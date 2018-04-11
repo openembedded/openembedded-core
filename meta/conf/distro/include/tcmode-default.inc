@@ -72,7 +72,7 @@ PREFERRED_VERSION_nativesdk-qemu ?= "${QEMUVERSION}"
 # Setup suitable toolchain flags
 require conf/distro/include/as-needed.inc
 
-GOVERSION ?= "1.10%"
+GOVERSION ?= "1.9%"
 PREFERRED_VERSION_virtual/${TARGET_PREFIX}go ?= "${GOVERSION}"
 PREFERRED_VERSION_go-cross-${TARGET_ARCH} ?= "${GOVERSION}"
 PREFERRED_VERSION_go-crosssdk-${SDK_ARCH} ?= "${GOVERSION}"
