@@ -45,7 +45,7 @@ ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
 # A useful thing to do for testing Icecream changes locally is to add a
 # subversion in local.conf:
 #  ICECC_ENV_VERSION_append = "-my-ver-1"
-ICECC_ENV_VERSION = "1"
+ICECC_ENV_VERSION = "2"
 
 # Default to disabling the caret workaround, If set to "1" in local.conf, icecc
 # will locally recompile any files that have warnings, which can adversely
