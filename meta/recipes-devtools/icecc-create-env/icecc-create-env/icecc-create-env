@@ -42,11 +42,13 @@ fix_rpath ()
     if ! is_dynamic_elf "$path"; then
         return
     fi
-    local new_rpath="`readelf -w -d "$path" | grep RPATH | \
+    local old_rpath="`$PATCHELF --print-rpath "$path"`"
+    local new_rpath="`echo "$old_rpath" | \
         sed 's/.*\[\(.*\)\]/\1/g' | \
         sed "s,\\\$ORIGIN,/$origin,g"`"
 
     if test -n "$new_rpath"; then
+        print_debug "Converting RPATH '$old_rpath' -> '$new_rpath'"
         $PATCHELF --set-rpath "$new_rpath" "$path"
     fi
 }
