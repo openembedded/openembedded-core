@@ -197,6 +197,9 @@ while test -n "$1"; do
         --log)
             do_log=1
             ;;
+        --extra=*)
+            extra_tools="$extra_tools ${1#--extra=}"
+            ;;
         *)
             break
             ;;
@@ -283,6 +286,15 @@ else
     print_output "'true' not found"
     exit 1
 fi
+
+for extra in $extra_tools; do
+    if test -x "$extra"; then
+        add_file "$extra"
+    else
+        print_output "'$extra' not found"
+        exit 1
+    fi
+done
 
 link_rel ()
 {
