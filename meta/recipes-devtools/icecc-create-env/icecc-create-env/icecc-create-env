@@ -99,48 +99,90 @@ normalize_path ()
     echo $path
 }
 
+add_file_common()
+{
+    local p="$1"
+    local path="$2"
+    local alias="$3"
+
+    add_alias "$path" "$p"
+    if test -n "$alias"; then
+        add_alias "$path" "$alias"
+    fi
+
+    add_path "$path" || return 1
+    print_debug "Adding file '$path'"
+
+    return 0
+}
+
+add_deps()
+{
+    local path="$1"
+    local interp="$2"
+
+    if test -n "$interp" && test -x "$interp"; then
+        # Use the dynamic loaders --list argument to list the
+        # dependencies. The program may have a different program
+        # interpreter (typical when using uninative tarballs), which is
+        # why we can't just call ldd.
+        deps="`$interp --list "$path"`"
+    else
+        deps="`ldd "$path"`"
+    fi
+
+    print_debug "Dependencies are:"
+    print_debug "$deps"
+    if test -n "$deps"; then
+        for lib in $deps; do
+            # ldd now outputs ld as /lib/ld-linux.so.xx on current nptl
+            # based glibc this regexp parse the outputs like:
+            # ldd /usr/bin/gcc
+            #         linux-gate.so.1 =>  (0xffffe000)
+            #         libc.so.6 => /lib/tls/libc.so.6 (0xb7e81000)
+            #         /lib/ld-linux.so.2 (0xb7fe8000)
+            # covering both situations ( with => and without )
+            lib="`echo "$lib" | sed -n 's,^[^/]*\(/[^ ]*\).*,\1,p'`"
+
+            test -f "$lib" || continue
+            # Check whether the same library also exists in the parent
+            # directory, and prefer that on the assumption that it is a
+            # more generic one.
+            local baselib=`echo "$lib" | sed 's,\(/[^/]*\)/.*\(/[^/]*\)$,\1\2,'`
+            test -f "$baselib" && lib=$baselib
+            add_dependency "$lib" "$interp"
+        done
+    fi
+}
+
+add_dependency()
+{
+    local p=`normalize_path $1`
+    # readlink is required for Yocto, so we can use it
+    local path=`readlink -f "$p"`
+    local interp="$2"
+
+    add_file_common "$p" "$path" || return
+
+    if test -x "$path" && is_dynamic_elf "$path"; then
+        add_deps "$path" "$interp"
+    fi
+}
+
 add_file ()
 {
     local p=`normalize_path $1`
     # readlink is required for Yocto, so we can use it
     local path=`readlink -f "$p"`
 
-    add_alias "$path" "$p"
-    if test -n "$2"; then
-        add_alias "$path" "$2"
-    fi
+    add_file_common "$p" "$path" "$2" || return
 
-    add_path "$path" || return
+    if test -x "$path" && is_dynamic_elf "$path"; then
+        # Request the program interpeter (dynamic loader)
+        interp=`readelf -W -l "$path" | grep "Requesting program interpreter:" | sed "s/\s*\[Requesting program interpreter:\s*\(.*\)\]/\1/g"`
+        print_debug "Interpreter is '$interp'"
 
-    if test -x "$path"; then
-        # Only call ldd when it makes sense
-        if is_dynamic_elf "$path"; then
-            # Request the program interpeter (dynamic loader)
-            interp=`readelf -w -l "$path" | grep "Requesting program interpreter:" | sed "s/\s*\[Requesting program interpreter:\s*\(.*\)\]/\1/g"`
-
-            if test -n "$interp" && test -x "$interp"; then
-                # Use the dynamic loaders --list argument to list the
-                # depenencies. The program may have a a different program
-                # interpeter (typical when using uninative tarballs), which is
-                # why we can't just call ldd.
-                #
-                # ldd now outputs ld as /lib/ld-linux.so.xx on current nptl based glibc
-                # this regexp parse the outputs like:
-                # ldd /usr/bin/gcc
-                #         linux-gate.so.1 =>  (0xffffe000)
-                #         libc.so.6 => /lib/tls/libc.so.6 (0xb7e81000)
-                #         /lib/ld-linux.so.2 (0xb7fe8000)
-                # covering both situations ( with => and without )
-                for lib in `$interp --list "$path" | sed -n 's,^[^/]*\(/[^ ]*\).*,\1,p'`; do
-                    test -f "$lib" || continue
-                    # Check wether the same library also exists in the parent directory,
-                    # and prefer that on the assumption that it is a more generic one.
-                    local baselib=`echo "$lib" | sed 's,\(/[^/]*\)/.*\(/[^/]*\)$,\1\2,'`
-                    test -f "$baselib" && lib=$baselib
-                    add_file "$lib"
-                done
-            fi
-        fi
+        add_deps "$path" "$interp"
     fi
 }
 
