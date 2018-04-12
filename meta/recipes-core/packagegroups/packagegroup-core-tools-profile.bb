@@ -33,9 +33,7 @@ PERF_libc-musl = ""
 # systemtap needs elfutils which is not fully buildable on some arches/libcs
 SYSTEMTAP = "systemtap"
 SYSTEMTAP_libc-musl = ""
-SYSTEMTAP_mipsarch = ""
 SYSTEMTAP_nios2 = ""
-SYSTEMTAP_aarch64 = ""
 
 # lttng-ust uses sched_getcpu() which is not there on for some platforms.
 LTTNGUST = "lttng-ust"
