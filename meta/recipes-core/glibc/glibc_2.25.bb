@@ -43,6 +43,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0026-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
            file://0027-locale-fix-hard-coded-reference-to-gcc-E.patch \
            file://0028-Rework-fno-omit-frame-pointer-support-on-i386.patch \
+           file://0029-bits-siginfo.h-enum-definition-for-TRAP_HWBKPT-is-mi.patch \
 "
 
 NATIVESDKFIXES ?= ""
