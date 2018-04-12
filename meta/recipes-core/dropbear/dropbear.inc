@@ -14,10 +14,8 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
            file://0001-urandom-xauth-changes-to-options.h.patch \
-           file://0003-configure.patch \
            file://0004-fix-2kb-keys.patch \
-           file://0007-dropbear-fix-for-x32-abi.patch \
-           file://fix-libtomcrypt-libtommath-ordering.patch \
+           file://0007-fix-localoptions-search-path.patch \
            file://init \
            file://dropbearkey.service \
            file://dropbear@.service \
@@ -51,6 +49,10 @@ PACKAGECONFIG[system-libtom] = "--disable-bundled-libtom,--enable-bundled-libtom
 
 EXTRA_OECONF += "\
  ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--enable-pam', '--disable-pam', d)}"
+
+# This option appends to CFLAGS and LDFLAGS from OE
+# This is causing [textrel] QA warning
+EXTRA_OECONF += "--disable-harden"
 
 do_install() {
 	install -d ${D}${sysconfdir} \
