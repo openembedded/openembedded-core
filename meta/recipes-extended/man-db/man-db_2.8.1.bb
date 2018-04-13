@@ -25,6 +25,7 @@ FILES_${PN} += "${prefix}/lib/tmpfiles.d"
 
 FILES_${PN}-dev += "${libdir}/man-db/libman.so ${libdir}/${BPN}/libmandb.so"
 
+RDEPENDS_${PN} += "groff"
 RRECOMMENDS_${PN} += "less"
 RPROVIDES_${PN} += " man"
 
