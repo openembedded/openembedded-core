@@ -54,10 +54,11 @@ diff --git a/chardev/char-socket.c b/chardev/char-socket.c
 index 53eda8ef00..f566107c35 100644
 --- a/chardev/char-socket.c
 +++ b/chardev/char-socket.c
-@@ -852,6 +852,66 @@ static gboolean socket_reconnect_timeout(gpointer opaque)
+@@ -852,6 +852,68 @@ static gboolean socket_reconnect_timeout(gpointer opaque)
      return false;
  }
  
++#ifndef _WIN32
 +static void chardev_open_socket_cmd(Chardev *chr,
 +                                    const char *cmd,
 +                                    Error **errp)
@@ -117,42 +118,49 @@ index 53eda8ef00..f566107c35 100644
 +        object_unref(OBJECT(sioc));
 +    }
 +}
++#endif
 +
  static void qmp_chardev_open_socket(Chardev *chr,
                                      ChardevBackend *backend,
                                      bool *be_opened,
-@@ -859,6 +919,7 @@ static void qmp_chardev_open_socket(Chardev *chr,
+@@ -859,6 +921,9 @@
  {
      SocketChardev *s = SOCKET_CHARDEV(chr);
      ChardevSocket *sock = backend->u.socket.data;
++#ifndef _WIN32
 +    const char *cmd     = sock->cmd;
++#endif
      bool do_nodelay     = sock->has_nodelay ? sock->nodelay : false;
      bool is_listen      = sock->has_server  ? sock->server  : true;
      bool is_telnet      = sock->has_telnet  ? sock->telnet  : false;
-@@ -926,7 +987,12 @@ static void qmp_chardev_open_socket(Chardev *chr,
+@@ -925,7 +990,14 @@
+     } else if (reconnect > 0) {
          s->reconnect_time = reconnect;
      }
- 
--    if (s->reconnect_time) {
+-
++#ifndef _WIN32
 +    if (cmd) {
 +        chardev_open_socket_cmd(chr, cmd, errp);
 +
 +        /* everything ready (or failed permanently) before we return */
 +        *be_opened = true;
-+    } else if (s->reconnect_time) {
++    } else
++#endif
+     if (s->reconnect_time) {
          sioc = qio_channel_socket_new();
          tcp_chr_set_client_ioc_name(chr, sioc);
-         qio_channel_socket_connect_async(sioc, s->addr,
-@@ -985,11 +1051,22 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
+@@ -985,10 +1057,26 @@
      const char *host = qemu_opt_get(opts, "host");
      const char *port = qemu_opt_get(opts, "port");
      const char *tls_creds = qemu_opt_get(opts, "tls-creds");
++#ifndef _WIN32
 +    const char *cmd = qemu_opt_get(opts, "cmd");
++#endif
      SocketAddressLegacy *addr;
      ChardevSocket *sock;
  
      backend->type = CHARDEV_BACKEND_KIND_SOCKET;
--    if (!path) {
++#ifndef _WIN32
 +    if (cmd) {
 +        /*
 +         * Here we have to ensure that no options are set which are incompatible with
@@ -163,24 +171,33 @@ index 53eda8ef00..f566107c35 100644
 +            error_setg(errp, "chardev: socket: cmd does not support any additional options");
 +            return;
 +        }
-+    } else if (!path) {
++    } else
++#endif
+     if (!path) {
          if (!host) {
              error_setg(errp, "chardev: socket: no host given");
-             return;
-@@ -1021,13 +1098,14 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
+@@ -1021,13 +1109,24 @@
      sock->has_reconnect = true;
      sock->reconnect = reconnect;
      sock->tls_creds = g_strdup(tls_creds);
++#ifndef _WIN32
 +    sock->cmd = g_strdup(cmd);
++#endif
  
      addr = g_new0(SocketAddressLegacy, 1);
--    if (path) {
++#ifndef _WIN32
 +    if (path || cmd) {
++#else
+     if (path) {
++#endif
          UnixSocketAddress *q_unix;
          addr->type = SOCKET_ADDRESS_LEGACY_KIND_UNIX;
          q_unix = addr->u.q_unix.data = g_new0(UnixSocketAddress, 1);
--        q_unix->path = g_strdup(path);
++#ifndef _WIN32
 +        q_unix->path = cmd ? g_strdup_printf("cmd:%s", cmd) : g_strdup(path);
++#else
+         q_unix->path = g_strdup(path);
++#endif
      } else {
          addr->type = SOCKET_ADDRESS_LEGACY_KIND_INET;
          addr->u.inet.data = g_new(InetSocketAddress, 1);
@@ -223,4 +240,3 @@ index ae19dcd1ed..6de0f29bcd 100644
                                       '*wait'      : 'bool',
 -- 
 2.14.1
-
