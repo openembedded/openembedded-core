@@ -22,8 +22,10 @@ RUNTIMELIBITM_nios2 = ""
 RUNTIMELIBITM_microblaze = ""
 RUNTIMELIBITM_riscv32 = ""
 RUNTIMELIBITM_riscv64 = ""
+RUNTIMELIBSSP ?= ""
+RUNTIMELIBSSP_mingw32 ?= "libssp"
 
-RUNTIMETARGET = "libssp libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
+RUNTIMETARGET = "${RUNTIMELIBSSP} libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
     ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
 "
 RUNTIMETARGET_append_x86 = " libmpx"
