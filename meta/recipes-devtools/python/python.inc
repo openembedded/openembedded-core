@@ -33,6 +33,12 @@ EXTRA_OECONF = "\
   ${PYTHONLSBOPTS} \
 "
 
+do_configure_prepend() {
+	libdirleaf="$(echo ${libdir} | sed -e 's:${prefix}/::')"
+	sed -i -e "s:SEDMELIBLEAF:${libdirleaf}:g" \
+		${S}/configure.ac
+}
+
 do_install_append () {
 	sed -i -e 's:${HOSTTOOLS_DIR}/install:install:g' \
 		-e 's:${HOSTTOOLS_DIR}/mkdir:mkdir:g' \
