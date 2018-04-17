@@ -15,7 +15,6 @@ SRC_URI += "file://configure-sbindir.patch \
             file://display_testname_for_subtest.patch \
             file://avoid_parallel_tests.patch \
 "
-SRC_URI_append_class-native = " file://no_getrandom.patch"
 SRC_URI[md5sum] = "5b6821c403c3cc6e7775f74df1882a20"
 SRC_URI[sha256sum] = "f9be7cdcf4fc5c5064a226599acdda6bdf3d86c640152ba01ea642d91108dc8a"
 
