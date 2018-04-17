@@ -45,7 +45,7 @@ inherit native
 require python-native-${PYTHON_MAJMIN}-manifest.inc
 
 # uninative may be used on pre glibc 2.25 systems which don't have getentropy
-EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip ac_cv_func_getentropy=no"
+EXTRA_OECONF_append = " --bindir=${bindir}/${PN} --without-ensurepip"
 
 EXTRA_OEMAKE = '\
   LIBC="" \

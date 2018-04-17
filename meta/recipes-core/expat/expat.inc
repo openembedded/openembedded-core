@@ -9,7 +9,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.bz2 \
            file://libtool-tag.patch \
 	  "
 
-SRC_URI_append_class-native = " file://no_getrandom.patch"
+SRC_URI[md5sum] = "789e297f547980fc9ecc036f9a070d49"
+SRC_URI[sha256sum] = "d9dc32efba7e74f788fcc4f212a43216fc37cf5f23f4c2339664d473353aedf6"
 
 inherit autotools lib_package
 
