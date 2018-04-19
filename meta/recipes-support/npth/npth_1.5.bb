@@ -15,9 +15,13 @@ SRC_URI[sha256sum] = "294a690c1f537b92ed829d867bee537e46be93fbd60b16c04630fbbfcd
 
 BINCONFIG = "${bindir}/npth-config"
 
-inherit autotools binconfig-disabled
+inherit autotools binconfig-disabled multilib_header 
 
 FILES_${PN} = "${libdir}/libnpth.so.*"
 FILES_${PN}-dev += "${bindir}/npth-config"
+
+do_install_append() {
+    oe_multilib_header npth.h
+}
 
 BBCLASSEXTEND = "native"
