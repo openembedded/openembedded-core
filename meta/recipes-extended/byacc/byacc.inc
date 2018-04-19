@@ -5,7 +5,7 @@ programming language."
 SECTION = "devel"
 LICENSE = "PD"
 
-SRC_URI = "ftp://invisible-island.net/byacc/byacc-${PV}.tgz \
+SRC_URI = "https://downloads.yoctoproject.org/mirror/sources/byacc-${PV}.tgz \
            file://byacc-open.patch \
            file://0001-byacc-do-not-reorder-CC-and-CFLAGS.patch"
 
