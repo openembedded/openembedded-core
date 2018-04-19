@@ -344,6 +344,20 @@ def parse_debugsources_from_dwarfsrcfiles_output(dwarfsrcfiles_output):
 
     return debugfiles.keys()
 
+def append_source_info(file, sourcefile, d):
+    cmd = "'dwarfsrcfiles' '%s'" % (file)
+    (retval, output) = oe.utils.getstatusoutput(cmd)
+    # 255 means a specific file wasn't fully parsed to get the debug file list, which is not a fatal failure
+    if retval != 0 and retval != 255:
+        bb.fatal("dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
+
+    debugsources = parse_debugsources_from_dwarfsrcfiles_output(output)
+    # filenames are null-separated - this is an artefact of the previous use
+    # of rpm's debugedit, which was writing them out that way, and the code elsewhere
+    # is still assuming that.
+    debuglistoutput = '\0'.join(debugsources) + '\0'
+    open(sourcefile, 'a').write(debuglistoutput)
+
 
 def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     # Function to split a single file into two components, one is the stripped
@@ -369,18 +383,7 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
 
     # We need to extract the debug src information here...
     if debugsrcdir:
-        cmd = "'dwarfsrcfiles' '%s'" % (file)
-        (retval, output) = oe.utils.getstatusoutput(cmd)
-        # 255 means a specific file wasn't fully parsed to get the debug file list, which is not a fatal failure
-        if retval != 0 and retval != 255:
-            bb.fatal("dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
-
-        debugsources = parse_debugsources_from_dwarfsrcfiles_output(output)
-        # filenames are null-separated - this is an artefact of the previous use
-        # of rpm's debugedit, which was writing them out that way, and the code elsewhere
-        # is still assuming that.
-        debuglistoutput = '\0'.join(debugsources) + '\0'
-        open(sourcefile, 'a').write(debuglistoutput)
+        append_source_info(file, sourcefile, d)
 
     bb.utils.mkdirhier(os.path.dirname(debugfile))
 
@@ -936,6 +939,15 @@ python split_and_strip_files () {
                 type |= 8
         return type
 
+    def isStaticLib(path):
+        if path.endswith('.a') and not os.path.islink(path):
+            with open(path, 'rb') as fh:
+                # The magic must include the first slash to avoid
+                # matching golang static libraries
+                magic = b'!<arch>\x0a/'
+                start = fh.read(len(magic))
+                return start == magic
+        return False
 
     #
     # First lets figure out all of the files we may have to process ... do this only once!
@@ -943,6 +955,7 @@ python split_and_strip_files () {
     elffiles = {}
     symlinks = {}
     kernmods = []
+    staticlibs = []
     inodes = {}
     libdir = os.path.abspath(dvar + os.sep + d.getVar("libdir"))
     baselibdir = os.path.abspath(dvar + os.sep + d.getVar("base_libdir"))
@@ -954,6 +967,9 @@ python split_and_strip_files () {
                 file = os.path.join(root, f)
                 if file.endswith(".ko") and file.find("/lib/modules/") != -1:
                     kernmods.append(file)
+                    continue
+                if isStaticLib(file):
+                    staticlibs.append(file)
                     continue
 
                 # Skip debug files
@@ -1032,6 +1048,10 @@ python split_and_strip_files () {
             #bb.note("Split %s -> %s" % (file, fpath))
             # Only store off the hard link reference if we successfully split!
             splitdebuginfo(file, fpath, debugsrcdir, sourcefile, d)
+
+        if debugsrcdir:
+            for file in staticlibs:
+                append_source_info(file, sourcefile, d)
 
         # Hardlink our debug symbols to the other hardlink copies
         for ref in inodes:
