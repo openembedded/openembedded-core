@@ -14,6 +14,10 @@ SRC_URI[md5sum] = "281a2f92fdc39c40ad6b76f6631fdbd7"
 SRC_URI[sha256sum] = "9c09220be4435dc27fcd22d291707b94b97f159e0c442fbcd60c168f8f79eb06"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
-inherit autotools
+inherit autotools multilib_header
 
 CPPFLAGS_append_riscv64  = " -pthread -D_REENTRANT"
+
+do_install_append() {
+    oe_multilib_header urcu/config.h
+}
