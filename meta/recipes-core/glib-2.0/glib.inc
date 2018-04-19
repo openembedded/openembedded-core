@@ -91,6 +91,9 @@ USE_NLS_class-target = "yes"
 USE_NLS_class-nativesdk = "yes"
 CACHED_CONFIGUREVARS_append_class-native = " ac_cv_path_MSGFMT=/bin/false"
 
+EXEEXT = ""
+EXEEXT_mingw32 = ".exe"
+
 do_install_append () {
 	if [ -f ${D}${bindir}/gtester-report ]; then
 		sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python3|'
@@ -107,7 +110,7 @@ do_install_append () {
 
         # Make sure gio-querymodules is unique among multilibs
         if test "x${MLPREFIX}" != "x"; then
-                mv ${D}${libexecdir}/gio-querymodules ${D}${libexecdir}/${MLPREFIX}gio-querymodules
+                mv ${D}${libexecdir}/gio-querymodules${EXEEXT} ${D}${libexecdir}/${MLPREFIX}gio-querymodules${EXEEXT}
         fi
 }
 
