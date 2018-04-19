@@ -8,7 +8,7 @@ DEPENDS = "zlib"
 
 LIBV = "16"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/${PV}/${BP}.tar.xz"
+SRC_URI = "https://ftp-osl.osuosl.org/pub/${BPN}/src/archive/xz/${BPN}${LIBV}/${BP}.tar.xz"
 
 SRC_URI[md5sum] = "425354f86c392318d31aedca71019372"
 SRC_URI[sha256sum] = "d8d3ec9de6b5db740fefac702c37ffcf96ae46cb17c18c1544635a3852f78f7a"
