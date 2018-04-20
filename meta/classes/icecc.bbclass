@@ -366,20 +366,14 @@ set_icecc_env() {
 
         # the ICECC_VERSION generation step must be locked by a mutex
         # in order to prevent race conditions
-        exit_code=0
-        flock -n -E 10 "${ICECC_VERSION}.lock" \
-            ${ICECC_ENV_EXEC} ${ICECC_ENV_DEBUG} "${ICECC_CC}" "${ICECC_CXX}" "${ICECC_AS}" "${ICECC_VERSION}" || exit_code=$?
-        if [ "$exit_code" -eq 0 ]; then
+        if flock -n "${ICECC_VERSION}.lock" \
+            ${ICECC_ENV_EXEC} ${ICECC_ENV_DEBUG} "${ICECC_CC}" "${ICECC_CXX}" "${ICECC_AS}" "${ICECC_VERSION}"
+        then
             touch "${ICECC_VERSION}.done"
-        elif [ "$exit_code" -eq "10" ]; then
-            if [ ! wait_for_file "${ICECC_VERSION}.done" 30 ]; then
-                # locking failed so wait for ${ICECC_VERSION}.done to appear
-                bbwarn "Timeout waiting for ${ICECC_VERSION}.done"
-                return
-            fi
-        else
-            bbwarn "Could not create icecc environment: $exit_code"
-            touch "${ICECC_VERSION}.done"
+        elif [ ! wait_for_file "${ICECC_VERSION}.done" 30 ]
+        then
+            # locking failed so wait for ${ICECC_VERSION}.done to appear
+            bbwarn "Timeout waiting for ${ICECC_VERSION}.done"
             return
         fi
     fi
