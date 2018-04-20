@@ -880,6 +880,7 @@ python split_and_strip_files () {
 
     dvar = d.getVar('PKGD')
     pn = d.getVar('PN')
+    targetos = d.getVar('TARGET_OS')
 
     oldcwd = os.getcwd()
     os.chdir(dvar)
@@ -1049,7 +1050,7 @@ python split_and_strip_files () {
             # Only store off the hard link reference if we successfully split!
             splitdebuginfo(file, fpath, debugsrcdir, sourcefile, d)
 
-        if debugsrcdir:
+        if debugsrcdir and not targetos.startswith("mingw"):
             for file in staticlibs:
                 append_source_info(file, sourcefile, d)
 
