@@ -8,7 +8,7 @@ SRC_URI = "git://git.yoctoproject.org/pseudo \
            file://toomanyfiles.patch \
            "
 
-SRCREV = "19f18124f16c4c85405b140a1fb8cb3b31d865bf"
+SRCREV = "fddbe854c9db058d5a05830d3bcdd4233d95ee2e"
 S = "${WORKDIR}/git"
 PV = "1.9.0+git${SRCPV}"
 
