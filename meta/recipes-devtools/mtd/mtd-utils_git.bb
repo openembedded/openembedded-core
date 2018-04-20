@@ -28,10 +28,27 @@ CPPFLAGS_append_riscv64  = " -pthread -D_REENTRANT"
 
 EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} ${@bb.utils.contains('PACKAGECONFIG', 'xattr', '', '-DWITHOUT_XATTR', d)} -I${S}/include' 'BUILDDIR=${S}'"
 
-ALTERNATIVE_${PN} = "flash_eraseall"
+# Use higher priority than corresponding BusyBox-provided applets
+ALTERNATIVE_PRIORITY = "100"
+
+ALTERNATIVE_${PN} = "flashcp flash_eraseall flash_lock flash_unlock nanddump nandwrite"
+ALTERNATIVE_${PN}-ubifs = "ubiattach ubidetach ubimkvol ubirename ubirmvol ubirsvol ubiupdatevol"
+
 ALTERNATIVE_LINK_NAME[flash_eraseall] = "${sbindir}/flash_eraseall"
-# Use higher priority than busybox's flash_eraseall (created when built with CONFIG_FLASH_ERASEALL)
-ALTERNATIVE_PRIORITY[flash_eraseall] = "100"
+ALTERNATIVE_LINK_NAME[nandwrite] = "${sbindir}/nandwrite"
+ALTERNATIVE_LINK_NAME[nanddump] = "${sbindir}/nanddump"
+ALTERNATIVE_LINK_NAME[ubiattach] = "${sbindir}/ubiattach"
+ALTERNATIVE_LINK_NAME[ubiattach] = "${sbindir}/ubiattach"
+ALTERNATIVE_LINK_NAME[ubidetach] = "${sbindir}/ubidetach"
+ALTERNATIVE_LINK_NAME[ubimkvol] = "${sbindir}/ubimkvol"
+ALTERNATIVE_LINK_NAME[ubirename] = "${sbindir}/ubirename"
+ALTERNATIVE_LINK_NAME[ubirmvol] = "${sbindir}/ubirmvol"
+ALTERNATIVE_LINK_NAME[ubirsvol] = "${sbindir}/ubirsvol"
+ALTERNATIVE_LINK_NAME[ubiupdatevol] = "${sbindir}/ubiupdatevol"
+ALTERNATIVE_LINK_NAME[flash_eraseall] = "${sbindir}/flash_eraseall"
+ALTERNATIVE_LINK_NAME[flash_lock] = "${sbindir}/flash_lock"
+ALTERNATIVE_LINK_NAME[flash_unlock] = "${sbindir}/flash_unlock"
+ALTERNATIVE_LINK_NAME[flashcp] = "${sbindir}/flashcp"
 
 do_install () {
 	oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} INCLUDEDIR=${includedir}
