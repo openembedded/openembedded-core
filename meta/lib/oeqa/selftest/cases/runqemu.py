@@ -185,7 +185,9 @@ class QemuTest(OESelftestTestCase):
             qemu_shutdown_succeeded = self._start_qemu_shutdown_check_if_shutdown_succeeded(qemu, shutdown_timeout)
             self.assertTrue(qemu_shutdown_succeeded, 'Failed: %s does not shutdown within timeout(%s)' % (self.machine, shutdown_timeout))
 
-    def test_qemu_can_boot_nfs_and_shutdown(self):
+    # Need to have portmap/rpcbind running to allow this test to work and
+    # current autobuilder setup does not have this.
+    def disabled_test_qemu_can_boot_nfs_and_shutdown(self):
         self.assertExists(self.qemuboot_conf)
         bitbake('meta-ide-support')
         rootfs_tar = "%s-%s.tar.bz2" % (self.recipe, self.machine)
