@@ -11,7 +11,7 @@ do_compile() {
 	export CC=$BUILD_CC
 
 	cd src
-	./make.bash --host-only
+	CGO_CFLAGS="${BUILD_CFLAGS}" CGO_LDFLAGS="${BUILD_LDFLAGS}" ./make.bash --host-only
 	cp ${B}/pkg/tool/${BUILD_GOTUPLE}/go_bootstrap ${B}
 	rm -rf ${B}/pkg/${TARGET_GOTUPLE}
 	./make.bash --target-only
