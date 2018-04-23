@@ -344,12 +344,15 @@ def parse_debugsources_from_dwarfsrcfiles_output(dwarfsrcfiles_output):
 
     return debugfiles.keys()
 
-def append_source_info(file, sourcefile, d):
+def append_source_info(file, sourcefile, d, fatal=True):
     cmd = "'dwarfsrcfiles' '%s'" % (file)
     (retval, output) = oe.utils.getstatusoutput(cmd)
     # 255 means a specific file wasn't fully parsed to get the debug file list, which is not a fatal failure
     if retval != 0 and retval != 255:
-        bb.fatal("dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
+        msg = "dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else "")
+        if fatal:
+            bb.fatal(msg)
+        bb.note(msg)
 
     debugsources = parse_debugsources_from_dwarfsrcfiles_output(output)
     # filenames are null-separated - this is an artefact of the previous use
@@ -1052,7 +1055,7 @@ python split_and_strip_files () {
 
         if debugsrcdir and not targetos.startswith("mingw"):
             for file in staticlibs:
-                append_source_info(file, sourcefile, d)
+                append_source_info(file, sourcefile, d, fatal=False)
 
         # Hardlink our debug symbols to the other hardlink copies
         for ref in inodes:
