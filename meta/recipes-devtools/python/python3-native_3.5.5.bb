@@ -25,6 +25,7 @@ file://sysconfig.py-add-_PYTHON_PROJECT_SRC.patch \
 file://setup.py-check-cross_compiling-when-get-FLAGS.patch \
 file://0001-Do-not-use-the-shell-version-of-python-config-that-w.patch \
 file://support_SOURCE_DATE_EPOCH_in_py_compile.patch \
+file://regen-all.patch \
 "
 
 SRC_URI[md5sum] = "f3763edf9824d5d3a15f5f646083b6e0"
@@ -62,9 +63,9 @@ do_configure_append() {
 
 # Regenerate all of the generated files
 # This ensures that pgen and friends get created during the compile phase
+#
 do_compile_prepend() {
-    # Has to be done ahead of other regen- targets due to https://bugs.python.org/issue33080
-    oe_runmake regen-importlib
+    # Assuming https://bugs.python.org/issue33080 has been addressed in Makefile.
     oe_runmake regen-all
 }
 
