@@ -22,6 +22,7 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch \
            file://memfd.patch \
            file://0001-arm-translate-a64-treat-DISAS_UPDATE-as-variant-of-D.patch \
+           file://check-PS2Queue-pointers-in-post_load-routine.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
