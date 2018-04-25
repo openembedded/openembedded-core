@@ -171,7 +171,7 @@ FILES_${PN} += "${datadir}/zoneinfo/Pacific/Honolulu     \
                 ${datadir}/zoneinfo/Asia/Dubai           \
                 ${datadir}/zoneinfo/Asia/Karachi         \
                 ${datadir}/zoneinfo/Asia/Dhaka           \
-                ${datadir}/zoneinfo/Asia/Bankok          \
+                ${datadir}/zoneinfo/Asia/Bangkok         \
                 ${datadir}/zoneinfo/Asia/Hong_Kong       \
                 ${datadir}/zoneinfo/Asia/Tokyo           \
                 ${datadir}/zoneinfo/Australia/Darwin     \
