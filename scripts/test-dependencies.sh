@@ -163,7 +163,7 @@ build_every_recipe() {
   fi
   if [ "${TYPE}" != "2" ] ; then
     echo "!!!Removing tmpdir \"$tmpdir\"!!!"
-    rm -rf $tmpdir/deploy $tmpdir/pkgdata $tmpdir/sstate-control $tmpdir/stamps $tmpdir/sysroots $tmpdir/work $tmpdir/work-shared 2>/dev/null
+    rm -rf $tmpdir/deploy $tmpdir/pkgdata $tmpdir/sstate-control $tmpdir/stamps $tmpdir/sysroots* $tmpdir/work $tmpdir/work-shared 2>/dev/null
   fi
   i=1
   count=`cat $recipes ${OUTPUT1}/failed-recipes.log | sort -u | wc -l`
@@ -185,7 +185,7 @@ build_every_recipe() {
       mv ${OUTPUTB}/${recipe}.log ${OUTPUTB}/ok/
     fi
     if [ "${TYPE}" != "2" ] ; then
-      rm -rf $tmpdir/deploy $tmpdir/pkgdata $tmpdir/sstate-control $tmpdir/stamps $tmpdir/sysroots $tmpdir/work $tmpdir/work-shared 2>/dev/null
+      rm -rf $tmpdir/deploy $tmpdir/pkgdata $tmpdir/sstate-control $tmpdir/stamps $tmpdir/sysroots* $tmpdir/work $tmpdir/work-shared 2>/dev/null
     fi
     i=`expr $i + 1`
   done
