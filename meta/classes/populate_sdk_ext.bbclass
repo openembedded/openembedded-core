@@ -319,8 +319,9 @@ python copy_buildsystem () {
             f.write('TCLIBCAPPEND = ""\n')
             f.write('DL_DIR = "${TOPDIR}/downloads"\n')
 
-            f.write('INHERIT += "%s"\n' % 'uninative')
-            f.write('UNINATIVE_CHECKSUM[%s] = "%s"\n\n' % (d.getVar('BUILD_ARCH'), uninative_checksum))
+            if bb.data.inherits_class('uninative', d):
+               f.write('INHERIT += "%s"\n' % 'uninative')
+               f.write('UNINATIVE_CHECKSUM[%s] = "%s"\n\n' % (d.getVar('BUILD_ARCH'), uninative_checksum))
             f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
 
             # Some classes are not suitable for SDK, remove them from INHERIT
