@@ -17,6 +17,8 @@ SRC_URI[sha256sum] = "87592b86cb037c554375f5868bdd3cc57748aef38d6cb741c81065f0be
 inherit autotools gettext texinfo
 
 PACKAGECONFIG ??= ""
+PACKAGECONFIG_append_class-target = " ${@bb.utils.filter('DISTRO_FEATURES', 'acl', d)}"
+
 PACKAGECONFIG[acl] = "--with-posix-acls,--without-posix-acls,acl"
 
 EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
