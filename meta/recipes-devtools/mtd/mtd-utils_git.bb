@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 inherit autotools pkgconfig update-alternatives
 
 DEPENDS = "zlib lzo e2fsprogs util-linux"
+RDEPENDS_mtd-utils-tests += "bash"
 
 PV = "2.0.1+${SRCPV}"
 
@@ -17,6 +18,8 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git \
 "
 
 S = "${WORKDIR}/git/"
+
+EXTRA_OECONF += "--enable-install-tests"
 
 # xattr support creates an additional compile-time dependency on acl because
 # the sys/acl.h header is needed. libacl is not needed and thus enabling xattr
@@ -54,11 +57,12 @@ do_install () {
 	oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} INCLUDEDIR=${includedir}
 }
 
-PACKAGES =+ "mtd-utils-jffs2 mtd-utils-ubifs mtd-utils-misc"
+PACKAGES =+ "mtd-utils-jffs2 mtd-utils-ubifs mtd-utils-misc mtd-utils-tests"
 
 FILES_mtd-utils-jffs2 = "${sbindir}/mkfs.jffs2 ${sbindir}/jffs2dump ${sbindir}/jffs2reader ${sbindir}/sumtool"
 FILES_mtd-utils-ubifs = "${sbindir}/mkfs.ubifs ${sbindir}/ubi*"
 FILES_mtd-utils-misc = "${sbindir}/nftl* ${sbindir}/ftl* ${sbindir}/rfd* ${sbindir}/doc* ${sbindir}/serve_image ${sbindir}/recv_image"
+FILES_mtd-utils-tests = "${libexecdir}/mtd-utils/*"
 
 BBCLASSEXTEND = "native nativesdk"
 
