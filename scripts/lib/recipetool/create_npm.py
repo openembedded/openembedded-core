@@ -320,6 +320,7 @@ class NpmRecipeHandler(RecipeHandler):
                     blacklist = True
                     break
             if (not blacklist and 'linux' not in pkg_os) or '!linux' in pkg_os:
+                pkg = pdata.get('name', 'Unnamed package')
                 logger.debug(2, "Skipping %s since it's incompatible with Linux" % pkg)
                 return False
         return True
