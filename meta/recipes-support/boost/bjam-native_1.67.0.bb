@@ -6,7 +6,7 @@ SECTION = "devel"
 inherit native
 
 SRC_URI += "file://bjam-native-build-bjam.debug.patch \
-            file://0001-Fix-a-strange-assert-typo-how-was-this-released-with.patch"
+"
 
 do_compile() {
     ./bootstrap.sh --with-toolset=gcc

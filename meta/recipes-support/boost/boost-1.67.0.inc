@@ -12,8 +12,8 @@ BOOST_MAJ = "${@"_".join(d.getVar("PV").split(".")[0:2])}"
 BOOST_P = "boost_${BOOST_VER}"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/boost/boost/${PV}/${BOOST_P}.tar.bz2"
-SRC_URI[md5sum] = "b2dfbd6c717be4a7bb2d88018eaccf75"
-SRC_URI[sha256sum] = "5721818253e6a0989583192f96782c4a98eb6204965316df9f5ad75819225ca9"
+SRC_URI[md5sum] = "ced776cb19428ab8488774e1415535ab"
+SRC_URI[sha256sum] = "2684c972994ee57fc5632e03bf044746f6eb45d4920c343937a465fd67a5adba"
 
 UPSTREAM_CHECK_URI = "http://www.boost.org/users/download/"
 UPSTREAM_CHECK_REGEX = "boostorg/release/(?P<pver>.*)/source/"
