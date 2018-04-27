@@ -33,8 +33,6 @@ siteconfig_do_siteconfig_gencache_prepend = " \
 
 # nptl needs unwind support in gcc, which can't be built without glibc.
 DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers virtual/${TARGET_PREFIX}libc-initial"
-# nptl needs libgcc but dlopens it, so our shlibs code doesn't detect this
-#RDEPENDS_${PN} += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
 
 CRYPTPROVIDES = "virtual/crypt"
 CRYPTPROVIDES_class-nativesdk = ""
@@ -79,8 +77,6 @@ EXTRA_OEMAKE += "SHELL=/bin/bash"
 do_configure_prepend() {
 	sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
 }
-
-GLIBC_ADDONS ?= "nptl,libidn"
 
 # Enable backtrace from abort()
 do_configure_append_arm () {

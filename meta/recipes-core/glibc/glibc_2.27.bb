@@ -35,7 +35,6 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0018-eglibc-Help-bootstrap-cross-toolchain.patch \
            file://0019-eglibc-Clear-cache-lines-on-ppc8xx.patch \
            file://0020-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0021-eglibc-Install-PIC-archives.patch \
            file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
            file://0024-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
@@ -76,14 +75,11 @@ COMPATIBLE_HOST_libc-musl_class-target = "null"
 GLIBCPIE ??= ""
 
 EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
-                --without-cvs --disable-profile \
+                --disable-profile \
                 --disable-debug --without-gd \
                 --enable-clocale=gnu \
-                --enable-add-ons=libidn \
                 --with-headers=${STAGING_INCDIR} \
                 --without-selinux \
-                --enable-obsolete-rpc \
-                --enable-obsolete-nsl \
                 --enable-tunables \
                 --enable-bind-now \
                 --enable-stack-protector=strong \
@@ -113,22 +109,10 @@ do_configure () {
         CPPFLAGS="" oe_runconf
 }
 
-rpcsvc = "bootparam_prot.x nlm_prot.x rstat.x \
-	  yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
-	  rusers.x spray.x nfs_prot.x rquota.x key_prot.x"
-
 do_compile () {
 	# -Wl,-rpath-link <staging>/lib in LDFLAGS can cause breakage if another glibc is in staging
 	unset LDFLAGS
 	base_do_compile
-	(
-		cd ${S}/sunrpc/rpcsvc
-		for r in ${rpcsvc}; do
-			h=`echo $r|sed -e's,\.x$,.h,'`
-			rm -f $h
-			${B}/sunrpc/cross-rpcgen -h $r -o $h || bbwarn "${PN}: unable to generate header for $r"
-		done
-	)
 	echo "Adjust ldd script"
 	if [ -n "${RTLDLIST}" ]
 	then
