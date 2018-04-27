@@ -59,7 +59,6 @@ SSTATEPREINSTFUNCS = ""
 SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
 SSTATEPOSTINSTFUNCS = ""
 EXTRA_STAGING_FIXMES ?= "HOSTTOOLS_DIR"
-SSTATECLEANFUNCS = ""
 
 # Check whether sstate exists for tasks that support sstate and are in the
 # locked signatures file.
@@ -506,10 +505,6 @@ def sstate_clean(ss, d):
         if rm_stamp in stfile or rm_setscene in stfile or \
                 stfile.endswith(rm_nohash):
             oe.path.remove(stfile)
-
-    # Removes the users/groups created by the package
-    for cleanfunc in (d.getVar('SSTATECLEANFUNCS') or '').split():
-        bb.build.exec_func(cleanfunc, d)
 
 sstate_clean[vardepsexclude] = "SSTATE_MANFILEPREFIX"
 
