@@ -472,7 +472,8 @@ class RpmRootfs(Rootfs):
         self._log_check_error()
 
     def _cleanup(self):
-        self.pm._invoke_dnf(["clean", "all"])
+        if bb.utils.contains("IMAGE_FEATURES", "package-management", True, False, self.d):
+            self.pm._invoke_dnf(["clean", "all"])
 
 
 class DpkgOpkgRootfs(Rootfs):
