@@ -668,7 +668,7 @@ class RpmPM(PackageManager):
         self.saved_packaging_data = self.d.expand('${T}/saved_packaging_data/%s' % self.task_name)
         if not os.path.exists(self.d.expand('${T}/saved_packaging_data')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved_packaging_data'))
-        self.packaging_data_dirs = ['var/lib/rpm', 'var/lib/dnf', 'var/cache/dnf']
+        self.packaging_data_dirs = ['etc/rpm', 'etc/rpmrc', 'etc/dnf', 'var/lib/rpm', 'var/lib/dnf', 'var/cache/dnf']
         self.solution_manifest = self.d.expand('${T}/saved/%s_solution' %
                                                self.task_name)
         if not os.path.exists(self.d.expand('${T}/saved')):
@@ -832,7 +832,10 @@ class RpmPM(PackageManager):
         for i in self.packaging_data_dirs:
             source_dir = oe.path.join(self.target_rootfs, i)
             target_dir = oe.path.join(self.saved_packaging_data, i)
-            shutil.copytree(source_dir, target_dir, symlinks=True)
+            if os.path.isdir(source_dir):
+                shutil.copytree(source_dir, target_dir, symlinks=True)
+            elif os.path.isfile(source_dir):
+                shutil.copy2(source_dir, target_dir)
 
     def recovery_packaging_data(self):
         # Move the rpmlib back
@@ -842,9 +845,10 @@ class RpmPM(PackageManager):
                 if os.path.exists(target_dir):
                     bb.utils.remove(target_dir, True)
                 source_dir = oe.path.join(self.saved_packaging_data, i)
-                shutil.copytree(source_dir,
-                            target_dir,
-                            symlinks=True)
+                if os.path.isdir(source_dir):
+                    shutil.copytree(source_dir, target_dir, symlinks=True)
+                elif os.path.isfile(source_dir):
+                    shutil.copy2(source_dir, target_dir)
 
     def list_installed(self):
         output = self._invoke_dnf(["repoquery", "--installed", "--queryformat", "Package: %{name} %{arch} %{version} %{name}-%{version}-%{release}.%{arch}.rpm\nDependencies:\n%{requires}\nRecommendations:\n%{recommends}\nDependenciesEndHere:\n"],
