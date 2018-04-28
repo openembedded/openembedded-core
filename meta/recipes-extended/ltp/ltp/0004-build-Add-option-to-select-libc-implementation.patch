@@ -102,20 +102,6 @@ Index: git/testcases/network/nfsv4/acl/Makefile
 +endif
 +
  include $(top_srcdir)/include/mk/generic_leaf_target.mk
-Index: git/testcases/network/rpc/basic_tests/Makefile
-===================================================================
---- git.orig/testcases/network/rpc/basic_tests/Makefile
-+++ git/testcases/network/rpc/basic_tests/Makefile
-@@ -23,4 +23,9 @@
- top_srcdir		?= ../../../..
- 
- include $(top_srcdir)/include/mk/env_pre.mk
-+
-+ifeq ($(LIBC),musl)
-+FILTER_OUT_DIRS += rpc01
-+endif
-+
- include $(top_srcdir)/include/mk/generic_trunk_target.mk
 Index: git/testcases/realtime/func/pi-tests/Makefile
 ===================================================================
 --- git.orig/testcases/realtime/func/pi-tests/Makefile

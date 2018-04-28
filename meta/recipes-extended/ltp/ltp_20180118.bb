@@ -45,6 +45,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0039-commands-ar01-Fix-for-test-in-deterministic-mode.patch \
            file://0040-safe_macros-make-is_fuse-return-zero-if-fs_type-is-N.patch \
+           file://0001-Disable-rpc01-on-glibc-and-musl.patch \
            "
 
 S = "${WORKDIR}/git"
