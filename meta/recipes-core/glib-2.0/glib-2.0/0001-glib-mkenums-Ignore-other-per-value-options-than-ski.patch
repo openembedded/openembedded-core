@@ -1,0 +1,32 @@
+From 12ffb50d587003a46678567b771c6e984035a5e9 Mon Sep 17 00:00:00 2001
+From: Peter Kjellerstedt <pkj@axis.com>
+Date: Sat, 28 Apr 2018 03:07:50 +0200
+Subject: [PATCH] glib-mkenums: Ignore other per value options than 'skip' and
+ 'nick'
+
+If some other per value option was present than 'skip' or 'nick' then
+a KeyError would occur. Ignoring such options matches the behaviour of
+the old, Perl-based glib-mkenums.
+
+Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=795008]
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ gobject/glib-mkenums.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gobject/glib-mkenums.in b/gobject/glib-mkenums.in
+index fe9a10756..4ccc1f458 100755
+--- a/gobject/glib-mkenums.in
++++ b/gobject/glib-mkenums.in
+@@ -218,7 +218,7 @@ def parse_entries(file, file_name):
+             if options is not None:
+                 options = parse_trigraph(options)
+                 if 'skip' not in options:
+-                    entries.append((name, value, options['nick']))
++                    entries.append((name, value, options.get('nick', None)))
+             else:
+                 entries.append((name, value))
+         elif re.match(r's*\#', line):
+-- 
+2.12.0
+
