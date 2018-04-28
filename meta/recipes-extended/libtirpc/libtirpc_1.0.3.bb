@@ -10,17 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f835cce8852481e4b2bbbdd23b5e47f3 \
 PROVIDES = "virtual/librpc"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
-           file://export_key_secretkey_is_set.patch \
-           file://0001-replace-__bzero-with-memset-API.patch \
-           file://0001-include-stdint.h-for-uintptr_t.patch \
+           file://libtirpc-1.0.4-rc1.patch \
+           file://musl.patch \
            "
 
-SRC_URI_append_libc-musl = " \
-                             file://Use-netbsd-queue.h.patch \
-                           "
-
-SRC_URI[md5sum] = "d5a37f1dccec484f9cabe2b97e54e9a6"
-SRC_URI[sha256sum] = "723c5ce92706cbb601a8db09110df1b4b69391643158f20ff587e20e7c5f90f5"
+SRC_URI[md5sum] = "f8403a10695348854e71d525c4db5931"
+SRC_URI[sha256sum] = "86c3a78fc1bddefa96111dd233124c703b22a78884203c55c3e06b3be6a0fd5e"
 
 inherit autotools pkgconfig
 
