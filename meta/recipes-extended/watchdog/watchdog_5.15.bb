@@ -22,12 +22,13 @@ SRC_URI[sha256sum] = "ffdc865137ad5d8e53664bd22bad4de6ca136d1b4636720320cb52af0c
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/watchdog/files/watchdog/"
 UPSTREAM_CHECK_REGEX = "/watchdog/(?P<pver>(\d+[\.\-_]*)+)/"
 
-inherit autotools update-rc.d systemd
+inherit autotools update-rc.d systemd pkgconfig
 
-DEPENDS_append_libc-musl = " libtirpc "
-CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc "
-LDFLAGS_append_libc-musl = " -ltirpc "
-EXTRA_OECONF_append_libc-musl = " --disable-nfs "
+DEPENDS += "libtirpc"
+CFLAGS += "-I${STAGING_INCDIR}/tirpc"
+LDFLAGS += "-ltirpc"
+
+EXTRA_OECONF += " --disable-nfs "
 
 INITSCRIPT_PACKAGES = "${PN} ${PN}-keepalive"
 
