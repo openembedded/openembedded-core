@@ -145,7 +145,6 @@ do_configure() {
                        -e "s,\(i_fcntl=\)'undef',\1'define',g" \
                        -e "s,\(h_fcntl=\)'false',\1'true',g" \
                        -e "s,-fstack-protector,-fno-stack-protector,g" \
-                       -e "s,-lnsl,,g" \
                     config.sh-${TARGET_ARCH}-${TARGET_OS}
         fi
 
@@ -158,6 +157,7 @@ do_configure() {
                -e "s,@BASELIBDIR@,${base_libdir},g" \
                -e "s,@EXECPREFIX@,${exec_prefix},g" \
                -e 's,@USRBIN@,${bindir},g' \
+               -e "s,-lnsl,,g" \
             config.sh-${TARGET_ARCH}-${TARGET_OS}
 
 	case "${TARGET_ARCH}" in
