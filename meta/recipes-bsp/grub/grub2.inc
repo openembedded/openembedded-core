@@ -67,12 +67,4 @@ do_configure_prepend() {
 	${S}/autogen.sh )
 }
 
-# grub and grub-efi's sysroot/${datadir}/grub/grub-mkconfig_lib are
-# conflicted, remove it since no one uses it.
-SYSROOT_DIRS_BLACKLIST += "${datadir}/grub/grub-mkconfig_lib"
-
-PACKAGES =+ "${PN}-editenv"
-
-FILES_${PN}-editenv = "${bindir}/grub-editenv"
-RDEPENDS_${PN} += "${PN}-editenv"
 RDEPENDS_${PN}_class-native = ""
