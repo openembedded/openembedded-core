@@ -21,13 +21,4 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gettext
 
-EXTRA_OECONF += "--libdir=${libdir}/nsl --includedir=${includedir}/nsl"
-
-do_install_append() {
-	install -d ${D}${libdir}
-	mv ${D}${libdir}/nsl/pkgconfig ${D}${libdir}
-}
-
-FILES_${PN} += "${libdir}/nsl/*.so.*"
-FILES_${PN}-dev += "${includedir}/nsl ${libdir}/nsl/*.so"
-FILES_${PN}-staticdev += "${libdir}/nsl/*.a"
+BBCLASSEXTEND = "native nativesdk"
