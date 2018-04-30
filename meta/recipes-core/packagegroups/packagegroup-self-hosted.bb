@@ -76,9 +76,6 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     intltool \
     ldd \
     less \
-    libssp \
-    libssp-dev \
-    libssp-staticdev \
     libstdc++ \
     libstdc++-dev \
     libtool \
@@ -90,10 +87,16 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     quilt \
     sed \
     "
-# glibc-utils: for rpcgen
+RDEPENDS_packagegroup-self-hosted-sdk_append_mingw32 = "\
+    libssp \
+    libssp-dev \
+    libssp-staticdev \
+    "
+# rpcsvc-proto: for rpcgen
 RDEPENDS_packagegroup-self-hosted-sdk_append_libc-glibc = "\
     glibc-gconv-ibm850 \
     glibc-utils \
+    rpcsvc-proto \
     "
 RDEPENDS_packagegroup-self-hosted-debug = " \
     gdb \
