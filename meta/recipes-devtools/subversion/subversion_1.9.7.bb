@@ -1,14 +1,11 @@
 SUMMARY = "Subversion (svn) version control system client"
+HOMEPAGE = "http://subversion.tigris.org"
 SECTION = "console/network"
+LICENSE = "Apache-2"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=af81ae49ba359e70626c05e9bf313709"
+
 DEPENDS = "apr-util serf sqlite3 file"
 DEPENDS_append_class-native = " file-replacement-native"
-RDEPENDS_${PN} = "serf"
-LICENSE = "Apache-2"
-HOMEPAGE = "http://subversion.tigris.org"
-
-BBCLASSEXTEND = "native"
-
-inherit gettext pkgconfig
 
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://disable_macos.patch \
@@ -20,25 +17,27 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "05b0c677681073920f938c1f322e0be2"
 SRC_URI[sha256sum] = "c3b118333ce12e501d509e66bb0a47bcc34d053990acab45559431ac3e491623"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=af81ae49ba359e70626c05e9bf313709"
+inherit autotools pkgconfig gettext
+
+PACKAGECONFIG ?= ""
 
 PACKAGECONFIG[sasl] = "--with-sasl,--without-sasl,cyrus-sasl"
 PACKAGECONFIG[gnome-keyring] = "--with-gnome-keyring,--without-gnome-keyring,glib-2.0 gnome-keyring"
 
 EXTRA_OECONF = " \
-                --without-berkeley-db --without-apxs \
-                --without-swig --with-apr=${STAGING_BINDIR_CROSS} \
-                --with-apr-util=${STAGING_BINDIR_CROSS} \
-                --disable-keychain \
-                ac_cv_path_RUBY=none"
-
-inherit autotools
-
-export LDFLAGS += " -L${STAGING_LIBDIR} "
-CPPFLAGS += "-P"
-BUILD_CPPFLAGS += "-P"
+    --with-apr=${STAGING_BINDIR_CROSS} \
+    --with-apr-util=${STAGING_BINDIR_CROSS} \
+    --without-apxs \
+    --without-berkeley-db \
+    --without-swig \
+    --disable-keychain \
+    ac_cv_path_RUBY=none \
+"
 
 acpaths = "-I build/ -I build/ac-macros/"
+
+CPPFLAGS += "-P"
+BUILD_CPPFLAGS += "-P"
 
 do_configure_prepend () {
 	rm -f ${S}/libtool
@@ -53,3 +52,7 @@ do_configure_prepend () {
 #| /home/pokybuild/yocto-autobuilder/yocto-worker/nightly-qa-logrotate/build/build/tmp/work/x86_64-linux/subversion-native/1.8.9-r0/subversion-1.8.9/build-outputs.mk:1090: recipe for target 'install-serf-lib' failed
 #| make: *** [install-serf-lib] Error 1
 PARALLEL_MAKEINST = ""
+
+RDEPENDS_${PN} = "serf"
+
+BBCLASSEXTEND = "native"
