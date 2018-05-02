@@ -16,7 +16,7 @@ PACKAGECONFIG ??= "udev"
 # or no alsabat at all.
 PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftwf"
 
-PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,,udev"
+PACKAGECONFIG[udev] = "--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d,--with-udev-rules-dir=/unwanted/rules.d,udev"
 PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/utils/alsa-utils-${PV}.tar.bz2 \
@@ -101,9 +101,8 @@ do_install() {
 	rm ${D}${sbindir}/alsa-info.sh
 	rm -f ${D}${sbindir}/alsabat-test.sh
 
-	if ${@bb.utils.contains('PACKAGECONFIG', 'udev', 'false', 'true', d)}; then
-		# This is where alsa-utils will install its rules if we don't tell it anything else.
-		rm -rf ${D}${nonarch_base_libdir}/udev
-		rmdir --ignore-fail-on-non-empty ${D}${nonarch_base_libdir}
-	fi
+	# If udev is disabled, we told configure to install the rules
+	# in /unwanted, so we can remove them now. If udev is enabled,
+	# then /unwanted won't exist and this will have no effect.
+	rm -rf ${D}/unwanted
 }
