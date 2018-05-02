@@ -8,11 +8,10 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://llvm-config-version.patch \
            file://0001-winsys-svga-drm-Include-sys-types.h.patch \
            file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
-           file://0001-st-dri-Initialise-modifier-to-INVALID-for-DRI2.patch \
            "
 
-SRC_URI[md5sum] = "203d1a79156ab6926f2d253b377e9d9d"
-SRC_URI[sha256sum] = "8f9d9bf281c48e4a8f5228816577263b4c655248dc7666e75034ab422951a6b1"
+SRC_URI[md5sum] = "3c303da98ec2ce37c795baeba5aee31e"
+SRC_URI[sha256sum] = "98fa159768482dc568b9f8bf0f36c7acb823fa47428ffd650b40784f16b9e7b3"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
