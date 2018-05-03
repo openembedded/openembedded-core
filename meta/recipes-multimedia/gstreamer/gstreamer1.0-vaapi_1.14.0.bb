@@ -9,12 +9,14 @@ FILESPATH = "${@base_set_filespath(["${FILE_DIRNAME}/${REALPN}", "${FILE_DIRNAME
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
-DEPENDS = "libva"
-
 SRC_URI = "https://gstreamer.freedesktop.org/src/${REALPN}/${REALPN}-${PV}.tar.xz \
           "
 
+SRC_URI[md5sum] = "248c3aafab59814e71eb4a6c334cb261"
+SRC_URI[sha256sum] = "e4e31f085ef289bf1049398f641345979d20a1b11a80285744bba98504991df2"
+
 S = "${WORKDIR}/${REALPN}-${PV}"
+DEPENDS = "libva gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad"
 
 inherit autotools pkgconfig gtk-doc distro_features_check upstream-version-is-even
 
