@@ -4,13 +4,21 @@ SECTION = "multimedia"
 
 LICENSE = "LGPLv2.1"
 LICENSE_FLAGS = "commercial"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
+                    file://omx/gstomx.h;beginline=1;endline=21;md5=5c8e1fca32704488e76d2ba9ddfa935f"
+
+SRC_URI = "http://gstreamer.freedesktop.org/src/gst-omx/gst-omx-${PV}.tar.xz"
+
+SRC_URI[md5sum] = "2bca3bd68540a97122450d78576ad2be"
+SRC_URI[sha256sum] = "4d43c354087cb77924982943e34e0d47294b5570304db11fd8b268b53bcff693"
+
+S = "${WORKDIR}/gst-omx-${PV}"
 
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad"
 
 inherit autotools pkgconfig gettext gtk-doc upstream-version-is-even
 
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
-
 
 GSTREAMER_1_0_OMX_TARGET ?= "bellagio"
 GSTREAMER_1_0_OMX_CORE_NAME ?= "${libdir}/libomxil-bellagio.so.0"
