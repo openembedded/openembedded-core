@@ -27,7 +27,7 @@ inherit gettext
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'pulseaudio x11', d)} \
-    cairo flac gdk-pixbuf gudev jpeg libpng soup speex taglib v4l2 bz2 zlib gtk \
+    cairo flac gdk-pixbuf gudev jpeg libpng soup speex taglib v4l2 bz2 zlib gtk mpg123 lame \
 "
 
 X11DEPENDS = "virtual/libx11 libsm libxrender libxfixes libxdamage"
