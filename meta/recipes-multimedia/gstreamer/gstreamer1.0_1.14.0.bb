@@ -14,11 +14,19 @@ inherit autotools pkgconfig gettext upstream-version-is-even gobject-introspecti
 # (it has a custom INTROSPECTION_INIT macro, and so must be used instead of our common introspection.m4 file)
 acpaths = "-I ${S}/common/m4 -I ${S}/m4"
 
-SRC_URI_append = " \
+LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
+                    file://gst/gst.h;beginline=1;endline=21;md5=e059138481205ee2c6fc1c079c016d0d"
+
+S = "${WORKDIR}/gstreamer-${PV}"
+
+SRC_URI = " \
+    http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
     file://gtk-doc-tweaks.patch \
     file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
 "
+SRC_URI[md5sum] = "63c7cbfb86aa28c4522e374dc5555b96"
+SRC_URI[sha256sum] = "fc361367f0d4b780a868a8833f9f30b9c9f4ac9faea4e6b251db8b4b0398466e"
 
 PACKAGECONFIG ??= ""
 
@@ -59,3 +67,5 @@ do_configure[prefuncs] += "delete_pkg_m4_file"
 do_compile_prepend() {
         export GIR_EXTRA_LIBS_PATH="${B}/gst/.libs:${B}/libs/gst/base/.libs"
 }
+
+CVE_PRODUCT = "gstreamer"
