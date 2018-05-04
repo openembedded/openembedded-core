@@ -5,16 +5,16 @@ Upstream-Status: Inappropriate [configuration]
 
 Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
 
-diff --git a/configure.ac b/configure.ac
-index 7004bd3..b2b03c6 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -31,7 +31,7 @@
+Index: strace-4.22/configure.ac
+===================================================================
+--- strace-4.22.orig/configure.ac
++++ strace-4.22/configure.ac
+@@ -32,7 +32,7 @@
  
  AC_PREREQ(2.57)
  AC_INIT([strace],
 -	m4_esyscmd([./git-version-gen .tarball-version]),
 +	m4_esyscmd_s([cat .tarball-version]),
- 	[strace-devel@lists.sourceforge.net],
+ 	[strace-devel@lists.strace.io],
  	[strace],
  	[https://strace.io])
