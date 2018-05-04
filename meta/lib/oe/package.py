@@ -73,7 +73,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     def is_elf(path):
         exec_type = 0
         ret, result = oe.utils.getstatusoutput(
-            "file -b \"%s\"" % path.replace("\"", "\\\""))
+            "file \"%s\"" % path.replace("\"", "\\\""))
 
         if ret:
             bb.error("split_and_strip_files: 'file %s' failed" % path)
