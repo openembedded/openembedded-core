@@ -13,11 +13,11 @@ DEPENDS = "glib-2.0 glib-2.0-native pango gtk+3 menu-cache intltool-native libex
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.xz \
            file://0001-Correctly-check-the-stamp-file-that-indicates-if-we-.patch \
-           file://0001-Enclose-text-in-programlisting-into-CDATA.patch \
+           file://0001-Do-not-add-library-path-to-avoid-host-contamination.patch \
            "
 
-SRC_URI[md5sum] = "a1ba9ae5e920f38b647dd511edd6c807"
-SRC_URI[sha256sum] = "c706bb1020cf5f2d6f5a9226f692ce1985947134dcf2bde64278bd0420779b5a"
+SRC_URI[md5sum] = "02a024714d51e0d37afc7bd596a44f3b"
+SRC_URI[sha256sum] = "18d06f7996ce1cf8947df6e106bc0338c6ae0c4138c316f2501f6f6f435c7c72"
 
 inherit autotools pkgconfig gtk-doc gettext distro_features_check
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
