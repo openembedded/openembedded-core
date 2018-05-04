@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 BPN = "gnome-desktop"
 
 inherit gnome pkgconfig upstream-version-is-even gobject-introspection
-SRC_URI[archive.md5sum] = "3e7b67578307220a21688f28307b6789"
-SRC_URI[archive.sha256sum] = "f1df71c39e32147f6d58f53a9c05b964b00b7c98fbca090419355437c72fd59d"
+SRC_URI[archive.md5sum] = "bcbf906d94eb08060c60a7364384d678"
+SRC_URI[archive.sha256sum] = "78a397a2be47586e6dc075d6a7fc5659aae3d10713d76994ce1b46086e7ecb9a"
 
 SRC_URI += " \
            file://gnome-desktop-thumbnail-don-t-assume-time_t-is-long.patch \
