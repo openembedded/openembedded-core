@@ -10,10 +10,10 @@ DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 
 inherit autotools pkgconfig
 
-SRC_URI = "http://www.efficios.com/files/babeltrace/babeltrace-${PV}.tar.bz2 \
+SRC_URI = "git://git.linuxfoundation.org/diamon/babeltrace.git;branch=stable-1.5 \
 "
 
 EXTRA_OECONF = "--disable-debug-info"
 
-SRC_URI[md5sum] = "7decafd46093e4e47c14e7307d498986"
-SRC_URI[sha256sum] = "409146789b4a6b81f6a275fcad932a030743d444f6de5bd4a34aaf17aa72e8ac"
+S = "${WORKDIR}/git"
+SRCREV = "d68a4daf85c73ab7d7070de0c98d0c170af4758e"
