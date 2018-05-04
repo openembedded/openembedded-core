@@ -71,6 +71,7 @@ def package_qa_get_machine_dict(d):
                         "microblaze":  (189,   0,    0,          False,         32),
                         "microblazeeb":(189,   0,    0,          False,         32),
                         "microblazeel":(189,   0,    0,          True,          32),
+                        "powerpc":    (20,     0,    0,          False,         32),
                         "riscv32":    (243,    0,    0,          True,          32),
                         "riscv64":    (243,    0,    0,          True,          64),
                       },
