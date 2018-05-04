@@ -1,4 +1,4 @@
-From 06ebdaa5c8f9721acf93cc3e75a877a3c963867f Mon Sep 17 00:00:00 2001
+From 3875175563df28813c22b1de6bda260285f65cb0 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 3 Jan 2018 17:02:01 +0200
 Subject: [PATCH] giscanner: add a --lib-dirs-envvar option
@@ -19,7 +19,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  3 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/giscanner/ccompiler.py b/giscanner/ccompiler.py
-index a8bd5b1..6cf25d5 100644
+index d10327c..47f57c6 100644
 --- a/giscanner/ccompiler.py
 +++ b/giscanner/ccompiler.py
 @@ -109,7 +109,7 @@ class CCompiler(object):
@@ -35,8 +35,8 @@ index a8bd5b1..6cf25d5 100644
          if os.name == 'nt':
              runtime_path_envvar = ['LIB', 'PATH']
          else:
--            runtime_path_envvar = ['LD_LIBRARY_PATH']
-+            runtime_path_envvar = ['LD_LIBRARY_PATH'] if not lib_dirs_envvar else [lib_dirs_envvar]
+-            runtime_path_envvar = ['LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH']
++            runtime_path_envvar = ['LD_LIBRARY_PATH', 'DYLD_LIBRARY_PATH'] if not lib_dirs_envvar else [lib_dirs_envvar]
              # Search the current directory first
              # (This flag is not supported nor needed for Visual C++)
              args.append('-L.')
