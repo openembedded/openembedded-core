@@ -13,8 +13,8 @@ DEPENDS += "perl"
 
 SRC_URI = "http://www.cpan.org/authors/id/E/ET/ETHER/URI-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "37d44a08e599aa945b32a9434ffe00a5"
-SRC_URI[sha256sum] = "cca7ab4a6f63f3ccaacae0f2e1337e8edf84137e73f18548ec7d659f23efe413"
+SRC_URI[md5sum] = "892f7183b178af40f205ba37128225db"
+SRC_URI[sha256sum] = "a9c254f45f89cb1dd946b689dfe433095404532a4543bdaab0b71ce0fdcdd53d"
 
 S = "${WORKDIR}/URI-${PV}"
 
