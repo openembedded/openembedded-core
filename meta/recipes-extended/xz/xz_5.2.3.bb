@@ -31,6 +31,11 @@ PACKAGES =+ "liblzma"
 
 FILES_liblzma = "${libdir}/liblzma*${SOLIBS}"
 
+inherit update-alternatives
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN} = "xz xzcat unxz \
+                     lzma lzcat unlzma"
+
 BBCLASSEXTEND = "native nativesdk"
 
 export CONFIG_SHELL="/bin/sh"
