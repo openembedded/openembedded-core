@@ -8,7 +8,7 @@ LIBCEXTENSION = ""
 LIBCOVERRIDE = ":libc-baremetal"
 OVERRIDES .= "${LIBCOVERRIDE}"
 
-ASSUME_PROVIDED += "virtual/libc virtual/libiconv"
+ASSUME_PROVIDED += "virtual/libc virtual/libiconv virtual/crypt"
 
 PREFERRED_PROVIDER_virtual/libc ?= "musl"
 PREFERRED_PROVIDER_virtual/libiconv ?= "musl"
