@@ -1,0 +1,41 @@
+Upstream-Status: Submitted
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 4854c72bc21486f81712c8693588f7af6c64cf93 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Wed, 9 May 2018 20:41:36 +0100
+Subject: [PATCH] src/intel/Makefile.vulkan.am: add missing MKDIR_GEN
+
+Out of tree builds can try to write into a directory that doesn't exist yet:
+
+| Traceback (most recent call last):
+|   File "../../../mesa-18.0.2/src/intel/vulkan/anv_icd.py", line 46, in <module>
+|     with open(args.out, 'w') as f:
+| IOError: [Errno 2] No such file or directory: 'vulkan/intel_icd.x86_64.json'
+| Makefile:4882: recipe for target 'vulkan/intel_icd.x86_64.json' failed
+
+Add missing MKDIR_GEN calls to solve this.
+---
+ src/intel/Makefile.vulkan.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/intel/Makefile.vulkan.am b/src/intel/Makefile.vulkan.am
+index 0bcbf0419c..4125cb205a 100644
+--- a/src/intel/Makefile.vulkan.am
++++ b/src/intel/Makefile.vulkan.am
+@@ -64,10 +64,12 @@ EXTRA_DIST += \
+ 	vulkan/TODO
+ 
+ vulkan/dev_icd.json : vulkan/anv_extensions.py vulkan/anv_icd.py
++	$(MKDIR_GEN)
+ 	$(AM_V_GEN)$(PYTHON2) $(srcdir)/vulkan/anv_icd.py \
+ 		--lib-path="${abs_top_builddir}/${LIB_DIR}" --out $@
+ 
+ vulkan/intel_icd.@host_cpu@.json : vulkan/anv_extensions.py vulkan/anv_icd.py
++	$(MKDIR_GEN)
+ 	$(AM_V_GEN)$(PYTHON2) $(srcdir)/vulkan/anv_icd.py \
+ 		--lib-path="${libdir}" --out $@
+ 
+-- 
+2.11.0
+

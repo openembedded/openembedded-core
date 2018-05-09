@@ -8,6 +8,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://llvm-config-version.patch \
            file://0001-winsys-svga-drm-Include-sys-types.h.patch \
            file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
+           file://vulkan-mkdir.patch \
            "
 
 SRC_URI[md5sum] = "3c303da98ec2ce37c795baeba5aee31e"
