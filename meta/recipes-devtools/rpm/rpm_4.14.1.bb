@@ -73,6 +73,8 @@ BBCLASSEXTEND = "native nativesdk"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[imaevm] = "--with-imaevm,,ima-evm-utils"
 
+ASNEEDED = ""
+
 # Direct rpm-native to read configuration from our sysroot, not the one it was compiled in
 # libmagic also has sysroot path contamination, so override it
 do_install_append_class-native() {
