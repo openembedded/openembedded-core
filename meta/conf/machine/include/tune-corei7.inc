@@ -8,7 +8,7 @@
 #
 DEFAULTTUNE ?= "corei7-64"
 
-# Pull in the previous tune in to pull in PACKAGE_EXTRA_ARCHS
+# Include the previous tune to pull in PACKAGE_EXTRA_ARCHS
 require conf/machine/include/tune-core2.inc
 
 # Extra tune features
