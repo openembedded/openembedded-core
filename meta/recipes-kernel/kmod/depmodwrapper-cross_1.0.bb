@@ -11,6 +11,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SSTATE_SCAN_FILES += "depmodwrapper"
 EXTRA_STAGING_FIXMES += "PKGDATA_DIR"
 
+DEPENDS += "kmod-native"
 do_populate_sysroot[depends] = ""
 
 do_install() {
