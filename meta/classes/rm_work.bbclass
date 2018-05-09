@@ -53,6 +53,10 @@ do_rm_work () {
             *do_setscene*)
                 break
                 ;;
+            *_setscene*)
+                i=dummy
+                break
+                ;;
             *sigdata*|*sigbasedata*)
                 i=dummy
                 break
@@ -86,10 +90,6 @@ do_rm_work () {
             # of chain tasks depend directly on do_package anymore.
             *do_package|*do_package.*|*do_package_setscene.*)
                 rm -f $i;
-                i=dummy
-                break
-                ;;
-            *_setscene*)
                 i=dummy
                 break
                 ;;
