@@ -38,6 +38,8 @@ export MANDIR = "${mandir}"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS= ${PCI_CONF_FLAG}"
 
+ASNEEDED = ""
+
 # The configure script breaks if the HOST variable is set
 HOST[unexport] = "1"
 
