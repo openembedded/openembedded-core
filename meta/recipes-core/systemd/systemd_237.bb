@@ -50,6 +50,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0030-fix-missing-of-__register_atfork-for-non-glibc-build.patch \
            file://0031-fix-missing-ULONG_LONG_MAX-definition-in-case-of-mus.patch \
            file://0032-memfd.patch \
+           file://0033-basic-macros-rename-noreturn-into-_noreturn_-8456.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
