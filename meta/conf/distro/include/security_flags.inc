@@ -33,7 +33,6 @@ SECURITY_CFLAGS_pn-libgcc_powerpc = ""
 GCCPIE_powerpc = ""
 GLIBCPIE_powerpc = ""
 
-# arm specific security flag issues
 SECURITY_CFLAGS_pn-glibc = ""
 SECURITY_CFLAGS_pn-glibc-initial = ""
 SECURITY_CFLAGS_pn-gcc-runtime = ""
@@ -43,7 +42,6 @@ SECURITY_CFLAGS_pn-grub-efi-native = ""
 SECURITY_CFLAGS_pn-grub-efi-x86-native = ""
 SECURITY_CFLAGS_pn-grub-efi-i586-native = ""
 SECURITY_CFLAGS_pn-grub-efi-x86-64-native = ""
-
 SECURITY_CFLAGS_pn-mkelfimage_x86 = ""
 
 SECURITY_CFLAGS_pn-valgrind = "${SECURITY_NOPIE_CFLAGS}"
