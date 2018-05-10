@@ -23,6 +23,9 @@ inherit autotools ptest bluetooth
 EXTRA_OECONF += "--enable-mpers=no"
 
 CFLAGS_append_libc-musl = " -Dsigcontext_struct=sigcontext"
+# otherwise strace-4.22/tests/inject-nf.c fails to build as discussed here:
+# http://lists.openembedded.org/pipermail/openembedded-core/2018-May/150647.html
+DEBUG_OPTIMIZATION_remove = "${@bb.utils.contains('PTEST_ENABLED', '1', '-fno-omit-frame-pointer', '', d)}"
 
 RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
 
