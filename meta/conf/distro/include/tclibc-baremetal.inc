@@ -4,9 +4,7 @@
 
 LIBCEXTENSION = ""
 
-# Add baremetal libc overrides to the overrides.
 LIBCOVERRIDE = ":libc-baremetal"
-OVERRIDES .= "${LIBCOVERRIDE}"
 
 ASSUME_PROVIDED += "virtual/libc virtual/libiconv virtual/crypt"
 
