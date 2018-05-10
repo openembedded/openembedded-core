@@ -420,7 +420,10 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, src
                 logger.info('Source subdirectory has changed, updating S value')
 
     if license_diff:
-        newlicchksum = " ".join(["file://{};md5={}".format(l["path"], l["actual_md5"]) + (";beginline={}".format(l["beginline"]) if l["beginline"] else "") + (";endline={}".format(l["endline"]) if l["endline"] else "") for l in new_licenses])
+        newlicchksum = " ".join(["file://{}".format(l['path']) +
+                                 (";beginline={}".format(l['beginline']) if l['beginline'] else "") +
+                                 (";endline={}".format(l['endline']) if l['endline'] else "") +
+                                 (";md5={}".format(l['actual_md5'])) for l in new_licenses])
         newvalues["LIC_FILES_CHKSUM"] = newlicchksum
         _add_license_diff_to_recipe(fullpath, license_diff)
 
