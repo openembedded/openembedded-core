@@ -7,8 +7,8 @@ SRC_URI = "http://ftp.sudo.ws/sudo/dist/sudo-${PV}.tar.gz \
 
 PAM_SRC_URI = "file://sudo.pam"
 
-SRC_URI[md5sum] = "24abdea48db4c5abcd410167c801cc8c"
-SRC_URI[sha256sum] = "7256cb27c20883b14360eddbd17f98922073d104b214cf65aeacf1d9c9b9fd02"
+SRC_URI[md5sum] = "ea444d747feb1decfebdffd0b38b0739"
+SRC_URI[sha256sum] = "d863d29b6fc87bc784a3223350e2b28a2ff2c4738f0fb8f1c92bb38c3017e679"
 
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
@@ -27,8 +27,8 @@ do_install_append () {
 	chmod 4111 ${D}${bindir}/sudo
 	chmod 0440 ${D}${sysconfdir}/sudoers
 
-	# Explicitly remove the ${localstatedir}/run directory to avoid QA error
-	rmdir -p --ignore-fail-on-non-empty ${D}${localstatedir}/run/sudo
+	# Explicitly remove the /run directory to avoid QA error
+	rmdir -p --ignore-fail-on-non-empty ${D}/run/sudo
 }
 
 FILES_${PN} += "${libdir}/tmpfiles.d"
