@@ -1,0 +1,33 @@
+From a12dfe9be05f9dee96c7637a20c01e05711c563c Mon Sep 17 00:00:00 2001
+From: David Michael <david.michael@coreos.com>
+Date: Sun, 7 Jan 11:26:57 2018 -0500
+Subject: [PATCH] arm64: Set -fno-PIC along with -mcmodel=large
+
+As seen in GCC's gcc/config/aarch64/aarch64.c, -fPIC with large
+code model is unsupported.  This fixes the "sorry, unimplemented"
+errors when building with compilers defaulting to -fPIC.
+
+Upstream-Status: Backport
+
+Signed-off-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: David Michael <david.michael@coreos.com>
+Signed-off-by: Mingli Yu <Mingli.Yu@windriver.com>
+---
+ purgatory/arch/arm64/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/purgatory/arch/arm64/Makefile b/purgatory/arch/arm64/Makefile
+index 636abea..80068ca 100644
+--- a/purgatory/arch/arm64/Makefile
++++ b/purgatory/arch/arm64/Makefile
+@@ -1,6 +1,7 @@
+ 
+ arm64_PURGATORY_EXTRA_CFLAGS = \
+ 	-mcmodel=large \
++	-fno-PIC \
+ 	-fno-stack-protector \
+ 	-fno-asynchronous-unwind-tables \
+ 	-Wundef \
+-- 
+2.7.4
+
