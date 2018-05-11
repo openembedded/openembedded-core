@@ -12,6 +12,8 @@ TOOLCHAIN_HOST_TASK = "\
     nativesdk-glibc-gconv-iso8859-1 \
     nativesdk-glibc-gconv-utf-16 \
     nativesdk-glibc-gconv-cp1252 \
+    nativesdk-glibc-gconv-euc-jp \
+    nativesdk-glibc-gconv-libjis \
     nativesdk-patchelf \
     nativesdk-libxcrypt \
     "
