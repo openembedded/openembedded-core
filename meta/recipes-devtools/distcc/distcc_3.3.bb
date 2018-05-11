@@ -14,14 +14,13 @@ PACKAGECONFIG[popt] = "--without-included-popt,--with-included-popt,popt"
 
 RRECOMMENDS_${PN} = "avahi-daemon"
 
-SRC_URI = "git://github.com/akuster/distcc.git;branch=${PV} \
+SRC_URI = "git://github.com/distcc/distcc.git \
            file://separatebuilddir.patch \
-           file://0001-zeroconf-Include-fcntl.h.patch \
            file://default \
            file://distccmon-gnome.desktop \
            file://distcc \
            file://distcc.service"
-SRCREV = "d8b18df3e9dcbe4f092bed565835d3975e99432c"
+SRCREV = "002e68b766ccd7ad05551e67d162b71a7a773d0d"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d useradd systemd
@@ -61,9 +60,10 @@ PACKAGES += "distcc-distmon-gnome"
 
 FILES_${PN} = " ${sysconfdir} \
 		${bindir}/distcc \
-    ${bindir}/lsdistcc \
+		${bindir}/lsdistcc \
 		${bindir}/distccd \
 		${bindir}/distccmon-text \
+		${sbindir}/update-distcc-symlinks \
 		${systemd_unitdir}/system/distcc.service"
 FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
 				${datadir}/distcc"
