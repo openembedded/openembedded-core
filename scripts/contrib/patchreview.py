@@ -132,8 +132,8 @@ def analyse(results, want_blame=False, verbose=True):
             need_blame = True
             if verbose:
                 print("Missing Signed-off-by tag (%s)" % patch)
-        # TODO: disable this for now as too much fails
-        if False and r.malformed_sob:
+
+        if r.malformed_sob:
             need_blame = True
             if verbose:
                 print("Malformed Signed-off-by '%s' (%s)" % (r.malformed_sob, patch))
