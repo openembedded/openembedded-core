@@ -12,7 +12,9 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
            file://fix-pktloc_syntax_h-race.patch \
            file://fix-pc-file.patch \
+           file://lib-check-for-integer-overflow-in-nlmsg_reserve.patch \
 "
+
 UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
 
 SRC_URI[md5sum] = "a8ba62a5c4f883f4e493a46d1f3733fe"
