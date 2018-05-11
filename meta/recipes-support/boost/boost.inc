@@ -9,6 +9,7 @@ BOOST_LIBS = "\
 	atomic \
 	chrono \
 	container \
+	contract \
 	date_time \
 	exception \
 	filesystem \
