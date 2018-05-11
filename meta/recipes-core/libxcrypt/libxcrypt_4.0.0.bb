@@ -12,7 +12,9 @@ inherit autotools
 SRCREV ?= "215b32aa4e0b255c3356a96bd6d257661bad73ca"
 SRCBRANCH ?= "master"
 
-SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH}"
+SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH} \
+           file://0001-disable-format-truncation-warning-with-gcc-8.patch \
+           "
 
 PROVIDES = "virtual/crypt"
 
