@@ -6,7 +6,7 @@ Subject: [PATCH] Do not look into $HOME when looking for gtk modules
 On the host it causes host contamination, on the target it's a
 potential security issue. Gtk+3 has already removed this.
 
-Upstream-Status: Inapproriate [gtk2 is in maintenance mode]
+Upstream-Status: Inappropriate [gtk2 is in maintenance mode]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  gtk/gtkmodules.c | 4 ----
