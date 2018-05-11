@@ -13,7 +13,7 @@ The issue is only reported for the "swig_ptr: " line, but for
 consistency we replace both occurrences of strncpy with memcpy.
 ---
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Status: Backport [https://github.com/swig/swig/pull/898]
+Upstream-Status: Backport [https://github.com/swig/swig/pull/898]
 
  Lib/python/pyinit.swg | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
