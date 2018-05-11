@@ -122,6 +122,10 @@ class DirectPlugin(ImagerPlugin):
         if self._update_fstab(fstab_lines, self.parts):
             # copy rootfs dir to workdir to update fstab
             # as rootfs can be used by other tasks and can't be modified
+            new_pseudo = os.path.realpath(os.path.join(self.workdir, "pseudo"))
+            from_dir = os.path.join(os.path.join(image_rootfs, ".."), "pseudo")
+            from_dir = os.path.realpath(from_dir)
+            copyhardlinktree(from_dir, new_pseudo)
             new_rootfs = os.path.realpath(os.path.join(self.workdir, "rootfs_copy"))
             copyhardlinktree(image_rootfs, new_rootfs)
             fstab_path = os.path.join(new_rootfs, 'etc/fstab')
