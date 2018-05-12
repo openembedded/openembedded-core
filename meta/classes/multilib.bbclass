@@ -49,7 +49,6 @@ python multilib_virtclass_handler () {
     if bb.data.inherits_class('allarch', e.data) and not bb.data.inherits_class('packagegroup', e.data):
         raise bb.parse.SkipRecipe("Don't extend allarch recipes which are not packagegroups")
 
-
     # Expand this since this won't work correctly once we set a multilib into place
     e.data.setVar("ALL_MULTILIB_PACKAGE_ARCHS", e.data.getVar("ALL_MULTILIB_PACKAGE_ARCHS"))
  
@@ -65,12 +64,11 @@ python multilib_virtclass_handler () {
     e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
 
-    # Expand the WHITELISTs with multilib prefix
-    for whitelist in ["WHITELIST_GPL-3.0", "LGPLv2_WHITELIST_GPL-3.0"]:
-        pkgs = e.data.getVar(whitelist)
-        for pkg in pkgs.split():
-            pkgs += " " + variant + "-" + pkg
-        e.data.setVar(whitelist, pkgs)
+    # Expand WHITELIST_GPL-3.0 with multilib prefix
+    pkgs = e.data.getVar("WHITELIST_GPL-3.0")
+    for pkg in pkgs.split():
+        pkgs += " " + variant + "-" + pkg
+    e.data.setVar("WHITELIST_GPL-3.0", pkgs)
 
     # DEFAULTTUNE can change TARGET_ARCH override so expand this now before update_data
     newtune = e.data.getVar("DEFAULTTUNE_" + "virtclass-multilib-" + variant, False)

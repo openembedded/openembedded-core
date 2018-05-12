@@ -520,19 +520,18 @@ python () {
             incompatwl = []
             for lic in bad_licenses:
                 spdx_license = return_spdx(d, lic)
-                for w in ["LGPLv2_WHITELIST_", "WHITELIST_"]:
-                    whitelist.extend((d.getVar(w + lic) or "").split())
-                    if spdx_license:
-                        whitelist.extend((d.getVar(w + spdx_license) or "").split())
-                    '''
-                    We need to track what we are whitelisting and why. If pn is
-                    incompatible we need to be able to note that the image that
-                    is created may infact contain incompatible licenses despite
-                    INCOMPATIBLE_LICENSE being set.
-                    '''
-                    incompatwl.extend((d.getVar(w + lic) or "").split())
-                    if spdx_license:
-                        incompatwl.extend((d.getVar(w + spdx_license) or "").split())
+                whitelist.extend((d.getVar("WHITELIST_" + lic) or "").split())
+                if spdx_license:
+                    whitelist.extend((d.getVar("WHITELIST_" + spdx_license) or "").split())
+                '''
+                We need to track what we are whitelisting and why. If pn is
+                incompatible we need to be able to note that the image that
+                is created may infact contain incompatible licenses despite
+                INCOMPATIBLE_LICENSE being set.
+                '''
+                incompatwl.extend((d.getVar("WHITELIST_" + lic) or "").split())
+                if spdx_license:
+                    incompatwl.extend((d.getVar("WHITELIST_" + spdx_license) or "").split())
 
             if not pn in whitelist:
                 pkgs = d.getVar('PACKAGES').split()
