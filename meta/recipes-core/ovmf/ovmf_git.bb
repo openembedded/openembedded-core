@@ -19,6 +19,10 @@ SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
 	file://0004-ovmf-enable-long-path-file.patch \
 	file://VfrCompile-increase-path-length-limit.patch \
 	file://no-stack-protector-all-archs.patch \
+	file://0001-BaseTools-header.makefile-add-Wno-stringop-truncatio.patch \
+	file://0002-BaseTools-header.makefile-add-Wno-restrict.patch \
+	file://0003-BaseTools-header.makefile-revert-gcc-8-Wno-xxx-optio.patch \
+	file://0004-BaseTools-GenVtf-silence-false-stringop-overflow-war.patch \
         "
 UPSTREAM_VERSION_UNKNOWN = "1"
 
