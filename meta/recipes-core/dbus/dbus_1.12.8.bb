@@ -18,8 +18,8 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
 "
 
-SRC_URI[md5sum] = "3361456cadb99aa6601bed5b48964254"
-SRC_URI[sha256sum] = "272bb5091770b047c8188b926d5e6038fa4fe6745488b2add96b23e2d9a83d88"
+SRC_URI[md5sum] = "2764bf150e5aa8005b7bc0d6c388756a"
+SRC_URI[sha256sum] = "e2dc99e7338303393b6663a98320aba6a63421bcdaaf571c8022f815e5896eb3"
 
 inherit useradd autotools pkgconfig gettext update-rc.d upstream-version-is-even
 
@@ -153,14 +153,6 @@ do_install() {
 do_install_class-native() {
 	autotools_do_install
 
-	# for dbus-glib-native introspection generation
-	install -d ${D}${STAGING_DATADIR_NATIVE}/dbus/
-	# N.B. is below install actually required?
-	install -m 0644 bus/session.conf ${D}${STAGING_DATADIR_NATIVE}/dbus/session.conf
-
-	# dbus-glib-native and dbus-glib need this xml file
-	./bus/dbus-daemon --introspect > ${D}${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml
-	
 	# dbus-launch has no X support so lets not install it in case the host
 	# has a more featured and useful version
 	rm -f ${D}${bindir}/dbus-launch
