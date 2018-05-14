@@ -28,7 +28,7 @@ case "$1" in
 		fi
 		if ! root_is_nfs ; then
                         if [ $have_bin_ip -eq 1 ]; then
-                                /SBIN_DIR/ip addr flush dev $interface
+                                /SBIN_DIR/ip -4 addr flush dev $interface
                                 /SBIN_DIR/ip link set dev $interface up
                         else
                                 /SBIN_DIR/ifconfig $interface 0.0.0.0
