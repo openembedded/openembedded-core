@@ -22,9 +22,7 @@ inherit autotools pkgconfig gettext bash-completion gtk-doc
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[tests] = "--enable-tests,,,"
 
-EXTRA_OECONF = "--with-introspect-xml=${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml \
-                --with-dbus-binding-tool=${STAGING_BINDIR_NATIVE}/dbus-binding-tool"
-EXTRA_OECONF_class-native = "--with-introspect-xml=${STAGING_DATADIR_NATIVE}/dbus/dbus-bus-introspect.xml"
+EXTRA_OECONF_class-target = "--with-dbus-binding-tool=${STAGING_BINDIR_NATIVE}/dbus-binding-tool"
 
 PACKAGES += "${PN}-tests"
 
