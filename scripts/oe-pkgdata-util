@@ -277,7 +277,7 @@ def lookup_recipe(args):
                     print("%s is in the RPROVIDES of %s:" % (pkg, f))
                 pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", f)
                 parse_pkgdatafile(pkgdatafile)
-            break
+            continue
         pkgdatafile = os.path.join(args.pkgdata_dir, 'runtime-reverse', pkg)
         if not os.path.exists(pkgdatafile):
             logger.error("The following packages could not be found: %s" % pkg)
@@ -341,7 +341,7 @@ def package_info(args):
                     print("%s is in the RPROVIDES of %s:" % (pkg, f))
                 pkgdatafile = os.path.join(args.pkgdata_dir, "runtime", f)
                 parse_pkgdatafile(pkgdatafile)
-            break
+            continue
         pkgdatafile = os.path.join(args.pkgdata_dir, "runtime-reverse", pkg)
         if not os.path.exists(pkgdatafile):
             logger.error("Unable to find any built runtime package named %s" % pkg)
