@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://install-sh;endline=42;md5=b3549726c1022bee09c174c72a0
 
 SRC_URI = "http://invisible-mirror.net/archives/${BPN}/${BP}.tgz \
            file://run-ptest \
+           file://avoid-check-user-break-cc.patch \
 "
 
 SRC_URI[md5sum] = "c048a32d55d8bd6724f382baf41f325f"
