@@ -32,7 +32,6 @@ RDEPENDS_${PN}-base = "\
     adwaita-icon-theme \
     settings-daemon \
     shutdown-desktop \
-    libsdl \
     ${NETWORK_MANAGER} \
     udev-extraconf \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-server pulseaudio-client-conf-sato pulseaudio-misc', '', d)} \
