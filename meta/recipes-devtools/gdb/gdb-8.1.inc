@@ -16,9 +16,8 @@ SRC_URI = "http://ftp.gnu.org/gnu/gdb/gdb-${PV}.tar.xz \
            file://0009-Change-order-of-CFLAGS.patch \
            file://0010-resolve-restrict-keyword-conflict.patch \
            file://package_devel_gdb_patches_120-sigprocmask-invalid-call.patch \
-           file://0012-Unbreak-GDBserver-build-for-x32.patch \
            file://gdb-Fix-ia64-defining-TRAP_HWBKPT-before-including-g.patch \
 "
-SRC_URI[md5sum] = "48cac527e6f3018b865ece021e9723ac"
-SRC_URI[sha256sum] = "3dbd5f93e36ba2815ad0efab030dcd0c7b211d7b353a40a53f4c02d7d56295e3"
+SRC_URI[md5sum] = "f46487561f9a16916a8102316f7fd105"
+SRC_URI[sha256sum] = "af61a0263858e69c5dce51eab26662ff3d2ad9aa68da9583e8143b5426be4b34"
 

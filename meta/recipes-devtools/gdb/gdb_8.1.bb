@@ -6,6 +6,8 @@ inherit python3-dir
 EXTRA_OEMAKE_append_libc-musl = "\
                                  gt_cv_func_gnugettext1_libc=yes \
                                  gt_cv_func_gnugettext2_libc=yes \
+                                 gl_cv_func_working_strerror=yes \
+                                 gl_cv_func_strerror_0_works=yes \
                                  gl_cv_func_gettimeofday_clobber=no \
                                 "
 
