@@ -28,13 +28,16 @@ DEBIANNAME_${PN} = "libnss-mdns"
 RDEPENDS_${PN} = "avahi-daemon"
 
 pkg_postinst_${PN} () {
-	sed -e '/^hosts:/s/\s*\<mdns\>//' \
-		-e 's/\(^hosts:.*\)\(\<files\>\)\(.*\)\(\<dns\>\)\(.*\)/\1\2 mdns4_minimal [NOTFOUND=return]\3\4 mdns\5/' \
-		-i $D${sysconfdir}/nsswitch.conf
+	sed '
+		/^hosts:/ !b
+		/\<mdns\(4\|6\)\?\(_minimal\)\?\>/ b
+		s/\([[:blank:]]\+\)dns\>/\1mdns4_minimal [NOTFOUND=return] dns/g
+		' -i $D${sysconfdir}/nsswitch.conf
 }
 
 pkg_prerm_${PN} () {
-	sed -e '/^hosts:/s/\s*\<mdns\>//' \
-		-e '/^hosts:/s/\s*mdns4_minimal\s\+\[NOTFOUND=return\]//' \
-		-i $D${sysconfdir}/nsswitch.conf
+	sed '
+		/^hosts:/ !b
+		s/[[:blank:]]\+mdns\(4\|6\)\?\(_minimal\( \[NOTFOUND=return\]\)\?\)\?//g
+		' -i $D${sysconfdir}/nsswitch.conf
 }
