@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=df4be47940a91ee69556f5f71eed4aec \
                     file://COPYINGv3;md5=d32239bcb673463ab874e80d47fae504 \
                     file://lib/idna.h;endline=21;md5=37cffad24807f446a24de3e7371f20b9 \
                     file://src/idn.c;endline=20;md5=09e97034a8877b3451cb65065fc2c06e"
-DEPENDS = "virtual/libiconv"
+DEPENDS = "virtual/libiconv autoconf-archive"
 
 inherit pkgconfig autotools gettext texinfo gtk-doc
 
@@ -21,8 +21,8 @@ SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
            file://0001-idn-format-security-warnings.patch \
            "
 
-SRC_URI[md5sum] = "a829db6cd0b85733017c20a50bf10798"
-SRC_URI[sha256sum] = "3719e2975f2fb28605df3479c380af2cf4ab4e919e1506527e4c7670afff6e3c"
+SRC_URI[md5sum] = "bef634141fe39326cb354b75e891fead"
+SRC_URI[sha256sum] = "f11af1005b46b7b15d057d7f107315a1ad46935c7fcdf243c16e46ec14f0fe1e"
 
 # command tool is under GPLv3+, while libidn itself is under LGPLv2.1+ or LGPLv3
 # so package command into a separate package
