@@ -14,20 +14,12 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://mips-SIGEMT.patch \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            file://0001-tests-sigaction-Check-for-mips-and-alpha-before-usin.patch \
+           file://0001-linux-arm-raw_syscall.h-avoid-r7-specified-register-.patch \
            "
 SRC_URI[md5sum] = "7a2a7d7715da6e6834bc65bd09bace1c"
 SRC_URI[sha256sum] = "068cd09264c95e4d591bbcd3ea08f99a693ed8663cd5169b0fdad72eb5bdb39d"
 
 inherit autotools ptest bluetooth
-
-EXTRA_OECONF += "--enable-mpers=no"
-
-CFLAGS_append_libc-musl = " -Dsigcontext_struct=sigcontext"
-# otherwise strace-4.22/tests/inject-nf.c fails to build as discussed here:
-# http://lists.openembedded.org/pipermail/openembedded-core/2018-May/150647.html
-DEBUG_OPTIMIZATION_remove = "${@bb.utils.contains('PTEST_ENABLED', '1', '-fno-omit-frame-pointer', '', d)}"
-
-RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
 
 PACKAGECONFIG_class-target ??= "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
@@ -35,6 +27,10 @@ PACKAGECONFIG_class-target ??= "\
 
 PACKAGECONFIG[bluez] = "ac_cv_header_bluetooth_bluetooth_h=yes,ac_cv_header_bluetooth_bluetooth_h=no,${BLUEZ}"
 PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
+
+EXTRA_OECONF += "--enable-mpers=no"
+
+CFLAGS_append_libc-musl = " -Dsigcontext_struct=sigcontext"
 
 TESTDIR = "tests"
 
@@ -60,6 +56,8 @@ do_install_ptest() {
 	    -e '/^RPM_CHANGELOGTIME/d' \
 	${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
+
+RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
 
 BBCLASSEXTEND = "native"
 TOOLCHAIN = "gcc"
