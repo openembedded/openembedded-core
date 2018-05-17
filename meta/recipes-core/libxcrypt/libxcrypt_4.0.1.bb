@@ -9,11 +9,10 @@ LIC_FILES_CHKSUM ?= "file://LICENSING;md5=d1cc18f512ded3bd6000f3729f31be08 \
 
 inherit autotools
 
-SRCREV ?= "215b32aa4e0b255c3356a96bd6d257661bad73ca"
+SRCREV ?= "089479bb24acd168613757a6f12d63caa95416b4"
 SRCBRANCH ?= "master"
 
 SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH} \
-           file://0001-disable-format-truncation-warning-with-gcc-8.patch \
            "
 
 PROVIDES = "virtual/crypt"
