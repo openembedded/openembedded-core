@@ -3,7 +3,7 @@ LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS = "libsoup-2.4 webkitgtk gtk+3 iso-codes avahi libnotify gcr \
-	   gsettings-desktop-schemas gnome-desktop3 libxml2-native \
+	   gsettings-desktop-schemas libxml2-native \
 	   glib-2.0 glib-2.0-native json-glib"
 
 GNOMEBASEBUILDCLASS = "meson"
