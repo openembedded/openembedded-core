@@ -38,7 +38,6 @@ PACKAGECONFIG[unwind] = "--with-unwind,--without-unwind,libunwind"
 PACKAGECONFIG[dw] = "--with-dw,--without-dw,elfutils"
 
 EXTRA_OECONF = " \
-    --disable-dependency-tracking \
     --disable-examples \
 "
 
