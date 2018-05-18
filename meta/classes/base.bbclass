@@ -621,7 +621,7 @@ python () {
         elif path.endswith('.zip') or path.endswith('.jar'):
             d.appendVarFlag('do_unpack', 'depends', ' unzip-native:do_populate_sysroot')
 
-        # file is needed by rpm2cpio.sh
+        # Some rpm files may be compressed internally using xz (for example, rpms from Fedora)
         elif path.endswith('.rpm'):
             d.appendVarFlag('do_unpack', 'depends', ' xz-native:do_populate_sysroot')
 
