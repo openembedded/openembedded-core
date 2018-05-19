@@ -9,8 +9,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ea5bed2f60d357618ca161ad539f7c0a \
                     file://kexec/kexec.c;beginline=1;endline=20;md5=af10f6ae4a8715965e648aa687ad3e09"
 DEPENDS = "zlib xz"
 
-PR = "r1"
-
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz \
            file://kdump \
            file://kdump.conf \
@@ -20,11 +18,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0010-kexec-ARM-Fix-add_buffer_phys_virt-align-issue.patch \
            file://kexec-x32.patch \
            file://0001-Disable-PIE-during-link.patch \
-           file://0001-arm64-Set-fno-PIC-along-with-mcmodel-large.patch \
-         "
+           "
 
-SRC_URI[md5sum] = "5198968de79b5ded96f97f3c2ea9637b"
-SRC_URI[sha256sum] = "cf17fc99bf77c9b39f06ee88ac0e86d0349c4a0c3f8214a3cc78eece872f6f3a"
+SRC_URI[md5sum] = "8e071ca473694a71e4ae60ed7ef6f377"
+SRC_URI[sha256sum] = "450c87ba048641eb05f9717f5567aca57f063c266149ae663b58a34e5852deaf"
 
 inherit autotools update-rc.d systemd
 
