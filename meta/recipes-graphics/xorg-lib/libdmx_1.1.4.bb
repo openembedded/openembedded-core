@@ -15,6 +15,6 @@ DEPENDS += "libxext xorgproto"
 
 PE = "1"
 
-SRC_URI[md5sum] = "ba983eba5a9f05d152a0725b8e863151"
-SRC_URI[sha256sum] = "c97da36d2e56a2d7b6e4f896241785acc95e97eb9557465fd66ba2a155a7b201"
+SRC_URI[md5sum] = "d2f1f0ec68ac3932dd7f1d9aa0a7a11c"
+SRC_URI[sha256sum] = "253f90005d134fa7a209fbcbc5a3024335367c930adf0f3203e754cf32747243"
 
