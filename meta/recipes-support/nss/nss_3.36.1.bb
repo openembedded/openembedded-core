@@ -26,12 +26,10 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://disable-Wvarargs-with-clang.patch \
            file://pqg.c-ULL_addend.patch \
            file://Fix-compilation-for-X32.patch \
-           file://nss-build-hacl-poly1305-aarch64.patch \
-           file://0001-Bug-1437734-Use-snprintf-in-sign.c-r-ttaubert.patch \
            "
 
-SRC_URI[md5sum] = "9467ec9e65c5aeb3254a50250490f5f7"
-SRC_URI[sha256sum] = "f4127de09bede39f5fd0f789d33c3504c5d261e69ea03022d46b319b3e32f6fa"
+SRC_URI[md5sum] = "814d8fe3ec89006cf62078e2a56cf2f9"
+SRC_URI[sha256sum] = "6025441d528ff6a7f1a4b673b6ee7d3540731ada3f78d5acd5c3b3736b222bff"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
