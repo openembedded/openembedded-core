@@ -17,12 +17,11 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 DEPENDS = "bison flex"
 
 SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix2-${PV}.tar.gz \
-    file://rename-yy_scan_string-manually.patch \
-    file://manipulate-fds-instead-of-FILE.patch;striplevel=2 \
-    file://0001-Linux-add-support-for-X32-ABI-compilation.patch \
-    "
-SRC_URI[md5sum] = "48ef4314fb4ffdd0c96f14dcf20544e1"
-SRC_URI[sha256sum] = "b2d81e84107ac9a02be86ea43cbea7afa8fd4b4150270bc88c2d4c9fea0b8aad"
+           file://rename-yy_scan_string-manually.patch \
+           file://manipulate-fds-instead-of-FILE.patch \
+           "
+SRC_URI[md5sum] = "31691e2eb82b2064f78536a3423c18d6"
+SRC_URI[sha256sum] = "5d8fc9d9db9e04830d40bec9add04b21c05d466e0187d354815006fdd823cf15"
 UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
 S = "${WORKDIR}/acpica-unix2-${PV}"
