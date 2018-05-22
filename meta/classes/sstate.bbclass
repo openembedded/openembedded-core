@@ -975,9 +975,6 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
 
         # Consider sysroot depending on sysroot tasks
         if taskdependees[task][1] == 'do_populate_sysroot' and taskdependees[dep][1] == 'do_populate_sysroot':
-            # base-passwd/shadow-sysroot don't need their dependencies
-            if taskdependees[dep][0].endswith(("base-passwd", "shadow-sysroot")):
-                continue
             # Allow excluding certain recursive dependencies. If a recipe needs it should add a
             # specific dependency itself, rather than relying on one of its dependees to pull
             # them in.
