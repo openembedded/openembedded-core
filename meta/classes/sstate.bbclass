@@ -978,9 +978,6 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
             # base-passwd/shadow-sysroot don't need their dependencies
             if taskdependees[dep][0].endswith(("base-passwd", "shadow-sysroot")):
                 continue
-            # Nothing need depend on libc-initial/gcc-cross-initial
-            if "-initial" in taskdependees[task][0]:
-                continue
             # Allow excluding certain recursive dependencies. If a recipe needs it should add a
             # specific dependency itself, rather than relying on one of its dependees to pull
             # them in.
