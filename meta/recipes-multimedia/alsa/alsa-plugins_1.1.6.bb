@@ -14,15 +14,15 @@ SECTION = "multimedia"
 # of LGPLv2.1 like the rest of the plugins.
 LICENSE = "LGPLv2.1 & GPLv2+"
 LIC_FILES_CHKSUM = "\
-        file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
-        file://COPYING.GPL;md5=94d55d512a9ba36caa9b7df079bae19f \
+        file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
+        file://COPYING.GPL;md5=59530bdf33659b29e73d4adb9f9f6552 \
         file://m4/attributes.m4;endline=33;md5=b25958da44c02231e3641f1bccef53eb \
         file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
 "
 
 SRC_URI = "ftp://ftp.alsa-project.org/pub/plugins/${BP}.tar.bz2"
-SRC_URI[md5sum] = "f898b0e6e8acf3f6f82bc2a0f0c84a97"
-SRC_URI[sha256sum] = "797da5f8f53379fbea28817bc466de16affd2c07849e84f1af8d5e22f7bb7f1c"
+SRC_URI[md5sum] = "8387279e99feeb2ecffaac5f293223d7"
+SRC_URI[sha256sum] = "6f1d31ebe3b1fa1cc8dade60b7bed1cb2583ac998167002d350dc0a5e3e40c13"
 
 DEPENDS += "alsa-lib"
 
