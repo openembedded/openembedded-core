@@ -920,6 +920,7 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
     # task is included in taskdependees too
     # Return - False - We need this dependency
     #        - True - We can skip this dependency
+    import re
 
     def logit(msg, log):
         if log is not None:
@@ -979,6 +980,18 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
                 continue
             # Nothing need depend on libc-initial/gcc-cross-initial
             if "-initial" in taskdependees[task][0]:
+                continue
+            # Allow excluding certain recursive dependencies. If a recipe needs it should add a
+            # specific dependency itself, rather than relying on one of its dependees to pull
+            # them in.
+            # See also http://lists.openembedded.org/pipermail/openembedded-core/2018-January/146324.html
+            not_needed = False
+            for excl in (d.getVar('SSTATE_EXCLUDEDEPS_SYSROOT') or "").split():
+                if re.match(excl.split('->', 1)[0], taskdependees[dep][0]):
+                    if re.match(excl.split('->', 1)[1], taskdependees[task][0]):
+                        not_needed = True
+                        break
+            if not_needed:
                 continue
             # For meta-extsdk-toolchain we want all sysroot dependencies
             if taskdependees[dep][0] == 'meta-extsdk-toolchain':
