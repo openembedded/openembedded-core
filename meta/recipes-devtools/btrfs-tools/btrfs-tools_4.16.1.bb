@@ -10,17 +10,18 @@ HOMEPAGE = "https://btrfs.wiki.kernel.org"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067"
 SECTION = "base"
-DEPENDS = "util-linux attr e2fsprogs lzo acl"
+DEPENDS = "util-linux attr e2fsprogs lzo acl python3-setuptools-native"
 DEPENDS_append_class-target = " udev"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "3097f02c948f69f520c565ff8f8ba476aa6edb88"
+SRCREV = "f7fc27cb20924cc340a2a522655969253dd97ae9"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Makefile-build-mktables-using-native-gcc.patch \
-           file://ftw-subdir-walk.patch \
+           file://0001-Add-LDFLAGS-when-building-libbtrfsutil.so.patch \
+           file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
 
-inherit autotools-brokensep pkgconfig manpages
+inherit autotools-brokensep pkgconfig manpages distutils3-base
 
 CLEANBROKEN = "1"
 
@@ -35,5 +36,9 @@ do_configure_prepend() {
 }
 
 S = "${WORKDIR}/git"
+
+do_install_append() {
+    oe_runmake 'DESTDIR=${D}' 'PYTHON_SITEPACKAGES_DIR=${PYTHON_SITEPACKAGES_DIR}' install_python
+}
 
 BBCLASSEXTEND = "native"
