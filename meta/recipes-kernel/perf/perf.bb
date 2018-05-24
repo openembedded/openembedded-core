@@ -96,6 +96,7 @@ EXTRA_OEMAKE += "\
 "
 
 PERF_SRC ?= "Makefile \
+             include \
              tools/arch \
              tools/build \
              tools/include \
