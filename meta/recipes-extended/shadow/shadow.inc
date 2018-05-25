@@ -127,7 +127,8 @@ do_install_append() {
 	# Ensure that the image has as a /var/spool/mail dir so shadow can
 	# put mailboxes there if the user reconfigures shadow to its
 	# defaults (see sed below).
-	install -d ${D}${localstatedir}/spool/mail
+	install -m 0775 -d ${D}${localstatedir}/spool/mail
+	chown root:mail ${D}${localstatedir}/spool/mail
 
 	if [ -e ${WORKDIR}/pam.d ]; then
 		install -d ${D}${sysconfdir}/pam.d/
