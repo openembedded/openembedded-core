@@ -43,6 +43,8 @@ do_install_ptest() {
 	for i in `grep -vE "@|^$|#|Gt-dummy" ${S}/test/Maketests |awk -F: '{print $1}'` Maketests inclib.awk; \
 	  do cp ${S}/test/$i* ${D}${PTEST_PATH}/test; \
 	done
+	sed -i -e 's|/usr/local/bin|${bindir}|g' \
+	    -e 's|#!${base_bindir}/awk|#!${bindir}/awk|g' ${D}${PTEST_PATH}/test/*.awk
 }
 
 BBCLASSEXTEND = "native nativesdk"
