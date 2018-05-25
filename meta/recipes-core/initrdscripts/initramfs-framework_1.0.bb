@@ -9,6 +9,7 @@ inherit allarch
 
 SRC_URI = "file://init \
            file://exec \
+           file://nfsrootfs \
            file://rootfs \
            file://finish \
            file://mdev \
@@ -24,6 +25,7 @@ do_install() {
 
     # base
     install -m 0755 ${WORKDIR}/init ${D}/init
+    install -m 0755 ${WORKDIR}/nfsrootfs ${D}/init.d/85-nfsrootfs
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
@@ -53,6 +55,7 @@ PACKAGES = "${PN}-base \
             initramfs-module-mdev \
             initramfs-module-udev \
             initramfs-module-e2fs \
+            initramfs-module-nfsrootfs \
             initramfs-module-rootfs \
             initramfs-module-debug \
            "
@@ -82,6 +85,10 @@ FILES_initramfs-module-udev = "/init.d/01-udev"
 SUMMARY_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
 RDEPENDS_initramfs-module-e2fs = "${PN}-base"
 FILES_initramfs-module-e2fs = "/init.d/10-e2fs"
+
+SUMMARY_initramfs-module-nfsrootfs = "initramfs support for locating and mounting the root partition via nfs"
+RDEPENDS_initramfs-module-nfsrootfs = "${PN}-base"
+FILES_initramfs-module-nfsrootfs = "/init.d/85-nfsrootfs"
 
 SUMMARY_initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
 RDEPENDS_initramfs-module-rootfs = "${PN}-base"
