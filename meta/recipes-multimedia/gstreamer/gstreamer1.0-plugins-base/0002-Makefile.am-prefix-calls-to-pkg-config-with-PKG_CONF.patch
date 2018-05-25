@@ -1,4 +1,4 @@
-From 77b88eae845060d38cf788651f66a7ae98f9b199 Mon Sep 17 00:00:00 2001
+From 9601fc0cd6751a1affdc8717217b95931db31d7f Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 5 Apr 2018 10:26:25 +0800
 Subject: [PATCH] Makefile.am: prefix calls to pkg-config with
@@ -12,7 +12,7 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  gst-libs/gst/allocators/Makefile.am |  4 ++--
  gst-libs/gst/app/Makefile.am        |  4 ++--
  gst-libs/gst/audio/Makefile.am      | 12 ++++++------
- gst-libs/gst/gl/Makefile.am         | 12 ++++++------
+ gst-libs/gst/gl/Makefile.am         |  8 ++++----
  gst-libs/gst/pbutils/Makefile.am    | 12 ++++++------
  gst-libs/gst/riff/Makefile.am       |  8 ++++----
  gst-libs/gst/rtp/Makefile.am        |  8 ++++----
@@ -20,7 +20,7 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  gst-libs/gst/sdp/Makefile.am        |  4 ++--
  gst-libs/gst/tag/Makefile.am        |  8 ++++----
  gst-libs/gst/video/Makefile.am      |  8 ++++----
- 11 files changed, 42 insertions(+), 42 deletions(-)
+ 11 files changed, 40 insertions(+), 40 deletions(-)
 
 diff --git a/gst-libs/gst/allocators/Makefile.am b/gst-libs/gst/allocators/Makefile.am
 index 1ecc950..d6417ac 100644
@@ -92,32 +92,29 @@ index 7fb65f2..5379f79 100644
  
  CLEANFILES += $(BUILT_GIRSOURCES) $(typelibs_DATA)
 diff --git a/gst-libs/gst/gl/Makefile.am b/gst-libs/gst/gl/Makefile.am
-index 16f829f..fc15a6d 100644
+index 3276d7f..0cdfe26 100644
 --- a/gst-libs/gst/gl/Makefile.am
 +++ b/gst-libs/gst/gl/Makefile.am
-@@ -185,9 +185,9 @@ GstGL-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstgl-@GST_API_VERSION@
- 		-I$(top_builddir)/gst-libs \
+@@ -186,9 +186,9 @@ GstGL-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstgl-@GST_API_VERSION@
  		$(GST_PLUGINS_BASE_CFLAGS) \
  		$(GL_CFLAGS) \
+ 		--add-include-path="$(top_builddir)/gst-libs/gst/video/" \
 -		--add-include-path=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
 -		--add-include-path=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-base-@GST_API_VERSION@` \
--		--add-include-path=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-video-@GST_API_VERSION@` \
+ 		--library-path="$(top_builddir)/gst-libs/gst/video/" \
 +		--add-include-path=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
 +		--add-include-path=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-base-@GST_API_VERSION@` \
-+		--add-include-path=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-video-@GST_API_VERSION@` \
  		--library=libgstgl-@GST_API_VERSION@.la \
  		--include=Gst-@GST_API_VERSION@ \
  		--include=GstBase-@GST_API_VERSION@ \
-@@ -216,9 +216,9 @@ typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
- 		$(INTROSPECTION_COMPILER) \
+@@ -218,8 +218,8 @@ typelibs_DATA = $(BUILT_GIRSOURCES:.gir=.typelib)
  		--includedir=$(srcdir) \
  		--includedir=$(builddir) \
+ 		--includedir="$(top_builddir)/gst-libs/gst/video/" \
 -		--includedir=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
 -		--includedir=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-base-@GST_API_VERSION@` \
--		--includedir=`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-video-@GST_API_VERSION@` \
 +		--includedir=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-@GST_API_VERSION@` \
 +		--includedir=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-base-@GST_API_VERSION@` \
-+		--includedir=$(PKG_CONFIG_SYSROOT_DIR)`PKG_CONFIG_PATH="$(GST_PKG_CONFIG_PATH)" $(PKG_CONFIG) --variable=girdir gstreamer-video-@GST_API_VERSION@` \
  		$(INTROSPECTION_COMPILER_OPTS) $< -o $(@F)
  
  CLEANFILES = $(BUILT_GIRSOURCES) $(typelibs_DATA)

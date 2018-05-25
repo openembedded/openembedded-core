@@ -18,10 +18,9 @@ SRC_URI = " \
             file://0009-glimagesink-Downrank-to-marginal.patch \
             file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
             file://link-with-libvchostif.patch \
-            file://0001-gl-pick-up-GstVideo-1.0.gir-from-local-build-dir.patch \
             "
-SRC_URI[md5sum] = "370271327dd23110421a9c2927ac989a"
-SRC_URI[sha256sum] = "7e904660ff56e02b036cf7fdfb77a50a540828ca9d2614d69ba931772e5b6940"
+SRC_URI[md5sum] = "c42154ab6f85c59f0e449d8d7e290342"
+SRC_URI[sha256sum] = "1026c7c3082d825d9b5d034c1a6dd8a4ebab60eb3738b0a0afde4ad2dc0b0db5"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 
