@@ -8,7 +8,7 @@ LICENSE = "LGPLv2+"
 
 DEPENDS = "glib-2.0 glib-2.0-native libcap libxml2 bison-native flex-native"
 
-inherit autotools pkgconfig gettext upstream-version-is-even gobject-introspection gtk-doc
+inherit autotools pkgconfig gettext upstream-version-is-even gobject-introspection gtk-doc ptest
 
 # This way common/m4/introspection.m4 will come first
 # (it has a custom INTROSPECTION_INIT macro, and so must be used instead of our common introspection.m4 file)
@@ -24,11 +24,14 @@ SRC_URI = " \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
     file://gtk-doc-tweaks.patch \
     file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
+    file://add-a-target-to-compile-tests.patch \
+    file://run-ptest \
 "
 SRC_URI[md5sum] = "63c7cbfb86aa28c4522e374dc5555b96"
 SRC_URI[sha256sum] = "fc361367f0d4b780a868a8833f9f30b9c9f4ac9faea4e6b251db8b4b0398466e"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
+                   "
 
 PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[tests] = "--enable-tests,--disable-tests"
@@ -54,6 +57,7 @@ FILES_${PN}-bash-completion += "${datadir}/bash-completion/completions/ ${datadi
 
 RRECOMMENDS_${PN}_qemux86 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
 RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
+RDEPENDS_${PN}-ptest += "make"
 
 delete_pkg_m4_file() {
         # This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
@@ -65,6 +69,24 @@ do_configure[prefuncs] += "delete_pkg_m4_file"
 
 do_compile_prepend() {
         export GIR_EXTRA_LIBS_PATH="${B}/gst/.libs:${B}/libs/gst/base/.libs"
+}
+
+do_compile_ptest() {
+        oe_runmake build-checks
+}
+
+do_install_ptest() {
+        oe_runmake -C tests/check DESTDIR=${D}${PTEST_PATH} install-ptest
+        install -m 644 ${B}/tests/check/Makefile ${D}${PTEST_PATH}
+        install -m 755 ${S}/test-driver ${D}${PTEST_PATH}
+        sed -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
+            -e 's|${DEBUG_PREFIX_MAP}||g' \
+            -e 's:${HOSTTOOLS_DIR}/::g' \
+            -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \-e 's/^Makefile:/_Makefile:/' \
+            -e 's/^srcdir = \(.*\)/srcdir = ./' -e 's/^top_srcdir = \(.*\)/top_srcdir = ./' \
+            -e 's/^builddir = \(.*\)/builddir = ./' -e 's/^top_builddir = \(.*\)/top_builddir = ./' \
+            -i ${D}${PTEST_PATH}/Makefile
 }
 
 CVE_PRODUCT = "gstreamer"
