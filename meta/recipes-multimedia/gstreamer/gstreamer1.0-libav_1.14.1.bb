@@ -19,8 +19,8 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${PV}.tar.xz
            file://0001-configure-check-for-armv7ve-variant.patch \
            file://0001-fix-host-contamination.patch \
            "
-SRC_URI[md5sum] = "943045b9e937ffc5c6cfa0bd5c44230d"
-SRC_URI[sha256sum] = "fb134b4d3e054746ef8b922ff157b0c7903d1fdd910708a45add66954da7ef89"
+SRC_URI[md5sum] = "d57b0052f6eccb8e6762def05995133c"
+SRC_URI[sha256sum] = "eff80a02d2f2fb9f34b67e9a26e9954d3218c7aa18e863f2a47805fa7066029d"
 
 S = "${WORKDIR}/gst-libav-${PV}"
 
