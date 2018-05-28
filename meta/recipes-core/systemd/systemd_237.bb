@@ -53,6 +53,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0033-basic-macros-rename-noreturn-into-_noreturn_-8456.patch \
            file://libmount.patch \
            file://0034-Fix-format-truncation-compile-failure-by-typecasting.patch \
+           file://0035-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
