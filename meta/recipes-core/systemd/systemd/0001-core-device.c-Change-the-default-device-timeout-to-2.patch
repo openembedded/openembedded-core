@@ -1,4 +1,4 @@
-From 9820c165a9e559cf851e3beb60fad2571de4ded2 Mon Sep 17 00:00:00 2001
+From 7844e070745611a52e355b73e7890f360dd540d0 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 14 Dec 2015 04:09:19 +0000
 Subject: [PATCH] core/device.c: Change the default device timeout to 240 sec.
@@ -16,10 +16,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/core/device.c b/src/core/device.c
-index 77601c552..98bf49ba2 100644
+index a43664d3b..4b16a8aec 100644
 --- a/src/core/device.c
 +++ b/src/core/device.c
-@@ -112,7 +112,7 @@ static void device_init(Unit *u) {
+@@ -113,7 +113,7 @@ static void device_init(Unit *u) {
           * indefinitely for plugged in devices, something which cannot
           * happen for the other units since their operations time out
           * anyway. */
@@ -28,6 +28,3 @@ index 77601c552..98bf49ba2 100644
  
          u->ignore_on_isolate = true;
  }
--- 
-2.16.1
-
