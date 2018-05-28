@@ -15,9 +15,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0daaf958d5531ab86169ec6e275e1517"
 SECTION = "libs"
 DEPENDS += "rpcsvc-proto-native"
 
-PV = "1.3.1+git${SRCPV}"
+PV = "1.4+git${SRCPV}"
 
-SRCREV = "abcf24a09665b3def0f54c87d2acd4796de5d83a"
+SRCREV = "9bc3b5b785723cfff459b0c01b39d87d4bed975c"
 
 SRC_URI = "git://github.com/thkukuk/${BPN} \
            file://0001-Use-cross-compiled-rpcgen.patch \
