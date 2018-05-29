@@ -25,6 +25,8 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d useradd systemd
 
+ASNEEDED = ""
+
 EXTRA_OECONF += "--disable-Werror PYTHON='' --disable-pump-mode"
 
 USERADD_PACKAGES = "${PN}"
