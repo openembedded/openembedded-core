@@ -40,6 +40,9 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            file://0001-perl-disable-auto-reqs.patch \
            file://0001-configure.ac-add-option-for-dbus.patch \
+           file://0001-Factor-out-and-unify-setting-CLOEXEC.patch \
+           file://0002-Optimize-rpmSetCloseOnExec.patch \
+           file://0003-rpmSetCloseOnExec-use-getrlimit.patch \
            "
 
 PE = "1"
