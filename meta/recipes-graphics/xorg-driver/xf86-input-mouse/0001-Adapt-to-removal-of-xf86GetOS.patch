@@ -1,0 +1,48 @@
+From 3c8f243b750a92d5837a449d344ff884dbd02b57 Mon Sep 17 00:00:00 2001
+From: Adam Jackson <ajax@redhat.com>
+Date: Thu, 16 Feb 2017 09:21:21 -0500
+Subject: [PATCH] Adapt to removal of xf86GetOS
+
+Signed-off-by: Adam Jackson <ajax@redhat.com>
+
+Upstream-Status: Backport
+Fixes build issue with updated xorg-server changes.
+
+Signed-off-by: Armin Kuster <akuster808@gmail.com>
+
+---
+ src/mouse.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/src/mouse.c b/src/mouse.c
+index dae98aa..40d97a9 100644
+--- a/src/mouse.c
++++ b/src/mouse.c
+@@ -794,7 +794,6 @@ InitProtocols(void)
+ {
+     int classes;
+     int i;
+-    const char *osname = NULL;
+ 
+     if (osInfo)
+         return TRUE;
+@@ -821,11 +820,11 @@ InitProtocols(void)
+                 mouseProtocols[i].id = PROT_UNSUP;
+ 
+     /* NetBSD uses PROT_BM for "PS/2". */
+-    xf86GetOS(&osname, NULL, NULL, NULL);
+-    if (osname && xf86NameCmp(osname, "netbsd") == 0)
+-        for (i = 0; mouseProtocols[i].name; i++)
+-            if (mouseProtocols[i].id == PROT_PS2)
+-                mouseProtocols[i].id = PROT_BM;
++#if defined(__NetBSD__)
++    for (i = 0; mouseProtocols[i].name; i++)
++        if (mouseProtocols[i].id == PROT_PS2)
++            mouseProtocols[i].id = PROT_BM;
++#endif
+ 
+     return TRUE;
+ }
+-- 
+2.7.4
+
