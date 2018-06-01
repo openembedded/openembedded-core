@@ -260,10 +260,16 @@ def testimage_main(d):
     # Load tests before starting the target
     test_paths = get_runtime_paths(d)
     test_modules = d.getVar('TEST_SUITES').split()
+    if not test_modules:
+        bb.fatal('Empty test suite, please verify TEST_SUITES variable')
+
     tc.loadTests(test_paths, modules=test_modules)
 
-    if not getSuiteCases(tc.suites):
+    suitecases = getSuiteCases(tc.suites)
+    if not suitecases:
         bb.fatal('Empty test suite, please verify TEST_SUITES variable')
+    else:
+        bb.debug(2, 'test suites:\n\t%s' % '\n\t'.join([str(c) for c in suitecases]))
 
     package_extraction(d, tc.suites)
 
