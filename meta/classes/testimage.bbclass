@@ -121,7 +121,7 @@ python do_testimage() {
     testimage_sanity(d)
 
     if (d.getVar('IMAGE_PKGTYPE') == 'rpm'
-       and 'dnf' in d.getVar('TEST_SUITES')):
+       and ('dnf' in d.getVar('TEST_SUITES') or 'auto' in d.getVar('TEST_SUITES'))):
         create_rpm_index(d)
 
     testimage_main(d)
