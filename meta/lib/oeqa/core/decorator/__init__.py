@@ -2,7 +2,7 @@
 # Released under the MIT license (see COPYING.MIT)
 
 from functools import wraps
-from abc import abstractmethod
+from abc import abstractmethod, ABCMeta
 
 decoratorClasses = set()
 
@@ -10,7 +10,7 @@ def registerDecorator(obj):
     decoratorClasses.add(obj)
     return obj
 
-class OETestDecorator(object):
+class OETestDecorator(object, metaclass=ABCMeta):
     case = None # Reference of OETestCase decorated
     attrs = None # Attributes to be loaded by decorator implementation
 
