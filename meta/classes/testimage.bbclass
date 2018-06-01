@@ -117,13 +117,6 @@ testimage_dump_host () {
 }
 
 python do_testimage() {
-
-    testimage_sanity(d)
-
-    if (d.getVar('IMAGE_PKGTYPE') == 'rpm'
-       and ('dnf' in d.getVar('TEST_SUITES') or 'auto' in d.getVar('TEST_SUITES'))):
-        create_rpm_index(d)
-
     testimage_main(d)
 }
 
@@ -158,6 +151,12 @@ def testimage_main(d):
         Catch SIGTERM from worker in order to stop qemu.
         """
         raise RuntimeError
+
+    testimage_sanity(d)
+
+    if (d.getVar('IMAGE_PKGTYPE') == 'rpm'
+       and ('dnf' in d.getVar('TEST_SUITES') or 'auto' in d.getVar('TEST_SUITES'))):
+        create_rpm_index(d)
 
     logger = make_logger_bitbake_compatible(logging.getLogger("BitBake"))
     pn = d.getVar("PN")
