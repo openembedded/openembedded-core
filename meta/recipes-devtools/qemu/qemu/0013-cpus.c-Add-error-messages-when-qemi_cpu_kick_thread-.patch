@@ -1,4 +1,4 @@
-From db914e0f93a32b6731a636517002ecadc207718b Mon Sep 17 00:00:00 2001
+From edc8dba74c7a4a2121d76c982be0074183bf080a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 Date: Wed, 12 Aug 2015 15:11:30 -0500
 Subject: [PATCH] cpus.c: Add error messages when qemi_cpu_kick_thread fails.
@@ -19,10 +19,10 @@ Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
  create mode 100644 custom_debug.h
 
 diff --git a/cpus.c b/cpus.c
-index 114c29b..c3dd2e0 100644
+index 38eba8bff3..b84a60a4f3 100644
 --- a/cpus.c
 +++ b/cpus.c
-@@ -1510,6 +1510,8 @@ static void *qemu_tcg_cpu_thread_fn(void *arg)
+@@ -1690,6 +1690,8 @@ static void *qemu_tcg_cpu_thread_fn(void *arg)
      return NULL;
  }
  
@@ -31,7 +31,7 @@ index 114c29b..c3dd2e0 100644
  static void qemu_cpu_kick_thread(CPUState *cpu)
  {
  #ifndef _WIN32
-@@ -1522,6 +1524,9 @@ static void qemu_cpu_kick_thread(CPUState *cpu)
+@@ -1702,6 +1704,9 @@ static void qemu_cpu_kick_thread(CPUState *cpu)
      err = pthread_kill(cpu->thread->thread, SIG_IPI);
      if (err) {
          fprintf(stderr, "qemu:%s: %s", __func__, strerror(err));
@@ -43,7 +43,7 @@ index 114c29b..c3dd2e0 100644
  #else /* _WIN32 */
 diff --git a/custom_debug.h b/custom_debug.h
 new file mode 100644
-index 0000000..f029e45
+index 0000000000..f029e45547
 --- /dev/null
 +++ b/custom_debug.h
 @@ -0,0 +1,24 @@

@@ -20,19 +20,17 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://0008-chardev-connect-socket-to-a-spawned-command.patch \
            file://0009-apic-fixup-fallthrough-to-PIC.patch \
            file://0010-linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch \
-           file://0011-memfd-fix-configure-test.patch \
-           file://0012-arm-translate-a64-treat-DISAS_UPDATE-as-variant-of-D.patch \
-           file://0013-ps2-check-PS2Queue-pointers-in-post_load-routine.patch \
+           file://0011-Revert-linux-user-fix-mmap-munmap-mprotect-mremap-sh.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
 SRC_URI_append_class-native = " \
-            file://0014-fix-libcap-header-issue-on-some-distro.patch \
-            file://0015-cpus.c-Add-error-messages-when-qemi_cpu_kick_thread-.patch \
+            file://0012-fix-libcap-header-issue-on-some-distro.patch \
+            file://0013-cpus.c-Add-error-messages-when-qemi_cpu_kick_thread-.patch \
             "
 
-SRC_URI[md5sum] = "61cf862b6007eba4ac98247776af2e27"
-SRC_URI[sha256sum] = "d9df2213ceed32e91dab7bc9dd19c1af83f91ba72c7aeef7605dfaaf81732ccb"
+SRC_URI[md5sum] = "122fd7cdf241ff7eb1e42c0b503b5d1b"
+SRC_URI[sha256sum] = "c9f4a147bc915d24df9784affc611a115f42d24720a89210b479f1ba7a3f679c"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
