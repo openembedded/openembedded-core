@@ -1,4 +1,4 @@
-From a75a52d62418dafe462be4fe30485501d1010bb9 Mon Sep 17 00:00:00 2001
+From 7354b9b24c36ee712bb6e881d39504bf1b6a4c8b Mon Sep 17 00:00:00 2001
 From: Victor Kamensky <kamensky@cisco.com>
 Date: Fri, 23 Mar 2018 18:26:45 +0000
 Subject: [PATCH] arm/translate-a64: treat DISAS_UPDATE as variant of
@@ -43,10 +43,10 @@ Upstream-Status: Backport
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/target/arm/translate-a64.c b/target/arm/translate-a64.c
-index 31ff047..327513e 100644
+index 625ef2d..c381091 100644
 --- a/target/arm/translate-a64.c
 +++ b/target/arm/translate-a64.c
-@@ -13378,12 +13378,12 @@ static void aarch64_tr_tb_stop(DisasContextBase *dcbase, CPUState *cpu)
+@@ -11384,12 +11384,12 @@ static void aarch64_tr_tb_stop(DisasContextBase *dcbase, CPUState *cpu)
          case DISAS_UPDATE:
              gen_a64_set_pc_im(dc->pc);
              /* fall through */
@@ -62,6 +62,3 @@ index 31ff047..327513e 100644
          case DISAS_NORETURN:
          case DISAS_SWI:
              break;
--- 
-2.7.4
-

@@ -1,4 +1,4 @@
-From ee9a17d0e12143971a9676227cce953c0dbe52fb Mon Sep 17 00:00:00 2001
+From 065061dca34fa5b91be6dce9a87a8755d8826c78 Mon Sep 17 00:00:00 2001
 From: Prasad J Pandit <pjp@fedoraproject.org>
 Date: Thu, 16 Nov 2017 13:21:55 +0530
 Subject: [PATCH] ps2: check PS2Queue pointers in post_load routine
@@ -58,6 +58,3 @@ index f388a23..de171a2 100644
      /* reset rptr/wptr/count */
      q->rptr = 0;
      q->wptr = size;
--- 
-2.7.4
-

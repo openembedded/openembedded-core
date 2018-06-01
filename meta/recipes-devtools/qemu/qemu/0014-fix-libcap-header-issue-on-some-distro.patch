@@ -1,4 +1,7 @@
-fix libcap header issue on some distro
+From 47fdb0b6e2e393194a8c81544c647fdd997aec7f Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Tue, 12 Mar 2013 09:54:06 +0800
+Subject: [PATCH] fix libcap header issue on some distro
 
 1, When build qemu-native on SLED 11.2, there is an error:
 ...
@@ -52,13 +55,14 @@ http://patchwork.linuxtv.org/patch/12748/
 Upstream-Status: Pending
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
- fsdev/virtfs-proxy-helper.c |    7 +++++--
+ fsdev/virtfs-proxy-helper.c | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/fsdev/virtfs-proxy-helper.c b/fsdev/virtfs-proxy-helper.c
+index 8e48500..6490030 100644
 --- a/fsdev/virtfs-proxy-helper.c
 +++ b/fsdev/virtfs-proxy-helper.c
-@@ -12,7 +12,6 @@
+@@ -13,7 +13,6 @@
  #include <sys/resource.h>
  #include <getopt.h>
  #include <syslog.h>
@@ -66,7 +70,7 @@ diff --git a/fsdev/virtfs-proxy-helper.c b/fsdev/virtfs-proxy-helper.c
  #include <sys/fsuid.h>
  #include <sys/vfs.h>
  #include <sys/ioctl.h>
-@@ -26,7 +25,11 @@
+@@ -27,7 +26,11 @@
  #include "9p-iov-marshal.h"
  #include "hw/9pfs/9p-proxy.h"
  #include "fsdev/9p-iov-marshal.h"
@@ -79,6 +83,3 @@ diff --git a/fsdev/virtfs-proxy-helper.c b/fsdev/virtfs-proxy-helper.c
  #define PROGNAME "virtfs-proxy-helper"
  
  #ifndef XFS_SUPER_MAGIC
--- 
-1.7.10.4
-
