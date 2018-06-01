@@ -284,8 +284,8 @@ class Disk:
             aname = "_%s" % name
             if aname not in self.__dict__:
                 setattr(self, aname, find_executable(name, self.paths))
-                if aname not in self.__dict__:
-                    raise WicError("Can't find executable {}".format(name))
+                if aname not in self.__dict__ or self.__dict__[aname] is None:
+                    raise WicError("Can't find executable '{}'".format(name))
             return self.__dict__[aname]
         return self.__dict__[name]
 
