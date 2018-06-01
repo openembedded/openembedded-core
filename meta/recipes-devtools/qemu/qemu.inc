@@ -74,10 +74,9 @@ do_install_append() {
 # END of qemu-mips workaround
 
 PACKAGECONFIG ??= " \
-	fdt sdl \
-	fdt sdl kvm \
-	${@bb.utils.filter('DISTRO_FEATURES', 'alsa xen', d)} \
-	"
+    fdt sdl kvm \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'alsa xen', d)} \
+"
 PACKAGECONFIG_class-native ??= "fdt alsa kvm"
 PACKAGECONFIG_class-nativesdk ??= "fdt sdl kvm"
 
@@ -115,5 +114,10 @@ PACKAGECONFIG[bzip2] = "--enable-bzip2,--disable-bzip2,bzip2"
 PACKAGECONFIG[bluez] = "--enable-bluez,--disable-bluez,${BLUEZ}"
 PACKAGECONFIG[libiscsi] = "--enable-libiscsi,--disable-libiscsi"
 PACKAGECONFIG[kvm] = "--enable-kvm,--disable-kvm"
+PACKAGECONFIG[virglrenderer] = "--enable-virglrenderer,--disable-virglrenderer,virglrenderer"
+# spice will be in meta-networking layer
+PACKAGECONFIG[spice] = "--enable-spice,--disable-spice,spice"
+# usbredir will be in meta-networking layer
+PACKAGECONFIG[usb-redir] = "--enable-usb-redir,--disable-usb-redir,usbredir"
 
 INSANE_SKIP_${PN} = "arch"
