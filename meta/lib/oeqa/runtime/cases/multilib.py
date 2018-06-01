@@ -38,6 +38,6 @@ class MultilibTest(OERuntimeTestCase):
 
     @OETestID(279)
     @OETestDepends(['multilib.MultilibTest.test_check_multilib_libc'])
-    @OEHasPackage(['lib32-connman'])
+    @OEHasPackage(['lib32-connman', '!connman'])
     def test_file_connman(self):
         self.archtest("/usr/sbin/connmand", "ELF32")
