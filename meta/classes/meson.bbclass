@@ -90,7 +90,7 @@ meson_do_configure() {
     fi
 }
 
-meson_do_configure_prepend_class-target() {
+override_native_tools() {
     # Set these so that meson uses the native tools for its build sanity tests,
     # which require executables to be runnable. The cross file will still
     # override these for the target build. Note that we do *not* set CFLAGS,
@@ -100,18 +100,15 @@ meson_do_configure_prepend_class-target() {
     export CXX="${BUILD_CXX}"
     export LD="${BUILD_LD}"
     export AR="${BUILD_AR}"
+
+}
+
+meson_do_configure_prepend_class-target() {
+    override_native_tools
 }
 
 meson_do_configure_prepend_class-nativesdk() {
-    # Set these so that meson uses the native tools for its build sanity tests,
-    # which require executables to be runnable. The cross file will still
-    # override these for the nativesdk build. Note that we do *not* set CFLAGS,
-    # LDFLAGS, etc. as they will be slurped in by meson and applied to the
-    # nativesdk build, causing errors.
-    export CC="${BUILD_CC}"
-    export CXX="${BUILD_CXX}"
-    export LD="${BUILD_LD}"
-    export AR="${BUILD_AR}"
+    override_native_tools
 }
 
 meson_do_configure_prepend_class-native() {
