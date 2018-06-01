@@ -1,3 +1,8 @@
+From c79c48a79710d0e2ef68062435596ac455cd9f71 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Wed, 9 Mar 2016 22:49:02 +0000
+Subject: [PATCH] qemu: Limit paths searched during user mode emulation
+
 By default qemu builds a complete list of directories within the user
 emulation sysroot (-L option). The OE sysroot directory is large and
 this is confusing, for example it indexes all pkgdata. In particular this
@@ -8,18 +13,21 @@ things if/as/when it needs to. This drastically reduces the files it
 reads and reduces memory usage and cleans up strace.
 
 It would also avoid the infinite directory traversal bug in [YOCTO #6996]
-although the code could still be vulnerable if it parsed those specific 
+although the code could still be vulnerable if it parsed those specific
 paths.
 
 RP
 2016/3/9
 Upstream-Status: Pending
+---
+ util/path.c | 44 ++++++++++++++++++++++----------------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-Index: qemu-2.5.0/util/path.c
-===================================================================
---- qemu-2.5.0.orig/util/path.c
-+++ qemu-2.5.0/util/path.c
-@@ -19,6 +19,7 @@ struct pathelem
+diff --git a/util/path.c b/util/path.c
+index 7f9fc27..a416cd4 100644
+--- a/util/path.c
++++ b/util/path.c
+@@ -15,6 +15,7 @@ struct pathelem
      char *name;
      /* Full path name, eg. /usr/gnemul/x86-linux/lib. */
      char *pathname;
@@ -27,7 +35,7 @@ Index: qemu-2.5.0/util/path.c
      struct pathelem *parent;
      /* Children */
      unsigned int num_entries;
-@@ -49,6 +50,7 @@ static struct pathelem *new_entry(const
+@@ -45,6 +46,7 @@ static struct pathelem *new_entry(const char *root,
      new->name = g_strdup(name);
      new->pathname = g_strdup_printf("%s/%s", root, name);
      new->num_entries = 0;
@@ -35,7 +43,7 @@ Index: qemu-2.5.0/util/path.c
      return new;
  }
  
-@@ -57,15 +59,16 @@ static struct pathelem *new_entry(const
+@@ -53,15 +55,16 @@ static struct pathelem *new_entry(const char *root,
  /* Not all systems provide this feature */
  #if defined(DT_DIR) && defined(DT_UNKNOWN) && defined(DT_LNK)
  # define dirent_type(dirent) ((dirent)->d_type)
@@ -55,7 +63,7 @@ Index: qemu-2.5.0/util/path.c
      DIR *dir;
  
      if ((dir = opendir(path->pathname)) != NULL) {
-@@ -78,6 +81,11 @@ static struct pathelem *add_dir_maybe(st
+@@ -74,6 +77,11 @@ static struct pathelem *add_dir_maybe(struct pathelem *path)
          }
          closedir(dir);
      }
@@ -67,7 +75,7 @@ Index: qemu-2.5.0/util/path.c
      return path;
  }
  
-@@ -93,26 +101,16 @@ static struct pathelem *add_entry(struct
+@@ -89,26 +97,16 @@ static struct pathelem *add_entry(struct pathelem *root, const char *name,
      e = &root->entries[root->num_entries-1];
  
      *e = new_entry(root->pathname, root, name);
@@ -97,7 +105,7 @@ Index: qemu-2.5.0/util/path.c
  {
      unsigned int i, namelen;
  
-@@ -123,14 +121,18 @@ follow_path(const struct pathelem *curso
+@@ -119,14 +117,18 @@ follow_path(const struct pathelem *cursor, const char *name)
          return cursor->pathname;
  
      if (strneq(name, namelen, ".."))
@@ -119,7 +127,7 @@ Index: qemu-2.5.0/util/path.c
  
      /* Not found */
      return NULL;
-@@ -164,8 +166,6 @@ void init_paths(const char *prefix)
+@@ -160,8 +162,6 @@ void init_paths(const char *prefix)
          g_free(base->name);
          g_free(base);
          base = NULL;
@@ -128,7 +136,7 @@ Index: qemu-2.5.0/util/path.c
      }
  }
  
-@@ -177,5 +177,5 @@ const char *path(const char *name)
+@@ -173,5 +173,5 @@ const char *path(const char *name)
      if (!base || !name || name[0] != '/')
          return name;
  

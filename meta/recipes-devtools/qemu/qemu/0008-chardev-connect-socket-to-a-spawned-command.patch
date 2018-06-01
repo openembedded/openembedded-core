@@ -1,4 +1,4 @@
-From 3bb3100c22eb30146a69656480bdffeef8663575 Mon Sep 17 00:00:00 2001
+From 55c9510311b7481a0c8f3f71b3ce130cc25563f9 Mon Sep 17 00:00:00 2001
 From: Alistair Francis <alistair.francis@xilinx.com>
 Date: Thu, 21 Dec 2017 11:35:16 -0800
 Subject: [PATCH] chardev: connect socket to a spawned command
@@ -45,13 +45,13 @@ Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Patrick Ohly <patrick.ohly@intel.com>
 ---
- chardev/char-socket.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ chardev/char-socket.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++
  chardev/char.c        |  3 ++
  qapi/char.json        |  5 +++
- 3 files changed, 90 insertions(+), 4 deletions(-)
+ 3 files changed, 107 insertions(+)
 
 diff --git a/chardev/char-socket.c b/chardev/char-socket.c
-index 53eda8ef00..f566107c35 100644
+index 53eda8e..6c63555 100644
 --- a/chardev/char-socket.c
 +++ b/chardev/char-socket.c
 @@ -852,6 +852,68 @@ static gboolean socket_reconnect_timeout(gpointer opaque)
@@ -123,7 +123,7 @@ index 53eda8ef00..f566107c35 100644
  static void qmp_chardev_open_socket(Chardev *chr,
                                      ChardevBackend *backend,
                                      bool *be_opened,
-@@ -859,6 +921,9 @@
+@@ -859,6 +921,9 @@ static void qmp_chardev_open_socket(Chardev *chr,
  {
      SocketChardev *s = SOCKET_CHARDEV(chr);
      ChardevSocket *sock = backend->u.socket.data;
@@ -133,15 +133,14 @@ index 53eda8ef00..f566107c35 100644
      bool do_nodelay     = sock->has_nodelay ? sock->nodelay : false;
      bool is_listen      = sock->has_server  ? sock->server  : true;
      bool is_telnet      = sock->has_telnet  ? sock->telnet  : false;
-@@ -925,7 +990,14 @@
+@@ -925,7 +990,14 @@ static void qmp_chardev_open_socket(Chardev *chr,
      } else if (reconnect > 0) {
          s->reconnect_time = reconnect;
      }
--
 +#ifndef _WIN32
 +    if (cmd) {
 +        chardev_open_socket_cmd(chr, cmd, errp);
-+
+ 
 +        /* everything ready (or failed permanently) before we return */
 +        *be_opened = true;
 +    } else
@@ -149,7 +148,7 @@ index 53eda8ef00..f566107c35 100644
      if (s->reconnect_time) {
          sioc = qio_channel_socket_new();
          tcp_chr_set_client_ioc_name(chr, sioc);
-@@ -985,10 +1057,26 @@
+@@ -985,10 +1057,26 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
      const char *host = qemu_opt_get(opts, "host");
      const char *port = qemu_opt_get(opts, "port");
      const char *tls_creds = qemu_opt_get(opts, "tls-creds");
@@ -176,7 +175,7 @@ index 53eda8ef00..f566107c35 100644
      if (!path) {
          if (!host) {
              error_setg(errp, "chardev: socket: no host given");
-@@ -1021,13 +1109,24 @@
+@@ -1021,13 +1109,24 @@ static void qemu_chr_parse_socket(QemuOpts *opts, ChardevBackend *backend,
      sock->has_reconnect = true;
      sock->reconnect = reconnect;
      sock->tls_creds = g_strdup(tls_creds);
@@ -202,21 +201,21 @@ index 53eda8ef00..f566107c35 100644
          addr->type = SOCKET_ADDRESS_LEGACY_KIND_INET;
          addr->u.inet.data = g_new(InetSocketAddress, 1);
 diff --git a/chardev/char.c b/chardev/char.c
-index 2ae4f465ec..5d52cd5de5 100644
+index 2ae4f46..5d52cd5 100644
 --- a/chardev/char.c
 +++ b/chardev/char.c
-@@ -792,6 +792,9 @@ QemuOptsList qemu_chardev_opts = {
-         },{
+@@ -793,6 +793,9 @@ QemuOptsList qemu_chardev_opts = {
              .name = "path",
              .type = QEMU_OPT_STRING,
-+        },{
+         },{
 +            .name = "cmd",
 +            .type = QEMU_OPT_STRING,
-         },{
++        },{
              .name = "host",
              .type = QEMU_OPT_STRING,
+         },{
 diff --git a/qapi/char.json b/qapi/char.json
-index ae19dcd1ed..6de0f29bcd 100644
+index ae19dcd..6de0f29 100644
 --- a/qapi/char.json
 +++ b/qapi/char.json
 @@ -241,6 +241,10 @@
@@ -238,5 +237,3 @@ index ae19dcd1ed..6de0f29bcd 100644
                                       '*tls-creds'  : 'str',
                                       '*server'    : 'bool',
                                       '*wait'      : 'bool',
--- 
-2.14.1

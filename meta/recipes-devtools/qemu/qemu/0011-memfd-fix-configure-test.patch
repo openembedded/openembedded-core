@@ -1,7 +1,4 @@
-Upstream-Status: Backport
-Signed-off-by: Ross Burton <ross.burton@intel.com>
-
-From 75e5b70e6b5dcc4f2219992d7cffa462aa406af0 Mon Sep 17 00:00:00 2001
+From 0c8af3f651a125d636a71d93bafd35ff5240431a Mon Sep 17 00:00:00 2001
 From: Paolo Bonzini <pbonzini@redhat.com>
 Date: Tue, 28 Nov 2017 11:51:27 +0100
 Subject: [PATCH] memfd: fix configure test
@@ -19,6 +16,8 @@ file actually does not exist---it is a typo in the memfd_create(2) man
 page.
 
 Cc: Marc-André Lureau <marcandre.lureau@redhat.com>
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
  configure    | 2 +-
@@ -26,10 +25,10 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
  2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/configure b/configure
-index 9c8aa5a98b..99ccc1725a 100755
+index b5312f4..ec12f36 100755
 --- a/configure
 +++ b/configure
-@@ -3923,7 +3923,7 @@ fi
+@@ -3920,7 +3920,7 @@ fi
  # check if memfd is supported
  memfd=no
  cat > $TMPC << EOF
@@ -39,7 +38,7 @@ index 9c8aa5a98b..99ccc1725a 100755
  int main(void)
  {
 diff --git a/util/memfd.c b/util/memfd.c
-index 4571d1aba8..412e94a405 100644
+index 4571d1a..412e94a 100644
 --- a/util/memfd.c
 +++ b/util/memfd.c
 @@ -31,9 +31,7 @@
@@ -53,5 +52,3 @@ index 4571d1aba8..412e94a405 100644
  #include <sys/syscall.h>
  #include <asm/unistd.h>
  
--- 
-2.11.0
