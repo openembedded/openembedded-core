@@ -87,7 +87,7 @@ PACKAGECONFIG_class-native_remove = "${@'kvm' if not os.path.exists('/usr/includ
 PACKAGECONFIG_remove_darwin = "kvm"
 PACKAGECONFIG_remove_mingw32 = "kvm"
 
-PACKAGECONFIG[sdl] = "--enable-sdl,--disable-sdl,libsdl"
+PACKAGECONFIG[sdl] = "--enable-sdl --with-sdlabi=2.0,--disable-sdl,libsdl2"
 PACKAGECONFIG[virtfs] = "--enable-virtfs --enable-attr,--disable-virtfs,libcap attr,"
 PACKAGECONFIG[aio] = "--enable-linux-aio,--disable-linux-aio,libaio,"
 PACKAGECONFIG[xfs] = "--enable-xfsctl,--disable-xfsctl,xfsprogs,"
