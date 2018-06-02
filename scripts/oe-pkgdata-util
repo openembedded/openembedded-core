@@ -287,8 +287,11 @@ def lookup_recipe(args):
 def package_info(args):
     def parse_pkgdatafile(pkgdatafile):
         vars = ['PKGV', 'PKGE', 'PKGR', 'PN', 'PV', 'PE', 'PR', 'PKGSIZE']
+        if args.extra:
+            vars += args.extra
         with open(pkgdatafile, 'r') as f:
             vals = dict()
+            extra = ''
             for line in f:
                 for var in vars:
                     m = re.match(var + '(?:_\S+)?:\s*(.+?)\s*$', line)
@@ -306,7 +309,12 @@ def package_info(args):
                 recipe_version = vals['PE'] + ":" + recipe_version
             if 'PR' in vals:
                 recipe_version = recipe_version + "-" + vals['PR']
-            print("%s %s %s %s %s" % (pkg, pkg_version, recipe, recipe_version, pkg_size))
+            if args.extra:
+                for var in args.extra:
+                    if var in vals:
+                        val = re.sub(r'\s+', ' ', vals[var])
+                        extra += ' "%s"' % val
+            print("%s %s %s %s %s%s" % (pkg, pkg_version, recipe, recipe_version, pkg_size, extra))
 
     # Handle both multiple arguments and multiple values within an arg (old syntax)
     packages = []
