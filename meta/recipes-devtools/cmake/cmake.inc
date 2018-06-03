@@ -20,6 +20,9 @@ SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://0001-FindBoost-Fix-incorrect-alphabetisation-of-headers-l.patch \
            file://0002-FindBoost-Implement-Architecture-and-Address-Model-t.patch \
            file://0003-FindBoost-Search-for-upstream-packaged-libs-next-to-.patch \
+           file://0004-FindBoost-Generate-imported-targets-for-future-Boost.patch \
+           file://0005-FindBoost-support-OPTIONAL_COMPONENTS.patch \
+           file://0006-FindBoost-Add-support-for-Boost-1.67-with-Python-ver.patch \
            "
 
 SRC_URI[md5sum] = "1c38c67295ca696aeafd8c059d748b38"
