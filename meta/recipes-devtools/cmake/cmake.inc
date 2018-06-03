@@ -16,6 +16,10 @@ SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://support-oe-qt4-tools-names.patch \
            file://qt4-fail-silent.patch \
            file://cmake-Prevent-the-detection-of-Qt5.patch \
+           file://0001-FindBoost-Boost-1.66.0-dependency-and-release-update.patch \
+           file://0001-FindBoost-Fix-incorrect-alphabetisation-of-headers-l.patch \
+           file://0002-FindBoost-Implement-Architecture-and-Address-Model-t.patch \
+           file://0003-FindBoost-Search-for-upstream-packaged-libs-next-to-.patch \
            "
 
 SRC_URI[md5sum] = "1c38c67295ca696aeafd8c059d748b38"
