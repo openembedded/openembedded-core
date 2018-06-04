@@ -118,11 +118,23 @@ EOF
 }
 
 toolchain_create_post_relocate_script() {
-	script=$1
-	rm -f $script
-	touch $script
+	relocate_script=$1
+	env_dir=$2
+	rm -f $relocate_script
+	touch $relocate_script
 
-	cat >> $script <<EOF
+	cat >> $relocate_script <<EOF
+# Source top-level SDK env scripts in case they are needed for the relocate
+# scripts.
+for env_setup_script in ${env_dir}/environment-setup-*; do
+    . \$env_setup_script
+    status=\$?
+    if [ \$status != 0 ]; then
+        echo "\$0: Failed to source \$env_setup_script with status \$status"
+        exit \$status
+    fi
+done
+
 if [ -d "${SDKPATHNATIVE}/post-relocate-setup.d/" ]; then
     for s in ${SDKPATHNATIVE}/post-relocate-setup.d/*; do
         if [ ! -x \$s ]; then
