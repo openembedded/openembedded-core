@@ -9,6 +9,8 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/${BP}.tar
            file://0002-gobject-introspection-determine-g-ir-scanner-and-g-i.patch \
            file://0001-Linker-rules-move-cross_args-in-front-of-output_args.patch \
            file://0003-native_bindir.patch \
+           file://0004-Prettifying-some-output-with-pathlib.patch \
+           file://0005-Set-the-meson-command-to-use-when-we-know-what-it-is.patch \
            "
 SRC_URI[md5sum] = "1698f6526574839de5dcdc45e3f7d582"
 SRC_URI[sha256sum] = "19497a03e7e5b303d8d11f98789a79aba59b5ad4a81bd00f4d099be0212cee78"
