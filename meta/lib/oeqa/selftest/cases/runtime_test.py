@@ -135,7 +135,7 @@ class TestImage(OESelftestTestCase):
         Summary: Check package feeds functionality for dnf
         Expected: 1. Check that remote package feeds can be accessed
         Product: oe-core
-        Author: Alexander Kanavin <alexander.kanavin@intel.com>
+        Author: Alexander Kanavin <alex.kanavin@gmail.com>
         """
         if get_bb_var('DISTRO') == 'poky-tiny':
             self.skipTest('core-image-full-cmdline not buildable for poky-tiny')
@@ -231,7 +231,7 @@ class Postinst(OESelftestTestCase):
         Expected:       The scriptlet failure is properly reported.
                         The file that is created after the error in the scriptlet is not present.
         Product: oe-core
-        Author: Alexander Kanavin <alexander.kanavin@intel.com>
+        Author: Alexander Kanavin <alex.kanavin@gmail.com>
         """
 
         import oe.path

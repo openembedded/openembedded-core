@@ -107,7 +107,7 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
         Expected:    There should be some RPM prefixed entries in the above file.
         Product:     BSPs
         Author:      Alexandru Georgescu <alexandru.c.georgescu@intel.com>
-        Author:      Alexander Kanavin <alexander.kanavin@intel.com>
+        Author:      Alexander Kanavin <alex.kanavin@gmail.com>
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
         db_files_cmd = 'ls /var/lib/rpm/__db.*'
