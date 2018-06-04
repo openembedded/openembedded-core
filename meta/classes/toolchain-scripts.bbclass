@@ -122,7 +122,7 @@ toolchain_create_post_relocate_script() {
 	rm -f $script
 	touch $script
 
-    cat >> $script <<EOF
+	cat >> $script <<EOF
 if [ -d "${SDKPATHNATIVE}/post-relocate-setup.d/" ]; then
     for s in ${SDKPATHNATIVE}/post-relocate-setup.d/*.sh; do
         \$s "\$1"
