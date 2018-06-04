@@ -124,7 +124,10 @@ toolchain_create_post_relocate_script() {
 
 	cat >> $script <<EOF
 if [ -d "${SDKPATHNATIVE}/post-relocate-setup.d/" ]; then
-    for s in ${SDKPATHNATIVE}/post-relocate-setup.d/*.sh; do
+    for s in ${SDKPATHNATIVE}/post-relocate-setup.d/*; do
+        if [ ! -x \$s ]; then
+            continue
+        fi
         \$s "\$1"
     done
     rm -rf "${SDKPATHNATIVE}/post-relocate-setup.d"
