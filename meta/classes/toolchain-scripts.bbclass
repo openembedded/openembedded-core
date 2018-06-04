@@ -129,6 +129,11 @@ if [ -d "${SDKPATHNATIVE}/post-relocate-setup.d/" ]; then
             continue
         fi
         \$s "\$1"
+        status=\$?
+        if [ \$status != 0 ]; then
+            echo "post-relocate command \"\$s \$1\" failed with status \$status" >&2
+            exit \$status
+        fi
     done
     rm -rf "${SDKPATHNATIVE}/post-relocate-setup.d"
 fi
