@@ -188,8 +188,6 @@ RDEPENDS_packagegroup-self-hosted-graphics = "\
     libgl-dev \
     libglu \
     libglu-dev \
-    libsdl \
-    libsdl-dev \
     libx11-dev \
     adwaita-icon-theme \
     xdg-utils \
