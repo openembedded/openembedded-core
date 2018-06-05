@@ -21,18 +21,14 @@ DEPENDS_append_libc-musl = " fts "
 EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "731cd34e682d297b207668be8b1d15320a9ac1b1"
+SRCREV = "96cbf48313afa65ef4d693d3441cbfd60a8d9b27"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
-           file://0001-configure-add-knob-to-control-numa-support.patch \
-           file://0001-configure-Fix-default-value-of-without-numa-switch-i.patch \
-           file://0003-Add-knob-to-control-tirpc-support.patch \
            file://0004-build-Add-option-to-select-libc-implementation.patch \
            file://0005-kernel-controllers-Link-with-libfts-explicitly-on-mu.patch \
            file://0007-fix-__WORDSIZE-undeclared-when-building-with-musl.patch \
            file://0008-Check-if-__GLIBC_PREREQ-is-defined-before-using-it.patch \
            file://0009-fix-redefinition-of-struct-msgbuf-error-building-wit.patch \
-           file://0010-replace-__BEGIN_DECLS-and-__END_DECLS.patch \
            file://0018-guard-mallocopt-with-__GLIBC__.patch \
            file://0020-getdents-define-getdents-getdents64-only-for-glibc.patch \
            file://0021-Define-_GNU_SOURCE-for-MREMAP_MAYMOVE-definition.patch \
@@ -44,8 +40,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0035-fix-test_proc_kill-hang.patch \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0039-commands-ar01-Fix-for-test-in-deterministic-mode.patch \
-           file://0040-safe_macros-make-is_fuse-return-zero-if-fs_type-is-N.patch \
-           file://0001-Disable-rpc01-on-glibc-and-musl.patch \
+           file://0040-read_all-Define-FNM_EXTMATCH-if-not-already-like-und.patch \
            "
 
 S = "${WORKDIR}/git"
