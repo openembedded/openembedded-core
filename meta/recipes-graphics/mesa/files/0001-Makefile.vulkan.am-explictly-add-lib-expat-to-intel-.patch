@@ -1,8 +1,9 @@
-From 342311dbb190735b7b32ab20f81c1d8dbcfe717a Mon Sep 17 00:00:00 2001
+From 327c3dcbfa005f5d1b2fcda07ca1198d65bd23c5 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Wed, 11 Oct 2017 15:40:42 +0800
-Subject: [PATCH] Makefile.vulkan.am: explictly add lib expat to intel
+Subject: [PATCH 1/7] Makefile.vulkan.am: explictly add lib expat to intel
  libvulkan's lib depends
+Organization: O.S. Systems Software LTDA.
 
 While built with "-fvisibility=default"
 ...
@@ -28,11 +29,11 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  src/intel/Makefile.vulkan.am | 1 +
  1 file changed, 1 insertion(+)
 
-Index: mesa-17.3.6/src/intel/Makefile.vulkan.am
-===================================================================
---- mesa-17.3.6.orig/src/intel/Makefile.vulkan.am
-+++ mesa-17.3.6/src/intel/Makefile.vulkan.am
-@@ -144,6 +144,7 @@ VULKAN_LIB_DEPS = \
+diff --git a/src/intel/Makefile.vulkan.am b/src/intel/Makefile.vulkan.am
+index 4125cb205a..356c4f8452 100644
+--- a/src/intel/Makefile.vulkan.am
++++ b/src/intel/Makefile.vulkan.am
+@@ -161,6 +161,7 @@ VULKAN_LIB_DEPS = \
  	$(LIBDRM_LIBS) \
  	$(PTHREAD_LIBS) \
  	$(DLOPEN_LIBS) \
@@ -40,3 +41,6 @@ Index: mesa-17.3.6/src/intel/Makefile.vulkan.am
  	-lm
  
  if HAVE_PLATFORM_ANDROID
+-- 
+2.17.1
+

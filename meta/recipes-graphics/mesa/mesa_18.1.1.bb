@@ -1,18 +1,17 @@
 require ${BPN}.inc
 
 SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
-           file://disable-asm-on-non-gcc.patch \
-	   file://Use-Python-3-to-execute-the-scripts.patch \
-           file://0001-Use-wayland-scanner-in-the-path.patch \
-           file://0002-hardware-gloat.patch \
-           file://llvm-config-version.patch \
-           file://0001-winsys-svga-drm-Include-sys-types.h.patch \
            file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
-           file://vulkan-mkdir.patch \
-           "
+           file://0002-Simplify-wayland-scanner-lookup.patch \
+           file://0003-winsys-svga-drm-Include-sys-types.h.patch \
+           file://0004-hardware-gloat.patch \
+           file://0005-Properly-get-LLVM-version-when-using-LLVM-Git-releas.patch \
+           file://0006-Use-Python-3-to-execute-the-scripts.patch \
+           file://0007-dri-i965-Add-missing-time.h-include.patch \
+"
 
-SRC_URI[md5sum] = "3c303da98ec2ce37c795baeba5aee31e"
-SRC_URI[sha256sum] = "98fa159768482dc568b9f8bf0f36c7acb823fa47428ffd650b40784f16b9e7b3"
+SRC_URI[md5sum] = "063468c930ff61d211ece0191874fa95"
+SRC_URI[sha256sum] = "d3312a2ede5aac14a47476b208b8e3a401367838330197c4588ab8ad420d7781"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
