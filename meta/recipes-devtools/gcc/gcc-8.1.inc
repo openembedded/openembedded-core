@@ -70,6 +70,7 @@ SRC_URI = "\
            file://0037-sync-gcc-stddef.h-with-musl.patch \
            file://0038-fix-segmentation-fault-in-precompiled-header-generat.patch \
            file://0039-Fix-for-testsuite-failure.patch \
+           file://0040-Re-introduce-spe-commandline-options.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
