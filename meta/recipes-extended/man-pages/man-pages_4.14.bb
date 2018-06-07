@@ -10,7 +10,13 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/Archive/${BP}.tar.gz"
 SRC_URI[md5sum] = "82bd2d05c4d0dba5e7a90d39c9555197"
 SRC_URI[sha256sum] = "aeebc6b09a11e7f7bbc98f3984fe8b8b2bde9d2f5f9dcbd4348a9e0d93704238"
 
-RDEPENDS_${PN} = "man"
+inherit manpages
+
+MAN_PKG = "${PN}"
+
+# help manpages.bbclass deal with RDEPNDS and postinstall scripts
+PACKAGECONFIG = "manpages"
+PACKAGECONFIG[manpages] = ""
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
