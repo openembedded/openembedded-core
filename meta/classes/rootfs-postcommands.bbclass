@@ -36,11 +36,6 @@ ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("DISTRO_FEATURES", "systemd"
 
 ROOTFS_POSTPROCESS_COMMAND += 'empty_var_volatile;'
 
-# Disable DNS lookups, the SSH_DISABLE_DNS_LOOKUP can be overridden to allow
-# distros to choose not to take this change
-SSH_DISABLE_DNS_LOOKUP ?= " ssh_disable_dns_lookup ; "
-ROOTFS_POSTPROCESS_COMMAND_append_qemuall = "${SSH_DISABLE_DNS_LOOKUP}"
-
 # Sort the user and group entries in /etc by ID in order to make the content
 # deterministic. Package installs are not deterministic, causing the ordering
 # of entries to change between builds. In case that this isn't desired,
@@ -168,12 +163,6 @@ ssh_allow_empty_password () {
 		do
 			sed -i 's/nullok_secure/nullok/' $f
 		done
-	fi
-}
-
-ssh_disable_dns_lookup () {
-	if [ -e ${IMAGE_ROOTFS}${sysconfdir}/ssh/sshd_config ]; then
-		sed -i -e 's:#UseDNS yes:UseDNS no:' ${IMAGE_ROOTFS}${sysconfdir}/ssh/sshd_config
 	fi
 }
 
