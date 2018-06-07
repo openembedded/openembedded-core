@@ -27,6 +27,7 @@ import fcntl
 import shutil
 import glob
 import configparser
+import signal
 
 class RunQemuError(Exception):
     """Custom exception to raise on known errors."""
@@ -233,6 +234,10 @@ class BaseConfig(object):
         # slirp qemus are running.
         self.mac_tap = "52:54:00:12:34:"
         self.mac_slirp = "52:54:00:12:35:"
+        # pid of the actual qemu process
+        self.qemupid = None
+        # avoid cleanup twice
+        self.cleaned = False
 
     def acquire_lock(self, error=True):
         logger.debug("Acquiring lockfile %s..." % self.lock)
@@ -1200,10 +1205,18 @@ class BaseConfig(object):
         cmd = "%s %s" % (self.qemu_opt, kernel_opts)
         logger.info('Running %s\n' % cmd)
         process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+        self.qemupid = process.pid
         if process.wait():
             logger.error("Failed to run qemu: %s", process.stderr.read().decode())
 
     def cleanup(self):
+        if self.cleaned:
+            return
+
+        # avoid dealing with SIGTERM when cleanup function is running
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+
+        logger.info("Cleaning up")
         if self.cleantap:
             cmd = 'sudo %s %s %s' % (self.qemuifdown, self.tap, self.bindir_native)
             logger.debug('Running %s' % cmd)
@@ -1226,6 +1239,8 @@ class BaseConfig(object):
             logger.info('Removing %s' % self.rootfs)
             shutil.rmtree(self.rootfs)
             shutil.rmtree('%s.pseudo_state' % self.rootfs)
+
+        self.cleaned = True
 
     def load_bitbake_env(self, mach=None):
         if self.bitbake_e:
@@ -1282,6 +1297,13 @@ def main():
         return 0
     try:
         config = BaseConfig()
+
+        def sigterm_handler(signum, frame):
+            logger.info("SIGTERM received")
+            os.kill(config.qemupid, signal.SIGTERM)
+            config.cleanup()
+        signal.signal(signal.SIGTERM, sigterm_handler)
+
         config.check_args()
         config.read_qemuboot()
         config.check_and_set()
@@ -1300,7 +1322,6 @@ def main():
         traceback.print_exc()
         return 1
     finally:
-        print("Cleanup")
         config.cleanup()
 
 if __name__ == "__main__":
