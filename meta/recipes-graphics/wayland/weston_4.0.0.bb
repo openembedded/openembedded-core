@@ -15,6 +15,8 @@ SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "33709aa4d5916f89643fca0fc0064b39"
 SRC_URI[sha256sum] = "a0fc0ae7ef83dfbed12abfe9b8096a24a7dd00705e86fa0db1e619ded18b4b58"
 
+UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
+
 inherit autotools pkgconfig useradd distro_features_check
 # depends on virtual/egl
 REQUIRED_DISTRO_FEATURES = "opengl"

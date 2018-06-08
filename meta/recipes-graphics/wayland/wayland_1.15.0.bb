@@ -18,6 +18,8 @@ SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "b7393c17fdce9a8d383edab656c92fd2"
 SRC_URI[sha256sum] = "eb3fbebb8559d56a80ad3753ec3db800f587329067962dbf65e14488b4b7aeb0"
 
+UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
+
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-documentation --with-host-scanner"
