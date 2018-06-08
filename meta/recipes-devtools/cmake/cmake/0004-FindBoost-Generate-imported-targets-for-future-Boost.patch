@@ -13,7 +13,7 @@ support newly-released Boost versions pending a new CMake release.
 
 Affects cmake < 3.11.0
 
-Upsteam-Status: Backport
+Upstream-Status: Backport
 [Yocto 12762]
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 

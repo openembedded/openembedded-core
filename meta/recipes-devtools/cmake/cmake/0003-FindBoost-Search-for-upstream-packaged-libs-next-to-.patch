@@ -9,7 +9,7 @@ Upstream packages Boost binaries for Windows with the 'boost' directory
 
 Affects cmake < 3.11.0
 
-Upsteam-Status: Backport
+Upstream-Status: Backport
 [Yocto 12762]
 Signed-off-by: Armin Kuster <akuster808@gmail.com>
 
