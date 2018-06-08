@@ -20,6 +20,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
 SRC_URI[md5sum] = "62e5f5685b8d9752fdeaf17c057d53d1"
 SRC_URI[sha256sum] = "5b2875ccff99ff7baab63a34b67f8c920def240e178ff50add809e267d9ea24b"
 
+SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch "
+
 inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even
 BBCLASSEXTEND = "native"
 
