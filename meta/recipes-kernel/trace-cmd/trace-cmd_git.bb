@@ -10,6 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
                     file://trace-input.c;beginline=5;endline=8;md5=3ec82f43bbe0cfb5951ff414ef4d44d0 \
 "
 
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[audit] = ',NO_AUDIT=1,audit'
 EXTRA_OEMAKE = "\
     'prefix=${prefix}' \
     'bindir=${bindir}' \
@@ -21,6 +23,7 @@ EXTRA_OEMAKE = "\
     'libdir=${libdir}' \
     \
     NO_PYTHON=1 \
+    ${PACKAGECONFIG_CONFARGS} \
 "
 
 do_compile_prepend() {
