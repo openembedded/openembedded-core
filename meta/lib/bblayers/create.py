@@ -43,8 +43,11 @@ class CreatePlugin(LayerPlugin):
         license_dst = os.path.join(layerdir, copying)
         shutil.copy(license_src, license_dst)
 
+        # Get the compat value for core layer.
+        compat = self.tinfoil.config_data.getVar('LAYERSERIES_COMPAT_core') or ""
+
         # Create the layer.conf from templates/layer.conf
-        layerconf_template = read_template('layer.conf') % (args.layerdir, args.layerdir, args.layerdir, args.priority)
+        layerconf_template = read_template('layer.conf') % (args.layerdir, args.layerdir, args.layerdir, args.priority, args.layerdir, args.layerdir, compat)
         layerconf = os.path.join(conf, 'layer.conf')
         with open(layerconf, 'w') as fd:
             fd.write(layerconf_template)
