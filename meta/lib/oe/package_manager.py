@@ -370,7 +370,7 @@ class PackageManager(object, metaclass=ABCMeta):
                 self._handle_intercept_failure(registered_pkgs)
 
 
-    def run_intercepts(self):
+    def run_intercepts(self, populate_sdk=None):
         intercepts_dir = self.intercepts_dir
 
         bb.note("Running intercept scripts:")
@@ -392,9 +392,22 @@ class PackageManager(object, metaclass=ABCMeta):
                 output = subprocess.check_output(script_full, stderr=subprocess.STDOUT)
                 if output: bb.note(output.decode("utf-8"))
             except subprocess.CalledProcessError as e:
-                bb.warn("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
                 bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
-                self._postpone_to_first_boot(script_full)
+                if populate_sdk == 'host':
+                    bb.warn("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
+                elif populate_sdk == 'target':
+                    if "qemuwrapper: qemu usermode is not supported" in e.output.decode("utf-8"):
+                        bb.warn("The postinstall intercept hook '%s' could not be executed due to missing qemu usermode support, details in %s/log.do_%s"
+                                % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
+                    else:
+                        bb.fatal("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
+                else:
+                    if "qemuwrapper: qemu usermode is not supported" in e.output.decode("utf-8"):
+                        bb.note("The postinstall intercept hook '%s' could not be executed due to missing qemu usermode support, details in %s/log.do_%s"
+                                % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
+                        self._postpone_to_first_boot(script_full)
+                    else:
+                        bb.fatal("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
 
     @abstractmethod
     def update(self):
