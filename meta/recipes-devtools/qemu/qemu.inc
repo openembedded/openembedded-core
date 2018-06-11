@@ -5,7 +5,7 @@ DEPENDS = "glib-2.0 zlib pixman"
 RDEPENDS_${PN}_class-target += "bash"
 
 require qemu-targets.inc
-inherit autotools pkgconfig bluetooth
+inherit pkgconfig bluetooth
 BBCLASSEXTEND = "native nativesdk"
 
 # QEMU_TARGETS is overridable variable
@@ -27,6 +27,7 @@ EXTRA_OECONF = " \
     --disable-werror \
     --target-list=${@get_qemu_target_list(d)} \
     --extra-cflags='${CFLAGS}' \
+    ${PACKAGECONFIG_CONFARGS} \
     "
 EXTRA_OECONF_append_class-native = " --python=python2.7"
 
@@ -36,27 +37,23 @@ LDFLAGS_append_class-native = " -fuse-ld=bfd"
 
 export LIBTOOL="${HOST_SYS}-libtool"
 
+B = "${WORKDIR}/build"
+
 do_configure_prepend_class-native() {
 	# Append build host pkg-config paths for native target since the host may provide sdl
 	BHOST_PKGCONFIG_PATH=$(PATH=/usr/bin:/bin pkg-config --variable pc_path pkg-config || echo "")
 	if [ ! -z "$BHOST_PKGCONFIG_PATH" ]; then
 		export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BHOST_PKGCONFIG_PATH
 	fi
-
-	# Alter target makefiles to accept CFLAGS set via env
-	sed -i -r \
-		-e 's/^(C|OP_C|HELPER_C)FLAGS=/\1FLAGS+=/' \
-		"${S}"/Makefile "${S}"/Makefile.target
 }
 
 do_configure() {
     ${S}/configure ${EXTRA_OECONF}
-    test ! -e ${S}/target-i386/beginend_funcs.sh || chmod a+x ${S}/target-i386/beginend_funcs.sh
 }
 
 do_install () {
-	export STRIP="true"
-	autotools_do_install
+	export STRIP=""
+	oe_runmake 'DESTDIR=${D}' install
 }
 
 # The following fragment will create a wrapper for qemu-mips user emulation
