@@ -22,8 +22,8 @@ SRC_URI = "http://portland.freedesktop.org/download/${BPN}-${PV}.tar.gz \
            file://0001-Don-t-build-the-in-script-manual.patch \
           "
 
-SRC_URI[md5sum] = "361e75eb76c94d19f6f4f330d8ee626b"
-SRC_URI[sha256sum] = "951952e2c6bb21214e0bb54e0dffa057d30f5563300225c24c16fba846258bcc"
+SRC_URI[md5sum] = "902042508b626027a3709d105f0b63ff"
+SRC_URI[sha256sum] = "d798b08af8a8e2063ddde6c9fa3398ca81484f27dec642c5627ffcaa0d4051d9"
 
 UPSTREAM_CHECK_REGEX = "xdg-utils-(?P<pver>((\d+[\.\-_]*)+)((rc|alpha|beta)\d+)?)\.(tar\.gz|tgz)"
 
