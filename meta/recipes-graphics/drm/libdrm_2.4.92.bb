@@ -12,7 +12,6 @@ DEPENDS = "libpthread-stubs libpciaccess"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://installtests.patch \
-           file://fix_O_CLOEXEC_undeclared.patch \
            file://0001-configure.ac-Allow-explicit-enabling-of-cunit-tests.patch \
           "
 
