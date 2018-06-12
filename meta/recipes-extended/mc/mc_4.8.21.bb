@@ -9,8 +9,8 @@ RDEPENDS_${PN} = "ncurses-terminfo"
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://0001-mc-replace-perl-w-with-use-warnings.patch \
            "
-SRC_URI[md5sum] = "dcfc7aa613c62291a0f71f6b698d8267"
-SRC_URI[sha256sum] = "2d85daaa6ab26e524946df4823ac2f69802bc16bc967781b5e28d5b86fc3b979"
+SRC_URI[md5sum] = "63d2b90e2198ee79d08eb4a8989220e2"
+SRC_URI[sha256sum] = "251d9f0ef9309ef3eea0fdc4c12b8b61149e5056bef1b2de2ccc7f015d973444"
 
 inherit autotools gettext pkgconfig
 
