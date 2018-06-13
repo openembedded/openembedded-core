@@ -53,6 +53,9 @@ if [[ ${SDK_ROOTFS_DIR:0:1} != "/" ]]; then
 fi
 
 TAR_OPTS=""
+if [[ "$ROOTFS_TARBALL" =~ tar\.xz$ ]]; then
+	TAR_OPTS="--numeric-owner -xJf"
+fi
 if [[ "$ROOTFS_TARBALL" =~ tar\.bz2$ ]]; then
 	TAR_OPTS="--numeric-owner -xjf"
 fi
@@ -64,7 +67,7 @@ if [[ "$ROOTFS_TARBALL" =~ \.tar$ ]]; then
 fi
 if [ -z "$TAR_OPTS" ]; then
 	echo "Error: Unable to determine sdk tarball format"
-	echo "Accepted types: .tar / .tar.gz / .tar.bz2"
+	echo "Accepted types: .tar / .tar.gz / .tar.bz2 / .tar.xz"
 	exit 1
 fi
 
