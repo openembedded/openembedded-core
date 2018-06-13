@@ -50,6 +50,7 @@ common_errors = [
     "GPT: Use GNU Parted to correct GPT errors",
     "Cannot set xattr user.Librepo.DownloadInProgress",
     "Failed to read /var/lib/nfs/statd/state: Success",
+    "error retry time-out =",
     ]
 
 video_related = [
