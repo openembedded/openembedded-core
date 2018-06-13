@@ -49,6 +49,7 @@ common_errors = [
     "error: couldn\'t mount because of unsupported optional features",
     "GPT: Use GNU Parted to correct GPT errors",
     "Cannot set xattr user.Librepo.DownloadInProgress",
+    "Failed to read /var/lib/nfs/statd/state: Success",
     ]
 
 video_related = [
