@@ -42,7 +42,8 @@ MESON_CROSS_FILE_class-target = "--cross-file ${WORKDIR}/meson.cross"
 MESON_CROSS_FILE_class-nativesdk = "--cross-file ${WORKDIR}/meson.cross"
 
 def meson_array(var, d):
-    return "', '".join(d.getVar(var).split()).join(("'", "'"))
+    items = d.getVar(var).split()
+    return repr(items[0] if len(items) == 1 else items)
 
 addtask write_config before do_configure
 do_write_config[vardeps] += "MESON_C_ARGS MESON_CPP_ARGS MESON_LINK_ARGS CC CXX LD AR NM STRIP READELF"
@@ -50,21 +51,21 @@ do_write_config() {
     # This needs to be Py to split the args into single-element lists
     cat >${WORKDIR}/meson.cross <<EOF
 [binaries]
-c = [${@meson_array('CC', d)}]
-cpp = [${@meson_array('CXX', d)}]
-ar = [${@meson_array('AR', d)}]
-nm = [${@meson_array('NM', d)}]
-ld = [${@meson_array('LD', d)}]
-strip = [${@meson_array('STRIP', d)}]
-readelf = [${@meson_array('READELF', d)}]
+c = ${@meson_array('CC', d)}
+cpp = ${@meson_array('CXX', d)}
+ar = ${@meson_array('AR', d)}
+nm = ${@meson_array('NM', d)}
+ld = ${@meson_array('LD', d)}
+strip = ${@meson_array('STRIP', d)}
+readelf = ${@meson_array('READELF', d)}
 pkgconfig = 'pkg-config'
 
 [properties]
 needs_exe_wrapper = true
-c_args = [${@meson_array('MESON_C_ARGS', d)}]
-c_link_args = [${@meson_array('MESON_LINK_ARGS', d)}]
-cpp_args = [${@meson_array('MESON_CPP_ARGS', d)}]
-cpp_link_args = [${@meson_array('MESON_LINK_ARGS', d)}]
+c_args = ${@meson_array('MESON_C_ARGS', d)}
+c_link_args = ${@meson_array('MESON_LINK_ARGS', d)}
+cpp_args = ${@meson_array('MESON_CPP_ARGS', d)}
+cpp_link_args = ${@meson_array('MESON_LINK_ARGS', d)}
 gtkdoc_exe_wrapper = '${B}/gtkdoc-qemuwrapper'
 
 [host_machine]
