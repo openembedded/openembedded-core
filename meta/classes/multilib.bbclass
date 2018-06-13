@@ -115,6 +115,7 @@ python __anonymous () {
     clsextend.map_variable("INITSCRIPT_PACKAGES")
     clsextend.map_variable("USERADD_PACKAGES")
     clsextend.map_variable("SYSTEMD_PACKAGES")
+    clsextend.map_variable("UPDATERCPN")
 }
 
 PACKAGEFUNCS_append = " do_package_qa_multilib"
