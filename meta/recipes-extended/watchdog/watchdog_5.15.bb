@@ -32,10 +32,10 @@ EXTRA_OECONF += " --disable-nfs "
 INITSCRIPT_PACKAGES = "${PN} ${PN}-keepalive"
 
 INITSCRIPT_NAME_${PN} = "watchdog.sh"
-INITSCRIPT_PARAMS_${PN} = "start 15 1 2 3 4 5 . stop 85 0 6 ."
+INITSCRIPT_PARAMS_${PN} = "start 25 1 2 3 4 5 . stop 85 0 6 ."
 
 INITSCRIPT_NAME_${PN}-keepalive = "wd_keepalive"
-INITSCRIPT_PARAMS_${PN}-keepalive = "start 15 1 2 3 4 5 . stop 85 0 6 ."
+INITSCRIPT_PARAMS_${PN}-keepalive = "start 25 1 2 3 4 5 . stop 85 0 6 ."
 
 SYSTEMD_PACKAGES = "${PN} ${PN}-keepalive"
 SYSTEMD_SERVICE_${PN} = "watchdog.service"
