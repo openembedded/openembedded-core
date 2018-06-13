@@ -52,9 +52,9 @@ EXTRA_AUTORECONF += "--exclude=aclocal"
 EXTRA_OECONF = "'LOGIN_PROGRAM=${base_bindir}/login' \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} \
                 --without-zlib-version-check \
-                --with-privsep-path=/var/run/sshd \
+                --with-privsep-path=${localstatedir}/run/sshd \
                 --sysconfdir=${sysconfdir}/ssh \
-                --with-xauth=/usr/bin/xauth \
+                --with-xauth=${bindir}/xauth \
                 --disable-strip \
                 "
 
@@ -160,3 +160,5 @@ CONFFILES_${PN}-ssh = "${sysconfdir}/ssh/ssh_config"
 ALTERNATIVE_PRIORITY = "90"
 ALTERNATIVE_${PN}-scp = "scp"
 ALTERNATIVE_${PN}-ssh = "ssh"
+
+BBCLASSEXTEND += "nativesdk"
