@@ -23,6 +23,7 @@ SRC_URI = "http://wiki.qemu-project.org/download/${BP}.tar.bz2 \
            file://0011-memfd-fix-configure-test.patch \
            file://0012-arm-translate-a64-treat-DISAS_UPDATE-as-variant-of-D.patch \
            file://0013-ps2-check-PS2Queue-pointers-in-post_load-routine.patch \
+           file://0001-CVE-2018-11806-QEMU-slirp-heap-buffer-overflow.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+\..*)\.tar"
 
