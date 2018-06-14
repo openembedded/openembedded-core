@@ -18,7 +18,6 @@ PROFILE_TOOLS_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'sys
 
 RRECOMMENDS_${PN} = "\
     ${PERF} \
-    trace-cmd \
     blktrace \
     ${PROFILE_TOOLS_X} \
     ${PROFILE_TOOLS_SYSTEMD} \
