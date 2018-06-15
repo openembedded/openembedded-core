@@ -19,6 +19,13 @@ LIC_FILES_CHKSUM = "\
 DEPENDS = "attr libaio libcap acl openssl zip-native"
 DEPENDS_append_libc-musl = " fts "
 EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
+
+# since ltp contains x86-64 assembler which uses the frame-pointer register,
+# set -fomit-frame-pointer x86-64 to handle cases where optimisation
+# is set to -O0 or frame pointers have been enabled by -fno-omit-frame-pointer
+# earlier in CFLAGS, etc.
+CFLAGS_append_x86-64 = " -fomit-frame-pointer"
+
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 SRCREV = "96cbf48313afa65ef4d693d3441cbfd60a8d9b27"
