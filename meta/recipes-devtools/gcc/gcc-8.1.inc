@@ -115,6 +115,7 @@ EXTRA_OECONF_INITIAL = "\
     --with-system-zlib \
     --disable-lto \
     --disable-plugin \
+    --enable-linker-build-id \
     --enable-decimal-float=no \
     --without-isl \
     --disable-libssp \
