@@ -32,7 +32,6 @@ BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.xz"
 SRC_URI = "\
            ${BASEURI} \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-           file://0002-c99-snprintf.patch \
            file://0003-gcc-poison-system-directories.patch \
            file://0004-gcc-poison-dir-extend.patch \
            file://0005-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
