@@ -73,6 +73,7 @@ SRC_URI = "\
            ${BACKPORTS} \
 "
 BACKPORTS = "\
+           file://0041-arm-PR-target-86003-build-failures-with-with-cpu-xsc.patch \
 "
 SRC_URI[md5sum] = "65f7c65818dc540b3437605026d329fc"
 SRC_URI[sha256sum] = "1d1866f992626e61349a1ccd0b8d5253816222cdc13390dcfaa74b093aa2b153"
