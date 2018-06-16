@@ -258,25 +258,34 @@ fitimage_emit_section_config() {
 	fi
 
 	# Test if we have any DTBs at all
-	conf_desc="Linux kernel"
-	kernel_line="kernel = \"kernel@${2}\";"
+	sep=""
+	conf_desc=""
+	kernel_line=""
 	fdt_line=""
 	ramdisk_line=""
 	setup_line=""
 	default_line=""
 
+	if [ -n "${2}" ]; then
+		conf_desc="Linux kernel"
+		sep=", "
+		kernel_line="kernel = \"kernel@${2}\";"
+	fi
+
 	if [ -n "${3}" ]; then
-		conf_desc="${conf_desc}, FDT blob"
+		conf_desc="${conf_desc}${sep}FDT blob"
+		sep=", "
 		fdt_line="fdt = \"fdt@${3}\";"
 	fi
 
 	if [ -n "${4}" ]; then
-		conf_desc="${conf_desc}, ramdisk"
+		conf_desc="${conf_desc}${sep}ramdisk"
+		sep=", "
 		ramdisk_line="ramdisk = \"ramdisk@${4}\";"
 	fi
 
 	if [ -n "${5}" ]; then
-		conf_desc="${conf_desc}, setup"
+		conf_desc="${conf_desc}${sep}setup"
 		setup_line="setup = \"setup@${5}\";"
 	fi
 
@@ -299,18 +308,26 @@ EOF
 
 	if [ ! -z "${conf_sign_keyname}" ] ; then
 
-		sign_line="sign-images = \"kernel\""
+		sign_line="sign-images = "
+		sep=""
+
+		if [ -n "${2}" ]; then
+			sign_line="${sign_line}${sep}\"kernel\""
+			sep=", "
+		fi
 
 		if [ -n "${3}" ]; then
-			sign_line="${sign_line}, \"fdt\""
+			sign_line="${sign_line}${sep}\"fdt\""
+			sep=", "
 		fi
 
 		if [ -n "${4}" ]; then
-			sign_line="${sign_line}, \"ramdisk\""
+			sign_line="${sign_line}${sep}\"ramdisk\""
+			sep=", "
 		fi
 
 		if [ -n "${5}" ]; then
-			sign_line="${sign_line}, \"setup\""
+			sign_line="${sign_line}${sep}\"setup\""
 		fi
 
 		sign_line="${sign_line};"
@@ -413,7 +430,12 @@ fitimage_assemble() {
 	if [ -n "${DTBS}" ]; then
 		i=1
 		for DTB in ${DTBS}; do
-			fitimage_emit_section_config ${1} "${kernelcount}" "${DTB}" "${ramdiskcount}" "${setupcount}" "`expr ${i} = ${dtbcount}`"
+			dtb_ext=${DTB##*.}
+			if [ "${dtb_ext}" = "dtbo" ]; then
+				fitimage_emit_section_config ${1} "" "${DTB}" "" "" "`expr ${i} = ${dtbcount}`"
+			else
+				fitimage_emit_section_config ${1} "${kernelcount}" "${DTB}" "${ramdiskcount}" "${setupcount}" "`expr ${i} = ${dtbcount}`"
+			fi
 			i=`expr ${i} + 1`
 		done
 	fi
