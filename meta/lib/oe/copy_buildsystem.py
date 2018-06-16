@@ -26,6 +26,7 @@ class BuildSystem(object):
 
     def copy_bitbake_and_layers(self, destdir, workspace_name=None):
         # Copy in all metadata layers + bitbake (as repositories)
+        copied_corebase = None
         layers_copied = []
         bb.utils.mkdirhier(destdir)
         layers = list(self.layerdirs)
@@ -84,17 +85,18 @@ class BuildSystem(object):
 
             layer_relative = os.path.relpath(layerdestpath,
                                              destdir)
-            layers_copied.append(layer_relative)
-
             # Treat corebase as special since it typically will contain
             # build directories or other custom items.
             if corebase == layer:
+                copied_corebase = layer_relative
                 bb.utils.mkdirhier(layerdestpath)
                 for f in corebase_files:
                     f_basename = os.path.basename(f)
                     destname = os.path.join(layerdestpath, f_basename)
                     _smart_copy(f, destname)
             else:
+                layers_copied.append(layer_relative)
+
                 if os.path.exists(os.path.join(layerdestpath, 'conf/layer.conf')):
                     bb.note("Skipping layer %s, already handled" % layer)
                 else:
@@ -140,7 +142,7 @@ class BuildSystem(object):
                 layers_copied.remove(layer)
                 break
 
-        return layers_copied
+        return copied_corebase, layers_copied
 
 def generate_locked_sigs(sigfile, d):
     bb.utils.mkdirhier(os.path.dirname(sigfile))

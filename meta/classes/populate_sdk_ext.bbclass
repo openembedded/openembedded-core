@@ -200,15 +200,9 @@ python copy_buildsystem () {
         workspace_name = 'orig-workspace'
     else:
         workspace_name = None
-    layers_copied = buildsystem.copy_bitbake_and_layers(baseoutpath + '/layers', workspace_name)
 
-    sdkbblayers = []
-    corebase = os.path.basename(d.getVar('COREBASE'))
-    for layer in layers_copied:
-        if corebase == os.path.basename(layer):
-            conf_bbpath = os.path.join('layers', layer, 'bitbake')
-        else:
-            sdkbblayers.append(layer)
+    corebase, sdkbblayers = buildsystem.copy_bitbake_and_layers(baseoutpath + '/layers', workspace_name)
+    conf_bbpath = os.path.join('layers', corebase, 'bitbake')
 
     for path in os.listdir(baseoutpath + '/layers'):
         relpath = os.path.join('layers', path, oe_init_env_script)
