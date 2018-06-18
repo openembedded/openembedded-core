@@ -88,7 +88,6 @@ RDEPENDS_packagegroup-core-full-cmdline-utils = "\
     mc-helpers-perl \
     ncurses \
     net-tools \
-    popt \
     procps \
     psmisc \
     sed \
