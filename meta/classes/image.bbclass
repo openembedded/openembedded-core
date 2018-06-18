@@ -1,11 +1,3 @@
-def build_live(d):
-    if bb.utils.contains("IMAGE_FSTYPES", "live", "live", "0", d) == "0": # live is not set but hob might set iso or hddimg
-        d.setVar('NOISO', bb.utils.contains('IMAGE_FSTYPES', "iso", "0", "1", d))
-        d.setVar('NOHDD', bb.utils.contains('IMAGE_FSTYPES', "hddimg", "0", "1", d))
-        if d.getVar('NOISO') == "0" or d.getVar('NOHDD') == "0":
-            return "image-live"
-        return ""
-    return "image-live"
 
 IMAGE_CLASSES ??= ""
 
@@ -18,7 +10,7 @@ IMGCLASSES = "rootfs_${IMAGE_PKGTYPE} image_types ${IMAGE_CLASSES}"
 # Only Linux SDKs support populate_sdk_ext, fall back to populate_sdk_base
 # in the non-Linux SDK_OS case, such as mingw32
 IMGCLASSES += "${@['populate_sdk_base', 'populate_sdk_ext']['linux' in d.getVar("SDK_OS")]}"
-IMGCLASSES += "${@build_live(d)}"
+IMGCLASSES += "${@bb.utils.contains_any('IMAGE_FSTYPES', 'live iso hddimg', 'image-live', '', d)}"
 IMGCLASSES += "${@bb.utils.contains('IMAGE_FSTYPES', 'container', 'image-container', '', d)}"
 IMGCLASSES += "image_types_wic"
 IMGCLASSES += "${@oe.utils.conditional('TEST_IMAGE', '1', 'testimage-auto', '', d)}"

@@ -19,8 +19,6 @@
 
 # External variables (also used by syslinux.bbclass)
 # ${INITRD} - indicates a list of filesystem images to concatenate and use as an initrd (optional)
-# ${NOISO}  - skip building the ISO image if set to 1
-# ${NOHDD}  - skip building the HDD image if set to 1
 # ${HDDIMG_ID} - FAT image volume-id
 # ${ROOTFS} - indicates a filesystem image to include as the root filesystem (optional)
 
@@ -80,8 +78,8 @@ populate_live() {
 }
 
 build_iso() {
-	# Only create an ISO if we have an INITRD and NOISO was not set
-	if [ -z "${INITRD}" ] || [ "${NOISO}" = "1" ]; then
+	# Only create an ISO if we have an INITRD and the live or iso image type was selected
+	if [ -z "${INITRD}" ] || [ "${@bb.utils.contains_any('IMAGE_FSTYPES', 'live iso', '1', '0', d)}" != "1" ]; then
 		bbnote "ISO image will not be created."
 		return
 	fi
@@ -217,7 +215,7 @@ build_fat_img() {
 
 build_hddimg() {
 	# Create an HDD image
-	if [ "${NOHDD}" != "1" ] ; then
+	if [ "${@bb.utils.contains_any('IMAGE_FSTYPES', 'live hddimg', '1', '0', d)}" = "1" ] ; then
 		populate_live ${HDDDIR}
 
 		if [ "${PCBIOS}" = "1" ]; then
