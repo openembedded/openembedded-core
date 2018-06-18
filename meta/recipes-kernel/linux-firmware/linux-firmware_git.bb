@@ -66,7 +66,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.adsp_sst;md5=615c45b91a5a4a9fe046d6ab9a2df728 \
     file://LICENCE.agere;md5=af0133de6b4a9b2522defd5f188afd31 \
     file://LICENSE.amdgpu;md5=0aa3c2f3e736af320a08a3aeeccecf29 \
-    file://LICENSE.amd-ucode;md5=3a0de451253cc1edbf30a3c621effee3 \
+    file://LICENSE.amd-ucode;md5=3c5399dc9148d7f0e1f41e34b69cf14f \
     file://LICENCE.atheros_firmware;md5=30a14c7823beedac9fa39c64fdd01a13 \
     file://LICENSE.atmel;md5=aa74ac0c60595dee4d4e239107ea77a3 \
     file://LICENCE.broadcom_bcm43xx;md5=3160c14df7228891b868060e1951dfbc \
@@ -118,7 +118,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-    file://WHENCE;md5=6f46986f4e913ef16b765c2319cc5141 \
+    file://WHENCE;md5=eaaf310bac02fee05ea1b334f58c5caf \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -181,7 +181,7 @@ NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
 NO_GENERIC_LICENSE[WHENCE] = "WHENCE"
 
-SRCREV = "8fc2d4e55685bf73b6f7752383da9067404a74bb"
+SRCREV = "d1147327232ec4616a66ab898df84f9700c816c1"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
