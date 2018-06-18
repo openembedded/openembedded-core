@@ -194,3 +194,8 @@ python do_testsdkext() {
 addtask testsdkext
 do_testsdkext[nostamp] = "1"
 
+python () {
+    if oe.types.boolean(d.getVar("TESTIMAGE_AUTO") or "False"):
+        bb.build.addtask("testsdk", None, "do_populate_sdk", d)
+        bb.build.addtask("testsdkext", None, "do_populate_sdk_ext", d)
+}

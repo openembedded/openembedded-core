@@ -13,7 +13,6 @@ IMGCLASSES += "${@['populate_sdk_base', 'populate_sdk_ext']['linux' in d.getVar(
 IMGCLASSES += "${@bb.utils.contains_any('IMAGE_FSTYPES', 'live iso hddimg', 'image-live', '', d)}"
 IMGCLASSES += "${@bb.utils.contains('IMAGE_FSTYPES', 'container', 'image-container', '', d)}"
 IMGCLASSES += "image_types_wic"
-IMGCLASSES += "${@oe.utils.conditional('TEST_IMAGE', '1', 'testimage-auto', '', d)}"
 IMGCLASSES += "rootfs-postcommands"
 inherit ${IMGCLASSES}
 

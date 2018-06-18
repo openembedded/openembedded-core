@@ -10,6 +10,11 @@
 # - first add IMAGE_CLASSES += "testimage" in local.conf
 # - build a qemu core-image-sato
 # - then bitbake core-image-sato -c testimage. That will run a standard suite of tests.
+#
+# The tests can be run automatically each time an image is built if you set
+# TESTIMAGE_AUTO = "1"
+
+TESTIMAGE_AUTO ??= "0"
 
 # You can set (or append to) TEST_SUITES in local.conf to select the tests
 # which you want to run for your target.
@@ -382,4 +387,7 @@ def package_extraction(d, test_suites):
 
 testimage_main[vardepsexclude] += "BB_ORIGENV DATETIME"
 
-inherit testsdk
+python () {
+    if oe.types.boolean(d.getVar("TESTIMAGE_AUTO") or "False"):
+        bb.build.addtask("testimage", "do_build", "do_image_complete", d)
+}
