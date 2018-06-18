@@ -14,13 +14,9 @@ PV = "2.99.917+git${SRCPV}"
 S = "${WORKDIR}/git"
 
 SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-intel \
-           file://disable-x11-dri3.patch \
-           file://always_include_xorg_server.h.patch \
            file://0001-Add-Coffeelake-PCI-IDs-for-S-Skus.patch \
            "
 
-SRC_URI[md5sum] = "fa196a66e52c0c624fe5d350af7a5e7b"
-SRC_URI[sha256sum] = "00b781eea055582820a123c47b62411bdf6aabf4f03dc0568faec55faf9667c9"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 DEPENDS += "virtual/libx11 drm libpciaccess pixman"
