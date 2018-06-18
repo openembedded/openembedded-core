@@ -10,8 +10,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0007-dri-i965-Add-missing-time.h-include.patch \
 "
 
-SRC_URI[md5sum] = "063468c930ff61d211ece0191874fa95"
-SRC_URI[sha256sum] = "d3312a2ede5aac14a47476b208b8e3a401367838330197c4588ab8ad420d7781"
+SRC_URI[md5sum] = "a2d4f031eb6bd6111d44d84004476918"
+SRC_URI[sha256sum] = "070bf0648ba5b242d7303ceed32aed80842f4c0ba16e5acc1a650a46eadfb1f9"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
