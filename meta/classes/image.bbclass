@@ -1,9 +1,29 @@
-inherit rootfs_${IMAGE_PKGTYPE}
+def build_live(d):
+    if bb.utils.contains("IMAGE_FSTYPES", "live", "live", "0", d) == "0": # live is not set but hob might set iso or hddimg
+        d.setVar('NOISO', bb.utils.contains('IMAGE_FSTYPES', "iso", "0", "1", d))
+        d.setVar('NOHDD', bb.utils.contains('IMAGE_FSTYPES', "hddimg", "0", "1", d))
+        if d.getVar('NOISO') == "0" or d.getVar('NOHDD') == "0":
+            return "image-live"
+        return ""
+    return "image-live"
 
+IMAGE_CLASSES ??= ""
+
+# rootfs bootstrap install
+# warning -  image-container resets this
+ROOTFS_BOOTSTRAP_INSTALL = "run-postinsts"
+
+# Handle inherits of any of the image classes we need
+IMGCLASSES = "rootfs_${IMAGE_PKGTYPE} image_types ${IMAGE_CLASSES}"
 # Only Linux SDKs support populate_sdk_ext, fall back to populate_sdk_base
 # in the non-Linux SDK_OS case, such as mingw32
-SDKEXTCLASS ?= "${@['populate_sdk_base', 'populate_sdk_ext']['linux' in d.getVar("SDK_OS")]}"
-inherit ${SDKEXTCLASS}
+IMGCLASSES += "${@['populate_sdk_base', 'populate_sdk_ext']['linux' in d.getVar("SDK_OS")]}"
+IMGCLASSES += "${@build_live(d)}"
+IMGCLASSES += "${@bb.utils.contains('IMAGE_FSTYPES', 'container', 'image-container', '', d)}"
+IMGCLASSES += "image_types_wic"
+IMGCLASSES += "${@oe.utils.conditional('TEST_IMAGE', '1', 'testimage-auto', '', d)}"
+IMGCLASSES += "rootfs-postcommands"
+inherit ${IMGCLASSES}
 
 TOOLCHAIN_TARGET_TASK += "${PACKAGE_INSTALL}"
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY += "${PACKAGE_INSTALL_ATTEMPTONLY}"
@@ -18,9 +38,6 @@ PATH_prepend = "${@":".join(all_multilib_tune_values(d, 'STAGING_BINDIR_CROSS').
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-TESTIMAGECLASS = "${@oe.utils.conditional('TEST_IMAGE', '1', 'testimage-auto', '', d)}"
-inherit ${TESTIMAGECLASS}
-
 # IMAGE_FEATURES may contain any available package group
 IMAGE_FEATURES ?= ""
 IMAGE_FEATURES[type] = "list"
@@ -29,8 +46,6 @@ IMAGE_FEATURES[validitems] += "debug-tweaks read-only-rootfs empty-root-password
 # Generate companion debugfs?
 IMAGE_GEN_DEBUGFS ?= "0"
 
-# rootfs bootstrap install
-ROOTFS_BOOTSTRAP_INSTALL = "run-postinsts"
 
 # These packages will be removed from a read-only rootfs after all other
 # packages have been installed
@@ -127,23 +142,6 @@ do_rootfs[vardeps] += "${@rootfs_variables(d)}"
 
 do_build[depends] += "virtual/kernel:do_deploy"
 
-def build_live(d):
-    if bb.utils.contains("IMAGE_FSTYPES", "live", "live", "0", d) == "0": # live is not set but hob might set iso or hddimg
-        d.setVar('NOISO', bb.utils.contains('IMAGE_FSTYPES', "iso", "0", "1", d))
-        d.setVar('NOHDD', bb.utils.contains('IMAGE_FSTYPES', "hddimg", "0", "1", d))
-        if d.getVar('NOISO') == "0" or d.getVar('NOHDD') == "0":
-            return "image-live"
-        return ""
-    return "image-live"
-
-IMAGE_TYPE_live = "${@build_live(d)}"
-inherit ${IMAGE_TYPE_live}
-
-IMAGE_TYPE_container = '${@bb.utils.contains("IMAGE_FSTYPES", "container", "image-container", "", d)}'
-inherit ${IMAGE_TYPE_container}
-
-IMAGE_TYPE_wic = "image_types_wic"
-inherit ${IMAGE_TYPE_wic}
 
 python () {
     def extraimage_getdepends(task):
@@ -178,9 +176,6 @@ python () {
     check_image_features(d)
 }
 
-IMAGE_CLASSES += "image_types"
-inherit ${IMAGE_CLASSES}
-
 IMAGE_POSTPROCESS_COMMAND ?= ""
 
 # some default locales
@@ -191,8 +186,6 @@ LINGUAS_INSTALL ?= "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('IM
 # Prefer image, but use the fallback files for lookups if the image ones
 # aren't yet available.
 PSEUDO_PASSWD = "${IMAGE_ROOTFS}:${STAGING_DIR_NATIVE}"
-
-inherit rootfs-postcommands
 
 PACKAGE_EXCLUDE ??= ""
 PACKAGE_EXCLUDE[type] = "list"
