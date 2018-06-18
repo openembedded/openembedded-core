@@ -21,12 +21,12 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 
-PACKAGECONFIG ??= "xvmc uxa udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri1 dri2', '', d)}"
+PACKAGECONFIG ??= "xvmc uxa udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri2 dri3', '', d)}"
 
 PACKAGECONFIG[dri] = "--enable-dri,--disable-dri"
-PACKAGECONFIG[dri1] = "--enable-dri1,--disable-dri1,xorgproto"
-PACKAGECONFIG[dri2] = "--enable-dri2,--disable-dri2,xorgproto"
-PACKAGECONFIG[dri3] = "--enable-dri3,--disable-dri3,xorgproto"
+PACKAGECONFIG[dri1] = "--enable-dri1,--disable-dri1"
+PACKAGECONFIG[dri2] = "--enable-dri2,--disable-dri2"
+PACKAGECONFIG[dri3] = "--enable-dri3,--disable-dri3"
 PACKAGECONFIG[sna] = "--enable-sna,--disable-sna"
 PACKAGECONFIG[uxa] = "--enable-uxa,--disable-uxa"
 PACKAGECONFIG[udev] = "--enable-udev,--disable-udev,udev"
