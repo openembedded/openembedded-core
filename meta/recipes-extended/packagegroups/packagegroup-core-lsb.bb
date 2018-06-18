@@ -158,7 +158,6 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     make \
     man \
     man-pages \
-    mktemp \
     msmtp \
     patch \
     procps \

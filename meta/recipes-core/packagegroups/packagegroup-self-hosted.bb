@@ -80,7 +80,6 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     libstdc++-dev \
     libtool \
     make \
-    mktemp \
     perl-module-re \
     perl-module-text-wrap \
     pkgconfig \
