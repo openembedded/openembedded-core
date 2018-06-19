@@ -1,5 +1,5 @@
 SUMMARY = "Subversion (svn) version control system client"
-HOMEPAGE = "http://subversion.tigris.org"
+HOMEPAGE = "http://subversion.apache.org"
 SECTION = "console/network"
 LICENSE = "Apache-2 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=83206f39819e7a4dfca2ff7c190f6ce0"
