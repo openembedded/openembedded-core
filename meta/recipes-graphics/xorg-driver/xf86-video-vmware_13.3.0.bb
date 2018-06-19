@@ -10,8 +10,8 @@ DEPENDS += "virtual/libx11 xorgproto libpciaccess"
 
 SRC_URI += "file://0002-add-option-for-vmwgfx.patch"
 
-SRC_URI[md5sum] = "4c3912e4d8947f6c2fc1ee9e2f211d74"
-SRC_URI[sha256sum] = "e2f7f7101fba7f53b268e7a25908babbf155b3984fb5268b3d244eb6c11bf62b"
+SRC_URI[md5sum] = "08d66d062055080ff699ab4869726ea2"
+SRC_URI[sha256sum] = "47971924659e51666a757269ad941a059ef5afe7a47b5101c174a6022ac4066c"
 
 COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
 
