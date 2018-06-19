@@ -14,8 +14,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
 SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "875cbd09ab8394277fd16070326abbae"
-SRC_URI[sha256sum] = "2a4bbc05fea22151b7a7c8ac2655d549aa9b0486bedc7f5a68c72716343b02f3"
+SRC_URI[md5sum] = "74c4bdf52382127cb5802c3f2ab441e0"
+SRC_URI[sha256sum] = "91b18580f46b4e4ea913707f6c8d68ab5286879c3a6591462f3b9e760d3ac4d7"
 
 SECTION = "x11/libs"
 DEPENDS = "intltool-native util-macros libxslt-native"
