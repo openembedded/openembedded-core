@@ -50,9 +50,6 @@ do_rm_work () {
         for j in ${SSTATETASKS} do_shared_workdir
         do
             case $i in
-            *do_setscene*)
-                break
-                ;;
             *sigdata*|*sigbasedata*)
                 i=dummy
                 break
