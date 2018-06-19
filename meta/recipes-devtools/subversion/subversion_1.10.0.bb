@@ -1,21 +1,20 @@
 SUMMARY = "Subversion (svn) version control system client"
 HOMEPAGE = "http://subversion.tigris.org"
 SECTION = "console/network"
-LICENSE = "Apache-2"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=af81ae49ba359e70626c05e9bf313709"
+LICENSE = "Apache-2 & MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=83206f39819e7a4dfca2ff7c190f6ce0"
 
-DEPENDS = "apr-util serf sqlite3 file"
+DEPENDS = "apr-util serf sqlite3 file lz4"
 DEPENDS_append_class-native = " file-replacement-native"
 
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://disable_macos.patch \
-           file://serf.m4-Regex-modified-to-allow-D-in-paths.patch \
            file://0001-Fix-libtool-name-in-configure.ac.patch \
            file://serfmacro.patch \
            "
 
-SRC_URI[md5sum] = "05b0c677681073920f938c1f322e0be2"
-SRC_URI[sha256sum] = "c3b118333ce12e501d509e66bb0a47bcc34d053990acab45559431ac3e491623"
+SRC_URI[md5sum] = "0126847f9e8cb8ed0b90a6a18b203309"
+SRC_URI[sha256sum] = "2cf23f3abb837dea0585a6b0ebd70e80e01f95bddef7c1aa097c18e3eaa6b584"
 
 inherit autotools pkgconfig gettext
 
@@ -31,6 +30,7 @@ EXTRA_OECONF = " \
     --without-berkeley-db \
     --without-swig \
     --disable-keychain \
+    --with-utf8proc=internal \
     ac_cv_path_RUBY=none \
 "
 
