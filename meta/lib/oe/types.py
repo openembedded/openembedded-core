@@ -105,6 +105,8 @@ def boolean(value):
     Valid values for true: 'yes', 'y', 'true', 't', '1'
     Valid values for false: 'no', 'n', 'false', 'f', '0'
     """
+    if isinstance(value, bool):
+        return value
 
     if not isinstance(value, str):
         raise TypeError("boolean accepts a string, not '%s'" % type(value))
