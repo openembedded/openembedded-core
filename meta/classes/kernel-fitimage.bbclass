@@ -459,7 +459,7 @@ fitimage_assemble() {
 		uboot-mkimage \
 			${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
 			-F -k "${UBOOT_SIGN_KEYDIR}" \
-			-K "${DEPLOY_DIR_IMAGE}/${UBOOT_DTB_BINARY}" \
+			${@'-K "${DEPLOY_DIR_IMAGE}/${UBOOT_DTB_BINARY}"' if len('${UBOOT_DTB_BINARY}') else ''} \
 			-r arch/${ARCH}/boot/${2}
 	fi
 }
