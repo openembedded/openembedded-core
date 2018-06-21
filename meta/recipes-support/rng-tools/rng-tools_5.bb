@@ -43,6 +43,6 @@ do_install_append() {
 }
 
 INITSCRIPT_NAME = "rng-tools"
-INITSCRIPT_PARAMS = "start 30 2 3 4 5 . stop 30 0 6 1 ."
+INITSCRIPT_PARAMS = "start 03 2 3 4 5 . stop 30 0 6 1 ."
 
 SYSTEMD_SERVICE_${PN} = "rngd.service"
