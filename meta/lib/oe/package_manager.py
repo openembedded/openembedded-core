@@ -382,7 +382,8 @@ class PackageManager(object, metaclass=ABCMeta):
             if script == "postinst_intercept" or not os.access(script_full, os.X_OK):
                 continue
 
-            if script == "delay_to_first_boot":
+            # we do not want to run any multilib variant of this
+            if script.startswith("delay_to_first_boot"):
                 self._postpone_to_first_boot(script_full)
                 continue
 
