@@ -3,6 +3,7 @@ DESCRIPTION = "Provides tools that enable the set-up and manipulation of the lin
 SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING.kbd;md5=9b2d91511d3d80d4d20ac6e6b0137fe9"
+DEPENDS = "flex-native bison-native"
 PR = "r8"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lct/console-tools-${PV}.tar.gz \
