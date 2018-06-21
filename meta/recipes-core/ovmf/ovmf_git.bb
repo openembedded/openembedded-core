@@ -39,7 +39,7 @@ SRC_URI[openssl.sha256sum] = "57be8618979d80c910728cfc99369bf97b2a1abd8f366ab6eb
 
 inherit deploy
 
-PARALLEL_MAKE_class-native = ""
+PARALLEL_MAKE = ""
 
 S = "${WORKDIR}/git"
 
