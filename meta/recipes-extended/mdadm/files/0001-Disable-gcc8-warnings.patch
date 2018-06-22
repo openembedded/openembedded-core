@@ -6,6 +6,14 @@ Subject: [PATCH] Disable gcc8 warnings
 This is needed until
 https://bugzilla.redhat.com/show_bug.cgi?id=1553958
 
+Fix super0.c issue which is triggered only in DEBUG_BUILD with -O1 (or any
+configuration without -ftree-vrp or with -fno-tree-vrp)
+
+super0.c: In function 'examine_super0':
+super0.c:238:32: error: 'snprintf' output may be truncated before the last format character [-Werror=format-truncation=]
+   snprintf(nb, sizeof(nb), "%4d", d);
+                                ^
+
 Upstream-Status: Inappropriate [Workaround]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
@@ -16,8 +24,22 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  super-ddf.c   | 4 ++++
  super-intel.c | 6 ++++++
  super1.c      | 5 +++++
- 5 files changed, 22 insertions(+), 1 deletion(-)
+ super0.c      | 2 +-
+ 6 files changed, 22 insertions(+), 1 deletion(-)
 
+diff --git a/super0.c b/super0.c
+index f5b4507..264b598 100644
+--- a/super0.c
++++ b/super0.c
+@@ -231,7 +231,7 @@
+ 	     d++) {
+ 		mdp_disk_t *dp;
+ 		char *dv;
+-		char nb[11];
++		char nb[12];
+ 		int wonly, failfast;
+ 		if (d>=0) dp = &sb->disks[d];
+ 		else dp = &sb->this_disk;
 diff --git a/Monitor.c b/Monitor.c
 index 802a9d9..23b246b 100644
 --- a/Monitor.c
