@@ -35,7 +35,7 @@ PACKAGES =+ "util-linux-agetty util-linux-fdisk util-linux-cfdisk util-linux-sfd
              util-linux-lsblk util-linux-mkfs.cramfs util-linux-fstrim \
              util-linux-partx util-linux-hwclock util-linux-mountpoint \
              util-linux-findfs util-linux-getopt util-linux-sulogin util-linux-prlimit \
-             util-linux-ionice util-linux-switch-root"
+             util-linux-ionice util-linux-switch-root util-linux-unshare"
 PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pylibmount', 'util-linux-pylibmount', '', d)}"
 PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'util-linux-runuser util-linux-su', '', d)}"
 
@@ -46,7 +46,7 @@ SHARED_EXTRA_OECONF = "--disable-use-tty-group \
                        --enable-kill --enable-last --enable-mesg --enable-partx \
                        --enable-raw --enable-rfkill --disable-login \
                        --disable-vipw --disable-newgrp --disable-chfn-chsh \
-                       --enable-write --enable-mount \
+                       --enable-write --enable-mount --enable-unshare \
                        --enable-libuuid --enable-libblkid --enable-fsck \
                        --disable-minix --disable-bfs --without-udev \
                        usrsbin_execdir='${sbindir}' \
@@ -113,6 +113,7 @@ FILES_util-linux-sulogin = "${base_sbindir}/sulogin*"
 FILES_util-linux-mountpoint = "${base_bindir}/mountpoint.${BPN}"
 
 FILES_util-linux-switch-root = "${base_sbindir}/switch_root.${BPN}"
+FILES_util-linux-unshare = "${bindir}/unshare"
 
 # Util-linux' blkid replaces the e2fsprogs one
 FILES_util-linux-blkid = "${base_sbindir}/blkid*"
