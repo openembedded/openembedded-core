@@ -30,4 +30,4 @@ do_install() {
 	install -m 0755 ${S}/update-rc.d ${D}${sbindir}/update-rc.d
 }
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
