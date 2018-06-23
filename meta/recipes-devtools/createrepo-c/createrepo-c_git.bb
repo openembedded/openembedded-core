@@ -21,7 +21,7 @@ inherit cmake pkgconfig bash-completion distutils3-base
 
 EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
 
 # Direct createrepo to read rpm configuration from our sysroot, not the one it was compiled in
 do_install_append_class-native() {
@@ -29,3 +29,8 @@ do_install_append_class-native() {
                 RPM_CONFIGDIR=${STAGING_LIBDIR_NATIVE}/rpm
 }
 
+do_install_append_class-nativesdk() {
+        create_wrapper ${D}/${bindir}/createrepo_c \
+                RPM_CONFIGDIR=${SDKPATHNATIVE}${libdir_nativesdk}/rpm
+        rm -rf ${D}/etc
+}
