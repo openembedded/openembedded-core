@@ -1,7 +1,7 @@
-From 0afb2efada7e435ae18ef7d3db0758464189f44f Mon Sep 17 00:00:00 2001
+From a3f4821c4a3f723d21c9298d54bee8a656bfd7fb Mon Sep 17 00:00:00 2001
 From: Bernhard Voelker <mail@bernhard-voelker.de>
 Date: Tue, 30 Jan 2018 23:30:09 +0100
-Subject: find: make -delete honour the -ignore_readdir_race option
+Subject: [PATCH] find: make -delete honour the -ignore_readdir_race option
 
 * find/pred.c (pred_delete): Return true when the -ignore_readdir_race
 option is active and unlinkat() came back with ENOENT.
@@ -29,6 +29,7 @@ https://savannah.gnu.org/bugs/?52981
 
 Upstream-Status: Backport
 Signed-off-by: Zhixiong Chi <zhixiong.chi@windriver.com>
+
 ---
  NEWS          |  4 ++++
  doc/find.texi | 15 ++++++++++++++-
@@ -37,22 +38,22 @@ Signed-off-by: Zhixiong Chi <zhixiong.chi@windriver.com>
  4 files changed, 46 insertions(+), 1 deletion(-)
 
 diff --git a/NEWS b/NEWS
-index 88cf17d..9809bf4 100644
+index 660c241..b86ec1e 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -42,6 +42,10 @@
-
- ** Bug Fixes
-
+@@ -42,6 +42,10 @@ Updated the Danish translation.
+ 
+ ** Bug Fixes:
+ 
 +#52981: find: the '-delete' action no longer complains about disappeared files
 +        when the '-ignore_readdir_race' option is given, too.  That action will
 +        also returns true in such a case now.
 +
  Applied patch #8688: Spelling fixes.
-
+ 
  * Major changes in release 4.5.18, 2015-12-27
 diff --git a/doc/find.texi b/doc/find.texi
-index 3580be7..0089193 100644
+index fdeb841..247c19a 100644
 --- a/doc/find.texi
 +++ b/doc/find.texi
 @@ -1418,7 +1418,15 @@ gives a significant increase in search speed.
@@ -85,11 +86,11 @@ index 3580be7..0089193 100644
  
  @node Adding Tests
 diff --git a/find/find.1 b/find/find.1
-index 0437cd8..0d44c37 100644
+index 7b141b8..0eec41c 100644
 --- a/find/find.1
 +++ b/find/find.1
-@@ -479,6 +479,17 @@ this option on and part of it with this option off
- (if you need to do that, you will need to issue two \fBfind\fR commands
+@@ -479,6 +479,17 @@ one part of the filesystem with this option on and part of it with this option
+ off (if you need to do that, you will need to issue two \fBfind\fR commands
  instead, one with the option and one without it).
  
 +Furthermore,
@@ -125,7 +126,7 @@ index 0437cd8..0d44c37 100644
  Execute \fIcommand\fR; true if 0 status is returned.  All following
  arguments to
 diff --git a/find/pred.c b/find/pred.c
-index 7e2a7bd..af3bacb 100644
+index 32938fb..431f065 100644
 --- a/find/pred.c
 +++ b/find/pred.c
 @@ -324,6 +324,12 @@ pred_delete (const char *pathname, struct stat *stat_buf, struct predicate *pred
@@ -141,5 +142,3 @@ index 7e2a7bd..af3bacb 100644
  	  if (EISDIR == errno)
  	    {
  	      if ((flags & AT_REMOVEDIR) == 0)
---
-cgit v1.0-41-gc330
