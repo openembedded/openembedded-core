@@ -25,11 +25,11 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://nss-fix-nsinstall-build.patch \
            file://disable-Wvarargs-with-clang.patch \
            file://pqg.c-ULL_addend.patch \
-           file://Fix-compilation-for-X32.patch \
+           file://0001-Bug-1432455-Build-FStar.c-when-not-building-with-int.patch \
            "
 
-SRC_URI[md5sum] = "814d8fe3ec89006cf62078e2a56cf2f9"
-SRC_URI[sha256sum] = "6025441d528ff6a7f1a4b673b6ee7d3540731ada3f78d5acd5c3b3736b222bff"
+SRC_URI[md5sum] = "e9526d7217d02afa96b90b89924c38df"
+SRC_URI[sha256sum] = "097b30e436479ad737b3703b25b6198b6513e202731085c6f097d8853dd20405"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
