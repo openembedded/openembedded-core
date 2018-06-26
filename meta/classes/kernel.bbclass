@@ -288,7 +288,7 @@ kernel_do_compile() {
 	if [ "${BUILD_REPRODUCIBLE_BINARIES}" = "1" ]; then
 		# kernel sources do not use do_unpack, so SOURCE_DATE_EPOCH may not
 		# be set....
-		if [ "$SOURCE_DATE_EPOCH" = "0" ]; then
+		if [ "${SOURCE_DATE_EPOCH}" = "" -o "${SOURCE_DATE_EPOCH}" = "0" ]; then
 			olddir=`pwd`
 			cd ${S}
 			SOURCE_DATE_EPOCH=`git log  -1 --pretty=%ct`
