@@ -33,6 +33,9 @@ export DIRS = "crypto ssl apps"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
 
+# openssl fails with ccache: https://bugzilla.yoctoproject.org/show_bug.cgi?id=12810
+CCACHE = ""
+
 inherit pkgconfig siteinfo multilib_header ptest relative_symlinks
 
 PACKAGES =+ "libcrypto libssl ${PN}-misc openssl-conf"
