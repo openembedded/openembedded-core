@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM = "file://COPYING.txt;md5=02ee26814dd044bd7838ae24e05b880f"
 
 PROVIDES = "virtual/libsdl2"
 
-SRC_URI = " \
-    http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
+SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
+           file://more-gen-depends.patch \
 "
 
 S = "${WORKDIR}/SDL2-${PV}"
