@@ -16,10 +16,9 @@ UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
 
 SRC_URI = "git://github.com/file/file.git \
         file://debian-742262.patch \
-        file://0001-Add-P-prompt-into-Usage-info.patch \
         "
 
-SRCREV = "d474e35513940dbca039b510b4de705b44f5bd9c"
+SRCREV = "219846094c7593e27453e62855e61181089c48cf"
 S = "${WORKDIR}/git"
 
 inherit autotools
