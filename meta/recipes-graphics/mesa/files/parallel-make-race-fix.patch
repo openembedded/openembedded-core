@@ -1,0 +1,26 @@
+There is a parallel make build issue in src/egl/drivers/dri2/
+for wayland builds. Can be reproduced with:
+
+$ rm src/egl/drivers/dri2/*.h src/egl/drivers/dri2/platform_wayland.lo
+$ make -C src/egl/ drivers/dri2/platform_wayland.lo
+
+../../../mesa-18.1.2/src/egl/drivers/dri2/platform_wayland.c:50:10: fatal error: linux-dmabuf-unstable-v1-client-protocol.h: No such file or directory
+
+This patch adds the missing dependency.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Upstream-Status: Submitted (https://lists.freedesktop.org/archives/mesa-dev/2018-June/198889.html)
+
+Index: mesa-18.1.2/src/egl/Makefile.am
+===================================================================
+--- mesa-18.1.2.orig/src/egl/Makefile.am
++++ mesa-18.1.2/src/egl/Makefile.am
+@@ -80,6 +80,7 @@ drivers/dri2/linux-dmabuf-unstable-v1-cl
+ if HAVE_PLATFORM_WAYLAND
+ drivers/dri2/linux-dmabuf-unstable-v1-protocol.lo: drivers/dri2/linux-dmabuf-unstable-v1-client-protocol.h
+ drivers/dri2/egl_dri2.lo: drivers/dri2/linux-dmabuf-unstable-v1-client-protocol.h
++drivers/dri2/platform_wayland.lo: drivers/dri2/linux-dmabuf-unstable-v1-client-protocol.h
+ 
+ AM_CFLAGS += $(WAYLAND_CLIENT_CFLAGS)
+ libEGL_common_la_LIBADD += $(WAYLAND_CLIENT_LIBS)
