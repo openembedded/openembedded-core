@@ -30,8 +30,10 @@ class CreatePlugin(LayerPlugin):
         conf = os.path.join(layerdir, 'conf')
         bb.utils.mkdirhier(conf)
 
+        layername = os.path.basename(os.path.normpath(args.layerdir))
+
         # Create the README from templates/README
-        readme_template =  read_template('README') % (args.layerdir, args.layerdir, args.layerdir, args.layerdir, args.layerdir, args.layerdir)
+        readme_template =  read_template('README').format(layername=layername)
         readme = os.path.join(layerdir, 'README')
         with open(readme, 'w') as fd:
             fd.write(readme_template)
@@ -47,7 +49,8 @@ class CreatePlugin(LayerPlugin):
         compat = self.tinfoil.config_data.getVar('LAYERSERIES_COMPAT_core') or ""
 
         # Create the layer.conf from templates/layer.conf
-        layerconf_template = read_template('layer.conf') % (args.layerdir, args.layerdir, args.layerdir, args.priority, args.layerdir, args.layerdir, compat)
+        layerconf_template = read_template('layer.conf').format(
+                layername=layername, priority=args.priority, compat=compat)
         layerconf = os.path.join(conf, 'layer.conf')
         with open(layerconf, 'w') as fd:
             fd.write(layerconf_template)
