@@ -67,3 +67,6 @@ do_install_append(){
 addtask kernel_version_sanity_check after do_kernel_metadata do_kernel_checkout before do_compile
 addtask validate_branches before do_patch after do_kernel_checkout
 addtask kernel_configcheck after do_configure before do_compile
+
+# enable kernel-sample for oeqa/runtime/cases's ksample.py test
+KERNEL_FEATURES_append_qemuall=" features/kernel-sample/kernel-sample.scc"
