@@ -1,7 +1,7 @@
-From 33025fb1650768a0b923f3c824c270628eef83db Mon Sep 17 00:00:00 2001
+From a240a803529225dda630b8f57ca7dfcad61ccd85 Mon Sep 17 00:00:00 2001
 From: Otavio Salvador <otavio@ossystems.com.br>
 Date: Tue, 5 Jun 2018 11:11:10 -0300
-Subject: [PATCH 5/7] Properly get LLVM version when using LLVM Git releases
+Subject: [PATCH 5/8] Properly get LLVM version when using LLVM Git releases
 Organization: O.S. Systems Software LTDA.
 
 $ llvm-config-host --version
@@ -18,10 +18,10 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 7c95598afc..c248248c6b 100644
+index 3a8f04bd12..59226823ca 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1075,7 +1075,7 @@ strip_unwanted_llvm_flags() {
+@@ -1089,7 +1089,7 @@ strip_unwanted_llvm_flags() {
  
  llvm_set_environment_variables() {
      if test "x$LLVM_CONFIG" != xno; then
@@ -30,7 +30,7 @@ index 7c95598afc..c248248c6b 100644
          LLVM_CPPFLAGS=`strip_unwanted_llvm_flags "$LLVM_CONFIG --cppflags"`
          LLVM_INCLUDEDIR=`$LLVM_CONFIG --includedir`
          LLVM_LIBDIR=`$LLVM_CONFIG --libdir`
-@@ -2776,7 +2776,7 @@ detect_old_buggy_llvm() {
+@@ -2793,7 +2793,7 @@ detect_old_buggy_llvm() {
      dnl ourselves.
      dnl (See https://llvm.org/bugs/show_bug.cgi?id=6823)
      dnl We can't use $LLVM_VERSION because it has 'svn' stripped out,
@@ -40,5 +40,5 @@ index 7c95598afc..c248248c6b 100644
  
      if test "x$llvm_have_one_so" = xyes; then
 -- 
-2.17.1
+2.18.0
 

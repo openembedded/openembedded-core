@@ -1,7 +1,7 @@
-From 52468545daa0c2d205312e06304d8fb374e0bbf0 Mon Sep 17 00:00:00 2001
+From 9bc2dad0257b778faf30edd5bc8f5c19ddf27351 Mon Sep 17 00:00:00 2001
 From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
 Date: Sun, 20 Mar 2016 13:27:04 +0100
-Subject: [PATCH 4/7] hardware gloat
+Subject: [PATCH 4/8] hardware gloat
 Organization: O.S. Systems Software LTDA.
 
 Upstream-Status: Inappropriate [not author]
@@ -48,5 +48,5 @@ index 25f6f74f36..61629ef2ff 100644
        return FALSE;
  
 -- 
-2.17.1
+2.18.0
 

@@ -1,7 +1,7 @@
-From 9a25f6e7a0eb8825ab089fdd166dbaee778a4c81 Mon Sep 17 00:00:00 2001
+From 23305c16e4444f5aa289f126f040ed061de292c0 Mon Sep 17 00:00:00 2001
 From: Otavio Salvador <otavio@ossystems.com.br>
 Date: Wed, 6 Jun 2018 09:50:35 -0300
-Subject: [PATCH 7/7] dri: i965: Add missing time.h include
+Subject: [PATCH 7/8] dri: i965: Add missing time.h include
 Organization: O.S. Systems Software LTDA.
 
 This fixes a build error when using musl:
@@ -32,5 +32,5 @@ index 68f5e0c2c8..5b60a23763 100644
  #include "util/list.h"
  
 -- 
-2.17.1
+2.18.0
 

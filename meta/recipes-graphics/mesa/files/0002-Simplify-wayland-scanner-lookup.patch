@@ -1,7 +1,7 @@
-From 135f6ae990df9abe3765ed339f76c55026c86fe5 Mon Sep 17 00:00:00 2001
+From 425c19542f9343e7b6a5b8aea26e1f2897484bc1 Mon Sep 17 00:00:00 2001
 From: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Date: Tue, 15 Nov 2016 15:20:49 +0200
-Subject: [PATCH 2/7] Simplify wayland-scanner lookup
+Subject: [PATCH 2/8] Simplify wayland-scanner lookup
 Organization: O.S. Systems Software LTDA.
 
 Don't use pkg-config to lookup the path of a binary that's in the path.
@@ -16,10 +16,10 @@ Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
  1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index f1fbdcc6c7..7c95598afc 100644
+index 49fa3e8c51..3a8f04bd12 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1796,12 +1796,7 @@ for plat in $platforms; do
+@@ -1810,12 +1810,7 @@ for plat in $platforms; do
          PKG_CHECK_MODULES([WAYLAND_PROTOCOLS], [wayland-protocols >= $WAYLAND_PROTOCOLS_REQUIRED])
          WAYLAND_PROTOCOLS_DATADIR=`$PKG_CONFIG --variable=pkgdatadir wayland-protocols`
  
@@ -34,5 +34,5 @@ index f1fbdcc6c7..7c95598afc 100644
          if test "x$WAYLAND_SCANNER" = "x:"; then
                  AC_MSG_ERROR([wayland-scanner is needed to compile the wayland platform])
 -- 
-2.17.1
+2.18.0
 

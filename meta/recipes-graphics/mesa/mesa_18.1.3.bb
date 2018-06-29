@@ -8,11 +8,11 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0005-Properly-get-LLVM-version-when-using-LLVM-Git-releas.patch \
            file://0006-Use-Python-3-to-execute-the-scripts.patch \
            file://0007-dri-i965-Add-missing-time.h-include.patch \
-           file://parallel-make-race-fix.patch \
+           file://0008-egl-fix-build-race-in-automake.patch \
 "
 
-SRC_URI[md5sum] = "a2d4f031eb6bd6111d44d84004476918"
-SRC_URI[sha256sum] = "070bf0648ba5b242d7303ceed32aed80842f4c0ba16e5acc1a650a46eadfb1f9"
+SRC_URI[md5sum] = "b34273403a605f6f98ead00f0bdf8e0b"
+SRC_URI[sha256sum] = "54f08deeda0cd2f818e8d40140040ed013de7852573002453b7f50da9ea738ce"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
