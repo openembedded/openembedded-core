@@ -103,8 +103,11 @@ def boolean(value):
     """OpenEmbedded 'boolean' type
 
     Valid values for true: 'yes', 'y', 'true', 't', '1'
-    Valid values for false: 'no', 'n', 'false', 'f', '0'
+    Valid values for false: 'no', 'n', 'false', 'f', '0', None
     """
+    if value is None:
+        return False
+
     if isinstance(value, bool):
         return value
 
