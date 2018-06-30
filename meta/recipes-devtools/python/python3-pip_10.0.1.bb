@@ -2,12 +2,12 @@ SUMMARY = "The PyPA recommended tool for installing Python packages"
 HOMEPAGE = "https://pypi.python.org/pypi/pip"
 SECTION = "devel/python"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=25fba45109565f87de20bae85bc39452"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3f8d33acaac5c5dac8c613904bd56a6f"
 
 DEPENDS += "python3 python3-setuptools-native"
 
-SRC_URI[md5sum] = "b15b33f9aad61f88d0f8c866d16c55d8"
-SRC_URI[sha256sum] = "7bf48f9a693be1d58f49f7af7e0ae9fe29fd671cde8a55e6edca3581c4ef5796"
+SRC_URI[md5sum] = "83a177756e2c801d0b3a6f7b0d4f3f7e"
+SRC_URI[sha256sum] = "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdbd7ee68"
 
 inherit pypi distutils3
 
