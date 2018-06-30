@@ -8,15 +8,16 @@ DEPENDS = "expat dbus dbus-glib virtual/libintl"
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${PV}.tar.gz \
 "
 
-RSRC_URI[md5sum] = "1ce1ddf2582060f8f971652ea54cc17e"
-SRC_URI[sha256sum] = "32f29c17172cdb9cb61c68b1f1a71dfe7351506fc830869029c47449bd04faeb"
+SRC_URI[md5sum] = "7379db774c10904f27e7e2743d90fb43"
+SRC_URI[sha256sum] = "abf12bbb765e300bf8e2a1b2f32f85949eab06998dbda127952c31cb63957b6f"
 S = "${WORKDIR}/dbus-python-${PV}"
 
 inherit distutils3-base autotools pkgconfig
 
-PACKAGECONFIG ?= ""
-PACKAGECONFIG[docs] = "--enable-html-docs,--disable-html-docs,python3-docutils-native"
-PACKAGECONFIG[api-docs] = "--enable-api-docs,--disable-api-docs,python3-docutils-native python3-epydoc-native"
+# documentation needs python3-sphinx, which is not in oe-core or meta-python for now
+# change to use PACKAGECONFIG when python3-sphinx is added to oe-core
+EXTRA_OECONF += "--disable-documentation"
+
 
 RDEPENDS_${PN} = "python3-io python3-logging python3-stringold python3-threading python3-xml"
 
