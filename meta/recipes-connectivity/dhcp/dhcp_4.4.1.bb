@@ -7,16 +7,15 @@ SRC_URI += "file://0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.pat
             file://0005-dhcp-client-fix-invoke-dhclient-script-failed-on-Rea.patch \
             file://0006-site.h-enable-gentle-shutdown.patch \
             file://0007-Add-configure-argument-to-make-the-libxml2-dependenc.patch \
-            file://0008-tweak-to-support-external-bind.patch \
             file://0009-remove-dhclient-script-bash-dependency.patch \
-            file://0010-build-shared-libs.patch \
-            file://0011-Moved-the-call-to-isc_app_ctxstart-to-not-get-signal.patch \
             file://0012-dhcp-correct-the-intention-for-xml2-lib-search.patch \
-            file://CVE-2017-3144.patch \
-           "
+            file://0013-fixup_use_libbind.patch \
+"
 
-SRC_URI[md5sum] = "afa6e9b3eb7539ea048421a82c668adc"
-SRC_URI[sha256sum] = "a41eaf6364f1377fe065d35671d9cf82bbbc8f21207819b2b9f33f652aec6f1b"
+SRC_URI[md5sum] = "18c7f4dcbb0a63df25098216d47b1ede"
+SRC_URI[sha256sum] = "2a22508922ab367b4af4664a0472dc220cc9603482cf3c16d9aff14f3a76b608"
+
+LDFLAGS_append = " -pthread"
 
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[bind-httpstats] = "--with-libxml2,--without-libxml2,libxml2"
