@@ -1,0 +1,49 @@
+From 39b1e54b2968620723bf32e96764c88797714879 Mon Sep 17 00:00:00 2001
+From: Ken Sharp <ken.sharp@artifex.com>
+Date: Wed, 18 Apr 2018 15:46:32 +0100
+Subject: [PATCH] pdfwrite - Guard against trying to output an infinite number
+
+Bug #699255 " Buffer overflow on pprintg1 due to mishandle postscript file data to pdf"
+
+The file uses an enormous parameter to xyxhow, causing an overflow in
+the calculation of text positioning (value > 1e39).
+
+Since this is basically a nonsense value, and PostScript only supports
+real values up to 1e38, this patch follows the same approach as for
+a degenerate CTM, and treats it as 0.
+
+Adobe Acrobat Distiller throws a limitcheck error, so we could do that
+instead if this approach proves to be a problem.
+
+Upstream-Status: Backport
+git://git.ghostscript.com/ghostpdl.git
+CVE: CVE-2018-10194
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
+---
+ devices/vector/gdevpdts.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/devices/vector/gdevpdts.c b/devices/vector/gdevpdts.c
+index 848ad78..172fe6b 100644
+--- a/devices/vector/gdevpdts.c
++++ b/devices/vector/gdevpdts.c
+@@ -103,9 +103,14 @@ append_text_move(pdf_text_state_t *pts, double dw)
+ static int
+ set_text_distance(gs_point *pdist, double dx, double dy, const gs_matrix *pmat)
+ {
+-    int code = gs_distance_transform_inverse(dx, dy, pmat, pdist);
++    int code;
+     double rounded;
+ 
++    if (dx > 1e38 || dy > 1e38)
++        code = gs_error_undefinedresult;
++    else
++        code = gs_distance_transform_inverse(dx, dy, pmat, pdist);
++
+     if (code == gs_error_undefinedresult) {
+         /* The CTM is degenerate.
+            Can't know the distance in user space.
+-- 
+2.7.4
+

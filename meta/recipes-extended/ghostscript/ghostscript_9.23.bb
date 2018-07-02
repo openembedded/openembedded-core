@@ -33,6 +33,7 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
+           file://0001-pdfwrite-Guard-against-trying-to-output-an-infinite-.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
