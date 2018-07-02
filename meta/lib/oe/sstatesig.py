@@ -372,8 +372,14 @@ def sstate_get_manifest_filename(task, d):
 def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
     d2 = d
     variant = ''
+    curr_variant = ''
+    if d.getVar("BBEXTENDCURR") == "multilib":
+        curr_variant = d.getVar("BBEXTENDVARIANT")
+        if "virtclass-multilib" not in d.getVar("OVERRIDES"):
+            curr_variant = "invalid"
     if taskdata2.startswith("virtual:multilib"):
         variant = taskdata2.split(":")[2]
+    if curr_variant != variant:
         if variant not in multilibcache:
             multilibcache[variant] = oe.utils.get_multilib_datastore(variant, d)
         d2 = multilibcache[variant]
