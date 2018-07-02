@@ -328,15 +328,8 @@ def get_multilib_datastore(variant, d):
 def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = ' '):
     """Return a string of all ${var} in all multilib tune configuration"""
     values = []
-    value = d.getVar(var) or ""
-    if value != "":
-        if need_split:
-            for item in value.split(delim):
-                values.append(item)
-        else:
-            values.append(value)
-    variants = d.getVar("MULTILIB_VARIANTS") or ""
-    for item in variants.split():
+    variants = (d.getVar("MULTILIB_VARIANTS") or "").split() + ['']
+    for item in variants:
         localdata = get_multilib_datastore(item, d)
         # We need WORKDIR to be consistent with the original datastore
         localdata.setVar("WORKDIR", d.getVar("WORKDIR"))
