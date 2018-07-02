@@ -6,7 +6,7 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://src/gpgme.h.in;endline=23;md5=9d157d08a69059344e6f82abd2d25781 \
+                    file://src/gpgme.h.in;endline=23;md5=4d6319e587fd944adfe61a41a8f15b36 \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
@@ -20,8 +20,8 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0007-qt-python-Add-variables-to-tests.patch \
           "
 
-SRC_URI[md5sum] = "78b1533c593478982ee2fc548260c563"
-SRC_URI[sha256sum] = "1a8fed1197c3b99c35f403066bb344a26224d292afc048cfdfc4ccd5690a0693"
+SRC_URI[md5sum] = "129c46fb85a7ffa41e43345e48aee884"
+SRC_URI[sha256sum] = "2d1b111774d2e3dd26dcd7c251819ce4ef774ec5e566251eb9308fa7542fbd6f"
 
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"
