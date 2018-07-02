@@ -41,18 +41,18 @@ index b3c7e0b..88446de 100644
  target_link_libraries(jsc ${JSC_LIBRARIES})
  
 diff --git a/Source/WebCore/PlatformGTK.cmake b/Source/WebCore/PlatformGTK.cmake
-index 32c6ccc..fef5e8b 100644
+index f7d8d70a..3c27b8bc 100644
 --- a/Source/WebCore/PlatformGTK.cmake
 +++ b/Source/WebCore/PlatformGTK.cmake
-@@ -159,7 +159,7 @@ if (ENABLE_PLUGIN_PROCESS_GTK2)
-         ${GTK2_INCLUDE_DIRS}
-         ${GDK2_INCLUDE_DIRS}
+@@ -157,7 +157,7 @@ if (ENABLE_PLUGIN_PROCESS_GTK2)
+     target_include_directories(WebCorePlatformGTK2 PRIVATE
+         ${WebCore_INCLUDE_DIRECTORIES}
      )
 -    target_include_directories(WebCorePlatformGTK2 SYSTEM PRIVATE
 +    target_include_directories(WebCorePlatformGTK2 PRIVATE
          ${WebCore_SYSTEM_INCLUDE_DIRECTORIES}
-     )
-     target_link_libraries(WebCorePlatformGTK2
+         ${GTK2_INCLUDE_DIRS}
+         ${GDK2_INCLUDE_DIRS}
 @@ -183,7 +183,7 @@ add_dependencies(WebCorePlatformGTK WebCore)
  target_include_directories(WebCorePlatformGTK PRIVATE
      ${WebCore_INCLUDE_DIRECTORIES}
