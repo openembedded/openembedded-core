@@ -383,8 +383,6 @@ python extend_recipe_sysroot() {
     lock = bb.utils.lockfile(recipesysroot + "/sysroot.lock")
 
     fixme = {}
-    fixme[''] = []
-    fixme['native'] = []
     seendirs = set()
     postinsts = []
     multilibs = {}
@@ -483,12 +481,13 @@ python extend_recipe_sysroot() {
 
         if manifest:
             newmanifest = collections.OrderedDict()
+            targetdir = destsysroot
             if native:
-                fm = fixme['native']
                 targetdir = recipesysrootnative
-            else:
-                fm = fixme['']
-                targetdir = destsysroot
+            if targetdir not in fixme:
+                fixme[targetdir] = []
+            fm = fixme[targetdir]
+
             with open(manifest, "r") as f:
                 manifests[dep] = manifest
                 for l in f:
@@ -546,12 +545,7 @@ python extend_recipe_sysroot() {
     bb.note("Skipping as already exists in sysroot: %s" % str(msg_exists))
 
     for f in fixme:
-        if f == '':
-            staging_processfixme(fixme[f], recipesysroot, recipesysroot, recipesysrootnative, d)
-        elif f == 'native':
-            staging_processfixme(fixme[f], recipesysrootnative, recipesysroot, recipesysrootnative, d)
-        else:
-            staging_processfixme(fixme[f], multilibs[f].getVar("RECIPE_SYSROOT"), recipesysroot, recipesysrootnative, d)
+        staging_processfixme(fixme[f], f, recipesysroot, recipesysrootnative, d)
 
     for p in postinsts:
         subprocess.check_output(p, shell=True, stderr=subprocess.STDOUT)
