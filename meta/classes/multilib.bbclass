@@ -35,6 +35,8 @@ python multilib_virtclass_handler () {
         return
 
     if bb.data.inherits_class('cross-canadian', e.data):
+        # Multilib cross-candian should use the same nativesdk sysroot without MLPREFIX
+        e.data.setVar("RECIPE_SYSROOT", "${WORKDIR}/recipe-sysroot")
         e.data.setVar("MLPREFIX", variant + "-")
         override = ":virtclass-multilib-" + variant
         e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
