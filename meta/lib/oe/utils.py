@@ -327,9 +327,15 @@ def host_gcc_version(d):
 
 def get_multilib_datastore(variant, d):
     localdata = bb.data.createCopy(d)
-    overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + variant
-    localdata.setVar("OVERRIDES", overrides)
-    localdata.setVar("MLPREFIX", variant + "-")
+    if variant:
+        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + variant
+        localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", variant + "-")
+    else:
+        overrides = localdata.getVar("OVERRIDES", False).split(":")
+        overrides = ":".join([x for x in overrides if not x.startswith("virtclass-multilib-")])
+        localdata.setVar("OVERRIDES", overrides)
+        localdata.setVar("MLPREFIX", "")
     return localdata
 
 #
