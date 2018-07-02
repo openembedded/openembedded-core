@@ -13,8 +13,8 @@ normalize_dtb () {
 	DTB="$1"
 	if echo ${DTB} | grep -q '/dts/'; then
 		bbwarn "${DTB} contains the full path to the the dts file, but only the dtb name should be used."
-		DTB=`basename ${DTB} | sed 's,\.dts$,.dtb,g'`
 	fi
+	DTB=`basename ${DTB} | sed 's,\.dts$,.dtb,g'`
 	echo "${DTB}"
 }
 
