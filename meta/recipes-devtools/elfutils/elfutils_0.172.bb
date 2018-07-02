@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
 DEPENDS_append_libc-musl = " argp-standalone fts "
 # The Debian patches below are from:
-# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.168-0.2.debian.tar.xz
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.170-0.5.debian.tar.xz
 SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0001-dso-link-change.patch \
            file://0002-Fix-elf_cvt_gunhash-if-dest-and-src-are-same.patch \
@@ -16,19 +16,23 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0006-Fix-build-on-aarch64-musl.patch \
            file://0007-Fix-control-path-where-we-have-str-as-uninitialized-.patch \
            file://0001-libasm-may-link-with-libbz2-if-found.patch \
-           file://debian/hppa_backend.diff \
-           file://debian/arm_backend.diff \
-           file://debian/mips_backend.patch \
-           file://debian/mips_readelf_w.patch \
+           file://debian/0001-hppa_backend.patch \
+           file://debian/0001-arm_backend.patch \
+           file://debian/0001-mips_backend.patch \
+           file://debian/0001-testsuite-ignore-elflint.patch \
+           file://debian/0001-mips_readelf_w.patch \
+           file://debian/kfreebsd_path.patch \
            file://debian/0001-Ignore-differences-between-mips-machine-identifiers.patch \
            file://debian/0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
            file://debian/0003-Add-mips-n64-relocation-format-hack.patch \
-           file://0001-Use-fallthrough-attribute.patch \
-           file://0001-Ensure-that-packed-structs-follow-the-gcc-memory-lay.patch \
+           file://debian/hurd_path.patch \
+           file://debian/ignore_strmerge.diff \
+           file://debian/0001-fix-gcc7-ftbfs.patch \
+           file://debian/0001-disable_werror.patch \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
-SRC_URI[md5sum] = "03599aee98c9b726c7a732a2dd0245d5"
-SRC_URI[sha256sum] = "1f844775576b79bdc9f9c717a50058d08620323c1e935458223a12f249c9e066"
+SRC_URI[md5sum] = "01e87ab4c5a6a249c04e22a97a4221d3"
+SRC_URI[sha256sum] = "779c99e6344c4982bbab60b8d276cec3d468151c758905f9a44ba6b6edaa0e24"
 
 inherit autotools gettext
 

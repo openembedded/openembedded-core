@@ -1,16 +1,15 @@
-From ef0981744669149a00dd0439a54dac30de7b56a7 Mon Sep 17 00:00:00 2001
+From 207be05c44da5c4c31179a34660e176145ff8d4b Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 16 Aug 2017 10:06:26 +0800
+Date: Mon, 2 Jul 2018 09:52:23 +0800
 Subject: [PATCH] build: Provide alternatives for glibc assumptions helps
  compiling it on musl
 
 Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Rebase to 0.170
+Rebase to 0.172
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-
 ---
  Makefile.am                      |  2 +-
  lib/color.c                      |  3 ++-
@@ -24,10 +23,9 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  libcpu/i386_parse.c              |  2 +-
  libdw/Makefile.am                |  3 ++-
  libdw/libdw_alloc.c              |  2 +-
- libdwfl/dwfl_build_id_find_elf.c |  3 ++-
+ libdwfl/dwfl_build_id_find_elf.c |  1 +
  libdwfl/dwfl_error.c             |  4 +++-
  libdwfl/dwfl_module_getdwarf.c   |  1 +
- libdwfl/find-debuginfo.c         |  2 +-
  libdwfl/libdwfl_crc32_file.c     |  9 +++++++++
  libdwfl/linux-kernel-modules.c   |  1 +
  libebl/eblopenbackend.c          |  2 +-
@@ -75,16 +73,15 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  tests/getsrc_die.c               |  2 +-
  tests/line2addr.c                |  2 +-
  tests/low_high_pc.c              |  2 +-
- tests/md5-sha1-test.c            |  2 +-
  tests/rdwrmmap.c                 |  2 +-
  tests/saridx.c                   |  2 +-
  tests/sectiondump.c              |  2 +-
  tests/varlocs.c                  |  2 +-
  tests/vdsosyms.c                 |  2 +-
- 69 files changed, 95 insertions(+), 64 deletions(-)
+ 67 files changed, 92 insertions(+), 61 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 2ff444e7..41f77df8 100644
+index 2ff444e..41f77df 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -28,7 +28,7 @@ pkginclude_HEADERS = version.h
@@ -97,7 +94,7 @@ index 2ff444e7..41f77df8 100644
  EXTRA_DIST = elfutils.spec GPG-KEY NOTES CONTRIBUTING \
  	     COPYING COPYING-GPLV2 COPYING-LGPLV3
 diff --git a/lib/color.c b/lib/color.c
-index f62389d5..a2a84b46 100644
+index f62389d..a2a84b4 100644
 --- a/lib/color.c
 +++ b/lib/color.c
 @@ -32,13 +32,14 @@
@@ -117,7 +114,7 @@ index f62389d5..a2a84b46 100644
  /* Prototype for option handler.  */
  static error_t parse_opt (int key, char *arg, struct argp_state *state);
 diff --git a/lib/fixedsizehash.h b/lib/fixedsizehash.h
-index dac2a5f5..43016fc3 100644
+index dac2a5f..43016fc 100644
 --- a/lib/fixedsizehash.h
 +++ b/lib/fixedsizehash.h
 @@ -30,7 +30,6 @@
@@ -129,7 +126,7 @@ index dac2a5f5..43016fc3 100644
  #include <system.h>
  
 diff --git a/lib/system.h b/lib/system.h
-index 92033355..1a601319 100644
+index 9203335..1a60131 100644
 --- a/lib/system.h
 +++ b/lib/system.h
 @@ -50,6 +50,16 @@
@@ -150,7 +147,7 @@ index 92033355..1a601319 100644
  #ifndef MAX
  #define MAX(m, n) ((m) < (n) ? (n) : (m))
 diff --git a/lib/xmalloc.c b/lib/xmalloc.c
-index 0cde384f..217b0541 100644
+index 0cde384..217b054 100644
 --- a/lib/xmalloc.c
 +++ b/lib/xmalloc.c
 @@ -30,7 +30,7 @@
@@ -163,7 +160,7 @@ index 0cde384f..217b0541 100644
  #include <stddef.h>
  #include <stdlib.h>
 diff --git a/libasm/asm_end.c b/libasm/asm_end.c
-index ced24f50..4ad918c4 100644
+index ced24f5..4ad918c 100644
 --- a/libasm/asm_end.c
 +++ b/libasm/asm_end.c
 @@ -32,7 +32,7 @@
@@ -176,7 +173,7 @@ index ced24f50..4ad918c4 100644
  #include <stdio.h>
  #include <stdlib.h>
 diff --git a/libasm/asm_newscn.c b/libasm/asm_newscn.c
-index ddbb25df..74a598d9 100644
+index ddbb25d..74a598d 100644
 --- a/libasm/asm_newscn.c
 +++ b/libasm/asm_newscn.c
 @@ -32,7 +32,7 @@
@@ -189,7 +186,7 @@ index ddbb25df..74a598d9 100644
  #include <stdlib.h>
  #include <string.h>
 diff --git a/libcpu/i386_gendis.c b/libcpu/i386_gendis.c
-index aae5eae6..6d760165 100644
+index aae5eae..6d76016 100644
 --- a/libcpu/i386_gendis.c
 +++ b/libcpu/i386_gendis.c
 @@ -31,7 +31,7 @@
@@ -202,10 +199,10 @@ index aae5eae6..6d760165 100644
  #include <stdio.h>
  #include <stdlib.h>
 diff --git a/libcpu/i386_lex.c b/libcpu/i386_lex.c
-index ba5f4aa5..b1e41916 100644
+index facdf71..f13842f 100644
 --- a/libcpu/i386_lex.c
 +++ b/libcpu/i386_lex.c
-@@ -577,7 +577,7 @@ char *i386_text;
+@@ -571,7 +571,7 @@ char *i386_text;
  #endif
  
  #include <ctype.h>
@@ -215,7 +212,7 @@ index ba5f4aa5..b1e41916 100644
  
  #include <libeu.h>
 diff --git a/libcpu/i386_parse.c b/libcpu/i386_parse.c
-index 6fa7ce3d..bb270061 100644
+index 3c5058a..bf402d6 100644
 --- a/libcpu/i386_parse.c
 +++ b/libcpu/i386_parse.c
 @@ -107,7 +107,7 @@
@@ -228,10 +225,10 @@ index 6fa7ce3d..bb270061 100644
  #include <libintl.h>
  #include <math.h>
 diff --git a/libdw/Makefile.am b/libdw/Makefile.am
-index ff8c291e..89e792aa 100644
+index 41df4f3..e6b275f 100644
 --- a/libdw/Makefile.am
 +++ b/libdw/Makefile.am
-@@ -105,7 +105,8 @@ am_libdw_pic_a_OBJECTS = $(libdw_a_SOURCES:.c=.os)
+@@ -107,7 +107,8 @@ am_libdw_pic_a_OBJECTS = $(libdw_a_SOURCES:.c=.os)
  libdw_so_LIBS = libdw_pic.a ../libdwelf/libdwelf_pic.a \
  	  ../libdwfl/libdwfl_pic.a ../libebl/libebl.a
  libdw_so_DEPS = ../lib/libeu.a ../libelf/libelf.so
@@ -242,7 +239,7 @@ index ff8c291e..89e792aa 100644
  libdw.so$(EXEEXT): $(srcdir)/libdw.map $(libdw_so_LIBS) $(libdw_so_DEPS)
  # The rpath is necessary for libebl because its $ORIGIN use will
 diff --git a/libdw/libdw_alloc.c b/libdw/libdw_alloc.c
-index 28a8cf6e..29aeb3f7 100644
+index d6af23a..deb724c 100644
 --- a/libdw/libdw_alloc.c
 +++ b/libdw/libdw_alloc.c
 @@ -31,7 +31,7 @@
@@ -255,7 +252,7 @@ index 28a8cf6e..29aeb3f7 100644
  #include <stdlib.h>
  #include "libdwP.h"
 diff --git a/libdwfl/dwfl_build_id_find_elf.c b/libdwfl/dwfl_build_id_find_elf.c
-index ee0c1646..b06ab596 100644
+index cc6c3f6..b06ab59 100644
 --- a/libdwfl/dwfl_build_id_find_elf.c
 +++ b/libdwfl/dwfl_build_id_find_elf.c
 @@ -31,6 +31,7 @@
@@ -266,17 +263,8 @@ index ee0c1646..b06ab596 100644
  #include <inttypes.h>
  #include <fcntl.h>
  #include <unistd.h>
-@@ -99,7 +100,7 @@ __libdwfl_open_by_build_id (Dwfl_Module *mod, bool debug, char **file_name,
- 	{
- 	  if (*file_name != NULL)
- 	    free (*file_name);
--	  *file_name = canonicalize_file_name (name);
-+	  *file_name = realpath (name, NULL);
- 	  if (*file_name == NULL)
- 	    {
- 	      *file_name = name;
 diff --git a/libdwfl/dwfl_error.c b/libdwfl/dwfl_error.c
-index 7bcf61cc..c345797a 100644
+index 7bcf61c..c345797 100644
 --- a/libdwfl/dwfl_error.c
 +++ b/libdwfl/dwfl_error.c
 @@ -140,6 +140,7 @@ __libdwfl_seterrno (Dwfl_Error error)
@@ -298,7 +286,7 @@ index 7bcf61cc..c345797a 100644
        return elf_errmsg (error & 0xffff);
      case OTHER_ERROR (LIBDW):
 diff --git a/libdwfl/dwfl_module_getdwarf.c b/libdwfl/dwfl_module_getdwarf.c
-index 9775aced..511c4a6a 100644
+index af6838a..c079d6a 100644
 --- a/libdwfl/dwfl_module_getdwarf.c
 +++ b/libdwfl/dwfl_module_getdwarf.c
 @@ -35,6 +35,7 @@
@@ -309,21 +297,8 @@ index 9775aced..511c4a6a 100644
  #include "../libdw/libdwP.h"	/* DWARF_E_* values are here.  */
  #include "../libelf/libelfP.h"
  #include "system.h"
-diff --git a/libdwfl/find-debuginfo.c b/libdwfl/find-debuginfo.c
-index 6d5a42a6..9267788d 100644
---- a/libdwfl/find-debuginfo.c
-+++ b/libdwfl/find-debuginfo.c
-@@ -389,7 +389,7 @@ dwfl_standard_find_debuginfo (Dwfl_Module *mod,
-       /* If FILE_NAME is a symlink, the debug file might be associated
- 	 with the symlink target name instead.  */
- 
--      char *canon = canonicalize_file_name (file_name);
-+      char *canon = realpath (file_name, NULL);
-       if (canon != NULL && strcmp (file_name, canon))
- 	fd = find_debuginfo_in_path (mod, canon,
- 				     debuglink_file, debuglink_crc,
 diff --git a/libdwfl/libdwfl_crc32_file.c b/libdwfl/libdwfl_crc32_file.c
-index f849128d..6f0aca1b 100644
+index f849128..6f0aca1 100644
 --- a/libdwfl/libdwfl_crc32_file.c
 +++ b/libdwfl/libdwfl_crc32_file.c
 @@ -29,6 +29,15 @@
@@ -343,7 +318,7 @@ index f849128d..6f0aca1b 100644
  #define crc32 __libdwfl_crc32
  #include <libdwflP.h>
 diff --git a/libdwfl/linux-kernel-modules.c b/libdwfl/linux-kernel-modules.c
-index 9d0fef2c..9fc09b88 100644
+index 9d0fef2..9fc09b8 100644
 --- a/libdwfl/linux-kernel-modules.c
 +++ b/libdwfl/linux-kernel-modules.c
 @@ -40,6 +40,7 @@
@@ -355,7 +330,7 @@ index 9d0fef2c..9fc09b88 100644
  #include <errno.h>
  #include <stdio.h>
 diff --git a/libebl/eblopenbackend.c b/libebl/eblopenbackend.c
-index 53713963..2e66dfdd 100644
+index 8b063f4..9bdeead 100644
 --- a/libebl/eblopenbackend.c
 +++ b/libebl/eblopenbackend.c
 @@ -32,7 +32,7 @@
@@ -368,7 +343,7 @@ index 53713963..2e66dfdd 100644
  #include <dwarf.h>
  #include <stdlib.h>
 diff --git a/libelf/elf.h b/libelf/elf.h
-index 5cf2b934..990b3afb 100644
+index f774898..be277d0 100644
 --- a/libelf/elf.h
 +++ b/libelf/elf.h
 @@ -21,7 +21,9 @@
@@ -382,9 +357,9 @@ index 5cf2b934..990b3afb 100644
  
  /* Standard ELF types.  */
  
-@@ -3705,6 +3707,8 @@ enum
- #define R_BPF_NONE		0	/* No reloc */
- #define R_BPF_MAP_FD		1	/* Map fd to pointer */
+@@ -3912,6 +3914,8 @@ enum
+ #define R_METAG_TLS_LE_HI16	60
+ #define R_METAG_TLS_LE_LO16	61
  
 -__END_DECLS
 +#ifdef __cplusplus
@@ -393,7 +368,7 @@ index 5cf2b934..990b3afb 100644
  
  #endif	/* elf.h */
 diff --git a/libelf/libelf.h b/libelf/libelf.h
-index 547c0f50..dd78799e 100644
+index 547c0f5..dd78799 100644
 --- a/libelf/libelf.h
 +++ b/libelf/libelf.h
 @@ -29,6 +29,7 @@
@@ -405,7 +380,7 @@ index 547c0f50..dd78799e 100644
  #include <sys/types.h>
  
 diff --git a/libelf/libelfP.h b/libelf/libelfP.h
-index 7ee6625a..58408997 100644
+index ca805ac..47f25c2 100644
 --- a/libelf/libelfP.h
 +++ b/libelf/libelfP.h
 @@ -32,6 +32,7 @@
@@ -417,7 +392,7 @@ index 7ee6625a..58408997 100644
  #include <errno.h>
  #include <stdbool.h>
 diff --git a/src/addr2line.c b/src/addr2line.c
-index 444ee52c..9596fa67 100644
+index 5acafa0..a4920b3 100644
 --- a/src/addr2line.c
 +++ b/src/addr2line.c
 @@ -23,7 +23,7 @@
@@ -430,7 +405,7 @@ index 444ee52c..9596fa67 100644
  #include <inttypes.h>
  #include <libdwfl.h>
 diff --git a/src/ar.c b/src/ar.c
-index ec32cee5..4efd729c 100644
+index 818115b..2166f1b 100644
 --- a/src/ar.c
 +++ b/src/ar.c
 @@ -22,7 +22,7 @@
@@ -443,7 +418,7 @@ index ec32cee5..4efd729c 100644
  #include <gelf.h>
  #include <libintl.h>
 diff --git a/src/arlib.c b/src/arlib.c
-index e0839aab..1143658f 100644
+index e0839aa..1143658 100644
 --- a/src/arlib.c
 +++ b/src/arlib.c
 @@ -21,7 +21,7 @@
@@ -456,7 +431,7 @@ index e0839aab..1143658f 100644
  #include <inttypes.h>
  #include <libintl.h>
 diff --git a/src/arlib2.c b/src/arlib2.c
-index 553fc57b..46443d0e 100644
+index 553fc57..46443d0 100644
 --- a/src/arlib2.c
 +++ b/src/arlib2.c
 @@ -20,7 +20,7 @@
@@ -469,7 +444,7 @@ index 553fc57b..46443d0e 100644
  #include <limits.h>
  #include <string.h>
 diff --git a/src/elfcmp.c b/src/elfcmp.c
-index 50464207..cff183fa 100644
+index 5046420..cff183f 100644
 --- a/src/elfcmp.c
 +++ b/src/elfcmp.c
 @@ -23,7 +23,7 @@
@@ -482,7 +457,7 @@ index 50464207..cff183fa 100644
  #include <locale.h>
  #include <libintl.h>
 diff --git a/src/elflint.c b/src/elflint.c
-index df1b3a03..67d8d134 100644
+index 0a26d97..e45fb39 100644
 --- a/src/elflint.c
 +++ b/src/elflint.c
 @@ -24,7 +24,7 @@
@@ -495,7 +470,7 @@ index df1b3a03..67d8d134 100644
  #include <gelf.h>
  #include <inttypes.h>
 diff --git a/src/findtextrel.c b/src/findtextrel.c
-index 8f1e239a..71463af3 100644
+index 8f1e239..71463af 100644
 --- a/src/findtextrel.c
 +++ b/src/findtextrel.c
 @@ -23,7 +23,7 @@
@@ -508,7 +483,7 @@ index 8f1e239a..71463af3 100644
  #include <gelf.h>
  #include <libdw.h>
 diff --git a/src/nm.c b/src/nm.c
-index 969c6d35..3113c04c 100644
+index 969c6d3..3113c04 100644
 --- a/src/nm.c
 +++ b/src/nm.c
 @@ -26,7 +26,7 @@
@@ -521,7 +496,7 @@ index 969c6d35..3113c04c 100644
  #include <gelf.h>
  #include <inttypes.h>
 diff --git a/src/objdump.c b/src/objdump.c
-index 0dd9a6aa..9c8bf149 100644
+index 0dd9a6a..9c8bf14 100644
 --- a/src/objdump.c
 +++ b/src/objdump.c
 @@ -21,7 +21,7 @@
@@ -534,7 +509,7 @@ index 0dd9a6aa..9c8bf149 100644
  #include <inttypes.h>
  #include <libintl.h>
 diff --git a/src/ranlib.c b/src/ranlib.c
-index cc0ee233..ae851e40 100644
+index cc0ee23..ae851e4 100644
 --- a/src/ranlib.c
 +++ b/src/ranlib.c
 @@ -24,7 +24,7 @@
@@ -547,10 +522,10 @@ index cc0ee233..ae851e40 100644
  #include <gelf.h>
  #include <libintl.h>
 diff --git a/src/readelf.c b/src/readelf.c
-index 6a27e7e0..4759a965 100644
+index f185897..6623e93 100644
 --- a/src/readelf.c
 +++ b/src/readelf.c
-@@ -25,7 +25,7 @@
+@@ -24,7 +24,7 @@
  #include <ctype.h>
  #include <dwarf.h>
  #include <errno.h>
@@ -560,7 +535,7 @@ index 6a27e7e0..4759a965 100644
  #include <gelf.h>
  #include <inttypes.h>
 diff --git a/src/size.c b/src/size.c
-index ad8dbcbb..fd83be06 100644
+index ad8dbcb..fd83be0 100644
 --- a/src/size.c
 +++ b/src/size.c
 @@ -21,7 +21,7 @@
@@ -573,7 +548,7 @@ index ad8dbcbb..fd83be06 100644
  #include <gelf.h>
  #include <inttypes.h>
 diff --git a/src/stack.c b/src/stack.c
-index 6f2ff69f..6da0243d 100644
+index 52ae3a8..0fda285 100644
 --- a/src/stack.c
 +++ b/src/stack.c
 @@ -18,7 +18,7 @@
@@ -586,7 +561,7 @@ index 6f2ff69f..6da0243d 100644
  #include <inttypes.h>
  #include <stdio.h>
 diff --git a/src/strings.c b/src/strings.c
-index 03d0f133..5c311cbd 100644
+index 03d0f13..5c311cb 100644
 --- a/src/strings.c
 +++ b/src/strings.c
 @@ -25,7 +25,7 @@
@@ -599,7 +574,7 @@ index 03d0f133..5c311cbd 100644
  #include <gelf.h>
  #include <inttypes.h>
 diff --git a/src/strip.c b/src/strip.c
-index c7830ec6..0d7f148d 100644
+index 773ed54..ff05f46 100644
 --- a/src/strip.c
 +++ b/src/strip.c
 @@ -24,7 +24,7 @@
@@ -612,7 +587,7 @@ index c7830ec6..0d7f148d 100644
  #include <fnmatch.h>
  #include <gelf.h>
 diff --git a/src/unstrip.c b/src/unstrip.c
-index 50749093..3d4f9525 100644
+index f368e69..5ca83d0 100644
 --- a/src/unstrip.c
 +++ b/src/unstrip.c
 @@ -31,7 +31,7 @@
@@ -625,7 +600,7 @@ index 50749093..3d4f9525 100644
  #include <fnmatch.h>
  #include <libintl.h>
 diff --git a/tests/addrscopes.c b/tests/addrscopes.c
-index 791569f5..54f4311b 100644
+index 791569f..54f4311 100644
 --- a/tests/addrscopes.c
 +++ b/tests/addrscopes.c
 @@ -25,7 +25,7 @@
@@ -638,7 +613,7 @@ index 791569f5..54f4311b 100644
  
  
 diff --git a/tests/allregs.c b/tests/allregs.c
-index 286f7e3c..c9de0897 100644
+index 286f7e3..c9de089 100644
 --- a/tests/allregs.c
 +++ b/tests/allregs.c
 @@ -21,7 +21,7 @@
@@ -651,7 +626,7 @@ index 286f7e3c..c9de0897 100644
  #include <argp.h>
  #include <assert.h>
 diff --git a/tests/backtrace-data.c b/tests/backtrace-data.c
-index a387d8ff..955c27d1 100644
+index a387d8f..955c27d 100644
 --- a/tests/backtrace-data.c
 +++ b/tests/backtrace-data.c
 @@ -27,7 +27,7 @@
@@ -664,10 +639,10 @@ index a387d8ff..955c27d1 100644
  #include <dwarf.h>
  #if defined(__x86_64__) && defined(__linux__)
 diff --git a/tests/backtrace-dwarf.c b/tests/backtrace-dwarf.c
-index 2dc8a9a2..24ca7fb0 100644
+index 7ff826c..246650b 100644
 --- a/tests/backtrace-dwarf.c
 +++ b/tests/backtrace-dwarf.c
-@@ -22,7 +22,7 @@
+@@ -21,7 +21,7 @@
  #include <stdio_ext.h>
  #include <locale.h>
  #include <errno.h>
@@ -675,9 +650,9 @@ index 2dc8a9a2..24ca7fb0 100644
 +#include <err.h>
  #include <unistd.h>
  #include <sys/types.h>
- #include <sys/wait.h>
+ #include ELFUTILS_HEADER(dwfl)
 diff --git a/tests/backtrace.c b/tests/backtrace.c
-index f5dd761f..a93a8f03 100644
+index f5dd761..a93a8f0 100644
 --- a/tests/backtrace.c
 +++ b/tests/backtrace.c
 @@ -24,7 +24,7 @@
@@ -690,7 +665,7 @@ index f5dd761f..a93a8f03 100644
  #include <dwarf.h>
  #ifdef __linux__
 diff --git a/tests/buildid.c b/tests/buildid.c
-index 87c18773..2953e6bb 100644
+index 87c1877..2953e6b 100644
 --- a/tests/buildid.c
 +++ b/tests/buildid.c
 @@ -23,7 +23,7 @@
@@ -703,7 +678,7 @@ index 87c18773..2953e6bb 100644
  #include <stdlib.h>
  #include <sys/types.h>
 diff --git a/tests/debugaltlink.c b/tests/debugaltlink.c
-index 6d97d500..ee7e559e 100644
+index 6d97d50..ee7e559 100644
 --- a/tests/debugaltlink.c
 +++ b/tests/debugaltlink.c
 @@ -23,7 +23,7 @@
@@ -716,7 +691,7 @@ index 6d97d500..ee7e559e 100644
  #include <stdlib.h>
  #include <sys/types.h>
 diff --git a/tests/debuglink.c b/tests/debuglink.c
-index 935d1029..741cb814 100644
+index 935d102..741cb81 100644
 --- a/tests/debuglink.c
 +++ b/tests/debuglink.c
 @@ -21,7 +21,7 @@
@@ -729,7 +704,7 @@ index 935d1029..741cb814 100644
  #include <stdlib.h>
  #include <sys/types.h>
 diff --git a/tests/deleted.c b/tests/deleted.c
-index 6be35bc2..01907113 100644
+index 6be35bc..0190711 100644
 --- a/tests/deleted.c
 +++ b/tests/deleted.c
 @@ -21,7 +21,7 @@
@@ -742,7 +717,7 @@ index 6be35bc2..01907113 100644
  #ifdef __linux__
  #include <sys/prctl.h>
 diff --git a/tests/dwfl-addr-sect.c b/tests/dwfl-addr-sect.c
-index 21e470a3..1ea1e3b2 100644
+index 21e470a..1ea1e3b 100644
 --- a/tests/dwfl-addr-sect.c
 +++ b/tests/dwfl-addr-sect.c
 @@ -23,7 +23,7 @@
@@ -755,7 +730,7 @@ index 21e470a3..1ea1e3b2 100644
  #include <argp.h>
  #include ELFUTILS_HEADER(dwfl)
 diff --git a/tests/dwfl-bug-addr-overflow.c b/tests/dwfl-bug-addr-overflow.c
-index aa8030e1..02c8bef9 100644
+index aa8030e..02c8bef 100644
 --- a/tests/dwfl-bug-addr-overflow.c
 +++ b/tests/dwfl-bug-addr-overflow.c
 @@ -20,7 +20,7 @@
@@ -768,7 +743,7 @@ index aa8030e1..02c8bef9 100644
  #include ELFUTILS_HEADER(dwfl)
  
 diff --git a/tests/dwfl-bug-fd-leak.c b/tests/dwfl-bug-fd-leak.c
-index 689cdd79..5973da39 100644
+index 689cdd7..5973da3 100644
 --- a/tests/dwfl-bug-fd-leak.c
 +++ b/tests/dwfl-bug-fd-leak.c
 @@ -24,7 +24,7 @@
@@ -781,7 +756,7 @@ index 689cdd79..5973da39 100644
  #include <dwarf.h>
  
 diff --git a/tests/dwfl-bug-getmodules.c b/tests/dwfl-bug-getmodules.c
-index 1ee989f8..fd62e653 100644
+index 1ee989f..fd62e65 100644
 --- a/tests/dwfl-bug-getmodules.c
 +++ b/tests/dwfl-bug-getmodules.c
 @@ -18,7 +18,7 @@
@@ -794,7 +769,7 @@ index 1ee989f8..fd62e653 100644
  static const Dwfl_Callbacks callbacks =
    {
 diff --git a/tests/dwfl-report-elf-align.c b/tests/dwfl-report-elf-align.c
-index a4e97d3c..f471587c 100644
+index a4e97d3..f471587 100644
 --- a/tests/dwfl-report-elf-align.c
 +++ b/tests/dwfl-report-elf-align.c
 @@ -20,7 +20,7 @@
@@ -807,7 +782,7 @@ index a4e97d3c..f471587c 100644
  #include <string.h>
  #include <stdlib.h>
 diff --git a/tests/dwfllines.c b/tests/dwfllines.c
-index 90379dd2..cbdf6c4c 100644
+index 90379dd..cbdf6c4 100644
 --- a/tests/dwfllines.c
 +++ b/tests/dwfllines.c
 @@ -27,7 +27,7 @@
@@ -820,7 +795,7 @@ index 90379dd2..cbdf6c4c 100644
  int
  main (int argc, char *argv[])
 diff --git a/tests/dwflmodtest.c b/tests/dwflmodtest.c
-index 0027f96b..e68d3bca 100644
+index 0027f96..e68d3bc 100644
 --- a/tests/dwflmodtest.c
 +++ b/tests/dwflmodtest.c
 @@ -23,7 +23,7 @@
@@ -833,7 +808,7 @@ index 0027f96b..e68d3bca 100644
  #include <argp.h>
  #include ELFUTILS_HEADER(dwfl)
 diff --git a/tests/dwflsyms.c b/tests/dwflsyms.c
-index 49ac3346..cf078301 100644
+index 49ac334..cf07830 100644
 --- a/tests/dwflsyms.c
 +++ b/tests/dwflsyms.c
 @@ -25,7 +25,7 @@
@@ -846,7 +821,7 @@ index 49ac3346..cf078301 100644
  
  static const char *
 diff --git a/tests/early-offscn.c b/tests/early-offscn.c
-index 924cb9ef..6f60d5a3 100644
+index 924cb9e..6f60d5a 100644
 --- a/tests/early-offscn.c
 +++ b/tests/early-offscn.c
 @@ -19,7 +19,7 @@
@@ -859,7 +834,7 @@ index 924cb9ef..6f60d5a3 100644
  #include <gelf.h>
  #include <stdio.h>
 diff --git a/tests/ecp.c b/tests/ecp.c
-index 38a6859e..743cea5d 100644
+index 38a6859..743cea5 100644
 --- a/tests/ecp.c
 +++ b/tests/ecp.c
 @@ -20,7 +20,7 @@
@@ -872,7 +847,7 @@ index 38a6859e..743cea5d 100644
  #include <gelf.h>
  #include <stdlib.h>
 diff --git a/tests/find-prologues.c b/tests/find-prologues.c
-index ba8ae371..76f5f047 100644
+index ba8ae37..76f5f04 100644
 --- a/tests/find-prologues.c
 +++ b/tests/find-prologues.c
 @@ -25,7 +25,7 @@
@@ -885,7 +860,7 @@ index ba8ae371..76f5f047 100644
  #include <fnmatch.h>
  
 diff --git a/tests/funcretval.c b/tests/funcretval.c
-index 8d19d117..c8aaa93d 100644
+index 8d19d11..c8aaa93 100644
 --- a/tests/funcretval.c
 +++ b/tests/funcretval.c
 @@ -25,7 +25,7 @@
@@ -898,7 +873,7 @@ index 8d19d117..c8aaa93d 100644
  #include <fnmatch.h>
  
 diff --git a/tests/funcscopes.c b/tests/funcscopes.c
-index 9c901858..dbccb89e 100644
+index 9c90185..dbccb89 100644
 --- a/tests/funcscopes.c
 +++ b/tests/funcscopes.c
 @@ -25,7 +25,7 @@
@@ -911,7 +886,7 @@ index 9c901858..dbccb89e 100644
  #include <fnmatch.h>
  
 diff --git a/tests/getsrc_die.c b/tests/getsrc_die.c
-index 055aede0..9c394dd0 100644
+index 055aede..9c394dd 100644
 --- a/tests/getsrc_die.c
 +++ b/tests/getsrc_die.c
 @@ -19,7 +19,7 @@
@@ -924,7 +899,7 @@ index 055aede0..9c394dd0 100644
  #include <inttypes.h>
  #include <libelf.h>
 diff --git a/tests/line2addr.c b/tests/line2addr.c
-index e0d65d3d..9bf0023b 100644
+index e0d65d3..9bf0023 100644
 --- a/tests/line2addr.c
 +++ b/tests/line2addr.c
 @@ -26,7 +26,7 @@
@@ -937,7 +912,7 @@ index e0d65d3d..9bf0023b 100644
  
  static void
 diff --git a/tests/low_high_pc.c b/tests/low_high_pc.c
-index d0f43023..8da4fbdf 100644
+index 5c6b343..fa0c158 100644
 --- a/tests/low_high_pc.c
 +++ b/tests/low_high_pc.c
 @@ -25,7 +25,7 @@
@@ -949,21 +924,8 @@ index d0f43023..8da4fbdf 100644
  #include <string.h>
  #include <fnmatch.h>
  
-diff --git a/tests/md5-sha1-test.c b/tests/md5-sha1-test.c
-index d50355e9..3c41f40b 100644
---- a/tests/md5-sha1-test.c
-+++ b/tests/md5-sha1-test.c
-@@ -19,7 +19,7 @@
- #endif
- 
- #include <string.h>
--#include <error.h>
-+#include <err.h>
- 
- #include "md5.h"
- #include "sha1.h"
 diff --git a/tests/rdwrmmap.c b/tests/rdwrmmap.c
-index 6f027dfe..1ce5e6ed 100644
+index 6f027df..1ce5e6e 100644
 --- a/tests/rdwrmmap.c
 +++ b/tests/rdwrmmap.c
 @@ -19,7 +19,7 @@
@@ -976,7 +938,7 @@ index 6f027dfe..1ce5e6ed 100644
  #include <fcntl.h>
  #include <unistd.h>
 diff --git a/tests/saridx.c b/tests/saridx.c
-index 8a450d82..b3878013 100644
+index 8a450d8..b387801 100644
 --- a/tests/saridx.c
 +++ b/tests/saridx.c
 @@ -17,7 +17,7 @@
@@ -989,7 +951,7 @@ index 8a450d82..b3878013 100644
  #include <gelf.h>
  #include <stdio.h>
 diff --git a/tests/sectiondump.c b/tests/sectiondump.c
-index 3033fedc..8e888db3 100644
+index 3033fed..8e888db 100644
 --- a/tests/sectiondump.c
 +++ b/tests/sectiondump.c
 @@ -18,7 +18,7 @@
@@ -1002,7 +964,7 @@ index 3033fedc..8e888db3 100644
  #include <gelf.h>
  #include <inttypes.h>
 diff --git a/tests/varlocs.c b/tests/varlocs.c
-index c3fba89e..e043ea2c 100644
+index f4a711c..1d89a61 100644
 --- a/tests/varlocs.c
 +++ b/tests/varlocs.c
 @@ -25,7 +25,7 @@
@@ -1015,7 +977,7 @@ index c3fba89e..e043ea2c 100644
  #include <sys/types.h>
  #include <sys/stat.h>
 diff --git a/tests/vdsosyms.c b/tests/vdsosyms.c
-index b876c10b..afb28232 100644
+index b876c10..afb2823 100644
 --- a/tests/vdsosyms.c
 +++ b/tests/vdsosyms.c
 @@ -18,7 +18,7 @@
@@ -1027,3 +989,6 @@ index b876c10b..afb28232 100644
  #include <inttypes.h>
  #include <stdio.h>
  #include <string.h>
+-- 
+2.7.4
+

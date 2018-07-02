@@ -1,11 +1,13 @@
-From 46d0d0ca718093486eeeedf1b44134e9e29b56f7 Mon Sep 17 00:00:00 2001
+From 59ffb86bda845a68d3686afa7bc784131df678f7 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Wed, 16 Aug 2017 09:18:59 +0800
-Subject: [PATCH] mips backends
+Date: Fri, 29 Jun 2018 15:45:58 +0800
+Subject: [PATCH] mips_backend
 
-Upstream-Status: Backport [from debian]
+Upstream-Status: Backport from debian
+mips_backend.diff and rebase to 0.172
 
-Rebase to 0.170
+http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.170-0.5.debian.tar.xz
+
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  backends/Makefile.am    |   8 +-
@@ -23,25 +25,26 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  create mode 100644 backends/mips_symbol.c
 
 diff --git a/backends/Makefile.am b/backends/Makefile.am
-index 7f1f5d4..91baf6e 100644
+index 1e4b8e9..e7bccf8 100644
 --- a/backends/Makefile.am
 +++ b/backends/Makefile.am
-@@ -33,12 +33,12 @@ AM_CPPFLAGS += -I$(top_srcdir)/libebl -I$(top_srcdir)/libasm \
+@@ -33,13 +33,13 @@ AM_CPPFLAGS += -I$(top_srcdir)/libebl -I$(top_srcdir)/libasm \
  
  
  modules = i386 sh x86_64 ia64 alpha arm aarch64 sparc ppc ppc64 s390 \
--	  tilegx m68k bpf parisc
-+	  tilegx m68k bpf parisc mips
+-	  tilegx m68k bpf riscv parisc
++	  tilegx m68k bpf riscv parisc mips
  libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a    \
  	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a    \
  	     libebl_aarch64_pic.a libebl_sparc_pic.a libebl_ppc_pic.a \
  	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a \
--	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_parisc_pic.a
-+	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_parisc_pic.a libebl_mips_pic.a
+ 	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_riscv_pic.a \
+-	     libebl_parisc_pic.a
++	     libebl_parisc_pic.a libebl_mips_pic.a
  noinst_LIBRARIES = $(libebl_pic)
  noinst_DATA = $(libebl_pic:_pic.a=.so)
  
-@@ -128,6 +128,10 @@ parisc_SRCS = parisc_init.c parisc_symbol.c parisc_regs.c parisc_retval.c
+@@ -139,6 +139,10 @@ parisc_SRCS = parisc_init.c parisc_symbol.c parisc_regs.c parisc_retval.c
  libebl_parisc_pic_a_SOURCES = $(parisc_SRCS)
  am_libebl_parisc_pic_a_OBJECTS = $(parisc_SRCS:.c=.os)
  
@@ -698,7 +701,7 @@ index 0000000..ba465fe
 +    }
 +}
 diff --git a/libebl/eblopenbackend.c b/libebl/eblopenbackend.c
-index 1f81477..5371396 100644
+index 8b063f4..5405b0c 100644
 --- a/libebl/eblopenbackend.c
 +++ b/libebl/eblopenbackend.c
 @@ -72,6 +72,8 @@ static const struct
@@ -711,5 +714,5 @@ index 1f81477..5371396 100644
    { "m32", "elf_m32", "m32", 3, EM_M32, 0, 0 },
    { "m68k", "elf_m68k", "m68k", 4, EM_68K, ELFCLASS32, ELFDATA2MSB },
 -- 
-1.8.3.1
+2.7.4
 
