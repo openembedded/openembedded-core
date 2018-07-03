@@ -27,8 +27,8 @@ SRC_URI += "file://python-libdir.patch \
             file://0001-automake-Add-default-libtool_tag-to-cppasm.patch \
             "
 
-SRC_URI[md5sum] = "95df3f2d6eb8f81e70b8cb63a93c8853"
-SRC_URI[sha256sum] = "988e32527abe052307d21c8ca000aa238b914df363a617e38f4fb89f5abf6260"
+SRC_URI[md5sum] = "83cc2463a4080efd46a72ba2c9f6b8f5"
+SRC_URI[sha256sum] = "608a97523f97db32f1f5d5615c98ca69326ced2054c9f82e65bade7fc4c9dea8"
 
 PERL = "${USRBINPATH}/perl"
 PERL_class-native = "${USRBINPATH}/env perl"
