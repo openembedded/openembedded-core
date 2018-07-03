@@ -45,6 +45,18 @@ def meson_array(var, d):
     items = d.getVar(var).split()
     return repr(items[0] if len(items) == 1 else items)
 
+# Map our ARCH values to what Meson expects:
+# http://mesonbuild.com/Reference-tables.html#cpu-families
+def meson_cpu_family(var, d):
+    import re
+    arch = d.getVar(var)
+    if arch == 'powerpc':
+        return 'ppc'
+    elif re.match(r"i[3-6]86", arch):
+        return "x86"
+    else:
+        return arch
+
 addtask write_config before do_configure
 do_write_config[vardeps] += "MESON_C_ARGS MESON_CPP_ARGS MESON_LINK_ARGS CC CXX LD AR NM STRIP READELF"
 do_write_config() {
@@ -70,13 +82,13 @@ gtkdoc_exe_wrapper = '${B}/gtkdoc-qemuwrapper'
 
 [host_machine]
 system = '${HOST_OS}'
-cpu_family = '${HOST_ARCH}'
+cpu_family = '${@meson_cpu_family('HOST_ARCH', d)}'
 cpu = '${HOST_ARCH}'
 endian = '${MESON_HOST_ENDIAN}'
 
 [target_machine]
 system = '${TARGET_OS}'
-cpu_family = '${TARGET_ARCH}'
+cpu_family = '${@meson_cpu_family('TARGET_ARCH', d)}'
 cpu = '${TARGET_ARCH}'
 endian = '${MESON_TARGET_ENDIAN}'
 EOF
