@@ -87,7 +87,6 @@ DISTRO_PN_ALIAS_pn-encodings = "Ubuntu=xfonts-encodings Mandriva=x11-font-encodi
 DISTRO_PN_ALIAS_pn-font-alias = "Fedora=xorg-x11-fonts-base Mandriva=x11-font-alias Meego=xorg-x11-fonts"
 DISTRO_PN_ALIAS_pn-font-util = "Meego=xorg-x11-font-utils Fedora=xorg-x11-font-utils Ubuntu=xfonts-utils Mandriva=x11-font-util Debian=xfonts-utils"
 DISTRO_PN_ALIAS_pn-formfactor = "OE-Core"
-DISTRO_PN_ALIAS_pn-fstests = "OpenedHand"
 DISTRO_PN_ALIAS_pn-gcc-cross-initial = "OE-Core"
 DISTRO_PN_ALIAS_pn-gcc-cross-initial-i586 = "OE-Core"
 DISTRO_PN_ALIAS_pn-gcc-crosssdk-initial = "OE-Core"

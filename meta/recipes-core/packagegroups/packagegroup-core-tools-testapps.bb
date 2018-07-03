@@ -25,7 +25,6 @@ X11GLTOOLS = "\
     "
 
 X11TOOLS = "\
-    fstests \
     gst-examples \
     x11perf \
     xrestop \
