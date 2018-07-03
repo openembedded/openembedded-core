@@ -474,6 +474,9 @@ python extend_recipe_sysroot() {
             # We need a consistent WORKDIR for the image
             d2.setVar("WORKDIR", d.getVar("WORKDIR"))
         destsysroot = d2.getVar("RECIPE_SYSROOT")
+        # We put allarch recipes into the default sysroot
+        if manifest and "allarch" in manifest:
+            destsysroot = d.getVar("RECIPE_SYSROOT")
 
         native = False
         if c.endswith("-native") or "-cross-" in c or "-crosssdk" in c:
