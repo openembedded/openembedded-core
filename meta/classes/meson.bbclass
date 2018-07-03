@@ -35,7 +35,7 @@ MESON_LINK_ARGS = "${MESON_TOOLCHAIN_ARGS} ${LDFLAGS}"
 MESON_HOST_ENDIAN = "bogus-endian"
 MESON_TARGET_ENDIAN = "bogus-endian"
 
-EXTRA_OEMESON += "${PACKAGECONFIG_CONFARGS}"
+EXTRA_OEMESON_append = " ${PACKAGECONFIG_CONFARGS}"
 
 MESON_CROSS_FILE = ""
 MESON_CROSS_FILE_class-target = "--cross-file ${WORKDIR}/meson.cross"
@@ -85,6 +85,7 @@ EOF
 CONFIGURE_FILES = "meson.build"
 
 meson_do_configure() {
+    bbnote Executing meson ${EXTRA_OEMESON}...
     if ! meson ${MESONOPTS} "${MESON_SOURCEPATH}" "${B}" ${MESON_CROSS_FILE} ${EXTRA_OEMESON}; then
         cat ${B}/meson-logs/meson-log.txt
         bbfatal_log meson failed
@@ -118,11 +119,11 @@ meson_do_configure_prepend_class-native() {
 
 do_compile[progress] = "outof:^\[(\d+)/(\d+)\]\s+"
 meson_do_compile() {
-    ninja ${PARALLEL_MAKE}
+    ninja -v ${PARALLEL_MAKE}
 }
 
 meson_do_install() {
-    DESTDIR='${D}' ninja ${PARALLEL_MAKEINST} install
+    DESTDIR='${D}' ninja -v ${PARALLEL_MAKEINST} install
 }
 
 EXPORT_FUNCTIONS do_configure do_compile do_install
