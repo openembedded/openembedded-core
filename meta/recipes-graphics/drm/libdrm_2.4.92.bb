@@ -11,23 +11,19 @@ PROVIDES = "drm"
 DEPENDS = "libpthread-stubs libpciaccess"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
-           file://installtests.patch \
-           file://0001-configure.ac-Allow-explicit-enabling-of-cunit-tests.patch \
-          "
-
+           file://musl-ioctl.patch"
 SRC_URI[md5sum] = "f9b00d985f82d0be6ecc20c799acc89e"
 SRC_URI[sha256sum] = "e9e48fdb4de139dc4d9880aa1473158a16ff6aff63d14341367bd30a51ff39fa"
 
-inherit autotools pkgconfig manpages
+inherit meson pkgconfig manpages
 
-EXTRA_OECONF += "--disable-cairo-tests \
-                 --without-cunit \
-                 --enable-omap-experimental-api \
-                 --enable-etnaviv-experimental-api \
-                 --enable-install-test-programs \
-                 --disable-valgrind \
-                "
-PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, libxslt-native xmlto-native"
+EXTRA_OEMESON = "-Dvalgrind=false \
+                 -Dcairo-tests=false \
+                 -Dinstall-test-programs=true \
+                 -Domap=true \
+                 -Detnaviv=true"
+
+PACKAGECONFIG[manpages] = "-Dman-pages=true,-Dman-pages=false,libxslt-native xmlto-native"
 
 ALLOW_EMPTY_${PN}-drivers = "1"
 PACKAGES =+ "${PN}-tests ${PN}-drivers ${PN}-radeon ${PN}-nouveau ${PN}-omap \
