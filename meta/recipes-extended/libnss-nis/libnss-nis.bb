@@ -28,9 +28,4 @@ BBCLASSEXTEND += "native nativesdk"
 #
 # We will skip parsing this packagegeoup for non-glibc systems
 #
-python __anonymous () {
-    if d.getVar('TCLIBC') != "glibc":
-        raise bb.parse.SkipRecipe("incompatible with %s C library" %
-                                   d.getVar('TCLIBC'))
-}
-
+COMPATIBLE_HOST_libc-musl = 'null'
