@@ -88,7 +88,7 @@ def prepare_data(args):
         log.error("Name needs to be provided either via "+userfile+" or as an argument (-n).")
         sys.exit(1)
 
-    while len(args.name) <= 0 and len(args.name) < 50:
+    while len(args.name) <= 0 or len(args.name) > 50:
         print("\nName needs to be given and must not more than 50 characters.")
         args.name, args.email = ask_for_contactdetails()
 
