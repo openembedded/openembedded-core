@@ -51,6 +51,7 @@ common_errors = [
     "Cannot set xattr user.Librepo.DownloadInProgress",
     "Failed to read /var/lib/nfs/statd/state: Success",
     "error retry time-out =",
+    "logind: cannot setup systemd-logind helper (-61), using legacy fallback"
     ]
 
 video_related = [
