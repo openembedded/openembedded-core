@@ -11,6 +11,7 @@ on glibc since sys/types.h is included through another
 system headers
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Backport [7dfdfbf8c37e52e7b9b09f7d1d434edad3ebc864]
 ---
  src/gallium/winsys/svga/drm/vmw_screen.h | 1 +
  1 file changed, 1 insertion(+)
