@@ -3,7 +3,7 @@ From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Fri, 29 Jun 2018 15:59:57 +0800
 Subject: [PATCH] fix gcc7 ftbfs
 
-Upstream-Status: Backport from debian
+Upstream-Status: Pending [from debian]
 fix-gcc7-ftbfs.diff and rebase to 0.172
 
 http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.170-0.5.debian.tar.xz

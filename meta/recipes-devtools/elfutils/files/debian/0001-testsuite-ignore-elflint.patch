@@ -9,7 +9,7 @@ binutils don't pass elflint. However elfutils shouldn't FTBFS because of this.
 So we run the tests on all archs to see what breaks, but if it breaks we ignore
 the result (exitcode 77 means: this test was skipped).
 
-Upstream-Status: Backport from debian
+Upstream-Status: Pending [from debian]
 testsuite-ignore-elflint.diff and rebase to 0.172
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>

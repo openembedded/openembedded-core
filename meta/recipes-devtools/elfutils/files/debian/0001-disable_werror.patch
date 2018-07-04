@@ -8,7 +8,7 @@ Last-Update: 2018-01-01
 
 Signed-off-by: Helmut Grohne <helmut@subdivi.de>
 
-Upstream-Status: Backport from debian
+Upstream-Status: Pending [from debian]
 mdisable_werror.patc and rebase to 0.172
 
 http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.170-0.5.debian.tar.xz

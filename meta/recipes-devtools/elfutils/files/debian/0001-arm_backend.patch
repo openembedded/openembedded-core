@@ -3,7 +3,7 @@ From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Fri, 29 Jun 2018 15:42:39 +0800
 Subject: [PATCH] arm_backend
 
-Upstream-Status: Backport from debian
+Upstream-Status: Pending [from debian]
 arm_backend.diff and rebase to 0.172
 
 http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.170-0.5.debian.tar.xz

@@ -21,11 +21,9 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/0001-mips_backend.patch \
            file://debian/0001-testsuite-ignore-elflint.patch \
            file://debian/0001-mips_readelf_w.patch \
-           file://debian/kfreebsd_path.patch \
            file://debian/0001-Ignore-differences-between-mips-machine-identifiers.patch \
            file://debian/0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
            file://debian/0003-Add-mips-n64-relocation-format-hack.patch \
-           file://debian/hurd_path.patch \
            file://debian/ignore_strmerge.diff \
            file://debian/0001-fix-gcc7-ftbfs.patch \
            file://debian/0001-disable_werror.patch \

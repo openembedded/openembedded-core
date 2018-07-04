@@ -9,6 +9,7 @@ where indirect libraries may be not found by linker
 | /mnt/a/oe/build/tmp/work/riscv64-bec-linux/elfutils/0.170-r0/recipe-sysroot/usr/lib/libbz2.so.1: error adding symbols: DSO missing from command line
 | collect2: error: ld returned 1 exit status
 
+Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  src/Makefile.am | 4 ++--
