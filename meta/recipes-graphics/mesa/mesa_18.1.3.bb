@@ -1,7 +1,6 @@
 require ${BPN}.inc
 
 SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
-           file://0001-Makefile.vulkan.am-explictly-add-lib-expat-to-intel-.patch \
            file://0002-Simplify-wayland-scanner-lookup.patch \
            file://0003-winsys-svga-drm-Include-sys-types.h.patch \
            file://0004-hardware-gloat.patch \

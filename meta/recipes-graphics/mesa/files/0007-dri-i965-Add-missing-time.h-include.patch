@@ -13,7 +13,7 @@ This fixes a build error when using musl:
 |     ^~~~~~
 `----
 
-Upstream-Status: Pending
+Upstream-Status: Backport [3c288da5eec81ee58b85927df18d9194ead8f5c2]
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
  src/mesa/drivers/dri/i965/brw_bufmgr.h | 1 +
