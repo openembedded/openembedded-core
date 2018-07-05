@@ -17,6 +17,8 @@ SRC_URI[sha256sum] = "1e683c2e7c3921814706d62fbbd3e9cbf493a75fa00255e0e715508d81
 
 S = "${WORKDIR}/nss-mdns-${PV}"
 
+localstatedir = "/"
+
 inherit autotools
 
 EXTRA_OECONF = "--libdir=${base_libdir} --disable-lynx --enable-avahi"
