@@ -77,6 +77,8 @@ CONFIGFILESURI_riscv64 = " \
 
 S = "${WORKDIR}/numpy-${PV}"
 
+CLEANBROKEN = "1"
+
 # Make the build fail and replace *config.h with proper one
 # This is a ugly, ugly hack - Koen
 do_compile_prepend_class-target() {
