@@ -3,9 +3,7 @@ inherit native
 
 DEPENDS += "bzip2-replacement-native expat-native xz-native zlib-native curl-native"
 
-SRC_URI += "\
-    file://cmlibarchive-disable-ext2fs.patch \
-"
+SRC_URI += "file://0004-Disable-use-of-ext2fs-ext2_fs.h-by-cmake-s-internal-.patch"
 
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
