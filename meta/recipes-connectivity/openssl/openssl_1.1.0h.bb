@@ -126,12 +126,12 @@ do_configure () {
 #| engines/afalg/e_afalg.c:110:20: error: '__NR_eventfd' undeclared (first use in this function)
 #|      return syscall(__NR_eventfd, n);
 #|                     ^~~~~~~~~~~~
-EXTRA_OECONF_aarch64 += "no-afalgeng"
+EXTRA_OECONF_append_aarch64 = " no-afalgeng"
 
 #| ./libcrypto.so: undefined reference to `getcontext'
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
-EXTRA_OECONF_libc-musl += "-DOPENSSL_NO_ASYNC"
+EXTRA_OECONF_append_libc-musl = " -DOPENSSL_NO_ASYNC"
 
 do_install () {
         oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install
