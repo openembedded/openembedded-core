@@ -300,7 +300,7 @@ def sstate_installpkg(ss, d):
     sstatepkg = d.getVar('SSTATE_PKG') + '_' + ss['task'] + ".tgz"
 
     if not os.path.exists(sstatepkg):
-        pstaging_fetch(sstatefetch, sstatepkg, d)
+        pstaging_fetch(sstatefetch, d)
 
     if not os.path.isfile(sstatepkg):
         bb.note("Staging package %s does not exist" % sstatepkg)
@@ -635,7 +635,7 @@ def sstate_package(ss, d):
 
     return
 
-def pstaging_fetch(sstatefetch, sstatepkg, d):
+def pstaging_fetch(sstatefetch, d):
     import bb.fetch2
 
     # Only try and fetch if the user has configured a mirror
