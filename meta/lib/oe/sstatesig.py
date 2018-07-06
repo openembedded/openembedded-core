@@ -45,7 +45,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
 
     # allarch packagegroups are assumed to have well behaved names which don't change between architecures/tunes
     if isPackageGroup(fn) and isAllArch(fn) and not isNative(depname):
-        return False  
+        return False
 
     # Exclude well defined machine specific configurations which don't change ABI
     if depname in siggen.abisaferecipes and not isImage(fn):
