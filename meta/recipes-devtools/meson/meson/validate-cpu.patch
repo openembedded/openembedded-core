@@ -100,7 +100,7 @@ index 091d92dc..67177c1f 100644
  
      if trial not in known_cpu_families:
 -        mlog.warning('Unknown CPU family %s, please report this at https://github.com/mesonbuild/meson/issues/new' % trial)
-+        raise EnvironmentException('Unknown CPU family %s, please report this at https://github.com/mesonbuild/meson/issues/new' % trial)
++        raise EnvironmentException('Unknown CPU family %s, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.' % trial)
  
      return trial
  
@@ -109,7 +109,7 @@ index 091d92dc..67177c1f 100644
  
                  if entry == 'cpu_family' and res not in known_cpu_families:
 -                    mlog.warning('Unknown CPU family %s, please report this at https://github.com/mesonbuild/meson/issues/new' % value)
-+                    raise EnvironmentException('Unknown CPU family %s, please report this at https://github.com/mesonbuild/meson/issues/new' % value)
++                    raise EnvironmentException('Unknown CPU family %s, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.' % value)
  
                  if self.ok_type(res):
                      self.config[s][entry] = res
