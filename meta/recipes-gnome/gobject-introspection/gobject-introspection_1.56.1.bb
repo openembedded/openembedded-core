@@ -17,17 +17,13 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0005-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
            file://0001-giscanner-add-a-lib-dirs-envvar-option.patch \
            "
+
 SRC_URI[md5sum] = "62e5f5685b8d9752fdeaf17c057d53d1"
 SRC_URI[sha256sum] = "5b2875ccff99ff7baab63a34b67f8c920def240e178ff50add809e267d9ea24b"
 
-SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch "
+SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
 inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even
-BBCLASSEXTEND = "native"
-
-# needed for writing out the qemu wrapper script
-export STAGING_DIR_HOST
-export B
 
 DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native"
 
@@ -38,7 +34,29 @@ DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native"
 # (standard ldd doesn't work when cross-compiling).
 DEPENDS_class-target_append = " gobject-introspection-native qemu-native prelink-native"
 
-SSTATE_SCAN_FILES += "g-ir-scanner-qemuwrapper g-ir-scanner-wrapper g-ir-compiler-wrapper g-ir-scanner-lddwrapper Gio-2.0.gir postinst-ldsoconf-${PN}"
+# needed for writing out the qemu wrapper script
+export STAGING_DIR_HOST
+export B
+
+PACKAGECONFIG ?= ""
+PACKAGECONFIG[doctool] = "--enable-doctool,--disable-doctool,python3-mako,"
+
+# Configure target build to use native tools of itself and to use a qemu wrapper
+# and optionally to generate introspection data
+EXTRA_OECONF_class-target = " \
+    --disable-static \
+    --enable-host-gi \
+    --enable-gi-cross-wrapper=${B}/g-ir-scanner-qemuwrapper \
+    --enable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
+    ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection-data', '--disable-introspection-data', d)} \
+"
+
+# Need to ensure ld.so.conf exists so prelink-native works
+# both before we build and if we install from sstate
+do_configure[prefuncs] += "gobject_introspection_preconfigure"
+python gobject_introspection_preconfigure () {
+    oe.utils.write_ld_so_conf(d)
+}
 
 do_configure_prepend_class-native() {
         # Tweak the native python scripts so that they don't refer to the
@@ -100,18 +118,6 @@ EOF
         sed -i -e '1s,#!.*,#!${USRBINPATH}/env python3,' ${S}/tools/g-ir-tool-template.in
 }
 
-# Configure target build to use native tools of itself and to use a qemu wrapper
-# and optionally to generate introspection data
-EXTRA_OECONF_class-target = "--enable-host-gi \
-                              --disable-static \
-                              --enable-gi-cross-wrapper=${B}/g-ir-scanner-qemuwrapper \
-                              --enable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
-                              ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection-data', '--disable-introspection-data', d)} \
-                             "
-
-PACKAGECONFIG ?= ""
-PACKAGECONFIG[doctool] = "--enable-doctool,--disable-doctool,python3-mako,"
-
 do_compile_prepend() {
         # This prevents g-ir-scanner from writing cache data to $HOME
         export GI_SCANNER_DISABLE_CACHE=1
@@ -130,27 +136,6 @@ do_install_append_class-target() {
         install ${B}/g-ir-scanner-lddwrapper ${D}${bindir}/
 }
 
-# .typelib files are needed at runtime and so they go to the main package
-FILES_${PN}_append = " ${libdir}/girepository-*/*.typelib"
-
-# .gir files go to dev package, as they're needed for developing (but not for running)
-# things that depends on introspection.
-FILES_${PN}-dev_append = " ${datadir}/gir-*/*.gir"
-FILES_${PN}-dev_append = " ${datadir}/gir-*/*.rnc"
-
-# These are used by gobject-based packages
-# to generate transient introspection binaries
-FILES_${PN}-dev_append = " ${datadir}/gobject-introspection-1.0/gdump.c \
-               ${datadir}/gobject-introspection-1.0/Makefile.introspection"
-
-# These are used by dependent packages (e.g. pygobject) to build their
-# testsuites.
-FILES_${PN}-dev_append = " ${datadir}/gobject-introspection-1.0/tests/*.c \
-                   ${datadir}/gobject-introspection-1.0/tests/*.h"
-
-FILES_${PN}-dbg += "${libdir}/gobject-introspection/giscanner/.debug/"
-FILES_${PN}-staticdev += "${libdir}/gobject-introspection/giscanner/*.a"
-
 # we need target versions of introspection tools in sysroot so that they can be run via qemu
 # when building introspection files in other packages
 SYSROOT_DIRS_append_class-target = " ${bindir}"
@@ -163,13 +148,6 @@ gi_binaries_sysroot_preprocess() {
            -e "s|g_ir_scanner=.*|g_ir_scanner=${bindir}/g-ir-scanner-wrapper|" \
            -e "s|g_ir_compiler=.*|g_ir_compiler=${bindir}/g-ir-compiler-wrapper|" \
            ${SYSROOT_DESTDIR}${libdir}/pkgconfig/gobject-introspection-1.0.pc
-}
-
-# Need to ensure ld.so.conf exists so prelink-native works
-# both before we build and if we install from sstate
-do_configure[prefuncs] += "gobject_introspection_preconfigure"
-python gobject_introspection_preconfigure () {
-    oe.utils.write_ld_so_conf(d)
 }
 
 SYSROOT_PREPROCESS_FUNCS_append = " gi_ldsoconf_sysroot_preprocess"
@@ -191,3 +169,28 @@ gi_package_preprocess() {
 	rm -f ${PKGD}${bindir}/g-ir-compiler-wrapper
 	rm -f ${PKGD}${bindir}/g-ir-scanner-lddwrapper
 }
+
+SSTATE_SCAN_FILES += "g-ir-scanner-qemuwrapper g-ir-scanner-wrapper g-ir-compiler-wrapper g-ir-scanner-lddwrapper Gio-2.0.gir postinst-ldsoconf-${PN}"
+
+# .typelib files are needed at runtime and so they go to the main package
+FILES_${PN}_append = " ${libdir}/girepository-*/*.typelib"
+
+# .gir files go to dev package, as they're needed for developing (but not for running)
+# things that depends on introspection.
+FILES_${PN}-dev_append = " ${datadir}/gir-*/*.gir"
+FILES_${PN}-dev_append = " ${datadir}/gir-*/*.rnc"
+
+# These are used by gobject-based packages
+# to generate transient introspection binaries
+FILES_${PN}-dev_append = " ${datadir}/gobject-introspection-1.0/gdump.c \
+                           ${datadir}/gobject-introspection-1.0/Makefile.introspection"
+
+# These are used by dependent packages (e.g. pygobject) to build their
+# testsuites.
+FILES_${PN}-dev_append = " ${datadir}/gobject-introspection-1.0/tests/*.c \
+                           ${datadir}/gobject-introspection-1.0/tests/*.h"
+
+FILES_${PN}-dbg += "${libdir}/gobject-introspection/giscanner/.debug/"
+FILES_${PN}-staticdev += "${libdir}/gobject-introspection/giscanner/*.a"
+
+BBCLASSEXTEND = "native"
