@@ -1,6 +1,6 @@
 inherit distutils
 
-DEPENDS += "python-distribute-native"
+DEPENDS += "python-setuptools-native"
 
 DISTUTILS_INSTALL_ARGS = "--root=${D} \
     --prefix=${prefix} \
