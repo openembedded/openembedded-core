@@ -102,7 +102,7 @@ EOF
 
 # Configure target build to use native tools of itself and to use a qemu wrapper
 # and optionally to generate introspection data
-EXTRA_OECONF_class-target += "--enable-host-gi \
+EXTRA_OECONF_class-target = "--enable-host-gi \
                               --disable-static \
                               --enable-gi-cross-wrapper=${B}/g-ir-scanner-qemuwrapper \
                               --enable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
