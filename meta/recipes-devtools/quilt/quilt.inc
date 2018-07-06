@@ -16,10 +16,6 @@ SRC_URI[sha256sum] = "f6cbc788e5cbbb381a3c6eab5b9efce67c776a8662a7795c7432fd27aa
 
 inherit autotools-brokensep ptest
 
-EXTRA_OECONF_darwin += "--without-date \
-                        --without-getopt \
-                        "
-
 CLEANBROKEN = "1"
 
 PACKAGES += "guards guards-doc"
@@ -30,9 +26,6 @@ FILES_${PN}-doc = "${mandir}/man1/quilt.1 ${docdir}/${BPN}"
 FILES_guards-doc = "${mandir}/man1/guards.1"
 
 RDEPENDS_${PN} = "bash"
-
-EXTRA_OE_MAKE_ARGS_darwin ?= ""
-EXTRA_OE_MAKE_ARGS ?= "BUILD_ROOT=${D}"
 
 EXTRA_OECONF = "--with-perl='${USRBINPATH}/env perl' --with-patch=patch"
 
@@ -51,7 +44,7 @@ do_configure_append () {
 
 # quilt ignores DESTDIR
 do_install () {
-	oe_runmake ${EXTRA_OE_MAKE_ARGS} install
+	oe_runmake 'BUILD_ROOT=${D}' install
 	# cleanup unpackaged files
 	rm -rf ${D}/${datadir}/emacs
 }
