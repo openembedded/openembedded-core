@@ -18,15 +18,6 @@ inherit autotools-brokensep ptest
 
 CLEANBROKEN = "1"
 
-PACKAGES += "guards guards-doc"
-FILES_${PN} = "${sysconfdir} ${datadir}/quilt \
-               ${bindir}/quilt ${libdir}/quilt"
-FILES_guards = "${bindir}/guards"
-FILES_${PN}-doc = "${mandir}/man1/quilt.1 ${docdir}/${BPN}"
-FILES_guards-doc = "${mandir}/man1/guards.1"
-
-RDEPENDS_${PN} = "bash"
-
 EXTRA_OECONF = "--with-perl='${USRBINPATH}/env perl' --with-patch=patch"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_BASH=/bin/bash"
@@ -42,7 +33,7 @@ do_configure_append () {
 	sed -e 's,^COMPAT_SYMLINKS.*:=.*,COMPAT_SYMLINKS	:=,' -i ${S}/Makefile
 }
 
-# quilt ignores DESTDIR
+# quilt Makefiles install to BUILD_ROOT instead of DESTDIR
 do_install () {
 	oe_runmake 'BUILD_ROOT=${D}' install
 	# cleanup unpackaged files
@@ -62,6 +53,15 @@ do_install_ptest() {
 	cp ${WORKDIR}/test.sh ${D}${PTEST_PATH}
 }
 
+PACKAGES += "guards guards-doc"
+
+FILES_${PN} = "${sysconfdir} ${datadir}/quilt \
+               ${bindir}/quilt ${libdir}/quilt"
+FILES_guards = "${bindir}/guards"
+FILES_${PN}-doc = "${mandir}/man1/quilt.1 ${docdir}/${BPN}"
+FILES_guards-doc = "${mandir}/man1/guards.1"
+
+RDEPENDS_${PN} = "bash"
 RDEPENDS_${PN}-ptest = "make file sed gawk diffutils findutils ed perl \
                         perl-module-filehandle perl-module-getopt-std \
                         perl-module-posix perl-module-file-temp \
