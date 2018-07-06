@@ -407,7 +407,7 @@ python sstate_hardcode_path_unpack () {
         bb.note("Replacing fixme paths in sstate package: %s" % (sstate_hardcode_cmd))
         subprocess.check_call(sstate_hardcode_cmd, shell=True)
 
-        # Need to remove this or we'd copy it into the target directory and may 
+        # Need to remove this or we'd copy it into the target directory and may
         # conflict with another writer
         os.remove(fixmefn)
 }
