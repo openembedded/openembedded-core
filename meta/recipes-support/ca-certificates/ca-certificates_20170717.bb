@@ -26,7 +26,6 @@ SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https \
            "
 
 S = "${WORKDIR}/git"
-SYSROOT_DIRS_class-native += "${sysconfdir} ${datadir}/ca-certificates"
 
 inherit allarch
 
