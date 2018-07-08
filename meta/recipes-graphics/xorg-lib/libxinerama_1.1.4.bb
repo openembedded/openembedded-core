@@ -16,7 +16,7 @@ PE = "1"
 
 XORG_PN = "libXinerama"
 
-SRC_URI[md5sum] = "9336dc46ae3bf5f81c247f7131461efd"
-SRC_URI[sha256sum] = "7a45699f1773095a3f821e491cbd5e10c887c5a5fce5d8d3fced15c2ff7698e2"
+SRC_URI[md5sum] = "0d5f826a197dae74da67af4a9ef35885"
+SRC_URI[sha256sum] = "0008dbd7ecf717e1e507eed1856ab0d9cf946d03201b85d5dcf61489bb02d720"
 
 BBCLASSEXTEND = "native nativesdk"
