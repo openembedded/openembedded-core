@@ -19,5 +19,5 @@ PE = "1"
 
 XORG_PN = "libXScrnSaver"
 
-SRC_URI[md5sum] = "7a773b16165e39e938650bcc9027c1d5"
-SRC_URI[sha256sum] = "8ff1efa7341c7f34bcf9b17c89648d6325ddaae22e3904e091794e0b4426ce1d"
+SRC_URI[md5sum] = "eeea9d5af3e6c143d0ea1721d27a5e49"
+SRC_URI[sha256sum] = "f917075a1b7b5a38d67a8b0238eaab14acd2557679835b154cf2bca576e89bf8"
