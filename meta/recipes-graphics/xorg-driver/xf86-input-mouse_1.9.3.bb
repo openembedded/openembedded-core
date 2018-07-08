@@ -10,7 +10,5 @@ driver."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=90ea9f90d72b6d9327dede5ffdb2a510"
 
-SRC_URI += "file://0001-Adapt-to-removal-of-xf86GetOS.patch"
-
-SRC_URI[md5sum] = "ce2d679283a22c8e0dccdd9248594845"
-SRC_URI[sha256sum] = "f425d5b05c6ab412a27e0a1106bb83f9e2662b307210abbe48270892387f4b2f"
+SRC_URI[md5sum] = "a2104693bbcfe1413397f7905eecd3dc"
+SRC_URI[sha256sum] = "93ecb350604d05be98b7d4e5db3b8155a44890069a7d8d6b800c0bea79c85cc5"
