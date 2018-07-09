@@ -10,7 +10,7 @@ DISTUTILS_INSTALL_ARGS ?= "--prefix=${D}/${prefix} \
 
 distutils3_do_configure() {
 	if [ "${CLEANBROKEN}" != "1" ] ; then
-		${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py clean
+		${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py clean ${DISTUTILS_BUILD_ARGS}
 	fi
 }
 
