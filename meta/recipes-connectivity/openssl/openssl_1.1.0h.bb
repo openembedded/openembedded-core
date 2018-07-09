@@ -8,11 +8,6 @@ SECTION = "libs/network"
 LICENSE = "openssl"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d57d511030c9d66ef5f5966bee5a7eff"
 
-BBCLASSEXTEND = "native nativesdk"
-
-SRC_URI[md5sum] = "5271477e4d93f4ea032b665ef095ff24"
-SRC_URI[sha256sum] = "5835626cde9e99656585fc7aaa2302a73a7e1340bf8c14fd635a62c66802a517"
-
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
@@ -21,11 +16,23 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
 
 SRC_URI_append_class-nativesdk = " \
            file://environment.d-openssl.sh \
-          "
+           "
 
-S = "${WORKDIR}/openssl-${PV}"
+SRC_URI[md5sum] = "5271477e4d93f4ea032b665ef095ff24"
+SRC_URI[sha256sum] = "5835626cde9e99656585fc7aaa2302a73a7e1340bf8c14fd635a62c66802a517"
 
 inherit lib_package multilib_header ptest
+
+#| engines/afalg/e_afalg.c: In function 'eventfd':
+#| engines/afalg/e_afalg.c:110:20: error: '__NR_eventfd' undeclared (first use in this function)
+#|      return syscall(__NR_eventfd, n);
+#|                     ^~~~~~~~~~~~
+EXTRA_OECONF_append_aarch64 = " no-afalgeng"
+
+#| ./libcrypto.so: undefined reference to `getcontext'
+#| ./libcrypto.so: undefined reference to `setcontext'
+#| ./libcrypto.so: undefined reference to `makecontext'
+EXTRA_OECONF_append_libc-musl = " -DOPENSSL_NO_ASYNC"
 
 do_configure () {
 	os=${HOST_OS}
@@ -122,17 +129,6 @@ do_configure () {
 	perl ./Configure ${EXTRA_OECONF} --prefix=$useprefix --openssldir=${libdir}/ssl-1.1 --libdir=${libdirleaf} $target
 }
 
-#| engines/afalg/e_afalg.c: In function 'eventfd':
-#| engines/afalg/e_afalg.c:110:20: error: '__NR_eventfd' undeclared (first use in this function)
-#|      return syscall(__NR_eventfd, n);
-#|                     ^~~~~~~~~~~~
-EXTRA_OECONF_append_aarch64 = " no-afalgeng"
-
-#| ./libcrypto.so: undefined reference to `getcontext'
-#| ./libcrypto.so: undefined reference to `setcontext'
-#| ./libcrypto.so: undefined reference to `makecontext'
-EXTRA_OECONF_append_libc-musl = " -DOPENSSL_NO_ASYNC"
-
 do_install () {
         oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install
         oe_multilib_header openssl/opensslconf.h
@@ -146,12 +142,10 @@ do_install_append_class-native () {
         sed -i -e 's,/etc/openssl,${sysconfdir}/ssl,g' ${D}${bindir}/c_rehash
 }
 
-do_install_append_class-nativesdk() {
-    mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
-    install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
+do_install_append_class-nativesdk () {
+        mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
+        install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
-
-FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
 
 do_install_ptest() {
         cp -r * ${D}${PTEST_PATH}
@@ -163,10 +157,12 @@ do_install_ptest() {
         sed -i 's/$target{shared_extension_simple}/".so.ptest"/' ${D}${PTEST_PATH}/test/recipes/90-test_shlibload.t
 }
 
-RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
-
-FILES_${PN} =+ " ${libdir}/ssl-1.1/*"
-
 PACKAGES =+ "${PN}-engines"
+
+FILES_${PN} =+ "${libdir}/ssl-1.1/*"
+FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
 FILES_${PN}-engines = "${libdir}/engines-1.1"
 
+RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
+
+BBCLASSEXTEND = "native nativesdk"
