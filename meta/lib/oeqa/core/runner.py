@@ -43,11 +43,17 @@ class OETestResult(_TestResult):
         super(OETestResult, self).__init__(*args, **kwargs)
 
         self.successes = []
+        self.starttime = {}
+        self.endtime = {}
+        self.progressinfo = {}
 
         self.tc = tc
         self._tc_map_results()
 
     def startTest(self, test):
+        # May have been set by concurrencytest
+        if test.id() not in self.starttime:
+            self.starttime[test.id()] = time.time()
         super(OETestResult, self).startTest(test)
 
     def _tc_map_results(self):
@@ -56,6 +62,12 @@ class OETestResult(_TestResult):
         self.tc._results['skipped'] = self.skipped
         self.tc._results['expectedFailures'] = self.expectedFailures
         self.tc._results['successes'] = self.successes
+
+    def stopTest(self, test):
+        self.endtime[test.id()] = time.time()
+        super(OETestResult, self).stopTest(test)
+        if test.id() in self.progressinfo:
+            print(self.progressinfo[test.id()])
 
     def logSummary(self, component, context_msg=''):
         elapsed_time = self.tc._run_end_time - self.tc._run_start_time
@@ -141,12 +153,16 @@ class OETestResult(_TestResult):
                     if hasattr(d, 'oeid'):
                         oeid = d.oeid
 
+            t = ""
+            if case.id() in self.starttime and case.id() in self.endtime:
+                t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
+
             if fail:
-                self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
-                    oeid, desc))
+                self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(),
+                    oeid, desc, t))
             else:
-                self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
-                    oeid, 'UNKNOWN'))
+                self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(),
+                    oeid, 'UNKNOWN', t))
 
 class OEListTestsResult(object):
     def wasSuccessful(self):

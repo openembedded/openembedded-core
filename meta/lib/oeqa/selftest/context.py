@@ -25,14 +25,14 @@ class OESelftestTestContext(OETestContext):
         self.custommachine = None
         self.config_paths = config_paths
 
-    def runTests(self, machine=None, skips=[]):
+    def runTests(self, processes=None, machine=None, skips=[]):
         if machine:
             self.custommachine = machine
             if machine == 'random':
                 self.custommachine = choice(self.machines)
             self.logger.info('Run tests with custom MACHINE set to: %s' % \
                     self.custommachine)
-        return super(OESelftestTestContext, self).runTests(skips)
+        return super(OESelftestTestContext, self).runTests(processes, skips)
 
     def listTests(self, display_type, machine=None):
         return super(OESelftestTestContext, self).listTests(display_type)
@@ -67,6 +67,9 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         group.add_argument('-l', '--list-tests', required=False,
                 action="store_true", default=False,
                 help='List all available tests.')
+
+        parser.add_argument('-j', '--num-processes', dest='processes', action='store',
+                type=int, help="number of processes to execute in parallel with")
 
         parser.add_argument('--machine', required=False, choices=['random', 'all'],
                             help='Run tests on different machines (random/all).')
@@ -137,6 +140,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                 self.tc_kwargs['init']['config_paths']['bblayers_backup'])
 
         self.tc_kwargs['run']['skips'] = args.skips
+        self.tc_kwargs['run']['processes'] = args.processes
 
     def _pre_run(self):
         def _check_required_env_variables(vars):

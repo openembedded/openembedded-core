@@ -58,14 +58,20 @@ class OETestContext(object):
                 modules_required, filters)
         self.suites = self.loader.discover()
 
-    def runTests(self, skips=[]):
+    def runTests(self, processes=None, skips=[]):
         self.runner = self.runnerClass(self, descriptions=False, verbosity=2, buffer=True)
 
         # Dinamically skip those tests specified though arguments
         self.skipTests(skips)
 
         self._run_start_time = time.time()
-        result = self.runner.run(self.suites)
+        if processes:
+            from oeqa.core.utils.concurrencytest import ConcurrentTestSuite
+
+            concurrent_suite = ConcurrentTestSuite(self.suites, processes)
+            result = self.runner.run(concurrent_suite)
+        else:
+            result = self.runner.run(self.suites)
         self._run_end_time = time.time()
 
         return result
