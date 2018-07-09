@@ -12,7 +12,7 @@ python () {
 }
 
 SRCREV_machine ?= "3373c0cf71f2812eeb9694839456df6f67fd32ac"
-SRCREV_meta ?= "ff65711e13fa39d7fe2947a1ba196dad82eed327"
+SRCREV_meta ?= "d35642f0b65f7772a45e1457fd60de6d1bff8e58"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;branch=${KBRANCH};name=machine \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.15;destsuffix=${KMETA}"
