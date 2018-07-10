@@ -56,3 +56,5 @@ FILES_${PN}-kms = "${libdir}/libkms*.so.*"
 FILES_${PN}-freedreno = "${libdir}/libdrm_freedreno.so.*"
 FILES_${PN}-amdgpu = "${libdir}/libdrm_amdgpu.so.*"
 FILES_${PN}-etnaviv = "${libdir}/libdrm_etnaviv.so.*"
+
+BBCLASSEXTEND = "native nativesdk"
