@@ -14,6 +14,7 @@ COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
+           file://0001-Fix-btrfs-Remove-unnecessary-fs_info-parameter.patch \
 "
 
 SRC_URI[md5sum] = "8110099f4615fc89a74ffe9189b56cfc"
