@@ -12,6 +12,7 @@ LICENSE = "GPLv2"
 PR = "r9"
 
 PACKAGECONFIG ??= "scripting tui libunwind"
+PACKAGECONFIG[dwarf] = ",NO_DWARF=1"
 PACKAGECONFIG[scripting] = ",NO_LIBPERL=1 NO_LIBPYTHON=1,perl python"
 # gui support was added with kernel 3.6.35
 # since 3.10 libnewt was replaced by slang
@@ -80,7 +81,7 @@ EXTRA_OEMAKE = '\
     EXTRA_CFLAGS="-ldw" \
     EXTRA_LDFLAGS="${PERF_EXTRA_LDFLAGS}" \
     perfexecdir=${libexecdir} \
-    NO_GTK2=1 NO_DWARF=1 \
+    NO_GTK2=1 \
     ${PACKAGECONFIG_CONFARGS} \
 '
 
