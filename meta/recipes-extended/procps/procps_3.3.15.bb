@@ -17,8 +17,8 @@ SRC_URI = "http://downloads.sourceforge.net/project/procps-ng/Production/procps-
            file://0001-Fix-out-of-tree-builds.patch \
            "
 
-SRC_URI[md5sum] = "fce371ccc1c15a67af9d85e4057e559d"
-SRC_URI[sha256sum] = "5eda0253999b7d786e690edfa73301b3113c7a67058478866e98e9ff6736726c"
+SRC_URI[md5sum] = "2b0717a7cb474b3d6dfdeedfbad2eccc"
+SRC_URI[sha256sum] = "10bd744ffcb3de2d591d2f6acf1a54a7ba070fdcc432a855931a5057149f0465"
 
 S = "${WORKDIR}/procps-ng-${PV}"
 
