@@ -8,7 +8,7 @@ SECTION = "x11/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://xf86drm.c;beginline=9;endline=32;md5=c8a3b961af7667c530816761e949dc71"
 PROVIDES = "drm"
-DEPENDS = "libpthread-stubs libpciaccess"
+DEPENDS = "libpthread-stubs"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://musl-ioctl.patch"
@@ -17,12 +17,24 @@ SRC_URI[sha256sum] = "e9e48fdb4de139dc4d9880aa1473158a16ff6aff63d14341367bd30a51
 
 inherit meson pkgconfig manpages
 
-EXTRA_OEMESON = "-Dvalgrind=false \
-                 -Dcairo-tests=false \
-                 -Dinstall-test-programs=true \
-                 -Domap=true \
-                 -Detnaviv=true"
-
+PACKAGECONFIG ??= "libkms intel radeon amdgpu nouveau vmwgfx omap freedreno vc4 etnaviv install-test-programs"
+PACKAGECONFIG[libkms] = "-Dlibkms=true,-Dlibkms=false"
+PACKAGECONFIG[intel] = "-Dintel=true,-Dintel=false,libpciaccess"
+PACKAGECONFIG[radeon] = "-Dradeon=true,-Dradeon=false"
+PACKAGECONFIG[amdgpu] = "-Damdgpu=true,-Damdgpu=false"
+PACKAGECONFIG[nouveau] = "-Dnouveau=true,-Dnouveau=false"
+PACKAGECONFIG[vmwgfx] = "-Dvmwgfx=true,-Dvmwgfx=false"
+PACKAGECONFIG[omap] = "-Domap=true,-Domap=false"
+PACKAGECONFIG[exynos] = "-Dexynos=true,-Dexynos=false"
+PACKAGECONFIG[freedreno] = "-Dfreedreno=true,-Dfreedreno=false"
+PACKAGECONFIG[tegra] = "-Dtegra=true,-Dtegra=false"
+PACKAGECONFIG[vc4] = "-Dvc4=true,-Dvc4=false"
+PACKAGECONFIG[etnaviv] = "-Detnaviv=true,-Detnaviv=false"
+PACKAGECONFIG[freedreno-kgsl] = "-Dfreedreno-kgsl=true,-Dfreedreno-kgsl=false"
+PACKAGECONFIG[valgrind] = "-Dvalgrind=true,-Dvalgrind=false,valgrind"
+PACKAGECONFIG[install-test-programs] = "-Dinstall-test-programs=true,-Dinstall-test-programs=false"
+PACKAGECONFIG[cairo-tests] = "-Dcairo-tests=true,-Dcairo-tests=false"
+PACKAGECONFIG[udev] = "-Dudev=true,-Dudev=false,udev"
 PACKAGECONFIG[manpages] = "-Dman-pages=true,-Dman-pages=false,libxslt-native xmlto-native"
 
 ALLOW_EMPTY_${PN}-drivers = "1"
