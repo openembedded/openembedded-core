@@ -47,21 +47,16 @@ class OETestResult(_TestResult):
         self.endtime = {}
         self.progressinfo = {}
 
+        # Inject into tc so that TestDepends decorator can see results
+        tc.results = self
+
         self.tc = tc
-        self._tc_map_results()
 
     def startTest(self, test):
         # May have been set by concurrencytest
         if test.id() not in self.starttime:
             self.starttime[test.id()] = time.time()
         super(OETestResult, self).startTest(test)
-
-    def _tc_map_results(self):
-        self.tc._results['failures'] = self.failures
-        self.tc._results['errors'] = self.errors
-        self.tc._results['skipped'] = self.skipped
-        self.tc._results['expectedFailures'] = self.expectedFailures
-        self.tc._results['successes'] = self.successes
 
     def stopTest(self, test):
         self.endtime[test.id()] = time.time()
@@ -80,7 +75,7 @@ class OETestResult(_TestResult):
             msg = "%s - OK - All required tests passed" % component
         else:
             msg = "%s - FAIL - Required tests failed" % component
-        skipped = len(self.tc._results['skipped'])
+        skipped = len(self.skipped)
         if skipped: 
             msg += " (skipped=%d)" % skipped
         self.tc.logger.info(msg)
@@ -88,7 +83,7 @@ class OETestResult(_TestResult):
     def _getDetailsNotPassed(self, case, type, desc):
         found = False
 
-        for (scase, msg) in self.tc._results[type]:
+        for (scase, msg) in getattr(self, type):
             # XXX: When XML reporting is enabled scase is
             # xmlrunner.result._TestInfo instance instead of
             # string.
