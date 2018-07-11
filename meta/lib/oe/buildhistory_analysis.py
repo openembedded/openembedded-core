@@ -13,6 +13,7 @@ import os.path
 import difflib
 import git
 import re
+import shlex
 import hashlib
 import collections
 import bb.utils
@@ -115,10 +116,13 @@ class ChangeRecord:
                 aitems = pkglist_combine(depvera)
                 bitems = pkglist_combine(depverb)
             else:
-                aitems = self.oldvalue.split()
-                bitems = self.newvalue.split()
                 if self.fieldname == 'FILELIST':
+                    aitems = shlex.split(self.oldvalue)
+                    bitems = shlex.split(self.newvalue)
                     renamed_dirs, aitems, bitems = detect_renamed_dirs(aitems, bitems)
+                else:
+                    aitems = self.oldvalue.split()
+                    bitems = self.newvalue.split()
 
             removed = list(set(aitems) - set(bitems))
             added = list(set(bitems) - set(aitems))
@@ -409,9 +413,13 @@ def compare_dict_blobs(path, ablob, bblob, report_all, report_ver):
                     (depvera, depverb) = compare_pkg_lists(astr, bstr)
                     if depvera == depverb:
                         continue
-                alist = astr.split()
+                if key == 'FILELIST':
+                    alist = shlex.split(astr)
+                    blist = shlex.split(bstr)
+                else:
+                    alist = astr.split()
+                    blist = bstr.split()
                 alist.sort()
-                blist = bstr.split()
                 blist.sort()
                 # We don't care about the removal of self-dependencies
                 if pkgname in alist and not pkgname in blist:
