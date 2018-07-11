@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c7b12b6702da38ca028ace54aae3d484 \
 
 SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
            "
-SRC_URI[md5sum] = "5d32eaf0f5d6b7da7f5ad0959e2551e6"
-SRC_URI[sha256sum] = "9648896b2462b49b15a69b60f44656593c170c0e73121c890eb16d0c1d9376f6"
+SRC_URI[md5sum] = "d75ec11e8443946b4795e4be1cf22db8"
+SRC_URI[sha256sum] = "dabb727a4b64e87bfa8c025c1d63919ce12100b49fdeded31857644a59729ee2"
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
