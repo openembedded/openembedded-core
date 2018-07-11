@@ -88,10 +88,10 @@ class OETestResult(_TestResult):
                     break
                 scase_str = scase.test_id
             else:
-                if case == scase:
+                if case.id() == scase.id():
                     found = True
                     break
-                scase_str = str(scase)
+                scase_str = str(scase.id())
 
             # When fails at module or class level the class name is passed as string
             # so figure out to see if match
