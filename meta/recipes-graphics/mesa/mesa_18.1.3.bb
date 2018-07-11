@@ -3,7 +3,6 @@ require ${BPN}.inc
 SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0002-Simplify-wayland-scanner-lookup.patch \
            file://0003-winsys-svga-drm-Include-sys-types.h.patch \
-           file://0004-hardware-gloat.patch \
            file://0005-Properly-get-LLVM-version-when-using-LLVM-Git-releas.patch \
            file://0006-Use-Python-3-to-execute-the-scripts.patch \
            file://0007-dri-i965-Add-missing-time.h-include.patch \
