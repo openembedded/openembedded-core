@@ -1138,21 +1138,22 @@ python populate_packages () {
 
     # Sanity check PACKAGES for duplicates
     # Sanity should be moved to sanity.bbclass once we have the infrastructure
-    package_list = []
+    package_dict = {}
 
-    for pkg in packages.split():
-        if pkg in package_list:
+    for i, pkg in enumerate(packages.split()):
+        if pkg in package_dict:
             msg = "%s is listed in PACKAGES multiple times, this leads to packaging errors." % pkg
             package_qa_handle_error("packages-list", msg, d)
         # If debug-with-srcpkg mode is enabled then the src package will have
         # priority over dbg package when assigning the files.
         # This allows src package to include source files and remove them from dbg.
         elif split_source_package and pkg.endswith("-src"):
-            package_list.insert(0, pkg)
-        elif autodebug and pkg.endswith("-dbg") and not split_source_package:
-            package_list.insert(0, pkg)
+            package_dict[pkg] = (10, i)
+        elif autodebug and pkg.endswith("-dbg"):
+            package_dict[pkg] = (30, i)
         else:
-            package_list.append(pkg)
+            package_dict[pkg] = (50, i)
+    package_list = sorted(package_dict.keys(), key=package_dict.get)
     d.setVar('PACKAGES', ' '.join(package_list))
     pkgdest = d.getVar('PKGDEST')
 
