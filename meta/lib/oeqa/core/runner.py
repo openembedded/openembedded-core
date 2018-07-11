@@ -42,6 +42,8 @@ class OETestResult(_TestResult):
     def __init__(self, tc, *args, **kwargs):
         super(OETestResult, self).__init__(*args, **kwargs)
 
+        self.successes = []
+
         self.tc = tc
         self._tc_map_results()
 
@@ -58,6 +60,7 @@ class OETestResult(_TestResult):
         self.tc._results['errors'] = self.errors
         self.tc._results['skipped'] = self.skipped
         self.tc._results['expectedFailures'] = self.expectedFailures
+        self.tc._results['successes'] = self.successes
 
     def logSummary(self, component, context_msg=''):
         elapsed_time = self.tc._run_end_time - self.tc._run_start_time
@@ -115,13 +118,18 @@ class OETestResult(_TestResult):
 
         return (found, None)
 
+    def addSuccess(self, test):
+        #Added so we can keep track of successes too
+        self.successes.append((test, None))
+        super(OETestResult, self).addSuccess(test)
+
     def logDetails(self):
         self.tc.logger.info("RESULTS:")
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
 
-            result_types = ['failures', 'errors', 'skipped', 'expectedFailures']
-            result_desc = ['FAILED', 'ERROR', 'SKIPPED', 'EXPECTEDFAIL']
+            result_types = ['failures', 'errors', 'skipped', 'expectedFailures', 'successes']
+            result_desc = ['FAILED', 'ERROR', 'SKIPPED', 'EXPECTEDFAIL', 'PASSED']
 
             fail = False
             desc = None
@@ -143,7 +151,7 @@ class OETestResult(_TestResult):
                     oeid, desc))
             else:
                 self.tc.logger.info("RESULTS - %s - Testcase %s: %s" % (case.id(),
-                    oeid, 'PASSED'))
+                    oeid, 'UNKNOWN'))
 
 class OEListTestsResult(object):
     def wasSuccessful(self):
