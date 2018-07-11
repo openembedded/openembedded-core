@@ -123,15 +123,6 @@ ignore_errors = {
         'dmi: Firmware registration failed.',
         'irq: type mismatch, failed to map hwirq-27 for /intc',
         ] + common_errors,
-    'emenlow' : [
-        '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
-        '(EE) Failed to load module "psb"',
-        '(EE) Failed to load module psb',
-        '(EE) Failed to load module "psbdrv"',
-        '(EE) Failed to load module psbdrv',
-        '(EE) open /dev/fb0: No such file or directory',
-        '(EE) AIGLX: reverting to software rendering',
-        ] + x86_common,
     'intel-core2-32' : [
         'ACPI: No _BQC method, cannot determine initial brightness',
         '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
@@ -159,7 +150,6 @@ ignore_errors = {
         'Bluetooth: hci0: Failed to send firmware data (-38)',
         'atkbd serio0: Failed to enable keyboard on isa0060/serio0',
         ] + x86_common,
-    'crownbay' : x86_common,
     'genericx86' : x86_common,
     'genericx86-64' : [
         'Direct firmware load for i915',
@@ -171,10 +161,6 @@ ignore_errors = {
         ] + x86_common,
     'edgerouter' : [
         'Fatal server error:',
-        ] + common_errors,
-    'jasperforest' : [
-        'Activated service \'org.bluez\' failed:',
-        'Unable to find NFC netlink family',
         ] + common_errors,
 }
 
