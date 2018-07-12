@@ -391,11 +391,8 @@ class Disk:
         def write_ptable(parts, target):
             with tempfile.NamedTemporaryFile(prefix="wic-sfdisk-", mode='w') as outf:
                 write_sfdisk_script(outf, parts)
-                cmd = "{} --no-reread {} < {} 2>/dev/null".format(self.sfdisk, target, outf.name)
-                try:
-                    subprocess.check_output(cmd, shell=True)
-                except subprocess.CalledProcessError as err:
-                    raise WicError("Can't run '{}' command: {}".format(cmd, err))
+                cmd = "{} --no-reread {} < {} ".format(self.sfdisk, target, outf.name)
+                exec_cmd(cmd, as_shell=True)
 
         if expand is None:
             sparse_copy(self.imagepath, target)
@@ -412,6 +409,8 @@ class Disk:
             for line in exec_cmd("{} -F {}".format(self.sfdisk, target)).splitlines():
                 if line.startswith("Unpartitioned space ") and line.endswith("sectors"):
                     free = int(line.split()[-2])
+                    # Align free space to a 2048 sector boundary. YOCTO #12840.
+                    free = free - (free % 2048)
             if free is None:
                 raise WicError("Can't get size of unpartitioned space")
 
