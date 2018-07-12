@@ -1,0 +1,32 @@
+From c637aaad6f0db5ad45a5296c837cb1f5253d3e3a Mon Sep 17 00:00:00 2001
+From: Christos Zoulas <christos@zoulas.com>
+Date: Thu, 24 May 2018 18:54:40 +0000
+Subject: [PATCH] fix bogus magic
+
+Upstream-Status: Backport
+[https://github.com/file/file/commit/4fb6a59df80d4974f8230bfce36e38e6de7d574f]
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ magic/Magdir/dbpf | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/magic/Magdir/dbpf b/magic/Magdir/dbpf
+index 65cab61e..e81c5538 100644
+--- a/magic/Magdir/dbpf
++++ b/magic/Magdir/dbpf
+@@ -9,9 +9,7 @@
+ >4	ulelong	x	\b, version: %u.
+ >>8	ulelong	x	\b%u
+ >>>36	ulelong	x       \b, files: %u
++>>24	ledate	!0	\b, created: %s
++>>28	ledate	!0	\b, modified: %s
+ !:ext	dbpf/package/dat/sc4
+ !:mime	application/x-maxis-dbpf
+-4	ulelong	1
+->8	ulelong	!1
+->>24	ledate	!0	\b, created: %s
+->>>28	ledate	!0	\b, modified: %s
+-- 
+2.13.3
+
