@@ -416,6 +416,7 @@ class Disk:
 
             # calculate expanded partitions sizes
             sizes = {}
+            num_auto_resize = 0
             for num, part in enumerate(parts['partitiontable']['partitions'], 1):
                 if num in expand:
                     if expand[num] != 0: # don't resize partition if size is set to 0
@@ -425,10 +426,11 @@ class Disk:
                         sizes[num] = sectors
                 elif part['type'] != 'f':
                     sizes[num] = -1
+                    num_auto_resize += 1
 
             for num, part in enumerate(parts['partitiontable']['partitions'], 1):
                 if sizes.get(num) == -1:
-                    part['size'] += free // len(sizes)
+                    part['size'] += free // num_auto_resize
 
             # write resized partition table to the target
             write_ptable(parts, target)
