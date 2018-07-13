@@ -29,7 +29,7 @@ class VersionOrdering(OESelftestTestCase):
         cls.bindir = oe.path.join(cls.staging, vars["bindir_native"])
         cls.libdir = oe.path.join(cls.staging, vars["libdir_native"])
 
-    def setUp(self):
+    def setUpLocal(self):
         # Just for convenience
         self.staging = type(self).staging
         self.bindir = type(self).bindir
