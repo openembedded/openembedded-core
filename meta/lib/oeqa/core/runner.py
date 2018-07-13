@@ -7,16 +7,8 @@ import unittest
 import logging
 import re
 
-xmlEnabled = False
-try:
-    import xmlrunner
-    from xmlrunner.result import _XMLTestResult as _TestResult
-    from xmlrunner.runner import XMLTestRunner as _TestRunner
-    xmlEnabled = True
-except ImportError:
-    # use the base runner instead
-    from unittest import TextTestResult as _TestResult
-    from unittest import TextTestRunner as _TestRunner
+from unittest import TextTestResult as _TestResult
+from unittest import TextTestRunner as _TestRunner
 
 class OEStreamLogger(object):
     def __init__(self, logger):
@@ -84,19 +76,10 @@ class OETestResult(_TestResult):
         found = False
 
         for (scase, msg) in getattr(self, type):
-            # XXX: When XML reporting is enabled scase is
-            # xmlrunner.result._TestInfo instance instead of
-            # string.
-            if xmlEnabled:
-                if case.id() == scase.test_id:
-                    found = True
-                    break
-                scase_str = scase.test_id
-            else:
-                if case.id() == scase.id():
-                    found = True
-                    break
-                scase_str = str(scase.id())
+            if case.id() == scase.id():
+                found = True
+                break
+            scase_str = str(scase.id())
 
             # When fails at module or class level the class name is passed as string
             # so figure out to see if match
@@ -167,33 +150,14 @@ class OETestRunner(_TestRunner):
     streamLoggerClass = OEStreamLogger
 
     def __init__(self, tc, *args, **kwargs):
-        if xmlEnabled:
-            if not kwargs.get('output'):
-                kwargs['output'] = os.path.join(os.getcwd(),
-                        'TestResults_%s_%s' % (time.strftime("%Y%m%d%H%M%S"), os.getpid()))
-
         kwargs['stream'] = self.streamLoggerClass(tc.logger)
         super(OETestRunner, self).__init__(*args, **kwargs)
         self.tc = tc
         self.resultclass = OETestResult
 
-    # XXX: The unittest-xml-reporting package defines _make_result method instead
-    # of _makeResult standard on unittest.
-    if xmlEnabled:
-        def _make_result(self):
-            """
-            Creates a TestResult object which will be used to store
-            information about the executed tests.
-            """
-            # override in subclasses if necessary.
-            return self.resultclass(self.tc,
-                self.stream, self.descriptions, self.verbosity, self.elapsed_times
-            )
-    else:
-        def _makeResult(self):
-            return self.resultclass(self.tc, self.stream, self.descriptions,
-                    self.verbosity)
-
+    def _makeResult(self):
+        return self.resultclass(self.tc, self.stream, self.descriptions,
+                self.verbosity)
 
     def _walk_suite(self, suite, func):
         for obj in suite:
