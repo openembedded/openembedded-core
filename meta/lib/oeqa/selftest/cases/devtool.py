@@ -13,6 +13,58 @@ from oeqa.core.decorator.oeid import OETestID
 
 class DevtoolBase(OESelftestTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super(DevtoolBase, cls).setUpClass()
+        bb_vars = get_bb_vars(['TOPDIR', 'SSTATE_DIR'])
+        cls.original_sstate = bb_vars['SSTATE_DIR']
+        cls.devtool_sstate = os.path.join(bb_vars['TOPDIR'], 'sstate_devtool')
+        cls.sstate_conf  = 'SSTATE_DIR = "%s"\n' % cls.devtool_sstate
+        cls.sstate_conf += ('SSTATE_MIRRORS += "file://.* file:///%s/PATH"\n'
+                            % cls.original_sstate)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.logger.debug('Deleting devtool sstate cache on %s' % cls.devtool_sstate)
+        runCmd('rm -rf %s' % cls.devtool_sstate)
+        super(DevtoolBase, cls).tearDownClass()
+
+    def setUp(self):
+        """Test case setup function"""
+        super(DevtoolBase, self).setUp()
+        self.workspacedir = os.path.join(self.builddir, 'workspace')
+        self.assertTrue(not os.path.exists(self.workspacedir),
+                        'This test cannot be run with a workspace directory '
+                        'under the build directory')
+        self.append_config(self.sstate_conf)
+
+    def _check_src_repo(self, repo_dir):
+        """Check srctree git repository"""
+        self.assertTrue(os.path.isdir(os.path.join(repo_dir, '.git')),
+                        'git repository for external source tree not found')
+        result = runCmd('git status --porcelain', cwd=repo_dir)
+        self.assertEqual(result.output.strip(), "",
+                         'Created git repo is not clean')
+        result = runCmd('git symbolic-ref HEAD', cwd=repo_dir)
+        self.assertEqual(result.output.strip(), "refs/heads/devtool",
+                         'Wrong branch in git repo')
+
+    def _check_repo_status(self, repo_dir, expected_status):
+        """Check the worktree status of a repository"""
+        result = runCmd('git status . --porcelain',
+                        cwd=repo_dir)
+        for line in result.output.splitlines():
+            for ind, (f_status, fn_re) in enumerate(expected_status):
+                if re.match(fn_re, line[3:]):
+                    if f_status != line[:2]:
+                        self.fail('Unexpected status in line: %s' % line)
+                    expected_status.pop(ind)
+                    break
+            else:
+                self.fail('Unexpected modified file in line: %s' % line)
+        if expected_status:
+            self.fail('Missing file changes: %s' % expected_status)
+
     def _test_recipe_contents(self, recipefile, checkvars, checkinherits):
         with open(recipefile, 'r') as f:
             invar = None
@@ -116,58 +168,6 @@ class DevtoolBase(OESelftestTestCase):
 
 class DevtoolTests(DevtoolBase):
 
-    @classmethod
-    def setUpClass(cls):
-        super(DevtoolTests, cls).setUpClass()
-        bb_vars = get_bb_vars(['TOPDIR', 'SSTATE_DIR'])
-        cls.original_sstate = bb_vars['SSTATE_DIR']
-        cls.devtool_sstate = os.path.join(bb_vars['TOPDIR'], 'sstate_devtool')
-        cls.sstate_conf  = 'SSTATE_DIR = "%s"\n' % cls.devtool_sstate
-        cls.sstate_conf += ('SSTATE_MIRRORS += "file://.* file:///%s/PATH"\n'
-                            % cls.original_sstate)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.logger.debug('Deleting devtool sstate cache on %s' % cls.devtool_sstate)
-        runCmd('rm -rf %s' % cls.devtool_sstate)
-        super(DevtoolTests, cls).tearDownClass()
-
-    def setUp(self):
-        """Test case setup function"""
-        super(DevtoolTests, self).setUp()
-        self.workspacedir = os.path.join(self.builddir, 'workspace')
-        self.assertTrue(not os.path.exists(self.workspacedir),
-                        'This test cannot be run with a workspace directory '
-                        'under the build directory')
-        self.append_config(self.sstate_conf)
-
-    def _check_src_repo(self, repo_dir):
-        """Check srctree git repository"""
-        self.assertTrue(os.path.isdir(os.path.join(repo_dir, '.git')),
-                        'git repository for external source tree not found')
-        result = runCmd('git status --porcelain', cwd=repo_dir)
-        self.assertEqual(result.output.strip(), "",
-                         'Created git repo is not clean')
-        result = runCmd('git symbolic-ref HEAD', cwd=repo_dir)
-        self.assertEqual(result.output.strip(), "refs/heads/devtool",
-                         'Wrong branch in git repo')
-
-    def _check_repo_status(self, repo_dir, expected_status):
-        """Check the worktree status of a repository"""
-        result = runCmd('git status . --porcelain',
-                        cwd=repo_dir)
-        for line in result.output.splitlines():
-            for ind, (f_status, fn_re) in enumerate(expected_status):
-                if re.match(fn_re, line[3:]):
-                    if f_status != line[:2]:
-                        self.fail('Unexpected status in line: %s' % line)
-                    expected_status.pop(ind)
-                    break
-            else:
-                self.fail('Unexpected modified file in line: %s' % line)
-        if expected_status:
-            self.fail('Missing file changes: %s' % expected_status)
-
     @OETestID(1158)
     def test_create_workspace(self):
         # Check preconditions
@@ -188,6 +188,8 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn(tempdir, result.output)
         self.assertIn(self.workspacedir, result.output)
+
+class DevtoolAddTests(DevtoolBase):
 
     @OETestID(1159)
     def test_devtool_add(self):
@@ -444,6 +446,8 @@ class DevtoolTests(DevtoolBase):
         checkvars['SRC_URI'] = url.replace(testver, '${PV}')
         self._test_recipe_contents(recipefile, checkvars, [])
 
+class DevtoolModifyTests(DevtoolBase):
+
     @OETestID(1164)
     def test_devtool_modify(self):
         import oe.path
@@ -689,6 +693,7 @@ class DevtoolTests(DevtoolBase):
         self._check_src_repo(tempdir)
         # This is probably sufficient
 
+class DevtoolUpdateTests(DevtoolBase):
 
     @OETestID(1169)
     def test_devtool_update_recipe(self):
@@ -1105,6 +1110,8 @@ class DevtoolTests(DevtoolBase):
         expected_status = []
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
+class DevtoolExtractTests(DevtoolBase):
+
     @OETestID(1163)
     def test_devtool_extract(self):
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
@@ -1273,6 +1280,8 @@ class DevtoolTests(DevtoolBase):
                         reqpkgs.remove(pkg)
         if reqpkgs:
             self.fail('The following packages were not present in the image as expected: %s' % ', '.join(reqpkgs))
+
+class DevtoolUpgradeTests(DevtoolBase):
 
     @OETestID(1367)
     def test_devtool_upgrade(self):
