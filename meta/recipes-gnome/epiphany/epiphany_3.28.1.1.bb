@@ -19,4 +19,4 @@ SRC_URI[archive.sha256sum] = "99426aa0e386742e924d84b59ec16bf394195fb9fce85d07f7
 EXTRA_OEMESON += " -Ddistributor_name=${DISTRO}"
 
 FILES_${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers ${datadir}/metainfo"
-RDEPENDS_${PN} = "iso-codes adwaita-icon-theme"
+RDEPENDS_${PN} = "iso-codes adwaita-icon-theme gsettings-desktop-schemas"
