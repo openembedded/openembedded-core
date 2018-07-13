@@ -235,6 +235,8 @@ class DevtoolTests(DevtoolBase):
 
     @OETestID(1423)
     def test_devtool_add_git_local(self):
+        # We need dbus built so that DEPENDS recognition works
+        bitbake('dbus')
         # Fetch source from a remote URL, but do it outside of devtool
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
