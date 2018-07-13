@@ -15,8 +15,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b148fc8adf19dc9aec17cf9cd29a9a5e"
 
 SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2"
-SRC_URI[md5sum] = "6649be70390606651cb636320bfd43c6"
-SRC_URI[sha256sum] = "f6a7790c3dcc56537372c90a83036a3136194a8b397e84e97bf9cc9254fa2c51"
+SRC_URI[md5sum] = "93b58aa5b14c16f4bace8a45dc255ec9"
+SRC_URI[sha256sum] = "ed7a6ed1fab657df4e83ea11f90310efcf31c27828f32d65351a28ca3c404dc0"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva-utils/releases"
 
