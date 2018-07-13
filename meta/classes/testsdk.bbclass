@@ -42,6 +42,8 @@ def testsdk_main(d):
     host_pkg_manifest = OESDKTestContextExecutor._load_manifest(
         d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.host.manifest"))
 
+    processes = d.getVar("TESTIMAGE_NUMBER_THREADS") or d.getVar("BB_NUMBER_THREADS")
+
     sdk_dir = d.expand("${WORKDIR}/testimage-sdk/")
     bb.utils.remove(sdk_dir, True)
     bb.utils.mkdirhier(sdk_dir)
@@ -65,7 +67,10 @@ def testsdk_main(d):
             import traceback
             bb.fatal("Loading tests failed:\n%s" % traceback.format_exc())
 
-        result = tc.runTests()
+        if processes:
+            result = tc.runTests(processes=int(processes))
+        else:
+            result = tc.runTests()
 
         component = "%s %s" % (pn, OESDKTestContextExecutor.name)
         context_msg = "%s:%s" % (os.path.basename(tcname), os.path.basename(sdk_env))

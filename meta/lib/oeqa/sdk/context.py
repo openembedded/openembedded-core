@@ -65,6 +65,9 @@ class OESDKTestContextExecutor(OETestContextExecutor):
         sdk_rgroup.add_argument('--sdk-dir', required=False, action='store', 
             help='sdk installed directory')
 
+        self.parser.add_argument('-j', '--num-processes', dest='processes', action='store',
+                type=int, help="number of processes to execute in parallel with")
+
     @staticmethod
     def _load_manifest(manifest):
         pkg_manifest = {}
@@ -85,6 +88,7 @@ class OESDKTestContextExecutor(OETestContextExecutor):
                 OESDKTestContextExecutor._load_manifest(args.target_manifest)
         self.tc_kwargs['init']['host_pkg_manifest'] = \
                 OESDKTestContextExecutor._load_manifest(args.host_manifest)
+        self.tc_kwargs['run']['processes'] = args.processes
 
     @staticmethod
     def _get_sdk_environs(sdk_dir):
