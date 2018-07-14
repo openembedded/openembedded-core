@@ -61,7 +61,7 @@ def only_for_arch(archs, image='core-image-minimal'):
     return wrapper
 
 
-class Wic(OESelftestTestCase):
+class WicTestCase(OESelftestTestCase):
     """Wic test class."""
 
     image_is_ready = False
@@ -71,7 +71,7 @@ class Wic(OESelftestTestCase):
     def setUpLocal(self):
         """This code is executed before each test method."""
         self.resultdir = self.builddir + "/wic-tmp/"
-        super(Wic, self).setUpLocal()
+        super(WicTestCase, self).setUpLocal()
         if not self.native_sysroot:
             Wic.native_sysroot = get_bb_var('STAGING_DIR_NATIVE', 'wic-tools')
 
@@ -92,7 +92,9 @@ class Wic(OESelftestTestCase):
     def tearDownLocal(self):
         """Remove resultdir as it may contain images."""
         rmtree(self.resultdir, ignore_errors=True)
-        super(Wic, self).tearDownLocal()
+        super(WicTestCase, self).tearDownLocal()
+
+class Wic(WicTestCase):
 
     @OETestID(1552)
     def test_version(self):
@@ -522,6 +524,8 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
+class Wic2(WicTestCase):
+
     @OETestID(1496)
     def test_bmap_short(self):
         """Test generation of .bmap file -m option"""
@@ -679,7 +683,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         Test creation of a simple image with partition size controlled through
         --fixed-size flag
         """
-        wkspath, wksname = Wic._make_fixed_size_wks(200)
+        wkspath, wksname = Wic2._make_fixed_size_wks(200)
 
         self.assertEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
                                    % (wkspath, self.resultdir)).status)
@@ -711,7 +715,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
         --fixed-size flag. The size of partition is intentionally set to 1MiB
         in order to trigger an error in wic.
         """
-        wkspath, wksname = Wic._make_fixed_size_wks(1)
+        wkspath, wksname = Wic2._make_fixed_size_wks(1)
 
         self.assertEqual(1, runCmd("wic create %s -e core-image-minimal -o %s" \
                                    % (wkspath, self.resultdir), ignore_status=True).status)
