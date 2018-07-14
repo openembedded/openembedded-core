@@ -13,8 +13,6 @@ from oeqa.core.decorator.oeid import OETestID
 
 class DevtoolBase(OESelftestTestCase):
 
-    buffer = True
-
     def _test_recipe_contents(self, recipefile, checkvars, checkinherits):
         with open(recipefile, 'r') as f:
             invar = None

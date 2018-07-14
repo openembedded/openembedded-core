@@ -14,8 +14,6 @@ class RunqemuTests(OESelftestTestCase):
 
     image_is_ready = False
     deploy_dir_image = ''
-    # We only want to print runqemu stdout/stderr if there is a test case failure
-    buffer = True
 
     def setUpLocal(self):
         super(RunqemuTests, self).setUpLocal()

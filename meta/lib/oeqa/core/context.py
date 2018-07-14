@@ -59,7 +59,7 @@ class OETestContext(object):
         self.suites = self.loader.discover()
 
     def runTests(self, skips=[]):
-        self.runner = self.runnerClass(self, descriptions=False, verbosity=2)
+        self.runner = self.runnerClass(self, descriptions=False, verbosity=2, buffer=True)
 
         # Dinamically skip those tests specified though arguments
         self.skipTests(skips)
