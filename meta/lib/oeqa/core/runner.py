@@ -43,11 +43,6 @@ class OETestResult(_TestResult):
         self.tc = tc
 
     def startTest(self, test):
-        # Allow us to trigger the testcase buffer mode on a per test basis
-        # so stdout/stderr are only printed upon failure. Enables debugging
-        # but clean output
-        if hasattr(test, "buffer"):
-            self.buffer = test.buffer
         super(OETestResult, self).startTest(test)
 
     def logSummary(self, component, context_msg=''):
