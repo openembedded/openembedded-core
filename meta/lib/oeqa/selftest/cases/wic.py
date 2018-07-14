@@ -191,7 +191,7 @@ class Wic(OESelftestTestCase):
                  'MACHINE_FEATURES_append = " efi"\n'\
                  'DEPENDS_pn-core-image-minimal += "syslinux"\n'
         self.append_config(config)
-        bitbake('core-image-minimal')
+        bitbake('core-image-minimal core-image-minimal-initramfs')
         self.remove_config(config)
         cmd = "wic create mkhybridiso --image-name core-image-minimal -o %s" % self.resultdir
         self.assertEqual(0, runCmd(cmd).status)
