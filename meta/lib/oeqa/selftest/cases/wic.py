@@ -64,13 +64,13 @@ def only_for_arch(archs, image='core-image-minimal'):
 class Wic(OESelftestTestCase):
     """Wic test class."""
 
-    resultdir = "/var/tmp/wic.oe-selftest/"
     image_is_ready = False
     native_sysroot = None
     wicenv_cache = {}
 
     def setUpLocal(self):
         """This code is executed before each test method."""
+        self.resultdir = self.builddir + "/wic-tmp/"
         super(Wic, self).setUpLocal()
         if not self.native_sysroot:
             Wic.native_sysroot = get_bb_var('STAGING_DIR_NATIVE', 'wic-tools')
