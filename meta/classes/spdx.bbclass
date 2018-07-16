@@ -202,13 +202,8 @@ def list_files(dir):
     return
 
 def hash_file(file_name):
-    try:
-        with open(file_name, 'rb') as f:
-            data_string = f.read()
-            sha1 = hash_string(data_string)
-            return sha1
-    except:
-        return None
+    from bb.utils import sha1_file
+    return sha1_file(file_name)
 
 def hash_string(data):
     import hashlib
