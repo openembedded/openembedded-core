@@ -289,7 +289,8 @@ def create_spdx_doc(file_info, scanned_files):
 def get_ver_code(dirname):
     chksums = []
     for f_dir, f in list_files(dirname):
-        hash = hash_file(os.path.join(dirname, f_dir, f))
+        path = os.path.join(dirname, f_dir, f)
+        hash = hash_file(path)
         if not hash is None:
             chksums.append(hash)
         else:
