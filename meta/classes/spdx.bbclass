@@ -226,7 +226,7 @@ def run_fossology(foss_command, full_spdx):
     except subprocess.CalledProcessError as e:
         return None
 
-    foss_output = string.replace(foss_output, '\r', '')
+    foss_output = foss_output.replace('\r', '')
 
     # Package info
     package_info = {}
