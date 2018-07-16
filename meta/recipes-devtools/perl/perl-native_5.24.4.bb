@@ -18,8 +18,8 @@ SRC_URI += "\
            file://perl-5.26.1-guard_old_libcrypt_fix.patch \
           "
 
-SRC_URI[md5sum] = "af6a84c7c3e2b8b269c105a5db2f6d53"
-SRC_URI[sha256sum] = "03a77bac4505c270f1890ece75afc7d4b555090b41aa41ea478747e23b2afb3f"
+SRC_URI[md5sum] = "04622bc4d3941dc7eb571c52b7c02993"
+SRC_URI[sha256sum] = "7f080287ff64750270689843ae945f02159a33cb8f2fc910248c15befba5db84"
 
 inherit native
 
