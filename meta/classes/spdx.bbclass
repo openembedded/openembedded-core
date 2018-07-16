@@ -208,7 +208,7 @@ def hash_file(file_name):
 def hash_string(data):
     import hashlib
     sha1 = hashlib.sha1()
-    sha1.update(data)
+    sha1.update(data.encode('utf-8'))
     return sha1.hexdigest()
 
 def run_fossology(foss_command, full_spdx):
