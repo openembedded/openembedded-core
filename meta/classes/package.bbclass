@@ -1603,6 +1603,18 @@ python package_do_shlibs() {
     libdir_re = re.compile(".*/%s$" % d.getVar('baselib'))
 
     packages = d.getVar('PACKAGES')
+
+    shlib_pkgs = []
+    exclusion_list = d.getVar("EXCLUDE_PACKAGES_FROM_SHLIBS")
+    if exclusion_list:
+        for pkg in packages.split():
+            if pkg not in exclusion_list.split():
+                shlib_pkgs.append(pkg)
+            else:
+                bb.note("not generating shlibs for %s" % pkg)
+    else:
+        shlib_pkgs = packages.split()
+
     targetos = d.getVar('TARGET_OS')
 
     workdir = d.getVar('WORKDIR')
@@ -1734,7 +1746,7 @@ python package_do_shlibs() {
     needed = {}
     shlib_provider = oe.package.read_shlib_providers(d)
 
-    for pkg in packages.split():
+    for pkg in shlib_pkgs:
         private_libs = d.getVar('PRIVATE_LIBS_' + pkg) or d.getVar('PRIVATE_LIBS') or ""
         private_libs = private_libs.split()
         needs_ldconfig = False
@@ -1806,7 +1818,7 @@ python package_do_shlibs() {
 
     libsearchpath = [d.getVar('libdir'), d.getVar('base_libdir')]
 
-    for pkg in packages.split():
+    for pkg in shlib_pkgs:
         bb.debug(2, "calculating shlib requirements for %s" % pkg)
 
         private_libs = d.getVar('PRIVATE_LIBS_' + pkg) or d.getVar('PRIVATE_LIBS') or ""
