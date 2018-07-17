@@ -160,12 +160,22 @@ do_install_ptest() {
 	sed -i 's/$target{shared_extension_simple}/".so.ptest"/' ${D}${PTEST_PATH}/test/recipes/90-test_shlibload.t
 }
 
-PACKAGES =+ "${PN}-engines"
+PACKAGES =+ "libcrypto libssl ${PN}-misc ${PN}-engines openssl-conf"
 
+FILES_libcrypto = "${libdir}/libcrypto${SOLIBS}"
+FILES_libssl = "${libdir}/libssl${SOLIBS}"
 FILES_${PN} =+ "${libdir}/ssl-1.1/*"
 FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
 FILES_${PN}-engines = "${libdir}/engines-1.1"
 
+FILES_${PN}-misc = "${libdir}/ssl-1.1/misc"
+RDEPENDS_${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
+
+FILES_openssl-conf = "${libdir}/ssl-1.1/openssl.cnf"
+CONFFILES_openssl-conf = "${libdir}/ssl-1.1/openssl.cnf"
+RRECOMMENDS_libcrypto += "openssl-conf"
+
+RDEPENDS_${PN}-bin = "perl"
 RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
 
 BBCLASSEXTEND = "native nativesdk"
