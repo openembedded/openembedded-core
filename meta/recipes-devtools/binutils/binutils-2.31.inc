@@ -18,7 +18,7 @@ BINUPV = "${@binutils_branch_version(d)}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "caa839fba66600a6c36d3639906ed9110b79c307"
+SRCREV ?= "f8b4d71490df766ca9c474f7ab9c82b3a8029a5a"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=binutils-${BINUPV}-branch;protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
