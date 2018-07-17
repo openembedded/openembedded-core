@@ -24,7 +24,7 @@ SRC_URI_append_class-nativesdk = " \
 SRC_URI[md5sum] = "5271477e4d93f4ea032b665ef095ff24"
 SRC_URI[sha256sum] = "5835626cde9e99656585fc7aaa2302a73a7e1340bf8c14fd635a62c66802a517"
 
-inherit lib_package multilib_header ptest
+inherit lib_package multilib_header ptest relative_symlinks
 
 #| engines/afalg/e_afalg.c: In function 'eventfd':
 #| engines/afalg/e_afalg.c:110:20: error: '__NR_eventfd' undeclared (first use in this function)
@@ -135,6 +135,18 @@ do_configure () {
 do_install () {
 	oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install
 	oe_multilib_header openssl/opensslconf.h
+
+	# Create SSL structure for PATH hard-coded packages like ca-certificates
+	# Debian is also using this technique
+	install -d ${D}${sysconfdir}/ssl/
+	mv ${D}${libdir}/ssl-1.1/openssl.cnf \
+		${D}${libdir}/ssl-1.1/certs \
+		${D}${libdir}/ssl-1.1/private \
+		\
+		${D}${sysconfdir}/ssl/
+	ln -sf ${sysconfdir}/ssl/certs ${D}${libdir}/ssl-1.1/certs
+	ln -sf ${sysconfdir}/ssl/private ${D}${libdir}/ssl-1.1/private
+	ln -sf ${sysconfdir}/ssl/openssl.cnf ${D}${libdir}/ssl-1.1/openssl.cnf
 }
 
 do_install_append_class-native () {
@@ -171,8 +183,8 @@ FILES_${PN}-engines = "${libdir}/engines-1.1"
 FILES_${PN}-misc = "${libdir}/ssl-1.1/misc"
 RDEPENDS_${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
 
-FILES_openssl-conf = "${libdir}/ssl-1.1/openssl.cnf"
-CONFFILES_openssl-conf = "${libdir}/ssl-1.1/openssl.cnf"
+FILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf ${libdir}/ssl-1.1/openssl.cnf"
+CONFFILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 RRECOMMENDS_libcrypto += "openssl-conf"
 
 RDEPENDS_${PN}-bin = "perl"
