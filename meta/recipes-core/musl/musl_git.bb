@@ -3,7 +3,7 @@
 
 require musl.inc
 
-SRCREV = "193338e619de7c993efa2c0e1a87240bd732c181"
+SRCREV = "9cad27a3dc1a4eb349b6591e4dc8cc89dce32277"
 
 PV = "1.1.19+git${SRCPV}"
 
