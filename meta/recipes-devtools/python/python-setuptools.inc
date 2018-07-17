@@ -8,6 +8,8 @@ PYPI_PACKAGE_EXT = "zip"
 
 inherit pypi
 
+SRC_URI_append_class-native = " file://0001-conditionally-do-not-fetch-code-by-easy_install.patch"
+
 SRC_URI[md5sum] = "260630ae1a64bafa39dcc53404d63829"
 SRC_URI[sha256sum] = "012adb8e25fbfd64c652e99e7bab58799a3aaf05d39ab38561f69190a909015f"
 
