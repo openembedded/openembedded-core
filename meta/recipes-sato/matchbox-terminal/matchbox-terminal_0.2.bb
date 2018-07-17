@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 DEPENDS = "gtk+3 vte"
 SECTION = "x11/utils"
 
-#SRCREV tagged 0.1
-SRCREV = "3ad357db2302760b8a8817b5f4478dd87479442f"
+#SRCREV tagged 0.2
+SRCREV = "161276d0f5d1be8187010fd0d9581a6feca70ea5"
 SRC_URI = "git://git.yoctoproject.org/${BPN}"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
