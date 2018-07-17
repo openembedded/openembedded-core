@@ -60,7 +60,7 @@ tool_find=`/usr/bin/which $tool 2>/dev/null`
 
 if [ -n "$tool_find" ] ; then
     # add old path to allow usage of host tools
-    PATH=$PATH:$OLD_PATH $@
+    PATH=$PATH:$OLD_PATH "$@"
 else
     echo "Error: Unable to find '$tool' in $PATH"
     echo "Error: Have you run 'bitbake $native_recipe -caddto_recipe_sysroot'?"
