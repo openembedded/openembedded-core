@@ -12,7 +12,9 @@ SRC_URI[archive.md5sum] = "c6cf132a56bd346fbf49a43abb02e5c2"
 SRC_URI[archive.sha256sum] = "5efbc890ba41a323ffe0599cd260fd12bd8eb62a04aa1bd1b2762575d253d66f"
 
 # http://errors.yoctoproject.org/Errors/Details/20228/
-ARM_INSTRUCTION_SET = "arm"
+ARM_INSTRUCTION_SET_armv4 = "arm"
+ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET_armv6 = "arm"
 
 # vapigen.m4 bundled with the tarball does not yet have our cross-compilation fixes
 do_configure_prepend() {

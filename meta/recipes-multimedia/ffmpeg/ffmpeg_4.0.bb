@@ -30,7 +30,9 @@ SRC_URI[md5sum] = "1cc9e8cb027b9fd4c54f598f51002c19"
 SRC_URI[sha256sum] = "ed945daf40b124e77a685893cc025d086f638bc703183460aff49508edb3a43f"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
-ARM_INSTRUCTION_SET = "arm"
+ARM_INSTRUCTION_SET_armv4 = "arm"
+ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET_armv6 = "arm"
 
 # Should be API compatible with libav (which was a fork of ffmpeg)
 # libpostproc was previously packaged from a separate recipe

@@ -21,7 +21,9 @@ FILES_${PN} += " \
 "
 
 # http://errors.yoctoproject.org/Errors/Details/20229/
-ARM_INSTRUCTION_SET = "arm"
+ARM_INSTRUCTION_SET_armv4 = "arm"
+ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET_armv6 = "arm"
 
 # These files may be out of date or missing our fixes
 # libgcrypt.m4 in particular is calling into libgcrypt-config
