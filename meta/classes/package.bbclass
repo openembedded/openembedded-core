@@ -1411,9 +1411,6 @@ fi
     pkgdest = d.getVar('PKGDEST')
     pkgdatadir = d.getVar('PKGDESTWORK')
 
-    # Take shared lock since we're only reading, not writing
-    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
-
     data_file = pkgdatadir + d.expand("/${PN}" )
     f = open(data_file, 'w')
     f.write("PACKAGES: %s\n" % packages)
@@ -1518,7 +1515,6 @@ fi
     if bb.data.inherits_class('allarch', d) and not bb.data.inherits_class('packagegroup', d):
         write_extra_runtime_pkgs(global_variants, packages, pkgdatadir)
 
-    bb.utils.unlockfile(lf)
 }
 emit_pkgdata[dirs] = "${PKGDESTWORK}/runtime ${PKGDESTWORK}/runtime-reverse ${PKGDESTWORK}/runtime-rprovides"
 
@@ -1628,9 +1624,6 @@ python package_do_shlibs() {
     pkgdest = d.getVar('PKGDEST')
 
     shlibswork_dir = d.getVar('SHLIBSWORKDIR')
-
-    # Take shared lock since we're only reading, not writing
-    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
 
     def linux_so(file, needed, sonames, renames, pkgver):
         needs_ldconfig = False
@@ -1744,7 +1737,11 @@ python package_do_shlibs() {
     use_ldconfig = bb.utils.contains('DISTRO_FEATURES', 'ldconfig', True, False, d)
 
     needed = {}
+
+    # Take shared lock since we're only reading, not writing
+    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
     shlib_provider = oe.package.read_shlib_providers(d)
+    bb.utils.unlockfile(lf)
 
     for pkg in shlib_pkgs:
         private_libs = d.getVar('PRIVATE_LIBS_' + pkg) or d.getVar('PRIVATE_LIBS') or ""
@@ -1799,8 +1796,6 @@ python package_do_shlibs() {
             postinst += d.getVar('ldconfig_postinst_fragment')
             d.setVar('pkg_postinst_%s' % pkg, postinst)
         bb.debug(1, 'LIBNAMES: pkg %s sonames %s' % (pkg, sonames))
-
-    bb.utils.unlockfile(lf)
 
     assumed_libs = d.getVar('ASSUME_SHLIBS')
     if assumed_libs:
@@ -1914,9 +1909,6 @@ python package_do_pkgconfig () {
                             if hdr == 'Requires':
                                 pkgconfig_needed[pkg] += exp.replace(',', ' ').split()
 
-    # Take shared lock since we're only reading, not writing
-    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
-
     for pkg in packages.split():
         pkgs_file = os.path.join(shlibswork_dir, pkg + ".pclist")
         if pkgconfig_provided[pkg] != []:
@@ -1924,6 +1916,9 @@ python package_do_pkgconfig () {
             for p in pkgconfig_provided[pkg]:
                 f.write('%s\n' % p)
             f.close()
+
+    # Take shared lock since we're only reading, not writing
+    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
 
     # Go from least to most specific since the last one found wins
     for dir in reversed(shlibs_dirs):
@@ -1939,6 +1934,8 @@ python package_do_pkgconfig () {
                 pkgconfig_provided[pkg] = []
                 for l in lines:
                     pkgconfig_provided[pkg].append(l.rstrip())
+
+    bb.utils.unlockfile(lf)
 
     for pkg in packages.split():
         deps = []
@@ -1957,8 +1954,6 @@ python package_do_pkgconfig () {
             for dep in deps:
                 fd.write(dep + '\n')
             fd.close()
-
-    bb.utils.unlockfile(lf)
 }
 
 def read_libdep_files(d):
