@@ -11,27 +11,9 @@ SRC_URI[sha256sum] = "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdb
 
 inherit pypi distutils3
 
-DISTUTILS_INSTALL_ARGS += "--install-lib=${D}${PYTHON_SITEPACKAGES_DIR}"
-
-do_install_prepend() {
-    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-}
-
-# Use setuptools site.py instead, avoid shared state issue
 do_install_append() {
-    rm ${D}${PYTHON_SITEPACKAGES_DIR}/site.py
-    rm ${D}${PYTHON_SITEPACKAGES_DIR}/__pycache__/site.cpython-*.pyc
-
     # Install as pip3 and leave pip2 as default
     rm ${D}/${bindir}/pip
-
-    # Installed eggs need to be passed directly to the interpreter via a pth file
-    echo "./${PYPI_PACKAGE}-${PV}-py${PYTHON_BASEVERSION}.egg" > ${D}${PYTHON_SITEPACKAGES_DIR}/${PYPI_PACKAGE}-${PV}.pth
-
-    # Make sure we use /usr/bin/env python3
-    for PYTHSCRIPT in `grep -rIl ${bindir} ${D}${bindir}/pip3*`; do
-        sed -i -e '1s|^#!.*|#!/usr/bin/env python3|' $PYTHSCRIPT
-    done
 }
 
 RDEPENDS_${PN} = "\
