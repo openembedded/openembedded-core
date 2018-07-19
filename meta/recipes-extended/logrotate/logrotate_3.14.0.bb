@@ -34,9 +34,9 @@ PACKAGECONFIG[acl] = ",,acl"
 PACKAGECONFIG[selinux] = ",,libselinux"
 
 CONFFILES_${PN} += "${localstatedir}/lib/logrotate.status \
-		    ${sysconfdir}/logrotate.conf \
-		    ${sysconfdir}/logrotate.d/btmp \
-		    ${sysconfdir}/logrotate.d/wtmp"
+                    ${sysconfdir}/logrotate.conf \
+                    ${sysconfdir}/logrotate.d/btmp \
+                    ${sysconfdir}/logrotate.d/wtmp"
 
 # If RPM_OPT_FLAGS is unset, it adds -g itself rather than obeying our
 # optimization variables, so use it rather than EXTRA_CFLAGS.
@@ -62,8 +62,11 @@ SYSTEMD_SERVICE_${PN} = "\
     ${BPN}.timer \
 "
 
+LOGROTATE_OPTIONS ?= ""
+
 LOGROTATE_SYSTEMD_TIMER_BASIS ?= "daily"
 LOGROTATE_SYSTEMD_TIMER_ACCURACY ?= "12h"
+LOGROTATE_SYSTEMD_TIMER_PERSISTENT ?= "true"
 
 do_install(){
     oe_runmake install DESTDIR=${D} PREFIX=${D} MANDIR=${mandir}
@@ -78,8 +81,15 @@ do_install(){
         install -d ${D}${systemd_system_unitdir}
         install -m 0644 ${S}/examples/logrotate.service ${D}${systemd_system_unitdir}/logrotate.service
         install -m 0644 ${S}/examples/logrotate.timer ${D}${systemd_system_unitdir}/logrotate.timer
-        sed -i -e 's,OnCalendar=.*$,OnCalendar=${LOGROTATE_SYSTEMD_TIMER_BASIS},g' ${D}${systemd_system_unitdir}/logrotate.timer
-        sed -i -e 's,AccuracySec=.*$,AccuracySec=${LOGROTATE_SYSTEMD_TIMER_ACCURACY},g' ${D}${systemd_system_unitdir}/logrotate.timer
+        [ -z "${LOGROTATE_OPTIONS}" ] ||
+            sed -ri \
+                -e 's|(ExecStart=.*/logrotate.*)$|\1 ${LOGROTATE_OPTIONS}|g' \
+                ${D}${systemd_system_unitdir}/logrotate.service
+        sed -ri \
+            -e 's|(OnCalendar=).*$|\1${LOGROTATE_SYSTEMD_TIMER_BASIS}|g' \
+            -e 's|(AccuracySec=).*$|\1${LOGROTATE_SYSTEMD_TIMER_ACCURACY}|g' \
+            -e 's|(Persistent=).*$|\1${LOGROTATE_SYSTEMD_TIMER_PERSISTENT}|g' \
+            ${D}${systemd_system_unitdir}/logrotate.timer
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
