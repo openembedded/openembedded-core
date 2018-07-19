@@ -6,8 +6,6 @@ basic functions of the window system."
 
 require xorg-lib-common.inc
 
-inherit siteinfo
-
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/libx11:"
 
 PE = "1"
