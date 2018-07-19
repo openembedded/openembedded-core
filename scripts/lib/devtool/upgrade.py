@@ -264,7 +264,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
     if no_patch:
         patches = oe.recipeutils.get_recipe_patches(crd)
         if patches:
-            logger.warn('By user choice, the following patches will NOT be applied to the new source tree:\n  %s' % '\n  '.join([os.path.basename(patch) for patch in patches]))
+            logger.warning('By user choice, the following patches will NOT be applied to the new source tree:\n  %s' % '\n  '.join([os.path.basename(patch) for patch in patches]))
     else:
         __run('git checkout devtool-patched -b %s' % branch)
         skiptag = False
@@ -273,9 +273,9 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         except bb.process.ExecutionError as e:
             skiptag = True
             if 'conflict' in e.stdout:
-                logger.warn('Command \'%s\' failed:\n%s\n\nYou will need to resolve conflicts in order to complete the upgrade.' % (e.command, e.stdout.rstrip()))
+                logger.warning('Command \'%s\' failed:\n%s\n\nYou will need to resolve conflicts in order to complete the upgrade.' % (e.command, e.stdout.rstrip()))
             else:
-                logger.warn('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
+                logger.warning('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
         if not skiptag:
             if uri.startswith('git://'):
                 suffix = 'new'

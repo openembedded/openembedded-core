@@ -393,7 +393,7 @@ class QemuRunner:
                 # qemu-system behaves well and a SIGTERM is enough
                 os.kill(self.qemupid, signal.SIGTERM)
             except ProcessLookupError as e:
-                self.logger.warn('qemu-system ended unexpectedly')
+                self.logger.warning('qemu-system ended unexpectedly')
 
     def stop_thread(self):
         if self.thread and self.thread.is_alive():
@@ -470,7 +470,7 @@ class QemuRunner:
 
     def _dump_host(self):
         self.host_dumper.create_dir("qemu")
-        self.logger.warn("Qemu ended unexpectedly, dump data from host"
+        self.logger.warning("Qemu ended unexpectedly, dump data from host"
                 " is in %s" % self.host_dumper.dump_dir)
         self.host_dumper.dump_host()
 
