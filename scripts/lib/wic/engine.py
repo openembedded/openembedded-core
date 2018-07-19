@@ -494,7 +494,7 @@ class Disk:
                     sparse_copy(partfname, target, seek=part['start'] * self._lsector_size)
                     os.unlink(partfname)
                 elif part['type'] != 'f':
-                    logger.warn("skipping partition {}: unsupported fstype {}".format(pnum, fstype))
+                    logger.warning("skipping partition {}: unsupported fstype {}".format(pnum, fstype))
 
 def wic_ls(args, native_sysroot):
     """List contents of partitioned image or vfat partition."""
