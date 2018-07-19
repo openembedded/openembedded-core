@@ -15,9 +15,6 @@ SRC_URI[sha256sum] = "012adb8e25fbfd64c652e99e7bab58799a3aaf05d39ab38561f69190a9
 
 DEPENDS += "${PYTHON_PN}"
 
-DISTUTILS_INSTALL_ARGS += "--install-lib=${D}${PYTHON_SITEPACKAGES_DIR} \
-                           --script-dir=${bindir}"
-
 RDEPENDS_${PN} = "\
   ${PYTHON_PN}-compile \
   ${PYTHON_PN}-compression \
