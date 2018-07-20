@@ -367,10 +367,12 @@ def append_source_info(file, sourcefile, d, fatal=True):
     # of rpm's debugedit, which was writing them out that way, and the code elsewhere
     # is still assuming that.
     debuglistoutput = '\0'.join(debugsources) + '\0'
+    lf = bb.utils.lockfile(sourcefile + ".lock")
     open(sourcefile, 'a').write(debuglistoutput)
+    bb.utils.unlockfile(lf)
 
 
-def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
+def splitdebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, sourcefile, d):
     # Function to split a single file into two components, one is the stripped
     # target system binary, the other contains any debugging information. The
     # two files are linked to reference each other.
@@ -378,6 +380,15 @@ def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
     # sourcefile is also generated containing a list of debugsources
 
     import stat
+
+    src = file[len(dvar):]
+    dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
+    debugfile = dvar + dest
+
+    # Split the file...
+    bb.utils.mkdirhier(os.path.dirname(debugfile))
+    #bb.note("Split %s -> %s" % (file, debugfile))
+    # Only store off the hard link reference if we successfully split!
 
     dvar = d.getVar('PKGD')
     objcopy = d.getVar("OBJCOPY")
@@ -1046,16 +1057,7 @@ python split_and_strip_files () {
     # First lets process debug splitting
     #
     if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT') != '1'):
-        for file in elffiles:
-            src = file[len(dvar):]
-            dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
-            fpath = dvar + dest
-
-            # Split the file...
-            bb.utils.mkdirhier(os.path.dirname(fpath))
-            #bb.note("Split %s -> %s" % (file, fpath))
-            # Only store off the hard link reference if we successfully split!
-            splitdebuginfo(file, fpath, debugsrcdir, sourcefile, d)
+        oe.utils.multiprocess_launch(splitdebuginfo, list(elffiles), d, extraargs=(dvar, debugdir, debuglibdir, debugappend, debugsrcdir, sourcefile, d))
 
         if debugsrcdir and not targetos.startswith("mingw"):
             for file in staticlibs:
