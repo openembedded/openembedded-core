@@ -26,9 +26,6 @@ FILES_SOLIBSDEV = ""
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'sysprofd', 'sysprof2.service', '', d)}"
 
-# We do not yet work for aarch64.
-COMPATIBLE_HOST = "^(?!aarch64).*"
-
 FILES_${PN} += " \
                ${datadir}/dbus-1/system-services \
                ${datadir}/dbus-1/system.d \
