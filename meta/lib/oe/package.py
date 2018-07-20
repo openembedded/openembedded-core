@@ -1,3 +1,4 @@
+import stat
 import mmap
 import subprocess
 
@@ -10,8 +11,6 @@ def runstrip(arg):
     # 4 - executable
     # 8 - shared library
     # 16 - kernel module
-
-    import stat, subprocess
 
     (file, elftype, strip) = arg
 
@@ -37,15 +36,10 @@ def runstrip(arg):
     stripcmd.append(file)
     bb.debug(1, "runstrip: %s" % stripcmd)
 
-    try:
-        output = subprocess.check_output(stripcmd, stderr=subprocess.STDOUT)
-    except subprocess.CalledProcessError as e:
-        bb.error("runstrip: '%s' strip command failed with %s (%s)" % (stripcmd, e.returncode, e.output))
+    output = subprocess.check_output(stripcmd, stderr=subprocess.STDOUT)
 
     if newmode:
         os.chmod(file, origmode)
-
-    return
 
 # Detect .ko module by searching for "vermagic=" string
 def is_kernel_module(path):
@@ -164,8 +158,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, d, qa_already_stripp
         elf_file = int(elffiles[file])
         sfiles.append((file, elf_file, strip_cmd))
 
-    oe.utils.multiprocess_exec(sfiles, runstrip)
-
+    oe.utils.multiprocess_launch(runstrip, sfiles, d)
 
 
 def file_translate(file):

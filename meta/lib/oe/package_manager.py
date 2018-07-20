@@ -3,7 +3,6 @@ import os
 import glob
 import subprocess
 import shutil
-import multiprocessing
 import re
 import collections
 import bb
@@ -177,7 +176,7 @@ class OpkgIndexer(Indexer):
             bb.note("There are no packages in %s!" % self.deploy_dir)
             return
 
-        oe.utils.multiprocess_exec(index_cmds, create_index)
+        oe.utils.multiprocess_launch(create_index, index_cmds, self.d)
 
         if signer:
             feed_sig_type = self.d.getVar('PACKAGE_FEED_GPG_SIGNATURE_TYPE')
@@ -258,7 +257,7 @@ class DpkgIndexer(Indexer):
             bb.note("There are no packages in %s" % self.deploy_dir)
             return
 
-        oe.utils.multiprocess_exec(index_cmds, create_index)
+        oe.utils.multiprocess_launch(create_index, index_cmds, self.d)
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             raise NotImplementedError('Package feed signing not implementd for dpkg')
 

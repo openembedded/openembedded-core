@@ -1105,7 +1105,7 @@ python split_and_strip_files () {
         for f in kernmods:
             sfiles.append((f, 16, strip))
 
-        oe.utils.multiprocess_exec(sfiles, oe.package.runstrip)
+        oe.utils.multiprocess_launch(oe.package.runstrip, sfiles, d)
 
     #
     # End of strip
@@ -1541,7 +1541,7 @@ python package_do_filedeps() {
         for files in chunks(pkgfiles[pkg], 100):
             pkglist.append((pkg, files, rpmdeps, pkgdest))
 
-    processed = oe.utils.multiprocess_exec( pkglist, oe.package.filedeprunner)
+    processed = oe.utils.multiprocess_launch(oe.package.filedeprunner, pkglist, d)
 
     provides_files = {}
     requires_files = {}
