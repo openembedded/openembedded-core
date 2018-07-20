@@ -340,9 +340,21 @@ class Disk:
         """Remove files/dirs from the partition."""
         partimg = self._get_part_image(pnum)
         if self.partitions[pnum].fstype.startswith('ext'):
-            exec_cmd("{} {} -wR 'rm {}'".format(self.debugfs,
+            cmd = "{} {} -wR 'rm {}'".format(self.debugfs,
                                                 self._get_part_image(pnum),
-                                                path), as_shell=True)
+                                                path)
+            out = exec_cmd(cmd , as_shell=True)
+            for line in out.splitlines():
+                if line.startswith("rm:"):
+                    if "file is a directory" in line:
+                        # Try rmdir to see if this is an empty directory. This won't delete
+                        # any non empty directory so let user know about any error that this might
+                        # generate.
+                        print(exec_cmd("{} {} -wR 'rmdir {}'".format(self.debugfs,
+                                                    self._get_part_image(pnum),
+                                                    path), as_shell=True))
+                    else:
+                        raise WicError("Could not complete operation: wic %s" % str(line))
         else: # fat
             cmd = "{} -i {} ::{}".format(self.mdel, partimg, path)
             try:
