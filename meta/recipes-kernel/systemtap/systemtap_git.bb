@@ -3,6 +3,8 @@ HOMEPAGE = "https://sourceware.org/systemtap/"
 
 require systemtap_git.inc
 
+SRC_URI += "file://0001-improve-reproducibility-for-c-compiling.patch"
+
 DEPENDS = "elfutils"
 
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
@@ -24,6 +26,12 @@ PACKAGECONFIG[monitor] = "--enable-monitor,--disable-monitor,ncurses json-c"
 PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,python3-setuptools-native"
 
 inherit autotools gettext pkgconfig distutils3-base
+
+do_configure_prepend () {
+    # Improve reproducibility for c++ object files
+    reltivepath="${@os.path.relpath(d.getVar('STAGING_INCDIR'), d.getVar('S'))}"
+    sed -i "s:@RELATIVE_STAGING_INCDIR@:$reltivepath:g" ${S}/stringtable.h
+}
 
 do_install_append () {
    if [ ! -f ${D}${bindir}/stap ]; then
