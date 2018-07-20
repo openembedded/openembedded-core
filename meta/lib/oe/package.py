@@ -1,8 +1,11 @@
+import mmap
+import subprocess
+
 def runstrip(arg):
     # Function to strip a single file, called from split_and_strip_files below
     # A working 'file' (one which works on the target architecture)
     #
-    # The elftype is a bit pattern (explained in split_and_strip_files) to tell
+    # The elftype is a bit pattern (explained in is_elf below) to tell
     # us what type of file we're processing...
     # 4 - executable
     # 8 - shared library
@@ -44,6 +47,44 @@ def runstrip(arg):
 
     return
 
+# Detect .ko module by searching for "vermagic=" string
+def is_kernel_module(path):
+    with open(path) as f:
+        return mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ).find(b"vermagic=") >= 0
+
+# Return type (bits):
+# 0 - not elf
+# 1 - ELF
+# 2 - stripped
+# 4 - executable
+# 8 - shared library
+# 16 - kernel module
+def is_elf(path):
+    exec_type = 0
+    result = subprocess.check_output(["file", "-b", path], stderr=subprocess.STDOUT).decode("utf-8")
+
+    if "ELF" in result:
+        exec_type |= 1
+        if "not stripped" not in result:
+            exec_type |= 2
+        if "executable" in result:
+            exec_type |= 4
+        if "shared" in result:
+            exec_type |= 8
+        if "relocatable" in result:
+            if path.endswith(".ko") and path.find("/lib/modules/") != -1 and is_kernel_module(path):
+                exec_type |= 16
+    return exec_type
+
+def is_static_lib(path):
+    if path.endswith('.a') and not os.path.islink(path):
+        with open(path, 'rb') as fh:
+            # The magic must include the first slash to avoid
+            # matching golang static libraries
+            magic = b'!<arch>\x0a/'
+            start = fh.read(len(magic))
+            return start == magic
+    return False
 
 def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=False):
     """
@@ -56,35 +97,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     :param qa_already_stripped: Set to True if already-stripped' in ${INSANE_SKIP}
     This is for proper logging and messages only.
     """
-    import stat, errno, oe.path, oe.utils, mmap, subprocess
-
-    # Detect .ko module by searching for "vermagic=" string
-    def is_kernel_module(path):
-        with open(path) as f:
-            return mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ).find(b"vermagic=") >= 0
-
-    # Return type (bits):
-    # 0 - not elf
-    # 1 - ELF
-    # 2 - stripped
-    # 4 - executable
-    # 8 - shared library
-    # 16 - kernel module
-    def is_elf(path):
-        exec_type = 0
-        result = subprocess.check_output(["file", "-b", path], stderr=subprocess.STDOUT).decode("utf-8")
-
-        if "ELF" in result:
-            exec_type |= 1
-            if "not stripped" not in result:
-                exec_type |= 2
-            if "executable" in result:
-                exec_type |= 4
-            if "shared" in result:
-                exec_type |= 8
-            if "relocatable" in result and is_kernel_module(path):
-                exec_type |= 16
-        return exec_type
+    import stat, errno, oe.path, oe.utils
 
     elffiles = {}
     inodes = {}

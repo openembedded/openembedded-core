@@ -936,38 +936,6 @@ python split_and_strip_files () {
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     bb.utils.remove(sourcefile)
 
-    # Return type (bits):
-    # 0 - not elf
-    # 1 - ELF
-    # 2 - stripped
-    # 4 - executable
-    # 8 - shared library
-    # 16 - kernel module
-    def isELF(path):
-        type = 0
-        result = subprocess.check_output(["file", "-b", path], stderr=subprocess.STDOUT).decode("utf-8")
-
-        # Not stripped
-        if "ELF" in result:
-            type |= 1
-            if "not stripped" not in result:
-                type |= 2
-            if "executable" in result:
-                type |= 4
-            if "shared" in result:
-                type |= 8
-        return type
-
-    def isStaticLib(path):
-        if path.endswith('.a') and not os.path.islink(path):
-            with open(path, 'rb') as fh:
-                # The magic must include the first slash to avoid
-                # matching golang static libraries
-                magic = b'!<arch>\x0a/'
-                start = fh.read(len(magic))
-                return start == magic
-        return False
-
     #
     # First lets figure out all of the files we may have to process ... do this only once!
     #
@@ -987,7 +955,7 @@ python split_and_strip_files () {
                 if file.endswith(".ko") and file.find("/lib/modules/") != -1:
                     kernmods.append(file)
                     continue
-                if isStaticLib(file):
+                if oe.package.is_static_lib(file):
                     staticlibs.append(file)
                     continue
 
@@ -1017,14 +985,14 @@ python split_and_strip_files () {
                     # If it's a symlink, and points to an ELF file, we capture the readlink target
                     if cpath.islink(file):
                         target = os.readlink(file)
-                        if isELF(ltarget):
-                            #bb.note("Sym: %s (%d)" % (ltarget, isELF(ltarget)))
+                        if oe.package.is_elf(ltarget):
+                            #bb.note("Sym: %s (%d)" % (ltarget, oe.package.is_elf(ltarget)))
                             symlinks[file] = target
                         continue
 
                     # It's a file (or hardlink), not a link
                     # ...but is it ELF, and is it already stripped?
-                    elf_file = isELF(file)
+                    elf_file = oe.package.is_elf(file)
                     if elf_file & 1:
                         if elf_file & 2:
                             if 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split():
