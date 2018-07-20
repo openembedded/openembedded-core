@@ -74,7 +74,7 @@ def is_elf(path):
         if "relocatable" in result:
             if path.endswith(".ko") and path.find("/lib/modules/") != -1 and is_kernel_module(path):
                 exec_type |= 16
-    return exec_type
+    return (path, exec_type)
 
 def is_static_lib(path):
     if path.endswith('.a') and not os.path.islink(path):
@@ -86,7 +86,7 @@ def is_static_lib(path):
             return start == magic
     return False
 
-def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=False):
+def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, d, qa_already_stripped=False):
     """
     Strip executable code (like executables, shared libraries) _in_place_
     - Based on sysroot_strip in staging.bbclass
@@ -107,6 +107,8 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     #
     # First lets figure out all of the files we may have to process
     #
+    checkelf = []
+    inodecache = {}
     for root, dirs, files in os.walk(dstdir):
         for f in files:
             file = os.path.join(root, f)
@@ -132,7 +134,11 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
 
                 # It's a file (or hardlink), not a link
                 # ...but is it ELF, and is it already stripped?
-                elf_file = is_elf(file)
+                checkelf.append(file)
+                inodecache[file] = s.st_ino
+    results = oe.utils.multiprocess_launch(is_elf, checkelf, d)
+    for (file, elf_file) in results:
+                #elf_file = is_elf(file)
                 if elf_file & 1:
                     if elf_file & 2:
                         if qa_already_stripped:
@@ -141,12 +147,12 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
                             bb.warn("File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dstdir):], pn))
                         continue
 
-                    if s.st_ino in inodes:
+                    if inodecache[file] in inodes:
                         os.unlink(file)
-                        os.link(inodes[s.st_ino], file)
+                        os.link(inodes[inodecache[file]], file)
                     else:
                         # break hardlinks so that we do not strip the original.
-                        inodes[s.st_ino] = file
+                        inodes[inodecache[file]] = file
                         bb.utils.copyfile(file, file)
                         elffiles[file] = elf_file
 

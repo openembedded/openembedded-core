@@ -949,6 +949,8 @@ python split_and_strip_files () {
     skipfiles = (d.getVar("INHIBIT_PACKAGE_STRIP_FILES") or "").split()
     if (d.getVar('INHIBIT_PACKAGE_STRIP') != '1' or \
             d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT') != '1'):
+        checkelf = {}
+        checkelflinks = {}
         for root, dirs, files in cpath.walk(dvar):
             for f in files:
                 file = os.path.join(root, f)
@@ -982,44 +984,57 @@ python split_and_strip_files () {
                 # Check its an executable
                 if (s[stat.ST_MODE] & stat.S_IXUSR) or (s[stat.ST_MODE] & stat.S_IXGRP) or (s[stat.ST_MODE] & stat.S_IXOTH) \
                         or ((file.startswith(libdir) or file.startswith(baselibdir)) and (".so" in f or ".node" in f)):
-                    # If it's a symlink, and points to an ELF file, we capture the readlink target
+
                     if cpath.islink(file):
-                        target = os.readlink(file)
-                        if oe.package.is_elf(ltarget):
-                            #bb.note("Sym: %s (%d)" % (ltarget, oe.package.is_elf(ltarget)))
-                            symlinks[file] = target
+                        checkelflinks[file] = ltarget
                         continue
+                    # Use a reference of device ID and inode number to identify files
+                    file_reference = "%d_%d" % (s.st_dev, s.st_ino)
+                    checkelf[file] = (file, file_reference)
 
-                    # It's a file (or hardlink), not a link
-                    # ...but is it ELF, and is it already stripped?
-                    elf_file = oe.package.is_elf(file)
-                    if elf_file & 1:
-                        if elf_file & 2:
-                            if 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split():
-                                bb.note("Skipping file %s from %s for already-stripped QA test" % (file[len(dvar):], pn))
-                            else:
-                                msg = "File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn)
-                                package_qa_handle_error("already-stripped", msg, d)
-                            continue
+        results = oe.utils.multiprocess_launch(oe.package.is_elf, checkelflinks.values(), d)
+        results_map = {}
+        for (ltarget, elf_file) in results:
+            results_map[ltarget] = elf_file
+        for file in checkelflinks:
+            ltarget = checkelflinks[file]
+            # If it's a symlink, and points to an ELF file, we capture the readlink target
+            if results_map[ltarget]:
+                target = os.readlink(file)
+                #bb.note("Sym: %s (%d)" % (ltarget, results_map[ltarget]))
+                symlinks[file] = target
 
-                        # At this point we have an unstripped elf file. We need to:
-                        #  a) Make sure any file we strip is not hardlinked to anything else outside this tree
-                        #  b) Only strip any hardlinked file once (no races)
-                        #  c) Track any hardlinks between files so that we can reconstruct matching debug file hardlinks
+        results = oe.utils.multiprocess_launch(oe.package.is_elf, checkelf.keys(), d)
+        for (file, elf_file) in results:
+            # It's a file (or hardlink), not a link
+            # ...but is it ELF, and is it already stripped?
+            if elf_file & 1:
+                if elf_file & 2:
+                    if 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split():
+                        bb.note("Skipping file %s from %s for already-stripped QA test" % (file[len(dvar):], pn))
+                    else:
+                        msg = "File '%s' from %s was already stripped, this will prevent future debugging!" % (file[len(dvar):], pn)
+                        package_qa_handle_error("already-stripped", msg, d)
+                    continue
 
-                        # Use a reference of device ID and inode number to identify files
-                        file_reference = "%d_%d" % (s.st_dev, s.st_ino)
-                        if file_reference in inodes:
-                            os.unlink(file)
-                            os.link(inodes[file_reference][0], file)
-                            inodes[file_reference].append(file)
-                        else:
-                            inodes[file_reference] = [file]
-                            # break hardlink
-                            bb.utils.copyfile(file, file)
-                            elffiles[file] = elf_file
-                        # Modified the file so clear the cache
-                        cpath.updatecache(file)
+                # At this point we have an unstripped elf file. We need to:
+                #  a) Make sure any file we strip is not hardlinked to anything else outside this tree
+                #  b) Only strip any hardlinked file once (no races)
+                #  c) Track any hardlinks between files so that we can reconstruct matching debug file hardlinks
+
+                # Use a reference of device ID and inode number to identify files
+                file_reference = checkelf[file]
+                if file_reference in inodes:
+                    os.unlink(file)
+                    os.link(inodes[file_reference][0], file)
+                    inodes[file_reference].append(file)
+                else:
+                    inodes[file_reference] = [file]
+                    # break hardlink
+                    bb.utils.copyfile(file, file)
+                    elffiles[file] = elf_file
+                # Modified the file so clear the cache
+                cpath.updatecache(file)
 
     #
     # First lets process debug splitting
