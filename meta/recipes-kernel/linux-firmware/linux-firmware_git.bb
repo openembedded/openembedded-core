@@ -516,11 +516,7 @@ RDEPENDS_${PN}-vt6656 = "${PN}-vt6656-license"
 LICENSE_${PN}-bcm4329 = "Firmware-broadcom_bcm43xx"
 LICENSE_${PN}-bcm4330 = "Firmware-broadcom_bcm43xx"
 LICENSE_${PN}-bcm4334 = "Firmware-broadcom_bcm43xx"
-LICENSE_${PN}-bcm43340 = "Firmware-broadcom_bcm43xx"
-LICENSE_${PN}-bcm43362 = "Firmware-broadcom_bcm43xx"
 LICENSE_${PN}-bcm4339 = "Firmware-broadcom_bcm43xx"
-LICENSE_${PN}-bcm43430 = "Firmware-broadcom_bcm43xx"
-LICENSE_${PN}-bcm4354 = "Firmware-broadcom_bcm43xx"
 LICENSE_${PN}-broadcom-license = "Firmware-broadcom_bcm43xx"
 
 FILES_${PN}-broadcom-license = " \
@@ -535,14 +531,31 @@ FILES_${PN}-bcm4330 = " \
 FILES_${PN}-bcm4334 = " \
   ${nonarch_base_libdir}/firmware/brcm/brcmfmac4334-sdio.bin \
 "
+FILES_${PN}-bcm4339 = " \
+  ${nonarch_base_libdir}/firmware/brcm/brcmfmac4339-sdio.bin \
+"
+
+RDEPENDS_${PN}-bcm4329 += "${PN}-broadcom-license"
+RDEPENDS_${PN}-bcm4330 += "${PN}-broadcom-license"
+RDEPENDS_${PN}-bcm4334 += "${PN}-broadcom-license"
+RDEPENDS_${PN}-bcm4339 += "${PN}-broadcom-license"
+
+# For broadcom cypress
+
+LICENSE_${PN}-bcm43340 = "Firmware-cypress"
+LICENSE_${PN}-bcm43362 = "Firmware-cypress"
+LICENSE_${PN}-bcm43430 = "Firmware-cypress"
+LICENSE_${PN}-bcm4354 = "Firmware-cypress"
+LICENSE_${PN}-cypress-license = "Firmware-cypress"
+
+FILES_${PN}-cypress-license = "\
+  ${nonarch_base_libdir}/firmware/LICENCE.cypress \
+"
 FILES_${PN}-bcm43340 = " \
   ${nonarch_base_libdir}/firmware/brcm/brcmfmac43340-sdio.bin \
 "
 FILES_${PN}-bcm43362 = " \
   ${nonarch_base_libdir}/firmware/brcm/brcmfmac43362-sdio.bin \
-"
-FILES_${PN}-bcm4339 = " \
-  ${nonarch_base_libdir}/firmware/brcm/brcmfmac4339-sdio.bin \
 "
 FILES_${PN}-bcm43430 = " \
   ${nonarch_base_libdir}/firmware/brcm/brcmfmac43430-sdio.bin \
@@ -551,22 +564,10 @@ FILES_${PN}-bcm4354 = " \
   ${nonarch_base_libdir}/firmware/brcm/brcmfmac4354-sdio.bin \
 "
 
-RDEPENDS_${PN}-bcm4329 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm4330 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm4334 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm43340 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm43362 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm4339 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm43430 += "${PN}-broadcom-license"
-RDEPENDS_${PN}-bcm4354 += "${PN}-broadcom-license"
-
-# For broadcom cypress
-
-LICENSE_${PN}-cypress-license = "Firmware-cypress"
-
-FILES_${PN}-cypress-license = "\
-  ${nonarch_base_libdir}/firmware/LICENCE.cypress \
-"
+RDEPENDS_${PN}-bcm43340 += "${PN}-cypress-license"
+RDEPENDS_${PN}-bcm43362 += "${PN}-cypress-license"
+RDEPENDS_${PN}-bcm43430 += "${PN}-cypress-license"
+RDEPENDS_${PN}-bcm4354 += "${PN}-cypress-license"
 
 # For Broadcom bnx2-mips
 #
