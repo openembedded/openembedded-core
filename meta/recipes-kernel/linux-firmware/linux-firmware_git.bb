@@ -14,6 +14,7 @@ LICENSE = "\
     & Firmware-cavium \
     & Firmware-chelsio_firmware \
     & Firmware-cw1200 \
+    & Firmware-cypress \
     & Firmware-dib0700 \
     & Firmware-e100 \
     & Firmware-ene_firmware \
@@ -74,6 +75,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.cavium;md5=c37aaffb1ebe5939b2580d073a95daea \
     file://LICENCE.chelsio_firmware;md5=819aa8c3fa453f1b258ed8d168a9d903 \
     file://LICENCE.cw1200;md5=f0f770864e7a8444a5c5aa9d12a3a7ed \
+    file://LICENCE.cypress;md5=48cd9436c763bf873961f9ed7b5c147b \
     file://LICENSE.dib0700;md5=f7411825c8a555a1a3e5eab9ca773431 \
     file://LICENCE.e100;md5=ec0f84136766df159a3ae6d02acdf5a8 \
     file://LICENCE.ene_firmware;md5=ed67f0f62f8f798130c296720b7d3921 \
@@ -135,6 +137,7 @@ NO_GENERIC_LICENSE[Firmware-ca0132] = "LICENCE.ca0132"
 NO_GENERIC_LICENSE[Firmware-cavium] = "LICENCE.cavium"
 NO_GENERIC_LICENSE[Firmware-chelsio_firmware] = "LICENCE.chelsio_firmware"
 NO_GENERIC_LICENSE[Firmware-cw1200] = "LICENCE.cw1200"
+NO_GENERIC_LICENSE[Firmware-cypress] = "LICENCE.cypress"
 NO_GENERIC_LICENSE[Firmware-dib0700] = "LICENSE.dib0700"
 NO_GENERIC_LICENSE[Firmware-e100] = "LICENCE.e100"
 NO_GENERIC_LICENSE[Firmware-ene_firmware] = "LICENCE.ene_firmware"
@@ -233,6 +236,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rtl-license ${PN}-rtl8188 ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su ${PN}-rtl8723 ${PN}-rtl8821 \
              ${PN}-rtl8168 \
+             ${PN}-cypress-license \
              ${PN}-broadcom-license \
              ${PN}-bcm4329 ${PN}-bcm4330 ${PN}-bcm4334 ${PN}-bcm43340 \
              ${PN}-bcm43362 ${PN}-bcm4339 ${PN}-bcm43430 ${PN}-bcm4354 \
@@ -555,6 +559,14 @@ RDEPENDS_${PN}-bcm43362 += "${PN}-broadcom-license"
 RDEPENDS_${PN}-bcm4339 += "${PN}-broadcom-license"
 RDEPENDS_${PN}-bcm43430 += "${PN}-broadcom-license"
 RDEPENDS_${PN}-bcm4354 += "${PN}-broadcom-license"
+
+# For broadcom cypress
+
+LICENSE_${PN}-cypress-license = "Firmware-cypress"
+
+FILES_${PN}-cypress-license = "\
+  ${nonarch_base_libdir}/firmware/LICENCE.cypress \
+"
 
 # For Broadcom bnx2-mips
 #
