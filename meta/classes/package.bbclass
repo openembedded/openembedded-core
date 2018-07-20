@@ -430,6 +430,7 @@ def copydebugsources(debugsrcdir, d):
     # and copied to the destination here.
 
     import stat
+    import subprocess
 
     sourcefile = d.expand("${WORKDIR}/debugsources.list")
     if debugsrcdir and os.path.isfile(sourcefile):
@@ -466,23 +467,20 @@ def copydebugsources(debugsrcdir, d):
         processdebugsrc += "(cd '%s' ; cpio -pd0mlL --no-preserve-owner '%s%s' 2>/dev/null)"
 
         cmd = processdebugsrc % (sourcefile, workbasedir, localsrc_prefix, workparentdir, dvar, debugsrcdir)
-        (retval, output) = oe.utils.getstatusoutput(cmd)
-        # Can "fail" if internal headers/transient sources are attempted
-        #if retval:
-        #    bb.fatal("debug source copy failed with exit code %s (cmd was %s)" % (retval, cmd))
+        try:
+            subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError:
+            # Can "fail" if internal headers/transient sources are attempted
+            pass
 
         # cpio seems to have a bug with -lL together and symbolic links are just copied, not dereferenced.
         # Work around this by manually finding and copying any symbolic links that made it through.
         cmd = "find %s%s -type l -print0 -delete | sed s#%s%s/##g | (cd '%s' ; cpio -pd0mL --no-preserve-owner '%s%s' 2>/dev/null)" % (dvar, debugsrcdir, dvar, debugsrcdir, workparentdir, dvar, debugsrcdir)
-        (retval, output) = oe.utils.getstatusoutput(cmd)
-        if retval:
-            bb.fatal("debugsrc symlink fixup failed with exit code %s (cmd was %s)" % (retval, cmd))
+        subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
         # The copy by cpio may have resulted in some empty directories!  Remove these
         cmd = "find %s%s -empty -type d -delete" % (dvar, debugsrcdir)
-        (retval, output) = oe.utils.getstatusoutput(cmd)
-        if retval:
-            bb.fatal("empty directory removal failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
+        subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
         # Also remove debugsrcdir if its empty
         for p in nosuchdir[::-1]:
@@ -643,6 +641,8 @@ python package_do_split_locales() {
 }
 
 python perform_packagecopy () {
+    import subprocess
+
     dest = d.getVar('D')
     dvar = d.getVar('PKGD')
 
@@ -650,9 +650,7 @@ python perform_packagecopy () {
     # files to operate on
     # Preserve sparse files and hard links
     cmd = 'tar -cf - -C %s -p . | tar -xf - -C %s' % (dest, dvar)
-    (retval, output) = oe.utils.getstatusoutput(cmd)
-    if retval:
-        bb.fatal("file copy failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else ""))
+    subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
     # replace RPATHs for the nativesdk binaries, to make them relocatable
     if bb.data.inherits_class('nativesdk', d) or bb.data.inherits_class('cross-canadian', d):
