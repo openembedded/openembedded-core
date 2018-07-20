@@ -888,6 +888,7 @@ python fixup_perms () {
 
 python split_and_strip_files () {
     import stat, errno
+    import subprocess
 
     dvar = d.getVar('PKGD')
     pn = d.getVar('PN')
@@ -933,12 +934,7 @@ python split_and_strip_files () {
     # 16 - kernel module
     def isELF(path):
         type = 0
-        ret, result = oe.utils.getstatusoutput("file -b '%s'" % path)
-
-        if ret:
-            msg = "split_and_strip_files: 'file %s' failed" % path
-            package_qa_handle_error("split-strip", msg, d)
-            return type
+        result = subprocess.check_output(["file", "-b", path], stderr=subprocess.STDOUT).decode("utf-8")
 
         # Not stripped
         if "ELF" in result:

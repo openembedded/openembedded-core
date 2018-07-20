@@ -56,7 +56,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     :param qa_already_stripped: Set to True if already-stripped' in ${INSANE_SKIP}
     This is for proper logging and messages only.
     """
-    import stat, errno, oe.path, oe.utils, mmap
+    import stat, errno, oe.path, oe.utils, mmap, subprocess
 
     # Detect .ko module by searching for "vermagic=" string
     def is_kernel_module(path):
@@ -72,11 +72,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, qa_already_stripped=
     # 16 - kernel module
     def is_elf(path):
         exec_type = 0
-        ret, result = oe.utils.getstatusoutput("file -b '%s'" % path)
-
-        if ret:
-            bb.error("split_and_strip_files: 'file %s' failed" % path)
-            return exec_type
+        result = subprocess.check_output(["file", "-b", path], stderr=subprocess.STDOUT).decode("utf-8")
 
         if "ELF" in result:
             exec_type |= 1
