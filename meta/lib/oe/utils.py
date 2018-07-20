@@ -248,40 +248,6 @@ def execute_pre_post_process(d, cmds):
             bb.note("Executing %s ..." % cmd)
             bb.build.exec_func(cmd, d)
 
-def multiprocess_exec(commands, function):
-    import signal
-    import multiprocessing
-
-    if not commands:
-        return []
-
-    def init_worker():
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-    fails = []
-
-    def failures(res):
-        fails.append(res)
-
-    nproc = min(multiprocessing.cpu_count(), len(commands))
-    pool = bb.utils.multiprocessingpool(nproc, init_worker)
-
-    try:
-        mapresult = pool.map_async(function, commands, error_callback=failures)
-
-        pool.close()
-        pool.join()
-        results = mapresult.get()
-    except KeyboardInterrupt:
-        pool.terminate()
-        pool.join()
-        raise
-
-    if fails:
-        raise fails[0]
-
-    return results
-
 # For each item in items, call the function 'target' with item as the first 
 # argument, extraargs as the other arguments and handle any exceptions in the
 # parent thread
