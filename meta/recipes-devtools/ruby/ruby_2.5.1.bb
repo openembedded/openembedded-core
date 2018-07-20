@@ -3,6 +3,7 @@ require ruby.inc
 SRC_URI += " \
            file://ruby-CVE-2017-9226.patch \
            file://ruby-CVE-2017-9228.patch \
+           file://CVE-2018-1000073.patch \
            "
 
 SRC_URI[md5sum] = "23867bc8c16c55e43b14dfe0614bcfa8"
