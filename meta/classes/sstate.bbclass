@@ -715,17 +715,24 @@ sstate_task_postfunc[dirs] = "${WORKDIR}"
 #
 sstate_create_package () {
 	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
+
+        # Use pigz if available
+        OPT="-cz"
+        if [ -x "$(command -v pigz)" ]; then
+            OPT="-I pigz -c"
+        fi
+
 	# Need to handle empty directories
 	if [ "$(ls -A)" ]; then
 		set +e
-		tar -czf $TFILE *
+		tar $OPT -f $TFILE *
 		ret=$?
 		if [ $ret -ne 0 ] && [ $ret -ne 1 ]; then
 			exit 1
 		fi
 		set -e
 	else
-		tar -cz --file=$TFILE --files-from=/dev/null
+		tar $OPT --file=$TFILE --files-from=/dev/null
 	fi
 	chmod 0664 $TFILE
 	mv -f $TFILE ${SSTATE_PKG}
