@@ -1631,25 +1631,28 @@ python package_do_shlibs() {
 
     shlibswork_dir = d.getVar('SHLIBSWORKDIR')
 
-    def linux_so(file, needed, sonames, renames, pkgver):
+    def linux_so(file, pkg, pkgver, d):
         needs_ldconfig = False
+        needed = set()
+        sonames = set()
+        renames = []
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
         cmd = d.getVar('OBJDUMP') + " -p " + pipes.quote(file) + " 2>/dev/null"
         fd = os.popen(cmd)
         lines = fd.readlines()
         fd.close()
-        rpath = []
+        rpath = tuple()
         for l in lines:
             m = re.match("\s+RPATH\s+([^\s]*)", l)
             if m:
                 rpaths = m.group(1).replace("$ORIGIN", ldir).split(":")
-                rpath = list(map(os.path.normpath, rpaths))
+                rpath = tuple(map(os.path.normpath, rpaths))
         for l in lines:
             m = re.match("\s+NEEDED\s+([^\s]*)", l)
             if m:
                 dep = m.group(1)
-                if dep not in needed[pkg]:
-                    needed[pkg].append((dep, file, rpath))
+                if dep not in needed:
+                    needed.add((dep, file, rpath))
             m = re.match("\s+SONAME\s+([^\s]*)", l)
             if m:
                 this_soname = m.group(1)
@@ -1657,12 +1660,12 @@ python package_do_shlibs() {
                 if not prov in sonames:
                     # if library is private (only used by package) then do not build shlib for it
                     if not private_libs or this_soname not in private_libs:
-                        sonames.append(prov)
+                        sonames.add(prov)
                 if libdir_re.match(os.path.dirname(file)):
                     needs_ldconfig = True
                 if snap_symlinks and (os.path.basename(file) != this_soname):
                     renames.append((file, os.path.join(os.path.dirname(file), this_soname)))
-        return needs_ldconfig
+        return (needs_ldconfig, needed, sonames, renames)
 
     def darwin_so(file, needed, sonames, renames, pkgver):
         if not os.path.exists(file):
@@ -1690,7 +1693,7 @@ python package_do_shlibs() {
             for combo in combos:
                 if not combo in sonames:
                     prov = (combo, ldir, pkgver)
-                    sonames.append(prov)
+                    sonames.add(prov)
         if file.endswith('.dylib') or file.endswith('.so'):
             rpath = []
             p = sub.Popen([d.expand("${HOST_PREFIX}otool"), '-l', file],stdout=sub.PIPE,stderr=sub.PIPE)
@@ -1714,7 +1717,7 @@ python package_do_shlibs() {
                     continue
                 name = os.path.basename(l.split()[0]).rsplit(".", 1)[0]
                 if name and name not in needed[pkg]:
-                     needed[pkg].append((name, file, []))
+                     needed[pkg].add((name, file, tuple()))
 
     def mingw_dll(file, needed, sonames, renames, pkgver):
         if not os.path.exists(file):
@@ -1722,7 +1725,7 @@ python package_do_shlibs() {
 
         if file.endswith(".dll"):
             # assume all dlls are shared objects provided by the package
-            sonames.append((os.path.basename(file), os.path.dirname(file).replace(pkgdest + "/" + pkg, ''), pkgver))
+            sonames.add((os.path.basename(file), os.path.dirname(file).replace(pkgdest + "/" + pkg, ''), pkgver))
 
         if (file.endswith(".dll") or file.endswith(".exe")):
             # use objdump to search for "DLL Name: .*\.dll"
@@ -1733,7 +1736,7 @@ python package_do_shlibs() {
                 for m in re.finditer("DLL Name: (.*?\.dll)$", out.decode(), re.MULTILINE | re.IGNORECASE):
                     dllname = m.group(1)
                     if dllname:
-                        needed[pkg].append((dllname, file, []))
+                        needed[pkg].add((dllname, file, tuple()))
 
     if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS') == "1":
         snap_symlinks = True
@@ -1761,9 +1764,10 @@ python package_do_shlibs() {
         if not pkgver:
             pkgver = ver
 
-        needed[pkg] = []
-        sonames = list()
-        renames = list()
+        needed[pkg] = set()
+        sonames = set()
+        renames = []
+        linuxlist = []
         for file in pkgfiles[pkg]:
                 soname = None
                 if cpath.islink(file):
@@ -1773,8 +1777,17 @@ python package_do_shlibs() {
                 elif targetos.startswith("mingw"):
                     mingw_dll(file, needed, sonames, renames, pkgver)
                 elif os.access(file, os.X_OK) or lib_re.match(file):
-                    ldconfig = linux_so(file, needed, sonames, renames, pkgver)
-                    needs_ldconfig = needs_ldconfig or ldconfig
+                    linuxlist.append(file)
+
+        if linuxlist:
+            results = oe.utils.multiprocess_launch(linux_so, linuxlist, d, extraargs=(pkg, pkgver, d))
+            for r in results:
+                ldconfig = r[0]
+                needed[pkg] |= r[1]
+                sonames |= r[2]
+                renames.extend(r[3])
+                needs_ldconfig = needs_ldconfig or ldconfig
+
         for (old, new) in renames:
             bb.note("Renaming %s to %s" % (old, new))
             os.rename(old, new)
@@ -1840,7 +1853,7 @@ python package_do_shlibs() {
                 for k in shlib_provider[n[0]].keys():
                     shlib_provider_path.append(k)
                 match = None
-                for p in n[2] + shlib_provider_path + libsearchpath:
+                for p in list(n[2]) + shlib_provider_path + libsearchpath:
                     if p in shlib_provider[n[0]]:
                         match = p
                         break
