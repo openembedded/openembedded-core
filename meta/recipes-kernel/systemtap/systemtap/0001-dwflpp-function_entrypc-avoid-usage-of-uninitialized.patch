@@ -1,0 +1,46 @@
+From 8466fca2a074323a235ef38d425f994a2ff7e64f Mon Sep 17 00:00:00 2001
+From: Victor Kamensky <kamensky@cisco.com>
+Date: Mon, 9 Jul 2018 09:31:19 -0700
+Subject: [PATCH] dwflpp::function_entrypc avoid usage of uninitialized memory
+
+Failure on 3.3 release was observed. Failure was elusive and
+disappeared after seemingly random configure option change, or when
+code was compiled with -O1 or -O0 (vs default -O2). Running failing
+test case under valgrind memcheck pointed to couple places where
+'Conditional jump or move depends on uninitialised value(s)' occured.
+
+After addressing these in two places in dwflpp::function_entrypc,
+valgrind memcheck run is clean and original issue got fixed.
+
+Upstream-Status: Backport
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+---
+ dwflpp.cxx | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/dwflpp.cxx b/dwflpp.cxx
+index bfbb6b096..2172e705a 100644
+--- a/dwflpp.cxx
++++ b/dwflpp.cxx
+@@ -2465,13 +2465,17 @@ bool
+ dwflpp::function_entrypc (Dwarf_Addr * addr)
+ {
+   assert (function);
++
++  // assign default value
++  *addr = 0;
++
+   // PR10574: reject 0, which tends to be eliminated COMDAT
+   if (dwarf_entrypc (function, addr) == 0 && *addr != 0)
+     return true;
+ 
+   /* Assume the entry pc is the base address, or (if zero)
+      the first address of the ranges covering this DIE.  */
+-  Dwarf_Addr start, end;
++  Dwarf_Addr start = 0, end;
+   if (dwarf_ranges (function, 0, addr, &start, &end) >= 0)
+     {
+       if (*addr == 0)
+-- 
+2.17.1
+
