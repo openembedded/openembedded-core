@@ -52,6 +52,7 @@ SRC_URI_MUSL = "file://0001-Use-getenv-when-secure-versions-are-not-available.pa
                file://0018-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
                file://0019-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
                file://0020-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
+               file://0021-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
                "
 
 # Workaround undefined reference to `__stack_chk_fail_local' on qemux86 and qemuppc for musl
