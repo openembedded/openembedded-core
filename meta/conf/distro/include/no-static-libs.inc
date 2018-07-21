@@ -1,4 +1,4 @@
-DISABLE_STATIC = " --disable-static"
+DISABLE_STATIC ?= " --disable-static"
 
 # qemu aborts on unrecognised option
 DISABLE_STATIC_pn-qemu = ""
