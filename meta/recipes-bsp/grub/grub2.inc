@@ -33,7 +33,7 @@ COMPATIBLE_HOST_armv7ve = 'null'
 # configure.ac has code to set this automagically from the target tuple
 # but the OE freeform one (core2-foo-bar-linux) don't work with that.
 
-GRUBPLATFORM_arm = "uboot"
+GRUBPLATFORM_arm = "efi"
 GRUBPLATFORM_aarch64 = "efi"
 GRUBPLATFORM ??= "pc"
 
