@@ -691,9 +691,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
         # verify partition size with wic
         res = runCmd("parted -m %s unit mib p 2>/dev/null" % wicimg,
-                     ignore_status=True,
                      native_sysroot=self.native_sysroot)
-        self.assertEqual(0, res.status)
 
         # parse parted output which looks like this:
         # BYT;\n
