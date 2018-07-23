@@ -133,16 +133,8 @@ RDEPENDS_packagegroup-core-full-cmdline-multiuser = "\
 
 RDEPENDS_packagegroup-core-full-cmdline-sys-services = "\
     at \
-    bzip2 \
     cronie \
-    dbus \
-    elfutils \
-    gzip \
-    less \
     logrotate \
     nfs-utils \
-    pciutils \
     rpcbind \
-    tcp-wrappers \
-    tzdata \
     "
