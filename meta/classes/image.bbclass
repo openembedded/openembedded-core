@@ -141,7 +141,6 @@ python () {
             deps += " %s:%s" % (dep, task)
         return deps
 
-    d.appendVarFlag('do_image', 'depends', extraimage_getdepends('do_populate_lic'))
     d.appendVarFlag('do_image_complete', 'depends', extraimage_getdepends('do_populate_sysroot'))
 
     deps = " " + imagetypes_getdepends(d)

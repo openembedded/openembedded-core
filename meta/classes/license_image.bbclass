@@ -11,10 +11,6 @@ python write_package_manifest() {
         'w+').write(output)
 }
 
-python write_deploy_manifest() {
-    license_deployed_manifest(d)
-}
-
 python license_create_manifest() {
     import oe.packagedata
     from oe.rootfs import image_list_installed_packages
@@ -197,11 +193,6 @@ def get_deployed_dependencies(d):
     depends = list(set([dep[0] for dep
                     in list(taskdata.values())
                     if not dep[0].endswith("-native")]))
-    extra_depends = d.getVar("EXTRA_IMAGEDEPENDS")
-    boot_depends = get_boot_dependencies(d)
-    depends.extend(extra_depends.split())
-    depends.extend(boot_depends)
-    depends = list(set(depends))
 
     # To verify what was deployed it checks the rootfs dependencies against
     # the SSTATE_MANIFESTS for "deploy" task.
@@ -210,15 +201,6 @@ def get_deployed_dependencies(d):
     sstate_manifest_dir = d.getVar("SSTATE_MANIFESTS")
     archs = list(set(d.getVar("SSTATE_ARCHS").split()))
     for dep in depends:
-        # Some recipes have an arch on their own, so we try that first.
-        special_arch = d.getVar("PACKAGE_ARCH_pn-%s" % dep)
-        if special_arch:
-            sstate_manifest_file = os.path.join(sstate_manifest_dir,
-                    "manifest-%s-%s.deploy" % (special_arch, dep))
-            if os.path.exists(sstate_manifest_file):
-                deploy[dep] = sstate_manifest_file
-                continue
-
         for arch in archs:
             sstate_manifest_file = os.path.join(sstate_manifest_dir,
                     "manifest-%s-%s.deploy" % (arch, dep))
@@ -228,38 +210,6 @@ def get_deployed_dependencies(d):
 
     return deploy
 get_deployed_dependencies[vardepsexclude] = "BB_TASKDEPDATA"
-
-def get_boot_dependencies(d):
-    """
-    Return the dependencies from boot tasks
-    """
-
-    depends = []
-    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
-    # Only bootimg includes the depends flag
-    boot_depends_string = d.getVarFlag("do_bootimg", "depends") or ""
-    boot_depends = [dep.split(":")[0] for dep
-                in boot_depends_string.split()
-                if not dep.split(":")[0].endswith("-native")]
-    for dep in boot_depends:
-        info_file = os.path.join(d.getVar("LICENSE_DIRECTORY"),
-                dep, "recipeinfo")
-        # If the recipe and dependency name is the same
-        if os.path.exists(info_file):
-            depends.append(dep)
-        # We need to search for the provider of the dependency
-        else:
-            for taskdep in taskdepdata.values():
-                # The fifth field contains what the task provides
-                if dep in taskdep[4]:
-                    info_file = os.path.join(
-                            d.getVar("LICENSE_DIRECTORY"),
-                            taskdep[0], "recipeinfo")
-                    if os.path.exists(info_file):
-                        depends.append(taskdep[0])
-                        break
-    return depends
-get_boot_dependencies[vardepsexclude] = "BB_TASKDEPDATA"
 
 def get_deployed_files(man_file):
     """
@@ -279,6 +229,10 @@ def get_deployed_files(man_file):
 ROOTFS_POSTPROCESS_COMMAND_prepend = "write_package_manifest; license_create_manifest; "
 do_rootfs[recrdeptask] += "do_populate_lic"
 
-IMAGE_POSTPROCESS_COMMAND_prepend = "write_deploy_manifest; "
-do_image[recrdeptask] += "do_populate_lic"
+python do_populate_lic_deploy() {
+    license_deployed_manifest(d)
+}
+
+addtask populate_lic_deploy before do_build after do_image_complete
+do_populate_lic_deploy[recrdeptask] += "do_populate_lic do_deploy"
 
