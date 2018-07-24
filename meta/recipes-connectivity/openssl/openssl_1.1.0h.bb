@@ -37,10 +37,7 @@ EXTRA_OECONF_append_libc-musl = " -DOPENSSL_NO_ASYNC"
 do_configure () {
 	os=${HOST_OS}
 	case $os in
-	linux-uclibc |\
-	linux-uclibceabi |\
 	linux-gnueabi |\
-	linux-uclibcspe |\
 	linux-gnuspe |\
 	linux-musl*)
 		os=linux
