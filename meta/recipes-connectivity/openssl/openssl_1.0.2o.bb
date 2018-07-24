@@ -210,16 +210,16 @@ do_configure () {
 	perl ./Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} shared --prefix=$useprefix --openssldir=${libdir}/ssl --libdir=$libdirleaf $target
 }
 
-do_compile_prepend_class-target () {
+do_compile () {
+	oe_runmake depend
+	oe_runmake
+}
+
+do_compile_class-target () {
 	sed -i 's/\((OPENSSL=\)".*"/\1"openssl"/' Makefile
 	oe_runmake depend
 	cc_sanitized=`echo "${CC} ${CFLAG}" | sed -e 's,--sysroot=${STAGING_DIR_TARGET},,g' -e 's|${DEBUG_PREFIX_MAP}||g'`
 	oe_runmake CC_INFO="$cc_sanitized"
-}
-
-do_compile () {
-	oe_runmake depend
-	oe_runmake
 }
 
 do_compile_ptest () {
