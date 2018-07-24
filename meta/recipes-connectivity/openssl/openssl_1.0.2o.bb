@@ -71,7 +71,7 @@ PACKAGECONFIG[cryptodev-linux] = "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS,,cryp
 
 # Remove this to enable SSLv3. SSLv3 is defaulted to disabled due to the POODLE
 # vulnerability
-EXTRA_OECONF = "-no-ssl3"
+EXTRA_OECONF = "no-ssl3"
 
 export DIRS = "crypto ssl apps engines"
 export AS = "${CC} -c"
