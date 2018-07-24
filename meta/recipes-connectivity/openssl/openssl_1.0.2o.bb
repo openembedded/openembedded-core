@@ -63,6 +63,9 @@ UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 inherit pkgconfig siteinfo multilib_header ptest relative_symlinks
 
 PACKAGECONFIG ?= "cryptodev-linux"
+PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_class-nativesdk = ""
+
 PACKAGECONFIG[perl] = ",,,"
 PACKAGECONFIG[cryptodev-linux] = "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS,,cryptodev-linux"
 
@@ -87,10 +90,6 @@ CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB
 # Avoid binaries being marked as requiring an executable stack since they don't
 # (and it causes issues with SELinux)
 CFLAG += "-Wa,--noexecstack"
-
-# For target side versions of openssl enable support for OCF Linux driver
-# if they are available.
-CFLAG += "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS"
 
 CFLAG_append_class-native = " -fPIC"
 
@@ -208,7 +207,7 @@ do_configure () {
 		useprefix=/
 	fi
 	libdirleaf="$(echo ${libdir} | sed s:$useprefix::)"
-	perl ./Configure ${EXTRA_OECONF} shared --prefix=$useprefix --openssldir=${libdir}/ssl --libdir=$libdirleaf $target
+	perl ./Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} shared --prefix=$useprefix --openssldir=${libdir}/ssl --libdir=$libdirleaf $target
 }
 
 do_compile_prepend_class-target () {
