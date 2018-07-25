@@ -88,7 +88,7 @@ class BitbakeLayers(OESelftestTestCase):
     def test_bitbakelayers_createlayer(self):
         priority = 10
         layername = 'test-bitbakelayer-layercreate'
-        layerpath = os.path.join(get_bb_var('COREBASE'), layername)
+        layerpath = os.path.join(self.builddir, layername)
         self.assertFalse(os.path.exists(layerpath), '%s should not exist at this point in time' % layerpath)
         result = runCmd('bitbake-layers create-layer --priority=%d %s' % (priority, layerpath))
         self.track_for_cleanup(layerpath)
