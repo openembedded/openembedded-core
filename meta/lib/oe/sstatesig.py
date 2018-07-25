@@ -150,16 +150,23 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         if recipename in self.unlockedrecipes:
             unlocked = True
         else:
+            def get_mc(tid):
+                tid = tid.rsplit('.', 1)[0]
+                if tid.startswith('multiconfig:'):
+                    elems = tid.split(':')
+                    return elems[1]
             def recipename_from_dep(dep):
                 # The dep entry will look something like
                 # /path/path/recipename.bb.task, virtual:native:/p/foo.bb.task,
                 # ...
+
                 fn = dep.rsplit('.', 1)[0]
                 return dataCache.pkg_fn[fn]
 
+            mc = get_mc(fn)
             # If any unlocked recipe is in the direct dependencies then the
             # current recipe should be unlocked as well.
-            depnames = [ recipename_from_dep(x) for x in deps ]
+            depnames = [ recipename_from_dep(x) for x in deps if mc == get_mc(x)]
             if any(x in y for y in depnames for x in self.unlockedrecipes):
                 self.unlockedrecipes[recipename] = ''
                 unlocked = True

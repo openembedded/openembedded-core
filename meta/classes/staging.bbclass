@@ -256,7 +256,7 @@ python extend_recipe_sysroot() {
     workdir = d.getVar("WORKDIR")
     #bb.warn(str(taskdepdata))
     pn = d.getVar("PN")
-
+    mc = d.getVar("BB_CURRENT_MC")
     stagingdir = d.getVar("STAGING_DIR")
     sharedmanifests = d.getVar("COMPONENTS_DIR") + "/manifests"
     recipesysroot = d.getVar("RECIPE_SYSROOT")
@@ -443,7 +443,13 @@ python extend_recipe_sysroot() {
 
     msg_exists = []
     msg_adding = []
+
     for dep in configuredeps:
+        if mc != 'default':
+            # We should not care about other multiconfigs
+            depmc = dep.split(':')[1]
+            if depmc != mc:
+                continue
         c = setscenedeps[dep][0]
         if c not in installed:
             continue
