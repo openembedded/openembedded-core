@@ -15,8 +15,8 @@ SRC_URI = "http://www.mirrorservice.org/sites/lsof.itap.purdue.edu/pub/tools/uni
            file://lsof-remove-host-information.patch \
           "
 
-SRC_URI[md5sum] = "1b9cd34f3fb86856a125abbf2be3a386"
-SRC_URI[sha256sum] = "81ac2fc5fdc944793baf41a14002b6deb5a29096b387744e28f8c30a360a3718"
+SRC_URI[md5sum] = "148ed410cb52e08c2adc0c60f480f11f"
+SRC_URI[sha256sum] = "c9da946a525fbf82ff80090b6d1879c38df090556f3fe0e6d782cb44172450a3"
 
 LOCALSRC = "file://${WORKDIR}/lsof_${PV}/lsof_${PV}_src.tar"
 
