@@ -400,7 +400,7 @@ class QemuRunner:
         return False
 
     def is_alive(self):
-        if not self.runqemu:
+        if not self.runqemu or self.runqemu.poll() is not None:
             return False
         if os.path.isfile(self.qemu_pidfile):
             f = open(self.qemu_pidfile, 'r')
