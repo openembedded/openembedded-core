@@ -38,6 +38,8 @@ else:
     def b(x):
         return x.encode(sys.getfilesystemencoding())
 
+old_prefix = re.compile(b("##DEFAULT_INSTALL_DIR##"))
+
 def get_arch():
     f.seek(0)
     e_ident =f.read(16)
@@ -210,22 +212,19 @@ def change_dl_sysdirs(elf_file_name):
         f.write(sysdirslen)
 
 # MAIN
-if len(sys.argv) < 5:
+if len(sys.argv) < 4:
     sys.exit(-1)
 
 # In python > 3, strings may also contain Unicode characters. So, convert
 # them to bytes
 if sys.version_info < (3,):
-    new_prefix = sys.argv[2]
-    new_dl_path = sys.argv[3]
+    new_prefix = sys.argv[1]
+    new_dl_path = sys.argv[2]
 else:
-    new_prefix = sys.argv[2].encode()
-    new_dl_path = sys.argv[3].encode()
+    new_prefix = sys.argv[1].encode()
+    new_dl_path = sys.argv[2].encode()
 
-executables_list = sys.argv[4:]
-
-old_prefix_ne = b(sys.argv[1])
-old_prefix = re.compile(re.escape(old_prefix_ne));
+executables_list = sys.argv[3:]
 
 for e in executables_list:
     perms = os.stat(e)[stat.ST_MODE]
