@@ -12,6 +12,7 @@ DISTUTILS_INSTALL_ARGS ?= "--root=${D} \
 
 distutils3_do_configure() {
 	if [ "${CLEANBROKEN}" != "1" ] ; then
+		NO_FETCH_BUILD=1 \
 		${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py clean ${DISTUTILS_BUILD_ARGS}
 	fi
 }
