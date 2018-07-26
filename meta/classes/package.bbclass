@@ -58,7 +58,7 @@ PACKAGE_DEPENDS += "rpm-native dwarfsrcfiles-native"
 
 # If your postinstall can execute at rootfs creation time rather than on
 # target but depends on a native/cross tool in order to execute, you need to
-# list that tool in PACKAGE_WRITE_DEPENDS. Target package dependencies belong
+# list that tool in PACKAGE_WRITE_DEPS. Target package dependencies belong
 # in the package dependencies as normal, this is just for native/cross support
 # tools at rootfs build time.
 PACKAGE_WRITE_DEPS ??= ""
