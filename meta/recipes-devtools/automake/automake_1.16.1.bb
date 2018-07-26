@@ -25,6 +25,7 @@ SRC_URI += "file://python-libdir.patch \
             file://new_rt_path_for_test-driver.patch \
             file://automake-replace-w-option-in-shebangs-with-modern-use-warnings.patch \
             file://0001-automake-Add-default-libtool_tag-to-cppasm.patch \
+            file://0001-build-fix-race-in-parallel-builds.patch \
             "
 
 SRC_URI[md5sum] = "83cc2463a4080efd46a72ba2c9f6b8f5"
