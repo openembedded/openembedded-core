@@ -509,7 +509,6 @@ RECIPE_MAINTAINER_pn-opkg-keyrings = "Alejandro del Castillo <alejandro.delcasti
 RECIPE_MAINTAINER_pn-opkg-utils = "Alejandro del Castillo <alejandro.delcastillo@ni.com>"
 RECIPE_MAINTAINER_pn-orc = "Maxin B. John <maxin.john@intel.com>"
 RECIPE_MAINTAINER_pn-os-release = "Ross Burton <ross.burton@intel.com>"
-RECIPE_MAINTAINER_pn-ossp-uuid = "Alexander Kanavin <alex.kanavin@gmail.com>"
 RECIPE_MAINTAINER_pn-ovmf = "Ricardo Neri <ricardo.neri-calderon@linux.intel.com>"
 RECIPE_MAINTAINER_pn-ovmf-shell-image = "Ricardo Neri <ricardo.neri-calderon@linux.intel.com>"
 RECIPE_MAINTAINER_pn-p11-kit = "Alexander Kanavin <alex.kanavin@gmail.com>"
