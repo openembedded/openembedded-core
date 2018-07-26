@@ -65,27 +65,24 @@ class WicTestCase(OESelftestTestCase):
     """Wic test class."""
 
     image_is_ready = False
-    native_sysroot = None
     wicenv_cache = {}
 
     def setUpLocal(self):
         """This code is executed before each test method."""
         self.resultdir = self.builddir + "/wic-tmp/"
         super(WicTestCase, self).setUpLocal()
-        if not self.native_sysroot:
-            Wic.native_sysroot = get_bb_var('STAGING_DIR_NATIVE', 'wic-tools')
 
         # Do this here instead of in setUpClass as the base setUp does some
         # clean up which can result in the native tools built earlier in
         # setUpClass being unavailable.
-        if not Wic.image_is_ready:
+        if not WicTestCase.image_is_ready:
             if get_bb_var('USE_NLS') == 'yes':
                 bitbake('wic-tools')
             else:
                 self.skipTest('wic-tools cannot be built due its (intltool|gettext)-native dependency and NLS disable')
 
             bitbake('core-image-minimal')
-            Wic.image_is_ready = True
+            WicTestCase.image_is_ready = True
 
         rmtree(self.resultdir, ignore_errors=True)
 
@@ -93,6 +90,16 @@ class WicTestCase(OESelftestTestCase):
         """Remove resultdir as it may contain images."""
         rmtree(self.resultdir, ignore_errors=True)
         super(WicTestCase, self).tearDownLocal()
+
+    def _get_image_env_path(self, image):
+        """Generate and obtain the path to <image>.env"""
+        if image not in WicTestCase.wicenv_cache:
+            self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
+            bb_vars = get_bb_vars(['STAGING_DIR', 'MACHINE'], image)
+            stdir = bb_vars['STAGING_DIR']
+            machine = bb_vars['MACHINE']
+            WicTestCase.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
+        return WicTestCase.wicenv_cache[image]
 
 class Wic(WicTestCase):
 
@@ -534,16 +541,6 @@ class Wic2(WicTestCase):
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct.bmap")))
 
-    def _get_image_env_path(self, image):
-        """Generate and obtain the path to <image>.env"""
-        if image not in self.wicenv_cache:
-            self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
-            bb_vars = get_bb_vars(['STAGING_DIR', 'MACHINE'], image)
-            stdir = bb_vars['STAGING_DIR']
-            machine = bb_vars['MACHINE']
-            self.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
-        return self.wicenv_cache[image]
-
     @OETestID(1347)
     def test_image_env(self):
         """Test generation of <image>.env files."""
@@ -683,9 +680,11 @@ class Wic2(WicTestCase):
 
         wicimg = wicout[0]
 
+        native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
+
         # verify partition size with wic
         res = runCmd("parted -m %s unit mib p 2>/dev/null" % wicimg,
-                     native_sysroot=self.native_sysroot)
+                     native_sysroot=native_sysroot)
 
         # parse parted output which looks like this:
         # BYT;\n
