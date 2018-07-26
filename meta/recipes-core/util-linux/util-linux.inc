@@ -206,8 +206,9 @@ do_install_append_class-native () {
 ALTERNATIVE_PRIORITY = "80"
 
 ALTERNATIVE_${PN}  = "dmesg kill more mkswap blockdev pivot_root switch_root"
-ALTERNATIVE_${PN} += "hexdump last lastb logger mesg renice wall fallocate unshare"
+ALTERNATIVE_${PN} += "hexdump last lastb logger mesg renice wall unshare"
 ALTERNATIVE_${PN} += "setsid chrt flock utmpdump eject nologin taskset"
+ALTERNATIVE_${PN}_append_class-target = " fallocate"
 
 ALTERNATIVE_LINK_NAME[dmesg] = "${base_bindir}/dmesg"
 ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
