@@ -1,0 +1,28 @@
+freetype-2.9: Fix potential numeric overflow
+
+[No upstream tracking] -- https://savannah.nongnu.org/bugs/index.php?54023
+
+ttcmap: (tt_cmap2_validate): Fix potential numeric overflow
+
+The dead loop appears in the function tt_cmap2_char_next()
+in "src\sfnt\ttcmap.c" in version 2.9 when "charcode == 256".
+According to the notes, is seems that "subheader" should
+not be NULL when "charcode == 256".
+
+Upstream-Status: Backport [http://git.savannah.gnu.org/cgit/freetype/freetype2.git/commit/src/sfnt/ttcmap.c?id=5bd76524ef786d942b28dc52618aeda3aebfa3d6]
+bug: 54023
+Signed-off-by: Andrej Valek <andrej.valek@siemens.com>
+
+diff --git a/src/sfnt/ttcmap.c b/src/sfnt/ttcmap.c
+index 5afa6ae..8fb9542 100644
+--- a/src/sfnt/ttcmap.c
++++ b/src/sfnt/ttcmap.c
+@@ -358,7 +358,7 @@
+       /* check range within 0..255 */
+       if ( valid->level >= FT_VALIDATE_PARANOID )
+       {
+-        if ( first_code >= 256 || first_code + code_count > 256 )
++        if ( first_code >= 256 || code_count > 256 - first_code )
+           FT_INVALID_DATA;
+       }
+ 
