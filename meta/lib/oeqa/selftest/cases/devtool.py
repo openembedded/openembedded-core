@@ -11,6 +11,70 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer
 from oeqa.utils.commands import get_bb_vars, runqemu, get_test_layer
 from oeqa.core.decorator.oeid import OETestID
 
+oldmetapath = None
+
+def setUpModule():
+    import bb.utils
+
+    global templayerdir
+    templayerdir = tempfile.mkdtemp(prefix='devtoolqa')
+    corecopydir = os.path.join(templayerdir, 'core-copy')
+    bblayers_conf = os.path.join(os.environ['BUILDDIR'], 'conf', 'bblayers.conf')
+    edited_layers = []
+
+    # We need to take a copy of the meta layer so we can modify it and not
+    # have any races against other tests that might be running in parallel
+    # however things like COREBASE mean that you can't just copy meta, you
+    # need the whole repository.
+    def bblayers_edit_cb(layerpath, canonical_layerpath):
+        global oldmetapath
+        if not canonical_layerpath.endswith('/'):
+            # This helps us match exactly when we're using this path later
+            canonical_layerpath += '/'
+        if not edited_layers and canonical_layerpath.endswith('/meta/'):
+            edited_layers.append(layerpath)
+            oldmetapath = layerpath
+            result = runCmd('git rev-parse --show-toplevel', cwd=canonical_layerpath)
+            oldreporoot = result.output.rstrip()
+            newmetapath = os.path.join(corecopydir, os.path.relpath(oldmetapath, oldreporoot))
+            runCmd('git clone %s %s' % (oldreporoot, corecopydir), cwd=templayerdir)
+            # Now we need to copy any modified files
+            # You might ask "why not just copy the entire tree instead of
+            # cloning and doing this?" - well, the problem with that is
+            # TMPDIR or an equally large subdirectory might exist
+            # under COREBASE and we don't want to copy that, so we have
+            # to be selective.
+            result = runCmd('git status --porcelain', cwd=oldreporoot)
+            for line in result.output.splitlines():
+                if line.startswith(' M ') or line.startswith('?? '):
+                    relpth = line.split()[1]
+                    pth = os.path.join(oldreporoot, relpth)
+                    if pth.startswith(canonical_layerpath):
+                        if relpth.endswith('/'):
+                            destdir = os.path.join(corecopydir, relpth)
+                            shutil.copytree(pth, destdir)
+                        else:
+                            destdir = os.path.join(corecopydir, os.path.dirname(relpth))
+                            bb.utils.mkdirhier(destdir)
+                            shutil.copy2(pth, destdir)
+            return newmetapath
+        else:
+            return layerpath
+    bb.utils.edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
+
+def tearDownModule():
+    if oldmetapath:
+        edited_layers = []
+        def bblayers_edit_cb(layerpath, canonical_layerpath):
+            if not edited_layers and canonical_layerpath.endswith('/meta'):
+                edited_layers.append(layerpath)
+                return oldmetapath
+            else:
+                return layerpath
+        bblayers_conf = os.path.join(os.environ['BUILDDIR'], 'conf', 'bblayers.conf')
+        bb.utils.edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
+    shutil.rmtree(templayerdir)
+
 class DevtoolBase(OESelftestTestCase):
 
     @classmethod
