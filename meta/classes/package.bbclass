@@ -1557,12 +1557,12 @@ python package_do_filedeps() {
         for file in provides:
             provides_files[pkg].append(file)
             key = "FILERPROVIDES_" + file + "_" + pkg
-            d.setVar(key, " ".join(provides[file]))
+            d.appendVar(key, " " + " ".join(provides[file]))
 
         for file in requires:
             requires_files[pkg].append(file)
             key = "FILERDEPENDS_" + file + "_" + pkg
-            d.setVar(key, " ".join(requires[file]))
+            d.appendVar(key, " " + " ".join(requires[file]))
 
     for pkg in requires_files:
         d.setVar("FILERDEPENDSFLIST_" + pkg, " ".join(requires_files[pkg]))
