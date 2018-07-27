@@ -43,6 +43,12 @@ def testsdk_main(d):
         d.expand("${SDK_DEPLOY}/${TOOLCHAIN_OUTPUTNAME}.host.manifest"))
 
     processes = d.getVar("TESTIMAGE_NUMBER_THREADS") or d.getVar("BB_NUMBER_THREADS")
+    if processes:
+        try:
+            import testtools, subunit
+        except ImportError:
+            bb.warn("Failed to import testtools or subunit, the testcases will run serially")
+            processes = None
 
     sdk_dir = d.expand("${WORKDIR}/testimage-sdk/")
     bb.utils.remove(sdk_dir, True)
