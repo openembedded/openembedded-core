@@ -2,13 +2,13 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "8.1.0"
+PV = "8.2.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "8.1.0"
+BINV = "8.2.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-8.1:${FILE_DIRNAME}/gcc-8.1/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-8.2:${FILE_DIRNAME}/gcc-8.2/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native"
@@ -73,10 +73,9 @@ SRC_URI = "\
            ${BACKPORTS} \
 "
 BACKPORTS = "\
-           file://0041-arm-PR-target-86003-build-failures-with-with-cpu-xsc.patch \
 "
-SRC_URI[md5sum] = "65f7c65818dc540b3437605026d329fc"
-SRC_URI[sha256sum] = "1d1866f992626e61349a1ccd0b8d5253816222cdc13390dcfaa74b093aa2b153"
+SRC_URI[md5sum] = "4ab282f414676496483b3e1793d07862"
+SRC_URI[sha256sum] = "196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
