@@ -379,17 +379,24 @@ class PackageManager(object, metaclass=ABCMeta):
 
     def _initialize_intercepts(self):
         bb.note("Initializing intercept dir for %s" % self.target_rootfs)
-        postinst_intercepts_dir = self.d.getVar("POSTINST_INTERCEPTS_DIR")
-        if not postinst_intercepts_dir:
-            postinst_intercepts_dir = self.d.expand("${COREBASE}/scripts/postinst-intercepts")
         # As there might be more than one instance of PackageManager operating at the same time
         # we need to isolate the intercept_scripts directories from each other,
         # hence the ugly hash digest in dir name.
-        self.intercepts_dir = os.path.join(self.d.getVar('WORKDIR'),
-                                      "intercept_scripts-%s" %(hashlib.sha256(self.target_rootfs.encode()).hexdigest()) )
+        self.intercepts_dir = os.path.join(self.d.getVar('WORKDIR'), "intercept_scripts-%s" %
+                                           (hashlib.sha256(self.target_rootfs.encode()).hexdigest()))
 
+        postinst_intercepts = (self.d.getVar("POSTINST_INTERCEPTS") or "").split()
+        if not postinst_intercepts:
+            postinst_intercepts_path = self.d.getVar("POSTINST_INTERCEPTS_PATH")
+            if not postinst_intercepts_path:
+                postinst_intercepts_path = self.d.getVar("POSTINST_INTERCEPTS_DIR") or self.d.expand("${COREBASE}/scripts/postinst-intercepts")
+            postinst_intercepts = oe.path.which_wild('*', postinst_intercepts_path)
+
+        bb.debug(1, 'Collected intercepts:\n%s' % ''.join('  %s\n' % i for i in postinst_intercepts))
         bb.utils.remove(self.intercepts_dir, True)
-        shutil.copytree(postinst_intercepts_dir, self.intercepts_dir)
+        bb.utils.mkdirhier(self.intercepts_dir)
+        for intercept in postinst_intercepts:
+            bb.utils.copyfile(intercept, os.path.join(self.intercepts_dir, os.path.basename(intercept)))
 
     @abstractmethod
     def _handle_intercept_failure(self, failed_script):
