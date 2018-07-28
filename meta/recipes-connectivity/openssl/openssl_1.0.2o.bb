@@ -72,9 +72,6 @@ PACKAGECONFIG[cryptodev-linux] = "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS,,cryp
 # vulnerability
 EXTRA_OECONF = "no-ssl3"
 
-export DIRS = "crypto ssl apps engines"
-export AS = "${CC} -c"
-export EX_LIBS = "-lgcc -ldl"
 export OE_LDFLAGS = "${LDFLAGS}"
 
 # openssl fails with ccache: https://bugzilla.yoctoproject.org/show_bug.cgi?id=12810
@@ -222,9 +219,6 @@ do_compile_class-target () {
 }
 
 do_compile_ptest () {
-	# build dependencies for test directory too
-	export DIRS="$DIRS test"
-	oe_runmake depend
 	oe_runmake buildtest
 }
 
