@@ -187,6 +187,10 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             self.tc.logger.error("You have buildhistory enabled already and this isn't recommended for selftest, please disable it first.")
             raise OEQAPreRun
 
+        if "rm_work.bbclass" in self.tc.td["BBINCLUDED"]:
+            self.tc.logger.error("You have rm_work enabled which isn't recommended while running oe-selftest. Please disable it before continuing.")
+            raise OEQAPreRun
+
         if "PRSERV_HOST" in self.tc.td:
             self.tc.logger.error("Please unset PRSERV_HOST in order to run oe-selftest")
             raise OEQAPreRun
