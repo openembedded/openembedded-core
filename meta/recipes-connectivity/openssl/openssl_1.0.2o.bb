@@ -89,10 +89,6 @@ CFLAG += "-Wa,--noexecstack"
 
 CFLAG_append_class-native = " -fPIC"
 
-do_configure_prepend_darwin () {
-	sed -i -e '/version-script=openssl\.ld/d' Configure
-}
-
 do_configure () {
 	# The crypto_use_bigint patch means that perl's bignum module needs to be
 	# installed, but some distributions (for example Fedora 23) don't ship it by
@@ -189,9 +185,6 @@ do_configure () {
 		;;
 	linux-sparc)
 		target=linux-sparcv8
-		;;
-	darwin-i386)
-		target=darwin-i386-cc
 		;;
 	esac
 
