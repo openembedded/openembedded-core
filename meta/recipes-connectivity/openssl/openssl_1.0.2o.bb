@@ -43,6 +43,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://Use-SHA256-not-MD5-as-default-digest.patch \
            file://0001-Fix-build-with-clang-using-external-assembler.patch \
            file://0001-openssl-force-soft-link-to-avoid-rare-race.patch \
+           file://0001-allow-manpages-to-be-disabled.patch \
            "
 
 SRC_URI_append_class-target = " \
@@ -59,18 +60,21 @@ SRC_URI[sha256sum] = "ec3f5c9714ba0fd45cb4e087301eb1336c317e0d20b575a125050470e8
 
 UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 
-inherit pkgconfig siteinfo multilib_header ptest relative_symlinks
+inherit pkgconfig siteinfo multilib_header ptest relative_symlinks manpages
 
 PACKAGECONFIG ?= "cryptodev-linux"
 PACKAGECONFIG_class-native = ""
 PACKAGECONFIG_class-nativesdk = ""
 
-PACKAGECONFIG[perl] = ",,,"
 PACKAGECONFIG[cryptodev-linux] = "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS,,cryptodev-linux"
+PACKAGECONFIG[manpages] = ",,,"
+PACKAGECONFIG[perl] = ",,,"
 
 # Remove this to enable SSLv3. SSLv3 is defaulted to disabled due to the POODLE
 # vulnerability
 EXTRA_OECONF = "no-ssl3"
+
+EXTRA_OEMAKE = "${@bb.utils.contains('PACKAGECONFIG', 'manpages', '', 'OE_DISABLE_MANPAGES=1', d)}"
 
 export OE_LDFLAGS = "${LDFLAGS}"
 
