@@ -1021,7 +1021,7 @@ python split_and_strip_files () {
                 #  c) Track any hardlinks between files so that we can reconstruct matching debug file hardlinks
 
                 # Use a reference of device ID and inode number to identify files
-                file_reference = checkelf[file]
+                file_reference = checkelf[file][1]
                 if file_reference in inodes:
                     os.unlink(file)
                     os.link(inodes[file_reference][0], file)
