@@ -1,5 +1,7 @@
 require libtool-${PV}.inc
 
+SRC_URI += "file://multilib.patch"
+
 RDEPENDS_${PN} += "bash"
 
 #
