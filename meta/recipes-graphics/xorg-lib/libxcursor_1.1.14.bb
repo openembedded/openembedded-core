@@ -16,6 +16,8 @@ BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
 
+SRC_URI += "file://CVE-2017-16612.patch"
+
 XORG_PN = "libXcursor"
 
 SRC_URI[md5sum] = "1e7c17afbbce83e2215917047c57d1b3"
