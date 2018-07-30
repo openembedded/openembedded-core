@@ -1,6 +1,7 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.core.decorator.oeid import OETestID
-from oeqa.utils.commands import bitbake, get_bb_vars
+from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var
+import stat
 import subprocess, os
 import oe.path
 
@@ -84,3 +85,15 @@ class VersionOrdering(OESelftestTestCase):
             status = subprocess.call(command, env=env)
             self.assertIn(status, (99, 100, 101))
             self.assertEqual(status - 100, sort, "%s %s (%d) failed" % (ver1, ver2, sort))
+
+class PackageTests(OESelftestTestCase):
+    # Verify that a recipe which sets up hardlink files has those preserved into split packages
+    def test_preserve_hardlinks(self):
+        result = bitbake("selftest-hardlink")
+
+        dest = get_bb_var('PKGDEST', 'selftest-hardlink')
+        bindir = get_bb_var('bindir', 'selftest-hardlink')
+
+        # Recipe creates 4 hardlinked files, there is a copy in package/ and a copy in packages-split/
+        # so expect 8 in total.
+        self.assertEqual(os.stat(dest + "/selftest-hardlink" + bindir + "/hello").st_nlink, 8)
