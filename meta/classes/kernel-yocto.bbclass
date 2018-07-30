@@ -140,6 +140,8 @@ do_kernel_metadata() {
 			includes="$includes -I${WORKDIR}/$f/kernel-meta"
 	        elif [ -d "${WORKDIR}/$f" ]; then
 			includes="$includes -I${WORKDIR}/$f"
+		elif [ -d "${WORKDIR}/../oe-local-files/$f" ]; then
+			includes="$includes -I${WORKDIR}/../oe-local-files/$f"
 		fi
 	done
 	for s in ${sccs} ${patches}; do
