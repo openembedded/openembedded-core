@@ -8,7 +8,7 @@ class SyslogTest(OERuntimeTestCase):
 
     @OETestID(201)
     @OETestDepends(['ssh.SSHTest.test_ssh'])
-    @OEHasPackage(["busybox-syslog", "sysklogd"])
+    @OEHasPackage(["busybox-syslog", "sysklogd", "rsyslog", "syslog-ng"])
     def test_syslog_running(self):
         cmd = '%s  | grep -i [s]yslogd' % self.tc.target_cmds['ps']
         status, output = self.target.run(cmd)
@@ -45,7 +45,7 @@ class SyslogTestConfig(OERuntimeTestCase):
 
     @OETestID(202)
     @OETestDepends(['oe_syslog.SyslogTestConfig.test_syslog_logger'])
-    @OEHasPackage(["!sysklogd", "busybox"])
+    @OEHasPackage(["busybox-syslog"])
     @skipIfDataVar('VIRTUAL-RUNTIME_init_manager', 'systemd',
                    'Not appropiate for systemd image')
     def test_syslog_startup_config(self):
