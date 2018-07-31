@@ -101,7 +101,6 @@ CONFIGURE_FILES = "meson.build"
 meson_do_configure() {
     bbnote Executing meson ${EXTRA_OEMESON}...
     if ! meson ${MESONOPTS} "${MESON_SOURCEPATH}" "${B}" ${MESON_CROSS_FILE} ${EXTRA_OEMESON}; then
-        cat ${B}/meson-logs/meson-log.txt
         bbfatal_log meson failed
     fi
 }
