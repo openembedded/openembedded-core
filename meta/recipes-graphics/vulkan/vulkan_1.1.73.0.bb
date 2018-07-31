@@ -9,11 +9,11 @@ SECTION = "libs"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=99c647ca3d4f6a4b9d8628f757aad156 \
-                    file://loader/loader.c;endline=25;md5=a87cd5442291c23d1fce4eece4cfde9d"
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers.git;branch=sdk-1.0.65 \
+                    file://loader/loader.c;endline=25;md5=151b392f46568aaedb4ad22b246237ec"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers.git;branch=sdk-1.1.73 \
            file://demos-Don-t-build-tri-or-cube.patch \
            "
-SRCREV = "73486a1a169d862d5210e2ad520d95319a2383fa"
+SRCREV = "5998d6f444a85e6381b7a089ebf3f9e86482a31d"
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
@@ -34,3 +34,4 @@ PACKAGECONFIG[x11] = "-DBUILD_WSI_XLIB_SUPPORT=ON -DBUILD_WSI_XCB_SUPPORT=ON -DD
 PACKAGECONFIG[wayland] = "-DBUILD_WSI_WAYLAND_SUPPORT=ON, -DBUILD_WSI_WAYLAND_SUPPORT=OFF, wayland"
 
 RRECOMMENDS_${PN} = "mesa-vulkan-drivers"
+INSANE_SKIP_${PN}-dev += "dev-elf"
