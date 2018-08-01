@@ -24,11 +24,7 @@ fi
 # /dev/tty[A-z]), otherwise we confuse e.g. the eclipse launcher which tries do
 # use ssh
 case $(tty 2>/dev/null) in
-	# The first invocation of resize verifies that it exists, the second
-	# does the actual resizing. This is due to that resize uses stderr to
-	# determine the size of the tty, which does not work if it is redirected
-	# to /dev/null.
-	/dev/tty[A-z]*) resize >/dev/null 2>&1 && resize >/dev/null;;
+	/dev/tty[A-z]*) [ -x @BINDIR@/resize ] && @BINDIR@/resize >/dev/null;;
 esac
 
 export PATH PS1 OPIEDIR QPEDIR QTDIR EDITOR TERM
