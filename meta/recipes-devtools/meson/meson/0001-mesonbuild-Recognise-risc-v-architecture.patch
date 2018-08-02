@@ -1,0 +1,27 @@
+From 85bb96909d2024769d8e758538a7e8e2004dbb4d Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 14 Jul 2018 13:03:39 -0700
+Subject: [PATCH] mesonbuild: Recognise risc-v architecture
+
+Upstream-Status: Backport [https://github.com/mesonbuild/meson/commit/6fafbad6d5ba591075a72e4726af647cece7020d]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ mesonbuild/environment.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
+index a0580a21..b2041424 100644
+--- a/mesonbuild/environment.py
++++ b/mesonbuild/environment.py
+@@ -83,6 +83,8 @@ known_cpu_families = (
+     'ppc',
+     'ppc64',
+     'ppc64le',
++    'riscv32',
++    'riscv64',
+     'sparc64',
+     'x86',
+     'x86_64'
+-- 
+2.18.0
+
