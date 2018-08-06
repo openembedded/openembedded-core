@@ -36,6 +36,7 @@ SRC_URI = "\
      file://0014-Detect-64-bit-MIPS-targets.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://CVE-2017-17124.patch \
+     file://CVE-2017-14930.patch \
 "
 S  = "${WORKDIR}/git"
 
