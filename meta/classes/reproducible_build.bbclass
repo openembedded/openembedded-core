@@ -56,7 +56,7 @@ def get_source_date_epoch_known_files(d, path):
     for file in known_files:
         filepath = os.path.join(path,file)
         if os.path.isfile(filepath):
-            mtime = int(os.path.getmtime(filepath))
+            mtime = int(os.lstat(filepath).st_mtime)
             # There may be more than one "known_file" present, if so, use the youngest one
             if mtime > source_date_epoch:
                 source_date_epoch = mtime
@@ -114,7 +114,7 @@ python do_create_source_date_epoch_stamp() {
             for fname in files:
                 filename = os.path.join(root, fname)
                 try:
-                    mtime = int(os.path.getmtime(filename))
+                    mtime = int(os.lstat(filename).st_mtime)
                 except ValueError:
                     mtime = 0
                 if mtime > source_date_epoch:
