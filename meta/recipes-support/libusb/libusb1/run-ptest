@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo
+echo "---------------------------- libusb1 tests ---------------------------"
+echo
+
+./stress | tr '\n' ' '  | \
+sed 's/Starting test run: \([a-zA-Z_]*\)\.\.\. \([a-zA-Z_]*\) (.) /\2 \1\n/g' | \
+sed '$d' | \
+sed '{
+	s/^Success/PASS:/g
+	s/^Failure/FAIL:/g
+	s/^Error/FAIL:/g
+	s/^Skip/SKIP:/g
+}' 
