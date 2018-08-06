@@ -16,11 +16,9 @@ UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
 
 SRC_URI = "git://github.com/file/file.git \
         file://debian-742262.patch \
-        file://CVE-2018-10360.patch \
-        file://fix-bogus-magic.patch \
         "
 
-SRCREV = "219846094c7593e27453e62855e61181089c48cf"
+SRCREV = "315cef2f699da3c31a54bd3c6c6070680fbaf1f5"
 S = "${WORKDIR}/git"
 
 inherit autotools
