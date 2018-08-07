@@ -892,6 +892,18 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False):
             evdata['found'].append( (sq_fn[task], sq_task[task], sq_hash[task], sstatefile ) )
         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
 
+    # Print some summary statistics about the current task completion and how much sstate
+    # reuse there was. Avoid divide by zero errors.
+    total = len(sq_fn)
+    currentcount = d.getVar("BB_SETSCENE_STAMPCURRENT_COUNT") or 0
+    complete = 0
+    if currentcount:
+        complete = (len(ret) + currentcount) / (total + currentcount) * 100
+    match = 0
+    if total:
+        match = len(ret) / total * 100
+    bb.plain("Sstate summary: Wanted %d Found %d Missed %d Current %d (%d%% match, %d%% complete)" % (total, len(ret), len(missed), currentcount, match, complete))
+
     if hasattr(bb.parse.siggen, "checkhashes"):
         bb.parse.siggen.checkhashes(missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d)
 
