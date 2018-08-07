@@ -10,8 +10,8 @@ SRC_URI = "${GNUPG_MIRROR}/npth/npth-${PV}.tar.bz2 \
            file://pkgconfig.patch \
           "
 
-SRC_URI[md5sum] = "9ba2dc4302d2f32c66737c43ed191b1b"
-SRC_URI[sha256sum] = "294a690c1f537b92ed829d867bee537e46be93fbd60b16c04630fbbfcd9db3c2"
+SRC_URI[md5sum] = "375d1a15ad969f32d25f1a7630929854"
+SRC_URI[sha256sum] = "1393abd9adcf0762d34798dc34fdcf4d0d22a8410721e76f1e3afcd1daa4e2d1"
 
 BINCONFIG = "${bindir}/npth-config"
 
