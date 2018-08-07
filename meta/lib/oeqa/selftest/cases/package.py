@@ -89,7 +89,7 @@ class VersionOrdering(OESelftestTestCase):
 class PackageTests(OESelftestTestCase):
     # Verify that a recipe which sets up hardlink files has those preserved into split packages
     def test_preserve_hardlinks(self):
-        result = bitbake("selftest-hardlink")
+        result = bitbake("selftest-hardlink -c package")
 
         dest = get_bb_var('PKGDEST', 'selftest-hardlink')
         bindir = get_bb_var('bindir', 'selftest-hardlink')
