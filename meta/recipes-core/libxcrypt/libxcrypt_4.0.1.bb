@@ -24,9 +24,4 @@ S = "${WORKDIR}/git"
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE} -std=gnu99"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir}"
 
-python () {
-    if not bb.data.inherits_class('nativesdk', d):
-        raise bb.parse.SkipRecipe("Recipe only applies in nativesdk case for now")
-}
-
 BBCLASSEXTEND = "nativesdk"
