@@ -1,7 +1,7 @@
-From 1a53084249d9dae1ef4281246efc899c8f9d63ed Mon Sep 17 00:00:00 2001
+From 324aa1ffbf85ebd06b54f228604d6651895c1eea Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:16:38 +0000
-Subject: [PATCH 08/27] __ieee754_sqrt{,f} are now inline functions and call
+Subject: [PATCH 09/30] __ieee754_sqrt{,f} are now inline functions and call
  out __slow versions
 
 Upstream-Status: Pending
@@ -383,5 +383,5 @@ index 9d175122a8..10de1f0cc3 100644
 +
  strong_alias (__ieee754_sqrtf, __sqrtf_finite)
 -- 
-2.16.1
+2.18.0
 

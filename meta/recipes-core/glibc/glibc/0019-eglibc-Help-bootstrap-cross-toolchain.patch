@@ -1,7 +1,7 @@
-From fcfa19b69e8749477022161a808a201807ef72ec Mon Sep 17 00:00:00 2001
+From 6b8ee1ae86f8b9a49f751ab211002c83744356a6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:49:28 +0000
-Subject: [PATCH 18/27] eglibc: Help bootstrap cross toolchain
+Subject: [PATCH 19/30] eglibc: Help bootstrap cross toolchain
 
 Taken from EGLIBC, r1484 + r1525
 
@@ -29,7 +29,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  create mode 100644 include/stubs-bootstrap.h
 
 diff --git a/Makefile b/Makefile
-index bea4e27f8d..8c83cfadc6 100644
+index d3f25a525a..ab383867e2 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -70,9 +70,18 @@ subdir-dirs = include
@@ -52,7 +52,7 @@ index bea4e27f8d..8c83cfadc6 100644
  ifeq (yes,$(build-shared))
  headers += gnu/lib-names.h
  endif
-@@ -152,6 +161,16 @@ others: $(common-objpfx)testrun.sh
+@@ -195,6 +204,16 @@ others: $(common-objpfx)testrun.sh
  
  subdir-stubs := $(foreach dir,$(subdirs),$(common-objpfx)$(dir)/stubs)
  
@@ -69,7 +69,7 @@ index bea4e27f8d..8c83cfadc6 100644
  ifndef abi-variants
  installed-stubs = $(inst_includedir)/gnu/stubs.h
  else
-@@ -178,6 +197,7 @@ $(inst_includedir)/gnu/stubs.h: $(+force)
+@@ -221,6 +240,7 @@ $(inst_includedir)/gnu/stubs.h: $(+force)
  
  install-others-nosubdir: $(installed-stubs)
  endif
@@ -96,5 +96,5 @@ index 0000000000..1d2b669aff
 +   EGLIBC subdir 'stubs' make targets, on every .o file in EGLIBC, but
 +   an empty stubs.h like this will do fine for GCC.  */
 -- 
-2.16.1
+2.18.0
 

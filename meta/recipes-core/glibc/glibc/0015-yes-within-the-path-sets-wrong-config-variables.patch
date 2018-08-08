@@ -1,7 +1,7 @@
-From 62f44ce3dd01a257cf67116e355492cb1659a917 Mon Sep 17 00:00:00 2001
+From be9965d0e53db1d7fe9419710a84c75526a18cc0 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:31:06 +0000
-Subject: [PATCH 14/27] 'yes' within the path sets wrong config variables
+Subject: [PATCH 15/30] 'yes' within the path sets wrong config variables
 
 It seems that the 'AC_EGREP_CPP(yes...' example is quite popular
 but being such a short word to grep it is likely to produce
@@ -259,5 +259,5 @@ index f9cba6e15d..b21f72f1e4 100644
      ], libc_cv_ppc64_def_call_elf=yes, libc_cv_ppc64_def_call_elf=no)])
    if test $libc_cv_ppc64_def_call_elf = no; then
 -- 
-2.16.1
+2.18.0
 

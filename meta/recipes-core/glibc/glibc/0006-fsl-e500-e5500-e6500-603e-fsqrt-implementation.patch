@@ -1,31 +1,31 @@
-From 661adfe9c220d10617bf6bb283827471c3956b01 Mon Sep 17 00:00:00 2001
+From b28e06d87a43e6aacff5624aaec75106599edec8 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:01:50 +0000
-Subject: [PATCH 05/27] fsl e500/e5500/e6500/603e fsqrt implementation
+Subject: [PATCH 06/30] fsl e500/e5500/e6500/603e fsqrt implementation
 
 Upstream-Status: Pending
 Signed-off-by: Edmar Wienskoski <edmar@freescale.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c        | 134 +++++++++++++++++++++
- sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c       | 101 ++++++++++++++++
- sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrt.c      | 134 +++++++++++++++++++++
- sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrtf.c     | 101 ++++++++++++++++
- sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrt.c       | 134 +++++++++++++++++++++
- sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrtf.c      | 101 ++++++++++++++++
- sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrt.c       | 134 +++++++++++++++++++++
- sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrtf.c      | 101 ++++++++++++++++
- sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c       | 134 +++++++++++++++++++++
- sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c      | 101 ++++++++++++++++
- sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrt.c       | 134 +++++++++++++++++++++
- sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrtf.c      | 101 ++++++++++++++++
- .../sysv/linux/powerpc/powerpc32/603e/fpu/Implies  |   1 +
- .../linux/powerpc/powerpc32/e300c3/fpu/Implies     |   2 +
- .../linux/powerpc/powerpc32/e500mc/fpu/Implies     |   1 +
- .../sysv/linux/powerpc/powerpc32/e5500/fpu/Implies |   1 +
- .../sysv/linux/powerpc/powerpc32/e6500/fpu/Implies |   1 +
- .../sysv/linux/powerpc/powerpc64/e5500/fpu/Implies |   1 +
- .../sysv/linux/powerpc/powerpc64/e6500/fpu/Implies |   1 +
+ sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c   | 134 ++++++++++++++++++
+ sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c  | 101 +++++++++++++
+ sysdeps/powerpc/powerpc32/e500mc/fpu/e_sqrt.c | 134 ++++++++++++++++++
+ .../powerpc/powerpc32/e500mc/fpu/e_sqrtf.c    | 101 +++++++++++++
+ sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrt.c  | 134 ++++++++++++++++++
+ sysdeps/powerpc/powerpc32/e5500/fpu/e_sqrtf.c | 101 +++++++++++++
+ sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrt.c  | 134 ++++++++++++++++++
+ sysdeps/powerpc/powerpc32/e6500/fpu/e_sqrtf.c | 101 +++++++++++++
+ sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrt.c  | 134 ++++++++++++++++++
+ sysdeps/powerpc/powerpc64/e5500/fpu/e_sqrtf.c | 101 +++++++++++++
+ sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrt.c  | 134 ++++++++++++++++++
+ sysdeps/powerpc/powerpc64/e6500/fpu/e_sqrtf.c | 101 +++++++++++++
+ .../linux/powerpc/powerpc32/603e/fpu/Implies  |   1 +
+ .../powerpc/powerpc32/e300c3/fpu/Implies      |   2 +
+ .../powerpc/powerpc32/e500mc/fpu/Implies      |   1 +
+ .../linux/powerpc/powerpc32/e5500/fpu/Implies |   1 +
+ .../linux/powerpc/powerpc32/e6500/fpu/Implies |   1 +
+ .../linux/powerpc/powerpc64/e5500/fpu/Implies |   1 +
+ .../linux/powerpc/powerpc64/e6500/fpu/Implies |   1 +
  19 files changed, 1418 insertions(+)
  create mode 100644 sysdeps/powerpc/powerpc32/603e/fpu/e_sqrt.c
  create mode 100644 sysdeps/powerpc/powerpc32/603e/fpu/e_sqrtf.c
@@ -1580,5 +1580,5 @@ index 0000000000..04ff8cc181
 @@ -0,0 +1 @@
 +powerpc/powerpc64/e6500/fpu
 -- 
-2.16.1
+2.18.0
 

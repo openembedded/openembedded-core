@@ -1,13 +1,25 @@
-localedef --add-to-archive uses a hard-coded locale path which doesn't exist in
-normal use, and there's no way to pass an alternative filename.
+From 5a6f019ded549faaf42478f6f96428dc7c20606e Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 3 Aug 2018 09:42:06 -0700
+Subject: [PATCH 29/30] localedef --add-to-archive uses a hard-coded locale
+ path
 
-Add a fallback of $LOCALEARCHIVE from the environment, and allow creation of new locale archives that are not the system archive.
+it doesn't exist in normal use, and there's no way to pass an
+alternative filename.
+
+Add a fallback of $LOCALEARCHIVE from the environment, and allow
+creation of new locale archives that are not the system archive.
 
 Upstream-Status: Inappropriate (OE-specific)
+
 Signed-off-by: Ross Burton <ross.burton@intel.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ locale/programs/locarchive.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/locale/programs/locarchive.c b/locale/programs/locarchive.c
-index ca332a34..6b7ba9b2 100644
+index ca332a345f..6b7ba9b2e3 100644
 --- a/locale/programs/locarchive.c
 +++ b/locale/programs/locarchive.c
 @@ -569,10 +569,13 @@ open_archive (struct locarhandle *ah, bool readonly)
@@ -37,3 +49,6 @@ index ca332a34..6b7ba9b2 100644
  	    {
  	      if (readonly)
  		{
+-- 
+2.18.0
+

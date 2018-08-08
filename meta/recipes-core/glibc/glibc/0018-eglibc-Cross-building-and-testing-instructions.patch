@@ -1,15 +1,15 @@
-From 897430bbb65a0f22284d7957206b5fd4efd6607f Mon Sep 17 00:00:00 2001
+From 448222134c9a0b147c4598f288ccc9d045b873c4 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:42:58 +0000
-Subject: [PATCH 17/27] eglibc: Cross building and testing instructions
+Subject: [PATCH 18/30] eglibc: Cross building and testing instructions
 
 Ported from eglibc
 Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- GLIBC.cross-building | 383 +++++++++++++++++++++++++++++++++++++++++++++++++++
- GLIBC.cross-testing  | 205 +++++++++++++++++++++++++++
+ GLIBC.cross-building | 383 +++++++++++++++++++++++++++++++++++++++++++
+ GLIBC.cross-testing  | 205 +++++++++++++++++++++++
  2 files changed, 588 insertions(+)
  create mode 100644 GLIBC.cross-building
  create mode 100644 GLIBC.cross-testing
@@ -615,5 +615,5 @@ index 0000000000..b67b468466
 +  simply place copies of these libraries in the top GLIBC build
 +  directory.
 -- 
-2.16.1
+2.18.0
 
