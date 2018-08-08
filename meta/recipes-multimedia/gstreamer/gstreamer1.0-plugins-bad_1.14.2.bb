@@ -9,8 +9,8 @@ SRC_URI = " \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
     file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running.patch \
 "
-SRC_URI[md5sum] = "c2f963501fc6afc084c418894425dcfd"
-SRC_URI[sha256sum] = "2a77c6908032aafdf2cd2e5823fec948f16a25c2d1497a953828d762dc20d61a"
+SRC_URI[md5sum] = "76826c564bed5511982d7fb6137d9875"
+SRC_URI[sha256sum] = "34fab7da70994465a64468330b2168a4a0ed90a7de7e4c499b6d127c6c1b1eaf"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
