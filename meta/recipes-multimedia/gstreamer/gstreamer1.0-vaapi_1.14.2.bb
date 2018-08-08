@@ -12,8 +12,8 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/${REALPN}/${REALPN}-${PV}.tar.x
            file://0001-gst-vaapi-Makefile.am-Add-EGL_CFLAGS-to-libgstvaapi-.patch \
           "
 
-SRC_URI[md5sum] = "38c5b2390797b7a0a269a5ab6c8cbe8f"
-SRC_URI[sha256sum] = "585c3ddb0c39220de0a33e5d0ed6196a108b8407ec3538d7c64617713b4434e8"
+SRC_URI[md5sum] = "12ee9c16dfa0bb1808c76683e1c9a328"
+SRC_URI[sha256sum] = "7f1064e27f5abd3a42ef66b425f1a2b9dbae7748c81bd9d090ce52a1aaf30d8a"
 
 S = "${WORKDIR}/${REALPN}-${PV}"
 DEPENDS = "libva gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad"
