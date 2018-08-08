@@ -3,13 +3,13 @@ DESCRIPTION = "Forked code from glibc libary to extract only crypto part."
 HOMEPAGE = "https://github.com/besser82/libxcrypt"
 SECTION = "libs"
 LICENSE = "LGPLv2.1"
-LIC_FILES_CHKSUM ?= "file://LICENSING;md5=d1cc18f512ded3bd6000f3729f31be08 \
+LIC_FILES_CHKSUM ?= "file://LICENSING;md5=cb3ca4cabd2447a37bf186fad6f79852 \
       file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
 "
 
-inherit autotools
+inherit autotools pkgconfig
 
-SRCREV ?= "089479bb24acd168613757a6f12d63caa95416b4"
+SRCREV ?= "21b455b68baad279e6a3936faced16c5e5634376"
 SRCBRANCH ?= "master"
 
 SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH} \
