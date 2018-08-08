@@ -21,8 +21,8 @@ SRC_URI = " \
             file://0011-gl-Add-switches-for-explicitely-enabling-disabling-P.patch \
             file://link-with-libvchostif.patch \
             "
-SRC_URI[md5sum] = "c42154ab6f85c59f0e449d8d7e290342"
-SRC_URI[sha256sum] = "1026c7c3082d825d9b5d034c1a6dd8a4ebab60eb3738b0a0afde4ad2dc0b0db5"
+SRC_URI[md5sum] = "8bc790d623350cd8eac68d3a13d79f7d"
+SRC_URI[sha256sum] = "a4b7e80ba869f599307449b17c9e00b5d1e94d3ba1d8a1a386b8770b2ef01c7c"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 

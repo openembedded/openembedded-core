@@ -1,4 +1,4 @@
-From 4d6ea58f96b9744af8d899ddca22c2695ac74b5b Mon Sep 17 00:00:00 2001
+From 7022b87353a37b78bae7cf0106a4e47913bb5c97 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 5 Apr 2018 10:15:08 +0800
 Subject: [PATCH] Makefile.am: don't hardcode libtool name when running
@@ -62,14 +62,14 @@ index 2922245..7fb65f2 100644
  		--pkg gstreamer-base-@GST_API_VERSION@ \
  		--pkg-export gstreamer-audio-@GST_API_VERSION@ \
 diff --git a/gst-libs/gst/gl/Makefile.am b/gst-libs/gst/gl/Makefile.am
-index a3bbc94..16f829f 100644
+index 4e77e8c..3276d7f 100644
 --- a/gst-libs/gst/gl/Makefile.am
 +++ b/gst-libs/gst/gl/Makefile.am
-@@ -192,7 +192,7 @@ GstGL-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstgl-@GST_API_VERSION@
+@@ -193,7 +193,7 @@ GstGL-@GST_API_VERSION@.gir: $(INTROSPECTION_SCANNER) libgstgl-@GST_API_VERSION@
  		--include=Gst-@GST_API_VERSION@ \
  		--include=GstBase-@GST_API_VERSION@ \
  		--include=GstVideo-@GST_API_VERSION@ \
--		--libtool="$(top_builddir)/libtool" \
+-		--libtool="${LIBTOOL}" \
 +		--libtool="$(LIBTOOL)" \
  		--pkg gstreamer-@GST_API_VERSION@ \
  		--pkg gstreamer-base-@GST_API_VERSION@ \
