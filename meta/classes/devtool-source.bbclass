@@ -90,10 +90,22 @@ python devtool_post_unpack() {
                         fname in files])
         return ret
 
+    is_kernel_yocto = bb.data.inherits_class('kernel-yocto', d)
     # Move local source files into separate subdir
     recipe_patches = [os.path.basename(patch) for patch in
                         oe.recipeutils.get_recipe_patches(d)]
     local_files = oe.recipeutils.get_recipe_local_files(d)
+
+    if is_kernel_yocto:
+        for key in local_files.copy():
+            if key.endswith('scc'):
+                sccfile = open(local_files[key], 'r')
+                for l in sccfile:
+                    line = l.split()
+                    if line and line[0] in ('kconf', 'patch'):
+                        local_files[line[-1]] = os.path.join(os.path.dirname(local_files[key]), line[-1])
+                        shutil.copy2(os.path.join(os.path.dirname(local_files[key]), line[-1]), workdir)
+                sccfile.close()
 
     # Ignore local files with subdir={BP}
     srcabspath = os.path.abspath(srcsubdir)
