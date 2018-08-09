@@ -7,7 +7,7 @@ SECTION = "console/network"
 LICENSE = "MIT & BSD-3-Clause & BSD-2-Clause & PD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a5ec40cafba26fc4396d0b550f824e01"
 
-DEPENDS = "zlib"
+DEPENDS = "zlib virtual/crypt"
 RPROVIDES_${PN} = "ssh sshd"
 
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
