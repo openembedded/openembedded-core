@@ -14,8 +14,7 @@ inherit manpages
 
 MAN_PKG = "${PN}"
 
-# help manpages.bbclass deal with RDEPNDS and postinstall scripts
-PACKAGECONFIG = "manpages"
+PACKAGECONFIG ??= ""
 PACKAGECONFIG[manpages] = ""
 
 do_configure[noexec] = "1"
