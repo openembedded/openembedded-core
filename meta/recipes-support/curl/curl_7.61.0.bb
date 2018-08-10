@@ -73,4 +73,7 @@ RRECOMMENDS_lib${BPN} += "ca-certificates"
 
 FILES_${PN} += "${datadir}/zsh"
 
+inherit multilib_script
+MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/curl-config"
+
 BBCLASSEXTEND = "native nativesdk"
