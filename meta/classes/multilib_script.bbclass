@@ -25,7 +25,7 @@ python () {
     for entry in (d.getVar("MULTILIB_SCRIPTS", False) or "").split():
        pkg, script = entry.split(":")
        scriptname = os.path.basename(script)
-       d.setVar("ALTERNATIVE_" + pkg, scriptname)
+       d.appendVar("ALTERNATIVE_" + pkg, scriptname + " ")
        d.setVarFlag("ALTERNATIVE_LINK_NAME", scriptname, script)
        d.setVarFlag("ALTERNATIVE_TARGET", scriptname, script + "-${MULTILIB_SUFFIX}")
        d.appendVar("multilibscript_rename",  "\n	mv ${PKGD}" + script + " ${PKGD}" + script + "-${MULTILIB_SUFFIX}")
