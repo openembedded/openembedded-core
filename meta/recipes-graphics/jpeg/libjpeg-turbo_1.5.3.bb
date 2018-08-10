@@ -46,7 +46,7 @@ DEBUG_OPTIMIZATION_append_armv5 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb
 def get_build_time(d):
     if d.getVar('SOURCE_DATE_EPOCH') != None:
         import datetime
-        return " --with-build-date="+ datetime.datetime.fromtimestamp(float(d.getVar('SOURCE_DATE_EPOCH'))).strftime("%Y%m%d")
+        return " --with-build-date="+ datetime.datetime.utcfromtimestamp(float(d.getVar('SOURCE_DATE_EPOCH'))).strftime("%Y%m%d")
     return ""
 
 EXTRA_OECONF_append_class-target = "${@get_build_time(d)}"
