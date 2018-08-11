@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=cfc0ed77a9f62fa62eded042ebe31d72 \
       file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
       file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
-DEPENDS += "gperf-native bison-native"
+DEPENDS += "gperf-native bison-native make-native"
 
 SRCREV ?= "3c03baca37fdcb52c3881e653ca392bba7a99c2b"
 
