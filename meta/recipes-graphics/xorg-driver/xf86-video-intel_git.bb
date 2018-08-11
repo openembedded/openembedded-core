@@ -15,6 +15,7 @@ S = "${WORKDIR}/git"
 
 SRC_URI = "git://anongit.freedesktop.org/xorg/driver/xf86-video-intel \
            file://0001-Add-Coffeelake-PCI-IDs-for-S-Skus.patch \
+           file://glibc.patch \
            "
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
