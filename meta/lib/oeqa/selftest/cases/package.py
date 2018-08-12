@@ -88,6 +88,7 @@ class VersionOrdering(OESelftestTestCase):
 
 class PackageTests(OESelftestTestCase):
     # Verify that a recipe which sets up hardlink files has those preserved into split packages
+    # Also test file sparseness is preserved
     def test_preserve_hardlinks(self):
         result = bitbake("selftest-hardlink -c package")
 
@@ -97,3 +98,8 @@ class PackageTests(OESelftestTestCase):
         # Recipe creates 4 hardlinked files, there is a copy in package/ and a copy in packages-split/
         # so expect 8 in total.
         self.assertEqual(os.stat(dest + "/selftest-hardlink" + bindir + "/hello").st_nlink, 8)
+
+        # Test a sparse file remains sparse
+        sparsestat = os.stat(dest + "/selftest-hardlink" + bindir + "/sparsetest")
+        self.assertEqual(sparsestat.st_blocks, 0)
+        self.assertEqual(sparsestat.st_size, 1048576)

@@ -16,4 +16,5 @@ do_install () {
 	ln ${D}${bindir}/hello ${D}${bindir}/hello2
 	ln ${D}${bindir}/hello ${D}${bindir}/hello3
 	ln ${D}${bindir}/hello ${D}${bindir}/hello4
+	dd if=/dev/zero of=${D}${bindir}/sparsetest bs=1 count=0 seek=1M
 }
