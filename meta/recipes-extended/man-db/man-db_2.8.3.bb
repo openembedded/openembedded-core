@@ -4,7 +4,8 @@ LICENSE = "LGPLv2.1 & GPLv2"
 LIC_FILES_CHKSUM = "file://docs/COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://docs/COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz"
+SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
+           file://99_mandb"
 SRC_URI[md5sum] = "6f3055e18fdd1ce5cbbdb30403991ec7"
 SRC_URI[sha256sum] = "5932a1ca366e1ec61a3ece1a3afa0e92f2fdc125b61d236f20cc6ff9d80cc4ac"
 
@@ -16,6 +17,15 @@ USE_NLS_libc-musl = "no"
 inherit gettext pkgconfig autotools
 
 EXTRA_OECONF = "--with-pager=less"
+
+do_install() {
+	autotools_do_install
+
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+	        install -d ${D}/etc/default/volatiles
+		install -m 0644 ${WORKDIR}/99_mandb ${D}/etc/default/volatiles
+	fi
+}
 
 do_install_append_libc-musl() {
         rm -f ${D}${libdir}/charset.alias
