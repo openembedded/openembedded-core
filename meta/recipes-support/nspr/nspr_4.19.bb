@@ -149,7 +149,9 @@ TESTS = " \
     xnotify \
     zerolen"
 
-inherit autotools
+inherit autotools multilib_script
+
+MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/nspr-config"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
