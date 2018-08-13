@@ -147,6 +147,8 @@ python copy_perf_source_from_kernel() {
     for s in sources:
         src = oe.path.join(src_dir, s)
         dest = oe.path.join(dest_dir, s)
+        if not os.path.exists(src):
+            bb.fatal("Path does not exist: %s. Maybe PERF_SRC does not match the kernel version." % src)
         if os.path.isdir(src):
             oe.path.copyhardlinktree(src, dest)
         else:
