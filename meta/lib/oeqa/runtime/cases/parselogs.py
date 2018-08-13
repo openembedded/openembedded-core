@@ -313,7 +313,7 @@ class ParseLogsTest(OERuntimeTestCase):
                 pass
 
             if result is not None:
-                results[log.replace('target_logs/','')] = {}
+                results[log] = {}
                 rez = result.splitlines()
 
                 for xrez in rez:
@@ -323,7 +323,7 @@ class ParseLogsTest(OERuntimeTestCase):
                         grep_output = check_output(cmd).decode('utf-8')
                     except:
                         pass
-                    results[log.replace('target_logs/','')][xrez]=grep_output
+                    results[log][xrez]=grep_output
 
         return results
 
