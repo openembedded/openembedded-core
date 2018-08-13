@@ -12,6 +12,7 @@ import oe.path
 import string
 from oe.gpg_sign import get_signer
 import hashlib
+import fnmatch
 
 # this can be used by all PM backends to create the index files in parallel
 def create_index(arg):
@@ -88,6 +89,47 @@ def failed_postinsts_warn(pkgs, log_path):
     bb.warn("""Intentionally failing postinstall scriptlets of %s to defer them to first boot is deprecated. Please place them into pkg_postinst_ontarget_${PN} ().
 If deferring to first boot wasn't the intent, then scriptlet failure may mean an issue in the recipe, or a regression elsewhere.
 Details of the failure are in %s.""" %(pkgs, log_path))
+
+def generate_locale_archive(d, rootfs, target_arch, localedir):
+    # Pretty sure we don't need this for locale archive generation but
+    # keeping it to be safe...
+    locale_arch_options = { \
+        "arm": ["--uint32-align=4", "--little-endian"],
+        "armeb": ["--uint32-align=4", "--big-endian"],
+        "aarch64": ["--uint32-align=4", "--little-endian"],
+        "aarch64_be": ["--uint32-align=4", "--big-endian"],
+        "sh4": ["--uint32-align=4", "--big-endian"],
+        "powerpc": ["--uint32-align=4", "--big-endian"],
+        "powerpc64": ["--uint32-align=4", "--big-endian"],
+        "mips": ["--uint32-align=4", "--big-endian"],
+        "mipsisa32r6": ["--uint32-align=4", "--big-endian"],
+        "mips64": ["--uint32-align=4", "--big-endian"],
+        "mipsisa64r6": ["--uint32-align=4", "--big-endian"],
+        "mipsel": ["--uint32-align=4", "--little-endian"],
+        "mipsisa32r6el": ["--uint32-align=4", "--little-endian"],
+        "mips64el": ["--uint32-align=4", "--little-endian"],
+        "mipsisa64r6el": ["--uint32-align=4", "--little-endian"],
+        "i586": ["--uint32-align=4", "--little-endian"],
+        "i686": ["--uint32-align=4", "--little-endian"],
+        "x86_64": ["--uint32-align=4", "--little-endian"]
+    }
+    if target_arch in locale_arch_options:
+        arch_options = locale_arch_options[target_arch]
+    else:
+        bb.error("locale_arch_options not found for target_arch=" + target_arch)
+        bb.fatal("unknown arch:" + target_arch + " for locale_arch_options")
+
+    # Need to set this so cross-localedef knows where the archive is
+    env = dict(os.environ)
+    env["LOCALEARCHIVE"] = oe.path.join(localedir, "locale-archive")
+
+    for name in os.listdir(localedir):
+        path = os.path.join(localedir, name)
+        if os.path.isdir(path):
+            cmd = ["cross-localedef", "--verbose"]
+            cmd += arch_options
+            cmd += ["--add-to-archive", path]
+            subprocess.check_output(cmd, env=env, stderr=subprocess.STDOUT)
 
 class Indexer(object, metaclass=ABCMeta):
     def __init__(self, d, deploy_dir):
@@ -535,6 +577,13 @@ class PackageManager(object, metaclass=ABCMeta):
                 bb.fatal("Could not compute complementary packages list. Command "
                          "'%s' returned %d:\n%s" %
                          (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
+
+        target_arch = self.d.getVar('TARGET_ARCH')
+        localedir = oe.path.join(self.target_rootfs, self.d.getVar("libdir"), "locale")
+        if os.path.exists(localedir) and os.listdir(localedir):
+            generate_locale_archive(self.d, self.target_rootfs, target_arch, localedir)
+            # And now delete the binary locales
+            self.remove(fnmatch.filter(self.list_installed(), "glibc-binary-localedata-*"), False)
 
     def deploy_dir_lock(self):
         if self.deploy_dir is None:
