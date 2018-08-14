@@ -621,7 +621,7 @@ class PackageManager(object, metaclass=ABCMeta):
             return res
         return _append(uris, base_paths)
 
-def create_packages_dir(d, rpm_repo_dir, deploydir, taskname, filterbydependencies):
+def create_packages_dir(d, subrepo_dir, deploydir, taskname, filterbydependencies):
     """
     Go through our do_package_write_X dependencies and hardlink the packages we depend
     upon into the repo directory. This prevents us seeing other packages that may
@@ -636,15 +636,13 @@ def create_packages_dir(d, rpm_repo_dir, deploydir, taskname, filterbydependenci
     seendirs = set()
     multilibs = {}
    
-    rpm_subrepo_dir = oe.path.join(rpm_repo_dir, "rpm")
-
-    bb.utils.remove(rpm_subrepo_dir, recurse=True)
-    bb.utils.mkdirhier(rpm_subrepo_dir)
+    bb.utils.remove(subrepo_dir, recurse=True)
+    bb.utils.mkdirhier(subrepo_dir)
 
     # Detect bitbake -b usage
     nodeps = d.getVar("BB_LIMITEDDEPS") or False
     if nodeps or not filterbydependencies:
-        oe.path.symlink(deploydir, rpm_subrepo_dir, True)
+        oe.path.symlink(deploydir, subrepo_dir, True)
         return
 
     start = None
@@ -655,24 +653,24 @@ def create_packages_dir(d, rpm_repo_dir, deploydir, taskname, filterbydependenci
             break
     if start is None:
         bb.fatal("Couldn't find ourself in BB_TASKDEPDATA?")
-    rpmdeps = set()
+    pkgdeps = set()
     start = [start]
     seen = set(start)
-    # Support direct dependencies (do_rootfs -> rpms)
-    # or indirect dependencies within PN (do_populate_sdk_ext -> do_rootfs -> rpms)
+    # Support direct dependencies (do_rootfs -> do_package_write_X)
+    # or indirect dependencies within PN (do_populate_sdk_ext -> do_rootfs -> do_package_write_X)
     while start:
         next = []
         for dep2 in start:
             for dep in taskdepdata[dep2][3]:
                 if taskdepdata[dep][0] != pn:
                     if "do_" + taskname in dep:
-                        rpmdeps.add(dep)
+                        pkgdeps.add(dep)
                 elif dep not in seen:
                     next.append(dep)
                     seen.add(dep)
         start = next
 
-    for dep in rpmdeps:
+    for dep in pkgdeps:
         c = taskdepdata[dep][0]
         manifest, d2 = oe.sstatesig.find_sstate_manifest(c, taskdepdata[dep][2], taskname, d, multilibs)
         if not manifest:
@@ -683,7 +681,7 @@ def create_packages_dir(d, rpm_repo_dir, deploydir, taskname, filterbydependenci
             for l in f:
                 l = l.strip()
                 dest = l.replace(deploydir, "")
-                dest = rpm_subrepo_dir + dest
+                dest = subrepo_dir + dest
                 if l.endswith("/"):
                     if dest not in seendirs:
                         bb.utils.mkdirhier(dest)
@@ -725,7 +723,7 @@ class RpmPM(PackageManager):
             self.primary_arch = self.d.getVar('MACHINE_ARCH')
 
         self.rpm_repo_dir = oe.path.join(self.d.getVar('WORKDIR'), rpm_repo_workdir)
-        create_packages_dir(self.d, self.rpm_repo_dir, d.getVar("DEPLOY_DIR_RPM"), "package_write_rpm", filterbydependencies)
+        create_packages_dir(self.d, oe.path.join(self.rpm_repo_dir, "rpm"), d.getVar("DEPLOY_DIR_RPM"), "package_write_rpm", filterbydependencies)
 
         self.saved_packaging_data = self.d.expand('${T}/saved_packaging_data/%s' % self.task_name)
         if not os.path.exists(self.d.expand('${T}/saved_packaging_data')):
