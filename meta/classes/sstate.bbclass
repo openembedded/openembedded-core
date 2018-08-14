@@ -721,9 +721,9 @@ sstate_create_package () {
 	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
 
         # Use pigz if available
-        OPT="-cz"
+        OPT="-czS"
         if [ -x "$(command -v pigz)" ]; then
-            OPT="-I pigz -c"
+            OPT="-I pigz -cS"
         fi
 
 	# Need to handle empty directories
