@@ -89,17 +89,26 @@ class VersionOrdering(OESelftestTestCase):
 class PackageTests(OESelftestTestCase):
     # Verify that a recipe which sets up hardlink files has those preserved into split packages
     # Also test file sparseness is preserved
-    def test_preserve_hardlinks(self):
-        result = bitbake("selftest-hardlink -c package")
+    def test_preserve_sparse_hardlinks(self):
+        bitbake("selftest-hardlink -c package")
 
         dest = get_bb_var('PKGDEST', 'selftest-hardlink')
         bindir = get_bb_var('bindir', 'selftest-hardlink')
 
-        # Recipe creates 4 hardlinked files, there is a copy in package/ and a copy in packages-split/
-        # so expect 8 in total.
-        self.assertEqual(os.stat(dest + "/selftest-hardlink" + bindir + "/hello").st_nlink, 8)
+        def checkfiles():
+            # Recipe creates 4 hardlinked files, there is a copy in package/ and a copy in packages-split/
+            # so expect 8 in total.
+            self.assertEqual(os.stat(dest + "/selftest-hardlink" + bindir + "/hello").st_nlink, 8)
 
-        # Test a sparse file remains sparse
-        sparsestat = os.stat(dest + "/selftest-hardlink" + bindir + "/sparsetest")
-        self.assertEqual(sparsestat.st_blocks, 0)
-        self.assertEqual(sparsestat.st_size, 1048576)
+            # Test a sparse file remains sparse
+            sparsestat = os.stat(dest + "/selftest-hardlink" + bindir + "/sparsetest")
+            self.assertEqual(sparsestat.st_blocks, 0)
+            self.assertEqual(sparsestat.st_size, 1048576)
+
+        checkfiles()
+
+        # Clean and reinstall so its now definitely from sstate, then retest.
+        bitbake("selftest-hardlink -c clean")
+        bitbake("selftest-hardlink -c package")
+
+        checkfiles()
