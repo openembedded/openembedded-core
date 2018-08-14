@@ -44,26 +44,16 @@ class BootimgPartitionPlugin(SourcePlugin):
     name = 'bootimg-partition'
 
     @classmethod
-    def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
+    def do_configure_partition(cls, part, source_params, cr, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
-                             rootfs_dir, native_sysroot):
+                             native_sysroot):
         """
-        Called to do the actual content population for a partition i.e. it
-        'prepares' the partition to be incorporated into the image.
-        In this case, does the following:
-        - sets up a vfat partition
-        - copies all files listed in IMAGE_BOOT_FILES variable
+        Called before do_prepare_partition()
         """
-        hdddir = "%s/boot.%d" % (cr_workdir, part.lineno)
-        install_cmd = "install -d %s" % hdddir
-        exec_cmd(install_cmd)
-
         if not kernel_dir:
             kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not kernel_dir:
                 raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
-
-        logger.debug('Kernel dir: %s', bootimg_dir)
 
         boot_files = None
         for (fmt, id) in (("_uuid-%s", part.uuid), ("_label-%s", part.label), (None, None)):
@@ -94,9 +84,9 @@ class BootimgPartitionPlugin(SourcePlugin):
             logger.debug('Destination entry: %r', dst_entry)
             deploy_files.append(dst_entry)
 
+        cls.install_task = [];
         for deploy_entry in deploy_files:
             src, dst = deploy_entry
-            install_task = []
             if '*' in src:
                 # by default install files under their basename
                 entry_name_fn = os.path.basename
@@ -113,17 +103,40 @@ class BootimgPartitionPlugin(SourcePlugin):
                 for entry in srcs:
                     src = os.path.relpath(entry, kernel_dir)
                     entry_dst_name = entry_name_fn(entry)
-                    install_task.append((src, entry_dst_name)))
+                    cls.install_task.append((src, entry_dst_name))
             else:
-                install_task = [(src, dst)]
+                cls.install_task.append((src, dst))
 
-            for task in install_task:
-                src_path, dst_path = task
-                logger.debug('Install %s as %s', src_path, dst_path)
-                install_cmd = "install -m 0644 -D %s %s" \
-                              % (os.path.join(kernel_dir, src_path),
-                                 os.path.join(hdddir, dst_path))
-                exec_cmd(install_cmd)
+    @classmethod
+    def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
+                             oe_builddir, bootimg_dir, kernel_dir,
+                             rootfs_dir, native_sysroot):
+        """
+        Called to do the actual content population for a partition i.e. it
+        'prepares' the partition to be incorporated into the image.
+        In this case, does the following:
+        - sets up a vfat partition
+        - copies all files listed in IMAGE_BOOT_FILES variable
+        """
+        hdddir = "%s/boot.%d" % (cr_workdir, part.lineno)
+        install_cmd = "install -d %s" % hdddir
+        exec_cmd(install_cmd)
+
+        if not kernel_dir:
+            kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
+            if not kernel_dir:
+                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
+
+        logger.debug('Kernel dir: %s', bootimg_dir)
+
+
+        for task in cls.install_task:
+            src_path, dst_path = task
+            logger.debug('Install %s as %s', src_path, dst_path)
+            install_cmd = "install -m 0644 -D %s %s" \
+                          % (os.path.join(kernel_dir, src_path),
+                             os.path.join(hdddir, dst_path))
+            exec_cmd(install_cmd)
 
         logger.debug('Prepare boot partition using rootfs in %s', hdddir)
         part.prepare_rootfs(cr_workdir, oe_builddir, hdddir,
