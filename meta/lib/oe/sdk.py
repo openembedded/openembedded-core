@@ -227,11 +227,17 @@ class OpkgSdk(Sdk):
         self.host_manifest = OpkgManifest(d, self.manifest_dir,
                                           Manifest.MANIFEST_TYPE_SDK_HOST)
 
+        ipk_repo_workdir = "oe-sdk-repo"
+        if "sdk_ext" in d.getVar("BB_RUNTASK"):
+            ipk_repo_workdir = "oe-sdk-ext-repo"
+
         self.target_pm = OpkgPM(d, self.sdk_target_sysroot, self.target_conf,
-                                self.d.getVar("ALL_MULTILIB_PACKAGE_ARCHS"))
+                                self.d.getVar("ALL_MULTILIB_PACKAGE_ARCHS"), 
+                                ipk_repo_workdir=ipk_repo_workdir)
 
         self.host_pm = OpkgPM(d, self.sdk_host_sysroot, self.host_conf,
-                              self.d.getVar("SDK_PACKAGE_ARCHS"))
+                              self.d.getVar("SDK_PACKAGE_ARCHS"),
+                                ipk_repo_workdir=ipk_repo_workdir)
 
     def _populate_sysroot(self, pm, manifest):
         pkgs_to_install = manifest.parse_initial_manifest()
@@ -307,15 +313,21 @@ class DpkgSdk(Sdk):
         self.host_manifest = DpkgManifest(d, self.manifest_dir,
                                           Manifest.MANIFEST_TYPE_SDK_HOST)
 
+        deb_repo_workdir = "oe-sdk-repo"
+        if "sdk_ext" in d.getVar("BB_RUNTASK"):
+            deb_repo_workdir = "oe-sdk-ext-repo"
+
         self.target_pm = DpkgPM(d, self.sdk_target_sysroot,
                                 self.d.getVar("PACKAGE_ARCHS"),
                                 self.d.getVar("DPKG_ARCH"),
-                                self.target_conf_dir)
+                                self.target_conf_dir,
+                                deb_repo_workdir=deb_repo_workdir)
 
         self.host_pm = DpkgPM(d, self.sdk_host_sysroot,
                               self.d.getVar("SDK_PACKAGE_ARCHS"),
                               self.d.getVar("DEB_SDK_ARCH"),
-                              self.host_conf_dir)
+                              self.host_conf_dir,
+                              deb_repo_workdir=deb_repo_workdir)
 
     def _copy_apt_dir_to(self, dst_dir):
         staging_etcdir_native = self.d.getVar("STAGING_ETCDIR_NATIVE")

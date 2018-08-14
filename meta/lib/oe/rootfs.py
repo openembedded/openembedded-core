@@ -786,7 +786,7 @@ class OpkgRootfs(DpkgOpkgRootfs):
             ml_opkg_conf = os.path.join(ml_temp,
                                         variant + "-" + os.path.basename(self.opkg_conf))
 
-            ml_pm = OpkgPM(self.d, ml_target_rootfs, ml_opkg_conf, self.pkg_archs)
+            ml_pm = OpkgPM(self.d, ml_target_rootfs, ml_opkg_conf, self.pkg_archs, prepare_index=False)
 
             ml_pm.update()
             ml_pm.install(pkgs)

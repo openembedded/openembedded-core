@@ -1124,18 +1124,21 @@ class OpkgDpkgPM(PackageManager):
         self.mark_packages("unpacked", registered_pkgs.split())
 
 class OpkgPM(OpkgDpkgPM):
-    def __init__(self, d, target_rootfs, config_file, archs, task_name='target'):
+    def __init__(self, d, target_rootfs, config_file, archs, task_name='target', ipk_repo_workdir="oe-rootfs-repo", filterbydependencies=True, prepare_index=True):
         super(OpkgPM, self).__init__(d, target_rootfs)
 
         self.config_file = config_file
         self.pkg_archs = archs
         self.task_name = task_name
 
-        self.deploy_dir = self.d.getVar("DEPLOY_DIR_IPK")
+        self.deploy_dir = oe.path.join(self.d.getVar('WORKDIR'), ipk_repo_workdir)
         self.deploy_lock_file = os.path.join(self.deploy_dir, "deploy.lock")
         self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg")
         self.opkg_args = "--volatile-cache -f %s -t %s -o %s " % (self.config_file, self.d.expand('${T}/ipktemp/') ,target_rootfs)
         self.opkg_args += self.d.getVar("OPKG_ARGS")
+
+        if prepare_index:
+            create_packages_dir(self.d, self.deploy_dir, d.getVar("DEPLOY_DIR_IPK"), "package_write_ipk", filterbydependencies)
 
         opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
         if opkg_lib_dir[0] == "/":
@@ -1501,9 +1504,12 @@ class OpkgPM(OpkgDpkgPM):
         return tmp_dir
 
 class DpkgPM(OpkgDpkgPM):
-    def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None):
+    def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None, deb_repo_workdir="oe-rootfs-repo", filterbydependencies=True):
         super(DpkgPM, self).__init__(d, target_rootfs)
-        self.deploy_dir = self.d.getVar('DEPLOY_DIR_DEB')
+        self.deploy_dir = oe.path.join(self.d.getVar('WORKDIR'), deb_repo_workdir)
+
+        create_packages_dir(self.d, self.deploy_dir, d.getVar("DEPLOY_DIR_DEB"), "package_write_deb", filterbydependencies)
+
         if apt_conf_dir is None:
             self.apt_conf_dir = self.d.expand("${APTCONF_TARGET}/apt")
         else:
