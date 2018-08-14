@@ -1118,6 +1118,11 @@ class BaseConfig(object):
             qbsys = 'riscv64'
         elif mach == 'qemuriscv32':
             qbsys = 'riscv32'
+        else:
+            logger.error("Unable to determine QEMU PC System emulator for %s machine." % mach)
+            logger.error("As %s is not among valid QEMU machines such as," % mach)
+            logger.error("qemux86-64, qemux86, qemuarm64, qemuarm, qemumips64, qemumips64el, qemumipsel, qemumips, qemuppc")
+            raise RunQemuError("Set qb_system_name with suitable QEMU PC System emulator in .*qemuboot.conf.")
 
         return 'qemu-system-%s' % qbsys
 
