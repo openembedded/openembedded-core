@@ -1045,6 +1045,16 @@ python sstate_eventhandler2() {
         with open(preservestampfile, 'r') as f:
             preservestamps = f.readlines()
     seen = []
+
+    # The machine index contains all the stamps this machine has ever seen in this build directory.
+    # We should only remove things which this machine once accessed but no longer does.
+    machineindex = set()
+    bb.utils.mkdirhier(d.expand("${SSTATE_MANIFESTS}"))
+    mi = d.expand("${SSTATE_MANIFESTS}/index-machine-${MACHINE}")
+    if os.path.exists(mi):
+        with open(mi, "r") as f:
+            machineindex = set(line.strip() for line in f.readlines())
+
     for a in sorted(list(set(d.getVar("SSTATE_ARCHS").split()))):
         toremove = []
         i = d.expand("${SSTATE_MANIFESTS}/index-" + a)
@@ -1054,7 +1064,7 @@ python sstate_eventhandler2() {
             lines = f.readlines()
             for l in lines:
                 (stamp, manifest, workdir) = l.split()
-                if stamp not in stamps and stamp not in preservestamps:
+                if stamp not in stamps and stamp not in preservestamps and stamp in machineindex:
                     toremove.append(l)
                     if stamp not in seen:
                         bb.debug(2, "Stamp %s is not reachable, removing related manifests" % stamp)
@@ -1083,6 +1093,11 @@ python sstate_eventhandler2() {
         with open(i, "w") as f:
             for l in lines:
                 f.write(l)
+    machineindex |= set(stamps)
+    with open(mi, "w") as f:
+        for l in machineindex:
+            f.write(l + "\n")
+
     if preservestamps:
         os.remove(preservestampfile)
 }
