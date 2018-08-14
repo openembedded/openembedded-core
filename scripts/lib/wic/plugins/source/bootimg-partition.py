@@ -111,20 +111,18 @@ class BootimgPartitionPlugin(SourcePlugin):
 
                 logger.debug('Globbed sources: %s', ', '.join(srcs))
                 for entry in srcs:
+                    src = os.path.relpath(entry, kernel_dir)
                     entry_dst_name = entry_name_fn(entry)
-                    install_task.append((entry,
-                                         os.path.join(hdddir,
-                                                      entry_dst_name)))
+                    install_task.append((src, entry_dst_name)))
             else:
-                install_task = [(os.path.join(kernel_dir, src),
-                                 os.path.join(hdddir, dst))]
+                install_task = [(src, dst)]
 
             for task in install_task:
                 src_path, dst_path = task
-                logger.debug('Install %s as %s',
-                             os.path.basename(src_path), dst_path)
+                logger.debug('Install %s as %s', src_path, dst_path)
                 install_cmd = "install -m 0644 -D %s %s" \
-                              % (src_path, dst_path)
+                              % (os.path.join(kernel_dir, src_path),
+                                 os.path.join(hdddir, dst_path))
                 exec_cmd(install_cmd)
 
         logger.debug('Prepare boot partition using rootfs in %s', hdddir)
