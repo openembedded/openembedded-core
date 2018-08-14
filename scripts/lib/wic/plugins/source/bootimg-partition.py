@@ -48,8 +48,12 @@ class BootimgPartitionPlugin(SourcePlugin):
                              oe_builddir, bootimg_dir, kernel_dir,
                              native_sysroot):
         """
-        Called before do_prepare_partition()
+        Called before do_prepare_partition(), create u-boot specific boot config
         """
+        hdddir = "%s/boot.%d" % (cr_workdir, part.lineno)
+        install_cmd = "install -d %s" % hdddir
+        exec_cmd(install_cmd)
+
         if not kernel_dir:
             kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not kernel_dir:
@@ -107,6 +111,49 @@ class BootimgPartitionPlugin(SourcePlugin):
             else:
                 cls.install_task.append((src, dst))
 
+        if source_params.get('loader') != "u-boot":
+            return
+
+        # The kernel types supported by the sysboot of u-boot
+        kernel_types = ["uImage", "zImage", "Image", "vmlinux", "fitImage"]
+        has_dtb = False
+        fdt_dir = '/'
+        kernel_name = None
+        for task in cls.install_task:
+            src, dst = task
+            # Find the kernel image name
+            for image in kernel_types:
+                if re.match(image, src):
+                    if not kernel_name:
+                        kernel_name = os.path.join('/', dst)
+                    else:
+                        raise WicError('Multi kernel file founded')
+
+            # We suppose that all the dtb are in the same directory
+            if re.search(r'\.dtb', src) and fdt_dir == '/':
+                has_dtb = True
+                fdt_dir = os.path.join(fdt_dir, os.path.dirname(dst))
+
+        if not kernel_name:
+            raise WicError('No kernel file founded')
+
+        # Compose the extlinux.conf
+        extlinux_conf = "default Yocto\n"
+        extlinux_conf += "label Yocto\n"
+        extlinux_conf += "   kernel %s\n" % kernel_name
+        if has_dtb:
+            extlinux_conf += "   fdtdir %s\n" % fdt_dir
+        bootloader = cr.ks.bootloader
+        extlinux_conf += "append root=%s rootwait %s\n" \
+                         % (cr.rootdev, bootloader.append if bootloader.append else '')
+
+        install_cmd = "install -d %s/extlinux/" % hdddir
+        exec_cmd(install_cmd)
+        cfg = open("%s/extlinux/extlinux.conf" % hdddir, "w")
+        cfg.write(extlinux_conf)
+        cfg.close()
+
+
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
@@ -119,8 +166,6 @@ class BootimgPartitionPlugin(SourcePlugin):
         - copies all files listed in IMAGE_BOOT_FILES variable
         """
         hdddir = "%s/boot.%d" % (cr_workdir, part.lineno)
-        install_cmd = "install -d %s" % hdddir
-        exec_cmd(install_cmd)
 
         if not kernel_dir:
             kernel_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
