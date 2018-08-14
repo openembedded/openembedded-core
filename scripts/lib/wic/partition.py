@@ -66,7 +66,6 @@ class Partition():
 
         self.lineno = lineno
         self.source_file = ""
-        self.sourceparams_dict = {}
 
     def get_extra_block_count(self, current_blocks):
         """
