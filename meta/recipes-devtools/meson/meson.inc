@@ -15,6 +15,7 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0002-Make-CPU-family-warnings-fatal.patch \
            file://0003-Send-user-to-our-wiki-instead-of-Meson-bug-system.patch \
            file://0001-mesonbuild-Recognise-risc-v-architecture.patch \
+           file://0001-Support-building-allarch-recipes-again.patch \
            "
 
 SRC_URI[md5sum] = "1698f6526574839de5dcdc45e3f7d582"
