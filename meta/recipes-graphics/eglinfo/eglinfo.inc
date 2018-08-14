@@ -8,6 +8,7 @@ DEPENDS = "virtual/egl"
 
 SRC_URI = "git://github.com/dv1/eglinfo.git;branch=master \
            file://0001-Add-STAGING_INCDIR-to-searchpath-for-egl-headers.patch \
+           file://0001-Check-for-libegl-using-pkg-config.patch \
           "
 SRCREV = "4b317648ec6cf39556a9e5d8078f605bc0edd5de"
 
@@ -15,7 +16,7 @@ CVE_PRODUCT = "eglinfo"
 
 S = "${WORKDIR}/git"
 
-inherit waf distro_features_check
+inherit waf distro_features_check pkgconfig
 # depends on virtual/egl
 REQUIRED_DISTRO_FEATURES ?= "opengl"
 
