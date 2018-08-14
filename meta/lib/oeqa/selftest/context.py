@@ -201,8 +201,8 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
         _add_layer_libs()
 
-        self.tc.logger.info("Running bitbake -p")
-        runCmd("bitbake -p")
+        self.tc.logger.info("Running bitbake -e to test the configuration is valid/parsable")
+        runCmd("bitbake -e")
 
     def _internal_run(self, logger, args):
         self.module_paths = self._get_cases_paths(
