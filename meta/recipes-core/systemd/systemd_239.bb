@@ -29,6 +29,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-login-use-parse_uid-when-unmounting-user-runtime-dir.patch \
            file://0001-sd-bus-make-BUS_DEFAULT_TIMEOUT-configurable.patch \
            file://0022-build-sys-Detect-whether-struct-statx-is-defined-in-.patch \
+           file://0023-resolvconf-fixes-for-the-compatibility-interface.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
