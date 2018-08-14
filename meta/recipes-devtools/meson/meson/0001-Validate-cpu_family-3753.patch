@@ -1,13 +1,7 @@
-Validate the passed CPU family (US: backport) and turn the upstream warning to
-an error (US: inappropriate).
-
-Upstream-Status: Backport
-Signed-off-by: Ross Burton <ross.burton@intel.com>
-
-From 456f7ea48503731d50a2b7287a0f198b73b4fe61 Mon Sep 17 00:00:00 2001
+From 12fe95b1943eb832a54ba09274fa02c60d04f6b0 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross@burtonini.com>
 Date: Wed, 20 Jun 2018 13:45:44 +0100
-Subject: [PATCH 1/2] Validate cpu_family (#3753)
+Subject: [PATCH 1/3] Validate cpu_family (#3753)
 
 * environment: validate cpu_family in cross file
 
@@ -25,12 +19,16 @@ $ python3
 import platform; platform.machine()
 
 Partial fix for #3751
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
  mesonbuild/environment.py | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ run_unittests.py          | 18 ++++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
 diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index 6920b8d6..091d92dc 100644
+index d02a837..678d009 100644
 --- a/mesonbuild/environment.py
 +++ b/mesonbuild/environment.py
 @@ -72,6 +72,22 @@ from .compilers import (
@@ -78,41 +76,35 @@ index 6920b8d6..091d92dc 100644
                  if self.ok_type(res):
                      self.config[s][entry] = res
                  elif isinstance(res, list):
+diff --git a/run_unittests.py b/run_unittests.py
+index 3c215db..7185008 100755
+--- a/run_unittests.py
++++ b/run_unittests.py
+@@ -2065,6 +2065,24 @@ recommended as it can lead to undefined behaviour on some platforms''')
+         self.wipe()
+ 
+ 
++    @unittest.skipIf(not os.path.isdir('docs'), 'Doc dir not found, presumably because this is a tarball release.')
++    def test_cpu_families_documented(self):
++        with open("docs/markdown/Reference-tables.md") as f:
++            md = f.read()
++        self.assertIsNotNone(md)
++
++        sections = list(re.finditer(r"^## (.+)$", md, re.MULTILINE))
++        for s1, s2 in zip(sections[::2], sections[1::2]):
++            if s1.group(1) == "CPU families":
++                # Extract the content for this section
++                content = md[s1.end():s2.start()]
++                # Find the list entries
++                arches = [m.group(1) for m in re.finditer(r"^\| (\w+) +\|", content, re.MULTILINE)]
++                # Drop the header
++                arches = set(arches[1:])
++                self.assertEqual(arches, set(mesonbuild.environment.known_cpu_families))
++
++
+ class FailureTests(BasePlatformTests):
+     '''
+     Tests that test failure conditions. Build files here should be dynamically
 -- 
-2.11.0
-
-
-From 202e0199d3ffd2637f4dbee08f8351520f7dde3b Mon Sep 17 00:00:00 2001
-From: Ross Burton <ross.burton@intel.com>
-Date: Tue, 3 Jul 2018 13:59:09 +0100
-Subject: [PATCH 2/2] Make CPU family warnings fatal
-
----
- mesonbuild/environment.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index 091d92dc..67177c1f 100644
---- a/mesonbuild/environment.py
-+++ b/mesonbuild/environment.py
-@@ -228,7 +228,7 @@ def detect_cpu_family(compilers):
-     # Add fixes here as bugs are reported.
- 
-     if trial not in known_cpu_families:
--        mlog.warning('Unknown CPU family %s, please report this at https://github.com/mesonbuild/meson/issues/new' % trial)
-+        raise EnvironmentException('Unknown CPU family %s, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.' % trial)
- 
-     return trial
- 
-@@ -1043,7 +1043,7 @@ class CrossBuildInfo:
-                     raise EnvironmentException('Malformed value in cross file variable %s.' % entry)
- 
-                 if entry == 'cpu_family' and res not in known_cpu_families:
--                    mlog.warning('Unknown CPU family %s, please report this at https://github.com/mesonbuild/meson/issues/new' % value)
-+                    raise EnvironmentException('Unknown CPU family %s, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.' % value)
- 
-                 if self.ok_type(res):
-                     self.config[s][entry] = res
--- 
-2.11.0
+2.12.0
 

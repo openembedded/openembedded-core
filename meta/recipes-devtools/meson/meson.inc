@@ -11,7 +11,9 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0003-native_bindir.patch \
            file://0004-Prettifying-some-output-with-pathlib.patch \
            file://0005-Set-the-meson-command-to-use-when-we-know-what-it-is.patch \
-           file://validate-cpu.patch \
+           file://0001-Validate-cpu_family-3753.patch \
+           file://0002-Make-CPU-family-warnings-fatal.patch \
+           file://0003-Send-user-to-our-wiki-instead-of-Meson-bug-system.patch \
            file://0001-mesonbuild-Recognise-risc-v-architecture.patch \
            "
 
