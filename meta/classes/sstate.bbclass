@@ -980,9 +980,16 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
             # them in.
             # See also http://lists.openembedded.org/pipermail/openembedded-core/2018-January/146324.html
             not_needed = False
-            for excl in (d.getVar('SSTATE_EXCLUDEDEPS_SYSROOT') or "").split():
-                if re.match(excl.split('->', 1)[0], taskdependees[dep][0]):
-                    if re.match(excl.split('->', 1)[1], taskdependees[task][0]):
+            excludedeps = d.getVar('_SSTATE_EXCLUDEDEPS_SYSROOT')
+            if excludedeps is None:
+                # Cache the regular expressions for speed
+                excludedeps = []
+                for excl in (d.getVar('SSTATE_EXCLUDEDEPS_SYSROOT') or "").split():
+                    excludedeps.append((re.compile(excl.split('->', 1)[0]), re.compile(excl.split('->', 1)[1])))
+                d.setVar('_SSTATE_EXCLUDEDEPS_SYSROOT', excludedeps)
+            for excl in excludedeps:
+                if excl[0].match(taskdependees[dep][0]):
+                    if excl[1].match(taskdependees[task][0]):
                         not_needed = True
                         break
             if not_needed:
