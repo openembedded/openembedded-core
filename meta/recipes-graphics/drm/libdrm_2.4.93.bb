@@ -12,8 +12,8 @@ DEPENDS = "libpthread-stubs"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.bz2 \
            file://musl-ioctl.patch"
-SRC_URI[md5sum] = "f9b00d985f82d0be6ecc20c799acc89e"
-SRC_URI[sha256sum] = "e9e48fdb4de139dc4d9880aa1473158a16ff6aff63d14341367bd30a51ff39fa"
+SRC_URI[md5sum] = "0ba45ad1551b2c1b6df0797a3e65f827"
+SRC_URI[sha256sum] = "6e84d1dc9548a76f20b59a85cf80a0b230cd8196084f5243469d9e65354fcd3c"
 
 inherit meson pkgconfig manpages
 
