@@ -12,6 +12,8 @@ DEPENDS = "libogg"
 
 SRC_URI = "http://downloads.xiph.org/releases/vorbis/${BP}.tar.xz \
            file://0001-configure-Check-for-clang.patch \
+           file://CVE-2018-10392.patch \
+           file://CVE-2017-14160.patch \
           "
 SRC_URI[md5sum] = "b7d1692f275c73e7833ed1cc2697cd65"
 SRC_URI[sha256sum] = "af00bb5a784e7c9e69f56823de4637c350643deedaf333d0fa86ecdba6fcb415"
