@@ -30,6 +30,9 @@ SECURITY_X_LDFLAGS ?= "-fstack-protector-strong -Wl,-z,relro"
 # powerpc does not get on with pie for reasons not looked into as yet
 SECURITY_CFLAGS_powerpc = "-fstack-protector-strong ${lcl_maybe_fortify} ${SECURITY_NOPIE_CFLAGS}"
 SECURITY_CFLAGS_pn-libgcc_powerpc = ""
+SECURITY_CFLAGS_append_powerpc_pn-libdrm = " -fPIC -DPIC"
+SECURITY_CFLAGS_append_powerpc_pn-libinput = " -fPIC -DPIC"
+SECURITY_CFLAGS_append_powerpc_pn-at-spi2-core = " -fPIC -DPIC"
 GCCPIE_powerpc = ""
 GLIBCPIE_powerpc = ""
 
