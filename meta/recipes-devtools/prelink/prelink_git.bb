@@ -31,7 +31,9 @@ SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;branch=cross_prelink \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default \
-	   file://macros.prelink"
+           file://macros.prelink \
+           file://0001-src-dso.c-use-ehdr.e_shstrndx-as-index.patch \
+"
 UPSTREAM_CHECK_COMMITS = "1"
 
 TARGET_OS_ORIG := "${TARGET_OS}"
