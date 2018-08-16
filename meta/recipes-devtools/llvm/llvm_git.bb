@@ -19,14 +19,13 @@ PROVIDES += "llvm${PV}"
 LLVM_RELEASE = "${PV}"
 LLVM_DIR = "llvm${LLVM_RELEASE}"
 
-SRCREV = "089d4c0c490687db6c75f1d074e99c4d42936a50"
+SRCREV = "5136df4d089a086b70d452160ad5451861269498"
 PV = "6.0"
 BRANCH = "release_60"
-PATCH_VERSION = "0"
+PATCH_VERSION = "1"
 SRC_URI = "git://github.com/llvm-mirror/llvm.git;branch=${BRANCH};protocol=http \
            file://0001-llvm-TargetLibraryInfo-Undefine-libc-functions-if-th.patch \
            file://0002-llvm-allow-env-override-of-exe-path.patch \
-           file://0001-Disable-generating-a-native-llvm-config.patch \
           "
 UPSTREAM_CHECK_COMMITS = "1"
 S = "${WORKDIR}/git"
