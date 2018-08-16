@@ -36,6 +36,7 @@ SRC_URI = "\
      file://0014-Detect-64-bit-MIPS-targets.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-add-i386pep-emulation-for-x86_64.patch \
+     file://0017-improve-check-for-input-file-matching-output-file.patch \
 "
 S  = "${WORKDIR}/git"
 
