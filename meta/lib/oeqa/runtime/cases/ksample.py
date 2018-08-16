@@ -18,7 +18,8 @@ class KSample(OERuntimeTestCase):
         else:
             # check result
             result = ("%s" % match_string) in output
-            self.assertTrue(result)
+            msg = output
+            self.assertTrue(result, msg)
             self.assertEqual(status, 0, cmd)
 
     def check_config(self, config_opt=''):
@@ -126,7 +127,16 @@ class KSampleTest(KSample):
         self.cmd_and_check("echo 1 > /sys/kernel/debug/tracing/events/sample-trace/enable")
         self.cmd_and_check("cat /sys/kernel/debug/tracing/events/sample-trace/enable")
         # check result
-        self.cmd_and_check("cat /sys/kernel/debug/tracing/trace | grep hello | head -n1 | cut -d\':\' -f2", " foo_bar")
+        status = 1
+        count = 0
+        while status != 0:
+            time.sleep(1)
+            status, output = self.target.run('cat /sys/kernel/debug/tracing/trace | grep hello | head -n1 | cut -d\':\' -f2')
+            if " foo_bar" in output:
+                break
+            count = count + 1
+            if count > 5:
+                self.assertTrue(False, "Time out when check result")
         # disable trace
         self.cmd_and_check("echo 0 > /sys/kernel/debug/tracing/events/sample-trace/enable")
         # clean up trace
