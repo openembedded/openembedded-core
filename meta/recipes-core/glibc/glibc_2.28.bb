@@ -17,6 +17,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
+           file://makedbs.sh \
            \
            ${NATIVESDKFIXES} \
            file://0006-fsl-e500-e5500-e6500-603e-fsqrt-implementation.patch \
