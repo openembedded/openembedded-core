@@ -8,8 +8,8 @@ SRC_URI = "git://anongit.freedesktop.org/piglit \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-# From 2018-06-18
-SRCREV = "431bcc74ff54521ed1c498af9b13e629f949bda6"
+# From 2018-08-13
+SRCREV = "57859e15dc8ba4034348b04d0b72f213b74d6347"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr${SRCPV}"
 
