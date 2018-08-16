@@ -164,6 +164,11 @@ class KSampleTest(KSample):
     # hw breakpoint
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_hw_breakpoint_example(self):
+        # check arch
+        status, output = self.target.run("uname -m")
+        result = ("x86" in output) or ("aarch64" in output)
+        if not result:
+            self.skipTest("the arch doesn't support hw breakpoint" % output)
         # check config
         self.check_config("CONFIG_KALLSYMS_ALL")
         # make sure if module exists
