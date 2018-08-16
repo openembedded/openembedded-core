@@ -1,6 +1,6 @@
 require recipes-devtools/python/python.inc
 
-DEPENDS = "python3-native libffi bzip2 gdbm openssl sqlite3 zlib virtual/libintl xz"
+DEPENDS = "python3-native libffi bzip2 gdbm openssl sqlite3 zlib virtual/libintl xz qemu-native qemu-helper-native"
 
 PR = "${INC_PR}.0"
 PYTHON_MAJMIN = "3.5"
@@ -37,6 +37,8 @@ SRC_URI += "\
             file://configure.ac-fix-LIBPL.patch \
             file://0001-Issue-21272-Use-_sysconfigdata.py-to-initialize-dist.patch \
             file://pass-missing-libraries-to-Extension-for-mul.patch \
+            file://Use-correct-CFLAGS-for-extensions-when-cross-compili.patch \
+            file://0002-Makefile-add-target-to-split-profile-generation.patch \
            "
 SRC_URI[md5sum] = "f3763edf9824d5d3a15f5f646083b6e0"
 SRC_URI[sha256sum] = "063d2c3b0402d6191b90731e0f735c64830e7522348aeb7ed382a83165d45009"
@@ -48,7 +50,7 @@ UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
 
 S = "${WORKDIR}/Python-${PV}"
 
-inherit autotools multilib_header python3native pkgconfig update-alternatives
+inherit autotools multilib_header python3native pkgconfig update-alternatives qemu
 
 MULTILIB_SUFFIX = "${@d.getVar('base_libdir',1).split('/')[-1]}"
 
@@ -69,7 +71,8 @@ CACHED_CONFIGUREVARS = "ac_cv_have_chflags=no \
 TARGET_CC_ARCH += "-DNDEBUG -fno-inline"
 SDK_CC_ARCH += "-DNDEBUG -fno-inline"
 EXTRA_OEMAKE += "CROSS_COMPILE=yes"
-EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip"
+EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip --enable-optimizations"
+PYTHON3_PROFILE_TASK ?= "${S}/Tools/pybench/pybench.py -n 10"
 
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 export _PYTHON_PROJECT_BASE = "${B}"
@@ -102,7 +105,6 @@ do_compile() {
         sed -e 's,${STAGING_DIR_HOST},,g' -i *.py
         cd -
 
-
 	# remove any bogus LD_LIBRARY_PATH
 	sed -i -e s,RUNSHARED=.*,RUNSHARED=, Makefile
 
@@ -121,23 +123,34 @@ do_compile() {
 	# then call do_install twice we get Makefile.orig == Makefile.sysroot
 	install -m 0644 Makefile Makefile.sysroot
 
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		LIB=${baselib} \
-		ARCH=${TARGET_ARCH} \
-		OPT="${CFLAGS}" libpython3.so
+        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
+                HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
+                STAGING_LIBDIR=${STAGING_LIBDIR} \
+                STAGING_INCDIR=${STAGING_INCDIR} \
+                STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
+                LIB=${baselib} \
+                ARCH=${TARGET_ARCH} \
+                OPT="${CFLAGS}" profile-opt
 
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		LIB=${baselib} \
-		ARCH=${TARGET_ARCH} \
-		OPT="${CFLAGS}"
+        if ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'true', 'false', d)}; then
+                qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}/${base_libdir}'])}"
+                cat > pgo-image-qemuwrapper << EOF
+#!/bin/sh
+set -x
+$qemu_binary "\$@"
+EOF
+                chmod +x pgo-image-qemuwrapper
+                ./pgo-image-qemuwrapper ${B}/python ${PYTHON3_PROFILE_TASK} || true
+	fi
+
+        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
+                HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
+                STAGING_LIBDIR=${STAGING_LIBDIR} \
+                STAGING_INCDIR=${STAGING_INCDIR} \
+                STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
+                LIB=${baselib} \
+                ARCH=${TARGET_ARCH} \
+                OPT="${CFLAGS}" clean_and_use_profile
 }
 
 do_install() {
@@ -157,7 +170,7 @@ do_install() {
 		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
 		LIB=${baselib} \
 		ARCH=${TARGET_ARCH} \
-		DESTDIR=${D} LIBDIR=${libdir}
+		DESTDIR=${D} LIBDIR=${libdir} build_all_use_profile
 	
 	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
