@@ -20,6 +20,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/infozip/UnZip%206.x%20%28latest%29/UnZip%206.0/
 	file://18-cve-2014-9913-unzip-buffer-overflow.patch \
 	file://19-cve-2016-9844-zipinfo-buffer-overflow.patch \
 	file://symlink.patch \
+	file://0001-unzip-fix-CVE-2018-1000035.patch \
 "
 UPSTREAM_VERSION_UNKNOWN = "1"
 
