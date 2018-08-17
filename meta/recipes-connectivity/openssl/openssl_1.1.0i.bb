@@ -51,28 +51,13 @@ do_configure () {
 	esac
 	target="$os-${HOST_ARCH}"
 	case $target in
-	linux-arm)
-		target=linux-armv4
-		;;
-	linux-armeb)
+	linux-arm*)
 		target=linux-armv4
 		;;
 	linux-aarch64*)
 		target=linux-aarch64
 		;;
-	linux-sh3)
-		target=linux-generic32
-		;;
-	linux-sh4)
-		target=linux-generic32
-		;;
-	linux-i486)
-		target=linux-elf
-		;;
-	linux-i586 | linux-viac3)
-		target=linux-elf
-		;;
-	linux-i686)
+	linux-i?86 | linux-viac3)
 		target=linux-elf
 		;;
 	linux-gnux32-x86_64 | linux-muslx32-x86_64 )
@@ -81,23 +66,17 @@ do_configure () {
 	linux-gnu64-x86_64)
 		target=linux-x86_64
 		;;
-	linux-mips)
+	linux-mips | linux-mipsel)
 		# specifying TARGET_CC_ARCH prevents openssl from (incorrectly) adding target architecture flags
-		target="linux-mips32 ${TARGET_CC_ARCH}"
-		;;
-	linux-mipsel)
 		target="linux-mips32 ${TARGET_CC_ARCH}"
 		;;
 	linux-gnun32-mips*)
 		target=linux-mips64
 		;;
-	linux-*-mips64 | linux-mips64)
+	linux-*-mips64 | linux-mips64 | linux-*-mips64el | linux-mips64el)
 		target=linux64-mips64
 		;;
-	linux-*-mips64el | linux-mips64el)
-		target=linux64-mips64
-		;;
-	linux-microblaze*|linux-nios2*)
+	linux-microblaze* | linux-nios2* | linux-sh3 | linux-sh4)
 		target=linux-generic32
 		;;
 	linux-powerpc)
@@ -112,14 +91,8 @@ do_configure () {
 	linux-riscv64)
 		target=linux-generic64
 		;;
-	linux-supersparc)
+	linux-sparc | linux-supersparc)
 		target=linux-sparcv9
-		;;
-	linux-sparc)
-		target=linux-sparcv9
-		;;
-	darwin-i386)
-		target=darwin-i386-cc
 		;;
 	esac
 
