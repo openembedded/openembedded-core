@@ -58,7 +58,7 @@ do_configure () {
 		target=linux-aarch64
 		;;
 	linux-i?86 | linux-viac3)
-		target=linux-elf
+		target=linux-x86
 		;;
 	linux-gnux32-x86_64 | linux-muslx32-x86_64 )
 		target=linux-x32
