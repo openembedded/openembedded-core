@@ -22,6 +22,7 @@ SRC_URI = "http://www.xmlsoft.org/sources/libxml2-${PV}.tar.gz;name=libtar \
            file://fix-execution-of-ptests.patch \
            file://fix-CVE-2017-8872.patch \
            file://fix-CVE-2018-14404.patch \
+           file://0001-Fix-infinite-loop-in-LZMA-decompression.patch \
            "
 
 SRC_URI[libtar.md5sum] = "b786e353e2aa1b872d70d5d1ca0c740d"
