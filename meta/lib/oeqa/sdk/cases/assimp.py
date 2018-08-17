@@ -1,7 +1,6 @@
 import os, subprocess, unittest
 import bb
 from oeqa.sdk.case import OESDKTestCase
-from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
@@ -62,7 +61,3 @@ class BuildAssimp(OESDKTestCase):
             self.assertEqual(machine, elf.machine())
             self.assertEqual(bits, elf.abiSize())
             self.assertEqual(endian, elf.isLittleEndian())
-
-    @classmethod
-    def tearDownClass(self):
-        self.project.clean()
