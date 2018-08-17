@@ -223,10 +223,11 @@ do_install () {
 	install -d ${D}${includedir}
 	cp --dereference -R include/openssl ${D}${includedir}
 
+	oe_multilib_header openssl/opensslconf.h
+
 	install -Dm 0755 ${WORKDIR}/openssl-c_rehash.sh ${D}${bindir}/c_rehash
 	sed -i -e 's,/etc/openssl,${sysconfdir}/ssl,g' ${D}${bindir}/c_rehash
 
-	oe_multilib_header openssl/opensslconf.h
 	if [ "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}" ]; then
 		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/CA.pl
 		sed -i -e '1s,.*,#!${bindir}/env perl,' ${D}${libdir}/ssl/misc/tsget
@@ -234,12 +235,12 @@ do_install () {
 		rm -f ${D}${libdir}/ssl/misc/CA.pl ${D}${libdir}/ssl/misc/tsget
 	fi
 
-	# Create SSL structure
-	install -d ${D}${sysconfdir}/ssl/
-	mv ${D}${libdir}/ssl/openssl.cnf \
-	   ${D}${libdir}/ssl/certs \
+	# Create SSL structure for packages such as ca-certificates which
+	# contain hard-coded paths to /etc/ssl. Debian does the same.
+	install -d ${D}${sysconfdir}/ssl
+	mv ${D}${libdir}/ssl/certs \
 	   ${D}${libdir}/ssl/private \
-	   \
+	   ${D}${libdir}/ssl/openssl.cnf \
 	   ${D}${sysconfdir}/ssl/
 	ln -sf ${sysconfdir}/ssl/certs ${D}${libdir}/ssl/certs
 	ln -sf ${sysconfdir}/ssl/private ${D}${libdir}/ssl/private
@@ -254,6 +255,19 @@ do_install () {
 	    rm -f $f
 	    ln -s openssl10-$ln_f $(dirname $f)/openssl10-$(basename $f)
 	done
+}
+
+do_install_append_class-native () {
+	create_wrapper ${D}${bindir}/openssl \
+	    OPENSSL_CONF=${libdir}/ssl/openssl.cnf \
+	    SSL_CERT_DIR=${libdir}/ssl/certs \
+	    SSL_CERT_FILE=${libdir}/ssl/cert.pem \
+	    OPENSSL_ENGINES=${libdir}/ssl/engines
+}
+
+do_install_append_class-nativesdk () {
+	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
+	install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
 
 do_install_ptest () {
@@ -304,21 +318,8 @@ do_install_ptest () {
 	${D}${PTEST_PATH}/Makefile ${D}${PTEST_PATH}/Configure
 }
 
-do_install_append_class-native() {
-	create_wrapper ${D}${bindir}/openssl \
-	    OPENSSL_CONF=${libdir}/ssl/openssl.cnf \
-	    SSL_CERT_DIR=${libdir}/ssl/certs \
-	    SSL_CERT_FILE=${libdir}/ssl/cert.pem \
-	    OPENSSL_ENGINES=${libdir}/ssl/engines
-}
-
-do_install_append_class-nativesdk() {
-	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
-	install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
-}
-
-# Add the openssl.cnf file to the openssl-conf package.  Make the libcrypto
-# package RRECOMMENDS on this package.  This will enable the configuration
+# Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
+# package RRECOMMENDS on this package. This will enable the configuration
 # file to be installed for both the base openssl package and the libcrypto
 # package since the base openssl package depends on the libcrypto package.
 

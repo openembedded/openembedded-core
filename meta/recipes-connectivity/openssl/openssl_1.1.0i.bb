@@ -106,16 +106,16 @@ do_configure () {
 
 do_install () {
 	oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install
+
 	oe_multilib_header openssl/opensslconf.h
 
-	# Create SSL structure for PATH hard-coded packages like ca-certificates
-	# Debian is also using this technique
-	install -d ${D}${sysconfdir}/ssl/
-	mv ${D}${libdir}/ssl-1.1/openssl.cnf \
-		${D}${libdir}/ssl-1.1/certs \
-		${D}${libdir}/ssl-1.1/private \
-		\
-		${D}${sysconfdir}/ssl/
+	# Create SSL structure for packages such as ca-certificates which
+	# contain hard-coded paths to /etc/ssl. Debian does the same.
+	install -d ${D}${sysconfdir}/ssl
+	mv ${D}${libdir}/ssl-1.1/certs \
+	   ${D}${libdir}/ssl-1.1/private \
+	   ${D}${libdir}/ssl-1.1/openssl.cnf \
+	   ${D}${sysconfdir}/ssl/
 	ln -sf ${sysconfdir}/ssl/certs ${D}${libdir}/ssl-1.1/certs
 	ln -sf ${sysconfdir}/ssl/private ${D}${libdir}/ssl-1.1/private
 	ln -sf ${sysconfdir}/ssl/openssl.cnf ${D}${libdir}/ssl-1.1/openssl.cnf
@@ -134,7 +134,7 @@ do_install_append_class-nativesdk () {
 	install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
 
-do_install_ptest() {
+do_install_ptest () {
 	cp -r * ${D}${PTEST_PATH}
 
 	# Putting .so files in ptest package will mess up the dependencies of the main openssl package
@@ -144,22 +144,26 @@ do_install_ptest() {
 	sed -i 's/$target{shared_extension_simple}/".so.ptest"/' ${D}${PTEST_PATH}/test/recipes/90-test_shlibload.t
 }
 
-PACKAGES =+ "libcrypto libssl ${PN}-misc ${PN}-engines openssl-conf"
+# Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
+# package RRECOMMENDS on this package. This will enable the configuration
+# file to be installed for both the openssl-bin package and the libcrypto
+# package since the openssl-bin package depends on the libcrypto package.
+
+PACKAGES =+ "libcrypto libssl openssl-conf ${PN}-engines ${PN}-misc"
 
 FILES_libcrypto = "${libdir}/libcrypto${SOLIBS}"
 FILES_libssl = "${libdir}/libssl${SOLIBS}"
+FILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf ${libdir}/ssl-1.1/openssl.cnf"
+FILES_${PN}-engines = "${libdir}/engines-1.1"
+FILES_${PN}-misc = "${libdir}/ssl-1.1/misc"
 FILES_${PN} =+ "${libdir}/ssl-1.1/*"
 FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
-FILES_${PN}-engines = "${libdir}/engines-1.1"
 
-FILES_${PN}-misc = "${libdir}/ssl-1.1/misc"
-RDEPENDS_${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
-
-FILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf ${libdir}/ssl-1.1/openssl.cnf"
 CONFFILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
-RRECOMMENDS_libcrypto += "openssl-conf"
 
+RRECOMMENDS_libcrypto += "openssl-conf"
 RDEPENDS_${PN}-bin = "perl"
+RDEPENDS_${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
 RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
 
 BBCLASSEXTEND = "native nativesdk"
