@@ -667,26 +667,26 @@ kernel_do_deploy() {
 	fi
 
 	for type in ${KERNEL_IMAGETYPES} ; do
-		base_name=${type}-${KERNEL_IMAGE_BASE_NAME}
+		base_name=${type}-${KERNEL_IMAGE_NAME}
 		install -m 0644 ${KERNEL_OUTPUT_DIR}/${type} $deployDir/${base_name}.bin
 	done
 	if [ ${MODULE_TARBALL_DEPLOY} = "1" ] && (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		mkdir -p ${D}/lib
-		tar -cvzf $deployDir/${MODULE_TARBALL_BASE_NAME} -C ${D} lib
-		ln -sf ${MODULE_TARBALL_BASE_NAME} $deployDir/${MODULE_TARBALL_SYMLINK_NAME}
+		tar -cvzf $deployDir/${MODULE_TARBALL_NAME} -C ${D} lib
+		ln -sf ${MODULE_TARBALL_NAME} $deployDir/${MODULE_TARBALL_LINK_NAME}
 	fi
 
 	for type in ${KERNEL_IMAGETYPES} ; do
-		base_name=${type}-${KERNEL_IMAGE_BASE_NAME}
-		symlink_name=${type}-${KERNEL_IMAGE_SYMLINK_NAME}
+		base_name=${type}-${KERNEL_IMAGE_NAME}
+		symlink_name=${type}-${KERNEL_IMAGE_LINK_NAME}
 		ln -sf ${base_name}.bin $deployDir/${symlink_name}.bin
 		ln -sf ${base_name}.bin $deployDir/${type}
 	done
 
 	if [ ! -z "${INITRAMFS_IMAGE}" -a x"${INITRAMFS_IMAGE_BUNDLE}" = x1 ]; then
 		for type in ${KERNEL_IMAGETYPES} ; do
-			initramfs_base_name=${type}-${INITRAMFS_BASE_NAME}
-			initramfs_symlink_name=${type}-${INITRAMFS_SYMLINK_NAME}
+			initramfs_base_name=${type}-${INITRAMFS_NAME}
+			initramfs_symlink_name=${type}-${INITRAMFS_LINK_NAME}
 			install -m 0644 ${KERNEL_OUTPUT_DIR}/${type}.initramfs $deployDir/${initramfs_base_name}.bin
 			ln -sf ${initramfs_base_name}.bin $deployDir/${initramfs_symlink_name}.bin
 		done
