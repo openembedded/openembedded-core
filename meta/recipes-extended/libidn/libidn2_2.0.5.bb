@@ -19,6 +19,10 @@ DEPENDS = "virtual/libiconv libunistring"
 
 inherit pkgconfig autotools gettext texinfo gtk-doc lib_package
 
+EXTRA_OECONF += "--disable-rpath \
+                 --with-libunistring-prefix=${STAGING_EXECPREFIXDIR} \
+                 "
+
 LICENSE_${PN} = "(GPLv2+ | LGPLv3)"
 LICENSE_${PN}-bin = "GPLv3+"
 
