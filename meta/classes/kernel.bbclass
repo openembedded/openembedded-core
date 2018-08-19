@@ -235,31 +235,31 @@ do_bundle_initramfs () {
 		copy_initramfs
 		# Backing up kernel image relies on its type(regular file or symbolic link)
 		tmp_path=""
-		for type in ${KERNEL_IMAGETYPE_FOR_MAKE} ; do
-			if [ -h ${KERNEL_OUTPUT_DIR}/$type ] ; then
-				linkpath=`readlink -n ${KERNEL_OUTPUT_DIR}/$type`
-				realpath=`readlink -fn ${KERNEL_OUTPUT_DIR}/$type`
+		for imageType in ${KERNEL_IMAGETYPE_FOR_MAKE} ; do
+			if [ -h ${KERNEL_OUTPUT_DIR}/$imageType ] ; then
+				linkpath=`readlink -n ${KERNEL_OUTPUT_DIR}/$imageType`
+				realpath=`readlink -fn ${KERNEL_OUTPUT_DIR}/$imageType`
 				mv -f $realpath $realpath.bak
-				tmp_path=$tmp_path" "$type"#"$linkpath"#"$realpath
-			elif [ -f ${KERNEL_OUTPUT_DIR}/$type ]; then
-				mv -f ${KERNEL_OUTPUT_DIR}/$type ${KERNEL_OUTPUT_DIR}/$type.bak
-				tmp_path=$tmp_path" "$type"##"
+				tmp_path=$tmp_path" "$imageType"#"$linkpath"#"$realpath
+			elif [ -f ${KERNEL_OUTPUT_DIR}/$imageType ]; then
+				mv -f ${KERNEL_OUTPUT_DIR}/$imageType ${KERNEL_OUTPUT_DIR}/$imageType.bak
+				tmp_path=$tmp_path" "$imageType"##"
 			fi
 		done
 		use_alternate_initrd=CONFIG_INITRAMFS_SOURCE=${B}/usr/${INITRAMFS_IMAGE_NAME}.cpio
 		kernel_do_compile
 		# Restoring kernel image
 		for tp in $tmp_path ; do
-			type=`echo $tp|cut -d "#" -f 1`
+			imageType=`echo $tp|cut -d "#" -f 1`
 			linkpath=`echo $tp|cut -d "#" -f 2`
 			realpath=`echo $tp|cut -d "#" -f 3`
 			if [ -n "$realpath" ]; then
 				mv -f $realpath $realpath.initramfs
 				mv -f $realpath.bak $realpath
-				ln -sf $linkpath.initramfs ${B}/${KERNEL_OUTPUT_DIR}/$type.initramfs
+				ln -sf $linkpath.initramfs ${B}/${KERNEL_OUTPUT_DIR}/$imageType.initramfs
 			else
-				mv -f ${KERNEL_OUTPUT_DIR}/$type ${KERNEL_OUTPUT_DIR}/$type.initramfs
-				mv -f ${KERNEL_OUTPUT_DIR}/$type.bak ${KERNEL_OUTPUT_DIR}/$type
+				mv -f ${KERNEL_OUTPUT_DIR}/$imageType ${KERNEL_OUTPUT_DIR}/$imageType.initramfs
+				mv -f ${KERNEL_OUTPUT_DIR}/$imageType.bak ${KERNEL_OUTPUT_DIR}/$imageType
 			fi
 		done
 	fi
@@ -365,10 +365,10 @@ kernel_do_install() {
 	#
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -d ${D}/boot
-	for type in ${KERNEL_IMAGETYPES} ; do
-		install -m 0644 ${KERNEL_OUTPUT_DIR}/${type} ${D}/${KERNEL_IMAGEDEST}/${type}-${KERNEL_VERSION}
+	for imageType in ${KERNEL_IMAGETYPES} ; do
+		install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType} ${D}/${KERNEL_IMAGEDEST}/${imageType}-${KERNEL_VERSION}
 		if [ "${KERNEL_PACKAGE_NAME}" = "kernel" ]; then
-			ln -sf ${type}-${KERNEL_VERSION} ${D}/${KERNEL_IMAGEDEST}/${type}
+			ln -sf ${imageType}-${KERNEL_VERSION} ${D}/${KERNEL_IMAGEDEST}/${imageType}
 		fi
 	done
 	install -m 0644 System.map ${D}/boot/System.map-${KERNEL_VERSION}
@@ -640,10 +640,10 @@ do_sizecheck() {
 			die "Invalid KERNEL_IMAGE_MAXSIZE: ${KERNEL_IMAGE_MAXSIZE}, should be an integer (The unit is Kbytes)"
 		fi
 		at_least_one_fits=
-		for type in ${KERNEL_IMAGETYPES} ; do
-			size=`du -ks ${B}/${KERNEL_OUTPUT_DIR}/$type | awk '{print $1}'`
+		for imageType in ${KERNEL_IMAGETYPES} ; do
+			size=`du -ks ${B}/${KERNEL_OUTPUT_DIR}/$imageType | awk '{print $1}'`
 			if [ $size -ge ${KERNEL_IMAGE_MAXSIZE} ]; then
-				bbwarn "This kernel $type (size=$size(K) > ${KERNEL_IMAGE_MAXSIZE}(K)) is too big for your device."
+				bbwarn "This kernel $imageType (size=$size(K) > ${KERNEL_IMAGE_MAXSIZE}(K)) is too big for your device."
 			else
 				at_least_one_fits=y
 			fi
@@ -666,9 +666,9 @@ kernel_do_deploy() {
 		mkdir "$deployDir"
 	fi
 
-	for type in ${KERNEL_IMAGETYPES} ; do
-		base_name=${type}-${KERNEL_IMAGE_NAME}
-		install -m 0644 ${KERNEL_OUTPUT_DIR}/${type} $deployDir/${base_name}.bin
+	for imageType in ${KERNEL_IMAGETYPES} ; do
+		base_name=${imageType}-${KERNEL_IMAGE_NAME}
+		install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType} $deployDir/${base_name}.bin
 	done
 	if [ ${MODULE_TARBALL_DEPLOY} = "1" ] && (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		mkdir -p ${D}/lib
@@ -676,18 +676,18 @@ kernel_do_deploy() {
 		ln -sf modules-${MODULE_TARBALL_NAME}.tgz $deployDir/modules-${MODULE_TARBALL_LINK_NAME}.tgz
 	fi
 
-	for type in ${KERNEL_IMAGETYPES} ; do
-		base_name=${type}-${KERNEL_IMAGE_NAME}
-		symlink_name=${type}-${KERNEL_IMAGE_LINK_NAME}
+	for imageType in ${KERNEL_IMAGETYPES} ; do
+		base_name=${imageType}-${KERNEL_IMAGE_NAME}
+		symlink_name=${imageType}-${KERNEL_IMAGE_LINK_NAME}
 		ln -sf ${base_name}.bin $deployDir/${symlink_name}.bin
-		ln -sf ${base_name}.bin $deployDir/${type}
+		ln -sf ${base_name}.bin $deployDir/${imageType}
 	done
 
 	if [ ! -z "${INITRAMFS_IMAGE}" -a x"${INITRAMFS_IMAGE_BUNDLE}" = x1 ]; then
-		for type in ${KERNEL_IMAGETYPES} ; do
-			initramfs_base_name=${type}-${INITRAMFS_NAME}
-			initramfs_symlink_name=${type}-${INITRAMFS_LINK_NAME}
-			install -m 0644 ${KERNEL_OUTPUT_DIR}/${type}.initramfs $deployDir/${initramfs_base_name}.bin
+		for imageType in ${KERNEL_IMAGETYPES} ; do
+			initramfs_base_name=${imageType}-${INITRAMFS_NAME}
+			initramfs_symlink_name=${imageType}-${INITRAMFS_LINK_NAME}
+			install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType}.initramfs $deployDir/${initramfs_base_name}.bin
 			ln -sf ${initramfs_base_name}.bin $deployDir/${initramfs_symlink_name}.bin
 		done
 	fi
