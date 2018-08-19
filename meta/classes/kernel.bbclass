@@ -672,8 +672,8 @@ kernel_do_deploy() {
 	done
 	if [ ${MODULE_TARBALL_DEPLOY} = "1" ] && (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		mkdir -p ${D}/lib
-		tar -cvzf $deployDir/${MODULE_TARBALL_NAME} -C ${D} lib
-		ln -sf ${MODULE_TARBALL_NAME} $deployDir/${MODULE_TARBALL_LINK_NAME}
+		tar -cvzf $deployDir/modules-${MODULE_TARBALL_NAME}.tgz -C ${D} lib
+		ln -sf modules-${MODULE_TARBALL_NAME}.tgz $deployDir/modules-${MODULE_TARBALL_LINK_NAME}.tgz
 	fi
 
 	for type in ${KERNEL_IMAGETYPES} ; do
