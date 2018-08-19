@@ -1,4 +1,4 @@
-inherit kernel-uboot uboot-sign
+inherit kernel-uboot kernel-artifact-names uboot-sign
 
 python __anonymous () {
     kerneltypes = d.getVar('KERNEL_IMAGETYPES') or ""
@@ -488,32 +488,22 @@ kernel_do_deploy[vardepsexclude] = "DATETIME"
 kernel_do_deploy_append() {
 	# Update deploy directory
 	if echo ${KERNEL_IMAGETYPES} | grep -wq "fitImage"; then
-		cd ${B}
 		echo "Copying fit-image.its source file..."
-		its_base_name="fitImage-its-${PV}-${PR}-${MACHINE}-${DATETIME}"
-		its_symlink_name=fitImage-its-${MACHINE}
-		install -m 0644 fit-image.its ${DEPLOYDIR}/${its_base_name}.its
-		linux_bin_base_name="fitImage-linux.bin-${PV}-${PR}-${MACHINE}-${DATETIME}"
-		linux_bin_symlink_name=fitImage-linux.bin-${MACHINE}
-		install -m 0644 linux.bin ${DEPLOYDIR}/${linux_bin_base_name}.bin
+		install -m 0644 ${B}/fit-image.its ${DEPLOYDIR}/fitImage-its-${KERNEL_FIT_BASE_NAME}.its
+		ln -snf fitImage-its-${KERNEL_FIT_BASE_NAME} ${DEPLOYDIR}/fitImage-its-${KERNEL_FIT_SYMLINK_NAME}
+
+		echo "Copying linux.bin file..."
+		install -m 0644 ${B}/linux.bin ${DEPLOYDIR}/fitImage-linux.bin-${KERNEL_FIT_BASE_NAME}.bin
+		ln -snf fitImage-linux.bin-${KERNEL_FIT_BASE_NAME}.bin ${DEPLOYDIR}/fitImage-linux.bin-${KERNEL_FIT_SYMLINK_NAME}
 
 		if [ -n "${INITRAMFS_IMAGE}" ]; then
 			echo "Copying fit-image-${INITRAMFS_IMAGE}.its source file..."
-			its_initramfs_base_name="fitImage-its-${INITRAMFS_IMAGE_NAME}-${PV}-${PR}-${DATETIME}"
-			its_initramfs_symlink_name=fitImage-its-${INITRAMFS_IMAGE_NAME}
-			install -m 0644 fit-image-${INITRAMFS_IMAGE}.its ${DEPLOYDIR}/${its_initramfs_base_name}.its
-			fit_initramfs_base_name="fitImage-${INITRAMFS_IMAGE_NAME}-${PV}-${PR}-${DATETIME}"
-			fit_initramfs_symlink_name=fitImage-${INITRAMFS_IMAGE_NAME}
-			install -m 0644 arch/${ARCH}/boot/fitImage-${INITRAMFS_IMAGE} ${DEPLOYDIR}/${fit_initramfs_base_name}.bin
-		fi
+			install -m 0644 ${B}/fit-image-${INITRAMFS_IMAGE}.its ${DEPLOYDIR}/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_BASE_NAME}.its
+			ln -snf fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_BASE_NAME}.its ${DEPLOYDIR}/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_SYMLINK_NAME}
 
-		cd ${DEPLOYDIR}
-		ln -sf ${its_base_name}.its ${its_symlink_name}.its
-		ln -sf ${linux_bin_base_name}.bin ${linux_bin_symlink_name}.bin
-
-		if [ -n "${INITRAMFS_IMAGE}" ]; then
-			ln -sf ${its_initramfs_base_name}.its ${its_initramfs_symlink_name}.its
-			ln -sf ${fit_initramfs_base_name}.bin ${fit_initramfs_symlink_name}.bin
+			echo "Copying fitImage-${INITRAMFS_IMAGE} file..."
+			install -m 0644 ${B}/arch/${ARCH}/boot/fitImage-${INITRAMFS_IMAGE} ${DEPLOYDIR}/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_BASE_NAME}.bin
+			ln -snf fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_BASE_NAME}.bin ${DEPLOYDIR}/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_SYMLINK_NAME}
 		fi
 	fi
 }
