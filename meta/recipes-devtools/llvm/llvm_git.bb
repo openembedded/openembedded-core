@@ -50,9 +50,7 @@ def get_llvm_host_arch(bb, d):
 #
 # Default to build all OE-Core supported target arches (user overridable).
 #
-LLVM_TARGETS ?= "${@get_llvm_host_arch(bb, d)}"
-LLVM_TARGETS_prepend_class-target_x86 = "AMDGPU;"
-LLVM_TARGETS_prepend_class-target_x86-64 = "AMDGPU;"
+LLVM_TARGETS ?= "AMDGPU;${@get_llvm_host_arch(bb, d)}"
 
 ARM_INSTRUCTION_SET_armv5 = "arm"
 ARM_INSTRUCTION_SET_armv4t = "arm"
