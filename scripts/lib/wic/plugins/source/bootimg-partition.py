@@ -30,6 +30,7 @@ import re
 from glob import glob
 
 from wic import WicError
+from wic.engine import get_custom_config
 from wic.pluginbase import SourcePlugin
 from wic.misc import exec_cmd, get_bitbake_var
 
@@ -114,38 +115,52 @@ class BootimgPartitionPlugin(SourcePlugin):
         if source_params.get('loader') != "u-boot":
             return
 
-        # The kernel types supported by the sysboot of u-boot
-        kernel_types = ["uImage", "zImage", "Image", "vmlinux", "fitImage"]
-        has_dtb = False
-        fdt_dir = '/'
-        kernel_name = None
-        for task in cls.install_task:
-            src, dst = task
-            # Find the kernel image name
-            for image in kernel_types:
-                if re.match(image, src):
-                    if not kernel_name:
-                        kernel_name = os.path.join('/', dst)
-                    else:
-                        raise WicError('Multi kernel file founded')
+        configfile = cr.ks.bootloader.configfile
+        custom_cfg = None
+        if configfile:
+            custom_cfg = get_custom_config(configfile)
+            if custom_cfg:
+                # Use a custom configuration for extlinux.conf
+                extlinux_conf = custom_cfg
+                logger.debug("Using custom configuration file "
+                             "%s for extlinux.cfg", configfile)
+            else:
+                raise WicError("configfile is specified but failed to "
+                               "get it from %s." % configfile)
 
-            # We suppose that all the dtb are in the same directory
-            if re.search(r'\.dtb', src) and fdt_dir == '/':
-                has_dtb = True
-                fdt_dir = os.path.join(fdt_dir, os.path.dirname(dst))
+        if not custom_cfg:
+            # The kernel types supported by the sysboot of u-boot
+            kernel_types = ["uImage", "zImage", "Image", "vmlinux", "fitImage"]
+            has_dtb = False
+            fdt_dir = '/'
+            kernel_name = None
+            for task in cls.install_task:
+                src, dst = task
+                # Find the kernel image name
+                for image in kernel_types:
+                    if re.match(image, src):
+                        if not kernel_name:
+                            kernel_name = os.path.join('/', dst)
+                        else:
+                            raise WicError('Multi kernel file founded')
 
-        if not kernel_name:
-            raise WicError('No kernel file founded')
+                # We suppose that all the dtb are in the same directory
+                if re.search(r'\.dtb', src) and fdt_dir == '/':
+                    has_dtb = True
+                    fdt_dir = os.path.join(fdt_dir, os.path.dirname(dst))
 
-        # Compose the extlinux.conf
-        extlinux_conf = "default Yocto\n"
-        extlinux_conf += "label Yocto\n"
-        extlinux_conf += "   kernel %s\n" % kernel_name
-        if has_dtb:
-            extlinux_conf += "   fdtdir %s\n" % fdt_dir
-        bootloader = cr.ks.bootloader
-        extlinux_conf += "append root=%s rootwait %s\n" \
-                         % (cr.rootdev, bootloader.append if bootloader.append else '')
+            if not kernel_name:
+                raise WicError('No kernel file founded')
+
+            # Compose the extlinux.conf
+            extlinux_conf = "default Yocto\n"
+            extlinux_conf += "label Yocto\n"
+            extlinux_conf += "   kernel %s\n" % kernel_name
+            if has_dtb:
+                extlinux_conf += "   fdtdir %s\n" % fdt_dir
+            bootloader = cr.ks.bootloader
+            extlinux_conf += "append root=%s rootwait %s\n" \
+                             % (cr.rootdev, bootloader.append if bootloader.append else '')
 
         install_cmd = "install -d %s/extlinux/" % hdddir
         exec_cmd(install_cmd)
