@@ -44,14 +44,15 @@ def get_llvm_arch(bb, d, arch_var):
     else:
         raise bb.parse.SkipRecipe("Cannot map '%s' to a supported LLVM architecture" % a)
 
-def get_llvm_target_arch(bb, d):
-    return get_llvm_arch(bb, d, 'TARGET_ARCH')
+def get_llvm_host_arch(bb, d):
+    return get_llvm_arch(bb, d, 'HOST_ARCH')
+
 #
 # Default to build all OE-Core supported target arches (user overridable).
 #
-LLVM_TARGETS ?= "${@get_llvm_target_arch(bb, d)}"
-LLVM_TARGETS_prepend_x86 = "AMDGPU;"
-LLVM_TARGETS_prepend_x86-64 = "AMDGPU;"
+LLVM_TARGETS ?= "${@get_llvm_host_arch(bb, d)}"
+LLVM_TARGETS_prepend_class-target_x86 = "AMDGPU;"
+LLVM_TARGETS_prepend_class-target_x86-64 = "AMDGPU;"
 
 ARM_INSTRUCTION_SET_armv5 = "arm"
 ARM_INSTRUCTION_SET_armv4t = "arm"
