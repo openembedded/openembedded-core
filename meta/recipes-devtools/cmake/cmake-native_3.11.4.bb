@@ -3,7 +3,12 @@ inherit native
 
 DEPENDS += "bzip2-replacement-native expat-native xz-native zlib-native curl-native"
 
-SRC_URI += "file://0004-Disable-use-of-ext2fs-ext2_fs.h-by-cmake-s-internal-.patch"
+SRC_URI += "file://0004-Disable-use-of-ext2fs-ext2_fs.h-by-cmake-s-internal-.patch \
+            file://OEToolchainConfig.cmake \
+            file://environment.d-cmake.sh \
+            file://0001-CMakeDetermineSystem-use-oe-environment-vars-to-load.patch \
+            "
+
 
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
@@ -31,6 +36,15 @@ do_compile() {
 
 do_install() {
 	oe_runmake 'DESTDIR=${D}' install
+
+	# The following codes are here because eSDK needs to provide compatibilty
+	# for SDK. That is, eSDK could also be used like traditional SDK.
+	mkdir -p ${D}${datadir}/cmake
+	install -m 644 ${WORKDIR}/OEToolchainConfig.cmake ${D}${datadir}/cmake/
+	mkdir -p ${D}${base_prefix}/environment-setup.d
+	install -m 644 ${WORKDIR}/environment.d-cmake.sh ${D}${base_prefix}/environment-setup.d/cmake.sh
 }
 
 do_compile[progress] = "percent"
+
+SYSROOT_DIRS_NATIVE += "${datadir}/cmake ${base_prefix}/environment-setup.d"
