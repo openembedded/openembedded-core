@@ -130,24 +130,28 @@ class BootimgPartitionPlugin(SourcePlugin):
 
         if not custom_cfg:
             # The kernel types supported by the sysboot of u-boot
-            kernel_types = ["uImage", "zImage", "Image", "vmlinux", "fitImage"]
+            kernel_types = ["zImage", "Image", "fitImage", "uImage", "vmlinux"]
             has_dtb = False
             fdt_dir = '/'
             kernel_name = None
+
+            # Find the kernel image name, from the highest precedence to lowest
+            for image in kernel_types:
+                for task in cls.install_task:
+                    src, dst = task
+                    if re.match(image, src):
+                        kernel_name = os.path.join('/', dst)
+                        break
+                if kernel_name:
+                    break
+
             for task in cls.install_task:
                 src, dst = task
-                # Find the kernel image name
-                for image in kernel_types:
-                    if re.match(image, src):
-                        if not kernel_name:
-                            kernel_name = os.path.join('/', dst)
-                        else:
-                            raise WicError('Multi kernel file founded')
-
                 # We suppose that all the dtb are in the same directory
                 if re.search(r'\.dtb', src) and fdt_dir == '/':
                     has_dtb = True
                     fdt_dir = os.path.join(fdt_dir, os.path.dirname(dst))
+                    break
 
             if not kernel_name:
                 raise WicError('No kernel file founded')
