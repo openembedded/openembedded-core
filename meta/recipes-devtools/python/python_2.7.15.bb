@@ -1,6 +1,7 @@
 require python.inc
 
-DEPENDS = "python-native libffi bzip2 gdbm openssl readline sqlite3 zlib"
+DEPENDS = "python-native libffi bzip2 gdbm openssl \
+           readline sqlite3 zlib virtual/crypt"
 
 PR = "${INC_PR}"
 

@@ -1,6 +1,8 @@
 require recipes-devtools/python/python.inc
 
-DEPENDS = "python3-native libffi bzip2 gdbm openssl sqlite3 zlib virtual/libintl xz qemu-native qemu-helper-native"
+DEPENDS = "python3-native libffi bzip2 gdbm openssl \
+           sqlite3 zlib virtual/libintl xz qemu-native \
+           qemu-helper-native virtual/crypt"
 
 PR = "${INC_PR}.0"
 PYTHON_MAJMIN = "3.5"
