@@ -1024,7 +1024,7 @@ python split_and_strip_files () {
                 else:
                     inodes[file_reference] = [file]
                     # break hardlink
-                    bb.utils.copyfile(file, file)
+                    bb.utils.break_hardlinks(file)
                     elffiles[file] = elf_file
                 # Modified the file so clear the cache
                 cpath.updatecache(file)
