@@ -225,7 +225,9 @@ def fork_for_tests(concurrency_num, suite):
                 finally:
                     if newbuilddir:
                         removebuilddir(newbuilddir)
+                    stream.flush()
                     os._exit(1)
+            stream.flush()
             os._exit(0)
         else:
             os.close(c2pwrite)
