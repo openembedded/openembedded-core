@@ -58,7 +58,7 @@ class OETestContext(object):
         self.suites = self.loader.discover()
 
     def runTests(self, processes=None, skips=[]):
-        self.runner = self.runnerClass(self, descriptions=False, verbosity=2, buffer=True)
+        self.runner = self.runnerClass(self, descriptions=False, verbosity=2)
 
         # Dinamically skip those tests specified though arguments
         self.skipTests(skips)
@@ -70,6 +70,7 @@ class OETestContext(object):
             concurrent_suite = ConcurrentTestSuite(self.suites, processes)
             result = self.runner.run(concurrent_suite)
         else:
+            self.runner.buffer = True
             result = self.runner.run(self.suites)
         self._run_end_time = time.time()
 
