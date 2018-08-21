@@ -159,7 +159,7 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, d, qa_already_stripp
                     else:
                         # break hardlinks so that we do not strip the original.
                         inodes[inodecache[file]] = file
-                        bb.utils.copyfile(file, file)
+                        bb.utils.break_hardlinks(file)
                         elffiles[file] = elf_file
 
     #
