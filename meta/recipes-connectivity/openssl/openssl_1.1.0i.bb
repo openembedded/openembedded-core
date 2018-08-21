@@ -14,6 +14,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
            file://0001-Take-linking-flags-from-LDFLAGS-env-var.patch \
+           file://0001-allow-OPENSSLDIR-and-ENGINESDIR-CFLAGS-to-be-control.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
@@ -29,6 +30,9 @@ inherit lib_package multilib_header ptest relative_symlinks
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
 EXTRA_OECONF_append_libc-musl = " -DOPENSSL_NO_ASYNC"
+
+EXTRA_OEMAKE_append_class-native = " OE_DOPENSSLDIR='/not/builtin' OE_DENGINESDIR='/not/builtin'"
+EXTRA_OEMAKE_append_class-nativesdk = " OE_DOPENSSLDIR='/not/builtin' OE_DENGINESDIR='/not/builtin'"
 
 do_configure () {
 	os=${HOST_OS}
@@ -116,6 +120,12 @@ do_install () {
 }
 
 do_install_append_class-native () {
+	create_wrapper ${D}${bindir}/openssl \
+	    OPENSSL_CONF=${libdir}/ssl-1.1/openssl.cnf \
+	    SSL_CERT_DIR=${libdir}/ssl-1.1/certs \
+	    SSL_CERT_FILE=${libdir}/ssl-1.1/cert.pem \
+	    OPENSSL_ENGINES=${libdir}/ssl-1.1/engines
+
 	# Install a custom version of c_rehash that can handle sysroots properly.
 	# This version is used for example when installing ca-certificates during
 	# image creation.
