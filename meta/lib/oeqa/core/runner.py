@@ -56,6 +56,14 @@ class OETestResult(_TestResult):
         if test.id() in self.progressinfo:
             self.tc.logger.info(self.progressinfo[test.id()])
 
+        # Print the errors/failures early to aid/speed debugging, its a pain
+        # to wait until selftest finishes to see them.
+        for t in ['failures', 'errors', 'skipped', 'expectedFailures']:
+            for (scase, msg) in getattr(self, t):
+                if test.id() == scase.id():
+                    self.tc.logger.info(str(msg))
+                    break
+
     def logSummary(self, component, context_msg=''):
         elapsed_time = self.tc._run_end_time - self.tc._run_start_time
         self.tc.logger.info("SUMMARY:")
