@@ -33,10 +33,11 @@ SSTATE_DUPWHITELIST += "${DEPLOY_DIR_RPM}/sdk_provides_dummy_nativesdk/ ${DEPLOY
 SSTATE_DUPWHITELIST += "${DEPLOY_DIR_RPM}/buildtools_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/buildtools-dummy-nativesdk/"
 # Archive the sources for many architectures in one deploy folder
 SSTATE_DUPWHITELIST += "${DEPLOY_DIR_SRC}"
-# ovmf/grub-efi/systemd-boot multilib recipes can generate identical overlapping files
+# ovmf/grub-efi/systemd-boot/intel-microcode multilib recipes can generate identical overlapping files
 SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/ovmf"
 SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/grub-efi"
 SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/systemd-boot"
+SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/microcode"
 
 SSTATE_SCAN_FILES ?= "*.la *-config *_config postinst-*"
 SSTATE_SCAN_CMD ??= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES").split())}" \) -type f'
