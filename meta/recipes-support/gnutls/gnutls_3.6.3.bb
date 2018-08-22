@@ -18,7 +18,6 @@ DEPENDS_append_libc-musl = " argp-standalone"
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
 SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar.xz \
-           file://0001-configure.ac-fix-sed-command.patch \
            file://arm_eabi.patch \
 "
 
