@@ -14,16 +14,15 @@ LIC_FILES_CHKSUM = "file://docs/LICENSE.TXT;md5=4af6221506f202774ef74f64932878a1
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/freetype/freetype-${PV}.tar.bz2 \
            file://use-right-libtool.patch \
-           file://fix-potential-numeric-overflow.patch \
           "
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/freetype/files/freetype2/"
 UPSTREAM_CHECK_REGEX = "freetype-(?P<pver>\d+(\.\d+)+)"
 
-SRC_URI[md5sum] = "513c403c110016fdc7e537216a642b1d"
-SRC_URI[sha256sum] = "e6ffba3c8cef93f557d1f767d7bc3dee860ac7a3aaff588a521e081bc36f4c8a"
+SRC_URI[md5sum] = "60ef7d8160cd4bf8cb118ee9d65367ca"
+SRC_URI[sha256sum] = "db8d87ea720ea9d5edc5388fc7a0497bb11ba9fe972245e0f7f4c7e8b1e1e84d"
 
-inherit autotools pkgconfig binconfig-disabled multilib_header
+inherit autotools pkgconfig multilib_header
 
 # Adapt autotools to work with the minimal autoconf usage in freetype
 AUTOTOOLS_SCRIPT_PATH = "${S}/builds/unix"
@@ -37,6 +36,7 @@ PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2"
 PACKAGECONFIG[harfbuzz] = "--with-harfbuzz,--without-harfbuzz,harfbuzz"
 PACKAGECONFIG[pixmap] = "--with-png,--without-png,libpng"
 PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib"
+PACKAGECONFIG[freetypeconfig] = "--enable-freetype-config=yes,--enable-freetype-config=no,"
 
 EXTRA_OECONF = "CC_BUILD='${BUILD_CC}'"
 
@@ -45,7 +45,5 @@ TARGET_CPPFLAGS += "-D_FILE_OFFSET_BITS=64"
 do_install_append() {
 	oe_multilib_header freetype2/freetype/config/ftconfig.h
 }
-
-BINCONFIG = "${bindir}/freetype-config"
 
 BBCLASSEXTEND = "native nativesdk"
