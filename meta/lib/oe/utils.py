@@ -368,6 +368,9 @@ def get_multilib_datastore(variant, d):
         localdata.setVar("OVERRIDES", overrides)
         localdata.setVar("MLPREFIX", variant + "-")
     else:
+        origdefault = localdata.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL")
+        if origdefault:
+            localdata.setVar("DEFAULTTUNE", origdefault)
         overrides = localdata.getVar("OVERRIDES", False).split(":")
         overrides = ":".join([x for x in overrides if not x.startswith("virtclass-multilib-")])
         localdata.setVar("OVERRIDES", overrides)
