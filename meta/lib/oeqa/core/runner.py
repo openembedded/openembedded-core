@@ -54,7 +54,7 @@ class OETestResult(_TestResult):
         self.endtime[test.id()] = time.time()
         super(OETestResult, self).stopTest(test)
         if test.id() in self.progressinfo:
-            print(self.progressinfo[test.id()])
+            self.tc.logger.info(self.progressinfo[test.id()])
 
     def logSummary(self, component, context_msg=''):
         elapsed_time = self.tc._run_end_time - self.tc._run_start_time
