@@ -361,21 +361,7 @@ def all_multilib_tune_list(vars, d):
     for v in vars:
         values[v] = []
 
-    localdata = bb.data.createCopy(d)
-    overrides = localdata.getVar("OVERRIDES", False).split(":")
-    newoverrides = []
-    for o in overrides:
-        if not o.startswith("virtclass-multilib-"):
-            newoverrides.append(o)
-    localdata.setVar("OVERRIDES", ":".join(newoverrides))
-    localdata.setVar("MLPREFIX", "")
-    origdefault = localdata.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL")
-    if origdefault:
-        localdata.setVar("DEFAULTTUNE", origdefault)
-    values['ml'] = ['']
-    for v in vars:
-        values[v].append(localdata.getVar(v))
-    variants = d.getVar("MULTILIB_VARIANTS") or ""
+    variants = (d.getVar("MULTILIB_VARIANTS") or "").split() + ['']
     for item in variants.split():
         localdata = get_multilib_datastore(item, d)
         values[v].append(localdata.getVar(v))
