@@ -339,7 +339,7 @@ python split_perl_packages () {
 }
 
 PACKAGES_DYNAMIC += "^perl-module-.*(?<!\-native)$"
-PACKAGES_DYNAMIC_class-nativesdk += "^nativesdk-perl-module-.*"
+PACKAGES_DYNAMIC_class-nativesdk = "^nativesdk-perl-module-.*"
 
 RPROVIDES_perl-lib = "perl-lib"
 
