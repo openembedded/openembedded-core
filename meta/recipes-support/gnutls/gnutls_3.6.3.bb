@@ -35,8 +35,6 @@ PACKAGECONFIG[libidn] = "--with-idn,--without-idn,libidn2"
 PACKAGECONFIG[libtasn1] = "--with-included-libtasn1=no,--with-included-libtasn1,libtasn1"
 PACKAGECONFIG[p11-kit] = "--with-p11-kit,--without-p11-kit,p11-kit"
 PACKAGECONFIG[tpm] = "--with-tpm,--without-tpm,trousers"
-PACKAGECONFIG[ssl3] = "--enable-ssl3-support,--disable-ssl3-support,"
-PACKAGECONFIG[tls13] = "--enable-tls13-support,--disable-tls13-support,"
 
 EXTRA_OECONF = " \
     --enable-doc \
