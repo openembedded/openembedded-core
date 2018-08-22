@@ -1,28 +1,15 @@
 inherit linuxloader
 
-def ld_append_if_tune_exists(d, infos):
-    loader = get_linuxloader(d)
-    if loader:
-        infos['ldconfig'].add('{"' + loader + '",' + "FLAG_ELF_LIBC6" + ' }')
-        infos['lddrewrite'].add(loader)
+GLIBC_GETLOADER = "${@get_linuxloader(d)}"
 
 def glibc_dl_info(d):
     infos = {'ldconfig':set(), 'lddrewrite':set()}
-    ld_append_if_tune_exists(d, infos)
 
-    #DEFAULTTUNE_MULTILIB_ORIGINAL
-    original_tune=d.getVar("DEFAULTTUNE_MULTILIB_ORIGINAL")
-    if original_tune:
-        localdata = bb.data.createCopy(d)
-        localdata.setVar("DEFAULTTUNE", original_tune)
-        ld_append_if_tune_exists(localdata, infos)
+    loaders = all_multilib_tune_values(d, "GLIBC_GETLOADER").split()
+    for loader in loaders:
+        infos['ldconfig'].add('{"' + loader + '",' + "FLAG_ELF_LIBC6" + ' }')
+        infos['lddrewrite'].add(loader)
 
-    variants = d.getVar("MULTILIB_VARIANTS") or ""
-    for item in variants.split():
-        localdata = bb.data.createCopy(d)
-        overrides = localdata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + item
-        localdata.setVar("OVERRIDES", overrides)
-        ld_append_if_tune_exists(localdata, infos)
     infos['ldconfig'] = ','.join(infos['ldconfig'])
     infos['lddrewrite'] = ' '.join(infos['lddrewrite'])
     return infos
