@@ -58,7 +58,7 @@ SRC_URI[sha256sum] = "50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c
 
 UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 
-inherit pkgconfig siteinfo multilib_header ptest relative_symlinks manpages
+inherit pkgconfig siteinfo multilib_header ptest manpages
 
 PACKAGECONFIG ?= "cryptodev-linux"
 PACKAGECONFIG_class-native = ""
@@ -242,9 +242,12 @@ do_install () {
 	   ${D}${libdir}/ssl/private \
 	   ${D}${libdir}/ssl/openssl.cnf \
 	   ${D}${sysconfdir}/ssl/
-	ln -sf ${sysconfdir}/ssl/certs ${D}${libdir}/ssl/certs
-	ln -sf ${sysconfdir}/ssl/private ${D}${libdir}/ssl/private
-	ln -sf ${sysconfdir}/ssl/openssl.cnf ${D}${libdir}/ssl/openssl.cnf
+
+	# Although absolute symlinks would be OK for the target, they become
+	# invalid if native or nativesdk are relocated from sstate.
+	ln -sf ${@oe.path.relative('${libdir}/ssl', '${sysconfdir}/ssl/certs')} ${D}${libdir}/ssl/certs
+	ln -sf ${@oe.path.relative('${libdir}/ssl', '${sysconfdir}/ssl/private')} ${D}${libdir}/ssl/private
+	ln -sf ${@oe.path.relative('${libdir}/ssl', '${sysconfdir}/ssl/openssl.cnf')} ${D}${libdir}/ssl/openssl.cnf
 
 	# Rename man pages to prefix openssl10-*
 	for f in `find ${D}${mandir} -type f`; do

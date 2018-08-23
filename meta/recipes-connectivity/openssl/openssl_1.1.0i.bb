@@ -24,7 +24,7 @@ SRC_URI_append_class-nativesdk = " \
 SRC_URI[md5sum] = "9495126aafd2659d357ea66a969c3fe1"
 SRC_URI[sha256sum] = "ebbfc844a8c8cc0ea5dc10b86c9ce97f401837f3fa08c17b2cdadc118253cf99"
 
-inherit lib_package multilib_header ptest relative_symlinks
+inherit lib_package multilib_header ptest
 
 #| ./libcrypto.so: undefined reference to `getcontext'
 #| ./libcrypto.so: undefined reference to `setcontext'
@@ -114,9 +114,12 @@ do_install () {
 	   ${D}${libdir}/ssl-1.1/private \
 	   ${D}${libdir}/ssl-1.1/openssl.cnf \
 	   ${D}${sysconfdir}/ssl/
-	ln -sf ${sysconfdir}/ssl/certs ${D}${libdir}/ssl-1.1/certs
-	ln -sf ${sysconfdir}/ssl/private ${D}${libdir}/ssl-1.1/private
-	ln -sf ${sysconfdir}/ssl/openssl.cnf ${D}${libdir}/ssl-1.1/openssl.cnf
+
+	# Although absolute symlinks would be OK for the target, they become
+	# invalid if native or nativesdk are relocated from sstate.
+	ln -sf ${@oe.path.relative('${libdir}/ssl-1.1', '${sysconfdir}/ssl/certs')} ${D}${libdir}/ssl-1.1/certs
+	ln -sf ${@oe.path.relative('${libdir}/ssl-1.1', '${sysconfdir}/ssl/private')} ${D}${libdir}/ssl-1.1/private
+	ln -sf ${@oe.path.relative('${libdir}/ssl-1.1', '${sysconfdir}/ssl/openssl.cnf')} ${D}${libdir}/ssl-1.1/openssl.cnf
 }
 
 do_install_append_class-native () {
