@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/distcc/distcc.git \
            file://distccmon-gnome.desktop \
            file://distcc \
            file://distcc.service"
-SRCREV = "002e68b766ccd7ad05551e67d162b71a7a773d0d"
+SRCREV = "8600f0857dac55ea393dc11a860948692d215fc8"
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d useradd systemd
