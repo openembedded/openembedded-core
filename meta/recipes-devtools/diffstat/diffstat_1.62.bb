@@ -12,8 +12,8 @@ SRC_URI = "http://invisible-mirror.net/archives/${BPN}/${BP}.tgz \
            file://avoid-check-user-break-cc.patch \
 "
 
-SRC_URI[md5sum] = "c048a32d55d8bd6724f382baf41f325f"
-SRC_URI[sha256sum] = "25359e0c27183f997b36c9202583b5dc2df390c20e22a92606af4bf7856a55ee"
+SRC_URI[md5sum] = "91e106bb34cb097750db7ddc0ba1d8fc"
+SRC_URI[sha256sum] = "7f09183644ed77a156b15346bbad4e89c93543e140add9dab18747e30522591f"
 
 S = "${WORKDIR}/diffstat-${PV}"
 
