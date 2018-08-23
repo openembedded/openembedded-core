@@ -30,8 +30,9 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/0001-disable_werror.patch \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
-SRC_URI[md5sum] = "01e87ab4c5a6a249c04e22a97a4221d3"
-SRC_URI[sha256sum] = "779c99e6344c4982bbab60b8d276cec3d468151c758905f9a44ba6b6edaa0e24"
+
+SRC_URI[md5sum] = "35decb1ebfb90d565e4c411bee4185cc"
+SRC_URI[sha256sum] = "b76d8c133f68dad46250f5c223482c8299d454a69430d9aa5c19123345a000ff"
 
 inherit autotools gettext
 
