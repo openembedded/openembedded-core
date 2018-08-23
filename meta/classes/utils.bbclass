@@ -362,7 +362,7 @@ def all_multilib_tune_list(vars, d):
         values[v] = []
 
     variants = (d.getVar("MULTILIB_VARIANTS") or "").split() + ['']
-    for item in variants.split():
+    for item in variants:
         localdata = get_multilib_datastore(item, d)
         values[v].append(localdata.getVar(v))
         values['ml'].append(item)
