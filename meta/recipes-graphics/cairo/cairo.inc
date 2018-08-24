@@ -33,11 +33,10 @@ PACKAGECONFIG[egl] = "--enable-egl=yes,--disable-egl,virtual/egl"
 PACKAGECONFIG[glesv2] = "--enable-glesv2,--disable-glesv2,virtual/libgles2"
 PACKAGECONFIG[opengl] = "--enable-gl,--disable-gl,virtual/libgl"
 
-#check for TARGET_FPU=soft and inform configure of the result so it can disable some floating points 
-require cairo-fpu.inc
-EXTRA_OECONF += "${@get_cairo_fpu_setting(bb, d)} \
-                 --enable-tee \
-                "
+EXTRA_OECONF += " \
+    ${@bb.utils.contains('TARGET_FPU', 'soft', '--disable-some-floating-point', '', d)} \
+    --enable-tee \
+"
 
 inherit autotools pkgconfig upstream-version-is-even gtk-doc
 
