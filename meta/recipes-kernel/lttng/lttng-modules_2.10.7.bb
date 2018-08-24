@@ -11,14 +11,14 @@ inherit module
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 
+#https://lttng.org/files/lttng-modules/lttng-modules-2.10.7.tar.bz2
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
-           file://0001-Fix-btrfs-Remove-unnecessary-fs_info-parameter.patch \
 "
 
-SRC_URI[md5sum] = "8110099f4615fc89a74ffe9189b56cfc"
-SRC_URI[sha256sum] = "04a080c81743eb29d181bac29ceb0c15819a2f4210793f2cc9958d885435029f"
+SRC_URI[md5sum] = "d3cb4520948083bf1573a2e4cb7406aa"
+SRC_URI[sha256sum] = "f049428d3d131e103a7a7038d184731bf7bcdce00503fc19a2c9b5693ecbb3b5"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
