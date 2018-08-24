@@ -8,6 +8,5 @@ SRC_URI_append_libc-musl = "\
     file://0001-if_ether-move-muslc-ethhdr-protection-to-uapi-file.patch \
    "
 
-
-SRC_URI[md5sum] = "8186ce63c489199b58b6a58ad2a24a94"
-SRC_URI[sha256sum] = "cd44df4b23a3e0edc14be63df95d768b9600b31c35be05fb89f93226907fc8c6"
+SRC_URI[md5sum] = "bee5fe53ee1c3142b8f0c12c0d3348f9"
+SRC_URI[sha256sum] = "19d8bcf49ef530cd4e364a45b4a22fa70714b70349c8100e7308488e26f1eaf1"
