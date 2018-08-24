@@ -360,6 +360,7 @@ def all_multilib_tune_list(vars, d):
     values = {}
     for v in vars:
         values[v] = []
+    values['ml'] = ['']
 
     variants = (d.getVar("MULTILIB_VARIANTS") or "").split() + ['']
     for item in variants:
