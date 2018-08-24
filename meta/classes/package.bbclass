@@ -1043,15 +1043,18 @@ python split_and_strip_files () {
         for ref in inodes:
             if len(inodes[ref]) == 1:
                 continue
+
+            target = inodes[ref][0][len(dvar):]
             for file in inodes[ref][1:]:
                 src = file[len(dvar):]
-                dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
+                dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(target) + debugappend
                 fpath = dvar + dest
-                target = inodes[ref][0][len(dvar):]
                 ftarget = dvar + debuglibdir + os.path.dirname(target) + debugdir + "/" + os.path.basename(target) + debugappend
                 bb.utils.mkdirhier(os.path.dirname(fpath))
-                #bb.note("Link %s -> %s" % (fpath, ftarget))
-                os.link(ftarget, fpath)
+                # Only one hardlink of separated debug info file in each directory
+                if not os.access(fpath, os.R_OK):
+                    #bb.note("Link %s -> %s" % (fpath, ftarget))
+                    os.link(ftarget, fpath)
 
         # Create symlinks for all cases we were able to split symbols
         for file in symlinks:
