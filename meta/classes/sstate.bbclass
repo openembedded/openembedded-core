@@ -1040,7 +1040,7 @@ python sstate_eventhandler() {
         bb.siggen.dump_this_task(sstatepkg + '_' + taskname + ".tgz" ".siginfo", d)
 }
 
-SSTATE_PRUNE_OBSOLETEWORKDIR = "1"
+SSTATE_PRUNE_OBSOLETEWORKDIR ?= "1"
 
 # Event handler which removes manifests and stamps file for
 # recipes which are no longer reachable in a build where they
