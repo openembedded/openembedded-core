@@ -350,6 +350,7 @@ python do_kernel_configcheck() {
         pass
 
     config_check_visibility = int(d.getVar("KCONF_AUDIT_LEVEL") or 0)
+    bsp_check_visibility = int(d.getVar("KCONF_BSP_AUDIT_LEVEL") or 0)
 
     # if config check visibility is non-zero, report dropped configuration values
     mismatch_file = d.expand("${S}/%s/cfg/mismatch.txt" % kmeta)
@@ -358,6 +359,27 @@ python do_kernel_configcheck() {
             with open (mismatch_file, "r") as myfile:
                 results = myfile.read()
                 bb.warn( "[kernel config]: specified values did not make it into the kernel's final configuration:\n\n%s" % results)
+
+    if bsp_check_visibility:
+        invalid_file = d.expand("${S}/%s/cfg/invalid.cfg" % kmeta)
+        if os.path.exists(invalid_file) and os.stat(invalid_file).st_size > 0:
+            with open (invalid_file, "r") as myfile:
+                results = myfile.read()
+                bb.warn( "[kernel config]: This BSP sets config options that are not offered anywhere within this kernel:\n\n%s" % results)
+        errors_file = d.expand("${S}/%s/cfg/fragment_errors.txt" % kmeta)
+        if os.path.exists(errors_file) and os.stat(errors_file).st_size > 0:
+            with open (errors_file, "r") as myfile:
+               results = myfile.read()
+               bb.warn( "[kernel config]: This BSP contains fragments with errors:\n\n%s" % results)
+
+    # if the audit level is greater than two, we report if a fragment has overriden
+    # a value from a base fragment. This is really only used for new kernel introduction
+    if bsp_check_visibility > 2:
+        redefinition_file = d.expand("${S}/%s/cfg/redefinition.txt" % kmeta)
+        if os.path.exists(redefinition_file) and os.stat(redefinition_file).st_size > 0:
+            with open (redefinition_file, "r") as myfile:
+                results = myfile.read()
+                bb.warn( "[kernel config]: This BSP has configuration options defined in more than one config, with differing values:\n\n%s" % results)
 }
 
 # Ensure that the branches (BSP and meta) are on the locations specified by
