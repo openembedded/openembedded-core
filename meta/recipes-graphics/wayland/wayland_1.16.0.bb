@@ -15,8 +15,8 @@ DEPENDS = "expat libxml2 libffi wayland-native"
 SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
 	   file://fixpathinpcfiles.patch \
            "
-SRC_URI[md5sum] = "b7393c17fdce9a8d383edab656c92fd2"
-SRC_URI[sha256sum] = "eb3fbebb8559d56a80ad3753ec3db800f587329067962dbf65e14488b4b7aeb0"
+SRC_URI[md5sum] = "0c215e53de71d6fb26f7102cdc6432d3"
+SRC_URI[sha256sum] = "4e72c2b56109ccfb6610d776e465f4ca0af2280c9c2f7d5cc23f0ed2548752f5"
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
