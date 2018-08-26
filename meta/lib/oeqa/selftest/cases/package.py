@@ -1,6 +1,6 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.core.decorator.oeid import OETestID
-from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var
+from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var, runqemu
 import stat
 import subprocess, os
 import oe.path
@@ -98,7 +98,7 @@ class PackageTests(OESelftestTestCase):
         def checkfiles():
             # Recipe creates 4 hardlinked files, there is a copy in package/ and a copy in packages-split/
             # so expect 8 in total.
-            self.assertEqual(os.stat(dest + "/selftest-hardlink" + bindir + "/hello").st_nlink, 8)
+            self.assertEqual(os.stat(dest + "/selftest-hardlink" + bindir + "/hello1").st_nlink, 8)
 
             # Test a sparse file remains sparse
             sparsestat = os.stat(dest + "/selftest-hardlink" + bindir + "/sparsetest")
@@ -112,3 +112,38 @@ class PackageTests(OESelftestTestCase):
         bitbake("selftest-hardlink -c package")
 
         checkfiles()
+
+    # Verify gdb to read symbols from separated debug hardlink file correctly
+    def test_gdb_hardlink_debug(self):
+        features = 'IMAGE_INSTALL_append = " selftest-hardlink"\n'
+        features += 'IMAGE_INSTALL_append = " selftest-hardlink-dbg"\n'
+        features += 'IMAGE_INSTALL_append = " selftest-hardlink-gdb"\n'
+        self.write_config(features)
+        bitbake("core-image-minimal")
+
+        def gdbtest(qemu, binary):
+            """
+            Check that gdb ``binary`` to read symbols from separated debug file
+            """
+            self.logger.info("gdbtest %s" % binary)
+            status, output = qemu.run_serial('/usr/bin/gdb.sh %s' % binary, timeout=60)
+            for l in output.split('\n'):
+                # Check debugging symbols exists
+                if '(no debugging symbols found)' in l:
+                    self.logger.error("No debugging symbols found. GDB result:\n%s" % output)
+                    return False
+
+                # Check debugging symbols works correctly
+                elif "Breakpoint 1, main () at hello.c:4" in l:
+                    return True
+
+            self.logger.error("GDB result:\n%s: %s" % output)
+            return False
+
+        with runqemu('core-image-minimal') as qemu:
+            for binary in ['/usr/bin/hello1',
+                           '/usr/bin/hello2',
+                           '/usr/libexec/hello3',
+                           '/usr/libexec/hello4']:
+                if not gdbtest(qemu, binary):
+                    self.fail('GDB %s failed' % binary)
