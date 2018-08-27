@@ -215,9 +215,11 @@ do_install_append_class-target() {
     # Create a blank certificate
     mkdir -p ${D}${sysconfdir}/pki/nssdb/
     touch ./empty_password
-    certutil -N -d ${D}${sysconfdir}/pki/nssdb/ -f ./empty_password
+    certutil -N -d sql:${D}${sysconfdir}/pki/nssdb/ -f ./empty_password
     chmod 644 ${D}${sysconfdir}/pki/nssdb/*.db
     rm ./empty_password
+    # Remove build path prefix
+    sed -i "s:${D}::g"  ${D}${sysconfdir}/pki/nssdb/pkcs11.txt
 }
 
 PACKAGE_WRITE_DEPS += "nss-native"
