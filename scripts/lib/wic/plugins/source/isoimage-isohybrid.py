@@ -194,7 +194,7 @@ class IsoImagePlugin(SourcePlugin):
             exec_cmd("cd %s && find . | cpio -o -H newc -R root:root >./initrd.cpio " \
                     % initrd_dir, as_shell=True)
             exec_cmd("gzip -f -9 -c %s/initrd.cpio > %s" \
-                    % (cr_workdir, initrd), as_shell=True)
+                    % (initrd_dir, initrd), as_shell=True)
             shutil.rmtree(initrd_dir)
 
         return initrd
@@ -317,7 +317,7 @@ class IsoImagePlugin(SourcePlugin):
                     grub_src = os.path.join(deploy_dir, grub_src_image)
                     if not os.path.exists(grub_src):
                         raise WicError("Grub loader %s is not found in %s. "
-                                       "Please build grub-efi first" % (grub_image, deploy_dir))
+                                       "Please build grub-efi first" % (grub_src_image, deploy_dir))
                     shutil.copy(grub_src, grub_target)
 
                 if not os.path.isfile(os.path.join(target_dir, "boot.cfg")):
