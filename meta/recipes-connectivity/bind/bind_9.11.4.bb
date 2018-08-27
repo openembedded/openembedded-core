@@ -17,6 +17,8 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://bind-ensure-searching-for-json-headers-searches-sysr.patch \
            file://0001-gen.c-extend-DIRNAMESIZE-from-256-to-512.patch \
            file://0001-lib-dns-gen.c-fix-too-long-error.patch \
+           file://0001-configure.in-remove-useless-L-use_openssl-lib.patch \
+           file://0001-named-lwresd-V-and-start-log-hide-build-options.patch \
 "
 
 SRC_URI[md5sum] = "9b4834d78f30cdb796ce437262272a36"
