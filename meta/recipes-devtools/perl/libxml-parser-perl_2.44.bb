@@ -21,13 +21,6 @@ inherit cpan ptest-perl
 do_configure_append_class-target() {
 	sed -E \
 	    -e 's:-L${STAGING_LIBDIR}::g' -e 's:-I${STAGING_INCDIR}::g' \
-	    -e 's:LD_RUN_PATH ?= ?"?[^"]*"?::g' \
-	    -i Makefile Expat/Makefile
-}
-
-do_configure_append_class-nativesdk() {
-	sed -E \
-	    -e 's:LD_RUN_PATH ?= ?"?[^"]*"?::g' \
 	    -i Makefile Expat/Makefile
 }
 

@@ -40,6 +40,16 @@ cpan_do_configure () {
 	fi
 }
 
+do_configure_append_class-target() {
+       find . -name Makefile | xargs sed -E -i \
+           -e 's:LD_RUN_PATH ?= ?"?[^"]*"?::g'
+}
+
+do_configure_append_class-nativesdk() {
+       find . -name Makefile | xargs sed -E -i \
+           -e 's:LD_RUN_PATH ?= ?"?[^"]*"?::g'
+}
+
 cpan_do_compile () {
 	oe_runmake PASTHRU_INC="${CFLAGS}" LD="${CCLD}"
 }
