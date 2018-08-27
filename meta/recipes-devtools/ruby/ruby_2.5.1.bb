@@ -35,6 +35,26 @@ do_install() {
     oe_runmake 'DESTDIR=${D}' install
 }
 
+do_install_append_class-target () {
+    # Find out rbconfig.rb from .installed.list
+    rbconfig_rb=`grep rbconfig.rb ${B}/.installed.list`
+    # Remove build host directories
+    sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
+           -e s:'--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
+           -e 's|${DEBUG_PREFIX_MAP}||g' \
+           -e 's:${HOSTTOOLS_DIR}/::g' \
+           -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+           -e 's:${RECIPE_SYSROOT}::g' \
+           -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
+        ${D}$rbconfig_rb
+
+    # Find out created.rid from .installed.list
+    created_rid=`grep created.rid ${B}/.installed.list`
+    # Remove build host directories
+    sed -i -e 's:${WORKDIR}::g' ${D}$created_rid
+
+}
+
 PACKAGES =+ "${PN}-ri-docs ${PN}-rdoc"
 
 SUMMARY_${PN}-ri-docs = "ri (Ruby Interactive) documentation for the Ruby standard library"
