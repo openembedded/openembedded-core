@@ -11,8 +11,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f475368924827d06d4b416111c8bdb77"
 DEPENDS = "hostperl-runtime-native"
 DEPENDS_append_class-target = " openssl-native"
 
-PROVIDES += "openssl10"
-
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
@@ -55,6 +53,8 @@ SRC_URI_append_class-nativesdk = " \
 
 SRC_URI[md5sum] = "ac5eb30bf5798aa14b1ae6d0e7da58df"
 SRC_URI[sha256sum] = "50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00"
+
+S = "${WORKDIR}/openssl-${PV}"
 
 UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 
@@ -326,20 +326,35 @@ do_install_ptest () {
 # file to be installed for both the base openssl package and the libcrypto
 # package since the base openssl package depends on the libcrypto package.
 
-PACKAGES =+ "libcrypto libssl openssl-conf ${PN}-engines ${PN}-misc"
+PACKAGES =+ "libcrypto10 libssl10 openssl10-conf ${PN}-engines ${PN}-misc"
 
-FILES_libcrypto = "${libdir}/libcrypto${SOLIBS}"
-FILES_libssl = "${libdir}/libssl${SOLIBS}"
-FILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
+FILES_libcrypto10 = "${libdir}/libcrypto${SOLIBS}"
+FILES_libssl10 = "${libdir}/libssl${SOLIBS}"
+FILES_openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
 FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
 FILES_${PN}-misc = "${libdir}/ssl/misc"
 FILES_${PN} =+ "${libdir}/ssl/*"
 FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
 
-CONFFILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
+CONFFILES_openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
 
-RRECOMMENDS_libcrypto += "openssl-conf"
+RRECOMMENDS_libcrypto10 += "openssl10-conf"
 RDEPENDS_${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
 RDEPENDS_${PN}-ptest += "${PN}-misc make perl perl-module-filehandle bc"
 
 BBCLASSEXTEND = "native nativesdk"
+PACKAGE_PREPROCESS_FUNCS += "openssl_package_preprocess"
+
+# openssl 1.0 development files and executable binaries clash with openssl 1.1
+# files when installed into target rootfs. So we don't put them into
+# packages, but they continue to be provided via target sysroot for
+# cross-compilation on the host, if some software still depends on openssl 1.0.
+openssl_package_preprocess () {
+        for file in `find ${PKGD} -name *.h -o -name *.pc -o -name *.so`; do
+                rm $file
+        done
+        rm ${PKGD}/usr/bin/openssl
+        rm ${PKGD}/usr/bin/c_rehash
+        rmdir ${PKGD}/usr/bin
+
+}
