@@ -1,7 +1,7 @@
-From d43faf6d253db789225b7c454c8f255fbc68857e Mon Sep 17 00:00:00 2001
+From d74a4de6daea5a511c2b5636bbb552c15b3a4ad9 Mon Sep 17 00:00:00 2001
 From: Emil Renner Berthing <systemd@esmil.dk>
 Date: Thu, 18 Sep 2014 15:24:56 +0200
-Subject: [PATCH 02/19] don't use glibc-specific qsort_r
+Subject: [PATCH] don't use glibc-specific qsort_r
 
 Upstream-Status: Inappropriate [musl specific]
 
@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  4 files changed, 37 insertions(+), 31 deletions(-)
 
 diff --git a/src/basic/format-table.c b/src/basic/format-table.c
-index 94e796d1c..f7b4eade9 100644
+index 94e796d1ca..9b3f35c29a 100644
 --- a/src/basic/format-table.c
 +++ b/src/basic/format-table.c
 @@ -745,29 +745,29 @@ static int cell_data_compare(TableData *a, size_t index_a, TableData *b, size_t
@@ -63,7 +63,7 @@ index 94e796d1c..f7b4eade9 100644
  
 -                qsort_r_safe(sorted, n_rows, sizeof(size_t), table_data_compare, t);
 +                if (n_rows <= 1)
-+                        return;
++                        return 0;
 +                assert(sorted);
 +                user_table = t;
 +                qsort(sorted, n_rows, sizeof(size_t), table_data_compare);
@@ -72,7 +72,7 @@ index 94e796d1c..f7b4eade9 100644
  
          if (t->display_map)
 diff --git a/src/basic/util.h b/src/basic/util.h
-index 9699d228f..40eaf518c 100644
+index 9699d228f9..40eaf518cb 100644
 --- a/src/basic/util.h
 +++ b/src/basic/util.h
 @@ -105,13 +105,6 @@ static inline void qsort_safe(void *base, size_t nmemb, size_t size, comparison_
@@ -90,7 +90,7 @@ index 9699d228f..40eaf518c 100644
  /**
   * Normal memcpy requires src to be nonnull. We do nothing if n is 0.
 diff --git a/src/hwdb/hwdb.c b/src/hwdb/hwdb.c
-index 317cad8a6..701d59a1e 100644
+index 317cad8a67..701d59a1eb 100644
 --- a/src/hwdb/hwdb.c
 +++ b/src/hwdb/hwdb.c
 @@ -135,13 +135,12 @@ static void trie_free(struct trie *trie) {
@@ -135,7 +135,7 @@ index 317cad8a6..701d59a1e 100644
  }
  
 diff --git a/src/udev/udevadm-hwdb.c b/src/udev/udevadm-hwdb.c
-index 02408a428..491d367d1 100644
+index 02408a4285..491d367d12 100644
 --- a/src/udev/udevadm-hwdb.c
 +++ b/src/udev/udevadm-hwdb.c
 @@ -114,13 +114,13 @@ static void trie_node_cleanup(struct trie_node *node) {
@@ -179,5 +179,5 @@ index 02408a428..491d367d1 100644
  }
  
 -- 
-2.11.0
+2.18.0
 
