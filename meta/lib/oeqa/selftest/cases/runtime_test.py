@@ -249,8 +249,8 @@ class Postinst(OESelftestTestCase):
                 features = 'CORE_IMAGE_EXTRA_INSTALL = "postinst-rootfs-failing"\n'
                 features += 'PACKAGE_CLASSES = "%s"\n' % classes
                 self.write_config(features)
-                bb_result = bitbake('core-image-minimal')
-                self.assertGreaterEqual(bb_result.output.find("Intentionally failing postinstall scriptlets of ['postinst-rootfs-failing'] to defer them to first boot is deprecated."), 0,
+                bb_result = bitbake('core-image-minimal', ignore_status=True)
+                self.assertGreaterEqual(bb_result.output.find("Postinstall scriptlets of ['postinst-rootfs-failing'] have failed."), 0,
                     "Warning about a failed scriptlet not found in bitbake output: %s" %(bb_result.output))
 
                 self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs-before-failure")),

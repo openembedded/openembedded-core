@@ -84,10 +84,10 @@ def opkg_query(cmd_output):
 
     return output
 
-# Note: this should be bb.fatal in the future.
-def failed_postinsts_warn(pkgs, log_path):
-    bb.warn("""Intentionally failing postinstall scriptlets of %s to defer them to first boot is deprecated. Please place them into pkg_postinst_ontarget_${PN} ().
-If deferring to first boot wasn't the intent, then scriptlet failure may mean an issue in the recipe, or a regression elsewhere.
+def failed_postinsts_abort(pkgs, log_path):
+    bb.fatal("""Postinstall scriptlets of %s have failed. If the intention is to defer them to first boot,
+then please place them into pkg_postinst_ontarget_${PN} ().
+Deferring to first boot via 'exit 1' is no longer supported.
 Details of the failure are in %s.""" %(pkgs, log_path))
 
 def generate_locale_archive(d, rootfs, target_arch, localedir):
@@ -858,9 +858,7 @@ class RpmPM(PackageManager):
                 failed_scriptlets_pkgnames[line.split()[-1]] = True
 
         if len(failed_scriptlets_pkgnames) > 0:
-            failed_postinsts_warn(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
-        for pkg in failed_scriptlets_pkgnames.keys():
-            self.save_rpmpostinst(pkg)
+            failed_postinsts_abort(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
 
     def remove(self, pkgs, with_dependencies = True):
         if len(pkgs) == 0:
@@ -1341,7 +1339,7 @@ class OpkgPM(OpkgDpkgPM):
                     bb.warn(line)
                     failed_pkgs.append(line.split(".")[0])
             if failed_pkgs:
-                failed_postinsts_warn(failed_pkgs, self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
+                failed_postinsts_abort(failed_pkgs, self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
@@ -1594,7 +1592,6 @@ class DpkgPM(OpkgDpkgPM):
         os.environ['INTERCEPT_DIR'] = self.intercepts_dir
         os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
-        failed_pkgs = []
         for pkg_name in installed_pkgs:
             for control_script in control_scripts:
                 p_full = os.path.join(info_dir, pkg_name + control_script.suffix)
@@ -1609,12 +1606,7 @@ class DpkgPM(OpkgDpkgPM):
                         bb.warn("%s for package %s failed with %d:\n%s" %
                                 (control_script.name, pkg_name, e.returncode,
                                     e.output.decode("utf-8")))
-                        failed_postinsts_warn([pkg_name], self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
-                        failed_pkgs.append(pkg_name)
-                        break
-
-        if len(failed_pkgs):
-            self.mark_packages("unpacked", failed_pkgs)
+                        failed_postinsts_abort([pkg_name], self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
 
     def update(self):
         os.environ['APT_CONFIG'] = self.apt_conf_file
