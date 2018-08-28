@@ -1,0 +1,73 @@
+From 0dd486ba596fea07742a9317542bce27e18fd830 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 9 Apr 2018 18:02:56 +0300
+Subject: [PATCH] Link dynamic libraries with their library dependencies.
+
+It does seem like outside of OpenBSD, no one has actually used libressl yet.
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+---
+ CMakeLists.txt        | 5 +++++
+ crypto/CMakeLists.txt | 1 +
+ ssl/CMakeLists.txt    | 2 +-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 549849f..0f9d8f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -266,15 +266,19 @@ set(OPENSSL_LIBS tls ssl crypto)
+ 
+ # Add additional required libs
+ if(WIN32)
++	set(OPENSSL_LIB_LIBS ws2_32)
+ 	set(OPENSSL_LIBS ${OPENSSL_LIBS} ws2_32)
+ endif()
+ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
++	set(OPENSSL_LIB_LIBS pthread)
+ 	set(OPENSSL_LIBS ${OPENSSL_LIBS} pthread)
+ endif()
+ if(CMAKE_SYSTEM_NAME MATCHES "HP-UX")
++	set(OPENSSL_LIB_LIBS pthread)
+ 	set(OPENSSL_LIBS ${OPENSSL_LIBS} pthread)
+ endif()
+ if(CMAKE_SYSTEM_NAME MATCHES "SunOS")
++	set(OPENSSL_LIB_LIBS nsl socket)
+ 	set(OPENSSL_LIBS ${OPENSSL_LIBS} nsl socket)
+ endif()
+ 
+@@ -282,6 +286,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+ 	# Check if we need -lrt to get clock_gettime on Linux
+ 	check_library_exists(rt clock_gettime "time.h" HAVE_CLOCK_GETTIME)
+ 	if (HAVE_CLOCK_GETTIME)
++		set(OPENSSL_LIB_LIBS ${OPENSSL_LIB_LIBS} rt)
+ 		set(OPENSSL_LIBS ${OPENSSL_LIBS} rt)
+ 	endif()
+ else()
+diff --git a/crypto/CMakeLists.txt b/crypto/CMakeLists.txt
+index 90e127e..08eceda 100644
+--- a/crypto/CMakeLists.txt
++++ b/crypto/CMakeLists.txt
+@@ -813,6 +813,7 @@ target_include_directories(crypto
+ 		../include)
+ 
+ if (BUILD_SHARED_LIBS)
++	target_link_libraries(crypto ${OPENSSL_LIB_LIBS})
+ 	export_symbol(crypto ${CMAKE_CURRENT_BINARY_DIR}/crypto_p.sym)
+ 	if (WIN32)
+ 		target_link_libraries(crypto Ws2_32.lib)
+diff --git a/ssl/CMakeLists.txt b/ssl/CMakeLists.txt
+index 1a559e6..ed17223 100644
+--- a/ssl/CMakeLists.txt
++++ b/ssl/CMakeLists.txt
+@@ -51,7 +51,7 @@ target_include_directories(ssl
+ 
+ if (BUILD_SHARED_LIBS)
+ 	export_symbol(ssl ${CMAKE_CURRENT_SOURCE_DIR}/ssl.sym)
+-	target_link_libraries(ssl crypto)
++	target_link_libraries(ssl crypto ${OPENSSL_LIB_LIBS})
+ 	if (WIN32)
+ 		target_link_libraries(ssl Ws2_32.lib)
+ 		set(SSL_POSTFIX -${SSL_MAJOR_VERSION})
