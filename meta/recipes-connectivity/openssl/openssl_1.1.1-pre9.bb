@@ -13,26 +13,30 @@ DEPENDS = "hostperl-runtime-native"
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
-           file://0001-Take-linking-flags-from-LDFLAGS-env-var.patch \
-           file://0001-allow-OPENSSLDIR-and-ENGINESDIR-CFLAGS-to-be-control.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI[md5sum] = "9495126aafd2659d357ea66a969c3fe1"
-SRC_URI[sha256sum] = "ebbfc844a8c8cc0ea5dc10b86c9ce97f401837f3fa08c17b2cdadc118253cf99"
+SRC_URI[md5sum] = "6aa32e976e2c9a4aee858ced135d2573"
+SRC_URI[sha256sum] = "95ebdfbb05e8451fb01a186ccaa4a7da0eff9a48999ede9fe1a7d90db75ccb4c"
 
 inherit lib_package multilib_header ptest
 
 #| ./libcrypto.so: undefined reference to `getcontext'
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
-EXTRA_OECONF_append_libc-musl = " -DOPENSSL_NO_ASYNC"
+CPPFLAGS_append_libc-musl = " -DOPENSSL_NO_ASYNC"
 
-EXTRA_OEMAKE_append_class-native = " OE_DOPENSSLDIR='/not/builtin' OE_DENGINESDIR='/not/builtin'"
-EXTRA_OEMAKE_append_class-nativesdk = " OE_DOPENSSLDIR='/not/builtin' OE_DENGINESDIR='/not/builtin'"
+# This prevents openssl from using getrandom() which is not available on older glibc versions
+# (native versions can be built with newer glibc, but then relocated onto a system with older glibc)
+EXTRA_OECONF_class-native = "--with-rand-seed=devrandom"
+EXTRA_OECONF_class-nativesdk = "--with-rand-seed=devrandom"
+
+# Relying on hardcoded built-in paths causes openssl-native to not be relocateable from sstate.
+CFLAGS_append_class-native = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/builtin"
+CFLAGS_append_class-nativesdk = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/builtin"
 
 do_configure () {
 	os=${HOST_OS}
@@ -98,8 +102,9 @@ do_configure () {
 	if [ "x$useprefix" = "x" ]; then
 		useprefix=/
 	fi
-	libdirleaf="$(echo ${libdir} | sed s:$useprefix::)"
-	perl ./Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} --prefix=$useprefix --openssldir=${libdir}/ssl-1.1 --libdir=$libdirleaf $target
+	# WARNING: do not set compiler/linker flags (-I/-D etc.) in EXTRA_OECONF, as they will fully replace the
+	# environment variables set by bitbake. Adjust the environment variables instead.
+	perl ./Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} --prefix=$useprefix --openssldir=${libdir}/ssl-1.1 --libdir=${libdir} $target
 }
 
 do_install () {
