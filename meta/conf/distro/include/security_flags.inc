@@ -21,11 +21,13 @@ SECURITY_PIE_CFLAGS ?= "${@'' if '${GCCPIE}' else '-pie -fPIE'}"
 
 SECURITY_NOPIE_CFLAGS ?= "-no-pie -fno-PIE"
 
-SECURITY_CFLAGS ?= "-fstack-protector-strong ${SECURITY_PIE_CFLAGS} ${lcl_maybe_fortify} ${SECURITY_STRINGFORMAT}"
-SECURITY_NO_PIE_CFLAGS ?= "-fstack-protector-strong ${lcl_maybe_fortify} ${SECURITY_STRINGFORMAT}"
+SECURITY_STACK_PROTECTOR ?= "-fstack-protector-strong"
 
-SECURITY_LDFLAGS ?= "-fstack-protector-strong -Wl,-z,relro,-z,now"
-SECURITY_X_LDFLAGS ?= "-fstack-protector-strong -Wl,-z,relro"
+SECURITY_CFLAGS ?= "${SECURITY_STACK_PROTECTOR} ${SECURITY_PIE_CFLAGS} ${lcl_maybe_fortify} ${SECURITY_STRINGFORMAT}"
+SECURITY_NO_PIE_CFLAGS ?= "${SECURITY_STACK_PROTECTOR} ${lcl_maybe_fortify} ${SECURITY_STRINGFORMAT}"
+
+SECURITY_LDFLAGS ?= "${SECURITY_STACK_PROTECTOR} -Wl,-z,relro,-z,now"
+SECURITY_X_LDFLAGS ?= "${SECURITY_STACK_PROTECTOR} -Wl,-z,relro"
 
 # powerpc does not get on with pie for reasons not looked into as yet
 GCCPIE_powerpc = ""
@@ -56,9 +58,9 @@ SECURITY_STRINGFORMAT_pn-gcc = ""
 TARGET_CC_ARCH_append_class-target = " ${SECURITY_CFLAGS}"
 TARGET_LDFLAGS_append_class-target = " ${SECURITY_LDFLAGS}"
 
-SECURITY_LDFLAGS_remove_pn-gcc-runtime = "-fstack-protector-strong"
-SECURITY_LDFLAGS_remove_pn-glibc = "-fstack-protector-strong"
-SECURITY_LDFLAGS_remove_pn-glibc-initial = "-fstack-protector-strong"
+SECURITY_STACK_PROTECTOR_pn-gcc-runtime = ""
+SECURITY_STACK_PROTECTOR_pn-glibc = ""
+SECURITY_STACK_PROTECTOR_pn-glibc-initial = ""
 # All xorg module drivers need to be linked this way as well and are
 # handled in recipes-graphics/xorg-driver/xorg-driver-common.inc
 SECURITY_LDFLAGS_pn-xserver-xorg = "${SECURITY_X_LDFLAGS}"
