@@ -67,7 +67,8 @@ class DnfRepoTest(DnfTest):
         deploy_url = 'http://%s:%s/' %(self.target.server_ip, self.repo_server.port)
         cmdlinerepoopts = ["--repofrompath=oe-testimage-repo-%s,%s%s" %(arch, deploy_url, arch) for arch in pkgarchs]
 
-        self.dnf(" ".join(cmdlinerepoopts) + " --nogpgcheck " + command)
+        output = self.dnf(" ".join(cmdlinerepoopts) + " --nogpgcheck " + command)
+        return output
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
     @OETestID(1744)
@@ -88,6 +89,9 @@ class DnfRepoTest(DnfTest):
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_makecache'])
     @OETestID(1740)
     def test_dnf_install(self):
+        output = self.dnf_with_repo('list run-postinsts-dev')
+        if 'Installed Packages' in output:
+            self.dnf_with_repo('remove -y run-postinsts-dev')
         self.dnf_with_repo('install -y run-postinsts-dev')
 
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_install'])
