@@ -149,13 +149,9 @@ do_install_append_class-nativesdk () {
 
 do_install_ptest () {
 	cp -r * ${D}${PTEST_PATH}
-
-	# Putting .so files in ptest package will mess up the dependencies of the main openssl package
-	# so we rename them to .so.ptest and patch the test accordingly
-	mv ${D}${PTEST_PATH}/libcrypto.so ${D}${PTEST_PATH}/libcrypto.so.ptest
-	mv ${D}${PTEST_PATH}/libssl.so ${D}${PTEST_PATH}/libssl.so.ptest
-	sed -i 's/$target{shared_extension_simple}/".so.ptest"/' ${D}${PTEST_PATH}/test/recipes/90-test_shlibload.t
 }
+
+PRIVATE_LIBS_${PN}-ptest = "libcrypto.so.1.1 libssl.so.1.1"
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
 # package RRECOMMENDS on this package. This will enable the configuration
