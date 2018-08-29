@@ -29,7 +29,13 @@ class OESDKTestContext(OETestContext):
     def hasHostPackage(self, pkg):
         return self._hasPackage(self.host_pkg_manifest, pkg)
 
-    def hasTargetPackage(self, pkg):
+    def hasTargetPackage(self, pkg, multilib=False):
+        if multilib:
+            # match multilib according to sdk_env
+            mls = self.td.get('MULTILIB_VARIANTS', '').split()
+            for ml in mls:
+                if ('ml'+ml) in self.sdk_env:
+                    pkg = ml + '-' + pkg
         return self._hasPackage(self.target_pkg_manifest, pkg)
 
 class OESDKTestContextExecutor(OETestContextExecutor):
