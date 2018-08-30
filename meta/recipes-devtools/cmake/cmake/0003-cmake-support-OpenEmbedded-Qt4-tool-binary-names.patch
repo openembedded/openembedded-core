@@ -1,7 +1,7 @@
-From 5fc9c33a7d6781008877b19dfdf0a526a50524f2 Mon Sep 17 00:00:00 2001
+From c783ceeef485c23e13c3d9f0418719cb0e0b86ee Mon Sep 17 00:00:00 2001
 From: Otavio Salvador <otavio@ossystems.com.br>
 Date: Thu, 12 May 2011 15:36:03 +0000
-Subject: [PATCH 2/4] cmake: support OpenEmbedded Qt4 tool binary names
+Subject: [PATCH 3/5] cmake: support OpenEmbedded Qt4 tool binary names
 Organization: O.S. Systems Software LTDA.
 
 The FindQt4 module looks for Qt4 binaries to be able to gather the
@@ -25,7 +25,7 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/Modules/FindQt4.cmake b/Modules/FindQt4.cmake
-index 5a7eadb96..d48a5bfd1 100644
+index 847a798af..7ad981879 100644
 --- a/Modules/FindQt4.cmake
 +++ b/Modules/FindQt4.cmake
 @@ -517,7 +517,7 @@ endfunction()
@@ -37,7 +37,7 @@ index 5a7eadb96..d48a5bfd1 100644
  _qt4_find_qmake("${_QT4_QMAKE_NAMES}" QT_QMAKE_EXECUTABLE QTVERSION)
  
  if (QT_QMAKE_EXECUTABLE AND
-@@ -1143,12 +1143,12 @@ if (QT_QMAKE_EXECUTABLE AND
+@@ -1135,12 +1135,12 @@ if (QT_QMAKE_EXECUTABLE AND
    _find_qt4_program(QT_MOC_EXECUTABLE Qt4::moc moc-qt4 moc4 moc)
    _find_qt4_program(QT_UIC_EXECUTABLE Qt4::uic uic-qt4 uic4 uic)
    _find_qt4_program(QT_UIC3_EXECUTABLE Qt4::uic3 uic3)
