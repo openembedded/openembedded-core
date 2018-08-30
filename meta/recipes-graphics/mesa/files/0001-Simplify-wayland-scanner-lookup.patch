@@ -1,7 +1,7 @@
-From 425c19542f9343e7b6a5b8aea26e1f2897484bc1 Mon Sep 17 00:00:00 2001
+From 7e8e0f8a8ac2425e19a2f340c9e3da9345f25940 Mon Sep 17 00:00:00 2001
 From: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Date: Tue, 15 Nov 2016 15:20:49 +0200
-Subject: [PATCH 2/8] Simplify wayland-scanner lookup
+Subject: [PATCH 1/6] Simplify wayland-scanner lookup
 Organization: O.S. Systems Software LTDA.
 
 Don't use pkg-config to lookup the path of a binary that's in the path.
@@ -11,15 +11,16 @@ PKG_CONFIG_SYSROOT_DIR.
 
 Upstream-Status: Pending
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
 ---
  configure.ac | 7 +------
  1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 49fa3e8c51..3a8f04bd12 100644
+index 14f1af2b2f..916d0bd207 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1810,12 +1810,7 @@ for plat in $platforms; do
+@@ -1825,12 +1825,7 @@ for plat in $platforms; do
          PKG_CHECK_MODULES([WAYLAND_PROTOCOLS], [wayland-protocols >= $WAYLAND_PROTOCOLS_REQUIRED])
          WAYLAND_PROTOCOLS_DATADIR=`$PKG_CONFIG --variable=pkgdatadir wayland-protocols`
  

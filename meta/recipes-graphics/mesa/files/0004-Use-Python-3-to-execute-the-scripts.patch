@@ -1,7 +1,7 @@
-From 66b512e72e164a0da13c1cfffe988188cc2b4988 Mon Sep 17 00:00:00 2001
+From ebe6077a1d74e56b28249f71e8760295fa846ed2 Mon Sep 17 00:00:00 2001
 From: Otavio Salvador <otavio@ossystems.com.br>
 Date: Fri, 29 Dec 2017 10:27:59 -0200
-Subject: [PATCH 6/8] Use Python 3 to execute the scripts
+Subject: [PATCH 4/6] Use Python 3 to execute the scripts
 Organization: O.S. Systems Software LTDA.
 
 The MESA build system uses Python 2 but as OE-Core has moved away from
@@ -15,7 +15,7 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 59226823ca..711cb8b82c 100644
+index dd172f1ebe..40cac36ac2 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -122,7 +122,7 @@ AM_PROG_CC_C_O
