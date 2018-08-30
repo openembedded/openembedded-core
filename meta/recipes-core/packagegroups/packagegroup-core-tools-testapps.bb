@@ -17,6 +17,9 @@ KEXECTOOLS_microblaze ?= ""
 KEXECTOOLS_nios2 ?= ""
 KEXECTOOLS_riscv64 ?= ""
 
+GSTEXAMPLES ?= "gst-examples"
+GSTEXAMPLES_riscv64 = ""
+
 X11GLTOOLS = "\
     mesa-demos \
     "
@@ -26,7 +29,7 @@ X11GLTOOLS = "\
     "
 
 X11TOOLS = "\
-    gst-examples \
+    ${GSTEXAMPLES} \
     x11perf \
     xrestop \
     xwininfo \
