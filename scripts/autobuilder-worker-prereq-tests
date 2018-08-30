@@ -8,6 +8,8 @@
 # Todo
 # Add testtools/subunit import test
 # Add python3-git test
+# Add pigz test
+# vnc tests/checkvnc?
 #
 
 . ./oe-init-build-env > /dev/null
