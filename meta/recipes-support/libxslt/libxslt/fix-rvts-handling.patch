@@ -5,7 +5,7 @@ libxslt-1.1.32: Fix handling of RVTs returned from nested EXSLT functions
 Set the context variable to NULL when evaluating EXSLT functions.
 Fixes potential use-after-free errors or memory leaks.
 
-Upstream-Status: Backport [https://git.gnome.org/browse/libxslt/commit/?id=8bd32f7753ac253a54279a0b6a88d15a57076bb0]
+Upstream-Status: Backport [https://gitlab.gnome.org/GNOME/libxslt/commit/8bd32f7753ac253a54279a0b6a88d15a57076bb0]
 bug: 792580
 Signed-off-by: Andrej Valek <andrej.valek@siemens.com>
 
