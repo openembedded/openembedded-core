@@ -146,6 +146,8 @@ do_install() {
             cp -a --parents arch/arm64/kernel/vdso/sigreturn.S $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/note.S $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/gen_vdso_offsets.sh $kerneldir/build/
+
+            cp -a --parents arch/arm64/kernel/module.lds $kerneldir/build/
 	fi
 
 	# include the machine specific headers for ARM variants, if available.
@@ -156,6 +158,8 @@ do_install() {
 	    cp -a --parents arch/arm/tools/gen-mach-types $kerneldir/build/
 	    cp -a --parents arch/arm/tools/mach-types $kerneldir/build/
 	    cp -a --parents arch/arm/tools/syscall* $kerneldir/build/
+
+            cp -a --parents arch/arm/kernel/module.lds $kerneldir/build/
 	fi
 
 	if [ -d arch/${ARCH}/include ]; then
