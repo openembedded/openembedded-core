@@ -774,7 +774,11 @@ python fixup_perms () {
         bbpath = d.getVar('BBPATH')
         fs_perms_tables = d.getVar('FILESYSTEM_PERMS_TABLES') or ""
         for conf_file in fs_perms_tables.split():
-            str += " %s" % bb.utils.which(bbpath, conf_file)
+            confpath = bb.utils.which(bbpath, conf_file)
+            if confpath:
+                str += " %s" % bb.utils.which(bbpath, conf_file)
+            else:
+                bb.warn("cannot find %s specified in FILESYSTEM_PERMS_TABLES" % conf_file)
         return str
 
 
