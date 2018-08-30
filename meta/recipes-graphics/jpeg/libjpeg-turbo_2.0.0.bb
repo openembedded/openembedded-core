@@ -11,7 +11,8 @@ DEPENDS_append_x86-64_class-target = " nasm-native"
 DEPENDS_append_x86_class-target    = " nasm-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
-           file://0001-libjpeg-turbo-fix-package_qa-error.patch"
+           file://0001-libjpeg-turbo-fix-package_qa-error.patch \
+           file://0001-libjpeg-turbo-fix-wrongly-defined-define-HAVE_STDLIB.patch"
 
 SRC_URI[md5sum] = "b12a3fcf1d078db38410f27718a91b83"
 SRC_URI[sha256sum] = "778876105d0d316203c928fd2a0374c8c01f755d0a00b12a1c8934aeccff8868"
