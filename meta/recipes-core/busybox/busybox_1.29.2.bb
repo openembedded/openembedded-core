@@ -42,13 +42,8 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://rcK \
            file://runlevel \
            file://makefile-libbb-race.patch \
-           file://CVE-2011-5325.patch \
-           file://CVE-2017-15873.patch \
-           file://busybox-CVE-2017-16544.patch \
-           file://busybox-fix-lzma-segfaults.patch \
-           file://umount-ignore-c.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
-SRC_URI[tarball.md5sum] = "476186f4bab81781dab2369bfd42734e"
-SRC_URI[tarball.sha256sum] = "9d4be516b61e6480f156b11eb42577a13529f75d3383850bb75c50c285de63df"
+SRC_URI[tarball.md5sum] = "46617af37a39579711d8b36f189cdf1e"
+SRC_URI[tarball.sha256sum] = "67d2fa6e147a45875fe972de62d907ef866fe784c495c363bf34756c444a5d61"
