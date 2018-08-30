@@ -38,6 +38,9 @@ FILES_${PN}-dev = " \
 # Rather than duplicating multiple entries for these, make one
 # list and reuse it.
 
+LDGOLD ?= "ld.gold dwp"
+LDGOLD_riscv64 = ""
+
 USE_ALTERNATIVES_FOR = " \
 	addr2line \
 	ar \
@@ -47,7 +50,7 @@ USE_ALTERNATIVES_FOR = " \
 	gprof \
 	ld \
 	ld.bfd \
-	ld.gold dwp \
+	${LDGOLD} \
 	nm \
 	objcopy \
 	objdump \
