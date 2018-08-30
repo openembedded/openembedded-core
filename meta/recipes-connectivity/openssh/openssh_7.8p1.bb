@@ -25,13 +25,12 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
            file://sshd_check_keys \
            file://add-test-support-for-busybox.patch \
-           file://disable-ciphers-not-supported-by-OpenSSL-DES.patch \
            "
 
 PAM_SRC_URI = "file://sshd"
 
-SRC_URI[md5sum] = "68ba883aff6958297432e5877e9a0fe2"
-SRC_URI[sha256sum] = "d73be7e684e99efcd024be15a30bffcbe41b012b2f7b3c9084aed621775e6b8f"
+SRC_URI[md5sum] = "ce1d090fa6239fd38eb989d5e983b074"
+SRC_URI[sha256sum] = "1a484bb15152c183bb2514e112aa30dd34138c3cfb032eee5490a66c507144ca"
 
 inherit useradd update-rc.d update-alternatives systemd
 
