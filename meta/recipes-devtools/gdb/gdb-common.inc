@@ -1,7 +1,7 @@
 SUMMARY = "GNU debugger"
 HOMEPAGE = "http://www.gnu.org/software/gdb/"
 SECTION = "devel"
-DEPENDS = "expat zlib ncurses virtual/libiconv ${LTTNGUST}"
+DEPENDS = "expat zlib ncurses virtual/libiconv ${LTTNGUST} bison-native"
 
 LTTNGUST = "lttng-ust"
 LTTNGUST_aarch64 = ""
