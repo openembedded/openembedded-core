@@ -175,4 +175,8 @@ RDEPENDS_${PN}-bin = "perl"
 RDEPENDS_${PN}-misc = "perl"
 RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
 
+RPROVIDES_openssl-conf = "openssl10-conf"
+RREPLACES_openssl-conf = "openssl10-conf"
+RCONFLICTS_openssl-conf = "openssl10-conf"
+
 BBCLASSEXTEND = "native nativesdk"
