@@ -237,7 +237,7 @@ autotools_do_configure() {
 }
 
 autotools_do_compile() {
-    oe_runmake
+	oe_runmake
 }
 
 autotools_do_install() {
