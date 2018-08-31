@@ -22,10 +22,11 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://detect-gstreamer-gl.patch \
            file://0012-soup-Forward-declare-URL-class.patch \
            file://0001-Fix-PaintingData-has-no-member-named-lightVector-on-.patch \
+           file://0001-webkitgtk-fix-CVE-2017-17821.patch \
            "
 
-SRC_URI[md5sum] = "efb69a0cc3cc67ef2647efec22e44c69"
-SRC_URI[sha256sum] = "579b307d78fa16a73f112790178022166d7ad17d4147492ced9b9fba48f20dd8"
+SRC_URI[md5sum] = "72a05f6a4dc1c78b079590a8fd280401"
+SRC_URI[sha256sum] = "15c0f8d26e9605afe0948d161ba5fd82efee8eda2debd409fd40a440ac3af990"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
