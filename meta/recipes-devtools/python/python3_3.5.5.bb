@@ -74,7 +74,7 @@ TARGET_CC_ARCH += "-DNDEBUG -fno-inline"
 SDK_CC_ARCH += "-DNDEBUG -fno-inline"
 EXTRA_OEMAKE += "CROSS_COMPILE=yes"
 EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip --enable-optimizations"
-PYTHON3_PROFILE_TASK ?= "${S}/Tools/pybench/pybench.py -n 10"
+PYTHON3_PROFILE_TASK ?= "${S}/Tools/pybench/pybench.py -n 1"
 
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 export _PYTHON_PROJECT_BASE = "${B}"
