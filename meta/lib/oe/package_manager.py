@@ -766,7 +766,9 @@ class RpmPM(PackageManager):
         rpmrcconfdir = "%s/%s" %(self.target_rootfs, "etc/")
         bb.utils.mkdirhier(platformconfdir)
         open(platformconfdir + "platform", 'w').write("%s-pc-linux" % self.primary_arch)
-        open(rpmrcconfdir + "rpmrc", 'w').write("arch_compat: %s: %s\n" % (self.primary_arch, self.archs if len(self.archs) > 0 else self.primary_arch))
+        with open(rpmrcconfdir + "rpmrc", 'w') as f:
+            f.write("arch_compat: %s: %s\n" % (self.primary_arch, self.archs if len(self.archs) > 0 else self.primary_arch))
+            f.write("buildarch_compat: %s: noarch\n" % self.primary_arch)
 
         open(platformconfdir + "macros", 'w').write("%_transaction_color 7\n")
         if self.d.getVar('RPM_PREFER_ELF_ARCH'):
