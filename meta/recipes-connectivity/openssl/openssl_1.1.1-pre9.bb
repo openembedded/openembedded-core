@@ -10,7 +10,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=d57d511030c9d66ef5f5966bee5a7eff"
 
 DEPENDS = "hostperl-runtime-native"
 
-SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
+# This short sort lower than 1.1.1 final, to avoid package version going downwards issue
+PV = "1.1.1~pre9"
+S = "${WORKDIR}/openssl-1.1.1-pre9"
+
+SRC_URI = "http://www.openssl.org/source/openssl-1.1.1-pre9.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
            "
