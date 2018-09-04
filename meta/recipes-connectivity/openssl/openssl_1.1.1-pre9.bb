@@ -31,7 +31,7 @@ inherit lib_package multilib_header ptest
 #| ./libcrypto.so: undefined reference to `getcontext'
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
-CPPFLAGS_append_libc-musl = " -DOPENSSL_NO_ASYNC"
+EXTRA_OECONF_append_libc-musl = " no-async"
 
 # This prevents openssl from using getrandom() which is not available on older glibc versions
 # (native versions can be built with newer glibc, but then relocated onto a system with older glibc)
