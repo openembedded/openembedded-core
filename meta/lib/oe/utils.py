@@ -342,8 +342,11 @@ def format_pkg_list(pkg_dict, ret_format=None):
 
     return '\n'.join(output)
 
-def host_gcc_version(d):
+def host_gcc_version(d, taskcontextonly=False):
     import re, subprocess
+
+    if taskcontextonly and d.getVar('BB_WORKERCONTEXT') != '1':
+        return
 
     compiler = d.getVar("BUILD_CC")
     try:
