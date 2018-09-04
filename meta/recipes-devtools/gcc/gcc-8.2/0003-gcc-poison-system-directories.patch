@@ -162,7 +162,7 @@ index b11c6a57939..e3b7a21966f 100644
  
  /* Microsoft Windows does not natively support inodes.
     VMS has non-numeric inodes.  */
-@@ -393,6 +394,24 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
+@@ -393,6 +394,26 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
  	}
        fprintf (stderr, _("End of search list.\n"));
      }
@@ -176,7 +176,9 @@ index b11c6a57939..e3b7a21966f 100644
 +         {
 +          if ((!strncmp (p->name, "/usr/include", 12))
 +              || (!strncmp (p->name, "/usr/local/include", 18))
-+              || (!strncmp (p->name, "/usr/X11R6/include", 18)))
++              || (!strncmp (p->name, "/usr/X11R6/include", 18))
++              || (!strncmp (p->name, "/sw/include", 11))
++              || (!strncmp (p->name, "/opt/include", 12)))
 +            warning (OPT_Wpoison_system_directories,
 +                     "include location \"%s\" is unsafe for "
 +                     "cross-compilation",
