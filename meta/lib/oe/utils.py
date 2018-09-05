@@ -25,6 +25,13 @@ def conditional(variable, checkvalue, truevalue, falsevalue, d):
     else:
         return falsevalue
 
+def vartrue(var, iftrue, iffalse, d):
+    import oe.types
+    if oe.types.boolean(d.getVar(var)):
+        return iftrue
+    else:
+        return iffalse
+
 def less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
     if float(d.getVar(variable)) <= float(checkvalue):
         return truevalue
@@ -467,3 +474,4 @@ class ImageQAFailed(bb.build.FuncFailed):
             msg = msg + ' (%s)' % self.description
 
         return msg
+
