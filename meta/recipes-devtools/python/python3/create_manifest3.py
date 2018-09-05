@@ -50,8 +50,8 @@ pyversion = str(sys.argv[1])
 # Hack to get native python search path (for folders), not fond of it but it works for now
 pivot = 'recipe-sysroot-native'
 for p in sys.path:
-  if pivot in p:
-    nativelibfolder = p[:p.find(pivot)+len(pivot)]
+    if pivot in p:
+        nativelibfolder = p[:p.find(pivot)+len(pivot)]
 
 # Empty dict to hold the whole manifest
 new_manifest = {}
@@ -65,21 +65,21 @@ hasfolders = []
 allfolders = []
 
 def isFolder(value):
-  value = value.replace('${PYTHON_MAJMIN}',pyversion)
-  if os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib32')):
-    return True
-  else:
-    return False
+    value = value.replace('${PYTHON_MAJMIN}',pyversion)
+    if os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib32')):
+        return True
+    else:
+        return False
 
 def isCached(item):
-  if '__pycache__' in item:
-    return True
-  else:
-    return False
+    if '__pycache__' in item:
+        return True
+    else:
+        return False
 
 # Read existing JSON manifest
 with open('python3-manifest.json') as manifest:
-  old_manifest = json.load(manifest)
+    old_manifest = json.load(manifest)
 
 #
 # First pass to get core-package functionality, because we base everything on the fact that core is actually working
@@ -114,50 +114,50 @@ for coredep in output.split():
 # pass them to the manifest directly.
 
 for filedep in old_manifest['core']['files']:
-  if isFolder(filedep):
-    if isCached(filedep):
-        if filedep not in old_manifest['core']['cached']:
-            old_manifest['core']['cached'].append(filedep)
-    else:
+    if isFolder(filedep):
+        if isCached(filedep):
+            if filedep not in old_manifest['core']['cached']:
+                old_manifest['core']['cached'].append(filedep)
+        else:
+            if filedep not in old_manifest['core']['files']:
+                old_manifest['core']['files'].append(filedep)
+        continue
+    if '${bindir}' in filedep:
         if filedep not in old_manifest['core']['files']:
             old_manifest['core']['files'].append(filedep)
-    continue
-  if '${bindir}' in filedep:
-    if filedep not in old_manifest['core']['files']:
-      old_manifest['core']['files'].append(filedep)
-    continue
-  if filedep == '':
-    continue
-  if '${includedir}' in filedep:
-    if filedep not in old_manifest['core']['files']:
-      old_manifest['core']['files'].append(filedep)
-    continue
+        continue
+    if filedep == '':
+        continue
+    if '${includedir}' in filedep:
+        if filedep not in old_manifest['core']['files']:
+            old_manifest['core']['files'].append(filedep)
+        continue
 
-  # Get actual module name , shouldnt be affected by libdir/bindir, etc.
-  pymodule = os.path.splitext(os.path.basename(os.path.normpath(filedep)))[0]
+    # Get actual module name , shouldnt be affected by libdir/bindir, etc.
+    pymodule = os.path.splitext(os.path.basename(os.path.normpath(filedep)))[0]
 
 
-  # We now know that were dealing with a python module, so we can import it
-  # and check what its dependencies are.
-  # We launch a separate task for each module for deterministic behavior.
-  # Each module will only import what is necessary for it to work in specific.
-  # The output of each task will contain each module's dependencies
+    # We now know that were dealing with a python module, so we can import it
+    # and check what its dependencies are.
+    # We launch a separate task for each module for deterministic behavior.
+    # Each module will only import what is necessary for it to work in specific.
+    # The output of each task will contain each module's dependencies
 
-  print ('Getting dependencies for module: %s' % pymodule)
-  output = subprocess.check_output([sys.executable, 'get_module_deps3.py', '%s' % pymodule]).decode('utf8')
-  print ('The following dependencies were found for module %s:\n' % pymodule)
-  print (output)
+    print ('Getting dependencies for module: %s' % pymodule)
+    output = subprocess.check_output([sys.executable, 'get_module_deps3.py', '%s' % pymodule]).decode('utf8')
+    print ('The following dependencies were found for module %s:\n' % pymodule)
+    print (output)
 
 
-  for pymodule_dep in output.split():
-    pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
+    for pymodule_dep in output.split():
+        pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
 
-    if isCached(pymodule_dep):
-        if pymodule_dep not in old_manifest['core']['cached']:
-            old_manifest['core']['cached'].append(pymodule_dep)
-    else:
-        if pymodule_dep not in old_manifest['core']['files']:
-            old_manifest['core']['files'].append(pymodule_dep)
+        if isCached(pymodule_dep):
+            if pymodule_dep not in old_manifest['core']['cached']:
+                old_manifest['core']['cached'].append(pymodule_dep)
+        else:
+            if pymodule_dep not in old_manifest['core']['files']:
+                old_manifest['core']['files'].append(pymodule_dep)
 
 
 # At this point we are done with the core package.
