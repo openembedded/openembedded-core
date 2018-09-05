@@ -44,6 +44,9 @@ import subprocess
 import json
 import os
 
+# Get python version from ${PYTHON_MAJMIN}
+pyversion = str(sys.argv[1])
+
 # Hack to get native python search path (for folders), not fond of it but it works for now
 pivot='recipe-sysroot-native'
 for p in sys.path:
@@ -62,6 +65,7 @@ hasfolders=[]
 allfolders=[]
 
 def isFolder(value):
+  value = value.replace('${PYTHON_MAJMIN}',pyversion)
   if os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib32')):
     return True
   else:
@@ -85,6 +89,7 @@ print ('Getting dependencies for package: core')
 # Special call to check for core package
 output = subprocess.check_output([sys.executable, 'get_module_deps3.py', 'python-core-package']).decode('utf8')
 for item in output.split():
+    item = item.replace(pyversion,'${PYTHON_MAJMIN}')
     # We append it so it doesnt hurt what we currently have:
     if isCached(item):
         if item not in old_manifest['core']['cached']:
@@ -98,6 +103,7 @@ for item in output.split():
             old_manifest['core']['files'].append(item)
 
 for value in old_manifest['core']['files']:
+  value = value.replace(pyversion,'${PYTHON_MAJMIN}')
   # Ignore folders, since we don't import those, difficult to handle multilib
   if isFolder(value):
     # Pass it directly
@@ -131,6 +137,8 @@ for value in old_manifest['core']['files']:
   print ('The following dependencies were found for module %s:\n' % value)
   print (output)
   for item in output.split():
+    item = item.replace(pyversion,'${PYTHON_MAJMIN}')
+
     # We append it so it doesnt hurt what we currently have:
     if isCached(item):
         if item not in old_manifest['core']['cached']:
@@ -250,6 +258,7 @@ for key in old_manifest:
             #   is folder_string inside path/folder1/folder2/filename?, 
             #   Yes, it works, but we waste a couple of milliseconds.
 
+            item = item.replace(pyversion,'${PYTHON_MAJMIN}')
             inFolders=False
             for folder in allfolders:
                 if folder in item:
@@ -265,7 +274,6 @@ for key in old_manifest:
                                     folderFound = True
                                     if keyfolder not in new_manifest[key]['rdepends'] and keyfolder != key:
                                         new_manifest[key]['rdepends'].append(keyfolder)
-                                    
                         else:
                             break
 
