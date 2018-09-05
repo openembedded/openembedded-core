@@ -197,10 +197,6 @@
         "files": [
             "${bindir}/python*[!-config]",
             "${includedir}/python${PYTHON_BINABI}/pyconfig*.h",
-            "${libdir}/python${PYTHON_MAJMIN}/_collections_abc.py",
-            "${libdir}/python${PYTHON_MAJMIN}/_sitebuiltins.py",
-            "${libdir}/python${PYTHON_MAJMIN}/collections",
-            "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserDict.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserList.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserString.py",
@@ -281,6 +277,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/selectors.py",
             "${libdir}/python${PYTHON_MAJMIN}/signal.py",
             "${libdir}/python${PYTHON_MAJMIN}/site.py",
+            "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py",
             "${libdir}/python${PYTHON_MAJMIN}/sre_compile.py",
             "${libdir}/python${PYTHON_MAJMIN}/sre_constants.py",
             "${libdir}/python${PYTHON_MAJMIN}/sre_parse.py",
