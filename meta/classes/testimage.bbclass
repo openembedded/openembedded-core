@@ -221,8 +221,8 @@ def testimage_main(d):
     # Get use_kvm
     qemu_use_kvm = d.getVar("QEMU_USE_KVM")
     if qemu_use_kvm and \
-       (oe.types.boolean(qemu_use_kvm) and 'x86' in machine or \
-        d.getVar('MACHINE') in qemu_use_kvm.split()):
+       (d.getVar('MACHINE') in qemu_use_kvm.split() or \
+        oe.types.boolean(qemu_use_kvm) and 'x86' in machine):
         kvm = True
     else:
         kvm = False
