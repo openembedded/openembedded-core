@@ -208,6 +208,10 @@ do_install () {
 	sed -i "s:^/usr/bin/:BINDIR/:" busybox.links*
 	sed -i "s:^/usr/sbin/:SBINDIR/:" busybox.links*
 
+	# Move arch/link to BINDIR to match coreutils
+	sed -i "s:^BASE_BINDIR/arch:BINDIR/arch:" busybox.links*
+	sed -i "s:^BASE_BINDIR/link:BINDIR/link:" busybox.links*
+
 	sed -i "s:^BASE_BINDIR/:${base_bindir}/:" busybox.links*
 	sed -i "s:^BASE_SBINDIR/:${base_sbindir}/:" busybox.links*
 	sed -i "s:^BINDIR/:${bindir}/:" busybox.links*
