@@ -9,7 +9,7 @@ and executables, so that far fewer relocations need to be resolved at \
 runtime and thus programs come up faster."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c93c0550bd3173f4504b2cbd8991e50b"
-SRCREV = "a853a5d715d84eec93aa68e8f2df26b7d860f5b2"
+SRCREV = "1f2b5469d1a10e9bfd53aafb8501b361ef08bcb0"
 PV = "1.0+git${SRCPV}"
 
 #
@@ -27,7 +27,7 @@ FILES_${PN}-cron = "${sysconfdir}/cron.daily ${sysconfdir}/default"
 
 PACKAGES =+ "${PN}-cron"
 
-SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;branch=cross_prelink_staging \
+SRC_URI = "git://git.yoctoproject.org/prelink-cross.git \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default \
