@@ -39,14 +39,10 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0003-rpmstrpool.c-make-operations-over-string-pools-threa.patch \
            file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            file://0001-perl-disable-auto-reqs.patch \
-           file://0001-configure.ac-add-option-for-dbus.patch \
-           file://0001-Factor-out-and-unify-setting-CLOEXEC.patch \
-           file://0002-Optimize-rpmSetCloseOnExec.patch \
-           file://0003-rpmSetCloseOnExec-use-getrlimit.patch \
            "
 
 PE = "1"
-SRCREV = "bfee1410af51c1cc9724791fb8d985260a62102b"
+SRCREV = "753f6941dc32e94047b7cfe713ddd604a810b4db"
 
 S = "${WORKDIR}/git"
 
@@ -68,8 +64,8 @@ EXTRA_OECONF_append_libc-musl = " --disable-nls"
 #
 # Disable dbus for native, so that rpm doesn't attempt to inhibit shutdown via session dbus even when plugins support is enabled.
 # Also disable plugins by default for native.
-EXTRA_OECONF_append_class-native = " --sysconfdir=/etc --localstatedir=/var --without-dbus --disable-plugins"
-EXTRA_OECONF_append_class-nativesdk = " --sysconfdir=/etc --localstatedir=/var --without-dbus --disable-plugins"
+EXTRA_OECONF_append_class-native = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
+EXTRA_OECONF_append_class-nativesdk = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
 
 BBCLASSEXTEND = "native nativesdk"
 
