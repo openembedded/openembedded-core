@@ -73,7 +73,8 @@ CACHED_CONFIGUREVARS = "ac_cv_have_chflags=no \
 TARGET_CC_ARCH += "-DNDEBUG -fno-inline"
 SDK_CC_ARCH += "-DNDEBUG -fno-inline"
 EXTRA_OEMAKE += "CROSS_COMPILE=yes"
-EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip --enable-optimizations"
+EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip"
+
 PYTHON3_PROFILE_TASK ?= "${S}/Tools/pybench/pybench.py -n 1"
 
 export CROSS_COMPILE = "${TARGET_PREFIX}"
@@ -87,8 +88,10 @@ export CROSSPYTHONPATH = "${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dy
 # No ctypes option for python 3
 PYTHONLSBOPTS = ""
 
-PACKAGECONFIG ??= "readline"
+PACKAGECONFIG ??= "readline ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'pgo', '', d)}"
 PACKAGECONFIG[readline] = ",,readline"
+# Use profile guided optimisation by running PyBench inside qemu-user
+PACKAGECONFIG[pgo] = "--enable-optimizations"
 
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
@@ -108,16 +111,16 @@ run_make() {
 }
 
 do_compile() {
-        # regenerate platform specific files, because they depend on system headers
-        cd ${S}/Lib/plat-linux*
-        include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-                ${S}/Tools/scripts/h2py.py -i '(u_long)' \
-                ${STAGING_INCDIR}/dlfcn.h \
-                ${STAGING_INCDIR}/linux/cdrom.h \
-                ${STAGING_INCDIR}/netinet/in.h \
-                ${STAGING_INCDIR}/sys/types.h
-        sed -e 's,${STAGING_DIR_HOST},,g' -i *.py
-        cd -
+	# regenerate platform specific files, because they depend on system headers
+	cd ${S}/Lib/plat-linux*
+	include=${STAGING_INCDIR} ${STAGING_BINDIR_NATIVE}/python3-native/python3 \
+		${S}/Tools/scripts/h2py.py -i '(u_long)' \
+		${STAGING_INCDIR}/dlfcn.h \
+		${STAGING_INCDIR}/linux/cdrom.h \
+		${STAGING_INCDIR}/netinet/in.h \
+		${STAGING_INCDIR}/sys/types.h
+	sed -e 's,${STAGING_DIR_HOST},,g' -i *.py
+	cd -
 
 	# remove any bogus LD_LIBRARY_PATH
 	sed -i -e s,RUNSHARED=.*,RUNSHARED=, Makefile
@@ -137,20 +140,21 @@ do_compile() {
 	# then call do_install twice we get Makefile.orig == Makefile.sysroot
 	install -m 0644 Makefile Makefile.sysroot
 
-    run_make profile-opt
-
-        if ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'true', 'false', d)}; then
-                qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}/${base_libdir}'])}"
-                cat > pgo-image-qemuwrapper << EOF
+	if ${@bb.utils.contains('PACKAGECONFIG', 'pgo', 'true', 'false', d)}; then
+		run_make profile-opt
+		qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}/${base_libdir}'])}"
+		cat > pgo-image-qemuwrapper << EOF
 #!/bin/sh
 set -x
 $qemu_binary "\$@"
 EOF
-                chmod +x pgo-image-qemuwrapper
-                ./pgo-image-qemuwrapper ${B}/python ${PYTHON3_PROFILE_TASK} || true
+		chmod +x pgo-image-qemuwrapper
+		./pgo-image-qemuwrapper ${B}/python ${PYTHON3_PROFILE_TASK} || true
+		run_make clean_and_use_profile
+	else
+		run_make libpython3.so
+		run_make
 	fi
-
-    run_make clean_and_use_profile
 }
 
 do_install() {
@@ -163,8 +167,12 @@ do_install() {
 
 	# rerun the build once again with original makefile this time
 	# run install in a separate step to avoid compile/install race
-	run_make DESTDIR=${D} LIBDIR=${libdir} build_all_use_profile
-	
+	if ${@bb.utils.contains('PACKAGECONFIG', 'pgo', 'true', 'false', d)}; then
+		run_make DESTDIR=${D} LIBDIR=${libdir} build_all_use_profile
+	else
+		run_make DESTDIR=${D} LIBDIR=${libdir}
+	fi
+
 	run_make DESTDIR=${D} LIBDIR=${libdir} install
 
 	# avoid conflict with 2to3 from Python 2
