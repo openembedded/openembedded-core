@@ -41,6 +41,7 @@ INITSCRIPT_NAME_${PN}-udhcpd = "busybox-udhcpd"
 SYSTEMD_PACKAGES = "${PN}-syslog"
 SYSTEMD_SERVICE_${PN}-syslog = "${@bb.utils.contains('SRC_URI', 'file://syslog.cfg', 'busybox-syslog.service', '', d)}"
 
+RDEPENDS_${PN}-syslog = "busybox"
 CONFFILES_${PN}-syslog = "${sysconfdir}/syslog-startup.conf"
 RCONFLICTS_${PN}-syslog = "rsyslog sysklogd syslog-ng"
 
