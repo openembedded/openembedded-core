@@ -25,6 +25,7 @@ VIRTUAL-RUNTIME_alsa-state ?= "alsa-state"
 VIRTUAL-RUNTIME_getopt ?= "util-linux-getopt"
 VIRTUAL-RUNTIME_base-utils ?= "busybox"
 VIRTUAL-RUNTIME_base-utils-hwclock ?= "busybox-hwclock"
+VIRTUAL-RUNTIME_base-utils-syslog ?= "busybox-syslog"
 
 #
 # Default recipe providers
