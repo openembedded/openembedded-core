@@ -20,7 +20,7 @@ EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
 
 EXPAT = "--with-expat --with-libexpat-prefix=${STAGING_DIR_HOST}"
 
-EXTRA_OECONF = "--disable-gdbtk --disable-tui --disable-x --disable-werror \
+EXTRA_OECONF = "--disable-gdbtk --disable-x --disable-werror \
                 --with-curses --disable-multilib --disable-sim \
                 --without-lzma --without-guile \
                 ${GDBPROPREFIX} ${EXPAT} \
@@ -36,6 +36,8 @@ PACKAGECONFIG ??= "readline"
 PACKAGECONFIG[readline] = "--with-system-readline,--without-system-readline,readline"
 PACKAGECONFIG[python] = "--with-python=${WORKDIR}/python,--without-python,python3,python3 python3-codecs"
 PACKAGECONFIG[babeltrace] = "--with-babeltrace,--without-babeltrace,babeltrace"
+# ncurses is already a hard DEPENDS, but would be added here if it weren't
+PACKAGECONFIG[tui] = "--enable-tui,--disable-tui"
 
 GDBPROPREFIX = "--program-prefix=''"
 
