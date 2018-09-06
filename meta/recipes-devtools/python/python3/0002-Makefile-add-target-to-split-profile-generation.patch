@@ -19,7 +19,7 @@ diff --git a/Makefile.pre.in b/Makefile.pre.in
 index 84bc3ff..017a2c4 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -469,13 +469,11 @@ profile-opt:
+@@ -469,13 +469,12 @@ profile-opt:
  	$(MAKE) profile-removal
  	$(MAKE) build_all_generate_profile
  	$(MAKE) profile-removal
@@ -31,7 +31,7 @@ index 84bc3ff..017a2c4 100644
  	@echo "Rebuilding with profile guided optimizations:"
  	$(MAKE) clean
  	$(MAKE) build_all_use_profile
--	$(MAKE) profile-removal
+ 	$(MAKE) profile-removal
  
  build_all_generate_profile:
  	$(MAKE) @DEF_MAKE_RULE@ CFLAGS_NODIST="$(CFLAGS) $(EXTRA_CFLAGS) $(PGO_PROF_GEN_FLAG) @LTOFLAGS@" LDFLAGS="$(LDFLAGS) $(PGO_PROF_GEN_FLAG) @LTOFLAGS@" LIBS="$(LIBS)"
