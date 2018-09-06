@@ -1,4 +1,4 @@
-From 31ef4cce83c1770ea1e816d91b7e258fbf170035 Mon Sep 17 00:00:00 2001
+From 4cf37d56fddcc22bcd818f6d470404f56d907f3c Mon Sep 17 00:00:00 2001
 From: Sascha Silbe <x-yo17@se-silbe.de>
 Date: Fri, 8 Jun 2018 13:55:10 +0200
 Subject: [PATCH] Relocate the repository directory for native builds
@@ -14,12 +14,13 @@ cache or sstate mirror).
 
 Upstream-Status: Inappropriate
 Signed-off-by: Sascha Silbe <x-yo17@se-silbe.de>
+
 ---
  girepository/girepository.c | 15 +++++++++++++--
  1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/girepository/girepository.c b/girepository/girepository.c
-index 10282c72..60c45104 100644
+index c1fa3d3..efa557e 100644
 --- a/girepository/girepository.c
 +++ b/girepository/girepository.c
 @@ -21,6 +21,8 @@
@@ -40,7 +41,7 @@ index 10282c72..60c45104 100644
  /**
   * SECTION:girepository
   * @short_description: GObject Introspection repository manager
-@@ -191,9 +195,16 @@ init_globals (void)
+@@ -188,9 +192,16 @@ init_globals (void)
            g_free (custom_dirs);
          }
  
@@ -57,8 +58,5 @@ index 10282c72..60c45104 100644
 +        typelib_dir = g_build_filename (libdir, "girepository-1.0", NULL);
 +      }
  
-       search_path = g_slist_prepend (search_path, typelib_dir);
+       typelib_search_path = g_slist_prepend (typelib_search_path, typelib_dir);
  
--- 
-2.11.0
-

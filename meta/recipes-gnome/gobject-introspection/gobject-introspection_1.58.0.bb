@@ -3,10 +3,10 @@ HOMEPAGE = "https://wiki.gnome.org/action/show/Projects/GObjectIntrospection"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "libs"
 LICENSE = "LGPLv2+ & GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=6317a809f70ed9848fa5673121908586 \
-                    file://tools/compiler.c;md5=fc5007fc20022720e6c0b0cdde41fabd;endline=20 \
-                    file://giscanner/sourcescanner.c;md5=194d6e0c1d00662f32d030ce44de8d39;endline=22 \
-                    file://girepository/giregisteredtypeinfo.c;md5=661847611ae6979465415f31a759ba27;endline=21 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=c434e8128a68bedd59b80b2ac1eb1c4a \
+                    file://tools/compiler.c;endline=20;md5=fc5007fc20022720e6c0b0cdde41fabd \
+                    file://giscanner/sourcescanner.c;endline=22;md5=194d6e0c1d00662f32d030ce44de8d39 \
+                    file://girepository/giregisteredtypeinfo.c;endline=21;md5=661847611ae6979465415f31a759ba27 \
                     "
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-${PV}.tar.xz \
@@ -16,16 +16,17 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0004-giscanner-add-a-use-ldd-wrapper-option.patch \
            file://0005-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
            file://0001-giscanner-add-a-lib-dirs-envvar-option.patch \
+           file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
            "
 
-SRC_URI[md5sum] = "62e5f5685b8d9752fdeaf17c057d53d1"
-SRC_URI[sha256sum] = "5b2875ccff99ff7baab63a34b67f8c920def240e178ff50add809e267d9ea24b"
+SRC_URI[md5sum] = "94fec875276262037bfcd51226db12fe"
+SRC_URI[sha256sum] = "27c1590a32749de0a5481ce897772547043e94bccba4bc0a7edb3d8513e401ec"
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
 inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even
 
-DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native"
+DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native autoconf-archive"
 
 # target build needs qemu to run temporary introspection binaries created
 # on the fly by g-ir-scanner and a native version of itself to run
