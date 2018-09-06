@@ -1,4 +1,4 @@
-From 8757b36be6109f6d7ea0bd8dafbaed647e0d2192 Mon Sep 17 00:00:00 2001
+From 215486b53a7a6dfca064cd2e9196a9de6ed6f0c2 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 02:31:12 +0000
 Subject: [PATCH 05/11] Add support for Renesas SH (sh4) architecture.
@@ -26,24 +26,24 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gdb/testsuite/gdb.base/signals.c     |   4 +
  11 files changed, 617 insertions(+), 29 deletions(-)
 
-Index: gdb-8.1/gdb/Makefile.in
-===================================================================
---- gdb-8.1.orig/gdb/Makefile.in
-+++ gdb-8.1/gdb/Makefile.in
-@@ -758,6 +758,8 @@ ALL_TARGET_OBS = \
- 	sh-linux-tdep.o \
- 	sh-nbsd-tdep.o \
- 	sh-tdep.o \
-+	sh-linux-tdep.o \
-+	sh-linux-nat.o \
- 	sh64-tdep.o \
- 	sol2-tdep.o \
- 	solib-aix.o \
-Index: gdb-8.1/gdb/configure.host
-===================================================================
---- gdb-8.1.orig/gdb/configure.host
-+++ gdb-8.1/gdb/configure.host
-@@ -152,6 +152,7 @@ powerpc*-*-linux*)	gdb_host=linux ;;
+diff --git a/gdb/Makefile.in b/gdb/Makefile.in
+index c76a4e4394..921fdadb49 100644
+--- a/gdb/Makefile.in
++++ b/gdb/Makefile.in
+@@ -2326,6 +2326,8 @@ ALLDEPFILES = \
+ 	sh-nbsd-nat.c \
+ 	sh-nbsd-tdep.c \
+ 	sh-tdep.c \
++	sh-linux-tdep.c \
++	sh-linux-nat.c \
+ 	sol2-tdep.c \
+ 	solib-aix.c \
+ 	solib-spu.c \
+diff --git a/gdb/configure.host b/gdb/configure.host
+index 23a2f16399..39a886ec53 100644
+--- a/gdb/configure.host
++++ b/gdb/configure.host
+@@ -153,6 +153,7 @@ riscv*-*-linux*)	gdb_host=linux ;;
  
  s390*-*-linux*)		gdb_host=linux ;;
  
@@ -51,10 +51,10 @@ Index: gdb-8.1/gdb/configure.host
  sh*-*-netbsdelf* | sh*-*-knetbsd*-gnu)
  			gdb_host=nbsd ;;
  sh*-*-openbsd*)		gdb_host=nbsd ;;
-Index: gdb-8.1/gdb/sh-linux-tdep.c
-===================================================================
---- gdb-8.1.orig/gdb/sh-linux-tdep.c
-+++ gdb-8.1/gdb/sh-linux-tdep.c
+diff --git a/gdb/sh-linux-tdep.c b/gdb/sh-linux-tdep.c
+index db93967910..4109c549e8 100644
+--- a/gdb/sh-linux-tdep.c
++++ b/gdb/sh-linux-tdep.c
 @@ -18,14 +18,37 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
  
@@ -93,7 +93,7 @@ Index: gdb-8.1/gdb/sh-linux-tdep.c
  #include "glibc-tdep.h"
  #include "sh-tdep.h"
  #include "linux-tdep.h"
-@@ -180,9 +203,505 @@ static struct tramp_frame sh_linux_rt_si
+@@ -180,9 +203,505 @@ static struct tramp_frame sh_linux_rt_sigreturn_tramp_frame = {
    sh_linux_rt_sigreturn_init
  };
  
@@ -599,10 +599,10 @@ Index: gdb-8.1/gdb/sh-linux-tdep.c
    linux_init_abi (info, gdbarch);
  
    /* GNU/Linux uses SVR4-style shared libraries.  */
-Index: gdb-8.1/gdb/sh-tdep.c
-===================================================================
---- gdb-8.1.orig/gdb/sh-tdep.c
-+++ gdb-8.1/gdb/sh-tdep.c
+diff --git a/gdb/sh-tdep.c b/gdb/sh-tdep.c
+index fe64cf979a..4417114cd0 100644
+--- a/gdb/sh-tdep.c
++++ b/gdb/sh-tdep.c
 @@ -21,6 +21,9 @@
     sac@cygnus.com.  */
  
@@ -613,7 +613,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
  #include "frame.h"
  #include "frame-base.h"
  #include "frame-unwind.h"
-@@ -67,23 +70,6 @@ static const char *const sh_cc_enum[] =
+@@ -66,23 +69,6 @@ static const char *const sh_cc_enum[] = {
  
  static const char *sh_active_calling_convention = sh_cc_gcc;
  
@@ -637,7 +637,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
  static int
  sh_is_renesas_calling_convention (struct type *func_type)
  {
-@@ -1051,7 +1037,7 @@ sh_treat_as_flt_p (struct type *type)
+@@ -1050,7 +1036,7 @@ sh_treat_as_flt_p (struct type *type)
      return 0;
    /* Otherwise if the type of that member is float, the whole type is
       treated as float.  */
@@ -646,7 +646,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
      return 1;
    /* Otherwise it's not treated as float.  */
    return 0;
-@@ -1101,7 +1087,7 @@ sh_push_dummy_call_fpu (struct gdbarch *
+@@ -1100,7 +1086,7 @@ sh_push_dummy_call_fpu (struct gdbarch *gdbarch,
       in four registers available.  Loop thru args from first to last.  */
    for (argnum = 0; argnum < nargs; argnum++)
      {
@@ -655,7 +655,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
        len = TYPE_LENGTH (type);
        val = sh_justify_value_in_reg (gdbarch, args[argnum], len);
  
-@@ -1835,7 +1821,7 @@ sh_dwarf2_frame_init_reg (struct gdbarch
+@@ -1834,7 +1820,7 @@ sh_dwarf2_frame_init_reg (struct gdbarch *gdbarch, int regnum,
      reg->how = DWARF2_FRAME_REG_UNDEFINED;
  }
  
@@ -664,7 +664,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
  sh_alloc_frame_cache (void)
  {
    struct sh_frame_cache *cache;
-@@ -1862,7 +1848,7 @@ sh_alloc_frame_cache (void)
+@@ -1861,7 +1847,7 @@ sh_alloc_frame_cache (void)
    return cache;
  }
  
@@ -673,7 +673,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
  sh_frame_cache (struct frame_info *this_frame, void **this_cache)
  {
    struct gdbarch *gdbarch = get_frame_arch (this_frame);
-@@ -1929,9 +1915,9 @@ sh_frame_cache (struct frame_info *this_
+@@ -1928,9 +1914,9 @@ sh_frame_cache (struct frame_info *this_frame, void **this_cache)
    return cache;
  }
  
@@ -686,7 +686,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
  {
    struct gdbarch *gdbarch = get_frame_arch (this_frame);
    struct sh_frame_cache *cache = sh_frame_cache (this_frame, this_cache);
-@@ -1945,7 +1931,7 @@ sh_frame_prev_register (struct frame_inf
+@@ -1944,7 +1930,7 @@ sh_frame_prev_register (struct frame_info *this_frame,
       the current frame.  Frob regnum so that we pull the value from
       the correct place.  */
    if (regnum == gdbarch_pc_regnum (gdbarch))
@@ -695,7 +695,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
  
    if (regnum < SH_NUM_REGS && cache->saved_regs[regnum] != -1)
      return frame_unwind_got_memory (this_frame, regnum,
-@@ -2254,8 +2240,8 @@ sh_return_in_first_hidden_param_p (struc
+@@ -2255,8 +2241,8 @@ sh_return_in_first_hidden_param_p (struct gdbarch *gdbarch,
  static struct gdbarch *
  sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
  {
@@ -703,9 +703,9 @@ Index: gdb-8.1/gdb/sh-tdep.c
    struct gdbarch_tdep *tdep;
 +  struct gdbarch *gdbarch;
  
-   /* SH5 is handled entirely in sh64-tdep.c.  */
-   if (info.bfd_arch_info->mach == bfd_mach_sh5)
-@@ -2271,6 +2257,18 @@ sh_gdbarch_init (struct gdbarch_info inf
+   /* If there is already a candidate, use it.  */
+   arches = gdbarch_list_lookup_by_info (arches, &info);
+@@ -2268,6 +2254,18 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
    tdep = XCNEW (struct gdbarch_tdep);
    gdbarch = gdbarch_alloc (&info, tdep);
  
@@ -724,7 +724,7 @@ Index: gdb-8.1/gdb/sh-tdep.c
    set_gdbarch_short_bit (gdbarch, 2 * TARGET_CHAR_BIT);
    set_gdbarch_int_bit (gdbarch, 4 * TARGET_CHAR_BIT);
    set_gdbarch_long_bit (gdbarch, 4 * TARGET_CHAR_BIT);
-@@ -2425,10 +2423,11 @@ sh_gdbarch_init (struct gdbarch_info inf
+@@ -2422,10 +2420,11 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
        break;
      }
  
@@ -737,10 +737,10 @@ Index: gdb-8.1/gdb/sh-tdep.c
    frame_unwind_append_unwinder (gdbarch, &sh_stub_unwind);
    frame_unwind_append_unwinder (gdbarch, &sh_frame_unwind);
  
-Index: gdb-8.1/gdb/sh-tdep.h
-===================================================================
---- gdb-8.1.orig/gdb/sh-tdep.h
-+++ gdb-8.1/gdb/sh-tdep.h
+diff --git a/gdb/sh-tdep.h b/gdb/sh-tdep.h
+index 59acd35b88..be3f998d84 100644
+--- a/gdb/sh-tdep.h
++++ b/gdb/sh-tdep.h
 @@ -21,6 +21,12 @@
  
  /* Contributed by Steve Chamberlain sac@cygnus.com.  */
@@ -820,10 +820,10 @@ Index: gdb-8.1/gdb/sh-tdep.h
    /* Non-NULL when debugging from a core file.  Provides the offset
       where each general-purpose register is stored inside the associated
       core file section.  */
-Index: gdb-8.1/gdb/testsuite/gdb.asm/asm-source.exp
-===================================================================
---- gdb-8.1.orig/gdb/testsuite/gdb.asm/asm-source.exp
-+++ gdb-8.1/gdb/testsuite/gdb.asm/asm-source.exp
+diff --git a/gdb/testsuite/gdb.asm/asm-source.exp b/gdb/testsuite/gdb.asm/asm-source.exp
+index 9879f0ca47..cbc0e4d5f7 100644
+--- a/gdb/testsuite/gdb.asm/asm-source.exp
++++ b/gdb/testsuite/gdb.asm/asm-source.exp
 @@ -116,6 +116,11 @@ switch -glob -- [istarget] {
              append link-flags " -m elf32ppc"
          }
@@ -836,10 +836,10 @@ Index: gdb-8.1/gdb/testsuite/gdb.asm/asm-source.exp
      "sh*-*-*" {
          set asm-arch sh
  	set debug-flags "-gdwarf-2"
-Index: gdb-8.1/gdb/testsuite/gdb.asm/sh.inc
-===================================================================
---- gdb-8.1.orig/gdb/testsuite/gdb.asm/sh.inc
-+++ gdb-8.1/gdb/testsuite/gdb.asm/sh.inc
+diff --git a/gdb/testsuite/gdb.asm/sh.inc b/gdb/testsuite/gdb.asm/sh.inc
+index a4a5fc545e..89efed7795 100644
+--- a/gdb/testsuite/gdb.asm/sh.inc
++++ b/gdb/testsuite/gdb.asm/sh.inc
 @@ -40,9 +40,8 @@
  	mov.l   .Lconst\@,r1
  	bra	.Lafterconst\@
@@ -851,10 +851,10 @@ Index: gdb-8.1/gdb/testsuite/gdb.asm/sh.inc
  	.long	\subr
  	.align	1
  .Lafterconst\@:
-Index: gdb-8.1/gdb/testsuite/gdb.base/annota1.c
-===================================================================
---- gdb-8.1.orig/gdb/testsuite/gdb.base/annota1.c
-+++ gdb-8.1/gdb/testsuite/gdb.base/annota1.c
+diff --git a/gdb/testsuite/gdb.base/annota1.c b/gdb/testsuite/gdb.base/annota1.c
+index 424e1b8327..0de2e7b633 100644
+--- a/gdb/testsuite/gdb.base/annota1.c
++++ b/gdb/testsuite/gdb.base/annota1.c
 @@ -1,6 +1,9 @@
  #include <stdio.h>
  #include <signal.h>
@@ -865,10 +865,10 @@ Index: gdb-8.1/gdb/testsuite/gdb.base/annota1.c
  
  void
  handle_USR1 (int sig)
-Index: gdb-8.1/gdb/testsuite/gdb.base/annota3.c
-===================================================================
---- gdb-8.1.orig/gdb/testsuite/gdb.base/annota3.c
-+++ gdb-8.1/gdb/testsuite/gdb.base/annota3.c
+diff --git a/gdb/testsuite/gdb.base/annota3.c b/gdb/testsuite/gdb.base/annota3.c
+index 424e1b8327..952aaf218a 100644
+--- a/gdb/testsuite/gdb.base/annota3.c
++++ b/gdb/testsuite/gdb.base/annota3.c
 @@ -1,6 +1,10 @@
  #include <stdio.h>
  #include <signal.h>
@@ -880,10 +880,10 @@ Index: gdb-8.1/gdb/testsuite/gdb.base/annota3.c
  
  void
  handle_USR1 (int sig)
-Index: gdb-8.1/gdb/testsuite/gdb.base/sigall.c
-===================================================================
---- gdb-8.1.orig/gdb/testsuite/gdb.base/sigall.c
-+++ gdb-8.1/gdb/testsuite/gdb.base/sigall.c
+diff --git a/gdb/testsuite/gdb.base/sigall.c b/gdb/testsuite/gdb.base/sigall.c
+index 81f3b08d6b..1574b2d6cb 100644
+--- a/gdb/testsuite/gdb.base/sigall.c
++++ b/gdb/testsuite/gdb.base/sigall.c
 @@ -1,6 +1,9 @@
  #include <signal.h>
  #include <unistd.h>
@@ -894,10 +894,10 @@ Index: gdb-8.1/gdb/testsuite/gdb.base/sigall.c
  
  /* Signal handlers, we set breakpoints in them to make sure that the
     signals really get delivered.  */
-Index: gdb-8.1/gdb/testsuite/gdb.base/signals.c
-===================================================================
---- gdb-8.1.orig/gdb/testsuite/gdb.base/signals.c
-+++ gdb-8.1/gdb/testsuite/gdb.base/signals.c
+diff --git a/gdb/testsuite/gdb.base/signals.c b/gdb/testsuite/gdb.base/signals.c
+index 756606880f..1205a9bc9c 100644
+--- a/gdb/testsuite/gdb.base/signals.c
++++ b/gdb/testsuite/gdb.base/signals.c
 @@ -3,6 +3,10 @@
  #include <signal.h>
  #include <unistd.h>
@@ -909,3 +909,6 @@ Index: gdb-8.1/gdb/testsuite/gdb.base/signals.c
  
  static int count = 0;
  
+-- 
+2.18.0
+

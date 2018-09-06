@@ -1,7 +1,10 @@
-From 56893a61aa4f0270fa8d1197b9848247f90fce0d Mon Sep 17 00:00:00 2001
+From b1985595e46721bb168ac38f4c841a915cc2f799 Mon Sep 17 00:00:00 2001
 From: Yousong Zhou <yszhou4tech@gmail.com>
 Date: Fri, 24 Mar 2017 10:36:03 +0800
-Subject: [PATCH] Fix invalid sigprocmask call
+Subject: [PATCH 11/11] Fix invalid sigprocmask call
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 The POSIX document says
 
@@ -20,18 +23,19 @@ gdb/ChangeLog:
 
     * common/signals-state-save-restore.c (save_original_signals_state):
     Fix invalid sigprocmask call.
----
+
 Upstream-Status: Pending [not author, cherry-picked from LEDE https://bugs.lede-project.org/index.php?do=details&task_id=637&openedfrom=-1%2Bweek]
 Signed-off-by: André Draszik <adraszik@tycoint.com>
- gdb/ChangeLog                           | 5 +++++
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
  gdb/common/signals-state-save-restore.c | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gdb/common/signals-state-save-restore.c b/gdb/common/signals-state-save-restore.c
-index d11a9ae..734335c 100644
+index 5bb66321bb..6597decbc6 100644
 --- a/gdb/common/signals-state-save-restore.c
 +++ b/gdb/common/signals-state-save-restore.c
-@@ -41,7 +41,7 @@ save_original_signals_state (void)
+@@ -41,7 +41,7 @@ save_original_signals_state (bool quiet)
    int i;
    int res;
  
@@ -41,5 +45,5 @@ index d11a9ae..734335c 100644
      perror_with_name (("sigprocmask"));
  
 -- 
-2.6.4
+2.18.0
 
