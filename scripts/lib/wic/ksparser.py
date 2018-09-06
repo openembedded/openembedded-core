@@ -196,8 +196,8 @@ class KickStart():
                         raise KickStartError('%s:%d: %s' % \
                                              (confpath, lineno, err))
                     if line.startswith('part'):
-                        # SquashFS does not support UUID
-                        if parsed.fstype == 'squashfs' and parsed.use_uuid:
+                        # SquashFS does not support filesystem UUID
+                        if parsed.fstype == 'squashfs' and parsed.fsuuid:
                             err = "%s:%d: SquashFS does not support UUID" \
                                   % (confpath, lineno)
                             raise KickStartError(err)
