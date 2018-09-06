@@ -13,12 +13,10 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://Enable-more-tests-while-cross-compiling.patch \
            file://0001-Install-gio-querymodules-as-libexec_PROGRAM.patch \
            file://0001-Do-not-ignore-return-value-of-write.patch \
-           file://0001-Test-for-pthread_getname_np-before-using-it.patch \
            file://0010-Do-not-hardcode-python-path-into-various-tools.patch \
-           file://0001-glib-mkenums-Ignore-other-per-value-options-than-ski.patch \
            "
 
 SRC_URI_append_class-native = " file://relocate-modules.patch"
 
-SRC_URI[md5sum] = "988af38524804ea1ae6bc9a2bad181ff"
-SRC_URI[sha256sum] = "40ef3f44f2c651c7a31aedee44259809b6f03d3d20be44545cd7d177221c0b8d"
+SRC_URI[md5sum] = "9b5d21c802f55bf37171c4fbfe7d32d1"
+SRC_URI[sha256sum] = "c0f4ce0730b4f95c47b711613b5406a887c2ee13ea6d25930d72a4fa7fdb77f6"

@@ -87,10 +87,10 @@ ARM_INSTRUCTION_SET_armv5 = "arm"
 CPPFLAGS_append_class-target_mips16e = " -DNVALGRIND=1"
 
 # GLib generally requires gettext to be present so for USE_NLS to yes.  For
-# native builds as i18n is disabled globally we can tell it to use a fake msgfmt.
+# native builds as i18n is disabled globally we have to add a gettext-native dependency.
 USE_NLS_class-target = "yes"
 USE_NLS_class-nativesdk = "yes"
-CACHED_CONFIGUREVARS_append_class-native = " ac_cv_path_MSGFMT=/bin/false"
+DEPENDS_append_class-native = " gettext-native"
 
 EXEEXT = ""
 EXEEXT_mingw32 = ".exe"
