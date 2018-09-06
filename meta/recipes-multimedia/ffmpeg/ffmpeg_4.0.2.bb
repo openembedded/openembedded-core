@@ -39,7 +39,7 @@ ARM_INSTRUCTION_SET_armv6 = "arm"
 # libpostproc was previously packaged from a separate recipe
 PROVIDES = "libav libpostproc"
 
-DEPENDS = "alsa-lib zlib libogg yasm-native"
+DEPENDS = "alsa-lib zlib libogg nasm-native"
 
 inherit autotools pkgconfig
 
