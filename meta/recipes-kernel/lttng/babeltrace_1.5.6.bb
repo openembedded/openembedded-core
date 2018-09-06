@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=76ba15dd76a248e1dd526bca0e2125fa"
 DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 
 SRC_URI = "git://git.linuxfoundation.org/diamon/babeltrace.git;branch=stable-1.5"
-SRCREV = "d68a4daf85c73ab7d7070de0c98d0c170af4758e"
+SRCREV = "4f10a4adabee5ca61c27ba399b3438505e0cd6de"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)$"
 
 S = "${WORKDIR}/git"
