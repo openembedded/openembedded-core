@@ -76,7 +76,7 @@ SDK_CC_ARCH += "-DNDEBUG -fno-inline"
 EXTRA_OEMAKE += "CROSS_COMPILE=yes"
 EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ --without-ensurepip"
 
-PYTHON3_PROFILE_TASK ?= "${S}/Tools/pybench/pybench.py -n 1"
+PYTHON3_PROFILE_TASK ?= "./python -m test.regrtest --pgo test_grammar test_opcodes test_dict test_builtin test_exceptions test_types test_support || true"
 
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 export _PYTHON_PROJECT_BASE = "${B}"
@@ -144,13 +144,15 @@ do_compile() {
 	if ${@bb.utils.contains('PACKAGECONFIG', 'pgo', 'true', 'false', d)}; then
 		run_make profile-opt
 		qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}/${base_libdir}'])}"
-		cat > pgo-image-qemuwrapper << EOF
+		cat >pgo-wrapper <<EOF
 #!/bin/sh
-set -x
+cd ${B}
 $qemu_binary "\$@"
 EOF
-		chmod +x pgo-image-qemuwrapper
-		./pgo-image-qemuwrapper ${B}/python ${PYTHON3_PROFILE_TASK} || true
+		chmod +x pgo-wrapper
+		bbnote Gathering profiling data
+		./pgo-wrapper ${PYTHON3_PROFILE_TASK}
+		bbnote Profiling data gathered, rebuilding
 		run_make clean_and_use_profile
 	else
 		run_make libpython3.so
