@@ -1,4 +1,4 @@
-From 5ae347907b8c65983365a6325ac990fcde28d508 Mon Sep 17 00:00:00 2001
+From 57f6b661d7865e8cecd17be36fab68f7f8447998 Mon Sep 17 00:00:00 2001
 From: Rico Tzschichholz <ricotz@ubuntu.com>
 Date: Wed, 6 Sep 2017 18:52:55 +0200
 Subject: [PATCH] libvaladoc: Allow disabling the graphviz dependency of
@@ -17,10 +17,10 @@ Upstream-Status: Submitted [bugzilla link above]
  4 files changed, 63 insertions(+), 34 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 694ffd2..9150620 100644
+index 730c72d..af81986 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -112,34 +112,38 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
+@@ -119,34 +119,38 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
  AC_SUBST(GMODULE_CFLAGS)
  AC_SUBST(GMODULE_LIBS)
  
@@ -202,7 +202,7 @@ index 37c731c..e0326ef 100644
  
  	public void write_namespace_content (Namespace node, Api.Node? parent) {
 diff --git a/libvaladoc/html/htmlmarkupwriter.vala b/libvaladoc/html/htmlmarkupwriter.vala
-index dcc4dad..cf9c860 100644
+index 5aa4afd..e79b0b8 100644
 --- a/libvaladoc/html/htmlmarkupwriter.vala
 +++ b/libvaladoc/html/htmlmarkupwriter.vala
 @@ -51,12 +51,16 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
@@ -210,14 +210,14 @@ index dcc4dad..cf9c860 100644
  	}
  
 +#if HAVE_GRAPHVIZ
- 	public MarkupWriter add_usemap (Charts.Chart chart) {
+ 	public unowned MarkupWriter add_usemap (Charts.Chart chart) {
  		string? buf = (string?) chart.write_buffer ("cmapx");
  		if (buf != null) {
  			raw_text ("\n");
  			raw_text ((!) buf);
  		}
 +#else
-+	public MarkupWriter add_usemap (void* chart) {
++	public unowned MarkupWriter add_usemap (void* chart) {
 +#endif
  
  		return this;
