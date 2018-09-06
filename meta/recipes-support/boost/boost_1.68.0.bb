@@ -8,5 +8,4 @@ SRC_URI += "\
            file://0001-Apply-boost-1.62.0-no-forced-flags.patch.patch \
            file://0003-Don-t-set-up-arch-instruction-set-flags-we-do-that-o.patch \
            file://0001-make_x86_64_sysv_elf_gas.S-set-.file-section.patch \
-           file://0001-Removed-clang-specific-branch-for-x86-DCAS-based-loa.patch \
            "
