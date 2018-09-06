@@ -95,6 +95,18 @@ do_configure_append() {
 	autoreconf -Wcross --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 }
 
+run_make() {
+	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
+		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
+		STAGING_LIBDIR=${STAGING_LIBDIR} \
+		STAGING_INCDIR=${STAGING_INCDIR} \
+		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
+		LIB=${baselib} \
+		ARCH=${TARGET_ARCH} \
+		OPT="${CFLAGS}" \
+		"$@"
+}
+
 do_compile() {
         # regenerate platform specific files, because they depend on system headers
         cd ${S}/Lib/plat-linux*
@@ -125,14 +137,7 @@ do_compile() {
 	# then call do_install twice we get Makefile.orig == Makefile.sysroot
 	install -m 0644 Makefile Makefile.sysroot
 
-        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
-                HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-                STAGING_LIBDIR=${STAGING_LIBDIR} \
-                STAGING_INCDIR=${STAGING_INCDIR} \
-                STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-                LIB=${baselib} \
-                ARCH=${TARGET_ARCH} \
-                OPT="${CFLAGS}" profile-opt
+    run_make profile-opt
 
         if ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'true', 'false', d)}; then
                 qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}/${base_libdir}'])}"
@@ -145,14 +150,7 @@ EOF
                 ./pgo-image-qemuwrapper ${B}/python ${PYTHON3_PROFILE_TASK} || true
 	fi
 
-        oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
-                HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-                STAGING_LIBDIR=${STAGING_LIBDIR} \
-                STAGING_INCDIR=${STAGING_INCDIR} \
-                STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-                LIB=${baselib} \
-                ARCH=${TARGET_ARCH} \
-                OPT="${CFLAGS}" clean_and_use_profile
+    run_make clean_and_use_profile
 }
 
 do_install() {
@@ -165,23 +163,9 @@ do_install() {
 
 	# rerun the build once again with original makefile this time
 	# run install in a separate step to avoid compile/install race
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		LIB=${baselib} \
-		ARCH=${TARGET_ARCH} \
-		DESTDIR=${D} LIBDIR=${libdir} build_all_use_profile
+	run_make DESTDIR=${D} LIBDIR=${libdir} build_all_use_profile
 	
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python3-native/pgen \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python3-native/python3 \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		LIB=${baselib} \
-		ARCH=${TARGET_ARCH} \
-		DESTDIR=${D} LIBDIR=${libdir} install
+	run_make DESTDIR=${D} LIBDIR=${libdir} install
 
 	# avoid conflict with 2to3 from Python 2
 	rm -f ${D}/${bindir}/2to3
