@@ -301,7 +301,7 @@ python extend_recipe_sysroot() {
         data = ""
         for dep in deptree:
             deps = "    " + "\n    ".join(deptree[dep][3]) + "\n"
-            data = "%s:\n  %s\n  %s\n%s  %s\n  %s\n" % (deptree[dep][0], deptree[dep][1], deptree[dep][2], deps, deptree[dep][4], deptree[dep][5])
+            data = data + "%s:\n  %s\n  %s\n%s  %s\n  %s\n" % (deptree[dep][0], deptree[dep][1], deptree[dep][2], deps, deptree[dep][4], deptree[dep][5])
         return data
 
     #bb.note("Full dep tree is:\n%s" % print_dep_tree(taskdepdata))
