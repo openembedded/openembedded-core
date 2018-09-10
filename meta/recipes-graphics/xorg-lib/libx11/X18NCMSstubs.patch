@@ -1,52 +1,49 @@
-Upstream-Status: Pending
+From 62005ad019d6afb81da100b3113292a16472d241 Mon Sep 17 00:00:00 2001
+From: Changqing Li <changqing.li@windriver.com>
+Date: Mon, 10 Sep 2018 09:08:27 +0800
+Subject: [PATCH] Upstream-Status: Inappropriate [configuration]
 
-Upstream-Status: Inappropriate [configuration]
-Index: libX11-1.3/src/imConv.c
-===================================================================
---- libX11-1.3.orig/src/imConv.c
-+++ libX11-1.3/src/imConv.c
-@@ -83,6 +83,7 @@ static const struct SubstRec SubstTable[
-  * from UCS char to specified charset char.
-  * This converter is needed for _XimGetCharCode subroutine.
-  */
-+#ifdef XLOCALE
- XPointer
- _XimGetLocaleCode (
-     _Xconst char*	encoding_name)
-@@ -96,6 +97,7 @@ _XimGetLocaleCode (
-     }
-     return cvt;
- }
-+#endif
+Update patch to version 1.6.6
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ src/Makefile.am    |   5 +-
+ src/X18NCMSstubs.c | 426 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/imConv.c       |   5 +-
+ src/locking.c      |   4 +
+ 4 files changed, 438 insertions(+), 2 deletions(-)
+ create mode 100644 src/X18NCMSstubs.c
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index f8c476d..cdbcbbd 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -336,13 +336,16 @@ if THRSTUBS
+ libX11_la_SOURCES+=UIThrStubs.c
+ endif
  
- /*
-  * Returns the locale dependent representation of a keysym.
-@@ -106,6 +108,7 @@ _XimGetLocaleCode (
-  * terminating NUL byte. Return 0 if the keysym is not representable in the
-  * locale
-  */
-+#ifdef XLOCALE
- /*ARGSUSED*/
- int
- _XimGetCharCode (
-@@ -135,6 +138,7 @@ _XimGetCharCode (
-         buf[count]= '\0';
-     return count;
- }
-+#endif
++libX11_la_SOURCES+=X18NCMSstubs.c
++
+ x11datadir = @X11_DATADIR@
+ x11data_DATA = XErrorDB
  
- #ifdef XKB
- static int lookup_string(
-Index: libX11-1.3/src/X18NCMSstubs.c
-===================================================================
+ EXTRA_DIST = \
+ 	$(x11data_DATA) \
+ 	os2Stubs.c \
+-	UIThrStubs.c 
++	UIThrStubs.c \
++	X18NCMSstubs.c
+ 
+ libX11_xcb_la_SOURCES = x11_xcb.c Xxcbint.h
+ libX11_xcb_la_LDFLAGS = -version-number 1:0:0 -no-undefined
+diff --git a/src/X18NCMSstubs.c b/src/X18NCMSstubs.c
+new file mode 100644
+index 0000000..429cb31
 --- /dev/null
-+++ libX11-1.3/src/X18NCMSstubs.c
-@@ -0,0 +1,428 @@
-+/*
-+ * X18NCMSstubs.c
-+ * - Provides stubs and dummy funcs needed when Xcms and XLocale stuff removed
++++ b/src/X18NCMSstubs.c
+@@ -0,0 +1,426 @@
++ /* - Provides stubs and dummy funcs needed when Xcms and XLocale stuff removed
 + *
-+ * Copyright © 2003 Matthew Allum
++ * Copyright Â© 2003 Matthew Allum
 + *
 + * Permission to use, copy, modify, distribute, and sell this software and its
 + * documentation for any purpose is hereby granted without fee, provided that
@@ -470,33 +467,48 @@ Index: libX11-1.3/src/X18NCMSstubs.c
 +}
 +
 +#endif
-Index: libX11-1.3/src/Makefile.am
-===================================================================
---- libX11-1.3.orig/src/Makefile.am
-+++ libX11-1.3/src/Makefile.am
-@@ -335,6 +335,8 @@ if THRSTUBS
- libX11_la_SOURCES+=UIThrStubs.c
- endif
- 
-+libX11_la_SOURCES+=X18NCMSstubs.c
-+
- x11datadir = @X11_DATADIR@
- x11data_DATA = XKeysymDB XErrorDB
- 
-@@ -342,6 +344,7 @@ EXTRA_DIST = \
- 	$(x11data_DATA) \
- 	os2Stubs.c \
--	UIThrStubs.c 
-+	UIThrStubs.c \
-+	X18NCMSstubs.c
- 
- if XCB
- libX11_la_SOURCES += \
-Index: libX11-1.3/src/locking.c
-===================================================================
---- libX11-1.3.orig/src/locking.c
-+++ libX11-1.3/src/locking.c
-@@ -66,7 +66,9 @@ in this Software without prior written a
+diff --git a/src/imConv.c b/src/imConv.c
+index c3c1974..04ecc81 100644
+--- a/src/imConv.c
++++ b/src/imConv.c
+@@ -80,6 +80,7 @@ static const struct SubstRec SubstTable[] = {
+  * from UCS char to specified charset char.
+  * This converter is needed for _XimGetCharCode subroutine.
+  */
++#ifdef XLOCALE
+ XPointer
+ _XimGetLocaleCode (
+     _Xconst char*	encoding_name)
+@@ -93,7 +94,7 @@ _XimGetLocaleCode (
+     }
+     return cvt;
+ }
+-
++#endif
+ /*
+  * Returns the locale dependent representation of a keysym.
+  * The locale's encoding is passed in form of pointer to UCS convertor.
+@@ -105,6 +105,7 @@ _XimGetLocaleCode (
+  * locale
+  */
+ /*ARGSUSED*/
++#ifdef XLOCALE
+ int
+ _XimGetCharCode (
+     XPointer            ucs_conv,
+@@ -133,6 +134,7 @@ _XimGetCharCode (
+         buf[count]= '\0';
+     return count;
+ }
++#endif
+
+ #ifdef XKB
+ static int lookup_string(
+diff --git a/src/locking.c b/src/locking.c
+index 9f4fe06..e6967ee 100644
+--- a/src/locking.c
++++ b/src/locking.c
+@@ -65,7 +65,9 @@ in this Software without prior written authorization from The Open Group.
  #define NUM_FREE_CVLS 4
  
  /* in lcWrap.c */
@@ -506,7 +518,7 @@ Index: libX11-1.3/src/locking.c
  
  #ifdef WIN32
  static DWORD _X_TlsIndex = (DWORD)-1;
-@@ -594,9 +596,11 @@ Status XInitThreads(void)
+@@ -597,9 +599,11 @@ Status XInitThreads(void)
      _Xglobal_lock = &global_lock;
      xmutex_init(_Xglobal_lock->lock);
      xmutex_set_name(_Xglobal_lock->lock, "Xlib global");
@@ -518,3 +530,6 @@ Index: libX11-1.3/src/locking.c
      _XLockMutex_fn = _XLockMutex;
      _XUnlockMutex_fn = _XUnlockMutex;
      _XCreateMutex_fn = _XCreateMutex;
+-- 
+2.7.4
+
