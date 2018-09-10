@@ -19,6 +19,7 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://0001-lib-dns-gen.c-fix-too-long-error.patch \
            file://0001-configure.in-remove-useless-L-use_openssl-lib.patch \
            file://0001-named-lwresd-V-and-start-log-hide-build-options.patch \
+           file://CVE-2018-5740.patch \
 "
 
 SRC_URI[md5sum] = "9b4834d78f30cdb796ce437262272a36"
