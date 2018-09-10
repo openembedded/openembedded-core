@@ -28,3 +28,9 @@ TOOLCHAIN_HOST_TASK ?= "packagegroup-cross-canadian-${MACHINE}"
 TOOLCHAIN_HOST_TASK_ATTEMPTONLY ?= ""
 TOOLCHAIN_TARGET_TASK ?= "libgcc-dev"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE_remove = "virtual/${MLPREFIX}libc zlib ncurses"
+
+# disable stack protector by default (no-libc, no protector implementation)
+SECURITY_STACK_PROTECTOR_libc-baremetal = ""
+# disable pie security flags by default
+SECURITY_CFLAGS_libc-baremetal = "${SECURITY_NOPIE_CFLAGS}"
+SECURITY_LDFLAGS_libc-baremetal = ""

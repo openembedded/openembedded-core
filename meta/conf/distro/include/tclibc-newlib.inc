@@ -42,3 +42,7 @@ TARGET_OS_arm = "eabi"
 TOOLCHAIN_HOST_TASK ?= "packagegroup-cross-canadian-${MACHINE}"
 TOOLCHAIN_TARGET_TASK ?= "${LIBC_DEPENDENCIES}"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE_remove = "zlib ncurses"
+
+# disable pie security flags by default
+SECURITY_CFLAGS_libc-newlib = "${SECURITY_NOPIE_CFLAGS}"
+SECURITY_LDFLAGS_libc-newlib = ""
