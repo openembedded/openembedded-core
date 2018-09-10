@@ -667,8 +667,11 @@ kernel_do_deploy() {
 	fi
 
 	for imageType in ${KERNEL_IMAGETYPES} ; do
-		base_name=${imageType}-${KERNEL_IMAGE_NAME}
-		install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType} $deployDir/${base_name}.bin
+		# kernel-fitimage class deploys fitImages, skip here
+		if [ "$imageType" != "fitImage" ]; then
+			base_name=${imageType}-${KERNEL_IMAGE_NAME}
+			install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType} $deployDir/${base_name}.bin
+		fi
 	done
 	if [ ${MODULE_TARBALL_DEPLOY} = "1" ] && (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
 		mkdir -p ${D}/lib
@@ -685,10 +688,13 @@ kernel_do_deploy() {
 
 	if [ ! -z "${INITRAMFS_IMAGE}" -a x"${INITRAMFS_IMAGE_BUNDLE}" = x1 ]; then
 		for imageType in ${KERNEL_IMAGETYPES} ; do
-			initramfs_base_name=${imageType}-${INITRAMFS_NAME}
-			initramfs_symlink_name=${imageType}-${INITRAMFS_LINK_NAME}
-			install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType}.initramfs $deployDir/${initramfs_base_name}.bin
-			ln -sf ${initramfs_base_name}.bin $deployDir/${initramfs_symlink_name}.bin
+			# kernel-fitimage class deploys fitImages, skip here
+			if [ "$imageType" != "fitImage" ]; then
+				initramfs_base_name=${imageType}-${INITRAMFS_NAME}
+				initramfs_symlink_name=${imageType}-${INITRAMFS_LINK_NAME}
+				install -m 0644 ${KERNEL_OUTPUT_DIR}/${imageType}.initramfs $deployDir/${initramfs_base_name}.bin
+				ln -sf ${initramfs_base_name}.bin $deployDir/${initramfs_symlink_name}.bin
+			fi
 		done
 	fi
 }
