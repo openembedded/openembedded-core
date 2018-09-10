@@ -21,6 +21,9 @@ LIBC_DEPENDENCIES = ""
 EXTRA_OECONF_pn-gcc-cross-${TARGET_ARCH}_append = " --without-headers"
 DEPENDS_remove_pn-meta-toolchain = "virtual/libc virtual/${TARGET_PREFIX}compilerlibs"
 
+# certain compiler libs cannot be used without libc, avoid the dependence on compilerlibs
+BASEDEPENDS_remove_class-target = "virtual/${TARGET_PREFIX}compilerlibs"
+
 TARGET_OS = "elf"
 TARGET_OS_arm = "eabi"
 
