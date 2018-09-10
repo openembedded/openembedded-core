@@ -42,6 +42,7 @@ SRC_URI += "\
             file://Use-correct-CFLAGS-for-extensions-when-cross-compili.patch \
             file://0002-Makefile-add-target-to-split-profile-generation.patch \
             file://float-endian.patch \
+            file://ftplib.patch \
            "
 SRC_URI[md5sum] = "f3763edf9824d5d3a15f5f646083b6e0"
 SRC_URI[sha256sum] = "063d2c3b0402d6191b90731e0f735c64830e7522348aeb7ed382a83165d45009"
