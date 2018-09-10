@@ -28,7 +28,6 @@ SRC_URI += "\
             file://cgi_py.patch \
             file://host_include_contamination.patch \
             file://python-3.3-multilib.patch \
-            file://shutil-follow-symlink-fix.patch \
             file://sysroot-include-headers.patch \
             file://unixccompiler.patch \
             file://avoid-ncursesw-include-path.patch \
