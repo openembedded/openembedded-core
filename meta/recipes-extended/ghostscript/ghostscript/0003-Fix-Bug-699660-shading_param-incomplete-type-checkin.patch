@@ -1,0 +1,91 @@
+From 759238fd904aab1706dc1007826a13a670cda320 Mon Sep 17 00:00:00 2001
+From: Ken Sharp <ken.sharp@artifex.com>
+Date: Thu, 23 Aug 2018 14:12:48 +0100
+Subject: [PATCH 3/5] Fix Bug 699660 "shading_param incomplete type checking"
+
+Its possible to pass a t_struct parameter to .shfill which is not a
+shading function built by .buildshading. This could then lead to memory
+corruption or a segmentation fault by treating the object passed in
+as if it were a shading.
+
+Its non-trivial to check the t_struct, because this function can take
+7 different kinds of structures as a parameter. Checking these is
+possible, of course, but would add a performance penalty.
+
+However, we can note that we never call .shfill without first calling
+.buildshading, and we never call .buildshading without immediately
+calling .shfill. So we can treat these as an atomic operation. The
+.buildshading function takes all its parameters as PostScript objects
+and validates them, so that should be safe.
+
+This allows us to 'hide' the .shfill operator preventing the possibility
+of passing an invalid parameter.
+
+CVE: CVE-2018-15909
+Upstream-Status: Backport [git://git.ghostscript.com/ghostpdl.git]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ Resource/Init/gs_init.ps  | 4 ++--
+ Resource/Init/gs_ll3.ps   | 7 ++++++-
+ Resource/Init/pdf_draw.ps | 3 +--
+ 3 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/Resource/Init/gs_init.ps b/Resource/Init/gs_init.ps
+index 6c8da53..1956ed5 100644
+--- a/Resource/Init/gs_init.ps
++++ b/Resource/Init/gs_init.ps
+@@ -2181,8 +2181,8 @@ SAFER { .setsafeglobal } if
+ /.getiodevice /.getdevparms /.putdevparams /.bbox_transform /.matchmedia /.matchpagesize /.defaultpapersize
+ /.oserrno /.setoserrno /.oserrorstring /.getCPSImode
+ /.getscanconverter /.setscanconverter /.type1encrypt /.type1decrypt/.languagelevel /.setlanguagelevel /.eqproc /.fillpage /.buildpattern1 /.saslprep
+-/.buildshading1 /.buildshadin2 /.buildshading3 /.buildshading4 /.buildshading5 /.buildshading6 /.buildshading7 /.buildshadingpattern
+-/.argindex /.bytestring /.namestring /.stringbreak /.stringmatch /.globalvmarray /.globalvmdict /.globalvmpackedarray /.globalvmstring
++/.buildshading1 /.buildshading2 /.buildshading3 /.buildshading4 /.buildshading5 /.buildshading6 /.buildshading7 /.buildshadingpattern
++%/.shfill /.argindex /.bytestring /.namestring /.stringbreak /.stringmatch /.globalvmarray /.globalvmdict /.globalvmpackedarray /.globalvmstring
+ /.localvmarray /.localvmdict /.localvmpackedarray /.localvmstring /.systemvmarray /.systemvmdict /.systemvmpackedarray /.systemvmstring /.systemvmfile /.systemvmlibfile
+ /.systemvmSFD /.settrapparams /.currentsystemparams /.currentuserparams /.getsystemparam /.getuserparam /.setsystemparams /.setuserparams
+ /.checkpassword /.locale_to_utf8 /.currentglobal /.gcheck /.imagepath
+diff --git a/Resource/Init/gs_ll3.ps b/Resource/Init/gs_ll3.ps
+index 5aa56a3..1d37e53 100644
+--- a/Resource/Init/gs_ll3.ps
++++ b/Resource/Init/gs_ll3.ps
+@@ -440,6 +440,11 @@ systemdict /.reuseparamdict mark
+     /shfill .systemvar /undefined signalerror
+   } ifelse
+ } bind def
++
++/.buildshading_and_shfill {
++  .buildshading .shfill
++} bind def
++
+ systemdict /.reuseparamdict undef
+ 
+ /.buildpattern2 {	% <template> <matrix> .buildpattern2
+@@ -464,7 +469,7 @@ systemdict /.reuseparamdict undef
+         % Currently, .shfill requires that the color space
+         % in the pattern be the current color space.
+         % Disable overprintmode for shfill
+-  { dup gsave 0 .setoverprintmode .buildshading .shfill } stopped
++  { dup gsave 0 .setoverprintmode .buildshading_and_shfill } stopped
+   grestore {
+     /$error .systemvar /errorinfo 2 copy known {
+       pop pop
+diff --git a/Resource/Init/pdf_draw.ps b/Resource/Init/pdf_draw.ps
+index e8ca213..a7144d3 100644
+--- a/Resource/Init/pdf_draw.ps
++++ b/Resource/Init/pdf_draw.ps
+@@ -1365,9 +1365,8 @@ drawopdict begin
+     { dup /.shading .knownget {
+         exch pop
+       } {
+-       .buildshading
++       .buildshading_and_shfill
+       } ifelse
+-      .shfill
+     } stopped {
+       pop
+       (   **** Error: Ignoring invalid smooth shading object, output may be incorrect.\n)
+-- 
+2.8.1
+

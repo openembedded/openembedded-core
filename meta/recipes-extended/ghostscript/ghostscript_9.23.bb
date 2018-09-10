@@ -26,6 +26,11 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
                 file://remove-direct-symlink.patch \
+                file://0001-Bug-699665-memory-corruption-in-aesdecode.patch \
+                file://0002-Bug-699656-Handle-LockDistillerParams-not-being-a-bo.patch \
+                file://0003-Fix-Bug-699660-shading_param-incomplete-type-checkin.patch \
+                file://0004-Hide-the-.shfill-operator.patch \
+                file://0005-Bug-699657-properly-apply-file-permissions-to-.tempf.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \

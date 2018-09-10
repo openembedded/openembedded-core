@@ -1,0 +1,54 @@
+From f4f50ceea8e8852b8c3ac73f5807d8b54b735c3e Mon Sep 17 00:00:00 2001
+From: Chris Liddell <chris.liddell@artifex.com>
+Date: Tue, 21 Aug 2018 20:17:05 +0100
+Subject: [PATCH 5/5] Bug 699657: properly apply file permissions to .tempfile
+
+CVE: CVE-2018-15908
+Upstream-Status: Backport [git://git.ghostscript.com/ghostpdl.git]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ psi/zfile.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/psi/zfile.c b/psi/zfile.c
+index a0acd5a..19996b0 100644
+--- a/psi/zfile.c
++++ b/psi/zfile.c
+@@ -134,7 +134,7 @@ check_file_permissions_reduced(i_ctx_t *i_ctx_p, const char *fname, int len,
+     /* we're protecting arbitrary file system accesses, not Postscript device accesses.
+      * Although, note that %pipe% is explicitly checked for and disallowed elsewhere
+      */
+-    if (iodev != iodev_default(imemory)) {
++    if (iodev && iodev != iodev_default(imemory)) {
+         return 0;
+     }
+ 
+@@ -734,7 +734,23 @@ ztempfile(i_ctx_t *i_ctx_p)
+     }
+ 
+     if (gp_file_name_is_absolute(pstr, strlen(pstr))) {
+-        if (check_file_permissions(i_ctx_p, pstr, strlen(pstr),
++        int plen = strlen(pstr);
++        const char *sep = gp_file_name_separator();
++#ifdef DEBUG
++        int seplen = strlen(sep);
++        if (seplen != 1)
++            return_error(gs_error_Fatal);
++#endif
++        /* strip off the file name prefix, leave just the directory name
++         * so we can check if we are allowed to write to it
++         */
++        for ( ; plen >=0; plen--) {
++            if (pstr[plen] == sep[0])
++                break;
++        }
++        memcpy(fname, pstr, plen);
++        fname[plen] = '\0';
++        if (check_file_permissions(i_ctx_p, fname, strlen(fname),
+                                    NULL, "PermitFileWriting") < 0) {
+             code = gs_note_error(gs_error_invalidfileaccess);
+             goto done;
+-- 
+2.8.1
+
