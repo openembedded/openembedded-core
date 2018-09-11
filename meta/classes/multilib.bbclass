@@ -146,6 +146,10 @@ python do_package_qa_multilib() {
     if not ml:
         return
 
+    # exception for ${MLPREFIX}target-sdk-provides-dummy
+    if 'target-sdk-provides-dummy' in d.getVar('PN'):
+        return
+
     packages = d.getVar('PACKAGES')
     for pkg in packages.split():
         check_mlprefix(pkg, 'RDEPENDS', ml)
