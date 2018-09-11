@@ -30,6 +30,7 @@ CONFLICT_DISTRO_FEATURES = "systemd"
 EXTRA_OECONF = " \
     --sbindir=${base_sbindir} \
     --with-rootlibdir=${base_libdir} \
+    --with-rootlibexecdir=${nonarch_base_libdir}/udev \
     --with-rootprefix= \
 "
 
@@ -64,7 +65,7 @@ PACKAGES =+ "libudev"
 PACKAGES =+ "eudev-hwdb"
 
 
-FILES_${PN} += "${libexecdir} ${base_libdir}/udev ${bindir}/udevadm"
+FILES_${PN} += "${libexecdir} ${nonarch_base_libdir}/udev ${bindir}/udevadm"
 FILES_${PN}-dev = "${datadir}/pkgconfig/udev.pc \
                    ${includedir}/libudev.h ${libdir}/libudev.so \
                    ${includedir}/udev.h ${libdir}/libudev.la \
