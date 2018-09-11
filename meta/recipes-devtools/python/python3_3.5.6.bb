@@ -72,8 +72,6 @@ EXTRA_OECONF += "CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}
 PYTHON3_PROFILE_TASK ?= "./python -m test.regrtest --pgo test_grammar test_opcodes test_dict test_builtin test_exceptions test_types test_support || true"
 
 export CROSS_COMPILE = "${TARGET_PREFIX}"
-export _PYTHON_PROJECT_BASE = "${B}"
-export _PYTHON_PROJECT_SRC = "${S}"
 export CCSHARED = "-fPIC"
 
 # Fix cross compilation of different modules
