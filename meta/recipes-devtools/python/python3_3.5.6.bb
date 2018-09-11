@@ -84,7 +84,6 @@ PACKAGECONFIG[pgo] = "--enable-optimizations"
 
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
-	autoreconf -Wcross --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 }
 
 run_make() {
