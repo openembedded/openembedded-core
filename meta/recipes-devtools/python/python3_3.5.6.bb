@@ -1,12 +1,9 @@
-require recipes-devtools/python/python.inc
+require recipes-devtools/python/python3.inc
 
 DEPENDS = "python3-native libffi bzip2 gdbm openssl \
            sqlite3 zlib virtual/libintl xz qemu-native \
            qemu-helper-native virtual/crypt"
 
-PR = "${INC_PR}.0"
-PYTHON_MAJMIN = "3.5"
-PYTHON_BINABI = "${PYTHON_MAJMIN}m"
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
 DISTRO_SRC_URI_linuxstdbase = ""
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
@@ -48,17 +45,8 @@ SRC_URI += "\
             file://0004-bpo-33570-TLS-1.3-ciphers-for-OpenSSL-1.1.1-GH-6976.patch \
             file://0005-bpo-30714-ALPN-changes-for-OpenSSL-1.1.0f-2305.patch \
            "
-SRC_URI[md5sum] = "f5a99f765e765336a3ebbb2a24ca2be3"
-SRC_URI[sha256sum] = "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b6ec515b22618f55fa07276b897bacea"
-
-# exclude pre-releases for both python 2.x and 3.x
-UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
-
-S = "${WORKDIR}/Python-${PV}"
-
-inherit autotools multilib_header python3native pkgconfig update-alternatives qemu
+inherit multilib_header python3native update-alternatives qemu
 
 MULTILIB_SUFFIX = "${@d.getVar('base_libdir',1).split('/')[-1]}"
 
@@ -90,9 +78,6 @@ export CCSHARED = "-fPIC"
 
 # Fix cross compilation of different modules
 export CROSSPYTHONPATH = "${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/:${B}/build/lib.linux-${TARGET_ARCH}-${PYTHON_MAJMIN}:${S}/Lib:${S}/Lib/plat-linux"
-
-# No ctypes option for python 3
-PYTHONLSBOPTS = ""
 
 PACKAGECONFIG ??= "readline ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'pgo', '', d)}"
 PACKAGECONFIG[readline] = ",,readline"
