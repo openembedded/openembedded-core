@@ -349,12 +349,9 @@ MACHINE = \"qemuarm\"
         self.sstate_allarch_samesigs(configA, configB)
 
     @OETestID(1645)
-    def test_sstate_allarch_samesigs_multilib(self):
+    def test_sstate_nativesdk_samesigs_multilib(self):
         """
-        The sstate checksums of allarch multilib packages should be independent of whichever
-        MACHINE is set. Check this using bitbake -S.
-        Also, rather than duplicate the test, check nativesdk stamps are the same between
-        the two MACHINE values.
+        check nativesdk stamps are the same between the two MACHINE values.
         """
 
         configA = """
@@ -392,10 +389,6 @@ MULTILIBS = \"\"
                         (_, task, _, shash) = name.rsplit(".", 3)
                         f[os.path.join(os.path.basename(root), task)] = shash
             return f
-        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/all" + self.target_vendor + "-" + self.target_os)
-        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/all" + self.target_vendor + "-" + self.target_os)
-        self.maxDiff = None
-        self.assertEqual(files1, files2)
 
         nativesdkdir = os.path.basename(glob.glob(self.topdir + "/tmp-sstatesamehash/stamps/*-nativesdk*-linux")[0])
 
