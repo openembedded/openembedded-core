@@ -23,7 +23,7 @@ PYTHON_BINABI = "${PYTHON_MAJMIN}m"
 
 S = "${WORKDIR}/Python-${PV}"
 
-inherit autotools pkgconfig
+inherit autotools bluetooth pkgconfig
 
 EXTRA_OECONF = "\
   --with-threads \
@@ -32,8 +32,9 @@ EXTRA_OECONF = "\
   --with-signal-module \
   --enable-shared \
   --enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)} \
-  ac_cv_header_bluetooth_bluetooth_h=no ac_cv_header_bluetooth_h=no \
 "
+
+PACKAGECONFIG[bluetooth] = ",ac_cv_header_bluetooth_bluetooth_h=no ac_cv_header_bluetooth_h=no,${BLUEZ}"
 
 do_install_append () {
 	sed -i -e 's:${HOSTTOOLS_DIR}/install:install:g' \
