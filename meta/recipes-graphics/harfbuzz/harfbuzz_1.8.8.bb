@@ -27,6 +27,12 @@ EXTRA_OECONF = " \
     --without-graphite2 \
 "
 
+do_configure_prepend() {
+    # This is ancient and can get used instead of the patched one we ship,
+    # so delete it. In 1.8.9 this should be removed upstream.
+    rm -f ${S}/m4/pkg.m4
+}
+
 PACKAGES =+ "${PN}-icu ${PN}-icu-dev"
 
 LEAD_SONAME = "libharfbuzz.so"
