@@ -55,9 +55,10 @@ DT_RESERVED_MAP ??= "8"
 DT_BOOT_CPU[doc] = "The boot cpu, defaults to 0"
 DT_BOOT_CPU ??= "0"
 
-DTC_FLAGS ?= "-R ${DT_RESERVED_MAP} -p ${DT_PADDING_SIZE} -b ${DT_BOOT_CPU}"
+DTC_FLAGS ?= "-R ${DT_RESERVED_MAP} -b ${DT_BOOT_CPU}"
 DTC_PPFLAGS ?= "-nostdinc -undef -D__DTS__ -x assembler-with-cpp"
-DTC_OFLAGS ?= "-@ -H epapr"
+DTC_BFLAGS ?= "-p ${DT_PADDING_SIZE}"
+DTC_OFLAGS ?= "-p 0 -@ -H epapr"
 
 python () {
     if d.getVar("KERNEL_INCLUDE"):
@@ -106,6 +107,8 @@ def devicetree_compile(dtspath, includes, d):
     dtcargs = ["dtc"] + (d.getVar("DTC_FLAGS") or "").split()
     if isoverlay:
         dtcargs += (d.getVar("DTC_OFLAGS") or "").split()
+    else:
+        dtcargs += (d.getVar("DTC_BFLAGS") or "").split()
     for i in includes:
         dtcargs += ["-i", i]
     dtcargs += ["-o", "{0}.{1}".format(dtname, "dtbo" if isoverlay else "dtb")]
