@@ -19,7 +19,9 @@ BINCONFIG = "${bindir}/icu-config"
 
 ICU_MAJOR_VER = "${@d.getVar('PV').split('.')[0]}"
 
-inherit autotools pkgconfig binconfig
+inherit autotools pkgconfig binconfig multilib_script
+
+MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/icu-config"
 
 # ICU needs the native build directory as an argument to its --with-cross-build option when
 # cross-compiling. Taken the situation that different builds may share a common sstate-cache

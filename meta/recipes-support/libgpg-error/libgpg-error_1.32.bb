@@ -20,7 +20,10 @@ SRC_URI[sha256sum] = "c345c5e73cc2332f8d50db84a2280abfb1d8f6d4f1858b9daa30404db4
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
-inherit autotools binconfig-disabled pkgconfig gettext multilib_header
+inherit autotools binconfig-disabled pkgconfig gettext multilib_header multilib_script
+
+MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/gpgrt-config"
+
 CPPFLAGS += "-P"
 do_compile_prepend() {
 	TARGET_FILE=linux-gnu

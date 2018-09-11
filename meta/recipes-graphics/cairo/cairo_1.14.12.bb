@@ -30,7 +30,9 @@ SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
 SRC_URI[md5sum] = "9f0db9dbfca0966be8acd682e636d165"
 SRC_URI[sha256sum] = "8c90f00c500b2299c0a323dd9beead2a00353752b2092ead558139bd67f7bf16"
 
-inherit autotools pkgconfig upstream-version-is-even gtk-doc
+inherit autotools pkgconfig upstream-version-is-even gtk-doc multilib_script
+
+MULTILIB_SCRIPTS = "${PN}-perf-utils:${bindir}/cairo-trace"
 
 X11DEPENDS = "virtual/libx11 libsm libxrender libxext"
 
@@ -79,7 +81,7 @@ DESCRIPTION_cairo-perf-utils = "The Cairo library performance utilities"
 FILES_${PN} = "${libdir}/libcairo.so.*"
 FILES_${PN}-gobject = "${libdir}/libcairo-gobject.so.*"
 FILES_${PN}-script-interpreter = "${libdir}/libcairo-script-interpreter.so.*"
-FILES_${PN}-perf-utils = "${bindir}/cairo-trace ${libdir}/cairo/*.la ${libdir}/cairo/libcairo-trace.so.*"
+FILES_${PN}-perf-utils = "${bindir}/cairo-trace* ${libdir}/cairo/*.la ${libdir}/cairo/libcairo-trace.so.*"
 FILES_${PN}-dev += "${libdir}/cairo/*.so"
 
 BBCLASSEXTEND = "native"
