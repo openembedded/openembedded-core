@@ -47,6 +47,7 @@ class Partition():
         self.fsopts = args.fsopts
         self.fstype = args.fstype
         self.label = args.label
+        self.use_label = args.use_label
         self.mkfs_extraopts = args.mkfs_extraopts
         self.mountpoint = args.mountpoint
         self.no_table = args.no_table

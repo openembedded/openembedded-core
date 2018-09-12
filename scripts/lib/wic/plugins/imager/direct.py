@@ -155,6 +155,8 @@ class DirectPlugin(ImagerPlugin):
                         device_name = "UUID=%s" % part.fsuuid
                 else:
                     device_name = "PARTUUID=%s" % part.uuid
+            elif part.use_label:
+                device_name = "LABEL=%s" % part.label
             else:
                 # mmc device partitions are named mmcblk0p1, mmcblk0p2..
                 prefix = 'p' if  part.disk.startswith('mmcblk') else ''
