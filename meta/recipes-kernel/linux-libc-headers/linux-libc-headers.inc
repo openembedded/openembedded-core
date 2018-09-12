@@ -53,12 +53,9 @@ S = "${WORKDIR}/linux-${PV}"
 
 EXTRA_OEMAKE = " HOSTCC="${BUILD_CC}" HOSTCPP="${BUILD_CPP}""
 
-do_configure() {
-	oe_runmake allnoconfig
-}
+do_configure[noexec] = "1"
 
-do_compile () {
-}
+do_compile[noexec] = "1"
 
 do_install() {
 	oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}
