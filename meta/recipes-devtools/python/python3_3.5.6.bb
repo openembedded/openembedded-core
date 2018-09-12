@@ -43,8 +43,8 @@ SRC_URI += "\
             file://ftplib.patch \
             file://signal.patch \
            "
-SRC_URI[md5sum] = "f3763edf9824d5d3a15f5f646083b6e0"
-SRC_URI[sha256sum] = "063d2c3b0402d6191b90731e0f735c64830e7522348aeb7ed382a83165d45009"
+SRC_URI[md5sum] = "f5a99f765e765336a3ebbb2a24ca2be3"
+SRC_URI[sha256sum] = "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b6ec515b22618f55fa07276b897bacea"
 
