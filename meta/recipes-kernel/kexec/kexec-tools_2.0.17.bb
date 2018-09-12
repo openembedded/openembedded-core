@@ -78,6 +78,9 @@ INITSCRIPT_PACKAGES = "kdump"
 INITSCRIPT_NAME_kdump = "kdump"
 INITSCRIPT_PARAMS_kdump = "start 56 2 3 4 5 . stop 56 0 1 6 ."
 
+SYSTEMD_PACKAGES = "kdump"
+SYSTEMD_SERVICE_kdump = "kdump.service"
+
 SECURITY_PIE_CFLAGS_remove = "-fPIE -pie"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|powerpc.*|mips.*)-(linux|freebsd.*)'
