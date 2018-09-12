@@ -42,6 +42,11 @@ SRC_URI += "\
             file://float-endian.patch \
             file://ftplib.patch \
             file://signal.patch \
+            file://0001-Issue-28043-SSLContext-has-improved-default-settings.patch \
+            file://0002-bpo-29136-Add-TLS-1.3-cipher-suites-and-OP_NO_TLSv1_.patch \
+            file://0003-bpo-32947-Fixes-for-TLS-1.3-and-OpenSSL-1.1.1-GH-876.patch \
+            file://0004-bpo-33570-TLS-1.3-ciphers-for-OpenSSL-1.1.1-GH-6976.patch \
+            file://0005-bpo-30714-ALPN-changes-for-OpenSSL-1.1.0f-2305.patch \
            "
 SRC_URI[md5sum] = "f5a99f765e765336a3ebbb2a24ca2be3"
 SRC_URI[sha256sum] = "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
