@@ -6,6 +6,7 @@ SRC_URI_append_libc-musl = "\
     file://0003-remove-inclusion-of-sysinfo.h-in-kernel.h.patch \
     file://0001-libc-compat.h-musl-_does_-define-IFF_LOWER_UP-DORMAN.patch \
     file://0001-if_ether-move-muslc-ethhdr-protection-to-uapi-file.patch \
+    file://0001-include-linux-stddef.h-in-swab.h-uapi-header.patch \
    "
 
 SRC_URI[md5sum] = "bee5fe53ee1c3142b8f0c12c0d3348f9"
