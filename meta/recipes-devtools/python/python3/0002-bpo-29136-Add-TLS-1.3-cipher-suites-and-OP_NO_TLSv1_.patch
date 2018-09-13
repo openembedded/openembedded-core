@@ -1,7 +1,7 @@
-From 46c719ec4f79d6830c55ab7f5a03d826eabd0bd5 Mon Sep 17 00:00:00 2001
+From e950ea68dab006944af194c9910b8f2341d1437d Mon Sep 17 00:00:00 2001
 From: Christian Heimes <christian@python.org>
 Date: Thu, 7 Sep 2017 20:23:52 -0700
-Subject: [PATCH 2/4] bpo-29136: Add TLS 1.3 cipher suites and OP_NO_TLSv1_3
+Subject: [PATCH] bpo-29136: Add TLS 1.3 cipher suites and OP_NO_TLSv1_3
  (GH-1363) (#3444)
 
 * bpo-29136: Add TLS 1.3 support
@@ -25,11 +25,11 @@ Upstream-Status: Backport
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  Doc/library/ssl.rst                           | 21 ++++++++++++++
- Lib/ssl.py                                    | 14 +++++++++
+ Lib/ssl.py                                    |  7 +++++
  Lib/test/test_ssl.py                          | 29 ++++++++++++++++++-
  .../2017-09-04-16-39-49.bpo-29136.vSn1oR.rst  |  1 +
  Modules/_ssl.c                                | 13 +++++++++
- 5 files changed, 77 insertions(+), 1 deletion(-)
+ 5 files changed, 70 insertions(+), 1 deletion(-)
  create mode 100644 Misc/NEWS.d/next/Library/2017-09-04-16-39-49.bpo-29136.vSn1oR.rst
 
 diff --git a/Doc/library/ssl.rst b/Doc/library/ssl.rst
@@ -79,25 +79,18 @@ index 14f2d68217..29c5e94cf6 100644
  
     List of supported TLS channel binding types.  Strings in this list
 diff --git a/Lib/ssl.py b/Lib/ssl.py
-index 4d302a78fa..ac2c0cbaf3 100644
+index 4d302a78fa..f233e72e1f 100644
 --- a/Lib/ssl.py
 +++ b/Lib/ssl.py
-@@ -122,6 +122,14 @@ _import_symbols('OP_')
+@@ -122,6 +122,7 @@ _import_symbols('OP_')
  _import_symbols('ALERT_DESCRIPTION_')
  _import_symbols('SSL_ERROR_')
  _import_symbols('VERIFY_')
 +from _ssl import HAS_SNI, HAS_ECDH, HAS_NPN, HAS_ALPN, HAS_TLSv1_3
-+from _ssl import _OPENSSL_API_VERSION
-+
-+
-+_IntEnum._convert(
-+    '_SSLMethod', __name__,
-+    lambda name: name.startswith('PROTOCOL_') and name != 'PROTOCOL_SSLv23',
-+    source=_ssl)
  
  from _ssl import HAS_SNI, HAS_ECDH, HAS_NPN, HAS_ALPN
  
-@@ -162,6 +170,7 @@ else:
+@@ -162,6 +163,7 @@ else:
  # (OpenSSL's default setting is 'DEFAULT:!aNULL:!eNULL')
  # Enable a better set of ciphers by default
  # This list has been explicitly chosen to:
@@ -105,7 +98,7 @@ index 4d302a78fa..ac2c0cbaf3 100644
  #   * Prefer cipher suites that offer perfect forward secrecy (DHE/ECDHE)
  #   * Prefer ECDHE over DHE for better performance
  #   * Prefer AEAD over CBC for better performance and security
-@@ -173,6 +182,8 @@ else:
+@@ -173,6 +175,8 @@ else:
  #   * Disable NULL authentication, NULL encryption, 3DES and MD5 MACs
  #     for security reasons
  _DEFAULT_CIPHERS = (
@@ -114,7 +107,7 @@ index 4d302a78fa..ac2c0cbaf3 100644
      'ECDH+AESGCM:ECDH+CHACHA20:DH+AESGCM:DH+CHACHA20:ECDH+AES256:DH+AES256:'
      'ECDH+AES128:DH+AES:ECDH+HIGH:DH+HIGH:RSA+AESGCM:RSA+AES:RSA+HIGH:'
      '!aNULL:!eNULL:!MD5:!3DES'
-@@ -180,6 +191,7 @@ _DEFAULT_CIPHERS = (
+@@ -180,6 +184,7 @@ _DEFAULT_CIPHERS = (
  
  # Restricted and more secure ciphers for the server side
  # This list has been explicitly chosen to:
@@ -122,7 +115,7 @@ index 4d302a78fa..ac2c0cbaf3 100644
  #   * Prefer cipher suites that offer perfect forward secrecy (DHE/ECDHE)
  #   * Prefer ECDHE over DHE for better performance
  #   * Prefer AEAD over CBC for better performance and security
-@@ -190,6 +202,8 @@ _DEFAULT_CIPHERS = (
+@@ -190,6 +195,8 @@ _DEFAULT_CIPHERS = (
  #   * Disable NULL authentication, NULL encryption, MD5 MACs, DSS, RC4, and
  #     3DES for security reasons
  _RESTRICTED_SERVER_CIPHERS = (
