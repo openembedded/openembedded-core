@@ -122,16 +122,12 @@ def get_source_date_epoch_from_youngest_file(d, sourcedir):
     return source_date_epoch
 
 python do_create_source_date_epoch_stamp() {
-    sourcedir = d.getVar('S')
-    if not os.path.isdir(sourcedir):
-        bb.warn("Unable to determine source_date_epoch! path:%s" % sourcedir)
-        return
-
     epochfile = d.getVar('SDE_FILE')
     if os.path.isfile(epochfile):
         bb.debug(1, " path: %s reusing __source_date_epoch.txt" % epochfile)
         return
 
+    sourcedir = d.getVar('S')
     source_date_epoch = (
         get_source_date_epoch_from_git(d, sourcedir) or
         get_source_date_epoch_from_known_files(d, sourcedir) or
