@@ -214,7 +214,7 @@ for pypkg in old_manifest:
 
     # Handle special cases, we assume that when they were manually added 
     # to the manifest we knew what we were doing.
-    special_packages = ['misc', 'modules', 'dev', 'tests', 'sqlite3-tests']
+    special_packages = ['misc', 'modules', 'dev', 'tests']
     if pypkg in special_packages or 'staticdev' in pypkg:
         print('Passing %s package directly' % pypkg)
         new_manifest[pypkg] = old_manifest[pypkg]
