@@ -1,11 +1,12 @@
-Discover monotonic clock using compile-time check
+From 8a91316c4a38f20e7866289f3d779a037d27a129 Mon Sep 17 00:00:00 2001
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Date: Mon, 12 Dec 2016 12:11:39 +0200
+Subject: [PATCH] Discover monotonic clock using compile-time check
 
 monotonic clock check does not work when cross-compiling.
 
 Upstream-Status: Denied [Does not work on OpenBSD]
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
-
-
 
 Original patch follows:
 
@@ -21,15 +22,16 @@ monotonic clock is available. This check can run just fine when we are
 cross-compiling.
 
 Signed-off-by: David James <davidjames at google.com>
+
 ---
  configure.ac | 17 +++++++----------
  1 file changed, 7 insertions(+), 10 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index f7ab48c..26e85cd 100644
+index 2b21667..786e002 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1048,19 +1048,16 @@ if ! test "x$have_clock_gettime" = xno; then
+@@ -984,19 +984,16 @@ if ! test "x$have_clock_gettime" = xno; then
          CPPFLAGS="$CPPFLAGS -D_POSIX_C_SOURCE=200112L"
      fi
  
@@ -54,8 +56,5 @@ index f7ab48c..26e85cd 100644
 -       [MONOTONIC_CLOCK="cross compiling"])
 +]])],[MONOTONIC_CLOCK=yes], [MONOTONIC_CLOCK=no])
  
-     LIBS="$LIBS_SAVE"
-     CPPFLAGS="$CPPFLAGS_SAVE"
--- 
-2.1.4
-
+     if test "$MONOTONIC_CLOCK" = "cross compiling"; then
+         AC_CHECK_DECL([CLOCK_MONOTONIC],[MONOTONIC_CLOCK="guessing yes"],[MONOTONIC_CLOCK=no],[#include <time.h>])
