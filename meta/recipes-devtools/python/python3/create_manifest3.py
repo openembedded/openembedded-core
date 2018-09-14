@@ -43,6 +43,7 @@ import sys
 import subprocess
 import json
 import os
+import collections
 
 # Get python version from ${PYTHON_MAJMIN}
 pyversion = str(sys.argv[1])
@@ -54,7 +55,7 @@ for p in sys.path:
         nativelibfolder = p[:p.find(pivot)+len(pivot)]
 
 # Empty dict to hold the whole manifest
-new_manifest = {}
+new_manifest = collections.OrderedDict()
 
 # Check for repeated files, folders and wildcards
 allfiles = []
@@ -79,7 +80,7 @@ def isCached(item):
 
 # Read existing JSON manifest
 with open('python3-manifest.json') as manifest:
-    old_manifest = json.load(manifest)
+    old_manifest = json.load(manifest, object_pairs_hook=collections.OrderedDict)
 
 #
 # First pass to get core-package functionality, because we base everything on the fact that core is actually working
@@ -195,18 +196,16 @@ for pypkg in old_manifest:
 
 for pypkg in old_manifest:
     # Use an empty dict as data structure to hold data for each package and fill it up
-    new_manifest[pypkg] = {}
-    new_manifest[pypkg]['files'] = []
+    new_manifest[pypkg] = collections.OrderedDict()
+    new_manifest[pypkg]['summary'] = old_manifest[pypkg]['summary']
     new_manifest[pypkg]['rdepends'] = []
+    new_manifest[pypkg]['files'] = []
+    new_manifest[pypkg]['cached'] = old_manifest[pypkg]['cached']
 
     # All packages should depend on core
     if pypkg != 'core':
-         new_manifest[pypkg]['rdepends'].append('core')
-         new_manifest[pypkg]['cached'] = []
-    else:
-         new_manifest[pypkg]['cached'] = old_manifest[pypkg]['cached']
-    new_manifest[pypkg]['summary'] = old_manifest[pypkg]['summary']
-
+        new_manifest[pypkg]['rdepends'].append('core')
+        new_manifest[pypkg]['cached'] = []
 
     print('\n')
     print('--------------------------')
@@ -400,7 +399,7 @@ for pypkg in new_manifest:
 
 # Create the manifest from the data structure that was built
 with open('python3-manifest.json.new','w') as outfile:
-    json.dump(new_manifest,outfile,sort_keys=True, indent=4)
+    json.dump(new_manifest,outfile, indent=4)
     outfile.write('\n')
 
 if (repeated):
