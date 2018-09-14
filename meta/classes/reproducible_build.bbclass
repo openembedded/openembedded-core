@@ -51,6 +51,7 @@ addtask do_deploy_source_date_epoch before do_configure after do_patch
 
 def get_source_date_epoch_from_known_files(d, sourcedir):
     source_date_epoch = None
+    newest_file = None
     known_files = set(["NEWS", "ChangeLog", "Changelog", "CHANGES"])
     for file in known_files:
         filepath = os.path.join(sourcedir, file)
@@ -59,6 +60,9 @@ def get_source_date_epoch_from_known_files(d, sourcedir):
             # There may be more than one "known_file" present, if so, use the youngest one
             if not source_date_epoch or mtime > source_date_epoch:
                 source_date_epoch = mtime
+                newest_file = filepath
+    if newest_file:
+        bb.debug(1, "SOURCE_DATE_EPOCH taken from: %s" % newest_file)
     return source_date_epoch
 
 def find_git_folder(d, sourcedir):
@@ -93,7 +97,7 @@ def get_source_date_epoch_from_git(d, sourcedir):
         if gitpath:
             import subprocess
             source_date_epoch = int(subprocess.check_output(['git','log','-1','--pretty=%ct'], cwd=gitpath))
-            bb.debug(1, "git repo path: %s sde: %d" % (gitpath, source_date_epoch))
+            bb.debug(1, "git repository: %s" % gitpath)
     return source_date_epoch
 
 def get_source_date_epoch_from_youngest_file(d, sourcedir):
@@ -117,14 +121,14 @@ def get_source_date_epoch_from_youngest_file(d, sourcedir):
                 source_date_epoch = mtime
                 newest_file = filename
 
-    if newest_file != None:
-        bb.debug(1," SOURCE_DATE_EPOCH %d derived from: %s" % (source_date_epoch, newest_file))
+    if newest_file:
+        bb.debug(1, "Newest file found: %s" % newest_file)
     return source_date_epoch
 
 python do_create_source_date_epoch_stamp() {
     epochfile = d.getVar('SDE_FILE')
     if os.path.isfile(epochfile):
-        bb.debug(1, " path: %s reusing __source_date_epoch.txt" % epochfile)
+        bb.debug(1, "Reusing SOURCE_DATE_EPOCH from: %s" % epochfile)
         return
 
     sourcedir = d.getVar('S')
@@ -136,10 +140,9 @@ python do_create_source_date_epoch_stamp() {
     )
     if source_date_epoch == 0:
         # empty folder, not a single file ...
-        # kernel source do_unpack is special cased
-        if not bb.data.inherits_class('kernel', d):
-            bb.debug(1, "Unable to determine source_date_epoch! path:%s" % sourcedir)
+        bb.debug(1, "No files found to determine SOURCE_DATE_EPOCH")
 
+    bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
     bb.utils.mkdirhier(d.getVar('SDE_DIR'))
     with open(epochfile, 'w') as f:
         f.write(str(source_date_epoch))
@@ -155,6 +158,6 @@ python () {
         if os.path.isfile(epochfile):
             with open(epochfile, 'r') as f:
                 source_date_epoch = f.read()
-            bb.debug(1, "source_date_epoch stamp found ---> stamp %s" % source_date_epoch)
+            bb.debug(1, "SOURCE_DATE_EPOCH: %s" % source_date_epoch)
         d.setVar('SOURCE_DATE_EPOCH', source_date_epoch)
 }
