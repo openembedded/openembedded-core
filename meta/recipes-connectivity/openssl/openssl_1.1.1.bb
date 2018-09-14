@@ -10,11 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=d57d511030c9d66ef5f5966bee5a7eff"
 
 DEPENDS = "hostperl-runtime-native"
 
-# This short sort lower than 1.1.1 final, to avoid package version going downwards issue
-PV = "1.1.1~pre9"
-S = "${WORKDIR}/openssl-1.1.1-pre9"
-
-SRC_URI = "http://www.openssl.org/source/openssl-1.1.1-pre9.tar.gz \
+SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
            "
@@ -23,8 +19,8 @@ SRC_URI_append_class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI[md5sum] = "6aa32e976e2c9a4aee858ced135d2573"
-SRC_URI[sha256sum] = "95ebdfbb05e8451fb01a186ccaa4a7da0eff9a48999ede9fe1a7d90db75ccb4c"
+SRC_URI[md5sum] = "7079eb017429e0ffb9efb42bf80ccb21"
+SRC_URI[sha256sum] = "2836875a0f89c03d0fdf483941512613a50cfb421d6fd94b9f41d7279d586a3d"
 
 inherit lib_package multilib_header ptest
 
