@@ -49,11 +49,11 @@ do_deploy_source_date_epoch[sstate-plaindirs] = "${SDE_DIR}"
 addtask do_deploy_source_date_epoch_setscene
 addtask do_deploy_source_date_epoch before do_configure after do_patch
 
-def get_source_date_epoch_from_known_files(d, path):
+def get_source_date_epoch_from_known_files(d, sourcedir):
     source_date_epoch = None
     known_files = set(["NEWS", "ChangeLog", "Changelog", "CHANGES"])
     for file in known_files:
-        filepath = os.path.join(path,file)
+        filepath = os.path.join(sourcedir, file)
         if os.path.isfile(filepath):
             mtime = int(os.lstat(filepath).st_mtime)
             # There may be more than one "known_file" present, if so, use the youngest one
@@ -61,37 +61,38 @@ def get_source_date_epoch_from_known_files(d, path):
                 source_date_epoch = mtime
     return source_date_epoch
 
-def find_git_folder(path):
+def find_git_folder(workdir):
     exclude = set(["temp", "license-destdir", "patches", "recipe-sysroot-native", "recipe-sysroot", "pseudo", "build", "image", "sysroot-destdir"])
-    for root, dirs, files in os.walk(path, topdown=True):
+    for root, dirs, files in os.walk(workdir, topdown=True):
         dirs[:] = [d for d in dirs if d not in exclude]
         if '.git' in dirs:
             return root
 
-def get_source_date_epoch_from_git(d, path):
+def get_source_date_epoch_from_git(d, sourcedir):
     source_date_epoch = None
     if "git://" in d.getVar('SRC_URI'):
-        gitpath = find_git_folder(d.getVar('WORKDIR'))
-        if gitpath != None:
+        workdir = d.getVar('WORKDIR')
+        gitpath = find_git_folder(workdir)
+        if gitpath:
             import subprocess
             if os.path.isdir(os.path.join(gitpath,".git")):
                 try:
-                    source_date_epoch = int(subprocess.check_output(['git','log','-1','--pretty=%ct'], cwd=path))
+                    source_date_epoch = int(subprocess.check_output(['git','log','-1','--pretty=%ct'], cwd=sourcedir))
                     bb.debug(1, "git repo path:%s sde: %d" % (gitpath,source_date_epoch))
                 except subprocess.CalledProcessError as grepexc:
                     bb.debug(1, "Expected git repository not found, (path: %s) error:%d" % (gitpath, grepexc.returncode))
         else:
-            bb.warn("Failed to find a git repository for path:%s" % (path))
+            bb.warn("Failed to find a git repository for path:%s" % workdir)
     return source_date_epoch
 
-def get_source_date_epoch_from_youngest_file(d, path):
+def get_source_date_epoch_from_youngest_file(d, sourcedir):
     # Do it the hard way: check all files and find the youngest one...
     source_date_epoch = None
     newest_file = None
     # Just in case S = WORKDIR
     exclude = set(["build", "image", "license-destdir", "patches", "pseudo",
                    "recipe-sysroot", "recipe-sysroot-native", "sysroot-destdir", "temp"])
-    for root, dirs, files in os.walk(path, topdown=True):
+    for root, dirs, files in os.walk(sourcedir, topdown=True):
         files = [f for f in files if not f[0] == '.']
         dirs[:] = [d for d in dirs if d not in exclude]
 
@@ -110,9 +111,9 @@ def get_source_date_epoch_from_youngest_file(d, path):
     return source_date_epoch
 
 python do_create_source_date_epoch_stamp() {
-    path = d.getVar('S')
-    if not os.path.isdir(path):
-        bb.warn("Unable to determine source_date_epoch! path:%s" % path)
+    sourcedir = d.getVar('S')
+    if not os.path.isdir(sourcedir):
+        bb.warn("Unable to determine source_date_epoch! path:%s" % sourcedir)
         return
 
     epochfile = d.getVar('SDE_FILE')
@@ -121,16 +122,16 @@ python do_create_source_date_epoch_stamp() {
         return
 
     source_date_epoch = (
-        get_source_date_epoch_from_git(d, path) or
-        get_source_date_epoch_from_known_files(d, path) or
-        get_source_date_epoch_from_youngest_file(d, path) or
+        get_source_date_epoch_from_git(d, sourcedir) or
+        get_source_date_epoch_from_known_files(d, sourcedir) or
+        get_source_date_epoch_from_youngest_file(d, sourcedir) or
         0       # Last resort
     )
     if source_date_epoch == 0:
         # empty folder, not a single file ...
         # kernel source do_unpack is special cased
         if not bb.data.inherits_class('kernel', d):
-            bb.debug(1, "Unable to determine source_date_epoch! path:%s" % path)
+            bb.debug(1, "Unable to determine source_date_epoch! path:%s" % sourcedir)
 
     bb.utils.mkdirhier(d.getVar('SDE_DIR'))
     with open(epochfile, 'w') as f:
