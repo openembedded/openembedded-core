@@ -1,4 +1,18 @@
 {
+    "tests": {
+        "summary": "Python test suite",
+        "rdepends": [
+            "core",
+            "modules"
+        ],
+        "files": [
+            "${libdir}/python${PYTHON_MAJMIN}/*/test",
+            "${libdir}/python${PYTHON_MAJMIN}/*/tests",
+            "${libdir}/python${PYTHON_MAJMIN}/idlelib/idle_test/",
+            "${libdir}/python${PYTHON_MAJMIN}/test"
+        ],
+        "cached": []
+    },
     "2to3": {
         "summary": "Python automated Python 2 to 3 code translator",
         "rdepends": [
@@ -989,17 +1003,6 @@
             "${libdir}/python${PYTHON_MAJMIN}/sqlite3/__pycache__/dump.*.pyc"
         ]
     },
-    "sqlite3-tests": {
-        "cached": [],
-        "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/sqlite3/test"
-        ],
-        "rdepends": [
-            "core",
-            "tests"
-        ],
-        "summary": "Python Sqlite3 database support tests"
-    },
     "stringold": {
         "summary": "Python string APIs [deprecated]",
         "rdepends": [
@@ -1036,17 +1039,6 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/pty.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/tty.*.pyc"
         ]
-    },
-    "tests": {
-        "cached": [],
-        "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/test"
-        ],
-        "rdepends": [
-            "core",
-            "modules"
-        ],
-        "summary": "Python tests"
     },
     "threading": {
         "summary": "Python threading & synchronization support",
