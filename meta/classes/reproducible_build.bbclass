@@ -61,28 +61,39 @@ def get_source_date_epoch_from_known_files(d, sourcedir):
                 source_date_epoch = mtime
     return source_date_epoch
 
-def find_git_folder(workdir):
-    exclude = set(["temp", "license-destdir", "patches", "recipe-sysroot-native", "recipe-sysroot", "pseudo", "build", "image", "sysroot-destdir"])
+def find_git_folder(d, sourcedir):
+    # First guess: WORKDIR/git
+    # This is the default git fetcher unpack path
+    workdir = d.getVar('WORKDIR')
+    gitpath = os.path.join(workdir, "git/.git")
+    if os.path.isdir(gitpath):
+        return gitpath
+
+    # Second guess: ${S}
+    gitpath = os.path.join(sourcedir, ".git")
+    if os.path.isdir(gitpath):
+        return gitpath
+
+    # Perhaps there was a subpath or destsuffix specified.
+    # Go looking in the WORKDIR
+    exclude = set(["build", "image", "license-destdir", "patches", "pseudo",
+                   "recipe-sysroot", "recipe-sysroot-native", "sysroot-destdir", "temp"])
     for root, dirs, files in os.walk(workdir, topdown=True):
         dirs[:] = [d for d in dirs if d not in exclude]
         if '.git' in dirs:
             return root
 
+    bb.warn("Failed to find a git repository in WORKDIR: %s" % workdir)
+    return None
+
 def get_source_date_epoch_from_git(d, sourcedir):
     source_date_epoch = None
     if "git://" in d.getVar('SRC_URI'):
-        workdir = d.getVar('WORKDIR')
-        gitpath = find_git_folder(workdir)
+        gitpath = find_git_folder(d, sourcedir)
         if gitpath:
             import subprocess
-            if os.path.isdir(os.path.join(gitpath,".git")):
-                try:
-                    source_date_epoch = int(subprocess.check_output(['git','log','-1','--pretty=%ct'], cwd=sourcedir))
-                    bb.debug(1, "git repo path:%s sde: %d" % (gitpath,source_date_epoch))
-                except subprocess.CalledProcessError as grepexc:
-                    bb.debug(1, "Expected git repository not found, (path: %s) error:%d" % (gitpath, grepexc.returncode))
-        else:
-            bb.warn("Failed to find a git repository for path:%s" % workdir)
+            source_date_epoch = int(subprocess.check_output(['git','log','-1','--pretty=%ct'], cwd=gitpath))
+            bb.debug(1, "git repo path: %s sde: %d" % (gitpath, source_date_epoch))
     return source_date_epoch
 
 def get_source_date_epoch_from_youngest_file(d, sourcedir):
