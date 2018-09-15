@@ -689,6 +689,7 @@ def create_packages_dir(d, subrepo_dir, deploydir, taskname, filterbydependencie
         with open(manifest, "r") as f:
             for l in f:
                 l = l.strip()
+                deploydir = os.path.normpath(deploydir)
                 dest = l.replace(deploydir, "")
                 dest = subrepo_dir + dest
                 if l.endswith("/"):
