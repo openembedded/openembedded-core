@@ -52,6 +52,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0041-cve-2017-5669-shmat-for-0-or-PAGESIZE-with-RND-flag-.patch \
            file://0042-fs-ftest-ftest06.c-Fix-too-small-name-string-and-rel.patch \
            file://0043-open-creat-skip-S_ISGID-check-on-files-created-by-no.patch \
+           file://0001-syscalls-fcntl-make-OFD-command-use-fcntl64-syscall-.patch \
            "
 
 S = "${WORKDIR}/git"
