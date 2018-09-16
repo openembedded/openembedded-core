@@ -122,7 +122,7 @@ LIC_FILES_CHKSUM = "\
     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-    file://WHENCE;md5=feb25f3efdbe10fcc121005d02d407d6 \
+    file://WHENCE;md5=36ef3e9887bb8b38ff265c602de6740e \
 "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -188,7 +188,7 @@ NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
 NO_GENERIC_LICENSE[WHENCE] = "WHENCE"
 
-SRCREV = "fea76a04f25fd0a217c0d566ff5ff8f23ad3e648"
+SRCREV = "44d4fca9922a252a0bd81f6307bcc072a78da54a"
 PE = "1"
 PV = "0.0+git${SRCPV}"
 
