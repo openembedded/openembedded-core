@@ -18,7 +18,7 @@ SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            file://0004-Fail-silently-if-system-Qt-installation-is-broken.patch \
 "
 
-SRC_URI[md5sum] = "10109246a51102bfda45ff3935275fbf"
-SRC_URI[sha256sum] = "c53d5c2ce81d7a957ee83e3e635c8cda5dfe20c9d501a4828ee28e1615e57ab2"
+SRC_URI[md5sum] = "6e7c550cfa1c2e216b35903dc70d80af"
+SRC_URI[sha256sum] = "0f97485799e51a7070cc11494f3e02349b0fc3a24cc12b082e737bf67a0581a4"
 
 UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
