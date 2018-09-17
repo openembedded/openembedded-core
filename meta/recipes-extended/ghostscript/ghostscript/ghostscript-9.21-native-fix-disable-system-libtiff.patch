@@ -11,9 +11,10 @@ Upstream-Status: Pending
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 
-Rebase to ghostscript 9.23.
+Rebase to ghostscript 9.25.
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+Signed-off-by: Jagadeesh Krishnanjanappa <jkrishnanjanappa@mvista.com>
 ---
  configure.ac | 5 +++++
  1 file changed, 5 insertions(+)
@@ -22,15 +23,15 @@ diff --git a/configure.ac b/configure.ac
 index 80a60b1..f3e9efb 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1284,6 +1284,7 @@ case "x$with_system_libtiff" in
- esac
+@@ -1319,6 +1319,7 @@ AC_TRY_COMPILE([], [return 0;],
+ CFLAGS=$CGLAGS_STORE
  
  if test x"$SHARE_LIBTIFF" = x"0" ; then
 +    if test -e $LIBTIFFDIR/configure; then
        echo "Running libtiff configure script..."
        olddir=`pwd`
        if ! test -d "$LIBTIFFCONFDIR" ; then
-@@ -1302,6 +1303,10 @@ if test x"$SHARE_LIBTIFF" = x"0" ; then
+@@ -1337,6 +1338,10 @@ if test x"$SHARE_LIBTIFF" = x"0" ; then
  
        echo
        echo "Continuing with Ghostscript configuration..."

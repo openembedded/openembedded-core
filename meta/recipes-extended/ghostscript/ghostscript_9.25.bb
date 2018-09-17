@@ -19,18 +19,12 @@ DEPENDS_class-native = "libpng-native"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs923/${BPN}-${PV}.tar.gz \
+SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs925/${BPN}-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://do-not-check-local-libpng-source.patch \
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
-                file://remove-direct-symlink.patch \
-                file://0001-Bug-699665-memory-corruption-in-aesdecode.patch \
-                file://0002-Bug-699656-Handle-LockDistillerParams-not-being-a-bo.patch \
-                file://0003-Fix-Bug-699660-shading_param-incomplete-type-checkin.patch \
-                file://0004-Hide-the-.shfill-operator.patch \
-                file://0005-Bug-699657-properly-apply-file-permissions-to-.tempf.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
@@ -38,7 +32,6 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
-           file://0001-pdfwrite-Guard-against-trying-to-output-an-infinite-.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -46,8 +39,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "5a47ab47cd22dec1eb5f51c06f1c9d9c"
-SRC_URI[sha256sum] = "f65964807a3c97a2c0810d4b9806585367e73129e57ae33378cea18e07a1ed9b"
+SRC_URI[md5sum] = "eebd0fadbfa8e800094422ce65e94d5d"
+SRC_URI[sha256sum] = "baafa64740b090bff50b220a6df3be95c46069b7e30f4b4effed28316e5b2389"
 
 # Put something like
 #

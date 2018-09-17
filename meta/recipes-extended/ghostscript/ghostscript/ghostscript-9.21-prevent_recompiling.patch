@@ -11,8 +11,9 @@ Upstream-Status: Pending
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
 Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
 
-Rebase to 9.23
+Rebase to 9.25
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+Signed-off-by: Jagadeesh Krishnanjanappa <jkrishnanjanappa@mvista.com>
 ---
  base/unix-aux.mak | 44 --------------------------------------------
  1 file changed, 44 deletions(-)
@@ -21,9 +22,9 @@ diff --git a/base/unix-aux.mak b/base/unix-aux.mak
 index 5bf72e9..9cb39d7 100644
 --- a/base/unix-aux.mak
 +++ b/base/unix-aux.mak
-@@ -64,50 +64,6 @@ $(GLOBJ)gp_sysv.$(OBJ): $(GLSRC)gp_sysv.c $(stdio__h) $(time__h) $(AK)\
-  $(UNIX_AUX_MAK) $(MAKEDIRS)
- 	$(GLCC) $(GLO_)gp_sysv.$(OBJ) $(C_) $(GLSRC)gp_sysv.c
+@@ -54,50 +54,6 @@ $(AUX)gp_stdia.$(OBJ): $(GLSRC)gp_stdia.
+   $(stdio__h) $(time__h) $(unistd__h) $(gx_h) $(gp_h) $(UNIX_AUX_MAK) $(MAKEDIRS)
+ 	$(GLCCAUX) $(AUXO_)gp_stdia.$(OBJ) $(C_) $(GLSRC)gp_stdia.c
  
 -# -------------------------- Auxiliary programs --------------------------- #
 -
