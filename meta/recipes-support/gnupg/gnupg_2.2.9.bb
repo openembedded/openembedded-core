@@ -15,7 +15,8 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0003-dirmngr-uses-libgpg-error.patch \
            file://0004-autogen.sh-fix-find-version-for-beta-checking.patch \
           "
-SRC_URI_append_class-native = " file://0001-configure.ac-use-a-custom-value-for-the-location-of-.patch"
+SRC_URI_append_class-native = " file://0001-configure.ac-use-a-custom-value-for-the-location-of-.patch \
+                                file://relocate.patch"
 
 
 SRC_URI[md5sum] = "52c895a81f514a65e08923736c38654a"
@@ -41,6 +42,10 @@ do_configure_prepend () {
 do_install_append() {
 	ln -sf gpg2 ${D}${bindir}/gpg
 	ln -sf gpgv2 ${D}${bindir}/gpgv
+}
+
+do_install_append_class-native() {
+	create_wrapper ${D}${bindir}/gpg2 GNUPG_BINDIR=${STAGING_BINDIR_NATIVE}
 }
 
 PACKAGECONFIG ??= "gnutls"
