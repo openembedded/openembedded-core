@@ -15,7 +15,6 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
            file://CVE-2018-15599.patch \
            file://0001-urandom-xauth-changes-to-options.h.patch \
-           file://0007-fix-localoptions-search-path.patch \
            file://init \
            file://dropbearkey.service \
            file://dropbear@.service \
