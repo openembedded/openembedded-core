@@ -1,0 +1,72 @@
+From 0efa7fd1c800277d5323d05cb245c0536fe9ce22 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Sun, 16 Sep 2018 12:39:22 +0000
+Subject: [PATCH] soft-fp: ignore maybe-uninitialized
+
+* with -O it fails with:
+
+In file included from ../soft-fp/soft-fp.h:318,
+                 from ../sysdeps/ieee754/soft-fp/s_fdiv.c:28:
+../sysdeps/ieee754/soft-fp/s_fdiv.c: In function '__fdiv':
+../soft-fp/op-2.h:98:25: error: 'R_f1' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+        X##_f0 = (X##_f1 << (_FP_W_TYPE_SIZE - (N)) | X##_f0 >> (N) \
+                         ^~
+../sysdeps/ieee754/soft-fp/s_fdiv.c:38:14: note: 'R_f1' was declared here
+   FP_DECL_D (R);
+              ^
+../soft-fp/op-2.h:37:36: note: in definition of macro '_FP_FRAC_DECL_2'
+   _FP_W_TYPE X##_f0 _FP_ZERO_INIT, X##_f1 _FP_ZERO_INIT
+                                    ^
+../soft-fp/double.h:95:24: note: in expansion of macro '_FP_DECL'
+ # define FP_DECL_D(X)  _FP_DECL (2, X)
+                        ^~~~~~~~
+../sysdeps/ieee754/soft-fp/s_fdiv.c:38:3: note: in expansion of macro 'FP_DECL_D'
+   FP_DECL_D (R);
+   ^~~~~~~~~
+../soft-fp/op-2.h:101:17: error: 'R_f0' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+       : (X##_f0 << (_FP_W_TYPE_SIZE - (N))) != 0)); \
+                 ^~
+../sysdeps/ieee754/soft-fp/s_fdiv.c:38:14: note: 'R_f0' was declared here
+   FP_DECL_D (R);
+              ^
+../soft-fp/op-2.h:37:14: note: in definition of macro '_FP_FRAC_DECL_2'
+   _FP_W_TYPE X##_f0 _FP_ZERO_INIT, X##_f1 _FP_ZERO_INIT
+              ^
+../soft-fp/double.h:95:24: note: in expansion of macro '_FP_DECL'
+ # define FP_DECL_D(X)  _FP_DECL (2, X)
+                        ^~~~~~~~
+../sysdeps/ieee754/soft-fp/s_fdiv.c:38:3: note: in expansion of macro 'FP_DECL_D'
+   FP_DECL_D (R);
+   ^~~~~~~~~
+
+Upstream-Status: Submitted [https://www.sourceware.org/ml/libc-alpha/2018-09/msg00300.html]
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ soft-fp/op-2.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/soft-fp/op-2.h b/soft-fp/op-2.h
+index 6020d663d4..6672337949 100644
+--- a/soft-fp/op-2.h
++++ b/soft-fp/op-2.h
+@@ -92,6 +92,8 @@
+ 	      X##_f1 = 0;						\
+ 	    }))
+ 
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #define _FP_FRAC_SRS_2(X, N, sz)					\
+   (void) (((N) < _FP_W_TYPE_SIZE)					\
+ 	  ? ({								\
+@@ -109,6 +111,7 @@
+ 			    | X##_f0) != 0));				\
+ 	      X##_f1 = 0;						\
+ 	    }))
++#pragma GCC diagnostic pop
+ 
+ #define _FP_FRAC_ADDI_2(X, I)	\
+   __FP_FRAC_ADDI_2 (X##_f1, X##_f0, I)
+-- 
+2.17.1
+

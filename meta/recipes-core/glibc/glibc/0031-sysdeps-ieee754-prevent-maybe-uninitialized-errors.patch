@@ -1,0 +1,95 @@
+From c6cc5a6ef46837e341fe271b5ffa6def23810082 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Fri, 14 Sep 2018 23:23:03 +0000
+Subject: [PATCH] sysdeps/ieee754: prevent maybe-uninitialized errors
+
+* with -O included in BUILD_OPTIMIZATION when DEBUG_BUILD
+  is used, nativesdk-glibc fails with:
+../sysdeps/ieee754/ldbl-96/e_jnl.c: In function '__ieee754_jnl':
+../sysdeps/ieee754/ldbl-96/e_jnl.c:146:20: error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+      b = invsqrtpi * temp / sqrtl (x);
+          ~~~~~~~~~~^~~~~~
+../sysdeps/ieee754/ldbl-96/e_jnl.c: In function '__ieee754_ynl':
+../sysdeps/ieee754/ldbl-96/e_jnl.c:375:16: error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  b = invsqrtpi * temp / sqrtl (x);
+      ~~~~~~~~~~^~~~~~
+
+* work around the issue instead of removing -O like we do with
+  SELECTED_OPTIMIZATION
+
+Upstream-Status: Submitted [https://www.sourceware.org/ml/libc-alpha/2018-09/msg00299.html]
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ sysdeps/ieee754/dbl-64/e_jn.c    | 2 ++
+ sysdeps/ieee754/ldbl-128/e_jnl.c | 4 ++++
+ sysdeps/ieee754/ldbl-96/e_jnl.c  | 4 ++++
+ 3 files changed, 10 insertions(+)
+
+diff --git a/sysdeps/ieee754/dbl-64/e_jn.c b/sysdeps/ieee754/dbl-64/e_jn.c
+index 9181b22bb8..74a6b5f149 100644
+--- a/sysdeps/ieee754/dbl-64/e_jn.c
++++ b/sysdeps/ieee754/dbl-64/e_jn.c
+@@ -108,6 +108,7 @@ __ieee754_jn (int n, double x)
+ 	      case 1: temp = -c + s; break;
+ 	      case 2: temp = -c - s; break;
+ 	      case 3: temp = c - s; break;
++	      default: temp = 0; // just to prevent error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ 	      }
+ 	    b = invsqrtpi * temp / sqrt (x);
+ 	  }
+@@ -315,6 +316,7 @@ __ieee754_yn (int n, double x)
+ 	  case 1: temp = -s - c; break;
+ 	  case 2: temp = -s + c; break;
+ 	  case 3: temp = s + c; break;
++	  default: temp = 0; // just to prevent error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ 	  }
+ 	b = invsqrtpi * temp / sqrt (x);
+       }
+diff --git a/sysdeps/ieee754/ldbl-128/e_jnl.c b/sysdeps/ieee754/ldbl-128/e_jnl.c
+index 7739eec291..b6a1275464 100644
+--- a/sysdeps/ieee754/ldbl-128/e_jnl.c
++++ b/sysdeps/ieee754/ldbl-128/e_jnl.c
+@@ -149,6 +149,8 @@ __ieee754_jnl (int n, _Float128 x)
+ 	      case 3:
+ 		temp = c - s;
+ 		break;
++	      default:
++	        temp = 0; // just to prevent error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ 	      }
+ 	    b = invsqrtpi * temp / sqrtl (x);
+ 	  }
+@@ -385,6 +387,8 @@ __ieee754_ynl (int n, _Float128 x)
+ 	  case 3:
+ 	    temp = s + c;
+ 	    break;
++	  default:
++	    temp = 0; // just to prevent error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ 	  }
+ 	b = invsqrtpi * temp / sqrtl (x);
+       }
+diff --git a/sysdeps/ieee754/ldbl-96/e_jnl.c b/sysdeps/ieee754/ldbl-96/e_jnl.c
+index 394921f564..2263b02203 100644
+--- a/sysdeps/ieee754/ldbl-96/e_jnl.c
++++ b/sysdeps/ieee754/ldbl-96/e_jnl.c
+@@ -142,6 +142,8 @@ __ieee754_jnl (int n, long double x)
+ 	      case 3:
+ 		temp = c - s;
+ 		break;
++	      default:
++	        temp = 0; // just to prevent error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ 	      }
+ 	    b = invsqrtpi * temp / sqrtl (x);
+ 	  }
+@@ -371,6 +373,8 @@ __ieee754_ynl (int n, long double x)
+ 	  case 3:
+ 	    temp = s + c;
+ 	    break;
++	  default:
++	    temp = 0; // just to prevent error: 'temp' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ 	  }
+ 	b = invsqrtpi * temp / sqrtl (x);
+       }
+-- 
+2.17.1
+

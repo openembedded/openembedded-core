@@ -45,6 +45,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-bits-siginfo-consts.h-enum-definition-for-TRAP_HWBKP.patch \
            file://0029-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
            file://0030-intl-Emit-no-lines-in-bison-generated-files.patch \
+           file://0031-sysdeps-ieee754-prevent-maybe-uninitialized-errors.patch \
+           file://0032-soft-fp-ignore-maybe-uninitialized.patch \
 "
 
 NATIVESDKFIXES ?= ""

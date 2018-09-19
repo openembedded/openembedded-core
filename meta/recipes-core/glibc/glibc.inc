@@ -6,18 +6,6 @@ STAGINGCC = "gcc-cross-initial-${TARGET_ARCH}"
 STAGINGCC_class-nativesdk = "gcc-crosssdk-initial-${SDK_SYS}"
 PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}.${STAGINGCC}:"
 
-python () {
-    opt_effective = "-O"
-    for opt in d.getVar('SELECTED_OPTIMIZATION').split():
-        if opt in ("-O0", "-O", "-O1", "-O2", "-O3", "-Os"):
-            opt_effective = opt
-    if opt_effective == "-O0":
-        bb.fatal("%s can't be built with %s, try -O1 instead" % (d.getVar('PN'), opt_effective))
-    if opt_effective in ("-O", "-O1", "-Os"):
-        bb.note("%s doesn't build cleanly with %s, adding -Wno-error to SELECTED_OPTIMIZATION" % (d.getVar('PN'), opt_effective))
-        d.appendVar("SELECTED_OPTIMIZATION", " -Wno-error")
-}
-
 # siteconfig.bbclass runs configure which needs a working compiler
 # For the compiler to work we need a working libc yet libc isn't
 # in the sysroots directory at this point. This means the libc.so
