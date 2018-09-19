@@ -23,14 +23,14 @@ distutils3_do_compile() {
         STAGING_LIBDIR=${STAGING_LIBDIR} \
         ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py \
         build ${DISTUTILS_BUILD_ARGS} || \
-        bbfatal_log "${PYTHON_PN} setup.py build_ext execution failed."
+        bbfatal_log "'${PYTHON_PN} setup.py build ${DISTUTILS_BUILD_ARGS}' execution failed."
 }
 distutils3_do_compile[vardepsexclude] = "MACHINE"
 
 distutils3_stage_headers() {
         install -d ${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}
         ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py install_headers ${DISTUTILS_STAGE_HEADERS_ARGS} || \
-        bbfatal_log "${PYTHON_PN} setup.py install_headers execution failed."
+        bbfatal_log "'${PYTHON_PN} setup.py install_headers ${DISTUTILS_STAGE_HEADERS_ARGS}' execution for stage_headers failed."
 }
 distutils3_stage_headers[vardepsexclude] = "MACHINE"
 
@@ -40,7 +40,7 @@ distutils3_stage_all() {
         install -d ${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}
         PYTHONPATH=${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR} \
         ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py install ${DISTUTILS_STAGE_ALL_ARGS} || \
-        bbfatal_log "${PYTHON_PN} setup.py install (stage) execution failed."
+        bbfatal_log "'${PYTHON_PN} setup.py install ${DISTUTILS_STAGE_ALL_ARGS}' execution for stage_all failed."
 }
 distutils3_stage_all[vardepsexclude] = "MACHINE"
 
@@ -50,7 +50,7 @@ distutils3_do_install() {
         STAGING_LIBDIR=${STAGING_LIBDIR} \
         PYTHONPATH=${D}${PYTHON_SITEPACKAGES_DIR} \
         ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py install ${DISTUTILS_INSTALL_ARGS} || \
-        bbfatal_log "${PYTHON_PN} setup.py install execution failed."
+        bbfatal_log "'${PYTHON_PN} setup.py install ${DISTUTILS_INSTALL_ARGS}' execution failed."
 
         # support filenames with *spaces*
         find ${D} -name "*.py" -exec grep -q ${D} {} \; -exec sed -i -e s:${D}::g {} \;
