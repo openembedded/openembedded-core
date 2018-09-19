@@ -8,11 +8,10 @@ SECTION = "console/network"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=429658c6612f3a9b1293782366ab29d8"
 
-# openssl 1.1 patches are proposed at https://github.com/openssh/openssh-portable/pull/48
-DEPENDS = "zlib openssl10"
+DEPENDS = "zlib openssl"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.gz \
+SRC_URI = "git://github.com/openssh/openssh-portable;branch=master \
            file://sshd_config \
            file://ssh_config \
            file://init \
@@ -29,8 +28,9 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
 
 PAM_SRC_URI = "file://sshd"
 
-SRC_URI[md5sum] = "ce1d090fa6239fd38eb989d5e983b074"
-SRC_URI[sha256sum] = "1a484bb15152c183bb2514e112aa30dd34138c3cfb032eee5490a66c507144ca"
+SRCREV = "cce8cbe0ed7d1ba3a575310e0b63c193326ae616"
+
+S = "${WORKDIR}/git"
 
 inherit useradd update-rc.d update-alternatives systemd
 
@@ -80,7 +80,8 @@ do_configure_prepend () {
 do_compile_ptest() {
         # skip regress/unittests/ binaries: this will silently skip
         # unittests in run-ptests which is good because they are so slow.
-        oe_runmake regress/modpipe regress/setuid-allowed regress/netcat
+        oe_runmake regress/modpipe regress/setuid-allowed regress/netcat \
+                   regress/check-perm regress/mkdtemp
 }
 
 do_install_append () {
