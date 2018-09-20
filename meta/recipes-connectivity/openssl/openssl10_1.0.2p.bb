@@ -164,7 +164,7 @@ do_configure () {
 	linux-mips*)
 		target=debian-mips
 		;;
-	linux-microblaze* | linux-nios2* | linux-gnu*ilp32**)
+	linux-microblaze* | linux-nios2* | linux-gnu*ilp32** | linux-arc*)
 		target=linux-generic32
 		;;
 	linux-powerpc)
