@@ -75,6 +75,7 @@ do_install_ptest() {
 		sed -i \
 		 -e 's:${B}:${PTEST_PATH}:g' \
 		 {} +
+        sed -i -e 's;@PTEST_PATH@;${PTEST_PATH};g'  ${D}${PTEST_PATH}/run-ptest
 }
 
 RDEPENDS_${PN}-ptest += "bash"
