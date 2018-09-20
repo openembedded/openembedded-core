@@ -9,10 +9,8 @@ DEPENDS = "libtasn1 libffi"
 SRC_URI = "git://github.com/p11-glue/p11-kit \
            file://0001-LINGUAS-drop-the-languages-for-which-upstream-does-n.patch \
            "
-SRCREV = "bfb3bd47aa48983f5349479bca598403097ff81c"
+SRCREV = "3770793f026e46a000d2d8816d56122598289d5c"
 S = "${WORKDIR}/git"
-# exclude odd minor versions, which are development releases
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
 
 AUTOTOOLS_AUXDIR = "${S}/build/litter"
 EXTRA_OECONF = "--without-trust-paths"
