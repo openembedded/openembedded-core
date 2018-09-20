@@ -13,7 +13,9 @@ SRCREV = "3770793f026e46a000d2d8816d56122598289d5c"
 S = "${WORKDIR}/git"
 
 AUTOTOOLS_AUXDIR = "${S}/build/litter"
-EXTRA_OECONF = "--without-trust-paths"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[trust-paths] = "--with-trust-paths=/etc/ssl/certs/ca-certificates.crt,--without-trust-paths,,ca-certificates"
 
 # This recipe does not use the standard gtk-doc m4 macros, and so the ./configure flags
 # that control gtk-doc build are non-standard
