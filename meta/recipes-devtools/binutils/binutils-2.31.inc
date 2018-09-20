@@ -37,6 +37,10 @@ SRC_URI = "\
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-add-i386pep-emulation-for-x86_64.patch \
      file://0017-improve-check-for-input-file-matching-output-file.patch \
+     file://0018-Refactored-location-where-GOT-information-is-collect.patch \
+     file://0019-Improved-robustness.-Return-FALSE-in-case-of-NULL-po.patch \
+     file://0020-Make-sure-global-symbol-is-not-an-indirect-or-warnin.patch \
+     file://0021-PLT-information-was-still-being-generated-when-symbo.patch \
 "
 S  = "${WORKDIR}/git"
 
