@@ -47,6 +47,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0030-intl-Emit-no-lines-in-bison-generated-files.patch \
            file://0031-sysdeps-ieee754-prevent-maybe-uninitialized-errors.patch \
            file://0032-soft-fp-ignore-maybe-uninitialized.patch \
+           file://0001-Linux-gethostid-Check-for-NULL-value-from-gethostbyn.patch \
 "
 
 NATIVESDKFIXES ?= ""
