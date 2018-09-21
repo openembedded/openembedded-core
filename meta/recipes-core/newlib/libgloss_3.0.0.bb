@@ -18,6 +18,7 @@ do_install_prepend() {
 
 do_install_append() {
 	# Move libs to default directories so they can be picked up later
+	install -d ${D}${libdir}
 	mv -v ${D}${prefix}/${TARGET_SYS}/lib/* ${D}${libdir}
 
 	# Remove original directory
