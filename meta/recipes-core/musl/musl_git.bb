@@ -4,7 +4,7 @@
 require musl.inc
 inherit linuxloader
 
-SRCREV = "0fa1e638e87cf257e9f96b4019b2076afd674a19"
+SRCREV = "c50985d5c8e316c5c464f352e79eeebfed1121a9"
 
 PV = "1.1.20+git${SRCPV}"
 
@@ -12,8 +12,6 @@ PV = "1.1.20+git${SRCPV}"
 
 SRC_URI = "git://git.musl-libc.org/musl \
            file://0001-Make-dynamic-linker-a-relative-symlink-to-libc.patch \
-           file://0001-wireup-linux-name_to_handle_at-and-name_to_handle_at.patch \
-           file://0001-Define-MAX_HANDLE_SZ.patch \
           "
 
 S = "${WORKDIR}/git"
