@@ -337,8 +337,8 @@ python do_kernel_configcheck() {
 
     try:
         configs = subprocess.check_output(['scc', '--configs', '-o', s + '/.kernel-meta'], env=env).decode('utf-8')
-    except subprocess.CalledProcessError:
-        bb.fatal( "Cannot gather config fragments for audit: %s" % configs)
+    except subprocess.CalledProcessError as e:
+        bb.fatal( "Cannot gather config fragments for audit: %s" % e.output.decode("utf-8") )
 
     try:
         subprocess.check_call(['kconf_check', '--report', '-o',
