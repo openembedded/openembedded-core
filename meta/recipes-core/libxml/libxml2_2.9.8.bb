@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://Copyright;md5=2044417e2e5006b65a8b9067b683fcf1 \
 DEPENDS = "zlib virtual/libiconv"
 
 SRC_URI = "http://www.xmlsoft.org/sources/libxml2-${PV}.tar.gz;name=libtar \
-           http://www.w3.org/XML/Test/xmlts20080827.tar.gz;name=testtar \
+           http://www.w3.org/XML/Test/xmlts20080827.tar.gz;subdir=${BP};name=testtar \
            file://libxml-64bit.patch \
            file://runtest.patch \
            file://run-ptest \
@@ -77,7 +77,7 @@ FILES_${PN}-python = "${PYTHON_SITEPACKAGES_DIR}"
 
 do_configure_prepend () {
 	# executables take longer to package: these should not be executable
-	find ${WORKDIR}/xmlconf/ -type f -exec chmod -x {} \+
+	find ${S}/xmlconf/ -type f -exec chmod -x {} \+
 }
 
 do_compile_ptest() {
@@ -85,7 +85,7 @@ do_compile_ptest() {
 }
 
 do_install_ptest () {
-	cp -r ${WORKDIR}/xmlconf ${D}${PTEST_PATH}
+	cp -r ${S}/xmlconf ${D}${PTEST_PATH}
 	if [ "${@bb.utils.filter('PACKAGECONFIG', 'python', d)}" ]; then
 		sed -i -e 's|^\(PYTHON = \).*|\1${USRBINPATH}/${PYTHON_PN}|' \
 		    ${D}${PTEST_PATH}/python/tests/Makefile
