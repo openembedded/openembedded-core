@@ -22,6 +22,7 @@ SRC_URI = "https://downloads.yoctoproject.org/mirror/sources/${BP}.tar.xz \
            file://CVE-2017-2616.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://CVE-2018-7169.patch \
+           file://CVE-2016-6252.patch \
            "
 
 SRC_URI_append_class-target = " \
