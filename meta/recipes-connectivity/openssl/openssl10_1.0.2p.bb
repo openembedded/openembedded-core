@@ -191,7 +191,7 @@ do_configure () {
 	if [ "x$useprefix" = "x" ]; then
 		useprefix=/
 	fi
-	libdirleaf="$(echo ${libdir} | sed s:$useprefix::)"
+	libdirleaf="$( echo "${libdir}" | sed "s:^$useprefix/*::" )"
 	perl ./Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} shared --prefix=$useprefix --openssldir=${libdir}/ssl --libdir=$libdirleaf $target
 }
 
