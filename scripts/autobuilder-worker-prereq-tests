@@ -10,6 +10,9 @@
 # Add python3-git test
 # Add pigz test
 # vnc tests/checkvnc?
+# test sendmail works (for QA email notification)
+# test error report submission works
+# test buildistory git repo works?
 #
 
 . ./oe-init-build-env > /dev/null
