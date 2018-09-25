@@ -35,32 +35,6 @@ index cb69641..727eb6a 100644
          args += self._unpack_args('--htmlargs=', 'html_args', kwargs)
          args += self._unpack_args('--scanargs=', 'scan_args', kwargs)
          args += self._unpack_args('--scanobjsargs=', 'scanobjs_args', kwargs)
-@@ -854,14 +858,22 @@ This will become a hard error in the future.''')
-         ldflags.update(internal_ldflags)
-         ldflags.update(state.environment.coredata.get_external_link_args('c'))
-         ldflags.update(external_ldflags)
-+
-+        cross_c_args = " ".join(state.environment.cross_info.config["properties"].get('c_args', ""))
-+        cross_link_args = " ".join(state.environment.cross_info.config["properties"].get('c_link_args', ""))
-+
-         if cflags:
--            args += ['--cflags=%s' % ' '.join(cflags)]
-+            args += ['--cflags=%s %s' % (cross_c_args,' '.join(cflags))]
-         if ldflags:
--            args += ['--ldflags=%s' % ' '.join(ldflags)]
-+            args += ['--ldflags=%s %s' % (cross_link_args, ' '.join(ldflags))]
-         compiler = state.environment.coredata.compilers.get('c')
--        if compiler:
-+        cross_compiler = state.environment.coredata.cross_compilers.get('c')
-+        if compiler and not state.environment.is_cross_build():
-             args += ['--cc=%s' % ' '.join(compiler.get_exelist())]
-             args += ['--ld=%s' % ' '.join(compiler.get_linker_exelist())]
-+        elif cross_compiler and state.environment.is_cross_build():
-+            args += ['--cc=%s' % ' '.join(cross_compiler.get_exelist())]
-+            args += ['--ld=%s' % ' '.join(cross_compiler.get_linker_exelist())]
- 
-         return args
- 
 diff --git a/mesonbuild/scripts/gtkdochelper.py b/mesonbuild/scripts/gtkdochelper.py
 index 948dc5a..9c5bd19 100644
 --- a/mesonbuild/scripts/gtkdochelper.py
