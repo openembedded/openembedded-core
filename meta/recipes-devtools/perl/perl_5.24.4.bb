@@ -65,6 +65,7 @@ SRC_URI += " \
         file://perl-test-customized.patch \
         file://perl-5.26.1-guard_old_libcrypt_fix.patch \
         file://CVE-2018-12015.patch \
+        file://0001-ExtUtils-MM_Unix.pm-fix-race-issues.patch \
 "
 
 # Fix test case issues

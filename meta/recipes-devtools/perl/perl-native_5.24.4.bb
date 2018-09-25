@@ -16,6 +16,7 @@ SRC_URI += "\
            file://perl-PathTools-don-t-filter-out-blib-from-INC.patch \
            file://0001-Configure-Remove-fstack-protector-strong-for-native-.patch \
            file://perl-5.26.1-guard_old_libcrypt_fix.patch \
+           file://0001-ExtUtils-MM_Unix.pm-fix-race-issues.patch \
           "
 
 SRC_URI[md5sum] = "04622bc4d3941dc7eb571c52b7c02993"
