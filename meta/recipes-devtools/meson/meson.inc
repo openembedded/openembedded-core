@@ -9,13 +9,15 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0002-gobject-introspection-determine-g-ir-scanner-and-g-i.patch \
            file://0001-Linker-rules-move-cross_args-in-front-of-output_args.patch \
            file://0003-native_bindir.patch \
-           file://0002-Make-CPU-family-warnings-fatal.patch \
-           file://0001-Support-building-allarch-recipes-again.patch \
            file://gi-flags.patch \
            file://gtkdoc-flags.patch \
            "
 SRC_URI[sha256sum] = "92d8afd921751261e36151643464efd3394162f69efbe8cd53e0a66b1cf395eb"
 SRC_URI[md5sum] = "31bda3519d8c0eb3438267268a78085e"
+
+SRC_URI_append_class-native = "file://0002-Make-CPU-family-warnings-fatal.patch \
+                               file://0001-Support-building-allarch-recipes-again.patch \
+                               "
 
 UPSTREAM_CHECK_URI = "https://github.com/mesonbuild/meson/releases"
 
