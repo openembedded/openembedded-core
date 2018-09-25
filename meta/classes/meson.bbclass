@@ -1,4 +1,4 @@
-inherit python3native
+inherit siteinfo python3native
 
 DEPENDS_append = " meson-native ninja-native"
 
@@ -31,10 +31,6 @@ MESON_C_ARGS = "${MESON_TOOLCHAIN_ARGS} ${CFLAGS}"
 MESON_CPP_ARGS = "${MESON_TOOLCHAIN_ARGS} ${CXXFLAGS}"
 MESON_LINK_ARGS = "${MESON_TOOLCHAIN_ARGS} ${LDFLAGS}"
 
-# both are required but not used by meson
-MESON_HOST_ENDIAN = "bogus-endian"
-MESON_TARGET_ENDIAN = "bogus-endian"
-
 EXTRA_OEMESON_append = " ${PACKAGECONFIG_CONFARGS}"
 
 MESON_CROSS_FILE = ""
@@ -58,6 +54,16 @@ def meson_cpu_family(var, d):
         return "x86"
     else:
         return arch
+
+def meson_endian(prefix, d):
+    arch, os = d.getVar(prefix + "_ARCH"), d.getVar(prefix + "_OS")
+    sitedata = siteinfo_data_for_machine(arch, os, d)
+    if "endian-little" in sitedata:
+        return "little"
+    elif "endian-big" in sitedata:
+        return "big"
+    else:
+        bb.fatal("Cannot determine endianism for %s-%s" % (arch, os))
 
 addtask write_config before do_configure
 do_write_config[vardeps] += "MESON_C_ARGS MESON_CPP_ARGS MESON_LINK_ARGS CC CXX LD AR NM STRIP READELF"
@@ -86,13 +92,13 @@ gtkdoc_exe_wrapper = '${B}/gtkdoc-qemuwrapper'
 system = '${HOST_OS}'
 cpu_family = '${@meson_cpu_family('HOST_ARCH', d)}'
 cpu = '${HOST_ARCH}'
-endian = '${MESON_HOST_ENDIAN}'
+endian = '${@meson_endian('HOST', d)}'
 
 [target_machine]
 system = '${TARGET_OS}'
 cpu_family = '${@meson_cpu_family('TARGET_ARCH', d)}'
 cpu = '${TARGET_ARCH}'
-endian = '${MESON_TARGET_ENDIAN}'
+endian = '${@meson_endian('TARGET', d)}'
 EOF
 }
 
