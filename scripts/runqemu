@@ -1202,6 +1202,7 @@ class BaseConfig(object):
                 self.qemu_opt += " -serial mon:vc -serial null"
 
     def start_qemu(self):
+        import shlex
         if self.kernel:
             kernel_opts = "-kernel %s -append '%s %s %s %s'" % (self.kernel, self.kernel_cmdline,
                                                                 self.kernel_cmdline_script, self.get('QB_KERNEL_CMDLINE_APPEND'),
@@ -1211,11 +1212,16 @@ class BaseConfig(object):
         else:
             kernel_opts = ""
         cmd = "%s %s" % (self.qemu_opt, kernel_opts)
+        cmds = shlex.split(cmd)
         logger.info('Running %s\n' % cmd)
-        process = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+        process = subprocess.Popen(cmds, stderr=subprocess.PIPE)
         self.qemupid = process.pid
-        if process.wait():
-            logger.error("Failed to run qemu: %s", process.stderr.read().decode())
+        retcode = process.wait()
+        if retcode:
+            if retcode == -signal.SIGTERM:
+                logger.info("Qemu terminated by SIGTERM")
+            else:
+                logger.error("Failed to run qemu: %s", process.stderr.read().decode())
 
     def cleanup(self):
         if self.cleaned:
@@ -1310,6 +1316,7 @@ def main():
             logger.info("SIGTERM received")
             os.kill(config.qemupid, signal.SIGTERM)
             config.cleanup()
+            subprocess.run(["tput", "smam"])
         signal.signal(signal.SIGTERM, sigterm_handler)
 
         config.check_args()
@@ -1331,6 +1338,7 @@ def main():
         return 1
     finally:
         config.cleanup()
+        subprocess.run(["tput", "smam"])
 
 if __name__ == "__main__":
     sys.exit(main())
