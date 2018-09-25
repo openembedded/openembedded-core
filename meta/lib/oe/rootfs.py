@@ -144,6 +144,10 @@ class Rootfs(object, metaclass=ABCMeta):
         bb.note("  Install complementary '*-dbg' packages...")
         self.pm.install_complementary('*-dbg')
 
+        if self.d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-with-srcpkg':
+            bb.note("  Install complementary '*-src' packages...")
+            self.pm.install_complementary('*-src')
+
         bb.note("  Rename debug rootfs...")
         try:
             shutil.rmtree(self.image_rootfs + '-dbg')
