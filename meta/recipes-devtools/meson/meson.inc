@@ -10,7 +10,6 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0001-Linker-rules-move-cross_args-in-front-of-output_args.patch \
            file://0003-native_bindir.patch \
            file://0002-Make-CPU-family-warnings-fatal.patch \
-           file://0003-Send-user-to-our-wiki-instead-of-Meson-bug-system.patch \
            file://0001-Support-building-allarch-recipes-again.patch \
            "
 SRC_URI[sha256sum] = "92d8afd921751261e36151643464efd3394162f69efbe8cd53e0a66b1cf395eb"
