@@ -24,7 +24,11 @@ MESONOPTS = " --prefix ${prefix} \
               --infodir ${@noprefix('infodir', d)} \
               --sysconfdir ${sysconfdir} \
               --localstatedir ${localstatedir} \
-              --sharedstatedir ${sharedstatedir}"
+              --sharedstatedir ${sharedstatedir} \
+              -Dc_args='${BUILD_CPPFLAGS} ${BUILD_CFLAGS}' \
+              -Dc_link_args='${BUILD_LDFLAGS}' \
+              -Dcpp_args='${BUILD_CPPFLAGS} ${BUILD_CXXFLAGS}' \
+              -Dcpp_link_args='${BUILD_LDFLAGS}'"
 
 MESON_TOOLCHAIN_ARGS = "${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 MESON_C_ARGS = "${MESON_TOOLCHAIN_ARGS} ${CFLAGS}"
@@ -114,14 +118,15 @@ meson_do_configure() {
 override_native_tools() {
     # Set these so that meson uses the native tools for its build sanity tests,
     # which require executables to be runnable. The cross file will still
-    # override these for the target build. Note that we do *not* set CFLAGS,
-    # LDFLAGS, etc. as they will be slurped in by meson and applied to the
-    # target build, causing errors.
+    # override these for the target build.
     export CC="${BUILD_CC}"
     export CXX="${BUILD_CXX}"
     export LD="${BUILD_LD}"
     export AR="${BUILD_AR}"
-
+    # These contain *target* flags but will be used as *native* flags.  The
+    # correct native flags will be passed via -Dc_args and so on, unset them so
+    # they don't interfere with tools invoked by Meson (such as g-ir-scanner)
+    unset CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 }
 
 meson_do_configure_prepend_class-target() {
