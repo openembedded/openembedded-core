@@ -8,8 +8,8 @@ SRC_URI = " \
             file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
             "
 
-SRC_URI[md5sum] = "5b83b2828e31ce5b4a5c03c71e707ae7"
-SRC_URI[sha256sum] = "c0575e2811860bfff59b865b8d125153859a01f0615fa41e279b64d88d25caad"
+SRC_URI[md5sum] = "01904b7f000cfa6a8e96de0fa1b3ceca"
+SRC_URI[sha256sum] = "5112bce6af0be62760687ca47873c90ce4d65d3fe920a3adf8145db7b07bff5d"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"
 
