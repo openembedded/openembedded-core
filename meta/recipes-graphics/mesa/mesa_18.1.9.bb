@@ -9,8 +9,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0006-use-PKG_CHECK_VAR-for-defining-WAYLAND_PROTOCOLS_DAT.patch \
 "
 
-SRC_URI[md5sum] = "17d8a7e7ecbe146a7dc439e8b6eb02e9"
-SRC_URI[sha256sum] = "655e3b32ce3bdddd5e6e8768596e5d4bdef82d0dd37067c324cc4b2daa207306"
+SRC_URI[md5sum] = "2f8d2098ab478bc3907e42130577b54a"
+SRC_URI[sha256sum] = "55f5778d58a710a63d6635f000535768faf7db9e8144dc0f4fd1989f936c1a83"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
