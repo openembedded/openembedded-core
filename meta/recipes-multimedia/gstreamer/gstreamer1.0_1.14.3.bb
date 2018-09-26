@@ -27,8 +27,8 @@ SRC_URI = " \
     file://add-a-target-to-compile-tests.patch \
     file://run-ptest \
 "
-SRC_URI[md5sum] = "9f4177c1752e44cbd72f6311ee61e1ba"
-SRC_URI[sha256sum] = "4bd6127299f3f29379046bbd58a526e6353b569e0e72f7b4df2ae70df6882e09"
+SRC_URI[md5sum] = "c790c0d002164cafe93e67cdf78c8ace"
+SRC_URI[sha256sum] = "13ae530eb1d4566c3aa0cff1bbb8e64c643065bb12e2e7c707f311ab4a390456"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                    "
