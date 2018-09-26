@@ -60,6 +60,7 @@ PACKAGECONFIG[openal]          = "--enable-openal,--disable-openal,openal-soft"
 PACKAGECONFIG[opencv]          = "--enable-opencv,--disable-opencv,opencv"
 PACKAGECONFIG[openh264]        = "--enable-openh264,--disable-openh264,openh264"
 PACKAGECONFIG[openjpeg]        = "--enable-openjpeg,--disable-openjpeg,openjpeg"
+PACKAGECONFIG[openmpt]         = "--enable-openmpt,--disable-openmpt,libopenmpt"
 # the opus encoder/decoder elements are now in the -base package,
 # but the opus parser remains in -bad
 PACKAGECONFIG[opusparse]       = "--enable-opus,--disable-opus,libopus"
@@ -84,7 +85,7 @@ PACKAGECONFIG[webrtcdsp]       = "--enable-webrtcdsp,--disable-webrtcdsp,webrtc-
 # these plugins have no corresponding library in OE-core or meta-openembedded:
 #   openni2 winks direct3d directsound winscreencap acm apple_media iqa
 #   android_media avc bs2b chromaprint daala dts fdkaac gme gsm kate ladspa
-#   lv2 mpeg2enc mplex msdk musepack nvenc ofa openmpt opensles soundtouch
+#   lv2 mpeg2enc mplex msdk musepack nvenc ofa opensles soundtouch
 #   spandsp spc teletextdec vdpau wasapi x265 zbar
 
 EXTRA_OECONF += " \
@@ -120,7 +121,6 @@ EXTRA_OECONF += " \
     --disable-nvenc \
     --disable-ofa \
     --disable-openexr \
-    --disable-openmpt \
     --disable-openni2 \
     --disable-opensles \
     --disable-soundtouch \
