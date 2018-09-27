@@ -12,6 +12,11 @@ MACHINEOVERRIDES = ""
 
 MULTILIBS = ""
 
+# we need consistent staging dir whether or not multilib is enabled
+STAGING_DIR_HOST = "${WORKDIR}/recipe-sysroot"
+STAGING_DIR_TARGET = "${WORKDIR}/recipe-sysroot"
+RECIPE_SYSROOT = "${WORKDIR}/recipe-sysroot"
+
 #
 # Update PACKAGE_ARCH and PACKAGE_ARCHS
 #
