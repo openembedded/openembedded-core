@@ -207,10 +207,11 @@ do_poststash_install_cleanup () {
 	rm -rf ${D}/${localedir}
 	rm -rf ${D}${datadir}/locale
 	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
-		if [ -d ${D}${exec_prefix}/lib/locale ] ; then
-			rm -rf ${D}${exec_prefix}/lib/locale
+		if [ -d ${D}${exec_prefix}/lib ]; then
 			# error out if directory isn't empty
-			rm -f ${D}${exec_prefix}/lib
+			# this dir should only contain locale dir
+			# which has been deleted in the previous step
+			rmdir ${D}${exec_prefix}/lib
 		fi
 	fi
 }
