@@ -994,14 +994,9 @@
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sqlite3.*.so",
-            "${libdir}/python${PYTHON_MAJMIN}/sqlite3/dbapi2.py",
-            "${libdir}/python${PYTHON_MAJMIN}/sqlite3/dump.py"
+            "${libdir}/python${PYTHON_MAJMIN}/sqlite3"
         ],
-        "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/sqlite3/__pycache__",
-            "${libdir}/python${PYTHON_MAJMIN}/sqlite3/__pycache__/dbapi2.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/sqlite3/__pycache__/dump.*.pyc"
-        ]
+        "cached": []
     },
     "stringold": {
         "summary": "Python string APIs [deprecated]",
