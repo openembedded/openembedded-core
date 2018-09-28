@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     nativesdk-cmake \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'nativesdk-wayland', '', d)} \
     nativesdk-sdk-provides-dummy \
+    nativesdk-bison \
     "
 
 RDEPENDS_${PN}_darwin = "\
