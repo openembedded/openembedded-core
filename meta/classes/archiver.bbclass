@@ -98,9 +98,12 @@ python () {
 
         # There is a corner case with "gcc-source-${PV}" recipes, they don't have
         # the "do_configure" task, so we need to use "do_preconfigure"
-        if pn.startswith("gcc-source-"):
+        def hasTask(task):
+            return bool(d.getVarFlag(task, "task", False)) and not bool(d.getVarFlag(task, "noexec", False))
+
+        if hasTask("do_preconfigure"):
             d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_preconfigure' % pn)
-        else:
+        elif hasTask("do_configure"):
             d.appendVarFlag('do_ar_configured', 'depends', ' %s:do_configure' % pn)
         d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_configured' % pn)
 
