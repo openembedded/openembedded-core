@@ -179,3 +179,13 @@ FILES_${PN}-staticdev = "${libdir}/go/pkg"
 
 INSANE_SKIP_${PN} += "ldflags"
 INSANE_SKIP_${PN}-ptest += "ldflags"
+
+# Add -buildmode=pie to GOBUILDFLAGS to satisfy "textrel" QA checking, but mips
+# doesn't support -buildmode=pie, so skip the QA checking for mips and its
+# variants.
+python() {
+    if 'mips' in d.getVar('TARGET_ARCH'):
+        d.appendVar('INSANE_SKIP_%s' % d.getVar('PN'), " textrel")
+    else:
+        d.appendVar('GOBUILDFLAGS', ' -buildmode=pie')
+}
