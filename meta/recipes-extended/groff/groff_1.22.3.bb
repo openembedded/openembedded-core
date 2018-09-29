@@ -20,7 +20,9 @@ DEPENDS = "groff-native"
 DEPENDS_class-native = ""
 RDEPENDS_${PN} += "perl sed"
 
-inherit autotools texinfo
+inherit autotools texinfo multilib_script
+
+MULTILIB_SCRIPTS = "${PN}:${bindir}/gpinyin ${PN}:${bindir}/groffer ${PN}:${bindir}/grog"
 
 EXTRA_OECONF = "--without-x"
 PARALLEL_MAKE = ""
