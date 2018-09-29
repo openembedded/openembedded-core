@@ -30,6 +30,7 @@ EXTRA_OECONF = "--disable-oss --disable-esd --disable-arts \
                 --enable-pthreads \
                 --enable-sdl-dlopen \
                 --disable-rpath \
+                --disable-sndio \
                 "
 
 # opengl packageconfig factored out to make it easy for distros
