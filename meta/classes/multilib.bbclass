@@ -11,8 +11,12 @@ python multilib_virtclass_handler () {
     # There should only be one kernel in multilib configs
     # We also skip multilib setup for module packages.
     provides = (e.data.getVar("PROVIDES") or "").split()
-    if "virtual/kernel" in provides or bb.data.inherits_class('module-base', e.data) or "make-mod-scripts" in e.data.getVar("PN"):
-        raise bb.parse.SkipRecipe("We shouldn't have multilib variants for the kernel")
+    non_ml_recipes = d.getVar('NON_MULTILIB_RECIPES').split()
+    bpn = e.data.getVar("BPN")
+    if "virtual/kernel" in provides or \
+            bb.data.inherits_class('module-base', e.data) or \
+            bpn in non_ml_recipes:
+        raise bb.parse.SkipRecipe("We shouldn't have multilib variants for %s" % bpn)
 
     save_var_name=e.data.getVar("MULTILIB_SAVE_VARNAME") or ""
     for name in save_var_name.split():
