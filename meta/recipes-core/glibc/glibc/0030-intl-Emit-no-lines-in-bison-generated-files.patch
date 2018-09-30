@@ -1,7 +1,7 @@
-From 959f3fc8743cbb3b13c3be11ee359f139f5be8c7 Mon Sep 17 00:00:00 2001
+From a54c15d0567d547137066f41b1b22eba4875c27b Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 3 Aug 2018 09:44:00 -0700
-Subject: [PATCH 30/30] intl: Emit no lines in bison generated files
+Subject: [PATCH] intl: Emit no lines in bison generated files
 
 Improve reproducibility:
 Do not put any #line preprocessor commands in bison generated files.
@@ -29,6 +29,3 @@ index 672edf1b38..d31888d013 100644
  
  $(inst_localedir)/locale.alias: locale.alias $(+force)
  	$(do-install)
--- 
-2.18.0
-

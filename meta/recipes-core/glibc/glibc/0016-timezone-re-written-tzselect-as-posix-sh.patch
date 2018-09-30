@@ -1,7 +1,7 @@
-From 60694f7ed69c8b711ffe37ce157032e85f60347b Mon Sep 17 00:00:00 2001
+From 04fb7b93dc40c1f96ebc05d29a2f02f9e4f0d572 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:33:03 +0000
-Subject: [PATCH 16/30] timezone: re-written tzselect as posix sh
+Subject: [PATCH] timezone: re-written tzselect as posix sh
 
 To avoid the bash dependency.
 
@@ -40,6 +40,3 @@ index d2c3a6d1dd..089679f306 100755
  
  # Output one argument as-is to standard output.
  # Safer than 'echo', which can mishandle '\' or leading '-'.
--- 
-2.18.0
-

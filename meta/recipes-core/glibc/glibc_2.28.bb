@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=cfc0ed77a9f62fa62eded042ebe31d72 \
 
 DEPENDS += "gperf-native bison-native make-native"
 
-SRCREV ?= "3c03baca37fdcb52c3881e653ca392bba7a99c2b"
+SRCREV ?= "044c96f0d5595aeb0bb4e79355081c5a7f4faca5"
 
 SRCBRANCH ?= "release/${PV}/master"
 
@@ -45,9 +45,9 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-bits-siginfo-consts.h-enum-definition-for-TRAP_HWBKP.patch \
            file://0029-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
            file://0030-intl-Emit-no-lines-in-bison-generated-files.patch \
-           file://0031-sysdeps-ieee754-prevent-maybe-uninitialized-errors.patch \
-           file://0032-soft-fp-ignore-maybe-uninitialized.patch \
-           file://0001-Linux-gethostid-Check-for-NULL-value-from-gethostbyn.patch \
+           file://0031-sysdeps-ieee754-prevent-maybe-uninitialized-errors-w.patch \
+           file://0032-sysdeps-ieee754-soft-fp-ignore-maybe-uninitialized-w.patch \
+           file://0033-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
 "
 
 NATIVESDKFIXES ?= ""

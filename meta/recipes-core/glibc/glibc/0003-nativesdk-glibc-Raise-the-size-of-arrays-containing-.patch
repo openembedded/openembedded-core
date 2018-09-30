@@ -1,8 +1,7 @@
-From 5962ca897efe965745e193c12041693c9e07dd24 Mon Sep 17 00:00:00 2001
+From 055dd46b793168fb08e44913153010b088011ba2 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:51:38 +0000
-Subject: [PATCH 03/30] nativesdk-glibc: Raise the size of arrays containing dl
- paths
+Subject: [PATCH] nativesdk-glibc: Raise the size of arrays containing dl paths
 
 This patch puts the dynamic loader path in the binaries, SYSTEM_DIRS strings
 and lengths as well as ld.so.cache path in the dynamic loader to specific
@@ -135,6 +134,3 @@ index cf43f1cf3b..7f07adde53 100644
  #ifndef add_system_dir
  # define add_system_dir(dir) add_dir (dir)
  #endif
--- 
-2.18.0
-

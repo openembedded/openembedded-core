@@ -1,7 +1,7 @@
-From 3e24f9d63aef5561b80fc7c345ce61943910e69b Mon Sep 17 00:00:00 2001
+From 4bb23fbb07984b93fd14f353fd9325d927b0cd98 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:33:49 +0000
-Subject: [PATCH 22/30] eglibc: Forward port cross locale generation support
+Subject: [PATCH] eglibc: Forward port cross locale generation support
 
 Upstream-Status: Pending
 
@@ -561,6 +561,3 @@ index e4de907e1f..b5d8f5c17d 100644
  #ifdef NL_CURRENT_INDIRECT
  # define WEAK_POSTLOAD(postload) weak_extern (postload)
  #else
--- 
-2.18.0
-

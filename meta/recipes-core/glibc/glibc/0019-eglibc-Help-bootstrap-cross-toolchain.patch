@@ -1,7 +1,7 @@
-From 6b8ee1ae86f8b9a49f751ab211002c83744356a6 Mon Sep 17 00:00:00 2001
+From f4ec5527d562d38523abb8587a6c7532e9d21f8a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:49:28 +0000
-Subject: [PATCH 19/30] eglibc: Help bootstrap cross toolchain
+Subject: [PATCH] eglibc: Help bootstrap cross toolchain
 
 Taken from EGLIBC, r1484 + r1525
 
@@ -95,6 +95,3 @@ index 0000000000..1d2b669aff
 +   difficult headers.  The <gnu/stubs.h> header depends, via the
 +   EGLIBC subdir 'stubs' make targets, on every .o file in EGLIBC, but
 +   an empty stubs.h like this will do fine for GCC.  */
--- 
-2.18.0
-

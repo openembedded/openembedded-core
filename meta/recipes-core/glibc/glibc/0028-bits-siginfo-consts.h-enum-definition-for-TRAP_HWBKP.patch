@@ -1,8 +1,8 @@
-From 55cc59b7da97b80cd26027656a252082b09aa2bb Mon Sep 17 00:00:00 2001
+From 38fad3e5ab3b45c56810abd35fa11a72fa10b8f1 Mon Sep 17 00:00:00 2001
 From: Pratyush Anand <panand@redhat.com>
 Date: Wed, 22 Mar 2017 17:02:38 +0530
-Subject: [PATCH 28/30] bits/siginfo-consts.h: enum definition for TRAP_HWBKPT
- is missing
+Subject: [PATCH] bits/siginfo-consts.h: enum definition for TRAP_HWBKPT is
+ missing
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,6 +64,3 @@ index 193bd9c471..3fe852bc5f 100644
  };
  # endif
  
--- 
-2.18.0
-

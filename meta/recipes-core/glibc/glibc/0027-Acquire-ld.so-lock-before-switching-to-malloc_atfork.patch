@@ -1,7 +1,7 @@
-From c3e04a90dd762cad4ee9bd7564d74e052781be5c Mon Sep 17 00:00:00 2001
+From 6ea962e0946da7564a774b08dd3eda28d64e9e56 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 27 Jan 2018 10:08:04 -0800
-Subject: [PATCH 27/30] Acquire ld.so lock before switching to malloc_atfork
+Subject: [PATCH] Acquire ld.so lock before switching to malloc_atfork
 
 The patch is from
   https://sourceware.org/bugzilla/show_bug.cgi?id=4578
@@ -63,6 +63,3 @@ index 0f48933ff1..eef3f9669b 100644
      }
  
    return pid;
--- 
-2.18.0
-
