@@ -13,6 +13,7 @@ DEPENDS = "hostperl-runtime-native"
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://openssl-c_rehash.sh \
+           file://0001-skip-test_symbol_presence.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
