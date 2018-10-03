@@ -48,6 +48,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0031-sysdeps-ieee754-prevent-maybe-uninitialized-errors-w.patch \
            file://0032-sysdeps-ieee754-soft-fp-ignore-maybe-uninitialized-w.patch \
            file://0033-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           file://0034-inject-file-assembly-directives.patch \
 "
 
 NATIVESDKFIXES ?= ""
