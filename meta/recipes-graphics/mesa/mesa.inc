@@ -108,6 +108,8 @@ PACKAGECONFIG[unwind] = "--enable-libunwind,--disable-libunwind,libunwind"
 
 EXTRA_OECONF_remove_libc-musl = "--enable-glx-tls"
 EXTRA_OECONF_append_libc-musl = " --disable-glx-tls"
+EXTRA_OECONF_append_libc-musl_x86 = " --disable-asm"
+
 # llvmpipe is slow if compiled with -fomit-frame-pointer (e.g. -O2)
 FULL_OPTIMIZATION_append = " -fno-omit-frame-pointer"
 
