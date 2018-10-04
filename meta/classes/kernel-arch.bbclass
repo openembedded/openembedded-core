@@ -29,6 +29,7 @@ def map_kernel_arch(a, d):
     elif re.match('aarch64_ilp32$', a):         return 'arm64'
     elif re.match('aarch64_be_ilp32$', a):      return 'arm64'
     elif re.match('mips(isa|)(32|64|)(r6|)(el|)$', a):      return 'mips'
+    elif re.match('mcf', a):                    return 'm68k'
     elif re.match('riscv(32|64|)(eb|)$', a):    return 'riscv'
     elif re.match('p(pc|owerpc)(|64)', a):      return 'powerpc'
     elif re.match('sh(3|4)$', a):               return 'sh'
