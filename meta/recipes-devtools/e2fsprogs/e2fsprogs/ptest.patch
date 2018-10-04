@@ -1,7 +1,18 @@
+From b8842065ad621a03a971dfd50db862c5bffdeb49 Mon Sep 17 00:00:00 2001
+From: Dmitry Eremin-Solenikov <dmitry_eremin@mentor.com>
+Date: Sat, 18 Apr 2015 17:58:17 +0300
+Subject: [PATCH] e2fsprogs: add ptest
+
 Upstream-Status: Inappropriate
 
+---
+ tests/Makefile.in    |  4 ++--
+ tests/test_config    | 32 ++++++++++++++++----------------
+ tests/test_script.in |  2 +-
+ 3 files changed, 19 insertions(+), 19 deletions(-)
+
 diff --git a/tests/Makefile.in b/tests/Makefile.in
-index 8c4d204..e021af3 100644
+index 8c4d2048..e021af32 100644
 --- a/tests/Makefile.in
 +++ b/tests/Makefile.in
 @@ -19,7 +19,7 @@ test_one: $(srcdir)/test_one.in Makefile mke2fs.conf
@@ -23,7 +34,7 @@ index 8c4d204..e021af3 100644
  	@chmod +x-w test_script
  
 diff --git a/tests/test_config b/tests/test_config
-index 1f146ca..52c453f 100644
+index 1f146ca2..05125f9c 100644
 --- a/tests/test_config
 +++ b/tests/test_config
 @@ -3,16 +3,16 @@
@@ -47,7 +58,7 @@ index 1f146ca..52c453f 100644
 +CHATTR="$USE_VALGRIND chattr"
 +LSATTR="$USE_VALGRIND lsattr"
 +E2IMAGE="$USE_VALGRIND e2image"
-+E2IMAGE_EXE=/sbin/e2image"
++E2IMAGE_EXE="/sbin/e2image"
 +DEBUGFS="$USE_VALGRIND debugfs"
 +DEBUGFS_EXE="/sbin/debugfs"
  TEST_BITS="test_data.tmp"
@@ -75,7 +86,7 @@ index 1f146ca..52c453f 100644
  LD_LIBRARY_PATH=../lib:../lib/ext2fs:../lib/e2p:../lib/et:../lib/ss:${LD_LIBRARY_PATH}
  DYLD_LIBRARY_PATH=../lib:../lib/ext2fs:../lib/e2p:../lib/et:../lib/ss:${DYLD_LIBRARY_PATH}
 diff --git a/tests/test_script.in b/tests/test_script.in
-index 9959e30..442999d 100644
+index 9959e308..442999db 100644
 --- a/tests/test_script.in
 +++ b/tests/test_script.in
 @@ -39,7 +39,7 @@ for i; do
