@@ -33,6 +33,7 @@ def siteinfo_data_for_machine(arch, os, d):
         "i686": "endian-little bit-32 ix86-common",
         "ia64": "endian-little bit-64",
         "lm32": "endian-big bit-32",
+        "m68k": "endian-big bit-32",
         "microblaze": "endian-big bit-32 microblaze-common",
         "microblazeeb": "endian-big bit-32 microblaze-common",
         "microblazeel": "endian-little bit-32 microblaze-common",
