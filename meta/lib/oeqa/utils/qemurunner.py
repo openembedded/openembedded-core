@@ -350,10 +350,10 @@ class QemuRunner:
         return True
 
     def stop(self):
-        self.stop_thread()
-        self.stop_qemu_system()
         if hasattr(self, "origchldhandler"):
             signal.signal(signal.SIGCHLD, self.origchldhandler)
+        self.stop_thread()
+        self.stop_qemu_system()
         if self.runqemu:
             if hasattr(self, "monitorpid"):
                 os.kill(self.monitorpid, signal.SIGKILL)
