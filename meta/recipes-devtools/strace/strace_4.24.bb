@@ -44,6 +44,8 @@ do_compile_ptest() {
 
 do_install_ptest() {
 	oe_runmake -C ${TESTDIR} install-ptest BUILDDIR=${B} DESTDIR=${D}${PTEST_PATH} TESTDIR=${TESTDIR}
+	install -m 755 ${S}/test-driver ${D}${PTEST_PATH}
+	install -m 644 ${B}/config.h ${D}${PTEST_PATH}
 	sed -i -e '/^src/s/strace.*[1-9]/ptest/' \
 	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
 	    -e 's|${DEBUG_PREFIX_MAP}||g' \
