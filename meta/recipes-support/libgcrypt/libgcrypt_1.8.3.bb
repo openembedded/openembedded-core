@@ -10,7 +10,8 @@ LICENSE_${PN}-dev = "GPLv2+ & LGPLv2.1+"
 LICENSE_dumpsexp-dev = "GPLv3+"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
-                    file://COPYING.LIB;md5=bbb461211a33b134d42ed5ee802b37ff"
+                    file://COPYING.LIB;md5=bbb461211a33b134d42ed5ee802b37ff \
+                    file://LICENSES;md5=840e3bcb754e5046ffeda7619034cbd8"
 
 DEPENDS = "libgpg-error"
 
