@@ -131,12 +131,12 @@ do_install () {
 	# We don't really need these, so we'll remove them...
 	rm -rf ${D}${libdir}/ldscripts
 
+	bindir_rel=${@os.path.relpath('${bindir}', '${prefix}/${TARGET_SYS}/bin')}
+
 	# Fix the /usr/${TARGET_SYS}/bin/* links
 	for l in ${D}${prefix}/${TARGET_SYS}/bin/*; do
 		rm -f $l
-		ln -sf `echo ${prefix}/${TARGET_SYS}/bin \
-			| tr -s / \
-			| sed -e 's,^/,,' -e 's,[^/]*,..,g'`${bindir}/${TARGET_PREFIX}`basename $l` $l
+		ln -sf $bindir_rel/${TARGET_PREFIX}`basename $l` $l
 	done
 
 	# Install the libiberty header
