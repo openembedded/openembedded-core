@@ -1,6 +1,6 @@
 Fix various issues which cause problems under musl.
 
-Upstream-Status: Submitted
+Upstream-Status: Backport [bd1326ba7d68df38c5ccaafd2403a5fb30bd452b]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 From 630516bcc0233b047f65665c003201ba6e77453d Mon Sep 17 00:00:00 2001
