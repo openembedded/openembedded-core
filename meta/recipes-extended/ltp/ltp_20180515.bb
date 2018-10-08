@@ -53,6 +53,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0042-fs-ftest-ftest06.c-Fix-too-small-name-string-and-rel.patch \
            file://0043-open-creat-skip-S_ISGID-check-on-files-created-by-no.patch \
            file://0001-syscalls-fcntl-make-OFD-command-use-fcntl64-syscall-.patch \
+           file://0001-sigwaitinfo01-recent-glibc-calls-syscall-directly.patch \
            "
 
 S = "${WORKDIR}/git"
