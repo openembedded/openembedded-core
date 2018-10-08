@@ -7,9 +7,7 @@ Subject: [PATCH] bpo-33354: Fix test_ssl when a filename cannot be encoded
 Skip test_load_dh_params() of test_ssl when Python filesystem encoding
 cannot encode the provided path.
 
-Upstream-Status:
-Backport[https://github.com/python/cpython/commit/19f6bd06af3c7fc0db5f96878aaa68f5589ff13e]
-
+Upstream-Status: Backport [https://github.com/python/cpython/commit/19f6bd06af3c7fc0db5f96878aaa68f5589ff13e]
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  Lib/test/test_ssl.py                                     | 9 ++++++++-
