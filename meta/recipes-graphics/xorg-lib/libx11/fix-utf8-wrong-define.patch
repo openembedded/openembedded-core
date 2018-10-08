@@ -1,7 +1,7 @@
 From 046703373055c7029c19d171e415ff3caaa87372 Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Mon, 10 Sep 2018 09:16:33 +0800
-Subject: [PATCH]
+Subject: [PATCH] Disable unicode
 
 Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 

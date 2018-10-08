@@ -1,7 +1,7 @@
 From 5c1693028ef12ab767d7cdbc349c27efa1ada87a Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Mon, 10 Sep 2018 09:13:38 +0800
-Subject: [PATCH]
+Subject: [PATCH] Fix build when xlocale disabled
 
 Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 
