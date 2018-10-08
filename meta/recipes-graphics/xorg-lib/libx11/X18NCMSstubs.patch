@@ -1,10 +1,11 @@
 From 62005ad019d6afb81da100b3113292a16472d241 Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Mon, 10 Sep 2018 09:08:27 +0800
-Subject: [PATCH] Upstream-Status: Inappropriate [configuration]
+Subject: [PATCH] 
 
 Update patch to version 1.6.6
 Signed-off-by: Changqing Li <changqing.li@windriver.com>
+Upstream-Status: Inappropriate [configuration]
 ---
  src/Makefile.am    |   5 +-
  src/X18NCMSstubs.c | 426 +++++++++++++++++++++++++++++++++++++++++++++++++++++

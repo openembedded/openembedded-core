@@ -1,13 +1,14 @@
 From 046703373055c7029c19d171e415ff3caaa87372 Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Mon, 10 Sep 2018 09:16:33 +0800
-Subject: [PATCH] Upstream-Status: Pending
+Subject: [PATCH]
 
 Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 
 Update patch to version 1.6.6
 
 Signed-off-by: Changqing Li <changqing.li@windriver.com>
+Upstream-Status: Pending
 ---
  include/X11/Xlib.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
