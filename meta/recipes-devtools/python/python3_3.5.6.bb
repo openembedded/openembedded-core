@@ -217,8 +217,7 @@ py_package_preprocess () {
 # manual dependency additions
 RPROVIDES_${PN}-modules = "${PN}"
 RRECOMMENDS_${PN}-core_append_class-nativesdk = " nativesdk-python3-modules"
-RRECOMMENDS_${PN}-crypt = "openssl"
-RRECOMMENDS_${PN}-crypt_class-nativesdk = "nativesdk-openssl"
+RRECOMMENDS_${PN}-crypt = "openssl ca-certificates"
 
 FILES_${PN}-2to3 += "${bindir}/2to3-${PYTHON_MAJMIN}"
 FILES_${PN}-pydoc += "${bindir}/pydoc${PYTHON_MAJMIN} ${bindir}/pydoc3"
