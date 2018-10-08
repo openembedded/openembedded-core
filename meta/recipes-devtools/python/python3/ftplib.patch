@@ -1,3 +1,6 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
 From cabe916dc694997d4892b58986e73a713d5a2f8d Mon Sep 17 00:00:00 2001
 From: "Miss Islington (bot)"
  <31488909+miss-islington@users.noreply.github.com>
