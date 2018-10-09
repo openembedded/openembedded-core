@@ -254,8 +254,7 @@ do_install () {
 			ln -sf busybox ${D}${base_bindir}/busybox.nosuid
 		fi
 	else
-		install -d ${D}${base_bindir} ${D}${base_sbindir}
-		install -d ${D}${libdir} ${D}${bindir} ${D}${sbindir}
+		install -d ${D}${base_bindir} ${D}${bindir} ${D}${libdir}
 		cat busybox.links | while read FILE; do
 			NAME=`basename "$FILE"`
 			install -m 0755 "0_lib/$NAME" "${D}$FILE.${BPN}"
@@ -316,7 +315,6 @@ do_install () {
         if grep "CONFIG_INIT=y" ${B}/.config; then
                 install -D -m 0777 ${WORKDIR}/rcS ${D}${sysconfdir}/init.d/rcS
                 install -D -m 0777 ${WORKDIR}/rcK ${D}${sysconfdir}/init.d/rcK
-                install -D -m 0755 ${WORKDIR}/runlevel ${D}${base_sbindir}/runlevel
         fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
