@@ -22,17 +22,15 @@ PACKAGECONFIG[libunwind] = ",NO_LIBUNWIND=1 NO_LIBDW_DWARF_UNWIND=1,libunwind"
 PACKAGECONFIG[libnuma] = ",NO_LIBNUMA=1"
 PACKAGECONFIG[systemtap] = ",NO_SDT=1,systemtap"
 PACKAGECONFIG[jvmti] = ",NO_JVMTI=1"
-
 # libaudit support would need scripting to be enabled
 PACKAGECONFIG[audit] = ",NO_LIBAUDIT=1,audit"
+PACKAGECONFIG[manpages] = ",,xmlto-native asciidoc-native"
 
 DEPENDS = " \
     virtual/${MLPREFIX}libc \
     ${MLPREFIX}elfutils \
     ${MLPREFIX}binutils \
     bison-native flex-native xz \
-    xmlto-native \
-    asciidoc-native \
 "
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
