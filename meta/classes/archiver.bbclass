@@ -247,7 +247,6 @@ python do_ar_configured() {
         # instead of.
         elif pn != 'libtool-native':
             def runTask(task):
-                bb.warn("running %s" % task)
                 prefuncs = d.getVarFlag(task, 'prefuncs') or ''
                 for func in prefuncs.split():
                     if func != "sysroot_cleansstate":
