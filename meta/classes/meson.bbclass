@@ -109,6 +109,9 @@ EOF
 CONFIGURE_FILES = "meson.build"
 
 meson_do_configure() {
+    # Work around "Meson fails if /tmp is mounted with noexec #2972"
+    mkdir -p "${B}/meson-private/tmp"
+    export TMPDIR="${B}/meson-private/tmp"
     bbnote Executing meson ${EXTRA_OEMESON}...
     if ! meson ${MESONOPTS} "${MESON_SOURCEPATH}" "${B}" ${MESON_CROSS_FILE} ${EXTRA_OEMESON}; then
         bbfatal_log meson failed
