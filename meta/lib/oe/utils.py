@@ -347,7 +347,13 @@ def format_pkg_list(pkg_dict, ret_format=None):
         for pkg in sorted(pkg_dict):
             output.append(pkg)
 
-    return '\n'.join(output)
+    output_str = '\n'.join(output)
+
+    if output_str:
+        # make sure last line is newline terminated
+        output_str += '\n'
+
+    return output_str
 
 def host_gcc_version(d, taskcontextonly=False):
     import re, subprocess
