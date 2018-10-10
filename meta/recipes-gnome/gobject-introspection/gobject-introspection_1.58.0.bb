@@ -17,6 +17,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0005-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
            file://0001-giscanner-add-a-lib-dirs-envvar-option.patch \
            file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
+           file://0001-configure.ac-make-GIR_DIR-configurable.patch \
+           file://0002-g-ir-tools-respect-gir_dir_prefix.patch \
            "
 
 SRC_URI[md5sum] = "94fec875276262037bfcd51226db12fe"
@@ -24,7 +26,9 @@ SRC_URI[sha256sum] = "27c1590a32749de0a5481ce897772547043e94bccba4bc0a7edb3d8513
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
-inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even
+inherit autotools pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even multilib_script
+
+MULTILIB_SCRIPTS = "${PN}:${bindir}/g-ir-annotation-tool ${PN}:${bindir}/g-ir-scanner"
 
 DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native autoconf-archive"
 
@@ -50,6 +54,7 @@ EXTRA_OECONF_class-target = " \
     --enable-gi-cross-wrapper=${B}/g-ir-scanner-qemuwrapper \
     --enable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
     ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '--enable-introspection-data', '--disable-introspection-data', d)} \
+    ${@'--with-gir-dir-prefix=${libdir}' if d.getVar('MULTILIBS') else ''} \
 "
 
 # Need to ensure ld.so.conf exists so prelink-native works
@@ -94,7 +99,7 @@ EOF
 # This prevents g-ir-scanner from writing cache data to $HOME
 export GI_SCANNER_DISABLE_CACHE=1
 
-g-ir-scanner --lib-dirs-envvar=GIR_EXTRA_LIBS_PATH --use-binary-wrapper=${STAGING_BINDIR}/g-ir-scanner-qemuwrapper --use-ldd-wrapper=${STAGING_BINDIR}/g-ir-scanner-lddwrapper --add-include-path=${STAGING_DATADIR}/gir-1.0 "\$@"
+g-ir-scanner --lib-dirs-envvar=GIR_EXTRA_LIBS_PATH --use-binary-wrapper=${STAGING_BINDIR}/g-ir-scanner-qemuwrapper --use-ldd-wrapper=${STAGING_BINDIR}/g-ir-scanner-lddwrapper --add-include-path=${STAGING_DATADIR}/gir-1.0 --add-include-path=${STAGING_LIBDIR}/gir-1.0 "\$@"
 EOF
         chmod +x ${B}/g-ir-scanner-wrapper
 
@@ -178,7 +183,7 @@ FILES_${PN}_append = " ${libdir}/girepository-*/*.typelib"
 
 # .gir files go to dev package, as they're needed for developing (but not for running)
 # things that depends on introspection.
-FILES_${PN}-dev_append = " ${datadir}/gir-*/*.gir"
+FILES_${PN}-dev_append = " ${datadir}/gir-*/*.gir ${libdir}/gir-*/*.gir"
 FILES_${PN}-dev_append = " ${datadir}/gir-*/*.rnc"
 
 # These are used by gobject-based packages
