@@ -67,12 +67,13 @@ python populate_packages_prepend () {
         d.setVar('PKG_libxml2', '${MLPREFIX}libxml2')
 }
 
-PACKAGES += "${PN}-utils ${PN}-python"
+PACKAGE_BEFORE_PN += "${PN}-utils"
+PACKAGES += "${PN}-python"
 
 FILES_${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
 FILES_${PN}-dev += "${libdir}/xml2Conf.sh ${libdir}/cmake/*"
-FILES_${PN}-utils += "${bindir}/*"
-FILES_${PN}-python += "${PYTHON_SITEPACKAGES_DIR}"
+FILES_${PN}-utils = "${bindir}/*"
+FILES_${PN}-python = "${PYTHON_SITEPACKAGES_DIR}"
 
 do_configure_prepend () {
 	# executables take longer to package: these should not be executable
