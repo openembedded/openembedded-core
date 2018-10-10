@@ -22,7 +22,7 @@ PACKAGECONFIG[gnome] = "-DWITH_GNOME=yes,-DWITH_GNOME=no,gconf"
 PACKAGECONFIG[gnome3] = "-DWITH_GNOME3=yes,-DWITH_GNOME3=no"
 
 EXTRA_OECMAKE += " \
-    -DWITH_KDE4=no \
+    -DWITH_KDE=no \
     -DWITH_MOZJS=no \
     -DWITH_NM=no \
     -DWITH_PERL=no \
