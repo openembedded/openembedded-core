@@ -447,7 +447,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${base_sbindir}/runlevel \
                 ${base_sbindir}/telinit \
                 ${base_sbindir}/resolvconf \
-                ${base_sbindir}/reboot \
+                ${base_sbindir}/reboot.systemd \
                 ${base_sbindir}/init \
                 ${datadir}/dbus-1/services \
                 ${datadir}/dbus-1/system-services \
@@ -556,11 +556,14 @@ python __anonymous() {
         d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 
-ALTERNATIVE_${PN} = "resolv-conf"
+ALTERNATIVE_${PN} = "resolv-conf reboot"
 
 ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.systemd"
 ALTERNATIVE_LINK_NAME[resolv-conf] = "${sysconfdir}/resolv.conf"
 ALTERNATIVE_PRIORITY[resolv-conf] ?= "50"
+
+ALTERNATIVE_LINK_NAME[reboot] = "${base_sbindir}/reboot"
+ALTERNATIVE_PRIORITY[reboot] = "100"
 
 pkg_postinst_${PN} () {
 	sed -e '/^hosts:/s/\s*\<myhostname\>//' \
