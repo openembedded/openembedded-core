@@ -216,10 +216,6 @@
           "expected_results": ""
         },
         "4": {
-          "action": "bitbake core-image-full-cmdline   \n",
-          "expected_results": "Image should be successfully built   \n"
-        },
-        "5": {
           "action": "bitbake -u taskexp -g core-image-full-cmdline    \n\nNOTE: To execute the last command of this test, it's necessary that the machine is executing an X11 server, or if that's not the case (for example, if running the test on a headless server), it is required to enable ssh X11 forwarding on both, the server and the client, and have the X11 server running on the client.    \n\nThe instructions to enable X11 forwarding vary between distributions. But for example, these are the steps to enable it between a server running openSUSE Leap 42.1 and a client with Fedora 24:  \nA. On the server, make sure /home//.ssh/config contains the line:  \n     ForwardX11 yes  \nB. On the server, make sure xauth is installed by running:  \n      which xauth  \nC. On the client, connect to the server, enabling X11 forwarding, for example by using:  \n      ssh -X user@server    \nNOTE 2: depexp was renamed to taskexp on 2.3 M4",
           "expected_results": "Verify that a \"dependency explorer\" is opened and file \n   dependencies are listed  "
         }
