@@ -17,7 +17,10 @@ class OpkgRepoTest(OpkgTest):
 
     @classmethod
     def setUpClass(cls):
-        service_repo = os.path.join(cls.tc.td['DEPLOY_DIR_IPK'], 'all')
+        allarchfeed = 'all'
+        if cls.tc.td["MULTILIB_VARIANTS"]:
+            allarchfeed = cls.tc.td["TUNE_PKGARCH"]
+        service_repo = os.path.join(cls.tc.td['DEPLOY_DIR_IPK'], allarchfeed)
         cls.repo_server = HTTPService(service_repo, cls.tc.target.server_ip)
         cls.repo_server.start()
 
