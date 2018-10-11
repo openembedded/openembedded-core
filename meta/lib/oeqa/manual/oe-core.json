@@ -260,35 +260,5 @@
       },
       "summary": "test_bitbake_sane_error_for_invalid_layer"
     }
-  },
-  {
-    "test": {
-      "@alias": "oe-core.bitbake.Test_bitbake-selftest",
-      "author": [
-        {
-          "email": "jair.de.jesus.gonzalez.plascencia@intel.com",
-          "name": "jair.de.jesus.gonzalez.plascencia@intel.com"
-        }
-      ],
-      "execution": {
-        "1": {
-          "action": "clone poky ",
-          "expected_results": ""
-        },
-        "2": {
-          "action": "cd poky ",
-          "expected_results": ""
-        },
-        "3": {
-          "action": "source oe-init-build-env ",
-          "expected_results": ""
-        },
-        "4": {
-          "action": "bitbake-selftest -v\n",
-          "expected_results": "All test cases are executed and no errors are reported.\n"
-        }
-      },
-      "summary": "Test_bitbake-selftest"
-    }
   }
 ]
