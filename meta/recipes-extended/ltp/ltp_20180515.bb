@@ -54,6 +54,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0043-open-creat-skip-S_ISGID-check-on-files-created-by-no.patch \
            file://0001-syscalls-fcntl-make-OFD-command-use-fcntl64-syscall-.patch \
            file://0001-sigwaitinfo01-recent-glibc-calls-syscall-directly.patch \
+           file://0001-netns_helper.sh-use-ping-6-when-ping6-is-not-avaliab.patch \
            "
 
 S = "${WORKDIR}/git"
