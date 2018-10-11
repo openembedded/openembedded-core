@@ -32,6 +32,7 @@ SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;branch=cross_prelink_sta
            file://prelink.cron.daily \
            file://prelink.default \
            file://macros.prelink \
+           file://0001-src-arch-mips.c-check-info-resolvetls-before-use-its.patch \
 "
 UPSTREAM_CHECK_COMMITS = "1"
 
