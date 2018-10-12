@@ -34,7 +34,7 @@ class KSample(OERuntimeTestCase):
         cmd = "ls " + "/lib/modules/" + output + "/kernel/samples/" + path + module_name
         status, output = self.target.run(cmd)
         if status != 0:
-            error_info = module_name + "doesn't exist"
+            error_info = module_name + " doesn't exist"
             self.skipTest(error_info)
 
     def kfifo_func(self, name=''):
