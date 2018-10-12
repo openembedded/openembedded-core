@@ -136,6 +136,7 @@ RDEPENDS_packagegroup-core-lsb-core = "\
     bc \
     binutils \
     binutils-symlinks \
+    bzip2 \
     coreutils \
     cpio \
     cronie \

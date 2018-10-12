@@ -125,6 +125,7 @@ RDEPENDS_packagegroup-core-full-cmdline-initscripts = "\
     "
 
 RDEPENDS_packagegroup-core-full-cmdline-multiuser = "\
+    bzip2 \
     cracklib \
     gzip \
     shadow \
