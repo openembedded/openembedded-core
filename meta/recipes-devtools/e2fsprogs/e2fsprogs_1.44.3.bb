@@ -129,4 +129,7 @@ do_install_ptest() {
 	find "${D}${PTEST_PATH}" -type f \
 	    \( -name 'Makefile' -o -name 'Makefile.in' -o -name '*.o' -o -name '*.c' -o -name '*.h' \)\
 	    -exec  rm -f {} +
+
+        install -d ${D}${PTEST_PATH}/lib
+        install -m 0644 ${B}/lib/config.h  ${D}${PTEST_PATH}/lib/
 }
