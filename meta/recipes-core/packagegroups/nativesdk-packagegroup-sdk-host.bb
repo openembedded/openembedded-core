@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'nativesdk-wayland', '', d)} \
     nativesdk-sdk-provides-dummy \
     nativesdk-bison \
+    nativesdk-flex \
     "
 
 RDEPENDS_${PN}_darwin = "\
