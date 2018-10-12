@@ -23,7 +23,6 @@ SRC_URI += "\
   file://avoid_warning_about_tkinter.patch \
   file://avoid_warning_for_sunos_specific_module.patch \
   file://python-2.7.3-remove-bsdb-rpath.patch \
-  file://fix-makefile-for-ptest.patch \
   file://run-ptest \
   file://parallel-makeinst-create-bindir.patch \
   file://use_sysroot_ncurses_instead_of_host.patch \
@@ -34,7 +33,7 @@ SRC_URI += "\
 
 S = "${WORKDIR}/Python-${PV}"
 
-inherit autotools multilib_header python-dir pythonnative
+inherit autotools multilib_header python-dir pythonnative ptest
 
 CONFIGUREOPTS += " --with-system-ffi "
 
@@ -167,27 +166,7 @@ FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 RDEPENDS_${PN}-modules += "${PN}-misc"
 
 # ptest
-RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests"
-#inherit ptest after "require python-${PYTHON_MAJMIN}-manifest.inc" so PACKAGES doesn't get overwritten
-inherit ptest
-
-# This must come after inherit ptest for the override to take effect
-do_install_ptest() {
-	cp ${B}/Makefile ${D}${PTEST_PATH}
-	sed -e s:LIBDIR/python/ptest:${PTEST_PATH}:g \
-	 -e s:LIBDIR:${libdir}:g \
-	 -i ${D}${PTEST_PATH}/run-ptest
-
-	#Remove build host references
-	sed -i \
-		-e 's:--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
-	    -e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
-	    -e 's|${DEBUG_PREFIX_MAP}||g' \
-	    -e 's:${HOSTTOOLS_DIR}/::g' \
-	    -e 's:${RECIPE_SYSROOT}::g' \
-	    -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
-	${D}/${PTEST_PATH}/Makefile
-}
+RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests unzip"
 
 # catch manpage
 PACKAGES += "${PN}-man"
