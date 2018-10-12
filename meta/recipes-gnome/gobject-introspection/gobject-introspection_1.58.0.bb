@@ -194,4 +194,6 @@ FILES_${PN}-dev_append = " ${datadir}/gobject-introspection-1.0/tests/*.c \
 FILES_${PN}-dbg += "${libdir}/gobject-introspection/giscanner/.debug/"
 FILES_${PN}-staticdev += "${libdir}/gobject-introspection/giscanner/*.a"
 
+RDEPENDS_${PN} = "python3-pickle python3-xml"
+
 BBCLASSEXTEND = "native"
