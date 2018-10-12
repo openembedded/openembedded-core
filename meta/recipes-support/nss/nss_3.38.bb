@@ -25,6 +25,9 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://nss-fix-nsinstall-build.patch \
            file://disable-Wvarargs-with-clang.patch \
            file://pqg.c-ULL_addend.patch \
+           file://blank-cert9.db \
+           file://blank-key4.db \
+           file://system-pkcs11.txt \
            "
 
 SRC_URI[md5sum] = "ac9065460a7634ba8eb0f942f404e773"
@@ -212,14 +215,16 @@ do_install_append() {
 }
 
 do_install_append_class-target() {
-    # Create a blank certificate
-    mkdir -p ${D}${sysconfdir}/pki/nssdb/
-    touch ./empty_password
-    certutil -N -d sql:${D}${sysconfdir}/pki/nssdb/ -f ./empty_password
-    chmod 644 ${D}${sysconfdir}/pki/nssdb/*.db
-    rm ./empty_password
-    # Remove build path prefix
-    sed -i "s:${D}::g"  ${D}${sysconfdir}/pki/nssdb/pkcs11.txt
+    # It used to call certutil to create a blank certificate with empty password at
+    # build time, but the checksum of key4.db changes every time when certutil is called.
+    # It causes non-determinism issue, so provide databases with a blank certificate
+    # which are originally from output of nss in qemux86-64 build. You can get these
+    # databases by:
+    # certutil -N -d sql:/database/path/ --empty-password
+    install -d ${D}${sysconfdir}/pki/nssdb/
+    install -m 0644 ${WORKDIR}/blank-cert9.db ${D}${sysconfdir}/pki/nssdb/cert9.db
+    install -m 0644 ${WORKDIR}/blank-key4.db ${D}${sysconfdir}/pki/nssdb/key4.db
+    install -m 0644 ${WORKDIR}/system-pkcs11.txt ${D}${sysconfdir}/pki/nssdb/pkcs11.txt
 }
 
 PACKAGE_WRITE_DEPS += "nss-native"
