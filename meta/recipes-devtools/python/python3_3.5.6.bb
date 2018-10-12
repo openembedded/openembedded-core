@@ -44,9 +44,10 @@ SRC_URI += "\
             file://0003-bpo-32947-Fixes-for-TLS-1.3-and-OpenSSL-1.1.1-GH-876.patch \
             file://0004-bpo-33570-TLS-1.3-ciphers-for-OpenSSL-1.1.1-GH-6976.patch \
             file://0005-bpo-30714-ALPN-changes-for-OpenSSL-1.1.0f-2305.patch \
+            file://run-ptest \
            "
 
-inherit multilib_header python3native update-alternatives qemu
+inherit multilib_header python3native update-alternatives qemu ptest
 
 MULTILIB_SUFFIX = "${@d.getVar('base_libdir',1).split('/')[-1]}"
 
@@ -241,6 +242,8 @@ FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN}"
 # catch manpage
 PACKAGES += "${PN}-man"
 FILES_${PN}-man = "${datadir}/man"
+
+RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests unzip bzip2"
 
 BBCLASSEXTEND = "nativesdk"
 
