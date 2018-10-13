@@ -56,6 +56,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 # http://lists.openembedded.org/pipermail/openembedded-core/2015-January/100679.html
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
+ARM_INSTRUCTION_SET_armv6 = "arm"
 
 # glibc uses PARALLELMFLAGS variable to pass parallel build info so transfer
 # PARALLEL_MAKE into PARALLELMFLAGS and empty out PARALLEL_MAKE
