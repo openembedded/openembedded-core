@@ -163,7 +163,6 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             locale-base-hr-hr \
             locale-base-el-gr \
             locale-base-fr-fr \
-            locale-base-fr-fr \
             locale-base-es-es \
             locale-base-en-gb \
            "
