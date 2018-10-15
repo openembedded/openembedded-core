@@ -177,6 +177,8 @@ FILES_${PN}-man = "${datadir}/man"
 # Nasty but if bdb isn't enabled the package won't be generated
 RDEPENDS_${PN}-modules_remove = "${@bb.utils.contains('PACKAGECONFIG', 'bdb', '', '${PN}-bsddb', d)}"
 
+RDEPENDS_${PN}-dev = ""
+
 BBCLASSEXTEND = "nativesdk"
 
 RPROVIDES_${PN} += "${PN}-modules"
@@ -220,7 +222,6 @@ python(){
                 if value.endswith('.py'):
                     d.appendVar('FILES_' + pypackage, ' ' + value + 'c')
 
-        d.setVar('RDEPENDS_' + pypackage, '')
         for value in python_manifest[key]['rdepends']:
             # Make it work with or without $PN
             if '${PN}' in value:

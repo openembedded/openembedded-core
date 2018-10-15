@@ -245,6 +245,8 @@ FILES_${PN}-man = "${datadir}/man"
 
 RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests unzip bzip2"
 
+RDEPENDS_${PN}-dev = ""
+
 BBCLASSEXTEND = "nativesdk"
 
 RPROVIDES_${PN} += "${PN}-modules"
@@ -288,7 +290,6 @@ python(){
             for value in python_manifest[key]['cached']:
                     d.appendVar('FILES_' + pypackage, ' ' + value)
 
-        d.setVar('RDEPENDS_' + pypackage, '')
         for value in python_manifest[key]['rdepends']:
             # Make it work with or without $PN
             if '${PN}' in value:
