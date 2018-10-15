@@ -152,6 +152,7 @@ py_package_preprocess () {
 	(cd ${PKGD}; python -m py_compile ./${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata.py)
 }
 
+PACKAGES_remove = "${PN}"
 
 # manual dependency additions
 RPROVIDES_${PN}-core = "${PN}"
@@ -180,8 +181,6 @@ RDEPENDS_${PN}-modules_remove = "${@bb.utils.contains('PACKAGECONFIG', 'bdb', ''
 RDEPENDS_${PN}-dev = ""
 
 BBCLASSEXTEND = "nativesdk"
-
-RPROVIDES_${PN} += "${PN}-modules"
 
 # We want bytecode precompiled .py files (.pyc's) by default
 # but the user may set it on their own conf

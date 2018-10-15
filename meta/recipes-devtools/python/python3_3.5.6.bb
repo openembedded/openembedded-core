@@ -215,6 +215,8 @@ py_package_preprocess () {
 	mv ${PKGD}/${bindir}/python${PYTHON_BINABI}-config ${PKGD}/${bindir}/python${PYTHON_BINABI}-config-${MULTILIB_SUFFIX}
 }
 
+PACKAGES_remove = "${PN}"
+
 # manual dependency additions
 RPROVIDES_${PN}-modules = "${PN}"
 RRECOMMENDS_${PN}-core_append_class-nativesdk = " nativesdk-python3-modules"
@@ -248,8 +250,6 @@ RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests unzip bzip2"
 RDEPENDS_${PN}-dev = ""
 
 BBCLASSEXTEND = "nativesdk"
-
-RPROVIDES_${PN} += "${PN}-modules"
 
 # We want bytecode precompiled .py files (.pyc's) by default
 # but the user may set it on their own conf
