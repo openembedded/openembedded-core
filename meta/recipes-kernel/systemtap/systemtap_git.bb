@@ -25,7 +25,7 @@ PACKAGECONFIG[sqlite] = "--enable-sqlite,--disable-sqlite,sqlite3"
 PACKAGECONFIG[monitor] = "--enable-monitor,--disable-monitor,ncurses json-c"
 PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,python3-setuptools-native"
 
-inherit autotools gettext pkgconfig distutils3-base
+inherit autotools gettext pkgconfig distutils3-base systemd
 
 do_configure_prepend () {
     # Improve reproducibility for c++ object files
@@ -39,6 +39,14 @@ do_install_append () {
       rm -rf ${D}${datadir}/${PN}
       rm ${D}${libexecdir}/${PN}/stap-env
    fi
+
+   # Fix makefile hardcoded path assumptions for systemd (assumes $prefix)
+   install -d `dirname ${D}${systemd_unitdir}`
+   mv ${D}${prefix}/lib/systemd `dirname ${D}${systemd_unitdir}`
+   rmdir ${D}${prefix}/lib --ignore-fail-on-non-empty
+
+   # Ensure correct ownership for files copied in
+   chown root.root ${D}${sysconfdir}/stap-exporter/* -R
 }
 
 BBCLASSEXTEND = "nativesdk"
