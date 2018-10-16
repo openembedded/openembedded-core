@@ -864,8 +864,9 @@ class RpmPM(PackageManager):
             failed_postinsts_abort(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
 
     def remove(self, pkgs, with_dependencies = True):
-        if len(pkgs) == 0:
+        if not pkgs:
             return
+
         self._prepare_pkg_transaction()
 
         if with_dependencies:
@@ -1353,6 +1354,9 @@ class OpkgPM(OpkgDpkgPM):
                                               (cmd, e.returncode, e.output.decode("utf-8")))
 
     def remove(self, pkgs, with_dependencies=True):
+        if not pkgs:
+            return
+
         if with_dependencies:
             cmd = "%s %s --force-remove --force-removal-of-dependent-packages remove %s" % \
                 (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
@@ -1663,6 +1667,9 @@ class DpkgPM(OpkgDpkgPM):
 
 
     def remove(self, pkgs, with_dependencies=True):
+        if not pkgs:
+            return
+
         if with_dependencies:
             os.environ['APT_CONFIG'] = self.apt_conf_file
             cmd = "%s purge %s" % (self.apt_get_cmd, ' '.join(pkgs))
