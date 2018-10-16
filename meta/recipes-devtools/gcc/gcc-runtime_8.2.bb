@@ -8,3 +8,5 @@ FILES_libgomp-dev += "\
     ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/openacc.h \
 "
 
+# Building with thumb enabled on armv6t fails
+ARM_INSTRUCTION_SET_armv6 = "arm"
