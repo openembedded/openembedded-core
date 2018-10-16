@@ -41,6 +41,8 @@ SRC_URI = "\
      file://0019-Improved-robustness.-Return-FALSE-in-case-of-NULL-po.patch \
      file://0020-Make-sure-global-symbol-is-not-an-indirect-or-warnin.patch \
      file://0021-PLT-information-was-still-being-generated-when-symbo.patch \
+     file://CVE-2018-17358.patch \
+     file://CVE-2018-17360.patch \
 "
 S  = "${WORKDIR}/git"
 
