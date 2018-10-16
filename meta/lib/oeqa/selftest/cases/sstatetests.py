@@ -262,6 +262,7 @@ class SStateTests(SStateBase):
         self.write_config("""
 MACHINE = "qemux86"
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
+TCLIBCAPPEND = ""
 BUILD_ARCH = "x86_64"
 BUILD_OS = "linux"
 SDKMACHINE = "x86_64"
@@ -272,6 +273,7 @@ PACKAGE_CLASSES = "package_rpm package_ipk package_deb"
         self.write_config("""
 MACHINE = "qemux86"
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
+TCLIBCAPPEND = ""
 BUILD_ARCH = "i686"
 BUILD_OS = "linux"
 SDKMACHINE = "i686"
@@ -307,12 +309,14 @@ PACKAGE_CLASSES = "package_rpm package_ipk package_deb"
 
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+TCLIBCAPPEND = \"\"
 NATIVELSBSTRING = \"DistroA\"
 """)
         self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
         bitbake("core-image-sato -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+TCLIBCAPPEND = \"\"
 NATIVELSBSTRING = \"DistroB\"
 """)
         self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
@@ -340,10 +344,12 @@ NATIVELSBSTRING = \"DistroB\"
 
         configA = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86-64\"
 """
         configB = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+TCLIBCAPPEND = \"\"
 MACHINE = \"qemuarm\"
 """
         self.sstate_allarch_samesigs(configA, configB)
@@ -356,6 +362,7 @@ MACHINE = \"qemuarm\"
 
         configA = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86-64\"
 require conf/multilib.conf
 MULTILIBS = \"multilib:lib32\"
@@ -363,6 +370,7 @@ DEFAULTTUNE_virtclass-multilib-lib32 = \"x86\"
 """
         configB = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+TCLIBCAPPEND = \"\"
 MACHINE = \"qemuarm\"
 require conf/multilib.conf
 MULTILIBS = \"\"
@@ -407,6 +415,7 @@ MULTILIBS = \"\"
 
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
+TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86\"
 require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
@@ -416,6 +425,7 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
+TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86copy\"
 require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
@@ -451,6 +461,7 @@ DEFAULTTUNE_virtclass-multilib-lib32 = "x86"
 
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
+TCLIBCAPPEND = ""
 BB_NUMBER_THREADS = "${@oe.utils.cpu_count()}"
 PARALLEL_MAKE = "-j 1"
 DL_DIR = "${TOPDIR}/download1"
@@ -464,6 +475,7 @@ http_proxy = ""
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
+TCLIBCAPPEND = ""
 BB_NUMBER_THREADS = "${@oe.utils.cpu_count()+1}"
 PARALLEL_MAKE = "-j 2"
 DL_DIR = "${TOPDIR}/download2"
