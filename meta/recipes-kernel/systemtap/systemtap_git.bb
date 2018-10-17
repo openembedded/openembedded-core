@@ -27,6 +27,8 @@ PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,
 
 inherit autotools gettext pkgconfig distutils3-base systemd
 
+SYSTEMD_SERVICE_${PN} = "stap-exporter.service"
+
 do_configure_prepend () {
     # Improve reproducibility for c++ object files
     reltivepath="${@os.path.relpath(d.getVar('STAGING_INCDIR'), d.getVar('S'))}"
