@@ -14,6 +14,8 @@ SECTION = "libs"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
+           file://0001-syscfg-Support-ARC-CPUs-and-simplify-aliasing-table.patch \
+           file://0002-syscfg-Add-support-for-arc-unknown-linux-gnu.patch \
 	  "
 SRC_URI[md5sum] = "ef3d928a5a453fa701ecc3bb22be1c64"
 SRC_URI[sha256sum] = "c345c5e73cc2332f8d50db84a2280abfb1d8f6d4f1858b9daa30404db44540ca"
@@ -30,6 +32,9 @@ do_compile_prepend() {
 	if [ ${TARGET_OS} = "mingw32" ]; then
 		# There are no arch specific syscfg files for mingw32
 		TARGET_FILE=
+	elif [ ${TARGET_ARCH} = "arc" ]; then
+		# ARC syscfg file is automatically aliased to i686-pc-linux-gnu
+		TARGET_FILE=
 	elif [ ${TARGET_OS} != "linux" ]; then
 		TARGET_FILE=${TARGET_OS}
 	fi
@@ -38,11 +43,11 @@ do_compile_prepend() {
 	  aarch64_be) TUPLE=aarch64-unknown-linux-gnu ;;
 	  arm)	      TUPLE=arm-unknown-linux-gnueabi ;;
 	  armeb)      TUPLE=arm-unknown-linux-gnueabi ;;
-	  i586|i686)  TUPLE=i686-pc-linux-gnu ;;
+	  i586|i686)  TUPLE=i686-unknown-linux-gnu;;
 	  mips64*)    TUPLE=mips64el-unknown-linux-gnuabi64 ;;
 	  mips*el)    TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips*)      TUPLE=mips-unknown-linux-gnu ;;
-	  x86_64)     TUPLE=x86_64-pc-linux-gnu ;;
+	  x86_64)     TUPLE=x86_64-unknown-linux-gnu ;;
 	  *)          TUPLE=${TARGET_ARCH}-unknown-linux-gnu ;;
 	esac
 
