@@ -31,7 +31,6 @@ SRC_URI += "file://touchscreen.rules \
            file://0022-build-sys-Detect-whether-struct-statx-is-defined-in-.patch \
            file://0023-resolvconf-fixes-for-the-compatibility-interface.patch \
            "
-SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
 # patches made for musl are only applied on TCLIBC is musl
 SRC_URI += "${SRC_URI_MUSL}"
@@ -218,10 +217,6 @@ do_install() {
 	[ ! -e ${D}/init ] && ln -s ${rootlibexecdir}/systemd/systemd ${D}/init
 	[ ! -e ${D}/${base_sbindir}/udevd ] && ln -s ${rootlibexecdir}/systemd/systemd-udevd ${D}/${base_sbindir}/udevd
 
-	# Create machine-id
-	# 20:12 < mezcalero> koen: you have three options: a) run systemd-machine-id-setup at install time, b) have / read-only and an empty file there (for stateless) and c) boot with / writable
-	touch ${D}${sysconfdir}/machine-id
-
 	install -d ${D}${sysconfdir}/udev/rules.d/
 	install -d ${D}${sysconfdir}/tmpfiles.d
 	install -m 0644 ${WORKDIR}/*.rules ${D}${sysconfdir}/udev/rules.d/
@@ -256,11 +251,6 @@ do_install() {
 		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/rescue.target.wants/systemd-update-utmp-runlevel.service
 	fi
 
-	# Enable journal to forward message to syslog daemon
-	sed -i -e 's/.*ForwardToSyslog.*/ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
-	# Set the maximium size of runtime journal to 64M as default
-	sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=64M/' ${D}${sysconfdir}/systemd/journald.conf
-
 	# this file is needed to exist if networkd is disabled but timesyncd is still in use since timesyncd checks it
 	# for existence else it fails
 	if [ -s ${D}${exec_prefix}/lib/tmpfiles.d/systemd.conf ]; then
@@ -284,6 +274,14 @@ do_install() {
 			chown polkitd:root ${D}${datadir}/polkit-1/rules.d
 		fi
 	fi
+
+	# conf files are handled by systemd-conf
+	rm -f ${D}${sysconfdir}/machine-id
+	rm -f ${D}${sysconfdir}/systemd/coredump.conf
+	rm -f ${D}${sysconfdir}/systemd/journald.conf
+	rm -f ${D}${sysconfdir}/systemd/logind.conf
+	rm -f ${D}${sysconfdir}/systemd/system.conf
+	rm -f ${D}${sysconfdir}/systemd/user.conf
 }
 
 
@@ -433,13 +431,6 @@ FILES_${PN}-extra-utils = "\
                         ${rootlibexecdir}/systemd/systemd-cgroups-agent \
 "
 
-CONFFILES_${PN} = "${sysconfdir}/machine-id \
-                ${sysconfdir}/systemd/coredump.conf \
-                ${sysconfdir}/systemd/journald.conf \
-                ${sysconfdir}/systemd/logind.conf \
-                ${sysconfdir}/systemd/system.conf \
-                ${sysconfdir}/systemd/user.conf"
-
 FILES_${PN} = " ${base_bindir}/* \
                 ${base_sbindir}/shutdown \
                 ${base_sbindir}/halt \
@@ -455,7 +446,6 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${datadir}/${BPN} \
                 ${datadir}/factory \
                 ${sysconfdir}/dbus-1/ \
-                ${sysconfdir}/machine-id \
                 ${sysconfdir}/modules-load.d/ \
                 ${sysconfdir}/pam.d/ \
                 ${sysconfdir}/sysctl.d/ \
@@ -504,7 +494,7 @@ FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ $
 
 RDEPENDS_${PN} += "kmod dbus util-linux-mount udev (= ${EXTENDPKGV}) util-linux-agetty util-linux-fsck"
 RDEPENDS_${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', '', 'systemd-serialgetty', d)}"
-RDEPENDS_${PN} += "volatile-binds update-rc.d"
+RDEPENDS_${PN} += "volatile-binds update-rc.d systemd-conf"
 
 RRECOMMENDS_${PN} += "systemd-extra-utils \
                       systemd-compat-units udev-hwdb \
