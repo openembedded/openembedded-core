@@ -8,8 +8,8 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            "
 
-SRC_URI[md5sum] = "9c42f79636ed1c0e908b7483d789b32e"
-SRC_URI[sha256sum] = "42a2487ab11ce43c288e73b2668ef8b1ab40a0e2b4f94e80fca04ad27b6f1c87"
+SRC_URI[md5sum] = "d4f22c66b3210ffe6b10d01c04e008b5"
+SRC_URI[sha256sum] = "0175f5393d19da51f4c11462cba4ba6ef3fa042abf1611a70bdfed586b7bfb2b"
 
 DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst"
 
