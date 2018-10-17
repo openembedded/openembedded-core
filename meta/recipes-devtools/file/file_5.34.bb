@@ -21,7 +21,10 @@ SRC_URI = "git://github.com/file/file.git \
 SRCREV = "315cef2f699da3c31a54bd3c6c6070680fbaf1f5"
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools update-alternatives
+
+ALTERNATIVE_${PN} = "file"
+ALTERNATIVE_LINK_NAME[file] = "${bindir}/file"
 
 EXTRA_OEMAKE_append_class-target = "-e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/file-native/file"
 EXTRA_OEMAKE_append_class-nativesdk = "-e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/file-native/file"
