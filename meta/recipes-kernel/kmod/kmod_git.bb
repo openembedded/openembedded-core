@@ -39,7 +39,7 @@ do_compile_prepend() {
 
 inherit update-alternatives bash-completion
 
-ALTERNATIVE_PRIORITY = "60"
+ALTERNATIVE_PRIORITY = "70"
 
 ALTERNATIVE_kmod = "insmod modprobe rmmod modinfo bin-lsmod lsmod depmod"
 
