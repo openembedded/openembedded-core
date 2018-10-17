@@ -46,7 +46,7 @@ do_install_append () {
    rmdir ${D}${prefix}/lib --ignore-fail-on-non-empty
 
    # Ensure correct ownership for files copied in
-   chown root.root ${D}${sysconfdir}/stap-exporter/* -R
+   chown root:root ${D}${sysconfdir}/stap-exporter/* -R
 }
 
 BBCLASSEXTEND = "nativesdk"
