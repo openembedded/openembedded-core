@@ -1322,7 +1322,11 @@ class OpkgPM(OpkgDpkgPM):
         if not pkgs:
             return
 
-        cmd = "%s %s install %s" % (self.opkg_cmd, self.opkg_args, ' '.join(pkgs))
+        cmd = "%s %s" % (self.opkg_cmd, self.opkg_args)
+        for exclude in (self.d.getVar("PACKAGE_EXCLUDE") or "").split():
+            cmd += " --add-exclude %s" % exclude
+        cmd += " install "
+        cmd += " ".join(pkgs)
 
         os.environ['D'] = self.target_rootfs
         os.environ['OFFLINE_ROOT'] = self.target_rootfs
