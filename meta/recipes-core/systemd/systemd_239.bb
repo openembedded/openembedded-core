@@ -282,6 +282,10 @@ do_install() {
 	rm -f ${D}${sysconfdir}/systemd/logind.conf
 	rm -f ${D}${sysconfdir}/systemd/system.conf
 	rm -f ${D}${sysconfdir}/systemd/user.conf
+
+	# duplicate udevadm for postinst script
+	install -d ${D}${libexecdir}
+	ln ${D}${base_bindir}/udevadm ${D}${libexecdir}/${MLPREFIX}udevadm
 }
 
 
@@ -532,6 +536,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
                ${base_bindir}/udevadm \
+               ${libexecdir}/${MLPREFIX}udevadm \
                ${datadir}/bash-completion/completions/udevadm \
               "
 
@@ -570,13 +575,7 @@ pkg_prerm_${PN} () {
 PACKAGE_WRITE_DEPS += "qemu-native"
 pkg_postinst_udev-hwdb () {
 	if test -n "$D"; then
-		if ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'true','false', d)}; then
-			${@qemu_run_binary(d, '$D', '${base_bindir}/udevadm')} hwdb --update \
-				--root $D
-			chown root:root $D${sysconfdir}/udev/hwdb.bin
-		else
-			$INTERCEPT_DIR/postinst_intercept delay_to_first_boot ${PKG} mlprefix=${MLPREFIX}
-		fi
+		$INTERCEPT_DIR/postinst_intercept update_udev_hwdb ${PKG} mlprefix=${MLPREFIX} binprefix=${MLPREFIX}
 	else
 		udevadm hwdb --update
 	fi

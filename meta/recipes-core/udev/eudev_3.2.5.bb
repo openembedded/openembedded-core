@@ -50,6 +50,10 @@ do_install_append() {
 
 	# hid2hci has moved to bluez4. removed in udev as of version 169
 	rm -f ${D}${base_libdir}/udev/hid2hci
+
+	# duplicate udevadm for postinst script
+	install -d ${D}${libexecdir}
+	ln ${D}${bindir}/udevadm ${D}${libexecdir}/${MLPREFIX}udevadm
 }
 
 do_install_prepend_class-target () {
@@ -81,12 +85,7 @@ RPROVIDES_eudev-hwdb += "udev-hwdb"
 PACKAGE_WRITE_DEPS += "qemu-native"
 pkg_postinst_eudev-hwdb () {
     if test -n "$D"; then
-        if ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'true','false', d)}; then
-            ${@qemu_run_binary(d, '$D', '${bindir}/udevadm')} hwdb --update --root $D
-            chown root:root $D${sysconfdir}/udev/hwdb.bin
-        else
-            $INTERCEPT_DIR/postinst_intercept delay_to_first_boot ${PKG} mlprefix=${MLPREFIX}
-        fi
+        $INTERCEPT_DIR/postinst_intercept update_udev_hwdb ${PKG} mlprefix=${MLPREFIX} binprefix=${MLPREFIX}
     else
         udevadm hwdb --update
     fi
