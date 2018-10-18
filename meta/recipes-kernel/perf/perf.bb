@@ -75,6 +75,7 @@ EXTRA_OEMAKE = '\
     perfexecdir=${libexecdir} \
     NO_GTK2=1 \
     ${PACKAGECONFIG_CONFARGS} \
+    TMPDIR="${B}" \
 '
 
 EXTRA_OEMAKE += "\
