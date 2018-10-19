@@ -24,6 +24,7 @@ TOOLCHAIN_HOST_TASK ?= "\
     nativesdk-ca-certificates \
     nativesdk-texinfo \
     nativesdk-libnss-nis \
+    nativesdk-rpcsvc-proto \
     "
 
 MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
