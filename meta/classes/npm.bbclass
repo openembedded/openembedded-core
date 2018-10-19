@@ -10,7 +10,7 @@ def node_pkgname(d):
 
 NPMPN ?= "${@node_pkgname(d)}"
 
-NPM_INSTALLDIR = "${D}${libdir}/node_modules/${NPMPN}"
+NPM_INSTALLDIR = "${D}${libdir}/node/${NPMPN}"
 
 # function maps arch names to npm arch names
 def npm_oe_arch_map(target_arch, d):
