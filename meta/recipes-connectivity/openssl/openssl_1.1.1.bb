@@ -151,10 +151,22 @@ do_install_append_class-nativesdk () {
 }
 
 do_install_ptest () {
-	cp -r * ${D}${PTEST_PATH}
-}
+	cp ${B}/Configure ${B}/configdata.pm ${D}${PTEST_PATH}
+	# TODO fuzz needs to be pruned of non-binaries
+	cp -r ${B}/external ${B}/test ${B}/fuzz ${B}/util ${D}${PTEST_PATH}
 
-PRIVATE_LIBS_${PN}-ptest = "libcrypto.so.1.1 libssl.so.1.1"
+	# For test_shlibload
+	ln -s ${libdir}/libcrypto.so.1.1 ${D}${PTEST_PATH}/libcrypto.so
+	ln -s ${libdir}/libssl.so.1.1 ${D}${PTEST_PATH}/libssl.so
+
+	install -d ${D}${PTEST_PATH}/apps
+	ln -s ${bindir}/openssl ${D}${PTEST_PATH}/apps
+	install -m644 ${B}/apps/*.pem ${B}/apps/*.srl ${B}/apps/openssl.cnf ${D}${PTEST_PATH}/apps
+	install -m755 ${B}/apps/CA.pl ${D}${PTEST_PATH}/apps
+
+	install -d ${D}${PTEST_PATH}/engines
+	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines
+}
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
 # package RRECOMMENDS on this package. This will enable the configuration
@@ -176,7 +188,7 @@ CONFFILES_openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 RRECOMMENDS_libcrypto += "openssl-conf"
 RDEPENDS_${PN}-bin = "perl"
 RDEPENDS_${PN}-misc = "perl"
-RDEPENDS_${PN}-ptest += "perl-module-file-spec-functions bash python"
+RDEPENDS_${PN}-ptest += "openssl-bin perl perl-modules bash python"
 
 RPROVIDES_openssl-conf = "openssl10-conf"
 RREPLACES_openssl-conf = "openssl10-conf"
