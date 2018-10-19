@@ -26,6 +26,9 @@ SRC_URI[sha256sum] = "2836875a0f89c03d0fdf483941512613a50cfb421d6fd94b9f41d7279d
 
 inherit lib_package multilib_header ptest
 
+B = "${WORKDIR}/build"
+do_configure[cleandirs] = "${B}"
+
 #| ./libcrypto.so: undefined reference to `getcontext'
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
@@ -107,7 +110,7 @@ do_configure () {
 	# WARNING: do not set compiler/linker flags (-I/-D etc.) in EXTRA_OECONF, as they will fully replace the
 	# environment variables set by bitbake. Adjust the environment variables instead.
 	PERL5LIB="${S}/external/perl/Text-Template-1.46/lib/" \
-	perl ./Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} --prefix=$useprefix --openssldir=${libdir}/ssl-1.1 --libdir=${libdir} $target
+	perl ${S}/Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} --prefix=$useprefix --openssldir=${libdir}/ssl-1.1 --libdir=${libdir} $target
 }
 
 do_install () {
@@ -151,9 +154,11 @@ do_install_append_class-nativesdk () {
 }
 
 do_install_ptest () {
-	cp ${B}/Configure ${B}/configdata.pm ${D}${PTEST_PATH}
-	# TODO fuzz needs to be pruned of non-binaries
-	cp -r ${B}/external ${B}/test ${B}/fuzz ${B}/util ${D}${PTEST_PATH}
+	# Prune the build tree
+	rm -f ${B}/fuzz/*.* ${B}/test/*.*
+
+	cp ${S}/Configure ${B}/configdata.pm ${D}${PTEST_PATH}
+	cp -r ${S}/external ${B}/test ${S}/test ${B}/fuzz ${S}/util ${B}/util ${D}${PTEST_PATH}
 
 	# For test_shlibload
 	ln -s ${libdir}/libcrypto.so.1.1 ${D}${PTEST_PATH}/libcrypto.so
@@ -161,7 +166,7 @@ do_install_ptest () {
 
 	install -d ${D}${PTEST_PATH}/apps
 	ln -s ${bindir}/openssl ${D}${PTEST_PATH}/apps
-	install -m644 ${B}/apps/*.pem ${B}/apps/*.srl ${B}/apps/openssl.cnf ${D}${PTEST_PATH}/apps
+	install -m644 ${S}/apps/*.pem ${S}/apps/*.srl ${S}/apps/openssl.cnf ${D}${PTEST_PATH}/apps
 	install -m755 ${B}/apps/CA.pl ${D}${PTEST_PATH}/apps
 
 	install -d ${D}${PTEST_PATH}/engines
