@@ -1,7 +1,7 @@
-From 2f07af34697c61decdcfa5b11434451fbcf37704 Mon Sep 17 00:00:00 2001
+From fe0fcaf43ef3aab81541dad2a71b46254dc4cf6a Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Sat, 17 Feb 2018 10:03:48 -0800
-Subject: [PATCH 6/9] cmd/dist: separate host and target builds
+Subject: [PATCH] cmd/dist: separate host and target builds
 
 Change the dist tool to allow for OE-style cross-
 and cross-canadian builds:
@@ -32,15 +32,16 @@ Upstream-Status: Inappropriate [OE specific]
 Signed-off-by: Matt Madison <matt@madison.systems>
 
 more dist cleanup
----
- src/cmd/dist/build.go | 149 +++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 111 insertions(+), 38 deletions(-)
 
-diff --git a/src/cmd/dist/build.go b/src/cmd/dist/build.go
-index afc615b5c2..36262665b2 100644
---- a/src/cmd/dist/build.go
-+++ b/src/cmd/dist/build.go
-@@ -38,6 +38,7 @@ var (
+---
+ src/cmd/dist/build.go | 153 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 111 insertions(+), 42 deletions(-)
+
+Index: go/src/cmd/dist/build.go
+===================================================================
+--- go.orig/src/cmd/dist/build.go
++++ go/src/cmd/dist/build.go
+@@ -39,6 +39,7 @@ var (
  	goldflags        string
  	workdir          string
  	tooldir          string
@@ -48,7 +49,7 @@ index afc615b5c2..36262665b2 100644
  	oldgoos          string
  	oldgoarch        string
  	exe              string
-@@ -49,6 +50,7 @@ var (
+@@ -50,6 +51,7 @@ var (
  
  	rebuildall   bool
  	defaultclang bool
@@ -56,7 +57,7 @@ index afc615b5c2..36262665b2 100644
  
  	vflag int // verbosity
  )
-@@ -223,6 +225,8 @@ func xinit() {
+@@ -231,6 +233,8 @@ func xinit() {
  	if tooldir = os.Getenv("GOTOOLDIR"); tooldir == "" {
  		tooldir = pathf("%s/pkg/tool/%s_%s", goroot, gohostos, gohostarch)
  	}
@@ -65,7 +66,7 @@ index afc615b5c2..36262665b2 100644
  }
  
  // compilerEnv returns a map from "goos/goarch" to the
-@@ -252,7 +256,6 @@ func compilerEnv(envName, def string) map[string]string {
+@@ -260,7 +264,6 @@ func compilerEnv(envName, def string) ma
  		if gohostos != goos || gohostarch != goarch {
  			m[gohostos+"/"+gohostarch] = m[""]
  		}
@@ -73,7 +74,7 @@ index afc615b5c2..36262665b2 100644
  	}
  
  	for _, goos := range okgoos {
-@@ -479,8 +482,10 @@ func setup() {
+@@ -487,8 +490,10 @@ func setup() {
  	// We keep it in pkg/, just like the object directory above.
  	if rebuildall {
  		xremoveall(tooldir)
@@ -84,7 +85,7 @@ index afc615b5c2..36262665b2 100644
  
  	// Remove tool binaries from before the tool/gohostos_gohostarch
  	xremoveall(pathf("%s/bin/tool", goroot))
-@@ -1130,11 +1135,29 @@ func cmdbootstrap() {
+@@ -1155,11 +1160,29 @@ func cmdbootstrap() {
  
  	var noBanner bool
  	var debug bool
@@ -115,7 +116,7 @@ index afc615b5c2..36262665b2 100644
  
  	if debug {
  		// cmd/buildid is used in debug mode.
-@@ -1182,8 +1205,13 @@ func cmdbootstrap() {
+@@ -1207,8 +1230,13 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  
@@ -131,7 +132,7 @@ index afc615b5c2..36262665b2 100644
  	goBootstrap := pathf("%s/go_bootstrap", tooldir)
  	cmdGo := pathf("%s/go", gobin)
  	if debug {
-@@ -1212,7 +1240,11 @@ func cmdbootstrap() {
+@@ -1237,7 +1265,11 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
@@ -144,7 +145,7 @@ index afc615b5c2..36262665b2 100644
  	goInstall(goBootstrap, append([]string{"-i"}, toolchain...)...)
  	if debug {
  		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
-@@ -1249,45 +1281,82 @@ func cmdbootstrap() {
+@@ -1274,50 +1306,84 @@ func cmdbootstrap() {
  	}
  	checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
  
@@ -196,6 +197,7 @@ index afc615b5c2..36262665b2 100644
 -		timelog("build", "host toolchain")
 -		if vflag > 0 {
 -			xprintf("\n")
++
 +		if goos == oldgoos && goarch == oldgoarch {
 +			// Common case - not setting up for cross-compilation.
 +			timelog("build", "toolchain")
@@ -231,16 +233,11 @@ index afc615b5c2..36262665b2 100644
  		goInstall(goBootstrap, "std", "cmd")
  		checkNotStale(goBootstrap, "std", "cmd")
  		checkNotStale(cmdGo, "std", "cmd")
--
+ 
 -		timelog("build", "target toolchain")
 -		if vflag > 0 {
 -			xprintf("\n")
-+		if debug {
-+			run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
-+			run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))
-+			checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
-+			copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
- 		}
+-		}
 -		goos = oldgoos
 -		goarch = oldgoarch
 -		os.Setenv("GOOS", goos)
@@ -248,18 +245,29 @@ index afc615b5c2..36262665b2 100644
 -		os.Setenv("CC", compilerEnvLookup(defaultcc, goos, goarch))
 -		xprintf("Building packages and commands for target, %s/%s.\n", goos, goarch)
 -	}
--	goInstall(goBootstrap, "std", "cmd")
--	checkNotStale(goBootstrap, "std", "cmd")
--	checkNotStale(cmdGo, "std", "cmd")
+-	targets := []string{"std", "cmd"}
+-	if goos == "js" && goarch == "wasm" {
+-		// Skip the cmd tools for js/wasm. They're not usable.
+-		targets = targets[:1]
+-	}
+-	goInstall(goBootstrap, targets...)
+-	checkNotStale(goBootstrap, targets...)
+-	checkNotStale(cmdGo, targets...)
 -	if debug {
 -		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
 -		run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))
 -		checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
 -		copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
++		if debug {
++			run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
++			run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))
++			checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
++			copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
++		}
  	}
  
  	// Check that there are no new files in $GOROOT/bin other than
-@@ -1305,7 +1374,11 @@ func cmdbootstrap() {
+@@ -1335,7 +1401,11 @@ func cmdbootstrap() {
  	}
  
  	// Remove go_bootstrap now that we're done.
@@ -272,6 +280,3 @@ index afc615b5c2..36262665b2 100644
  
  	// Print trailing banner unless instructed otherwise.
  	if !noBanner {
--- 
-2.14.1
-

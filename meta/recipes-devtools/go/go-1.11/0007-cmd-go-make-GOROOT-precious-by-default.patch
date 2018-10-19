@@ -1,7 +1,7 @@
-From f98aa287941417226a6e4f78759f8a5e19732cde Mon Sep 17 00:00:00 2001
+From 7cc60b3887be2d5674b9f5d422d022976cf205e5 Mon Sep 17 00:00:00 2001
 From: Matt Madison <matt@madison.systems>
 Date: Fri, 2 Mar 2018 06:00:20 -0800
-Subject: [PATCH 7/9] cmd/go: make GOROOT precious by default
+Subject: [PATCH] cmd/go: make GOROOT precious by default
 
 The go build tool normally rebuilds whatever it detects is
 stale.  This can be a problem when GOROOT is intended to
@@ -17,17 +17,18 @@ environment variable.
 Upstream-Status: Inappropriate [OE specific]
 
 Signed-off-by: Matt Madison <matt@madison.systems>
+
 ---
  src/cmd/go/internal/work/action.go |  3 +++
  src/cmd/go/internal/work/build.go  |  5 +++++
  src/cmd/go/internal/work/exec.go   | 25 +++++++++++++++++++++++++
  3 files changed, 33 insertions(+)
 
-diff --git a/src/cmd/go/internal/work/action.go b/src/cmd/go/internal/work/action.go
-index 9f1f8f8a50..a382880474 100644
---- a/src/cmd/go/internal/work/action.go
-+++ b/src/cmd/go/internal/work/action.go
-@@ -563,6 +563,9 @@ func (b *Builder) addTransitiveLinkDeps(a, a1 *Action, shlib string) {
+Index: go/src/cmd/go/internal/work/action.go
+===================================================================
+--- go.orig/src/cmd/go/internal/work/action.go
++++ go/src/cmd/go/internal/work/action.go
+@@ -600,6 +600,9 @@ func (b *Builder) addTransitiveLinkDeps(
  			if p1 == nil || p1.Shlib == "" || haveShlib[filepath.Base(p1.Shlib)] {
  				continue
  			}
@@ -37,11 +38,11 @@ index 9f1f8f8a50..a382880474 100644
  			haveShlib[filepath.Base(p1.Shlib)] = true
  			// TODO(rsc): The use of ModeInstall here is suspect, but if we only do ModeBuild,
  			// we'll end up building an overall library or executable that depends at runtime
-diff --git a/src/cmd/go/internal/work/build.go b/src/cmd/go/internal/work/build.go
-index 57b7b00879..e2ba95420e 100644
---- a/src/cmd/go/internal/work/build.go
-+++ b/src/cmd/go/internal/work/build.go
-@@ -143,6 +143,7 @@ See also: go install, go get, go clean.
+Index: go/src/cmd/go/internal/work/build.go
+===================================================================
+--- go.orig/src/cmd/go/internal/work/build.go
++++ go/src/cmd/go/internal/work/build.go
+@@ -147,6 +147,7 @@ See also: go install, go get, go clean.
  }
  
  const concurrentGCBackendCompilationEnabledByDefault = true
@@ -49,7 +50,7 @@ index 57b7b00879..e2ba95420e 100644
  
  func init() {
  	// break init cycle
-@@ -156,6 +157,10 @@ func init() {
+@@ -160,6 +161,10 @@ func init() {
  
  	AddBuildFlags(CmdBuild)
  	AddBuildFlags(CmdInstall)
@@ -60,12 +61,12 @@ index 57b7b00879..e2ba95420e 100644
  }
  
  // Note that flags consulted by other parts of the code
-diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
-index b0f6b45647..c8f266a8ad 100644
---- a/src/cmd/go/internal/work/exec.go
-+++ b/src/cmd/go/internal/work/exec.go
-@@ -371,6 +371,23 @@ func (b *Builder) build(a *Action) (err error) {
- 		return fmt.Errorf("missing or invalid binary-only package")
+Index: go/src/cmd/go/internal/work/exec.go
+===================================================================
+--- go.orig/src/cmd/go/internal/work/exec.go
++++ go/src/cmd/go/internal/work/exec.go
+@@ -440,6 +440,23 @@ func (b *Builder) build(a *Action) (err
+ 		return fmt.Errorf("module requires Go %s", p.Module.GoVersion)
  	}
  
 +	if goRootPrecious && (a.Package.Standard || a.Package.Goroot) {
@@ -78,9 +79,9 @@ index b0f6b45647..c8f266a8ad 100644
 +			a.Package.StaleReason = "GOROOT-resident package"
 +			return nil
 +		}
-+		if b.ComputeStaleOnly {
-+			a.Package.Stale = true
-+			a.Package.StaleReason = "missing or invalid GOROOT-resident package"
++		a.Package.Stale = true
++		a.Package.StaleReason = "missing or invalid GOROOT-resident package"
++		if b.IsCmdList {
 +			return nil
 +		}
 +	}
@@ -88,7 +89,7 @@ index b0f6b45647..c8f266a8ad 100644
  	if err := b.Mkdir(a.Objdir); err != nil {
  		return err
  	}
-@@ -1097,6 +1114,14 @@ func BuildInstallFunc(b *Builder, a *Action) (err error) {
+@@ -1435,6 +1452,14 @@ func BuildInstallFunc(b *Builder, a *Act
  		return nil
  	}
  
@@ -103,6 +104,3 @@ index b0f6b45647..c8f266a8ad 100644
  	if err := b.Mkdir(a.Objdir); err != nil {
  		return err
  	}
--- 
-2.14.1
-
