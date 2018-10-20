@@ -15,8 +15,8 @@ SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.bz2 \
            file://gcc-mips-pr68302-mips-workaround.patch \
           "
 
-SRC_URI[md5sum] = "c2b6cf928afa16b0047c974e7aaa783f"
-SRC_URI[sha256sum] = "188c8752193c50ff2dbe89db4554c63df2e26a2e47b0fa415a70918b5b851daa"
+SRC_URI[md5sum] = "f33cdfc67346f7217a9326c0d8679975"
+SRC_URI[sha256sum] = "a89fb7af7a11f43d2ce84a844a4b38df688c092bf4b67683aef179cdf2a647c4"
 
 BBCLASSEXTEND = "native nativesdk"
 
