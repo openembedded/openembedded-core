@@ -32,8 +32,9 @@ def setUpModule():
             # This helps us match exactly when we're using this path later
             canonical_layerpath += '/'
         if not edited_layers and canonical_layerpath.endswith('/meta/'):
+            canonical_layerpath = os.path.realpath(canonical_layerpath) + '/'
             edited_layers.append(layerpath)
-            oldmetapath = layerpath
+            oldmetapath = os.path.realpath(layerpath)
             result = runCmd('git rev-parse --show-toplevel', cwd=canonical_layerpath)
             oldreporoot = result.output.rstrip()
             newmetapath = os.path.join(corecopydir, os.path.relpath(oldmetapath, oldreporoot))
