@@ -11,7 +11,6 @@ SRC_URI = "http://ftp.mozilla.org/pub/nspr/releases/v${PV}/src/nspr-${PV}.tar.gz
            file://remove-srcdir-from-configure-in.patch \
            file://0002-Add-nios2-support.patch \
            file://0001-md-Fix-build-with-musl.patch \
-           file://0003-Add-type-definitions-for-the-RISC-V-architecture.patch \
            file://0004-Add-ARC-support.patch \
            file://nspr.pc.in \
 "
@@ -24,8 +23,8 @@ CACHED_CONFIGUREVARS_append_libc-musl = " CFLAGS='${CFLAGS} -D_PR_POLL_AVAILABLE
 UPSTREAM_CHECK_URI = "http://ftp.mozilla.org/pub/nspr/releases/"
 UPSTREAM_CHECK_REGEX = "v(?P<pver>\d+(\.\d+)+)/"
 
-SRC_URI[md5sum] = "e1d27282ad6286b69d6b9fd07201d3dd"
-SRC_URI[sha256sum] = "2ed95917fa2277910d1d1cf36030607dccc0ba522bba08e2af13c113dcd8f729"
+SRC_URI[md5sum] = "1c198c7e73f6b0e2bb9153a644ba246b"
+SRC_URI[sha256sum] = "2c8964913da89ffbaf464d49ce44d79e8804e1794ef9a8c52a7bff7224d1556e"
 
 CVE_PRODUCT = "netscape_portable_runtime"
 
