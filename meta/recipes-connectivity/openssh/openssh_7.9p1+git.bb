@@ -28,7 +28,7 @@ SRC_URI = "git://github.com/openssh/openssh-portable;branch=master \
 
 PAM_SRC_URI = "file://sshd"
 
-SRCREV = "cce8cbe0ed7d1ba3a575310e0b63c193326ae616"
+SRCREV = "aede1c34243a6f7feae2fb2cb686ade5f9be6f3d"
 
 S = "${WORKDIR}/git"
 
