@@ -21,8 +21,8 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://arm_eabi.patch \
 "
 
-SRC_URI[md5sum] = "d3b1b05c2546b80832101a423a80faf8"
-SRC_URI[sha256sum] = "ed642b66a4ecf4851ab2d809cd1475c297b6201d8e8bd14b4d1c08b53ffca993"
+SRC_URI[md5sum] = "63363d1c00601f4d11a5cadc8b5e0799"
+SRC_URI[sha256sum] = "c663a792fbc84349c27c36059181f2ca86c9442e75ee8b0ad72f5f9b35deab3a"
 
 inherit autotools texinfo binconfig pkgconfig gettext lib_package gtk-doc
 
