@@ -38,6 +38,15 @@ done
 automount_systemd() {
     name="`basename "$DEVNAME"`"
 
+    # Skip the partition which are already in /etc/fstab
+    grep "^[[:space:]]*$DEVNAME" /etc/fstab && return
+    for n in LABEL PARTLABEL UUID PARTUUID; do
+        tmp="$(lsblk -o $n $DEVNAME | sed -e '1d')"
+        test -z "$tmp" && continue
+        tmp="$n=$tmp"
+        grep "^[[:space:]]*$tmp" /etc/fstab && return
+    done
+
     [ -d "/run/media/$name" ] || mkdir -p "/run/media/$name"
 
     MOUNT="$MOUNT -o silent"
