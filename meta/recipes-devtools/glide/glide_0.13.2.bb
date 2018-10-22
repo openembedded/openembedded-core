@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=54905cf894f8cc416a92f4fc
 
 GO_IMPORT = "github.com/Masterminds/glide"
 SRC_URI = "git://${GO_IMPORT}"
-SRCREV = "67790b3dbede72cfdc54aa53be4706322c9499e0"
+SRCREV = "9ef6ca313b3200079861f2de4e567b1d22081d19"
 
 inherit go
 
