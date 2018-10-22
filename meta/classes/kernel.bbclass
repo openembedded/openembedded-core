@@ -164,7 +164,7 @@ KERNEL_RELEASE ?= "${KERNEL_VERSION}"
 
 # The directory where built kernel lies in the kernel tree
 KERNEL_OUTPUT_DIR ?= "arch/${ARCH}/boot"
-KERNEL_IMAGEDEST = "boot"
+KERNEL_IMAGEDEST ?= "boot"
 
 #
 # configuration
