@@ -66,6 +66,16 @@ automount_systemd() {
 automount() {
 	name="`basename "$DEVNAME"`"
 
+	if [ -x "$PMOUNT" ]; then
+		$PMOUNT $DEVNAME 2> /dev/null
+	elif [ -x $MOUNT ]; then
+		$MOUNT $DEVNAME 2> /dev/null
+	fi
+
+	# If the device isn't mounted at this point, it isn't
+	# configured in fstab
+	grep -q "^$DEVNAME " /proc/mounts && return
+
 	! test -d "/run/media/$name" && mkdir -p "/run/media/$name"
 	# Silent util-linux's version of mounting auto
 	if [ "x`readlink $MOUNT`" = "x/bin/mount.util-linux" ] ;
@@ -109,20 +119,13 @@ name="`basename "$DEVNAME"`"
 [ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
 
 if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
-	if [ -x "$PMOUNT" ]; then
-		$PMOUNT $DEVNAME 2> /dev/null
-	elif [ -x $MOUNT ]; then
-    		$MOUNT $DEVNAME 2> /dev/null
-	fi
-
-	# If the device isn't mounted at this point, it isn't
-	# configured in fstab (note the root filesystem can show up as
-	# /dev/root in /proc/mounts, so check the device number too)
+    # Note the root filesystem can show up as /dev/root in /proc/mounts,
+    # so check the device number too
     if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
         if [ "`basename $MOUNT`" = "systemd-mount" ];then
-            grep -q "^$DEVNAME " /proc/mounts || automount_systemd
+            automount_systemd
         else
-            grep -q "^$DEVNAME " /proc/mounts || automount
+            automount
         fi
     fi
 fi
