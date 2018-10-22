@@ -4,7 +4,7 @@
 #
 # Attempt to mount any added block devices and umount any removed devices
 
-BASE_INIT="`readlink "@base_sbindir@/init"`"
+BASE_INIT="`readlink -f "@base_sbindir@/init"`"
 INIT_SYSTEMD="@systemd_unitdir@/systemd"
 
 if [ "x$BASE_INIT" = "x$INIT_SYSTEMD" ];then
