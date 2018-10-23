@@ -63,8 +63,8 @@ python () {
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}/')
 
         local_srcuri = []
-        fetch = bb.fetch2.Fetch((d.getVar('SRC_URI') or '').split(), d)
-        for url in fetch.urls:
+        fetch = bb.fetch2.Fetch((d.getVar('SRC_URI', True) or '').split(), d, cache = False, localonly = True)
+        for url in filter(lambda _: fetch.ud[_], fetch.urls):
             url_data = fetch.ud[url]
             parm = url_data.parm
             if (url_data.type == 'file' or
