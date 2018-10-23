@@ -19,3 +19,5 @@ EXTRA_OEMAKE =+ "prefix=${prefix} includedir=${includedir} libdir=${libdir}"
 do_install () {
     oe_runmake install DESTDIR=${D}
 }
+
+BBCLASSEXTEND = "nativesdk"
