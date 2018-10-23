@@ -33,6 +33,7 @@ SRC_URI += "\
   file://float-endian.patch \
   file://0001-closes-bpo-34540-Convert-shutil._call_external_zip-t.patch \
   file://0001-2.7-bpo-34623-Use-XML_SetHashSalt-in-_elementtree-GH.patch \
+  file://0001-python2-use-cc_basename-to-replace-CC-for-checking-c.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
