@@ -6,6 +6,7 @@ import time
 import unittest
 import logging
 import re
+import json
 
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
@@ -119,8 +120,9 @@ class OETestResult(_TestResult):
         self.successes.append((test, None))
         super(OETestResult, self).addSuccess(test)
 
-    def logDetails(self):
+    def logDetails(self, json_file_dir=None, configuration=None, result_id=None):
         self.tc.logger.info("RESULTS:")
+        result = {}
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
 
@@ -137,6 +139,11 @@ class OETestResult(_TestResult):
                 t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
 
             self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
+            result[case.id()] = {'status': status, 'log': log}
+
+        if json_file_dir:
+            tresultjsonhelper = OETestResultJSONHelper()
+            tresultjsonhelper.dump_testresult_file(json_file_dir, configuration, result_id, result)
 
 class OEListTestsResult(object):
     def wasSuccessful(self):
@@ -249,3 +256,29 @@ class OETestRunner(_TestRunner):
             self._list_tests_module(suite)
 
         return OEListTestsResult()
+
+class OETestResultJSONHelper(object):
+
+    testresult_filename = 'testresults.json'
+
+    def _get_existing_testresults_if_available(self, write_dir):
+        testresults = {}
+        file = os.path.join(write_dir, self.testresult_filename)
+        if os.path.exists(file):
+            with open(file, "r") as f:
+                testresults = json.load(f)
+        return testresults
+
+    def _write_file(self, write_dir, file_name, file_content):
+        file_path = os.path.join(write_dir, file_name)
+        with open(file_path, 'w') as the_file:
+            the_file.write(file_content)
+
+    def dump_testresult_file(self, write_dir, configuration, result_id, test_result):
+        bb.utils.mkdirhier(write_dir)
+        lf = bb.utils.lockfile(os.path.join(write_dir, 'jsontestresult.lock'))
+        test_results = self._get_existing_testresults_if_available(write_dir)
+        test_results[result_id] = {'configuration': configuration, 'result': test_result}
+        json_testresults = json.dumps(test_results, sort_keys=True, indent=4)
+        self._write_file(write_dir, self.testresult_filename, json_testresults)
+        bb.utils.unlockfile(lf)
