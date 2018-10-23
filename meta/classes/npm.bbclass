@@ -22,7 +22,7 @@ def npm_oe_arch_map(target_arch, d):
     return target_arch
 
 NPM_ARCH ?= "${@npm_oe_arch_map(d.getVar('TARGET_ARCH'), d)}"
-NPM_INSTALL_DEV = "0"
+NPM_INSTALL_DEV ?= "0"
 
 npm_do_compile() {
 	# Copy in any additionally fetched modules
