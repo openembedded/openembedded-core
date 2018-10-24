@@ -33,7 +33,7 @@ RDEPENDS_${PN}-base = "\
     settings-daemon \
     shutdown-desktop \
     ${NETWORK_MANAGER} \
-    udev-extraconf \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udev-extraconf', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio-server pulseaudio-client-conf-sato pulseaudio-misc', '', d)} \
     "
 

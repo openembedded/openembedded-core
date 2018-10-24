@@ -76,7 +76,7 @@ RDEPENDS_packagegroup-core-sys-extended = "\
     screen \
     setserial \
     sysstat \
-    udev-extraconf \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'udev-extraconf', d)} \
     unzip \
     watchdog \
     wget \
