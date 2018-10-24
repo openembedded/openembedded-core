@@ -210,6 +210,9 @@ do_install() {
 	    cp -a --parents kernel/bounds.c $kerneldir/build
 	    cp -a --parents Kbuild $kerneldir/build
 	fi
+
+        # required to build scripts/selinux/genheaders/genheaders
+        cp -a --parents security/selinux/include/* $kerneldir/build/
     )
 
     # Make sure the Makefile and version.h have a matching timestamp so that
