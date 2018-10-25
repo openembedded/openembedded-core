@@ -16,9 +16,11 @@ ${sysconfdir}/systemd/user.conf"
 
 FILES_${PN} = "${sysconfdir}/machine-id ${sysconfdir}/systemd"
 
+do_configure[noexec] = '1'
 do_compile[noexec] = '1'
 
 do_install() {
+	rm -rf ${D}/${sysconfdir}/systemd
 	install -d ${D}/${sysconfdir}/systemd
 
 	# Create machine-id
