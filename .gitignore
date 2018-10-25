@@ -2,6 +2,7 @@ bitbake
 *.pyc
 *.pyo
 /*.patch
+/.repo/
 /build*/
 pyshtables.py
 pstage/
