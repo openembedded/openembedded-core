@@ -16,6 +16,7 @@ SRC_URI += "\
             file://builddir.patch \
             file://parallel-makeinst-create-bindir.patch \
             file://revert_use_of_sysconfigdata.patch \
+            file://0001-python-native-fix-one-do_populate_sysroot-warning.patch \
            "
 
 S = "${WORKDIR}/Python-${PV}"
