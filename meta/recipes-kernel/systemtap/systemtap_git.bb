@@ -27,7 +27,16 @@ PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,
 
 inherit autotools gettext pkgconfig distutils3-base systemd
 
-SYSTEMD_SERVICE_${PN} = "stap-exporter.service"
+PACKAGES =+ "${PN}-exporter"
+
+FILES_${PN}-exporter = "${sysconfdir}/stap-exporter/* \
+                        ${sysconfdir}/sysconfig/stap-exporter \
+                        ${systemd_unitdir}/system/stap-exporter.service \
+                        ${sbindir}/stap-exporter"
+
+RDEPENDS_${PN}-exporter = "${PN} python3-core python3-netclient"
+
+SYSTEMD_SERVICE_${PN}-exporter = "stap-exporter.service"
 
 do_configure_prepend () {
     # Improve reproducibility for c++ object files
