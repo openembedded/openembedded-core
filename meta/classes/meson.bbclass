@@ -52,6 +52,8 @@ def meson_cpu_family(var, d):
     arch = d.getVar(var)
     if arch == 'powerpc':
         return 'ppc'
+    elif arch == 'powerpc64':
+        return 'ppc64'
     elif arch == 'mipsel':
         return 'mips'
     elif re.match(r"i[3-6]86", arch):
