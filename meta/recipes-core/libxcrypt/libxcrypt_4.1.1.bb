@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM ?= "file://LICENSING;md5=cb3ca4cabd2447a37bf186fad6f79852 \
 inherit autotools pkgconfig
 
 SRCREV ?= "21b455b68baad279e6a3936faced16c5e5634376"
-SRCBRANCH ?= "master"
+SRCBRANCH ?= "develop"
 
 SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH} \
            "
