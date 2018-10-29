@@ -139,7 +139,10 @@ class OETestResult(_TestResult):
                 t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
 
             self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
-            result[case.id()] = {'status': status, 'log': log}
+            if log:
+                result[case.id()] = {'status': status, 'log': log}
+            else:
+                result[case.id()] = {'status': status}
 
         if json_file_dir:
             tresultjsonhelper = OETestResultJSONHelper()
