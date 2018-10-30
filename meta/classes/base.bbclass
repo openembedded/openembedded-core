@@ -128,6 +128,12 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
                 os.symlink(srctool, desttool)
             else:
                 notfound.append(tool)
+    # Force "python" -> "python2"
+    desttool = os.path.join(dest, "python")
+    if not os.path.exists(desttool):
+        srctool = "python2"
+        os.symlink(srctool, desttool)
+
     if notfound and fatal:
         bb.fatal("The following required tools (as specified by HOSTTOOLS) appear to be unavailable in PATH, please install them in order to proceed:\n  %s" % " ".join(notfound))
 
