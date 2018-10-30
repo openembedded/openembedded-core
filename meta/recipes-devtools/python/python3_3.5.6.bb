@@ -226,8 +226,8 @@ FILES_${PN}-2to3 += "${bindir}/2to3-${PYTHON_MAJMIN}"
 FILES_${PN}-pydoc += "${bindir}/pydoc${PYTHON_MAJMIN} ${bindir}/pydoc3"
 FILES_${PN}-idle += "${bindir}/idle3 ${bindir}/idle${PYTHON_MAJMIN}"
 
-PACKAGES =+ "${PN}-pyvenv"
-FILES_${PN}-pyvenv += "${bindir}/pyvenv-${PYTHON_MAJMIN} ${bindir}/pyvenv"
+# provide python-pyvenv from python3-venv
+RPROVIDES_${PN}-venv += "${PN}-pyvenv"
 
 # package libpython3
 PACKAGES =+ "libpython3 libpython3-staticdev"
