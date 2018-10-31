@@ -26,6 +26,10 @@ PACKAGECONFIG[jvmti] = ",NO_JVMTI=1"
 PACKAGECONFIG[audit] = ",NO_LIBAUDIT=1,audit"
 PACKAGECONFIG[manpages] = ",,xmlto-native asciidoc-native"
 
+# libunwind is not yet ported for some architectures
+PACKAGECONFIG_remove_arc = "libunwind"
+PACKAGECONFIG_remove_riscv64 = "libunwind"
+
 DEPENDS = " \
     virtual/${MLPREFIX}libc \
     ${MLPREFIX}elfutils \
