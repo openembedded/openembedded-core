@@ -48,6 +48,8 @@ do_compile_prepend() {
 	  mips*el)    TUPLE=mipsel-unknown-linux-gnu ;;
 	  mips*)      TUPLE=mips-unknown-linux-gnu ;;
 	  x86_64)     TUPLE=x86_64-unknown-linux-gnu ;;
+	  ppc64)      TUPLE=powerpc64-unknown-linux-gnu ;;
+	  ppc64le)    TUPLE=powerpc64le-unknown-linux-gnu ;;
 	  *)          TUPLE=${TARGET_ARCH}-unknown-linux-gnu ;;
 	esac
 
