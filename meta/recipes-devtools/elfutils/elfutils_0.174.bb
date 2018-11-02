@@ -28,14 +28,11 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/ignore_strmerge.diff \
            file://debian/0001-fix-gcc7-ftbfs.patch \
            file://debian/0001-disable_werror.patch \
-           file://CVE-2018-16062.patch \
-           file://0001-libdw-Check-end-of-attributes-list-consistently.patch \
-           file://0002-libelf-Return-error-if-elf_compress_gnu-is-used-on-S.patch \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
 
-SRC_URI[md5sum] = "35decb1ebfb90d565e4c411bee4185cc"
-SRC_URI[sha256sum] = "b76d8c133f68dad46250f5c223482c8299d454a69430d9aa5c19123345a000ff"
+SRC_URI[md5sum] = "48bec24c0c8b2c16820326956dff9378"
+SRC_URI[sha256sum] = "cdf27e70076e10a29539d89e367101d516bc4aa11b0d7777fe52139e3fcad08a"
 
 inherit autotools gettext
 
