@@ -40,6 +40,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://0001-Fix-build-with-clang-using-external-assembler.patch \
            file://0001-openssl-force-soft-link-to-avoid-rare-race.patch \
            file://0001-allow-manpages-to-be-disabled.patch \
+           file://0001-fix-CVE-2018-0734.patch \
            "
 
 SRC_URI_append_class-target = " \
