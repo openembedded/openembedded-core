@@ -31,6 +31,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0022-build-sys-Detect-whether-struct-statx-is-defined-in-.patch \
            file://0023-resolvconf-fixes-for-the-compatibility-interface.patch \
            file://0001-core-when-deserializing-state-always-use-read_line-L.patch \
+           file://0001-chown-recursive-let-s-rework-the-recursive-logic-to-.patch \
            "
 
 # patches made for musl are only applied on TCLIBC is musl
