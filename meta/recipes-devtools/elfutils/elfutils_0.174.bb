@@ -17,6 +17,9 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0007-Fix-control-path-where-we-have-str-as-uninitialized-.patch \
            file://0001-libasm-may-link-with-libbz2-if-found.patch \
            file://0001-libelf-elf_end.c-check-data_list.data.d.d_buf-before.patch \
+           file://0001-libdwfl-Sanity-check-partial-core-file-data-reads.patch \
+           file://0001-size-Handle-recursive-ELF-ar-files.patch \
+           file://0001-arlib-Check-that-sh_entsize-isn-t-zero.patch \
            file://debian/0001-hppa_backend.patch \
            file://debian/0001-arm_backend.patch \
            file://debian/0001-mips_backend.patch \
