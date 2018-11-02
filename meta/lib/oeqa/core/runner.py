@@ -122,7 +122,11 @@ class OETestResult(_TestResult):
 
     def logDetails(self, json_file_dir=None, configuration=None, result_id=None):
         self.tc.logger.info("RESULTS:")
+
         result = {}
+        if hasattr(self.tc, "extraresults"):
+            result = self.tc.extraresults
+
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
 
@@ -147,6 +151,10 @@ class OETestResult(_TestResult):
         if json_file_dir:
             tresultjsonhelper = OETestResultJSONHelper()
             tresultjsonhelper.dump_testresult_file(json_file_dir, configuration, result_id, result)
+
+    def wasSuccessful(self):
+        # Override as we unexpected successes aren't failures for us
+        return (len(self.failures) == len(self.errors) == 0)
 
 class OEListTestsResult(object):
     def wasSuccessful(self):
