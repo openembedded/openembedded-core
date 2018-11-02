@@ -16,6 +16,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://openssl-c_rehash.sh \
            file://0001-skip-test_symbol_presence.patch \
            file://0002-fix-CVE-2018-0734.patch \
+           file://0003-fix-CVE-2018-0735.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
