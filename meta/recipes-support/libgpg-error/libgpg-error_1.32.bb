@@ -5,8 +5,8 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-                    file://src/gpg-error.h.in;endline=19;md5=e9be7dd9dc7686d91b5421a091c212cc \
-                    file://src/init.c;endline=20;md5=872b2389fe9bae7ffb80d2b91225afbc"
+                    file://src/gpg-error.h.in;beginline=2;endline=18;md5=524d4e810c4dcdc38e4fa28e70a13bf8 \
+                    file://src/init.c;beginline=2;endline=17;md5=f01cdfcf747af5380590cfd9bbfeaaf7"
 
 
 SECTION = "libs"
