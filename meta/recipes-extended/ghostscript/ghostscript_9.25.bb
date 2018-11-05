@@ -30,6 +30,8 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
                 file://0003-Bug-699832-add-control-over-hiding-error-handlers.patch \
                 file://0004-For-hidden-operators-pass-a-name-object-to-error-han.patch \
                 file://0005-Bug-699938-.loadfontloop-must-be-an-operator.patch \
+                file://0006-Undefine-some-additional-internal-operators.patch \
+                file://0007-Bug-699927-don-t-include-operator-arrays-in-execstac.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
