@@ -24,7 +24,10 @@
 #
 # 4. If the above steps fail, use the modification time of the youngest file in the source tree.
 #
-# Once the value of SOURCE_DATE_EPOCH is determined, it is stored in the recipe's ${SDE_FILE}.
+# Once the value of SOURCE_DATE_EPOCH is determined, it is stored in the recipe's SDE_FILE.
+# If none of these mechanisms are suitable, replace the do_deploy_source_date_epoch task
+# with recipe-specific functionality to write the appropriate SOURCE_DATE_EPOCH into the SDE_FILE.
+#
 # If this file is found by other tasks, the value is exported in the SOURCE_DATE_EPOCH variable.
 # SOURCE_DATE_EPOCH is set for all tasks that might use it (do_configure, do_compile, do_package, ...)
 
