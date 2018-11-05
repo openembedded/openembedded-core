@@ -25,6 +25,11 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
                 file://do-not-check-local-libpng-source.patch \
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
+                file://0001-Bug-699795-add-operand-checking-to-.setnativefontmap.patch \
+                file://0002-Bug-699816-Improve-hiding-of-security-critical-custo.patch \
+                file://0003-Bug-699832-add-control-over-hiding-error-handlers.patch \
+                file://0004-For-hidden-operators-pass-a-name-object-to-error-han.patch \
+                file://0005-Bug-699938-.loadfontloop-must-be-an-operator.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
