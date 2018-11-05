@@ -34,10 +34,11 @@ if [ "$?" != "0" ]; then
     echo "Bitbake parsing failed"
     exit 1
 fi
-WATCHES=`sysctl fs.inotify.max_user_watches -n`
-if (( $WATCHES < 100000 )); then
-    echo 'Need to increase watches (echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf'
-    #exit 1
+
+WATCHES=$(PATH="/sbin:/usr/sbin:$PATH" sysctl fs.inotify.max_user_watches -n)
+if (( $WATCHES < 65000 )); then
+    echo 'Need to increase watches (echo fs.inotify.max_user_watches=65536 | sudo tee -a /etc/sysctl.conf'
+    exit 1
 fi
 mkdir -p tmp/deploy/images/qemux86-64
 pushd tmp/deploy/images/qemux86-64
