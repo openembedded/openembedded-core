@@ -32,6 +32,7 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
                 file://0005-Bug-699938-.loadfontloop-must-be-an-operator.patch \
                 file://0006-Undefine-some-additional-internal-operators.patch \
                 file://0007-Bug-699927-don-t-include-operator-arrays-in-execstac.patch \
+                file://0008-Make-.forceput-unavailable-from-.policyprocs-helper-.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
