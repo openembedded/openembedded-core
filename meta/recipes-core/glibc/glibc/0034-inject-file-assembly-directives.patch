@@ -257,3 +257,16 @@ index 244d87fb6d..14d3e2ce14 100644
  /* Initial entry point code for the dynamic linker.
     The C function `_dl_start' is the real entry point;
     its return value is the user program's entry point.	*/
+diff --git a/sysdeps/unix/sysv/linux/arm/libc-do-syscall.S b/sysdeps/unix/sysv/linux/arm/libc-do-syscall.S
+index d26ad1f8d3..a0de10bf81 100644
+--- a/sysdeps/unix/sysv/linux/arm/libc-do-syscall.S
++++ b/sysdeps/unix/sysv/linux/arm/libc-do-syscall.S
+@@ -27,6 +27,8 @@
+    ARM unwind tables for register to register moves, the actual opcodes
+    are not defined.  */
+ 
++      .file "libc-do-syscall.S"
++
+ #if defined(__thumb__)
+ 	.thumb
+ 	.syntax unified
