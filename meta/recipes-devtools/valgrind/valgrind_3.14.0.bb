@@ -54,6 +54,7 @@ COMPATIBLE_HOST_linux-muslx32 = 'null'
 
 # Disable for some MIPS variants
 COMPATIBLE_HOST_mipsarchr6 = 'null'
+COMPATIBLE_HOST_linux-gnun32 = 'null'
 
 inherit autotools ptest multilib_header
 
