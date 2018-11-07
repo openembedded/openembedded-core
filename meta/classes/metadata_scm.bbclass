@@ -3,27 +3,11 @@ METADATA_REVISION ?= "${@base_detect_revision(d)}"
 
 def base_detect_revision(d):
     path = base_get_scmbasepath(d)
-
-    scms = [base_get_metadata_git_revision]
-
-    for scm in scms:
-        rev = scm(path, d)
-        if rev != "<unknown>":
-            return rev
-
-    return "<unknown>"
+    return base_get_metadata_git_revision(path, d)
 
 def base_detect_branch(d):
     path = base_get_scmbasepath(d)
-
-    scms = [base_get_metadata_git_branch]
-
-    for scm in scms:
-        rev = scm(path, d)
-        if rev != "<unknown>":
-            return rev.strip()
-
-    return "<unknown>"
+    return base_get_metadata_git_branch(path, d)
 
 def base_get_scmbasepath(d):
     return os.path.join(d.getVar('COREBASE'), 'meta')
