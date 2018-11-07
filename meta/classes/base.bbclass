@@ -467,12 +467,15 @@ python () {
 
     if bb.data.inherits_class('license', d):
         check_license_format(d)
-        unmatched_license_flag = check_license_flags(d)
-        if unmatched_license_flag:
-            bb.debug(1, "Skipping %s because it has a restricted license not"
-                 " whitelisted in LICENSE_FLAGS_WHITELIST" % pn)
-            raise bb.parse.SkipRecipe("because it has a restricted license not"
-                 " whitelisted in LICENSE_FLAGS_WHITELIST")
+        unmatched_license_flags = check_license_flags(d)
+        if unmatched_license_flags:
+            if len(unmatched_license_flags) == 1:
+                message = "because it has a restricted license '{0}'. Which is not whitelisted in LICENSE_FLAGS_WHITELIST".format(unmatched_license_flags[0])
+            else:
+                message = "because it has restricted licenses {0}. Which are not whitelisted in LICENSE_FLAGS_WHITELIST".format(
+                    ", ".join("'{0}'".format(f) for f in unmatched_license_flags))
+            bb.debug(1, "Skipping %s %s" % (pn, message))
+            raise bb.parse.SkipRecipe(message)
 
     # If we're building a target package we need to use fakeroot (pseudo)
     # in order to capture permissions, owners, groups and special files
