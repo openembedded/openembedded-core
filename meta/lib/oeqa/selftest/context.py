@@ -203,7 +203,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         runCmd("bitbake -p")
 
     def get_json_result_dir(self, args):
-        json_result_dir = os.path.join(os.path.dirname(os.path.abspath(args.output_log)), 'log', 'oeqa')
+        json_result_dir = os.path.join(self.tc.td["LOG_DIR"], 'oeqa')
         if "OEQA_JSON_RESULT_DIR" in self.tc.td:
             json_result_dir = self.tc.td["OEQA_JSON_RESULT_DIR"]
 
