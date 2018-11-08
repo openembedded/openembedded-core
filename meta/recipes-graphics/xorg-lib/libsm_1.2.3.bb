@@ -28,4 +28,4 @@ SRC_URI[sha256sum] = "2d264499dcb05f56438dee12a1b4b71d76736ce7ba7aa6efbf15ebb113
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
