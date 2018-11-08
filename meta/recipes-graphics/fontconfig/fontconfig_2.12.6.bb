@@ -61,4 +61,4 @@ FONTCONFIG_FONT_DIRS ?= "no"
 
 EXTRA_OECONF = " --disable-docs --with-default-fonts=${datadir}/fonts --with-cache-dir=${FONTCONFIG_CACHE_DIR} --with-add-fonts=${FONTCONFIG_FONT_DIRS}"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
