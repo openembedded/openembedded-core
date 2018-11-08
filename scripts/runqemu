@@ -75,6 +75,7 @@ of the following environment variables (in any order):
   Simplified QEMU command-line options can be passed with:
     nographic - disable video console
     serial - enable a serial console on /dev/ttyS0
+    serialstdio - enable a serial console on the console (regardless of graphics mode)
     slirp - enable user networking, no root privileges is required
     kvm - enable KVM when running x86/x86_64 (VT-capable CPU required)
     kvm-vhost - enable KVM with vhost when running x86/x86_64 (VT-capable CPU required)
@@ -211,6 +212,7 @@ class BaseConfig(object):
         self.slirp_enabled = False
         self.nfs_instance = 0
         self.nfs_running = False
+        self.serialconsole = False
         self.serialstdio = False
         self.cleantap = False
         self.saved_stty = ''
@@ -428,6 +430,9 @@ class BaseConfig(object):
                 self.qemu_opt_script += ' -nographic'
                 self.kernel_cmdline_script += ' console=ttyS0'
             elif arg == 'serial':
+                self.kernel_cmdline_script += ' console=ttyS0'
+                self.serialconsole = True
+            elif arg == "serialstdio":
                 self.kernel_cmdline_script += ' console=ttyS0'
                 self.serialstdio = True
             elif arg == 'audio':
@@ -1169,7 +1174,7 @@ class BaseConfig(object):
         if self.snapshot:
             self.qemu_opt += " -snapshot"
 
-        if self.serialstdio:
+        if self.serialconsole:
             if sys.stdin.isatty():
                 subprocess.check_call("stty intr ^]", shell=True)
                 logger.info("Interrupt character is '^]'")
@@ -1196,7 +1201,7 @@ class BaseConfig(object):
         #     INIT: Id "S1" respawning too fast: disabled for 5 minutes
         serial_num = len(re.findall("-serial", self.qemu_opt))
         if serial_num == 0:
-            if re.search("-nographic", self.qemu_opt):
+            if re.search("-nographic", self.qemu_opt) or self.serialstdio:
                 self.qemu_opt += " -serial mon:stdio -serial null"
             else:
                 self.qemu_opt += " -serial mon:vc -serial null"
