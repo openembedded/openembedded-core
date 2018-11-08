@@ -14,7 +14,7 @@ PROVIDES = "virtual/libsdl"
 
 PR = "r3"
 
-SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
+SRC_URI = "https://www.libsdl.org/release/SDL-${PV}.tar.gz \
            file://libsdl-1.2.15-xdata32.patch \
            file://pkgconfig.patch \
            file://0001-build-Pass-tag-CC-explictly-when-using-libtool.patch \
