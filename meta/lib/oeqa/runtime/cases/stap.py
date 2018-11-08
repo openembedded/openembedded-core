@@ -4,6 +4,7 @@ from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.oeid import OETestID
 from oeqa.core.decorator.data import skipIfNotFeature
+from oeqa.runtime.decorator.package import OEHasPackage
 
 class StapTest(OERuntimeTestCase):
 
@@ -22,6 +23,7 @@ class StapTest(OERuntimeTestCase):
     @skipIfNotFeature('tools-profile',
                       'Test requires tools-profile to be in IMAGE_FEATURES')
     @OETestDepends(['kernelmodule.KernelModuleTest.test_kernel_module'])
+    @OEHasPackage(['systemtap'])
     def test_stap(self):
         cmds = [
             'cd /usr/src/kernel && make scripts prepare',

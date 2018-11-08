@@ -16,13 +16,13 @@ class OpkgTest(OERuntimeTestCase):
 class OpkgRepoTest(OpkgTest):
 
     @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         service_repo = os.path.join(cls.tc.td['DEPLOY_DIR_IPK'], 'all')
         cls.repo_server = HTTPService(service_repo, cls.tc.target.server_ip)
         cls.repo_server.start()
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDown(cls):
         cls.repo_server.stop()
 
     def setup_source_config_for_package_install(self):
