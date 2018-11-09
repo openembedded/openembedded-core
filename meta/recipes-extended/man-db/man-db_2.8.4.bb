@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://docs/COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
            file://99_mandb \
            file://man_db.conf-avoid-multilib-install-file-conflict.patch"
-SRC_URI[md5sum] = "6f3055e18fdd1ce5cbbdb30403991ec7"
-SRC_URI[sha256sum] = "5932a1ca366e1ec61a3ece1a3afa0e92f2fdc125b61d236f20cc6ff9d80cc4ac"
+SRC_URI[md5sum] = "ab41db551f500e4a595b11203b86c67a"
+SRC_URI[sha256sum] = "103c185f9d8269b9ee3b8a4cb27912b3aa393e952731ef96fedc880723472bc3"
 
 DEPENDS = "libpipeline gdbm groff-native base-passwd"
 RDEPENDS_${PN} += "base-passwd"
@@ -19,6 +19,7 @@ USE_NLS_libc-musl = "no"
 inherit gettext pkgconfig autotools
 
 EXTRA_OECONF = "--with-pager=less"
+EXTRA_AUTORECONF += "-I ${S}/gl/m4"
 
 do_install() {
 	autotools_do_install
