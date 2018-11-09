@@ -9,13 +9,13 @@ from oeqa.runtime.decorator.package import OEHasPackage
 class StapTest(OERuntimeTestCase):
 
     @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         src = os.path.join(cls.tc.runtime_files_dir, 'hello.stp')
         dst = '/tmp/hello.stp'
         cls.tc.target.copyTo(src, dst)
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDown(cls):
         files = '/tmp/hello.stp'
         cls.tc.target.run('rm %s' % files)
 
