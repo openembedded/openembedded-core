@@ -18,11 +18,10 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://0005-configure.in-fix-LTFLAGS-to-make-it-work-with-ccache.patch \
            file://0006-apr-fix-off_t-size-doesn-t-match-in-glibc-when-cross.patch \
            file://0007-explicitly-link-libapr-against-phtread-to-make-gold-.patch \
-           file://0008-apr-fix-ptest-hang-in-teststr.patch \
-"
+           "
 
-SRC_URI[md5sum] = "12f2a349483ad6f12db49ba01fbfdbfa"
-SRC_URI[sha256sum] = "131f06d16d7aabd097fa992a33eec2b6af3962f93e6d570a9bd4d85e95993172"
+SRC_URI[md5sum] = "ad4add8efdfe87330b88e5e788241775"
+SRC_URI[sha256sum] = "a67ca9fcf9c4ff59bce7f428a323c8b5e18667fdea7b0ebad47d194371b0a105"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest
 
