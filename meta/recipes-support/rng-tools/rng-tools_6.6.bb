@@ -1,27 +1,38 @@
 SUMMARY = "Random number generator daemon"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0b6f033afe6db235e559456585dc8cdc"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/gkernel/${BP}.tar.gz \
+SRC_URI = "git://github.com/nhorman/rng-tools.git \
            file://0001-If-the-libc-is-lacking-argp-use-libargp.patch \
            file://0002-Add-argument-to-control-the-libargp-dependency.patch \
            file://underquote.patch \
            file://rng-tools-5-fix-textrels-on-PIC-x86.patch \
-           file://read_error_msg.patch \
            file://init \
            file://default \
            file://rngd.service \
 "
+SRCREV = "4ebc21d6f387bb7b4b3f6badc429e27b21c0a6ee"
+S = "${WORKDIR}/git"
 
-SRC_URI[md5sum] = "6726cdc6fae1f5122463f24ae980dd68"
-SRC_URI[sha256sum] = "60a102b6603bbcce2da341470cad42eeaa9564a16b4490e7867026ca11a3078e"
+inherit autotools update-rc.d systemd pkgconfig
 
-inherit autotools update-rc.d systemd
+DEPENDS = "curl \
+           libxml2 \
+           openssl \
+           sysfsutils \
+           libgcrypt \
+          "
 
-PACKAGECONFIG = "libgcrypt"
+PACKAGECONFIG ??= "libgcrypt libjitterentropy"
 PACKAGECONFIG_libc-musl = "libargp"
 PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
 PACKAGECONFIG[libgcrypt] = "--with-libgcrypt,--without-libgcrypt,libgcrypt,"
+PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterntropy,libjitterentropy"
+
+# Refer autogen.sh in rng-tools
+do_configure_prepend() {
+    cp ${S}/README.md ${S}/README
+}
 
 do_install_append() {
     # Only install the init script when 'sysvinit' is in DISTRO_FEATURES.
