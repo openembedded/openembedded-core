@@ -2,8 +2,7 @@ import subprocess, unittest
 from oeqa.sdk.case import OESDKTestCase
 
 class PythonTest(OESDKTestCase):
-    @classmethod
-    def setUpClass(self):
+    def setUp(self):
         if not (self.tc.hasHostPackage("nativesdk-python3") or
                 self.tc.hasHostPackage("python3-native")):
             raise unittest.SkipTest("No python package in the SDK")

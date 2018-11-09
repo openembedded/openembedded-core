@@ -12,8 +12,7 @@ class BuildAssimp(OESDKTestCase):
 
     td_vars = ['DATETIME', 'TARGET_OS', 'TARGET_ARCH']
 
-    @classmethod
-    def setUpClass(self):
+    def setUp(self):
         if not (self.tc.hasHostPackage("nativesdk-cmake") or
                 self.tc.hasHostPackage("cmake-native")):
             raise unittest.SkipTest("Needs cmake")

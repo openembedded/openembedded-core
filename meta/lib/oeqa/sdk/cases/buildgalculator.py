@@ -6,8 +6,7 @@ from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 class GalculatorTest(OESDKTestCase):
     td_vars = ['DATETIME']
 
-    @classmethod
-    def setUpClass(self):
+    def setUp(self):
         if not (self.tc.hasTargetPackage("gtk+3", multilib=True) or \
                 self.tc.hasTargetPackage("libgtk-3.0", multilib=True)):
             raise unittest.SkipTest("GalculatorTest class: SDK don't support gtk+3")

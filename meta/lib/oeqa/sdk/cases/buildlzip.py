@@ -15,6 +15,7 @@ class BuildLzipTest(OESDKTestCase):
                         self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
         self.project.download_archive()
 
+    def setUp(self):
         machine = self.td.get("MACHINE")
 
         if not (self.tc.hasHostPackage("packagegroup-cross-canadian-%s" % machine) or
