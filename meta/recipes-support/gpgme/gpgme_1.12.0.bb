@@ -17,11 +17,11 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0004-python-import.patch \
            file://0005-gpgme-config-skip-all-lib-or-usr-lib-directories-in-.patch \
            file://0006-fix-build-path-issue.patch \
-           file://0007-qt-python-Add-variables-to-tests.patch \
+           file://0007-python-Add-variables-to-tests.patch \
           "
 
-SRC_URI[md5sum] = "129c46fb85a7ffa41e43345e48aee884"
-SRC_URI[sha256sum] = "2d1b111774d2e3dd26dcd7c251819ce4ef774ec5e566251eb9308fa7542fbd6f"
+SRC_URI[md5sum] = "902fca3a94907efe4e929b2ade545a7c"
+SRC_URI[sha256sum] = "b4dc951c3743a60e2e120a77892e9e864fb936b2e58e7c77e8581f4d050e8cd8"
 
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"
@@ -56,7 +56,6 @@ EXTRA_OECONF += '--enable-languages="${LANGUAGES}" \
                  --disable-gpg-test \
                  --disable-gpgsm-test \
                  --disable-g13-test \
-                 --disable-lang-qt-test \
                  --disable-lang-python-test \
 '
 
