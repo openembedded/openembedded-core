@@ -43,14 +43,12 @@ TEST_PACKAGED_DIR ?= "${TEST_NEEDED_PACKAGES_DIR}/packaged"
 BASICTESTSUITE = "\
     ping date df ssh scp python perl gi ptest parselogs \
     logrotate connman systemd oe_syslog pam stap ldd xorg \
+    kernelmodule gcc buildcpio buildlzip buildgalculator \
     ${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'dnf rpm', '', d)} \
     ${@bb.utils.contains('IMAGE_PKGTYPE', 'ipk', 'opkg', '', d)} \
     ${@bb.utils.contains('IMAGE_PKGTYPE', 'deb', 'apt', '', d)}"
-DEVTESTSUITE = "gcc kernelmodule buildcpio buildlzip buildgalculator "
 
 DEFAULT_TEST_SUITES = "${BASICTESTSUITE}"
-DEFAULT_TEST_SUITES_pn-core-image-sato-sdk = "${BASICTESTSUITE} ${DEVTESTSUITE}"
-DEFAULT_TEST_SUITES_pn-core-image-lsb-sdk = "${BASICTESTSUITE} ${DEVTESTSUITE}"
 
 # aarch64 has no graphics
 DEFAULT_TEST_SUITES_remove_aarch64 = "xorg"
