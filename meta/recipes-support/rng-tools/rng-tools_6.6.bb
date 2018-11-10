@@ -7,6 +7,7 @@ SRC_URI = "git://github.com/nhorman/rng-tools.git \
            file://0002-Add-argument-to-control-the-libargp-dependency.patch \
            file://underquote.patch \
            file://rng-tools-5-fix-textrels-on-PIC-x86.patch \
+           file://0001-configure.ac-fix-typo.patch \
            file://init \
            file://default \
            file://rngd.service \
@@ -24,10 +25,10 @@ DEPENDS = "curl \
           "
 
 PACKAGECONFIG ??= "libgcrypt libjitterentropy"
-PACKAGECONFIG_libc-musl = "libargp"
+PACKAGECONFIG_libc-musl = "libargp libjitterentropy"
 PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
 PACKAGECONFIG[libgcrypt] = "--with-libgcrypt,--without-libgcrypt,libgcrypt,"
-PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterntropy,libjitterentropy"
+PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterentropy,libjitterentropy"
 
 # Refer autogen.sh in rng-tools
 do_configure_prepend() {
