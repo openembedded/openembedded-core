@@ -15,8 +15,8 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            file://0001-tests-sigaction-Check-for-mips-and-alpha-before-usin.patch \
            "
-SRC_URI[md5sum] = "8780136849c85acf76ad3a522aa4462a"
-SRC_URI[sha256sum] = "1f4e59fc1edfa2bfb4adf2a748623dc25b105ec79713dd84404199f91b0b0634"
+SRC_URI[md5sum] = "fa5ac841e9ce6af133061822898d49a9"
+SRC_URI[sha256sum] = "d685f8e65470b7832c3aff60c57ab4459f26ff89f07c10f92bd70ee89efac701"
 
 inherit autotools ptest bluetooth
 
