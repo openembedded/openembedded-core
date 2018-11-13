@@ -93,13 +93,13 @@ class OETestResult(_TestResult):
 
                 # When fails at module or class level the class name is passed as string
                 # so figure out to see if match
-                m = re.search("^setUpModule \((?P<module_name>.*)\)$", scase_str)
+                m = re.search(r"^setUpModule \((?P<module_name>.*)\)$", scase_str)
                 if m:
                     if case.__class__.__module__ == m.group('module_name'):
                         found = True
                         break
 
-                m = re.search("^setUpClass \((?P<class_name>.*)\)$", scase_str)
+                m = re.search(r"^setUpClass \((?P<class_name>.*)\)$", scase_str)
                 if m:
                     class_name = "%s.%s" % (case.__class__.__module__,
                                             case.__class__.__name__)
