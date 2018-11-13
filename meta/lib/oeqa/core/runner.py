@@ -122,6 +122,7 @@ class OETestResult(_TestResult):
         self.tc.logger.info("RESULTS:")
 
         result = {}
+        logs = {}
         if hasattr(self.tc, "extraresults"):
             result = self.tc.extraresults
 
@@ -140,11 +141,19 @@ class OETestResult(_TestResult):
             if case.id() in self.starttime and case.id() in self.endtime:
                 t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
 
-            self.tc.logger.info("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
+            if status not in logs:
+                logs[status] = []
+            logs[status].append("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
             if log:
                 result[case.id()] = {'status': status, 'log': log}
             else:
                 result[case.id()] = {'status': status}
+
+        for i in ['PASSED', 'SKIPPED', 'EXPECTEDFAIL', 'ERROR', 'FAILED', 'UNKNOWN']:
+            if i not in logs:
+                continue
+            for l in logs[i]:
+                self.tc.logger.info(l)
 
         if json_file_dir:
             tresultjsonhelper = OETestResultJSONHelper()
