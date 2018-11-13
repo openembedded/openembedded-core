@@ -61,9 +61,7 @@ class OETestResult(_TestResult):
             msg = "%s - OK - All required tests passed" % component
         else:
             msg = "%s - FAIL - Required tests failed" % component
-        skipped = len(self.skipped)
-        if skipped:
-            msg += " (skipped=%d)" % skipped
+        msg += " (successes=%d, skipped=%d, failures=%d, errors=%d)" % (len(self.successes), len(self.skipped), len(self.failures), len(self.errors))
         self.tc.logger.info(msg)
 
     def _getTestResultDetails(self, case):
