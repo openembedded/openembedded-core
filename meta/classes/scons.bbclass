@@ -2,7 +2,16 @@ DEPENDS += "python-scons-native"
 
 EXTRA_OESCONS ?= ""
 
-do_configure[noexec] = "1"
+do_configure() {
+	if [ -n "${CONFIGURESTAMPFILE}" ]; then
+		if [ -e "${CONFIGURESTAMPFILE}" -a "`cat ${CONFIGURESTAMPFILE}`" != "${BB_TASKHASH}" -a "${CLEANBROKEN}" != "1" ]; then
+			${STAGING_BINDIR_NATIVE}/scons --clean PREFIX=${prefix} prefix=${prefix} ${EXTRA_OESCONS}
+		fi
+
+		mkdir -p `dirname ${CONFIGURESTAMPFILE}`
+		echo ${BB_TASKHASH} > ${CONFIGURESTAMPFILE}
+	fi
+}
 
 scons_do_compile() {
         ${STAGING_BINDIR_NATIVE}/scons ${PARALLEL_MAKE} PREFIX=${prefix} prefix=${prefix} ${EXTRA_OESCONS} || \
