@@ -32,10 +32,10 @@ python license_create_manifest() {
 
     rootfs_license_manifest = os.path.join(d.getVar('LICENSE_DIRECTORY'),
                         d.getVar('IMAGE_NAME'), 'license.manifest')
-    write_license_files(d, rootfs_license_manifest, pkg_dic)
+    write_license_files(d, rootfs_license_manifest, pkg_dic, rootfs=True)
 }
 
-def write_license_files(d, license_manifest, pkg_dic):
+def write_license_files(d, license_manifest, pkg_dic, rootfs=True):
     import re
 
     bad_licenses = (d.getVar("INCOMPATIBLE_LICENSE") or "").split()
@@ -94,7 +94,7 @@ def write_license_files(d, license_manifest, pkg_dic):
     # With both options set we see a .5 M increase in core-image-minimal
     copy_lic_manifest = d.getVar('COPY_LIC_MANIFEST')
     copy_lic_dirs = d.getVar('COPY_LIC_DIRS')
-    if copy_lic_manifest == "1":
+    if rootfs and copy_lic_manifest == "1":
         rootfs_license_dir = os.path.join(d.getVar('IMAGE_ROOTFS'), 
                                 'usr', 'share', 'common-licenses')
         bb.utils.mkdirhier(rootfs_license_dir)
@@ -146,6 +146,13 @@ def write_license_files(d, license_manifest, pkg_dic):
                             continue
 
                         os.link(pkg_license, pkg_rootfs_license)
+            # Fixup file ownership
+            for walkroot, dirs, files in os.walk(rootfs_license_dir):
+                for f in files:
+                    os.lchown(os.path.join(walkroot, f), 0, 0)
+                for dir in dirs:
+                    os.lchown(os.path.join(walkroot, dir), 0, 0)
+
 
 
 def license_deployed_manifest(d):
@@ -176,7 +183,7 @@ def license_deployed_manifest(d):
                                     d.getVar('IMAGE_NAME'))
     bb.utils.mkdirhier(lic_manifest_dir)
     image_license_manifest = os.path.join(lic_manifest_dir, 'image_license.manifest')
-    write_license_files(d, image_license_manifest, man_dic)
+    write_license_files(d, image_license_manifest, man_dic, rootfs=False)
 
 def get_deployed_dependencies(d):
     """
