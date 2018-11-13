@@ -146,6 +146,9 @@ class Command(object):
         # At this point we know that the process has closed stdout/stderr, so
         # it is safe and necessary to wait for the actual process completion.
         self.status = self.process.wait()
+        self.process.stdout.close()
+        if self.process.stderr:
+            self.process.stderr.close()
 
         self.log.debug("Command '%s' returned %d as exit code." % (self.cmd, self.status))
         # logging the complete output is insane
