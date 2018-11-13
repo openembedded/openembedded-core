@@ -371,7 +371,7 @@ if __name__ == "__main__":
     "lib-dynload/readline.*.so rlcompleter.*" )
 
     m.addPackage( "${PN}-reprlib", "Python alternate repr() implementation", "${PN}-core",
-    "reprlib.py" )
+    "reprlib.*" )
 
     m.addPackage( "${PN}-resource", "Python resource control interface", "${PN}-core",
     "lib-dynload/resource.*.so" )

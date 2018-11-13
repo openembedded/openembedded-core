@@ -194,7 +194,7 @@ FILES_${PN}-readline="${libdir}/python3.5/lib-dynload/readline.*.so ${libdir}/py
 
 SUMMARY_${PN}-reprlib="Python alternate repr() implementation"
 RDEPENDS_${PN}-reprlib="${PN}-core"
-FILES_${PN}-reprlib="${libdir}/python3.5/reprlib.py ${libdir}/python3.5/__pycache__/reprlib.py "
+FILES_${PN}-reprlib="${libdir}/python3.5/reprlib.* ${libdir}/python3.5/__pycache__/reprlib.* "
 
 SUMMARY_${PN}-resource="Python resource control interface"
 RDEPENDS_${PN}-resource="${PN}-core"
