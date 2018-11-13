@@ -15,13 +15,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://rpcbind.conf \
            file://rpcbind.socket \
            file://rpcbind.service \
-           file://0001-rpcbind-pair-all-svc_getargs-calls-with-svc_freeargs.patch \
-           file://pmapproc_dump-Fixed-typo-in-memory-leak-patch.patch \
-           file://rpcbproc_callit_com-Stop-freeing-a-static-pointer.patch \
            file://rpcbind_add_option_to_fix_port_number.patch \
           "
-SRC_URI[md5sum] = "cf10cd41ed8228fc54c316191c1f07fe"
-SRC_URI[sha256sum] = "074a9a530dc7c11e0d905aa59bcb0847c009313f02e98d3d798aa9568f414c66"
+SRC_URI[md5sum] = "ed46f09b9c0fa2d49015f6431bc5ea7b"
+SRC_URI[sha256sum] = "2ce360683963b35c19c43f0ee2c7f18aa5b81ef41c3fdbd15ffcb00b8bffda7a"
 
 inherit autotools update-rc.d systemd pkgconfig
 
@@ -48,8 +45,6 @@ PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_unitdir}/system/
 EXTRA_OECONF += " --enable-warmstarts --with-rpcuser=rpc"
 
 do_install_append () {
-	mv ${D}${bindir} ${D}${sbindir}
-
 	install -d ${D}${sysconfdir}/init.d
 	sed -e 's,/etc/,${sysconfdir}/,g' \
 		-e 's,/sbin/,${sbindir}/,g' \
