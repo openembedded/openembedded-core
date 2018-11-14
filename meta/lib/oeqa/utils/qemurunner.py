@@ -238,13 +238,13 @@ class QemuRunner:
                 # because is possible to have control characters
                 cmdline = re_control_char.sub(' ', cmdline)
             try:
-                ips = re.findall("((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
+                ips = re.findall(r"((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
                 self.ip = ips[0]
                 self.server_ip = ips[1]
                 self.logger.debug("qemu cmdline used:\n{}".format(cmdline))
             except (IndexError, ValueError):
                 # Try to get network configuration from runqemu output
-                match = re.match('.*Network configuration: ([0-9.]+)::([0-9.]+):([0-9.]+)$.*',
+                match = re.match(r'.*Network configuration: ([0-9.]+)::([0-9.]+):([0-9.]+)$.*',
                                  out, re.MULTILINE|re.DOTALL)
                 if match:
                     self.ip, self.server_ip, self.netmask = match.groups()
@@ -331,14 +331,14 @@ class QemuRunner:
         # If we are not able to login the tests can continue
         try:
             (status, output) = self.run_serial("root\n", raw=True)
-            if re.search("root@[a-zA-Z0-9\-]+:~#", output):
+            if re.search(r"root@[a-zA-Z0-9\-]+:~#", output):
                 self.logged = True
                 self.logger.debug("Logged as root in serial console")
                 if netconf:
                     # configure guest networking
                     cmd = "ifconfig eth0 %s netmask %s up\n" % (self.ip, self.netmask)
                     output = self.run_serial(cmd, raw=True)[1]
-                    if re.search("root@[a-zA-Z0-9\-]+:~#", output):
+                    if re.search(r"root@[a-zA-Z0-9\-]+:~#", output):
                         self.logger.debug("configured ip address %s", self.ip)
                     else:
                         self.logger.debug("Couldn't configure guest networking")
@@ -444,7 +444,7 @@ class QemuRunner:
                 if answer:
                     data += answer.decode('utf-8')
                     # Search the prompt to stop
-                    if re.search("[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
+                    if re.search(r"[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
                         break
                 else:
                     raise Exception("No data on serial console socket")
