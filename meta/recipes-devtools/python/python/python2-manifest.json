@@ -966,6 +966,7 @@
             "core"
         ], 
         "files": [
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_tkinter.so",
             "${libdir}/python2.7/lib-tk"
         ]
     }, 
