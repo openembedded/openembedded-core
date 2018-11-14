@@ -21,7 +21,7 @@ ${DISTRO_SRC_URI} \
 
 SRC_URI += "\
             file://03-fix-tkinter-detection.patch \
-            file://avoid_warning_about_tkinter.patch \
+            ${@bb.utils.contains('PACKAGECONFIG', 'tk', '', 'file://avoid_warning_about_tkinter.patch', d)} \
             file://cgi_py.patch \
             file://host_include_contamination.patch \
             file://python-3.3-multilib.patch \
@@ -82,6 +82,7 @@ PACKAGECONFIG ??= "readline ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-userm
 PACKAGECONFIG[readline] = ",,readline"
 # Use profile guided optimisation by running PyBench inside qemu-user
 PACKAGECONFIG[pgo] = "--enable-optimizations"
+PACKAGECONFIG[tk] = ",,tk"
 
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
@@ -246,7 +247,7 @@ PACKAGES += "${PN}-man"
 FILES_${PN}-man = "${datadir}/man"
 
 RDEPENDS_${PN}-ptest = "${PN}-modules ${PN}-tests unzip bzip2"
-
+RDEPENDS_${PN}-tkinter += "${@bb.utils.contains('PACKAGECONFIG', 'tk', 'tk', '', d)}"
 RDEPENDS_${PN}-dev = ""
 
 BBCLASSEXTEND = "nativesdk"

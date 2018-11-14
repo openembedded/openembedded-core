@@ -12,7 +12,7 @@ file://130-readline-setup.patch \
 file://150-fix-setupterm.patch \
 file://python-3.3-multilib.patch \
 file://03-fix-tkinter-detection.patch \
-file://avoid_warning_about_tkinter.patch \
+${@bb.utils.contains('PACKAGECONFIG', 'tk', '', 'file://avoid_warning_about_tkinter.patch', d)} \
 file://0001-h2py-Fix-issue-13032-where-it-fails-with-UnicodeDeco.patch \
 file://sysroot-include-headers.patch \
 file://unixccompiler.patch \
@@ -28,6 +28,7 @@ file://0003-bpo-32947-Fixes-for-TLS-1.3-and-OpenSSL-1.1.1-GH-876.patch \
 file://0004-bpo-33570-TLS-1.3-ciphers-for-OpenSSL-1.1.1-GH-6976.patch \
 file://0005-bpo-30714-ALPN-changes-for-OpenSSL-1.1.0f-2305.patch \
 "
+PACKAGECONFIG[tk] = ",,tk-native"
 
 EXTRANATIVEPATH += "bzip2-native"
 DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native gdbm-native"
