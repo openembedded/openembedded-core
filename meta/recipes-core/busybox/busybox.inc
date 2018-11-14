@@ -455,4 +455,4 @@ pkg_prerm_${PN}-syslog () {
 	fi
 }
 
-RPROVIDES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', '/bin/sh', '', d)}"
+RPROVIDES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', '/bin/sh /bin/ash', '', d)}"
