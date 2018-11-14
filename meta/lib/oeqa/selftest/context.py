@@ -5,7 +5,7 @@ import os
 import time
 import glob
 import sys
-import imp
+import importlib
 import signal
 from shutil import copyfile
 from random import choice
@@ -183,7 +183,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                     self.tc.logger.info("\t%s" % l)
 
                 sys.path.extend(layer_libdirs)
-                imp.reload(oeqa.selftest)
+                importlib.reload(oeqa.selftest)
 
         _check_required_env_variables(["BUILDDIR"])
         _check_presence_meta_selftest()
