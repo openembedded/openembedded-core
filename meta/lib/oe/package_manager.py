@@ -320,7 +320,7 @@ class PkgsList(object, metaclass=ABCMeta):
 
 class RpmPkgsList(PkgsList):
     def list_pkgs(self):
-        return RpmPM(self.d, self.rootfs_dir, self.d.getVar('TARGET_VENDOR')).list_installed()
+        return RpmPM(self.d, self.rootfs_dir, self.d.getVar('TARGET_VENDOR'), needfeed=False).list_installed()
 
 class OpkgPkgsList(PkgsList):
     def __init__(self, d, rootfs_dir, config_file):
@@ -724,7 +724,8 @@ class RpmPM(PackageManager):
                  arch_var=None,
                  os_var=None,
                  rpm_repo_workdir="oe-rootfs-repo",
-                 filterbydependencies=True):
+                 filterbydependencies=True,
+                 needfeed=True):
         super(RpmPM, self).__init__(d, target_rootfs)
         self.target_vendor = target_vendor
         self.task_name = task_name
@@ -737,8 +738,9 @@ class RpmPM(PackageManager):
         else:
             self.primary_arch = self.d.getVar('MACHINE_ARCH')
 
-        self.rpm_repo_dir = oe.path.join(self.d.getVar('WORKDIR'), rpm_repo_workdir)
-        create_packages_dir(self.d, oe.path.join(self.rpm_repo_dir, "rpm"), d.getVar("DEPLOY_DIR_RPM"), "package_write_rpm", filterbydependencies)
+        if needfeed:
+            self.rpm_repo_dir = oe.path.join(self.d.getVar('WORKDIR'), rpm_repo_workdir)
+            create_packages_dir(self.d, oe.path.join(self.rpm_repo_dir, "rpm"), d.getVar("DEPLOY_DIR_RPM"), "package_write_rpm", filterbydependencies)
 
         self.saved_packaging_data = self.d.expand('${T}/saved_packaging_data/%s' % self.task_name)
         if not os.path.exists(self.d.expand('${T}/saved_packaging_data')):
@@ -967,10 +969,11 @@ class RpmPM(PackageManager):
         standard_dnf_args = ["-v", "--rpmverbosity=debug", "-y",
                              "-c", oe.path.join(self.target_rootfs, "etc/dnf/dnf.conf"),
                              "--setopt=reposdir=%s" %(oe.path.join(self.target_rootfs, "etc/yum.repos.d")),
-                             "--repofrompath=oe-repo,%s" % (self.rpm_repo_dir),
                              "--installroot=%s" % (self.target_rootfs),
                              "--setopt=logdir=%s" % (self.d.getVar('T'))
                             ]
+        if hasattr(self, "rpm_repo_dir"):
+            standard_dnf_args.append("--repofrompath=oe-repo,%s" % (self.rpm_repo_dir))
         cmd = [dnf_cmd] + standard_dnf_args + dnf_args
         bb.note('Running %s' % ' '.join(cmd))
         try:
