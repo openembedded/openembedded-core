@@ -26,6 +26,8 @@ import string
 import subprocess
 import sys
 import tempfile
+import importlib
+from importlib import machinery
 
 def logger_create(name, stream=None):
     logger = logging.getLogger(name)
@@ -50,12 +52,9 @@ def load_plugins(logger, plugins, pluginpath):
 
     def load_plugin(name):
         logger.debug('Loading plugin %s' % name)
-        fp, pathname, description = imp.find_module(name, [pluginpath])
-        try:
-            return imp.load_module(name, fp, pathname, description)
-        finally:
-            if fp:
-                fp.close()
+        spec = importlib.machinery.PathFinder.find_spec(name, path=[pluginpath] )
+        if spec:
+            return spec.loader.load_module()
 
     def plugin_name(filename):
         return os.path.splitext(os.path.basename(filename))[0]
