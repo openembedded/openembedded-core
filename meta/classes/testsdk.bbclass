@@ -23,7 +23,7 @@ def get_sdk_configuration(d, test_type):
                     'IMAGE_BASENAME': d.getVar("IMAGE_BASENAME"),
                     'IMAGE_PKGTYPE': d.getVar("IMAGE_PKGTYPE"),
                     'STARTTIME': d.getVar("DATETIME"),
-                    'HOST_DISTRO': ('-'.join(platform.linux_distribution())).replace(' ', '-'),
+                    'HOST_DISTRO': oe.lsb.distro_identifier().replace(' ', '-'),
                     'LAYERS': get_layers(d.getVar("BBLAYERS"))}
     return configuration
 get_sdk_configuration[vardepsexclude] = "DATETIME"
