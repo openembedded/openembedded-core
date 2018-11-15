@@ -221,13 +221,13 @@ def add_layer(bblayersconf, layer, layers, logger):
 
     return True
 
-def check_command(error_msg, cmd):
+def check_command(error_msg, cmd, cwd=None):
     '''
     Run a command under a shell, capture stdout and stderr in a single stream,
     throw an error when command returns non-zero exit code. Returns the output.
     '''
 
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd)
     output, _ = p.communicate()
     if p.returncode:
         msg = "%s\nCommand: %s\nOutput:\n%s" % (error_msg, cmd, output.decode('utf-8'))
@@ -257,7 +257,7 @@ def get_signatures(builddir, failsafe=False, machine=None):
         os.unlink(sigs_file)
     try:
         check_command('Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.',
-                      cmd)
+                      cmd, builddir)
     except RuntimeError as ex:
         if failsafe and os.path.exists(sigs_file):
             # Ignore the error here. Most likely some recipes active
