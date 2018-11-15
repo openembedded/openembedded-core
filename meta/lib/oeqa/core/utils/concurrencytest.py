@@ -115,6 +115,9 @@ class ConcurrentTestSuite(unittest.TestSuite):
             for thread, process_result in threads.values():
                 process_result.stop()
             raise
+        finally:
+            for test in tests:
+                test[0]._stream.close()
 
     def _run_test(self, test, process_result, queue):
         try:
