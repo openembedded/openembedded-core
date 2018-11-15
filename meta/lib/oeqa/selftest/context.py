@@ -11,6 +11,7 @@ from shutil import copyfile
 from random import choice
 
 import oeqa
+import oe
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 from oeqa.core.exception import OEQAPreRun, OEQATestNotFound
@@ -223,7 +224,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         configuration = {'TEST_TYPE': 'oeselftest',
                         'STARTTIME': args.test_start_time,
                         'MACHINE': self.tc.td["MACHINE"],
-                        'HOST_DISTRO': ('-'.join(platform.linux_distribution())).replace(' ', '-'),
+                        'HOST_DISTRO': oe.lsb.distro_identifier().replace(' ', '-'),
                         'HOST_NAME': metadata['hostname'],
                         'LAYERS': metadata['layers']}
         return configuration
