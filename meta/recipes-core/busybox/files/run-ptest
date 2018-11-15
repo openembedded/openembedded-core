@@ -2,6 +2,7 @@
 
 current_dir=$(readlink -f $0)
 export bindir=$(dirname $current_dir)
+export SKIP_KNOWN_BUGS=1
 
 cd testsuite || exit 1
 ./runtest -v | sed -r 's/^(SKIPPED|UNTESTED):/SKIP:/'
