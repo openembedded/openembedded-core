@@ -15,11 +15,10 @@ COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
-           file://0001-Fix-net-expose-sk-wmem-in-sock_exceed_buf_limit-trac.patch \
-"
+           "
 
-SRC_URI[md5sum] = "d3cb4520948083bf1573a2e4cb7406aa"
-SRC_URI[sha256sum] = "f049428d3d131e103a7a7038d184731bf7bcdce00503fc19a2c9b5693ecbb3b5"
+SRC_URI[md5sum] = "54bd9fca61487bbec1b3fca2f2213c98"
+SRC_URI[sha256sum] = "fe1d269bca723e8948af871c322c37d3900e647cdc5eb3efbe821e434beee44c"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
