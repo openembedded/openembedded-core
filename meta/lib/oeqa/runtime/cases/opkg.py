@@ -18,7 +18,7 @@ class OpkgRepoTest(OpkgTest):
     @classmethod
     def setUp(cls):
         service_repo = os.path.join(cls.tc.td['DEPLOY_DIR_IPK'], 'all')
-        cls.repo_server = HTTPService(service_repo, cls.tc.target.server_ip)
+        cls.repo_server = HTTPService(service_repo, cls.tc.target.server_ip, logger=cls.tc.logger)
         cls.repo_server.start()
 
     @classmethod
