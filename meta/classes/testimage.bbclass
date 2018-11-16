@@ -39,9 +39,7 @@ BASICTESTSUITE = "\
     ping date df ssh scp python perl gi ptest parselogs \
     logrotate connman systemd oe_syslog pam stap ldd xorg \
     kernelmodule gcc buildcpio buildlzip buildgalculator \
-    ${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'dnf rpm', '', d)} \
-    ${@bb.utils.contains('IMAGE_PKGTYPE', 'ipk', 'opkg', '', d)} \
-    ${@bb.utils.contains('IMAGE_PKGTYPE', 'deb', 'apt', '', d)}"
+    dnf rpm opkg apt"
 
 DEFAULT_TEST_SUITES = "${BASICTESTSUITE}"
 
