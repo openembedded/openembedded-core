@@ -85,7 +85,11 @@ python(){
     import json
     pythondir = d.getVar('THISDIR',True)
     with open(pythondir+'/python3/python3-manifest.json') as manifest_file:
-        python_manifest=json.load(manifest_file)
+        manifest_str =  manifest_file.read()
+        json_start = manifest_str.find('# EOC') + 6
+        manifest_file.seek(json_start)
+        manifest_str = manifest_file.read()
+        python_manifest = json.loads(manifest_str)
 
     rprovides = d.getVar('RPROVIDES').split()
 
