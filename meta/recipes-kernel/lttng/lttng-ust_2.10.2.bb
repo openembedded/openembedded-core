@@ -23,8 +23,8 @@ PE = "2"
 SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
            file://lttng-ust-doc-examples-disable.patch \
           "
-SRC_URI[md5sum] = "4863cc2f9f0a070b42438bb646bbba06"
-SRC_URI[sha256sum] = "07cc3c0b71e7b77f1913d5b7f340a78a9af414440e4662712aef2d635b88ee9d"
+SRC_URI[md5sum] = "a95333f76e2986113154b8193f5cfca3"
+SRC_URI[sha256sum] = "c4ca22b904eb08817b313a73d499e1b217ffee1f862156d0d52865317486c045"
 
 CVE_PRODUCT = "ust"
 
