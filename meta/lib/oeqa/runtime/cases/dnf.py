@@ -55,7 +55,7 @@ class DnfRepoTest(DnfTest):
     @classmethod
     def setUpClass(cls):
         cls.repo_server = HTTPService(os.path.join(cls.tc.td['WORKDIR'], 'oe-testimage-repo'),
-                                      cls.tc.target.server_ip)
+                                      cls.tc.target.server_ip, logger=cls.tc.logger)
         cls.repo_server.start()
 
     @classmethod
