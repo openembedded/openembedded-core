@@ -2,7 +2,6 @@ require pseudo.inc
 
 SRC_URI = "git://git.yoctoproject.org/pseudo \
            file://0001-configure-Prune-PIE-flags.patch \
-           file://libm.patch \
            file://fallback-passwd \
            file://fallback-group \
            file://moreretries.patch \
