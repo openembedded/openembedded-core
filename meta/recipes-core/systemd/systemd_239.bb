@@ -33,6 +33,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-core-when-deserializing-state-always-use-read_line-L.patch \
            file://0001-chown-recursive-let-s-rework-the-recursive-logic-to-.patch \
            file://0001-dhcp6-make-sure-we-have-enough-space-for-the-DHCP6-o.patch \
+           file://0001-Revert-sysctl.d-request-ECN-on-both-in-and-outgoing-.patch \
            "
 
 # patches made for musl are only applied on TCLIBC is musl
