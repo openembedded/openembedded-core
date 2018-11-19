@@ -18,11 +18,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0010-kexec-ARM-Fix-add_buffer_phys_virt-align-issue.patch \
            file://kexec-x32.patch \
            file://0001-Disable-PIE-during-link.patch \
-           file://0001-kexec-fix-for-Unhandled-rela-relocation-R_X86_64_PLT.patch \
            "
 
-SRC_URI[md5sum] = "8e071ca473694a71e4ae60ed7ef6f377"
-SRC_URI[sha256sum] = "450c87ba048641eb05f9717f5567aca57f063c266149ae663b58a34e5852deaf"
+SRC_URI[md5sum] = "43845327af54b002aaebd5b8076c7bd7"
+SRC_URI[sha256sum] = "594ac13ea437c70b0d5f0eaf5075b93422b05c23c2a5e21991d2442bbd202d86"
 
 inherit autotools update-rc.d systemd
 
