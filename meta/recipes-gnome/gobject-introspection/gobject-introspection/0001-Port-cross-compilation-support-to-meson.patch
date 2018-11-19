@@ -1,0 +1,159 @@
+From e8ce42c5cb54847517fe8fbe50bbaea452618218 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 15 Nov 2018 15:10:05 +0100
+Subject: [PATCH] Port cross-compilation support to meson
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ gir/meson.build   | 59 ++++++++++++++++++++++++++++++++++-------------
+ meson.build       |  4 +++-
+ meson_options.txt | 20 ++++++++++++++++
+ 3 files changed, 66 insertions(+), 17 deletions(-)
+
+diff --git a/gir/meson.build b/gir/meson.build
+index 607bbc4..c0e221b 100644
+--- a/gir/meson.build
++++ b/gir/meson.build
+@@ -37,15 +37,27 @@ typelibdir = join_paths(get_option('libdir'), 'girepository-1.0')
+ girdir = join_paths(get_option('datadir'), 'gir-1.0')
+ install_data(gir_files, install_dir: girdir)
+ 
+-scanner_command = [
+-  python,
+-  girscanner,
+-  '--output=@OUTPUT@',
+-  '--no-libtool',
+-  '--reparse-validate',
+-  '--add-include-path', join_paths(meson.current_build_dir()),
+-  '--add-include-path', join_paths(meson.current_source_dir()),
+-]
++if get_option('enable-host-gi')
++    scanner_command = [
++      'g-ir-scanner',
++      '--output=@OUTPUT@',
++      '--no-libtool',
++      '--reparse-validate',
++      '--add-include-path', join_paths(meson.current_build_dir()),
++      '--add-include-path', join_paths(meson.current_source_dir()),
++    ]
++else
++    scanner_command = [
++      python,
++      girscanner,
++      '--output=@OUTPUT@',
++      '--no-libtool',
++      '--reparse-validate',
++      '--add-include-path', join_paths(meson.current_build_dir()),
++      '--add-include-path', join_paths(meson.current_source_dir()),
++    ]
++endif
++
+ 
+ dep_type = glib_dep.type_name()
+ if dep_type == 'internal'
+@@ -58,6 +70,12 @@ if dep_type == 'internal'
+                       '--extra-library=glib-2.0', '--extra-library=gobject-2.0']
+ endif
+ 
++if get_option('enable-gi-cross-wrapper') != ''
++  scanner_command += ['--use-binary-wrapper=' + get_option('enable-gi-cross-wrapper')]
++endif
++if get_option('enable-gi-ldd-wrapper') != ''
++  scanner_command += ['--use-ldd-wrapper=' + get_option('enable-gi-ldd-wrapper')]
++endif
+ # Take a glob and print to newlines
+ globber = '''
+ from glob import glob
+@@ -84,8 +102,8 @@ glib_command = scanner_command + [
+ 
+ if dep_type == 'pkgconfig'
+   glib_command += ['--external-library', '--pkg=glib-2.0']
+-  glib_libdir = glib_dep.get_pkgconfig_variable('libdir')
+-  glib_incdir = join_paths(glib_dep.get_pkgconfig_variable('includedir'), 'glib-2.0')
++  glib_libdir = get_option('pkgconfig-sysroot-path') + glib_dep.get_pkgconfig_variable('libdir')
++  glib_incdir = get_option('pkgconfig-sysroot-path') + join_paths(glib_dep.get_pkgconfig_variable('includedir'), 'glib-2.0')
+   glib_libincdir = join_paths(glib_libdir, 'glib-2.0', 'include')
+   glib_files += join_paths(glib_incdir, 'gobject', 'glib-types.h')
+   glib_files += join_paths(glib_libincdir, 'glibconfig.h')
+@@ -339,7 +357,7 @@ endforeach
+ if giounix_dep.found()
+   if dep_type == 'pkgconfig'
+     gio_command += ['--pkg=gio-unix-2.0']
+-    giounix_includedir = join_paths(giounix_dep.get_pkgconfig_variable('includedir'), 'gio-unix-2.0')
++    giounix_includedir = get_option('pkgconfig-sysroot-path') + join_paths(giounix_dep.get_pkgconfig_variable('includedir'), 'gio-unix-2.0')
+     # Get the installed gio-unix header list
+     ret = run_command(python, '-c', globber.format(join_paths(giounix_includedir, 'gio', '*.h')))
+     if ret.returncode() != 0
+@@ -417,15 +435,24 @@ gir_files += custom_target('gir-girepository',
+   ]
+ )
+ 
++if get_option('enable-gi-cross-wrapper') != ''
++    gircompiler_command = [get_option('enable-gi-cross-wrapper'), gircompiler.full_path(), '-o', '@OUTPUT@', '@INPUT@',
++              '--includedir', meson.current_build_dir(),
++              '--includedir', meson.current_source_dir(),
++    ]
++else
++    gircompiler_command = [gircompiler, '-o', '@OUTPUT@', '@INPUT@',
++              '--includedir', meson.current_build_dir(),
++              '--includedir', meson.current_source_dir(),
++    ]
++endif
++
+ foreach gir : gir_files
+   custom_target('generate-typelib-@0@'.format(gir).underscorify(),
+     input: gir,
+     output: '@BASENAME@.typelib',
+     depends: [gobject_gir, ],
+-    command: [gircompiler, '-o', '@OUTPUT@', '@INPUT@',
+-              '--includedir', meson.current_build_dir(),
+-              '--includedir', meson.current_source_dir(),
+-    ],
++    command: gircompiler_command,
+     install: true,
+     install_dir: typelibdir,
+   )
+diff --git a/meson.build b/meson.build
+index 7ec9532..9e20da5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -76,7 +76,9 @@ libffi_dep = dependency('libffi',
+ subdir('girepository')
+ subdir('tools')
+ subdir('giscanner')
+-subdir('gir')
++if get_option('enable-introspection-data') == true
++    subdir('gir')
++endif
+ subdir('examples')
+ subdir('docs')
+ subdir('tests')
+diff --git a/meson_options.txt b/meson_options.txt
+index 49726be..3e17c78 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -21,3 +21,23 @@ option('cairo-libname', type: 'string',
+ option('python', type: 'string', value: 'python3',
+   description: 'Path or name of the Python interpreter to build for'
+ )
++
++option('enable-host-gi', type: 'boolean', value : false,
++  description: 'Use gobject introspection tools installed in the host system (useful when cross-compiling)'
++)
++
++option('enable-gi-cross-wrapper', type: 'string',
++  description: 'Use a wrapper to run gicompiler and binaries produced by giscanner (useful when cross-compiling)'
++)
++
++option('enable-gi-ldd-wrapper', type: 'string',
++  description: 'Use a ldd wrapper instead of system ldd command in giscanner (useful when cross-compiling)'
++)
++
++option('enable-introspection-data', type: 'boolean', value : false,
++  description: 'Build introspection data (.gir and .typelib files) in addition to library and tools'
++)
++
++option('pkgconfig-sysroot-path', type: 'string',
++  description: 'Specify a sysroot path to prepend to pkgconfig output (useful when cross-compiling)'
++)
