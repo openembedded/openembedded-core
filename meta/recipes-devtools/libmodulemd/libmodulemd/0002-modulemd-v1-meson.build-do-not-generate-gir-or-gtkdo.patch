@@ -1,0 +1,65 @@
+From b6c8039afe016d25c17cdf1b2462d6a53d49fad1 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 6 Nov 2018 13:43:00 +0100
+Subject: [PATCH] modulemd/v1/meson.build: do not generate gir or gtkdoc
+
+Both of these really need a configuration option.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+---
+ meson.build             |  1 -
+ modulemd/v1/meson.build | 20 --------------------
+ 2 files changed, 21 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index db7c6a1..e0ea61a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -49,7 +49,6 @@ gnome = import('gnome')
+ pkg = import('pkgconfig')
+ gobject = dependency('gobject-2.0')
+ yaml = dependency('yaml-0.1')
+-gtkdoc = dependency('gtk-doc')
+ 
+ spec_tmpl = find_program('spec_tmpl.sh')
+ 
+diff --git a/modulemd/v1/meson.build b/modulemd/v1/meson.build
+index 38e0d15..d59e519 100644
+--- a/modulemd/v1/meson.build
++++ b/modulemd/v1/meson.build
+@@ -311,19 +311,6 @@ if valgrind.found()
+           timeout : 300)
+ endif
+ 
+-gnome.generate_gir(
+-    modulemd_v1_lib,
+-    sources : modulemd_v1_srcs + modulemd_v1_hdrs,
+-    nsversion : '.'.join([libmodulemd_version_array[0], '0']),
+-    namespace : 'Modulemd',
+-    symbol_prefix : 'modulemd_',
+-    identifier_prefix : 'Modulemd',
+-    includes : [
+-        'GObject-2.0',
+-    ],
+-    install : true,
+-    )
+-
+ xcdata = configuration_data()
+ xcdata.set('VERSION', libmodulemd_version)
+ configure_file(
+@@ -339,13 +326,6 @@ configure_file(
+   configuration : cdata
+ )
+ 
+-gnome.gtkdoc(
+-    'modulemd-1.0',
+-    install_dir: 'modulemd-1.0',
+-    src_dir : './',
+-    main_xml : 'modulemd-docs.xml',
+-    install : true)
+-
+ pkg.generate(
+     libraries : modulemd_v1_lib,
+     subdirs : v1_header_path,
