@@ -10,11 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "glib-2.0"
 
+GNOMEBASEBUILDCLASS = "meson"
+inherit gnomebase lib_package gobject-introspection gtk-doc gettext ptest-gnome
+
+SRC_URI += "file://run-ptest"
 SRC_URI[archive.md5sum] = "35107e23a7bbbc70f31c34f7b9adf1c3"
 SRC_URI[archive.sha256sum] = "2d7709a44749c7318599a6829322e081915bdc73f5be5045882ed120bb686dc8"
-
-GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase lib_package gobject-introspection gtk-doc gettext
 
 # This builds both API docs (via gtk-doc) and manpages
 GTKDOC_ENABLE_FLAG = "-Ddocs=true"
@@ -29,8 +30,9 @@ EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'T
                                                                                     '${GI_DISABLE_FLAG}', d)} "
 
 do_install_append() {
-    # FIXME: these need to be provided via ptest
-    rm -rf ${D}${datadir}/installed-tests ${D}${libexecdir}
+	if ! ${@bb.utils.contains('PTEST_ENABLED', '1', 'true', 'false', d)}; then
+		rm -rf ${D}${datadir}/installed-tests ${D}${libexecdir}
+	fi
 }
 
 BBCLASSEXTEND = "native nativesdk"
