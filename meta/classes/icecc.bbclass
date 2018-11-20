@@ -68,14 +68,22 @@ ICECC_ENV_DEBUG ??= ""
 #
 # libgcc-initial - fails with CPP sanity check error if host sysroot contains
 #                  cross gcc built for another target tune/variant
+# target-sdk-provides-dummy - ${HOST_PREFIX} is empty which triggers the "NULL
+#                             prefix" error.
 ICECC_SYSTEM_PACKAGE_BL += "\
     libgcc-initial \
+    target-sdk-provides-dummy \
     "
 
 # "system" classes that should be blacklisted. When adding new entry, please
 # document why (how it failed) so that we can re-evaluate it later
 #
+# image - Image aren't compiling, but the testing framework for images captures
+#         PARALLEL_MAKE as part of the test environment. Many tests won't use
+#         icecream, but leaving the high level of parallelism can cause them to
+#         consume an unnecessary amount of resources.
 ICECC_SYSTEM_CLASS_BL += "\
+    image \
     "
 
 def icecc_dep_prepend(d):
