@@ -1,8 +1,8 @@
 SUMMARY = "Package manager forked from Yum, using libsolv as a dependency resolver"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://PACKAGE-LICENSING;md5=bfc29916e11321be06924c4fb096fdcc \
-                   "
+                    file://PACKAGE-LICENSING;md5=4a0548e303dbc77f067335b4d688e745 \
+                    "
 
 SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0001-Corretly-install-tmpfiles.d-configuration.patch \
@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0030-Run-python-scripts-using-env.patch \
            "
 
-SRCREV = "564c44667c7014843fa6f1732621093114ec59b2"
+SRCREV = "6fdf0e8cc714c92ee08bd4db9412d4c587ffafe9"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
