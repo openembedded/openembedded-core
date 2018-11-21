@@ -43,7 +43,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            "
 
 PE = "1"
-SRCREV = "753f6941dc32e94047b7cfe713ddd604a810b4db"
+SRCREV = "4a9440006398646583f0d9ae1837dad2875013aa"
 
 S = "${WORKDIR}/git"
 
