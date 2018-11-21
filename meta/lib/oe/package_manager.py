@@ -864,7 +864,7 @@ class RpmPM(PackageManager):
 
         failed_scriptlets_pkgnames = collections.OrderedDict()
         for line in output.splitlines():
-            if line.startswith("Non-fatal POSTIN scriptlet failure in rpm package"):
+            if line.startswith("Error in POSTIN scriptlet in rpm package"):
                 failed_scriptlets_pkgnames[line.split()[-1]] = True
 
         if len(failed_scriptlets_pkgnames) > 0:
