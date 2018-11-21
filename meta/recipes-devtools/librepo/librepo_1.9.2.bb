@@ -7,11 +7,11 @@ SRC_URI = "git://github.com/rpm-software-management/librepo.git \
            file://0004-Set-gpgme-variables-with-pkg-config-not-with-cmake-m.patch \
            "
 
-SRCREV = "7b9b7bf388f3f059529c6f50c40b30919fef30f9"
+SRCREV = "313a7644d03f9657ee0c7aa747d1db260f8e2fc0"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "curl expat glib-2.0 openssl attr gpgme"
+DEPENDS = "curl glib-2.0 openssl attr gpgme libxml2"
 
 inherit cmake distutils3-base pkgconfig
 
