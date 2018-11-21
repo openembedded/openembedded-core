@@ -20,13 +20,10 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
            file://0001-Fix-build-with-musl.patch \
            file://detect-gstreamer-gl.patch \
-           file://0012-soup-Forward-declare-URL-class.patch \
-           file://0001-Fix-PaintingData-has-no-member-named-lightVector-on-.patch \
-           file://0001-webkitgtk-fix-CVE-2017-17821.patch \
            "
 
-SRC_URI[md5sum] = "72a05f6a4dc1c78b079590a8fd280401"
-SRC_URI[sha256sum] = "15c0f8d26e9605afe0948d161ba5fd82efee8eda2debd409fd40a440ac3af990"
+SRC_URI[md5sum] = "6dae6837c884a25413fb1d4527c9894a"
+SRC_URI[sha256sum] = "9dfd542902953be9af8ff32bd37fe662ca3d75f7348514ebac15c6252a6ccd72"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
