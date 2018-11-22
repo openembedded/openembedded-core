@@ -9,13 +9,11 @@ inherit gnomebase gettext systemd upstream-version-is-even
 
 DEPENDS = "glib-2.0 libxml2-native glib-2.0-native"
 
-SRC_URI[archive.md5sum] = "ae896a8a2364e18c07fafa9573202f59"
-SRC_URI[archive.sha256sum] = "29cd2c4be277f00698dce48259219557c4fddc2c01254b8fac95900a8c663f63"
+SRC_URI[archive.md5sum] = "80cb47906eced2e7b9976bf00deec323"
+SRC_URI[archive.sha256sum] = "e90878e5a509bd79d170a7a51d47cc5508ab1363afaf0d97654373dfd9c8ba0b"
 SRC_URI += " \
            file://define-NT_GNU_BUILD_ID.patch \
            file://0001-Do-not-build-anything-in-help-as-it-requires-itstool.patch \
-           file://wordsize.patch \
-           file://0001-fix-non-literal-format-string-issues.patch \
            "
 RECIPE_NO_UPDATE_REASON = "Waiting for resolution of https://bugzilla.gnome.org/show_bug.cgi?id=794625"
 
