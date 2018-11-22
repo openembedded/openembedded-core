@@ -10,8 +10,8 @@ SRC_URI = "${GNU_MIRROR}/gdbm/gdbm-${PV}.tar.gz \
            file://ptest.patch \
           "
 
-SRC_URI[md5sum] = "e316f8e4a3e7e4f23955be65d54fec48"
-SRC_URI[sha256sum] = "b8822cb4769e2d759c828c06f196614936c88c141c3132b18252fe25c2b635ce"
+SRC_URI[md5sum] = "988dc82182121c7570e0cb8b4fcd5415"
+SRC_URI[sha256sum] = "86e613527e5dba544e73208f42b78b7c022d4fa5a6d5498bf18c8d6f745b91dc"
 
 inherit autotools gettext texinfo lib_package ptest
 
