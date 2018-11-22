@@ -128,6 +128,10 @@ def get_source_date_epoch_from_youngest_file(d, sourcedir):
         bb.debug(1, "Newest file found: %s" % newest_file)
     return source_date_epoch
 
+def fixed_source_date_epoch():
+    bb.debug(1, "No tarball or git repo found to determine SOURCE_DATE_EPOCH")
+    return 0
+
 python do_create_source_date_epoch_stamp() {
     epochfile = d.getVar('SDE_FILE')
     if os.path.isfile(epochfile):
@@ -139,11 +143,8 @@ python do_create_source_date_epoch_stamp() {
         get_source_date_epoch_from_git(d, sourcedir) or
         get_source_date_epoch_from_known_files(d, sourcedir) or
         get_source_date_epoch_from_youngest_file(d, sourcedir) or
-        0       # Last resort
+        fixed_source_date_epoch()       # Last resort
     )
-    if source_date_epoch == 0:
-        # empty folder, not a single file ...
-        bb.debug(1, "No files found to determine SOURCE_DATE_EPOCH")
 
     bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
     bb.utils.mkdirhier(d.getVar('SDE_DIR'))
