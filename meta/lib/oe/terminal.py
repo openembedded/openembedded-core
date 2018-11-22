@@ -296,6 +296,8 @@ def check_terminal_version(terminalName):
             vernum = ver.split(' ')[-1]
         if ver.startswith('tmux'):
             vernum = ver.split()[-1]
+        if ver.startswith('tmux next-'):
+            vernum = ver.split()[-1][5:]
     return vernum
 
 def distro_name():
