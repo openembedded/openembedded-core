@@ -4,6 +4,7 @@ SECTION = "devel"
 DEPENDS = "expat zlib ncurses virtual/libiconv ${LTTNGUST} bison-native"
 
 LTTNGUST = "lttng-ust"
+LTTNGUST_arc = ""
 LTTNGUST_aarch64 = ""
 LTTNGUST_riscv64 = ""
 LTTNGUST_mipsarch = ""
