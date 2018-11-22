@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0030-Run-python-scripts-using-env.patch \
            "
 
-SRCREV = "6fdf0e8cc714c92ee08bd4db9412d4c587ffafe9"
+SRCREV = "689a4c515738226f3dc85edb2035d23233ff41d8"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
