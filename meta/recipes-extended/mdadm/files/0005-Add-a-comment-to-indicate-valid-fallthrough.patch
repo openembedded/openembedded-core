@@ -1,7 +1,7 @@
-From 09014233bf10900f7bd8390b3b64ff82bca45222 Mon Sep 17 00:00:00 2001
+From 0c2c8ae6b3a1fb0f611f9795953a7a6ed06be38d Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 19 Apr 2017 12:04:15 -0700
-Subject: [PATCH 5/5] Add a comment to indicate valid fallthrough
+Subject: [PATCH] Add a comment to indicate valid fallthrough
 
 gcc7 warns about code with fallthroughs, this patch adds
 the comment to indicate a valid fallthrough, helps gcc7
@@ -10,9 +10,8 @@ compiler warnings
 This works in cross and native compilation case
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
-Upstream-Status: Submitted
 
+---
  Grow.c        | 4 ++++
  bitmap.c      | 8 ++++++++
  mdadm.c       | 2 ++
@@ -21,10 +20,10 @@ Upstream-Status: Submitted
  5 files changed, 16 insertions(+)
 
 diff --git a/Grow.c b/Grow.c
-index 455c5f9..27c73b1 100755
+index 4436a4d..b3116e2 100644
 --- a/Grow.c
 +++ b/Grow.c
-@@ -1257,6 +1257,7 @@ char *analyse_change(char *devname, struct mdinfo *info, struct reshape *re)
+@@ -1447,6 +1447,7 @@ char *analyse_change(char *devname, struct mdinfo *info, struct reshape *re)
  		switch (info->new_level) {
  		case 4:
  			delta_parity = 1;
@@ -32,7 +31,7 @@ index 455c5f9..27c73b1 100755
  		case 0:
  			re->level = 4;
  			re->before.layout = 0;
-@@ -1284,10 +1285,12 @@ char *analyse_change(char *devname, struct mdinfo *info, struct reshape *re)
+@@ -1474,10 +1475,12 @@ char *analyse_change(char *devname, struct mdinfo *info, struct reshape *re)
  
  	case 4:
  		info->array.layout = ALGORITHM_PARITY_N;
@@ -45,7 +44,7 @@ index 455c5f9..27c73b1 100755
  		case 4:
  			re->level = info->array.level;
  			re->before.data_disks = info->array.raid_disks - 1;
-@@ -1343,6 +1346,7 @@ char *analyse_change(char *devname, struct mdinfo *info, struct reshape *re)
+@@ -1533,6 +1536,7 @@ char *analyse_change(char *devname, struct mdinfo *info, struct reshape *re)
  		case 4:
  		case 5:
  			delta_parity = -1;
@@ -54,7 +53,7 @@ index 455c5f9..27c73b1 100755
  			re->level = 6;
  			re->before.data_disks = info->array.raid_disks - 2;
 diff --git a/bitmap.c b/bitmap.c
-index ccedfd3..a6ff091 100644
+index e38cb96..10af328 100644
 --- a/bitmap.c
 +++ b/bitmap.c
 @@ -82,13 +82,21 @@ static inline int count_dirty_bits_byte(char byte, int num_bits)
@@ -80,10 +79,10 @@ index ccedfd3..a6ff091 100644
  	}
  
 diff --git a/mdadm.c b/mdadm.c
-index c3a265b..2d06d3b 100644
+index 25a1abd..9843bc5 100644
 --- a/mdadm.c
 +++ b/mdadm.c
-@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
+@@ -155,6 +155,7 @@ int main(int argc, char *argv[])
  			    mode == CREATE || mode == GROW ||
  			    mode == INCREMENTAL || mode == MANAGE)
  				break; /* b means bitmap */
@@ -91,7 +90,7 @@ index c3a265b..2d06d3b 100644
  		case Brief:
  			c.brief = 1;
  			continue;
-@@ -828,6 +829,7 @@ int main(int argc, char *argv[])
+@@ -839,6 +840,7 @@ int main(int argc, char *argv[])
  
  		case O(INCREMENTAL,NoDegraded):
  			pr_err("--no-degraded is deprecated in Incremental mode\n");
@@ -100,11 +99,11 @@ index c3a265b..2d06d3b 100644
  			c.runstop = -1; /* --stop isn't allowed for --assemble,
  					 * so we overload slightly */
 diff --git a/super-intel.c b/super-intel.c
-index 4e466ff..00a2925 100644
+index e726987..1bc4b80 100644
 --- a/super-intel.c
 +++ b/super-intel.c
-@@ -3271,6 +3271,7 @@ static void getinfo_super_imsm_volume(struct supertype *st, struct mdinfo *info,
- 						<< SECT_PER_MB_SHIFT;
+@@ -3425,6 +3425,7 @@ static void getinfo_super_imsm_volume(struct supertype *st, struct mdinfo *info,
+ 
  			}
  		}
 +		/* fallthrough */
@@ -112,10 +111,10 @@ index 4e466ff..00a2925 100644
  			/* we could emulate the checkpointing of
  			 * 'sync_action=check' migrations, but for now
 diff --git a/util.c b/util.c
-index 32bd909..f2a4d19 100644
+index c26cf5f..61cbe23 100644
 --- a/util.c
 +++ b/util.c
-@@ -335,6 +335,7 @@ unsigned long long parse_size(char *size)
+@@ -400,6 +400,7 @@ unsigned long long parse_size(char *size)
  		switch (*c) {
  		case 'K':
  			c++;
@@ -123,6 +122,3 @@ index 32bd909..f2a4d19 100644
  		default:
  			s *= 2;
  			break;
--- 
-2.12.2
-

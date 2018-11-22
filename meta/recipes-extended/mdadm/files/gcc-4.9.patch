@@ -1,3 +1,8 @@
+From 8804bca3de1b79a7c579783b7e3a7603f43bbb48 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 2 May 2014 16:31:17 -0700
+Subject: [PATCH] mdadm: Fix build on gcc 4.9
+
 super-intel.c:5063:2: error: right-hand operand of comma expression has no effect [-Werror=unused-value]
   snprintf((char *) spare->sig, MAX_SIGNATURE_LENGTH,
   ^
@@ -7,11 +12,15 @@ make: *** [super-intel.o] Error 1
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
 
-Index: mdadm-4.0/super-intel.c
-===================================================================
---- mdadm-4.0.orig/super-intel.c
-+++ mdadm-4.0/super-intel.c
-@@ -5725,7 +5725,7 @@ static int write_super_imsm_spares(struc
+---
+ super-intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/super-intel.c b/super-intel.c
+index 6438987..e726987 100644
+--- a/super-intel.c
++++ b/super-intel.c
+@@ -5941,7 +5941,7 @@ static int write_super_imsm_spares(struct intel_super *super, int doclose)
  	spare->cache_size = mpb->cache_size;
  	spare->pwr_cycle_count = __cpu_to_le32(1);
  

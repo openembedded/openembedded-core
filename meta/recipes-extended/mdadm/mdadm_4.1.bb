@@ -16,17 +16,12 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://run-ptest \
            file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
            file://0001-include-sys-sysmacros.h-for-major-minor-defintions.patch \
-           file://0001-mdadm-Add-Wimplicit-fallthrough-0-in-Makefile.patch \
-           file://0002-mdadm-Specify-enough-length-when-write-to-buffer.patch \
-           file://0003-Replace-snprintf-with-strncpy-at-some-places-to-avoi.patch \
-           file://0004-mdadm-Forced-type-conversion-to-avoid-truncation.patch \
            file://0005-Add-a-comment-to-indicate-valid-fallthrough.patch \
            file://0001-Use-CC-to-check-for-implicit-fallthrough-warning-sup.patch \
-           file://0001-use-memmove-instead-of-memcpy-on-overlapping-region.patch \
            file://0001-Disable-gcc8-warnings.patch \
            "
-SRC_URI[md5sum] = "2cb4feffea9167ba71b5f346a0c0a40d"
-SRC_URI[sha256sum] = "1d6ae7f24ced3a0fa7b5613b32f4a589bb4881e3946a5a2c3724056254ada3a9"
+SRC_URI[md5sum] = "51bf3651bd73a06c413a2f964f299598"
+SRC_URI[sha256sum] = "ab7688842908d3583a704d491956f31324c3a5fc9f6a04653cb75d19f1934f4a"
 
 CFLAGS += "-fno-strict-aliasing"
 inherit autotools-brokensep

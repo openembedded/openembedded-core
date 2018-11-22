@@ -1,4 +1,4 @@
-From 943616e5dffb79f307e4bd9b249d316212998750 Mon Sep 17 00:00:00 2001
+From 714f2262960a7fe9e8f973629ed214023e144590 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 18 Dec 2016 08:30:51 +0000
 Subject: [PATCH] include <sys/sysmacros.h> for major/minor defintions
@@ -25,14 +25,13 @@ Fixes
 |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
-Upstream-Status: Pending
 
+---
  mdadm.h | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/mdadm.h b/mdadm.h
-index 8c8f4d1..3ce13b5 100755
+index bb943bf..79c44c6 100644
 --- a/mdadm.h
 +++ b/mdadm.h
 @@ -34,6 +34,7 @@ extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
@@ -43,6 +42,3 @@ index 8c8f4d1..3ce13b5 100755
  #include	<sys/stat.h>
  #include	<stdint.h>
  #include	<stdlib.h>
--- 
-1.9.1
-
