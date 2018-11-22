@@ -101,7 +101,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         if target_type == 'simpleremote':
             target = OESSHTarget(logger, target_ip, server_ip, **kwargs)
         elif target_type == 'qemu':
-            target = OEQemuTarget(logger, target_ip, server_ip, **kwargs)
+            target = OEQemuTarget(logger, server_ip, **kwargs)
         else:
             # XXX: This code uses the old naming convention for controllers and
             # targets, the idea it is to leave just targets as the controller
