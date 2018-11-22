@@ -6,5 +6,5 @@ SRC_URI = "git://gitlab.com/psmisc/psmisc.git;protocol=https \
            file://0001-Use-UINTPTR_MAX-instead-of-__WORDSIZE.patch \
 	   file://0001-Makefile.am-create-src-directory-before-attempting-t.patch \
            "
-SRCREV = "bd952b3063f2466ecab4ec093026cf0c4ce373c7"
+SRCREV = "44eab9a3a63394eae6b79a7ef0a042f57e0c8a8f"
 S = "${WORKDIR}/git"
