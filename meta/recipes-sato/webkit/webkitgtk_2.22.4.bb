@@ -22,8 +22,8 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://detect-gstreamer-gl.patch \
            "
 
-SRC_URI[md5sum] = "6dae6837c884a25413fb1d4527c9894a"
-SRC_URI[sha256sum] = "9dfd542902953be9af8ff32bd37fe662ca3d75f7348514ebac15c6252a6ccd72"
+SRC_URI[md5sum] = "9f08d09cfc21c761a431a545549f301a"
+SRC_URI[sha256sum] = "fab5be2883802352ae0e735dd1eff4bc18abaff7ac78689cec72eb2f611943b8"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
