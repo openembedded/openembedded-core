@@ -101,7 +101,7 @@ python () {
     if bb.data.inherits_class('native', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross', d):
         d.setVar('SSTATE_EXTRAPATH', "${NATIVELSBSTRING}/")
         d.setVar('BB_HASHFILENAME', "True ${SSTATE_PKGSPEC} ${SSTATE_SWSPEC}")
-        d.setVar('SSTATE_EXTRAPATHWILDCARD', "*/")
+        d.setVar('SSTATE_EXTRAPATHWILDCARD', "${NATIVELSBSTRING}/")
 
     unique_tasks = sorted(set((d.getVar('SSTATETASKS') or "").split()))
     d.setVar('SSTATETASKS', " ".join(unique_tasks))
