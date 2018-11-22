@@ -22,7 +22,10 @@
 # 3. Use the mtime of "known" files such as NEWS, CHANGLELOG, ...
 #    This works for well-kept repositories distributed via tarball.
 #
-# 4. If the above steps fail, use the modification time of the youngest file in the source tree.
+# 4. Use the modification time of the youngest file in the source tree, if there is one.
+#    This will be the newest file from the distribution tarball, if any.
+#
+# 5. Fall back to a fixed timestamp.
 #
 # Once the value of SOURCE_DATE_EPOCH is determined, it is stored in the recipe's SDE_FILE.
 # If none of these mechanisms are suitable, replace the do_deploy_source_date_epoch task
@@ -104,15 +107,15 @@ def get_source_date_epoch_from_git(d, sourcedir):
     return source_date_epoch
 
 def get_source_date_epoch_from_youngest_file(d, sourcedir):
+    if sourcedir == d.getVar('WORKDIR'):
+       # These sources are almost certainly not from a tarball
+       return None
+
     # Do it the hard way: check all files and find the youngest one...
     source_date_epoch = None
     newest_file = None
-    # Just in case S = WORKDIR
-    exclude = set(["build", "image", "license-destdir", "patches", "pseudo",
-                   "recipe-sysroot", "recipe-sysroot-native", "sysroot-destdir", "temp"])
     for root, dirs, files in os.walk(sourcedir, topdown=True):
         files = [f for f in files if not f[0] == '.']
-        dirs[:] = [d for d in dirs if d not in exclude]
 
         for fname in files:
             filename = os.path.join(root, fname)
