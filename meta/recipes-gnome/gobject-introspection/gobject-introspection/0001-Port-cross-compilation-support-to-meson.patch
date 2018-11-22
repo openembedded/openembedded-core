@@ -1,10 +1,11 @@
-From e8ce42c5cb54847517fe8fbe50bbaea452618218 Mon Sep 17 00:00:00 2001
+From fabf8c505181636182a357e0c6e764b752ccf468 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 15 Nov 2018 15:10:05 +0100
 Subject: [PATCH] Port cross-compilation support to meson
 
 Upstream-Status: Pending
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
 ---
  gir/meson.build   | 59 ++++++++++++++++++++++++++++++++++-------------
  meson.build       |  4 +++-
@@ -12,7 +13,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  3 files changed, 66 insertions(+), 17 deletions(-)
 
 diff --git a/gir/meson.build b/gir/meson.build
-index 607bbc4..c0e221b 100644
+index 607bbc45..c0e221b3 100644
 --- a/gir/meson.build
 +++ b/gir/meson.build
 @@ -37,15 +37,27 @@ typelibdir = join_paths(get_option('libdir'), 'girepository-1.0')
@@ -115,7 +116,7 @@ index 607bbc4..c0e221b 100644
      install_dir: typelibdir,
    )
 diff --git a/meson.build b/meson.build
-index 7ec9532..9e20da5 100644
+index 7ec95328..9e20da57 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -76,7 +76,9 @@ libffi_dep = dependency('libffi',
@@ -130,7 +131,7 @@ index 7ec9532..9e20da5 100644
  subdir('docs')
  subdir('tests')
 diff --git a/meson_options.txt b/meson_options.txt
-index 49726be..3e17c78 100644
+index 49726be6..d557a3b6 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -21,3 +21,23 @@ option('cairo-libname', type: 'string',
@@ -150,7 +151,7 @@ index 49726be..3e17c78 100644
 +  description: 'Use a ldd wrapper instead of system ldd command in giscanner (useful when cross-compiling)'
 +)
 +
-+option('enable-introspection-data', type: 'boolean', value : false,
++option('enable-introspection-data', type: 'boolean', value : true,
 +  description: 'Build introspection data (.gir and .typelib files) in addition to library and tools'
 +)
 +
