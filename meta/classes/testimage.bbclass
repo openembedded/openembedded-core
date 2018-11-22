@@ -230,6 +230,10 @@ def testimage_main(d):
     # Get use_kvm
     kvm = oe.types.qemu_use_kvm(d.getVar('QEMU_USE_KVM'), d.getVar('TARGET_ARCH'))
 
+    slirp = False
+    if d.getVar("QEMU_USE_SLIRP"):
+        slirp = True
+
     # TODO: We use the current implementatin of qemu runner because of
     # time constrains, qemu runner really needs a refactor too.
     target_kwargs = { 'machine'     : machine,
@@ -241,6 +245,7 @@ def testimage_main(d):
                       'boottime'    : boottime,
                       'bootlog'     : bootlog,
                       'kvm'         : kvm,
+                      'slirp'       : slirp,
                     }
 
     # TODO: Currently BBPATH is needed for custom loading of targets.
