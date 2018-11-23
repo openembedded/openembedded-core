@@ -1,65 +1,9 @@
-From 59ffb86bda845a68d3686afa7bc784131df678f7 Mon Sep 17 00:00:00 2001
-From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Fri, 29 Jun 2018 15:45:58 +0800
-Subject: [PATCH] mips_backend
-
 Upstream-Status: Pending [from debian]
-mips_backend.diff and rebase to 0.172
-
-http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.170-0.5.debian.tar.xz
-
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
----
- backends/Makefile.am    |   8 +-
- backends/mips_init.c    |  59 +++++++++
- backends/mips_regs.c    | 104 ++++++++++++++++
- backends/mips_reloc.def |  79 ++++++++++++
- backends/mips_retval.c  | 321 ++++++++++++++++++++++++++++++++++++++++++++++++
- backends/mips_symbol.c  |  52 ++++++++
- libebl/eblopenbackend.c |   2 +
- 7 files changed, 623 insertions(+), 2 deletions(-)
- create mode 100644 backends/mips_init.c
- create mode 100644 backends/mips_regs.c
- create mode 100644 backends/mips_reloc.def
- create mode 100644 backends/mips_retval.c
- create mode 100644 backends/mips_symbol.c
-
-diff --git a/backends/Makefile.am b/backends/Makefile.am
-index 1e4b8e9..e7bccf8 100644
---- a/backends/Makefile.am
-+++ b/backends/Makefile.am
-@@ -33,13 +33,13 @@ AM_CPPFLAGS += -I$(top_srcdir)/libebl -I$(top_srcdir)/libasm \
- 
- 
- modules = i386 sh x86_64 ia64 alpha arm aarch64 sparc ppc ppc64 s390 \
--	  tilegx m68k bpf riscv parisc
-+	  tilegx m68k bpf riscv parisc mips
- libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a    \
- 	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a    \
- 	     libebl_aarch64_pic.a libebl_sparc_pic.a libebl_ppc_pic.a \
- 	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a \
- 	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_riscv_pic.a \
--	     libebl_parisc_pic.a
-+	     libebl_parisc_pic.a libebl_mips_pic.a
- noinst_LIBRARIES = $(libebl_pic)
- noinst_DATA = $(libebl_pic:_pic.a=.so)
- 
-@@ -139,6 +139,10 @@ parisc_SRCS = parisc_init.c parisc_symbol.c parisc_regs.c parisc_retval.c
- libebl_parisc_pic_a_SOURCES = $(parisc_SRCS)
- am_libebl_parisc_pic_a_OBJECTS = $(parisc_SRCS:.c=.os)
- 
-+mips_SRCS = mips_init.c mips_symbol.c mips_regs.c mips_retval.c
-+libebl_mips_pic_a_SOURCES = $(mips_SRCS)
-+am_libebl_mips_pic_a_OBJECTS = $(mips_SRCS:.c=.os)
-+
- libebl_%.so libebl_%.map: libebl_%_pic.a $(libelf) $(libdw) $(libeu)
- 	@rm -f $(@:.so=.map)
- 	$(AM_V_at)echo 'ELFUTILS_$(PACKAGE_VERSION) { global: $*_init; local: *; };' \
-diff --git a/backends/mips_init.c b/backends/mips_init.c
-new file mode 100644
-index 0000000..975c04e
+Index: elfutils-0.175/backends/mips_init.c
+===================================================================
 --- /dev/null
-+++ b/backends/mips_init.c
++++ elfutils-0.175/backends/mips_init.c
 @@ -0,0 +1,59 @@
 +/* Initialization of mips specific backend library.
 +   Copyright (C) 2006 Red Hat, Inc.
@@ -120,11 +64,10 @@ index 0000000..975c04e
 +
 +  return MODVERSION;
 +}
-diff --git a/backends/mips_regs.c b/backends/mips_regs.c
-new file mode 100644
-index 0000000..44f86cb
+Index: elfutils-0.175/backends/mips_regs.c
+===================================================================
 --- /dev/null
-+++ b/backends/mips_regs.c
++++ elfutils-0.175/backends/mips_regs.c
 @@ -0,0 +1,104 @@
 +/* Register names and numbers for MIPS DWARF.
 +   Copyright (C) 2006 Red Hat, Inc.
@@ -230,11 +173,10 @@ index 0000000..44f86cb
 +  name[namelen++] = '\0';
 +  return namelen;
 +}
-diff --git a/backends/mips_reloc.def b/backends/mips_reloc.def
-new file mode 100644
-index 0000000..4579970
+Index: elfutils-0.175/backends/mips_reloc.def
+===================================================================
 --- /dev/null
-+++ b/backends/mips_reloc.def
++++ elfutils-0.175/backends/mips_reloc.def
 @@ -0,0 +1,79 @@
 +/* List the relocation types for mips.  -*- C -*-
 +   Copyright (C) 2006 Red Hat, Inc.
@@ -315,11 +257,10 @@ index 0000000..4579970
 +
 +#define NO_COPY_RELOC 1
 +#define NO_RELATIVE_RELOC 1
-diff --git a/backends/mips_retval.c b/backends/mips_retval.c
-new file mode 100644
-index 0000000..656cd1f
+Index: elfutils-0.175/backends/mips_retval.c
+===================================================================
 --- /dev/null
-+++ b/backends/mips_retval.c
++++ elfutils-0.175/backends/mips_retval.c
 @@ -0,0 +1,321 @@
 +/* Function return value location for Linux/mips ABI.
 +   Copyright (C) 2005 Red Hat, Inc.
@@ -642,12 +583,11 @@ index 0000000..656cd1f
 +     DWARF and might be valid.  */
 +  return -2;
 +}
-diff --git a/backends/mips_symbol.c b/backends/mips_symbol.c
-new file mode 100644
-index 0000000..ba465fe
+Index: elfutils-0.175/backends/mips_symbol.c
+===================================================================
 --- /dev/null
-+++ b/backends/mips_symbol.c
-@@ -0,0 +1,52 @@
++++ elfutils-0.175/backends/mips_symbol.c
+@@ -0,0 +1,53 @@
 +/* MIPS specific symbolic name handling.
 +   Copyright (C) 2002, 2003, 2005 Red Hat, Inc.
 +   This file is part of Red Hat elfutils.
@@ -686,7 +626,8 @@ index 0000000..ba465fe
 +
 +/* Check for the simple reloc types.  */
 +Elf_Type
-+mips_reloc_simple_type (Ebl *ebl __attribute__ ((unused)), int type)
++mips_reloc_simple_type (Ebl *ebl __attribute__ ((unused)), int type,
++                        int *addsub __attribute__ ((unused)))
 +{
 +  switch (type)
 +    {
@@ -700,11 +641,11 @@ index 0000000..ba465fe
 +      return ELF_T_NUM;
 +    }
 +}
-diff --git a/libebl/eblopenbackend.c b/libebl/eblopenbackend.c
-index 8b063f4..5405b0c 100644
---- a/libebl/eblopenbackend.c
-+++ b/libebl/eblopenbackend.c
-@@ -72,6 +72,8 @@ static const struct
+Index: elfutils-0.175/libebl/eblopenbackend.c
+===================================================================
+--- elfutils-0.175.orig/libebl/eblopenbackend.c
++++ elfutils-0.175/libebl/eblopenbackend.c
+@@ -71,6 +71,8 @@ static const struct
    { "sparc", "elf_sparc", "sparc", 5, EM_SPARC, 0, 0 },
    { "sparc", "elf_sparcv8plus", "sparc", 5, EM_SPARC32PLUS, 0, 0 },
    { "s390", "ebl_s390", "s390", 4, EM_S390, 0, 0 },
@@ -713,6 +654,34 @@ index 8b063f4..5405b0c 100644
  
    { "m32", "elf_m32", "m32", 3, EM_M32, 0, 0 },
    { "m68k", "elf_m68k", "m68k", 4, EM_68K, ELFCLASS32, ELFDATA2MSB },
--- 
-2.7.4
-
+Index: elfutils-0.175/backends/Makefile.am
+===================================================================
+--- elfutils-0.175.orig/backends/Makefile.am
++++ elfutils-0.175/backends/Makefile.am
+@@ -33,13 +33,13 @@ AM_CPPFLAGS += -I$(top_srcdir)/libebl -I
+ 
+ 
+ modules = i386 sh x86_64 ia64 alpha arm aarch64 sparc ppc ppc64 s390 \
+-	  tilegx m68k bpf riscv parisc
++	  tilegx m68k bpf riscv parisc mips
+ libebl_pic = libebl_i386_pic.a libebl_sh_pic.a libebl_x86_64_pic.a    \
+ 	     libebl_ia64_pic.a libebl_alpha_pic.a libebl_arm_pic.a    \
+ 	     libebl_aarch64_pic.a libebl_sparc_pic.a libebl_ppc_pic.a \
+ 	     libebl_ppc64_pic.a libebl_s390_pic.a libebl_tilegx_pic.a \
+ 	     libebl_m68k_pic.a libebl_bpf_pic.a libebl_riscv_pic.a \
+-	     libebl_parisc_pic.a
++	     libebl_parisc_pic.a libebl_mips_pic.a
+ noinst_LIBRARIES = $(libebl_pic)
+ noinst_DATA = $(libebl_pic:_pic.a=.so)
+ 
+@@ -141,6 +141,10 @@ parisc_SRCS = parisc_init.c parisc_symbo
+ libebl_parisc_pic_a_SOURCES = $(parisc_SRCS)
+ am_libebl_parisc_pic_a_OBJECTS = $(parisc_SRCS:.c=.os)
+ 
++mips_SRCS = mips_init.c mips_symbol.c mips_regs.c mips_retval.c
++libebl_mips_pic_a_SOURCES = $(mips_SRCS)
++am_libebl_mips_pic_a_OBJECTS = $(mips_SRCS:.c=.os)
++
+ libebl_%.so libebl_%.map: libebl_%_pic.a $(libelf) $(libdw) $(libeu)
+ 	@rm -f $(@:.so=.map)
+ 	$(AM_V_at)echo 'ELFUTILS_$(PACKAGE_VERSION) { global: $*_init; local: *; };' \
