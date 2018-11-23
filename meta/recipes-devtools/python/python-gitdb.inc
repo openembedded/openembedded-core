@@ -21,4 +21,4 @@ RDEPENDS_${PN} += "${PYTHON_PN}-async \
                    ${PYTHON_PN}-shell \
                    ${PYTHON_PN}-smmap \
 "
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"

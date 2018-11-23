@@ -15,4 +15,4 @@ SRC_URI[sha256sum] = "0e2b62b497bd5f0afebc002eda4d90df9d209c30ef257e8673c90a6b5c
 RDEPENDS_${PN} += "${PYTHON_PN}-codecs \
                    ${PYTHON_PN}-mmap \
 "
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
