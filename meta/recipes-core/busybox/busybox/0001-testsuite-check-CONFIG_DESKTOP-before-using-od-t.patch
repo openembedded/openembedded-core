@@ -1,0 +1,83 @@
+From b09db631e77c63ebe733c69b00108f043f1f1d85 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Wed, 21 Nov 2018 10:00:29 +0800
+Subject: [PATCH] testsuite: check CONFIG_DESKTOP before using 'od -t'
+
+The '-t' option for od is enabled by CONFIG_DESKTOP. So
+check this config before using 'od -t' in test cases.
+
+Upstream-Status: Submitted [http://lists.busybox.net/pipermail/busybox/2018-November/086895.html]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ testsuite/echo/echo-prints-dash        | 1 +
+ testsuite/echo/echo-prints-non-opts    | 1 +
+ testsuite/echo/echo-prints-slash-zero  | 2 +-
+ testsuite/echo/echo-prints-slash_00041 | 2 +-
+ testsuite/echo/echo-prints-slash_0041  | 2 +-
+ testsuite/echo/echo-prints-slash_041   | 2 +-
+ testsuite/echo/echo-prints-slash_41    | 2 +-
+ 7 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/testsuite/echo/echo-prints-dash b/testsuite/echo/echo-prints-dash
+index ddcdbad..f1f31a0 100644
+--- a/testsuite/echo/echo-prints-dash
++++ b/testsuite/echo/echo-prints-dash
+@@ -1 +1,2 @@
++# FEATURE: CONFIG_DESKTOP
+ test "`busybox echo - | od -t x1 | head -n 1`" = "0000000 2d 0a"
+diff --git a/testsuite/echo/echo-prints-non-opts b/testsuite/echo/echo-prints-non-opts
+index c7d1e20..4e642a1 100644
+--- a/testsuite/echo/echo-prints-non-opts
++++ b/testsuite/echo/echo-prints-non-opts
+@@ -1 +1,2 @@
++# FEATURE: CONFIG_DESKTOP
+ test "`busybox echo -neEZ | od -t x1 | head -n 1`" = "0000000 2d 6e 65 45 5a 0a"
+diff --git a/testsuite/echo/echo-prints-slash-zero b/testsuite/echo/echo-prints-slash-zero
+index d97ed8e..948f899 100644
+--- a/testsuite/echo/echo-prints-slash-zero
++++ b/testsuite/echo/echo-prints-slash-zero
+@@ -1,3 +1,3 @@
+-# FEATURE: CONFIG_FEATURE_FANCY_ECHO
++# FEATURE: CONFIG_FEATURE_FANCY_ECHO CONFIG_DESKTOP
+ 
+ test "`busybox echo -e -n 'msg\n\0' | od -t x1 | head -n 1`" = "0000000 6d 73 67 0a 00"
+diff --git a/testsuite/echo/echo-prints-slash_00041 b/testsuite/echo/echo-prints-slash_00041
+index 9cffabd..7ea217b 100644
+--- a/testsuite/echo/echo-prints-slash_00041
++++ b/testsuite/echo/echo-prints-slash_00041
+@@ -1,3 +1,3 @@
+-# FEATURE: CONFIG_FEATURE_FANCY_ECHO
++# FEATURE: CONFIG_FEATURE_FANCY_ECHO CONFIG_DESKTOP
+ 
+ test "`busybox echo -ne '\00041z' | od -t x1 | head -n 1`" = "0000000 04 31 7a"
+diff --git a/testsuite/echo/echo-prints-slash_0041 b/testsuite/echo/echo-prints-slash_0041
+index b07429d..941faca 100644
+--- a/testsuite/echo/echo-prints-slash_0041
++++ b/testsuite/echo/echo-prints-slash_0041
+@@ -1,3 +1,3 @@
+-# FEATURE: CONFIG_FEATURE_FANCY_ECHO
++# FEATURE: CONFIG_FEATURE_FANCY_ECHO CONFIG_DESKTOP
+ 
+ test "`busybox echo -ne '\0041z' | od -t x1 | head -n 1`" = "0000000 21 7a"
+diff --git a/testsuite/echo/echo-prints-slash_041 b/testsuite/echo/echo-prints-slash_041
+index 1d70cec..60cbfca 100644
+--- a/testsuite/echo/echo-prints-slash_041
++++ b/testsuite/echo/echo-prints-slash_041
+@@ -1,3 +1,3 @@
+-# FEATURE: CONFIG_FEATURE_FANCY_ECHO
++# FEATURE: CONFIG_FEATURE_FANCY_ECHO CONFIG_DESKTOP
+ 
+ test "`busybox echo -ne '\041z' | od -t x1 | head -n 1`" = "0000000 21 7a"
+diff --git a/testsuite/echo/echo-prints-slash_41 b/testsuite/echo/echo-prints-slash_41
+index 6d8999b..afd7c36 100644
+--- a/testsuite/echo/echo-prints-slash_41
++++ b/testsuite/echo/echo-prints-slash_41
+@@ -1,3 +1,3 @@
+-# FEATURE: CONFIG_FEATURE_FANCY_ECHO
++# FEATURE: CONFIG_FEATURE_FANCY_ECHO CONFIG_DESKTOP
+ 
+ test "`busybox echo -ne '\41z' | od -t x1 | head -n 1`" = "0000000 21 7a"
+-- 
+2.7.4
+
