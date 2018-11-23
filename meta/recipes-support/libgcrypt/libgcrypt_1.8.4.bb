@@ -22,8 +22,8 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://0002-libgcrypt-fix-building-error-with-O2-in-sysroot-path.patch \
            file://0004-tests-Makefile.am-fix-undefined-reference-to-pthread.patch \
 "
-SRC_URI[md5sum] = "3139c2402e844985a67fb288a930534d"
-SRC_URI[sha256sum] = "66ec90be036747602f2b48f98312361a9180c97c68a690a5f376fa0f67d0af7c"
+SRC_URI[md5sum] = "fbfdaebbbc6d7e5fbbf6ffdb3e139573"
+SRC_URI[sha256sum] = "f638143a0672628fde0cad745e9b14deb85dffb175709cacc1f4fe24b93f2227"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
