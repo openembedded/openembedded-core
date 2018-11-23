@@ -285,7 +285,7 @@ python(){
         for value in python_manifest[key]['files']:
             d.appendVar('FILES_' + pypackage, ' ' + value)
 
-    	# Add cached files
+        # Add cached files
         if include_pycs == '1':
             for value in python_manifest[key]['cached']:
                     d.appendVar('FILES_' + pypackage, ' ' + value)
