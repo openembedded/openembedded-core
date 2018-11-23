@@ -41,6 +41,7 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://rcS \
            file://rcK \
            file://makefile-libbb-race.patch \
+           file://0001-testsuite-check-uudecode-before-using-it.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
