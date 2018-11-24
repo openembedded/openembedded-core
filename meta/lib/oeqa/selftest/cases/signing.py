@@ -15,23 +15,18 @@ class Signing(OESelftestTestCase):
     pub_key_path = ""
     secret_key_path = ""
 
-    @classmethod
-    def setUpClass(cls):
-        super(Signing, cls).setUpClass()
+    def setup_gpg(self):
         # Check that we can find the gpg binary and fail early if we can't
         if not shutil.which("gpg"):
-            raise AssertionError("This test needs GnuPG")
+            self.skipTest('gpg binary not found')
 
-        cls.gpg_dir = tempfile.mkdtemp(prefix="oeqa-signing-")
+        self.gpg_dir = tempfile.mkdtemp(prefix="oeqa-signing-")
+        self.track_for_cleanup(self.gpg_dir)
 
-        cls.pub_key_path = os.path.join(cls.testlayer_path, 'files', 'signing', "key.pub")
-        cls.secret_key_path = os.path.join(cls.testlayer_path, 'files', 'signing', "key.secret")
+        self.pub_key_path = os.path.join(self.testlayer_path, 'files', 'signing', "key.pub")
+        self.secret_key_path = os.path.join(self.testlayer_path, 'files', 'signing', "key.secret")
 
-        runCmd('gpg --batch --homedir %s --import %s %s' % (cls.gpg_dir, cls.pub_key_path, cls.secret_key_path))
-
-    @classmethod
-    def tearDownClass(cls):
-        shutil.rmtree(cls.gpg_dir, ignore_errors=True)
+        runCmd('gpg --batch --homedir %s --import %s %s' % (self.gpg_dir, self.pub_key_path, self.secret_key_path))
 
     @OETestID(1362)
     def test_signing_packages(self):
@@ -45,6 +40,8 @@ class Signing(OESelftestTestCase):
         AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
         """
         import oe.packagedata
+
+        self.setup_gpg()
 
         package_classes = get_bb_var('PACKAGE_CLASSES')
         if 'package_rpm' not in package_classes:
@@ -110,6 +107,8 @@ class Signing(OESelftestTestCase):
 
         builddir = os.environ.get('BUILDDIR')
         sstatedir = os.path.join(builddir, 'test-sstate')
+
+        self.setup_gpg()
 
         self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
         self.add_command_to_tearDown('rm -rf %s' % sstatedir)
