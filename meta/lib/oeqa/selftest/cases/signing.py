@@ -153,10 +153,10 @@ class Signing(OESelftestTestCase):
             self.add_command_to_tearDown('rm -rf %s' % builddir)
 
             bitbake('-c clean %s' % test_recipe)
-            bitbake(test_recipe)
+            bitbake('-c populate_lic %s' % test_recipe)
 
-            recipe_sig = glob.glob(sstatedir + '/*/*:ed:*_package.tgz.sig')
-            recipe_tgz = glob.glob(sstatedir + '/*/*:ed:*_package.tgz')
+            recipe_sig = glob.glob(sstatedir + '/*/*:ed:*_populate_lic.tgz.sig')
+            recipe_tgz = glob.glob(sstatedir + '/*/*:ed:*_populate_lic.tgz')
 
             self.assertEqual(len(recipe_sig), 1, 'Failed to find .sig file.')
             self.assertEqual(len(recipe_tgz), 1, 'Failed to find .tgz file.')
