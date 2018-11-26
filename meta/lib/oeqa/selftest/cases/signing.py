@@ -1,10 +1,12 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 import os
+import oe
 import glob
 import re
 import shutil
 import tempfile
+from contextlib import contextmanager
 from oeqa.core.decorator.oeid import OETestID
 from oeqa.utils.ftools import write_file
 
@@ -16,9 +18,7 @@ class Signing(OESelftestTestCase):
     secret_key_path = ""
 
     def setup_gpg(self):
-        # Check that we can find the gpg binary and fail early if we can't
-        if not shutil.which("gpg"):
-            self.skipTest('gpg binary not found')
+        bitbake('gnupg-native -c addto_recipe_sysroot')
 
         self.gpg_dir = tempfile.mkdtemp(prefix="oeqa-signing-")
         self.track_for_cleanup(self.gpg_dir)
@@ -26,7 +26,30 @@ class Signing(OESelftestTestCase):
         self.pub_key_path = os.path.join(self.testlayer_path, 'files', 'signing', "key.pub")
         self.secret_key_path = os.path.join(self.testlayer_path, 'files', 'signing', "key.secret")
 
-        runCmd('gpg --batch --homedir %s --import %s %s' % (self.gpg_dir, self.pub_key_path, self.secret_key_path))
+        nsysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "gnupg-native")
+        runCmd('gpg --batch --homedir %s --import %s %s' % (self.gpg_dir, self.pub_key_path, self.secret_key_path), native_sysroot=nsysroot)
+        return nsysroot + get_bb_var("bindir_native")
+
+
+    @contextmanager
+    def create_new_builddir(self, builddir, newbuilddir):
+        bb.utils.mkdirhier(newbuilddir)
+        oe.path.copytree(builddir + "/conf", newbuilddir + "/conf")
+        oe.path.copytree(builddir + "/cache", newbuilddir + "/cache")
+
+        origenv = os.environ.copy()
+
+        for e in os.environ:
+            if builddir in os.environ[e]:
+                os.environ[e] = os.environ[e].replace(builddir, newbuilddir)
+
+        os.chdir(newbuilddir)
+        try:
+            yield
+        finally:
+            for e in origenv:
+                os.environ[e] = origenv[e]
+            os.chdir(builddir)
 
     @OETestID(1362)
     def test_signing_packages(self):
@@ -105,13 +128,12 @@ class Signing(OESelftestTestCase):
 
         test_recipe = 'ed'
 
-        builddir = os.environ.get('BUILDDIR')
+        # Since we need gpg but we can't use gpg-native for sstate signatures, we 
+        # build gpg-native in our original builddir then run the tests in a second one.
+        builddir = os.environ.get('BUILDDIR') + "-testsign"
         sstatedir = os.path.join(builddir, 'test-sstate')
 
-        self.setup_gpg()
-
-        self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
-        self.add_command_to_tearDown('rm -rf %s' % sstatedir)
+        nsysroot = self.setup_gpg()
 
         feature = 'SSTATE_SIG_KEY ?= "testuser"\n'
         feature += 'SSTATE_SIG_PASSPHRASE ?= "test123"\n'
@@ -123,19 +145,26 @@ class Signing(OESelftestTestCase):
 
         self.write_config(feature)
 
-        bitbake('-c clean %s' % test_recipe)
-        bitbake(test_recipe)
+        with self.create_new_builddir(os.environ['BUILDDIR'], builddir):
 
-        recipe_sig = glob.glob(sstatedir + '/*/*:ed:*_package.tgz.sig')
-        recipe_tgz = glob.glob(sstatedir + '/*/*:ed:*_package.tgz')
+            os.environ["PATH"] = nsysroot + ":" + os.environ["PATH"]
+            self.add_command_to_tearDown('bitbake -c clean %s' % test_recipe)
+            self.add_command_to_tearDown('rm -rf %s' % sstatedir)
+            self.add_command_to_tearDown('rm -rf %s' % builddir)
 
-        self.assertEqual(len(recipe_sig), 1, 'Failed to find .sig file.')
-        self.assertEqual(len(recipe_tgz), 1, 'Failed to find .tgz file.')
+            bitbake('-c clean %s' % test_recipe)
+            bitbake(test_recipe)
 
-        ret = runCmd('gpg --homedir %s --verify %s %s' % (self.gpg_dir, recipe_sig[0], recipe_tgz[0]))
-        # gpg: Signature made Thu 22 Oct 2015 01:45:09 PM EEST using RSA key ID 61EEFB30
-        # gpg: Good signature from "testuser (nocomment) <testuser@email.com>"
-        self.assertIn('gpg: Good signature from', ret.output, 'Package signed incorrectly.')
+            recipe_sig = glob.glob(sstatedir + '/*/*:ed:*_package.tgz.sig')
+            recipe_tgz = glob.glob(sstatedir + '/*/*:ed:*_package.tgz')
+
+            self.assertEqual(len(recipe_sig), 1, 'Failed to find .sig file.')
+            self.assertEqual(len(recipe_tgz), 1, 'Failed to find .tgz file.')
+
+            ret = runCmd('gpg --homedir %s --verify %s %s' % (self.gpg_dir, recipe_sig[0], recipe_tgz[0]))
+            # gpg: Signature made Thu 22 Oct 2015 01:45:09 PM EEST using RSA key ID 61EEFB30
+            # gpg: Good signature from "testuser (nocomment) <testuser@email.com>"
+            self.assertIn('gpg: Good signature from', ret.output, 'Package signed incorrectly.')
 
 
 class LockedSignatures(OESelftestTestCase):
