@@ -40,8 +40,9 @@ class ImageOptionsTests(OESelftestTestCase):
         self.add_command_to_tearDown('bitbake -c clean m4')
         bitbake("m4 -f -c compile")
         log_compile = os.path.join(get_bb_var("WORKDIR","m4"), "temp/log.do_compile")
-        res = runCmd("grep ccache %s" % log_compile, ignore_status=True)
-        self.assertEqual(0, res.status, msg="No match for ccache in m4 log.do_compile. For further details: %s" % log_compile)
+        with open(log_compile, "r") as f:
+            loglines = "".join(f.readlines())
+        self.assertIn("ccache", loglines, msg="No match for ccache in m4 log.do_compile. For further details: %s" % log_compile)
 
     @OETestID(1435)
     def test_read_only_image(self):
