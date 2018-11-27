@@ -333,7 +333,11 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
         try:
             qemu.start(params=qemuparams, ssh=ssh, runqemuparams=runqemuparams, launch_cmd=launch_cmd, discard_writes=discard_writes)
         except bb.build.FuncFailed:
-            raise Exception('Failed to start QEMU - see the logs in %s' % logdir)
+            msg = 'Failed to start QEMU - see the logs in %s' % logdir
+            if os.path.exists(qemu.qemurunnerlog):
+                with open(qemu.qemurunnerlog, 'r') as f:
+                    msg = msg + "Qemurunner log output from %s:\n%s" % (qemu.qemurunnerlog, f.read())
+            raise Exception(msg)
 
         yield qemu
 
