@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 SRC_URI = "http://gstreamer.freedesktop.org/src/gst-omx/gst-omx-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "d5e4c0650a4de8f6a6301b7070367587"
-SRC_URI[sha256sum] = "6ba7dc5caabce092ea645b5c6de1a82d12ee086d18f692a8f31cbc359b708cb1"
+SRC_URI[md5sum] = "81e67ea03be607b7c548ce911598d754"
+SRC_URI[sha256sum] = "969870e75c1f75c96f8783530e2c2932fc3afbfd976eb0c466f51dae268ea3d4"
 
 S = "${WORKDIR}/gst-omx-${PV}"
 
