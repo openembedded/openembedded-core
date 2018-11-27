@@ -55,6 +55,7 @@ PACKAGECONFIG[libmms]          = "--enable-libmms,--disable-libmms,libmms"
 PACKAGECONFIG[libssh2]         = "--enable-libssh2,--disable-libssh2,libssh2"
 PACKAGECONFIG[lcms2]           = "--enable-lcms2,--disable-lcms2,lcms"
 PACKAGECONFIG[modplug]         = "--enable-modplug,--disable-modplug,libmodplug"
+PACKAGECONFIG[msdk]            = "--enable-msdk,--disable-msdk,intel-mediasdk"
 PACKAGECONFIG[neon]            = "--enable-neon,--disable-neon,neon"
 PACKAGECONFIG[openal]          = "--enable-openal,--disable-openal,openal-soft"
 PACKAGECONFIG[opencv]          = "--enable-opencv,--disable-opencv,opencv"
@@ -85,7 +86,7 @@ PACKAGECONFIG[webrtcdsp]       = "--enable-webrtcdsp,--disable-webrtcdsp,webrtc-
 # these plugins have no corresponding library in OE-core or meta-openembedded:
 #   openni2 winks direct3d directsound winscreencap acm apple_media iqa
 #   android_media avc bs2b chromaprint daala dts fdkaac gme gsm kate ladspa
-#   lv2 mpeg2enc mplex msdk musepack nvenc ofa opensles soundtouch
+#   lv2 mpeg2enc mplex musepack nvenc ofa opensles soundtouch
 #   spandsp spc teletextdec vdpau wasapi x265 zbar
 
 EXTRA_OECONF += " \
@@ -116,7 +117,6 @@ EXTRA_OECONF += " \
     --disable-lv2 \
     --disable-mpeg2enc \
     --disable-mplex \
-    --disable-msdk \
     --disable-musepack \
     --disable-nvenc \
     --disable-ofa \
