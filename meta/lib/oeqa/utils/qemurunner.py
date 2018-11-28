@@ -135,7 +135,7 @@ class QemuRunner:
 
     def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None, env = None):
         try:
-            threadsock, threadport = self.create_socket()
+            self.threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
         except socket.error as msg:
             self.logger.error("Failed to create listening socket: %s" % msg[1])
@@ -263,7 +263,7 @@ class QemuRunner:
         self.logger.debug("Target IP: %s" % self.ip)
         self.logger.debug("Server IP: %s" % self.server_ip)
 
-        self.thread = LoggingThread(self.log, threadsock, self.logger)
+        self.thread = LoggingThread(self.log, self.threadsock, self.logger)
         self.thread.start()
         if not self.thread.connection_established.wait(self.boottime):
             self.logger.error("Didn't receive a console connection from qemu. "
@@ -372,13 +372,19 @@ class QemuRunner:
             self.runqemu.stdin.close()
             self.runqemu.stdout.close()
             self.runqemu = None
+
         if hasattr(self, 'server_socket') and self.server_socket:
             self.server_socket.close()
             self.server_socket = None
+        if hasattr(self, 'threadsock') and self.threadsock:
+            self.threadsock.close()
+            self.threadsock = None
         self.qemupid = None
         self.ip = None
         if os.path.exists(self.qemu_pidfile):
             os.remove(self.qemu_pidfile)
+        if self.monitorpipe:
+            self.monitorpipe.close()
 
     def stop_qemu_system(self):
         if self.qemupid:
