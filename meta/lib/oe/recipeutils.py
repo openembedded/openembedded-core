@@ -52,6 +52,29 @@ def parse_recipe(cooker, fn, appendfiles):
     return envdata
 
 
+def simplify_history(history, d):
+    """
+    Eliminate any irrelevant events from a variable history
+    """
+    ret_history = []
+    has_set = False
+    # Go backwards through the history and remove any immediate operations
+    # before the most recent set
+    for event in reversed(history):
+        if 'flag' in event or not 'file' in event:
+            continue
+        if event['op'] == 'set':
+            if has_set:
+                continue
+            has_set = True
+        elif event['op'] in ('append', 'prepend', 'postdot', 'predot'):
+            # Reminder: "append" and "prepend" mean += and =+ respectively, NOT _append / _prepend
+            if has_set:
+                continue
+        ret_history.insert(0, event)
+    return ret_history
+
+
 def get_var_files(fn, varlist, d):
     """Find the file in which each of a list of variables is set.
     Note: requires variable history to be enabled when parsing.
@@ -176,7 +199,14 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
     def outputvalue(name, lines, rewindcomments=False):
         if values[name] is None:
             return
-        rawtext = '%s = "%s"%s' % (name, values[name], newline)
+        if isinstance(values[name], tuple):
+            op, value = values[name]
+            if op == '+=' and value.strip() == '':
+                return
+        else:
+            value = values[name]
+            op = '='
+        rawtext = '%s %s "%s"%s' % (name, op, value, newline)
         addlines = []
         nowrap = False
         for nowrap_re in nowrap_vars_res:
@@ -186,10 +216,10 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
         if nowrap:
             addlines.append(rawtext)
         elif name in list_vars:
-            splitvalue = split_var_value(values[name], assignment=False)
+            splitvalue = split_var_value(value, assignment=False)
             if len(splitvalue) > 1:
                 linesplit = ' \\\n' + (' ' * (len(name) + 4))
-                addlines.append('%s = "%s%s"%s' % (name, linesplit.join(splitvalue), linesplit, newline))
+                addlines.append('%s %s "%s%s"%s' % (name, op, linesplit.join(splitvalue), linesplit, newline))
             else:
                 addlines.append(rawtext)
         else:
@@ -321,12 +351,47 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None
     """Modify a list of variable values in the specified recipe. Handles inc files if
     used by the recipe.
     """
+    overrides = d.getVar('OVERRIDES').split(':')
+    def override_applicable(hevent):
+        op = hevent['op']
+        if '[' in op:
+            opoverrides = op.split('[')[1].split(']')[0].split('_')
+            for opoverride in opoverrides:
+                if not opoverride in overrides:
+                    return False
+        return True
+
     varlist = varvalues.keys()
+    fn = os.path.abspath(fn)
     varfiles = get_var_files(fn, varlist, d)
     locs = localise_file_vars(fn, varfiles, varlist)
     patches = []
     for f,v in locs.items():
         vals = {k: varvalues[k] for k in v}
+        f = os.path.abspath(f)
+        if f == fn:
+            extravals = {}
+            for var, value in vals.items():
+                if var in list_vars:
+                    history = simplify_history(d.varhistory.variable(var), d)
+                    recipe_set = False
+                    for event in history:
+                        if os.path.abspath(event['file']) == fn:
+                            if event['op'] == 'set':
+                                recipe_set = True
+                    if not recipe_set:
+                        for event in history:
+                            if event['op'].startswith('_remove'):
+                                continue
+                            if not override_applicable(event):
+                                continue
+                            newvalue = value.replace(event['detail'], '')
+                            if newvalue == value and os.path.abspath(event['file']) == fn and event['op'].startswith('_'):
+                                op = event['op'].replace('[', '_').replace(']', '')
+                                extravals[var + op] = None
+                            value = newvalue
+                            vals[var] = ('+=', value)
+            vals.update(extravals)
         patchdata = patch_recipe_file(f, vals, patch, relpath, redirect_output)
         if patch:
             patches.append(patchdata)
