@@ -19,20 +19,12 @@ DEPENDS_class-native = "libpng-native"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs925/${BPN}-${PV}.tar.gz \
+SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs926/${BPN}-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://do-not-check-local-libpng-source.patch \
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
-                file://0001-Bug-699795-add-operand-checking-to-.setnativefontmap.patch \
-                file://0002-Bug-699816-Improve-hiding-of-security-critical-custo.patch \
-                file://0003-Bug-699832-add-control-over-hiding-error-handlers.patch \
-                file://0004-For-hidden-operators-pass-a-name-object-to-error-han.patch \
-                file://0005-Bug-699938-.loadfontloop-must-be-an-operator.patch \
-                file://0006-Undefine-some-additional-internal-operators.patch \
-                file://0007-Bug-699927-don-t-include-operator-arrays-in-execstac.patch \
-                file://0008-Make-.forceput-unavailable-from-.policyprocs-helper-.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
@@ -47,8 +39,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "eebd0fadbfa8e800094422ce65e94d5d"
-SRC_URI[sha256sum] = "baafa64740b090bff50b220a6df3be95c46069b7e30f4b4effed28316e5b2389"
+SRC_URI[md5sum] = "806bc2dedbc7f69b003f536658e08d4a"
+SRC_URI[sha256sum] = "831fc019bd477f7cc2d481dc5395ebfa4a593a95eb2fe1eb231a97e450d7540d"
 
 # Put something like
 #
