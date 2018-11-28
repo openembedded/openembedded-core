@@ -369,6 +369,8 @@ class QemuRunner:
             if self.runqemu.poll() is None:
                 self.logger.debug("Sending SIGKILL to runqemu")
                 os.killpg(os.getpgid(self.runqemu.pid), signal.SIGKILL)
+            self.runqemu.stdin.close()
+            self.runqemu.stdout.close()
             self.runqemu = None
         if hasattr(self, 'server_socket') and self.server_socket:
             self.server_socket.close()
