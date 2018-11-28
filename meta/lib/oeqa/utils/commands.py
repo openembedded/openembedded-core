@@ -345,11 +345,11 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
         yield qemu
 
     finally:
+        targetlogger.removeHandler(handler)
         try:
             qemu.stop()
         except:
             pass
-    targetlogger.removeHandler(handler)
 
 def updateEnv(env_file):
     """
