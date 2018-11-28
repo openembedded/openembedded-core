@@ -32,6 +32,7 @@ EXTRA_OECONF += "--enable-mpers=no"
 CFLAGS_append_libc-musl = " -Dsigcontext_struct=sigcontext"
 
 TESTDIR = "tests"
+PTEST_BUILD_HOST_PATTERN = "^(DEB_CHANGELOGTIME|RPM_CHANGELOGTIME|WARN_CFLAGS_FOR_BUILD)"
 
 do_install_append() {
 	# We don't ship strace-graph here because it needs perl
@@ -46,16 +47,6 @@ do_install_ptest() {
 	oe_runmake -C ${TESTDIR} install-ptest BUILDDIR=${B} DESTDIR=${D}${PTEST_PATH} TESTDIR=${TESTDIR}
 	install -m 755 ${S}/test-driver ${D}${PTEST_PATH}
 	install -m 644 ${B}/config.h ${D}${PTEST_PATH}
-	sed -i -e '/^src/s/strace.*[1-9]/ptest/' \
-	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
-	    -e 's|${DEBUG_PREFIX_MAP}||g' \
-	    -e 's:${HOSTTOOLS_DIR}/::g' \
-	    -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
-	    -e 's:${RECIPE_SYSROOT}::g' \
-	    -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
-	    -e '/^DEB_CHANGELOGTIME/d' \
-	    -e '/^RPM_CHANGELOGTIME/d' \
-	${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
 RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
