@@ -27,31 +27,6 @@ list_vars = ['SRC_URI', 'LIC_FILES_CHKSUM']
 meta_vars = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION']
 
 
-def pn_to_recipe(cooker, pn, mc=''):
-    """Convert a recipe name (PN) to the path to the recipe file"""
-
-    best = cooker.findBestProvider(pn, mc)
-    return best[3]
-
-
-def get_unavailable_reasons(cooker, pn):
-    """If a recipe could not be found, find out why if possible"""
-    import bb.taskdata
-    taskdata = bb.taskdata.TaskData(None, skiplist=cooker.skiplist)
-    return taskdata.get_reasons(pn)
-
-
-def parse_recipe(cooker, fn, appendfiles):
-    """
-    Parse an individual recipe file, optionally with a list of
-    bbappend files.
-    """
-    import bb.cache
-    parser = bb.cache.NoCache(cooker.databuilder)
-    envdata = parser.loadDataFull(fn, appendfiles)
-    return envdata
-
-
 def simplify_history(history, d):
     """
     Eliminate any irrelevant events from a variable history
