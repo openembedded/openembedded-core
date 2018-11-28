@@ -41,8 +41,8 @@ inherit ptest
 
 do_install_ptest() {
 	tar -c --exclude=nfs test/ | ( cd ${D}${PTEST_PATH} && tar -xf - )
-	mkdir ${D}${PTEST_PATH}/include
-	cp ${S}/include/builddefs ${S}/include/buildmacros ${S}/include/buildrules ${D}${PTEST_PATH}/include/
+	install -d ${D}${PTEST_PATH}/include
+	install -m 644 ${S}/include/builddefs ${S}/include/buildmacros ${S}/include/buildrules ${D}${PTEST_PATH}/include/
 	# Remove any build host references
 	sed -e "s:--sysroot=${STAGING_DIR_TARGET}::g" \
 	    -e 's:${HOSTTOOLS_DIR}/::g' \
