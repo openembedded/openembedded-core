@@ -81,11 +81,19 @@ def get_var_files(fn, varlist, d):
     """
     varfiles = {}
     for v in varlist:
-        history = d.varhistory.variable(v)
         files = []
-        for event in history:
-            if 'file' in event and not 'flag' in event:
-                files.append(event['file'])
+        if '[' in v:
+            varsplit = v.split('[')
+            varflag = varsplit[1].split(']')[0]
+            history = d.varhistory.variable(varsplit[0])
+            for event in history:
+                if 'file' in event and event.get('flag', '') == varflag:
+                    files.append(event['file'])
+        else:
+            history = d.varhistory.variable(v)
+            for event in history:
+                if 'file' in event and not 'flag' in event:
+                    files.append(event['file'])
         if files:
             actualfile = files[-1]
         else:
