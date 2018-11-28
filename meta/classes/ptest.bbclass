@@ -4,6 +4,7 @@ This package contains a test directory ${PTEST_PATH} for package test purposes."
 
 PTEST_PATH ?= "${libdir}/${BPN}/ptest"
 PTEST_BUILD_HOST_FILES ?= "Makefile"
+PTEST_BUILD_HOST_PATTERN ?= ""
 
 FILES_${PN}-ptest = "${PTEST_PATH}"
 SECTION_${PN}-ptest = "devel"
@@ -56,6 +57,10 @@ do_install_ptest_base() {
                 -e 's#${WORKDIR}/*=#.=#g' \
                 -e 's#${WORKDIR}/*##g' \
                 -i $installed_ptest_file
+            if [ -n "${PTEST_BUILD_HOST_PATTERN}" ]; then
+               sed -E '/${PTEST_BUILD_HOST_PATTERN}/d' \
+                   -i $installed_ptest_file
+            fi
         done
     done
 }
