@@ -156,6 +156,7 @@ do_install_append_class-nativesdk () {
 	sed 's|/usr/lib/ssl/|/usr/lib/ssl-1.1/|g' -i ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
 
+PTEST_BUILD_HOST_FILES += "configdata.pm"
 do_install_ptest () {
 	# Prune the build tree
 	rm -f ${B}/fuzz/*.* ${B}/test/*.*
