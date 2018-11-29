@@ -89,15 +89,21 @@ def ua_extend_depends(d):
     if not 'virtual/update-alternatives' in d.getVar('PROVIDES'):
         d.appendVar('DEPENDS', ' virtual/${MLPREFIX}update-alternatives')
 
-python __anonymous() {
+def update_alternatives_enabled(d):
     # Update Alternatives only works on target packages...
     if bb.data.inherits_class('native', d) or \
        bb.data.inherits_class('cross', d) or bb.data.inherits_class('crosssdk', d) or \
        bb.data.inherits_class('cross-canadian', d):
-        return
+        return False
 
     # Disable when targeting mingw32 (no target support)
     if d.getVar("TARGET_OS") == "mingw32":
+        return False
+
+    return True
+
+python __anonymous() {
+    if not update_alternatives_enabled(d):
         return
 
     # compute special vardeps
@@ -128,6 +134,11 @@ populate_packages[vardeps] += "${UPDALTVARS} ${@gen_updatealternativesvars(d)}"
 # the split and strip steps..  packagecopy seems to be the earliest reasonable
 # place.
 python perform_packagecopy_append () {
+    if update_alternatives_enabled(d):
+        apply_update_alternative_renames(d)
+}
+
+def apply_update_alternative_renames(d):
     # Check for deprecated usage...
     pn = d.getVar('BPN')
     if d.getVar('ALTERNATIVE_LINKS') != None:
@@ -194,11 +205,13 @@ python perform_packagecopy_append () {
                     os.unlink(src)
                 else:
                     bb.warn('%s: Unable to resolve dangling symlink: %s' % (pn, alt_target))
-}
 
 PACKAGESPLITFUNCS_prepend = "populate_packages_updatealternatives "
 
 python populate_packages_updatealternatives () {
+    if not update_alternatives_enabled(d):
+        return
+
     pn = d.getVar('BPN')
 
     # Do actual update alternatives processing
@@ -252,10 +265,15 @@ python populate_packages_updatealternatives () {
 }
 
 python package_do_filedeps_append () {
+    if update_alternatives_enabled(d):
+        apply_update_alternative_provides(d)
+}
+
+def apply_update_alternative_provides(d):
     pn = d.getVar('BPN')
     pkgdest = d.getVar('PKGDEST')
 
-    for pkg in packages.split():
+    for pkg in d.getVar('PACKAGES').split():
         for alt_name in (d.getVar('ALTERNATIVE_%s' % pkg) or "").split():
             alt_link     = d.getVarFlag('ALTERNATIVE_LINK_NAME', alt_name)
             alt_target   = d.getVarFlag('ALTERNATIVE_TARGET_%s' % pkg, alt_name) or d.getVarFlag('ALTERNATIVE_TARGET', alt_name)
@@ -273,5 +291,4 @@ python package_do_filedeps_append () {
             d.appendVar('FILERPROVIDES_%s_%s' % (trans_target, pkg), " " + alt_link)
             if not trans_target in (d.getVar('FILERPROVIDESFLIST_%s' % pkg) or ""):
                 d.appendVar('FILERPROVIDESFLIST_%s' % pkg, " " + trans_target)
-}
 
