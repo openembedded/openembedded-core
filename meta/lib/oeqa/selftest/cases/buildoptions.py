@@ -38,6 +38,7 @@ class ImageOptionsTests(OESelftestTestCase):
         self.assertTrue(os.path.isfile(p), msg = "No ccache found (%s)" % p)
         self.write_config('INHERIT += "ccache"')
         self.add_command_to_tearDown('bitbake -c clean m4')
+        bitbake("m4 -c clean")
         bitbake("m4 -f -c compile")
         log_compile = os.path.join(get_bb_var("WORKDIR","m4"), "temp/log.do_compile")
         with open(log_compile, "r") as f:
