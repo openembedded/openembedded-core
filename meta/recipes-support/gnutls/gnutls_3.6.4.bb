@@ -24,7 +24,7 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
 SRC_URI[md5sum] = "63363d1c00601f4d11a5cadc8b5e0799"
 SRC_URI[sha256sum] = "c663a792fbc84349c27c36059181f2ca86c9442e75ee8b0ad72f5f9b35deab3a"
 
-inherit autotools texinfo binconfig pkgconfig gettext lib_package gtk-doc
+inherit autotools texinfo pkgconfig gettext lib_package gtk-doc
 
 PACKAGECONFIG ??= "libidn"
 
