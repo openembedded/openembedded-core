@@ -100,9 +100,14 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
     def _process_args(self, logger, args):
         args.test_start_time = time.strftime("%Y%m%d%H%M%S")
-        args.output_log = '%s-results-%s.log' % (self.name, args.test_start_time)
         args.test_data_file = None
         args.CASES_PATHS = None
+
+        bbvars = get_bb_vars()
+        logdir = os.environ.get("BUILDDIR")
+        if 'LOG_DIR' in bbvars:
+            logdir = bbvars['LOG_DIR']
+        args.output_log = logdir + '/%s-results-%s.log' % (self.name, args.test_start_time)
 
         super(OESelftestTestContextExecutor, self)._process_args(logger, args)
 
@@ -113,7 +118,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         elif args.list_tests:
             args.list_tests = 'name'
 
-        self.tc_kwargs['init']['td'] = get_bb_vars()
+        self.tc_kwargs['init']['td'] = bbvars
         self.tc_kwargs['init']['machines'] = self._get_available_machines()
 
         builddir = os.environ.get("BUILDDIR")
@@ -303,7 +308,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
             output_link = os.path.join(os.path.dirname(args.output_log),
                     "%s-results.log" % self.name)
-            if os.path.exists(output_link):
+            if os.path.lexists(output_link):
                 os.remove(output_link)
             os.symlink(args.output_log, output_link)
 
