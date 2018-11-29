@@ -4,7 +4,7 @@
 require musl.inc
 inherit linuxloader
 
-SRCREV = "c50985d5c8e316c5c464f352e79eeebfed1121a9"
+SRCREV = "39ef612aa193cc6e954ac5a01574300ccd4b7ef9"
 
 PV = "1.1.20+git${SRCPV}"
 
