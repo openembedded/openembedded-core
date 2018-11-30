@@ -10,7 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "https://gstreamer.freedesktop.org/src/${REALPN}/${REALPN}-${PV}.tar.xz \
            file://0001-gst-vaapi-Makefile.am-Add-EGL_CFLAGS-to-libgstvaapi-.patch \
-          "
+           file://0001-vaapsink-downgrade-to-marginal.patch \
+           "
 
 SRC_URI[md5sum] = "12ee9c16dfa0bb1808c76683e1c9a328"
 SRC_URI[sha256sum] = "7f1064e27f5abd3a42ef66b425f1a2b9dbae7748c81bd9d090ce52a1aaf30d8a"
