@@ -6,6 +6,7 @@ Subject: [PATCH] statx: fix compile errors
 struct statx is only defined in sys/stat.h when _GNU_SOURCE is defined.
 The testcases do define _GNU_SOURCE, but not the m4 struct check.
 
+Upstream-Status: Backport
 Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 Acked-by: Cyril Hrubis <chrubis@suse.cz>
 ---
