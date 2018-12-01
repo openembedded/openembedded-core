@@ -30,12 +30,13 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://nfs-utils-debianize-start-statd.patch \
            file://bugfix-adjust-statd-service-name.patch \
            file://nfs-utils-musl-limits.patch \
+           file://0001-cacheio-use-intmax_t-for-formatted-IO.patch \
 "
 
 SRC_URI_append_libc-musl = " file://nfs-utils-musl-res_querydomain.patch"
 
-SRC_URI[md5sum] = "d77b182a9ee396aa6221ac2401ad7046"
-SRC_URI[sha256sum] = "96d06b5a86b185815760d8f04c34fdface8fa8b9949ff256ac05c3ebc08335a5"
+SRC_URI[md5sum] = "b6c9c032995af1c08fea9fbcc1ce33e9"
+SRC_URI[sha256sum] = "f68b34793831b05f1fd5760d6bdec92772c7684177586a99a61e7b444f336322"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
