@@ -18,4 +18,4 @@ EXTRA_OEMESON = "-Ddeveloper_build=false"
 
 DEPENDS += "glib-2.0 libyaml"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
