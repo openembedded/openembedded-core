@@ -31,6 +31,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://bugfix-adjust-statd-service-name.patch \
            file://nfs-utils-musl-limits.patch \
            file://0001-cacheio-use-intmax_t-for-formatted-IO.patch \
+           file://0001-Do-not-pass-null-pointer-to-freeaddrinfo.patch \
 "
 
 SRC_URI_append_libc-musl = " file://nfs-utils-musl-res_querydomain.patch"
