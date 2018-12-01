@@ -66,6 +66,9 @@ class TestMultiprocessLaunch(TestCase):
 
         def dummyerror(msg):
             print("ERROR: %s" % msg)
+        def dummyfatal(msg):
+            print("ERROR: %s" % msg)
+            raise bb.BBHandledException()
 
         @contextmanager
         def captured_output():
@@ -79,6 +82,7 @@ class TestMultiprocessLaunch(TestCase):
 
         d = bb.data_smart.DataSmart()
         bb.error = dummyerror
+        bb.fatal = dummyfatal
 
         # Assert the function returns the right results
         result = multiprocess_launch(testfunction, ["3", "4", "5", "6"], d, extraargs=(d,))

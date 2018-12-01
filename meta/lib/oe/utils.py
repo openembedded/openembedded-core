@@ -318,9 +318,10 @@ def multiprocess_launch(target, items, d, extraargs=None):
     for p in launched:
         p.join()
     if errors:
+        msg = ""
         for (e, tb) in errors:
-            bb.error(str(tb))
-        bb.fatal("Fatal errors occurred in subprocesses, tracebacks printed above")
+            msg = msg + str(e) + ": " + str(tb) + "\n"
+        bb.fatal("Fatal errors occurred in subprocesses:\n%s" % msg)
     return results
 
 def squashspaces(string):
