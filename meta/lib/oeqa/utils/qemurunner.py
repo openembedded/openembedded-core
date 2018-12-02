@@ -207,8 +207,8 @@ class QemuRunner:
                     # No point waiting any longer
                     self.logger.debug('runqemu exited with code %d' % self.runqemu.returncode)
                     self._dump_host()
-                    self.stop()
                     self.logger.debug("Output from runqemu:\n%s" % self.getOutput(output))
+                    self.stop()
                     return False
             time.sleep(0.5)
 
@@ -220,8 +220,8 @@ class QemuRunner:
             processes = ps.decode("utf-8")
             self.logger.debug("Running processes:\n%s" % processes)
             self._dump_host()
-            self.stop()
             op = self.getOutput(output)
+            self.stop()
             if op:
                 self.logger.error("Output from runqemu:\n%s" % op)
             else:
