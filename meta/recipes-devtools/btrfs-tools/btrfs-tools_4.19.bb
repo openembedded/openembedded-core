@@ -14,11 +14,12 @@ DEPENDS = "util-linux attr e2fsprogs lzo acl python3-setuptools-native"
 DEPENDS_append_class-target = " udev"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "7faaca0d9f78f7162ae603231f693dd8e1af2a41"
+SRCREV = "d72d913291683188ddf5d758db02f1bc3b05d2f7"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Makefile-build-mktables-using-native-gcc.patch \
            file://0001-Add-LDFLAGS-when-building-libbtrfsutil.so.patch \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
+           file://0001-btrfs-progs-kernel-lib-bitops-Fix-big-endian-compila.patch \
            "
 
 inherit autotools-brokensep pkgconfig manpages distutils3-base
