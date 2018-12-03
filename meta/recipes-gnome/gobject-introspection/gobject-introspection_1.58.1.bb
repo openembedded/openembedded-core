@@ -19,6 +19,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
            file://0001-configure.ac-make-GIR_DIR-configurable.patch \
            file://0002-g-ir-tools-respect-gir_dir_prefix.patch \
+           file://0010-meson-add-option-gir-dir-prefix.patch \
            file://0001-Port-cross-compilation-support-to-meson.patch \
            "
 

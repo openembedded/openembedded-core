@@ -1,4 +1,4 @@
-From fabf8c505181636182a357e0c6e764b752ccf468 Mon Sep 17 00:00:00 2001
+From ea25a5a755bc839d5b504aac207f860ae68109bc Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 15 Nov 2018 15:10:05 +0100
 Subject: [PATCH] Port cross-compilation support to meson
@@ -13,11 +13,11 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  3 files changed, 66 insertions(+), 17 deletions(-)
 
 diff --git a/gir/meson.build b/gir/meson.build
-index 607bbc45..c0e221b3 100644
+index 1cb514a..f873068 100644
 --- a/gir/meson.build
 +++ b/gir/meson.build
-@@ -37,15 +37,27 @@ typelibdir = join_paths(get_option('libdir'), 'girepository-1.0')
- girdir = join_paths(get_option('datadir'), 'gir-1.0')
+@@ -36,15 +36,27 @@ gir_files = [
+ typelibdir = join_paths(get_option('libdir'), 'girepository-1.0')
  install_data(gir_files, install_dir: girdir)
  
 -scanner_command = [
@@ -53,7 +53,7 @@ index 607bbc45..c0e221b3 100644
  
  dep_type = glib_dep.type_name()
  if dep_type == 'internal'
-@@ -58,6 +70,12 @@ if dep_type == 'internal'
+@@ -57,6 +69,12 @@ if dep_type == 'internal'
                        '--extra-library=glib-2.0', '--extra-library=gobject-2.0']
  endif
  
@@ -66,7 +66,7 @@ index 607bbc45..c0e221b3 100644
  # Take a glob and print to newlines
  globber = '''
  from glob import glob
-@@ -84,8 +102,8 @@ glib_command = scanner_command + [
+@@ -83,8 +101,8 @@ glib_command = scanner_command + [
  
  if dep_type == 'pkgconfig'
    glib_command += ['--external-library', '--pkg=glib-2.0']
@@ -77,7 +77,7 @@ index 607bbc45..c0e221b3 100644
    glib_libincdir = join_paths(glib_libdir, 'glib-2.0', 'include')
    glib_files += join_paths(glib_incdir, 'gobject', 'glib-types.h')
    glib_files += join_paths(glib_libincdir, 'glibconfig.h')
-@@ -339,7 +357,7 @@ endforeach
+@@ -338,7 +356,7 @@ endforeach
  if giounix_dep.found()
    if dep_type == 'pkgconfig'
      gio_command += ['--pkg=gio-unix-2.0']
@@ -86,7 +86,7 @@ index 607bbc45..c0e221b3 100644
      # Get the installed gio-unix header list
      ret = run_command(python, '-c', globber.format(join_paths(giounix_includedir, 'gio', '*.h')))
      if ret.returncode() != 0
-@@ -417,15 +435,24 @@ gir_files += custom_target('gir-girepository',
+@@ -416,15 +434,24 @@ gir_files += custom_target('gir-girepository',
    ]
  )
  
@@ -116,10 +116,10 @@ index 607bbc45..c0e221b3 100644
      install_dir: typelibdir,
    )
 diff --git a/meson.build b/meson.build
-index 7ec95328..9e20da57 100644
+index 17acd82..e0bb495 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -76,7 +76,9 @@ libffi_dep = dependency('libffi',
+@@ -81,7 +81,9 @@ libffi_dep = dependency('libffi',
  subdir('girepository')
  subdir('tools')
  subdir('giscanner')
@@ -131,12 +131,12 @@ index 7ec95328..9e20da57 100644
  subdir('docs')
  subdir('tests')
 diff --git a/meson_options.txt b/meson_options.txt
-index 49726be6..d557a3b6 100644
+index ee6958d..b168142 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -21,3 +21,23 @@ option('cairo-libname', type: 'string',
- option('python', type: 'string', value: 'python3',
-   description: 'Path or name of the Python interpreter to build for'
+@@ -25,3 +25,23 @@ option('python', type: 'string', value: 'python3',
+ option('gir-dir-prefix', type: 'string',
+   description: 'Intermediate prefix for gir installation under ${prefix}'
  )
 +
 +option('enable-host-gi', type: 'boolean', value : false,
