@@ -42,7 +42,8 @@ SYSLINUX_TIMEOUT = "10"
         """Test runqemu machine"""
         cmd = "%s %s" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
-            self.assertTrue(qemu.runner.logged, "Failed: %s" % cmd)
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
 
     @OETestID(2002)
     def test_boot_machine_ext4(self):
@@ -50,7 +51,7 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s ext4" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue('rootfs.ext4' in f.read(), "Failed: %s" % cmd)
+                self.assertIn('rootfs.ext4', f.read(), "Failed: %s" % cmd)
 
     @OETestID(2003)
     def test_boot_machine_iso(self):
@@ -58,14 +59,16 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s iso" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue('media=cdrom' in f.read(), "Failed: %s" % cmd)
+                self.assertIn('media=cdrom', f.read(), "Failed: %s" % cmd)
 
     @OETestID(2004)
     def test_boot_recipe_image(self):
         """Test runqemu recipe-image"""
         cmd = "%s %s" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
-            self.assertTrue(qemu.runner.logged, "Failed: %s" % cmd)
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
+
 
     @OETestID(2005)
     def test_boot_recipe_image_vmdk(self):
@@ -73,7 +76,7 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s wic.vmdk" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue('format=vmdk' in f.read(), "Failed: %s" % cmd)
+                self.assertIn('format=vmdk', f.read(), "Failed: %s" % cmd)
 
     @OETestID(2006)
     def test_boot_recipe_image_vdi(self):
@@ -81,14 +84,16 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s wic.vdi" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue('format=vdi' in f.read(), "Failed: %s" % cmd)
+                self.assertIn('format=vdi', f.read(), "Failed: %s" % cmd)
 
     @OETestID(2007)
     def test_boot_deploy(self):
         """Test runqemu deploy_dir_image"""
         cmd = "%s %s" % (self.cmd_common, self.deploy_dir_image)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
-            self.assertTrue(qemu.runner.logged, "Failed: %s" % cmd)
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
+
 
     @OETestID(2008)
     def test_boot_deploy_hddimg(self):
@@ -96,7 +101,7 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s hddimg" % (self.cmd_common, self.deploy_dir_image)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue(re.search('file=.*.hddimg', f.read()), "Failed: %s" % cmd)
+                self.assertTrue(re.search('file=.*.hddimg', f.read()), "Failed: %s, %s" % (cmd, f.read()))
 
     @OETestID(2009)
     def test_boot_machine_slirp(self):
@@ -104,7 +109,7 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s slirp %s" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue(' -netdev user' in f.read(), "Failed: %s" % cmd)
+                self.assertIn(' -netdev user', f.read(), "Failed: %s" % cmd)
 
     @OETestID(2009)
     def test_boot_machine_slirp_qcow2(self):
@@ -112,7 +117,7 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s slirp wic.qcow2 %s" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertTrue('format=qcow2' in f.read(), "Failed: %s" % cmd)
+                self.assertIn('format=qcow2', f.read(), "Failed: %s" % cmd)
 
     @OETestID(2010)
     def test_boot_qemu_boot(self):
@@ -123,7 +128,8 @@ SYSLINUX_TIMEOUT = "10"
             self.skipTest("%s not found" % qemuboot_conf)
         cmd = "%s %s" % (self.cmd_common, qemuboot_conf)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
-            self.assertTrue(qemu.runner.logged, "Failed: %s" % cmd)
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
 
     @OETestID(2011)
     def test_boot_rootfs(self):
@@ -134,7 +140,9 @@ SYSLINUX_TIMEOUT = "10"
             self.skipTest("%s not found" % rootfs)
         cmd = "%s %s" % (self.cmd_common, rootfs)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
-            self.assertTrue(qemu.runner.logged, "Failed: %s" % cmd)
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
+
 
 # This test was designed as a separate class to test that shutdown
 # command will shutdown qemu as expected on each qemu architecture
