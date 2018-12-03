@@ -25,7 +25,7 @@ Fixes
 |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
+Upstream-Status: Pending
 ---
  mdadm.h | 1 +
  1 file changed, 1 insertion(+)

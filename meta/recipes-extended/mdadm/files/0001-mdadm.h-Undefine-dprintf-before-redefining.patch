@@ -14,7 +14,7 @@ In file included from policy.c:25:
 /mnt/oe/openembedded-core/build/tmp-glibc/sysroots/qemux86/usr/include/bits/stdio2.h:145:12: note: previous definition is here
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
+Upstream-Status: Pending
 ---
  mdadm.h | 2 ++
  1 file changed, 2 insertions(+)
