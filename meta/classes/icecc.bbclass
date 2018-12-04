@@ -398,7 +398,7 @@ set_icecc_env() {
     # Don't let ccache find the icecream compiler links that have been created, otherwise
     # it can end up invoking icecream recursively.
     export CCACHE_PATH="$PATH"
-    export CCACHE_DISBALE="1"
+    export CCACHE_DISABLE="1"
 
     export ICECC_VERSION ICECC_CC ICECC_CXX
     export PATH="$ICE_PATH:$PATH"
