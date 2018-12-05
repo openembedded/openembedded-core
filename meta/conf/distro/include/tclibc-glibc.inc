@@ -32,7 +32,7 @@ LIBC_LOCALE_DEPENDENCIES = "\
 	glibc-gconv-iso8859-15"
 
 def get_libc_locales_dependencies(d):
-    if 'libc-locales' in (d.getVar('DISTRO_FEATURES') or '').split() :
+    if bb.utils.contains('DISTRO_FEATURES', 'libc-charsets libc-locale-code libc-locales', True, False, d):
         return d.getVar('LIBC_LOCALE_DEPENDENCIES') or ''
     else:
         return ''
