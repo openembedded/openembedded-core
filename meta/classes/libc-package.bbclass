@@ -39,9 +39,7 @@ python __anonymous () {
                 break
 
     # try to fix disable charsets/locales/locale-code compile fail
-    if bb.utils.contains('DISTRO_FEATURES', 'libc-charsets', True, False, d) and \
-            bb.utils.contains('DISTRO_FEATURES', 'libc-locales', True, False, d) and \
-            bb.utils.contains('DISTRO_FEATURES', 'libc-locale-code', True, False, d):
+    if bb.utils.contains('DISTRO_FEATURES', 'libc-charsets libc-locales libc-locale-code', True, False, d):
         d.setVar('PACKAGE_NO_GCONV', '0')
     else:
         d.setVar('PACKAGE_NO_GCONV', '1')

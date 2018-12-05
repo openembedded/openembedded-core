@@ -72,7 +72,7 @@ FILES_localedef = "${bindir}/localedef"
 LOCALETREESRC = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
 
 do_install () {
-	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
+	mkdir -p ${D}${bindir} ${D}${datadir}
 	if [ -n "$(ls ${LOCALETREESRC}/${bindir})" ]; then
 		cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
 	fi
@@ -80,11 +80,14 @@ do_install () {
 		mkdir -p ${D}${localedir}
 		cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${localedir}/* ${D}${localedir}
 	fi
-	if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
-		cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
-	fi
-	if [ -e ${LOCALETREESRC}/${datadir}/i18n ]; then
-		cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
+	if [ ${@d.getVar('PACKAGE_NO_GCONV')} -eq 0 ]; then
+		mkdir -p ${D}${libdir}
+		if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
+			cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
+		fi
+		if [ -e ${LOCALETREESRC}/${datadir}/i18n ]; then
+			cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
+		fi
 	fi
 	if [ -e ${LOCALETREESRC}/${datadir}/locale ]; then
 		cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
