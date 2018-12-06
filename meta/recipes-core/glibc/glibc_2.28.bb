@@ -122,10 +122,10 @@ do_compile () {
 	if [ -n "${RTLDLIST}" ]
 	then
 		prevrtld=`cat ${B}/elf/ldd | grep "^RTLDLIST=" | sed 's#^RTLDLIST="\?\([^"]*\)"\?$#\1#'`
-		if [ "${prevrtld}" != "${RTLDLIST}" ]
-		then
-			sed -i ${B}/elf/ldd -e "s#^RTLDLIST=.*\$#RTLDLIST=\"${prevrtld} ${RTLDLIST}\"#"
-		fi
+		# remove duplicate entries
+		newrtld=`echo $(printf '%s\n' ${prevrtld} ${RTLDLIST} | LC_ALL=C sort -u)`
+		echo "ldd \"${prevrtld} ${RTLDLIST}\" -> \"${newrtld}\""
+		sed -i ${B}/elf/ldd -e "s#^RTLDLIST=.*\$#RTLDLIST=\"${newrtld}\"#"
 	fi
 
 }
