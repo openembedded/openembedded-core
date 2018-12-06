@@ -73,6 +73,7 @@ CORE_IMAGE_EXTRA_INSTALL = "perl"
         cls.image = 'core-image-minimal'
 
         bb_vars = get_bb_vars(['SSTATE_DIR', 'WORKDIR'], cls.image)
+        bb.utils.mkdirhier(bb_vars["WORKDIR"])
         cls.tmpdirobj = tempfile.TemporaryDirectory(prefix="selftest-esdk-", dir=bb_vars["WORKDIR"])
         cls.tmpdir_eSDKQA = cls.tmpdirobj.name
 
