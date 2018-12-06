@@ -14,7 +14,7 @@ SRC_URI = "http://download.savannah.nongnu.org/releases/libunwind/libunwind-${PV
            "
 
 SRC_URI_append_libc-musl = " file://musl-header-conflict.patch"
-EXTRA_OECONF_append_libc-musl = " --disable-documentation --disable-tests "
+EXTRA_OECONF_append_libc-musl = " --disable-documentation --disable-tests --enable-static"
 
 # http://errors.yoctoproject.org/Errors/Details/20487/
 ARM_INSTRUCTION_SET_armv4 = "arm"
