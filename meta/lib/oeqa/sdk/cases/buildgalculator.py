@@ -1,7 +1,15 @@
+import os
+import subprocess
+import tempfile
 import unittest
+
+import bb
 
 from oeqa.sdk.case import OESDKTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
+
+from oeqa.utils.subprocesstweak import errors_have_output
+errors_have_output()
 
 class GalculatorTest(OESDKTestCase):
     td_vars = ['DATETIME']
@@ -14,23 +22,22 @@ class GalculatorTest(OESDKTestCase):
             raise unittest.SkipTest("GalculatorTest class: SDK doesn't contain gettext")
 
     def test_galculator(self):
-        dl_dir = self.td.get('DL_DIR', None)
-        project = None
-        try:
-            project = SDKBuildProject(self.tc.sdk_dir + "/galculator/",
-                                      self.tc.sdk_env,
-                                      "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2",
-                                      self.tc.sdk_dir, self.td['DATETIME'], dl_dir=dl_dir)
+        with tempfile.TemporaryDirectory(prefix="galculator", dir=self.tc.sdk_dir) as testdir:
+            dl_dir = self.td.get('DL_DIR', None)
+            tarball = self.fetch(testdir, dl_dir, "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2")
 
-            project.download_archive()
+            dirs = {}
+            dirs["source"] = os.path.join(testdir, "galculator-2.1.4")
+            dirs["build"] = os.path.join(testdir, "build")
+            dirs["install"] = os.path.join(testdir, "install")
 
-            # regenerate configure to get support for --with-libtool-sysroot
-            legacy_preconf=("autoreconf -i -f -I ${OECORE_TARGET_SYSROOT}/usr/share/aclocal -I m4;")
+            subprocess.check_output(["tar", "xf", tarball, "-C", testdir])
+            self.assertTrue(os.path.isdir(dirs["source"]))
 
-            self.assertEqual(project.run_configure(extra_cmds=legacy_preconf),
-                             0, msg="Running configure failed")
+            bb.utils.mkdirhier(dirs["build"])
+            self._run("cd {source} && autoreconf -i -f -I $OECORE_TARGET_SYSROOT/usr/share/aclocal -I m4".format(**dirs))
+            self._run("cd {build} && {source}/configure $CONFIGURE_FLAGS".format(**dirs))
+            self._run("cd {build} && make -j".format(**dirs))
+            self._run("cd {build} && make install DESTDIR={install}".format(**dirs))
 
-            self.assertEqual(project.run_make(), 0,
-                            msg="Running make failed")
-        finally:
-            project.clean()
+            self.check_elf(os.path.join(dirs["install"], "usr", "local", "bin", "galculator"))
