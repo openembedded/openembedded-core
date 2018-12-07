@@ -363,6 +363,9 @@ def host_gcc_version(d, taskcontextonly=False):
         return
 
     compiler = d.getVar("BUILD_CC")
+    # Get rid of ccache since it is not present when parsing.
+    if compiler.startswith('ccache '):
+        compiler = compiler[7:]
     try:
         env = os.environ.copy()
         env["PATH"] = d.getVar("PATH")
