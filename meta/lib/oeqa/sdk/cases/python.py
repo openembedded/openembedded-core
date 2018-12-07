@@ -7,7 +7,7 @@ class Python2Test(OESDKTestCase):
                 self.tc.hasHostPackage("python-core-native")):
             raise unittest.SkipTest("No python package in the SDK")
 
-    def test_python3(self):
+    def test_python2(self):
         try:
             cmd = "python -c \"import codecs; print(codecs.encode('Uryyb, jbeyq', 'rot13'))\""
             output = self._run(cmd)
