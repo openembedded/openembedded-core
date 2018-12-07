@@ -37,11 +37,6 @@ CACHED_CONFIGUREVARS += "ac_cv_header_netinet_sctp_h=no ac_cv_header_netinet_sct
 CACHED_CONFIGUREVARS += "ac_cv_sizeof_struct_iovec=yes"
 CACHED_CONFIGUREVARS += "ac_cv_file__dev_zero=yes"
 
-# Otherwise libtool fails to compile apr-utils
-# x86_64-linux-libtool: compile: unable to infer tagged configuration
-# x86_64-linux-libtool:   error: specify a tag with '--tag'
-CCACHE = ""
-
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
