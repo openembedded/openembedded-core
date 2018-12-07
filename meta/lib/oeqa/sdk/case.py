@@ -10,3 +10,35 @@ class OESDKTestCase(OETestCase):
         return subprocess.check_output(". %s > /dev/null; %s;" % \
                 (self.tc.sdk_env, cmd), shell=True,
                 stderr=subprocess.STDOUT, universal_newlines=True)
+
+    def fetch(self, workdir, dl_dir, url, archive=None):
+        if not archive:
+            from urllib.parse import urlparse
+            archive = os.path.basename(urlparse(url).path)
+
+        if dl_dir:
+            tarball = os.path.join(dl_dir, archive)
+            if os.path.exists(tarball):
+                return tarball
+
+        tarball = os.path.join(workdir, archive)
+        subprocess.check_output(["wget", "-O", tarball, url])
+        return tarball
+
+    def check_elf(self, path, target_os=None, target_arch=None):
+        import oe.qa, oe.elf
+
+        elf = oe.qa.ELFFile(path)
+        elf.open()
+
+        if not target_os or not target_arch:
+            output = self._run("echo $OECORE_TARGET_OS:$OECORE_TARGET_ARCH")
+            target_os, target_arch = output.strip().split(":")
+
+        machine_data = oe.elf.machine_dict(None)[target_os][target_arch]
+        (machine, osabi, abiversion, endian, bits) = machine_data
+
+        self.assertEqual(machine, elf.machine())
+        self.assertEqual(bits, elf.abiSize())
+        self.assertEqual(endian, elf.isLittleEndian())
+
