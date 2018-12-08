@@ -310,7 +310,13 @@ for pypkg in old_manifest:
             pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
             inFolders = False
             for folder in allfolders:
-                if folder in pymodule_dep:
+                # The module could have a directory named after it, e.g. xml, if we take out the filename from the path
+                # we'll end up with ${libdir}, and we want ${libdir}/xml
+                if isFolder(pymodule_dep):
+                    check_path = pymodule_dep
+                else:
+                    check_path = os.path.dirname(pymodule_dep)
+                if folder in check_path :
                     inFolders = True # Did we find a folder?
                     folderFound = False # Second flag to break inner for
                     # Loop only through packages which contain folders
