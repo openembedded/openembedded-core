@@ -9,24 +9,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
-           file://gcc-4.9.patch \
+           file://run-ptest \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
            file://mdadm-fix-ptest-build-errors.patch \
-           file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
-           file://run-ptest \
            file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
-           file://0001-include-sys-sysmacros.h-for-major-minor-defintions.patch \
-           file://0005-Add-a-comment-to-indicate-valid-fallthrough.patch \
+           file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
            file://0001-Use-CC-to-check-for-implicit-fallthrough-warning-sup.patch \
-           file://0001-Disable-gcc8-warnings.patch \
+           file://0001-Compute-abs-diff-in-a-standard-compliant-way.patch \
            "
 SRC_URI[md5sum] = "51bf3651bd73a06c413a2f964f299598"
 SRC_URI[sha256sum] = "ab7688842908d3583a704d491956f31324c3a5fc9f6a04653cb75d19f1934f4a"
 
-CFLAGS += "-fno-strict-aliasing"
-inherit autotools-brokensep
+inherit autotools-brokensep ptest
 
-EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}"'
+CFLAGS_append_toolchain-clang = " -Wno-error=address-of-packed-member"
+
 # PPC64 and MIPS64 uses long long for u64 in the kernel, but powerpc's asm/types.h
 # prevents 64-bit userland from seeing this definition, instead defaulting
 # to u64 == long in userspace. Define __SANE_USERSPACE_TYPES__ to get
@@ -34,6 +31,8 @@ EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}"'
 CFLAGS_append_powerpc64 = ' -D__SANE_USERSPACE_TYPES__'
 CFLAGS_append_mipsarchn64 = ' -D__SANE_USERSPACE_TYPES__'
 CFLAGS_append_mipsarchn32 = ' -D__SANE_USERSPACE_TYPES__'
+
+EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}"'
 
 do_compile() {
 	# Point to right sbindir
@@ -45,8 +44,6 @@ do_install() {
 	export STRIP=""
 	autotools_do_install
 }
-
-inherit ptest
 
 do_compile_ptest() {
 	oe_runmake test
@@ -62,6 +59,7 @@ do_install_ptest() {
 		install -D -m 755 $prg ${D}${PTEST_PATH}/
 	done
 }
+
 RDEPENDS_${PN}-ptest += "bash"
 RRECOMMENDS_${PN}-ptest += " \
     coreutils \
