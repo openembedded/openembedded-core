@@ -307,10 +307,10 @@ def package_qa_check_arch(path,name,d, elf, messages):
     if not ((machine == elf.machine()) or is_32 or is_bpf):
         package_qa_add_message(messages, "arch", "Architecture did not match (%s, expected %s) on %s" % \
                  (oe.qa.elf_machine_to_string(elf.machine()), oe.qa.elf_machine_to_string(machine), package_qa_clean_path(path,d)))
-    elif not ((bits == elf.abiSize()) or is_32):
+    elif not ((bits == elf.abiSize()) or is_32 or is_bpf):
         package_qa_add_message(messages, "arch", "Bit size did not match (%d to %d) %s on %s" % \
                  (bits, elf.abiSize(), bpn, package_qa_clean_path(path,d)))
-    elif not littleendian == elf.isLittleEndian():
+    elif not ((littleendian == elf.isLittleEndian()) or is_bpf):
         package_qa_add_message(messages, "arch", "Endiannes did not match (%d to %d) on %s" % \
                  (littleendian, elf.isLittleEndian(), package_qa_clean_path(path,d)))
 
