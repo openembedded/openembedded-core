@@ -2,7 +2,7 @@ Subject: [PATCH] Fix SHA_HTONL bug for arm 32be.
 
 In arm 32be, there is no need to reverse the host value.
 
-Upstream Status: Pending
+Upstream-Status: Pending
 
 Signed-off-by: Zheng Ruoqin <zhengrq.fnst@cn.fujitsu.com>
 ---
