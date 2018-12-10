@@ -98,6 +98,8 @@ EXTRA_OECMAKE_append_x86-x32 = " -DENABLE_JIT=OFF "
 SECURITY_CFLAGS_remove_aarch64 = "-fpie"
 SECURITY_CFLAGS_append_aarch64 = " -fPIE"
 
+LDFLAGS_append_toolchain-clang = " -rtlib=compiler-rt"
+
 FILES_${PN} += "${libdir}/webkit2gtk-4.0/injected-bundle/libwebkit2gtkinjectedbundle.so"
 
 RRECOMMENDS_${PN} += "ca-certificates shared-mime-info"
