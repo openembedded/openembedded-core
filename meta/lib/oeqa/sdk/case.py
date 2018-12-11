@@ -1,6 +1,7 @@
 # Copyright (C) 2016 Intel Corporation
 # Released under the MIT license (see COPYING.MIT)
 
+import os
 import subprocess
 
 from oeqa.core.case import OETestCase
@@ -26,10 +27,12 @@ class OESDKTestCase(OETestCase):
         return tarball
 
     def check_elf(self, path, target_os=None, target_arch=None):
+        """
+        Verify that the ELF binary $path matches the specified target
+        OS/architecture, or if not specified the currently configured MACHINE's
+        OS/architecture.
+        """
         import oe.qa, oe.elf
-
-        elf = oe.qa.ELFFile(path)
-        elf.open()
 
         if not target_os or not target_arch:
             output = self._run("echo $OECORE_TARGET_OS:$OECORE_TARGET_ARCH")
@@ -38,7 +41,11 @@ class OESDKTestCase(OETestCase):
         machine_data = oe.elf.machine_dict(None)[target_os][target_arch]
         (machine, osabi, abiversion, endian, bits) = machine_data
 
-        self.assertEqual(machine, elf.machine())
+        elf = oe.qa.ELFFile(path)
+        elf.open()
+
+        self.assertEqual(machine, elf.machine(),
+                         "Binary was %s but expected %s" %
+                         (oe.qa.elf_machine_to_string(elf.machine()), oe.qa.elf_machine_to_string(machine)))
         self.assertEqual(bits, elf.abiSize())
         self.assertEqual(endian, elf.isLittleEndian())
-
