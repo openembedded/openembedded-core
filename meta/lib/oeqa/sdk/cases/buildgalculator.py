@@ -3,17 +3,14 @@ import subprocess
 import tempfile
 import unittest
 
-import bb
-
 from oeqa.sdk.case import OESDKTestCase
-from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
-
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
 class GalculatorTest(OESDKTestCase):
-    td_vars = ['DATETIME']
-
+    """
+    Test that autotools and GTK+ 3 compiles correctly.
+    """
     def setUp(self):
         if not (self.tc.hasTargetPackage("gtk+3", multilib=True) or \
                 self.tc.hasTargetPackage("libgtk-3.0", multilib=True)):
@@ -33,8 +30,8 @@ class GalculatorTest(OESDKTestCase):
 
             subprocess.check_output(["tar", "xf", tarball, "-C", testdir])
             self.assertTrue(os.path.isdir(dirs["source"]))
+            os.makedirs(dirs["build"])
 
-            bb.utils.mkdirhier(dirs["build"])
             self._run("cd {source} && autoreconf -i -f -I $OECORE_TARGET_SYSROOT/usr/share/aclocal -I m4".format(**dirs))
             self._run("cd {build} && {source}/configure $CONFIGURE_FLAGS".format(**dirs))
             self._run("cd {build} && make -j".format(**dirs))
