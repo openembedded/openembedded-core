@@ -519,17 +519,29 @@ class DpkgOpkgRootfs(Rootfs):
                 m_status = re.match("^Status:.*unpacked", line)
                 m_depends = re.match("^Depends: (.*)", line)
 
+                #Only one of m_pkg, m_status or m_depends is not None at time
+                #If m_pkg is not None, we started a new package
                 if m_pkg is not None:
-                    if pkg_name and pkg_status_match:
-                        pkgs[pkg_name] = _get_pkg_depends_list(pkg_depends)
-
+                    #Get Package name
                     pkg_name = m_pkg.group(1)
+                    #Make sure we reset other variables
                     pkg_status_match = False
                     pkg_depends = ""
                 elif m_status is not None:
+                    #New status matched
                     pkg_status_match = True
                 elif m_depends is not None:
+                    #New depends macthed
                     pkg_depends = m_depends.group(1)
+                else:
+                    pass
+
+                #Now check if we can process package depends and postinst
+                if "" != pkg_name and pkg_status_match:
+                    pkgs[pkg_name] = _get_pkg_depends_list(pkg_depends)
+                else:
+                    #Not enough information
+                    pass
 
         # remove package dependencies not in postinsts
         pkg_names = list(pkgs.keys())
