@@ -76,8 +76,9 @@ EXTRA_OECONF = "\
 		--with-database=simple \
 		--without-zsh-completion-dir \
 		--with-udev-rules-dir=`pkg-config --variable=udevdir udev`/rules.d \
-                ac_cv_header_valgrind_memcheck_h=no \
-                --disable-tests \
+		ac_cv_header_valgrind_memcheck_h=no \
+		--disable-tests \
+		--disable-running-from-build-tree \
 "
 
 # soxr (the SoX Resampler library) doesn't seem to be currently packaged in
