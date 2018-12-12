@@ -70,7 +70,7 @@ concat_dtb() {
 		elif [ -e "${DEPLOYDIR}/${UBOOT_NODTB_IMAGE}" -a -e "$deployed_uboot_dtb_binary" ]; then
 			cd ${DEPLOYDIR}
 			cat ${UBOOT_NODTB_IMAGE} $deployed_uboot_dtb_binary | tee ${B}/${UBOOT_BINARY} > ${UBOOT_IMAGE}
-		else
+		elif [ -n "${UBOOT_DTB_BINARY}" ]; then
 			bbwarn "Failure while adding public key to u-boot binary. Verified boot won't be available."
 		fi
 	fi
@@ -86,7 +86,7 @@ do_install_append() {
 			# need both of them.
 			install ${B}/${UBOOT_DTB_BINARY} ${D}${datadir}/${UBOOT_DTB_IMAGE}
 			ln -sf ${UBOOT_DTB_IMAGE} ${D}${datadir}/${UBOOT_DTB_BINARY}
-		else
+		elif [ -n "${UBOOT_DTB_BINARY}" ]; then
 			bbwarn "${B}/${UBOOT_DTB_BINARY} not found"
 		fi
 	fi
