@@ -122,6 +122,10 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
         desttool = os.path.join(dest, tool)
         if not os.path.exists(desttool):
             srctool = bb.utils.which(path, tool, executable=True)
+            # gcc/g++ may link to ccache on some hosts, e.g.,
+            # /usr/local/bin/ccache/gcc -> /usr/bin/ccache, then which(gcc)
+            # would return /usr/local/bin/ccache/gcc, but what we need is
+            # /usr/bin/gcc, this code can check and fix that.
             if "ccache" in srctool:
                 srctool = bb.utils.which(path, tool, executable=True, direction=1)
             if srctool:
