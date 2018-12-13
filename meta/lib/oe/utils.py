@@ -366,7 +366,8 @@ def host_gcc_version(d, taskcontextonly=False):
     try:
         env = os.environ.copy()
         env["PATH"] = d.getVar("PATH")
-        output = subprocess.check_output("%s --version" % compiler, shell=True, env=env).decode("utf-8")
+        output = subprocess.check_output("%s --version" % compiler, \
+                    shell=True, env=env, stderr=subprocess.STDOUT).decode("utf-8")
     except subprocess.CalledProcessError as e:
         bb.fatal("Error running %s --version: %s" % (compiler, e.output.decode("utf-8")))
 
