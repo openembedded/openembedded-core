@@ -48,3 +48,17 @@ python() {
         d.appendVar('DEPENDS', ' ccache-native')
         d.setVar('CCACHE', 'ccache ')
 }
+
+addtask cleanccache after do_clean
+python do_cleanccache() {
+    import shutil
+
+    ccache_dir = d.getVar('CCACHE_DIR')
+    if os.path.exists(ccache_dir):
+        bb.note("Removing %s" % ccache_dir)
+        shutil.rmtree(ccache_dir)
+    else:
+        bb.note("%s doesn't exist" % ccache_dir)
+}
+addtask cleanall after do_cleanccache
+do_cleanccache[nostamp] = "1"
