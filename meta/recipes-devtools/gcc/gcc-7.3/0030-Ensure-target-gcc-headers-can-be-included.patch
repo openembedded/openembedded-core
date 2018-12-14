@@ -57,42 +57,6 @@ index 10b96eca0a7..c8da0884872 100644
  #ifdef LOCAL_INCLUDE_DIR
      /* /usr/local/include comes before the fixincluded header files.  */
      { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },
-diff --git a/gcc/defaults.h b/gcc/defaults.h
-index 7ad92d920f8..39848cc9c0e 100644
---- a/gcc/defaults.h
-+++ b/gcc/defaults.h
-@@ -1475,4 +1475,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
- #define DWARF_GNAT_ENCODINGS_DEFAULT DWARF_GNAT_ENCODINGS_GDB
- #endif
- 
-+/* Default prefixes to attach to command names.  */
-+
-+#ifndef STANDARD_STARTFILE_PREFIX_1
-+#define STANDARD_STARTFILE_PREFIX_1 "/lib/"
-+#endif
-+#ifndef STANDARD_STARTFILE_PREFIX_2
-+#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib/"
-+#endif
-+
- #endif  /* ! GCC_DEFAULTS_H */
-diff --git a/gcc/gcc.c b/gcc/gcc.c
-index c73d4023987..b27245dbf77 100644
---- a/gcc/gcc.c
-+++ b/gcc/gcc.c
-@@ -1472,13 +1472,6 @@ static const char *gcc_libexec_prefix;
- 
- /* Default prefixes to attach to command names.  */
- 
--#ifndef STANDARD_STARTFILE_PREFIX_1
--#define STANDARD_STARTFILE_PREFIX_1 "/lib/"
--#endif
--#ifndef STANDARD_STARTFILE_PREFIX_2
--#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib/"
--#endif
--
- #ifdef CROSS_DIRECTORY_STRUCTURE  /* Don't use these prefixes for a cross compiler.  */
- #undef MD_EXEC_PREFIX
- #undef MD_STARTFILE_PREFIX
 -- 
 2.12.2
 
