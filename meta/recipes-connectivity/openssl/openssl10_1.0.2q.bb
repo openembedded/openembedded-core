@@ -81,6 +81,7 @@ CCACHE = ""
 
 TERMIO ?= "-DTERMIO"
 TERMIO_libc-musl = "-DTERMIOS"
+EXTRA_OECONF_append_libc-musl_powerpc64 = " no-asm"
 
 CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
          ${TERMIO} ${CFLAGS} -Wall"

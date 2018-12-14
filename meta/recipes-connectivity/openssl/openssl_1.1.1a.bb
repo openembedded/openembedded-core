@@ -35,6 +35,7 @@ do_configure[cleandirs] = "${B}"
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
 EXTRA_OECONF_append_libc-musl = " no-async"
+EXTRA_OECONF_append_libc-musl_powerpc64 = " no-asm"
 
 # This prevents openssl from using getrandom() which is not available on older glibc versions
 # (native versions can be built with newer glibc, but then relocated onto a system with older glibc)
