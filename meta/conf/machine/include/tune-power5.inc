@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "ppc64p5"
+DEFAULTTUNE ?= "ppcp5"
 
 require conf/machine/include/powerpc/arch-powerpc64.inc
 
