@@ -70,6 +70,7 @@ SRC_URI = "\
            file://0039-Fix-for-testsuite-failure.patch \
            file://0040-Re-introduce-spe-commandline-options.patch \
            file://0041-ARC-fix-spec-gen.patch \
+           file://0042-powerpc-powerpc64-Add-support-for-musl-ldso.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
