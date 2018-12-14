@@ -21,7 +21,8 @@ do_install () {
 set -x
 
 if [ ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'True', 'False', d)} = False ]; then
-        echo "qemuwrapper: qemu usermode is not supported"
+	echo "qemuwrapper: qemu usermode is not supported"
+	exit 1
 fi
 
 
