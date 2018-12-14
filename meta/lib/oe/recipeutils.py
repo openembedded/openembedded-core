@@ -16,8 +16,10 @@ import shutil
 import re
 import fnmatch
 import glob
-from collections import OrderedDict, defaultdict
+import bb.tinfoil
 
+from collections import OrderedDict, defaultdict
+from bb.utils import vercmp_string
 
 # Help us to find places to insert values
 recipe_progression = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION', 'LICENSE', 'LICENSE_FLAGS', 'LIC_FILES_CHKSUM', 'PROVIDES', 'DEPENDS', 'PR', 'PV', 'SRCREV', 'SRCPV', 'SRC_URI', 'S', 'do_fetch()', 'do_unpack()', 'do_patch()', 'EXTRA_OECONF', 'EXTRA_OECMAKE', 'EXTRA_OESCONS', 'do_configure()', 'EXTRA_OEMAKE', 'do_compile()', 'do_install()', 'do_populate_sysroot()', 'INITSCRIPT', 'USERADD', 'GROUPADD', 'PACKAGES', 'FILES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RPROVIDES', 'RREPLACES', 'RCONFLICTS', 'ALLOW_EMPTY', 'populate_packages()', 'do_package()', 'do_deploy()']
@@ -1017,3 +1019,52 @@ def get_recipe_upstream_version(rd):
         ru['datetime'] = datetime.now()
 
     return ru
+
+def get_recipe_upgrade_status(recipes=None):
+    pkgs_list = []
+    with bb.tinfoil.Tinfoil() as tinfoil:
+        tinfoil.prepare(config_only=False)
+
+        if not recipes:
+            recipes = tinfoil.all_recipe_files(variants=False)
+
+        for fn in recipes:
+            try:
+                if fn.startswith("/"):
+                    data = tinfoil.parse_recipe_file(fn)
+                else:
+                    data = tinfoil.parse_recipe(fn)
+            except bb.providers.NoProvider:
+                bb.note(" No provider for %s" % fn)
+                continue
+
+            unreliable = data.getVar('UPSTREAM_CHECK_UNRELIABLE')
+            if unreliable == "1":
+                bb.note(" Skip package %s as upstream check unreliable" % pn)
+                continue
+
+            uv = get_recipe_upstream_version(data)
+
+            pn = data.getVar('PN')
+            cur_ver = uv['current_version']
+
+            upstream_version_unknown = data.getVar('UPSTREAM_VERSION_UNKNOWN')
+            if not uv['version']:
+                status = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
+            else:
+                cmp = vercmp_string(uv['current_version'], uv['version'])
+                if cmp == -1:
+                    status = "UPDATE" if not upstream_version_unknown else "KNOWN_BROKEN"
+                elif cmp == 0:
+                    status = "MATCH" if not upstream_version_unknown else "KNOWN_BROKEN"
+                else:
+                    status = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
+
+            next_ver = uv['version'] if uv['version'] else "N/A"
+            revision = uv['revision'] if uv['revision'] else "N/A"
+            maintainer = data.getVar('RECIPE_MAINTAINER')
+            no_upgrade_reason = data.getVar('RECIPE_NO_UPDATE_REASON')
+
+            pkgs_list.append((pn, status, cur_ver, next_ver, maintainer, revision, no_upgrade_reason))
+
+    return pkgs_list
