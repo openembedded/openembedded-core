@@ -4,6 +4,8 @@ from oeqa.utils.decorators import testcase
 from oeqa.utils.ftools import write_file
 from oeqa.core.decorator.oeid import OETestID
 
+import oe.recipeutils
+
 class Distrodata(OESelftestTestCase):
 
     @OETestID(1902)
@@ -17,11 +19,11 @@ class Distrodata(OESelftestTestCase):
         feature = 'INHERIT += "distrodata"\n'
         feature += 'LICENSE_FLAGS_WHITELIST += " commercial"\n'
         self.write_config(feature)
-        bitbake('-c checkpkg world')
 
-        checkpkg_result = open(os.path.join(get_bb_var("LOG_DIR"), "checkpkg.csv")).readlines()[1:]
-        regressed_failures = [pkg_data[0] for pkg_data in [pkg_line.split('\t') for pkg_line in checkpkg_result] if pkg_data[11] == 'UNKNOWN_BROKEN']
-        regressed_successes = [pkg_data[0] for pkg_data in [pkg_line.split('\t') for pkg_line in checkpkg_result] if pkg_data[11] == 'KNOWN_BROKEN']
+        pkgs = oe.recipeutils.get_recipe_upgrade_status()
+
+        regressed_failures = [pkg[0] for pkg in pkgs if pkg[1] == 'UNKNOWN_BROKEN']
+        regressed_successes = [pkg[0] for pkg in pkgs if pkg[1] == 'KNOWN_BROKEN']
         msg = ""
         if len(regressed_failures) > 0:
             msg = msg + """
