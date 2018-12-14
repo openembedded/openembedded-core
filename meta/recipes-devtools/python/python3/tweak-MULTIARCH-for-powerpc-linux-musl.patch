@@ -1,0 +1,40 @@
+From 7362464383bbd54f8e6be4389f2c74c0717bc6e1 Mon Sep 17 00:00:00 2001
+From: Serhey Popovych <serhe.popovych@gmail.com>
+Date: Sat, 8 Dec 2018 11:24:06 -0500
+Subject: [PATCH] configure.ac: tweak MULTIARCH for powerpc-linux-musl
+
+For musl builds, the MULTIARCH is powerpc-linux-musl and configure.ac
+does not have lines to recognize it causing configure error for the
+platform triplet when building for powerpc 32bit.
+
+This is feature described in PEP-3149 and to prevent possible runtime
+compatibility issues we map powerpc-linux-musl to powerpc-linux-gnu.
+
+Look at similar change by Hongxu Jia <hongxu.jia@> presended in
+tweak-MULTIARCH-for-powerpc-linux-gnuspe.patch to handle p1022ds BSP
+builds.
+
+Upstream-Status: Pending
+Signed-off-by: Serhey Popovych <serhe.popovych@gmail.com>
+---
+ configure.ac | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 95c98d1..1a4d8aa 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -752,6 +752,10 @@ if test x$MULTIARCH = xpowerpc-linux-gnuspev1
+ then
+ 	MULTIARCH="powerpc-linux-gnuspe"
+ fi
++if test x$MULTIARCH = xpowerpc-linux-musl
++then
++	MULTIARCH="powerpc-linux-gnu"
++fi
+ 
+ AC_SUBST(MULTIARCH)
+ 
+-- 
+2.7.4
+
