@@ -138,10 +138,10 @@ do_kernel_metadata() {
 	for f in ${feat_dirs}; do
 		if [ -d "${WORKDIR}/$f/meta" ]; then
 			includes="$includes -I${WORKDIR}/$f/kernel-meta"
-	        elif [ -d "${WORKDIR}/$f" ]; then
-			includes="$includes -I${WORKDIR}/$f"
 		elif [ -d "${WORKDIR}/../oe-local-files/$f" ]; then
 			includes="$includes -I${WORKDIR}/../oe-local-files/$f"
+	        elif [ -d "${WORKDIR}/$f" ]; then
+			includes="$includes -I${WORKDIR}/$f"
 		fi
 	done
 	for s in ${sccs} ${patches}; do

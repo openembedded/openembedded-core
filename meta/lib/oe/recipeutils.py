@@ -482,7 +482,14 @@ def get_recipe_local_files(d, patches=False, archives=False):
                     unpack = fetch.ud[uri].parm.get('unpack', True)
                     if unpack:
                         continue
-            ret[fname] = localpath
+            if os.path.isdir(localpath):
+                for root, dirs, files in os.walk(localpath):
+                    for fname in files:
+                        fileabspath = os.path.join(root,fname)
+                        srcdir = os.path.dirname(localpath)
+                        ret[os.path.relpath(fileabspath,srcdir)] = fileabspath
+            else:
+                ret[fname] = localpath
     return ret
 
 
