@@ -65,8 +65,8 @@ Index: go/src/cmd/go/internal/work/exec.go
 ===================================================================
 --- go.orig/src/cmd/go/internal/work/exec.go
 +++ go/src/cmd/go/internal/work/exec.go
-@@ -440,6 +440,23 @@ func (b *Builder) build(a *Action) (err
- 		return fmt.Errorf("module requires Go %s", p.Module.GoVersion)
+@@ -436,6 +436,23 @@ func (b *Builder) build(a *Action) (err
+ 		return fmt.Errorf("missing or invalid binary-only package; expected file %q", a.Package.Target)
  	}
  
 +	if goRootPrecious && (a.Package.Standard || a.Package.Goroot) {
@@ -89,7 +89,7 @@ Index: go/src/cmd/go/internal/work/exec.go
  	if err := b.Mkdir(a.Objdir); err != nil {
  		return err
  	}
-@@ -1435,6 +1452,14 @@ func BuildInstallFunc(b *Builder, a *Act
+@@ -1438,6 +1455,14 @@ func BuildInstallFunc(b *Builder, a *Act
  		return nil
  	}
  
