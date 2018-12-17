@@ -1,0 +1,42 @@
+From 7d01f2acf6fde6341a68a91f9b343841cc424af7 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 17 Dec 2018 11:33:35 -0800
+Subject: [PATCH] Add x32 specific inline asm
+
+Upstream-Status: Pending [https://github.com/besser82/libxcrypt/issues/74#issuecomment-447966455]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ alg-yescrypt-opt.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/alg-yescrypt-opt.c b/alg-yescrypt-opt.c
+index 5dbd822..060caf4 100644
+--- a/alg-yescrypt-opt.c
++++ b/alg-yescrypt-opt.c
+@@ -528,6 +528,11 @@ static volatile uint64_t Smask2var = Smask2;
+ #undef MAYBE_MEMORY_BARRIER
+ #define MAYBE_MEMORY_BARRIER \
+ 	__asm__("" : : : "memory");
++#ifdef __ILP32__ /* x32 */
++#define REGISTER_PREFIX "e"
++#else
++#define REGISTER_PREFIX "r"
++#endif
+ #define PWXFORM_SIMD(X) { \
+ 	__m128i H; \
+ 	__asm__( \
+@@ -537,8 +542,8 @@ static volatile uint64_t Smask2var = Smask2;
+ 	    "pmuludq %1, %0\n\t" \
+ 	    "movl %%eax, %%ecx\n\t" \
+ 	    "shrq $0x20, %%rax\n\t" \
+-	    "paddq (%3,%%rcx), %0\n\t" \
+-	    "pxor (%4,%%rax), %0\n\t" \
++	    "paddq (%3,%%" REGISTER_PREFIX "cx), %0\n\t" \
++	    "pxor (%4,%%" REGISTER_PREFIX "ax), %0\n\t" \
+ 	    : "+x" (X), "=x" (H) \
+ 	    : "d" (Smask2), "S" (S0), "D" (S1) \
+ 	    : "cc", "ax", "cx"); \
+-- 
+2.20.1
+
