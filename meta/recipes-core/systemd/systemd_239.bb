@@ -35,6 +35,8 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-dhcp6-make-sure-we-have-enough-space-for-the-DHCP6-o.patch \
            file://0001-Revert-sysctl.d-request-ECN-on-both-in-and-outgoing-.patch \
            file://0001-timesync-changes-type-of-drift_freq-to-int64_t.patch \
+           file://0001-sysctl-Don-t-pass-null-directive-argument-to-s.patch \
+           file://0002-core-Fix-use-after-free-case-in-load_from_path.patch \
            "
 
 # patches made for musl are only applied on TCLIBC is musl
