@@ -19,7 +19,7 @@ SRCREV_machine_qemux86 ?= "9eddc793f95f4e7e283996a007e205622c633539"
 SRCREV_machine_qemux86-64 ?= "9eddc793f95f4e7e283996a007e205622c633539"
 SRCREV_machine_qemumips64 ?= "6641acbf076ba3f7ad96e846581272215a537904"
 SRCREV_machine ?= "9eddc793f95f4e7e283996a007e205622c633539"
-SRCREV_meta ?= "cc2fb5bd0e71f4beec5c4ce726da0a87e2d55337"
+SRCREV_meta ?= "8f4a98c93851f7f83d796aae2871df2798b8d917"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.18;destsuffix=${KMETA}"
