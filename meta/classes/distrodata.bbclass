@@ -1,6 +1,5 @@
 include conf/distro/include/upstream_tracking.inc
 include conf/distro/include/distro_alias.inc
-include conf/distro/include/maintainers.inc
 
 addhandler distro_eventhandler
 distro_eventhandler[eventmask] = "bb.event.BuildStarted"
