@@ -17,7 +17,7 @@ KCONF_BSP_AUDIT_LEVEL = "2"
 
 SRCREV_machine_qemuarm ?= "b8f2e8e00f8ddbdf5d7d7614c14eab52f8ee9275"
 SRCREV_machine ?= "e727c70583a78cf1dc53e8e219722e2f9d1bc858"
-SRCREV_meta ?= "1992fb4dad3012f71d319273d61da22ed9aa0469"
+SRCREV_meta ?= "ced14887c323f1cb6b3befe2b29e471e8fee1bc6"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
