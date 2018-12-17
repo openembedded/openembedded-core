@@ -1,4 +1,4 @@
-KBRANCH ?= "v4.18/standard/tiny/common-pc"
+KBRANCH ?= "v4.18/standard/tiny/base"
 LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
 
