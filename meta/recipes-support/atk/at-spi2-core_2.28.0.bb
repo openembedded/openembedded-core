@@ -18,7 +18,7 @@ inherit meson gtk-doc gettext systemd pkgconfig distro_features_check upstream-v
 REQUIRED_DISTRO_FEATURES = "x11"
 
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
-                  -Ddbus_daemon=${bindir}"
+                  -Ddbus_daemon=${bindir}/dbus-daemon"
 
 GTKDOC_ENABLE_FLAG = "-Denable_docs=true"
 GTKDOC_DISABLE_FLAG = "-Denable_docs=false"
