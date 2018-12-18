@@ -359,7 +359,8 @@ def append_source_info(file, sourcefile, d, fatal=True):
     # of rpm's debugedit, which was writing them out that way, and the code elsewhere
     # is still assuming that.
     debuglistoutput = '\0'.join(debugsources) + '\0'
-    open(sourcefile, 'a').write(debuglistoutput)
+    with open(sourcefile, 'a') as sf:
+        sf.write(debuglistoutput)
 
 
 def splitdebuginfo(file, debugfile, debugsrcdir, sourcefile, d):
