@@ -128,7 +128,7 @@ do_install_append_class-target () {
 }
 
 INHIBIT_DEFAULT_DEPS = "1"
-DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ libgcc"
+DEPENDS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++ libgcc virtual/${MLPREFIX}libc"
 PROVIDES = "virtual/${TARGET_PREFIX}compilerlibs"
 
 BBCLASSEXTEND = "nativesdk"
@@ -288,7 +288,3 @@ FILES_libmpx-dev = "\
 SUMMARY_libmpx-dev = "Intel Memory Protection Extension library - development files"
 FILES_libmpx-staticdev = "${libdir}/libmpx.a ${libdir}/libmpxwrappers.a"
 SUMMARY_libmpx-staticdev = "Intel Memory Protection Extension library - static development files"
-
-do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
-do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
