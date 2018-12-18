@@ -4,9 +4,6 @@ OECMAKE_SOURCEPATH ??= "${S}"
 DEPENDS_prepend = "cmake-native "
 B = "${WORKDIR}/build"
 
-# We need to unset CCACHE otherwise cmake gets too confused
-CCACHE = ""
-
 # What CMake generator to use.
 # The supported options are "Unix Makefiles" or "Ninja".
 OECMAKE_GENERATOR ?= "Ninja"
@@ -23,10 +20,22 @@ python() {
         d.setVarFlag("do_compile", "progress", r"outof:^\[(\d+)/(\d+)\]\s+")
     else:
         bb.fatal("Unknown CMake Generator %s" % generator)
+
+    # C/C++ Compiler (without cpu arch/tune arguments)
+    if not d.getVar('OECMAKE_C_COMPILER'):
+        cc_list = d.getVar('CC').split()
+        if cc_list[0] == 'ccache':
+            d.setVar('OECMAKE_C_COMPILER', '%s %s' % (cc_list[0], cc_list[1]))
+        else:
+            d.setVar('OECMAKE_C_COMPILER', cc_list[0])
+
+    if not d.getVar('OECMAKE_CXX_COMPILER'):
+        cxx_list = d.getVar('CXX').split()
+        if cxx_list[0] == 'ccache':
+            d.setVar('OECMAKE_CXX_COMPILER', '%s %s' % (cxx_list[0], cxx_list[1]))
+        else:
+            d.setVar('OECMAKE_CXX_COMPILER', cxx_list[0])
 }
-# C/C++ Compiler (without cpu arch/tune arguments)
-OECMAKE_C_COMPILER ?= "`echo ${CC} | sed 's/^\([^ ]*\).*/\1/'`"
-OECMAKE_CXX_COMPILER ?= "`echo ${CXX} | sed 's/^\([^ ]*\).*/\1/'`"
 OECMAKE_AR ?= "${AR}"
 
 # Compiler flags

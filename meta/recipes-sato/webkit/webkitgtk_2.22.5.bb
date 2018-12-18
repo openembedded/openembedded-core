@@ -121,3 +121,6 @@ ARM_INSTRUCTION_SET_armv7ve = "thumb"
 # Segmentation fault
 GI_DATA_ENABLED_armv7a = "False"
 GI_DATA_ENABLED_armv7ve = "False"
+
+# Can't be built with ccache
+CCACHE_DISABLE = "1"

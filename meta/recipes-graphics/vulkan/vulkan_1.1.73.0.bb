@@ -35,3 +35,6 @@ PACKAGECONFIG[wayland] = "-DBUILD_WSI_WAYLAND_SUPPORT=ON, -DBUILD_WSI_WAYLAND_SU
 
 RRECOMMENDS_${PN} = "mesa-vulkan-drivers"
 INSANE_SKIP_${PN}-dev += "dev-elf"
+
+# Can't be built with ccache
+CCACHE_DISABLE = "1"

@@ -52,3 +52,6 @@ RDEPENDS_${PN} = "waffle waffle-bin python3 python3-mako python3-json \
 	"
 
 INSANE_SKIP_${PN} += "dev-so already-stripped"
+
+# Can't be built with ccache
+CCACHE_DISABLE = "1"
