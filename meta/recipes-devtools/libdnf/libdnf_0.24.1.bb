@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf \
            file://0001-Add-WITH_TESTS-option.patch \
            "
 
-SRCREV = "5c198ea2357c5779cf83050e5291646c3b186446"
+SRCREV = "04b71d78a2170e930a3c248d48a231b19f823064"
 
 S = "${WORKDIR}/git"
 
