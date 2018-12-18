@@ -16,7 +16,6 @@ class Distrodata(OESelftestTestCase):
         Product:     oe-core
         Author:      Alexander Kanavin <alex.kanavin@gmail.com>
         """
-        feature = 'INHERIT += "distrodata"\n'
         feature += 'LICENSE_FLAGS_WHITELIST += " commercial"\n'
         self.write_config(feature)
 
