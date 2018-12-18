@@ -1,4 +1,4 @@
-From 2882e091e7b905441beef51dbed968f4dd7ffd7c Mon Sep 17 00:00:00 2001
+From 47a596165e253edb45eb48a35e50f488182e13fd Mon Sep 17 00:00:00 2001
 From: Sascha Silbe <x-yo17@se-silbe.de>
 Date: Fri, 8 Jun 2018 13:55:10 +0200
 Subject: [PATCH] Relocate the repository directory for native builds
