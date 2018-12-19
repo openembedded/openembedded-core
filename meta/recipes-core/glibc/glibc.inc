@@ -15,7 +15,7 @@ python () {
         bb.fatal("%s can't be built with %s, try -O1 instead" % (d.getVar('PN'), opt_effective))
 }
 
-DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers"
+DEPENDS = "virtual/${TARGET_PREFIX}gcc libgcc-initial linux-libc-headers"
 
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
@@ -32,6 +32,9 @@ CACHED_CONFIGUREVARS += " \
   libc_cv_ssp_all=no \
   libc_cv_ssp=no \
 "
+
+# ifunc doesn't appear to work on mips, casuses libbfd assertion failures
+CACHED_CONFIGUREVARS_append_mipsarch = " libc_cv_ld_gnu_indirect_function=no"
 
 GLIBC_EXTRA_OECONF ?= ""
 GLIBC_EXTRA_OECONF_class-nativesdk = ""

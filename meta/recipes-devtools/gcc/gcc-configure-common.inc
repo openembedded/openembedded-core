@@ -47,6 +47,10 @@ EXTRA_OECONF = "\
     ${@get_gcc_multiarch_setting(bb, d)} \
 "
 
+# glibc version is a minimum controlling whether features are enabled. 
+# Doesn't need to track glibc exactly
+EXTRA_OECONF_append_libc-glibc = " --with-glibc-version=2.28 "
+
 # Set this here since GCC configure won't auto-detect and enable
 # initfini-arry when cross compiling.
 EXTRA_OECONF_append = " --enable-initfini-array"

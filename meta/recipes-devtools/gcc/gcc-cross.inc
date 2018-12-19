@@ -2,7 +2,7 @@ inherit cross
 
 INHIBIT_DEFAULT_DEPS = "1"
 EXTRADEPENDS = ""
-DEPENDS = "virtual/${TARGET_PREFIX}binutils virtual/${TARGET_PREFIX}libc-for-gcc ${EXTRADEPENDS} ${NATIVEDEPS}"
+DEPENDS = "virtual/${TARGET_PREFIX}binutils ${EXTRADEPENDS} ${NATIVEDEPS}"
 PROVIDES = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}g++"
 python () {
     if d.getVar("TARGET_OS").startswith("linux"):
@@ -43,6 +43,12 @@ EXTRA_OECONF_PATHS = "\
 "
 
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
+
+
+do_configure_prepend () {
+	install -d ${RECIPE_SYSROOT}${target_includedir}
+	touch ${RECIPE_SYSROOT}${target_includedir}/limits.h
+}
 
 do_compile () {
 	export CC="${BUILD_CC}"
