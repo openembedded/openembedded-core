@@ -303,7 +303,7 @@ def icecc_get_and_check_tool(bb, d, tool):
     # compiler environment package.
     t = icecc_get_tool(bb, d, tool)
     if t:
-        link_path = icecc_get_tool_link(tool, d)
+        link_path = icecc_get_tool_link(t, d)
         if link_path == get_icecc(d):
             bb.error("%s is a symlink to %s in PATH and this prevents icecc from working" % (t, get_icecc(d)))
             return ""
