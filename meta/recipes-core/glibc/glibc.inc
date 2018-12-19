@@ -17,7 +17,7 @@ python () {
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc libgcc-initial linux-libc-headers"
 
-PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
+PROVIDES = "virtual/libc"
 PROVIDES += "virtual/libintl virtual/libiconv"
 inherit autotools texinfo distro_features_check systemd
 
