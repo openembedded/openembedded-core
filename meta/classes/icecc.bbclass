@@ -38,7 +38,7 @@ BB_HASHBASE_WHITELIST += "ICECC_PARALLEL_MAKE ICECC_DISABLED ICECC_USER_PACKAGE_
 
 ICECC_ENV_EXEC ?= "${STAGING_BINDIR_NATIVE}/icecc-create-env"
 
-HOSTTOOLS_NONFATAL += "icecc"
+HOSTTOOLS_NONFATAL += "icecc patchelf"
 
 # This version can be incremented when changes are made to the environment that
 # invalidate the version on the compile nodes. Changing it will cause a new
@@ -324,6 +324,10 @@ set_icecc_env() {
     ICECC_BIN="${@get_icecc(d)}"
     if [ -z "${ICECC_BIN}" ]; then
         bbwarn "Cannot use icecc: icecc binary not found"
+        return
+    fi
+    if [ -z "$(which patchelf patchelf-uninative)" ]; then
+        bbwarn "Cannot use icecc: patchelf not found"
         return
     fi
 
