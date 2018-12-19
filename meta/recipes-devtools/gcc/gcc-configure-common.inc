@@ -17,7 +17,6 @@ LANGUAGES ?= "c,c++${FORTRAN}${JAVA}"
 
 EXTRA_OECONF_BASE ?= ""
 EXTRA_OECONF_PATHS ?= ""
-EXTRA_OECONF_INITIAL ?= ""
 
 GCCMULTILIB ?= "--disable-multilib"
 GCCTHREADS ?= "posix"
