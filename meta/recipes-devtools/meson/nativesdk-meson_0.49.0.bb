@@ -66,9 +66,8 @@ do_install_append() {
 
 RDEPENDS_${PN} += "\
     nativesdk-ninja \
-    nativesdk-python3-core \
-    nativesdk-python3-misc \
-    nativesdk-python3-modules \
+    nativesdk-python3 \
+    nativesdk-python3-setuptools \
     "
 
 FILES_${PN} += "${datadir}/meson ${SDKPATHNATIVE}"
