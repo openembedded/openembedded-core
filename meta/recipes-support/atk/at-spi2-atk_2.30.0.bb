@@ -3,8 +3,8 @@ HOMEPAGE = "https://wiki.linuxfoundation.org/accessibility/d-bus"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
 
-SRC_URI[archive.md5sum] = "355c7916a69513490cb83ad34016b169"
-SRC_URI[archive.sha256sum] = "61891f0abae1689f6617a963105a3f1dcdab5970c4a36ded9c79a7a544b16a6e"
+SRC_URI[archive.md5sum] = "1ad754b90bcb14244b73ca4d0c14d274"
+SRC_URI[archive.sha256sum] = "e2e1571004ea7b105c969473ce455a95be4038fb2541471714aeb33a26da8a9a"
 
 DEPENDS = "dbus glib-2.0 glib-2.0-native atk at-spi2-core libxml2"
 
