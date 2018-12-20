@@ -12,10 +12,10 @@ DEPENDS_append_x86_class-target    = " nasm-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-libjpeg-turbo-fix-package_qa-error.patch \
-           file://0001-libjpeg-turbo-fix-wrongly-defined-define-HAVE_STDLIB.patch"
+           "
 
-SRC_URI[md5sum] = "b12a3fcf1d078db38410f27718a91b83"
-SRC_URI[sha256sum] = "778876105d0d316203c928fd2a0374c8c01f755d0a00b12a1c8934aeccff8868"
+SRC_URI[md5sum] = "1b05a66aa9b006fd04ed29f408e68f46"
+SRC_URI[sha256sum] = "e5f86cec31df1d39596e0cca619ab1b01f99025a27dafdfc97a30f3a12f866ff"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libjpeg-turbo/files/"
 UPSTREAM_CHECK_REGEX = "/libjpeg-turbo/files/(?P<pver>(\d+[\.\-_]*)+)/"
 
