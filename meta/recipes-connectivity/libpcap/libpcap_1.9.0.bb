@@ -10,33 +10,36 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5eb289217c160e2920d2e35bddc36453 \
                     file://pcap.h;beginline=1;endline=32;md5=39af3510e011f34b8872f120b1dc31d2"
 DEPENDS = "flex-native bison-native"
 
-INC_PR = "r5"
-
-SRC_URI = "http://www.tcpdump.org/release/${BP}.tar.gz"
-
-BINCONFIG = "${bindir}/pcap-config"
+SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.gz \
+           file://0001-pcap-usb-linux.c-add-missing-limits.h-for-musl-syste.patch \
+           "
+SRC_URI[md5sum] = "dffd65cb14406ab9841f421732eb0f33"
+SRC_URI[sha256sum] = "2edb88808e5913fdaa8e9c1fcaf272e19b2485338742b5074b9fe44d68f37019"
 
 inherit autotools binconfig-disabled pkgconfig bluetooth
 
-EXTRA_OECONF = "--with-pcap=linux"
+BINCONFIG = "${bindir}/pcap-config"
+
+# Explicitly disable dag support. We don't have recipe for it and if enabled here,
+# configure script poisons the include dirs with /usr/local/include even when the
+# support hasn't been detected.
+EXTRA_OECONF = " \
+                 --with-pcap=linux \
+                 --without-dag \
+                 "
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ}', '', d)} \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
-PACKAGECONFIG[bluez4] = "--enable-bluetooth,--disable-bluetooth,bluez4"
-# Add a dummy PACKAGECONFIG for bluez5 since it is not supported by libpcap.
-PACKAGECONFIG[bluez5] = ",,"
+PACKAGECONFIG[bluez5] = "--enable-bluetooth,--disable-bluetooth,bluez5"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 PACKAGECONFIG[libnl] = "--with-libnl,--without-libnl,libnl"
 
-CPPFLAGS_prepend = "-I${S} "
-CFLAGS_prepend = "-I${S} "
-CXXFLAGS_prepend = "-I${S} "
-
 do_configure_prepend () {
-    sed -i -e's,^V_RPATH_OPT=.*$,V_RPATH_OPT=,' ${S}/pcap-config.in
+    #remove hardcoded references to /usr/include
+    sed 's|\([ "^'\''I]\+\)/usr/include/|\1${STAGING_INCDIR}/|g' -i ${S}/configure.ac
 }
 
 BBCLASSEXTEND = "native"
