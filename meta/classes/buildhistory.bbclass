@@ -896,7 +896,7 @@ def write_latest_srcrev(d, pkghistdir):
             if orig_srcrev != 'INVALID':
                 f.write('# SRCREV = "%s"\n' % orig_srcrev)
             if len(srcrevs) > 1:
-                for name, srcrev in srcrevs.items():
+                for name, srcrev in sorted(srcrevs.items()):
                     orig_srcrev = d.getVar('SRCREV_%s' % name, False)
                     if orig_srcrev:
                         f.write('# SRCREV_%s = "%s"\n' % (name, orig_srcrev))
@@ -904,7 +904,7 @@ def write_latest_srcrev(d, pkghistdir):
             else:
                 f.write('SRCREV = "%s"\n' % next(iter(srcrevs.values())))
             if len(tag_srcrevs) > 0:
-                for name, srcrev in tag_srcrevs.items():
+                for name, srcrev in sorted(tag_srcrevs.items()):
                     f.write('# tag_%s = "%s"\n' % (name, srcrev))
                     if name in old_tag_srcrevs and old_tag_srcrevs[name] != srcrev:
                         pkg = d.getVar('PN')
