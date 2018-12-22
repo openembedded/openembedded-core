@@ -89,6 +89,7 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --enable-stack-protector=strong \
                 --enable-stackguard-randomization \
                 --disable-crypt \
+                --with-default-link \
                 ${GLIBCPIE} \
                 ${GLIBC_EXTRA_OECONF}"
 
