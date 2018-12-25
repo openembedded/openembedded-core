@@ -293,18 +293,12 @@ def testimage_main(d):
 
     package_extraction(d, tc.suites)
 
-    bootparams = None
-    if d.getVar('VIRTUAL-RUNTIME_init_manager', '') == 'systemd':
-        # Add systemd.log_level=debug to enable systemd debug logging
-        bootparams = 'systemd.log_target=console'
-
     results = None
     orig_sigterm_handler = signal.signal(signal.SIGTERM, sigterm_exception)
     try:
         # We need to check if runqemu ends unexpectedly
         # or if the worker send us a SIGTERM
-        tc.target.start(params=d.getVar("TEST_QEMUPARAMS"),
-                        extra_bootparams=bootparams)
+        tc.target.start(params=d.getVar("TEST_QEMUPARAMS"))
         results = tc.runTests()
     except (RuntimeError, BlockingIOError) as err:
         if isinstance(err, RuntimeError):
