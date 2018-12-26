@@ -16,6 +16,7 @@ SRC_URI = "http://ftp.gnu.org/gnu/gdb/gdb-${PV}.tar.xz \
            file://0010-resolve-restrict-keyword-conflict.patch \
            file://0011-Fix-invalid-sigprocmask-call.patch \
            file://gdbserver-ctrl-c-handling.patch \
+           file://0001-Fix-build-with-latest-GCC-9.0-tree.patch \
 "
 SRC_URI[md5sum] = "b5a49dbff00d9a87fbe114d14b3101c0"
 SRC_URI[sha256sum] = "c3a441a29c7c89720b734e5a9c6289c0a06be7e0c76ef538f7bbcef389347c39"
