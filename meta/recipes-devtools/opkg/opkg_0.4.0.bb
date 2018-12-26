@@ -14,11 +14,10 @@ PE = "1"
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://opkg.conf \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-           file://0001-remove_maintainer_scripts-use-strict-matching.patch \
 "
 
-SRC_URI[md5sum] = "79e04307f6f54db431c251772d7d987c"
-SRC_URI[sha256sum] = "f607f0e61be8cf8a3bbd0d2dccd9ec9e9b6c21dd4307b671c600d6eeaf84d30b"
+SRC_URI[md5sum] = "ae51d95fee599bb4dce08453529158f5"
+SRC_URI[sha256sum] = "f6c00515d8a2ad8f6742a8e73830315d1983ed0459cba77c4d656cfc9e7fe6fe"
 
 inherit autotools pkgconfig systemd
 
