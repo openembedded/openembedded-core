@@ -354,6 +354,7 @@ class QemuRunner:
             else:
                 self.logger.debug("Couldn't login into serial console"
                             " as root using blank password")
+                self.logger.debug("The output:\n%s" % output)
         except:
             self.logger.debug("Serial console failed while trying to login")
         return True
