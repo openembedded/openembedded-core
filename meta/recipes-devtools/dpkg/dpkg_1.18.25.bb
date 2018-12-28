@@ -1,7 +1,7 @@
 require dpkg.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20170518T093838Z/pool/main/d/dpkg/dpkg_1.18.24.tar.xz \
+SRC_URI = "http://snapshot.debian.org/archive/debian/20181228T152949Z/pool/main/d/dpkg/dpkg_1.18.25.tar.xz \
            file://noman.patch \
            file://remove-tar-no-timestamp.patch \
            file://arch_pm.patch \
@@ -14,9 +14,8 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20170518T093838Z/pool/main/
            file://0006-add-musleabi-to-known-target-tripets.patch \
            file://0007-dpkg-deb-build.c-Remove-usage-of-clamp-mtime-in-tar.patch \
            file://0001-dpkg-Support-muslx32-build.patch \
-           file://0001-arch-Add-support-for-riscv64-CPU.patch \
            "
 SRC_URI_append_class-native = " file://glibc2.5-sync_file_range.patch "
 
-SRC_URI[md5sum] = "02e8af8faf1e689228da806c3e8c6882"
-SRC_URI[sha256sum] = "d853081d3e06bfd46a227056e591f094e42e78fa8a5793b0093bad30b710d7b4"
+SRC_URI[md5sum] = "e463f58b04acb23659df23d2a7a05cff"
+SRC_URI[sha256sum] = "c49c371953aea03f543814dcae37c069e86069333fb2e24e9252e76647663492"
