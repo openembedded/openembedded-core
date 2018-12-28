@@ -1,0 +1,34 @@
+From 58c69d65b19b5f9a35e1f5ce08d2ea47884233d3 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 27 Dec 2018 00:18:51 -0800
+Subject: [PATCH] Makefile.SH: Pod-Simple requires Getopt-Long
+
+Fixed a race issue when parallel build:
+
+Running pm_to_blib for cpan/Pod-Simple directly
+[snip]
+/path/to/cpan/podlators/../../miniperl "-I../../lib" "-I../../lib" -MExtUtils::MY -e 'MY->fixin(shift)' -- blib/script/pod2man
+Can't locate Getopt/Long.pm in @INC [snip]
+
+Upstream-Status: Submitted[https://www.nntp.perl.org/group/perl.perl5.porters/2018/12/msg253236.html]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ Makefile.SH | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile.SH b/Makefile.SH
+index 9848d55..7a164e7 100755
+--- a/Makefile.SH
++++ b/Makefile.SH
+@@ -189,6 +189,7 @@ dynamic_list=' '
+ dynamic_ext_re="lib/auto/re/re.$dlext"
+ extra_dep='
+ ext/Pod-Functions/pm_to_blib: cpan/Pod-Simple/pm_to_blib cpan/Pod-Escapes/pm_to_blib pod/perlfunc.pod
++cpan/Pod-Simple/pm_to_blib: cpan/Getopt-Long/pm_to_blib
+ '
+ for f in $dynamic_ext; do
+     : the dependency named here will never exist
+-- 
+2.10.2
+
