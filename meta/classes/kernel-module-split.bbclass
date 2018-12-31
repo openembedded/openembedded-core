@@ -48,7 +48,8 @@ python split_kernel_module_packages () {
         tmpfile = tf[1]
         cmd = "%sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("HOST_PREFIX") or "", file, tmpfile)
         subprocess.check_call(cmd, shell=True)
-        f = open(tmpfile)
+        # errors='replace': Some old kernel versions contain invalid utf-8 characters in mod descriptions (like 0xf6, 'ö')
+        f = open(tmpfile, errors='replace')
         l = f.read().split("\000")
         f.close()
         os.close(tf[0])
