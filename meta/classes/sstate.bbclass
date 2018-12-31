@@ -1081,12 +1081,15 @@ python sstate_eventhandler2() {
         with open(i, "r") as f:
             lines = f.readlines()
             for l in lines:
-                (stamp, manifest, workdir) = l.split()
-                if stamp not in stamps and stamp not in preservestamps and stamp in machineindex:
-                    toremove.append(l)
-                    if stamp not in seen:
-                        bb.debug(2, "Stamp %s is not reachable, removing related manifests" % stamp)
-                        seen.append(stamp)
+                try:
+                    (stamp, manifest, workdir) = l.split()
+                    if stamp not in stamps and stamp not in preservestamps and stamp in machineindex:
+                        toremove.append(l)
+                        if stamp not in seen:
+                            bb.debug(2, "Stamp %s is not reachable, removing related manifests" % stamp)
+                            seen.append(stamp)
+                except ValueError:
+                    bb.fatal("Invalid line '%s' in sstate manifest '%s'" % (l, i))
 
         if toremove:
             msg = "Removing %d recipes from the %s sysroot" % (len(toremove), a)
