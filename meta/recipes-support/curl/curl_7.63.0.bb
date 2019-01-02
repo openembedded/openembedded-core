@@ -9,8 +9,8 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
 "
 
-SRC_URI[md5sum] = "7adf426f80c68bbdd04d44b9bc171d61"
-SRC_URI[sha256sum] = "7802c54076500be500b171fde786258579d60547a3a35b8c5a23d8c88e8f9620"
+SRC_URI[md5sum] = "0a6c1e993bd5102bc52fc89900542644"
+SRC_URI[sha256sum] = "9bab7ed4ecff77020a312d84cc5fb7eb02d58419d218f267477a724a17fd8dd8"
 
 CVE_PRODUCT = "curl libcurl"
 inherit autotools pkgconfig binconfig multilib_header
