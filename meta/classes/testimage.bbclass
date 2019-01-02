@@ -201,12 +201,13 @@ def testimage_main(d):
     machine = d.getVar("MACHINE")
 
     # Get rootfs
-    fstypes = [fs for fs in d.getVar('IMAGE_FSTYPES').split(' ')
-                  if fs in supported_fstypes]
-    if not fstypes:
-        bb.fatal('Unsupported image type built. Add a comptible image to '
-                 'IMAGE_FSTYPES. Supported types: %s' %
-                 ', '.join(supported_fstypes))
+    fstypes = d.getVar('IMAGE_FSTYPES').split()
+    if d.getVar("TEST_TARGET") == "qemu":
+        fstypes = [fs for fs in fstypes if fs in supported_fstypes]
+        if not fstypes:
+            bb.fatal('Unsupported image type built. Add a comptible image to '
+                     'IMAGE_FSTYPES. Supported types: %s' %
+                     ', '.join(supported_fstypes))
     rootfs = '%s.%s' % (image_name, fstypes[0])
 
     # Get tmpdir (not really used, just for compatibility)
