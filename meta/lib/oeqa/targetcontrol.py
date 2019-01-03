@@ -196,7 +196,7 @@ class QemuTarget(BaseTarget):
         else:
             raise bb.build.FuncFailed("%s - FAILED to re-start qemu - check the task log and the boot log" % self.pn)
 
-    def run_serial(self, command, timeout=5):
+    def run_serial(self, command, timeout=60):
         return self.runner.run_serial(command, timeout=timeout)
 
 
