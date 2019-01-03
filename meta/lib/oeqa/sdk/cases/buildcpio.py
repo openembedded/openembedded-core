@@ -13,8 +13,7 @@ class BuildCpioTest(OESDKTestCase):
     """
     def test_cpio(self):
         with tempfile.TemporaryDirectory(prefix="cpio-", dir=self.tc.sdk_dir) as testdir:
-            dl_dir = self.td.get('DL_DIR', None)
-            tarball = self.fetch(testdir, dl_dir, "https://ftp.gnu.org/gnu/cpio/cpio-2.12.tar.gz")
+            tarball = self.fetch(testdir, self.td["DL_DIR"], "https://ftp.gnu.org/gnu/cpio/cpio-2.12.tar.gz")
 
             dirs = {}
             dirs["source"] = os.path.join(testdir, "cpio-2.12")

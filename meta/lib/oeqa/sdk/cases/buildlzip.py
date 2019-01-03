@@ -9,8 +9,7 @@ class BuildLzipTest(OESDKTestCase):
     """
     def test_lzip(self):
         with tempfile.TemporaryDirectory(prefix="lzip", dir=self.tc.sdk_dir) as testdir:
-            dl_dir = self.td.get('DL_DIR', None)
-            tarball = self.fetch(testdir, dl_dir, "http://downloads.yoctoproject.org/mirror/sources/lzip-1.19.tar.gz")
+            tarball = self.fetch(testdir, self.td["DL_DIR"], "http://downloads.yoctoproject.org/mirror/sources/lzip-1.19.tar.gz")
 
             dirs = {}
             dirs["source"] = os.path.join(testdir, "lzip-1.19")

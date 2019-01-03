@@ -20,8 +20,7 @@ class GalculatorTest(OESDKTestCase):
 
     def test_galculator(self):
         with tempfile.TemporaryDirectory(prefix="galculator", dir=self.tc.sdk_dir) as testdir:
-            dl_dir = self.td.get('DL_DIR', None)
-            tarball = self.fetch(testdir, dl_dir, "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2")
+            tarball = self.fetch(testdir, self.td["DL_DIR"], "http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2")
 
             dirs = {}
             dirs["source"] = os.path.join(testdir, "galculator-2.1.4")

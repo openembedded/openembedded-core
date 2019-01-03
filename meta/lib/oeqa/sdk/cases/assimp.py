@@ -20,8 +20,7 @@ class BuildAssimp(OESDKTestCase):
     def test_assimp(self):
         import tempfile
         with tempfile.TemporaryDirectory(prefix="assimp", dir=self.tc.sdk_dir) as testdir:
-            dl_dir = self.td.get('DL_DIR', None)
-            tarball = self.fetch(testdir, dl_dir, "https://github.com/assimp/assimp/archive/v4.1.0.tar.gz")
+            tarball = self.fetch(testdir, self.td["DL_DIR"], "https://github.com/assimp/assimp/archive/v4.1.0.tar.gz")
             subprocess.check_output(["tar", "xf", tarball, "-C", testdir])
 
             sourcedir = os.path.join(testdir, "assimp-4.1.0") 
