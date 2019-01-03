@@ -148,7 +148,7 @@ def apply_update_alternative_renames(d):
     pkgdest = d.getVar('PKGD')
     for pkg in (d.getVar('PACKAGES') or "").split():
         # If the src == dest, we know we need to rename the dest by appending ${BPN}
-        link_rename = {}
+        link_rename = []
         for alt_name in (d.getVar('ALTERNATIVE_%s' % pkg) or "").split():
             alt_link     = d.getVarFlag('ALTERNATIVE_LINK_NAME', alt_name)
             if not alt_link:
@@ -174,7 +174,7 @@ def apply_update_alternative_renames(d):
                 elif os.path.lexists(src):
                     if os.path.islink(src):
                         # Delay rename of links
-                        link_rename[alt_target] = alt_target_rename
+                        link_rename.append((alt_target, alt_target_rename))
                     else:
                         bb.note('%s: Rename %s -> %s' % (pn, alt_target, alt_target_rename))
                         os.rename(src, dest)
@@ -185,22 +185,21 @@ def apply_update_alternative_renames(d):
 
         # Process delayed link names
         # Do these after other renames so we can correct broken links
-        for alt_target in link_rename:
+        for (alt_target, alt_target_rename) in link_rename:
             src = '%s/%s' % (pkgdest, alt_target)
-            dest = '%s/%s' % (pkgdest, link_rename[alt_target])
-            link = os.readlink(src)
+            dest = '%s/%s' % (pkgdest, alt_target_rename)
             link_target = oe.path.realpath(src, pkgdest, True)
 
             if os.path.lexists(link_target):
                 # Ok, the link_target exists, we can rename
-                bb.note('%s: Rename (link) %s -> %s' % (pn, alt_target, link_rename[alt_target]))
+                bb.note('%s: Rename (link) %s -> %s' % (pn, alt_target, alt_target_rename))
                 os.rename(src, dest)
             else:
                 # Try to resolve the broken link to link.${BPN}
                 link_maybe = '%s.%s' % (os.readlink(src), pn)
                 if os.path.lexists(os.path.join(os.path.dirname(src), link_maybe)):
                     # Ok, the renamed link target exists.. create a new link, and remove the original
-                    bb.note('%s: Creating new link %s -> %s' % (pn, link_rename[alt_target], link_maybe))
+                    bb.note('%s: Creating new link %s -> %s' % (pn, alt_target_rename, link_maybe))
                     os.symlink(link_maybe, dest)
                     os.unlink(src)
                 else:
