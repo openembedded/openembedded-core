@@ -231,13 +231,7 @@ def testimage_main(d):
     boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT"))
 
     # Get use_kvm
-    qemu_use_kvm = d.getVar("QEMU_USE_KVM")
-    if qemu_use_kvm and \
-       (d.getVar('MACHINE') in qemu_use_kvm.split() or \
-        oe.types.boolean(qemu_use_kvm) and 'x86' in machine):
-        kvm = True
-    else:
-        kvm = False
+    kvm = oe.types.qemu_use_kvm(d.getVar('QEMU_USE_KVM'), d.getVar('TARGET_ARCH'))
 
     slirp = False
     if d.getVar("QEMU_USE_SLIRP"):
