@@ -187,6 +187,8 @@ class SourceMirroring(OESelftestTestCase):
 BB_ALLOWED_NETWORKS = "downloads.yoctoproject.org"
 MIRRORS = ""
 DL_DIR = "${TMPDIR}/test_downloads"
+STAMPS_DIR = "${TMPDIR}/test_stamps"
+SSTATE_DIR = "${TMPDIR}/test_sstate-cache"
 PREMIRRORS = "\\
     bzr://.*/.*   http://downloads.yoctoproject.org/mirror/sources/ \\n \\
     cvs://.*/.*   http://downloads.yoctoproject.org/mirror/sources/ \\n \\
