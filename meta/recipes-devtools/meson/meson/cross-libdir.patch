@@ -1,0 +1,41 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From ce24f0d6a9be22ba61d80cd254e0409de2eaffd7 Mon Sep 17 00:00:00 2001
+From: Jussi Pakkanen <jpakkane@gmail.com>
+Date: Thu, 27 Dec 2018 23:43:35 +0200
+Subject: [PATCH] Default libdir is "lib" when cross compiling. Closes #2535.
+
+---
+ docs/markdown/snippets/crosslib.md |  7 +++++++
+ mesonbuild/coredata.py             |  8 ++++++++
+ run_unittests.py                   | 13 +++++++++++++
+ 3 files changed, 28 insertions(+)
+ create mode 100644 docs/markdown/snippets/crosslib.md
+
+diff --git a/mesonbuild/coredata.py b/mesonbuild/coredata.py
+index d70c23038c..4e2f3e008c 100644
+--- a/mesonbuild/coredata.py
++++ b/mesonbuild/coredata.py
+@@ -299,6 +299,7 @@ def __init__(self, options):
+         # Only to print a warning if it changes between Meson invocations.
+         self.pkgconf_envvar = os.environ.get('PKG_CONFIG_PATH', '')
+         self.config_files = self.__load_config_files(options.native_file)
++        self.libdir_cross_fixup()
+ 
+     @staticmethod
+     def __load_config_files(filenames):
+@@ -348,6 +349,13 @@ def __load_cross_file(filename):
+ 
+         raise MesonException('Cannot find specified cross file: ' + filename)
+ 
++    def libdir_cross_fixup(self):
++        # By default set libdir to "lib" when cross compiling since
++        # getting the "system default" is always wrong on multiarch
++        # platforms as it gets a value like lib/x86_64-linux-gnu.
++        if self.cross_file is not None:
++            self.builtins['libdir'].value = 'lib'
++
+     def sanitize_prefix(self, prefix):
+         if not os.path.isabs(prefix):
+             raise MesonException('prefix value {!r} must be an absolute path'
