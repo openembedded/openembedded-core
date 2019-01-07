@@ -1,13 +1,20 @@
 include meson.inc
 
 inherit nativesdk
+inherit siteinfo
 
 SRC_URI += "file://meson-setup.py \
             file://meson-wrapper"
 
-# both are required but not used by meson
-MESON_SDK_ENDIAN = "bogus-endian"
-MESON_TARGET_ENDIAN = "bogus-endian"
+def meson_endian(prefix, d):
+    arch, os = d.getVar(prefix + "_ARCH"), d.getVar(prefix + "_OS")
+    sitedata = siteinfo_data_for_machine(arch, os, d)
+    if "endian-little" in sitedata:
+        return "little"
+    elif "endian-big" in sitedata:
+        return "big"
+    else:
+        bb.fatal("Cannot determine endianism for %s-%s" % (arch, os))
 
 MESON_TOOLCHAIN_ARGS = "${BUILDSDK_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 MESON_C_ARGS = "${MESON_TOOLCHAIN_ARGS} ${BUILDSDK_CFLAGS}"
@@ -44,7 +51,7 @@ cpp_link_args = @LDFLAGS
 system = '${SDK_OS}'
 cpu_family = '${SDK_ARCH}'
 cpu = '${SDK_ARCH}'
-endian = '${MESON_SDK_ENDIAN}'
+endian = '${@meson_endian("SDK", d)}'
 EOF
 
     install -d ${D}${SDKPATHNATIVE}/post-relocate-setup.d
