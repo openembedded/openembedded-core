@@ -1,7 +1,7 @@
-From 3bbea65e11918f8753e8006a2198b999cdb0af58 Mon Sep 17 00:00:00 2001
+From 694eba7bb974f6b8bd308804cb24350150108b2b Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Wed, 21 Nov 2018 15:12:43 +0800
-Subject: [PATCH] scripts: Use fixed temporary file instead of pipe for
+Subject: [PATCH] scripts: Use fixed input and output files instead of pipe for
  here-doc
 
 There was a bug of "as" in binutils that when it checks if the input file and
@@ -40,31 +40,29 @@ Upstream-Status: Inappropriate [A work around for binutils v2.31]
 
 Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- scripts/gcc-goto.sh | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ scripts/gcc-goto.sh | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/scripts/gcc-goto.sh b/scripts/gcc-goto.sh
-index 083c526..0aaf1b4 100755
+index 083c526..8dfac55 100755
 --- a/scripts/gcc-goto.sh
 +++ b/scripts/gcc-goto.sh
-@@ -3,7 +3,9 @@
+@@ -3,7 +3,7 @@
  # Test for gcc 'asm goto' support
  # Copyright (C) 2010, Jason Baron <jbaron@redhat.com>
  
 -cat << "END" | $@ -x c - -c -o /dev/null >/dev/null 2>&1 && echo "y"
-+TMPFILE=`mktemp -p .`
-+
-+cat << "END" > ${TMPFILE}
++cat << "END" > ./input
  int main(void)
  {
  #if defined(__arm__) || defined(__aarch64__)
-@@ -20,3 +22,6 @@ entry:
+@@ -20,3 +20,6 @@ entry:
  	return 0;
  }
  END
 +
-+$@ -x c ${TMPFILE} -c -o /dev/null && echo "y"
-+rm ${TMPFILE}
++$@ -x c ./input -c -o ./output && echo "y"
++rm ./input ./output
 -- 
 2.7.4
 
