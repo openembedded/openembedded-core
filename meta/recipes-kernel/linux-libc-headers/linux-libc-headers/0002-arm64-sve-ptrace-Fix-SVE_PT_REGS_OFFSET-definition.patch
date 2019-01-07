@@ -1,0 +1,43 @@
+From 0dede80d25ae2005f8af7235809fc09a7c47c62e Mon Sep 17 00:00:00 2001
+From: Dave Martin <Dave.Martin@arm.com>
+Date: Tue, 11 Dec 2018 19:26:46 +0000
+Subject: [PATCH 2/3] arm64/sve: ptrace: Fix SVE_PT_REGS_OFFSET definition
+
+SVE_PT_REGS_OFFSET is supposed to indicate the offset for skipping
+over the ptrace NT_ARM_SVE header (struct user_sve_header) to the
+start of the SVE register data proper.
+
+However, currently SVE_PT_REGS_OFFSET is defined in terms of struct
+sve_context, which is wrong: that structure describes the SVE
+header in the signal frame, not in the ptrace regset.
+
+This patch fixes the definition to use the ptrace header structure
+struct user_sve_header instead.
+
+By good fortune, the to structures are the same size anyway, so
+there is no functional or ABI change.
+
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+
+Upstream-Status: Submitted [https://www.spinics.net/lists/arm-kernel/msg694800.html]
+---
+ arch/arm64/include/uapi/asm/ptrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+index 98c4ce55d9c3..ad64d2c92ef5 100644
+--- a/arch/arm64/include/uapi/asm/ptrace.h
++++ b/arch/arm64/include/uapi/asm/ptrace.h
+@@ -130,7 +130,7 @@ struct user_sve_header {
+ 
+ /* Offset from the start of struct user_sve_header to the register data */
+ #define SVE_PT_REGS_OFFSET					\
+-	((sizeof(struct sve_context) + (SVE_VQ_BYTES - 1))	\
++	((sizeof(struct user_sve_header) + (SVE_VQ_BYTES - 1))	\
+ 		/ SVE_VQ_BYTES * SVE_VQ_BYTES)
+ 
+ /*
+-- 
+2.5.0
+
