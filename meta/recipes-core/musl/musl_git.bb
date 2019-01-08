@@ -4,9 +4,11 @@
 require musl.inc
 inherit linuxloader
 
-SRCREV = "21a172dd36cae7a08492fd3a7500d7bf0daee13e"
+SRCREV = "de7dc1318f493184b20f7661bc12b1829b957b67"
 
-PV = "1.1.20+git${SRCPV}"
+BASEVER = "1.1.20"
+
+PV = "${BASEVER}+git${SRCPV}"
 
 # mirror is at git://github.com/kraj/musl.git
 
