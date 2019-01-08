@@ -16,7 +16,7 @@ class Distrodata(OESelftestTestCase):
         Product:     oe-core
         Author:      Alexander Kanavin <alex.kanavin@gmail.com>
         """
-        feature += 'LICENSE_FLAGS_WHITELIST += " commercial"\n'
+        feature = 'LICENSE_FLAGS_WHITELIST += " commercial"\n'
         self.write_config(feature)
 
         pkgs = oe.recipeutils.get_recipe_upgrade_status()
