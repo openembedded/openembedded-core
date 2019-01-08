@@ -1,0 +1,49 @@
+From e2c4cf7f98a519eb4d95532bfa06bcaf3562fed5 Mon Sep 17 00:00:00 2001
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Mon, 17 Dec 2018 11:26:38 +0100
+Subject: [PATCH] net: Use __kernel_clockid_t in uapi net_stamp.h
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Herton reports the following error when building a userspace program that
+includes net_stamp.h:
+
+ In file included from foo.c:2:
+ /usr/include/linux/net_tstamp.h:158:2: error: unknown type name
+ ‘clockid_t’
+   clockid_t clockid; /* reference clockid */
+   ^~~~~~~~~
+
+Fix it by using __kernel_clockid_t in place of clockid_t.
+
+Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
+Cc: Timothy Redaelli <tredaelli@redhat.com>
+Reported-by: Herton R. Krzesinski <herton@redhat.com>
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Tested-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+---
+Upstream-Status: Backport [https://github.com/torvalds/linux/commit/e2c4cf7f98a519eb4d95532bfa06bcaf3562fed5]
+
+ include/uapi/linux/net_tstamp.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/net_tstamp.h b/include/uapi/linux/net_tstamp.h
+index 97ff3c17ec4d..e5b39721c6e4 100644
+--- a/include/uapi/linux/net_tstamp.h
++++ b/include/uapi/linux/net_tstamp.h
+@@ -155,8 +155,8 @@ enum txtime_flags {
+ };
+ 
+ struct sock_txtime {
+-	clockid_t	clockid;	/* reference clockid */
+-	__u32		flags;		/* as defined by enum txtime_flags */
++	__kernel_clockid_t	clockid;/* reference clockid */
++	__u32			flags;	/* as defined by enum txtime_flags */
+ };
+ 
+ #endif /* _NET_TIMESTAMPING_H */
+-- 
+2.20.1
+

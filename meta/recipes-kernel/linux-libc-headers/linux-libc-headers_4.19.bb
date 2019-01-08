@@ -10,6 +10,7 @@ SRC_URI_append_libc-musl = "\
    "
 
 SRC_URI_append = "\
+    file://0001-net-Use-__kernel_clockid_t-in-uapi-net_stamp.h.patch \
     file://0001-scripts-Use-fixed-input-and-output-files-instead-of-.patch \
     file://0001-kbuild-install_headers.sh-Strip-_UAPI-from-if-define.patch \
     file://0002-arm64-sve-ptrace-Fix-SVE_PT_REGS_OFFSET-definition.patch \
