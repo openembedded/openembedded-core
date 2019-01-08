@@ -13,6 +13,7 @@ LIC_FILES_CHKSUM = "file://licenses/GPL-2;md5=94d55d512a9ba36caa9b7df079bae19f"
 SRC_URI = "file://rotation \
            file://nsswitch.conf \
            file://motd \
+           file://hosts \
            file://host.conf \
            file://profile \
            file://shells \
@@ -113,6 +114,7 @@ do_install () {
 	ln -snf ../run ${D}${localstatedir}/run
 	ln -snf ../run/lock ${D}${localstatedir}/lock
 
+	install -m 0644 ${WORKDIR}/hosts ${D}${sysconfdir}/hosts
 	${BASEFILESISSUEINSTALL}
 
 	rotation=`cat ${WORKDIR}/rotation`
@@ -140,6 +142,7 @@ DISTRO_VERSION[vardepsexclude] += "DATE"
 do_install_basefilesissue () {
 	if [ "${hostname}" ]; then
 		echo ${hostname} > ${D}${sysconfdir}/hostname
+		echo "127.0.1.1 ${hostname}" >> ${D}${sysconfdir}/hosts
 	fi
 
 	install -m 644 ${WORKDIR}/issue*  ${D}${sysconfdir}
@@ -177,5 +180,5 @@ FILES_${PN}-doc = "${docdir} ${datadir}/common-licenses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-CONFFILES_${PN} = "${sysconfdir}/fstab ${@['', '${sysconfdir}/hostname'][(d.getVar('hostname') != '')]} ${sysconfdir}/shells"
+CONFFILES_${PN} = "${sysconfdir}/fstab ${@['', '${sysconfdir}/hostname ${sysconfdir}/hosts'][(d.getVar('hostname') != '')]} ${sysconfdir}/shells"
 CONFFILES_${PN} += "${sysconfdir}/motd ${sysconfdir}/nsswitch.conf ${sysconfdir}/profile"
