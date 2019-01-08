@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=429658c6612f3a9b1293782366ab29d8"
 DEPENDS = "zlib openssl"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-SRC_URI = "git://github.com/openssh/openssh-portable;branch=master \
+SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar.gz \
            file://sshd_config \
            file://ssh_config \
            file://init \
@@ -25,12 +25,10 @@ SRC_URI = "git://github.com/openssh/openssh-portable;branch=master \
            file://sshd_check_keys \
            file://add-test-support-for-busybox.patch \
            "
+SRC_URI[md5sum] = "c6af50b7a474d04726a5aa747a5dce8f"
+SRC_URI[sha256sum] = "6b4b3ba2253d84ed3771c8050728d597c91cfce898713beb7b64a305b6f11aad"
 
 PAM_SRC_URI = "file://sshd"
-
-SRCREV = "aede1c34243a6f7feae2fb2cb686ade5f9be6f3d"
-
-S = "${WORKDIR}/git"
 
 inherit useradd update-rc.d update-alternatives systemd
 
