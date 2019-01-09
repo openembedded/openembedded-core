@@ -6,7 +6,7 @@ SECTION = "console/utils"
 
 # two clause BSD
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=6a7382872edb68d33e1a9398b6e03188"
+LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=0251eaec1188b20d9a72c502ecfdda1b"
 
 DEPENDS = "zlib file-replacement-native"
 DEPENDS_class-native = "zlib-native"
@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/file/file.git \
         file://debian-742262.patch \
         "
 
-SRCREV = "315cef2f699da3c31a54bd3c6c6070680fbaf1f5"
+SRCREV = "d1ff3af7a2c6b38bdbdde7af26b59e3c50a48fff"
 S = "${WORKDIR}/git"
 
 inherit autotools update-alternatives
