@@ -18,8 +18,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://gcc46-compatibility.patch \
            "
 
-SRC_URI[md5sum] = "ae32011cfe6b1c40c0f244b9a49ba181"
-SRC_URI[sha256sum] = "76006d8ea8d67bcf72f35d09d43e9ef6a69400d6d5d4bf64baf1ab7434e2b722"
+SRC_URI[md5sum] = "32af17b917545a693e549af2439c4a99"
+SRC_URI[sha256sum] = "6715ea7eae1c7e4fc5041034bd3f107ec2911962ed284a081e491646b12277f0"
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*)-linux"
 COMPATIBLE_HOST_armv4 = 'null'
