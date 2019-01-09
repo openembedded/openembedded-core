@@ -130,6 +130,13 @@ def use_icecc(bb,d):
         return "no"
 
     pn = d.getVar('PN')
+    bpn = d.getVar('BPN')
+
+    # Blacklist/whitelist checks are made against BPN, because there is a good
+    # chance that if icecc should be skipped for a recipe, it should be skipped
+    # for all the variants of that recipe. PN is still checked in case a user
+    # specified a more specific recipe.
+    check_pn = set([pn, bpn])
 
     system_class_blacklist = (d.getVar('ICECC_SYSTEM_CLASS_BL') or "").split()
     user_class_blacklist = (d.getVar('ICECC_USER_CLASS_BL') or "none").split()
@@ -145,11 +152,11 @@ def use_icecc(bb,d):
     user_package_whitelist = (d.getVar('ICECC_USER_PACKAGE_WL') or "").split()
     package_blacklist = system_package_blacklist + user_package_blacklist
 
-    if pn in package_blacklist:
+    if check_pn & set(package_blacklist):
         bb.debug(1, "%s: found in blacklist, disable icecc" % pn)
         return "no"
 
-    if pn in user_package_whitelist:
+    if check_pn & set(user_package_whitelist):
         bb.debug(1, "%s: found in whitelist, enable icecc" % pn)
         return "yes"
 
