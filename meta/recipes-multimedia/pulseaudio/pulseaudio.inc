@@ -194,6 +194,7 @@ SYSTEMD_SERVICE_${PN}-server = "pulseaudio.service"
 FILES_${PN}-misc = "${bindir}/* ${libdir}/pulseaudio/libpulsedsp.so"
 
 # Allow the pulseaudio package to be created empty as a placeholder (-dbg and -dev depend on it)
+FILES_${PN} = ""
 ALLOW_EMPTY_${PN} = "1"
 
 CONFFILES_libpulse = "${sysconfdir}/pulse/client.conf"
