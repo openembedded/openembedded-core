@@ -11,13 +11,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 DEPENDS = "glib-2.0"
 
 GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase lib_package gobject-introspection gtk-doc gettext ptest-gnome
+inherit gnomebase lib_package gobject-introspection gtk-doc gettext ptest-gnome manpages
 
 SRC_URI += "file://run-ptest"
-SRC_URI[archive.md5sum] = "35107e23a7bbbc70f31c34f7b9adf1c3"
-SRC_URI[archive.sha256sum] = "2d7709a44749c7318599a6829322e081915bdc73f5be5045882ed120bb686dc8"
+SRC_URI[archive.md5sum] = "4d4bb9837f6d31e32d0ce658ae135f68"
+SRC_URI[archive.sha256sum] = "720c5f4379513dc11fd97dc75336eb0c0d3338c53128044d9fabec4374f4bc47"
 
-# This builds both API docs (via gtk-doc) and manpages
+PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxslt-native xmlto-native"
+
+# This builds both API docs (via gtk-doc)
 GTKDOC_ENABLE_FLAG = "-Ddocs=true"
 GTKDOC_DISABLE_FLAG = "-Ddocs=false"
 
