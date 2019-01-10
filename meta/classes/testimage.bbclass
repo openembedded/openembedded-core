@@ -77,7 +77,7 @@ TESTIMAGEDEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'deb', 'apt-native:do
 TESTIMAGELOCK = "${TMPDIR}/testimage.lock"
 TESTIMAGELOCK_qemuall = ""
 
-TESTIMAGE_DUMP_DIR ?= "/tmp/oe-saved-tests/"
+TESTIMAGE_DUMP_DIR ?= "${LOG_DIR}/runtime-hostdump/"
 
 TESTIMAGE_UPDATE_VARS ?= "DL_DIR WORKDIR DEPLOY_DIR"
 
@@ -249,6 +249,7 @@ def testimage_main(d):
                       'bootlog'     : bootlog,
                       'kvm'         : kvm,
                       'slirp'       : slirp,
+                      'dump_dir'    : d.getVar("TESTIMAGE_DUMP_DIR"),
                     }
 
     # TODO: Currently BBPATH is needed for custom loading of targets.
