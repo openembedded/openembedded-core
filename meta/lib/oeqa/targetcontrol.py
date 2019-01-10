@@ -107,6 +107,8 @@ class QemuTarget(BaseTarget):
         dump_target_cmds = d.getVar("testimage_dump_target")
         dump_host_cmds = d.getVar("testimage_dump_host")
         dump_dir = d.getVar("TESTIMAGE_DUMP_DIR")
+        if not dump_dir:
+            dump_dir = os.path.join(d.getVar('LOG_DIR'), 'runtime-hostdump')
         use_kvm = oe.types.qemu_use_kvm(d.getVar('QEMU_USE_KVM'), d.getVar('TARGET_ARCH'))
 
         # Log QemuRunner log output to a file
