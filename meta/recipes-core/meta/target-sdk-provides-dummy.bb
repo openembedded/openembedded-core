@@ -31,12 +31,15 @@ DUMMYPROVIDES = "\
     perl-module-file-glob \
     perl-module-file-path \
     perl-module-file-stat \
+    perl-module-file-temp \
     perl-module-getopt-long \
     perl-module-io-file \
+    perl-module-overload \
     perl-module-posix \
     perl-module-overload \
     perl-module-thread-queue \
     perl-module-threads \
+    perl-module-warnings \
     /bin/sh \
     /bin/bash \
     /usr/bin/env \
