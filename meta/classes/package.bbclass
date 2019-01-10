@@ -1562,12 +1562,12 @@ python package_do_filedeps() {
         if pkg not in requires_files:
             requires_files[pkg] = []
 
-        for file in provides:
+        for file in sorted(provides):
             provides_files[pkg].append(file)
             key = "FILERPROVIDES_" + file + "_" + pkg
             d.appendVar(key, " " + " ".join(provides[file]))
 
-        for file in requires:
+        for file in sorted(requires):
             requires_files[pkg].append(file)
             key = "FILERDEPENDS_" + file + "_" + pkg
             d.appendVar(key, " " + " ".join(requires[file]))
@@ -1868,7 +1868,7 @@ python package_do_shlibs() {
             os.remove(deps_file)
         if len(deps):
             fd = open(deps_file, 'w')
-            for dep in deps:
+            for dep in sorted(deps):
                 fd.write(dep + '\n')
             fd.close()
 }
@@ -1989,7 +1989,7 @@ python read_shlibdeps () {
     packages = d.getVar('PACKAGES').split()
     for pkg in packages:
         rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg) or "")
-        for dep in pkglibdeps[pkg]:
+        for dep in sorted(pkglibdeps[pkg]):
             # Add the dep if it's not already there, or if no comparison is set
             if dep not in rdepends:
                 rdepends[dep] = []
@@ -2022,7 +2022,7 @@ python package_depchains() {
         #bb.note('depends for %s is %s' % (base, depends))
         rreclist = bb.utils.explode_dep_versions2(d.getVar('RRECOMMENDS_' + pkg) or "")
 
-        for depend in depends:
+        for depend in sorted(depends):
             if depend.find('-native') != -1 or depend.find('-cross') != -1 or depend.startswith('virtual/'):
                 #bb.note("Skipping %s" % depend)
                 continue
@@ -2043,7 +2043,7 @@ python package_depchains() {
         #bb.note('rdepends for %s is %s' % (base, rdepends))
         rreclist = bb.utils.explode_dep_versions2(d.getVar('RRECOMMENDS_' + pkg) or "")
 
-        for depend in rdepends:
+        for depend in sorted(rdepends):
             if depend.find('virtual-locale-') != -1:
                 #bb.note("Skipping %s" % depend)
                 continue
