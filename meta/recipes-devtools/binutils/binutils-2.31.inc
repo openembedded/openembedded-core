@@ -37,6 +37,8 @@ SRC_URI = "\
      file://0014-Detect-64-bit-MIPS-targets.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-add-i386pep-emulation-for-x86_64.patch \
+     file://0022-Handle-ELF-compressed-header-alignment-correctly-by-.patch \
+     file://0023-gold-Get-alignment-of-uncompressed-section-from-ch_a.patch \
      file://clang-bfd-fix.patch \
      file://CVE-2018-17358.patch \
      file://CVE-2018-17360.patch \
