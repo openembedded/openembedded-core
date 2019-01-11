@@ -69,6 +69,13 @@ EXTRA_OECMAKE = " \
 EXTRA_OECMAKE_append_x86 = " -DUSE_GSTREAMER_GL=OFF "
 EXTRA_OECMAKE_append_x86-x32 = " -DUSE_GSTREAMER_GL=OFF "
 
+# Javascript JIT is not supported on ARC
+EXTRA_OECMAKE_append_arc = " -DENABLE_JIT=OFF "
+# By default 25-bit "medium" calls are used on ARC
+# which is not enough for binaries larger than 32 MiB
+CFLAGS_append_arc = " -mlong-calls"
+CXXFLAGS_append_arc = " -mlong-calls"
+
 # Javascript JIT is not supported on powerpc
 EXTRA_OECMAKE_append_powerpc = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_powerpc64 = " -DENABLE_JIT=OFF "
