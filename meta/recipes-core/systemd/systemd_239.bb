@@ -51,7 +51,7 @@ SRC_URI_MUSL = "file://0001-Use-getenv-when-secure-versions-are-not-available.pa
                file://0002-don-t-use-glibc-specific-qsort_r.patch \
                file://0003-comparison_fn_t-is-glibc-specific-use-raw-signature-.patch \
                file://0004-add-fallback-parse_printf_format-implementation.patch \
-               file://0005-include-gshadow-only-if-ENABLE_GSHADOW-is-1.patch \
+               file://0005-basic-user-util-properly-protect-use-of-gshadow.patch \
                file://0006-src-basic-missing.h-check-for-missing-strndupa.patch \
                file://0007-Include-netinet-if_ether.h.patch \
                file://0008-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not-.patch \
@@ -68,6 +68,7 @@ SRC_URI_MUSL = "file://0001-Use-getenv-when-secure-versions-are-not-available.pa
                file://0019-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
                file://0020-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
                file://0021-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
+               file://0022-Use-if-instead-of-ifdef-for-ENABLE_GSHADOW.patch \
                "
 
 # Workaround undefined reference to `__stack_chk_fail_local' on qemux86 and qemuppc for musl
