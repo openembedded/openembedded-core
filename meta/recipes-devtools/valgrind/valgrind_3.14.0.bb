@@ -58,6 +58,9 @@ COMPATIBLE_HOST_linux-muslx32 = 'null'
 COMPATIBLE_HOST_mipsarchr6 = 'null'
 COMPATIBLE_HOST_linux-gnun32 = 'null'
 
+# Disable for powerpc64 with musl
+COMPATIBLE_HOST_libc-musl_powerpc64 = 'null'
+
 inherit autotools ptest multilib_header
 
 EXTRA_OECONF = "--enable-tls --without-mpicc"
