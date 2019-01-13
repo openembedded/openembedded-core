@@ -362,7 +362,7 @@ def sstate_installpkgdir(ss, d):
 
     for plain in ss['plaindirs']:
         workdir = d.getVar('WORKDIR')
-        sharedworkdir = os.path.join(d.getVar('TMPDIR', True), "work-shared")
+        sharedworkdir = os.path.join(d.getVar('TMPDIR'), "work-shared")
         src = sstateinst + "/" + plain.replace(workdir, '')
         if sharedworkdir in plain:
             src = sstateinst + "/" + plain.replace(sharedworkdir, '')
@@ -623,7 +623,7 @@ def sstate_package(ss, d):
         os.rename(state[1], sstatebuild + state[0])
 
     workdir = d.getVar('WORKDIR')
-    sharedworkdir = os.path.join(d.getVar('TMPDIR', True), "work-shared")
+    sharedworkdir = os.path.join(d.getVar('TMPDIR'), "work-shared")
     for plain in ss['plaindirs']:
         pdir = plain.replace(workdir, sstatebuild)
         if sharedworkdir in plain:
