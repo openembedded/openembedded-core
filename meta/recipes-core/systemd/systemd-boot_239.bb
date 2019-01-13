@@ -29,7 +29,7 @@ EXTRA_OEMESON += "-Defi=true \
 python __anonymous () {
     import re
     target = d.getVar('TARGET_ARCH')
-    prefix = "" if d.getVar('EFI_PROVIDER', True) == "systemd-boot" else "systemd-"
+    prefix = "" if d.getVar('EFI_PROVIDER') == "systemd-boot" else "systemd-"
     if target == "x86_64":
         systemdimage = prefix + "bootx64.efi"
     else:

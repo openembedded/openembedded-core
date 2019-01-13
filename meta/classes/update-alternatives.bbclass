@@ -154,7 +154,7 @@ def apply_update_alternative_renames(d):
             if not alt_link:
                 alt_link = "%s/%s" % (d.getVar('bindir'), alt_name)
                 d.setVarFlag('ALTERNATIVE_LINK_NAME', alt_name, alt_link)
-            if alt_link.startswith(os.path.join(d.getVar('sysconfdir', True), 'init.d')):
+            if alt_link.startswith(os.path.join(d.getVar('sysconfdir'), 'init.d')):
                 # Managing init scripts does not work (bug #10433), foremost
                 # because of a race with update-rc.d
                 bb.fatal("Using update-alternatives for managing SysV init scripts is not supported")
