@@ -1,0 +1,31 @@
+From 9c68cdd1a89f9b944edc804d7c5d000c45de7b85 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 14 Jan 2019 11:45:20 +0100
+Subject: [PATCH] Also build dynaloader separately as race failures have been
+ observed in Yocto.
+
+Upstream-Status: Submitted [https://github.com/arsv/perl-cross/issues/72]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 7846406..cd8d75f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -74,10 +74,13 @@ $(CROSSPATCHED): %.applied: %.patch
+ # Force full patching before any building starts. Als, force early building
+ # of miniperl -- not really necessary, but makes the build process more logical.
+ # No reason to try CC if HOSTCC fails.
++#
++# Dynaloader is also built separately as race failures have been observed.
+ all:
+ 	$(MAKE) crosspatch
+ 	$(MAKE) miniperl$X
+-	$(MAKE) dynaloader perl$x nonxs_ext utilities extensions pods
++	$(MAKE) dynaloader
++	$(MAKE) perl$x nonxs_ext utilities extensions pods
+ 
+ config.h: config.sh config_h.SH
+ 	CONFIG_H=$@ CONFIG_SH=$< ./config_h.SH

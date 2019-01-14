@@ -21,6 +21,7 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://0001-configure_path.sh-do-not-hardcode-prefix-lib-as-libr.patch \
            file://fix-race-failures.patch \
            file://fix-race-failures-2.patch \
+           file://0001-Also-build-dynaloader-separately-as-race-failures-ha.patch \
            "
 
 SRC_URI[perl.md5sum] = "838198c43d4f39d7af797e2f59c2bee5"
