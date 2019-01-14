@@ -46,7 +46,7 @@ python populate_packages_prepend() {
     # do_split_packages requires a pair of () in the regex, but we have nothing
     # to match, so use an empty pair.
     if bb.utils.contains('DISTRO_FEATURES', 'ptest', True, False, d):
-        do_split_packages(d, d.expand('${libdir}/perl/${PV}'), '.*\.t()',
+        do_split_packages(d, d.expand('${libdir}/perl/${PV}'), r'.*\.t()',
             '${PN}-ptest%s', '%s', recursive=True, match_path=True)
 }
 

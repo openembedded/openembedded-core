@@ -60,7 +60,7 @@ do_install_append() {
 
 python populate_packages_prepend() {
     plugindir = d.expand('${libdir}/alsa-lib/')
-    packages = " ".join(do_split_packages(d, plugindir, '^libasound_module_(.*)\.so$', 'libasound-module-%s', 'Alsa plugin for %s', extra_depends=''))
+    packages = " ".join(do_split_packages(d, plugindir, r'^libasound_module_(.*)\.so$', 'libasound-module-%s', 'Alsa plugin for %s', extra_depends=''))
     d.setVar("RDEPENDS_alsa-plugins", packages)
 }
 

@@ -354,9 +354,9 @@ class Rootfs(object, metaclass=ABCMeta):
 class RpmRootfs(Rootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
         super(RpmRootfs, self).__init__(d, progress_reporter, logcatcher)
-        self.log_check_regex = '(unpacking of archive failed|Cannot find package'\
-                               '|exit 1|ERROR: |Error: |Error |ERROR '\
-                               '|Failed |Failed: |Failed$|Failed\(\d+\):)'
+        self.log_check_regex = r'(unpacking of archive failed|Cannot find package'\
+                               r'|exit 1|ERROR: |Error: |Error |ERROR '\
+                               r'|Failed |Failed: |Failed$|Failed\(\d+\):)'
         self.manifest = RpmManifest(d, manifest_dir)
 
         self.pm = RpmPM(d,
@@ -499,7 +499,7 @@ class DpkgOpkgRootfs(Rootfs):
             pkg_depends_list = []
             # filter version requirements like libc (>= 1.1)
             for dep in pkg_depends.split(', '):
-                m_dep = re.match("^(.*) \(.*\)$", dep)
+                m_dep = re.match(r"^(.*) \(.*\)$", dep)
                 if m_dep:
                     dep = m_dep.group(1)
                 pkg_depends_list.append(dep)
@@ -515,9 +515,9 @@ class DpkgOpkgRootfs(Rootfs):
             data = status.read()
             status.close()
             for line in data.split('\n'):
-                m_pkg = re.match("^Package: (.*)", line)
-                m_status = re.match("^Status:.*unpacked", line)
-                m_depends = re.match("^Depends: (.*)", line)
+                m_pkg = re.match(r"^Package: (.*)", line)
+                m_status = re.match(r"^Status:.*unpacked", line)
+                m_depends = re.match(r"^Depends: (.*)", line)
 
                 #Only one of m_pkg, m_status or m_depends is not None at time
                 #If m_pkg is not None, we started a new package
@@ -771,7 +771,7 @@ class OpkgRootfs(DpkgOpkgRootfs):
         if allow_replace is None:
             allow_replace = ""
 
-        allow_rep = re.compile(re.sub("\|$", "", allow_replace))
+        allow_rep = re.compile(re.sub(r"\|$", r"", allow_replace))
         error_prompt = "Multilib check error:"
 
         files = {}

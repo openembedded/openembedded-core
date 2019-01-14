@@ -314,7 +314,7 @@ python do_package_prepend () {
 }
 
 python populate_packages_prepend() {
-    do_split_packages(d, '${base_libdir}', '^lib(.*)\.so\..*$',
+    do_split_packages(d, '${base_libdir}', r'^lib(.*)\.so\..*$',
                       output_pattern='util-linux-lib%s',
                       description='util-linux lib%s',
                       extra_depends='', prepend=True, allow_links=True)

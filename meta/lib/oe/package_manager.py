@@ -29,7 +29,7 @@ def opkg_query(cmd_output):
     a dictionary with the information of the packages. This is used
     when the packages are in deb or ipk format.
     """
-    verregex = re.compile(' \([=<>]* [^ )]*\)')
+    verregex = re.compile(r' \([=<>]* [^ )]*\)')
     output = dict()
     pkg = ""
     arch = ""
@@ -252,8 +252,8 @@ class DpkgIndexer(Indexer):
             with open(os.path.join(self.d.expand("${STAGING_ETCDIR_NATIVE}"),
                 "apt", "apt.conf.sample")) as apt_conf_sample:
                 for line in apt_conf_sample.read().split("\n"):
-                    line = re.sub("#ROOTFS#", "/dev/null", line)
-                    line = re.sub("#APTCONF#", self.apt_conf_dir, line)
+                    line = re.sub(r"#ROOTFS#", "/dev/null", line)
+                    line = re.sub(r"#APTCONF#", self.apt_conf_dir, line)
                     apt_conf.write(line + "\n")
 
     def write_index(self):
@@ -408,7 +408,7 @@ class PackageManager(object, metaclass=ABCMeta):
         with open(postinst_intercept_hook) as intercept:
             registered_pkgs = None
             for line in intercept.read().split("\n"):
-                m = re.match("^##PKGS:(.*)", line)
+                m = re.match(r"^##PKGS:(.*)", line)
                 if m is not None:
                     registered_pkgs = m.group(1).strip()
                     break
@@ -1217,7 +1217,7 @@ class OpkgPM(OpkgDpkgPM):
                 priority += 5
 
             for line in (self.d.getVar('IPK_FEED_URIS') or "").split():
-                feed_match = re.match("^[ \t]*(.*)##([^ \t]*)[ \t]*$", line)
+                feed_match = re.match(r"^[ \t]*(.*)##([^ \t]*)[ \t]*$", line)
 
                 if feed_match is not None:
                     feed_name = feed_match.group(1)
@@ -1597,7 +1597,7 @@ class DpkgPM(OpkgDpkgPM):
 
         with open(status_file, "r") as status:
             for line in status.read().split('\n'):
-                m = re.match("^Package: (.*)", line)
+                m = re.match(r"^Package: (.*)", line)
                 if m is not None:
                     installed_pkgs.append(m.group(1))
 
@@ -1662,13 +1662,13 @@ class DpkgPM(OpkgDpkgPM):
         # rename *.dpkg-new files/dirs
         for root, dirs, files in os.walk(self.target_rootfs):
             for dir in dirs:
-                new_dir = re.sub("\.dpkg-new", "", dir)
+                new_dir = re.sub(r"\.dpkg-new", "", dir)
                 if dir != new_dir:
                     os.rename(os.path.join(root, dir),
                               os.path.join(root, new_dir))
 
             for file in files:
-                new_file = re.sub("\.dpkg-new", "", file)
+                new_file = re.sub(r"\.dpkg-new", "", file)
                 if file != new_file:
                     os.rename(os.path.join(root, file),
                               os.path.join(root, new_file))
@@ -1733,7 +1733,7 @@ class DpkgPM(OpkgDpkgPM):
                     sources_file.write("deb %s ./\n" % uri)
 
     def _create_configs(self, archs, base_archs):
-        base_archs = re.sub("_", "-", base_archs)
+        base_archs = re.sub(r"_", r"-", base_archs)
 
         if os.path.exists(self.apt_conf_dir):
             bb.utils.remove(self.apt_conf_dir, True)
@@ -1787,7 +1787,7 @@ class DpkgPM(OpkgDpkgPM):
         with open(self.apt_conf_file, "w+") as apt_conf:
             with open(self.d.expand("${STAGING_ETCDIR_NATIVE}/apt/apt.conf.sample")) as apt_conf_sample:
                 for line in apt_conf_sample.read().split("\n"):
-                    match_arch = re.match("  Architecture \".*\";$", line)
+                    match_arch = re.match(r"  Architecture \".*\";$", line)
                     architectures = ""
                     if match_arch:
                         for base_arch in base_arch_list:
@@ -1795,8 +1795,8 @@ class DpkgPM(OpkgDpkgPM):
                         apt_conf.write("  Architectures {%s};\n" % architectures);
                         apt_conf.write("  Architecture \"%s\";\n" % base_archs)
                     else:
-                        line = re.sub("#ROOTFS#", self.target_rootfs, line)
-                        line = re.sub("#APTCONF#", self.apt_conf_dir, line)
+                        line = re.sub(r"#ROOTFS#", self.target_rootfs, line)
+                        line = re.sub(r"#APTCONF#", self.apt_conf_dir, line)
                         apt_conf.write(line + "\n")
 
         target_dpkg_dir = "%s/var/lib/dpkg" % self.target_rootfs

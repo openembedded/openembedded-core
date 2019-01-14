@@ -211,8 +211,8 @@ pkg_postinst_${PN}-server() {
 
 python populate_packages_prepend() {
     plugindir = d.expand('${libdir}/pulse-${PV}/modules/')
-    do_split_packages(d, plugindir, '^module-(.*)\.so$', '${PN}-module-%s', 'PulseAudio module for %s', extra_depends='', prepend=True)
-    do_split_packages(d, plugindir, '^lib(.*)\.so$', '${PN}-lib-%s', 'PulseAudio library for %s', extra_depends='', prepend=True)
+    do_split_packages(d, plugindir, r'^module-(.*)\.so$', '${PN}-module-%s', 'PulseAudio module for %s', extra_depends='', prepend=True)
+    do_split_packages(d, plugindir, r'^lib(.*)\.so$', '${PN}-lib-%s', 'PulseAudio library for %s', extra_depends='', prepend=True)
 }
 
 RDEPENDS_pulseaudio-server = " \

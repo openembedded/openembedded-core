@@ -133,14 +133,14 @@ python populate_packages_prepend() {
         add_rdepends(bb, d, file, pkg, depmap, multilib_prefix, False)
     plugin_dir = d.expand('${libdir}/connman/plugins/')
     plugin_name = d.expand('${PN}-plugin-%s')
-    do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, \
+    do_split_packages(d, plugin_dir, r'^(.*).so$', plugin_name, \
         '${PN} plugin for %s', extra_depends='', hook=hook, prepend=True )
 
     hook = lambda file,pkg,x,y,z: \
         add_rdepends(bb, d, file, pkg, depmap, multilib_prefix, True)
     plugin_dir = d.expand('${libdir}/connman/plugins-vpn/')
     plugin_name = d.expand('${PN}-plugin-vpn-%s')
-    do_split_packages(d, plugin_dir, '^(.*).so$', plugin_name, \
+    do_split_packages(d, plugin_dir, r'^(.*).so$', plugin_name, \
         '${PN} VPN plugin for %s', extra_depends='', hook=hook, prepend=True )
 }
 

@@ -35,5 +35,5 @@ REQUIRED_DISTRO_FEATURES_class-native = ""
 export PYTHON = "python3"
 
 python populate_packages_prepend () {
-    do_split_packages(d, '${libdir}', '^libxcb-(.*)\.so\..*$', 'libxcb-%s', 'XCB library module for %s', allow_links=True)
+    do_split_packages(d, '${libdir}', r'^libxcb-(.*)\.so\..*$', 'libxcb-%s', 'XCB library module for %s', allow_links=True)
 }

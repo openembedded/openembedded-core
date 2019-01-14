@@ -75,7 +75,7 @@ def legitimize_package_name(s):
             return ('\\u%s' % cp).encode('latin-1').decode('unicode_escape')
 
     # Handle unicode codepoints encoded as <U0123>, as in glibc locale files.
-    s = re.sub('<U([0-9A-Fa-f]{1,4})>', fixutf, s)
+    s = re.sub(r'<U([0-9A-Fa-f]{1,4})>', fixutf, s)
 
     # Remaining package name validity fixes
     return s.lower().replace('_', '-').replace('@', '+').replace(',', '+').replace('/', '-')
@@ -1590,8 +1590,8 @@ python package_do_shlibs() {
         bb.note("not generating shlibs")
         return
 
-    lib_re = re.compile("^.*\.so")
-    libdir_re = re.compile(".*/%s$" % d.getVar('baselib'))
+    lib_re = re.compile(r"^.*\.so")
+    libdir_re = re.compile(r".*/%s$" % d.getVar('baselib'))
 
     packages = d.getVar('PACKAGES')
 
@@ -1632,17 +1632,17 @@ python package_do_shlibs() {
         fd.close()
         rpath = tuple()
         for l in lines:
-            m = re.match("\s+RPATH\s+([^\s]*)", l)
+            m = re.match(r"\s+RPATH\s+([^\s]*)", l)
             if m:
                 rpaths = m.group(1).replace("$ORIGIN", ldir).split(":")
                 rpath = tuple(map(os.path.normpath, rpaths))
         for l in lines:
-            m = re.match("\s+NEEDED\s+([^\s]*)", l)
+            m = re.match(r"\s+NEEDED\s+([^\s]*)", l)
             if m:
                 dep = m.group(1)
                 if dep not in needed:
                     needed.add((dep, file, rpath))
-            m = re.match("\s+SONAME\s+([^\s]*)", l)
+            m = re.match(r"\s+SONAME\s+([^\s]*)", l)
             if m:
                 this_soname = m.group(1)
                 prov = (this_soname, ldir, pkgver)
@@ -1722,7 +1722,7 @@ python package_do_shlibs() {
             out, err = p.communicate()
             # process the output, grabbing all .dll names
             if p.returncode == 0:
-                for m in re.finditer("DLL Name: (.*?\.dll)$", out.decode(), re.MULTILINE | re.IGNORECASE):
+                for m in re.finditer(r"DLL Name: (.*?\.dll)$", out.decode(), re.MULTILINE | re.IGNORECASE):
                     dllname = m.group(1)
                     if dllname:
                         needed[pkg].add((dllname, file, tuple()))
@@ -1883,9 +1883,9 @@ python package_do_pkgconfig () {
     shlibs_dirs = d.getVar('SHLIBSDIRS').split()
     shlibswork_dir = d.getVar('SHLIBSWORKDIR')
 
-    pc_re = re.compile('(.*)\.pc$')
-    var_re = re.compile('(.*)=(.*)')
-    field_re = re.compile('(.*): (.*)')
+    pc_re = re.compile(r'(.*)\.pc$')
+    var_re = re.compile(r'(.*)=(.*)')
+    field_re = re.compile(r'(.*): (.*)')
 
     pkgconfig_provided = {}
     pkgconfig_needed = {}
@@ -1933,7 +1933,7 @@ python package_do_pkgconfig () {
         if not os.path.exists(dir):
             continue
         for file in os.listdir(dir):
-            m = re.match('^(.*)\.pclist$', file)
+            m = re.match(r'^(.*)\.pclist$', file)
             if m:
                 pkg = m.group(1)
                 fd = open(os.path.join(dir, file))

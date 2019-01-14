@@ -334,8 +334,8 @@ class GitApplyTree(PatchTree):
     @staticmethod
     def interpretPatchHeader(headerlines):
         import re
-        author_re = re.compile('[\S ]+ <\S+@\S+\.\S+>')
-        from_commit_re = re.compile('^From [a-z0-9]{40} .*')
+        author_re = re.compile(r'[\S ]+ <\S+@\S+\.\S+>')
+        from_commit_re = re.compile(r'^From [a-z0-9]{40} .*')
         outlines = []
         author = None
         date = None

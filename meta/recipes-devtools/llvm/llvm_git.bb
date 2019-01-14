@@ -34,13 +34,13 @@ LLVM_INSTALL_DIR = "${WORKDIR}/llvm-install"
 def get_llvm_arch(bb, d, arch_var):
     import re
     a = d.getVar(arch_var)
-    if   re.match('(i.86|athlon|x86.64)$', a):         return 'X86'
-    elif re.match('arm$', a):                          return 'ARM'
-    elif re.match('armeb$', a):                        return 'ARM'
-    elif re.match('aarch64$', a):                      return 'AArch64'
-    elif re.match('aarch64_be$', a):                   return 'AArch64'
-    elif re.match('mips(isa|)(32|64|)(r6|)(el|)$', a): return 'Mips'
-    elif re.match('p(pc|owerpc)(|64)', a):             return 'PowerPC'
+    if   re.match(r'(i.86|athlon|x86.64)$', a):         return 'X86'
+    elif re.match(r'arm$', a):                          return 'ARM'
+    elif re.match(r'armeb$', a):                        return 'ARM'
+    elif re.match(r'aarch64$', a):                      return 'AArch64'
+    elif re.match(r'aarch64_be$', a):                   return 'AArch64'
+    elif re.match(r'mips(isa|)(32|64|)(r6|)(el|)$', a): return 'Mips'
+    elif re.match(r'p(pc|owerpc)(|64)', a):             return 'PowerPC'
     else:
         raise bb.parse.SkipRecipe("Cannot map '%s' to a supported LLVM architecture" % a)
 
@@ -172,9 +172,9 @@ INSANE_SKIP_${MLPREFIX}libllvm${LLVM_RELEASE}-llvm += "dev-so"
 python llvm_populate_packages() {
     libdir = bb.data.expand('${libdir}', d)
     libllvm_libdir = bb.data.expand('${libdir}/${LLVM_DIR}', d)
-    split_dbg_packages = do_split_packages(d, libllvm_libdir+'/.debug', '^lib(.*)\.so$', 'libllvm${LLVM_RELEASE}-%s-dbg', 'Split debug package for %s', allow_dirs=True)
-    split_packages = do_split_packages(d, libdir, '^lib(.*)\.so$', 'libllvm${LLVM_RELEASE}-%s', 'Split package for %s', allow_dirs=True, allow_links=True, recursive=True)
-    split_staticdev_packages = do_split_packages(d, libllvm_libdir, '^lib(.*)\.a$', 'libllvm${LLVM_RELEASE}-%s-staticdev', 'Split staticdev package for %s', allow_dirs=True)
+    split_dbg_packages = do_split_packages(d, libllvm_libdir+'/.debug', r'^lib(.*)\.so$', 'libllvm${LLVM_RELEASE}-%s-dbg', 'Split debug package for %s', allow_dirs=True)
+    split_packages = do_split_packages(d, libdir, r'^lib(.*)\.so$', 'libllvm${LLVM_RELEASE}-%s', 'Split package for %s', allow_dirs=True, allow_links=True, recursive=True)
+    split_staticdev_packages = do_split_packages(d, libllvm_libdir, r'^lib(.*)\.a$', 'libllvm${LLVM_RELEASE}-%s-staticdev', 'Split staticdev package for %s', allow_dirs=True)
     if split_packages:
         pn = d.getVar('PN')
         d.appendVar('RDEPENDS_' + pn, ' '+' '.join(split_packages))
