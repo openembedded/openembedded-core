@@ -12,6 +12,7 @@ Fixes
 | ../../strace-4.18/tests/sigaction.c:177:36: error: 'struct_set_sa {aka struct set_sa}' has no member named 'restorer'
 |  # define SA_RESTORER_ARGS , new_act->restorer
 
+Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 ---
