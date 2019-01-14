@@ -672,12 +672,29 @@ def buildhistory_get_build_id(d):
     statusheader = d.getVar('BUILDCFG_HEADER')
     return('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
 
+def buildhistory_get_modified(path):
+    # copied from get_layer_git_status() in image-buildinfo.bbclass
+    import subprocess
+    try:
+        subprocess.check_output("""cd %s; export PSEUDO_UNLOAD=1; set -e;
+                                git diff --quiet --no-ext-diff
+                                git diff --quiet --no-ext-diff --cached""" % path,
+                                shell=True,
+                                stderr=subprocess.STDOUT)
+        return ""
+    except subprocess.CalledProcessError as ex:
+        # Silently treat errors as "modified", without checking for the
+        # (expected) return code 1 in a modified git repo. For example, we get
+        # output and a 129 return code when a layer isn't a git repo at all.
+        return " -- modified"
+
 def buildhistory_get_metadata_revs(d):
     # We want an easily machine-readable format here, so get_layers_branch_rev isn't quite what we want
     layers = (d.getVar("BBLAYERS") or "").split()
-    medadata_revs = ["%-17s = %s:%s" % (os.path.basename(i), \
+    medadata_revs = ["%-17s = %s:%s%s" % (os.path.basename(i), \
         base_get_metadata_git_branch(i, None).strip(), \
-        base_get_metadata_git_revision(i, None)) \
+        base_get_metadata_git_revision(i, None), \
+        buildhistory_get_modified(i)) \
             for i in layers]
     return '\n'.join(medadata_revs)
 
