@@ -26,7 +26,7 @@ S = "${WORKDIR}/ConsoleKit-${PV}"
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'pam systemd', d)}"
 
 PACKAGECONFIG[pam] = "--enable-pam-module --with-pam-module-dir=${base_libdir}/security,--disable-pam-module,libpam"
-PACKAGECONFIG[policykit] = "--with-polkit,--without-polkit,polkit"
+PACKAGECONFIG[polkit] = "--with-polkit,--without-polkit,polkit"
 PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_unitdir}/system/,--with-systemdsystemunitdir="
 
 FILES_${PN} += "${exec_prefix}/lib/ConsoleKit \
