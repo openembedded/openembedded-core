@@ -22,8 +22,7 @@ S = "${WORKDIR}/GConf-${PV}"
 EXTRA_OECONF = "--enable-shared --disable-static \
                 --disable-orbit --with-openldap=no --disable-gtk"
 
-# Disable Polkit by default
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'polkit', d)}"
 # We really don't want Polkit for native
 PACKAGECONFIG_class-native = ""
 
