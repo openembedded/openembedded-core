@@ -22,12 +22,12 @@ S = "${WORKDIR}/GConf-${PV}"
 EXTRA_OECONF = "--enable-shared --disable-static \
                 --disable-orbit --with-openldap=no --disable-gtk"
 
-# Disable PolicyKit by default
+# Disable Polkit by default
 PACKAGECONFIG ??= ""
-# We really don't want PolicyKit for native
+# We really don't want Polkit for native
 PACKAGECONFIG_class-native = ""
 
-PACKAGECONFIG[policykit] = "--enable-defaults-service,--disable-defaults-service,polkit"
+PACKAGECONFIG[polkit] = "--enable-defaults-service,--disable-defaults-service,polkit"
 PACKAGECONFIG[debug] = "--enable-debug=yes, --enable-debug=minimum"
 
 do_install_append() {
