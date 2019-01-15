@@ -338,8 +338,8 @@ DESCRIPTION_${PN}-journal-remote = "systemd-journal-remote is a command to recei
 
 SYSTEMD_PACKAGES = "${@bb.utils.contains('PACKAGECONFIG', 'binfmt', '${PN}-binfmt', '', d)} \
                     ${@bb.utils.contains('PACKAGECONFIG', 'microhttpd', '${PN}-journal-gatewayd', '', d)} \
+                    ${@bb.utils.contains('PACKAGECONFIG', 'microhttpd', '${PN}-journal-remote', '', d)} \
                     ${@bb.utils.contains('PACKAGECONFIG', 'journal-upload', '${PN}-journal-upload', '', d)} \
-                    ${@bb.utils.contains('PACKAGECONFIG', '', '${PN}-journal-remote', '', d)} \
 "
 SYSTEMD_SERVICE_${PN}-binfmt = "systemd-binfmt.service"
 
