@@ -1,14 +1,8 @@
 require util-linux.inc
 
-# To support older hosts, we need to patch and/or revert
-# some upstream changes.  Only do this for native packages.
-OLDHOST = ""
-OLDHOST_class-native = "file://util-linux-native-qsort.patch"
-
 SRC_URI += "file://configure-sbindir.patch \
             file://runuser.pamd \
             file://runuser-l.pamd \
-            ${OLDHOST} \
             file://ptest.patch \
             file://run-ptest \
             file://display_testname_for_subtest.patch \
