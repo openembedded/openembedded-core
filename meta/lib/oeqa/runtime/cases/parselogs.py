@@ -113,6 +113,7 @@ ignore_errors = {
         'OF: amba_device_add() failed (-19) for /amba/sctl@101e0000',
         'OF: amba_device_add() failed (-19) for /amba/watchdog@101e1000',
         'OF: amba_device_add() failed (-19) for /amba/sci@101f0000',
+        'OF: amba_device_add() failed (-19) for /amba/spi@101f4000',
         'OF: amba_device_add() failed (-19) for /amba/ssp@101f4000',
         'OF: amba_device_add() failed (-19) for /amba/fpga/sci@a000',
         'Failed to initialize \'/amba/timer@101e3000\': -22',
