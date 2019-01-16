@@ -23,6 +23,7 @@ PV[vardepvalue] = "${PV}"
 # We don't want the sstate to depend on things like the distro string
 # of the system, we let the sstate paths take care of this.
 SSTATE_EXTRAPATH[vardepvalue] = ""
+SSTATE_EXTRAPATHWILDCARD[vardepvalue] = ""
 
 # For multilib rpm the allarch packagegroup files can overwrite (in theory they're identical)
 SSTATE_DUPWHITELIST = "${DEPLOY_DIR}/licenses/"
