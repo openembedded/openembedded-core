@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=90904486f8fbf1861cf42752e1a39efe"
 
 SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "238a240d3f869a52f8ac38ee3f8faafa"
-SRC_URI[sha256sum] = "d43cfd27cad53d0c22a9bf9702e9dffcc7018a0df21d15b92c56d250d747c744"
+SRC_URI[md5sum] = "3f489aa48ad2aa1f967dc5e293bbd06f"
+SRC_URI[sha256sum] = "34fd26c70a277a9fdd54cb5ecf389badedaf48047b269d1008fbc819b24e80bc"
 
 # brokensep since this uses autoconf but not automake
 inherit autotools-brokensep
