@@ -138,6 +138,14 @@ python apply_update_alternative_renames () {
     if not update_alternatives_enabled(d):
        return
 
+    from re import sub
+
+    def update_files(alt_target, alt_target_rename, pkg, d):
+        f = d.getVar('FILES_' + pkg)
+        if f:
+            f = sub(r'(^|\s)%s(\s|$)' % alt_target, r'\1%s\2' % alt_target_rename, f)
+            d.setVar('FILES_' + pkg, f)
+
     # Check for deprecated usage...
     pn = d.getVar('BPN')
     if d.getVar('ALTERNATIVE_LINKS') != None:
@@ -177,6 +185,7 @@ python apply_update_alternative_renames () {
                     else:
                         bb.note('%s: Rename %s -> %s' % (pn, alt_target, alt_target_rename))
                         os.rename(src, dest)
+                        update_files(alt_target, alt_target_rename, pkg, d)
                 else:
                     bb.warn("%s: alternative target (%s or %s) does not exist, skipping..." % (pn, alt_target, alt_target_rename))
                     continue
@@ -203,6 +212,8 @@ python apply_update_alternative_renames () {
                     os.unlink(src)
                 else:
                     bb.warn('%s: Unable to resolve dangling symlink: %s' % (pn, alt_target))
+                    continue
+            update_files(alt_target, alt_target_rename, pkg, d)
 }
 
 PACKAGESPLITFUNCS_prepend = "populate_packages_updatealternatives "
