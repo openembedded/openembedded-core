@@ -13,8 +13,8 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://serfmacro.patch \
            "
 
-SRC_URI[md5sum] = "b0401a17fe9f4a769e36fcfcfad93461"
-SRC_URI[sha256sum] = "87c44344b074ac2e9ed7ca9675fb1e5b197051c3deecfe5934e5f6aefbf83e56"
+SRC_URI[md5sum] = "5797bf701d2d868fa964c7bbc4931267"
+SRC_URI[sha256sum] = "9efd2750ca4d72ec903431a24b9c732b6cbb84aad9b7563f59dd96dea5be60bb"
 
 inherit autotools pkgconfig gettext
 
