@@ -6,5 +6,5 @@ SRC_URI += " file://0001-git-version-gen-don-t-append-dirty-if-we-re-not-in-g.pa
 	     file://0001-Disable-valadoc.patch \
 "
 
-SRC_URI[md5sum] = "6fdd6fadbef27e3dd05086d6a3220556"
-SRC_URI[sha256sum] = "5fc73dd1e683dc7391bb96d02b2f671aa8289411a48611a05265629e0048587d"
+SRC_URI[md5sum] = "f34cb465a164ba7f1f2e7fea31f36d13"
+SRC_URI[sha256sum] = "b528906d080ac5b6043285a82c194c988e495c70da71ae19c1fc7811509f4f1e"
