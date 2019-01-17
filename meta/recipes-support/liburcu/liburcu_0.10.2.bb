@@ -11,8 +11,8 @@ SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
            file://Add-support-for-the-RISC-V-architecture.patch \
            "
 
-SRC_URI[md5sum] = "281a2f92fdc39c40ad6b76f6631fdbd7"
-SRC_URI[sha256sum] = "9c09220be4435dc27fcd22d291707b94b97f159e0c442fbcd60c168f8f79eb06"
+SRC_URI[md5sum] = "7c424c5183ec009d87e0f70c23e92f1b"
+SRC_URI[sha256sum] = "b3f6888daf6fe02c1f8097f4a0898e41b5fe9975e121dc792b9ddef4b17261cc"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 inherit autotools multilib_header
