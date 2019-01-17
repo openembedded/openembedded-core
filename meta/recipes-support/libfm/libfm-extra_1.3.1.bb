@@ -11,8 +11,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.xz \
            file://0001-nls.m4-Take-it-from-gettext-0.15.patch \
           "
 
-SRC_URI[md5sum] = "02a024714d51e0d37afc7bd596a44f3b"
-SRC_URI[sha256sum] = "18d06f7996ce1cf8947df6e106bc0338c6ae0c4138c316f2501f6f6f435c7c72"
+SRC_URI[md5sum] = "c15ecd2c9317e2c385cd3f046d0b61ba"
+SRC_URI[sha256sum] = "96b1244bde41ca0eef0332cfb5c67bb16725dfd102128f3e6f74fadc13a1cfe4"
 
 S = "${WORKDIR}/libfm-${PV}"
 
