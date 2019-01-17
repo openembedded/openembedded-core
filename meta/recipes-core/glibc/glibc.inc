@@ -2,10 +2,6 @@ require glibc-common.inc
 require glibc-ld.inc
 require glibc-testing.inc
 
-STAGINGCC = "gcc-cross-initial-${TARGET_ARCH}"
-STAGINGCC_class-nativesdk = "gcc-crosssdk-initial-${SDK_SYS}"
-PATH_prepend = "${STAGING_BINDIR_TOOLCHAIN}.${STAGINGCC}:"
-
 python () {
     opt_effective = "-O"
     for opt in d.getVar('SELECTED_OPTIMIZATION').split():
