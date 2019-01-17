@@ -23,8 +23,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0001-Port-cross-compilation-support-to-meson.patch \
            "
 
-SRC_URI[md5sum] = "8479d6c543173721ce948484d0cd1d64"
-SRC_URI[sha256sum] = "2a5e0f69459af7ca4c41b8f4e19d9c80ddf877834bb0e7fdd420e2495ae2eda8"
+SRC_URI[md5sum] = "182432c1f33886be8f4da073218b597d"
+SRC_URI[sha256sum] = "025b632bbd944dcf11fc50d19a0ca086b83baf92b3e34936d008180d28cdc3c8"
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
