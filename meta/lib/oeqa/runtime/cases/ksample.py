@@ -22,6 +22,12 @@ class KSample(OERuntimeTestCase):
             self.assertTrue(result, msg)
             self.assertEqual(status, 0, cmd)
 
+    def check_arch(self, archset=''):
+        status, output = self.target.run("uname -m")
+        result = ("%s" % output) in archset
+        if not result:
+            self.skipTest("This case doesn't support %s" % output)
+
     def check_config(self, config_opt=''):
         cmd = "zcat /proc/config.gz | grep %s" % config_opt
         status, output = self.target.run(cmd)
@@ -99,6 +105,7 @@ class KSampleTest(KSample):
     # kprobe
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_kprobe_test(self):
+        self.check_arch("x86 ppc")
         index = ["kprobe", "kretprobe"]
         for i in index:
             self.kprobe_func(i)
