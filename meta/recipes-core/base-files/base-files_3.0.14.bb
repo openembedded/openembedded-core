@@ -150,7 +150,7 @@ do_install_basefilesissue () {
 		printf "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue
 		printf "${DISTRO_NAME} " >> ${D}${sysconfdir}/issue.net
 		if [ -n "${DISTRO_VERSION}" ]; then
-			distro_version_nodate=${@'${DISTRO_VERSION}'.replace('snapshot-${DATE}','snapshot').replace('${DATE}','')}
+			distro_version_nodate="${@d.getVar('DISTRO_VERSION').replace('snapshot-${DATE}','snapshot').replace('${DATE}','')}"
 			printf "%s " $distro_version_nodate >> ${D}${sysconfdir}/issue
 			printf "%s " $distro_version_nodate >> ${D}${sysconfdir}/issue.net
 		fi
