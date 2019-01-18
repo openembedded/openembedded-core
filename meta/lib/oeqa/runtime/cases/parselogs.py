@@ -162,7 +162,23 @@ ignore_errors = {
         'The driver is built-in, so to load the firmware you need to',
         ] + x86_common,
     'edgerouter' : [
+        'not creating \'/sys/firmware/fdt\'',
+        'Failed to find cpu0 device node',
         'Fatal server error:',
+        'Server terminated with error',
+        ] + common_errors,
+    'beaglebone-yocto' : [
+        'Direct firmware load for regulatory.db',
+        'failed to load regulatory.db',
+        'l4_wkup_cm',
+        'Failed to load module "glx"',
+        'Failed to make EGL context current',
+        'glamor initialization failed',
+        ] + common_errors,
+    'mpc8315e-rdb' : [
+        'of_irq_parse_pci: failed with',
+        'Fatal server error:',
+        'Server terminated with error',
         ] + common_errors,
 }
 
