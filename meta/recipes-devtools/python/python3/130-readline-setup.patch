@@ -49,7 +49,7 @@ Upstream-Status: Inappropriate [Embedded Specific]
 -            curses_library = 'ncurses'
 -        elif self.compiler.find_library_file(lib_dirs, 'curses'):
 -            curses_library = 'curses'
-+        curses_library = "ncurses"
++        curses_library = "ncursesw"
  
          if host_platform == 'darwin':
              os_release = int(os.uname()[2].split('.')[0])
