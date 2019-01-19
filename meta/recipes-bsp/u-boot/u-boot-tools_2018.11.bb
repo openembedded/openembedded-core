@@ -1,4 +1,4 @@
-require u-boot-common_${PV}.inc
+require u-boot-common.inc
 
 SUMMARY = "U-Boot bootloader tools"
 DEPENDS += "openssl"
