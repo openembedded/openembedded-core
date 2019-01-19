@@ -11,11 +11,12 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "d4f22c66b3210ffe6b10d01c04e008b5"
 SRC_URI[sha256sum] = "0175f5393d19da51f4c11462cba4ba6ef3fa042abf1611a70bdfed586b7bfb2b"
 
-DEPENDS = "dbus glib-2.0 virtual/libx11 libxi libxtst"
+X11DEPENDS = "virtual/libx11 libxi libxtst"
 
-inherit meson gtk-doc gettext systemd pkgconfig distro_features_check upstream-version-is-even gobject-introspection
-# depends on virtual/libx11
-REQUIRED_DISTRO_FEATURES = "x11"
+DEPENDS = "dbus glib-2.0"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', d)}"
+
+inherit meson gtk-doc gettext systemd pkgconfig upstream-version-is-even gobject-introspection
 
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
                   -Ddbus_daemon=${bindir}/dbus-daemon"
