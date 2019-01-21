@@ -774,9 +774,13 @@ def modify(args, config, basepath, workspace):
             check_commits = True
         else:
             if os.path.exists(os.path.join(srctree, '.git')):
-                # Check if it's a tree previously extracted by us
+                # Check if it's a tree previously extracted by us. This is done
+                # by ensuring that devtool-base and args.branch (devtool) exist.
+                # The check_commits logic will cause an exception if either one
+                # of these doesn't exist
                 try:
                     (stdout, _) = bb.process.run('git branch --contains devtool-base', cwd=srctree)
+                    bb.process.run('git rev-parse %s' % args.branch, cwd=srctree)
                 except bb.process.ExecutionError:
                     stdout = ''
                 if stdout:
