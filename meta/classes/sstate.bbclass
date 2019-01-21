@@ -83,9 +83,9 @@ SSTATE_SIG_PASSPHRASE ?= ""
 # Whether to verify the GnUPG signatures when extracting sstate archives
 SSTATE_VERIFY_SIG ?= "0"
 
-SSTATE_HASHEQUIV_METHOD ?= "OEOuthashBasic"
-SSTATE_HASHEQUIV_METHOD[doc] = "The function used to calculate the output hash \
-    for a task, which in turn is used to determine equivalency. \
+SSTATE_HASHEQUIV_METHOD ?= "oe.sstatesig.OEOuthashBasic"
+SSTATE_HASHEQUIV_METHOD[doc] = "The fully-qualified function used to calculate \
+    the output hash for a task, which in turn is used to determine equivalency. \
     "
 
 SSTATE_HASHEQUIV_SERVER ?= ""
@@ -781,65 +781,6 @@ python sstate_sign_package () {
         signer.detach_sign(sstate_pkg, d.getVar('SSTATE_SIG_KEY', False), None,
                            d.getVar('SSTATE_SIG_PASSPHRASE'), armor=False)
 }
-
-def OEOuthashBasic(path, sigfile, task, d):
-    import hashlib
-    import stat
-
-    def update_hash(s):
-        s = s.encode('utf-8')
-        h.update(s)
-        if sigfile:
-            sigfile.write(s)
-
-    h = hashlib.sha256()
-    prev_dir = os.getcwd()
-
-    try:
-        os.chdir(path)
-
-        update_hash("OEOuthashBasic\n")
-
-        # It is only currently useful to get equivalent hashes for things that
-        # can be restored from sstate. Since the sstate object is named using
-        # SSTATE_PKGSPEC and the task name, those should be included in the
-        # output hash calculation.
-        update_hash("SSTATE_PKGSPEC=%s\n" % d.getVar('SSTATE_PKGSPEC'))
-        update_hash("task=%s\n" % task)
-
-        for root, dirs, files in os.walk('.', topdown=True):
-            # Sort directories and files to ensure consistent ordering
-            dirs.sort()
-            files.sort()
-
-            for f in files:
-                path = os.path.join(root, f)
-                s = os.lstat(path)
-
-                # Hash file path
-                update_hash(path + '\n')
-
-                # Hash file mode
-                update_hash("\tmode=0x%x\n" % stat.S_IMODE(s.st_mode))
-                update_hash("\ttype=0x%x\n" % stat.S_IFMT(s.st_mode))
-
-                if stat.S_ISBLK(s.st_mode) or stat.S_ISBLK(s.st_mode):
-                    # Hash device major and minor
-                    update_hash("\tdev=%d,%d\n" % (os.major(s.st_rdev), os.minor(s.st_rdev)))
-                elif stat.S_ISLNK(s.st_mode):
-                    # Hash symbolic link
-                    update_hash("\tsymlink=%s\n" % os.readlink(path))
-                else:
-                    fh = hashlib.sha256()
-                    # Hash file contents
-                    with open(path, 'rb') as d:
-                        for chunk in iter(lambda: d.read(4096), b""):
-                            fh.update(chunk)
-                    update_hash("\tdigest=%s\n" % fh.hexdigest())
-    finally:
-        os.chdir(prev_dir)
-
-    return h.hexdigest()
 
 python sstate_report_unihash() {
     report_unihash = getattr(bb.parse.siggen, 'report_unihash', None)

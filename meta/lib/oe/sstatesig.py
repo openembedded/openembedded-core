@@ -270,7 +270,7 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHash):
         super().init_rundepcheck(data)
         self.server = data.getVar('SSTATE_HASHEQUIV_SERVER')
         self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
-        self.unihashes = bb.persist_data.persist('SSTATESIG_UNIHASH_CACHE_v1_' + self.method, data)
+        self.unihashes = bb.persist_data.persist('SSTATESIG_UNIHASH_CACHE_v1_' + self.method.replace('.', '_'), data)
 
     def get_taskdata(self):
         return (self.server, self.method) + super().get_taskdata()
@@ -355,6 +355,7 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHash):
         import json
         import tempfile
         import base64
+        import importlib
 
         taskhash = d.getVar('BB_TASKHASH')
         unihash = d.getVar('BB_UNIHASH')
@@ -376,11 +377,14 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHash):
         sigfile_link = "depsig.do_%s" % task
 
         try:
-            call = self.method + '(path, sigfile, task, d)'
             sigfile = open(os.path.join(tempdir, sigfile_name), 'w+b')
+
             locs = {'path': path, 'sigfile': sigfile, 'task': task, 'd': d}
 
-            outhash = bb.utils.better_eval(call, locs)
+            (module, method) = self.method.rsplit('.', 1)
+            locs['method'] = getattr(importlib.import_module(module), method)
+
+            outhash = bb.utils.better_eval('method(path, sigfile, task, d)', locs)
 
             try:
                 url = '%s/v1/equivalent' % self.server
@@ -580,5 +584,134 @@ def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
             return manifest, d2
     bb.warn("Manifest %s not found in %s (variant '%s')?" % (manifest, d2.expand(" ".join(pkgarchs)), variant))
     return None, d2
+
+def OEOuthashBasic(path, sigfile, task, d):
+    """
+    Basic output hash function
+
+    Calculates the output hash of a task by hashing all output file metadata,
+    and file contents.
+    """
+    import hashlib
+    import stat
+    import pwd
+    import grp
+
+    def update_hash(s):
+        s = s.encode('utf-8')
+        h.update(s)
+        if sigfile:
+            sigfile.write(s)
+
+    h = hashlib.sha256()
+    prev_dir = os.getcwd()
+    include_owners = os.environ.get('PSEUDO_DISABLED') == '0'
+
+    try:
+        os.chdir(path)
+
+        update_hash("OEOuthashBasic\n")
+
+        # It is only currently useful to get equivalent hashes for things that
+        # can be restored from sstate. Since the sstate object is named using
+        # SSTATE_PKGSPEC and the task name, those should be included in the
+        # output hash calculation.
+        update_hash("SSTATE_PKGSPEC=%s\n" % d.getVar('SSTATE_PKGSPEC'))
+        update_hash("task=%s\n" % task)
+
+        for root, dirs, files in os.walk('.', topdown=True):
+            # Sort directories to ensure consistent ordering when recursing
+            dirs.sort()
+            files.sort()
+
+            def process(path):
+                s = os.lstat(path)
+
+                if stat.S_ISDIR(s.st_mode):
+                    update_hash('d')
+                elif stat.S_ISCHR(s.st_mode):
+                    update_hash('c')
+                elif stat.S_ISBLK(s.st_mode):
+                    update_hash('b')
+                elif stat.S_ISSOCK(s.st_mode):
+                    update_hash('s')
+                elif stat.S_ISLNK(s.st_mode):
+                    update_hash('l')
+                elif stat.S_ISFIFO(s.st_mode):
+                    update_hash('p')
+                else:
+                    update_hash('-')
+
+                def add_perm(mask, on, off='-'):
+                    if mask & s.st_mode:
+                        update_hash(on)
+                    else:
+                        update_hash(off)
+
+                add_perm(stat.S_IRUSR, 'r')
+                add_perm(stat.S_IWUSR, 'w')
+                if stat.S_ISUID & s.st_mode:
+                    add_perm(stat.S_IXUSR, 's', 'S')
+                else:
+                    add_perm(stat.S_IXUSR, 'x')
+
+                add_perm(stat.S_IRGRP, 'r')
+                add_perm(stat.S_IWGRP, 'w')
+                if stat.S_ISGID & s.st_mode:
+                    add_perm(stat.S_IXGRP, 's', 'S')
+                else:
+                    add_perm(stat.S_IXGRP, 'x')
+
+                add_perm(stat.S_IROTH, 'r')
+                add_perm(stat.S_IWOTH, 'w')
+                if stat.S_ISVTX & s.st_mode:
+                    update_hash('t')
+                else:
+                    add_perm(stat.S_IXOTH, 'x')
+
+                if include_owners:
+                    update_hash(" %10s" % pwd.getpwuid(s.st_uid).pw_name)
+                    update_hash(" %10s" % grp.getgrgid(s.st_gid).gr_name)
+
+                update_hash(" ")
+                if stat.S_ISBLK(s.st_mode) or stat.S_ISCHR(s.st_mode):
+                    update_hash("%9s" % ("%d.%d" % (os.major(s.st_rdev), os.minor(s.st_rdev))))
+                else:
+                    update_hash(" " * 9)
+
+                update_hash(" ")
+                if stat.S_ISREG(s.st_mode):
+                    update_hash("%10d" % s.st_size)
+                else:
+                    update_hash(" " * 10)
+
+                update_hash(" ")
+                fh = hashlib.sha256()
+                if stat.S_ISREG(s.st_mode):
+                    # Hash file contents
+                    with open(path, 'rb') as d:
+                        for chunk in iter(lambda: d.read(4096), b""):
+                            fh.update(chunk)
+                    update_hash(fh.hexdigest())
+                else:
+                    update_hash(" " * len(fh.hexdigest()))
+
+                update_hash(" %s" % path)
+
+                if stat.S_ISLNK(s.st_mode):
+                    update_hash(" -> %s" % os.readlink(path))
+
+                update_hash("\n")
+
+            # Process this directory and all its child files
+            process(root)
+            for f in files:
+                if f == 'fixmepath':
+                    continue
+                process(os.path.join(root, f))
+    finally:
+        os.chdir(prev_dir)
+
+    return h.hexdigest()
 
 
