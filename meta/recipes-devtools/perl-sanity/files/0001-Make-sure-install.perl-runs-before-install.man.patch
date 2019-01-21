@@ -1,0 +1,27 @@
+From 965adc80636e24e9608ca983c18c95cae08de021 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 21 Jan 2019 12:09:13 +0100
+Subject: [PATCH] Make sure install.perl runs before install.man
+
+Otherwise, install.man may attempt to write to non-existing directory:
+|   Can't open file /home/pokybuild/yocto-worker/qemux86-64-x32/build/build/tmp/work/x86_64_x32-poky-linux-gnux32/perl/5.28.1-r0/image/usr/libx32/perl5/5.28.1/x86_64-linux/.packlist: No such file or directory at installman line 183.
+
+Upstream-Status: Submitted [https://github.com/arsv/perl-cross/issues/72]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index cd8d75f..82bdc1d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -410,7 +410,7 @@ install.perl: installperl | miniperl$X
+ 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
+ 	-@test ! -s extras.lst || $(MAKE) extras.install
+ 
+-install.man: installman pod/perltoc.pod | miniperl$X
++install.man: install.perl installman pod/perltoc.pod | miniperl$X
+ 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
+ 
+ ifneq ($(perlname),perl)
