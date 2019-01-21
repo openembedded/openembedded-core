@@ -82,7 +82,8 @@ do_configure_class-native() {
     -Dbin=${bindir}/perl-native \
     -Duseshrplib \
     -Dsoname=libperl.so.5 \
-    -Dvendorprefix=${prefix}
+    -Dvendorprefix=${prefix} \
+    -Ui_xlocale
 }
 
 do_compile() {
