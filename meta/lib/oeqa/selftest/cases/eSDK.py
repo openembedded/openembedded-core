@@ -32,7 +32,7 @@ class oeSDKExtSelfTest(OESelftestTestCase):
         if not 'shell' in options:
             options['shell'] = True
 
-        runCmd("cd %s; . %s; %s" % (tmpdir_eSDKQA, env_eSDK, cmd), **options)
+        runCmd("cd %s; unset BBPATH; unset BUILDDIR; . %s; %s" % (tmpdir_eSDKQA, env_eSDK, cmd), **options)
 
     @staticmethod
     def generate_eSDK(image):
