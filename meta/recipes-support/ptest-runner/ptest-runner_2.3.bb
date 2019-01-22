@@ -7,7 +7,7 @@ HOMEPAGE = "http://git.yoctoproject.org/cgit/cgit.cgi/ptest-runner2/about/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
-SRCREV = "80712583732b4a809532f644fb09e7d2e812d7ba"
+SRCREV = "e1062f776eea60c50435c6b8ddf9714a31141aee"
 PV = "2.3+git${SRCPV}"
 
 SRC_URI = "git://git.yoctoproject.org/ptest-runner2"
@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 FILES_${PN} = "${bindir}/ptest-runner"
 
-EXTRA_OEMAKE = "-e MAKEFLAGS="
+EXTRA_OEMAKE = "-e MAKEFLAGS= CFLAGS="${CFLAGS} -DDEFAULT_DIRECTORY=\\\"${libdir}\\\"""
 
 do_compile () {
 	oe_runmake
