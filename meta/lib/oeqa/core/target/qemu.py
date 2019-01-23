@@ -33,11 +33,11 @@ class OEQemuTarget(OESSHTarget):
                                  use_kvm=kvm, use_slirp=slirp, dump_dir=dump_dir,
                                  dump_host_cmds=dump_host_cmds, logger=logger)
 
-    def start(self, params=None, extra_bootparams=None):
+    def start(self, params=None, extra_bootparams=None, runqemuparams=''):
         if self.use_slirp and not self.server_ip:
             self.logger.error("Could not start qemu with slirp without server ip - provide 'TEST_SERVER_IP'")
             raise RuntimeError("FAILED to start qemu - check the task log and the boot log")
-        if self.runner.start(params, extra_bootparams=extra_bootparams):
+        if self.runner.start(params, extra_bootparams=extra_bootparams, runqemuparams=runqemuparams):
             self.ip = self.runner.ip
             if self.use_slirp:
                 target_ip_port = self.runner.ip.split(':')
