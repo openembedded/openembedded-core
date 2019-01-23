@@ -439,6 +439,11 @@ class PackageManager(object, metaclass=ABCMeta):
                 self._postpone_to_first_boot(script_full)
                 continue
 
+            if populate_sdk == 'host' and self.d.getVar('SDK_OS') == 'mingw32':
+                bb.warn("The postinstall intercept hook '%s' could not be executed due to missing wine support, details in %s/log.do_%s"
+                                % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
+                continue
+
             bb.note("> Executing %s intercept ..." % script)
 
             try:
@@ -447,7 +452,7 @@ class PackageManager(object, metaclass=ABCMeta):
             except subprocess.CalledProcessError as e:
                 bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
                 if populate_sdk == 'host':
-                    bb.warn("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
+                    bb.fatal("The postinstall intercept hook '%s' failed, details in %s/log.do_%s" % (script, self.d.getVar('T'), self.d.getVar('BB_CURRENTTASK')))
                 elif populate_sdk == 'target':
                     if "qemuwrapper: qemu usermode is not supported" in e.output.decode("utf-8"):
                         bb.warn("The postinstall intercept hook '%s' could not be executed due to missing qemu usermode support, details in %s/log.do_%s"
