@@ -105,7 +105,7 @@ class KSampleTest(KSample):
     # kprobe
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_kprobe_test(self):
-        self.check_arch("x86 ppc")
+        self.check_arch("x86_64 i686 ppc")
         index = ["kprobe", "kretprobe"]
         for i in index:
             self.kprobe_func(i)
@@ -173,9 +173,9 @@ class KSampleTest(KSample):
     def test_hw_breakpoint_example(self):
         # check arch
         status, output = self.target.run("uname -m")
-        result = ("x86" in output) or ("aarch64" in output)
+        result = ("x86_64" in output) or ("aarch64" in output)
         if not result:
-            self.skipTest("the arch doesn't support hw breakpoint" % output)
+            self.skipTest("the arch %s doesn't support hw breakpoint" % output)
         # check config
         self.check_config("CONFIG_KALLSYMS_ALL")
         # make sure if module exists
