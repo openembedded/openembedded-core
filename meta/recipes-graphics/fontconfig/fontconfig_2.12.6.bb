@@ -42,6 +42,12 @@ do_install_append_class-target() {
     ln ${D}${bindir}/fc-cache ${D}${libexecdir}/${MLPREFIX}fc-cache
 }
 
+do_install_append_class-nativesdk() {
+    # duplicate fc-cache for postinstall script
+    mkdir -p ${D}${libexecdir}
+    ln ${D}${bindir}/fc-cache ${D}${libexecdir}/${MLPREFIX}fc-cache
+}
+
 PACKAGES =+ "fontconfig-utils"
 FILES_${PN} =+ "${datadir}/xml/*"
 FILES_fontconfig-utils = "${bindir}/* ${libexecdir}/*"
