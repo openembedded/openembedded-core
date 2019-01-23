@@ -1020,8 +1020,54 @@ def get_recipe_upstream_version(rd):
 
     return ru
 
+def _get_recipe_upgrade_status(data):
+    uv = get_recipe_upstream_version(data)
+
+    pn = data.getVar('PN')
+    cur_ver = uv['current_version']
+
+    upstream_version_unknown = data.getVar('UPSTREAM_VERSION_UNKNOWN')
+    if not uv['version']:
+        status = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
+    else:
+        cmp = vercmp_string(uv['current_version'], uv['version'])
+        if cmp == -1:
+            status = "UPDATE" if not upstream_version_unknown else "KNOWN_BROKEN"
+        elif cmp == 0:
+            status = "MATCH" if not upstream_version_unknown else "KNOWN_BROKEN"
+        else:
+            status = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
+
+    next_ver = uv['version'] if uv['version'] else "N/A"
+    revision = uv['revision'] if uv['revision'] else "N/A"
+    maintainer = data.getVar('RECIPE_MAINTAINER')
+    no_upgrade_reason = data.getVar('RECIPE_NO_UPDATE_REASON')
+
+    return (pn, status, cur_ver, next_ver, maintainer, revision, no_upgrade_reason)
+
 def get_recipe_upgrade_status(recipes=None):
     pkgs_list = []
+    data_copy_list = []
+    copy_vars = ('SRC_URI',
+                 'PV',
+                 'GITDIR',
+                 'DL_DIR',
+                 'PN',
+                 'CACHE',
+                 'PERSISTENT_DIR',
+                 'BB_URI_HEADREVS',
+                 'UPSTREAM_CHECK_COMMITS',
+                 'UPSTREAM_CHECK_GITTAGREGEX',
+                 'UPSTREAM_CHECK_REGEX',
+                 'UPSTREAM_CHECK_URI',
+                 'UPSTREAM_VERSION_UNKNOWN',
+                 'RECIPE_MAINTAINER',
+                 'RECIPE_NO_UPDATE_REASON',
+                 'RECIPE_UPSTREAM_VERSION',
+                 'RECIPE_UPSTREAM_DATE',
+                 'CHECK_DATE',
+            )
+
     with bb.tinfoil.Tinfoil() as tinfoil:
         tinfoil.prepare(config_only=False)
 
@@ -1043,28 +1089,17 @@ def get_recipe_upgrade_status(recipes=None):
                 bb.note(" Skip package %s as upstream check unreliable" % pn)
                 continue
 
-            uv = get_recipe_upstream_version(data)
+            data_copy = bb.data.init()
+            for var in copy_vars:
+                data_copy.setVar(var, data.getVar(var))
+            for k in data:
+                if k.startswith('SRCREV'):
+                    data_copy.setVar(k, data.getVar(k))
 
-            pn = data.getVar('PN')
-            cur_ver = uv['current_version']
+            data_copy_list.append(data_copy)
 
-            upstream_version_unknown = data.getVar('UPSTREAM_VERSION_UNKNOWN')
-            if not uv['version']:
-                status = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
-            else:
-                cmp = vercmp_string(uv['current_version'], uv['version'])
-                if cmp == -1:
-                    status = "UPDATE" if not upstream_version_unknown else "KNOWN_BROKEN"
-                elif cmp == 0:
-                    status = "MATCH" if not upstream_version_unknown else "KNOWN_BROKEN"
-                else:
-                    status = "UNKNOWN" if upstream_version_unknown else "UNKNOWN_BROKEN"
-
-            next_ver = uv['version'] if uv['version'] else "N/A"
-            revision = uv['revision'] if uv['revision'] else "N/A"
-            maintainer = data.getVar('RECIPE_MAINTAINER')
-            no_upgrade_reason = data.getVar('RECIPE_NO_UPDATE_REASON')
-
-            pkgs_list.append((pn, status, cur_ver, next_ver, maintainer, revision, no_upgrade_reason))
+    from concurrent.futures import ProcessPoolExecutor
+    with ProcessPoolExecutor(max_workers=utils.cpu_count()) as executor:
+        pkgs_list = executor.map(_get_recipe_upgrade_status, data_copy_list)
 
     return pkgs_list
