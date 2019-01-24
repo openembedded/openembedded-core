@@ -29,6 +29,7 @@ CMAKE_EXTRACONF = "\
 do_configure () {
 	${S}/configure --verbose --prefix=${prefix} \
 		${@oe.utils.parallel_make_argument(d, '--parallel=%d')} \
+		${@bb.utils.contains('CCACHE', 'ccache ', '--enable-ccache', '', d)} \
 		-- ${CMAKE_EXTRACONF}
 }
 
