@@ -23,6 +23,7 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://fix-race-failures-2.patch \
            file://0001-Also-build-dynaloader-separately-as-race-failures-ha.patch \
            file://0001-Make-sure-install.perl-runs-before-install.man.patch \
+           file://0001-Makefile-Make-install.perl-depend-on-install.sym.patch \
            "
 
 SRC_URI[perl.md5sum] = "838198c43d4f39d7af797e2f59c2bee5"

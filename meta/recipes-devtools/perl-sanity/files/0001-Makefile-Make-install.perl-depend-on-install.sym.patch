@@ -1,0 +1,32 @@
+From a0a2fcac3735ca90017976d2b87f550d051a969b Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Tue, 22 Jan 2019 19:21:27 -0800
+Subject: [PATCH] Makefile: Make install.perl depend on install.sym
+
+Fix a race issue when install, there might be no
+$(installbin)/$(perlname)$(version) when install.sym runs after install.perl
+since install.sym removes it.
+
+Upstream-Status: Submitted [https://github.com/arsv/perl-cross/pull/73]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index cd8d75f..1aa8ef2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -406,7 +406,7 @@ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniper
+ 
+ install: install.perl install.sym install.man
+ 
+-install.perl: installperl | miniperl$X
++install.perl: installperl install.sym | miniperl$X
+ 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
+ 	-@test ! -s extras.lst || $(MAKE) extras.install
+ 
+-- 
+2.10.2
+
