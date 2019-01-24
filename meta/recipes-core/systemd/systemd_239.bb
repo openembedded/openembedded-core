@@ -39,6 +39,8 @@ SRC_URI += "file://touchscreen.rules \
            file://0002-core-Fix-use-after-free-case-in-load_from_path.patch \
            file://0001-meson-rename-Ddebug-to-Ddebug-extra.patch \
            file://0024-journald-do-not-store-the-iovec-entry-for-process-co.patch \
+           file://0025-journald-set-a-limit-on-the-number-of-fields-1k.patch \
+           file://0026-journal-remote-set-a-limit-on-the-number-of-fields-i.patch \
            "
 
 # patches made for musl are only applied on TCLIBC is musl
