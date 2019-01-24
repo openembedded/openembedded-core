@@ -2,6 +2,7 @@ import tempfile
 import shutil
 import os
 import glob
+import time
 from oeqa.core.decorator.oeid import OETestID
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
@@ -95,6 +96,11 @@ SSTATE_MIRRORS =  "file://.* file://%s/PATH"
 
     @classmethod
     def tearDownClass(cls):
+        for i in range(0, 10):
+            if os.path.exists(os.path.join(cls.tmpdir_eSDKQA, 'bitbake.lock')):
+                time.sleep(1)
+            else:
+                break
         cls.tmpdirobj.cleanup()
         super().tearDownClass()
 
