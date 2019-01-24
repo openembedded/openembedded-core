@@ -15,6 +15,7 @@ EXTRA_OECONF_PATHS = "\
 "
 
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
+EXTRA_OECONF_append = " --cache-file=${B}/config.cache"
 
 RUNTIMELIBITM = "libitm"
 RUNTIMELIBITM_arc = ""
