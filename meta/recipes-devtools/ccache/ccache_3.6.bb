@@ -8,4 +8,5 @@ SRC_URI[sha256sum] = "a3f2b91a2353b65a863c5901251efe48060ecdebec46b5eaec8ea8e092
 
 SRC_URI += " \
             file://0002-dev.mk.in-fix-file-name-too-long.patch \
+            file://0003-Fix-Segmentation-fault-error-when-gcc-o-dev-null.patch \
 "
