@@ -38,6 +38,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-sysctl-Don-t-pass-null-directive-argument-to-s.patch \
            file://0002-core-Fix-use-after-free-case-in-load_from_path.patch \
            file://0001-meson-rename-Ddebug-to-Ddebug-extra.patch \
+           file://0024-journald-do-not-store-the-iovec-entry-for-process-co.patch \
            "
 
 # patches made for musl are only applied on TCLIBC is musl
