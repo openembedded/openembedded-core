@@ -8,7 +8,7 @@ Otherwise, there would be build errors in the following 2 cases:
 Or:
 * undef HAVE_POSIX_FADVISE
 
-Upstream-Status: Pending
+Upstream-Status: Backport [https://gitlab.freedesktop.org/fontconfig/fontconfig/commit/586e35450e9ca7c1dc647ceb9d75ac8ed08c5c16]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
