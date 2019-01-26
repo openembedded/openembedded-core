@@ -790,7 +790,7 @@ class UserResolver(Resolver):
 
 
 def patch_path(url, fetch, workdir, expand=True):
-    """Return the local path of a patch, or None if this isn't a patch"""
+    """Return the local path of a patch, or return nothing if this isn't a patch"""
 
     local = fetch.localpath(url)
     base, ext = os.path.splitext(os.path.basename(local))
