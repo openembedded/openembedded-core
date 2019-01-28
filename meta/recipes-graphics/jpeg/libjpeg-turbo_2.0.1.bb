@@ -53,4 +53,4 @@ FILES_jpeg-tools = "${bindir}/*"
 DESCRIPTION_libturbojpeg = "A SIMD-accelerated JPEG codec which provides only TurboJPEG APIs"
 FILES_libturbojpeg = "${libdir}/libturbojpeg.so.*"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

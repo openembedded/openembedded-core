@@ -38,3 +38,4 @@ FILES_${PN} += "${datadir}/dbus-1/services/*.service \
                 ${datadir}/defaults/at-spi2 \
                 ${systemd_user_unitdir}/at-spi-dbus-bus.service \
                 "
+BBCLASSEXTEND = "native nativesdk"
