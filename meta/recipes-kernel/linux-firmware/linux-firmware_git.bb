@@ -300,6 +300,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-i915-license ${PN}-i915 \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2-mips \
+             ${PN}-liquidio \
              ${PN}-netronome-license ${PN}-netronome \
              ${PN}-qat ${PN}-qat-license \
              ${PN}-qcom-license \
@@ -859,6 +860,8 @@ RDEPENDS_${PN}-qcom-venus-1.8 = "${PN}-qcom-license"
 RDEPENDS_${PN}-qcom-venus-4.2 = "${PN}-qcom-license"
 RDEPENDS_${PN}-qcom-adreno-a3xx = "${PN}-qcom-license"
 RDEPENDS_${PN}-qcom-adreno-a530 = "${PN}-qcom-license"
+
+FILES_${PN}-liquidio = "${nonarch_base_libdir}/firmware/liquidio"
 
 # For other firmwares
 # Maybe split out to separate packages when needed.
