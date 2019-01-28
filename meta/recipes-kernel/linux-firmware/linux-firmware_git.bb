@@ -920,13 +920,13 @@ RDEPENDS_${PN} += "${PN}-whence-license"
 # Make linux-firmware-ibt depend on all of the split-out ibt packages.
 python populate_packages_prepend () {
     firmware_pkgs = oe.utils.packages_filter_out_system(d)
-    d.appendVar('RDEPENDS_linux-firmware', ' ' + ' '.join(firmware_pkgs))
+    d.appendVar('RRECOMMENDS_linux-firmware', ' ' + ' '.join(firmware_pkgs))
 
     iwlwifi_pkgs = filter(lambda x: x.find('-iwlwifi-') != -1, firmware_pkgs)
-    d.appendVar('RDEPENDS_linux-firmware-iwlwifi', ' ' + ' '.join(iwlwifi_pkgs))
+    d.appendVar('RRECOMMENDS_linux-firmware-iwlwifi', ' ' + ' '.join(iwlwifi_pkgs))
 
     ibt_pkgs = filter(lambda x: x.find('-ibt-') != -1, firmware_pkgs)
-    d.appendVar('RDEPENDS_linux-firmware-ibt', ' ' + ' '.join(ibt_pkgs))
+    d.appendVar('RRECOMMENDS_linux-firmware-ibt', ' ' + ' '.join(ibt_pkgs))
 }
 
 # Firmware files are generally not ran on the CPU, so they can be
