@@ -7,32 +7,40 @@ from . import ftools
 
 # A parser that can be used to identify weather a line is a test result or a section statement.
 class PtestParser(object):
-
     def __init__(self):
+        self.results = Result()
 
-        self.test_regex = {}
-        self.test_regex['pass'] = re.compile(r"^PASS:(.+)")
-        self.test_regex['fail'] = re.compile(r"^FAIL:(.+)")
-        self.test_regex['skip'] = re.compile(r"^SKIP:(.+)")
+    def parse(self, logfile):
+        test_regex = {}
+        test_regex['pass'] = re.compile(r"^PASS:(.+)")
+        test_regex['fail'] = re.compile(r"^FAIL:(.+)")
+        test_regex['skip'] = re.compile(r"^SKIP:(.+)")
 
-        self.section_regex = {}
-        self.section_regex['begin'] = re.compile(r"^BEGIN: .*/(.+)/ptest")
-        self.section_regex['end'] = re.compile(r"^END: .*/(.+)/ptest")
+        section_regex = {}
+        section_regex['begin'] = re.compile(r"^BEGIN: .*/(.+)/ptest")
+        section_regex['end'] = re.compile(r"^END: .*/(.+)/ptest")
 
-    # Parse a line and return a tuple containing the type of result (test/section) and its category, status and name
-    def parse_line(self, line):
+        with open(logfile, errors='replace') as f:
+            for line in f:
+                result = section_regex['begin'].search(line)
+                if result:
+                    current_section = result.group(1)
+                    continue
 
-        for test_status, status_regex in test_status_list.items():
-            test_name = status_regex.search(line)
-            if test_name:
-                return ['test', test_category, test_status, test_name.group(1)]
+                result = section_regex['end'].search(line)
+                if result:
+                    if current_section != result.group(1):
+                        bb.warn("Ptest log section mismatch %s vs. %s" % (current_section, result.group(1)))
+                    current_section = None
+                    continue
 
-        for section_status, status_regex in section_status_list.items():
-            section_name = status_regex.search(line)
-            if section_name:
-                return ['section', section_category, section_status, section_name.group(1)]
-        return None
+                for t in test_regex:
+                    result = test_regex[t].search(line)
+                    if result:
+                        self.results.store(current_section, result.group(1), t)
 
+        self.results.sort_tests()
+        return self.results
 
 class Result(object):
 

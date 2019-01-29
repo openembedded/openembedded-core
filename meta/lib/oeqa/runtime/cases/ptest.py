@@ -1,49 +1,15 @@
 import unittest
 import pprint
+import re
 
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.oeid import OETestID
 from oeqa.core.decorator.data import skipIfNotFeature
 from oeqa.runtime.decorator.package import OEHasPackage
-from oeqa.utils.logparser import PtestParser, Result
+from oeqa.utils.logparser import PtestParser
 
 class PtestRunnerTest(OERuntimeTestCase):
-
-    # a ptest log parser
-    def parse_ptest(self, logfile):
-        parser = PtestParser()
-        result = Result()
-
-        with open(logfile, errors='replace') as f:
-            for line in f:
-                result_tuple = parser.parse_line(line)
-                if not result_tuple:
-                    continue
-                line_type, category, status, name = result_tuple
-
-                if line_type == 'section' and status == 'begin':
-                    current_section = name
-                    continue
-
-                if line_type == 'section' and status == 'end':
-                    current_section = None
-                    continue
-
-                if line_type == 'test' and status == 'pass':
-                    result.store(current_section, name, status)
-                    continue
-
-                if line_type == 'test' and status == 'fail':
-                    result.store(current_section, name, status)
-                    continue
-
-                if line_type == 'test' and status == 'skip':
-                    result.store(current_section, name, status)
-                    continue
-
-        result.sort_tests()
-        return result
 
     @OETestID(1600)
     @skipIfNotFeature('ptest', 'Test requires ptest to be in DISTRO_FEATURES')
@@ -83,7 +49,7 @@ class PtestRunnerTest(OERuntimeTestCase):
         extras['ptestresult.rawlogs'] = {'log': output}
 
         # Parse and save results
-        parse_result = self.parse_ptest(ptest_runner_log)
+        parse_result = PtestParser().parse(ptest_runner_log)
         parse_result.log_as_files(ptest_log_dir, test_status = ['pass','fail', 'skip'])
         if os.path.exists(ptest_log_dir_link):
             # Remove the old link to create a new one
