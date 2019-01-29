@@ -5,66 +5,24 @@ import os
 import re
 from . import ftools
 
-
 # A parser that can be used to identify weather a line is a test result or a section statement.
 class Lparser(object):
 
-    def __init__(self, test_0_pass_regex, test_0_fail_regex, test_0_skip_regex, section_0_begin_regex=None, section_0_end_regex=None, **kwargs):
-        # Initialize the arguments dictionary
-        if kwargs:
-            self.args = kwargs
-        else:
-            self.args = {}
+    def __init__(self, **kwargs):
 
-        # Add the default args to the dictionary
-        self.args['test_0_pass_regex'] = test_0_pass_regex
-        self.args['test_0_fail_regex'] = test_0_fail_regex
-        self.args['test_0_skip_regex'] = test_0_skip_regex
-        if section_0_begin_regex:
-            self.args['section_0_begin_regex'] = section_0_begin_regex
-        if section_0_end_regex:
-            self.args['section_0_end_regex'] = section_0_end_regex
-
-        self.test_possible_status = ['pass', 'fail', 'error', 'skip']
-        self.section_possible_status = ['begin', 'end']
-
-        self.initialized = False
-
-
-    # Initialize the parser with the current configuration
-    def init(self):
-
-        # extra arguments can be added by the user to define new test and section categories. They must follow a pre-defined pattern: <type>_<category_name>_<status>_regex
-        self.test_argument_pattern = "^test_(.+?)_(%s)_regex" % '|'.join(map(str, self.test_possible_status))
-        self.section_argument_pattern = "^section_(.+?)_(%s)_regex" % '|'.join(map(str, self.section_possible_status))
-
-        # Initialize the test and section regex dictionaries
         self.test_regex = {}
-        self.section_regex ={}
+        self.test_regex[0] = {}
+        self.test_regex[0]['pass'] = re.compile(r"^PASS:(.+)")
+        self.test_regex[0]['fail'] = re.compile(r"^FAIL:(.+)")
+        self.test_regex[0]['skip'] = re.compile(r"^SKIP:(.+)")
 
-        for arg, value in self.args.items():
-            if not value:
-                raise Exception('The value of provided argument %s is %s. Should have a valid value.' % (key, value))
-            is_test =  re.search(self.test_argument_pattern, arg)
-            is_section = re.search(self.section_argument_pattern, arg)
-            if is_test:
-                if not is_test.group(1) in self.test_regex:
-                    self.test_regex[is_test.group(1)] = {}
-                self.test_regex[is_test.group(1)][is_test.group(2)] = re.compile(value)
-            elif is_section:
-                if not is_section.group(1) in self.section_regex:
-                    self.section_regex[is_section.group(1)] = {}
-                self.section_regex[is_section.group(1)][is_section.group(2)] = re.compile(value)
-            else:
-                # TODO: Make these call a traceback instead of a simple exception..
-                raise Exception("The provided argument name does not correspond to any valid type. Please give one of the following types:\nfor tests: %s\nfor sections: %s" % (self.test_argument_pattern, self.section_argument_pattern))
-
-        self.initialized = True
+        self.section_regex = {}
+        self.section_regex[0] = {}
+        self.section_regex[0]['begin'] = re.compile(r"^BEGIN: .*/(.+)/ptest")
+        self.section_regex[0]['end'] = re.compile(r"^END: .*/(.+)/ptest")
 
     # Parse a line and return a tuple containing the type of result (test/section) and its category, status and name
     def parse_line(self, line):
-        if not self.initialized:
-            raise Exception("The parser is not initialized..")
 
         for test_category, test_status_list in self.test_regex.items():
             for test_status, status_regex in test_status_list.items():
