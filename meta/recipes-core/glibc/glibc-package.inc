@@ -107,7 +107,9 @@ do_install_append () {
 		install -d ${D}${sysconfdir}/tmpfiles.d
 		echo "d /run/nscd 755 root root -" \
 			> ${D}${sysconfdir}/tmpfiles.d/nscd.conf
-	else
+	fi
+
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/default/volatiles
 		echo "d root root 0755 /var/run/nscd none" \
 			> ${D}${sysconfdir}/default/volatiles/98_nscd
