@@ -49,12 +49,14 @@ class PtestRunnerTest(OERuntimeTestCase):
         extras['ptestresult.rawlogs'] = {'log': output}
 
         # Parse and save results
-        parse_result = PtestParser().parse(ptest_runner_log)
+        parse_result, sections = PtestParser().parse(ptest_runner_log)
         parse_result.log_as_files(ptest_log_dir, test_status = ['pass','fail', 'skip'])
         if os.path.exists(ptest_log_dir_link):
             # Remove the old link to create a new one
             os.remove(ptest_log_dir_link)
         os.symlink(os.path.basename(ptest_log_dir), ptest_log_dir_link)
+
+        extras['ptestresult.sections'] = sections
 
         trans = str.maketrans("()", "__")
         resmap = {'pass': 'PASSED', 'skip': 'SKIPPED', 'fail': 'FAILED'}
