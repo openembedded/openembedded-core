@@ -206,3 +206,7 @@ RREPLACES_openssl-conf = "openssl10-conf"
 RCONFLICTS_openssl-conf = "openssl10-conf"
 
 BBCLASSEXTEND = "native nativesdk"
+
+inherit multilib_script
+
+MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
