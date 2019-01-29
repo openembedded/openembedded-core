@@ -18,7 +18,6 @@ SRC_URI = "file://rotation \
            file://profile \
            file://shells \
            file://fstab \
-           file://filesystems \
            file://issue.net \
            file://issue \
            file://usbd \
@@ -123,7 +122,6 @@ do_install () {
 	fi
 
 	install -m 0644 ${WORKDIR}/fstab ${D}${sysconfdir}/fstab
-	install -m 0644 ${WORKDIR}/filesystems ${D}${sysconfdir}/filesystems
 	install -m 0644 ${WORKDIR}/usbd ${D}${sysconfdir}/default/usbd
 	install -m 0644 ${WORKDIR}/profile ${D}${sysconfdir}/profile
 	sed -i 's#ROOTHOME#${ROOT_HOME}#' ${D}${sysconfdir}/profile
