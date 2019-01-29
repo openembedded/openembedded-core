@@ -3,7 +3,6 @@
 import sys
 import os
 import re
-from . import ftools
 
 # A parser that can be used to identify weather a line is a test result or a section statement.
 class PtestParser(object):
@@ -13,9 +12,9 @@ class PtestParser(object):
 
     def parse(self, logfile):
         test_regex = {}
-        test_regex['pass'] = re.compile(r"^PASS:(.+)")
-        test_regex['fail'] = re.compile(r"^FAIL:(.+)")
-        test_regex['skip'] = re.compile(r"^SKIP:(.+)")
+        test_regex['PASSED'] = re.compile(r"^PASS:(.+)")
+        test_regex['FAILED'] = re.compile(r"^FAIL:(.+)")
+        test_regex['SKIPPED'] = re.compile(r"^SKIP:(.+)")
 
         section_regex = {}
         section_regex['begin'] = re.compile(r"^BEGIN: .*/(.+)/ptest")
@@ -72,9 +71,7 @@ class PtestParser(object):
         return self.results, self.sections
 
     # Log the results as files. The file name is the section name and the contents are the tests in that section.
-    def results_as_files(self, target_dir, test_status):
-        if not type(test_status) == type([]):
-            raise Exception("test_status should be a list. Got " + str(test_status) + " instead.")
+    def results_as_files(self, target_dir):
         if not os.path.exists(target_dir):
             raise Exception("Target directory does not exist: %s" % target_dir)
 
@@ -84,10 +81,8 @@ class PtestParser(object):
                 prefix = section
             section_file = os.path.join(target_dir, prefix)
             # purge the file contents if it exists
-            open(section_file, 'w').close()
-            for test_name in sorted(self.results[section]):
-                status = self.results[section][test_name]
-                # we log only the tests with status in the test_status list
-                if status in test_status:
-                    ftools.append_file(section_file, status + ": " + test_name)
+            with open(section_file, 'w') as f:
+                for test_name in sorted(self.results[section]):
+                    status = self.results[section][test_name]
+                    f.write(status + ": " + test_name + "\n")
 
