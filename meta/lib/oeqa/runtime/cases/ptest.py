@@ -12,12 +12,7 @@ class PtestRunnerTest(OERuntimeTestCase):
 
     # a ptest log parser
     def parse_ptest(self, logfile):
-        parser = Lparser(test_0_pass_regex="^PASS:(.+)",
-                         test_0_fail_regex="^FAIL:(.+)",
-                         test_0_skip_regex="^SKIP:(.+)",
-                         section_0_begin_regex="^BEGIN: .*/(.+)/ptest",
-                         section_0_end_regex="^END: .*/(.+)/ptest")
-        parser.init()
+        parser = Lparser()
         result = Result()
 
         with open(logfile, errors='replace') as f:
