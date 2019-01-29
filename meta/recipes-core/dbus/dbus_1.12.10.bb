@@ -120,6 +120,9 @@ do_install() {
 		install -d ${D}${sysconfdir}/init.d
 		sed 's:@bindir@:${bindir}:' < ${WORKDIR}/dbus-1.init >${WORKDIR}/dbus-1.init.sh
 		install -m 0755 ${WORKDIR}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
+		install -d ${D}${sysconfdir}/default/volatiles
+		echo "d messagebus messagebus 0755 ${localstatedir}/run/dbus none" \
+		     > ${D}${sysconfdir}/default/volatiles/99_dbus
 	fi
 
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
@@ -130,10 +133,6 @@ do_install() {
 		ln -fs ../dbus.socket ${D}${systemd_system_unitdir}/sockets.target.wants/dbus.socket
 		ln -fs ../dbus.service ${D}${systemd_system_unitdir}/multi-user.target.wants/dbus.service
 	fi
-
-	install -d ${D}${sysconfdir}/default/volatiles
-	echo "d messagebus messagebus 0755 ${localstatedir}/run/dbus none" \
-	     > ${D}${sysconfdir}/default/volatiles/99_dbus
 
 
 	mkdir -p ${D}${localstatedir}/lib/dbus
