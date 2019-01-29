@@ -6,13 +6,13 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.oeid import OETestID
 from oeqa.core.decorator.data import skipIfNotFeature
 from oeqa.runtime.decorator.package import OEHasPackage
-from oeqa.utils.logparser import Lparser, Result
+from oeqa.utils.logparser import PtestParser, Result
 
 class PtestRunnerTest(OERuntimeTestCase):
 
     # a ptest log parser
     def parse_ptest(self, logfile):
-        parser = Lparser()
+        parser = PtestParser()
         result = Result()
 
         with open(logfile, errors='replace') as f:
@@ -20,7 +20,7 @@ class PtestRunnerTest(OERuntimeTestCase):
                 result_tuple = parser.parse_line(line)
                 if not result_tuple:
                     continue
-                result_tuple = line_type, category, status, name = parser.parse_line(line)
+                line_type, category, status, name = result_tuple
 
                 if line_type == 'section' and status == 'begin':
                     current_section = name
