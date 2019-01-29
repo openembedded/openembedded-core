@@ -99,7 +99,7 @@ class PtestRunnerTest(OERuntimeTestCase):
         resmap = {'pass': 'PASSED', 'skip': 'SKIPPED', 'fail': 'FAILED'}
         for section in parse_result.result_dict:
             for test, result in parse_result.result_dict[section]:
-                testname = "ptestresult." + section + "." + "_".join(test.translate(trans).split())
+                testname = "ptestresult." + (section or "No-section") + "." + "_".join(test.translate(trans).split())
                 extras[testname] = {'status': resmap[result]}
 
         failed_tests = {}
