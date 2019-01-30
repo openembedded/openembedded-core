@@ -9,3 +9,6 @@ IMAGE_FEATURES += "ptest-pkgs"
 # box) and explicitly add just 500MB.
 IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "524288"
+
+# ptests need more memory than standard to avoid the OOM killer
+QB_MEM = "-m 1024"
