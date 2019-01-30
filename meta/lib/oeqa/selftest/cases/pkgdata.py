@@ -13,6 +13,7 @@ class OePkgdataUtilTests(OESelftestTestCase):
         super(OePkgdataUtilTests, cls).setUpClass()
         # Ensure we have the right data in pkgdata
         cls.logger.info('Running bitbake to generate pkgdata')
+        bitbake('target-sdk-provides-dummy -c clean')
         bitbake('busybox zlib m4')
 
     @OETestID(1203)
