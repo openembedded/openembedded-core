@@ -72,10 +72,13 @@ do_install_append_class-nativesdk() {
 }
 
 do_install_append_class-native() {
-    # provided by gtk-icon-utils-native
-    rm ${D}${bindir}/gtk-encode-symbolic-svg
+        create_wrapper ${D}/${bindir}/gtk-update-icon-cache \
+                GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        create_wrapper ${D}/${bindir}/gtk-encode-symbolic-svg \
+                GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/2.10.0/loaders.cache
 }
 
+PROVIDES += "gtk-icon-utils"
 PACKAGES =+ "${PN}-demo"
 LIBV = "3.0.0"
 
