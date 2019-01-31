@@ -1,7 +1,7 @@
-From 6ea962e0946da7564a774b08dd3eda28d64e9e56 Mon Sep 17 00:00:00 2001
+From eb43af9afba3c2b499be6e71b69687d4e7c6272a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 27 Jan 2018 10:08:04 -0800
-Subject: [PATCH] Acquire ld.so lock before switching to malloc_atfork
+Subject: [PATCH 27/30] Acquire ld.so lock before switching to malloc_atfork
 
 The patch is from
   https://sourceware.org/bugzilla/show_bug.cgi?id=4578
@@ -32,7 +32,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/sysdeps/nptl/fork.c b/sysdeps/nptl/fork.c
-index 0f48933ff1..eef3f9669b 100644
+index 5c9bb44372..84a1a404b3 100644
 --- a/sysdeps/nptl/fork.c
 +++ b/sysdeps/nptl/fork.c
 @@ -25,6 +25,7 @@
@@ -63,3 +63,6 @@ index 0f48933ff1..eef3f9669b 100644
      }
  
    return pid;
+-- 
+2.20.1
+

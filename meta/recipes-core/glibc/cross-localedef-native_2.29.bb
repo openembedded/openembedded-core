@@ -21,8 +21,10 @@ SRCBRANCH ?= "release/${PV}/master"
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 
-SRCREV_glibc ?= "3c03baca37fdcb52c3881e653ca392bba7a99c2b"
-SRCREV_localedef ?= "c328777219ccc480be3112cf807217ca6b570b64"
+PV = "2.29"
+
+SRCREV_glibc ?= "56c86f5dd516284558e106d04b92875d5b623b7a"
+SRCREV_localedef ?= "cd9f958c4c94a638fa7b2b4e21627364f1a1a655"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
@@ -34,7 +36,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0021-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
-           file://0029-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://0024-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
 "
 # Makes for a rather long rev (22 characters), but...
 #

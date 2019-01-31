@@ -7,12 +7,23 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=cfc0ed77a9f62fa62eded042ebe31d72 \
 
 DEPENDS += "gperf-native bison-native make-native"
 
-SRCREV ?= "044c96f0d5595aeb0bb4e79355081c5a7f4faca5"
+PV = "2.29"
+
+SRCREV ?= "56c86f5dd516284558e106d04b92875d5b623b7a"
 
 SRCBRANCH ?= "release/${PV}/master"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
+
+NATIVESDKFIXES ?= ""
+NATIVESDKFIXES_class-nativesdk = "\
+           file://0001-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \
+           file://0002-nativesdk-glibc-Fix-buffer-overrun-with-a-relocated-.patch \
+           file://0003-nativesdk-glibc-Raise-the-size-of-arrays-containing-.patch \
+           file://0004-nativesdk-glibc-Allow-64-bit-atomics-for-x86.patch \
+           file://0005-nativesdk-glibc-Make-relocatable-install-for-locales.patch \
+"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://etc/ld.so.conf \
@@ -38,26 +49,13 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0021-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
-           file://0024-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
-           file://0025-locale-fix-hard-coded-reference-to-gcc-E.patch \
+           file://0024-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://0025-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
            file://0026-reset-dl_load_write_lock-after-forking.patch \
            file://0027-Acquire-ld.so-lock-before-switching-to-malloc_atfork.patch \
-           file://0028-bits-siginfo-consts.h-enum-definition-for-TRAP_HWBKP.patch \
-           file://0029-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0030-intl-Emit-no-lines-in-bison-generated-files.patch \
-           file://0031-sysdeps-ieee754-prevent-maybe-uninitialized-errors-w.patch \
-           file://0032-sysdeps-ieee754-soft-fp-ignore-maybe-uninitialized-w.patch \
-           file://0033-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
-           file://0034-inject-file-assembly-directives.patch \
-"
-
-NATIVESDKFIXES ?= ""
-NATIVESDKFIXES_class-nativesdk = "\
-           file://0001-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \
-           file://0002-nativesdk-glibc-Fix-buffer-overrun-with-a-relocated-.patch \
-           file://0003-nativesdk-glibc-Raise-the-size-of-arrays-containing-.patch \
-           file://0004-nativesdk-glibc-Allow-64-bit-atomics-for-x86.patch \
-           file://0005-nativesdk-glibc-Make-relocatable-install-for-locales.patch \
+           file://0028-intl-Emit-no-lines-in-bison-generated-files.patch \
+           file://0029-inject-file-assembly-directives.patch \
+           file://0030-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
 "
 
 S = "${WORKDIR}/git"

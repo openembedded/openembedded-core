@@ -21,3 +21,4 @@ do_install[depends] += "virtual/${MLPREFIX}libc:do_stash_locale"
 
 COMPATIBLE_HOST_libc-musl_class-target = "null"
 
+PV = "2.29"
