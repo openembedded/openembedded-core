@@ -1122,7 +1122,8 @@
         ], 
         "files": [
             "${libdir}/python2.7/DocXMLRPCServer.py", 
-            "${libdir}/python2.7/SimpleXMLRPCServer.py"
+            "${libdir}/python2.7/SimpleXMLRPCServer.py", 
+            "${libdir}/python2.7/xmlrpclib.py"
         ]
     }, 
     "zlib": {
