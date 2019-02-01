@@ -32,6 +32,8 @@ S = "${WORKDIR}/perl-${PV}"
 
 inherit upstream-version-is-even
 
+DEPENDS += "db gdbm zlib virtual/crypt"
+
 do_unpack_append() {
     bb.build.exec_func('do_copy_perlcross', d)
 }
