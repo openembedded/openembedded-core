@@ -8,9 +8,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 DEPENDS = "expat zlib"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git"
-SRC_URI_append_libc-musl = " file://0001-Add-fallback-fopencookie-implementation.patch \
-                             file://0002-Fixes-to-internal-fopencookie-implementation.patch \
-                           "
 
 SRCREV = "dc7d0f1c3113f2c8217563166906bef3eb5d1ee1"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
