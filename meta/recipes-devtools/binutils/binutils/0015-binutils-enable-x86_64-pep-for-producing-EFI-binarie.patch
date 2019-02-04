@@ -1,4 +1,8 @@
-binutils : enable x86_64-pep for producing EFI binaries on x86-64
+From d5d783903e335302e562bac8da1a083338d75b25 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Thu, 29 Nov 2018 17:46:40 -0800
+Subject: [PATCH 15/15] binutils : enable x86_64-pep for producing EFI binaries
+ on x86-64
 
 Add x86_64-pep emulation support to the set enabled for x86_64 targets
 to enable the linker to produce Portable Executables for EFI binaries.
@@ -6,15 +10,20 @@ to enable the linker to produce Portable Executables for EFI binaries.
 Enables building the x86-64 EFI variant of the Xen hypervisor for
 the OpenXT Project.
 
-Signed-off-by: Christopher Clark <christopher.clark6@baesystems.com>
-
 Upstream-Status: Inappropriate [OE configuration specific]
+
+Signed-off-by: Christopher Clark <christopher.clark6@baesystems.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
+ bfd/config.bfd   | 2 +-
+ ld/configure.tgt | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
 diff --git a/bfd/config.bfd b/bfd/config.bfd
-index c882421..dc705b6 100644
+index 3614ff79d4..aef144803a 100644
 --- a/bfd/config.bfd
 +++ b/bfd/config.bfd
-@@ -688,7 +688,7 @@ case "${targ}" in
+@@ -694,7 +694,7 @@ case "${targ}" in
      ;;
    x86_64-*-linux-*)
      targ_defvec=x86_64_elf64_vec
@@ -24,10 +33,10 @@ index c882421..dc705b6 100644
      ;;
    x86_64-*-nacl*)
 diff --git a/ld/configure.tgt b/ld/configure.tgt
-index a1db7ad..65a984a 100644
+index 347df6c3f6..1e37d747a9 100644
 --- a/ld/configure.tgt
 +++ b/ld/configure.tgt
-@@ -253,8 +253,9 @@ x86_64-*-linux-gnux32)	targ_emul=elf32_x86_64
+@@ -257,8 +257,9 @@ x86_64-*-linux-gnux32)	targ_emul=elf32_x86_64
  			tdir_elf_iamcu=`echo ${targ_alias} | sed -e 's/x86_64/i386/' -e 's/-linux-gnux32/-linux-gnu/'`
  			tdir_elf_i386=`echo ${targ_alias} | sed -e 's/x86_64/i386/' -e 's/-linux-gnux32/-linux-gnu/'` ;;
  x86_64-*-linux-*)	targ_emul=elf_x86_64
@@ -39,3 +48,6 @@ index a1db7ad..65a984a 100644
  			tdir_elf_i386=`echo ${targ_alias} | sed -e 's/x86_64/i386/'` ;;
  i[3-7]86-*-redox*)	targ_emul=elf_i386
  			targ_extra_emuls=elf_x86_64 ;;
+-- 
+2.20.1
+
