@@ -23,7 +23,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 
 PV = "2.29"
 
-SRCREV_glibc ?= "56c86f5dd516284558e106d04b92875d5b623b7a"
+SRCREV_glibc ?= "86013ef5cea322b8f4b9c22f230c22cce369e947"
 SRCREV_localedef ?= "cd9f958c4c94a638fa7b2b4e21627364f1a1a655"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \

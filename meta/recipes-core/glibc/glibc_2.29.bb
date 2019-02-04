@@ -9,7 +9,7 @@ DEPENDS += "gperf-native bison-native make-native"
 
 PV = "2.29"
 
-SRCREV ?= "56c86f5dd516284558e106d04b92875d5b623b7a"
+SRCREV ?= "86013ef5cea322b8f4b9c22f230c22cce369e947"
 
 SRCBRANCH ?= "release/${PV}/master"
 
