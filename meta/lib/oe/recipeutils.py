@@ -24,7 +24,7 @@ from bb.utils import vercmp_string
 # Help us to find places to insert values
 recipe_progression = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION', 'LICENSE', 'LICENSE_FLAGS', 'LIC_FILES_CHKSUM', 'PROVIDES', 'DEPENDS', 'PR', 'PV', 'SRCREV', 'SRCPV', 'SRC_URI', 'S', 'do_fetch()', 'do_unpack()', 'do_patch()', 'EXTRA_OECONF', 'EXTRA_OECMAKE', 'EXTRA_OESCONS', 'do_configure()', 'EXTRA_OEMAKE', 'do_compile()', 'do_install()', 'do_populate_sysroot()', 'INITSCRIPT', 'USERADD', 'GROUPADD', 'PACKAGES', 'FILES', 'RDEPENDS', 'RRECOMMENDS', 'RSUGGESTS', 'RPROVIDES', 'RREPLACES', 'RCONFLICTS', 'ALLOW_EMPTY', 'populate_packages()', 'do_package()', 'do_deploy()']
 # Variables that sometimes are a bit long but shouldn't be wrapped
-nowrap_vars = ['SUMMARY', 'HOMEPAGE', 'BUGTRACKER', 'SRC_URI\[(.+\.)?md5sum\]', 'SRC_URI\[(.+\.)?sha256sum\]']
+nowrap_vars = ['SUMMARY', 'HOMEPAGE', 'BUGTRACKER', r'SRC_URI\[(.+\.)?md5sum\]', r'SRC_URI\[(.+\.)?sha256sum\]']
 list_vars = ['SRC_URI', 'LIC_FILES_CHKSUM']
 meta_vars = ['SUMMARY', 'DESCRIPTION', 'HOMEPAGE', 'BUGTRACKER', 'SECTION']
 
@@ -161,7 +161,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
             key = item[:-2]
         else:
             key = item
-        restr = '%s(_[a-zA-Z0-9-_$(){}]+|\[[^\]]*\])?' % key
+        restr = r'%s(_[a-zA-Z0-9-_$(){}]+|\[[^\]]*\])?' % key
         if item.endswith('()'):
             recipe_progression_restrs.append(restr + '()')
         else:
@@ -925,7 +925,7 @@ def get_recipe_pv_without_srcpv(pv, uri_type):
     sfx = ''
 
     if uri_type == 'git':
-        git_regex = re.compile("(?P<pfx>v?)(?P<ver>[^\+]*)((?P<sfx>\+(git)?r?(AUTOINC\+))(?P<rev>.*))?")
+        git_regex = re.compile(r"(?P<pfx>v?)(?P<ver>[^\+]*)((?P<sfx>\+(git)?r?(AUTOINC\+))(?P<rev>.*))?")
         m = git_regex.match(pv)
 
         if m:
@@ -933,7 +933,7 @@ def get_recipe_pv_without_srcpv(pv, uri_type):
             pfx = m.group('pfx')
             sfx = m.group('sfx')
     else:
-        regex = re.compile("(?P<pfx>(v|r)?)(?P<ver>.*)")
+        regex = re.compile(r"(?P<pfx>(v|r)?)(?P<ver>.*)")
         m = regex.match(pv)
         if m:
             pv = m.group('ver')
