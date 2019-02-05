@@ -157,7 +157,12 @@ do_install() {
 	    # include a few files for 'make prepare'
 	    cp -a --parents arch/arm/tools/gen-mach-types $kerneldir/build/
 	    cp -a --parents arch/arm/tools/mach-types $kerneldir/build/
-	    cp -a --parents arch/arm/tools/syscall* $kerneldir/build/
+
+	    # ARM syscall table tools only exist for kernels v4.10 or later
+            SYSCALL_TOOLS=$(find arch/arm/tools -name "syscall*")
+            if [ -n "$SYSCALL_TOOLS" ] ; then
+	        cp -a --parents $SYSCALL_TOOLS $kerneldir/build/
+            fi
 
             cp -a --parents arch/arm/kernel/module.lds $kerneldir/build/
 	fi
