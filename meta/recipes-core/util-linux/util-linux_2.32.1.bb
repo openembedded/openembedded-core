@@ -11,12 +11,3 @@ SRC_URI += "file://configure-sbindir.patch \
 "
 SRC_URI[md5sum] = "9e5b1b8c1dc99455bdb6b462cf9436d9"
 SRC_URI[sha256sum] = "86e6707a379c7ff5489c218cfaf1e3464b0b95acf7817db0bc5f179e356a67b2"
-
-CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
-
-EXTRA_OECONF_class-native = "${SHARED_EXTRA_OECONF} \
-			     --disable-use-tty-group \
-"
-EXTRA_OECONF_class-nativesdk = "${SHARED_EXTRA_OECONF} \
-				--disable-use-tty-group \
-"

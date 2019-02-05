@@ -42,18 +42,25 @@ PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'util-linux-runuser 
 
 PACKAGES_DYNAMIC = "^util-linux-lib.*"
 
-SHARED_EXTRA_OECONF = "--disable-use-tty-group \
-                       --disable-makeinstall-chown \
-                       --enable-kill --enable-last --enable-mesg --enable-partx \
-                       --enable-raw --enable-rfkill --disable-login \
-                       --disable-vipw --disable-newgrp --disable-chfn-chsh \
-                       --enable-write --enable-mount --enable-unshare \
-                       --enable-libuuid --enable-libblkid --enable-fsck \
-                       --disable-minix --disable-bfs --without-udev \
-                       usrsbin_execdir='${sbindir}' \
+CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
+UTIL_LINUX_LIBDIR = "${libdir}"
+UTIL_LINUX_LIBDIR_class-target = "${base_libdir}"
+EXTRA_OECONF = "\
+    --enable-libuuid --enable-libblkid \
+    \
+    --enable-fsck --enable-kill --enable-last --enable-mesg \
+    --enable-mount --enable-partx --enable-raw --enable-rfkill \
+    --enable-unshare --enable-write \
+    \
+    --disable-bfs --disable-chfn-chsh --disable-login \
+    --disable-makeinstall-chown --disable-minix --disable-newgrp \
+    --disable-use-tty-group --disable-vipw \
+    \
+    --without-udev \
+    \
+    usrsbin_execdir='${sbindir}' \
+    --libdir='${UTIL_LINUX_LIBDIR}' \
 "
-
-EXTRA_OECONF = "${SHARED_EXTRA_OECONF} --libdir=${base_libdir}"
 
 PACKAGECONFIG_class-target ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
 PACKAGECONFIG[pam] = "--enable-su --enable-runuser,--disable-su --disable-runuser, libpam,"
@@ -309,7 +316,7 @@ ALTERNATIVE_LINK_NAME[switch_root] = "${base_sbindir}/switch_root"
 BBCLASSEXTEND = "native nativesdk"
 
 python populate_packages_prepend() {
-    do_split_packages(d, '${base_libdir}', r'^lib(.*)\.so\..*$',
+    do_split_packages(d, d.getVar('UTIL_LINUX_LIBDIR'), r'^lib(.*)\.so\..*$',
                       output_pattern='util-linux-lib%s',
                       description='util-linux lib%s',
                       extra_depends='', prepend=True, allow_links=True)
