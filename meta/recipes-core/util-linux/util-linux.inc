@@ -28,19 +28,36 @@ MAJOR_VERSION = "${@'.'.join(d.getVar('PV').split('.')[0:2])}"
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/v${MAJOR_VERSION}/${BP}.tar.xz \
            "
 
-PACKAGES =+ "util-linux-agetty util-linux-blkdiscard util-linux-fdisk util-linux-cfdisk util-linux-sfdisk \
-             util-linux-swaponoff util-linux-losetup util-linux-umount \
+PACKAGES =+ "util-linux-blkdiscard util-linux-sfdisk \
+             util-linux-swaponoff util-linux-umount \
              util-linux-mount util-linux-readprofile util-linux-uuidd \
-             util-linux-uuidgen util-linux-lscpu util-linux-fsck.cramfs util-linux-fsck \
-             util-linux-blkid util-linux-mkfs util-linux-mcookie util-linux-rfkill \
-             util-linux-lsblk util-linux-mkfs.cramfs util-linux-fstrim \
-             util-linux-partx util-linux-hwclock util-linux-mountpoint \
-             util-linux-findfs util-linux-getopt util-linux-sulogin util-linux-prlimit \
-             util-linux-ionice util-linux-switch-root util-linux-unshare"
+             util-linux-uuidgen util-linux-lscpu util-linux-fsck.cramfs \
+             util-linux-mkfs util-linux-mcookie util-linux-rfkill \
+             util-linux-lsblk util-linux-mkfs.cramfs \
+             util-linux-partx util-linux-mountpoint \
+             util-linux-findfs util-linux-getopt util-linux-prlimit \
+             util-linux-ionice util-linux-unshare"
 PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pylibmount', 'util-linux-pylibmount', '', d)}"
 PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'util-linux-runuser util-linux-su', '', d)}"
 
-PACKAGES_DYNAMIC = "^util-linux-lib.*"
+python util_linux_binpackages () {
+    def pkg_hook(f, pkg, file_regex, output_pattern, modulename):
+        if d.getVar('ALTERNATIVE_' + pkg):
+            return
+        if d.getVarFlag('ALTERNATIVE_LINK_NAME', modulename):
+            d.setVar('ALTERNATIVE_' + pkg, modulename)
+
+    for dir in [ '${base_sbindir}' ]:
+        do_split_packages(d, root=dir,
+                          file_regex=r'(.*)', output_pattern='${PN}-%s',
+                          description='${PN} %s',
+                          hook=pkg_hook, extra_depends='', prepend=True)
+}
+
+# we must execute before update-alternatives PACKAGE_PREPROCESS_FUNCS
+PACKAGE_PREPROCESS_FUNCS =+ "util_linux_binpackages "
+
+PACKAGES_DYNAMIC = "^util-linux-.*"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 UTIL_LINUX_LIBDIR = "${libdir}"
@@ -81,14 +98,8 @@ FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
 
 FILES_${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.la"
 
-FILES_util-linux-agetty = "${base_sbindir}/agetty"
 FILES_util-linux-blkdiscard = "${sbindir}/blkdiscard"
-FILES_util-linux-fdisk = "${base_sbindir}/fdisk.${BPN}"
-FILES_util-linux-fstrim = "${base_sbindir}/fstrim.${BPN}"
-FILES_util-linux-cfdisk = "${base_sbindir}/cfdisk"
 FILES_util-linux-sfdisk = "${sbindir}/sfdisk"
-FILES_util-linux-swaponoff = "${base_sbindir}/swapon.${BPN} ${base_sbindir}/swapoff.${BPN}"
-FILES_util-linux-losetup = "${base_sbindir}/losetup.${BPN}"
 FILES_util-linux-mount = "${base_bindir}/mount.${BPN}"
 FILES_util-linux-mcookie = "${bindir}/mcookie"
 FILES_util-linux-umount = "${base_bindir}/umount.${BPN}"
@@ -97,7 +108,6 @@ FILES_util-linux-uuidgen = "${bindir}/uuidgen"
 FILES_util-linux-uuidd = "${sbindir}/uuidd"
 FILES_util-linux-rfkill = "${sbindir}/rfkill.${BPN}"
 FILES_util-linux-partx = "${sbindir}/partx"
-FILES_util-linux-hwclock = "${base_sbindir}/hwclock.${BPN}"
 FILES_util-linux-findfs = "${sbindir}/findfs"
 FILES_util-linux-getopt = "${base_bindir}/getopt.${BPN}"
 FILES_util-linux-runuser = "${sbindir}/runuser"
@@ -113,27 +123,24 @@ FILES_util-linux-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so
 FILES_util-linux-lsblk = "${bindir}/lsblk"
 FILES_util-linux-lscpu = "${bindir}/lscpu"
 
-FILES_util-linux-fsck = "${base_sbindir}/fsck.${BPN}"
 FILES_util-linux-mkfs = "${sbindir}/mkfs"
 
 FILES_util-linux-fsck.cramfs = "${sbindir}/fsck.cramfs"
 FILES_util-linux-mkfs.cramfs = "${sbindir}/mkfs.cramfs"
 
-FILES_util-linux-sulogin = "${base_sbindir}/sulogin.${BPN}"
 FILES_util-linux-mountpoint = "${base_bindir}/mountpoint.${BPN}"
 
-FILES_util-linux-switch-root = "${base_sbindir}/switch_root.${BPN}"
 FILES_util-linux-unshare = "${bindir}/unshare.${BPN}"
 
 # Util-linux' blkid replaces the e2fsprogs one
-FILES_util-linux-blkid = "${base_sbindir}/blkid.${BPN}"
 RCONFLICTS_util-linux-blkid = "e2fsprogs-blkid"
 RREPLACES_util-linux-blkid = "e2fsprogs-blkid"
 
 RDEPENDS_${PN} = "util-linux-umount util-linux-swaponoff util-linux-losetup util-linux-sulogin util-linux-lsblk"
 RDEPENDS_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'util-linux-runuser util-linux-su', '', d)}"
 
-RRECOMMENDS_${PN} = "util-linux-blkdiscard util-linux-fdisk util-linux-cfdisk util-linux-sfdisk util-linux-mount util-linux-readprofile util-linux-mkfs util-linux-mountpoint util-linux-prlimit util-linux-ionice util-linux-switch-root"
+RRECOMMENDS_${PN} = "util-linux-blkdiscard util-linux-sfdisk util-linux-mount util-linux-readprofile util-linux-mkfs util-linux-mountpoint util-linux-prlimit util-linux-ionice"
+RRECOMMENDS_${PN} += "${PN}-blockdev ${PN}-cfdisk ${PN}-ctrlaltdel ${PN}-fdisk ${PN}-mkswap ${PN}-nologin ${PN}-pivot-root ${PN}-switch-root"
 
 RRECOMMENDS_${PN}_class-native = ""
 RRECOMMENDS_${PN}_class-nativesdk = ""
@@ -141,6 +148,9 @@ RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
 
 RPROVIDES_${PN}-dev = "util-linux-libblkid-dev util-linux-libmount-dev util-linux-libuuid-dev"
+
+RDEPENDS_${PN}-swaponoff = "${PN}-swapon ${PN}-swapoff"
+ALLOW_EMPTY_${PN}-swaponoff = "1"
 
 #SYSTEMD_PACKAGES = "${PN}-uuidd ${PN}-fstrim"
 SYSTEMD_SERVICE_${PN}-uuidd = "uuidd.socket uuidd.service"
@@ -213,9 +223,9 @@ do_install_append_class-native () {
 ALTERNATIVE_PRIORITY = "80"
 
 ALTERNATIVE_${PN}  = " \
-    dmesg kill more mkswap blockdev pivot_root \
+    dmesg kill more \
     hexdump last lastb logger mesg renice wall \
-    setsid chrt flock utmpdump eject nologin taskset fallocate \
+    setsid chrt flock utmpdump eject taskset fallocate \
     fsfreeze nsenter cal rev \
 "
 
@@ -254,13 +264,10 @@ ALTERNATIVE_LINK_NAME[uuid.3] = "${mandir}/man3/uuid.3"
 ALTERNATIVE_LINK_NAME[eject.1] = "${mandir}/man1/eject.1"
 ALTERNATIVE_LINK_NAME[logger.1] = "${mandir}/man1/logger.1"
 
-ALTERNATIVE_util-linux-hwclock = "hwclock"
 ALTERNATIVE_LINK_NAME[hwclock] = "${base_sbindir}/hwclock"
 
-ALTERNATIVE_util-linux-fdisk = "fdisk"
 ALTERNATIVE_LINK_NAME[fdisk] = "${base_sbindir}/fdisk"
 
-ALTERNATIVE_util-linux-fstrim = "fstrim"
 ALTERNATIVE_LINK_NAME[fstrim] = "${base_sbindir}/fstrim"
 
 ALTERNATIVE_util-linux-agetty = "getty"
@@ -279,17 +286,13 @@ ALTERNATIVE_LINK_NAME[umount] = "${base_bindir}/umount"
 ALTERNATIVE_util-linux-readprofile = "readprofile"
 ALTERNATIVE_LINK_NAME[readprofile] = "${sbindir}/readprofile"
 
-ALTERNATIVE_util-linux-losetup = "losetup"
 ALTERNATIVE_LINK_NAME[losetup] = "${base_sbindir}/losetup"
 
-ALTERNATIVE_util-linux-swaponoff = "swapoff swapon"
 ALTERNATIVE_LINK_NAME[swapoff] = "${base_sbindir}/swapoff"
 ALTERNATIVE_LINK_NAME[swapon] = "${base_sbindir}/swapon"
 
-ALTERNATIVE_util-linux-fsck = "fsck"
 ALTERNATIVE_LINK_NAME[fsck] = "${base_sbindir}/fsck"
 
-ALTERNATIVE_util-linux-blkid = "blkid"
 ALTERNATIVE_LINK_NAME[blkid] = "${base_sbindir}/blkid"
 
 ALTERNATIVE_util-linux-rfkill = "rfkill"
@@ -298,7 +301,6 @@ ALTERNATIVE_LINK_NAME[rfkill] = "${sbindir}/rfkill"
 ALTERNATIVE_util-linux-getopt = "getopt"
 ALTERNATIVE_LINK_NAME[getopt] = "${base_bindir}/getopt"
 
-ALTERNATIVE_util-linux-sulogin = "sulogin"
 ALTERNATIVE_LINK_NAME[sulogin] = "${base_sbindir}/sulogin"
 
 ALTERNATIVE_util-linux-mountpoint = "mountpoint"
@@ -310,7 +312,6 @@ ALTERNATIVE_LINK_NAME[unshare] = "${bindir}/unshare"
 ALTERNATIVE_util-linux-ionice = "ionice"
 ALTERNATIVE_LINK_NAME[ionice] = "${bindir}/ionice"
 
-ALTERNATIVE_util-linux-switch-root = "switch_root"
 ALTERNATIVE_LINK_NAME[switch_root] = "${base_sbindir}/switch_root"
 
 BBCLASSEXTEND = "native nativesdk"
