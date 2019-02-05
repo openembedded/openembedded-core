@@ -747,15 +747,16 @@ class OpkgRootfs(DpkgOpkgRootfs):
         if filecmp.cmp(f1, f2):
             return True
 
-        if self.image_rootfs not in f1:
-            self._prelink_file(f1.replace(key, ''), f1)
+        if bb.data.inherits_class('image-prelink', self.d):
+            if self.image_rootfs not in f1:
+                self._prelink_file(f1.replace(key, ''), f1)
 
-        if self.image_rootfs not in f2:
-            self._prelink_file(f2.replace(key, ''), f2)
+            if self.image_rootfs not in f2:
+                self._prelink_file(f2.replace(key, ''), f2)
 
-        # Both of them are prelinked
-        if filecmp.cmp(f1, f2):
-            return True
+            # Both of them are prelinked
+            if filecmp.cmp(f1, f2):
+                return True
 
         # Not equal
         return False
