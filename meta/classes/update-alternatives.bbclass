@@ -138,12 +138,12 @@ python apply_update_alternative_renames () {
     if not update_alternatives_enabled(d):
        return
 
-    from re import sub
+    import re
 
     def update_files(alt_target, alt_target_rename, pkg, d):
         f = d.getVar('FILES_' + pkg)
         if f:
-            f = sub(r'(^|\s)%s(\s|$)' % alt_target, r'\1%s\2' % alt_target_rename, f)
+            f = re.sub(r'(^|\s)%s(\s|$)' % re.escape (alt_target), r'\1%s\2' % alt_target_rename, f)
             d.setVar('FILES_' + pkg, f)
 
     # Check for deprecated usage...
