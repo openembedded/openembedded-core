@@ -52,6 +52,28 @@ python util_linux_binpackages () {
                           file_regex=r'(.*)', output_pattern='${PN}-%s',
                           description='${PN} %s',
                           hook=pkg_hook, extra_depends='', prepend=True)
+
+    # There are some symlinks for some binaries which we have ignored
+    # above. Add them to the package owning the binary they are
+    # pointing to
+    extras = {}
+    dvar = d.getVar('PKGD')
+    for root in [ '${base_sbindir}' ]:
+        root = d.expand(root)
+        for walkroot, dirs, files in os.walk(dvar + root):
+            for f in files:
+                file = os.path.join(walkroot, f)
+                if not os.path.islink(file):
+                    continue
+
+                pkg = os.path.basename(os.readlink(file))
+                extras[pkg] = extras.get(pkg, '') + ' ' + file.replace(dvar, '', 1)
+
+    pn = d.getVar('PN')
+    for pkg, links in extras.items():
+        of = d.getVar('FILES_' + pn + '-' + pkg)
+        links = of + links
+        d.setVar('FILES_' + pn + '-' + pkg, links)
 }
 
 # we must execute before update-alternatives PACKAGE_PREPROCESS_FUNCS
