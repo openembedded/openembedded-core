@@ -1,3 +1,8 @@
+From fa96a7fd19e17b9c6b4dd01c3c3774fb382dddc6 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Wed, 5 Sep 2018 11:45:52 +0100
+Subject: [PATCH] Don't do runtime test to get float byte order
+
 Python uses AC_RUN_IFELSE to determine the byte order for floats and doubles,
 and falls back onto "I don't know" if it can't run code.  This results in
 crippled floating point numbers in Python, and the regression tests fail.
@@ -8,32 +13,17 @@ binary to identify the format.
 
 Upstream-Status: Submitted [https://bugs.python.org/issue34585]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
-
-From 50df2a4c3a65ed06322be7c26d42b06ce81730c1 Mon Sep 17 00:00:00 2001
-From: Ross Burton <ross.burton@intel.com>
-Date: Wed, 5 Sep 2018 11:45:52 +0100
-Subject: [PATCH] Don't do runtime test to get float byte order
-
 ---
- configure.ac                     | 74 +++++------------------------------
- m4/ax_c_float_words_bigendian.m4 | 83 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 92 insertions(+), 65 deletions(-)
+ configure.ac                     | 72 +++------------------------
+ m4/ax_c_float_words_bigendian.m4 | 83 ++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+), 65 deletions(-)
  create mode 100644 m4/ax_c_float_words_bigendian.m4
 
 diff --git a/configure.ac b/configure.ac
-index c9b755f0f4..1215969871 100644
+index 4a3681f..4ab19a6 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -9,6 +9,8 @@ AC_PREREQ(2.65)
- 
- AC_INIT(python, PYTHON_VERSION, https://bugs.python.org/)
- 
-+AC_CONFIG_MACRO_DIR(m4)
-+
- AC_SUBST(BASECPPFLAGS)
- if test "$srcdir" != . -a "$srcdir" != "$(pwd)"; then
-     # If we're building out-of-tree, we need to make sure the following
-@@ -4128,77 +4130,19 @@ fi
+@@ -4328,77 +4328,19 @@ fi
  # * Check for various properties of floating point *
  # **************************************************
  
@@ -120,7 +110,7 @@ index c9b755f0f4..1215969871 100644
  # The short float repr introduced in Python 3.1 requires the
 diff --git a/m4/ax_c_float_words_bigendian.m4 b/m4/ax_c_float_words_bigendian.m4
 new file mode 100644
-index 0000000000..216b90d803
+index 0000000..216b90d
 --- /dev/null
 +++ b/m4/ax_c_float_words_bigendian.m4
 @@ -0,0 +1,83 @@
@@ -207,6 +197,3 @@ index 0000000000..216b90d803
 +esac
 +
 +])# AX_C_FLOAT_WORDS_BIGENDIAN
--- 
-2.11.0
-

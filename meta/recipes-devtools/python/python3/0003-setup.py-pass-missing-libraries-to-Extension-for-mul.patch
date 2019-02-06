@@ -1,7 +1,8 @@
-From a784b70d47ba2104afbcfd805e2a66cdc2109ec5 Mon Sep 17 00:00:00 2001
+From b881a79adcd4ae5ac8fe4f49d0fc77c47f777919 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Fri, 4 Aug 2017 11:16:14 +0800
-Subject: [PATCH] setup.py: pass missing libraries to Extension for multiprocessing module
+Subject: [PATCH] setup.py: pass missing libraries to Extension for
+ multiprocessing module
 
 In the following commit:
 ...
@@ -53,10 +54,10 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index 4f0f522..d05707d 100644
+index b7a36a6..658ead3 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1606,8 +1606,10 @@ class PyBuildExt(build_ext):
+@@ -1584,8 +1584,10 @@ class PyBuildExt(build_ext):
          elif host_platform.startswith('netbsd'):
              macros = dict()
              libraries = []
@@ -69,14 +70,11 @@ index 4f0f522..d05707d 100644
              macros = dict()
              libraries = ['rt']
  
-@@ -1626,6 +1628,7 @@ class PyBuildExt(build_ext):
-         if sysconfig.get_config_var('WITH_THREAD'):
-             exts.append ( Extension('_multiprocessing', multiprocessing_srcs,
-                                     define_macros=list(macros.items()),
-+                                    libraries=libraries,
-                                     include_dirs=["Modules/_multiprocessing"]))
-         else:
-             missing.append('_multiprocessing')
--- 
-2.7.4
-
+@@ -1603,6 +1605,7 @@ class PyBuildExt(build_ext):
+ 
+         exts.append ( Extension('_multiprocessing', multiprocessing_srcs,
+                                 define_macros=list(macros.items()),
++                                libraries=libraries,
+                                 include_dirs=["Modules/_multiprocessing"]))
+         # End multiprocessing
+ 

@@ -109,7 +109,7 @@
             "core"
         ],
         "files": [
-            "${bindir}/2to3-*",
+            "${bindir}/2to3*",
             "${libdir}/python${PYTHON_MAJMIN}/lib2to3"
         ],
         "cached": []
@@ -117,24 +117,18 @@
     "asyncio": {
         "summary": "Python Asynchronous I/",
         "rdepends": [
-            "compression",
             "core",
-            "crypt",
             "io",
             "logging",
-            "math",
-            "multiprocessing",
             "netclient",
-            "pickle",
-            "shell",
-            "stringold",
-            "threading",
-            "unixadmin"
+            "numbers",
+            "stringold"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/asyncio",
             "${libdir}/python${PYTHON_MAJMIN}/concurrent",
-            "${libdir}/python${PYTHON_MAJMIN}/concurrent/futures"
+            "${libdir}/python${PYTHON_MAJMIN}/concurrent/futures",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_asyncio.*.so"
         ],
         "cached": []
     },
@@ -174,19 +168,7 @@
     "compile": {
         "summary": "Python bytecode compilation support",
         "rdepends": [
-            "asyncio",
-            "compression",
-            "core",
-            "crypt",
-            "io",
-            "logging",
-            "math",
-            "multiprocessing",
-            "pickle",
-            "shell",
-            "stringold",
-            "threading",
-            "unixadmin"
+            "core"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/compileall.py",
@@ -239,7 +221,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/_collections_abc.py",
             "${libdir}/python${PYTHON_MAJMIN}/_markupbase.py",
             "${libdir}/python${PYTHON_MAJMIN}/_sitebuiltins.py",
-            "${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata.py",
+            "${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py",
             "${libdir}/python${PYTHON_MAJMIN}/_weakrefset.py",
             "${libdir}/python${PYTHON_MAJMIN}/abc.py",
             "${libdir}/python${PYTHON_MAJMIN}/argparse.py",
@@ -413,9 +395,13 @@
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/crypt.py",
             "${libdir}/python${PYTHON_MAJMIN}/hashlib.py",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_blake2.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_crypt.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_hashlib.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha256.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha3.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha1.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_md5.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha512.*.so"
         ],
         "cached": [
@@ -506,8 +492,7 @@
             "${libdir}/*.o",
             "${libdir}/lib*${SOLIBSDEV}",
             "${libdir}/pkgconfig",
-            "${libdir}/python${PYTHON_MAJMIN}/config*/Makefile",
-            "${libdir}/python${PYTHON_MAJMIN}/config*/Makefile/__pycache__"
+            "${prefix}/lib/python${PYTHON_MAJMIN}/config*/"
         ],
         "rdepends": [
             "core"
@@ -820,7 +805,9 @@
     "multiprocessing": {
         "summary": "Python multiprocessing support",
         "rdepends": [
-            "core"
+            "core",
+            "io",
+            "pickle"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_multiprocessing.*.so",
@@ -831,18 +818,14 @@
     "netclient": {
         "summary": "Python Internet Protocol clients",
         "rdepends": [
-            "compression",
             "core",
             "crypt",
-            "ctypes",
             "datetime",
             "email",
             "io",
             "math",
             "mime",
-            "shell",
-            "stringold",
-            "unixadmin"
+            "stringold"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/base64.py",
@@ -850,6 +833,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/hmac.py",
             "${libdir}/python${PYTHON_MAJMIN}/http",
             "${libdir}/python${PYTHON_MAJMIN}/http/__pycache__",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_uuid.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/mimetypes.py",
             "${libdir}/python${PYTHON_MAJMIN}/nntplib.py",
             "${libdir}/python${PYTHON_MAJMIN}/poplib.py",
@@ -904,13 +888,16 @@
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/_pydecimal.py",
+            "${libdir}/python${PYTHON_MAJMIN}/contextvars.py",
             "${libdir}/python${PYTHON_MAJMIN}/decimal.py",
             "${libdir}/python${PYTHON_MAJMIN}/fractions.py",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_contextvars.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_decimal.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/numbers.py"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_pydecimal.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/contextvars.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/decimal.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/fractions.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/numbers.*.pyc"
@@ -1134,13 +1121,12 @@
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/_dummy_thread.py",
             "${libdir}/python${PYTHON_MAJMIN}/_threading_local.py",
-            "${libdir}/python${PYTHON_MAJMIN}/dummy_threading.py",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_queue.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/queue.py"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_dummy_thread.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_threading_local.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/dummy_threading.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/queue.*.pyc"
         ]
     },
