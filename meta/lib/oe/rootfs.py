@@ -892,8 +892,6 @@ class OpkgRootfs(DpkgOpkgRootfs):
 
         self.pm.update()
 
-        self.pm.handle_bad_recommendations()
-
         if self.progress_reporter:
             self.progress_reporter.next_stage()
 
