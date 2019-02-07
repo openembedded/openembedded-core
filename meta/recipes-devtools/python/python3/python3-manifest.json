@@ -212,6 +212,7 @@
         "files": [
             "${bindir}/python*[!-config]",
             "${includedir}/python${PYTHON_BINABI}/pyconfig*.h",
+            "${prefix}/lib/python${PYTHON_MAJMIN}/config*/*[!.a]",
             "${libdir}/python${PYTHON_MAJMIN}/UserDict.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserList.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserString.py",
@@ -491,8 +492,7 @@
             "${libdir}/*.la",
             "${libdir}/*.o",
             "${libdir}/lib*${SOLIBSDEV}",
-            "${libdir}/pkgconfig",
-            "${prefix}/lib/python${PYTHON_MAJMIN}/config*/"
+            "${libdir}/pkgconfig"
         ],
         "rdepends": [
             "core"
