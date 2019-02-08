@@ -1,21 +1,22 @@
-From 506bd37bd580d7382d7c58257dac4b1e502a887c Mon Sep 17 00:00:00 2001
+From 7a4fd5933cc795df85cdd85168fe54fbaec4dcec Mon Sep 17 00:00:00 2001
 From: Christopher Larson <chris_larson@mentor.com>
 Date: Tue, 13 Dec 2016 09:50:34 -0700
-Subject: [PATCH] Fix for X32
+Subject: [PATCH 6/6] Fix for X32
 
 Apply patch to fix the X32 build from https://github.com/sjnewbury/x32.
 
 Upstream-Status: Pending
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
+
 ---
  src/x86_64/Gos-linux.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/x86_64/Gos-linux.c b/src/x86_64/Gos-linux.c
-index 9e1acfc..8169d5a 100644
+index bd14234..be1cb5b 100644
 --- a/src/x86_64/Gos-linux.c
 +++ b/src/x86_64/Gos-linux.c
-@@ -143,8 +143,8 @@ x86_64_sigreturn (unw_cursor_t *cursor)
+@@ -145,8 +145,8 @@ x86_64_sigreturn (unw_cursor_t *cursor)
  
    Debug (8, "resuming at ip=%llx via sigreturn(%p)\n",
               (unsigned long long) c->dwarf.ip, sc);
@@ -27,5 +28,5 @@ index 9e1acfc..8169d5a 100644
                          :: "r"(sc), "i"(SYS_rt_sigreturn)
                          : "memory");
 -- 
-2.8.0
+2.20.1
 

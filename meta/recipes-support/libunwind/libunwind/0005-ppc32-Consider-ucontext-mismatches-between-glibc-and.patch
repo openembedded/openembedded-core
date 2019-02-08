@@ -1,7 +1,8 @@
-From e0eea53c77fce8537c58a072b684043507987bcc Mon Sep 17 00:00:00 2001
+From 02919d74b1599979884f9cee466ed392d9fc4819 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 9 Jul 2016 01:07:53 +0000
-Subject: [PATCH] ppc32: Consider ucontext mismatches between glibc and musl
+Subject: [PATCH 5/6] ppc32: Consider ucontext mismatches between glibc and
+ musl
 
 This helps in porting libunwind onto musl based systems
 ptrace.h change is required again an error that surfaces
@@ -18,17 +19,17 @@ In file included from /mnt/oe/openembedded-core/build/tmp-musl/sysroots/qemuppc/
  struct pt_regs {
         ^~~~~~~
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
 Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
+---
  src/ppc32/Ginit.c            |   6 +-
- src/ppc32/ucontext_i.h       | 158 ++++++++++++++++++++++---------------------
+ src/ppc32/ucontext_i.h       | 158 ++++++++++++++++++-----------------
  src/ptrace/_UPT_reg_offset.c |   7 ++
  3 files changed, 92 insertions(+), 79 deletions(-)
 
 diff --git a/src/ppc32/Ginit.c b/src/ppc32/Ginit.c
-index f2e6e82..617aaa1 100644
+index ba30244..c5312d9 100644
 --- a/src/ppc32/Ginit.c
 +++ b/src/ppc32/Ginit.c
 @@ -48,12 +48,12 @@ uc_addr (ucontext_t *uc, int reg)
@@ -226,7 +227,7 @@ index c6ba806..b79f15c 100644
  
  #endif
 diff --git a/src/ptrace/_UPT_reg_offset.c b/src/ptrace/_UPT_reg_offset.c
-index 68461a2..fcc43f7 100644
+index c82d1c9..6c31baa 100644
 --- a/src/ptrace/_UPT_reg_offset.c
 +++ b/src/ptrace/_UPT_reg_offset.c
 @@ -27,6 +27,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
@@ -244,5 +245,5 @@ index 68461a2..fcc43f7 100644
  #ifdef HAVE_ASM_PTRACE_OFFSETS_H
  # include <asm/ptrace_offsets.h>
 -- 
-1.8.3.1
+2.20.1
 
