@@ -542,6 +542,7 @@ Examine build performance test results from a Git repository"""
                        help="Tag name (pattern) for finding results")
     group.add_argument('--hostname', '-H')
     group.add_argument('--branch', '-B', default='master')
+    group.add_argument('--branch2')
     group.add_argument('--machine', default='qemux86')
     group.add_argument('--history-length', default=25, type=int,
                        help="Number of tested revisions to plot in html report")
@@ -579,6 +580,10 @@ def main(argv=None):
 
     revs = get_test_revs(repo, args.tag_name, hostname=args.hostname,
                          branch=args.branch, machine=args.machine)
+    if args.branch2:
+        revs = revs + get_test_revs(repo, args.tag_name, hostname=args.hostname,
+                             branch=args.branch2, machine=args.machine)
+
     if len(revs) < 2:
         log.error("%d tester revisions found, unable to generate report",
                   len(revs))
