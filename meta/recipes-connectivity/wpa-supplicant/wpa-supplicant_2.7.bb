@@ -3,9 +3,9 @@ HOMEPAGE = "http://w1.fi/wpa_supplicant/"
 BUGTRACKER = "http://w1.fi/security/"
 SECTION = "network"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=292eece3f2ebbaa25608eed8464018a3 \
-                    file://README;beginline=1;endline=56;md5=3f01d778be8f953962388307ee38ed2b \
-                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=4061612fc5715696134e3baf933e8aba"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a3791c270ad6bb026707d17bf750e5ef \
+                    file://README;beginline=1;endline=56;md5=495cbce6008253de4b4d8f4cdfae9f4f \
+                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=a5687903a31b8679e6a06b3afa5c819e"
 DEPENDS = "dbus libnl"
 RRECOMMENDS_${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
 
@@ -24,19 +24,10 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
-           file://key-replay-cve-multiple1.patch \
-           file://key-replay-cve-multiple2.patch \
-           file://key-replay-cve-multiple3.patch \
-           file://key-replay-cve-multiple4.patch \
-           file://key-replay-cve-multiple5.patch \
-           file://key-replay-cve-multiple6.patch \
-           file://key-replay-cve-multiple7.patch \
-           file://key-replay-cve-multiple8.patch \
-           file://wpa_supplicant-CVE-2018-14526.patch \
            file://0001-replace-systemd-install-Alias-with-WantedBy.patch \
           "
-SRC_URI[md5sum] = "091569eb4440b7d7f2b4276dbfc03c3c"
-SRC_URI[sha256sum] = "b4936d34c4e6cdd44954beba74296d964bc2c9668ecaa5255e499636fe2b1450"
+SRC_URI[md5sum] = "a68538fb62766f40f890125026c42c10"
+SRC_URI[sha256sum] = "76ea6b06b7a2ea8e6d9eb1a9166166f1656e6d48c7508914f592100c95c73074"
 
 CVE_PRODUCT = "wpa_supplicant"
 
