@@ -510,10 +510,10 @@ def auto_args(repo, args):
 
         key = split[0]
         val = split[1].strip()
-        if key == 'hostname':
+        if key == 'hostname' and not args.hostname:
             log.debug("Using hostname %s", val)
             args.hostname = val
-        elif key == 'branch':
+        elif key == 'branch' and not args.branch:
             log.debug("Using branch %s", val)
             args.branch = val
 
