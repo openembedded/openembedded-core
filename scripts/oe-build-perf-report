@@ -541,8 +541,8 @@ Examine build performance test results from a Git repository"""
                        default='{hostname}/{branch}/{machine}/{commit_number}-g{commit}/{tag_number}',
                        help="Tag name (pattern) for finding results")
     group.add_argument('--hostname', '-H')
-    group.add_argument('--branch', '-B', default='master')
-    group.add_argument('--branch2')
+    group.add_argument('--branch', '-B', default='master', help="Branch to find commit in")
+    group.add_argument('--branch2', help="Branch to find comparision revisions in")
     group.add_argument('--machine', default='qemux86')
     group.add_argument('--history-length', default=25, type=int,
                        help="Number of tested revisions to plot in html report")
@@ -581,13 +581,18 @@ def main(argv=None):
     revs = get_test_revs(repo, args.tag_name, hostname=args.hostname,
                          branch=args.branch, machine=args.machine)
     if args.branch2:
-        revs = revs + get_test_revs(repo, args.tag_name, hostname=args.hostname,
+        revs2 = get_test_revs(repo, args.tag_name, hostname=args.hostname,
                              branch=args.branch2, machine=args.machine)
-
-    if len(revs) < 2:
-        log.error("%d tester revisions found, unable to generate report",
-                  len(revs))
-        return 1
+        if not len(revs2):
+            log.error("No revisions found to compare against")
+            return 1
+        if not len(revs):
+            log.error("No revision to report on found")
+            return 1
+    else:
+        if len(revs) < 2:
+            log.error("Only %d tester revisions found, unable to generate report" % len(revs))
+            return 1
 
     # Pick revisions
     if args.commit:
@@ -599,6 +604,11 @@ def main(argv=None):
     else:
         index1 = len(revs) - 1
 
+    if args.branch2:
+        revs2.append(revs[index1])
+        index1 = len(revs2) - 1
+        revs = revs2
+
     if args.commit2:
         if args.commit_number2:
             log.warning("Ignoring --commit-number2 as --commit2 was specified")
@@ -608,6 +618,11 @@ def main(argv=None):
     else:
         if index1 > 0:
             index2 = index1 - 1
+            # Find the closest matching commit number for comparision
+            # In future we could check the commit is a common ancestor and
+            # continue back if not but this good enough for now
+            while index2 > 0 and revs[index2].commit_number > revs[index1].commit_number:
+                index2 = index2 - 1
         else:
             log.error("Unable to determine the other commit, use "
                       "--commit2 or --commit-number2 to specify it")
