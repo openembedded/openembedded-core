@@ -244,8 +244,13 @@ class Disk:
         self._psector_size = None
         self._ptable_format = None
 
-        # find parted
-        self.paths = "/bin:/usr/bin:/usr/sbin:/sbin/"
+        # read paths from $PATH environment variable
+        # if it fails, use hardcoded paths
+        try:
+            self.paths = os.environ['PATH']
+        except KeyError:
+            self.paths = "/bin:/usr/bin:/usr/sbin:/sbin/"
+
         if native_sysroot:
             for path in self.paths.split(':'):
                 self.paths = "%s%s:%s" % (native_sysroot, path, self.paths)
