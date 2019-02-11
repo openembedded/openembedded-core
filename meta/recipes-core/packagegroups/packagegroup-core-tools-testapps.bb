@@ -34,7 +34,6 @@ X11TOOLS = "\
     xrestop \
     xwininfo \
     xprop \
-    xvideo-tests \
     "
 
 RDEPENDS_${PN} = "\
