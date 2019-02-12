@@ -39,7 +39,7 @@ diff --git a/Tests/CMakeLists.txt b/Tests/CMakeLists.txt
 index b8b724ed8..63f6bb6d2 100644
 --- a/Tests/CMakeLists.txt
 +++ b/Tests/CMakeLists.txt
-@@ -1322,7 +1322,7 @@ ${CMake_BINARY_DIR}/bin/cmake -DDIR=dev -P ${CMake_SOURCE_DIR}/Utilities/Release
+@@ -1297,7 +1297,7 @@ ${CMake_BINARY_DIR}/bin/cmake -DDIR=dev -P ${CMake_SOURCE_DIR}/Utilities/Release
      set(CMake_TEST_Qt5 1)
    endif()
    if(CMake_TEST_Qt5)
@@ -70,10 +70,10 @@ diff --git a/Tests/QtAutogen/AutogenTest.cmake b/Tests/QtAutogen/AutogenTest.cma
 index 8c0a14fca..e9923b21a 100644
 --- a/Tests/QtAutogen/AutogenTest.cmake
 +++ b/Tests/QtAutogen/AutogenTest.cmake
-@@ -22,7 +22,7 @@ if (QT_TEST_VERSION STREQUAL 4)
+@@ -22,7 +22,7 @@ if (QT_TEST_VERSION EQUAL 4)
    endmacro()
  
- elseif(QT_TEST_VERSION STREQUAL 5)
+ elseif(QT_TEST_VERSION EQUAL 5)
 -  find_package(Qt5Widgets REQUIRED)
 +  #find_package(Qt5Widgets REQUIRED)
  
@@ -96,7 +96,7 @@ diff --git a/Tests/RunCMake/CMakeLists.txt b/Tests/RunCMake/CMakeLists.txt
 index 637c5c2cb..c0376effc 100644
 --- a/Tests/RunCMake/CMakeLists.txt
 +++ b/Tests/RunCMake/CMakeLists.txt
-@@ -291,7 +291,7 @@ add_RunCMake_test(configure_file)
+@@ -310,7 +310,7 @@ add_RunCMake_test(configure_file)
  add_RunCMake_test(CTestTimeoutAfterMatch)
  
  find_package(Qt4 QUIET)
