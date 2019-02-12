@@ -196,29 +196,27 @@ def add_layer_dependencies(bblayersconf, layer, layers, logger):
     if layer_depends is None:
         return False
     else:
-        # Don't add a layer that is already present.
-        added = set()
-        output = check_command('Getting existing layers failed.', 'bitbake-layers show-layers').decode('utf-8')
-        for layer, path, pri in re.findall(r'^(\S+) +([^\n]*?) +(\d+)$', output, re.MULTILINE):
-            added.add(path)
+        add_layers(bblayersconf, layer_depends, logger)
 
-        for layer_depend in layer_depends:
-            name = layer_depend['name']
-            path = layer_depend['path']
-            if path in added:
-                continue
-            else:
-                added.add(path)
-            logger.info('Adding layer dependency %s' % name)
-            with open(bblayersconf, 'a+') as f:
-                f.write("\nBBLAYERS += \"%s\"\n" % path)
     return True
 
-def add_layer(bblayersconf, layer, layers, logger):
-    logger.info('Adding layer %s' % layer['name'])
-    with open(bblayersconf, 'a+') as f:
-        f.write("\nBBLAYERS += \"%s\"\n" % layer['path'])
+def add_layers(bblayersconf, layers, logger):
+    # Don't add a layer that is already present.
+    added = set()
+    output = check_command('Getting existing layers failed.', 'bitbake-layers show-layers').decode('utf-8')
+    for layer, path, pri in re.findall(r'^(\S+) +([^\n]*?) +(\d+)$', output, re.MULTILINE):
+        added.add(path)
 
+    with open(bblayersconf, 'a+') as f:
+        for layer in layers:
+            logger.info('Adding layer %s' % layer['name'])
+            name = layer['name']
+            path = layer['path']
+            if path in added:
+                logger.info('%s is already in %s' % (name, bblayersconf))
+            else:
+                added.add(path)
+                f.write("\nBBLAYERS += \"%s\"\n" % path)
     return True
 
 def check_command(error_msg, cmd, cwd=None):
