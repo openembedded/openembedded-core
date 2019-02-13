@@ -15,17 +15,17 @@ python split_gstreamer10_packages () {
 
 python set_metapkg_rdepends () {
     import os
+    import oe.utils
 
     pn = d.getVar('PN')
     metapkg =  pn + '-meta'
     d.setVar('ALLOW_EMPTY_' + metapkg, "1")
     d.setVar('FILES_' + metapkg, "")
-    blacklist = [ pn, pn + '-locale', pn + '-dev', pn + '-dbg', pn + '-doc', pn + '-meta' ]
+    blacklist = [ pn, pn + '-meta' ]
     metapkg_rdepends = []
-    packages = d.getVar('PACKAGES').split()
     pkgdest = d.getVar('PKGDEST')
-    for pkg in packages[1:]:
-        if not pkg in blacklist and not pkg in metapkg_rdepends and not pkg.endswith('-dev') and not pkg.endswith('-dbg') and not pkg.count('locale') and not pkg.count('-staticdev'):
+    for pkg in oe.utils.packages_filter_out_system(d):
+        if pkg not in blacklist and pkg not in metapkg_rdepends:
             # See if the package is empty by looking at the contents of its PKGDEST subdirectory. 
             # If this subdirectory is empty, then the package is.
             # Empty packages do not get added to the meta package's RDEPENDS
