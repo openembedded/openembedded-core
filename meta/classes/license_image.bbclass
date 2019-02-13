@@ -37,6 +37,7 @@ python license_create_manifest() {
 
 def write_license_files(d, license_manifest, pkg_dic, rootfs=True):
     import re
+    import stat
 
     bad_licenses = (d.getVar("INCOMPATIBLE_LICENSE") or "").split()
     bad_licenses = map(lambda l: canonical_license(d, l), bad_licenses)
@@ -146,12 +147,17 @@ def write_license_files(d, license_manifest, pkg_dic, rootfs=True):
                             continue
 
                         os.link(pkg_license, pkg_rootfs_license)
-            # Fixup file ownership
+            # Fixup file ownership and permissions
             for walkroot, dirs, files in os.walk(rootfs_license_dir):
                 for f in files:
-                    os.lchown(os.path.join(walkroot, f), 0, 0)
+                    p = os.path.join(walkroot, f)
+                    os.lchown(p, 0, 0)
+                    if not os.path.islink(p):
+                        os.chmod(p, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
                 for dir in dirs:
-                    os.lchown(os.path.join(walkroot, dir), 0, 0)
+                    p = os.path.join(walkroot, dir)
+                    os.lchown(p, 0, 0)
+                    os.chmod(p, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
 
 
 
