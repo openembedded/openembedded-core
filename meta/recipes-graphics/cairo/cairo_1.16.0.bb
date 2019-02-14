@@ -24,11 +24,10 @@ DEPENDS = "fontconfig glib-2.0 libpng pixman zlib"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \ 
-           file://0001-cairo-Fix-CVE-2017-9814.patch \
           "
 
-SRC_URI[md5sum] = "9f0db9dbfca0966be8acd682e636d165"
-SRC_URI[sha256sum] = "8c90f00c500b2299c0a323dd9beead2a00353752b2092ead558139bd67f7bf16"
+SRC_URI[md5sum] = "f19e0353828269c22bd72e271243a552"
+SRC_URI[sha256sum] = "5e7b29b3f113ef870d1e3ecf8adf21f923396401604bda16d44be45e66052331"
 
 inherit autotools pkgconfig upstream-version-is-even gtk-doc multilib_script
 
@@ -81,7 +80,6 @@ DESCRIPTION_cairo-perf-utils = "The Cairo library performance utilities"
 FILES_${PN} = "${libdir}/libcairo.so.*"
 FILES_${PN}-gobject = "${libdir}/libcairo-gobject.so.*"
 FILES_${PN}-script-interpreter = "${libdir}/libcairo-script-interpreter.so.*"
-FILES_${PN}-perf-utils = "${bindir}/cairo-trace* ${libdir}/cairo/*.la ${libdir}/cairo/libcairo-trace.so.*"
-FILES_${PN}-dev += "${libdir}/cairo/*.so"
+FILES_${PN}-perf-utils = "${bindir}/cairo-trace* ${libdir}/cairo/*.la ${libdir}/cairo/libcairo-trace.so"
 
 BBCLASSEXTEND = "native nativesdk"
