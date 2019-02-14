@@ -1,0 +1,35 @@
+==============================================================================================================
+Test Report (Count of passed, failed, skipped group by file_dir, result_id)
+==============================================================================================================
+--------------------------------------------------------------------------------------------------------------
+{{ 'file_dir'.ljust(max_len_dir) }} | {{ 'result_id'.ljust(max_len_result_id) }} | {{ 'passed'.ljust(10) }} | {{ 'failed'.ljust(10) }} | {{ 'skipped'.ljust(10) }}
+--------------------------------------------------------------------------------------------------------------
+{% for report in test_count_reports |sort(attribute='test_file_dir_result_id') %}
+{{ report.file_dir.ljust(max_len_dir) }} | {{ report.result_id.ljust(max_len_result_id) }} | {{ (report.passed|string).ljust(10) }} | {{ (report.failed|string).ljust(10) }} | {{ (report.skipped|string).ljust(10) }}
+{% endfor %}
+--------------------------------------------------------------------------------------------------------------
+
+==============================================================================================================
+Test Report (Percent of passed, failed, skipped group by file_dir, result_id)
+==============================================================================================================
+--------------------------------------------------------------------------------------------------------------
+{{ 'file_dir'.ljust(max_len_dir) }} | {{ 'result_id'.ljust(max_len_result_id) }} | {{ 'passed_%'.ljust(10) }} | {{ 'failed_%'.ljust(10) }} | {{ 'skipped_%'.ljust(10) }}
+--------------------------------------------------------------------------------------------------------------
+{% for report in test_percent_reports |sort(attribute='test_file_dir_result_id') %}
+{{ report.file_dir.ljust(max_len_dir) }} | {{ report.result_id.ljust(max_len_result_id) }} | {{ (report.passed|string).ljust(10) }} | {{ (report.failed|string).ljust(10) }} | {{ (report.skipped|string).ljust(10) }}
+{% endfor %}
+--------------------------------------------------------------------------------------------------------------
+
+==============================================================================================================
+Test Report (Failed test cases group by file_dir, result_id)
+==============================================================================================================
+--------------------------------------------------------------------------------------------------------------
+{% for report in test_count_reports |sort(attribute='test_file_dir_result_id') %}
+{% if report.failed_testcases %}
+file_dir | result_id : {{ report.file_dir }} | {{ report.result_id }}
+{% for testcase in report.failed_testcases %}
+    {{ testcase }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+--------------------------------------------------------------------------------------------------------------
