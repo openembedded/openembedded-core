@@ -17,6 +17,11 @@
 # To perform regression file analysis, execute the below
 #     $ resulttool regression-file <base_result_file> <target_result_file>
 #
+# To execute manual test cases, execute the below
+#     $ resulttool manualexecution <manualjsonfile>
+#
+# By default testresults.json for manualexecution store in <build>/tmp/log/manual/
+#
 # Copyright (c) 2019, Intel Corporation.
 #
 # This program is free software; you can redistribute it and/or modify it
@@ -42,6 +47,7 @@ import resulttool.merge
 import resulttool.store
 import resulttool.regression
 import resulttool.report
+import resulttool.manualexecution
 logger = scriptutils.logger_create('resulttool')
 
 def _validate_user_input_arguments(args):
@@ -58,6 +64,8 @@ def main():
     parser.add_argument('-q', '--quiet', help='print only errors', action='store_true')
     subparsers = parser.add_subparsers(dest="subparser_name", title='subcommands', metavar='<subcommand>')
     subparsers.required = True
+    subparsers.add_subparser_group('manualexecution', 'manual testcases', 300)
+    resulttool.manualexecution.register_commands(subparsers)
     subparsers.add_subparser_group('setup', 'setup', 200)
     resulttool.merge.register_commands(subparsers)
     resulttool.store.register_commands(subparsers)
