@@ -142,8 +142,6 @@ RDEPENDS_${PN}-ptest += "\
             shared-mime-info \
            "
 
-# When https://gitlab.gnome.org/GNOME/glib/issues/1343 is
-# fixed add locale-base-pl-pl
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             glibc-gconv-utf-16 \
             glibc-charmap-utf-8 \
@@ -167,6 +165,5 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             locale-base-fr-fr \
             locale-base-es-es \
             locale-base-en-gb \
+            locale-base-pl-pl \
            "
-
-INSANE_SKIP_${PN}-ptest += "libdir"

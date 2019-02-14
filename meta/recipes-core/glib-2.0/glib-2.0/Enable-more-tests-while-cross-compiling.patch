@@ -1,4 +1,4 @@
-From 4b1a6d247c78125096a6ea5ab3cab8a1f000dc23 Mon Sep 17 00:00:00 2001
+From 70e462e070f8eb20b7660c1cf88271c0449e43cc Mon Sep 17 00:00:00 2001
 From: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Date: Mon, 9 Nov 2015 11:07:27 +0200
 Subject: [PATCH] Enable more tests while cross-compiling
@@ -9,17 +9,15 @@ case we can depend on glib-2.0-native.
 
 Upstream-Status: Inappropriate [OE specific]
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
-
 ---
- gio/tests/Makefile.am     | 10 ++++++----
- tests/gobject/Makefile.am |  8 +++++---
- 2 files changed, 11 insertions(+), 7 deletions(-)
+ gio/tests/Makefile.am | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/gio/tests/Makefile.am b/gio/tests/Makefile.am
-index 1f0bed7..8295deb 100644
+index c4e7a92..633e85c 100644
 --- a/gio/tests/Makefile.am
 +++ b/gio/tests/Makefile.am
-@@ -550,10 +550,9 @@ test_programs += \
+@@ -583,10 +583,9 @@ test_programs += \
  endif
  
  # -----------------------------------------------------------------------------
@@ -32,7 +30,7 @@ index 1f0bed7..8295deb 100644
  test_programs += resources
  resources_SOURCES = resources.c
  nodist_resources_SOURCES = test_resources.c test_resources2.c test_resources2.h
-@@ -578,7 +577,11 @@ if !ENABLE_INSTALLED_TESTS
+@@ -611,7 +610,11 @@ if !ENABLE_INSTALLED_TESTS
  libresourceplugin_la_LDFLAGS += -rpath /
  endif
  
@@ -44,7 +42,7 @@ index 1f0bed7..8295deb 100644
  
  test-generated.txt: test1.txt
  	$(AM_V_GEN) echo "Generated" > $@ && \
-@@ -599,7 +602,6 @@ test.gresource: test.gresource.xml Makefile $(shell $(glib_compile_resources) --
+@@ -632,7 +635,6 @@ test.gresource: test.gresource.xml Makefile $(shell $(glib_compile_resources) --
  
  EXTRA_DIST += test.gresource.xml test1.txt test2.gresource.xml test2.txt test3.gresource.xml test3.txt test4.gresource.xml
  CLEANFILES += test-generated.txt test_resources.c test_resources2.[ch] plugin_resources.c test.gresource
@@ -52,29 +50,3 @@ index 1f0bed7..8295deb 100644
  
  BUILT_SOURCES += giotypefuncs.inc
  
-diff --git a/tests/gobject/Makefile.am b/tests/gobject/Makefile.am
-index 0e60987..927d13a 100644
---- a/tests/gobject/Makefile.am
-+++ b/tests/gobject/Makefile.am
-@@ -51,10 +51,13 @@ if ENABLE_TIMELOOP
- installed_test_programs += timeloop-closure
- endif
- 
--# The marshal test requires running a binary, which means we cannot
--# build it when cross-compiling
-+# The marshal test requires running a binary, which means we require
-+# glib-native when cross-compiling
- if !CROSS_COMPILING
- glib_genmarshal=$(top_builddir)/gobject/glib-genmarshal
-+else
-+glib_genmarshal=$(shell which glib-genmarshal)
-+endif
- 
- testmarshal.h: stamp-testmarshal.h
- 	@true
-@@ -71,4 +74,3 @@ testmarshal.c: testmarshal.h testmarshal.list $(glib_genmarshal)
- BUILT_SOURCES += testmarshal.h testmarshal.c
- CLEANFILES += stamp-testmarshal.h testmarshal.h testmarshal.c
- EXTRA_DIST += testcommon.h testmarshal.list
--endif # !CROSS_COMPILING
-\ No newline at end of file
