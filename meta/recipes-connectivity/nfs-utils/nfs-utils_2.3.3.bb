@@ -26,7 +26,6 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://nfs-mountd.service \
            file://nfs-statd.service \
            file://proc-fs-nfsd.mount \
-           file://nfs-utils-Do-not-pass-CFLAGS-to-gcc-while-building.patch \
            file://nfs-utils-debianize-start-statd.patch \
            file://bugfix-adjust-statd-service-name.patch \
            file://nfs-utils-musl-limits.patch \
@@ -35,6 +34,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://clang-format-string.patch \
            file://0001-Makefile.am-update-the-path-of-libnfs.a.patch \
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
+           file://0001-Don-t-build-tools-with-CC_FOR_BUILD.patch \
 "
 SRC_URI_append_libc-glibc = " file://0001-configure.ac-Do-not-fatalize-Wmissing-prototypes.patch"
 SRC_URI_append_libc-musl = " file://nfs-utils-musl-res_querydomain.patch"
@@ -146,11 +146,6 @@ do_install_append () {
 	# chown the directories and files
 	chown -R rpcuser:rpcuser ${D}${localstatedir}/lib/nfs/statd
 	chmod 0644 ${D}${localstatedir}/lib/nfs/statd/state
-
-	# the following are built by CC_FOR_BUILD
-	rm -f ${D}${sbindir}/rpcdebug
-	rm -f ${D}${sbindir}/rpcgen
-	rm -f ${D}${sbindir}/locktest
 
         # Make python tools use python 3
         sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${sbindir}/mountstats ${D}${sbindir}/nfsiostat
