@@ -14,13 +14,13 @@ SRC_URI = "git://github.com/mirror/x264;branch=stable \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-SRCREV = "e9a5903edf8ca59ef20e6f4894c196f135af735e"
+SRCREV = "0a84d986e7020f8344f00752e3600b9769cc1e85"
 
-PV = "r2854+git${SRCPV}"
+PV = "r2917+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit lib_package pkgconfig perlnative
+inherit lib_package pkgconfig
 
 X264_DISABLE_ASM = ""
 X264_DISABLE_ASM_x86 = "--disable-asm"
