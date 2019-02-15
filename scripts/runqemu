@@ -679,6 +679,17 @@ class BaseConfig(object):
             logger.info('QB_MEM is not set, use 512M by default')
             self.set('QB_MEM', '-m 512')
 
+        # Check and remove M or m suffix
+        qb_mem = self.get('QB_MEM')
+        if qb_mem.endswith('M') or qb_mem.endswith('m'):
+            qb_mem = qb_mem[:-1]
+
+        # Add -m prefix it not present
+        if not qb_mem.startswith('-m'):
+            qb_mem = '-m %s' % qb_mem
+
+        self.set('QB_MEM', qb_mem)
+
         mach = self.get('MACHINE')
         if not mach.startswith('qemumips'):
             self.kernel_cmdline_script += ' mem=%s' % self.get('QB_MEM').replace('-m','').strip() + 'M'
