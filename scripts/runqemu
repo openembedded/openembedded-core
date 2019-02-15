@@ -189,6 +189,7 @@ class BaseConfig(object):
 
         self.qemu_opt = ''
         self.qemu_opt_script = ''
+        self.qemuparams = ''
         self.clean_nfs_dir = False
         self.nfs_server = ''
         self.rootfs = ''
@@ -460,7 +461,7 @@ class BaseConfig(object):
             elif arg.startswith('biosfilename='):
                 self.qemu_opt_script += ' -bios %s' % arg[len('biosfilename='):]
             elif arg.startswith('qemuparams='):
-                self.qemu_opt_script += ' %s' % arg[len('qemuparams='):]
+                self.qemuparams = ' %s' % arg[len('qemuparams='):]
             elif arg.startswith('bootparams='):
                 self.bootparams = arg[len('bootparams='):]
             elif os.path.exists(arg) or (re.search(':', arg) and re.search('/', arg)):
@@ -667,7 +668,11 @@ class BaseConfig(object):
             raise RunQemuError("Invalid custombiosdir: %s" % self.custombiosdir)
 
     def check_mem(self):
-        s = re.search('-m +([0-9]+)', self.qemu_opt_script)
+        """
+        Both qemu and kernel needs memory settings, so check QB_MEM and set it
+        for both.
+        """
+        s = re.search('-m +([0-9]+)', self.qemuparams)
         if s:
             self.set('QB_MEM', '-m %s' % s.group(1))
         elif not self.get('QB_MEM'):
@@ -1168,6 +1173,10 @@ class BaseConfig(object):
             self.qemu_opt += ' -vga std'
 
         self.qemu_opt += ' ' + self.qemu_opt_script
+
+        # Append qemuparams to override previous settings
+        if self.qemuparams:
+            self.qemu_opt += ' ' + self.qemuparams
 
         if self.snapshot:
             self.qemu_opt += " -snapshot"
