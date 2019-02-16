@@ -192,3 +192,6 @@ do_packagedata[stamp-extra-info] = ""
 do_populate_sysroot[stamp-extra-info] = ""
 
 USE_NLS = "no"
+
+RECIPERDEPTASK = "do_populate_sysroot"
+do_populate_sysroot[rdeptask] = "${RECIPERDEPTASK}"
