@@ -29,6 +29,7 @@ SRC_URI = "git://git.yoctoproject.org/poky;branch=thud \
            file://README_VirtualBox_Guest_Additions.txt \
            file://README_VirtualBox_Toaster.txt \
           "
+RECIPE_NO_UPDATE_REASON = "Recipe is recursive and handled as part of the release process"
 BA_INCLUDE_SOURCES ??= "0"
 
 IMAGE_CMD_ext4_append () {
