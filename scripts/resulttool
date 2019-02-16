@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 #
-# test results tool - tool for testresults.json (merge test results, regression analysis)
+# test results tool - tool for manipulating OEQA test result json files
+# (merge results, summarise results, regression analysis, generate manual test results file)
 #
 # To look for help information.
 #    $ resulttool
 #
-# To store test result from oeqa automated tests, execute the below
+# To store test results from oeqa automated tests, execute the below
 #     $ resulttool store <source_dir> <git_branch>
 #
 # To merge test results, execute the below
@@ -58,7 +59,7 @@ def _validate_user_input_arguments(args):
     return True
 
 def main():
-    parser = argparse_oe.ArgumentParser(description="OpenEmbedded test results tool.",
+    parser = argparse_oe.ArgumentParser(description="OEQA test result manipulation tool.",
                                         epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
     parser.add_argument('-d', '--debug', help='enable debug output', action='store_true')
     parser.add_argument('-q', '--quiet', help='print only errors', action='store_true')

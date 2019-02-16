@@ -1,6 +1,7 @@
-# test result tool - store test results
+# resulttool - store test results
 #
 # Copyright (c) 2019, Intel Corporation.
+# Copyright (c) 2019, Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms and conditions of the GNU General Public License,
@@ -11,100 +12,81 @@
 # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 # more details.
 #
-import datetime
 import tempfile
 import os
 import subprocess
+import json
+import shutil
 import scriptpath
 scriptpath.add_bitbake_lib_path()
 scriptpath.add_oe_lib_path()
-from resulttool.resultsutils import checkout_git_dir
-try:
-    import bb
-except ImportError:
-    pass
+import resulttool.resultutils as resultutils
+import oeqa.utils.gitarchive as gitarchive
 
-class ResultsGitStore(object):
-
-    def _get_output_dir(self):
-        basepath = os.environ['BUILDDIR']
-        return basepath + '/testresults_%s/' % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
-    def _create_temporary_workspace_dir(self):
-        return tempfile.mkdtemp(prefix='testresults.')
-
-    def _remove_temporary_workspace_dir(self, workspace_dir):
-        return subprocess.run(["rm", "-rf",  workspace_dir])
-
-    def _oe_copy_files(self, source_dir, destination_dir):
-        from oe.path import copytree
-        copytree(source_dir, destination_dir)
-
-    def _copy_files(self, source_dir, destination_dir, copy_ignore=None):
-        from shutil import copytree
-        copytree(source_dir, destination_dir, ignore=copy_ignore)
-
-    def _store_files_to_git(self, logger, file_dir, git_dir, git_branch, commit_msg_subject, commit_msg_body):
-        logger.debug('Storing test result into git repository (%s) and branch (%s)'
-                     % (git_dir, git_branch))
-        return subprocess.run(["oe-git-archive",
-                               file_dir,
-                               "-g", git_dir,
-                               "-b", git_branch,
-                               "--commit-msg-subject", commit_msg_subject,
-                               "--commit-msg-body", commit_msg_body])
-
-    def store_to_existing(self, logger, source_dir, git_dir, git_branch):
-        logger.debug('Storing files to existing git repository and branch')
-        from shutil import ignore_patterns
-        dest_dir = self._create_temporary_workspace_dir()
-        dest_top_dir = os.path.join(dest_dir, 'top_dir')
-        self._copy_files(git_dir, dest_top_dir, copy_ignore=ignore_patterns('.git'))
-        self._oe_copy_files(source_dir, dest_top_dir)
-        self._store_files_to_git(logger, dest_top_dir, git_dir, git_branch,
-                                 'Store as existing git and branch', 'Store as existing git repository and branch')
-        self._remove_temporary_workspace_dir(dest_dir)
-        return git_dir
-
-    def store_to_existing_with_new_branch(self, logger, source_dir, git_dir, git_branch):
-        logger.debug('Storing files to existing git repository with new branch')
-        self._store_files_to_git(logger, source_dir, git_dir, git_branch,
-                                 'Store as existing git with new branch',
-                                 'Store as existing git repository with new branch')
-        return git_dir
-
-    def store_to_new(self, logger, source_dir, git_branch):
-        logger.debug('Storing files to new git repository')
-        output_dir = self._get_output_dir()
-        self._store_files_to_git(logger, source_dir, output_dir, git_branch,
-                                 'Store as new', 'Store as new git repository')
-        return output_dir
-
-    def store(self, logger, source_dir, git_dir, git_branch):
-        if git_dir:
-            if checkout_git_dir(git_dir, git_branch):
-                self.store_to_existing(logger, source_dir, git_dir, git_branch)
-            else:
-                self.store_to_existing_with_new_branch(logger, source_dir, git_dir, git_branch)
-        else:
-            self.store_to_new(logger, source_dir, git_branch)
 
 def store(args, logger):
-    gitstore = ResultsGitStore()
-    gitstore.store(logger, args.source_dir, args.git_dir, args.git_branch)
+    tempdir = tempfile.mkdtemp(prefix='testresults.')
+    try:
+        results = {}
+        logger.info('Reading files from %s' % args.source)
+        for root, dirs, files in os.walk(args.source):
+            for name in files:
+                f = os.path.join(root, name)
+                if name == "testresults.json":
+                    resultutils.append_resultsdata(results, f)
+                elif args.all:
+                    dst = f.replace(args.source, tempdir + "/")
+                    os.makedirs(os.path.dirname(dst), exist_ok=True)
+                    shutil.copyfile(f, dst)
+        resultutils.save_resultsdata(results, tempdir)
+
+        if not results and not args.all:
+            if args.allow_empty:
+                logger.info("No results found to store")
+                return 0
+            logger.error("No results found to store")
+            return 1
+
+        keywords = {'branch': None, 'commit': None, 'commit_count': None}
+
+        # Find the branch/commit/commit_count and ensure they all match
+        for suite in results:
+            for result in results[suite]:
+                config = results[suite][result]['configuration']['LAYERS']['meta']
+                for k in keywords:
+                    if keywords[k] is None:
+                        keywords[k] = config.get(k)
+                    if config.get(k) != keywords[k]:
+                        logger.error("Mismatched source commit/branch/count: %s vs %s" % (config.get(k), keywords[k]))
+                        return 1
+
+        logger.info('Storing test result into git repository %s' % args.git_dir)
+
+        gitarchive.gitarchive(tempdir, args.git_dir, False, False,
+                              "Results of {branch}:{commit}", "branch: {branch}\ncommit: {commit}", "{branch}",
+                              False, "{branch}/{commit_count}-g{commit}/{tag_number}",
+                              'Test run #{tag_number} of {branch}:{commit}', '',
+                              [], [], False, keywords, logger)
+
+    finally:
+        subprocess.check_call(["rm", "-rf",  tempdir])
+
     return 0
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
-    parser_build = subparsers.add_parser('store', help='store test result files and directories into git repository',
-                                         description='store the testresults.json files and related directories '
-                                                     'from the source directory into the destination git repository '
-                                                     'with the given git branch',
+    parser_build = subparsers.add_parser('store', help='store test results into a git repository',
+                                         description='takes a results file or directory of results files and stores '
+                                                     'them into the destination git repository, splitting out the results '
+                                                     'files as configured',
                                          group='setup')
     parser_build.set_defaults(func=store)
-    parser_build.add_argument('source_dir',
-                              help='source directory that contain the test result files and directories to be stored')
-    parser_build.add_argument('git_branch', help='git branch used for store')
-    parser_build.add_argument('-d', '--git-dir', default='',
-                              help='(optional) default store to new <top_dir>/<build>/<testresults_datetime> '
-                                   'directory unless provided with existing git repository as destination')
+    parser_build.add_argument('source',
+                              help='source file or directory that contain the test result files to be stored')
+    parser_build.add_argument('git_dir',
+                              help='the location of the git repository to store the results in')
+    parser_build.add_argument('-a', '--all', action='store_true',
+                              help='include all files, not just testresults.json files')
+    parser_build.add_argument('-e', '--allow-empty', action='store_true',
+                              help='don\'t error if no results to store are found')
+

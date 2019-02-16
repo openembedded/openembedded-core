@@ -1,6 +1,7 @@
-# test result tool - regression analysis
+# resulttool - regression analysis
 #
 # Copyright (c) 2019, Intel Corporation.
+# Copyright (c) 2019, Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms and conditions of the GNU General Public License,
@@ -11,171 +12,170 @@
 # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 # more details.
 #
-from resulttool.resultsutils import load_json_file, get_dict_value, pop_dict_element
+import resulttool.resultutils as resultutils
 import json
 
-class ResultsRegressionSelector(object):
+from oeqa.utils.git import GitRepo
+import oeqa.utils.gitarchive as gitarchive
 
-    def get_results_unique_configurations(self, logger, results):
-        unique_configurations_map = {"oeselftest": ['TEST_TYPE', 'HOST_DISTRO', 'MACHINE'],
-                                     "runtime": ['TEST_TYPE', 'IMAGE_BASENAME', 'MACHINE'],
-                                     "sdk": ['TEST_TYPE', 'IMAGE_BASENAME', 'MACHINE', 'SDKMACHINE'],
-                                     "sdkext": ['TEST_TYPE', 'IMAGE_BASENAME', 'MACHINE', 'SDKMACHINE']}
-        results_unique_configs = {}
-        for k in results:
-            result = results[k]
-            result_configs = get_dict_value(logger, result, 'configuration')
-            result_test_type = get_dict_value(logger, result_configs, 'TEST_TYPE')
-            unique_configuration_keys = get_dict_value(logger, unique_configurations_map, result_test_type)
-            result_unique_config = {}
-            for ck in unique_configuration_keys:
-                config_value = get_dict_value(logger, result_configs, ck)
-                if config_value:
-                    result_unique_config[ck] = config_value
-            results_unique_configs[k] = result_unique_config
-        return results_unique_configs
-
-    def get_regression_base_target_pair(self, logger, base_results, target_results):
-        base_configs = self.get_results_unique_configurations(logger, base_results)
-        logger.debug('Retrieved base configuration: config=%s' % base_configs)
-        target_configs = self.get_results_unique_configurations(logger, target_results)
-        logger.debug('Retrieved target configuration: config=%s' % target_configs)
-        regression_pair = {}
-        for bk in base_configs:
-            base_config = base_configs[bk]
-            for tk in target_configs:
-                target_config = target_configs[tk]
-                if base_config == target_config:
-                    if bk in regression_pair:
-                        regression_pair[bk].append(tk)
-                    else:
-                        regression_pair[bk] = [tk]
-        return regression_pair
-
-    def run_regression_with_regression_pairing(self, logger, regression_pair, base_results, target_results):
-        regression = ResultsRegression()
-        for base in regression_pair:
-            for target in regression_pair[base]:
-                print('Getting regression for base=%s target=%s' % (base, target))
-                regression.run(logger, base_results[base], target_results[target])
-
-class ResultsRegression(object):
-
-    def print_regression_result(self, result):
-        if result:
-            print('============================Start Regression============================')
-            print('Only print regression if base status not equal target')
-            print('<test case> : <base status> -> <target status>')
-            print('========================================================================')
-            for k in result:
-                print(k, ':', result[k]['base'], '->', result[k]['target'])
-            print('==============================End Regression==============================')
-
-    def get_regression_result(self, logger, base_result, target_result):
-        base_result = get_dict_value(logger, base_result, 'result')
-        target_result = get_dict_value(logger, target_result, 'result')
-        result = {}
-        if base_result and target_result:
-            logger.debug('Getting regression result')
-            for k in base_result:
-                base_testcase = base_result[k]
-                base_status = get_dict_value(logger, base_testcase, 'status')
-                if base_status:
-                    target_testcase = get_dict_value(logger, target_result, k)
-                    target_status = get_dict_value(logger, target_testcase, 'status')
-                    if base_status != target_status:
-                        result[k] = {'base': base_status, 'target': target_status}
-                else:
-                    logger.error('Failed to retrieved base test case status: %s' % k)
-        return result
-
-    def run(self, logger, base_result, target_result):
-        if base_result and target_result:
-            result = self.get_regression_result(logger, base_result, target_result)
-            logger.debug('Retrieved regression result =%s' % result)
-            self.print_regression_result(result)
-        else:
-            logger.error('Input data objects must not be empty (base_result=%s, target_result=%s)' %
-                         (base_result, target_result))
-
-def get_results_from_directory(logger, source_dir):
-    from resulttool.merge import ResultsMerge
-    from resulttool.resultsutils import get_directory_files
-    result_files = get_directory_files(source_dir, ['.git'], 'testresults.json')
-    base_results = {}
-    for file in result_files:
-        merge = ResultsMerge()
-        results = merge.get_test_results(logger, file, '')
-        base_results = merge.merge_results(base_results, results)
-    return base_results
-
-def remove_testcases_to_optimize_regression_runtime(logger, results):
-    test_case_removal = ['ptestresult.rawlogs', 'ptestresult.sections']
-    for r in test_case_removal:
-        for k in results:
-            result = get_dict_value(logger, results[k], 'result')
-            pop_dict_element(logger, result, r)
-
-def regression_file(args, logger):
-    base_results = load_json_file(args.base_result_file)
-    print('Successfully loaded base test results from: %s' % args.base_result_file)
-    target_results = load_json_file(args.target_result_file)
-    print('Successfully loaded target test results from: %s' % args.target_result_file)
-    remove_testcases_to_optimize_regression_runtime(logger, base_results)
-    remove_testcases_to_optimize_regression_runtime(logger, target_results)
-    if args.base_result_id and args.target_result_id:
-        base_result = get_dict_value(logger, base_results, base_result_id)
-        print('Getting base test result with result_id=%s' % base_result_id)
-        target_result = get_dict_value(logger, target_results, target_result_id)
-        print('Getting target test result with result_id=%s' % target_result_id)
-        regression = ResultsRegression()
-        regression.run(logger, base_result, target_result)
+def compare_result(logger, base_name, target_name, base_result, target_result):
+    base_result = base_result.get('result')
+    target_result = target_result.get('result')
+    result = {}
+    if base_result and target_result:
+        for k in base_result:
+            base_testcase = base_result[k]
+            base_status = base_testcase.get('status')
+            if base_status:
+                target_testcase = target_result.get(k, {})
+                target_status = target_testcase.get('status')
+                if base_status != target_status:
+                    result[k] = {'base': base_status, 'target': target_status}
+            else:
+                logger.error('Failed to retrieved base test case status: %s' % k)
+    if result:
+        resultstring = "Regression: %s\n            %s\n" % (base_name, target_name)
+        for k in result:
+            resultstring += '    %s: %s -> %s\n' % (k, result[k]['base'], result[k]['target'])
     else:
-        regression = ResultsRegressionSelector()
-        regression_pair = regression.get_regression_base_target_pair(logger, base_results, target_results)
-        logger.debug('Retrieved regression pair=%s' % regression_pair)
-        regression.run_regression_with_regression_pairing(logger, regression_pair, base_results, target_results)
-    return 0
+        resultstring = "Match: %s\n       %s" % (base_name, target_name)
+    return result, resultstring
 
-def regression_directory(args, logger):
-    base_results = get_results_from_directory(logger, args.base_result_directory)
-    target_results = get_results_from_directory(logger, args.target_result_directory)
-    remove_testcases_to_optimize_regression_runtime(logger, base_results)
-    remove_testcases_to_optimize_regression_runtime(logger, target_results)
-    regression = ResultsRegressionSelector()
-    regression_pair = regression.get_regression_base_target_pair(logger, base_results, target_results)
-    logger.debug('Retrieved regression pair=%s' % regression_pair)
-    regression.run_regression_with_regression_pairing(logger, regression_pair, base_results, target_results)
+def get_results(logger, source):
+    return resultutils.load_resultsdata(source, configmap=resultutils.regression_map)
+
+def regression(args, logger):
+    base_results = get_results(logger, args.base_result)
+    target_results = get_results(logger, args.target_result)
+
+    regression_common(args, logger, base_results, target_results)
+
+def regression_common(args, logger, base_results, target_results):
+    if args.base_result_id:
+        base_results = resultutils.filter_resultsdata(base_results, args.base_result_id)
+    if args.target_result_id:
+        target_results = resultutils.filter_resultsdata(target_results, args.target_result_id)
+
+    matches = []
+    regressions = []
+    notfound = []
+
+    for a in base_results:
+        if a in target_results:
+            base = list(base_results[a].keys())
+            target = list(target_results[a].keys())
+            # We may have multiple base/targets which are for different configurations. Start by 
+            # removing any pairs which match
+            for c in base.copy():
+                for b in target.copy():
+                    res, resstr = compare_result(logger, c, b, base_results[a][c], target_results[a][b])
+                    if not res:
+                        matches.append(resstr)
+                        base.remove(c)
+                        target.remove(b)
+                        break
+            # Should only now see regressions, we may not be able to match multiple pairs directly
+            for c in base:
+                for b in target:
+                    res, resstr = compare_result(logger, c, b, base_results[a][c], target_results[a][b])
+                    if res:
+                        regressions.append(resstr)
+        else:
+            notfound.append("%s not found in target" % a)
+    print("\n".join(matches))
+    print("\n".join(regressions))
+    print("\n".join(notfound))
+
     return 0
 
 def regression_git(args, logger):
-    from resulttool.resultsutils import checkout_git_dir
     base_results = {}
     target_results = {}
-    if checkout_git_dir(args.source_dir, args.base_git_branch):
-        base_results = get_results_from_directory(logger, args.source_dir)
-    if checkout_git_dir(args.source_dir, args.target_git_branch):
-        target_results = get_results_from_directory(logger, args.source_dir)
-    if base_results and target_results:
-        remove_testcases_to_optimize_regression_runtime(logger, base_results)
-        remove_testcases_to_optimize_regression_runtime(logger, target_results)
-        regression = ResultsRegressionSelector()
-        regression_pair = regression.get_regression_base_target_pair(logger, base_results, target_results)
-        logger.debug('Retrieved regression pair=%s' % regression_pair)
-        regression.run_regression_with_regression_pairing(logger, regression_pair, base_results, target_results)
+
+    tag_name = "{branch}/{commit_number}-g{commit}/{tag_number}"
+    repo = GitRepo(args.repo)
+
+    revs = gitarchive.get_test_revs(logger, repo, tag_name, branch=args.branch)
+
+    if args.branch2:
+        revs2 = gitarchive.get_test_revs(logger, repo, tag_name, branch=args.branch2)
+        if not len(revs2):
+            logger.error("No revisions found to compare against")
+            return 1
+        if not len(revs):
+            logger.error("No revision to report on found")
+            return 1
+    else:
+        if len(revs) < 2:
+            logger.error("Only %d tester revisions found, unable to generate report" % len(revs))
+            return 1
+
+    # Pick revisions
+    if args.commit:
+        if args.commit_number:
+            logger.warning("Ignoring --commit-number as --commit was specified")
+        index1 = gitarchive.rev_find(revs, 'commit', args.commit)
+    elif args.commit_number:
+        index1 = gitarchive.rev_find(revs, 'commit_number', args.commit_number)
+    else:
+        index1 = len(revs) - 1
+
+    if args.branch2:
+        revs2.append(revs[index1])
+        index1 = len(revs2) - 1
+        revs = revs2
+
+    if args.commit2:
+        if args.commit_number2:
+            logger.warning("Ignoring --commit-number2 as --commit2 was specified")
+        index2 = gitarchive.rev_find(revs, 'commit', args.commit2)
+    elif args.commit_number2:
+        index2 = gitarchive.rev_find(revs, 'commit_number', args.commit_number2)
+    else:
+        if index1 > 0:
+            index2 = index1 - 1
+            # Find the closest matching commit number for comparision
+            # In future we could check the commit is a common ancestor and
+            # continue back if not but this good enough for now
+            while index2 > 0 and revs[index2].commit_number > revs[index1].commit_number:
+                index2 = index2 - 1
+        else:
+            logger.error("Unable to determine the other commit, use "
+                      "--commit2 or --commit-number2 to specify it")
+            return 1
+
+    logger.info("Comparing:\n%s\nto\n%s\n" % (revs[index1], revs[index2]))
+
+    base_results = resultutils.git_get_result(repo, revs[index1][2])
+    target_results = resultutils.git_get_result(repo, revs[index2][2])
+
+    regression_common(args, logger, base_results, target_results)
+
     return 0
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
-    parser_build = subparsers.add_parser('regression-file', help='regression file analysis',
+
+    parser_build = subparsers.add_parser('regression', help='regression file/directory analysis',
+                                         description='regression analysis comparing the base set of results to the target results',
+                                         group='analysis')
+    parser_build.set_defaults(func=regression)
+    parser_build.add_argument('base_result',
+                              help='base result file/directory for the comparison')
+    parser_build.add_argument('target_result',
+                              help='target result file/directory to compare with')
+    parser_build.add_argument('-b', '--base-result-id', default='',
+                              help='(optional) filter the base results to this result ID')
+    parser_build.add_argument('-t', '--target-result-id', default='',
+                              help='(optional) filter the target results to this result ID')
+
+    parser_build = subparsers.add_parser('regression-git', help='regression git analysis',
                                          description='regression analysis comparing base result set to target '
                                                      'result set',
                                          group='analysis')
-    parser_build.set_defaults(func=regression_file)
-    parser_build.add_argument('base_result_file',
-                              help='base result file provide the base result set')
-    parser_build.add_argument('target_result_file',
-                              help='target result file provide the target result set for comparison with base result')
+    parser_build.set_defaults(func=regression_git)
+    parser_build.add_argument('repo',
+                              help='the git repository containing the data')
     parser_build.add_argument('-b', '--base-result-id', default='',
                               help='(optional) default select regression based on configurations unless base result '
                                    'id was provided')
@@ -183,26 +183,10 @@ def register_commands(subparsers):
                               help='(optional) default select regression based on configurations unless target result '
                                    'id was provided')
 
-    parser_build = subparsers.add_parser('regression-dir', help='regression directory analysis',
-                                         description='regression analysis comparing base result set to target '
-                                                     'result set',
-                                         group='analysis')
-    parser_build.set_defaults(func=regression_directory)
-    parser_build.add_argument('base_result_directory',
-                              help='base result directory provide the files for base result set')
-    parser_build.add_argument('target_result_directory',
-                              help='target result file provide the files for target result set for comparison with '
-                                   'base result')
+    parser_build.add_argument('--branch', '-B', default='master', help="Branch to find commit in")
+    parser_build.add_argument('--branch2', help="Branch to find comparision revisions in")
+    parser_build.add_argument('--commit', help="Revision to search for")
+    parser_build.add_argument('--commit-number', help="Revision number to search for, redundant if --commit is specified")
+    parser_build.add_argument('--commit2', help="Revision to compare with")
+    parser_build.add_argument('--commit-number2', help="Revision number to compare with, redundant if --commit2 is specified")
 
-    parser_build = subparsers.add_parser('regression-git', help='regression git analysis',
-                                         description='regression analysis comparing base result set to target '
-                                                     'result set',
-                                         group='analysis')
-    parser_build.set_defaults(func=regression_git)
-    parser_build.add_argument('source_dir',
-                              help='source directory that contain the git repository with test result files')
-    parser_build.add_argument('base_git_branch',
-                              help='base git branch that provide the files for base result set')
-    parser_build.add_argument('target_git_branch',
-                              help='target git branch that provide the files for target result set for comparison with '
-                                   'base result')
