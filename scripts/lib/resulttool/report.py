@@ -1,6 +1,7 @@
 # test result tool - report text based test results
 #
 # Copyright (c) 2019, Intel Corporation.
+# Copyright (c) 2019, Linux Foundation
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms and conditions of the GNU General Public License,
@@ -14,100 +15,120 @@
 import os
 import glob
 import json
-from resulttool.resultsutils import checkout_git_dir, load_json_file, get_dict_value, get_directory_files
+import resulttool.resultutils as resultutils
+from oeqa.utils.git import GitRepo
+import oeqa.utils.gitarchive as gitarchive
+
 
 class ResultsTextReport(object):
+    def __init__(self):
+        self.ptests = {}
+        self.result_types = {'passed': ['PASSED', 'passed'],
+                             'failed': ['FAILED', 'failed', 'ERROR', 'error', 'UNKNOWN'],
+                             'skipped': ['SKIPPED', 'skipped']}
+
+
+    def handle_ptest_result(self, k, status, result):
+        if k == 'ptestresult.sections':
+            return
+        _, suite, test = k.split(".", 2)
+        # Handle 'glib-2.0'
+        if suite not in result['ptestresult.sections']:
+            try:
+                _, suite, suite1, test = k.split(".", 3)
+                if suite + "." + suite1 in result['ptestresult.sections']:
+                    suite = suite + "." + suite1
+            except ValueError:
+                pass
+        if suite not in self.ptests:
+            self.ptests[suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+        for tk in self.result_types:
+            if status in self.result_types[tk]:
+                self.ptests[suite][tk] += 1
+        if suite in result['ptestresult.sections']:
+            if 'duration' in result['ptestresult.sections'][suite]:
+                self.ptests[suite]['duration'] = result['ptestresult.sections'][suite]['duration']
+            if 'timeout' in result['ptestresult.sections'][suite]:
+                self.ptests[suite]['duration'] += " T"
 
     def get_aggregated_test_result(self, logger, testresult):
         test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
-        result_types = {'passed': ['PASSED', 'passed'],
-                        'failed': ['FAILED', 'failed', 'ERROR', 'error', 'UNKNOWN'],
-                        'skipped': ['SKIPPED', 'skipped']}
-        result = get_dict_value(logger, testresult, 'result')
+        result = testresult.get('result', [])
         for k in result:
-            test_status = get_dict_value(logger, result[k], 'status')
-            for tk in result_types:
-                if test_status in result_types[tk]:
+            test_status = result[k].get('status', [])
+            for tk in self.result_types:
+                if test_status in self.result_types[tk]:
                     test_count_report[tk] += 1
-            if test_status in result_types['failed']:
+            if test_status in self.result_types['failed']:
                 test_count_report['failed_testcases'].append(k)
+            if k.startswith("ptestresult."):
+                self.handle_ptest_result(k, test_status, result)
         return test_count_report
 
-    def get_test_result_percentage(self, test_result_count):
-        total_tested = test_result_count['passed'] + test_result_count['failed'] + test_result_count['skipped']
-        test_percent_report = {'passed': 0, 'failed': 0, 'skipped': 0}
-        for k in test_percent_report:
-            test_percent_report[k] = format(test_result_count[k] / total_tested * 100, '.2f')
-        return test_percent_report
-
-    def add_test_configurations(self, test_report, source_dir, file, result_id):
-        test_report['file_dir'] = self._get_short_file_dir(source_dir, file)
-        test_report['result_id'] = result_id
-        test_report['test_file_dir_result_id'] = '%s_%s' % (test_report['file_dir'], test_report['result_id'])
-
-    def _get_short_file_dir(self, source_dir, file):
-        file_dir = os.path.dirname(file)
-        source_dir = source_dir[:-1] if source_dir[-1] == '/' else source_dir
-        if file_dir == source_dir:
-            return 'None'
-        return file_dir.replace(source_dir, '')
-
-    def get_max_string_len(self, test_result_list, key, default_max_len):
-        max_len = default_max_len
-        for test_result in test_result_list:
-            value_len = len(test_result[key])
-            if value_len > max_len:
-                max_len = value_len
-        return max_len
-
-    def print_test_report(self, template_file_name, test_count_reports, test_percent_reports,
-                          max_len_dir, max_len_result_id):
+    def print_test_report(self, template_file_name, test_count_reports):
         from jinja2 import Environment, FileSystemLoader
         script_path = os.path.dirname(os.path.realpath(__file__))
         file_loader = FileSystemLoader(script_path + '/template')
         env = Environment(loader=file_loader, trim_blocks=True)
         template = env.get_template(template_file_name)
-        output = template.render(test_count_reports=test_count_reports,
-                                 test_percent_reports=test_percent_reports,
-                                 max_len_dir=max_len_dir,
-                                 max_len_result_id=max_len_result_id)
-        print('Printing text-based test report:')
+        havefailed = False
+        haveptest = bool(self.ptests)
+        reportvalues = []
+        cols = ['passed', 'failed', 'skipped']
+        maxlen = {'passed' : 0, 'failed' : 0, 'skipped' : 0, 'result_id': 0, 'testseries' : 0, 'ptest' : 0 }
+        for line in test_count_reports:
+            total_tested = line['passed'] + line['failed'] + line['skipped']
+            vals = {}
+            vals['result_id'] = line['result_id']
+            vals['testseries'] = line['testseries']
+            vals['sort'] = line['testseries'] + "_" + line['result_id']
+            vals['failed_testcases'] = line['failed_testcases']
+            for k in cols:
+                vals[k] = "%d (%s%%)" % (line[k], format(line[k] / total_tested * 100, '.0f'))
+            for k in maxlen:
+                if k in vals and len(vals[k]) > maxlen[k]:
+                    maxlen[k] = len(vals[k])
+            reportvalues.append(vals)
+            if line['failed_testcases']:
+                havefailed = True
+        for ptest in self.ptests:
+            if len(ptest) > maxlen['ptest']:
+                maxlen['ptest'] = len(ptest)
+        output = template.render(reportvalues=reportvalues,
+                                 havefailed=havefailed,
+                                 haveptest=haveptest,
+                                 ptests=self.ptests,
+                                 maxlen=maxlen)
         print(output)
 
-    def view_test_report(self, logger, source_dir, git_branch):
-        if git_branch:
-            checkout_git_dir(source_dir, git_branch)
+    def view_test_report(self, logger, source_dir, tag):
         test_count_reports = []
-        test_percent_reports = []
-        for file in get_directory_files(source_dir, ['.git'], 'testresults.json'):
-            logger.debug('Computing result for test result file: %s' % file)
-            testresults = load_json_file(file)
-            for k in testresults:
-                test_count_report = self.get_aggregated_test_result(logger, testresults[k])
-                test_percent_report = self.get_test_result_percentage(test_count_report)
-                self.add_test_configurations(test_count_report, source_dir, file, k)
-                self.add_test_configurations(test_percent_report, source_dir, file, k)
+        if tag:
+            repo = GitRepo(source_dir)
+            testresults = resultutils.git_get_result(repo, [tag])
+        else:
+            testresults = resultutils.load_resultsdata(source_dir)
+        for testsuite in testresults:
+            for resultid in testresults[testsuite]:
+                result = testresults[testsuite][resultid]
+                test_count_report = self.get_aggregated_test_result(logger, result)
+                test_count_report['testseries'] = result['configuration']['TESTSERIES']
+                test_count_report['result_id'] = resultid
                 test_count_reports.append(test_count_report)
-                test_percent_reports.append(test_percent_report)
-        max_len_dir = self.get_max_string_len(test_count_reports, 'file_dir', len('file_dir'))
-        max_len_result_id = self.get_max_string_len(test_count_reports, 'result_id', len('result_id'))
-        self.print_test_report('test_report_full_text.txt', test_count_reports, test_percent_reports,
-                               max_len_dir, max_len_result_id)
+        self.print_test_report('test_report_full_text.txt', test_count_reports)
 
 def report(args, logger):
     report = ResultsTextReport()
-    report.view_test_report(logger, args.source_dir, args.git_branch)
+    report.view_test_report(logger, args.source_dir, args.tag)
     return 0
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
-    parser_build = subparsers.add_parser('report', help='report test result summary',
-                                         description='report text-based test result summary from the source directory',
+    parser_build = subparsers.add_parser('report', help='summarise test results',
+                                         description='print a text-based summary of the test results',
                                          group='analysis')
     parser_build.set_defaults(func=report)
     parser_build.add_argument('source_dir',
-                              help='source directory that contain the test result files for reporting')
-    parser_build.add_argument('-b', '--git-branch', default='',
-                              help='(optional) default assume source directory contains all available files for '
-                                   'reporting unless a git branch was provided where it will try to checkout '
-                                   'the provided git branch assuming source directory was a git repository')
+                              help='source file/directory that contain the test result files to summarise')
+    parser_build.add_argument('-t', '--tag', default='',
+                              help='source_dir is a git repository, report on the tag specified from that repository')

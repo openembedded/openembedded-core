@@ -18,7 +18,11 @@ import sys
 import datetime
 import re
 from oeqa.core.runner import OETestResultJSONHelper
-from resulttool.resultsutils import load_json_file
+
+def load_json_file(file):
+    with open(file, "r") as f:
+        return json.load(f)
+
 
 class ManualTestRunner(object):
     def __init__(self):
