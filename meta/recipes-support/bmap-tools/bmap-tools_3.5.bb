@@ -9,14 +9,15 @@ SECTION = "console/utils"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "https://github.com/intel/${BPN}/releases/download/v${PV}/${BP}.tgz"
+SRC_URI = "git://github.com/intel/${BPN}"
 
-SRC_URI[md5sum] = "883420183611aa137cbaf68a91ef0d7e"
-SRC_URI[sha256sum] = "0064891270c180c190f41925b0f6fb9cecac3056f1168d2592dbe90e5f226c0a"
+SRCREV = "db7087b883bf52cbff063ad17a41cc1cbb85104d"
+S = "${WORKDIR}/git"
+PV .= "+git${SRCPV}"
 
-UPSTREAM_CHECK_URI = "https://github.com/intel/${BPN}/releases"
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
-RDEPENDS_${PN} = "python3-core python3-compression python3-mmap python3-setuptools python3-fcntl"
+RDEPENDS_${PN} = "python3-core python3-compression python3-mmap python3-setuptools python3-fcntl python3-six"
 
 inherit python3native
 inherit setuptools3
