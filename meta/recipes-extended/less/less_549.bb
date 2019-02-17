@@ -21,14 +21,15 @@ SECTION = "console/utils"
 
 LICENSE = "GPLv3+ | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://LICENSE;md5=2ef3e4b8dafc85612bc5254b8081e234"
+                    file://LICENSE;md5=ba01d0cab7f62f7f2204c7780ff6a87d \
+                    "
 DEPENDS = "ncurses"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
 	  "
 
-SRC_URI[md5sum] = "6a39bccf420c946b0fd7ffc64961315b"
-SRC_URI[sha256sum] = "503f91ab0af4846f34f0444ab71c4b286123f0044a4964f1ae781486c617f2e2"
+SRC_URI[md5sum] = "d12863d348077739a4d3bc67ad9b7f00"
+SRC_URI[sha256sum] = "eec42357903faabfb294ffcc41ff08cbb29db54db46568cd8d0ed15a0482e19d"
 
 UPSTREAM_CHECK_URI = "http://www.greenwoodsoftware.com/less/download.html"
 
