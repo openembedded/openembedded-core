@@ -77,10 +77,12 @@ FILES_${PN}-codegen = "${datadir}/glib-2.0/codegen/*.py \
                        ${bindir}/gdbus-codegen"
 FILES_${PN}-utils = "${bindir}/*"
 
-RRECOMMENDS_${PN} += "shared-mime-info"
+SHAREDMIMEDEP = "shared-mime-info"
+SHAREDMIMEDEP_class-native = ""
 # When cross compiling for Windows we don't want to include this
-RRECOMMENDS_${PN}_remove_mingw32 = "shared-mime-info"
-RRECOMMENDS_${PN}_class-native = ""
+SHAREDMIMEDEP_mingw32 = ""
+
+RRECOMMENDS_${PN} += "${SHAREDMIMEDEP}"
 
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
