@@ -9,8 +9,8 @@ PE = "1"
 SRC_URI = "${DEBIAN_MIRROR}/main/n/${BPN}/${BPN}_${PV}.tar.xz \
            file://netbase-add-rpcbind-as-an-alias-to-sunrpc.patch"
 
-SRC_URI[md5sum] = "15f2d9b3783802f7f48f6734b6540ac4"
-SRC_URI[sha256sum] = "309bddc69a43b98e5a450992b70cdfc0e3d1afb9107bc631d04b0714be98f88b"
+SRC_URI[md5sum] = "7ad156272c5a42f49c73386ff39c8624"
+SRC_URI[sha256sum] = "5d93a099deb28869b7306e914700fafbd293b55bdb5df05a5aa6effd0af5930c"
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/netbase/"
 do_install () {
