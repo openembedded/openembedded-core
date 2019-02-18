@@ -68,8 +68,8 @@ do_prep_locale_tree() {
 		gunzip $i
 	done
 	tar -cf - -C ${LOCALETREESRC}${base_libdir} -p . | tar -xf - -C $treedir/${base_libdir}
-	if [ -f ${STAGING_DIR_NATIVE}${prefix_native}/lib/libgcc_s.* ]; then
-		tar -cf - -C ${STAGING_DIR_NATIVE}/${prefix_native}/${base_libdir} -p libgcc_s.* | tar -xf - -C $treedir/${base_libdir}
+	if [ -f ${STAGING_LIBDIR_NATIVE}/libgcc_s.* ]; then
+		tar -cf - -C ${STAGING_LIBDIR_NATIVE} -p libgcc_s.* | tar -xf - -C $treedir/${base_libdir}
 	fi
 	install -m 0755 ${LOCALETREESRC}${bindir}/localedef $treedir/${base_bindir}
 }
@@ -278,7 +278,7 @@ python package_do_split_gconvs () {
             qemu_options = d.getVar('QEMU_OPTIONS')
 
             cmd = "PSEUDO_RELOADED=YES PATH=\"%s\" I18NPATH=\"%s\" %s -L %s \
-                -E LD_LIBRARY_PATH=%s %s %s/bin/localedef %s" % \
+                -E LD_LIBRARY_PATH=%s %s %s${base_bindir}/localedef %s" % \
                 (path, i18npath, qemu, treedir, ldlibdir, qemu_options, treedir, localedef_opts)
 
         commands["%s/%s" % (outputpath, name)] = cmd
