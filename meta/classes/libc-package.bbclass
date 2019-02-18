@@ -67,7 +67,12 @@ do_prep_locale_tree() {
 	for i in $treedir/${datadir}/i18n/charmaps/*gz; do 
 		gunzip $i
 	done
-	tar -cf - -C ${LOCALETREESRC}${base_libdir} -p . | tar -xf - -C $treedir/${base_libdir}
+	# The extract pattern "./l*.so*" is carefully selected so that it will
+	# match ld*.so and lib*.so*, but not any files in the gconv directory
+	# (if it exists). This makes sure we only unpack the files we need.
+	# This is important in case usrmerge is set in DISTRO_FEATURES, which
+	# means ${base_libdir} == ${libdir}.
+	tar -cf - -C ${LOCALETREESRC}${base_libdir} -p . | tar -xf - -C $treedir/${base_libdir} --wildcards './l*.so*'
 	if [ -f ${STAGING_LIBDIR_NATIVE}/libgcc_s.* ]; then
 		tar -cf - -C ${STAGING_LIBDIR_NATIVE} -p libgcc_s.* | tar -xf - -C $treedir/${base_libdir}
 	fi
