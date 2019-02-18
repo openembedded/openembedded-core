@@ -4,7 +4,6 @@ LICENSE = "GPLv3+"
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz \
            file://run-ptest \
-           file://gnulib.patch \
           "
 SRC_URI_append_class-target = " file://wrong-path-fix.patch"
 
@@ -35,6 +34,5 @@ do_install_ptest() {
             ${B}/tests/Makefile > ${D}${PTEST_PATH}/src/tests/Makefile
 }
 
-SRC_URI[md5sum] = "929d6a6b832f75b28e3eeeafb30c1d9b"
-SRC_URI[sha256sum] = "5d2d3a3432ef32f24cdb060d278834507b481a75adeca18850c73592f778f6ad"
-
+SRC_URI[md5sum] = "cf9ee51aff167ff69844d5d7d71c8b20"
+SRC_URI[sha256sum] = "c91f74430bf7bc20402e1f657d0b252cb80aa66ba333a25704512af346633c68"
