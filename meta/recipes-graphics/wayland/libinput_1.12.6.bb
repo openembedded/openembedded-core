@@ -9,8 +9,8 @@ DEPENDS = "libevdev udev mtdev"
 
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
            "
-SRC_URI[md5sum] = "083d6bf311d5e1e3a62440dc634bb8f0"
-SRC_URI[sha256sum] = "f266ff861a2e7a97e1402c4345e3547b900efde68adbd40e56403e2617fee255"
+SRC_URI[md5sum] = "8cf10cc0fdfab865b105dd28283fa0fd"
+SRC_URI[sha256sum] = "12b4023a3fc683d3d8127db573bdf925a2ef366615042f69c87e57c32a50f45d"
 
 UPSTREAM_CHECK_REGEX = "libinput-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 inherit meson pkgconfig lib_package
