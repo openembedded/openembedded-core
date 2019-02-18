@@ -348,11 +348,14 @@ python package_do_split_gconvs () {
         makefile = oe.path.join(d.getVar("WORKDIR"), "locale-tree", "Makefile")
         m = open(makefile, "w")
         m.write("all: %s\n\n" % " ".join(commands.keys()))
-        for cmd in commands:
+        total = len(commands)
+        for i, cmd in enumerate(commands):
             m.write(cmd + ":\n")
+            m.write("\t@echo 'Progress %d/%d'\n" % (i, total))
             m.write("\t" + commands[cmd] + "\n\n")
         m.close()
         d.setVar("EXTRA_OEMAKE", "-C %s ${PARALLEL_MAKE}" % (os.path.dirname(makefile)))
+        d.setVarFlag("oe_runmake", "progress", "outof:Progress\s(\d+)/(\d+)")
         bb.note("Executing binary locale generation makefile")
         bb.build.exec_func("oe_runmake", d)
         bb.note("collecting binary locales from locale tree")
