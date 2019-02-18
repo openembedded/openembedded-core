@@ -20,5 +20,5 @@ XORG_PN = "libXau"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "685f8abbffa6d145c0f930f00703b21b"
-SRC_URI[sha256sum] = "fdd477320aeb5cdd67272838722d6b7d544887dfe7de46e1e7cc0c27c2bea4f2"
+SRC_URI[md5sum] = "c5f16288f2da9f071b29111d68797480"
+SRC_URI[sha256sum] = "ccf8cbf0dbf676faa2ea0a6d64bcc3b6746064722b606c8c52917ed00dcb73ec"
