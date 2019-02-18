@@ -12,6 +12,8 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0001-python-module-do-not-manipulate-the-environment-when.patch \
            file://disable-rpath-handling.patch \
            file://cross-libdir.patch \
+           file://0001-modules-windows-split-WINDRES-env-variable.patch \
+           file://0002-environment.py-detect-windows-also-if-the-system-str.patch \
            "
 SRC_URI[sha256sum] = "fb0395c4ac208eab381cd1a20571584bdbba176eb562a7efa9cb17cace0e1551"
 SRC_URI[md5sum] = "3c35b91e8040901034809576d54007c6"
