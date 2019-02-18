@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://lib/LICENSE;md5=ebc2ea4814a64de7708f1571904b32cc \
 
 PE = "1"
 
-SRCREV = "b3692db46d2b23a7c0af2d5e69988c94f126e10a"
+SRCREV = "641b453d9db536ee020851bfcb1dc39f61006f0a"
 
 SRC_URI = "git://github.com/lz4/lz4.git \
            file://run-ptest \
