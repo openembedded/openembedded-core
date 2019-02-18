@@ -15,8 +15,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-Run-installation-commands-as-shell-jobs.patch \
            "
 
-SRC_URI[md5sum] = "b25b2d82cbebf2cc9cd469457b604f2c"
-SRC_URI[sha256sum] = "7aae8c1dffd6772fd1a21a3d365a0ea28b7c3988bdbbeafbf8742cda68242150"
+SRC_URI[md5sum] = "db3fd812821d72fdd9a3c7d622a95b35"
+SRC_URI[sha256sum] = "6d752a2b1bc668483956d4485c39cad1642d9358e133ff689526e43674a4e1ce"
 
 do_install_append() {
 	# Build uses gtk-encode-symbolic-svg to create png versions:
