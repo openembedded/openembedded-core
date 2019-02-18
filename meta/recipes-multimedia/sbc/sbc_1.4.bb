@@ -14,8 +14,8 @@ DEPENDS = "libsndfile1"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "2d8b7841f2c11ab287718d562f2b981c"
-SRC_URI[sha256sum] = "e61022cf576f14190241e7071753fdacdce5d1dea89ffd704110fc50be689309"
+SRC_URI[md5sum] = "800fb0908899baa48dc216d8e156cc05"
+SRC_URI[sha256sum] = "518bf46e6bb3dc808a95e1eabad26fdebe8a099c1e781c27ed7fca6c2f4a54c9"
 
 inherit autotools pkgconfig
 
