@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf \
            file://0001-include-missing-string-and-errno.h-headers.patch \
            "
 
-SRCREV = "04b71d78a2170e930a3c248d48a231b19f823064"
+SRCREV = "bd23204aa83d10e3d293a9f2d496cba6070f6a4d"
 
 S = "${WORKDIR}/git"
 
