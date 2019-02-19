@@ -4,13 +4,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 require diffutils.inc
 
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
-           file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            file://run-ptest \
 "
-SRC_URI_append_libc-glibc = " file://0001-explicitly-disable-replacing-getopt.patch"
 
-SRC_URI[md5sum] = "07cf286672ced26fba54cd0313bdc071"
-SRC_URI[sha256sum] = "d621e8bdd4b573918c8145f7ae61817d1be9deb4c8d2328a65cea8e11d783bd6"
+SRC_URI[md5sum] = "4824adc0e95dbbf11dfbdfaad6a1e461"
+SRC_URI[sha256sum] = "b3a7a6221c3dc916085f0d205abf6b8e1ba443d4dd965118da364a1dc1cb3a26"
 
 EXTRA_OECONF += "ac_cv_path_PR_PROGRAM=${bindir}/pr --without-libsigsegv-prefix"
 
