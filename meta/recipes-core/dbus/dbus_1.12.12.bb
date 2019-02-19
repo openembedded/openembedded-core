@@ -18,8 +18,8 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
 "
 
-SRC_URI[md5sum] = "c3e12b4206e2a7da39d7cc42567790ef"
-SRC_URI[sha256sum] = "4b693d24976258c3f2fa9cc33ad9288c5fbfa7a16481dbd9a8a429f7aa8cdcf7"
+SRC_URI[md5sum] = "ea11069521beeee4e47f0086596a43c8"
+SRC_URI[sha256sum] = "9546f226011a1e5d9d77245fe5549ef25af4694053189d624d0d6ac127ecf5f8"
 
 inherit useradd autotools pkgconfig gettext update-rc.d upstream-version-is-even
 
