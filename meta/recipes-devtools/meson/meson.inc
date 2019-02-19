@@ -15,8 +15,8 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0001-modules-windows-split-WINDRES-env-variable.patch \
            file://0002-environment.py-detect-windows-also-if-the-system-str.patch \
            "
-SRC_URI[sha256sum] = "fb0395c4ac208eab381cd1a20571584bdbba176eb562a7efa9cb17cace0e1551"
-SRC_URI[md5sum] = "3c35b91e8040901034809576d54007c6"
+SRC_URI[sha256sum] = "ef9f14326ec1e30d3ba1a26df0f92826ede5a79255ad723af78a2691c37109fd"
+SRC_URI[md5sum] = "0267b0871266056184c484792572c682"
 
 SRC_URI_append_class-native = " \
     file://0001-Make-CPU-family-warnings-fatal.patch \

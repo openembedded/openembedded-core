@@ -1,7 +1,7 @@
-From d058d0f1d8833d99e8a3d3b9bcc383db23b52671 Mon Sep 17 00:00:00 2001
+From 2db829d865bb6464ac15dbb4a58c9a675e296866 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 3 Jul 2018 13:59:09 +0100
-Subject: [PATCH 1/2] Make CPU family warnings fatal
+Subject: [PATCH] Make CPU family warnings fatal
 
 Upstream-Status: Inappropriate [OE specific]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
@@ -34,6 +34,3 @@ index 2ccd31e..5fcf9df 100644
  
          endian = literal['endian']
          if endian not in ('little', 'big'):
--- 
-2.17.1
-

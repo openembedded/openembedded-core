@@ -1,7 +1,7 @@
-From ffab5c5046da29fc20b074d21f6de46520cee58c Mon Sep 17 00:00:00 2001
+From f8419d5f279f1fb9b5e7eead4f1579bce7cb0e4e Mon Sep 17 00:00:00 2001
 From: Peter Kjellerstedt <pkj@axis.com>
 Date: Thu, 26 Jul 2018 16:32:49 +0200
-Subject: [PATCH 2/2] Support building allarch recipes again
+Subject: [PATCH] Support building allarch recipes again
 
 This registers "allarch" as a known CPU family.
 
@@ -24,6 +24,3 @@ index 5fcf9df..b4fc0dc 100644
      'aarch64',
      'arc',
      'arm',
--- 
-2.17.1
-
