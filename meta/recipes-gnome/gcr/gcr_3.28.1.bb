@@ -12,8 +12,8 @@ inherit gnomebase gtk-icon-cache gtk-doc distro_features_check upstream-version-
 # depends on gtk+3, but also x11 through gtk+-x11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRC_URI[archive.md5sum] = "5321319307dad34dca2fd52e7c9c01ab"
-SRC_URI[archive.sha256sum] = "15e175d1da7ec486d59749ba34906241c442898118ce224a7b70bf2e849faf0b"
+SRC_URI[archive.md5sum] = "afd88cacfd54c1ac5b3e0eb35e3aa674"
+SRC_URI[archive.sha256sum] = "95204aa2111c301778ebfbe60975ce3ed698c958430ffcc2a785ac5e593d168b"
 
 FILES_${PN} += " \
     ${datadir}/dbus-1 \
