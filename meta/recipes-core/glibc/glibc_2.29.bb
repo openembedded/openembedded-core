@@ -56,6 +56,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-intl-Emit-no-lines-in-bison-generated-files.patch \
            file://0029-inject-file-assembly-directives.patch \
            file://0030-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           file://0001-x86-64-memcmp-Use-unsigned-Jcc-instructions-on-size-.patch \
 "
 
 S = "${WORKDIR}/git"
