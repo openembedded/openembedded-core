@@ -25,11 +25,9 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://mips64_cpu_detection.patch \
-           file://CVE-2018-15822.patch \
-           file://0001-postproc-postprocess_template-remove-FF_REG_sp-from-.patch \
            "
-SRC_URI[md5sum] = "ae0bfdf809306a212b4f0e6eb8d1c75e"
-SRC_URI[sha256sum] = "a95c0cc9eb990e94031d2183f2e6e444cc61c99f6f182d1575c433d62afb2f97"
+SRC_URI[md5sum] = "720fc84617a2c38aeae79aff3689a567"
+SRC_URI[sha256sum] = "373749824dfd334d84e55dff406729edfd1606575ee44dd485d97d45ea4d2d86"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET_armv4 = "arm"
