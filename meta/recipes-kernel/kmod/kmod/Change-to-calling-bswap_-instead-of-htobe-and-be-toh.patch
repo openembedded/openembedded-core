@@ -1,4 +1,7 @@
-Subject: Change to calling bswap_* instead of htobe* and be*toh
+From 38d6871d9c98e0080426ea375e390728485b2bc2 Mon Sep 17 00:00:00 2001
+From: Ting Liu <b28495@freescale.com>
+Date: Tue, 10 Sep 2013 06:00:20 +0000
+Subject: [PATCH] Change to calling bswap_* instead of htobe* and be*toh
 
 We can't use htobe* and be*toh functions because they are not
 available on older versions of glibc, For example, shipped on Centos 5.5.
@@ -9,12 +12,13 @@ Upstream-Status: Inappropriate
 
 Signed-off-by: Ting Liu <b28495@freescale.com>
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
 ---
  libkmod/libkmod-signature.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/libkmod/libkmod-signature.c b/libkmod/libkmod-signature.c
-index 6fc06fc..912185a 100644
+index 48d0145..dd2c6fa 100644
 --- a/libkmod/libkmod-signature.c
 +++ b/libkmod/libkmod-signature.c
 @@ -18,6 +18,7 @@
@@ -23,9 +27,9 @@ index 6fc06fc..912185a 100644
  #include <endian.h>
 +#include <byteswap.h>
  #include <inttypes.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -127,7 +128,7 @@ bool kmod_module_signature_info(const struct kmod_file *file, struct kmod_signat
+ #ifdef ENABLE_OPENSSL
+ #include <openssl/cms.h>
+@@ -343,7 +344,7 @@ bool kmod_module_signature_info(const struct kmod_file *file, struct kmod_signat
  			modsig->hash >= PKEY_HASH__LAST ||
  			modsig->id_type >= PKEY_ID_TYPE__LAST)
  		return false;
@@ -34,6 +38,3 @@ index 6fc06fc..912185a 100644
  	if (sig_len == 0 ||
  	    size < (int64_t)(modsig->signer_len + modsig->key_id_len + sig_len))
  		return false;
--- 
-1.9.1
-
