@@ -1,0 +1,38 @@
+From 48cbdd56036728ffea431ad63cf5e2ad05cef69c Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 14 Feb 2019 18:06:25 +0100
+Subject: [PATCH] Fix a couple of decisions around cross-compilation
+
+1. gobject-introspection can be build when cross compiling
+2. generating loaders.cache requires running a target binary which
+we do elsewhere (in postinsts)
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ gdk-pixbuf/meson.build | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/gdk-pixbuf/meson.build b/gdk-pixbuf/meson.build
+index 77c162b..fc3eb33 100644
+--- a/gdk-pixbuf/meson.build
++++ b/gdk-pixbuf/meson.build
+@@ -230,6 +230,7 @@ foreach bin: gdkpixbuf_bin
+   set_variable(bin_name.underscorify(), bin)
+ endforeach
+ 
++if not meson.is_cross_build()
+ # The 'loaders.cache' used for testing, so we don't accidentally
+ # load the installed cache; we always build it by default
+ loaders_cache = custom_target('loaders.cache',
+@@ -241,8 +242,9 @@ loaders_cache = custom_target('loaders.cache',
+                               ],
+                               build_by_default: true)
+ loaders_dep = declare_dependency(sources: [ loaders_cache ])
++endif
+ 
+-build_gir = get_option('with_gir') and not meson.is_cross_build()
++build_gir = get_option('with_gir')
+ if build_gir
+   gir_args = [
+     '--quiet',

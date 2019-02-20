@@ -1,0 +1,31 @@
+From b287cb313dbfac3257f1ab451b19ba59580f78e1 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 18 Feb 2019 16:00:12 +0100
+Subject: [PATCH] Disable tests in native builds.
+
+They have found to be problematic at least on Centos 7:
+https://autobuilder.yoctoproject.org/typhoon/#/builders/50/builds/296/steps/7/logs/step1b
+
+With autotools this was not a problem because it had a configuration
+switch for disabling test, which was used. Meson has no such facility :(
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 92c4049..0871c84 100644
+--- a/meson.build
++++ b/meson.build
+@@ -397,7 +397,7 @@ endif
+ # i18n
+ subdir('po')
+ 
+-subdir('tests')
++#subdir('tests')
+ subdir('thumbnailer')
+ 
+ # Documentation

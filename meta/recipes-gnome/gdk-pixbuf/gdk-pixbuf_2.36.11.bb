@@ -13,18 +13,42 @@ DEPENDS = "glib-2.0 gdk-pixbuf-native shared-mime-info"
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
-           file://hardcoded_libtool.patch \
-           file://extending-libinstall-dependencies.patch \
            file://run-ptest \
            file://fatal-loader.patch \
            file://0001-Work-around-thumbnailer-cross-compile-failure.patch \
-           file://0001-Fix-without-libtiff-not-having-an-effect.patch \
+           file://0001-Fix-a-couple-of-decisions-around-cross-compilation.patch \
+           file://0001-loaders.cache-depend-on-loaders-being-fully-build.patch \
+           "
+
+SRC_URI_append_class-target = " \
+           file://0002-Work-around-thumbnailer-cross-compile-failure.patch \
+           "
+SRC_URI_append_class-nativesdk = " \
+           file://0002-Work-around-thumbnailer-cross-compile-failure.patch \
+           file://0001-Disable-tests-in-native-builds.patch \
+           "
+SRC_URI_append_class-native = " \
+           file://0001-Disable-tests-in-native-builds.patch \
            "
 
 SRC_URI[md5sum] = "6e84e5485c17ce7c25df77fe76eb2d6a"
 SRC_URI[sha256sum] = "ae62ab87250413156ed72ef756347b10208c00e76b222d82d9ed361ed9dde2f3"
 
-inherit autotools pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
+inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
+
+GTKDOC_ENABLE_FLAG = "-Dwith_docs=true"
+GTKDOC_DISABLE_FLAG = "-Dwith_docs=false"
+
+GI_ENABLE_FLAG = "-Dwith_gir=true"
+GI_DISABLE_FLAG = "-Dwith_gir=false"
+
+EXTRA_OEMESON_append_class-nativesdk = " ${GI_DISABLE_FLAG}"
+
+EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${GI_ENABLE_FLAG}', \
+                                                                                       '${GI_DISABLE_FLAG}', d)} "
+
+EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
+                                                                                     '${GTKDOC_DISABLE_FLAG}', d)} "
 
 LIBV = "2.10.0"
 
@@ -34,12 +58,12 @@ PACKAGECONFIG ??= "${GDK_PIXBUF_LOADERS}"
 PACKAGECONFIG_linuxstdbase = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} ${GDK_PIXBUF_LOADERS}"
 PACKAGECONFIG_class-native = "${GDK_PIXBUF_LOADERS}"
 
-PACKAGECONFIG[png] = "--with-libpng,--without-libpng,libpng"
-PACKAGECONFIG[jpeg] = "--with-libjpeg,--without-libjpeg,jpeg"
-PACKAGECONFIG[tiff] = "--with-libtiff,--without-libtiff,tiff"
-PACKAGECONFIG[jpeg2000] = "--with-libjasper,--without-libjasper,jasper"
+PACKAGECONFIG[png] = "-Denable_png=true,-Denable_png=false,libpng"
+PACKAGECONFIG[jpeg] = "-Denable_jpeg=true,-Denable_jpeg=false,jpeg"
+PACKAGECONFIG[tiff] = "-Denable_tiff=true,-Denable_tiff=false,tiff"
+PACKAGECONFIG[jpeg2000] = "-Denable_jasper=true,-Denable_jasper=false,jasper"
 
-PACKAGECONFIG[x11] = "--with-x11,--without-x11,virtual/libx11"
+PACKAGECONFIG[x11] = ",,virtual/libx11"
 
 PACKAGES =+ "${PN}-xlib"
 
@@ -81,6 +105,11 @@ do_install_append() {
 	# Move gdk-pixbuf-query-loaders into libdir so it is always available
 	# in multilib builds.
 	mv ${D}/${bindir}/gdk-pixbuf-query-loaders ${D}/${libdir}/gdk-pixbuf-2.0/
+
+	# Do not install ptests if ptest is not enabled; gdk-pixbuf has no configuration option for this
+	if [ "${PTEST_ENABLED}" != "1" ]; then
+		rm -rf ${D}${datadir}/installed-tests
+	fi
 }
 
 do_install_append_class-native() {
