@@ -16,7 +16,7 @@ inherit autotools gtk-doc pkgconfig manpages
 
 SRCREV = "58133a96c894c043e48c74ddf0bfe8db90bac62f"
 # Lookout for PV bump too when SRCREV is changed
-PV = "26+git${SRCPV}"
+PV = "26"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git \
            file://depmod-search.conf \
