@@ -27,6 +27,8 @@ inherit deploy kernel-arch
 
 COMPATIBLE_MACHINE ?= "^$"
 
+PROVIDES = "virtual/dtb"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SYSROOT_DIRS += "/boot/devicetree"
