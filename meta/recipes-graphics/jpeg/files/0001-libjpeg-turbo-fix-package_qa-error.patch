@@ -1,4 +1,4 @@
-From ce3bd4f0e46f738a9aec098e7c341ad6deeab9f2 Mon Sep 17 00:00:00 2001
+From 5cf847b5bef8dc3f9f89bd09dd5af4e6603f393c Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Mon, 27 Aug 2018 16:10:55 +0800
 Subject: [PATCH] libjpeg-turbo: fix package_qa error
@@ -16,17 +16,17 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  1 file changed, 4 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index efeb51a..bbebe55 100644
+index 2bc3458..ea3041e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -109,10 +109,6 @@ endif()
- 
- include(cmakescripts/GNUInstallDirs.cmake)
+@@ -189,10 +189,6 @@ endif()
+ report_option(ENABLE_SHARED "Shared libraries")
+ report_option(ENABLE_STATIC "Static libraries")
  
 -if(ENABLE_SHARED)
 -  set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR})
 -endif()
 -
- macro(report_directory var)
-   if(CMAKE_INSTALL_${var} STREQUAL CMAKE_INSTALL_FULL_${var})
-     message(STATUS "CMAKE_INSTALL_${var} = ${CMAKE_INSTALL_${var}}")
+ if(WITH_12BIT)
+   set(WITH_ARITH_DEC 0)
+   set(WITH_ARITH_ENC 0)
