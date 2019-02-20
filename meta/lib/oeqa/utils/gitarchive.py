@@ -17,6 +17,8 @@
 import os
 import re
 import sys
+from operator import attrgetter
+from collections import namedtuple
 from oeqa.utils.git import GitRepo, GitError
 
 class ArchiveError(Exception):
@@ -170,4 +172,73 @@ def gitarchive(data_dir, git_dir, no_create, bare, commit_msg_subject, commit_ms
             cmd.extend([push, branch_name] + notes_refs)
         log.info("Pushing data to remote")
         data_repo.run_cmd(cmd)
+
+# Container class for tester revisions
+TestedRev = namedtuple('TestedRev', 'commit commit_number tags')
+
+def get_test_runs(log, repo, tag_name, **kwargs):
+    """Get a sorted list of test runs, matching given pattern"""
+    # First, get field names from the tag name pattern
+    field_names = [m.group(1) for m in re.finditer(r'{(\w+)}', tag_name)]
+    undef_fields = [f for f in field_names if f not in kwargs.keys()]
+
+    # Fields for formatting tag name pattern
+    str_fields = dict([(f, '*') for f in field_names])
+    str_fields.update(kwargs)
+
+    # Get a list of all matching tags
+    tag_pattern = tag_name.format(**str_fields)
+    tags = repo.run_cmd(['tag', '-l', tag_pattern]).splitlines()
+    log.debug("Found %d tags matching pattern '%s'", len(tags), tag_pattern)
+
+    # Parse undefined fields from tag names
+    str_fields = dict([(f, r'(?P<{}>[\w\-.()]+)'.format(f)) for f in field_names])
+    str_fields['branch'] = r'(?P<branch>[\w\-.()/]+)'
+    str_fields['commit'] = '(?P<commit>[0-9a-f]{7,40})'
+    str_fields['commit_number'] = '(?P<commit_number>[0-9]{1,7})'
+    str_fields['tag_number'] = '(?P<tag_number>[0-9]{1,5})'
+    # escape parenthesis in fields in order to not messa up the regexp
+    fixed_fields = dict([(k, v.replace('(', r'\(').replace(')', r'\)')) for k, v in kwargs.items()])
+    str_fields.update(fixed_fields)
+    tag_re = re.compile(tag_name.format(**str_fields))
+
+    # Parse fields from tags
+    revs = []
+    for tag in tags:
+        m = tag_re.match(tag)
+        groups = m.groupdict()
+        revs.append([groups[f] for f in undef_fields] + [tag])
+
+    # Return field names and a sorted list of revs
+    return undef_fields, sorted(revs)
+
+def get_test_revs(log, repo, tag_name, **kwargs):
+    """Get list of all tested revisions"""
+    fields, runs = get_test_runs(log, repo, tag_name, **kwargs)
+
+    revs = {}
+    commit_i = fields.index('commit')
+    commit_num_i = fields.index('commit_number')
+    for run in runs:
+        commit = run[commit_i]
+        commit_num = run[commit_num_i]
+        tag = run[-1]
+        if not commit in revs:
+            revs[commit] = TestedRev(commit, commit_num, [tag])
+        else:
+            assert commit_num == revs[commit].commit_number, "Commit numbers do not match"
+            revs[commit].tags.append(tag)
+
+    # Return in sorted table
+    revs = sorted(revs.values(), key=attrgetter('commit_number'))
+    log.debug("Found %d tested revisions:\n    %s", len(revs),
+              "\n    ".join(['{} ({})'.format(rev.commit_number, rev.commit) for rev in revs]))
+    return revs
+
+def rev_find(revs, attr, val):
+    """Search from a list of TestedRev"""
+    for i, rev in enumerate(revs):
+        if getattr(rev, attr) == val:
+            return i
+    raise ValueError("Unable to find '{}' value '{}'".format(attr, val))
 
