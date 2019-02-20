@@ -5,7 +5,6 @@ PE = "1"
 SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
-           file://configure-libtool.patch \
            file://run-ptest \
            file://uclibc_musl_translation.patch \
            file://Enable-more-tests-while-cross-compiling.patch \
@@ -14,6 +13,9 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-Do-not-ignore-return-value-of-write.patch \
            file://0010-Do-not-hardcode-python-path-into-various-tools.patch \
            file://0001-Revert-Use-absolute-paths-in-pkg-config-files.patch \
+           file://0001-Set-host_machine-correctly-when-building-with-mingw3.patch \
+           file://0001-Do-not-write-bindir-into-pkg-config-files.patch \
+           file://0001-meson.build-do-not-hardcode-linux-as-the-host-system.patch \
            "
 
 SRC_URI_append_class-native = " file://relocate-modules.patch"
