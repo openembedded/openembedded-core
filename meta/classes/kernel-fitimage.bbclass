@@ -30,6 +30,13 @@ python __anonymous () {
         if image:
             d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_complete')
 
+	#check if there are any dtb providers
+        providerdtb = d.getVar("PREFERRED_PROVIDER_virtual/dtb")
+        if providerdtb:
+            d.appendVarFlag('do_assemble_fitimage', 'depends', ' virtual/dtb:do_populate_sysroot')
+            d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' virtual/dtb:do_populate_sysroot')
+            d.setVar('EXTERNAL_KERNEL_DEVICETREE', "${RECIPE_SYSROOT}/boot/devicetree")
+
         # Verified boot will sign the fitImage and append the public key to
         # U-Boot dtb. We ensure the U-Boot dtb is deployed before assembling
         # the fitImage:
@@ -373,7 +380,8 @@ fitimage_assemble() {
 	#
 	# Step 2: Prepare a DTB image section
 	#
-	if [ -n "${KERNEL_DEVICETREE}" ]; then
+
+	if [ -z "${EXTERNAL_KERNEL_DEVICETREE}" ] && [ -n "${KERNEL_DEVICETREE}" ]; then
 		dtbcount=1
 		for DTB in ${KERNEL_DEVICETREE}; do
 			if echo ${DTB} | grep -q '/dts/'; then
@@ -388,6 +396,16 @@ fitimage_assemble() {
 			DTB=$(echo "${DTB}" | tr '/' '_')
 			DTBS="${DTBS} ${DTB}"
 			fitimage_emit_section_dtb ${1} ${DTB} ${DTB_PATH}
+		done
+	fi
+
+	if [ -n "${EXTERNAL_KERNEL_DEVICETREE}" ]; then
+		dtbcount=1
+		for DTBFILE in ${EXTERNAL_KERNEL_DEVICETREE}/*.dtb; do
+			DTB=`basename ${DTBFILE}`
+			DTB=$(echo "${DTB}" | tr '/' '_')
+			DTBS="${DTBS} ${DTB}"
+			fitimage_emit_section_dtb ${1} ${DTB} ${DTBFILE}
 		done
 	fi
 
