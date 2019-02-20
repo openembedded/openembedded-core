@@ -11,8 +11,8 @@ SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2 \
            file://musl_dirent.patch \
 "
 
-SRC_URI[md5sum] = "8404e4c1fc5a3000228ab2b8ad674a65"
-SRC_URI[sha256sum] = "87592b86cb037c554375f5868bdd3cc57748aef38d6cb741c81065f0beac63b7"
+SRC_URI[md5sum] = "77afa35b696c8d760331fa0e12c2fac9"
+SRC_URI[sha256sum] = "577bd4463eea103bdfc662fc385789e2228dbeb399a1d0b98571ed9ce044f763"
 
 inherit autotools gettext texinfo
 
@@ -41,11 +41,6 @@ do_install_append_class-target() {
         mv ${D}${bindir}/gtar ${D}${base_bindir}/gtar
         rmdir ${D}${bindir}/
     fi
-}
-
-do_install_append_libc-musl() {
-    rm -f ${D}${libdir}/charset.alias
-    rmdir ${D}${libdir}
 }
 
 PACKAGES =+ "${PN}-rmt"
