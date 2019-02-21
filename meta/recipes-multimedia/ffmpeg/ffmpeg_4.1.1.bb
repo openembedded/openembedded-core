@@ -42,7 +42,7 @@ DEPENDS = "alsa-lib zlib libogg nasm-native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc \
+PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc avresample \
                    bzlib gpl lzma theora x264 \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv', '', d)}"
 
