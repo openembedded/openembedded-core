@@ -47,14 +47,23 @@ PACKAGES_DYNAMIC = "^libasound-module-.*"
 
 # The alsa-plugins package doesn't itself contain anything, it just depends on
 # all built plugins.
+FILES_${PN} = ""
 ALLOW_EMPTY_${PN} = "1"
 
 do_install_append() {
 	rm ${D}${libdir}/alsa-lib/*.la
 
-	# We use the example as is, so just drop the .example suffix.
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'yes', 'no', d)}" = "yes" ]; then
+		# We use the example as is, so just drop the .example suffix.
 		mv ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf.example ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf
+
+		# The conf.d files are installed in datadir, but alsa-lib
+		# searches for conf.d files only in sysconfdir. Distributions
+		# are expected to create symlinks in sysconfdir, so that's what
+		# we do here.
+		mkdir -p ${D}${sysconfdir}/alsa/conf.d
+		ln -s ${datadir}/alsa/alsa.conf.d/50-pulseaudio.conf ${D}${sysconfdir}/alsa/conf.d/50-pulseaudio.conf
+		ln -s ${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf ${D}${sysconfdir}/alsa/conf.d/99-pulseaudio-default.conf
 	fi
 }
 
@@ -94,6 +103,8 @@ INSANE_SKIP_${MLPREFIX}libasound-module-rate-speexrate = "dev-so"
 FILES_${PN}-pulseaudio-conf += "\
         ${datadir}/alsa/alsa.conf.d/50-pulseaudio.conf \
         ${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf \
+        ${sysconfdir}/alsa/conf.d/50-pulseaudio.conf \
+        ${sysconfdir}/alsa/conf.d/99-pulseaudio-default.conf \
 "
 
 RDEPENDS_${PN}-pulseaudio-conf += "\
