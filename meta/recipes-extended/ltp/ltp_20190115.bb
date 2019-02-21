@@ -27,7 +27,7 @@ CFLAGS_append_x86-64 = " -fomit-frame-pointer"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "f424769b1ad9fca477118763f88a6cec98ea2c0a"
+SRCREV = "a6a5caef13632e669dda27b0461726eba546a2f3"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0004-build-Add-option-to-select-libc-implementation.patch \
@@ -46,13 +46,8 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0035-fix-test_proc_kill-hang.patch \
            file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0039-commands-ar01-Fix-for-test-in-deterministic-mode.patch \
-           file://0001-syscalls-fcntl-make-OFD-command-use-fcntl64-syscall-.patch \
-           file://0001-sigwaitinfo01-recent-glibc-calls-syscall-directly.patch \
-           file://0001-netns_helper.sh-use-ping-6-when-ping6-is-not-avaliab.patch \
            file://0001-open_posix_testsuite-mmap24-2-Relax-condition-a-bit.patch \
-           file://0001-statx-fix-compile-errors.patch \
-           file://0001-setrlimit05-Use-another-method-to-get-bad-address.patch \
-           file://0001-getcpu01-Rename-getcpu-to-avoid-conflict-with-glibc-.patch \
+           file://define-sigrtmin-and-sigrtmax-for-musl.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -96,6 +91,7 @@ RDEPENDS_${PN} = "\
     curl \
     e2fsprogs-mke2fs \
     expect \
+    file \
     gawk \
     gzip \
     iproute2 \
@@ -105,6 +101,7 @@ RDEPENDS_${PN} = "\
     perl \
     python-core \
     procps \
+    quota \
     unzip \
     util-linux \
     which \

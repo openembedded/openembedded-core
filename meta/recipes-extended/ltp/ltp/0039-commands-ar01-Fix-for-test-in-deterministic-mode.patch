@@ -32,7 +32,7 @@ index be105f6da..813a51d9c 100644
  TST_TESTFUNC=test
  TST_NEEDS_TMPDIR=1
  TST_NEEDS_CMDS="$AR"
-
+ 
  . tst_test.sh
  
 +setup()
