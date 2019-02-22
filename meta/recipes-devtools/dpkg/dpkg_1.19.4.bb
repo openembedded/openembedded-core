@@ -1,11 +1,10 @@
 require dpkg.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20181228T152949Z/pool/main/d/dpkg/dpkg_1.18.25.tar.xz \
+SRC_URI = "${DEBIAN_MIRROR}/main/d/${BPN}/${BPN}_${PV}.tar.xz \
            file://noman.patch \
            file://remove-tar-no-timestamp.patch \
            file://arch_pm.patch \
-           file://dpkg-configure.service \
            file://add_armeb_triplet_entry.patch \
            file://0002-Adapt-to-linux-wrs-kernel-version-which-has-characte.patch \
            file://0003-Our-pre-postinsts-expect-D-to-be-set-when-running-in.patch \
@@ -15,7 +14,9 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20181228T152949Z/pool/main/
            file://0007-dpkg-deb-build.c-Remove-usage-of-clamp-mtime-in-tar.patch \
            file://0001-dpkg-Support-muslx32-build.patch \
            "
-SRC_URI_append_class-native = " file://glibc2.5-sync_file_range.patch "
+SRC_URI_append_class-native = " file://glibc2.5-sync_file_range.patch \
+                                file://tweak-options-require-tar-1.27.patch \
+"
 
-SRC_URI[md5sum] = "e463f58b04acb23659df23d2a7a05cff"
-SRC_URI[sha256sum] = "c49c371953aea03f543814dcae37c069e86069333fb2e24e9252e76647663492"
+SRC_URI[md5sum] = "1e4420409426d8c58bbe13a8e07c0c0b"
+SRC_URI[sha256sum] = "c15234e98655689586bff2d517a6fdc6135d139c54d52ae9cfa6a90007fee0ae"
