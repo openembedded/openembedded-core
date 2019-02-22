@@ -2,9 +2,10 @@ SUMMARY = "Image loading library for GTK+"
 HOMEPAGE = "http://www.gtk.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 
-LICENSE = "LGPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7 \
-                    file://gdk-pixbuf/gdk-pixbuf.h;endline=26;md5=72b39da7cbdde2e665329fef618e1d6b"
+LICENSE = "LGPLv2.1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
+                    file://gdk-pixbuf/gdk-pixbuf.h;endline=26;md5=72b39da7cbdde2e665329fef618e1d6b \
+                    "
 
 SECTION = "libs"
 
@@ -18,29 +19,26 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-Work-around-thumbnailer-cross-compile-failure.patch \
            file://0001-Fix-a-couple-of-decisions-around-cross-compilation.patch \
            file://0001-loaders.cache-depend-on-loaders-being-fully-build.patch \
+           file://0004-Do-not-run-tests-when-building.patch \
            "
 
 SRC_URI_append_class-target = " \
-           file://0002-Work-around-thumbnailer-cross-compile-failure.patch \
+           file://0003-target-only-Work-around-thumbnailer-cross-compile-fa.patch \
            "
 SRC_URI_append_class-nativesdk = " \
-           file://0002-Work-around-thumbnailer-cross-compile-failure.patch \
-           file://0001-Disable-tests-in-native-builds.patch \
-           "
-SRC_URI_append_class-native = " \
-           file://0001-Disable-tests-in-native-builds.patch \
+           file://0003-target-only-Work-around-thumbnailer-cross-compile-fa.patch \
            "
 
-SRC_URI[md5sum] = "6e84e5485c17ce7c25df77fe76eb2d6a"
-SRC_URI[sha256sum] = "ae62ab87250413156ed72ef756347b10208c00e76b222d82d9ed361ed9dde2f3"
+SRC_URI[md5sum] = "77765f24496dc8c90c6e0cbe10fd8f0e"
+SRC_URI[sha256sum] = "dd50973c7757bcde15de6bcd3a6d462a445efd552604ae6435a0532fbbadae47"
 
 inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
-GTKDOC_ENABLE_FLAG = "-Dwith_docs=true"
-GTKDOC_DISABLE_FLAG = "-Dwith_docs=false"
+GTKDOC_ENABLE_FLAG = "-Ddocs=true"
+GTKDOC_DISABLE_FLAG = "-Ddocs=false"
 
-GI_ENABLE_FLAG = "-Dwith_gir=true"
-GI_DISABLE_FLAG = "-Dwith_gir=false"
+GI_ENABLE_FLAG = "-Dgir=true"
+GI_DISABLE_FLAG = "-Dgir=false"
 
 EXTRA_OEMESON_append_class-nativesdk = " ${GI_DISABLE_FLAG}"
 
@@ -49,6 +47,8 @@ EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'T
 
 EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
                                                                                      '${GTKDOC_DISABLE_FLAG}', d)} "
+
+EXTRA_OEMESON_append = " ${@bb.utils.contains('PTEST_ENABLED', '1', '-Dinstalled_tests=true', '-Dinstalled_tests=false', d)}"
 
 LIBV = "2.10.0"
 
@@ -63,7 +63,7 @@ PACKAGECONFIG[jpeg] = "-Denable_jpeg=true,-Denable_jpeg=false,jpeg"
 PACKAGECONFIG[tiff] = "-Denable_tiff=true,-Denable_tiff=false,tiff"
 PACKAGECONFIG[jpeg2000] = "-Denable_jasper=true,-Denable_jasper=false,jasper"
 
-PACKAGECONFIG[x11] = ",,virtual/libx11"
+PACKAGECONFIG[x11] = "-Dx11=true,-Dx11=false,virtual/libx11"
 
 PACKAGES =+ "${PN}-xlib"
 
@@ -102,14 +102,10 @@ python populate_packages_prepend () {
 }
 
 do_install_append() {
-	# Move gdk-pixbuf-query-loaders into libdir so it is always available
+	# Copy gdk-pixbuf-query-loaders into libdir so it is always available
 	# in multilib builds.
-	mv ${D}/${bindir}/gdk-pixbuf-query-loaders ${D}/${libdir}/gdk-pixbuf-2.0/
+	cp ${D}/${bindir}/gdk-pixbuf-query-loaders ${D}/${libdir}/gdk-pixbuf-2.0/
 
-	# Do not install ptests if ptest is not enabled; gdk-pixbuf has no configuration option for this
-	if [ "${PTEST_ENABLED}" != "1" ]; then
-		rm -rf ${D}${datadir}/installed-tests
-	fi
 }
 
 do_install_append_class-native() {
@@ -125,6 +121,10 @@ do_install_append_class-native() {
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
 
 	create_wrapper ${D}/${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders \
+		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache \
+		GDK_PIXBUF_MODULEDIR=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders
+
+	create_wrapper ${D}/${bindir}/gdk-pixbuf-query-loaders \
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache \
 		GDK_PIXBUF_MODULEDIR=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders
 }
