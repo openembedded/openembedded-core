@@ -1,7 +1,7 @@
-From 7792f228991744a0396b8bf811e281dca86165d3 Mon Sep 17 00:00:00 2001
+From 34c3d07b67e6c08f555473a86ff158951abb6000 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 16 Aug 2017 18:58:20 -0700
-Subject: [PATCH 2/6] winsys/svga/drm: Include sys/types.h
+Subject: [PATCH 2/5] winsys/svga/drm: Include sys/types.h
 Organization: O.S. Systems Software LTDA.
 
 vmw_screen.h uses dev_t which is defines in sys/types.h
@@ -18,7 +18,7 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/gallium/winsys/svga/drm/vmw_screen.h b/src/gallium/winsys/svga/drm/vmw_screen.h
-index f21cabb51f..4c972fdaa9 100644
+index a87c087d9c5..cb34fec48e7 100644
 --- a/src/gallium/winsys/svga/drm/vmw_screen.h
 +++ b/src/gallium/winsys/svga/drm/vmw_screen.h
 @@ -41,6 +41,7 @@
@@ -30,5 +30,5 @@ index f21cabb51f..4c972fdaa9 100644
  #define VMW_GMR_POOL_SIZE (16*1024*1024)
  #define VMW_QUERY_POOL_SIZE (8192)
 -- 
-2.18.0
+2.20.1
 
