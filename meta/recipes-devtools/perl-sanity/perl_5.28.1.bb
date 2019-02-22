@@ -34,6 +34,8 @@ inherit upstream-version-is-even
 
 DEPENDS += "db gdbm zlib virtual/crypt"
 
+PERL_LIB_VER = "${@'.'.join(d.getVar('PV').split('.')[0:2])}.0"
+
 do_unpack_append() {
     bb.build.exec_func('do_copy_perlcross', d)
 }
@@ -104,7 +106,7 @@ do_install() {
 
     # Fix up shared library
     rm ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/libperl.so
-    ln -sf ../../../../libperl.so.${PV} ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/libperl.so
+    ln -sf ../../../../libperl.so.${PERL_LIB_VER} ${D}/${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/libperl.so
 }
 
 do_install_append_class-target() {
