@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://hdsploader/COPYING;md5=59530bdf33659b29e73d4adb9f9f65
                     file://ld10k1/COPYING.LIB;md5=a916467b91076e631dd8edb7424769c7 \
                     "
 
-SRC_URI = "ftp://ftp.alsa-project.org/pub/tools/${BP}.tar.bz2 \
+SRC_URI = "https://www.alsa-project.org/files/pub/tools/${BP}.tar.bz2 \
            file://0002-Fix-clang-Wreserved-user-defined-literal-warnings.patch \
            file://musl.patch \
            "
