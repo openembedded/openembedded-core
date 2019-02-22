@@ -41,6 +41,8 @@ SRC_URI += "file://touchscreen.rules \
            file://0024-journald-do-not-store-the-iovec-entry-for-process-co.patch \
            file://0025-journald-set-a-limit-on-the-number-of-fields.patch \
            file://0026-journal-fix-out-of-bounds-read-CVE-2018-16866.patch \
+           file://CVE-2019-6454.patch \
+           file://sd-bus-if-we-receive-an-invalid-dbus-message-ignore-.patch \
            "
 
 # patches made for musl are only applied on TCLIBC is musl
