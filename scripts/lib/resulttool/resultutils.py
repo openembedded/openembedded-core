@@ -61,7 +61,8 @@ def append_resultsdata(results, f, configmap=store_map):
             del data[res]['result']['ptestresult.rawlogs']
         if 'ptestresult.sections' in data[res]['result']:
             for i in data[res]['result']['ptestresult.sections']:
-                del data[res]['result']['ptestresult.sections'][i]['log']
+                if 'log' in data[res]['result']['ptestresult.sections'][i]:
+                    del data[res]['result']['ptestresult.sections'][i]['log']
         results[testpath][res] = data[res]
 
 #
