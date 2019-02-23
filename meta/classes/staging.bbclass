@@ -198,6 +198,10 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
             if manifest.endswith("-initial.populate_sysroot"):
                 # skip glibc-initial and libgcc-initial due to file overlap
                 continue
+            if not native and (manifest.endswith("-native.populate_sysroot") or "nativesdk-" in manifest):
+                continue
+            if native and not (manifest.endswith("-native.populate_sysroot") or manifest.endswith("-cross.populate_sysroot") or "-cross-" in manifest):
+                continue
             tmanifest = targetdir + "/" + os.path.basename(manifest)
             if os.path.exists(tmanifest):
                 continue
