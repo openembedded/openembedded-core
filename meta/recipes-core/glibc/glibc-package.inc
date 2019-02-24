@@ -15,7 +15,12 @@ RPROVIDES_glibc-thread-db = "eglibc-thread-db"
 RPROVIDES_${PN}-pcprofile = "eglibc-pcprofile"
 RPROVIDES_${PN}-dbg = "eglibc-dbg"
 libc_baselibs = "${base_libdir}/libc.so.* ${base_libdir}/libc-*.so ${base_libdir}/libm*.so.* ${base_libdir}/libm-*.so ${base_libdir}/libmvec-*.so ${base_libdir}/ld*.so.* ${base_libdir}/ld-*.so ${base_libdir}/libpthread*.so.* ${base_libdir}/libpthread-*.so ${base_libdir}/libresolv*.so.* ${base_libdir}/libresolv-*.so ${base_libdir}/librt*.so.* ${base_libdir}/librt-*.so ${base_libdir}/libutil*.so.* ${base_libdir}/libutil-*.so ${base_libdir}/libnsl*.so.* ${base_libdir}/libnsl-*.so ${base_libdir}/libnss_files*.so.* ${base_libdir}/libnss_files-*.so ${base_libdir}/libnss_compat*.so.* ${base_libdir}/libnss_compat-*.so ${base_libdir}/libnss_dns*.so.* ${base_libdir}/libnss_dns-*.so ${base_libdir}/libdl*.so.* ${base_libdir}/libdl-*.so ${base_libdir}/libanl*.so.* ${base_libdir}/libanl-*.so ${base_libdir}/libBrokenLocale*.so.* ${base_libdir}/libBrokenLocale-*.so"
-libc_baselibs_append_aarch64 = " /lib/ld-linux-aarch64*.so.1"
+ARCH_DYNAMIC_LOADER = ""
+# The aarch64 ABI says the dynamic linker -must- be
+# /lib/ld-linux-aarch64{,_be}.so.1. With usrmerge, that may mean that
+# we need to install it in /usr/lib.
+ARCH_DYNAMIC_LOADER_aarch64 = "ld-linux-${TARGET_ARCH}.so.1"
+libc_baselibs_append = " ${@oe.utils.conditional('ARCH_DYNAMIC_LOADER', '', '', '${root_prefix}/lib/${ARCH_DYNAMIC_LOADER}', d)}"
 INSANE_SKIP_${PN}_append_aarch64 = " libdir"
 
 FILES_${PN} = "${libc_baselibs} ${libexecdir}/* ${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf"
@@ -114,20 +119,20 @@ do_install_append () {
 		echo "d root root 0755 /var/run/nscd none" \
 			> ${D}${sysconfdir}/default/volatiles/98_nscd
 	fi
+
+	# The dynamic loader will have been installed into
+	# ${base_libdir}. However, if that isn't going to end up being
+	# available in the ABI-mandated location, then a symlink must
+        # be created.
+
+	if [ -n "${ARCH_DYNAMIC_LOADER}" -a ! -e "${D}${root_prefix}/lib/${ARCH_DYNAMIC_LOADER}" ]; then
+		install -d ${D}${root_prefix}/lib
+		ln -s ${@oe.path.relative('${root_prefix}/lib', '${base_libdir}')}/${ARCH_DYNAMIC_LOADER} \
+				${D}${root_prefix}/lib/${ARCH_DYNAMIC_LOADER}
+	fi
 }
 
 do_install_append_aarch64 () {
-	if [ "${base_libdir}" != "${nonarch_base_libdir}" ]; then
-		# The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
-		install -d ${D}${nonarch_base_libdir}
-		if [ -e ${D}${base_libdir}/ld-linux-aarch64.so.1 ]; then
-			ln -s ${@oe.path.relative('${nonarch_base_libdir}', '${base_libdir}')}/ld-linux-aarch64.so.1 \
-				${D}${nonarch_base_libdir}/ld-linux-aarch64.so.1
-		elif [ -e ${D}${base_libdir}/ld-linux-aarch64_be.so.1 ]; then
-			ln -s ${@oe.path.relative('${nonarch_base_libdir}', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
-				${D}${nonarch_base_libdir}/ld-linux-aarch64_be.so.1
-		fi
-	fi
 	do_install_armmultilib
 }
 
@@ -209,12 +214,15 @@ do_poststash_install_cleanup () {
 	rm -rf ${D}/${localedir}
 	rm -rf ${D}${datadir}/locale
 	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
-		if [ -d ${D}${exec_prefix}/lib ]; then
+	    if [ -d "${D}${exec_prefix}/lib" ]; then
+		if [ -z "${ARCH_DYNAMIC_LOADER}" -o \
+		     ! -e "${D}${exec_prefix}/lib/${ARCH_DYNAMIC_LOADER}" ]; then
 			# error out if directory isn't empty
 			# this dir should only contain locale dir
 			# which has been deleted in the previous step
 			rmdir ${D}${exec_prefix}/lib
 		fi
+	    fi
 	fi
 }
 addtask do_poststash_install_cleanup after do_stash_locale do_install before do_populate_sysroot do_package
