@@ -60,6 +60,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0024-journald-do-not-store-the-iovec-entry-for-process-co.patch \
            file://0025-journald-set-a-limit-on-the-number-of-fields-1k.patch \
            file://0026-journal-remote-set-a-limit-on-the-number-of-fields-i.patch \
+           file://0027-journal-fix-out-of-bounds-read-CVE-2018-16866.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
