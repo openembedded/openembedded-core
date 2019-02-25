@@ -9,13 +9,10 @@ LIC_FILES_CHKSUM = "file://hdsploader/COPYING;md5=59530bdf33659b29e73d4adb9f9f65
                     file://ld10k1/COPYING.LIB;md5=a916467b91076e631dd8edb7424769c7 \
                     "
 
-SRC_URI = "https://www.alsa-project.org/files/pub/tools/${BP}.tar.bz2 \
-           file://0002-Fix-clang-Wreserved-user-defined-literal-warnings.patch \
-           file://musl.patch \
-           "
+SRC_URI = "https://www.alsa-project.org/files/pub/tools/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "5ca8c9437ae779997cd62fb2815fef19"
-SRC_URI[sha256sum] = "d69c4dc2fb641a974d9903e9eb78c94cb0c7ac6c45bae664f0c9d6c0a1593227"
+SRC_URI[md5sum] = "475bdf6457bcf55c8c895d653ee56a54"
+SRC_URI[sha256sum] = "a0243328a8f6f691a3055c484fd8d3326393096325e93743b246029d327c4ef6"
 
 inherit autotools-brokensep pkgconfig
 # brokensep as as10k1 (and probably more) fail out of tree
@@ -38,7 +35,6 @@ PACKAGECONFIG[hdajacksensetest] = ",,glib-2.0"
 PACKAGECONFIG[hdspconf] = ",,fltk"
 PACKAGECONFIG[hdsploader] = ""
 PACKAGECONFIG[hdspmixer] = ",,fltk"
-PACKAGECONFIG[hwmixvolume] = ",,,python-core python-pygtk"
 PACKAGECONFIG[ld10k1] = ""
 PACKAGECONFIG[mixartloader] = ""
 PACKAGECONFIG[pcxhrloader] = ""
@@ -50,6 +46,10 @@ PACKAGECONFIG[sscape_ctl] = ""
 PACKAGECONFIG[us428control] = ""
 PACKAGECONFIG[usx2yloader] = ""
 PACKAGECONFIG[vxloader] = ""
+
+# At the time of writing pyalsa is not packaged for OE, so this is not expected
+# to work.
+PACKAGECONFIG[hwmixvolume] = ",,,python-core python-pygobject pyalsa"
 
 python do_configure() {
     for subdir in d.getVar("PACKAGECONFIG").split():
