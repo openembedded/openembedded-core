@@ -63,6 +63,8 @@ SRC_URI += "file://touchscreen.rules \
            file://0027-journal-fix-out-of-bounds-read-CVE-2018-16866.patch \
            file://0001-tmpfiles-don-t-resolve-pathnames-when-traversing-rec.patch \
            file://0002-Make-tmpfiles-safe.patch \
+           file://CVE-2019-6454.patch \
+           file://sd-bus-if-we-receive-an-invalid-dbus-message-ignore-.patch \
            "
 SRC_URI_append_qemuall = " file://0001-core-device.c-Change-the-default-device-timeout-to-2.patch"
 
