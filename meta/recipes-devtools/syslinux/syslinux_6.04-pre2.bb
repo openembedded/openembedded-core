@@ -7,10 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 # If you really want to run syslinux, you need mtools.  We just want the
 # ldlinux.* stuff for now, so skip mtools-native
 DEPENDS = "nasm-native util-linux e2fsprogs"
+PV = "6.04-pre2"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/syslinux-${PV}.tar.xz \
-           file://syslinux-fix-parallel-building-issue.patch \
-           file://syslinux-libupload-depend-lib.patch \
+SRC_URI = "https://www.zytor.com/pub/syslinux/Testing/6.04/syslinux-${PV}.tar.xz \
            file://syslinux-remove-clean-script.patch \
            file://0001-linux-syslinux-support-ext2-3-4-device.patch \
            file://0002-linux-syslinux-implement-open_ext2_fs.patch \
@@ -21,13 +20,11 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/boot/syslinux/syslinux-${PV}.tar.xz \
            file://0007-linux-syslinux-implement-ext_construct_sectmap_fs.patch \
            file://0008-libinstaller-syslinuxext-implement-syslinux_patch_bo.patch \
            file://0009-linux-syslinux-implement-install_bootblock.patch \
-           file://0010-gcc46-compatibility.patch \
-           file://0011-mk-MMD-does-not-take-any-arguments.patch \
-           file://syslinux-6.03-sysmacros.patch \
+           file://0001-install-don-t-install-obsolete-file-com32.ld.patch \
            "
 
-SRC_URI[md5sum] = "92a253df9211e9c20172796ecf388f13"
-SRC_URI[sha256sum] = "26d3986d2bea109d5dc0e4f8c4822a459276cf021125e8c9f23c3cca5d8c850e"
+SRC_URI[md5sum] = "2b31c78f087f99179feb357da312d7ec"
+SRC_URI[sha256sum] = "4441a5d593f85bb6e8d578cf6653fb4ec30f9e8f4a2315a3d8f2d0a8b3fadf94"
 
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 # Don't let the sanity checker trip on the 32 bit real mode BIOS binaries
@@ -62,7 +59,7 @@ do_compile() {
 }
 
 do_install() {
-	oe_runmake CC="${CC} ${CFLAGS}" LD="${LD}" install INSTALLROOT="${D}" firmware="bios"
+	oe_runmake CC="${CC} ${CFLAGS}" LD="${LD}" firmware="bios" install INSTALLROOT="${D}"
 
 	install -d ${D}${datadir}/syslinux/
 	install -m 644 ${S}/bios/core/ldlinux.sys ${D}${datadir}/syslinux/
