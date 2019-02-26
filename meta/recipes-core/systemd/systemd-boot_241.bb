@@ -3,10 +3,11 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/systemd:"
 
 DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
 
-SRC_URI += "file://0002-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
-            file://0006-remove-nobody-user-group-checking.patch \
+# NOTE: These three patches are in theory not needed, but we haven't
+#       figured out how to correctly pass efi-cc parameter if it's an array.
+SRC_URI += "file://0001-Revert-meson-use-an-array-option-for-efi-cc.patch \
+            file://0001-Revert-meson-print-EFI-CC-configuration-nicely.patch \
             file://0001-Fix-to-run-efi_cc-and-efi_ld-correctly-when-cross-co.patch \
-            file://0001-meson-rename-Ddebug-to-Ddebug-extra.patch \
             "
 
 inherit meson pkgconfig gettext
