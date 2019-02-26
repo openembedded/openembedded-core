@@ -63,11 +63,11 @@ do_install_append () {
 }
 
 do_install_ptest () {
-    for f in Makefile tests/Makefile tests/utils/utils.sh ; do
+    for f in Makefile tests/Makefile tests/utils/utils.sh tests/regression/tools/save-load/load-42*.lttng tests/regression/tools/save-load/configuration/load-42*.lttng ; do
         install -D "${B}/$f" "${D}${PTEST_PATH}/$f"
     done
 
-    for f in config/tap-driver.sh config/test-driver ; do
+    for f in config/tap-driver.sh config/test-driver src/common/config/session.xsd src/common/mi-lttng-3.0.xsd; do
         install -D "${S}/$f" "${D}${PTEST_PATH}/$f"
     done
 
@@ -141,8 +141,17 @@ do_install_ptest () {
         -e 's#\(^test.*LDADD.=\)#disable\1#g' \
         -i ${D}${PTEST_PATH}/tests/unit/Makefile
 
+    #
+    # Disable notification tools tests as currently
+    # these hang and cause the rest of the ptests to timeout
+    #
+    sed -e 's#tools/notification/test_notification_ust##g' \
+        -e 's#tools/notification/test_notification_kernel##g' \
+        -e 's#tools/notification/test_notification_multi_app##g' \
+        -i ${D}${PTEST_PATH}/tests/regression/Makefile
+
     # Substitute links to installed binaries.
-    for prog in lttng lttng-relayd lttng-sessiond lttng-consumerd ; do
+    for prog in lttng lttng-relayd lttng-sessiond lttng-consumerd lttng-crash; do
         exedir="${D}${PTEST_PATH}/src/bin/${prog}"
         install -d "$exedir"
         case "$prog" in
