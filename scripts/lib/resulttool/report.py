@@ -30,6 +30,14 @@ class ResultsTextReport(object):
 
     def handle_ptest_result(self, k, status, result):
         if k == 'ptestresult.sections':
+            # Ensure tests without any test results still show up on the report
+            for suite in result['ptestresult.sections']:
+                if suite not in self.ptests:
+                    self.ptests[suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+                if 'duration' in result['ptestresult.sections'][suite]:
+                    self.ptests[suite]['duration'] = result['ptestresult.sections'][suite]['duration']
+                if 'timeout' in result['ptestresult.sections'][suite]:
+                    self.ptests[suite]['duration'] += " T"
             return
         try:
             _, suite, test = k.split(".", 2)
@@ -48,11 +56,6 @@ class ResultsTextReport(object):
         for tk in self.result_types:
             if status in self.result_types[tk]:
                 self.ptests[suite][tk] += 1
-        if 'ptestresult.sections' in result and suite in result['ptestresult.sections']:
-            if 'duration' in result['ptestresult.sections'][suite]:
-                self.ptests[suite]['duration'] = result['ptestresult.sections'][suite]['duration']
-            if 'timeout' in result['ptestresult.sections'][suite]:
-                self.ptests[suite]['duration'] += " T"
 
     def get_aggregated_test_result(self, logger, testresult):
         test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
