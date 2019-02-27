@@ -133,8 +133,8 @@ FILES_${PN}-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__pycache__/*"
 
 # Util-linux' blkid replaces the e2fsprogs one
-RCONFLICTS_${PN}-blkid = "e2fsprogs-blkid"
-RREPLACES_${PN}-blkid = "e2fsprogs-blkid"
+RCONFLICTS_${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
+RREPLACES_${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
 
 RRECOMMENDS_${PN}_class-native = ""
 RRECOMMENDS_${PN}_class-nativesdk = ""
