@@ -29,7 +29,7 @@ def store(args, logger):
     try:
         results = {}
         logger.info('Reading files from %s' % args.source)
-        for root, dirs, files in os.walk(args.source):
+        for root, dirs,  files in os.walk(args.source):
             for name in files:
                 f = os.path.join(root, name)
                 if name == "testresults.json":
@@ -38,7 +38,8 @@ def store(args, logger):
                     dst = f.replace(args.source, tempdir + "/")
                     os.makedirs(os.path.dirname(dst), exist_ok=True)
                     shutil.copyfile(f, dst)
-        resultutils.save_resultsdata(results, tempdir)
+
+        revisions = {}
 
         if not results and not args.all:
             if args.allow_empty:
@@ -47,26 +48,32 @@ def store(args, logger):
             logger.error("No results found to store")
             return 1
 
-        keywords = {'branch': None, 'commit': None, 'commit_count': None}
-
         # Find the branch/commit/commit_count and ensure they all match
         for suite in results:
             for result in results[suite]:
                 config = results[suite][result]['configuration']['LAYERS']['meta']
-                for k in keywords:
-                    if keywords[k] is None:
-                        keywords[k] = config.get(k)
-                    if config.get(k) != keywords[k]:
-                        logger.error("Mismatched source commit/branch/count: %s vs %s" % (config.get(k), keywords[k]))
-                        return 1
+                revision = (config['commit'], config['branch'], str(config['commit_count']))
+                if revision not in revisions:
+                    revisions[revision] = {}
+                if suite not in revisions[revision]:
+                    revisions[revision][suite] = {}
+                revisions[revision][suite] = results[suite][result]
 
-        logger.info('Storing test result into git repository %s' % args.git_dir)
+        logger.info("Found %d revisions to store" % len(revisions))
 
-        gitarchive.gitarchive(tempdir, args.git_dir, False, False,
-                              "Results of {branch}:{commit}", "branch: {branch}\ncommit: {commit}", "{branch}",
-                              False, "{branch}/{commit_count}-g{commit}/{tag_number}",
-                              'Test run #{tag_number} of {branch}:{commit}', '',
-                              [], [], False, keywords, logger)
+        for r in revisions:
+            results = revisions[r]
+            keywords = {'commit': r[0], 'branch': r[1], "commit_count": r[2]}
+            subprocess.check_call(["find", tempdir, "!", "-path", "./.git/*", "-delete"])
+            resultutils.save_resultsdata(results, tempdir)
+
+            logger.info('Storing test result into git repository %s' % args.git_dir)
+
+            gitarchive.gitarchive(tempdir, args.git_dir, False, False,
+                                  "Results of {branch}:{commit}", "branch: {branch}\ncommit: {commit}", "{branch}",
+                                  False, "{branch}/{commit_count}-g{commit}/{tag_number}",
+                                  'Test run #{tag_number} of {branch}:{commit}', '',
+                                  [], [], False, keywords, logger)
 
     finally:
         subprocess.check_call(["rm", "-rf",  tempdir])
