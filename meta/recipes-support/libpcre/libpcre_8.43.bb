@@ -8,7 +8,6 @@ SECTION = "devel"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=91bee59d1b327eb1599b4c673e2fb3d1"
 SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre-${PV}.tar.bz2 \
-           file://pcre-cross.patch \
            file://fix-pcre-name-collision.patch \
            file://run-ptest \
            file://Makefile \
@@ -36,21 +35,7 @@ BINCONFIG = "${bindir}/pcre-config"
 
 inherit autotools binconfig-disabled ptest
 
-EXTRA_OECONF = "\
-    --enable-newline-is-lf \
-    --enable-rebuild-chartables \
-    --enable-utf \
-    --with-link-size=2 \
-    --with-match-limit=10000000 \
-"
-
-# Set LINK_SIZE in BUILD_CFLAGS given that the autotools bbclass use it to
-# set CFLAGS_FOR_BUILD, required for the libpcre build.
-BUILD_CFLAGS =+ "-DLINK_SIZE=2 -I${B}"
-CFLAGS += "-D_REENTRANT"
-CXXFLAGS_append_powerpc = " -lstdc++"
-
-export CCLD_FOR_BUILD ="${BUILD_CCLD}"
+EXTRA_OECONF = "--enable-utf"
 
 PACKAGES =+ "libpcrecpp libpcreposix pcregrep pcregrep-doc pcretest pcretest-doc"
 
