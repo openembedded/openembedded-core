@@ -30,7 +30,7 @@ python __anonymous () {
         if image:
             d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_complete')
 
-	#check if there are any dtb providers
+        #check if there are any dtb providers
         providerdtb = d.getVar("PREFERRED_PROVIDER_virtual/dtb")
         if providerdtb:
             d.appendVarFlag('do_assemble_fitimage', 'depends', ' virtual/dtb:do_populate_sysroot')
