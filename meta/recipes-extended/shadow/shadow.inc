@@ -57,7 +57,7 @@ EXTRA_OECONF += "--without-audit \
 NSCDOPT = ""
 NSCDOPT_class-native = "--without-nscd"
 NSCDOPT_class-nativesdk = "--without-nscd"
-NSCDOPT_libc-glibc = "${@bb.utils.contains('DISTRO_FEATURES', 'libc-spawn', '--with-nscd', '--without-nscd', d)}"
+NSCDOPT_libc-glibc = "--with-nscd"
           
 PAM_PLUGINS = "libpam-runtime \
                pam-plugin-faildelay \

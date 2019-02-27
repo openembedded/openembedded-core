@@ -39,8 +39,6 @@ SRC_URI_append_class-native = " file://disable-hardcoded-configs.patch"
 
 inherit autotools texinfo distro_features_check
 
-REQUIRED_DISTRO_FEATURES_libc-glibc = "libc-charsets libc-locale-code libc-locales"
-
 EXTRA_OECONF = "--without-x"
 
 BBCLASSEXTEND = "native nativesdk"
