@@ -31,9 +31,12 @@ class ResultsTextReport(object):
     def handle_ptest_result(self, k, status, result):
         if k == 'ptestresult.sections':
             return
-        _, suite, test = k.split(".", 2)
+        try:
+            _, suite, test = k.split(".", 2)
+        except ValueError:
+            return
         # Handle 'glib-2.0'
-        if suite not in result['ptestresult.sections']:
+        if 'ptestresult.sections' in result and suite not in result['ptestresult.sections']:
             try:
                 _, suite, suite1, test = k.split(".", 3)
                 if suite + "." + suite1 in result['ptestresult.sections']:
@@ -45,7 +48,7 @@ class ResultsTextReport(object):
         for tk in self.result_types:
             if status in self.result_types[tk]:
                 self.ptests[suite][tk] += 1
-        if suite in result['ptestresult.sections']:
+        if 'ptestresult.sections' in result and suite in result['ptestresult.sections']:
             if 'duration' in result['ptestresult.sections'][suite]:
                 self.ptests[suite]['duration'] = result['ptestresult.sections'][suite]['duration']
             if 'timeout' in result['ptestresult.sections'][suite]:
