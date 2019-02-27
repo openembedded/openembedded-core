@@ -9,6 +9,7 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=91bee59d1b327eb1599b4c673e2fb3d1"
 SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre-${PV}.tar.bz2 \
            file://fix-pcre-name-collision.patch \
+           file://out-of-tree.patch \
            file://run-ptest \
            file://Makefile \
 "
@@ -23,13 +24,14 @@ S = "${WORKDIR}/pcre-${PV}"
 PROVIDES += "pcre"
 DEPENDS += "bzip2 zlib"
 
-PACKAGECONFIG ??= "pcre8 unicode-properties"
+PACKAGECONFIG ??= "pcre8 unicode-properties jit"
 
 PACKAGECONFIG[pcre8] = "--enable-pcre8,--disable-pcre8"
 PACKAGECONFIG[pcre16] = "--enable-pcre16,--disable-pcre16"
 PACKAGECONFIG[pcre32] = "--enable-pcre32,--disable-pcre32"
 PACKAGECONFIG[pcretest-readline] = "--enable-pcretest-libreadline,--disable-pcretest-libreadline,readline,"
 PACKAGECONFIG[unicode-properties] = "--enable-unicode-properties,--disable-unicode-properties"
+PACKAGECONFIG[jit] = "--enable-jit=auto,--disable-jit"
 
 BINCONFIG = "${bindir}/pcre-config"
 
