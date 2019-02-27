@@ -20,3 +20,9 @@ def get_qemu_target_list(d):
     if 'linux' not in tos:
         return softmmuonly + ''.join([arch + "-softmmu" + "," for arch in archs]).rstrip(',')
     return softmmuonly + linuxuseronly + ''.join([arch + "-linux-user" + "," + arch + "-softmmu" + "," for arch in archs]).rstrip(',')
+
+def get_qemu_usermode_target_list(d):
+    return ",".join(filter(lambda i: "-linux-user" in i, get_qemu_target_list(d).split(',')))
+
+def get_qemu_system_target_list(d):
+    return ",".join(filter(lambda i: "-linux-user" not in i, get_qemu_target_list(d).split(',')))
