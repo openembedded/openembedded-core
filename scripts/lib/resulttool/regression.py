@@ -35,7 +35,7 @@ def compare_result(logger, base_name, target_name, base_result, target_result):
                 logger.error('Failed to retrieved base test case status: %s' % k)
     if result:
         resultstring = "Regression: %s\n            %s\n" % (base_name, target_name)
-        for k in result:
+        for k in sorted(result):
             resultstring += '    %s: %s -> %s\n' % (k, result[k]['base'], result[k]['target'])
     else:
         resultstring = "Match: %s\n       %s" % (base_name, target_name)
@@ -82,9 +82,9 @@ def regression_common(args, logger, base_results, target_results):
                         regressions.append(resstr)
         else:
             notfound.append("%s not found in target" % a)
-    print("\n".join(matches))
-    print("\n".join(regressions))
-    print("\n".join(notfound))
+    print("\n".join(sorted(matches)))
+    print("\n".join(sorted(regressions)))
+    print("\n".join(sorted(notfound)))
 
     return 0
 
