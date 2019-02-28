@@ -57,7 +57,7 @@ def store(args, logger):
                     revisions[revision] = {}
                 if suite not in revisions[revision]:
                     revisions[revision][suite] = {}
-                revisions[revision][suite] = results[suite][result]
+                revisions[revision][suite][result] = results[suite][result]
 
         logger.info("Found %d revisions to store" % len(revisions))
 
