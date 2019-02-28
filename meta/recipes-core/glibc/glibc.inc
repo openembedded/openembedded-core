@@ -34,14 +34,6 @@ CACHED_CONFIGUREVARS_append_mipsarch = " libc_cv_ld_gnu_indirect_function=no"
 
 GLIBC_EXTRA_OECONF ?= ""
 GLIBC_EXTRA_OECONF_class-nativesdk = ""
-INHIBIT_DEFAULT_DEPS = "1"
-
-# This needs to match with glibc-collateral.inc, otherwise glibc-scripts and glibc-locale
-# will fail to find main glibc, for details see
-# http://lists.openembedded.org/pipermail/openembedded-core/2015-January/100679.html
-ARM_INSTRUCTION_SET_armv4 = "arm"
-ARM_INSTRUCTION_SET_armv5 = "arm"
-ARM_INSTRUCTION_SET_armv6 = "arm"
 
 # glibc uses PARALLELMFLAGS variable to pass parallel build info so transfer
 # PARALLEL_MAKE into PARALLELMFLAGS and empty out PARALLEL_MAKE

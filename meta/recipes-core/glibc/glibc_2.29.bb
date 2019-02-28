@@ -69,11 +69,6 @@ BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir}"
 
 GLIBC_BROKEN_LOCALES = ""
-#
-# We will skip parsing glibc when target system C library selection is not glibc
-# this helps in easing out parsing for non-glibc system libraries
-#
-COMPATIBLE_HOST_libc-musl_class-target = "null"
 
 GLIBCPIE ??= ""
 
