@@ -30,8 +30,8 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
 
-SRC_URI[md5sum] = "9a02b0382b78cc2d515fb950275d4c02"
-SRC_URI[sha256sum] = "f7ef925541ee32c6d15ae5cb27da5f119e01a5ccdbe9fe57bf836730d7b7a65b"
+SRC_URI[md5sum] = "077e4f49320cad82bf17a997068b1db9"
+SRC_URI[sha256sum] = "eb5747c371b0af0f71e86215a5ebb88728533c3a104a43d4231963f308cd1023"
 
 inherit autotools gettext
 
