@@ -487,6 +487,15 @@ do_shared_workdir () {
 		mkdir -p $kerneldir/arch/${ARCH}/include/generated/
 		cp -fR arch/${ARCH}/include/generated/* $kerneldir/arch/${ARCH}/include/generated/
 	fi
+
+	if (grep -q -i -e '^CONFIG_UNWINDER_ORC=y$' $kerneldir/.config); then
+		# With CONFIG_UNWINDER_ORC (the default in 4.14), objtool is required for
+		# out-of-tree modules to be able to generate object files.
+		if [ -x tools/objtool/objtool ]; then
+			mkdir -p ${kerneldir}/tools/objtool
+			cp tools/objtool/objtool ${kerneldir}/tools/objtool/
+		fi
+	fi
 }
 
 # We don't need to stage anything, not the modules/firmware since those would clash with linux-firmware
