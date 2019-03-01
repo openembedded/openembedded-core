@@ -69,6 +69,8 @@ x86_common = [
     'amd_nb: Cannot enumerate AMD northbridges',
     'failed to retrieve link info, disabling eDP',
     'Direct firmware load for iwlwifi',
+    'Direct firmware load for regulatory.db',
+    'failed to load regulatory.db',
 ] + common_errors
 
 qemux86_common = [
