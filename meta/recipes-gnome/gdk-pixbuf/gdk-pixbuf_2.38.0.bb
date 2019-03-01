@@ -58,10 +58,10 @@ PACKAGECONFIG ??= "${GDK_PIXBUF_LOADERS}"
 PACKAGECONFIG_linuxstdbase = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} ${GDK_PIXBUF_LOADERS}"
 PACKAGECONFIG_class-native = "${GDK_PIXBUF_LOADERS}"
 
-PACKAGECONFIG[png] = "-Denable_png=true,-Denable_png=false,libpng"
-PACKAGECONFIG[jpeg] = "-Denable_jpeg=true,-Denable_jpeg=false,jpeg"
-PACKAGECONFIG[tiff] = "-Denable_tiff=true,-Denable_tiff=false,tiff"
-PACKAGECONFIG[jpeg2000] = "-Denable_jasper=true,-Denable_jasper=false,jasper"
+PACKAGECONFIG[png] = "-Dpng=true,-Dpng=false,libpng"
+PACKAGECONFIG[jpeg] = "-Djpeg=true,-Djpeg=false,jpeg"
+PACKAGECONFIG[tiff] = "-Dtiff=true,-Dtiff=false,tiff"
+PACKAGECONFIG[jpeg2000] = "-Djasper=true,-Djasper=false,jasper"
 
 PACKAGECONFIG[x11] = "-Dx11=true,-Dx11=false,virtual/libx11"
 
