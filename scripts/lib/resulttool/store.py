@@ -68,7 +68,7 @@ def store(args, logger):
             results = revisions[r]
             keywords = {'commit': r[0], 'branch': r[1], "commit_count": r[2]}
             subprocess.check_call(["find", tempdir, "!", "-path", "./.git/*", "-delete"])
-            resultutils.save_resultsdata(results, tempdir)
+            resultutils.save_resultsdata(results, tempdir, ptestlogs=True)
 
             logger.info('Storing test result into git repository %s' % args.git_dir)
 
