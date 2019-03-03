@@ -74,6 +74,7 @@ of the following environment variables (in any order):
   MACHINE - the machine name (optional, autodetected from KERNEL filename if unspecified)
   Simplified QEMU command-line options can be passed with:
     nographic - disable video console
+    sdl - choose the SDL frontend instead of the Gtk+ default
     gl - enable virgl-based GL acceleration
     gl-es - enable virgl-based GL acceleration, using OpenGL ES
     egl-headless - enable headless EGL output; use vnc or spice to see it
@@ -404,6 +405,8 @@ class BaseConfig(object):
             elif arg == 'nographic':
                 self.qemu_opt_script += ' -nographic'
                 self.kernel_cmdline_script += ' console=ttyS0'
+            elif arg == 'sdl':
+                self.qemu_opt_script += ' -display sdl'
             elif arg == 'gl':
                 self.qemu_opt_script += ' -vga virtio -display gtk,gl=on'
             elif arg == 'gl-es':
