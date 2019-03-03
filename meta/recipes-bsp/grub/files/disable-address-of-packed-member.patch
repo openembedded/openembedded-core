@@ -247,3 +247,16 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  
  static grub_dl_t my_mod;
  
+--- a/grub-core/commands/usbtest.c
++++ b/grub-core/commands/usbtest.c
+@@ -63,6 +63,10 @@ static const char *usb_devspeed[] =
+     "High"
+   };
+ 
++#if __GNUC__ >= 9
++#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
++#endif
++
+ static grub_usb_err_t
+ grub_usb_get_string (grub_usb_device_t dev, grub_uint8_t index, int langid,
+ 		     char **string)
