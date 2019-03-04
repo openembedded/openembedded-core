@@ -26,6 +26,7 @@ DUMMYPROVIDES = "\
     perl-module-getopt-long \
     perl-module-io-file \
     perl-module-posix \
+    perl-module-overload \
     perl-module-thread-queue \
     perl-module-threads \
     /bin/sh \
