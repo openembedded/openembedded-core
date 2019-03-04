@@ -27,6 +27,7 @@ CLEANBROKEN = "1"
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
 EXTRA_OECONF = " --disable-zstd"
 EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
+EXTRA_OEMAKE = "V=1"
 
 do_configure_prepend() {
 	# Upstream doesn't ship this and autoreconf won't install it as automake isn't used.
