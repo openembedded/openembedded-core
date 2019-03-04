@@ -39,12 +39,12 @@ def logger_create(name, stream=None):
 
 def logger_setup_color(logger, color='auto'):
     from bb.msg import BBLogFormatter
-    console = logging.StreamHandler(sys.stdout)
-    formatter = BBLogFormatter("%(levelname)s: %(message)s")
-    console.setFormatter(formatter)
-    logger.handlers = [console]
-    if color == 'always' or (color=='auto' and console.stream.isatty()):
-        formatter.enable_color()
+
+    for handler in logger.handlers:
+        if (isinstance(handler, logging.StreamHandler) and
+            isinstance(handler.formatter, BBLogFormatter)):
+            if color == 'always' or (color == 'auto' and handler.stream.isatty()):
+                handler.formatter.enable_color()
 
 
 def load_plugins(logger, plugins, pluginpath):
@@ -68,6 +68,7 @@ def load_plugins(logger, plugins, pluginpath):
             if hasattr(plugin, 'plugin_init'):
                 plugin.plugin_init(plugins)
             plugins.append(plugin)
+
 
 def git_convert_standalone_clone(repodir):
     """If specified directory is a git repository, ensure it's a standalone clone"""
