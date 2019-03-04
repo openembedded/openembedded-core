@@ -16,7 +16,6 @@ RDEPENDS_${PN} = "libgcc"
 
 SRCREV = "6c33832b8c7bf2d7b64d6aed023c0bda43a03311"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
-           file://0001-Makefile-build-mktables-using-native-gcc.patch \
            file://0001-Add-LDFLAGS-when-building-libbtrfsutil.so.patch \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
