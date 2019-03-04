@@ -27,6 +27,12 @@ SRC_URI[sha256sum] = "fc20130f8b7cbd2fb918b2f14e2f429e109c31ddd0fb38fc5d71d9ffed
 
 inherit lib_package multilib_header ptest
 
+PACKAGECONFIG ?= ""
+PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_class-nativesdk = ""
+
+PACKAGECONFIG[cryptodev-linux] = "enable-devcryptoeng,disable-devcryptoeng,cryptodev-linux"
+
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
 
