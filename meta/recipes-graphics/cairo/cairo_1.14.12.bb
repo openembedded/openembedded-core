@@ -25,6 +25,8 @@ DEPENDS = "fontconfig glib-2.0 libpng pixman zlib"
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \ 
            file://0001-cairo-Fix-CVE-2017-9814.patch \
+           file://CVE-2019-6461.patch \
+           file://CVE-2019-6462.patch \
           "
 
 SRC_URI[md5sum] = "9f0db9dbfca0966be8acd682e636d165"
