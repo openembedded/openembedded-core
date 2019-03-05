@@ -14,11 +14,9 @@ DEPENDS_class-native = "zlib-native"
 # Blacklist a bogus tag in upstream check
 UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
 
-SRC_URI = "git://github.com/file/file.git \
-        file://debian-742262.patch \
-        "
+SRC_URI = "git://github.com/file/file.git"
 
-SRCREV = "d1ff3af7a2c6b38bdbdde7af26b59e3c50a48fff"
+SRCREV = "f3a4b9ada3ca99e62c62b9aa78eee4935a8094fe"
 S = "${WORKDIR}/git"
 
 inherit autotools update-alternatives
