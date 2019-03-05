@@ -17,6 +17,7 @@ SRC_URI = "${BASE_SRC_URI} \
            file://icu-pkgdata-large-cmd.patch \
            file://fix-install-manx.patch \
            file://0002-Add-ARC-support.patch \
+           file://CVE-2018-18928.patch \
            "
 
 SRC_URI_append_class-target = "\
