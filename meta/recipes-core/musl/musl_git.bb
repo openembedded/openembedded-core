@@ -4,7 +4,7 @@
 require musl.inc
 inherit linuxloader
 
-SRCREV = "6516282d2adfad2c7e66d854cde3357120c75dbd"
+SRCREV = "43e7efb46555f13a556d92944ac05c19b8929b60"
 
 BASEVER = "1.1.21"
 
@@ -15,7 +15,6 @@ PV = "${BASEVER}+git${SRCPV}"
 SRC_URI = "git://git.musl-libc.org/musl \
            file://0001-Make-dynamic-linker-a-relative-symlink-to-libc.patch \
            file://0002-ldso-Use-syslibdir-and-libdir-as-default-pathes-to-l.patch \
-           file://out_of_bounds_read.patch \
           "
 
 S = "${WORKDIR}/git"
