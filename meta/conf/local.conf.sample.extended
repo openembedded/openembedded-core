@@ -384,3 +384,11 @@
 #VIRTUAL-RUNTIME_login_manager = "shadow-base"
 #VIRTUAL-RUNTIME_init_manager = "systemd"
 #VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+
+#
+# Use a full set of packages instead of busybox for base utils
+#
+#PREFERRED_PROVIDER_base-utils = "packagegroup-core-base-utils"
+#VIRTUAL-RUNTIME_base-utils = "packagegroup-core-base-utils"
+#VIRTUAL-RUNTIME_base-utils-hwclock = "util-linux-hwclock"
+#VIRTUAL-RUNTIME_base-utils-syslog = "syslog"
