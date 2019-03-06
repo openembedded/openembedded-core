@@ -21,7 +21,6 @@ DEPENDS = "curl \
            libxml2 \
            openssl \
            sysfsutils \
-           libgcrypt \
           "
 
 PACKAGECONFIG ??= "libgcrypt libjitterentropy"
