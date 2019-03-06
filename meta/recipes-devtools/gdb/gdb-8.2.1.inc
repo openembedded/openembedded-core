@@ -18,6 +18,6 @@ SRC_URI = "http://ftp.gnu.org/gnu/gdb/gdb-${PV}.tar.xz \
            file://gdbserver-ctrl-c-handling.patch \
            file://0001-Fix-build-with-latest-GCC-9.0-tree.patch \
 "
-SRC_URI[md5sum] = "b5a49dbff00d9a87fbe114d14b3101c0"
-SRC_URI[sha256sum] = "c3a441a29c7c89720b734e5a9c6289c0a06be7e0c76ef538f7bbcef389347c39"
+SRC_URI[md5sum] = "f8b2562e830a4098dd5b5ea9e9296c70"
+SRC_URI[sha256sum] = "0a6a432907a03c5c8eaad3c3cffd50c00a40c3a5e3c4039440624bae703f2202"
 
