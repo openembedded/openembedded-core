@@ -73,8 +73,6 @@ do_install_prepend() {
 
 do_install_append() {
 
-	rm "${D}${bindir}/nslookup"
-	rm "${D}${mandir}/man1/nslookup.1"
 	rmdir "${D}${localstatedir}/run"
 	rmdir --ignore-fail-on-non-empty "${D}${localstatedir}"
 	install -d -o bind "${D}${localstatedir}/cache/bind"
@@ -118,8 +116,12 @@ CONFFILES_${PN} = " \
 	${sysconfdir}/bind/db.root \
 	"
 
+ALTERNATIVE_${PN}-utils = "nslookup"
+ALTERNATIVE_LINK_NAME[nslookup] = "${bindir}/nslookup"
+ALTERNATIVE_PRIORITY = "100"
+
 PACKAGE_BEFORE_PN += "${PN}-utils"
-FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/mdig ${bindir}/nsupdate"
+FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/mdig ${bindir}/nslookup ${bindir}/nsupdate"
 FILES_${PN}-dev += "${bindir}/isc-config.h"
 FILES_${PN} += "${sbindir}/generate-rndc-key.sh"
 
