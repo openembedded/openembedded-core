@@ -17,9 +17,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools update-rc.d systemd pkgconfig
 
-DEPENDS = "curl \
-           libxml2 \
-           openssl \
+DEPENDS = " \
            sysfsutils \
           "
 
@@ -28,6 +26,7 @@ PACKAGECONFIG_libc-musl = "libargp libjitterentropy"
 PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
 PACKAGECONFIG[libgcrypt] = "--with-libgcrypt,--without-libgcrypt,libgcrypt,"
 PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterentropy,libjitterentropy"
+PACKAGECONFIG[nistbeacon] = "--with-nistbeacon,--without-nistbeacon,curl libxml2 openssl"
 
 # Refer autogen.sh in rng-tools
 do_configure_prepend() {
