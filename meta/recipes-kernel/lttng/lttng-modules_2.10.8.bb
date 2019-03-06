@@ -15,6 +15,15 @@ COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm).*-linux'
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
+           file://0001-Fix-signal-Distinguish-between-kernel_siginfo-and-si.patch \
+           file://0002-Fix-signal-Remove-SEND_SIG_FORCED-v4.20.patch \
+           file://0003-Fix-ext4-adjust-reserved-cluster-count-when-removing.patch \
+           file://0004-Fix-timer-instrumentation-for-RHEL-7.6.patch \
+           file://0005-Fix-Remove-type-argument-from-access_ok-function-v5..patch \
+           file://0006-Fix-Replace-pointer-values-with-task-tk_pid-and-rpc_.patch \
+           file://0007-Fix-SUNRPC-Simplify-defining-common-RPC-trace-events.patch \
+           file://0008-Fix-btrfs-Remove-fsid-metadata_fsid-fields-from-btrf.patch \
+           file://0009-Cleanup-tp-mempool-Remove-logically-dead-code.patch \
            "
 
 SRC_URI[md5sum] = "54bd9fca61487bbec1b3fca2f2213c98"
