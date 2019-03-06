@@ -1,8 +1,7 @@
 From 694eba7bb974f6b8bd308804cb24350150108b2b Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Wed, 21 Nov 2018 15:12:43 +0800
-Subject: [PATCH] scripts: Use fixed input and output files instead of pipe for
- here-doc
+Subject: [PATCH] scripts: Use fixed input and output files instead of pipe for here-doc
 
 There was a bug of "as" in binutils that when it checks if the input file and
 output file are the same one, it would not check if they are on the same block
@@ -44,14 +43,14 @@ Signed-off-by: He Zhe <zhe.he@windriver.com>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/scripts/gcc-goto.sh b/scripts/gcc-goto.sh
-index 083c526..8dfac55 100755
+index 8b980fb22..d256a9438 100755
 --- a/scripts/gcc-goto.sh
 +++ b/scripts/gcc-goto.sh
 @@ -3,7 +3,7 @@
  # Test for gcc 'asm goto' support
  # Copyright (C) 2010, Jason Baron <jbaron@redhat.com>
  
--cat << "END" | $@ -x c - -c -o /dev/null >/dev/null 2>&1 && echo "y"
+-cat << "END" | $@ -x c - -fno-PIE -c -o /dev/null
 +cat << "END" > ./input
  int main(void)
  {
@@ -61,8 +60,8 @@ index 083c526..8dfac55 100755
  }
  END
 +
-+$@ -x c ./input -c -o ./output && echo "y"
++$@ -x c ./input -fno-PIE -c -o ./output
 +rm ./input ./output
 -- 
-2.7.4
+2.19.1
 
