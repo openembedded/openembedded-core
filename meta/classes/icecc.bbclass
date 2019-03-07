@@ -405,7 +405,8 @@ set_icecc_env() {
     export ICECC_VERSION ICECC_CC ICECC_CXX
     export PATH="$ICE_PATH:$PATH"
 
-    bbnote "Using icecc"
+    bbnote "Using icecc path: $ICE_PATH"
+    bbnote "Using icecc tarball: $ICECC_VERSION"
 }
 
 do_configure_prepend() {
