@@ -570,7 +570,7 @@ python populate_lic_qa_checksum() {
         bb.fatal("Fatal QA errors found, failing task.")
 }
 
-def package_qa_check_staged(path,d):
+def qa_check_staged(path,d):
     """
     Check staged la and pc files for common problems like references to the work
     directory.
@@ -589,20 +589,31 @@ def package_qa_check_staged(path,d):
     else:
         pkgconfigcheck = tmpdir
 
+    skip = (d.getVar('INSANE_SKIP') or "").split()
+    skip_la = False
+    if 'la' in skip:
+        bb.note("Recipe %s skipping qa checking: la" % d.getVar('PN'))
+        skip_la = True
+
+    skip_pkgconfig = False
+    if 'pkgconfig' in skip:
+        bb.note("Recipe %s skipping qa checking: pkgconfig" % d.getVar('PN'))
+        skip_pkgconfig = True
+
     # find all .la and .pc files
     # read the content
     # and check for stuff that looks wrong
     for root, dirs, files in os.walk(path):
         for file in files:
             path = os.path.join(root,file)
-            if file.endswith(".la"):
+            if file.endswith(".la") and not skip_la:
                 with open(path) as f:
                     file_content = f.read()
                     file_content = file_content.replace(recipesysroot, "")
                     if workdir in file_content:
                         error_msg = "%s failed sanity test (workdir) in path %s" % (file,root)
                         sane &= package_qa_handle_error("la", error_msg, d)
-            elif file.endswith(".pc"):
+            elif file.endswith(".pc") and not skip_pkgconfig:
                 with open(path) as f:
                     file_content = f.read()
                     file_content = file_content.replace(recipesysroot, "")
@@ -1034,8 +1045,7 @@ addtask do_package_qa_setscene
 
 python do_qa_staging() {
     bb.note("QA checking staging")
-
-    if not package_qa_check_staged(d.expand('${SYSROOT_DESTDIR}${libdir}'), d):
+    if not qa_check_staged(d.expand('${SYSROOT_DESTDIR}${libdir}'), d):
         bb.fatal("QA staging was broken by the package built above")
 }
 
