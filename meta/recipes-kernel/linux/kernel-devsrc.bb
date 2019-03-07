@@ -150,6 +150,13 @@ do_install() {
             cp -a --parents arch/arm64/kernel/module.lds $kerneldir/build/
 	fi
 
+	if [ "${ARCH}" = "powerpc" ]; then
+	    # 5.0 needs these files, but don't error if they aren't present in the source
+	    cp -a --parents arch/${ARCH}/kernel/syscalls/syscall.tbl $kerneldir/build/ 2>/dev/null || :
+	    cp -a --parents arch/${ARCH}/kernel/syscalls/syscalltbl.sh $kerneldir/build/ 2>/dev/null || :
+	    cp -a --parents arch/${ARCH}/kernel/syscalls/syscallhdr.sh $kerneldir/build/ 2>/dev/null || :
+	fi
+
 	# include the machine specific headers for ARM variants, if available.
 	if [ "${ARCH}" = "arm" ]; then
 	    cp -a --parents arch/${ARCH}/mach-*/include $kerneldir/build/
@@ -214,6 +221,9 @@ do_install() {
 	    cp -a --parents kernel/time/timeconst.bc $kerneldir/build
 	    cp -a --parents kernel/bounds.c $kerneldir/build
 	    cp -a --parents Kbuild $kerneldir/build
+	    cp -a --parents arch/mips/kernel/syscalls/*.sh $kerneldir/build
+	    cp -a --parents arch/mips/kernel/syscalls/*.tbl $kerneldir/build
+	    cp -a --parents arch/mips/tools/elf-entry.c $kerneldir/build 2>/dev/null || :
 	fi
 
         # required to build scripts/selinux/genheaders/genheaders
