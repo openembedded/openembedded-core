@@ -19,6 +19,7 @@ import datetime
 import re
 from oeqa.core.runner import OETestResultJSONHelper
 
+
 def load_json_file(file):
     with open(file, "r") as f:
         return json.load(f)
@@ -46,31 +47,34 @@ class ManualTestRunner(object):
     def _get_input(self, config):
         while True:
             output = input('{} = '.format(config))
-            if re.match('^[a-zA-Z0-9_]+$', output):
+            if re.match('^[a-zA-Z0-9_-]+$', output):
                 break
-            print('Only alphanumeric and underscore are allowed. Please try again')
+            print('Only alphanumeric and underscore/hyphen are allowed. Please try again')
         return output
 
     def _create_config(self):
+        from oeqa.utils.metadata import get_layers
+        from oeqa.utils.commands import get_bb_var
+        from resulttool.resultutils import store_map
+
+        layers = get_layers(get_bb_var('BBLAYERS'))
         self.configuration = {}
-        while True:
-            try:
-                conf_total = int(input('\nPlease provide how many configuration you want to save \n'))
-                break
-            except ValueError:
-                print('Invalid input. Please provide input as a number not character.')
-        for i in range(conf_total):
-            print('---------------------------------------------')
-            print('This is configuration #%s ' % (i + 1) + '. Please provide configuration name and its value')
-            print('---------------------------------------------')
-            name_conf = self._get_input('Configuration Name')
-            value_conf = self._get_input('Configuration Value')
-            print('---------------------------------------------\n')
-            self.configuration[name_conf.upper()] = value_conf
+        self.configuration['LAYERS'] = layers
         current_datetime = datetime.datetime.now()
         self.starttime = current_datetime.strftime('%Y%m%d%H%M%S')
         self.configuration['STARTTIME'] = self.starttime
-        self.configuration['TEST_TYPE'] = self.test_module
+        self.configuration['TEST_TYPE'] = 'manual'
+        self.configuration['TEST_MODULE'] = self.test_module
+
+        extra_config = set(store_map['manual']) - set(self.configuration)
+        for config in sorted(extra_config):
+            print('---------------------------------------------')
+            print('This is configuration #%s. Please provide configuration value(use "None" if not applicable).'
+                  % config)
+            print('---------------------------------------------')
+            value_conf = self._get_input('Configuration Value')
+            print('---------------------------------------------\n')
+            self.configuration[config] = value_conf
 
     def _create_result_id(self):
         self.result_id = 'manual_' + self.test_module + '_' + self.starttime
