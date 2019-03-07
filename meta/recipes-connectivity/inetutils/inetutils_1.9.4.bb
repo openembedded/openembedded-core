@@ -54,6 +54,8 @@ EXTRA_OECONF_append_libc-musl = " --disable-rsh --disable-rcp --disable-rlogin "
 do_configure_prepend () {
     export HELP2MAN='true'
     cp ${STAGING_DATADIR_NATIVE}/gettext/config.rpath ${S}/build-aux/config.rpath
+    install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}
+    install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}
     rm -f ${S}/glob/configure*
 }
 
