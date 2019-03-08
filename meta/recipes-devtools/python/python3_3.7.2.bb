@@ -65,6 +65,7 @@ EXTRANATIVEPATH += "python3-native"
 CACHED_CONFIGUREVARS = " \
                 ac_cv_file__dev_ptmx=yes \
                 ac_cv_file__dev_ptc=no \
+                ac_cv_working_tzset=yes \
 "
 
 PACKAGECONFIG_class-target ??= "readline ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'pgo', '', d)}"
