@@ -61,6 +61,7 @@ CACHED_CONFIGUREVARS = "ac_cv_have_chflags=no \
                 ac_cv_buggy_getaddrinfo=no \
                 ac_cv_file__dev_ptmx=yes \
                 ac_cv_file__dev_ptc=no \
+                ac_cv_working_tzset=yes \
 "
 
 TARGET_CC_ARCH += "-DNDEBUG -fno-inline"
