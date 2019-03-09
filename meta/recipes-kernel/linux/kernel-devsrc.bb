@@ -221,8 +221,8 @@ do_install() {
 	    cp -a --parents kernel/time/timeconst.bc $kerneldir/build
 	    cp -a --parents kernel/bounds.c $kerneldir/build
 	    cp -a --parents Kbuild $kerneldir/build
-	    cp -a --parents arch/mips/kernel/syscalls/*.sh $kerneldir/build
-	    cp -a --parents arch/mips/kernel/syscalls/*.tbl $kerneldir/build
+	    cp -a --parents arch/mips/kernel/syscalls/*.sh $kerneldir/build 2>/dev/null || :
+	    cp -a --parents arch/mips/kernel/syscalls/*.tbl $kerneldir/build 2>/dev/null || :
 	    cp -a --parents arch/mips/tools/elf-entry.c $kerneldir/build 2>/dev/null || :
 	fi
 
