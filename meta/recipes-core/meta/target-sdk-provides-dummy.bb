@@ -2,9 +2,17 @@ DUMMYARCH = "sdk-provides-dummy-target"
 
 DUMMYPROVIDES = "\
     busybox \
+    busybox-dev \
+    busybox-src \
     coreutils \
+    coreutils-dev \
+    coreutils-src \
     bash \
+    bash-dev \
+    bash-src \
     perl \
+    perl-dev \
+    perl-src \
     perl-module-re \
     perl-module-strict \
     perl-module-vars \
@@ -34,6 +42,8 @@ DUMMYPROVIDES = "\
     /usr/bin/env \
     /usr/bin/perl \
     pkgconfig \
+    pkgconfig-dev \
+    pkgconfig-src \
 "
 
 require dummy-sdk-package.inc
