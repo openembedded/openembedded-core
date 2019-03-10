@@ -13,8 +13,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8fbed71dddf48541818cef8079124199"
 DEPENDS += "libxmu libxau"
 PE = "1"
 
-SRC_URI[md5sum] = "f5d490738b148cb7f2fe760f40f92516"
-SRC_URI[sha256sum] = "93e619ee15471f576cfb30c663e18f5bc70aca577a63d2c2c03f006a7837c29a"
+SRC_URI[md5sum] = "a48c72954ae6665e0616f6653636da8c"
+SRC_URI[sha256sum] = "a2dc3c579e13674947395ef8ccc1b3763f89012a216c2cc6277096489aadc396"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
