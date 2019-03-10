@@ -28,11 +28,10 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://blank-cert9.db \
            file://blank-key4.db \
            file://system-pkcs11.txt \
-           file://nss-fix-SHA_HTONL-bug-for-arm-32be.patch \
            "
 
-SRC_URI[md5sum] = "eec62a289387a7ce2fd9cca1f76600f3"
-SRC_URI[sha256sum] = "ab2e18f5d0dd0079c0005396f9beb9a41e9a1bbc7e6c1d0a99affcef0471712d"
+SRC_URI[md5sum] = "1f6cc6c702379478a3a72298caaef0a7"
+SRC_URI[sha256sum] = "087db37d38fd49dfd584dd2a8b5baa7fc88de7c9bd97c0c2d5be4abcafc61fc6"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
