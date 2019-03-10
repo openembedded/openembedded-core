@@ -20,8 +20,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0001-Disable-PIE-during-link.patch \
            "
 
-SRC_URI[md5sum] = "43845327af54b002aaebd5b8076c7bd7"
-SRC_URI[sha256sum] = "594ac13ea437c70b0d5f0eaf5075b93422b05c23c2a5e21991d2442bbd202d86"
+SRC_URI[md5sum] = "052458f0a35c2a3b0d2302caa3318e9f"
+SRC_URI[sha256sum] = "913c8dee918e5855a4ba60d609371390978144b4c8d15d6446ca0057b7bc5e58"
 
 inherit autotools update-rc.d systemd
 
