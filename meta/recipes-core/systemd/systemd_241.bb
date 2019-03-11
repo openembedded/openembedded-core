@@ -102,7 +102,6 @@ PACKAGECONFIG_remove_libc-musl = " \
     nss-mymachines \
     nss-resolve \
     resolved \
-    selinux \
     smack \
     sysusers \
     utmp \
