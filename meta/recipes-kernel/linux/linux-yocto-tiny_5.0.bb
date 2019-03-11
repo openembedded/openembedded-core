@@ -15,9 +15,9 @@ DEPENDS += "openssl-native util-linux-native"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-SRCREV_machine_qemuarm ?= "6da91ac9afd3b8c144760e3ceacc6a812ddfa3f6"
-SRCREV_machine ?= "1a0da7e50b77c82841efb501c648dbaca699eac2"
-SRCREV_meta ?= "4faa4419884d2bbe65f637befd71a1e95629eaae"
+SRCREV_machine_qemuarm ?= "2260c031075188dce4d30223527dda68e3940574"
+SRCREV_machine ?= "37c8f2a3df1e3154087538a27228fad0c6e172c5"
+SRCREV_meta ?= "8fbd119bd954443b1cae496d7797c458faa02495"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
