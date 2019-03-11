@@ -12,11 +12,12 @@ LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8902e6643f7bcd7793b23dcd5d8031a4"
 
 DEPENDS += "libxrender libxfixes"
-BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
 
 XORG_PN = "libXcursor"
 
-SRC_URI[md5sum] = "58fe3514e1e7135cf364101e714d1a14"
-SRC_URI[sha256sum] = "294e670dd37cd23995e69aae626629d4a2dfe5708851bbc13d032401b7a3df6b"
+SRC_URI[md5sum] = "9b9be0e289130fb820aedf67705fc549"
+SRC_URI[sha256sum] = "3ad3e9f8251094af6fe8cb4afcf63e28df504d46bfa5a5529db74a505d628782"
+
+BBCLASSEXTEND = "native nativesdk"
