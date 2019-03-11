@@ -15,7 +15,7 @@ def find_patches(d,subdir):
         patchdir = ''
         if "patchdir" in parm:
             patchdir = parm["patchdir"]
-        if patchdir:
+        if subdir:
             if subdir == patchdir:
                 patch_list.append(local)
         else:
