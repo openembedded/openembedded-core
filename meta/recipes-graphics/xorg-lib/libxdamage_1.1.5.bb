@@ -18,11 +18,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=9fe101f30dd24134cf43146863241868"
 
 DEPENDS += "virtual/libx11 xorgproto libxfixes"
 PROVIDES = "xdamage"
-BBCLASSEXTEND = "native nativesdk"
 
 PE = "1"
 
 XORG_PN = "libXdamage"
 
-SRC_URI[md5sum] = "0cf292de2a9fa2e9a939aefde68fd34f"
-SRC_URI[sha256sum] = "7c3fe7c657e83547f4822bfde30a90d84524efb56365448768409b77f05355ad"
+SRC_URI[md5sum] = "e3f554267a7a04b042dc1f6352bd6d99"
+SRC_URI[sha256sum] = "b734068643cac3b5f3d2c8279dd366b5bf28c7219d9e9d8717e1383995e0ea45"
+
+BBCLASSEXTEND = "native nativesdk"
