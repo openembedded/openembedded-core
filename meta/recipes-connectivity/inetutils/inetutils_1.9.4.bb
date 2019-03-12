@@ -49,7 +49,9 @@ EXTRA_OECONF = "--with-ncurses-include-dir=${STAGING_INCDIR} \
         --enable-rpath=no \
 "
 
-EXTRA_OECONF_append_libc-musl = " --disable-rsh --disable-rcp --disable-rlogin --disable-rexec --disable-rexecd"
+# These are horrible for security, disable them
+EXTRA_OECONF_append = " --disable-rsh --disable-rshd --disable-rcp \
+        --disable-rlogin --disable-rlogind --disable-rexec --disable-rexecd"
 
 do_configure_prepend () {
     export HELP2MAN='true'
