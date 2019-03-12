@@ -107,9 +107,17 @@ class ResultsTextReport(object):
                                  maxlen=maxlen)
         print(output)
 
-    def view_test_report(self, logger, source_dir, tag):
+    def view_test_report(self, logger, source_dir, branch, commit, tag):
         test_count_reports = []
-        if tag:
+        if commit:
+            if tag:
+                logger.warning("Ignoring --tag as --commit was specified")
+            tag_name = "{branch}/{commit_number}-g{commit}/{tag_number}"
+            repo = GitRepo(source_dir)
+            revs = gitarchive.get_test_revs(logger, repo, tag_name, branch=branch)
+            rev_index = gitarchive.rev_find(revs, 'commit', commit)
+            testresults = resultutils.git_get_result(repo, revs[rev_index][2])
+        elif tag:
             repo = GitRepo(source_dir)
             testresults = resultutils.git_get_result(repo, [tag])
         else:
@@ -125,7 +133,7 @@ class ResultsTextReport(object):
 
 def report(args, logger):
     report = ResultsTextReport()
-    report.view_test_report(logger, args.source_dir, args.tag)
+    report.view_test_report(logger, args.source_dir, args.branch, args.commit, args.tag)
     return 0
 
 def register_commands(subparsers):
@@ -136,5 +144,7 @@ def register_commands(subparsers):
     parser_build.set_defaults(func=report)
     parser_build.add_argument('source_dir',
                               help='source file/directory that contain the test result files to summarise')
+    parser_build.add_argument('--branch', '-B', default='master', help="Branch to find commit in")
+    parser_build.add_argument('--commit', help="Revision to report")
     parser_build.add_argument('-t', '--tag', default='',
                               help='source_dir is a git repository, report on the tag specified from that repository')
