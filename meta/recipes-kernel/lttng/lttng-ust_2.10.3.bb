@@ -8,7 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c963eb366b781252b0bf0fdf1624d9e9 \
                     file://snprintf/snprintf.c;endline=32;md5=d3d544959d8a3782b2e07451be0a903c \
                     file://snprintf/various.h;endline=31;md5=89f2509b6b4682c4fc95255eec4abe44"
 
-inherit autotools lib_package manpages
+PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
+                 am_cv_python_pythondir='${PYTHON_SITEPACKAGES_DIR}' \
+                 PYTHON_INCLUDE='-I${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}' \
+"
+
+inherit autotools lib_package manpages python3native
 
 DEPENDS = "liburcu util-linux"
 RDEPENDS_${PN}-bin = "python3-core"
@@ -29,6 +34,11 @@ SRC_URI[sha256sum] = "9e8420f90d5f963f7aa32bc6d44adc1e491136f687c69ffb7a3075d33b
 CVE_PRODUCT = "ust"
 
 PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-native xmlto-native libxslt-native"
+PACKAGECONFIG[python3-agent] = "--enable-python-agent ${PYTHON_OPTION}, --disable-python-agent, python3, python3"
+
+FILES_${PN} += " ${PYTHON_SITEPACKAGES_DIR}/*"
+FILES_${PN}-staticdev += " ${PYTHON_SITEPACKAGES_DIR}/*.a"
+FILES_${PN}-dev += " ${PYTHON_SITEPACKAGES_DIR}/*.la"
 
 do_install_append() {
         # Patch python tools to use Python 3; they should be source compatible, but
