@@ -11,7 +11,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 
 DEPENDS = "liburcu popt libxml2 util-linux"
 RDEPENDS_${PN} = "libgcc"
-RDEPENDS_${PN}-ptest += "make perl bash gawk ${PN} babeltrace procps"
+RDEPENDS_${PN}-ptest += "make perl bash gawk ${PN} babeltrace procps perl-module-overloading coreutils util-linux"
+RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
+RDEPENDS_${PN}-ptest_append_libc-musl = " musl-utils"
 # babelstats.pl wants getopt-long
 RDEPENDS_${PN}-ptest += "perl-module-getopt-long"
 
@@ -140,15 +142,6 @@ do_install_ptest () {
         -e 's#\(^test.*SOURCES.=\)#disable\1#g' \
         -e 's#\(^test.*LDADD.=\)#disable\1#g' \
         -i ${D}${PTEST_PATH}/tests/unit/Makefile
-
-    #
-    # Disable notification tools tests as currently
-    # these hang and cause the rest of the ptests to timeout
-    #
-    sed -e 's#tools/notification/test_notification_ust##g' \
-        -e 's#tools/notification/test_notification_kernel##g' \
-        -e 's#tools/notification/test_notification_multi_app##g' \
-        -i ${D}${PTEST_PATH}/tests/regression/Makefile
 
     # Substitute links to installed binaries.
     for prog in lttng lttng-relayd lttng-sessiond lttng-consumerd lttng-crash; do
