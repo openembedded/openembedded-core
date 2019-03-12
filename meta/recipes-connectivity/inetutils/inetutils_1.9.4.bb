@@ -49,7 +49,7 @@ EXTRA_OECONF = "--with-ncurses-include-dir=${STAGING_INCDIR} \
         --enable-rpath=no \
 "
 
-EXTRA_OECONF_append_libc-musl = " --disable-rsh --disable-rcp --disable-rlogin "
+EXTRA_OECONF_append_libc-musl = " --disable-rsh --disable-rcp --disable-rlogin --disable-rexec --disable-rexecd"
 
 do_configure_prepend () {
     export HELP2MAN='true'
@@ -72,21 +72,23 @@ do_install_append () {
     mv ${D}${libexecdir}/syslogd ${D}${base_sbindir}/
     mv ${D}${libexecdir}/tftpd ${D}${sbindir}/in.tftpd
     mv ${D}${libexecdir}/telnetd ${D}${sbindir}/in.telnetd
-    mv ${D}${libexecdir}/rexecd ${D}${sbindir}/in.rexecd
+    if [ -e ${D}${libexecdir}/rexecd ]; then
+        mv ${D}${libexecdir}/rexecd ${D}${sbindir}/in.rexecd
+        cp ${WORKDIR}/rexec.xinetd.inetutils ${D}/${sysconfdir}/xinetd.d/rexec
+    fi
     if [ -e ${D}${libexecdir}/rlogind ]; then
         mv ${D}${libexecdir}/rlogind ${D}${sbindir}/in.rlogind
+        cp ${WORKDIR}/rlogin.xinetd.inetutils ${D}/${sysconfdir}/xinetd.d/rlogin
     fi
     if [ -e ${D}${libexecdir}/rshd ]; then
         mv ${D}${libexecdir}/rshd ${D}${sbindir}/in.rshd
+        cp ${WORKDIR}/rsh.xinetd.inetutils ${D}/${sysconfdir}/xinetd.d/rsh
     fi
     if [ -e ${D}${libexecdir}/talkd ]; then
         mv ${D}${libexecdir}/talkd ${D}${sbindir}/in.talkd
     fi
     mv ${D}${libexecdir}/uucpd ${D}${sbindir}/in.uucpd
     mv ${D}${libexecdir}/* ${D}${bindir}/
-    cp ${WORKDIR}/rexec.xinetd.inetutils  ${D}/${sysconfdir}/xinetd.d/rexec
-    cp ${WORKDIR}/rlogin.xinetd.inetutils  ${D}/${sysconfdir}/xinetd.d/rlogin
-    cp ${WORKDIR}/rsh.xinetd.inetutils  ${D}/${sysconfdir}/xinetd.d/rsh
     cp ${WORKDIR}/telnet.xinetd.inetutils  ${D}/${sysconfdir}/xinetd.d/telnet
     cp ${WORKDIR}/tftpd.xinetd.inetutils  ${D}/${sysconfdir}/xinetd.d/tftpd
 
@@ -132,15 +134,6 @@ ALTERNATIVE_${PN}-telnetd = "telnetd"
 ALTERNATIVE_LINK_NAME[telnetd] = "${sbindir}/telnetd"
 ALTERNATIVE_TARGET[telnetd] = "${sbindir}/in.telnetd"
 
-ALTERNATIVE_${PN}-rsh = "rcp rexec rlogin rsh"
-ALTERNATIVE_${PN}-rshd = "rshd rexecd rlogind"
-ALTERNATIVE_LINK_NAME[rshd] = "${sbindir}/rshd"
-ALTERNATIVE_TARGET[rshd] = "${sbindir}/in.rshd"
-ALTERNATIVE_LINK_NAME[rexecd] = "${sbindir}/rexecd"
-ALTERNATIVE_TARGET[rexecd] = "${sbindir}/in.rexecd"
-ALTERNATIVE_LINK_NAME[rlogind] = "${sbindir}/rlogind"
-ALTERNATIVE_TARGET[rlogind] = "${sbindir}/in.rlogind"
-
 ALTERNATIVE_${PN}-inetd= "inetd"
 ALTERNATIVE_${PN}-traceroute = "traceroute"
 
@@ -178,13 +171,20 @@ FILES_${PN}-ftp = "${bindir}/ftp.${BPN}"
 
 FILES_${PN}-tftp = "${bindir}/tftp.${BPN}"
 FILES_${PN}-telnet = "${bindir}/telnet.${BPN}"
-FILES_${PN}-rsh = "${bindir}/rsh.${BPN} ${bindir}/rlogin.${BPN} ${bindir}/rexec.${BPN} ${bindir}/rcp.${BPN}"
+
+# We make us of RCONFLICTS / RPROVIDES here rather than using the normal
+# alternatives method as this leads to packaging QA issues when using
+# musl as that library does not provide what these applications need to
+# build.
+FILES_${PN}-rsh = "${bindir}/rsh ${bindir}/rlogin ${bindir}/rexec ${bindir}/rcp"
+RCONFLICTS_${PN}-rsh += "netkit-rsh-client"
+RPROVIDES_${PN}-rsh = "rsh"
 
 FILES_${PN}-rshd = "${sbindir}/in.rshd ${sbindir}/in.rlogind ${sbindir}/in.rexecd \
                     ${sysconfdir}/xinetd.d/rsh ${sysconfdir}/xinetd.d/rlogin ${sysconfdir}/xinetd.d/rexec"
 FILES_${PN}-rshd-dbg = "${sbindir}/.debug/in.rshd ${sbindir}/.debug/in.rlogind ${sbindir}/.debug/in.rexecd"
 RDEPENDS_${PN}-rshd += "xinetd tcp-wrappers"
-RCONFLICTS_${PN}-rshd += "netkit-rshd"
+RCONFLICTS_${PN}-rshd += "netkit-rshd-server"
 RPROVIDES_${PN}-rshd = "rshd"
 
 FILES_${PN}-ftpd = "${bindir}/ftpd.${BPN}"
