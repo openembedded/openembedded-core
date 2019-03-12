@@ -89,6 +89,9 @@ do_install_ptest () {
         install -d "${D}${PTEST_PATH}/tests/$d"
         find "${B}/tests/$d" -maxdepth 1 -executable -type f \
             -exec install -t "${D}${PTEST_PATH}/tests/$d" {} +
+        # Take all .py scripts for tests using the python bindings.
+        find "${B}/tests/$d" -maxdepth 1 -type f -name "*.py" \
+            -exec install -t "${D}${PTEST_PATH}/tests/$d" {} +
         test -r "${B}/tests/$d/Makefile" && \
             install -t "${D}${PTEST_PATH}/tests/$d" "${B}/tests/$d/Makefile"
     done
@@ -100,10 +103,20 @@ do_install_ptest () {
                 *.so)
                     install -d ${D}${PTEST_PATH}/tests/$d/
                     ln -s  ../$f ${D}${PTEST_PATH}/tests/$d/$f
+                    # Remove any rpath/runpath to pass QA check.
+                    chrpath --delete ${D}${PTEST_PATH}/tests/$d/$f
                     ;;
             esac
         done
     done
+
+    #
+    # Use the versioned libs of liblttng-ust-dl.
+    #
+    ustdl="${D}${PTEST_PATH}/tests/regression/ust/ust-dl/test_ust-dl.py"
+    if [ -e $ustdl ]; then
+        sed -i -e 's!:liblttng-ust-dl.so!:liblttng-ust-dl.so.0!' $ustdl
+    fi
 
     install ${B}/tests/unit/ini_config/sample.ini ${D}${PTEST_PATH}/tests/unit/ini_config/
 
@@ -120,16 +133,6 @@ do_install_ptest () {
         -e 's/^builddir = \(.*\)/builddir = ./' \
         -e 's/^all-am:.*/all-am:/' \
         {} +
-
-    # These objects trigger [rpaths] QA checks; the test harness
-    # skips the associated tests if they're missing, so delete
-    # them.
-    objs=""
-    objs="$objs regression/ust/ust-dl/libbar.so"
-    objs="$objs regression/ust/ust-dl/libfoo.so"
-    for obj in $objs ; do
-        rm -f "${D}${PTEST_PATH}/tests/${obj}"
-    done
 
     find "${D}${PTEST_PATH}" -name Makefile -type f -exec \
         touch -r "${B}/Makefile" {} +
