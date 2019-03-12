@@ -13,7 +13,10 @@ SRC_URI = "git://anongit.freedesktop.org/virglrenderer \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig distro_features_check
 
 BBCLASSEXTEND = "native nativesdk"
 
+REQUIRED_DISTRO_FEATURES = "opengl"
+REQUIRED_DISTRO_FEATURES_class-native = ""
+REQUIRED_DISTRO_FEATURES_class-nativesdk = ""
