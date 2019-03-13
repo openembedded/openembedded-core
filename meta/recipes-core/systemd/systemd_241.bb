@@ -195,7 +195,6 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
 
 # Hardcode target binary paths to avoid using paths from sysroot
 EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
-                  -Dkill-path=${base_bindir}/kill \
                   -Dkmod-path=${base_bindir}/kmod \
                   -Dmount-path=${base_bindir}/mount \
                   -Dquotacheck-path=${sbindir}/quotacheck \
