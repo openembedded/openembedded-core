@@ -22,8 +22,7 @@ DEPENDS = "glib-2.0-native \
            virtual/libintl \
            virtual/libiconv \
            libffi \
-           zlib \
-           ${@bb.utils.contains('PTEST_ENABLED', '1', 'dbus', '', d)}"
+           zlib"
 
 PACKAGES += "${PN}-codegen ${PN}-utils"
 
@@ -43,19 +42,17 @@ unset _PYTHON_SYSCONFIGDATA_NAME
 
 S = "${WORKDIR}/glib-${PV}"
 
-PACKAGECONFIG ??= "system-pcre libmount"
+PACKAGECONFIG ??= "system-pcre libmount \
+                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 # To use the system pcre it must be configured with --enable-unicode-properties
 PACKAGECONFIG[system-pcre] = "-Dinternal_pcre=false,-Dinternal_pcre=true,libpcre"
 PACKAGECONFIG[libmount] = "-Dlibmount=true,-Dlibmount=false,util-linux"
 PACKAGECONFIG[manpages] = "-Dman=true, -Dman=false, libxslt-native xmlto-native"
 # libelf is auto-detected without a configuration option
 PACKAGECONFIG[libelf] = ",,elfutils"
+PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false,dbus"
 
-CORECONF = "-Ddtrace=false -Dfam=false -Dsystemtap=false -Dselinux=false"
-
-EXTRA_OEMESON = "${CORECONF} ${@bb.utils.contains('PTEST_ENABLED', '1', '-Dinstalled_tests=true', '-Dinstalled_tests=false', d)}"
-EXTRA_OEMESON_class-native = "${CORECONF} -Dinstalled_tests=false"
-EXTRA_OEMESON_class-nativesdk = "${CORECONF} -Dinstalled_tests=false"
+EXTRA_OEMESON = "-Ddtrace=false -Dfam=false -Dsystemtap=false -Dselinux=false"
 
 do_configure_prepend() {
 	sed -i -e '1s,#!.*,#!${USRBINPATH}/env python3,' ${S}/gio/gdbus-2.0/codegen/gdbus-codegen.in
