@@ -23,6 +23,12 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0011-Revert-linux-user-fix-mmap-munmap-mprotect-mremap-sh.patch \
            file://0001-Add-a-missing-X11-include.patch \
            file://0001-egl-headless-add-egl_create_context.patch \
+           file://0014-fix-CVE-2018-16872.patch \
+           file://0015-fix-CVE-2018-20124.patch \
+           file://0016-fix-CVE-2018-20125.patch \
+           file://0017-fix-CVE-2018-20126.patch \
+           file://0018-fix-CVE-2018-20191.patch \
+           file://0019-fix-CVE-2018-20216.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
