@@ -1,7 +1,7 @@
-From f48b8f073f921ce5be859130313e9d392ef3e78e Mon Sep 17 00:00:00 2001
+From 5489e1d22e18740a1924628c5c97096d48dcfbf8 Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Fri, 15 Feb 2019 10:57:06 -0200
-Subject: [PATCH 4/5] use PKG_CHECK_VAR for defining WAYLAND_PROTOCOLS_DATADIR
+Subject: [PATCH 4/4] use PKG_CHECK_VAR for defining WAYLAND_PROTOCOLS_DATADIR
 Organization: O.S. Systems Software LTDA.
 
 This allows to override the wayland-protocols pkgdatadir with the
@@ -21,10 +21,10 @@ Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 0065376f4b7..b21fb2210c6 100644
+index 13fed9daf59..6cff8afb7cf 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1839,7 +1839,7 @@ for plat in $platforms; do
+@@ -1852,7 +1852,7 @@ for plat in $platforms; do
          if test "x$enable_egl" = xyes; then
            PKG_CHECK_MODULES([WAYLAND_EGL], [wayland-egl-backend >= $WAYLAND_EGL_BACKEND_REQUIRED])
          fi
@@ -33,3 +33,6 @@ index 0065376f4b7..b21fb2210c6 100644
  
          PKG_CHECK_EXISTS([wayland-scanner >= 1.15],
                            AC_SUBST(SCANNER_ARG, 'private-code'),
+-- 
+2.21.0
+
