@@ -1,7 +1,7 @@
 [
   {
     "test": {
-      "@alias": "toaster.toaster.Create_a_Yocto_project_and_start_the_Toaster",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Create_a_Yocto_project_and_start_the_Toaster",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -31,7 +31,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Sort_the_content_of_the_builds_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Sort_the_content_of_the_builds_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -69,7 +69,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Search_the_content_of_the_builds_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Search_the_content_of_the_builds_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -107,7 +107,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Filter_the_content_of_the_builds_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Filter_the_content_of_the_builds_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -149,7 +149,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Tasks_in_toaster_UI",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Tasks_in_toaster_UI",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -231,7 +231,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.package_detail_in_toaster_UI",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.package_detail_in_toaster_UI",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -285,7 +285,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.recipes:_Sort_the_content_of_the_recipes_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.recipes:_Sort_the_content_of_the_recipes_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -327,7 +327,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.recipes:_Search_the_content_of_the_recipes_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.recipes:_Search_the_content_of_the_recipes_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -385,7 +385,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.recipes:_Customise_the_columns_of_the_recipes_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.recipes:_Customise_the_columns_of_the_recipes_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -411,7 +411,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.recipes:_View_a_table_with_all_the_recipes_included_in_an_image_recipe",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.recipes:_View_a_table_with_all_the_recipes_included_in_an_image_recipe",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -441,7 +441,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.recipes:_View_detailed_information_about_a_recipe。",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.recipes:_View_detailed_information_about_a_recipe。",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -495,7 +495,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.variables:_Search_the_content_of_the_bitbake_variables_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.variables:_Search_the_content_of_the_bitbake_variables_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -545,7 +545,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.variables:_Sort_the_content_of_the_bitbake_variables_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.variables:_Sort_the_content_of_the_bitbake_variables_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -579,7 +579,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.builds:_View_a_table_of_all_the_builds_run_for_a_certain_build_directory",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.builds:_View_a_table_of_all_the_builds_run_for_a_certain_build_directory",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -605,7 +605,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.builds:_Customise_the_columns_of_the_builds_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.builds:_Customise_the_columns_of_the_builds_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -635,7 +635,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.packages:_View_a_table_with_all_the_packages_built_for_an_image_recipe",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.packages:_View_a_table_with_all_the_packages_built_for_an_image_recipe",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -673,7 +673,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.packages:_Sort_the_content_of_the_packages_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.packages:_Sort_the_content_of_the_packages_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -735,7 +735,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.packages:_Customise_the_columns_of_the_packages_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.packages:_Customise_the_columns_of_the_packages_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -769,7 +769,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.packages:_Search_the_content_of_the_packages_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.packages:_Search_the_content_of_the_packages_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -823,7 +823,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.View_detailed_information_about_a_layer",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.View_detailed_information_about_a_layer",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -853,7 +853,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Select_the_number_of_table_rows_displayed_per_page",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Select_the_number_of_table_rows_displayed_per_page",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -891,7 +891,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.View_detailed_configuration_information_for_a_build",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.View_detailed_configuration_information_for_a_build",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -945,7 +945,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.variables:_Customise_the_columns_of_the_bitbake_variables_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.variables:_Customise_the_columns_of_the_bitbake_variables_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -971,7 +971,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.variables:_Filter_the_content_of_the_bitbake_variables_table",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.variables:_Filter_the_content_of_the_bitbake_variables_table",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -1005,7 +1005,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.View_and_navigate_the_full_directory_structure_of_built_images",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.View_and_navigate_the_full_directory_structure_of_built_images",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -1047,7 +1047,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.View_a_summary_of_all_the_information_available_for_a_build",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.View_a_summary_of_all_the_information_available_for_a_build",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -1089,7 +1089,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Display_the_content_of_error_messages_and_warnings",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Display_the_content_of_error_messages_and_warnings",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
@@ -1119,7 +1119,7 @@
   },
   {
     "test": {
-      "@alias": "toaster.toaster.Build_summary_information_fully_implemented",
+      "@alias": "toaster-unmanaged-mode.toaster-unmanaged.Build_summary_information_fully_implemented",
       "author": [
         {
           "email": "Yuan.Sun2@windriver.com",
