@@ -68,6 +68,8 @@ def go_map_arch(a, d):
         return 'ppc64'
     elif re.match('p(pc|owerpc)(64el)', a):
         return 'ppc64le'
+    elif a == 'riscv64':
+        return 'riscv64'
     else:
         raise bb.parse.SkipRecipe("Unsupported CPU architecture: %s" % a)
 
