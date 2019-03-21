@@ -26,7 +26,7 @@ SRC_URI[sha256sum] = "ab7688842908d3583a704d491956f31324c3a5fc9f6a04653cb75d19f1
 
 inherit autotools-brokensep ptest systemd
 
-SYSTEMD_SERVICE_${PN} = "mdmonitor.service"
+SYSTEMD_SERVICE_${PN} = "mdmonitor.service mdmon@.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
 CFLAGS_append_toolchain-clang = " -Wno-error=address-of-packed-member"
@@ -57,6 +57,7 @@ do_install_append() {
         install -m 644 ${S}/mdadm.conf-example ${D}${sysconfdir}/mdadm.conf
         install -d ${D}/${systemd_unitdir}/system
         install -m 644 ${WORKDIR}/mdmonitor.service ${D}/${systemd_unitdir}/system
+        install -m 644 ${S}/systemd/mdmon@.service ${D}/${systemd_unitdir}/system
         install -d ${D}/${sysconfdir}/init.d
         install -m 755 ${WORKDIR}/mdadm.init ${D}${sysconfdir}/init.d/mdmonitor
 }
