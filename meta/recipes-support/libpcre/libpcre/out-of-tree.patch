@@ -1,6 +1,6 @@
 In out-of-tree builds the #include fails because $srcdir isn't in the include path.  Set CPPFLAGS so that it is.
 
-Upstream-Status: Submitted [https://bugs.exim.org/show_bug.cgi?id=2379]
+Upstream-Status: Backport [r1750]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 Index: configure.ac
