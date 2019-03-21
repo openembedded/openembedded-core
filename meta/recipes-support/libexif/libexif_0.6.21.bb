@@ -12,7 +12,4 @@ SRC_URI[sha256sum] = "16cdaeb62eb3e6dfab2435f7d7bccd2f37438d21c5218ec4e58efa9157
 
 inherit autotools gettext
 
-do_configure_append() {
-	sed -i s:doc\ binary:binary:g Makefile
-}
-
+EXTRA_OECONF += "--disable-docs"
