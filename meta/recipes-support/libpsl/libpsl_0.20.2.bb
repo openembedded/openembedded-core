@@ -16,3 +16,5 @@ inherit autotools gettext gtk-doc manpages pkgconfig lib_package
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[manpages] = "--enable-man,--disable-man,libxslt-native"
+
+BBCLASSEXTEND = "native nativesdk"
