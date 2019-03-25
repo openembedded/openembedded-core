@@ -11,22 +11,22 @@ KBRANCH_qemux86  ?= "v4.19/standard/base"
 KBRANCH_qemux86-64 ?= "v4.19/standard/base"
 KBRANCH_qemumips64 ?= "v4.19/standard/mti-malta64"
 
-SRCREV_machine_qemuarm ?= "5fe7d1bfb1d030c1e696efef2ee89974874c0b01"
-SRCREV_machine_qemuarm64 ?= "148322096f4147947955fa83c9863eed4ac23897"
-SRCREV_machine_qemumips ?= "7ec0c72dac55c5b72c82fb3bcc4f44ff59d79c4d"
-SRCREV_machine_qemuppc ?= "148322096f4147947955fa83c9863eed4ac23897"
-SRCREV_machine_qemux86 ?= "148322096f4147947955fa83c9863eed4ac23897"
-SRCREV_machine_qemux86-64 ?= "148322096f4147947955fa83c9863eed4ac23897"
-SRCREV_machine_qemumips64 ?= "141bb3296422e09cfb0a8ef06f2e7f1748bb8f65"
-SRCREV_machine ?= "148322096f4147947955fa83c9863eed4ac23897"
-SRCREV_meta ?= "b173a1b0a218f2bebc28251ef08ee592652b6bc0"
+SRCREV_machine_qemuarm ?= "3df49db2ea9b8e800cb30d5d695d4d2a2f8c1bed"
+SRCREV_machine_qemuarm64 ?= "253c39a252f25843111b7be0c8247eb4bd6c328d"
+SRCREV_machine_qemumips ?= "5dc975d0e586edd5d33bce62560f998f9a246be6"
+SRCREV_machine_qemuppc ?= "253c39a252f25843111b7be0c8247eb4bd6c328d"
+SRCREV_machine_qemux86 ?= "253c39a252f25843111b7be0c8247eb4bd6c328d"
+SRCREV_machine_qemux86-64 ?= "253c39a252f25843111b7be0c8247eb4bd6c328d"
+SRCREV_machine_qemumips64 ?= "bb7ae8a8cbe76c9ce2804f651936f059f9f621a2"
+SRCREV_machine ?= "253c39a252f25843111b7be0c8247eb4bd6c328d"
+SRCREV_meta ?= "d85f07e03c980eca5ffd5ba058985d6ed3a83801"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRANCH}; \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.19;destsuffix=${KMETA} \
           "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
-LINUX_VERSION ?= "4.19.19"
+LINUX_VERSION ?= "4.19.30"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
