@@ -28,8 +28,8 @@ DEPENDS = "ncurses"
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
 	  "
 
-SRC_URI[md5sum] = "d12863d348077739a4d3bc67ad9b7f00"
-SRC_URI[sha256sum] = "eec42357903faabfb294ffcc41ff08cbb29db54db46568cd8d0ed15a0482e19d"
+SRC_URI[md5sum] = "8caff88e34afff512b663d7c690bd2cf"
+SRC_URI[sha256sum] = "6a53639f08d7ed05b6e104b82c32193f79ac01a3eddb20e114e1c261948bd57b"
 
 UPSTREAM_CHECK_URI = "http://www.greenwoodsoftware.com/less/download.html"
 
