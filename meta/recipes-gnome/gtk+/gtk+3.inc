@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.gtk.org"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "libs"
 
-DEPENDS = "glib-2.0 cairo pango atk jpeg libpng gdk-pixbuf \
+DEPENDS = "glib-2.0 cairo pango atk jpeg libpng gdk-pixbuf librsvg \
            gdk-pixbuf-native"
 
 LICENSE = "LGPLv2 & LGPLv2+ & LGPLv2.1+"
