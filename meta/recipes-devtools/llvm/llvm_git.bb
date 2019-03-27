@@ -12,7 +12,7 @@ DEPENDS = "libffi libxml2 zlib ninja-native llvm-native"
 
 RDEPENDS_${PN}_append_class-target = " ncurses-terminfo"
 
-inherit perlnative cmake pkgconfig
+inherit cmake pkgconfig
 
 PROVIDES += "llvm${PV}"
 
