@@ -26,6 +26,10 @@ SRC_URI = "https://www.zytor.com/pub/syslinux/Testing/6.04/syslinux-${PV}.tar.xz
 SRC_URI[md5sum] = "2b31c78f087f99179feb357da312d7ec"
 SRC_URI[sha256sum] = "4441a5d593f85bb6e8d578cf6653fb4ec30f9e8f4a2315a3d8f2d0a8b3fadf94"
 
+UPSTREAM_CHECK_URI = "https://www.zytor.com/pub/syslinux/"
+UPSTREAM_CHECK_REGEX = "syslinux-(?P<pver>.+)\.tar"
+UPSTREAM_VERSION_UNKNOWN = "1"
+
 COMPATIBLE_HOST = '(x86_64|i.86).*-(linux|freebsd.*)'
 # Don't let the sanity checker trip on the 32 bit real mode BIOS binaries
 INSANE_SKIP_${PN}-misc = "arch"
