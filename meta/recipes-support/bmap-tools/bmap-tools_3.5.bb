@@ -15,7 +15,7 @@ SRCREV = "db7087b883bf52cbff063ad17a41cc1cbb85104d"
 S = "${WORKDIR}/git"
 PV .= "+git${SRCPV}"
 
-UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 RDEPENDS_${PN} = "python3-core python3-compression python3-mmap python3-setuptools python3-fcntl python3-six"
 
