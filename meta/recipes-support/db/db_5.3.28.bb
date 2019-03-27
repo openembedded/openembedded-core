@@ -30,7 +30,7 @@ SRC_URI += "file://fix-parallel-build.patch \
 # We are not interested in official latest 6.x versions;
 # let's track what debian is using.
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/d/db5.3/"
-UPSTREAM_CHECK_REGEX = "db5\.3_(?P<pver>.+)\.orig"
+UPSTREAM_CHECK_REGEX = "db5\.3_(?P<pver>\d+(\.\d+)+).+\.orig"
 
 SRC_URI[md5sum] = "b99454564d5b4479750567031d66fe24"
 SRC_URI[sha256sum] = "e0a992d740709892e81f9d93f06daf305cf73fb81b545afe72478043172c3628"
