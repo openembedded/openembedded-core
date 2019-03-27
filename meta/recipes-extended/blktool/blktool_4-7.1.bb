@@ -13,6 +13,7 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20160728T043443Z/pool/main/
            file://0001-fix-typos-in-manpage.patch \
            file://0002-fix-string-error.patch \
            file://0003-Fix-3-d-argument-for-BLKROSET-it-must-be-const-int.patch \
+           file://0004-fix-ftbfs-glibc-2.28.patch \
            file://blktool-gnulib-makedev.patch \
           "
 
