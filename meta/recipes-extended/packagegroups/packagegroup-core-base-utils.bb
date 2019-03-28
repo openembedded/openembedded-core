@@ -38,7 +38,6 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "keyboard", "kbd", "", d)} \
     kmod \
     less \
-    lzip \
     ncurses-tools \
     net-tools \
     parted \
