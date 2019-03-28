@@ -70,6 +70,7 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
                   -DLLVM_OPTIMIZED_TABLEGEN=ON \
                   -DLLVM_TARGETS_TO_BUILD='${LLVM_TARGETS}' \
+                  -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON \
                   -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python2 \
                   -G Ninja"
 
