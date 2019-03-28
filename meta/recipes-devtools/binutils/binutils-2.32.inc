@@ -20,6 +20,7 @@ def binutils_branch_version(d):
 # correctly set to match the upstream version tag).
 UPSTREAM_VERSION_UNKNOWN = "1"
 PV = "2.32.0"
+CVE_VERSION = "2.32"
 BINUPV = "${@binutils_branch_version(d)}"
 #BRANCH = "binutils-${BINUPV}-branch"
 BRANCH ?= "binutils-2_32-branch"
