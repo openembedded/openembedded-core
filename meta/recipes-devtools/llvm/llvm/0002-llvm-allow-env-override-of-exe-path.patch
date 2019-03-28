@@ -51,7 +51,7 @@ index bec89fef98c..91b4d6e4c43 100644
      ActiveObjRoot = LLVM_OBJ_ROOT;
    } else if (sys::fs::equivalent(CurrentExecPrefix,
 -                                 Twine(LLVM_OBJ_ROOT) + "/bin")) {
-+                                 Twine(LLVM_OBJ_ROOT) + "/bin/llvm8.0")) {
++                                 Twine(LLVM_OBJ_ROOT) + "/bin/llvm8.0.0")) {
      IsInDevelopmentTree = true;
      DevelopmentTreeLayout = CMakeBuildModeStyle;
      ActiveObjRoot = LLVM_OBJ_ROOT;
@@ -63,12 +63,12 @@ index bec89fef98c..91b4d6e4c43 100644
 +  // llvm-config from within a target sysroot.
 +  std::string Multilibdir = std::getenv("YOCTO_ALTERNATE_MULTILIB_NAME");
 +  if (Multilibdir.empty()) {
-+    Multilibdir = "/lib/llvm8.0" LLVM_LIBDIR_SUFFIX;
++    Multilibdir = "/lib/llvm8.0.0" LLVM_LIBDIR_SUFFIX;
 +  }
 +
    if (IsInDevelopmentTree) {
 -    ActiveIncludeDir = std::string(LLVM_SRC_ROOT) + "/include";
-+    ActiveIncludeDir = std::string(LLVM_SRC_ROOT) + "/include/llvm8.0";
++    ActiveIncludeDir = std::string(LLVM_SRC_ROOT) + "/include/llvm8.0.0";
      ActivePrefix = CurrentExecPrefix;
  
      // CMake organizes the products differently than a normal prefix style
@@ -78,17 +78,17 @@ index bec89fef98c..91b4d6e4c43 100644
      case CMakeStyle:
 -      ActiveBinDir = ActiveObjRoot + "/bin";
 -      ActiveLibDir = ActiveObjRoot + "/lib" + LLVM_LIBDIR_SUFFIX;
-+      ActiveBinDir = ActiveObjRoot + "/bin/llvm8.0";
-+      ActiveLibDir = ActiveObjRoot + "/lib/llvm8.0" + LLVM_LIBDIR_SUFFIX;
++      ActiveBinDir = ActiveObjRoot + "/bin/llvm8.0.0";
++      ActiveLibDir = ActiveObjRoot + "/lib/llvm8.0.0" + LLVM_LIBDIR_SUFFIX;
        ActiveCMakeDir = ActiveLibDir + "/cmake/llvm";
        break;
      case CMakeBuildModeStyle:
        ActivePrefix = ActiveObjRoot;
 -      ActiveBinDir = ActiveObjRoot + "/bin/" + build_mode;
-+      ActiveBinDir = ActiveObjRoot + "/bin/llvm8.0/" + build_mode;
++      ActiveBinDir = ActiveObjRoot + "/bin/llvm8.0.0/" + build_mode;
        ActiveLibDir =
 -          ActiveObjRoot + "/lib" + LLVM_LIBDIR_SUFFIX + "/" + build_mode;
-+          ActiveObjRoot + "/lib/llvm8.0" + LLVM_LIBDIR_SUFFIX + "/" + build_mode;
++          ActiveObjRoot + "/lib/llvm8.0.0" + LLVM_LIBDIR_SUFFIX + "/" + build_mode;
        ActiveCMakeDir = ActiveLibDir + "/cmake/llvm";
        break;
      }
@@ -96,11 +96,11 @@ index bec89fef98c..91b4d6e4c43 100644
      // We need to include files from both the source and object trees.
      ActiveIncludeOption =
 -        ("-I" + ActiveIncludeDir + " " + "-I" + ActiveObjRoot + "/include");
-+        ("-I" + ActiveIncludeDir + " " + "-I" + ActiveObjRoot + "/include/llvm8.0");
++        ("-I" + ActiveIncludeDir + " " + "-I" + ActiveObjRoot + "/include/llvm8.0.0");
    } else {
      ActivePrefix = CurrentExecPrefix;
 -    ActiveIncludeDir = ActivePrefix + "/include";
-+    ActiveIncludeDir = ActivePrefix + "/include/llvm8.0";
++    ActiveIncludeDir = ActivePrefix + "/include/llvm8.0.0";
      SmallString<256> path(StringRef(LLVM_TOOLS_INSTALL_DIR));
      sys::fs::make_absolute(ActivePrefix, path);
      ActiveBinDir = path.str();
