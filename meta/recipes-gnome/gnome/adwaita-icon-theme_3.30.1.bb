@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c84cac88e46fc07647ea07e6c24eeb7c"
 
 inherit allarch autotools pkgconfig gettext gtk-icon-cache upstream-version-is-even
 
-
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-Don-t-use-AC_CANONICAL_HOST.patch \
@@ -17,6 +16,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
 
 SRC_URI[md5sum] = "db3fd812821d72fdd9a3c7d622a95b35"
 SRC_URI[sha256sum] = "6d752a2b1bc668483956d4485c39cad1642d9358e133ff689526e43674a4e1ce"
+
+DEPENDS += "librsvg-native"
 
 PACKAGES = "${PN}-cursors ${PN}-symbolic-hires ${PN}-symbolic ${PN}-hires ${PN}"
 
