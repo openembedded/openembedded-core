@@ -16,3 +16,5 @@ EXTRA_AUTORECONF += "--exclude=aclocal"
 BBCLASSEXTEND = "native"
 
 DEPENDS = "groff-native"
+
+CVE_PRODUCT = "netwide_assembler"
