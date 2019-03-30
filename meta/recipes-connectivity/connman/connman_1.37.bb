@@ -5,12 +5,11 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://0001-connman.service-stop-systemd-resolved-when-we-use-co.patch \
             file://connman \
             file://no-version-scripts.patch \
-            file://0001-Fix-various-issues-which-cause-problems-under-musl.patch \
 "
 
 SRC_URI_append_libc-musl = " file://0002-resolve-musl-does-not-implement-res_ninit.patch"
 
-SRC_URI[md5sum] = "dae77d9c904d2c223ae849e32079d57e"
-SRC_URI[sha256sum] = "c789db41cc443fa41e661217ea321492ad59a004bebcd1aa013f3bc10a6e0074"
+SRC_URI[md5sum] = "75012084f14fb63a84b116e66c6e94fb"
+SRC_URI[sha256sum] = "6ce29b3eb0bb16a7387bc609c39455fd13064bdcde5a4d185fab3a0c71946e16"
 
 RRECOMMENDS_${PN} = "connman-conf"
