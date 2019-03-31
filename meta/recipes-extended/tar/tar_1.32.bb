@@ -11,8 +11,8 @@ SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2 \
            file://musl_dirent.patch \
 "
 
-SRC_URI[md5sum] = "77afa35b696c8d760331fa0e12c2fac9"
-SRC_URI[sha256sum] = "577bd4463eea103bdfc662fc385789e2228dbeb399a1d0b98571ed9ce044f763"
+SRC_URI[md5sum] = "17917356fff5cb4bd3cd5a6c3e727b05"
+SRC_URI[sha256sum] = "e4bb9e08e12e7fa9f11fef544efc85e59ba34538593d9ad38148c7ca2bfbb566"
 
 inherit autotools gettext texinfo
 
