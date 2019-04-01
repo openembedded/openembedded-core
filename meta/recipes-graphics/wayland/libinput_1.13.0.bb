@@ -7,12 +7,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1f2ea9ebff3a2c6d458faf58492efb63"
 
 DEPENDS = "libevdev udev mtdev"
 
-SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
-           "
-SRC_URI[md5sum] = "8cf10cc0fdfab865b105dd28283fa0fd"
-SRC_URI[sha256sum] = "12b4023a3fc683d3d8127db573bdf925a2ef366615042f69c87e57c32a50f45d"
+SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz"
+SRC_URI[md5sum] = "ea0834452b03457f8a33359db3eabfbf"
+SRC_URI[sha256sum] = "eb27c95d35c8fc9c7b96b9f0b2de5a043c47eb5f4b2868f353ab1bd0be0b616d"
 
 UPSTREAM_CHECK_REGEX = "libinput-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
+
 inherit meson pkgconfig lib_package
 
 PACKAGECONFIG ??= ""
