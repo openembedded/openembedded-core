@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 DEPENDS = "expat zlib"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git \
-           file://0001-solver_solve-only-disfavor-recommends-if-there-are-a.patch \
            file://0001-build-use-GNUInstallDirs.patch \
 "
 
-SRCREV = "dc7d0f1c3113f2c8217563166906bef3eb5d1ee1"
+SRCREV = "51fc3b1214aa9677e972712fa1ce6916e438751f"
+
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
