@@ -9,6 +9,7 @@ DEPENDS = "expat zlib"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git \
            file://0001-solver_solve-only-disfavor-recommends-if-there-are-a.patch \
+           file://0001-build-use-GNUInstallDirs.patch \
 "
 
 SRCREV = "dc7d0f1c3113f2c8217563166906bef3eb5d1ee1"
@@ -21,7 +22,7 @@ inherit cmake
 PACKAGECONFIG ??= "rpm"
 PACKAGECONFIG[rpm] = "-DENABLE_RPMMD=ON -DENABLE_RPMDB=ON,,rpm"
 
-EXTRA_OECMAKE = "-DLIB=${baselib} -DMULTI_SEMANTICS=ON -DENABLE_COMPLEX_DEPS=ON"
+EXTRA_OECMAKE = "-DMULTI_SEMANTICS=ON -DENABLE_COMPLEX_DEPS=ON"
 
 PACKAGES =+ "${PN}-tools ${PN}ext"
 
