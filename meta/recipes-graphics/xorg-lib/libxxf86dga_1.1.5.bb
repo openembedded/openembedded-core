@@ -13,7 +13,7 @@ DEPENDS += "libxext"
 
 PE = "1"
 
-SRC_URI[md5sum] = "d7dd9b9df336b7dd4028b6b56542ff2c"
-SRC_URI[sha256sum] = "8eecd4b6c1df9a3704c04733c2f4fa93ef469b55028af5510b25818e2456c77e"
+SRC_URI[md5sum] = "0ddeafc13b33086357cfa96fae41ee8e"
+SRC_URI[sha256sum] = "2b98bc5f506c6140d4eddd3990842d30f5dae733b64f198a504f07461bdb7203"
 
 XORG_PN = "libXxf86dga"
