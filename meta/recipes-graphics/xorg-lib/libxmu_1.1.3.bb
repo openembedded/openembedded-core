@@ -7,7 +7,6 @@ Widgets. A subset of the functions that do not rely on the Athena \
 Widgets (libXaw) or X Toolkit Instrinsics (libXt) are provided in a \
 second library, libXmuu."
 
-
 require xorg-lib-common.inc
 
 LICENSE = "MIT & MIT-style"
@@ -28,8 +27,8 @@ FILES_libxmuu = "${libdir}/libXmuu.so.*"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "41d92ab627dfa06568076043f3e089e4"
-SRC_URI[sha256sum] = "756edc7c383254eef8b4e1b733c3bf1dc061b523c9f9833ac7058378b8349d0b"
+SRC_URI[md5sum] = "ac774cff8b493f566088a255dbf91201"
+SRC_URI[sha256sum] = "9c343225e7c3dc0904f2122b562278da5fed639b1b5e880d25111561bac5b731"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
