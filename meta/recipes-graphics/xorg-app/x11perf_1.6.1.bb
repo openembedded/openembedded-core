@@ -19,5 +19,5 @@ do_install_append_class-target () {
 
 FILES_${PN} += "${libdir}/X11/x11perfcomp/*"
 
-SRC_URI[md5sum] = "f0b24e4d8beb622a419e8431e1c03cd7"
-SRC_URI[sha256sum] = "e87098dec1947572d70c62697a7b70bde1ab5668237d4660080eade6bc096751"
+SRC_URI[md5sum] = "e96b56756990c56c24d2d02c2964456b"
+SRC_URI[sha256sum] = "1c7e0b8ffc2794b4ccf11e04d551823abe0ea47b4f7db0637390db6fbe817c34"
