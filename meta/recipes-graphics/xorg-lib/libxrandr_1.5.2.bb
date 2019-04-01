@@ -19,5 +19,5 @@ XORG_PN = "libXrandr"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "28e486f1d491b757173dd85ba34ee884"
-SRC_URI[sha256sum] = "1ff9e7fa0e4adea912b16a5f0cfa7c1d35b0dcda0e216831f7715c8a3abcf51a"
+SRC_URI[md5sum] = "18f3b20d522f45e4dadd34afb5bea048"
+SRC_URI[sha256sum] = "8aea0ebe403d62330bb741ed595b53741acf45033d3bda1792f1d4cc3daee023"
