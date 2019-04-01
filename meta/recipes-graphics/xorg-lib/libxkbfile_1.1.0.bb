@@ -14,5 +14,5 @@ PE = "1"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "4a4cfeaf24dab1b991903455d6d7d404"
-SRC_URI[sha256sum] = "51817e0530961975d9513b773960b4edd275f7d5c72293d5a151ed4f42aeb16a"
+SRC_URI[md5sum] = "dd7e1e946def674e78c0efbc5c7d5b3b"
+SRC_URI[sha256sum] = "758dbdaa20add2db4902df0b1b7c936564b7376c02a0acd1f2a331bd334b38c7"
