@@ -4,22 +4,24 @@ HOMEPAGE = "https://github.com/besser82/libxcrypt"
 SECTION = "libs"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM ?= "file://LICENSING;md5=be275bc7f91642efe7709a8ae7a1433b \
-      file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
+                     file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
 "
 
 inherit autotools pkgconfig
 
-PV = "4.4.2"
-# v4.4.2
-SRCREV ?= "cf6abf18083566ec1612af27982a5160c9e0f137"
-SRCBRANCH ?= "develop"
+PV = "4.4.4"
 
-SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH} \
-           "
+SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH}"
+SRCREV = "3b251d4e1af66aa7697c4ac96c689f996fa90c32"
+SRCBRANCH ?= "develop"
 
 PROVIDES = "virtual/crypt"
 
-FILES_${PN} = "${libdir}/libcrypt*.so.* ${libdir}/libcrypt-*.so ${libdir}/libowcrypt*.so.* ${libdir}/libowcrypt-*.so"
+FILES_${PN} = "${libdir}/libcrypt*.so.* \
+               ${libdir}/libcrypt-*.so \
+               ${libdir}/libowcrypt*.so.* \
+               ${libdir}/libowcrypt-*.so \
+"
 
 S = "${WORKDIR}/git"
 
