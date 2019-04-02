@@ -29,15 +29,18 @@ def store(args, logger):
     try:
         results = {}
         logger.info('Reading files from %s' % args.source)
-        for root, dirs,  files in os.walk(args.source):
-            for name in files:
-                f = os.path.join(root, name)
-                if name == "testresults.json":
-                    resultutils.append_resultsdata(results, f)
-                elif args.all:
-                    dst = f.replace(args.source, tempdir + "/")
-                    os.makedirs(os.path.dirname(dst), exist_ok=True)
-                    shutil.copyfile(f, dst)
+        if os.path.isfile(args.source):
+            resultutils.append_resultsdata(results, args.source)
+        else:
+            for root, dirs,  files in os.walk(args.source):
+                for name in files:
+                    f = os.path.join(root, name)
+                    if name == "testresults.json":
+                        resultutils.append_resultsdata(results, f)
+                    elif args.all:
+                        dst = f.replace(args.source, tempdir + "/")
+                        os.makedirs(os.path.dirname(dst), exist_ok=True)
+                        shutil.copyfile(f, dst)
 
         revisions = {}
 
