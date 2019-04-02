@@ -23,8 +23,8 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://bad_optional_access.patch \
            "
 
-SRC_URI[md5sum] = "7c21a30f7f078f0b712caf0c7ee966a4"
-SRC_URI[sha256sum] = "df90db9c0db0a2072b945fa3e1d45865922bd686c4659cce6cb5897ce357c85b"
+SRC_URI[md5sum] = "47386c10a9c3975f933c85404f35ff3b"
+SRC_URI[sha256sum] = "4be6f7d605cd0a690fd26e8aa83b089a33ad9d419148eafcfb60580dd2af30ff"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
