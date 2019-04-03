@@ -490,3 +490,6 @@ class ImageQAFailed(bb.build.FuncFailed):
 
         return msg
 
+def sh_quote(string):
+    import shlex
+    return shlex.quote(string)
