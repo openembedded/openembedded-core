@@ -85,7 +85,7 @@ class ManualTestRunner(object):
         print('------------------------------------------------------------------------')
         print('You have total ' + str(total_steps) + ' test steps to be executed.')
         print('------------------------------------------------------------------------\n')
-        for step in sorted((self.jdata[test_id]['test']['execution']).keys()):
+        for step, _ in sorted(self.jdata[test_id]['test']['execution'].items(), key=lambda x: int(x[0])):
             print('Step %s: ' % step + self.jdata[test_id]['test']['execution']['%s' % step]['action'])
             expected_output = self.jdata[test_id]['test']['execution']['%s' % step]['expected_results']
             if expected_output:
