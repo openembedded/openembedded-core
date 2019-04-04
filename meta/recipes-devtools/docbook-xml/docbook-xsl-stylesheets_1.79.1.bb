@@ -42,14 +42,11 @@ do_install () {
 
 	ln -s VERSION ${D}/${datadir}/xml/docbook/xsl-stylesheets-${PV}/VERSION.xsl
 
-	install -v -m644 -D README \
-		${D}${datadir}/doc/docbook-xsl-${PV}/README.txt
-	install -v -m644    RELEASE-NOTES* NEWS* \
-		${D}${datadir}/doc/docbook-xsl-${PV}
+	install -d ${D}${docdir}/${BPN}
+	install -v -m644 README RELEASE-NOTES* NEWS* ${D}${docdir}/${BPN}
 
 	install -d ${D}${sysconfdir}/xml/
 	install -m 755  ${WORKDIR}/docbook-xsl.xml ${D}${sysconfdir}/xml/docbook-xsl.xml
-
 }
 
 do_install_append_class-native () {
