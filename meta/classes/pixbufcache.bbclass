@@ -54,7 +54,6 @@ GDK_PIXBUF_FATAL_LOADER=1 ${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-que
 DEPENDS_append_class-native = " gdk-pixbuf-native"
 SYSROOT_PREPROCESS_FUNCS_append_class-native = " pixbufcache_sstate_postinst"
 
-# See base.bbclass for the other half of this
 pixbufcache_sstate_postinst() {
 	mkdir -p ${SYSROOT_DESTDIR}${bindir}
 	dest=${SYSROOT_DESTDIR}${bindir}/postinst-${PN}
