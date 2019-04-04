@@ -40,7 +40,6 @@ LTTNGUST = "lttng-ust"
 LTTNGUST_arc = ""
 
 LTTNGTOOLS = "lttng-tools"
-LTTNGTOOLS_libc-musl = ""
 LTTNGTOOLS_arc = ""
 
 LTTNGMODULES = "lttng-modules"
