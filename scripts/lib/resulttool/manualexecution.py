@@ -45,9 +45,9 @@ class ManualTestRunner(object):
     def _get_input(self, config):
         while True:
             output = input('{} = '.format(config))
-            if re.match('^[a-zA-Z0-9_-]+$', output):
+            if re.match('^[a-z0-9-.]+$', output):
                 break
-            print('Only alphanumeric and underscore/hyphen are allowed. Please try again')
+            print('Only lowercase alphanumeric, hyphen and dot are allowed. Please try again')
         return output
 
     def _create_config(self):
