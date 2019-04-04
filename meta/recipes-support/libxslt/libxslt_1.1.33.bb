@@ -36,9 +36,9 @@ RPROVIDES_${PN}-bin += "${PN}-utils"
 RCONFLICTS_${PN}-bin += "${PN}-utils"
 RREPLACES_${PN}-bin += "${PN}-utils"
 
-
+# This is only needed until libxml can load the relocated catalog itself
 do_install_append_class-native () {
-    create_wrapper ${D}/${bindir}/xsltproc XML_CATALOG_FILES=${sysconfdir}/xml/catalog.xml
+    create_wrapper ${D}/${bindir}/xsltproc XML_CATALOG_FILES=${sysconfdir}/xml/catalog
 }
 
 FILES_${PN} += "${libdir}/libxslt-plugins"
