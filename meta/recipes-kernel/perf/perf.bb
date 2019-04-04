@@ -271,3 +271,4 @@ FILES_${PN}-perl = "${libexecdir}/perf-core/scripts/perl"
 
 
 INHIBIT_PACKAGE_DEBUG_SPLIT="1"
+DEBUG_OPTIMIZATION_append = " -Wno-error=maybe-uninitialized"
