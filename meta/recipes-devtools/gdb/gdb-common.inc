@@ -8,7 +8,6 @@ LTTNGUST_arc = ""
 LTTNGUST_aarch64 = ""
 LTTNGUST_mipsarch = ""
 LTTNGUST_sh4 = ""
-LTTNGUST_libc-musl = ""
 
 inherit autotools texinfo
 
