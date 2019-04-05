@@ -29,14 +29,6 @@ EXTRA_OEMESON_append = " -Dvapi=false"
 GTKDOC_ENABLE_FLAG = "-Ddoc=true"
 GTKDOC_DISABLE_FLAG = "-Ddoc=false"
 
-GI_ENABLE_FLAG = "-Dintrospection=true"
-GI_DISABLE_FLAG = "-Dintrospection=false"
-
-EXTRA_OEMESON_append_class-nativesdk = " ${GI_DISABLE_FLAG}"
-
-EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${GI_ENABLE_FLAG}', \
-                                                                                       '${GI_DISABLE_FLAG}', d)} "
-
 EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
                                                                                      '${GTKDOC_DISABLE_FLAG}', d)} "
 
