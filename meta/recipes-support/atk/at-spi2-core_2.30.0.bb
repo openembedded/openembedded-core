@@ -24,14 +24,12 @@ EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
 GTKDOC_ENABLE_FLAG = "-Denable_docs=true"
 GTKDOC_DISABLE_FLAG = "-Denable_docs=false"
 
-GI_ENABLE_FLAG = "-Denable-introspection=yes"
-GI_DISABLE_FLAG = "-Denable-introspection=no"
-
-EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${GI_ENABLE_FLAG}', \
-                                                                                       '${GI_DISABLE_FLAG}', d)} "
-
 EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
                                                                                      '${GTKDOC_DISABLE_FLAG}', d)} "
+
+GIR_MESON_OPTION = 'enable-introspection'
+GIR_MESON_ENABLE_FLAG = 'yes'
+GIR_MESON_DISABLE_FLAG = 'no'
 
 FILES_${PN} += "${datadir}/dbus-1/services/*.service \
                 ${datadir}/dbus-1/accessibility-services/*.service \
