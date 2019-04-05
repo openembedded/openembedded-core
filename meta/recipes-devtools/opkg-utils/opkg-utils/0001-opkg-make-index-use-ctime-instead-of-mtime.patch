@@ -1,0 +1,59 @@
+From 0cd38bb1bdcdbfc091014a1f39d015a1586a33e6 Mon Sep 17 00:00:00 2001
+From: Stefan Agner <stefan.agner@toradex.com>
+Date: Fri, 19 Oct 2018 17:38:21 +0200
+Subject: [PATCH] opkg-make-index: use ctime instead of mtime
+
+Upstream-Status: Backport
+
+When using sstate, two parallel builds can produce two packages
+with the same mtime but different checksums. When later one of
+those two builds fetches the others ipk, the package index does
+not get udpated properly (since mtime matches). This ends up with
+messages such as:
+  Downloading file:/../tmp/work/../image/...ipk.
+  Removing corrupt package file /../sysroot/../var/cache/opkg/volatile/...ipk
+
+However, in that case, ctime is different. Use ctime instead of
+mtime to prevent failures like this.
+
+Suggested-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Acked-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Acked-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+Signed-off-by: Ming Liu <liu.ming50@gmail.com>
+---
+ opkg-make-index | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/opkg-make-index b/opkg-make-index
+index 3227fc0..db7bf64 100755
+--- a/opkg-make-index
++++ b/opkg-make-index
+@@ -115,12 +115,12 @@ for abspath in files:
+      pkg = None
+      fnameStat = os.stat(abspath)
+      if filename in old_pkg_hash:
+-          if filename in pkgsStamps and int(fnameStat.st_mtime) == pkgsStamps[filename]:
++          if filename in pkgsStamps and int(fnameStat.st_ctime) == pkgsStamps[filename]:
+             if (verbose):
+                sys.stderr.write("Found %s in Packages\n" % (filename,))
+             pkg = old_pkg_hash[filename]
+           else:
+-               sys.stderr.write("Found %s in Packages, but mtime differs - re-reading\n" % (filename,))
++               sys.stderr.write("Found %s in Packages, but ctime differs - re-reading\n" % (filename,))
+ 
+      if not pkg:
+           if (verbose):
+@@ -137,7 +137,7 @@ for abspath in files:
+      else:
+           old_filename = ""
+      s = packages.add_package(pkg, opt_a)
+-     pkgsStamps[filename] = fnameStat.st_mtime
++     pkgsStamps[filename] = fnameStat.st_ctime
+      if s == 0:
+           if old_filename:
+                # old package was displaced by newer
+-- 
+2.7.4
+
