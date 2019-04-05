@@ -9,15 +9,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SECTION = "libs"
 DEPENDS = "glib-2.0"
 
-SRC_URI[archive.md5sum] = "75b14b7e73a67753be9ce307751c661d"
-SRC_URI[archive.sha256sum] = "bdfa0255e031b8ee003cc283002536b77ee76450105f1dc6ab066b9bf4330068"
+SRC_URI[archive.md5sum] = "83321ffc3c336894b8a5bc18db3fe58d"
+SRC_URI[archive.sha256sum] = "d71c6b2faa5ac29100314f08a1be020a2afd0291f025614c0af0d17b14435d92"
 
 PACKAGECONFIG ??= "gnutls"
 
-PACKAGECONFIG[gnutls] = "-Dgnutls=true,-Dgnutls=false,gnutls"
-PACKAGECONFIG[libproxy] = "-Dlibproxy_support=true,-Dlibproxy_support=false,libproxy"
+PACKAGECONFIG[gnutls] = "-Dgnutls=enabled,-Dgnutls=disabled,gnutls"
+PACKAGECONFIG[libproxy] = "-Dlibproxy=enabled,-Dlibproxy=disabled,libproxy"
 
-EXTRA_OEMESON = "-Dgnome_proxy_support=false"
+EXTRA_OEMESON = "-Dgnome_proxy=disabled"
 
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase gettext upstream-version-is-even gio-module-cache
