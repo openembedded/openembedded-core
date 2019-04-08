@@ -1135,7 +1135,7 @@ Rerun configure task after fixing this."""
             for config in configs:
                 gnu = "grep \"^[[:space:]]*AM_GNU_GETTEXT\" %s >/dev/null" % config
                 if subprocess.call(gnu, shell=True) == 0:
-                    error_msg = "%s required but not in DEPENDS for file %s. Missing inherit gettext?"
+                    error_msg = "AM_GNU_GETTEXT used but no inherit gettext"
                     package_qa_handle_error("configure-gettext", error_msg, d)
 
     ###########################################################################
