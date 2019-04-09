@@ -38,7 +38,21 @@ class ManualTestRunner(object):
             print('Only lowercase alphanumeric, hyphen and dot are allowed. Please try again')
         return output
 
-    def _create_config(self):
+    def _get_available_config_options(self, config_options, test_module, target_config):
+        avail_config_options = None
+        if test_module in config_options:
+            avail_config_options = config_options[test_module].get(target_config)
+        return avail_config_options
+
+    def _choose_config_option(self, options):
+        while True:
+            output = input('{} = '.format('Option index number'))
+            if output in options:
+                break
+            print('Only integer index inputs from above available configuration options are allowed. Please try again.')
+        return options[output]
+
+    def _create_config(self, config_options):
         from oeqa.utils.metadata import get_layers
         from oeqa.utils.commands import get_bb_var
         from resulttool.resultutils import store_map
@@ -54,11 +68,22 @@ class ManualTestRunner(object):
 
         extra_config = set(store_map['manual']) - set(self.configuration)
         for config in sorted(extra_config):
-            print('---------------------------------------------')
-            print('This is configuration #%s. Please provide configuration value(use "None" if not applicable).' % config)
-            print('---------------------------------------------')
-            value_conf = self._get_input('Configuration Value')
-            print('---------------------------------------------\n')
+            avail_config_options = self._get_available_config_options(config_options, self.test_module, config)
+            if avail_config_options:
+                print('---------------------------------------------')
+                print('These are available configuration #%s options:' % config)
+                print('---------------------------------------------')
+                for option, _ in sorted(avail_config_options.items(), key=lambda x: int(x[0])):
+                    print('%s: %s' % (option, avail_config_options[option]))
+                print('Please select configuration option, enter the integer index number.')
+                value_conf = self._choose_config_option(avail_config_options)
+                print('---------------------------------------------\n')
+            else:
+                print('---------------------------------------------')
+                print('This is configuration #%s. Please provide configuration value(use "None" if not applicable).' % config)
+                print('---------------------------------------------')
+                value_conf = self._get_input('Configuration Value')
+                print('---------------------------------------------\n')
             self.configuration[config] = value_conf
 
     def _create_result_id(self):
@@ -99,9 +124,12 @@ class ManualTestRunner(object):
         basepath = os.environ['BUILDDIR']
         self.write_dir = basepath + '/tmp/log/manual/'
 
-    def run_test(self, file):
+    def run_test(self, file, config_options_file):
         self._get_testcases(file)
-        self._create_config()
+        config_options = {}
+        if config_options_file:
+            config_options = load_json_file(config_options_file)
+        self._create_config(config_options)
         self._create_result_id()
         self._create_write_dir()
         test_results = {}
@@ -113,7 +141,7 @@ class ManualTestRunner(object):
 
 def manualexecution(args, logger):
     testrunner = ManualTestRunner()
-    get_configuration, get_result_id, get_write_dir, get_test_results = testrunner.run_test(args.file)
+    get_configuration, get_result_id, get_write_dir, get_test_results = testrunner.run_test(args.file, args.config_options_file)
     resultjsonhelper = OETestResultJSONHelper()
     resultjsonhelper.dump_testresult_file(get_write_dir, get_configuration, get_result_id, get_test_results)
     return 0
@@ -125,3 +153,5 @@ def register_commands(subparsers):
                                          group='manualexecution')
     parser_build.set_defaults(func=manualexecution)
     parser_build.add_argument('file', help='specify path to manual test case JSON file.Note: Please use \"\" to encapsulate the file path.')
+    parser_build.add_argument('-c', '--config-options-file', default='',
+                              help='the config options file to import and used as available configuration option selection')
