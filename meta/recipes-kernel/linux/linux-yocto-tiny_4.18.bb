@@ -1,5 +1,5 @@
 KBRANCH ?= "v4.18/standard/tiny/base"
-KBRANCH_qemuarm  ?= "v4.15/standard/tiny/arm-versatile-926ejs"
+KBRANCH_qemuarm  ?= "v4.18/standard/tiny/arm-versatile-926ejs"
 
 LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
