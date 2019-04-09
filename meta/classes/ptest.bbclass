@@ -65,6 +65,38 @@ do_install_ptest_base() {
     done
 }
 
+PTEST_BINDIR_PKGD_PATH = "${PKGD}${PTEST_PATH}/bin"
+
+# This function needs to run after apply_update_alternative_renames because the
+# aforementioned function will update the ALTERNATIVE_LINK_NAME flag. Append is
+# used here to make this function to run as late as possible.
+PACKAGE_PREPROCESS_FUNCS_append = "${@bb.utils.contains('PTEST_BINDIR', '1', \
+                                    bb.utils.contains('PTEST_ENABLED', '1', ' ptest_update_alternatives', '', d), '', d)}"
+
+python ptest_update_alternatives() {
+    """
+    This function will generate the symlinks in the PTEST_BINDIR_PKGD_PATH
+    to match the renamed binaries by update-alternatives.
+    """
+
+    if not bb.data.inherits_class('update-alternatives', d) \
+           or not update_alternatives_enabled(d):
+        return
+
+    bb.note("Generating symlinks for ptest")
+    bin_paths = { os.environ["bindir"], os.environ["base_bindir"],
+                  os.environ["sbindir"], os.environ["base_sbindir"] }
+    ptest_bindir = d.getVar("PTEST_BINDIR_PKGD_PATH")
+    os.mkdir(ptest_bindir)
+    for pkg in (d.getVar('PACKAGES') or "").split():
+        alternatives = update_alternatives_alt_targets(d, pkg)
+        for alt_name, alt_link, alt_target, _ in alternatives:
+            # Some alternatives are for man pages,
+            # check if the alternative is in PATH
+            if os.path.dirname(alt_link) in bin_paths:
+                os.symlink(alt_target, os.path.join(ptest_bindir, alt_name))
+}
+
 do_configure_ptest_base[dirs] = "${B}"
 do_compile_ptest_base[dirs] = "${B}"
 do_install_ptest_base[dirs] = "${B}"
