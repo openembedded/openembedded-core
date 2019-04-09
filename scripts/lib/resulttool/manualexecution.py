@@ -24,6 +24,11 @@ def load_json_file(file):
     with open(file, "r") as f:
         return json.load(f)
 
+def write_json_file(f, json_data):
+    os.makedirs(os.path.dirname(f), exist_ok=True)
+    with open(f, 'w') as filedata:
+        filedata.write(json.dumps(json_data, sort_keys=True, indent=4))
+
 class ManualTestRunner(object):
 
     def _get_testcases(self, file):
@@ -139,8 +144,53 @@ class ManualTestRunner(object):
             test_results.update(test_result)
         return self.configuration, self.result_id, self.write_dir, test_results
 
+    def _get_true_false_input(self, input_message):
+        yes_list = ['Y', 'YES']
+        no_list = ['N', 'NO']
+        while True:
+            more_config_option = input(input_message).upper()
+            if more_config_option in yes_list or more_config_option in no_list:
+                break
+            print('Invalid input!')
+        if more_config_option in no_list:
+            return False
+        return True
+
+    def make_config_option_file(self, logger, manual_case_file, config_options_file):
+        config_options = {}
+        if config_options_file:
+            config_options = load_json_file(config_options_file)
+        new_test_module = os.path.basename(manual_case_file).split('.')[0]
+        print('Creating configuration options file for test module: %s' % new_test_module)
+        new_config_options = {}
+
+        while True:
+            config_name = input('\nPlease provide test configuration to create:\n').upper()
+            new_config_options[config_name] = {}
+            while True:
+                config_value = self._get_input('Configuration possible option value')
+                config_option_index = len(new_config_options[config_name]) + 1
+                new_config_options[config_name][config_option_index] = config_value
+                more_config_option = self._get_true_false_input('\nIs there more configuration option input: (Y)es/(N)o\n')
+                if not more_config_option:
+                    break
+            more_config = self._get_true_false_input('\nIs there more configuration to create: (Y)es/(N)o\n')
+            if not more_config:
+                break
+
+        if new_config_options:
+            config_options[new_test_module] = new_config_options
+        if not config_options_file:
+            self._create_write_dir()
+            config_options_file = os.path.join(self.write_dir, 'manual_config_options.json')
+        write_json_file(config_options_file, config_options)
+        logger.info('Configuration option file created at %s' % config_options_file)
+
 def manualexecution(args, logger):
     testrunner = ManualTestRunner()
+    if args.make_config_options_file:
+        testrunner.make_config_option_file(logger, args.file, args.config_options_file)
+        return 0
     get_configuration, get_result_id, get_write_dir, get_test_results = testrunner.run_test(args.file, args.config_options_file)
     resultjsonhelper = OETestResultJSONHelper()
     resultjsonhelper.dump_testresult_file(get_write_dir, get_configuration, get_result_id, get_test_results)
@@ -154,4 +204,6 @@ def register_commands(subparsers):
     parser_build.set_defaults(func=manualexecution)
     parser_build.add_argument('file', help='specify path to manual test case JSON file.Note: Please use \"\" to encapsulate the file path.')
     parser_build.add_argument('-c', '--config-options-file', default='',
-                              help='the config options file to import and used as available configuration option selection')
+                              help='the config options file to import and used as available configuration option selection or make config option file')
+    parser_build.add_argument('-m', '--make-config-options-file', action='store_true',
+                              help='make the configuration options file based on provided inputs')
