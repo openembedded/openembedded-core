@@ -1,7 +1,7 @@
 SUMMARY = "Utilities and libraries for handling compiled object files"
 HOMEPAGE = "https://sourceware.org/elfutils"
 SECTION = "base"
-LICENSE = "(GPLv3 & Elfutils-Exception)"
+LICENSE = "GPLv2 & LGPLv3+ & GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
 DEPENDS_append_libc-musl = " argp-standalone fts "
@@ -53,6 +53,18 @@ BBCLASSEXTEND = "native nativesdk"
 
 # Package utilities separately
 PACKAGES =+ "${PN}-binutils libelf libasm libdw"
+
+# shared libraries are licensed GPLv2 or GPLv3+, binaries GPLv3+
+# according to NEWS file:
+# "The license is now GPLv2/LGPLv3+ for the libraries and GPLv3+ for stand-alone
+# programs. There is now also a formal CONTRIBUTING document describing how to
+# submit patches."
+LICENSE_${PN}-binutils = "GPLv3+"
+LICENSE_${PN} = "GPLv3+"
+LICENSE_libelf = "GPLv2 | LGPLv3+"
+LICENSE_libasm = "GPLv2 | LGPLv3+"
+LICENSE_libdw = "GPLv2 | LGPLv3+"
+
 FILES_${PN}-binutils = "\
     ${bindir}/eu-addr2line \
     ${bindir}/eu-ld \
