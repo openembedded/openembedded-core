@@ -20,8 +20,6 @@ GOARM_arm_class-target[export] = "1"
 GO386[export] = "0"
 GO386_x86_class-target = "${TARGET_GO386}"
 GO386_x86_class-target[export] = "1"
-GO386_i586_class-target = "${TARGET_GO386}"
-GO386_i586_class-target[export] = "1"
 
 GOMIPS[export] = "0"
 GOMIPS_mips_class-target = "${TARGET_GOMIPS}"
