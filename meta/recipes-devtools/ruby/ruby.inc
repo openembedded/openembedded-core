@@ -24,7 +24,7 @@ SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
            "
 UPSTREAM_CHECK_URI = "https://www.ruby-lang.org/en/downloads/"
 
-inherit autotools
+inherit autotools ptest
 
 
 # This snippet lets compiled extensions which rely on external libraries,
