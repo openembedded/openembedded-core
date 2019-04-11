@@ -28,6 +28,7 @@ EXTRA_OECONF = "\
     --disable-dtrace \
     --enable-shared \
     --enable-load-relative \
+    --with-pkg-config=pkg-config \
 "
 
 do_install() {
