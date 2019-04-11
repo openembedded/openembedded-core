@@ -12,11 +12,10 @@ DEPENDS = "libnl"
 SRC_URI = "http://www.kernel.org/pub/software/network/iw/${BP}.tar.gz \
            file://0001-iw-version.sh-don-t-use-git-describe-for-versioning.patch \
            file://separate-objdir.patch \
-           file://0001-connect-fix-parsing-of-WEP-keys.patch \
 "
 
-SRC_URI[md5sum] = "2067516ca9940fdb8c091ee3250da374"
-SRC_URI[sha256sum] = "a0c3aad6ff52234d03a2522ba2eba570e36abb3e60dc29bf0b1ce88dd725d6d4"
+SRC_URI[md5sum] = "a0a17ab1b20132c716bba9a4f9974ba6"
+SRC_URI[sha256sum] = "36fc7592dde7bec934df83cd53ef1f2c08ceec5cd58d07eb8f71cc6e8464013c"
 
 inherit pkgconfig
 
