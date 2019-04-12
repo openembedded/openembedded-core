@@ -1329,7 +1329,8 @@ def main():
             logger.info("SIGTERM received")
             os.kill(config.qemupid, signal.SIGTERM)
             config.cleanup()
-            subprocess.check_call(["tput", "smam"])
+            # Deliberately ignore the return code of 'tput smam'.
+            subprocess.call(["tput", "smam"])
         signal.signal(signal.SIGTERM, sigterm_handler)
 
         config.check_args()
@@ -1351,7 +1352,8 @@ def main():
         return 1
     finally:
         config.cleanup()
-        subprocess.check_call(["tput", "smam"])
+        # Deliberately ignore the return code of 'tput smam'.
+        subprocess.call(["tput", "smam"])
 
 if __name__ == "__main__":
     sys.exit(main())
