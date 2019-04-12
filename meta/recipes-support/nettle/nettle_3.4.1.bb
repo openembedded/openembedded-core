@@ -14,8 +14,11 @@ SRC_URI = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz \
            file://Add-target-to-only-build-tests-not-run-them.patch \
            file://run-ptest \
            file://check-header-files-of-openssl-only-if-enable_.patch \
-           file://0001-nettle-pbkdf2.c-change-the-initialization-for-salt.patch \
            "
+
+SRC_URI_append_class-target = "\
+            file://dlopen-test.patch \
+            "
 
 SRC_URI[md5sum] = "9bdebb0e2f638d3b9d91f7fc264b70c1"
 SRC_URI[sha256sum] = "f941cf1535cd5d1819be5ccae5babef01f6db611f9b5a777bae9c7604b8a92ad"
@@ -44,10 +47,6 @@ do_install_ptest() {
         # tools can be found in PATH, not in ../tools/
         sed -i -e 's|../tools/||' ${D}${PTEST_PATH}/testsuite/*-test
         install ${B}/testsuite/*-test ${D}${PTEST_PATH}/testsuite/
-        # libnettle.so is needed for dlopen-test
-        if [ -f ${D}${libdir}/libnettle.so.6.* ]; then
-            cp ${D}${libdir}/libnettle.so.6.* ${D}${PTEST_PATH}/libnettle.so
-        fi
 }
 
 BBCLASSEXTEND = "native nativesdk"
