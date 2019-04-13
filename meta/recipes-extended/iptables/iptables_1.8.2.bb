@@ -10,10 +10,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263\
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
+           file://0003-extensions-format-security-fixes-in-libipt_icmp.patch  \
 "
 
-SRC_URI[md5sum] = "7d2b7847e4aa8832a18437b8a4c1873d"
-SRC_URI[sha256sum] = "55d02dfa46263343a401f297d44190f2a3e5113c8933946f094ed40237053733"
+SRC_URI[md5sum] = "944558e88ddcc3b9b0d9550070fa3599"
+SRC_URI[sha256sum] = "a3778b50ed1a3256f9ca975de82c2204e508001fc2471238c8c97f3d1c4c12af"
 
 inherit autotools pkgconfig
 
