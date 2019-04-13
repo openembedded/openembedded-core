@@ -84,8 +84,8 @@ python ptest_update_alternatives() {
         return
 
     bb.note("Generating symlinks for ptest")
-    bin_paths = { os.environ["bindir"], os.environ["base_bindir"],
-                  os.environ["sbindir"], os.environ["base_sbindir"] }
+    bin_paths = { d.getVar("bindir"), d.getVar("base_bindir"),
+                   d.getVar("sbindir"), d.getVar("base_sbindir") }
     ptest_bindir = d.getVar("PTEST_BINDIR_PKGD_PATH")
     os.mkdir(ptest_bindir)
     for pkg in (d.getVar('PACKAGES') or "").split():
