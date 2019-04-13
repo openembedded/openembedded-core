@@ -70,6 +70,7 @@ do_install_append_class-target() {
 do_install_class-native() {
 	install -d ${D}${bindir}
 	install -m 755 grub-mkimage ${D}${bindir}
+	install -m 755 grub-editenv ${D}${bindir}
 }
 
 do_install_class-target() {
