@@ -82,7 +82,6 @@ B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # Language Overrides
 FORTRAN = ""
-JAVA = ""
 
 LTO = "--enable-lto"
 SSP ?= "--disable-libssp"
