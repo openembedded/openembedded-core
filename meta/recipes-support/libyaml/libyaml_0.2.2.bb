@@ -8,8 +8,10 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a76b4c69bfcf82313bbdc0393b04438a"
 
 SRC_URI = "http://pyyaml.org/download/libyaml/yaml-${PV}.tar.gz"
-SRC_URI[md5sum] = "2ad4119a57f94739cc39a1b482c81264"
-SRC_URI[sha256sum] = "46bca77dc8be954686cff21888d6ce10ca4016b360ae1f56962e6882a17aa1fe"
+SRC_URI[md5sum] = "54bf11ccb8bc488b5b3bec931f5b70dc"
+SRC_URI[sha256sum] = "4a9100ab61047fd9bd395bcef3ce5403365cafd55c1e0d0299cde14958e47be9"
+
+S = "${WORKDIR}/yaml-${PV}"
 
 inherit autotools
 
