@@ -7,9 +7,8 @@ inherit gnomebase upstream-version-is-even vala distro_features_check gobject-in
 
 DEPENDS = "glib-2.0-native glib-2.0 gtk+3"
 
-SRC_URI += " file://0001-Add-a-define-so-that-gir-compilation-succeeds.patch"
-SRC_URI[archive.md5sum] = "24e2e1b914a34f5b8868a9507d1f3c4c"
-SRC_URI[archive.sha256sum] = "78770eae9fa15ac5acb9c733d29459330b2540affbf72933119e36dbd90b36d5"
+SRC_URI[archive.md5sum] = "5f6455ebc47e86f63b9579997137f391"
+SRC_URI[archive.sha256sum] = "238da19fdcc3ae9bb0c2d781d099fb8c6ec70c4dd3dffad80d230344ecc3f972"
 
 GIR_MESON_OPTION = 'with_introspection'
 
