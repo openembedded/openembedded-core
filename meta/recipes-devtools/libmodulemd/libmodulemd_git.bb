@@ -7,8 +7,8 @@ SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https \
            file://0002-modulemd-v1-meson.build-do-not-generate-gir-or-gtkdo.patch \
            "
 
-PV = "2.1.0"
-SRCREV = "072e6ee791fe7822a6d423bdac7e4a5cbb118bce"
+PV = "2.2.3"
+SRCREV = "4c75c6f8b39ee57aebe8fd36ef84808e893048c0"
 
 S = "${WORKDIR}/git"
 
