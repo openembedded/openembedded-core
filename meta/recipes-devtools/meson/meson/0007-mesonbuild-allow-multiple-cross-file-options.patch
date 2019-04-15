@@ -1,4 +1,7 @@
-mesonbuild: allow multiple --cross-file options
+From 07ae4f949b8402cff178dd12c210d9a726ffe2da Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Mon, 18 Mar 2019 17:27:57 +0000
+Subject: [PATCH] mesonbuild: allow multiple --cross-file options
 
 Just like --native-file, allow multiple --cross-file options.  This is mostly
 unifying the logic between cross_files and config_files.
@@ -6,11 +9,30 @@ unifying the logic between cross_files and config_files.
 Upstream-Status: Backport [will be in 0.50.1]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
+---
+ .../markdown/snippets/multiple-cross-files.md |  3 ++
+ mesonbuild/backend/backends.py                |  3 +-
+ mesonbuild/coredata.py                        | 52 +++----------------
+ mesonbuild/environment.py                     |  5 +-
+ mesonbuild/msetup.py                          |  4 +-
+ mesonbuild/munstable_coredata.py              |  5 +-
+ 6 files changed, 20 insertions(+), 52 deletions(-)
+ create mode 100644 docs/markdown/snippets/multiple-cross-files.md
+
+diff --git a/docs/markdown/snippets/multiple-cross-files.md b/docs/markdown/snippets/multiple-cross-files.md
+new file mode 100644
+index 0000000..de229be
+--- /dev/null
++++ b/docs/markdown/snippets/multiple-cross-files.md
+@@ -0,0 +1,3 @@
++## Multipe cross files can be specified
++
++`--cross-file` can be passed multiple times, with the configuration files overlaying the same way as `--native-file`.
 diff --git a/mesonbuild/backend/backends.py b/mesonbuild/backend/backends.py
-index 40402513..4b9bcb59 100644
+index 4d35d22..5b270d3 100644
 --- a/mesonbuild/backend/backends.py
 +++ b/mesonbuild/backend/backends.py
-@@ -726,8 +726,7 @@ class Backend:
+@@ -788,8 +788,7 @@ class Backend:
          deps = [os.path.join(self.build_to_src, df)
                  for df in self.interpreter.get_build_def_files()]
          if self.environment.is_cross_build():
@@ -21,39 +43,19 @@ index 40402513..4b9bcb59 100644
          if os.path.exists(os.path.join(self.environment.get_source_dir(), 'meson_options.txt')):
              deps.append(os.path.join(self.build_to_src, 'meson_options.txt'))
 diff --git a/mesonbuild/coredata.py b/mesonbuild/coredata.py
-index c3f5a745..ff810683 100644
+index 066ad30..d80e9a0 100644
 --- a/mesonbuild/coredata.py
 +++ b/mesonbuild/coredata.py
-@@ -201,8 +201,8 @@ class UserFeatureOption(UserComboOption):
-         return self.value == 'auto'
- 
- 
--def load_configs(filenames):
--    """Load native files."""
-+def load_configs(filenames, subdir):
-+    """Load configuration files from a named subdirectory."""
-     def gen():
-         for f in filenames:
-             f = os.path.expanduser(os.path.expandvars(f))
-@@ -215,7 +215,7 @@ def load_configs(filenames):
-                     os.environ.get('XDG_DATA_HOME', os.path.expanduser('~/.local/share')),
-                 ] + os.environ.get('XDG_DATA_DIRS', '/usr/local/share:/usr/share').split(':')
-                 for path in paths:
--                    path_to_try = os.path.join(path, 'meson', 'native', f)
-+                    path_to_try = os.path.join(path, 'meson', subdir, f)
-                     if os.path.isfile(path_to_try):
-                         yield path_to_try
-                         break
-@@ -291,7 +291,7 @@ class CoreData:
-         self.compiler_options = {}
+@@ -265,7 +265,7 @@ class CoreData:
+         self.compiler_options = PerMachine({}, {}, {})
          self.base_options = {}
-         self.external_preprocess_args = {} # CPPFLAGS only
+         self.external_preprocess_args = PerMachine({}, {}, {}) # CPPFLAGS only
 -        self.cross_file = self.__load_cross_file(options.cross_file)
 +        self.cross_files = self.__load_config_files(options.cross_file)
          self.compilers = OrderedDict()
          self.cross_compilers = OrderedDict()
          self.deps = OrderedDict()
-@@ -301,52 +301,14 @@ class CoreData:
+@@ -276,57 +276,19 @@ class CoreData:
  
      @staticmethod
      def __load_config_files(filenames):
@@ -105,10 +107,16 @@ index c3f5a745..ff810683 100644
 -
 -        raise MesonException('Cannot find specified cross file: ' + filename)
 -
+     def libdir_cross_fixup(self):
+         # By default set libdir to "lib" when cross compiling since
+         # getting the "system default" is always wrong on multiarch
+         # platforms as it gets a value like lib/x86_64-linux-gnu.
+-        if self.cross_file is not None:
++        if self.cross_files:
+             self.builtins['libdir'].value = 'lib'
+ 
      def sanitize_prefix(self, prefix):
-         if not os.path.isabs(prefix):
-             raise MesonException('prefix value {!r} must be an absolute path'
-@@ -558,8 +520,8 @@ def read_cmd_line_file(build_dir, options):
+@@ -642,8 +604,8 @@ def read_cmd_line_file(build_dir, options):
      options.cmd_line_options = d
  
      properties = config['properties']
@@ -119,7 +127,7 @@ index c3f5a745..ff810683 100644
      if not options.native_file:
          # This will be a string in the form: "['first', 'second', ...]", use
          # literal_eval to get it into the list of strings.
-@@ -570,7 +532,7 @@ def write_cmd_line_file(build_dir, options):
+@@ -654,7 +616,7 @@ def write_cmd_line_file(build_dir, options):
      config = CmdLineFileParser()
  
      properties = {}
@@ -129,50 +137,26 @@ index c3f5a745..ff810683 100644
      if options.native_file:
          properties['native_file'] = options.native_file
 diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index 6d86daf9..406ab8b8 100644
+index c25ef33..4c1c5ac 100644
 --- a/mesonbuild/environment.py
 +++ b/mesonbuild/environment.py
-@@ -355,8 +355,8 @@ class Environment:
-         self.machines = MachineInfos()
-         # Will be fully initialized later using compilers later.
-         self.machines.detect_build()
--        if self.coredata.cross_file:
--            self.cross_info = CrossBuildInfo(self.coredata.cross_file)
+@@ -394,8 +394,9 @@ class Environment:
+             self.binaries.build = BinaryTable(config.get('binaries', {}))
+             self.paths.build = Directories(**config.get('paths', {}))
+ 
+-        if self.coredata.cross_file is not None:
+-            config = MesonConfigFile.parse_datafile(self.coredata.cross_file)
 +        if self.coredata.cross_files:
-+            self.cross_info = CrossBuildInfo(self.coredata.cross_files)
-             if 'exe_wrapper' in self.cross_info.config['binaries']:
-                 from .dependencies import ExternalProgram
-                 self.exe_wrapper = ExternalProgram.from_bin_list(
-@@ -373,7 +373,7 @@ class Environment:
- 
-         if self.coredata.config_files:
-             self.config_info = coredata.ConfigData(
--                coredata.load_configs(self.coredata.config_files))
-+                coredata.load_configs(self.coredata.config_files, 'native'))
-         else:
-             self.config_info = coredata.ConfigData()
- 
-@@ -1113,13 +1113,8 @@ class CrossBuildInfo:
-     def ok_type(self, i):
-         return isinstance(i, (str, int, bool))
- 
--    def parse_datafile(self, filename):
--        config = configparser.ConfigParser()
--        try:
--            with open(filename, 'r') as f:
--                config.read_file(f, filename)
--        except FileNotFoundError:
--            raise EnvironmentException('File not found: %s.' % filename)
-+    def parse_datafile(self, filenames):
-+        config = coredata.load_configs(filenames, 'cross')
-         # This is a bit hackish at the moment.
-         for s in config.sections():
-             self.config[s] = {}
++            config = MesonConfigFile.from_config_parser(
++                coredata.load_configs(self.coredata.cross_files, 'cross'))
+             self.properties.host = Properties(config.get('properties', {}), False)
+             self.binaries.host = BinaryTable(config.get('binaries', {}), False)
+             if 'host_machine' in config:
 diff --git a/mesonbuild/msetup.py b/mesonbuild/msetup.py
-index 56a0e9a7..f0a1ae19 100644
+index 023afdb..6e8ca83 100644
 --- a/mesonbuild/msetup.py
 +++ b/mesonbuild/msetup.py
-@@ -27,7 +27,9 @@ from .mesonlib import MesonException
+@@ -29,7 +29,9 @@ from .mesonlib import MesonException
  
  def add_arguments(parser):
      coredata.register_builtin_arguments(parser)
@@ -183,25 +167,19 @@ index 56a0e9a7..f0a1ae19 100644
                          help='File describing cross compilation environment.')
      parser.add_argument('--native-file',
                          default=[],
-diff --git a/run_unittests.py b/run_unittests.py
-index e6874b25..1d247291 100755
---- a/run_unittests.py
-+++ b/run_unittests.py
-@@ -529,7 +529,7 @@ class InternalTests(unittest.TestCase):
-         config.write(configfile)
-         configfile.flush()
-         configfile.close()
--        detected_value = mesonbuild.environment.CrossBuildInfo(configfile.name).need_exe_wrapper()
-+        detected_value = mesonbuild.environment.CrossBuildInfo((configfile.name,)).need_exe_wrapper()
-         os.unlink(configfilename)
- 
-         desired_value = not detected_value
-@@ -541,7 +541,7 @@ class InternalTests(unittest.TestCase):
-         configfilename = configfile.name
-         config.write(configfile)
-         configfile.close()
--        forced_value = mesonbuild.environment.CrossBuildInfo(configfile.name).need_exe_wrapper()
-+        forced_value = mesonbuild.environment.CrossBuildInfo((configfile.name,)).need_exe_wrapper()
-         os.unlink(configfilename)
- 
-         self.assertEqual(forced_value, desired_value)
+diff --git a/mesonbuild/munstable_coredata.py b/mesonbuild/munstable_coredata.py
+index 78f3f34..913f942 100644
+--- a/mesonbuild/munstable_coredata.py
++++ b/mesonbuild/munstable_coredata.py
+@@ -81,8 +81,9 @@ def run(options):
+             print('Last seen PKGCONFIG enviroment variable value: ' + v)
+         elif k == 'version':
+             print('Meson version: ' + v)
+-        elif k == 'cross_file':
+-            print('Cross File: ' + (v or 'None'))
++        elif k == 'cross_files':
++            if v:
++                print('Cross File: ' + ' '.join(v))
+         elif k == 'config_files':
+             if v:
+                 print('Native File: ' + ' '.join(v))

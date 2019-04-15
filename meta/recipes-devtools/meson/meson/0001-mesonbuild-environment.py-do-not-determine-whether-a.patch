@@ -1,0 +1,30 @@
+From c040f0dbace3259c80f3710bc019433b9c817940 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 25 Mar 2019 18:18:33 +0100
+Subject: [PATCH] mesonbuild/environment.py: do not determine whether a build
+ is cross by comparing architectures
+
+This can, and does, go wrong when our host architecture is same as the target one(e.g. x86_64).
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ mesonbuild/environment.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
+index 4c1c5ac..6e5d689 100644
+--- a/mesonbuild/environment.py
++++ b/mesonbuild/environment.py
+@@ -478,7 +478,7 @@ class Environment:
+         self.first_invocation = True
+ 
+     def is_cross_build(self):
+-        return not self.machines.matches_build_machine(MachineChoice.HOST)
++        return self.need_exe_wrapper()
+ 
+     def dump_coredata(self):
+         return coredata.save(self.coredata, self.get_build_dir())
+-- 
+2.17.1
+
