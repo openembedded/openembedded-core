@@ -17,14 +17,12 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0005-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
            file://0001-giscanner-add-a-lib-dirs-envvar-option.patch \
            file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
-           file://0001-configure.ac-make-GIR_DIR-configurable.patch \
-           file://0002-g-ir-tools-respect-gir_dir_prefix.patch \
-           file://0010-meson-add-option-gir-dir-prefix.patch \
            file://0001-Port-cross-compilation-support-to-meson.patch \
+           file://0001-meson.build-disable-tests-when-cross-compiling.patch \
            "
 
-SRC_URI[md5sum] = "182432c1f33886be8f4da073218b597d"
-SRC_URI[sha256sum] = "025b632bbd944dcf11fc50d19a0ca086b83baf92b3e34936d008180d28cdc3c8"
+SRC_URI[md5sum] = "46fc8a98f6563e64947ac3d574632525"
+SRC_URI[sha256sum] = "d844d1499ecd36f3ec8a3573616186d36626ec0c9a7981939e99aa02e9c824b3"
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
@@ -56,7 +54,7 @@ EXTRA_OEMESON_class-target = " \
     -Denable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
     -Dpkgconfig-sysroot-path=${PKG_CONFIG_SYSROOT_DIR} \
     ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Denable-introspection-data=true', '-Denable-introspection-data=false', d)} \
-    ${@'-Dgir-dir-prefix=${libdir}' if d.getVar('MULTILIBS') else ''} \
+    ${@'-Dgir_dir_prefix=${libdir}' if d.getVar('MULTILIBS') else ''} \
 "
 
 # Need to ensure ld.so.conf exists so prelink-native works
