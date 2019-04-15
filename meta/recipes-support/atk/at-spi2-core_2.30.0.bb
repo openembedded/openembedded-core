@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
+           file://meson-0.50-fix.patch \
            "
 
 SRC_URI[md5sum] = "d4f22c66b3210ffe6b10d01c04e008b5"
