@@ -1,6 +1,6 @@
 SUMMARY = "msmtp is an SMTP client"
 DESCRIPTION = "A sendmail replacement for use in MTAs like mutt"
-HOMEPAGE = "http://msmtp.sourceforge.net/"
+HOMEPAGE = "https://marlam.de/msmtp/"
 SECTION = "console/network"
 
 LICENSE = "GPLv3"
@@ -9,11 +9,10 @@ DEPENDS = "zlib gnutls"
 #COPYING or Licence
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "http://sourceforge.net/projects/msmtp/files/msmtp/${PV}/${BPN}-${PV}.tar.xz \
-          "
+SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz"
 
-SRC_URI[md5sum] = "82b0520b57db4b2cf05333d11fb5974d"
-SRC_URI[sha256sum] = "da15db1f62bd0201fce5310adb89c86188be91cd745b7cb3b62b81a501e7fb5e"
+SRC_URI[md5sum] = "0c0be51e6872e818f78bd6924636327b"
+SRC_URI[sha256sum] = "3cb2eefd33d048f0f82de100ef39a494e44fd1485e376ead31f733d2f36b92b4"
 
 inherit gettext autotools update-alternatives pkgconfig
 
