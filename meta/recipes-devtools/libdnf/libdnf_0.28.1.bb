@@ -7,10 +7,9 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf \
            file://0004-Set-libsolv-variables-with-pkg-config-cmake-s-own-mo.patch \
            file://0001-Get-parameters-for-both-libsolv-and-libsolvext-libdn.patch \
            file://0001-Add-WITH_TESTS-option.patch \
-           file://0001-include-missing-string-and-errno.h-headers.patch \
            "
 
-SRCREV = "bd23204aa83d10e3d293a9f2d496cba6070f6a4d"
+SRCREV = "751f89045b80d58c0d05800f74357cf78cdf7e77"
 
 S = "${WORKDIR}/git"
 
