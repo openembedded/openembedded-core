@@ -1,7 +1,6 @@
 require python.inc
 EXTRANATIVEPATH += "bzip2-native"
 DEPENDS = "openssl-native bzip2-replacement-native zlib-native readline-native sqlite3-native expat-native gdbm-native db-native"
-PR = "${INC_PR}.1"
 
 SRC_URI += "\
             file://05-enable-ctypes-cross-build.patch \
@@ -17,7 +16,6 @@ SRC_URI += "\
             file://parallel-makeinst-create-bindir.patch \
             file://revert_use_of_sysconfigdata.patch \
             file://0001-python-native-fix-one-do_populate_sysroot-warning.patch \
-            file://0001-2.7-bpo-34623-Use-XML_SetHashSalt-in-_elementtree-GH.patch \
            "
 
 S = "${WORKDIR}/Python-${PV}"
