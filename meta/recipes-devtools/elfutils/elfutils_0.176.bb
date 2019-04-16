@@ -27,20 +27,45 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/hurd_path.patch \
            file://debian/ignore_strmerge.diff \
            file://debian/disable_werror.patch \
+           file://debian/testsuite-ignore-elflint.diff \
+           file://0001-skip-the-test-when-gcc-not-deployed.patch \
+           file://run-ptest \
+           file://serial-tests.patch \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
 
 SRC_URI[md5sum] = "077e4f49320cad82bf17a997068b1db9"
 SRC_URI[sha256sum] = "eb5747c371b0af0f71e86215a5ebb88728533c3a104a43d4231963f308cd1023"
 
-inherit autotools gettext
+inherit autotools gettext ptest
 
 EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
 EXTRA_OECONF_append_class-native = " --without-bzlib"
+# gcc has been added to blacklist, we will find workaround solution
+RDEPENDS_${PN}-ptest = "libasm libelf bash"
+
+EXTRA_OECONF_append_class-target += "--enable-tests-rpath"
 
 do_install_append() {
 	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
 		rm -f ${D}${bindir}/eu-objdump
+	fi
+}
+
+do_compile_ptest() {
+	cd ${B}/tests
+	oe_runmake buildtest-TESTS
+}
+
+do_install_ptest() {
+	if [ ${PTEST_ENABLED} = "1" ]; then
+		cp -r ${S}/tests/                       ${D}${PTEST_PATH}
+		cp -r ${B}/tests/*                      ${D}${PTEST_PATH}/tests
+		cp -r ${B}/src                          ${D}${PTEST_PATH}
+		cp -r ${B}/config.h                     ${D}${PTEST_PATH}
+		cp -r ${B}/backends                     ${D}${PTEST_PATH}
+		sed -i '/^Makefile:/c Makefile:'        ${D}${PTEST_PATH}/tests/Makefile
+		find ${D}${PTEST_PATH} -type f -name *.[hoc] | xargs -i rm {}
 	fi
 }
 

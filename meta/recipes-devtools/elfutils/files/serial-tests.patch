@@ -1,0 +1,28 @@
+From 48e111a17e8d5f10690716a63c17670f1406b56c Mon Sep 17 00:00:00 2001
+From: "Hongjun.Yang" <hongjun.yang@windriver.com>
+Date: Wed, 28 Oct 2015 13:24:54 +0800
+Subject: [PATCH] Add serial-tests support, ptest need it.
+
+Add serial-tests support, ptest need it.
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Mingli Yu <Mingli.Yu@windriver.com>
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index b4e012d..2eb0417 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -45,7 +45,7 @@ AC_COPYRIGHT([Copyright (C) 1996-2018 The elfutils developers.])
+ AC_PREREQ(2.63)			dnl Minimum Autoconf version required.
+ 
+ dnl We use GNU make extensions; automake 1.10 defaults to -Wportability.
+-AM_INIT_AUTOMAKE([gnits 1.11 -Wno-portability dist-bzip2 no-dist-gzip parallel-tests])
++AM_INIT_AUTOMAKE([gnits 1.11 -Wno-portability dist-bzip2 no-dist-gzip serial-tests])
+ AM_MAINTAINER_MODE
+ 
+ AM_SILENT_RULES([yes])
