@@ -193,6 +193,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Drootlibdir=${rootlibdir} \
                   -Drootprefix=${rootprefix} \
                   -Dsysvrcnd-path=${sysconfdir} \
+                  -Ddefault-locale=C \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot
