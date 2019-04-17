@@ -10,7 +10,6 @@ PTESTS_FAST = "\
     attr-ptest \
     bluez5-ptest \
     bzip2-ptest \
-    dbus-test-ptest \
     diffstat-ptest \
     diffutils-ptest \
     elfutils-ptest \
@@ -60,6 +59,7 @@ PTESTS_FAST = "\
 PTESTS_SLOW = "\
     bash-ptest \
     busybox-ptest \
+    dbus-test-ptest \
     e2fsprogs-ptest \
     glib-2.0-ptest \
     gstreamer1.0-ptest \
