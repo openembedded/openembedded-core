@@ -46,12 +46,12 @@ UBOOT_NODTB_SYMLINK ?= "u-boot-nodtb-${MACHINE}.${UBOOT_SUFFIX}"
 UBOOT_PN = "${@d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'}"
 
 concat_dtb_helper() {
-	if [ -e ${UBOOT_DTB_BINARY} ]; then
+	if [ -e "${UBOOT_DTB_BINARY}" ]; then
 		ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_BINARY}
 		ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_SYMLINK}
 	fi
 
-	if [ -f ${UBOOT_NODTB_BINARY} ]; then
+	if [ -f "${UBOOT_NODTB_BINARY}" ]; then
 		install ${UBOOT_NODTB_BINARY} ${DEPLOYDIR}/${UBOOT_NODTB_IMAGE}
 		ln -sf ${UBOOT_NODTB_IMAGE} ${UBOOT_NODTB_SYMLINK}
 		ln -sf ${UBOOT_NODTB_IMAGE} ${UBOOT_NODTB_BINARY}
@@ -67,13 +67,13 @@ concat_dtb_helper() {
 	elif [ -e "${DEPLOYDIR}/${UBOOT_NODTB_IMAGE}" -a -e "$deployed_uboot_dtb_binary" ]; then
 		cd ${DEPLOYDIR}
 		cat ${UBOOT_NODTB_IMAGE} $deployed_uboot_dtb_binary | tee ${UBOOT_BINARY} > ${UBOOT_IMAGE}
-	elif [ -n "${UBOOT_DTB_BINARY}" ]; then
+	else
 		bbwarn "Failure while adding public key to u-boot binary. Verified boot won't be available."
 	fi
 }
 
 concat_dtb() {
-	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${PN}" = "${UBOOT_PN}" ]; then
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${PN}" = "${UBOOT_PN}" -a -n "${UBOOT_DTB_BINARY}" ]; then
 		mkdir -p ${DEPLOYDIR}
 		if [ -n "${UBOOT_CONFIG}" ]; then
 			for config in ${UBOOT_MACHINE}; do
@@ -90,19 +90,19 @@ concat_dtb() {
 # Install UBOOT_DTB_BINARY to datadir, so that kernel can use it for
 # signing, and kernel will deploy UBOOT_DTB_BINARY after signs it.
 install_helper() {
-	if [ -f ${UBOOT_DTB_BINARY} ]; then
+	if [ -f "${UBOOT_DTB_BINARY}" ]; then
 		install -d ${D}${datadir}
 		# UBOOT_DTB_BINARY is a symlink to UBOOT_DTB_IMAGE, so we
 		# need both of them.
 		install ${UBOOT_DTB_BINARY} ${D}${datadir}/${UBOOT_DTB_IMAGE}
 		ln -sf ${UBOOT_DTB_IMAGE} ${D}${datadir}/${UBOOT_DTB_BINARY}
-	elif [ -n "${UBOOT_DTB_BINARY}" ]; then
+	else
 		bbwarn "${UBOOT_DTB_BINARY} not found"
 	fi
 }
 
 do_install_append() {
-	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${PN}" = "${UBOOT_PN}" ]; then
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${PN}" = "${UBOOT_PN}" -a -n "${UBOOT_DTB_BINARY}" ]; then
 		if [ -n "${UBOOT_CONFIG}" ]; then
 			for config in ${UBOOT_MACHINE}; do
 				cd ${B}/${config}
