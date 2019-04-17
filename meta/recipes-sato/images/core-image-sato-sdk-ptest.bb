@@ -5,6 +5,8 @@ DESCRIPTION += "Also includes ptest packages."
 
 IMAGE_FEATURES += "ptest-pkgs"
 
+PROVIDES += "core-image-sato-ptest"
+
 # Also include ptests which may not otherwise be included in a sato image
 IMAGE_INSTALL += "${PTESTS_FAST} ${PTESTS_SLOW}"
 
