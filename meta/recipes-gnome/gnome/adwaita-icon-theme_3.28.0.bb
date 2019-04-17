@@ -18,13 +18,6 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
 SRC_URI[md5sum] = "b25b2d82cbebf2cc9cd469457b604f2c"
 SRC_URI[sha256sum] = "7aae8c1dffd6772fd1a21a3d365a0ea28b7c3988bdbbeafbf8742cda68242150"
 
-do_install_append() {
-	# Build uses gtk-encode-symbolic-svg to create png versions:
-        # no need to store the svgs anymore.
-	rm -f ${D}${prefix}/share/icons/Adwaita/scalable/*/*-symbolic.svg \
-	      ${D}${prefix}/share/icons/Adwaita/scalable/*/*-symbolic-rtl.svg
-}
-
 PACKAGES = "${PN}-cursors ${PN}-symbolic-hires ${PN}-symbolic ${PN}-hires ${PN}"
 
 RREPLACES_${PN} = "gnome-icon-theme"
@@ -37,7 +30,8 @@ FILES_${PN}-symbolic-hires = "${prefix}/share/icons/Adwaita/96x96/*/*.symbolic.p
                               ${prefix}/share/icons/Adwaita/48x48/*/*.symbolic.png \
                               ${prefix}/share/icons/Adwaita/32x32/*/*.symbolic.png"
 FILES_${PN}-symbolic = "${prefix}/share/icons/Adwaita/16x16/*/*.symbolic.png \
-                        ${prefix}/share/icons/Adwaita/24x24/*/*.symbolic.png"
+                        ${prefix}/share/icons/Adwaita/24x24/*/*.symbolic.png \
+                        ${prefix}/share/icons/Adwaita/scalable/*/*-symbolic*.svg"
 FILES_${PN}-hires = "${prefix}/share/icons/Adwaita/256x256/ \
                      ${prefix}/share/icons/Adwaita/512x512/"
 FILES_${PN} = "${prefix}/share/icons/Adwaita/ \
