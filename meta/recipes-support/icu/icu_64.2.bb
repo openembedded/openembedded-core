@@ -17,6 +17,7 @@ SRC_URI = "${BASE_SRC_URI} \
            file://icu-pkgdata-large-cmd.patch \
            file://fix-install-manx.patch \
            file://0001-Fix-big-endian-build.patch \
+           file://0001-icu-Added-armeb-support.patch \
            "
 
 SRC_URI_append_class-target = "\
