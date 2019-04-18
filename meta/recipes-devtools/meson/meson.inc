@@ -16,6 +16,7 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0001-environment.py-detect-windows-also-if-the-system-str.patch \
            file://0001-mesonbuild-environment.py-do-not-determine-whether-a.patch \
            file://0001-mesonbuild-environment.py-check-environment-for-vari.patch \
+           file://0001-modules-python.py-do-not-substitute-python-s-install.patch \
            "
 SRC_URI[sha256sum] = "2a1bc42dda58206fb922cda5e1ca95cc03ad126321d26acc47d3493ec4e7021f"
 SRC_URI[md5sum] = "433483107fda4616eaf33de7e7083a84"
