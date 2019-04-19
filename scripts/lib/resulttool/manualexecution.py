@@ -17,6 +17,7 @@ import os
 import sys
 import datetime
 import re
+import copy
 from oeqa.core.runner import OETestResultJSONHelper
 
 
@@ -123,7 +124,7 @@ class ManualTestRunner(object):
     def _get_write_dir(self):
         return os.environ['BUILDDIR'] + '/tmp/log/manual/'
 
-    def run_test(self, case_file, config_options_file):
+    def run_test(self, case_file, config_options_file, testcase_config_file):
         test_module = self._get_test_module(case_file)
         cases = load_json_file(case_file)
         config_options = {}
@@ -132,6 +133,13 @@ class ManualTestRunner(object):
         configurations = self._get_config(config_options, test_module)
         result_id = 'manual_%s_%s' % (test_module, configurations['STARTTIME'])
         test_results = {}
+        if testcase_config_file:
+            test_case_config = load_json_file(testcase_config_file)
+            test_case_to_execute = test_case_config['testcases']
+            for case in copy.deepcopy(cases) :
+                if case['test']['@alias'] not in test_case_to_execute:
+                    cases.remove(case)
+
         print('\nTotal number of test cases in this test suite: %s\n' % len(cases))
         for c in cases:
             test_result = self._execute_test_steps(c)
@@ -184,7 +192,7 @@ def manualexecution(args, logger):
     if args.make_config_options_file:
         testrunner.make_config_option_file(logger, args.file, args.config_options_file)
         return 0
-    configurations, result_id, write_dir, test_results = testrunner.run_test(args.file, args.config_options_file)
+    configurations, result_id, write_dir, test_results = testrunner.run_test(args.file, args.config_options_file, args.testcase_config_file)
     resultjsonhelper = OETestResultJSONHelper()
     resultjsonhelper.dump_testresult_file(write_dir, configurations, result_id, test_results)
     return 0
@@ -200,3 +208,5 @@ def register_commands(subparsers):
                               help='the config options file to import and used as available configuration option selection or make config option file')
     parser_build.add_argument('-m', '--make-config-options-file', action='store_true',
                               help='make the configuration options file based on provided inputs')
+    parser_build.add_argument('-t', '--testcase-config-file', default='',
+                              help='the testcase configuration file to enable user to run a selected set of test case')
