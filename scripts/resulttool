@@ -49,6 +49,7 @@ import resulttool.store
 import resulttool.regression
 import resulttool.report
 import resulttool.manualexecution
+import resulttool.log
 logger = scriptutils.logger_create('resulttool')
 
 def main():
@@ -66,6 +67,7 @@ def main():
     subparsers.add_subparser_group('analysis', 'analysis', 100)
     resulttool.regression.register_commands(subparsers)
     resulttool.report.register_commands(subparsers)
+    resulttool.log.register_commands(subparsers)
 
     args = parser.parse_args()
     if args.debug:
