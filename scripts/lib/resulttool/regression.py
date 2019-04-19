@@ -64,7 +64,7 @@ def regression_common(args, logger, base_results, target_results):
         if a in target_results:
             base = list(base_results[a].keys())
             target = list(target_results[a].keys())
-            # We may have multiple base/targets which are for different configurations. Start by 
+            # We may have multiple base/targets which are for different configurations. Start by
             # removing any pairs which match
             for c in base.copy():
                 for b in target.copy():
