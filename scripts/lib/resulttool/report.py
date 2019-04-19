@@ -143,7 +143,7 @@ def register_commands(subparsers):
                                          group='analysis')
     parser_build.set_defaults(func=report)
     parser_build.add_argument('source_dir',
-                              help='source file/directory that contain the test result files to summarise')
+                              help='source file/directory/URL that contain the test result files to summarise')
     parser_build.add_argument('--branch', '-B', default='master', help="Branch to find commit in")
     parser_build.add_argument('--commit', help="Revision to report")
     parser_build.add_argument('-t', '--tag', default='',

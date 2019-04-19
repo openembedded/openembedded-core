@@ -16,6 +16,8 @@ import os
 import json
 import scriptpath
 import copy
+import urllib
+import posixpath
 scriptpath.add_oe_lib_path()
 
 flatten_map = {
@@ -40,20 +42,33 @@ store_map = {
     "manual": ['TEST_TYPE', 'TEST_MODULE', 'MACHINE', 'IMAGE_BASENAME']
 }
 
+def is_url(p):
+    """
+    Helper for determining if the given path is a URL
+    """
+    return p.startswith('http://') or p.startswith('https://')
+
 #
 # Load the json file and append the results data into the provided results dict
 #
 def append_resultsdata(results, f, configmap=store_map):
     if type(f) is str:
-        with open(f, "r") as filedata:
-            data = json.load(filedata)
+        if is_url(f):
+            with urllib.request.urlopen(f) as response:
+                data = json.loads(response.read().decode('utf-8'))
+            url = urllib.parse.urlparse(f)
+            testseries = posixpath.basename(posixpath.dirname(url.path))
+        else:
+            with open(f, "r") as filedata:
+                data = json.load(filedata)
+            testseries = os.path.basename(os.path.dirname(f))
     else:
         data = f
     for res in data:
         if "configuration" not in data[res] or "result" not in data[res]:
             raise ValueError("Test results data without configuration or result section?")
         if "TESTSERIES" not in data[res]["configuration"]:
-            data[res]["configuration"]["TESTSERIES"] = os.path.basename(os.path.dirname(f))
+            data[res]["configuration"]["TESTSERIES"] = testseries
         testtype = data[res]["configuration"].get("TEST_TYPE")
         if testtype not in configmap:
             raise ValueError("Unknown test type %s" % testtype)
@@ -69,7 +84,7 @@ def append_resultsdata(results, f, configmap=store_map):
 #
 def load_resultsdata(source, configmap=store_map):
     results = {}
-    if os.path.isfile(source):
+    if is_url(source) or os.path.isfile(source):
         append_resultsdata(results, source, configmap)
         return results
     for root, dirs, files in os.walk(source):
