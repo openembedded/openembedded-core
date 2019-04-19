@@ -161,9 +161,9 @@ def register_commands(subparsers):
                                          group='analysis')
     parser_build.set_defaults(func=regression)
     parser_build.add_argument('base_result',
-                              help='base result file/directory for the comparison')
+                              help='base result file/directory/URL for the comparison')
     parser_build.add_argument('target_result',
-                              help='target result file/directory to compare with')
+                              help='target result file/directory/URL to compare with')
     parser_build.add_argument('-b', '--base-result-id', default='',
                               help='(optional) filter the base results to this result ID')
     parser_build.add_argument('-t', '--target-result-id', default='',

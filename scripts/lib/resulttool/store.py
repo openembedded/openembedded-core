@@ -29,7 +29,7 @@ def store(args, logger):
     try:
         results = {}
         logger.info('Reading files from %s' % args.source)
-        if os.path.isfile(args.source):
+        if resultutils.is_url(args.source) or os.path.isfile(args.source):
             resultutils.append_resultsdata(results, args.source)
         else:
             for root, dirs,  files in os.walk(args.source):
@@ -92,7 +92,7 @@ def register_commands(subparsers):
                                          group='setup')
     parser_build.set_defaults(func=store)
     parser_build.add_argument('source',
-                              help='source file or directory that contain the test result files to be stored')
+                              help='source file/directory/URL that contain the test result files to be stored')
     parser_build.add_argument('git_dir',
                               help='the location of the git repository to store the results in')
     parser_build.add_argument('-a', '--all', action='store_true',
