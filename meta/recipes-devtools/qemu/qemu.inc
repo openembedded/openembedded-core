@@ -165,5 +165,6 @@ PACKAGECONFIG[virglrenderer] = "--enable-virglrenderer,--disable-virglrenderer,v
 PACKAGECONFIG[spice] = "--enable-spice,--disable-spice,spice"
 # usbredir will be in meta-networking layer
 PACKAGECONFIG[usb-redir] = "--enable-usb-redir,--disable-usb-redir,usbredir"
+PACKAGECONFIG[snappy] = "--enable-snappy,--disable-snappy,snappy"
 
 INSANE_SKIP_${PN} = "arch"
