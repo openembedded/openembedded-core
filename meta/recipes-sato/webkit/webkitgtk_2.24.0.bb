@@ -20,6 +20,9 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
            file://0001-Fix-build-with-musl.patch \
            file://detect-gstreamer-gl.patch \
+           file://include_array.patch \
+           file://narrowing.patch \
+           file://snprintf.patch \
            "
 
 SRC_URI[md5sum] = "576d69c598b3e36c73441052d02466de"
