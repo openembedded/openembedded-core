@@ -24,6 +24,7 @@ class ResultsTextReport(object):
     def __init__(self):
         self.ptests = {}
         self.ltptests = {}
+        self.ltpposixtests = {}
         self.result_types = {'passed': ['PASSED', 'passed'],
                              'failed': ['FAILED', 'failed', 'ERROR', 'error', 'UNKNOWN'],
                              'skipped': ['SKIPPED', 'skipped']}
@@ -88,6 +89,37 @@ class ResultsTextReport(object):
             if status in self.result_types[tk]:
                 self.ltptests[suite][tk] += 1
 
+    def handle_ltpposixtest_result(self, k, status, result):
+        if k == 'ltpposixresult.sections':
+            # Ensure tests without any test results still show up on the report
+            for suite in result['ltpposixresult.sections']:
+                if suite not in self.ltpposixtests:
+                    self.ltpposixtests[suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+                if 'duration' in result['ltpposixresult.sections'][suite]:
+                    self.ltpposixtests[suite]['duration'] = result['ltpposixresult.sections'][suite]['duration']
+            return
+        try:
+            _, suite, test = k.split(".", 2)
+        except ValueError:
+            return
+        # Handle 'glib-2.0'
+        if 'ltpposixresult.sections' in result and suite not in result['ltpposixresult.sections']:
+            try:
+                _, suite, suite1, test = k.split(".", 3)
+                if suite + "." + suite1 in result['ltpposixresult.sections']:
+                    suite = suite + "." + suite1
+            except ValueError:
+                pass
+        if suite not in self.ltpposixtests:
+            self.ltpposixtests[suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+        for tk in self.result_types:
+            if status in self.result_types[tk]:
+                self.ltpposixtests[suite][tk] += 1
+
+    def get_aggregated_test_result(self, logger, testresult):
+        test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
+    def get_aggregated_test_result(self, logger, testresult):
+        test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
     def get_aggregated_test_result(self, logger, testresult):
         test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
     def get_aggregated_test_result(self, logger, testresult):
@@ -104,6 +136,8 @@ class ResultsTextReport(object):
                 self.handle_ptest_result(k, test_status, result)
             if k.startswith("ltpresult."):
                 self.handle_ltptest_result(k, test_status, result)
+            if k.startswith("ltpposixresult."):
+                self.handle_ltpposixtest_result(k, test_status, result)
         return test_count_report
 
     def print_test_report(self, template_file_name, test_count_reports):
@@ -115,9 +149,10 @@ class ResultsTextReport(object):
         havefailed = False
         haveptest = bool(self.ptests)
         haveltp = bool(self.ltptests)
+        haveltpposix = bool(self.ltpposixtests)
         reportvalues = []
         cols = ['passed', 'failed', 'skipped']
-        maxlen = {'passed' : 0, 'failed' : 0, 'skipped' : 0, 'result_id': 0, 'testseries' : 0, 'ptest' : 0 ,'ltptest': 0}
+        maxlen = {'passed' : 0, 'failed' : 0, 'skipped' : 0, 'result_id': 0, 'testseries' : 0, 'ptest' : 0 ,'ltptest': 0, 'ltpposixtest': 0}
         for line in test_count_reports:
             total_tested = line['passed'] + line['failed'] + line['skipped']
             vals = {}
@@ -139,12 +174,17 @@ class ResultsTextReport(object):
         for ltptest in self.ltptests:
             if len(ltptest) > maxlen['ltptest']:
                 maxlen['ltptest'] = len(ltptest)
+        for ltpposixtest in self.ltpposixtests:
+            if len(ltpposixtest) > maxlen['ltpposixtest']:
+                maxlen['ltpposixtest'] = len(ltpposixtest)
         output = template.render(reportvalues=reportvalues,
                                  havefailed=havefailed,
                                  haveptest=haveptest,
                                  ptests=self.ptests,
                                  haveltp=haveltp,
+                                 haveltpposix=haveltpposix,
                                  ltptests=self.ltptests,
+                                 ltpposixtests=self.ltpposixtests,
                                  maxlen=maxlen)
         print(output)
 
