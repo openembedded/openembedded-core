@@ -23,6 +23,7 @@ import oeqa.utils.gitarchive as gitarchive
 class ResultsTextReport(object):
     def __init__(self):
         self.ptests = {}
+        self.ltptests = {}
         self.result_types = {'passed': ['PASSED', 'passed'],
                              'failed': ['FAILED', 'failed', 'ERROR', 'error', 'UNKNOWN'],
                              'skipped': ['SKIPPED', 'skipped']}
@@ -57,6 +58,38 @@ class ResultsTextReport(object):
             if status in self.result_types[tk]:
                 self.ptests[suite][tk] += 1
 
+    def handle_ltptest_result(self, k, status, result):
+        if k == 'ltpresult.sections':
+            # Ensure tests without any test results still show up on the report
+            for suite in result['ltpresult.sections']:
+                if suite not in self.ltptests:
+                    self.ltptests[suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+                if 'duration' in result['ltpresult.sections'][suite]:
+                    self.ltptests[suite]['duration'] = result['ltpresult.sections'][suite]['duration']
+                if 'timeout' in result['ltpresult.sections'][suite]:
+                    self.ltptests[suite]['duration'] += " T"
+            return
+        try:
+            _, suite, test = k.split(".", 2)
+        except ValueError:
+            return
+        # Handle 'glib-2.0'
+        if 'ltpresult.sections' in result and suite not in result['ltpresult.sections']:
+            try:
+                _, suite, suite1, test = k.split(".", 3)
+                print("split2: %s %s %s" % (suite, suite1, test))
+                if suite + "." + suite1 in result['ltpresult.sections']:
+                    suite = suite + "." + suite1
+            except ValueError:
+                pass
+        if suite not in self.ltptests:
+            self.ltptests[suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+        for tk in self.result_types:
+            if status in self.result_types[tk]:
+                self.ltptests[suite][tk] += 1
+
+    def get_aggregated_test_result(self, logger, testresult):
+        test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
     def get_aggregated_test_result(self, logger, testresult):
         test_count_report = {'passed': 0, 'failed': 0, 'skipped': 0, 'failed_testcases': []}
         result = testresult.get('result', [])
@@ -69,6 +102,8 @@ class ResultsTextReport(object):
                 test_count_report['failed_testcases'].append(k)
             if k.startswith("ptestresult."):
                 self.handle_ptest_result(k, test_status, result)
+            if k.startswith("ltpresult."):
+                self.handle_ltptest_result(k, test_status, result)
         return test_count_report
 
     def print_test_report(self, template_file_name, test_count_reports):
@@ -79,9 +114,10 @@ class ResultsTextReport(object):
         template = env.get_template(template_file_name)
         havefailed = False
         haveptest = bool(self.ptests)
+        haveltp = bool(self.ltptests)
         reportvalues = []
         cols = ['passed', 'failed', 'skipped']
-        maxlen = {'passed' : 0, 'failed' : 0, 'skipped' : 0, 'result_id': 0, 'testseries' : 0, 'ptest' : 0 }
+        maxlen = {'passed' : 0, 'failed' : 0, 'skipped' : 0, 'result_id': 0, 'testseries' : 0, 'ptest' : 0 ,'ltptest': 0}
         for line in test_count_reports:
             total_tested = line['passed'] + line['failed'] + line['skipped']
             vals = {}
@@ -100,10 +136,15 @@ class ResultsTextReport(object):
         for ptest in self.ptests:
             if len(ptest) > maxlen['ptest']:
                 maxlen['ptest'] = len(ptest)
+        for ltptest in self.ltptests:
+            if len(ltptest) > maxlen['ltptest']:
+                maxlen['ltptest'] = len(ltptest)
         output = template.render(reportvalues=reportvalues,
                                  havefailed=havefailed,
                                  haveptest=haveptest,
                                  ptests=self.ptests,
+                                 haveltp=haveltp,
+                                 ltptests=self.ltptests,
                                  maxlen=maxlen)
         print(output)
 
