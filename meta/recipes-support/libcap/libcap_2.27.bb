@@ -10,8 +10,8 @@ DEPENDS = "hostperl-runtime-native gperf-native"
 SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${PV}.tar.xz \
            file://0001-ensure-the-XATTR_NAME_CAPS-is-defined-when-it-is-use.patch \
            "
-SRC_URI[md5sum] = "968ac4d42a1a71754313527be2ab5df3"
-SRC_URI[sha256sum] = "b630b7c484271b3ba867680d6a14b10a86cfa67247a14631b14c06731d5a458b"
+SRC_URI[md5sum] = "2e8f9fab32eb5ccb37969fe317fd17aa"
+SRC_URI[sha256sum] = "dac1792d0118bee6aae6ba7fb93ff1602c6a9bda812fd63916eee1435b9c486a"
 
 inherit lib_package
 
