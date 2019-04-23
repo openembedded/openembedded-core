@@ -16,12 +16,9 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
 DEPENDS = "bison flex bison-native"
 
-SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix2-${PV}.tar.gz \
-           file://rename-yy_scan_string-manually.patch \
-           file://manipulate-fds-instead-of-FILE.patch \
-           "
-SRC_URI[md5sum] = "31691e2eb82b2064f78536a3423c18d6"
-SRC_URI[sha256sum] = "5d8fc9d9db9e04830d40bec9add04b21c05d466e0187d354815006fdd823cf15"
+SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix2-${PV}.tar.gz"
+SRC_URI[md5sum] = "0ea9047bf15dfdf3583f5266cc6da718"
+SRC_URI[sha256sum] = "8f939ad6130862e05853837496500b3fb93037530e5ea0ca0298458522ffc2c7"
 UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
 S = "${WORKDIR}/acpica-unix2-${PV}"
@@ -31,16 +28,16 @@ inherit update-alternatives
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "acpixtract"
 
-EXTRA_OEMAKE = "CC='${CC}' 'OPT_CFLAGS=-Wall'"
+EXTRA_OEMAKE = "CC='${CC}' \
+                OPT_CFLAGS=-Wall \
+                DESTDIR=${D} \
+                PREFIX=${prefix} \
+                INSTALLDIR=${bindir} \
+                INSTALLFLAGS= \
+                "
 
 do_install() {
-    install -D -p -m0755 generate/unix/bin*/iasl ${D}${bindir}/iasl
-    install -D -p -m0755 generate/unix/bin*/acpibin ${D}${bindir}/acpibin
-    install -D -p -m0755 generate/unix/bin*/acpiexec ${D}${bindir}/acpiexec
-    install -D -p -m0755 generate/unix/bin*/acpihelp ${D}${bindir}/acpihelp
-    install -D -p -m0755 generate/unix/bin*/acpinames ${D}${bindir}/acpinames
-    install -D -p -m0755 generate/unix/bin*/acpisrc ${D}${bindir}/acpisrc
-    install -D -p -m0755 generate/unix/bin*/acpixtract ${D}${bindir}/acpixtract
+    oe_runmake install
 }
 
 # iasl*.bb is a subset of this recipe, so RREPLACE it
