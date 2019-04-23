@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz"
 
+UPSTREAM_CHECK_URI = "https://marlam.de/msmtp/download/"
+
 SRC_URI[md5sum] = "0c0be51e6872e818f78bd6924636327b"
 SRC_URI[sha256sum] = "3cb2eefd33d048f0f82de100ef39a494e44fd1485e376ead31f733d2f36b92b4"
 
