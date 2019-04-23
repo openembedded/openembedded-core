@@ -6,6 +6,9 @@ Subject: [PATCH] load_configs: generalise the search path
 Instead of hard-coding the fact that load_configs() searches for files under
 meson/native, pass in the subdirectory allowing the cross-file code to use the
 same logic.
+
+Upstream-Status: Backport
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  mesonbuild/coredata.py    | 6 +++---
  mesonbuild/environment.py | 2 +-
