@@ -10,8 +10,8 @@ SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${S
            file://0001-npy_cpu-Add-riscv-support.patch \
            ${CONFIGFILESURI} \
            "
-SRC_URI[md5sum] = "4fc754be7ec3e0f80b042d907e99f4ad"
-SRC_URI[sha256sum] = "8088221e6e27da8d5907729f0bfe798f526836f22cc59ae83a0f867e67416a3e"
+SRC_URI[md5sum] = "0886e5b5017f08f2b7a624c0b5931e61"
+SRC_URI[sha256sum] = "adf063a3f87ab89393f5eea0eb903293b112fa0a308e8c594a75ffa585d81d4f"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
