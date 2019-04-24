@@ -22,8 +22,8 @@ SRC_URI = "${BASE_SRC_URI} \
 SRC_URI_append_class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[md5sum] = "f150be2231c13bb45206d79e0242372b"
-SRC_URI[sha256sum] = "92f1b7b9d51b396679c17f35a2112423361b8da3c1b9de00aa94fd768ae296e6"
+SRC_URI[md5sum] = "a3d18213beec454e3cdec9a3116d6b05"
+SRC_URI[sha256sum] = "627d5d8478e6d96fc8c90fed4851239079a561a6a8b9e48b0892f24e82d31d6c"
 
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)/"
 UPSTREAM_CHECK_URI = "http://download.icu-project.org/files/icu4c/"
