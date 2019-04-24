@@ -1,9 +1,15 @@
 SUMMARY = "Virtual terminal emulator GTK+ widget library"
 BUGTRACKER = "https://bugzilla.gnome.org/buglist.cgi?product=vte"
-LICENSE = "LGPLv2.1+"
-DEPENDS = "glib-2.0 gtk+3 libpcre2 intltool-native libxml2-native gperf-native"
+LICENSE = "GPLv3 & LGPLv2.1+"
+LICENSE_libvte = "LGPLv2.1+"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
+LIC_FILES_CHKSUM = " \
+    file://COPYING.GPL3;md5=2f31b266d3440dd7ee50f92cf67d8e6c \
+    file://COPYING.LGPL2;md5=4fbd65380cdd255951079008b364516c \
+    file://COPYING.LGPL3;md5=b52f2d57d10c4f7ee67a7eb9615d5d24 \
+"
+
+DEPENDS = "glib-2.0 gtk+3 libpcre2 intltool-native libxml2-native gperf-native"
 
 inherit gnomebase gtk-doc distro_features_check upstream-version-is-even gobject-introspection
 
@@ -11,9 +17,10 @@ inherit gnomebase gtk-doc distro_features_check upstream-version-is-even gobject
 SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'vala', '', 'file://0001-Add-m4-vapigen.m4.patch', d) } \
            file://0001-app.cc-use-old-school-asignment-to-avoid-gcc-4.8-err.patch \
+           file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
            "
-SRC_URI[archive.md5sum] = "de8181350dccb010e915e366bdd06d18"
-SRC_URI[archive.sha256sum] = "0f2657cef52accbfe56feede553155552d7c1984b1291838af3cb8cfc19b26af"
+SRC_URI[archive.md5sum] = "a8984cd5a101dbff0b0c875d1de3f692"
+SRC_URI[archive.sha256sum] = "02fa8ecc02a9332e47f486795494527b5687b3bd448e73e6b67285f2f326dc7c"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
@@ -27,7 +34,7 @@ export XDG_DATA_DIRS = "${STAGING_DATADIR}"
 
 # Help g-ir-scanner find the .so for linking
 do_compile_prepend() {
-        export GIR_EXTRA_LIBS_PATH="${B}/src/.libs"
+    export GIR_EXTRA_LIBS_PATH="${B}/src/.libs"
 }
 
 # Package additional files
