@@ -16,8 +16,8 @@ SRC_URI = " \
 
 UNKNOWN_CONFIGURE_WHITELIST = "introspection"
 
-SRC_URI[md5sum] = "6e39bca1d19a27cde4435061dd59578a"
-SRC_URI[sha256sum] = "83f4d7e59fde6bc6b0d39c5e5208574802f759bc525a4cb8e7265dfcba45ef29"
+SRC_URI[md5sum] = "9d5dbca10162dd9b0d03fed0c6cf865d"
+SRC_URI[sha256sum] = "32c99def94b8dea5ce9e4bc99576ef87591ea779b4db77cfdca7af81b76d04d8"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 

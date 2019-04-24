@@ -12,15 +12,19 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index a63d771..b3925d0 100644
+index 278fa16f..aacbd4a2 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -174,4 +174,4 @@ configure_file(input : 'PKG-INFO.in',
- 
+@@ -175,6 +175,6 @@ configure_file(input : 'PKG-INFO.in',
  subdir('gi')
  subdir('pygtkcompat')
+ with_tests = get_option('tests')
+-if with_tests
 -subdir('tests')
+-endif
++#if with_tests
 +#subdir('tests')
++#endif
 -- 
 2.17.1
 
