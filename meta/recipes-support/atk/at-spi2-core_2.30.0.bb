@@ -22,11 +22,7 @@ inherit meson gtk-doc gettext systemd pkgconfig upstream-version-is-even gobject
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
                   -Ddbus_daemon=${bindir}/dbus-daemon"
 
-GTKDOC_ENABLE_FLAG = "-Denable_docs=true"
-GTKDOC_DISABLE_FLAG = "-Denable_docs=false"
-
-EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
-                                                                                     '${GTKDOC_DISABLE_FLAG}', d)} "
+GTKDOC_MESON_OPTION = "enable_docs"
 
 GIR_MESON_OPTION = 'enable-introspection'
 GIR_MESON_ENABLE_FLAG = 'yes'

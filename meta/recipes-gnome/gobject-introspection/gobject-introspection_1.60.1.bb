@@ -28,6 +28,8 @@ SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-fo
 
 inherit meson pkgconfig gtk-doc python3native qemu gobject-introspection-data upstream-version-is-even multilib_script
 
+GTKDOC_MESON_OPTION = "gtk_doc"
+
 MULTILIB_SCRIPTS = "${PN}:${bindir}/g-ir-annotation-tool ${PN}:${bindir}/g-ir-scanner"
 
 DEPENDS_append = " libffi zlib glib-2.0 python3 flex-native bison-native autoconf-archive"

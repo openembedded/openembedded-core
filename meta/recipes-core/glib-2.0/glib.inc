@@ -30,11 +30,7 @@ LEAD_SONAME = "libglib-2.0.*"
 
 inherit meson gettext gtk-doc pkgconfig ptest-gnome upstream-version-is-even bash-completion gio-module-cache manpages distro_features_check
 
-GTKDOC_ENABLE_FLAG = "-Dgtk_doc=true"
-GTKDOC_DISABLE_FLAG = "-Dgtk_doc=false"
-
-EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
-                                                                                     '${GTKDOC_DISABLE_FLAG}', d)} "
+GTKDOC_MESON_OPTION = "gtk_doc"
 
 # This avoids the need to depend on target python3, which in case of mingw is not even possible.
 # meson's python configuration pokes into python3 configuration, so this provides the native config to it.

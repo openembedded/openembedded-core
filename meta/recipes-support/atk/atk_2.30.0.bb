@@ -14,12 +14,6 @@ DEPENDS = "gettext-native glib-2.0"
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase gtk-doc gettext upstream-version-is-even gobject-introspection
 
-GTKDOC_ENABLE_FLAG = "-Ddocs=true"
-GTKDOC_DISABLE_FLAG = "-Ddocs=false"
-
-EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
-                                                                                     '${GTKDOC_DISABLE_FLAG}', d)} "
-
 SRC_URI_append = " \
                    file://0001-meson.build-enable-introspection-for-cross-compile.patch \
                    file://0001-Switch-from-filename-to-basename.patch \

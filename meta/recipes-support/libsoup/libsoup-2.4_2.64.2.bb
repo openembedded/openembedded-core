@@ -26,12 +26,7 @@ PACKAGECONFIG[gssapi] = "-Dgssapi=true,-Dgssapi=false,krb5"
 
 EXTRA_OEMESON_append = " -Dvapi=false"
 
-GTKDOC_ENABLE_FLAG = "-Ddoc=true"
-GTKDOC_DISABLE_FLAG = "-Ddoc=false"
-
-EXTRA_OEMESON_append_class-target = " ${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_ENABLE_FLAG}', \
-                                                                                     '${GTKDOC_DISABLE_FLAG}', d)} "
-
+GTKDOC_MESON_OPTION = "doc"
 
 # When built without gnome support, libsoup-2.4 will contain only one shared lib
 # and will therefore become subject to renaming by debian.bbclass. Prevent
