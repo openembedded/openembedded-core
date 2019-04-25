@@ -16,7 +16,7 @@ import os
 import json
 import scriptpath
 import copy
-import urllib
+import urllib.request
 import posixpath
 scriptpath.add_oe_lib_path()
 
