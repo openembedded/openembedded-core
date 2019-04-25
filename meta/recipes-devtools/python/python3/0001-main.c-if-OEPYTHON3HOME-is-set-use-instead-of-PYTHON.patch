@@ -1,0 +1,35 @@
+From ffe7797637f08cd6ee4c82e2d67462c5e194d30a Mon Sep 17 00:00:00 2001
+From: Jaewon Lee <jaewon.lee@xilinx.com>
+Date: Thu, 25 Apr 2019 15:34:26 -0700
+Subject: [PATCH] main.c: if OEPYTHON3HOME is set use instead of PYTHONHOME
+
+There is one variable PYTHONHOME to determine where libraries are coming
+from for both python2 and python3. This becomes an issue if only one has
+libraries in the specified PYTHONHOME path, but they are using the same
+PYTHONHOME. Creating another variable OEPYTHON3HOME to allow for a way
+to set a different path for python3
+
+Signed-off-by: Jaewon Lee <jaewon.lee@xilinx.com>
+RP: Backported to 3.5.6 (code totally different to original path for 
+later python versions)
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+---
+ Modules/main.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+Index: Python-3.5.6/Python/pylifecycle.c
+===================================================================
+--- Python-3.5.6.orig/Python/pylifecycle.c
++++ Python-3.5.6/Python/pylifecycle.c
+@@ -864,7 +864,9 @@ Py_GetPythonHome(void)
+ {
+     wchar_t *home = default_home;
+     if (home == NULL && !Py_IgnoreEnvironmentFlag) {
+-        char* chome = Py_GETENV("PYTHONHOME");
++        char* chome = Py_GETENV("OEPYTHON3HOME");
++        if (!chome)
++            chome = Py_GETENV("PYTHONHOME");
+         if (chome) {
+             size_t size = Py_ARRAY_LENGTH(env_home);
+             size_t r = mbstowcs(env_home, chome, size);
