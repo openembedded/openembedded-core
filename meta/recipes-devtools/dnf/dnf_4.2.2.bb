@@ -26,7 +26,7 @@ EXTRA_OECMAKE = " -DWITH_MAN=0 -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -
 
 BBCLASSEXTEND = "native nativesdk"
 
-RDEPENDS_${PN}_class-target += " \
+RDEPENDS_${PN} += " \
   python3-core \
   python3-codecs \
   python3-netclient \
@@ -49,6 +49,8 @@ RDEPENDS_${PN}_class-target += " \
   python3-gpg \
   "
 
+RDEPENDS_${PN}_class-native = ""
+
 RRECOMMENDS_${PN}_class-target += "gnupg"
 
 # Create a symlink called 'dnf' as 'make install' does not do it, but
@@ -64,6 +66,12 @@ do_install_append_class-native() {
         create_wrapper ${D}/${bindir}/dnf \
                 RPM_CONFIGDIR=${STAGING_LIBDIR_NATIVE}/rpm \
                 RPM_NO_CHROOT_FOR_SCRIPTS=1
+}
+
+do_install_append_class-nativesdk() {
+        create_wrapper ${D}/${bindir}/dnf \
+                RPM_CONFIGDIR=${SDKPATHNATIVE}${libdir_nativesdk}/rpm \
+                RPM_NO_CHROOT_FOR_SCRIPTS=1 
 }
 
 SYSTEMD_SERVICE_${PN} = "dnf-makecache.service dnf-makecache.timer \
