@@ -29,6 +29,8 @@ inherit cmake pkgconfig gobject-introspection perlnative distro_features_check u
 
 REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
+CVE_PRODUCT = "webkitgtk webkitgtk\+"
+
 DEPENDS = "zlib libsoup-2.4 curl libxml2 cairo libxslt libxt libidn libgcrypt \
            gtk+3 gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 \
 	   pango icu bison-native gawk intltool-native libwebp \
