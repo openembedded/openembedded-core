@@ -50,7 +50,8 @@ CFLAGS += "-D_GNU_SOURCE"
 # Use libtool-cross (which has a hack to prevent that) instead.
 EXTRA_OEMAKE_class-target = "LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool"
 
-PACKAGES =+ "libvte"
+PACKAGES =+ "libvte ${PN}-prompt"
 FILES_libvte = "${libdir}/*.so.* ${libdir}/girepository-1.0/*"
+FILES_${PN}-prompt = "${sysconfdir}/profile.d"
 
 BBCLASSEXTEND = "native nativesdk"
