@@ -7,6 +7,7 @@ import unittest
 import logging
 import re
 import json
+import sys
 
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
@@ -45,6 +46,9 @@ class OETestResult(_TestResult):
 
         self.tc = tc
 
+        # stdout and stderr for each test case
+        self.logged_output = {}
+
     def startTest(self, test):
         # May have been set by concurrencytest
         if test.id() not in self.starttime:
@@ -53,6 +57,9 @@ class OETestResult(_TestResult):
 
     def stopTest(self, test):
         self.endtime[test.id()] = time.time()
+        if self.buffer:
+            self.logged_output[test.id()] = (
+                    sys.stdout.getvalue(), sys.stderr.getvalue())
         super(OETestResult, self).stopTest(test)
         if test.id() in self.progressinfo:
             self.tc.logger.info(self.progressinfo[test.id()])
@@ -118,7 +125,8 @@ class OETestResult(_TestResult):
         self.successes.append((test, None))
         super(OETestResult, self).addSuccess(test)
 
-    def logDetails(self, json_file_dir=None, configuration=None, result_id=None):
+    def logDetails(self, json_file_dir=None, configuration=None, result_id=None,
+            dump_streams=False):
         self.tc.logger.info("RESULTS:")
 
         result = {}
@@ -144,10 +152,14 @@ class OETestResult(_TestResult):
             if status not in logs:
                 logs[status] = []
             logs[status].append("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
+            report = {'status': status}
             if log:
-                result[case.id()] = {'status': status, 'log': log}
-            else:
-                result[case.id()] = {'status': status}
+                report['log'] = log
+            if dump_streams and case.id() in self.logged_output:
+                (stdout, stderr) = self.logged_output[case.id()]
+                report['stdout'] = stdout
+                report['stderr'] = stderr
+            result[case.id()] = report
 
         for i in ['PASSED', 'SKIPPED', 'EXPECTEDFAIL', 'ERROR', 'FAILED', 'UNKNOWN']:
             if i not in logs:
