@@ -60,15 +60,23 @@ SSTATEPOSTUNPACKFUNCS[vardepvalueexclude] .= "| buildhistory_emit_outputsigs"
 # When extending build history, derive your class from buildhistory.bbclass
 # and extend this list here with the additional files created by the derived
 # class.
-BUILDHISTORY_PRESERVE = "latest latest_srcrev"
+BUILDHISTORY_PRESERVE = "latest latest_srcrev sysroot"
 
 PATCH_GIT_USER_EMAIL ?= "buildhistory@oe"
 PATCH_GIT_USER_NAME ?= "OpenEmbedded"
+
+buildhistory_emit_sysroot() {
+	mkdir --parents ${BUILDHISTORY_DIR_PACKAGE}
+	buildhistory_list_files ${SYSROOT_DESTDIR} ${BUILDHISTORY_DIR_PACKAGE}/sysroot
+}
 
 #
 # Write out metadata about this package for comparison when writing future packages
 #
 python buildhistory_emit_pkghistory() {
+    if d.getVar('BB_CURRENTTASK') in ['populate_sysroot', 'populate_sysroot_setscene']:
+        bb.build.exec_func("buildhistory_emit_sysroot", d)
+
     if not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
         return 0
 
