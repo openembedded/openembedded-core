@@ -181,7 +181,7 @@ class ChangeRecord:
             diff = difflib.unified_diff(alines, blines, self.fieldname, self.fieldname, lineterm='')
             out += '\n  '.join(list(diff)[2:])
             out += '\n  --'
-        elif self.fieldname in img_monitor_files or '/image-files/' in self.path:
+        elif self.fieldname in img_monitor_files or '/image-files/' in self.path or self.fieldname == "sysroot":
             if self.filechanges or (self.oldvalue and self.newvalue):
                 fieldname = self.fieldname
                 if '/image-files/' in self.path:
@@ -571,6 +571,15 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
             elif filename.startswith('latest.'):
                 chg = ChangeRecord(path, filename, d.a_blob.data_stream.read().decode('utf-8'), d.b_blob.data_stream.read().decode('utf-8'), True)
                 changes.append(chg)
+            elif filename == 'sysroot':
+                alines = d.a_blob.data_stream.read().decode('utf-8').splitlines()
+                blines = d.b_blob.data_stream.read().decode('utf-8').splitlines()
+                filechanges = compare_file_lists(alines,blines)
+                if filechanges:
+                    chg = ChangeRecord(path, filename, None, None, True)
+                    chg.filechanges = filechanges
+                    changes.append(chg)
+
         elif path.startswith('images/'):
             filename = os.path.basename(d.a_blob.path)
             if filename in img_monitor_files:
