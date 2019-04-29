@@ -19,6 +19,7 @@ PTESTS_FAST = "\
     gawk-ptest \
     gdbm-ptest \
     gdk-pixbuf-ptest \
+    gettext-ptest \
     gzip-ptest \
     json-glib-ptest \
     kbd-ptest \
@@ -37,6 +38,7 @@ PTESTS_FAST = "\
     libxml-simple-perl-ptest \
     libxml2-ptest \
     lzo-ptest \
+    m4-ptest \
     nettle-ptest \
     openssl-ptest \
     opkg-ptest \
