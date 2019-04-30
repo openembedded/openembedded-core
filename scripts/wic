@@ -426,7 +426,7 @@ def expandtype(rules):
     if rules == 'auto':
         return {}
     result = {}
-    for rule in rules.split('-'):
+    for rule in rules.split(','):
         try:
             part, size = rule.split(':')
         except ValueError:
