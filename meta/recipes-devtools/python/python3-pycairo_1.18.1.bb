@@ -8,24 +8,20 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f2e071ab72978431b294a0d696327421 \
                     file://COPYING-MPL-1.1;md5=bfe1f75d606912a4111c90743d6c7325"
 
 # cairo >= 1.14
-DEPENDS = "cairo"
+DEPENDS = "cairo python3"
 
 SRC_URI = "https://github.com/pygobject/pycairo/releases/download/v${PV}/pycairo-${PV}.tar.gz"
 UPSTREAM_CHECK_URI = "https://github.com/pygobject/pycairo/releases/"
 
-SRC_URI[md5sum] = "3ff210c34e7b052590e15fd0fb147766"
-SRC_URI[sha256sum] = "ad150ea637860836b66705e0513b8e59494538f0b80497ad3462051368755016"
+SRC_URI[md5sum] = "7610da8a40a7bed548991aa3416431d1"
+SRC_URI[sha256sum] = "70172e58b6bad7572a3518c26729b074acdde15e6fee6cbab6d3528ad552b786"
 
 S = "${WORKDIR}/pycairo-${PV}"
 
-inherit setuptools3 pkgconfig
+inherit meson pkgconfig
 
 CFLAGS += "-fPIC"
 
 BBCLASSEXTEND = "native"
 
-do_install_append() {
-    install -d ${D}${includedir}/pycairo/
-    install -m 0644 ${D}${datadir}/include/pycairo/py3cairo.h ${D}${includedir}/pycairo/
-}
-FILES_${PN} += "${datadir}/include/pycairo/py3cairo.h"
+FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/*"
