@@ -39,10 +39,10 @@ Signed-off-by: Mingli Yu <Mingli.Yu@windriver.com>
  tests/dwfl-proc-attach.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tests/dwfl-proc-attach.c b/tests/dwfl-proc-attach.c
-index 102ba18..ad4208e 100644
---- a/tests/dwfl-proc-attach.c
-+++ b/tests/dwfl-proc-attach.c
+Index: elfutils-0.176/tests/dwfl-proc-attach.c
+===================================================================
+--- elfutils-0.176.orig/tests/dwfl-proc-attach.c
++++ elfutils-0.176/tests/dwfl-proc-attach.c
 @@ -76,10 +76,10 @@ main (int argc __attribute__ ((unused)),
        char **argv __attribute__ ((unused)))
  {
@@ -57,6 +57,35 @@ index 102ba18..ad4208e 100644
      error (-1, err, "Couldn't create thread2");
  
    Dwfl *dwfl = dwfl_begin (&proc_callbacks);
--- 
-2.7.4
-
+Index: elfutils-0.176/tests/backtrace.c
+===================================================================
+--- elfutils-0.176.orig/tests/backtrace.c
++++ elfutils-0.176/tests/backtrace.c
+@@ -219,23 +219,23 @@ dump (Dwfl *dwfl)
+ {
+   ptrdiff_t ptrdiff = dwfl_getmodules (dwfl, dump_modules, NULL, 0);
+   assert (ptrdiff == 0);
+-  bool err = false;
++  bool err1 = false;
+   switch (dwfl_getthreads (dwfl, thread_callback, NULL))
+     {
+     case 0:
+       break;
+     case DWARF_CB_ABORT:
+-      err = true;
++      err1 = true;
+       break;
+     case -1:
+       error (0, 0, "dwfl_getthreads: %s", dwfl_errmsg (-1));
+-      err = true;
++      err1 = true;
+       break;
+     default:
+       abort ();
+     }
+   callback_verify (0, 0, 0, NULL, dwfl);
+-  if (err)
++  if (err1)
+     exit (EXIT_FAILURE);
+ }
+ 
