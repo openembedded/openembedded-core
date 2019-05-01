@@ -8,7 +8,7 @@ ALTERNATIVE_${PN}_remove = "xxd"
 PACKAGECONFIG += "tiny"
 
 do_install() {
-    install -D -m 0755 ${S}/vim ${D}/${bindir}/vim.tiny
+    install -D -m 0755 ${S}/src/vim ${D}/${bindir}/vim.tiny
 }
 
 ALTERNATIVE_PRIORITY = "90"
