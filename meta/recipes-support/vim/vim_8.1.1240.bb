@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/vim/vim.git \
            file://vim-add-knob-whether-elf.h-are-checked.patch \
            file://0001-src-Makefile-improve-reproducibility.patch \
 "
-SRCREV = "493fbe4abee660d30b4f2aef87b754b0a720213c"
+SRCREV = "d96dbd6f95ea22f609042cc9c6272f14a21ff1a5"
 
 S = "${WORKDIR}/git"
 
@@ -34,6 +34,16 @@ do_configure () {
     oe_runconf
     touch src/auto/configure
     touch src/auto/config.mk src/auto/config.h
+}
+
+do_compile() {
+    # We do not support fully / correctly the following locales.  Attempting
+    # to use these with msgfmt in order to update the ".desktop" files exposes
+    # this problem and leads to the compile failing.
+    for LOCALE in cs fr ko pl sk zh_CN zh_TW;do
+        echo -n > src/po/${LOCALE}.po
+    done
+    autotools_do_compile
 }
 
 #Available PACKAGECONFIG options are gtkgui, acl, x11, tiny
