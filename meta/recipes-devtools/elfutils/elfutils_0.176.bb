@@ -30,7 +30,7 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/testsuite-ignore-elflint.diff \
            file://0001-skip-the-test-when-gcc-not-deployed.patch \
            file://run-ptest \
-           file://serial-tests.patch \
+           file://ptest.patch \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch \
                              file://0001-fix-err-variable-and-function-conflicts.patch \
@@ -43,10 +43,9 @@ inherit autotools gettext ptest
 
 EXTRA_OECONF = "--program-prefix=eu- --without-lzma"
 EXTRA_OECONF_append_class-native = " --without-bzlib"
-# gcc has been added to blacklist, we will find workaround solution
-RDEPENDS_${PN}-ptest = "libasm libelf bash"
+RDEPENDS_${PN}-ptest = "libasm libelf bash make coreutils ${PN}-binutils ${PN}"
 
-EXTRA_OECONF_append_class-target += "--enable-tests-rpath"
+EXTRA_OECONF_append_class-target += "--disable-tests-rpath"
 
 do_install_append() {
 	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
@@ -56,14 +55,13 @@ do_install_append() {
 
 do_compile_ptest() {
 	cd ${B}/tests
-	oe_runmake buildtest-TESTS
+	oe_runmake buildtest-TESTS oecheck
 }
 
 do_install_ptest() {
 	if [ ${PTEST_ENABLED} = "1" ]; then
 		cp -r ${S}/tests/                       ${D}${PTEST_PATH}
 		cp -r ${B}/tests/*                      ${D}${PTEST_PATH}/tests
-		cp -r ${B}/src                          ${D}${PTEST_PATH}
 		cp -r ${B}/config.h                     ${D}${PTEST_PATH}
 		cp -r ${B}/backends                     ${D}${PTEST_PATH}
 		sed -i '/^Makefile:/c Makefile:'        ${D}${PTEST_PATH}/tests/Makefile
