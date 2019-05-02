@@ -1,4 +1,4 @@
-From 496231774f8bc17ecfaf543a6603e3cad3f3f74e Mon Sep 17 00:00:00 2001
+From 2a66bd95c856de6950fbd802c5b99075207c1d76 Mon Sep 17 00:00:00 2001
 From: Martin Jansa <martin.jansa@lge.com>
 Date: Fri, 1 Jun 2018 08:41:07 +0000
 Subject: [PATCH] Revert "linux-user: fix mmap/munmap/mprotect/mremap/shmat"
@@ -23,7 +23,7 @@ Upstream-Status: Pending
  4 files changed, 15 insertions(+), 29 deletions(-)
 
 diff --git a/include/exec/cpu-all.h b/include/exec/cpu-all.h
-index 117d2fbb..90558c14 100644
+index b16c9ec5..612db6a0 100644
 --- a/include/exec/cpu-all.h
 +++ b/include/exec/cpu-all.h
 @@ -163,12 +163,8 @@ extern unsigned long guest_base;
@@ -41,7 +41,7 @@ index 117d2fbb..90558c14 100644
  
  #include "exec/hwaddr.h"
 diff --git a/include/exec/cpu_ldst.h b/include/exec/cpu_ldst.h
-index 95906849..ed17b3f6 100644
+index d78041d7..845639f7 100644
 --- a/include/exec/cpu_ldst.h
 +++ b/include/exec/cpu_ldst.h
 @@ -62,13 +62,15 @@ typedef uint64_t abi_ptr;
@@ -68,7 +68,7 @@ index 95906849..ed17b3f6 100644
  #define h2g_nocheck(x) ({ \
      unsigned long __ret = (unsigned long)(x) - guest_base; \
 diff --git a/linux-user/mmap.c b/linux-user/mmap.c
-index 41e0983c..d0ee1c53 100644
+index e0249efe..cfe34b35 100644
 --- a/linux-user/mmap.c
 +++ b/linux-user/mmap.c
 @@ -79,7 +79,7 @@ int target_mprotect(abi_ulong start, abi_ulong len, int prot)
@@ -81,9 +81,9 @@ index 41e0983c..d0ee1c53 100644
      }
      prot &= PROT_READ | PROT_WRITE | PROT_EXEC;
 @@ -490,8 +490,8 @@ abi_long target_mmap(abi_ulong start, abi_ulong len, int prot,
- 	 * It can fail only on 64-bit host with 32-bit target.
- 	 * On any other target/host host mmap() handles this error correctly.
- 	 */
+          * It can fail only on 64-bit host with 32-bit target.
+          * On any other target/host host mmap() handles this error correctly.
+          */
 -        if (!guest_range_valid(start, len)) {
 -            errno = ENOMEM;
 +        if ((unsigned long)start + len - 1 > (abi_ulong) -1) {
@@ -118,10 +118,10 @@ index 41e0983c..d0ee1c53 100644
  
      if (flags & MREMAP_FIXED) {
 diff --git a/linux-user/syscall.c b/linux-user/syscall.c
-index 280137da..efdd0006 100644
+index 96cd4bf8..e6754772 100644
 --- a/linux-user/syscall.c
 +++ b/linux-user/syscall.c
-@@ -3818,9 +3818,6 @@ static inline abi_ulong do_shmat(CPUArchState *cpu_env,
+@@ -3860,9 +3860,6 @@ static inline abi_ulong do_shmat(CPUArchState *cpu_env,
              return -TARGET_EINVAL;
          }
      }
@@ -131,7 +131,7 @@ index 280137da..efdd0006 100644
  
      mmap_lock();
  
-@@ -6582,7 +6579,7 @@ static int open_self_maps(void *cpu_env, int fd)
+@@ -6633,7 +6630,7 @@ static int open_self_maps(void *cpu_env, int fd)
          }
          if (h2g_valid(min)) {
              int flags = page_get_flags(h2g(min));

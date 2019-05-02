@@ -18,5 +18,3 @@ PACKAGECONFIG ??= " \
     ${@bb.utils.filter('DISTRO_FEATURES', 'alsa xen', d)} \
 "
 PACKAGECONFIG_class-nativesdk ??= "fdt sdl kvm"
-
-

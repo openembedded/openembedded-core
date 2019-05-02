@@ -1,4 +1,4 @@
-From 3de7a5635093c31dcb960ce9dff27da629b85d4d Mon Sep 17 00:00:00 2001
+From bf04acef9ec31ddcc18ddbb4ac5b7b1e7368bf7d Mon Sep 17 00:00:00 2001
 From: Jason Wessel <jason.wessel@windriver.com>
 Date: Fri, 28 Mar 2014 17:42:43 +0800
 Subject: [PATCH] qemu: Add addition environment space to boot loader
@@ -19,10 +19,10 @@ Signed-off-by: Roy Li <rongqing.li@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/hw/mips/mips_malta.c b/hw/mips/mips_malta.c
-index c1cf0fe1..decffd2f 100644
+index 439665ab..285c78ef 100644
 --- a/hw/mips/mips_malta.c
 +++ b/hw/mips/mips_malta.c
-@@ -62,7 +62,7 @@
+@@ -60,7 +60,7 @@
  
  #define ENVP_ADDR		0x80002000l
  #define ENVP_NB_ENTRIES	 	16

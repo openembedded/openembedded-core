@@ -1,4 +1,4 @@
-From bce25c9cda73569963615ffd31ed949cbe3a3781 Mon Sep 17 00:00:00 2001
+From a33ae91504ea4d254b5ace64a84791d3c96c9773 Mon Sep 17 00:00:00 2001
 From: Alistair Francis <alistair.francis@xilinx.com>
 Date: Wed, 17 Jan 2018 10:51:49 -0800
 Subject: [PATCH] linux-user: Fix webkitgtk hangs on 32-bit x86 target
@@ -19,7 +19,7 @@ Signed-off-by: Alistair Francis <alistair.francis@xilinx.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/linux-user/main.c b/linux-user/main.c
-index 923cbb75..fe0b9ff4 100644
+index a0aba9cb..34c54924 100644
 --- a/linux-user/main.c
 +++ b/linux-user/main.c
 @@ -69,7 +69,7 @@ int have_guest_base;

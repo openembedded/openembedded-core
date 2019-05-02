@@ -1,4 +1,4 @@
-From 861c522df7791d7e93743d5641f3ef2a5a3c4632 Mon Sep 17 00:00:00 2001
+From 0a53e906510cce1f32bc04a11e81ea40f834dac4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 Date: Wed, 12 Aug 2015 15:11:30 -0500
 Subject: [PATCH] cpus.c: Add error messages when qemi_cpu_kick_thread fails.
@@ -20,10 +20,10 @@ Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
  create mode 100644 custom_debug.h
 
 diff --git a/cpus.c b/cpus.c
-index 0ddeeefc..4f3a5624 100644
+index e83f72b4..e6e2576e 100644
 --- a/cpus.c
 +++ b/cpus.c
-@@ -1768,6 +1768,8 @@ static void *qemu_tcg_cpu_thread_fn(void *arg)
+@@ -1769,6 +1769,8 @@ static void *qemu_tcg_cpu_thread_fn(void *arg)
      return NULL;
  }
  
@@ -32,9 +32,9 @@ index 0ddeeefc..4f3a5624 100644
  static void qemu_cpu_kick_thread(CPUState *cpu)
  {
  #ifndef _WIN32
-@@ -1780,6 +1782,9 @@ static void qemu_cpu_kick_thread(CPUState *cpu)
+@@ -1781,6 +1783,9 @@ static void qemu_cpu_kick_thread(CPUState *cpu)
      err = pthread_kill(cpu->thread->thread, SIG_IPI);
-     if (err) {
+     if (err && err != ESRCH) {
          fprintf(stderr, "qemu:%s: %s", __func__, strerror(err));
 +        fprintf(stderr, "CPU #%d:\n", cpu->cpu_index);
 +        cpu_dump_state(cpu, stderr, fprintf, 0);
