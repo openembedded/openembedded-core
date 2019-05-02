@@ -664,6 +664,13 @@ reproducible_final_image_task () {
         find  ${IMAGE_ROOTFS} -exec touch -h  --date=@$REPRODUCIBLE_TIMESTAMP_ROOTFS {} \;
     fi
 }
-IMAGE_PREPROCESS_COMMAND_append = " reproducible_final_image_task; "
+
+IMAGE_EXTRADEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-systemctl-native', '', d)}"
+
+systemd_preset_all () {
+	systemctl --root="${IMAGE_ROOTFS}" --preset-mode=enable-only preset-all
+}
+
+IMAGE_PREPROCESS_COMMAND_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd_preset_all;', '', d)} reproducible_final_image_task; "
 
 CVE_PRODUCT = ""
