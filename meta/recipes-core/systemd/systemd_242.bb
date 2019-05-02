@@ -66,7 +66,6 @@ PACKAGECONFIG ??= " \
     acl \
     backlight \
     binfmt \
-    firstboot \
     gshadow \
     hibernate \
     hostnamed \
