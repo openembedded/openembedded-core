@@ -46,17 +46,29 @@ class RootfsPlugin(SourcePlugin):
     name = 'rootfs'
 
     @staticmethod
-    def __get_rootfs_dir(rootfs_dir):
-        if os.path.isdir(rootfs_dir):
-            return os.path.realpath(rootfs_dir)
+    def __get_rootfs_dir(rootfs_dir, subdir):
+        real_rootfs=True
 
-        image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
-        if not os.path.isdir(image_rootfs_dir):
-            raise WicError("No valid artifact IMAGE_ROOTFS from image "
-                           "named %s has been found at %s, exiting." %
-                           (rootfs_dir, image_rootfs_dir))
+        if not os.path.isdir(rootfs_dir):
+            image_rootfs_dir = get_bitbake_var("IMAGE_ROOTFS", rootfs_dir)
+            if not os.path.isdir(image_rootfs_dir):
+                raise WicError("No valid artifact IMAGE_ROOTFS from image "
+                               "named %s has been found at %s, exiting." %
+                               (rootfs_dir, image_rootfs_dir))
+            rootfs_dir = image_rootfs_dir
 
-        return os.path.realpath(image_rootfs_dir)
+        if subdir:
+            real_rootfs = False
+            subdir = subdir[1:] if subdir.startswith("/") else subdir
+            sub_rootfs_dir = os.path.join(rootfs_dir, subdir)
+            if not sub_rootfs_dir.startswith(rootfs_dir):
+                raise WicError("'%s' points to a path outside the rootfs" % (subdir,))
+            if not os.path.isdir(sub_rootfs_dir):
+                raise WicError("Couldn't find subdir=%s in rootfs %s" %
+                               (subdir, rootfs_dir))
+            rootfs_dir = sub_rootfs_dir
+
+        return (os.path.realpath(rootfs_dir), real_rootfs)
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
@@ -81,7 +93,8 @@ class RootfsPlugin(SourcePlugin):
                 raise WicError("Couldn't find --rootfs-dir=%s connection or "
                                "it is not a valid path, exiting" % part.rootfs_dir)
 
-        part.rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
+        part.rootfs_dir, real_rootfs = cls.__get_rootfs_dir(rootfs_dir,
+                                                            source_params.get("subdir", ""))
 
         new_rootfs = None
         # Handle excluded paths.
@@ -123,4 +136,4 @@ class RootfsPlugin(SourcePlugin):
                     shutil.rmtree(full_path)
 
         part.prepare_rootfs(cr_workdir, oe_builddir,
-                            new_rootfs or part.rootfs_dir, native_sysroot)
+                            new_rootfs or part.rootfs_dir, native_sysroot, real_rootfs)
