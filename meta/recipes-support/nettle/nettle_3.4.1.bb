@@ -30,7 +30,7 @@ inherit autotools ptest multilib_header
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
 EXTRA_OECONF = "--disable-openssl"
-CFLAGS_append = " -std=c99"
+CFLAGS_append = " -std=gnu99"
 
 do_compile_ptest() {
         oe_runmake buildtest
