@@ -704,7 +704,7 @@ def create_recipe(args):
         if not args.autorev and srcrev == '${AUTOREV}':
             if os.path.exists(os.path.join(srctree, '.git')):
                 (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
-            srcrev = stdout.rstrip()
+                srcrev = stdout.rstrip()
         lines_before.append('SRCREV = "%s"' % srcrev)
     if args.provides:
         lines_before.append('PROVIDES = "%s"' % args.provides)
