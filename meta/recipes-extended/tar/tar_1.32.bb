@@ -21,7 +21,7 @@ PACKAGECONFIG_append_class-target = " ${@bb.utils.filter('DISTRO_FEATURES', 'acl
 
 PACKAGECONFIG[acl] = "--with-posix-acls,--without-posix-acls,acl"
 
-EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
+EXTRA_OECONF += "DEFAULT_RMT_DIR=${sbindir}"
 
 # Let aclocal use the relative path for the m4 file rather than the
 # absolute since tar has a lot of m4 files, otherwise there might
@@ -45,7 +45,7 @@ do_install_append_class-target() {
 
 PACKAGES =+ "${PN}-rmt"
 
-FILES_${PN}-rmt = "${base_sbindir}/rmt*"
+FILES_${PN}-rmt = "${sbindir}/rmt*"
 
 inherit update-alternatives
 
@@ -57,7 +57,7 @@ ALTERNATIVE_${PN}_class-nativesdk = ""
 ALTERNATIVE_${PN}-rmt_class-nativesdk = ""
 
 ALTERNATIVE_LINK_NAME[tar] = "${base_bindir}/tar"
-ALTERNATIVE_LINK_NAME[rmt] = "${base_sbindir}/rmt"
+ALTERNATIVE_LINK_NAME[rmt] = "${sbindir}/rmt"
 
 PROVIDES_append_class-native = " tar-replacement-native"
 NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
