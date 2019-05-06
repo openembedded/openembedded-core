@@ -8,6 +8,9 @@ v3 certificates, and other security standards."
 HOMEPAGE = "http://www.mozilla.org/projects/security/pki/nss/"
 SECTION = "libs"
 
+DEPENDS = "sqlite3 nspr zlib nss-native"
+DEPENDS_class-native = "sqlite3-native nspr-native zlib-native"
+
 LICENSE = "MPL-2.0 | (MPL-2.0 & GPL-2.0+) | (MPL-2.0 & LGPL-2.1+)"
 
 LIC_FILES_CHKSUM = "file://nss/COPYING;md5=3b1e88e1b9c0b5a4b2881d46cce06a18 \
@@ -37,10 +40,6 @@ UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
 
 inherit siteinfo
-
-DEPENDS = "sqlite3 nspr zlib nss-native"
-DEPENDS_class-native = "sqlite3-native nspr-native zlib-native"
-RDEPENDS_${PN}-smime = "perl"
 
 TD = "${S}/tentative-dist"
 TDS = "${S}/tentative-dist-staging"
@@ -118,8 +117,8 @@ do_compile() {
         OS_TEST=${OS_TEST} \
         RPATH="${RPATH}"
 }
-do_compile[vardepsexclude] += "SITEINFO_BITS"
 
+do_compile[vardepsexclude] += "SITEINFO_BITS"
 
 do_install_prepend_class-nativesdk() {
     export LDFLAGS=""
@@ -195,6 +194,7 @@ do_install() {
         install -m 755 -t ${D}/${bindir} $binary
     done
 }
+
 do_install[vardepsexclude] += "SITEINFO_BITS"
 
 do_install_append() {
@@ -248,17 +248,20 @@ PACKAGES =+ "${PN}-smime"
 FILES_${PN}-smime = "\
     ${bindir}/smime \
 "
+
 FILES_${PN} = "\
     ${sysconfdir} \
     ${bindir} \
     ${libdir}/lib*.chk \
     ${libdir}/lib*.so \
     "
+
 FILES_${PN}-dev = "\
     ${libdir}/nss \
     ${libdir}/pkgconfig/* \
     ${includedir}/* \
     "
 
-BBCLASSEXTEND = "native nativesdk"
+RDEPENDS_${PN}-smime = "perl"
 
+BBCLASSEXTEND = "native nativesdk"
