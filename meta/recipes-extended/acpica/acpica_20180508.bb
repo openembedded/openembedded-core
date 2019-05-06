@@ -29,7 +29,7 @@ S = "${WORKDIR}/acpica-unix2-${PV}"
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE_${PN} = "acpixtract"
+ALTERNATIVE_${PN} = "acpixtract acpidump"
 
 EXTRA_OEMAKE = "CC='${CC}' 'OPT_CFLAGS=-Wall'"
 
