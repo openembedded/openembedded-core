@@ -24,14 +24,12 @@ RRECOMMENDS_${PN}_libc-glibc = "\
 	glibc-gconv-ibm866 \
 	glibc-gconv-ibm869 \
 	"
-SRC_URI[md5sum] = "f750246a65ee6f9d2e82d10b03a0aaaf"
-SRC_URI[sha256sum] = "1bc197199ea1c2c317f597879486eeb817f3199b526d94cc6841624768d910df"
+SRC_URI[md5sum] = "1d17b58c53a46b29c7f521d4a55ccef1"
+SRC_URI[sha256sum] = "f188db26751aeb5692a79b2380b440ecc05fd1848a52f869d7ca1193f2ef8ee3"
 
 SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
            file://mtools-makeinfo.patch \
            file://no-x11.gplv3.patch \
-           file://0001-Continue-even-if-fs-size-is-not-divisible-by-sectors.patch \
-           file://0001-remove-LOCK_NB-to-use-blocking-request.patch \
            file://clang_UNUSED.patch \
            "
 
