@@ -6,15 +6,13 @@ SECTION = "console/network"
 LICENSE = "GPLv3"
 DEPENDS = "zlib gnutls"
 
-#COPYING or Licence
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
-
-SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz"
 
 UPSTREAM_CHECK_URI = "https://marlam.de/msmtp/download/"
 
-SRC_URI[md5sum] = "0c0be51e6872e818f78bd6924636327b"
-SRC_URI[sha256sum] = "3cb2eefd33d048f0f82de100ef39a494e44fd1485e376ead31f733d2f36b92b4"
+SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz"
+SRC_URI[md5sum] = "abfabb92f0461137f3c09cd16d98fc9b"
+SRC_URI[sha256sum] = "e5dd7fe95bc8e2f5eea3e4894ec9628252f30bd700a7fd1a568b10efa91129f7"
 
 inherit gettext autotools update-alternatives pkgconfig
 
