@@ -204,6 +204,8 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
                   -Dsulogin-path=${base_sbindir}/sulogin \
                   -Dumount-path=${base_bindir}/umount"
 
+CFLAGS += "-Wno-error=format-overflow"
+
 do_install() {
 	meson_do_install
 	install -d ${D}/${base_sbindir}
