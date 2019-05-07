@@ -12,13 +12,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://README;beginline=257;endline=287;md5=338c05eadd013872abb1d6e198e10a3f"
 
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
-           file://Makefile.in-fix-for-parallel-build.patch \
            file://0001-define-NETDB_INTERNAL-to-1-if-not-available.patch \
-           file://0001-Access-c_ispeed-and-c_ospeed-via-APIs.patch \
 "
 
-SRC_URI[md5sum] = "607a24c15bd2cb54e9328bfbbd3a1ae9"
-SRC_URI[sha256sum] = "e3561f808739383eb10fada1e5d4f26883f0311b34fd0af7837d0c95ef379251"
+SRC_URI[md5sum] = "b2a032a47b8b89a18485697fa975154f"
+SRC_URI[sha256sum] = "0dd63ffe498168a4aac41d307594c5076ff307aa0ac04b141f8f1cec6594d04a"
 
 inherit autotools
 
