@@ -8,7 +8,7 @@ This reverts commit 89e68b575e138d0af1435f11a8ffcd8779c237bd.
 This fixes QEMU aborts when running the qemuarm machine.
 
 Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
-Upstream-status: Pending
+Upstream-Status: Pending
 ---
  target/arm/helper.h        |  33 -------
  target/arm/translate-a64.c |  36 ++++----

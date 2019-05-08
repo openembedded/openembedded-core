@@ -8,7 +8,7 @@ end of each transfer.  Fixes the problem recently introduces where very quick
 transfers do not display the progressmeter at all.  Spotted by naddy@
 
 OpenBSD-Commit-ID: 68dc46c259e8fdd4f5db3ec2a130f8e4590a7a9a
-Ustream-Status: Backport
+Upstream-Status: Backport
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 ---
  progressmeter.c | 13 +++++--------
