@@ -20,6 +20,8 @@ SYSCONFDIR = Path("etc")
 BASE_LIBDIR = Path("lib")
 LIBDIR = Path("usr", "lib")
 
+locations = list()
+
 
 class SystemdFile():
     """Class representing a single systemd configuration file"""
@@ -111,12 +113,6 @@ class Presets():
 
     def _collect_presets(self, scope, root):
         """Collect list of preset files"""
-        locations = [SYSCONFDIR / "systemd"]
-        # Handle the usrmerge case by ignoring /lib when it's a symlink
-        if not BASE_LIBDIR.is_symlink():
-            locations.append(BASE_LIBDIR / "systemd")
-        locations.append(LIBDIR / "systemd")
-
         presets = dict()
         for location in locations:
             paths = (root / location / scope).glob("*.preset")
@@ -146,27 +142,6 @@ class Presets():
         return None
 
 
-def collect_services(root):
-    """Collect list of service files"""
-    locations = [SYSCONFDIR / "systemd"]
-    # Handle the usrmerge case by ignoring /lib when it's a symlink
-    if not BASE_LIBDIR.is_symlink():
-        locations.append(BASE_LIBDIR / "systemd")
-    locations.append(LIBDIR / "systemd")
-
-    services = dict()
-    for location in locations:
-        paths = (root / location / "system").glob("*")
-        for path in paths:
-            if path.is_dir():
-                continue
-            # implement earlier names override later ones
-            if path.name not in services:
-                services[path.name] = path
-
-    return services
-
-
 def add_link(path, target):
     try:
         path.parent.mkdir(parents=True)
@@ -177,69 +152,113 @@ def add_link(path, target):
         path.symlink_to(target)
 
 
-def process_deps(root, config, service, location, prop, dirstem):
-    systemdir = SYSCONFDIR / "systemd" / "system"
-
-    target = ROOT / location.relative_to(root)
-    try:
-        for dependent in config.get('Install', prop):
-            wants = root / systemdir / "{}.{}".format(dependent, dirstem) / service
-            add_link(wants, target)
-
-    except KeyError:
-        pass
+class SystemdUnitNotFoundError(Exception):
+    pass
 
 
-def enable(root, service, location, services):
-    if location.is_symlink():
-        # ignore aliases
-        return
+class SystemdUnit():
+    def __init__(self, root, unit):
+        self.root = root
+        self.unit = unit
+        self.config = None
 
-    config = SystemdFile(root, location)
-    template = re.match(r"[^@]+@(?P<instance>[^\.]*)\.", service)
-    if template:
-        instance = template.group('instance')
-        if not instance:
-            try:
-                instance = config.get('Install', 'DefaultInstance')[0]
-                service = service.replace("@.", "@{}.".format(instance))
-            except KeyError:
-                pass
-        if instance is None:
+    def _path_for_unit(self, unit):
+        for location in locations:
+            path = self.root / location / "system" / unit
+            if path.exists():
+                return path
+
+        raise SystemdUnitNotFoundError(self.root, unit)
+
+    def _process_deps(self, config, service, location, prop, dirstem):
+        systemdir = self.root / SYSCONFDIR / "systemd" / "system"
+
+        target = ROOT / location.relative_to(self.root)
+        try:
+            for dependent in config.get('Install', prop):
+                wants = systemdir / "{}.{}".format(dependent, dirstem) / service
+                add_link(wants, target)
+
+        except KeyError:
+            pass
+
+    def enable(self):
+        # if we're enabling an instance, first extract the actual instance
+        # then figure out what the template unit is
+        template = re.match(r"[^@]+@(?P<instance>[^\.]*)\.", self.unit)
+        if template:
+            instance = template.group('instance')
+            unit = re.sub(r"@[^\.]*\.", "@.", self.unit, 1)
+        else:
+            instance = None
+            unit = self.unit
+
+        path = self._path_for_unit(unit)
+
+        if path.is_symlink():
+            # ignore aliases
             return
-    else:
-        instance = None
 
-    process_deps(root, config, service, location, 'WantedBy', 'wants')
-    process_deps(root, config, service, location, 'RequiredBy', 'requires')
+        config = SystemdFile(self.root, path)
+        if instance == "":
+            try:
+                default_instance = config.get('Install', 'DefaultInstance')[0]
+            except KeyError:
+                # no default instance, so nothing to enable
+                return
 
-    try:
-        for also in config.get('Install', 'Also'):
-            enable(root, also, services[also], services)
+            service = self.unit.replace("@.",
+                                        "@{}.".format(default_instance))
+        else:
+            service = self.unit
 
-    except KeyError:
-        pass
+        self._process_deps(config, service, path, 'WantedBy', 'wants')
+        self._process_deps(config, service, path, 'RequiredBy', 'requires')
 
-    systemdir = root / SYSCONFDIR / "systemd" / "system"
-    target = ROOT / location.relative_to(root)
-    try:
-        for dest in config.get('Install', 'Alias'):
-            alias = systemdir / dest
-            add_link(alias, target)
+        try:
+            for also in config.get('Install', 'Also'):
+                SystemdUnit(self.root, also).enable()
 
-    except KeyError:
-        pass
+        except KeyError:
+            pass
+
+        systemdir = self.root / SYSCONFDIR / "systemd" / "system"
+        target = ROOT / path.relative_to(self.root)
+        try:
+            for dest in config.get('Install', 'Alias'):
+                alias = systemdir / dest
+                add_link(alias, target)
+
+        except KeyError:
+            pass
+
+    def mask(self):
+        systemdir = self.root / SYSCONFDIR / "systemd" / "system"
+        add_link(systemdir / self.unit, "/dev/null")
+
+
+def collect_services(root):
+    """Collect list of service files"""
+    services = set()
+    for location in locations:
+        paths = (root / location / "system").glob("*")
+        for path in paths:
+            if path.is_dir():
+                continue
+            services.add(path.name)
+
+    return services
 
 
 def preset_all(root):
     presets = Presets('system-preset', root)
     services = collect_services(root)
 
-    for service, location in services.items():
+    for service in services:
         state = presets.state(service)
 
         if state == "enable" or state is None:
-            enable(root, service, location, services)
+            SystemdUnit(root, service).enable()
 
     # If we populate the systemd links we also create /etc/machine-id, which
     # allows systemd to boot with the filesystem read-only before generating
@@ -251,18 +270,13 @@ def preset_all(root):
     (root / SYSCONFDIR / "machine-id").touch()
 
 
-def mask(root, *services):
-    systemdir = root / SYSCONFDIR / "systemd" / "system"
-    for service in services:
-        add_link(systemdir / service, "/dev/null")
-
-
 def main():
     if sys.version_info < (3, 4, 0):
         sys.exit("Python 3.4 or greater is required")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', nargs=1, choices=['mask', 'preset-all'])
+    parser.add_argument('command', nargs=1, choices=['enable', 'mask',
+                                                     'preset-all'])
     parser.add_argument('service', nargs=argparse.REMAINDER)
     parser.add_argument('--root')
     parser.add_argument('--preset-mode',
@@ -272,9 +286,20 @@ def main():
     args = parser.parse_args()
 
     root = Path(args.root) if args.root else ROOT
+
+    locations.append(SYSCONFDIR / "systemd")
+    # Handle the usrmerge case by ignoring /lib when it's a symlink
+    if not (root / BASE_LIBDIR).is_symlink():
+        locations.append(BASE_LIBDIR / "systemd")
+    locations.append(LIBDIR / "systemd")
+
     command = args.command[0]
     if command == "mask":
-        mask(root, *args.service)
+        for service in args.service:
+            SystemdUnit(root, service).mask()
+    elif command == "enable":
+        for service in args.service:
+            SystemdUnit(root, service).enable()
     elif command == "preset-all":
         if len(args.service) != 0:
             sys.exit("Too many arguments.")
