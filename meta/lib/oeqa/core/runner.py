@@ -88,11 +88,17 @@ class OETestResult(_TestResult):
 
     def _getTestResultDetails(self, case):
         result_types = {'failures': 'FAILED', 'errors': 'ERROR', 'skipped': 'SKIPPED',
-                        'expectedFailures': 'EXPECTEDFAIL', 'successes': 'PASSED'}
+                        'expectedFailures': 'EXPECTEDFAIL', 'successes': 'PASSED',
+                        'unexpectedSuccesses' : 'PASSED'}
 
         for rtype in result_types:
             found = False
-            for (scase, msg) in getattr(self, rtype):
+            for resultclass in getattr(self, rtype):
+                # unexpectedSuccesses are just lists, not lists of tuples
+                if isinstance(resultclass, tuple):
+                    scase, msg = resultclass
+                else:
+                    scase, msg = resultclass, None
                 if case.id() == scase.id():
                     found = True
                     break
