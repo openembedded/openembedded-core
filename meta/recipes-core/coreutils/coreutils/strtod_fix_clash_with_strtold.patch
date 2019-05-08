@@ -9,7 +9,7 @@ Simplify by remving the macro / external variable,
 and having just a function.  User changed.  This avoids
 the need for an external variable that might clash.
 
-Upstream-Status: Backported [rhel5]
+Upstream-Status: Backport [rhel5]
 
 Signed-off-by: Oleksandr Kravchuk <open.source@oleksandr-kravchuk.com>
 
