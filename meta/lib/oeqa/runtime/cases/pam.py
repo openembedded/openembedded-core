@@ -3,12 +3,10 @@
 
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
-from oeqa.core.decorator.oeid import OETestID
 from oeqa.core.decorator.data import skipIfNotFeature
 
 class PamBasicTest(OERuntimeTestCase):
 
-    @OETestID(1543)
     @skipIfNotFeature('pam', 'Test requires pam to be in DISTRO_FEATURES')
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_pam(self):

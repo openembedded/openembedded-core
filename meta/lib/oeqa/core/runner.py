@@ -139,19 +139,13 @@ class OETestResult(_TestResult):
 
             (status, log) = self._getTestResultDetails(case)
 
-            oeid = -1
-            if hasattr(case, 'decorators'):
-                for d in case.decorators:
-                    if hasattr(d, 'oeid'):
-                        oeid = d.oeid
-
             t = ""
             if case.id() in self.starttime and case.id() in self.endtime:
                 t = " (" + "{0:.2f}".format(self.endtime[case.id()] - self.starttime[case.id()]) + "s)"
 
             if status not in logs:
                 logs[status] = []
-            logs[status].append("RESULTS - %s - Testcase %s: %s%s" % (case.id(), oeid, status, t))
+            logs[status].append("RESULTS - %s: %s%s" % (case.id(), status, t))
             report = {'status': status}
             if log:
                 report['log'] = log
@@ -202,38 +196,19 @@ class OETestRunner(_TestRunner):
                 self._walked_cases = self._walked_cases + 1
 
     def _list_tests_name(self, suite):
-        from oeqa.core.decorator.oeid import OETestID
         from oeqa.core.decorator.oetag import OETestTag
 
         self._walked_cases = 0
 
-        def _list_cases_without_id(logger, case):
-
-            found_id = False
-            if hasattr(case, 'decorators'):
-                for d in case.decorators:
-                    if isinstance(d, OETestID):
-                        found_id = True
-
-            if not found_id:
-                logger.info('oeid missing for %s' % case.id())
-
         def _list_cases(logger, case):
-            oeid = None
             oetag = None
 
             if hasattr(case, 'decorators'):
                 for d in case.decorators:
-                    if isinstance(d, OETestID):
-                        oeid = d.oeid
-                    elif isinstance(d, OETestTag):
+                    if isinstance(d, OETestTag):
                         oetag = d.oetag
 
-            logger.info("%s\t%s\t\t%s" % (oeid, oetag, case.id()))
-
-        self.tc.logger.info("Listing test cases that don't have oeid ...")
-        self._walk_suite(suite, _list_cases_without_id)
-        self.tc.logger.info("-" * 80)
+            logger.info("%s\t\t%s" % (oetag, case.id()))
 
         self.tc.logger.info("Listing all available tests:")
         self._walked_cases = 0

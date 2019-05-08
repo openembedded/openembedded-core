@@ -3,7 +3,6 @@ from tempfile import mkstemp
 
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
-from oeqa.core.decorator.oeid import OETestID
 from oeqa.runtime.decorator.package import OEHasPackage
 
 class ScpTest(OERuntimeTestCase):
@@ -19,7 +18,6 @@ class ScpTest(OERuntimeTestCase):
     def tearDownClass(cls):
         os.remove(cls.tmp_path)
 
-    @OETestID(220)
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['openssh-scp', 'dropbear'])
     def test_scp_file(self):
