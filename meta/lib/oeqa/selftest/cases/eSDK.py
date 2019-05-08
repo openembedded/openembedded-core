@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 import tempfile
 import shutil
 import os

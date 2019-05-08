@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 # This test should cover https://bugzilla.yoctoproject.org/tr_show_case.cgi?case_id=287 testcase
 # Note that the image under test must have "pam" in DISTRO_FEATURES
 

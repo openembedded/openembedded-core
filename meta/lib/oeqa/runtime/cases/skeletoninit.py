@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 # This test should cover https://bugzilla.yoctoproject.org/tr_show_case.cgi?case_id=284
 # testcase. Image under test must have meta-skeleton layer in bblayers and
 # IMAGE_INSTALL_append = " service" in local.conf

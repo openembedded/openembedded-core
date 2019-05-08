@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#
+# SPDX-License-Identifier: MIT
+#
 
 import sys
 import os
