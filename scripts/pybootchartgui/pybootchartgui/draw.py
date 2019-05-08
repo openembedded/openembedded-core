@@ -513,18 +513,19 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
     y = curr_y+header_h
 
     offset = trace.min or min(trace.start.keys())
-    for s in sorted(trace.start.keys()):
-        for val in sorted(trace.start[s]):
+    for start in sorted(trace.start.keys()):
+        for process in sorted(trace.start[start]):
             if not options.app_options.show_all and \
-                    trace.processes[val][1] - s < options.app_options.mintime:
+                    trace.processes[process][1] - start < options.app_options.mintime:
                 continue
-            task = val.split(":")[1]
-            #print(val)
-            #print(trace.processes[val][1])
+            task = process.split(":")[1]
+
+            #print(process)
+            #print(trace.processes[process][1])
             #print(s)
 
-            x = chart_rect[0] + (s - offset) * sec_w
-            w = ((trace.processes[val][1] - s) * sec_w)
+            x = chart_rect[0] + (start - offset) * sec_w
+            w = ((trace.processes[process][1] - start) * sec_w)
 
             #print("proc at %s %s %s %s" % (x, y, w, proc_h))
             col = None
@@ -549,7 +550,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                 draw_fill_rect(ctx, col, (x, y, w, proc_h))
             draw_rect(ctx, PROC_BORDER_COLOR, (x, y, w, proc_h))
 
-            draw_label_in_box(ctx, PROC_TEXT_COLOR, val, x, y + proc_h - 4, w, proc_h)
+            draw_label_in_box(ctx, PROC_TEXT_COLOR, process, x, y + proc_h - 4, w, proc_h)
             y = y + proc_h
 
     return curr_y
