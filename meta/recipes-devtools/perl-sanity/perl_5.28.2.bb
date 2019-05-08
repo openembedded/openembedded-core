@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=5b122a36d0f6dc55279a0ebc69f3c60b \
 
 
 SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
-           https://github.com/arsv/perl-cross/releases/download/1.2.2/perl-cross-1.2.2.tar.gz;name=perl-cross \
+           https://github.com/arsv/perl-cross/releases/download/1.2.3/perl-cross-1.2.3.tar.gz;name=perl-cross \
            file://perl-rdepends.txt \
            file://0001-configure_tool.sh-do-not-quote-the-argument-to-comma.patch \
            file://0001-ExtUtils-MakeMaker-add-LDFLAGS-when-linking-binary-m.patch \
@@ -23,10 +23,10 @@ SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
 "
 
-SRC_URI[perl.md5sum] = "838198c43d4f39d7af797e2f59c2bee5"
-SRC_URI[perl.sha256sum] = "3ebf85fe65df2ee165b22596540b7d5d42f84d4b72d84834f74e2e0b8956c347"
-SRC_URI[perl-cross.md5sum] = "9a6c05497bdde9a3106e3be9246f4da1"
-SRC_URI[perl-cross.sha256sum] = "e6987838f27d8cd3368ea68fc56a68cc52371505950927b8b7c5cb76e3a94caa"
+SRC_URI[perl.md5sum] = "1323e7581fbedf3791d2843f4ccaec4b"
+SRC_URI[perl.sha256sum] = "aa95456dddb3eb1cc5475fed4e08f91876bea71fb636fba6399054dfbabed6c7"
+SRC_URI[perl-cross.md5sum] = "03d9eafd71161eb5d1f80434e8b49dbc"
+SRC_URI[perl-cross.sha256sum] = "84583a1bb5f3a2c64d13d031386c114382e5c62955c6f84a27cec8318536627c"
 
 PR = "r1"
 
