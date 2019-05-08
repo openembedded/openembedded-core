@@ -8,5 +8,5 @@ from oeqa.core.case import OETestCase
 class OESDKTestCase(OETestCase):
     def _run(self, cmd):
         return subprocess.check_output(". %s > /dev/null; %s;" % \
-                (self.tc.sdk_env, cmd), shell=True,
+                (self.tc.sdk_env, cmd), shell=True, executable="/bin/bash",
                 stderr=subprocess.STDOUT, universal_newlines=True)
