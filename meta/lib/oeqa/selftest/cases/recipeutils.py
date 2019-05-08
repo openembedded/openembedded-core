@@ -6,7 +6,6 @@ import bb.tinfoil
 
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, get_test_layer
-from oeqa.core.decorator.oeid import OETestID
 
 
 def setUpModule():

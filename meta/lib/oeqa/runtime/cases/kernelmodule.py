@@ -2,7 +2,6 @@ import os
 
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
-from oeqa.core.decorator.oeid import OETestID
 from oeqa.core.decorator.data import skipIfNotFeature
 from oeqa.runtime.decorator.package import OEHasPackage
 
@@ -23,7 +22,6 @@ class KernelModuleTest(OERuntimeTestCase):
         files = '/tmp/Makefile /tmp/hellomod.c'
         cls.tc.target.run('rm %s' % files)
 
-    @OETestID(1541)
     @skipIfNotFeature('tools-sdk',
                       'Test requires tools-sdk to be in IMAGE_FEATURES')
     @OETestDepends(['gcc.GccCompileTest.test_gcc_compile'])

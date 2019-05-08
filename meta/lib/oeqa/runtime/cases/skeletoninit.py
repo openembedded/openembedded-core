@@ -3,7 +3,6 @@
 # IMAGE_INSTALL_append = " service" in local.conf
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
-from oeqa.core.decorator.oeid import OETestID
 from oeqa.core.decorator.data import skipIfDataVar
 from oeqa.runtime.decorator.package import OEHasPackage
 
@@ -22,7 +21,6 @@ class SkeletonBasicTest(OERuntimeTestCase):
         msg = 'skeleton-test not found. Output:\n%s' % output
         self.assertEqual(status, 0, msg=msg)
 
-    @OETestID(284)
     @OETestDepends(['skeletoninit.SkeletonBasicTest.test_skeleton_availability'])
     def test_skeleton_script(self):
         output1 = self.target.run("/etc/init.d/skeleton start")[1]
