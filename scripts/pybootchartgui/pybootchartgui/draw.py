@@ -19,6 +19,7 @@ import math
 import re
 import random
 import colorsys
+import functools
 from operator import itemgetter
 
 class RenderOptions:
@@ -449,7 +450,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
                             [(sample.time,
                               # Sum up used space of all volumes including the current one
                               # so that the graphs appear as stacked on top of each other.
-                              reduce(lambda x,y: x+y,
+                              functools.reduce(lambda x,y: x+y,
                                      [sample.records[volume] - min_used[volume]
                                       for volume in volumes[0:i]
                                       if volume in sample.records],
@@ -501,7 +502,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
              TASK_COLOR_SYSROOT, off_x+360, curr_y + 45, leg_s)
     draw_legend_box (ctx, "Package", \
              TASK_COLOR_PACKAGE, off_x+480, curr_y + 45, leg_s)
-    draw_legend_box (ctx, "Package Write",
+    draw_legend_box (ctx, "Package Write", \
              TASK_COLOR_PACKAGE_WRITE, off_x+600, curr_y + 45, leg_s)
 
     ctx.set_font_size(PROC_TEXT_FONT_SIZE)
@@ -518,13 +519,14 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                     trace.processes[val][1] - s < options.app_options.mintime:
                 continue
             task = val.split(":")[1]
-            #print val
-            #print trace.processes[val][1]
-            #print s
+            #print(val)
+            #print(trace.processes[val][1])
+            #print(s)
+
             x = chart_rect[0] + (s - offset) * sec_w
             w = ((trace.processes[val][1] - s) * sec_w)
 
-            #print "proc at %s %s %s %s" % (x, y, w, proc_h)
+            #print("proc at %s %s %s %s" % (x, y, w, proc_h))
             col = None
             if task == "do_compile":
                 col = TASK_COLOR_COMPILE
