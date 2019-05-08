@@ -16,18 +16,36 @@ python __anonymous() {
     # from doing any work so that pure-systemd images don't have redundant init
     # files.
     if bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d):
+        d.appendVar("DEPENDS", " systemd-systemctl-native")
+        d.appendVar("PACKAGE_WRITE_DEPS", " systemd-systemctl-native")
         if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
             d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 
 systemd_postinst() {
 if type systemctl >/dev/null 2>/dev/null; then
+	OPTS=""
+
+	if [ -n "$D" ]; then
+		OPTS="--root=$D"
+	fi
+
+	if [ "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
+		for service in ${SYSTEMD_SERVICE_ESCAPED}; do
+			case "${service}" in
+			*@*)
+				systemctl ${OPTS} enable "${service}"
+				;;
+			esac
+		done
+	fi
+
 	if [ -z "$D" ]; then
 		systemctl daemon-reload
-		systemctl preset "${SYSTEMD_SERVICE_ESCAPED}"
+		systemctl preset ${SYSTEMD_SERVICE_ESCAPED}
 
 		if [ "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
-			systemctl --no-block restart "${SYSTEMD_SERVICE_ESCAPED}"
+			systemctl --no-block restart ${SYSTEMD_SERVICE_ESCAPED}
 		fi
 	fi
 fi
@@ -36,9 +54,9 @@ fi
 systemd_prerm() {
 if type systemctl >/dev/null 2>/dev/null; then
 	if [ -z "$D" ]; then
-		systemctl stop "${SYSTEMD_SERVICE_ESCAPED}"
+		systemctl stop ${SYSTEMD_SERVICE_ESCAPED}
 
-		systemctl disable "${SYSTEMD_SERVICE_ESCAPED}"
+		systemctl disable ${SYSTEMD_SERVICE_ESCAPED}
 	fi
 fi
 }
@@ -162,10 +180,7 @@ python systemd_populate_packages() {
                 else:
                     bb.fatal("SYSTEMD_SERVICE_%s value %s does not exist" % (pkg_systemd, service))
 
-    def systemd_create_presets(pkg):
-        action = get_package_var(d, 'SYSTEMD_AUTO_ENABLE', pkg)
-        if action not in ("enable", "disable"):
-            bb.fatal("SYSTEMD_AUTO_ENABLE_%s '%s' is not 'enable' or 'disable'" % (pkg, action))
+    def systemd_create_presets(pkg, action):
         presetf = oe.path.join(d.getVar("PKGD"), d.getVar("systemd_unitdir"), "system-preset/98-%s.preset" % pkg)
         bb.utils.mkdirhier(os.path.dirname(presetf))
         with open(presetf, 'a') as fd:
@@ -179,7 +194,11 @@ python systemd_populate_packages() {
             systemd_check_package(pkg)
             if d.getVar('SYSTEMD_SERVICE_' + pkg):
                 systemd_generate_package_scripts(pkg)
-                systemd_create_presets(pkg)
+                action = get_package_var(d, 'SYSTEMD_AUTO_ENABLE', pkg)
+                if action in ("enable", "disable"):
+                    systemd_create_presets(pkg, action)
+                elif action not in ("mask", "preset"):
+                    bb.fatal("SYSTEMD_AUTO_ENABLE_%s '%s' is not 'enable', 'disable', 'mask' or 'preset'" % (pkg, action))
         systemd_check_services()
 }
 
