@@ -167,3 +167,19 @@ def git_get_result(repo, tags):
         append_resultsdata(results, obj)
 
     return results
+
+def test_run_results(results):
+    """
+    Convenient generator function that iterates over all test runs that have a
+    result section.
+
+    Generates a tuple of:
+        (result json file path, test run name, test run (dict), test run "results" (dict))
+    for each test run that has a "result" section
+    """
+    for path in results:
+        for run_name, test_run in results[path].items():
+            if not 'result' in test_run:
+                continue
+            yield path, run_name, test_run, test_run['result']
+
