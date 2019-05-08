@@ -342,6 +342,10 @@ def extents(options, xscale, trace):
         if trace.mem_stats:
             h += meminfo_bar_h
 
+    # Allow for width of process legend and offset
+    if w < (720 + off_x):
+        w = 720 + off_x
+
     return (w, h)
 
 def clip_visible(clip, rect):
@@ -490,7 +494,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
     return curr_y
 
 def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
-    chart_rect = [off_x, curr_y+header_h, w, h - 2 * off_y - header_h - leg_s + proc_h]
+    chart_rect = [off_x, curr_y+header_h, w, h - curr_y - 1 * off_y - header_h  ]
 
     draw_legend_box (ctx, "Configure", \
              TASK_COLOR_CONFIGURE, off_x  , curr_y + 45, leg_s)
