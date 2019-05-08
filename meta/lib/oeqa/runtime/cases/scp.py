@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 import os
 from tempfile import mkstemp
 

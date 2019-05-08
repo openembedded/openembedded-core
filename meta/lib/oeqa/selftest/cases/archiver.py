@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 import os
 import glob
 from oeqa.utils.commands import bitbake, get_bb_vars

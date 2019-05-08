@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 #
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
 # Modified for use in OE by Richard Purdie, 2018
 #
 # Modified by: Corey Goldberg, 2013

@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 from subprocess import Popen, PIPE
 
 from oeqa.runtime.case import OERuntimeTestCase

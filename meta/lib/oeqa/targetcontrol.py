@@ -1,6 +1,8 @@
+#
 # Copyright (C) 2013 Intel Corporation
 #
-# Released under the MIT license (see COPYING.MIT)
+# SPDX-License-Identifier: MIT
+#
 
 # This module is used by testimage.bbclass for setting up and controlling a target machine.
 

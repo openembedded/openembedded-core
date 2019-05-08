@@ -1,3 +1,7 @@
+#
+# SPDX-License-Identifier: MIT
+#
+
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.sdk.utils.sdkbuildproject import SDKBuildProject
 from oeqa.utils.commands import bitbake, get_bb_vars, runCmd

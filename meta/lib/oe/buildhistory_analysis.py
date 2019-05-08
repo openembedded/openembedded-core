@@ -3,6 +3,8 @@
 # Copyright (C) 2012-2013, 2016-2017 Intel Corporation
 # Author: Paul Eggleton <paul.eggleton@linux.intel.com>
 #
+# SPDX-License-Identifier: GPL-2.0-only
+#
 # Note: requires GitPython 0.3.1+
 #
 # You can use this from the command line by running scripts/buildhistory-diff
