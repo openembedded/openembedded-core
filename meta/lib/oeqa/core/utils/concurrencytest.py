@@ -19,6 +19,7 @@ import testtools
 import threading
 import time
 import io
+import subunit
 
 from queue import Queue
 from itertools import cycle
@@ -50,10 +51,11 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
     def _add_result_with_semaphore(self, method, test, *args, **kwargs):
         self.semaphore.acquire()
         try:
-            self.result.starttime[test.id()] = self._test_start.timestamp()
-            self.result.threadprogress[self.threadnum].append(test.id())
-            totalprogress = sum(len(x) for x in self.result.threadprogress.values())
-            self.result.progressinfo[test.id()] = "%s: %s/%s %s/%s (%ss) (%s)" % (
+            if self._test_start:
+                self.result.starttime[test.id()] = self._test_start.timestamp()
+                self.result.threadprogress[self.threadnum].append(test.id())
+                totalprogress = sum(len(x) for x in self.result.threadprogress.values())
+                self.result.progressinfo[test.id()] = "%s: %s/%s %s/%s (%ss) (%s)" % (
                     self.threadnum,
                     len(self.result.threadprogress[self.threadnum]),
                     self.totalinprocess,
@@ -64,6 +66,23 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
         finally:
             self.semaphore.release()
         super(BBThreadsafeForwardingResult, self)._add_result_with_semaphore(method, test, *args, **kwargs)
+
+#
+# We have to patch subunit since it doesn't understand how to handle addError
+# outside of a running test case. This can happen if classSetUp() fails
+# for a class of tests. This unfortunately has horrible internal knowledge.
+#
+def outSideTestaddError(self, offset, line):
+    """An 'error:' directive has been read."""
+    test_name = line[offset:-1].decode('utf8')
+    self.parser._current_test = subunit.RemotedTestCase(test_name)
+    self.parser.current_test_description = test_name
+    self.parser._state = self.parser._reading_error_details
+    self.parser._reading_error_details.set_simple()
+    self.parser.subunitLineReceived(line)
+
+subunit._OutSideTest.addError = outSideTestaddError
+
 
 #
 # A dummy structure to add to io.StringIO so that the .buffer object
