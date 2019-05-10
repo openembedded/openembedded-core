@@ -1,0 +1,62 @@
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/glib/merge_requests/828]
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 93d8482384ebc5c7d1f3d92b0190db0371269663 Mon Sep 17 00:00:00 2001
+From: Rafal Luzynski <digitalfreak@lingonborough.com>
+Date: Fri, 10 May 2019 00:40:27 +0200
+Subject: [PATCH] build: Fix a typo in the test whether _NL_ABALTMON_n is
+ supported
+
+The correct spelling is "_NL_ABALTMON_n" rather than "_NL_ALTMON_n".
+The typo made Meson build think that _NL_ABALTMON_n constants are
+not supported which was totally wrong. This made g_date_time_format()
+output incorrect abbreviated month names in some languages.
+The old configure.ac script was correct here.
+
+Bug introduced in commit be4f96b6502c01d2a51d60b7a669c8ef82e22a4d.
+
+Closes: #1759
+---
+ meson.build | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index c5d2ce5f8..08fa40ac5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1002,20 +1002,20 @@ if cc.links('''#ifndef _GNU_SOURCE
+               #include <langinfo.h>
+                int main (int argc, char ** argv) {
+                  char *str;
+-                 str = nl_langinfo (_NL_ALTMON_1);
+-                 str = nl_langinfo (_NL_ALTMON_2);
+-                 str = nl_langinfo (_NL_ALTMON_3);
+-                 str = nl_langinfo (_NL_ALTMON_4);
+-                 str = nl_langinfo (_NL_ALTMON_5);
+-                 str = nl_langinfo (_NL_ALTMON_6);
+-                 str = nl_langinfo (_NL_ALTMON_7);
+-                 str = nl_langinfo (_NL_ALTMON_8);
+-                 str = nl_langinfo (_NL_ALTMON_9);
+-                 str = nl_langinfo (_NL_ALTMON_10);
+-                 str = nl_langinfo (_NL_ALTMON_11);
+-                 str = nl_langinfo (_NL_ALTMON_12);
++                 str = nl_langinfo (_NL_ABALTMON_1);
++                 str = nl_langinfo (_NL_ABALTMON_2);
++                 str = nl_langinfo (_NL_ABALTMON_3);
++                 str = nl_langinfo (_NL_ABALTMON_4);
++                 str = nl_langinfo (_NL_ABALTMON_5);
++                 str = nl_langinfo (_NL_ABALTMON_6);
++                 str = nl_langinfo (_NL_ABALTMON_7);
++                 str = nl_langinfo (_NL_ABALTMON_8);
++                 str = nl_langinfo (_NL_ABALTMON_9);
++                 str = nl_langinfo (_NL_ABALTMON_10);
++                 str = nl_langinfo (_NL_ABALTMON_11);
++                 str = nl_langinfo (_NL_ABALTMON_12);
+                  return 0;
+-               }''', name : 'nl_langinfo (_NL_ALTMON_n)')
++               }''', name : 'nl_langinfo (_NL_ABALTMON_n)')
+   glib_conf.set('HAVE_LANGINFO_ABALTMON', 1)
+ endif
+ 
+-- 
+2.18.1
