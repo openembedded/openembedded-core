@@ -148,6 +148,14 @@ RDEPENDS_${PN}-ptest += "\
             tzdata-europe \
             tzdata-posix \
             shared-mime-info \
+            ${PN}-locale-ja \
+            ${PN}-locale-fr \
+            ${PN}-locale-el \
+            ${PN}-locale-hr \
+            ${PN}-locale-lt \
+            ${PN}-locale-pl \
+            ${PN}-locale-ru \
+            ${PN}-locale-th \
            "
 
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
@@ -173,5 +181,7 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = "\
             locale-base-fr-fr \
             locale-base-es-es \
             locale-base-en-gb \
+            locale-base-en-us \
             locale-base-pl-pl \
+            locale-base-pl-pl.iso-8859-2 \
            "
