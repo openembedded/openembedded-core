@@ -15,6 +15,7 @@ SRC_URI[archive.sha256sum] = "c022f3d10f55a5b7c31676fb001b4cb6401db8ab9f6e8418c6
 PACKAGECONFIG ??= "gnutls"
 
 PACKAGECONFIG[gnutls] = "-Dgnutls=enabled,-Dgnutls=disabled,gnutls"
+PACKAGECONFIG[openssl] = "-Dopenssl=enabled,-Dopenssl=disabled,openssl"
 PACKAGECONFIG[libproxy] = "-Dlibproxy=enabled,-Dlibproxy=disabled,libproxy"
 
 EXTRA_OEMESON = "-Dgnome_proxy=disabled"
