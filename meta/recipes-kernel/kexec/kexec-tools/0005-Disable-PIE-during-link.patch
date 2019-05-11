@@ -1,4 +1,4 @@
-From ea7be6d71b85880e8e8a2c8a4f49a696c5f31ae4 Mon Sep 17 00:00:00 2001
+From c54488ad5fd657e0f154d76d7456d9080be24836 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 10 Jun 2017 11:18:49 -0700
 Subject: [PATCH] Disable PIE during link
@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/purgatory/Makefile b/purgatory/Makefile
-index 564bdb7..a08e41f 100644
+index 416e6b9..f00edb4 100644
 --- a/purgatory/Makefile
 +++ b/purgatory/Makefile
 @@ -59,7 +59,7 @@ $(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
@@ -26,6 +26,3 @@ index 564bdb7..a08e41f 100644
  			-nodefaultlibs -e purgatory_start -Wl,-r \
  			-Wl,-Map=$(PURGATORY_MAP)
  
--- 
-2.13.1
-

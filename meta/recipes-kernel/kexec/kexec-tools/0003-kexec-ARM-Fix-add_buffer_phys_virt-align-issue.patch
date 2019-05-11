@@ -1,4 +1,4 @@
-From 78e497fb69950665e639cfab8f4fb50cc404a1eb Mon Sep 17 00:00:00 2001
+From 55e583d20651e829afbbc8dba0f8ec3017cda2d5 Mon Sep 17 00:00:00 2001
 From: Haiqing Bai <Haiqing.Bai@windriver.com>
 Date: Mon, 9 Jan 2017 15:26:29 +0800
 Subject: [PATCH] kexec: ARM: Fix add_buffer_phys_virt() align issue
@@ -17,7 +17,7 @@ Signed-off-by: Haiqing Bai <Haiqing.Bai@windriver.com>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 245c21a..12139c3 100644
+index daa4788..3f72b38 100644
 --- a/kexec/arch/arm/crashdump-arm.c
 +++ b/kexec/arch/arm/crashdump-arm.c
 @@ -240,6 +240,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
@@ -47,6 +47,3 @@ index 245c21a..12139c3 100644
  					  crash_kernel_mem.start,
  					  crash_kernel_mem.end, -1, 0);
  
--- 
-1.9.1
-
