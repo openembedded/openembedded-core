@@ -3,7 +3,6 @@ require iproute2.inc
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://configure-cross.patch \
            file://0001-libc-compat.h-add-musl-workaround.patch \
-           file://0001-ip-Remove-unneed-header.patch \
           "
 
 SRC_URI[md5sum] = "d22107b4d7cfb999eeb8ad8a0aec1124"
