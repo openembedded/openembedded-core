@@ -1,0 +1,46 @@
+From f73df5196c35ef9c4531e4b6b26800c41954fd77 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Sat, 11 May 2019 20:00:29 +0800
+Subject: [PATCH] support musl
+
+...
+|./lib/math.h:2877:1: error: 'int signbit(float)' conflicts with a previous declaration
+| _GL_MATH_CXX_REAL_FLOATING_DECL_2 (signbit)
+| ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+|In file included from recipe-sysroot/usr/include/c++/8.3.0/math.h:36,
+|                 from ./lib/math.h:27,
+|                 from ./src/include/driver.h:27,
+|                 from src/devices/grodvi/dvi.cpp:20:
+|recipe-sysroot/usr/include/c++/8.3.0/cmath:661:3: note: previous declaration 'constexpr bool std::signbit(float)'
+|   signbit(float __x)
+|   ^~~~~~~
+...
+
+Upstream-Status: Pending
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ lib/math.in.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/math.in.h b/lib/math.in.h
+index c30fc20..16e406a 100644
+--- a/lib/math.in.h
++++ b/lib/math.in.h
+@@ -2397,11 +2397,13 @@ _GL_EXTERN_C int gl_signbitl (long double arg);
+     gl_signbitf (x))
+ # endif
+ # ifdef __cplusplus
++#if defined(__GLIBC__)
+ #  if defined signbit || defined GNULIB_NAMESPACE
+ _GL_MATH_CXX_REAL_FLOATING_DECL_1 (signbit)
+ #   undef signbit
+ _GL_MATH_CXX_REAL_FLOATING_DECL_2 (signbit)
+ #  endif
++# endif //if defined(__GLIBC__)
+ # endif
+ #elif defined GNULIB_POSIXCHECK
+ # if defined signbit
+-- 
+2.7.4
+

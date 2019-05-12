@@ -8,48 +8,26 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
-	file://groff-1.22.2-correct-man.local-install-path.patch \
-	file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
 	file://0001-replace-perl-w-with-use-warnings.patch \
 	file://groff-not-search-fonts-on-build-host.patch \
+	file://0001-fix-shebang-for-taget.patch \
+	file://0001-support-musl.patch \
 "
 
-SRC_URI[md5sum] = "cc825fa64bc7306a885f2fb2268d3ec5"
-SRC_URI[sha256sum] = "3a48a9d6c97750bfbd535feeb5be0111db6406ddb7bb79fc680809cda6d828a5"
+SRC_URI[md5sum] = "08fb04335e2f5e73f23ea4c3adbf0c5f"
+SRC_URI[sha256sum] = "e78e7b4cb7dec310849004fa88847c44701e8d133b5d4c13057d876c1bad0293"
 
-DEPENDS = "groff-native"
-DEPENDS_class-native = ""
+DEPENDS = "bison-native"
 RDEPENDS_${PN} += "perl sed"
 
-inherit autotools texinfo multilib_script
+inherit autotools-brokensep texinfo multilib_script pkgconfig
 
 MULTILIB_SCRIPTS = "${PN}:${bindir}/gpinyin ${PN}:${bindir}/groffer ${PN}:${bindir}/grog"
 
-EXTRA_OECONF = "--without-x"
+EXTRA_OECONF = "--without-x --without-doc"
 PARALLEL_MAKE = ""
 
 CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl'"
-
-do_configure_prepend() {
-	if [ "${BUILD_SYS}" != "${HOST_SYS}" ]; then
-		sed -i \
-		    -e '/^GROFFBIN=/s:=.*:=${STAGING_BINDIR_NATIVE}/groff:' \
-		    -e '/^TROFFBIN=/s:=.*:=${STAGING_BINDIR_NATIVE}/troff:' \
-		    -e '/^GROFF_BIN_PATH=/s:=.*:=${STAGING_BINDIR_NATIVE}:' \
-		    -e '/^GROFF_BIN_DIR=/s:=.*:=${STAGING_BINDIR_NATIVE}:' \
-		    ${S}/contrib/*/Makefile.sub \
-		    ${S}/doc/Makefile.in \
-		    ${S}/doc/Makefile.sub
-	fi
-}
-
-do_configure_append() {
-    # generate gnulib configure script
-    olddir=`pwd`
-    cd ${S}/src/libs/gnulib/
-    ACLOCAL="$ACLOCAL" autoreconf -Wcross --verbose --install --force ${EXTRA_AUTORECONF} $acpaths || die "autoreconf execution failed."
-    cd ${olddir}
-}
 
 do_install_append() {
 	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
