@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://docs/COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
            file://99_mandb \
            file://man_db.conf-avoid-multilib-install-file-conflict.patch"
-SRC_URI[md5sum] = "ab41db551f500e4a595b11203b86c67a"
-SRC_URI[sha256sum] = "103c185f9d8269b9ee3b8a4cb27912b3aa393e952731ef96fedc880723472bc3"
+SRC_URI[md5sum] = "c5c6c3434be14a5527d43b5ad0f09a13"
+SRC_URI[sha256sum] = "b64d52747534f1fe873b2876eb7f01319985309d5d7da319d2bc52ba1e73f6c1"
 
 DEPENDS = "libpipeline gdbm groff-native base-passwd"
 RDEPENDS_${PN} += "base-passwd"
@@ -16,7 +16,7 @@ RDEPENDS_${PN} += "base-passwd"
 # | /usr/src/debug/man-db/2.8.0-r0/man-db-2.8.0/src/whatis.c:939: undefined reference to `_nl_msg_cat_cntr'
 USE_NLS_libc-musl = "no"
 
-inherit gettext pkgconfig autotools
+inherit gettext pkgconfig autotools systemd
 
 EXTRA_OECONF = "--with-pager=less"
 EXTRA_AUTORECONF += "-I ${S}/gl/m4"
@@ -54,3 +54,6 @@ def compress_pkg(d):
     return ""
 
 RDEPENDS_${PN} += "${@compress_pkg(d)}"
+
+SYSTEMD_SERVICE_${PN} = "man-db.timer man-db.service"
+SYSTEMD_AUTO_ENABLE ?= "disable"
