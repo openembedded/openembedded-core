@@ -19,7 +19,7 @@ DEPENDS_class-native = "libpng-native"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs926/${BPN}-${PV}.tar.gz \
+SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs927/${BPN}-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://do-not-check-local-libpng-source.patch \
@@ -32,19 +32,6 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.02-genarch.patch \
            file://objarch.h \
            file://cups-no-gcrypt.patch \
-           file://CVE-2019-6116-0001.patch \
-           file://CVE-2019-6116-0002.patch \
-           file://CVE-2019-6116-0003.patch \
-           file://CVE-2019-6116-0004.patch \
-           file://CVE-2019-6116-0005.patch \
-           file://CVE-2019-6116-0006.patch \
-           file://CVE-2019-6116-0007.patch \
-           file://CVE-2019-3835-0001.patch \
-           file://CVE-2019-3835-0002.patch \
-           file://CVE-2019-3835-0003.patch \
-           file://CVE-2019-3835-0004.patch \
-           file://CVE-2019-3838-0001.patch \
-           file://CVE-2019-3838-0002.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -52,8 +39,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "806bc2dedbc7f69b003f536658e08d4a"
-SRC_URI[sha256sum] = "831fc019bd477f7cc2d481dc5395ebfa4a593a95eb2fe1eb231a97e450d7540d"
+SRC_URI[md5sum] = "c3990a504a3a23b9babe9de00ed6597d"
+SRC_URI[sha256sum] = "9760e8bdd07a08dbd445188a6557cb70e60ccb6a5601f7dbfba0d225e28ce285"
 
 # Put something like
 #
