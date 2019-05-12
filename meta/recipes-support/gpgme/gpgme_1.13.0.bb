@@ -6,11 +6,12 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LESSER;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://src/gpgme.h.in;endline=23;md5=4d6319e587fd944adfe61a41a8f15b36 \
+                    file://src/gpgme.h.in;endline=23;md5=2f0bf06d1c7dcb28532a9d0f94a7ca1d \
                     file://src/engine.h;endline=22;md5=4b6d8ba313d9b564cc4d4cfb1640af9d"
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
+           file://0001-Revert-build-Make-gpgme.m4-use-gpgrt-config-with-.pc.patch \
            file://0001-pkgconfig.patch \
            file://0002-gpgme-lang-python-gpg-error-config-should-not-be-use.patch \
            file://0003-Correctly-install-python-modules.patch \
@@ -18,10 +19,11 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0005-gpgme-config-skip-all-lib-or-usr-lib-directories-in-.patch \
            file://0006-fix-build-path-issue.patch \
            file://0007-python-Add-variables-to-tests.patch \
+           file://0008-do-not-auto-check-var-PYTHON.patch \
           "
 
-SRC_URI[md5sum] = "902fca3a94907efe4e929b2ade545a7c"
-SRC_URI[sha256sum] = "b4dc951c3743a60e2e120a77892e9e864fb936b2e58e7c77e8581f4d050e8cd8"
+SRC_URI[md5sum] = "e511a0d95c507ab87e713140c82fc7d0"
+SRC_URI[sha256sum] = "d4b23e47a9e784a63e029338cce0464a82ce0ae4af852886afda410f9e39c630"
 
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"
@@ -44,9 +46,7 @@ PACKAGECONFIG[python3] = ",,python3 swig-native,"
 # support. Since these bindings are currently not needed, we can disable them.
 DEFAULT_LANGUAGES = ""
 DEFAULT_LANGUAGES_class-target = "cpp"
-LANGUAGES ?= "${DEFAULT_LANGUAGES}"
-LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python2', ' python2', '', d)}"
-LANGUAGES .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', ' python3', '', d)}"
+LANGUAGES ?= "${DEFAULT_LANGUAGES} python"
 
 PYTHON_INHERIT = "${@bb.utils.contains('PACKAGECONFIG', 'python2', 'pythonnative', '', d)}"
 PYTHON_INHERIT .= "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native', '', d)}"
