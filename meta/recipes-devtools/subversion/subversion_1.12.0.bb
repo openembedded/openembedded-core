@@ -2,7 +2,7 @@ SUMMARY = "Subversion (svn) version control system client"
 HOMEPAGE = "http://subversion.apache.org"
 SECTION = "console/network"
 LICENSE = "Apache-2 & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=83206f39819e7a4dfca2ff7c190f6ce0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=6487ae7094d359fa90fb9c4096e52e2b"
 
 DEPENDS = "apr-util serf sqlite3 file lz4"
 DEPENDS_append_class-native = " file-replacement-native"
@@ -11,10 +11,11 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://disable_macos.patch \
            file://0001-Fix-libtool-name-in-configure.ac.patch \
            file://serfmacro.patch \
+           file://subversion-1.12.0-apr_1.7.0_fix-1.patch \
            "
 
-SRC_URI[md5sum] = "5797bf701d2d868fa964c7bbc4931267"
-SRC_URI[sha256sum] = "9efd2750ca4d72ec903431a24b9c732b6cbb84aad9b7563f59dd96dea5be60bb"
+SRC_URI[md5sum] = "be4f5c0b1b38a5d82bd6d16a16ff1346"
+SRC_URI[sha256sum] = "7fae7c73d8a007c107c0ae5eb372bc0bb013dbfe966fcd5c59cd5a195a5e2edf"
 
 inherit autotools pkgconfig gettext
 
