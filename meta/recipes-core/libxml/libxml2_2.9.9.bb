@@ -20,13 +20,10 @@ SRC_URI = "http://www.xmlsoft.org/sources/libxml2-${PV}.tar.gz;name=libtar \
            file://libxml-m4-use-pkgconfig.patch \
            file://0001-Make-ptest-run-the-python-tests-if-python-is-enabled.patch \
            file://fix-execution-of-ptests.patch \
-           file://fix-CVE-2017-8872.patch \
-           file://fix-CVE-2018-14404.patch \
-           file://0001-Fix-infinite-loop-in-LZMA-decompression.patch \
            "
 
-SRC_URI[libtar.md5sum] = "b786e353e2aa1b872d70d5d1ca0c740d"
-SRC_URI[libtar.sha256sum] = "0b74e51595654f958148759cfef0993114ddccccbb6f31aee018f3558e8e2732"
+SRC_URI[libtar.md5sum] = "c04a5a0a042eaa157e8e8c9eabe76bd6"
+SRC_URI[libtar.sha256sum] = "94fb70890143e3c6549f265cee93ec064c80a84c42ad0f23e85ee1fd6540a871"
 SRC_URI[testtar.md5sum] = "ae3d1ebe000a3972afa104ca7f0e1b4a"
 SRC_URI[testtar.sha256sum] = "96151685cec997e1f9f3387e3626d61e6284d4d6e66e0e440c209286c03e9cc7"
 
