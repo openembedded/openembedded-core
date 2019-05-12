@@ -207,7 +207,7 @@ def SSHCall(command, logger, timeout=None, **opts):
                 logger.debug('time: %s, endtime: %s' % (time.time(), endtime))
                 try:
                     if select.select([process.stdout], [], [], 5)[0] != []:
-                        reader = codecs.getreader('utf-8')(process.stdout, 'surrogatepass')
+                        reader = codecs.getreader('utf-8')(process.stdout, 'ignore')
                         data = reader.read(1024, 4096)
                         if not data:
                             process.stdout.close()
@@ -234,7 +234,7 @@ def SSHCall(command, logger, timeout=None, **opts):
                 output += lastline
 
         else:
-            output = process.communicate()[0].decode("utf-8", errors='surrogatepass')
+            output = process.communicate()[0].decode('utf-8', errors='ignore')
             logger.debug('Data from SSH call: %s' % output.rstrip())
 
     options = {
