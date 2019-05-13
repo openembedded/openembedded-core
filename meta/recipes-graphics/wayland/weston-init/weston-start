@@ -75,7 +75,7 @@ if test -z "$XDG_RUNTIME_DIR"; then
 	fi
 	if [ -n "$WESTON_USER" ]
 	then
-		chown $WEST_USER:$WESTON_USER $XDG_RUNTIME_DIR
+		chown $WESTON_USER:$WESTON_USER $XDG_RUNTIME_DIR
 	fi
 fi
 
