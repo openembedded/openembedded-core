@@ -14,8 +14,8 @@ DEPENDS = "dbus"
 inherit autotools pkgconfig
 
 SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "4356397ca11d5f8ec7f1aaf1e91ffea4"
-SRC_URI[sha256sum] = "a5a4d45ca002dd91560fcd565e696f59e82631e69c927115dafc640f0b8d779c"
+SRC_URI[md5sum] = "920189f5be4ee4cd72d610baeb20da65"
+SRC_URI[sha256sum] = "d4aa08915f4058ecaab509dffbe22665d71dba6fe9626caff63c0e5f4b78a394"
 
 do_configure_prepend () {
     mkdir -p ${S}/build-aux
