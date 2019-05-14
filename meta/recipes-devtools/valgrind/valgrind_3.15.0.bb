@@ -108,12 +108,13 @@ RDEPENDS_${PN} += "perl"
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
-RDEPENDS_${PN}-ptest += " sed perl perl-module-file-glob"
+RDEPENDS_${PN}-ptest += " sed perl perl-module-file-glob ${PN}-dbg"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
 # One of the tests contains a bogus interpreter path on purpose.
 # Skip file dependency check
 SKIP_FILEDEPS_${PN}-ptest = '1'
+INSANE_SKIP_${PN}-ptest = "debug-deps"
 
 do_compile_ptest() {
     oe_runmake check
