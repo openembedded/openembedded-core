@@ -157,6 +157,8 @@ do_install_ptest() {
         cd $saved_dir
     done
 
+    # Hide then restore a.c that is used by ann[12].vgtest in call/cachegrind
+    mv ${D}${PTEST_PATH}/cachegrind/tests/a.c ${D}${PTEST_PATH}/cachegrind/tests/a_c
     # clean out build artifacts before building the rpm
     find ${D}${PTEST_PATH} \
          \( -name "Makefile*" \
@@ -165,6 +167,14 @@ do_install_ptest() {
         -o -name "*.S" \
         -o -name "*.h" \) \
         -exec rm {} \;
+    mv ${D}${PTEST_PATH}/cachegrind/tests/a_c ${D}${PTEST_PATH}/cachegrind/tests/a.c
+
+    # find *_annotate in ${bindir} for yocto build
+    sed -i s:\.\./\.\./cachegrind/cg_annotate:${bindir}/cg_annotate: ${D}${PTEST_PATH}/cachegrind/tests/ann1.vgtest
+    sed -i s:\.\./\.\./cachegrind/cg_annotate:${bindir}/cg_annotate: ${D}${PTEST_PATH}/cachegrind/tests/ann2.vgtest
+
+    sed -i s:\.\./\.\./callgrind/callgrind_annotate:${bindir}/callgrind_annotate: ${D}${PTEST_PATH}/callgrind/tests/ann1.vgtest
+    sed -i s:\.\./\.\./callgrind/callgrind_annotate:${bindir}/callgrind_annotate: ${D}${PTEST_PATH}/callgrind/tests/ann2.vgtest
 
     # needed by massif tests
     cp ${B}/massif/ms_print ${D}${PTEST_PATH}/massif/ms_print
