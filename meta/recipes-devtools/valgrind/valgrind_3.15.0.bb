@@ -136,7 +136,17 @@ do_install_ptest() {
         # exclude shell or the package won't install
         rm -rf none/tests/shell* 2>/dev/null
 
-        subdirs="tests cachegrind/tests callgrind/tests drd/tests helgrind/tests massif/tests memcheck/tests none/tests"
+        subdirs=" \
+	   cachegrind/tests \
+	   callgrind/tests \
+	   drd/tests \
+	   gdbserver_tests \
+	   helgrind/tests \
+	   massif/tests \
+	   memcheck/tests \
+	   none/tests \
+	   tests \
+	"
 
         # Get the vg test scripts, filters, and expected files
         for dir in $subdirs ; do
