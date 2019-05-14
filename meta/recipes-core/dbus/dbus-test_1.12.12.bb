@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
 
 DEPENDS = "dbus glib-2.0"
 
-RDEPENDS_${PN} += "make"
 RDEPENDS_${PN}-dev = ""
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
@@ -85,6 +84,7 @@ do_install_ptest() {
         sed -i -e 's;@PTEST_PATH@;${PTEST_PATH};g'  ${D}${PTEST_PATH}/run-ptest
 }
 
-RDEPENDS_${PN}-ptest += "bash"
+RDEPENDS_${PN}-ptest += "bash make dbus"
+RDEPENDS_${PN}-ptest_remove = "${PN}"
 
 PRIVATE_LIBS_${PN}-ptest = "libdbus-1.so.3"
