@@ -1,4 +1,4 @@
-require vim_${PV}.bb
+require vim.inc
 
 SUMMARY += " (with tiny features)"
 
