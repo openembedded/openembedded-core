@@ -56,6 +56,7 @@ npm_do_install() {
 	local NPM_PACKFILE=$(npm pack .)
 	npm install --prefix ${D}${prefix} -g --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry ${NPM_PACKFILE}
 	ln -fs node_modules ${D}${libdir}/node
+	find ${D}${NPM_INSTALLDIR} -type f \( -name "*.a" -o -name "*.d" -o -name "*.o" \) -delete
 	if [ -d ${D}${prefix}/etc ] ; then
 		# This will be empty
 		rmdir ${D}${prefix}/etc
