@@ -10,7 +10,7 @@ def node_pkgname(d):
 
 NPMPN ?= "${@node_pkgname(d)}"
 
-NPM_INSTALLDIR = "${libdir}/node/${NPMPN}"
+NPM_INSTALLDIR = "${libdir}/node_modules/${NPMPN}"
 
 # function maps arch names to npm arch names
 def npm_oe_arch_map(target_arch, d):
@@ -55,7 +55,7 @@ npm_do_install() {
 	mkdir -p ${D}${libdir}/node_modules
 	local NPM_PACKFILE=$(npm pack .)
 	npm install --prefix ${D}${prefix} -g --arch=${NPM_ARCH} --target_arch=${NPM_ARCH} --production --no-registry ${NPM_PACKFILE}
-	mv ${D}${libdir}/node_modules ${D}${libdir}/node
+	ln -fs node_modules ${D}${libdir}/node
 	if [ -d ${D}${prefix}/etc ] ; then
 		# This will be empty
 		rmdir ${D}${prefix}/etc
@@ -85,6 +85,8 @@ python populate_packages_prepend () {
 }
 
 FILES_${PN} += " \
+    ${bindir} \
+    ${libdir}/node \
     ${NPM_INSTALLDIR} \
 "
 
