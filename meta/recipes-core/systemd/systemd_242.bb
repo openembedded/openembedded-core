@@ -38,7 +38,7 @@ SRC_URI_MUSL = "file://0001-Use-getenv-when-secure-versions-are-not-available.pa
                file://0008-add-missing-FTW_-macros-for-musl.patch \
                file://0010-fix-missing-of-__register_atfork-for-non-glibc-build.patch \
                file://0011-Use-uintmax_t-for-handling-rlim_t.patch \
-               file://0012-fix-missing-ULONG_LONG_MAX-definition-in-case-of-mus.patch \
+               file://0001-Replace-the-legacy-ULONG_LONG_MAX-with-the-C99-ULLON.patch \
                file://0014-test-sizeof.c-Disable-tests-for-missing-typedefs-in-.patch \
                file://0015-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
                file://0016-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
@@ -47,7 +47,7 @@ SRC_URI_MUSL = "file://0001-Use-getenv-when-secure-versions-are-not-available.pa
                file://0019-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
                file://0020-missing_type.h-add-__compar_d_fn_t-definition.patch \
                file://0021-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0022-include-sys-wait.h-to-avoid-compile-failure.patch \
+               file://0001-src-udev-udev-event.c-must-include-sys-wait.h.patch \
                file://0023-socket-util.h-include-string.h.patch \
                file://0024-test-json.c-define-M_PIl.patch \
                file://0025-fs-utilh-add-missing-sys-stat-include.patch \
