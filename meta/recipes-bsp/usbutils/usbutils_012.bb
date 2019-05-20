@@ -11,10 +11,9 @@ LIC_FILES_CHKSUM = "file://lsusb.c;endline=1;md5=7d4861d978ff5ba7cb2b319ed1d4afe
 DEPENDS = "libusb1 virtual/libiconv udev"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
-           file://usb-devices-avoid-dependency-on-bash.patch \
           "
-SRC_URI[md5sum] = "5eb2d2d68f9ed6dc3e9659a5988f7ed6"
-SRC_URI[sha256sum] = "881ba47fb2df10c3ba54a4cd6755a90377180890788e476f99d480ea9bc8bb58"
+SRC_URI[md5sum] = "7484445cbcf04b3eacac892fe58f8d9f"
+SRC_URI[sha256sum] = "ae2e10aad530d95839b6f4d46cd41715eae6f0f1789310d793e9be21b3e7ae20"
 
 inherit autotools pkgconfig distro_features_check update-alternatives
 
