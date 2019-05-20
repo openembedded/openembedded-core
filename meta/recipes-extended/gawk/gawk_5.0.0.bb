@@ -19,8 +19,8 @@ SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "0256724a0af50cb83ac92f833488673d"
-SRC_URI[sha256sum] = "2b23d51503b2df9a41aa6fddc6002ad7ebf2a386ac19dc1b6be0dd48b0acf6db"
+SRC_URI[md5sum] = "45366249c13aae2bfb00e8e97c3f39b7"
+SRC_URI[sha256sum] = "2d686c9a5b7ba292bc3fa56bc84a1959d721a9d57970a76413156d4b8f1fc67d"
 
 inherit autotools gettext texinfo update-alternatives
 
