@@ -12,8 +12,8 @@ SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz \
            file://0001-Do-not-enforce-no-introspection-when-cross-building.patch \
            "
-SRC_URI[md5sum] = "5f04c09a06f6dbe4c4d3f003992145ce"
-SRC_URI[sha256sum] = "4a2cb6c1174540af13661636035992c2b179dfcb39f4d3fa7bee3c7e355c43ff"
+SRC_URI[md5sum] = "66c2ae89d6031b01337d78a2c57c75d5"
+SRC_URI[sha256sum] = "bd2ea602eba642509672812f3c99b77cbec2f3de02ba1cc8cb7206bf7de0ae2a"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
