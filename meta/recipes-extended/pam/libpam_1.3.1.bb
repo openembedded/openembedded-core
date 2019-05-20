@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7eb5c1bf854e8881005d673599ee74d3 \
                     file://libpamc/License;md5=a4da476a14c093fdc73be3c3c9ba8fb3 \
                     "
 
-SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
+SRC_URI = "https://github.com/linux-pam/linux-pam/releases/download/v${PV}/Linux-PAM-${PV}.tar.xz \
            file://99_pam \
            file://pam.d/common-account \
            file://pam.d/common-auth \
@@ -23,12 +23,11 @@ SRC_URI = "http://linux-pam.org/library/Linux-PAM-${PV}.tar.bz2 \
            file://fixsepbuild.patch \
            file://pam-security-abstract-securetty-handling.patch \
            file://pam-unix-nullok-secure.patch \
-           file://libpam-xtests-remove-bash-dependency.patch \
            file://crypt_configure.patch \
           "
 
-SRC_URI[md5sum] = "da4b2289b7cfb19583d54e9eaaef1c3a"
-SRC_URI[sha256sum] = "241aed1ef522f66ed672719ecf2205ec513fd0075ed80cda8e086a5b1a01d1bb"
+SRC_URI[md5sum] = "558ff53b0fc0563ca97f79e911822165"
+SRC_URI[sha256sum] = "eff47a4ecd833fbf18de9686632a70ee8d0794b79aecb217ebd0ce11db4cd0db"
 
 SRC_URI_append_libc-musl = " file://0001-Add-support-for-defining-missing-funcitonality.patch \
                              file://include_paths_header.patch \
@@ -44,8 +43,6 @@ EXTRA_OECONF = "--with-db-uniquename=_pam \
 		--disable-prelude"
 
 CFLAGS_append = " -fPIC "
-
-PR = "r5"
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
