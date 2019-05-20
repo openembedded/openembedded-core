@@ -14,8 +14,8 @@ SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@gnome_verdir("${PV}")}/${GNOMEBN}-${PV}
            file://0002-help-meson.build-disable-the-use-of-yelp.patch \
            file://0001-web-app-utils-Clean-up-ephy_web_application_create.patch \
            "
-SRC_URI[archive.md5sum] = "93faec353e9f62519859e6164350fd5d"
-SRC_URI[archive.sha256sum] = "a8284fb9bbc8b7914a154a8eac1598c8b59ae421e0d685146fb48198427926be"
+SRC_URI[archive.md5sum] = "2a6672b22a0fdb869e5f0a415ac2da34"
+SRC_URI[archive.sha256sum] = "8ae70d9feaba3754c63ab249deeef9b7a31161a372655b4214f148ea2f440cfa"
 
 FILES_${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers ${datadir}/metainfo"
 RDEPENDS_${PN} = "iso-codes adwaita-icon-theme gsettings-desktop-schemas"
