@@ -21,8 +21,8 @@ SRC_URI = "\
     file://pkg-config-native.in \
     file://pkg-config-esdk.in \
 "
-SRC_URI[md5sum] = "0c93492d7f001e5175b0347b5472e86d"
-SRC_URI[sha256sum] = "6135a3abb576672ba54a899860442ba185063f0f90dae5892f64f7bae8e1ece5"
+SRC_URI[md5sum] = "556bae2b9e0cc7b46e7c00083cb6d95d"
+SRC_URI[sha256sum] = "22b9ee38438901f9d60f180e5182821180854fa738fd071f593ea26a81da208c"
 
 inherit autotools
 
