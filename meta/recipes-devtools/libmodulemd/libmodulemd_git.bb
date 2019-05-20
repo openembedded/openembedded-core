@@ -7,14 +7,14 @@ SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https \
            file://0002-modulemd-v1-meson.build-do-not-generate-gir-or-gtkdo.patch \
            "
 
-PV = "2.2.3"
-SRCREV = "4c75c6f8b39ee57aebe8fd36ef84808e893048c0"
+PV = "2.4.0"
+SRCREV = "d0a3eda45e083e8fe8b329a2310a53abdbf1e4d6"
 
 S = "${WORKDIR}/git"
 
 inherit meson gobject-introspection
 
-EXTRA_OEMESON = "-Ddeveloper_build=false -Dbuild_api_v1=true -Dbuild_api_v2=false"
+EXTRA_OEMESON = "-Ddeveloper_build=false -Dbuild_api_v1=true -Dbuild_api_v2=true"
 
 DEPENDS += "glib-2.0 libyaml glib-2.0-native"
 
