@@ -7,8 +7,8 @@ inherit gnomebase upstream-version-is-even vala distro_features_check gobject-in
 
 DEPENDS = "glib-2.0-native glib-2.0 gtk+3"
 
-SRC_URI[archive.md5sum] = "5f6455ebc47e86f63b9579997137f391"
-SRC_URI[archive.sha256sum] = "238da19fdcc3ae9bb0c2d781d099fb8c6ec70c4dd3dffad80d230344ecc3f972"
+SRC_URI[archive.md5sum] = "b5c99a8f483a0defe7c7124a3220e412"
+SRC_URI[archive.sha256sum] = "413f8dfb8706760e0c649e2994bd10524ac0736601dd03ad2036293bed3bf141"
 
 GIR_MESON_OPTION = 'with_introspection'
 
