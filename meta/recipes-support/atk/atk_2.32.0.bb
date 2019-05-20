@@ -14,12 +14,9 @@ DEPENDS = "gettext-native glib-2.0"
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase gtk-doc gettext upstream-version-is-even gobject-introspection
 
-SRC_URI_append = " \
-                   file://0001-meson.build-enable-introspection-for-cross-compile.patch \
-                   file://0001-Switch-from-filename-to-basename.patch \
-                   "
-SRC_URI[archive.md5sum] = "769c85005d392ad17ffbc063f2d26454"
-SRC_URI[archive.sha256sum] = "dd4d90d4217f2a0c1fee708a555596c2c19d26fef0952e1ead1938ab632c027b"
+SRC_URI += " file://0001-meson.build-enable-introspection-for-cross-compile.patch"
+SRC_URI[archive.md5sum] = "c10b0b2af3c199e42caa6275b845c49d"
+SRC_URI[archive.sha256sum] = "cb41feda7fe4ef0daa024471438ea0219592baf7c291347e5a858bb64e4091cc"
 
 BBCLASSEXTEND = "native nativesdk"
 
