@@ -23,10 +23,11 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://include_array.patch \
            file://narrowing.patch \
            file://snprintf.patch \
+           file://0001-gstreamer-add-a-missing-format-string.patch \
            "
 
-SRC_URI[md5sum] = "576d69c598b3e36c73441052d02466de"
-SRC_URI[sha256sum] = "2e4ad1503fe482ceb5a83cf70ac9cd42f37eb718555a4d6844fe4c59a9214407"
+SRC_URI[md5sum] = "83012998e1b9f71abb37d8baf6f9c7e6"
+SRC_URI[sha256sum] = "019cb1f0d05bf6148b72c7a85734bcd006388a1c14132843ef9a1b2cb7b4321c"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
@@ -70,10 +71,6 @@ EXTRA_OECMAKE = " \
 		-DENABLE_MINIBROWSER=ON \
                 -DPYTHON_EXECUTABLE=`which python` \
 		"
-
-# GL/GLES header clash: both define the same thing, differently, on 32 bit x86
-EXTRA_OECMAKE_append_x86 = " -DUSE_GSTREAMER_GL=OFF "
-EXTRA_OECMAKE_append_x86-x32 = " -DUSE_GSTREAMER_GL=OFF "
 
 # Javascript JIT is not supported on ARC
 EXTRA_OECMAKE_append_arc = " -DENABLE_JIT=OFF "
