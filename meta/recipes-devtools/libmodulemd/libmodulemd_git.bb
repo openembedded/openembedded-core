@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=25a3927bff3ee4f5b21bcb0ed3fcd6bb"
 SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https \
            file://0001-spec_tmpl.sh-use-bin-sh-not-usr-bin-sh.patch \
            file://0002-modulemd-v1-meson.build-do-not-generate-gir-or-gtkdo.patch \
+           file://0001-v1-meson.build-explicitly-specify-the-v1-library-in-.patch \
            "
 
 PV = "2.4.0"
