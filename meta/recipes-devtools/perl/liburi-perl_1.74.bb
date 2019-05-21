@@ -33,6 +33,6 @@ do_install_prepend() {
 	rm -rf ${B}/t/file.t
 }
 
-RDEPENDS_${PN}-ptest += "libtest-needs-perl"
+RDEPENDS_${PN}-ptest += "libtest-needs-perl perl-module-test-more"
 
 BBCLASSEXTEND = "native"
