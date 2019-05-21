@@ -23,10 +23,10 @@ ALTERNATIVE_PRIORITY = "100"
 
 RDEPENDS_${PN} += "base-files"
 RDEPENDS_${PN}_class-nativesdk = ""
-RDEPENDS_${PN}-ptest += "make"
+RDEPENDS_${PN}-ptest += "make coreutils perl"
 
 DEPENDS_append_libc-glibc = " virtual/libc-locale"
-RDEPENDS_${PN}-ptest_append_libc-glibc = " locale-base-fr-fr locale-base-de-de"
+RDEPENDS_${PN}-ptest_append_libc-glibc = " locale-base-en-us locale-base-fr-fr locale-base-fr-fr.iso-8859-1 locale-base-de-de locale-base-zh-hk.big5-hkscs glibc-utils"
 
 USERADD_PACKAGES = "${PN}-ptest"
 USERADD_PARAM_${PN}-ptest = "--create-home --user-group test"
