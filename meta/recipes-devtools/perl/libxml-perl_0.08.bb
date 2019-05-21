@@ -26,3 +26,4 @@ do_compile() {
 	cpan_do_compile
 }
 
+RDEPENDS_${PN}-ptest += "libxml-parser-perl"
