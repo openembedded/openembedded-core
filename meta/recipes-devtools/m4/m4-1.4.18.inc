@@ -53,7 +53,7 @@ do_install_ptest() {
 }
 
 
-RDEPENDS_${PN}-ptest += "make"
+RDEPENDS_${PN}-ptest += "make coreutils diffutils"
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
      locale-base-fr-fr.iso-8859-1 \
 "
