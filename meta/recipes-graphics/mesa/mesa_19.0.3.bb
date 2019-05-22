@@ -3,6 +3,7 @@ require ${BPN}.inc
 SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-meson.build-check-for-all-linux-host_os-combinations.patch \
            file://0001-meson.build-make-TLS-GLX-optional-again.patch \
+           file://0001-Allow-enable-DRI-without-DRI-drivers.patch \
            "
 
 SRC_URI[md5sum] = "d03bf14e42c0e54ebae5730712ccc408"
