@@ -39,6 +39,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0005-Tests-use-modprobe-to-test-for-the-presence-of-lttng.patch \
            file://0006-Tests-check-for-lttng-modules-presence.patch \
            file://0007-Fix-getgrnam-is-not-MT-Safe-use-getgrnam_r.patch \
+           file://0008-Fix-check-for-lttng-modules-presence-before-testing.patch \
            "
 
 SRC_URI[md5sum] = "e88c521b5da6bb48a8187af633336ecc"
