@@ -5,8 +5,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-libc-compat.h-add-musl-workaround.patch \
           "
 
-SRC_URI[md5sum] = "d22107b4d7cfb999eeb8ad8a0aec1124"
-SRC_URI[sha256sum] = "df047302a39650ef832c07e8dab5df7a23218cd398bd310c8628e386161d20ba"
+SRC_URI[md5sum] = "a2b8349abf4ae00e92155fda22de4d5e"
+SRC_URI[sha256sum] = "dc5a980873eabf6b00c0be976b6e5562b1400d47d1d07d2ac35d5e5acbcf7bcf"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
