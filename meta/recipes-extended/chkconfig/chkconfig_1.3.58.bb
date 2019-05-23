@@ -23,6 +23,7 @@ SRC_URI = "git://github.com/fedora-sysv/chkconfig.git \
           "
 
 SRCREV = "3e0b3909ff6328d232b27b9c32f1a9309c6cd0a4"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
