@@ -28,10 +28,8 @@
 # of the executable from argv[0] and emulate the corresponding program, so
 # multiple copies of this script will exist under different names.
 
-import sys, os
+import sys, os, argparse
 
-olong = "--output="
-Elong = "--macro-expand="
 
 this_binary = sys.argv[0].split("/")[-1]
 
@@ -61,17 +59,8 @@ complex_binaries = "makeinfo texi2any".split()
 
 valid_binaries = simple_binaries + complex_binaries
 
-# For generating blank output files.
-def touch_file(path):
-    with open(path, "w"):
-        pass
-
 assert this_binary in valid_binaries, \
        this_binary + " is not one of " + ', '.join(valid_binaries)
-
-if "--version" in sys.argv:
-    print(version_str)
-    sys.exit(0)
 
 # For debugging
 log_interceptions = False
@@ -81,35 +70,27 @@ if log_interceptions:
 
 # Look through the options and flags, and if necessary, touch any output
 # files.
-arg_idx = 1
-while arg_idx < len(sys.argv):
-    arg = sys.argv [arg_idx]
+p = argparse.ArgumentParser()
+if this_binary in complex_binaries:
+    p.add_argument('-E', '--macro-expand', metavar='FILE')
+p.add_argument('-o', '--output', metavar='DEST')
+p.add_argument('--version', action='store_true')
 
-    if arg == "--":
-        break
+args, unknown = p.parse_known_args()
 
-    # Something like -I . can result in a need for this (specifically the .)
-    elif len(arg) < 2:
+if args.version:
+    print(version_str)
+    sys.exit(0)
+
+# Check for functionality that isn't implemented yet.
+assert not getattr(args, 'macro_expand', None), \
+    "-E/--macro-expand option not yet supported" + stub_msg
+
+# Check if -o or --output is specified.
+if args.output:
+    with open(args.output, 'w'):
         pass
-
-    # Check if -o or --output is specified. These can be used at most once.
-    elif arg[0] == '-' and arg[1] != '-' and arg[len(arg) - 1] == 'o':
-        touch_file(sys.argv[arg_idx + 1])
-        sys.exit(0)
-    elif arg.startswith(olong):
-        touch_file(arg.split("=")[1])
-        sys.exit(0)
-
-    # Check for functionality that isn't implemented yet.
-    else:
-        assert arg[0] != '-' or arg[1] == '-' or 'E' not in arg or \
-               this_binary in simple_binaries, \
-               "-E option not yet supported" + stub_msg
-
-        assert not arg.startswith(Elong), \
-               Elong[:-1] + " option not yet supported" + stub_msg
-
-    arg_idx += 1
+    sys.exit(0)
 
 # The -o/--output option overrides the default. For makeinfo and texi2any,
 # that default is to look for a @setfilename command in the input file.
