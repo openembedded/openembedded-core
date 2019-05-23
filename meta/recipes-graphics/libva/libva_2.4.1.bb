@@ -19,8 +19,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
 SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "cfc69c2a5f526dd1858e098fb8eebfa6"
-SRC_URI[sha256sum] = "99263056c21593a26f2ece812aee6fe60142b49e6cd46cb33c8dddf18fc19391"
+SRC_URI[md5sum] = "5b5ace9de3f07cb7b8f4d19b6979adf0"
+SRC_URI[sha256sum] = "e9e053908591b121793eaa5d8aa37675b4cd3af4b12f1f377dff4767f39cee70"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva/releases"
 
