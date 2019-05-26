@@ -25,11 +25,10 @@ SRC_URI = " \
     file://gtk-doc-tweaks.patch \
     file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
     file://add-a-target-to-compile-tests.patch \
-    file://0002-gstconfig.h.in-initial-RISC-V-support.patch \
     file://run-ptest \
 "
-SRC_URI[md5sum] = "f67fbbc42bd85a0701df119f52fb52bd"
-SRC_URI[sha256sum] = "f94f6696c5f05a3b3a9183e39c5f5c0b779f75a04c0efa497e7920afa985ffc7"
+SRC_URI[md5sum] = "862b7e4263d946bc2ef31b3c582e5587"
+SRC_URI[sha256sum] = "0e8e2f7118be437cba879353970cf83c2acced825ecb9275ba05d9186ef07c00"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                    "
@@ -55,6 +54,7 @@ PACKAGES += "${PN}-bash-completion"
 FILES_${PN} += "${libdir}/gstreamer-1.0/*.so"
 FILES_${PN}-dev += "${libdir}/gstreamer-1.0/*.la ${libdir}/gstreamer-1.0/*.a ${libdir}/gstreamer-1.0/include"
 FILES_${PN}-bash-completion += "${datadir}/bash-completion/completions/ ${datadir}/bash-completion/helpers/gst*"
+FILES_${PN}-dbg += "${datadir}/gdb ${datadir}/gstreamer-1.0/gdb"
 
 RDEPENDS_${PN}-ptest += "make"
 
