@@ -1,8 +1,7 @@
 require gstreamer1.0-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c54ce9345727175ff66d17b67ff51f58 \
-                    file://COPYING.LIB;md5=6762ed442b3822387a51c92d928ead0d \
+LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
                     file://common/coverage/coverage-report.pl;beginline=2;endline=17;md5=a4e1830fce078028c8f0974161272607"
 
 SRC_URI = " \
@@ -11,18 +10,16 @@ SRC_URI = " \
             file://0003-ssaparse-enhance-SSA-text-lines-parsing.patch \
             file://make-gio_unix_2_0-dependency-configurable.patch \
             file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
-            file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running.patch \
             file://0002-Makefile.am-prefix-calls-to-pkg-config-with-PKG_CONF.patch \
             file://0003-riff-add-missing-include-directories-when-calling-in.patch \
             file://0004-rtsp-drop-incorrect-reference-to-gstreamer-sdp-in-Ma.patch \
+            file://0005-viv-fb-Make-sure-config.h-is-included.patch \
             file://0009-glimagesink-Downrank-to-marginal.patch \
             file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
-            file://0010-gl-Add-switch-for-explicitely-enabling-disabling-GBM.patch \
-            file://0011-gl-Add-switches-for-explicitely-enabling-disabling-P.patch \
             file://link-with-libvchostif.patch \
             "
-SRC_URI[md5sum] = "4dbe20c1bf44191c2b8833234df5cb2a"
-SRC_URI[sha256sum] = "ca6139490e48863e7706d870ff4e8ac9f417b56f3b9e4b3ce490c13b09a77461"
+SRC_URI[md5sum] = "41dde92930710c75cdb49169c5cc6dfc"
+SRC_URI[sha256sum] = "4093aa7b51e28fb24dfd603893fead8d1b7782f088b05ed0f22a21ef176fb5ae"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 
