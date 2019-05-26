@@ -7,10 +7,9 @@ SRC_URI = " \
     file://avoid-including-sys-poll.h-directly.patch \
     file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
     file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
-    file://0001-Makefile.am-don-t-hardcode-libtool-name-when-running.patch \
 "
-SRC_URI[md5sum] = "5d20a91d027708abcf924f6c1279dd25"
-SRC_URI[sha256sum] = "910b4e0e2e897e8b6d06767af1779d70057c309f67292f485ff988d087aa0de5"
+SRC_URI[md5sum] = "e9e562d86c1527c44d904500dd35e326"
+SRC_URI[sha256sum] = "22139de35626ada6090bdfa3423b27b7fc15a0198331d25c95e6b12cb1072b05"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
@@ -69,6 +68,7 @@ PACKAGECONFIG[resindvd]        = "--enable-resindvd,--disable-resindvd,libdvdrea
 PACKAGECONFIG[rsvg]            = "--enable-rsvg,--disable-rsvg,librsvg"
 PACKAGECONFIG[rtmp]            = "--enable-rtmp,--disable-rtmp,rtmpdump"
 PACKAGECONFIG[sbc]             = "--enable-sbc,--disable-sbc,sbc"
+PACKAGECONFIG[sctp]            = "--enable-sctp,--disable-sctp,usrsctp"
 PACKAGECONFIG[smoothstreaming] = "--enable-smoothstreaming,--disable-smoothstreaming,libxml2"
 PACKAGECONFIG[sndfile]         = "--enable-sndfile,--disable-sndfile,libsndfile1"
 PACKAGECONFIG[srtp]            = "--enable-srtp,--disable-srtp,libsrtp"
@@ -84,10 +84,10 @@ PACKAGECONFIG[webrtc]          = "--enable-webrtc,--disable-webrtc,libnice"
 PACKAGECONFIG[webrtcdsp]       = "--enable-webrtcdsp,--disable-webrtcdsp,webrtc-audio-processing"
 
 # these plugins have no corresponding library in OE-core or meta-openembedded:
-#   openni2 winks direct3d directsound winscreencap acm apple_media iqa
-#   android_media avc bs2b chromaprint daala dts fdkaac gme gsm kate ladspa
+#   openni2 winks direct3d directsound winscreencap apple_media iqa
+#   android_media avc bs2b chromaprint dts fdkaac gme gsm kate ladspa
 #   lv2 mpeg2enc mplex musepack nvenc ofa opensles soundtouch
-#   spandsp spc teletextdec vdpau wasapi x265 zbar
+#   spandsp teletextdec vdpau wasapi wpe x265 zbar
 
 EXTRA_OECONF += " \
     --enable-decklink \
@@ -96,15 +96,12 @@ EXTRA_OECONF += " \
     --enable-ipcpipeline \
     --enable-netsim \
     --enable-shm \
-    --enable-vcd \
-    --disable-acm \
     --disable-android_media \
     --disable-aom \
     --disable-apple_media \
     --disable-avc \
     --disable-bs2b \
     --disable-chromaprint \
-    --disable-daala \
     --disable-direct3d \
     --disable-directsound \
     --disable-dts \
@@ -125,7 +122,6 @@ EXTRA_OECONF += " \
     --disable-opensles \
     --disable-soundtouch \
     --disable-spandsp \
-    --disable-spc \
     --disable-srt \
     --disable-teletextdec \
     --disable-vdpau \
@@ -133,6 +129,7 @@ EXTRA_OECONF += " \
     --disable-wildmidi \
     --disable-winks \
     --disable-winscreencap \
+    --disable-wpe \
     --disable-x265 \
     --disable-zbar \
     ${@bb.utils.contains("TUNE_FEATURES", "mx32", "--disable-yadif", "", d)} \
