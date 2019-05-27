@@ -639,6 +639,18 @@ python () {
     if needsrcrev:
         d.setVar("SRCPV", "${@bb.fetch2.get_srcrev(d)}")
 
+        # Gather all named SRCREVs to add to the sstate hash calculation
+        # This anonymous python snippet is called multiple times so we
+        # need to be careful to not double up the appends here and cause
+        # the base hash to mismatch the task hash
+        for uri in srcuri.split():
+            parm = bb.fetch.decodeurl(uri)[5]
+            uri_names = parm.get("name", "").split(",")
+            for uri_name in filter(None, uri_names):
+                srcrev_name = "SRCREV_{}".format(uri_name)
+                if srcrev_name not in (d.getVarFlag("do_fetch", "vardeps") or "").split():
+                    d.appendVarFlag("do_fetch", "vardeps", " {}".format(srcrev_name))
+
     set_packagetriplet(d)
 
     # 'multimachine' handling
