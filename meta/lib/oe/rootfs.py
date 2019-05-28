@@ -205,28 +205,29 @@ class Rootfs(object, metaclass=ABCMeta):
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
-
+        bb.note("Rootfs.create: after_progress_reporter: diff = %s" % (str(datetime.now() - total_start_time)))
         # call the package manager dependent create method
         self._create()
+        bb.note("Rootfs.create: after_self_create: diff = %s" % (str(datetime.now() - total_start_time)))
 
         sysconfdir = self.image_rootfs + self.d.getVar('sysconfdir')
         bb.utils.mkdirhier(sysconfdir)
         with open(sysconfdir + "/version", "w+") as ver:
             ver.write(self.d.getVar('BUILDNAME') + "\n")
+        bb.note("Rootfs.create: after_ver_write: diff = %s" % (str(datetime.now() - total_start_time)))
 
-        start_time = datetime.now()
         execute_pre_post_process(self.d, rootfs_post_install_cmds)
-        end_time = datetime.now()
-        diff_time = str(end_time - start_time)
-        bb.note("Rootfs.create: rootfs_post_install: diff = %s, location = %s" % (diff_time, rootfs_post_install_cmds))
+        bb.note("Rootfs.create: after_rootfs_post_install_cmds: diff = %s" % (str(datetime.now() - total_start_time)))
 
         self.pm.run_intercepts()
+        bb.note("Rootfs.create: after_self_pm_run_intercepts: diff = %s" % (str(datetime.now() - total_start_time)))
 
-        start_time = datetime.now()
         execute_pre_post_process(self.d, post_process_cmds)
+        bb.note("Rootfs.create: after_post_process_cmds: diff = %s" % (str(datetime.now() - total_start_time)))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("Rootfs.create: after_progress_reporter_next_stage: diff = %s" % (str(datetime.now() - total_start_time)))
 
         if bb.utils.contains("IMAGE_FEATURES", "read-only-rootfs",
                          True, False, self.d):
@@ -235,34 +236,41 @@ class Rootfs(object, metaclass=ABCMeta):
                 bb.fatal("The following packages could not be configured "
                          "offline and rootfs is read-only: %s" %
                          delayed_postinsts)
+        bb.note("Rootfs.create: after_read_only_rootfs: diff = %s" % (str(datetime.now() - total_start_time)))
 
         if self.d.getVar('USE_DEVFS') != "1":
             self._create_devfs()
+        bb.note("Rootfs.create: after_USE_DEVFS: diff = %s" % (str(datetime.now() - total_start_time)))
 
         self._uninstall_unneeded()
+        bb.note("Rootfs.create: after_uninstall_unneeded: diff = %s" % (str(datetime.now() - total_start_time)))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("Rootfs.create: after_progress_reporter_next_stage_second: diff = %s" % (str(datetime.now() - total_start_time)))
 
         self._insert_feed_uris()
+        bb.note("Rootfs.create: after_insert_feed_uris: diff = %s" % (str(datetime.now() - total_start_time)))
 
         self._run_ldconfig()
+        bb.note("Rootfs.create: after_run_ldconfig: diff = %s" % (str(datetime.now() - total_start_time)))
 
         if self.d.getVar('USE_DEPMOD') != "0":
             self._generate_kernel_module_deps()
+        bb.note("Rootfs.create: after_USE_DEPMOD: diff = %s" % (str(datetime.now() - total_start_time)))
 
         self._cleanup()
+        bb.note("Rootfs.create: after_cleanup: diff = %s" % (str(datetime.now() - total_start_time)))
         self._log_check()
+        bb.note("Rootfs.create: after_log_check: diff = %s" % (str(datetime.now() - total_start_time)))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("Rootfs.create: after_progress_reporter_next_stage_third: diff = %s" % (str(datetime.now() - total_start_time)))
 
         end_time = datetime.now()
-        diff_time = str(end_time - start_time)
-        bb.note("Rootfs.create: after_post_process: diff = %s, location = %s" % (diff_time, post_process_cmds))
-
         total_diff_time = str(end_time - total_start_time)
-        bb.note("Rootfs.create_inner_check: after_post_process: diff = %s, location = %s" % (total_diff_time, "inner_check"))
+        bb.note("Rootfs.create_inner_check: total_diff: diff = %s, location = %s" % (total_diff_time, "inner_check"))
 
     def _uninstall_unneeded(self):
         # Remove unneeded init script symlinks
