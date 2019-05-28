@@ -43,7 +43,7 @@ do_unpack_append() {
 }
 
 do_copy_perlcross() {
-    cp -rf ${WORKDIR}/perl-cross*/* ${S}
+    cp -rfp ${WORKDIR}/perl-cross*/* ${S}
 }
 
 do_configure_class-target() {
