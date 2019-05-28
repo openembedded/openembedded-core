@@ -8,7 +8,7 @@ import shutil
 import os
 import subprocess
 import re
-
+from datetime import datetime
 
 class Rootfs(object, metaclass=ABCMeta):
     """
@@ -192,7 +192,11 @@ class Rootfs(object, metaclass=ABCMeta):
 
         bb.utils.mkdirhier(self.deploydir)
 
+        start_time = datetime.now()
         execute_pre_post_process(self.d, pre_process_cmds)
+        end_time = datetime.now()
+        diff_time = str(end_time - start_time)
+        bb.note("Rootfs.create: pre_process: diff = %s, location = %s" % (diff_time, pre_process_cmds))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
@@ -205,10 +209,15 @@ class Rootfs(object, metaclass=ABCMeta):
         with open(sysconfdir + "/version", "w+") as ver:
             ver.write(self.d.getVar('BUILDNAME') + "\n")
 
+        start_time = datetime.now()
         execute_pre_post_process(self.d, rootfs_post_install_cmds)
+        end_time = datetime.now()
+        diff_time = str(end_time - start_time)
+        bb.note("Rootfs.create: rootfs_post_install: diff = %s, location = %s" % (diff_time, rootfs_post_install_cmds))
 
         self.pm.run_intercepts()
 
+        start_time = datetime.now()
         execute_pre_post_process(self.d, post_process_cmds)
 
         if self.progress_reporter:
@@ -243,6 +252,9 @@ class Rootfs(object, metaclass=ABCMeta):
         if self.progress_reporter:
             self.progress_reporter.next_stage()
 
+        end_time = datetime.now()
+        diff_time = str(end_time - start_time)
+        bb.note("Rootfs.create: after_post_process: diff = %s, location = %s" % (diff_time, post_process_cmds))
 
     def _uninstall_unneeded(self):
         # Remove unneeded init script symlinks
@@ -954,8 +966,10 @@ def variable_depends(d, manifest_dir=None):
     return cls._depends_list()
 
 def create_rootfs(d, manifest_dir=None, progress_reporter=None, logcatcher=None):
+    start_time = datetime.now()
     env_bkp = os.environ.copy()
 
+    start_time = datetime.now()
     img_type = d.getVar('IMAGE_PKGTYPE')
     if img_type == "rpm":
         RpmRootfs(d, manifest_dir, progress_reporter, logcatcher).create()
@@ -963,9 +977,20 @@ def create_rootfs(d, manifest_dir=None, progress_reporter=None, logcatcher=None)
         OpkgRootfs(d, manifest_dir, progress_reporter, logcatcher).create()
     elif img_type == "deb":
         DpkgRootfs(d, manifest_dir, progress_reporter, logcatcher).create()
+    end_time = datetime.now()
+    diff_time = str(end_time - start_time)
+    bb.note("rootfs.py.create_rootfs: pre_process: diff = %s, location = %s" % (diff_time, "Rootfs.create()"))
 
+    start_time = datetime.now()
     os.environ.clear()
+    end_time = datetime.now()
+    diff_time = str(end_time - start_time)
+    bb.note("rootfs.py.create_rootfs: pre_process: diff = %s, location = %s" % (diff_time, "os.environ.clear"))
+    start_time = datetime.now()
     os.environ.update(env_bkp)
+    end_time = datetime.now()
+    diff_time = str(end_time - start_time)
+    bb.note("rootfs.py.create_rootfs: pre_process: diff = %s, location = %s" % (diff_time, "os.environ.update"))
 
 
 def image_list_installed_packages(d, rootfs_dir=None):

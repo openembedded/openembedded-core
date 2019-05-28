@@ -187,6 +187,7 @@ fakeroot python do_rootfs () {
     from oe.rootfs import create_rootfs
     from oe.manifest import create_manifest
     import logging
+    from datetime import datetime
 
     logger = d.getVar('BB_TASK_LOGGER', False)
     if logger:
@@ -242,7 +243,11 @@ fakeroot python do_rootfs () {
 
     # generate rootfs
     d.setVarFlag('REPRODUCIBLE_TIMESTAMP_ROOTFS', 'export', '1')
+    start_time = datetime.now()
     create_rootfs(d, progress_reporter=progress_reporter, logcatcher=logcatcher)
+    end_time = datetime.now()
+    diff_time = str(end_time - start_time)
+    bb.note("image_class_create_rootfs: diff = %s, location = %s" % (diff_time, ":DEBUG:"))
 
     progress_reporter.finish()
 }
