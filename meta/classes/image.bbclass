@@ -259,6 +259,7 @@ addtask rootfs after do_prepare_recipe_sysroot
 
 fakeroot python do_image () {
     from oe.utils import execute_pre_post_process
+    from datetime import datetime
 
     d.setVarFlag('REPRODUCIBLE_TIMESTAMP_ROOTFS', 'export', '1')
     pre_process_cmds = d.getVar("IMAGE_PREPROCESS_COMMAND")
@@ -275,6 +276,7 @@ addtask do_image after do_rootfs
 
 fakeroot python do_image_complete () {
     from oe.utils import execute_pre_post_process
+    from datetime import datetime
 
     post_process_cmds = d.getVar("IMAGE_POSTPROCESS_COMMAND")
 
@@ -291,6 +293,7 @@ do_image_complete[sstate-outputdirs] = "${DEPLOY_DIR_IMAGE}"
 do_image_complete[stamp-extra-info] = "${MACHINE_ARCH}"
 addtask do_image_complete after do_image before do_build
 python do_image_complete_setscene () {
+    from datetime import datetime
     start_time = datetime.now()
     sstate_setscene(d)
     bb.note("image_class-do_image_complete_setscene: diff = %s, location = %s" % (str(datetime.now() - start_time), "fakeroot python do_image_complete_setscene"))
