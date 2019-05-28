@@ -26,8 +26,15 @@ RDEPENDS_${PN}_class-nativesdk = ""
 RDEPENDS_${PN}-ptest += "make coreutils perl"
 
 DEPENDS_append_libc-glibc = " virtual/libc-locale"
-RDEPENDS_${PN}-ptest_append_libc-glibc = " locale-base-en-us locale-base-fr-fr locale-base-fr-fr.iso-8859-1 locale-base-de-de locale-base-zh-hk.big5-hkscs glibc-utils"
-
+RDEPENDS_${PN}-ptest_append_libc-glibc = " \
+	glibc-gconv-iso8859-1 \
+	glibc-utils \
+	locale-base-de-de \
+	locale-base-en-us \
+	locale-base-fr-fr \
+	locale-base-fr-fr.iso-8859-1 \
+	locale-base-zh-hk.big5-hkscs \
+	"
 USERADD_PACKAGES = "${PN}-ptest"
 USERADD_PARAM_${PN}-ptest = "--create-home --user-group test"
 
