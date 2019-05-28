@@ -183,6 +183,7 @@ class Rootfs(object, metaclass=ABCMeta):
         return None
 
     def create(self):
+        total_start_time = datetime.now()
         bb.note("###### Generate rootfs #######")
         pre_process_cmds = self.d.getVar("ROOTFS_PREPROCESS_COMMAND")
         post_process_cmds = self.d.getVar("ROOTFS_POSTPROCESS_COMMAND")
@@ -255,6 +256,9 @@ class Rootfs(object, metaclass=ABCMeta):
         end_time = datetime.now()
         diff_time = str(end_time - start_time)
         bb.note("Rootfs.create: after_post_process: diff = %s, location = %s" % (diff_time, post_process_cmds))
+
+        total_diff_time = str(end_time - total_start_time)
+        bb.note("Rootfs.create_inner_check: after_post_process: diff = %s, location = %s" % (total_diff_time, "inner_check"))
 
     def _uninstall_unneeded(self):
         # Remove unneeded init script symlinks
