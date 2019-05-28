@@ -246,6 +246,7 @@ def cpu_count():
     return multiprocessing.cpu_count()
 
 def execute_pre_post_process(d, cmds):
+    from datetime import datetime
     if cmds is None:
         return
 
@@ -253,7 +254,11 @@ def execute_pre_post_process(d, cmds):
         cmd = cmd.strip()
         if cmd != '':
             bb.note("Executing %s ..." % cmd)
+            start_time = datetime.now()
             bb.build.exec_func(cmd, d)
+            end_time = datetime.now()
+            diff_time = str(end_time - start_time)
+            bb.note("utils.py.execute_pre_post_process: diff = %s, command = %s" % (diff_time, cmd))
 
 # For each item in items, call the function 'target' with item as the first 
 # argument, extraargs as the other arguments and handle any exceptions in the
