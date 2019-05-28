@@ -27,6 +27,10 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/hurd_path.patch \
            file://debian/ignore_strmerge.diff \
            file://debian/disable_werror.patch \
+           file://CVE-2019-7149.patch \
+           file://CVE-2019-7150.patch \
+           file://CVE-2019-7146_p1.patch \
+           file://CVE-2019-7146_p2.patch \
            "
 SRC_URI_append_libc-musl = " file://0008-build-Provide-alternatives-for-glibc-assumptions-hel.patch"
 
