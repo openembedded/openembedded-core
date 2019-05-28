@@ -14,3 +14,4 @@ SRC_URI[md5sum] = "75012084f14fb63a84b116e66c6e94fb"
 SRC_URI[sha256sum] = "6ce29b3eb0bb16a7387bc609c39455fd13064bdcde5a4d185fab3a0c71946e16"
 
 RRECOMMENDS_${PN} = "connman-conf"
+RCONFLICTS_${PN} = "networkmanager"
