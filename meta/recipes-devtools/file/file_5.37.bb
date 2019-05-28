@@ -16,7 +16,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
 
 SRC_URI = "git://github.com/file/file.git"
 
-SRCREV = "f3a4b9ada3ca99e62c62b9aa78eee4935a8094fe"
+SRCREV = "a0d5b0e4e9f97d74a9911e95cedd579852e25398"
 S = "${WORKDIR}/git"
 
 inherit autotools update-alternatives
