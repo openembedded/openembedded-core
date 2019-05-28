@@ -16,6 +16,7 @@ class Rootfs(object, metaclass=ABCMeta):
     """
 
     def __init__(self, d, progress_reporter=None, logcatcher=None):
+        start_time = datetime.now()
         self.d = d
         self.pm = None
         self.image_rootfs = self.d.getVar('IMAGE_ROOTFS')
@@ -24,6 +25,9 @@ class Rootfs(object, metaclass=ABCMeta):
         self.logcatcher = logcatcher
 
         self.install_order = Manifest.INSTALL_ORDER
+        end_time = datetime.now()
+        diff_time = str(end_time - start_time)
+        bb.note("Rootfs.__init__: diff = %s" % (diff_time))
 
     @abstractmethod
     def _create(self):
@@ -508,7 +512,11 @@ class RpmRootfs(Rootfs):
 
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
+        start_time = datetime.now()
         super(DpkgOpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
+        end_time = datetime.now()
+        diff_time = str(end_time - start_time)
+        bb.note("DpkgOpkgRootfs.__init__: diff = %s" % (diff_time))
 
     def _get_pkgs_postinsts(self, status_file):
         def _get_pkg_depends_list(pkg_depends):
@@ -695,6 +703,7 @@ class DpkgRootfs(DpkgOpkgRootfs):
 
 class OpkgRootfs(DpkgOpkgRootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
+        start_time = datetime.now()
         super(OpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
         self.log_check_regex = '(exit 1|Collected errors)'
 
@@ -717,6 +726,9 @@ class OpkgRootfs(DpkgOpkgRootfs):
             self.pm.recover_packaging_data()
 
         bb.utils.remove(self.d.getVar('MULTILIB_TEMP_ROOTFS'), True)
+        end_time = datetime.now()
+        diff_time = str(end_time - start_time)
+        bb.note("OpkgRootfs.__init__: diff = %s" % (diff_time))
 
     def _prelink_file(self, root_dir, filename):
         bb.note('prelink %s in %s' % (filename, root_dir))
