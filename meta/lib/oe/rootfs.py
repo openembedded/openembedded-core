@@ -899,32 +899,42 @@ class OpkgRootfs(DpkgOpkgRootfs):
         return False
 
     def _create(self):
+        start_time = datetime.now()
         pkgs_to_install = self.manifest.parse_initial_manifest()
         opkg_pre_process_cmds = self.d.getVar('OPKG_PREPROCESS_COMMANDS')
         opkg_post_process_cmds = self.d.getVar('OPKG_POSTPROCESS_COMMANDS')
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "prepare_cmds"))
 
         # update PM index files
         self.pm.write_index()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "write_index"))
 
         execute_pre_post_process(self.d, opkg_pre_process_cmds)
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "execute_pre_post_process"))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
             # Steps are a bit different in order, skip next
             self.progress_reporter.next_stage()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "progress_reporter"))
 
         self.pm.update()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "update"))
 
         self.pm.handle_bad_recommendations()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "handle_bad_recommendations"))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "progress_reporter_2"))
 
         if self.inc_opkg_image_gen == "1":
             self._remove_extra_packages(pkgs_to_install)
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "_remove_extra_packages"))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "progress_reporter_3"))
 
         for pkg_type in self.install_order:
             if pkg_type in pkgs_to_install:
@@ -936,26 +946,34 @@ class OpkgRootfs(DpkgOpkgRootfs):
 
                 self.pm.install(pkgs_to_install[pkg_type],
                                 [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "package_install"))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "progress_reporter_4"))
 
         self.pm.install_complementary()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "install_complementary"))
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "progress_reporter_5"))
 
         opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
         opkg_dir = os.path.join(opkg_lib_dir, 'opkg')
         self._setup_dbg_rootfs([opkg_dir])
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "_setup_dbg_rootfs"))
 
         execute_pre_post_process(self.d, opkg_post_process_cmds)
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "opkg_post_process_cmds"))
+        bb.note(opkg_post_process_cmds)
 
         if self.inc_opkg_image_gen == "1":
             self.pm.backup_packaging_data()
-
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "backup_packaging_data"))
         if self.progress_reporter:
             self.progress_reporter.next_stage()
+        bb.note("rootfs.py.OpkgRootfs._create: diff = %s, location = %s" % (str(datetime.now() - start_time), "progress_reporter_last"))
 
     @staticmethod
     def _depends_list():
