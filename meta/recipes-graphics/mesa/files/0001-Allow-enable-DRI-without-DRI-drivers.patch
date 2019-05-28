@@ -3,7 +3,7 @@ From: Andrei Gherzan <andrei@gherzan.ro>
 Date: Wed, 22 May 2019 18:32:07 +0100
 Subject: [PATCH] Allow enable DRI without DRI drivers
 
-Upstream-status: Pending
+Upstream-Status: Pending
 Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
 ---
  meson.build       | 2 +-

@@ -11,6 +11,7 @@ Also delete a duplicate line.
 
 Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
 Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
+Upstream-Status: Pending
 ---
  meson.build | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
