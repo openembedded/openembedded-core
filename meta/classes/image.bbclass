@@ -263,7 +263,11 @@ fakeroot python do_image () {
     d.setVarFlag('REPRODUCIBLE_TIMESTAMP_ROOTFS', 'export', '1')
     pre_process_cmds = d.getVar("IMAGE_PREPROCESS_COMMAND")
 
+    start_time = datetime.now()
     execute_pre_post_process(d, pre_process_cmds)
+    end_time = datetime.now()
+    diff_time = str(end_time - start_time)
+    bb.note("image_class-do_image: diff = %s, location = %s" % (diff_time, "fakeroot python do_image"))
 }
 do_image[dirs] = "${TOPDIR}"
 do_image[umask] = "022"
@@ -274,7 +278,9 @@ fakeroot python do_image_complete () {
 
     post_process_cmds = d.getVar("IMAGE_POSTPROCESS_COMMAND")
 
+    start_time = datetime.now()
     execute_pre_post_process(d, post_process_cmds)
+    bb.note("image_class-do_image_complete: diff = %s, location = %s" % (str(datetime.now() - start_time), "fakeroot python do_image_complete"))
 }
 do_image_complete[dirs] = "${TOPDIR}"
 do_image_complete[umask] = "022"
@@ -285,7 +291,9 @@ do_image_complete[sstate-outputdirs] = "${DEPLOY_DIR_IMAGE}"
 do_image_complete[stamp-extra-info] = "${MACHINE_ARCH}"
 addtask do_image_complete after do_image before do_build
 python do_image_complete_setscene () {
+    start_time = datetime.now()
     sstate_setscene(d)
+    bb.note("image_class-do_image_complete_setscene: diff = %s, location = %s" % (str(datetime.now() - start_time), "fakeroot python do_image_complete_setscene"))
 }
 addtask do_image_complete_setscene
 
