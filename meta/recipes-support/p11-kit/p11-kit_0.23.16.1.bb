@@ -9,7 +9,7 @@ DEPENDS = "libtasn1 libffi"
 SRC_URI = "git://github.com/p11-glue/p11-kit \
            file://0001-LINGUAS-drop-the-languages-for-which-upstream-does-n.patch \
            "
-SRCREV = "1ba80c67c492f25581ed97c8c31ffb5f20636d06"
+SRCREV = "c689917b393379d288b868f70b2f7b7f6aafe430"
 S = "${WORKDIR}/git"
 
 AUTOTOOLS_AUXDIR = "${S}/build/litter"
