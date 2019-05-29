@@ -57,7 +57,7 @@ fakeroot create_sdk_files() {
 }
 
 
-fakeroot tar_sdk() {
+fakeroot archive_sdk() {
 	cd ${SDK_OUTPUT}/${SDKPATH}
 
 	DEST="./${SDK_ARCH}-${SDK_OS}"
