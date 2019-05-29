@@ -81,7 +81,7 @@ do_install_ptest() {
 	done
 }
 
-RDEPENDS_${PN}-ptest += "bash"
+RDEPENDS_${PN}-ptest += "bash e2fsprogs-mke2fs"
 RRECOMMENDS_${PN}-ptest += " \
     coreutils \
     util-linux \
