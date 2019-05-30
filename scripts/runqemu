@@ -491,12 +491,13 @@ class BaseConfig(object):
         yocto_paravirt_kvm_wiki = "https://wiki.yoctoproject.org/wiki/Running_an_x86_Yocto_Linux_image_under_QEMU_KVM"
         dev_kvm = '/dev/kvm'
         dev_vhost = '/dev/vhost-net'
-        with open('/proc/cpuinfo', 'r') as f:
-            kvm_cap = re.search('vmx|svm', "".join(f.readlines()))
-        if not kvm_cap:
-            logger.error("You are trying to enable KVM on a cpu without VT support.")
-            logger.error("Remove kvm from the command-line, or refer:")
-            raise RunQemuError(yocto_kvm_wiki)
+        if self.qemu_system.endswith(('i386', 'x86_64')):
+            with open('/proc/cpuinfo', 'r') as f:
+                kvm_cap = re.search('vmx|svm', "".join(f.readlines()))
+            if not kvm_cap:
+                logger.error("You are trying to enable KVM on a cpu without VT support.")
+                logger.error("Remove kvm from the command-line, or refer:")
+                raise RunQemuError(yocto_kvm_wiki)
 
         if not os.path.exists(dev_kvm):
             logger.error("Missing KVM device. Have you inserted kvm modules?")
@@ -703,6 +704,7 @@ class BaseConfig(object):
         else:
             os.putenv('QEMU_AUDIO_DRV', 'none')
 
+        self.check_qemu_system()
         self.check_kvm()
         self.check_fstype()
         self.check_rootfs()
@@ -1128,21 +1130,23 @@ class BaseConfig(object):
 
         return 'qemu-system-%s' % qbsys
 
-    def setup_final(self):
+    def check_qemu_system(self):
         qemu_system = self.get('QB_SYSTEM_NAME')
         if not qemu_system:
             qemu_system = self.guess_qb_system()
         if not qemu_system:
             raise RunQemuError("Failed to boot, QB_SYSTEM_NAME is NULL!")
+        self.qemu_system = qemu_system
 
-        qemu_bin = os.path.join(self.bindir_native, qemu_system)
+    def setup_final(self):
+        qemu_bin = os.path.join(self.bindir_native, self.qemu_system)
 
         # It is possible to have qemu-native in ASSUME_PROVIDED, and it won't
         # find QEMU in sysroot, it needs to use host's qemu.
         if not os.path.exists(qemu_bin):
             logger.info("QEMU binary not found in %s, trying host's QEMU" % qemu_bin)
             for path in (os.environ['PATH'] or '').split(':'):
-                qemu_bin_tmp = os.path.join(path, qemu_system)
+                qemu_bin_tmp = os.path.join(path, self.qemu_system)
                 logger.info("Trying: %s" % qemu_bin_tmp)
                 if os.path.exists(qemu_bin_tmp):
                     qemu_bin = qemu_bin_tmp
