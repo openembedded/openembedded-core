@@ -603,6 +603,8 @@ FILES_udev += "${base_sbindir}/udevd \
 
 FILES_udev-hwdb = "${rootlibexecdir}/udev/hwdb.d"
 
+RCONFLICTS_${PN} = "tiny-init ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolvconf', '', d)}"
+
 INITSCRIPT_PACKAGES = "udev"
 INITSCRIPT_NAME_udev = "systemd-udevd"
 INITSCRIPT_PARAMS_udev = "start 03 S ."
