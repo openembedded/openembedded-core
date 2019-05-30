@@ -73,8 +73,13 @@ class BootimgEFIPlugin(SourcePlugin):
 
             kernel = "/bzImage"
 
-            grubefi_conf += "linux %s root=%s rootwait %s\n" \
-                % (kernel, creator.rootdev, bootloader.append)
+            label = source_params.get('label')
+            label_conf = "root=%s" % creator.rootdev
+            if label:
+                label_conf = "LABEL=%s" % label
+
+            grubefi_conf += "linux %s %s rootwait %s\n" \
+                % (kernel, label_conf, bootloader.append)
 
             if initrd:
                grubefi_conf += "initrd /%s\n" % initrd
@@ -144,8 +149,14 @@ class BootimgEFIPlugin(SourcePlugin):
             boot_conf = ""
             boot_conf += "title %s\n" % (title if title else "boot")
             boot_conf += "linux %s\n" % kernel
-            boot_conf += "options LABEL=Boot root=%s %s\n" % \
-                             (creator.rootdev, bootloader.append)
+
+            label = source_params.get('label')
+            label_conf = "LABEL=Boot root=%s" % creator.rootdev
+            if label:
+                label_conf = "LABEL=%s" % label
+
+            boot_conf += "options %s %s\n" % \
+                             (label_conf, bootloader.append)
 
             if initrd:
                 boot_conf += "initrd /%s\n" % initrd
