@@ -18,6 +18,7 @@ SRCREV = "43013422dbce4bcc9ed77cfe65b294caa0985ec8"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-LDFLAGS-when-building-libbtrfsutil.so.patch \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
+           file://0003-btrfs-progs-Pass-CFLAGS-and-LDFLAGS-to-Python.patch \
            "
 
 inherit autotools-brokensep pkgconfig manpages distutils3-base
@@ -27,7 +28,10 @@ CLEANBROKEN = "1"
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
 EXTRA_OECONF = " --disable-zstd"
 EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
-EXTRA_OEMAKE = "V=1"
+EXTRA_PYTHON_CFLAGS = "${DEBUG_PREFIX_MAP}"
+EXTRA_PYTHON_CFLAGS_class-native = ""
+EXTRA_PYTHON_LDFLAGS = "${LDFLAGS}"
+EXTRA_OEMAKE = "V=1 'EXTRA_PYTHON_CFLAGS=${EXTRA_PYTHON_CFLAGS}' 'EXTRA_PYTHON_LDFLAGS=${EXTRA_PYTHON_LDFLAGS}'"
 
 do_configure_prepend() {
 	# Upstream doesn't ship this and autoreconf won't install it as automake isn't used.
