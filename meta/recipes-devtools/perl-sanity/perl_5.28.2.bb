@@ -90,6 +90,16 @@ do_configure_class-native() {
     -Ui_xlocale
 }
 
+do_configure_append() {
+    if [ -n "$SOURCE_DATE_EPOCH" ]; then
+        PERL_BUILD_DATE="$(${PYTHON} -c "\
+from datetime import datetime, timezone; \
+print(datetime.fromtimestamp($SOURCE_DATE_EPOCH, timezone.utc).strftime('%a %b %d %H:%M:%S %Y')) \
+            ")"
+        echo "#define PERL_BUILD_DATE \"$PERL_BUILD_DATE\"" >> config.h
+    fi
+}
+
 do_compile() {
     oe_runmake
 }
