@@ -173,6 +173,7 @@ perl_package_preprocess () {
             ${PKGD}${libdir}/perl5/${PV}/Config.pm \
             ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config.pm \
             ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config.pod \
+	    ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config_git.pl \
             ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config_heavy.pl \
             ${PKGD}${libdir}/perl5/${PV}/ExtUtils/Liblist/Kid.pm \
             ${PKGD}${libdir}/perl5/${PV}/FileCache.pm \
@@ -185,6 +186,7 @@ require perl-ptest.inc
 FILES_${PN} = "${bindir}/perl ${bindir}/perl.real ${bindir}/perl${PV} ${libdir}/libperl.so* \
                ${libdir}/perl5/site_perl \
                ${libdir}/perl5/${PV}/Config.pm \
+	       ${libdir}/perl5/${PV}/*/Config_git.pl \
                ${libdir}/perl5/${PV}/*/Config_heavy-target.pl \
                ${libdir}/perl5/config.sh \
                ${libdir}/perl5/${PV}/strict.pm \
