@@ -16,6 +16,9 @@ UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
 
 SRC_URI = "git://github.com/file/file.git \
         file://debian-742262.patch \
+        file://CVE-2019-8906.patch \
+        file://CVE-2019-8904.patch \
+        file://CVE-2019-8905_CVE-2019-8907.patch \
         "
 
 SRCREV = "315cef2f699da3c31a54bd3c6c6070680fbaf1f5"
