@@ -18,7 +18,9 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '${X11DEPENDS}', '', 
 inherit meson gtk-doc gettext systemd pkgconfig upstream-version-is-even gobject-introspection
 
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
-                  -Ddbus_daemon=${bindir}/dbus-daemon"
+                  -Ddbus_daemon=${bindir}/dbus-daemon \
+                  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', '-Dx11=yes', '-Dx11=no', d)} \
+"
 
 GTKDOC_MESON_OPTION = "docs"
 

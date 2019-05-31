@@ -11,9 +11,6 @@ DEPENDS = "dbus glib-2.0 glib-2.0-native atk at-spi2-core libxml2"
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase distro_features_check upstream-version-is-even
 
-# The at-spi2-core requires x11 in DISTRO_FEATURES
-REQUIRED_DISTRO_FEATURES = "x11"
-
 PACKAGES =+ "${PN}-gnome ${PN}-gtk2"
 
 FILES_${PN}-gnome = "${libdir}/gnome-settings-daemon-3.0/gtk-modules"
