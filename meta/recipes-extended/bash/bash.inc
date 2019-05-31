@@ -27,6 +27,7 @@ RDEPENDS_${PN}-ptest += "make coreutils perl"
 
 DEPENDS_append_libc-glibc = " virtual/libc-locale"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " \
+	glibc-gconv-big5hkscs \
 	glibc-gconv-iso8859-1 \
 	glibc-utils \
 	locale-base-de-de \
