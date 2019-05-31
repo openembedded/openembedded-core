@@ -19,4 +19,8 @@ then
         echo "Warning: The de_DE* locales is needed to run the intl.tests, please add it."
 fi
 
-make -k THIS_SH=/bin/bash BUILD_DIR=`pwd` srcdir=`pwd`  runtest
+useradd bash_user
+chown -R bash_user:bash_user ./tests
+su bash_user -c "make -k THIS_SH=/bin/bash BUILD_DIR=`pwd` srcdir=`pwd` runtest"
+chown -R root:root ./tests
+userdel bash_user
