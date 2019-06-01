@@ -9,7 +9,7 @@ LICENSE = "MIT & PD"
 LIC_FILES_CHKSUM = "file://src/xdemos/glxgears.c;beginline=1;endline=20;md5=914225785450eff644a86c871d3ae00e \
                     file://src/xdemos/glxdemo.c;beginline=1;endline=8;md5=b01d5ab1aee94d35b7efaa2ef48e1a06"
 
-SRC_URI = "https://mesa.freedesktop.org/archive/demos/${PV}/${BPN}-${PV}.tar.bz2 \
+SRC_URI = "https://mesa.freedesktop.org/archive/demos/${BPN}-${PV}.tar.bz2 \
            file://0001-mesa-demos-Add-missing-data-files.patch \
            file://0003-configure-Allow-to-disable-demos-which-require-GLEW-.patch \
            file://0004-Use-DEMOS_DATA_DIR-to-locate-data-files.patch \
@@ -19,8 +19,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/demos/${PV}/${BPN}-${PV}.tar.bz2
            file://0012-mesa-demos-OpenVG-demos-with-single-frame-need-eglSw.patch \
            file://0013-only-build-GLX-demos-if-needed.patch \
            "
-SRC_URI[md5sum] = "628e75c23c17394f11a316c36f8e4164"
-SRC_URI[sha256sum] = "c173154bbd0d5fb53d732471984def42fb1b14ac85fcb834138fb9518b3e0bef"
+SRC_URI[md5sum] = "6b65a02622765522176d00f553086fa3"
+SRC_URI[sha256sum] = "01e99c94a0184e63e796728af89bfac559795fb2a0d6f506fa900455ca5fff7d"
 
 inherit autotools pkgconfig distro_features_check
 # depends on virtual/egl, virtual/libgl ...
