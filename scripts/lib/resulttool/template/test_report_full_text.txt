@@ -22,12 +22,9 @@ Test Result Status Summary (Counts/Percentages sorted by testseries, ID)
 {{ ptest.ljust(maxlen['ptest']) }} | {{ (ptests[machine][ptest]['passed']|string).ljust(maxlen['passed']) }} | {{ (ptests[machine][ptest]['failed']|string).ljust(maxlen['failed']) }} | {{ (ptests[machine][ptest]['skipped']|string).ljust(maxlen['skipped']) }} | {{ (ptests[machine][ptest]['duration']|string) }}
 {% endfor %}
 --------------------------------------------------------------------------------------------------------------
-{% else %}
-There was no ptest data for {{ machine }}
+
 {% endif %}
-
 {% endfor %}
-
 
 {% for machine in machines %}
 {% if ltptests[machine] %}
@@ -41,12 +38,9 @@ There was no ptest data for {{ machine }}
 {{ ltptest.ljust(maxlen['ltptest']) }} | {{ (ltptests[machine][ltptest]['passed']|string).ljust(maxlen['passed']) }} | {{ (ltptests[machine][ltptest]['failed']|string).ljust(maxlen['failed']) }} | {{ (ltptests[machine][ltptest]['skipped']|string).ljust(maxlen['skipped']) }} | {{ (ltptests[machine][ltptest]['duration']|string) }}
 {% endfor %}
 --------------------------------------------------------------------------------------------------------------
-{% else %}
-There was no LTP Test data for {{ machine }}
+
 {% endif %}
-
 {% endfor %}
-
 
 {% for machine in machines %}
 {% if ltpposixtests[machine] %}
@@ -60,10 +54,8 @@ There was no LTP Test data for {{ machine }}
 {{ ltpposixtest.ljust(maxlen['ltpposixtest']) }} | {{ (ltpposixtests[machine][ltpposixtest]['passed']|string).ljust(maxlen['passed']) }} | {{ (ltpposixtests[machine][ltpposixtest]['failed']|string).ljust(maxlen['failed']) }} | {{ (ltpposixtests[machine][ltpposixtest]['skipped']|string).ljust(maxlen['skipped']) }} | {{ (ltpposixtests[machine][ltpposixtest]['duration']|string) }}
 {% endfor %}
 --------------------------------------------------------------------------------------------------------------
-{% else %}
-There was no LTP Posix Test data for {{ machine }}
-{% endif %}
 
+{% endif %}
 {% endfor %}
 
 
