@@ -1,0 +1,41 @@
+From df675c91f4b33490f0fa831b11162bdb0e2ff550 Mon Sep 17 00:00:00 2001
+From: Martin Jansa <Martin.Jansa@gmail.com>
+Date: Thu, 23 May 2019 20:50:45 +0000
+Subject: [PATCH] opkg-list-fields: fix to print the fields again
+
+* printing opkg.Package directly doesn't return anything useful now
+  <opkg.Package object at 0x7fd49e9f2780>
+
+* we need to call Package.print() function and specify which checksums
+  to print, we can include both md5 and sha256 for opkg-list-fields
+
+* it was changed in this commit:
+  commit 601d691dd80ef494aef069017edc5bf80aa883a1
+  Author: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+  Date:   Wed Dec 19 11:40:15 2018 -0600
+
+    opkg-make-index: add sha256sum support
+
+  which replaced the modified __str__ function with print(self, checksum)
+
+Upstream-Status: Backport [http://git.yoctoproject.org/cgit/cgit.cgi/opkg-utils/commit/?id=5163a74a59d54b2a8374414435ece9d542dbd5e2]
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ opkg-list-fields | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/opkg-list-fields b/opkg-list-fields
+index c14a90f..8a5a588 100755
+--- a/opkg-list-fields
++++ b/opkg-list-fields
+@@ -11,5 +11,4 @@ def usage():
+ if (len(sys.argv) < 2):
+      usage()
+ 
+-print(opkg.Package(sys.argv[1]))
+-
++print(opkg.Package(sys.argv[1]).print(('md5','sha256')))
+-- 
+2.17.1
+
