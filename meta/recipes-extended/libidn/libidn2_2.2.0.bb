@@ -3,17 +3,15 @@ DESCRIPTION = "Implementation of the Stringprep, Punycode and IDNA specification
 HOMEPAGE = "http://www.gnu.org/software/libidn/"
 SECTION = "libs"
 LICENSE = "(GPLv2+ | LGPLv3) & GPLv3+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ab90e75ef97cc6318ce4f2fbda62fe4d \
+LIC_FILES_CHKSUM = "file://COPYING;md5=2d834ea7d480438ada04e5d846152395 \
                     file://COPYING.LESSERv3;md5=e6a600fd5e1d9cbde2d983680233ad02 \
                     file://COPYINGv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://src/idn2.c;endline=16;md5=0283aec28e049f5bcaaeee52aa865874 \
+                    file://src/idn2.c;endline=16;md5=426b74d6deb620ab6d39c8a6efd4c13a \
                     file://lib/idn2.h.in;endline=27;md5=c2cd28d3f87260f157f022eabb83714f"
 
-SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz \
-           file://Unset-need_charset_alias-when-building-for-musl.patch \
-          "
-SRC_URI[md5sum] = "eaf9a5b9d03b0cce3760f34b3124eb36"
-SRC_URI[sha256sum] = "53f69170886f1fa6fa5b332439c7a77a7d22626a82ef17e2c1224858bb4ca2b8"
+SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz"
+SRC_URI[md5sum] = "b846d4d20e22b99d6f7387bb66e00a1f"
+SRC_URI[sha256sum] = "fc734732b506d878753ec6606982bf7b936e868c25c30ddb0d83f7d7056381fe"
 
 DEPENDS = "virtual/libiconv libunistring"
 
