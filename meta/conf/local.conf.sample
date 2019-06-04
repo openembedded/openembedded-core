@@ -25,8 +25,8 @@
 #MACHINE ?= "qemux86"
 #MACHINE ?= "qemux86-64"
 #
-# This sets the default machine to be qemux86 if no other machine is selected:
-MACHINE ??= "qemux86"
+# This sets the default machine to be qemux86-64 if no other machine is selected:
+MACHINE ??= "qemux86-64"
 
 #
 # Where to place downloads
