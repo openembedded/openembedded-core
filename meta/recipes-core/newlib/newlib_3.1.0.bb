@@ -3,7 +3,8 @@ require newlib.inc
 PROVIDES += "virtual/libc virtual/libiconv virtual/libintl"
 
 do_configure() {
-	${S}/configure ${EXTRA_OECONF}
+    export CC_FOR_TARGET="${CC}"
+    ${S}/configure ${EXTRA_OECONF}
 }
 
 do_install_append() {
