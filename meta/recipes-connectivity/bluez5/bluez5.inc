@@ -119,7 +119,10 @@ FILES_${PN}-dev += " \
 
 FILES_${PN}-obex = "${libexecdir}/bluetooth/obexd \
                     ${exec_prefix}/lib/systemd/user/obex.service \
+                    ${systemd_system_unitdir}/obex.service \
+                    ${sysconfdir}/systemd/system/multi-user.target.wants/obex.service \
                     ${datadir}/dbus-1/services/org.bluez.obex.service \
+                    ${sysconfdir}/dbus-1/system.d/obexd.conf \
                    "
 SYSTEMD_SERVICE_${PN}-obex = "obex.service"
 
