@@ -78,8 +78,13 @@ do_install_ptest () {
 	    -e 's|${DEBUG_PREFIX_MAP}||g' \
 	    -e "s,${S},,g" -e "s,${B},,g" -e "s,${STAGING_DIR_NATIVE},,g" \
 	    -e 's:${HOSTTOOLS_DIR}/::g' \
+	    -e 's:${UNINATIVE_LOADER}:${base_bindir}/false:g' \
 	     ${D}${PTEST_PATH}/Makefile
 }
+# The uninative loader is different on i386 & x86_64 hosts. Since it is only
+# being replaced with /bin/false anyway, it doesn't need to be part of the task
+# hash
+do_install_ptest[vardepsexclude] += "UNINATIVE_LOADER"
 
 pkg_postinst_${PN} () {
 	grep -q "^${base_bindir}/bash$" $D${sysconfdir}/shells || echo ${base_bindir}/bash >> $D${sysconfdir}/shells
