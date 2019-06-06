@@ -438,7 +438,7 @@ class BaseConfig(object):
             elif arg == 'publicvnc':
                 self.qemu_opt_script += ' -vnc :0'
             elif arg.startswith('tcpserial='):
-                self.tcpserial_portnum = arg[len('tcpserial='):]
+                self.tcpserial_portnum = '%s' % arg[len('tcpserial='):]
             elif arg.startswith('biosdir='):
                 self.custombiosdir = arg[len('biosdir='):]
             elif arg.startswith('biosfilename='):
@@ -681,10 +681,16 @@ class BaseConfig(object):
 
     def check_tcpserial(self):
         if self.tcpserial_portnum:
+            ports = self.tcpserial_portnum.split(':')
+            port = ports[0]
             if self.get('QB_TCPSERIAL_OPT'):
-                self.qemu_opt_script += ' ' + self.get('QB_TCPSERIAL_OPT').replace('@PORT@', self.tcpserial_portnum)
+                self.qemu_opt_script += ' ' + self.get('QB_TCPSERIAL_OPT').replace('@PORT@', port)
             else:
-                self.qemu_opt_script += ' -serial tcp:127.0.0.1:%s' % self.tcpserial_portnum
+                self.qemu_opt_script += ' -serial tcp:127.0.0.1:%s' % port
+
+            if len(ports) > 1:
+                for port in ports[1:]:
+                    self.qemu_opt_script += ' -serial tcp:127.0.0.1:%s' % port
 
     def check_and_set(self):
         """Check configs sanity and set when needed"""
