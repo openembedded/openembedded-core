@@ -27,7 +27,7 @@ SRC_URI += "file://touchscreen.rules \
            "
 
 # patches needed by musl
-SRC_URI += "${SRC_URI_MUSL}"
+SRC_URI_append_libc-musl = " ${SRC_URI_MUSL}"
 SRC_URI_MUSL = "file://0001-Use-getenv-when-secure-versions-are-not-available.patch \
                file://0002-don-t-use-glibc-specific-qsort_r.patch \
                file://0003-missing_type.h-add-__compare_fn_t-and-comparison_fn_.patch \
