@@ -8,7 +8,6 @@ PR = "r1"
 
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://no_check.patch \
-           file://syscalls.patch \
            file://fix-doc-mandir.patch \
            file://fix-compile-failure-while-dis.patch \
            file://0001-Include-fcntl.h-in-platform_defs.h.patch \
