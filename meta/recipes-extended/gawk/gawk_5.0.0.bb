@@ -40,11 +40,14 @@ inherit ptest
 
 do_install_ptest() {
 	mkdir ${D}${PTEST_PATH}/test
+	ln -s ${bindir}/gawk ${D}${PTEST_PATH}/gawk
 	for i in `grep -vE "@|^$|#|Gt-dummy" ${S}/test/Maketests |awk -F: '{print $1}'` Maketests inclib.awk; \
 	  do cp ${S}/test/$i* ${D}${PTEST_PATH}/test; \
 	done
 	sed -i -e 's|/usr/local/bin|${bindir}|g' \
 	    -e 's|#!${base_bindir}/awk|#!${bindir}/awk|g' ${D}${PTEST_PATH}/test/*.awk
 }
+
+RDEPENDS_${PN}-ptest += "make"
 
 BBCLASSEXTEND = "native nativesdk"
