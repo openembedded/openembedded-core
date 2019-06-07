@@ -1,4 +1,4 @@
-DEPENDS += "python-scons-native"
+DEPENDS += "python3-scons-native"
 
 EXTRA_OESCONS ?= ""
 
