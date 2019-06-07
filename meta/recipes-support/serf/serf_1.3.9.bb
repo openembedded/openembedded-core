@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "549c2d21c577a8a9c0450facb5cca809f26591f048e466552240947bdf
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
-DEPENDS = "python-scons-native openssl apr apr-util util-linux expat"
+DEPENDS = "python3-scons-native openssl apr apr-util util-linux expat"
 
 do_compile() {
 	${STAGING_BINDIR_NATIVE}/scons ${PARALLEL_MAKE} PREFIX=${prefix} \
