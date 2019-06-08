@@ -60,6 +60,7 @@ class QemuRunner:
         self.runqemutime = 120
         self.qemu_pidfile = 'pidfile_'+str(os.getpid())
         self.host_dumper = HostDumper(dump_host_cmds, dump_dir)
+        self.monitorpipe = None
 
         self.logger = logger
 
