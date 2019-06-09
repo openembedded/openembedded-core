@@ -185,10 +185,11 @@ class BaseConfig(object):
         self.lock_descriptor = None
         self.bitbake_e = ''
         self.snapshot = False
+        self.wictypes = ('wic', 'wic.vmdk', 'wic.qcow2', 'wic.vdi')
         self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs',
                         'cpio.gz', 'cpio', 'ramfs', 'tar.bz2', 'tar.gz')
-        self.vmtypes = ('hddimg', 'hdddirect', 'wic', 'wic.vmdk',
-                        'wic.qcow2', 'wic.vdi', 'iso')
+        self.vmtypes = ('hddimg', 'hdddirect', 'iso')
+        self.fsinfo = {}
         self.network_device = "-device e1000,netdev=net0,mac=@MAC@"
         # Use different mac section for tap and slirp to avoid
         # conflicts, e.g., when one is running with tap, the other is
@@ -253,7 +254,7 @@ class BaseConfig(object):
 
     def check_arg_fstype(self, fst):
         """Check and set FSTYPE"""
-        if fst not in self.fstypes + self.vmtypes:
+        if fst not in self.fstypes + self.vmtypes + self.wictypes:
             logger.warning("Maybe unsupported FSTYPE: %s" % fst)
         if not self.fstype or self.fstype == fst:
             if fst == 'ramfs':
@@ -390,7 +391,7 @@ class BaseConfig(object):
 
         unknown_arg = ""
         for arg in sys.argv[1:]:
-            if arg in self.fstypes + self.vmtypes:
+            if arg in self.fstypes + self.vmtypes + self.wictypes:
                 self.check_arg_fstype(arg)
             elif arg == 'nographic':
                 self.qemu_opt_script += ' -nographic'
@@ -535,6 +536,40 @@ class BaseConfig(object):
                 self.fstype = fstype
             else:
                 raise RunQemuError("FSTYPE is NULL!")
+
+        # parse QB_FSINFO into dict, e.g. { 'wic': ['no-kernel-in-fs', 'a-flag'], 'ext4': ['another-flag']}
+        wic_fs = False
+        qb_fsinfo = self.get('QB_FSINFO')
+        if qb_fsinfo:
+            qb_fsinfo = qb_fsinfo.split()
+            for fsinfo in qb_fsinfo:
+                try:
+                    fstype, fsflag = fsinfo.split(':')
+
+                    if fstype == 'wic':
+                        if fsflag == 'no-kernel-in-fs':
+                            wic_fs = True
+                        elif fsflag == 'kernel-in-fs':
+                            wic_fs = False
+                        else:
+                            logger.warn('Unknown flag "%s:%s" in QB_FSINFO', fstype, fsflag)
+                            continue
+                    else:
+                        logger.warn('QB_FSINFO is not supported for image type "%s"', fstype)
+                        continue
+
+                    if fstype in self.fsinfo:
+                        self.fsinfo[fstype].append(fsflag)
+                    else:
+                        self.fsinfo[fstype] = [fsflag]
+                except Exception:
+                    logger.error('Invalid parameter "%s" in QB_FSINFO', fsinfo)
+
+        # treat wic images as vmimages (with kernel) or as fsimages (rootfs only)
+        if wic_fs:
+            self.fstypes = self.fstypes + self.wictypes
+        else:
+            self.vmtypes = self.vmtypes + self.wictypes
 
     def check_rootfs(self):
         """Check and set rootfs"""
@@ -832,7 +867,11 @@ class BaseConfig(object):
             if self.dtb:
                 print('DTB: [%s]' % self.dtb)
         print('MACHINE: [%s]' % self.get('MACHINE'))
-        print('FSTYPE: [%s]' % self.fstype)
+        try:
+            fstype_flags = ' (' + ', '.join(self.fsinfo[self.fstype]) + ')'
+        except KeyError:
+            fstype_flags = ''
+        print('FSTYPE: [%s%s]' % (self.fstype, fstype_flags))
         if self.fstype  == 'nfs':
             print('NFS_DIR: [%s]' % self.rootfs)
         else:
