@@ -18,8 +18,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://fatal-loader.patch \
            file://0001-Work-around-thumbnailer-cross-compile-failure.patch \
            file://0001-Fix-a-couple-of-decisions-around-cross-compilation.patch \
-           file://0001-loaders.cache-depend-on-loaders-being-fully-build.patch \
            file://0004-Do-not-run-tests-when-building.patch \
+           file://0006-Build-thumbnailer-and-tests-also-in-cross-builds.patch \
            "
 
 SRC_URI_append_class-target = " \
@@ -29,8 +29,8 @@ SRC_URI_append_class-nativesdk = " \
            file://0003-target-only-Work-around-thumbnailer-cross-compile-fa.patch \
            "
 
-SRC_URI[md5sum] = "77765f24496dc8c90c6e0cbe10fd8f0e"
-SRC_URI[sha256sum] = "dd50973c7757bcde15de6bcd3a6d462a445efd552604ae6435a0532fbbadae47"
+SRC_URI[md5sum] = "f6ba2195acd18c5c9555421f30c31cc1"
+SRC_URI[sha256sum] = "f19ff836ba991031610dcc53774e8ca436160f7d981867c8c3a37acfe493ab3a"
 
 inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
