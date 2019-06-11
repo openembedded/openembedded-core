@@ -1329,6 +1329,8 @@ class OpkgPM(OpkgDpkgPM):
         cmd = "%s %s" % (self.opkg_cmd, self.opkg_args)
         for exclude in (self.d.getVar("PACKAGE_EXCLUDE") or "").split():
             cmd += " --add-exclude %s" % exclude
+        for bad_recommendation in (self.d.getVar("BAD_RECOMMENDATIONS") or "").split():
+            cmd += " --add-ignore-recommends %s" % bad_recommendation
         cmd += " install "
         cmd += " ".join(pkgs)
 
@@ -1396,45 +1398,6 @@ class OpkgPM(OpkgDpkgPM):
 
     def list_installed(self):
         return OpkgPkgsList(self.d, self.target_rootfs, self.config_file).list_pkgs()
-
-    def handle_bad_recommendations(self):
-        bad_recommendations = self.d.getVar("BAD_RECOMMENDATIONS") or ""
-        if bad_recommendations.strip() == "":
-            return
-
-        status_file = os.path.join(self.opkg_dir, "status")
-
-        # If status file existed, it means the bad recommendations has already
-        # been handled
-        if os.path.exists(status_file):
-            return
-
-        cmd = "%s %s info " % (self.opkg_cmd, self.opkg_args)
-
-        with open(status_file, "w+") as status:
-            for pkg in bad_recommendations.split():
-                pkg_info = cmd + pkg
-
-                try:
-                    output = subprocess.check_output(pkg_info.split(), stderr=subprocess.STDOUT).strip().decode("utf-8")
-                except subprocess.CalledProcessError as e:
-                    bb.fatal("Cannot get package info. Command '%s' "
-                             "returned %d:\n%s" % (pkg_info, e.returncode, e.output.decode("utf-8")))
-
-                if output == "":
-                    bb.note("Ignored bad recommendation: '%s' is "
-                            "not a package" % pkg)
-                    continue
-
-                for line in output.split('\n'):
-                    if line.startswith("Status:"):
-                        status.write("Status: deinstall hold not-installed\n")
-                    else:
-                        status.write(line + "\n")
-
-                # Append a blank line after each package entry to ensure that it
-                # is separated from the following entry
-                status.write("\n")
 
     def dummy_install(self, pkgs):
         """
