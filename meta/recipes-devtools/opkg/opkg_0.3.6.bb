@@ -15,6 +15,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://opkg.conf \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
            file://0001-remove_maintainer_scripts-use-strict-matching.patch \
+           file://0001-libopkg-add-add-ignore-recommends-option.patch \
 "
 
 SRC_URI[md5sum] = "79e04307f6f54db431c251772d7d987c"
