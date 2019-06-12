@@ -9,5 +9,5 @@ SRC_URI += "file://configure-sbindir.patch \
             file://avoid_parallel_tests.patch \
             file://check-for-_HAVE_STRUCT_TERMIOS_C_OSPEED.patch \
 "
-SRC_URI[md5sum] = "9e5b1b8c1dc99455bdb6b462cf9436d9"
-SRC_URI[sha256sum] = "86e6707a379c7ff5489c218cfaf1e3464b0b95acf7817db0bc5f179e356a67b2"
+SRC_URI[md5sum] = "91653b90fcbe9c161153e39b8cc69fb5"
+SRC_URI[sha256sum] = "631be8eac6cf6230ba478de211941d526808dba3cd436380793334496013ce97"
