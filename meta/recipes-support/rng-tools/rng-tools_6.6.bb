@@ -44,18 +44,13 @@ do_configure_prepend() {
 }
 
 do_install_append() {
-    install -d "${D}${sysconfdir}/init.d"
-    install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/rng-tools
-    sed -i -e 's,/etc/,${sysconfdir}/,' -e 's,/usr/sbin/,${sbindir}/,' \
-        ${D}${sysconfdir}/init.d/rng-tools
-
-    # Only install the default script when 'sysvinit' is in DISTRO_FEATURES.
-    if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
-        install -d "${D}${sysconfdir}/default"
-        install -m 0644 ${WORKDIR}/default ${D}${sysconfdir}/default/rng-tools
-    fi
-
-    install -d ${D}${systemd_unitdir}/system
-    install -m 644 ${WORKDIR}/rngd.service ${D}${systemd_unitdir}/system
-    sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/rngd.service
+    install -Dm 0644 ${WORKDIR}/default ${D}${sysconfdir}/default/rng-tools
+    install -Dm 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/rng-tools
+    install -Dm 0644 ${WORKDIR}/rngd.service \
+                     ${D}${systemd_system_unitdir}/rngd.service
+    sed -i \
+        -e 's,@SYSCONFDIR@,${sysconfdir},' \
+        -e 's,@SBINDIR@,${sbindir},' \
+        ${D}${sysconfdir}/init.d/rng-tools \
+        ${D}${systemd_system_unitdir}/rngd.service
 }
