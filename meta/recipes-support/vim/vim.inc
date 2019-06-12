@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/vim/vim.git \
            file://vim-add-knob-whether-elf.h-are-checked.patch \
            file://0001-src-Makefile-improve-reproducibility.patch \
 "
-SRCREV = "d96dbd6f95ea22f609042cc9c6272f14a21ff1a5"
+SRCREV = "202d982b36d87cf91d992bd7e30d3223bdc72cd9"
 
 S = "${WORKDIR}/git"
 
