@@ -23,7 +23,7 @@ EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 inherit update-alternatives
 
-do_install_class-target() {
+do_install() {
 	# Install files into /bin (FHS), which is typical place for gzip
 	install -d ${D}${base_bindir}
 	install ${B}/pigz ${D}${base_bindir}/pigz
@@ -31,7 +31,7 @@ do_install_class-target() {
 	ln -nsf pigz ${D}${base_bindir}/pigzcat
 }
 
-do_install() {
+do_install_append_class-native() {
 	install -d ${D}${bindir}
 	install ${B}/pigz ${D}${bindir}/gzip
 	ln -nsf gzip ${D}${bindir}/gunzip
