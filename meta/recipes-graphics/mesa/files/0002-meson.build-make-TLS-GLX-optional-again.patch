@@ -1,23 +1,26 @@
-From 48318f1a5c9042a8e1bb4456c2584362b25c4a59 Mon Sep 17 00:00:00 2001
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Wed, 15 May 2019 17:21:51 +0200
-Subject: [PATCH] meson.build: make TLS GLX optional again
+From d31718999797ffc4dd177d14760ef7b8fd95ac2f Mon Sep 17 00:00:00 2001
+From: Fabio Berton <fabio.berton@ossystems.com.br>
+Date: Wed, 12 Jun 2019 14:15:57 -0300
+Subject: [PATCH 2/3] meson.build: make TLS GLX optional again
+Organization: O.S. Systems Software LTDA.
 
 This was optional with autotools, and needs to be disabled
 when using musl C library, for instance.
 
 Upstream-Status: Pending
+
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
 ---
  meson.build       | 4 +++-
- meson_options.txt | 6 ++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ meson_options.txt | 7 +++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index c41f6b4..8843f3c 100644
+index e11880f2902..7a07974ba61 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -336,7 +336,9 @@ if with_egl and not (with_platform_drm or with_platform_surfaceless)
+@@ -362,7 +362,9 @@ if with_egl and not (with_platform_drm or with_platform_surfaceless)
    endif
  endif
  
@@ -29,10 +32,10 @@ index c41f6b4..8843f3c 100644
    if not (with_platform_x11 and with_any_opengl)
      error('Cannot build GLX support without X11 platform support and at least one OpenGL API')
 diff --git a/meson_options.txt b/meson_options.txt
-index ccf7065..0f1e800 100644
+index 1f72faabee8..fcd49efea27 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -324,3 +324,9 @@ option(
+@@ -339,6 +339,13 @@ option(
    value : true,
    description : 'Enable direct rendering in GLX and EGL for DRI',
  )
@@ -42,3 +45,10 @@ index ccf7065..0f1e800 100644
 +  value : true,
 +  description : 'Enable TLS support in GLX',
 +)
++
+ option(
+   'I-love-half-baked-turnips',
+   type : 'boolean',
+-- 
+2.22.0
+
