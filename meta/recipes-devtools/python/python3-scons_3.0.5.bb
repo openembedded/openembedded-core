@@ -15,7 +15,7 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 inherit setuptools3
 
 do_install_prepend() {
-    sed -i -e "s:/usr/bin/env python:/usr/bin/env python3:g" ${S}/script/*
+    sed -i -e "1s,#!.*python.*,#!${USRBINPATH}/env python3," ${S}/script/*
 }
 
 RDEPENDS_${PN} = "\
