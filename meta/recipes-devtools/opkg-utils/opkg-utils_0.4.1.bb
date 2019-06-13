@@ -9,14 +9,12 @@ PROVIDES += "${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'virtu
 
 SRC_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/${BPN}/snapshot/${BPN}-${PV}.tar.gz \
            file://0001-Switch-all-scripts-to-use-Python-3.x.patch \
-           file://0001-opkg-build-do-not-set-mtime-on-data.tar.X.patch \
-    file://0001-opkg-list-fields-fix-to-print-the-fields-again.patch \
 "
 UPSTREAM_CHECK_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/opkg-utils/refs/"
 
 
-SRC_URI[md5sum] = "6e1c2eae96239520a8eb3d05372773ea"
-SRC_URI[sha256sum] = "8153f4e5dadde422d35feaf86bf595266af9d0037389bc418fa87feb0437efb3"
+SRC_URI[md5sum] = "8c140f835b694a0c27cfb23d2426a02b"
+SRC_URI[sha256sum] = "9ea9efdd9fe13661ad251e3a2860c1c93045adcfaa6659c3e86d9748ecda3b6e"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
