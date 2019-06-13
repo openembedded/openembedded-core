@@ -24,6 +24,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0005-rules-watch-metadata-changes-in-ide-devices.patch \
            file://0006-network-remove-redunant-link-name-in-message.patch \
            file://99-default.preset \
+           file://0001-resolved-Fix-incorrect-use-of-OpenSSL-BUF_MEM.patch \
            "
 
 # patches needed by musl
