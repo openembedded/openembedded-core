@@ -318,4 +318,8 @@ do_install_ptest() {
     sed -i -e \
          '/^TS_CMD_KILL/ s|kill|${PTEST_PATH}/bin/kill|g' \
          ${D}${PTEST_PATH}/tests/commands.sh
+
+
+    sed -i 's|@base_sbindir@|${base_sbindir}|g'       ${D}${PTEST_PATH}/run-ptest
+
 }
