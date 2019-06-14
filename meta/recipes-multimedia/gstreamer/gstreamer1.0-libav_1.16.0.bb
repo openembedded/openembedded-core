@@ -28,6 +28,11 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base zlib bzip2 xz"
 
 inherit autotools pkgconfig upstream-version-is-even gtk-doc
 
+# Disable documentation for now as it is failing with gtk-doc 1.30:
+# gst-libav-plugins-docs.sgml:38: element include: XInclude error:
+# could not load xml/tree_index.sgml, and no fallback was found
+GTKDOC_ENABLED = "False"
+
 # CAUTION: Using the system libav is not recommended. Since the libav API is changing all the time,
 # compilation errors (and other, more subtle bugs) can happen. It is usually better to rely on the
 # libav copy included in the gst-libav package.
