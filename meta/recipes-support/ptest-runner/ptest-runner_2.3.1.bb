@@ -13,7 +13,9 @@ PV = "2.3.1+git${SRCPV}"
 SRC_URI = "git://git.yoctoproject.org/ptest-runner2 \
  file://0001-utils-Ensure-stdout-stderr-are-flushed.patch \
  file://0002-use-process-groups-when-spawning.patch \
- file://0003-utils-Ensure-pipes-are-read-after-exit.patch"
+ file://0003-utils-Ensure-pipes-are-read-after-exit.patch \
+ file://0004-utils-ensure-child-can-be-session-leader.patch \
+"
 
 S = "${WORKDIR}/git"
 
