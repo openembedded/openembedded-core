@@ -166,8 +166,8 @@ do_install_ptest () {
 	cp -r ${S}/external ${B}/test ${S}/test ${B}/fuzz ${S}/util ${B}/util ${D}${PTEST_PATH}
 
 	# For test_shlibload
-	ln -s ${libdir}/libcrypto.so.1.1 ${D}${PTEST_PATH}/libcrypto.so
-	ln -s ${libdir}/libssl.so.1.1 ${D}${PTEST_PATH}/libssl.so
+	ln -s ${libdir}/libcrypto.so.1.1 ${D}${PTEST_PATH}/
+	ln -s ${libdir}/libssl.so.1.1 ${D}${PTEST_PATH}/
 
 	install -d ${D}${PTEST_PATH}/apps
 	ln -s ${bindir}/openssl ${D}${PTEST_PATH}/apps
