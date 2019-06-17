@@ -17,8 +17,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=65c4cd8f39c24c7135ed70dacbcb09e3"
 
 SRC_URI = "http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/XML-SAX-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "861a454f7bf269990ed2c1c125f4db48"
-SRC_URI[sha256sum] = "45ea6564ef8692155d57b2de0862b6442d3c7e29f4a9bc9ede5d7ecdc74c2ae3"
+SRC_URI[md5sum] = "b62e3754523695c7f5bbcafa3676a38d"
+SRC_URI[sha256sum] = "4506c387043aa6a77b455f00f57409f3720aa7e553495ab2535263b4ed1ea12a"
 
 S = "${WORKDIR}/XML-SAX-${PV}"
 
@@ -30,6 +30,13 @@ do_install_ptest() {
 }
 
 RDEPENDS_${PN} += "perl-module-encode perl-module-perlio"
-RDEPENDS_${PN}-ptest += "perl-module-test perl-module-base perl-module-fatal perl-module-encode-unicode perl-module-encode-byte"
+
+RDEPENDS_${PN}-ptest += " \
+    perl-module-base  \
+    perl-module-encode-byte \
+    perl-module-encode-unicode \
+    perl-module-fatal \
+    perl-module-test \
+"
 
 BBCLASSEXTEND = "native nativesdk"
