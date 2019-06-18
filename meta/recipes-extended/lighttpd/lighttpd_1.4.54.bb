@@ -19,8 +19,8 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://0001-Use-pkg-config-for-pcre-dependency-instead-of-config.patch \
         "
 
-SRC_URI[md5sum] = "f93436d8d400b2b0e26ee4bcc60b9ac7"
-SRC_URI[sha256sum] = "3bdfce1cf3e9650a556a8c26fb15342c5717c63f530c54693db632b0371dcb78"
+SRC_URI[md5sum] = "7abc776243c811e9872f73ab38b7f8b5"
+SRC_URI[sha256sum] = "cf14cce2254a96d8fcb6d3181e1a3c29a8f832531c3e86ff6f2524ecda9a8721"
 
 PACKAGECONFIG ??= "openssl pcre zlib \
     ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
