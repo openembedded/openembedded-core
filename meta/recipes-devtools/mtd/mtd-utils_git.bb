@@ -10,12 +10,11 @@ inherit autotools pkgconfig update-alternatives
 DEPENDS = "zlib e2fsprogs util-linux"
 RDEPENDS_mtd-utils-tests += "bash"
 
-PV = "2.0.2+${SRCPV}"
+PV = "2.1.0+${SRCPV}"
 
-SRCREV = "bc63d36e39f389c8c17f6a8e9db47f2acc884659"
+SRCREV = "b5027be5f470830ac9543db3c52e076b13abd313"
 SRC_URI = "git://git.infradead.org/mtd-utils.git \
            file://add-exclusion-to-mkfs-jffs2-git-2.patch \
-           file://0001-Revert-Return-correct-error-number-in-ubi_get_vol_in.patch \
 "
 
 S = "${WORKDIR}/git/"
@@ -28,6 +27,7 @@ EXTRA_OECONF += "--enable-install-tests"
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'xattr', d)} lzo"
 PACKAGECONFIG[lzo] = "--with-lzo,--without-lzo,lzo"
 PACKAGECONFIG[xattr] = "--with-xattr,--without-xattr,acl"
+PACKAGECONFIG[crypto] = "--with-crypto,--without-crypto,openssl"
 
 CPPFLAGS_append_riscv64  = " -pthread -D_REENTRANT"
 
