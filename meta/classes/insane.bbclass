@@ -259,13 +259,6 @@ def package_qa_check_dbg(path, name, d, elf, messages):
             package_qa_add_message(messages, "debug-files", "non debug package contains .debug directory: %s path %s" % \
                      (name, package_qa_clean_path(path,d)))
 
-QAPATHTEST[perms] = "package_qa_check_perm"
-def package_qa_check_perm(path,name,d, elf, messages):
-    """
-    Check the permission of files
-    """
-    return
-
 QAPATHTEST[arch] = "package_qa_check_arch"
 def package_qa_check_arch(path,name,d, elf, messages):
     """
