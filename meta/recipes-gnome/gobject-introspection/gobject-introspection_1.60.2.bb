@@ -21,8 +21,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0001-meson.build-disable-tests-when-cross-compiling.patch \
            "
 
-SRC_URI[md5sum] = "46fc8a98f6563e64947ac3d574632525"
-SRC_URI[sha256sum] = "d844d1499ecd36f3ec8a3573616186d36626ec0c9a7981939e99aa02e9c824b3"
+SRC_URI[md5sum] = "57c1c5dcf3d0a9aa73d06c2d5e6960d7"
+SRC_URI[sha256sum] = "ffdfe2368fb2e34a547898b01aac0520d52d8627fdeb1c306559bcb503ab5e9c"
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
