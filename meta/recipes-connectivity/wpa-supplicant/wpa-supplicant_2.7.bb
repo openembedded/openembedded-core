@@ -25,6 +25,22 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
            file://0001-replace-systemd-install-Alias-with-WantedBy.patch \
+           file://0001-OpenSSL-Use-constant-time-operations-for-private-big.patch \
+           file://0002-Add-helper-functions-for-constant-time-operations.patch \
+           file://0003-OpenSSL-Use-constant-time-selection-for-crypto_bignu.patch \
+           file://0004-EAP-pwd-Use-constant-time-and-memory-access-for-find.patch \
+           file://0005-SAE-Minimize-timing-differences-in-PWE-derivation.patch \
+           file://0006-SAE-Avoid-branches-in-is_quadratic_residue_blind.patch \
+           file://0007-SAE-Mask-timing-of-MODP-groups-22-23-24.patch \
+           file://0008-SAE-Use-const_time-selection-for-PWE-in-FFC.patch \
+           file://0009-SAE-Use-constant-time-operations-in-sae_test_pwd_see.patch \
+           file://0010-SAE-Fix-confirm-message-validation-in-error-cases.patch \
+           file://0011-EAP-pwd-server-Verify-received-scalar-and-element.patch \
+           file://0012-EAP-pwd-server-Detect-reflection-attacks.patch \
+           file://0013-EAP-pwd-client-Verify-received-scalar-and-element.patch \
+           file://0014-EAP-pwd-Check-element-x-y-coordinates-explicitly.patch \
+           file://0001-EAP-pwd-server-Fix-reassembly-buffer-handling.patch \
+           file://0003-EAP-pwd-peer-Fix-reassembly-buffer-handling.patch \
           "
 SRC_URI[md5sum] = "a68538fb62766f40f890125026c42c10"
 SRC_URI[sha256sum] = "76ea6b06b7a2ea8e6d9eb1a9166166f1656e6d48c7508914f592100c95c73074"
