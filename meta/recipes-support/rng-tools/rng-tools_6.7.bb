@@ -10,16 +10,12 @@ DEPENDS = "sysfsutils"
 
 SRC_URI = "\
     git://github.com/nhorman/rng-tools.git \
-    file://0001-If-the-libc-is-lacking-argp-use-libargp.patch \
-    file://0002-Add-argument-to-control-the-libargp-dependency.patch \
-    file://underquote.patch \
-    file://rng-tools-5-fix-textrels-on-PIC-x86.patch \
-    file://0001-configure.ac-fix-typo.patch \
+    file://fix-rngd-fail-to-stop.patch \
     file://init \
     file://default \
     file://rngd.service \
 "
-SRCREV = "4ebc21d6f387bb7b4b3f6badc429e27b21c0a6ee"
+SRCREV = "9fc873c5af0e392632e6b736938b811f7ca97251"
 
 S = "${WORKDIR}/git"
 
@@ -31,6 +27,7 @@ PACKAGECONFIG_libc-musl = "libargp libjitterentropy"
 PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
 PACKAGECONFIG[libgcrypt] = "--with-libgcrypt,--without-libgcrypt,libgcrypt,"
 PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterentropy,libjitterentropy"
+PACKAGECONFIG[libp11] = "--with-pkcs11,--without-pkcs11,libp11 openssl"
 PACKAGECONFIG[nistbeacon] = "--with-nistbeacon,--without-nistbeacon,curl libxml2 openssl"
 
 INITSCRIPT_NAME = "rng-tools"
