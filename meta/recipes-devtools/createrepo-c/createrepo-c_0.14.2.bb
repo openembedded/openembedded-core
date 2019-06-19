@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/rpm-software-management/createrepo_c \
            file://0001-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            "
 
-SRCREV = "8cffea9751b14366a7f6f3664f5d39fe4f0f9253"
+SRCREV = "f390af98c8f1bb04010e293ea864eae160f75879"
 
 S = "${WORKDIR}/git"
 
