@@ -6,6 +6,8 @@ require conf/machine/include/riscv/tune-riscv.inc
 MACHINE_FEATURES = "screen keyboard ext2 ext3 serial"
 
 KERNEL_IMAGETYPE = "Image"
+KERNEL_IMAGETYPES += "uImage"
+KEEPUIMAGE = "no"
 
 SERIAL_CONSOLES ?= "115200;ttyS0 115200;hvc0"
 
@@ -16,6 +18,9 @@ MACHINE_EXTRA_RRECOMMENDS += " kernel-modules"
 EXTRA_IMAGEDEPENDS += "opensbi"
 RISCV_SBI_PLAT ?= "qemu/virt"
 RISCV_SBI_PAYLOAD ?= "${KERNEL_IMAGETYPE}-${MACHINE}.bin"
+
+UBOOT_ENTRYPOINT_riscv32 = "0x80400000"
+UBOOT_ENTRYPOINT_riscv64 = "0x80200000"
 
 # qemuboot options
 QB_KERNEL_CMDLINE_APPEND = "earlycon=sbi"
