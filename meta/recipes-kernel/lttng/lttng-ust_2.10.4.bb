@@ -27,11 +27,10 @@ PE = "2"
 
 SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
            file://lttng-ust-doc-examples-disable.patch \
-	   file://0001-compat-work-around-broken-_SC_NPROCESSORS_CONF-on-MU.patch \
           "
 
-SRC_URI[md5sum] = "ffcfa8c1ba9a52f002d240e936e9afa2"
-SRC_URI[sha256sum] = "9e8420f90d5f963f7aa32bc6d44adc1e491136f687c69ffb7a3075d33b40852b"
+SRC_URI[md5sum] = "19916ff0dec23c90f985586a8cbd1fd2"
+SRC_URI[sha256sum] = "75d5b4bb205c444a343e1297e14cd3a2503fc645a26710531cbd319c72c1a967"
 
 CVE_PRODUCT = "ust"
 
