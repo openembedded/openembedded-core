@@ -9,12 +9,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=17f20574c0b154d12236d5fbe964f549"
 SRC_URI = " \
     https://github.com/libevent/libevent/releases/download/release-${PV}-stable/${BP}-stable.tar.gz \
     file://Makefile-missing-test-dir.patch \
-    file://0001-test-fix-32bit-linux-regress.patch \
     file://run-ptest \
 "
 
-SRC_URI[md5sum] = "f3eeaed018542963b7d2416ef1135ecc"
-SRC_URI[sha256sum] = "965cc5a8bb46ce4199a47e9b2c9e1cae3b137e8356ffdad6d94d3b9069b71dc2"
+SRC_URI[md5sum] = "999caf86f52943af2363bc8077f00167"
+SRC_URI[sha256sum] = "e864af41a336bb11dab1a23f32993afe963c1f69618bd9292b89ecf6904845b0"
 
 UPSTREAM_CHECK_URI = "http://libevent.org/"
 
