@@ -14,11 +14,9 @@ DEPENDS = "util-linux attr e2fsprogs lzo acl python3-setuptools-native"
 DEPENDS_append_class-target = " udev"
 RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "43013422dbce4bcc9ed77cfe65b294caa0985ec8"
+SRCREV = "781e36a784faa58a4f0515eef124af860d59e2c0"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
-           file://0001-Add-LDFLAGS-when-building-libbtrfsutil.so.patch \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
-           file://0003-btrfs-progs-Pass-CFLAGS-and-LDFLAGS-to-Python.patch \
            "
 
 inherit autotools-brokensep pkgconfig manpages distutils3-base
