@@ -75,8 +75,16 @@ CACHED_CONFIGUREVARS = " \
                 ac_cv_file__dev_ptc=no \
                 ac_cv_working_tzset=yes \
 "
+python() {
+    # PGO currently causes builds to not be reproducible, so disable it for
+    # now. See YOCTO #13407
+    if bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', True, False, d) and d.getVar('BUILD_REPRODUCIBLE_BINARIES') != '1':
+        d.setVar('PACKAGECONFIG_PGO', 'pgo')
+    else:
+        d.setVar('PACKAGECONFIG_PGO', '')
+}
 
-PACKAGECONFIG_class-target ??= "readline ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'pgo', '', d)}"
+PACKAGECONFIG_class-target ??= "readline ${PACKAGECONFIG_PGO}"
 PACKAGECONFIG_class-native ??= "readline"
 PACKAGECONFIG_class-nativesdk ??= "readline"
 PACKAGECONFIG[readline] = ",,readline"
