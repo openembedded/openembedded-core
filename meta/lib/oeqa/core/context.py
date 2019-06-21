@@ -52,7 +52,7 @@ class OETestContext(object):
             return func
         for test in self.suites:
             for skip in skips:
-                if test.id().startswith(skip):
+                if (test.id()+'.').startswith(skip+'.'):
                     setattr(test, 'setUp', skipfuncgen('Skip by the command line argument "%s"' % skip))
 
     def loadTests(self, module_paths, modules=[], tests=[],
