@@ -14,14 +14,11 @@ PE = "1"
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://opkg.conf \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-           file://0001-libopkg-add-add-ignore-recommends-option.patch \
-           file://0001-regress-issue72.py-resolve-paths-before-comparision.patch \
-           file://0001-opkg-add-target-for-testsuite-installation.patch \
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "ae51d95fee599bb4dce08453529158f5"
-SRC_URI[sha256sum] = "f6c00515d8a2ad8f6742a8e73830315d1983ed0459cba77c4d656cfc9e7fe6fe"
+SRC_URI[md5sum] = "ba0c21305fc93b26e844981ef100dc85"
+SRC_URI[sha256sum] = "45ac1e037d3877f635d883f8a555e172883a25d3eeb7986c75890fdd31250a43"
 
 # This needs to be before ptest inherit, otherwise all ptest files end packaged
 # in libopkg package if OPKGLIBDIR == libdir, because default
@@ -44,6 +41,16 @@ PACKAGECONFIG[pathfinder] = "--enable-pathfinder,--disable-pathfinder,pathfinder
 PACKAGECONFIG[libsolv] = "--with-libsolv,--without-libsolv,libsolv"
 
 EXTRA_OECONF_class-native = "--localstatedir=/${@os.path.relpath('${localstatedir}', '${STAGING_DIR_NATIVE}')} --sysconfdir=/${@os.path.relpath('${sysconfdir}', '${STAGING_DIR_NATIVE}')}"
+
+# Release tarball has unused binaries on the tests folder, automatically created by automake.
+# For now, delete them to avoid packaging errors (wrong architecture)
+do_unpack_append () {
+    bb.build.exec_func('remove_test_binaries', d)
+}
+
+remove_test_binaries () {
+	rm ${WORKDIR}/opkg-${PV}/tests/libopkg_test*
+}
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
