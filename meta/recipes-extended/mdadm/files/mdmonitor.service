@@ -13,7 +13,8 @@ ConditionPathExists=/etc/mdadm.conf
 Type=forking
 PIDFile=/var/run/mdadm/mdadm.pid
 EnvironmentFile=-/etc/sysconfig/mdmonitor
-ExecStart=/sbin/mdadm --monitor --scan -f --pid-file=/var/run/mdadm/mdadm.pid
+ExecStartPre=mkdir -p /var/run/mdadm
+ExecStart=/sbin/mdadm --monitor -y --scan -f --pid-file=/var/run/mdadm/mdadm.pid
 
 [Install]
 WantedBy=multi-user.target
