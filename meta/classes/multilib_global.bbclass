@@ -202,5 +202,4 @@ python multilib_virtclass_handler_global () {
 }
 
 addhandler multilib_virtclass_handler_global
-multilib_virtclass_handler_global[eventmask] = "bb.event.RecipeParsed"
-
+multilib_virtclass_handler_global[eventmask] = "bb.event.RecipeTaskPreProcess"
