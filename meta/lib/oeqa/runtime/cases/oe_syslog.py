@@ -6,6 +6,7 @@ from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfDataVar
 from oeqa.runtime.decorator.package import OEHasPackage
+import time
 
 class SyslogTest(OERuntimeTestCase):
 
@@ -20,6 +21,53 @@ class SyslogTest(OERuntimeTestCase):
         self.assertTrue(hasdaemon, msg=msg)
 
 class SyslogTestConfig(OERuntimeTestCase):
+
+    def verif_not_running(self, pids):
+        for pid in pids:
+            status, err_output = self.target.run('kill -0 %s' %pid)
+            if not status:
+                self.logger.debug("previous %s is still running" %pid)
+                return 1
+
+    def verify_running(self, names):
+        pids = []
+        for name in names:
+            status, pid = self.target.run('pidof %s' %name)
+            if status:
+                self.logger.debug("%s is not running" %name)
+                return 1, pids
+            pids.append(pid)
+        return 0, pids
+
+
+    def restart_sanity(self, names, restart_cmd):
+        status, original_pids = self.verify_running(names)
+        if status:
+            return 1
+
+        status, output = self.target.run(restart_cmd)
+
+        # Always check for an error, most likely a race between shutting down and starting up
+        timeout = time.time() + 30
+
+        while time.time() < timeout:
+            # Verify the previous ones are no longer running
+            status = self.verif_not_running(original_pids)
+            if status:
+                continue
+
+            status, pids = self.verify_running(names)
+            if status:
+                continue
+
+            # Everything is fine now, so exit to continue the test
+            status = 0
+            break
+
+        msg = ('Could not restart %s service. Status and output: %s and %s'
+               %(names, status, output))
+        self.assertEqual(status, 0, msg)
+
 
     @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_logger(self):
@@ -37,12 +85,16 @@ class SyslogTestConfig(OERuntimeTestCase):
                ' Output: %s ' % output)
         self.assertEqual(status, 0, msg=msg)
 
+
     @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_restart(self):
-        if "systemd" != self.tc.td.get("VIRTUAL-RUNTIME_init_manager", ""):
-            (_, _) = self.target.run('/etc/init.d/syslog restart')
-        else:
-            (_, _) = self.target.run('systemctl restart syslog.service')
+        status = self.restart_sanity(['systemd-journald'], 'systemctl restart syslog.service')
+        if status:
+            status = self.restart_sanity(['rsyslogd'], '/etc/init.d/rsyslog restart')
+            if status:
+                status = self.restart_sanity(['syslogd', 'klogd'], '/etc/init.d/syslog restart')
+            else:
+                self.logger.info("No syslog found to restart, ignoring")
 
 
     @OETestDepends(['oe_syslog.SyslogTestConfig.test_syslog_logger'])
@@ -52,10 +104,8 @@ class SyslogTestConfig(OERuntimeTestCase):
     def test_syslog_startup_config(self):
         cmd = 'echo "LOGFILE=/var/log/test" >> /etc/syslog-startup.conf'
         self.target.run(cmd)
-        status, output = self.target.run('/etc/init.d/syslog restart')
-        msg = ('Could not restart syslog service. Status and output:'
-               ' %s and %s' % (status,output))
-        self.assertEqual(status, 0, msg)
+
+        self.test_syslog_restart()
 
         cmd = 'logger foobar && grep foobar /var/log/test'
         status,output = self.target.run(cmd)
@@ -64,4 +114,4 @@ class SyslogTestConfig(OERuntimeTestCase):
 
         cmd = "sed -i 's#LOGFILE=/var/log/test##' /etc/syslog-startup.conf"
         self.target.run(cmd)
-        self.target.run('/etc/init.d/syslog restart')
+        self.test_syslog_restart()
