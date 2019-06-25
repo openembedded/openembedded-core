@@ -6,8 +6,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0003-Allow-enable-DRI-without-DRI-drivers.patch \
            "
 
-SRC_URI[md5sum] = "090cd351cf938fc1729dee983520216a"
-SRC_URI[sha256sum] = "2a6c3af3a803389183168e449c536304cf03e0f82c4c9333077933543b9d02f3"
+SRC_URI[md5sum] = "07cd8cd79de28ec1a374ee3a06e47789"
+SRC_URI[sha256sum] = "72114b16b4a84373b2acda060fe2bb1d45ea2598efab3ef2d44bdeda74f15581"
 
 #because we cannot rely on the fact that all apps will use pkgconfig,
 #make eglplatform.h independent of MESA_EGL_NO_X11_HEADER
