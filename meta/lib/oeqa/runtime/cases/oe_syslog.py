@@ -43,31 +43,38 @@ class SyslogTestConfig(OERuntimeTestCase):
     def restart_sanity(self, names, restart_cmd):
         status, original_pids = self.verify_running(names)
         if status:
-            return 1
+            return False
 
         status, output = self.target.run(restart_cmd)
+
+        msg = ('Could not restart %s service. Status and output: %s and %s' % (names, status, output))
+        self.assertEqual(status, 0, msg)
 
         # Always check for an error, most likely a race between shutting down and starting up
         timeout = time.time() + 30
 
+        restarted = False
+        status = ""
         while time.time() < timeout:
             # Verify the previous ones are no longer running
             status = self.verif_not_running(original_pids)
             if status:
+                status = "Original syslog processes still running"
                 continue
 
             status, pids = self.verify_running(names)
             if status:
+                status = "New syslog processes not running"
                 continue
 
             # Everything is fine now, so exit to continue the test
-            status = 0
+            restarted = True
             break
 
-        msg = ('Could not restart %s service. Status and output: %s and %s'
-               %(names, status, output))
-        self.assertEqual(status, 0, msg)
+        msg = ('%s didn\'t appear to restart: %s' % (names, status))
+        self.assertTrue(restarted, msg)
 
+        return True
 
     @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_logger(self):
@@ -88,13 +95,14 @@ class SyslogTestConfig(OERuntimeTestCase):
 
     @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_restart(self):
-        status = self.restart_sanity(['systemd-journald'], 'systemctl restart syslog.service')
-        if status:
-            status = self.restart_sanity(['rsyslogd'], '/etc/init.d/rsyslog restart')
-            if status:
-                status = self.restart_sanity(['syslogd', 'klogd'], '/etc/init.d/syslog restart')
-            else:
-                self.logger.info("No syslog found to restart, ignoring")
+        if self.restart_sanity(['systemd-journald'], 'systemctl restart syslog.service'):
+            pass
+        elif self.restart_sanity(['rsyslogd'], '/etc/init.d/rsyslog restart'):
+            pass
+        elif self.restart_sanity(['syslogd', 'klogd'], '/etc/init.d/syslog restart'):
+            pass
+        else:
+            self.logger.info("No syslog found to restart, ignoring")
 
 
     @OETestDepends(['oe_syslog.SyslogTestConfig.test_syslog_logger'])
