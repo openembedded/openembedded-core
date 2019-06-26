@@ -40,7 +40,7 @@ class SyslogTestConfig(OERuntimeTestCase):
         return 0, pids
 
 
-    def restart_sanity(self, names, restart_cmd):
+    def restart_sanity(self, names, restart_cmd, pidchange=True):
         status, original_pids = self.verify_running(names)
         if status:
             return False
@@ -49,6 +49,9 @@ class SyslogTestConfig(OERuntimeTestCase):
 
         msg = ('Could not restart %s service. Status and output: %s and %s' % (names, status, output))
         self.assertEqual(status, 0, msg)
+
+        if not pidchange:
+            return True
 
         # Always check for an error, most likely a race between shutting down and starting up
         timeout = time.time() + 30
@@ -95,7 +98,7 @@ class SyslogTestConfig(OERuntimeTestCase):
 
     @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_restart(self):
-        if self.restart_sanity(['systemd-journald'], 'systemctl restart syslog.service'):
+        if self.restart_sanity(['systemd-journald'], 'systemctl restart syslog.service', pidchange=False):
             pass
         elif self.restart_sanity(['rsyslogd'], '/etc/init.d/rsyslog restart'):
             pass
