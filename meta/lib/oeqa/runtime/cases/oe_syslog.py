@@ -85,6 +85,9 @@ class SyslogTestConfig(OERuntimeTestCase):
         msg = "Can't log into syslog. Output: %s " % output
         self.assertEqual(status, 0, msg=msg)
 
+        # There is no way to flush the logger to disk in all cases
+        time.sleep(1)
+
         status, output = self.target.run('grep foobar /var/log/messages')
         if status != 0:
             if self.tc.td.get("VIRTUAL-RUNTIME_init_manager") == "systemd":
