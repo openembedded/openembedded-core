@@ -13,10 +13,9 @@ DEPENDS = "mkfontscale-native mkfontdir-native font-util-native"
 RDEPENDS_${PN} = ""
 
 SRC_URI += "file://nocompiler.patch"
+SRC_URI[md5sum] = "bbae4f247b88ccde0e85ed6a403da22a"
+SRC_URI[sha256sum] = "bd96e16143a044b19e87f217cf6a3763a70c561d1076aad6f6d862ec41774a31"
 
 inherit allarch
 
 EXTRA_OECONF += "--with-encodingsdir=${datadir}/fonts/X11/encodings"
-
-SRC_URI[md5sum] = "0f2d6546d514c5cc4ecf78a60657a5c1"
-SRC_URI[sha256sum] = "ced6312988a45d23812c2ac708b4595f63fd7a49c4dcd9f66bdcd50d1057d539"
