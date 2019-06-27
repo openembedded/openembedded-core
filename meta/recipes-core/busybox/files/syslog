@@ -82,7 +82,7 @@ case "$1" in
 	;;
   restart)
 	pid1=`pidof syslogd`
-	pid2=`pidof syslogd`
+	pid2=`pidof klogd`
 	$0 stop
 	waitpid $pid1
 	waitpid $pid2
