@@ -1,0 +1,190 @@
+Index: pigz-2.4/pigz.c
+===================================================================
+--- pigz-2.4.orig/pigz.c
++++ pigz-2.4/pigz.c
+@@ -4293,8 +4293,8 @@ local int option(char *arg) {
+ 
+ #ifndef NOTHREAD
+ // handle error received from yarn function
+-local void cut_yarn(int err) {
+-    throw(err, err == ENOMEM ? "not enough memory" : "internal threads error");
++local void cut_yarn(int err, int loc) {
++    throw(err, err == ENOMEM ? "not enough memory (%d, %d)" : "internal threads error (%d, %d)", err, loc);
+ }
+ #endif
+ 
+Index: pigz-2.4/yarn.c
+===================================================================
+--- pigz-2.4.orig/yarn.c
++++ pigz-2.4/yarn.c
+@@ -50,14 +50,14 @@
+ 
+ /* error handling external globals, resettable by application */
+ char *yarn_prefix = "yarn";
+-void (*yarn_abort)(int) = NULL;
++void (*yarn_abort)(int, int) = NULL;
+ 
+ 
+ /* immediately exit -- use for errors that shouldn't ever happen */
+-local void fail(int err)
++local void fail(int err, int loc)
+ {
+     if (yarn_abort != NULL)
+-        yarn_abort(err);
++        yarn_abort(err, loc);
+     fprintf(stderr, "%s: %s (%d) -- aborting\n", yarn_prefix,
+             err == ENOMEM ? "out of memory" : "internal pthread error", err);
+     exit(err == ENOMEM || err == EAGAIN ? err : EINVAL);
+@@ -83,7 +83,7 @@ local void *my_malloc(size_t size)
+     void *block;
+ 
+     if ((block = my_malloc_f(size)) == NULL)
+-        fail(ENOMEM);
++        fail(ENOMEM, 1);
+     return block;
+ }
+ 
+@@ -103,7 +103,7 @@ lock *new_lock(long initial)
+     bolt = my_malloc(sizeof(struct lock_s));
+     if ((ret = pthread_mutex_init(&(bolt->mutex), NULL)) ||
+         (ret = pthread_cond_init(&(bolt->cond), NULL)))
+-        fail(ret);
++        fail(ret, 2);
+     bolt->value = initial;
+     return bolt;
+ }
+@@ -113,7 +113,7 @@ void possess(lock *bolt)
+     int ret;
+ 
+     if ((ret = pthread_mutex_lock(&(bolt->mutex))) != 0)
+-        fail(ret);
++        fail(ret, 3);
+ }
+ 
+ void release(lock *bolt)
+@@ -121,7 +121,7 @@ void release(lock *bolt)
+     int ret;
+ 
+     if ((ret = pthread_mutex_unlock(&(bolt->mutex))) != 0)
+-        fail(ret);
++        fail(ret, 4);
+ }
+ 
+ void twist(lock *bolt, enum twist_op op, long val)
+@@ -134,7 +134,7 @@ void twist(lock *bolt, enum twist_op op,
+         bolt->value += val;
+     if ((ret = pthread_cond_broadcast(&(bolt->cond))) ||
+         (ret = pthread_mutex_unlock(&(bolt->mutex))))
+-        fail(ret);
++        fail(ret, 5);
+ }
+ 
+ #define until(a) while(!(a))
+@@ -147,22 +147,22 @@ void wait_for(lock *bolt, enum wait_op o
+     case TO_BE:
+         until (bolt->value == val)
+             if ((ret = pthread_cond_wait(&(bolt->cond), &(bolt->mutex))) != 0)
+-                fail(ret);
++                fail(ret, 6);
+         break;
+     case NOT_TO_BE:
+         until (bolt->value != val)
+             if ((ret = pthread_cond_wait(&(bolt->cond), &(bolt->mutex))) != 0)
+-                fail(ret);
++                fail(ret, 7);
+         break;
+     case TO_BE_MORE_THAN:
+         until (bolt->value > val)
+             if ((ret = pthread_cond_wait(&(bolt->cond), &(bolt->mutex))) != 0)
+-                fail(ret);
++                fail(ret, 8);
+         break;
+     case TO_BE_LESS_THAN:
+         until (bolt->value < val)
+             if ((ret = pthread_cond_wait(&(bolt->cond), &(bolt->mutex))) != 0)
+-                fail(ret);
++                fail(ret, 9);
+     }
+ }
+ 
+@@ -179,7 +179,7 @@ void free_lock(lock *bolt)
+         return;
+     if ((ret = pthread_cond_destroy(&(bolt->cond))) ||
+         (ret = pthread_mutex_destroy(&(bolt->mutex))))
+-        fail(ret);
++        fail(ret, 10);
+     my_free(bolt);
+ }
+ 
+@@ -224,7 +224,7 @@ local void reenter(void *dummy)
+         prior = &(match->next);
+     }
+     if (match == NULL)
+-        fail(EINVAL);
++        fail(EINVAL, 11);
+ 
+     /* mark this thread as done and move it to the head of the list */
+     match->done = 1;
+@@ -287,7 +287,7 @@ thread *launch(void (*probe)(void *), vo
+         (ret = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE)) ||
+         (ret = pthread_create(&(th->id), &attr, ignition, capsule)) ||
+         (ret = pthread_attr_destroy(&attr)))
+-        fail(ret);
++        fail(ret, 12);
+ 
+     /* put the thread in the threads list for join_all() */
+     th->done = 0;
+@@ -304,7 +304,7 @@ void join(thread *ally)
+ 
+     /* wait for thread to exit and return its resources */
+     if ((ret = pthread_join(ally->id, NULL)) != 0)
+-        fail(ret);
++        fail(ret, 13);
+ 
+     /* find the thread in the threads list */
+     possess(&(threads_lock));
+@@ -315,7 +315,7 @@ void join(thread *ally)
+         prior = &(match->next);
+     }
+     if (match == NULL)
+-        fail(EINVAL);
++        fail(EINVAL, 14);
+ 
+     /* remove thread from list and update exited count, free thread */
+     if (match->done)
+@@ -351,12 +351,12 @@ int join_all(void)
+             prior = &(match->next);
+         }
+         if (match == NULL)
+-            fail(EINVAL);
++            fail(EINVAL, 15);
+ 
+         /* join the thread (will be almost immediate), remove from the threads
+            list, update the reenter count, and free the thread */
+         if ((ret = pthread_join(match->id, NULL)) != 0)
+-            fail(ret);
++            fail(ret, 16);
+         threads_lock.value--;
+         *prior = match->next;
+         my_free(match);
+@@ -375,6 +375,6 @@ void destruct(thread *off_course)
+     int ret;
+ 
+     if ((ret = pthread_cancel(off_course->id)) != 0)
+-        fail(ret);
++        fail(ret, 17);
+     join(off_course);
+ }
+Index: pigz-2.4/yarn.h
+===================================================================
+--- pigz-2.4.orig/yarn.h
++++ pigz-2.4/yarn.h
+@@ -110,7 +110,7 @@
+  */
+ 
+ extern char *yarn_prefix;
+-extern void (*yarn_abort)(int);
++extern void (*yarn_abort)(int, int);
+ 
+ void yarn_mem(void *(*)(size_t), void (*)(void *));
+ 
