@@ -26,6 +26,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
 	   file://0001-bpo-36852-proper-detection-of-mips-architecture-for-.patch \
 	   file://crosspythonpath.patch \
            file://reformat_sysconfig.py \
+           file://0001-Use-FLAG_REF-always-for-interned-strings.patch \
            "
 
 SRC_URI_append_class-native = " \
