@@ -13,8 +13,7 @@ independent of any particular user interface policy or style."
 require xorg-lib-common.inc
 
 LICENSE = "MIT & MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING;md5=6565b1e0094ea1caae0971cc4035f343"
-
+LIC_FILES_CHKSUM = "file://COPYING;md5=73d55cea4d27ca1a09a5d23378b3ecf8"
 
 DEPENDS += "util-linux libxcb libsm virtual/libx11 xorgproto libxdmcp"
 PROVIDES = "xt"
@@ -24,12 +23,10 @@ PE = "1"
 XORG_PN = "libXt"
 
 SRC_URI +=  "file://libxt_fix_for_x32.patch \
-             file://0001-libXt-util-don-t-link-makestrs-with-target-cflags.patch \
             "
+SRC_URI[md5sum] = "a9019421d3ee8b4937b6afd9025f018a"
+SRC_URI[sha256sum] = "b31df531dabed9f4611fc8980bc51d7782967e2aff44c4105251a1acb5a77831"
 
 BBCLASSEXTEND = "native nativesdk"
 
 EXTRA_OECONF += "--disable-xkb"
-
-SRC_URI[md5sum] = "8f5b5576fbabba29a05f3ca2226f74d3"
-SRC_URI[sha256sum] = "46eeb6be780211fdd98c5109286618f6707712235fdd19df4ce1e6954f349f1a"
