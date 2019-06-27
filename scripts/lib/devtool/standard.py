@@ -1866,13 +1866,27 @@ def reset(args, config, basepath, workspace):
 def _get_layer(layername, d):
     """Determine the base layer path for the specified layer name/path"""
     layerdirs = d.getVar('BBLAYERS').split()
-    layers = {os.path.basename(p): p for p in layerdirs}
+    layers = {}    # {basename: layer_paths}
+    for p in layerdirs:
+        bn = os.path.basename(p)
+        if bn not in layers:
+            layers[bn] = [p]
+        else:
+            layers[bn].append(p)
     # Provide some shortcuts
     if layername.lower() in ['oe-core', 'openembedded-core']:
-        layerdir = layers.get('meta', None)
+        layername = 'meta'
+    layer_paths = layers.get(layername, None)
+    if not layer_paths:
+        return os.path.abspath(layername)
+    elif len(layer_paths) == 1:
+        return os.path.abspath(layer_paths[0])
     else:
-        layerdir = layers.get(layername, None)
-    return os.path.abspath(layerdir or layername)
+        # multiple layers having the same base name
+        logger.warning("Multiple layers have the same base name '%s', use the first one '%s'." % (layername, layer_paths[0]))
+        logger.warning("Consider using path instead of base name to specify layer:\n\t\t%s" % '\n\t\t'.join(layer_paths))
+        return os.path.abspath(layer_paths[0])
+
 
 def finish(args, config, basepath, workspace):
     """Entry point for the devtool 'finish' subcommand"""
