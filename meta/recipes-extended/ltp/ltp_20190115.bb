@@ -50,6 +50,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://define-sigrtmin-and-sigrtmax-for-musl.patch \
            file://setregid01-security-string-formatting.patch \
            file://0001-syscalls-setrlimit03.c-read-proc-sys-fs-nr_open-for-.patch \
+		   file://0001-shmctl01-don-t-use-hardcoded-index-0-for-SHM_STAT-te.patch \
            "
 
 S = "${WORKDIR}/git"
