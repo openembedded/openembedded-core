@@ -40,6 +40,7 @@
 
 inherit packagedata
 inherit chrpath
+inherit package_pkgdata
 
 # Need the package_qa_handle_error() in insane.bbclass
 inherit insane
@@ -1571,7 +1572,7 @@ python package_do_filedeps() {
         d.setVar("FILERPROVIDESFLIST_" + pkg, " ".join(provides_files[pkg]))
 }
 
-SHLIBSDIRS = "${PKGDATA_DIR}/${MLPREFIX}shlibs2"
+SHLIBSDIRS = "${WORKDIR_PKGDATA}/${MLPREFIX}shlibs2"
 SHLIBSWORKDIR = "${PKGDESTWORK}/${MLPREFIX}shlibs2"
 
 python package_do_shlibs() {
@@ -1729,10 +1730,7 @@ python package_do_shlibs() {
 
     needed = {}
 
-    # Take shared lock since we're only reading, not writing
-    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
     shlib_provider = oe.package.read_shlib_providers(d)
-    bb.utils.unlockfile(lf)
 
     for pkg in shlib_pkgs:
         private_libs = d.getVar('PRIVATE_LIBS_' + pkg) or d.getVar('PRIVATE_LIBS') or ""
@@ -1918,9 +1916,6 @@ python package_do_pkgconfig () {
                 f.write('%s\n' % p)
             f.close()
 
-    # Take shared lock since we're only reading, not writing
-    lf = bb.utils.lockfile(d.expand("${PACKAGELOCK}"), True)
-
     # Go from least to most specific since the last one found wins
     for dir in reversed(shlibs_dirs):
         if not os.path.exists(dir):
@@ -1935,8 +1930,6 @@ python package_do_pkgconfig () {
                 pkgconfig_provided[pkg] = []
                 for l in lines:
                     pkgconfig_provided[pkg].append(l.rstrip())
-
-    bb.utils.unlockfile(lf)
 
     for pkg in packages.split():
         deps = []
@@ -2134,6 +2127,7 @@ def gen_packagevar(d):
 PACKAGE_PREPROCESS_FUNCS ?= ""
 # Functions for setting up PKGD
 PACKAGEBUILDPKGD ?= " \
+                package_prepare_pkgdata \
                 perform_packagecopy \
                 ${PACKAGE_PREPROCESS_FUNCS} \
                 split_and_strip_files \
@@ -2261,12 +2255,8 @@ do_packagedata () {
 addtask packagedata before do_build after do_package
 
 SSTATETASKS += "do_packagedata"
-# PACKAGELOCK protects readers of PKGDATA_DIR against writes
-# whilst code is reading in do_package
-PACKAGELOCK = "${STAGING_DIR}/package-output.lock"
 do_packagedata[sstate-inputdirs] = "${PKGDESTWORK}"
 do_packagedata[sstate-outputdirs] = "${PKGDATA_DIR}"
-do_packagedata[sstate-lockfile] = "${PACKAGELOCK}"
 do_packagedata[stamp-extra-info] = "${MACHINE_ARCH}"
 
 python do_packagedata_setscene () {

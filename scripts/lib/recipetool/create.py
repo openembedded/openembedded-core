@@ -60,7 +60,9 @@ class RecipeHandler(object):
         if RecipeHandler.recipelibmap:
             return
         # First build up library->package mapping
-        shlib_providers = oe.package.read_shlib_providers(d)
+        d2 = bb.data.createCopy(d)
+        d2.setVar("WORKDIR_PKGDATA", "${PKGDATA_DIR}")
+        shlib_providers = oe.package.read_shlib_providers(d2)
         libdir = d.getVar('libdir')
         base_libdir = d.getVar('base_libdir')
         libpaths = list(set([base_libdir, libdir]))
