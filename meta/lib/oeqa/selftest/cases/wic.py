@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright (c) 2015, Intel Corporation.
 #
