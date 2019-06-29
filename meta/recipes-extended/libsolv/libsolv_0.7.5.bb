@@ -8,10 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 DEPENDS = "expat zlib"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git \
-           file://0001-build-use-GNUInstallDirs.patch \
 "
 
-SRCREV = "51fc3b1214aa9677e972712fa1ce6916e438751f"
+SRCREV = "2cab7ea00d08390374b25b11d969f3740c4660f4"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
