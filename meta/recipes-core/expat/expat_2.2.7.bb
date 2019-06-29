@@ -7,12 +7,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5b8620d98e49772d95fc1d291c26aa79"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.bz2 \
-           file://autotools.patch \
            file://libtool-tag.patch \
 	  "
 
-SRC_URI[md5sum] = "ca047ae951b40020ac831c28859161b2"
-SRC_URI[sha256sum] = "17b43c2716d521369f82fc2dc70f359860e90fa440bea65b3b85f0b246ea81f2"
+SRC_URI[md5sum] = "72f36b87cdb478aba1e78473393766aa"
+SRC_URI[sha256sum] = "cbc9102f4a31a8dafd42d642e9a3aa31e79a0aedaa1f6efd2795ebc83174ec18"
 
 inherit autotools lib_package
 
