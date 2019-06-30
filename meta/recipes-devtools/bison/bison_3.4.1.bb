@@ -17,8 +17,8 @@ SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
 # No point in hardcoding path to m4, just use PATH
 EXTRA_OECONF += "M4=m4"
 
-SRC_URI[md5sum] = "c9b552dee234b2f6b66e56b27e5234c9"
-SRC_URI[sha256sum] = "039ee45b61d95e5003e7e8376f9080001b4066ff357bde271b7faace53b9d804"
+SRC_URI[md5sum] = "201286a573b12da109df96282fe4ff4a"
+SRC_URI[sha256sum] = "27159ac5ebf736dffd5636fd2cd625767c9e437de65baa63cb0de83570bd820d"
 
 inherit autotools gettext texinfo
 
