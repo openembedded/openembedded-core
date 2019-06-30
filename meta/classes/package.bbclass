@@ -238,7 +238,7 @@ def do_split_packages(d, root, file_regex, output_pattern, description, postinst
     d.setVar('PACKAGES', ' '.join(packages))
     return list(split_packages)
 
-PACKAGE_DEPENDS += "file-native pigz-native"
+PACKAGE_DEPENDS += "file-native"
 
 python () {
     if d.getVar('PACKAGES') != '':
