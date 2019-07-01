@@ -3,24 +3,14 @@ SECTION = "console/network"
 LICENSE = "unfs3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9475885294e17c0cc0067820d042792e"
 
-# SVN support for upstream version check isn't implemented yet
-RECIPE_UPSTREAM_VERSION = "0.9.22.r497"
-RECIPE_UPSTREAM_DATE = "Oct 08, 2015"
-CHECK_DATE = "Dec 10, 2015"
-
 DEPENDS = "flex-native bison-native flex"
 DEPENDS += "libtirpc"
 DEPENDS_append_class-nativesdk = " flex-nativesdk"
 
 ASNEEDED = ""
 
-MOD_PV = "497"
-S = "${WORKDIR}/trunk"
-# Only subversion url left in OE-Core, use a mirror tarball instead since
-# this rarely changes.
-# svn://svn.code.sf.net/p/unfs3/code;module=trunk;rev=${MOD_PV};protocol=http
-# rename the tarball in mirror to avoid clash with user local svn tarball
-SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/unfs3-0.9.22.r497.tar.gz \
+S = "${WORKDIR}/git"
+SRC_URI = "git://github.com/unfs3/unfs3.git;protocol=https \
            file://unfs3_parallel_build.patch \
            file://alternate_rpc_ports.patch \
            file://fix_pid_race_parent_writes_child_pid.patch \
@@ -31,8 +21,9 @@ SRC_URI = "http://downloads.yoctoproject.org/mirror/sources/unfs3-0.9.22.r497.ta
            file://0001-daemon.c-Libtirpc-porting-fixes.patch \
            file://0001-attr-fix-utime-for-symlink.patch \
           "
-SRC_URI[md5sum] = "2e43e471c77ade0331901c40b8f8e9a3"
-SRC_URI[sha256sum] = "21009468a9ba07b72ea93780d025a63ab4e55bf8fc3127803c296f0900fe1bac"
+SRCREV = "c12a5c69a8d59be6916cbd0e0f41c159f1962425"
+
+PV = "0.9.22+${SRCPV}"
 
 BBCLASSEXTEND = "native nativesdk"
 
