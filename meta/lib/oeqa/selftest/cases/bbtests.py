@@ -242,6 +242,36 @@ INHERIT_remove = \"report-error\"
             self.assertIn('_setscene', task, 'A task different from _setscene ran: %s.\n'
                                              'Executed tasks were: %s' % (task, str(tasks)))
 
+    def test_skip_setscene(self):
+        test_recipe = 'ed'
+
+        bitbake(test_recipe)
+        bitbake('-c clean %s' % test_recipe)
+
+        ret = bitbake('--setscene-only %s' % test_recipe)
+        tasks = re.findall(r'task\s+(do_\S+):', ret.output)
+
+        for task in tasks:
+            self.assertIn('_setscene', task, 'A task different from _setscene ran: %s.\n'
+                                             'Executed tasks were: %s' % (task, str(tasks)))
+
+        # Run without setscene. Should do nothing
+        ret = bitbake('--skip-setscene %s' % test_recipe)
+        tasks = re.findall(r'task\s+(do_\S+):', ret.output)
+
+        self.assertFalse(tasks, 'Tasks %s ran when they should not have' % (str(tasks)))
+
+        # Clean (leave sstate cache) and run with --skip-setscene. No setscene
+        # tasks should run
+        bitbake('-c clean %s' % test_recipe)
+
+        ret = bitbake('--skip-setscene %s' % test_recipe)
+        tasks = re.findall(r'task\s+(do_\S+):', ret.output)
+
+        for task in tasks:
+            self.assertNotIn('_setscene', task, 'A _setscene task ran: %s.\n'
+                                                'Executed tasks were: %s' % (task, str(tasks)))
+
     def test_bbappend_order(self):
         """ Bitbake should bbappend to recipe in a predictable order """
         test_recipe = 'ed'
