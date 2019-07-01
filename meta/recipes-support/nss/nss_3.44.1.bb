@@ -33,8 +33,8 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://system-pkcs11.txt \
            "
 
-SRC_URI[md5sum] = "e9222b9573452b9f4e6ff4915d6407c2"
-SRC_URI[sha256sum] = "a5620e59b6eeedfd5a12c9298b50ad92e9898b223e214eb675e36f4ffb5b6aff"
+SRC_URI[md5sum] = "511a37f35650812283274694b98c20b2"
+SRC_URI[sha256sum] = "fce4cb80c989cde35416ecbe55920856015a35151c4f21be64470e4dd4de12f8"
 
 UPSTREAM_CHECK_URI = "https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_Releases"
 UPSTREAM_CHECK_REGEX = "NSS_(?P<pver>.+)_release_notes"
