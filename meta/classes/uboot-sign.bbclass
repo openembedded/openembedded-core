@@ -80,16 +80,16 @@ do_concat_dtb () {
 }
 
 python () {
-	uboot_pn = d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'
-	if d.getVar('UBOOT_SIGN_ENABLE') == '1' and d.getVar('PN') == uboot_pn:
-		kernel_pn = d.getVar('PREFERRED_PROVIDER_virtual/kernel')
+    uboot_pn = d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'
+    if d.getVar('UBOOT_SIGN_ENABLE') == '1' and d.getVar('PN') == uboot_pn:
+        kernel_pn = d.getVar('PREFERRED_PROVIDER_virtual/kernel')
 
-		# u-boot.dtb and u-boot-nodtb.bin are deployed _before_ do_deploy
-		# Thus, do_deploy_setscene will also populate them in DEPLOY_IMAGE_DIR
-		bb.build.addtask('do_deploy_dtb', 'do_deploy', 'do_compile', d)
+        # u-boot.dtb and u-boot-nodtb.bin are deployed _before_ do_deploy
+        # Thus, do_deploy_setscene will also populate them in DEPLOY_IMAGE_DIR
+        bb.build.addtask('do_deploy_dtb', 'do_deploy', 'do_compile', d)
 
-		# do_concat_dtb is scheduled _before_ do_install as it overwrite the
-		# u-boot.bin in both DEPLOYDIR and DEPLOY_IMAGE_DIR.
-		bb.build.addtask('do_concat_dtb', 'do_install', None, d)
-		d.appendVarFlag('do_concat_dtb', 'depends', ' %s:do_assemble_fitimage' % kernel_pn)
+        # do_concat_dtb is scheduled _before_ do_install as it overwrite the
+        # u-boot.bin in both DEPLOYDIR and DEPLOY_IMAGE_DIR.
+        bb.build.addtask('do_concat_dtb', 'do_install', None, d)
+        d.appendVarFlag('do_concat_dtb', 'depends', ' %s:do_assemble_fitimage' % kernel_pn)
 }
