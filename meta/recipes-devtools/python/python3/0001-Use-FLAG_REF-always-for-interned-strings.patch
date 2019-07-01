@@ -3,7 +3,7 @@ From: Inada Naoki <songofacandy@gmail.com>
 Date: Sat, 14 Jul 2018 00:46:11 +0900
 Subject: [PATCH] Use FLAG_REF always for interned strings
 
-Upstream-status: Submitted [https://github.com/python/cpython/pull/8226]
+Upstream-Status: Submitted [https://github.com/python/cpython/pull/8226]
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
  Python/marshal.c | 9 +++++++--
