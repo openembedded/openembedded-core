@@ -666,10 +666,11 @@ reproducible_final_image_task () {
 }
 
 systemd_preset_all () {
-    systemctl --root="${IMAGE_ROOTFS}" --preset-mode=enable-only preset-all
+    if [ -e ${IMAGE_ROOTFS}${root_prefix}/lib/systemd/systemd ]; then
+	systemctl --root="${IMAGE_ROOTFS}" --preset-mode=enable-only preset-all
+    fi
 }
 
-IMAGE_EXTRADEPENDS += "${@ 'systemd-systemctl-native' if bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d) and not bb.utils.contains('IMAGE_FEATURES', 'stateless-rootfs', True, False, d) else ''}"
 IMAGE_PREPROCESS_COMMAND_append = " ${@ 'systemd_preset_all;' if bb.utils.contains('DISTRO_FEATURES', 'systemd', True, False, d) and not bb.utils.contains('IMAGE_FEATURES', 'stateless-rootfs', True, False, d) else ''} reproducible_final_image_task; "
 
 CVE_PRODUCT = ""
