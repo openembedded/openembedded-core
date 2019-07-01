@@ -6,8 +6,8 @@ SRC_URI += " \
            file://run-ptest \
            "
 
-SRC_URI[md5sum] = "20c85b67846d49622ef3b24230803fef"
-SRC_URI[sha256sum] = "9828d03852c37c20fa333a0264f2490f07338576734d910ee3fd538c9520846c"
+SRC_URI[md5sum] = "7e156fb526b8f4bb1b30a3dd8a7ce400"
+SRC_URI[sha256sum] = "28a945fdf340e6ba04fc890b98648342e3cccfd6d223a48f3810572f11b2514c"
 
 # it's unknown to configure script, but then passed to extconf.rb
 # maybe it's not really needed as we're hardcoding the result with
