@@ -122,6 +122,12 @@ if [ ! -e "$IMAGE" ]; then
 	exit 1
 fi
 
+if [ ! -e "$DEVICE" ]; then
+	echo "ERROR: Device $DEVICE does not exist"
+	usage
+	exit 1
+fi
+
 if [ "$(uname)" = "Darwin" ]; then
 	# readlink doesn't support -f on MacOS, just assume it isn't a symlink
 	ACTUAL_DEVICE=$DEVICE
@@ -139,9 +145,8 @@ if is_inuse $ACTUAL_DEVICE ; then
 	exit 1
 fi
 
-
 if [ ! -w "$DEVICE" ]; then
-	echo "ERROR: Device $DEVICE does not exist or is not writable"
+	echo "ERROR: Device $DEVICE is not writable - possibly use sudo?"
 	usage
 	exit 1
 fi
