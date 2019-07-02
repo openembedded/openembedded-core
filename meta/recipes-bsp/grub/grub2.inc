@@ -63,10 +63,6 @@ BUILD_LDFLAGS = ""
 CFLAGS_append = " -Wno-error"
 
 do_configure_prepend() {
-	# The grub2 configure script uses variables such as TARGET_CFLAGS etc
-	# for its own purposes. Remove the OE versions from the environment to
-	# avoid conflicts.
-	unset TARGET_CPPFLAGS TARGET_CFLAGS TARGET_CXXFLAGS TARGET_LDFLAGS
 	( cd ${S}
 	${S}/autogen.sh )
 }
