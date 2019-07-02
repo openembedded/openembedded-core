@@ -44,9 +44,8 @@ SRC_URI = "http://www.busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0001-testsuite-check-uudecode-before-using-it.patch \
            file://0001-testsuite-use-www.example.org-for-wget-test-cases.patch \
            file://0001-du-l-works-fix-to-use-145-instead-of-144.patch \
-           file://0001-dc.tests-fix-two-test-case-to-also-depend-on-DC_BIG.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
-SRC_URI[tarball.md5sum] = "4f72fc6abd736d5f4741fc4a2485547a"
-SRC_URI[tarball.sha256sum] = "3d1d04a4dbd34048f4794815a5c48ebb9eb53c5277e09ffffc060323b95dfbdc"
+SRC_URI[tarball.md5sum] = "cdba5d4458f944ceec5cdcf7c4914b69"
+SRC_URI[tarball.sha256sum] = "0e4925392fd9f3743cc517e031b68b012b24a63b0cf6c1ff03cce7bb3846cc99"
