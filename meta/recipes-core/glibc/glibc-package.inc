@@ -162,21 +162,28 @@ bashscripts = "mtrace sotruss xtrace"
 do_stash_locale () {
 	dest=${LOCALESTASH}
 	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
-	if [ "${base_libdir}" != "${libdir}" ]; then
-		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
-	fi
+	# Hide away the locale data from the deployment
 	if [ -e ${D}${bindir}/localedef ]; then
 		mv -f ${D}${bindir}/localedef ${dest}${bindir}
 	fi
 	if [ -e ${D}${libdir}/gconv ]; then
 		mv -f ${D}${libdir}/gconv ${dest}${libdir}
 	fi
-	if [ -e ${D}${exec_prefix}/lib ]; then
-		cp -fpPR ${D}${exec_prefix}/lib ${dest}${exec_prefix}
-	fi
 	if [ -e ${D}${datadir}/i18n ]; then
 		mv ${D}${datadir}/i18n ${dest}${datadir}
 	fi
+
+	# Make a copy of all the libraries into the locale stash
+	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
+	if [ "${base_libdir}" != "${libdir}" ]; then
+		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
+	fi
+	if [ -e ${D}${exec_prefix}/lib ]; then
+		if [ ${exec_prefix}/lib != ${base_libdir} ] && [ ${exec_prefix}/lib != ${libdir} ]; then
+			cp -fpPR ${D}${exec_prefix}/lib ${dest}${exec_prefix}
+		fi
+	fi
+
 	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
 	rm -rf ${D}${datadir}/locale/
 	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
