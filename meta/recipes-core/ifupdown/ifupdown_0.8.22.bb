@@ -10,8 +10,9 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https \
 	   file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
 	   file://inet-6-.defn-fix-inverted-checks-for-loopback.patch \
 	   file://99_network \
+	   file://0001-Define-FNM_EXTMATCH-for-musl.patch \
 	  "
-SRCREV = "11b9f99f7ecc7052497e6786156cfed531f11823"
+SRCREV = "ab5a0f464e53e172316a5ca8b5dcdc49e8848999"
 
 S = "${WORKDIR}/git"
 
