@@ -49,7 +49,7 @@ device_details() {
 	if [ -f "/sys/class/block/$DEV/device/vendor" ]; then
 		echo "  vendor: $(cat /sys/class/block/$DEV/device/vendor)"
 	else
-		echo "  vendor: UNKOWN"
+		echo "  vendor: UNKNOWN"
 	fi
 	if [ -f "/sys/class/block/$DEV/device/model" ]; then
 		echo "   model: $(cat /sys/class/block/$DEV/device/model)"
