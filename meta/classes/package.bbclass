@@ -1358,12 +1358,16 @@ python emit_pkgdata() {
     import json
 
     def process_postinst_on_target(pkg, mlprefix):
+        pkgval = d.getVar('PKG_%s' % pkg)
+        if pkgval is None:
+            pkgval = pkg
+
         defer_fragment = """
 if [ -n "$D" ]; then
     $INTERCEPT_DIR/postinst_intercept delay_to_first_boot %s mlprefix=%s
     exit 0
 fi
-""" % (pkg, mlprefix)
+""" % (pkgval, mlprefix)
 
         postinst = d.getVar('pkg_postinst_%s' % pkg)
         postinst_ontarget = d.getVar('pkg_postinst_ontarget_%s' % pkg)
