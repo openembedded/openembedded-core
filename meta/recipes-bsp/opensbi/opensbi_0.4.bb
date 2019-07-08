@@ -1,17 +1,16 @@
 SUMMARY = "RISC-V Open Source Supervisor Binary Interface (OpenSBI)"
 DESCRIPTION = "OpenSBI aims to provide an open-source and extensible implementation of the RISC-V SBI specification for a platform specific firmware (M-mode) and a general purpose OS, hypervisor or bootloader (S-mode or HS-mode). OpenSBI implementation can be easily extended by RISC-V platform or System-on-Chip vendors to fit a particular hadware configuration."
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://COPYING.BSD;md5=c36118b4f615f9da37635f2a7ac8ccaf"
+LIC_FILES_CHKSUM = "file://COPYING.BSD;md5=42dd9555eb177f35150cf9aa240b61e5"
 DEPENDS += "dtc-native"
 
 require opensbi-payloads.inc
 
 inherit autotools-brokensep
 
-SRCREV = "ca20ac0cd4c099006d4eea4d9ac7bd7b58e2ae0f"
+SRCREV = "ce228ee0919deb9957192d723eecc8aaae2697c6"
 SRC_URI = "git://github.com/riscv/opensbi.git \
            file://0001-Makefile-Don-t-specify-mabi-or-march.patch \
-           file://0002-lib-Create-a-sbi_ipi_data-structure.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -38,12 +37,15 @@ do_deploy () {
 	install -d ${DEPLOY_DIR_IMAGE}
 	install -m 755 ${D}/platform/${RISCV_SBI_PLAT}/firmware/fw_payload.* ${DEPLOY_DIR_IMAGE}/
 	install -m 755 ${D}/platform/${RISCV_SBI_PLAT}/firmware/fw_jump.* ${DEPLOY_DIR_IMAGE}/
+	install -m 755 ${D}/platform/${RISCV_SBI_PLAT}/firmware/fw_dynamic.* ${DEPLOY_DIR_IMAGE}/
 }
 
 addtask deploy after do_install
 
 FILES_${PN} += "/platform/${RISCV_SBI_PLAT}/firmware/fw_jump.*"
 FILES_${PN} += "/platform/${RISCV_SBI_PLAT}/firmware/fw_payload.*"
+FILES_${PN} += "/platform/${RISCV_SBI_PLAT}/firmware/fw_dynamic.*"
+
 
 COMPATIBLE_HOST = "(riscv64|riscv32).*"
 INHIBIT_PACKAGE_STRIP = "1"
