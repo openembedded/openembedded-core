@@ -67,7 +67,7 @@ PATCH_GIT_USER_NAME ?= "OpenEmbedded"
 
 buildhistory_emit_sysroot() {
 	mkdir --parents ${BUILDHISTORY_DIR_PACKAGE}
-	buildhistory_list_files ${SYSROOT_DESTDIR} ${BUILDHISTORY_DIR_PACKAGE}/sysroot
+	buildhistory_list_files_no_owners ${SYSROOT_DESTDIR} ${BUILDHISTORY_DIR_PACKAGE}/sysroot
 }
 
 #
@@ -534,6 +534,20 @@ buildhistory_list_files() {
 		eval ${FAKEROOTENV} ${FAKEROOTCMD} $find_cmd
 	else
 		eval $find_cmd
+	fi | sort -k5 | sed 's/ * -> $//' > $2 )
+}
+
+buildhistory_list_files_no_owners() {
+	# List the files in the specified directory, but exclude date/time etc.
+	# Also don't output the ownership data, but instead output just - - so
+	# that the same parsing code as for _list_files works.
+	# This is somewhat messy, but handles where the size is not printed for device files under pseudo
+	( cd $1
+	find_cmd='find . ! -path . -printf "%M -          -          %10s %p -> %l\n"'
+	if [ "$3" = "fakeroot" ] ; then
+		eval ${FAKEROOTENV} ${FAKEROOTCMD} "$find_cmd"
+	else
+		eval "$find_cmd"
 	fi | sort -k5 | sed 's/ * -> $//' > $2 )
 }
 
