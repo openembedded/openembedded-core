@@ -65,9 +65,20 @@ BUILDHISTORY_PRESERVE = "latest latest_srcrev sysroot"
 PATCH_GIT_USER_EMAIL ?= "buildhistory@oe"
 PATCH_GIT_USER_NAME ?= "OpenEmbedded"
 
+#
+# Write out the contents of the sysroot
+#
 buildhistory_emit_sysroot() {
 	mkdir --parents ${BUILDHISTORY_DIR_PACKAGE}
-	buildhistory_list_files_no_owners ${SYSROOT_DESTDIR} ${BUILDHISTORY_DIR_PACKAGE}/sysroot
+	case ${CLASSOVERRIDE} in
+	class-native|class-cross|class-crosssdk)
+		BASE=${SYSROOT_DESTDIR}/${STAGING_DIR_NATIVE}
+		;;
+	*)
+		BASE=${SYSROOT_DESTDIR}
+		;;
+	esac
+	buildhistory_list_files_no_owners $BASE ${BUILDHISTORY_DIR_PACKAGE}/sysroot
 }
 
 #
