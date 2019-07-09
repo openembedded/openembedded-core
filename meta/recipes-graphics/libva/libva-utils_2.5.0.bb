@@ -18,8 +18,8 @@ SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2
            file://0001-Build-sfcsample-only-when-X11-backend-is-enabled.patch \
            "
 
-SRC_URI[md5sum] = "f5374c4c32ce136e50aea0267887aed5"
-SRC_URI[sha256sum] = "5b7d1954b40fcb2c0544be20125c71a0852049715ab85a3e8aba60434a40c6b3"
+SRC_URI[md5sum] = "c1fada26c286654859eff33b2562cb79"
+SRC_URI[sha256sum] = "9238c9d5110d60f935683390b8383fdac3507346384cd5f117a23c6db1d72a17"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva-utils/releases"
 
