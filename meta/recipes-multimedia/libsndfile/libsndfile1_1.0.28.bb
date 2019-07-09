@@ -33,9 +33,3 @@ PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
 PACKAGECONFIG[regtest] = "--enable-sqlite,--disable-sqlite,sqlite3"
 
 inherit autotools lib_package pkgconfig
-
-do_configure_prepend_arm() {
-	export ac_cv_sys_largefile_source=1
-	export ac_cv_sys_file_offset_bits=64
-}
-
