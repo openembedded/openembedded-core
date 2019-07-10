@@ -26,7 +26,8 @@ SRC_URI_append_class-nativesdk = " \
 SRC_URI[md5sum] = "15e21da6efe8aa0e0768ffd8cd37a5f6"
 SRC_URI[sha256sum] = "f6fb3079ad15076154eda9413fed42877d668e7069d9b87396d0804fdb3f4c90"
 
-inherit lib_package multilib_header ptest
+inherit lib_package multilib_header multilib_script ptest
+MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
 
 PACKAGECONFIG ?= ""
 PACKAGECONFIG_class-native = ""
