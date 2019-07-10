@@ -25,6 +25,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0006-network-remove-redunant-link-name-in-message.patch \
            file://99-default.preset \
            file://0001-resolved-Fix-incorrect-use-of-OpenSSL-BUF_MEM.patch \
+           file://0001-core-set-fs.file-max-sysctl-to-LONG_MAX-rather-than-.patch \
            "
 
 # patches needed by musl
