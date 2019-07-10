@@ -491,6 +491,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
     """Extract sources of a recipe"""
     import oe.recipeutils
     import oe.patch
+    import oe.path
 
     pn = d.getVar('PN')
 
@@ -587,7 +588,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
         with open(preservestampfile, 'w') as f:
             f.write(d.getVar('STAMP'))
         try:
-            if bb.data.inherits_class('kernel-yocto', d):
+            if is_kernel_yocto:
                 # We need to generate the kernel config
                 task = 'do_configure'
             else:
@@ -613,6 +614,23 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
         except FileNotFoundError as e:
             raise DevtoolError('Something went wrong with source extraction - the devtool-source class was not active or did not function correctly:\n%s' % str(e))
         srcsubdir_rel = os.path.relpath(srcsubdir, os.path.join(tempdir, 'workdir'))
+
+        # Check if work-shared is empty, if yes
+        # find source and copy to work-shared
+        if is_kernel_yocto:
+            workshareddir = d.getVar('STAGING_KERNEL_DIR')
+            staging_kerVer = get_staging_kver(workshareddir)
+            kernelVersion = d.getVar('LINUX_VERSION')
+
+            # handle dangling symbolic link in work-shared:
+            if os.path.islink(workshareddir):
+                os.unlink(workshareddir)
+
+            if os.path.exists(workshareddir) and (not os.listdir(workshareddir) or kernelVersion != staging_kerVer):
+                shutil.rmtree(workshareddir)
+                oe.path.copyhardlinktree(srcsubdir,workshareddir)
+            elif not os.path.exists(workshareddir):
+                oe.path.copyhardlinktree(srcsubdir,workshareddir)
 
         tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
         srctree_localdir = os.path.join(srctree, 'oe-local-files')
