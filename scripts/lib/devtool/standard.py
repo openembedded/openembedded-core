@@ -461,6 +461,31 @@ def sync(args, config, basepath, workspace):
     finally:
         tinfoil.shutdown()
 
+def symlink_oelocal_files_srctree(rd,srctree):
+    import oe.patch
+    if os.path.abspath(rd.getVar('S')) == os.path.abspath(rd.getVar('WORKDIR')):
+        # If recipe extracts to ${WORKDIR}, symlink the files into the srctree
+        # (otherwise the recipe won't build as expected)
+        local_files_dir = os.path.join(srctree, 'oe-local-files')
+        addfiles = []
+        for root, _, files in os.walk(local_files_dir):
+            relpth = os.path.relpath(root, local_files_dir)
+            if relpth != '.':
+                bb.utils.mkdirhier(os.path.join(srctree, relpth))
+            for fn in files:
+                if fn == '.gitignore':
+                    continue
+                destpth = os.path.join(srctree, relpth, fn)
+                if os.path.exists(destpth):
+                    os.unlink(destpth)
+                os.symlink('oe-local-files/%s' % fn, destpth)
+                addfiles.append(os.path.join(relpth, fn))
+        if addfiles:
+            bb.process.run('git add %s' % ' '.join(addfiles), cwd=srctree)
+        useroptions = []
+        oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=rd)
+        bb.process.run('git %s commit -a -m "Committing local file symlinks\n\n%s"' % (' '.join(useroptions), oe.patch.GitApplyTree.ignore_commit_prefix), cwd=srctree)
+
 
 def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, workspace, fixed_setup, d, tinfoil, no_overrides=False):
     """Extract sources of a recipe"""
@@ -617,29 +642,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
                 shutil.move(tempdir_localdir, srcsubdir)
 
             shutil.move(srcsubdir, srctree)
-
-            if os.path.abspath(d.getVar('S')) == os.path.abspath(d.getVar('WORKDIR')):
-                # If recipe extracts to ${WORKDIR}, symlink the files into the srctree
-                # (otherwise the recipe won't build as expected)
-                local_files_dir = os.path.join(srctree, 'oe-local-files')
-                addfiles = []
-                for root, _, files in os.walk(local_files_dir):
-                    relpth = os.path.relpath(root, local_files_dir)
-                    if relpth != '.':
-                        bb.utils.mkdirhier(os.path.join(srctree, relpth))
-                    for fn in files:
-                        if fn == '.gitignore':
-                            continue
-                        destpth = os.path.join(srctree, relpth, fn)
-                        if os.path.exists(destpth):
-                            os.unlink(destpth)
-                        os.symlink('oe-local-files/%s' % fn, destpth)
-                        addfiles.append(os.path.join(relpth, fn))
-                if addfiles:
-                    bb.process.run('git add %s' % ' '.join(addfiles), cwd=srctree)
-                useroptions = []
-                oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=d)
-                bb.process.run('git %s commit -a -m "Committing local file symlinks\n\n%s"' % (' '.join(useroptions), oe.patch.GitApplyTree.ignore_commit_prefix), cwd=srctree)
+            symlink_oelocal_files_srctree(d,srctree)
 
         if is_kernel_yocto:
             logger.info('Copying kernel config to srctree')
@@ -707,11 +710,31 @@ def _check_preserve(config, recipename):
                     tf.write(line)
     os.rename(newfile, origfile)
 
+def get_staging_kver(srcdir):
+    # Kernel version from work-shared
+    kerver = []
+    staging_kerVer=""
+    if os.path.exists(srcdir) and os.listdir(srcdir):
+        with open(os.path.join(srcdir,"Makefile")) as f:
+            version = [next(f) for x in range(5)][1:4]
+            for word in version:
+                kerver.append(word.split('= ')[1].split('\n')[0])
+            staging_kerVer = ".".join(kerver)
+    return staging_kerVer
+
+def get_staging_kbranch(srcdir):
+    staging_kbranch = ""
+    if os.path.exists(srcdir) and os.listdir(srcdir):
+        (branch, _) = bb.process.run('git branch | grep \* | cut -d \' \' -f2', cwd=srcdir)
+        staging_kbranch = "".join(branch.split('\n')[0])
+    return staging_kbranch
+
 def modify(args, config, basepath, workspace):
     """Entry point for the devtool 'modify' subcommand"""
     import bb
     import oe.recipeutils
     import oe.patch
+    import oe.path
 
     if args.recipename in workspace:
         raise DevtoolError("recipe %s is already in your workspace" %
@@ -753,6 +776,59 @@ def modify(args, config, basepath, workspace):
         initial_rev = None
         commits = []
         check_commits = False
+
+        if bb.data.inherits_class('kernel-yocto', rd):
+            # Current set kernel version
+            kernelVersion = rd.getVar('LINUX_VERSION')
+            srcdir = rd.getVar('STAGING_KERNEL_DIR')
+            kbranch = rd.getVar('KBRANCH')
+
+            staging_kerVer = get_staging_kver(srcdir)
+            staging_kbranch = get_staging_kbranch(srcdir)
+            if (os.path.exists(srcdir) and os.listdir(srcdir)) and (kernelVersion in staging_kerVer and staging_kbranch == kbranch):
+                oe.path.copyhardlinktree(srcdir,srctree)
+                workdir = rd.getVar('WORKDIR')
+                srcsubdir = rd.getVar('S')
+                localfilesdir = os.path.join(srctree,'oe-local-files')
+                # Move local source files into separate subdir
+                recipe_patches = [os.path.basename(patch) for patch in oe.recipeutils.get_recipe_patches(rd)]
+                local_files = oe.recipeutils.get_recipe_local_files(rd)
+
+                for key in local_files.copy():
+                    if key.endswith('scc'):
+                        sccfile = open(local_files[key], 'r')
+                        for l in sccfile:
+                            line = l.split()
+                            if line and line[0] in ('kconf', 'patch'):
+                                cfg = os.path.join(os.path.dirname(local_files[key]), line[-1])
+                                if not cfg in local_files.values():
+                                    local_files[line[-1]] = cfg
+                                    shutil.copy2(cfg, workdir)
+                        sccfile.close()
+
+                # Ignore local files with subdir={BP}
+                srcabspath = os.path.abspath(srcsubdir)
+                local_files = [fname for fname in local_files if os.path.exists(os.path.join(workdir, fname)) and  (srcabspath == workdir or not  os.path.join(workdir, fname).startswith(srcabspath + os.sep))]
+                if local_files:
+                    for fname in local_files:
+                        _move_file(os.path.join(workdir, fname), os.path.join(srctree, 'oe-local-files', fname))
+                    with open(os.path.join(srctree, 'oe-local-files', '.gitignore'), 'w') as f:
+                        f.write('# Ignore local files, by default. Remove this file ''if you want to commit the directory to Git\n*\n')
+
+                symlink_oelocal_files_srctree(rd,srctree)
+
+                task = 'do_configure'
+                res = tinfoil.build_targets(pn, task, handle_events=True)
+
+                # Copy .config to workspace
+                kconfpath = rd.getVar('B')
+                logger.info('Copying kernel config to workspace')
+                shutil.copy2(os.path.join(kconfpath, '.config'),srctree)
+
+                # Set this to true, we still need to get initial_rev
+                # by parsing the git repo
+                args.no_extract = True
+
         if not args.no_extract:
             initial_rev, _ = _extract_source(srctree, args.keep_temp, args.branch, False, config, basepath, workspace, args.fixed_setup, rd, tinfoil, no_overrides=args.no_overrides)
             if not initial_rev:
