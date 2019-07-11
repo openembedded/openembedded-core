@@ -60,6 +60,8 @@ BUILD_CFLAGS = ""
 BUILD_CXXFLAGS = ""
 BUILD_LDFLAGS = ""
 
+export PYTHON = "python3"
+
 CFLAGS_append = " -Wno-error"
 
 do_configure_prepend() {
