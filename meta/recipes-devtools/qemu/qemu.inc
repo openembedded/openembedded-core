@@ -77,6 +77,8 @@ export LIBTOOL="${HOST_SYS}-libtool"
 
 B = "${WORKDIR}/build"
 
+EXTRA_OECONF_append = " --python=${HOSTTOOLS_DIR}/python3"
+
 do_configure_prepend_class-native() {
 	# Append build host pkg-config paths for native target since the host may provide sdl
 	BHOST_PKGCONFIG_PATH=$(PATH=/usr/bin:/bin pkg-config --variable pc_path pkg-config || echo "")
