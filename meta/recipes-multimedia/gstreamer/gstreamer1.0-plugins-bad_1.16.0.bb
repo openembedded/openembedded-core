@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 DEPENDS += "gstreamer1.0-plugins-base"
 
-inherit gettext bluetooth gobject-introspection
+inherit gettext gobject-introspection
 
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \
@@ -35,7 +35,7 @@ PACKAGECONFIG ??= " \
 # not add GL dependencies here, since these are taken care of in -base.
 
 PACKAGECONFIG[assrender]       = "--enable-assrender,--disable-assrender,libass"
-PACKAGECONFIG[bluez]           = "--enable-bluez,--disable-bluez,${BLUEZ}"
+PACKAGECONFIG[bluez]           = "--enable-bluez,--disable-bluez,bluez5"
 PACKAGECONFIG[bz2]             = "--enable-bz2,--disable-bz2,bzip2"
 PACKAGECONFIG[curl]            = "--enable-curl,--disable-curl,curl"
 PACKAGECONFIG[dash]            = "--enable-dash,--disable-dash,libxml2"
