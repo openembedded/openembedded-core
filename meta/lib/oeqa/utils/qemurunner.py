@@ -425,13 +425,20 @@ class QemuRunner:
         if not self.runqemu or self.runqemu.poll() is not None:
             return False
         if os.path.isfile(self.qemu_pidfile):
-            f = open(self.qemu_pidfile, 'r')
-            qemu_pid = f.read()
-            f.close()
-            qemupid = int(qemu_pid)
-            if os.path.exists("/proc/" + str(qemupid)):
-                self.qemupid = qemupid
-                return True
+            # when handling pidfile, qemu creates the file, stat it, lock it and then write to it
+            # so it's possible that the file has been created but the content is empty
+            pidfile_timeout = time.time() + 3
+            while time.time() < pidfile_timeout:
+                with open(self.qemu_pidfile, 'r') as f:
+                    qemu_pid = f.read().strip()
+                # file created but not yet written contents
+                if not qemu_pid:
+                    time.sleep(0.5)
+                    continue
+                else:
+                    if os.path.exists("/proc/" + qemu_pid):
+                        self.qemupid = int(qemu_pid)
+                        return True
         return False
 
     def run_serial(self, command, raw=False, timeout=60):
