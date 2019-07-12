@@ -161,34 +161,34 @@ bashscripts = "mtrace sotruss xtrace"
 
 do_stash_locale () {
 	dest=${LOCALESTASH}
-	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
+	install -d $dest${base_libdir} $dest${bindir} $dest${libdir} $dest${datadir}
 	# Hide away the locale data from the deployment
 	if [ -e ${D}${bindir}/localedef ]; then
-		cp -a ${D}${bindir}/localedef ${dest}${bindir}
+		cp -a ${D}${bindir}/localedef $dest${bindir}
 	fi
 	if [ -e ${D}${libdir}/gconv ]; then
-		cp -a ${D}${libdir}/gconv ${dest}${libdir}
+		cp -a ${D}${libdir}/gconv $dest${libdir}
 	fi
 	if [ -e ${D}${datadir}/i18n ]; then
-		cp -a  ${D}${datadir}/i18n ${dest}${datadir}
+		cp -a  ${D}${datadir}/i18n $dest${datadir}
 	fi
 
 	# Make a copy of all the libraries into the locale stash
-	cp -fpPR ${D}${libdir}/* ${dest}${libdir}
+	cp -fpPR ${D}${libdir}/* $dest${libdir}
 	if [ "${base_libdir}" != "${libdir}" ]; then
-		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
+		cp -fpPR ${D}${base_libdir}/* $dest${base_libdir}
 	fi
 	if [ -e ${D}${exec_prefix}/lib ]; then
 		if [ ${exec_prefix}/lib != ${base_libdir} ] && [ ${exec_prefix}/lib != ${libdir} ]; then
-			cp -fpPR ${D}${exec_prefix}/lib ${dest}${exec_prefix}
+			cp -fpPR ${D}${exec_prefix}/lib $dest${exec_prefix}
 		fi
 	fi
 
-	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
+	cp -fpPR ${D}${datadir}/* $dest${datadir}
 	rm -rf ${D}${datadir}/locale/
-	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
+	cp -fpPR ${WORKDIR}/SUPPORTED $dest
 
-	target=${dest}/scripts
+	target=$dest/scripts
 	mkdir -p $target
 	for i in ${bashscripts}; do
 		if [ -f ${D}${bindir}/$i ]; then
@@ -216,23 +216,23 @@ stash_locale_cleanup () {
 	cleanupdir=$1
 	# Remove all files which do_stash_locale() copies
 	for i in ${bashscripts}; do
-	    rm -f ${cleanupdir}${bindir}/$i
+		rm -f $cleanupdir${bindir}/$i
 	done
-	rm -f ${cleanupdir}${bindir}/localedef
-	rm -rf ${cleanupdir}${datadir}/i18n
-	rm -rf ${cleanupdir}${libdir}/gconv
-	rm -rf ${cleanupdir}/${localedir}
-	rm -rf ${cleanupdir}${datadir}/locale
+	rm -f $cleanupdir${bindir}/localedef
+	rm -rf $cleanupdir${datadir}/i18n
+	rm -rf $cleanupdir${libdir}/gconv
+	rm -rf $cleanupdir${localedir}
+	rm -rf $cleanupdir${datadir}/locale
 	if [ "${libdir}" != "${exec_prefix}/lib" ] && [ "${root_prefix}/lib" != "${exec_prefix}/lib" ]; then
-	    if [ -d "${cleanupdir}${exec_prefix}/lib" ]; then
-		if [ -z "${ARCH_DYNAMIC_LOADER}" -o \
-		     ! -e "${cleanupdir}${exec_prefix}/lib/${ARCH_DYNAMIC_LOADER}" ]; then
-			# error out if directory isn't empty
-			# this dir should only contain locale dir
-			# which has been deleted in the previous step
-			rmdir ${cleanupdir}${exec_prefix}/lib
+		if [ -d "$cleanupdir${exec_prefix}/lib" ]; then
+			if [ -z "${ARCH_DYNAMIC_LOADER}" -o \
+			     ! -e "$cleanupdir${exec_prefix}/lib/${ARCH_DYNAMIC_LOADER}" ]; then
+				# error out if directory isn't empty
+				# this dir should only contain locale dir
+				# which has been deleted in the previous step
+				rmdir $cleanupdir${exec_prefix}/lib
+			fi
 		fi
-	    fi
 	fi
 }
 
