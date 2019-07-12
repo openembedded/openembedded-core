@@ -4,6 +4,7 @@
 
 import os
 import fnmatch
+import time
 
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
@@ -77,7 +78,21 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
             msg = 'status: %s. Cannot run rpm -qa: %s' % (status, output)
             self.assertEqual(status, 0, msg=msg)
 
+        def check_no_process_for_user(u):
+            _, output = self.target.run(self.tc.target_cmds['ps'])
+            if u + ' ' in output:
+                return False
+            else:
+                return True
+
         def unset_up_test_user(u):
+            # ensure no test1 process in running
+            timeout = time.time() + 30
+            while time.time() < timeout:
+                if check_no_process_for_user(u):
+                    break
+                else:
+                    time.sleep(1)
             status, output = self.target.run('userdel -r %s' % u)
             msg = 'Failed to erase user: %s' % output
             self.assertTrue(status == 0, msg=msg)
