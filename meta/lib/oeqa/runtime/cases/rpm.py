@@ -30,35 +30,6 @@ class RpmBasicTest(OERuntimeTestCase):
         msg = 'status and output: %s and %s' % (status, output)
         self.assertEqual(status, 0, msg=msg)
 
-class RpmInstallRemoveTest(OERuntimeTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        pkgarch = cls.td['TUNE_PKGARCH'].replace('-', '_')
-        rpmdir = os.path.join(cls.tc.td['DEPLOY_DIR'], 'rpm', pkgarch)
-        # Pick base-passwd-doc as a test file to get installed, because it's small
-        # and it will always be built for standard targets
-        rpm_doc = 'base-passwd-doc-*.%s.rpm' % pkgarch
-        if not os.path.exists(rpmdir):
-            return
-        for f in fnmatch.filter(os.listdir(rpmdir), rpm_doc):
-            cls.test_file = os.path.join(rpmdir, f)
-        cls.dst = '/tmp/base-passwd-doc.rpm'
-
-    @OETestDepends(['rpm.RpmBasicTest.test_rpm_query'])
-    def test_rpm_install(self):
-        self.tc.target.copyTo(self.test_file, self.dst)
-        status, output = self.target.run('rpm -ivh /tmp/base-passwd-doc.rpm')
-        msg = 'Failed to install base-passwd-doc package: %s' % output
-        self.assertEqual(status, 0, msg=msg)
-        self.tc.target.run('rm -f %s' % self.dst)
-
-    @OETestDepends(['rpm.RpmInstallRemoveTest.test_rpm_install'])
-    def test_rpm_remove(self):
-        status,output = self.target.run('rpm -e base-passwd-doc')
-        msg = 'Failed to remove base-passwd-doc package: %s' % output
-        self.assertEqual(status, 0, msg=msg)
-
     @OETestDepends(['rpm.RpmBasicTest.test_rpm_query'])
     def test_rpm_query_nonroot(self):
 
@@ -104,6 +75,36 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
             exec_as_test_user(tuser)
         finally:
             unset_up_test_user(tuser)
+
+
+class RpmInstallRemoveTest(OERuntimeTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        pkgarch = cls.td['TUNE_PKGARCH'].replace('-', '_')
+        rpmdir = os.path.join(cls.tc.td['DEPLOY_DIR'], 'rpm', pkgarch)
+        # Pick base-passwd-doc as a test file to get installed, because it's small
+        # and it will always be built for standard targets
+        rpm_doc = 'base-passwd-doc-*.%s.rpm' % pkgarch
+        if not os.path.exists(rpmdir):
+            return
+        for f in fnmatch.filter(os.listdir(rpmdir), rpm_doc):
+            cls.test_file = os.path.join(rpmdir, f)
+        cls.dst = '/tmp/base-passwd-doc.rpm'
+
+    @OETestDepends(['rpm.RpmBasicTest.test_rpm_query'])
+    def test_rpm_install(self):
+        self.tc.target.copyTo(self.test_file, self.dst)
+        status, output = self.target.run('rpm -ivh /tmp/base-passwd-doc.rpm')
+        msg = 'Failed to install base-passwd-doc package: %s' % output
+        self.assertEqual(status, 0, msg=msg)
+        self.tc.target.run('rm -f %s' % self.dst)
+
+    @OETestDepends(['rpm.RpmInstallRemoveTest.test_rpm_install'])
+    def test_rpm_remove(self):
+        status,output = self.target.run('rpm -e base-passwd-doc')
+        msg = 'Failed to remove base-passwd-doc package: %s' % output
+        self.assertEqual(status, 0, msg=msg)
 
     @OETestDepends(['rpm.RpmInstallRemoveTest.test_rpm_remove'])
     def test_check_rpm_install_removal_log_file_size(self):
