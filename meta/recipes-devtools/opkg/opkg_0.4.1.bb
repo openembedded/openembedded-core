@@ -28,7 +28,7 @@ PACKAGES =+ "libopkg"
 inherit autotools pkgconfig systemd ptest
 
 target_localstatedir := "${localstatedir}"
-OPKGLIBDIR = "${target_localstatedir}/lib"
+OPKGLIBDIR ??= "${target_localstatedir}/lib"
 
 PACKAGECONFIG ??= "libsolv"
 
