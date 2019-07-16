@@ -61,6 +61,11 @@ do_install_append () {
 	install -d ${D}${OPKGLIBDIR}/opkg
 }
 
+do_install_ptest () {
+	sed -i -e '/@echo $^/d' ${D}${PTEST_PATH}/tests/Makefile
+	sed -i -e '/@PYTHONPATH=. $(PYTHON) $^/a\\t@if [ "$$?" != "0" ];then echo "FAIL:"$^;else echo "PASS:"$^;fi' ${D}${PTEST_PATH}/tests/Makefile
+}
+
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config libarchive"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
