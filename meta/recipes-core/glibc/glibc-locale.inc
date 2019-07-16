@@ -98,3 +98,6 @@ do_install() {
 inherit libc-package
 
 BBCLASSEXTEND = "nativesdk"
+
+# Don't scan for CVEs as glibc will be scanned
+CVE_PRODUCT = ""
