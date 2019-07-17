@@ -31,6 +31,7 @@ do_install_append() {
 	rm -r ${D}/include
 	rm -r ${D}/platform/${RISCV_SBI_PLAT}/lib
 	rm -r ${D}/platform/${RISCV_SBI_PLAT}/firmware/payloads
+	rm -r ${D}/lib
 }
 
 do_deploy () {
