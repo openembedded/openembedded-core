@@ -98,7 +98,7 @@ class QemuRunner:
     def handleSIGCHLD(self, signum, frame):
         if self.runqemu and self.runqemu.poll():
             if self.runqemu.returncode:
-                self.logger.debug('runqemu exited with code %d' % self.runqemu.returncode)
+                self.logger.warning('runqemu exited with code %d' % self.runqemu.returncode)
                 self.logger.debug("Output from runqemu:\n%s" % self.getOutput(self.runqemu.stdout))
                 self.stop()
                 self._dump_host()
@@ -208,9 +208,9 @@ class QemuRunner:
             if self.runqemu.poll():
                 if self.runqemu.returncode:
                     # No point waiting any longer
-                    self.logger.debug('runqemu exited with code %d' % self.runqemu.returncode)
+                    self.logger.warning('runqemu exited with code %d' % self.runqemu.returncode)
                     self._dump_host()
-                    self.logger.debug("Output from runqemu:\n%s" % self.getOutput(output))
+                    self.logger.warning("Output from runqemu:\n%s" % self.getOutput(output))
                     self.stop()
                     return False
             time.sleep(0.5)
@@ -329,14 +329,14 @@ class QemuRunner:
 
         if not reachedlogin:
             if time.time() >= endtime:
-                self.logger.debug("Target didn't reach login banner in %d seconds (%s)" %
+                self.logger.warning("Target didn't reach login banner in %d seconds (%s)" %
                                   (self.boottime, time.strftime("%D %H:%M:%S")))
             tail = lambda l: "\n".join(l.splitlines()[-25:])
             bootlog = bootlog.decode("utf-8")
             # in case bootlog is empty, use tail qemu log store at self.msg
             lines = tail(bootlog if bootlog else self.msg)
-            self.logger.debug("Last 25 lines of text:\n%s" % lines)
-            self.logger.debug("Check full boot log: %s" % self.logfile)
+            self.logger.warning("Last 25 lines of text:\n%s" % lines)
+            self.logger.warning("Check full boot log: %s" % self.logfile)
             self._dump_host()
             self.stop()
             return False
@@ -356,11 +356,11 @@ class QemuRunner:
                     else:
                         self.logger.debug("Couldn't configure guest networking")
             else:
-                self.logger.debug("Couldn't login into serial console"
+                self.logger.warning("Couldn't login into serial console"
                             " as root using blank password")
-                self.logger.debug("The output:\n%s" % output)
+                self.logger.warning("The output:\n%s" % output)
         except:
-            self.logger.debug("Serial console failed while trying to login")
+            self.logger.warning("Serial console failed while trying to login")
         return True
 
     def stop(self):
@@ -414,7 +414,7 @@ class QemuRunner:
             self.thread.join()
 
     def restart(self, qemuparams = None):
-        self.logger.debug("Restarting qemu process")
+        self.logger.warning("Restarting qemu process")
         if self.runqemu.poll() is None:
             self.stop()
         if self.start(qemuparams):
