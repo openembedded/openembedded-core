@@ -1,0 +1,74 @@
+From d5293d73b760268a6b200ab7d9323e37700e6a8c Mon Sep 17 00:00:00 2001
+From: Petr Vorel <petr.vorel@gmail.com>
+Date: Thu, 28 Mar 2019 07:11:25 +0100
+Subject: [PATCH] lapi: Define TST_ABI{,32,64} to detect target type
+
+This is meant to be a replacement of __WORDSIZE definition.
+
+Motivation was instead of finding, where all libc define
+__WORDSIZE, which is usually used for detecting target type
+(at least MUSL defines it in different place than other libc)
+we define our own constant.
+
+Suggested-by: Cyril Hrubis <chrubis@suse.cz>
+Signed-off-by: Petr Vorel <petr.vorel@gmail.com>
+
+Upstream-Status: Backport
+Signed-off-by: Hongzhi.Song <hongzhi.song@windriver.com>
+---
+ include/lapi/abisize.h | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
+
+diff --git a/include/lapi/abisize.h b/include/lapi/abisize.h
+index 897bdfd..9e6622c 100644
+--- a/include/lapi/abisize.h
++++ b/include/lapi/abisize.h
+@@ -1,25 +1,22 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+- * Copyright (c) 2014 Linux Test Project
++ * Copyright (c) 2014-2019 Linux Test Project
+  *  Cyril Hrubis <chrubis@suse.cz>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of
+- * the License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it would be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write the Free Software Foundation,
+- * Inc.,  51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ *  Petr Vorel <petr.vorel@gmail.com>
+  */
+ 
+ #ifndef ABISIZE_H__
+ #define ABISIZE_H__
+ 
++/* __WORDSIZE replacement */
++#if defined(__LP64__) || defined(_LP64)
++# define TST_ABI64
++# define TST_ABI 64
++#else
++# define TST_ABI32
++# define TST_ABI 32
++#endif
++
+ /*
+  * Determines if we have to split up 64 bit arguments or not
+  *
+@@ -29,6 +26,6 @@
+      (defined(__mips__) && _MIPS_SIM == _ABIN32) || \
+      (defined(__x86_64__) && defined(__ILP32__)) || \
+      (defined(__aarch64__) && defined(__ILP32__)) || \
+-     __WORDSIZE == 64
++     defined(TST_ABI64)
+ 
+ #endif /* ABISIZE_H__ */
+-- 
+2.8.1
+

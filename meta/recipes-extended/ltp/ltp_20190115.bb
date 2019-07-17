@@ -53,6 +53,8 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-shmctl01-don-t-use-hardcoded-index-0-for-SHM_STAT-te.patch \
            file://0001-diotest4-Let-kernel-pick-an-address-when-calling-mma.patch \
            file://0001-file01.sh-Fix-in-was-not-recognized.patch \
+           file://0001-lapi-Define-TST_ABI-32-64-to-detect-target-type.patch \
+           file://0001-getrlimit03-adjust-a-bit-of-code-to-compatiable-with.patch \
            "
 
 S = "${WORKDIR}/git"
