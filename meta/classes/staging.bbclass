@@ -577,17 +577,6 @@ python do_prepare_recipe_sysroot () {
 }
 addtask do_prepare_recipe_sysroot before do_configure after do_fetch
 
-# Clean out the recipe specific sysroots before do_fetch
-# (use a prefunc so we can order before extend_recipe_sysroot if it gets added)
-python clean_recipe_sysroot() {
-    # We remove these stamps since we're removing any content they'd have added with
-    # cleandirs. This removes the sigdata too, likely not a big deal,
-    oe.path.remove(d.getVar("STAMP") + "*addto_recipe_sysroot*")
-    return
-}
-clean_recipe_sysroot[cleandirs] += "${RECIPE_SYSROOT} ${RECIPE_SYSROOT_NATIVE}"
-do_fetch[prefuncs] += "clean_recipe_sysroot"
-
 python staging_taskhandler() {
     bbtasks = e.tasklist
     for task in bbtasks:
