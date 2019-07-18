@@ -20,10 +20,8 @@ XORG_PN = "libICE"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "addfb1e897ca8079531669c7c7711726"
-SRC_URI[sha256sum] = "8f7032f2c1c64352b5423f6b48a8ebdc339cc63064af34d66a6c9aa79759e202"
-
-SRC_URI += "file://CVE-2017-2626.patch"
+SRC_URI[md5sum] = "76d77499ee7120a56566891ca2c0dbcf"
+SRC_URI[sha256sum] = "6f86dce12cf4bcaf5c37dddd8b1b64ed2ddf1ef7b218f22b9942595fb747c348"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[arc4] = "ac_cv_lib_bsd_arc4random_buf=yes,ac_cv_lib_bsd_arc4random_buf=no,libbsd"
