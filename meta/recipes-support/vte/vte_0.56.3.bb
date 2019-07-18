@@ -19,8 +19,8 @@ SRC_URI += "file://0001-Don-t-enable-stack-protection-by-default.patch \
            file://0001-app.cc-use-old-school-asignment-to-avoid-gcc-4.8-err.patch \
            file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
            "
-SRC_URI[archive.md5sum] = "a8984cd5a101dbff0b0c875d1de3f692"
-SRC_URI[archive.sha256sum] = "02fa8ecc02a9332e47f486795494527b5687b3bd448e73e6b67285f2f326dc7c"
+SRC_URI[archive.md5sum] = "adf341807861a5dad9f98e5c701c0769"
+SRC_URI[archive.sha256sum] = "17a1d4bc8848f1d2acfa4c20aaa24b9bac49f057b8909c56d3dafec2e2332648"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
