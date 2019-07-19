@@ -11,6 +11,7 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
            file://0003-extensions-format-security-fixes-in-libipt_icmp.patch  \
+           file://CVE-2019-11360.patch \
 "
 
 SRC_URI[md5sum] = "944558e88ddcc3b9b0d9550070fa3599"
