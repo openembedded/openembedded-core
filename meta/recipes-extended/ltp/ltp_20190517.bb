@@ -27,34 +27,21 @@ CFLAGS_append_x86-64 = " -fomit-frame-pointer"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "a6a5caef13632e669dda27b0461726eba546a2f3"
+SRCREV = "ac33ef87f0b9dc56533026435be3ea8c67ce86d2"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
-           file://0004-build-Add-option-to-select-libc-implementation.patch \
-           file://0005-kernel-controllers-Link-with-libfts-explicitly-on-mu.patch \
-           file://0007-fix-__WORDSIZE-undeclared-when-building-with-musl.patch \
-           file://0008-Check-if-__GLIBC_PREREQ-is-defined-before-using-it.patch \
-           file://0009-fix-redefinition-of-struct-msgbuf-error-building-wit.patch \
-           file://0018-guard-mallocopt-with-__GLIBC__.patch \
-           file://0020-getdents-define-getdents-getdents64-only-for-glibc.patch \
-           file://0021-Define-_GNU_SOURCE-for-MREMAP_MAYMOVE-definition.patch \
-           file://0023-ptrace-Use-int-instead-of-enum-__ptrace_request.patch \
-           file://0024-rt_sigaction-rt_sigprocmark-Define-_GNU_SOURCE.patch \
-           file://0026-crash01-Define-_GNU_SOURCE.patch \
-           file://0028-rt_sigaction.h-Use-sighandler_t-instead-of-__sighand.patch \
-           file://0034-periodic_output.patch \
-           file://0035-fix-test_proc_kill-hang.patch \
-           file://0036-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
-           file://0039-commands-ar01-Fix-for-test-in-deterministic-mode.patch \
-           file://0001-open_posix_testsuite-mmap24-2-Relax-condition-a-bit.patch \
-           file://define-sigrtmin-and-sigrtmax-for-musl.patch \
-           file://setregid01-security-string-formatting.patch \
-           file://0001-syscalls-setrlimit03.c-read-proc-sys-fs-nr_open-for-.patch \
-           file://0001-shmctl01-don-t-use-hardcoded-index-0-for-SHM_STAT-te.patch \
-           file://0001-diotest4-Let-kernel-pick-an-address-when-calling-mma.patch \
-           file://0001-file01.sh-Fix-in-was-not-recognized.patch \
-           file://0001-lapi-Define-TST_ABI-32-64-to-detect-target-type.patch \
-           file://0001-getrlimit03-adjust-a-bit-of-code-to-compatiable-with.patch \
+           file://0001-build-Add-option-to-select-libc-implementation.patch \
+           file://0002-kernel-controllers-Link-with-libfts-explicitly-on-mu.patch \
+           file://0003-Check-if-__GLIBC_PREREQ-is-defined-before-using-it.patch \
+           file://0004-guard-mallocopt-with-__GLIBC__.patch \
+           file://0005-getdents-define-getdents-getdents64-only-for-glibc.patch \
+           file://0006-rt_tgsigqueueinfo-disable-test-on-musl.patch \
+           file://0007-Fix-test_proc_kill-hanging.patch \
+           file://0008-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
+           file://0009-open_posix_testsuite-mmap24-2-Relax-condition-a-bit.patch \
+           file://0010-shmctl01-don-t-use-hardcoded-index-0-for-SHM_STAT-te.patch \
+           file://0011-direct_io-diotest4-drop-MAP_FIXED.patch \
+           file://0012-getrlimit03-adjust-a-bit-of-code-to-compatiable-with.patch \
            "
 
 S = "${WORKDIR}/git"

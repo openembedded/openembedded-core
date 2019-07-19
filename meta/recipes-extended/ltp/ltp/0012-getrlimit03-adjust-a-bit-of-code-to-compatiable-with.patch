@@ -1,4 +1,4 @@
-From e79652a3839869b1983d65999e5d5dcb50bc9cd7 Mon Sep 17 00:00:00 2001
+From 4ac747c1f7ff8e2ec2567d6672822e95a9b56e55 Mon Sep 17 00:00:00 2001
 From: "Hongzhi.Song" <hongzhi.song@windriver.com>
 Date: Mon, 15 Jul 2019 03:39:06 -0400
 Subject: [PATCH] getrlimit03: adjust a bit of code to compatiable with mips32
@@ -26,13 +26,15 @@ Signed-off-by: Jan Stancek <jstancek@redhat.com>
 Signed-off-by: Hongzhi.Song <hongzhi.song@windriver.com>
 
 Upstream-Status: Backport
+[https://github.com/linux-test-project/ltp/commit/7a3bca63cd7f059d490b6274f0fdf3247be93fde]
+
 Signed-off-by: Hongzhi.Song <hongzhi.song@windriver.com>
 ---
  testcases/kernel/syscalls/getrlimit/getrlimit03.c | 8 +++++++-
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/testcases/kernel/syscalls/getrlimit/getrlimit03.c b/testcases/kernel/syscalls/getrlimit/getrlimit03.c
-index e4d56c4..03bd821 100644
+index e4d56c4..319bc49 100644
 --- a/testcases/kernel/syscalls/getrlimit/getrlimit03.c
 +++ b/testcases/kernel/syscalls/getrlimit/getrlimit03.c
 @@ -26,6 +26,7 @@
@@ -58,5 +60,5 @@ index e4d56c4..03bd821 100644
  static int getrlimit_ulong(int resource, struct rlimit_ulong *rlim)
  {
 -- 
-2.8.1
+2.7.4
 

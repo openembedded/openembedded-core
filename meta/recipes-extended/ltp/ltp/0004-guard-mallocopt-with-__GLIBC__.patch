@@ -1,12 +1,13 @@
-From f42b060e80c9f40627c712d4d56d45221bd7d9fa Mon Sep 17 00:00:00 2001
+From d0fc9ca5d3366f9b8907e463222403cd2327be10 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 8 Jan 2016 06:51:20 +0000
-Subject: [PATCH 18/32] guard mallocopt() with __GLIBC__
+Subject: [PATCH] guard mallocopt() with __GLIBC__
 
 mallocopt is not available on non glibc implementations
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  utils/benchmark/ebizzy-0.3/ebizzy.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
@@ -29,5 +30,5 @@ index 5bb8eff..934d951 100644
  		fprintf(stderr, "Chunk size %u smaller than record size %u\n",
  			chunk_size, record_size);
 -- 
-2.7.0
+2.7.4
 

@@ -1,4 +1,4 @@
-From db0a43d9388be2c347a8306751bbe6bec086d062 Mon Sep 17 00:00:00 2001
+From 794933b38354a2612cf2c471f11798b306f35315 Mon Sep 17 00:00:00 2001
 From: Jan Stancek <jstancek@redhat.com>
 Date: Mon, 20 May 2019 20:47:20 +0200
 Subject: [PATCH] shmctl01: don't use hardcoded index == 0 for SHM_STAT test
@@ -21,10 +21,11 @@ Signed-off-by: Jan Stancek <jstancek@redhat.com>
 Reviewed-by: Petr Vorel <pvorel@suse.cz>
 Acked-by: Cyril Hrubis <chrubis@suse.cz>
 
-Upstream-Status: Backport from v20190517
-[https://lists.linux.it/pipermail/ltp/2019-May/012051.html]
+Upstream-Status: Backport
+[https://github.com/linux-test-project/ltp/commit/db0a43d9388be2c347a8306751bbe6bec086d062]
 
 Signed-off-by: Hongzhi Song <hongzhi.song@windriver.com>
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
 ---
  testcases/kernel/syscalls/ipc/shmctl/shmctl01.c | 21 ++++++++++++++++++---
  1 file changed, 18 insertions(+), 3 deletions(-)
@@ -77,5 +78,5 @@ index 1b46977..52bf23a 100644
  
  static void func_lock(int ret)
 -- 
-2.8.1
+2.7.4
 
