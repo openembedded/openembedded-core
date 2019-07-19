@@ -22,6 +22,7 @@ SRC_URI = "git://github.com/unfs3/unfs3.git;protocol=https \
            file://0001-attr-fix-utime-for-symlink.patch \
           "
 SRCREV = "c12a5c69a8d59be6916cbd0e0f41c159f1962425"
+UPSTREAM_CHECK_GITTAGREGEX = "unfs3\-(?P<pver>.+)"
 
 PV = "0.9.22+${SRCPV}"
 
