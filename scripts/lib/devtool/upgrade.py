@@ -281,6 +281,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
             logger.info('Preserving temporary directory %s' % tmpsrctree)
         else:
             shutil.rmtree(tmpsrctree)
+            shutil.rmtree(tmpdir)
 
     return (rev, md5, sha256, srcbranch, srcsubdir_rel)
 
