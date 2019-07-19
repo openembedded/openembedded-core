@@ -17,6 +17,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://0001-buildinfo-strip-sysroot-and-debug-prefix-map-from-co.patch \
            file://afalg.patch \
            file://0001-Fix-build-error-for-aarch64-big-endian.patch \
+           file://0001-Fix-broken-change-from-b3d113e.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
