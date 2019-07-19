@@ -130,6 +130,7 @@ override_native_tools() {
     export CXX="${BUILD_CXX}"
     export LD="${BUILD_LD}"
     export AR="${BUILD_AR}"
+    export STRIP="${BUILD_STRIP}"
     # These contain *target* flags but will be used as *native* flags.  The
     # correct native flags will be passed via -Dc_args and so on, unset them so
     # they don't interfere with tools invoked by Meson (such as g-ir-scanner)
