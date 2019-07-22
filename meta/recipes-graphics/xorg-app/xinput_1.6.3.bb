@@ -8,5 +8,5 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=881525f89f99cad39c9832bcb72e6fa5"
 
 DEPENDS += " libxi libxrandr libxinerama"
 
-SRC_URI[md5sum] = "6a889412eff2e3c1c6bb19146f6fe84c"
-SRC_URI[sha256sum] = "3694d29b4180952fbf13c6d4e59541310cbb11eef5bf888ff3d8b7f4e3aee5c4"
+SRC_URI[md5sum] = "ac6b7432726008b2f50eba82b0e2dbe4"
+SRC_URI[sha256sum] = "35a281dd3b9b22ea85e39869bb7670ba78955d5fec17c6ef7165d61e5aeb66ed"
