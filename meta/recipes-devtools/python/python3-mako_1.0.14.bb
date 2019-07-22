@@ -6,10 +6,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=df7e6c7c82990acf0228a55e00d29bc9"
 
 PYPI_PACKAGE = "Mako"
 
-inherit pypi
+inherit pypi setuptools3
 
-SRC_URI[md5sum] = "ad6c7dcb5d39c99f4fdf4fec892c5dee"
-SRC_URI[sha256sum] = "95ee720cc3453063788515d55bd7ce4a2a77b7b209e4ac70ec5c86091eb02541"
+SRC_URI[md5sum] = "e162578170331f0cc6a4adb063c7c0f6"
+SRC_URI[sha256sum] = "f5a642d8c5699269ab62a68b296ff990767eb120f51e2e8f3d6afb16bdb57f4b"
 
 RDEPENDS_${PN} = "${PYTHON_PN}-html \
                   ${PYTHON_PN}-netclient \
