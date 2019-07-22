@@ -272,7 +272,11 @@ class SignatureGeneratorOEEquivHash(bb.siggen.SignatureGeneratorUniHashMixIn, Si
     def init_rundepcheck(self, data):
         super().init_rundepcheck(data)
         self.server = data.getVar('SSTATE_HASHEQUIV_SERVER')
+        if not self.server:
+            bb.fatal("OEEquivHash requires SSTATE_HASHEQUIV_SERVER to be set")
         self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
+        if not self.method:
+            bb.fatal("OEEquivHash requires SSTATE_HASHEQUIV_METHOD to be set")
         self.unihashes = bb.persist_data.persist('SSTATESIG_UNIHASH_CACHE_v1_' + self.method.replace('.', '_'), data)
 
 
