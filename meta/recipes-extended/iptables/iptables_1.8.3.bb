@@ -10,12 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263\
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
-           file://0003-extensions-format-security-fixes-in-libipt_icmp.patch  \
-           file://CVE-2019-11360.patch \
 "
 
-SRC_URI[md5sum] = "944558e88ddcc3b9b0d9550070fa3599"
-SRC_URI[sha256sum] = "a3778b50ed1a3256f9ca975de82c2204e508001fc2471238c8c97f3d1c4c12af"
+SRC_URI[md5sum] = "29de711d15c040c402cf3038c69ff513"
+SRC_URI[sha256sum] = "a23cac034181206b4545f4e7e730e76e08b5f3dd78771ba9645a6756de9cdd80"
 
 inherit autotools pkgconfig
 
@@ -48,6 +46,13 @@ python populate_packages_prepend() {
 }
 
 FILES_${PN} += "${datadir}/xtables"
+
+# Include the symlinks as well in respective packages
+FILES_${PN}-module-xt-conntrack += "${libdir}/xtables/libxt_state.so"
+FILES_${PN}-module-xt-ct += "${libdir}/xtables/libxt_NOTRACK.so"
+
+INSANE_SKIP_${PN}-module-xt-conntrack = "dev-so"
+INSANE_SKIP_${PN}-module-xt-ct = "dev-so"
 
 ALLOW_EMPTY_${PN}-modules = "1"
 
