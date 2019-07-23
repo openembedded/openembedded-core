@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1e86753638d3cf2512528b99079bc4f3"
 
 SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2 \
            file://sdl2.patch"
-SRC_URI[md5sum] = "ea32caa61d41d8be797f0b04a1b43ad9"
-SRC_URI[sha256sum] = "6c1337aee2e4bf993299851c70b7db11faec785303cfca3a5c3eb5f329ba7023"
+SRC_URI[md5sum] = "64749512a6fdc117227abe13fee4cc36"
+SRC_URI[sha256sum] = "df063307faa27c7d9efe63d2139b1564cfc7cdbb7c6f449c89ef8faabfa0eab2"
 
 inherit autotools pkgconfig
 
