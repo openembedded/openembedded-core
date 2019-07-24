@@ -2,7 +2,7 @@ SUMMARY = "System call tracing tool"
 HOMEPAGE = "http://strace.io"
 SECTION = "console/utils"
 LICENSE = "LGPL-2.1+ & GPL-2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=5c84d1c6e48e7961ccd2cd2ae32f7bf1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0169a04810830e94f4b1cfb823c9f592"
 
 SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://disable-git-version-gen.patch \
@@ -14,11 +14,10 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://mips-SIGEMT.patch \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            file://0001-tests-sigaction-Check-for-mips-and-alpha-before-usin.patch \
-           file://0001-mips-o32-fix-build.patch \
            file://ptest-spacesave.patch \
            "
-SRC_URI[md5sum] = "daa51acc0c7c696221ec03cf0b30a7af"
-SRC_URI[sha256sum] = "7c4d2ffeef4f7d1cdc71062ca78d1130eb52f947c2fca82f59f6a1183bfa1e1c"
+SRC_URI[md5sum] = "b9c02b07dcde5125498ce7da69b77baf"
+SRC_URI[sha256sum] = "d513bc085609a9afd64faf2ce71deb95b96faf46cd7bc86048bc655e4e4c24d2"
 
 inherit autotools ptest
 
