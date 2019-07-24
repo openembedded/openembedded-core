@@ -10,12 +10,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8b8d26c37c1d5a04f9b0186edbebc183"
 
 PYPI_PACKAGE = "GitPython"
 
-inherit pypi
+inherit pypi setuptools3
 
-SRC_URI[md5sum] = "cee43a39a1468084d49d1c49fb675204"
-SRC_URI[sha256sum] = "8237dc5bfd6f1366abeee5624111b9d6879393d84745a507de0fda86043b65a8"
+SRC_URI[md5sum] = "33bfbc89fe616ca22b6336be80d570f4"
+SRC_URI[sha256sum] = "7428f1cc5e72d53e65c3259d5cebc22fb2b07f973c49d95b3c3d26c64890a3c3"
 
-DEPENDS = "${PYTHON_PN}-gitdb"
+DEPENDS += " ${PYTHON_PN}-gitdb"
 
 RDEPENDS_${PN} += " \
                    ${PYTHON_PN}-datetime \
@@ -29,4 +29,5 @@ RDEPENDS_${PN} += " \
                    ${PYTHON_PN}-unixadmin \
                    git \
 "
+
 BBCLASSEXTEND = "native nativesdk"
