@@ -157,19 +157,6 @@ def get_first_file(cmds):
                     return f
     return ''
 
-def check_free_port(host, port):
-    """ Check whether the port is free or not """
-    import socket
-    from contextlib import closing
-
-    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-        if sock.connect_ex((host, port)) == 0:
-            # Port is open, so not free
-            return False
-        else:
-            # Port is not open, so free
-            return True
-
 class BaseConfig(object):
     def __init__(self):
         # The self.d saved vars from self.set(), part of them are from qemuboot.conf
@@ -218,8 +205,9 @@ class BaseConfig(object):
         self.audio_enabled = False
         self.tcpserial_portnum = ''
         self.custombiosdir = ''
-        self.lock = ''
-        self.lock_descriptor = None
+        self.taplock = ''
+        self.taplock_descriptor = None
+        self.portlocks = {}
         self.bitbake_e = ''
         self.snapshot = False
         self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs',
@@ -240,30 +228,81 @@ class BaseConfig(object):
         # avoid cleanup twice
         self.cleaned = False
 
-    def acquire_lock(self, error=True):
-        logger.debug("Acquiring lockfile %s..." % self.lock)
+    def acquire_taplock(self, error=True):
+        logger.debug("Acquiring lockfile %s..." % self.taplock)
         try:
-            self.lock_descriptor = open(self.lock, 'w')
-            fcntl.flock(self.lock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
+            self.taplock_descriptor = open(self.taplock, 'w')
+            fcntl.flock(self.taplock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
         except Exception as e:
-            msg = "Acquiring lockfile %s failed: %s" % (self.lock, e)
+            msg = "Acquiring lockfile %s failed: %s" % (self.taplock, e)
             if error:
                 logger.error(msg)
             else:
                 logger.info(msg)
-            if self.lock_descriptor:
-                self.lock_descriptor.close()
-                self.lock_descriptor = None
+            if self.taplock_descriptor:
+                self.taplock_descriptor.close()
+                self.taplock_descriptor = None
             return False
         return True
 
-    def release_lock(self):
-        if self.lock_descriptor:
+    def release_taplock(self):
+        if self.taplock_descriptor:
             logger.debug("Releasing lockfile for tap device '%s'" % self.tap)
-            fcntl.flock(self.lock_descriptor, fcntl.LOCK_UN)
-            self.lock_descriptor.close()
-            os.remove(self.lock)
-            self.lock_descriptor = None
+            fcntl.flock(self.taplock_descriptor, fcntl.LOCK_UN)
+            self.taplock_descriptor.close()
+            os.remove(self.taplock)
+            self.taplock_descriptor = None
+
+    def check_free_port(self, host, port, lockdir):
+        """ Check whether the port is free or not """
+        import socket
+        from contextlib import closing
+
+        lockfile = os.path.join(lockdir, str(port) + '.lock')
+        if self.acquire_portlock(lockfile):
+            with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+                if sock.connect_ex((host, port)) == 0:
+                    # Port is open, so not free
+                    self.release_portlock(lockfile)
+                    return False
+                else:
+                    # Port is not open, so free
+                    return True
+        else:
+            return False
+
+    def acquire_portlock(self, lockfile, error=True):
+        logger.debug("Acquiring lockfile %s..." % lockfile)
+        try:
+            portlock_descriptor = open(lockfile, 'w')
+            self.portlocks.update({lockfile: portlock_descriptor})
+            fcntl.flock(self.portlocks[lockfile], fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except Exception as e:
+            msg = "Acquiring lockfile %s failed: %s" % (lockfile, e)
+            if error:
+                logger.error(msg)
+            else:
+                logger.info(msg)
+            if self.portlocks[lockfile]:
+                self.portlocks[lockfile].close()
+                del self.portlocks[lockfile]
+            return False
+        return True
+
+    def release_portlock(self, lockfile=None):
+        if lockfile != None:
+           logger.debug("Releasing lockfile '%s'" % lockfile)
+           fcntl.flock(self.portlocks[lockfile], fcntl.LOCK_UN)
+           self.portlocks[lockfile].close()
+           os.remove(lockfile)
+           del self.portlocks[lockfile]
+        elif len(self.portlocks):
+            for lockfile, descriptor in self.portlocks.items():
+                logger.debug("Releasing lockfile '%s'" % lockfile)
+                fcntl.flock(descriptor, fcntl.LOCK_UN)
+                descriptor.close()
+                os.remove(lockfile)
+            self.portlocks = {}
 
     def get(self, key):
         if key in self.d:
@@ -923,10 +962,21 @@ class BaseConfig(object):
         ports = re.findall('hostfwd=[^-]*:([0-9]+)-[^,-]*', qb_slirp_opt)
         ports = [int(i) for i in ports]
         mac = 2
+
+        lockdir = "/tmp/qemu-port-locks"
+        if not os.path.exists(lockdir):
+            # There might be a race issue when multi runqemu processess are
+            # running at the same time.
+            try:
+                os.mkdir(lockdir)
+                os.chmod(lockdir, 0o777)
+            except FileExistsError:
+                pass
+
         # Find a free port to avoid conflicts
         for p in ports[:]:
             p_new = p
-            while not check_free_port('localhost', p_new):
+            while not self.check_free_port('localhost', p_new, lockdir):
                 p_new += 1
                 mac += 1
                 while p_new in ports:
@@ -981,8 +1031,8 @@ class BaseConfig(object):
             if os.path.exists('%s.skip' % lockfile):
                 logger.info('Found %s.skip, skipping %s' % (lockfile, p))
                 continue
-            self.lock = lockfile + '.lock'
-            if self.acquire_lock(error=False):
+            self.taplock = lockfile + '.lock'
+            if self.acquire_taplock(error=False):
                 tap = p
                 logger.info("Using preconfigured tap device %s" % tap)
                 logger.info("If this is not intended, touch %s.skip to make runqemu skip %s." %(lockfile, tap))
@@ -1000,8 +1050,8 @@ class BaseConfig(object):
             cmd = ('sudo', self.qemuifup, str(uid), str(gid), self.bindir_native)
             tap = subprocess.check_output(cmd).decode('utf-8').strip()
             lockfile = os.path.join(lockdir, tap)
-            self.lock = lockfile + '.lock'
-            self.acquire_lock()
+            self.taplock = lockfile + '.lock'
+            self.acquire_taplock()
             self.cleantap = True
             logger.debug('Created tap: %s' % tap)
 
@@ -1233,8 +1283,11 @@ class BaseConfig(object):
         cmds = shlex.split(cmd)
         logger.info('Running %s\n' % cmd)
         pass_fds = []
-        if self.lock_descriptor:
-            pass_fds = [self.lock_descriptor.fileno()]
+        if self.taplock_descriptor:
+            pass_fds = [self.taplock_descriptor.fileno()]
+        if len(self.portlocks):
+            for descriptor in self.portlocks.values():
+                pass_fds.append(descriptor.fileno())
         process = subprocess.Popen(cmds, stderr=subprocess.PIPE, pass_fds=pass_fds)
         self.qemupid = process.pid
         retcode = process.wait()
@@ -1256,7 +1309,8 @@ class BaseConfig(object):
             cmd = ('sudo', self.qemuifdown, self.tap, self.bindir_native)
             logger.debug('Running %s' % str(cmd))
             subprocess.check_call(cmd)
-        self.release_lock()
+        self.release_taplock()
+        self.release_portlock()
 
         if self.nfs_running:
             logger.info("Shutting down the userspace NFS server...")
