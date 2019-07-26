@@ -329,7 +329,7 @@ def sstate_installpkg(ss, d):
         pstaging_fetch(sstatefetch, d)
 
     if not os.path.isfile(sstatepkg):
-        bb.note("Staging package %s does not exist" % sstatepkg)
+        bb.note("Sstate package %s does not exist" % sstatepkg)
         return False
 
     sstate_clean(ss, d)
