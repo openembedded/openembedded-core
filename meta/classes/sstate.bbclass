@@ -340,7 +340,8 @@ def sstate_installpkg(ss, d):
     if bb.utils.to_boolean(d.getVar("SSTATE_VERIFY_SIG"), False):
         signer = get_signer(d, 'local')
         if not signer.verify(sstatepkg + '.sig'):
-            bb.warn("Cannot verify signature on sstate package %s" % sstatepkg)
+            bb.warn("Cannot verify signature on sstate package %s, skipping acceleration..." % sstatepkg)
+            return False
 
     # Empty sstateinst directory, ensure its clean
     if os.path.exists(sstateinst):
