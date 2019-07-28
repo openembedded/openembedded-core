@@ -18,6 +18,15 @@ SRC_URI = "http://www.libsdl.org/release/SDL-${PV}.tar.gz \
            file://libsdl-1.2.15-xdata32.patch \
            file://pkgconfig.patch \
            file://0001-build-Pass-tag-CC-explictly-when-using-libtool.patch \
+           file://CVE-2019-7577.patch \
+           file://CVE-2019-7574.patch \
+           file://CVE-2019-7572.patch \
+           file://CVE-2019-7578.patch \
+           file://CVE-2019-7575.patch \
+           file://CVE-2019-7635.patch \
+           file://CVE-2019-7637.patch \
+           file://CVE-2019-7638.patch \
+           file://CVE-2019-7576.patch \
           "
 
 UPSTREAM_CHECK_REGEX = "SDL-(?P<pver>\d+(\.\d+)+)\.tar"
