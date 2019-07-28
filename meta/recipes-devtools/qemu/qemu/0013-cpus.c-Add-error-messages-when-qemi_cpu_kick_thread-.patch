@@ -18,11 +18,11 @@ Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
  2 files changed, 29 insertions(+)
  create mode 100644 custom_debug.h
 
-diff --git a/cpus.c b/cpus.c
-index 38eba8bff3..b84a60a4f3 100644
---- a/cpus.c
-+++ b/cpus.c
-@@ -1690,6 +1690,8 @@ static void *qemu_tcg_cpu_thread_fn(void *arg)
+Index: qemu-3.0.0/cpus.c
+===================================================================
+--- qemu-3.0.0.orig/cpus.c
++++ qemu-3.0.0/cpus.c
+@@ -1693,6 +1693,8 @@ static void *qemu_tcg_cpu_thread_fn(void
      return NULL;
  }
  
@@ -31,7 +31,7 @@ index 38eba8bff3..b84a60a4f3 100644
  static void qemu_cpu_kick_thread(CPUState *cpu)
  {
  #ifndef _WIN32
-@@ -1702,6 +1704,9 @@ static void qemu_cpu_kick_thread(CPUState *cpu)
+@@ -1705,6 +1707,9 @@ static void qemu_cpu_kick_thread(CPUStat
      err = pthread_kill(cpu->thread->thread, SIG_IPI);
      if (err) {
          fprintf(stderr, "qemu:%s: %s", __func__, strerror(err));
@@ -41,11 +41,10 @@ index 38eba8bff3..b84a60a4f3 100644
          exit(1);
      }
  #else /* _WIN32 */
-diff --git a/custom_debug.h b/custom_debug.h
-new file mode 100644
-index 0000000000..f029e45547
+Index: qemu-3.0.0/custom_debug.h
+===================================================================
 --- /dev/null
-+++ b/custom_debug.h
++++ qemu-3.0.0/custom_debug.h
 @@ -0,0 +1,24 @@
 +#include <execinfo.h>
 +#include <stdio.h>
