@@ -59,7 +59,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCache):
     # is machine specific.
     # Therefore if we're not a kernel or a module recipe (inheriting the kernel classes)
     # and we reccomend a kernel-module, we exclude the dependency.
-    depfn = dep.rsplit(".", 1)[0]
+    depfn = dep.rsplit(":", 1)[0]
     if dataCache and isKernel(depfn) and not isKernel(fn):
         for pkg in dataCache.runrecs[fn]:
             if " ".join(dataCache.runrecs[fn][pkg]).find("kernel-module-") != -1:
@@ -142,8 +142,10 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         self.dump_lockedsigs(sigfile)
         return super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigs(dataCache, options)
 
-    def get_taskhash(self, fn, task, deps, dataCache):
-        h = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskhash(fn, task, deps, dataCache)
+    def get_taskhash(self, tid, deps, dataCache):
+        h = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskhash(tid, deps, dataCache)
+
+        (mc, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
 
         recipename = dataCache.pkg_fn[fn]
         self.lockedpnmap[fn] = recipename
@@ -153,34 +155,23 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         if recipename in self.unlockedrecipes:
             unlocked = True
         else:
-            def get_mc(tid):
-                tid = tid.rsplit('.', 1)[0]
-                if tid.startswith('mc:'):
-                    elems = tid.split(':')
-                    return elems[1]
             def recipename_from_dep(dep):
-                # The dep entry will look something like
-                # /path/path/recipename.bb.task, virtual:native:/p/foo.bb.task,
-                # ...
-
-                fn = dep.rsplit('.', 1)[0]
+                fn = bb.runqueue.fn_from_tid(dep)
                 return dataCache.pkg_fn[fn]
 
-            mc = get_mc(fn)
             # If any unlocked recipe is in the direct dependencies then the
             # current recipe should be unlocked as well.
-            depnames = [ recipename_from_dep(x) for x in deps if mc == get_mc(x)]
+            depnames = [ recipename_from_dep(x) for x in deps if mc == bb.runqueue.mc_from_tid(x)]
             if any(x in y for y in depnames for x in self.unlockedrecipes):
                 self.unlockedrecipes[recipename] = ''
                 unlocked = True
 
         if not unlocked and recipename in self.lockedsigs:
             if task in self.lockedsigs[recipename]:
-                k = fn + "." + task
                 h_locked = self.lockedsigs[recipename][task][0]
                 var = self.lockedsigs[recipename][task][1]
-                self.lockedhashes[k] = h_locked
-                self.taskhash[k] = h_locked
+                self.lockedhashes[tid] = h_locked
+                self.taskhash[tid] = h_locked
                 #bb.warn("Using %s %s %s" % (recipename, task, h))
 
                 if h != h_locked:
@@ -192,36 +183,35 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         return h
 
     def dump_sigtask(self, fn, task, stampbase, runtime):
-        k = fn + "." + task
-        if k in self.lockedhashes:
+        tid = fn + ":" + task
+        if tid in self.lockedhashes:
             return
         super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigtask(fn, task, stampbase, runtime)
 
     def dump_lockedsigs(self, sigfile, taskfilter=None):
         types = {}
-        for k in self.runtaskdeps:
+        for tid in self.runtaskdeps:
             if taskfilter:
-                if not k in taskfilter:
+                if not tid in taskfilter:
                     continue
-            fn = k.rsplit(".",1)[0]
+            fn = bb.runqueue.fn_from_tid(tid)
             t = self.lockedhashfn[fn].split(" ")[1].split(":")[5]
             t = 't-' + t.replace('_', '-')
             if t not in types:
                 types[t] = []
-            types[t].append(k)
+            types[t].append(tid)
 
         with open(sigfile, "w") as f:
             l = sorted(types)
             for t in l:
                 f.write('SIGGEN_LOCKEDSIGS_%s = "\\\n' % t)
                 types[t].sort()
-                sortedk = sorted(types[t], key=lambda k: self.lockedpnmap[k.rsplit(".",1)[0]])
-                for k in sortedk:
-                    fn = k.rsplit(".",1)[0]
-                    task = k.rsplit(".",1)[1]
-                    if k not in self.taskhash:
+                sortedtid = sorted(types[t], key=lambda tid: self.lockedpnmap[bb.runqueue.fn_from_tid(tid)])
+                for tid in sortedtid:
+                    (_, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
+                    if tid not in self.taskhash:
                         continue
-                    f.write("    " + self.lockedpnmap[fn] + ":" + task + ":" + self.taskhash[k] + " \\\n")
+                    f.write("    " + self.lockedpnmap[fn] + ":" + task + ":" + self.taskhash[tid] + " \\\n")
                 f.write('    "\n')
             f.write('SIGGEN_LOCKEDSIGS_TYPES_%s = "%s"' % (self.machine, " ".join(l)))
 
@@ -229,11 +219,11 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         with open(sigfile, "w") as f:
             tasks = []
             for taskitem in self.taskhash:
-                (fn, task) = taskitem.rsplit(".", 1)
+                (fn, task) = taskitem.rsplit(":", 1)
                 pn = self.lockedpnmap[fn]
                 tasks.append((pn, task, fn, self.taskhash[taskitem]))
             for (pn, task, fn, taskhash) in sorted(tasks):
-                f.write('%s.%s %s %s\n' % (pn, task, fn, taskhash))
+                f.write('%s:%s %s %s\n' % (pn, task, fn, taskhash))
 
     def checkhashes(self, sq_data, missed, found, d):
         warn_msgs = []
