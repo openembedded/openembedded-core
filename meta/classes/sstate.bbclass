@@ -823,29 +823,26 @@ sstate_unpack_package () {
 
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 
-def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *, sq_unihash=None):
-
-    ret = []
-    missed = []
+def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, **kwargs):
+    found = set()
+    missed = set()
     extension = ".tgz"
     if siginfo:
         extension = extension + ".siginfo"
 
     def gethash(task):
-        if sq_unihash is not None:
-            return sq_unihash[task]
-        return sq_hash[task]
+        return sq_data['unihash'][task]
 
     def getpathcomponents(task, d):
         # Magic data from BB_HASHFILENAME
-        splithashfn = sq_hashfn[task].split(" ")
+        splithashfn = sq_data['hashfn'][task].split(" ")
         spec = splithashfn[1]
         if splithashfn[0] == "True":
             extrapath = d.getVar("NATIVELSBSTRING") + "/"
         else:
             extrapath = ""
-
-        tname = sq_task[task][3:]
+        
+        tname = bb.runqueue.taskname_from_tid(task)[3:]
 
         if tname in ["fetch", "unpack", "patch", "populate_lic", "preconfigure"] and splithashfn[2]:
             spec = splithashfn[2]
@@ -854,18 +851,18 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *, 
         return spec, extrapath, tname
 
 
-    for task in range(len(sq_fn)):
+    for tid in sq_data['hash']:
 
-        spec, extrapath, tname = getpathcomponents(task, d)
+        spec, extrapath, tname = getpathcomponents(tid, d)
 
-        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + extension)
+        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + extension)
 
         if os.path.exists(sstatefile):
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
-            ret.append(task)
+            found.add(tid)
             continue
         else:
-            missed.append(task)
+            missed.add(tid)
             bb.debug(2, "SState: Looked for but didn't find file %s" % sstatefile)
 
     mirrors = d.getVar("SSTATE_MIRRORS")
@@ -895,7 +892,7 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *, 
             thread_worker.connection_cache.close_connections()
 
         def checkstatus(thread_worker, arg):
-            (task, sstatefile) = arg
+            (tid, sstatefile) = arg
 
             localdata2 = bb.data.createCopy(localdata)
             srcuri = "file://" + sstatefile
@@ -907,22 +904,22 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *, 
                             connection_cache=thread_worker.connection_cache)
                 fetcher.checkstatus()
                 bb.debug(2, "SState: Successful fetch test for %s" % srcuri)
-                ret.append(task)
-                if task in missed:
-                    missed.remove(task)
+                found.add(tid)
+                if tid in missed:
+                    missed.remove(tid)
             except:
-                missed.append(task)
+                missed.add(tid)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
                 pass
             bb.event.fire(bb.event.ProcessProgress(msg, len(tasklist) - thread_worker.tasks.qsize()), d)
 
         tasklist = []
-        for task in range(len(sq_fn)):
-            if task in ret:
+        for tid in sq_data['hash']:
+            if tid in found:
                 continue
-            spec, extrapath, tname = getpathcomponents(task, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + extension)
-            tasklist.append((task, sstatefile))
+            spec, extrapath, tname = getpathcomponents(tid, d)
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + extension)
+            tasklist.append((tid, sstatefile))
 
         if tasklist:
             msg = "Checking sstate mirror object availability"
@@ -943,38 +940,37 @@ def sstate_checkhashes(sq_fn, sq_task, sq_hash, sq_hashfn, d, siginfo=False, *, 
             bb.event.fire(bb.event.ProcessFinished(msg), d)
 
     # Likely checking an individual task hash again for multiconfig sharing of sstate tasks so skip reporting
-    if len(sq_fn) == 1:
-        return ret
+    if len(sq_data['hash']) == 1:
+        return found
 
     inheritlist = d.getVar("INHERIT")
     if "toaster" in inheritlist:
         evdata = {'missed': [], 'found': []};
-        for task in missed:
-            spec, extrapath, tname = getpathcomponents(task, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + ".tgz")
-            evdata['missed'].append( (sq_fn[task], sq_task[task], gethash(task), sstatefile ) )
-        for task in ret:
-            spec, extrapath, tname = getpathcomponents(task, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(task), d) + "_" + tname + ".tgz")
-            evdata['found'].append( (sq_fn[task], sq_task[task], gethash(task), sstatefile ) )
+        for tid in missed:
+            spec, extrapath, tname = getpathcomponents(tid, d)
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + ".tgz")
+            evdata['missed'].append((bb.runqueue.fn_from_tid(tid), bb.runqueue.taskname_from_tid(tid), gethash(tid), sstatefile ) )
+        for tid in found:
+            spec, extrapath, tname = getpathcomponents(tid, d)
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + ".tgz")
+            evdata['found'].append((bb.runqueue.fn_from_tid(tid), bb.runqueue.taskname_from_tid(tid), gethash(tid), sstatefile ) )
         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
 
     # Print some summary statistics about the current task completion and how much sstate
     # reuse there was. Avoid divide by zero errors.
-    total = len(sq_fn)
-    currentcount = d.getVar("BB_SETSCENE_STAMPCURRENT_COUNT") or 0
+    total = len(sq_data['hash'])
     complete = 0
     if currentcount:
-        complete = (len(ret) + currentcount) / (total + currentcount) * 100
+        complete = (len(found) + currentcount) / (total + currentcount) * 100
     match = 0
     if total:
-        match = len(ret) / total * 100
-    bb.plain("Sstate summary: Wanted %d Found %d Missed %d Current %d (%d%% match, %d%% complete)" % (total, len(ret), len(missed), currentcount, match, complete))
+        match = len(found) / total * 100
+    bb.plain("Sstate summary: Wanted %d Found %d Missed %d Current %d (%d%% match, %d%% complete)" % (total, len(found), len(missed), currentcount, match, complete))
 
     if hasattr(bb.parse.siggen, "checkhashes"):
-        bb.parse.siggen.checkhashes(missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d)
+        bb.parse.siggen.checkhashes(sq_data, missed, found, d)
 
-    return ret
+    return found
 
 BB_SETSCENE_DEPVALID = "setscene_depvalid"
 

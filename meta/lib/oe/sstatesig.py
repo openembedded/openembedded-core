@@ -235,19 +235,20 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
             for (pn, task, fn, taskhash) in sorted(tasks):
                 f.write('%s.%s %s %s\n' % (pn, task, fn, taskhash))
 
-    def checkhashes(self, missed, ret, sq_fn, sq_task, sq_hash, sq_hashfn, d):
+    def checkhashes(self, sq_data, missed, found, d):
         warn_msgs = []
         error_msgs = []
         sstate_missing_msgs = []
 
-        for task in range(len(sq_fn)):
-            if task not in ret:
+        for tid in sq_data['hash']:
+            if tid not in found:
                 for pn in self.lockedsigs:
-                    if sq_hash[task] in iter(self.lockedsigs[pn].values()):
-                        if sq_task[task] == 'do_shared_workdir':
+                    taskname = bb.runqueue.taskname_from_tid(tid)
+                    if sq_data['hash'][tid] in iter(self.lockedsigs[pn].values()):
+                        if taskname == 'do_shared_workdir':
                             continue
                         sstate_missing_msgs.append("Locked sig is set for %s:%s (%s) yet not in sstate cache?"
-                                               % (pn, sq_task[task], sq_hash[task]))
+                                               % (pn, taskname, sq_data['hash'][tid]))
 
         checklevel = d.getVar("SIGGEN_LOCKEDSIGS_TASKSIG_CHECK")
         if checklevel == 'warn':
