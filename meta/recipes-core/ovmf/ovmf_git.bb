@@ -4,7 +4,7 @@ Virtual Machines. OVMF contains sample UEFI firmware for QEMU and KVM"
 HOMEPAGE = "https://github.com/tianocore/tianocore.github.io/wiki/OVMF"
 LICENSE = "BSD"
 LICENSE_class-target = "${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'BSD & OpenSSL', 'BSD', d)}"
-LIC_FILES_CHKSUM = "file://OvmfPkg/License.txt;md5=343dc88e82ff33d042074f62050c3496"
+LIC_FILES_CHKSUM = "file://OvmfPkg/License.txt;md5=06357ddc23f46577c2aeaeaf7b776d65"
 
 # Enabling Secure Boot adds a dependency on OpenSSL and implies
 # compiling OVMF twice, so it is disabled by default. Distros
@@ -12,30 +12,15 @@ LIC_FILES_CHKSUM = "file://OvmfPkg/License.txt;md5=343dc88e82ff33d042074f62050c3
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[secureboot] = ",,,"
 
-SRC_URI = "git://github.com/tianocore/edk2.git;branch=master \
-	file://0001-ia32-Dont-use-pie.patch \
+SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=git \
 	file://0002-ovmf-update-path-to-native-BaseTools.patch \
 	file://0003-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
 	file://0004-ovmf-enable-long-path-file.patch \
-	file://VfrCompile-increase-path-length-limit.patch \
 	file://no-stack-protector-all-archs.patch \
-	file://0001-BaseTools-header.makefile-add-Wno-stringop-truncatio.patch \
-	file://0002-BaseTools-header.makefile-add-Wno-restrict.patch \
-	file://0003-BaseTools-header.makefile-revert-gcc-8-Wno-xxx-optio.patch \
-	file://0004-BaseTools-GenVtf-silence-false-stringop-overflow-war.patch \
         "
 UPSTREAM_VERSION_UNKNOWN = "1"
 
-OPENSSL_RELEASE = "openssl-1.1.0e"
-
-SRC_URI_append_class-target = " \
-	${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'http://www.openssl.org/source/${OPENSSL_RELEASE}.tar.gz;name=openssl;subdir=${S}/CryptoPkg/Library/OpensslLib', '', d)} \
-	file://0007-OvmfPkg-EnrollDefaultKeys-application-for-enrolling-.patch \
-"
-
-SRCREV="ec4910cd3336565fdb61dafdd9ec4ae7a6160ba3"
-SRC_URI[openssl.md5sum] = "51c42d152122e474754aea96f66928c6"
-SRC_URI[openssl.sha256sum] = "57be8618979d80c910728cfc99369bf97b2a1abd8f366ab6ebdee8975ad3874c"
+SRCREV="20d2e5a125e34fc8501026613a71549b2a1a3e54"
 
 inherit deploy
 
@@ -44,7 +29,7 @@ PARALLEL_MAKE = ""
 S = "${WORKDIR}/git"
 
 DEPENDS_class-native="util-linux-native iasl-native"
-DEPENDS_class-target="ovmf-native"
+DEPENDS_class-target="ovmf-native bc-native"
 
 DEPENDS_append = " nasm-native"
 
@@ -191,12 +176,9 @@ do_compile_class-target() {
     ln ${build_dir}/${OVMF_ARCH}/Shell.efi ${WORKDIR}/ovmf/
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'true', 'false', d)}; then
-        # See CryptoPkg/Library/OpensslLib/Patch-HOWTO.txt and
-        # https://src.fedoraproject.org/cgit/rpms/edk2.git/tree/ for
-        # building with Secure Boot enabled.
+        # Repeat build with the Secure Boot flags.
         bbnote "Building with Secure Boot."
         rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
-        ln -sf ${OPENSSL_RELEASE} ${S}/CryptoPkg/Library/OpensslLib/openssl
         ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b RELEASE -t ${FIXED_GCCVER} ${OVMF_SECURE_BOOT_FLAGS}
         ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.secboot.fd
         ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.secboot.code.fd
