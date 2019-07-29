@@ -257,7 +257,7 @@ fi
 
 # Replace the SUBJECT token with it.
 if [ -n "$SUBJECT" ]; then
-	sed -i -e "s/\*\*\* SUBJECT HERE \*\*\*/$SUBJECT/" "$CL"
+	sed -i -e "s\`\*\*\* SUBJECT HERE \*\*\*\`$SUBJECT\`" "$CL"
 fi
 
 
