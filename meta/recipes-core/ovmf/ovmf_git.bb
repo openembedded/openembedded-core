@@ -46,6 +46,8 @@ COMPATIBLE_HOST='(i.86|x86_64).*'
 OVMF_SECURE_BOOT_EXTRA_FLAGS ??= ""
 OVMF_SECURE_BOOT_FLAGS = "-DSECURE_BOOT_ENABLE=TRUE ${OVMF_SECURE_BOOT_EXTRA_FLAGS}"
 
+export PYTHON_COMMAND = "${HOSTTOOLS_DIR}/python3"
+
 do_patch[postfuncs] += "fix_basetools_location"
 fix_basetools_location () {
 }
