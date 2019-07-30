@@ -24,11 +24,7 @@ MESONOPTS = " --prefix ${prefix} \
               --infodir ${@noprefix('infodir', d)} \
               --sysconfdir ${sysconfdir} \
               --localstatedir ${localstatedir} \
-              --sharedstatedir ${sharedstatedir} \
-              -Dc_args='${BUILD_CPPFLAGS} ${BUILD_CFLAGS}' \
-              -Dc_link_args='${BUILD_LDFLAGS}' \
-              -Dcpp_args='${BUILD_CPPFLAGS} ${BUILD_CXXFLAGS}' \
-              -Dcpp_link_args='${BUILD_LDFLAGS}'"
+              --sharedstatedir ${sharedstatedir} "
 
 EXTRA_OEMESON_append = " ${PACKAGECONFIG_CONFARGS}"
 
