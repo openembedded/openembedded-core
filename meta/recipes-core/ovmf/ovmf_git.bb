@@ -217,6 +217,7 @@ FILES_ovmf-shell-efi = " \
 
 DEPLOYDEP = ""
 DEPLOYDEP_class-target = "qemu-system-native:do_populate_sysroot"
+DEPLOYDEP_class-target += " ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'openssl-native:do_populate_sysroot', '', d)}"
 do_deploy[depends] += "${DEPLOYDEP}"
 
 do_deploy() {
@@ -232,6 +233,13 @@ do_deploy_class-target() {
         ; do
         qemu-img convert -f raw -O qcow2 ${WORKDIR}/ovmf/$i.fd ${DEPLOYDIR}/$i.qcow2
     done
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'true', 'false', d)}; then
+        # Create a test Platform Key and first Key Exchange Key to use with EnrollDefaultKeys
+        openssl req -new -x509 -newkey rsa:2048 -keyout ${DEPLOYDIR}/OvmfPkKek1.key \
+                -out ${DEPLOYDIR}/OvmfPkKek1.crt -nodes -days 20 -subj "/CN=OVMFSecBootTest"
+        openssl x509 -in ${DEPLOYDIR}/OvmfPkKek1.crt -out ${DEPLOYDIR}/OvmfPkKek1.pem -outform PEM
+    fi
 }
 addtask do_deploy after do_compile before do_build
 
