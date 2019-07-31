@@ -82,7 +82,7 @@ ld = ${@meson_array('LD', d)}
 strip = ${@meson_array('STRIP', d)}
 readelf = ${@meson_array('READELF', d)}
 pkgconfig = 'pkg-config'
-llvm-config = 'llvm-config8.0.0'
+llvm-config = 'llvm-config${LLVMVERSION}'
 
 [properties]
 needs_exe_wrapper = true
