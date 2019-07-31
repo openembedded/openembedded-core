@@ -512,18 +512,6 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/difflib.*.pyc"
         ]
     },
-    "distutils-staticdev": {
-        "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/config/__pycache__/lib*.a"
-        ],
-        "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/config/lib*.a"
-        ],
-        "rdepends": [
-            "distutils"
-        ],
-        "summary": "Python distribution utilities (static libraries)"
-    },
     "distutils": {
         "summary": "Python Distribution Utilities",
         "rdepends": [
