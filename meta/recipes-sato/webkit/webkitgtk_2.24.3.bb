@@ -87,10 +87,6 @@ EXTRA_OECMAKE_append_armv5 = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_armv6 = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_armv4 = " -DENABLE_JIT=OFF "
 
-# binutils 2.25.1 has a bug on aarch64:
-# https://sourceware.org/bugzilla/show_bug.cgi?id=18430
-EXTRA_OECMAKE_append_aarch64 = " -DUSE_LD_GOLD=OFF "
-EXTRA_OECMAKE_append_mipsarch = " -DUSE_LD_GOLD=OFF "
 EXTRA_OECMAKE_append_powerpc = " -DUSE_LD_GOLD=OFF "
 
 # JIT not supported on MIPS either
