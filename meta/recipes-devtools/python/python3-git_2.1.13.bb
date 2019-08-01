@@ -12,8 +12,8 @@ PYPI_PACKAGE = "GitPython"
 
 inherit pypi setuptools3
 
-SRC_URI[md5sum] = "33bfbc89fe616ca22b6336be80d570f4"
-SRC_URI[sha256sum] = "7428f1cc5e72d53e65c3259d5cebc22fb2b07f973c49d95b3c3d26c64890a3c3"
+SRC_URI[md5sum] = "1ecc2d27123418e4c9e5602788c96855"
+SRC_URI[sha256sum] = "c15c55ff890cd3a6a8330059e80885410a328f645551b55a91d858bfb3eb2573"
 
 DEPENDS += " ${PYTHON_PN}-gitdb"
 
