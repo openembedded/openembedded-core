@@ -1237,6 +1237,11 @@ python () {
     if prog.search(pn):
         package_qa_handle_error("uppercase-pn", 'PN: %s is upper case, this can result in unexpected behavior.' % pn, d)
 
+    # Some people mistakenly use DEPENDS_${PN} instead of DEPENDS and wonder
+    # why it doesn't work.
+    if (d.getVar(d.expand('DEPENDS_${PN}'))):
+        package_qa_handle_error("pkgvarcheck", "recipe uses DEPENDS_${PN}, should use DEPENDS", d)
+
     issues = []
     if (d.getVar('PACKAGES') or "").split():
         for dep in (d.getVar('QADEPENDS') or "").split():
