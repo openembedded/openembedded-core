@@ -120,13 +120,14 @@ EXTRA_OECONF += "--with-fop=no \
 "
 
 OPENGL_PKGCONFIGS = "dri glx glamor dri3 xshmfence"
-PACKAGECONFIG ??= "dri2 udev ${XORG_CRYPTO} \
+PACKAGECONFIG ??= "dga dri2 udev ${XORG_CRYPTO} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '${OPENGL_PKGCONFIGS}', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl wayland', 'xwayland', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd systemd-logind', '', d)} \
 "
 
 PACKAGECONFIG[udev] = "--enable-config-udev,--disable-config-udev,udev"
+PACKAGECONFIG[dga] = "--enable-dga,--disable-dga"
 PACKAGECONFIG[dri] = "--enable-dri,--disable-dri,virtual/mesa"
 PACKAGECONFIG[dri2] = "--enable-dri2,--disable-dri2"
 # DRI3 requires xshmfence to also be enabled
