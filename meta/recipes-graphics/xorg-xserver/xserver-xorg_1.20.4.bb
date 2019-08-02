@@ -4,6 +4,7 @@ SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.pat
             file://pkgconfig.patch \
             file://0001-test-xtest-Initialize-array-with-braces.patch \
             file://0001-compiler.h-Do-not-include-sys-io.h-on-ARM-with-glibc.patch \
+            file://sdksyms-no-build-path.patch \
             "
 SRC_URI[md5sum] = "c4841cc24b79420205d082fe82e0a650"
 SRC_URI[sha256sum] = "fe0fd493ebe93bfc56bede382fa204458ff5f636ea54d413a5d1bd58e19166ee"
