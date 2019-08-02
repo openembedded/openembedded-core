@@ -1,0 +1,35 @@
+Passing -all-static to libtool is done to avoid libtool wrappers on Windows, but
+it means that the build host needs to have libc.a installed.  This isn't the
+case for a lot of distributions out of the box, so revert this commit.
+
+Filed a bug upstream to get a proper fix: https://gitlab.freedesktop.org/xorg/lib/libx11/issues/100
+
+Upstream-Status: Inappropriate
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From b9f74dc5e714115057a5a1789b4de202d6f58547 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@intel.com>
+Date: Fri, 2 Aug 2019 00:39:39 +0100
+Subject: [PATCH 2/2] Revert "Avoid using libtool wrapper for makekeys"
+
+This reverts commit 4645e219133458781e3fb48eaea6a74cccb1b9aa.
+---
+ src/util/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/util/Makefile.am b/src/util/Makefile.am
+index 37314370..a051567a 100644
+--- a/src/util/Makefile.am
++++ b/src/util/Makefile.am
+@@ -10,7 +10,7 @@ AM_CPPFLAGS = \
+ CC = @CC_FOR_BUILD@
+ CPPFLAGS = @CPPFLAGS_FOR_BUILD@
+ CFLAGS = @CFLAGS_FOR_BUILD@
+-LDFLAGS = @LDFLAGS_FOR_BUILD@ -all-static
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ LIBS =
+ EXEEXT = @EXEEXT_FOR_BUILD@
+ 
+-- 
+2.20.1
+
