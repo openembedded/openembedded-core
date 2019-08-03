@@ -755,6 +755,11 @@ sstate_task_postfunc[dirs] = "${WORKDIR}"
 sstate_create_package () {
 	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
 
+	# Exit earlu if it already exists
+	if [ -e ${SSTATE_PKG} ]; then
+		return
+	fi
+
         # Use pigz if available
         OPT="-czS"
         if [ -x "$(command -v pigz)" ]; then
@@ -774,7 +779,12 @@ sstate_create_package () {
 		tar $OPT --file=$TFILE --files-from=/dev/null
 	fi
 	chmod 0664 $TFILE
-	mv -f $TFILE ${SSTATE_PKG}
+	# Skip if it was already created by some other process
+	if [ ! -e ${SSTATE_PKG} ]; then
+		mv -f $TFILE ${SSTATE_PKG}
+	else
+		rm $TFILE
+	fi
 }
 
 python sstate_sign_package () {
