@@ -1,20 +1,7 @@
 require glibc.inc
-
-LIC_FILES_CHKSUM = "file://LICENSES;md5=cfc0ed77a9f62fa62eded042ebe31d72 \
-      file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-      file://posix/rxspencer/COPYRIGHT;md5=dc5485bb394a13b2332ec1c785f5d83a \
-      file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
+require glibc-version.inc
 
 DEPENDS += "gperf-native bison-native make-native"
-
-PV = "2.29"
-
-SRCREV ?= "86013ef5cea322b8f4b9c22f230c22cce369e947"
-
-SRCBRANCH ?= "release/${PV}/master"
-
-GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 
 NATIVESDKFIXES ?= ""
 NATIVESDKFIXES_class-nativesdk = "\
@@ -25,7 +12,7 @@ NATIVESDKFIXES_class-nativesdk = "\
            file://0005-nativesdk-glibc-Make-relocatable-install-for-locales.patch \
 "
 
-SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
+SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
            file://makedbs.sh \
@@ -51,13 +38,10 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
            file://0024-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
            file://0025-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
-           file://0028-intl-Emit-no-lines-in-bison-generated-files.patch \
-           file://0029-inject-file-assembly-directives.patch \
-           file://0030-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
-           file://0001-x86-64-memcmp-Use-unsigned-Jcc-instructions-on-size-.patch \
-           file://CVE-2019-9169.patch \
-"
-
+           file://0026-intl-Emit-no-lines-in-bison-generated-files.patch \
+           file://0027-inject-file-assembly-directives.patch \
+           file://0028-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 

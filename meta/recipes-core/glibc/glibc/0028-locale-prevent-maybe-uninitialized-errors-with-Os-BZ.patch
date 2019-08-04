@@ -1,7 +1,7 @@
-From 6ddab9c8692e6a777c2e2e7a6ca26a65df7d2c5d Mon Sep 17 00:00:00 2001
+From d934788e3221c28c9a1892235cbe4cfd1b28ced0 Mon Sep 17 00:00:00 2001
 From: Martin Jansa <martin.jansa@gmail.com>
 Date: Mon, 17 Dec 2018 21:36:18 +0000
-Subject: [PATCH 30/30] locale: prevent maybe-uninitialized errors with -Os [BZ
+Subject: [PATCH 28/28] locale: prevent maybe-uninitialized errors with -Os [BZ
  #19444]
 
 Fixes following error when building for aarch64 with -Os:
@@ -52,5 +52,5 @@ index 7ca81498b2..d608ca70bb 100644
    const unsigned char *usrc;
  
 -- 
-2.20.1
+2.22.0
 

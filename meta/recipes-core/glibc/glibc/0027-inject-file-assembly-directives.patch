@@ -1,7 +1,7 @@
-From 649bfb399265eb48a9fe8db1c2b5a31633c55152 Mon Sep 17 00:00:00 2001
+From fecd98040a2ae1bc5943a40a1623d76a696e0785 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 29 Nov 2018 17:29:35 -0800
-Subject: [PATCH 29/30] inject file assembly directives
+Subject: [PATCH 27/28] inject file assembly directives
 
 Currently, non-IA builds are not reproducibile since build paths are
 being injected into the debug symbols. These are coming from the use of
@@ -300,5 +300,5 @@ index eeb96544e3..da182b28f8 100644
 +
  #include <brk.S>
 -- 
-2.20.1
+2.22.0
 
