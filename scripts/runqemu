@@ -148,6 +148,10 @@ class BaseConfig(object):
         # Setting one also adds "-vga std" because that is all that
         # OVMF supports.
         self.ovmf_bios = []
+        # When enrolling default Secure Boot keys, the hypervisor
+        # must provide the Platform Key and the first Key Exchange Key
+        # certificate in the Type 11 SMBIOS table.
+        self.ovmf_secboot_pkkek1 = ''
         self.qemuboot = ''
         self.qbconfload = False
         self.kernel = ''
@@ -638,6 +642,23 @@ class BaseConfig(object):
         if not os.path.exists(self.rootfs):
             raise RunQemuError("Can't find rootfs: %s" % self.rootfs)
 
+    def setup_pkkek1(self):
+        """
+        Extract from PEM certificate the Platform Key and first Key
+        Exchange Key certificate string. The hypervisor needs to provide
+        it in the Type 11 SMBIOS table
+        """
+        pemcert = '%s/%s' % (self.get('DEPLOY_DIR_IMAGE'), 'OvmfPkKek1.pem')
+        try:
+            with open(pemcert, 'r') as pemfile:
+                key = pemfile.read().replace('\n', ''). \
+                      replace('-----BEGIN CERTIFICATE-----', ''). \
+                      replace('-----END CERTIFICATE-----', '')
+                self.ovmf_secboot_pkkek1 = key
+
+        except FileNotFoundError:
+            raise RunQemuError("Can't open PEM certificate %s " % pemcert)
+
     def check_ovmf(self):
         """Check and set full path for OVMF firmware and variable file(s)."""
 
@@ -648,6 +669,8 @@ class BaseConfig(object):
                 path = '%s/%s.%s' % (self.get('DEPLOY_DIR_IMAGE'), ovmf, suffix)
                 if os.path.exists(path):
                     self.ovmf_bios[index] = path
+                    if ovmf.endswith('secboot'):
+                        self.setup_pkkek1()
                     break
             else:
                 raise RunQemuError("Can't find OVMF firmware: %s" % ovmf)
@@ -914,6 +937,8 @@ class BaseConfig(object):
             print('ROOTFS: [%s]' % self.rootfs)
         if self.ovmf_bios:
             print('OVMF: %s' % self.ovmf_bios)
+        if (self.ovmf_secboot_pkkek1):
+            print('SECBOOT PKKEK1: [%s...]' % self.ovmf_secboot_pkkek1[0:100])
         print('CONFFILE: [%s]' % self.qemuboot)
         print('')
 
@@ -1261,6 +1286,13 @@ class BaseConfig(object):
             self.qemu_opt += ' -vga std'
 
         self.qemu_opt += ' ' + self.qemu_opt_script
+
+        if self.ovmf_secboot_pkkek1:
+			# Provide the Platform Key and first Key Exchange Key certificate as an
+			# OEM string in the SMBIOS Type 11 table. Prepend the certificate string
+			# with "application prefix" of the EnrollDefaultKeys.efi application
+            self.qemu_opt += ' -smbios type=11,value=4e32566d-8e9e-4f52-81d3-5bb9715f9727:' \
+                             + self.ovmf_secboot_pkkek1
 
         # Append qemuparams to override previous settings
         if self.qemuparams:
