@@ -31,7 +31,7 @@ Message-Id: <20190718130641.15294-1-laurent@vivier.eu>
 Signed-off-by: Laurent Vivier <laurent@vivier.eu>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
-Uptream-status: Backport (upstream commit: 6d5d5dde9adb5acb32e6b8e3dfbf47fff0f308d2)
+Upstream-Status: Backport [upstream commit: 6d5d5dde9adb5acb32e6b8e3dfbf47fff0f308d2]
 
  linux-user/ioctls.h        |  21 +++++-
  linux-user/syscall.c       | 140 +++++++++++++++++++++++++++++--------
