@@ -28,7 +28,7 @@
 # Please keep this list in alphabetical order.
 #
 RECIPE_MAINTAINER_pn-acl = "Chen Qi <Qi.Chen@windriver.com>"
-RECIPE_MAINTAINER_pn-acpica = "Fathi Boudra <fathi.boudra@linaro.org>"
+RECIPE_MAINTAINER_pn-acpica = "Ross Burton <ross.burton@intel.com>"
 RECIPE_MAINTAINER_pn-acpid = "Ross Burton <ross.burton@intel.com>"
 RECIPE_MAINTAINER_pn-adwaita-icon-theme = "Ross Burton <ross.burton@intel.com>"
 RECIPE_MAINTAINER_pn-alsa-lib = "Tanu Kaskinen <tanuk@iki.fi>"
