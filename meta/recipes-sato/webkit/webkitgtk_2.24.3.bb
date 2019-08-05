@@ -23,6 +23,7 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://include_array.patch \
            file://narrowing.patch \
            file://0001-gstreamer-add-a-missing-format-string.patch \
+           file://0001-Unreviewed-fix-build-failure-https-bugs.webkit.org-s.patch \
            "
 
 SRC_URI[md5sum] = "e2a5bbd09a217eba096a2d1562143e35"
