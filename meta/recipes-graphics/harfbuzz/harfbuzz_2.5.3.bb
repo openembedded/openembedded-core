@@ -4,15 +4,14 @@ HOMEPAGE = "http://www.freedesktop.org/wiki/Software/HarfBuzz"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=HarfBuzz"
 SECTION = "libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=e021dd6dda6ff1e6b1044002fc662b9b \
-                    file://src/hb-ucdn/COPYING;md5=994ba0f1295f15b4bda4999a5bbeddef \
-"
+LIC_FILES_CHKSUM = "file://COPYING;md5=e11f5c3149cdec4bb309babb020b32b9 \
+                    file://src/hb-ucd.cc;md5=343f1797944de49ab2b5f5cf3126d3f2"
 
 DEPENDS = "glib-2.0 cairo fontconfig freetype"
 
-SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.bz2"
-SRC_URI[md5sum] = "49f111f9b52ae3d9b31c1a3631a320bd"
-SRC_URI[sha256sum] = "b470eff9dd5b596edf078596b46a1f83c179449f051a469430afc15869db336f"
+SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.xz"
+SRC_URI[md5sum] = "29a310e74a90b4e4f6d62f3e74a571e5"
+SRC_URI[sha256sum] = "fed00dc797b7ba3ca943225f0a854baaed4c1640fff8a31d455cd3b5caec855c"
 
 inherit autotools pkgconfig lib_package gtk-doc
 
