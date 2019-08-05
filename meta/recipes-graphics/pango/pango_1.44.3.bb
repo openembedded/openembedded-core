@@ -16,18 +16,21 @@ GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even gobject-introspection
 
 SRC_URI += "file://run-ptest \
-            file://insensitive-diff.patch"
+            "
 
-SRC_URI[archive.md5sum] = "deb171a31a3ad76342d5195a1b5bbc7c"
-SRC_URI[archive.sha256sum] = "1d2b74cd63e8bd41961f2f8d952355aa0f9be6002b52c8aa7699d9f5da597c9d"
+SRC_URI[archive.md5sum] = "7f91f1b5883ff848b445ab11ebabcf03"
+SRC_URI[archive.sha256sum] = "290bb100ca5c7025ec3f97332eaf783b76ba1f444110f06ac5ee3285e3e5aece"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
 
-PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
-PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} \
+                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 
-GTKDOC_MESON_OPTION = "enable_docs"
-GIR_MESON_OPTION = 'gir'
+PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
+PACKAGECONFIG[tests] = "-Dinstall-tests=true, -Dinstall-tests=false"
+
+GTKDOC_MESON_OPTION = "gtk_doc"
+GIR_MESON_OPTION = 'introspection'
 
 LEAD_SONAME = "libpango-1.0*"
 LIBV = "1.8.0"
@@ -41,10 +44,3 @@ RPROVIDES_${PN} += "pango-modules pango-module-indic-lang \
                     pango-module-basic-fc pango-module-arabic-lang"
 
 BBCLASSEXTEND = "native nativesdk"
-
-do_install_append () {
-	if [ "${PTEST_ENABLED}" != "1" ]; then
-		rm -rf ${D}${libexecdir}/installed-tests ${D}${datadir}/installed-tests
-                rmdir --ignore-fail-on-non-empty ${D}${libexecdir} ${D}${datadir}
-	fi
-}
