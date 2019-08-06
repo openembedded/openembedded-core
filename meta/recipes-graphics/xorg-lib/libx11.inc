@@ -11,7 +11,7 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/libx11:"
 PE = "1"
 
 SRC_URI += "file://Fix-hanging-issue-in-_XReply.patch \
-            file://fix-libtool.patch \
+            file://no-host-libtool.patch \
             file://no-host-x.patch"
 
 SRC_URI[md5sum] = "c5fa5a86a20e3591bed6c046498d4b8f"
