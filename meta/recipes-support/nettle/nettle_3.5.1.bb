@@ -20,8 +20,8 @@ SRC_URI_append_class-target = "\
             file://dlopen-test.patch \
             "
 
-SRC_URI[md5sum] = "9bdebb0e2f638d3b9d91f7fc264b70c1"
-SRC_URI[sha256sum] = "f941cf1535cd5d1819be5ccae5babef01f6db611f9b5a777bae9c7604b8a92ad"
+SRC_URI[md5sum] = "0e5707b418c3826768d41130fbe4ee86"
+SRC_URI[sha256sum] = "75cca1998761b02e16f2db56da52992aef622bf55a3b45ec538bc2eedadc9419"
 
 UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
@@ -37,7 +37,7 @@ do_compile_ptest() {
 }
 
 do_install_append() {
-    oe_multilib_header nettle/nettle-stdint.h nettle/version.h
+    oe_multilib_header nettle/version.h
 }
 
 do_install_ptest() {
