@@ -15,11 +15,9 @@ GNOMEBASEBUILDCLASS = "meson"
 
 inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even gobject-introspection
 
-SRC_URI += "file://run-ptest \
-            "
-
-SRC_URI[archive.md5sum] = "7f91f1b5883ff848b445ab11ebabcf03"
-SRC_URI[archive.sha256sum] = "290bb100ca5c7025ec3f97332eaf783b76ba1f444110f06ac5ee3285e3e5aece"
+SRC_URI += "file://run-ptest"
+SRC_URI[archive.md5sum] = "b6bf689e3ce4f46b0fd887b64c850ea1"
+SRC_URI[archive.sha256sum] = "8527dfcbeedb4390149b6f94620c0fa64e26046ab85042c2a7556438847d7fc1"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
 
@@ -38,7 +36,8 @@ LIBV = "1.8.0"
 FILES_${PN} = "${bindir}/* ${libdir}/libpango*${SOLIBS}"
 FILES_${PN}-dev += "${libdir}/pango/${LIBV}/modules/*.la"
 
-RDEPENDS_${PN}-ptest += "liberation-fonts cantarell-fonts"
+RDEPENDS_${PN}-ptest += "cantarell-fonts"
+RDEPENDS_${PN}-ptest_append_libc-glibc = " locale-base-en-us"
 
 RPROVIDES_${PN} += "pango-modules pango-module-indic-lang \
                     pango-module-basic-fc pango-module-arabic-lang"
