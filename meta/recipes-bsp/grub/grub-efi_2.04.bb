@@ -105,5 +105,3 @@ INSANE_SKIP_${PN}_append_linux-gnux32 = " arch"
 INSANE_SKIP_${PN}-dbg_append_linux-gnux32 = " arch"
 INSANE_SKIP_${PN}_append_linux-muslx32 = " arch"
 INSANE_SKIP_${PN}-dbg_append_linux-muslx32 = " arch"
-
-BBCLASSEXTEND = "native"
