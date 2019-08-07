@@ -1,7 +1,7 @@
 SUMMARY = "GObject wrapper for libudev"
 HOMEPAGE = "https://wiki.gnome.org/Projects/libgudev"
-SRC_URI[archive.sha256sum] = "ee4cb2b9c573cdf354f6ed744f01b111d4b5bed3503ffa956cefff50489c7860"
-SRC_URI[archive.md5sum] = "6914852377156665567abf8a38d89236"
+SRC_URI[archive.sha256sum] = "587c4970eb23f4e2deee2cb1fb7838c94a78c578f41ce12cac0a3f4a80dabb03"
+SRC_URI[archive.md5sum] = "d59a317a40aaa02a2226056c0bb4d3e1"
 
 DEPENDS = "glib-2.0 udev"
 
