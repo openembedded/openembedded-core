@@ -288,7 +288,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     if not taskname:
         # We have to derive pn and taskname
         key = pn
-        splitit = key.split('.bb.')
+        splitit = key.split('.bb:')
         taskname = splitit[1]
         pn = os.path.basename(splitit[0]).split('_')[0]
         if key.startswith('virtual:native:'):
