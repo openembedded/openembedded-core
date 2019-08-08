@@ -14,6 +14,10 @@ FILES_${PN}-common = " \
     ${datadir}/grub \
 "
 
+FILES_${PN}-common_append_aarch64 = " \
+    ${libdir}/${BPN} \
+"
+
 do_install_append () {
     install -d ${D}${sysconfdir}/grub.d
     # Remove build host references...

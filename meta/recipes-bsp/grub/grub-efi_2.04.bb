@@ -81,6 +81,10 @@ do_install_class-target() {
         {} +
 }
 
+do_install_append_aarch64() {
+    rm -rf  ${D}/${prefix}/
+}
+
 GRUB_BUILDIN ?= "boot linux ext2 fat serial part_msdos part_gpt normal \
                  efi_gop iso9660 configfile search loadenv test"
 
@@ -99,6 +103,7 @@ FILES_${PN} = "${libdir}/grub/${GRUB_TARGET}-efi \
                /boot/EFI/BOOT/${GRUB_IMAGE} \
                "
 
+FILES_${PN}_remove_aarch64 = "${libdir}/grub/${GRUB_TARGET}-efi"
 
 # 64-bit binaries are expected for the bootloader with an x32 userland
 INSANE_SKIP_${PN}_append_linux-gnux32 = " arch"
