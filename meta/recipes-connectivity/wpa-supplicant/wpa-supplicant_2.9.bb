@@ -26,8 +26,8 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://99_wpa_supplicant \
            file://0001-replace-systemd-install-Alias-with-WantedBy.patch \
           "
-SRC_URI[md5sum] = "0af5998c5d924e985cab16b9a1c77904"
-SRC_URI[sha256sum] = "a689336a12a99151b9de5e25bfccadb88438f4f4438eb8db331cd94346fd3d96"
+SRC_URI[md5sum] = "2d2958c782576dc9901092fbfecb4190"
+SRC_URI[sha256sum] = "fcbdee7b4a64bea8177973299c8c824419c413ec2e3a95db63dd6a5dc3541f17"
 
 CVE_PRODUCT = "wpa_supplicant"
 
