@@ -18,15 +18,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 DEPENDS = "slang popt python3"
 
 SRC_URI = "https://releases.pagure.org/newt/newt-${PV}.tar.gz \
-           file://fix_SHAREDDIR.patch \
            file://cross_ar.patch \
            file://Makefile.in-Add-tinfo-library-to-the-linking-librari.patch \
            file://pie-flags.patch \
            file://0001-detect-gold-as-GNU-linker-too.patch \
 "
 
-SRC_URI[md5sum] = "70b288f821234593a8e7920e435b259b"
-SRC_URI[sha256sum] = "8d66ba6beffc3f786d4ccfee9d2b43d93484680ef8db9397a4fb70b5adbb6dbc"
+SRC_URI[md5sum] = "a0a5fd6b53bb167a65e15996b249ebb5"
+SRC_URI[sha256sum] = "265eb46b55d7eaeb887fca7a1d51fe115658882dfe148164b6c49fccac5abb31"
 
 S = "${WORKDIR}/newt-${PV}"
 
