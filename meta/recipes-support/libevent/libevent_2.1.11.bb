@@ -12,8 +12,8 @@ SRC_URI = " \
     file://run-ptest \
 "
 
-SRC_URI[md5sum] = "999caf86f52943af2363bc8077f00167"
-SRC_URI[sha256sum] = "e864af41a336bb11dab1a23f32993afe963c1f69618bd9292b89ecf6904845b0"
+SRC_URI[md5sum] = "7f35cfe69b82d879111ec0d7b7b1c531"
+SRC_URI[sha256sum] = "a65bac6202ea8c5609fd5c7e480e6d25de467ea1917c08290c521752f147283d"
 
 UPSTREAM_CHECK_URI = "http://libevent.org/"
 
