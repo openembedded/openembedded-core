@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5e6b20ea2ef94a998145f0ea3f788ee0"
 
 DEPENDS += "libinput"
 
-SRC_URI[md5sum] = "b7548bc1d7e82d189205794ff86307af"
-SRC_URI[sha256sum] = "b8b346962c6b62b8069928c29c0db83b6f544863bf2fc6830f324de841de2820"
+SRC_URI[md5sum] = "d600e8e2e30747b8ce49ec5294ff0ab6"
+SRC_URI[sha256sum] = "c28b56a21754b972db31798e6a4cf4dc9d69208d08f8fe41701a94def5e94bee"
 
 FILES_${PN} += "${datadir}/X11/xorg.conf.d"
