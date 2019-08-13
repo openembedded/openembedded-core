@@ -21,6 +21,7 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=git \
 
 PV = "edk2-stable201905"
 SRCREV="20d2e5a125e34fc8501026613a71549b2a1a3e54"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>edk2-stable.*)"
 
 inherit deploy
 
