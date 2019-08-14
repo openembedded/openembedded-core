@@ -1,10 +1,10 @@
 SUMMARY = "Tools for managing Yocto Project style branched kernels"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=a6c2fa8aef1bda400e2828845ba0d06c"
+LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=9c30e971d435e249624278c3e343e501"
 
 DEPENDS = "git-native"
 
-SRCREV = "af1a779f662c81da521e4d602f3c6446547d12a2"
+SRCREV = "7604d2d1a49d88e38d5b5854209dc1435b790893"
 PR = "r12"
 PV = "0.2+git${SRCPV}"
 
