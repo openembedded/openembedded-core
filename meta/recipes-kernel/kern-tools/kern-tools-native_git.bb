@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://git/tools/kgit;beginline=5;endline=9;md5=9c30e971d435
 
 DEPENDS = "git-native"
 
-SRCREV = "7604d2d1a49d88e38d5b5854209dc1435b790893"
+SRCREV = "bb6df0ef2365689cd3df6f76a8838cddae0d9343"
 PR = "r12"
 PV = "0.2+git${SRCPV}"
 
