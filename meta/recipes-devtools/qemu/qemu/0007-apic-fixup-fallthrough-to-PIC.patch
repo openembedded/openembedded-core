@@ -1,4 +1,4 @@
-From 1b3f264e2ba18caf658fae27293c426c8366c6a3 Mon Sep 17 00:00:00 2001
+From f51e49e7d7d87b7254242b7360f99c2df94a5a2d Mon Sep 17 00:00:00 2001
 From: Mark Asselstine <mark.asselstine@windriver.com>
 Date: Tue, 26 Feb 2013 11:43:28 -0500
 Subject: [PATCH] apic: fixup fallthrough to PIC
@@ -30,10 +30,10 @@ Signed-off-by: He Zhe <zhe.he@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/hw/intc/apic.c b/hw/intc/apic.c
-index 6ea619c3..f892811e 100644
+index bce89911..df4b582e 100644
 --- a/hw/intc/apic.c
 +++ b/hw/intc/apic.c
-@@ -604,7 +604,7 @@ int apic_accept_pic_intr(DeviceState *dev)
+@@ -603,7 +603,7 @@ int apic_accept_pic_intr(DeviceState *dev)
      APICCommonState *s = APIC(dev);
      uint32_t lvt0;
  

@@ -1,32 +1,35 @@
-From 2a66bd95c856de6950fbd802c5b99075207c1d76 Mon Sep 17 00:00:00 2001
+From b633b9a1813fcd715dce44659a89293f1c64ae8c Mon Sep 17 00:00:00 2001
 From: Martin Jansa <martin.jansa@lge.com>
 Date: Fri, 1 Jun 2018 08:41:07 +0000
-Subject: [PATCH] Revert "linux-user: fix mmap/munmap/mprotect/mremap/shmat"
+Subject: [PATCH] Fix webkitgtk builds
 
-Causes qemu-i386 to hang during gobject-introspection in webkitgtk build
-when musl is used on qemux86 - the same issue as
-0010-linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch
-was fixing in 2.11.0 release, but with this patch the fix no longer worked
-as discussed here:
-http://lists.openembedded.org/pipermail/openembedded-core/2018-May/150302.html
-http://lists.openembedded.org/pipermail/openembedded-core/2018-June/151382.html
+This is a partial revert of "linux-user: fix mmap/munmap/mprotect/mremap/shmat".
+
+This patch fixes qemu-i386 hangs during gobject-introspection in webkitgtk build
+when musl is used on qemux86. This is the same issue that
+0008-linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch was
+fixing in the 2.11 release.
+
+This patch also fixes a build failure when building webkitgtk for
+qemumips. A QEMU assert is seen while building webkitgtk:
+page_check_range: Assertion `start < ((target_ulong)1 << L1_MAP_ADDR_SPACE_BITS)' failed.
 
 This reverts commit ebf9a3630c911d0cfc9c20f7cafe9ba4f88cf583.
 
 Upstream-Status: Pending
-
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 ---
  include/exec/cpu-all.h  |  6 +-----
- include/exec/cpu_ldst.h | 16 +++++++++-------
+ include/exec/cpu_ldst.h |  5 ++++-
  linux-user/mmap.c       | 17 ++++-------------
  linux-user/syscall.c    |  5 +----
- 4 files changed, 15 insertions(+), 29 deletions(-)
+ 4 files changed, 10 insertions(+), 23 deletions(-)
 
 diff --git a/include/exec/cpu-all.h b/include/exec/cpu-all.h
-index b16c9ec5..612db6a0 100644
+index 536ea58f81..4c63a6a2e4 100644
 --- a/include/exec/cpu-all.h
 +++ b/include/exec/cpu-all.h
-@@ -163,12 +163,8 @@ extern unsigned long guest_base;
+@@ -162,12 +162,8 @@ extern unsigned long guest_base;
  extern int have_guest_base;
  extern unsigned long reserved_va;
  
@@ -41,37 +44,26 @@ index b16c9ec5..612db6a0 100644
  
  #include "exec/hwaddr.h"
 diff --git a/include/exec/cpu_ldst.h b/include/exec/cpu_ldst.h
-index d78041d7..845639f7 100644
+index 9151fdb042..cb2b8f329f 100644
 --- a/include/exec/cpu_ldst.h
 +++ b/include/exec/cpu_ldst.h
-@@ -62,13 +62,15 @@ typedef uint64_t abi_ptr;
- /* All direct uses of g2h and h2g need to go away for usermode softmmu.  */
- #define g2h(x) ((void *)((unsigned long)(abi_ptr)(x) + guest_base))
- 
+@@ -65,7 +65,10 @@ typedef uint64_t abi_ptr;
+ #if HOST_LONG_BITS <= TARGET_VIRT_ADDR_SPACE_BITS
+ #define guest_addr_valid(x) (1)
+ #else
 -#define guest_addr_valid(x) ((x) <= GUEST_ADDR_MAX)
--#define h2g_valid(x) guest_addr_valid((unsigned long)(x) - guest_base)
--
--static inline int guest_range_valid(unsigned long start, unsigned long len)
--{
--    return len - 1 <= GUEST_ADDR_MAX && start <= GUEST_ADDR_MAX - len + 1;
--}
-+#if HOST_LONG_BITS <= TARGET_VIRT_ADDR_SPACE_BITS
-+#define h2g_valid(x) 1
-+#else
-+#define h2g_valid(x) ({ \
-+    unsigned long __guest = (unsigned long)(x) - guest_base; \
-+    (__guest < (1ul << TARGET_VIRT_ADDR_SPACE_BITS)) && \
-+    (!reserved_va || (__guest < reserved_va)); \
++#define guest_addr_valid(x) ({ \
++    ((x) < (1ul << TARGET_VIRT_ADDR_SPACE_BITS)) && \
++    (!reserved_va || ((x) < reserved_va)); \
 +})
-+#endif
+ #endif
+ #define h2g_valid(x) guest_addr_valid((unsigned long)(x) - guest_base)
  
- #define h2g_nocheck(x) ({ \
-     unsigned long __ret = (unsigned long)(x) - guest_base; \
 diff --git a/linux-user/mmap.c b/linux-user/mmap.c
-index e0249efe..cfe34b35 100644
+index 46a6e3a761..7735465462 100644
 --- a/linux-user/mmap.c
 +++ b/linux-user/mmap.c
-@@ -79,7 +79,7 @@ int target_mprotect(abi_ulong start, abi_ulong len, int prot)
+@@ -78,7 +78,7 @@ int target_mprotect(abi_ulong start, abi_ulong len, int prot)
          return -TARGET_EINVAL;
      len = TARGET_PAGE_ALIGN(len);
      end = start + len;
@@ -80,7 +72,7 @@ index e0249efe..cfe34b35 100644
          return -TARGET_ENOMEM;
      }
      prot &= PROT_READ | PROT_WRITE | PROT_EXEC;
-@@ -490,8 +490,8 @@ abi_long target_mmap(abi_ulong start, abi_ulong len, int prot,
+@@ -495,8 +495,8 @@ abi_long target_mmap(abi_ulong start, abi_ulong len, int prot,
           * It can fail only on 64-bit host with 32-bit target.
           * On any other target/host host mmap() handles this error correctly.
           */
@@ -91,7 +83,7 @@ index e0249efe..cfe34b35 100644
              goto fail;
          }
  
-@@ -631,10 +631,8 @@ int target_munmap(abi_ulong start, abi_ulong len)
+@@ -636,10 +636,8 @@ int target_munmap(abi_ulong start, abi_ulong len)
      if (start & ~TARGET_PAGE_MASK)
          return -TARGET_EINVAL;
      len = TARGET_PAGE_ALIGN(len);
@@ -103,7 +95,7 @@ index e0249efe..cfe34b35 100644
      mmap_lock();
      end = start + len;
      real_start = start & qemu_host_page_mask;
-@@ -689,13 +687,6 @@ abi_long target_mremap(abi_ulong old_addr, abi_ulong old_size,
+@@ -694,13 +692,6 @@ abi_long target_mremap(abi_ulong old_addr, abi_ulong old_size,
      int prot;
      void *host_addr;
  
@@ -118,10 +110,10 @@ index e0249efe..cfe34b35 100644
  
      if (flags & MREMAP_FIXED) {
 diff --git a/linux-user/syscall.c b/linux-user/syscall.c
-index 96cd4bf8..e6754772 100644
+index 8b41a03901..bc5d85de02 100644
 --- a/linux-user/syscall.c
 +++ b/linux-user/syscall.c
-@@ -3860,9 +3860,6 @@ static inline abi_ulong do_shmat(CPUArchState *cpu_env,
+@@ -4031,9 +4031,6 @@ static inline abi_ulong do_shmat(CPUArchState *cpu_env,
              return -TARGET_EINVAL;
          }
      }
@@ -131,7 +123,7 @@ index 96cd4bf8..e6754772 100644
  
      mmap_lock();
  
-@@ -6633,7 +6630,7 @@ static int open_self_maps(void *cpu_env, int fd)
+@@ -6881,7 +6878,7 @@ static int open_self_maps(void *cpu_env, int fd)
          }
          if (h2g_valid(min)) {
              int flags = page_get_flags(h2g(min));
@@ -140,3 +132,6 @@ index 96cd4bf8..e6754772 100644
              if (page_check_range(h2g(min), max - min, flags) == -1) {
                  continue;
              }
+-- 
+2.22.0
+

@@ -2,7 +2,7 @@ BPN = "qemu"
 
 require qemu-native.inc
 
-# As some of the files installed by qemu-native and qemu-system-native 
+# As some of the files installed by qemu-native and qemu-system-native
 # are the same, we depend on qemu-native to get the full installation set
 # and avoid file clashes
 DEPENDS = "glib-2.0-native zlib-native pixman-native qemu-native bison-native"

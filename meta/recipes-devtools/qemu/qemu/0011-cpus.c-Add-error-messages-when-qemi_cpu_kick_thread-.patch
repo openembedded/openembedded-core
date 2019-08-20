@@ -37,7 +37,7 @@ index e83f72b4..e6e2576e 100644
      if (err && err != ESRCH) {
          fprintf(stderr, "qemu:%s: %s", __func__, strerror(err));
 +        fprintf(stderr, "CPU #%d:\n", cpu->cpu_index);
-+        cpu_dump_state(cpu, stderr, fprintf, 0);
++        cpu_dump_state(cpu, stderr, 0);
 +        backtrace_print();
          exit(1);
      }
