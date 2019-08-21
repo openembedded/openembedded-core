@@ -10,8 +10,8 @@ inherit pypi
 
 SRC_URI_append_class-native = " file://0001-conditionally-do-not-fetch-code-by-easy_install.patch"
 
-SRC_URI[md5sum] = "f26bbb3201c42ef37fb8d184cb85234d"
-SRC_URI[sha256sum] = "c519b84c299911fd94ef47e3de4fe678c254aefc5cdf8a9b12e4cdc8cc3744a8"
+SRC_URI[md5sum] = "a3470ce184da33f0fa6c9f44f6221bc0"
+SRC_URI[sha256sum] = "66b86bbae7cc7ac2e867f52dc08a6bd064d938bac59dfec71b9b565dd36d6012"
 
 DEPENDS += "${PYTHON_PN}"
 
