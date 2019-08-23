@@ -619,6 +619,12 @@ python __anonymous() {
         d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 }
 
+python do_warn_musl() {
+    if d.getVar('TCLIBC') == "musl":
+        bb.warn("Using systemd with musl is not recommended since it is not supported upstream and some patches are known to be problematic.")
+}
+addtask warn_musl before do_configure
+
 ALTERNATIVE_${PN} = "halt reboot shutdown poweroff runlevel resolv-conf"
 
 ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.systemd"
