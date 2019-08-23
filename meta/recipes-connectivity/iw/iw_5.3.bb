@@ -14,8 +14,8 @@ SRC_URI = "http://www.kernel.org/pub/software/network/iw/${BP}.tar.gz \
            file://separate-objdir.patch \
 "
 
-SRC_URI[md5sum] = "a0a17ab1b20132c716bba9a4f9974ba6"
-SRC_URI[sha256sum] = "36fc7592dde7bec934df83cd53ef1f2c08ceec5cd58d07eb8f71cc6e8464013c"
+SRC_URI[md5sum] = "6d4d1c0ee34f3a7bda0e6aafcd7aaf31"
+SRC_URI[sha256sum] = "175abbfce86348c0b70e778c13a94c0bfc9abc7a506d2bd608261583aeedf64a"
 
 inherit pkgconfig
 
@@ -26,7 +26,6 @@ EXTRA_OEMAKE = "\
     'SBINDIR=${sbindir}' \
     'MANDIR=${mandir}' \
 "
-B = "${WORKDIR}/build"
 
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
