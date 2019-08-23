@@ -22,12 +22,8 @@ SRC_URI += "file://touchscreen.rules \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://0004-rules-whitelist-hd-devices.patch \
            file://0005-rules-watch-metadata-changes-in-ide-devices.patch \
-           file://0006-network-remove-redunant-link-name-in-message.patch \
            file://99-default.preset \
            file://0001-resolved-Fix-incorrect-use-of-OpenSSL-BUF_MEM.patch \
-           file://0001-core-set-fs.file-max-sysctl-to-LONG_MAX-rather-than-.patch \
-           file://0001-networkd-fix-link-up.patch \
-           file://0002-network-do-not-send-ipv6.patch \
            "
 
 # patches needed by musl
