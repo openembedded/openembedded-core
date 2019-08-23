@@ -47,10 +47,10 @@ EXTRA_OECONF = " \
 CFLAGS_append = " -fPIC"
 
 # pread() is in POSIX.1-2001 so any reasonable system must surely support it
-CFLAGS += "-DUSE_PREAD"
+CFLAGS_append = " -DUSE_PREAD"
 
 # Provide column meta-data API
-CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"
+CFLAGS_append = " -DSQLITE_ENABLE_COLUMN_METADATA"
 
 PACKAGES = "lib${BPN} lib${BPN}-dev lib${BPN}-doc ${PN}-dbg lib${BPN}-staticdev ${PN}"
 
