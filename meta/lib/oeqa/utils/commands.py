@@ -337,7 +337,7 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
         qemu.deploy()
         try:
             qemu.start(params=qemuparams, ssh=ssh, runqemuparams=runqemuparams, launch_cmd=launch_cmd, discard_writes=discard_writes)
-        except EXception as e:
+        except Exception as e:
             msg = str(e) + '\nFailed to start QEMU - see the logs in %s' % logdir
             if os.path.exists(qemu.qemurunnerlog):
                 with open(qemu.qemurunnerlog, 'r') as f:
