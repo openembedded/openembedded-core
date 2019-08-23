@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libtool bzip2 zlib virtual/libintl"
 DEPENDS_append_libc-musl = " argp-standalone fts musl-obstack "
 # The Debian patches below are from:
-# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.175-1.debian.tar.xz
+# http://ftp.de.debian.org/debian/pool/main/e/elfutils/elfutils_0.176-1.debian.tar.xz
 SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0001-dso-link-change.patch \
            file://0002-Fix-elf_cvt_gunhash-if-dest-and-src-are-same.patch \
@@ -28,6 +28,8 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://debian/ignore_strmerge.diff \
            file://debian/disable_werror.patch \
            file://debian/testsuite-ignore-elflint.diff \
+           file://debian/mips_cfi.patch \
+           file://debian/0001-fix-compile-failure-with-debian-patches.patch \
            file://0001-skip-the-test-when-gcc-not-deployed.patch \
            file://run-ptest \
            file://ptest.patch \
@@ -38,8 +40,8 @@ SRC_URI_append_libc-musl = " \
            file://musl-utils.patch \
            file://musl-tests.patch \
            "
-SRC_URI[md5sum] = "077e4f49320cad82bf17a997068b1db9"
-SRC_URI[sha256sum] = "eb5747c371b0af0f71e86215a5ebb88728533c3a104a43d4231963f308cd1023"
+SRC_URI[md5sum] = "0b583722f911e1632544718d502aab87"
+SRC_URI[sha256sum] = "fa489deccbcae7d8c920f60d85906124c1989c591196d90e0fd668e3dc05042e"
 
 inherit autotools gettext ptest
 
