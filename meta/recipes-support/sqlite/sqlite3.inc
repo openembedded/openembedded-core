@@ -19,7 +19,7 @@ UPSTREAM_CHECK_REGEX = "releaselog/(?P<pver>(\d+[\.\-_]*)+)\.html"
 
 CVE_PRODUCT = "sqlite"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig siteinfo
 
 # enable those which are enabled by default in configure
 PACKAGECONFIG ?= "fts4 fts5 json1 rtree dyn_ext"
@@ -51,6 +51,10 @@ CFLAGS_append = " -DUSE_PREAD"
 
 # Provide column meta-data API
 CFLAGS_append = " -DSQLITE_ENABLE_COLUMN_METADATA"
+
+# Unless SQLITE_BYTEORDER is predefined, the code falls back to build time
+# huristics, which are not always correct
+CFLAGS_append = " ${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DSQLITE_BYTEORDER=1234', '-DSQLITE_BYTEORDER=4321', d)}"
 
 PACKAGES = "lib${BPN} lib${BPN}-dev lib${BPN}-doc ${PN}-dbg lib${BPN}-staticdev ${PN}"
 
