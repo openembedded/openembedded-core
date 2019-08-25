@@ -141,7 +141,7 @@ PACKAGES =+ "pybootchartgui"
 FILES_pybootchartgui += "${PYTHON_SITEPACKAGES_DIR}/pybootchartgui ${bindir}/pybootchartgui"
 RDEPENDS_pybootchartgui = "python3-pycairo python3-compression python3-image python3-shell python3-compression python3-codecs"
 RDEPENDS_${PN}_class-target += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'sysvinit-pidof', 'procps', d)}"
-RDEPENDS_${PN}_class-target += "lsb"
+RDEPENDS_${PN}_class-target += "lsb-release"
 DEPENDS_append_class-native = " python3-pycairo-native"
 
 PACKAGES =+ "bootchartd-stop-initscript"
