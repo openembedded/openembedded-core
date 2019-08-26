@@ -87,16 +87,16 @@ fakeroot do_populate_poky_src () {
 	mkdir -p ${IMAGE_ROOTFS}/media/cdrom
 
 	# Allow builder to use sudo
-	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}/etc/sudoers
+	echo "builder ALL=(ALL) NOPASSWD: ALL" >> ${IMAGE_ROOTFS}${sysconfdir}/sudoers
 
 	# Load tap/tun at startup
 	rm -f ${IMAGE_ROOTFS}/sbin/iptables
-	lnr ${IMAGE_ROOTFS}/usr/sbin/iptables ${IMAGE_ROOTFS}/sbin/iptables
-	echo "tun" >> ${IMAGE_ROOTFS}/etc/modules
+	lnr ${IMAGE_ROOTFS}${sbindir}/iptables ${IMAGE_ROOTFS}/sbin/iptables
+	echo "tun" >> ${IMAGE_ROOTFS}${sysconfdir}/modules
 
 	# Use Clearlooks GTK+ theme
-	mkdir -p ${IMAGE_ROOTFS}/etc/gtk-2.0
-	echo 'gtk-theme-name = "Clearlooks"' > ${IMAGE_ROOTFS}/etc/gtk-2.0/gtkrc
+	mkdir -p ${IMAGE_ROOTFS}${sysconfdir}/gtk-2.0
+	echo 'gtk-theme-name = "Clearlooks"' > ${IMAGE_ROOTFS}${sysconfdir}/gtk-2.0/gtkrc
 
 	# Install modules needed for toaster
 	export STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE}

@@ -18,7 +18,7 @@ libc_baselibs = "${base_libdir}/libc.so.* ${base_libdir}/libc-*.so ${base_libdir
 ARCH_DYNAMIC_LOADER = ""
 # The aarch64 ABI says the dynamic linker -must- be
 # /lib/ld-linux-aarch64{,_be}.so.1. With usrmerge, that may mean that
-# we need to install it in /usr/lib.
+# we need to install it in ${libdir}.
 ARCH_DYNAMIC_LOADER_aarch64 = "ld-linux-${TARGET_ARCH}.so.1"
 libc_baselibs_append = " ${@oe.utils.conditional('ARCH_DYNAMIC_LOADER', '', '', '${root_prefix}/lib/${ARCH_DYNAMIC_LOADER}', d)}"
 INSANE_SKIP_${PN}_append_aarch64 = " libdir"

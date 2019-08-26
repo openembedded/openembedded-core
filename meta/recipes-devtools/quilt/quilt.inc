@@ -30,7 +30,7 @@ EXTRA_AUTORECONF += "--exclude=aclocal"
 CACHED_CONFIGUREVARS += "ac_cv_path_BASH=/bin/bash"
 
 # Make sure we don't have "-w" in shebang lines: it breaks using
-# "/usr/bin/env perl" as parser
+# "${bindir}/env perl" as parser
 do_configure_prepend () {
 	find ${S} -name "*.in" -exec sed -i -e "1s,^#\!.*@PERL@ -w$,#\! @PERL@\nuse warnings;," {} \;
 }

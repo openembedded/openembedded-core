@@ -96,8 +96,8 @@ do_install () {
 		install -m 644 ${S}/wpa_supplicant/systemd/*.service ${D}/${systemd_unitdir}/system
 	fi
 
-	install -d ${D}/etc/default/volatiles
-	install -m 0644 ${WORKDIR}/99_wpa_supplicant ${D}/etc/default/volatiles
+	install -d ${D}${sysconfdir}/default/volatiles
+	install -m 0644 ${WORKDIR}/99_wpa_supplicant ${D}${sysconfdir}/default/volatiles
 }
 
 pkg_postinst_wpa-supplicant () {

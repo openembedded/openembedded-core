@@ -4,7 +4,7 @@ HOMEPAGE = "https://fedorahosted.org/linux-pam/"
 BUGTRACKER = "https://fedorahosted.org/linux-pam/newticket"
 SECTION = "base"
 # PAM is dual licensed under GPL and BSD.
-# /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time
+# ${sysconfdir}/pam.d comes from Debian libpam-runtime in 2009-11 (at that time
 # libpam-runtime-1.0.1 is GPLv2+), by openembedded
 LICENSE = "GPLv2+ | BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7eb5c1bf854e8881005d673599ee74d3 \

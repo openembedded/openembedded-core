@@ -33,7 +33,7 @@ EXTRA_OECONF += "--disable-file-converter-check --with-file-converter=texttops"
 
 do_configure_prepend() {
     export PERL="${bindir}/env perl"
-    export CUPS_SERVERBIN=${exec_prefix}/lib/cups       # /usr/lib NOT libdir
+    export CUPS_SERVERBIN=${exec_prefix}/lib/cups       # ${libdir} NOT libdir
 }
 
 do_install_append_linuxstdbase() {

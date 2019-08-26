@@ -4,7 +4,7 @@ SUMMARY = "X Window System initializer"
 
 DESCRIPTION = "The xinit program is used to start the X Window System \
 server and a first client program on systems that cannot start X \
-directly from /etc/init or in environments that use multiple window \
+directly from ${sysconfdir}/init or in environments that use multiple window \
 systems. When this first client exits, xinit will kill the X server and \
 then terminate."
 

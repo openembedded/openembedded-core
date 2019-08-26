@@ -70,8 +70,8 @@ SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
 inherit autotools texinfo
 
 PERL = "${USRBINPATH}/perl"
-PERL_class-native = "/usr/bin/env perl"
-PERL_class-nativesdk = "/usr/bin/env perl"
+PERL_class-native = "${bindir}/env perl"
+PERL_class-nativesdk = "${bindir}/env perl"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_PERL='${PERL}'"
 

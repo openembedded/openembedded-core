@@ -25,7 +25,7 @@ SRC_URI[md5sum] = "097ff1a324ae02e0a3b0369f07a7544a"
 SRC_URI[sha256sum] = "f4a245b94124b377d8b49646bf421f9155d36aa7614b6ebf83705d3ffc76eaad"
 
 do_configure_prepend() {
-	sed -i -e 's%@ACLOCAL_CWFLAGS@%-I ${STAGING_DIR_NATIVE}/usr/share/cwautomacros/m4%g' ${S}/Makefile.am ${S}/tilde/Makefile.am
+	sed -i -e 's%@ACLOCAL_CWFLAGS@%-I ${STAGING_DIR_NATIVE}${datadir}/cwautomacros/m4%g' ${S}/Makefile.am ${S}/tilde/Makefile.am
 }
 
 ALTERNATIVE_${PN} = "which"

@@ -1,6 +1,6 @@
 do_compile_append () {
 	# now generate script to drive testing
-	echo "#!/usr/bin/env sh" >${B}/${HOST_PREFIX}testglibc
+	echo "#!${bindir}/env sh" >${B}/${HOST_PREFIX}testglibc
 	set >> ${B}/${HOST_PREFIX}testglibc
 	# prune out the unneeded vars
 	sed -i -e "/^BASH/d" ${B}/${HOST_PREFIX}testglibc
@@ -55,7 +55,7 @@ then
 	echo "   The tree should be accessible at same location on build host and target"
 	echo "   You can add nfs-client to IMAGE_FEATURES to get the nfs client on target"
 	echo "3. nfs server on build host is not running."
-	echo "   Please make sure that you have 'no_root_squash' added in /etc/exports if you want"
+	echo "   Please make sure that you have 'no_root_squash' added in ${sysconfdir}/exports if you want"
 	echo "   to test as root user on target (usually its recommended to create a non"
 	echo "   root user."
 	echo "   As a sanity check make sure that target can read/write to the glibc build tree"

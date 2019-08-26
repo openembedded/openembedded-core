@@ -30,5 +30,5 @@ do_install_append_class-native() {
 do_install_append_class-nativesdk() {
         create_wrapper ${D}/${bindir}/createrepo_c \
                 RPM_CONFIGDIR=${SDKPATHNATIVE}${libdir_nativesdk}/rpm
-        rm -rf ${D}/etc
+        rm -rf ${D}${sysconfdir}
 }

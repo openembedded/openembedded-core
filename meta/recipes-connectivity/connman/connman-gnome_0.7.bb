@@ -26,5 +26,5 @@ ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 RDEPENDS_${PN} = "connman"
 
 do_install_append() {
-    install -m 0644 ${WORKDIR}/images/* ${D}/usr/share/icons/hicolor/22x22/apps/
+    install -m 0644 ${WORKDIR}/images/* ${D}${datadir}/icons/hicolor/22x22/apps/
 }

@@ -34,9 +34,9 @@ do_install_append () {
 	if [ "${PN}" = "dpkg-native" ]; then
 		# update-alternatives doesn't have an offline mode
 		rm ${D}${bindir}/update-alternatives
-		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env nativeperl|' ${D}${bindir}/dpkg-*
+		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!${bindir}/env nativeperl|' ${D}${bindir}/dpkg-*
 	else
-		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!/usr/bin/env perl|' ${D}${bindir}/dpkg-*
+		sed -i -e 's|^#!.*${bindir}/perl-native.*/perl|#!${bindir}/env perl|' ${D}${bindir}/dpkg-*
 	fi
 }
 

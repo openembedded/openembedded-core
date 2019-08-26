@@ -18,7 +18,7 @@ DEPENDS = "libxml2-native libxslt-native docbook-xml-dtd4-native docbook-xsl-sty
 S = "${WORKDIR}/git"
 
 # Tell xmllint where to find the DocBook XML catalogue, because right now it
-# opens /etc/xml/catalog on the host. Depends on auto-catalogs.patch
+# opens ${sysconfdir}/xml/catalog on the host. Depends on auto-catalogs.patch
 export SGML_CATALOG_FILES="file://${STAGING_ETCDIR_NATIVE}/xml/catalog"
 
 # Not using automake

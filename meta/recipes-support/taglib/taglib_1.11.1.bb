@@ -40,5 +40,5 @@ do_configure_prepend () {
 }
 
 # without -fPIC depending packages failed with many error like:
-# | <...>/ld: error: <...>/usr/lib/libtag.a(modfilebase.cpp.o): requires unsupported dynamic reloc R_ARM_THM_MOVW_ABS_NC; recompile with -fPIC
+# | <...>/ld: error: <...>${libdir}/libtag.a(modfilebase.cpp.o): requires unsupported dynamic reloc R_ARM_THM_MOVW_ABS_NC; recompile with -fPIC
 CXXFLAGS += "-fPIC"

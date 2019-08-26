@@ -38,8 +38,8 @@ do_install() {
 	# don't install /var/log/sa when populating rootfs. Do it through volatile
 	rm -rf ${D}/var
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
-	        install -d ${D}/etc/default/volatiles
-		install -m 0644 ${WORKDIR}/99_sysstat ${D}/etc/default/volatiles
+	        install -d ${D}${sysconfdir}/default/volatiles
+		install -m 0644 ${WORKDIR}/99_sysstat ${D}${sysconfdir}/default/volatiles
 	fi
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 	        install -d ${D}${sysconfdir}/tmpfiles.d
@@ -56,8 +56,8 @@ do_install() {
 
 pkg_postinst_${PN} () {
 	if [  ! -n "$D" ]; then
-		if [ -e /etc/init.d/populate-volatile.sh ]; then
-			/etc/init.d/populate-volatile.sh update
+		if [ -e ${sysconfdir}/init.d/populate-volatile.sh ]; then
+			${sysconfdir}/init.d/populate-volatile.sh update
 		fi
 	fi
 }

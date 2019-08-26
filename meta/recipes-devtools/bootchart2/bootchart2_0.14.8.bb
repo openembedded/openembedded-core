@@ -75,7 +75,7 @@
 # either install it directly from some other source, or build bootchart2-native
 # and find pybootchartgui in the native sysroot:
 #    bitbake bootchart2-native
-#   ./tmp/sysroots/x86_64-linux/usr/bin/pybootchartgui /path/to/bootchart.tgz
+#   ./tmp/sysroots/x86_64-linux${bindir}/pybootchartgui /path/to/bootchart.tgz
 # Note that, whether installed on your build system or on your image, the 
 # pybootchartgui provided by this recipe does not support the -i option. You 
 # will need to install pybootchartgui by other means in order to run it in

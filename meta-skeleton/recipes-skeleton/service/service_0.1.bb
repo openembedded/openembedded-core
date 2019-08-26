@@ -15,10 +15,10 @@ do_compile () {
 do_install () {
 	install -d ${D}${sysconfdir}/init.d
 	cat ${WORKDIR}/skeleton | \
-	  sed -e 's,/etc,${sysconfdir},g' \
-	      -e 's,/usr/sbin,${sbindir},g' \
+	  sed -e 's,${sysconfdir},${sysconfdir},g' \
+	      -e 's,${sbindir},${sbindir},g' \
 	      -e 's,/var,${localstatedir},g' \
-	      -e 's,/usr/bin,${bindir},g' \
+	      -e 's,${bindir},${bindir},g' \
 	      -e 's,/usr,${prefix},g' > ${D}${sysconfdir}/init.d/skeleton
 	chmod a+x ${D}${sysconfdir}/init.d/skeleton
 

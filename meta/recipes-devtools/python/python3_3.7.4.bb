@@ -124,9 +124,9 @@ do_install_append_class-target() {
 }
 
 do_install_append_class-native() {
-        # Make sure we use /usr/bin/env python
+        # Make sure we use ${bindir}/env python
         for PYTHSCRIPT in `grep -rIl ${bindir}/${PN}/python ${D}${bindir}/${PN}`; do
-                sed -i -e '1s|^#!.*|#!/usr/bin/env python3|' $PYTHSCRIPT
+                sed -i -e '1s|^#!.*|#!${bindir}/env python3|' $PYTHSCRIPT
         done
         # Add a symlink to the native Python so that scripts can just invoke
         # "nativepython" and get the right one without needing absolute paths
@@ -150,7 +150,7 @@ do_install_append() {
 }
 
 do_install_append_class-nativesdk () {
-    create_wrapper ${D}${bindir}/python${PYTHON_MAJMIN} OEPYTHON3HOME='${prefix}' TERMINFO_DIRS='${sysconfdir}/terminfo:/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo' PYTHONNOUSERSITE='1'
+    create_wrapper ${D}${bindir}/python${PYTHON_MAJMIN} OEPYTHON3HOME='${prefix}' TERMINFO_DIRS='${sysconfdir}/terminfo:${sysconfdir}/terminfo:${datadir}/terminfo:${datadir}/misc/terminfo:/lib/terminfo' PYTHONNOUSERSITE='1'
 }
 
 SSTATE_SCAN_FILES += "Makefile _sysconfigdata.py"

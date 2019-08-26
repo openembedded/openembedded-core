@@ -51,8 +51,8 @@ DUMMYPROVIDES = "\
     ${@' '.join([multilib_pkg_extend(d, pkg) for pkg in d.getVar('DUMMYPROVIDES_PACKAGES').split()])} \
     /bin/sh \
     /bin/bash \
-    /usr/bin/env \
-    /usr/bin/perl \
+    ${bindir}/env \
+    ${bindir}/perl \
     libperl.so.5 \
     libperl.so.5()(64bit) \
 "

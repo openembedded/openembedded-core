@@ -54,11 +54,11 @@ PACKAGES_DYNAMIC = "^${PN}-lib.*"
 # because the sstate had a hard coded search path.  Until this is fixed
 # another way this is deemed good enough.
 EX_TERMCAP = ""
-EX_TERMCAP_class-native = ":/etc/termcap:/usr/share/misc/termcap"
-EX_TERMCAP_class-nativesdk = ":/etc/termcap:/usr/share/misc/termcap"
+EX_TERMCAP_class-native = ":${sysconfdir}/termcap:${datadir}/misc/termcap"
+EX_TERMCAP_class-nativesdk = ":${sysconfdir}/termcap:${datadir}/misc/termcap"
 EX_TERMINFO = ""
-EX_TERMINFO_class-native = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
-EX_TERMINFO_class-nativesdk = ":/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo"
+EX_TERMINFO_class-native = ":${sysconfdir}/terminfo:${datadir}/terminfo:${datadir}/misc/terminfo:/lib/terminfo"
+EX_TERMINFO_class-nativesdk = ":${sysconfdir}/terminfo:${datadir}/terminfo:${datadir}/misc/terminfo:/lib/terminfo"
 EX_TERMLIB ?= "tinfo"
 
 # Helper function for do_configure to allow multiple configurations
@@ -193,7 +193,7 @@ do_install() {
                 then
                         install -d ${D}${sysconfdir}/terminfo/${basedir}
                         mv ${termfile} ${D}${sysconfdir}/terminfo/${basedir}/
-                        ln -s /etc/terminfo/${basedir}/${x} \
+                        ln -s ${sysconfdir}/terminfo/${basedir}/${x} \
                                 ${D}${datadir}/terminfo/${basedir}/${x}
                 fi
         done
@@ -203,8 +203,8 @@ do_install() {
                 ln -sf xterm-color ${D}${sysconfdir}/terminfo/x/xterm
         fi
 
-        # When changing ${libdir} to e.g. /usr/lib/myawesomelib/ ncurses 
-        # still installs '/usr/lib/terminfo', so try to rm both 
+        # When changing ${libdir} to e.g. ${libdir}/myawesomelib/ ncurses 
+        # still installs '${libdir}/terminfo', so try to rm both 
         # the proper path and a slightly hardcoded one
         rm -f ${D}${libdir}/terminfo ${D}${prefix}/lib/terminfo
 

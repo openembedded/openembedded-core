@@ -232,7 +232,7 @@ do_install_append () {
         done
 }
 
-# Installing /usr/lib/gcc/* means we'd have two copies, one from gcc-cross
+# Installing ${libdir}/gcc/* means we'd have two copies, one from gcc-cross
 # and one from here. These can confuse gcc cross where includes use #include_next
 # and builds track file dependencies (e.g. perl and its makedepends code).
 # For determinism we don't install this ever and rely on the copy from gcc-cross.

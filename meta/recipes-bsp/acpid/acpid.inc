@@ -20,7 +20,7 @@ SYSTEMD_SERVICE_${PN} = "acpid.service"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
-	sed -e 's,/usr/sbin,${sbindir},g' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/acpid
+	sed -e 's,${sbindir},${sbindir},g' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/acpid
 	chmod 755 ${D}${sysconfdir}/init.d/acpid
 
 	install -d ${D}${sysconfdir}/acpi

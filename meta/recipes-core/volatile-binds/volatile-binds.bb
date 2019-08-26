@@ -74,7 +74,7 @@ do_install () {
     # Suppress attempts to process some tmpfiles that are not temporary.
     #
     install -d ${D}${sysconfdir}/tmpfiles.d ${D}/var/cache
-    ln -s /dev/null ${D}${sysconfdir}/tmpfiles.d/etc.conf
+    ln -s /dev/null ${D}${sysconfdir}/tmpfiles.d${sysconfdir}.conf
     ln -s /dev/null ${D}${sysconfdir}/tmpfiles.d/home.conf
 }
 do_install[dirs] = "${WORKDIR}"

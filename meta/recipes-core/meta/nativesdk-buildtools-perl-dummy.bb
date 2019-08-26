@@ -21,7 +21,7 @@ DUMMYPROVIDES = "\
     nativesdk-perl-module-posix \
     nativesdk-perl-module-thread-queue \
     nativesdk-perl-module-threads \
-    /usr/bin/perl \
+    ${bindir}/perl \
     "
 
 PR = "r2"

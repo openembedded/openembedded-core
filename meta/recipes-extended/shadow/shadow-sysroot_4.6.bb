@@ -9,7 +9,7 @@ DEPENDS = "base-passwd"
 
 PR = "r3"
 
-# The sole purpose of this recipe is to provide the /etc/login.defs
+# The sole purpose of this recipe is to provide the ${sysconfdir}/login.defs
 # file for the target sysroot - needed so the shadow-native utilities
 # can add custom users/groups for recipes that use inherit useradd.
 SRC_URI = "file://login.defs_shadow-sysroot"
@@ -28,5 +28,5 @@ SYSROOT_DIRS += "${sysconfdir}"
 
 # don't create any packages
 # otherwise: dbus-dev depends on shadow-sysroot-dev which depends on shadow-sysroot 
-# and this has another copy of /etc/login.defs already provided by shadow
+# and this has another copy of ${sysconfdir}/login.defs already provided by shadow
 PACKAGES = ""

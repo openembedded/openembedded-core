@@ -87,8 +87,8 @@ pkg_postinst_dbus() {
 		systemctl $OPTS mask dbus-1.service
 	fi
 
-	if [ -z "$D" ] && [ -e /etc/init.d/populate-volatile.sh ] ; then
-		/etc/init.d/populate-volatile.sh update
+	if [ -z "$D" ] && [ -e ${sysconfdir}/init.d/populate-volatile.sh ] ; then
+		${sysconfdir}/init.d/populate-volatile.sh update
 	fi
 }
 

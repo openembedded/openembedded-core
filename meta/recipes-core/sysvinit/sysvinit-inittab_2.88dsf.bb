@@ -20,7 +20,7 @@ do_install() {
     install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
     install -d ${D}${base_bindir}
     install -m 0755 ${WORKDIR}/start_getty ${D}${base_bindir}/start_getty
-    sed -e 's,/usr/bin,${bindir},g' -i ${D}${base_bindir}/start_getty
+    sed -e 's,${bindir},${bindir},g' -i ${D}${base_bindir}/start_getty
 
     set -x
     tmp="${SERIAL_CONSOLES}"
@@ -70,7 +70,7 @@ if [ -e /proc/consoles ]; then
 		k=`echo ${i} | sed s/^.*\://g`
 		if [ -z "`grep ${j} /proc/consoles`" ]; then
 			if [ -z "${k}" ] || [ -z "`grep ${k} /proc/consoles`" ] || [ ! -e /dev/${j} ]; then
-				sed -i -e /^.*${j}\ /d -e /^.*${j}$/d /etc/inittab
+				sed -i -e /^.*${j}\ /d -e /^.*${j}$/d ${sysconfdir}/inittab
 			fi
 		fi
 	done

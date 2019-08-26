@@ -62,7 +62,7 @@ inherit autotools pkgconfig relative_symlinks gettext
 FONTCONFIG_CACHE_DIR ?= "${localstatedir}/cache/fontconfig"
 
 # comma separated list of additional directories
-# /usr/share/fonts is already included by default (you can change it with --with-default-fonts)
+# ${datadir}/fonts is already included by default (you can change it with --with-default-fonts)
 FONTCONFIG_FONT_DIRS ?= "no"
 
 EXTRA_OECONF = " --disable-docs --with-default-fonts=${datadir}/fonts --with-cache-dir=${FONTCONFIG_CACHE_DIR} --with-add-fonts=${FONTCONFIG_FONT_DIRS}"

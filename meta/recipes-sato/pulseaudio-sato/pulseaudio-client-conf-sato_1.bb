@@ -1,4 +1,4 @@
-SUMMARY = "/etc/pulse/client.conf tailored for Sato"
+SUMMARY = "${sysconfdir}/pulse/client.conf tailored for Sato"
 SECTION = "multimedia"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"

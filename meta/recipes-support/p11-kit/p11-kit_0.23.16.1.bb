@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 AUTOTOOLS_AUXDIR = "${S}/build/litter"
 
 PACKAGECONFIG ??= ""
-PACKAGECONFIG[trust-paths] = "--with-trust-paths=/etc/ssl/certs/ca-certificates.crt,--without-trust-paths,,ca-certificates"
+PACKAGECONFIG[trust-paths] = "--with-trust-paths=${sysconfdir}/ssl/certs/ca-certificates.crt,--without-trust-paths,,ca-certificates"
 
 # This recipe does not use the standard gtk-doc m4 macros, and so the ./configure flags
 # that control gtk-doc build are non-standard

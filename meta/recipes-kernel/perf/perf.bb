@@ -231,9 +231,9 @@ do_configure_prepend () {
         sed -i 's,#include "perf_regs.h",#include "perf_regs.h"\n#include "util/debug.h",' ${S}/tools/perf/arch/arm/util/unwind-libunwind.c
     fi
 
-    # use /usr/bin/env instead of version specific python
+    # use ${bindir}/env instead of version specific python
     for s in `find ${S}/tools/perf/scripts/python/ -name '*.py'`; do
-        sed -i 's,/usr/bin/python2,/usr/bin/env python,' "${s}"
+        sed -i 's,${bindir}/python2,${bindir}/env python,' "${s}"
     done
 
     # unistd.h can be out of sync between libc-headers and the captured version in the perf source

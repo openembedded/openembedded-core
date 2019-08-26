@@ -86,8 +86,8 @@ do_install_ptest () {
 	if [ "${@bb.utils.filter('PACKAGECONFIG', 'python', d)}" ]; then
 		sed -i -e 's|^\(PYTHON = \).*|\1${USRBINPATH}/${PYTHON_PN}|' \
 		    ${D}${PTEST_PATH}/python/tests/Makefile
-		grep -lrZ '#!/usr/bin/python' ${D}${PTEST_PATH}/python |
-			xargs -0 sed -i -e 's|/usr/bin/python|${USRBINPATH}/${PYTHON_PN}|'
+		grep -lrZ '#!${bindir}/python' ${D}${PTEST_PATH}/python |
+			xargs -0 sed -i -e 's|${bindir}/python|${USRBINPATH}/${PYTHON_PN}|'
 	fi
 	#Remove build host references from various Makefiles
 	find "${D}${PTEST_PATH}" -name Makefile -type f -exec \

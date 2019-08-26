@@ -13,7 +13,7 @@ NATIVESDKFIXES_class-nativesdk = "\
 "
 
 SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
-           file://etc/ld.so.conf \
+           file:/${sysconfdir}/ld.so.conf \
            file://generate-supported.mk \
            file://makedbs.sh \
            \

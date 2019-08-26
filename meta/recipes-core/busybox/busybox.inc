@@ -209,8 +209,8 @@ do_compile() {
 do_install () {
 	sed -i "s:^/bin/:BASE_BINDIR/:" busybox.links*
 	sed -i "s:^/sbin/:BASE_SBINDIR/:" busybox.links*
-	sed -i "s:^/usr/bin/:BINDIR/:" busybox.links*
-	sed -i "s:^/usr/sbin/:SBINDIR/:" busybox.links*
+	sed -i "s:^${bindir}/:BINDIR/:" busybox.links*
+	sed -i "s:^${sbindir}/:SBINDIR/:" busybox.links*
 
 	# Move arch/link to BINDIR to match coreutils
 	sed -i "s:^BASE_BINDIR/arch:BINDIR/arch:" busybox.links*
@@ -303,7 +303,7 @@ do_install () {
 	fi
 	if grep -q "CONFIG_INETD=y" ${B}/.config; then
 		install -m 0755 ${WORKDIR}/inetd ${D}${sysconfdir}/init.d/inetd.${BPN}
-		sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/inetd.${BPN}
+		sed -i "s:${sbindir}/:${sbindir}/:" ${D}${sysconfdir}/init.d/inetd.${BPN}
 		install -m 0644 ${WORKDIR}/inetd.conf ${D}${sysconfdir}/
 	fi
 	if grep -q "CONFIG_MDEV=y" ${B}/.config; then
@@ -360,7 +360,7 @@ inherit update-alternatives
 ALTERNATIVE_PRIORITY = "50"
 
 python do_package_prepend () {
-    # We need to load the full set of busybox provides from the /etc/busybox.links
+    # We need to load the full set of busybox provides from the ${sysconfdir}/busybox.links
     # Use this to see the update-alternatives with the right information
 
     dvar = d.getVar('D')
@@ -385,7 +385,7 @@ python do_package_prepend () {
         f.close()
         return
 
-    if os.path.exists('%s/etc/busybox.links' % (dvar)):
+    if os.path.exists('%s${sysconfdir}/busybox.links' % (dvar)):
         set_alternative_vars("${sysconfdir}/busybox.links", "${base_bindir}/busybox")
     else:
         set_alternative_vars("${sysconfdir}/busybox.links.nosuid", "${base_bindir}/busybox.nosuid")

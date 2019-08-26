@@ -47,9 +47,9 @@ do_install() {
 	install -d ${D}${bindir}/${PN}
 	install -m 0755 Parser/pgen ${D}${bindir}/${PN}
 
-	# Make sure we use /usr/bin/env python
+	# Make sure we use ${bindir}/env python
 	for PYTHSCRIPT in `grep -rIl ${bindir}/${PN}/python ${D}${bindir}/${PN}`; do
-		sed -i -e '1s|^#!.*|#!/usr/bin/env python|' $PYTHSCRIPT
+		sed -i -e '1s|^#!.*|#!${bindir}/env python|' $PYTHSCRIPT
 	done
 
 	# Add a symlink to the native Python so that scripts can just invoke

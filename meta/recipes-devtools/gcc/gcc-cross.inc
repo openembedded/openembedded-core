@@ -64,7 +64,7 @@ do_compile () {
 	oe_runmake all-host configure-target-libgcc
 	(cd ${B}/${TARGET_SYS}/libgcc; oe_runmake enable-execute-stack.c unwind.h md-unwind-support.h sfp-machine.h gthr-default.h)
 	# now generate script to drive testing
-	echo "#!/usr/bin/env sh" >${B}/${TARGET_PREFIX}testgcc
+	echo "#!${bindir}/env sh" >${B}/${TARGET_PREFIX}testgcc
 	set >> ${B}/${TARGET_PREFIX}testgcc
 	# prune out the unneeded vars
 	sed -i -e "/^BASH/d" ${B}/${TARGET_PREFIX}testgcc

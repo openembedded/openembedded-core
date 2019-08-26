@@ -64,7 +64,7 @@ fakeroot archive_sdk() {
 	DEST="./${SDK_ARCH}-${SDK_OS}"
 	mv sysroots/${SDK_SYS} $DEST
 	rm sysroots -rf
-	patchelf --set-interpreter ${@''.join('a' for n in range(1024))} $DEST/usr/bin/patchelf
-	mv $DEST/usr/bin/patchelf $DEST/usr/bin/patchelf-uninative
+	patchelf --set-interpreter ${@''.join('a' for n in range(1024))} $DEST${bindir}/patchelf
+	mv $DEST${bindir}/patchelf $DEST${bindir}/patchelf-uninative
 	${SDK_ARCHIVE_CMD}
 }

@@ -67,7 +67,7 @@ ALTERNATIVE_LINK_NAME[syslogd.8] = "${mandir}/man8/syslogd.8"
 pkg_prerm_${PN} () {
 	if test "x$D" = "x"; then
 	if test "$1" = "upgrade" -o "$1" = "remove"; then
-		/etc/init.d/syslog stop || :
+		${sysconfdir}/init.d/syslog stop || :
 	fi
 	fi
 }

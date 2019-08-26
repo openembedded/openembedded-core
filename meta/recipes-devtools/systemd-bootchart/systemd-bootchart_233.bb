@@ -27,7 +27,7 @@ REQUIRED_DISTRO_FEATURES = "systemd"
 SYSTEMD_SERVICE_${PN} = "systemd-bootchart.service"
 
 do_configure_prepend() {
-    # intltool.m4 is a soft link to /usr/share/aclocal/m4, delete it and use the one in our sysroot
+    # intltool.m4 is a soft link to ${datadir}/aclocal/m4, delete it and use the one in our sysroot
     rm -f ${S}/m4/intltool.m4
 }
 

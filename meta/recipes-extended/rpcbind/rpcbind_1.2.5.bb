@@ -46,7 +46,7 @@ EXTRA_OECONF += " --enable-warmstarts --with-rpcuser=rpc"
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/init.d
-	sed -e 's,/etc/,${sysconfdir}/,g' \
+	sed -e 's,${sysconfdir}/,${sysconfdir}/,g' \
 		-e 's,/sbin/,${sbindir}/,g' \
 		${WORKDIR}/init.d > ${D}${sysconfdir}/init.d/rpcbind
 	chmod 0755 ${D}${sysconfdir}/init.d/rpcbind

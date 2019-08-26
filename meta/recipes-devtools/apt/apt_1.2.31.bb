@@ -14,7 +14,7 @@ apt-manpages += "doc/apt-key.8"
 
 do_install_append() {
     #Write the correct apt-architecture to apt.conf
-    APT_CONF=${D}/etc/apt/apt.conf
+    APT_CONF=${D}${sysconfdir}/apt/apt.conf
     echo 'APT::Architecture "${DPKG_ARCH}";' > ${APT_CONF}
     oe_libinstall -so -C bin libapt-private ${D}${libdir}/
 }

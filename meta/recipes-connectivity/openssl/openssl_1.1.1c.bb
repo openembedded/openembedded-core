@@ -131,7 +131,7 @@ do_install () {
 	oe_multilib_header openssl/opensslconf.h
 
 	# Create SSL structure for packages such as ca-certificates which
-	# contain hard-coded paths to /etc/ssl. Debian does the same.
+	# contain hard-coded paths to ${sysconfdir}/ssl. Debian does the same.
 	install -d ${D}${sysconfdir}/ssl
 	mv ${D}${libdir}/ssl-1.1/certs \
 	   ${D}${libdir}/ssl-1.1/private \
@@ -156,7 +156,7 @@ do_install_append_class-native () {
 do_install_append_class-nativesdk () {
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
 	install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
-	sed 's|/usr/lib/ssl/|/usr/lib/ssl-1.1/|g' -i ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
+	sed 's|${libdir}/ssl/|${libdir}/ssl-1.1/|g' -i ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
 
 PTEST_BUILD_HOST_FILES += "configdata.pm"

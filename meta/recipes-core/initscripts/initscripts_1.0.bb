@@ -95,7 +95,7 @@ do_install () {
 	install -m 0755    ${WORKDIR}/single		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/umountnfs.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/urandom		${D}${sysconfdir}/init.d
-	sed -i ${D}${sysconfdir}/init.d/urandom -e 's,/var/,${localstatedir}/,g;s,/etc/,${sysconfdir}/,g'
+	sed -i ${D}${sysconfdir}/init.d/urandom -e 's,/var/,${localstatedir}/,g;s,${sysconfdir}/,${sysconfdir}/,g'
 	install -m 0755    ${WORKDIR}/devpts.sh	${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/devpts		${D}${sysconfdir}/default
 	install -m 0755    ${WORKDIR}/sysfs.sh		${D}${sysconfdir}/init.d
@@ -179,7 +179,7 @@ pkg_postinst_${PN} () {
 
     # Delete any old volatile cache script, as directories may have moved
     if [ -z "$D" ]; then
-        rm -f "/etc/volatile.cache"
+        rm -f "${sysconfdir}/volatile.cache"
     fi
 }
 

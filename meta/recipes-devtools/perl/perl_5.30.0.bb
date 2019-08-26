@@ -151,9 +151,9 @@ do_install_append_class-native () {
     # installed to a different location from the one it was built for.
     create_wrapper ${D}${bindir}/perl-native/perl PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl5/site_perl/${PV}:${STAGING_LIBDIR}/perl5/vendor_perl/${PV}:${STAGING_LIBDIR}/perl5/${PV}'
 
-    # Use /usr/bin/env nativeperl for the perl script.
+    # Use ${bindir}/env nativeperl for the perl script.
     for f in `grep -Il '#! *${bindir}/perl' ${D}/${bindir}/*`; do
-            sed -i -e 's|${bindir}/perl|/usr/bin/env nativeperl|' $f
+            sed -i -e 's|${bindir}/perl|${bindir}/env nativeperl|' $f
     done
 }
 
@@ -313,7 +313,7 @@ SYSROOT_PREPROCESS_FUNCS += "perl_sysroot_create_wrapper"
 
 perl_sysroot_create_wrapper () {
        mkdir -p ${SYSROOT_DESTDIR}${bindir}
-       # Create a wrapper that /usr/bin/env perl will use to get perl-native.
+       # Create a wrapper that ${bindir}/env perl will use to get perl-native.
        # This MUST live in the normal bindir.
        cat > ${SYSROOT_DESTDIR}${bindir}/nativeperl << EOF
 #!/bin/sh

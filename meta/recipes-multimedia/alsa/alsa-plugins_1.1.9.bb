@@ -56,8 +56,8 @@ do_install_append() {
 
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'pulseaudio', 'yes', 'no', d)}" = "yes" ]; then
 		# We use the example as is. Upstream installs the file under
-		# /etc, but we move it under /usr/share and add a symlink under
-		# /etc to be consistent with other installed configuration
+		# ${sysconfdir}, but we move it under ${datadir} and add a symlink under
+		# ${sysconfdir} to be consistent with other installed configuration
 		# files.
 		mv ${D}${sysconfdir}/alsa/conf.d/99-pulseaudio-default.conf.example ${D}${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf
 		ln -s ${datadir}/alsa/alsa.conf.d/99-pulseaudio-default.conf ${D}${sysconfdir}/alsa/conf.d/99-pulseaudio-default.conf
@@ -70,7 +70,7 @@ python populate_packages_prepend() {
     d.setVar("RDEPENDS_alsa-plugins", packages)
 }
 
-# Many plugins have a configuration file (plus a symlink in /etc) associated
+# Many plugins have a configuration file (plus a symlink in ${sysconfdir}) associated
 # with them. We put the plugin and it's configuration usually in the same
 # package, but that's problematic when the configuration file is related to
 # multiple plugins, as is the case with the pulse, oss and maemo plugins. In

@@ -41,7 +41,7 @@ SYSTEMD_PACKAGES = "${PN} ${PN}-keepalive"
 SYSTEMD_SERVICE_${PN} = "watchdog.service"
 SYSTEMD_SERVICE_${PN}-keepalive = "wd_keepalive.service"
 # When using systemd, consider making use of internal watchdog support of systemd.
-# See RuntimeWatchdogSec in /etc/systemd/system.conf.
+# See RuntimeWatchdogSec in ${sysconfdir}/systemd/system.conf.
 SYSTEMD_AUTO_ENABLE = "disable"
 
 do_install_append() {

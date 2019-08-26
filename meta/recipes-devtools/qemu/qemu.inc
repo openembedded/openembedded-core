@@ -79,7 +79,7 @@ EXTRA_OECONF_append = " --python=${HOSTTOOLS_DIR}/python3"
 
 do_configure_prepend_class-native() {
 	# Append build host pkg-config paths for native target since the host may provide sdl
-	BHOST_PKGCONFIG_PATH=$(PATH=/usr/bin:/bin pkg-config --variable pc_path pkg-config || echo "")
+	BHOST_PKGCONFIG_PATH=$(PATH=${bindir}:/bin pkg-config --variable pc_path pkg-config || echo "")
 	if [ ! -z "$BHOST_PKGCONFIG_PATH" ]; then
 		export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BHOST_PKGCONFIG_PATH
 	fi
@@ -114,7 +114,7 @@ make_qemu_wrapper() {
         for tool in `ls ${D}${bindir}/qemu-system-*`; do
                 create_wrapper $tool \
                         GDK_PIXBUF_MODULE_FILE=$gdk_pixbuf_module_file \
-                        FONTCONFIG_PATH=/etc/fonts \
+                        FONTCONFIG_PATH=${sysconfdir}/fonts \
                         GTK_THEME=Adwaita
         done
 }

@@ -1,7 +1,7 @@
 inherit allarch
 
 SUMMARY = "Operating system identification"
-DESCRIPTION = "The /usr/lib/os-release file contains operating system identification data."
+DESCRIPTION = "The ${libdir}/os-release file contains operating system identification data."
 LICENSE = "MIT"
 INHIBIT_DEFAULT_DEPS = "1"
 

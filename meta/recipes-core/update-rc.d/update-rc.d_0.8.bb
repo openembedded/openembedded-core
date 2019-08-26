@@ -1,6 +1,6 @@
-SUMMARY = "manage symlinks in /etc/rcN.d"
+SUMMARY = "manage symlinks in ${sysconfdir}/rcN.d"
 HOMEPAGE = "http://github.com/philb/update-rc.d/"
-DESCRIPTION = "update-rc.d is a utility that allows the management of symlinks to the initscripts in the /etc/rcN.d directory structure."
+DESCRIPTION = "update-rc.d is a utility that allows the management of symlinks to the initscripts in the ${sysconfdir}/rcN.d directory structure."
 SECTION = "base"
 
 LICENSE = "GPLv2+"

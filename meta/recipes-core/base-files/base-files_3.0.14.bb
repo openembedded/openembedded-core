@@ -61,7 +61,7 @@ conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
              ${sysconfdir}/default"
 
 # By default the hostname is the machine name. If the hostname is unset then a
-# /etc/hostname file isn't written, suitable for environments with dynamic
+# ${sysconfdir}/hostname file isn't written, suitable for environments with dynamic
 # hostnames.
 #
 # The hostname can be changed outside of this recipe by using

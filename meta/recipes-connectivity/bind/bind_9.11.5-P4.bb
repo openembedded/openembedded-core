@@ -81,7 +81,7 @@ do_install_append() {
 	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
 	install -m 755 "${S}/init.d" "${D}${sysconfdir}/init.d/bind"
         if ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'true', 'false', d)}; then
-		sed -i -e '1s,#!.*python3,#! /usr/bin/python3,' \
+		sed -i -e '1s,#!.*python3,#! ${bindir}/python3,' \
 		${D}${sbindir}/dnssec-coverage \
 		${D}${sbindir}/dnssec-checkds \
 		${D}${sbindir}/dnssec-keymgr

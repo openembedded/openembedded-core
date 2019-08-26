@@ -76,10 +76,10 @@ do_install() {
 	do
 		ln -s ./dropbearmulti ${D}${sbindir}/$i
 	done
-	sed -e 's,/etc,${sysconfdir},g' \
-		-e 's,/usr/sbin,${sbindir},g' \
+	sed -e 's,${sysconfdir},${sysconfdir},g' \
+		-e 's,${sbindir},${sbindir},g' \
 		-e 's,/var,${localstatedir},g' \
-		-e 's,/usr/bin,${bindir},g' \
+		-e 's,${bindir},${bindir},g' \
 		-e 's,/usr,${prefix},g' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/dropbear
 	chmod 755 ${D}${sysconfdir}/init.d/dropbear
 	if [ "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}" ]; then

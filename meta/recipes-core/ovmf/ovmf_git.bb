@@ -62,8 +62,8 @@ do_patch[postfuncs] += "fix_iasl"
 fix_iasl() {
 }
 fix_iasl_class-native() {
-    # iasl is not installed under /usr/bin when building with OE.
-    sed -i -e 's#/usr/bin/iasl#${STAGING_BINDIR_NATIVE}/iasl#' ${S}/BaseTools/Conf/tools_def.template
+    # iasl is not installed under ${bindir} when building with OE.
+    sed -i -e 's#${bindir}/iasl#${STAGING_BINDIR_NATIVE}/iasl#' ${S}/BaseTools/Conf/tools_def.template
 }
 
 # Inject CC and friends into the build. LINKER already is in GNUmakefile.

@@ -27,11 +27,11 @@ MULTILIB_SCRIPTS = "${PN}:${bindir}/gpinyin ${PN}:${bindir}/groffer ${PN}:${bind
 EXTRA_OECONF = "--without-x --without-doc"
 PARALLEL_MAKE = ""
 
-CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl' ac_cv_path_BASH_PROG='no'"
+CACHED_CONFIGUREVARS += "ac_cv_path_PERL='${bindir}/env perl' ac_cv_path_BASH_PROG='no'"
 
 do_install_append() {
-	# Some distros have both /bin/perl and /usr/bin/perl, but we set perl location
-	# for target as /usr/bin/perl, so fix it to /usr/bin/perl.
+	# Some distros have both /bin/perl and ${bindir}/perl, but we set perl location
+	# for target as ${bindir}/perl, so fix it to ${bindir}/perl.
 	for i in afmtodit mmroff gropdf pdfmom grog; do
 		if [ -f ${D}${bindir}/$i ]; then
 			sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/$i
@@ -41,13 +41,13 @@ do_install_append() {
 		rm -rf ${D}${libdir}/charset.alias
 	fi
 
-	# awk is located at /usr/bin/, not /bin/
+	# awk is located at ${bindir}/, not /bin/
 	SPECIAL_AWK=`find ${D} -name special.awk`
 	if [ -f ${SPECIAL_AWK} ]; then
 		sed -i -e 's:#!.*awk:#! ${USRBINPATH}/awk:' ${SPECIAL_AWK}
 	fi
 
-	# not ship /usr/bin/glilypond and its releated files in embedded target system
+	# not ship ${bindir}/glilypond and its releated files in embedded target system
 	rm -rf ${D}${bindir}/glilypond
 	rm -rf ${D}${libdir}/groff/glilypond
 	rm -rf ${D}${mandir}/man1/glilypond*

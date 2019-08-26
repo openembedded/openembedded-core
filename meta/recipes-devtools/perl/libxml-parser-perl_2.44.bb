@@ -42,10 +42,10 @@ do_compile_class-native() {
 }
 
 do_install_ptest() {
-	sed -i -e "s:/usr/local/bin/perl:/usr/bin/perl:g" ${B}/samples/xmlstats
-	sed -i -e "s:/usr/local/bin/perl:/usr/bin/perl:g" ${B}/samples/xmlfilter
-	sed -i -e "s:/usr/local/bin/perl:/usr/bin/perl:g" ${B}/samples/xmlcomments
-	sed -i -e "s:/usr/local/bin/perl:/usr/bin/perl:g" ${B}/samples/canonical
+	sed -i -e "s:/usr/local/bin/perl:${bindir}/perl:g" ${B}/samples/xmlstats
+	sed -i -e "s:/usr/local/bin/perl:${bindir}/perl:g" ${B}/samples/xmlfilter
+	sed -i -e "s:/usr/local/bin/perl:${bindir}/perl:g" ${B}/samples/xmlcomments
+	sed -i -e "s:/usr/local/bin/perl:${bindir}/perl:g" ${B}/samples/canonical
 	cp -r ${B}/samples ${D}${PTEST_PATH}
 	chown -R root:root ${D}${PTEST_PATH}/samples
 }

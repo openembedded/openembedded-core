@@ -33,7 +33,7 @@ do_install () {
 		mv ${D}${libdir}/libgcc* ${D}${base_libdir} || true
 	fi
 
-	# install the runtime in /usr/lib/ not in /usr/lib/gcc on target
+	# install the runtime in ${libdir}/ not in ${libdir}/gcc on target
 	# so that cross-gcc can find it in the sysroot
 
 	mv ${D}${libdir}/gcc/* ${D}${libdir}
@@ -60,9 +60,9 @@ BBCLASSEXTEND = "nativesdk"
 addtask multilib_install after do_install before do_package do_populate_sysroot
 # this makes multilib gcc files findable for target gcc
 # e.g.
-#    /usr/lib/i586-pokymllib32-linux/4.7/
+#    ${libdir}/i586-pokymllib32-linux/4.7/
 # by creating this symlink to it
-#    /usr/lib64/x86_64-poky-linux/4.7/32
+#    ${libdir}64/x86_64-poky-linux/4.7/32
 
 fakeroot python do_multilib_install() {
     import re

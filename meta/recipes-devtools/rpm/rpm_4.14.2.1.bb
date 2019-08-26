@@ -60,14 +60,14 @@ EXTRA_AUTORECONF_append = " --exclude=gnu-configize"
 EXTRA_OECONF_append = " --without-lua --enable-python"
 EXTRA_OECONF_append_libc-musl = " --disable-nls"
 
-# --sysconfdir prevents rpm from attempting to access machine-specific configuration in sysroot/etc; we need to have it in rootfs
+# --sysconfdir prevents rpm from attempting to access machine-specific configuration in sysroot${sysconfdir}; we need to have it in rootfs
 #
 # --localstatedir prevents rpm from writing its database to native sysroot when building images
 #
 # Disable dbus for native, so that rpm doesn't attempt to inhibit shutdown via session dbus even when plugins support is enabled.
 # Also disable plugins by default for native.
-EXTRA_OECONF_append_class-native = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
-EXTRA_OECONF_append_class-nativesdk = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
+EXTRA_OECONF_append_class-native = " --sysconfdir=${sysconfdir} --localstatedir=/var --disable-plugins"
+EXTRA_OECONF_append_class-nativesdk = " --sysconfdir=${sysconfdir} --localstatedir=/var --disable-plugins"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -123,7 +123,7 @@ do_install_append () {
 	sed -i -e 's:${HOSTTOOLS_DIR}/::g' \
 	    ${D}/${libdir}/rpm/macros
 
-	sed -i -e 's|/usr/bin/python|${USRBINPATH}/env ${PYTHON_PN}|' \
+	sed -i -e 's|${bindir}/python|${USRBINPATH}/env ${PYTHON_PN}|' \
 	    ${D}${libdir}/rpm/pythondistdeps.py \
 	    ${D}${libdir}/rpm/python-macro-helper
 }

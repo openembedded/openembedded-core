@@ -99,7 +99,7 @@ EXEEXT_mingw32 = ".exe"
 
 do_install_append () {
 	if [ -f ${D}${bindir}/gtester-report ]; then
-		sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!/usr/bin/env python3|'
+		sed ${D}${bindir}/gtester-report -i -e '1s|^#!.*|#!${bindir}/env python3|'
 	fi
 
 	# Remove some unpackaged files

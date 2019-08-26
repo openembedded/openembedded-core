@@ -50,7 +50,7 @@ do_compile_ptest () {
 }
 
 do_install_append () {
-	# Move /usr/bin/bash to /bin/bash, if need
+	# Move ${bindir}/bash to /bin/bash, if need
 	if [ "${base_bindir}" != "${bindir}" ]; then
 		mkdir -p ${D}${base_bindir}
 		mv ${D}${bindir}/bash ${D}${base_bindir}

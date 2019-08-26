@@ -19,6 +19,6 @@ do_configure() {
 }
 
 do_install_append () {
-	# Make sure we use /usr/bin/env perl
-	sed -i -e "1s:#!.*:#! /usr/bin/env perl:" ${D}${bindir}/help2man
+	# Make sure we use ${bindir}/env perl
+	sed -i -e "1s:#!.*:#! ${bindir}/env perl:" ${D}${bindir}/help2man
 }

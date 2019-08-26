@@ -70,7 +70,7 @@ do_install() {
 	oe_libinstall -so libapm ${D}${libdir}
 	install -m 0644 apm.h ${D}${includedir}
 
-	sed -e 's,/usr/sbin,${sbindir},g; s,/etc,${sysconfdir},g;' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/apmd
+	sed -e 's,${sbindir},${sbindir},g; s,${sysconfdir},${sysconfdir},g;' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/apmd
 	chmod 755 ${D}${sysconfdir}/init.d/apmd
 
 	install -d ${D}${systemd_unitdir}/system

@@ -5,7 +5,7 @@ interfaces.  Newt can be used to add stacked windows, entry widgets, \
 checkboxes, radio buttons, labels, plain text fields, scrollbars, \
 etc., to text mode user interfaces.  This package also contains the \
 shared library needed by programs built with newt, as well as a \
-/usr/bin/dialog replacement called whiptail.  Newt is based on the \
+${bindir}/dialog replacement called whiptail.  Newt is based on the \
 slang library."
 
 HOMEPAGE = "https://releases.pagure.org/newt/"
