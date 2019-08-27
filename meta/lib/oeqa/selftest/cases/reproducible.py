@@ -120,7 +120,6 @@ class ReproducibleTests(OESelftestTestCase):
         self.extras['reproducible']['files'].setdefault(package_class, {})[name] = [
                 {'reference': p.reference, 'test': p.test} for p in packages]
 
-    @unittest.skip("Reproducible builds do not yet pass")
     def test_reproducible_builds(self):
         capture_vars = ['DEPLOY_DIR_' + c.upper() for c in self.package_classes]
 
