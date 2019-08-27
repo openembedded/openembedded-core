@@ -3,7 +3,7 @@ DESCRIPTION = "C library and command-line tools for reading and writing tar, cpi
 HOMEPAGE = "http://www.libarchive.org/"
 SECTION = "devel"
 LICENSE = "BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ed99aca006bc346974bb745a35336425"
+LIC_FILES_CHKSUM = "file://COPYING;md5=fe01f5e02b1f0cc934d593a7b0ddceb6"
 
 DEPENDS = "e2fsprogs-native"
 
@@ -32,18 +32,10 @@ PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 EXTRA_OECONF += "--enable-largefile"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
-           file://non-recursive-extract-and-list.patch \
-           file://bug1066.patch \
-           file://CVE-2018-1000877.patch \
-           file://CVE-2018-1000878.patch \
-           file://CVE-2018-1000879.patch \
-           file://CVE-2018-1000880.patch \
-           file://CVE-2019-1000019.patch \
-           file://CVE-2019-1000020.patch \
 "
 
-SRC_URI[md5sum] = "4038e366ca5b659dae3efcc744e72120"
-SRC_URI[sha256sum] = "ba7eb1781c9fbbae178c4c6bad1c6eb08edab9a1496c64833d1715d022b30e2e"
+SRC_URI[md5sum] = "6046396255bd7cf6d0f6603a9bda39ac"
+SRC_URI[sha256sum] = "8643d50ed40c759f5412a3af4e353cffbce4fdf3b5cf321cb72cacf06b2d825e"
 
 inherit autotools update-alternatives pkgconfig
 
