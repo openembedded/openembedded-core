@@ -134,7 +134,7 @@ class ReproducibleTests(OESelftestTestCase):
 
         reproducible_tmp = os.path.join(self.topdir, 'reproducible', 'tmp')
         if os.path.exists(reproducible_tmp):
-            bb.utils.remove(reproducible_tmp)
+            bb.utils.remove(reproducible_tmp, recurse=True)
 
         # Perform another build. This build should *not* share sstate or pull
         # from any mirrors, but sharing a DL_DIR is fine
@@ -150,18 +150,19 @@ class ReproducibleTests(OESelftestTestCase):
         # kept after the build so it can be diffed for debugging.
 
         for c in self.package_classes:
-            package_class = 'package_' + c
+            with self.subTest(package_class=c):
+                package_class = 'package_' + c
 
-            deploy_reference = vars_reference['DEPLOY_DIR_' + c.upper()]
-            deploy_test = vars_test['DEPLOY_DIR_' + c.upper()]
+                deploy_reference = vars_reference['DEPLOY_DIR_' + c.upper()]
+                deploy_test = vars_test['DEPLOY_DIR_' + c.upper()]
 
-            result = self.compare_packages(deploy_reference, deploy_test, diffutils_sysroot)
+                result = self.compare_packages(deploy_reference, deploy_test, diffutils_sysroot)
 
-            self.logger.info('Reproducibility summary for %s: %s' % (c, result))
+                self.logger.info('Reproducibility summary for %s: %s' % (c, result))
 
-            self.append_to_log('\n'.join("%s: %s" % (r.status, r.test) for r in result.total))
+                self.append_to_log('\n'.join("%s: %s" % (r.status, r.test) for r in result.total))
 
-            if result.missing or result.different:
-                self.fail("The following %s packages are missing or different: %s" %
-                        (c, ' '.join(r.test for r in (result.missing + result.different))))
+                if result.missing or result.different:
+                    self.fail("The following %s packages are missing or different: %s" %
+                            (c, ' '.join(r.test for r in (result.missing + result.different))))
 
