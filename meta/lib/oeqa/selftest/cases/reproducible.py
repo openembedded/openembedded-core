@@ -8,6 +8,7 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 import functools
 import multiprocessing
 import textwrap
+import json
 import unittest
 
 MISSING = 'MISSING'
@@ -86,6 +87,7 @@ class ReproducibleTests(OESelftestTestCase):
         self.extras = self.tc.extraresults
 
         self.extras.setdefault('reproducible.rawlogs', {})['log'] = ''
+        self.extras.setdefault('reproducible', {}).setdefault('files', {})
 
     def append_to_log(self, msg):
         self.extras['reproducible.rawlogs']['log'] += msg
@@ -113,6 +115,10 @@ class ReproducibleTests(OESelftestTestCase):
 
         result.sort()
         return result
+
+    def write_package_list(self, package_class, name, packages):
+        self.extras['reproducible']['files'].setdefault(package_class, {})[name] = [
+                {'reference': p.reference, 'test': p.test} for p in packages]
 
     @unittest.skip("Reproducible builds do not yet pass")
     def test_reproducible_builds(self):
@@ -161,6 +167,10 @@ class ReproducibleTests(OESelftestTestCase):
                 self.logger.info('Reproducibility summary for %s: %s' % (c, result))
 
                 self.append_to_log('\n'.join("%s: %s" % (r.status, r.test) for r in result.total))
+
+                self.write_package_list(package_class, 'missing', result.missing)
+                self.write_package_list(package_class, 'different', result.different)
+                self.write_package_list(package_class, 'same', result.same)
 
                 if result.missing or result.different:
                     self.fail("The following %s packages are missing or different: %s" %
