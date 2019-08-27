@@ -11,11 +11,10 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://disable_macos.patch \
            file://0001-Fix-libtool-name-in-configure.ac.patch \
            file://serfmacro.patch \
-           file://subversion-1.12.0-apr_1.7.0_fix-1.patch \
            "
 
-SRC_URI[md5sum] = "be4f5c0b1b38a5d82bd6d16a16ff1346"
-SRC_URI[sha256sum] = "7fae7c73d8a007c107c0ae5eb372bc0bb013dbfe966fcd5c59cd5a195a5e2edf"
+SRC_URI[md5sum] = "1ff249f848f834ded88536543e031975"
+SRC_URI[sha256sum] = "3bd0b5c8e4c5175263dc9a92fd9aef94ce917e80af034f26fe5c45fde7e0f771"
 
 inherit autotools pkgconfig gettext
 
