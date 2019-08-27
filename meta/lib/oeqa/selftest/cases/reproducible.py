@@ -132,15 +132,22 @@ class ReproducibleTests(OESelftestTestCase):
         bitbake("diffutils-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
 
+        reproducible_tmp = os.path.join(self.topdir, 'reproducible', 'tmp')
+        if os.path.exists(reproducible_tmp):
+            bb.utils.remove(reproducible_tmp)
+
         # Perform another build. This build should *not* share sstate or pull
         # from any mirrors, but sharing a DL_DIR is fine
-        self.write_config(textwrap.dedent('''\
-            TMPDIR = "${TOPDIR}/reproducible/tmp"
+        self.write_config((textwrap.dedent('''\
+            TMPDIR = "%s"
             SSTATE_DIR = "${TMPDIR}/sstate"
             SSTATE_MIRROR = ""
-            ''') + common_config)
+            ''') % reproducible_tmp) + common_config)
         vars_test = get_bb_vars(capture_vars)
         bitbake(' '.join(self.images))
+
+        # NOTE: The temp directory from the reproducible build is purposely
+        # kept after the build so it can be diffed for debugging.
 
         for c in self.package_classes:
             package_class = 'package_' + c
