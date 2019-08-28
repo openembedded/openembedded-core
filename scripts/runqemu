@@ -755,8 +755,8 @@ class BaseConfig(object):
         if s:
             self.set('QB_MEM', '-m %s' % s.group(1))
         elif not self.get('QB_MEM'):
-            logger.info('QB_MEM is not set, use 512M by default')
-            self.set('QB_MEM', '-m 512')
+            logger.info('QB_MEM is not set, use 256M by default')
+            self.set('QB_MEM', '-m 256')
 
         # Check and remove M or m suffix
         qb_mem = self.get('QB_MEM')
