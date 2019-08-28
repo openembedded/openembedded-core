@@ -242,6 +242,10 @@ do_configure_prepend () {
     # unistd.h can be out of sync between libc-headers and the captured version in the perf source
     # so we copy it from the sysroot unistd.h to the perf unistd.h
     install -D -m0644 ${STAGING_INCDIR}/asm-generic/unistd.h ${S}/tools/include/uapi/asm-generic/unistd.h
+    install -D -m0644 ${STAGING_INCDIR}/asm-generic/unistd.h ${S}/include/uapi/asm-generic/unistd.h
+
+    # bits.h can have the same issuen as unistd.h, so we make the tools variant take precedence
+    install -D -m0644 ${S}/tools/include/linux/bits.h ${S}/include/linux/bits.h
 }
 
 python do_package_prepend() {
