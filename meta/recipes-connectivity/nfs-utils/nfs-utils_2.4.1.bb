@@ -28,19 +28,16 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://proc-fs-nfsd.mount \
            file://nfs-utils-debianize-start-statd.patch \
            file://bugfix-adjust-statd-service-name.patch \
-           file://nfs-utils-musl-limits.patch \
            file://0001-cacheio-use-intmax_t-for-formatted-IO.patch \
-           file://0001-Do-not-pass-null-pointer-to-freeaddrinfo.patch \
            file://clang-format-string.patch \
-           file://0001-Makefile.am-update-the-path-of-libnfs.a.patch \
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://0001-Don-t-build-tools-with-CC_FOR_BUILD.patch \
 "
 SRC_URI_append_libc-glibc = " file://0001-configure.ac-Do-not-fatalize-Wmissing-prototypes.patch"
 SRC_URI_append_libc-musl = " file://nfs-utils-musl-res_querydomain.patch"
 
-SRC_URI[md5sum] = "b6c9c032995af1c08fea9fbcc1ce33e9"
-SRC_URI[sha256sum] = "f68b34793831b05f1fd5760d6bdec92772c7684177586a99a61e7b444f336322"
+SRC_URI[md5sum] = "161efe469ec1b06f1c750bd87f8ba6dd"
+SRC_URI[sha256sum] = "85274ada94479b1beba9f8eeffd19f477c53a6710b9998d1192c807854087736"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
@@ -108,9 +105,6 @@ FILES_${PN} += "${systemd_unitdir}"
 do_configure_prepend() {
         sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
             ${S}/utils/mount/Makefile.am
-
-        sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
-            ${S}/utils/osd_login/Makefile.am
 }
 
 # Make clean needed because the package comes with
