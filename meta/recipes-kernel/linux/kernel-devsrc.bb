@@ -141,7 +141,7 @@ do_install() {
 	    # arch/arm64/include/asm/opcodes.h references arch/arm
 	    cp -a --parents arch/arm/include/asm/opcodes.h $kerneldir/build/
 
-            cp -a --parents arch/arm64/kernel/vdso/gettimeofday.S $kerneldir/build/
+            cp -a --parents arch/arm64/kernel/vdso/*gettimeofday.* $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/sigreturn.S $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/note.S $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/gen_vdso_offsets.sh $kerneldir/build/
@@ -178,6 +178,8 @@ do_install() {
 	fi
 
 	cp -a include $kerneldir/build
+
+	cp -a --parents lib/vdso/* $kerneldir/build/ 2>/dev/null || :
 
 	cp -a --parents tools/include/tools/le_byteshift.h $kerneldir/build/
 	cp -a --parents tools/include/tools/be_byteshift.h $kerneldir/build/
