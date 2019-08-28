@@ -46,6 +46,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-syscalls-tgkill03-wait-for-defunct-tid-to-get-detach.patch \
            file://0001-ustat02-Fix-EFAULT-in-32bit-compatibility-mode.patch \
            file://0001-cve-meltdown.c-Fix-kernel-symbol-finding.patch \
+           file://0001-testcases-use-python3-everywhere-to-run-python-scrip.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -97,7 +98,7 @@ RDEPENDS_${PN} = "\
     libaio \
     logrotate \
     perl \
-    python-core \
+    python3-core \
     procps \
     quota \
     unzip \
