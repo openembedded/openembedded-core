@@ -10,7 +10,7 @@ DEPENDS = "expat zlib"
 SRC_URI = "git://github.com/openSUSE/libsolv.git \
 "
 
-SRCREV = "2cab7ea00d08390374b25b11d969f3740c4660f4"
+SRCREV = "17ce4bc4fb52a0b32964f3b7d491c18177980be1"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
