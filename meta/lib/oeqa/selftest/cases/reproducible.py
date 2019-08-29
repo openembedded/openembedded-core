@@ -123,45 +123,53 @@ class ReproducibleTests(OESelftestTestCase):
     def test_reproducible_builds(self):
         capture_vars = ['DEPLOY_DIR_' + c.upper() for c in self.package_classes]
 
-        common_config = textwrap.dedent('''\
-            INHERIT += "reproducible_build"
-            PACKAGE_CLASSES = "%s"
-            ''') % (' '.join('package_%s' % c for c in self.package_classes))
-
-        # Do an initial build. It's acceptable for this build to use sstate
-        self.write_config(common_config)
-        vars_reference = get_bb_vars(capture_vars)
-        bitbake(' '.join(self.images))
-
         # Build native utilities
+        self.write_config('')
         bitbake("diffutils-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
 
-        reproducible_tmp = os.path.join(self.topdir, 'reproducible', 'tmp')
-        if os.path.exists(reproducible_tmp):
-            bb.utils.remove(reproducible_tmp, recurse=True)
-
-        # Perform another build. This build should *not* share sstate or pull
-        # from any mirrors, but sharing a DL_DIR is fine
-        self.write_config((textwrap.dedent('''\
-            TMPDIR = "%s"
+        # Reproducible builds should not pull from sstate or mirrors, but
+        # sharing DL_DIR is fine
+        common_config = textwrap.dedent('''\
+            INHERIT += "reproducible_build"
+            PACKAGE_CLASSES = "%s"
             SSTATE_DIR = "${TMPDIR}/sstate"
             SSTATE_MIRROR = ""
-            ''') % reproducible_tmp) + common_config)
-        vars_test = get_bb_vars(capture_vars)
+            ''') % (' '.join('package_%s' % c for c in self.package_classes))
+
+        # Perform a build.
+        reproducibleA_tmp = os.path.join(self.topdir, 'reproducibleA', 'tmp')
+        if os.path.exists(reproducibleA_tmp):
+            bb.utils.remove(reproducibleA_tmp, recurse=True)
+
+        self.write_config((textwrap.dedent('''\
+            TMPDIR = "%s"
+            ''') % reproducibleA_tmp) + common_config)
+        vars_A = get_bb_vars(capture_vars)
         bitbake(' '.join(self.images))
 
-        # NOTE: The temp directory from the reproducible build is purposely
+        # Perform another build.
+        reproducibleB_tmp = os.path.join(self.topdir, 'reproducibleB', 'tmp')
+        if os.path.exists(reproducibleB_tmp):
+            bb.utils.remove(reproducibleB_tmp, recurse=True)
+
+        self.write_config((textwrap.dedent('''\
+            TMPDIR = "%s"
+            ''') % reproducibleB_tmp) + common_config)
+        vars_B = get_bb_vars(capture_vars)
+        bitbake(' '.join(self.images))
+
+        # NOTE: The temp directories from the reproducible build are purposely
         # kept after the build so it can be diffed for debugging.
 
         for c in self.package_classes:
             with self.subTest(package_class=c):
                 package_class = 'package_' + c
 
-                deploy_reference = vars_reference['DEPLOY_DIR_' + c.upper()]
-                deploy_test = vars_test['DEPLOY_DIR_' + c.upper()]
+                deploy_A = vars_A['DEPLOY_DIR_' + c.upper()]
+                deploy_B = vars_B['DEPLOY_DIR_' + c.upper()]
 
-                result = self.compare_packages(deploy_reference, deploy_test, diffutils_sysroot)
+                result = self.compare_packages(deploy_A, deploy_B, diffutils_sysroot)
 
                 self.logger.info('Reproducibility summary for %s: %s' % (c, result))
 
