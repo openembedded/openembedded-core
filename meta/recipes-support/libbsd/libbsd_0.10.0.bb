@@ -28,16 +28,13 @@ HOMEPAGE = "http://libbsd.freedesktop.org/wiki/"
 # License: public-domain
 # License: public-domain-Colin-Plumb
 LICENSE = "BSD-4-Clause & ISC & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=b552602fda69e34c753d26de383f33c5"
+LIC_FILES_CHKSUM = "file://COPYING;md5=2120be0173469a06ed185b688e0e1ae0"
 SECTION = "libs"
 
-SRC_URI = " \
-    http://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
-    file://0001-flopen-Add-missing-fcntl.h-include.patch \
-"
+SRC_URI = "http://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "a74b80c4143afa032c90226a4518fffe"
-SRC_URI[sha256sum] = "56d835742327d69faccd16955a60b6dcf30684a8da518c4eca0ac713b9e0a7a4"
+SRC_URI[md5sum] = "ead96d240d02faa5b921c0aa50c812b5"
+SRC_URI[sha256sum] = "34b8adc726883d0e85b3118fa13605e179a62b31ba51f676136ecb2d0bc1a887"
 
 inherit autotools pkgconfig
 
