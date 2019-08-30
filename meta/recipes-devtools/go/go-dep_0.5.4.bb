@@ -8,8 +8,7 @@ SRC_URI = "git://${GO_IMPORT} \
            file://0001-Add-support-for-mips-mips64.patch;patchdir=src/github.com/golang/dep \
           "
 
-# Points to 0.5.0 tag
-SRCREV = "224a564abe296670b692fe08bb63a3e4c4ad7978"
+SRCREV = "1f7c19e5f52f49ffb9f956f64c010be14683468b"
 
 inherit go
 
