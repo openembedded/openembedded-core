@@ -16,6 +16,9 @@ SRC_URI = "https://github.com/libffi/libffi/releases/download/v3.3-rc0/libffi-3.
            "
 SRC_URI[md5sum] = "8d2a82a78faf10a5e53c27d986e8f04e"
 SRC_URI[sha256sum] = "403d67aabf1c05157855ea2b1d9950263fb6316536c8c333f5b9ab1eb2f20ecf"
+UPSTREAM_CHECK_URI = "https://github.com/libffi/libffi/releases/"
+UPSTREAM_CHECK_REGEX = "libffi-(?P<pver>\d+(\.\d+)+)\.tar"
+UPSTREAM_VERSION_UNKNOWN = "1"
 
 EXTRA_OECONF += "--disable-builddir"
 EXTRA_OEMAKE_class-target = "LIBTOOLFLAGS='--tag=CC'"
