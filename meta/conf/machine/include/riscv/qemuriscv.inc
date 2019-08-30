@@ -11,7 +11,9 @@ KEEPUIMAGE = "no"
 
 SERIAL_CONSOLES ?= "115200;ttyS0 115200;hvc0"
 
-IMAGE_FSTYPES_append = " ext4"
+IMAGE_FSTYPES += "ext4 wic.qcow2"
+
+WKS_FILE ?= "qemuriscv.wks"
 
 MACHINE_EXTRA_RRECOMMENDS += " kernel-modules"
 
