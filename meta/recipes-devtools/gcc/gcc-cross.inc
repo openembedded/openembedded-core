@@ -196,6 +196,8 @@ do_install () {
 	# We use libiberty from binutils
 	find ${D}${exec_prefix}/lib -name libiberty.a | xargs rm -f
 	find ${D}${exec_prefix}/lib -name libiberty.h | xargs rm -f
+
+	find ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include-fixed -type f -not -name "README" -not -name limits.h -not -name syslimits.h | xargs rm -f
 }
 
 do_package[noexec] = "1"
