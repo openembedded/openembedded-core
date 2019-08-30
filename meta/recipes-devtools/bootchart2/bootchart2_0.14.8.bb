@@ -121,11 +121,17 @@ do_compile_prepend () {
 }
 
 do_install () {
+    if ${@bb.utils.contains('DISTRO_FEATURES','usrmerge','true','false',d)}; then
+        sed -i -e "s;install -m 755 -D bootchartd \$(DESTDIR)\$(EARLY_PREFIX)/sbin/;install -m 755 -D bootchartd \$(DESTDIR)/usr/sbin/;g" ${B}/Makefile
+    fi
+    sed -i -e "s;SYSTEMD_UNIT_DIR =; SYSTEMD_UNIT_DIR ?=;g" ${B}/Makefile
     install -d ${D}${sysconfdir} # needed for -native
     export PY_LIBDIR="${libdir}/${PYTHON_DIR}"
     export BINDIR="${bindir}"
     export DESTDIR="${D}"
     export LIBDIR="${base_libdir}"
+    export PKGLIBDIR="${base_libdir}/bootchart"
+    export SYSTEMD_UNIT_DIR="${systemd_unitdir}/system"
 
     oe_runmake install
     install -d ${D}${sysconfdir}/init.d
