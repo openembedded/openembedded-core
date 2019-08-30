@@ -23,11 +23,10 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://include_array.patch \
            file://narrowing.patch \
            file://0001-gstreamer-add-a-missing-format-string.patch \
-           file://0001-Unreviewed-fix-build-failure-https-bugs.webkit.org-s.patch \
            "
 
-SRC_URI[md5sum] = "e2a5bbd09a217eba096a2d1562143e35"
-SRC_URI[sha256sum] = "940d746d7e82c357222feb5b3f44c4b201e81df7d81ddca5ca2bf3ae0acf6c51"
+SRC_URI[md5sum] = "c214963d8c0e7d83460da04a0d8dda87"
+SRC_URI[sha256sum] = "8668b129c026624ec226a4cccf4995f9d26f3e88fc28ab75b0e965f3c32b7dd8"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
