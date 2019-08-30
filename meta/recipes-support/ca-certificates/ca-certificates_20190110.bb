@@ -23,6 +23,7 @@ SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https \
            file://default-sysroot.patch \
            file://sbindir.patch \
            file://0003-update-ca-certificates-use-relative-symlinks-from-ET.patch \
+           file://0001-certdata2pem.py-use-python3.patch \
            "
 
 S = "${WORKDIR}/git"
