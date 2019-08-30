@@ -69,7 +69,7 @@ EXTRA_OECMAKE = " \
 		${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DENABLE_INTROSPECTION=ON', '-DENABLE_INTROSPECTION=OFF', d)} \
 		${@bb.utils.contains('GTKDOC_ENABLED', 'True', '-DENABLE_GTKDOC=ON', '-DENABLE_GTKDOC=OFF', d)} \
 		-DENABLE_MINIBROWSER=ON \
-                -DPYTHON_EXECUTABLE=`which python` \
+                -DPYTHON_EXECUTABLE=`which python3` \
 		"
 
 # Javascript JIT is not supported on ARC
