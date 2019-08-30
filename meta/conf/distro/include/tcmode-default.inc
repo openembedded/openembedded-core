@@ -23,7 +23,7 @@ SDKGCCVERSION ?= "${GCCVERSION}"
 BINUVERSION ?= "2.32%"
 GDBVERSION ?= "8.3%"
 GLIBCVERSION ?= "2.30%"
-LINUXLIBCVERSION ?= "5.0%"
+LINUXLIBCVERSION ?= "5.2%"
 QEMUVERSION ?= "4.1%"
 GOVERSION ?= "1.12%"
 # This can not use wildcards like 8.0.% since it is also used in mesa to denote
