@@ -134,7 +134,6 @@ class ReproducibleTests(OESelftestTestCase):
             INHERIT += "reproducible_build"
             PACKAGE_CLASSES = "%s"
             SSTATE_DIR = "${TMPDIR}/sstate"
-            SSTATE_MIRROR = ""
             ''') % (' '.join('package_%s' % c for c in self.package_classes))
 
         # Perform a build.
@@ -154,6 +153,7 @@ class ReproducibleTests(OESelftestTestCase):
             bb.utils.remove(reproducibleB_tmp, recurse=True)
 
         self.write_config((textwrap.dedent('''\
+            SSTATE_MIRROR = ""
             TMPDIR = "%s"
             ''') % reproducibleB_tmp) + common_config)
         vars_B = get_bb_vars(capture_vars)
