@@ -1,3 +1,6 @@
+Upstream-Status: Backport [https://dev.gnupg.org/T4459]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 From 7865041c77f4f7005282f10f9b6666b19072fbdf Mon Sep 17 00:00:00 2001
 From: NIIBE Yutaka <gniibe@fsij.org>
 Date: Mon, 15 Apr 2019 15:10:44 +0900
@@ -16,7 +19,6 @@ which only allows escaping specific characters.
 GnuPG-bug-id: 4459
 Reported-by: Marius Schamschula
 Signed-off-by: NIIBE Yutaka <gniibe@fsij.org>
-Upstream-Status: Backport [https://dev.gnupg.org/T4459]
 ---
  lang/cl/mkerrcodes.awk |  2 +-
  src/Makefile.am        |  2 +-
