@@ -206,6 +206,7 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
                   -Dquotacheck-path=${sbindir}/quotacheck \
                   -Dquotaon-path=${sbindir}/quotaon \
                   -Dsulogin-path=${base_sbindir}/sulogin \
+                  -Dnologin-path=${base_sbindir}/nologin \
                   -Dumount-path=${base_bindir}/umount"
 
 do_install() {
