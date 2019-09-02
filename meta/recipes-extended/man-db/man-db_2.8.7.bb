@@ -18,7 +18,7 @@ USE_NLS_libc-musl = "no"
 
 inherit gettext pkgconfig autotools systemd
 
-EXTRA_OECONF = "--with-pager=less"
+EXTRA_OECONF = "--with-pager=less --with-systemdsystemunitdir=${systemd_unitdir}/system"
 EXTRA_AUTORECONF += "-I ${S}/gl/m4"
 
 do_install() {
