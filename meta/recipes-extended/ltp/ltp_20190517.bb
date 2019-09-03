@@ -47,6 +47,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-ustat02-Fix-EFAULT-in-32bit-compatibility-mode.patch \
            file://0001-cve-meltdown.c-Fix-kernel-symbol-finding.patch \
            file://0001-testcases-use-python3-everywhere-to-run-python-scrip.patch \
+           file://0001-syscall-rt_sigtimedwait01-Fix-wrong-sigset-length-fo.patch \
            "
 
 S = "${WORKDIR}/git"
