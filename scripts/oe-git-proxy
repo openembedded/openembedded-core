@@ -41,10 +41,12 @@ if [ $# -lt 2 -o "$1" = '--help' -o "$1" = '-h' ] ; then
 fi
 
 # Locate the netcat binary
-SOCAT=$(which socat 2>/dev/null)
-if [ $? -ne 0 ]; then
-	echo "ERROR: socat binary not in PATH" 1>&2
-	exit 1
+if [ -z "$SOCAT" ]; then
+	SOCAT=$(which socat 2>/dev/null)
+	if [ $? -ne 0 ]; then
+		echo "ERROR: socat binary not in PATH" 1>&2
+		exit 1
+	fi
 fi
 METHOD=""
 
