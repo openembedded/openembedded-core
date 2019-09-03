@@ -107,7 +107,7 @@ match_host() {
 	HOST=$1
 	GLOB=$2
 
-	if [ -z "${HOST%%$GLOB}" ]; then
+	if [ -z "${HOST%%*$GLOB}" ]; then
 		return 0
 	fi
 
