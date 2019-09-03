@@ -10,8 +10,6 @@ DEPENDS = "ncurses"
 
 inherit autotools
 
-# upstream site does not allow wget's User-Agent
-FETCHCMD_wget += "-U bitbake"
 SRC_URI = "http://www.thrysoee.dk/editline/${BP}.tar.gz \
            file://stdc-predef.patch \
            file://0001-readline.c-fix-cannot-get-history.patch \
