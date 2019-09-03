@@ -11,13 +11,12 @@ DEPENDS = "flex-native bison-native"
 
 SRC_URI = "https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
            file://fix-pc-file.patch \
-           file://0001-PATCH-fix-libnl-3.4.0-musl-compile-problem.patch \
 "
 
 UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
 
-SRC_URI[md5sum] = "8f71910c03db363b41e2ea62057a4311"
-SRC_URI[sha256sum] = "b7287637ae71c6db6f89e1422c995f0407ff2fe50cecd61a312b6a9b0921f5bf"
+SRC_URI[md5sum] = "74ba57b1b1d6f9f92268aa8141d8e8e4"
+SRC_URI[sha256sum] = "352133ec9545da76f77e70ccb48c9d7e5324d67f6474744647a7ed382b5e05fa"
 
 inherit autotools pkgconfig
 
