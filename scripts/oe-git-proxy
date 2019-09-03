@@ -19,6 +19,9 @@
 # AUTHORS
 # Darren Hart <dvhart@linux.intel.com>
 
+# disable pathname expansion, NO_PROXY fields could start with "*" or be it
+set -f
+
 if [ $# -lt 2 -o "$1" = '--help' -o "$1" = '-h' ] ; then
     echo 'oe-git-proxy: error: the following arguments are required: host port'
     echo 'Usage: oe-git-proxy host port'
