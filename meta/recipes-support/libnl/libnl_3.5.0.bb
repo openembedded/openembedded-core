@@ -9,14 +9,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "flex-native bison-native"
 
-SRC_URI = "https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
-           file://fix-pc-file.patch \
-"
-
-UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
-
+SRC_URI = "https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz"
 SRC_URI[md5sum] = "74ba57b1b1d6f9f92268aa8141d8e8e4"
 SRC_URI[sha256sum] = "352133ec9545da76f77e70ccb48c9d7e5324d67f6474744647a7ed382b5e05fa"
+
+UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
 
 inherit autotools pkgconfig
 
