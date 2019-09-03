@@ -82,7 +82,7 @@ of the following environment variables (in any order):
   bootparams=<xyz> - specify custom kernel parameters during boot
   help, -h, --help: print this text
   -d, --debug: Enable debug output
-  -q, --quite: Hide most output except error messages
+  -q, --quiet: Hide most output except error messages
 
 Examples:
   runqemu
