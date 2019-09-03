@@ -25,8 +25,8 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BP}.tar.xz
             file://disable-check-different-filesystems.patch \
             "
 
-SRC_URI[md5sum] = "320046f0b9fc38337e8827d4c5a866a0"
-SRC_URI[sha256sum] = "313612c4776a305393454c874ef590d8acf84c9ffa648717731dfe902284ff8f"
+SRC_URI[md5sum] = "afe109afea749c306ff489203fde6beb"
+SRC_URI[sha256sum] = "491fec9e89f1372f02a0ab66579aa2e9d63cac5178dfa672c204c88e693a908b"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'acl selinux', d)}"
 
