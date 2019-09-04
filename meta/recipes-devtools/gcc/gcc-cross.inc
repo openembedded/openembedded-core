@@ -212,6 +212,9 @@ do_gcc_stash_builddir[cleandirs] = "${BUILDDIRSTASH}"
 do_gcc_stash_builddir () {
 	dest=${BUILDDIRSTASH}
 	hardlinkdir . $dest
+	# Makefile does move-if-change which can end up with 'timestamp' as file contents so break links to those files
+	rm $dest/gcc/include/*.h
+	cp gcc/include/*.h $dest/gcc/include/
 }
 addtask do_gcc_stash_builddir after do_compile before do_install
 SSTATETASKS += "do_gcc_stash_builddir"
