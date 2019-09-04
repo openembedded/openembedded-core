@@ -43,10 +43,11 @@ class GlibcSelfTest(OESelftestTestCase):
 
         builddir = get_bb_var("B", "glibc-testsuite")
 
-        self.tc.extraresults["ptestresult.sections"]["glibc"] = {}
+        ptestsuite = "glibc-user" if ssh is None else "glibc"
+        self.tc.extraresults["ptestresult.sections"][ptestsuite] = {}
         with open(os.path.join(builddir, "tests.sum"), "r") as f:
             for test, result in parse_values(f):
-                self.tc.extraresults["ptestresult.glibc.{}".format(test)] = {"status" : result}
+                self.tc.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
 
 class GlibcSelfTestSystemEmulated(GlibcSelfTest):
     default_installed_packages = [

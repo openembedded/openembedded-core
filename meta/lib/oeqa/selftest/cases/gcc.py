@@ -79,6 +79,7 @@ class GccSelfTest(OESelftestTestCase):
                 sumspath = os.path.join(builddir, target_sys, suite, "testsuite", "{0}.sum".format(suite.split("-")[0]))
 
             ptestsuite = "gcc-{}".format(suite) if suite != "gcc" else suite
+            ptestsuite = ptestsuite + "-user" if ssh is None else ptestsuite
             self.tc.extraresults["ptestresult.sections"][ptestsuite] = {}
             with open(sumspath, "r") as f:
                 for test, result in parse_values(f):
