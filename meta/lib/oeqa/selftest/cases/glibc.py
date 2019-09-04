@@ -60,8 +60,8 @@ class GlibcSelfTestSystemEmulated(GlibcSelfTest):
         "libstdc++",
         "libatomic",
         "libgomp",
-        "python3",
-        "python3-pexpect",
+        # "python3",
+        # "python3-pexpect",
         "nfs-utils",
         ]
 
