@@ -26,6 +26,7 @@ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} \
 
 PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
 PACKAGECONFIG[tests] = "-Dinstall-tests=true, -Dinstall-tests=false"
+PACKAGECONFIG[thai] = ",,libthai"
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 GIR_MESON_OPTION = 'introspection'
