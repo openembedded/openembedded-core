@@ -43,15 +43,10 @@ class GlibcSelfTest(OESelftestTestCase):
 
         builddir = get_bb_var("B", "glibc-testsuite")
 
-        failed = 0
         self.tc.extraresults["ptestresult.sections"]["glibc"] = {}
         with open(os.path.join(builddir, "tests.sum"), "r") as f:
             for test, result in parse_values(f):
                 self.tc.extraresults["ptestresult.glibc.{}".format(test)] = {"status" : result}
-                if result == "FAIL":
-                    self.logger.info("failed: '{}'".format(test))
-                    failed += 1
-        self.assertEqual(failed, 0)
 
 class GlibcSelfTestSystemEmulated(GlibcSelfTest):
     default_installed_packages = [

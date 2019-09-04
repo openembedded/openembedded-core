@@ -52,13 +52,7 @@ class BinutilsCrossSelfTest(OESelftestTestCase):
         if not os.path.exists(sumspath):
             sumspath = os.path.join(builddir, suite, "testsuite", "{0}.sum".format(suite))
 
-        failed = 0
         with open(sumspath, "r") as f:
             for test, result in parse_values(f):
                 self.tc.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
-                if result == "FAIL":
-                    self.logger.info("failed: '{}'".format(test))
-                    failed += 1
-
-        self.assertEqual(failed, 0)
 
