@@ -9,6 +9,8 @@ DEPENDS += "binutils-native"
 deltask do_compile
 deltask do_install
 
+inherit nopackages
+
 do_configure[dirs] += "${B}/ld ${B}/bfd"
 do_configure() {
     # create config.h, oe enables initfini-array by default
