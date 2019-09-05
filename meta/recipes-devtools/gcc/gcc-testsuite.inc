@@ -77,6 +77,7 @@ python check_prepare() {
     def generate_remote_ssh_linux_config(d):
         content = []
         content.append('load_generic_config "unix"')
+        content.append('process_multilib_options ""')
         content.append("set_board_info hostname {0}".format(d.getVar("TOOLCHAIN_TEST_HOST")))
         content.append("set_board_info username {0}".format(d.getVar("TOOLCHAIN_TEST_HOST_USER")))
 
