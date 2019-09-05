@@ -83,6 +83,7 @@ PACKAGECONFIG ??= " \
     quotacheck \
     randomseed \
     resolved \
+    set-time-epoch \
     smack \
     sysusers \
     timedated \
@@ -166,7 +167,12 @@ PACKAGECONFIG[seccomp] = "-Dseccomp=true,-Dseccomp=false,libseccomp"
 PACKAGECONFIG[selinux] = "-Dselinux=true,-Dselinux=false,libselinux,initscripts-sushell"
 PACKAGECONFIG[smack] = "-Dsmack=true,-Dsmack=false"
 PACKAGECONFIG[sysusers] = "-Dsysusers=true,-Dsysusers=false"
-PACKAGECONFIG[time-epoch] = "-Dtime-epoch=0,,"
+# When enabled use reproducble build timestamp if set as time epoch,
+# or build time if not. When disabled, time epoch is unset.
+def build_epoch(d):
+    epoch = d.getVar('SOURCE_DATE_EPOCH') or "-1"
+    return '-Dtime-epoch=%d' % int(epoch)
+PACKAGECONFIG[set-time-epoch] = "${@build_epoch(d)},-Dtime-epoch=0"
 PACKAGECONFIG[timedated] = "-Dtimedated=true,-Dtimedated=false"
 PACKAGECONFIG[timesyncd] = "-Dtimesyncd=true,-Dtimesyncd=false"
 PACKAGECONFIG[usrmerge] = "-Dsplit-usr=false,-Dsplit-usr=true"
