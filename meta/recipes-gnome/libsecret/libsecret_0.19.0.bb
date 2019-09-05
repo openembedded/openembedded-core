@@ -8,8 +8,8 @@ DEPENDS += "glib-2.0 libgcrypt gettext-native"
 
 PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, libxslt-native xmlto-native"
 
-SRC_URI[archive.md5sum] = "fee403988442f497f3c1dfe7b128869c"
-SRC_URI[archive.sha256sum] = "3bfa889d260e0dbabcf5b9967f2aae12edcd2ddc9adc365de7a5cc840c311d15"
+SRC_URI[archive.md5sum] = "483d293e73e7257c6d9fc18579b0e1ea"
+SRC_URI[archive.sha256sum] = "8049b09a4e737911aa647e50aee3d06b5db7aa902608ca43a0dd10d83e1d67f9"
 
 # http://errors.yoctoproject.org/Errors/Details/20228/
 ARM_INSTRUCTION_SET_armv4 = "arm"
