@@ -93,6 +93,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.\d+)*)"
 SRC_URI = "git://github.com/xrmx/bootchart.git \
            file://bootchartd_stop.sh \
            file://0001-collector-Allocate-space-on-heap-for-chunks.patch \
+           file://0001-bootchart2-support-usrmerge.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -114,6 +115,8 @@ UPDATERCPN = "bootchartd-stop-initscript"
 INITSCRIPT_NAME = "bootchartd_stop.sh"
 INITSCRIPT_PARAMS = "start 99 2 3 4 5 ."
 
+EXTRA_OEMAKE = 'BASE_SBINDIR="${base_sbindir}"'
+
 do_compile_prepend () {
     export PY_LIBDIR="${libdir}/${PYTHON_DIR}"
     export BINDIR="${bindir}"
@@ -121,10 +124,6 @@ do_compile_prepend () {
 }
 
 do_install () {
-    if ${@bb.utils.contains('DISTRO_FEATURES','usrmerge','true','false',d)}; then
-        sed -i -e "s;install -m 755 -D bootchartd \$(DESTDIR)\$(EARLY_PREFIX)/sbin/;install -m 755 -D bootchartd \$(DESTDIR)/usr/sbin/;g" ${B}/Makefile
-    fi
-    sed -i -e "s;SYSTEMD_UNIT_DIR =; SYSTEMD_UNIT_DIR ?=;g" ${B}/Makefile
     install -d ${D}${sysconfdir} # needed for -native
     export PY_LIBDIR="${libdir}/${PYTHON_DIR}"
     export BINDIR="${bindir}"
