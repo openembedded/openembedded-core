@@ -14,7 +14,7 @@ def parse_values(content):
                 yield i[len(v) + 2:].strip(), v
                 break
 
-@OETestTag("machine")
+@OETestTag("toolchain-user", "toolchain-system")
 class BinutilsCrossSelfTest(OESelftestTestCase):
     def test_binutils(self):
         self.run_binutils("binutils")
