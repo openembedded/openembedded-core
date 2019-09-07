@@ -43,6 +43,7 @@ class OETestResult(_TestResult):
         self.starttime = {}
         self.endtime = {}
         self.progressinfo = {}
+        self.extraresults = {}
 
         # Inject into tc so that TestDepends decorator can see results
         tc.results = self
@@ -129,19 +130,51 @@ class OETestResult(_TestResult):
 
         return 'UNKNOWN', None
 
-    def addSuccess(self, test):
+    def extractExtraResults(self, test, details = None):
+        extraresults = None
+        if details is not None and "extraresults" in details:
+            extraresults = details.get("extraresults", {})
+        elif hasattr(test, "extraresults"):
+            extraresults = test.extraresults
+
+        if extraresults is not None:
+            for k, v in extraresults.items():
+                # handle updating already existing entries (e.g. ptestresults.sections)
+                if k in self.extraresults:
+                    self.extraresults[k].update(v)
+                else:
+                    self.extraresults[k] = v
+
+    def addError(self, test, *args, details = None):
+        self.extractExtraResults(test, details = details)
+        return super(OETestResult, self).addError(test, *args)
+
+    def addFailure(self, test, *args, details = None):
+        self.extractExtraResults(test, details = details)
+        return super(OETestResult, self).addFailure(test, *args)
+
+    def addSuccess(self, test, details = None):
         #Added so we can keep track of successes too
         self.successes.append((test, None))
-        super(OETestResult, self).addSuccess(test)
+        self.extractExtraResults(test, details = details)
+        return super(OETestResult, self).addSuccess(test)
+
+    def addExpectedFailure(self, test, *args, details = None):
+        self.extractExtraResults(test, details = details)
+        return super(OETestResult, self).addExpectedFailure(test, *args)
+
+    def addUnexpectedSuccess(self, test, details = None):
+        self.extractExtraResults(test, details = details)
+        return super(OETestResult, self).addUnexpectedSuccess(test)
 
     def logDetails(self, json_file_dir=None, configuration=None, result_id=None,
             dump_streams=False):
         self.tc.logger.info("RESULTS:")
 
-        result = {}
+        result = self.extraresults
         logs = {}
         if hasattr(self.tc, "extraresults"):
-            result = self.tc.extraresults
+            result.update(self.tc.extraresults)
 
         for case_name in self.tc._registry['cases']:
             case = self.tc._registry['cases'][case_name]
