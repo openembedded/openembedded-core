@@ -16,15 +16,6 @@ def parse_values(content):
 
 @OETestTag("machine")
 class BinutilsCrossSelfTest(OESelftestTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        if not hasattr(cls.tc, "extraresults"):
-            cls.tc.extraresults = {}
-
-        if "ptestresult.sections" not in cls.tc.extraresults:
-            cls.tc.extraresults["ptestresult.sections"] = {}
-
     def test_binutils(self):
         self.run_binutils("binutils")
 
@@ -46,7 +37,7 @@ class BinutilsCrossSelfTest(OESelftestTestCase):
         bitbake("{0} -c check".format(recipe))
 
         ptestsuite = "binutils-{}".format(suite) if suite != "binutils" else suite
-        self.tc.extraresults["ptestresult.sections"][ptestsuite] = {}
+        self.extraresults = {"ptestresult.sections" : {ptestsuite : {}}}
 
         sumspath = os.path.join(builddir, suite, "{0}.sum".format(suite))
         if not os.path.exists(sumspath):
@@ -54,5 +45,5 @@ class BinutilsCrossSelfTest(OESelftestTestCase):
 
         with open(sumspath, "r") as f:
             for test, result in parse_values(f):
-                self.tc.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
+                self.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
 

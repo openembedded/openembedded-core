@@ -13,15 +13,6 @@ def parse_values(content):
 
 @OETestTag("machine")
 class GccSelfTest(OESelftestTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        if not hasattr(cls.tc, "extraresults"):
-            cls.tc.extraresults = {}
-
-        if "ptestresult.sections" not in cls.tc.extraresults:
-            cls.tc.extraresults["ptestresult.sections"] = {}
-
     def gcc_runtime_check_skip(self, suite):
         targets = get_bb_var("RUNTIMETARGET", "gcc-runtime").split()
         if suite not in targets:
@@ -71,6 +62,7 @@ class GccSelfTest(OESelftestTestCase):
         bb_vars = get_bb_vars(["B", "TARGET_SYS"], recipe)
         builddir, target_sys = bb_vars["B"], bb_vars["TARGET_SYS"]
 
+        self.extraresults = {"ptestresult.sections" : {}}
         for suite in suites:
             sumspath = os.path.join(builddir, "gcc", "testsuite", suite, "{0}.sum".format(suite))
             if not os.path.exists(sumspath): # check in target dirs
@@ -80,10 +72,10 @@ class GccSelfTest(OESelftestTestCase):
 
             ptestsuite = "gcc-{}".format(suite) if suite != "gcc" else suite
             ptestsuite = ptestsuite + "-user" if ssh is None else ptestsuite
-            self.tc.extraresults["ptestresult.sections"][ptestsuite] = {}
+            self.extraresults["ptestresult.sections"][ptestsuite] = {}
             with open(sumspath, "r") as f:
                 for test, result in parse_values(f):
-                    self.tc.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
+                    self.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
 
 class GccSelfTestSystemEmulated(GccSelfTest):
     default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp"]

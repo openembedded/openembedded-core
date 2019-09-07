@@ -82,15 +82,12 @@ class ReproducibleTests(OESelftestTestCase):
         for v in needed_vars:
             setattr(self, v.lower(), bb_vars[v])
 
-        if not hasattr(self.tc, "extraresults"):
-            self.tc.extraresults = {}
-        self.extras = self.tc.extraresults
-
-        self.extras.setdefault('reproducible.rawlogs', {})['log'] = ''
-        self.extras.setdefault('reproducible', {}).setdefault('files', {})
+        self.extrasresults = {}
+        self.extrasresults.setdefault('reproducible.rawlogs', {})['log'] = ''
+        self.extrasresults.setdefault('reproducible', {}).setdefault('files', {})
 
     def append_to_log(self, msg):
-        self.extras['reproducible.rawlogs']['log'] += msg
+        self.extrasresults['reproducible.rawlogs']['log'] += msg
 
     def compare_packages(self, reference_dir, test_dir, diffutils_sysroot):
         result = PackageCompareResults()
@@ -117,7 +114,7 @@ class ReproducibleTests(OESelftestTestCase):
         return result
 
     def write_package_list(self, package_class, name, packages):
-        self.extras['reproducible']['files'].setdefault(package_class, {})[name] = [
+        self.extrasresults['reproducible']['files'].setdefault(package_class, {})[name] = [
                 {'reference': p.reference, 'test': p.test} for p in packages]
 
     def test_reproducible_builds(self):

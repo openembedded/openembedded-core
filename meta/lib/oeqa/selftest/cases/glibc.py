@@ -15,15 +15,6 @@ def parse_values(content):
 
 @OETestTag("machine")
 class GlibcSelfTest(OESelftestTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        if not hasattr(cls.tc, "extraresults"):
-            cls.tc.extraresults = {}
-
-        if "ptestresult.sections" not in cls.tc.extraresults:
-            cls.tc.extraresults["ptestresult.sections"] = {}
-
     def test_glibc(self):
         self.glibc_run_check()
 
@@ -44,10 +35,10 @@ class GlibcSelfTest(OESelftestTestCase):
         builddir = get_bb_var("B", "glibc-testsuite")
 
         ptestsuite = "glibc-user" if ssh is None else "glibc"
-        self.tc.extraresults["ptestresult.sections"][ptestsuite] = {}
+        self.extraresults = {"ptestresult.sections" : {ptestsuite : {}}}
         with open(os.path.join(builddir, "tests.sum"), "r") as f:
             for test, result in parse_values(f):
-                self.tc.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
+                self.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
 
 class GlibcSelfTestSystemEmulated(GlibcSelfTest):
     default_installed_packages = [
