@@ -238,23 +238,20 @@ class OETestRunner(_TestRunner):
                 self._walked_cases = self._walked_cases + 1
 
     def _list_tests_name(self, suite):
-        from oeqa.core.decorator.oetag import OETestTag
-
         self._walked_cases = 0
 
         def _list_cases(logger, case):
-            oetag = None
-
-            if hasattr(case, 'decorators'):
-                for d in case.decorators:
-                    if isinstance(d, OETestTag):
-                        oetag = d.oetag
-
-            logger.info("%s\t\t%s" % (oetag, case.id()))
+            oetags = []
+            if hasattr(case, '__oeqa_testtags'):
+                oetags = getattr(case, '__oeqa_testtags')
+            if oetags:
+                logger.info("%s (%s)" % (case.id(), ",".join(oetags)))
+            else:
+                logger.info("%s" % (case.id()))
 
         self.tc.logger.info("Listing all available tests:")
         self._walked_cases = 0
-        self.tc.logger.info("id\ttag\t\ttest")
+        self.tc.logger.info("test (tags)")
         self.tc.logger.info("-" * 80)
         self._walk_suite(suite, _list_cases)
         self.tc.logger.info("-" * 80)
