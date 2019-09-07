@@ -13,12 +13,8 @@ def parse_values(content):
                 yield i[len(v) + 2:].strip(), v
                 break
 
-@OETestTag("machine")
-class GlibcSelfTest(OESelftestTestCase):
-    def test_glibc(self):
-        self.glibc_run_check()
-
-    def glibc_run_check(self, ssh = None):
+class GlibcSelfTestBase(OESelftestTestCase):
+    def run_check(self, ssh = None):
         # configure ssh target
         features = []
         if ssh is not None:
@@ -40,28 +36,26 @@ class GlibcSelfTest(OESelftestTestCase):
             for test, result in parse_values(f):
                 self.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
 
-class GlibcSelfTestSystemEmulated(GlibcSelfTest):
-    default_installed_packages = [
-        "glibc-charmaps",
-        "libgcc",
-        "libstdc++",
-        "libatomic",
-        "libgomp",
-        # "python3",
-        # "python3-pexpect",
-        "nfs-utils",
-        ]
-
-    def glibc_run_check(self):
+    def run_check_emulated(self):
         with contextlib.ExitStack() as s:
             # use the base work dir, as the nfs mount, since the recipe directory may not exist
             tmpdir = get_bb_var("BASE_WORKDIR")
             nfsport, mountport = s.enter_context(unfs_server(tmpdir))
 
             # build core-image-minimal with required packages
+            default_installed_packages = [
+                "glibc-charmaps",
+                "libgcc",
+                "libstdc++",
+                "libatomic",
+                "libgomp",
+                # "python3",
+                # "python3-pexpect",
+                "nfs-utils",
+                ]
             features = []
             features.append('IMAGE_FEATURES += "ssh-server-openssh"')
-            features.append('CORE_IMAGE_EXTRA_INSTALL += "{0}"'.format(" ".join(self.default_installed_packages)))
+            features.append('CORE_IMAGE_EXTRA_INSTALL += "{0}"'.format(" ".join(default_installed_packages)))
             self.write_config("\n".join(features))
             bitbake("core-image-minimal")
 
@@ -80,5 +74,15 @@ class GlibcSelfTestSystemEmulated(GlibcSelfTest):
             if status != 0:
                 raise Exception("Failed to setup NFS mount on target ({})".format(repr(output)))
 
-            super().glibc_run_check(ssh = qemu.ip)
+            self.run_check(ssh = qemu.ip)
+
+@OETestTag("toolchain-user")
+class GlibcSelfTest(GlibcSelfTestBase):
+    def test_glibc(self):
+        self.run_check()
+
+@OETestTag("toolchain-system")
+class GlibcSelfTestSystemEmulated(GlibcSelfTestBase):
+    def test_glibc(self):
+        self.run_check_emulated()
 
