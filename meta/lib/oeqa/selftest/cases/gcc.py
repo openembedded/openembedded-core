@@ -11,34 +11,13 @@ def parse_values(content):
                 yield i[len(v) + 2:].strip(), v
                 break
 
-@OETestTag("machine")
-class GccSelfTest(OESelftestTestCase):
-    def gcc_runtime_check_skip(self, suite):
+class GccSelfTestBase(OESelftestTestCase):
+    def check_skip(self, suite):
         targets = get_bb_var("RUNTIMETARGET", "gcc-runtime").split()
         if suite not in targets:
             self.skipTest("Target does not use {0}".format(suite))
 
-    def test_cross_gcc(self):
-        self.gcc_run_check("gcc", "g++")
-
-    def test_libatomic(self):
-        self.gcc_run_check("libatomic")
-
-    def test_libgomp(self):
-        self.gcc_run_check("libgomp")
-
-    def test_libstdcxx(self):
-        self.gcc_run_check("libstdc++-v3")
-
-    def test_libssp(self):
-        self.gcc_runtime_check_skip("libssp")
-        self.gcc_run_check("libssp")
-
-    def test_libitm(self):
-        self.gcc_runtime_check_skip("libitm")
-        self.gcc_run_check("libitm")
-
-    def gcc_run_check(self, *suites, ssh = None):
+    def run_check(self, *suites, ssh = None):
         targets = set()
         for s in suites:
             if s in ["gcc", "g++"]:
@@ -77,14 +56,12 @@ class GccSelfTest(OESelftestTestCase):
                 for test, result in parse_values(f):
                     self.extraresults["ptestresult.{}.{}".format(ptestsuite, test)] = {"status" : result}
 
-class GccSelfTestSystemEmulated(GccSelfTest):
-    default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp"]
-
-    def gcc_run_check(self, *args, **kwargs):
+    def run_check_emulated(self, *args, **kwargs):
         # build core-image-minimal with required packages
+        default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp"]
         features = []
         features.append('IMAGE_FEATURES += "ssh-server-openssh"')
-        features.append('CORE_IMAGE_EXTRA_INSTALL += "{0}"'.format(" ".join(self.default_installed_packages)))
+        features.append('CORE_IMAGE_EXTRA_INSTALL += "{0}"'.format(" ".join(default_installed_packages)))
         self.write_config("\n".join(features))
         bitbake("core-image-minimal")
 
@@ -94,5 +71,69 @@ class GccSelfTestSystemEmulated(GccSelfTest):
             status, _ = qemu.run("uname")
             self.assertEqual(status, 0)
 
-            return super().gcc_run_check(*args, ssh=qemu.ip, **kwargs)
+            return self.run_check(*args, ssh=qemu.ip, **kwargs)
+
+@OETestTag("toolchain-user")
+class GccCrossSelfTest(GccSelfTestBase):
+    def test_cross_gcc(self):
+        self.run_check("gcc", "g++")
+
+@OETestTag("toolchain-user")
+class GccLibAtomicSelfTest(GccSelfTestBase):
+    def test_libatomic(self):
+        self.run_check("libatomic")
+
+@OETestTag("toolchain-user")
+class GccLibGompSelfTest(GccSelfTestBase):
+    def test_libgomp(self):
+        self.run_check("libgomp")
+
+@OETestTag("toolchain-user")
+class GccLibStdCxxSelfTest(GccSelfTestBase):
+    def test_libstdcxx(self):
+        self.run_check("libstdc++-v3")
+
+@OETestTag("toolchain-user")
+class GccLibSspSelfTest(GccSelfTestBase):
+    def test_libssp(self):
+        self.check_skip("libssp")
+        self.run_check("libssp")
+
+@OETestTag("toolchain-user")
+class GccLibItmSelfTest(GccSelfTestBase):
+    def test_libitm(self):
+        self.check_skip("libitm")
+        self.run_check("libitm")
+
+@OETestTag("toolchain-system")
+class GccCrossSelfTestSystemEmulated(GccSelfTestBase):
+    def test_cross_gcc(self):
+        self.run_check_emulated("gcc", "g++")
+
+@OETestTag("toolchain-system")
+class GccLibAtomicSelfTestSystemEmulated(GccSelfTestBase):
+    def test_libatomic(self):
+        self.run_check_emulated("libatomic")
+
+@OETestTag("toolchain-system")
+class GccLibGompSelfTestSystemEmulated(GccSelfTestBase):
+    def test_libgomp(self):
+        self.run_check_emulated("libgomp")
+
+@OETestTag("toolchain-system")
+class GccLibStdCxxSelfTestSystemEmulated(GccSelfTestBase):
+    def test_libstdcxx(self):
+        self.run_check_emulated("libstdc++-v3")
+
+@OETestTag("toolchain-system")
+class GccLibSspSelfTestSystemEmulated(GccSelfTestBase):
+    def test_libssp(self):
+        self.check_skip("libssp")
+        self.run_check_emulated("libssp")
+
+@OETestTag("toolchain-system")
+class GccLibItmSelfTestSystemEmulated(GccSelfTestBase):
+    def test_libitm(self):
+        self.check_skip("libitm")
+        self.run_check_emulated("libitm")
 
