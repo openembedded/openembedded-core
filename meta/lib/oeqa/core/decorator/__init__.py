@@ -70,7 +70,8 @@ def OETestTag(*tags):
         expandedtags += strToList(tag)
     def decorator(item):
         if hasattr(item, "__oeqa_testtags"):
-            item.__oeqa_testtags += expandedtags
+            # do not append, create a new list (to handle classes with inheritance)
+            item.__oeqa_testtags = list(item.__oeqa_testtags) + expandedtags
         else:
             item.__oeqa_testtags = expandedtags
         return item
