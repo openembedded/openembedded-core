@@ -35,6 +35,8 @@ SRC_URI += "\
   file://bpo-35907-cve-2019-9948-fix.patch \
   file://bpo-36216-cve-2019-9636.patch \
   file://bpo-36216-cve-2019-9636-fix.patch \
+  file://bpo-35121-cve-2018-20852.patch \
+  file://bpo-30458-cve-2019-9740.patch \
 "
 
 S = "${WORKDIR}/Python-${PV}"
