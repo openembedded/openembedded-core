@@ -14,6 +14,7 @@ SECTION = "libs"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
+           file://libgpg-error-1.35-gawk5-support.patch \
 	  "
 
 SRC_URI[md5sum] = "2808a9e044f883f7554c5ba6a380b711"
