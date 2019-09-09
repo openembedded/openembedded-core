@@ -16,6 +16,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
            file://0001-syscfg-Support-ARC-CPUs-and-simplify-aliasing-table.patch \
            file://0002-syscfg-Add-support-for-arc-unknown-linux-gnu.patch \
+           file://libgpg-error-1.35-gawk5-support.patch \
 	  "
 SRC_URI[md5sum] = "ef3d928a5a453fa701ecc3bb22be1c64"
 SRC_URI[sha256sum] = "c345c5e73cc2332f8d50db84a2280abfb1d8f6d4f1858b9daa30404db44540ca"
