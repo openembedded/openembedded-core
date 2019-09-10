@@ -17,6 +17,14 @@ EXP_TOOLS="exp-bbv exp-dhat exp-sgcheck"
 GDB_BIN=@bindir@/gdb
 cd ${VALGRIND_LIB}/ptest && ./gdbserver_tests/make_local_links ${GDB_BIN}
 
+arch=`arch`
+if [ "$arch" = "aarch64" ]; then
+   echo "Aarch64: Hide valgrind tests that result in defunct process and then out of memory"
+   for i in `cat remove-for-aarch64`; do
+      mv $i.vgtest $i.IGNORE;
+   done
+fi
+
 cd ${VALGRIND_LIB}/ptest && ./tests/vg_regtest \
     --valgrind=${VALGRIND_BIN} \
     --valgrind-lib=${VALGRIND_LIB} \
@@ -28,6 +36,14 @@ cd ${VALGRIND_LIB}/ptest && \
     ./tests/post_regtest_checks $(pwd) \
     gdbserver_tests ${TOOLS} ${EXP_TOOLS} \
     2>&1|tee -a ${LOG}
+
+if [ "$arch" = "aarch64" ]; then
+   echo "Aarch64: Restore valgrind tests that result in defunct process and then out of memory"
+   for i in `cat remove-for-aarch64`; do
+      mv $i.IGNORE $i.vgtest;
+   done
+fi
+
 
 passed=`grep PASS: ${LOG}|wc -l`
 failed=`grep FAIL: ${LOG}|wc -l`
