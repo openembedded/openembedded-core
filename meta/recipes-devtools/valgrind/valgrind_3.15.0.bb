@@ -109,7 +109,7 @@ RDEPENDS_${PN} += "perl"
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
-RDEPENDS_${PN}-ptest += " file perl perl-module-file-glob sed ${PN}-dbg"
+RDEPENDS_${PN}-ptest += " bash file perl perl-module-file-glob procps sed ${PN}-dbg"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
 # One of the tests contains a bogus interpreter path on purpose.
@@ -134,40 +134,45 @@ do_install_ptest() {
     for parent_dir in ${S} ${B} ; do
         cd $parent_dir
 
-        # exclude shell or the package won't install
-        rm -rf none/tests/shell* 2>/dev/null
-
         subdirs=" \
 	   cachegrind/tests \
 	   callgrind/tests \
+	   dhat/tests \
 	   drd/tests \
+	   exp-bbv/tests \
+	   exp-dhat/tests \
 	   gdbserver_tests \
 	   helgrind/tests \
+	   lackey/tests \
 	   massif/tests \
 	   memcheck/tests \
 	   none/tests \
 	   tests \
 	"
-
         # Get the vg test scripts, filters, and expected files
         for dir in $subdirs ; do
             find $dir | cpio -pvdu ${D}${PTEST_PATH}
         done
         cd $saved_dir
     done
+    cp ${B}/config.h ${D}${PTEST_PATH}
+    mkdir ${D}${PTEST_PATH}/perf
+    cp ${B}/perf/bigcode ${D}${PTEST_PATH}/perf
 
     # Hide then restore a.c that is used by ann[12].vgtest in call/cachegrind
     mv ${D}${PTEST_PATH}/cachegrind/tests/a.c ${D}${PTEST_PATH}/cachegrind/tests/a_c
-    # clean out build artifacts before building the rpm
+    # clean out build artifacts before building the package. Keep config.h for ptests.
+    mv ${D}${PTEST_PATH}/config.h ${D}${PTEST_PATH}/config_h
+
     find ${D}${PTEST_PATH} \
-         \( -name "Makefile*" \
+        \( \
+	   -name "Makefile*" \
         -o -name "*.o" \
-        -o -name "*.c" \
-        -o -name "*.S" \
-        -o -name "*.h" \) \
+	\) \
         -exec rm {} \;
     mv ${D}${PTEST_PATH}/cachegrind/tests/a_c ${D}${PTEST_PATH}/cachegrind/tests/a.c
     touch ${D}${PTEST_PATH}/cachegrind/tests/a.c -r ${D}${PTEST_PATH}/cachegrind/tests/cgout-test
+    mv ${D}${PTEST_PATH}/config_h ${D}${PTEST_PATH}/config.h
 
     # find *_annotate in ${bindir} for yocto build
     sed -i s:\.\./\.\./cachegrind/cg_annotate:${bindir}/cg_annotate: ${D}${PTEST_PATH}/cachegrind/tests/ann1.vgtest
