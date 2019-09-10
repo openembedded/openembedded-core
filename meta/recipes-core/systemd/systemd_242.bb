@@ -287,6 +287,9 @@ do_install() {
 		fi
 	fi
 
+	# create link for existing udev rules
+	ln -s ${base_bindir}/udevadm ${D}${base_sbindir}/udevadm
+
 	# duplicate udevadm for postinst script
 	install -d ${D}${libexecdir}
 	ln ${D}${base_bindir}/udevadm ${D}${libexecdir}/${MLPREFIX}udevadm
@@ -604,6 +607,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
                ${base_bindir}/udevadm \
+               ${base_sbindir}/udevadm \
                ${libexecdir}/${MLPREFIX}udevadm \
                ${datadir}/bash-completion/completions/udevadm \
               "
