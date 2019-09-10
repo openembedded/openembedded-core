@@ -38,6 +38,7 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://0001-Return-a-valid-exit_code-from-vg_regtest.patch \
            file://0001-valgrind-filter_xml_frames-do-not-filter-usr.patch \
            file://0002-valgrind-adjust-std_list-expected-output.patch \
+           file://0001-adjust-path-filter-for-2-memcheck-tests.patch \
            "
 SRC_URI[md5sum] = "46e5fbdcbc3502a5976a317a0860a975"
 SRC_URI[sha256sum] = "417c7a9da8f60dd05698b3a7bc6002e4ef996f14c13f0ff96679a16873e78ab1"
@@ -109,7 +110,7 @@ RDEPENDS_${PN} += "perl"
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
-RDEPENDS_${PN}-ptest += " bash file perl perl-module-file-glob procps sed ${PN}-dbg"
+RDEPENDS_${PN}-ptest += " bash file libgomp perl perl-module-file-glob procps sed ${PN}-dbg"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
 # One of the tests contains a bogus interpreter path on purpose.
@@ -158,6 +159,8 @@ do_install_ptest() {
     cp ${B}/config.h ${D}${PTEST_PATH}
     mkdir ${D}${PTEST_PATH}/perf
     cp ${B}/perf/bigcode ${D}${PTEST_PATH}/perf
+    # needed by memcheck/tests/vcpu_bz2
+    cp ${B}/perf/bz2 ${D}${PTEST_PATH}/perf
 
     # Hide then restore a.c that is used by ann[12].vgtest in call/cachegrind
     mv ${D}${PTEST_PATH}/cachegrind/tests/a.c ${D}${PTEST_PATH}/cachegrind/tests/a_c
