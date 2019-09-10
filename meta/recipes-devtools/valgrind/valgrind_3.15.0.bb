@@ -110,7 +110,11 @@ RDEPENDS_${PN} += "perl"
 # redirect functions like strlen.
 RRECOMMENDS_${PN} += "${TCLIBC}-dbg"
 
-RDEPENDS_${PN}-ptest += " bash file libgomp perl perl-module-file-glob procps sed ${PN}-dbg"
+RDEPENDS_${PN}-ptest += " bash coreutils file \
+   gdb libgomp \
+   perl \
+   perl-module-getopt-long perl-module-file-basename perl-module-file-glob \
+   procps sed ${PN}-dbg"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
 # One of the tests contains a bogus interpreter path on purpose.
@@ -136,12 +140,11 @@ do_install_ptest() {
         cd $parent_dir
 
         subdirs=" \
+	   .in_place \
 	   cachegrind/tests \
 	   callgrind/tests \
 	   dhat/tests \
 	   drd/tests \
-	   exp-bbv/tests \
-	   exp-dhat/tests \
 	   gdbserver_tests \
 	   helgrind/tests \
 	   lackey/tests \
@@ -149,6 +152,9 @@ do_install_ptest() {
 	   memcheck/tests \
 	   none/tests \
 	   tests \
+	   exp-bbv/tests \
+	   exp-dhat/tests \
+	   exp-sgcheck/tests \
 	"
         # Get the vg test scripts, filters, and expected files
         for dir in $subdirs ; do
@@ -156,16 +162,24 @@ do_install_ptest() {
         done
         cd $saved_dir
     done
+
+    # The scripts reference config.h so add it to the top ptest dir.
     cp ${B}/config.h ${D}${PTEST_PATH}
+
+    # Add an executable need by none/tests/bigcode
     mkdir ${D}${PTEST_PATH}/perf
     cp ${B}/perf/bigcode ${D}${PTEST_PATH}/perf
-    # needed by memcheck/tests/vcpu_bz2
+
+    # Add an executable needed by memcheck/tests/vcpu_bz2
     cp ${B}/perf/bz2 ${D}${PTEST_PATH}/perf
 
-    # Hide then restore a.c that is used by ann[12].vgtest in call/cachegrind
-    mv ${D}${PTEST_PATH}/cachegrind/tests/a.c ${D}${PTEST_PATH}/cachegrind/tests/a_c
-    # clean out build artifacts before building the package. Keep config.h for ptests.
-    mv ${D}${PTEST_PATH}/config.h ${D}${PTEST_PATH}/config_h
+    # Make the ptest dir look like the top level valgrind src dir
+    # This is checked by the gdbserver_tests/make_local_links script
+    mkdir ${D}${PTEST_PATH}/coregrind
+    cp ${B}/coregrind/vgdb ${D}${PTEST_PATH}/coregrind
+
+    # Add an executable needed by massif tests
+    cp ${B}/massif/ms_print ${D}${PTEST_PATH}/massif/ms_print
 
     find ${D}${PTEST_PATH} \
         \( \
@@ -173,9 +187,9 @@ do_install_ptest() {
         -o -name "*.o" \
 	\) \
         -exec rm {} \;
-    mv ${D}${PTEST_PATH}/cachegrind/tests/a_c ${D}${PTEST_PATH}/cachegrind/tests/a.c
+
+    # These files need to be newer so touch them.
     touch ${D}${PTEST_PATH}/cachegrind/tests/a.c -r ${D}${PTEST_PATH}/cachegrind/tests/cgout-test
-    mv ${D}${PTEST_PATH}/config_h ${D}${PTEST_PATH}/config.h
 
     # find *_annotate in ${bindir} for yocto build
     sed -i s:\.\./\.\./cachegrind/cg_annotate:${bindir}/cg_annotate: ${D}${PTEST_PATH}/cachegrind/tests/ann1.vgtest
@@ -184,9 +198,7 @@ do_install_ptest() {
     sed -i s:\.\./\.\./callgrind/callgrind_annotate:${bindir}/callgrind_annotate: ${D}${PTEST_PATH}/callgrind/tests/ann1.vgtest
     sed -i s:\.\./\.\./callgrind/callgrind_annotate:${bindir}/callgrind_annotate: ${D}${PTEST_PATH}/callgrind/tests/ann2.vgtest
 
-    # needed by massif tests
-    cp ${B}/massif/ms_print ${D}${PTEST_PATH}/massif/ms_print
-
     # handle multilib
     sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
+    sed -i s:@bindir@:${bindir}:g ${D}${PTEST_PATH}/run-ptest
 }
