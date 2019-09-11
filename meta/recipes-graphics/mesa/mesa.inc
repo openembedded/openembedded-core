@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://docs/license.html;md5=725f991a1cc322aa7a0cd3a2016621c
 
 PE = "2"
 
-DEPENDS = "expat makedepend-native flex-native bison-native libxml2-native zlib chrpath-replacement-native python3-mako-native gettext-native python3"
+DEPENDS = "expat makedepend-native flex-native bison-native libxml2-native zlib chrpath-replacement-native python3-mako-native gettext-native"
 EXTRANATIVEPATH += "chrpath-native"
 PROVIDES = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'virtual/libgl', '', d)} \
@@ -25,6 +25,11 @@ PROVIDES = " \
     "
 
 inherit meson pkgconfig python3native gettext distro_features_check
+
+# Unset these to stop python trying to report the target Python setup
+_PYTHON_SYSCONFIGDATA_NAME[unexport] = "1"
+STAGING_INCDIR[unexport] = "1"
+STAGING_LIBDIR[unexport] = "1"
 
 BBCLASSEXTEND = "native nativesdk"
 
