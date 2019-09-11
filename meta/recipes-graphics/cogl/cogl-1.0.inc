@@ -75,4 +75,6 @@ RPROVIDES_libcogl = "cogl-1.0"
 RCONFLICTS_libcogl = "cogl-1.0"
 RREPLACES_libcogl = "cogl-1.0"
 
+RDEPENDS_${PN}-dev = "libcogl"
+
 COMPATIBLE_HOST_armv4 = 'null'
