@@ -16,7 +16,7 @@ RDEPENDS_${PN}_class-native = ""
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "23756dab809f9ec5011bb27fb2c3c7d6"
-SRC_URI[sha256sum] = "aa7ebdb0715106dd255082f2310dbaa2cd7e225957c2a77d719720c7cc92b921"
+SRC_URI[md5sum] = "3d6adb76fdd072db8c8fae41b40855e8"
+SRC_URI[sha256sum] = "3ad880444123ac06a7238546fa38a2a6ad7f7e0cc3614de7e103863616522282"
 
 SYSROOT_DIRS_BLACKLIST_remove = "${datadir}/fonts"
