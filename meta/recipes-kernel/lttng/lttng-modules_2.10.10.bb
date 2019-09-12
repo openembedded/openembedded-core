@@ -43,3 +43,4 @@ SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.1
 SRCREV_class-devupstream = "624aca5d7507fbd11ea4a1a474c3aa1031bd9a31"
 PV_class-devupstream = "2.10.10+git${SRCPV}"
 S_class-devupstream = "${WORKDIR}/git"
+SRCREV_FORMAT ?= "lttng_git"
