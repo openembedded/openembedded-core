@@ -10,6 +10,7 @@ DEPENDS = "libxml2"
 
 SRC_URI = "http://xmlsoft.org/sources/libxslt-${PV}.tar.gz \
            file://fix-rvts-handling.patch \
+           file://CVE-2019-11068.patch \
            "
 
 SRC_URI[md5sum] = "1fc72f98e98bf4443f1651165f3aa146"
