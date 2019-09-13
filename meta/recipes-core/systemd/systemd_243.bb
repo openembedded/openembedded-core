@@ -37,7 +37,6 @@ SRC_URI_MUSL = "\
                file://0008-add-missing-FTW_-macros-for-musl.patch \
                file://0010-fix-missing-of-__register_atfork-for-non-glibc-build.patch \
                file://0011-Use-uintmax_t-for-handling-rlim_t.patch \
-               file://0001-Replace-the-legacy-ULONG_LONG_MAX-with-the-C99-ULLON.patch \
                file://0014-test-sizeof.c-Disable-tests-for-missing-typedefs-in-.patch \
                file://0015-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
                file://0016-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
@@ -46,11 +45,11 @@ SRC_URI_MUSL = "\
                file://0019-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
                file://0020-missing_type.h-add-__compar_d_fn_t-definition.patch \
                file://0021-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0001-src-udev-udev-event.c-must-include-sys-wait.h.patch \
-               file://0023-socket-util.h-include-string.h.patch \
                file://0024-test-json.c-define-M_PIl.patch \
-               file://0025-fs-utilh-add-missing-sys-stat-include.patch \
                file://0001-do-not-disable-buffer-in-writing-files.patch \
+               file://0002-src-login-brightness.c-include-sys-wait.h.patch \
+               file://0003-src-basic-copy.c-include-signal.h.patch \
+               file://0004-src-shared-cpu-set-util.h-add-__cpu_mask-definition.patch \
                "
 
 PAM_PLUGINS = " \
@@ -657,13 +656,13 @@ ALTERNATIVE_TARGET[runlevel] = "${base_bindir}/systemctl"
 ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
 ALTERNATIVE_PRIORITY[runlevel] ?= "300"
 
-pkg_postinst_${PN} () {
+pkg_postinst_${PN}_libc-glibc () {
 	sed -e '/^hosts:/s/\s*\<myhostname\>//' \
 		-e 's/\(^hosts:.*\)\(\<files\>\)\(.*\)\(\<dns\>\)\(.*\)/\1\2 myhostname \3\4\5/' \
 		-i $D${sysconfdir}/nsswitch.conf
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm_${PN}_libc-glibc () {
 	sed -e '/^hosts:/s/\s*\<myhostname\>//' \
 		-e '/^hosts:/s/\s*myhostname//' \
 		-i $D${sysconfdir}/nsswitch.conf
