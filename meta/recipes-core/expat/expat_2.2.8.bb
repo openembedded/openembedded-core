@@ -10,8 +10,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.bz2 \
            file://libtool-tag.patch \
 	  "
 
-SRC_URI[md5sum] = "72f36b87cdb478aba1e78473393766aa"
-SRC_URI[sha256sum] = "cbc9102f4a31a8dafd42d642e9a3aa31e79a0aedaa1f6efd2795ebc83174ec18"
+SRC_URI[md5sum] = "00858041acfea5757af55e6ee6b86231"
+SRC_URI[sha256sum] = "9a130948b05a82da34e4171d5f5ae5d321d9630277af02c8fa51e431f6475102"
 
 inherit autotools lib_package
 
