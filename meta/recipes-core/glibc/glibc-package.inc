@@ -83,14 +83,6 @@ do_install_append () {
 		rm -f ${D}${infodir}/dir
 	fi
 
-	if ! ${@bb.utils.contains('DISTRO_FEATURES', 'ldconfig', 'true', 'false', d)}; then
-		# The distro doesn't want these files so let's not install them
-		rm -f ${D}${sysconfdir}/ld.so.conf
-		rm -f ${D}${base_sbindir}/ldconfig
-		# This directory will be empty now so remove it too.
-		rmdir ${D}${sysconfdir}
-	fi
-
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${localstatedir}/db/nscd
 	install -m 0755 ${S}/nscd/nscd.init ${D}${sysconfdir}/init.d/nscd
@@ -101,18 +93,6 @@ do_install_append () {
 
 	install -d ${D}${systemd_unitdir}/system
 	install -m 0644 ${S}/nscd/nscd.service ${D}${systemd_unitdir}/system/
-
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
-		install -d ${D}${sysconfdir}/tmpfiles.d
-		echo "d /run/nscd 755 root root -" \
-			> ${D}${sysconfdir}/tmpfiles.d/nscd.conf
-	fi
-
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
-		install -d ${D}${sysconfdir}/default/volatiles
-		echo "d root root 0755 /var/run/nscd none" \
-			> ${D}${sysconfdir}/default/volatiles/98_nscd
-	fi
 
 	# The dynamic loader will have been installed into
 	# ${base_libdir}. However, if that isn't going to end up being
@@ -126,6 +106,27 @@ do_install_append () {
 	fi
 }
 
+do_install_append_class-target() {
+	if ! ${@bb.utils.contains('DISTRO_FEATURES', 'ldconfig', 'true', 'false', d)}; then
+		# The distro doesn't want these files so let's not install them
+		rm -f ${D}${sysconfdir}/ld.so.conf
+		rm -f ${D}${base_sbindir}/ldconfig
+		# This directory will be empty now so remove it too.
+		rmdir ${D}${sysconfdir}
+	fi
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+		install -d ${D}${sysconfdir}/tmpfiles.d
+		echo "d /run/nscd 755 root root -" \
+			> ${D}${sysconfdir}/tmpfiles.d/nscd.conf
+	fi
+
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+		install -d ${D}${sysconfdir}/default/volatiles
+		echo "d root root 0755 /var/run/nscd none" \
+			> ${D}${sysconfdir}/default/volatiles/98_nscd
+	fi
+
+}
 do_install_append_aarch64 () {
 	do_install_armmultilib
 }
