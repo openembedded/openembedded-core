@@ -3,7 +3,7 @@ require grub2.inc
 GRUBPLATFORM = "efi"
 
 DEPENDS_append_class-target = " grub-efi-native"
-RDEPENDS_${PN}_class-target = "diffutils freetype grub-common virtual/grub-bootconf"
+RDEPENDS_${PN}_class-target = "grub-common virtual/grub-bootconf"
 
 SRC_URI += " \
            file://cfg \
