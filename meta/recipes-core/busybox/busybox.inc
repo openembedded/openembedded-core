@@ -128,7 +128,9 @@ do_prepare_config () {
 		${S}/.config.oe-tmp > ${S}/.config
 	fi
 	sed -i 's/CONFIG_IFUPDOWN_UDHCPC_CMD_OPTIONS="-R -n"/CONFIG_IFUPDOWN_UDHCPC_CMD_OPTIONS="-R -b"/' ${S}/.config
-	sed -i 's|${DEBUG_PREFIX_MAP}||g' ${S}/.config
+	if [ -n "${DEBUG_PREFIX_MAP}" ]; then
+		sed -i 's|${DEBUG_PREFIX_MAP}||g' ${S}/.config
+	fi
 }
 
 # returns all the elements from the src uri that are .cfg files
@@ -142,6 +144,7 @@ def find_cfgs(d):
     return sources_list
 
 do_configure () {
+	set -x
 	do_prepare_config
 	merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
 	cml1_do_configure
