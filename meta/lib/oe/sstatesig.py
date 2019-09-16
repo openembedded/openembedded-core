@@ -264,7 +264,7 @@ class SignatureGeneratorOEEquivHash(bb.siggen.SignatureGeneratorUniHashMixIn, Si
         super().init_rundepcheck(data)
         autostart = data.getVar('BB_HASHSERVE')
         if autostart:
-            self.server = "http://" + autostart
+            self.server = autostart
         else:
             self.server = data.getVar('SSTATE_HASHEQUIV_SERVER')
         if not self.server:
