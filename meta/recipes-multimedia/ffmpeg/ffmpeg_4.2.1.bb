@@ -120,6 +120,8 @@ EXTRA_OECONF_append_linux-gnux32 = " --disable-asm"
 
 LDFLAGS_append_x86 = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
 
+EXTRA_OEMAKE = "V=1"
+
 do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
