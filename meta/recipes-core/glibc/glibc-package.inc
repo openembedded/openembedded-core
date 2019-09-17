@@ -97,7 +97,7 @@ do_install_append () {
 	# The dynamic loader will have been installed into
 	# ${base_libdir}. However, if that isn't going to end up being
 	# available in the ABI-mandated location, then a symlink must
-        # be created.
+	# be created.
 
 	if [ -n "${ARCH_DYNAMIC_LOADER}" -a ! -e "${D}${root_prefix}/lib/${ARCH_DYNAMIC_LOADER}" ]; then
 		install -d ${D}${root_prefix}/lib
@@ -111,8 +111,6 @@ do_install_append_class-target() {
 		# The distro doesn't want these files so let's not install them
 		rm -f ${D}${sysconfdir}/ld.so.conf
 		rm -f ${D}${base_sbindir}/ldconfig
-		# This directory will be empty now so remove it too.
-		rmdir ${D}${sysconfdir}
 	fi
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/tmpfiles.d
