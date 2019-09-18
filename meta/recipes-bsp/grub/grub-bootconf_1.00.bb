@@ -9,6 +9,8 @@ RPROVIDES_${PN} += "virtual/grub-bootconf"
 
 inherit grub-efi-cfg
 
+require conf/image-uefi.conf
+
 S = "${WORKDIR}"
 
 GRUB_CFG = "${S}/grub-bootconf"
@@ -23,10 +25,8 @@ python do_configure() {
 do_configure[vardeps] += "APPEND ROOT"
 
 do_install() {
-	install -d ${D}/boot
-	install -d ${D}/boot/EFI
-	install -d ${D}/boot/EFI/BOOT
-	install grub-bootconf ${D}/boot/EFI/BOOT/grub.cfg
+	install -d ${D}${EFI_FILES_PATH}
+	install grub-bootconf ${D}${EFI_FILES_PATH}/grub.cfg
 }
 
-FILES_${PN} = "/boot/EFI/BOOT/grub.cfg"
+FILES_${PN} = "${EFI_FILES_PATH}/grub.cfg"
