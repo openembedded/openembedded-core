@@ -29,8 +29,8 @@ SRC_URI_append_class-nativesdk = " \
            file://0003-target-only-Work-around-thumbnailer-cross-compile-fa.patch \
            "
 
-SRC_URI[md5sum] = "f6ba2195acd18c5c9555421f30c31cc1"
-SRC_URI[sha256sum] = "f19ff836ba991031610dcc53774e8ca436160f7d981867c8c3a37acfe493ab3a"
+SRC_URI[md5sum] = "cc1d712a1643b92ff0904d589963971f"
+SRC_URI[sha256sum] = "73fa651ec0d89d73dd3070b129ce2203a66171dfc0bd2caa3570a9c93d2d0781"
 
 inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
