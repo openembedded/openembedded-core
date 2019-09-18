@@ -17,8 +17,8 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 DEPENDS = "bison flex bison-native"
 
 SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix2-${PV}.tar.gz"
-SRC_URI[md5sum] = "dd1f8240f924b12b0a0de0c31ab26ab1"
-SRC_URI[sha256sum] = "860b5f94a0590b278592acf16a4556b05ff0309c08e8c48aa29827cfa02c8e9d"
+SRC_URI[md5sum] = "6a73b1e34715916fa31132dbe11008b0"
+SRC_URI[sha256sum] = "888e80f3bb77381620a5ead208e1a1be06f3ea66ddc8cfdfa62811cae5f03752"
 UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
 S = "${WORKDIR}/acpica-unix2-${PV}"
