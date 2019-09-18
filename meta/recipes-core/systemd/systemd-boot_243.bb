@@ -1,6 +1,8 @@
 require systemd.inc
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/systemd:"
 
+require conf/image-uefi.conf
+
 DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
 
 # NOTE: These three patches are in theory not needed, but we haven't
@@ -33,16 +35,13 @@ python __anonymous () {
     import re
     target = d.getVar('TARGET_ARCH')
     prefix = "" if d.getVar('EFI_PROVIDER') == "systemd-boot" else "systemd-"
-    if target == "x86_64":
-        systemdimage = prefix + "bootx64.efi"
-    else:
-        systemdimage = prefix + "bootia32.efi"
+    systemdimage = prefix + d.getVar("EFI_BOOT_IMAGE")
     d.setVar("SYSTEMD_BOOT_IMAGE", systemdimage)
     prefix = "systemd-" if prefix == "" else ""
     d.setVar("SYSTEMD_BOOT_IMAGE_PREFIX", prefix)
 }
 
-FILES_${PN} = "/boot/EFI/BOOT/${SYSTEMD_BOOT_IMAGE}"
+FILES_${PN} = "${EFI_FILES_PATH}/${SYSTEMD_BOOT_IMAGE}"
 
 RDEPENDS_${PN} += "virtual/systemd-bootconf"
 
@@ -61,10 +60,8 @@ do_compile() {
 }
 
 do_install() {
-	install -d ${D}/boot
-	install -d ${D}/boot/EFI
-	install -d ${D}/boot/EFI/BOOT
-	install ${B}/src/boot/efi/systemd-boot*.efi ${D}/boot/EFI/BOOT/${SYSTEMD_BOOT_IMAGE}
+	install -d ${D}${EFI_FILES_PATH}
+	install ${B}/src/boot/efi/systemd-boot*.efi ${D}${EFI_FILES_PATH}/${SYSTEMD_BOOT_IMAGE}
 }
 
 do_deploy () {
