@@ -27,11 +27,10 @@ PE = "2"
 
 SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
            file://lttng-ust-doc-examples-disable.patch \
-           file://0001-Add-config-time-check-for-new-gettid-API.patch \
           "
 
-SRC_URI[md5sum] = "19916ff0dec23c90f985586a8cbd1fd2"
-SRC_URI[sha256sum] = "75d5b4bb205c444a343e1297e14cd3a2503fc645a26710531cbd319c72c1a967"
+SRC_URI[md5sum] = "f0c86a9fa7dcfd0205fb42584a310b1c"
+SRC_URI[sha256sum] = "06f9ed9b2198855b1c7fcbf15fe57297ee259409ffa1b3bad87321412d98bc35"
 
 CVE_PRODUCT = "ust"
 
