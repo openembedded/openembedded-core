@@ -1,0 +1,26 @@
+From 5fadf5e07efcb30d9ea2bbeab6f2c92be441591d Mon Sep 17 00:00:00 2001
+From: Yanlin Du <duyanlin@huawei.com>
+Date: Thu, 19 Sep 2019 10:51:58 +0800
+Subject: [PATCH] libdnf: support for removing libcheck dependencies
+
+libcheck could be removed, when WITH_TESTS is turned on.
+
+Signed-off-by: Yanlin Du <duyanlin@huawei.com>
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6df91e1..8c05eed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,7 +51,9 @@ find_package(OpenSSL REQUIRED)
+ 
+ 
+ # build dependencies via pkg-config
++IF (WITH_TESTS)
+ pkg_check_modules(CHECK REQUIRED check)
++ENDIF()
+ pkg_check_modules(GLIB REQUIRED gio-unix-2.0>=2.46.0)
+ include_directories(${GLIB_INCLUDE_DIRS})
+ pkg_check_modules(JSONC REQUIRED json-c)
+-- 
+1.8.5.6
+
