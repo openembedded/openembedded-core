@@ -18,8 +18,8 @@
 def siteinfo_data_for_machine(arch, os, d):
     archinfo = {
         "allarch": "endian-little bit-32", # bogus, but better than special-casing the checks below for allarch
-        "aarch64": "endian-little bit-64 arm-common arm-64",
-        "aarch64_be": "endian-big bit-64 arm-common arm-64",
+        "aarch64": "endian-little bit-64 arm-common",
+        "aarch64_be": "endian-big bit-64 arm-common",
         "arc": "endian-little bit-32 arc-common",
         "arceb": "endian-big bit-32 arc-common",
         "arm": "endian-little bit-32 arm-common arm-32",
@@ -78,9 +78,9 @@ def siteinfo_data_for_machine(arch, os, d):
         "mingw32": "common-mingw",
     }
     targetinfo = {
-        "aarch64-linux-gnu": "aarch64-linux",
-        "aarch64_be-linux-gnu": "aarch64_be-linux",
-        "aarch64-linux-gnu_ilp32": "bit-32 aarch64_be-linux arm-32",
+        "aarch64-linux-gnu": "aarch64-linux arm-64",
+        "aarch64_be-linux-gnu": "aarch64_be-linux arm-64",
+        "aarch64-linux-gnu_ilp32": "bit-32 aarch64-linux arm-32",
         "aarch64_be-linux-gnu_ilp32": "bit-32 aarch64_be-linux arm-32",
         "aarch64-linux-musl": "aarch64-linux",
         "aarch64_be-linux-musl": "aarch64_be-linux",
