@@ -130,10 +130,10 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
 
     def get_taskdata(self):
         data = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskdata()
-        return (data, self.lockedpnmap, self.lockedhashfn)
+        return (data, self.lockedpnmap, self.lockedhashfn, self.lockedhashes)
 
     def set_taskdata(self, data):
-        coredata, self.lockedpnmap, self.lockedhashfn = data
+        coredata, self.lockedpnmap, self.lockedhashfn, self.lockedhashes = data
         super(bb.siggen.SignatureGeneratorBasicHash, self).set_taskdata(coredata)
 
     def dump_sigs(self, dataCache, options):
@@ -171,16 +171,22 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
                 h_locked = self.lockedsigs[recipename][task][0]
                 var = self.lockedsigs[recipename][task][1]
                 self.lockedhashes[tid] = h_locked
+                unihash = super().get_unihash(tid)
                 self.taskhash[tid] = h_locked
                 #bb.warn("Using %s %s %s" % (recipename, task, h))
 
-                if h != h_locked:
+                if h != h_locked and h_locked != unihash:
                     self.mismatch_msgs.append('The %s:%s sig is computed to be %s, but the sig is locked to %s in %s'
                                           % (recipename, task, h, h_locked, var))
 
                 return h_locked
         #bb.warn("%s %s %s" % (recipename, task, h))
         return h
+
+    def get_unihash(self, tid):
+        if tid in self.lockedhashes:
+            return self.lockedhashes[tid]
+        return super().get_unihash(tid)
 
     def dump_sigtask(self, fn, task, stampbase, runtime):
         tid = fn + ":" + task
@@ -211,7 +217,7 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
                     (_, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
                     if tid not in self.taskhash:
                         continue
-                    f.write("    " + self.lockedpnmap[fn] + ":" + task + ":" + self.taskhash[tid] + " \\\n")
+                    f.write("    " + self.lockedpnmap[fn] + ":" + task + ":" + self.get_unihash(tid) + " \\\n")
                 f.write('    "\n')
             f.write('SIGGEN_LOCKEDSIGS_TYPES_%s = "%s"' % (self.machine, " ".join(l)))
 
