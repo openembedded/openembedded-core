@@ -22,12 +22,6 @@ RPROVIDES_${PN} = "libjson"
 
 inherit autotools
 
-EXTRA_OECONF = "--disable-werror \
-                "
-
-do_configure_prepend() {
-    # Clean up autoconf cruft that should not be in the tarball
-    rm -f ${S}/config.status
-}
+EXTRA_OECONF = "--disable-werror"
 
 BBCLASSEXTEND = "native nativesdk"
