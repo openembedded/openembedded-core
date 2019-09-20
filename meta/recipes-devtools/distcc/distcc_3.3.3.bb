@@ -12,7 +12,7 @@ PACKAGECONFIG[gtk] = "--with-gtk,--without-gtk --without-gnome,gtk+"
 # use system popt by default
 PACKAGECONFIG[popt] = "--without-included-popt,--with-included-popt,popt"
 
-RRECOMMENDS_${PN} = "avahi-daemon"
+RRECOMMENDS_${PN}-server = "avahi-daemon"
 
 SRC_URI = "git://github.com/distcc/distcc.git \
            file://fix-gnome.patch \
@@ -29,17 +29,20 @@ ASNEEDED = ""
 
 EXTRA_OECONF += "--disable-Werror PYTHON='' --disable-pump-mode"
 
-USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system \
+PACKAGE_BEFORE_PN = "${PN}-distmon-gnome ${PN}-server"
+
+USERADD_PACKAGES = "${PN}-server"
+USERADD_PARAM_${PN}-server = "--system \
                        --home /dev/null \
                        --no-create-home \
                        --gid nogroup \
                        distcc"
 
+UPDATERCPN = "${PN}-server"
 INITSCRIPT_NAME = "distcc"
 
-SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "distcc.service"
+SYSTEMD_PACKAGES = "${PN}-server"
+SYSTEMD_SERVICE_${PN}-server = "distcc.service"
 
 do_install() {
     # Improve reproducibility: compress w/o timestamps
@@ -53,20 +56,12 @@ do_install() {
     sed -i -e 's,@BINDIR@,${bindir},g' ${D}${systemd_unitdir}/system/distcc.service
 }
 
-PACKAGES += "distcc-distmon-gnome"
-
-FILES_${PN} = " ${sysconfdir} \
-		${bindir}/distcc \
-		${bindir}/lsdistcc \
-		${bindir}/distccd \
-		${bindir}/distccmon-text \
-		${sbindir}/update-distcc-symlinks \
-		${systemd_unitdir}/system/distcc.service"
-
-FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
-				${datadir}/applications \
-				${datadir}/pixmaps"
-
+FILES_${PN}-server = "${sysconfdir} \
+                      ${bindir}/distccd \
+                      ${sbindir}"
+FILES_${PN}-distmon-gnome = "${bindir}/distccmon-gnome \
+                             ${datadir}/applications \
+                             ${datadir}/pixmaps"
 
 #
 # distcc upstream dropped the 3.2 branch which we reference in older project releases
