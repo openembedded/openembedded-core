@@ -299,9 +299,10 @@ do_install() {
 }
 
 do_install_append () {
-       # Mips qemu is extremely slow, allow more time for the hwdb update
-       # This is a workaround until https://github.com/systemd/systemd/issues/13581 is resolved
-       sed -i -e s#TimeoutSec=90s#TimeoutSec=180s# ${D}${systemd_unitdir}/system/systemd-hwdb-update.service
+	# Mips qemu is extremely slow, allow more time for the hwdb update
+	# This is a workaround until https://github.com/systemd/systemd/issues/13581 is resolved
+	[ ! -e ${D}${systemd_unitdir}/system/systemd-hwdb-update.service ] ||
+		sed -i -e s#TimeoutSec=90s#TimeoutSec=180s# ${D}${systemd_unitdir}/system/systemd-hwdb-update.service
 }
 
 python populate_packages_prepend (){
