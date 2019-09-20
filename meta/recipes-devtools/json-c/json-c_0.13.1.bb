@@ -23,7 +23,6 @@ RPROVIDES_${PN} = "libjson"
 inherit autotools
 
 EXTRA_OECONF = "--disable-werror \
-                --enable-rdrand \
                 "
 
 do_configure_prepend() {
