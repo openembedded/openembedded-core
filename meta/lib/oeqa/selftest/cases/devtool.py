@@ -604,6 +604,7 @@ class DevtoolModifyTests(DevtoolBase):
             bitbake('mdadm m4 -c buildclean')
             assertNoFile(tempdir_mdadm, 'mdadm')
             assertNoFile(builddir_m4, 'src/m4')
+            runCmd('echo "#Trigger rebuild" >> %s/Makefile' % tempdir_mdadm)
             bitbake('mdadm m4 -c compile')
             assertFile(tempdir_mdadm, 'mdadm')
             assertFile(builddir_m4, 'src/m4')
