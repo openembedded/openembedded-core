@@ -15,9 +15,9 @@ PACKAGECONFIG[popt] = "--without-included-popt,--with-included-popt,popt"
 RRECOMMENDS_${PN} = "avahi-daemon"
 
 SRC_URI = "git://github.com/distcc/distcc.git \
+           file://fix-gnome.patch \
            file://separatebuilddir.patch \
            file://default \
-           file://distccmon-gnome.desktop \
            file://distcc \
            file://distcc.service"
 SRCREV = "4cde9bcfbda589abd842e3bbc652ce369085eaae"
@@ -51,13 +51,8 @@ do_install() {
     install -d ${D}${systemd_unitdir}/system/
     install -m 0644 ${WORKDIR}/distcc.service ${D}${systemd_unitdir}/system
     sed -i -e 's,@BINDIR@,${bindir},g' ${D}${systemd_unitdir}/system/distcc.service
-    ${DESKTOPINSTALL}
 }
-DESKTOPINSTALL = ""
-DESKTOPINSTALL_libc-glibc () {
-    install -d ${D}${datadir}/distcc/
-    install -m 0644 ${WORKDIR}/distccmon-gnome.desktop ${D}${datadir}/distcc/
-}
+
 PACKAGES += "distcc-distmon-gnome"
 
 FILES_${PN} = " ${sysconfdir} \
@@ -67,8 +62,10 @@ FILES_${PN} = " ${sysconfdir} \
 		${bindir}/distccmon-text \
 		${sbindir}/update-distcc-symlinks \
 		${systemd_unitdir}/system/distcc.service"
+
 FILES_distcc-distmon-gnome = "  ${bindir}/distccmon-gnome \
-				${datadir}/distcc"
+				${datadir}/applications \
+				${datadir}/pixmaps"
 
 
 #
