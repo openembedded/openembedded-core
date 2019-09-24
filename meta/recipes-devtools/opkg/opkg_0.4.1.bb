@@ -25,7 +25,7 @@ SRC_URI[sha256sum] = "45ac1e037d3877f635d883f8a555e172883a25d3eeb7986c75890fdd31
 # PTEST_PATH ?= "${libdir}/${BPN}/ptest"
 PACKAGES =+ "libopkg"
 
-inherit autotools pkgconfig systemd ptest
+inherit autotools pkgconfig ptest
 
 target_localstatedir := "${localstatedir}"
 OPKGLIBDIR ??= "${target_localstatedir}/lib"
