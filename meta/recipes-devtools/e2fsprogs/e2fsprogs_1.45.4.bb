@@ -11,7 +11,7 @@ SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permissio
                                 file://quiet-debugfs.patch \
 "
 
-SRCREV = "1f56fb81236fe3e25e2c60c1e89ea0aa7cb36260"
+SRCREV = "984ff8d6a0a1d5dc300505f67b38ed5047d51dac"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
