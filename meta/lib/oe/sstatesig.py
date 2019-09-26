@@ -90,8 +90,7 @@ class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
     def rundep_check(self, fn, recipename, task, dep, depname, dataCache = None):
         return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCache)
 
-class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
-    name = "OEBasicHash"
+class SignatureGeneratorOEBasicHashMixIn(object):
     def init_rundepcheck(self, data):
         self.abisaferecipes = (data.getVar("SIGGEN_EXCLUDERECIPES_ABISAFE") or "").split()
         self.saferecipedeps = (data.getVar("SIGGEN_EXCLUDE_SAFE_RECIPE_DEPS") or "").split()
@@ -129,12 +128,11 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCache)
 
     def get_taskdata(self):
-        data = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskdata()
-        return (data, self.lockedpnmap, self.lockedhashfn, self.lockedhashes)
+        return (self.lockedpnmap, self.lockedhashfn, self.lockedhashes) + super().get_taskdata()
 
     def set_taskdata(self, data):
-        coredata, self.lockedpnmap, self.lockedhashfn, self.lockedhashes = data
-        super(bb.siggen.SignatureGeneratorBasicHash, self).set_taskdata(coredata)
+        self.lockedpnmap, self.lockedhashfn, self.lockedhashes = data[:3]
+        super().set_taskdata(data[3:])
 
     def dump_sigs(self, dataCache, options):
         sigfile = os.getcwd() + "/locked-sigs.inc"
@@ -263,7 +261,10 @@ class SignatureGeneratorOEBasicHash(bb.siggen.SignatureGeneratorBasicHash):
         if error_msgs:
             bb.fatal("\n".join(error_msgs))
 
-class SignatureGeneratorOEEquivHash(bb.siggen.SignatureGeneratorUniHashMixIn, SignatureGeneratorOEBasicHash):
+class SignatureGeneratorOEBasicHash(SignatureGeneratorOEBasicHashMixIn, bb.siggen.SignatureGeneratorBasicHash):
+    name = "OEBasicHash"
+
+class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHashMixIn, bb.siggen.SignatureGeneratorUniHashMixIn, bb.siggen.SignatureGeneratorBasicHash):
     name = "OEEquivHash"
 
     def init_rundepcheck(self, data):
