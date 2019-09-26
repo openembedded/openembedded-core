@@ -44,9 +44,9 @@ do_install_append() {
 }
 
 # Apparently the public Tcl headers are only in /usr/include/tcl8.6
-# when building for the target.
-TCL_INCLUDE_PATH = ""
-TCL_INCLUDE_PATH_class-target = "--with-tclinclude=${STAGING_INCDIR}/tcl8.6"
+# when building for the target and nativesdk.
+TCL_INCLUDE_PATH = "--with-tclinclude=${STAGING_INCDIR}/tcl8.6"
+TCL_INCLUDE_PATH_class-native = ""
 
 EXTRA_OECONF += "--with-tcl=${STAGING_LIBDIR} \
                  --enable-shared \
