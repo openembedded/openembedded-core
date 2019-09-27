@@ -53,6 +53,7 @@ do_deploy_source_date_epoch () {
 
 python do_deploy_source_date_epoch_setscene () {
     sstate_setscene(d)
+    bb.utils.mkdirhier(d.getVar('SDE_DIR'))
     sde_file = os.path.join(d.getVar('SDE_DEPLOYDIR'), '__source_date_epoch.txt')
     if os.path.exists(sde_file):
         os.rename(sde_file, d.getVar('SDE_FILE'))
