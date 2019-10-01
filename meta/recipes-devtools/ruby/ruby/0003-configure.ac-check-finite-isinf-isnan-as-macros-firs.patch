@@ -1,7 +1,7 @@
-From 3a8189530312e81d6c005c396565f985a47f3383 Mon Sep 17 00:00:00 2001
+From bd71b698bf733e6e93282cd2b1b93f51e1a33c7c Mon Sep 17 00:00:00 2001
 From: nobu <nobu@b2dd03c8-39d4-4d8f-98ff-823fe69b080e>
 Date: Fri, 8 Feb 2019 07:22:55 +0000
-Subject: [PATCH] configure.ac: check finite,isinf,isnan as macros first
+Subject: [PATCH 3/3] configure.ac: check finite,isinf,isnan as macros first
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -12,7 +12,6 @@ git-svn-id: svn+ssh://ci.ruby-lang.org/ruby/trunk@67036 b2dd03c8-39d4-4d8f-98ff-
 
 ---
 Upstream-Status: Backport [https://github.com/ruby/ruby/commit/74f94b3e6ebf15b76f3b357e754095412b006e94]
-(modified so as to apply cleanly here)
 Signed-off-by: André Draszik <andre.draszik@jci.com>
 ---
  aclocal.m4                    |  1 +
@@ -22,19 +21,22 @@ Signed-off-by: André Draszik <andre.draszik@jci.com>
  create mode 100644 tool/m4/ruby_replace_funcs.m4
 
 diff --git a/aclocal.m4 b/aclocal.m4
-index 18ba297b05..2a907b3467 100644
+index b0fe3eb959..ed7d14ef63 100644
 --- a/aclocal.m4
 +++ b/aclocal.m4
-@@ -13,3 +13,4 @@
- 
- m4_ifndef([AC_CONFIG_MACRO_DIRS], [m4_defun([_AM_CONFIG_MACRO_DIRS], [])m4_defun([AC_CONFIG_MACRO_DIRS], [_AM_CONFIG_MACRO_DIRS($@)])])
- m4_include([acinclude.m4])
+@@ -35,6 +35,7 @@ m4_include([tool/m4/ruby_func_attribute.m4])
+ m4_include([tool/m4/ruby_mingw32.m4])
+ m4_include([tool/m4/ruby_prepend_option.m4])
+ m4_include([tool/m4/ruby_prog_gnu_ld.m4])
 +m4_include([tool/m4/ruby_replace_funcs.m4])
+ m4_include([tool/m4/ruby_replace_type.m4])
+ m4_include([tool/m4/ruby_rm_recursive.m4])
+ m4_include([tool/m4/ruby_setjmp_type.m4])
 diff --git a/configure.ac b/configure.ac
-index 8a7cee55b8..b97c5b3cc9 100644
+index 2c4d2888d2..2691da6a3c 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1189,9 +1189,6 @@ main()
+@@ -946,9 +946,6 @@ main()
  		ac_cv_func_fsync=yes
  		ac_cv_func_seekdir=yes
  		ac_cv_func_telldir=yes
@@ -44,7 +46,7 @@ index 8a7cee55b8..b97c5b3cc9 100644
  		ac_cv_func_lchown=yes
  		ac_cv_func_link=yes
  		ac_cv_func_readlink=yes
-@@ -1239,9 +1236,6 @@ main()
+@@ -999,9 +996,6 @@ main()
  [netbsd*], [	LIBS="-lm $LIBS"
  		],
  [dragonfly*], [	LIBS="-lm $LIBS"
@@ -54,7 +56,7 @@ index 8a7cee55b8..b97c5b3cc9 100644
  		],
  [aix*],[	LIBS="-lm $LIBS"
  		ac_cv_func_round=no
-@@ -2213,11 +2207,8 @@ AC_REPLACE_FUNCS(dup2)
+@@ -1724,11 +1718,8 @@ AC_REPLACE_FUNCS(dup2)
  AC_REPLACE_FUNCS(erf)
  AC_REPLACE_FUNCS(explicit_bzero)
  AC_REPLACE_FUNCS(ffs)
@@ -65,8 +67,8 @@ index 8a7cee55b8..b97c5b3cc9 100644
 -AC_REPLACE_FUNCS(isnan)
  AC_REPLACE_FUNCS(lgamma_r)
  AC_REPLACE_FUNCS(memmove)
- AC_REPLACE_FUNCS(nextafter)
-@@ -2229,6 +2220,10 @@ AC_REPLACE_FUNCS(strlcpy)
+ AC_REPLACE_FUNCS(nan)
+@@ -1741,6 +1732,10 @@ AC_REPLACE_FUNCS(strlcpy)
  AC_REPLACE_FUNCS(strstr)
  AC_REPLACE_FUNCS(tgamma)
  

@@ -1,12 +1,12 @@
 require ruby.inc
 
 SRC_URI += " \
-           file://0001-configure.ac-check-finite-isinf-isnan-as-macros-firs.patch \
+           file://0003-configure.ac-check-finite-isinf-isnan-as-macros-firs.patch \
            file://run-ptest \
            "
 
-SRC_URI[md5sum] = "7e156fb526b8f4bb1b30a3dd8a7ce400"
-SRC_URI[sha256sum] = "28a945fdf340e6ba04fc890b98648342e3cccfd6d223a48f3810572f11b2514c"
+SRC_URI[md5sum] = "49b628cdb21db967d8a3f6ca6e222583"
+SRC_URI[sha256sum] = "4fc1d8ba75505b3797020a6ffc85a8bcff6adc4dabae343b6572bf281ee17937"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
@@ -14,8 +14,6 @@ PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[valgrind] = "--with-valgrind=yes, --with-valgrind=no, valgrind"
 PACKAGECONFIG[gmp] = "--with-gmp=yes, --with-gmp=no, gmp"
 PACKAGECONFIG[ipv6] = "--enable-ipv6, --disable-ipv6,"
-
-EXTRA_AUTORECONF += "--exclude=aclocal"
 
 EXTRA_OECONF = "\
     --disable-versioned-paths \
@@ -42,12 +40,6 @@ do_install_append_class-target () {
            -e 's:${RECIPE_SYSROOT}::g' \
            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
         ${D}$rbconfig_rb
-
-    # Find out created.rid from .installed.list
-    created_rid=`grep created.rid ${B}/.installed.list`
-    # Remove build host directories
-    sed -i -e 's:${WORKDIR}::g' ${D}$created_rid
-
 }
 
 do_install_ptest () {
