@@ -44,6 +44,14 @@ do_install_append_class-target () {
 
 do_install_ptest () {
     cp -rf ${S}/test ${D}${PTEST_PATH}/
+    # install test-binaries
+    find $(find ./.ext -path '*/-test-') -name '*.so' -print0 \
+        | tar --no-recursion --null -T - --no-same-owner --preserve-permissions -cf - \
+        | tar -C ${D}${libdir}/ruby/${SHRT_VER}.0/ --no-same-owner --preserve-permissions --strip-components=2 -xf -
+    # adjust path to not assume build directory layout
+    sed -e 's|File.expand_path(.*\.\./bin/erb[^)]*|File.expand_path("${bindir}/erb"|g' \
+        -i ${D}${PTEST_PATH}/test/erb/test_erb_command.rb
+
     cp -r ${S}/include ${D}/${libdir}/ruby/
     test_case_rb=`grep rubygems/test_case.rb ${B}/.installed.list`
     sed -i -e 's:../../../test/:../../../ptest/test/:g' ${D}/$test_case_rb
@@ -61,6 +69,9 @@ FILES_${PN}-rdoc += "${libdir}/ruby/*/rdoc ${bindir}/rdoc"
 
 FILES_${PN} += "${datadir}/rubygems"
 
-FILES_${PN}-ptest_append_class-target += "${libdir}/ruby/include"
+FILES_${PN}-ptest_append_class-target = "\
+    ${libdir}/ruby/include \
+    ${libdir}/ruby/${SHRT_VER}.0/*/-test- \
+"
 
 BBCLASSEXTEND = "native"
