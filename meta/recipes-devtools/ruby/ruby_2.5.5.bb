@@ -1,8 +1,6 @@
 require ruby.inc
 
 SRC_URI += " \
-           file://ruby-CVE-2017-9226.patch \
-           file://ruby-CVE-2017-9228.patch \
            file://run-ptest \
            "
 
