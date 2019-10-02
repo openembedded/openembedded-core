@@ -1,4 +1,8 @@
 SUMMARY = "Fast open source processor emulator"
+DESCRIPTION = "QEMU is a hosted virtual machine monitor: it emulates the \
+machine's processor through dynamic binary translation and provides a set \
+of different hardware and device models for the machine, enabling it to run \
+a variety of guest operating systems"
 HOMEPAGE = "http://qemu.org"
 LICENSE = "GPLv2 & LGPLv2.1"
 

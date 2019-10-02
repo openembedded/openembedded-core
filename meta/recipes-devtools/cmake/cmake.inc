@@ -2,6 +2,12 @@
 # Released under the MIT license (see packages/COPYING)
 
 SUMMARY = "Cross-platform, open-source make system"
+DESCRIPTION = "CMake is used to control the software compilation process \
+using simple platform and compiler independent configuration files. CMake \
+generates native makefiles and workspaces that can be used in the compiler \
+environment of your choice. CMake is quite sophisticated: it is possible to \
+support complex environments requiring system configuration, pre-processor \
+generation, code generation, and template instantiation."
 HOMEPAGE = "http://www.cmake.org/"
 BUGTRACKER = "http://public.kitware.com/Bug/my_view_page.php"
 SECTION = "console/utils"

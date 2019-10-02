@@ -1,4 +1,8 @@
 SUMMARY = "Tool for working with series of patches"
+DESCRIPTION = "Quilt is a tool to manage large sets of patches by keeping \
+track of the changes each patch makes. Patches can be applied, un-applied,\
+refreshed, etc. The key philosophical concept is that your primary output \
+is patches."
 HOMEPAGE = "http://savannah.nongnu.org/projects/quilt/"
 SECTION = "devel"
 LICENSE = "GPLv2"

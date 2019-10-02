@@ -1,5 +1,8 @@
 HOMEPAGE = "http://mesonbuild.com"
 SUMMARY = "A high performance build system"
+DESCRIPTION = "Meson is a build system designed to increase programmer \
+productivity. It does this by providing a fast, simple and easy to use \
+interface for modern software development tools and practices."
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3b83ef96387f14655fc854ddc3c6bd57"
