@@ -4,7 +4,7 @@ Date: Mon, 25 Mar 2019 17:17:06 +0100
 Subject: [PATCH] environment.py: detect windows also if the system string
  contains 'mingw'
 
-Upstream-Status: Pending
+Upstream-Status: Backport [fe645a0a9e2da230d2c500af1f5b2db5da1e364d]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 
 ---
