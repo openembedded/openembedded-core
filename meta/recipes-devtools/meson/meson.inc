@@ -32,6 +32,6 @@ UPSTREAM_CHECK_URI = "https://github.com/mesonbuild/meson/releases"
 
 inherit setuptools3
 
-RDEPENDS_${PN} = "ninja python3-core python3-modules"
+RDEPENDS_${PN} = "ninja python3-modules python3-pkg-resources"
 
 FILES_${PN} += "${datadir}/polkit-1"
