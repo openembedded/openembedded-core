@@ -1,0 +1,28 @@
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+From 0b4d1e8afd5428a495f8624ee061f63977b4c268 Mon Sep 17 00:00:00 2001
+From: Jussi Pakkanen <jpakkane@gmail.com>
+Date: Sun, 6 Oct 2019 15:17:32 +0300
+Subject: [PATCH] Cross build is defined by the existance of a cross file.
+
+---
+ mesonbuild/environment.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
+index e5d041b4..03c65688 100644
+--- a/mesonbuild/environment.py
++++ b/mesonbuild/environment.py
+@@ -611,7 +611,7 @@ class Environment:
+         self.first_invocation = True
+ 
+     def is_cross_build(self) -> bool:
+-        return not self.machines.matches_build_machine(MachineChoice.HOST)
++        return self.coredata.is_cross_build()
+ 
+     def dump_coredata(self):
+         return coredata.save(self.coredata, self.get_build_dir())
+-- 
+2.20.1
+

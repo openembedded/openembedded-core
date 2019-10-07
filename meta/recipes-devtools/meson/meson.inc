@@ -15,7 +15,7 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://disable-rpath-handling.patch \
            file://cross-prop-default.patch \
            file://0001-environment.py-detect-windows-also-if-the-system-str.patch \
-           file://0001-mesonbuild-environment.py-do-not-determine-whether-a.patch \
+           file://0001-Cross-build-is-defined-by-the-existance-of-a-cross-f.patch \
            file://0001-mesonbuild-environment.py-check-environment-for-vari.patch \
            file://0001-modules-python.py-do-not-substitute-python-s-install.patch \
            file://vala-cross-compile.patch \
