@@ -11,10 +11,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5eb289217c160e2920d2e35bddc36453 \
 DEPENDS = "flex-native bison-native"
 
 SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.gz \
-           file://0001-pcap-usb-linux.c-add-missing-limits.h-for-musl-syste.patch \
            "
-SRC_URI[md5sum] = "dffd65cb14406ab9841f421732eb0f33"
-SRC_URI[sha256sum] = "2edb88808e5913fdaa8e9c1fcaf272e19b2485338742b5074b9fe44d68f37019"
+SRC_URI[md5sum] = "21af603d9a591c7d96a6457021d84e6c"
+SRC_URI[sha256sum] = "635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094"
 
 inherit autotools binconfig-disabled pkgconfig
 
