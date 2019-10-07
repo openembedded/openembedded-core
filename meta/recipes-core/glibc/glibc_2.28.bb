@@ -50,6 +50,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://CVE-2019-9169.patch \
            file://CVE-2016-10739.patch \
            file://CVE-2018-19591.patch \
+           file://CVE-2019-6488.patch \
+           file://CVE-2019-7309.patch \
 "
 
 NATIVESDKFIXES ?= ""
