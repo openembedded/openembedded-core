@@ -265,13 +265,23 @@ python split_perl_packages () {
     # Read the pre-generated dependency file, and use it to set module dependecies
     for line in open(d.expand("${WORKDIR}") + '/perl-rdepends.txt').readlines():
         splitline = line.split()
-        module = splitline[0].replace("RDEPENDS_perl", "RDEPENDS_${PN}")
-        depends = splitline[2].strip('"').replace("perl-module", "${PN}-module")
+        if bb.data.inherits_class('native', d):
+            module = splitline[0] + '-native'
+            depends = "perl-native"
+        else:
+            module = splitline[0].replace("RDEPENDS_perl", "RDEPENDS_${PN}")
+            depends = splitline[2].strip('"').replace("perl-module", "${PN}-module")
         d.appendVar(d.expand(module), " " + depends)
 }
 
-PACKAGES_DYNAMIC_class-target += "^perl-module-.*"
-PACKAGES_DYNAMIC_class-nativesdk += "^nativesdk-perl-module-.*"
+python() {
+    if d.getVar('CLASSOVERRIDE') == "class-target":
+        d.setVar("PACKAGES_DYNAMIC", "^perl-module-.*(?<!native)$")
+    elif d.getVar('CLASSOVERRIDE') == "class-native":
+        d.setVar("PACKAGES_DYNAMIC", "^perl-module-.*-native$")
+    elif d.getVar('CLASSOVERRIDE') == "class-nativesdk":
+        d.setVar("PACKAGES_DYNAMIC", "^nativesdk-perl-module-.*")
+}
 
 RDEPENDS_${PN}-misc += "perl perl-modules"
 RDEPENDS_${PN}-pod += "perl"
