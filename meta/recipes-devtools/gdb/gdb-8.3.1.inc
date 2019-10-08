@@ -16,7 +16,6 @@ SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.xz \
            file://0009-Change-order-of-CFLAGS.patch \
            file://0010-resolve-restrict-keyword-conflict.patch \
            file://0011-Fix-invalid-sigprocmask-call.patch \
-           file://CVE-2017-9778.patch \
            "
-SRC_URI[md5sum] = "bbd95b2f9b34621ad7a19a3965476314"
-SRC_URI[sha256sum] = "802f7ee309dcc547d65a68d61ebd6526762d26c3051f52caebe2189ac1ffd72e"
+SRC_URI[md5sum] = "73b6a5d8141672c62bf851cd34c4aa83"
+SRC_URI[sha256sum] = "1e55b4d7cdca7b34be12f4ceae651623aa73b2fd640152313f9f66a7149757c4"
