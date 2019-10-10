@@ -35,12 +35,13 @@ S = "${WORKDIR}/perl-${PV}"
 
 inherit upstream-version-is-even
 
-DEPENDS += "gdbm zlib virtual/crypt"
+DEPENDS += "zlib virtual/crypt"
 
 PERL_LIB_VER = "${@'.'.join(d.getVar('PV').split('.')[0:2])}.0"
 
-PACKAGECONFIG ??= "bdb"
+PACKAGECONFIG ??= "bdb gdbm"
 PACKAGECONFIG[bdb] = ",-Ui_db,db"
+PACKAGECONFIG[gdbm] = ",-Ui_gdbm,gdbm"
 
 # Don't generate comments in enc2xs output files. They are not reproducible
 export ENC2XS_NO_COMMENTS = "1"
