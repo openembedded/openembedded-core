@@ -457,6 +457,7 @@ class BaseConfig(object):
                     del os.environ['PKG_CONFIG_PATH']
                     del os.environ['PKG_CONFIG_DIR']
                     del os.environ['PKG_CONFIG_LIBDIR']
+                    del os.environ['PKG_CONFIG_SYSROOT_DIR']
                 except KeyError:
                     pass
                 try:
