@@ -18,8 +18,8 @@ PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "api-documentation", 
 PACKAGECONFIG[working-scripts] = ",,libxslt-native xmlto-native python3-six python3-pygments"
 PACKAGECONFIG[tests] = "--enable-tests,--disable-tests,glib-2.0"
 
-SRC_URI[archive.md5sum] = "6239713011369a4fbdc7619350403772"
-SRC_URI[archive.sha256sum] = "a51687956d0377ac70904d03fdc73c9e116589b4a01453fa92162442b3657011"
+SRC_URI[archive.md5sum] = "07764836262e154e94922e5f2aa476ae"
+SRC_URI[archive.sha256sum] = "de0ef034fb17cb21ab0c635ec730d19746bce52984a6706e7bbec6fb5e0b907c"
 SRC_URI += "file://0001-Do-not-hardocode-paths-to-perl-python-in-scripts.patch \
            file://0001-Do-not-error-out-if-xsltproc-is-not-found.patch \
            file://conditionaltests.patch \
