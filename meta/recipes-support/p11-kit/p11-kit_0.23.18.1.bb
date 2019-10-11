@@ -6,10 +6,8 @@ inherit autotools gettext pkgconfig gtk-doc
 
 DEPENDS = "libtasn1 libffi"
 
-SRC_URI = "git://github.com/p11-glue/p11-kit \
-           file://0001-LINGUAS-drop-the-languages-for-which-upstream-does-n.patch \
-           "
-SRCREV = "c689917b393379d288b868f70b2f7b7f6aafe430"
+SRC_URI = "git://github.com/p11-glue/p11-kit"
+SRCREV = "b0ebe7555c291808db29377ba79cb8326301f0a6"
 S = "${WORKDIR}/git"
 
 AUTOTOOLS_AUXDIR = "${S}/build/litter"
