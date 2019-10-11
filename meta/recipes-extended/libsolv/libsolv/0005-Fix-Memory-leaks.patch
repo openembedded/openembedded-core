@@ -1,0 +1,158 @@
+From 6c99f33252d8bf8ff3e49013b8ad78aacf71c5d8 Mon Sep 17 00:00:00 2001
+From: Jaroslav Rohel <jrohel@redhat.com>
+Date: Tue, 11 Dec 2018 10:14:04 +0100
+Subject: [PATCH] Fix: Memory leaks
+Reply-To: muislam@microsoft.com
+
+CVE: CVE-2018-20532 CVE-2018-20533 CVE-2018-20534
+
+Upstream-Status: Backport
+
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
+
+Cherry picked from  https://github.com/openSUSE/libsolv/pull/291/commits
+---
+ ext/repo_rpmdb.c  | 16 ++++++++++++++++
+ ext/testcase.c    |  4 ++++
+ tools/repo2solv.c |  1 +
+ 3 files changed, 21 insertions(+)
+
+diff --git a/ext/repo_rpmdb.c b/ext/repo_rpmdb.c
+index 75bb6780..ff939978 100644
+--- a/ext/repo_rpmdb.c
++++ b/ext/repo_rpmdb.c
+@@ -1939,6 +1939,8 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+   if (fread(lead, 96 + 16, 1, fp) != 1 || getu32(lead) != 0xedabeedb)
+     {
+       pool_error(pool, -1, "%s: not a rpm", rpm);
++      solv_chksum_free(leadsigchksumh, NULL);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+@@ -1951,12 +1953,16 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+   if (lead[78] != 0 || lead[79] != 5)
+     {
+       pool_error(pool, -1, "%s: not a rpm v5 header", rpm);
++      solv_chksum_free(leadsigchksumh, NULL);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+   if (getu32(lead + 96) != 0x8eade801)
+     {
+       pool_error(pool, -1, "%s: bad signature header", rpm);
++      solv_chksum_free(leadsigchksumh, NULL);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+@@ -1965,6 +1971,8 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+   if (sigcnt >= MAX_SIG_CNT || sigdsize >= MAX_SIG_DSIZE)
+     {
+       pool_error(pool, -1, "%s: bad signature header", rpm);
++      solv_chksum_free(leadsigchksumh, NULL);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+@@ -1975,6 +1983,8 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+     {
+       if (!headfromfp(&state, rpm, fp, lead + 96, sigcnt, sigdsize, sigpad, chksumh, leadsigchksumh))
+ 	{
++      solv_chksum_free(leadsigchksumh, NULL);
++      solv_chksum_free(chksumh, NULL);
+ 	  fclose(fp);
+ 	  return 0;
+ 	}
+@@ -2014,6 +2024,8 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+ 	  if (fread(lead, l, 1, fp) != 1)
+ 	    {
+ 	      pool_error(pool, -1, "%s: unexpected EOF", rpm);
++          solv_chksum_free(leadsigchksumh, NULL);
++          solv_chksum_free(chksumh, NULL);
+ 	      fclose(fp);
+ 	      return 0;
+ 	    }
+@@ -2034,6 +2046,7 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+   if (fread(lead, 16, 1, fp) != 1)
+     {
+       pool_error(pool, -1, "%s: unexpected EOF", rpm);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+@@ -2042,6 +2055,7 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+   if (getu32(lead) != 0x8eade801)
+     {
+       pool_error(pool, -1, "%s: bad header", rpm);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+@@ -2050,6 +2064,7 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+   if (sigcnt >= MAX_HDR_CNT || sigdsize >= MAX_HDR_DSIZE)
+     {
+       pool_error(pool, -1, "%s: bad header", rpm);
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+@@ -2057,6 +2072,7 @@ repo_add_rpm(Repo *repo, const char *rpm, int flags)
+ 
+   if (!headfromfp(&state, rpm, fp, lead, sigcnt, sigdsize, 0, chksumh, 0))
+     {
++      solv_chksum_free(chksumh, NULL);
+       fclose(fp);
+       return 0;
+     }
+diff --git a/ext/testcase.c b/ext/testcase.c
+index aa72a8d7..3901d90d 100644
+--- a/ext/testcase.c
++++ b/ext/testcase.c
+@@ -2348,6 +2348,7 @@ testcase_write_mangled(Solver *solv, const char *dir, int resultflags, const cha
+ 	  if (fclose(fp))
+ 	    {
+ 	      pool_error(solv->pool, 0, "testcase_write: write error");
++	      solv_free(result);
+ 	      strqueue_free(&sq);
+ 	      return 0;
+ 	    }
+@@ -2360,12 +2361,14 @@ testcase_write_mangled(Solver *solv, const char *dir, int resultflags, const cha
+   if (!(fp = fopen(out, "w")))
+     {
+       pool_error(solv->pool, 0, "testcase_write: could not open '%s' for writing", out);
++      solv_free(cmd);
+       strqueue_free(&sq);
+       return 0;
+     }
+   if (*cmd && fwrite(cmd, strlen(cmd), 1, fp) != 1)
+     {
+       pool_error(solv->pool, 0, "testcase_write: write error");
++      solv_free(cmd);
+       strqueue_free(&sq);
+       fclose(fp);
+       return 0;
+@@ -2373,6 +2376,7 @@ testcase_write_mangled(Solver *solv, const char *dir, int resultflags, const cha
+   if (fclose(fp))
+     {
+       pool_error(solv->pool, 0, "testcase_write: write error");
++      solv_free(cmd);
+       strqueue_free(&sq);
+       return 0;
+     }
+diff --git a/tools/repo2solv.c b/tools/repo2solv.c
+index e055e408..30a41f42 100644
+--- a/tools/repo2solv.c
++++ b/tools/repo2solv.c
+@@ -208,6 +208,7 @@ read_plaindir_repo(Repo *repo, const char *dir)
+ 	repodata_set_location(data, p, 0, 0, bp[0] == '.' && bp[1] == '/' ? bp + 2 : bp);
+       solv_free(rpm);
+     }
++  solv_free(buf);
+   fclose(fp);
+   while (waitpid(pid, &wstatus, 0) == -1)
+     {
+-- 
+2.23.0
+

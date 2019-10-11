@@ -1,0 +1,37 @@
+From ebb51f73491987435664ac14b79bebe16ffbdd5c Mon Sep 17 00:00:00 2001
+From: Jaroslav Rohel <jrohel@redhat.com>
+Date: Tue, 11 Dec 2018 12:40:42 +0100
+Subject: [PATCH] Fix: Be sure that NONBLOCK is set
+Reply-To: muislam@microsoft.com
+
+CVE: CVE-2018-20532 CVE-2018-20533 CVE-2018-20534
+
+Upstream-Status: Backport
+
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
+
+Cherry picked from  https://github.com/openSUSE/libsolv/pull/291/commits
+---
+ examples/solv/fastestmirror.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/examples/solv/fastestmirror.c b/examples/solv/fastestmirror.c
+index d2ebd97a..0ee4e73b 100644
+--- a/examples/solv/fastestmirror.c
++++ b/examples/solv/fastestmirror.c
+@@ -68,7 +68,11 @@ findfastest(char **urls, int nurls)
+ 	  socks[i] = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+ 	  if (socks[i] >= 0)
+ 	    {
+-	      fcntl(socks[i], F_SETFL, O_NONBLOCK);
++	      if (fcntl(socks[i], F_SETFL, O_NONBLOCK) == -1)
++            {
++		      close(socks[i]);
++		      socks[i] = -1;
++            }
+ 	      if (connect(socks[i], result->ai_addr, result->ai_addrlen) == -1)
+ 		{
+ 		  if (errno != EINPROGRESS)
+-- 
+2.23.0
+

@@ -1,0 +1,113 @@
+From edf87c92cf59c2eed9c1e33c51a47163da15d90b Mon Sep 17 00:00:00 2001
+From: Jaroslav Rohel <jrohel@redhat.com>
+Date: Tue, 11 Dec 2018 12:58:34 +0100
+Subject: [PATCH] Don't set values that are never read
+Reply-To: muislam@microsoft.com
+
+CVE: CVE-2018-20532 CVE-2018-20533 CVE-2018-20534
+
+Upstream-Status: Backport
+
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
+
+Cherry picked from  https://github.com/openSUSE/libsolv/pull/291/commits
+---
+ ext/pool_fileconflicts.c | 1 -
+ ext/repo_appdata.c       | 2 +-
+ ext/repo_comps.c         | 2 +-
+ src/cleandeps.c          | 1 -
+ src/dirpool.c            | 2 +-
+ src/order.c              | 1 -
+ src/repopage.c           | 1 -
+ 7 files changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/ext/pool_fileconflicts.c b/ext/pool_fileconflicts.c
+index eaeb52b2..2fd3d540 100644
+--- a/ext/pool_fileconflicts.c
++++ b/ext/pool_fileconflicts.c
+@@ -590,7 +590,6 @@ findfileconflicts_alias_cb(void *cbdatav, const char *fn, struct filelistinfo *i
+ 
+   if (!info->dirlen)
+     return;
+-  dp = fn + info->dirlen;
+   if (info->diridx != cbdata->lastdiridx)
+     {
+       cbdata->lastdiridx = info->diridx;
+diff --git a/ext/repo_appdata.c b/ext/repo_appdata.c
+index 62faf2d8..69d46386 100644
+--- a/ext/repo_appdata.c
++++ b/ext/repo_appdata.c
+@@ -103,7 +103,7 @@ startElement(struct solv_xmlparser *xmlp, int state, const char *name, const cha
+ {
+   struct parsedata *pd = xmlp->userdata;
+   Pool *pool = pd->pool;
+-  Solvable *s = pd->solvable;
++  Solvable *s;
+   const char *type;
+ 
+   /* ignore all language tags */
+diff --git a/ext/repo_comps.c b/ext/repo_comps.c
+index 255ecb16..e59f8d12 100644
+--- a/ext/repo_comps.c
++++ b/ext/repo_comps.c
+@@ -107,7 +107,7 @@ startElement(struct solv_xmlparser *xmlp, int state, const char *name, const cha
+ {
+   struct parsedata *pd = xmlp->userdata;
+   Pool *pool = pd->pool;
+-  Solvable *s = pd->solvable;
++  Solvable *s;
+ 
+   switch(state)
+     {
+diff --git a/src/cleandeps.c b/src/cleandeps.c
+index 1da28f6e..b2fde317 100644
+--- a/src/cleandeps.c
++++ b/src/cleandeps.c
+@@ -748,7 +748,6 @@ solver_createcleandepsmap(Solver *solv, Map *cleandepsmap, int unneeded)
+ 	    continue;
+ 	  if (strncmp(pool_id2str(pool, s->name), "pattern:", 8) != 0)
+ 	    continue;
+-	  dp = s->repo->idarraydata + s->requires;
+ 	  for (dp = s->repo->idarraydata + s->requires; *dp; dp++)
+ 	    FOR_PROVIDES(p, pp, *dp)
+ 	      if (pool->solvables[p].repo == installed)
+diff --git a/src/dirpool.c b/src/dirpool.c
+index afb26ea5..bed9435e 100644
+--- a/src/dirpool.c
++++ b/src/dirpool.c
+@@ -85,7 +85,7 @@ dirpool_make_dirtraverse(Dirpool *dp)
+     return;
+   dp->dirs = solv_extend_resize(dp->dirs, dp->ndirs, sizeof(Id), DIR_BLOCK);
+   dirtraverse = solv_calloc_block(dp->ndirs, sizeof(Id), DIR_BLOCK);
+-  for (parent = 0, i = 0; i < dp->ndirs; i++)
++  for (i = 0; i < dp->ndirs; i++)
+     {
+       if (dp->dirs[i] > 0)
+ 	continue;
+diff --git a/src/order.c b/src/order.c
+index c92c3328..cfde40c9 100644
+--- a/src/order.c
++++ b/src/order.c
+@@ -1066,7 +1066,6 @@ transaction_order(Transaction *trans, int flags)
+ #if 0
+ printf("do %s [%d]\n", pool_solvid2str(pool, te->p), temedianr[i]);
+ #endif
+-      s = pool->solvables + te->p;
+       for (j = te->edges; od.invedgedata[j]; j++)
+ 	{
+ 	  struct _TransactionElement *te2 = od.tes + od.invedgedata[j];
+diff --git a/src/repopage.c b/src/repopage.c
+index 2b7a863b..85d53eb9 100644
+--- a/src/repopage.c
++++ b/src/repopage.c
+@@ -399,7 +399,6 @@ match_done:
+ 	      litlen -= 32;
+ 	    }
+ 	}
+-      litofs = 0;
+     }
+   return oo;
+ }
+-- 
+2.23.0
+

@@ -1,0 +1,36 @@
+From 58053b44c9ed043d48fa7dd595d213849b733f0f Mon Sep 17 00:00:00 2001
+From: Jaroslav Rohel <jrohel@redhat.com>
+Date: Tue, 11 Dec 2018 09:50:06 +0100
+Subject: [PATCH] Fix: Add va_end() before return
+Reply-To: muislam@microsoft.com
+
+The va_end() performs cleanup.
+If va_end() is not called before a function that calls va_start() returns,
+the behavior is undefined.
+
+CVE: CVE-2018-20532 CVE-2018-20533 CVE-2018-20534
+
+Upstream-Status: Backport
+
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
+
+Cherry picked from  https://github.com/openSUSE/libsolv/pull/291/commits
+---
+ src/pool.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/pool.c b/src/pool.c
+index 60cc0f49..f03b43f9 100644
+--- a/src/pool.c
++++ b/src/pool.c
+@@ -1505,6 +1505,7 @@ pool_debug(Pool *pool, int type, const char *format, ...)
+         vprintf(format, args);
+       else
+         vfprintf(stderr, format, args);
++      va_end(args);
+       return;
+     }
+   vsnprintf(buf, sizeof(buf), format, args);
+-- 
+2.23.0
+

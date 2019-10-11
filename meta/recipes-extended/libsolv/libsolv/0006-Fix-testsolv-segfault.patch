@@ -1,0 +1,41 @@
+From 823bf65087a017d2f488f01e09ee284fa36f7446 Mon Sep 17 00:00:00 2001
+From: Jaroslav Rohel <jrohel@redhat.com>
+Date: Tue, 11 Dec 2018 10:22:09 +0100
+Subject: [PATCH] Fix: testsolv segfault
+Reply-To: muislam@microsoft.com
+
+ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x7fab0e11bf2b bp 0x7ffdfc044b70 sp 0x7ffdfc044a90 T0)
+0 0x7fab0e11bf2a in testcase_str2dep_complex /home/company/real_sanitize/libsolv-master/ext/testcase.c:577
+1 0x7fab0e11c80f in testcase_str2dep /home/company/real_sanitize/libsolv-master/ext/testcase.c:656
+2 0x7fab0e12e64a in testcase_read /home/company/real_sanitize/libsolv-master/ext/testcase.c:2952
+3 0x402aa5 in main /home/company/real_sanitize/libsolv-master/tools/testsolv.c:148
+4 0x7fab0d9d2a3f in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x20a3f)
+5 0x401bb8 in _start (/home/company/real_sanitize/libsolv-master/build/install/bin/testsolv+0x401bb8)
+
+CVE: CVE-2018-20532 CVE-2018-20533 CVE-2018-20534
+
+Upstream-Status: Backport
+
+Signed-off-by: Muminul Islam <muislam@microsoft.com>
+
+Cherry picked from  https://github.com/openSUSE/libsolv/pull/291/commits
+---
+ ext/testcase.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ext/testcase.c b/ext/testcase.c
+index 3901d90d..dd20de14 100644
+--- a/ext/testcase.c
++++ b/ext/testcase.c
+@@ -571,6 +571,8 @@ testcase_str2dep_complex(Pool *pool, const char **sp, int relop)
+   Id flags, id, id2, namespaceid = 0;
+   struct oplist *op;
+ 
++  if (!s)
++    return 0;
+   while (*s == ' ' || *s == '\t')
+     s++;
+   if (!strncmp(s, "namespace:", 10))
+-- 
+2.23.0
+
