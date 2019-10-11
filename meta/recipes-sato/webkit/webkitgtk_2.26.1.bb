@@ -17,16 +17,12 @@ SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
            file://x32_support.patch \
            file://cross-compile.patch \
-           file://0001-WebKitMacros-Append-to-I-and-not-to-isystem.patch \
            file://0001-Fix-build-with-musl.patch \
-           file://detect-gstreamer-gl.patch \
            file://include_array.patch \
-           file://narrowing.patch \
-           file://0001-gstreamer-add-a-missing-format-string.patch \
            "
 
-SRC_URI[md5sum] = "c214963d8c0e7d83460da04a0d8dda87"
-SRC_URI[sha256sum] = "8668b129c026624ec226a4cccf4995f9d26f3e88fc28ab75b0e965f3c32b7dd8"
+SRC_URI[md5sum] = "08145bd6c1587230f135921c142bc150"
+SRC_URI[sha256sum] = "6b4b21801d2b1008422a1075dbd6fb4ae8b5127503faf657cf9671289d9cd155"
 
 inherit cmake pkgconfig gobject-introspection perlnative distro_features_check upstream-version-is-even gtk-doc
 
@@ -69,6 +65,7 @@ EXTRA_OECMAKE = " \
 		${@bb.utils.contains('GTKDOC_ENABLED', 'True', '-DENABLE_GTKDOC=ON', '-DENABLE_GTKDOC=OFF', d)} \
 		-DENABLE_MINIBROWSER=ON \
                 -DPYTHON_EXECUTABLE=`which python3` \
+                -DENABLE_BUBBLEWRAP_SANDBOX=OFF \
 		"
 
 # Javascript JIT is not supported on ARC
