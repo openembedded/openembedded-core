@@ -798,6 +798,11 @@ def check_sanity_everybuild(status, d):
         elif d.getVar('SDK_ARCH', False) == "${BUILD_ARCH}":
             status.addresult('SDKMACHINE is set, but SDK_ARCH has not been changed as a result - SDKMACHINE may have been set too late (e.g. in the distro configuration)\n')
 
+    # If SDK_VENDOR looks like "-my-sdk" then the triples are badly formed so fail early
+    sdkvendor = d.getVar("SDK_VENDOR")
+    if not (sdkvendor.startswith("-") and sdkvendor.count("-") == 1):
+        status.addresult("SDK_VENDOR should be of the form '-foosdk' with a single dash\n")
+
     check_supported_distro(d)
 
     omask = os.umask(0o022)
