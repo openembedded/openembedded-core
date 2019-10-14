@@ -41,7 +41,7 @@ int main(int argc, char **argv)
   int tap_fd, opt, delete = 0, brief = 0;
   char *tun = "", *file = "/dev/net/tun", *name = argv[0], *end;
 
-  while((opt = getopt(argc, argv, "bd:f:t:u:g:")) > 0){
+  while((opt = getopt(argc, argv, "bd:f:t:u:g:h")) > 0){
     switch(opt) {
       case 'b':
         brief = 1;
