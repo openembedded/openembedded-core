@@ -1,0 +1,56 @@
+From 80fa26c74279fced8d778351cff19d1d8f44fe4e Mon Sep 17 00:00:00 2001
+From: Kevin Atkinson <kevina@gnu.org>
+Date: Sun, 4 Aug 2019 04:20:29 -0400
+Subject: [PATCH] Fix various bugs found by OSS-Fuze.
+
+---
+ common/config.cpp    | 2 +-
+ common/file_util.cpp | 1 +
+ common/getdata.cpp   | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+Upstream-Status: Backport [https://github.com/GNUAspell/aspell/commit/80fa26c74279fced8d778351cff19d1d8f44fe4e]
+CVE: CVE-2019-17544
+Signed-off-by: Trevor Gamblin <trevor.gamblin@windriver.com>
+
+diff --git a/common/config.cpp b/common/config.cpp
+index 017e741..e117d3c 100644
+--- a/common/config.cpp
++++ b/common/config.cpp
+@@ -763,7 +763,7 @@ namespace acommon {
+       }
+       res.append(':');
+     }
+-    if (res.back() == ':') res.pop_back();
++    if (!res.empty() && res.back() == ':') res.pop_back();
+   }
+ 
+   struct ListAddHelper : public AddableContainer 
+diff --git a/common/file_util.cpp b/common/file_util.cpp
+index 8515832..56ea501 100644
+--- a/common/file_util.cpp
++++ b/common/file_util.cpp
+@@ -181,6 +181,7 @@ namespace acommon {
+     while ( (dir = els.next()) != 0 ) 
+     {
+       path = dir;
++      if (path.empty()) continue;
+       if (path.back() != '/') path += '/';
+       unsigned dir_len = path.size();
+       path += filename;
+diff --git a/common/getdata.cpp b/common/getdata.cpp
+index 7e822c9..1b04823 100644
+--- a/common/getdata.cpp
++++ b/common/getdata.cpp
+@@ -64,7 +64,7 @@ namespace acommon {
+   char * unescape(char * dest, const char * src)
+   {
+     while (*src) {
+-      if (*src == '\\') {
++      if (*src == '\\' && src[1]) {
+ 	++src;
+ 	switch (*src) {
+ 	case 'n': *dest = '\n'; break;
+-- 
+2.17.1
+
