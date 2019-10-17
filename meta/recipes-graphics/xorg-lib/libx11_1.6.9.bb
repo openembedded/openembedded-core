@@ -11,11 +11,10 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/libx11:"
 PE = "1"
 
 SRC_URI += "file://Fix-hanging-issue-in-_XReply.patch \
-            file://no-host-libtool.patch \
-            file://no-host-x.patch"
+            file://disable_tests.patch"
 
-SRC_URI[md5sum] = "c5fa5a86a20e3591bed6c046498d4b8f"
-SRC_URI[sha256sum] = "b289a845c189e251e0e884cc0f9269bbe97c238df3741e854ec4c17c21e473d5"
+SRC_URI[md5sum] = "55adbfb6d4370ecac5e70598c4e7eed2"
+SRC_URI[sha256sum] = "9cc7e8d000d6193fa5af580d50d689380b8287052270f5bb26a5fb6b58b2bed1"
 
 PROVIDES = "virtual/libx11"
 
@@ -37,6 +36,10 @@ CPPFLAGS_FOR_BUILD += "-D_GNU_SOURCE"
 
 PACKAGES =+ "${PN}-xcb"
 
+inherit gettext
+
 FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${datadir}/X11/Xcms.txt"
 FILES_${PN}-xcb += "${libdir}/libX11-xcb.so.*"
 FILES_${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
+
+BBCLASSEXTEND = "native nativesdk"
