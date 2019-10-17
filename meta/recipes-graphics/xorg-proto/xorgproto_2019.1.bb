@@ -1,6 +1,6 @@
 require xorg-proto-common.inc
 
-SUMMARY = "XCalibrate: Touchscreen calibration headers"
+SUMMARY = "X Window System unified protocol definitions"
 
 DESCRIPTION = "This package provides the headers and specification documents defining \
 the core protocol and (many) extensions for the X Window System"
