@@ -498,7 +498,8 @@
             "${libdir}/pkgconfig"
         ],
         "rdepends": [
-            "core"
+            "core",
+            "distutils"
         ],
         "summary": "Python development package"
     },
