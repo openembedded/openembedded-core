@@ -28,13 +28,11 @@ PACKAGECONFIG[zstd] = "ZSTD_SUPPORT=1,ZSTD_SUPPORT=0,zstd"
 PACKAGECONFIG[reproducible] = "REPRODUCIBLE_DEFAULT=1,REPRODUCIBLE_DEFAULT=0,"
 
 do_compile() {
-	oe_runmake mksquashfs unsquashfs
+	oe_runmake all
 }
 
-do_install () {
-	install -d ${D}${sbindir}
-	install -m 0755 mksquashfs ${D}${sbindir}/
-	install -m 0755 unsquashfs ${D}${sbindir}/
+do_install() {
+	oe_runmake install INSTALL_DIR=${D}${sbindir}
 }
 
 ARM_INSTRUCTION_SET_armv4 = "arm"
