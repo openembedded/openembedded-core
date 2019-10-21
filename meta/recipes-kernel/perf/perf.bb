@@ -153,6 +153,8 @@ python copy_perf_source_from_kernel() {
         if os.path.isdir(src):
             oe.path.copyhardlinktree(src, dest)
         else:
+            src_path = os.path.dirname(s)
+            os.makedirs(os.path.join(dest_dir,src_path),exist_ok=True)
             bb.utils.copyfile(src, dest)
 }
 
