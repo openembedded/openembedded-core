@@ -14,8 +14,8 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-Run-installation-commands-as-shell-jobs.patch \
            "
 
-SRC_URI[md5sum] = "4b16278cfed860a86c8221de62eec151"
-SRC_URI[sha256sum] = "698db6e407bb987baec736c6a30216dfc0317e3ca2403c7adf3a5aa46c193286"
+SRC_URI[md5sum] = "41b860c17efe065849b0cbf46e88811a"
+SRC_URI[sha256sum] = "40b7e91f8263552b64d0f9beff33150291b086618ce498c71bf10035e48c7c7f"
 
 DEPENDS += "librsvg-native"
 
