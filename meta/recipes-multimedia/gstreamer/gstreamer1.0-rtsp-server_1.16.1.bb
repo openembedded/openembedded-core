@@ -13,8 +13,8 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/${PNREAL}/${PNREAL}-${PV}.tar.xz
            file://gtk-doc-tweaks.patch \
            "
 
-SRC_URI[md5sum] = "adc4460239ec2eccf58ad9752ce53bfd"
-SRC_URI[sha256sum] = "198e9eec1a3e32dc810d3fbf3a714850a22c6288d4a5c8e802c5ff984af03f19"
+SRC_URI[md5sum] = "380d6a42e856c32fcefa508ad57129e0"
+SRC_URI[sha256sum] = "b0abacad2f86f60d63781d2b24443c5668733e8b08664bbef94124906d700144"
 
 S = "${WORKDIR}/${PNREAL}-${PV}"
 
