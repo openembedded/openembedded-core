@@ -2,13 +2,11 @@ require gstreamer1.0-plugins.inc
 
 SRC_URI = " \
             http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-${PV}.tar.xz \
-            file://0001-scaletempo-Advertise-interleaved-layout-in-caps-temp.patch \
             file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
-            file://headerfix.patch \
             "
 
-SRC_URI[md5sum] = "d1a7b442994d9522418de4af4330e034"
-SRC_URI[sha256sum] = "654adef33380d604112f702c2927574cfc285e31307b79e584113858838bb0fd"
+SRC_URI[md5sum] = "515987ee763256840a11bd8ea098f2bf"
+SRC_URI[sha256sum] = "9fbabe69018fcec707df0b71150168776040cde6c1a26bb5a82a136755fa8f1f"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"
 
