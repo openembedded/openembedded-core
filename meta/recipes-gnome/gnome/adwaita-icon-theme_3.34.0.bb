@@ -1,6 +1,6 @@
 SUMMARY = "GTK+ icon theme"
-HOMEPAGE = "http://ftp.gnome.org/pub/GNOME/sources/adwaita-icon-theme/"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/adwaita-icon-theme"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/adwaita-icon-theme/issues"
 SECTION = "x11/gnome"
 
 LICENSE = "LGPL-3.0 | CC-BY-SA-3.0"

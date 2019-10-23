@@ -1,5 +1,7 @@
 SUMMARY = "The libdazzle library is a companion library to GObject and Gtk+."
 LICENSE = "GPLv3+"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/libdazzle"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/libdazzle/issues"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 
 GNOMEBASEBUILDCLASS = "meson"

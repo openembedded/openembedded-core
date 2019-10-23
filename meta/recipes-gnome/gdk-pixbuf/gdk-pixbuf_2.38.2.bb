@@ -1,6 +1,6 @@
 SUMMARY = "Image loading library for GTK+"
-HOMEPAGE = "http://www.gtk.org/"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+HOMEPAGE = "https://wiki.gnome.org/Projects/GdkPixbuf"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/issues"
 
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \

@@ -1,6 +1,6 @@
 SUMMARY = "Library for rendering SVG files"
-HOMEPAGE = "http://ftp.gnome.org/pub/GNOME/sources/librsvg/"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/librsvg"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/librsvg/issues"
 
 RECIPE_NO_UPDATE_REASON = "Versions from 2.41.0 requires Rust compiler to build it"
 

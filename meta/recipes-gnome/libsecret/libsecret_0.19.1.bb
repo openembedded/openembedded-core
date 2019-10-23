@@ -1,5 +1,6 @@
 SUMMARY = "libsecret is a library for storing and retrieving passwords and other secrets"
 LICENSE = "LGPLv2.1"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/libsecret/issues"
 LIC_FILES_CHKSUM = "file://COPYING;md5=23c2a5e0106b99d75238986559bb5fc6"
 
 inherit gnomebase gtk-doc vala gobject-introspection manpages

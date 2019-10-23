@@ -1,6 +1,6 @@
 SUMMARY = "GNOME desktop-wide GSettings schemas"
-HOMEPAGE = "http://live.gnome.org/gsettings-desktop-schemas"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/issues"
 
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"

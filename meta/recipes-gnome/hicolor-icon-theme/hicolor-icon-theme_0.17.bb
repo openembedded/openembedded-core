@@ -1,5 +1,5 @@
 SUMMARY = "Default icon theme that all icon themes automatically inherit from"
-HOMEPAGE = "http://icon-theme.freedesktop.org/wiki/HicolorTheme"
+HOMEPAGE = "https://www.freedesktop.org/wiki/Software/icon-theme"
 BUGTRACKER = "https://bugs.freedesktop.org/"
 
 LICENSE = "GPLv2"

@@ -1,6 +1,6 @@
 SUMMARY = "Middleware layer between GObject-using C libraries and language bindings"
 HOMEPAGE = "https://wiki.gnome.org/action/show/Projects/GObjectIntrospection"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/gobject-introspection/issues"
 SECTION = "libs"
 LICENSE = "LGPLv2+ & GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c434e8128a68bedd59b80b2ac1eb1c4a \

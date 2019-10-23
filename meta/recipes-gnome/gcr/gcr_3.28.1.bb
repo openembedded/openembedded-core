@@ -1,6 +1,6 @@
 SUMMARY = "A library for bits of crypto UI and parsing etc"
-HOMEPAGE = "http://www.gnome.org/"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/gcr"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/gcr/issues"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
