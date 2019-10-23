@@ -1,4 +1,6 @@
 SUMMARY = "Default icon theme that all icon themes automatically inherit from"
+DESCRIPTION = "The hicolor-icon-theme package contains a default fallback \
+theme for implementations of the icon theme specification."
 HOMEPAGE = "https://www.freedesktop.org/wiki/Software/icon-theme"
 BUGTRACKER = "https://bugs.freedesktop.org/"
 

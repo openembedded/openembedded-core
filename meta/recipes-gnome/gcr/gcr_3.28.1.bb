@@ -1,4 +1,7 @@
 SUMMARY = "A library for bits of crypto UI and parsing etc"
+DESCRIPTION = "GCR is a library for displaying certificates, and crypto UI, \
+accessing key stores. It also provides the viewer for crypto files on the \
+GNOME desktop."
 HOMEPAGE = "https://gitlab.gnome.org/GNOME/gcr"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/gcr/issues"
 

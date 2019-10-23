@@ -1,4 +1,7 @@
 SUMMARY = "Image loading library for GTK+"
+DESCRIPTION = "The GDK Pixbuf library provides: Image loading and saving \
+facilities, fast scaling and compositing of pixbufs and Simple animation \
+loading (ie. animated GIFs)"
 HOMEPAGE = "https://wiki.gnome.org/Projects/GdkPixbuf"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/issues"
 

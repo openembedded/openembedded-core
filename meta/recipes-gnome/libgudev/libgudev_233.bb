@@ -1,4 +1,8 @@
 SUMMARY = "GObject wrapper for libudev"
+DESCRIPTION = "This library makes it much simpler to use libudev from programs \
+already using GObject. It also makes it possible to easily use libudev from \
+other programming languages, such as Javascript, because of GObject \
+introspection support."
 HOMEPAGE = "https://wiki.gnome.org/Projects/libgudev"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/libgudev/issues"
 SRC_URI[archive.sha256sum] = "587c4970eb23f4e2deee2cb1fb7838c94a78c578f41ce12cac0a3f4a80dabb03"

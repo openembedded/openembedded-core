@@ -1,4 +1,7 @@
 SUMMARY = "The libdazzle library is a companion library to GObject and Gtk+."
+DESCRIPTION = "A wide range of components from utilities for GIO, widgets for \
+GTK+, an animation framework, state machines, paneling and high-performance \
+counters are included."
 LICENSE = "GPLv3+"
 HOMEPAGE = "https://gitlab.gnome.org/GNOME/libdazzle"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/libdazzle/issues"

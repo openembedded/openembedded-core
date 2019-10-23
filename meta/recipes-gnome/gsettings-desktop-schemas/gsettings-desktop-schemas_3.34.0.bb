@@ -1,4 +1,6 @@
 SUMMARY = "GNOME desktop-wide GSettings schemas"
+DESCRIPTION = "GSettings desktop-wide schemas contains a collection of \
+GSettings schemas for settings shared by various components of a desktop."
 HOMEPAGE = "https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/issues"
 
