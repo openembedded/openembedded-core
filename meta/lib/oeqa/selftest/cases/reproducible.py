@@ -15,6 +15,7 @@ import tempfile
 import shutil
 import stat
 import os
+import datetime
 
 MISSING = 'MISSING'
 DIFFERENT = 'DIFFERENT'
@@ -80,6 +81,9 @@ class ReproducibleTests(OESelftestTestCase):
     package_classes = ['deb', 'ipk']
     images = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline']
     save_results = False
+    if 'OEQA_DEBUGGING_SAVED_OUTPUT' in os.environ:
+        save_results = os.environ['OEQA_DEBUGGING_SAVED_OUTPUT']
+
     # This variable controls if one of the test builds is allowed to pull from
     # an sstate cache/mirror. The other build is always done clean as a point of
     # comparison.
@@ -168,7 +172,9 @@ class ReproducibleTests(OESelftestTestCase):
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
 
         if self.save_results:
-            save_dir = tempfile.mkdtemp(prefix='oe-reproducible-')
+            os.makedirs(self.save_results, exist_ok=True)
+            datestr = datetime.datetime.now().strftime('%Y%m%d')
+            save_dir = tempfile.mkdtemp(prefix='oe-reproducible-%s-' % datestr, dir=self.save_results)
             os.chmod(save_dir, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
             self.logger.info('Non-reproducible packages will be copied to %s', save_dir)
 
@@ -203,4 +209,9 @@ class ReproducibleTests(OESelftestTestCase):
                 if result.missing or result.different:
                     self.fail("The following %s packages are missing or different: %s" %
                             (c, ' '.join(r.test for r in (result.missing + result.different))))
+
+        # Clean up empty directories
+        if self.save_results:
+            if not os.listdir(save_dir):
+                os.rmdir(save_dir)
 
