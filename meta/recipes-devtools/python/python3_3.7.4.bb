@@ -30,6 +30,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_locale.py-correct-the-test-output-format.patch \
            file://0017-setup.py-do-not-report-missing-dependencies-for-disa.patch \
            file://0001-bpo-34155-Dont-parse-domains-containing-GH-13079.patch \
+           file://0001-bpo-38243-xmlrpc.server-Escape-the-server_title-GH-1.patch \
            "
 
 SRC_URI_append_class-native = " \
