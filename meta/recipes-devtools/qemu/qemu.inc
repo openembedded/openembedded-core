@@ -95,6 +95,7 @@ do_configure_prepend_class-native() {
 do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
+do_configure[cleandirs] += "${B}"
 
 do_install () {
 	export STRIP=""
