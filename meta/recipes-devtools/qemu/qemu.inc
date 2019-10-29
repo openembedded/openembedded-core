@@ -22,24 +22,14 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0010-linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch \
            file://0011-Revert-linux-user-fix-mmap-munmap-mprotect-mremap-sh.patch \
            file://0001-Add-a-missing-X11-include.patch \
-           file://0001-egl-headless-add-egl_create_context.patch \
-           file://0014-fix-CVE-2018-16872.patch \
-           file://0015-fix-CVE-2018-20124.patch \
-           file://0016-fix-CVE-2018-20125.patch \
-           file://0017-fix-CVE-2018-20126.patch \
-           file://0018-fix-CVE-2018-20191.patch \
-           file://0019-fix-CVE-2018-20216.patch \
-           file://CVE-2019-3812.patch \
            file://0014-linux-user-fix-to-handle-variably-sized-SIOCGSTAMP-w.patch \
-           file://CVE-2018-20815.patch \
-           file://CVE-2019-8934.patch \
            file://0001-linux-user-assume-__NR_gettid-always-exists.patch \
            file://0001-linux-user-rename-gettid-to-sys_gettid-to-avoid-clas.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[md5sum] = "fb687ce0b02d3bf4327e36d3b99427a8"
-SRC_URI[sha256sum] = "6a0508df079a0a33c2487ca936a56c12122f105b8a96a44374704bef6c69abfc"
+SRC_URI[md5sum] = "aafb005c252eb3a667c2468868348c0a"
+SRC_URI[sha256sum] = "b148fc3c7382c5addd915db433383160ca7b840bc6ea90bb0d35c6b253526d56"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
