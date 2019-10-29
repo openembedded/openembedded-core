@@ -10,6 +10,7 @@ SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2 \
            file://remove-gets.patch \
            file://musl_dirent.patch \
            file://CVE-2019-9923.patch \
+           file://CVE-2018-20482.patch \
 "
 
 SRC_URI[md5sum] = "8404e4c1fc5a3000228ab2b8ad674a65"
