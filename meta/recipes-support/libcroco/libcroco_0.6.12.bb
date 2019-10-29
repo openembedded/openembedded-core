@@ -18,6 +18,7 @@ inherit gnomebase gtk-doc binconfig-disabled
 
 SRC_URI += "file://CVE-2017-7960.patch \
             file://CVE-2017-7961.patch \
+            file://CVE-2017-8834_71.patch \
             "
 
 SRC_URI[archive.md5sum] = "bc0984fce078ba2ce29f9500c6b9ddce"
