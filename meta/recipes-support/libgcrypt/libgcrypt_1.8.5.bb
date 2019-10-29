@@ -17,7 +17,7 @@ DEPENDS = "libgpg-error"
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
-           file://0001-Add-and-use-pkg-config-for-libgcrypt-instead-of-conf.patch \
+           file://0001-libgcrypt-fix-m4-file-for-oe-core.patch \
            file://0003-tests-bench-slope.c-workaround-ICE-failure-on-mips-w.patch \
            file://0002-libgcrypt-fix-building-error-with-O2-in-sysroot-path.patch \
            file://0004-tests-Makefile.am-fix-undefined-reference-to-pthread.patch \
@@ -25,8 +25,8 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://0002-AES-move-look-up-tables-to-.data-section-and-unshare.patch \
            file://0003-GCM-move-look-up-table-to-.data-section-and-unshare-.patch \
 "
-SRC_URI[md5sum] = "fbfdaebbbc6d7e5fbbf6ffdb3e139573"
-SRC_URI[sha256sum] = "f638143a0672628fde0cad745e9b14deb85dffb175709cacc1f4fe24b93f2227"
+SRC_URI[md5sum] = "348cc4601ca34307fc6cd6c945467743"
+SRC_URI[sha256sum] = "3b4a2a94cb637eff5bdebbcaf46f4d95c4f25206f459809339cdada0eb577ac3"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
