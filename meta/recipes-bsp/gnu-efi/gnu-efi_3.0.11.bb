@@ -16,11 +16,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://parallel-make-archives.patch \
            file://lib-Makefile-fix-parallel-issue.patch \
            file://gnu-efi-3.0.9-fix-clang-build.patch \
-           file://0001-Revert-efilink-fix-build-with-gcc-4.8.patch \
            "
 
-SRC_URI[md5sum] = "960a8379b6f95ee73d7778b70bf2a089"
-SRC_URI[sha256sum] = "f12082a3a5f0c3e38c67262a9f34245d139ac2cdfc0a0bdcf03c9b1f56fa4fed"
+SRC_URI[md5sum] = "21148bbcccec385a9bfdf5f678959577"
+SRC_URI[sha256sum] = "f28da792a2532e91e18e0101468811739a22cde9eee5eacfd0efb9bf3a61d6b9"
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*)-linux"
 COMPATIBLE_HOST_armv4 = 'null'
