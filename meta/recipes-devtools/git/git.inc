@@ -39,12 +39,12 @@ do_compile_prepend () {
 do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates
-	install -d ${D}/${mandir}/man1
-	install -d ${D}/${mandir}/man5
-	install -d ${D}/${mandir}/man7
-	install -t ${D}/${mandir}/man1 ${WORKDIR}/man1/*
-	install -t ${D}/${mandir}/man5 ${WORKDIR}/man5/*
-	install -t ${D}/${mandir}/man7 ${WORKDIR}/man7/*
+
+	for section in man1 man5 man7; do
+		install -d ${D}/${mandir}/$section
+		install -t ${D}/${mandir}/$section ${WORKDIR}/$section/*
+	done
+
 	install -d ${D}/${datadir}/bash-completion/completions/
 	install -m 644 ${S}/contrib/completion/git-completion.bash ${D}/${datadir}/bash-completion/completions/git
 }
