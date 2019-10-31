@@ -94,19 +94,15 @@ do_install_append_class-nativesdk() {
 FILES_${PN} += "${datadir}/git-core ${libexecdir}/git-core/"
 
 PERLTOOLS = " \
+    ${bindir}/git-cvsserver \
     ${libexecdir}/git-core/git-add--interactive \
     ${libexecdir}/git-core/git-archimport \
     ${libexecdir}/git-core/git-cvsexportcommit \
     ${libexecdir}/git-core/git-cvsimport \
     ${libexecdir}/git-core/git-cvsserver \
-    ${bindir}/git-cvsserver \
-    ${libexecdir}/git-core/git-difftool \
     ${libexecdir}/git-core/git-send-email \
     ${libexecdir}/git-core/git-svn \
     ${libexecdir}/git-core/git-instaweb \
-    ${libexecdir}/git-core/git-submodule \
-    ${libexecdir}/git-core/git-am \
-    ${libexecdir}/git-core/git-request-pull \
     ${datadir}/gitweb/gitweb.cgi \
     ${datadir}/git-core/templates/hooks/prepare-commit-msg.sample \
     ${datadir}/git-core/templates/hooks/pre-rebase.sample \
