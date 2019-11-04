@@ -11,9 +11,6 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=0251eaec1188b20d9a72c502ecfdd
 DEPENDS = "zlib file-replacement-native"
 DEPENDS_class-native = "zlib-native"
 
-# Blacklist a bogus tag in upstream check
-UPSTREAM_CHECK_GITTAGREGEX = "FILE(?P<pver>(?!6_23).+)"
-
 SRC_URI = "git://github.com/file/file.git \
            file://CVE-2019-18218.patch"
 
