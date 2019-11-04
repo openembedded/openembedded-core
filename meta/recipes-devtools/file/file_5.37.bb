@@ -29,6 +29,10 @@ EXTRA_OEMAKE_append_class-nativesdk = "-e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/
 
 FILES_${PN} += "${datadir}/misc/*.mgc"
 
+do_compile_append_class-native() {
+	oe_runmake check
+}
+
 do_install_append_class-native() {
 	create_cmdline_wrapper ${D}/${bindir}/file \
 		--magic-file ${datadir}/misc/magic.mgc
