@@ -47,6 +47,7 @@ UBOOT_PN = "${@d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'}"
 
 concat_dtb_helper() {
 	if [ -e "${UBOOT_DTB_BINARY}" ]; then
+		install ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_IMAGE}
 		ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_BINARY}
 		ln -sf ${UBOOT_DTB_IMAGE} ${DEPLOYDIR}/${UBOOT_DTB_SYMLINK}
 	fi
