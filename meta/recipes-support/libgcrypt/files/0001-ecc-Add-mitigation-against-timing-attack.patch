@@ -1,0 +1,70 @@
+From d5407b78cca9f9d318a4f4d2f6ba2b8388584cd9 Mon Sep 17 00:00:00 2001
+From: NIIBE Yutaka <gniibe@fsij.org>
+Date: Wed, 17 Jul 2019 12:44:50 +0900
+Subject: [PATCH] ecc: Add mitigation against timing attack.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Upstream-Status: Backport [https://git.gnupg.org/cgi-bin/gitweb.cgi?p=libgcrypt.git;a=commit;h=d5407b78c]
+CVE: CVE-2019-13627
+Signed-off-by: Trevor Gamblin <trevor.gamblin@windriver.com>
+
+* cipher/ecc-ecdsa.c (_gcry_ecc_ecdsa_sign): Add the order N to K.
+* mpi/ec.c (_gcry_mpi_ec_mul_point): Compute with NBITS of P or larger.
+
+--
+
+Cherry-picked master commit of:
+	 b9577f7c89b4327edc09f2231bc8b31521102c79
+
+CVE-id: CVE-2019-13627
+GnuPG-bug-id: 4626
+Co-authored-by: Ján Jančár <johny@neuromancer.sk>
+Signed-off-by: NIIBE Yutaka <gniibe@fsij.org>
+---
+ cipher/ecc-ecdsa.c | 10 ++++++++++
+ mpi/ec.c           |  6 +++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/cipher/ecc-ecdsa.c b/cipher/ecc-ecdsa.c
+index 140e8c09..84a1cf84 100644
+--- a/cipher/ecc-ecdsa.c
++++ b/cipher/ecc-ecdsa.c
+@@ -114,6 +114,16 @@ _gcry_ecc_ecdsa_sign (gcry_mpi_t input, ECC_secret_key *skey,
+           else
+             k = _gcry_dsa_gen_k (skey->E.n, GCRY_STRONG_RANDOM);
+ 
++          /* Originally, ECDSA computation requires k where 0 < k < n.
++           * Here, we add n (the order of curve), to keep k in a
++           * range: n < k < 2*n, or, addming more n, keep k in a range:
++           * 2*n < k < 3*n, so that timing difference of the EC
++           * multiply operation can be small.  The result is same.
++           */
++          mpi_add (k, k, skey->E.n);
++          if (!mpi_test_bit (k, qbits))
++            mpi_add (k, k, skey->E.n);
++
+           _gcry_mpi_ec_mul_point (&I, k, &skey->E.G, ctx);
+           if (_gcry_mpi_ec_get_affine (x, NULL, &I, ctx))
+             {
+diff --git a/mpi/ec.c b/mpi/ec.c
+index 89077cd9..adb02600 100644
+--- a/mpi/ec.c
++++ b/mpi/ec.c
+@@ -1309,7 +1309,11 @@ _gcry_mpi_ec_mul_point (mpi_point_t result,
+       unsigned int nbits;
+       int j;
+ 
+-      nbits = mpi_get_nbits (scalar);
++      if (mpi_cmp (scalar, ctx->p) >= 0)
++        nbits = mpi_get_nbits (scalar);
++      else
++        nbits = mpi_get_nbits (ctx->p);
++
+       if (ctx->model == MPI_EC_WEIERSTRASS)
+         {
+           mpi_set_ui (result->x, 1);
+-- 
+2.23.0
+
