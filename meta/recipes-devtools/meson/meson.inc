@@ -17,6 +17,7 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://many-cross.patch \
            file://cross-libdir.patch \
            file://0001-Fix-missing-return-statements-that-are-seen-with-Wer.patch \
+           file://0001-Handle-strings-in-cross-file-args.-Closes-4671.patch \
            "
 SRC_URI[sha256sum] = "ef9f14326ec1e30d3ba1a26df0f92826ede5a79255ad723af78a2691c37109fd"
 SRC_URI[md5sum] = "0267b0871266056184c484792572c682"
