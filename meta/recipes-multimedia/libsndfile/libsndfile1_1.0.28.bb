@@ -38,3 +38,6 @@ do_configure_prepend_arm() {
 	export ac_cv_sys_file_offset_bits=64
 }
 
+# This can't be replicated and is just a memory leak.
+# https://github.com/erikd/libsndfile/issues/398
+CVE_CHECK_WHITELIST += "CVE-2018-13419"
