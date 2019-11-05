@@ -1520,17 +1520,17 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
                                           patches_dir, changed_revs)
         logger.debug('Pre-filtering: update: %s, new: %s' % (dict(upd_p), dict(new_p)))
         if filter_patches:
-            new_p = {}
-            upd_p = {k:v for k,v in upd_p.items() if k in filter_patches}
+            new_p = OrderedDict()
+            upd_p = OrderedDict((k,v) for k,v in upd_p.items() if k in filter_patches)
             remove_files = [f for f in remove_files if f in filter_patches]
         updatefiles = False
         updaterecipe = False
         destpath = None
         srcuri = (rd.getVar('SRC_URI', False) or '').split()
         if appendlayerdir:
-            files = dict((os.path.join(local_files_dir, key), val) for
+            files = OrderedDict((os.path.join(local_files_dir, key), val) for
                          key, val in list(upd_f.items()) + list(new_f.items()))
-            files.update(dict((os.path.join(patches_dir, key), val) for
+            files.update(OrderedDict((os.path.join(patches_dir, key), val) for
                               key, val in list(upd_p.items()) + list(new_p.items())))
             if files or remove_files:
                 removevalues = None
