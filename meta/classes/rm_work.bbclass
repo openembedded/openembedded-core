@@ -64,6 +64,15 @@ do_rm_work () {
             mv $i `echo $i | sed -e "s#do_image_complete#do_image_complete_setscene#"`
             i=dummy
             ;;
+        *do_image_qa_setscene*)
+            # Ensure we don't 'stack' setscene extensions to this stamp with the section below
+            i=dummy
+            ;;
+        *do_image_qa*)
+            # Promote do_image_qa stamps to setscene versions (ahead of *do_image* below)
+            mv $i `echo $i | sed -e "s#do_image_qa#do_image_qa_setscene#"`
+            i=dummy
+            ;;
         *do_package_write*|*do_rootfs*|*do_image*|*do_bootimg*|*do_write_qemuboot_conf*|*do_build*)
             i=dummy
             ;;
