@@ -207,7 +207,7 @@ class ResultsTextReport(object):
                                  maxlen=maxlen)
         print(output)
 
-    def view_test_report(self, logger, source_dir, branch, commit, tag, use_regression_map):
+    def view_test_report(self, logger, source_dir, branch, commit, tag, use_regression_map, raw_test):
         test_count_reports = []
         configmap = resultutils.store_map
         if use_regression_map:
@@ -225,6 +225,17 @@ class ResultsTextReport(object):
             testresults = resultutils.git_get_result(repo, [tag], configmap=configmap)
         else:
             testresults = resultutils.load_resultsdata(source_dir, configmap=configmap)
+        if raw_test:
+            raw_results = {}
+            for testsuite in testresults:
+                result = testresults[testsuite].get(raw_test, {})
+                if result:
+                    raw_results[testsuite] = result
+            if raw_results:
+                print(json.dumps(raw_results, sort_keys=True, indent=4))
+            else:
+                print('Could not find raw test result for %s' % raw_test)
+            return 0
         for testsuite in testresults:
             for resultid in testresults[testsuite]:
                 skip = False
@@ -251,7 +262,8 @@ class ResultsTextReport(object):
 
 def report(args, logger):
     report = ResultsTextReport()
-    report.view_test_report(logger, args.source_dir, args.branch, args.commit, args.tag, args.use_regression_map)
+    report.view_test_report(logger, args.source_dir, args.branch, args.commit, args.tag, args.use_regression_map,
+                            args.raw_test_only)
     return 0
 
 def register_commands(subparsers):
@@ -268,4 +280,6 @@ def register_commands(subparsers):
                               help='source_dir is a git repository, report on the tag specified from that repository')
     parser_build.add_argument('-m', '--use_regression_map', action='store_true',
                               help='instead of the default "store_map", use the "regression_map" for report')
+    parser_build.add_argument('-r', '--raw_test_only', default='',
+                              help='output raw test result only for the user provided test result id')
 
