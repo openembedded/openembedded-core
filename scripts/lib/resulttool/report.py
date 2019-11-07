@@ -186,6 +186,10 @@ class ResultsTextReport(object):
                 havefailed = True
             if line['machine'] not in machines:
                 machines.append(line['machine'])
+        reporttotalvalues = {}
+        for k in cols:
+            reporttotalvalues[k] = '%s' % sum([line[k] for line in test_count_reports])
+        reporttotalvalues['count'] = '%s' % len(test_count_reports)
         for (machine, report) in self.ptests.items():
             for ptest in self.ptests[machine]:
                 if len(ptest) > maxlen['ptest']:
@@ -199,6 +203,7 @@ class ResultsTextReport(object):
                 if len(ltpposixtest) > maxlen['ltpposixtest']:
                     maxlen['ltpposixtest'] = len(ltpposixtest)
         output = template.render(reportvalues=reportvalues,
+                                 reporttotalvalues=reporttotalvalues,
                                  havefailed=havefailed,
                                  machines=machines,
                                  ptests=self.ptests,
