@@ -207,8 +207,11 @@ class ResultsTextReport(object):
                                  maxlen=maxlen)
         print(output)
 
-    def view_test_report(self, logger, source_dir, branch, commit, tag):
+    def view_test_report(self, logger, source_dir, branch, commit, tag, use_regression_map):
         test_count_reports = []
+        configmap = resultutils.store_map
+        if use_regression_map:
+            configmap = resultutils.regression_map
         if commit:
             if tag:
                 logger.warning("Ignoring --tag as --commit was specified")
@@ -216,12 +219,12 @@ class ResultsTextReport(object):
             repo = GitRepo(source_dir)
             revs = gitarchive.get_test_revs(logger, repo, tag_name, branch=branch)
             rev_index = gitarchive.rev_find(revs, 'commit', commit)
-            testresults = resultutils.git_get_result(repo, revs[rev_index][2])
+            testresults = resultutils.git_get_result(repo, revs[rev_index][2], configmap=configmap)
         elif tag:
             repo = GitRepo(source_dir)
-            testresults = resultutils.git_get_result(repo, [tag])
+            testresults = resultutils.git_get_result(repo, [tag], configmap=configmap)
         else:
-            testresults = resultutils.load_resultsdata(source_dir)
+            testresults = resultutils.load_resultsdata(source_dir, configmap=configmap)
         for testsuite in testresults:
             for resultid in testresults[testsuite]:
                 skip = False
@@ -248,7 +251,7 @@ class ResultsTextReport(object):
 
 def report(args, logger):
     report = ResultsTextReport()
-    report.view_test_report(logger, args.source_dir, args.branch, args.commit, args.tag)
+    report.view_test_report(logger, args.source_dir, args.branch, args.commit, args.tag, args.use_regression_map)
     return 0
 
 def register_commands(subparsers):
@@ -263,3 +266,6 @@ def register_commands(subparsers):
     parser_build.add_argument('--commit', help="Revision to report")
     parser_build.add_argument('-t', '--tag', default='',
                               help='source_dir is a git repository, report on the tag specified from that repository')
+    parser_build.add_argument('-m', '--use_regression_map', action='store_true',
+                              help='instead of the default "store_map", use the "regression_map" for report')
+
