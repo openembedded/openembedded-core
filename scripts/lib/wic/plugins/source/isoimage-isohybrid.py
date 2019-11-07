@@ -347,8 +347,10 @@ class IsoImagePlugin(SourcePlugin):
             # dosfs image for EFI boot
             bootimg = "%s/efi.img" % isodir
 
-            dosfs_cmd = 'mkfs.vfat -n "EFIimg" -S 512 -C %s %d' \
-                        % (bootimg, blocks)
+            esp_label = source_params.get('esp_label', 'EFIimg')
+
+            dosfs_cmd = 'mkfs.vfat -n \'%s\' -S 512 -C %s %d' \
+                        % (esp_label, bootimg, blocks)
             exec_native_cmd(dosfs_cmd, native_sysroot)
 
             mmd_cmd = "mmd -i %s ::/EFI" % bootimg
