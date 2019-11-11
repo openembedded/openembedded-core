@@ -129,3 +129,69 @@ class Archiver(OESelftestTestCase):
         self.write_config(features)
 
         bitbake('-n core-image-sato')
+
+    def _test_archiver_mode(self, mode, target_file_name, extra_config=None):
+        target = "selftest-ed"
+
+        features = 'INHERIT += "archiver"\n'
+        features +=  'ARCHIVER_MODE[src] = "%s"\n' % (mode)
+        if extra_config:
+            features += extra_config
+        self.write_config(features)
+
+        bitbake('-c clean %s' % (target))
+        bitbake('-c deploy_archives %s' % (target))
+
+        bb_vars = get_bb_vars(['DEPLOY_DIR_SRC', 'TARGET_SYS'])
+        glob_str = os.path.join(bb_vars['DEPLOY_DIR_SRC'], bb_vars['TARGET_SYS'], '%s-*' % (target))
+        glob_result = glob.glob(glob_str)
+        self.assertTrue(glob_result, 'Missing archiver directory for %s' % (target))
+
+        archive_path = os.path.join(glob_result[0], target_file_name)
+        self.assertTrue(os.path.exists(archive_path), 'Missing archive file %s' % (target_file_name))
+
+    def test_archiver_mode_original(self):
+        """
+        Test that the archiver works in with `ARCHIVER_MODE[src] = "original"`.
+        """
+
+        self._test_archiver_mode('original', 'ed-1.14.1.tar.lz')
+
+    def test_archiver_mode_patched(self):
+        """
+        Test that the archiver works in with `ARCHIVER_MODE[src] = "patched"`.
+        """
+
+        self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-patched.tar.gz')
+
+    def test_archiver_mode_configured(self):
+        """
+        Test that the archiver works in with `ARCHIVER_MODE[src] = "configured"`.
+        """
+
+        self._test_archiver_mode('configured', 'selftest-ed-1.14.1-r0-configured.tar.gz')
+
+    def test_archiver_mode_recipe(self):
+        """
+        Test that the archiver works in with `ARCHIVER_MODE[recipe] = "1"`.
+        """
+
+        self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-recipe.tar.gz',
+                                 'ARCHIVER_MODE[recipe] = "1"\n')
+
+    def test_archiver_mode_diff(self):
+        """
+        Test that the archiver works in with `ARCHIVER_MODE[diff] = "1"`.
+        Exclusions controlled by `ARCHIVER_MODE[diff-exclude]` are not yet tested.
+        """
+
+        self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-diff.gz',
+                                 'ARCHIVER_MODE[diff] = "1"\n')
+
+    def test_archiver_mode_dumpdata(self):
+        """
+        Test that the archiver works in with `ARCHIVER_MODE[dumpdata] = "1"`.
+        """
+
+        self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-showdata.dump',
+                                 'ARCHIVER_MODE[dumpdata] = "1"\n')
