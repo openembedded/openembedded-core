@@ -61,36 +61,6 @@
   },
   {
     "test": {
-      "@alias": "bsps-qemu.bsps-runtime.only_one_connmand_in_background(auto)",
-      "author": [
-        {
-          "email": "alexandru.c.georgescu@intel.com",
-          "name": "alexandru.c.georgescu@intel.com"
-        }
-      ],
-      "execution": {
-        "1": {
-          "action": "Boot system",
-          "expected_results": ""
-        },
-        "2": {
-          "action": "Run \"ps aux |grep connmand\" or \"ps -ef | grep connmand\" or \"ps | grep connmand\"",
-          "expected_results": "Connmand (connection manager, used to manage internet connections)  should be shown as an active process \n\n"
-        },
-        "3": {
-          "action": "Run command \"connmand\" to try to launch to a second connmand process",
-          "expected_results": ""
-        },
-        "4": {
-          "action": "Check, with \"ps\" connmand  if a second connmand can be generated ",
-          "expected_results": "There should be only one connmand process instance in background ."
-        }
-      },
-      "summary": "only_one_connmand_in_background"
-    }
-  },
-  {
-    "test": {
       "@alias": "bsps-qemu.bsps-runtime.check_bash_in_image",
       "author": [
         {
