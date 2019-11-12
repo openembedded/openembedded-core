@@ -1,36 +1,6 @@
 [
   {
     "test": {
-      "@alias": "bsps-qemu.bsps-tools.qemu_can_be_started_with_KVM_enabled",
-      "author": [
-        {
-          "email": "alexandru.c.georgescu@intel.com",
-          "name": "alexandru.c.georgescu@intel.com"
-        }
-      ],
-      "execution": {
-        "1": {
-          "action": "Build a kernel with KVM enabled  \n\nIn Local.conf add  \n\nQEMU_USE_KVM = \"${@ '1' if os.access('/dev/kvm', os.R_OK|os.W_OK) else '0' }\"  \n\n ",
-          "expected_results": ""
-        },
-        "2": {
-          "action": "Start qemu with option \"kvm\" with runqemu \n    a. If you start qemu with kvm failed, maybe it is because host not install kvm and vhost_net module. Follow below link to install them. \n    b. vhost_test refer:  https://wiki.yoctoproject.org/wiki/Running_an_x86_Yocto_Linux_image_under_QEMU_KVM \n    c. kvm refer: https://wiki.yoctoproject.org/wiki/How_to_enable_KVM_for_Poky_qemu",
-          "expected_results": ""
-        },
-        "3": {
-          "action": "Check if qemu starts up and if kvm_intel module is used",
-          "expected_results": ""
-        },
-        "4": {
-          "action": "If kvm_intel module is not used when starting qemu, it will show 0 in \"Used by\" column when you run \"lsmod | grep kvm_intel\" ",
-          "expected_results": "KVM enabled with qemu \nExecute \"lsmod | grep kvm_intel\" from your host twice, before and after you \nstart the qemu with kvm option. Before start, the number should be 0, \nafter start, the number should bigger than 0."
-        }
-      },
-      "summary": "qemu_can_be_started_with_KVM_enabled"
-    }
-  },
-  {
-    "test": {
       "@alias": "bsps-qemu.bsps-tools.Post-installation_logging",
       "author": [
         {
