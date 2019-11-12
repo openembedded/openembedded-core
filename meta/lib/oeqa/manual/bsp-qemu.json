@@ -1,40 +1,6 @@
 [
   {
     "test": {
-      "@alias": "bsps-qemu.bsps-tools.Post-installation_logging",
-      "author": [
-        {
-          "email": "yi.zhao@windriver.com",
-          "name": "yi.zhao@windriver.com"
-        }
-      ],
-      "execution": {
-        "1": {
-          "action": "Download the poky source and set environment \n",
-          "expected_results": "The /var/log/postinstall.log should exist in the first boot. The content of this log is like below:  \n\nRunning postinst /etc/rpm-postinsts/man... \nList directory to check the output log \nbin \nboot \ndev \netc \nhome \nlib \nlost+found \nmedia \nmnt \nproc \nrun \nsbin \nsys \ntmp \nusr \nvar \nList nonexist directory to check the stderr redirection log \nls: /nonexist: No such file or directory "
-        },
-        "2": {
-          "action": "Add the following lines to a .bb file. For expample, meta/recipes-connectivity/openssh/openssh_6.2p2.bb:   \n\npkg_postinst_ontarget_${PN} () {  \n       #!/bin/sh -e  \n       if [ x\"$D\" = \"x\" ]; then  \n       echo \"List directory to check the output log\"  \n       ls /  \n       echo \"List nonexist directory to check the stderr redirection log\"  \n       ls /nonexist  \n       else  \n       exit 1  \n       fi  \n}  \n\nMake sure the feature \"debug-tweaks\" is added in conf/local.conf \n",
-          "expected_results": ""
-        },
-        "3": {
-          "action": "Add ssh-server-openssh to EXTRA_IMAGE_FEATURES in local.conf \n",
-          "expected_results": ""
-        },
-        "4": {
-          "action": "Build core-image-minimal \n",
-          "expected_results": ""
-        },
-        "5": {
-          "action": "Boot up the image and check the /var/log/postinstall.log  ",
-          "expected_results": ""
-        }
-      },
-      "summary": "Post-installation_logging"
-    }
-  },
-  {
-    "test": {
       "@alias": "bsps-qemu.bsps-tools.Add_user_with_cleartext_type_password_during_filesystem_construction",
       "author": [
         {
