@@ -18,6 +18,16 @@ def has_feature(td, feature):
         return True
     return False
 
+def has_machine(td, machine):
+    """
+        Checks for MACHINE.
+    """
+
+    if (machine in td.get('MACHINE', '')):
+        return True
+    return False
+
+
 @registerDecorator
 class skipIfDataVar(OETestDecorator):
     """
@@ -130,4 +140,38 @@ class skipIfFeature(OETestDecorator):
                'or IMAGE_FEATURES' % (self.value))
         self.logger.debug(msg)
         if has_feature(self.case.td, self.value):
+            self.case.skipTest(self.msg)
+
+@registerDecorator
+class skipIfNotMachine(OETestDecorator):
+    """
+        Skip test based on MACHINE.
+
+        value must be match MACHINE or it will skip the test
+        with msg as the reason.
+    """
+
+    attrs = ('value', 'msg')
+
+    def setUpDecorator(self):
+        msg = ('Checking if %s is not this MACHINE' % self.value)
+        self.logger.debug(msg)
+        if not has_machine(self.case.td, self.value):
+            self.case.skipTest(self.msg)
+
+@registerDecorator
+class skipIfMachine(OETestDecorator):
+    """
+        Skip test based on Machine.
+
+        value must not be this machine or it will skip the test
+        with msg as the reason.
+    """
+
+    attrs = ('value', 'msg')
+
+    def setUpDecorator(self):
+        msg = ('Checking if %s is this MACHINE' % self.value)
+        self.logger.debug(msg)
+        if has_machine(self.case.td, self.value):
             self.case.skipTest(self.msg)
