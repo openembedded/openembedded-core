@@ -25,22 +25,4 @@
       "summary": "Add_user_with_cleartext_type_password_during_filesystem_construction"
     }
   },
-  {
-    "test": {
-      "@alias": "bsps-qemu.bsps-runtime.check_bash_in_image",
-      "author": [
-        {
-          "email": "alexandru.c.georgescu@intel.com",
-          "name": "alexandru.c.georgescu@intel.com"
-        }
-      ],
-      "execution": {
-        "1": {
-          "action": "After system is up, check if bash command exists with command \"which bash\"",
-          "expected_results": "bash command should exist in image giving something as below  \"/bin/bash\""
-        }
-      },
-      "summary": "check_bash_in_image"
-    }
-  }
 ]
