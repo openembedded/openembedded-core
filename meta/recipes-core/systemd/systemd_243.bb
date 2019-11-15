@@ -317,7 +317,6 @@ PACKAGES =+ "\
     ${PN}-rpm-macros \
     ${PN}-binfmt \
     ${PN}-zsh-completion \
-    ${PN}-xorg-xinitrc \
     ${PN}-container \
     ${PN}-journal-gatewayd \
     ${PN}-journal-upload \
@@ -378,8 +377,6 @@ FILES_${PN}-kernel-install = "${bindir}/kernel-install \
                              "
 FILES_${PN}-rpm-macros = "${exec_prefix}/lib/rpm \
                          "
-
-FILES_${PN}-xorg-xinitrc = "${sysconfdir}/X11/xinit/xinitrc.d/*"
 
 FILES_${PN}-zsh-completion = "${datadir}/zsh/site-functions"
 
@@ -529,6 +526,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/xdg/ \
                 ${sysconfdir}/init.d/README \
                 ${sysconfdir}/resolv-conf.systemd \
+                ${sysconfdir}/X11/xinit/xinitrc.d/* \
                 ${rootlibexecdir}/systemd/* \
                 ${systemd_unitdir}/* \
                 ${base_libdir}/security/*.so \
