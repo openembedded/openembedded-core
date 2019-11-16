@@ -75,8 +75,8 @@ python sysroot_strip () {
 
     dstdir = d.getVar('SYSROOT_DESTDIR')
     pn = d.getVar('PN')
-    libdir = os.path.abspath(dstdir + os.sep + d.getVar("libdir"))
-    base_libdir = os.path.abspath(dstdir + os.sep + d.getVar("base_libdir"))
+    libdir = d.getVar("libdir")
+    base_libdir = d.getVar("base_libdir")
     qa_already_stripped = 'already-stripped' in (d.getVar('INSANE_SKIP_' + pn) or "").split()
     strip_cmd = d.getVar("STRIP")
 
