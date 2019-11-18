@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e11f5c3149cdec4bb309babb020b32b9 \
                     file://src/hb-ucd.cc;beginline=1;endline=15;md5=29d4dcb6410429195df67efe3382d8bc"
 
 SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.xz"
-SRC_URI[md5sum] = "89b758a2eb14d56a94406cf914b62388"
-SRC_URI[sha256sum] = "c651fb3faaa338aeb280726837c2384064cdc17ef40539228d88a1260960844f"
+SRC_URI[md5sum] = "2b3a4dfdb3e5e50055f941978944da9f"
+SRC_URI[sha256sum] = "9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12"
 
 inherit autotools pkgconfig lib_package gtk-doc
 
