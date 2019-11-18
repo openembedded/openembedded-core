@@ -137,6 +137,7 @@ class DevtoolBase(OESelftestTestCase):
         with open(recipefile, 'r') as f:
             invar = None
             invalue = None
+            inherits = set()
             for line in f:
                 var = None
                 if invar:
@@ -158,7 +159,7 @@ class DevtoolBase(OESelftestTestCase):
                         invar = var
                         continue
                 elif line.startswith('inherit '):
-                    inherits = line.split()[1:]
+                    inherits.update(line.split()[1:])
 
                 if var and var in checkvars:
                     needvalue = checkvars.pop(var)
