@@ -496,7 +496,7 @@ def create_recipe(args):
             logger.info('Fetch temp directory is %s' % ftmpdir)
 
         dirlist = os.listdir(srctree)
-        filterout = ['git.indirectionsymlink']
+        filterout = ['git.indirectionsymlink', 'source-date-epoch']
         dirlist = [x for x in dirlist if x not in filterout]
         logger.debug('Directory listing (excluding filtered out):\n  %s' % '\n  '.join(dirlist))
         if len(dirlist) == 1:
