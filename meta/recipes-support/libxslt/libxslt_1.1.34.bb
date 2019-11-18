@@ -9,14 +9,10 @@ SECTION = "libs"
 DEPENDS = "libxml2"
 
 SRC_URI = "http://xmlsoft.org/sources/libxslt-${PV}.tar.gz \
-           file://0001-Fix-security-framework-bypass.patch \
-           file://CVE-2019-13117.patch \
-           file://CVE-2019-13118.patch \
-           file://CVE-2019-18197.patch \
-"
+          "
 
-SRC_URI[md5sum] = "b3bd254a03e46d58f8ad1e4559cd2c2f"
-SRC_URI[sha256sum] = "8e36605144409df979cab43d835002f63988f3dc94d5d3537c12796db90e38c8"
+SRC_URI[md5sum] = "db8765c8d076f1b6caafd9f2542a304a"
+SRC_URI[sha256sum] = "98b1bd46d6792925ad2dfe9a87452ea2adebf69dcb9919ffd55bf926a7f93f7f"
 
 UPSTREAM_CHECK_REGEX = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
