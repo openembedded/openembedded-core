@@ -14,7 +14,7 @@ SRC_URI = "\
     file://default \
     file://rngd.service \
 "
-SRCREV = "9fc873c5af0e392632e6b736938b811f7ca97251"
+SRCREV = "eb5e34c7fb05594760f99d863fbe0401fe297b93"
 
 S = "${WORKDIR}/git"
 
