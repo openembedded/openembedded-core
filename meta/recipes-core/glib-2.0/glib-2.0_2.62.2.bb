@@ -20,5 +20,5 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
 SRC_URI_append_class-native = " file://relocate-modules.patch"
 SRC_URI_append_class-target = " file://glib-meson.cross"
 
-SRC_URI[md5sum] = "64c14b4fe46c478992560c2f48a5b649"
-SRC_URI[sha256sum] = "3dd9024e1d0872a6da7ac509937ccf997161b11d7d35be337c7e829cbae0f9df"
+SRC_URI[md5sum] = "bed3a70397a019965efac0c49f9c8164"
+SRC_URI[sha256sum] = "698824a413f76df039739c2a78f45b10939d526ae7495bab4e694e6730deb3f1"
