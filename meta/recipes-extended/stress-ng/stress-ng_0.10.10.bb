@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 SRC_URI = "https://kernel.ubuntu.com/~cking/tarballs/${BPN}/${BP}.tar.xz \
            file://0001-Do-not-preserve-ownership-when-installing-example-jo.patch \
            "
-SRC_URI[md5sum] = "e02acd0bc00d3c6a81412537393c2436"
-SRC_URI[sha256sum] = "4addeaabcfcb709581cbc4c61182317b8d91bcf31f529bfa899d170facfd75ce"
+SRC_URI[md5sum] = "ad4de38d6ff1ccf3640573e967dfb136"
+SRC_URI[sha256sum] = "031de5ebc44b49992c11633f10aae96da05a85b326aebdffd88ba8c445d23cf4"
 
 DEPENDS = "coreutils-native"
 
