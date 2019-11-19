@@ -60,8 +60,9 @@ BUILD_LDFLAGS = ""
 export PYTHON = "python3"
 
 do_configure_prepend() {
-	( cd ${S}
-	${S}/autogen.sh )
+	cd ${S}
+	FROM_BOOTSTRAP=1 ${S}/autogen.sh
+	cd ${B}
 }
 
 RDEPENDS_${PN}_class-native = ""
