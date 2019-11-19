@@ -75,7 +75,6 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     g++-symlinks \
     gcc \
     gcc-symlinks \
-    intltool \
     ldd \
     less \
     libstdc++ \
