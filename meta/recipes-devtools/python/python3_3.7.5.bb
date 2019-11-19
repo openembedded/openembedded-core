@@ -226,6 +226,9 @@ python(){
     pn = 'python3'
     rprovides = d.getVar('RPROVIDES').split()
 
+    # ${PN}-misc-native is not in the manifest
+    rprovides.append(pn + '-misc-native')
+
     for key in python_manifest:
         pypackage = pn + '-' + key + '-native'
         if pypackage not in rprovides:
