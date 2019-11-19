@@ -33,7 +33,7 @@ GRUBPLATFORM_arm = "efi"
 GRUBPLATFORM_aarch64 = "efi"
 GRUBPLATFORM ??= "pc"
 
-inherit autotools gettext texinfo
+inherit autotools gettext texinfo pkgconfig
 
 EXTRA_OECONF = "--with-platform=${GRUBPLATFORM} \
                 --disable-grub-mkfont \
