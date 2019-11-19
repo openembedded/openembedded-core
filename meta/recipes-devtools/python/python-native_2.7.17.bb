@@ -78,6 +78,9 @@ python(){
     # Hardcoded since it cant be python-native-foo, should be python-foo-native
     pn = 'python'
 
+    # ${PN}-misc-native is not in the manifest
+    rprovides.append(pn + '-misc-native')
+
     for key in python_manifest:
         pypackage = pn + '-' + key + '-native'
         if pypackage not in rprovides:
