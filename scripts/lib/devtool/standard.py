@@ -936,8 +936,10 @@ def modify(args, config, basepath, workspace):
                         '}\n')
             if rd.getVarFlag('do_menuconfig','task'):
                 f.write('\ndo_configure_append() {\n'
-                '    cp ${B}/.config ${S}/.config.baseline\n'
-                '    ln -sfT ${B}/.config ${S}/.config.new\n'
+                '    if [ ! ${DEVTOOL_DISABLE_MENUCONFIG} ]; then\n'
+                '        cp ${B}/.config ${S}/.config.baseline\n'
+                '        ln -sfT ${B}/.config ${S}/.config.new\n'
+                '    fi\n'
                 '}\n')
             if initial_rev:
                 f.write('\n# initial_rev: %s\n' % initial_rev)
