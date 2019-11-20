@@ -85,6 +85,8 @@ do_configure () {
         fi
         merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
         cml1_do_configure
+    else
+        DEVTOOL_DISABLE_MENUCONFIG=true
     fi
 }
 
