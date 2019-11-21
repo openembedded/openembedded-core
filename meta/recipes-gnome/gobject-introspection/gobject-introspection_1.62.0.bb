@@ -21,6 +21,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
            file://0001-Port-cross-compilation-support-to-meson.patch \
            file://0001-meson.build-disable-tests-when-cross-compiling.patch \
+           file://0001-Fix-build-reproducibility.patch \
            "
 
 SRC_URI[md5sum] = "37278eab3704e42234b6080b8cf241f1"
