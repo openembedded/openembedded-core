@@ -56,7 +56,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0e5cd938de1a7a53ea5adac38cc10c39 \
                     file://src/pulsecore/filter/biquad.h;beginline=1;endline=4;md5=6d46d1365206528a20137355924233c1 \
 "
 
-DEPENDS = "libatomic-ops libsndfile1 libtool intltool-native"
+DEPENDS = "libatomic-ops libsndfile1 libtool"
 # optional
 DEPENDS += "udev alsa-lib glib-2.0"
 DEPENDS += "speexdsp libxml-parser-perl-native libcap"
@@ -158,12 +158,22 @@ USERADD_PARAM_pulseaudio-server = "--system --home /var/run/pulse \
                               --no-create-home --shell /bin/false \
                               --groups audio,pulse --gid pulse pulse"
 
+PACKAGES =+ "\
+             libpulse \
+             libpulse-mainloop-glib \
+             libpulse-simple \
+             libpulsecommon \
+             libpulsecore \
+             ${PN}-pa-info \
+             ${PN}-server \
+             ${PN}-misc \
+             "
+
 # The console-kit module is included here explicitly so bitbake can map to the
 # RDEPENDS we define for it in this recipe, and thereby ensure that when
 # adding the console-kit module to an image, we also get the necessary
 # consolekit package produced.
-PACKAGES =+ "libpulsecore libpulsecommon libpulse libpulse-simple libpulse-mainloop-glib \
-             pulseaudio-server pulseaudio-misc ${@bb.utils.contains('PACKAGECONFIG', 'dbus', 'pulseaudio-module-console-kit', '', d)}"
+PACKAGES =+ "${@bb.utils.contains('PACKAGECONFIG', 'dbus', 'pulseaudio-module-console-kit', '', d)}"
 
 #upgrade path:
 RREPLACES_pulseaudio-server = "libpulse-bin libpulse-conf"
@@ -183,6 +193,7 @@ FILES_libpulse-mainloop-glib = "${libdir}/libpulse-mainloop-glib.so.*"
 FILES_${PN}-dev += "${libdir}/pulse-${PV}/modules/*.la ${datadir}/vala ${libdir}/cmake"   
 FILES_${PN}-conf = "${sysconfdir}"
 FILES_${PN}-bin += "${sysconfdir}/default/volatiles/volatiles.04_pulse"
+FILES_${PN}-pa-info = "${bindir}/pa-info"
 FILES_${PN}-server = "${bindir}/pulseaudio ${bindir}/start-* ${sysconfdir} ${bindir}/pactl */udev/rules.d/*.rules */*/udev/rules.d/*.rules ${systemd_user_unitdir}/*"
 
 #SYSTEMD_PACKAGES = "${PN}-server"
@@ -213,6 +224,16 @@ python populate_packages_prepend() {
     do_split_packages(d, plugindir, r'^module-(.*)\.so$', '${PN}-module-%s', 'PulseAudio module for %s', extra_depends='', prepend=True)
     do_split_packages(d, plugindir, r'^lib(.*)\.so$', '${PN}-lib-%s', 'PulseAudio library for %s', extra_depends='', prepend=True)
 }
+
+# pa-info is a bash script that collects information about the audio setup.
+# It's primarily useful for attaching an information dump when reporting bugs.
+RDEPENDS_${PN}-pa-info = "\
+                          alsa-utils-amixer \
+                          alsa-utils-aplay \
+                          alsa-utils-scripts \
+                          bash \
+                          ${PN}-server \
+                          "
 
 RDEPENDS_pulseaudio-server = " \
     pulseaudio-module-filter-apply \
