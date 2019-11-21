@@ -11,7 +11,7 @@ Instead of running code, take a macro from autoconf-archive which compiles C
 with a special double in which has an ASCII representation, and then greps the
 binary to identify the format.
 
-Upstream-Status: Submitted [https://bugs.python.org/issue34585]
+Upstream-Status: Backport [2a9c3805ddedf282881ef7811a561c70b74f80b1]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 ---
  configure.ac                     | 72 +++------------------------
