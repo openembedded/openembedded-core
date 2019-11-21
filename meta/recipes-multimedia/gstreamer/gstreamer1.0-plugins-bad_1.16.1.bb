@@ -82,12 +82,13 @@ PACKAGECONFIG[wayland]         = "--enable-wayland,--disable-wayland,wayland-nat
 PACKAGECONFIG[webp]            = "--enable-webp,--disable-webp,libwebp"
 PACKAGECONFIG[webrtc]          = "--enable-webrtc,--disable-webrtc,libnice"
 PACKAGECONFIG[webrtcdsp]       = "--enable-webrtcdsp,--disable-webrtcdsp,webrtc-audio-processing"
+PACKAGECONFIG[zbar]            = "--enable-zbar,--disable-zbar,zbar"
 
 # these plugins have no corresponding library in OE-core or meta-openembedded:
 #   openni2 winks direct3d directsound winscreencap apple_media iqa
 #   android_media avc bs2b chromaprint dts fdkaac gme gsm kate ladspa
 #   lv2 mpeg2enc mplex musepack nvenc ofa opensles soundtouch
-#   spandsp teletextdec vdpau wasapi wpe x265 zbar
+#   spandsp teletextdec vdpau wasapi wpe x265
 
 EXTRA_OECONF += " \
     --enable-decklink \
@@ -131,7 +132,6 @@ EXTRA_OECONF += " \
     --disable-winscreencap \
     --disable-wpe \
     --disable-x265 \
-    --disable-zbar \
     ${@bb.utils.contains("TUNE_FEATURES", "mx32", "--disable-yadif", "", d)} \
 "
 
