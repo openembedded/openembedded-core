@@ -167,7 +167,6 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     sysstat \
     tar \
     tcl \
-    texi2html \
     texinfo \
     unzip \
     usbutils \
