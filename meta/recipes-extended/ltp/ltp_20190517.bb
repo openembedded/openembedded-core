@@ -85,8 +85,6 @@ do_install(){
 }
 
 RDEPENDS_${PN} = "\
-    acl \
-    at \
     attr \
     bash \
     cpio \
