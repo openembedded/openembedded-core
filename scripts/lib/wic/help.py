@@ -341,12 +341,15 @@ DESCRIPTION
 
 wic_cp_usage = """
 
- Copy files and directories to the vfat or ext* partition
+ Copy files and directories to/from the vfat or ext* partition
 
- usage: wic cp <src> <image>:<partition>[<path>] [--native-sysroot <path>]
+ usage: wic cp <src> <dest> [--native-sysroot <path>]
 
- This command  copies local files or directories to the vfat or ext* partitions
-of partitioned  image.
+ source/destination image in format <image>:<partition>[<path>]
+
+ This command copies files or directories either
+  - from local to vfat or ext* partitions of partitioned image
+  - from vfat or ext* partitions of partitioned image to local
 
  See 'wic help cp' for more detailed instructions.
 
@@ -355,16 +358,18 @@ of partitioned  image.
 wic_cp_help = """
 
 NAME
-    wic cp - copy files and directories to the vfat or ext* partitions
+    wic cp - copy files and directories to/from the vfat or ext* partitions
 
 SYNOPSIS
-    wic cp <src> <image>:<partition>
-    wic cp <src> <image>:<partition><path>
-    wic cp <src> <image>:<partition><path> --native-sysroot <path>
+    wic cp <src> <dest>:<partition>
+    wic cp <src>:<partition> <dest>
+    wic cp <src> <dest-image>:<partition><path>
+    wic cp <src> <dest-image>:<partition><path> --native-sysroot <path>
 
 DESCRIPTION
-    This command copies files and directories to the vfat or ext* partition of
-    the partitioned image.
+    This command copies files or directories either
+      - from local to vfat or ext* partitions of partitioned image
+      - from vfat or ext* partitions of partitioned image to local
 
     The first form of it copies file or directory to the root directory of
     the partition:
@@ -396,6 +401,10 @@ DESCRIPTION
        test         <DIR>     2017-05-24  21:27
                4 files                   0 bytes
                                 15 675 392 bytes free
+
+    The third form of the command copies file or directory from the specified directory
+    on the partition to local:
+       $ wic cp tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/vmlinuz test
 
     The -n option is used to specify the path to the native sysroot
     containing the tools(parted and mtools) to use.

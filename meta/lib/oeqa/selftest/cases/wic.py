@@ -866,6 +866,13 @@ class Wic2(WicTestCase):
             self.assertEqual(8, len(result.output.split('\n')))
             self.assertTrue(os.path.basename(testdir) in result.output)
 
+            # copy the file from the partition and check if it success
+            dest = '%s-cp' % testfile.name
+            runCmd("wic cp %s:1/%s %s -n %s" % (images[0],
+                    os.path.basename(testfile.name), dest, sysroot))
+            self.assertTrue(os.path.exists(dest))
+
+
     def test_wic_rm(self):
         """Test removing files and directories from the the wic image."""
         runCmd("wic create mkefidisk "
@@ -1004,6 +1011,16 @@ class Wic2(WicTestCase):
             result = runCmd("wic ls %s:2/ -n %s" % (images[0], sysroot))
             newdirs = set(line.split()[-1] for line in result.output.split('\n') if line)
             self.assertEqual(newdirs.difference(dirs), set([os.path.basename(testfile.name)]))
+
+            # check if the file to copy is in the partition
+            result = runCmd("wic ls %s:2/etc/ -n %s" % (images[0], sysroot))
+            self.assertTrue('fstab' in [line.split()[-1] for line in result.output.split('\n') if line])
+
+            # copy file from the partition, replace the temporary file content with it and
+            # check for the file size to validate the copy
+            runCmd("wic cp %s:2/etc/fstab %s -n %s" % (images[0], testfile.name, sysroot))
+            self.assertTrue(os.stat(testfile.name).st_size > 0)
+
 
     def test_wic_rm_ext(self):
         """Test removing files from the ext partition."""

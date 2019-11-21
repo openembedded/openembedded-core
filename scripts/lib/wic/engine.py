@@ -323,16 +323,31 @@ class Disk:
                                                    self._get_part_image(pnum),
                                                    path))
 
-    def copy(self, src, pnum, path):
+    def copy(self, src, dest):
         """Copy partition image into wic image."""
+        pnum =  dest.part if isinstance(src, str) else src.part
+
         if self.partitions[pnum].fstype.startswith('ext'):
-            cmd = "printf 'cd {}\nwrite {} {}\n' | {} -w {}".\
-                      format(path, src, os.path.basename(src),
+            if isinstance(src, str):
+                cmd = "printf 'cd {}\nwrite {} {}\n' | {} -w {}".\
+                      format(os.path.dirname(dest.path), src, os.path.basename(src),
                              self.debugfs, self._get_part_image(pnum))
+            else: # copy from wic
+                # run both dump and rdump to support both files and directory
+                cmd = "printf 'cd {}\ndump /{} {}\nrdump /{} {}\n' | {} {}".\
+                      format(os.path.dirname(src.path), src.path,
+                             dest, src.path, dest, self.debugfs,
+                             self._get_part_image(pnum))
         else: # fat
-            cmd = "{} -i {} -snop {} ::{}".format(self.mcopy,
+            if isinstance(src, str):
+                cmd = "{} -i {} -snop {} ::{}".format(self.mcopy,
                                                   self._get_part_image(pnum),
-                                                  src, path)
+                                                  src, dest.path)
+            else:
+                cmd = "{} -i {} -snop ::{} {}".format(self.mcopy,
+                                                  self._get_part_image(pnum),
+                                                  src.path, dest)
+
         exec_cmd(cmd, as_shell=True)
         self._put_part_image(pnum)
 
@@ -551,11 +566,15 @@ def wic_ls(args, native_sysroot):
 
 def wic_cp(args, native_sysroot):
     """
-    Copy local file or directory to the vfat partition of
+    Copy file or directory to/from the vfat/ext partition of
     partitioned image.
     """
-    disk = Disk(args.dest.image, native_sysroot)
-    disk.copy(args.src, args.dest.part, args.dest.path)
+    if isinstance(args.dest, str):
+        disk = Disk(args.src.image, native_sysroot)
+    else:
+        disk = Disk(args.dest.image, native_sysroot)
+    disk.copy(args.src, args.dest)
+
 
 def wic_rm(args, native_sysroot):
     """
