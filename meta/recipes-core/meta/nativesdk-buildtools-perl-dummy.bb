@@ -1,6 +1,6 @@
 DUMMYARCH = "buildtools-dummy-${SDKPKGSUFFIX}"
 
-DUMMYPROVIDES = "\
+DUMMYPROVIDES_PACKAGES = "\
     nativesdk-perl \
     nativesdk-libxml-parser-perl \
     nativesdk-perl-module-bytes \
@@ -21,6 +21,9 @@ DUMMYPROVIDES = "\
     nativesdk-perl-module-posix \
     nativesdk-perl-module-thread-queue \
     nativesdk-perl-module-threads \
+"
+
+DUMMYPROVIDES = "\
     /usr/bin/perl \
     "
 
