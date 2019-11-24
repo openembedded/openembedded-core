@@ -18,8 +18,8 @@ SRC_URI = " \
             file://0001-gstreamer-gl.pc.in-don-t-append-GL_CFLAGS-to-CFLAGS.patch \
             file://link-with-libvchostif.patch \
             "
-SRC_URI[md5sum] = "41dde92930710c75cdb49169c5cc6dfc"
-SRC_URI[sha256sum] = "4093aa7b51e28fb24dfd603893fead8d1b7782f088b05ed0f22a21ef176fb5ae"
+SRC_URI[md5sum] = "b5eb0651bab70bf1714f103bdd66ce47"
+SRC_URI[sha256sum] = "5c3cc489933d0597087c9bc6ba251c93693d64554bcc563539a084fa2d5fcb2b"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 
