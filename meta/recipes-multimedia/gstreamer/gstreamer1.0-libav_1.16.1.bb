@@ -18,10 +18,9 @@ SRC_URI = "http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-${PV}.tar.xz
            file://mips64_cpu_detection.patch \
            file://0001-configure-check-for-armv7ve-variant.patch \
            file://0001-fix-host-contamination.patch \
-           file://gtkdoc-no-tree.patch \
            "
-SRC_URI[md5sum] = "e3a201a45985ddc1327cd496046ca818"
-SRC_URI[sha256sum] = "dfac119043a9cfdcacd7acde77f674ab172cf2537b5812be52f49e9cddc53d9a"
+SRC_URI[md5sum] = "58023f4c71bbd711061e350fcd76c09d"
+SRC_URI[sha256sum] = "e8a5748ae9a4a7be9696512182ea9ffa6efe0be9b7976916548e9d4381ca61c4"
 
 S = "${WORKDIR}/gst-libav-${PV}"
 
