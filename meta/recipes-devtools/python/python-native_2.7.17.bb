@@ -12,7 +12,7 @@ SRC_URI += "\
             file://nohostlibs.patch \
             file://multilib.patch \
             file://add-md5module-support.patch \
-            file://builddir.patch \
+            file://0001-python-Resolve-intermediate-staging-issues.patch \
             file://parallel-makeinst-create-bindir.patch \
             file://revert_use_of_sysconfigdata.patch \
             file://0001-python-native-fix-one-do_populate_sysroot-warning.patch \
