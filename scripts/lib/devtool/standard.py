@@ -2011,7 +2011,7 @@ def finish(args, config, basepath, workspace):
     no_clean = args.no_clean
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
-        rd = parse_recipe(config, tinfoil, args.recipename, True, False)
+        rd = parse_recipe(config, tinfoil, args.recipename, True)
         if not rd:
             return 1
 
