@@ -179,7 +179,7 @@ RRECOMMENDS_${PN}-dbg = ""
 
 # include python debugging scripts
 FILES_${PN}-dbg += "\
-    ${libdir}/libstdc++.so.*-gdb.py \
+    ${libdir}/libstdc++.*-gdb.py \
     ${datadir}/gcc-${BINV}/python/libstdcxx \
 "
 
