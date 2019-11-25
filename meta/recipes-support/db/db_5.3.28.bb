@@ -10,7 +10,7 @@
 # same system at the same time if really necessary.
 SECTION = "libs"
 SUMMARY = "Berkeley Database v5"
-HOMEPAGE = "http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/overview/index.html"
+HOMEPAGE = "https://www.oracle.com/database/technologies/related/berkeleydb.html"
 LICENSE = "Sleepycat"
 RCONFLICTS_${PN} = "db3"
 
@@ -20,7 +20,7 @@ CVE_VERSION = "11.2.${PV}"
 PR = "r1"
 PE = "1"
 
-SRC_URI = "http://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
+SRC_URI = "https://download.oracle.com/berkeley-db/db-${PV}.tar.gz"
 SRC_URI += "file://fix-parallel-build.patch \
             file://0001-atomic-Rename-local-__atomic_compare_exchange-to-avo.patch \
             file://0001-configure-Add-explicit-tag-options-to-libtool-invoca.patch \

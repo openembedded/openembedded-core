@@ -1,6 +1,6 @@
 SUMMARY = "WebKit web rendering engine for the GTK+ platform"
-HOMEPAGE = "http://www.webkitgtk.org/"
-BUGTRACKER = "http://bugs.webkit.org/"
+HOMEPAGE = "https://www.webkitgtk.org/"
+BUGTRACKER = "https://bugs.webkit.org/"
 
 LICENSE = "BSD & LGPLv2+"
 LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d84286dda758da57bd691 \
@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d842
 		    file://Source/WebCore/LICENSE-LGPL-2.1;md5=a778a33ef338abbaf8b8a7c36b6eec80 \
 		   "
 
-SRC_URI = "http://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
+SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-FindGObjectIntrospection.cmake-prefix-variables-obta.patch \
            file://0001-When-building-introspection-files-add-CMAKE_C_FLAGS-.patch \
            file://0001-OptionsGTK.cmake-drop-the-hardcoded-introspection-gt.patch \
