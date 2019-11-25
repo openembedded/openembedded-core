@@ -29,13 +29,6 @@ if [ -z "$OE_SKIP_SDK_CHECK" ] && [ -n "$OECORE_SDK_VERSION" ]; then
     return 1
 fi
 
-py_v27_check=$(python2 -c 'import sys; print sys.version_info >= (2,7,3)')
-if [ "$py_v27_check" != "True" ]; then
-    echo >&2 "OpenEmbedded requires 'python' to be python v2 (>= 2.7.3), not python v3."
-    echo >&2 "Please upgrade your python v2."
-fi
-unset py_v27_check
-
 # We potentially have code that doesn't parse correctly with older versions 
 # of Python, and rather than fixing that and being eternally vigilant for 
 # any other new feature use, just check the version here.
