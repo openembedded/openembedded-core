@@ -31,7 +31,7 @@ re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds,
-                 use_kvm, logger, use_slirp=False):
+                 use_kvm, logger, use_slirp=False, serial_ports=2):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -55,6 +55,7 @@ class QemuRunner:
         self.thread = None
         self.use_kvm = use_kvm
         self.use_slirp = use_slirp
+        self.serial_ports = serial_ports
         self.msg = ''
 
         self.runqemutime = 120
@@ -142,7 +143,8 @@ class QemuRunner:
 
     def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None, env = None):
         try:
-            self.threadsock, threadport = self.create_socket()
+            if self.serial_ports >= 2:
+                self.threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
         except socket.error as msg:
             self.logger.error("Failed to create listening socket: %s" % msg[1])
@@ -160,7 +162,10 @@ class QemuRunner:
         if qemuparams:
             self.qemuparams = self.qemuparams[:-1] + " " + qemuparams + " " + '\"'
 
-        launch_cmd += ' tcpserial=%s:%s %s' % (threadport, self.serverport, self.qemuparams)
+        if self.serial_ports >= 2:
+            launch_cmd += ' tcpserial=%s:%s %s' % (threadport, self.serverport, self.qemuparams)
+        else:
+            launch_cmd += ' tcpserial=%s %s' % (self.serverport, self.qemuparams)
 
         self.origchldhandler = signal.getsignal(signal.SIGCHLD)
         signal.signal(signal.SIGCHLD, self.handleSIGCHLD)
@@ -275,14 +280,15 @@ class QemuRunner:
         self.logger.debug("Target IP: %s" % self.ip)
         self.logger.debug("Server IP: %s" % self.server_ip)
 
-        self.thread = LoggingThread(self.log, self.threadsock, self.logger)
-        self.thread.start()
-        if not self.thread.connection_established.wait(self.boottime):
-            self.logger.error("Didn't receive a console connection from qemu. "
-                         "Here is the qemu command line used:\n%s\nand "
-                         "output from runqemu:\n%s" % (cmdline, out))
-            self.stop_thread()
-            return False
+        if self.serial_ports >= 2:
+            self.thread = LoggingThread(self.log, self.threadsock, self.logger)
+            self.thread.start()
+            if not self.thread.connection_established.wait(self.boottime):
+                self.logger.error("Didn't receive a console connection from qemu. "
+                             "Here is the qemu command line used:\n%s\nand "
+                             "output from runqemu:\n%s" % (cmdline, out))
+                self.stop_thread()
+                return False
 
         self.logger.debug("Output from runqemu:\n%s", out)
         self.logger.debug("Waiting at most %d seconds for login banner (%s)" %
@@ -310,6 +316,10 @@ class QemuRunner:
                     data = data + sock.recv(1024)
                     if data:
                         bootlog += data
+                        if self.serial_ports < 2:
+                            # this socket has mixed console/kernel data, log it to logfile
+                            self.log(data)
+
                         data = b''
                         if b' login:' in bootlog:
                             self.server_socket = qemusock

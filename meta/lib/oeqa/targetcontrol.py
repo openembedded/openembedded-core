@@ -143,7 +143,8 @@ class QemuTarget(BaseTarget):
                             use_kvm = use_kvm,
                             dump_dir = dump_dir,
                             dump_host_cmds = d.getVar("testimage_dump_host"),
-                            logger = logger)
+                            logger = logger,
+                            serial_ports = len(d.getVar("SERIAL_CONSOLES").split()))
 
         self.target_dumper = TargetDumper(dump_target_cmds, dump_dir, self.runner)
 
