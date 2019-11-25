@@ -35,10 +35,9 @@ do_configure_append() {
 	autoreconf --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
 }
 
-# Regenerate all of the generated files
-# This ensures that pgen and friends get created during the compile phase
-do_compile_prepend() {
-    oe_runmake regen-all
+# Cross-compiling Python needs a native pgen, build it here for use later.
+do_compile_append() {
+	oe_runmake Parser/pgen
 }
 
 do_install() {
