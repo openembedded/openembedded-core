@@ -1,0 +1,77 @@
+From af75e8ee3d12a493b758421b2feed0351fdcbbf0 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 23 Nov 2019 13:44:32 -0800
+Subject: [PATCH] adjust for 64bit time_t for 32bit architectures
+
+libc that has support for 32 bit applications to use 64 bit
+time_t supplies __USE_TIME_BITS64 define [1]
+
+[1] https://sourceware.org/glibc/wiki/Y2038ProofnessDesign
+
+Upstream-Status: Pending
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/core.c        |  8 +++++++-
+ test/mtdev-test.c | 10 ++++++++--
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/src/core.c b/src/core.c
+index 87ef420..0d91c0b 100644
+--- a/src/core.c
++++ b/src/core.c
+@@ -31,6 +31,11 @@
+ #include "evbuf.h"
+ #include "match.h"
+ 
++#ifndef input_event_sec
++#define input_event_sec time.tv_sec
++#define input_event_usec time.tv_usec
++#endif
++
+ static inline int istouch(const struct mtdev_slot *data,
+ 			  const struct mtdev *dev)
+ {
+@@ -251,7 +256,8 @@ static void push_slot_changes(struct mtdev_state *state,
+ 			count++;
+ 	if (!count)
+ 		return;
+-	ev.time = syn->time;
++	ev.input_event_sec = syn->input_event_sec;
++	ev.input_event_usec = syn->input_event_usec;
+ 	ev.type = EV_ABS;
+ 	ev.code = ABS_MT_SLOT;
+ 	ev.value = slot;
+diff --git a/test/mtdev-test.c b/test/mtdev-test.c
+index 1b3e4f2..773f86a 100644
+--- a/test/mtdev-test.c
++++ b/test/mtdev-test.c
+@@ -30,9 +30,15 @@
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <fcntl.h>
++#include <stdint.h>
++
++#ifndef input_event_sec
++#define input_event_sec time.tv_sec
++#define input_event_usec time.tv_usec
++#endif
+ 
+ /* year-proof millisecond event time */
+-typedef __u64 mstime_t;
++typedef uint64_t mstime_t;
+ 
+ static int use_event(const struct input_event *ev)
+ {
+@@ -47,7 +53,7 @@ static void print_event(const struct input_event *ev)
+ {
+ 	static const mstime_t ms = 1000;
+ 	static int slot;
+-	mstime_t evtime = ev->time.tv_usec / ms + ev->time.tv_sec * ms;
++	mstime_t evtime = ev->input_event_usec / ms + ev->input_event_sec * ms;
+ 	if (ev->type == EV_ABS && ev->code == ABS_MT_SLOT)
+ 		slot = ev->value;
+ 	fprintf(stderr, "%012llx %02d %01d %04x %d\n",
+-- 
+2.24.0
+
