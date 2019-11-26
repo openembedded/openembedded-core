@@ -5,8 +5,8 @@ Wants=network-pre.target
 
 [Service]
 Type=oneshot
-ExecStart=@SBINDIR@/iptables-restore /etc/iptables/iptables.rules
-ExecReload=@SBINDIR@/iptables-restore /etc/iptables/iptables.rules
+ExecStart=@SBINDIR@/iptables-restore @RULESDIR@/iptables.rules
+ExecReload=@SBINDIR@/iptables-restore @RULESDIR@/iptables.rules
 RemainAfterExit=yes
 
 [Install]

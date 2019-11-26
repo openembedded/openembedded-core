@@ -38,14 +38,19 @@ do_configure_prepend() {
     rm -f libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4
 }
 
+IPTABLES_RULES_DIR ?= "${sysconfdir}/${BPN}"
+
 do_install_append() {
-    install -d ${D}${sysconfdir}/iptables
-    install -m 0644 ${WORKDIR}/iptables.rules ${D}${sysconfdir}/iptables
+    install -d ${D}${IPTABLES_RULES_DIR}
+    install -m 0644 ${WORKDIR}/iptables.rules ${D}${IPTABLES_RULES_DIR}
 
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${WORKDIR}/iptables.service ${D}${systemd_system_unitdir}
 
-    sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_system_unitdir}/iptables.service
+    sed -i \
+        -e 's,@SBINDIR@,${sbindir},g' \
+        -e 's,@RULESDIR@,${IPTABLES_RULES_DIR},g' \
+        ${D}${systemd_system_unitdir}/iptables.service
 }
 
 PACKAGES += "${PN}-modules"
