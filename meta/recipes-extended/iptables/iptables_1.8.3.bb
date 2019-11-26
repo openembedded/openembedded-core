@@ -13,11 +13,16 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
            file://iptables.service \
            file://iptables.rules \
+           file://ip6tables.service \
+           file://ip6tables.rules \
 "
 SRC_URI[md5sum] = "29de711d15c040c402cf3038c69ff513"
 SRC_URI[sha256sum] = "a23cac034181206b4545f4e7e730e76e08b5f3dd78771ba9645a6756de9cdd80"
 
-SYSTEMD_SERVICE_${PN} = "iptables.service"
+SYSTEMD_SERVICE_${PN} = "\
+    iptables.service \
+    ${@bb.utils.contains('PACKAGECONFIG', 'ipv6', 'ip6tables.service', '', d)} \
+"
 
 inherit autotools pkgconfig systemd
 
@@ -51,6 +56,16 @@ do_install_append() {
         -e 's,@SBINDIR@,${sbindir},g' \
         -e 's,@RULESDIR@,${IPTABLES_RULES_DIR},g' \
         ${D}${systemd_system_unitdir}/iptables.service
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'ipv6', 'true', 'false', d)} ; then
+        install -m 0644 ${WORKDIR}/ip6tables.rules ${D}${IPTABLES_RULES_DIR}
+        install -m 0644 ${WORKDIR}/ip6tables.service ${D}${systemd_system_unitdir}
+
+        sed -i \
+            -e 's,@SBINDIR@,${sbindir},g' \
+            -e 's,@RULESDIR@,${IPTABLES_RULES_DIR},g' \
+            ${D}${systemd_system_unitdir}/ip6tables.service
+    fi
 }
 
 PACKAGES += "${PN}-modules"
@@ -75,6 +90,10 @@ RRECOMMENDS_${PN} = " \
     kernel-module-nf-conntrack-ipv4 \
     kernel-module-nf-nat \
     kernel-module-ipt-masquerade \
+    ${@bb.utils.contains('PACKAGECONFIG', 'ipv6', '\
+        kernel-module-ip6table-filter \
+        kernel-module-ip6-tables \
+    ', '', d)} \
 "
 
 FILES_${PN} += "${datadir}/xtables"
