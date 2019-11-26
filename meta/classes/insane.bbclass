@@ -893,9 +893,9 @@ def package_qa_check_src_uri(pn, d, messages):
     if "${PN}" in d.getVar("SRC_URI", False):
         package_qa_handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
 
-    pn = d.getVar("SRC_URI")
-    if re.search(r"github\.com/.+/.+/archive/.+", pn):
-        package_qa_handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub archives" % pn, d)
+    for url in d.getVar("SRC_URI").split():
+        if re.search(r"github\.com/.+/.+/archive/.+", url):
+            package_qa_handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub archives" % pn, d)
 
 
 # The PACKAGE FUNC to scan each package
