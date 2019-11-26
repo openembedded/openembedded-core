@@ -45,7 +45,13 @@ PACKAGECONFIG[bdb] = ",,db"
 PACKAGECONFIG[tk] = ",,tk"
 
 # pgen isn't needed in the current build, but use the binary from python-native just in case.
-EXTRA_OEMAKE = "PGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen"
+EXTRA_OEMAKE = "PGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+                HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
+                CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
+                STAGING_LIBDIR=${STAGING_LIBDIR} \
+                STAGING_INCDIR=${STAGING_INCDIR} \
+                STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
+                "
 
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
@@ -85,12 +91,7 @@ do_compile() {
 	export CROSS_COMPILE="${TARGET_PREFIX}"
 	export PYTHONBUILDDIR="${B}"
 
-	oe_runmake \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		OPT="${CFLAGS}"
+	oe_runmake OPT="${CFLAGS}"
 }
 
 do_install() {
@@ -103,21 +104,9 @@ do_install() {
 
 	# After swizzling the makefile, we need to run the build again.
 	# install can race with the build so we have to run this first, then install
-	oe_runmake \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
-		CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		DESTDIR=${D} LIBDIR=${libdir}
+	oe_runmake DESTDIR=${D} LIBDIR=${libdir}
 	
-	oe_runmake \
-		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
-		CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
-		STAGING_LIBDIR=${STAGING_LIBDIR} \
-		STAGING_INCDIR=${STAGING_INCDIR} \
-		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
-		DESTDIR=${D} LIBDIR=${libdir} install
+	oe_runmake DESTDIR=${D} LIBDIR=${libdir} install
 
 	install -m 0644 Makefile.sysroot ${D}/${libdir}/python${PYTHON_MAJMIN}/config/Makefile
 
