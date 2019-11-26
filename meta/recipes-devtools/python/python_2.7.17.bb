@@ -44,6 +44,9 @@ PACKAGECONFIG ??= "bdb"
 PACKAGECONFIG[bdb] = ",,db"
 PACKAGECONFIG[tk] = ",,tk"
 
+# pgen isn't needed in the current build, but use the binary from python-native just in case.
+EXTRA_OEMAKE = "PGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen"
+
 do_configure_append() {
 	rm -f ${S}/Makefile.orig
         autoreconf -Wcross --verbose --install --force --exclude=autopoint ../Python-${PV}/Modules/_ctypes/libffi
@@ -82,7 +85,7 @@ do_compile() {
 	export CROSS_COMPILE="${TARGET_PREFIX}"
 	export PYTHONBUILDDIR="${B}"
 
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+	oe_runmake \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
 		STAGING_INCDIR=${STAGING_INCDIR} \
@@ -100,7 +103,7 @@ do_install() {
 
 	# After swizzling the makefile, we need to run the build again.
 	# install can race with the build so we have to run this first, then install
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+	oe_runmake \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
 		CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \
@@ -108,7 +111,7 @@ do_install() {
 		STAGING_BASELIBDIR=${STAGING_BASELIBDIR} \
 		DESTDIR=${D} LIBDIR=${libdir}
 	
-	oe_runmake HOSTPGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
+	oe_runmake \
 		HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
 		CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
 		STAGING_LIBDIR=${STAGING_LIBDIR} \

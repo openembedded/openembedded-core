@@ -16,14 +16,6 @@ Index: Python-2.7.13/Makefile.pre.in
 ===================================================================
 --- Python-2.7.13.orig/Makefile.pre.in
 +++ Python-2.7.13/Makefile.pre.in
-@@ -245,6 +245,7 @@ LIBFFI_INCLUDEDIR=	@LIBFFI_INCLUDEDIR@
- ##########################################################################
- # Parser
- PGEN=		Parser/pgen$(EXE)
-+HOSTPGEN=	$(PGEN)$(EXE)
- 
- PSRCS=		\
- 		Parser/acceler.c \
 @@ -512,7 +513,7 @@ $(BUILDPYTHON):	Modules/python.o $(LIBRA
  			$(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
  
@@ -33,15 +25,6 @@ Index: Python-2.7.13/Makefile.pre.in
  
  # Create build directory and generate the sysconfig build-time data there.
  # pybuilddir.txt contains the name of the build dir and is used for
-@@ -663,7 +663,7 @@
- 	# Regenerate Include/graminit.h and Python/graminit.c
- 	# from Grammar/Grammar using pgen
- 	@$(MKDIR_P) Include
--	$(PGEN) $(srcdir)/Grammar/Grammar \
-+	$(HOSTPGEN) $(srcdir)/Grammar/Grammar \
- 		$(srcdir)/Include/graminit.h \
- 		$(srcdir)/Python/graminit.c
- 
 @@ -1121,27 +1122,27 @@ libinstall:	build_all $(srcdir)/Lib/$(PL
  			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
  	fi
