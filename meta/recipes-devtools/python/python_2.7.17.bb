@@ -1,6 +1,6 @@
 require python.inc
 
-DEPENDS = "python-native libffi bzip2 gdbm openssl \
+DEPENDS = "libffi bzip2 gdbm openssl \
            readline sqlite3 zlib virtual/crypt"
 
 DISTRO_SRC_URI ?= "file://sitecustomize.py"
@@ -48,7 +48,6 @@ PACKAGECONFIG[tk] = ",,tk"
 
 # pgen isn't needed in the current build, but use the binary from python-native just in case.
 EXTRA_OEMAKE = "PGEN=${STAGING_BINDIR_NATIVE}/python-native/pgen \
-                HOSTPYTHON=${STAGING_BINDIR_NATIVE}/python-native/python \
                 CROSSPYTHONPATH=${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/ \
                 STAGING_LIBDIR=${STAGING_LIBDIR} \
                 STAGING_INCDIR=${STAGING_INCDIR} \
