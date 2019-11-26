@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://source/compiler/aslcompile.c;beginline=7;endline=150;
 
 COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
-DEPENDS = "bison flex bison-native"
+DEPENDS = "m4-native flex-native bison-native"
 
 SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix-${PV}.tar.gz"
 SRC_URI[md5sum] = "539a0252bcb42c383ceeaeb12ae9a60d"
