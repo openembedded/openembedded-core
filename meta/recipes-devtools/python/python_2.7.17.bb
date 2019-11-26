@@ -218,7 +218,7 @@ python(){
             d.appendVar('FILES_' + pypackage, ' ' + value)
             if include_pycs == '1':
                 if value.endswith('.py'):
-                    d.appendVar('FILES_' + pypackage, ' ' + value + 'c')
+                    d.appendVar('FILES_' + pypackage, ' ' + value + '?')
 
         for value in python_manifest[key]['rdepends']:
             # Make it work with or without $PN
