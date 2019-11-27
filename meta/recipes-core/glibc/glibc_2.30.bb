@@ -41,6 +41,7 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0026-intl-Emit-no-lines-in-bison-generated-files.patch \
            file://0027-inject-file-assembly-directives.patch \
            file://0028-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           file://CVE-2019-19126.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
