@@ -32,6 +32,7 @@ PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
 EXTRA_OECONF += "--enable-largefile"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
+           file://CVE-2019-19221.patch \
 "
 
 SRC_URI[md5sum] = "6046396255bd7cf6d0f6603a9bda39ac"
