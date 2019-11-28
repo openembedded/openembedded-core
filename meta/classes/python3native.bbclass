@@ -1,6 +1,8 @@
 inherit python3-dir
 
 PYTHON="${STAGING_BINDIR_NATIVE}/python3-native/python3"
+# PYTHON_EXECUTABLE is used by cmake
+PYTHON_EXECUTABLE="${PYTHON}"
 EXTRANATIVEPATH += "python3-native"
 DEPENDS_append = " python3-native "
 
