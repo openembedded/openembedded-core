@@ -242,8 +242,8 @@ class QemuRunner:
         self.logger.debug("qemu started in %s seconds - qemu procces pid is %s (%s)" %
                           (time.time() - (endtime - self.runqemutime),
                            self.qemupid, time.strftime("%D %H:%M:%S")))
+        cmdline = ''
         if get_ip:
-            cmdline = ''
             with open('/proc/%s/cmdline' % self.qemupid) as p:
                 cmdline = p.read()
                 # It is needed to sanitize the data received
