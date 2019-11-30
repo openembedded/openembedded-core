@@ -68,6 +68,13 @@ do_compile () {
 	sed -i 's@${STAGING_DIR_TARGET}@/host@g' ${B}/gcc/configargs.h
 	sed -i 's@${STAGING_DIR_HOST}@/host@g' ${B}/gcc/configargs.h
 
+	# Prevent sysroot/workdir paths from being used in checksum-options.
+	# checksum-options is used to generate a checksum which is embedded into
+	# the output binary.
+	oe_runmake TARGET-gcc=checksum-options all-gcc
+	sed -i 's@${DEBUG_PREFIX_MAP}@@g' ${B}/gcc/checksum-options
+	sed -i 's@${STAGING_DIR_HOST}@/host@g' ${B}/gcc/checksum-options
+
 	oe_runmake all-host configure-target-libgcc
 	(cd ${B}/${TARGET_SYS}/libgcc; oe_runmake enable-execute-stack.c unwind.h md-unwind-support.h sfp-machine.h gthr-default.h)
 	# now generate script to drive testing
