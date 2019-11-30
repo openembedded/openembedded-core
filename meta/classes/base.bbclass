@@ -606,6 +606,7 @@ python () {
         # Mercurial packages should DEPEND on mercurial-native
         elif scheme == "hg":
             needsrcrev = True
+            d.appendVar("EXTRANATIVEPATH", ' python3-native ')
             d.appendVarFlag('do_fetch', 'depends', ' mercurial-native:do_populate_sysroot')
 
         # Perforce packages support SRCREV = "${AUTOREV}"
