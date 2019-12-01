@@ -6,7 +6,7 @@ and for executing commands on a remote machine."
 HOMEPAGE = "http://www.openssh.com/"
 SECTION = "console/network"
 LICENSE = "BSD & ISC & MIT"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=429658c6612f3a9b1293782366ab29d8"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=18d9e5a8b3dd1790d73502f50426d4d3"
 
 DEPENDS = "zlib openssl virtual/crypt"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -24,14 +24,13 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
            file://sshd_check_keys \
            file://add-test-support-for-busybox.patch \
-           file://0001-upstream-fix-integer-overflow-in-XMSS-private-key-pa.patch \
            "
-SRC_URI[md5sum] = "bf050f002fe510e1daecd39044e1122d"
-SRC_URI[sha256sum] = "bd943879e69498e8031eb6b7f44d08cdc37d59a7ab689aa0b437320c3481fd68"
+SRC_URI[md5sum] = "513694343631a99841e815306806edf0"
+SRC_URI[sha256sum] = "02f5dbef3835d0753556f973cd57b4c19b6b1f6cd24c03445e23ac77ca1b93ff"
 
 PAM_SRC_URI = "file://sshd"
 
-inherit useradd update-rc.d update-alternatives systemd
+inherit manpages useradd update-rc.d update-alternatives systemd
 
 USERADD_PACKAGES = "${PN}-sshd"
 USERADD_PARAM_${PN}-sshd = "--system --no-create-home --home-dir /var/run/sshd --shell /bin/false --user-group sshd"
@@ -43,6 +42,12 @@ SYSTEMD_PACKAGES = "${PN}-sshd"
 SYSTEMD_SERVICE_${PN}-sshd = "sshd.socket"
 
 inherit autotools-brokensep ptest
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[kerberos] = "--with-kerberos5,--without-kerberos5,krb5"
+PACKAGECONFIG[ldns] = "--with-ldns,--without-ldns,ldns"
+PACKAGECONFIG[libedit] = "--with-libedit,--without-libedit,libedit"
+PACKAGECONFIG[manpages] = "--with-mantype=man,--with-mantype=cat"
 
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
