@@ -7,11 +7,10 @@ SRCNAME = "numpy"
 
 SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
-           file://0001-npy_cpu-Add-riscv-support.patch \
            file://0001-numpy-random-setup.py-remove-the-detection-of-x86-ta.patch \
            "
-SRC_URI[md5sum] = "c48b2ad785f82cdfe28c907ce35e2a71"
-SRC_URI[sha256sum] = "47b7b6145e7ba5918ce26be25999b6d4b35cf9fbfdf46b7da50090ffdb020445"
+SRC_URI[md5sum] = "9147c3ee75e58d657b5b8b5a4f3564e0"
+SRC_URI[sha256sum] = "fb0415475e673cb9a6dd816df999e0ab9f86fa3af2b1770944e7288d2bea4ac9"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
