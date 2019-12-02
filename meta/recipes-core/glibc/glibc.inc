@@ -1,6 +1,5 @@
 require glibc-common.inc
 require glibc-ld.inc
-require glibc-testing.inc
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc libgcc-initial linux-libc-headers"
 
