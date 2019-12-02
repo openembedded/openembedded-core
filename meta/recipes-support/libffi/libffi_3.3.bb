@@ -8,23 +8,22 @@ library really only provides the lowest, machine dependent layer of a fully feat
 A layer must exist above `libffi' that handles type conversions for values passed between the two languages."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=3610bb17683a0089ed64055416b2ae1b"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=492385fe22195952f5b9b197868ba268"
 
-SRC_URI = "https://github.com/libffi/libffi/releases/download/v3.3-rc0/libffi-3.3-rc0.tar.gz \
+SRC_URI = "https://github.com/libffi/libffi/releases/download/v${PV}/${BPN}-${PV}.tar.gz \
            file://not-win32.patch \
            file://0001-Fixed-missed-ifndef-for-__mips_soft_float.patch \
+           file://0001-powerpc-fix-build-failure-on-power7-and-older-532.patch \
+           file://0001-Address-platforms-with-no-__int128.patch \
            "
-SRC_URI[md5sum] = "8d2a82a78faf10a5e53c27d986e8f04e"
-SRC_URI[sha256sum] = "403d67aabf1c05157855ea2b1d9950263fb6316536c8c333f5b9ab1eb2f20ecf"
+SRC_URI[md5sum] = "6313289e32f1d38a9df4770b014a2ca7"
+SRC_URI[sha256sum] = "72fba7922703ddfa7a028d513ac15a85c8d54c8d67f55fa5a4802885dc652056"
 UPSTREAM_CHECK_URI = "https://github.com/libffi/libffi/releases/"
 UPSTREAM_CHECK_REGEX = "libffi-(?P<pver>\d+(\.\d+)+)\.tar"
-UPSTREAM_VERSION_UNKNOWN = "1"
 
 EXTRA_OECONF += "--disable-builddir"
 EXTRA_OEMAKE_class-target = "LIBTOOLFLAGS='--tag=CC'"
 inherit autotools texinfo multilib_header
-
-S = "${WORKDIR}/${BPN}-3.3-rc0"
 
 do_install_append() {
 	oe_multilib_header ffi.h
