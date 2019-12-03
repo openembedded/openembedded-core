@@ -32,7 +32,7 @@ do_install_append() {
         done
         for link_header in ${D}${includedir}/tirpc/rpcsvc/*; do
             if [ -f $link_header -a ! -e ${D}/${includedir}/rpcsvc/$(basename $link_header) ]; then
-                ln -sf ../tirpc/rpc/$(basename $link_header) ${D}${includedir}/rpcsvc/$(basename $link_header)
+                ln -sf ../tirpc/rpcsvc/$(basename $link_header) ${D}${includedir}/rpcsvc/$(basename $link_header)
             fi
         done
         ln -sf  tirpc/netconfig.h ${D}/${includedir}/netconfig.h
