@@ -6,11 +6,10 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
 PE = "1"
 
-SRC_URI = "${DEBIAN_MIRROR}/main/n/${BPN}/${BPN}_${PV}.tar.xz \
-           file://netbase-add-rpcbind-as-an-alias-to-sunrpc.patch"
+SRC_URI = "${DEBIAN_MIRROR}/main/n/${BPN}/${BPN}_${PV}.tar.xz"
 
-SRC_URI[md5sum] = "7ad156272c5a42f49c73386ff39c8624"
-SRC_URI[sha256sum] = "5d93a099deb28869b7306e914700fafbd293b55bdb5df05a5aa6effd0af5930c"
+SRC_URI[md5sum] = "f1e50e8d637f6be12af169fa1b67b40a"
+SRC_URI[sha256sum] = "1802ed95847a30d0b618cdfb6fc8f62989fda9fc3d1c0efd0b19e3011a34f915"
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/netbase/"
 do_install () {
