@@ -135,7 +135,7 @@ class PackageTests(OESelftestTestCase):
                     return False
 
                 # Check debugging symbols works correctly
-                elif re.match("Breakpoint 1.*hello\.c.*4", l):
+                elif re.match(r"Breakpoint 1.*hello\.c.*4", l):
                     return True
 
             self.logger.error("GDB result:\n%d: %s", status, output)
