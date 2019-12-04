@@ -1,0 +1,29 @@
+From 0d0aded7307a9f4ee0d299951512acd18b3e029e Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 4 Dec 2019 19:28:48 +0100
+Subject: [PATCH] Do not check for validity of shell executable.
+
+This kind of check fails when building a rootfs.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ src/useradd.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/src/useradd.c b/src/useradd.c
+index 4af0f7c..898fe02 100644
+--- a/src/useradd.c
++++ b/src/useradd.c
+@@ -1328,10 +1328,7 @@ static void process_flags (int argc, char **argv)
+ 				if (   ( !VALID (optarg) )
+ 				    || (   ('\0' != optarg[0])
+ 				        && ('/'  != optarg[0])
+-				        && ('*'  != optarg[0]) )
+-				    || (stat(optarg, &st) != 0)
+-				    || (S_ISDIR(st.st_mode))
+-				    || (access(optarg, X_OK) != 0)) {
++				        && ('*'  != optarg[0]) )) {
+ 					fprintf (stderr,
+ 					         _("%s: invalid shell '%s'\n"),
+ 					         Prog, optarg);
