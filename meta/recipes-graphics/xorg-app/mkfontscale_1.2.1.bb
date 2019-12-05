@@ -10,9 +10,12 @@ is used by the mkfontdir program."
 
 DEPENDS = "util-macros-native zlib libfontenc freetype xorgproto"
 
+PROVIDES += "mkfontdir"
+RPROVIDES_${PN} += "mkfontdir"
+
 BBCLASSEXTEND = "native"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=2e0d129d05305176d1a790e0ac1acb7f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=99b1e1269aba5179139b9e4380fc0934"
 
-SRC_URI[md5sum] = "987c438e79f5ddb84a9c5726a1610819"
-SRC_URI[sha256sum] = "1e98df69ee5f4542d711e140e1d93e2c3f2775407ccbb7849110d52b91782a6a"
+SRC_URI[md5sum] = "215940de158b1a3d8b3f8b442c606e2f"
+SRC_URI[sha256sum] = "ca0495eb974a179dd742bfa6199d561bda1c8da4a0c5a667f21fd82aaab6bac7"
