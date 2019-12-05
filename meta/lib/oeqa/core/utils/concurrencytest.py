@@ -221,6 +221,15 @@ def removebuilddir(d):
     while delay and os.path.exists(d + "/bitbake.lock"):
         time.sleep(1)
         delay = delay - 1
+    # Deleting these directories takes a lot of time, use autobuilder
+    # clobberdir if its available
+    clobberdir = os.path.expanduser("~/yocto-autobuilder-helper/janitor/clobberdir")
+    if os.path.exists(clobberdir):
+        try:
+            subprocess.check_call([clobberdir, d])
+            return
+        except subprocess.CalledProcessError:
+            pass
     bb.utils.prunedir(d, ionice=True)
 
 def fork_for_tests(concurrency_num, suite):
