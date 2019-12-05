@@ -5,7 +5,7 @@ GNU Project uses the Texinfo file format for most of its documentation."
 HOMEPAGE = "http://www.gnu.org/software/texinfo/"
 SECTION = "console/utils"
 LICENSE = "GPLv3+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 PROVIDES_append_class-native = " texinfo-replacement-native"
 
@@ -33,12 +33,11 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
-           file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
            ${TARGET_PATCH} \
-          "
+           "
 
-SRC_URI[md5sum] = "94e8f7149876793030e5518dd8d6e956"
-SRC_URI[sha256sum] = "d34272e4042c46186ddcd66bd5d980c0ca14ff734444686ccf8131f6ec8b1427"
+SRC_URI[md5sum] = "f0c1782f68ef73738d74bd1e9e30793a"
+SRC_URI[sha256sum] = "a52d05076b90032cb2523673c50e53185938746482cf3ca0213e9b4b50ac2d3e"
 
 tex_texinfo = "texmf/tex/texinfo"
 
