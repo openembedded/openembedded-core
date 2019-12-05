@@ -2,9 +2,11 @@ SUMMARY = "Keytable files and keyboard utilities"
 HOMEPAGE = "http://www.kbd-project.org/"
 # everything minus console-fonts is GPLv2+
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a5fcc36121d93e1f69d96a313078c8b5"
+LIC_FILES_CHKSUM = "file://COPYING;md5=892f569a555ba9c07a568a7c0c4fa63a"
 
 inherit autotools gettext ptest pkgconfig
+
+DEPENDS += "flex-native"
 
 RREPLACES_${PN} = "console-tools"
 RPROVIDES_${PN} = "console-tools"
@@ -13,10 +15,11 @@ RCONFLICTS_${PN} = "console-tools"
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            file://run-ptest \
            ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://set-proper-path-of-resources.patch', '', d)} \
-          "
+           file://0001-analyze.l-add-missing-string-format.patch \
+           "
 
-SRC_URI[md5sum] = "c1635a5a83b63aca7f97a3eab39ebaa6"
-SRC_URI[sha256sum] = "5fd90af6beb225a9bb9b9fb414c090fba53c9a55793e172f508cd43652e59a88"
+SRC_URI[md5sum] = "d1d7ae0b5fb875dc082731e09cd0c8bc"
+SRC_URI[sha256sum] = "21a1bc5f6fb3b18ce9fdd717e4533368060a3182a39c7155eaf7ec0f5f83e9f7"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)} \
                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests','', d)} \
