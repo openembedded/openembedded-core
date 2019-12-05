@@ -9,17 +9,18 @@ DEPENDS = "util-macros flex-native bison-native"
 
 SRC_URI = "http://xkbcommon.org/download/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "3c4409058dfd203f641a563358e0187d"
-SRC_URI[sha256sum] = "60ddcff932b7fd352752d51a5c4f04f3d0403230a584df9a2e0d5ed87c486c8b"
+SRC_URI[md5sum] = "4662756fd73ab0ac9e32efdad8f807f6"
+SRC_URI[sha256sum] = "d4c6aabf0a5c1fc616f8a6a65c8a818c03773b9a87da9fbc434da5acd1199be0"
 
 UPSTREAM_CHECK_URI = "http://xkbcommon.org/"
 
-inherit autotools pkgconfig
+inherit meson pkgconfig
 
-EXTRA_OECONF = "--disable-docs"
+EXTRA_OEMESON = "-Denable-docs=false"
 
-PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
-PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,libxcb xkeyboard-config,"
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'x11 wayland', d)}"
+PACKAGECONFIG[x11] = "-Denable-x11=true,-Denable-x11=false,libxcb xkeyboard-config,"
+PACKAGECONFIG[wayland] = "-Denable-wayland=true,-Denable-wayland=false,wayland-native wayland wayland-protocols,"
 
 # Fix a following runtime error:
 # xkbcommon: ERROR: couldn't find a Compose file for locale "C"
