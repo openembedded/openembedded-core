@@ -4,16 +4,15 @@ HOMEPAGE = "http://savannah.nongnu.org/projects/sysvinit/"
 SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
-                    file://COPYRIGHT;endline=15;md5=349c872e0066155e1818b786938876a4"
-PR = "r14"
+                    file://COPYRIGHT;endline=15;md5=a1d3b3526501d3546d530bbe6ab6cdbe \
+                    "
 
 RDEPENDS_${PN} = "${PN}-inittab"
 
-SRC_URI = "${SAVANNAH_GNU_MIRROR}/sysvinit/sysvinit-${PV}.tar.bz2 \
+SRC_URI = "${SAVANNAH_GNU_MIRROR}/sysvinit/sysvinit-${PV}.tar.xz \
            file://install.patch \
            file://crypt-lib.patch \
            file://pidof-add-m-option.patch \
-           file://0001-This-fixes-an-issue-that-clang-reports-about-mutlipl.patch \
            file://realpath.patch \
            file://0001-include-sys-sysmacros.h-for-major-minor-defines-in-g.patch \
            file://rcS-default \
@@ -21,10 +20,9 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/sysvinit/sysvinit-${PV}.tar.bz2 \
            file://rcS \
            file://bootlogd.init \
            file://01_bootlogd \
-"
-
-SRC_URI[md5sum] = "6eda8a97b86e0a6f59dabbf25202aa6f"
-SRC_URI[sha256sum] = "60bbc8c1e1792056e23761d22960b30bb13eccc2cabff8c7310a01f4d5df1519"
+           "
+SRC_URI[md5sum] = "48cebffebf2a96ab09bec14bf9976016"
+SRC_URI[sha256sum] = "2a2e26b72aa235a23ab1c8471005f890309ce1196c83fbc9413c57b9ab62b587"
 
 S = "${WORKDIR}/sysvinit-${PV}"
 B = "${S}/src"
@@ -81,7 +79,8 @@ EXTRA_OEMAKE += "'base_bindir=${base_bindir}' \
 		 'sbindir=${sbindir}' \
 		 'sysconfdir=${sysconfdir}' \
 		 'includedir=${includedir}' \
-		 'mandir=${mandir}'"
+		 'mandir=${mandir}' \
+                 MNTPOINT=yes"
 
 do_install () {
 	oe_runmake 'ROOT=${D}' install
@@ -107,4 +106,7 @@ do_install () {
 
 	chown root:shutdown ${D}${base_sbindir}/halt ${D}${base_sbindir}/shutdown
 	chmod o-x,u+s ${D}${base_sbindir}/halt ${D}${base_sbindir}/shutdown
+
+        # Already provided by e2fsprogs; sysvinit's version is a copy from there
+        rm ${D}${base_sbindir}/logsave
 }
