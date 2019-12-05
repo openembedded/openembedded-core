@@ -19,6 +19,16 @@ UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>2(\.\d+)+).tar"
 
 CVE_PRODUCT = "python"
 
+# Upstream agreement is that these are not security issues:
+# https://bugs.python.org/issue32367
+CVE_CHECK_WHITELIST += "CVE-2017-17522"
+# https://bugs.python.org/issue32056
+CVE_CHECK_WHITELIST += "CVE-2017-18207"
+
+# Windows-only, "It was determined that this is a longtime behavior
+# of Python that cannot really be altered at this point."
+CVE_CHECK_WHITELIST += "CVE-2015-5652"
+
 PYTHON_MAJMIN = "2.7"
 
 inherit autotools pkgconfig
