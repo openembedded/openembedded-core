@@ -9,11 +9,9 @@ DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 intltool-native libpsl"
 
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
-SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz \
-           file://0001-Do-not-enforce-no-introspection-when-cross-building.patch \
-           "
-SRC_URI[md5sum] = "42016d80ecae4cf8eb416631049a273a"
-SRC_URI[sha256sum] = "8308984f1eee1c4f8c113a9c1763b2b22d981bd811b0cc82a9f3f1aa63228779"
+SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
+SRC_URI[md5sum] = "29ee2ee7017945b64ede063b1396011c"
+SRC_URI[sha256sum] = "534bb08e35b0ff3702f3adfde87d3441e27c12f9f5ec351f056fe04cba02bafb"
 
 CVE_PRODUCT = "libsoup"
 
@@ -21,12 +19,15 @@ S = "${WORKDIR}/libsoup-${PV}"
 
 inherit meson gettext pkgconfig upstream-version-is-even gobject-introspection gtk-doc
 
+GIR_MESON_ENABLE_FLAG = 'enabled'
+GIR_MESON_DISABLE_FLAG = 'disabled'
+
 # libsoup-gnome is entirely deprecated and just stubs in 2.42 onwards. Disable by default.
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[gnome] = "-Dgnome=true,-Dgnome=false"
-PACKAGECONFIG[gssapi] = "-Dgssapi=true,-Dgssapi=false,krb5"
+PACKAGECONFIG[gssapi] = "-Dgssapi=enabled,-Dgssapi=disabled,krb5"
 
-EXTRA_OEMESON_append = " -Dvapi=false"
+EXTRA_OEMESON_append = " -Dvapi=disabled -Dtls_check=false"
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 
