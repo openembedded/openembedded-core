@@ -937,14 +937,13 @@ python do_package_qa () {
     pkgdest = d.getVar('PKGDEST')
     packages = set((d.getVar('PACKAGES') or '').split())
 
-    cpath = oe.cachedpath.CachedPath()
     global pkgfiles
     pkgfiles = {}
     for pkg in packages:
         pkgfiles[pkg] = []
-        for walkroot, dirs, files in cpath.walk(pkgdest + "/" + pkg):
+        for walkroot, dirs, files in os.walk(os.path.join(pkgdest, pkg)):
             for file in files:
-                pkgfiles[pkg].append(walkroot + os.sep + file)
+                pkgfiles[pkg].append(os.path.join(walkroot, file))
 
     # no packages should be scanned
     if not packages:
