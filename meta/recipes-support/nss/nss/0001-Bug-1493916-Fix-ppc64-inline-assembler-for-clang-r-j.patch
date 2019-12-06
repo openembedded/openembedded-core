@@ -1,0 +1,35 @@
+From 6b351dbb049b3b3ab6c0d51aa3c1c7fb3c9df80c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Hor=C3=A1k?= <dan@danny.cz>
+Date: Mon, 22 Jul 2019 11:07:41 -0700
+Subject: [PATCH] Bug 1493916 - Fix ppc64 inline assembler for clang r=jcj
+ Seems clang's inline assembler doesn't want registers to be prefixed with
+ "r", while gcc accepts both - r0 and 0 for GPR0.
+
+tested with clang 6.0 and gcc 8.1
+
+--HG--
+extra : amend_source : 87e09bb59c78bdb25b9573b9f29511e10b9db6fa
+extra : histedit_source : 9b3fad70ac2851bf7de14d42c34db4a5fba41710
+
+Upstream-Status: Backport [https://github.com/nss-dev/nss/commit/671d89b6c4a6f41707bb044534751098e2e3f211]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ nss/lib/freebl/mpi/mpcpucache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nss/lib/freebl/mpi/mpcpucache.c b/nss/lib/freebl/mpi/mpcpucache.c
+index 336b4cc..2ad291f 100644
+--- a/nss/lib/freebl/mpi/mpcpucache.c
++++ b/nss/lib/freebl/mpi/mpcpucache.c
+@@ -727,7 +727,7 @@ static inline void
+ dcbzl(char *array)
+ {
+     register char *a asm("r2") = array;
+-    __asm__ __volatile__("dcbzl %0,r0"
++    __asm__ __volatile__("dcbzl %0,0"
+                          : "=r"(a)
+                          : "0"(a));
+ }
+-- 
+2.24.0
+
