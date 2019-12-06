@@ -8,10 +8,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2119edef0916b0bd511cb3c731076271"
 
 DEPENDS = "zlib"
 
-SRC_URI = "git://github.com/assimp/assimp.git"
+SRC_URI = "git://github.com/assimp/assimp.git \
+           file://0001-closes-https-github.com-assimp-assimp-issues-2733-up.patch \
+           "
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV = "80799bdbf90ce626475635815ee18537718a05b1"
+SRCREV = "2d2889f73fa1b2ca09ba9f43c9785402d3a7fdd0"
 
 S = "${WORKDIR}/git"
 
