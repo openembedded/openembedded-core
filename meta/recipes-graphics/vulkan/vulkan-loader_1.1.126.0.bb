@@ -9,8 +9,8 @@ SECTION = "libs"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=7dbefed23242760aa3475ee42801c5ac"
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-Loader.git;branch=sdk-${PV}"
-SRCREV = "ecb0b1e69fb2f4d3cae262e6da24c170ce62ae13"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-Loader.git;branch=sdk-1.1.126"
+SRCREV = "4adad4ff705fa76f9edb2d37cb57e593decb60ed"
 
 S = "${WORKDIR}/git"
 
@@ -24,6 +24,7 @@ DEPENDS += "vulkan-headers"
 EXTRA_OECMAKE = "\
                  -DBUILD_TESTS=OFF \
                  -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
+                 -DASSEMBLER_WORKS=FALSE \
                  "
 
 # must choose x11 or wayland or both
