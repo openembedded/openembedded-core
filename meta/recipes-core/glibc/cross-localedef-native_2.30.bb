@@ -30,8 +30,9 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0023-Define-DUMMY_LOCALE_T-if-not-defined.patch \
            file://0024-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://add-cross-localedef-hardlink.patch \
-           file://allow-compile-separate-from-util-linux-hardlink.patch \
+           file://0029-Add-hardlink-resolver-from-util-linux.patch \
+           file://0030-hardlink-fix-ups-to-make-it-compile.patch \
+           file://0031-Add-hardlink-resolver-to-build.patch \
 "
 # Makes for a rather long rev (22 characters), but...
 #
