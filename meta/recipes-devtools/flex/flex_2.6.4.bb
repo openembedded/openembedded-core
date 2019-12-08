@@ -64,8 +64,13 @@ do_install_ptest() {
 	    -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \-e 's/^Makefile:/_Makefile:/' \
 	    -e 's/^srcdir = \(.*\)/srcdir = ./' -e 's/^top_srcdir = \(.*\)/top_srcdir = ./' \
 	    -e 's/^builddir = \(.*\)/builddir = ./' -e 's/^top_builddir = \(.*\)/top_builddir = ./' \
+	    -e 's:${UNINATIVE_LOADER}:${base_bindir}/false:g' \
 	    -i ${D}${PTEST_PATH}/Makefile
 }
+# The uninative loader is different on i386 & x86_64 hosts. Since it is only
+# being replaced with /bin/false anyway, it doesn't need to be part of the task
+# hash
+do_install_ptest[vardepsexclude] += "UNINATIVE_LOADER"
 
 # Not Apache Flex, or Adobe Flex, or IBM Flex.
 CVE_PRODUCT = "flex_project:flex"
