@@ -1,7 +1,7 @@
-From fc1ff860fd88fa2d0584bd19181c880a76331a8d Mon Sep 17 00:00:00 2001
+From a9332107872ada73e72e92872ea2998a4e1495e0 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:09:58 +0000
-Subject: [PATCH 04/15] Point scripts location to libdir
+Subject: [PATCH] Point scripts location to libdir
 
 Upstream-Status: Inappropriate [debian patch]
 
@@ -12,10 +12,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ld/Makefile.am b/ld/Makefile.am
-index c2c798b4fe..d7faf19271 100644
+index ddc7a78368..6fa7bf2583 100644
 --- a/ld/Makefile.am
 +++ b/ld/Makefile.am
-@@ -57,7 +57,7 @@ endif
+@@ -63,7 +63,7 @@ endif
  # We put the scripts in the directory $(scriptdir)/ldscripts.
  # We can't put the scripts in $(datadir) because the SEARCH_DIR
  # directives need to be different for native and cross linkers.
@@ -25,10 +25,10 @@ index c2c798b4fe..d7faf19271 100644
  EMUL = @EMUL@
  EMULATION_OFILES = @EMULATION_OFILES@
 diff --git a/ld/Makefile.in b/ld/Makefile.in
-index fc687fc516..8b14f5236c 100644
+index fdf06128b2..5c108b9e05 100644
 --- a/ld/Makefile.in
 +++ b/ld/Makefile.in
-@@ -563,7 +563,7 @@ AM_CFLAGS = $(WARN_CFLAGS) $(ELF_CLFAGS)
+@@ -572,7 +572,7 @@ AM_CFLAGS = $(WARN_CFLAGS) $(ELF_CLFAGS)
  # We put the scripts in the directory $(scriptdir)/ldscripts.
  # We can't put the scripts in $(datadir) because the SEARCH_DIR
  # directives need to be different for native and cross linkers.
@@ -37,6 +37,3 @@ index fc687fc516..8b14f5236c 100644
  BASEDIR = $(srcdir)/..
  BFDDIR = $(BASEDIR)/bfd
  INCDIR = $(BASEDIR)/include
--- 
-2.20.1
-

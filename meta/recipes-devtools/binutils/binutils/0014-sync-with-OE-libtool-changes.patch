@@ -1,7 +1,7 @@
-From b7729343206fa196b9a11747a92b3cf563277056 Mon Sep 17 00:00:00 2001
+From 6bc49e9a581eb46265935ea2756a99faa7d0562e Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Mon, 6 Mar 2017 23:33:27 -0800
-Subject: [PATCH 14/15] sync with OE libtool changes
+Subject: [PATCH] sync with OE libtool changes
 
 Apply these patches from our libtool patches as not only are redundant RPATHs a
 waste of space but they can cause incorrect linking when native packages are
@@ -84,6 +84,3 @@ index 11ee684ccc..3b19ac1532 100644
  	  fi
  	elif test -n "$runpath_var"; then
  	  case "$finalize_perm_rpath " in
--- 
-2.20.1
-

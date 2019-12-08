@@ -1,8 +1,8 @@
-From 8cb013106c379e81fe40cfdf486d9805c9e276ad Mon Sep 17 00:00:00 2001
+From cd6151c8423a0550fd5758ce17664e34560a103c Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:39:01 +0000
-Subject: [PATCH 07/15] don't let the distro compiler point to the wrong
- installation location
+Subject: [PATCH] don't let the distro compiler point to the wrong installation
+ location
 
 Thanks to RP for helping find the source code causing the issue.
 
@@ -30,6 +30,3 @@ index 0be45b4ae8..4817616bb2 100644
  install_to_libdir: all
  	if test -n "${target_header_dir}"; then \
  		${mkinstalldirs} $(DESTDIR)$(libdir)/$(MULTIOSDIR); \
--- 
-2.20.1
-

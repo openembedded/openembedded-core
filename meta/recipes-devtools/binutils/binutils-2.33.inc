@@ -16,15 +16,15 @@ def binutils_branch_version(d):
 
 # When upgrading to 2.33, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.32.0"
-CVE_VERSION = "2.32"
+PV = "2.33.1"
+CVE_VERSION = "2.33"
 BINUPV = "${@binutils_branch_version(d)}"
 #BRANCH = "binutils-${BINUPV}-branch"
-BRANCH ?= "binutils-2_32-branch"
+BRANCH ?= "binutils-2_33-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "b8c1f608db9ef3edd483d21a921d1fbedc71df6f"
+SRCREV ?= "c656f9a430636a6a7fc7a08c0e08f0098a729a02"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${BRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -41,14 +41,6 @@ SRC_URI = "\
      file://0013-Detect-64-bit-MIPS-targets.patch \
      file://0014-sync-with-OE-libtool-changes.patch \
      file://0015-binutils-enable-x86_64-pep-for-producing-EFI-binarie.patch \
-     file://CVE-2019-9074.patch \
-     file://CVE-2019-9075.patch \
-     file://CVE-2019-9076.patch \
-     file://CVE-2019-9077.patch \
-     file://CVE-2019-9071.patch \
-     file://CVE-2019-12972.patch \
-     file://CVE-2019-14250.patch \
-     file://CVE-2019-14444.patch \
      file://CVE-2019-17450.patch \
      file://CVE-2019-17451.patch \
 "
