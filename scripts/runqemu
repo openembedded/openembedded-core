@@ -1121,7 +1121,11 @@ class BaseConfig(object):
             uid = os.getuid()
             logger.info("Setting up tap interface under sudo")
             cmd = ('sudo', self.qemuifup, str(uid), str(gid), self.bindir_native)
-            tap = subprocess.check_output(cmd).decode('utf-8').strip()
+            try:
+                tap = subprocess.check_output(cmd).decode('utf-8').strip()
+            except subprocess.CalledProcessError as e:
+                logger.error('Setting up tap device failed:\n%s\nRun runqemu-gen-tapdevs to manually create one.' % str(e))
+                sys.exit(1)
             lockfile = os.path.join(lockdir, tap)
             self.taplock = lockfile + '.lock'
             self.acquire_taplock()
@@ -1130,7 +1134,7 @@ class BaseConfig(object):
 
         if not tap:
             logger.error("Failed to setup tap device. Run runqemu-gen-tapdevs to manually create.")
-            return 1
+            sys.exit(1)
         self.tap = tap
         tapnum = int(tap[3:])
         gateway = tapnum * 2 + 1
