@@ -933,29 +933,30 @@ class BaseConfig(object):
                     self.set('STAGING_BINDIR_NATIVE', '%s/usr/bin' % self.get('STAGING_DIR_NATIVE'))
 
     def print_config(self):
-        logger.info('Continuing with the following parameters:\n')
+        logoutput = ['Continuing with the following parameters:']
         if not self.fstype in self.vmtypes:
-            print('KERNEL: [%s]' % self.kernel)
+            logoutput.append('KERNEL: [%s]' % self.kernel)
             if self.bios:
-                print('BIOS: [%s]' % self.bios)
+                logoutput.append('BIOS: [%s]' % self.bios)
             if self.dtb:
-                print('DTB: [%s]' % self.dtb)
-        print('MACHINE: [%s]' % self.get('MACHINE'))
+                logoutput.append('DTB: [%s]' % self.dtb)
+        logoutput.append('MACHINE: [%s]' % self.get('MACHINE'))
         try:
             fstype_flags = ' (' + ', '.join(self.fsinfo[self.fstype]) + ')'
         except KeyError:
             fstype_flags = ''
-        print('FSTYPE: [%s%s]' % (self.fstype, fstype_flags))
+        logoutput.append('FSTYPE: [%s%s]' % (self.fstype, fstype_flags))
         if self.fstype  == 'nfs':
-            print('NFS_DIR: [%s]' % self.rootfs)
+            logoutput.append('NFS_DIR: [%s]' % self.rootfs)
         else:
-            print('ROOTFS: [%s]' % self.rootfs)
+            logoutput.append('ROOTFS: [%s]' % self.rootfs)
         if self.ovmf_bios:
-            print('OVMF: %s' % self.ovmf_bios)
+            logoutput.append('OVMF: %s' % self.ovmf_bios)
         if (self.ovmf_secboot_pkkek1):
-            print('SECBOOT PKKEK1: [%s...]' % self.ovmf_secboot_pkkek1[0:100])
-        print('CONFFILE: [%s]' % self.qemuboot)
-        print('')
+            logoutput.append('SECBOOT PKKEK1: [%s...]' % self.ovmf_secboot_pkkek1[0:100])
+        logoutput.append('CONFFILE: [%s]' % self.qemuboot)
+        logoutput.append('')
+        logger.info('\n'.join(logoutput))
 
     def setup_nfs(self):
         if not self.nfs_server:
