@@ -8,8 +8,8 @@ PE = "1"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/n/${BPN}/${BPN}_${PV}.tar.xz"
 
-SRC_URI[md5sum] = "f1e50e8d637f6be12af169fa1b67b40a"
-SRC_URI[sha256sum] = "1802ed95847a30d0b618cdfb6fc8f62989fda9fc3d1c0efd0b19e3011a34f915"
+SRC_URI[md5sum] = "ca2e339861b64370779341b9696ee3df"
+SRC_URI[sha256sum] = "4a9035eb379c4f7f7d424e5580b219b79566fa366c812542691ae337486cfb8e"
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/netbase/"
 do_install () {
