@@ -3,6 +3,7 @@ From: Christopher Larson <chris_larson@mentor.com>
 Date: Tue, 26 Nov 2019 22:34:34 +0500
 Subject: [PATCH] Wrap pthread_atfork usage in HAVE_PTHREAD_H
 
+Upstream-Status: Pending
 Signed-off-by: Christopher Larson <chris_larson@mentor.com>
 ---
  src/cap-ng.c | 2 ++

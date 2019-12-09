@@ -8,6 +8,7 @@ If the pthread.h header is found, make sure library containing
 On some hosts (e.g. openSUSE 15.1) "-lpthread" needs to be explicitly added
 in order for the code to compile correctly.
 
+Upstream-Status: Submitted [https://github.com/stevegrubb/libcap-ng/pull/10]
 Signed-off-by: Trevor Woerner <twoerner@gmail.com>
 ---
  configure.ac | 4 +++-
