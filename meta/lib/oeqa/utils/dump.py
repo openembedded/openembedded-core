@@ -73,6 +73,7 @@ class HostDumper(BaseDumper):
             self.dump_dir = dump_dir
         env = os.environ.copy()
         env['PATH'] = '/usr/sbin:/sbin:/usr/bin:/bin'
+        env['COLUMNS'] = '9999'
         for cmd in self.cmds:
             result = runCmd(cmd, ignore_status=True, env=env)
             self._write_dump(cmd.split()[0], result.output)
