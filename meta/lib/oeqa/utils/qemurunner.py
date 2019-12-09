@@ -99,8 +99,8 @@ class QemuRunner:
     def handleSIGCHLD(self, signum, frame):
         if self.runqemu and self.runqemu.poll():
             if self.runqemu.returncode:
-                self.logger.warning('runqemu exited with code %d' % self.runqemu.returncode)
-                self.logger.debug("Output from runqemu:\n%s" % self.getOutput(self.runqemu.stdout))
+                self.logger.error('runqemu exited with code %d' % self.runqemu.returncode)
+                self.logger.error('Output from runqemu:\n%s' % self.getOutput(self.runqemu.stdout))
                 self.stop()
                 self._dump_host()
                 raise SystemExit
