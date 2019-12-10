@@ -2,9 +2,6 @@ inherit distutils3-base
 
 DISTUTILS_BUILD_ARGS ?= ""
 DISTUTILS_BUILD_EXT_ARGS ?= ""
-DISTUTILS_STAGE_HEADERS_ARGS ?= "--install-dir=${STAGING_INCDIR}/${PYTHON_DIR}"
-DISTUTILS_STAGE_ALL_ARGS ?= "--prefix=${STAGING_DIR_HOST}${prefix} \
-    --install-data=${STAGING_DATADIR}"
 DISTUTILS_INSTALL_ARGS ?= "--root=${D} \
     --prefix=${prefix} \
     --install-lib=${PYTHON_SITEPACKAGES_DIR} \
@@ -29,23 +26,6 @@ distutils3_do_compile() {
         bbfatal_log "'${PYTHON_PN} setup.py build ${DISTUTILS_BUILD_ARGS}' execution failed."
 }
 distutils3_do_compile[vardepsexclude] = "MACHINE"
-
-distutils3_stage_headers() {
-        install -d ${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}
-        ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py install_headers ${DISTUTILS_STAGE_HEADERS_ARGS} || \
-        bbfatal_log "'${PYTHON_PN} setup.py install_headers ${DISTUTILS_STAGE_HEADERS_ARGS}' execution for stage_headers failed."
-}
-distutils3_stage_headers[vardepsexclude] = "MACHINE"
-
-distutils3_stage_all() {
-        STAGING_INCDIR=${STAGING_INCDIR} \
-        STAGING_LIBDIR=${STAGING_LIBDIR} \
-        install -d ${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}
-        PYTHONPATH=${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR} \
-        ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py install ${DISTUTILS_STAGE_ALL_ARGS} || \
-        bbfatal_log "'${PYTHON_PN} setup.py install ${DISTUTILS_STAGE_ALL_ARGS}' execution for stage_all failed."
-}
-distutils3_stage_all[vardepsexclude] = "MACHINE"
 
 distutils3_do_install() {
         install -d ${D}${PYTHON_SITEPACKAGES_DIR}
