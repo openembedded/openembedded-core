@@ -20,7 +20,7 @@ PACKAGECONFIG_class-native = "ipv6 proxy ssl threaded-resolver verbose zlib"
 PACKAGECONFIG_class-nativesdk = "ipv6 proxy ssl threaded-resolver verbose zlib"
 
 # 'ares' and 'threaded-resolver' are mutually exclusive
-PACKAGECONFIG[ares] = "--enable-ares,--disable-ares,c-ares"
+PACKAGECONFIG[ares] = "--enable-ares,--disable-ares,c-ares,,,threaded-resolver"
 PACKAGECONFIG[brotli] = "--with-brotli,--without-brotli,brotli"
 PACKAGECONFIG[builtinmanual] = "--enable-manual,--disable-manual"
 PACKAGECONFIG[dict] = "--enable-dict,--disable-dict,"
@@ -45,7 +45,7 @@ PACKAGECONFIG[ssl] = "--with-ssl --with-random=/dev/urandom,--without-ssl,openss
 PACKAGECONFIG[nss] = "--with-nss,--without-nss,nss"
 PACKAGECONFIG[telnet] = "--enable-telnet,--disable-telnet,"
 PACKAGECONFIG[tftp] = "--enable-tftp,--disable-tftp,"
-PACKAGECONFIG[threaded-resolver] = "--enable-threaded-resolver,--disable-threaded-resolver"
+PACKAGECONFIG[threaded-resolver] = "--enable-threaded-resolver,--disable-threaded-resolver,,,,ares"
 PACKAGECONFIG[verbose] = "--enable-verbose,--disable-verbose"
 PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
 
