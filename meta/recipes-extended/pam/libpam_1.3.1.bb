@@ -1,3 +1,4 @@
+DISABLE_STATIC = ""
 SUMMARY = "Linux-PAM (Pluggable Authentication Modules)"
 DESCRIPTION = "Linux-PAM (Pluggable Authentication Modules for Linux), a flexible mechanism for authenticating users"
 HOMEPAGE = "https://fedorahosted.org/linux-pam/"
@@ -20,7 +21,6 @@ SRC_URI = "https://github.com/linux-pam/linux-pam/releases/download/v${PV}/Linux
            file://pam.d/common-session-noninteractive \
            file://pam.d/other \
            file://libpam-xtests.patch \
-           file://fixsepbuild.patch \
            file://pam-security-abstract-securetty-handling.patch \
            file://pam-unix-nullok-secure.patch \
            file://crypt_configure.patch \
