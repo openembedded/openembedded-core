@@ -664,7 +664,8 @@ def sstate_package(ss, d):
         # All hooks should run in SSTATE_BUILDDIR.
         bb.build.exec_func(f, d, (sstatebuild,))
 
-    bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
+    # SSTATE_PKG may have been changed by sstate_report_unihash
+    bb.siggen.dump_this_task(d.getVar('SSTATE_PKG') + ".siginfo", d)
 
     return
 
