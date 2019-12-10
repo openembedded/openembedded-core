@@ -1,7 +1,6 @@
 inherit distutils3-base
 
 DISTUTILS_BUILD_ARGS ?= ""
-DISTUTILS_BUILD_EXT_ARGS ?= ""
 DISTUTILS_INSTALL_ARGS ?= "--root=${D} \
     --prefix=${prefix} \
     --install-lib=${PYTHON_SITEPACKAGES_DIR} \
