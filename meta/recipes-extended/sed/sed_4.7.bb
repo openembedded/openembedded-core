@@ -13,6 +13,9 @@ SRC_URI[md5sum] = "777ddfd9d71dd06711fe91f0925e1573"
 SRC_URI[sha256sum] = "2885768cd0a29ff8d58a6280a270ff161f6a3deb5690b2be6c49f46d4c67bd6a"
 
 inherit autotools texinfo update-alternatives gettext ptest
+
+PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux,libselinux"
+
 RDEPENDS_${PN}-ptest += "make gawk perl perl-module-filehandle perl-module-file-compare perl-module-file-find perl-module-file-temp perl-module-file-stat"
 RRECOMMENDS_${PN}-ptest_append_libc-glibc = " locale-base-ru-ru locale-base-en-us locale-base-el-gr.iso-8859-7"
 
