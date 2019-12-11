@@ -613,10 +613,8 @@ def sstate_package(ss, d):
 
     sstatebuild = d.expand("${WORKDIR}/sstate-build-%s/" % ss['task'])
     d.appendVar('SSTATE_PKG', '_'+ ss['task'] + ".tgz")
-    sstatepkg = d.getVar('SSTATE_PKG')
     bb.utils.remove(sstatebuild, recurse=True)
     bb.utils.mkdirhier(sstatebuild)
-    bb.utils.mkdirhier(os.path.dirname(sstatepkg))
     for state in ss['dirs']:
         if not os.path.exists(state[1]):
             continue
@@ -755,6 +753,8 @@ sstate_create_package () {
 	if [ -e ${SSTATE_PKG} ]; then
 		return
 	fi
+
+        mkdir -p `dirname ${SSTATE_PKG}`
 
         # Use pigz if available
         OPT="-czS"
