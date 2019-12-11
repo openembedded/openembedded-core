@@ -1263,8 +1263,9 @@ python populate_packages () {
     # Handle LICENSE_EXCLUSION
     package_list = []
     for pkg in packages:
-        if d.getVar('LICENSE_EXCLUSION-' + pkg):
-            msg = "%s has an incompatible license. Excluding from packaging." % pkg
+        licenses = d.getVar('LICENSE_EXCLUSION-' + pkg)
+        if licenses:
+            msg = "Excluding %s from packaging as it has incompatible license(s): %s" % (pkg, licenses)
             package_qa_handle_error("incompatible-license", msg, d)
         else:
             package_list.append(pkg)
