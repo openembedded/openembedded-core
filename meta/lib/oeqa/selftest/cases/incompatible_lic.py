@@ -23,6 +23,18 @@ class IncompatibleLicenseTests(OESelftestTestCase):
     def test_incompatible_alias_spdx_license(self):
         self.lic_test('incompatible-license', 'GPL-3.0', 'GPLv3')
 
+    # Verify that a package with an SPDX license (from AVAILABLE_LICENSES)
+    # cannot be built when INCOMPATIBLE_LICENSE contains a wildcarded license
+    # matching this SPDX license
+    def test_incompatible_spdx_license_wildcard(self):
+        self.lic_test('incompatible-license', 'GPL-3.0', '*GPL-3.0')
+
+    # Verify that a package with an SPDX license (from AVAILABLE_LICENSES)
+    # cannot be built when INCOMPATIBLE_LICENSE contains a wildcarded alias
+    # license matching this SPDX license
+    def test_incompatible_alias_spdx_license_wildcard(self):
+        self.lic_test('incompatible-license', 'GPL-3.0', '*GPLv3')
+
     # Verify that a package with an alias (from SPDXLICENSEMAP) to an SPDX
     # license cannot be built when INCOMPATIBLE_LICENSE contains this SPDX
     # license
@@ -33,6 +45,36 @@ class IncompatibleLicenseTests(OESelftestTestCase):
     # license cannot be built when INCOMPATIBLE_LICENSE contains this alias
     def test_incompatible_alias_spdx_license_alias(self):
         self.lic_test('incompatible-license-alias', 'GPL-3.0', 'GPLv3')
+
+    # Verify that a package with an alias (from SPDXLICENSEMAP) to an SPDX
+    # license cannot be built when INCOMPATIBLE_LICENSE contains a wildcarded
+    # license matching this SPDX license
+    def test_incompatible_spdx_license_alias_wildcard(self):
+        self.lic_test('incompatible-license-alias', 'GPL-3.0', '*GPL-3.0')
+
+    # Verify that a package with an alias (from SPDXLICENSEMAP) to an SPDX
+    # license cannot be built when INCOMPATIBLE_LICENSE contains a wildcarded
+    # alias license matching the SPDX license
+    def test_incompatible_alias_spdx_license_alias_wildcard(self):
+        self.lic_test('incompatible-license-alias', 'GPL-3.0', '*GPLv3')
+
+    # Verify that a package with multiple SPDX licenses (from
+    # AVAILABLE_LICENSES) cannot be built when INCOMPATIBLE_LICENSE contains
+    # some of them
+    def test_incompatible_spdx_licenses(self):
+        self.lic_test('incompatible-licenses', 'GPL-3.0 LGPL-3.0', 'GPL-3.0 LGPL-3.0')
+
+    # Verify that a package with multiple SPDX licenses (from
+    # AVAILABLE_LICENSES) cannot be built when INCOMPATIBLE_LICENSE contains a
+    # wildcard to some of them
+    def test_incompatible_spdx_licenses_wildcard(self):
+        self.lic_test('incompatible-licenses', 'GPL-3.0 LGPL-3.0', '*GPL-3.0')
+
+    # Verify that a package with multiple SPDX licenses (from
+    # AVAILABLE_LICENSES) cannot be built when INCOMPATIBLE_LICENSE contains a
+    # wildcard matching all licenses
+    def test_incompatible_all_licenses_wildcard(self):
+        self.lic_test('incompatible-licenses', 'GPL-2.0 GPL-3.0 LGPL-3.0', '*')
 
     # Verify that a package with a non-SPDX license (neither in
     # AVAILABLE_LICENSES nor in SPDXLICENSEMAP) cannot be built when
