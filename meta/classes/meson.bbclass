@@ -12,8 +12,9 @@ MESON_SOURCEPATH = "${S}"
 def noprefix(var, d):
     return d.getVar(var).replace(d.getVar('prefix') + '/', '', 1)
 
+MESON_BUILDTYPE ?= "plain"
 MESONOPTS = " --prefix ${prefix} \
-              --buildtype plain \
+              --buildtype ${MESON_BUILDTYPE} \
               --bindir ${@noprefix('bindir', d)} \
               --sbindir ${@noprefix('sbindir', d)} \
               --datadir ${@noprefix('datadir', d)} \
