@@ -526,23 +526,21 @@ python () {
             bad_licenses = expand_wildcard_licenses(d, bad_licenses)
 
             whitelist = []
-            incompatwl = []
             for lic in bad_licenses:
                 spdx_license = return_spdx(d, lic)
                 whitelist.extend((d.getVar("WHITELIST_" + lic) or "").split())
                 if spdx_license:
                     whitelist.extend((d.getVar("WHITELIST_" + spdx_license) or "").split())
+
+            if pn in whitelist:
                 '''
                 We need to track what we are whitelisting and why. If pn is
                 incompatible we need to be able to note that the image that
                 is created may infact contain incompatible licenses despite
                 INCOMPATIBLE_LICENSE being set.
                 '''
-                incompatwl.extend((d.getVar("WHITELIST_" + lic) or "").split())
-                if spdx_license:
-                    incompatwl.extend((d.getVar("WHITELIST_" + spdx_license) or "").split())
-
-            if not pn in whitelist:
+                bb.note("Including %s as buildable despite it having an incompatible license because it has been whitelisted" % pn)
+            else:
                 pkgs = d.getVar('PACKAGES').split()
                 skipped_pkgs = []
                 unskipped_pkgs = []
@@ -562,9 +560,6 @@ python () {
                 elif all_skipped or incompatible_license(d, bad_licenses):
                     bb.debug(1, "SKIPPING recipe %s because it's %s" % (pn, license))
                     raise bb.parse.SkipRecipe("it has an incompatible license: %s" % license)
-            elif pn in whitelist:
-                if pn in incompatwl:
-                    bb.note("INCLUDING " + pn + " as buildable despite INCOMPATIBLE_LICENSE because it has been whitelisted")
 
         # Try to verify per-package (LICENSE_<pkg>) values. LICENSE should be a
         # superset of all per-package licenses. We do not do advanced (pattern)
