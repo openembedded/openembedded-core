@@ -11,11 +11,11 @@ def generate_sstatefn(spec, hash, d):
 SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
 SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
 SSTATE_SWSPEC     = "sstate:${PN}::${PV}:${PR}::${SSTATE_VERSION}:"
-SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_UNIHASH'), d)}"
+SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_UNIHASH'), d)}_${SSTATE_CURRTASK}.tgz"
 SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
 SSTATE_EXTRAPATH   = ""
 SSTATE_EXTRAPATHWILDCARD = ""
-SSTATE_PATHSPEC   = "${SSTATE_DIR}/${SSTATE_EXTRAPATHWILDCARD}*/*/${SSTATE_PKGSPEC}"
+SSTATE_PATHSPEC   = "${SSTATE_DIR}/${SSTATE_EXTRAPATHWILDCARD}*/*/${SSTATE_PKGSPEC}*_${SSTATE_PATH_CURRTASK}.tgz*"
 
 # explicitly make PV to depend on evaluated value of PV variable
 PV[vardepvalue] = "${PV}"
@@ -317,8 +317,8 @@ def sstate_installpkg(ss, d):
     from oe.gpg_sign import get_signer
 
     sstateinst = d.expand("${WORKDIR}/sstate-install-%s/" % ss['task'])
-    sstatefetch = d.getVar('SSTATE_PKGNAME') + '_' + ss['task'] + ".tgz"
-    d.appendVar('SSTATE_PKG', '_'+ ss['task'] + ".tgz")
+    d.setVar("SSTATE_CURRTASK", ss['task'])
+    sstatefetch = d.getVar('SSTATE_PKGNAME')
     sstatepkg = d.getVar('SSTATE_PKG')
 
     if not os.path.exists(sstatepkg):
@@ -440,8 +440,9 @@ python sstate_hardcode_path_unpack () {
 def sstate_clean_cachefile(ss, d):
     import oe.path
 
-    sstatepkgfile = d.getVar('SSTATE_PATHSPEC') + "*_" + ss['task'] + ".tgz*"
     if d.getVarFlag('do_%s' % ss['task'], 'task'):
+        d.setVar("SSTATE_PATH_CURRTASK", ss['task'])
+        sstatepkgfile = d.getVar('SSTATE_PATHSPEC')
         bb.note("Removing %s" % sstatepkgfile)
         oe.path.remove(sstatepkgfile)
 
@@ -612,7 +613,7 @@ def sstate_package(ss, d):
     tmpdir = d.getVar('TMPDIR')
 
     sstatebuild = d.expand("${WORKDIR}/sstate-build-%s/" % ss['task'])
-    d.appendVar('SSTATE_PKG', '_'+ ss['task'] + ".tgz")
+    d.setVar("SSTATE_CURRTASK", ss['task'])
     bb.utils.remove(sstatebuild, recurse=True)
     bb.utils.mkdirhier(sstatebuild)
     for state in ss['dirs']:
@@ -1081,17 +1082,17 @@ addhandler sstate_eventhandler
 sstate_eventhandler[eventmask] = "bb.build.TaskSucceeded"
 python sstate_eventhandler() {
     d = e.data
-    # When we write an sstate package we rewrite the SSTATE_PKG
-    spkg = d.getVar('SSTATE_PKG')
-    if not spkg.endswith(".tgz"):
+    writtensstate = d.getVar('SSTATE_CURRTASK')
+    if not writtensstate:
         taskname = d.getVar("BB_RUNTASK")[3:]
         spec = d.getVar('SSTATE_PKGSPEC')
         swspec = d.getVar('SSTATE_SWSPEC')
         if taskname in ["fetch", "unpack", "patch", "populate_lic", "preconfigure"] and swspec:
             d.setVar("SSTATE_PKGSPEC", "${SSTATE_SWSPEC}")
             d.setVar("SSTATE_EXTRAPATH", "")
+        d.setVar("SSTATE_CURRTASK", taskname)
         sstatepkg = d.getVar('SSTATE_PKG')
-        bb.siggen.dump_this_task(sstatepkg + '_' + taskname + ".tgz" ".siginfo", d)
+        bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
 }
 
 SSTATE_PRUNE_OBSOLETEWORKDIR ?= "1"
