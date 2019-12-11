@@ -46,6 +46,19 @@ export WANT_LLVM_RELEASE = "${MESA_LLVM_RELEASE}"
 
 MESA_LLVM_RELEASE ?= "${LLVMVERSION}"
 
+# set the MESA_BUILD_TYPE to either 'release' (default) or 'debug'
+# by default the upstream mesa sources build a debug release
+# here we assume the user will want a release build by default
+MESA_BUILD_TYPE ?= "release"
+def check_buildtype(d):
+    _buildtype = d.getVar('MESA_BUILD_TYPE')
+    if _buildtype not in ['release', 'debug']:
+        bb.fatal("unknown build type (%s), please set MESA_BUILD_TYPE to either 'release' or 'debug'" % _buildtype)
+    if _buildtype == 'debug':
+        return 'debugoptimized'
+    return 'plain'
+MESON_BUILDTYPE = "${@check_buildtype(d)}"
+
 EXTRA_OEMESON = " \
     -Dshared-glapi=true \
     -Dgallium-opencl=disabled \
