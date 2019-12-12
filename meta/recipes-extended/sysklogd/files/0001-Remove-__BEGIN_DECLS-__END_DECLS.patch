@@ -1,0 +1,44 @@
+From 8c7995ac8da99eed55bf5410c558b1f0a74998d0 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 7 Dec 2019 10:27:28 -0800
+Subject: [PATCH 1/2] Remove __BEGIN_DECLS/__END_DECLS
+
+The __BEGIN_DECLS and __END_DECLS are internal identifiers in glibc and
+are not defined in any standard. Using them fails build on musl
+libc, its better to avoid them
+
+Upstream-Status: Submitted [https://github.com/troglobit/sysklogd/pull/10]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/syslog.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/syslog.h b/src/syslog.h
+index 4fb7627..120a18f 100644
+--- a/src/syslog.h
++++ b/src/syslog.h
+@@ -221,7 +221,9 @@ struct syslog_data {
+     .log_mask = 0xff, \
+ }
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ void	openlog    (const char *, int, int);
+ void	closelog   (void);
+ 
+@@ -245,7 +247,9 @@ void	syslogp_r  (int, struct syslog_data *, const char *, const char *,
+ 		    const char *, ...);
+ void	vsyslogp_r (int, struct syslog_data *, const char *, const char *,
+ 		    const char *, va_list);
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #else /* !__KERNEL__ */
+ 
+-- 
+2.24.0
+

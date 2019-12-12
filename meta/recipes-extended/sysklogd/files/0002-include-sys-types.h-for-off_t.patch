@@ -1,0 +1,29 @@
+From 10cff4ba2d09b30f8f1967f910e8ab08447a8add Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 7 Dec 2019 10:31:04 -0800
+Subject: [PATCH 2/2] include sys/types.h for off_t
+
+Fixes
+error: unknown type name 'off_t'
+
+Upstream-Status: Submitted [https://github.com/troglobit/sysklogd/pull/10]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/compat.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/compat.h b/src/compat.h
+index a867636..1ef1bf0 100644
+--- a/src/compat.h
++++ b/src/compat.h
+@@ -34,6 +34,7 @@
+ #include <pthread.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/types.h>
+ 
+ /*
+  * The following macro is used to remove const cast-away warnings
+-- 
+2.24.0
+
