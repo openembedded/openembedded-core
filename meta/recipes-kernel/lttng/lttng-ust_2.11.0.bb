@@ -15,6 +15,8 @@ PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
 
 inherit autotools lib_package manpages python3native
 
+EXTRA_OECONF = "--disable-numa"
+
 DEPENDS = "liburcu util-linux"
 RDEPENDS_${PN}-bin = "python3-core"
 
@@ -26,12 +28,11 @@ RCONFLICTS_${PN} = "lttng2-ust"
 PE = "2"
 
 SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
-           file://lttng-ust-doc-examples-disable.patch \
            file://0001-python-lttngust-Makefile.am-Add-install-lib-to-setup.patch \
-          "
+           "
 
-SRC_URI[md5sum] = "f0c86a9fa7dcfd0205fb42584a310b1c"
-SRC_URI[sha256sum] = "06f9ed9b2198855b1c7fcbf15fe57297ee259409ffa1b3bad87321412d98bc35"
+SRC_URI[md5sum] = "99823cfeb76562d753ffe67880e9cc59"
+SRC_URI[sha256sum] = "683280cfe5e12021e64c32cef9eeb0128f1f23dec32ba28adb5a2074be37c4d8"
 
 CVE_PRODUCT = "ust"
 
