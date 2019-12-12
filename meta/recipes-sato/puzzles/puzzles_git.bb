@@ -10,7 +10,6 @@ REQUIRED_DISTRO_FEATURES = "x11"
 
 SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            file://fix-compiling-failure-with-option-g-O.patch \
-           file://0001-Use-labs-instead-of-abs.patch \
            file://0001-palisade-Fix-warnings-with-clang-on-arm.patch \
            file://0001-Use-Wno-error-format-overflow-if-the-compiler-suppor.patch \
            file://0001-pattern.c-Change-string-lenght-parameter-to-be-size_.patch \
@@ -18,7 +17,7 @@ SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "c6e0161dd475415316ed66dc82794d68e52f0025"
+SRCREV = "1c0c49dd5cd8df6ae87f7be5371be84589fa2662"
 PE = "2"
 PV = "0.0+git${SRCPV}"
 
