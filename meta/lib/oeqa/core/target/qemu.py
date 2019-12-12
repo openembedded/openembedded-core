@@ -24,6 +24,7 @@ class OEQemuTarget(OESSHTarget):
                 user, port)
 
         self.server_ip = server_ip
+        self.server_port = 0
         self.machine = machine
         self.rootfs = rootfs
         self.kernel = kernel
