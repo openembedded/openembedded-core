@@ -5,14 +5,14 @@ Protocol (IPP), and has its own filtering driver model for handling various \
 document types."
 HOMEPAGE = "https://www.cups.org/"
 SECTION = "console/utils"
-LICENSE = "GPLv2 & LGPLv2"
+LICENSE = "Apache-2.0"
 DEPENDS = "gnutls libpng jpeg dbus zlib libusb1"
 
 SRC_URI = "https://github.com/apple/cups/releases/download/v${PV}/${BP}-source.tar.gz \
-           file://use_echo_only_in_init.patch \
-           file://0001-don-t-try-to-run-generated-binaries.patch \
-           file://cups_serverbin.patch \
-           file://cups-avoid-install-file-conflicts.patch \
+           file://0001-use-echo-only-in-init.patch \
+           file://0002-don-t-try-to-run-generated-binaries.patch \
+           file://0003-cups_1.4.6.bb-Fix-build-on-ppc64.patch \
+           file://0004-cups-fix-multilib-install-file-conflicts.patch\
            "
 
 UPSTREAM_CHECK_URI = "https://github.com/apple/cups/releases"
@@ -45,10 +45,6 @@ EXTRA_OECONF = " \
                --enable-debug \
                --disable-relro \
                --enable-libusb \
-               --without-php \
-               --without-perl \
-               --without-python \
-               --without-java \
                DSOFLAGS='${LDFLAGS}' \
                "
 
