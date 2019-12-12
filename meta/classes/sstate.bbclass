@@ -776,6 +776,7 @@ sstate_task_postfunc[dirs] = "${WORKDIR}"
 sstate_create_package () {
 	# Exit early if it already exists
 	if [ -e ${SSTATE_PKG} ]; then
+		touch ${SSTATE_PKG}
 		return
 	fi
 
@@ -803,10 +804,13 @@ sstate_create_package () {
 	chmod 0664 $TFILE
 	# Skip if it was already created by some other process
 	if [ ! -e ${SSTATE_PKG} ]; then
-		mv -f $TFILE ${SSTATE_PKG}
+		# Move into place using ln to attempt an atomic op.
+		# Abort if it already exists
+		ln $TFILE ${SSTATE_PKG} && rm $TFILE
 	else
 		rm $TFILE
 	fi
+	touch ${SSTATE_PKG}
 }
 
 python sstate_sign_package () {
