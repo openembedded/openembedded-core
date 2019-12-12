@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
 
 DEPENDS = "liburcu popt libxml2 util-linux"
 RDEPENDS_${PN} = "libgcc"
-RDEPENDS_${PN}-ptest += "make perl bash gawk babeltrace procps perl-module-overloading coreutils util-linux kmod lttng-modules sed"
+RDEPENDS_${PN}-ptest += "make perl bash gawk babeltrace procps perl-module-overloading coreutils util-linux kmod lttng-modules sed python3-core"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 RDEPENDS_${PN}-ptest_append_libc-musl = " musl-utils"
 # babelstats.pl wants getopt-long
@@ -30,15 +30,13 @@ PACKAGECONFIG_remove_arc = "lttng-ust"
 
 SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://x32.patch \
+           file://0001-tests-do-not-strip-a-helper-library.patch \
            file://run-ptest \
            file://lttng-sessiond.service \
-           file://0001-Skip-when-testapp-is-not-present.patch \
-           file://0002-Fix-check-for-lttng-modules-presence-before-testing.patch \
-           file://0001-check-for-gettid-API-during-configure.patch \
            "
 
-SRC_URI[md5sum] = "e7804d10e4cade381e241601f6047373"
-SRC_URI[sha256sum] = "ed71ebe00c5d985c74f30e97b614e909573cbd9276c85e05d9557a0b817a1312"
+SRC_URI[md5sum] = "e6c23244a36e2a09783d03a362eb63cb"
+SRC_URI[sha256sum] = "dce493c82db673c96049b5fad155a760fa449fab3d92467a69fcb0ddaf3f0fbc"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
@@ -58,6 +56,8 @@ FILES_${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/*.la"
 # Python module needs to keep _lttng.so
 INSANE_SKIP_${PN} = "libexec dev-so"
 INSANE_SKIP_${PN}-dbg = "libexec"
+
+PRIVATE_LIBS_${PN}-ptest = "libfoo.so"
 
 do_install_append () {
     # install systemd unit file
@@ -110,6 +110,8 @@ do_install_ptest () {
             esac
         done
     done
+
+    chrpath --delete ${D}${PTEST_PATH}/tests/utils/testapp/userspace-probe-elf-binary/userspace-probe-elf-binary
 
     #
     # Use the versioned libs of liblttng-ust-dl.
