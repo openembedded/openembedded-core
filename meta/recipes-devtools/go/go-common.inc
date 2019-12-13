@@ -37,16 +37,6 @@ export GO386 ?= "${TARGET_GO386}"
 export GOMIPS ?= "${TARGET_GOMIPS}"
 export GOROOT_FINAL ?= "${libdir}/go"
 
-GOEXPORTVARS = "1"
-GOEXPORTVARS_class-native = "0"
-
-GOARM[export] = "${GOEXPORTVARS}"
-GO386[export] = "${GOEXPORTVARS}"
-GOMIPS[export] = "${GOEXPORTVARS}"
-HOST_GOARM[export] = "${GOEXPORTVARS}"
-HOST_GO386[export] = "${GOEXPORTVARS}"
-HOST_GOMIPS[export] = "${GOEXPORTVARS}"
-
 do_compile_prepend() {
 	BUILD_CC=${BUILD_CC}
 }
