@@ -10,6 +10,7 @@ DEPENDS = "zlib"
 
 SRC_URI = "git://github.com/assimp/assimp.git \
            file://0001-closes-https-github.com-assimp-assimp-issues-2733-up.patch \
+           file://0001-Use-ASSIMP_LIB_INSTALL_DIR-to-search-library.patch \
            "
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
 
