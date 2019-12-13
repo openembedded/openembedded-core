@@ -1,0 +1,44 @@
+From 032a74d83b263c4faead8e4c25d497fb8ea07b6e Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Thu, 12 Dec 2019 10:29:02 -0500
+Subject: [PATCH 2/4] Fix: sunrpc: null rpc_clnt dereference in rpc_task_queued
+ tracepoint
+
+Based on upstream Linux commit:
+
+commit 0be283f676a1e7b208db0c992283197ef8b52158
+Author: Benjamin Coddington <bcodding@redhat.com>
+Date:   Tue Jan 23 09:32:35 2018 -0500
+
+    SUNRPC: Fix null rpc_clnt dereference in rpc_task_queued tracepoint
+
+    Backchannel tasks will not have a reference to the rpc_clnt.  Return -1 for
+    cl_clid in that case.
+
+    Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+    Signed-off-by: Trond Myklebust <trondmy@gmail.com>
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Upstream-Status: Backport [https://github.com/lttng/lttng-modules/commit/8f83a9103dcdf4f6b73783427fc5ded4869309d5]
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+---
+ instrumentation/events/lttng-module/rpc.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/instrumentation/events/lttng-module/rpc.h b/instrumentation/events/lttng-module/rpc.h
+index fb13106..68c622c 100644
+--- a/instrumentation/events/lttng-module/rpc.h
++++ b/instrumentation/events/lttng-module/rpc.h
+@@ -176,7 +176,8 @@ LTTNG_TRACEPOINT_EVENT_CLASS(rpc_task_queued,
+ 
+ 	TP_FIELDS(
+ 		ctf_integer(unsigned int, task_id, task->tk_pid)
+-		ctf_integer(unsigned int, client_id, task->tk_client->cl_clid)
++		ctf_integer(unsigned int, client_id, task->tk_client ?
++				task->tk_client->cl_clid : -1)
+ 		ctf_integer(unsigned long, timeout, task->tk_timeout)
+ 		ctf_integer(unsigned long, runstate, task->tk_runstate)
+ 		ctf_integer(int, status, task->tk_status)
+-- 
+2.17.1
+
