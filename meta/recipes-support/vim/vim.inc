@@ -14,6 +14,9 @@ SRC_URI = "git://github.com/vim/vim.git \
 "
 SRCREV = "202d982b36d87cf91d992bd7e30d3223bdc72cd9"
 
+# Do not consider .z in x.y.z, as that is updated with every commit
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+)\.0"
+
 S = "${WORKDIR}/git"
 
 VIMDIR = "vim${@d.getVar('PV').split('.')[0]}${@d.getVar('PV').split('.')[1]}"
