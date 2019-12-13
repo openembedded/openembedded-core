@@ -2,7 +2,7 @@ CHRPATH_BIN ?= "chrpath"
 PREPROCESS_RELOCATE_DIRS ?= ""
 
 def process_file_linux(cmd, fpath, rootdir, baseprefix, tmpdir, d, break_hardlinks = False):
-    import subprocess as sub, oe.qa
+    import subprocess, oe.qa
 
     with oe.qa.ELFFile(fpath) as elf:
         try:
@@ -10,13 +10,10 @@ def process_file_linux(cmd, fpath, rootdir, baseprefix, tmpdir, d, break_hardlin
         except oe.qa.NotELFFileError:
             return
 
-    p = sub.Popen([cmd, '-l', fpath],stdout=sub.PIPE,stderr=sub.PIPE)
-    out, err = p.communicate()
-    # If returned successfully, process stdout for results
-    if p.returncode != 0:
+    try:
+        out = subprocess.check_output([cmd, "-l", fpath], universal_newlines=True)
+    except subprocess.CalledProcessError:
         return
-
-    out = out.decode('utf-8')
 
     # Handle RUNPATH as well as RPATH
     out = out.replace("RUNPATH=","RPATH=")
@@ -50,10 +47,11 @@ def process_file_linux(cmd, fpath, rootdir, baseprefix, tmpdir, d, break_hardlin
 
         args = ":".join(new_rpaths)
         #bb.note("Setting rpath for %s to %s" %(fpath, args))
-        p = sub.Popen([cmd, '-r', args, fpath],stdout=sub.PIPE,stderr=sub.PIPE)
-        out, err = p.communicate()
-        if p.returncode != 0:
-            bb.fatal("%s: chrpath command failed with exit code %d:\n%s%s" % (d.getVar('PN'), p.returncode, out, err))
+        try:
+            subprocess.check_output([cmd, "-r", args, fpath],
+            stderr=subprocess.PIPE, universal_newlines=True)
+        except subprocess.CalledProcessError as e:
+            bb.fatal("chrpath command failed with exit code %d:\n%s\n%s" % (e.returncode, e.stdout, e.stderr))
 
 def process_file_darwin(cmd, fpath, rootdir, baseprefix, tmpdir, d, break_hardlinks = False):
     import subprocess as sub
