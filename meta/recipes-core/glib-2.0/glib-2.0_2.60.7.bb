@@ -23,3 +23,6 @@ SRC_URI_append_class-target = " file://glib-meson.cross"
 
 SRC_URI[md5sum] = "f036f78a7fca330d9f7d939fcf794bde"
 SRC_URI[sha256sum] = "8b12c0af569afd3b71200556ad751bad4cf4bf7bc4b5f880638459a42ca86310"
+
+# Fixed in 2.60.4, but CPE data is outdated
+CVE_CHECK_WHITELIST += "CVE-2019-12450"
