@@ -24,7 +24,8 @@ MESONOPTS = " --prefix ${prefix} \
               --infodir ${@noprefix('infodir', d)} \
               --sysconfdir ${sysconfdir} \
               --localstatedir ${localstatedir} \
-              --sharedstatedir ${sharedstatedir} "
+              --sharedstatedir ${sharedstatedir} \
+              --wrap-mode nodownload"
 
 EXTRA_OEMESON_append = " ${PACKAGECONFIG_CONFARGS}"
 
