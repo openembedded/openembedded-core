@@ -2,9 +2,7 @@ SUMMARY = "PNG image format decoding library"
 HOMEPAGE = "http://www.libpng.org/"
 SECTION = "libs"
 LICENSE = "Libpng"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b0085051bf265bac2bfc38bc89f50000\
-                    file://png.h;endline=144;md5=8acd23d544623816b097e07be0139509\
-                    "
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b0085051bf265bac2bfc38bc89f50000"
 DEPENDS = "zlib"
 
 LIBV = "16"
