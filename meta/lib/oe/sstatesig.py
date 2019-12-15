@@ -141,14 +141,13 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         return super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigs(dataCache, options)
 
     def get_taskhash(self, tid, deps, dataCache):
-        h = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskhash(tid, deps, dataCache)
         if tid in self.lockedhashes:
             if self.lockedhashes[tid]:
                 return self.lockedhashes[tid]
             else:
-                return h
+                return super().get_taskhash(tid, deps, dataCache)
 
-        h = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskhash(tid, deps, dataCache)
+        h = super().get_taskhash(tid, deps, dataCache)
 
         (mc, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
 
