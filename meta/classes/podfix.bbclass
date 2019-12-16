@@ -16,6 +16,9 @@ python pod_strip_version() {
     for root, dirs, files in os.walk(d.expand("${D}${mandir}")):
         for filename in files:
             filename = os.path.join(root, filename)
+            if not os.path.isfile(filename):
+                continue
+
             with opener(filename, "rb") as manfile:
                 manpage = manfile.read()
                 m = bad_re.search(manpage)
