@@ -3,12 +3,11 @@ DESCRIPTION = "Contains the m4 macros sufficient to support building \
 autoconf/automake. This provides a significant build time speedup by \
 the removal of gettext-native from most dependency chains (now only \
 needed for gettext for the target)."
-SRC_URI = "file://aclocal.tgz \
+SRC_URI = "file://aclocal/ \
            file://config.rpath \
            file://Makefile.in.in \
            file://remove-potcdate.sin \
            file://COPYING \
-           file://0001-PATCH-Disable-the-test-to-convert-euc-jp.patch \
 "
 
 INHIBIT_DEFAULT_DEPS = "1"
@@ -23,7 +22,7 @@ S = "${WORKDIR}"
 
 do_install () {
 	install -d ${D}${datadir}/aclocal/
-	cp ${WORKDIR}/*.m4 ${D}${datadir}/aclocal/
+	cp ${WORKDIR}/aclocal/*.m4 ${D}${datadir}/aclocal/
 	install -d ${D}${datadir}/gettext/po/
 	cp ${WORKDIR}/config.rpath ${D}${datadir}/gettext/
 	cp ${WORKDIR}/Makefile.in.in ${D}${datadir}/gettext/po/
