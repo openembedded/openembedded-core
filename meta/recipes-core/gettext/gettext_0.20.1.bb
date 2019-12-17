@@ -6,7 +6,7 @@ a few stand-alone programs to massage in various ways the sets of translatable a
 HOMEPAGE = "http://www.gnu.org/software/gettext/gettext.html"
 SECTION = "libs"
 LICENSE = "GPLv3+ & LGPL-2.1+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e"
 
 # Because po-gram-gen.y has been modified by fix-CVE-2018-18751.patch,
 # it requires yacc which provided by bison-native
@@ -17,17 +17,16 @@ PROVIDES = "virtual/libintl virtual/gettext"
 PROVIDES_class-native = "virtual/gettext-native"
 RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
-	   file://parallel.patch \
-	   file://add-with-bisonlocaledir.patch \
-	   file://cr-statement.c-timsort.h-fix-formatting-issues.patch \
-	   file://use-pkgconfig.patch \
-	   file://fix-CVE-2018-18751.patch \
-	   file://run-ptest \
-	   file://serial-tests-config.patch \
-"
+           file://parallel.patch \
+           file://add-with-bisonlocaledir.patch \
+           file://cr-statement.c-timsort.h-fix-formatting-issues.patch \
+           file://use-pkgconfig.patch \
+           file://run-ptest \
+           file://serial-tests-config.patch \
+           "
 
-SRC_URI[md5sum] = "97e034cf8ce5ba73a28ff6c3c0638092"
-SRC_URI[sha256sum] = "ff942af0e438ced4a8b0ea4b0b6e0d6d657157c5e2364de57baa279c1c125c43"
+SRC_URI[md5sum] = "bb5b0c0caa028105f3ca1905ddc306e2"
+SRC_URI[sha256sum] = "66415634c6e8c3fa8b71362879ec7575e27da43da562c798a8a2f223e6e47f5c"
 
 inherit autotools texinfo pkgconfig ptest
 
@@ -127,7 +126,7 @@ do_install_append_class-native () {
 	rm ${D}${datadir}/gettext/po/remove-potcdate.sin
 
         create_wrapper ${D}${bindir}/msgfmt \
-                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-0.19.8/"
+                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-0.20/"
 
 }
 

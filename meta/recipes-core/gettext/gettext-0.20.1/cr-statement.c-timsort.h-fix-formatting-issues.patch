@@ -1,4 +1,4 @@
-From e546de65a333789e83f5485757967cee29ee3681 Mon Sep 17 00:00:00 2001
+From f6245ef5530fc37a6243e798df34162fbbeab6f0 Mon Sep 17 00:00:00 2001
 From: Robert Yang <liezhi.yang@windriver.com>
 Date: Sun, 19 Feb 2017 23:32:46 -0800
 Subject: [PATCH] cr-statement.c/timsort.h: fix formatting issues
@@ -15,15 +15,15 @@ gettext-tools/gnulib-lib/libxml/timsort.h:326:80: warning: format '%lu' expects 
 Upstream-Status: Pending
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
----
- gettext-tools/gnulib-lib/libcroco/cr-statement.c | 10 +++++-----
- gettext-tools/gnulib-lib/libxml/timsort.h        |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/gettext-tools/gnulib-lib/libcroco/cr-statement.c b/gettext-tools/gnulib-lib/libcroco/cr-statement.c
+---
+ libtextstyle/lib/libcroco/cr-statement.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/libtextstyle/lib/libcroco/cr-statement.c b/libtextstyle/lib/libcroco/cr-statement.c
 index 617520f..100104b 100644
---- a/gettext-tools/gnulib-lib/libcroco/cr-statement.c
-+++ b/gettext-tools/gnulib-lib/libcroco/cr-statement.c
+--- a/libtextstyle/lib/libcroco/cr-statement.c
++++ b/libtextstyle/lib/libcroco/cr-statement.c
 @@ -2607,7 +2607,7 @@ cr_statement_dump_ruleset (CRStatement * a_this, FILE * a_fp, glong a_indent)
          g_return_if_fail (a_fp && a_this);
          str = cr_statement_ruleset_to_string (a_this, a_indent);
@@ -69,19 +69,3 @@ index 617520f..100104b 100644
                  g_free (str) ;
                  str = NULL ;
          }
-diff --git a/gettext-tools/gnulib-lib/libxml/timsort.h b/gettext-tools/gnulib-lib/libxml/timsort.h
-index 795f272..443918a 100644
---- a/gettext-tools/gnulib-lib/libxml/timsort.h
-+++ b/gettext-tools/gnulib-lib/libxml/timsort.h
-@@ -323,7 +323,7 @@ static void TIM_SORT_RESIZE(TEMP_STORAGE_T *store, const size_t new_size)
-     SORT_TYPE *tempstore = (SORT_TYPE *)realloc(store->storage, new_size * sizeof(SORT_TYPE));
-     if (tempstore == NULL)
-     {
--      fprintf(stderr, "Error allocating temporary storage for tim sort: need %lu bytes", sizeof(SORT_TYPE) * new_size);
-+      fprintf(stderr, "Error allocating temporary storage for tim sort: need %zu bytes", sizeof(SORT_TYPE) * new_size);
-       exit(1);
-     }
-     store->storage = tempstore;
--- 
-2.10.2
-
