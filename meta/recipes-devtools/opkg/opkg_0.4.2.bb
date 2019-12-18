@@ -5,7 +5,7 @@ HOMEPAGE = "http://code.google.com/p/opkg/"
 BUGTRACKER = "http://code.google.com/p/opkg/issues/list"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
-                    file://src/opkg.c;beginline=4;endline=18;md5=9f5a1ad5395378a807d6d591e2f92d25"
+                    file://src/opkg.c;beginline=4;endline=18;md5=d6200b0f2b41dee278aa5fad333eecae"
 
 DEPENDS = "libarchive"
 
@@ -14,13 +14,11 @@ PE = "1"
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://opkg.conf \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-           file://opkg_archive.patch \
-           file://open_inner.patch \
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "ba0c21305fc93b26e844981ef100dc85"
-SRC_URI[sha256sum] = "45ac1e037d3877f635d883f8a555e172883a25d3eeb7986c75890fdd31250a43"
+SRC_URI[md5sum] = "bd13e5dfc1c2536f0c7b2e15f795278e"
+SRC_URI[sha256sum] = "86887852c43457edfff9d8b6d9520f3f1cdd55f25eb600a6eb31e1c4e151e106"
 
 # This needs to be before ptest inherit, otherwise all ptest files end packaged
 # in libopkg package if OPKGLIBDIR == libdir, because default
@@ -46,16 +44,6 @@ PACKAGECONFIG[libsolv] = "--with-libsolv,--without-libsolv,libsolv"
 
 EXTRA_OECONF += " --disable-pathfinder"
 EXTRA_OECONF_class-native = "--localstatedir=/${@os.path.relpath('${localstatedir}', '${STAGING_DIR_NATIVE}')} --sysconfdir=/${@os.path.relpath('${sysconfdir}', '${STAGING_DIR_NATIVE}')}"
-
-# Release tarball has unused binaries on the tests folder, automatically created by automake.
-# For now, delete them to avoid packaging errors (wrong architecture)
-do_unpack_append () {
-    bb.build.exec_func('remove_test_binaries', d)
-}
-
-remove_test_binaries () {
-	rm ${WORKDIR}/opkg-${PV}/tests/libopkg_test*
-}
 
 do_install_append () {
 	install -d ${D}${sysconfdir}/opkg
