@@ -1,25 +1,26 @@
-From 2320650c6d381b914fe91b2dedaa5870279a8bcf Mon Sep 17 00:00:00 2001
+From a8bceaec1b16fffbf6810df05503d8ae9092b735 Mon Sep 17 00:00:00 2001
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 Date: Fri, 26 Jul 2019 17:34:26 -0400
-Subject: [PATCH] BaseTools: makefile: adjust to build in under bitbake
+Subject: [PATCH 2/5] BaseTools: makefile: adjust to build in under bitbake
 
 Prepend the build flags with those of bitbake. This is to build
 using the bitbake native sysroot include and library directories.
 
 Signed-off-by: Ricardo Neri <ricardo.neri@linux.intel.com>
 Upstream-Status: Pending
+
 ---
  BaseTools/Source/C/Makefiles/header.makefile | 10 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)
 
-Index: git/BaseTools/Source/C/Makefiles/header.makefile
-===================================================================
---- git.orig/BaseTools/Source/C/Makefiles/header.makefile
-+++ git/BaseTools/Source/C/Makefiles/header.makefile
+diff --git a/BaseTools/Source/C/Makefiles/header.makefile b/BaseTools/Source/C/Makefiles/header.makefile
+index 4e9b36d98b..eb03ee33fa 100644
+--- a/BaseTools/Source/C/Makefiles/header.makefile
++++ b/BaseTools/Source/C/Makefiles/header.makefile
 @@ -62,23 +62,23 @@ $(error Bad HOST_ARCH)
  endif
  
- INCLUDE = $(TOOL_INCLUDE) -I $(MAKEROOT) -I $(MAKEROOT)/Include/Common -I $(MAKEROOT)/Include/ -I $(MAKEROOT)/Include/IndustryStandard -I $(MAKEROOT)/Common/ -I .. -I . $(ARCH_INCLUDE) 
+ INCLUDE = $(TOOL_INCLUDE) -I $(MAKEROOT) -I $(MAKEROOT)/Include/Common -I $(MAKEROOT)/Include/ -I $(MAKEROOT)/Include/IndustryStandard -I $(MAKEROOT)/Common/ -I .. -I . $(ARCH_INCLUDE)
 -BUILD_CPPFLAGS = $(INCLUDE)
 +BUILD_CPPFLAGS += $(INCLUDE)
  
@@ -46,5 +47,5 @@ Index: git/BaseTools/Source/C/Makefiles/header.makefile
  ifeq ($(HOST_ARCH), IA32)
  #
 -- 
-2.20.1
+2.17.1
 
