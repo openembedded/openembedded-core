@@ -8,8 +8,8 @@ SRC_URI = "git://github.com/rpm-software-management/libcomps.git \
            file://0001-Add-crc32.c-to-sources-list.patch \
            "
 
-PV = "0.1.12"
-SRCREV = "d0c8aa312dcab75c265ed6123f8afe0d7c8e91db"
+PV = "0.1.14"
+SRCREV = "5a0e04286f3462e3308f2a332eb0f90a66920218"
 
 S = "${WORKDIR}/git"
 
