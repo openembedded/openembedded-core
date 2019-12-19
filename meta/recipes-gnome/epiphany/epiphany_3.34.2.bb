@@ -14,8 +14,8 @@ REQUIRED_DISTRO_FEATURES = "x11 opengl"
 SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@gnome_verdir("${PV}")}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive \
            file://0002-help-meson.build-disable-the-use-of-yelp.patch \
            "
-SRC_URI[archive.md5sum] = "50b50e18d99b19f44cc9cd419c6a4ba8"
-SRC_URI[archive.sha256sum] = "a07bc997ad2cbf14d58557bb0b63e92d8c33683680c5e50ea6f9b53b36bec1d9"
+SRC_URI[archive.md5sum] = "ae404e3a70ff904f5a23466727f8a90a"
+SRC_URI[archive.sha256sum] = "0eaa36fc7b73a23121a23b8a7ad3c18edaf5a8a6b7cdd6d630ba5b71d946a4a1"
 
 FILES_${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers ${datadir}/metainfo"
 RDEPENDS_${PN} = "iso-codes adwaita-icon-theme gsettings-desktop-schemas"
