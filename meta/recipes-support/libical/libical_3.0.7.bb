@@ -4,15 +4,16 @@ BUGTRACKER = "https://github.com/libical/libical/issues"
 LICENSE = "LGPLv2.1 | MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1910a2a76ddf6a9ba369182494170d87 \
                     file://LICENSE.LGPL21.txt;md5=933adb561f159e7c3da079536f0ed871 \
-                    file://LICENSE.MPL2.txt;md5=9741c346eef56131163e13b9db1241b3"
+                    file://LICENSE.MPL2.txt;md5=f75d2927d3c1ed2414ef72048f5ad640 \
+                    "
 SECTION = "libs"
 
 SRC_URI = " \
     https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
     file://0001-Use-our-hand-build-native-src-generator.patch \
 "
-SRC_URI[md5sum] = "463a59244c6767b8e67b29379405e297"
-SRC_URI[sha256sum] = "5c8a21c2b732ece4a33e5c862970b4f35a8548bbcda50de5695f6fc211ac4d97"
+SRC_URI[md5sum] = "8a5d07a7fba9e73a85e67f76258bf042"
+SRC_URI[sha256sum] = "0abe66df1ea826e57db7f281c704ede834c84139012e6c686ea7adafd4e763fc"
 UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake pkgconfig
