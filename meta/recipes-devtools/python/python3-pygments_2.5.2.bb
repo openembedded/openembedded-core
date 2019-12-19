@@ -5,8 +5,8 @@ LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e1d7b7bffbfeaa14083fd2bd3236aea8"
 
 inherit setuptools3
-SRC_URI[md5sum] = "5ecc3fbb2a783e917b369271fc0e6cd1"
-SRC_URI[sha256sum] = "881c4c157e45f30af185c1ffe8d549d48ac9127433f2c380c24b84572ad66297"
+SRC_URI[md5sum] = "465a35559863089d959d783a69f79b9f"
+SRC_URI[sha256sum] = "98c8aa5a9f778fcd1026a17361ddaf7330d1b7c62ae97c3bb0ae73e0b9b6b0fe"
 
 DEPENDS += "\
             ${PYTHON_PN} \
