@@ -35,6 +35,8 @@ SRC_URI = "git://github.com/llvm/llvm-project.git;branch=${BRANCH} \
            file://0007-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
           "
 
+UPSTREAM_CHECK_GITTAGREGEX = "llvmorg-(?P<pver>\d+(\.\d+)+)"
+
 S = "${WORKDIR}/git/llvm"
 
 LLVM_INSTALL_DIR = "${WORKDIR}/llvm-install"
