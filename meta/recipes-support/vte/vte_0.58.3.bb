@@ -20,8 +20,8 @@ inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-intros
 SRC_URI += "file://0001-app.cc-use-old-school-asignment-to-avoid-gcc-4.8-err.patch \
             file://0002-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
            "
-SRC_URI[archive.md5sum] = "dadbf2c1d9864d3ea185738f97ab63af"
-SRC_URI[archive.sha256sum] = "33c966d2b1f2c3b0f9416dbca883fd746159b5bd040350e3b78f8104b2a42bc0"
+SRC_URI[archive.md5sum] = "f59eb0784a361c0939c03d4566255916"
+SRC_URI[archive.sha256sum] = "22dcb54ac2ad1a56ab0a745e16ccfeb383f0b5860b5bfa1784561216f98d4975"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
