@@ -5,7 +5,7 @@ Porter/Duff model and implicit mask generation for geometric primitives \
 including trapezoids, triangles, and rectangles."
 HOMEPAGE = "http://www.pixman.org"
 SECTION = "x11/libs"
-DEPENDS = "zlib libpng"
+DEPENDS = "zlib"
 
 SRC_URI = "https://www.cairographics.org/releases/${BP}.tar.gz \
            file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
@@ -25,15 +25,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
                     file://pixman/pixman-arm-neon-asm.h;endline=24;md5=9a9cc1e51abbf1da58f4d9528ec9d49b \
                    "
 
-inherit autotools pkgconfig
+inherit meson pkgconfig
 
-IWMMXT = "--disable-arm-iwmmxt"
-LOONGSON_MMI = "--disable-loongson-mmi"
-# If target supports neon then disable the 'simd' (ie VFPv2) fallback, otherwise disable neon.
-NEON = "${@bb.utils.contains("TUNE_FEATURES", "neon", "--disable-arm-simd", "--disable-arm-neon" ,d)}"
-
-EXTRA_OECONF = "--disable-gtk ${IWMMXT} ${LOONGSON_MMI} ${NEON}"
-EXTRA_OECONF_class-native = "--disable-gtk"
-EXTRA_OECONF_class-nativesdk = "--disable-gtk"
+# These are for the tests and demos, which we don't install
+EXTRA_OEMESON = "-Dgtk=disabled -Dlibpng=disabled"
+# ld: pixman/libpixman-mmx.a(pixman-mmx.c.o):
+# linking mips:loongson_2f module with previous mips:isa64 modules 
+EXTRA_OEMESON += "-Dloongson-mmi=disabled"
 
 BBCLASSEXTEND = "native nativesdk"
