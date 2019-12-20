@@ -62,6 +62,15 @@ def meson_cpu_family(var, d):
     else:
         return arch
 
+# Map our OS values to what Meson expects:
+# https://mesonbuild.com/Reference-tables.html#operating-system-names
+def meson_operating_system(var, d):
+    os = d.getVar(var)
+    if "mingw" in os:
+        return "windows"
+    else:
+        return os
+
 def meson_endian(prefix, d):
     arch, os = d.getVar(prefix + "_ARCH"), d.getVar(prefix + "_OS")
     sitedata = siteinfo_data_for_machine(arch, os, d)
@@ -97,13 +106,13 @@ cpp_link_args = ${@meson_array('LDFLAGS', d)}
 gtkdoc_exe_wrapper = '${B}/gtkdoc-qemuwrapper'
 
 [host_machine]
-system = '${HOST_OS}'
+system = '${@meson_operating_system('HOST_OS', d)}'
 cpu_family = '${@meson_cpu_family('HOST_ARCH', d)}'
 cpu = '${HOST_ARCH}'
 endian = '${@meson_endian('HOST', d)}'
 
 [target_machine]
-system = '${TARGET_OS}'
+system = '${@meson_operating_system('TARGET_OS', d)}'
 cpu_family = '${@meson_cpu_family('TARGET_ARCH', d)}'
 cpu = '${TARGET_ARCH}'
 endian = '${@meson_endian('TARGET', d)}'
