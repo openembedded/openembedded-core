@@ -2,13 +2,16 @@ SUMMARY = "XML::Parser - A perl module for parsing XML documents"
 HOMEPAGE = "https://libexpat.github.io/"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0+"
-LIC_FILES_CHKSUM = "file://README;beginline=2;endline=6;md5=c8767d7516229f07b26e42d1cf8b51f1"
+LIC_FILES_CHKSUM = "file://Parser.pm;beginline=1;endline=7;md5=d12cc778c80fc4c518f0e5dee29fd5fb"
 
 DEPENDS += "expat"
 
-SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz"
-SRC_URI[md5sum] = "af4813fe3952362451201ced6fbce379"
-SRC_URI[sha256sum] = "1ae9d07ee9c35326b3d9aad56eae71a6730a73a116b9fe9e8a4758b7cc033216"
+SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Parser-${PV}.tar.gz \
+           file://ptest-perl/run-ptest \
+           file://0001-CheckLib.pm-do-not-attempt-to-run-a-cross-executable.patch \
+           "
+SRC_URI[md5sum] = "80bb18a8e6240fcf7ec2f7b57601c170"
+SRC_URI[sha256sum] = "d331332491c51cccfb4cb94ffc44f9cd73378e618498d4a37df9e043661c515d"
 
 S = "${WORKDIR}/XML-Parser-${PV}"
 
