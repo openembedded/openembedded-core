@@ -68,7 +68,7 @@ class PtestRunnerTest(OERuntimeTestCase):
 
         failed_tests = {}
         for section in results:
-            failed_testcases = [ "_".join(test.translate(trans).split()) for test in results[section] if results[section][test] == 'fail' ]
+            failed_testcases = [ "_".join(test.translate(trans).split()) for test in results[section] if results[section][test] == 'FAILED' ]
             if failed_testcases:
                 failed_tests[section] = failed_testcases
 
