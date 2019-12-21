@@ -23,19 +23,17 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
  m4/mpers.m4 | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/m4/mpers.m4 b/m4/mpers.m4
-index 13725d7..d8578ea 100644
 --- a/m4/mpers.m4
 +++ b/m4/mpers.m4
-@@ -88,6 +88,7 @@ case "$arch" in
- 	CFLAGS="$CFLAGS MPERS_CFLAGS $IFLAG"
- 	AC_CACHE_CHECK([for mpers_name personality compile support], [st_cv_cc],
+@@ -103,6 +103,7 @@ case "$arch" in
+ 	CFLAGS="$CFLAGS MPERS_CFLAGS${IFLAG:+ }$IFLAG"
+ 	AC_CACHE_CHECK([for mpers_name personality compile support (using $CC $CFLAGS)], [st_cv_cc],
  		[AC_COMPILE_IFELSE([AC_LANG_SOURCE([[#include <stdint.h>
 +						     #include <sys/syscall.h>
  						     int main(){return 0;}]])],
  				   [st_cv_cc=yes],
  				   [st_cv_cc=no])])
-@@ -95,6 +96,7 @@ case "$arch" in
+@@ -110,6 +111,7 @@ case "$arch" in
  		AC_CACHE_CHECK([for mpers_name personality runtime support],
  			[st_cv_runtime],
  			[AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdint.h>

@@ -1,0 +1,52 @@
+From 86bbe1135d5d13db1ced64141acfb513c03d2f30 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 21 Dec 2019 10:18:38 -0800
+Subject: [PATCH] define ptrace_syscall_info to __ptrace_syscall_info
+
+glibc 2.31+ has defined __ptrace_syscall_info [1]
+
+[1] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=d1e411e5c786ce3028d98b4e6fc02c2fcf66ae37;hp=2e4e75727eb05eef4c10470d865bd42962d5fae7
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ get_personality.h | 2 ++
+ ptrace.h          | 2 ++
+ 2 files changed, 4 insertions(+)
+
+--- a/get_personality.h
++++ b/get_personality.h
+@@ -10,7 +10,9 @@
+ 
+ # include "ptrace.h"
+ 
++# if HAVE_STRUCT___PTRACE_SYSCALL_INFO
+ extern int
+ get_personality_from_syscall_info(const struct ptrace_syscall_info *);
++# endif
+ 
+ #endif /* !STRACE_GET_PERSONALITY_H */
+--- a/ptrace.h
++++ b/ptrace.h
+@@ -186,6 +186,9 @@ struct ptrace_syscall_info {
+ };
+ # endif
+ 
++# if HAVE_STRUCT___PTRACE_SYSCALL_INFO
++#  define ptrace_syscall_info __ptrace_syscall_info
++# endif
+ # if !HAVE_DECL_PTRACE_PEEKUSER
+ #  define PTRACE_PEEKUSER PTRACE_PEEKUSR
+ # endif
+--- a/configure.ac
++++ b/configure.ac
+@@ -317,7 +317,8 @@ AC_CHECK_MEMBERS([struct stat.st_mtime_n
+ AC_CHECK_TYPES(m4_normalize([
+ 	struct pt_all_user_regs,
+ 	struct ia64_fpreg,
+-	struct ptrace_peeksiginfo_args
++	struct ptrace_peeksiginfo_args,
++	struct __ptrace_syscall_info
+ ]),,, [#include <sys/ptrace.h>])
+ 
+ # For kernels that do not have v3.10-rc1~201^2~11

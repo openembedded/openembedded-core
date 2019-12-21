@@ -11,7 +11,7 @@ Suggested-by: Rich Felker <dalias@aerifal.cx>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 --- a/configure.ac
 +++ b/configure.ac
-@@ -439,11 +439,7 @@ AC_CHECK_HEADERS(m4_normalize([
+@@ -441,11 +441,7 @@ AC_CHECK_HEADERS(m4_normalize([
  	sys/conf.h
  	sys/eventfd.h
  	sys/fanotify.h

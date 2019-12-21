@@ -12,13 +12,13 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://run-ptest \
            file://mips-SIGEMT.patch \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
-           file://0001-tests-sigaction-Check-for-mips-and-alpha-before-usin.patch \
            file://ptest-spacesave.patch \
            file://uintptr_t.patch \
            file://sys_headers.patch \
+           file://0001-define-ptrace_syscall_info-to-__ptrace_syscall_info.patch \
            "
-SRC_URI[md5sum] = "84f5e72de813c9b1bb6057ee8ab428d8"
-SRC_URI[sha256sum] = "6c131198749656401fe3efd6b4b16a07ea867e8f530867ceae8930bbc937a047"
+SRC_URI[md5sum] = "b2b58f05eb3c5c0bf9d1e26003b4d698"
+SRC_URI[sha256sum] = "f7d00514d51290b6db78ad7a9de709baf93caa5981498924cbc9a744cfd2a741"
 
 inherit autotools ptest
 
