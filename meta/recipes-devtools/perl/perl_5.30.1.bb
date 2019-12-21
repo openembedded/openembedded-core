@@ -32,7 +32,7 @@ SRC_URI[perl-cross.sha256sum] = "edce0b0c2f725e2db3f203d6d8e9f3f7161256f5d159055
 
 S = "${WORKDIR}/perl-${PV}"
 
-inherit upstream-version-is-even
+inherit upstream-version-is-even update-alternatives
 
 DEPENDS += "zlib virtual/crypt"
 
@@ -239,6 +239,10 @@ PACKAGES += "${PN}-module-cpan ${PN}-module-unicore"
 FILES_${PN}-module-cpan += "${libdir}/perl5/${PV}/CPAN \
                           "
 FILES_${PN}-module-unicore += "${libdir}/perl5/${PV}/unicore"
+
+ALTERNATIVE_PRIORITY = "40"
+ALTERNATIVE_${PN}-doc = "Thread.3"
+ALTERNATIVE_LINK_NAME[Thread.3] = "${mandir}/man3/Thread.3"
 
 # Create a perl-modules package recommending all the other perl
 # packages (actually the non modules packages and not created too)
