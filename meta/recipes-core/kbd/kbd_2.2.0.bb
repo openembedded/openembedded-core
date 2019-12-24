@@ -29,7 +29,7 @@ PACKAGECONFIG[pam] = "--enable-vlock, --disable-vlock, libpam,"
 PACKAGECONFIG[tests] = "--enable-tests, --disable-tests, libcheck"
 
 do_compile_ptest() {
-    oe_runmake -C ${B}/tests dumpkeys-fulltable alt-is-meta
+    oe_runmake -C ${B}/tests alt-is-meta dumpkeys-bkeymap dumpkeys-fulltable dumpkeys-mktable
 }
 
 do_install_ptest() {
@@ -42,7 +42,7 @@ do_install_ptest() {
 	-e 's:${RECIPE_SYSROOT}::g' \
 	-e 's:${S}/config/missing::g' \
 	-e 's:${WORKDIR}::g' \
-	-e '/libkeymap_.*_SOURCES =/d' -e '/$(EXEEXT):/,/^$/d' ${D}${PTEST_PATH}/tests/Makefile
+	-e '/^lib.*_SOURCES =/d' -e '/$(EXEEXT):/,/^$/d' ${D}${PTEST_PATH}/tests/Makefile
 
     find ${B}/tests -executable -exec install {} ${D}${PTEST_PATH}/tests \;
     find ${S}/tests \( -name \*.map -o -name \*.bin -o -name \*.output \) -exec install {} ${D}${PTEST_PATH}/tests \;
