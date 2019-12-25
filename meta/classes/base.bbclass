@@ -127,6 +127,9 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
     for tool in tools:
         desttool = os.path.join(dest, tool)
         if not os.path.exists(desttool):
+            # clean up dead symlink
+            if os.path.islink(desttool):
+                os.unlink(desttool)
             srctool = bb.utils.which(path, tool, executable=True)
             # gcc/g++ may link to ccache on some hosts, e.g.,
             # /usr/local/bin/ccache/gcc -> /usr/bin/ccache, then which(gcc)
