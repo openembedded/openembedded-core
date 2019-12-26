@@ -14,22 +14,19 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b148fc8adf19dc9aec17cf9cd29a9a5e"
 
-SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2 \
-           file://0001-Build-sfcsample-only-when-X11-backend-is-enabled.patch \
-           "
-
-SRC_URI[md5sum] = "c1fada26c286654859eff33b2562cb79"
-SRC_URI[sha256sum] = "9238c9d5110d60f935683390b8383fdac3507346384cd5f117a23c6db1d72a17"
+SRC_URI = "git://github.com/intel/libva-utils.git;branch=v2.6-branch"
+SRCREV = "8ea1eba433dcbceb0e5dcb54b8e3f984987f7a17"
+S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva-utils/releases"
 
 DEPENDS = "libva"
 
-inherit autotools pkgconfig features_check
+inherit meson pkgconfig features_check
 
 # depends on libva which requires opengl
 REQUIRED_DISTRO_FEATURES = "opengl"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
-PACKAGECONFIG[x11] = "--enable-x11,--disable-x11,virtual/libx11 libxext libxfixes"
-PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,wayland-native wayland"
+PACKAGECONFIG[x11] = "-Dx11=true, -Dx11=false,virtual/libx11 libxext libxfixes"
+PACKAGECONFIG[wayland] = "-Dwayland=true, -Dwayland=false,wayland-native wayland"
