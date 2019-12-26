@@ -16,6 +16,7 @@ inherit update-rc.d update-alternatives systemd autotools
 SRC_URI = "git://github.com/troglobit/sysklogd.git;nobranch=1 \
            file://0001-Remove-__BEGIN_DECLS-__END_DECLS.patch \
            file://0002-include-sys-types.h-for-off_t.patch \
+           file://0001-Fix-nasty-parallel-build-problem-reported-by-Gentoo-.patch \
            file://sysklogd \
            "
 S = "${WORKDIR}/git"
