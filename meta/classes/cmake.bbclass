@@ -181,9 +181,18 @@ cmake_do_configure() {
 	  -Wno-dev
 }
 
+# To disable verbose cmake logs for a given recipe or globally config metadata e.g. local.conf
+# add following
+#
+# CMAKE_VERBOSE = ""
+#
+
+CMAKE_VERBOSE ??= "VERBOSE=1"
+
+# Then run do_compile again
 cmake_runcmake_build() {
-	bbnote ${DESTDIR:+DESTDIR=${DESTDIR} }VERBOSE=1 cmake --build '${B}' "$@" -- ${EXTRA_OECMAKE_BUILD}
-	eval ${DESTDIR:+DESTDIR=${DESTDIR} }VERBOSE=1 cmake --build '${B}' "$@" -- ${EXTRA_OECMAKE_BUILD}
+	bbnote ${DESTDIR:+DESTDIR=${DESTDIR} }${CMAKE_VERBOSE} cmake --build '${B}' "$@" -- ${EXTRA_OECMAKE_BUILD}
+	eval ${DESTDIR:+DESTDIR=${DESTDIR} }${CMAKE_VERBOSE} cmake --build '${B}' "$@" -- ${EXTRA_OECMAKE_BUILD}
 }
 
 cmake_do_compile()  {
