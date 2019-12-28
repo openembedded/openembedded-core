@@ -103,6 +103,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         self.unlockedrecipes = (data.getVar("SIGGEN_UNLOCKED_RECIPES") or
                                 "").split()
         self.unlockedrecipes = { k: "" for k in self.unlockedrecipes }
+        self.buildarch = data.getVar('BUILD_ARCH')
         pass
 
     def tasks_resolved(self, virtmap, virtpnmap, dataCache):
@@ -139,6 +140,14 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         bb.plain("Writing locked sigs to %s" % sigfile)
         self.dump_lockedsigs(sigfile)
         return super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigs(dataCache, options)
+
+    def prep_taskhash(self, tid, deps, dataCache):
+        super().prep_taskhash(tid, deps, dataCache)
+        if hasattr(self, "extramethod"):
+            (_, _, _, fn) = bb.runqueue.split_tid_mcfn(tid)
+            inherits = " ".join(dataCache.inherits[fn])    
+            if inherits.find("/native.bbclass") != -1 or inherits.find("/cross.bbclass") != -1:
+                self.extramethod[tid] = ":" + self.buildarch
 
     def get_taskhash(self, tid, deps, dataCache):
         if tid in self.lockedhashes:
