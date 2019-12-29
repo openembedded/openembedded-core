@@ -13,5 +13,7 @@ DEPENDS += "libxkbfile"
 
 BBCLASSEXTEND = "native"
 
+EXTRA_OECONF += "--disable-selective-werror"
+
 SRC_URI[md5sum] = "12610df19df2af3797f2c130ee2bce97"
 SRC_URI[sha256sum] = "6dd8bcb9be7e85bd7294abe261b8c7b0539d2fc93e41b80fb8bd013767ce8424"
