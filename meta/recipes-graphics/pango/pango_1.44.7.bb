@@ -32,6 +32,10 @@ PACKAGECONFIG[thai] = ",,libthai"
 GTKDOC_MESON_OPTION = "gtk_doc"
 GIR_MESON_OPTION = 'introspection'
 
+do_configure_prepend_toolchain-clang() {
+    sed -i -e "/Werror=implicit-fallthrough/d" ${S}/meson.build
+}
+
 LEAD_SONAME = "libpango-1.0*"
 
 FILES_${PN} = "${bindir}/* ${libdir}/libpango*${SOLIBS}"
