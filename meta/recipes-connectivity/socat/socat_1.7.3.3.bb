@@ -44,6 +44,8 @@ PACKAGECONFIG ??= "readline"
 PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline"
 
+CFLAGS += "-fcommon"
+
 do_install_prepend () {
     mkdir -p ${D}${bindir}
     install -d ${D}${bindir} ${D}${mandir}/man1
