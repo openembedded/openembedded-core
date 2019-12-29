@@ -53,7 +53,6 @@ ARM_INSTRUCTION_SET_armv5 = "arm"
 ARM_INSTRUCTION_SET_armv6 = "arm"
 
 TUNE_CCARGS_remove = "-march=mips32r2"
-SECURITY_CFLAGS_mipsarch = "${SECURITY_NOPIE_CFLAGS}"
 SECURITY_NOPIE_CFLAGS ??= ""
 
 # go can't be built with ccache:
