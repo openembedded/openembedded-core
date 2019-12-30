@@ -135,6 +135,7 @@ class BaseConfig(object):
                         'DEPLOY_DIR_IMAGE',
                         'OE_TMPDIR',
                         'OECORE_NATIVE_SYSROOT',
+                        'MULTICONFIG',
                         )
 
         self.qemu_opt = ''
@@ -401,9 +402,7 @@ class BaseConfig(object):
             self.set("MACHINE", arg)
             return
 
-        cmd = 'MACHINE=%s bitbake -e' % arg
-        logger.info('Running %s...' % cmd)
-        self.bitbake_e = subprocess.check_output(cmd, shell=True).decode('utf-8')
+        self.bitbake_e = self.run_bitbake_env(arg)
         # bitbake -e doesn't report invalid MACHINE as an error, so
         # let's check DEPLOY_DIR_IMAGE to make sure that it is a valid
         # MACHINE.
@@ -1410,10 +1409,7 @@ class BaseConfig(object):
 
         self.cleaned = True
 
-    def load_bitbake_env(self, mach=None):
-        if self.bitbake_e:
-            return
-
+    def run_bitbake_env(self, mach=None):
         bitbake = shutil.which('bitbake')
         if not bitbake:
             return
@@ -1421,14 +1417,24 @@ class BaseConfig(object):
         if not mach:
             mach = self.get('MACHINE')
 
+        multiconfig = self.get('MULTICONFIG')
+        if multiconfig:
+            multiconfig = "mc:%s" % multiconfig
+
         if mach:
-            cmd = 'MACHINE=%s bitbake -e' % mach
+            cmd = 'MACHINE=%s bitbake -e %s' % (mach, multiconfig)
         else:
-            cmd = 'bitbake -e'
+            cmd = 'bitbake -e %s' % multiconfig
 
         logger.info('Running %s...' % cmd)
+        return subprocess.check_output(cmd, shell=True).decode('utf-8')
+
+    def load_bitbake_env(self, mach=None):
+        if self.bitbake_e:
+            return
+
         try:
-            self.bitbake_e = subprocess.check_output(cmd, shell=True).decode('utf-8')
+            self.bitbake_e = self.run_bitbake_env(mach=mach)
         except subprocess.CalledProcessError as err:
             self.bitbake_e = ''
             logger.warning("Couldn't run 'bitbake -e' to gather environment information:\n%s" % err.output.decode('utf-8'))
@@ -1443,7 +1449,13 @@ class BaseConfig(object):
         if result and os.path.exists(result):
             return result
 
-        cmd = ('bitbake', 'qemu-helper-native', '-e')
+        cmd = ['bitbake', '-e']
+        multiconfig = self.get('MULTICONFIG')
+        if multiconfig:
+            cmd.append('mc:%s:qemu-helper-native' % multiconfig)
+        else:
+            cmd.append('qemu-helper-native')
+
         logger.info('Running %s...' % str(cmd))
         out = subprocess.check_output(cmd).decode('utf-8')
 
