@@ -104,6 +104,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
                                 "").split()
         self.unlockedrecipes = { k: "" for k in self.unlockedrecipes }
         self.buildarch = data.getVar('BUILD_ARCH')
+        self._internal = False
         pass
 
     def tasks_resolved(self, virtmap, virtpnmap, dataCache):
@@ -156,7 +157,12 @@ class SignatureGeneratorOEBasicHashMixIn(object):
             else:
                 return super().get_taskhash(tid, deps, dataCache)
 
+        # get_taskhash will call get_unihash internally in the parent class, we 
+        # need to disable our filter of it whilst this runs else
+        # incorrect hashes can be calculated.
+        self._internal = True
         h = super().get_taskhash(tid, deps, dataCache)
+        self._internal = False
 
         (mc, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
 
@@ -184,7 +190,9 @@ class SignatureGeneratorOEBasicHashMixIn(object):
                 h_locked = self.lockedsigs[recipename][task][0]
                 var = self.lockedsigs[recipename][task][1]
                 self.lockedhashes[tid] = h_locked
-                unihash = super().get_unihash(tid)
+                self._internal = True
+                unihash = self.get_unihash(tid)
+                self._internal = False
                 self.taskhash[tid] = h_locked
                 #bb.warn("Using %s %s %s" % (recipename, task, h))
 
@@ -199,7 +207,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         return h
 
     def get_unihash(self, tid):
-        if tid in self.lockedhashes and self.lockedhashes[tid]:
+        if tid in self.lockedhashes and self.lockedhashes[tid] and not self._internal:
             return self.lockedhashes[tid]
         return super().get_unihash(tid)
 
