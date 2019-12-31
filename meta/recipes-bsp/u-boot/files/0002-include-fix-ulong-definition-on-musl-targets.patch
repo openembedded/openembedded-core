@@ -1,0 +1,83 @@
+From dccfea2e95cd3f26d1295e02d41012d014827dd9 Mon Sep 17 00:00:00 2001
+From: Sergei Trofimovich <slyfox@gentoo.org>
+Date: Mon, 16 Dec 2019 23:36:40 +0000
+Subject: [PATCH 2/2] include: fix 'ulong' definition on musl targets
+
+The build failure was originally reported on arm64-musl
+target at https://bugs.gentoo.org/703132. Here is the amd64-musl
+variant:
+
+```
+$ LANG=C make CROSS_COMPILE=x86_64-gentoo-linux-musl- tools-only_defconfig -j$(nproc)
+$ LANG=C make CROSS_COMPILE=x86_64-gentoo-linux-musl- tools-all            -j$(nproc)
+...
+In file included from tools/env/../../env/flags.c:7,
+                 from tools/env/env_flags.c:1:
+include/env.h:159:1: error: unknown type name 'ulong'; did you mean 'long'?
+  159 | ulong env_get_ulong(const char *name, int base, ulong default_val);
+      | ^~~~~
+      | long
+```
+
+Note: 'ulong' is not defined there.
+
+On glibc 'ulong' comes from <sys/types.h>:
+
+```c
+/* Old compatibility names for C types.  */
+typedef unsigned long int ulong;
+```
+
+On musl it comes from <sys/types.h> as well but from under different guards:
+
+```c
+typedef unsigned long u_long, ulong;
+```
+
+The change inlines 'ulong' define similar to 'uint' define.
+
+Upstream-Status: Pending
+Bug: https://bugs.gentoo.org/703132
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+Message-Id: <20191216233640.518168-1-slyfox@gentoo.org>
+---
+ include/compiler.h   | 2 +-
+ include/u-boot/crc.h | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/compiler.h b/include/compiler.h
+index 29507f9840..90372f239c 100644
+--- a/include/compiler.h
++++ b/include/compiler.h
+@@ -46,7 +46,6 @@
+ # include <byteswap.h>
+ #elif defined(__MACH__) || defined(__FreeBSD__)
+ # include <machine/endian.h>
+-typedef unsigned long ulong;
+ #endif
+ #ifdef __FreeBSD__
+ # include <sys/endian.h> /* htole32 and friends */
+@@ -66,6 +65,7 @@ typedef uint8_t __u8;
+ typedef uint16_t __u16;
+ typedef uint32_t __u32;
+ typedef unsigned int uint;
++typedef unsigned long ulong;
+ 
+ #define uswap_16(x) \
+ 	((((x) & 0xff00) >> 8) | \
+diff --git a/include/u-boot/crc.h b/include/u-boot/crc.h
+index 1086d2168c..b96b50d98b 100644
+--- a/include/u-boot/crc.h
++++ b/include/u-boot/crc.h
+@@ -8,6 +8,8 @@
+ #ifndef _UBOOT_CRC_H
+ #define _UBOOT_CRC_H
+ 
++#include <compiler.h> /* unit definition */
++
+ /**
+  * crc8() - Calculate and return CRC-8 of the data
+  *
+-- 
+2.24.1
+

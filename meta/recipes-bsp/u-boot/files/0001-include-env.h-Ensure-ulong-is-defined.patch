@@ -1,4 +1,4 @@
-From 0565a080d153d5baaaacfeb5045a832e126f4f9e Mon Sep 17 00:00:00 2001
+From 718170ff3a5e677db7212a86b129dacb28b1cac2 Mon Sep 17 00:00:00 2001
 From: Alistair Francis <alistair.francis@wdc.com>
 Date: Mon, 14 Oct 2019 17:37:30 -0700
 Subject: [PATCH] include/env.h: Ensure ulong is defined
@@ -14,7 +14,7 @@ Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/include/env.h b/include/env.h
-index b72239f6a5..5ca49a3456 100644
+index d6c2d751d6..6cf5053431 100644
 --- a/include/env.h
 +++ b/include/env.h
 @@ -13,6 +13,8 @@
@@ -27,5 +27,5 @@ index b72239f6a5..5ca49a3456 100644
  
  /* Value for environment validity */
 -- 
-2.23.0
+2.24.1
 

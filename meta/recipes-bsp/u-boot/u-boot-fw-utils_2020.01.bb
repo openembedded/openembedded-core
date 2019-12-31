@@ -3,7 +3,9 @@ require u-boot-common.inc
 SUMMARY = "U-Boot bootloader fw_printenv/setenv utilities"
 DEPENDS += "mtd-utils"
 
-SRC_URI += "file://0001-include-env.h-Ensure-ulong-is-defined.patch"
+SRC_URI += "file://0001-include-env.h-Ensure-ulong-is-defined.patch \
+            file://0002-include-fix-ulong-definition-on-musl-targets.patch \
+	    "
 
 INSANE_SKIP_${PN} = "already-stripped"
 EXTRA_OEMAKE_class-target = 'CROSS_COMPILE=${TARGET_PREFIX} CC="${CC} ${CFLAGS} ${LDFLAGS}" HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}" V=1'
