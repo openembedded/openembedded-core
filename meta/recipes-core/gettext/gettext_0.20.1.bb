@@ -23,6 +23,7 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://use-pkgconfig.patch \
            file://run-ptest \
            file://serial-tests-config.patch \
+           file://0001-msgmerge-Fix-behaviour-of-for-msgfmt-on-PO-files-wit.patch \
            "
 
 SRC_URI[md5sum] = "bb5b0c0caa028105f3ca1905ddc306e2"
