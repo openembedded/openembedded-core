@@ -30,6 +30,9 @@ do_configure_prepend() {
 do_install() {
 	autotools_do_install
 
+	# Don't version the documentation
+	mv ${D}${docdir}/${BP} ${D}${docdir}/${BPN}
+
 	# don't install /var/log/sa when populating rootfs. Do it through volatile
 	rm -rf ${D}/var
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
