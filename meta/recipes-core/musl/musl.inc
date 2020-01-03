@@ -25,3 +25,5 @@ MIPS_INSTRUCTION_SET = "mips"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 ARM_INSTRUCTION_SET_armv4 = "arm"
 
+# Enable out of tree build
+B = "${WORKDIR}/build"
