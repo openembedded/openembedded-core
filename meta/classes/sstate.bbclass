@@ -7,11 +7,28 @@ def generate_sstatefn(spec, hash, taskname, siginfo, d):
     if taskname is None:
        return ""
     extension = ".tgz"
+    # 8 chars reserved for siginfo
+    limit = 254 - 8
     if siginfo:
+        limit = 254
         extension = ".tgz.siginfo"
     if not hash:
         hash = "INVALID"
-    return hash[:2] + "/" + hash[2:4] + "/" + spec + hash + "_" + taskname + extension
+    fn = spec + hash + "_" + taskname + extension
+    # If the filename is too long, attempt to reduce it
+    if len(fn) > limit:
+        components = spec.split(":")
+        # Fields 0,5,6 are mandatory, 1 is most useful, 2,3,4 are just for information
+        # 7 is for the separators
+        avail = (254 - len(hash + "_" + taskname + extension) - len(components[0]) - len(components[1]) - len(components[5]) - len(components[6]) - 7) / 3
+        components[2] = components[2][:avail]
+        components[3] = components[3][:avail]
+        components[4] = components[4][:avail]
+        spec = ":".join(components)
+        fn = spec + hash + "_" + taskname + extension
+        if len(fn) > limit:
+            bb.fatal("Unable to reduce sstate name to less than 255 chararacters")
+    return hash[:2] + "/" + hash[2:4] + "/" + fn
 
 SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
 SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
