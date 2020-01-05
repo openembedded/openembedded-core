@@ -3,15 +3,20 @@ SSTATE_VERSION = "3"
 SSTATE_MANIFESTS ?= "${TMPDIR}/sstate-control"
 SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_MANMACH}-${PN}"
 
-def generate_sstatefn(spec, hash, d):
+def generate_sstatefn(spec, hash, taskname, siginfo, d):
+    if taskname is None:
+       return ""
+    extension = ".tgz"
+    if siginfo:
+        extension = ".tgz.siginfo"
     if not hash:
         hash = "INVALID"
-    return hash[:2] + "/" + hash[2:4] + "/" + spec + hash
+    return hash[:2] + "/" + hash[2:4] + "/" + spec + hash + "_" + taskname + extension
 
 SSTATE_PKGARCH    = "${PACKAGE_ARCH}"
 SSTATE_PKGSPEC    = "sstate:${PN}:${PACKAGE_ARCH}${TARGET_VENDOR}-${TARGET_OS}:${PV}:${PR}:${SSTATE_PKGARCH}:${SSTATE_VERSION}:"
 SSTATE_SWSPEC     = "sstate:${PN}::${PV}:${PR}::${SSTATE_VERSION}:"
-SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_UNIHASH'), d)}_${SSTATE_CURRTASK}.tgz"
+SSTATE_PKGNAME    = "${SSTATE_EXTRAPATH}${@generate_sstatefn(d.getVar('SSTATE_PKGSPEC'), d.getVar('BB_UNIHASH'), d.getVar('SSTATE_CURRTASK'), False, d)}"
 SSTATE_PKG        = "${SSTATE_DIR}/${SSTATE_PKGNAME}"
 SSTATE_EXTRAPATH   = ""
 SSTATE_EXTRAPATHWILDCARD = ""
@@ -822,9 +827,6 @@ BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
 def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, **kwargs):
     found = set()
     missed = set()
-    extension = ".tgz"
-    if siginfo:
-        extension = extension + ".siginfo"
 
     def gethash(task):
         return sq_data['unihash'][task]
@@ -851,7 +853,7 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
         spec, extrapath, tname = getpathcomponents(tid, d)
 
-        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + extension)
+        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, gethash(tid), tname, siginfo, d))
 
         if os.path.exists(sstatefile):
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
@@ -914,7 +916,7 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
             if tid in found:
                 continue
             spec, extrapath, tname = getpathcomponents(tid, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + extension)
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, siginfo, d))
             tasklist.append((tid, sstatefile))
 
         if tasklist:
@@ -944,11 +946,11 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
         evdata = {'missed': [], 'found': []};
         for tid in missed:
             spec, extrapath, tname = getpathcomponents(tid, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + ".tgz")
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, False, d))
             evdata['missed'].append((bb.runqueue.fn_from_tid(tid), bb.runqueue.taskname_from_tid(tid), gethash(tid), sstatefile ) )
         for tid in found:
             spec, extrapath, tname = getpathcomponents(tid, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), d) + "_" + tname + ".tgz")
+            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, False, d))
             evdata['found'].append((bb.runqueue.fn_from_tid(tid), bb.runqueue.taskname_from_tid(tid), gethash(tid), sstatefile ) )
         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
 
