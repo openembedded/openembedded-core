@@ -686,7 +686,11 @@ def sstate_package(ss, d):
         bb.build.exec_func(f, d, (sstatebuild,))
 
     # SSTATE_PKG may have been changed by sstate_report_unihash
-    bb.siggen.dump_this_task(d.getVar('SSTATE_PKG') + ".siginfo", d)
+    siginfo = d.getVar('SSTATE_PKG') + ".siginfo"
+    if not os.path.exists(siginfo):
+        bb.siggen.dump_this_task(siginfo, d)
+    else:
+        os.utime(siginfo, None)
 
     return
 
@@ -1110,8 +1114,11 @@ python sstate_eventhandler() {
             d.setVar("SSTATE_PKGSPEC", "${SSTATE_SWSPEC}")
             d.setVar("SSTATE_EXTRAPATH", "")
         d.setVar("SSTATE_CURRTASK", taskname)
-        sstatepkg = d.getVar('SSTATE_PKG')
-        bb.siggen.dump_this_task(sstatepkg + ".siginfo", d)
+        siginfo = d.getVar('SSTATE_PKG') + ".siginfo"
+        if not os.path.exists(siginfo):
+            bb.siggen.dump_this_task(siginfo, d)
+        else:
+            os.utime(siginfo, None)
 }
 
 SSTATE_PRUNE_OBSOLETEWORKDIR ?= "1"
