@@ -33,7 +33,7 @@ FILES_alsa-server = "${bindir}/*"
 FILES_alsa-conf = "${datadir}/alsa/"
 FILES_libatopology = "${libdir}/libatopology.so.*"
 
-RDEPENDS_${PN}_class-target = "alsa-conf"
+RDEPENDS_${PN}_class-target = "alsa-conf alsa-ucm-conf"
 
 # upgrade path
 RPROVIDES_${PN} = "libasound"
