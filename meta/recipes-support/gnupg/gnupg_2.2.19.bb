@@ -18,6 +18,7 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            "
 SRC_URI_append_class-native = " file://0001-configure.ac-use-a-custom-value-for-the-location-of-.patch \
                                 file://relocate.patch"
+SRC_URI_append_class-nativesdk = " file://relocate.patch"
 
 SRC_URI[md5sum] = "cb3b373d08ba078c325299945a7f2818"
 SRC_URI[sha256sum] = "242554c0e06f3a83c420b052f750b65ead711cc3fddddb5e7274fcdbb4e9dec0"
@@ -60,10 +61,17 @@ do_install_append() {
 }
 
 do_install_append_class-native() {
-	create_wrapper ${D}${bindir}/gpg2 GNUPG_BINDIR=${STAGING_BINDIR_NATIVE}
-	create_wrapper ${D}${bindir}/gpgconf GNUPG_BINDIR=${STAGING_BINDIR_NATIVE}
-	create_wrapper ${D}${bindir}/gpg-agent GNUPG_BINDIR=${STAGING_BINDIR_NATIVE}
-	create_wrapper ${D}${bindir}/gpg-connect-agent GNUPG_BINDIR=${STAGING_BINDIR_NATIVE}
+	create_wrappers ${STAGING_BINDIR_NATIVE}
+}
+
+do_install_append_class-nativesdk() {
+	create_wrappers ${SDKPATHNATIVE}${bindir_nativesdk}
+}
+
+create_wrappers() {
+	for i in gpg2 gpgconf gpg-agent gpg-connect-agent; do
+		create_wrapper ${D}${bindir}/$i GNUPG_BINDIR=$1
+	done
 }
 
 PACKAGECONFIG ??= "gnutls"
