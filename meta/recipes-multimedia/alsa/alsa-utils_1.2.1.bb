@@ -21,8 +21,8 @@ PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook
 
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
-SRC_URI[md5sum] = "5ed21c3e296c06046cc986e732f625f6"
-SRC_URI[sha256sum] = "5ddf2cbddb4bd1a4a2a6492a09c25898b08c3ad64893c3655be14194cf0a213a"
+SRC_URI[md5sum] = "c4628bae7632937eac2de4cf2a3de82e"
+SRC_URI[sha256sum] = "0b110ba71ef41d3009db1bc4dcae0cf79efb99cb5426fa19d0312470560a2c0d"
 
 # On build machines with python-docutils (not python3-docutils !!) installed
 # rst2man (not rst2man.py) is detected and compile fails with
@@ -56,6 +56,7 @@ PACKAGES += "${ALSA_UTILS_PKGS}"
 RDEPENDS_${PN} += "${ALSA_UTILS_PKGS}"
 
 FILES_${PN} = ""
+ALLOW_EMPTY_alsa-utils = "1"
 FILES_alsa-utils-alsabat     = "${bindir}/alsabat"
 FILES_alsa-utils-alsatplg    = "${bindir}/alsatplg"
 FILES_alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord ${bindir}/axfer"
@@ -87,8 +88,6 @@ SUMMARY_alsa-utils-alsaloop     = "ALSA PCM loopback utility"
 SUMMARY_alsa-utils-alsaucm      = "ALSA Use Case Manager"
 
 RRECOMMENDS_alsa-utils-alsactl = "alsa-states"
-
-ALLOW_EMPTY_alsa-utils = "1"
 
 do_install() {
 	autotools_do_install
