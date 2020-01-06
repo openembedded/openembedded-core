@@ -179,7 +179,9 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
         # will effectively do
         clean_esdk_builddir(d, sdkbasepath)
     finally:
-        os.replace(sdkbasepath + '/conf/local.conf.bak', sdkbasepath + '/conf/local.conf')
+        localconf = sdkbasepath + '/conf/local.conf'
+        if os.path.exists(localconf + '.bak'):
+            os.replace(localconf + '.bak', localconf)
 
 python copy_buildsystem () {
     import re
