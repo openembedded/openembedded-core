@@ -18,7 +18,6 @@ DISTRO_FEATURES_BACKFILL_CONSIDERED += "ldconfig"
 #USE_NLS ?= "no"
 
 CXXFLAGS += "-fvisibility-inlines-hidden"
-TARGET_CC_ARCH += "-D__USE_TIME_BITS64"
 
 IMAGE_LINGUAS = ""
 
