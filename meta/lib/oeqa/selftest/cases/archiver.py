@@ -152,28 +152,28 @@ class Archiver(OESelftestTestCase):
 
     def test_archiver_mode_original(self):
         """
-        Test that the archiver works in with `ARCHIVER_MODE[src] = "original"`.
+        Test that the archiver works with `ARCHIVER_MODE[src] = "original"`.
         """
 
         self._test_archiver_mode('original', 'ed-1.14.1.tar.lz')
 
     def test_archiver_mode_patched(self):
         """
-        Test that the archiver works in with `ARCHIVER_MODE[src] = "patched"`.
+        Test that the archiver works with `ARCHIVER_MODE[src] = "patched"`.
         """
 
         self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-patched.tar.gz')
 
     def test_archiver_mode_configured(self):
         """
-        Test that the archiver works in with `ARCHIVER_MODE[src] = "configured"`.
+        Test that the archiver works with `ARCHIVER_MODE[src] = "configured"`.
         """
 
         self._test_archiver_mode('configured', 'selftest-ed-1.14.1-r0-configured.tar.gz')
 
     def test_archiver_mode_recipe(self):
         """
-        Test that the archiver works in with `ARCHIVER_MODE[recipe] = "1"`.
+        Test that the archiver works with `ARCHIVER_MODE[recipe] = "1"`.
         """
 
         self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-recipe.tar.gz',
@@ -181,7 +181,7 @@ class Archiver(OESelftestTestCase):
 
     def test_archiver_mode_diff(self):
         """
-        Test that the archiver works in with `ARCHIVER_MODE[diff] = "1"`.
+        Test that the archiver works with `ARCHIVER_MODE[diff] = "1"`.
         Exclusions controlled by `ARCHIVER_MODE[diff-exclude]` are not yet tested.
         """
 
@@ -190,7 +190,7 @@ class Archiver(OESelftestTestCase):
 
     def test_archiver_mode_dumpdata(self):
         """
-        Test that the archiver works in with `ARCHIVER_MODE[dumpdata] = "1"`.
+        Test that the archiver works with `ARCHIVER_MODE[dumpdata] = "1"`.
         """
 
         self._test_archiver_mode('patched', 'selftest-ed-1.14.1-r0-showdata.dump',
