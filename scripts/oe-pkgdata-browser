@@ -35,7 +35,7 @@ def timeit(f):
 
 def human_size(nbytes):
     import math
-    suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+    suffixes = ['B', 'kB', 'MB', 'GB', 'TB', 'PB']
     human = nbytes
     rank = 0
     if nbytes != 0:
