@@ -768,6 +768,8 @@ class RpmPM(PackageManager):
         # This prevents accidental matching against libsolv's built-in policies
         if len(archs) <= 1:
             archs = archs + ["bogusarch"]
+        # This architecture needs to be upfront so that packages using it are properly prioritized
+        archs = ["sdk_provides_dummy_target"] + archs
         confdir = "%s/%s" %(self.target_rootfs, "etc/dnf/vars/")
         bb.utils.mkdirhier(confdir)
         open(confdir + "arch", 'w').write(":".join(archs))
