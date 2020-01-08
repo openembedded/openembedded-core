@@ -45,7 +45,9 @@ do_install_ptest() {
 	-e '/^lib.*_SOURCES =/d' -e '/$(EXEEXT):/,/^$/d' ${D}${PTEST_PATH}/tests/Makefile
 
     find ${B}/tests -executable -exec install {} ${D}${PTEST_PATH}/tests \;
-    find ${S}/tests \( -name \*.map -o -name \*.bin -o -name \*.output \) -exec install {} ${D}${PTEST_PATH}/tests \;
+    cp -rf ${S}/tests/data ${D}${PTEST_PATH}/tests
+    cp -rf ${S}/tests/findfile ${D}${PTEST_PATH}/tests
+    cp -rf ${S}/data ${D}${PTEST_PATH}
 
     install -D -m 755 ${S}/config/test-driver ${D}${PTEST_PATH}/config/test-driver
 }
