@@ -35,6 +35,8 @@
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Package Data Browser</property>
+    <property name="default_width">1200</property>
+    <property name="default_height">900</property>
     <property name="icon_name">accessories-dictionary</property>
     <property name="has_resize_grip">True</property>
     <child>
@@ -69,7 +71,7 @@
           <object class="GtkPaned" id="paned1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="position">200</property>
+            <property name="position">400</property>
             <property name="position_set">True</property>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow1">
@@ -112,7 +114,7 @@
               <object class="GtkPaned" id="paned2">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="position">200</property>
+                <property name="position">400</property>
                 <property name="position_set">True</property>
                 <child>
                   <object class="GtkScrolledWindow" id="scrolledwindow2">
