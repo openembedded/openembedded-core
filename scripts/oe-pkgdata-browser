@@ -176,11 +176,17 @@ class PkgUi():
             return
 
         recipe = model[it][RecipeColumns.Recipe]
-        for package in packages_in_recipe(self.pkgdata, recipe):
+        packages = packages_in_recipe(self.pkgdata, recipe)
+        for package in packages:
             # TODO also show PKG after debian-renaming?
             data = load_runtime_package(self.pkgdata, package)
             # TODO stash data to avoid reading in on_package_changed
             self.package_iters[package] = self.package_store.append([package, int(data["PKGSIZE"])])
+
+        package = recipe if recipe in packages else sorted(packages)[0]
+        path = self.package_store.get_path(self.package_iters[package])
+        self.package_view.set_cursor(path)
+        self.package_view.scroll_to_cell(path)
 
     def on_package_changed(self, selection):
         self.label.set_text("")
