@@ -186,6 +186,9 @@ class PkgUi():
         self.depends_label.hide()
         self.recommends_label.hide()
         self.suggests_label.hide()
+        self.provides_label.hide()
+        self.files_view.hide()
+        self.files_label.hide()
 
         (model, it) = selection.get_selected()
         if it is None:
@@ -205,6 +208,7 @@ class PkgUi():
         else:
             self.files_view.hide()
             self.files_label.set_text("This package has no files.")
+        self.files_label.show()
 
         def update_deps(field, prefix, label, clickable=True):
             if field in data:
