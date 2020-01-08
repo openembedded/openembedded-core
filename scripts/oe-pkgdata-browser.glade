@@ -289,12 +289,12 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkTreeViewColumn" id="treeviewcolumn4">
+                              <object class="GtkTreeViewColumn" id="file_size_column">
                                 <property name="title" translatable="yes">Size</property>
                                 <property name="sort_indicator">True</property>
                                 <property name="sort_column_id">1</property>
                                 <child>
-                                  <object class="GtkCellRendererText" id="cellrenderertext4"/>
+                                  <object class="GtkCellRendererText" id="file_size_cell"/>
                                   <attributes>
                                     <attribute name="text">1</attribute>
                                   </attributes>

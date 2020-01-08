@@ -133,6 +133,8 @@ class PkgUi():
 
         self.file_store = builder.get_object("file_store")
         self.file_store.set_sort_column_id(FileColumns.Filename, Gtk.SortType.ASCENDING)
+        builder.get_object("file_size_column").set_cell_data_func(builder.get_object("file_size_cell"), lambda column, cell, model, iter, data: cell.set_property("text", human_size(model[iter][FileColumns.Size])))
+
         self.files_view = builder.get_object("files_scrollview")
         self.files_label = builder.get_object("files_label")
 
