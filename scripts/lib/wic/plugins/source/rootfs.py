@@ -71,7 +71,7 @@ class RootfsPlugin(SourcePlugin):
 
         new_rootfs = None
         # Handle excluded paths.
-        if part.exclude_path is not None:
+        if part.exclude_path or part.include_path:
             # We need a new rootfs directory we can delete files from. Copy to
             # workdir.
             new_rootfs = os.path.realpath(os.path.join(cr_workdir, "rootfs%d" % part.lineno))
@@ -81,7 +81,10 @@ class RootfsPlugin(SourcePlugin):
 
             copyhardlinktree(part.rootfs_dir, new_rootfs)
 
-            for orig_path in part.exclude_path:
+            for path in part.include_path or []:
+                copyhardlinktree(path, new_rootfs)
+
+            for orig_path in part.exclude_path or []:
                 path = orig_path
                 if os.path.isabs(path):
                     logger.error("Must be relative: --exclude-path=%s" % orig_path)

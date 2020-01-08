@@ -30,6 +30,7 @@ class Partition():
         self.device = None
         self.extra_space = args.extra_space
         self.exclude_path = args.exclude_path
+        self.include_path = args.include_path
         self.fsopts = args.fsopts
         self.fstype = args.fstype
         self.label = args.label

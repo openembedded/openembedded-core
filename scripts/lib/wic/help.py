@@ -969,6 +969,16 @@ DESCRIPTION
                          is omitted, not the directory itself. This option only
                          has an effect with the rootfs source plugin.
 
+         --include-path: This option is specific to wic. It adds the contents
+                         of the given path to the resulting image. The path is
+                         relative to the directory in which wic is running not
+                         the rootfs itself so use of an absolute path is
+                         recommended. This option is most useful when multiple
+                         copies of the rootfs are added to an image and it is
+                         required to add extra content to only one of these
+                         copies. This option only has an effect with the rootfs
+                         source plugin.
+
          --extra-space: This option is specific to wic. It adds extra
                         space after the space filled by the content
                         of the partition. The final size can go
