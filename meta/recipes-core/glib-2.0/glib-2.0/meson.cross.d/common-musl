@@ -3,8 +3,4 @@ have_c99_vsnprintf = true
 have_c99_snprintf = true
 have_unix98_printf = true
 va_val_copy = true
-growing_stack = false
-have_proc_self_cmdline = true
-
-[binaries]
-env = "/usr/bin/env"
+have_strlcpy = true
