@@ -9,14 +9,15 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c81c08eeefd9418fca8f88309a76db10"
 
 DEPENDS = "libdrm mesa libepoxy"
-SRCREV = "48cc96c9aebb9d0164830a157efc8916f08f00c0"
+SRCREV = "66c57963aaf09a1c41056bd2a001da1d51957a14"
 SRC_URI = "git://anongit.freedesktop.org/virglrenderer \
            file://0001-gallium-Expand-libc-check-to-be-platform-OS-check.patch \
+           file://0001-meson.build-use-python3-directly-for-python.patch \
            "
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig features_check
+inherit meson pkgconfig features_check
 
 BBCLASSEXTEND = "native nativesdk"
 
