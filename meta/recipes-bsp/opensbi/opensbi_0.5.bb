@@ -11,6 +11,7 @@ inherit autotools-brokensep deploy
 SRCREV = "be92da280d87c38a2e0adc5d3f43bab7b5468f09"
 SRC_URI = "git://github.com/riscv/opensbi.git \
            file://0001-Makefile-Don-t-specify-mabi-or-march.patch \
+           file://0001-build-Use-ffreestanding.patch \
           "
 
 S = "${WORKDIR}/git"

@@ -1,0 +1,28 @@
+From efa39afecedf75a1f3154c39507bdde2810bc140 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 6 Jan 2020 18:21:02 -0800
+Subject: [PATCH] build: Use -ffreestanding
+
+this is a stand-alone/baremetal application, therefore demanding
+-ffreestanding would help it compile with hosted toolchains e.g. ( linux
+toolchains ), it also ensures that it won't be using platform
+optimizations like inlining mem* str* functions which gcc might decide
+especially with wrapper string functions in opensbi code
+
+Upstream-Status: Accepted [https://github.com/riscv/opensbi/commit/049ad0b3877352527ab470eba33bc767e9b54961]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/Makefile
++++ b/Makefile
+@@ -159,7 +159,7 @@ GENFLAGS	+=	$(libsbiutils-genflags-y)
+ GENFLAGS	+=	$(platform-genflags-y)
+ GENFLAGS	+=	$(firmware-genflags-y)
+ 
+-CFLAGS		=	-g -Wall -Werror -nostdlib -fno-strict-aliasing -O2
++CFLAGS		=	-g -Wall -Werror -ffreestanding -nostdlib -fno-strict-aliasing -O2
+ CFLAGS		+=	-fno-omit-frame-pointer -fno-optimize-sibling-calls
+ CFLAGS		+=	-mno-save-restore -mstrict-align
+ CFLAGS		+=	-mcmodel=$(PLATFORM_RISCV_CODE_MODEL)
