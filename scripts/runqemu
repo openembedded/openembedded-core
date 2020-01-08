@@ -165,6 +165,7 @@ class BaseConfig(object):
         self.kvm_enabled = False
         self.vhost_enabled = False
         self.slirp_enabled = False
+        self.net_bridge = None
         self.nfs_instance = 0
         self.nfs_running = False
         self.serialconsole = False
@@ -485,6 +486,8 @@ class BaseConfig(object):
                 self.vhost_enabled = True
             elif arg == 'slirp':
                 self.slirp_enabled = True
+            elif arg.startswith('bridge='):
+                self.net_bridge = '%s' % arg[len('bridge='):]
             elif arg == 'snapshot':
                 self.snapshot = True
             elif arg == 'publicvnc':
@@ -802,7 +805,7 @@ class BaseConfig(object):
     def check_and_set(self):
         """Check configs sanity and set when needed"""
         self.validate_paths()
-        if not self.slirp_enabled:
+        if not self.slirp_enabled and not self.net_bridge:
             check_tun()
         # Check audio
         if self.audio_enabled:
@@ -1020,6 +1023,10 @@ class BaseConfig(object):
 
         self.nfs_running = True
 
+    def setup_net_bridge(self):
+        self.set('NETWORK_CMD', '-netdev bridge,br=%s,id=net0,helper=%s -device virtio-net-pci,netdev=net0 ' % (
+            self.net_bridge, os.path.join(self.bindir_native, 'qemu-oe-bridge-helper')))
+
     def setup_slirp(self):
         """Setup user networking"""
 
@@ -1161,7 +1168,9 @@ class BaseConfig(object):
         if sys.stdin.isatty():
             self.saved_stty = subprocess.check_output(("stty", "-g")).decode('utf-8').strip()
         self.network_device = self.get('QB_NETWORK_DEVICE') or self.network_device
-        if self.slirp_enabled:
+        if self.net_bridge:
+            self.setup_net_bridge()
+        elif self.slirp_enabled:
             self.setup_slirp()
         else:
             self.setup_tap()
