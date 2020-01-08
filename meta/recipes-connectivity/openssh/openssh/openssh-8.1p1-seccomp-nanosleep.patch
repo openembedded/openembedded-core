@@ -1,0 +1,27 @@
+commit 7e929163ed40f9ce90060a3ca6df558c3d901379
+Author: Jakub Jelen <jjelen@redhat.com>
+Date:   Wed Nov 13 12:57:05 2019 +0100
+
+seccomp: Allow clock_nanosleep() to make OpenSSH working with latest glibc
+sandbox-seccomp: Allow clock_nanosleep on ARM
+
+Upstream-Status: Backport [https://github.com/tcely/openssh-portable/pull/258]
+                          [https://github.com/bobby0809/openssh-portable/pull/138]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com
+
+--- a/sandbox-seccomp-filter.c
++++ b/sandbox-seccomp-filter.c
+@@ -242,6 +242,12 @@ static const struct sock_filter preauth_
+ #ifdef __NR_nanosleep
+ 	SC_ALLOW(__NR_nanosleep),
+ #endif
++#ifdef __NR_clock_nanosleep
++	SC_ALLOW(__NR_clock_nanosleep),
++#endif
++#ifdef __NR_clock_nanosleep_time64
++	SC_ALLOW(__NR_clock_nanosleep_time64),
++#endif
+ #ifdef __NR__newselect
+ 	SC_ALLOW(__NR__newselect),
+ #endif
