@@ -36,7 +36,10 @@ do_patch[postfuncs] += "do_patch_module_build"
 do_install_ptest() {
 	cp -r ${B}/inc ${D}${PTEST_PATH}
 	cp -r ${B}/blib ${D}${PTEST_PATH}
+	cp -r ${B}/_build ${D}${PTEST_PATH}
+	cp -r ${B}/lib ${D}${PTEST_PATH}
 	chown -R root:root ${D}${PTEST_PATH}
+	sed -i -e "s,'perl' => .*,'perl' => '/usr/bin/perl'\,,g" ${D}${PTEST_PATH}/_build/build_params
 }
 
 RDEPENDS_${PN} += " \
