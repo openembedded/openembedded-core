@@ -580,9 +580,7 @@ class PartitionedImage():
                                 self.native_sysroot)
 
     def cleanup(self):
-        # remove partition images
-        for image in set(self.partimages):
-            os.remove(image)
+        pass
 
     def assemble(self):
         logger.debug("Installing partitions")
