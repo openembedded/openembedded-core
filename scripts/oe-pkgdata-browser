@@ -217,9 +217,9 @@ class PkgUi():
                 l = []
                 for name, version in bb.utils.explode_dep_versions2(data[field]).items():
                     if clickable:
-                        l.append("<a href='package:{0}'>{0}</a> {1}".format(name, " ".join(version)))
+                        l.append("<a href='package:{0}'>{0}</a> {1}".format(name, " ".join(version)).strip())
                     else:
-                        l.append("{0} {1}".format(name, " ".join(version)))
+                        l.append("{0} {1}".format(name, " ".join(version)).strip())
                 label.set_markup(prefix + ", ".join(l))
                 label.show()
             else:
