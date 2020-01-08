@@ -207,6 +207,9 @@ FILES_${PN} = "${bindir}/perl ${bindir}/perl.real ${bindir}/perl${PV} ${libdir}/
                ${libdir}/perl5/${PV}/warnings \
                ${libdir}/perl5/${PV}/vars.pm \
                ${libdir}/perl5/site_perl \
+               ${libdir}/perl5/${PV}/ExtUtils/MANIFEST.SKIP \
+               ${libdir}/perl5/${PV}/ExtUtils/xsubpp \
+               ${libdir}/perl5/${PV}/ExtUtils/typemap \
                "
 RPROVIDES_${PN} += "perl-module-strict perl-module-vars perl-module-config perl-module-warnings \
                     perl-module-warnings-register"
@@ -217,9 +220,6 @@ FILES_${PN}-dev_append = " ${libdir}/perl5/${PV}/*/CORE"
 
 FILES_${PN}-doc_append = " ${libdir}/perl5/${PV}/Unicode/Collate/*.txt \
                            ${libdir}/perl5/${PV}/*/.packlist \
-                           ${libdir}/perl5/${PV}/ExtUtils/MANIFEST.SKIP \
-                           ${libdir}/perl5/${PV}/ExtUtils/xsubpp \
-                           ${libdir}/perl5/${PV}/ExtUtils/typemap \
                            ${libdir}/perl5/${PV}/Encode/encode.h \
                          "
 PACKAGES += "${PN}-misc"
