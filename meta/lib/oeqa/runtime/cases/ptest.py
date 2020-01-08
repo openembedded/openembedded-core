@@ -67,6 +67,11 @@ class PtestRunnerTest(OERuntimeTestCase):
                 extras[testname] = {'status': result}
 
         failed_tests = {}
+
+        for section in sections:
+            if 'exitcode' in sections[section].keys():
+                failed_tests[section] = sections[section]["log"]
+
         for section in results:
             failed_testcases = [ "_".join(test.translate(trans).split()) for test in results[section] if results[section][test] == 'FAILED' ]
             if failed_testcases:
