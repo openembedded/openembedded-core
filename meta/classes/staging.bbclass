@@ -32,7 +32,7 @@ SYSROOT_DIRS_BLACKLIST = " \
     ${datadir}/gtk-doc/html \
     ${datadir}/locale \
     ${datadir}/pixmaps \
-    ${libdir}/${PN}/ptest \
+    ${libdir}/${BPN}/ptest \
 "
 
 sysroot_stage_dir() {
