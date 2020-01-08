@@ -84,12 +84,7 @@ do_install () {
 PACKAGES =+ "${PN}-lib ${PN}-libimage"
 
 RDEPENDS_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'procps', '', d)}"
-FILES_${PN} += "${libdir}/cups/backend \
-		${libdir}/cups/cgi-bin \
-		${libdir}/cups/filter \
-		${libdir}/cups/monitor \
-		${libdir}/cups/notifier \
-		${libdir}/cups/daemon \
+FILES_${PN} += "${libexecdir}/cups/ \
 	       "
 
 FILES_${PN}-lib = "${libdir}/libcups.so.*"
@@ -107,5 +102,5 @@ CONFFILES_${PN} += "${sysconfdir}/cups/cupsd.conf"
 
 SYSROOT_PREPROCESS_FUNCS += "cups_sysroot_preprocess"
 cups_sysroot_preprocess () {
-	sed -i ${SYSROOT_DESTDIR}${bindir_crossscripts}/cups-config -e 's:cups_datadir=.*:cups_datadir=${datadir}/cups:' -e 's:cups_serverbin=.*:cups_serverbin=${libdir}/cups:'
+	sed -i ${SYSROOT_DESTDIR}${bindir_crossscripts}/cups-config -e 's:cups_datadir=.*:cups_datadir=${datadir}/cups:' -e 's:cups_serverbin=.*:cups_serverbin=${libexecdir}/cups:'
 }
