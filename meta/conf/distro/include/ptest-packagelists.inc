@@ -53,8 +53,9 @@ PTESTS_FAST = "\
 #PTESTS_PROBLEMS = "\
 #    qemu-ptest \ # Doesn't run any tests?
 #    ruby-ptest \ # Timeout
-#    mdadm-ptest \ # Timeout
 #    clutter-1.0-ptest \ # Doesn't build due to depends on cogl-1.0
+#    lz4-ptest \ # Needs a rewrite
+#    rt-tests-ptest \ # Needs to be checked whether it runs at all
 #"
 
 PTESTS_SLOW = "\
