@@ -24,6 +24,7 @@ SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://run-ptest \
            file://serial-tests-config.patch \
            file://0001-msgmerge-Fix-behaviour-of-for-msgfmt-on-PO-files-wit.patch \
+           file://0001-tests-autopoint-3-unset-MAKEFLAGS.patch \
            "
 
 SRC_URI[md5sum] = "bb5b0c0caa028105f3ca1905ddc306e2"
@@ -150,8 +151,12 @@ do_install_ptest() {
         mkdir -p                                        ${D}${PTEST_PATH}/misc
         mkdir -p                                        ${D}${PTEST_PATH}/its
         mkdir -p                                        ${D}${PTEST_PATH}/styles
+        mkdir -p                                        ${D}${PTEST_PATH}/gnulib-lib
+        mkdir -p                                        ${D}${PTEST_PATH}/examples
         cp -rf ${S}/gettext-tools/its/*                 ${D}${PTEST_PATH}/its
         cp -rf ${S}/gettext-tools/styles/*              ${D}${PTEST_PATH}/styles
+        cp -rf ${S}/gettext-tools/gnulib-lib/gettext.h  ${D}${PTEST_PATH}/gnulib-lib
+        cp -rf ${S}/gettext-tools/examples/hello-c      ${D}${PTEST_PATH}/examples
         cp -rf ${S}/gettext-tools/tests/*               ${D}${PTEST_PATH}/tests
         cp -rf ${B}/gettext-tools/tests/.libs/*         ${D}${PTEST_PATH}/tests
         cp -rf ${B}/gettext-runtime/intl/.libs/libgnuintl.so.8*         ${D}${libdir}/
