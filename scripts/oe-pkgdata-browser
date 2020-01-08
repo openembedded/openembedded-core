@@ -99,7 +99,7 @@ class PkgUi():
         self.package_iters = {}
 
         builder = Gtk.Builder()
-        builder.add_from_file(os.path.join(os.path.dirname(__file__), "pkgdataui.glade"))
+        builder.add_from_file(os.path.join(os.path.dirname(__file__), "oe-pkgdata-browser.glade"))
 
         self.window = builder.get_object("window")
         self.window.connect("delete-event", Gtk.main_quit)
