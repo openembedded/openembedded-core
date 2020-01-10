@@ -112,6 +112,14 @@ print(datetime.fromtimestamp($SOURCE_DATE_EPOCH, timezone.utc).strftime('%a %b %
 
 do_compile() {
     oe_runmake
+    # This isn't generated reliably so delete and re-generate.
+    # https://github.com/arsv/perl-cross/issues/86
+
+    if [ -e pod/perltoc.pod ]; then
+        bbnote Rebuilding perltoc.pod
+        rm -f pod/perltoc.pod
+        oe_runmake pod/perltoc.pod
+    fi
 }
 
 do_install() {
