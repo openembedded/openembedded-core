@@ -49,6 +49,7 @@ hw_cv_func_vsnprintf_c99=${hw_cv_func_vsnprintf_c99=yes}
 # coreutils
 ac_cv_func_chown_works=${ac_cv_func_chown_works=yes}
 gl_cv_func_fstatat_zero_flag=${gl_cv_func_fstatat_zero_flag=yes}
+gl_cv_func_unlink_busy_text=${gl_cv_func_unlink_busy_text=yes}
 gl_cv_have_proc_uptime=${gl_cv_have_proc_uptime=yes}
 
 # mysql
