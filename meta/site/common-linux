@@ -52,6 +52,7 @@ ac_cv_func_utime_null=${ac_cv_func_utime_null=yes}
 gl_cv_func_fstatat_zero_flag=${gl_cv_func_fstatat_zero_flag=yes}
 gl_cv_func_unlink_busy_text=${gl_cv_func_unlink_busy_text=yes}
 gl_cv_have_proc_uptime=${gl_cv_have_proc_uptime=yes}
+gl_cv_pipes_are_fifos=${gl_cv_pipes_are_fifos='yes (1)'}
 
 # mysql
 ac_cv_sys_restartable_syscalls=${ac_cv_sys_restartable_syscalls=yes}
