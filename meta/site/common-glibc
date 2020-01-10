@@ -29,6 +29,7 @@ ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
 
 # coreutils
 fu_cv_sys_stat_statfs2_bsize=${fu_cv_sys_stat_statfs2_bsize=yes}
+gl_cv_func_getcwd_null=${gl_cv_func_getcwd_null=yes}
 gl_cv_func_working_mkstemp=${gl_cv_func_working_mkstemp=yes}
 
 # glib
