@@ -34,6 +34,7 @@ gl_cv_func_getcwd_null=${gl_cv_func_getcwd_null=yes}
 gl_cv_func_getcwd_path_max=${gl_cv_func_getcwd_path_max=yes}
 ac_cv_func_getgroups_works=${ac_cv_func_getgroups_works=yes}
 gl_cv_func_working_mkstemp=${gl_cv_func_working_mkstemp=yes}
+gl_cv_func_working_utimes=${gl_cv_func_working_utimes=yes}
 
 # glib
 glib_cv_strlcpy=${glib_cv_strlcpy=no}
