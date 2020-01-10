@@ -39,6 +39,7 @@ gl_cv_func_getcwd_null=${gl_cv_func_getcwd_null=yes}
 gl_cv_func_getcwd_path_max=${gl_cv_func_getcwd_path_max='no, but it is partly working'}
 ac_cv_func_getgroups_works=${ac_cv_func_getgroups_works=yes}
 gl_cv_func_gettimeofday_clobber=${gl_cv_func_gettimeofday_clobber=no}
+gl_cv_func_nanosleep=${gl_cv_func_nanosleep=yes}
 gl_cv_func_tzset_clobber=${gl_cv_func_tzset_clobber=no}
 gl_cv_func_gettimeofday_posix_signature=${gl_cv_func_gettimeofday_posix_signature=yes}
 gl_cv_func_working_mkstemp=${gl_cv_func_working_mkstemp=yes}
