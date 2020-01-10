@@ -15,6 +15,7 @@ ac_cv_func_posix_getpwuid_r=${ac_cv_func_posix_getpwuid_r=yes}
 ac_cv_func_posix_getgrgid_r=${ac_cv_func_posix_getgrgid_r=yes}
 ac_cv_func_getaddrinfo=${ac_cv_func_getaddrinfo=yes}
 ac_cv_func_mmap_fixed_mapped=${ac_cv_func_mmap_fixed_mapped=yes}
+ac_cv_func_strtod=${ac_cv_func_strtod=yes}
 
 # glib
 glib_cv_strlcpy=${glib_cv_strlcpy=no}
@@ -40,6 +41,7 @@ gl_cv_func_getcwd_path_max=${gl_cv_func_getcwd_path_max='no, but it is partly wo
 ac_cv_func_getgroups_works=${ac_cv_func_getgroups_works=yes}
 gl_cv_func_gettimeofday_clobber=${gl_cv_func_gettimeofday_clobber=no}
 gl_cv_func_nanosleep=${gl_cv_func_nanosleep=yes}
+gl_cv_func_strtod_works=${gl_cv_func_strtod_works=yes}
 gl_cv_func_tzset_clobber=${gl_cv_func_tzset_clobber=no}
 gl_cv_func_gettimeofday_posix_signature=${gl_cv_func_gettimeofday_posix_signature=yes}
 gl_cv_func_working_mkstemp=${gl_cv_func_working_mkstemp=yes}
