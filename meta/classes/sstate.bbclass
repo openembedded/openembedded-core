@@ -934,9 +934,11 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
                 missed.add(tid)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s" % srcuri)
                 pass
-            bb.event.fire(bb.event.ProcessProgress(msg, len(tasklist) - thread_worker.tasks.qsize()), d)
+            if len(tasklist) >= min_tasks:
+                bb.event.fire(bb.event.ProcessProgress(msg, len(tasklist) - thread_worker.tasks.qsize()), d)
 
         tasklist = []
+        min_tasks = 100
         for tid in sq_data['hash']:
             if tid in found:
                 continue
@@ -945,8 +947,9 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
             tasklist.append((tid, sstatefile))
 
         if tasklist:
-            msg = "Checking sstate mirror object availability"
-            bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
+            if len(tasklist) >= min_tasks:
+                msg = "Checking sstate mirror object availability"
+                bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
 
             import multiprocessing
             nproc = min(multiprocessing.cpu_count(), len(tasklist))
@@ -960,7 +963,8 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
             pool.wait_completion()
             bb.event.disable_threadlock()
 
-            bb.event.fire(bb.event.ProcessFinished(msg), d)
+            if len(tasklist) >= min_tasks:
+                bb.event.fire(bb.event.ProcessFinished(msg), d)
 
     # Likely checking an individual task hash again for multiconfig sharing of sstate tasks so skip reporting
     if len(sq_data['hash']) == 1:
