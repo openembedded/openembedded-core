@@ -36,7 +36,7 @@ def find_meson_cross_files(d):
     files = collections.OrderedDict()
     for path in d.getVar("FILESPATH").split(":"):
         for element in sitedata:
-            filename = os.path.join(path, "meson.cross.d", element)
+            filename = os.path.normpath(os.path.join(path, "meson.cross.d", element))
             files[filename.replace(corebase, "${COREBASE}")] = os.path.exists(filename)
 
     items = ["--cross-file=" + k for k,v in files.items() if v]
