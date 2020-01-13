@@ -9,6 +9,7 @@ event after 68 years of uptime, should be good for all practical
 purposes
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Pending
 ---
  src/basic/time-util.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
