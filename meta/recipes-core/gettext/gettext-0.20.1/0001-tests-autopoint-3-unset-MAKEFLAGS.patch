@@ -6,7 +6,7 @@ Subject: [PATCH] tests/autopoint-3: unset MAKEFLAGS
 This is needed when running ptests, as the MAKEFLAGS value (set up by run-ptest)
 is messing up the test.
 
-Upstream-Status: Inapppropriate [oe-core specific]
+Upstream-Status: Inappropriate [oe-core specific]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  gettext-tools/tests/autopoint-3 | 1 +
