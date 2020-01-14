@@ -56,10 +56,10 @@ PTESTS_FAST = "\
 #    clutter-1.0-ptest \ # Doesn't build due to depends on cogl-1.0
 #    lz4-ptest \ # Needs a rewrite
 #    rt-tests-ptest \ # Needs to be checked whether it runs at all
+#    bash-ptest \ # Test outcomes are non-deterministic by design
 #"
 
 PTESTS_SLOW = "\
-    bash-ptest \
     busybox-ptest \
     dbus-test-ptest \
     e2fsprogs-ptest \
