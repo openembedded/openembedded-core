@@ -28,6 +28,7 @@ FILES_${PN}-cron = "${sysconfdir}/cron.daily ${sysconfdir}/default"
 PACKAGES =+ "${PN}-cron"
 
 SRC_URI = "git://git.yoctoproject.org/prelink-cross.git;branch=cross_prelink_staging \
+           file://0001-Add-MIPS-gnu-hash-support.patch \
            file://prelink.conf \
            file://prelink.cron.daily \
            file://prelink.default \
