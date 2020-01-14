@@ -64,7 +64,8 @@ COMPATIBLE_HOST_linux-gnun32 = 'null'
 # Disable for powerpc64 with musl
 COMPATIBLE_HOST_libc-musl_powerpc64 = 'null'
 
-inherit autotools ptest multilib_header
+# brokenseip is unfortunately required by ptests to pass
+inherit autotools-brokensep ptest multilib_header
 
 EXTRA_OECONF = "--enable-tls --without-mpicc"
 EXTRA_OECONF += "${@['--enable-only32bit','--enable-only64bit'][d.getVar('SITEINFO_BITS') != '32']}"
@@ -116,7 +117,7 @@ RDEPENDS_${PN}-ptest += " bash coreutils file \
    gdb libgomp \
    perl \
    perl-module-getopt-long perl-module-file-basename perl-module-file-glob \
-   procps sed ${PN}-dbg"
+   procps sed ${PN}-dbg ${PN}-src"
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
 # One of the tests contains a bogus interpreter path on purpose.
