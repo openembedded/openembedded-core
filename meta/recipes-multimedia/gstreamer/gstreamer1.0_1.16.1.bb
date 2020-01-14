@@ -27,6 +27,7 @@ SRC_URI[sha256sum] = "02211c3447c4daa55919c5c0f43a82a6fbb51740d57fc3af0639d46f1c
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                    check \
+                   debug \
                    tools"
 
 PACKAGECONFIG[debug] = "-Dgst_debug=true,-Dgst_debug=false"
