@@ -541,8 +541,12 @@ def OEOuthashBasic(path, sigfile, task, d):
                     add_perm(stat.S_IXOTH, 'x')
 
                 if include_owners:
-                    update_hash(" %10s" % pwd.getpwuid(s.st_uid).pw_name)
-                    update_hash(" %10s" % grp.getgrgid(s.st_gid).gr_name)
+                    try:
+                        update_hash(" %10s" % pwd.getpwuid(s.st_uid).pw_name)
+                        update_hash(" %10s" % grp.getgrgid(s.st_gid).gr_name)
+                    except KeyError:
+                        bb.warn("KeyError in %s" % path)
+                        raise
 
                 update_hash(" ")
                 if stat.S_ISBLK(s.st_mode) or stat.S_ISCHR(s.st_mode):
