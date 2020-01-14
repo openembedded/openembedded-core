@@ -27,7 +27,7 @@ CFLAGS_append_x86-64 = " -fomit-frame-pointer"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "ac33ef87f0b9dc56533026435be3ea8c67ce86d2"
+SRCREV = "c9707b465a08397569920b676345474f44327200"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-build-Add-option-to-select-libc-implementation.patch \
@@ -38,19 +38,9 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0007-Fix-test_proc_kill-hanging.patch \
            file://0008-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0009-open_posix_testsuite-mmap24-2-Relax-condition-a-bit.patch \
-           file://0010-shmctl01-don-t-use-hardcoded-index-0-for-SHM_STAT-te.patch \
-           file://0011-direct_io-diotest4-drop-MAP_FIXED.patch \
-           file://0012-getrlimit03-adjust-a-bit-of-code-to-compatiable-with.patch \
-           file://0001-Add-configure-time-check-for-getdents-getdents64-API.patch \
-           file://0002-check-for-RES_USE_INET6-during-configure.patch \
-           file://0001-syscalls-tgkill03-wait-for-defunct-tid-to-get-detach.patch \
-           file://0001-ustat02-Fix-EFAULT-in-32bit-compatibility-mode.patch \
-           file://0001-cve-meltdown.c-Fix-kernel-symbol-finding.patch \
-           file://0001-testcases-use-python3-everywhere-to-run-python-scrip.patch \
-           file://0001-syscall-rt_sigtimedwait01-Fix-wrong-sigset-length-fo.patch \
-           file://0001-cve-2017-17052-Avoid-unsafe-exits-in-threads.patch \
-           file://0001-overcommit_memory-update-for-mm-fix-false-positive-O.patch \
            file://0001-mkswap01.sh-Add-udevadm-trigger-before-swap-verifica.patch \
+           file://0001-testcases-fix-an-absent-format-string-issue.patch \
+           file://0001-Add-more-musl-exclusions.patch \
            "
 
 S = "${WORKDIR}/git"

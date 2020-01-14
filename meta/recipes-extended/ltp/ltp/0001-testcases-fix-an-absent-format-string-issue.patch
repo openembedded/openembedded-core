@@ -1,0 +1,24 @@
+From 476ce907fa18042cdde0a244ba9a46cd895ce76c Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 12 Dec 2019 17:56:02 +0100
+Subject: [PATCH] testcases: fix an absent format string issue
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ .../kernel/syscalls/pidfd_send_signal/pidfd_send_signal03.c     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/testcases/kernel/syscalls/pidfd_send_signal/pidfd_send_signal03.c b/testcases/kernel/syscalls/pidfd_send_signal/pidfd_send_signal03.c
+index 27dbc6626..19d943d06 100644
+--- a/testcases/kernel/syscalls/pidfd_send_signal/pidfd_send_signal03.c
++++ b/testcases/kernel/syscalls/pidfd_send_signal/pidfd_send_signal03.c
+@@ -59,7 +59,7 @@ static void verify_pidfd_send_signal(void)
+ 
+ 		/* Manipulate PID for next process */
+ 		sprintf(pid_str, "%d", pid - 1);
+-		SAFE_FILE_PRINTF(last_pid_file, pid_str);
++		SAFE_FILE_PRINTF(last_pid_file, "%s", pid_str);
+ 
+ 		new_pid = SAFE_FORK();
+ 		if (new_pid == 0) {

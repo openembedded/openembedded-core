@@ -1,4 +1,4 @@
-From ec282980e6eee96f5b74aba464141f86049263e6 Mon Sep 17 00:00:00 2001
+From 62c3481c73a2414d7a5f0a70808bfc9a06195bd9 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 7 Jan 2016 18:19:03 +0000
 Subject: [PATCH] build: Add option to select libc implementation
@@ -12,6 +12,7 @@ Disable tests specifically not building _yet_ on musl based systems
 Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
 ---
  Makefile                                    | 5 +++++
  testcases/kernel/Makefile                   | 5 ++++-
@@ -24,7 +25,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  8 files changed, 35 insertions(+), 2 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 768ca46..e9d679a 100644
+index 768ca4606..e9d679a71 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -41,6 +41,11 @@ vpath %.mk		$(top_srcdir)/mk:$(top_srcdir)/mk/include
@@ -40,18 +41,19 @@ index 768ca46..e9d679a 100644
  # COMMON_TARGETS:	Targets which exist in all, clean, and install.
  # INSTALL_TARGETS:	Targets which exist in clean and install (contains
 diff --git a/testcases/kernel/Makefile b/testcases/kernel/Makefile
-index 39d79c7..24a57d9 100644
+index 3319b3163..94ea362c8 100644
 --- a/testcases/kernel/Makefile
 +++ b/testcases/kernel/Makefile
-@@ -49,12 +49,15 @@ SUBDIRS			+= connectors \
+@@ -49,13 +49,16 @@ SUBDIRS			+= connectors \
  			   logging \
  			   mem \
  			   numa \
 -			   pty \
  			   sched \
  			   security \
- 			   timers \
+ 			   sound \
  			   tracing \
+ 			   uevents \
  
 +ifneq ($(LIBC),musl)
 +SUBDIRS			+= pty
@@ -61,7 +63,7 @@ index 39d79c7..24a57d9 100644
  SUBDIRS			+= power_management
  endif
 diff --git a/testcases/kernel/sched/Makefile b/testcases/kernel/sched/Makefile
-index 6a57d79..74bb933 100644
+index 6a57d79ee..74bb93370 100644
 --- a/testcases/kernel/sched/Makefile
 +++ b/testcases/kernel/sched/Makefile
 @@ -23,5 +23,7 @@
@@ -74,7 +76,7 @@ index 6a57d79..74bb933 100644
 +endif
  include $(top_srcdir)/include/mk/generic_trunk_target.mk
 diff --git a/testcases/kernel/syscalls/Makefile b/testcases/kernel/syscalls/Makefile
-index 45a00cf..d1becd0 100644
+index 45a00cf7d..d1becd054 100644
 --- a/testcases/kernel/syscalls/Makefile
 +++ b/testcases/kernel/syscalls/Makefile
 @@ -28,6 +28,11 @@ ifeq ($(UCLINUX),1)
@@ -90,7 +92,7 @@ index 45a00cf..d1becd0 100644
  ifeq ($(UCLIBC),1)
  FILTER_OUT_DIRS	+= profil
 diff --git a/testcases/network/nfsv4/acl/Makefile b/testcases/network/nfsv4/acl/Makefile
-index 8c55a6b..f7cda62 100644
+index 8c55a6bbd..f7cda621d 100644
 --- a/testcases/network/nfsv4/acl/Makefile
 +++ b/testcases/network/nfsv4/acl/Makefile
 @@ -26,4 +26,8 @@ include $(top_srcdir)/include/mk/env_pre.mk
@@ -103,7 +105,7 @@ index 8c55a6b..f7cda62 100644
 +
  include $(top_srcdir)/include/mk/generic_leaf_target.mk
 diff --git a/testcases/network/rpc/basic_tests/Makefile b/testcases/network/rpc/basic_tests/Makefile
-index 66e9d56..ea8eb8a 100644
+index 66e9d5675..ea8eb8a98 100644
 --- a/testcases/network/rpc/basic_tests/Makefile
 +++ b/testcases/network/rpc/basic_tests/Makefile
 @@ -23,4 +23,9 @@
@@ -117,7 +119,7 @@ index 66e9d56..ea8eb8a 100644
 +
  include $(top_srcdir)/include/mk/generic_trunk_target.mk
 diff --git a/testcases/realtime/func/pi-tests/Makefile b/testcases/realtime/func/pi-tests/Makefile
-index 68616a7..748754b 100644
+index 68616a711..748754bb4 100644
 --- a/testcases/realtime/func/pi-tests/Makefile
 +++ b/testcases/realtime/func/pi-tests/Makefile
 @@ -27,5 +27,9 @@ include $(top_srcdir)/include/mk/env_pre.mk
@@ -131,7 +133,7 @@ index 68616a7..748754b 100644
  
  include $(top_srcdir)/include/mk/generic_leaf_target.mk
 diff --git a/testcases/realtime/stress/pi-tests/Makefile b/testcases/realtime/stress/pi-tests/Makefile
-index 1881f75..266e0b8 100644
+index 1881f7565..266e0b815 100644
 --- a/testcases/realtime/stress/pi-tests/Makefile
 +++ b/testcases/realtime/stress/pi-tests/Makefile
 @@ -24,4 +24,9 @@ top_srcdir		?= ../../../..
@@ -144,6 +146,3 @@ index 1881f75..266e0b8 100644
 +endif
 +
  include $(top_srcdir)/include/mk/generic_leaf_target.mk
--- 
-2.7.4
-
