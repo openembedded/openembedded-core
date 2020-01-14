@@ -7,12 +7,12 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https \
-	   file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
-	   file://inet-6-.defn-fix-inverted-checks-for-loopback.patch \
-	   file://99_network \
-	   file://0001-Define-FNM_EXTMATCH-for-musl.patch \
-	  "
-SRCREV = "ab5a0f464e53e172316a5ca8b5dcdc49e8848999"
+           file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
+           file://99_network \
+           file://0001-Define-FNM_EXTMATCH-for-musl.patch \
+           file://0001-Makefile-do-not-use-dpkg-for-determining-OS-type.patch \
+           "
+SRCREV = "4af76318cfc57f8e4a44d357104188666213bd4b"
 
 S = "${WORKDIR}/git"
 
