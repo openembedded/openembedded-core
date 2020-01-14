@@ -5,6 +5,8 @@ RUN_PTEST_FILE = "${D}${PTEST_PATH}/run-ptest"
 
 EXTRA_OEMESON += "-Dtest-files-path=${TEST_FILES_PATH}"
 
+GST_TEST_SUITE_NAME ?= "gstreamer-1.0"
+
 # Using do_install_ptest_base instead of do_install_ptest, since
 # the default do_install_ptest_base is hardcoded to expect Makefiles.
 do_install_ptest_base() {
