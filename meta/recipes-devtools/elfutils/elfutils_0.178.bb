@@ -13,7 +13,6 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0003-fixheadercheck.patch \
            file://0004-Disable-the-test-to-convert-euc-jp.patch \
            file://0006-Fix-build-on-aarch64-musl.patch \
-           file://0007-Fix-control-path-where-we-have-str-as-uninitialized-.patch \
            file://0001-libasm-may-link-with-libbz2-if-found.patch \
            file://0001-libelf-elf_end.c-check-data_list.data.d.d_buf-before.patch \
            file://debian/hppa_backend.diff \
@@ -36,17 +35,17 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://ptest.patch \
            "
 SRC_URI_append_libc-musl = " \
-           file://musl-obstack-fts.patch \
-           file://musl-libs.patch \
-           file://musl-utils.patch \
-           file://musl-tests.patch \
+           file://0001-musl-obstack-fts.patch \
+           file://0002-musl-libs.patch \
+           file://0003-musl-utils.patch \
+           file://0004-Fix-error-on-musl.patch \
            "
-SRC_URI[md5sum] = "0b583722f911e1632544718d502aab87"
-SRC_URI[sha256sum] = "fa489deccbcae7d8c920f60d85906124c1989c591196d90e0fd668e3dc05042e"
+SRC_URI[md5sum] = "5480d0b7174446aba13a6adde107287f"
+SRC_URI[sha256sum] = "31e7a00e96d4e9c4bda452e1f2cdac4daf8abd24f5e154dee232131899f3a0f2"
 
-inherit autotools gettext ptest
+inherit autotools gettext ptest pkgconfig
 
-EXTRA_OECONF = "--program-prefix=eu-"
+EXTRA_OECONF = "--program-prefix=eu- --disable-debuginfod"
 
 DEPENDS_BZIP2 = "bzip2-replacement-native"
 DEPENDS_BZIP2_class-target = "bzip2"
@@ -73,10 +72,11 @@ do_compile_ptest() {
 do_install_ptest() {
 	if [ ${PTEST_ENABLED} = "1" ]; then
 		# copy the files which needed by the cases
-		TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint"
+		TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip"
 		install -d -m 755                       ${D}${PTEST_PATH}/src
 		install -d -m 755                       ${D}${PTEST_PATH}/libelf
 		install -d -m 755                       ${D}${PTEST_PATH}/libdw
+		install -d -m 755                       ${D}${PTEST_PATH}/libasm
 		for test_file in ${TEST_FILES}; do
 			if [ -f ${B}/src/${test_file} ]; then
 				cp -r ${B}/src/${test_file} ${D}${PTEST_PATH}/src
@@ -84,6 +84,7 @@ do_install_ptest() {
 		done
 		cp ${D}${libdir}/libelf-${PV}.so ${D}${PTEST_PATH}/libelf/libelf.so
 		cp ${D}${libdir}/libdw-${PV}.so ${D}${PTEST_PATH}/libdw/libdw.so
+		cp ${D}${libdir}/libasm-${PV}.so ${D}${PTEST_PATH}/libasm/libasm.so
 		cp -r ${S}/tests/                       ${D}${PTEST_PATH}
 		cp -r ${B}/tests/*                      ${D}${PTEST_PATH}/tests
 		cp -r ${B}/config.h                     ${D}${PTEST_PATH}
@@ -146,10 +147,14 @@ INHIBIT_PACKAGE_STRIP_FILES = "\
     ${PKGD}${PTEST_PATH}/src/readelf \
     ${PKGD}${PTEST_PATH}/src/nm \
     ${PKGD}${PTEST_PATH}/src/elflint \
+    ${PKGD}${PTEST_PATH}/src/elfclassify \
+    ${PKGD}${PTEST_PATH}/src/stack \
+    ${PKGD}${PTEST_PATH}/src/unstrip \
     ${PKGD}${PTEST_PATH}/libelf/libelf.so \
     ${PKGD}${PTEST_PATH}/libdw/libdw.so \
+    ${PKGD}${PTEST_PATH}/libasm/libasm.so \
     ${PKGD}${PTEST_PATH}/backends/libebl_i386.so \
     ${PKGD}${PTEST_PATH}/backends/libebl_x86_64.so \
 "
 
-PRIVATE_LIBS_${PN}-ptest = "libdw.so.1 libelf.so.1"
+PRIVATE_LIBS_${PN}-ptest = "libdw.so.1 libelf.so.1 libasm.so.1"

@@ -1,7 +1,7 @@
-From 77b89dbc9f9f965ad0ef2e341d7d46bce5f07549 Mon Sep 17 00:00:00 2001
+From 8ccf3d92b8766b53f203df7e01b489604ef851f3 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Fri, 23 Aug 2019 10:17:25 +0800
-Subject: [PATCH 1/3] musl-obstack-fts
+Subject: [PATCH 1/4] musl-obstack-fts
 
 Look for libfts and libobstack during configure, these
 libraries are external to libc when using musl, whereas
@@ -12,17 +12,18 @@ Upstream-Status: Inappropriate [workaround for musl]
 
 Rebase to 0.177
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
 ---
- configure.ac      | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ configure.ac      | 54 +++++++++++++++++++++++++++++++++++++++++++++++
  libdw/Makefile.am |  2 +-
- src/Makefile.am   |  8 ++++----
- 3 files changed, 59 insertions(+), 5 deletions(-)
+ src/Makefile.am   |  6 +++---
+ 3 files changed, 58 insertions(+), 4 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index f93964c..b87b762 100644
+index cad7b2b..6d4229b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -494,6 +494,60 @@ else
+@@ -529,6 +529,60 @@ else
  fi
  AC_SUBST([argp_LDADD])
  
@@ -84,45 +85,43 @@ index f93964c..b87b762 100644
  
  dnl Documentation.
 diff --git a/libdw/Makefile.am b/libdw/Makefile.am
-index 7a3d532..a541fa3 100644
+index 33b5838..ff92e02 100644
 --- a/libdw/Makefile.am
 +++ b/libdw/Makefile.am
-@@ -108,7 +108,7 @@ am_libdw_pic_a_OBJECTS = $(libdw_a_SOURCES:.c=.os)
- libdw_so_LIBS = libdw_pic.a ../libdwelf/libdwelf_pic.a \
- 	  ../libdwfl/libdwfl_pic.a ../libebl/libebl.a
+@@ -109,7 +109,7 @@ libdw_so_LIBS = ../libebl/libebl_pic.a ../backends/libebl_backends_pic.a \
+ 		../libcpu/libcpu_pic.a libdw_pic.a ../libdwelf/libdwelf_pic.a \
+ 		../libdwfl/libdwfl_pic.a
  libdw_so_DEPS = ../lib/libeu.a ../libelf/libelf.so
--libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl -lz $(argp_LDADD) $(zip_LIBS)
-+libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl -lz $(argp_LDADD) $(fts_LDADD) $(zip_LIBS)
+-libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl -lz $(argp_LDADD) $(zip_LIBS) -pthread
++libdw_so_LDLIBS = $(libdw_so_DEPS) -ldl -lz $(argp_LDADD) $(fts_LDADD) $(zip_LIBS) -pthread
  libdw_so_SOURCES =
  libdw.so$(EXEEXT): $(srcdir)/libdw.map $(libdw_so_LIBS) $(libdw_so_DEPS)
- # The rpath is necessary for libebl because its $ORIGIN use will
+ 	$(AM_V_CCLD)$(LINK) $(dso_LDFLAGS) -o $@ \
 diff --git a/src/Makefile.am b/src/Makefile.am
-index b72f853..2f3dfce 100644
+index 13d9bda..d5a4f7d 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -69,8 +69,8 @@ ar_no_Wstack_usage = yes
+@@ -69,7 +69,7 @@ ar_no_Wstack_usage = yes
  unstrip_no_Wstack_usage = yes
  
- readelf_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
--nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl \
--	   $(demanglelib)
-+nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) \
-+	   $(obstack_LDADD) -ldl $(demanglelib)
+ readelf_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD)
+-nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) \
++nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(obstack_LDADD) \
+ 	   $(demanglelib)
  size_LDADD = $(libelf) $(libeu) $(argp_LDADD)
- strip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl
- elflint_LDADD  = $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
+ strip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD)
 @@ -78,9 +78,9 @@ findtextrel_LDADD = $(libdw) $(libelf) $(libeu) $(argp_LDADD)
  addr2line_LDADD = $(libdw) $(libelf) $(libeu) $(argp_LDADD) $(demanglelib)
- elfcmp_LDADD = $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
- objdump_LDADD  = $(libasm) $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
+ elfcmp_LDADD = $(libebl) $(libdw) $(libelf) $(libeu) $(argp_LDADD)
+ objdump_LDADD  = $(libasm) $(libebl) $(libdw) $(libelf) $(libeu) $(argp_LDADD)
 -ranlib_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD)
 +ranlib_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD) $(obstack_LDADD)
  strings_LDADD = $(libelf) $(libeu) $(argp_LDADD)
 -ar_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD)
 +ar_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD) $(obstack_LDADD)
- unstrip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl
- stack_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl $(demanglelib)
+ unstrip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD)
+ stack_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) $(demanglelib)
  elfcompress_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD)
 -- 
-2.7.4
+2.17.1
 

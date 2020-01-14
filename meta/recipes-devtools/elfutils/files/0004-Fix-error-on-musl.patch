@@ -1,4 +1,7 @@
-Fix error on musl:
+From 7ff8cbecde7455b530fa7894a78d2326799f2556 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Wed, 1 May 2019 22:15:03 +0100
+Subject: [PATCH 4/4] Fix error on musl:
 
 | ../../elfutils-0.176/tests/elfstrmerge.c: In function 'main':
 | ../../elfutils-0.176/tests/elfstrmerge.c:370:60: error: 'ALLPERMS' undeclared (first use in this function); did you mean 'EPERM'?
@@ -11,10 +14,14 @@ Upstream-Status: Inappropriate [workaround in musl]
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Index: elfutils-0.176/tests/elfstrmerge.c
-===================================================================
---- elfutils-0.176.orig/tests/elfstrmerge.c
-+++ elfutils-0.176/tests/elfstrmerge.c
+---
+ tests/elfstrmerge.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tests/elfstrmerge.c b/tests/elfstrmerge.c
+index ba0d68d..1d2447f 100644
+--- a/tests/elfstrmerge.c
++++ b/tests/elfstrmerge.c
 @@ -33,6 +33,11 @@
  #include ELFUTILS_HEADER(dwelf)
  #include "elf-knowledge.h"
@@ -27,3 +34,6 @@ Index: elfutils-0.176/tests/elfstrmerge.c
  /* The original ELF file.  */
  static int fd = -1;
  static Elf *elf = NULL;
+-- 
+2.17.1
+
