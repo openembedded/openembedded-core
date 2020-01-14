@@ -26,3 +26,4 @@ FILES_${PN} += " \
     ${datadir}/enchant-2 \
     ${libdir}/enchant-2 \
 "
+FILES_${PN}-staticdev += "${libdir}/enchant-2/*.a"
