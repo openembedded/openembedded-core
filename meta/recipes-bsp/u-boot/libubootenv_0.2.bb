@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://Licenses/lgpl-2.1.txt;md5=4fbd65380cdd255951079008b36
 SECTION = "libs"
 
 SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https"
-SRCREV = "bf6ff631c0e38cede67268ceb8bf1383b5f8848e"
+SRCREV = "879c0731fa0725785b9fa4499bbf6aacd04ee4c2"
 
 S = "${WORKDIR}/git"
 
