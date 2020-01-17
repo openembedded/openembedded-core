@@ -56,6 +56,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0030-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
            file://0001-x86-64-memcmp-Use-unsigned-Jcc-instructions-on-size-.patch \
            file://CVE-2019-9169.patch \
+           file://CVE-2019-19126.patch \
 "
 
 S = "${WORKDIR}/git"
