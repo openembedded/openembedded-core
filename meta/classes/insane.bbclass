@@ -28,6 +28,7 @@ WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
             pn-overrides infodir build-deps src-uri-bad \
             unknown-configure-option symlink-to-sysroot multilib \
             invalid-packageconfig host-user-contaminated uppercase-pn patch-fuzz \
+            mime \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -183,6 +184,17 @@ def package_qa_check_staticdev(path, name, d, elf, messages):
 
     if not name.endswith("-pic") and not name.endswith("-staticdev") and not name.endswith("-ptest") and path.endswith(".a") and not path.endswith("_nonshared.a"):
         package_qa_add_message(messages, "staticdev", "non -staticdev package contains static .a library: %s path '%s'" % \
+                 (name, package_qa_clean_path(path,d)))
+
+QAPATHTEST[mime] = "package_qa_check_mime"
+def package_qa_check_mime(path, name, d, elf, messages):
+    """
+    Check if package installs mime types to /usr/share/mime/packages
+    while no inheriting mime.bbclass
+    """
+
+    if d.getVar("datadir") + "/mime/packages" in path and path.endswith('.xml') and not bb.data.inherits_class("mime", d):
+        package_qa_add_message(messages, "mime", "package contains mime types but does not inhert mime: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
 
 def package_qa_check_libdir(d):
