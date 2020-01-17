@@ -14,6 +14,13 @@ LICENSE = "GPLv2 & LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
                     file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c"
 
+# DNSOverTLS strict mode was added in 243
+# https://github.com/systemd/systemd/issues/9397
+CVE_CHECK_WHITELIST += "CVE-2018-21029"
+
+# Commit dc903ec516cb on the 241 branch
+CVE_CHECK_WHITELIST += "CVE-2019-3843 CVE-2019-3844"
+
 SRCREV = "511646b8ac5c82f210b16920044465756913d238"
 SRCBRANCH = "v241-stable"
 SRC_URI = "git://github.com/systemd/systemd-stable.git;protocol=git;branch=${SRCBRANCH}"
