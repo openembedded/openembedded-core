@@ -41,6 +41,7 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://0014-EAP-pwd-Check-element-x-y-coordinates-explicitly.patch \
            file://0001-EAP-pwd-server-Fix-reassembly-buffer-handling.patch \
            file://0003-EAP-pwd-peer-Fix-reassembly-buffer-handling.patch \
+           file://0001-AP-Silently-ignore-management-frame-from-unexpected-.patch \
           "
 SRC_URI[md5sum] = "a68538fb62766f40f890125026c42c10"
 SRC_URI[sha256sum] = "76ea6b06b7a2ea8e6d9eb1a9166166f1656e6d48c7508914f592100c95c73074"
