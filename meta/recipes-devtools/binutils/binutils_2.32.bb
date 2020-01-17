@@ -48,4 +48,7 @@ FILES_libbfd = "${libdir}/libbfd-*.so"
 
 SRC_URI_append_class-nativesdk =  "file://nativesdk-relocation.patch"
 
+USE_ALTERNATIVES_FOR_class-nativesdk = ""
+FILES_${PN}_append_class-nativesdk = " ${bindir}"
+
 BBCLASSEXTEND = "native nativesdk"
