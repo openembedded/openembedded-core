@@ -21,7 +21,7 @@ CVE_CHECK_WHITELIST += "CVE-2018-21029"
 # Commit dc903ec516cb on the 241 branch
 CVE_CHECK_WHITELIST += "CVE-2019-3843 CVE-2019-3844"
 
-SRCREV = "511646b8ac5c82f210b16920044465756913d238"
+SRCREV = "d1cc09a6eac5f8d62e630cc31d604095e30d2d84"
 SRCBRANCH = "v241-stable"
 SRC_URI = "git://github.com/systemd/systemd-stable.git;protocol=git;branch=${SRCBRANCH}"
 
