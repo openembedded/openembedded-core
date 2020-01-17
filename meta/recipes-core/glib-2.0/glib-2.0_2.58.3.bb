@@ -19,6 +19,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-meson-do-a-build-time-check-for-strlcpy-before-attem.patch \
            file://glib-meson.cross \
            file://CVE-2019-13012.patch \
+           file://0001-gfile-Limit-access-to-files-when-copying.patch \
            "
 
 SRC_URI_append_class-native = " file://relocate-modules.patch"
