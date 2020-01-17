@@ -1,0 +1,127 @@
+From 84d70e63fc105e3713943ed8c0bdd4e31a698226 Mon Sep 17
+00:00:00 2001 From: Joachim Nilsson <troglobit@gmail.com> Date: Thu, 16 Jan
+2020 22:16:51 +0100 Subject: [PATCH] Drop libcompat to simplify build deps
+and really fix
+
+The original idea with libcompat was to keep as few objects as
+possible for linking with libsyslog.  That in turn to prevent
+a user of libsyslog from suddenly also getting strong binding
+to symbols like strlcpy() from libsyslog, rather than their C
+library of choice.
+
+However, this caused strlcpy.c to be built as both .o and .lo
+files, which in turn caused really bizarre build problems due
+to bad DAG dependency.
+
+This patch drops libcompat and instead marks all replacement APIs
+as weak symbols, which a C library can override.
+
+Signed-off-by: Joachim Nilsson <troglobit@gmail.com>
+
+Upstream-Status: Backport
+[https://github.com/troglobit/sysklogd/commit/84d70e63fc105e3713943ed8c0bdd4e31a698226]
+
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ lib/pidfile.c   |  8 +++++++-
+ lib/utimensat.c | 10 ++++++++--
+ src/Makefile.am |  7 +------
+ 3 files changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/lib/pidfile.c b/lib/pidfile.c
+index 81f2315..25b1c04 100644
+--- a/lib/pidfile.c
++++ b/lib/pidfile.c
+@@ -31,6 +31,9 @@
+  * POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
++#include <config.h>
++#ifndef HAVE_PIDFILE
++
+ #define _GNU_SOURCE		/* Needed with GLIBC to get asprintf() */
+ #include <sys/stat.h>		/* utimensat() */
+ #include <sys/time.h>		/* utimensat() on *BSD */
+@@ -54,7 +57,7 @@ const  char *__pidfile_path = RUNSTATEDIR;
+ const  char *__pidfile_name = NULL;
+ 
+ int
+-pidfile(const char *basename)
++__pidfile(const char *basename)
+ {
+ 	int save_errno;
+ 	int atexit_already;
+@@ -127,6 +130,9 @@ pidfile(const char *basename)
+ 	return (0);
+ }
+ 
++weak_alias(__pidfile, pidfile);
++#endif /* HAVE_PIDFILE */
++
+ static void
+ pidfile_cleanup(void)
+ {
+diff --git a/lib/utimensat.c b/lib/utimensat.c
+index edf7e10..b68ce0e 100644
+--- a/lib/utimensat.c
++++ b/lib/utimensat.c
+@@ -15,7 +15,8 @@
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
+ 
+-#include "config.h"
++#include <config.h>
++#ifndef HAVE_UTIMENSAT
+ 
+ #include <errno.h>
+ #ifdef HAVE_FCNTL_H
+@@ -23,7 +24,8 @@
+ #endif
+ #include <sys/time.h>		/* lutimes(), utimes(), utimensat() */
+ 
+-int utimensat(int dirfd, const char *pathname, const struct timespec ts[2], int flags)
++int
++__utimensat(int dirfd, const char *pathname, const struct timespec ts[2], int flags)
+ {
+ 	int ret = -1;
+ 	struct timeval tv[2];
+@@ -45,3 +47,7 @@ int utimensat(int dirfd, const char *pathname, const struct timespec ts[2], int
+ 
+ 	return ret;
+ }
++
++weak_alias(__utimensat, utimensat);
++
++#endif /* HAVE_UTIMENSAT */
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 6e2a51c..1db88d3 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -19,7 +19,6 @@
+ bin_PROGRAMS          =
+ sbin_PROGRAMS         = syslogd
+ lib_LTLIBRARIES       = libsyslog.la
+-noinst_LTLIBRARIES    = libcompat.la
+ 
+ if ENABLE_KLOGD
+ sbin_PROGRAMS        += klogd
+@@ -48,10 +47,6 @@ logger_CPPFLAGS       = $(AM_CPPFLAGS) -D_XOPEN_SOURCE=600
+ logger_LDADD          = $(LIBS) $(LIBOBJS)
+ logger_LDADD         += libsyslog.la
+ 
+-# Convenience library for libsyslog instead of linking with $(LTLIBOBJS),
+-# which would pull in pidfile() and other (strong) symbols as well.
+-libcompat_la_SOURCES  = ../lib/strlcpy.c ../lib/strlcat.c
+-
+ pkgconfigdir          = $(libdir)/pkgconfig
+ pkgincludedir         = $(includedir)/syslog
+ pkgconfig_DATA        = libsyslog.pc
+@@ -59,4 +54,4 @@ pkginclude_HEADERS    = syslog.h
+ libsyslog_la_SOURCES  = syslog.c syslog.h compat.h
+ libsyslog_la_CPPFLAGS = $(AM_CPPFLAGS) -D_XOPEN_SOURCE=600
+ libsyslog_la_LDFLAGS  = $(AM_LDFLAGS) -version-info 0:0:0
+-libsyslog_la_LIBADD   = libcompat.la
++libsyslog_la_LIBADD   = $(LTLIBOJBS)
+-- 
+2.7.4
+
