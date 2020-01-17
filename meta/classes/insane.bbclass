@@ -28,7 +28,7 @@ WARN_QA ?= "ldflags useless-rpaths rpaths staticdev libdir xorg-driver-abi \
             pn-overrides infodir build-deps src-uri-bad \
             unknown-configure-option symlink-to-sysroot multilib \
             invalid-packageconfig host-user-contaminated uppercase-pn patch-fuzz \
-            mime \
+            mime mime-xdg \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -196,6 +196,35 @@ def package_qa_check_mime(path, name, d, elf, messages):
     if d.getVar("datadir") + "/mime/packages" in path and path.endswith('.xml') and not bb.data.inherits_class("mime", d):
         package_qa_add_message(messages, "mime", "package contains mime types but does not inhert mime: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
+
+QAPATHTEST[mime-xdg] = "package_qa_check_mime_xdg"
+def package_qa_check_mime_xdg(path, name, d, elf, messages):
+    """
+    Check if package installs desktop file containing MimeType and requires
+    mime-types.bbclass to create /usr/share/applications/mimeinfo.cache
+    """
+
+    if d.getVar("datadir") + "/applications" in path and path.endswith('.desktop') and not bb.data.inherits_class("mime-xdg", d):
+        mime_type_found = False
+        try:
+            with open(path, 'r') as f:
+                for line in f.read().split('\n'):
+                    if 'MimeType' in line:
+                        mime_type_found = True
+                        break;
+        except:
+            # At least libreoffice installs symlinks with absolute paths that are dangling here.
+            # We could implement some magic but for few (one) recipes it is not worth the effort so just warn:
+            wstr = "%s cannot open %s - is it a symlink with absolute path?\n" % (name, package_qa_clean_path(path,d))
+            wstr += "Please check if (linked) file contains key 'MimeType'.\n"
+            pkgname = name
+            if name == d.getVar('PN'):
+                pkgname = '${PN}'
+            wstr += "If yes: add \'inhert mime-xdg\' and \'MIME_XDG_PACKAGES += \"%s\"\' / if no add \'INSANE_SKIP_%s += \"mime-xdg\"\' to recipe." % (pkgname, pkgname)
+            package_qa_add_message(messages, "mime-xdg", wstr)
+        if mime_type_found:
+            package_qa_add_message(messages, "mime-xdg", "package contains desktop file with key 'MimeType' but does not inhert mime-xdg: %s path '%s'" % \
+                    (name, package_qa_clean_path(path,d)))
 
 def package_qa_check_libdir(d):
     """
