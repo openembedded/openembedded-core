@@ -102,6 +102,9 @@ do_configure () {
 	linux-powerpc64)
 		target=linux-ppc64
 		;;
+	linux-powerpc64le)
+		target=linux-ppc64le
+		;;
 	linux-riscv32)
 		target=linux-generic32
 		;;
