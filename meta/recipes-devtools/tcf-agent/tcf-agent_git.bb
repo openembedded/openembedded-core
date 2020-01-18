@@ -46,6 +46,7 @@ CFLAGS_append_mips = " ${LCL_STOP_SERVICES}"
 CFLAGS_append_mips64 = " ${LCL_STOP_SERVICES}"
 CFLAGS_append_libc-musl = " ${LCL_STOP_SERVICES}"
 CFLAGS_append_powerpc64 = " ${LCL_STOP_SERVICES}"
+CFLAGS_append_powerpc64le = " ${LCL_STOP_SERVICES}"
 CFLAGS_append_riscv64 = " ${LCL_STOP_SERVICES}"
 
 do_install() {
