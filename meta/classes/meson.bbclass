@@ -45,7 +45,7 @@ def meson_cpu_family(var, d):
     arch = d.getVar(var)
     if arch == 'powerpc':
         return 'ppc'
-    elif arch == 'powerpc64':
+    elif arch == 'powerpc64' or arch == 'powerpc64le':
         return 'ppc64'
     elif arch == 'armeb':
         return 'arm'
