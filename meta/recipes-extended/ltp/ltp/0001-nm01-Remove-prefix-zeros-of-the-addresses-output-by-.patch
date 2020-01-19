@@ -1,0 +1,43 @@
+From 59cb0dd9f8e65b2d398fcaf4d163cbc8e1d0ae45 Mon Sep 17 00:00:00 2001
+From: He Zhe <zhe.he@windriver.com>
+Date: Tue, 31 Dec 2019 15:02:48 +0800
+Subject: [PATCH] nm01: Remove prefix zeros of the addresses output by nm
+ before comparing
+
+The latest nm v2.33.1 outputs symbols addresses without prefix zeros
+for "nm -f posix", which causes the following error.
+nm01 5 TFAIL: Got wrong format with -f bsd
+
+Let's remove the prefix zeros before comparing.
+
+Upstream-Status: Backport [59cb0dd9f8e65b2d398fcaf4d163cbc8e1d0ae45]
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Li Wang <liwang@redhat.com>
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Tested-by: Petr Vorel <pvorel@suse.cz>
+---
+ testcases/commands/nm/nm01.sh | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/testcases/commands/nm/nm01.sh b/testcases/commands/nm/nm01.sh
+index 30c41bd..fd9d3d9 100755
+--- a/testcases/commands/nm/nm01.sh
++++ b/testcases/commands/nm/nm01.sh
+@@ -84,8 +84,11 @@ test5()
+ 	EXPECT_PASS $NM -f bsd $TST_DATAROOT/f1 \> nm_bsd.out
+ 	EXPECT_PASS $NM -f posix $TST_DATAROOT/f1 \> nm_posix.out
+ 
+-	ROD awk '{print $3 $2 $1}' nm_bsd.out \> nm1.out
+-	ROD awk '{print $1 $2 $3}' nm_posix.out \> nm2.out
++	ROD awk '{print gensub(/\y(0+)([0-9a-fA-F]+)\y/, "\\2", "g")}' nm_bsd.out \> trimmed_nm_bsd.out
++	ROD awk '{print gensub(/\y(0+)([0-9a-fA-F]+)\y/, "\\2", "g")}' nm_posix.out \> trimmed_nm_posix.out
++
++	ROD awk '{print $3 $2 $1}' trimmed_nm_bsd.out \> nm1.out
++	ROD awk '{print $1 $2 $3}' trimmed_nm_posix.out \> nm2.out
+ 
+ 	if diff nm1.out nm2.out > /dev/null; then
+ 		tst_res TPASS "Got BSD format with -f bsd"
+-- 
+2.7.4
+

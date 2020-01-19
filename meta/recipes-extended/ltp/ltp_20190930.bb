@@ -41,6 +41,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-mkswap01.sh-Add-udevadm-trigger-before-swap-verifica.patch \
            file://0001-testcases-fix-an-absent-format-string-issue.patch \
            file://0001-Add-more-musl-exclusions.patch \
+           file://0001-nm01-Remove-prefix-zeros-of-the-addresses-output-by-.patch \
            "
 
 S = "${WORKDIR}/git"
