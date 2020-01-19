@@ -21,7 +21,7 @@ S = "${WORKDIR}/git"
 
 VIMDIR = "vim${@d.getVar('PV').split('.')[0]}${@d.getVar('PV').split('.')[1]}"
 
-inherit autotools-brokensep update-alternatives
+inherit autotools-brokensep update-alternatives mime-xdg
 
 CLEANBROKEN = "1"
 
