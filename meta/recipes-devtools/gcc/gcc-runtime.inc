@@ -16,9 +16,13 @@ EXTRA_OECONF_PATHS = "\
 
 EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
 EXTRA_OECONF_append = " --cache-file=${B}/config.cache"
+EXTRA_OECONF_append_libc-newlib = " --with-newlib"
 
 # Disable ifuncs for libatomic on arm conflicts -march/-mcpu
 EXTRA_OECONF_append_arm = " libat_cv_have_ifunc=no "
+
+# Newlib does not support symbol versioning on libsdtcc++
+SYMVERS_CONF_libc-newlib = ""
 
 # Building with thumb enabled on armv6t fails
 ARM_INSTRUCTION_SET_armv6 = "arm"
@@ -36,6 +40,8 @@ RUNTIMELIBSSP_mingw32 ?= "libssp"
 RUNTIMETARGET = "${RUNTIMELIBSSP} libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
     ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
 "
+# Only build libstdc++ for newlib
+RUNTIMETARGET_libc-newlib = "libstdc++-v3"
 
 # libiberty
 # libmudflap
