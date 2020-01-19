@@ -148,6 +148,7 @@ class ReproducibleTests(OESelftestTestCase):
         config = textwrap.dedent('''\
             INHERIT += "reproducible_build"
             PACKAGE_CLASSES = "{package_classes}"
+            INHIBIT_PACKAGE_STRIP = "1"
             TMPDIR = "{tmpdir}"
             ''').format(package_classes=' '.join('package_%s' % c for c in self.package_classes),
                         tmpdir=tmpdir)
