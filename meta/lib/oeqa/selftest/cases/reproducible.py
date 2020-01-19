@@ -80,6 +80,13 @@ class ReproducibleTests(OESelftestTestCase):
     package_classes = ['deb', 'ipk']
     images = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline']
     save_results = False
+    # This variable controls if one of the test builds is allowed to pull from
+    # an sstate cache/mirror. The other build is always done clean as a point of
+    # comparison.
+    # If you know that your sstate archives are reproducible, enabling this
+    # will test that and also make the test run faster. If your sstate is not
+    # reproducible, disable this in your derived test class
+    build_from_sstate = True
 
     def setUpLocal(self):
         super().setUpLocal()
@@ -127,7 +134,7 @@ class ReproducibleTests(OESelftestTestCase):
         bb.utils.mkdirhier(os.path.dirname(dest))
         shutil.copyfile(source, dest)
 
-    def test_reproducible_builds(self):
+    def do_test_build(self, name, use_sstate):
         capture_vars = ['DEPLOY_DIR_' + c.upper() for c in self.package_classes]
 
         if self.save_results:
@@ -135,41 +142,38 @@ class ReproducibleTests(OESelftestTestCase):
             os.chmod(save_dir, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
             self.logger.info('Non-reproducible packages will be copied to %s', save_dir)
 
+        tmpdir = os.path.join(self.topdir, name, 'tmp')
+        if os.path.exists(tmpdir):
+            bb.utils.remove(tmpdir, recurse=True)
+
+        config = textwrap.dedent('''\
+            INHERIT += "reproducible_build"
+            PACKAGE_CLASSES = "{package_classes}"
+            TMPDIR = "{tmpdir}"
+            ''').format(package_classes=' '.join('package_%s' % c for c in self.package_classes),
+                        tmpdir=tmpdir)
+
+        if not use_sstate:
+            # This config fragment will disable using shared and the sstate
+            # mirror, forcing a complete build from scratch
+            config += textwrap.dedent('''\
+                SSTATE_DIR = "${TMPDIR}/sstate"
+                SSTATE_MIRROR = ""
+                ''')
+
+        self.write_config(config)
+        d = get_bb_vars(capture_vars)
+        bitbake(' '.join(self.images))
+        return d
+
+    def test_reproducible_builds(self):
         # Build native utilities
         self.write_config('')
         bitbake("diffutils-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
 
-        # Reproducible builds should not pull from sstate or mirrors, but
-        # sharing DL_DIR is fine
-        common_config = textwrap.dedent('''\
-            INHERIT += "reproducible_build"
-            PACKAGE_CLASSES = "%s"
-            SSTATE_DIR = "${TMPDIR}/sstate"
-            ''') % (' '.join('package_%s' % c for c in self.package_classes))
-
-        # Perform a build.
-        reproducibleA_tmp = os.path.join(self.topdir, 'reproducibleA', 'tmp')
-        if os.path.exists(reproducibleA_tmp):
-            bb.utils.remove(reproducibleA_tmp, recurse=True)
-
-        self.write_config((textwrap.dedent('''\
-            TMPDIR = "%s"
-            ''') % reproducibleA_tmp) + common_config)
-        vars_A = get_bb_vars(capture_vars)
-        bitbake(' '.join(self.images))
-
-        # Perform another build.
-        reproducibleB_tmp = os.path.join(self.topdir, 'reproducibleB', 'tmp')
-        if os.path.exists(reproducibleB_tmp):
-            bb.utils.remove(reproducibleB_tmp, recurse=True)
-
-        self.write_config((textwrap.dedent('''\
-            SSTATE_MIRROR = ""
-            TMPDIR = "%s"
-            ''') % reproducibleB_tmp) + common_config)
-        vars_B = get_bb_vars(capture_vars)
-        bitbake(' '.join(self.images))
+        vars_A = self.do_test_build('reproducibleA', self.build_from_sstate)
+        vars_B = self.do_test_build('reproducibleB', False)
 
         # NOTE: The temp directories from the reproducible build are purposely
         # kept after the build so it can be diffed for debugging.
