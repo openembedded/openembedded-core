@@ -132,7 +132,7 @@ def generate_locale_archive(d, rootfs, target_arch, localedir):
     env = dict(os.environ)
     env["LOCALEARCHIVE"] = oe.path.join(localedir, "locale-archive")
 
-    for name in os.listdir(localedir):
+    for name in sorted(os.listdir(localedir)):
         path = os.path.join(localedir, name)
         if os.path.isdir(path):
             cmd = ["cross-localedef", "--verbose"]
