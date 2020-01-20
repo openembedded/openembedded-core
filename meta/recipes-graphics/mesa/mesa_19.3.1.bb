@@ -6,6 +6,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0003-Allow-enable-DRI-without-DRI-drivers.patch \
            file://0004-Revert-mesa-Enable-asm-unconditionally-now-that-gen_.patch \
            file://0005-vc4-use-intmax_t-for-formatted-output-of-timespec-me.patch \
+           file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
            "
 
 SRC_URI[md5sum] = "5c5965db31993af47fee82c9a7ccba5e"
