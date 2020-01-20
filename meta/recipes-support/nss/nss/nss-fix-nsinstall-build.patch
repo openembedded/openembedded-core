@@ -29,7 +29,7 @@ Index: nss-3.24/nss/coreconf/nsinstall/Makefile
 +# to clean the '-m64' from ARCHFLAG and LDFLAGS.
 +ARCHFLAG =
 +LDFLAGS =
-+CFLAGS =
++# CFLAGS =
 +
  ifeq (,$(filter-out OS2 WIN%,$(OS_TARGET)))
  PROGRAM		=
