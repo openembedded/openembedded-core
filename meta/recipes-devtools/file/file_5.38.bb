@@ -11,10 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;beginline=2;md5=0251eaec1188b20d9a72c502ecfdd
 DEPENDS = "zlib file-replacement-native"
 DEPENDS_class-native = "zlib-native"
 
-SRC_URI = "git://github.com/file/file.git \
-           file://CVE-2019-18218.patch"
+SRC_URI = "git://github.com/file/file.git"
 
-SRCREV = "a0d5b0e4e9f97d74a9911e95cedd579852e25398"
+SRCREV = "ec41083645689a787cdd00cb3b5bf578aa79e46c"
 S = "${WORKDIR}/git"
 
 inherit autotools update-alternatives
