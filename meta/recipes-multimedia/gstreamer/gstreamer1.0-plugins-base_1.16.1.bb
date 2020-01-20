@@ -38,7 +38,6 @@ PACKAGECONFIG ??= " \
 
 OPENGL_APIS = 'opengl gles2'
 OPENGL_PLATFORMS = 'egl'
-OPENGL_WINSYS = 'x11 wayland gbm'
 
 X11DEPENDS = "virtual/libx11 libsm libxrender libxv"
 X11ENABLEOPTS = "-Dx11=enabled -Dxvideo=enabled -Dxshm=enabled"
@@ -67,6 +66,12 @@ PACKAGECONFIG[egl]          = ",,virtual/egl"
 # OpenGL window systems (except for X11)
 PACKAGECONFIG[gbm]          = ",,virtual/libgbm libgudev libdrm"
 PACKAGECONFIG[wayland]      = ",,wayland-native wayland wayland-protocols libdrm"
+PACKAGECONFIG[dispmanx]     = ",,virtual/libomxil"
+
+OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'x11', ' x11', '', d)}"
+OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'gbm', ' gbm', '', d)}"
+OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'wayland', ' wayland', '', d)}"
+OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'dispmanx', ' dispmanx', '', d)}"
 
 EXTRA_OEMESON += " \
     -Dgl-graphene=disabled \
