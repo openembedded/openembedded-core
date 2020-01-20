@@ -9,9 +9,11 @@ DEPENDS = "hostperl-runtime-native gperf-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${PV}.tar.xz \
            file://0001-ensure-the-XATTR_NAME_CAPS-is-defined-when-it-is-use.patch \
+           file://0002-tests-do-not-run-target-executables.patch \
+           file://0001-tests-do-not-statically-link-a-test.patch \
            "
-SRC_URI[md5sum] = "2e8f9fab32eb5ccb37969fe317fd17aa"
-SRC_URI[sha256sum] = "dac1792d0118bee6aae6ba7fb93ff1602c6a9bda812fd63916eee1435b9c486a"
+SRC_URI[md5sum] = "52120c05dc797b01f5a7ae70f4335e96"
+SRC_URI[sha256sum] = "c6088de41e1c97fa8047e2e7de0e4ee0cd13e6cc16538022230ae76727a87c46"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/linux/libs/security/linux-privs/${BPN}2/"
 
