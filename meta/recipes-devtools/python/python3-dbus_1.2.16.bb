@@ -7,8 +7,8 @@ DEPENDS = "expat dbus glib-2.0 virtual/libintl"
 
 SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "c8739234fca9fba26368d1a337abe830"
-SRC_URI[sha256sum] = "b10206ba3dd641e4e46411ab91471c88e0eec1749860e4285193ee68df84ac31"
+SRC_URI[md5sum] = "51a45c973d82bedff033a4b57d69d5d8"
+SRC_URI[sha256sum] = "11238f1d86c995d8aed2e22f04a1e3779f0d70e587caffeab4857f3c662ed5a4"
 
 S = "${WORKDIR}/dbus-python-${PV}"
 
