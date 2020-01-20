@@ -1,0 +1,22 @@
+Use overloadable attribute to aid clang
+
+Fixes
+dcigettext.c:147:7: error: redeclaration of 'getcwd' must have the 'overloadable' attribute
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+--- a/gettext-runtime/intl/dcigettext.c
++++ b/gettext-runtime/intl/dcigettext.c
+@@ -144,7 +144,11 @@ char *getwd ();
+ #  if VMS
+ #   define getcwd(buf, max) (getcwd) (buf, max, 0)
+ #  else
+-char *getcwd ();
++char 
++#ifdef __clang__
++__attribute__((overloadable))
++#endif
++*getcwd ();
+ #  endif
+ # endif
+ # ifndef HAVE_STPCPY
