@@ -13,8 +13,9 @@ DEPENDS += "glib-2.0 libgcrypt gettext-native"
 
 PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, libxslt-native xmlto-native"
 
-SRC_URI[archive.md5sum] = "ea673119c00570d6434f8fd3636f1eb8"
-SRC_URI[archive.sha256sum] = "8583e10179456ae2c83075d95455f156dc08db6278b32bf4bd61819335a30e3a"
+SRC_URI += " file://0001-secret-file-collection-Rename-internal-functions-to-.patch"
+SRC_URI[archive.md5sum] = "335750caeed47f50496b3b0e6a1875ff"
+SRC_URI[archive.sha256sum] = "f1187370b453106af878e30c284a121ba0c513da8bb4170b329d66e250bdae43"
 
 # http://errors.yoctoproject.org/Errors/Details/20228/
 ARM_INSTRUCTION_SET_armv4 = "arm"
