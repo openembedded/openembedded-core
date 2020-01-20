@@ -7,8 +7,8 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/libpipeline/libpipeline-${PV}.tar.gz"
-SRC_URI[md5sum] = "4c8fe6cd85422baafd6e060f896c61bc"
-SRC_URI[sha256sum] = "d633706b7d845f08b42bc66ddbe845d57e726bf89298e2cee29f09577e2f902f"
+SRC_URI[md5sum] = "169de4cc1f6f7f7d430a5bed858b2fd3"
+SRC_URI[sha256sum] = "fd59c649c1ae9d67604d1644f116ad4d297eaa66f838e3dfab96b41e85b059fb"
 
 inherit pkgconfig autotools
 
