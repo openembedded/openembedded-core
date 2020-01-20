@@ -1,6 +1,6 @@
-From b881a79adcd4ae5ac8fe4f49d0fc77c47f777919 Mon Sep 17 00:00:00 2001
-From: Hongxu Jia <hongxu.jia@windriver.com>
-Date: Fri, 4 Aug 2017 11:16:14 +0800
+From 7019ba184b828ed7253750cf409fc5760ef90a54 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Thu, 9 Jan 2020 17:44:05 +0100
 Subject: [PATCH] setup.py: pass missing libraries to Extension for
  multiprocessing module
 
@@ -46,35 +46,24 @@ ValueError: semaphore or lock released too many times
 
 And the semaphore issue also caused multiprocessing.Queue().put() hung.
 
-Upstream-Status: Submitted [https://github.com/python/cpython/pull/2999]
+Upstream-Status: Pensing
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- setup.py | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/setup.py b/setup.py
-index b7a36a6..658ead3 100644
+index ec3f2a4..b0f1541 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1584,8 +1584,10 @@ class PyBuildExt(build_ext):
-         elif host_platform.startswith('netbsd'):
-             macros = dict()
-             libraries = []
--
--        else:                                   # Linux and other unices
-+        elif host_platform.startswith(('linux')):
-+            macros = dict()
-+            libraries = ['pthread']
-+        else:                                   # Other unices
-             macros = dict()
-             libraries = ['rt']
+@@ -1671,7 +1671,7 @@ class PyBuildExt(build_ext):
+                                    libraries=libs,
+                                    include_dirs=["Modules/_multiprocessing"]))
  
-@@ -1603,6 +1605,7 @@ class PyBuildExt(build_ext):
+-        self.add(Extension('_multiprocessing', multiprocessing_srcs,
++        self.add(Extension('_multiprocessing', multiprocessing_srcs, libraries=['pthread'],
+                            include_dirs=["Modules/_multiprocessing"]))
  
-         exts.append ( Extension('_multiprocessing', multiprocessing_srcs,
-                                 define_macros=list(macros.items()),
-+                                libraries=libraries,
-                                 include_dirs=["Modules/_multiprocessing"]))
-         # End multiprocessing
- 
+     def detect_uuid(self):
