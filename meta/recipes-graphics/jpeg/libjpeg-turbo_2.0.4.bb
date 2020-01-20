@@ -14,8 +14,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-libjpeg-turbo-fix-package_qa-error.patch \
            "
 
-SRC_URI[md5sum] = "bd07fddf26f9def7bab02739eb655116"
-SRC_URI[sha256sum] = "4246de500544d4ee408ee57048aa4aadc6f165fc17f141da87669f20ed3241b7"
+SRC_URI[md5sum] = "d01d9e0c28c27bc0de9f4e2e8ff49855"
+SRC_URI[sha256sum] = "33dd8547efd5543639e890efbf2ef52d5a21df81faf41bb940657af916a23406"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libjpeg-turbo/files/"
 UPSTREAM_CHECK_REGEX = "/libjpeg-turbo/files/(?P<pver>(\d+[\.\-_]*)+)/"
 
