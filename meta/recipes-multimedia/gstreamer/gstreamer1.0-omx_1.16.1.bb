@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "cbf54121a2cba575d460833e8132265781252ce32cf5b8f9fa8753e42a
 
 S = "${WORKDIR}/gst-omx-${PV}"
 
-DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad"
+DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad virtual/libomxil"
 
 inherit meson pkgconfig upstream-version-is-even
 
@@ -43,4 +43,5 @@ do_install[postfuncs] += " set_omx_core_name "
 FILES_${PN} += "${libdir}/gstreamer-1.0/*.so"
 FILES_${PN}-staticdev += "${libdir}/gstreamer-1.0/*.a"
 
-RDEPENDS_${PN} = "libomxil"
+VIRTUAL-RUNTIME_libomxil ?= "libomxil"
+RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_libomxil}"
