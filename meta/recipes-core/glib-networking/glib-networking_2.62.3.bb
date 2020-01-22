@@ -9,8 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SECTION = "libs"
 DEPENDS = "glib-2.0"
 
-SRC_URI[archive.md5sum] = "a8b669ae54c7178848ce7a9b596a471c"
-SRC_URI[archive.sha256sum] = "0644b8dc042bab8c9d2892aee5716513280c8773dbef43a038149f24cae15544"
+SRC_URI[archive.md5sum] = "a758ca62bd54982a798b39c744cbf783"
+SRC_URI[archive.sha256sum] = "8ca1f86f23a76b5c7640624f7d5490705c78e81375e1741c9a1c41ce7f8f7ff7"
 
 PACKAGECONFIG ??= "gnutls"
 
