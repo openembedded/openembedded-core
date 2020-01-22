@@ -126,11 +126,12 @@ def _toaster_dumpdata(pkgdatadir, d):
     datadir = os.path.join(pkgdatadir, 'runtime')
 
     # scan and send data for each generated package
-    for datafile in os.listdir(datadir):
-        if not datafile.endswith('.packaged'):
-            lpkgdata = _toaster_load_pkgdatafile(datadir, datafile)
-            # Fire an event containing the pkg data
-            bb.event.fire(bb.event.MetadataEvent("SinglePackageInfo", lpkgdata), d)
+    if os.path.exists(datadir):
+        for datafile in os.listdir(datadir):
+            if not datafile.endswith('.packaged'):
+                lpkgdata = _toaster_load_pkgdatafile(datadir, datafile)
+                # Fire an event containing the pkg data
+                bb.event.fire(bb.event.MetadataEvent("SinglePackageInfo", lpkgdata), d)
 
 python toaster_package_dumpdata() {
     _toaster_dumpdata(d.getVar('PKGDESTWORK'), d)
