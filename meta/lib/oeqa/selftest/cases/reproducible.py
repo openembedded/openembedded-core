@@ -137,11 +137,6 @@ class ReproducibleTests(OESelftestTestCase):
     def do_test_build(self, name, use_sstate):
         capture_vars = ['DEPLOY_DIR_' + c.upper() for c in self.package_classes]
 
-        if self.save_results:
-            save_dir = tempfile.mkdtemp(prefix='oe-reproducible-')
-            os.chmod(save_dir, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
-            self.logger.info('Non-reproducible packages will be copied to %s', save_dir)
-
         tmpdir = os.path.join(self.topdir, name, 'tmp')
         if os.path.exists(tmpdir):
             bb.utils.remove(tmpdir, recurse=True)
@@ -171,6 +166,11 @@ class ReproducibleTests(OESelftestTestCase):
         self.write_config('')
         bitbake("diffutils-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
+
+        if self.save_results:
+            save_dir = tempfile.mkdtemp(prefix='oe-reproducible-')
+            os.chmod(save_dir, stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+            self.logger.info('Non-reproducible packages will be copied to %s', save_dir)
 
         vars_A = self.do_test_build('reproducibleA', self.build_from_sstate)
         vars_B = self.do_test_build('reproducibleB', False)
