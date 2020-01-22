@@ -1,4 +1,4 @@
-From dd5c10f660716a2fab513714245be1932003306b Mon Sep 17 00:00:00 2001
+From 58f576d6f240b08957a402960cdf06c74201ac7b Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Thu, 12 Dec 2019 22:16:15 -0800
 Subject: [PATCH] Use ASSIMP_LIB_INSTALL_DIR to search library
@@ -8,12 +8,13 @@ Use ASSIMP_LIB_INSTALL_DIR rather than hardcoded /lib to search library
 Upstream-Status: Inappropriate [oe specific]
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
 ---
  assimpTargets-release.cmake.in | 16 ++++++++--------
  1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/assimpTargets-release.cmake.in b/assimpTargets-release.cmake.in
-index b09b881f..5c6999fe 100644
+index f3db8f1..b8a066a 100644
 --- a/assimpTargets-release.cmake.in
 +++ b/assimpTargets-release.cmake.in
 @@ -42,11 +42,11 @@ if(MSVC)
@@ -43,8 +44,8 @@ index b09b881f..5c6999fe 100644
    endif()
  
  else()
-@@ -66,17 +66,17 @@ else()
-     set(sharedLibraryName "libassimp${ASSIMP_LIBRARY_SUFFIX}@CMAKE_SHARED_LIBRARY_SUFFIX@.@ASSIMP_VERSION_MAJOR@")
+@@ -70,17 +70,17 @@ else()
+     endif()
      set_target_properties(assimp::assimp PROPERTIES
        IMPORTED_SONAME_RELEASE "${sharedLibraryName}"
 -      IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/${sharedLibraryName}"
@@ -65,6 +66,3 @@ index b09b881f..5c6999fe 100644
    endif()
  endif()
  
--- 
-2.21.0
-
