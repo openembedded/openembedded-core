@@ -169,7 +169,7 @@ def any_distro_features(d, features, truevalue="1", falsevalue=""):
     """
     return bb.utils.contains_any("DISTRO_FEATURES", features, truevalue, falsevalue, d)
 
-def parallel_make(d):
+def parallel_make(d, makeinst=False):
     """
     Return the integer value for the number of parallel threads to use when
     building, scraped out of PARALLEL_MAKE. If no parallelization option is
@@ -177,7 +177,10 @@ def parallel_make(d):
 
     e.g. if PARALLEL_MAKE = "-j 10", this will return 10 as an integer.
     """
-    pm = (d.getVar('PARALLEL_MAKE') or '').split()
+    if makeinst:
+        pm = (d.getVar('PARALLEL_MAKEINST') or '').split()
+    else:
+        pm = (d.getVar('PARALLEL_MAKE') or '').split()
     # look for '-j' and throw other options (e.g. '-l') away
     while pm:
         opt = pm.pop(0)
@@ -192,7 +195,7 @@ def parallel_make(d):
 
     return None
 
-def parallel_make_argument(d, fmt, limit=None):
+def parallel_make_argument(d, fmt, limit=None, makeinst=False):
     """
     Helper utility to construct a parallel make argument from the number of
     parallel threads specified in PARALLEL_MAKE.
@@ -205,7 +208,7 @@ def parallel_make_argument(d, fmt, limit=None):
     e.g. if PARALLEL_MAKE = "-j 10", parallel_make_argument(d, "-n %d") will return
     "-n 10"
     """
-    v = parallel_make(d)
+    v = parallel_make(d, makeinst)
     if v:
         if limit:
             v = min(limit, v)
