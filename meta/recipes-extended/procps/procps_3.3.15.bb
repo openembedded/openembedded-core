@@ -24,6 +24,9 @@ S = "${WORKDIR}/procps-ng-${PV}"
 
 EXTRA_OECONF = "--enable-skill --disable-modern-top"
 
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
+PACKAGECONFIG[systemd] = "--with-systemd,--without-systemd,systemd"
+
 do_install_append () {
 	install -d ${D}${base_bindir}
 	[ "${bindir}" != "${base_bindir}" ] && for i in ${base_bindir_progs}; do mv ${D}${bindir}/$i ${D}${base_bindir}/$i; done
