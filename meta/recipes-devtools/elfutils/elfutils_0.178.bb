@@ -58,11 +58,7 @@ RDEPENDS_${PN}-ptest += "libasm libelf bash make coreutils ${PN}-binutils"
 
 EXTRA_OECONF_append_class-target += "--disable-tests-rpath"
 
-do_install_append() {
-	if [ "${TARGET_ARCH}" != "x86_64" ] && [ -z `echo "${TARGET_ARCH}"|grep 'i.86'` ];then
-		rm -f ${D}${bindir}/eu-objdump
-	fi
-}
+RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 
 do_compile_ptest() {
 	cd ${B}/tests
@@ -139,6 +135,7 @@ INHIBIT_PACKAGE_STRIP_FILES = "\
     ${PKGD}${PTEST_PATH}/tests/elfstrmerge \
     ${PKGD}${PTEST_PATH}/tests/backtrace-child \
     ${PKGD}${PTEST_PATH}/tests/backtrace-data \
+    ${PKGD}${PTEST_PATH}/tests/backtrace-dwarf \
     ${PKGD}${PTEST_PATH}/tests/deleted \
     ${PKGD}${PTEST_PATH}/src/strip \
     ${PKGD}${PTEST_PATH}/src/addr2line \
