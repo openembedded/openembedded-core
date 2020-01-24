@@ -233,6 +233,9 @@ python npm_do_compile() {
         # Add node-gyp configuration
         configs.append(("arch", d.getVar("NPM_ARCH")))
         configs.append(("release", "true"))
+        sysroot = d.getVar("RECIPE_SYSROOT_NATIVE")
+        nodedir = os.path.join(sysroot, d.getVar("prefix_native").strip("/"))
+        configs.append(("nodedir", nodedir))
 
         # Pack and install the main package
         tarball = npm_pack(env, d.getVar("NPM_PACKAGE"), tmpdir)
