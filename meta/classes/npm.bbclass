@@ -236,6 +236,9 @@ python npm_do_compile() {
         sysroot = d.getVar("RECIPE_SYSROOT_NATIVE")
         nodedir = os.path.join(sysroot, d.getVar("prefix_native").strip("/"))
         configs.append(("nodedir", nodedir))
+        bindir = os.path.join(sysroot, d.getVar("bindir_native").strip("/"))
+        pythondir = os.path.join(bindir, "python-native", "python")
+        configs.append(("python", pythondir))
 
         # Pack and install the main package
         tarball = npm_pack(env, d.getVar("NPM_PACKAGE"), tmpdir)
