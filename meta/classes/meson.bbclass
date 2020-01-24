@@ -91,7 +91,6 @@ c = ${@meson_array('CC', d)}
 cpp = ${@meson_array('CXX', d)}
 ar = ${@meson_array('AR', d)}
 nm = ${@meson_array('NM', d)}
-ld = ${@meson_array('LD', d)}
 strip = ${@meson_array('STRIP', d)}
 readelf = ${@meson_array('READELF', d)}
 pkgconfig = 'pkg-config'
@@ -122,6 +121,10 @@ EOF
 CONFIGURE_FILES = "meson.build"
 
 meson_do_configure() {
+    # Meson requires this to be 'bfd, 'lld' or 'gold' from 0.53 onwards
+    # https://github.com/mesonbuild/meson/commit/ef9aeb188ea2bc7353e59916c18901cde90fa2b3
+    unset LD
+
     # Work around "Meson fails if /tmp is mounted with noexec #2972"
     mkdir -p "${B}/meson-private/tmp"
     export TMPDIR="${B}/meson-private/tmp"
