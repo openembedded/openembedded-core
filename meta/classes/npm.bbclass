@@ -44,6 +44,9 @@ NPM_BUILD = "${WORKDIR}/npm-build"
 def npm_global_configs(d):
     """Get the npm global configuration"""
     configs = []
+    # Ensure no network access is done
+    configs.append(("offline", "true"))
+    configs.append(("proxy", "http://invalid"))
     # Configure the cache directory
     configs.append(("cache", d.getVar("NPM_CACHE")))
     return configs
