@@ -1,4 +1,4 @@
-From cd980c763f11cfd928255346cc7e86f24add985e Mon Sep 17 00:00:00 2001
+From 8ce7a1ddbc9b7775568a98fcd50e39a01513c902 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 3 Jul 2018 13:59:09 +0100
 Subject: [PATCH] Make CPU family warnings fatal
@@ -12,10 +12,10 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
  2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/mesonbuild/envconfig.py b/mesonbuild/envconfig.py
-index 29d7422..5fb00a4 100644
+index 0f277a7..24578ea 100644
 --- a/mesonbuild/envconfig.py
 +++ b/mesonbuild/envconfig.py
-@@ -190,7 +190,7 @@ class MachineInfo:
+@@ -192,7 +192,7 @@ class MachineInfo:
  
          cpu_family = literal['cpu_family']
          if cpu_family not in known_cpu_families:
@@ -25,15 +25,15 @@ index 29d7422..5fb00a4 100644
          endian = literal['endian']
          if endian not in ('little', 'big'):
 diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index a9bc2b8..b91c8da 100644
+index dc8b14f..3aab71e 100644
 --- a/mesonbuild/environment.py
 +++ b/mesonbuild/environment.py
-@@ -348,9 +348,7 @@ def detect_cpu_family(compilers: CompilersDict) -> str:
+@@ -354,9 +354,7 @@ def detect_cpu_family(compilers: CompilersDict) -> str:
          trial = 'parisc'
  
      if trial not in known_cpu_families:
 -        mlog.warning('Unknown CPU family {!r}, please report this at '
--                     'https://github.com/mesonbuild/meson/issues/new with the'
+-                     'https://github.com/mesonbuild/meson/issues/new with the '
 -                     'output of `uname -a` and `cat /proc/cpuinfo`'.format(trial))
 +        raise EnvironmentException('Unknown CPU family %s, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.' % trial)
  

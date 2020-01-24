@@ -1,4 +1,4 @@
-From baf7b94fec5a31b2d0cb162e43dbd28cc019f38e Mon Sep 17 00:00:00 2001
+From af2554b9b08af973181b4e4181bd1cb936fdbb8f Mon Sep 17 00:00:00 2001
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Date: Wed, 15 Nov 2017 15:05:01 +0100
 Subject: [PATCH] native_bindir
@@ -22,7 +22,7 @@ Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
  2 files changed, 14 insertions(+), 11 deletions(-)
 
 diff --git a/mesonbuild/dependencies/base.py b/mesonbuild/dependencies/base.py
-index 35f0175..b39cba6 100644
+index f17b9f2..b5c9c92 100644
 --- a/mesonbuild/dependencies/base.py
 +++ b/mesonbuild/dependencies/base.py
 @@ -184,7 +184,7 @@ class Dependency:
@@ -43,7 +43,7 @@ index 35f0175..b39cba6 100644
          raise DependencyException('Method "get_pkgconfig_variable()" is '
                                    'invalid for an internal dependency')
  
-@@ -670,15 +670,18 @@ class PkgConfigDependency(ExternalDependency):
+@@ -673,15 +673,18 @@ class PkgConfigDependency(ExternalDependency):
          return s.format(self.__class__.__name__, self.name, self.is_found,
                          self.version_reqs)
  
@@ -65,7 +65,7 @@ index 35f0175..b39cba6 100644
          # Always copy the environment since we're going to modify it
          # with pkg-config variables
          if env is None:
-@@ -698,7 +701,7 @@ class PkgConfigDependency(ExternalDependency):
+@@ -701,7 +704,7 @@ class PkgConfigDependency(ExternalDependency):
          targs = tuple(args)
          cache = PkgConfigDependency.pkgbin_cache
          if (self.pkgbin, targs, fenv) not in cache:
@@ -73,8 +73,8 @@ index 35f0175..b39cba6 100644
 +            cache[(self.pkgbin, targs, fenv)] = self._call_pkgbin_real(args, env, use_native)
          return cache[(self.pkgbin, targs, fenv)]
  
-     def _convert_mingw_paths(self, args):
-@@ -885,7 +888,7 @@ class PkgConfigDependency(ExternalDependency):
+     def _convert_mingw_paths(self, args: List[str]) -> List[str]:
+@@ -907,7 +910,7 @@ class PkgConfigDependency(ExternalDependency):
                                        (self.name, out_raw))
          self.link_args, self.raw_link_args = self._search_libs(out, out_raw)
  
@@ -83,7 +83,7 @@ index 35f0175..b39cba6 100644
          options = ['--variable=' + variable_name, self.name]
  
          if 'define_variable' in kwargs:
-@@ -898,7 +901,7 @@ class PkgConfigDependency(ExternalDependency):
+@@ -920,7 +923,7 @@ class PkgConfigDependency(ExternalDependency):
  
              options = ['--define-variable=' + '='.join(definition)] + options
  
@@ -93,7 +93,7 @@ index 35f0175..b39cba6 100644
          if ret != 0:
              if self.required:
 diff --git a/mesonbuild/dependencies/ui.py b/mesonbuild/dependencies/ui.py
-index 6d784e6..73a9e13 100644
+index bdcc4a7..e2de847 100644
 --- a/mesonbuild/dependencies/ui.py
 +++ b/mesonbuild/dependencies/ui.py
 @@ -330,7 +330,7 @@ class QtBaseDependency(ExternalDependency):
