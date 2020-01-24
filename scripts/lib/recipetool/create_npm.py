@@ -12,7 +12,10 @@ import sys
 import tempfile
 import bb
 from bb.fetch2.npm import NpmEnvironment
+from bb.fetch2.npmsw import foreach_dependencies
 from recipetool.create import RecipeHandler
+from recipetool.create import guess_license
+from recipetool.create import split_pkg_licenses
 
 TINFOIL = None
 
@@ -110,6 +113,36 @@ class NpmRecipeHandler(RecipeHandler):
 
         return os.path.join(srctree, "npm-shrinkwrap.json")
 
+    def _handle_licenses(self, srctree, shrinkwrap_file, dev):
+        """Return the extra license files and the list of packages"""
+        licfiles = []
+        packages = {}
+
+        def _licfiles_append(licfile):
+            """Append 'licfile' to the license files list"""
+            licfilepath = os.path.join(srctree, licfile)
+            licmd5 = bb.utils.md5_file(licfilepath)
+            licfiles.append("file://%s;md5=%s" % (licfile, licmd5))
+
+        # Handle the parent package
+        _licfiles_append("package.json")
+        packages["${PN}"] = ""
+
+        # Handle the dependencies
+        def _handle_dependency(name, params, deptree):
+            suffix = "-".join([self._npm_name(dep) for dep in deptree])
+            destdirs = [os.path.join("node_modules", dep) for dep in deptree]
+            destdir = os.path.join(*destdirs)
+            _licfiles_append(os.path.join(destdir, "package.json"))
+            packages["${PN}-" + suffix] = destdir
+
+        with open(shrinkwrap_file, "r") as f:
+            shrinkwrap = json.load(f)
+
+        foreach_dependencies(shrinkwrap, _handle_dependency, dev)
+
+        return licfiles, packages
+
     def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         """Handle the npm recipe creation"""
 
@@ -198,6 +231,19 @@ class NpmRecipeHandler(RecipeHandler):
 
         (_, newlines) = bb.utils.edit_metadata(lines_before, ["SRC_URI"], _handle_srcuri)
         lines_before[:] = [line.rstrip('\n') for line in newlines]
+
+        # In order to generate correct licence checksums in the recipe the
+        # dependencies have to be fetched again using the npmsw url
+        bb.note("Fetching npm dependencies ...")
+        bb.utils.remove(os.path.join(srctree, "node_modules"), recurse=True)
+        fetcher = bb.fetch2.Fetch([url_local], d)
+        fetcher.download()
+        fetcher.unpack(srctree)
+
+        bb.note("Handling licences ...")
+        (licfiles, packages) = self._handle_licenses(srctree, shrinkwrap_file, dev)
+        extravalues["LIC_FILES_CHKSUM"] = licfiles
+        split_pkg_licenses(guess_license(srctree, d), packages, lines_after, [])
 
         classes.append("npm")
         handled.append("buildsystem")
