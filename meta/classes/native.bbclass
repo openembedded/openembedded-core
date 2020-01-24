@@ -191,7 +191,6 @@ do_addto_recipe_sysroot[deptask] = "do_populate_sysroot"
 inherit nopackages
 
 do_packagedata[stamp-extra-info] = ""
-do_populate_sysroot[stamp-extra-info] = ""
 
 USE_NLS = "no"
 
