@@ -1,4 +1,4 @@
-From ad055d58bd99b80e41face63bf20db3f04afa4e3 Mon Sep 17 00:00:00 2001
+From 4483a83074a340a921e319b88d72166f18e0df0b Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:15:07 +0000
 Subject: [PATCH] ppc/sqrt: Fix undefined reference to `__sqrt_finite'

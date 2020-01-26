@@ -1,4 +1,4 @@
-From 8678c584bca244fe9a3f8926eabb6b6c7e9784f1 Mon Sep 17 00:00:00 2001
+From 2023d88c355b8af6458c8e39ce38b75c1ca4ea2a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:33:03 +0000
 Subject: [PATCH] timezone: re-written tzselect as posix sh

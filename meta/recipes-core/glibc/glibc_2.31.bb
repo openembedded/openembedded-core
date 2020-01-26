@@ -32,16 +32,15 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0019-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0020-eglibc-Cross-building-and-testing-instructions.patch \
            file://0021-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0022-eglibc-Clear-cache-lines-on-ppc8xx.patch \
-           file://0023-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0024-eglibc-Forward-port-cross-locale-generation-support.patch \
-           file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
-           file://0026-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0027-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
-           file://0028-intl-Emit-no-lines-in-bison-generated-files.patch \
-           file://0029-inject-file-assembly-directives.patch \
-           file://0030-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
-           file://0031-Refactor-FORTIFY-in-glibc.patch \
+           file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
+           file://0023-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0024-Define-DUMMY_LOCALE_T-if-not-defined.patch \
+           file://0025-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://0026-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
+           file://0027-intl-Emit-no-lines-in-bison-generated-files.patch \
+           file://0028-inject-file-assembly-directives.patch \
+           file://0029-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           file://0030-Refactor-FORTIFY-in-glibc.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"

@@ -1,4 +1,4 @@
-From 2cc7b79157ce17144791dda1a2e3a6dc4902c736 Mon Sep 17 00:00:00 2001
+From 61b6c9737897c5828ef4b40699ee0a74c570034a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:01:50 +0000
 Subject: [PATCH] fsl e500/e5500/e6500/603e fsqrt implementation

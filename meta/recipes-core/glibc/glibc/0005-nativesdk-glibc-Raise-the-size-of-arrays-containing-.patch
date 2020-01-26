@@ -1,4 +1,4 @@
-From 702d68cbdf405e086f72e2a062127cbea43045ec Mon Sep 17 00:00:00 2001
+From 1b97befbe693eb93a77b6098f6ae1394a53462f4 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:51:38 +0000
 Subject: [PATCH] nativesdk-glibc: Raise the size of arrays containing dl paths

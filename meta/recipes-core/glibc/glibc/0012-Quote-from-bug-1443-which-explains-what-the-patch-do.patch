@@ -1,4 +1,4 @@
-From 0c73e17d5ea7c88247c1bfbb03511b0ccb6ba6b4 Mon Sep 17 00:00:00 2001
+From 8ca8e5cd78cbd37a713e1181f8f6641b57352aa8 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:20:09 +0000
 Subject: [PATCH] Quote from bug 1443 which explains what the patch does :

@@ -1,4 +1,4 @@
-From 02b69fc14ae1d6309e4e17081842b1f89bd40338 Mon Sep 17 00:00:00 2001
+From 25c21857a3fc0eb26831616ba88a696dd31ecba1 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:55:53 +0000
 Subject: [PATCH] eglibc: Resolve __fpscr_values on SH4

@@ -1,4 +1,4 @@
-From eaa1e89df6d760c3719e7060662c60b41ab6e87b Mon Sep 17 00:00:00 2001
+From 66963ad83bdd3b075006ddca9dfe357aed181d6a Mon Sep 17 00:00:00 2001
 From: Martin Jansa <martin.jansa@gmail.com>
 Date: Mon, 17 Dec 2018 21:36:18 +0000
 Subject: [PATCH] locale: prevent maybe-uninitialized errors with -Os [BZ
