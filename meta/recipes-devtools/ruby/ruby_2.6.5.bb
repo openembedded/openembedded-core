@@ -2,6 +2,7 @@ require ruby.inc
 
 SRC_URI += " \
            file://0003-configure.ac-check-finite-isinf-isnan-as-macros-firs.patch \
+           file://remove_has_include_macros.patch \
            file://run-ptest \
            "
 
