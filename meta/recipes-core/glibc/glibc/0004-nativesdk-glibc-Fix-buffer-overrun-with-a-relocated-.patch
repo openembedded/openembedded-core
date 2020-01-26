@@ -1,4 +1,4 @@
-From 3ac58bf1028841cc0a8fa7f258cbf21466740360 Mon Sep 17 00:00:00 2001
+From 7806340c2accc2c51e7e861b618c29fb5609a007 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:50:00 +0000
 Subject: [PATCH] nativesdk-glibc: Fix buffer overrun with a relocated SDK

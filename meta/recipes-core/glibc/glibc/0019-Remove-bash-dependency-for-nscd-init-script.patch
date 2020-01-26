@@ -1,4 +1,4 @@
-From a78f21f2f9b9246cd12b310833313328e8f646ed Mon Sep 17 00:00:00 2001
+From 06da20d9f89907e5f2777537244e6589ca3c9703 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 31 Dec 2015 14:33:02 -0800
 Subject: [PATCH] Remove bash dependency for nscd init script

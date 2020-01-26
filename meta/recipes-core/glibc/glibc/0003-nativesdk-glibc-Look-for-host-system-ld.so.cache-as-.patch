@@ -1,4 +1,4 @@
-From 14ddf13b7fc2e39a1ae657ceb3963e35731e95d0 Mon Sep 17 00:00:00 2001
+From 6987ad183770cb56680ccc4f6ea065a04f31ccb6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:48:24 +0000
 Subject: [PATCH] nativesdk-glibc: Look for host system ld.so.cache as well

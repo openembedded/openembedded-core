@@ -1,4 +1,4 @@
-From e6ff3960d9e4ed6a9a4be70732313127f0e6d0e0 Mon Sep 17 00:00:00 2001
+From 13beb1f428ec06778590bf526d6e641f73d5cf62 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:11:22 +0000
 Subject: [PATCH] readlib: Add OECORE_KNOWN_INTERPRETER_NAMES to known names

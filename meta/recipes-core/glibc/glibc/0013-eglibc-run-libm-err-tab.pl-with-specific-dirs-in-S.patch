@@ -1,4 +1,4 @@
-From 6a1ebbab0643fb2169314bcf1a0850b0f06dd27e Mon Sep 17 00:00:00 2001
+From 21509735678990760d5ebf9d0c65efa4b52b838d Mon Sep 17 00:00:00 2001
 From: Ting Liu <b28495@freescale.com>
 Date: Wed, 19 Dec 2012 04:39:57 -0600
 Subject: [PATCH] eglibc: run libm-err-tab.pl with specific dirs in ${S}

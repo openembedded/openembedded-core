@@ -1,4 +1,4 @@
-From 9b966b758d0c96ef6654251689318614ef10becc Mon Sep 17 00:00:00 2001
+From b52dba15527380cc18635e3696e0ef87efee9a84 Mon Sep 17 00:00:00 2001
 From: Jason Wessel <jason.wessel@windriver.com>
 Date: Sat, 7 Dec 2019 10:01:37 -0800
 Subject: [PATCH] localedef: fix-ups hardlink to make it compile
