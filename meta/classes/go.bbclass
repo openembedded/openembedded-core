@@ -53,6 +53,7 @@ GOTOOLDIR_class-native = "${STAGING_LIBDIR_NATIVE}/go/pkg/tool/${BUILD_GOTUPLE}"
 export GOTOOLDIR
 
 export CGO_ENABLED ?= "1"
+export CGO_ENABLED_riscv64 = "0"
 export CGO_CFLAGS ?= "${CFLAGS}"
 export CGO_CPPFLAGS ?= "${CPPFLAGS}"
 export CGO_CXXFLAGS ?= "${CXXFLAGS}"
