@@ -496,7 +496,7 @@ python () {
         d.appendVarFlag('do_devshell', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
 
     need_machine = d.getVar('COMPATIBLE_MACHINE')
-    if need_machine:
+    if need_machine and not d.getVar('PARSE_ALL_RECIPES', False):
         import re
         compat_machines = (d.getVar('MACHINEOVERRIDES') or "").split(":")
         for m in compat_machines:
@@ -505,7 +505,7 @@ python () {
         else:
             raise bb.parse.SkipRecipe("incompatible with machine %s (not in COMPATIBLE_MACHINE)" % d.getVar('MACHINE'))
 
-    source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', False)
+    source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', False) or d.getVar('PARSE_ALL_RECIPES', False)
     if not source_mirror_fetch:
         need_host = d.getVar('COMPATIBLE_HOST')
         if need_host:
