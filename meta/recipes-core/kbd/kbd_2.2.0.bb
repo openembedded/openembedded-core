@@ -17,6 +17,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://set-proper-path-of-resources.patch', '', d)} \
            file://0001-analyze.l-add-missing-string-format.patch \
            file://0001-Use-DATADIR-and-append-i386-to-fix-libkbdfile-test08.patch \
+           file://fix_cflags.patch \
            "
 
 SRC_URI[md5sum] = "d1d7ae0b5fb875dc082731e09cd0c8bc"
