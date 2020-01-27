@@ -1,0 +1,29 @@
+From 5f0ef3e007ed83c1ce7ae817308e5942decc1230 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 24 Jan 2020 18:03:25 +0100
+Subject: [PATCH] tests/regression: disable the tools/live tests
+
+They have been found to sporadically fail; the issue has been
+reported upstream and they will work to investigate and fix:
+https://bugs.lttng.org/issues/1217
+
+Upstream-Status: Inappropriate [upstream is working on a real fix]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ tests/regression/Makefile.am | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tests/regression/Makefile.am b/tests/regression/Makefile.am
+index 73eb9f7..92fc18f 100644
+--- a/tests/regression/Makefile.am
++++ b/tests/regression/Makefile.am
+@@ -9,9 +9,6 @@ TESTS = tools/filtering/test_invalid_filter \
+ 	tools/filtering/test_valid_filter \
+ 	tools/streaming/test_ust \
+ 	tools/health/test_thread_ok \
+-	tools/live/test_ust \
+-	tools/live/test_ust_tracefile_count \
+-	tools/live/test_lttng_ust \
+ 	tools/tracefile-limits/test_tracefile_count \
+ 	tools/tracefile-limits/test_tracefile_size \
+ 	tools/exclusion/test_exclusion \
