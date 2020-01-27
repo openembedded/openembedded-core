@@ -56,15 +56,14 @@ but their recipes claim otherwise by setting UPSTREAM_VERSION_UNKNOWN. Please re
             return False
 
         def is_maintainer_exception(entry):
-            exceptions = ["systemd", "musl", "libpam", "newlib", "linux-yocto", "opensbi", "linux-dummy",
-                          "mesa-gl", "libgfortran", "volatile-binds", "libgloss", "bsd-headers",
-                          "cve-update-db-native", "libssp-nonshared", "argp-standalone", "fts"]
+            exceptions = ["musl", "newlib", "linux-yocto", "linux-dummy", "mesa-gl", "libgfortran",
+                          "cve-update-db-native"]
             for i in exceptions:
                  if i in entry:
                      return True
             return False
 
-        feature = 'require conf/distro/include/maintainers.inc\nLICENSE_FLAGS_WHITELIST += " commercial"\n'
+        feature = 'require conf/distro/include/maintainers.inc\nLICENSE_FLAGS_WHITELIST += " commercial"\nPARSE_ALL_RECIPES = "1"\n'
         self.write_config(feature)
 
         with bb.tinfoil.Tinfoil() as tinfoil:
