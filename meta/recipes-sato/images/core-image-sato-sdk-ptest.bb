@@ -18,4 +18,5 @@ IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "1124288"
 
 # ptests need more memory than standard to avoid the OOM killer
-QB_MEM = "-m 1024"
+# also lttng-tools needs /tmp that has at least 1G
+QB_MEM = "-m 2048"
