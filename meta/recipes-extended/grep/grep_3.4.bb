@@ -16,6 +16,7 @@ inherit autotools gettext texinfo pkgconfig
 acpaths = "-I ./m4"
 
 do_configure_prepend () {
+	sed -i -e '1s,#!@SHELL@,#!/bin/sh,' ${S}/src/egrep.sh
 	rm -f ${S}/m4/init.m4
 }
 
@@ -41,5 +42,3 @@ ALTERNATIVE_${PN} = "grep egrep fgrep"
 ALTERNATIVE_LINK_NAME[grep] = "${base_bindir}/grep"
 ALTERNATIVE_LINK_NAME[egrep] = "${base_bindir}/egrep"
 ALTERNATIVE_LINK_NAME[fgrep] = "${base_bindir}/fgrep"
-
-export CONFIG_SHELL="/bin/sh"
