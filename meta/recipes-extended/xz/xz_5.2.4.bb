@@ -27,6 +27,8 @@ SRC_URI[md5sum] = "5ace3264bdd00c65eeec2891346f65e6"
 SRC_URI[sha256sum] = "b512f3b726d3b37b6dc4c8570e137b9311e7552e8ccbab4d39d47ce5f4177145"
 UPSTREAM_CHECK_REGEX = "xz-(?P<pver>\d+(\.\d+)+)\.tar"
 
+CACHED_CONFIGUREVARS += "gl_cv_posix_shell=/bin/sh"
+
 inherit autotools gettext
 
 PACKAGES =+ "liblzma"
@@ -39,5 +41,3 @@ ALTERNATIVE_${PN} = "xz xzcat unxz \
                      lzma lzcat unlzma"
 
 BBCLASSEXTEND = "native nativesdk"
-
-export CONFIG_SHELL="/bin/sh"
