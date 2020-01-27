@@ -156,6 +156,10 @@ MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/nspr-config"
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
+# Do not install nspr in usr/include, but in usr/include/nspr, the
+# preferred path upstream.
+EXTRA_OECONF += "--includedir=${includedir}/nspr"
+
 do_compile_prepend() {
 	oe_runmake CROSS_COMPILE=1 CFLAGS="-DXP_UNIX ${BUILD_CFLAGS}" LDFLAGS="" CC="${BUILD_CC}" -C config export
 }

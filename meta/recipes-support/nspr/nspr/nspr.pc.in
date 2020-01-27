@@ -8,4 +8,4 @@ Name: NSPR
 Description: The Netscape Portable Runtime
 Version: NSPRVERSION
 Libs: -L${libdir} -lplds4 -lplc4 -lnspr4 -lpthread -ldl
-Cflags:
+Cflags: -I${includedir}/nspr
