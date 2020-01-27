@@ -6,6 +6,7 @@ SRC_URI = " \
     file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
     file://avoid-including-sys-poll.h-directly.patch \
     file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
+    file://opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
 "
 SRC_URI[md5sum] = "24d4d30ecc67d5cbc77c0475bcea1210"
 SRC_URI[sha256sum] = "56481c95339b8985af13bac19b18bc8da7118c2a7d9440ed70e7dcd799c2adb5"
