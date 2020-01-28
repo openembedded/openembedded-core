@@ -1,0 +1,44 @@
+From 90fdb0ae0418f7907f09b763343a457bdf6855fa Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 27 Jan 2020 17:17:19 -0800
+Subject: [PATCH] tests: Make pthread_detatch call portable across platforms
+
+pthread_t is opaque type therefore we can not apply simple arithmetic to variables of pthread_t type
+this test needs to pass a invalid pthread_t handle, typcasting to uintptr_t works too and is portable
+across glibc and musl
+
+Fixes
+| pth_detached3.c:24:25: error: invalid use of undefined type 'struct __pthread'
+|    24 |   pthread_detach(thread + 8);
+|       |                         ^
+
+Upstream-Status: Submitted [https://sourceforge.net/p/valgrind/mailman/message/36910506/]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ drd/tests/pth_detached3.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drd/tests/pth_detached3.c b/drd/tests/pth_detached3.c
+index c02eef11a..efeb15b72 100644
+--- a/drd/tests/pth_detached3.c
++++ b/drd/tests/pth_detached3.c
+@@ -4,6 +4,7 @@
+ #include <errno.h>
+ #include <pthread.h>
+ #include <stdio.h>
++#include <stdint.h>
+ 
+ static void* thread_func(void* arg)
+ {
+@@ -21,7 +22,7 @@ int main(int argc, char** argv)
+   pthread_detach(thread);
+ 
+   /* Invoke pthread_detach() with an invalid thread ID. */
+-  pthread_detach(thread + 8);
++  pthread_detach((pthread_t)((uintptr_t)thread + 8));
+ 
+   fprintf(stderr, "Finished.\n");
+ 
+-- 
+2.25.0
+
