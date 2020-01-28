@@ -213,6 +213,8 @@ stash_locale_cleanup () {
 	rm -rf $cleanupdir${libdir}/gconv
 	rm -rf $cleanupdir${localedir}
 	rm -rf $cleanupdir${datadir}/locale
+	rmdir --ignore-fail-on-non-empty $cleanupdir${datadir}
+
 	if [ "${libdir}" != "${exec_prefix}/lib" ] && [ "${root_prefix}/lib" != "${exec_prefix}/lib" ]; then
 		if [ -d "$cleanupdir${exec_prefix}/lib" ]; then
 			if [ -z "${ARCH_DYNAMIC_LOADER}" -o \
