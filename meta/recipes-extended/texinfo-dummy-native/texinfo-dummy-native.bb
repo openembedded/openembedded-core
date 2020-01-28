@@ -9,8 +9,6 @@ SRC_URI = "file://template.py file://COPYING"
 
 S = "${WORKDIR}"
 
-NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
-
 inherit native
 
 #

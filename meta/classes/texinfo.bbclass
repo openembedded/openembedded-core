@@ -10,9 +10,7 @@ TEXDEP = "texinfo-native"
 TEXDEP_class-native = "texinfo-dummy-native"
 TEXDEP_class-cross = "texinfo-dummy-native"
 DEPENDS_append = " ${TEXDEP}"
-PATH_prepend_class-native = "${STAGING_BINDIR_NATIVE}/texinfo-dummy-native:"
-PATH_prepend_class-cross = "${STAGING_BINDIR_NATIVE}/texinfo-dummy-native:"
 
 # libtool-cross doesn't inherit cross
 TEXDEP_pn-libtool-cross = "texinfo-dummy-native"
-PATH_prepend_pn-libtool-cross = "${STAGING_BINDIR_NATIVE}/texinfo-dummy-native:"
+
