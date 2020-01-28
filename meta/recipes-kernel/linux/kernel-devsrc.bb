@@ -78,7 +78,7 @@ do_install() {
 	    cp Module.markers $kerneldir/build
 	fi
 
-	cp .config $kerneldir/build
+	cp -a .config $kerneldir/build
 
 	# This scripts copy blow up QA, so for now, we require a more
 	# complex 'make scripts' to restore these, versus copying them
@@ -128,11 +128,12 @@ do_install() {
 
 	    # extra files, just in case
 	    cp -a --parents tools/objtool/* $kerneldir/build/
-	    cp -a --parents tools/lib/str_error_r.c $kerneldir/build/
-	    cp -a --parents tools/lib/string.c $kerneldir/build/
+	    cp -a --parents tools/lib/* $kerneldir/build/
 	    cp -a --parents tools/lib/subcmd/* $kerneldir/build/
 
 	    cp -a --parents tools/include/* $kerneldir/build/
+
+	    cp -a --parents $(find tools/arch/${ARCH}/ -type f) $kerneldir/build/
 	fi
 
 	if [ "${ARCH}" = "arm64" ]; then
@@ -186,6 +187,7 @@ do_install() {
 
 	# required for generate missing syscalls prepare phase
 	cp -a --parents $(find arch/x86 -type f -name "syscall_32.tbl") $kerneldir/build
+	cp -a --parents $(find arch/arm -type f -name "*.tbl") $kerneldir/build
 
 	if [ "${ARCH}" = "x86" ]; then
 	    # files for 'make prepare' to succeed with kernel-devel
