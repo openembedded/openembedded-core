@@ -484,6 +484,9 @@ def OEOuthashBasic(path, sigfile, task, d):
     include_owners = os.environ.get('PSEUDO_DISABLED') == '0'
     if "package_write_" in task or task == "package_qa":
         include_owners = False
+    include_timestamps = False
+    if task == "package":
+        include_timestamps = d.getVar('BUILD_REPRODUCIBLE_BINARIES') == '1'
     extra_content = d.getVar('HASHEQUIV_HASH_VERSION')
 
     try:
@@ -557,6 +560,9 @@ def OEOuthashBasic(path, sigfile, task, d):
                     except KeyError:
                         bb.warn("KeyError in %s" % path)
                         raise
+
+                if include_timestamps:
+                    update_hash(" %10d" % s.st_mtime)
 
                 update_hash(" ")
                 if stat.S_ISBLK(s.st_mode) or stat.S_ISCHR(s.st_mode):
