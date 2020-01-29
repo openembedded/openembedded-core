@@ -67,6 +67,7 @@ do_install_append() {
 		-e 's,@BASE_BINDIR@,${base_bindir},g' \
 		${D}${systemd_unitdir}/system/lighttpd.service
 	#For FHS compliance, create symbolic links to /var/log and /var/tmp for logs and temporary data
+	install -d ${D}${localstatedir}/log ${D}${localstatedir}/tmp
 	ln -sf ${localstatedir}/log ${D}/www/logs
 	ln -sf ${localstatedir}/tmp ${D}/www/var
 }
