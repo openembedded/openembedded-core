@@ -14,8 +14,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
 "
 
-SRC_URI[md5sum] = "b2a032a47b8b89a18485697fa975154f"
-SRC_URI[sha256sum] = "0dd63ffe498168a4aac41d307594c5076ff307aa0ac04b141f8f1cec6594d04a"
+SRC_URI[md5sum] = "3cca4f8cd9d2d1caabd9cc099451bac9"
+SRC_URI[sha256sum] = "972374ca86f65498e23e3259c2ee1b8f9dbeb04d12c2a78c0c9b5d1cb97dfdfc"
 
 inherit autotools
 
