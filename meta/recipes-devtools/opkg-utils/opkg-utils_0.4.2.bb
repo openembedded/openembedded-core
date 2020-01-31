@@ -18,6 +18,8 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 
 RDEPENDS_${PN} += "bash"
 
+inherit perlnative
+
 # For native builds we use the host Python
 PYTHONRDEPS = "python3 python3-shell python3-io python3-math python3-crypt python3-logging python3-fcntl python3-pickle python3-compression python3-stringold"
 PYTHONRDEPS_class-native = ""
