@@ -24,7 +24,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0011-__ieee754_sqrt-f-are-now-inline-functions-and-call-o.patch \
            file://0012-Quote-from-bug-1443-which-explains-what-the-patch-do.patch \
            file://0013-eglibc-run-libm-err-tab.pl-with-specific-dirs-in-S.patch \
-           file://0014-__ieee754_sqrt-f-are-now-inline-functions-and-call-o.patch \
            file://0015-sysdeps-gnu-configure.ac-handle-correctly-libc_cv_ro.patch \
            file://0016-Add-unused-attribute.patch \
            file://0017-yes-within-the-path-sets-wrong-config-variables.patch \
