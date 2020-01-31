@@ -16,11 +16,11 @@ SRCREV = "879c0731fa0725785b9fa4499bbf6aacd04ee4c2"
 
 S = "${WORKDIR}/git"
 
-inherit cmake
+inherit cmake lib_package
 
 EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release"
 
 PROVIDES += "u-boot-fw-utils"
-RPROVIDES_${PN} += "u-boot-fw-utils"
+RPROVIDES_${PN}-bin += "u-boot-fw-utils"
 
 BBCLASSEXTEND = "native"
