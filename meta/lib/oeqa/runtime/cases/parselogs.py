@@ -185,11 +185,6 @@ ignore_errors = {
         'Failed to make EGL context current',
         'glamor initialization failed',
         ] + common_errors,
-    'mpc8315e-rdb' : [
-        'of_irq_parse_pci: failed with',
-        'Fatal server error:',
-        'Server terminated with error',
-        ] + common_errors,
 }
 
 log_locations = ["/var/log/","/var/log/dmesg", "/tmp/dmesg_output.log"]
