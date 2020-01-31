@@ -356,7 +356,7 @@ do_install_ptest () {
 	cp -r ${B}/testsuite ${D}${PTEST_PATH}/
         # These access the internet which is not guaranteed to work on machines running the tests
         rm -rf ${D}${PTEST_PATH}/testsuite/wget
-	cp ${B}/.config      ${D}${PTEST_PATH}/
+	sort ${B}/.config > ${D}${PTEST_PATH}/.config
 	ln -s /bin/busybox   ${D}${PTEST_PATH}/busybox
 }
 
