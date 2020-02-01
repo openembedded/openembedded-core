@@ -22,4 +22,4 @@ ARM_INSTRUCTION_SET_armv6 = "arm"
 #
 COMPATIBLE_HOST_libc-musl_class-target = "null"
 
-PV = "2.30.9000"
+PV = "2.31"
