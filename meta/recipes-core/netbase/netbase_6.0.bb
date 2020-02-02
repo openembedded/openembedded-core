@@ -8,13 +8,13 @@ PE = "1"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/n/${BPN}/${BPN}_${PV}.tar.xz"
 
-SRC_URI[md5sum] = "ca2e339861b64370779341b9696ee3df"
-SRC_URI[sha256sum] = "4a9035eb379c4f7f7d424e5580b219b79566fa366c812542691ae337486cfb8e"
+SRC_URI[md5sum] = "3417b0487161f1a2b070a3308cd7f957"
+SRC_URI[sha256sum] = "692baeb7b76eba5580c7edbc97ce1784a06b5aa4b367c5ed0b39e0ce7a97d594"
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/netbase/"
 do_install () {
 	install -d ${D}/${mandir}/man8 ${D}${sysconfdir}
-	install -m 0644 etc-rpc ${D}${sysconfdir}/rpc
-	install -m 0644 etc-protocols ${D}${sysconfdir}/protocols
-	install -m 0644 etc-services ${D}${sysconfdir}/services
+	install -m 0644 ${S}/etc/rpc ${D}${sysconfdir}/rpc
+	install -m 0644 ${S}/etc/protocols ${D}${sysconfdir}/protocols
+	install -m 0644 ${S}/etc/services ${D}${sysconfdir}/services
 }
