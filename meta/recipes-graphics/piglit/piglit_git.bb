@@ -44,6 +44,7 @@ do_configure_prepend() {
    fi
 }
 
+# Forcibly strip because Piglit is *huge*
 OECMAKE_TARGET_INSTALL = "install/strip"
 
 RDEPENDS_${PN} = "waffle waffle-bin python3 python3-mako python3-json \
@@ -54,6 +55,10 @@ RDEPENDS_${PN} = "waffle waffle-bin python3 python3-mako python3-json \
 	"
 
 INSANE_SKIP_${PN} += "dev-so already-stripped"
+
+# As nothing builds against Piglit we don't need to have anything in the
+# sysroot, especially when this is ~2GB of test suite
+SYSROOT_DIRS_remove = "${libdir}"
 
 # Can't be built with ccache
 CCACHE_DISABLE = "1"
