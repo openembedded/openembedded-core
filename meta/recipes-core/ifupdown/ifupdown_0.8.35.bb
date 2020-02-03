@@ -11,13 +11,15 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https \
            file://99_network \
            file://0001-Define-FNM_EXTMATCH-for-musl.patch \
            file://0001-Makefile-do-not-use-dpkg-for-determining-OS-type.patch \
+           file://run-ptest \
+           ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://tweak-ptest-script.patch', '', d)} \
            "
 SRCREV = "4af76318cfc57f8e4a44d357104188666213bd4b"
 
 S = "${WORKDIR}/git"
 
 
-inherit update-alternatives
+inherit ptest update-alternatives
 
 do_compile () {
 	chmod a+rx *.pl *.sh
@@ -38,6 +40,12 @@ do_install () {
 	install -m 0644 ifup.8 ${D}${mandir}/man8
 	install -m 0644 interfaces.5 ${D}${mandir}/man5
 	cd ${D}${mandir}/man8 && ln -s ifup.8 ifdown.8
+}
+
+do_install_ptest () {
+    install -d ${D}${PTEST_PATH}/tests
+    cp -r ${S}/tests/testbuild-linux ${D}${PTEST_PATH}/tests/
+    cp -r ${S}/tests/linux ${D}${PTEST_PATH}/tests/
 }
 
 ALTERNATIVE_PRIORITY = "100"
