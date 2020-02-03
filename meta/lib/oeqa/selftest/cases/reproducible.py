@@ -174,6 +174,8 @@ class ReproducibleTests(OESelftestTestCase):
         # NOTE: The temp directories from the reproducible build are purposely
         # kept after the build so it can be diffed for debugging.
 
+        fails = []
+
         for c in self.package_classes:
             with self.subTest(package_class=c):
                 package_class = 'package_' + c
@@ -197,6 +199,9 @@ class ReproducibleTests(OESelftestTestCase):
                         self.copy_file(d.test, '/'.join([save_dir, d.test]))
 
                 if result.missing or result.different:
-                    self.fail("The following %s packages are missing or different: %s" %
-                            (c, ' '.join(r.test for r in (result.missing + result.different))))
+                    fails.append("The following %s packages are missing or different: %s" %
+                            (c, '\n'.join(r.test for r in (result.missing + result.different))))
+
+        if fails:
+            self.fail('\n'.join(fails))
 
