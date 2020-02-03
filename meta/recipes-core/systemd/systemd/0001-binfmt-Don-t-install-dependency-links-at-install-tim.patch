@@ -24,10 +24,10 @@ Signed-off-by: Scott Murray <scott.murray@konsulko.com>
  units/systemd-binfmt.service.in         | 4 ++++
  3 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/units/meson.build b/units/meson.build
-index e1ee9f86c3..6bb7771b36 100644
---- a/units/meson.build
-+++ b/units/meson.build
+Index: systemd-stable/units/meson.build
+===================================================================
+--- systemd-stable.orig/units/meson.build
++++ systemd-stable/units/meson.build
 @@ -46,8 +46,7 @@ units = [
          ['poweroff.target',                     '',
           'runlevel0.target'],
@@ -48,10 +48,10 @@ index e1ee9f86c3..6bb7771b36 100644
          ['systemd-bless-boot.service',           'ENABLE_EFI HAVE_BLKID'],
          ['systemd-boot-check-no-failures.service', ''],
          ['systemd-boot-system-token.service',    'ENABLE_EFI',
-diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
-index 30a6bc9918..4231f3b70f 100644
---- a/units/proc-sys-fs-binfmt_misc.automount
-+++ b/units/proc-sys-fs-binfmt_misc.automount
+Index: systemd-stable/units/proc-sys-fs-binfmt_misc.automount
+===================================================================
+--- systemd-stable.orig/units/proc-sys-fs-binfmt_misc.automount
++++ systemd-stable/units/proc-sys-fs-binfmt_misc.automount
 @@ -18,3 +18,6 @@ ConditionPathIsReadWrite=/proc/sys/
  
  [Automount]
@@ -59,19 +59,19 @@ index 30a6bc9918..4231f3b70f 100644
 +
 +[Install]
 +WantedBy=sysinit.target
-diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
-index e940c7c9ad..6be7f5cc9b 100644
---- a/units/systemd-binfmt.service.in
-+++ b/units/systemd-binfmt.service.in
-@@ -14,6 +14,7 @@ Documentation=https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.htm
+Index: systemd-stable/units/systemd-binfmt.service.in
+===================================================================
+--- systemd-stable.orig/units/systemd-binfmt.service.in
++++ systemd-stable/units/systemd-binfmt.service.in
+@@ -14,6 +14,7 @@ Documentation=https://www.kernel.org/doc
  Documentation=https://www.freedesktop.org/wiki/Software/systemd/APIFileSystems
  DefaultDependencies=no
  Conflicts=shutdown.target
 +Wants=proc-sys-fs-binfmt_misc.automount
  After=proc-sys-fs-binfmt_misc.automount
+ After=proc-sys-fs-binfmt_misc.mount
  Before=sysinit.target shutdown.target
- ConditionPathIsReadWrite=/proc/sys/
-@@ -28,3 +29,6 @@ Type=oneshot
+@@ -29,3 +30,6 @@ Type=oneshot
  RemainAfterExit=yes
  ExecStart=@rootlibexecdir@/systemd-binfmt
  TimeoutSec=90s
