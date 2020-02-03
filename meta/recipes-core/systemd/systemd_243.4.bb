@@ -20,10 +20,6 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0002-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
-           file://0004-rules-whitelist-hd-devices.patch \
-           file://0005-rules-watch-metadata-changes-in-ide-devices.patch \
-           file://0001-unit-file.c-consider-symlink-on-filesystems-like-NFS.patch \
-           file://0001-seccomp-more-comprehensive-protection-against-libsec.patch \
            file://99-default.preset \
            "
 
