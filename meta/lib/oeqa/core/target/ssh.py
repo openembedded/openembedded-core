@@ -247,7 +247,7 @@ def SSHCall(command, logger, timeout=None, **opts):
         "stdin": None,
         "shell": False,
         "bufsize": -1,
-        "preexec_fn": os.setsid,
+        "start_new_session": True,
     }
     options.update(opts)
     output = ''
