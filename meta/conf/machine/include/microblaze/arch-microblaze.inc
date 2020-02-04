@@ -4,6 +4,11 @@
 TUNEVALID[microblaze] = "MicroBlaze"
 MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES", "microblaze", "microblaze:", "", d)}"
 
+# 64-bit
+TUNEVALID[64-bit] = "64-bit MicroBlaze"
+TUNECONFLICTS[64-bit] = "v8.00 v8.10 v8.20 v8.30 v8.40 v8.50 v9.0 v9.1 v9.2 v9.3 v9.4 v9.5 v9.6 v10.0"
+MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES", "64-bit", "microblaze64:", "", d)}"
+
 # Endian
 TUNEVALID[bigendian] = "Use Microblaze Big Endian"
 TUNECONFLICTS[bigendian] += "v10.0"
@@ -26,6 +31,7 @@ TUNECONFLICTS[frequency-optimized] += "v8.00 v8.10 v8.20 v8.30 v8.40 v8.50 v9.0 
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "barrel-shift", "-mxl-barrel-shift", "-mno-xl-barrel-shift", d)}"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "pattern-compare", "-mxl-pattern-compare", "-mno-xl-pattern-compare", d)}"
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "frequency-optimized", "-mxl-frequency", "", d)}"
+TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "64-bit", "-m64", "", d)}"
 
 # Disable reorder for v8.30 if pattern-compare is not enabled
 TUNE_CCARGS += "${@bb.utils.contains("TUNE_FEATURES", "reorder", \
@@ -48,6 +54,9 @@ require conf/machine/include/microblaze/feature-microblaze-math.inc
 # Architecture name, either 'microblaze' or 'microblazeel' depending on endianess
 TUNE_ARCH = "microblaze${@bb.utils.contains("TUNE_FEATURES", "bigendian", "", "el", d)}"
 
+# Add 64-bit to the PKGARCH if enabled.
+MBPKGARCH_SIZE = "${@bb.utils.contains("TUNE_FEATURES", "64-bit", "64", "", d)}"
+
 # Package Architecture formatting
-TUNE_PKGARCH = "microblaze${MBPKGARCH_ENDIAN}${MBPKGARCH_VERSION}${MBPKGARCH_TUNE}${MBPKGARCH_MATH}"
+TUNE_PKGARCH = "microblaze${MBPKGARCH_SIZE}${MBPKGARCH_ENDIAN}${MBPKGARCH_VERSION}${MBPKGARCH_TUNE}${MBPKGARCH_MATH}"
 
