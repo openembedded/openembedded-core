@@ -15,6 +15,7 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-OptionsGTK.cmake-drop-the-hardcoded-introspection-gt.patch \
            file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
            file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
+           file://0001-Enable-THREADS_PREFER_PTHREAD_FLAG.patch \
            file://x32_support.patch \
            file://cross-compile.patch \
            file://0001-Fix-build-with-musl.patch \
