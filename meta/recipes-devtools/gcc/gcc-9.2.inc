@@ -68,6 +68,7 @@ SRC_URI = "\
 	   file://CVE-2019-15847_1.patch \
 	   file://CVE-2019-15847_2.patch \
 	   file://CVE-2019-15847_3.patch \
+           file://re-PR-target-91102-aarch64-ICE-on-Linux-kernel-with-.patch \
 "
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 SRC_URI[md5sum] = "3818ad8600447f05349098232c2ddc78"
