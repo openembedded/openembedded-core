@@ -22,7 +22,6 @@ def machine_dict(d):
                         "mips":       ( 8,     0,    0,          False,         32),
                         "mipsel":     ( 8,     0,    0,          True,          32),
                         "microblaze":  (189,   0,    0,          False,         32),
-                        "microblazeeb":(189,   0,    0,          False,         32),
                         "microblazeel":(189,   0,    0,          True,          32),
                         "powerpc":    (20,     0,    0,          False,         32),
                         "riscv32":    (243,    0,    0,          True,          32),
@@ -60,7 +59,6 @@ def machine_dict(d):
                         "sh4":        (42,     0,    0,          True,          32),
                         "sparc":      ( 2,     0,    0,          False,         32),
                         "microblaze":  (189,   0,    0,          False,         32),
-                        "microblazeeb":(189,   0,    0,          False,         32),
                         "microblazeel":(189,   0,    0,          True,          32),
                       },
             "linux-musl" : { 
@@ -81,7 +79,6 @@ def machine_dict(d):
                         "mips64":     (   8,     0,    0,          False,         64),
                         "mips64el":   (   8,     0,    0,          True,          64),
                         "microblaze":  (189,     0,    0,          False,         32),
-                        "microblazeeb":(189,     0,    0,          False,         32),
                         "microblazeel":(189,     0,    0,          True,          32),
                         "riscv32":    (243,      0,    0,          True,          32),
                         "riscv64":    (243,      0,    0,          True,          64),

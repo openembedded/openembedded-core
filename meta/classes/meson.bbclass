@@ -57,7 +57,7 @@ def meson_cpu_family(var, d):
         return 'mips64'
     elif re.match(r"i[3-6]86", arch):
         return "x86"
-    elif arch == "microblazeel" or arch == "microblazeeb":
+    elif arch == "microblazeel":
         return "microblaze"
     else:
         return arch
