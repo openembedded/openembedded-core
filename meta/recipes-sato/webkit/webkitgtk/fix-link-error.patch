@@ -1,0 +1,45 @@
+webkitgtk: fix an occasional link error
+
+Part of ae465a4e...  Changelog is not included in the source tarball.
+
+Upstream-Status:  backport [git://git.webkit.org/WebKit.git]
+
+commit ae465a4e3b1498b6c4038fc7e596e0e3662d116f
+Author: Hironori.Fujii@sony.com <Hironori.Fujii@sony.com@268f45cc-cd09-0410-ab3c-d52691b4dbfc>
+Date:   Fri Jun 28 07:38:09 2019 +0000
+
+    [Win] unresolved external symbol "JSC::JSObject::didBecomePrototype(void)" referenced in function "JSC::Structure::create(...)"
+    https://bugs.webkit.org/show_bug.cgi?id=199312
+    
+    Reviewed by Keith Miller.
+    
+    WinCairo port, clang-cl Release builds reported a following linkage error:
+    
+    > WebCore.lib(UnifiedSource-4babe430-10.cpp.obj) : error LNK2019: unresolved external symbol "public: void __cdecl JSC::JSObject::didBecomePrototype(void)" (?didBecomePrototype@JSObject@JSC@@QEAAXXZ) referenced in function "public: static class JSC::Structure * __cdecl JSC::Structure::create(class JSC::VM &,class JSC::JSGlobalObject *,class JSC::JSValue,class JSC::TypeInfo const &,struct JSC::ClassInfo const *,unsigned char,unsigned int)" (?create@Structure@JSC@@SAPEAV12@AEAVVM@2@PEAVJSGlobalObject@2@VJSValue@2@AEBVTypeInfo@2@PEBUClassInfo@2@EI@Z)
+    
+    No new tests because there is no behavior change.
+    
+    * Modules/indexeddb/server/SQLiteIDBBackingStore.cpp: Include <JavaScriptCore/JSCInlines.h>,
+    and do not include headers which is included by it.
+    
+    git-svn-id: http://svn.webkit.org/repository/webkit/trunk@246922 268f45cc-cd09-0410-ab3c-d52691b4dbfc
+
+[ modification of Changelog deleted ]
+
+diff --git a/Source/WebCore/Modules/indexeddb/server/SQLiteIDBBackingStore.cpp b/Source/WebCore/Modules/indexeddb/server/SQLiteIDBBackingStore.cpp
+index d1b047c..0899a9a 100644
+--- a/Source/WebCore/Modules/indexeddb/server/SQLiteIDBBackingStore.cpp
++++ b/Source/WebCore/Modules/indexeddb/server/SQLiteIDBBackingStore.cpp
+@@ -49,11 +49,8 @@
+ #include "SQLiteTransaction.h"
+ #include "ThreadSafeDataBuffer.h"
+ #include <JavaScriptCore/AuxiliaryBarrierInlines.h>
+-#include <JavaScriptCore/HeapInlines.h>
+-#include <JavaScriptCore/JSCJSValueInlines.h>
+-#include <JavaScriptCore/JSGlobalObject.h>
++#include <JavaScriptCore/JSCInlines.h>
+ #include <JavaScriptCore/StrongInlines.h>
+-#include <JavaScriptCore/StructureInlines.h>
+ #include <wtf/FileSystem.h>
+ #include <wtf/NeverDestroyed.h>
+ #include <wtf/text/StringConcatenateNumbers.h>
