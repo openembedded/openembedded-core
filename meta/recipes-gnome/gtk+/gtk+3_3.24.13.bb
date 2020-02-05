@@ -7,6 +7,7 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            file://0002-Do-not-try-to-initialize-GL-without-libGL.patch \
            file://0003-Add-disable-opengl-configure-option.patch \
            file://link_fribidi.patch \
+           file://sort-resources.patch \
           "
 SRC_URI[md5sum] = "f65515e7bfa2199bd2188e871d69c686"
 SRC_URI[sha256sum] = "4c775c38cf1e3c534ef0ca52ca6c7a890fe169981af66141c713e054e68930a9"
