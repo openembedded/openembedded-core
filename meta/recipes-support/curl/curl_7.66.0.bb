@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=be5d9e1419c4363f4b32037a2d3b7ffa"
 
 SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
+           file://CVE-2019-15601.patch \
 "
 
 SRC_URI[md5sum] = "c238aa394e3aa47ca4fcb0491774149f"
