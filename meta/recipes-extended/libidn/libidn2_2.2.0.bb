@@ -22,7 +22,8 @@ EXTRA_OECONF += "--disable-rpath \
                  "
 
 do_install_append() {
-	sed -i -e 's|-L${STAGING_LIBDIR}||' ${D}${libdir}/pkgconfig/libidn2.pc
+	# Need to remove any duplicate whitespace too for reproducibility
+	sed -i -e 's|-L${STAGING_LIBDIR}||' -e 's/  */ /g' ${D}${libdir}/pkgconfig/libidn2.pc
 }
 
 LICENSE_${PN} = "(GPLv2+ | LGPLv3)"
