@@ -21,6 +21,7 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://fix-setgroup.patch \
            file://0001-enc2xs-Add-environment-variable-to-suppress-comments.patch \
            file://0002-Constant-Fix-up-shebang.patch \
+           file://determinism.patch  \
            "
 SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
