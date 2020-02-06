@@ -26,6 +26,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://0003-GCM-move-look-up-table-to-.data-section-and-unshare-.patch \
            file://0001-ecc-Add-mitigation-against-timing-attack.patch \
            file://0001-dsa-ecdsa-Fix-use-of-nonce-use-larger-one.patch \
+           file://determinism.patch \
 "
 SRC_URI[md5sum] = "fbfdaebbbc6d7e5fbbf6ffdb3e139573"
 SRC_URI[sha256sum] = "f638143a0672628fde0cad745e9b14deb85dffb175709cacc1f4fe24b93f2227"
