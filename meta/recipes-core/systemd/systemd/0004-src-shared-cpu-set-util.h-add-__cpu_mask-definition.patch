@@ -1,4 +1,7 @@
-Handle __cpu_mask usage
+From 6883ffc99168056101c667c6421f8353d5ad675a Mon Sep 17 00:00:00 2001
+From: Scott Murray <scott.murray@konsulko.com>
+Date: Fri, 13 Sep 2019 19:26:27 -0400
+Subject: [PATCH] Handle __cpu_mask usage
 
 Fixes errors:
 
@@ -15,13 +18,14 @@ add a typedef to cpu-set-util.h defining __cpu_mask appropriately.
 Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+
 ---
  src/shared/cpu-set-util.h | 2 ++
  src/test/test-sizeof.c    | 2 +-
  2 files changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/shared/cpu-set-util.h b/src/shared/cpu-set-util.h
-index 27812dfd59..f698f9df83 100644
+index 27812dfd5923..0ab40731ea93 100644
 --- a/src/shared/cpu-set-util.h
 +++ b/src/shared/cpu-set-util.h
 @@ -6,6 +6,8 @@
@@ -34,7 +38,7 @@ index 27812dfd59..f698f9df83 100644
  typedef struct CPUSet {
          cpu_set_t *set;
 diff --git a/src/test/test-sizeof.c b/src/test/test-sizeof.c
-index a710db5370..d1601ad929 100644
+index a710db5370b8..d1601ad9292d 100644
 --- a/src/test/test-sizeof.c
 +++ b/src/test/test-sizeof.c
 @@ -1,6 +1,5 @@
