@@ -14,11 +14,10 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "http://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-${PV}.tar.xz \
            file://sysctl.conf \
-           file://0001-Fix-out-of-tree-builds.patch \
            "
 
-SRC_URI[md5sum] = "2b0717a7cb474b3d6dfdeedfbad2eccc"
-SRC_URI[sha256sum] = "10bd744ffcb3de2d591d2f6acf1a54a7ba070fdcc432a855931a5057149f0465"
+SRC_URI[md5sum] = "e8dc8455e573bdc40b8381d572bbb89b"
+SRC_URI[sha256sum] = "925eacd65dedcf9c98eb94e8978bbfb63f5de37294cc1047d81462ed477a20af"
 
 S = "${WORKDIR}/procps-ng-${PV}"
 
