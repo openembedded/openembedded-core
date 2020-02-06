@@ -34,7 +34,8 @@ PACKAGECONFIG[docs] = "-DBUILD_HTML_MANS=true -DBUILD_MANS=true,-DBUILD_HTML_MAN
 
 inherit meson update-alternatives
 
-EXTRA_OEMESON += "--prefix=${root_prefix}/"
+# Have to disable setcap/suid as its not deterministic
+EXTRA_OEMESON += "--prefix=${root_prefix}/ -DNO_SETCAP_OR_SUID=true"
 
 ALTERNATIVE_PRIORITY = "100"
 
