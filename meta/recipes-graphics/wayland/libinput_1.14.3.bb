@@ -14,6 +14,7 @@ DEPENDS = "libevdev udev mtdev"
 
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
            file://0001-adjust-for-64bit-time_t-for-32bit-architectures.patch \
+           file://determinism.patch \
 "
 SRC_URI[md5sum] = "d052faa64eb6d2e649e582cc0fcf6e32"
 SRC_URI[sha256sum] = "0feb3a0589709cc1032893bfaf4c49150d5360bd9782bec888f9e4dd9044c5b7"
