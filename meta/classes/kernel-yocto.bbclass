@@ -359,8 +359,10 @@ do_kernel_configme() {
 		bbfatal_log "Could not configure ${KMACHINE}-${LINUX_KERNEL_TYPE}"
 	fi
 
-	echo "# Global settings from linux recipe" >> ${B}/.config
-	echo "CONFIG_LOCALVERSION="\"${LINUX_VERSION_EXTENSION}\" >> ${B}/.config
+	if [ ! -z "${LINUX_VERSION_EXTENSION}" ]; then
+		echo "# Global settings from linux recipe" >> ${B}/.config
+		echo "CONFIG_LOCALVERSION="\"${LINUX_VERSION_EXTENSION}\" >> ${B}/.config
+	fi
 }
 
 addtask kernel_configme before do_configure after do_patch
