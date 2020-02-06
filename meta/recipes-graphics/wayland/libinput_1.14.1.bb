@@ -7,7 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1f2ea9ebff3a2c6d458faf58492efb63"
 
 DEPENDS = "libevdev udev mtdev"
 
-SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz"
+SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
+           file://determinism.patch \
+"
 SRC_URI[md5sum] = "da29a704dc6f7ea2d5aac754db046340"
 SRC_URI[sha256sum] = "e333a3242835c019ca37d2cef8b51a87d3138eb47444119c0153dc7a8656ee70"
 
