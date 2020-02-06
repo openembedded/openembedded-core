@@ -99,13 +99,6 @@ do_kernel_metadata() {
 		fi
 	fi
 
-	machine_branch="${@ get_machine_branch(d, "${KBRANCH}" )}"
-	machine_srcrev="${SRCREV_machine}"
-	if [ -z "${machine_srcrev}" ]; then
-		# fallback to SRCREV if a non machine_meta tree is being built
-		machine_srcrev="${SRCREV}"
-	fi
-
 	# In a similar manner to the kernel itself:
 	#
 	#   defconfig: $(obj)/conf
