@@ -9,13 +9,11 @@ SRC_URI += "file://0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.pat
             file://0009-remove-dhclient-script-bash-dependency.patch \
             file://0012-dhcp-correct-the-intention-for-xml2-lib-search.patch \
             file://0013-fixup_use_libbind.patch \
-            file://0001-master-Added-includes-of-new-BIND9-compatibility-hea.patch \
-            file://0001-Fix-a-NSUPDATE-compiling-issue.patch \
             file://0001-workaround-busybox-limitation-in-linux-dhclient-script.patch \
 "
 
-SRC_URI[md5sum] = "18c7f4dcbb0a63df25098216d47b1ede"
-SRC_URI[sha256sum] = "2a22508922ab367b4af4664a0472dc220cc9603482cf3c16d9aff14f3a76b608"
+SRC_URI[md5sum] = "2afdaf8498dc1edaf3012efdd589b3e1"
+SRC_URI[sha256sum] = "1a7ccd64a16e5e68f7b5e0f527fd07240a2892ea53fe245620f4f5f607004521"
 
 LDFLAGS_append = " -pthread"
 
