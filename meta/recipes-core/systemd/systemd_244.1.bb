@@ -18,7 +18,6 @@ SRC_URI += "file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
-           file://0002-use-lnr-wrapper-instead-of-looking-for-relative-opti.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://99-default.preset \
            "
@@ -591,6 +590,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/ata_id \
                ${rootlibexecdir}/udev/cdrom_id \
                ${rootlibexecdir}/udev/collect \
+               ${rootlibexecdir}/udev/fido_id \
                ${rootlibexecdir}/udev/findkeyboards \
                ${rootlibexecdir}/udev/keyboard-force-release.sh \
                ${rootlibexecdir}/udev/keymap \

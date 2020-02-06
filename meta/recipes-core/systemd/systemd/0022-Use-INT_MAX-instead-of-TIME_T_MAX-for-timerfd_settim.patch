@@ -1,4 +1,4 @@
-From 6bcf562bd1e541c7aa46923d9a14201c7f785261 Mon Sep 17 00:00:00 2001
+From 3cc30186f9d9adb565dc29f2d4e68889974676ae Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 16 Dec 2019 12:49:07 -0800
 Subject: [PATCH] Use INT_MAX instead of TIME_T_MAX for timerfd_settime timeout
@@ -11,15 +11,16 @@ purposes
 Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
+
 ---
  src/basic/time-util.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/basic/time-util.c b/src/basic/time-util.c
-index bfe2c60da1..8cf682b36a 100644
+index d7ef30d2fe52..4d3219f114b5 100644
 --- a/src/basic/time-util.c
 +++ b/src/basic/time-util.c
-@@ -1486,7 +1486,7 @@ int time_change_fd(void) {
+@@ -1487,7 +1487,7 @@ int time_change_fd(void) {
  
          /* We only care for the cancellation event, hence we set the timeout to the latest possible value. */
          static const struct itimerspec its = {
@@ -28,6 +29,3 @@ index bfe2c60da1..8cf682b36a 100644
          };
  
          _cleanup_close_ int fd;
--- 
-2.24.1
-

@@ -1,8 +1,8 @@
-From 98254e4798e79d52ac6b562616cd244120f6e239 Mon Sep 17 00:00:00 2001
+From c73a87871df31b4f8d96c9d443759c6f702935f6 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Thu, 21 Feb 2019 16:23:24 +0800
-Subject: [PATCH 1/5] binfmt: Don't install dependency links at install time 
- for the binfmt services
+Subject: [PATCH] binfmt: Don't install dependency links at install time for
+ the binfmt services
 
 use [Install] blocks so that they get created when the service is enabled
 like a traditional service.
@@ -18,16 +18,17 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 [rebased for systemd 243]
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+
 ---
  units/meson.build                       | 6 ++----
  units/proc-sys-fs-binfmt_misc.automount | 3 +++
  units/systemd-binfmt.service.in         | 4 ++++
  3 files changed, 9 insertions(+), 4 deletions(-)
 
-Index: systemd-stable/units/meson.build
-===================================================================
---- systemd-stable.orig/units/meson.build
-+++ systemd-stable/units/meson.build
+diff --git a/units/meson.build b/units/meson.build
+index 6a3a0d0dea22..bbb1b78618c3 100644
+--- a/units/meson.build
++++ b/units/meson.build
 @@ -46,8 +46,7 @@ units = [
          ['poweroff.target',                     '',
           'runlevel0.target'],
@@ -48,10 +49,10 @@ Index: systemd-stable/units/meson.build
          ['systemd-bless-boot.service',           'ENABLE_EFI HAVE_BLKID'],
          ['systemd-boot-check-no-failures.service', ''],
          ['systemd-boot-system-token.service',    'ENABLE_EFI',
-Index: systemd-stable/units/proc-sys-fs-binfmt_misc.automount
-===================================================================
---- systemd-stable.orig/units/proc-sys-fs-binfmt_misc.automount
-+++ systemd-stable/units/proc-sys-fs-binfmt_misc.automount
+diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
+index 30a6bc991844..4231f3b70fe9 100644
+--- a/units/proc-sys-fs-binfmt_misc.automount
++++ b/units/proc-sys-fs-binfmt_misc.automount
 @@ -18,3 +18,6 @@ ConditionPathIsReadWrite=/proc/sys/
  
  [Automount]
@@ -59,11 +60,11 @@ Index: systemd-stable/units/proc-sys-fs-binfmt_misc.automount
 +
 +[Install]
 +WantedBy=sysinit.target
-Index: systemd-stable/units/systemd-binfmt.service.in
-===================================================================
---- systemd-stable.orig/units/systemd-binfmt.service.in
-+++ systemd-stable/units/systemd-binfmt.service.in
-@@ -14,6 +14,7 @@ Documentation=https://www.kernel.org/doc
+diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
+index 0c0f26451b67..763c4c466c16 100644
+--- a/units/systemd-binfmt.service.in
++++ b/units/systemd-binfmt.service.in
+@@ -14,6 +14,7 @@ Documentation=https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.htm
  Documentation=https://www.freedesktop.org/wiki/Software/systemd/APIFileSystems
  DefaultDependencies=no
  Conflicts=shutdown.target
