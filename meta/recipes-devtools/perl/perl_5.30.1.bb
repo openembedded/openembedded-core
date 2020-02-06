@@ -144,6 +144,9 @@ do_install_append_class-target() {
     # This is used to substitute target configuration when running native perl via perl-configpm-switch.patch
     ln -s Config_heavy.pl ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config_heavy-target.pl
 
+    # This contains host-specific information used for building miniperl (a helper executable built with host compiler)
+    # and therefore isn't reproducible. I believe the file isn't actually needed on target.
+    rm ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/xconfig.h
 }
 
 do_install_append_class-nativesdk() {
