@@ -1051,7 +1051,7 @@ python split_and_strip_files () {
 
         if debugsrcdir and not targetos.startswith("mingw"):
             for file in staticlibs:
-                results.extend(source_info(file, d, fatal=False))
+                results.append( (file, source_info(file, d, fatal=False)) )
 
         sources = set()
         for r in results:
