@@ -955,12 +955,6 @@ python split_and_strip_files () {
         for root, dirs, files in cpath.walk(dvar):
             for f in files:
                 file = os.path.join(root, f)
-                if file.endswith(".ko") and file.find("/lib/modules/") != -1:
-                    kernmods.append(file)
-                    continue
-                if oe.package.is_static_lib(file):
-                    staticlibs.append(file)
-                    continue
 
                 # Skip debug files
                 if debugappend and file.endswith(debugappend):
@@ -969,6 +963,13 @@ python split_and_strip_files () {
                     continue
 
                 if file in skipfiles:
+                    continue
+
+                if file.endswith(".ko") and file.find("/lib/modules/") != -1:
+                    kernmods.append(file)
+                    continue
+                if oe.package.is_static_lib(file):
+                    staticlibs.append(file)
                     continue
 
                 try:
