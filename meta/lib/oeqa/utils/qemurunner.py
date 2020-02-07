@@ -406,7 +406,10 @@ class QemuRunner:
         self.qemupid = None
         self.ip = None
         if os.path.exists(self.qemu_pidfile):
-            os.remove(self.qemu_pidfile)
+            try:
+                os.remove(self.qemu_pidfile)
+            except FileNotFoundError as e:
+                self.logger.warning('qemu pidfile is no longer present')
         if self.monitorpipe:
             self.monitorpipe.close()
 
