@@ -108,7 +108,6 @@ RDEPENDS_packagegroup-self-hosted-debug = " \
 
 RDEPENDS_packagegroup-self-hosted-extended = "\
     bzip2 \
-    chkconfig \
     chrpath \
     cpio \
     curl \
