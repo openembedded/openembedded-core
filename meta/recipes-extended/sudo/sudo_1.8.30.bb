@@ -13,8 +13,15 @@ SRC_URI[sha256sum] = "a35ad3ddc7465703e04190d3ff0b8d78ded9246749becf9a014dcb9c31
 DEPENDS += " virtual/crypt ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
 
+CACHED_CONFIGUREVARS = " \
+        ac_cv_type_rsize_t=no \
+        ac_cv_path_MVPROG=${base_bindir}/mv \
+        ac_cv_path_BSHELLPROG=${base_bindir}/sh \
+        ac_cv_path_SENDMAILPROG=${sbindir}/sendmail \
+        ac_cv_path_VIPROG=${base_bindir}/vi \
+        "
+
 EXTRA_OECONF += " \
-             ac_cv_type_rsize_t=no \
              ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '--with-pam', '--without-pam', d)} \
              ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-tmpfiles.d=${nonarch_libdir}/tmpfiles.d', '--disable-tmpfiles.d', d)} \
              --with-vardir=/var/lib/sudo \
