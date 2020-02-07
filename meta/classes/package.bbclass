@@ -416,6 +416,49 @@ def splitdebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, 
 
     return (file, sources)
 
+def splitstaticdebuginfo(file, dvar, debugstaticdir, debugstaticlibdir, debugstaticappend, debugsrcdir, d):
+    # Unlike the function above, there is no way to split a static library
+    # two components.  So to get similar results we will copy the unmodified
+    # static library (containing the debug symbols) into a new directory.
+    # We will then strip (preserving symbols) the static library in the
+    # typical location.
+    #
+    # return a mapping of files:debugsources
+
+    import stat
+    import shutil
+
+    src = file[len(dvar):]
+    dest = debugstaticlibdir + os.path.dirname(src) + debugstaticdir + "/" + os.path.basename(src) + debugstaticappend
+    debugfile = dvar + dest
+    sources = []
+
+    # Copy the file...
+    bb.utils.mkdirhier(os.path.dirname(debugfile))
+    #bb.note("Copy %s -> %s" % (file, debugfile))
+
+    dvar = d.getVar('PKGD')
+
+    newmode = None
+    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
+        origmode = os.stat(file)[stat.ST_MODE]
+        newmode = origmode | stat.S_IWRITE | stat.S_IREAD
+        os.chmod(file, newmode)
+
+    # We need to extract the debug src information here...
+    if debugsrcdir:
+        sources = source_info(file, d)
+
+    bb.utils.mkdirhier(os.path.dirname(debugfile))
+
+    # Copy the unmodified item to the debug directory
+    shutil.copy2(file, debugfile)
+
+    if newmode:
+        os.chmod(file, origmode)
+
+    return (file, sources)
+
 def copydebugsources(debugsrcdir, sources, d):
     # The debug src information written out to sourcefile is further processed
     # and copied to the destination here.
@@ -916,25 +959,37 @@ python split_and_strip_files () {
     if d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-file-directory':
         # Single debug-file-directory style debug info
         debugappend = ".debug"
+        debugstaticappend = ""
         debugdir = ""
+        debugstaticdir = ""
         debuglibdir = "/usr/lib/debug"
+        debugstaticlibdir = "/usr/lib/debug-static"
         debugsrcdir = "/usr/src/debug"
     elif d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-without-src':
         # Original OE-core, a.k.a. ".debug", style debug info, but without sources in /usr/src/debug
         debugappend = ""
+        debugstaticappend = ""
         debugdir = "/.debug"
+        debugstaticdir = "/.debug-static"
         debuglibdir = ""
+        debugstaticlibdir = ""
         debugsrcdir = ""
     elif d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-with-srcpkg':
         debugappend = ""
+        debugstaticappend = ""
         debugdir = "/.debug"
+        debugstaticdir = "/.debug-static"
         debuglibdir = ""
+        debugstaticlibdir = ""
         debugsrcdir = "/usr/src/debug"
     else:
         # Original OE-core, a.k.a. ".debug", style debug info
         debugappend = ""
+        debugstaticappend = ""
         debugdir = "/.debug"
+        debugstaticdir = "/.debug-static"
         debuglibdir = ""
+        debugstaticlibdir = ""
         debugsrcdir = "/usr/src/debug"
 
     #
@@ -1051,8 +1106,11 @@ python split_and_strip_files () {
         results = oe.utils.multiprocess_launch(splitdebuginfo, list(elffiles), d, extraargs=(dvar, debugdir, debuglibdir, debugappend, debugsrcdir, d))
 
         if debugsrcdir and not targetos.startswith("mingw"):
-            for file in staticlibs:
-                results.append( (file, source_info(file, d, fatal=False)) )
+            if (d.getVar('PACKAGE_DEBUG_STATIC_SPLIT') == '1'):
+                results = oe.utils.multiprocess_launch(splitstaticdebuginfo, staticlibs, d, extraargs=(dvar, debugstaticdir, debugstaticlibdir, debugstaticappend, debugsrcdir, d))
+            else:
+                for file in staticlibs:
+                    results.append( (file,source_info(file, d)) )
 
         sources = set()
         for r in results:
@@ -1121,6 +1179,9 @@ python split_and_strip_files () {
             sfiles.append((file, elf_file, strip))
         for f in kernmods:
             sfiles.append((f, 16, strip))
+        if (d.getVar('PACKAGE_STRIP_STATIC') == '1' or d.getVar('PACKAGE_DEBUG_STATIC_SPLIT') == '1'):
+            for f in staticlibs:
+                sfiles.append((f, 16, strip))
 
         oe.utils.multiprocess_launch(oe.package.runstrip, sfiles, d)
 
@@ -1188,7 +1249,7 @@ python populate_packages () {
             dir = os.sep
         for f in (files + dirs):
             path = "." + os.path.join(dir, f)
-            if "/.debug/" in path or path.endswith("/.debug"):
+            if "/.debug/" in path or "/.debug-static/" in path or path.endswith("/.debug"):
                 debug.append(path)
 
     for pkg in packages:
