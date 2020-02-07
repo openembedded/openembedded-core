@@ -30,6 +30,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-setup.py-pass-missing-libraries-to-Extension-for-mul.patch \
            file://0001-Makefile-do-not-compile-.pyc-in-parallel.patch \
            file://0001-configure.ac-fix-LIBPL.patch \
+           file://0001-python3-Do-not-hardcode-lib-for-distutils.patch \
            "
 
 SRC_URI_append_class-native = " \
