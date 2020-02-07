@@ -31,6 +31,7 @@ B = "${S}/src"
 
 inherit update-alternatives distro_features_check
 DEPENDS_append = " update-rc.d-native base-passwd virtual/crypt"
+do_package_setscene[depends] = "${MLPREFIX}base-passwd:do_populate_sysroot"
 
 REQUIRED_DISTRO_FEATURES = "sysvinit"
 
