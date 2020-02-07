@@ -1,12 +1,13 @@
 require xserver-xorg.inc
 
 SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.patch \
-            file://pkgconfig.patch \
-            file://0001-test-xtest-Initialize-array-with-braces.patch \
-            file://sdksyms-no-build-path.patch \
-            "
-SRC_URI[md5sum] = "a98170084f2c8fed480d2ff601f8a14b"
-SRC_URI[sha256sum] = "6316146304e6e8a36d5904987ae2917b5d5b195dc9fc63d67f7aca137e5a51d1"
+           file://pkgconfig.patch \
+           file://0001-test-xtest-Initialize-array-with-braces.patch \
+           file://sdksyms-no-build-path.patch \
+           file://0001-drmmode_display.c-add-missing-mi.h-include.patch \
+           "
+SRC_URI[md5sum] = "d2e96355ad47244c675bce38db2b48a9"
+SRC_URI[sha256sum] = "bd5986f010f34f5b3d6bc99fe395ecb1e0dead15a26807e0c832701809a06ea1"
 
 CFLAGS += "-fcommon"
 
