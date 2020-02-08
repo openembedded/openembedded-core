@@ -256,6 +256,7 @@ def testimage_main(d):
                       'kvm'         : kvm,
                       'slirp'       : slirp,
                       'dump_dir'    : d.getVar("TESTIMAGE_DUMP_DIR"),
+                      'serial_ports': len(d.getVar("SERIAL_CONSOLES").split()),
                     }
 
     # TODO: Currently BBPATH is needed for custom loading of targets.
