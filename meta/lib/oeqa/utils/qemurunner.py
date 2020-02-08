@@ -21,6 +21,7 @@ import threading
 import codecs
 import logging
 from oeqa.utils.dump import HostDumper
+from collections import defaultdict
 
 # Get Unicode non printable control chars
 control_range = list(range(0,32))+list(range(127,160))
@@ -31,7 +32,7 @@ re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds,
-                 use_kvm, logger, use_slirp=False, serial_ports=2):
+                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns = defaultdict(str)):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -57,6 +58,7 @@ class QemuRunner:
         self.use_slirp = use_slirp
         self.serial_ports = serial_ports
         self.msg = ''
+        self.boot_patterns = boot_patterns
 
         self.runqemutime = 120
         self.qemu_pidfile = 'pidfile_'+str(os.getpid())
@@ -64,6 +66,25 @@ class QemuRunner:
         self.monitorpipe = None
 
         self.logger = logger
+
+        # Enable testing other OS's
+        # Set commands for target communication, and default to Linux ALWAYS
+        # Other OS's or baremetal applications need to provide their
+        # own implementation passing it through QemuRunner's constructor
+        # or by passing them through TESTIMAGE_BOOT_PATTERNS[flag]
+        # provided variables, where <flag> is one of the mentioned below.
+        accepted_patterns = ['search_reached_prompt', 'send_login_user', 'search_login_succeeded', 'search_cmd_finished']
+        default_boot_patterns = defaultdict(str)
+        # Default to the usual paterns used to communicate with the target
+        default_boot_patterns['search_reached_prompt'] = b' login:'
+        default_boot_patterns['send_login_user'] = 'root\n'
+        default_boot_patterns['search_login_succeeded'] = r"root@[a-zA-Z0-9\-]+:~#"
+        default_boot_patterns['search_cmd_finished'] = r"[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#"
+
+        # Only override patterns that were set e.g. login user TESTIMAGE_BOOT_PATTERNS[send_login_user] = "webserver\n"
+        for pattern in accepted_patterns:
+            if not self.boot_patterns[pattern]:
+                self.boot_patterns[pattern] = default_boot_patterns[pattern]
 
     def create_socket(self):
         try:
@@ -321,7 +342,7 @@ class QemuRunner:
                             self.log(data)
 
                         data = b''
-                        if b' login:' in bootlog:
+                        if self.boot_patterns['search_reached_prompt'] in bootlog:
                             self.server_socket = qemusock
                             stopread = True
                             reachedlogin = True
@@ -353,8 +374,8 @@ class QemuRunner:
 
         # If we are not able to login the tests can continue
         try:
-            (status, output) = self.run_serial("root\n", raw=True)
-            if re.search(r"root@[a-zA-Z0-9\-]+:~#", output):
+            (status, output) = self.run_serial(self.boot_patterns['send_login_user'], raw=True)
+            if re.search(self.boot_patterns['search_login_succeeded'], output):
                 self.logged = True
                 self.logger.debug("Logged as root in serial console")
                 if netconf:
@@ -478,7 +499,7 @@ class QemuRunner:
                 if answer:
                     data += answer.decode('utf-8')
                     # Search the prompt to stop
-                    if re.search(r"[a-zA-Z0-9]+@[a-zA-Z0-9\-]+:~#", data):
+                    if re.search(self.boot_patterns['search_cmd_finished'], data):
                         break
                 else:
                     raise Exception("No data on serial console socket")
