@@ -356,6 +356,11 @@ python rootfs_log_check_recommends() {
 # Perform any additional adjustments needed to make rootf binary reproducible
 rootfs_reproducible () {
 	if [ "${REPRODUCIBLE_TIMESTAMP_ROOTFS}" != "" ]; then
+		# Convert UTC into %4Y%2m%2d%2H%2M%2S
+		sformatted=`date -u -d @${REPRODUCIBLE_TIMESTAMP_ROOTFS} +%4Y%2m%2d%2H%2M%2S`
+		echo $sformatted > ${IMAGE_ROOTFS}/etc/version
+		bbnote "rootfs_reproducible: set /etc/version to $sformatted"
+
 		if [ -d ${IMAGE_ROOTFS}${sysconfdir}/gconf ]; then
 			find ${IMAGE_ROOTFS}${sysconfdir}/gconf -name '%gconf.xml' -print0 | xargs -0r \
 			sed -i -e 's@\bmtime="[0-9][0-9]*"@mtime="'${REPRODUCIBLE_TIMESTAMP_ROOTFS}'"@g'
