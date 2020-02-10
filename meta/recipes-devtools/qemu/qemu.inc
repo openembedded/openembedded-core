@@ -27,14 +27,13 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0008-linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch \
            file://0009-Fix-webkitgtk-builds.patch \
            file://0010-configure-Add-pkg-config-handling-for-libgcrypt.patch \
-           file://0011-linux-user-remove-host-stime-syscall.patch \
+           file://0011-hw-i386-pc-fix-regression-in-parsing-vga-cmdline-par.patch \
            file://CVE-2019-15890.patch \
-           file://CVE-2019-12068.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[md5sum] = "cdf2b5ca52b9abac9bacb5842fa420f8"
-SRC_URI[sha256sum] = "656e60218689bdeec69903087fd7582d5d3e72238d02f4481d8dc6d79fd909c6"
+SRC_URI[md5sum] = "278eeb294e4b497e79af7a57e660cb9a"
+SRC_URI[sha256sum] = "d3481d4108ce211a053ef15be69af1bdd9dde1510fda80d92be0f6c3e98768f0"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
