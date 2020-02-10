@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM ?= "file://LICENSING;md5=3bb6614cf5880cbf1b9dbd9e3d145e2c \
 inherit autotools pkgconfig
 
 SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH}"
-SRCREV = "dcf7d7509a26a2fe83f115f5ee731c59749ae17e"
+SRCREV = "21f93470aad8634fcf39f72db0b62642c7073a0c"
 SRCBRANCH ?= "develop"
 
 PROVIDES = "virtual/crypt"
