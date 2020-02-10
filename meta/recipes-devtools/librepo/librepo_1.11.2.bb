@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/rpm-software-management/librepo.git \
            file://0004-Set-gpgme-variables-with-pkg-config-not-with-cmake-m.patch \
            "
 
-SRCREV = "5ade10012d40fad27a7aa1085091c2c5fdd099ff"
+SRCREV = "67c2d1f83f1bf87be3f26ba730fce7fbdf0c9fba"
 
 S = "${WORKDIR}/git"
 
