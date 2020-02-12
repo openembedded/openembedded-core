@@ -1,13 +1,13 @@
 require ruby.inc
 
 SRC_URI += " \
-           file://0003-configure.ac-check-finite-isinf-isnan-as-macros-firs.patch \
            file://remove_has_include_macros.patch \
            file://run-ptest \
+           file://0001-Modify-shebang-of-libexec-y2racc-and-libexec-racc2y.patch \
            "
 
-SRC_URI[md5sum] = "8754bfb36d52c2bf1fb3d3ddc7101606"
-SRC_URI[sha256sum] = "66976b716ecc1fd34f9b7c3c2b07bbd37631815377a2e3e85a5b194cfdcbed7d"
+SRC_URI[md5sum] = "bf4a54e8231176e109a42c546b4725a9"
+SRC_URI[sha256sum] = "8c99aa93b5e2f1bc8437d1bbbefd27b13e7694025331f77245d0c068ef1f8cbe"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
