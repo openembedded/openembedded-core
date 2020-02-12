@@ -1,7 +1,7 @@
 #
 # SPDX-License-Identifier: MIT
 #
-# Copyright 2019 by Garmin Ltd. or its subsidiaries
+# Copyright 2019-2020 by Garmin Ltd. or its subsidiaries
 
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
@@ -167,10 +167,16 @@ class ReproducibleTests(OESelftestTestCase):
         return d
 
     def test_reproducible_builds(self):
+        def strip_topdir(s):
+            if s.startswith(self.topdir):
+                return s[len(self.topdir):]
+            return s
+
         # Build native utilities
         self.write_config('')
-        bitbake("diffutils-native -c addto_recipe_sysroot")
+        bitbake("diffoscope-native diffutils-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
+        diffoscope_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffoscope-native")
 
         if self.save_results:
             os.makedirs(self.save_results, exist_ok=True)
@@ -206,18 +212,22 @@ class ReproducibleTests(OESelftestTestCase):
 
                 if self.save_results:
                     for d in result.different:
-                        self.copy_file(d.reference, '/'.join([save_dir, d.reference]))
-                        self.copy_file(d.test, '/'.join([save_dir, d.test]))
+                        self.copy_file(d.reference, '/'.join([save_dir, 'packages', strip_topdir(d.reference)]))
+                        self.copy_file(d.test, '/'.join([save_dir, 'packages', strip_topdir(d.test)]))
 
                 if result.missing or result.different:
                     fails.append("The following %s packages are missing or different: %s" %
                             (c, '\n'.join(r.test for r in (result.missing + result.different))))
 
-        if fails:
-            self.fail('\n'.join(fails))
-
         # Clean up empty directories
         if self.save_results:
             if not os.listdir(save_dir):
                 os.rmdir(save_dir)
+            else:
+                self.logger.info('Running diffoscope')
+                runCmd(['diffoscope', '--no-default-limits', '--exclude-directory-metadata', '--html-dir', 'diff-html', 'reproducibleA', 'reproducibleB'],
+                        native_sysroot=diffoscope_sysroot, ignore_status=True, cwd=os.path.join(save_dir, 'packages'))
+
+        if fails:
+            self.fail('\n'.join(fails))
 
