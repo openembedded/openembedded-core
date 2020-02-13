@@ -2,11 +2,10 @@ SUMMARY = "System call tracing tool"
 HOMEPAGE = "http://strace.io"
 SECTION = "console/utils"
 LICENSE = "LGPL-2.1+ & GPL-2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0169a04810830e94f4b1cfb823c9f592"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c756d9d5dabc27663df64f0bf492166c"
 
 SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://disable-git-version-gen.patch \
-           file://more-robust-test-for-m32-mx32-compile-support.patch \
            file://update-gawk-paths.patch \
            file://Makefile-ptest.patch \
            file://run-ptest \
@@ -14,11 +13,9 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            file://ptest-spacesave.patch \
            file://uintptr_t.patch \
-           file://sys_headers.patch \
-           file://0001-define-ptrace_syscall_info-to-__ptrace_syscall_info.patch \
            "
-SRC_URI[md5sum] = "b2b58f05eb3c5c0bf9d1e26003b4d698"
-SRC_URI[sha256sum] = "f7d00514d51290b6db78ad7a9de709baf93caa5981498924cbc9a744cfd2a741"
+SRC_URI[md5sum] = "dbce2e84632b39a4ed86b9fc60447af9"
+SRC_URI[sha256sum] = "9f58958c8e59ea62293d907d10572e352b582bd7948ed21aa28ebb47e5bf30ff"
 
 inherit autotools ptest
 
