@@ -45,6 +45,7 @@ def ipk_write_pkg(pkg, d):
     import subprocess
     import textwrap
     import collections
+    import glob
 
     def cleanupcontrol(root):
         for p in ['CONTROL', 'DEBIAN']:
@@ -101,8 +102,7 @@ def ipk_write_pkg(pkg, d):
         bb.utils.mkdirhier(pkgoutdir)
         os.chdir(root)
         cleanupcontrol(root)
-        from glob import glob
-        g = glob('*')
+        g = glob.glob('*')
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
             return
