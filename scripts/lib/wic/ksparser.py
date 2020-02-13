@@ -246,6 +246,11 @@ class KickStart():
                     elif line.startswith('bootloader'):
                         if not self.bootloader:
                             self.bootloader = parsed
+                            # Concatenate the strings set in APPEND
+                            append_var = get_bitbake_var("APPEND")
+                            if append_var:
+                                self.bootloader.append = ' '.join(filter(None, \
+                                                         (self.bootloader.append, append_var)))
                         else:
                             err = "%s:%d: more than one bootloader specified" \
                                       % (confpath, lineno)
