@@ -1,7 +1,7 @@
-From 215486b53a7a6dfca064cd2e9196a9de6ed6f0c2 Mon Sep 17 00:00:00 2001
+From 505f10a0ea1a8bba0584859d9a348bb779593ec2 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 02:31:12 +0000
-Subject: [PATCH 05/11] Add support for Renesas SH (sh4) architecture.
+Subject: [PATCH] Add support for Renesas SH (sh4) architecture.
 
 gdb (7.4-1~cvs20111117.2) experimental; urgency=low
  .
@@ -27,10 +27,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  11 files changed, 617 insertions(+), 29 deletions(-)
 
 diff --git a/gdb/Makefile.in b/gdb/Makefile.in
-index c76a4e4394..921fdadb49 100644
+index c3e074b21f..42dd7af59c 100644
 --- a/gdb/Makefile.in
 +++ b/gdb/Makefile.in
-@@ -2326,6 +2326,8 @@ ALLDEPFILES = \
+@@ -2317,6 +2317,8 @@ ALLDEPFILES = \
  	sh-nbsd-nat.c \
  	sh-nbsd-tdep.c \
  	sh-tdep.c \
@@ -38,12 +38,12 @@ index c76a4e4394..921fdadb49 100644
 +	sh-linux-nat.c \
  	sol2-tdep.c \
  	solib-aix.c \
- 	solib-spu.c \
+ 	solib-svr4.c \
 diff --git a/gdb/configure.host b/gdb/configure.host
-index 23a2f16399..39a886ec53 100644
+index ce52823729..5b5173a71a 100644
 --- a/gdb/configure.host
 +++ b/gdb/configure.host
-@@ -153,6 +153,7 @@ riscv*-*-linux*)	gdb_host=linux ;;
+@@ -148,6 +148,7 @@ riscv*-*-linux*)	gdb_host=linux ;;
  
  s390*-*-linux*)		gdb_host=linux ;;
  
@@ -52,7 +52,7 @@ index 23a2f16399..39a886ec53 100644
  			gdb_host=nbsd ;;
  sh*-*-openbsd*)		gdb_host=nbsd ;;
 diff --git a/gdb/sh-linux-tdep.c b/gdb/sh-linux-tdep.c
-index db93967910..4109c549e8 100644
+index 13c10eeeda..1d0d583a64 100644
 --- a/gdb/sh-linux-tdep.c
 +++ b/gdb/sh-linux-tdep.c
 @@ -18,14 +18,37 @@
@@ -93,7 +93,7 @@ index db93967910..4109c549e8 100644
  #include "glibc-tdep.h"
  #include "sh-tdep.h"
  #include "linux-tdep.h"
-@@ -180,9 +203,505 @@ static struct tramp_frame sh_linux_rt_sigreturn_tramp_frame = {
+@@ -181,9 +204,505 @@ static struct tramp_frame sh_linux_rt_sigreturn_tramp_frame = {
    sh_linux_rt_sigreturn_init
  };
  
@@ -600,7 +600,7 @@ index db93967910..4109c549e8 100644
  
    /* GNU/Linux uses SVR4-style shared libraries.  */
 diff --git a/gdb/sh-tdep.c b/gdb/sh-tdep.c
-index fe64cf979a..4417114cd0 100644
+index e3aee0ac28..5958cf3688 100644
 --- a/gdb/sh-tdep.c
 +++ b/gdb/sh-tdep.c
 @@ -21,6 +21,9 @@
@@ -655,7 +655,7 @@ index fe64cf979a..4417114cd0 100644
        len = TYPE_LENGTH (type);
        val = sh_justify_value_in_reg (gdbarch, args[argnum], len);
  
-@@ -1834,7 +1820,7 @@ sh_dwarf2_frame_init_reg (struct gdbarch *gdbarch, int regnum,
+@@ -1835,7 +1821,7 @@ sh_dwarf2_frame_init_reg (struct gdbarch *gdbarch, int regnum,
      reg->how = DWARF2_FRAME_REG_UNDEFINED;
  }
  
@@ -664,7 +664,7 @@ index fe64cf979a..4417114cd0 100644
  sh_alloc_frame_cache (void)
  {
    struct sh_frame_cache *cache;
-@@ -1861,7 +1847,7 @@ sh_alloc_frame_cache (void)
+@@ -1862,7 +1848,7 @@ sh_alloc_frame_cache (void)
    return cache;
  }
  
@@ -673,7 +673,7 @@ index fe64cf979a..4417114cd0 100644
  sh_frame_cache (struct frame_info *this_frame, void **this_cache)
  {
    struct gdbarch *gdbarch = get_frame_arch (this_frame);
-@@ -1928,9 +1914,9 @@ sh_frame_cache (struct frame_info *this_frame, void **this_cache)
+@@ -1929,9 +1915,9 @@ sh_frame_cache (struct frame_info *this_frame, void **this_cache)
    return cache;
  }
  
@@ -686,7 +686,7 @@ index fe64cf979a..4417114cd0 100644
  {
    struct gdbarch *gdbarch = get_frame_arch (this_frame);
    struct sh_frame_cache *cache = sh_frame_cache (this_frame, this_cache);
-@@ -1944,7 +1930,7 @@ sh_frame_prev_register (struct frame_info *this_frame,
+@@ -1945,7 +1931,7 @@ sh_frame_prev_register (struct frame_info *this_frame,
       the current frame.  Frob regnum so that we pull the value from
       the correct place.  */
    if (regnum == gdbarch_pc_regnum (gdbarch))
@@ -695,7 +695,7 @@ index fe64cf979a..4417114cd0 100644
  
    if (regnum < SH_NUM_REGS && cache->saved_regs[regnum] != -1)
      return frame_unwind_got_memory (this_frame, regnum,
-@@ -2255,8 +2241,8 @@ sh_return_in_first_hidden_param_p (struct gdbarch *gdbarch,
+@@ -2234,8 +2220,8 @@ sh_return_in_first_hidden_param_p (struct gdbarch *gdbarch,
  static struct gdbarch *
  sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
  {
@@ -705,7 +705,7 @@ index fe64cf979a..4417114cd0 100644
  
    /* If there is already a candidate, use it.  */
    arches = gdbarch_list_lookup_by_info (arches, &info);
-@@ -2268,6 +2254,18 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
+@@ -2247,6 +2233,18 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
    tdep = XCNEW (struct gdbarch_tdep);
    gdbarch = gdbarch_alloc (&info, tdep);
  
@@ -724,7 +724,7 @@ index fe64cf979a..4417114cd0 100644
    set_gdbarch_short_bit (gdbarch, 2 * TARGET_CHAR_BIT);
    set_gdbarch_int_bit (gdbarch, 4 * TARGET_CHAR_BIT);
    set_gdbarch_long_bit (gdbarch, 4 * TARGET_CHAR_BIT);
-@@ -2422,10 +2420,11 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
+@@ -2398,10 +2396,11 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
        break;
      }
  
@@ -738,7 +738,7 @@ index fe64cf979a..4417114cd0 100644
    frame_unwind_append_unwinder (gdbarch, &sh_frame_unwind);
  
 diff --git a/gdb/sh-tdep.h b/gdb/sh-tdep.h
-index 59acd35b88..be3f998d84 100644
+index 76e2e76e39..2710f63010 100644
 --- a/gdb/sh-tdep.h
 +++ b/gdb/sh-tdep.h
 @@ -21,6 +21,12 @@
@@ -821,7 +821,7 @@ index 59acd35b88..be3f998d84 100644
       where each general-purpose register is stored inside the associated
       core file section.  */
 diff --git a/gdb/testsuite/gdb.asm/asm-source.exp b/gdb/testsuite/gdb.asm/asm-source.exp
-index 9879f0ca47..cbc0e4d5f7 100644
+index 4914498f98..6e25cbed18 100644
 --- a/gdb/testsuite/gdb.asm/asm-source.exp
 +++ b/gdb/testsuite/gdb.asm/asm-source.exp
 @@ -116,6 +116,11 @@ switch -glob -- [istarget] {
@@ -909,6 +909,3 @@ index 756606880f..1205a9bc9c 100644
  
  static int count = 0;
  
--- 
-2.18.0
-

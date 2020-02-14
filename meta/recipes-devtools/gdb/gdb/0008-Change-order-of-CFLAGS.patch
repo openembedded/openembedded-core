@@ -1,7 +1,7 @@
-From ba6ffa461fe781d44d6dcbc0fbd569237b450fdc Mon Sep 17 00:00:00 2001
+From 40c9c174590ce6fdc873b453285249fe957f376d Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 30 Apr 2016 15:35:39 -0700
-Subject: [PATCH 09/11] Change order of CFLAGS
+Subject: [PATCH] Change order of CFLAGS
 
 Lets us override Werror if need be
 
@@ -13,18 +13,15 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gdb/gdbserver/Makefile.in b/gdb/gdbserver/Makefile.in
-index f2f8a084bd..9528db1364 100644
+index 16a9f2fd38..b9c8cd9c41 100644
 --- a/gdb/gdbserver/Makefile.in
 +++ b/gdb/gdbserver/Makefile.in
-@@ -143,7 +143,7 @@ CPPFLAGS = @CPPFLAGS@
+@@ -146,7 +146,7 @@ PTHREAD_LIBS = @PTHREAD_LIBS@
  INTERNAL_CFLAGS_BASE = ${CXXFLAGS} ${GLOBAL_CFLAGS} \
- 	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS} ${CPPFLAGS}
+ 	${PROFILE_CFLAGS} ${INCLUDE_CFLAGS} ${CPPFLAGS} $(PTHREAD_CFLAGS)
  INTERNAL_WARN_CFLAGS = ${INTERNAL_CFLAGS_BASE} $(WARN_CFLAGS)
 -INTERNAL_CFLAGS = ${INTERNAL_WARN_CFLAGS} $(WERROR_CFLAGS) -DGDBSERVER
 +INTERNAL_CFLAGS = ${INTERNAL_WARN_CFLAGS} $(WERROR_CFLAGS) ${COMPILER_CFLAGS} -DGDBSERVER
  
  # LDFLAGS is specifically reserved for setting from the command line
  # when running make.
--- 
-2.18.0
-
