@@ -58,3 +58,4 @@ addtask do_check after do_compile
 
 inherit nopackages
 deltask do_stash_locale
+deltask do_install
