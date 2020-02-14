@@ -12,4 +12,7 @@ SRC_URI[sha256sum] = "0d6486d6eb6e0445ba21fee2e8bdd3a366ce786bfac98e00e5a95038b7
 
 RDEPENDS_${PN} += "binutils vim squashfs-tools python3-libarchive-c python3-magic"
 
+# Dependencies don't build for musl
+COMPATIBLE_HOST_libc-musl = 'null'
+
 BBCLASSEXTEND = "native"
