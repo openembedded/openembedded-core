@@ -42,6 +42,7 @@ EXTRA_OECONF = " \
 		--with-gnu-as \
 		--with-gnu-ld \
 		--disable-multilib \
+		--disable-newlib-supplied-syscalls \
 		"
 
 do_configure[cleandirs] = "${B}"
