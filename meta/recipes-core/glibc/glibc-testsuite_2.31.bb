@@ -1,5 +1,7 @@
 require glibc_${PV}.bb
 
+EXCLUDE_FROM_WORLD = "1"
+
 # handle PN differences
 FILESEXTRAPATHS_prepend := "${THISDIR}/glibc:"
 
