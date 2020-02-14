@@ -26,6 +26,7 @@ SRC_URI += "file://fix-parallel-build.patch \
             file://0001-configure-Add-explicit-tag-options-to-libtool-invoca.patch \
             file://sequence-type.patch \
             file://0001-Fix-libc-compatibility-by-renaming-atomic_init-API.patch \
+            file://0001-clock-Do-not-define-own-timespec.patch \
            "
 # We are not interested in official latest 6.x versions;
 # let's track what debian is using.
