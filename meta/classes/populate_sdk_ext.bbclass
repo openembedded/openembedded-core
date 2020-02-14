@@ -574,8 +574,8 @@ sdk_ext_preinst() {
 		exit 1
 	fi
 	# The relocation script used by buildtools installer requires python
-	if ! command -v python > /dev/null; then
-		echo "ERROR: The installer requires python, please install it first"
+	if ! command -v python3 > /dev/null; then
+		echo "ERROR: The installer requires python3, please install it first"
 		exit 1
 	fi
 	missing_utils=""
