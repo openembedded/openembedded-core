@@ -470,6 +470,7 @@ python extend_recipe_sysroot() {
         elif os.path.lexists(depdir + "/" + c):
             os.unlink(depdir + "/" + c)
 
+    binfiles = {}
     # Now handle installs
     for dep in configuredeps:
         c = setscenedeps[dep][0]
@@ -562,7 +563,16 @@ python extend_recipe_sysroot() {
                     if l.endswith("/"):
                         staging_copydir(l, targetdir, dest, seendirs)
                         continue
-                    staging_copyfile(l, targetdir, dest, postinsts, seendirs)
+                    if "/bin/" in l or "/sbin/" in l:
+                        # defer /*bin/* files until last in case they need libs
+                        binfiles[l] = (targetdir, dest)
+                    else:
+                        staging_copyfile(l, targetdir, dest, postinsts, seendirs)
+
+    # Handle deferred binfiles
+    for l in binfiles:
+        (targetdir, dest) = binfiles[l]
+        staging_copyfile(l, targetdir, dest, postinsts, seendirs)
 
     bb.note("Installed into sysroot: %s" % str(msg_adding))
     bb.note("Skipping as already exists in sysroot: %s" % str(msg_exists))
