@@ -38,7 +38,7 @@ BASE_DEFAULT_DEPS_append_class-target = " ${NEWLIB_EXTENDED}"
 TARGET_OS = "elf"
 TARGET_OS_arm = "eabi"
 
-TOOLCHAIN_HOST_TASK ?= "packagegroup-cross-canadian-${MACHINE}"
+TOOLCHAIN_HOST_TASK ?= "packagegroup-cross-canadian-${MACHINE} nativesdk-qemu"
 TOOLCHAIN_TARGET_TASK ?= "${LIBC_DEPENDENCIES}"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE_remove = "zlib ncurses"
 
