@@ -24,12 +24,9 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
            file://sshd_check_keys \
            file://add-test-support-for-busybox.patch \
-           file://openssh-8.1p1-seccomp-nanosleep.patch \
-           file://0001-seccomp-Allow-clock_gettime64-in-sandbox.patch \
-           file://0001-Manually-applied-upstream-fix-for-openssh-test.patch \
            "
-SRC_URI[md5sum] = "513694343631a99841e815306806edf0"
-SRC_URI[sha256sum] = "02f5dbef3835d0753556f973cd57b4c19b6b1f6cd24c03445e23ac77ca1b93ff"
+SRC_URI[md5sum] = "3076e6413e8dbe56d33848c1054ac091"
+SRC_URI[sha256sum] = "43925151e6cf6cee1450190c0e9af4dc36b41c12737619edff8bcebdff64e671"
 
 PAM_SRC_URI = "file://sshd"
 
