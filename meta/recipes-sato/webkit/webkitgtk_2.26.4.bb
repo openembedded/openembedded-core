@@ -21,9 +21,8 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-Fix-build-with-musl.patch \
            file://include_array.patch \
            "
-
-SRC_URI[md5sum] = "65e06fe73ee166447894aaea95038e3b"
-SRC_URI[sha256sum] = "6b80f0637a80818559ac8fd50db3b394f41cb61904fb9b3ed65fa51635806512"
+SRC_URI[md5sum] = "60f881729f3b71244b7f6e58790073e0"
+SRC_URI[sha256sum] = "4386900713dfadf9741177210b32623cab22562a79ffd0d446b66569934b113f"
 
 inherit cmake pkgconfig gobject-introspection perlnative features_check upstream-version-is-even gtk-doc
 
