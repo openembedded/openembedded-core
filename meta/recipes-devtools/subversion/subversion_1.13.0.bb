@@ -37,6 +37,8 @@ EXTRA_OECONF = " \
     ac_cv_path_RUBY=none \
 "
 
+EXTRA_OEMAKE += "pkgconfig_dir=${libdir}/pkgconfig"
+
 acpaths = "-I build/ -I build/ac-macros/"
 
 CPPFLAGS += "-P"
