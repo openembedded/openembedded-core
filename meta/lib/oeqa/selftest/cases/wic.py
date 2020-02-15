@@ -537,7 +537,8 @@ class Wic2(WicTestCase):
         # filter out optional variables
         wicvars = wicvars.difference(('DEPLOY_DIR_IMAGE', 'IMAGE_BOOT_FILES',
                                       'INITRD', 'INITRD_LIVE', 'ISODIR','INITRAMFS_IMAGE',
-                                      'INITRAMFS_IMAGE_BUNDLE', 'INITRAMFS_LINK_NAME'))
+                                      'INITRAMFS_IMAGE_BUNDLE', 'INITRAMFS_LINK_NAME',
+                                      'APPEND'))
         with open(path) as envfile:
             content = dict(line.split("=", 1) for line in envfile)
             # test if variables used by wic present in the .env file
