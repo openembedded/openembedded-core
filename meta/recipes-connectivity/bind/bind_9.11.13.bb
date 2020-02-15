@@ -31,7 +31,7 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>9.(11|16|20|24|28)(\.\d+)+(-P\d+)*)/"
 # don't report it here since dhcpd is already recent enough.
 CVE_CHECK_WHITELIST += "CVE-2019-6470"
 
-inherit autotools update-rc.d systemd useradd pkgconfig multilib_script
+inherit autotools update-rc.d systemd useradd pkgconfig multilib_script multilib_header
 
 MULTILIB_SCRIPTS = "${PN}:${bindir}/bind9-config ${PN}:${bindir}/isc-config.sh"
 
@@ -105,6 +105,8 @@ do_install_append() {
 		install -d ${D}${sysconfdir}/tmpfiles.d
 		echo "d /run/named 0755 bind bind - -" > ${D}${sysconfdir}/tmpfiles.d/bind.conf
 	fi
+
+    oe_multilib_header isc/platform.h
 }
 
 CONFFILES_${PN} = " \
