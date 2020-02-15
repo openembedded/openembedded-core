@@ -194,7 +194,7 @@ def package_qa_check_mime(path, name, d, elf, messages):
     """
 
     if d.getVar("datadir") + "/mime/packages" in path and path.endswith('.xml') and not bb.data.inherits_class("mime", d):
-        package_qa_add_message(messages, "mime", "package contains mime types but does not inhert mime: %s path '%s'" % \
+        package_qa_add_message(messages, "mime", "package contains mime types but does not inherit mime: %s path '%s'" % \
                  (name, package_qa_clean_path(path,d)))
 
 QAPATHTEST[mime-xdg] = "package_qa_check_mime_xdg"
