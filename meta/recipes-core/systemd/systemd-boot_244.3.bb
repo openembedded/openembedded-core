@@ -5,27 +5,27 @@ require conf/image-uefi.conf
 
 DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
 
-# NOTE: These three patches are in theory not needed, but we haven't
-#       figured out how to correctly pass efi-cc parameter if it's an array.
-SRC_URI += "file://0001-Revert-meson-use-an-array-option-for-efi-cc.patch \
-            file://0001-Revert-meson-print-EFI-CC-configuration-nicely.patch \
-            file://0001-Fix-to-run-efi_cc-and-efi_ld-correctly-when-cross-co.patch \
-            file://0001-meson-Add-Defi-objcopy-option-to-specify-objcopy.patch \
-            "
-
 inherit meson pkgconfig gettext
 inherit deploy
 
-EFI_CC ?= "${CC}"
+LDFLAGS_prepend = "${@ " ".join(d.getVar('LD').split()[1:])} "
+
+do_write_config[vardeps] += "CC OBJCOPY"
+do_write_config_append() {
+    cat >${WORKDIR}/meson-${PN}.cross <<EOF
+[binaries]
+efi_cc = ${@meson_array('CC', d)}
+objcopy = ${@meson_array('OBJCOPY', d)}
+EOF
+}
+
 EXTRA_OEMESON += "-Defi=true \
                   -Dgnu-efi=true \
                   -Defi-includedir=${STAGING_INCDIR}/efi \
-                  -Defi-ldsdir=${STAGING_LIBDIR} \
                   -Defi-libdir=${STAGING_LIBDIR} \
+                  -Defi-ld=${@ d.getVar('LD').split()[0]} \
                   -Dman=false \
-                  -Defi-cc='${EFI_CC}' \
-                  -Defi-ld='${LD}' \
-                  -Defi-objcopy='${OBJCOPY}' \
+                  --cross-file ${WORKDIR}/meson-${PN}.cross \
                   "
 
 # install to the image as boot*.efi if its the EFI_PROVIDER,
