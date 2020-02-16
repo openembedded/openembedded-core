@@ -243,7 +243,7 @@ def testimage_main(d):
     if d.getVar("TEST_TARGET") == "qemu":
         fstypes = [fs for fs in fstypes if fs in supported_fstypes]
         if not fstypes:
-            bb.fatal('Unsupported image type built. Add a comptible image to '
+            bb.fatal('Unsupported image type built. Add a compatible image to '
                      'IMAGE_FSTYPES. Supported types: %s' %
                      ', '.join(supported_fstypes))
     qfstype = fstypes[0]
