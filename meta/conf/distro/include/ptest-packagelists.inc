@@ -57,6 +57,7 @@ PTESTS_FAST = "\
 #    lz4-ptest \ # Needs a rewrite
 #    rt-tests-ptest \ # Needs to be checked whether it runs at all
 #    bash-ptest \ # Test outcomes are non-deterministic by design
+#    ifupdown-ptest \ # Tested separately in lib/oeqa/selftest/cases/imagefeatures.py
 #"
 
 PTESTS_SLOW = "\
