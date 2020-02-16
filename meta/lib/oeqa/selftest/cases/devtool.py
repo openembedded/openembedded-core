@@ -1741,7 +1741,7 @@ class DevtoolUpgradeTests(DevtoolBase):
                          when building the kernel.
          """
         kernel_provider = get_bb_var('PREFERRED_PROVIDER_virtual/kernel')
-        # Clean up the enviroment
+        # Clean up the environment
         bitbake('%s -c clean' % kernel_provider)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         tempdir_cfg = tempfile.mkdtemp(prefix='config_qa')
