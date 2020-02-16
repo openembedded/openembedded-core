@@ -12,14 +12,19 @@ DEPENDS = "ncurses"
 
 inherit autotools gettext pkgconfig update-alternatives
 
-SRC_URI = "http://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-${PV}.tar.xz \
+SRC_URI = "git://gitlab.com/procps-ng/procps.git;protocol=https \
            file://sysctl.conf \
            "
+SRCREV = "59c88e18f29000ceaf7e5f98181b07be443cf12f"
 
-SRC_URI[md5sum] = "e8dc8455e573bdc40b8381d572bbb89b"
-SRC_URI[sha256sum] = "925eacd65dedcf9c98eb94e8978bbfb63f5de37294cc1047d81462ed477a20af"
+S = "${WORKDIR}/git"
 
-S = "${WORKDIR}/procps-ng-${PV}"
+# Upstream has a custom autogen.sh which invokes po/update-potfiles as they
+# don't ship a po/POTFILES.in (which is silly).  Without that file gettext
+# doesn't believe po/ is a gettext directory and won't generate po/Makefile.
+do_configure_prepend() {
+    ( cd ${S} && po/update-potfiles )
+}
 
 EXTRA_OECONF = "--enable-skill --disable-modern-top"
 
