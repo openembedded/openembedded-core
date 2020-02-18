@@ -20,7 +20,8 @@ GTKDOC_MESON_OPTION = 'gtk_doc'
 FILES_${PN} += " \
     ${libdir}/p11-kit-proxy.so \
     ${libdir}/pkcs11/*.so \
-    ${libdir}/pkcs11/*.la"
+    ${libdir}/pkcs11/*.la \
+    ${systemd_user_unitdir}/*"
 
 # PN contains p11-kit-proxy.so, a symlink to a loadable module
 INSANE_SKIP_${PN} = "dev-so"
