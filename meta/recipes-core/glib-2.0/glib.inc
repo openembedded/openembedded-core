@@ -58,13 +58,15 @@ FILES_${PN} = "${libdir}/lib*${SOLIBS} \
                ${libdir}/gio \
                ${libexecdir}/*gio-querymodules \
                ${datadir}/glib-2.0/schemas"
+
+FILES_${PN}-utils += "${bindir}/glib-genmarshal \
+                      ${bindir}/glib-gettextize \
+                      ${bindir}/glib-mkenums \
+                      ${bindir}/glib-compile-resources"
+
 FILES_${PN}-dev += "${libdir}/glib-2.0/include \
                     ${libdir}/gio/modules/lib*${SOLIBSDEV} \
                     ${libdir}/gio/modules/*.la \
-                    ${bindir}/glib-genmarshal \
-                    ${bindir}/glib-gettextize \
-                    ${bindir}/glib-mkenums \
-                    ${bindir}/glib-compile-resources \
                     ${datadir}/glib-2.0/gettext/po/Makefile.in.in \
                     ${datadir}/glib-2.0/schemas/gschema.dtd \
                     ${datadir}/glib-2.0/valgrind/glib.supp \
@@ -137,6 +139,8 @@ CODEGEN_PYTHON_RDEPENDS = "python3 python3-distutils python3-xml"
 CODEGEN_PYTHON_RDEPENDS_mingw32 = ""
 
 RDEPENDS_${PN}-codegen += "${CODEGEN_PYTHON_RDEPENDS}"
+
+RDEPENDS_${PN}-ptest += "${PN}-utils"
 
 RDEPENDS_${PN}-ptest += "\
             coreutils \
