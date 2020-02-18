@@ -26,6 +26,9 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
 SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
 "
+SRC_URI_append_class-target = " \
+           file://encodefix.patch \
+"
 
 SRC_URI[perl.md5sum] = "6438eb7b8db9bbde28e01086de376a46"
 SRC_URI[perl.sha256sum] = "bf3d25571ff1ee94186177c2cdef87867fd6a14aa5a84f0b1fb7bf798f42f964"
