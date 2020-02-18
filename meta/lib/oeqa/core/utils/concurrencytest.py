@@ -146,6 +146,20 @@ def outSideTestaddError(self, offset, line):
 
 subunit._OutSideTest.addError = outSideTestaddError
 
+# Like outSideTestaddError above, we need an equivalent for skips
+# happening at the setUpClass() level, otherwise we will see "UNKNOWN"
+# as a result for concurrent tests
+#
+def outSideTestaddSkip(self, offset, line):
+    """A 'skip:' directive has been read."""
+    test_name = line[offset:-1].decode('utf8')
+    self.parser._current_test = subunit.RemotedTestCase(test_name)
+    self.parser.current_test_description = test_name
+    self.parser._state = self.parser._reading_skip_details
+    self.parser._reading_skip_details.set_simple()
+    self.parser.subunitLineReceived(line)
+
+subunit._OutSideTest.addSkip = outSideTestaddSkip
 
 #
 # A dummy structure to add to io.StringIO so that the .buffer object
