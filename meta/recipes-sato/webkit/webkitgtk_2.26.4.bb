@@ -58,6 +58,12 @@ PACKAGECONFIG[libhyphen] = "-DUSE_LIBHYPHEN=ON,-DUSE_LIBHYPHEN=OFF,libhyphen"
 PACKAGECONFIG[woff2] = "-DUSE_WOFF2=ON,-DUSE_WOFF2=OFF,woff2"
 PACKAGECONFIG[openjpeg] = "-DUSE_OPENJPEG=ON,-DUSE_OPENJPEG=OFF,openjpeg"
 
+# webkitgtk is full of /usr/bin/env python, particular for generating docs
+do_configure[postfuncs] += "setup_python_link"
+setup_python_link() {
+	ln -s `which python3` ${STAGING_BINDIR_NATIVE}/python
+}
+
 EXTRA_OECMAKE = " \
 		-DPORT=GTK \
 		-DCMAKE_BUILD_TYPE=Release \
