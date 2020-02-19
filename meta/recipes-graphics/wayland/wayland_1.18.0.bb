@@ -13,20 +13,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b31d8f53b6aaf2b4985d7dd7810a70d1 \
 DEPENDS = "expat libffi wayland-native"
 
 SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
-           file://fixpathinpcfiles.patch \
+           file://0002-meson.build-find-the-native-wayland-scanner-directly.patch \
+           file://0002-Do-not-hardcode-the-path-to-wayland-scanner.patch \
            "
 SRC_URI[md5sum] = "23317697b6e3ff2e1ac8c5ba3ed57b65"
 SRC_URI[sha256sum] = "4675a79f091020817a98fd0484e7208c8762242266967f55a67776936c2e294d"
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
-inherit autotools pkgconfig
+inherit meson pkgconfig
 
 PACKAGECONFIG ??= "dtd-validation"
-PACKAGECONFIG[dtd-validation] = "--enable-dtd-validation,--disable-dtd-validation,libxml2,,"
+PACKAGECONFIG[dtd-validation] = "-Ddtd_validation=true,-Ddtd_validation=false,libxml2,,"
 
-EXTRA_OECONF = "--disable-documentation --with-host-scanner"
-EXTRA_OECONF_class-native = "--disable-documentation --disable-libraries"
+EXTRA_OEMESON = "-Ddocumentation=false"
+EXTRA_OEMESON_class-native = "-Ddocumentation=false -Dlibraries=false"
 
 # Wayland installs a M4 macro for other projects to use, which uses the target
 # pkg-config to find files.  Replace pkg-config with pkg-config-native.
