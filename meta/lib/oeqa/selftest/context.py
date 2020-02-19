@@ -9,9 +9,7 @@ import time
 import glob
 import sys
 import importlib
-import signal
 import subprocess
-from shutil import copyfile
 from random import choice
 
 import oeqa
@@ -185,26 +183,10 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
         builddir = os.environ.get("BUILDDIR")
         self.tc_kwargs['init']['config_paths'] = {}
-        self.tc_kwargs['init']['config_paths']['testlayer_path'] = \
-                get_test_layer()
+        self.tc_kwargs['init']['config_paths']['testlayer_path'] = get_test_layer()
         self.tc_kwargs['init']['config_paths']['builddir'] = builddir
-        self.tc_kwargs['init']['config_paths']['localconf'] = \
-                os.path.join(builddir, "conf/local.conf")
-        self.tc_kwargs['init']['config_paths']['localconf_backup'] = \
-                os.path.join(builddir, "conf/local.conf.orig")
-        self.tc_kwargs['init']['config_paths']['localconf_class_backup'] = \
-                os.path.join(builddir, "conf/local.conf.bk")
-        self.tc_kwargs['init']['config_paths']['bblayers'] = \
-                os.path.join(builddir, "conf/bblayers.conf")
-        self.tc_kwargs['init']['config_paths']['bblayers_backup'] = \
-                os.path.join(builddir, "conf/bblayers.conf.orig")
-        self.tc_kwargs['init']['config_paths']['bblayers_class_backup'] = \
-                os.path.join(builddir, "conf/bblayers.conf.bk")
-
-        copyfile(self.tc_kwargs['init']['config_paths']['localconf'],
-                self.tc_kwargs['init']['config_paths']['localconf_backup'])
-        copyfile(self.tc_kwargs['init']['config_paths']['bblayers'], 
-                self.tc_kwargs['init']['config_paths']['bblayers_backup'])
+        self.tc_kwargs['init']['config_paths']['localconf'] = os.path.join(builddir, "conf/local.conf")
+        self.tc_kwargs['init']['config_paths']['bblayers'] = os.path.join(builddir, "conf/bblayers.conf")
 
         def tag_filter(tags):
             if args.exclude_tags:
@@ -329,17 +311,8 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
         return rc
 
-    def _signal_clean_handler(self, signum, frame):
-        if self.ourpid == os.getpid():
-            sys.exit(1)
-    
     def run(self, logger, args):
         self._process_args(logger, args)
-
-        # Setup a SIGTERM handler to allow restoration of files like local.conf and bblayers.conf
-        # but don't interfer with other processes
-        self.ourpid = os.getpid()
-        signal.signal(signal.SIGTERM, self._signal_clean_handler)
 
         rc = None
         try:
@@ -369,20 +342,6 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                 rc = self._internal_run(logger, args)
         finally:
             config_paths = self.tc_kwargs['init']['config_paths']
-            if os.path.exists(config_paths['localconf_backup']):
-                copyfile(config_paths['localconf_backup'],
-                        config_paths['localconf'])
-                os.remove(config_paths['localconf_backup'])
-
-            if os.path.exists(config_paths['bblayers_backup']):
-                copyfile(config_paths['bblayers_backup'], 
-                        config_paths['bblayers'])
-                os.remove(config_paths['bblayers_backup'])
-
-            if os.path.exists(config_paths['localconf_class_backup']):
-                os.remove(config_paths['localconf_class_backup'])
-            if os.path.exists(config_paths['bblayers_class_backup']):
-                os.remove(config_paths['bblayers_class_backup'])
 
             output_link = os.path.join(os.path.dirname(args.output_log),
                     "%s-results.log" % self.name)
