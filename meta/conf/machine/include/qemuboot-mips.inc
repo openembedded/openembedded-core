@@ -7,4 +7,4 @@ QB_OPT_APPEND = "-show-cursor -usb -device usb-tablet"
 QB_OPT_APPEND += "-object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0"
 
 # For graphics to work we need to define the VGA device as well as the necessary USB devices
-QB_OPT_APPEND += "-device cirrus-vga"
+QB_OPT_APPEND += "-vga std"
