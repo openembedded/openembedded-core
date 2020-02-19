@@ -10,11 +10,13 @@ import glob
 import sys
 import importlib
 import signal
+import subprocess
 from shutil import copyfile
 from random import choice
 
 import oeqa
 import oe
+import bb.utils
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 from oeqa.core.exception import OEQAPreRun, OEQATestNotFound
@@ -28,6 +30,54 @@ class OESelftestTestContext(OETestContext):
         self.machines = machines
         self.custommachine = None
         self.config_paths = config_paths
+
+    def setup_builddir(self, suffix, selftestdir, suite):
+        builddir = os.environ['BUILDDIR']
+        if not selftestdir:
+            selftestdir = get_test_layer()
+        newbuilddir = builddir + suffix
+        newselftestdir = newbuilddir + "/meta-selftest"
+
+        if os.path.exists(newbuilddir):
+            self.logger.error("Build directory %s already exists, aborting" % newbuilddir)
+            sys.exit(1)
+
+        bb.utils.mkdirhier(newbuilddir)
+        oe.path.copytree(builddir + "/conf", newbuilddir + "/conf")
+        oe.path.copytree(builddir + "/cache", newbuilddir + "/cache")
+        oe.path.copytree(selftestdir, newselftestdir)
+
+        for e in os.environ:
+            if builddir in os.environ[e]:
+                os.environ[e] = os.environ[e].replace(builddir, newbuilddir)
+
+        subprocess.check_output("git init; git add *; git commit -a -m 'initial'", cwd=newselftestdir, shell=True)
+
+        # Tried to used bitbake-layers add/remove but it requires recipe parsing and hence is too slow
+        subprocess.check_output("sed %s/conf/bblayers.conf -i -e 's#%s#%s#g'" % (newbuilddir, selftestdir, newselftestdir), cwd=newbuilddir, shell=True)
+
+        os.chdir(newbuilddir)
+
+        for t in suite:
+            if not hasattr(t, "tc"):
+                continue
+            cp = t.tc.config_paths
+            for p in cp:
+                if selftestdir in cp[p] and newselftestdir not in cp[p]:
+                    cp[p] = cp[p].replace(selftestdir, newselftestdir)
+                if builddir in cp[p] and newbuilddir not in cp[p]:
+                    cp[p] = cp[p].replace(builddir, newbuilddir)
+
+        return (builddir, newbuilddir)
+
+    def prepareSuite(self, suites, processes):
+        if processes:
+            from oeqa.core.utils.concurrencytest import ConcurrentTestSuite
+
+            return ConcurrentTestSuite(suites, processes, self.setup_builddir)
+        else:
+            self.setup_builddir("-st", None, suites)
+            return suites
 
     def runTests(self, processes=None, machine=None, skips=[]):
         if machine:
