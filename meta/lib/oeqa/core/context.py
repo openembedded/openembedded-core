@@ -72,6 +72,9 @@ class OETestContext(object):
                 modules_required, **kwargs)
         self.suites = self.loader.discover()
 
+    def prepareSuite(self, suites, processes):
+        return suites
+
     def runTests(self, processes=None, skips=[]):
         self.runner = self.runnerClass(self, descriptions=False, verbosity=2)
 
@@ -79,14 +82,9 @@ class OETestContext(object):
         self.skipTests(skips)
 
         self._run_start_time = time.time()
-        if processes:
-            from oeqa.core.utils.concurrencytest import ConcurrentTestSuite
-
-            concurrent_suite = ConcurrentTestSuite(self.suites, processes)
-            result = self.runner.run(concurrent_suite)
-        else:
+        if not processes:
             self.runner.buffer = True
-            result = self.runner.run(self.suites)
+        result = self.runner.run(self.prepareSuite(self.suites, processes))
         self._run_end_time = time.time()
 
         return result

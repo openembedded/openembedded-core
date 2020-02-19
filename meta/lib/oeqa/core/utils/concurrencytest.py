@@ -177,9 +177,10 @@ class dummybuf(object):
 #
 class ConcurrentTestSuite(unittest.TestSuite):
 
-    def __init__(self, suite, processes):
+    def __init__(self, suite, processes, setupfunc):
         super(ConcurrentTestSuite, self).__init__([suite])
         self.processes = processes
+        self.setupfunc = setupfunc
 
     def run(self, result):
         tests, totaltests = fork_for_tests(self.processes, self)
@@ -272,37 +273,7 @@ def fork_for_tests(concurrency_num, suite):
                 stream = os.fdopen(c2pwrite, 'wb', 1)
                 os.close(c2pread)
 
-                # Create a new separate BUILDDIR for each group of tests
-                if 'BUILDDIR' in os.environ:
-                    builddir = os.environ['BUILDDIR']
-                    newbuilddir = builddir + "-st-" + str(ourpid)
-                    newselftestdir = newbuilddir + "/meta-selftest"
-
-                    bb.utils.mkdirhier(newbuilddir)
-                    oe.path.copytree(builddir + "/conf", newbuilddir + "/conf")
-                    oe.path.copytree(builddir + "/cache", newbuilddir + "/cache")
-                    oe.path.copytree(selftestdir, newselftestdir)
-
-                    for e in os.environ:
-                        if builddir in os.environ[e]:
-                            os.environ[e] = os.environ[e].replace(builddir, newbuilddir)
-
-                    subprocess.check_output("git init; git add *; git commit -a -m 'initial'", cwd=newselftestdir, shell=True)
-
-                    # Tried to used bitbake-layers add/remove but it requires recipe parsing and hence is too slow
-                    subprocess.check_output("sed %s/conf/bblayers.conf -i -e 's#%s#%s#g'" % (newbuilddir, selftestdir, newselftestdir), cwd=newbuilddir, shell=True)
-
-                    os.chdir(newbuilddir)
-
-                    for t in process_suite:
-                        if not hasattr(t, "tc"):
-                            continue
-                        cp = t.tc.config_paths
-                        for p in cp:
-                            if selftestdir in cp[p] and newselftestdir not in cp[p]:
-                                cp[p] = cp[p].replace(selftestdir, newselftestdir)
-                            if builddir in cp[p] and newbuilddir not in cp[p]:
-                                cp[p] = cp[p].replace(builddir, newbuilddir)
+                (builddir, newbuilddir) = suite.setupfunc("-st-" + str(ourpid), selftestdir, process_suite)
 
                 # Leave stderr and stdout open so we can see test noise
                 # Close stdin so that the child goes away if it decides to
