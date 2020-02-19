@@ -280,11 +280,15 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         return rc
 
     def _signal_clean_handler(self, signum, frame):
-        sys.exit(1)
+        if self.ourpid == os.getpid():
+            sys.exit(1)
     
     def run(self, logger, args):
         self._process_args(logger, args)
 
+        # Setup a SIGTERM handler to allow restoration of files like local.conf and bblayers.conf
+        # but don't interfer with other processes
+        self.ourpid = os.getpid()
         signal.signal(signal.SIGTERM, self._signal_clean_handler)
 
         rc = None
