@@ -174,9 +174,10 @@ class ReproducibleTests(OESelftestTestCase):
 
         # Build native utilities
         self.write_config('')
-        bitbake("diffoscope-native diffutils-native -c addto_recipe_sysroot")
+        bitbake("diffoscope-native diffutils-native jquery-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
         diffoscope_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffoscope-native")
+        jquery_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "jquery-native")
 
         if self.save_results:
             os.makedirs(self.save_results, exist_ok=True)
@@ -225,8 +226,14 @@ class ReproducibleTests(OESelftestTestCase):
                 os.rmdir(save_dir)
             else:
                 self.logger.info('Running diffoscope')
-                runCmd(['diffoscope', '--no-default-limits', '--exclude-directory-metadata', '--html-dir', 'diff-html', 'reproducibleA', 'reproducibleB'],
-                        native_sysroot=diffoscope_sysroot, ignore_status=True, cwd=os.path.join(save_dir, 'packages'))
+                package_dir = os.path.join(save_dir, 'packages')
+                package_html_dir = os.path.join(package_dir, 'diff-html')
+
+                # Copy jquery to improve the diffoscope output usability
+                self.copy_file(os.path.join(jquery_sysroot, 'usr/share/javascript/jquery/jquery.min.js'), os.path.join(package_html_dir, 'jquery.js'))
+
+                runCmd(['diffoscope', '--no-default-limits', '--exclude-directory-metadata', '--html-dir', package_html_dir, 'reproducibleA', 'reproducibleB'],
+                        native_sysroot=diffoscope_sysroot, ignore_status=True, cwd=package_dir)
 
         if fails:
             self.fail('\n'.join(fails))
