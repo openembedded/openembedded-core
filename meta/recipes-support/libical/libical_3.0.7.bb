@@ -40,5 +40,6 @@ do_install_append () {
     # Remove build host references
     sed -i \
        -e 's,${STAGING_LIBDIR},${libdir},g' \
+       -e 's,${STAGING_INCDIR},${includedir},g' \
        ${D}${libdir}/cmake/LibIcal/LibIcal*.cmake
 }
