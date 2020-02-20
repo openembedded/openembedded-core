@@ -1,4 +1,4 @@
-From 8ee1a4986ea35bd1e8ab867c5639d5fdbd944d9f Mon Sep 17 00:00:00 2001
+From 7b24f81e04c9d00d96de7dbd250beade6d2c6e44 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 Jan 2016 06:31:09 +0000
 Subject: [PATCH] warn for uses of system directories when cross linking
@@ -59,9 +59,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  ld/ldfile.c     | 17 +++++++++++++++++
  ld/ldlex.h      |  2 ++
  ld/ldmain.c     |  2 ++
- ld/lexsup.c     | 16 ++++++++++++++++
- 9 files changed, 86 insertions(+)
+ ld/lexsup.c     | 15 +++++++++++++++
+ 9 files changed, 85 insertions(+)
 
+diff --git a/ld/config.in b/ld/config.in
+index d93c9b0830..5da2742bea 100644
 --- a/ld/config.in
 +++ b/ld/config.in
 @@ -31,6 +31,9 @@
@@ -74,9 +76,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  /* Additional extension a shared object might have. */
  #undef EXTRA_SHLIB_EXTENSION
  
+diff --git a/ld/configure b/ld/configure
+index 811134a503..f8c17c19ae 100755
 --- a/ld/configure
 +++ b/ld/configure
-@@ -827,6 +827,7 @@ with_lib_path
+@@ -826,6 +826,7 @@ with_lib_path
  enable_targets
  enable_64_bit_bfd
  with_sysroot
@@ -93,7 +97,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
    --enable-gold[=ARG]     build gold [ARG={default,yes,no}]
    --enable-got=<type>     GOT handling scheme (target, single, negative,
                            multigot)
-@@ -16619,6 +16622,19 @@ fi
+@@ -15788,6 +15791,19 @@ fi
  
  
  
@@ -113,6 +117,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  # Check whether --enable-gold was given.
  if test "${enable_gold+set}" = set; then :
    enableval=$enable_gold; case "${enableval}" in
+diff --git a/ld/configure.ac b/ld/configure.ac
+index b5e849d84a..22e022ec03 100644
 --- a/ld/configure.ac
 +++ b/ld/configure.ac
 @@ -94,6 +94,16 @@ AC_SUBST(use_sysroot)
@@ -132,9 +138,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  dnl Use --enable-gold to decide if this linker should be the default.
  dnl "install_as_default" is set to false if gold is the default linker.
  dnl "installed_linker" is the installed BFD linker name.
+diff --git a/ld/ld.h b/ld/ld.h
+index 71fd781267..5c7843100b 100644
 --- a/ld/ld.h
 +++ b/ld/ld.h
-@@ -180,6 +180,14 @@ typedef struct
+@@ -166,6 +166,14 @@ typedef struct
       in the linker script.  */
    bfd_boolean force_group_allocation;
  
@@ -149,9 +157,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
    /* Big or little endian as set on command line.  */
    enum endian_enum endian;
  
+diff --git a/ld/ld.texi b/ld/ld.texi
+index eb7bcb9933..3c73d445a0 100644
 --- a/ld/ld.texi
 +++ b/ld/ld.texi
-@@ -2557,6 +2557,18 @@ string identifying the original linked f
+@@ -2551,6 +2551,18 @@ string identifying the original linked file does not change.
  
  Passing @code{none} for @var{style} disables the setting from any
  @code{--build-id} options earlier on the command line.
@@ -170,9 +180,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  @end table
  
  @c man end
+diff --git a/ld/ldfile.c b/ld/ldfile.c
+index 411f7ddf97..17db16c2cc 100644
 --- a/ld/ldfile.c
 +++ b/ld/ldfile.c
-@@ -116,6 +116,23 @@ ldfile_add_library_path (const char *nam
+@@ -117,6 +117,23 @@ ldfile_add_library_path (const char *name, bfd_boolean cmdline)
      new_dirs->name = concat (ld_sysroot, name + strlen ("$SYSROOT"), (const char *) NULL);
    else
      new_dirs->name = xstrdup (name);
@@ -196,6 +208,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  }
  
  /* Try to open a BFD for a lang_input_statement.  */
+diff --git a/ld/ldlex.h b/ld/ldlex.h
+index 5287f19a7f..55096e4fc9 100644
 --- a/ld/ldlex.h
 +++ b/ld/ldlex.h
 @@ -150,6 +150,8 @@ enum option_values
@@ -207,9 +221,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  };
  
  /* The initial parser states.  */
+diff --git a/ld/ldmain.c b/ld/ldmain.c
+index da1ad17763..12d0b07d8a 100644
 --- a/ld/ldmain.c
 +++ b/ld/ldmain.c
-@@ -270,6 +270,8 @@ main (int argc, char **argv)
+@@ -274,6 +274,8 @@ main (int argc, char **argv)
    command_line.warn_mismatch = TRUE;
    command_line.warn_search_mismatch = TRUE;
    command_line.check_section_addresses = -1;
@@ -218,9 +234,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  
    /* We initialize DEMANGLING based on the environment variable
       COLLECT_NO_DEMANGLE.  The gcc collect2 program will demangle the
+diff --git a/ld/lexsup.c b/ld/lexsup.c
+index 3d15cc491d..0e8b4f2b7a 100644
 --- a/ld/lexsup.c
 +++ b/ld/lexsup.c
-@@ -549,6 +549,14 @@ static const struct ld_option ld_options
+@@ -550,6 +550,14 @@ static const struct ld_option ld_options[] =
    { {"no-print-map-discarded", no_argument, NULL, OPTION_NO_PRINT_MAP_DISCARDED},
      '\0', NULL, N_("Do not show discarded sections in map file output"),
      TWO_DASHES },
@@ -235,7 +253,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  };
  
  #define OPTION_COUNT ARRAY_SIZE (ld_options)
-@@ -1590,6 +1598,13 @@ parse_args (unsigned argc, char **argv)
+@@ -1603,6 +1611,13 @@ parse_args (unsigned argc, char **argv)
  
  	case OPTION_PRINT_MAP_DISCARDED:
  	  config.print_map_discarded = TRUE;

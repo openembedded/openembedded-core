@@ -13,17 +13,12 @@ LICENSE = "GPLv3"
 
 DEPENDS = "flex-native bison-native zlib-native gnu-config-native autoconf-native"
 
-#
-# we need chrpath > 0.14 and some distros like centos 7 still have older chrpath
-#
-DEPENDS_append_class-target = " chrpath-replacement-native"
-EXTRANATIVEPATH_append_class-target = " chrpath-native"
-
 inherit autotools gettext multilib_header texinfo
 
 FILES_${PN} = " \
 	${bindir}/${TARGET_PREFIX}* \
-	${libdir}/lib*-*.so \
+	${libdir}/lib*.so.* \
+	${libdir}/lib*-${PV}*.so \
 	${prefix}/${TARGET_SYS}/bin/* \
         ${bindir}/embedspu"
 
@@ -33,6 +28,8 @@ FILES_${PN}-dev = " \
 	${includedir} \
 	${libdir}/*.la \
 	${libdir}/libbfd.so \
+	${libdir}/libctf.so \
+	${libdir}/libctf-nobfd.so \
 	${libdir}/libopcodes.so"
 
 # Rather than duplicating multiple entries for these, make one
@@ -80,6 +77,8 @@ EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
                 ${LDGOLD} \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)}"
 
+EXTRA_OECONF_append_x86-64 = " --enable-targets=x86_64-pe,x86_64-pep "
+
 LDGOLD_class-native = ""
 LDGOLD_class-crosssdk = ""
 LDGOLD ?= "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--enable-gold=default --enable-threads', '--enable-gold --enable-ld=default --enable-threads', d)}"
@@ -112,7 +111,14 @@ export CC_FOR_BUILD = "LD_LIBRARY_PATH= ${BUILD_CC}"
 MULTIARCH := "${@bb.utils.contains("DISTRO_FEATURES", "multiarch", "yes", "no", d)}"
 do_configure[vardeps] += "MULTIARCH"
 do_configure () {
-	(cd ${S}; gnu-configize) || die "Failed to run gnu-configize"
+	(for d in . bfd binutils gas gold gprof ld libctf opcodes; do
+		cd ${S}/$d
+		autoconf
+		rm -rf autom4te.cache
+	done
+	cd ${S}
+	gnu-configize)
+
 	oe_runconf
 #
 # must prime config.cache to ensure the build of libiberty
@@ -123,10 +129,6 @@ do_configure () {
 	done
 }
 
-do_compile_append_class-target() {
-	chrpath -d ${B}/binutils/elfedit
-	chrpath -d ${B}/binutils/readelf
-}
 do_install () {
 	autotools_do_install
 

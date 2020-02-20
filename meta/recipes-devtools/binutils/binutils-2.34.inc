@@ -14,35 +14,32 @@ def binutils_branch_version(d):
     pvsplit = d.getVar('PV').split('.')
     return pvsplit[0] + "_" + pvsplit[1]
 
-# When upgrading to 2.33, please make sure there is no trailing .0, so
+# When upgrading to 2.35, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.33.1"
-CVE_VERSION = "2.33"
+PV = "2.34"
+CVE_VERSION = "2.34"
 BINUPV = "${@binutils_branch_version(d)}"
 #BRANCH = "binutils-${BINUPV}-branch"
-BRANCH ?= "binutils-2_33-branch"
+BRANCH ?= "binutils-2_34-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "c656f9a430636a6a7fc7a08c0e08f0098a729a02"
+SRCREV ?= "d4b50999b3b287b5f984ade2f8734aa8c9359440"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${BRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
-     file://0003-configure-widen-the-regexp-for-SH-architectures.patch \
-     file://0004-Point-scripts-location-to-libdir.patch \
-     file://0005-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
-     file://0006-Use-libtool-2.4.patch \
-     file://0007-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
-     file://0008-warn-for-uses-of-system-directories-when-cross-linki.patch \
-     file://0009-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
-     file://0010-Change-default-emulation-for-mips64-linux.patch \
-     file://0011-Add-support-for-Netlogic-XLP.patch \
-     file://0012-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
-     file://0013-Detect-64-bit-MIPS-targets.patch \
-     file://0014-sync-with-OE-libtool-changes.patch \
-     file://0015-binutils-enable-x86_64-pep-for-producing-EFI-binarie.patch \
-     file://CVE-2019-17450.patch \
-     file://CVE-2019-17451.patch \
+     file://0004-configure-widen-the-regexp-for-SH-architectures.patch \
+     file://0005-Point-scripts-location-to-libdir.patch \
+     file://0006-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
+     file://0007-Use-libtool-2.4.patch \
+     file://0008-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
+     file://0009-warn-for-uses-of-system-directories-when-cross-linki.patch \
+     file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
+     file://0011-Change-default-emulation-for-mips64-linux.patch \
+     file://0012-Add-support-for-Netlogic-XLP.patch \
+     file://0013-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
+     file://0014-Detect-64-bit-MIPS-targets.patch \
+     file://0015-sync-with-OE-libtool-changes.patch \
 "
 S  = "${WORKDIR}/git"
 

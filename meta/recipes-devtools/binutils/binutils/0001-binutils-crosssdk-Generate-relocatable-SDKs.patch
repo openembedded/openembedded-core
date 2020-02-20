@@ -1,6 +1,6 @@
-From c9aed4cb3c02715b2ba1fc70949043849f202f46 Mon Sep 17 00:00:00 2001
+From b05f0be13aadf0b26a0b39dfe7daf2c47a300338 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Sun, 8 Dec 2019 00:31:35 -0800
+Date: Mon, 2 Mar 2015 01:58:54 +0000
 Subject: [PATCH] binutils-crosssdk: Generate relocatable SDKs
 
 This patch will modify the ELF linker scripts so that the crosssdk
@@ -18,23 +18,23 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/ld/genscripts.sh b/ld/genscripts.sh
-index cb2b081e9e..db2e9fd569 100755
+index 03392d265c..435689ea14 100755
 --- a/ld/genscripts.sh
 +++ b/ld/genscripts.sh
-@@ -325,6 +325,7 @@ DATA_ALIGNMENT_u="${DATA_ALIGNMENT_u-${DATA_ALIGNMENT_r}}"
+@@ -304,6 +304,7 @@ DATA_ALIGNMENT_u="${DATA_ALIGNMENT_u-${DATA_ALIGNMENT_r}}"
  LD_FLAG=r
  DATA_ALIGNMENT=${DATA_ALIGNMENT_r}
  DEFAULT_DATA_ALIGNMENT="ALIGN(${SEGMENT_SIZE})"
 +PARTIAL_LINKING=" "
- ( echo "/* Script for ld -r: link without relocation */"
+ ( echo "/* Script for -r */"
    source_sh ${CUSTOMIZER_SCRIPT}
    source_sh ${srcdir}/scripttempl/${SCRIPT_NAME}.sc
-@@ -333,10 +334,12 @@ DEFAULT_DATA_ALIGNMENT="ALIGN(${SEGMENT_SIZE})"
+@@ -312,10 +313,12 @@ DEFAULT_DATA_ALIGNMENT="ALIGN(${SEGMENT_SIZE})"
  LD_FLAG=u
  DATA_ALIGNMENT=${DATA_ALIGNMENT_u}
  CONSTRUCTING=" "
 +PARTIAL_LINKING=" "
- ( echo "/* Script for ld -Ur: link w/out relocation, do create constructors */"
+ ( echo "/* Script for -Ur */"
    source_sh ${CUSTOMIZER_SCRIPT}
    source_sh ${srcdir}/scripttempl/${SCRIPT_NAME}.sc
  ) | sed -e '/^ *$/d;s/[	 ]*$//' > ldscripts/${EMULATION_NAME}.xu
@@ -43,7 +43,7 @@ index cb2b081e9e..db2e9fd569 100755
  DATA_ALIGNMENT=${DATA_ALIGNMENT_}
  RELOCATING=" "
 diff --git a/ld/scripttempl/elf.sc b/ld/scripttempl/elf.sc
-index f9f0f7d402..9e469dca86 100644
+index 0b8b32a440..ee6b71075d 100644
 --- a/ld/scripttempl/elf.sc
 +++ b/ld/scripttempl/elf.sc
 @@ -140,8 +140,8 @@ if test -z "$DATA_SEGMENT_ALIGN"; then

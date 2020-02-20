@@ -49,9 +49,9 @@ do_install_class-native () {
 
 # Split out libbfd-*.so so including perf doesn't include extra stuff
 PACKAGE_BEFORE_PN += "libbfd"
-FILES_libbfd = "${libdir}/libbfd-*.so"
+FILES_libbfd = "${libdir}/libbfd-*.so.* ${libdir}/libbfd-*.so"
 
-SRC_URI_append_class-nativesdk =  " file://nativesdk-relocation.patch "
+SRC_URI_append_class-nativesdk =  " file://0003-binutils-nativesdk-Search-for-alternative-ld.so.conf.patch "
 
 USE_ALTERNATIVES_FOR_class-nativesdk = ""
 FILES_${PN}_append_class-nativesdk = " ${bindir}"
