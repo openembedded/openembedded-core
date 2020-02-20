@@ -61,6 +61,7 @@ PTESTS_FAST = "\
 #"
 
 PTESTS_SLOW = "\
+    babeltrace-ptest \
     busybox-ptest \
     dbus-test-ptest \
     e2fsprogs-ptest \
