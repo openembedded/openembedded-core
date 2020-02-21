@@ -55,7 +55,7 @@ PACKAGECONFIG[x11]        = "${X11ENABLEOPTS},${X11DISABLEOPTS},${X11DEPENDS}"
 # This is better done in a separate qt5 layer (which then should add a "qt5" packageconfig
 # in a gstreamer1.0-plugins-good bbappend).
 
-EXTRA_OECONF += " \
+EXTRA_OEMESON += " \
     -Daalib=disabled \
     -Ddirectsound=disabled \
     -Ddv=disabled \
@@ -64,7 +64,7 @@ EXTRA_OECONF += " \
     -Doss4=disabled \
     -Dosxaudio=disabled \
     -Dosxvideo=disabled \
-    -Dqt=disabled \
+    -Dqt5=disabled \
     -Dshout2=disabled \
     -Dtwolame=disabled \
     -Dwaveform=disabled \
