@@ -1,0 +1,46 @@
+From 3cccc0a2ab597b8273bddf08e9a3cc5551d7e530 Mon Sep 17 00:00:00 2001
+From: "djm@openbsd.org" <djm@openbsd.org>
+Date: Fri, 3 Jan 2020 03:02:26 +0000
+Subject: [PATCH] upstream: what bozo decided to use 2020 as a future date in a
+ regress
+
+test?
+
+OpenBSD-Regress-ID: 3b953df5a7e14081ff6cf495d4e8d40e153cbc3a
+
+Upstream-Status: Backport [https://github.com/openssh/openssh-portable/commit/ff31f15773ee173502eec4d7861ec56f26bba381]
+
+[Dropped the script version and copyright year change at the top]
+
+Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
+---
+ regress/cert-hostkey.sh | 2 +-
+ regress/cert-userkey.sh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/regress/cert-hostkey.sh b/regress/cert-hostkey.sh
+index 3ce7779..74d5a53 100644
+--- a/regress/cert-hostkey.sh
++++ b/regress/cert-hostkey.sh
+@@ -248,7 +248,7 @@ test_one() {
+ test_one "user-certificate"	failure "-n $HOSTS"
+ test_one "empty principals"	success "-h"
+ test_one "wrong principals"	failure "-h -n foo"
+-test_one "cert not yet valid"	failure "-h -V20200101:20300101"
++test_one "cert not yet valid"	failure "-h -V20300101:20320101"
+ test_one "cert expired"		failure "-h -V19800101:19900101"
+ test_one "cert valid interval"	success "-h -V-1w:+2w"
+ test_one "cert has constraints"	failure "-h -Oforce-command=false"
+diff --git a/regress/cert-userkey.sh b/regress/cert-userkey.sh
+index 6849e99..de455b8 100644
+--- a/regress/cert-userkey.sh
++++ b/regress/cert-userkey.sh
+@@ -327,7 +327,7 @@ test_one() {
+ test_one "correct principal"	success "-n ${USER}"
+ test_one "host-certificate"	failure "-n ${USER} -h"
+ test_one "wrong principals"	failure "-n foo"
+-test_one "cert not yet valid"	failure "-n ${USER} -V20200101:20300101"
++test_one "cert not yet valid"	failure "-n ${USER} -V20300101:20320101"
+ test_one "cert expired"		failure "-n ${USER} -V19800101:19900101"
+ test_one "cert valid interval"	success "-n ${USER} -V-1w:+2w"
+ test_one "wrong source-address"	failure "-n ${USER} -Osource-address=10.0.0.0/8"
