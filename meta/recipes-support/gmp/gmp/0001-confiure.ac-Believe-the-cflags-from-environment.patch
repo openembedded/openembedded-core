@@ -18,13 +18,11 @@ Upstream-Status: Inappropriate[OE-Specific]
  configure.ac | 11 -----------
  1 file changed, 11 deletions(-)
 
-Index: gmp-6.1.2/configure.ac
-===================================================================
---- gmp-6.1.2.orig/configure.ac
-+++ gmp-6.1.2/configure.ac
-@@ -604,15 +604,6 @@ case $host in
-     any_32_testlist="sizeof-long-4"
-     any_64_testlist="sizeof-long-8"
+--- a/configure.ac
++++ b/configure.ac
+@@ -625,17 +625,6 @@ case $host in
+     any_32_testlist="sizeof-void*-4"
+     any_64_testlist="sizeof-void*-8"
  
 -    # This is needed for clang, which is not content with flags like -mfpu=neon
 -    # alone.
@@ -33,12 +31,14 @@ Index: gmp-6.1.2/configure.ac
 -        gcc_cflags_fpmode="-mfloat-abi=softfp" ;;
 -      *-*-*eabihf)
 -        gcc_cflags_fpmode="-mfloat-abi=hard" ;;
+-      *-*-mingw*)
+-        limb_64=longlong ;;
 -    esac
 -
      # FIXME: We make mandatory compiler options optional here.  We should
      # either enforce them, or organise to strip paths as the corresponding
      # options fail.
-@@ -746,8 +737,6 @@ case $host in
+@@ -780,8 +769,6 @@ case $host in
  	;;
        *)
  	path="arm"
