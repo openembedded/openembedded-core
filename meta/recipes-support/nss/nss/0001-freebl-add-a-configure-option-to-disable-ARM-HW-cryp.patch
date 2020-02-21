@@ -42,8 +42,8 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  /* old gcc doesn't support some poly64x2_t intrinsic */
  #if defined(__aarch64__) && defined(IS_LITTLE_ENDIAN) && \
      (defined(__clang__) || defined(__GNUC__) && __GNUC__ > 6)
-@@ -28,6 +29,7 @@
-  * that compiler uses -mfpu=neon only. */
+@@ -25,6 +26,7 @@
+ /* We don't test on big endian platform, so disable this on big endian. */
  #define USE_ARM_GCM
  #endif
 +#endif
