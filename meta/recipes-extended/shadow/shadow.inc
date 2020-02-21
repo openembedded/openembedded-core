@@ -13,7 +13,6 @@ SRC_URI = "https://github.com/shadow-maint/shadow/releases/download/${PV}/${BP}.
            file://shadow-4.1.3-dots-in-usernames.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://shadow-relaxed-usernames.patch \
-           file://CVE-2019-19882.patch \
            "
 
 SRC_URI_append_class-target = " \
@@ -25,14 +24,13 @@ SRC_URI_append_class-native = " \
            file://0001-Disable-use-of-syslog-for-sysroot.patch \
            file://0002-Allow-for-setting-password-in-clear-text.patch \
            file://commonio.c-fix-unexpected-open-failure-in-chroot-env.patch \
-           file://0001-Do-not-check-for-validity-of-shell-executable.patch \
            "
 SRC_URI_append_class-nativesdk = " \
            file://0001-Disable-use-of-syslog-for-sysroot.patch \
            "
 
-SRC_URI[md5sum] = "017ac773ba370bc28e157cee30dad71a"
-SRC_URI[sha256sum] = "82016d65317555fc8ce9e669eb187984d8d4b1f8ecda0769f4bc5412aed326e4"
+SRC_URI[md5sum] = "3d97f11e66bfb0b14702b115fa8be480"
+SRC_URI[sha256sum] = "3ee3081fbbcbcfea5c8916419e46bc724807bab271072104f23e7a29e9668f3a"
 
 # Additional Policy files for PAM
 PAM_SRC_URI = "file://pam.d/chfn \
