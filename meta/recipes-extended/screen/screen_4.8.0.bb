@@ -9,7 +9,8 @@ SECTION = "console/utils"
 
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://screen.h;endline=26;md5=3971142989289a8198a544220703c2bf"
+                    file://screen.h;endline=26;md5=b8dc717c9a3dba842ae6c44ca0f73f52 \
+                    "
 
 DEPENDS = "ncurses virtual/crypt \
           ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -22,8 +23,8 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            file://0001-Remove-more-compatibility-stuff.patch \
           "
 
-SRC_URI[md5sum] = "b8971ebd68d046f2814d1040cb8e6641"
-SRC_URI[sha256sum] = "da775328fa783bd2a787d722014dbd99c6093effc11f337827604c2efc5d20c1"
+SRC_URI[md5sum] = "d276213d3acd10339cd37848b8c4ab1e"
+SRC_URI[sha256sum] = "6e11b13d8489925fde25dfb0935bf6ed71f9eb47eff233a181e078fde5655aa1"
 
 inherit autotools texinfo
 
