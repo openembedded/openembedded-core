@@ -7,6 +7,7 @@ SRC_URI = "\
   http://www.sqlite.org/2019/sqlite-autoconf-${SQLITE_PV}.tar.gz \
   file://CVE-2019-9936.patch \
   file://CVE-2019-9937.patch \
+  file://0001-Fix-CVE-2019-16168.patch \
   "
 
 SRC_URI[md5sum] = "1f72631ce6e8efa5b4a6e55a43b3bdc0"
