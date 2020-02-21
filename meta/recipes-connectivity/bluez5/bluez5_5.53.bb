@@ -1,7 +1,7 @@
 require bluez5.inc
 
-SRC_URI[md5sum] = "a33eb9aadf1dd4153420958709d3ce60"
-SRC_URI[sha256sum] = "f7144ce2039202cfac18ccb52426efea11c98e4f6e1bb8041bcb994b8378560a"
+SRC_URI[md5sum] = "85b14abb138948f50b1650aa866cb019"
+SRC_URI[sha256sum] = "38aa2da8302fefad53116bb281a11968732a42eeb19c5fb3668342f39b7938bc"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
