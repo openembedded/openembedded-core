@@ -1,4 +1,7 @@
+exec includedir should be pointing to general yocto includdir
+
 Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 Index: gmp-6.1.2/Makefile.am
 ===================================================================
