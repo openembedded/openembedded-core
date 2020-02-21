@@ -28,6 +28,7 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://CVE-2019-6109.patch \
            file://0001-upstream-Have-progressmeter-force-an-update-at-the-b.patch \
            file://CVE-2019-6111.patch \
+           file://0001-upstream-what-bozo-decided-to-use-2020-as-a-future-d.patch \
            "
 SRC_URI[md5sum] = "c6af50b7a474d04726a5aa747a5dce8f"
 SRC_URI[sha256sum] = "6b4b3ba2253d84ed3771c8050728d597c91cfce898713beb7b64a305b6f11aad"
