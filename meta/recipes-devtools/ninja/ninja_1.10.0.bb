@@ -5,11 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a81586a64ad4e476c791cda7e2f2c52e"
 
 DEPENDS = "re2c-native ninja-native"
 
-SRCREV = "b25c08bda4949192c69cea4cee057887341a2ffc"
+SRCREV = "ed7f67040b370189d989adbd60ff8ea29957231f"
 
-SRC_URI = "git://github.com/ninja-build/ninja.git;branch=release \
-           file://fix-musl.patch \
-"
+SRC_URI = "git://github.com/ninja-build/ninja.git;branch=release"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 S = "${WORKDIR}/git"
