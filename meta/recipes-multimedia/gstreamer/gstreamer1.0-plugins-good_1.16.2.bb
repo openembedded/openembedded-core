@@ -4,8 +4,8 @@ SRC_URI = " \
             https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-${PV}.tar.xz \
             "
 
-SRC_URI[md5sum] = "515987ee763256840a11bd8ea098f2bf"
-SRC_URI[sha256sum] = "9fbabe69018fcec707df0b71150168776040cde6c1a26bb5a82a136755fa8f1f"
+SRC_URI[md5sum] = "bd025f8f14974f94b75ac69a9d1b9c93"
+SRC_URI[sha256sum] = "40bb3bafda25c0b739c8fc36e48380fccf61c4d3f83747e97ac3f9b0171b1319"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"
 
