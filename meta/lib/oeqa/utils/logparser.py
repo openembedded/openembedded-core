@@ -26,7 +26,7 @@ class PtestParser(object):
         section_regex['timeout'] = re.compile(r"^TIMEOUT: .*/(.+)/ptest")
 
         # Cache markers so we don't take the re.search() hit all the time.
-        markers = ("PASSED", "FAILED", "SKIPPED", "BEGIN:", "END:", "DURATION:", "ERROR: Exit", "TIMEOUT:")
+        markers = ("PASS:", "FAIL:", "SKIP:", "BEGIN:", "END:", "DURATION:", "ERROR: Exit", "TIMEOUT:")
 
         def newsection():
             return { 'name': "No-section", 'log': [] }
