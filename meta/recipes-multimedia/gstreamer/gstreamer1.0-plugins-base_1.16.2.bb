@@ -13,8 +13,8 @@ SRC_URI = " \
             file://0005-viv-fb-Make-sure-config.h-is-included.patch \
             file://0009-glimagesink-Downrank-to-marginal.patch \
             "
-SRC_URI[md5sum] = "b5eb0651bab70bf1714f103bdd66ce47"
-SRC_URI[sha256sum] = "5c3cc489933d0597087c9bc6ba251c93693d64554bcc563539a084fa2d5fcb2b"
+SRC_URI[md5sum] = "3fdb32823535799a748c1fc14f978e2c"
+SRC_URI[sha256sum] = "b13e73e2fe74a4166552f9577c3dcb24bed077021b9c7fa600d910ec6987816a"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 
