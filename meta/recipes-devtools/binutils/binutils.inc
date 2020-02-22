@@ -75,9 +75,12 @@ EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
                 --enable-deterministic-archives \
                 --enable-plugins \
                 ${LDGOLD} \
+                ${EXTRA_TARGETS} \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)}"
 
-EXTRA_OECONF_append_x86-64 = " --enable-targets=x86_64-pe,x86_64-pep "
+EXTRA_TARGETS = ""
+EXTRA_TARGETS_x86-64 = " --enable-targets=x86_64-pe,x86_64-pep "
+EXTRA_TARGETS_class-native = ""
 
 LDGOLD_class-native = ""
 LDGOLD_class-crosssdk = ""
