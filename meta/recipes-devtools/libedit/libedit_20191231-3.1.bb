@@ -17,3 +17,9 @@ SRC_URI[md5sum] = "2e22a51131de94ff2df24901f7cfe416"
 SRC_URI[sha256sum] = "dbb82cb7e116a5f8025d35ef5b4f7d4a3cdd0a3909a146a39112095a2d229071"
 
 BBCLASSEXTEND = "native nativesdk"
+
+inherit update-alternatives
+
+ALTERNATIVE_PRIORITY = "90"
+ALTERNATIVE_${PN} = "history.3"
+ALTERNATIVE_LINK_NAME[history.3] = "${mandir}/man3/history.3"
