@@ -1,7 +1,7 @@
 [Unit]
 Description=Start psplash boot splash screen
 DefaultDependencies=no
-Requires=psplash-systemd.service
+RequiresMountsFor=/run
 
 [Service]
 ExecStart=/usr/bin/psplash
