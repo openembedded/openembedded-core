@@ -8,7 +8,9 @@ DEPENDS = "glib-2.0 libxkbcommon wayland virtual/egl libwpe"
 
 DEPENDS_append_class-target = " wayland-native"
 
-inherit cmake
+inherit cmake features_check
+
+REQUIRED_DISTRO_FEATURES = "opengl"
 
 SRC_URI = "https://wpewebkit.org/releases/${BPN}-${PV}.tar.xz"
 SRC_URI[sha256sum] = "6249a0b7cbfa662206a8d2fa24e2c574e75c681ad0e93468091f1dc68ddb299d"
