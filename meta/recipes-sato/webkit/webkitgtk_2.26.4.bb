@@ -124,9 +124,5 @@ ARM_INSTRUCTION_SET_armv7a = "thumb"
 ARM_INSTRUCTION_SET_armv7r = "thumb"
 ARM_INSTRUCTION_SET_armv7ve = "thumb"
 
-# qemu: uncaught target signal 11 (Segmentation fault) - core dumped
-# Segmentation fault
-GI_DATA_ENABLED_armv7a = "False"
-
 # Can't be built with ccache
 CCACHE_DISABLE = "1"
