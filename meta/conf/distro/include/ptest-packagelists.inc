@@ -58,6 +58,7 @@ PTESTS_FAST = "\
 #    rt-tests-ptest \ # Needs to be checked whether it runs at all
 #    bash-ptest \ # Test outcomes are non-deterministic by design
 #    ifupdown-ptest \ # Tested separately in lib/oeqa/selftest/cases/imagefeatures.py
+#    mdadm-ptest \ # Tests rely on non-deterministic sleep() amounts
 #"
 
 PTESTS_SLOW = "\
@@ -69,7 +70,6 @@ PTESTS_SLOW = "\
     gstreamer1.0-ptest \
     libevent-ptest \
     lttng-tools-ptest \
-    mdadm-ptest \
     openssh-ptest \
     openssl-ptest \
     perl-ptest \
