@@ -18,7 +18,20 @@ class PtestRunnerTest(OERuntimeTestCase):
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['ptest-runner'])
     @unittest.expectedFailure
-    def test_ptestrunner(self):
+    def test_ptestrunner_expectfail(self):
+        if not self.td.get('PTEST_EXPECT_FAILURE'):
+            self.skipTest('Cannot run ptests with @expectedFailure as ptests are required to pass')
+        self.do_ptestrunner()
+
+    @skipIfNotFeature('ptest', 'Test requires ptest to be in DISTRO_FEATURES')
+    @OETestDepends(['ssh.SSHTest.test_ssh'])
+    @OEHasPackage(['ptest-runner'])
+    def test_ptestrunner_expectsuccess(self):
+        if self.td.get('PTEST_EXPECT_FAILURE'):
+            self.skipTest('Cannot run ptests without @expectedFailure as ptests are expected to fail')
+        self.do_ptestrunner()
+
+    def do_ptestrunner(self):
         status, output = self.target.run('which ptest-runner', 0)
         if status != 0:
             self.skipTest("No -ptest packages are installed in the image")
