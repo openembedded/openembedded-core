@@ -2171,10 +2171,12 @@ python package_depchains() {
 # iteration, we need to list them here:
 PACKAGEVARS = "FILES RDEPENDS RRECOMMENDS SUMMARY DESCRIPTION RSUGGESTS RPROVIDES RCONFLICTS PKG ALLOW_EMPTY pkg_postinst pkg_postrm pkg_postinst_ontarget INITSCRIPT_NAME INITSCRIPT_PARAMS DEBIAN_NOAUTONAME ALTERNATIVE PKGE PKGV PKGR USERADD_PARAM GROUPADD_PARAM CONFFILES SYSTEMD_SERVICE LICENSE SECTION pkg_preinst pkg_prerm RREPLACES GROUPMEMS_PARAM SYSTEMD_AUTO_ENABLE SKIP_FILEDEPS PRIVATE_LIBS"
 
-def gen_packagevar(d):
+def gen_packagevar(d, pkgvars="PACKAGEVARS"):
     ret = []
     pkgs = (d.getVar("PACKAGES") or "").split()
-    vars = (d.getVar("PACKAGEVARS") or "").split()
+    vars = (d.getVar(pkgvars) or "").split()
+    for v in vars:
+        ret.append(v)
     for p in pkgs:
         for v in vars:
             ret.append(v + "_" + p)
