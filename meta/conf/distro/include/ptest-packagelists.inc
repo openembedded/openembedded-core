@@ -47,6 +47,7 @@ PTESTS_FAST = "\
     quilt-ptest \
     sed-ptest \
     slang-ptest \
+    wayland-ptest \
     zlib-ptest \
 "
 
