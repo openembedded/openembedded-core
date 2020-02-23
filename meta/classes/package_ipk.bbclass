@@ -237,6 +237,10 @@ def ipk_write_pkg(pkg, d):
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
 
+# Have to list any variables referenced as X_<pkg> that aren't in pkgdata here
+IPKEXTRAVARS = "PRIORITY MAINTAINER PACKAGE_ARCH HOMEPAGE"
+ipk_write_pkg[vardeps] += "${@gen_packagevar(d, 'IPKEXTRAVARS')}"
+
 # Otherwise allarch packages may change depending on override configuration
 ipk_write_pkg[vardepsexclude] = "OVERRIDES"
 
