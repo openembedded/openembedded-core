@@ -30,7 +30,7 @@ REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
 CVE_PRODUCT = "webkitgtk webkitgtk\+"
 
-DEPENDS = "zlib libsoup-2.4 curl libxml2 cairo libxslt libxt libidn libgcrypt \
+DEPENDS = "zlib libsoup-2.4 curl libxml2 cairo libxslt libxt libgcrypt \
            gtk+3 gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 \
 	   pango icu bison-native gawk intltool-native libwebp \
 	   atk udev harfbuzz jpeg libpng librsvg libtheora libvorbis libxcomposite libxtst \
