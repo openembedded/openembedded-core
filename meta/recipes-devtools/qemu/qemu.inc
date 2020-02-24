@@ -29,7 +29,8 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0010-configure-Add-pkg-config-handling-for-libgcrypt.patch \
            file://0011-hw-i386-pc-fix-regression-in-parsing-vga-cmdline-par.patch \
            file://CVE-2019-15890.patch \
-           "
+           file://CVE-2020-1711.patch \
+	   "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
 SRC_URI[md5sum] = "278eeb294e4b497e79af7a57e660cb9a"
