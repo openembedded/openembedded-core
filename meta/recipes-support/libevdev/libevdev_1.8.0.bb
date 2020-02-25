@@ -12,3 +12,5 @@ SRC_URI[md5sum] = "879631080be18526737e33b63d848039"
 SRC_URI[sha256sum] = "20d3cae4efd277f485abdf8f2a7c46588e539998b5a08c2c4d368218379d4211"
 
 inherit autotools pkgconfig
+
+UPSTREAM_CHECK_REGEX = "libevdev-(?P<pver>(\d+\.)+(?!90\d+)\d+)"
