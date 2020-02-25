@@ -45,6 +45,12 @@ do_install_append_class-target () {
 
 do_install_ptest () {
     cp -rf ${S}/test ${D}${PTEST_PATH}/
+
+    install -D ${S}/tool/test/runner.rb ${D}${PTEST_PATH}/tool/test/runner.rb
+    cp -r ${S}/tool/lib ${D}${PTEST_PATH}/tool/
+    mkdir -p ${D}${PTEST_PATH}/lib
+    cp -r ${S}/lib/did_you_mean ${S}/lib/rdoc ${D}${PTEST_PATH}/lib
+
     # install test-binaries
     find $(find ./.ext -path '*/-test-') -name '*.so' -print0 \
         | tar --no-recursion --null -T - --no-same-owner --preserve-permissions -cf - \
