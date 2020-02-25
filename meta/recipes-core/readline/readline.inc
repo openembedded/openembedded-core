@@ -47,7 +47,7 @@ CONFFILES_${PN} += "${sysconfdir}/inputrc"
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE_${PN} = "history.3"
+ALTERNATIVE_${PN}-doc = "history.3"
 ALTERNATIVE_LINK_NAME[history.3] = "${mandir}/man3/history.3"
 
 # OpenSuse injects versions into libreadline leading to conficits between our native one and theirs
