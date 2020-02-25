@@ -33,8 +33,8 @@ EXTRA_OECONF += "--enable-largefile"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "59bff5ee6216cbb76c8354f6dd6f5a5a"
-SRC_URI[sha256sum] = "fcf87f3ad8db2e4f74f32526dee62dd1fb9894782b0a503a89c9d7a70a235191"
+SRC_URI[md5sum] = "d953ed6b47694dadf0e6042f8f9ff451"
+SRC_URI[sha256sum] = "b60d58d12632ecf1e8fad7316dc82c6b9738a35625746b47ecdcaf4aed176176"
 
 inherit autotools update-alternatives pkgconfig
 
