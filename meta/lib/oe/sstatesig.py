@@ -477,11 +477,14 @@ def OEOuthashBasic(path, sigfile, task, d):
     h = hashlib.sha256()
     prev_dir = os.getcwd()
     include_owners = os.environ.get('PSEUDO_DISABLED') == '0'
+    extra_content = d.getVar('HASHEQUIV_HASH_VERSION')
 
     try:
         os.chdir(path)
 
         update_hash("OEOuthashBasic\n")
+        if extra_content:
+            update_hash(extra_content + "\n")
 
         # It is only currently useful to get equivalent hashes for things that
         # can be restored from sstate. Since the sstate object is named using
