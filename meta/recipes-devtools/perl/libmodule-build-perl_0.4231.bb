@@ -15,9 +15,9 @@ LIC_FILES_CHKSUM = "file://README;beginline=949;endline=954;md5=624c06db56a2af4d
 
 SRC_URI = "${CPAN_MIRROR}/authors/id/L/LE/LEONT/Module-Build-${PV}.tar.gz \
            file://run-ptest \
-          "
-SRC_URI[md5sum] = "1447d9e02e63f7a1643986789a8f1ba9"
-SRC_URI[sha256sum] = "1fe491a6cda914b01bc8e592faa2b5404e9f35915ca15322f8f2a8d8f9008c18"
+           "
+SRC_URI[md5sum] = "066b193e461d7dfe1eca17a139353001"
+SRC_URI[sha256sum] = "7e0f4c692c1740c1ac84ea14d7ea3d8bc798b2fb26c09877229e04f430b2b717"
 
 S = "${WORKDIR}/Module-Build-${PV}"
 
@@ -75,9 +75,10 @@ RDEPENDS_${PN} += " \
 "
 
 RDEPENDS_${PN}-ptest += " \
-    gcc \
-    make \
+    packagegroup-core-buildessential \
+    perl-dev \
     perl-module-blib \
+    perl-module-extutils-command-mm \
     perl-module-file-temp \
     perl-module-lib \
     perl-module-perlio \
@@ -102,5 +103,8 @@ RPROVIDES_${PN} += "\
     libmodule-build-platform-unix-perl \
     libmodule-build-podparser-perl \
 "
+
+# t/xs.t RDEPENDS on "EXTERN.h" provided by perl-dev
+INSANE_SKIP_${PN}-ptest = "dev-deps"
 
 BBCLASSEXTEND = "native"
