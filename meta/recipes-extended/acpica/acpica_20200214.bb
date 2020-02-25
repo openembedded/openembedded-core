@@ -10,15 +10,15 @@ HOMEPAGE = "http://www.acpica.org/"
 SECTION = "console/tools"
 
 LICENSE = "Intel | BSD | GPLv2"
-LIC_FILES_CHKSUM = "file://source/compiler/aslcompile.c;beginline=7;endline=150;md5=b5690d9ef8d54b2b1e1cc98aad64cd87"
+LIC_FILES_CHKSUM = "file://source/compiler/aslcompile.c;beginline=7;endline=150;md5=6adbcb81e9ee6ae50c569b94fe12f7c5"
 
 COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
 DEPENDS = "m4-native flex-native bison-native"
 
 SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix-${PV}.tar.gz"
-SRC_URI[md5sum] = "0f0eb38e796fac24c2aa4d9b6adcd950"
-SRC_URI[sha256sum] = "304930df9836d3d4cdbf67a3ae6bd96dbc65f62602d869f571f4b6a12341e6c6"
+SRC_URI[md5sum] = "3505ba6170b77db1399eae0e2a959113"
+SRC_URI[sha256sum] = "e77ab9f8557ca104f6e8f49efaa8eead29f78ca11cadfc8989012469ecc0738e"
 UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
 S = "${WORKDIR}/acpica-unix-${PV}"
