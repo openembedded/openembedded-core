@@ -6,16 +6,15 @@ SUMMARY = "Perl Compatible Regular Expressions"
 HOMEPAGE = "http://www.pcre.org"
 SECTION = "devel"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=91bee59d1b327eb1599b4c673e2fb3d1"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=3bb381a66a5385b246d4877922e7511e"
 SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre-${PV}.tar.bz2 \
            file://fix-pcre-name-collision.patch \
-           file://out-of-tree.patch \
            file://run-ptest \
            file://Makefile \
-"
+           "
 
-SRC_URI[md5sum] = "636222e79e392c3d95dcc545f24f98c4"
-SRC_URI[sha256sum] = "91e762520003013834ac1adb4a938d53b22a216341c061b0cf05603b290faf6b"
+SRC_URI[md5sum] = "cf7326204cc46c755b5b2608033d9d24"
+SRC_URI[sha256sum] = "19108658b23b3ec5058edc9f66ac545ea19f9537234be1ec62b714c84399366d"
 
 CVE_PRODUCT = "pcre"
 
