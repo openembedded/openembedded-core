@@ -123,5 +123,10 @@ ARM_INSTRUCTION_SET_armv7a = "thumb"
 ARM_INSTRUCTION_SET_armv7r = "thumb"
 ARM_INSTRUCTION_SET_armv7ve = "thumb"
 
+# introspection inside qemu-arm hangs forever on musl/arm builds
+# therefore disable GI_DATA
+GI_DATA_ENABLED_libc-musl_armv7a = "False"
+GI_DATA_ENABLED_libc-musl_armv7ve = "False"
+
 # Can't be built with ccache
 CCACHE_DISABLE = "1"
