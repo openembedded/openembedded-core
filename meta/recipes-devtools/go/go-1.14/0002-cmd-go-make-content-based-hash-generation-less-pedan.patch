@@ -50,11 +50,9 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/cmd/go/internal/work/exec.go  | 66 ++++++++++++++++++++++---------
  2 files changed, 49 insertions(+), 19 deletions(-)
 
-diff --git a/src/cmd/go/internal/envcmd/env.go b/src/cmd/go/internal/envcmd/env.go
-index 7b5ec5e..292f117 100644
 --- a/src/cmd/go/internal/envcmd/env.go
 +++ b/src/cmd/go/internal/envcmd/env.go
-@@ -154,7 +154,7 @@ func ExtraEnvVars() []cfg.EnvVar {
+@@ -156,7 +156,7 @@ func ExtraEnvVars() []cfg.EnvVar {
  func ExtraEnvVarsCostly() []cfg.EnvVar {
  	var b work.Builder
  	b.Init()
@@ -63,8 +61,6 @@ index 7b5ec5e..292f117 100644
  	if err != nil {
  		// Should not happen - b.CFlags was given an empty package.
  		fmt.Fprintf(os.Stderr, "go: invalid cflags: %v\n", err)
-diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
-index 7dd9a90..ccebaf8 100644
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
 @@ -32,6 +32,8 @@ import (
@@ -76,16 +72,16 @@ index 7dd9a90..ccebaf8 100644
  // actionList returns the list of actions in the dag rooted at root
  // as visited in a depth-first post-order traversal.
  func actionList(root *Action) []*Action {
-@@ -205,7 +207,7 @@ func (b *Builder) buildActionID(a *Action) cache.ActionID {
- 	// The compiler hides the exact value of $GOROOT
- 	// when building things in GOROOT.
+@@ -208,7 +210,7 @@ func (b *Builder) buildActionID(a *Actio
  	// Assume b.WorkDir is being trimmed properly.
+ 	// When -trimpath is used with a package built from the module cache,
+ 	// use the module path and version instead of the directory.
 -	if !p.Goroot && !cfg.BuildTrimpath && !strings.HasPrefix(p.Dir, b.WorkDir) {
 +	if !p.Goroot && !omitGopath && !cfg.BuildTrimpath && !strings.HasPrefix(p.Dir, b.WorkDir) {
  		fmt.Fprintf(h, "dir %s\n", p.Dir)
- 	}
- 	fmt.Fprintf(h, "goos %s goarch %s\n", cfg.Goos, cfg.Goarch)
-@@ -219,13 +221,13 @@ func (b *Builder) buildActionID(a *Action) cache.ActionID {
+ 	} else if cfg.BuildTrimpath && p.Module != nil {
+ 		fmt.Fprintf(h, "module %s@%s\n", p.Module.Path, p.Module.Version)
+@@ -224,13 +226,13 @@ func (b *Builder) buildActionID(a *Actio
  	}
  	if len(p.CgoFiles)+len(p.SwigFiles) > 0 {
  		fmt.Fprintf(h, "cgo %q\n", b.toolID("cgo"))
@@ -103,7 +99,7 @@ index 7dd9a90..ccebaf8 100644
  		}
  		// TODO(rsc): Should we include the SWIG version or Fortran/GCC/G++/Objective-C compiler versions?
  	}
-@@ -2229,33 +2231,48 @@ var (
+@@ -2228,33 +2230,48 @@ var (
  // gccCmd returns a gcc command line prefix
  // defaultCC is defined in zdefaultcc.go, written by cmd/dist.
  func (b *Builder) GccCmd(incdir, workdir string) []string {
@@ -161,7 +157,7 @@ index 7dd9a90..ccebaf8 100644
  }
  
  // compilerExe returns the compiler to use given an
-@@ -2264,11 +2281,16 @@ func (b *Builder) fcExe() []string {
+@@ -2263,11 +2280,16 @@ func (b *Builder) fcExe() []string {
  // of the compiler but can have additional arguments if they
  // were present in the environment value.
  // For example if CC="gcc -DGOPHER" then the result is ["gcc", "-DGOPHER"].
@@ -179,7 +175,7 @@ index 7dd9a90..ccebaf8 100644
  	return compiler
  }
  
-@@ -2429,7 +2451,7 @@ func envList(key, def string) []string {
+@@ -2428,7 +2450,7 @@ func envList(key, def string) []string {
  }
  
  // CFlags returns the flags to use when invoking the C, C++ or Fortran compilers, or cgo.
@@ -188,7 +184,7 @@ index 7dd9a90..ccebaf8 100644
  	defaults := "-g -O2"
  
  	if cppflags, err = buildFlags("CPPFLAGS", "", p.CgoCPPFLAGS, checkCompilerFlags); err != nil {
-@@ -2448,6 +2470,14 @@ func (b *Builder) CFlags(p *load.Package) (cppflags, cflags, cxxflags, fflags, l
+@@ -2447,6 +2469,14 @@ func (b *Builder) CFlags(p *load.Package
  		return
  	}
  
@@ -203,7 +199,7 @@ index 7dd9a90..ccebaf8 100644
  	return
  }
  
-@@ -2462,7 +2492,7 @@ var cgoRe = lazyregexp.New(`[/\\:]`)
+@@ -2461,7 +2491,7 @@ var cgoRe = lazyregexp.New(`[/\\:]`)
  
  func (b *Builder) cgo(a *Action, cgoExe, objdir string, pcCFLAGS, pcLDFLAGS, cgofiles, gccfiles, gxxfiles, mfiles, ffiles []string) (outGo, outObj []string, err error) {
  	p := a.Package
@@ -212,7 +208,7 @@ index 7dd9a90..ccebaf8 100644
  	if err != nil {
  		return nil, nil, err
  	}
-@@ -2821,7 +2851,7 @@ func (b *Builder) swigIntSize(objdir string) (intsize string, err error) {
+@@ -2820,7 +2850,7 @@ func (b *Builder) swigIntSize(objdir str
  
  // Run SWIG on one SWIG input file.
  func (b *Builder) swigOne(a *Action, p *load.Package, file, objdir string, pcCFLAGS []string, cxx bool, intgosize string) (outGo, outC string, err error) {
@@ -221,6 +217,3 @@ index 7dd9a90..ccebaf8 100644
  	if err != nil {
  		return "", "", err
  	}
--- 
-2.17.1 (Apple Git-112)
-
