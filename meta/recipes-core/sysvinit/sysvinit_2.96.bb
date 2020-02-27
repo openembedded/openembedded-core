@@ -110,4 +110,5 @@ do_install () {
 
         # Already provided by e2fsprogs; sysvinit's version is a copy from there
         rm ${D}${base_sbindir}/logsave
+        rm ${D}${mandir}/man8/logsave.8
 }
