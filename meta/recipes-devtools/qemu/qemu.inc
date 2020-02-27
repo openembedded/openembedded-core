@@ -30,6 +30,9 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0011-hw-i386-pc-fix-regression-in-parsing-vga-cmdline-par.patch \
            file://CVE-2019-15890.patch \
            file://CVE-2020-1711.patch \
+           file://CVE-2020-7039-1.patch \
+           file://CVE-2020-7039-2.patch \
+           file://CVE-2020-7039-3.patch \
 	   "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
