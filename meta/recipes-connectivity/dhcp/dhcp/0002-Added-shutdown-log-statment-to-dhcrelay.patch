@@ -1,0 +1,29 @@
+From adcd34ae1f56b16d7e9696d980332b4cf6c7ce91 Mon Sep 17 00:00:00 2001
+From: Thomas Markwalder <tmark@isc.org>
+Date: Fri, 13 Sep 2019 15:03:31 -0400
+Subject: [PATCH 2/3] Added shutdown log statment to dhcrelay
+
+Upstream-Status: Backport [https://gitlab.isc.org/isc-projects/dhcp.git]
+
+Signed-off-by: Ovidiu Panait <ovidiu.panait@windriver.com>
+---
+ relay/dhcrelay.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/relay/dhcrelay.c b/relay/dhcrelay.c
+index d8caaaf..4bd1d47 100644
+--- a/relay/dhcrelay.c
++++ b/relay/dhcrelay.c
+@@ -2076,6 +2076,9 @@ dhcp_set_control_state(control_object_state_t oldstate,
+ 	if (newstate != server_shutdown)
+ 		return ISC_R_SUCCESS;
+ 
++	/* Log shutdown on signal. */
++	log_info("Received signal %d, initiating shutdown.", shutdown_signal);
++
+ 	if (no_pid_file == ISC_FALSE)
+ 		(void) unlink(path_dhcrelay_pid);
+ 
+-- 
+2.23.0
+

@@ -1,0 +1,31 @@
+From e4b54b4d676783152d487103714cba2913661ef8 Mon Sep 17 00:00:00 2001
+From: Thomas Markwalder <tmark@isc.org>
+Date: Wed, 6 Nov 2019 15:53:50 -0500
+Subject: [PATCH 3/3] Addressed review comment.
+
+omapip/isclib.c
+    Added use of IGNORE_UNUSED()
+
+Upstream-Status: Backport [https://gitlab.isc.org/isc-projects/dhcp.git]
+
+Signed-off-by: Ovidiu Panait <ovidiu.panait@windriver.com>
+---
+ omapip/isclib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/omapip/isclib.c b/omapip/isclib.c
+index 73e017c..1d52463 100644
+--- a/omapip/isclib.c
++++ b/omapip/isclib.c
+@@ -151,7 +151,7 @@ handle_signal(int sig, void (*handler)(int)) {
+  */
+ static void
+ set_ctx_running(isc_task_t *task, isc_event_t *event) {
+-        task = task; // unused;
++    IGNORE_UNUSED(task);
+ 	dhcp_gbl_ctx.actx_running = ISC_TRUE;
+ 
+ 	if (shutdown_signal) {
+-- 
+2.23.0
+
