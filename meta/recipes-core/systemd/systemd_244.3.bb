@@ -17,9 +17,9 @@ REQUIRED_DISTRO_FEATURES = "systemd"
 SRC_URI += "file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://init \
+           file://99-default.preset \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
-           file://99-default.preset \
            "
 
 # patches needed by musl
@@ -42,7 +42,6 @@ SRC_URI_MUSL = "\
                file://0019-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
                file://0020-missing_type.h-add-__compar_d_fn_t-definition.patch \
                file://0021-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0022-Use-INT_MAX-instead-of-TIME_T_MAX-for-timerfd_settim.patch \
                file://0024-test-json.c-define-M_PIl.patch \
                file://0001-do-not-disable-buffer-in-writing-files.patch \
                file://0002-src-login-brightness.c-include-sys-wait.h.patch \
