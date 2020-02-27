@@ -17,11 +17,9 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/cmd/link/internal/ld/lib.go | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
-index 3fa258d..f96fb02 100644
 --- a/src/cmd/link/internal/ld/lib.go
 +++ b/src/cmd/link/internal/ld/lib.go
-@@ -1215,6 +1215,7 @@ func (ctxt *Link) hostlink() {
+@@ -1280,6 +1280,7 @@ func (ctxt *Link) hostlink() {
  				argv = append(argv, "-Wl,-z,relro")
  			}
  			argv = append(argv, "-shared")
@@ -29,7 +27,7 @@ index 3fa258d..f96fb02 100644
  			if ctxt.HeadType != objabi.Hwindows {
  				// Pass -z nodelete to mark the shared library as
  				// non-closeable: a dlclose will do nothing.
-@@ -1226,6 +1227,7 @@ func (ctxt *Link) hostlink() {
+@@ -1291,6 +1292,7 @@ func (ctxt *Link) hostlink() {
  			argv = append(argv, "-Wl,-z,relro")
  		}
  		argv = append(argv, "-shared")
@@ -37,7 +35,7 @@ index 3fa258d..f96fb02 100644
  	case BuildModePlugin:
  		if ctxt.HeadType == objabi.Hdarwin {
  			argv = append(argv, "-dynamiclib")
-@@ -1234,6 +1236,7 @@ func (ctxt *Link) hostlink() {
+@@ -1299,6 +1301,7 @@ func (ctxt *Link) hostlink() {
  				argv = append(argv, "-Wl,-z,relro")
  			}
  			argv = append(argv, "-shared")
@@ -45,6 +43,3 @@ index 3fa258d..f96fb02 100644
  		}
  	}
  
--- 
-2.17.1 (Apple Git-112)
-

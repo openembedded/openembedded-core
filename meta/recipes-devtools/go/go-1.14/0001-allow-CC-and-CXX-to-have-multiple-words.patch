@@ -15,11 +15,9 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/cmd/go/internal/envcmd/env.go | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/src/cmd/go/internal/envcmd/env.go b/src/cmd/go/internal/envcmd/env.go
-index 17852de..7b5ec5e 100644
 --- a/src/cmd/go/internal/envcmd/env.go
 +++ b/src/cmd/go/internal/envcmd/env.go
-@@ -100,11 +100,11 @@ func MkEnv() []cfg.EnvVar {
+@@ -102,11 +102,11 @@ func MkEnv() []cfg.EnvVar {
  
  	cc := cfg.DefaultCC(cfg.Goos, cfg.Goarch)
  	if env := strings.Fields(cfg.Getenv("CC")); len(env) > 0 {
@@ -33,6 +31,3 @@ index 17852de..7b5ec5e 100644
  	}
  	env = append(env, cfg.EnvVar{Name: "AR", Value: envOr("AR", "ar")})
  	env = append(env, cfg.EnvVar{Name: "CC", Value: cc})
--- 
-2.17.1 (Apple Git-112)
-

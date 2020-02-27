@@ -23,11 +23,9 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/cmd/go/internal/work/build.go | 8 +++++++-
  1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/src/cmd/go/internal/work/build.go b/src/cmd/go/internal/work/build.go
-index 6560317..5f3a988 100644
 --- a/src/cmd/go/internal/work/build.go
 +++ b/src/cmd/go/internal/work/build.go
-@@ -231,7 +231,13 @@ func AddBuildFlags(cmd *base.Command) {
+@@ -251,7 +251,13 @@ func AddBuildFlags(cmd *base.Command, ma
  
  	cmd.Flag.Var(&load.BuildAsmflags, "asmflags", "")
  	cmd.Flag.Var(buildCompiler{}, "compiler", "")
@@ -41,7 +39,4 @@ index 6560317..5f3a988 100644
 +
  	cmd.Flag.Var(&load.BuildGcflags, "gcflags", "")
  	cmd.Flag.Var(&load.BuildGccgoflags, "gccgoflags", "")
- 	cmd.Flag.StringVar(&cfg.BuildMod, "mod", "", "")
--- 
-2.17.1 (Apple Git-112)
-
+ 	if mask&OmitModFlag == 0 {

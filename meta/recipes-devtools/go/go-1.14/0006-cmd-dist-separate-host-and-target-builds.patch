@@ -38,8 +38,6 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/cmd/dist/build.go | 155 ++++++++++++++++++++++++++++++------------
  1 file changed, 112 insertions(+), 43 deletions(-)
 
-diff --git a/src/cmd/dist/build.go b/src/cmd/dist/build.go
-index 683ca6f..0ad082b 100644
 --- a/src/cmd/dist/build.go
 +++ b/src/cmd/dist/build.go
 @@ -41,6 +41,7 @@ var (
@@ -58,7 +56,7 @@ index 683ca6f..0ad082b 100644
  
  	vflag int // verbosity
  )
-@@ -247,6 +249,8 @@ func xinit() {
+@@ -249,6 +251,8 @@ func xinit() {
  	if tooldir = os.Getenv("GOTOOLDIR"); tooldir == "" {
  		tooldir = pathf("%s/pkg/tool/%s_%s", goroot, gohostos, gohostarch)
  	}
@@ -67,7 +65,7 @@ index 683ca6f..0ad082b 100644
  }
  
  // compilerEnv returns a map from "goos/goarch" to the
-@@ -478,8 +482,10 @@ func setup() {
+@@ -480,8 +484,10 @@ func setup() {
  	p := pathf("%s/pkg/%s_%s", goroot, gohostos, gohostarch)
  	if rebuildall {
  		xremoveall(p)
@@ -78,7 +76,7 @@ index 683ca6f..0ad082b 100644
  
  	if goos != gohostos || goarch != gohostarch {
  		p := pathf("%s/pkg/%s_%s", goroot, goos, goarch)
-@@ -1207,12 +1213,29 @@ func cmdbootstrap() {
+@@ -1244,12 +1250,29 @@ func cmdbootstrap() {
  
  	var noBanner bool
  	var debug bool
@@ -109,7 +107,7 @@ index 683ca6f..0ad082b 100644
  	// Set GOPATH to an internal directory. We shouldn't actually
  	// need to store files here, since the toolchain won't
  	// depend on modules outside of vendor directories, but if
-@@ -1266,8 +1289,13 @@ func cmdbootstrap() {
+@@ -1303,8 +1326,13 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  
@@ -125,7 +123,7 @@ index 683ca6f..0ad082b 100644
  	goBootstrap := pathf("%s/go_bootstrap", tooldir)
  	cmdGo := pathf("%s/go", gobin)
  	if debug {
-@@ -1296,7 +1324,11 @@ func cmdbootstrap() {
+@@ -1333,7 +1361,11 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
@@ -138,7 +136,7 @@ index 683ca6f..0ad082b 100644
  	goInstall(goBootstrap, append([]string{"-i"}, toolchain...)...)
  	if debug {
  		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
-@@ -1333,50 +1365,84 @@ func cmdbootstrap() {
+@@ -1370,50 +1402,84 @@ func cmdbootstrap() {
  	}
  	checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
  
@@ -190,8 +188,6 @@ index 683ca6f..0ad082b 100644
 -		timelog("build", "host toolchain")
 -		if vflag > 0 {
 -			xprintf("\n")
--		}
--		xprintf("Building packages and commands for host, %s/%s.\n", goos, goarch)
 +
 +		if goos == oldgoos && goarch == oldgoarch {
 +			// Common case - not setting up for cross-compilation.
@@ -223,7 +219,8 @@ index 683ca6f..0ad082b 100644
 +			os.Setenv("GOARCH", goarch)
 +			os.Setenv("CC", compilerEnvLookup(defaultcc, goos, goarch))
 +			xprintf("Building packages and commands for target, %s/%s.\n", goos, goarch)
-+		}
+ 		}
+-		xprintf("Building packages and commands for host, %s/%s.\n", goos, goarch)
  		goInstall(goBootstrap, "std", "cmd")
  		checkNotStale(goBootstrap, "std", "cmd")
  		checkNotStale(cmdGo, "std", "cmd")
@@ -231,12 +228,7 @@ index 683ca6f..0ad082b 100644
 -		timelog("build", "target toolchain")
 -		if vflag > 0 {
 -			xprintf("\n")
-+		if debug {
-+			run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
-+			run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))
-+			checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
-+			copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
- 		}
+-		}
 -		goos = oldgoos
 -		goarch = oldgoarch
 -		os.Setenv("GOOS", goos)
@@ -257,10 +249,16 @@ index 683ca6f..0ad082b 100644
 -		run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))
 -		checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
 -		copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
++		if debug {
++			run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
++			run("", ShowOutput|CheckExit, pathf("%s/buildid", tooldir), pathf("%s/pkg/%s_%s/runtime/internal/sys.a", goroot, goos, goarch))
++			checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
++			copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
++		}
  	}
  
  	// Check that there are no new files in $GOROOT/bin other than
-@@ -1393,8 +1459,11 @@ func cmdbootstrap() {
+@@ -1430,8 +1496,11 @@ func cmdbootstrap() {
  		}
  	}
  
@@ -274,6 +272,3 @@ index 683ca6f..0ad082b 100644
  
  	if goos == "android" {
  		// Make sure the exec wrapper will sync a fresh $GOROOT to the device.
--- 
-2.17.1 (Apple Git-112)
-
