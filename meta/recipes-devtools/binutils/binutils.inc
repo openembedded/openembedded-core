@@ -163,6 +163,8 @@ do_install () {
 	done
 
 	oe_multilib_header bfd.h
+        # bfd_stdint.h encodes the compiler name in the header
+        sed -i ${D}${includedir}/bfd_stdint.h -e "s,${TARGET_PREFIX},,"
 }
 
 inherit update-alternatives
