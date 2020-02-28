@@ -32,4 +32,4 @@ CFLAGS += "-fcommon"
 API = "--disable-obsolete-api"
 EXTRA_OECONF += "${API}"
 
-BBCLASSEXTEND = "nativesdk"
+BBCLASSEXTEND = "native nativesdk"
