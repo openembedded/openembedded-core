@@ -22,7 +22,7 @@ LEAD_SONAME = "libcupsdriver.so"
 
 CLEANBROKEN = "1"
 
-inherit autotools-brokensep binconfig useradd systemd pkgconfig
+inherit autotools-brokensep binconfig useradd systemd pkgconfig multilib_script
 
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "--system lpadmin"
@@ -99,6 +99,8 @@ FILES_${PN} += "${datadir}/doc/cups/images \
                 ${datadir}/icons/ \
                "
 CONFFILES_${PN} += "${sysconfdir}/cups/cupsd.conf"
+
+MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/cups-config"
 
 SYSROOT_PREPROCESS_FUNCS += "cups_sysroot_preprocess"
 cups_sysroot_preprocess () {
