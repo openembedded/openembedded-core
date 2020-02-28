@@ -14,11 +14,11 @@ SECTION = "libs"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
-           file://libgpg-error-1.36-gawk5-support.patch \
-	  "
+           file://0001-Do-not-fail-when-testing-config-scripts.patch \
+           "
 
-SRC_URI[md5sum] = "eff437f397e858a9127b76c0d87fa5ed"
-SRC_URI[sha256sum] = "babd98437208c163175c29453f8681094bcaf92968a15cafb1a276076b33c97c"
+SRC_URI[md5sum] = "729f22d917494fdc4b54fce5aa6547c7"
+SRC_URI[sha256sum] = "b32d6ff72a73cf79797f7f2d039e95e9c6f92f0c1450215410840ab62aea9763"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
