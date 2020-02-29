@@ -10,4 +10,5 @@ S = "${WORKDIR}/git"
 EXTRA_OECONF += "--with-abi-version=5 --cache-file=${B}/config.cache"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+(\+\d+)*)"
 
-CVE_VERSION = "6.1.${@d.getVar("PV").split('+')[1]}"
+# This is needed when using patchlevel versions like 6.1+20181013
+#CVE_VERSION = "${@d.getVar("PV").split('+')[0]}.${@d.getVar("PV").split('+')[1]}"
