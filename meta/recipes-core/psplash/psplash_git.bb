@@ -4,8 +4,9 @@ HOMEPAGE = "http://git.yoctoproject.org/cgit/cgit.cgi/psplash"
 SECTION = "base"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://psplash.h;beginline=1;endline=8;md5=8f232c1e95929eacab37f00900580224"
+DEPENDS = "gdk-pixbuf-native"
 
-SRCREV = "773a3977d255e8f59a741ad6ce37c4d40f1feaa1"
+SRCREV = "aea172a24c5b0bdc0f4efa780c0faa00c9238362"
 PV = "0.1+git${SRCPV}"
 PR = "r15"
 
@@ -48,9 +49,6 @@ python __anonymous() {
     # Set these so that we have less work to do in do_compile and do_install_append
     d.setVar("SPLASH_INSTALL", " ".join(pkgs))
     d.setVar("SPLASH_LOCALPATHS", " ".join(localpaths))
-
-    if haspng:
-        d.appendVar("DEPENDS", " gdk-pixbuf-native")
 
     d.prependVar("PACKAGES", "%s " % (" ".join(pkgs)))
     mlprefix = d.getVar('MLPREFIX') or ''
