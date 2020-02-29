@@ -28,6 +28,7 @@ PACKAGECONFIG[expat] = "--with-expat,--without-expat,expat,"
 PACKAGECONFIG[lzo] = "--with-lzo2,--without-lzo2,lzo,"
 PACKAGECONFIG[nettle] = "--with-nettle,--without-nettle,nettle,"
 PACKAGECONFIG[lz4] = "--with-lz4,--without-lz4,lz4,"
+PACKAGECONFIG[mbedtls] = "--with-mbedtls,--without-mbedtls,mbedtls,"
 
 EXTRA_OECONF += "--enable-largefile"
 
