@@ -12,6 +12,11 @@ SRC_URI += "\
 
 EXTRA_OECONF += "--without-guile"
 
+# This was breaking on target kernel modules tests from testimage on mips/mips64. Likely a 
+# glibc issue in 2.31 which may be fixed in branch updates (testing pending).
+EXTRA_OECONF_append_mips=" ac_cv_func_posix_spawn=no"
+EXTRA_OECONF_append_mips64=" ac_cv_func_posix_spawn=no"
+
 SRC_URI[md5sum] = "d5c40e7bd1e97a7404f5d3be982f479a"
 SRC_URI[sha256sum] = "de1a441c4edf952521db30bfca80baae86a0ff1acd0a00402999344f04c45e82"
 
