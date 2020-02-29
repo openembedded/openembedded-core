@@ -1,15 +1,18 @@
 SUMMARY = "AT-SPI 2 Toolkit Bridge"
 HOMEPAGE = "https://wiki.linuxfoundation.org/accessibility/d-bus"
-LICENSE = "LGPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=e9f288ba982d60518f375b5898283886"
+LICENSE = "LGPL-2.1+"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-SRC_URI[archive.md5sum] = "6a4b27bace3b9352721ed462b95f6291"
-SRC_URI[archive.sha256sum] = "0b51e6d339fa2bcca3a3e3159ccea574c67b107f1ac8b00047fa60e34ce7a45c"
+SRC_URI[archive.md5sum] = "e0f99641c5a403041c4214be04722e15"
+SRC_URI[archive.sha256sum] = "776df930748fde71c128be6c366a987b98b6ee66d508ed9c8db2355bf4b9cc16"
 
 DEPENDS = "dbus glib-2.0 glib-2.0-native atk at-spi2-core libxml2"
 
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase features_check upstream-version-is-even
+
+# gnomebase.bbclass sets SRC_URI = , so we need to append after, at least for -native
+SRC_URI += " file://0001-atk_test_util.h-add-missing-sys-time.h-include.patch"
 
 PACKAGES =+ "${PN}-gnome ${PN}-gtk2"
 
