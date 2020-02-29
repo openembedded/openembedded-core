@@ -1,28 +1,40 @@
-From b66905b094e08a84c30bc135003c3611f65d53ec Mon Sep 17 00:00:00 2001
+From 89c5841bd148a7ae70c65f4a1ca5996b7f0cddfa Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 12 Feb 2020 22:22:17 -0800
+Date: Wed, 19 Feb 2020 22:52:04 -0800
 Subject: [PATCH] syscalls: Check for time64 unsafe syscalls before using them
 
 musl is using 64bit time_t now on 32bit architectures and these syscalls
 no longer exist, therefore its better to check for them being available
 before using them
 
-Upstream-Status: Submitted [https://patchwork.ozlabs.org/patch/1241258/]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Reviewed-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
+Upstream-Status: accepted as 5b57ae2913e2d2d167cbd3822784b4c4ba336812
 ---
- lib/tst_clocks.c                                        | 9 +++++----
- testcases/kernel/syscalls/gettimeofday/gettimeofday01.c | 6 ++----
- testcases/kernel/syscalls/gettimeofday/gettimeofday02.c | 8 +++-----
- 3 files changed, 10 insertions(+), 13 deletions(-)
+ lib/tst_clocks.c                                 | 16 ++++++----------
+ .../syscalls/gettimeofday/gettimeofday01.c       |  6 ++----
+ .../syscalls/gettimeofday/gettimeofday02.c       |  8 +++-----
+ 3 files changed, 11 insertions(+), 19 deletions(-)
 
+diff --git a/lib/tst_clocks.c b/lib/tst_clocks.c
+index 5195da38f..fa2f1cb84 100644
 --- a/lib/tst_clocks.c
 +++ b/lib/tst_clocks.c
-@@ -22,21 +22,22 @@
- #define _GNU_SOURCE
- #include <unistd.h>
+@@ -3,28 +3,24 @@
+  * Copyright (c) 2017 Cyril Hrubis <chrubis@suse.cz>
+  */
+
+-/*
+- * clock_gettime() and clock_getres() functions
+- */
+-
+-#define _GNU_SOURCE
+-#include <unistd.h>
  #include <time.h>
 -#include <sys/syscall.h>
--
+
 +#define TST_NO_DEFAULT_MAIN
 +#include "tst_test.h"
  #include "tst_clocks.h"
@@ -45,6 +57,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 -	return syscall(SYS_clock_settime, clk_id, ts);
 +	return tst_syscall(__NR_clock_settime, clk_id, ts);
  }
+diff --git a/testcases/kernel/syscalls/gettimeofday/gettimeofday01.c b/testcases/kernel/syscalls/gettimeofday/gettimeofday01.c
+index 583d8f7b9..08ea1673a 100644
 --- a/testcases/kernel/syscalls/gettimeofday/gettimeofday01.c
 +++ b/testcases/kernel/syscalls/gettimeofday/gettimeofday01.c
 @@ -38,10 +38,8 @@
@@ -68,6 +82,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  
  		/* gettimeofday returns an int, so we need to turn the long
  		 * TEST_RETURN into an int to test with */
+diff --git a/testcases/kernel/syscalls/gettimeofday/gettimeofday02.c b/testcases/kernel/syscalls/gettimeofday/gettimeofday02.c
+index 1d60f448e..5170ad2f7 100644
 --- a/testcases/kernel/syscalls/gettimeofday/gettimeofday02.c
 +++ b/testcases/kernel/syscalls/gettimeofday/gettimeofday02.c
 @@ -16,14 +16,12 @@
@@ -102,3 +118,5 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  			tst_res(TBROK | TERRNO, "gettimeofday() failed");
  			return;
  		}
+--
+2.25.1

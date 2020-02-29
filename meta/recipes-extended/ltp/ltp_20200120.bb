@@ -12,12 +12,12 @@ LIC_FILES_CHKSUM = "\
     file://testcases/open_posix_testsuite/COPYING;md5=48b1c5ec633e3e30ec2cf884ae699947 \
     file://testcases/realtime/COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
     file://utils/benchmark/kernbench-0.42/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
-    file://utils/ffsb-6.0-rc2/COPYING;md5=c46082167a314d785d012a244748d803 \
 "
 
 DEPENDS = "attr libaio libcap acl openssl zip-native"
 DEPENDS_append_libc-musl = " fts "
 EXTRA_OEMAKE_append_libc-musl = " LIBC=musl "
+EXTRA_OECONF_append_libc-musl = " LIBS=-lfts "
 
 # since ltp contains x86-64 assembler which uses the frame-pointer register,
 # set -fomit-frame-pointer x86-64 to handle cases where optimisation
@@ -27,21 +27,16 @@ CFLAGS_append_x86-64 = " -fomit-frame-pointer"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "c9707b465a08397569920b676345474f44327200"
+SRCREV = "4079aaf264d0e9ead042b59d1c5f4e643620d0d5"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-build-Add-option-to-select-libc-implementation.patch \
-           file://0002-kernel-controllers-Link-with-libfts-explicitly-on-mu.patch \
            file://0003-Check-if-__GLIBC_PREREQ-is-defined-before-using-it.patch \
            file://0004-guard-mallocopt-with-__GLIBC__.patch \
-           file://0006-rt_tgsigqueueinfo-disable-test-on-musl.patch \
            file://0007-Fix-test_proc_kill-hanging.patch \
            file://0008-testcases-network-nfsv4-acl-acl1.c-Security-fix-on-s.patch \
            file://0009-open_posix_testsuite-mmap24-2-Relax-condition-a-bit.patch \
-           file://0001-mkswap01.sh-Add-udevadm-trigger-before-swap-verifica.patch \
-           file://0001-testcases-fix-an-absent-format-string-issue.patch \
            file://0001-Add-more-musl-exclusions.patch \
-           file://0001-nm01-Remove-prefix-zeros-of-the-addresses-output-by-.patch \
            file://0001-syscalls-Check-for-time64-unsafe-syscalls-before-usi.patch \
            "
 
