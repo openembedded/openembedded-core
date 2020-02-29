@@ -102,7 +102,7 @@ PACKAGECONFIG_remove_libc-musl = " \
     utmp \
 "
 
-CFLAGS_append_libc-musl = "-D__UAPI_DEF_ETHHDR=0 "
+CFLAGS_append_libc-musl = " -D__UAPI_DEF_ETHHDR=0 "
 
 # Use the upstream systemd serial-getty@.service and rely on
 # systemd-getty-generator instead of using the OE-core specific
