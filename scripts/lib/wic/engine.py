@@ -439,7 +439,7 @@ class Disk:
             outf.flush()
 
         def read_ptable(path):
-            out = exec_cmd("{} -dJ {}".format(self.sfdisk, path))
+            out = exec_cmd("{} -J {}".format(self.sfdisk, path))
             return json.loads(out)
 
         def write_ptable(parts, target):
