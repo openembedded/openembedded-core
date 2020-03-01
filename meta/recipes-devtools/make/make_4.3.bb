@@ -12,7 +12,6 @@ SRC_URI += "\
 
 EXTRA_OECONF += "--without-guile"
 
-SRC_URI[md5sum] = "d5c40e7bd1e97a7404f5d3be982f479a"
-SRC_URI[sha256sum] = "de1a441c4edf952521db30bfca80baae86a0ff1acd0a00402999344f04c45e82"
+SRC_URI[sha256sum] = "e05fdde47c5f7ca45cb697e973894ff4f5d79e13b750ed57d7b66d8defc78e19"
 
 BBCLASSEXTEND = "native nativesdk"
