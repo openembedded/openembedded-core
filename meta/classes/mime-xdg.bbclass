@@ -8,7 +8,7 @@ PACKAGE_WRITE_DEPS += "desktop-file-utils-native"
 DESKTOPDIR = "${datadir}/applications"
 
 # There are recipes out there installing their .desktop files as absolute
-# symlinks. For us these are dangling and cannot be introspected for "MymeType"
+# symlinks. For us these are dangling and cannot be introspected for "MimeType"
 # easily. By addding package-names to MIME_XDG_PACKAGES, packager can force
 # proper update-desktop-database handling. Note that all introspection is
 # skipped for MIME_XDG_PACKAGES not empty
