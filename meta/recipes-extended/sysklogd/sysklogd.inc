@@ -1,27 +1,21 @@
 SUMMARY = "System Log Daemons"
-DESCRIPTION = "The sysklogd package implements two system log daemons: syslogd, klogd"
+DESCRIPTION = "The sysklogd package implements system log daemons: syslogd"
 HOMEPAGE = "http://www.infodrom.org/projects/sysklogd/"
 SECTION = "base"
 
-LICENSE = "GPLv2+ & BSD"
-LICENSE_syslogd = "BSD"
-LICENSE_klogd = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+LICENSE = "BSD-3-Clause"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=5b4be4b2549338526758ef479c040943 \
                     file://src/syslogd.c;beginline=2;endline=15;md5=a880fecbc04503f071c494a9c0dd4f97 \
-                    file://src/klogd.c;beginline=2;endline=19;md5=4f5591d04cccbeb0352758ed4a9d7213 \
                    "
 
 inherit update-rc.d update-alternatives systemd autotools
 
 SRC_URI = "git://github.com/troglobit/sysklogd.git;nobranch=1 \
-           file://0001-Remove-__BEGIN_DECLS-__END_DECLS.patch \
-           file://0002-include-sys-types.h-for-off_t.patch \
-           file://0001-Drop-libcompat-to-simplify-build-deps-and-really-fix.patch \
            file://sysklogd \
            "
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF = "--with-systemd=${systemd_system_unitdir} --with-klogd --without-logger"
+EXTRA_OECONF = "--with-systemd=${systemd_system_unitdir} --without-logger"
 
 do_install_append () {
        install -d ${D}${sysconfdir}
@@ -31,7 +25,7 @@ do_install_append () {
 }
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "syslogd.service klogd.service"
+SYSTEMD_SERVICE_${PN} = "syslogd.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
 INITSCRIPT_NAME = "syslog"
