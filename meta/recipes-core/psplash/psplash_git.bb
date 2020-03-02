@@ -6,7 +6,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://psplash.h;beginline=1;endline=8;md5=8f232c1e95929eacab37f00900580224"
 DEPENDS = "gdk-pixbuf-native"
 
-SRCREV = "aea172a24c5b0bdc0f4efa780c0faa00c9238362"
+SRCREV = "0a902f7cd875ccf018456451be369f05fa55f962"
 PV = "0.1+git${SRCPV}"
 PR = "r15"
 
@@ -24,7 +24,6 @@ python __anonymous() {
     splashfiles = d.getVar('SPLASH_IMAGES').split()
     pkgs = []
     localpaths = []
-    haspng = False
     for uri in splashfiles:
         fetcher = bb.fetch2.Fetch([uri], d)
         flocal = os.path.basename(fetcher.localpath(uri))
@@ -42,8 +41,6 @@ python __anonymous() {
             bb.fatal("The output name '%s' derived from the URI %s is not valid, please specify the outsuffix parameter" % (outname, uri))
         else:
             pkgs.append(outname)
-        if flocal.endswith(".png"):
-            haspng = True
         localpaths.append(flocal)
 
     # Set these so that we have less work to do in do_compile and do_install_append
@@ -82,7 +79,7 @@ python do_compile () {
     # Build a separate executable for each splash image
     workdir = d.getVar('WORKDIR')
     convertscript = "%s/make-image-header.sh" % d.getVar('S')
-    destfile = "%s/psplash-poky-img.h" % d.getVar('S')
+    destfile = "%s/psplash-poky-img.h" % d.getVar('B')
     localfiles = d.getVar('SPLASH_LOCALPATHS').split()
     outputfiles = d.getVar('SPLASH_INSTALL').split()
     for localfile, outputfile in zip(localfiles, outputfiles):
