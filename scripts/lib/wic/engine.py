@@ -290,7 +290,7 @@ class Disk:
 
     def _get_part_image(self, pnum):
         if pnum not in self.partitions:
-            raise WicError("Partition %s is not in the image")
+            raise WicError("Partition %s is not in the image" % pnum)
         part = self.partitions[pnum]
         # check if fstype is supported
         for fstype in self.fstypes:
@@ -313,6 +313,9 @@ class Disk:
                     seek=self.partitions[pnum].start)
 
     def dir(self, pnum, path):
+        if pnum not in self.partitions:
+            raise WicError("Partition %s is not in the image" % pnum)
+
         if self.partitions[pnum].fstype.startswith('ext'):
             return exec_cmd("{} {} -R 'ls -l {}'".format(self.debugfs,
                                                          self._get_part_image(pnum),
