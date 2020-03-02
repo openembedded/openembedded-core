@@ -4,6 +4,7 @@ DefaultDependencies=no
 RequiresMountsFor=/run
 
 [Service]
+Type=notify
 ExecStart=/usr/bin/psplash
 
 [Install]
