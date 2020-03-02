@@ -8,6 +8,9 @@ DEPENDS = "libdrm mesa libepoxy"
 SRCREV = "48cc96c9aebb9d0164830a157efc8916f08f00c0"
 SRC_URI = "git://anongit.freedesktop.org/virglrenderer \
            file://0001-gallium-Expand-libc-check-to-be-platform-OS-check.patch \
+           file://CVE-2019-18390.patch \
+           file://CVE-2019-18391.patch \
+           file://CVE-2020-8002.patch  \
            "
 
 S = "${WORKDIR}/git"
