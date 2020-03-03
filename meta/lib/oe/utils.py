@@ -248,9 +248,10 @@ def trim_version(version, num_parts=2):
     trimmed = ".".join(parts[:num_parts])
     return trimmed
 
-def cpu_count():
+def cpu_count(at_least=1):
     import multiprocessing
-    return multiprocessing.cpu_count()
+    cpus = multiprocessing.cpu_count()
+    return max(cpus, at_least)
 
 def execute_pre_post_process(d, cmds):
     if cmds is None:
