@@ -33,13 +33,26 @@ do_patch_module_build () {
 
 do_patch[postfuncs] += "do_patch_module_build"
 
+EXTRA_CPAN_BUILD_FLAGS = "--create_packlist=0"
+
+do_install_append () {
+        rm -rf ${D}${docdir}/perl/html
+}
+
 do_install_ptest() {
 	cp -r ${B}/inc ${D}${PTEST_PATH}
 	cp -r ${B}/blib ${D}${PTEST_PATH}
 	cp -r ${B}/_build ${D}${PTEST_PATH}
 	cp -r ${B}/lib ${D}${PTEST_PATH}
 	chown -R root:root ${D}${PTEST_PATH}
-	sed -i -e "s,'perl' => .*,'perl' => '/usr/bin/perl'\,,g" ${D}${PTEST_PATH}/_build/build_params
+	sed -i -e "s,'perl' => .*,'perl' => '/usr/bin/perl'\,,g" \
+               -e "s,${STAGING_BINDIR_NATIVE}/perl-native/\.\.,${bindir}/,g" \
+               -e "s,${S},,g" \
+               -e "s,${D},,g" \
+               ${D}${PTEST_PATH}/_build/build_params \
+               ${D}${PTEST_PATH}/_build/runtime_params
+        rm -rf ${D}${PTEST_PATH}/blib/libhtml/site/lib/Module/
+        rm -rf ${D}${PTEST_PATH}/_build/magicnum
 }
 
 RDEPENDS_${PN} += " \
