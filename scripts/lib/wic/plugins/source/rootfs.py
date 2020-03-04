@@ -16,11 +16,11 @@ import os
 import shutil
 import sys
 
-from oe.path import copyhardlinktree
+from oe.path import copyhardlinktree, copytree
 
 from wic import WicError
 from wic.pluginbase import SourcePlugin
-from wic.misc import get_bitbake_var
+from wic.misc import get_bitbake_var, exec_native_cmd
 
 logger = logging.getLogger('wic')
 
@@ -43,6 +43,15 @@ class RootfsPlugin(SourcePlugin):
                            (rootfs_dir, image_rootfs_dir))
 
         return os.path.realpath(image_rootfs_dir)
+
+    @staticmethod
+    def __get_pseudo(native_sysroot, rootfs):
+        pseudo = "export PSEUDO_PREFIX=%s/usr;" % native_sysroot
+        pseudo += "export PSEUDO_LOCALSTATEDIR=%s;" % os.path.join(rootfs, "../pseudo")
+        pseudo += "export PSEUDO_PASSWD=%s;" % rootfs
+        pseudo += "export PSEUDO_NOSYMLINKEXP=1;"
+        pseudo += "%s " % get_bitbake_var("FAKEROOTCMD")
+        return pseudo
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
@@ -78,8 +87,15 @@ class RootfsPlugin(SourcePlugin):
 
             if os.path.lexists(new_rootfs):
                 shutil.rmtree(os.path.join(new_rootfs))
-
             copyhardlinktree(part.rootfs_dir, new_rootfs)
+
+            if os.path.lexists(os.path.join(new_rootfs, "../pseudo")):
+                shutil.rmtree(os.path.join(new_rootfs, "../pseudo"))
+            copytree(os.path.join(part.rootfs_dir, "../pseudo"),
+                     os.path.join(new_rootfs, "../pseudo"))
+            pseudo_cmd = "%s -B -m %s -M %s" % (cls.__get_pseudo(native_sysroot,new_rootfs),
+                                                part.rootfs_dir, new_rootfs)
+            exec_native_cmd(pseudo_cmd, native_sysroot)
 
             for path in part.include_path or []:
                 copyhardlinktree(path, new_rootfs)
