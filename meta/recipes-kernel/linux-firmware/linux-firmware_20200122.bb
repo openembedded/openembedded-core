@@ -208,27 +208,7 @@ do_compile() {
 }
 
 do_install() {
-	install -d  ${D}${nonarch_base_libdir}/firmware/
-	cp -r * ${D}${nonarch_base_libdir}/firmware/
-
-	# Avoid Makefile to be deployed
-	rm ${D}${nonarch_base_libdir}/firmware/Makefile
-
-	# Remove unbuild firmware which needs cmake and bash
-	rm ${D}${nonarch_base_libdir}/firmware/carl9170fw -rf
-
-	# Remove pointless bash script
-	rm ${D}${nonarch_base_libdir}/firmware/configure
-
-	# Remove python script used to check the WHENCE file
-	rm ${D}${nonarch_base_libdir}/firmware/check_whence.py
-
-	# Libertas sd8686
-	ln -sf libertas/sd8686_v9.bin ${D}${nonarch_base_libdir}/firmware/sd8686.bin
-	ln -sf libertas/sd8686_v9_helper.bin ${D}${nonarch_base_libdir}/firmware/sd8686_helper.bin
-
-	# fixup wl12xx location, after 2.6.37 the kernel searches a different location for it
-	( cd ${D}${nonarch_base_libdir}/firmware ; ln -sf ti-connectivity/* . )
+        oe_runmake 'DESTDIR=${D}' install
 }
 
 
