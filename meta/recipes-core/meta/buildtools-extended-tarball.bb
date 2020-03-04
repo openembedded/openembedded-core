@@ -25,6 +25,7 @@ TOOLCHAIN_HOST_TASK += "\
     nativesdk-libstdc++-dev \
     nativesdk-libtool \
     nativesdk-pkgconfig \
+    nativesdk-libxcrypt-dev \
     "
 
 TOOLCHAIN_OUTPUTNAME = "${SDK_ARCH}-buildtools-extended-nativesdk-standalone-${DISTRO_VERSION}"
