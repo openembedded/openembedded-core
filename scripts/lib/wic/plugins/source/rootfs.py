@@ -17,6 +17,7 @@ import shutil
 import sys
 
 from oe.path import copyhardlinktree, copytree
+from pathlib import Path
 
 from wic import WicError
 from wic.pluginbase import SourcePlugin
@@ -80,7 +81,7 @@ class RootfsPlugin(SourcePlugin):
 
         new_rootfs = None
         # Handle excluded paths.
-        if part.exclude_path or part.include_path:
+        if part.exclude_path or part.include_path or part.embed_rootfs:
             # We need a new rootfs directory we can delete files from. Copy to
             # workdir.
             new_rootfs = os.path.realpath(os.path.join(cr_workdir, "rootfs%d" % part.lineno))
@@ -99,6 +100,25 @@ class RootfsPlugin(SourcePlugin):
 
             for path in part.include_path or []:
                 copyhardlinktree(path, new_rootfs)
+
+            for embed in part.embed_rootfs or []:
+                [embed_rootfs, path] = embed
+                #we need to remove the initial / for os.path.join to work
+                if os.path.isabs(path):
+                    path = path[1:]
+                if embed_rootfs in krootfs_dir:
+                    embed_rootfs = krootfs_dir[embed_rootfs]
+                embed_rootfs = cls.__get_rootfs_dir(embed_rootfs)
+                tar_file = os.path.realpath(os.path.join(cr_workdir, "aux.tar"))
+                tar_cmd = "%s tar cpf %s -C %s ." % (cls.__get_pseudo(native_sysroot,
+                                                     embed_rootfs), tar_file, embed_rootfs)
+                exec_native_cmd(tar_cmd, native_sysroot)
+                untar_cmd = "%s tar xf %s -C %s ." % (cls.__get_pseudo(native_sysroot, new_rootfs),
+                                                      tar_file, os.path.join(new_rootfs, path))
+                Path(os.path.join(new_rootfs, path)).mkdir(parents=True, exist_ok=True)
+                exec_native_cmd(untar_cmd, native_sysroot,
+                                cls.__get_pseudo(native_sysroot, new_rootfs))
+                os.remove(tar_file)
 
             for orig_path in part.exclude_path or []:
                 path = orig_path

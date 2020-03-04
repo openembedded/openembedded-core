@@ -980,6 +980,14 @@ DESCRIPTION
                          copies. This option only has an effect with the rootfs
                          source plugin.
 
+         --embed-rootfs: This option is specific to wic. It embeds a rootfs into
+                         the given path to the resulting image. The option
+                         contains two fields, the roofs and the path, separated
+                         by a space. The rootfs follows the same logic as the
+                         rootfs-dir argument. Multiple options can be provided
+                         in order to embed multiple rootfs. This option only has
+                         an effect with the rootfs source plugin.
+
          --extra-space: This option is specific to wic. It adds extra
                         space after the space filled by the content
                         of the partition. The final size can go
