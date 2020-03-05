@@ -966,10 +966,6 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
             if len(tasklist) >= min_tasks:
                 bb.event.fire(bb.event.ProcessFinished(msg), d)
 
-    # Likely checking an individual task hash again for multiconfig sharing of sstate tasks so skip reporting
-    if len(sq_data['hash']) == 1:
-        return found
-
     inheritlist = d.getVar("INHERIT")
     if "toaster" in inheritlist:
         evdata = {'missed': [], 'found': []};
