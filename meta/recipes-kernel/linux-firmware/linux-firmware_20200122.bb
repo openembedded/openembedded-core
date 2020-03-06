@@ -511,8 +511,17 @@ LICENSE_${PN}-wl18xx = "Firmware-ti-connectivity"
 LICENSE_${PN}-ti-connectivity-license = "Firmware-ti-connectivity"
 
 FILES_${PN}-ti-connectivity-license = "${nonarch_base_libdir}/firmware/LICENCE.ti-connectivity"
+# wl18xx optionally needs wl1271-nvs.bin (which itself is a symlink to
+# wl127x-nvs.bin) - see linux/drivers/net/wireless/ti/wlcore/sdio.c
+# and drivers/net/wireless/ti/wlcore/spi.c.
+# While they're optional and actually only used to override the MAC
+# address on wl18xx, driver loading will delay (by udev timout - 60s)
+# if not there. So let's make it available always. Because it's a
+# symlink, both need to go to wlcommon.
 FILES_${PN}-wlcommon = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/TI* \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl127x-nvs.bin \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl1271-nvs.bin \
 "
 FILES_${PN}-wl12xx = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl12* \
