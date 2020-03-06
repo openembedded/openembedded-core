@@ -56,7 +56,8 @@ common_errors = [
     "error retry time-out =",
     "logind: cannot setup systemd-logind helper (-61), using legacy fallback",
     "Error changing net interface name 'eth0' to ",
-    "Cannot find a map file"
+    "Cannot find a map file",
+    "[rdrand]: Initialization Failed"
     ]
 
 video_related = [
