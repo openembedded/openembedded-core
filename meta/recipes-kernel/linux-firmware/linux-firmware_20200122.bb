@@ -512,15 +512,12 @@ LICENSE_${PN}-ti-connectivity-license = "Firmware-ti-connectivity"
 
 FILES_${PN}-ti-connectivity-license = "${nonarch_base_libdir}/firmware/LICENCE.ti-connectivity"
 FILES_${PN}-wlcommon = " \
-  ${nonarch_base_libdir}/firmware/TI* \
   ${nonarch_base_libdir}/firmware/ti-connectivity/TI* \
 "
 FILES_${PN}-wl12xx = " \
-  ${nonarch_base_libdir}/firmware/wl12* \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl12* \
 "
 FILES_${PN}-wl18xx = " \
-  ${nonarch_base_libdir}/firmware/wl18* \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl18* \
 "
 
