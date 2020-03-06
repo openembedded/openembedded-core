@@ -388,9 +388,13 @@ python copy_buildsystem () {
         bb.utils.mkdirhier(os.path.join(baseoutpath, 'cache'))
         shutil.copyfile(builddir + '/cache/bb_unihashes.dat', baseoutpath + '/cache/bb_unihashes.dat')
 
-    # Write a templateconf.cfg
-    with open(baseoutpath + '/conf/templateconf.cfg', 'w') as f:
-        f.write('meta/conf\n')
+    # Use templateconf.cfg file from builddir if exists
+    if os.path.exists(builddir + '/conf/templateconf.cfg'):
+        shutil.copyfile(builddir + '/conf/templateconf.cfg', baseoutpath + '/conf/templateconf.cfg')
+    else:
+        # Write a templateconf.cfg
+        with open(baseoutpath + '/conf/templateconf.cfg', 'w') as f:
+            f.write('meta/conf\n')
 
     # Ensure any variables set from the external environment (by way of
     # BB_ENV_EXTRAWHITE) are set in the SDK's configuration
