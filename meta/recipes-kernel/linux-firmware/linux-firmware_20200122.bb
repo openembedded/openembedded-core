@@ -208,7 +208,7 @@ do_compile() {
 }
 
 do_install() {
-        oe_runmake 'DESTDIR=${D}' install
+        oe_runmake 'DESTDIR=${D}' 'FIRMWAREDIR=${nonarch_base_libdir}/firmware' install
         cp GPL-2 LICEN[CS]E.* WHENCE ${D}${nonarch_base_libdir}/firmware/
 }
 
