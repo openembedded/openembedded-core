@@ -8,6 +8,7 @@ SRC_URI += "\
 	file://0001-src-dir.c-fix-buffer-overflow-warning.patch \
 	file://0002-w32-compat-dirent.c-follow-header.patch \
 	file://0003-posixfcn-fcntl-gnulib-make-emulated.patch \
+	file://0001-makeinst-Do-not-undef-POSIX-on-clang-arm.patch \
 "
 
 EXTRA_OECONF += "--without-guile"
