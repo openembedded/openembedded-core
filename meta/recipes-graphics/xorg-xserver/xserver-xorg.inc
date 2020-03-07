@@ -152,6 +152,7 @@ PACKAGECONFIG[gcrypt] = "--with-sha1=libgcrypt,,libgcrypt"
 do_install_append () {
 	# Its assumed base-files creates this for us
 	rmdir ${D}${localstatedir}/log/
+        sed -i -e 's,${libdir}/xorg/modules,${prefix}/lib*/xorg/modules,' ${D}${mandir}/man5/xorg.conf.5
 }
 
 # Add runtime provides for the ABI versions of the video and input subsystems,
