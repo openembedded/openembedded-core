@@ -150,11 +150,12 @@ def fixed_source_date_epoch():
     bb.debug(1, "No tarball or git repo found to determine SOURCE_DATE_EPOCH")
     return 0
 
-python do_create_source_date_epoch_stamp() {
+python create_source_date_epoch_stamp() {
     epochfile = d.getVar('SDE_FILE')
+    # If it exists we need to regenerate as the sources may have changed
     if os.path.isfile(epochfile):
-        bb.debug(1, "Reusing SOURCE_DATE_EPOCH from: %s" % epochfile)
-        return
+        bb.debug(1, "Deleting existing SOURCE_DATE_EPOCH from: %s" % epochfile)
+        os.remove(epochfile)
 
     sourcedir = d.getVar('S')
     source_date_epoch = (
@@ -197,5 +198,5 @@ BB_HASHBASE_WHITELIST += "SOURCE_DATE_EPOCH"
 
 python () {
     if d.getVar('BUILD_REPRODUCIBLE_BINARIES') == '1':
-        d.appendVarFlag("do_unpack", "postfuncs", " do_create_source_date_epoch_stamp")
+        d.appendVarFlag("do_unpack", "postfuncs", " create_source_date_epoch_stamp")
 }
