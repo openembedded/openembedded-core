@@ -149,6 +149,10 @@ inherit ptest
 
 RDEPENDS_${PN}-ptest += "bash findutils gawk liberror-perl libmodule-build-perl make perl perl-module-file-stat python3-core sed shadow"
 
+# -dev automatic dependencies fails as we don't want libmodule-build-perl-dev, its too heavy
+RRECOMMENDS_coreutils-dev[nodeprrecs] = "1"
+RRECOMMENDS_coreutils-dev = "acl-dev attr-dev gmp-dev libcap-dev bash-dev findutils-dev gawk-dev shadow-dev"
+
 do_install_ptest () {
     install -d ${D}${PTEST_PATH}/tests
     cp -r ${S}/tests/* ${D}${PTEST_PATH}/tests
