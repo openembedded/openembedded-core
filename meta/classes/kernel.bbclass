@@ -294,14 +294,10 @@ kernel_do_compile() {
 		# kernel sources do not use do_unpack, so SOURCE_DATE_EPOCH may not
 		# be set....
 		if [ "${SOURCE_DATE_EPOCH}" = "" -o "${SOURCE_DATE_EPOCH}" = "0" ]; then
-			olddir=`pwd`
-			cd ${S}
-			SOURCE_DATE_EPOCH=`git log  -1 --pretty=%ct`
-			# git repo not guaranteed, so fall back to REPRODUCIBLE_TIMESTAMP_ROOTFS
-			if [ $? -ne 0 ]; then
-				SOURCE_DATE_EPOCH=${REPRODUCIBLE_TIMESTAMP_ROOTFS}
-			fi
-			cd $olddir
+			# The source directory is not necessarily a git repository, so we
+			# specify the git-dir to ensure that git does not query a
+			# repository in any parent directory.
+			SOURCE_DATE_EPOCH=`git --git-dir="${S}/.git" log -1 --pretty=%ct 2>/dev/null || echo "${REPRODUCIBLE_TIMESTAMP_ROOTFS}"`
 		fi
 
 		ts=`LC_ALL=C date -d @$SOURCE_DATE_EPOCH`
