@@ -583,7 +583,9 @@ addtask do_ar_configured after do_unpack_and_patch
 addtask do_ar_mirror after do_fetch
 addtask do_dumpdata
 addtask do_ar_recipe
-addtask do_deploy_archives before do_build
+addtask do_deploy_archives
+do_build[recrdeptask] += "do_deploy_archives"
+do_populate_sdk[recrdeptask] += "do_deploy_archives"
 
 python () {
     # Add tasks in the correct order, specifically for linux-yocto to avoid race condition.
