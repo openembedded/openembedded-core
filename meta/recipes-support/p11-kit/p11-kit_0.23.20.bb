@@ -25,3 +25,5 @@ FILES_${PN} += " \
 
 # PN contains p11-kit-proxy.so, a symlink to a loadable module
 INSANE_SKIP_${PN} = "dev-so"
+
+BBCLASSEXTEND = "nativesdk"
