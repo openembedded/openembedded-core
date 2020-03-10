@@ -179,6 +179,10 @@ do_install () {
 	# Cleanup manpages..
 	rm -rf ${D}${mandir}/man7
 
+	# Don't package details about the build host
+	rm -f ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/plugin/include/auto-build.h
+	rm -f ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/plugin/include/bconfig.h
+
 	cd ${D}${bindir}
 
 	# We care about g++ not c++
