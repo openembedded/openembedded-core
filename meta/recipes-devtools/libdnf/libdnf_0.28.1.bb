@@ -12,6 +12,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf \
            "
 
 SRCREV = "751f89045b80d58c0d05800f74357cf78cdf7e77"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
