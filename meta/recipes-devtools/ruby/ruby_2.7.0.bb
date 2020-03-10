@@ -25,6 +25,9 @@ EXTRA_OECONF = "\
     --with-pkg-config=pkg-config \
 "
 
+EXTRA_OECONF_append_libc-musl_arm = " --with-coroutine=arm32"
+EXTRA_OECONF_append_libc-musl_armeb = " --with-coroutine=arm32"
+
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
 }
