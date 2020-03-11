@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0029-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            file://0030-Run-python-scripts-using-env.patch \
            file://Fix-SyntaxWarning.patch \
+           file://0001-set-python-path-for-completion_helper.patch \
            "
 
 SRCREV = "9947306a55271b8b7c9e2b6e3b7d582885b6045d"
