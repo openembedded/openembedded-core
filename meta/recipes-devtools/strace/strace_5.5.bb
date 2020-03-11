@@ -13,6 +13,7 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            file://ptest-spacesave.patch \
            file://uintptr_t.patch \
+           file://0001-strace-fix-reproducibilty-issues.patch \
            "
 SRC_URI[md5sum] = "dbce2e84632b39a4ed86b9fc60447af9"
 SRC_URI[sha256sum] = "9f58958c8e59ea62293d907d10572e352b582bd7948ed21aa28ebb47e5bf30ff"
