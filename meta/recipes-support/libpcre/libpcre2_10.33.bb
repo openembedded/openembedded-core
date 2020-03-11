@@ -12,6 +12,7 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=b1588d3bb4cb0e1f5a597d908f8c5b37"
 
 SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre2-${PV}.tar.bz2 \
            file://pcre-cross.patch \
+           file://CVE-2019-20454.patch \
 "
 
 SRC_URI[md5sum] = "80b355f2dce909a2e2424f5c79eddb44"
