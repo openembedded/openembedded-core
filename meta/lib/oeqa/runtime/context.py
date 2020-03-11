@@ -77,7 +77,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         runtime_group.add_argument('--packages-manifest', action='store',
                 default=self.default_manifest,
-                help="Package manifest of the image under testi, default: %s" \
+                help="Package manifest of the image under test, default: %s" \
                 % self.default_manifest)
 
         runtime_group.add_argument('--extract-dir', action='store',
@@ -184,7 +184,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         except:
             obj = None
         return obj
-        
+
     @staticmethod
     def readPackagesManifest(manifest):
         if not manifest or not os.path.exists(manifest):
