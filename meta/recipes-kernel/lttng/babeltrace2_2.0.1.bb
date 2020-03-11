@@ -11,6 +11,7 @@ SRC_URI = "git://git.linuxfoundation.org/diamon/babeltrace.git;branch=stable-2.0
 	   file://run-ptest \
 	   file://0001-tests-do-not-run-test-applications-from-.libs.patch \
            file://0001-Make-manpages-multilib-identical.patch \
+           file://0001-fs.c-initialize-other_entry.patch \
 	  "
 SRCREV = "06df58f89ee51b1a2c6a2c187ec3f15691633910"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>2(\.\d+)+)$"
