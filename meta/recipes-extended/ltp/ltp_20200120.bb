@@ -68,6 +68,12 @@ do_install(){
 
     # Copy POSIX test suite into ${D}/opt/ltp/testcases by manual
     cp -r testcases/open_posix_testsuite ${D}/opt/ltp/testcases
+
+    # Makefile were configured in the build system
+    find ${D}${prefix} -name Makefile | xargs -n 1 sed -i \
+         -e 's@[^ ]*-fdebug-prefix-map=[^ "]*@@g' \
+         -e 's@[^ ]*-fmacro-prefix-map=[^ "]*@@g' \
+         -e 's@[^ ]*--sysroot=[^ "]*@@g' 
 }
 
 RDEPENDS_${PN} = "\
