@@ -116,6 +116,9 @@ class OETestContextExecutor(object):
                 default=self.default_output_log,
                 help="results output log, default: %s" % self.default_output_log)
 
+        self.parser.add_argument('--json-result-dir', action='store',
+                help="json result output dir, create testresults.json here if set")
+
         group = self.parser.add_mutually_exclusive_group()
         group.add_argument('--run-tests', action='store', nargs='+',
                 default=self.default_tests,
@@ -178,6 +181,22 @@ class OETestContextExecutor(object):
 
         self.module_paths = args.CASES_PATHS
 
+    def _get_json_result_dir(self, args):
+        return args.json_result_dir
+
+    def _get_configuration(self):
+        td = self.tc_kwargs['init']['td']
+        configuration = {'TEST_TYPE': self.name,
+                        'MACHINE': td.get("MACHINE"),
+                        'DISTRO': td.get("DISTRO"),
+                        'IMAGE_BASENAME': td.get("IMAGE_BASENAME"),
+                        'DATETIME': td.get("DATETIME")}
+        return configuration
+
+    def _get_result_id(self, configuration):
+        return '%s_%s_%s_%s' % (configuration['TEST_TYPE'], configuration['IMAGE_BASENAME'],
+                                configuration['MACHINE'], configuration['DATETIME'])
+
     def _pre_run(self):
         pass
 
@@ -196,7 +215,16 @@ class OETestContextExecutor(object):
         else:
             self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
-            rc.logDetails()
+
+            json_result_dir = self._get_json_result_dir(args)
+            if json_result_dir:
+                configuration = self._get_configuration()
+                rc.logDetails(json_result_dir,
+                              configuration,
+                              self._get_result_id(configuration))
+            else:
+                rc.logDetails()
+
             rc.logSummary(self.name)
 
         output_link = os.path.join(os.path.dirname(args.output_log),
