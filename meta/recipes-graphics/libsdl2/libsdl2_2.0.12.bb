@@ -8,21 +8,22 @@ BUGTRACKER = "http://bugzilla.libsdl.org/"
 SECTION = "libs"
 
 LICENSE = "Zlib"
-LIC_FILES_CHKSUM = "file://COPYING.txt;md5=504a9454ceb89fd75a2583473b11409e"
+LIC_FILES_CHKSUM = "file://COPYING.txt;md5=2d4af6adb4d89aad0cdedbcc18c9a32f"
+
+# arm-neon adds MIT license
+LICENSE_append = " ${@bb.utils.contains('PACKAGECONFIG', 'arm-neon', '& MIT', '', d)}"
+LIC_FILES_CHKSUM_append = " ${@bb.utils.contains('PACKAGECONFIG', 'arm-neon', 'file://src/video/arm/pixman-arm-neon-asm.h;md5=9a9cc1e51abbf1da58f4d9528ec9d49b;beginline=1;endline=24', '', d)}"
 
 PROVIDES = "virtual/libsdl2"
 
 SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
            file://more-gen-depends.patch \
-           file://0001-Fixed-bug-4538-validate-image-size-when-loading-BMP-.patch \
-           file://0002-Fixed-bug-4797-SDL-fails-to-compile-with-Mesa-Master.patch \
-           file://0001-configure-check-for-build-dir-when-building-version-.patch \
 "
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[md5sum] = "5a2114f2a6f348bdab5bf52b994811db"
-SRC_URI[sha256sum] = "b4656c13a1f0d0023ae2f4a9cf08ec92fffb464e0f24238337784159b8b91d57"
+SRC_URI[md5sum] = "783b6f2df8ff02b19bb5ce492b99c8ff"
+SRC_URI[sha256sum] = "349268f695c02efbc9b9148a70b85e58cefbbf704abd3e91be654db7f1e2c863"
 
 inherit autotools lib_package binconfig-disabled pkgconfig
 
@@ -50,8 +51,10 @@ PACKAGECONFIG ??= " \
     ${PACKAGECONFIG_GL} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'alsa directfb pulseaudio x11', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland gles2', '', d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "neon","arm-neon","",d)} \
 "
 PACKAGECONFIG[alsa]       = "--enable-alsa --disable-alsatest,--disable-alsa,alsa-lib,"
+PACKAGECONFIG[arm-neon]   = "--enable-arm-neon,--disable-arm-neon"
 PACKAGECONFIG[directfb]   = "--enable-video-directfb,--disable-video-directfb,directfb"
 PACKAGECONFIG[gles2]      = "--enable-video-opengles,--disable-video-opengles,virtual/libgles2"
 PACKAGECONFIG[jack]       = "--enable-jack,--disable-jack,jack"
