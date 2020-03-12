@@ -131,6 +131,7 @@ ignore_errors = {
         '(EE) Server terminated with error (1). Closing log file.',
         'dmi: Firmware registration failed.',
         'irq: type mismatch, failed to map hwirq-27 for /intc',
+        'logind: failed to get session seat',
         ] + common_errors,
     'intel-core2-32' : [
         'ACPI: No _BQC method, cannot determine initial brightness',
