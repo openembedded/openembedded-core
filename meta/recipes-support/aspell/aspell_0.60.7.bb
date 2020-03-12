@@ -8,6 +8,8 @@ PR = "r1"
 
 SRC_URI = "${GNU_MIRROR}/aspell/aspell-${PV}.tar.gz \
            file://0001-Fix-various-bugs-found-by-OSS-Fuze.patch \
+           file://CVE-2019-20433-0001.patch \
+           file://CVE-2019-20433-0002.patch \
           "
 SRC_URI[md5sum] = "8ef2252609c511cd2bb26f3a3932ef28"
 SRC_URI[sha256sum] = "5ca8fc8cb0370cc6c9eb5b64c6d1bc5d57b3750dbf17887726c3407d833b70e4"
