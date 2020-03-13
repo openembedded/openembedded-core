@@ -66,27 +66,20 @@ do_install() {
 	rm -f ${D}${bindir}/ldd ${D}${GLIBC_LDSO}
 	lnr ${D}${libdir}/libc.so ${D}${bindir}/ldd
 	lnr ${D}${libdir}/libc.so ${D}${GLIBC_LDSO}
-	for l in crypt dl m pthread resolv rt util xnet
-	do
-		ln -sf libc.so ${D}${libdir}/lib$l.so
-	done
-	for i in libc.so.6 libcrypt.so.1 libdl.so.2 libm.so.6 libpthread.so.0 libresolv.so.2 librt.so.1 libutil.so.1; do
-		ln -sf libc.so ${D}${libdir}/$i
-	done
 }
 
 PACKAGES =+ "${PN}-glibc-compat"
 
-FILES_${PN}-glibc-compat += "\
-                ${libdir}/libc.so.6 ${libdir}/libcrypt.so.1 \
-                ${libdir}/libdl.so.2 ${libdir}/libm.so.6 \
-                ${libdir}/libpthread.so.0 ${libdir}/libresolv.so.2 \
-                ${libdir}/librt.so.1 ${libdir}/libutil.so.1 \
-                ${GLIBC_LDSO} \
-                "
+FILES_${PN}-glibc-compat += "${GLIBC_LDSO}"
+FILES_${PN}-staticdev = "${libdir}/libc.a"
+FILES_${PN}-dev =+ "${libdir}/libcrypt.a ${libdir}/libdl.a ${libdir}/libm.a \
+                    ${libdir}/libpthread.a ${libdir}/libresolv.a \
+                    ${libdir}/librt.a ${libdir}/libutil.a ${libdir}/libxnet.a \
+                   "
 
 RDEPENDS_${PN}-dev += "linux-libc-headers-dev bsd-headers-dev libssp-nonshared-staticdev"
 RPROVIDES_${PN}-dev += "libc-dev virtual-libc-dev"
 RPROVIDES_${PN} += "ldd libsegfault rtld(GNU_HASH)"
 
 LEAD_SONAME = "libc.so"
+INSANE_SKIP_${PN}-dev = "staticdev"
