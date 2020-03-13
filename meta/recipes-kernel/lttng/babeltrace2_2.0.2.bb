@@ -13,7 +13,7 @@ SRC_URI = "git://git.linuxfoundation.org/diamon/babeltrace.git;branch=stable-2.0
            file://0001-Make-manpages-multilib-identical.patch \
            file://0001-fs.c-initialize-other_entry.patch \
 	  "
-SRCREV = "06df58f89ee51b1a2c6a2c187ec3f15691633910"
+SRCREV = "33003c352ed56aa49e0b3df272bbab6fac36cae8"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>2(\.\d+)+)$"
 
 S = "${WORKDIR}/git"
