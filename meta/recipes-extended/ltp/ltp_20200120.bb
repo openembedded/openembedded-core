@@ -45,8 +45,8 @@ inherit autotools-brokensep
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
-export prefix = "/opt/ltp"
-export exec_prefix = "/opt/ltp"
+export prefix = "/opt/${PN}"
+export exec_prefix = "/opt/${PN}"
 
 PACKAGECONFIG[numa] = "--with-numa, --without-numa, numactl,"
 EXTRA_AUTORECONF += "-I ${S}/testcases/realtime/m4"
@@ -55,7 +55,7 @@ EXTRA_OECONF = " --with-power-management-testsuite --with-realtime-testsuite --w
 EXTRA_OECONF += " --without-tirpc "
 
 do_install(){
-    install -d ${D}/opt/ltp/
+    install -d ${D}${prefix}/
     oe_runmake DESTDIR=${D} SKIP_IDCHECK=1 install
 
     # fixup not deploy STPfailure_report.pl to avoid confusing about it fails to run
@@ -64,10 +64,10 @@ do_install(){
     # runs on the OSDL's Scaleable Test Platform (STP) and it mainly accesses
     # http://khack.osdl.org to retrieve ltp test results run on
     # OSDL's Scaleable Test Platform, but now http://khack.osdl.org unaccessible
-    rm -rf ${D}/opt/ltp/bin/STPfailure_report.pl
+    rm -rf ${D}${prefix}/bin/STPfailure_report.pl
 
-    # Copy POSIX test suite into ${D}/opt/ltp/testcases by manual
-    cp -r testcases/open_posix_testsuite ${D}/opt/ltp/testcases
+    # Copy POSIX test suite into ${D}${prefix}/testcases by manual
+    cp -r testcases/open_posix_testsuite ${D}${prefix}/testcases
 
     # Makefile were configured in the build system
     find ${D}${prefix} -name Makefile | xargs -n 1 sed -i \
@@ -101,10 +101,10 @@ RDEPENDS_${PN} = "\
     tar \
 "
 
-FILES_${PN} += "/opt/ltp/* /opt/ltp/runtest/* /opt/ltp/scenario_groups/* /opt/ltp/testcases/bin/* /opt/ltp/testcases/bin/*/bin/* /opt/ltp/testscripts/* /opt/ltp/testcases/open_posix_testsuite/* /opt/ltp/testcases/open_posix_testsuite/conformance/* /opt/ltp/testcases/open_posix_testsuite/Documentation/* /opt/ltp/testcases/open_posix_testsuite/functional/* /opt/ltp/testcases/open_posix_testsuite/include/* /opt/ltp/testcases/open_posix_testsuite/scripts/* /opt/ltp/testcases/open_posix_testsuite/stress/* /opt/ltp/testcases/open_posix_testsuite/tools/* /opt/ltp/testcases/data/nm01/lib.a /opt/ltp/lib/libmem.a"
+FILES_${PN} += "${prefix}/* ${prefix}/runtest/* ${prefix}/scenario_groups/* ${prefix}/testcases/bin/* ${prefix}/testcases/bin/*/bin/* ${prefix}/testscripts/* ${prefix}/testcases/open_posix_testsuite/* ${prefix}/testcases/open_posix_testsuite/conformance/* ${prefix}/testcases/open_posix_testsuite/Documentation/* ${prefix}/testcases/open_posix_testsuite/functional/* ${prefix}/testcases/open_posix_testsuite/include/* ${prefix}/testcases/open_posix_testsuite/scripts/* ${prefix}/testcases/open_posix_testsuite/stress/* ${prefix}/testcases/open_posix_testsuite/tools/* ${prefix}/testcases/data/nm01/lib.a ${prefix}/lib/libmem.a"
 
 # Avoid stripping some generated binaries otherwise some of the ltp tests such as ldd01 & nm01 fail
-INHIBIT_PACKAGE_STRIP_FILES = "/opt/ltp/testcases/bin/nm01 /opt/ltp/testcases/bin/ldd01"
+INHIBIT_PACKAGE_STRIP_FILES = "${prefix}/testcases/bin/nm01 ${prefix}/testcases/bin/ldd01"
 INSANE_SKIP_${PN} += "already-stripped staticdev"
 
 # Avoid file dependency scans, as LTP checks for things that may or may not
