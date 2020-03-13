@@ -58,6 +58,8 @@ SRC_URI = "\
     file://CVE-2018-10910.patch \
     file://gcc9-fixes.patch \
     file://0001-tools-Fix-build-after-y2038-changes-in-glibc.patch \
+    file://CVE-2020-0556-1.patch \
+    file://CVE-2020-0556-2.patch \
 "
 S = "${WORKDIR}/bluez-${PV}"
 
