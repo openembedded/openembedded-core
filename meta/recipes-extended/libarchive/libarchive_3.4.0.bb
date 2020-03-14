@@ -33,6 +33,7 @@ EXTRA_OECONF += "--enable-largefile"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://CVE-2019-19221.patch \
+           file://0001-RAR5-reader-reject-files-that-declare-invalid-header.patch \
 "
 
 SRC_URI[md5sum] = "6046396255bd7cf6d0f6603a9bda39ac"
