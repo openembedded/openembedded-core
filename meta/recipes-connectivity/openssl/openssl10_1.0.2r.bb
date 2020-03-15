@@ -60,6 +60,8 @@ S = "${WORKDIR}/openssl-${PV}"
 
 UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 
+CVE_PRODUCT = "openssl:openssl"
+
 inherit pkgconfig siteinfo multilib_header ptest manpages
 
 PACKAGECONFIG ?= "cryptodev-linux"
