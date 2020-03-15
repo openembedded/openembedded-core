@@ -24,7 +24,7 @@ IMAGE_FSTYPES = "wic.vmdk"
 
 inherit core-image module-base setuptools3
 
-SRCREV ?= "39d45ef825694705daf6d7ab4ab3066b1b8e3aa2"
+SRCREV ?= "4cf541859dca74669a4b7ddf4c1b2ada75f0379b"
 SRC_URI = "git://git.yoctoproject.org/poky \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
