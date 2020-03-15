@@ -18,6 +18,12 @@ SRC_URI[sha256sum] = "2bf85b5f88a5f2fa8069aed2a2dfc3a9f8d15a97e59c713e3906e5fdd9
 # No point in hardcoding path to m4, just use PATH
 EXTRA_OECONF += "M4=m4"
 
+# Reset any loadavg set via environment, it breaks parallel build
+# | ../bison-3.5.2/lib/uniwidth/width.c:21:10: fatal error: uniwidth.h: No such file or directory
+# |  #include "uniwidth.h"
+# |           ^~~~~~~~~~~~
+EXTRA_OEMAKE_append = " -l"
+
 inherit autotools gettext texinfo
 
 # The automatic m4 path detection gets confused, so force the right value
