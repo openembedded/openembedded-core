@@ -34,13 +34,13 @@ do_install() {
 	if ! ${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'true', 'false', d)}; then
 		rm -f "${D}${bindir}/update-alternatives"
 	fi
-
-    if ! ${@bb.utils.contains('PACKAGECONFIG', 'python', 'true', 'false', d)}; then
-        grep -lZ "/usr/bin/env.*python" ${D}${bindir}/* | xargs -0 rm
-    fi
 }
 
 do_install_append_class-target() {
+	if ! ${@bb.utils.contains('PACKAGECONFIG', 'python', 'true', 'false', d)}; then
+		grep -lZ "/usr/bin/env.*python" ${D}${bindir}/* | xargs -0 rm
+	fi
+
 	if [ -e "${D}${bindir}/update-alternatives" ]; then
 		sed -i ${D}${bindir}/update-alternatives -e 's,/usr/bin,${bindir},g; s,/usr/lib,${nonarch_libdir},g'
 	fi
