@@ -128,9 +128,11 @@ do_install_append_class-target () {
 			rm ${D}${datadir}/installed-tests/glib/gdbus-serialization.test
 		fi
 	fi
+	if [ -f ${D}${datadir}/installed-tests/glib/static-link.test ]; then
         if test "x${MLPREFIX}" != "x"; then
                 mv ${D}${datadir}/installed-tests/glib/static-link.test ${D}${datadir}/installed-tests/glib/${MLPREFIX}static-link.test
         fi
+	fi
 }
 
 # As we do not build python3 for windows, makes no sense to ship the script that's using it
