@@ -12,6 +12,7 @@ PV = "0.1.3+${SRCPV}"
 SRCREV = "e6b4d7516dae9b200e94fcfcb9ebc9331389655f"
 SRC_URI = "git://code.foxkit.us/adelie/libucontext.git;protocol=https \
            file://0001-pass-LDFLAGS-to-link-step.patch \
+           file://0001-Makefile-Add-LIBDIR-variable.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -51,7 +52,7 @@ export ARCH = "${@map_kernel_arch(d.getVar('TARGET_ARCH'), d)}"
 
 CFLAGS += "-Iarch/${ARCH}"
 
-EXTRA_OEMAKE = "CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
+EXTRA_OEMAKE = "CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}' LIBDIR='${base_libdir}'"
 
 do_compile() {
     oe_runmake ARCH=${ARCH}
