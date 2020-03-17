@@ -185,6 +185,8 @@ class BaseConfig(object):
         self.vmtypes = ('hddimg', 'iso')
         self.fsinfo = {}
         self.network_device = "-device e1000,netdev=net0,mac=@MAC@"
+        self.cmdline_ip_slirp = "ip=dhcp"
+        self.cmdline_ip_tap = "ip=192.168.7.@CLIENT@::192.168.7.@GATEWAY@:255.255.255.0"
         # Use different mac section for tap and slirp to avoid
         # conflicts, e.g., when one is running with tap, the other is
         # running with slirp.
@@ -1032,7 +1034,9 @@ class BaseConfig(object):
 
         if self.fstype == 'nfs':
             self.setup_nfs()
-        self.kernel_cmdline_script += ' ip=dhcp'
+        netconf = " " + self.cmdline_ip_slirp
+        logger.info("Network configuration:%s", netconf)
+        self.kernel_cmdline_script += netconf
         # Port mapping
         hostfwd = ",hostfwd=tcp::2222-:22,hostfwd=tcp::2323-:23"
         qb_slirp_opt_default = "-netdev user,id=net0%s,tftp=%s" % (hostfwd, self.get('DEPLOY_DIR_IMAGE'))
@@ -1147,9 +1151,11 @@ class BaseConfig(object):
         client = gateway + 1
         if self.fstype == 'nfs':
             self.setup_nfs()
-        netconf = "192.168.7.%s::192.168.7.%s:255.255.255.0" % (client, gateway)
-        logger.info("Network configuration: %s", netconf)
-        self.kernel_cmdline_script += " ip=%s" % netconf
+        netconf = " " + self.cmdline_ip_tap
+        netconf = netconf.replace('@CLIENT@', str(client))
+        netconf = netconf.replace('@GATEWAY@', str(gateway))
+        logger.info("Network configuration:%s", netconf)
+        self.kernel_cmdline_script += netconf
         mac = "%s%02x" % (self.mac_tap, client)
         qb_tap_opt = self.get('QB_TAP_OPT')
         if qb_tap_opt:
@@ -1171,8 +1177,10 @@ class BaseConfig(object):
         if self.net_bridge:
             self.setup_net_bridge()
         elif self.slirp_enabled:
+            self.cmdline_ip_slirp = self.get('QB_CMDLINE_IP_SLIRP') or self.cmdline_ip_slirp
             self.setup_slirp()
         else:
+            self.cmdline_ip_tap = self.get('QB_CMDLINE_IP_TAP') or self.cmdline_ip_tap
             self.setup_tap()
 
     def setup_rootfs(self):

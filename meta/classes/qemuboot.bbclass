@@ -36,12 +36,24 @@
 #                    Note, runqemu will replace @MAC@ with a predefined mac, you can set
 #                    a custom one, but that may cause conflicts when multiple qemus are
 #                    running on the same host.
+#                    Note: If more than one interface of type -device virtio-net-device gets added,
+#                          QB_NETWORK_DEVICE_prepend might be used, since Qemu enumerates the eth*
+#                          devices in reverse order to -device arguments.
 #
 # QB_TAP_OPT: netowrk option for 'tap' mode, e.g.,
 #             "-netdev tap,id=net0,ifname=@TAP@,script=no,downscript=no"
 #              Note, runqemu will replace "@TAP@" with the one which is used, such as tap0, tap1 ...
 #
 # QB_SLIRP_OPT: network option for SLIRP mode, e.g., -netdev user,id=net0"
+#
+# QB_CMDLINE_IP_SLIRP: If QB_NETWORK_DEVICE adds more than one network interface to qemu, usually the
+#                      ip= kernel comand line argument needs to be changed accordingly. Details are documented
+#                      in the kernel docuemntation https://www.kernel.org/doc/Documentation/filesystems/nfs/nfsroot.txt
+#                      Example to configure only the first interface: "ip=eth0:dhcp"
+# QB_CMDLINE_IP_TAP: This parameter is similar to the QB_CMDLINE_IP_SLIRP parameter. Since the tap interface requires
+#                    static IP configuration @CLIENT@ and @GATEWAY@ place holders are replaced by the IP and the gateway
+#                    address of the qemu guest by runqemu.
+#                    Example: "ip=192.168.7.@CLIENT@::192.168.7.@GATEWAY@:255.255.255.0::eth0"
 #
 # QB_ROOTFS_OPT: used as rootfs, e.g.,
 #               "-drive id=disk0,file=@ROOTFS@,if=none,format=raw -device virtio-blk-device,drive=disk0"
@@ -63,6 +75,8 @@ QB_DEFAULT_KERNEL ?= "${KERNEL_IMAGETYPE}"
 QB_DEFAULT_FSTYPE ?= "ext4"
 QB_OPT_APPEND ?= "-show-cursor"
 QB_NETWORK_DEVICE ?= "-device virtio-net-pci,netdev=net0,mac=@MAC@"
+QB_CMDLINE_IP_SLIRP ?= "ip=dhcp"
+QB_CMDLINE_IP_TAP ?= "ip=192.168.7.@CLIENT@::192.168.7.@GATEWAY@:255.255.255.0"
 
 # This should be kept align with ROOT_VM
 QB_DRIVE_TYPE ?= "/dev/sd"
