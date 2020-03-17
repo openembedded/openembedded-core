@@ -17,8 +17,8 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0001-mesonbuild-environment.py-check-environment-for-vari.patch \
            file://0001-modules-python.py-do-not-substitute-python-s-install.patch \
            "
-SRC_URI[sha256sum] = "ec1ba33eea701baca2c1607dac458152dc8323364a51fdef6babda2623413b04"
-SRC_URI[md5sum] = "9bf73f7b5a2426a7c8674a809bb8cae2"
+SRC_URI[sha256sum] = "3e8f830f33184397c2eb0b651ec502adb63decb28978bdc84b3558d71284c21f"
+SRC_URI[md5sum] = "80303535995fcae72bdb887df102b421"
 
 SRC_URI_append_class-native = " \
     file://0001-Make-CPU-family-warnings-fatal.patch \
