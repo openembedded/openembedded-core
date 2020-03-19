@@ -1,6 +1,6 @@
 require icu.inc
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=8bc5d32052a96f214cbdd1e53dfc935d"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=a3808a5b70071b07f87ff2205e4d75a0"
 
 def icu_download_version(d):
     pvsplit = d.getVar('PV').split('.')
@@ -28,8 +28,8 @@ SRC_URI = "${BASE_SRC_URI} \
 SRC_URI_append_class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[md5sum] = "d1ff436e26cabcb28e6cb383d32d1339"
-SRC_URI[sha256sum] = "53e37466b3d6d6d01ead029e3567d873a43a5d1c668ed2278e253b683136d948"
+SRC_URI[md5sum] = "b33dc6766711517c98d318447e5110f8"
+SRC_URI[sha256sum] = "52a3f2209ab95559c1cf0a14f24338001f389615bf00e2585ef3dbc43ecf0a2e"
 
 UPSTREAM_CHECK_REGEX = "icu4c-(?P<pver>\d+(_\d+)+)-src"
 UPSTREAM_CHECK_URI = "https://github.com/unicode-org/icu/releases"
