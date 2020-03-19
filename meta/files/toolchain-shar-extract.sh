@@ -1,8 +1,13 @@
 #!/bin/sh
 
 export LC_ALL=en_US.UTF-8
+#Make sure at least one python is installed
+INIT_PYTHON=$(which python3 2>/dev/null )
+[ -z "$INIT_PYTHON" ] && INIT_PYTHON=$(which python2 2>/dev/null)
+[ -z "$INIT_PYTHON" ] && echo "Error: The SDK needs a python installed" && exit 1
+
 # Remove invalid PATH elements first (maybe from a previously setup toolchain now deleted
-PATH=`python3 -c 'import os; print(":".join(e for e in os.environ["PATH"].split(":") if os.path.exists(e)))'`
+PATH=`$INIT_PYTHON -c 'import os; print(":".join(e for e in os.environ["PATH"].split(":") if os.path.exists(e)))'`
 
 tweakpath () {
     case ":${PATH}:" in
