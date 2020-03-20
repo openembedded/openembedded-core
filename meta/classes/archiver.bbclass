@@ -32,7 +32,7 @@
 #     directory suitable for direct use as a mirror. Duplicate sources are
 #     ignored.
 # 12) Source mirror exclusions:
-#     ARCHIVE_MIRROR_EXCLUDE is a list of prefixes to exclude from the mirror.
+#     ARCHIVER_MIRROR_EXCLUDE is a list of prefixes to exclude from the mirror.
 #     This may be used for sources which you are already publishing yourself
 #     (e.g. if the URI starts with 'https://mysite.com/' and your mirror is
 #     going to be published to the same site). It may also be used to exclude
@@ -359,7 +359,7 @@ python do_ar_mirror() {
                 break
 
         if len(ud.mirrortarballs) and not localpath:
-            bb.warn('Mirror tarballs are listed for a source but none are present.' \
+            bb.warn('Mirror tarballs are listed for a source but none are present. ' \
                     'Falling back to original download.\n' \
                     'SRC_URI = %s' % (url))
 
