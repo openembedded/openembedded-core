@@ -6,6 +6,8 @@ SRC_URI += "file://remove.ldconfig.call.patch \
             file://mkdir_p.patch \
             file://0001-misc-create_inode.c-set-dir-s-mode-correctly.patch \
             file://CVE-2019-5094.patch \
+            file://CVE-2019-5188.patch \
+            file://0001-e2fsck-don-t-try-to-rehash-a-deleted-directory.patch \
             "
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
