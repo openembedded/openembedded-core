@@ -1,0 +1,34 @@
+From ff3ad88c233ecd87f7983ad13836323f944540ec Mon Sep 17 00:00:00 2001
+From: Doug Nazar <nazard@nazar.ca>
+Date: Mon, 9 Dec 2019 10:53:37 -0500
+Subject: [PATCH] Disable statx if using glibc emulation
+
+On older kernels without statx, glibc with statx support will attempt
+to emulate the call. However it doesn't support AT_STATX_DONT_SYNC and
+will return EINVAL. This causes all xstat/xlstat calls to fail.
+
+Upstream-Status: Backport
+
+Signed-off-by: Doug Nazar <nazard@nazar.ca>
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ support/misc/xstat.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/support/misc/xstat.c b/support/misc/xstat.c
+index 661e29e4..a438fbcc 100644
+--- a/support/misc/xstat.c
++++ b/support/misc/xstat.c
+@@ -51,6 +51,9 @@ statx_do_stat(int fd, const char *pathname, struct stat *statbuf, int flags)
+ 			statx_copy(statbuf, &stxbuf);
+ 			return 0;
+ 		}
++		/* glibc emulation doesn't support AT_STATX_DONT_SYNC */
++		if (errno == EINVAL)
++			errno = ENOSYS;
+ 		if (errno == ENOSYS)
+ 			statx_supported = 0;
+ 	} else
+-- 
+2.19.1
+
