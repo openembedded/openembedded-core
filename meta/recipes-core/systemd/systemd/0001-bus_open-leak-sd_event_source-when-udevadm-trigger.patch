@@ -1,0 +1,35 @@
+From 3e9828454dcdaa6cd19ee7ea3e3db30567f22c9f Mon Sep 17 00:00:00 2001
+From: ven <2988994+hexiaowen@users.noreply.github.com>
+Date: Wed, 22 May 2019 14:24:28 +0800
+Subject: =?UTF-8?q?bus=5Fopen=20leak=20sd=5Fevent=5Fsource=20when=20udevad?=
+ =?UTF-8?q?m=20trigger=E3=80=82?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On my host, when executing the udevadm trigger, I only receive the change event, which causes memleak
+
+CVE: CVE-2019-20386
+Upstream-Status: Backport
+Signed-off-by: Adrian Bunk <bunk@stusta.de>
+---
+ src/login/logind-button.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/login/logind-button.c b/src/login/logind-button.c
+index daffbf0668..1624a31cc3 100644
+--- a/src/login/logind-button.c
++++ b/src/login/logind-button.c
+@@ -341,7 +341,8 @@ int button_open(Button *b) {
+         }
+ 
+         (void) button_set_mask(b);
+-
++        
++        b->io_event_source = sd_event_source_unref(b->io_event_source);
+         r = sd_event_add_io(b->manager->event, &b->io_event_source, b->fd, EPOLLIN, button_dispatch, b);
+         if (r < 0) {
+                 log_error_errno(r, "Failed to add button event: %m");
+-- 
+2.20.1
+
