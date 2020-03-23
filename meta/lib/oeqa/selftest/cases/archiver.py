@@ -208,7 +208,7 @@ class Archiver(OESelftestTestCase):
         """
         Test that the archiver works with `ARCHIVER_MODE[src] = "mirror"` and
         correctly excludes an archive when its URL matches
-        `ARCHIVER_MIRROR_EXCLUDES`.
+        `ARCHIVER_MIRROR_EXCLUDE`.
         """
 
         target='selftest-ed'
