@@ -48,6 +48,13 @@ do_install_ptest () {
     cp -r ${S}/tests/linux ${D}${PTEST_PATH}/tests/
 }
 
+pkg_postinst_ontarget_${PN} () {
+    if [ ! -f /etc/network/interfaces ]; then
+        mkdir -p /etc/network
+        touch /etc/network/interfaces
+    fi
+}
+
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "ifup ifdown"
 
