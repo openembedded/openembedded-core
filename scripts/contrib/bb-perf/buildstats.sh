@@ -66,62 +66,63 @@ EOM
 
 # Parse and validate arguments
 while getopts "b:r:t:s:aHh" OPT; do
-	case $OPT in
-	b)
-		BS_DIR="$OPTARG"
-		;;
-	r)
-		RECIPE="$OPTARG"
-		;;
-	t)
-		TASKS="$OPTARG"
-		;;
-	s)
-		STATS="$OPTARG"
-		;;
-	a)
+    case $OPT in
+    b)
+        BS_DIR="$OPTARG"
+        ;;
+    r)
+        RECIPE="$OPTARG"
+        ;;
+    t)
+        TASKS="$OPTARG"
+        ;;
+    s)
+        STATS="$OPTARG"
+        ;;
+    a)
         ACCUMULATE="y"
         ;;
-	H)
-	        HEADER="y"
-	        ;;
-	h)
-		usage
-		exit 0
-		;;
-	*)
-		usage
-		exit 1
-		;;
-	esac
+    H)
+        HEADER="y"
+        ;;
+    h)
+        usage
+        exit 0
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
 done
 
 # Ensure the buildstats folder exists
 if [ ! -d "$BS_DIR" ]; then
-	echo "ERROR: $BS_DIR does not exist"
-	usage
-	exit 1
+    echo "ERROR: $BS_DIR does not exist"
+    usage
+    exit 1
 fi
 
 stats=""
 IFS=":"
 for stat in ${STATS}; do
-	case $stat in
-	    TIME)
-		stats="${stats}:${TIME}"
-		;;
-	    IO)
-		stats="${stats}:${IO}"
-		;;
-	    RUSAGE)
-		stats="${stats}:${RUSAGE}"
-		;;
-	    CHILD_RUSAGE)
-		stats="${stats}:${CHILD_RUSAGE}"
-		;;
-	    *)
-		stats="${STATS}"
-	esac
+    case $stat in
+        TIME)
+            stats="${stats}:${TIME}"
+            ;;
+        IO)
+            stats="${stats}:${IO}"
+            ;;
+        RUSAGE)
+            stats="${stats}:${RUSAGE}"
+            ;;
+        CHILD_RUSAGE)
+            stats="${stats}:${CHILD_RUSAGE}"
+            ;;
+        *)
+            stats="${STATS}"
+            ;;
+    esac
 done
 
 # remove possible colon at the beginning
@@ -140,27 +141,27 @@ for task in ${TASKS}; do
     task="do_${task}"
     for file in $(find ${BS_DIR} -type f -path *${RECIPE}*/${task} | awk 'BEGIN{ ORS=""; OFS=":" } { print $0,"" }'); do
         recipe="$(basename $(dirname $file))"
-	times=""
-	for stat in ${stats}; do
-	    [ -z "$stat" ] && { echo "empty stats"; }
-	    time=$(sed -n -e "s/^\($stat\): \\(.*\\)/\\2/p" $file)
-	    # in case the stat is not present, set the value as NA
-	    [ -z "$time" ] && { time="NA"; }
-	    # Append it to times
-	    if [ -z "$times" ]; then
-		times="${time}"
-	    else
-		times="${times} ${time}"
-	    fi
-	done
-    if [ -n "$ACCUMULATE" ]; then
-        IFS=' '; valuesarray=(${times}); IFS=':'
-        times=0
-        for value in "${valuesarray[@]}"; do
-            [ "$value" == "NA" ] && { echo "ERROR: stat is not present."; usage; exit 1; }
-            times=$(( $times + $value ))
+        times=""
+        for stat in ${stats}; do
+            [ -z "$stat" ] && { echo "empty stats"; }
+            time=$(sed -n -e "s/^\($stat\): \\(.*\\)/\\2/p" $file)
+            # in case the stat is not present, set the value as NA
+            [ -z "$time" ] && { time="NA"; }
+            # Append it to times
+            if [ -z "$times" ]; then
+                times="${time}"
+            else
+                times="${times} ${time}"
+            fi
         done
-    fi
+        if [ -n "$ACCUMULATE" ]; then
+            IFS=' '; valuesarray=(${times}); IFS=':'
+            times=0
+            for value in "${valuesarray[@]}"; do
+                [ "$value" == "NA" ] && { echo "ERROR: stat is not present."; usage; exit 1; }
+                times=$(( $times + $value ))
+            done
+        fi
         echo "${task} ${recipe} ${times}"
     done
 done

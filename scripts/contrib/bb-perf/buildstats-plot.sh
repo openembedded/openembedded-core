@@ -72,40 +72,40 @@ EOM
 
 # Parse and validate arguments
 while getopts "b:n:r:t:s:o:aSh" OPT; do
-	case $OPT in
-	b)
-		BS_DIR="$OPTARG"
-		;;
-	n)
-		N="$OPTARG"
-		;;
+    case $OPT in
+    b)
+        BS_DIR="$OPTARG"
+        ;;
+    n)
+        N="$OPTARG"
+        ;;
     r)
         RECIPE="-r $OPTARG"
         ;;
     t)
         TASKS="$OPTARG"
         ;;
-	s)
-	        STATS="$OPTARG"
-	        ;;
-	a)
+    s)
+        STATS="$OPTARG"
+        ;;
+    a)
         ACCUMULATE="-a"
         ;;
-	S)
-	        SUM="y"
-	        ;;
-	o)
-	        OUTDATA_FILE="$OPTARG"
-	        ;;
-	h)
-		usage
-		exit 0
-		;;
-	*)
-		usage
-		exit 1
-		;;
-	esac
+    S)
+        SUM="y"
+        ;;
+    o)
+        OUTDATA_FILE="$OPTARG"
+        ;;
+    h)
+        usage
+        exit 0
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+    esac
 done
 
 # Get number of stats
@@ -141,8 +141,8 @@ else
     declare -a sumargs
     j=0
     for i in `seq $nstats`; do
-	sumargs[j]=sum; j=$(( $j + 1 ))
-	sumargs[j]=`expr 3 + $i - 1`;  j=$(( $j + 1 ))
+        sumargs[j]=sum; j=$(( $j + 1 ))
+        sumargs[j]=`expr 3 + $i - 1`;  j=$(( $j + 1 ))
     done
 
     # Do the processing with datamash
