@@ -38,6 +38,7 @@ Child rusage ru_nivcsw"
 BS_DIR="tmp/buildstats"
 TASKS="compile:configure:fetch:install:patch:populate_lic:populate_sysroot:unpack"
 STATS="$TIME"
+ACCUMULATE=""
 HEADER="" # No header by default
 
 function usage {
@@ -56,12 +57,13 @@ Usage: $CMD [-b buildstats_dir] [-t do_task]
                     IO=$IO
                     RUSAGE=$RUSAGE
                     CHILD_RUSAGE=$CHILD_RUSAGE
+  -a            Accumulate all stats values for found recipes
   -h            Display this help message
 EOM
 }
 
 # Parse and validate arguments
-while getopts "b:t:s:Hh" OPT; do
+while getopts "b:t:s:aHh" OPT; do
 	case $OPT in
 	b)
 		BS_DIR="$OPTARG"
@@ -72,6 +74,9 @@ while getopts "b:t:s:Hh" OPT; do
 	s)
 		STATS="$OPTARG"
 		;;
+	a)
+        ACCUMULATE="y"
+        ;;
 	H)
 	        HEADER="y"
 	        ;;
@@ -118,7 +123,13 @@ done
 stats="$(echo "$stats" | sed -e 's/^://1')"
 
 # Provide a header if required by the user
-[ -n "$HEADER" ] && { echo "task:recipe:$stats"; }
+if [ -n "$HEADER" ] ; then
+    if [ -n "$ACCUMULATE" ]; then
+        echo "task:recipe:accumulated(${stats//:/;})"
+    else
+        echo "task:recipe:$stats"
+    fi
+fi
 
 for task in ${TASKS}; do
     task="do_${task}"
@@ -137,6 +148,14 @@ for task in ${TASKS}; do
 		times="${times} ${time}"
 	    fi
 	done
+    if [ -n "$ACCUMULATE" ]; then
+        IFS=' '; valuesarray=(${times}); IFS=':'
+        times=0
+        for value in "${valuesarray[@]}"; do
+            [ "$value" == "NA" ] && { echo "ERROR: stat is not present."; usage; exit 1; }
+            times=$(( $times + $value ))
+        done
+    fi
         echo "${task} ${recipe} ${times}"
     done
 done
