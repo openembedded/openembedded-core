@@ -39,6 +39,7 @@ set -o errexit
 
 BS_DIR="tmp/buildstats"
 N=10
+TASKS="compile:configure:fetch:install:patch:populate_lic:populate_sysroot:unpack"
 STATS="utime"
 SUM=""
 OUTDATA_FILE="$PWD/buildstats-plot.out"
@@ -51,6 +52,8 @@ Usage: $CMD [-b buildstats_dir] [-t do_task]
                 (default: "$BS_DIR")
   -n N          Top N recipes to display. Ignored if -S is present
                 (default: "$N")
+  -t tasks      The tasks to be computed
+                (default: "$TASKS")
   -s stats      The stats to be matched. If more that one stat, units
                 should be the same because data is plot as histogram.
                 (see buildstats.sh -h for all options) or any other defined
@@ -64,7 +67,7 @@ EOM
 }
 
 # Parse and validate arguments
-while getopts "b:n:s:o:Sh" OPT; do
+while getopts "b:n:t:s:o:Sh" OPT; do
 	case $OPT in
 	b)
 		BS_DIR="$OPTARG"
@@ -72,6 +75,9 @@ while getopts "b:n:s:o:Sh" OPT; do
 	n)
 		N="$OPTARG"
 		;;
+    t)
+        TASKS="$OPTARG"
+        ;;
 	s)
 	        STATS="$OPTARG"
 	        ;;
@@ -101,7 +107,7 @@ CD=$(dirname $0)
 
 # Parse buildstats recipes to produce a single table
 OUTBUILDSTATS="$PWD/buildstats.log"
-$CD/buildstats.sh -b "$BS_DIR" -s "$STATS" -H > $OUTBUILDSTATS
+$CD/buildstats.sh -b "$BS_DIR" -s "$STATS" -t "$TASKS" -H > $OUTBUILDSTATS
 
 # Get headers
 HEADERS=$(cat $OUTBUILDSTATS | sed -n -e '1s/ /-/g' -e '1s/:/ /gp')
