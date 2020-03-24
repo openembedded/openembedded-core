@@ -36,6 +36,7 @@ Child rusage ru_majflt:Child rusage ru_inblock:Child rusage ru_oublock:Child rus
 Child rusage ru_nivcsw"
 
 BS_DIR="tmp/buildstats"
+RECIPE=""
 TASKS="compile:configure:fetch:install:patch:populate_lic:populate_sysroot:unpack"
 STATS="$TIME"
 ACCUMULATE=""
@@ -47,6 +48,7 @@ cat <<EOM
 Usage: $CMD [-b buildstats_dir] [-t do_task]
   -b buildstats The path where the folder resides
                 (default: "$BS_DIR")
+  -r recipe     The recipe to be computed
   -t tasks      The tasks to be computed
                 (default: "$TASKS")
   -s stats      The stats to be matched. Options: TIME, IO, RUSAGE, CHILD_RUSAGE
@@ -63,10 +65,13 @@ EOM
 }
 
 # Parse and validate arguments
-while getopts "b:t:s:aHh" OPT; do
+while getopts "b:r:t:s:aHh" OPT; do
 	case $OPT in
 	b)
 		BS_DIR="$OPTARG"
+		;;
+	r)
+		RECIPE="$OPTARG"
 		;;
 	t)
 		TASKS="$OPTARG"
@@ -133,7 +138,7 @@ fi
 
 for task in ${TASKS}; do
     task="do_${task}"
-    for file in $(find ${BS_DIR} -type f -name ${task} | awk 'BEGIN{ ORS=""; OFS=":" } { print $0,"" }'); do
+    for file in $(find ${BS_DIR} -type f -path *${RECIPE}*/${task} | awk 'BEGIN{ ORS=""; OFS=":" } { print $0,"" }'); do
         recipe="$(basename $(dirname $file))"
 	times=""
 	for stat in ${stats}; do
