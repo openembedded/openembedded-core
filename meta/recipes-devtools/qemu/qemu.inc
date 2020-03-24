@@ -83,6 +83,8 @@ EXTRA_OECONF = " \
     --disable-strip \
     --disable-werror \
     --extra-cflags='${CFLAGS}' \
+    --with-git=/bin/false \
+    --disable-git-update \
     ${PACKAGECONFIG_CONFARGS} \
     "
 
