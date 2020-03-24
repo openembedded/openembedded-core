@@ -101,7 +101,7 @@ CD=$(dirname $0)
 
 # Parse buildstats recipes to produce a single table
 OUTBUILDSTATS="$PWD/buildstats.log"
-$CD/buildstats.sh -H -s "$STATS" -H > $OUTBUILDSTATS
+$CD/buildstats.sh -b "$BS_DIR" -s "$STATS" -H > $OUTBUILDSTATS
 
 # Get headers
 HEADERS=$(cat $OUTBUILDSTATS | sed -n -e '1s/ /-/g' -e '1s/:/ /gp')
