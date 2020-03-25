@@ -1061,7 +1061,6 @@ def get_recipe_upgrade_status(recipes=None):
     data_copy_list = []
     copy_vars = ('SRC_URI',
                  'PV',
-                 'GITDIR',
                  'DL_DIR',
                  'PN',
                  'CACHE',
