@@ -20,8 +20,8 @@ SRC_URI_append_class-native = " file://0001-configure.ac-use-a-custom-value-for-
                                 file://relocate.patch"
 SRC_URI_append_class-nativesdk = " file://relocate.patch"
 
-SRC_URI[md5sum] = "cb3b373d08ba078c325299945a7f2818"
-SRC_URI[sha256sum] = "242554c0e06f3a83c420b052f750b65ead711cc3fddddb5e7274fcdbb4e9dec0"
+SRC_URI[md5sum] = "4ff88920cf52b35db0dedaee87bdbbb1"
+SRC_URI[sha256sum] = "04a7c9d48b74c399168ee8270e548588ddbe52218c337703d7f06373d326ca30"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
