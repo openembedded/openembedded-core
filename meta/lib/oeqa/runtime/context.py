@@ -47,6 +47,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     default_data = None
     default_test_data = 'data/testdata.json'
     default_tests = ''
+    default_json_result_dir = '%s-results' % name
 
     default_target_type = 'simpleremote'
     default_manifest = 'data/manifest'

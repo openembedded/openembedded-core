@@ -100,24 +100,26 @@ class OETestContextExecutor(object):
     name = 'core'
     help = 'core test component example'
     description = 'executes core test suite example'
+    datetime = time.strftime("%Y%m%d%H%M%S")
 
     default_cases = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
             'cases/example')]
     default_test_data = os.path.join(default_cases[0], 'data.json')
     default_tests = None
+    default_json_result_dir = None
 
     def register_commands(self, logger, subparsers):
         self.parser = subparsers.add_parser(self.name, help=self.help,
                 description=self.description, group='components')
 
-        self.default_output_log = '%s-results-%s.log' % (self.name,
-                time.strftime("%Y%m%d%H%M%S"))
+        self.default_output_log = '%s-results-%s.log' % (self.name, self.datetime)
         self.parser.add_argument('--output-log', action='store',
                 default=self.default_output_log,
                 help="results output log, default: %s" % self.default_output_log)
 
         self.parser.add_argument('--json-result-dir', action='store',
-                help="json result output dir, create testresults.json here if set")
+                default=self.default_json_result_dir,
+                help="json result output dir, default: %s" % self.default_json_result_dir)
 
         group = self.parser.add_mutually_exclusive_group()
         group.add_argument('--run-tests', action='store', nargs='+',
@@ -195,7 +197,7 @@ class OETestContextExecutor(object):
 
     def _get_result_id(self, configuration):
         return '%s_%s_%s_%s' % (configuration['TEST_TYPE'], configuration['IMAGE_BASENAME'],
-                                configuration['MACHINE'], configuration['DATETIME'])
+                                configuration['MACHINE'], self.datetime)
 
     def _pre_run(self):
         pass
