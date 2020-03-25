@@ -13,6 +13,6 @@ GNOMEBASEBUILDCLASS = "meson"
 
 inherit gnomebase gsettings gobject-introspection gettext upstream-version-is-even
 
-SRC_URI[archive.md5sum] = "9759ef53fb2e53fc8d19190e58f2c332"
-SRC_URI[archive.sha256sum] = "288b04260f7040b0e004a8d59c773cfb4e32df4f1b4a0f9d705c51afccc95ead"
+SRC_URI[archive.md5sum] = "697db9e6b2ae058f8a0d0b023e32ceac"
+SRC_URI[archive.sha256sum] = "764ab683286536324533a58d4e95fc57f81adaba7d880dd0ebbbced63e960ea6"
 SRC_URI += "file://0001-Do-not-skip-gir-installation-for-cross-compiling.patch"
