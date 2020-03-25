@@ -120,7 +120,7 @@ OUTBUILDSTATS="$PWD/buildstats.log"
 $CD/buildstats.sh -b "$BS_DIR" -s "$STATS" -t "$TASKS" $RECIPE $ACCUMULATE -H > $OUTBUILDSTATS
 
 # Get headers
-HEADERS=$(cat $OUTBUILDSTATS | sed -n -e '1s/ /-/g' -e '1s/:/ /gp')
+HEADERS=$(cat $OUTBUILDSTATS | sed -n -e 's/\(.*\)/"\1"/' -e '1s/ /\\\\\\\\ /g' -e 's/_/\\\\\\\\_/g' -e '1s/:/" "/gp')
 
 echo -e "set boxwidth 0.9 relative"
 echo -e "set style data histograms"
@@ -129,7 +129,7 @@ echo -e "set xtics rotate by 45 right"
 
 # Get output data
 if [ -z "$SUM" ]; then
-    cat $OUTBUILDSTATS | sed -e '1d' | sort -k3 -n -r | head -$N > $OUTDATA_FILE
+    cat $OUTBUILDSTATS | sed -e '1d' -e 's/_/\\\\_/g' | sort -k3 -n -r | head -$N > $OUTDATA_FILE
     # include task at recipe column
     sed -i -e "1i\
 ${HEADERS}" $OUTDATA_FILE
