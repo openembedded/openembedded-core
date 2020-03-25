@@ -114,13 +114,7 @@ export CC_FOR_BUILD = "LD_LIBRARY_PATH= ${BUILD_CC}"
 MULTIARCH := "${@bb.utils.contains("DISTRO_FEATURES", "multiarch", "yes", "no", d)}"
 do_configure[vardeps] += "MULTIARCH"
 do_configure () {
-	(for d in . bfd binutils gas gold gprof ld libctf opcodes; do
-		cd ${S}/$d
-		autoconf
-		rm -rf autom4te.cache
-	done
-	cd ${S}
-	gnu-configize)
+	(cd ${S} && gnu-configize)
 
 	oe_runconf
 #
