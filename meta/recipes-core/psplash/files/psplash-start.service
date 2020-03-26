@@ -6,6 +6,7 @@ RequiresMountsFor=/run
 [Service]
 Type=notify
 ExecStart=/usr/bin/psplash
+RemainAfterExit=yes
 
 [Install]
 WantedBy=sysinit.target
