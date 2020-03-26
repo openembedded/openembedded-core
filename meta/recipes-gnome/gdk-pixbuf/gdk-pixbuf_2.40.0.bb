@@ -99,6 +99,11 @@ do_install_append() {
 
 }
 
+# Remove a bad fuzzing attempt that sporadically fails without a way to reproduce
+do_install_ptest() {
+	rm ${D}/${datadir}/installed-tests/gdk-pixbuf/pixbuf-randomly-modified.test
+}
+
 do_install_append_class-native() {
 	find ${D}${libdir} -name "libpixbufloader-*.la" -exec rm \{\} \;
 
