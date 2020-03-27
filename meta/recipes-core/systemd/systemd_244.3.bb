@@ -601,7 +601,33 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/scsi_id \
                ${rootlibexecdir}/udev/v4l_id \
                ${rootlibexecdir}/udev/keymaps \
-               ${rootlibexecdir}/udev/rules.d/*.rules \
+               ${rootlibexecdir}/udev/rules.d/50-udev-default.rules \
+               ${rootlibexecdir}/udev/rules.d/60-autosuspend-chromiumos.rules \
+               ${rootlibexecdir}/udev/rules.d/60-block.rules \
+               ${rootlibexecdir}/udev/rules.d/60-cdrom_id.rules \
+               ${rootlibexecdir}/udev/rules.d/60-drm.rules \
+               ${rootlibexecdir}/udev/rules.d/60-evdev.rules \
+               ${rootlibexecdir}/udev/rules.d/60-fido-id.rules \
+               ${rootlibexecdir}/udev/rules.d/60-input-id.rules \
+               ${rootlibexecdir}/udev/rules.d/60-persistent-alsa.rules \
+               ${rootlibexecdir}/udev/rules.d/60-persistent-input.rules \
+               ${rootlibexecdir}/udev/rules.d/60-persistent-storage.rules \
+               ${rootlibexecdir}/udev/rules.d/60-persistent-storage-tape.rules \
+               ${rootlibexecdir}/udev/rules.d/60-persistent-v4l.rules \
+               ${rootlibexecdir}/udev/rules.d/60-sensor.rules \
+               ${rootlibexecdir}/udev/rules.d/60-serial.rules \
+               ${rootlibexecdir}/udev/rules.d/61-autosuspend-manual.rules \
+               ${rootlibexecdir}/udev/rules.d/64-btrfs.rules \
+               ${rootlibexecdir}/udev/rules.d/70-joystick.rules \
+               ${rootlibexecdir}/udev/rules.d/70-mouse.rules \
+               ${rootlibexecdir}/udev/rules.d/70-power-switch.rules \
+               ${rootlibexecdir}/udev/rules.d/70-touchpad.rules \
+               ${rootlibexecdir}/udev/rules.d/75-net-description.rules \
+               ${rootlibexecdir}/udev/rules.d/75-probe_mtd.rules \
+               ${rootlibexecdir}/udev/rules.d/78-sound-card.rules \
+               ${rootlibexecdir}/udev/rules.d/80-drivers.rules \
+               ${rootlibexecdir}/udev/rules.d/80-net-setup-link.rules \
+               ${rootlibexecdir}/udev/rules.d/90-vconsole.rules \
                ${sysconfdir}/udev \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
