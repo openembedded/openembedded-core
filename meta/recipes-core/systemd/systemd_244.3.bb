@@ -295,10 +295,6 @@ do_install() {
 	# install default policy for presets
 	# https://www.freedesktop.org/wiki/Software/systemd/Preset/#howto
 	install -Dm 0644 ${WORKDIR}/99-default.preset ${D}${systemd_unitdir}/system-preset/99-default.preset
-
-    # We use package postinsts for the hwdb update, as the update service is
-    # easily triggered for no reason and will slow down boots.
-    find ${D} -name systemd-hwdb-update.service -delete
 }
 
 python populate_packages_prepend (){
@@ -638,7 +634,9 @@ FILES_udev += "${base_sbindir}/udevd \
                ${datadir}/bash-completion/completions/udevadm \
               "
 
-FILES_udev-hwdb = "${rootlibexecdir}/udev/hwdb.d"
+FILES_udev-hwdb = "${rootlibexecdir}/udev/hwdb.d \
+                   ${systemd_unitdir}/system/systemd-hwdb-update.service \
+                   "
 
 RCONFLICTS_${PN} = "tiny-init ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolvconf', '', d)}"
 
@@ -698,7 +696,7 @@ pkg_prerm_${PN}_libc-glibc () {
 PACKAGE_WRITE_DEPS += "qemu-native"
 pkg_postinst_udev-hwdb () {
 	if test -n "$D"; then
-		$INTERCEPT_DIR/postinst_intercept update_udev_hwdb ${PKG} mlprefix=${MLPREFIX} binprefix=${MLPREFIX}
+		$INTERCEPT_DIR/postinst_intercept update_udev_hwdb ${PKG} mlprefix=${MLPREFIX} binprefix=${MLPREFIX} rootlibexecdir="${rootlibexecdir}" PREFERRED_PROVIDER_udev="${PREFERRED_PROVIDER_udev}"
 	else
 		udevadm hwdb --update
 	fi
