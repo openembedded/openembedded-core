@@ -548,11 +548,11 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/sysusers.d \
                 ${exec_prefix}/lib/environment.d \
                 ${localstatedir} \
-                ${nonarch_base_libdir}/udev/rules.d/70-uaccess.rules \
-                ${nonarch_base_libdir}/udev/rules.d/71-seat.rules \
-                ${nonarch_base_libdir}/udev/rules.d/73-seat-late.rules \
-                ${nonarch_base_libdir}/udev/rules.d/99-systemd.rules \
-                ${nonarch_base_libdir}/modprobe.d/systemd.conf \
+                ${rootlibexecdir}/udev/rules.d/70-uaccess.rules \
+                ${rootlibexecdir}/udev/rules.d/71-seat.rules \
+                ${rootlibexecdir}/udev/rules.d/73-seat-late.rules \
+                ${rootlibexecdir}/udev/rules.d/99-systemd.rules \
+                ${rootlibexecdir}/modprobe.d/systemd.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.locale1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.network1.conf \
