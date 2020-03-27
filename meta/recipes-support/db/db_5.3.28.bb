@@ -61,7 +61,9 @@ DB5_CONFIG ?= "--enable-o_direct --disable-cryptography --disable-queue --disabl
 
 EXTRA_OECONF = "${DB5_CONFIG} --enable-shared --enable-cxx --with-sysroot STRIP=true"
 
+PACKAGECONFIG ??= ""
 PACKAGECONFIG[verify] = "--enable-verify, --disable-verify"
+PACKAGECONFIG[dbm] = "--enable-dbm,--disable-dbm,"
 
 EXTRA_OEMAKE += "LIBTOOL='./${HOST_SYS}-libtool'"
 
