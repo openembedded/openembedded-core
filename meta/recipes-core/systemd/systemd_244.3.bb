@@ -307,7 +307,7 @@ python populate_packages_prepend (){
 }
 PACKAGES_DYNAMIC += "^lib(udev|systemd|nss).*"
 
-PACKAGES =+ "\
+PACKAGE_BEFORE_PN = "\
     ${PN}-gui \
     ${PN}-vconsole-setup \
     ${PN}-initramfs \
@@ -321,6 +321,8 @@ PACKAGES =+ "\
     ${PN}-journal-upload \
     ${PN}-journal-remote \
     ${PN}-extra-utils \
+    udev \
+    udev-hwdb \
 "
 
 SUMMARY_${PN}-container = "Tools for containers and VMs"
@@ -579,8 +581,6 @@ RRECOMMENDS_${PN} += "systemd-extra-utils \
 INSANE_SKIP_${PN} += "dev-so libdir"
 INSANE_SKIP_${PN}-dbg += "libdir"
 INSANE_SKIP_${PN}-doc += " libdir"
-
-PACKAGES =+ "udev udev-hwdb"
 
 RPROVIDES_udev = "hotplug"
 
