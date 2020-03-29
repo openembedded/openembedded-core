@@ -14,14 +14,10 @@ COMPATIBLE_HOST = '(x86_64|i.86|powerpc|aarch64|mips|nios2|arm|riscv).*-linux'
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
-           file://0001-Fix-SUNRPC-Fix-oops-when-trace-sunrpc_task-events-in.patch \
-           file://0002-Fix-sunrpc-null-rpc_clnt-dereference-in-rpc_task_que.patch \
-           file://0003-Fix-sunrpc-use-signed-integer-for-client-id.patch \
-           file://0004-sunrpc-introduce-lttng_get_clid-helper.patch \
            "
 
-SRC_URI[md5sum] = "c618fb646514dfc1bf910cfd7cda4256"
-SRC_URI[sha256sum] = "7f91e39b2e8e46d8bbba2b4c8c1614f1fb380611cd1a1fccc1d1859be26112f1"
+SRC_URI[md5sum] = "3e9ed67a2da17edf93194f8a5e75a246"
+SRC_URI[sha256sum] = "d0ba614a9cac3daf8ac034837f8b786e6be2ce0242aeecef7096bed5e03b762c"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
@@ -44,7 +40,7 @@ SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.1
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
-SRCREV_class-devupstream = "624aca5d7507fbd11ea4a1a474c3aa1031bd9a31"
-PV_class-devupstream = "2.10.10+git${SRCPV}"
+SRCREV_class-devupstream = "b34304f146ea234ea764580d7ce1b03d05a215f9"
+PV_class-devupstream = "2.10.14+git${SRCPV}"
 S_class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
