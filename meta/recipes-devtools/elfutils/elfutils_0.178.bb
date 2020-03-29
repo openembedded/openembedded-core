@@ -56,7 +56,7 @@ PACKAGECONFIG[xz] = "--with-lzma,--without-lzma,xz"
 
 RDEPENDS_${PN}-ptest += "libasm libelf bash make coreutils ${PN}-binutils"
 
-EXTRA_OECONF_append_class-target += "--disable-tests-rpath"
+EXTRA_OECONF_append_class-target = " --disable-tests-rpath"
 
 RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-utils"
 

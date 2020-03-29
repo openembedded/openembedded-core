@@ -23,8 +23,8 @@ EXTRA_OECONF += "--disable-libseccomp"
 ALTERNATIVE_${PN} = "file"
 ALTERNATIVE_LINK_NAME[file] = "${bindir}/file"
 
-EXTRA_OEMAKE_append_class-target = "-e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/file-native/file"
-EXTRA_OEMAKE_append_class-nativesdk = "-e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/file-native/file"
+EXTRA_OEMAKE_append_class-target = " -e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/file-native/file"
+EXTRA_OEMAKE_append_class-nativesdk = " -e FILE_COMPILE=${STAGING_BINDIR_NATIVE}/file-native/file"
 
 FILES_${PN} += "${datadir}/misc/*.mgc"
 
