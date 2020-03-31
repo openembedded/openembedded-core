@@ -17,7 +17,7 @@
 #        $ install-buildtools \
 #          --base-url http://downloads.yoctoproject.org/releases/yocto \
 #          --release yocto-3.1_M2 \
-#          --install-version 3.0+snapshot
+#          --installer-version 3.0+snapshot
 #          --build-date 202000122
 #
 #  Example usage (standard buildtools from release):
@@ -29,7 +29,7 @@
 #        $ install-buildtools --without-extended-buildtools \
 #          --base-url http://downloads.yoctoproject.org/releases/yocto \
 #          --release yocto-3.0.2 \
-#          --install-version 3.0.2
+#          --installer-version 3.0.2
 #
 
 import argparse
@@ -59,6 +59,7 @@ if not bitbakepath:
 PROGNAME = 'install-buildtools'
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
+DEFAULT_INSTALL_DIR: str = os.path.join(os.path.split(scripts_path)[0],'buildtools')
 DEFAULT_BASE_URL: str = 'http://downloads.yoctoproject.org/releases/yocto'
 DEFAULT_RELEASE: str = 'yocto-3.1_M2'
 DEFAULT_INSTALLER_VERSION: str = '3.0+snapshot'
@@ -66,6 +67,7 @@ DEFAULT_BUILDDATE: str = "20200122"
 
 
 def main():
+    global DEFAULT_INSTALL_DIR
     global DEFAULT_BASE_URL
     global DEFAULT_RELEASE
     global DEFAULT_INSTALLER_VERSION
@@ -73,6 +75,7 @@ def main():
     filename: str = ""
     release: str = ""
     buildtools_url: str = ""
+    install_dir: str = ""
 
     parser = argparse.ArgumentParser(
         description="Buildtools installation helper",
@@ -87,6 +90,7 @@ def main():
                              '(optional)\nRequires --url',
                         action='store')
     parser.add_argument('-d', '--directory',
+                        default=DEFAULT_INSTALL_DIR,
                         help='directory where buildtools SDK will be installed (optional)',
                         action='store')
     parser.add_argument('-r', '--release',
@@ -216,12 +220,12 @@ def main():
         st = os.stat(tmpbuildtools)
         os.chmod(tmpbuildtools, st.st_mode | stat.S_IEXEC)
         logger.debug(os.stat(tmpbuildtools))
-        install_dir = "/opt/poky/%s" % args.installer_version
         if args.directory:
             install_dir = args.directory
             ret = subprocess.call("%s -d %s -y" %
                                   (tmpbuildtools, install_dir), shell=True)
         else:
+            install_dir = "/opt/poky/%s" % args.installer_version
             ret = subprocess.call("%s -y" % tmpbuildtools, shell=True)
         if ret != 0:
             logger.error("Could not run buildtools installer")
@@ -238,7 +242,8 @@ def main():
             tool = 'gcc'
         else:
             tool = 'tar'
-        proc = subprocess.run("source %s/environment-setup-x86_64-pokysdk-linux && which %s" %
+        logger.debug("install_dir: %s" % install_dir)
+        proc = subprocess.run(". %s/environment-setup-x86_64-pokysdk-linux && which %s" %
                               (install_dir, tool),
                               shell=True, stdout=subprocess.PIPE)
         which_tool = proc.stdout.decode("utf-8")
