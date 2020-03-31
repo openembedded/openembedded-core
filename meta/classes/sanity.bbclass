@@ -521,6 +521,24 @@ def check_wsl(d):
             return "OpenEmbedded doesn't work under WSL at this time, sorry"
     return None
 
+# Require at least gcc version 4.8.
+#
+# This can be fixed on CentOS-7 with devtoolset-6+
+# https://www.softwarecollections.org/en/scls/rhscl/devtoolset-6/
+#
+# A less invasive fix is with scripts/install-buildtools (or with user
+# built buildtools-extended-tarball)
+#
+def check_gcc_version(sanity_data):
+    from distutils.version import LooseVersion
+    import subprocess
+    
+    build_cc, version = oe.utils.get_host_compiler_version(sanity_data)
+    if build_cc.strip() == "gcc":
+        if LooseVersion(version) < LooseVersion("4.8"):
+            return "Your version of gcc is older than 4.8 and will break builds. Please install a newer version of gcc (you could use the project's buildtools-extended-tarball or use scripts/install-buildtools).\n"
+    return None
+
 # Tar version 1.24 and onwards handle overwriting symlinks correctly
 # but earlier versions do not; this needs to work properly for sstate
 # Version 1.28 is needed so opkg-build works correctly when reproducibile builds are enabled
@@ -533,7 +551,7 @@ def check_tar_version(sanity_data):
         return "Unable to execute tar --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[3]
     if LooseVersion(version) < LooseVersion("1.28"):
-        return "Your version of tar is older than 1.28 and does not have the support needed to enable reproducible builds. Please install a newer version of tar (you could use the projects buildtools-tarball from our last release or use scripts/install-buildtools).\n"
+        return "Your version of tar is older than 1.28 and does not have the support needed to enable reproducible builds. Please install a newer version of tar (you could use the project's buildtools-tarball from our last release or use scripts/install-buildtools).\n"
     return None
 
 # We use git parameters and functionality only found in 1.7.8 or later
@@ -632,6 +650,7 @@ def check_sanity_version_change(status, d):
     except ImportError as e:
         status.addresult('Your Python 3 is not a full install. Please install the module %s (see the Getting Started guide for further information).\n' % e.name)
 
+    status.addresult(check_gcc_version(d))
     status.addresult(check_make_version(d))
     status.addresult(check_patch_version(d))
     status.addresult(check_tar_version(d))
