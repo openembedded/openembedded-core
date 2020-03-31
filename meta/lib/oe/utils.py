@@ -373,6 +373,37 @@ def format_pkg_list(pkg_dict, ret_format=None):
 
     return output_str
 
+
+# Helper function to get the host compiler version
+# Do not assume the compiler is gcc
+def get_host_compiler_version(d, taskcontextonly=False):
+    import re, subprocess
+
+    if taskcontextonly and d.getVar('BB_WORKERCONTEXT') != '1':
+        return
+
+    compiler = d.getVar("BUILD_CC")
+    # Get rid of ccache since it is not present when parsing.
+    if compiler.startswith('ccache '):
+        compiler = compiler[7:]
+    try:
+        env = os.environ.copy()
+        # datastore PATH does not contain session PATH as set by environment-setup-...
+        # this breaks the install-buildtools use-case
+        # env["PATH"] = d.getVar("PATH")
+        output = subprocess.check_output("%s --version" % compiler, \
+                    shell=True, env=env, stderr=subprocess.STDOUT).decode("utf-8")
+    except subprocess.CalledProcessError as e:
+        bb.fatal("Error running %s --version: %s" % (compiler, e.output.decode("utf-8")))
+
+    match = re.match(r".* (\d+\.\d+)\.\d+.*", output.split('\n')[0])
+    if not match:
+        bb.fatal("Can't get compiler version from %s --version output" % compiler)
+
+    version = match.group(1)
+    return compiler, version
+
+
 def host_gcc_version(d, taskcontextonly=False):
     import re, subprocess
 
