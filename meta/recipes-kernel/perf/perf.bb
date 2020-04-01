@@ -147,6 +147,7 @@ python copy_perf_source_from_kernel() {
     src_dir = d.getVar("STAGING_KERNEL_DIR")
     dest_dir = d.getVar("S")
     bb.utils.mkdirhier(dest_dir)
+    bb.utils.prunedir(dest_dir)
     for s in sources:
         src = oe.path.join(src_dir, s)
         dest = oe.path.join(dest_dir, s)
