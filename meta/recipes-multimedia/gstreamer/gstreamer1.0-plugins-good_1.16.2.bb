@@ -2,6 +2,8 @@ require gstreamer1.0-plugins-common.inc
 
 SRC_URI = " \
             https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-${PV}.tar.xz \
+            file://0001-qmlgl-ensure-Qt-defines-GLsync-to-fix-compile-on-som.patch \
+            file://0001-qt-include-ext-qt-gstqtgl.h-instead-of-gst-gl-gstglf.patch \
             "
 
 SRC_URI[md5sum] = "bd025f8f14974f94b75ac69a9d1b9c93"
