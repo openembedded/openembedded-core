@@ -1791,8 +1791,7 @@ class DpkgPM(OpkgDpkgPM):
             open(os.path.join(target_dpkg_dir, "available"), "w+").close()
 
     def remove_packaging_data(self):
-        bb.utils.remove(os.path.join(self.target_rootfs,
-                                     self.d.getVar('opkglibdir')), True)
+        bb.utils.remove(self.target_rootfs + self.d.getVar('opkglibdir'), True)
         bb.utils.remove(self.target_rootfs + "/var/lib/dpkg/", True)
 
     def fix_broken_dependencies(self):
