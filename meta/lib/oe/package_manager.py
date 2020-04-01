@@ -40,6 +40,7 @@ def opkg_query(cmd_output):
     ver = ""
     filename = ""
     dep = []
+    prov = []
     pkgarch = ""
     for line in cmd_output.splitlines()+['']:
         line = line.rstrip()
@@ -64,6 +65,10 @@ def opkg_query(cmd_output):
                     dep.append("%s [REC]" % recommend)
             elif line.startswith("PackageArch: "):
                 pkgarch = line.split(": ")[1]
+            elif line.startswith("Provides: "):
+                provides = verregex.sub('', line.split(": ")[1])
+                for provide in provides.split(", "):
+                    prov.append(provide)
 
         # When there is a blank line save the package information
         elif not line:
@@ -72,12 +77,13 @@ def opkg_query(cmd_output):
                 filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
             if pkg:
                 output[pkg] = {"arch":arch, "ver":ver,
-                        "filename":filename, "deps": dep, "pkgarch":pkgarch }
+                        "filename":filename, "deps": dep, "pkgarch":pkgarch, "provs": prov}
             pkg = ""
             arch = ""
             ver = ""
             filename = ""
             dep = []
+            prov = []
             pkgarch = ""
 
     return output
@@ -355,7 +361,7 @@ class DpkgPkgsList(PkgsList):
                "--admindir=%s/var/lib/dpkg" % self.rootfs_dir,
                "-W"]
 
-        cmd.append("-f=Package: ${Package}\nArchitecture: ${PackageArch}\nVersion: ${Version}\nFile: ${Package}_${Version}_${Architecture}.deb\nDepends: ${Depends}\nRecommends: ${Recommends}\n\n")
+        cmd.append("-f=Package: ${Package}\nArchitecture: ${PackageArch}\nVersion: ${Version}\nFile: ${Package}_${Version}_${Architecture}.deb\nDepends: ${Depends}\nRecommends: ${Recommends}\nProvides: ${Provides}\n\n")
 
         try:
             cmd_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip().decode("utf-8")
