@@ -41,7 +41,7 @@ def opkg_query(cmd_output):
     filename = ""
     dep = []
     pkgarch = ""
-    for line in cmd_output.splitlines():
+    for line in cmd_output.splitlines()+['']:
         line = line.rstrip()
         if ':' in line:
             if line.startswith("Package: "):
@@ -79,12 +79,6 @@ def opkg_query(cmd_output):
             filename = ""
             dep = []
             pkgarch = ""
-
-    if pkg:
-        if not filename:
-            filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
-        output[pkg] = {"arch":arch, "ver":ver,
-                "filename":filename, "deps": dep }
 
     return output
 
