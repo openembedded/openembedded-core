@@ -38,6 +38,7 @@ FILES_${PN}-dev = " \
 LDGOLD_ALTS ?= "ld.gold dwp"
 LDGOLD_ALTS_riscv64 = ""
 LDGOLD_ALTS_riscv32 = ""
+LDGOLD_ALTS_libc-glibc_mipsarch = ""
 
 USE_ALTERNATIVES_FOR = " \
 	addr2line \
@@ -84,6 +85,7 @@ EXTRA_TARGETS_class-native = ""
 
 LDGOLD_class-native = ""
 LDGOLD_class-crosssdk = ""
+LDGOLD_libc-glibc_mipsarch = ""
 LDGOLD ?= "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', '--enable-gold=default --enable-threads', '--enable-gold --enable-ld=default --enable-threads', d)}"
 
 
