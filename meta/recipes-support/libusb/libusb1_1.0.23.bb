@@ -9,12 +9,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24"
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/libusb/libusb-${PV}.tar.bz2 \
-           file://no-dll.patch \
            file://run-ptest \
           "
 
-SRC_URI[md5sum] = "466267889daead47674df933cea9cacb"
-SRC_URI[sha256sum] = "75aeb9d59a4fdb800d329a545c2e6799f732362193b465ea198f2aa275518157"
+SRC_URI[md5sum] = "be79ed4a4a440169deec8beaac6aae33"
+SRC_URI[sha256sum] = "4fc17b2ef3502757641bf8fe2c14ad86ec86302a2b785abcb0806fd03aa1201f"
 
 S = "${WORKDIR}/libusb-${PV}"
 
