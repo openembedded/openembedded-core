@@ -40,8 +40,8 @@ SRC_URI_append_libc-musl = " \
            file://0003-musl-utils.patch \
            file://0004-Fix-error-on-musl.patch \
            "
-SRC_URI[md5sum] = "5480d0b7174446aba13a6adde107287f"
-SRC_URI[sha256sum] = "31e7a00e96d4e9c4bda452e1f2cdac4daf8abd24f5e154dee232131899f3a0f2"
+SRC_URI[md5sum] = "8ee56b371b5a7ea081284c44e5164600"
+SRC_URI[sha256sum] = "25a545566cbacaa37ae6222e58f1c48ea4570f53ba991886e2f5ce96e22a23a2"
 
 inherit autotools gettext ptest pkgconfig
 
