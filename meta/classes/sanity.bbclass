@@ -823,7 +823,7 @@ def check_sanity_everybuild(status, d):
     # If SDK_VENDOR looks like "-my-sdk" then the triples are badly formed so fail early
     sdkvendor = d.getVar("SDK_VENDOR")
     if not (sdkvendor.startswith("-") and sdkvendor.count("-") == 1):
-        status.addresult("SDK_VENDOR should be of the form '-foosdk' with a single dash\n")
+        status.addresult("SDK_VENDOR should be of the form '-foosdk' with a single dash; found '%s'\n" % sdkvendor)
 
     check_supported_distro(d)
 
