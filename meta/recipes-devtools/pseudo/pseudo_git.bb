@@ -10,6 +10,7 @@ SRC_URI = "git://git.yoctoproject.org/pseudo \
            file://0001-Add-statx.patch \
            file://0001-realpath.c-Remove-trailing-slashes.patch \
            file://0006-xattr-adjust-for-attr-2.4.48-release.patch \
+           file://seccomp.patch \
            "
 
 SRCREV = "060058bb29f70b244e685b3c704eb0641b736f73"
