@@ -16,6 +16,9 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-Do-not-write-bindir-into-pkg-config-files.patch \
            file://0001-meson-Run-atomics-test-on-clang-as-well.patch \
            file://0001-gio-tests-resources.c-comment-out-a-build-host-only-.patch \
+           file://0011-GMainContext-Fix-GSource-iterator-if-iteration-can-m.patch \
+           file://0012-GMainContext-Fix-memory-leaks-and-memory-corruption-.patch \
+           file://0013-GMainContext-Move-mutex-unlocking-in-destructor-righ.patch \
            "
 
 SRC_URI_append_class-native = " file://relocate-modules.patch"
