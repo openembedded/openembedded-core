@@ -18,18 +18,47 @@ ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 
 BASE_SRC_URI = "https://github.com/unicode-org/icu/releases/download/release-${ICU_FOLDER}/icu4c-${ICU_PV}-src.tgz"
-SRC_URI = "${BASE_SRC_URI} \
+DATA_SRC_URI = "https://github.com/unicode-org/icu/releases/download/release-${ICU_FOLDER}/icu4c-${ICU_PV}-data.zip"
+SRC_URI = "${BASE_SRC_URI};name=code \
+           ${DATA_SRC_URI};name=data \
+           file://filter.json \
            file://icu-pkgdata-large-cmd.patch \
            file://fix-install-manx.patch \
-           file://0001-Fix-big-endian-build.patch \
+           file://0001-Fix-big-endian-build.patch;apply=no \
            file://0001-icu-Added-armeb-support.patch \
            "
 
 SRC_URI_append_class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[md5sum] = "b33dc6766711517c98d318447e5110f8"
-SRC_URI[sha256sum] = "52a3f2209ab95559c1cf0a14f24338001f389615bf00e2585ef3dbc43ecf0a2e"
+SRC_URI[code.sha256sum] = "52a3f2209ab95559c1cf0a14f24338001f389615bf00e2585ef3dbc43ecf0a2e"
+SRC_URI[data.sha256sum] = "8be647f738891d2beb79d48f99077b3499948430eae6f1be112553b15ab0243e"
 
 UPSTREAM_CHECK_REGEX = "icu4c-(?P<pver>\d+(_\d+)+)-src"
 UPSTREAM_CHECK_URI = "https://github.com/unicode-org/icu/releases"
+
+do_make_icudata_class-target () {
+    cd ${S}
+    rm -rf data
+    cp -a ${WORKDIR}/data .
+    patch -p1 < ${WORKDIR}/0001-Fix-big-endian-build.patch
+    AR='${BUILD_AR}' \
+    CC='${BUILD_CC}' \
+    CPP='${BUILD_CPP}' \
+    CXX='${BUILD_CXX}' \
+    RANLIB='${BUILD_RANLIB}' \
+    CFLAGS='${BUILD_CFLAGS}' \
+    CPPFLAGS='${BUILD_CPPFLAGS}' \
+    CXXFLAGS='${BUILD_CXXFLAGS}' \
+    LDFLAGS='${BUILD_LDFLAGS}' \
+    ICU_DATA_FILTER_FILE=${WORKDIR}/filter.json \
+    ./runConfigureICU Linux --with-data-packaging=archive
+    oe_runmake ${PARALLEL_MAKE}
+    install -Dm644 ${S}/data/out/icudt${ICU_MAJOR_VER}l.dat ${S}/data/in/icudt${ICU_MAJOR_VER}l.dat
+}
+
+do_make_icudata() {
+    :
+}
+
+addtask make_icudata before do_configure after do_patch
