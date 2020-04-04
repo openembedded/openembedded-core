@@ -47,6 +47,7 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0003-runsv-Use-64-prefix-syscall-if-we-have-to.patch \
            file://0001-Remove-syscall-wrappers-around-clock_gettime-closes-.patch \
            file://0001-Remove-stime-function-calls.patch \
+           file://0001-sysctl-ignore-EIO-of-stable_secret-below-proc-sys-ne.patch \
 "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
