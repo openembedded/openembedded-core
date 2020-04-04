@@ -18,6 +18,11 @@ EXTRA_OECONF_class-native = "--enable-targets=all \
                              --enable-64-bit-bfd \
                              --enable-install-libiberty \
                              --enable-install-libbfd \
+                             --disable-gdb \
+                             --disable-gdbserver \
+                             --disable-libdecnumber \
+                             --disable-readline \
+                             --disable-sim \
                              --disable-werror"
 
 # gcc9.0 end up mis-compiling libbfd.so with O2 which then crashes on target

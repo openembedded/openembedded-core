@@ -75,6 +75,11 @@ EXTRA_OECONF = "--program-prefix=${TARGET_PREFIX} \
                 --disable-werror \
                 --enable-deterministic-archives \
                 --enable-plugins \
+                --disable-gdb \
+                --disable-gdbserver \
+                --disable-libdecnumber \
+                --disable-readline \
+                --disable-sim \
                 ${LDGOLD} \
                 ${EXTRA_TARGETS} \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'multiarch', '--enable-64-bit-bfd', '', d)}"

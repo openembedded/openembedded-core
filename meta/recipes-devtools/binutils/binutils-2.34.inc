@@ -43,7 +43,3 @@ SRC_URI = "\
      file://CVE-2020-0551.patch \
 "
 S  = "${WORKDIR}/git"
-
-do_configure_prepend () {
-        rm -rf ${S}/gdb ${S}/libdecnumber ${S}/readline ${S}/sim
-}
