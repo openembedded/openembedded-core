@@ -37,6 +37,8 @@ SRC_URI[data.sha256sum] = "8be647f738891d2beb79d48f99077b3499948430eae6f1be11255
 UPSTREAM_CHECK_REGEX = "icu4c-(?P<pver>\d+(_\d+)+)-src"
 UPSTREAM_CHECK_URI = "https://github.com/unicode-org/icu/releases"
 
+EXTRA_OECONF_append_libc-musl = " ac_cv_func_strtod_l=no"
+
 do_make_icudata_class-target () {
     cd ${S}
     rm -rf data
