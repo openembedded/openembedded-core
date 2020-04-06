@@ -628,14 +628,15 @@ FILES_udev += "${base_sbindir}/udevd \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
                ${systemd_unitdir}/system/*.wants/*udev* \
+               ${base_bindir}/systemd-hwdb \
                ${base_bindir}/udevadm \
                ${base_sbindir}/udevadm \
                ${libexecdir}/${MLPREFIX}udevadm \
                ${datadir}/bash-completion/completions/udevadm \
+               ${systemd_unitdir}/system/systemd-hwdb-update.service \
               "
 
 FILES_udev-hwdb = "${rootlibexecdir}/udev/hwdb.d \
-                   ${systemd_unitdir}/system/systemd-hwdb-update.service \
                    "
 
 RCONFLICTS_${PN} = "tiny-init ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolvconf', '', d)}"
