@@ -1,19 +1,5 @@
 #!/bin/sh
 
-# Add an initial /var/lib/dhcp/dhclient.leases to make
-# sure the IP which dhclient try to renew is the same
-# with the IP which kernel got from dhcp server during
-# boot
-update_dhclient_leases()
-{
-    local addr=$1
-    local interface=$2
-    echo "lease {" >> /var/lib/dhcp/dhclient.leases
-    echo "  interface \"${addr}\";" >> /var/lib/dhcp/dhclient.leases
-    echo "  fixed-address ${interface:0:-3};" >> /var/lib/dhcp/dhclient.leases
-    echo "}" >> /var/lib/dhcp/dhclient.leases
-}
-
 # In case the interface is used for nfs, skip it.
 nfsroot=0
 interfaces=""
@@ -33,7 +19,6 @@ while read dev mtpt fstype rest; do
 done
 exec 0<&9 9<&-
 
-
 if [ $nfsroot -eq 0 ]; then
     interfaces="$INTERFACES"
 else
@@ -42,16 +27,7 @@ else
     fi
     for i in $INTERFACES; do
 	if test "x$i" = "x$nfs_iface"; then
-            interface_addr=`ip -4 address show $nfs_iface | grep 'inet '|sed 's/.*inet \(\S\+\).*/\1/'`
-            if [ "x$interface_addr" != "x" ] && cat /proc/cmdline | grep "ip=dhcp" > /dev/null ; then
-                # use to renew lease if needed
-                interfaces="$interfaces $i"
-                # use to update /var/lib/dhcp/dhclient.leases if needed
-                # when the ip got by kernel, we need use dhclient to renew the ip
-                update_dhclient_leases $nfs_iface $interface_addr
-            else
-                echo "dhclient skipping nfsroot interface $i"
-            fi
+            echo "dhclient skipping nfsroot interface $i"
 	else
 	    interfaces="$interfaces $i"
 	fi
