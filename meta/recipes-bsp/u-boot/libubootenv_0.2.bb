@@ -13,7 +13,7 @@ SECTION = "libs"
 
 PV = "0.2+git${SRCPV}"
 SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https"
-SRCREV = "ba952d05ec9ab16029816a06d956bac7fb4e9832"
+SRCREV = "f4b9cde3815abe84a98079cedd515283ea08c16b"
 
 S = "${WORKDIR}/git"
 
