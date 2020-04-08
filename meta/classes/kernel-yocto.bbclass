@@ -489,6 +489,12 @@ python () {
     # If diffconfig is available, ensure it runs after kernel_configme
     if 'do_diffconfig' in d:
         bb.build.addtask('do_diffconfig', None, 'do_kernel_configme', d)
+
+    externalsrc = d.getVar('EXTERNALSRC')
+    if externalsrc:
+        # If we deltask do_patch, do_kernel_configme is left without
+        # dependencies and runs too early
+        d.setVarFlag('do_kernel_configme', 'deps', (d.getVarFlag('do_kernel_configme', 'deps', False) or []) + ['do_unpack'])
 }
 
 # extra tasks
