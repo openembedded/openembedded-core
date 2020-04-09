@@ -3,16 +3,13 @@ HOMEPAGE = "https://wiki.linuxfoundation.org/accessibility/d-bus"
 LICENSE = "LGPL-2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-SRC_URI[archive.md5sum] = "e0f99641c5a403041c4214be04722e15"
-SRC_URI[archive.sha256sum] = "776df930748fde71c128be6c366a987b98b6ee66d508ed9c8db2355bf4b9cc16"
+SRC_URI[archive.md5sum] = "58cd278574e101363b18d9a8b7053d67"
+SRC_URI[archive.sha256sum] = "901323cee0eef05c01ec4dee06c701aeeca81a314a7d60216fa363005e27f4f0"
 
 DEPENDS = "dbus glib-2.0 glib-2.0-native atk at-spi2-core libxml2"
 
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase features_check upstream-version-is-even
-
-# gnomebase.bbclass sets SRC_URI = , so we need to append after, at least for -native
-SRC_URI += " file://0001-atk_test_util.h-add-missing-sys-time.h-include.patch"
 
 PACKAGES =+ "${PN}-gnome ${PN}-gtk2"
 
