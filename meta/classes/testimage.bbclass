@@ -275,11 +275,14 @@ def testimage_main(d):
     # Get use_kvm
     kvm = oe.types.qemu_use_kvm(d.getVar('QEMU_USE_KVM'), d.getVar('TARGET_ARCH'))
 
+    # Get OVMF
+    ovmf = d.getVar("QEMU_USE_OVMF")
+
     slirp = False
     if d.getVar("QEMU_USE_SLIRP"):
         slirp = True
 
-    # TODO: We use the current implementatin of qemu runner because of
+    # TODO: We use the current implementation of qemu runner because of
     # time constrains, qemu runner really needs a refactor too.
     target_kwargs = { 'machine'     : machine,
                       'rootfs'      : rootfs,
@@ -293,6 +296,7 @@ def testimage_main(d):
                       'slirp'       : slirp,
                       'dump_dir'    : d.getVar("TESTIMAGE_DUMP_DIR"),
                       'serial_ports': len(d.getVar("SERIAL_CONSOLES").split()),
+                      'ovmf'        : ovmf,
                     }
 
     if d.getVar("TESTIMAGE_BOOT_PATTERNS"):
