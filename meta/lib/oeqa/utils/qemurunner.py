@@ -32,7 +32,7 @@ re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds,
-                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns = defaultdict(str)):
+                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns = defaultdict(str), use_ovmf=False):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -55,6 +55,7 @@ class QemuRunner:
         self.logged = False
         self.thread = None
         self.use_kvm = use_kvm
+        self.use_ovmf = use_ovmf
         self.use_slirp = use_slirp
         self.serial_ports = serial_ports
         self.msg = ''
@@ -158,6 +159,8 @@ class QemuRunner:
                 launch_cmd += ' nographic'
             if self.use_slirp:
                 launch_cmd += ' slirp'
+            if self.use_ovmf:
+                launch_cmd += ' ovmf'
             launch_cmd += ' %s %s %s' % (runqemuparams, self.machine, self.rootfs)
 
         return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams, env=env)
