@@ -35,7 +35,7 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             split-strip packages-list pkgv-undefined var-undefined \
             version-going-backwards expanded-d invalid-chars \
             license-checksum dev-elf file-rdeps configure-unsafe \
-            configure-gettext perllocalpod \
+            configure-gettext perllocalpod shebang-size \
             "
 # Add usrmerge QA check based on distro feature
 ERROR_QA_append = "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', ' usrmerge', '', d)}"
@@ -82,6 +82,29 @@ def package_qa_add_message(messages, section, new_msg):
         messages[section] = new_msg
     else:
         messages[section] = messages[section] + "\n" + new_msg
+
+QAPATHTEST[shebang-size] = "package_qa_check_shebang_size"
+def package_qa_check_shebang_size(path, name, d, elf, messages):
+    if os.path.islink(path) or elf:
+        return
+
+    try:
+        with open(path, 'rb') as f:
+            stanza = f.readline(130)
+    except IOError:
+        return
+
+    if stanza.startswith(b'#!'):
+        #Shebang not found
+        try:
+            stanza = stanza.decode("utf-8")
+        except UnicodeDecodeError:
+            #If it is not a text file, it is not a script
+            return
+
+        if len(stanza) > 129:
+            package_qa_add_message(messages, "shebang-size", "%s: %s maximum shebang size exceeded, the maximum size is 128." % (name, package_qa_clean_path(path, d)))
+            return
 
 QAPATHTEST[libexec] = "package_qa_check_libexec"
 def package_qa_check_libexec(path,name, d, elf, messages):
