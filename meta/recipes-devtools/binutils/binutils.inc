@@ -152,6 +152,11 @@ do_install () {
 	install -m 644 ${S}/include/ansidecl.h ${D}${includedir}
 	install -m 644 ${S}/include/libiberty.h ${D}${includedir}
 
+	# insall pic version of libiberty if available
+        if [ -e ${B}/libiberty/pic/libiberty.a ]; then
+		install -Dm 0644 ${B}/libiberty/pic/libiberty.a ${D}${libdir}/libiberty.a
+	fi
+
 	cd ${D}${bindir}
 
 	# Symlinks for ease of running these on the native target
