@@ -204,7 +204,7 @@ def testimage_main(d):
         """
         Catch SIGTERM from worker in order to stop qemu.
         """
-        raise RuntimeError
+        os.kill(os.getpid(), signal.SIGINT)
 
     testimage_sanity(d)
 
@@ -364,9 +364,9 @@ def testimage_main(d):
         # or if the worker send us a SIGTERM
         tc.target.start(params=d.getVar("TEST_QEMUPARAMS"), runqemuparams=d.getVar("TEST_RUNQEMUPARAMS"))
         results = tc.runTests()
-    except (RuntimeError, BlockingIOError) as err:
-        if isinstance(err, RuntimeError):
-            bb.error('testimage received SIGTERM, shutting down...')
+    except (KeyboardInterrupt, BlockingIOError) as err:
+        if isinstance(err, KeyboardInterrupt):
+            bb.error('testimage interrupted, shutting down...')
         else:
             bb.error('runqemu failed, shutting down...')
         if results:
