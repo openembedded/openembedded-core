@@ -17,6 +17,7 @@ import shutil
 import sys
 
 from oe.path import copyhardlinktree
+from pathlib import Path
 
 from wic import WicError
 from wic.pluginbase import SourcePlugin
@@ -126,8 +127,63 @@ class RootfsPlugin(SourcePlugin):
                                                     orig_dir, new_rootfs)
                 exec_native_cmd(pseudo_cmd, native_sysroot)
 
-            for path in part.include_path or []:
-                copyhardlinktree(path, new_rootfs)
+            for in_path in part.include_path or []:
+                #parse arguments
+                include_path = in_path[0]
+                if len(in_path) > 2:
+                    logger.error("'Invalid number of arguments for include-path")
+                    sys.exit(1)
+                if len(in_path) == 2:
+                    path = in_path[1]
+                else:
+                    path = None
+
+                # Pack files to be included into a tar file.
+                # We need to create a tar file, because that way we can keep the
+                # permissions from the files even when they belong to different
+                # pseudo enviroments.
+                # If we simply copy files using copyhardlinktree/copytree... the
+                # copied files will belong to the user running wic.
+                tar_file = os.path.realpath(
+                           os.path.join(cr_workdir, "include-path%d.tar" % part.lineno))
+                if os.path.isfile(include_path):
+                    parent = os.path.dirname(os.path.realpath(include_path))
+                    tar_cmd = "tar c --owner=root --group=root -f %s -C %s %s" % (
+                                tar_file, parent, os.path.relpath(include_path, parent))
+                    exec_native_cmd(tar_cmd, native_sysroot)
+                else:
+                    if include_path in krootfs_dir:
+                        include_path = krootfs_dir[include_path]
+                    include_path = cls.__get_rootfs_dir(include_path)
+                    include_pseudo = os.path.join(include_path, "../pseudo")
+                    if os.path.lexists(include_pseudo):
+                        pseudo = cls.__get_pseudo(native_sysroot, include_path,
+                                                  include_pseudo)
+                        tar_cmd = "tar cf %s -C %s ." % (tar_file, include_path)
+                    else:
+                        pseudo = None
+                        tar_cmd = "tar c --owner=root --group=root -f %s -C %s ." % (
+                                tar_file, include_path)
+                    exec_native_cmd(tar_cmd, native_sysroot, pseudo)
+
+                #create destination
+                if path:
+                    destination = os.path.realpath(os.path.join(new_rootfs, path))
+                    if not destination.startswith(new_rootfs):
+                        logger.error("%s %s" % (destination, new_rootfs))
+                        sys.exit(1)
+                    Path(destination).mkdir(parents=True, exist_ok=True)
+                else:
+                    destination = new_rootfs
+
+                #extract destination
+                untar_cmd = "tar xf %s -C %s" % (tar_file, destination)
+                if new_pseudo:
+                    pseudo = cls.__get_pseudo(native_sysroot, new_rootfs, new_pseudo)
+                else:
+                    pseudo = None
+                exec_native_cmd(untar_cmd, native_sysroot, pseudo)
+                os.remove(tar_file)
 
             for orig_path in part.exclude_path or []:
                 path = orig_path
