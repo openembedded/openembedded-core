@@ -33,6 +33,22 @@ class RootfsPlugin(SourcePlugin):
     name = 'rootfs'
 
     @staticmethod
+    def __validate_path(cmd, rootfs_dir, path):
+        if os.path.isabs(path):
+            logger.error("%s: Must be relative: %s" % (cmd, orig_path))
+            sys.exit(1)
+
+        # Disallow climbing outside of parent directory using '..',
+        # because doing so could be quite disastrous (we will delete the
+        # directory, or modify a directory outside OpenEmbedded).
+        full_path = os.path.realpath(os.path.join(rootfs_dir, path))
+        if not full_path.startswith(os.path.realpath(rootfs_dir)):
+            logger.error("%s: Must point inside the rootfs:" % (cmd, path))
+            sys.exit(1)
+
+        return full_path
+
+    @staticmethod
     def __get_rootfs_dir(rootfs_dir):
         if os.path.isdir(rootfs_dir):
             return os.path.realpath(rootfs_dir)
@@ -99,14 +115,7 @@ class RootfsPlugin(SourcePlugin):
                 cd = part.change_directory
                 if cd[-1] == '/':
                     cd = cd[:-1]
-                if os.path.isabs(cd):
-                    logger.error("Must be relative: --change-directory=%s" % cd)
-                    sys.exit(1)
-                orig_dir = os.path.realpath(os.path.join(part.rootfs_dir, cd))
-                if not orig_dir.startswith(part.rootfs_dir):
-                    logger.error("'%s' points to a path outside the rootfs" % orig_dir)
-                    sys.exit(1)
-
+                orig_dir = cls.__validate_path("--change-directory", part.rootfs_dir, cd)
             else:
                 orig_dir = part.rootfs_dir
             copyhardlinktree(orig_dir, new_rootfs)
@@ -168,10 +177,7 @@ class RootfsPlugin(SourcePlugin):
 
                 #create destination
                 if path:
-                    destination = os.path.realpath(os.path.join(new_rootfs, path))
-                    if not destination.startswith(new_rootfs):
-                        logger.error("%s %s" % (destination, new_rootfs))
-                        sys.exit(1)
+                    destination = cls.__validate_path("--include-path", new_rootfs, path)
                     Path(destination).mkdir(parents=True, exist_ok=True)
                 else:
                     destination = new_rootfs
@@ -187,17 +193,8 @@ class RootfsPlugin(SourcePlugin):
 
             for orig_path in part.exclude_path or []:
                 path = orig_path
-                if os.path.isabs(path):
-                    logger.error("Must be relative: --exclude-path=%s" % orig_path)
-                    sys.exit(1)
 
-                full_path = os.path.realpath(os.path.join(new_rootfs, path))
-                # Disallow climbing outside of parent directory using '..',
-                # because doing so could be quite disastrous (we will delete the
-                # directory).
-                if not full_path.startswith(new_rootfs):
-                    logger.error("'%s' points to a path outside the rootfs" % orig_path)
-                    sys.exit(1)
+                full_path = cls.__validate_path("--exclude-path", new_rootfs, path)
 
                 if not os.path.lexists(full_path):
                     continue
