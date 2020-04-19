@@ -190,7 +190,7 @@ class Partition():
                            (self.mountpoint, self.size, self.fixed_size))
 
     def prepare_rootfs(self, cr_workdir, oe_builddir, rootfs_dir,
-                       native_sysroot, real_rootfs = True):
+                       native_sysroot, real_rootfs = True, pseudo_dir = None):
         """
         Prepare content for a rootfs partition i.e. create a partition
         and fill it from a /rootfs dir.
@@ -198,8 +198,9 @@ class Partition():
         Currently handles ext2/3/4, btrfs, vfat and squashfs.
         """
         p_prefix = os.environ.get("PSEUDO_PREFIX", "%s/usr" % native_sysroot)
-        p_localstatedir = os.environ.get("PSEUDO_LOCALSTATEDIR",
-                                         "%s/../pseudo" %  rootfs_dir)
+        if (pseudo_dir == None):
+            pseudo_dir = "%s/../pseudo" %  rootfs_dir
+        p_localstatedir = os.environ.get("PSEUDO_LOCALSTATEDIR", pseudo_dir)
         p_passwd = os.environ.get("PSEUDO_PASSWD", rootfs_dir)
         p_nosymlinkexp = os.environ.get("PSEUDO_NOSYMLINKEXP", "1")
         pseudo = "export PSEUDO_PREFIX=%s;" % p_prefix

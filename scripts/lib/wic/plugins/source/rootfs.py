@@ -20,7 +20,7 @@ from oe.path import copyhardlinktree
 
 from wic import WicError
 from wic.pluginbase import SourcePlugin
-from wic.misc import get_bitbake_var
+from wic.misc import get_bitbake_var, exec_native_cmd
 
 logger = logging.getLogger('wic')
 
@@ -43,6 +43,15 @@ class RootfsPlugin(SourcePlugin):
                            (rootfs_dir, image_rootfs_dir))
 
         return os.path.realpath(image_rootfs_dir)
+
+    @staticmethod
+    def __get_pseudo(native_sysroot, rootfs, pseudo_dir):
+        pseudo = "export PSEUDO_PREFIX=%s/usr;" % native_sysroot
+        pseudo += "export PSEUDO_LOCALSTATEDIR=%s;" % pseudo_dir
+        pseudo += "export PSEUDO_PASSWD=%s;" % rootfs
+        pseudo += "export PSEUDO_NOSYMLINKEXP=1;"
+        pseudo += "%s " % get_bitbake_var("FAKEROOTCMD")
+        return pseudo
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
@@ -68,8 +77,14 @@ class RootfsPlugin(SourcePlugin):
                                "it is not a valid path, exiting" % part.rootfs_dir)
 
         part.rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
+        pseudo_dir = os.path.join(part.rootfs_dir, "../pseudo")
+        if not os.path.lexists(pseudo_dir):
+            logger.warn("%s folder does not exist. "
+                        "Usernames and permissions will be invalid " % pseudo_dir)
+            pseudo_dir = None
 
         new_rootfs = None
+        new_pseudo = None
         # Handle excluded paths.
         if part.exclude_path or part.include_path:
             # We need a new rootfs directory we can delete files from. Copy to
@@ -78,8 +93,23 @@ class RootfsPlugin(SourcePlugin):
 
             if os.path.lexists(new_rootfs):
                 shutil.rmtree(os.path.join(new_rootfs))
-
             copyhardlinktree(part.rootfs_dir, new_rootfs)
+
+            # Convert the pseudo directory to its new location
+            if (pseudo_dir):
+                new_pseudo = os.path.realpath(
+                             os.path.join(cr_workdir, "pseudo%d" % part.lineno))
+                if os.path.lexists(new_pseudo):
+                    shutil.rmtree(new_pseudo)
+                os.mkdir(new_pseudo)
+                shutil.copy(os.path.join(pseudo_dir, "files.db"),
+                            os.path.join(new_pseudo, "files.db"))
+
+                pseudo_cmd = "%s -B -m %s -M %s" % (cls.__get_pseudo(native_sysroot,
+                                                                     new_rootfs,
+                                                                     new_pseudo),
+                                                    part.rootfs_dir, new_rootfs)
+                exec_native_cmd(pseudo_cmd, native_sysroot)
 
             for path in part.include_path or []:
                 copyhardlinktree(path, new_rootfs)
@@ -112,4 +142,5 @@ class RootfsPlugin(SourcePlugin):
                     shutil.rmtree(full_path)
 
         part.prepare_rootfs(cr_workdir, oe_builddir,
-                            new_rootfs or part.rootfs_dir, native_sysroot)
+                            new_rootfs or part.rootfs_dir, native_sysroot,
+                            pseudo_dir = new_pseudo or pseudo_dir)
