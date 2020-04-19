@@ -136,13 +136,15 @@ class RootfsPlugin(SourcePlugin):
                     sys.exit(1)
 
                 full_path = os.path.realpath(os.path.join(new_rootfs, path))
-
                 # Disallow climbing outside of parent directory using '..',
                 # because doing so could be quite disastrous (we will delete the
                 # directory).
                 if not full_path.startswith(new_rootfs):
                     logger.error("'%s' points to a path outside the rootfs" % orig_path)
                     sys.exit(1)
+
+                if not os.path.lexists(full_path):
+                    continue
 
                 if path.endswith(os.sep):
                     # Delete content only.
