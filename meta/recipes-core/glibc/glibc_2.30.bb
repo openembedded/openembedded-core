@@ -43,6 +43,7 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
            file://CVE-2019-19126.patch \
            file://CVE-2020-10029.patch \
+           file://CVE-2020-1751.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
