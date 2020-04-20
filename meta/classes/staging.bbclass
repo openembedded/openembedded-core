@@ -277,11 +277,13 @@ python extend_recipe_sysroot() {
 
     start = None
     configuredeps = []
+    owntaskdeps = []
     for dep in taskdepdata:
         data = taskdepdata[dep]
         if data[1] == mytaskname and data[0] == pn:
             start = dep
-            break
+        elif data[0] == pn:
+            owntaskdeps.append(data[1])
     if start is None:
         bb.fatal("Couldn't find ourself in BB_TASKDEPDATA?")
 
@@ -427,7 +429,7 @@ python extend_recipe_sysroot() {
                         # Was likely already uninstalled
                         continue
                     potential.append(l)
-        # We need to ensure not other task needs this dependency. We hold the sysroot
+        # We need to ensure no other task needs this dependency. We hold the sysroot
         # lock so we ca search the indexes to check
         if potential:
             for i in glob.glob(depdir + "/index.*"):
@@ -435,6 +437,11 @@ python extend_recipe_sysroot() {
                     continue
                 with open(i, "r") as f:
                     for l in f:
+                        if l.startswith("TaskDeps:"):
+                            prevtasks = l.split()[1:]
+                            if mytaskname in prevtasks:
+                                # We're a dependency of this task so we can clear items out the sysroot
+                                break
                         l = l.strip()
                         if l in potential:
                             potential.remove(l)
@@ -588,6 +595,7 @@ python extend_recipe_sysroot() {
         os.symlink(manifests[dep], depdir + "/" + c + ".complete")
 
     with open(taskindex, "w") as f:
+        f.write("TaskDeps: " + " ".join(owntaskdeps) + "\n")
         for l in sorted(installed):
             f.write(l + "\n")
 
