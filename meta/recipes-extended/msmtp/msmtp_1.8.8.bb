@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 UPSTREAM_CHECK_URI = "https://marlam.de/msmtp/download/"
 
 SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz"
-SRC_URI[md5sum] = "4cf3d000b24fc8769e9fd8ec8b3cf1fb"
-SRC_URI[sha256sum] = "9a53bcdc244ec5b1a806934ecc7746d9d09db581f587bedf597e9da2f48c51f1"
+SRC_URI[md5sum] = "016e432d12e12dc5d73960e2bc67f0fb"
+SRC_URI[sha256sum] = "eccb53e48f025f7e6f60210316df61cf6097a491728341c1e375fc1acc6459e5"
 
 inherit gettext autotools update-alternatives pkgconfig
 
