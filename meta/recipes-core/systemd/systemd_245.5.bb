@@ -47,6 +47,7 @@ SRC_URI_MUSL = "\
                file://0002-src-login-brightness.c-include-sys-wait.h.patch \
                file://0003-src-basic-copy.c-include-signal.h.patch \
                file://0004-src-shared-cpu-set-util.h-add-__cpu_mask-definition.patch \
+               file://0001-Handle-missing-gshadow.patch \
                "
 
 PAM_PLUGINS = " \
@@ -83,6 +84,7 @@ PACKAGECONFIG ??= " \
     sysvinit \
     timedated \
     timesyncd \
+    userdb \
     utmp \
     vconsole \
     xz \
@@ -97,6 +99,7 @@ PACKAGECONFIG_remove_libc-musl = " \
     nss-mymachines \
     nss-resolve \
     sysusers \
+    userdb \
     utmp \
 "
 
@@ -174,6 +177,7 @@ PACKAGECONFIG[timedated] = "-Dtimedated=true,-Dtimedated=false"
 PACKAGECONFIG[timesyncd] = "-Dtimesyncd=true,-Dtimesyncd=false"
 PACKAGECONFIG[usrmerge] = "-Dsplit-usr=false,-Dsplit-usr=true"
 PACKAGECONFIG[sbinmerge] = "-Dsplit-bin=false,-Dsplit-bin=true"
+PACKAGECONFIG[userdb] = "-Duserdb=true,-Duserdb=false"
 PACKAGECONFIG[utmp] = "-Dutmp=true,-Dutmp=false"
 PACKAGECONFIG[valgrind] = "-DVALGRIND=1,,valgrind"
 PACKAGECONFIG[vconsole] = "-Dvconsole=true,-Dvconsole=false,,${PN}-vconsole-setup"
@@ -494,10 +498,13 @@ FILES_${PN}-extra-utils = "\
 CONFFILES_${PN} = "${sysconfdir}/systemd/coredump.conf \
 	${sysconfdir}/systemd/journald.conf \
 	${sysconfdir}/systemd/logind.conf \
-	${sysconfdir}/systemd/system.conf \
-	${sysconfdir}/systemd/user.conf \
+	${sysconfdir}/systemd/networkd.conf \
+	${sysconfdir}/systemd/pstore.conf \
 	${sysconfdir}/systemd/resolved.conf \
+	${sysconfdir}/systemd/sleep.conf \
+	${sysconfdir}/systemd/system.conf \
 	${sysconfdir}/systemd/timesyncd.conf \
+	${sysconfdir}/systemd/user.conf \
 "
 
 FILES_${PN} = " ${base_bindir}/* \
