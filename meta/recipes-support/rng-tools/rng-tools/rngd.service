@@ -10,4 +10,4 @@ EnvironmentFile=-@SYSCONFDIR@/default/rng-tools
 ExecStart=@SBINDIR@/rngd -f $EXTRA_ARGS
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sysinit.target
