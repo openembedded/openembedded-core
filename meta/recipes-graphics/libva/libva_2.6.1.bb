@@ -23,7 +23,7 @@ SRC_URI[sha256sum] = "6c57eb642d828af2411aa38f55dc10111e8c98976dbab8fd62e4862940
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva/releases"
 
-DEPENDS = "libdrm virtual/mesa"
+DEPENDS = "libdrm"
 
 inherit meson pkgconfig features_check
 
