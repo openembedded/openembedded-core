@@ -117,9 +117,9 @@ class QemuTarget(BaseTarget):
         import oe.path
         bb.utils.mkdirhier(self.testdir)
         self.qemurunnerlog = os.path.join(self.testdir, 'qemurunner_log.%s' % self.datetime)
-        loggerhandler = logging.FileHandler(self.qemurunnerlog)
-        loggerhandler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
-        self.logger.addHandler(loggerhandler)
+        self.loggerhandler = logging.FileHandler(self.qemurunnerlog)
+        self.loggerhandler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+        self.logger.addHandler(self.loggerhandler)
         oe.path.symlink(os.path.basename(self.qemurunnerlog), os.path.join(self.testdir, 'qemurunner_log'), force=True)
 
         if d.getVar("DISTRO") == "poky-tiny":
@@ -182,6 +182,7 @@ class QemuTarget(BaseTarget):
 
     def stop(self):
         self.runner.stop()
+        self.logger.removeHandler(self.loggerhandler)
         self.connection = None
         self.ip = None
         self.server_ip = None
