@@ -24,7 +24,7 @@ HOMEPAGE = "http://www.rpm.org"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c0bf017c0fd1920e6158a333acabfd4a"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.15.x \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
            file://0001-When-cross-installing-execute-package-scriptlets-wit.patch \
@@ -34,20 +34,15 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.14.x \
            file://0001-Fix-build-with-musl-C-library.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
            file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
-           file://0001-Split-binary-package-building-into-a-separate-functi.patch \
-           file://0002-Run-binary-package-creation-via-thread-pools.patch \
-           file://0003-rpmstrpool.c-make-operations-over-string-pools-threa.patch \
-           file://0004-build-pack.c-remove-static-local-variables-from-buil.patch \
            file://0001-perl-disable-auto-reqs.patch \
            file://0001-rpm-rpmio.c-restrict-virtual-memory-usage-if-limit-s.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
-           file://0001-mono-find-provides-requires-do-not-use-monodis-from-.patch \
-           file://0001-Rip-out-partial-support-for-unused-MD2-and-RIPEMD160.patch \
            file://0001-rpmplugins.c-call-dlerror-prior-to-dlsym.patch \
+           file://0001-rpmfc.c-do-not-run-file-classification-in-parallel.patch \
            "
 
 PE = "1"
-SRCREV = "4a9440006398646583f0d9ae1837dad2875013aa"
+SRCREV = "ab2179452c5be276a6b96c591afded485c7e58c3"
 
 S = "${WORKDIR}/git"
 
@@ -61,7 +56,7 @@ export PYTHON_ABI
 EXTRA_AUTORECONF_append = " --exclude=gnu-configize"
 
 EXTRA_OECONF_append = " --without-lua --enable-python --with-crypto=openssl"
-EXTRA_OECONF_append_libc-musl = " --disable-nls"
+EXTRA_OECONF_append_libc-musl = " --disable-nls --disable-openmp"
 
 # --sysconfdir prevents rpm from attempting to access machine-specific configuration in sysroot/etc; we need to have it in rootfs
 #
@@ -127,8 +122,7 @@ do_install_append () {
 	    ${D}/${libdir}/rpm/macros
 
 	sed -i -e 's|/usr/bin/python|${USRBINPATH}/env ${PYTHON_PN}|' \
-	    ${D}${libdir}/rpm/pythondistdeps.py \
-	    ${D}${libdir}/rpm/python-macro-helper
+	    ${D}${libdir}/rpm/pythondistdeps.py
 }
 
 FILES_${PN} += "${libdir}/rpm-plugins/*.so \
