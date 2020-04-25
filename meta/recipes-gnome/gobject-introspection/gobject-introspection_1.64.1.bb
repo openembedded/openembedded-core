@@ -14,18 +14,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c434e8128a68bedd59b80b2ac1eb1c4a \
                     "
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-${PV}.tar.xz \
-           file://0003-giscanner-add-use-binary-wrapper-option.patch \
-           file://0004-giscanner-add-a-use-ldd-wrapper-option.patch \
-           file://0005-Prefix-pkg-config-paths-with-PKG_CONFIG_SYSROOT_DIR-.patch \
-           file://0001-giscanner-add-a-lib-dirs-envvar-option.patch \
            file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
-           file://0001-Port-cross-compilation-support-to-meson.patch \
-           file://0001-meson.build-disable-tests-when-cross-compiling.patch \
-           file://0001-Fix-build-reproducibility.patch \
            "
 
-SRC_URI[md5sum] = "37278eab3704e42234b6080b8cf241f1"
-SRC_URI[sha256sum] = "b1ee7ed257fdbc008702bdff0ff3e78a660e7e602efa8f211dc89b9d1e7d90a2"
+SRC_URI[md5sum] = "3419dfd086efcf83768e0579ab6abd2b"
+SRC_URI[sha256sum] = "80beae6728c134521926affff9b2e97125749b38d38744dc901f4010ee3e7fa7"
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
@@ -49,16 +42,16 @@ export STAGING_DIR_HOST
 export B
 
 PACKAGECONFIG ?= ""
-PACKAGECONFIG[doctool] = "-Ddoctool=true,-Ddoctool=false,python3-mako,"
+PACKAGECONFIG[doctool] = "-Ddoctool=enabled,-Ddoctool=disabled,python3-mako,"
 
 # Configure target build to use native tools of itself and to use a qemu wrapper
 # and optionally to generate introspection data
 EXTRA_OEMESON_class-target = " \
-    -Denable-host-gi=true \
-    -Denable-gi-cross-wrapper=${B}/g-ir-scanner-qemuwrapper \
-    -Denable-gi-ldd-wrapper=${B}/g-ir-scanner-lddwrapper \
-    -Dpkgconfig-sysroot-path=${PKG_CONFIG_SYSROOT_DIR} \
-    ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Denable-introspection-data=true', '-Denable-introspection-data=false', d)} \
+    -Dgi_cross_use_host_gi=true \
+    -Dgi_cross_binary_wrapper=${B}/g-ir-scanner-qemuwrapper \
+    -Dgi_cross_ldd_wrapper=${B}/g-ir-scanner-lddwrapper \
+    -Dgi_cross_pkgconfig_sysroot_path=${PKG_CONFIG_SYSROOT_DIR} \
+    ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dbuild_introspection_data=true', '-Dbuild_introspection_data=false', d)} \
     ${@'-Dgir_dir_prefix=${libdir}' if d.getVar('MULTILIBS') else ''} \
 "
 
