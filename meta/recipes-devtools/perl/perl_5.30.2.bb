@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://Copying;md5=5b122a36d0f6dc55279a0ebc69f3c60b \
 
 
 SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
-           https://github.com/arsv/perl-cross/releases/download/1.3.1/perl-cross-1.3.1.tar.gz;name=perl-cross \
+           https://github.com/arsv/perl-cross/releases/download/1.3.2/perl-cross-1.3.2.tar.gz;name=perl-cross \
            file://perl-rdepends.txt \
            file://0001-configure_tool.sh-do-not-quote-the-argument-to-comma.patch \
            file://0001-ExtUtils-MakeMaker-add-LDFLAGS-when-linking-binary-m.patch \
@@ -20,10 +20,8 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://0001-configure_path.sh-do-not-hardcode-prefix-lib-as-libr.patch \
            file://0001-enc2xs-Add-environment-variable-to-suppress-comments.patch \
            file://0002-Constant-Fix-up-shebang.patch \
-           file://0001-tests-adjust-to-correctly-exclude-unbuilt-extensions.patch \
            file://0001-PATCH-perl-134117-Close-DATA-in-loc_tools.pl.patch \
            file://determinism.patch  \
-           file://racefix.patch \
            "
 SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
@@ -32,10 +30,8 @@ SRC_URI_append_class-target = " \
            file://encodefix.patch \
 "
 
-SRC_URI[perl.md5sum] = "6438eb7b8db9bbde28e01086de376a46"
-SRC_URI[perl.sha256sum] = "bf3d25571ff1ee94186177c2cdef87867fd6a14aa5a84f0b1fb7bf798f42f964"
-SRC_URI[perl-cross.md5sum] = "1e463b105cfa56d251a86979af23e3a7"
-SRC_URI[perl-cross.sha256sum] = "edce0b0c2f725e2db3f203d6d8e9f3f7161256f5d1590551e40694f21200141d"
+SRC_URI[perl.sha256sum] = "66db7df8a91979eb576fac91743644da878244cf8ee152f02cd6f5cd7a731689"
+SRC_URI[perl-cross.sha256sum] = "defa12f0ad7be0b6c48b4f76e2fb5b37c1b37fbeb6e9ebe938279cd539a0c20c"
 
 S = "${WORKDIR}/perl-${PV}"
 
