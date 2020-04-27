@@ -21,6 +21,7 @@ TOOLCHAIN_HOST_TASK += "\
     nativesdk-gettext \
     nativesdk-libatomic \
     nativesdk-libgcc \
+    nativesdk-libgomp-dev \
     nativesdk-libstdc++ \
     nativesdk-libstdc++-dev \
     nativesdk-libstdc++-staticdev \
