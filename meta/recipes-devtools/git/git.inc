@@ -9,6 +9,18 @@ PROVIDES_append_class-native = " git-replacement-native"
 SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
            ${KERNELORG_MIRROR}/software/scm/git/git-manpages-${PV}.tar.gz;name=manpages \
            file://CVE-2020-5260.patch \
+           file://0001-t-lib-credential-use-test_i18ncmp-to-check-stderr.patch \
+           file://0002-credential-detect-unrepresentable-values-when-parsin.patch \
+           file://0003-fsck-detect-gitmodules-URLs-with-embedded-newlines.patch \
+           file://CVE-2020-11008-1.patch \
+           file://CVE-2020-11008-2.patch \
+           file://CVE-2020-11008-3.patch \
+           file://CVE-2020-11008-4.patch \
+           file://CVE-2020-11008-5.patch \
+           file://CVE-2020-11008-6.patch \
+           file://CVE-2020-11008-7.patch \
+           file://CVE-2020-11008-8.patch \
+           file://CVE-2020-11008-9.patch \
           "
 
 S = "${WORKDIR}/git-${PV}"
