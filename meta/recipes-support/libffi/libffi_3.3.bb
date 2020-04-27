@@ -16,6 +16,7 @@ SRC_URI = "https://github.com/libffi/libffi/releases/download/v${PV}/${BPN}-${PV
            file://0001-powerpc-fix-build-failure-on-power7-and-older-532.patch \
            file://0001-Address-platforms-with-no-__int128.patch \
            file://0001-Address-platforms-with-no-__int128-part2.patch \
+           file://0001-ffi_powerpc.h-fix-build-failure-with-powerpc7.patch \
            "
 SRC_URI[md5sum] = "6313289e32f1d38a9df4770b014a2ca7"
 SRC_URI[sha256sum] = "72fba7922703ddfa7a028d513ac15a85c8d54c8d67f55fa5a4802885dc652056"
