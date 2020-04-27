@@ -7,6 +7,17 @@ Upstream-Status: Pending
 RP 2020/4/3
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
+It fails to compile pseudo-native on centos 7:
+
+| ports/linux/pseudo_wrappers.c: In function ‘prctl’:
+| ports/linux/pseudo_wrappers.c:129:14: error: ‘SECCOMP_SET_MODE_FILTER’ undeclared (first use in this function)
+|    if (cmd == SECCOMP_SET_MODE_FILTER) {
+|               ^
+
+Add macro guard for seccomp to avoid the failure.
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+
 Index: git/ports/linux/pseudo_wrappers.c
 ===================================================================
 --- git.orig/ports/linux/pseudo_wrappers.c
@@ -40,7 +51,7 @@ Index: git/ports/linux/pseudo_wrappers.c
  	/* gcc magic to attempt to just pass these args to syscall. we have to
  	 * guess about the number of args; the docs discuss calling conventions
  	 * up to 7, so let's try that?
-@@ -92,3 +108,42 @@ static long wrap_syscall(long nr, va_lis
+@@ -92,3 +108,44 @@ static long wrap_syscall(long nr, va_lis
  	(void) ap;
  	return -1;
  }
@@ -56,6 +67,7 @@ Index: git/ports/linux/pseudo_wrappers.c
 +		return rc;
 +	}
 +
++#ifdef SECCOMP_SET_MODE_FILTER
 +	/* pseudo and seccomp are incompatible as pseudo uses different syscalls
 +	 * so pretend to enable seccomp but really do nothing */
 +	if (option == PR_SET_SECCOMP) {
@@ -67,6 +79,7 @@ Index: git/ports/linux/pseudo_wrappers.c
 +		    return 0;
 +		}
 +	}
++#endif
 +
 +	/* gcc magic to attempt to just pass these args to prctl. we have to
 +	 * guess about the number of args; the docs discuss calling conventions
