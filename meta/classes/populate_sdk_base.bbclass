@@ -187,8 +187,8 @@ fakeroot create_sdk_files() {
 	sed -i -e "s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:" ${SDK_OUTPUT}/${SDKPATH}/relocate_sdk.py
 
        mkdir -p ${SDK_OUTPUT}/${SDKPATHNATIVE}${sysconfdir}/
-       echo '${SDKPATHNATIVE}${libdir}
-${SDKPATHNATIVE}${base_libdir}
+       echo '${SDKPATHNATIVE}${libdir_nativesdk}
+${SDKPATHNATIVE}${base_libdir_nativesdk}
 include /etc/ld.so.conf' > ${SDK_OUTPUT}/${SDKPATHNATIVE}${sysconfdir}/ld.so.conf
 }
 
