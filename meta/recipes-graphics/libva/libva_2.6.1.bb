@@ -27,8 +27,6 @@ DEPENDS = "libdrm"
 
 inherit meson pkgconfig features_check
 
-REQUIRED_DISTRO_FEATURES = "opengl"
-
 PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11 opengl', 'glx', '', d)} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'x11 wayland', d)} \
