@@ -21,12 +21,12 @@ UPSTREAM_CHECK_REGEX = "logrotate-(?P<pver>\d+(\.\d+)+).tar"
 
 SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BP}.tar.xz \
             file://act-as-mv-when-rotate.patch \
-            file://update-the-manual.patch \
+            file://0001-Update-the-manual.patch \
             file://disable-check-different-filesystems.patch \
             "
 
-SRC_URI[md5sum] = "afe109afea749c306ff489203fde6beb"
-SRC_URI[sha256sum] = "491fec9e89f1372f02a0ab66579aa2e9d63cac5178dfa672c204c88e693a908b"
+SRC_URI[md5sum] = "faf729e0e24bfaafaa677bc6deb46ed8"
+SRC_URI[sha256sum] = "442f6fdf61c349eeae5f76799878b88fe45a11c8863a38b618bac6988f4a7ce5"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'acl selinux', d)}"
 
