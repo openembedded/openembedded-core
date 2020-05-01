@@ -14,8 +14,8 @@ DEPENDS = "gettext-native glib-2.0"
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase gtk-doc gettext upstream-version-is-even gobject-introspection
 
-SRC_URI[archive.md5sum] = "f60bbaf8bdd08b93d98736b54b2fc8e9"
-SRC_URI[archive.sha256sum] = "d4f0e3b3d21265fcf2bc371e117da51c42ede1a71f6db1c834e6976bb20997cb"
+SRC_URI[archive.md5sum] = "01aa5ec5138f5f8c9b3a4e3196ed2900"
+SRC_URI[archive.sha256sum] = "fb76247e369402be23f1f5c65d38a9639c1164d934e40f6a9cf3c9e96b652788"
 
 BBCLASSEXTEND = "native nativesdk"
 
