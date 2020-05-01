@@ -5,11 +5,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
-           file://0001-Fix-source-reproducibility.patch"
+SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "53c21565507105fb68031cd9c21a559b"
-SRC_URI[sha256sum] = "d629cdbd674e539f8912028512af583990938c7b49e25184c126b00121ef11c6"
+SRC_URI[md5sum] = "f101d111b06293d15738afc904c1d931"
+SRC_URI[sha256sum] = "88da57de0a7e3c60bc341a974a80fdba091612db3547c410d6deab039ca5c05a"
 
 X11DEPENDS = "virtual/libx11 libxi libxtst"
 
