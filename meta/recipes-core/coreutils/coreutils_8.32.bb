@@ -5,8 +5,9 @@ every system."
 HOMEPAGE = "http://www.gnu.org/software/coreutils/"
 BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
-                    file://src/ls.c;beginline=1;endline=15;md5=c456f9896277a0543e3866777ccc0255"
+LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
+                    file://src/ls.c;beginline=1;endline=15;md5=b7d80abf5b279320fb0e4b1007ed108b \
+                    "
 DEPENDS = "gmp libcap"
 DEPENDS_class-native = ""
 
@@ -19,12 +20,11 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://disable-ls-output-quoting.patch \
            file://0001-local.mk-fix-cross-compiling-problem.patch \
            file://run-ptest \
-          "
+           file://0001-ls-restore-8.31-behavior-on-removed-directories.patch \
+           "
 
-SRC_URI_append_libc-musl = "file://strtod_fix_clash_with_strtold.patch"
-
-SRC_URI[md5sum] = "0009a224d8e288e8ec406ef0161f9293"
-SRC_URI[sha256sum] = "ff7a9c918edce6b4f4b2725e3f9b37b0c4d193531cac49a48b56c4d0d3a9e9fd"
+SRC_URI[md5sum] = "022042695b7d5bcf1a93559a9735e668"
+SRC_URI[sha256sum] = "4458d8de7849df44ccab15e16b1548b285224dbba5f08fac070c1c0e0bcc4cfa"
 
 EXTRA_OECONF_class-native = "--without-gmp"
 EXTRA_OECONF_class-target = "--enable-install-program=arch,hostname --libexecdir=${libdir}"
