@@ -9,12 +9,11 @@ RRECOMMENDS_${PN} = "ncurses-terminfo"
 
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://0001-mc-replace-perl-w-with-use-warnings.patch \
-           file://0001-Add-option-to-control-configure-args.patch \
-           file://0001-Ticket-3629-configure.ac-drop-bundled-gettext.patch \
            file://nomandate.patch \
+           file://0001-Ticket-4070-misc-Makefile.am-install-mc.lib-only-onc.patch \
            "
-SRC_URI[md5sum] = "152927ac29cf0e61d7d019f261bb7d89"
-SRC_URI[sha256sum] = "238c4552545dcf3065359bd50753abbb150c1b22ec5a36eaa02c82808293267d"
+SRC_URI[md5sum] = "2621de1fa9058a9c41a4248becc969f9"
+SRC_URI[sha256sum] = "cfcc4d0546d0c3a88645a8bf71612ed36647ea3264d973b1f28183a0c84bae34"
 
 inherit autotools gettext pkgconfig
 
