@@ -20,8 +20,8 @@ inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-intros
 SRC_URI += "file://0001-app.cc-use-old-school-asignment-to-avoid-gcc-4.8-err.patch \
             file://0002-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
            "
-SRC_URI[archive.md5sum] = "f59eb0784a361c0939c03d4566255916"
-SRC_URI[archive.sha256sum] = "22dcb54ac2ad1a56ab0a745e16ccfeb383f0b5860b5bfa1784561216f98d4975"
+SRC_URI[archive.md5sum] = "1a0b5395915d2f3c88484511b38cc584"
+SRC_URI[archive.sha256sum] = "35a0280e3f12feeb3096da05699191373c47a4a20c55cb7081e828e6015f8ca5"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
@@ -44,6 +44,7 @@ FILES_${PN}-dev += "${datadir}/vala/vapi/*"
 PACKAGECONFIG ??= "gnutls"
 PACKAGECONFIG[vala] = "-Dvapi=true,-Dvapi=false,vala-native vala"
 PACKAGECONFIG[gnutls] = "-Dgnutls=true,-Dgnutls=false,gnutls"
+PACKAGECONFIG[systemd] = "-D_systemd=true,-D_systemd=false,systemd"
 # vala requires gir
 PACKAGECONFIG_remove_class-native = "vala"
 
