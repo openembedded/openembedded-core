@@ -1,12 +1,10 @@
 def machine_paths(d):
     """List any existing machine specific filespath directories"""
     machine = d.getVar("MACHINE")
-    filespathpkg = d.getVar("FILESPATHPKG").split(":")
     for basepath in d.getVar("FILESPATHBASE").split(":"):
-        for pkgpath in filespathpkg:
-            machinepath = os.path.join(basepath, pkgpath, machine)
-            if os.path.isdir(machinepath):
-                yield machinepath
+        machinepath = os.path.join(basepath, machine)
+        if os.path.isdir(machinepath):
+            yield machinepath
 
 def is_machine_specific(d):
     """Determine whether the current recipe is machine specific"""
