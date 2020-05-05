@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = " \
     file://COPYING.LGPL3;md5=b52f2d57d10c4f7ee67a7eb9615d5d24 \
 "
 
-DEPENDS = "glib-2.0 gtk+3 libpcre2 libxml2-native gperf-native"
+DEPENDS = "glib-2.0 gtk+3 libpcre2 libxml2-native gperf-native icu"
 
 GNOMEBASEBUILDCLASS = "meson"
 GIR_MESON_OPTION = 'gir'
