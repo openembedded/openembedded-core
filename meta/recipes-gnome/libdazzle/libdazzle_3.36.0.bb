@@ -12,8 +12,8 @@ inherit gnomebase upstream-version-is-even vala features_check gobject-introspec
 
 DEPENDS = "glib-2.0-native glib-2.0 gtk+3"
 
-SRC_URI[archive.md5sum] = "e796a92dd3f529616ed388c15208359b"
-SRC_URI[archive.sha256sum] = "3d981cbb9d9bb87bfaff7bfd44d9847223b3ef81e69225e4d1f6ac725a669505"
+SRC_URI[archive.md5sum] = "154be45a6aac020e7d59f477bd7cafcf"
+SRC_URI[archive.sha256sum] = "82b31bbf550fc62970c78bf7f9d55e5fae5b8ea13b24fe2d13c8c6039409d958"
 
 GIR_MESON_OPTION = 'with_introspection'
 
