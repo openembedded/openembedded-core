@@ -11,9 +11,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${
            file://0001-ensure-the-XATTR_NAME_CAPS-is-defined-when-it-is-use.patch \
            file://0002-tests-do-not-run-target-executables.patch \
            file://0001-tests-do-not-statically-link-a-test.patch \
+           file://0004-psx.c-replace-pthread_yield-with-standard-sched_yiel.patch \
            "
-SRC_URI[md5sum] = "7416119c9fdcfd0e8dd190a432c668e9"
-SRC_URI[sha256sum] = "1005e3d227f2340ad1e3360ef8b69d15e3c72a29c09f4894d7aac038bd26e2be"
+SRC_URI[md5sum] = "dcc6220b4a9bf260050b20c07edcddf4"
+SRC_URI[sha256sum] = "08edeaba2757021aeec45c4eeec52566675e0e0f5d4f057284d729e04f2643d6"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/linux/libs/security/linux-privs/${BPN}2/"
 
