@@ -20,12 +20,15 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://avahi-client/client.h;endline=23;md5=f4ac741a25c4f434039ba3e18c8674cf"
 
 SRC_URI = "https://github.com/lathiat/avahi/releases/download/v${PV}/avahi-${PV}.tar.gz \
-           file://fix-CVE-2017-6519.patch \
+           file://00avahi-autoipd \
+           file://99avahi-autoipd \
+           file://initscript.patch \
+           file://0001-Fix-opening-etc-resolv.conf-error.patch \
            "
 
 UPSTREAM_CHECK_URI = "https://github.com/lathiat/avahi/releases/"
-SRC_URI[md5sum] = "d76c59d0882ac6c256d70a2a585362a6"
-SRC_URI[sha256sum] = "57a99b5dfe7fdae794e3d1ee7a62973a368e91e414bd0dfa5d84434de5b14804"
+SRC_URI[md5sum] = "229c6aa30674fc43c202b22c5f8c2be7"
+SRC_URI[sha256sum] = "060309d7a333d38d951bc27598c677af1796934dbd98e1024e7ad8de798fedda"
 
 DEPENDS = "expat libcap libdaemon glib-2.0 intltool-native"
 
@@ -37,12 +40,15 @@ PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+"
 PACKAGECONFIG[gtk3] = "--enable-gtk3,--disable-gtk3,gtk+3"
 PACKAGECONFIG[libdns_sd] = "--enable-compat-libdns_sd --enable-dbus,,dbus"
+PACKAGECONFIG[libevent] = "--enable-libevent,--disable-libevent,libevent"
+PACKAGECONFIG[qt5] = "--enable-qt5,--disable-qt5,qtbase"
 
 inherit autotools pkgconfig gettext gobject-introspection
 
 EXTRA_OECONF = "--with-avahi-priv-access-group=adm \
              --disable-stack-protector \
              --disable-gdbm \
+             --disable-dbm \
              --disable-mono \
              --disable-monodoc \
              --disable-qt3 \
@@ -59,8 +65,6 @@ EXTRA_OECONF_SYSVINIT = "${@bb.utils.contains('DISTRO_FEATURES','sysvinit','--wi
 EXTRA_OECONF_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES','systemd','--with-systemdsystemunitdir=${systemd_unitdir}/system/','--without-systemdsystemunitdir',d)}"
 
 do_configure_prepend() {
-    sed 's:AM_CHECK_PYMOD:echo "no pymod" #AM_CHECK_PYMOD:g' -i ${S}/configure.ac
-
     # This m4 file will get in the way of our introspection.m4 with special cross-compilation fixes
     rm "${S}/common/introspection.m4" || true
 }
@@ -84,12 +88,6 @@ PACKAGES =+ "${@bb.utils.contains("PACKAGECONFIG", "libdns_sd", "libavahi-compat
 FILES_libavahi-compat-libdnssd = "${libdir}/libdns_sd.so.*"
 
 RPROVIDES_libavahi-compat-libdnssd = "libdns-sd"
-
-SRC_URI += "file://00avahi-autoipd \
-           file://99avahi-autoipd \
-           file://initscript.patch \
-           file://0001-Fix-opening-etc-resolv.conf-error.patch \
-           "
 
 inherit update-rc.d systemd useradd
 
