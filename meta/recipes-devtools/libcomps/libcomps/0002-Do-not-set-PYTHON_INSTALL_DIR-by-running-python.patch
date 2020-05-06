@@ -1,20 +1,19 @@
-From b28859ea93110d52d8a87d7b5a6c8796d0d523ed Mon Sep 17 00:00:00 2001
+From 32447a79e24f8e7e9e0150eb747f34116d63ef38 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 30 Dec 2016 18:22:09 +0200
-Subject: [PATCH] Do not set PYTHON_INSTALL_DIR by running python.
+Subject: [PATCH 2/2] Do not set PYTHON_INSTALL_DIR by running python.
 
 Upstream-Status: Inappropriate [oe-core specific]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
-
 ---
  libcomps/src/python/src/CMakeLists.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/libcomps/src/python/src/CMakeLists.txt b/libcomps/src/python/src/CMakeLists.txt
-index fa590ae..6913214 100644
+index b9b96ab..6d44567 100644
 --- a/libcomps/src/python/src/CMakeLists.txt
 +++ b/libcomps/src/python/src/CMakeLists.txt
-@@ -117,7 +117,7 @@ IF (SKBUILD)
+@@ -115,7 +115,7 @@ IF (SKBUILD)
      INSTALL(FILES libcomps/__init__.py DESTINATION libcomps/src/python/src/libcomps)
      INSTALL(TARGETS pycomps LIBRARY DESTINATION libcomps/src/python/src/libcomps)
  ELSE ()
@@ -23,3 +22,6 @@ index fa590ae..6913214 100644
  
      INSTALL(FILES ${pycomps_SRCDIR}/libcomps/__init__.py DESTINATION ${PYTHON_INSTALL_DIR}/libcomps)
      #INSTALL(FILES ${pycomps_SRCDIR}/tests/__test.py DESTINATION
+-- 
+2.26.2
+
