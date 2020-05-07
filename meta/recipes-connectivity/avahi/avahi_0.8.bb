@@ -35,7 +35,7 @@ DEPENDS = "expat libcap libdaemon glib-2.0 intltool-native"
 # For gtk related PACKAGECONFIGs: gtk, gtk3
 AVAHI_GTK ?= "gtk3"
 
-PACKAGECONFIG ??= "dbus ${AVAHI_GTK}"
+PACKAGECONFIG ??= "dbus ${@bb.utils.contains_any('DISTRO_FEATURES','x11 wayland','${AVAHI_GTK}','',d)}"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+"
 PACKAGECONFIG[gtk3] = "--enable-gtk3,--disable-gtk3,gtk+3"
