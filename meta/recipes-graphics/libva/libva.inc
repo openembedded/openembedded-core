@@ -16,7 +16,9 @@ BUGTRACKER = "https://github.com/intel/libva/issues"
 SECTION = "x11"
 LICENSE = "MIT"
 
-SRC_URI = "https://github.com/intel/${BPN}/releases/download/${PV}/${BP}.tar.bz2"
+SRC_URI = "https://github.com/intel/libva/releases/download/${PV}/libva-${PV}.tar.bz2"
+
+S = "${WORKDIR}/libva-${PV}"
 
 UPSTREAM_CHECK_URI = "https://github.com/intel/libva/releases"
 
