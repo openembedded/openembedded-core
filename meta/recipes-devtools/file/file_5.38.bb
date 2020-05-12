@@ -19,7 +19,6 @@ S = "${WORKDIR}/git"
 inherit autotools update-alternatives
 
 PACKAGECONFIG ??= "zlib"
-PACKAGECONFIG_class-native ??= "zlib"
 PACKAGECONFIG[bz2] = "--enable-bzlib, --disable-bzlib, bzip2"
 PACKAGECONFIG[lzma] = "--enable-xzlib, --disable-xzlib, xz"
 PACKAGECONFIG[zlib] = "--enable-zlib, --disable-zlib, zlib"
