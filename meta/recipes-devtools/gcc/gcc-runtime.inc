@@ -263,6 +263,7 @@ FILES_libgomp-dev = "\
     ${libdir}/libgomp*${SOLIBSDEV} \
     ${libdir}/libgomp*.la \
     ${libdir}/libgomp.spec \
+    ${libdir}/${TARGET_SYS}/${BINV}/include/acc_prof.h \
     ${libdir}/${TARGET_SYS}/${BINV}/include/omp.h \
     ${libdir}/${TARGET_SYS}/${BINV}/include/openacc.h \
 "
