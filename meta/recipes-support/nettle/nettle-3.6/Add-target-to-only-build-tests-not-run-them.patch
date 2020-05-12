@@ -8,12 +8,16 @@ Upstream-Status: Inappropriate [not a complete solution]
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Refactored for 3.4
 Signed-off-by: Armin Kuster <akuster@mvista.com>
+---
+ Makefile.in           | 3 +++
+ testsuite/Makefile.in | 2 ++
+ 2 files changed, 5 insertions(+)
 
-Index: nettle-3.4/Makefile.in
-===================================================================
---- nettle-3.4.orig/Makefile.in
-+++ nettle-3.4/Makefile.in
-@@ -55,6 +55,9 @@ clean distclean mostlyclean maintainer-c
+diff --git a/Makefile.in b/Makefile.in
+index e5ccfc7..15c9275 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -52,6 +52,9 @@ clean distclean mostlyclean maintainer-clean tags:
  	  echo "Making $@ in $$d" ; (cd $$d && $(MAKE) $@); done
  	$(MAKE) $@-here
  
@@ -23,16 +27,19 @@ Index: nettle-3.4/Makefile.in
  check-here:
  	true
  
-Index: nettle-3.4/testsuite/Makefile.in
-===================================================================
---- nettle-3.4.orig/testsuite/Makefile.in
-+++ nettle-3.4/testsuite/Makefile.in
-@@ -131,6 +131,8 @@ $(TARGETS) $(EXTRA_TARGETS): testutils.$
+diff --git a/testsuite/Makefile.in b/testsuite/Makefile.in
+index 3f5e5f6..8fd68a3 100644
+--- a/testsuite/Makefile.in
++++ b/testsuite/Makefile.in
+@@ -122,6 +122,8 @@ $(TARGETS) $(EXTRA_TARGETS): testutils.$(OBJEXT) ../nettle-internal.$(OBJEXT) \
  # data.
  VALGRIND = valgrind --error-exitcode=1 --leak-check=full --show-reachable=yes @IF_ASM@ --partial-loads-ok=yes
  
 +buildtest: $(TS_ALL)
 +
- # The PATH update is for windows dlls, DYLD_LIBRARY_PATH is for OSX.
  check: $(TS_ALL)
- 	LD_LIBRARY_PATH=../.lib PATH="../.lib:$$PATH" DYLD_LIBRARY_PATH=../.lib \
+ 	TEST_SHLIB_DIR="$(TEST_SHLIB_DIR)" \
+ 	  srcdir="$(srcdir)" \
+-- 
+2.17.1
+

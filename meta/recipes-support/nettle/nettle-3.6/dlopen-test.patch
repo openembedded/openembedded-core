@@ -7,15 +7,23 @@ Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
 Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ testsuite/dlopen-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/testsuite/dlopen-test.c	2016-10-01 00:28:38.000000000 -0700
-+++ b/testsuite/dlopen-test.c	2017-10-13 11:08:57.227572860 -0700
-@@ -9,7 +9,7 @@
+diff --git a/testsuite/dlopen-test.c b/testsuite/dlopen-test.c
+index 4265bf7..1a25d17 100644
+--- a/testsuite/dlopen-test.c
++++ b/testsuite/dlopen-test.c
+@@ -15,7 +15,7 @@ int
  main (int argc UNUSED, char **argv UNUSED)
  {
  #if HAVE_LIBDL
--  void *handle = dlopen ("../libnettle.so", RTLD_NOW);
+-  void *handle = dlopen ("../libnettle." SO_EXT, RTLD_NOW);
 +  void *handle = dlopen ("libnettle.so", RTLD_NOW);
    int (*get_version)(void);
    if (!handle)
      {
+-- 
+2.17.1
+
