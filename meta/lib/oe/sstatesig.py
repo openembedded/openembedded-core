@@ -151,6 +151,13 @@ class SignatureGeneratorOEBasicHashMixIn(object):
 
     def get_taskhash(self, tid, deps, dataCache):
         h = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskhash(tid, deps, dataCache)
+        if tid in self.lockedhashes:
+            if self.lockedhashes[tid]:
+                return self.lockedhashes[tid]
+            else:
+                return h
+
+        h = super(bb.siggen.SignatureGeneratorBasicHash, self).get_taskhash(tid, deps, dataCache)
 
         (mc, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
 
@@ -187,17 +194,19 @@ class SignatureGeneratorOEBasicHashMixIn(object):
                                           % (recipename, task, h, h_locked, var))
 
                 return h_locked
+
+        self.lockedhashes[tid] = False
         #bb.warn("%s %s %s" % (recipename, task, h))
         return h
 
     def get_unihash(self, tid):
-        if tid in self.lockedhashes:
+        if tid in self.lockedhashes and self.lockedhashes[tid]:
             return self.lockedhashes[tid]
         return super().get_unihash(tid)
 
     def dump_sigtask(self, fn, task, stampbase, runtime):
         tid = fn + ":" + task
-        if tid in self.lockedhashes:
+        if tid in self.lockedhashes and self.lockedhashes[tid]:
             return
         super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigtask(fn, task, stampbase, runtime)
 
