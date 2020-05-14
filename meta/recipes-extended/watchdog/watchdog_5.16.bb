@@ -6,17 +6,16 @@ HOMEPAGE = "http://watchdog.sourceforge.net/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=172030&atid=860194"
 
 LICENSE = "GPL-2.0+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ecc0551bf54ad97f6b541720f84d6569"
+LIC_FILES_CHKSUM = "file://COPYING;md5=084236108b1d4a9851bf5213fea586fd"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/watchdog/watchdog-${PV}.tar.gz \
-           file://0001-Include-linux-param.h-for-EXEC_PAGESIZE-definition.patch \
            file://0001-watchdog-remove-interdependencies-of-watchdog-and-wd.patch \
            file://watchdog.init \
            file://wd_keepalive.init \
 "
 
-SRC_URI[md5sum] = "678c32f6f35a0492c9c1b76b4aa88828"
-SRC_URI[sha256sum] = "ffdc865137ad5d8e53664bd22bad4de6ca136d1b4636720320cb52af0c18947c"
+SRC_URI[md5sum] = "1b4f51cabc64d1bee2fce7cdd626831f"
+SRC_URI[sha256sum] = "b8e7c070e1b72aee2663bdc13b5cc39f76c9232669cfbb1ac0adc7275a3b019d"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/watchdog/files/watchdog/"
 UPSTREAM_CHECK_REGEX = "/watchdog/(?P<pver>(\d+[\.\-_]*)+)/"
