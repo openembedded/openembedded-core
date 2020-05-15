@@ -13,8 +13,8 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
 
-SRC_URI[md5sum] = "2e3bc8cfb264fa13f374618b46f170e7"
-SRC_URI[sha256sum] = "8a42240813b8fd1d001835cd6f5ec687f7d7f3b26070d4e21604c35a51a6441d"
+SRC_URI[md5sum] = "be252df5013ea03894921d0b493c7b6c"
+SRC_URI[sha256sum] = "efeb2ae60e96dbe9a9b342d3a80dfc7642f06a8c09686089d491ad696bb98f4d"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
@@ -33,11 +33,11 @@ python do_package_prepend() {
 BBCLASSEXTEND = "devupstream:target"
 LIC_FILES_CHKSUM_class-devupstream = "file://LICENSE;md5=3f882d431dc0f32f1f44c0707aa41128"
 DEFAULT_PREFERENCE_class-devupstream = "-1"
-SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.11 \
+SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.12 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
 SRCREV_class-devupstream = "17c413953603f063f2a9d6c3788bec914ce6f955"
-PV_class-devupstream = "2.11.2+git${SRCPV}"
+PV_class-devupstream = "2.12.0+git${SRCPV}"
 S_class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
