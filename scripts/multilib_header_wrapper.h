@@ -5,8 +5,6 @@
  * 
  */
 
-#pragma once
-
 #if defined (__bpf__)
 #define __MHWORDSIZE			64
 #elif defined (__arm__)
