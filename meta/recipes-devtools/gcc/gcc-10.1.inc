@@ -87,7 +87,6 @@ EXTRA_OECONF_BASE = "\
     ${SSP} \
     --enable-libitm \
     --disable-bootstrap \
-    --disable-libmudflap \
     --with-system-zlib \
     ${@'--with-linker-hash-style=${LINKER_HASH_STYLE}' if '${LINKER_HASH_STYLE}' else ''} \
     --enable-linker-build-id \
@@ -99,7 +98,6 @@ EXTRA_OECONF_BASE = "\
 "
 
 EXTRA_OECONF_INITIAL = "\
-    --disable-libmudflap \
     --disable-libgomp \
     --disable-libitm \
     --disable-libquadmath \
