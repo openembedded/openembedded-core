@@ -5,9 +5,9 @@ to extract program execution details from the Linux operating system \
 and interpret them."
 
 LICENSE = "GPLv2 & LGPLv2.1"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=01d7fc4496aacf37d90df90b90b0cac1 \
-                    file://gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://lgpl-2.1.txt;md5=0f0d71500e6a57fd24d825f33242b9ca"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=40ef17463fbd6f377db3c47b1cbaded8 \
+                    file://LICENSES/GPL-2.0;md5=e68f69a54b44ba526ad7cb963e18fbce \
+                    file://LICENSES/LGPL-2.1;md5=9920968d0f2ff585ce61fae30344dd95"
 
 DEPENDS = "liburcu popt libxml2 util-linux"
 RDEPENDS_${PN} = "libgcc"
@@ -29,15 +29,15 @@ PACKAGECONFIG[manpages] = "--enable-man-pages, --disable-man-pages, asciidoc-nat
 PACKAGECONFIG_remove_arc = "lttng-ust"
 
 SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
-           file://x32.patch \
            file://0001-tests-do-not-strip-a-helper-library.patch \
            file://run-ptest \
            file://lttng-sessiond.service \
            file://0001-tests-regression-disable-the-tools-live-tests.patch \
+           file://0001-tests-gen-ust-events-ns-tp.h-Fix-build-with-musl-lib.patch \
            "
 
-SRC_URI[md5sum] = "68ed78f7fa4235477ea577e48b3cd245"
-SRC_URI[sha256sum] = "936477305b25f65c5dd22db9161287d30a309ce868b6180857b1fd1fb5e6a56b"
+SRC_URI[md5sum] = "4592201ea981f0722438345fb1f009d2"
+SRC_URI[sha256sum] = "405661d27617dc79a42712174a051a45c7ca12d167576c0d93f2de708ed29445"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
@@ -71,7 +71,7 @@ do_install_ptest () {
         install -D "${B}/$f" "${D}${PTEST_PATH}/$f"
     done
 
-    for f in config/tap-driver.sh config/test-driver src/common/config/session.xsd src/common/mi-lttng-3.0.xsd; do
+    for f in config/tap-driver.sh config/test-driver src/common/config/session.xsd src/common/mi-lttng-4.0.xsd; do
         install -D "${S}/$f" "${D}${PTEST_PATH}/$f"
     done
 
