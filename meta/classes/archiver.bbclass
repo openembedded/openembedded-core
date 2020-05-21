@@ -193,7 +193,13 @@ python do_ar_original() {
                 del decoded[5][param]
         encoded = bb.fetch2.encodeurl(decoded)
         urls[i] = encoded
-    fetch = bb.fetch2.Fetch(urls, d)
+
+    # Cleanup SRC_URI before call bb.fetch2.Fetch() since now SRC_URI is in the
+    # variable "urls", otherwise there might be errors like:
+    # The SRCREV_FORMAT variable must be set when multiple SCMs are used
+    ld = bb.data.createCopy(d)
+    ld.setVar('SRC_URI', '')
+    fetch = bb.fetch2.Fetch(urls, ld)
     tarball_suffix = {}
     for url in fetch.urls:
         local = fetch.localpath(url).rstrip("/");
