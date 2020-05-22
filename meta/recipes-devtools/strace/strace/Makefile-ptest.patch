@@ -44,6 +44,6 @@ index 825c989..4623c48 100644
 +	done
 +	for file in $(EXTRA_DIST); do \
 +		install $(srcdir)/$$file $(DESTDIR)/$(TESTDIR); \
-+		sed -i -e 's/$${srcdir=.}/./g' $(DESTDIR)/$(TESTDIR)/$$file; \
++		#sed -i -e 's/$${srcdir=.}/./g' $(DESTDIR)/$(TESTDIR)/$$file; \
 +	done
 +	for i in net scm_rights-fd rt_sigaction; do sed -i -e 's/$$srcdir/./g' $(DESTDIR)/$(TESTDIR)/$$i.test; done
