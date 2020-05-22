@@ -19,9 +19,7 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "3829315cb0a1e9cedc05ffe6def7a2c6"
 SRC_URI[sha256sum] = "68076686fa724a290ea49cdf0d1c0c1500907d1b759a3bcbfbec0293e8f56570"
 
-inherit autotools pkgconfig features_check
-
-REQUIRED_DISTRO_FEATURES = "${@bb.utils.contains('PACKAGECONFIG', 'libsecret', 'gobject-introspection-data', '', d)}"
+inherit autotools pkgconfig
 
 PACKAGECONFIG ??= "ncurses libcap"
 
@@ -29,6 +27,7 @@ PACKAGECONFIG[ncurses] = "--enable-ncurses  --with-ncurses-include-dir=${STAGING
 PACKAGECONFIG[libcap] = "--with-libcap, --without-libcap, libcap"
 PACKAGECONFIG[qt] = "--enable-pinentry-qt, --disable-pinentry-qt, qtbase-native qtbase"
 PACKAGECONFIG[gtk2] = "--enable-pinentry-gtk2, --disable-pinentry-gtk2, gtk+ glib-2.0"
+
 PACKAGECONFIG[secret] = "--enable-libsecret, --disable-libsecret, libsecret"
 
 EXTRA_OECONF = " \
