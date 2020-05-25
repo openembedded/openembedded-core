@@ -623,6 +623,10 @@ python write_specfile () {
 # Otherwise allarch packages may change depending on override configuration
 write_specfile[vardepsexclude] = "OVERRIDES"
 
+# Have to list any variables referenced as X_<pkg> that aren't in pkgdata here
+RPMEXTRAVARS = "PACKAGE_ADD_METADATA_RPM"
+write_specfile[vardeps] += "${@gen_packagevar(d, 'RPMEXTRAVARS')}"
+
 python do_package_rpm () {
     workdir = d.getVar('WORKDIR')
     tmpdir = d.getVar('TMPDIR')
