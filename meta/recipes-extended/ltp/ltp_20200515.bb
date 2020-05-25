@@ -89,6 +89,7 @@ RDEPENDS_${PN} = "\
     ldd \
     libaio \
     logrotate \
+    net-tools \
     perl \
     python3-core \
     procps \
