@@ -286,16 +286,18 @@ python write_specfile () {
 
     # Construct the SPEC file...
     srcname    = d.getVar('PN')
-    srcsummary = (d.getVar('SUMMARY') or d.getVar('DESCRIPTION') or ".")
-    srcversion = d.getVar('PKGV').replace('-', '+')
-    srcrelease = d.getVar('PKGR')
-    srcepoch   = (d.getVar('PKGE') or "")
-    srclicense = d.getVar('LICENSE')
-    srcsection = d.getVar('SECTION')
-    srcmaintainer  = d.getVar('MAINTAINER')
-    srchomepage    = d.getVar('HOMEPAGE')
-    srcdescription = d.getVar('DESCRIPTION') or "."
-    srccustomtagschunk = get_package_additional_metadata("rpm", d)
+    localdata = bb.data.createCopy(d)
+    localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + srcname)
+    srcsummary = (localdata.getVar('SUMMARY') or localdata.getVar('DESCRIPTION') or ".")
+    srcversion = localdata.getVar('PKGV').replace('-', '+')
+    srcrelease = localdata.getVar('PKGR')
+    srcepoch   = (localdata.getVar('PKGE') or "")
+    srclicense = localdata.getVar('LICENSE')
+    srcsection = localdata.getVar('SECTION')
+    srcmaintainer  = localdata.getVar('MAINTAINER')
+    srchomepage    = localdata.getVar('HOMEPAGE')
+    srcdescription = localdata.getVar('DESCRIPTION') or "."
+    srccustomtagschunk = get_package_additional_metadata("rpm", localdata)
 
     srcdepends     = d.getVar('DEPENDS')
     srcrdepends    = []
