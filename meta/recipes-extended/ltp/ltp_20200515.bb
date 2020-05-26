@@ -72,6 +72,10 @@ do_install(){
          -e 's@[^ ]*-fdebug-prefix-map=[^ "]*@@g' \
          -e 's@[^ ]*-fmacro-prefix-map=[^ "]*@@g' \
          -e 's@[^ ]*--sysroot=[^ "]*@@g' 
+
+    # The controllers memcg_stree test seems to cause us hangs and takes 900s
+    # (maybe we expect more regular output?), anyhow, skip it
+    sed -e '/^memcg_stress/d' -i ${D}${prefix}/runtest/controllers
 }
 
 RDEPENDS_${PN} = "\
