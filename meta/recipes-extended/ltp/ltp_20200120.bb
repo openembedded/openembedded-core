@@ -83,13 +83,17 @@ do_install(){
 RDEPENDS_${PN} = "\
     attr \
     bash \
+    bc \
+    coreutils \
     cpio \
     cronie \
     curl \
+    e2fsprogs \
     e2fsprogs-mke2fs \
     expect \
     file \
     gawk \
+    gdb \
     gzip \
     iproute2 \
     ldd \
