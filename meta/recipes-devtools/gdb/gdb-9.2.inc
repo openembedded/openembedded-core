@@ -17,5 +17,5 @@ SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.xz \
            file://0010-Fix-invalid-sigprocmask-call.patch \
            file://0011-gdbserver-ctrl-c-handling.patch \
            "
-SRC_URI[md5sum] = "f7e9f6236c425097d9e5f18a6ac40655"
-SRC_URI[sha256sum] = "699e0ec832fdd2f21c8266171ea5bf44024bd05164fdf064e4d10cc4cf0d1737"
+SRC_URI[md5sum] = "db95524e554870209ab7d9f8fd8dc557"
+SRC_URI[sha256sum] = "360cd7ae79b776988e89d8f9a01c985d0b1fa21c767a4295e5f88cb49175c555"
