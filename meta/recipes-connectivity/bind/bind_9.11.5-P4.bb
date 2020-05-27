@@ -28,6 +28,8 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://0005-refactor-tcpquota-and-pipeline-refs-allow-special-ca.patch \
            file://0006-restore-allowance-for-tcp-clients-interfaces.patch \
            file://0007-Replace-atomic-operations-in-bin-named-client.c-with.patch \
+           file://CVE-2020-8616.patch \
+           file://CVE-2020-8617.patch \
 "
 
 SRC_URI[md5sum] = "8ddab4b61fa4516fe404679c74e37960"
