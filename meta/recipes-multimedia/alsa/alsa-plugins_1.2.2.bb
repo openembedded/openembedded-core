@@ -13,16 +13,15 @@ SECTION = "multimedia"
 # license for libsamplerate, the samplerate plugin may be used under the terms
 # of LGPLv2.1 like the rest of the plugins.
 LICENSE = "LGPLv2.1 & GPLv2+"
-LIC_FILES_CHKSUM = "\
-        file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
-        file://COPYING.GPL;md5=59530bdf33659b29e73d4adb9f9f6552 \
-        file://m4/attributes.m4;endline=33;md5=b25958da44c02231e3641f1bccef53eb \
-        file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
-"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
+                    file://COPYING.GPL;md5=59530bdf33659b29e73d4adb9f9f6552 \
+                    file://m4/attributes.m4;endline=33;md5=bb8c6b2a67ac15156961e242fec33e50 \
+                    file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
+                    "
 
 SRC_URI = "https://www.alsa-project.org/files/pub/plugins/${BP}.tar.bz2"
-SRC_URI[md5sum] = "5b11cd3ec92e5f9190ec378565b529e8"
-SRC_URI[sha256sum] = "4d94de7ad41734b8604a652521200bb6554fcf0c2c00fdbd302b1710d76548da"
+SRC_URI[md5sum] = "8455e3c6fbc47f62f070afabc14ba575"
+SRC_URI[sha256sum] = "1c0f06450c928d711719686c9dbece2d480184f36fab11b8f0534cb7b41e337d"
 
 DEPENDS += "alsa-lib"
 
