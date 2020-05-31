@@ -2,18 +2,18 @@ SUMMARY = "Power usage tool"
 DESCRIPTION = "Linux tool to diagnose issues with power consumption and power management."
 HOMEPAGE = "https://01.org/powertop/"
 BUGTRACKER = "https://app.devzing.com/powertopbugs/bugzilla"
-DEPENDS = "ncurses libnl pciutils"
+DEPENDS = "ncurses libnl pciutils autoconf-archive"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 SRC_URI = "git://github.com/fenrus75/powertop;protocol=https \
     file://0001-wakeup_xxx.h-include-limits.h.patch \
 "
-SRCREV = "e8765b5475b22b7a2b6e9e8a031c68a268a0b0b3"
+SRCREV = "6988eaaa5bbcfff1dd86f757006c6c48cec965c5"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gettext pkgconfig
+inherit autotools gettext pkgconfig bash-completion
 
 # we do not want libncursesw if we can
 do_configure_prepend() {
@@ -22,6 +22,7 @@ do_configure_prepend() {
     mkdir -p ${B}/src/tuning/
     echo "${PV}" > ${S}/version-long
     echo "${PV}" > ${S}/version-short
+    cp ${STAGING_DATADIR}/aclocal/ax_require_defined.m4 ${S}/m4/
 }
 
 inherit update-alternatives
