@@ -1,4 +1,4 @@
-require mesa_${PV}.bb
+require mesa.inc
 
 SUMMARY += " (OpenGL only, no EGL/GLES)"
 
