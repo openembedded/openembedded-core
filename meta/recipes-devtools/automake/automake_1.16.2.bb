@@ -28,8 +28,8 @@ SRC_URI += "file://python-libdir.patch \
             file://0001-build-fix-race-in-parallel-builds.patch \
             "
 
-SRC_URI[md5sum] = "83cc2463a4080efd46a72ba2c9f6b8f5"
-SRC_URI[sha256sum] = "608a97523f97db32f1f5d5615c98ca69326ced2054c9f82e65bade7fc4c9dea8"
+SRC_URI[md5sum] = "f1a14f2ab2b0fb861a011e1d94e589e0"
+SRC_URI[sha256sum] = "b2f361094b410b4acbf4efba7337bdb786335ca09eb2518635a09fb7319ca5c1"
 
 PERL = "${USRBINPATH}/perl"
 PERL_class-native = "${USRBINPATH}/env perl"
