@@ -15,8 +15,8 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://uintptr_t.patch \
            file://0001-strace-fix-reproducibilty-issues.patch \
            "
-SRC_URI[md5sum] = "dbce2e84632b39a4ed86b9fc60447af9"
-SRC_URI[sha256sum] = "9f58958c8e59ea62293d907d10572e352b582bd7948ed21aa28ebb47e5bf30ff"
+SRC_URI[md5sum] = "f8e0394d4e537b3faadf0a72f5d1d17e"
+SRC_URI[sha256sum] = "189968eeae06ed9e20166ec55a830943c84374676a457c9fe010edc7541f1b01"
 
 inherit autotools ptest
 
@@ -27,7 +27,7 @@ PACKAGECONFIG_class-target ??= "\
 PACKAGECONFIG[bluez] = "ac_cv_header_bluetooth_bluetooth_h=yes,ac_cv_header_bluetooth_bluetooth_h=no,bluez5"
 PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
 
-EXTRA_OECONF += "--enable-mpers=no"
+EXTRA_OECONF += "--enable-mpers=no --disable-gcc-Werror"
 
 CFLAGS_append_libc-musl = " -Dsigcontext_struct=sigcontext"
 
