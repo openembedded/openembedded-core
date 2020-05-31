@@ -8,14 +8,11 @@ SUMMARY = "Perl Compatible Regular Expressions version 2"
 HOMEPAGE = "http://www.pcre.org"
 SECTION = "devel"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=b1588d3bb4cb0e1f5a597d908f8c5b37"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=a06590e9bd4c229532364727aaeaf084"
 
-SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre2-${PV}.tar.bz2 \
-           file://pcre-cross.patch \
-"
+SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre2-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "d280b62ded13f9ccf2fac16ee5286366"
-SRC_URI[sha256sum] = "74c473ffaba9e13db6951fd146e0143fe9887852ce73406a03277af1d9b798ca"
+SRC_URI[sha256sum] = "9ccba8e02b0ce78046cdfb52e5c177f0f445e421059e43becca4359c669d4613"
 
 CVE_PRODUCT = "pcre2"
 
@@ -30,19 +27,13 @@ inherit autotools binconfig-disabled
 
 EXTRA_OECONF = "\
     --enable-newline-is-lf \
-    --enable-rebuild-chartables \
     --with-link-size=2 \
     --with-match-limit=10000000 \
     --enable-pcre2-16 \
     --enable-pcre2-32 \
 "
-# Set LINK_SIZE in BUILD_CFLAGS given that the autotools bbclass use it to
-# set CFLAGS_FOR_BUILD, required for the libpcre build.
-BUILD_CFLAGS =+ "-DLINK_SIZE=2 -I${B}/src"
 CFLAGS += "-D_REENTRANT"
 CXXFLAGS_append_powerpc = " -lstdc++"
-
-export CCLD_FOR_BUILD ="${BUILD_CCLD}"
 
 PACKAGES =+ "libpcre2-16 libpcre2-32 pcre2grep pcre2grep-doc pcre2test pcre2test-doc"
 
