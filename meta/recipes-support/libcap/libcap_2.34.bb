@@ -11,10 +11,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${
            file://0001-ensure-the-XATTR_NAME_CAPS-is-defined-when-it-is-use.patch \
            file://0002-tests-do-not-run-target-executables.patch \
            file://0001-tests-do-not-statically-link-a-test.patch \
-           file://0004-psx.c-replace-pthread_yield-with-standard-sched_yiel.patch \
            "
-SRC_URI[md5sum] = "dcc6220b4a9bf260050b20c07edcddf4"
-SRC_URI[sha256sum] = "08edeaba2757021aeec45c4eeec52566675e0e0f5d4f057284d729e04f2643d6"
+SRC_URI[md5sum] = "66028a8080a0891c54b202bb5e749035"
+SRC_URI[sha256sum] = "aecdd42015955068d3d94b7caa9590fcb2de5df53ce53c61a21b912bfc0b1611"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/linux/libs/security/linux-privs/${BPN}2/"
 
@@ -26,7 +25,7 @@ do_configure() {
 	# libcap uses := for compilers, fortunately, it gives us a hint
 	# on what should be replaced with ?=
 	sed -e 's,:=,?=,g' -i Make.Rules
-	sed -e 's,^BUILD_CFLAGS ?= $(.*CFLAGS),BUILD_CFLAGS := $(BUILD_CFLAGS),' -i Make.Rules
+	sed -e 's,^BUILD_CFLAGS ?= ,BUILD_CFLAGS := $(BUILD_CFLAGS) ,' -i Make.Rules
 }
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
