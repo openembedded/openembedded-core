@@ -8,8 +8,7 @@ PYPI_PACKAGE = "Mako"
 
 inherit pypi setuptools3
 
-SRC_URI[md5sum] = "2660a4916f2f63456e6885c727b7cd2f"
-SRC_URI[sha256sum] = "2984a6733e1d472796ceef37ad48c26f4a984bb18119bb2dbc37a44d8f6e75a4"
+SRC_URI[sha256sum] = "8195c8c1400ceb53496064314c6736719c6f25e7479cd24c77be3d9361cddc27"
 
 RDEPENDS_${PN} = "${PYTHON_PN}-html \
                   ${PYTHON_PN}-netclient \
