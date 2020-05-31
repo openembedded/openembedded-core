@@ -6,25 +6,28 @@ HOMEPAGE = "https://github.com/nhorman/rng-tools"
 BUGTRACKER = "https://github.com/nhorman/rng-tools/issues"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-DEPENDS = "sysfsutils"
+DEPENDS = "sysfsutils openssl"
 
 SRC_URI = "\
     git://github.com/nhorman/rng-tools.git \
+    file://a4b6d9ce64f132e463b9091d0536913ddaf11516.patch \
+    file://dab16a5fd4efde8ef569b358e19b1fcbc7d0d938.patch \
     file://init \
     file://default \
     file://rngd.service \
 "
-SRCREV = "4a865797a69dd38c64a86aa32884ecc9ba7b4d08"
+SRCREV = "0be82200a66d9321451e0a0785bfae350b9cffdc"
 
 S = "${WORKDIR}/git"
 
 inherit autotools update-rc.d systemd pkgconfig
 
-PACKAGECONFIG ??= "libgcrypt libjitterentropy"
+EXTRA_OECONF = "--without-rtlsdr"
+
+PACKAGECONFIG ??= "libjitterentropy"
 PACKAGECONFIG_libc-musl = "libargp libjitterentropy"
 
 PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
-PACKAGECONFIG[libgcrypt] = "--with-libgcrypt,--without-libgcrypt,libgcrypt,"
 PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterentropy,libjitterentropy"
 PACKAGECONFIG[libp11] = "--with-pkcs11,--without-pkcs11,libp11 openssl"
 PACKAGECONFIG[nistbeacon] = "--with-nistbeacon,--without-nistbeacon,curl libxml2 openssl"
