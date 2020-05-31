@@ -19,16 +19,14 @@ RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://parallel.patch \
            file://add-with-bisonlocaledir.patch \
-           file://cr-statement.c-timsort.h-fix-formatting-issues.patch \
            file://use-pkgconfig.patch \
            file://run-ptest \
            file://serial-tests-config.patch \
-           file://0001-msgmerge-Fix-behaviour-of-for-msgfmt-on-PO-files-wit.patch \
            file://0001-tests-autopoint-3-unset-MAKEFLAGS.patch \
            file://0001-init-env.in-do-not-add-C-CXX-parameters.patch \
            "
-SRC_URI[md5sum] = "bb5b0c0caa028105f3ca1905ddc306e2"
-SRC_URI[sha256sum] = "66415634c6e8c3fa8b71362879ec7575e27da43da562c798a8a2f223e6e47f5c"
+SRC_URI[md5sum] = "30fec34a895fab4c02584449c500aac2"
+SRC_URI[sha256sum] = "ecb9d0908ca41d5ca5fef974323b3bba6bec19eebba0b44f396de98cfcc089f1"
 
 inherit autotools texinfo pkgconfig ptest
 
@@ -132,7 +130,7 @@ do_install_append_class-native () {
 	rm ${D}${datadir}/gettext/po/remove-potcdate.sin
 
         create_wrapper ${D}${bindir}/msgfmt \
-                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-0.20/"
+                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-0.20.2/"
 
 }
 

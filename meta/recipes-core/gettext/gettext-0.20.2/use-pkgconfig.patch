@@ -1,4 +1,4 @@
-From ef414b06be80c6f605731abc9e674e396b80ec9e Mon Sep 17 00:00:00 2001
+From c832880c5242b454a2c9e61b6a2dc26aecdc51bd Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 23 Jan 2018 00:54:13 +0000
 Subject: [PATCH] gettext: beat library detection into shape
@@ -15,14 +15,14 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 ---
  gettext-tools/gnulib-m4/libxml.m4             |  99 +----------------
- .../gnulib-local/lib/term-styled-ostream.oo.c |  12 +-
+ .../gnulib-local/lib/term-styled-ostream.oo.c |  12 +--
  libtextstyle/gnulib-local/m4/libcroco.m4      |  99 +++--------------
- libtextstyle/gnulib-local/m4/libglib.m4       | 104 +++---------------
+ libtextstyle/gnulib-local/m4/libglib.m4       | 100 +++---------------
  libtextstyle/gnulib-m4/libcroco.m4            |  99 +++--------------
- libtextstyle/gnulib-m4/libglib.m4             | 104 +++---------------
- libtextstyle/lib/term-styled-ostream.c        |  12 +-
- libtextstyle/lib/term-styled-ostream.oo.c     |  12 +-
- 8 files changed, 87 insertions(+), 454 deletions(-)
+ libtextstyle/gnulib-m4/libglib.m4             | 100 +++---------------
+ libtextstyle/lib/term-styled-ostream.c        |  12 +--
+ libtextstyle/lib/term-styled-ostream.oo.c     |  12 +--
+ 8 files changed, 83 insertions(+), 450 deletions(-)
 
 diff --git a/gettext-tools/gnulib-m4/libxml.m4 b/gettext-tools/gnulib-m4/libxml.m4
 index 05b9550..031ee65 100644
@@ -289,17 +289,10 @@ index bc53cc6..10b2455 100644
    AC_SUBST([LTLIBCROCO])
    AC_SUBST([INCCROCO])
 diff --git a/libtextstyle/gnulib-local/m4/libglib.m4 b/libtextstyle/gnulib-local/m4/libglib.m4
-index bef6fa3..8841755 100644
+index 5853772..767fba2 100644
 --- a/libtextstyle/gnulib-local/m4/libglib.m4
 +++ b/libtextstyle/gnulib-local/m4/libglib.m4
-@@ -1,105 +1,31 @@
--# libglib.m4 serial 4
--dnl Copyright (C) 2006-2007, 2019 Free Software Foundation, Inc.
-+# libglib.m4 serial 3 (gettext-0.17)
-+dnl Copyright (C) 2006-2007, 2015-2016 Free Software Foundation, Inc.
- dnl This file is free software; the Free Software Foundation
- dnl gives unlimited permission to copy and/or distribute it,
- dnl with or without modifications, as long as this notice is preserved.
+@@ -6,100 +6,26 @@ dnl with or without modifications, as long as this notice is preserved.
  
  dnl From Bruno Haible.
  
@@ -535,17 +528,10 @@ index bc53cc6..10b2455 100644
    AC_SUBST([LTLIBCROCO])
    AC_SUBST([INCCROCO])
 diff --git a/libtextstyle/gnulib-m4/libglib.m4 b/libtextstyle/gnulib-m4/libglib.m4
-index bef6fa3..8841755 100644
+index 5853772..767fba2 100644
 --- a/libtextstyle/gnulib-m4/libglib.m4
 +++ b/libtextstyle/gnulib-m4/libglib.m4
-@@ -1,105 +1,31 @@
--# libglib.m4 serial 4
--dnl Copyright (C) 2006-2007, 2019 Free Software Foundation, Inc.
-+# libglib.m4 serial 3 (gettext-0.17)
-+dnl Copyright (C) 2006-2007, 2015-2016 Free Software Foundation, Inc.
- dnl This file is free software; the Free Software Foundation
- dnl gives unlimited permission to copy and/or distribute it,
- dnl with or without modifications, as long as this notice is preserved.
+@@ -6,100 +6,26 @@ dnl with or without modifications, as long as this notice is preserved.
  
  dnl From Bruno Haible.
  
