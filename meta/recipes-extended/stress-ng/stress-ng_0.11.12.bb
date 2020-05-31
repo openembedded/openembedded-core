@@ -22,3 +22,5 @@ inherit bash-completion
 do_install() {
     oe_runmake DESTDIR=${D} install
 }
+
+COMPATIBLE_HOST_libc-musl = 'null'
