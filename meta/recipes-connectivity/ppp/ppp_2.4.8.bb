@@ -13,7 +13,6 @@ LIC_FILES_CHKSUM = "file://pppd/ccp.c;beginline=1;endline=29;md5=e2c43fe6e81ff77
 
 SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
            file://makefile.patch \
-           file://cifdefroute.patch \
            file://pppd-resolv-varrun.patch \
            file://makefile-remove-hard-usr-reference.patch \
            file://pon \
@@ -27,20 +26,17 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
            file://pap \
            file://ppp_on_boot \
            file://provider \
-           file://0001-ppp-Fix-compilation-errors-in-Makefile.patch \
            file://ppp@.service \
            file://fix-CVE-2015-3310.patch \
-           file://0001-pppoe-include-netinet-in.h-before-linux-in.h.patch \
            file://0001-ppp-Remove-unneeded-include.patch \
-           file://ppp-2.4.7-DES-openssl.patch \
            file://0001-pppd-Fix-bounds-check-in-EAP-code.patch \
-"
+           "
 
 SRC_URI_append_libc-musl = "\
            file://0001-Fix-build-with-musl.patch \
 "
-SRC_URI[md5sum] = "78818f40e6d33a1d1de68a1551f6595a"
-SRC_URI[sha256sum] = "02e0a3dd3e4799e33103f70ec7df75348c8540966ee7c948e4ed8a42bbccfb30"
+SRC_URI[md5sum] = "2ca8342b9804be15103fd3f687af701c"
+SRC_URI[sha256sum] = "f6bf89beae26b2943dff8f1003533d6a5a4909a0fa6edfbec44fe039bbe61bc6"
 
 inherit autotools-brokensep systemd
 
