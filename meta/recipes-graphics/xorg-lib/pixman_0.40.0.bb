@@ -9,10 +9,9 @@ DEPENDS = "zlib"
 
 SRC_URI = "https://www.cairographics.org/releases/${BP}.tar.gz \
            file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
-           file://0001-test-utils-Check-for-FE_INVALID-definition-before-us.patch \
            "
-SRC_URI[md5sum] = "267a7af290f93f643a1bc74490d9fdd1"
-SRC_URI[sha256sum] = "da66d6fd6e40aee70f7bd02e4f8f76fc3f006ec879d346bae6a723025cfbdde7"
+SRC_URI[md5sum] = "73858c0862dd9896fb5f62ae267084a4"
+SRC_URI[sha256sum] = "6d200dec3740d9ec4ec8d1180e25779c00bc749f94278c8b9021f5534db223fc"
 
 # see http://cairographics.org/releases/ - only even minor versions are stable
 UPSTREAM_CHECK_REGEX = "pixman-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
