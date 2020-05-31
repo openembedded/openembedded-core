@@ -9,16 +9,19 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://run-ptest \
            file://avoid_parallel_tests.patch \
+           file://fix-printf.patch \
            "
 
-SRC_URI[md5sum] = "fbb24aa414ab9a11ff66d351b5b8493b"
-SRC_URI[sha256sum] = "0b25a46b61bc6e26f56dcb973fc28acea159e2c32c9d6da42c0fa8d1a6339829"
+SRC_URI[sha256sum] = "e904e980294baf5878df410ebcf1d660497ba19bc3a77f798a04dba569f44a7e"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/software/network/ethtool/"
 
-inherit autotools ptest bash-completion
+inherit autotools ptest bash-completion pkgconfig
 
 RDEPENDS_${PN}-ptest += "make"
+
+PACKAGECONFIG ?= "netlink"
+PACKAGECONFIG[netlink] = "--enable-netlink,--disable-netlink,libmnl,"
 
 do_compile_ptest() {
    oe_runmake buildtest-TESTS
