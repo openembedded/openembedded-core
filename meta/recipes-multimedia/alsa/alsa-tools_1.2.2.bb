@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://hdsploader/COPYING;md5=59530bdf33659b29e73d4adb9f9f65
 
 SRC_URI = "https://www.alsa-project.org/files/pub/tools/${BP}.tar.bz2"
 
-SRC_URI[md5sum] = "475bdf6457bcf55c8c895d653ee56a54"
-SRC_URI[sha256sum] = "a0243328a8f6f691a3055c484fd8d3326393096325e93743b246029d327c4ef6"
+SRC_URI[md5sum] = "4e6187d2c3a8c73a9d75d66a72faed27"
+SRC_URI[sha256sum] = "bfd3c7aae1289269605d3da02279159b10e3dabdd31e658cbceaa30170957349"
 
 inherit autotools-brokensep pkgconfig
 # brokensep as as10k1 (and probably more) fail out of tree
