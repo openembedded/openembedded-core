@@ -10,11 +10,10 @@ SECTION = "devel"
 DEPENDS = "bison-native flex-native"
 
 SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
-           file://dont-depend-on-help2man.patch.patch \
            file://add-with-bisonlocaledir.patch \
            file://0001-bison-fix-the-parallel-build.patch \
-"
-SRC_URI[sha256sum] = "4c17e99881978fa32c05933c5262457fa5b2b611668454f8dc2a695cd6b3720c"
+           "
+SRC_URI[sha256sum] = "4a164b5cc971b896ce976bf4b624fab7279e0729cf983a5135df7e4df0970f6e"
 
 # No point in hardcoding path to m4, just use PATH
 EXTRA_OECONF += "M4=m4"
