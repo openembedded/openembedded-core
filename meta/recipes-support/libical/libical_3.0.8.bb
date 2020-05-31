@@ -12,8 +12,8 @@ SRC_URI = " \
     https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
     file://0001-Use-our-hand-build-native-src-generator.patch \
 "
-SRC_URI[md5sum] = "8a5d07a7fba9e73a85e67f76258bf042"
-SRC_URI[sha256sum] = "0abe66df1ea826e57db7f281c704ede834c84139012e6c686ea7adafd4e763fc"
+SRC_URI[md5sum] = "41bd1f1fcdcb4779cea478bb55cf07bf"
+SRC_URI[sha256sum] = "09fecacaf75ba5a242159e3a9758a5446b5ce4d0ab684f98a7040864e1d1286f"
 UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake pkgconfig
