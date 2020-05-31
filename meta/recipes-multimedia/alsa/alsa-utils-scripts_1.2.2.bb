@@ -1,4 +1,4 @@
-require alsa-utils_${PV}.bb
+require alsa-utils.inc
 
 SUMMARY = "Shell scripts that show help info and create ALSA configuration files"
 PROVIDES = "alsa-utils-alsaconf"
