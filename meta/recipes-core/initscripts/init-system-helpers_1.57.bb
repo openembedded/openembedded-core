@@ -16,8 +16,6 @@ SECTION = "base"
 LICENSE = "BSD-3-Clause & GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=ee2b1830fcfead84d07bc060ec43e072"
 
-DEPENDS = "perl"
-
 SRCREV = "760c625ec0e1ffebec2e391d891d389da0f65726"
 SRC_URI = "git://salsa.debian.org/debian/init-system-helpers.git"
 
@@ -30,17 +28,14 @@ do_install() {
 	install -d -m 0755 ${D}${sbindir}
 	install -m 0755 ${S}/script/invoke-rc.d ${D}${sbindir}
 	install -m 0755 ${S}/script/service ${D}${sbindir}
-	install -m 0755 ${S}/script/update-rc.d ${D}${sbindir}
 }
 
-PACKAGES += "${PN}-invoke-rc.d ${PN}-service ${PN}-update-rc.d"
+PACKAGES += "${PN}-invoke-rc.d ${PN}-service"
 
 FILES_${PN} = ""
 FILES_${PN}-invoke-rc.d = "${sbindir}/invoke-rc.d"
 FILES_${PN}-service = "${sbindir}/service"
-FILES_${PN}-update-rc.d = "${sbindir}/update-rc.d"
 
 ALLOW_EMPTY_${PN} = "1"
 
-RDEPENDS_${PN}-update-rc.d = "perl"
-RRECOMMENDS_${PN} += "${PN}-invoke-rc.d ${PN}-service ${PN}-update-rc.d"
+RRECOMMENDS_${PN} += "${PN}-invoke-rc.d ${PN}-service"
