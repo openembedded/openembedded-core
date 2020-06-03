@@ -136,7 +136,7 @@ python run_buildstats () {
                 if x:
                     f.write(x + " ")
             f.write("\n")
-            f.write("Build Started: %0.2f \n" % time.time())
+            f.write("Build Started: %0.2f \n" % d.getVar('__timedata_build', False)[0])
 
     elif isinstance(e, bb.event.BuildCompleted):
         build_time = os.path.join(bsdir, "build_stats")
