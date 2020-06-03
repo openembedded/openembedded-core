@@ -10,6 +10,7 @@ import glob
 import sys
 import importlib
 import subprocess
+import unittest
 from random import choice
 
 import oeqa
@@ -60,15 +61,24 @@ class OESelftestTestContext(OETestContext):
 
         os.chdir(newbuilddir)
 
-        for t in suite:
+        def patch_test(t):
             if not hasattr(t, "tc"):
-                continue
+                return
             cp = t.tc.config_paths
             for p in cp:
                 if selftestdir in cp[p] and newselftestdir not in cp[p]:
                     cp[p] = cp[p].replace(selftestdir, newselftestdir)
                 if builddir in cp[p] and newbuilddir not in cp[p]:
                     cp[p] = cp[p].replace(builddir, newbuilddir)
+
+        def patch_suite(s):
+            for x in s:
+                if isinstance(x, unittest.TestSuite):
+                    patch_suite(x)
+                else:
+                    patch_test(x)
+
+        patch_suite(suite)
 
         return (builddir, newbuilddir)
 
