@@ -138,6 +138,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                 help='Exclude all (unhidden) tests that match any of the specified tag(s). (exclude applies before select)')
 
         parser.add_argument('-B', '--newbuilddir', help='New build directory to use for tests.')
+        parser.add_argument('-v', '--verbose', action='store_true')
         parser.set_defaults(func=self.run)
 
     def _get_available_machines(self):
