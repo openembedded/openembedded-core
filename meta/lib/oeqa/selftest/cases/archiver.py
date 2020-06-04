@@ -255,3 +255,57 @@ class Archiver(OESelftestTestCase):
             glob_str = os.path.join(bb_vars['DEPLOY_DIR_SRC'], 'mirror', target_file_name)
             glob_result = glob.glob(glob_str)
             self.assertTrue(glob_result, 'Missing archive file %s' % (target_file_name))
+
+    def test_archiver_mode_mirror_gitsm(self):
+        """
+        Test that the archiver correctly handles git submodules with
+        `ARCHIVER_MODE[src] = "mirror"`.
+        """
+        features = 'INHERIT += "archiver"\n'
+        features += 'ARCHIVER_MODE[src] = "mirror"\n'
+        features += 'ARCHIVER_MODE[mirror] = "combined"\n'
+        features += 'BB_GENERATE_MIRROR_TARBALLS = "1"\n'
+        features += 'COPYLEFT_LICENSE_INCLUDE = "*"\n'
+        self.write_config(features)
+
+        bitbake('-c clean git-submodule-test')
+        bitbake('-c deploy_archives -f git-submodule-test')
+
+        bb_vars = get_bb_vars(['DEPLOY_DIR_SRC'])
+        for target_file_name in [
+            'git2_git.yoctoproject.org.git-submodule-test.tar.gz',
+            'git2_git.yoctoproject.org.bitbake-gitsm-test1.tar.gz',
+            'git2_git.yoctoproject.org.bitbake-gitsm-test2.tar.gz',
+            'git2_git.openembedded.org.bitbake.tar.gz'
+        ]:
+            target_path = os.path.join(bb_vars['DEPLOY_DIR_SRC'], 'mirror', target_file_name)
+            self.assertTrue(os.path.exists(target_path))
+
+    def test_archiver_mode_mirror_gitsm_shallow(self):
+        """
+        Test that the archiver correctly handles git submodules with
+        `ARCHIVER_MODE[src] = "mirror"`.
+        """
+        features = 'INHERIT += "archiver"\n'
+        features += 'ARCHIVER_MODE[src] = "mirror"\n'
+        features += 'ARCHIVER_MODE[mirror] = "combined"\n'
+        features += 'BB_GENERATE_MIRROR_TARBALLS = "1"\n'
+        features += 'COPYLEFT_LICENSE_INCLUDE = "*"\n'
+        features += 'BB_GIT_SHALLOW = "1"\n'
+        features += 'BB_GENERATE_SHALLOW_TARBALLS = "1"\n'
+        features += 'DL_DIR = "${TOPDIR}/downloads-shallow"\n'
+        self.write_config(features)
+
+        bitbake('-c clean git-submodule-test')
+        bitbake('-c deploy_archives -f git-submodule-test')
+
+        bb_vars = get_bb_vars(['DEPLOY_DIR_SRC'])
+        for target_file_name in [
+            'gitsmshallow_git.yoctoproject.org.git-submodule-test_a2885dd-1_master.tar.gz',
+            'gitsmshallow_git.yoctoproject.org.bitbake-gitsm-test1_bare_120f4c7-1.tar.gz',
+            'gitsmshallow_git.yoctoproject.org.bitbake-gitsm-test2_bare_f66699e-1.tar.gz',
+            'gitsmshallow_git.openembedded.org.bitbake_bare_52a144a-1.tar.gz',
+            'gitsmshallow_git.openembedded.org.bitbake_bare_c39b997-1.tar.gz'
+        ]:
+            target_path = os.path.join(bb_vars['DEPLOY_DIR_SRC'], 'mirror', target_file_name)
+            self.assertTrue(os.path.exists(target_path))
