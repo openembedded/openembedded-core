@@ -17,9 +17,7 @@ GIR_MESON_OPTION = 'gir'
 inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-introspection
 
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
-SRC_URI += " \
-            file://0002-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
-           "
+SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch"
 SRC_URI[archive.md5sum] = "1a0b5395915d2f3c88484511b38cc584"
 SRC_URI[archive.sha256sum] = "35a0280e3f12feeb3096da05699191373c47a4a20c55cb7081e828e6015f8ca5"
 
