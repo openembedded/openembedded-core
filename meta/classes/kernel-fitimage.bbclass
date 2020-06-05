@@ -53,6 +53,9 @@ UBOOT_MKIMAGE_DTCOPTS ??= ""
 # fitImage Hash Algo
 FIT_HASH_ALG ?= "sha256"
 
+# fitImage Signature Algo
+FIT_SIGN_ALG ?= "rsa2048"
+
 #
 # Emit the fitImage ITS header
 #
@@ -246,6 +249,7 @@ EOF
 fitimage_emit_section_config() {
 
 	conf_csum="${FIT_HASH_ALG}"
+	conf_sign_algo="${FIT_SIGN_ALG}"
 	if [ -n "${UBOOT_SIGN_ENABLE}" ] ; then
 		conf_sign_keyname="${UBOOT_SIGN_KEYNAME}"
 	fi
@@ -327,7 +331,7 @@ EOF
 
 		cat << EOF >> ${1}
                         signature@1 {
-                                algo = "${conf_csum},rsa2048";
+                                algo = "${conf_csum},${conf_sign_algo}";
                                 key-name-hint = "${conf_sign_keyname}";
 				${sign_line}
                         };
