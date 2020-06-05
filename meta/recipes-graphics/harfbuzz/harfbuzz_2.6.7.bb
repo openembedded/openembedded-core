@@ -4,12 +4,15 @@ HOMEPAGE = "http://www.freedesktop.org/wiki/Software/HarfBuzz"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=HarfBuzz"
 SECTION = "libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=e11f5c3149cdec4bb309babb020b32b9 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=8f787620b7d3866d9552fd1924c07572 \
                     file://src/hb-ucd.cc;beginline=1;endline=15;md5=29d4dcb6410429195df67efe3382d8bc"
 
-SRC_URI = "http://www.freedesktop.org/software/harfbuzz/release/${BP}.tar.xz"
-SRC_URI[md5sum] = "2b3a4dfdb3e5e50055f941978944da9f"
-SRC_URI[sha256sum] = "9413b8d96132d699687ef914ebb8c50440efc87b3f775d25856d7ec347c03c12"
+UPSTREAM_CHECK_URI = "https://github.com/${BPN}/${BPN}/releases"
+UPSTREAM_CHECK_REGEX = "harfbuzz-(?P<pver>\d+(\.\d+)+).tar"
+
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz"
+SRC_URI[md5sum] = "3b884586a09328c5fae76d8c200b0e1c"
+SRC_URI[sha256sum] = "49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218"
 
 inherit autotools pkgconfig lib_package gtk-doc
 
