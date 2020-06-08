@@ -8,12 +8,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a6a458c13f18385b7bc5069a6d7b176e"
 DEPENDS = "glib-2.0 util-linux popt bison-native flex-native"
 
 SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-2.0 \
-	   file://run-ptest \
-	   file://0001-tests-do-not-run-test-applications-from-.libs.patch \
+           file://run-ptest \
+           file://0001-tests-do-not-run-test-applications-from-.libs.patch \
            file://0001-Make-manpages-multilib-identical.patch \
-           file://0001-fs.c-initialize-other_entry.patch \
-	  "
-SRCREV = "33003c352ed56aa49e0b3df272bbab6fac36cae8"
+           "
+SRCREV = "91d154476e66735d705adda9ca5cbf5b5eea5940"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>2(\.\d+)+)$"
 
 S = "${WORKDIR}/git"
