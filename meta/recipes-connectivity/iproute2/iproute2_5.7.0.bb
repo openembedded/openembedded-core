@@ -2,10 +2,10 @@ require iproute2.inc
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-libc-compat.h-add-musl-workaround.patch \
-          "
+           file://0001-devlink.c-add-missing-include.patch \
+           "
 
-SRC_URI[md5sum] = "9da0c352707c34b8b1fec3bf42fcfd09"
-SRC_URI[sha256sum] = "1b5b0e25ce6e23da7526ea1da044e814ad85ba761b10dd29c2b027c056b04692"
+SRC_URI[sha256sum] = "725dc7ba94aae54c6f8d4223ca055d9fb4fe89d6994b1c03bfb4411c4dd10f21"
 
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
