@@ -9,10 +9,8 @@ SECTION = "multimedia"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1e86753638d3cf2512528b99079bc4f3"
 
-SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2 \
-           file://sdl2.patch"
-SRC_URI[md5sum] = "294a6c30546504ec3d0deac2b2ea22be"
-SRC_URI[sha256sum] = "90306848359c793fd43b9906e52201df18775742dc3c81c06ab67a806509890a"
+SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2"
+SRC_URI[sha256sum] = "74d6629ab7f3dd9a588b0931528ba7ecfa989a2cad6bf53ffeef9de31b0fe032"
 
 UPSTREAM_CHECK_REGEX = "mpg123-(?P<pver>\d+(\.\d+)+)\.tar"
 
