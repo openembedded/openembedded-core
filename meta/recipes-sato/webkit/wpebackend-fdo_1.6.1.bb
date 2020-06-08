@@ -12,7 +12,6 @@ inherit cmake features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-SRC_URI[md5sum] = "456afeed22f6749f7b2a97c11660835d"
 SRC_URI = "https://wpewebkit.org/releases/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "7f5bd7b9d8f97b1655f4dcd39fad92719d0fb3985b251da5802df13aaa09f567"
+SRC_URI[sha256sum] = "740eee3327acfb462b8460519a219e30dc0a870326e88e2ddc4fe2c8de20b1c9"
 
