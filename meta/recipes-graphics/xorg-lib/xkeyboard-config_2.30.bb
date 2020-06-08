@@ -12,11 +12,8 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xkeyboard-confi
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
-SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2 \
-           file://0001-fix-python3-support.patch \
-           "
-SRC_URI[md5sum] = "b5980bdc6c7d79f6dcccba8c76bb6c5d"
-SRC_URI[sha256sum] = "1d4175278bf06000683656763a8b1d3282c61a314b6db41260c8efe92d621802"
+SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
+SRC_URI[sha256sum] = "095a524f7b633ed257617202d06c9c71fe020c8897b106cf0dcdd0c6e8b797d4"
 
 SECTION = "x11/libs"
 DEPENDS = "util-macros libxslt-native"
