@@ -13,10 +13,9 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://serfmacro.patch \
            "
 
-SRC_URI[md5sum] = "3004b4dae18bf45a0b6ea4ef8820064d"
-SRC_URI[sha256sum] = "bc50ce2c3faa7b1ae9103c432017df98dfd989c4239f9f8270bb3a314ed9e5bd"
+SRC_URI[sha256sum] = "6ba8e218f9f97a83a799e58a3c6da1221d034b18d9d8cbbcb6ec52ab11722102"
 
-inherit autotools pkgconfig gettext
+inherit autotools pkgconfig gettext python3native
 
 CVE_PRODUCT = "apache:subversion"
 
