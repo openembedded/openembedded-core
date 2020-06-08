@@ -36,8 +36,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0001-tests-gen-ust-events-ns-tp.h-Fix-build-with-musl-lib.patch \
            "
 
-SRC_URI[md5sum] = "4592201ea981f0722438345fb1f009d2"
-SRC_URI[sha256sum] = "405661d27617dc79a42712174a051a45c7ca12d167576c0d93f2de708ed29445"
+SRC_URI[sha256sum] = "0de7afc1f40a5acbede933cdfd6cf47b32ff84d02e170a1321f7fc86141585b8"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
