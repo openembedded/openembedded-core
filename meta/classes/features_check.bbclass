@@ -16,7 +16,19 @@ python () {
     if d.getVar('PARSE_ALL_RECIPES', False):
         return
 
+    unused = True
+
     for kind in ['DISTRO', 'MACHINE', 'COMBINED']:
+        if d.getVar('ANY_OF_' + kind + '_FEATURES') is None and \
+           d.overridedata.get('ANY_OF_' + kind + '_FEATURES') is None and \
+           d.getVar('REQUIRED_' + kind + '_FEATURES') is None and \
+           d.overridedata.get('REQUIRED_' + kind + '_FEATURES') is None and \
+           d.getVar('CONFLICT_' + kind + '_FEATURES') is None and \
+           d.overridedata.get('CONFLICT_' + kind + '_FEATURES') is None:
+            continue
+
+        unused = False
+
         # Assume at least one var is set.
         features = set((d.getVar(kind + '_FEATURES') or '').split())
 
@@ -39,4 +51,7 @@ python () {
             if conflicts:
                 raise bb.parse.SkipRecipe("conflicting %s feature%s '%s' (in %s_FEATURES)"
                     % (kind.lower(), 's' if len(conflicts) > 1 else '', ' '.join(conflicts), kind))
+
+    if unused:
+        bb.warn("Recipe inherits features_check but doesn't use it")
 }
