@@ -331,7 +331,15 @@ INSANE_SKIP_${PN}-dev += "dev-elf"
 
 # catch all the rest (unsorted)
 PACKAGES += "${PN}-misc"
-RDEPENDS_${PN}-misc += "python3-core python3-email python3-codecs python3-pydoc python3-pickle python3-audio"
+RDEPENDS_${PN}-misc += "\
+  ${PN}-core \
+  ${PN}-email \
+  ${PN}-codecs \
+  ${PN}-pydoc \
+  ${PN}-pickle \
+  ${PN}-audio \
+  ${PN}-numbers \
+"
 RDEPENDS_${PN}-modules_append_class-target = " ${MLPREFIX}python3-misc"
 RDEPENDS_${PN}-modules_append_class-nativesdk = " ${MLPREFIX}python3-misc"
 FILES_${PN}-misc = "${libdir}/python${PYTHON_MAJMIN} ${libdir}/python${PYTHON_MAJMIN}/lib-dynload"
