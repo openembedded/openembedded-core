@@ -154,9 +154,11 @@ def main():
     group.add_argument('--without-extended-buildtools', action='store_false',
                        dest='with_extended_buildtools',
                        help='disable extended buildtools (traditional buildtools tarball)')
-    parser.add_argument('-c', '--check', help='enable md5 checksum checking',
-                        default=True,
-                        action='store_true')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-c', '--check', help='enable checksum validation',
+                        default=True, action='store_true')
+    group.add_argument('-n', '--no-check', help='disable checksum validation',
+                        dest="check", action='store_false')
     parser.add_argument('-D', '--debug', help='enable debug output',
                         action='store_true')
     parser.add_argument('-q', '--quiet', help='print only errors',
