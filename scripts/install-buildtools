@@ -35,6 +35,7 @@
 import argparse
 import logging
 import os
+import platform
 import re
 import shutil
 import shlex
@@ -112,6 +113,7 @@ def main():
     release = ""
     buildtools_url = ""
     install_dir = ""
+    arch = platform.machine()
 
     parser = argparse.ArgumentParser(
         description="Buildtools installation helper",
@@ -194,19 +196,19 @@ def main():
                     logger.error("Milestone installers require --build-date")
                 else:
                     if args.with_extended_buildtools:
-                        filename = "x86_64-buildtools-extended-nativesdk-standalone-%s-%s.sh" % (
-                            args.installer_version, args.build_date)
+                        filename = "%s-buildtools-extended-nativesdk-standalone-%s-%s.sh" % (
+                            arch, args.installer_version, args.build_date)
                     else:
-                        filename = "x86_64-buildtools-nativesdk-standalone-%s-%s.sh" % (
-                            args.installer_version, args.build_date)
+                        filename = "%s-buildtools-nativesdk-standalone-%s-%s.sh" % (
+                            arch, args.installer_version, args.build_date)
                     safe_filename = quote(filename)
                     buildtools_url = "%s/milestones/%s/buildtools/%s" % (base_url, args.release, safe_filename)
             # regular release SDK
             else:
                 if args.with_extended_buildtools:
-                    filename = "x86_64-buildtools-extended-nativesdk-standalone-%s.sh" % args.installer_version
+                    filename = "%s-buildtools-extended-nativesdk-standalone-%s.sh" % (arch, args.installer_version)
                 else:
-                    filename = "x86_64-buildtools-nativesdk-standalone-%s.sh" % args.installer_version
+                    filename = "%s-buildtools-nativesdk-standalone-%s.sh" % (arch, args.installer_version)
                 safe_filename = quote(filename)
                 buildtools_url = "%s/%s/buildtools/%s" % (base_url, args.release, safe_filename)
 
@@ -279,8 +281,8 @@ def main():
         # Setup the environment
         logger.info("Setting up the environment")
         regex = re.compile(r'^(?P<export>export )?(?P<env_var>[A-Z_]+)=(?P<env_val>.+)$')
-        with open("%s/environment-setup-x86_64-pokysdk-linux" %
-                  install_dir, 'rb') as f:
+        with open("%s/environment-setup-%s-pokysdk-linux" %
+                  (install_dir, arch), 'rb') as f:
             for line in f:
                 match = regex.search(line.decode('utf-8'))
                 logger.debug("export regex: %s" % match)
