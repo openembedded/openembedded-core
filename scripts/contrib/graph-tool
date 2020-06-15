@@ -11,6 +11,13 @@
 #
 
 import sys
+import os
+import argparse
+
+scripts_lib_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'lib'))
+sys.path.insert(0, scripts_lib_path)
+import argparse_oe
+
 
 def get_path_networkx(dotfile, fromnode, tonode):
     try:
@@ -34,47 +41,35 @@ def get_path_networkx(dotfile, fromnode, tonode):
     return networkx.all_simple_paths(graph, source=fromnode, target=tonode)
 
 
-def find_paths(args, usage):
-    if len(args) < 3:
-        usage()
-        sys.exit(1)
-
-    fromnode = args[1]
-    tonode = args[2]
-
+def find_paths(args):
     path = None
-    for path in get_path_networkx(args[0], fromnode, tonode):
+    for path in get_path_networkx(args.dotfile, args.fromnode, args.tonode):
         print(" -> ".join(map(str, path)))
     if not path:
-        print("ERROR: no path from %s to %s in graph" % (fromnode, tonode))
-        sys.exit(1)
+        print("ERROR: no path from %s to %s in graph" % (args.fromnode, args.tonode))
+        return 1
+
 
 def main():
-    import optparse
-    parser = optparse.OptionParser(
-        usage = '''%prog [options] <command> <arguments>
+    parser = argparse_oe.ArgumentParser(description='Small utility for working with .dot graph files')
 
-Available commands:
-    find-paths <dotfile> <from> <to>
-        Find all of the paths between two nodes in a dot graph''')
+    subparsers = parser.add_subparsers(title='subcommands', metavar='<subcommand>')
+    subparsers.required = True
 
-    #parser.add_option("-d", "--debug",
-    #        help = "Report all SRCREV values, not just ones where AUTOREV has been used",
-    #        action="store_true", dest="debug", default=False)
+    parser_find_paths = subparsers.add_parser('find-paths',
+                                              help='Find all of the paths between two nodes in a dot graph',
+                                              description='Finds all of the paths between two nodes in a dot graph')
+    parser_find_paths.add_argument('dotfile', help='.dot graph to search in')
+    parser_find_paths.add_argument('fromnode', help='starting node name')
+    parser_find_paths.add_argument('tonode', help='ending node name')
+    parser_find_paths.set_defaults(func=find_paths)
 
-    options, args = parser.parse_args(sys.argv)
-    args = args[1:]
+    args = parser.parse_args()
 
-    if len(args) < 1:
-        parser.print_help()
-        sys.exit(1)
-
-    if args[0] == "find-paths":
-        find_paths(args[1:], parser.print_help)
-    else:
-        parser.print_help()
-        sys.exit(1)
+    ret = args.func(args)
+    return ret
 
 
 if __name__ == "__main__":
-    main()
+    ret = main()
+    sys.exit(ret)
