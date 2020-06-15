@@ -258,6 +258,7 @@ def main():
             else:
                 logger.error("Checksum %s expected. Actual checksum is %s." %
                              (checksum, checksum_value))
+                return 1
 
         # Make installer executable
         logger.info("Making installer executable")
@@ -273,6 +274,7 @@ def main():
             ret = subprocess.call("%s -y" % tmpbuildtools, shell=True)
         if ret != 0:
             logger.error("Could not run buildtools installer")
+            return ret
 
         # Setup the environment
         logger.info("Setting up the environment")
