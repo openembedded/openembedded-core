@@ -156,7 +156,7 @@ do_install_append_class-nativesdk() {
     ln -s Config_heavy.pl ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config_heavy-target.pl
 
     create_wrapper ${D}${bindir}/perl \
-        PERL5LIB='$PERL5LIB:$OECORE_NATIVE_SYSROOT/${libdir_nativesdk}/perl5/site_perl/${PV}:$OECORE_NATIVE_SYSROOT/${libdir_nativesdk}/perl5/vendor_perl/${PV}:$OECORE_NATIVE_SYSROOT/${libdir_nativesdk}/perl5/${PV}'
+        PERL5LIB='$PERL5LIB:${SDKPATHNATIVE}/${libdir_nativesdk}/perl5/site_perl/${PV}:${SDKPATHNATIVE}/${libdir_nativesdk}/perl5/vendor_perl/${PV}:${SDKPATHNATIVE}/${libdir_nativesdk}/perl5/${PV}'
 }
 
 do_install_append_class-native () {
