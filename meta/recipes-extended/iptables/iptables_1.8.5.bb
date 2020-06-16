@@ -68,7 +68,7 @@ do_install_append() {
     fi
 }
 
-PACKAGES += "${PN}-modules"
+PACKAGES =+ "${PN}-modules ${PN}-apply"
 PACKAGES_DYNAMIC += "^${PN}-module-.*"
 
 python populate_packages_prepend() {
@@ -97,6 +97,9 @@ RRECOMMENDS_${PN} = " \
 "
 
 FILES_${PN} += "${datadir}/xtables"
+
+FILES_${PN}-apply = "${sbindir}/ip*-apply"
+RDEPENDS_${PN}-apply = "${PN} bash"
 
 # Include the symlinks as well in respective packages
 FILES_${PN}-module-xt-conntrack += "${libdir}/xtables/libxt_state.so"
