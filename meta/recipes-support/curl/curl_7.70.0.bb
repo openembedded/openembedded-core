@@ -57,6 +57,9 @@ EXTRA_OECONF = " \
     --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
     --without-libmetalink \
     --without-libpsl \
+    --enable-debug \
+    --enable-optimize \
+    --disable-curldebug \
 "
 
 do_install_append_class-target() {
