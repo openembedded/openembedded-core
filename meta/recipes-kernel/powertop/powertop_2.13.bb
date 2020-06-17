@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 SRC_URI = "git://github.com/fenrus75/powertop;protocol=https \
     file://0001-wakeup_xxx.h-include-limits.h.patch \
 "
-SRCREV = "6988eaaa5bbcfff1dd86f757006c6c48cec965c5"
+SRCREV = "184cee06b2d64679bae5f806fe0a218827fdde99"
 
 S = "${WORKDIR}/git"
 
