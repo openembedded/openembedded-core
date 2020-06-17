@@ -1,5 +1,5 @@
 SUMMARY = "Download, build, install, upgrade, and uninstall Python packages"
-HOMEPAGE = "https://pypi.python.org/pypi/setuptools"
+HOMEPAGE = "https://pypi.org/project/setuptools"
 SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;beginline=1;endline=19;md5=9a33897f1bca1160d7aad3835152e158"
