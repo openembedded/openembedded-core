@@ -12,6 +12,7 @@ DEPENDS_append_x86_class-target    = " nasm-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-libjpeg-turbo-fix-package_qa-error.patch \
+           file://0001-rdppm.c-Fix-buf-overrun-caused-by-bad-binary-PPM.patch \
            "
 
 SRC_URI[md5sum] = "bd07fddf26f9def7bab02739eb655116"
