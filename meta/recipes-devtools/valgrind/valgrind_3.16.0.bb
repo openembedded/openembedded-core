@@ -52,6 +52,9 @@ COMPATIBLE_HOST_armv4 = 'null'
 COMPATIBLE_HOST_armv5 = 'null'
 COMPATIBLE_HOST_armv6 = 'null'
 
+# valgrind fails with powerpc soft-float
+COMPATIBLE_HOST_powerpc = "${@bb.utils.contains('TARGET_FPU', 'soft', 'null', '.*-linux', d)}"
+
 # X32 isn't supported by valgrind at this time
 COMPATIBLE_HOST_linux-gnux32 = 'null'
 COMPATIBLE_HOST_linux-muslx32 = 'null'
