@@ -13,7 +13,7 @@ DEPENDS_class-native = "bzip2-replacement-native"
 
 SRC_URI = "git://github.com/file/file.git"
 
-SRCREV = "ec41083645689a787cdd00cb3b5bf578aa79e46c"
+SRCREV = "87731415de945660b00f02207d8e9d986ef9b82e"
 S = "${WORKDIR}/git"
 
 inherit autotools update-alternatives
