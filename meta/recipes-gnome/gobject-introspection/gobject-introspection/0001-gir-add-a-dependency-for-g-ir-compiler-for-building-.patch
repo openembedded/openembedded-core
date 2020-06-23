@@ -9,7 +9,7 @@ to build race errors between building the compiler and using it.
 
 Fix provided by Quentin Schulz <quentin.schulz@streamunlimited.com>
 
-Upstream-Status: Accepted [https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/228]
+Upstream-Status: Backport [https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/228]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  gir/meson.build | 2 +-
