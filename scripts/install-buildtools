@@ -57,9 +57,9 @@ logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
 DEFAULT_INSTALL_DIR = os.path.join(os.path.split(scripts_path)[0],'buildtools')
 DEFAULT_BASE_URL = 'http://downloads.yoctoproject.org/releases/yocto'
-DEFAULT_RELEASE = 'yocto-3.1'
-DEFAULT_INSTALLER_VERSION = '3.1'
-DEFAULT_BUILDDATE = ''
+DEFAULT_RELEASE = 'yocto-3.2_M1'
+DEFAULT_INSTALLER_VERSION = '3.1+snapshot'
+DEFAULT_BUILDDATE = '20200617'
 
 # Python version sanity check
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
@@ -227,7 +227,7 @@ def main():
         if args.check:
             logger.info("Fetching buildtools installer checksum")
             checksum_type = ""
-            for checksum_type in ["md5sum", "sha256"]:
+            for checksum_type in ["md5sum", "sha256sum"]:
                 check_url = "{}.{}".format(buildtools_url, checksum_type)
                 checksum_filename = "{}.{}".format(filename, checksum_type)
                 tmpbuildtools_checksum = os.path.join(tmpsdk_dir, checksum_filename)
