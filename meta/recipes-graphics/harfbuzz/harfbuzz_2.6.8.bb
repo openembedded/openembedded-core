@@ -11,8 +11,8 @@ UPSTREAM_CHECK_URI = "https://github.com/${BPN}/${BPN}/releases"
 UPSTREAM_CHECK_REGEX = "harfbuzz-(?P<pver>\d+(\.\d+)+).tar"
 
 SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "3b884586a09328c5fae76d8c200b0e1c"
-SRC_URI[sha256sum] = "49e481d06cdff97bf68d99fa26bdf785331f411614485d892ea4c78eb479b218"
+SRC_URI[md5sum] = "c8d4f2aeed6e576bd42f9dc6def1b1ae"
+SRC_URI[sha256sum] = "6648a571a27f186e47094121f0095e1b809e918b3037c630c7f38ffad86e3035"
 
 inherit autotools pkgconfig lib_package gtk-doc
 
