@@ -4,11 +4,11 @@ SECTION = "console/utils"
 HOMEPAGE = "http://www.kernel.org/pub/linux/docs/man-pages"
 LICENSE = "GPLv2+"
 
-LIC_FILES_CHKSUM = "file://README;md5=794f701617cc03fe50c53257660d8ec4"
+LIC_FILES_CHKSUM = "file://README;md5=207f70f56526417514ac46b6680e314f"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "ebddb52ea013c160f07fd0a4a7e9266d"
-SRC_URI[sha256sum] = "da4e939c624bec4bab8ca1702e5f54bbc70505090d90967fd5e12bc1453f19b0"
+SRC_URI[md5sum] = "193d9223e9c6dbe1d928eaaecc1f68db"
+SRC_URI[sha256sum] = "5ba58d7b2b9a8929903b1cf791ed4edf72ab225678d5ea0a6b80dc090080ac33"
 
 inherit manpages
 
