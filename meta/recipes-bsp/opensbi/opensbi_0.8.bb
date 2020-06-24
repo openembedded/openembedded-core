@@ -7,8 +7,8 @@ require opensbi-payloads.inc
 
 inherit autotools-brokensep deploy
 
-SRCREV = "ac5e821d50be631f26274765a59bc1b444ffd862"
-SRC_URI = "git://github.com/riscv/opensbi.git \
+SRCREV = "a98258d0b537a295f517bbc8d813007336731fa9"
+SRC_URI = "git://github.com/riscv/opensbi.git;branch=master \
            file://0001-Makefile-Don-t-specify-mabi-or-march.patch \
           "
 
@@ -25,22 +25,21 @@ do_install_append() {
 	# In the future these might be required as a dependency for other packages.
 	# At the moment just delete them to avoid warnings
 	rm -r ${D}/include
-	rm -r ${D}/platform/${RISCV_SBI_PLAT}/lib
-	rm -r ${D}/platform/${RISCV_SBI_PLAT}/firmware/payloads
-	rm -r ${D}/lib
+	rm -r ${D}/lib*
+	rm -r ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/payloads
 }
 
 do_deploy () {
-	install -m 755 ${D}/platform/${RISCV_SBI_PLAT}/firmware/fw_payload.* ${DEPLOYDIR}/
-	install -m 755 ${D}/platform/${RISCV_SBI_PLAT}/firmware/fw_jump.* ${DEPLOYDIR}/
-	install -m 755 ${D}/platform/${RISCV_SBI_PLAT}/firmware/fw_dynamic.* ${DEPLOYDIR}/
+	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_payload.* ${DEPLOYDIR}/
+	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_jump.* ${DEPLOYDIR}/
+	install -m 755 ${D}/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_dynamic.* ${DEPLOYDIR}/
 }
 
 addtask deploy before do_build after do_install
 
-FILES_${PN} += "/platform/${RISCV_SBI_PLAT}/firmware/fw_jump.*"
-FILES_${PN} += "/platform/${RISCV_SBI_PLAT}/firmware/fw_payload.*"
-FILES_${PN} += "/platform/${RISCV_SBI_PLAT}/firmware/fw_dynamic.*"
+FILES_${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_jump.*"
+FILES_${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_payload.*"
+FILES_${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_dynamic.*"
 
 COMPATIBLE_HOST = "(riscv64|riscv32).*"
 INHIBIT_PACKAGE_STRIP = "1"
