@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://docs/COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
            file://99_mandb \
            file://man_db.conf-avoid-multilib-install-file-conflict.patch"
-SRC_URI[sha256sum] = "7b383f26c67525205f96a4a3bfb27993396992794adda6fe05ad565f369f047c"
+SRC_URI[sha256sum] = "fa5aa11ab0692daf737e76947f45669225db310b2801a5911bceb7551c5597b8"
 
 DEPENDS = "libpipeline gdbm groff-native base-passwd"
 RDEPENDS_${PN} += "base-passwd"
