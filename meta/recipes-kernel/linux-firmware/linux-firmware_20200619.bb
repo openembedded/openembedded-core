@@ -126,7 +126,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
                     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
                     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
-                    file://WHENCE;md5=c15cee50b1a59d27106a37c2929d5291 \
+                    file://WHENCE;md5=d373d30188c38dabffec0d3cc87abbfd \
                     "
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
@@ -198,7 +198,7 @@ PE = "1"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "584c49c58291136b966ceffb0a456a672c23d4d759bab8bf86cbbe28061e415e"
+SRC_URI[sha256sum] = "962d3ae197d226c8259f9cc7746f7ef12a9d23787cd56bd27302021ba6339722"
 
 inherit allarch
 
