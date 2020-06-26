@@ -2,13 +2,11 @@ require sudo.inc
 
 SRC_URI = "https://www.sudo.ws/dist/sudo-${PV}.tar.gz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
-           file://0001-Include-sys-types.h-for-id_t-definition.patch \
            "
 
 PAM_SRC_URI = "file://sudo.pam"
 
-SRC_URI[md5sum] = "060b91a6b171cb7ce587222664549b2c"
-SRC_URI[sha256sum] = "ab231439c5dfdf4ecbef74f10d5f7e9686c2255c2f3887085b5c5e13281bf95c"
+SRC_URI[sha256sum] = "294116cefe10a02773917fc7440d8384b925955bc96a6e0eaa1977c83b34adff"
 
 DEPENDS += " virtual/crypt ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
@@ -39,8 +37,8 @@ do_install_append () {
 	chmod 4111 ${D}${bindir}/sudo
 	chmod 0440 ${D}${sysconfdir}/sudoers
 
-	# Explicitly remove the /run directory to avoid QA error
-	rmdir -p --ignore-fail-on-non-empty ${D}/run/sudo
+	# Explicitly remove the /sudo directory to avoid QA error
+	rmdir -p --ignore-fail-on-non-empty ${D}/sudo
 }
 
 FILES_${PN} += "${nonarch_libdir}/tmpfiles.d"
