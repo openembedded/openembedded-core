@@ -15,33 +15,20 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0006-Fix-build-on-aarch64-musl.patch \
            file://0001-libasm-may-link-with-libbz2-if-found.patch \
            file://0001-libelf-elf_end.c-check-data_list.data.d.d_buf-before.patch \
-           file://debian/hppa_backend.diff \
-           file://debian/arm_backend.diff \
-           file://debian/mips_backend.diff \
-           file://debian/mips_readelf_w.patch \
-           file://debian/kfreebsd_path.patch \
-           file://debian/0001-Ignore-differences-between-mips-machine-identifiers.patch \
-           file://debian/0002-Add-support-for-mips64-abis-in-mips_retval.c.patch \
-           file://debian/0003-Add-mips-n64-relocation-format-hack.patch \
-           file://debian/hurd_path.patch \
-           file://debian/ignore_strmerge.diff \
-           file://debian/disable_werror.patch \
-           file://debian/testsuite-ignore-elflint.diff \
-           file://debian/mips_cfi.patch \
-           file://debian/0001-fix-compile-failure-with-debian-patches.patch \
            file://0001-skip-the-test-when-gcc-not-deployed.patch \
            file://0001-ppc_initreg.c-Incliude-asm-ptrace.h-for-pt_regs-defi.patch \
            file://run-ptest \
            file://ptest.patch \
+           file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
            "
 SRC_URI_append_libc-musl = " \
            file://0001-musl-obstack-fts.patch \
            file://0002-musl-libs.patch \
            file://0003-musl-utils.patch \
            file://0004-Fix-error-on-musl.patch \
+           file://0015-config-eu.am-do-not-use-Werror.patch \
            "
-SRC_URI[md5sum] = "8ee56b371b5a7ea081284c44e5164600"
-SRC_URI[sha256sum] = "25a545566cbacaa37ae6222e58f1c48ea4570f53ba991886e2f5ce96e22a23a2"
+SRC_URI[sha256sum] = "b827b6e35c59d188ba97d7cf148fa8dc6f5c68eb6c5981888dfdbb758c0b569d"
 
 inherit autotools gettext ptest pkgconfig
 
