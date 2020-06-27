@@ -8,12 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
 PROVIDES += "${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'virtual/update-alternatives', '', d)}"
 
 SRC_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/${BPN}/snapshot/${BPN}-${PV}.tar.gz \ 
-           file://fix-reproducibility.patch \
 "
 UPSTREAM_CHECK_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/opkg-utils/refs/"
 
-SRC_URI[md5sum] = "cc210650644fcb9bba06ad5ec95a63ec"
-SRC_URI[sha256sum] = "5929ad87d541789e0b82d626db01a1201ac48df6f49f2262fcfb86cf815e5d6c"
+SRC_URI[md5sum] = "7bbadb3c381f3ea935b21d3bb8cc4671"
+SRC_URI[sha256sum] = "046517600fb0aed6c4645edefe02281f4fa2f1c02f71596152d93172452c0b01"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
