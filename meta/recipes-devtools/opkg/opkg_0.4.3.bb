@@ -17,8 +17,8 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "bd13e5dfc1c2536f0c7b2e15f795278e"
-SRC_URI[sha256sum] = "86887852c43457edfff9d8b6d9520f3f1cdd55f25eb600a6eb31e1c4e151e106"
+SRC_URI[md5sum] = "86ec5eee9362aca0990994a402e077e9"
+SRC_URI[sha256sum] = "dda452854bc0cd1334f7ba18a66003d1c12a98600c894111b56919b1ea434718"
 
 # This needs to be before ptest inherit, otherwise all ptest files end packaged
 # in libopkg package if OPKGLIBDIR == libdir, because default
