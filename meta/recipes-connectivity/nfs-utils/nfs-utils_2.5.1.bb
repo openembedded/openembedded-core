@@ -28,12 +28,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://proc-fs-nfsd.mount \
            file://nfs-utils-debianize-start-statd.patch \
            file://bugfix-adjust-statd-service-name.patch \
-           file://0001-cacheio-use-intmax_t-for-formatted-IO.patch \
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://clang-warnings.patch \
            "
-SRC_URI[md5sum] = "06020c76f531ed97f3145514901e0e7c"
-SRC_URI[sha256sum] = "af65fce5dd8370cff9ead67baac5a6cd69c376dcadfef264dc2c78c904f26599"
+SRC_URI[sha256sum] = "0f1c8170e16a07d9836bbf0836d48d0c842b6f0e0e8b18748f099751851d30c4"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
@@ -91,7 +89,7 @@ RDEPENDS_${PN}-client = "${PN}-mount rpcbind"
 
 FILES_${PN}-mount = "${base_sbindir}/*mount.nfs*"
 
-FILES_${PN}-stats = "${sbindir}/mountstats ${sbindir}/nfsiostat"
+FILES_${PN}-stats = "${sbindir}/mountstats ${sbindir}/nfsiostat ${sbindir}/nfsdclnts"
 RDEPENDS_${PN}-stats = "python3-core"
 
 FILES_${PN}-staticdev += "${libdir}/libnfsidmap/*.a"
@@ -99,8 +97,8 @@ FILES_${PN}-staticdev += "${libdir}/libnfsidmap/*.a"
 FILES_${PN} += "${systemd_unitdir} ${libdir}/libnfsidmap/"
 
 do_configure_prepend() {
-        sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
-            ${S}/utils/mount/Makefile.am
+	sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
+		${S}/utils/mount/Makefile.am
 }
 
 # Make clean needed because the package comes with
@@ -129,9 +127,9 @@ do_install_append () {
 		-e 's,@HIGH_RLIMIT_NOFILE@,${HIGH_RLIMIT_NOFILE},g' \
 		${D}${systemd_unitdir}/system/*.service
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-	    install -m 0644 ${WORKDIR}/proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/
-	    install -d ${D}${systemd_unitdir}/system/sysinit.target.wants/
-	    ln -sf ../proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/sysinit.target.wants/proc-fs-nfsd.mount
+		install -m 0644 ${WORKDIR}/proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/
+		install -d ${D}${systemd_unitdir}/system/sysinit.target.wants/
+		ln -sf ../proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/sysinit.target.wants/proc-fs-nfsd.mount
 	fi
 
 	# kernel code as of 3.8 hard-codes this path as a default
@@ -141,7 +139,6 @@ do_install_append () {
 	chown -R rpcuser:rpcuser ${D}${localstatedir}/lib/nfs/statd
 	chmod 0644 ${D}${localstatedir}/lib/nfs/statd/state
 
-        # Make python tools use python 3
-        sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${sbindir}/mountstats ${D}${sbindir}/nfsiostat
-
+	# Make python tools use python 3
+	sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${sbindir}/mountstats ${D}${sbindir}/nfsiostat
 }
