@@ -25,6 +25,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-unit-file.c-consider-symlink-on-filesystems-like-NFS.patch \
            file://99-default.preset \
            file://0001-Merge-branch-polkit-ref-count.patch \
+           file://CVE-2020-13776.patch \
            "
 
 # patches needed by musl
