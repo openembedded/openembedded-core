@@ -220,7 +220,6 @@ do_deploy[depends] += "${DEPLOYDEP}"
 
 do_deploy() {
 }
-do_deploy[cleandirs] = "${DEPLOYDIR}"
 do_deploy_class-target() {
     # For use with "runqemu ovmf".
     for i in \
