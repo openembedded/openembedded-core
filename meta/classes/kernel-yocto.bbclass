@@ -156,9 +156,10 @@ do_kernel_metadata() {
 	# a quick check to make sure we don't have duplicate defconfigs If
 	# there's a defconfig in the SRC_URI, did we also have one from the
 	# KBUILD_DEFCONFIG processing above ?
-	src_uri_defconfig=$(echo $sccs_from_src_uri | awk '{ if ($0=="defconfig") { print $0 } }' RS=' ')
+	src_uri_defconfig=$(echo $sccs_from_src_uri | awk '(match($0, "defconfig") != 0) { print $0 }' RS=' ')
 	# drop and defconfig's from the src_uri variable, we captured it just above here if it existed
-	sccs_from_src_uri=$(echo $sccs_from_src_uri | awk '{ if ($0!="defconfig") { print $0 } }' RS=' ')
+	sccs_from_src_uri=$(echo $sccs_from_src_uri | awk '(match($0, "defconfig") == 0) { print $0 }' RS=' ')
+
 	if [ -n "$in_tree_defconfig" ]; then
 		sccs_defconfig=$in_tree_defconfig
 		if [ -n "$src_uri_defconfig" ]; then
