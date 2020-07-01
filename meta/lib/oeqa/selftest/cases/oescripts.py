@@ -133,7 +133,7 @@ class OEListPackageconfigTests(OEScriptTests):
     def check_endlines(self, results,  expected_endlines): 
         for line in results.output.splitlines():
             for el in expected_endlines:
-                if line == el:
+                if line.split() == el.split():
                     expected_endlines.remove(el)
                     break
 
