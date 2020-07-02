@@ -31,6 +31,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
 	   file://0001-qemu-Do-not-include-file-if-not-exists.patch \
 	   file://CVE-2020-13361.patch \
 	   file://find_datadir.patch \
+	   file://CVE-2020-10761.patch \
 	   "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
