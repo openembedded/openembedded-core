@@ -20,8 +20,8 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
 
 SRC_URI_append_class-native = " file://relocate-modules.patch"
 
-SRC_URI[md5sum] = "ccc48e58545cac45f5b3df3b8aeaff13"
-SRC_URI[sha256sum] = "fe9cbc97925d14c804935f067a3ad77ef55c0bbe9befe68962318f5a767ceb22"
+SRC_URI[md5sum] = "0a4f67e9a9d729976e2f797e36fc1a57"
+SRC_URI[sha256sum] = "f7e0b325b272281f0462e0f7fff25a833820cac19911ff677251daf6d87bce50"
 
 # Find any meson cross files in FILESPATH that are relevant for the current
 # build (using siteinfo) and add them to EXTRA_OEMESON.
