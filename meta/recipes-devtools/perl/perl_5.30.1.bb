@@ -23,6 +23,9 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://0001-tests-adjust-to-correctly-exclude-unbuilt-extensions.patch \
            file://determinism.patch  \
            file://racefix.patch \
+           file://CVE-2020-10543.patch \
+           file://CVE-2020-10878_1.patch \
+           file://CVE-2020-10878_2.patch \
            "
 SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
