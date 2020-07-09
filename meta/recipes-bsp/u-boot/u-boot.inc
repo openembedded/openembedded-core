@@ -89,7 +89,7 @@ do_configure () {
                 j=$(expr $j + 1);
                 if [ $j -eq $i ]; then
                     oe_runmake -C ${S} O=${B}/${config} ${config}
-                    if [ test -n "${@' '.join(find_cfgs(d))}" ]; then
+                    if [ -n "${@' '.join(find_cfgs(d))}" ]; then
                         merge_config.sh -m -O ${B}/${config} ${B}/${config}/.config ${@" ".join(find_cfgs(d))}
                         oe_runmake -C ${S} O=${B}/${config} oldconfig
                     fi
