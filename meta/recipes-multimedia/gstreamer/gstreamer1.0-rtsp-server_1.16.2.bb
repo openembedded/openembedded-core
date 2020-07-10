@@ -4,7 +4,7 @@ SECTION = "multimedia"
 LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d"
 
-DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
+DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base make-native"
 
 PNREAL = "gst-rtsp-server"
 
