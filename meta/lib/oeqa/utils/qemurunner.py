@@ -32,7 +32,7 @@ re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds,
-                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns = defaultdict(str), use_ovmf=False):
+                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns = defaultdict(str), use_ovmf=False, workdir=None):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -63,7 +63,9 @@ class QemuRunner:
         self.boot_patterns = boot_patterns
 
         self.runqemutime = 120
-        self.qemu_pidfile = 'pidfile_'+str(os.getpid())
+        if not workdir:
+            workdir = os.getcwd()
+        self.qemu_pidfile = workdir + '/pidfile_' + str(os.getpid())
         self.host_dumper = HostDumper(dump_host_cmds, dump_dir)
         self.monitorpipe = None
 
