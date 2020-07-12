@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
                     "
 
 SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2"
-SRC_URI[sha256sum] = "1244585515fbebce7d0e53656c1fb614f99accb8413115ce3efb9a9309c4c892"
+SRC_URI[sha256sum] = "e81fc5b7afcaee8c9fd7f64a1e3043e88d62e9ad2c4cff55f578df6b0a9abe15"
 
 inherit autotools pkgconfig
 
