@@ -469,6 +469,29 @@ class FilemapFiemap(_FilemapBase):
                         % (first_prev, last_prev))
         yield (first_prev, last_prev)
 
+class FilemapNobmap(_FilemapBase):
+    """
+    This class is used when both the 'SEEK_DATA/HOLE' and FIEMAP are not
+    supported by the filesystem or kernel.
+    """
+
+    def __init__(self, image, log=None):
+        """Refer the '_FilemapBase' class for the documentation."""
+
+        # Call the base class constructor first
+        _FilemapBase.__init__(self, image, log)
+        self._log.debug("FilemapNobmap: initializing")
+
+    def block_is_mapped(self, block):
+        """Refer the '_FilemapBase' class for the documentation."""
+        return True
+
+    def get_mapped_ranges(self, start, count):
+        """Refer the '_FilemapBase' class for the documentation."""
+        self._log.debug("FilemapNobmap: get_mapped_ranges(%d,  %d(%d))"
+                        % (start, count, start + count - 1))
+        yield (start, start + count -1)
+
 def filemap(image, log=None):
     """
     Create and return an instance of a Filemap class - 'FilemapFiemap' or
@@ -482,7 +505,10 @@ def filemap(image, log=None):
     try:
         return FilemapFiemap(image, log)
     except ErrorNotSupp:
-        return FilemapSeek(image, log)
+        try:
+            return FilemapSeek(image, log)
+        except ErrorNotSupp:
+            return FilemapNobmap(image, log)
 
 def sparse_copy(src_fname, dst_fname, skip=0, seek=0,
                 length=0, api=None):
