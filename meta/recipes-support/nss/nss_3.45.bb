@@ -32,6 +32,7 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/${VERSIO
            file://blank-cert9.db \
            file://blank-key4.db \
            file://system-pkcs11.txt \
+           file://0001-Bug-1631576-Force-a-fixed-length-for-DSA-exponentiat.patch \
            "
 
 SRC_URI[md5sum] = "f1752d7223ee9d910d551e57264bafa8"
