@@ -142,15 +142,6 @@ class _FilemapBase(object):
 
         raise Error("the method is not implemented")
 
-    def block_is_unmapped(self, block): # pylint: disable=W0613,R0201
-        """
-        This method has has to be implemented by child classes. It returns
-        'True' if block number 'block' of the image file is not mapped (hole)
-        and 'False' otherwise.
-        """
-
-        raise Error("the method is not implemented")
-
     def get_mapped_ranges(self, start, count): # pylint: disable=W0613,R0201
         """
         This method has has to be implemented by child classes. This is a
@@ -264,10 +255,6 @@ class FilemapSeek(_FilemapBase):
         self._log.debug("FilemapSeek: block_is_mapped(%d) returns %s"
                         % (block, result))
         return result
-
-    def block_is_unmapped(self, block):
-        """Refer the '_FilemapBase' class for the documentation."""
-        return not self.block_is_mapped(block)
 
     def _get_ranges(self, start, count, whence1, whence2):
         """
@@ -421,10 +408,6 @@ class FilemapFiemap(_FilemapBase):
         self._log.debug("FilemapFiemap: block_is_mapped(%d) returns %s"
                         % (block, result))
         return result
-
-    def block_is_unmapped(self, block):
-        """Refer the '_FilemapBase' class for the documentation."""
-        return not self.block_is_mapped(block)
 
     def _unpack_fiemap_extent(self, index):
         """
