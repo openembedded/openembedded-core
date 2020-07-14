@@ -155,15 +155,6 @@ class _FilemapBase(object):
 
         raise Error("the method is not implemented")
 
-    def get_unmapped_ranges(self, start, count): # pylint: disable=W0613,R0201
-        """
-        This method has has to be implemented by child classes. Just like
-        'get_mapped_ranges()', but yields unmapped block ranges instead
-        (holes).
-        """
-
-        raise Error("the method is not implemented")
-
 
 # The 'SEEK_HOLE' and 'SEEK_DATA' options of the file seek system call
 _SEEK_DATA = 3
@@ -258,9 +249,8 @@ class FilemapSeek(_FilemapBase):
 
     def _get_ranges(self, start, count, whence1, whence2):
         """
-        This function implements 'get_mapped_ranges()' and
-        'get_unmapped_ranges()' depending on what is passed in the 'whence1'
-        and 'whence2' arguments.
+        This function implements 'get_mapped_ranges()' depending
+        on what is passed in the 'whence1' and 'whence2' arguments.
         """
 
         assert whence1 != whence2
@@ -289,12 +279,6 @@ class FilemapSeek(_FilemapBase):
         self._log.debug("FilemapSeek: get_mapped_ranges(%d,  %d(%d))"
                         % (start, count, start + count - 1))
         return self._get_ranges(start, count, _SEEK_DATA, _SEEK_HOLE)
-
-    def get_unmapped_ranges(self, start, count):
-        """Refer the '_FilemapBase' class for the documentation."""
-        self._log.debug("FilemapSeek: get_unmapped_ranges(%d,  %d(%d))"
-                        % (start, count, start + count - 1))
-        return self._get_ranges(start, count, _SEEK_HOLE, _SEEK_DATA)
 
 
 # Below goes the FIEMAP ioctl implementation, which is not very readable
@@ -484,24 +468,6 @@ class FilemapFiemap(_FilemapBase):
         self._log.debug("FilemapFiemap: yielding range (%d, %d)"
                         % (first_prev, last_prev))
         yield (first_prev, last_prev)
-
-    def get_unmapped_ranges(self, start, count):
-        """Refer the '_FilemapBase' class for the documentation."""
-        self._log.debug("FilemapFiemap: get_unmapped_ranges(%d,  %d(%d))"
-                        % (start, count, start + count - 1))
-        hole_first = start
-        for first, last in self._do_get_mapped_ranges(start, count):
-            if first > hole_first:
-                self._log.debug("FilemapFiemap: yielding range (%d, %d)"
-                                % (hole_first, first - 1))
-                yield (hole_first, first - 1)
-
-            hole_first = last + 1
-
-        if hole_first < start + count:
-            self._log.debug("FilemapFiemap: yielding range (%d, %d)"
-                            % (hole_first, start + count - 1))
-            yield (hole_first, start + count - 1)
 
 def filemap(image, log=None):
     """
