@@ -16,7 +16,7 @@ SECTION = "base"
 LICENSE = "BSD-3-Clause & GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=ee2b1830fcfead84d07bc060ec43e072"
 
-SRCREV = "760c625ec0e1ffebec2e391d891d389da0f65726"
+SRCREV = "6a1860c6f5ad295af605ddf588933544e7c24ce1"
 SRC_URI = "git://salsa.debian.org/debian/init-system-helpers.git;protocol=https"
 
 S = "${WORKDIR}/git"
