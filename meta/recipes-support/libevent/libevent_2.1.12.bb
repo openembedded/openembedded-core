@@ -12,8 +12,7 @@ SRC_URI = "https://github.com/libevent/libevent/releases/download/release-${PV}-
            file://0001-test-regress_dns.c-patch-out-tests-that-require-a-wo.patch \
            "
 
-SRC_URI[md5sum] = "7f35cfe69b82d879111ec0d7b7b1c531"
-SRC_URI[sha256sum] = "a65bac6202ea8c5609fd5c7e480e6d25de467ea1917c08290c521752f147283d"
+SRC_URI[sha256sum] = "92e6de1be9ec176428fd2367677e61ceffc2ee1cb119035037a27d346b0403bb"
 
 UPSTREAM_CHECK_URI = "http://libevent.org/"
 
