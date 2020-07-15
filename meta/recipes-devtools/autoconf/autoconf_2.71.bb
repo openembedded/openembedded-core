@@ -5,32 +5,23 @@ file that lists the operating system features that the package can use, in the f
 LICENSE = "GPLv3+"
 HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
-DEPENDS = "m4-native gnu-config-native"
+DEPENDS = "m4-native autoconf-native automake-native gnu-config-native help2man-native"
+DEPENDS_remove_class-native = "autoconf-native automake-native help2man-native"
 
-PR = "r11"
+LIC_FILES_CHKSUM = "file://COPYING;md5=cc3f3a7596cb558bbd9eb7fbaa3ef16c \
+		    file://COPYINGv3;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe \
-		    file://COPYINGv3;md5=d32239bcb673463ab874e80d47fae504"
-
-SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/autoconf/${BP}.tar.gz \
            file://program_prefix.patch \
-           file://check-automake-cross-warning.patch \
            file://autoreconf-exclude.patch \
-           file://autoreconf-gnuconfigize.patch \
-           file://config_site.patch \
            file://remove-usr-local-lib-from-m4.patch \
            file://preferbash.patch \
            file://autotest-automake-result-format.patch \
-           file://add_musl_config.patch \
-           file://performance.patch \
-           file://AC_HEADER_MAJOR-port-to-glibc-2.25.patch \
-           file://autoconf-replace-w-option-in-shebangs-with-modern-use-warnings.patch \
+           file://man-host-perl.patch \
            "
+SRC_URI_append_class-native = " file://no-man.patch"
 
-SRC_URI[md5sum] = "82d05e03b93e45f5a39b828dc9c6c29b"
-SRC_URI[sha256sum] = "954bd69b391edc12d6a4a51a2dd1476543da5c6bbf05a95b59dc0dd6fd4c2969"
-
-SRC_URI_append_class-native = " file://fix_path_xtra.patch"
+SRC_URI[sha256sum] = "431075ad0bf529ef13cb41e9042c542381103e80015686222b8a9d4abef42a1c"
 
 RDEPENDS_${PN} = "m4 gnu-config \
 		  perl \
@@ -69,11 +60,14 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PERL='${PERL}'"
 
 EXTRA_OECONF += "ac_cv_path_M4=m4 ac_cv_prog_TEST_EMACS=no"
 
-do_configure() {
-	# manually install a newer config.guess/.sub
+# As autoconf installs its own config.* files, ensure that they're always up to date.
+update_gnu_config() {
 	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}/build-aux
 	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}/build-aux
+}
+do_configure[prefuncss] += "update_gnu_config"
 
+do_configure_class-native() {
 	oe_runconf
 }
 
