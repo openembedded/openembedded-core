@@ -9,7 +9,7 @@ SRC_URI = "https://kernel.ubuntu.com/~cking/tarballs/${BPN}/${BP}.tar.xz \
            file://0001-Do-not-preserve-ownership-when-installing-example-jo.patch \
            file://no_daddr_t.patch \
            "
-SRC_URI[sha256sum] = "b21436fdbd9dc482a3fd95ae27cccf0097d0f226361ea3785215f7a4ad50136b"
+SRC_URI[sha256sum] = "6a333650fb5c85c5221f10d2cf890e9fc56530696e118d975fbbe96126c06963"
 
 DEPENDS = "coreutils-native"
 
