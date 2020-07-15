@@ -5,7 +5,9 @@ file that lists the operating system features that the package can use, in the f
 LICENSE = "GPLv3"
 HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
-DEPENDS = "m4-native gnu-config-native"
+
+DEPENDS = "m4-native gnu-config-native help2man-native"
+DEPENDS_remove_class-native = "help2man-native"
 
 RDEPENDS_${PN} = "m4 gnu-config \
 		  perl \
