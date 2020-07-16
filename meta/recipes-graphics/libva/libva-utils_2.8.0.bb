@@ -14,8 +14,8 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b148fc8adf19dc9aec17cf9cd29a9a5e"
 
-SRC_URI = "git://github.com/intel/libva-utils.git;branch=v2.7-branch"
-SRCREV = "5a24c635f6fb2b9ac31cab3360afca50e1860812"
+SRC_URI = "git://github.com/intel/libva-utils.git;branch=v2.8-branch"
+SRCREV = "af101a46d24c3f71a12b9f1ddb0c63626b19b3d8"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
