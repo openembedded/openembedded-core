@@ -47,14 +47,23 @@ def find_git_folder(d, sourcedir):
     return None
 
 def get_source_date_epoch_from_git(d, sourcedir):
-    source_date_epoch = None
-    if "git://" in d.getVar('SRC_URI'):
-        gitpath = find_git_folder(d, sourcedir)
-        if gitpath:
-            import subprocess
-            source_date_epoch = int(subprocess.check_output(['git','log','-1','--pretty=%ct'], cwd=gitpath))
-            bb.debug(1, "git repository: %s" % gitpath)
-    return source_date_epoch
+    if not "git://" in d.getVar('SRC_URI'):
+        return None
+
+    gitpath = find_git_folder(d, sourcedir)
+    if not gitpath:
+        return None
+
+    # Check that the repository has a valid HEAD; it may not if subdir is used
+    # in SRC_URI
+    p = subprocess.run(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=gitpath)
+    if p.returncode != 0:
+        bb.debug(1, "%s does not have a valid HEAD: %s" % (gitpath, p.stdout.decode('utf-8')))
+        return None
+
+    bb.debug(1, "git repository: %s" % gitpath)
+    p = subprocess.run(['git','log','-1','--pretty=%ct'], check=True, stdout=subprocess.PIPE, cwd=gitpath)
+    return int(p.stdout.decode('utf-8'))
 
 def get_source_date_epoch_from_youngest_file(d, sourcedir):
     if sourcedir == d.getVar('WORKDIR'):
