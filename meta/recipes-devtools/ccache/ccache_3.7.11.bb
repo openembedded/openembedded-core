@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=22d514dbc01fdf9a9784334b6b59417a"
 DEPENDS = "zlib"
 
 SRC_URI = "https://github.com/ccache/ccache/releases/download/v${PV}/${BP}.tar.gz"
-SRC_URI[sha256sum] = "447ddf21a5f0ffa6b6d26839ae876a6d17d0d7e3533926cdf78ecd11dad793f8"
+SRC_URI[sha256sum] = "34309a59d4b6b6b33756366aa9d3144a4655587be9f914476b4c0e2d36365f01"
 
 UPSTREAM_CHECK_URI = "https://github.com/ccache/ccache/releases/"
 
