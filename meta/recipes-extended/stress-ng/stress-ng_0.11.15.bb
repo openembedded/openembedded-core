@@ -22,5 +22,6 @@ inherit bash-completion
 
 do_install() {
     oe_runmake DESTDIR=${D} install
+    ln -s stress-ng ${D}${bindir}/stress
 }
 
