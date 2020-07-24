@@ -26,15 +26,15 @@ COREDEF="00_core"
 
 create_file() {
 	EXEC=""
-	[ -z "$2" ] && {
+	if [ -z "$2" ]; then
 		EXEC="
 		touch \"$1\";
 		"
-	} || {
+	else
 		EXEC="
 		cp \"$2\" \"$1\";
 		"
-	}
+	fi
 	EXEC="
 	${EXEC}
 	chown ${TUSER}:${TGROUP} $1 || echo \"Failed to set owner -${TUSER}- for -$1-.\" >/dev/tty0 2>&1;
@@ -42,9 +42,9 @@ create_file() {
 
 	test "$VOLATILE_ENABLE_CACHE" = yes && echo "$EXEC" >> /etc/volatile.cache.build
 
-	[ -e "$1" ] && {
+	if [ -e "$1" ]; then
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
-	} || {
+	else
 		if [ -z "$ROOT_DIR" ]; then
 			eval "$EXEC"
 		else
@@ -54,7 +54,7 @@ create_file() {
 			# run on target to set up the correct files and directories.
 			eval "$EXEC" > /dev/null 2>&1
 		fi
-	}
+	fi
 }
 
 mk_dir() {
@@ -64,9 +64,9 @@ mk_dir() {
 	chmod ${TMODE} $1 || echo \"Failed to set mode -${TMODE}- for -$1-.\" >/dev/tty0 2>&1 "
 
 	test "$VOLATILE_ENABLE_CACHE" = yes && echo "$EXEC" >> /etc/volatile.cache.build
-	[ -e "$1" ] && {
+	if [ -e "$1" ]; then
 		[ "${VERBOSE}" != "no" ] && echo "Target already exists. Skipping."
-	} || {
+	else
 		if [ -z "$ROOT_DIR" ]; then
 			eval "$EXEC"
 		else
@@ -74,7 +74,7 @@ mk_dir() {
 			# not be logged.
 			eval "$EXEC" > /dev/null 2>&1
 		fi
-	}
+	fi
 }
 
 link_file() {
@@ -188,13 +188,13 @@ apply_cfgfile() {
 		[ -L "${TNAME}" ] && {
 			[ "${VERBOSE}" != "no" ] && echo "Found link."
 			NEWNAME=$(ls -l "${TNAME}" | sed -e 's/^.*-> \(.*\)$/\1/')
-			echo "${NEWNAME}" | grep -v "^/" >/dev/null && {
+			if echo "${NEWNAME}" | grep -v "^/" >/dev/null; then
 				TNAME="$(echo "${TNAME}" | sed -e 's@\(.*\)/.*@\1@')/${NEWNAME}"
 				[ "${VERBOSE}" != "no" ] && echo "Converted relative linktarget to absolute path -${TNAME}-."
-			} || {
+			else
 				TNAME="${NEWNAME}"
 				[ "${VERBOSE}" != "no" ] && echo "Using absolute link target -${TNAME}-."
-			}
+			fi
 		}
 
 		case "${TTYPE}" in
