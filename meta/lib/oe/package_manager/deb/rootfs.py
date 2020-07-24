@@ -3,11 +3,11 @@
 #
 
 from oe.rootfs import Rootfs
-from oe.package_manager import DpkgPM
 from oe.manifest import Manifest
 from oe.utils import execute_pre_post_process
 from oe.package_manager.deb.manifest import DpkgManifest
 import re
+from oe.package_manager.deb import DpkgPM
 
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):

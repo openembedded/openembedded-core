@@ -15,6 +15,7 @@ from oe.package_manager.ipk.manifest import OpkgManifest
 from oe.package_manager.deb.manifest import DpkgManifest
 from oe.package_manager.rpm import RpmPkgsList
 from oe.package_manager.ipk import OpkgPkgsList
+from oe.package_manager.deb import DpkgPkgsList
 
 class Rootfs(object, metaclass=ABCMeta):
     """

@@ -5,7 +5,7 @@
 from oe.utils import execute_pre_post_process
 from oe.sdk import Sdk
 from oe.manifest import Manifest
-from oe.package_manager import DpkgPM
+from oe.package_manager.deb import DpkgPM
 import shutil
 
 class DpkgSdk(Sdk):
