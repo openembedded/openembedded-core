@@ -5,7 +5,7 @@
 from oe.utils import execute_pre_post_process
 from oe.sdk import Sdk
 from oe.manifest import Manifest
-from oe.package_manager import RpmPM
+from oe.package_manager.rpm import RpmPM
 import glob
 
 class RpmSdk(Sdk):

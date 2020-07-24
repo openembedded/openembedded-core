@@ -3,10 +3,10 @@
 #
 
 from oe.rootfs import Rootfs
-from oe.package_manager import RpmPM
 from oe.manifest import Manifest
 from oe.utils import execute_pre_post_process
 from oe.package_manager.rpm.manifest import RpmManifest
+from oe.package_manager.rpm import RpmPM
 
 class RpmRootfs(Rootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
