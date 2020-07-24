@@ -11,7 +11,7 @@ import shutil
 import os
 import subprocess
 import re
-
+from oe.package_manager.rpm.manifest import RpmManifest
 
 class Rootfs(object, metaclass=ABCMeta):
     """
@@ -359,6 +359,7 @@ class RpmRootfs(Rootfs):
         self.log_check_regex = r'(unpacking of archive failed|Cannot find package'\
                                r'|exit 1|ERROR: |Error: |Error |ERROR '\
                                r'|Failed |Failed: |Failed$|Failed\(\d+\):)'
+
         self.manifest = RpmManifest(d, manifest_dir)
 
         self.pm = RpmPM(d,
