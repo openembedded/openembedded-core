@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=75aae0d38feea6fda97ca381cb9132eb \
 
 SRC_URI = "http://www.freedesktop.org/software/libevdev/${BP}.tar.xz \
            file://determinism.patch"
-SRC_URI[md5sum] = "13c3f0911f9326d4b9fa103365f84421"
-SRC_URI[sha256sum] = "e7e18a64264f2dea19b6c50a481f8c062529d42919ccda0bc861495bce28eb9e"
+SRC_URI[md5sum] = "58286a834ae14536caf9cab8633419cf"
+SRC_URI[sha256sum] = "f5603c48c5afd76b14df7a5124e0a94a102f8da0d45826192325069d1bbc7acb"
 
 inherit autotools pkgconfig
 
