@@ -5,7 +5,7 @@
 from oe.utils import execute_pre_post_process
 from oe.sdk import Sdk
 from oe.manifest import Manifest
-from oe.package_manager import OpkgPM
+from oe.package_manager.ipk import OpkgPM
 import shutil
 import glob
 

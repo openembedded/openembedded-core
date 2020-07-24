@@ -118,6 +118,7 @@ def sdk_list_installed_packages(d, target, rootfs_dir=None):
         rootfs_dir = [sdk_output, os.path.join(sdk_output, target_path)][target is True]
 
     from oe.package_manager.rpm import RpmPkgsList
+    from oe.package_manager.ipk import OpkgPkgsList
     img_type = d.getVar('IMAGE_PKGTYPE')
     if img_type == "rpm":
         arch_var = ["SDK_PACKAGE_ARCHS", None][target is True]

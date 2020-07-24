@@ -5,10 +5,10 @@
 import re
 import filecmp
 from oe.rootfs import Rootfs
-from oe.package_manager import OpkgPM
 from oe.manifest import Manifest
 from oe.utils import execute_pre_post_process
 from oe.package_manager.ipk.manifest import OpkgManifest
+from oe.package_manager.ipk import OpkgPM
 
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
