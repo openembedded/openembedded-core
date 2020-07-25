@@ -6,13 +6,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;beginline=1;endline=19;md5=9a33897f1bca1160d7
 
 PYPI_PACKAGE_EXT = "zip"
 
-inherit pypi
+inherit pypi setuptools3
 
 SRC_URI_append_class-native = " file://0001-conditionally-do-not-fetch-code-by-easy_install.patch"
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
-SRC_URI[sha256sum] = "843037738d1e34e8b326b5e061f474aca6ef9d7ece41329afbc8aac6195a3920"
+SRC_URI[sha256sum] = "afe9e81fee0270d3f60d52608549cc8ec4c46dada8c95640c1a00160f577acf2"
 
 DEPENDS += "${PYTHON_PN}"
 
@@ -36,8 +36,13 @@ RDEPENDS_${PN} = "\
   ${PYTHON_PN}-unittest \
   ${PYTHON_PN}-xml \
 "
+
 do_install_prepend() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
+}
+
+do_install_append() {
+    mv ${D}${bindir}/easy_install ${D}${bindir}/easy3_install
 }
 
 BBCLASSEXTEND = "native nativesdk"
