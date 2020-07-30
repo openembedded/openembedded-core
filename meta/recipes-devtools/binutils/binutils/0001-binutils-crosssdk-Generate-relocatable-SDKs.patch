@@ -1,7 +1,7 @@
-From b05f0be13aadf0b26a0b39dfe7daf2c47a300338 Mon Sep 17 00:00:00 2001
+From b8d182865081d17549fb9a4b9bc3062b526caf65 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:58:54 +0000
-Subject: [PATCH] binutils-crosssdk: Generate relocatable SDKs
+Subject: [PATCH 01/17] binutils-crosssdk: Generate relocatable SDKs
 
 This patch will modify the ELF linker scripts so that the crosssdk
 linker will generate binaries with a 4096 bytes PT_INTERP section. When the binaries
@@ -18,7 +18,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/ld/genscripts.sh b/ld/genscripts.sh
-index 03392d265c..435689ea14 100755
+index 03392d265c7..435689ea144 100755
 --- a/ld/genscripts.sh
 +++ b/ld/genscripts.sh
 @@ -304,6 +304,7 @@ DATA_ALIGNMENT_u="${DATA_ALIGNMENT_u-${DATA_ALIGNMENT_r}}"
@@ -43,7 +43,7 @@ index 03392d265c..435689ea14 100755
  DATA_ALIGNMENT=${DATA_ALIGNMENT_}
  RELOCATING=" "
 diff --git a/ld/scripttempl/elf.sc b/ld/scripttempl/elf.sc
-index 0b8b32a440..ee6b71075d 100644
+index 0b8b32a4407..ee6b71075d7 100644
 --- a/ld/scripttempl/elf.sc
 +++ b/ld/scripttempl/elf.sc
 @@ -140,8 +140,8 @@ if test -z "$DATA_SEGMENT_ALIGN"; then
@@ -57,3 +57,6 @@ index 0b8b32a440..ee6b71075d 100644
  fi
  if test -z "$PLT"; then
    IPLT=".iplt         ${RELOCATING-0} : { *(.iplt) }"
+-- 
+2.28.0
+
