@@ -12,6 +12,7 @@ SRC_URI = "https://ftp.pcre.org/pub/pcre/pcre-${PV}.tar.bz2 \
            file://out-of-tree.patch \
            file://run-ptest \
            file://Makefile \
+           file://CVE-2020-14155.patch \
 "
 
 SRC_URI[md5sum] = "636222e79e392c3d95dcc545f24f98c4"
