@@ -4,6 +4,7 @@
 
 import re
 import filecmp
+import shutil
 from oe.rootfs import Rootfs
 from oe.manifest import Manifest
 from oe.utils import execute_pre_post_process

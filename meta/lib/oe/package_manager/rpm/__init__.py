@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import shutil
+import subprocess
 from oe.package_manager import *
 
 class RpmIndexer(Indexer):

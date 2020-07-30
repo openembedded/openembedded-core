@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import glob
+import shutil
 from oe.utils import execute_pre_post_process
 from oe.sdk import Sdk
 from oe.manifest import Manifest
 from oe.package_manager.ipk import OpkgPM
-import shutil
-import glob
 
 class OpkgSdk(Sdk):
     def __init__(self, d, manifest_dir=None):

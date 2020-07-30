@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import re
+import shutil
 from oe.rootfs import Rootfs
 from oe.manifest import Manifest
 from oe.utils import execute_pre_post_process
 from oe.package_manager.deb.manifest import DpkgManifest
-import re
 from oe.package_manager.deb import DpkgPM
 
 class DpkgOpkgRootfs(Rootfs):

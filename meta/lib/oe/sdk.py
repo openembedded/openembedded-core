@@ -7,8 +7,6 @@ from oe.utils import execute_pre_post_process
 from oe.manifest import *
 from oe.package_manager import *
 import os
-import shutil
-import glob
 import traceback
 
 class Sdk(object, metaclass=ABCMeta):

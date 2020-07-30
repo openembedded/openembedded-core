@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import re
+import shutil
+import subprocess
 from oe.package_manager import *
 
 class OpkgIndexer(Indexer):
