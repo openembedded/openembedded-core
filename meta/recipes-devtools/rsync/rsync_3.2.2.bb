@@ -14,7 +14,7 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/src/${BP}.tar.gz \
            file://makefile-no-rebuild.patch \
            "
 
-SRC_URI[sha256sum] = "95f2dd62979b500a99b34c1a6453a0787ada0330e4bec7fcffad37b9062d58d3"
+SRC_URI[sha256sum] = "644bd3841779507665211fd7db8359c8a10670c57e305b4aab61b4e40037afa8"
 
 # -16548 required for v3.1.3pre1. Already in v3.1.3.
 CVE_CHECK_WHITELIST += " CVE-2017-16548 "
