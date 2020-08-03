@@ -212,11 +212,36 @@ do_kernel_metadata() {
 	fi
 	meta_dir=$(kgit --meta)
 
+	KERNEL_FEATURES_FINAL=""
+	if [ -n "${KERNEL_FEATURES}" ]; then
+		for feature in ${KERNEL_FEATURES}; do
+			feature_found=f
+			for d in $includes; do
+				path_to_check=$(echo $d | sed 's/-I//g')
+				if [ "$feature_found" = "f" ] && [ -e "$path_to_check/$feature" ]; then
+				    feature_found=t
+				fi
+			done
+			if [ "$feature_found" = "f" ]; then
+				if [ -n "${KERNEL_DANGLING_FEATURES_WARN_ONLY}" ]; then
+				    bbwarn "Feature '$feature' not found, but KERNEL_DANGLING_FEATURES_WARN_ONLY is set"
+				    bbwarn "This may cause runtime issues, dropping feature and allowing configuration to continue"
+				else
+				    bberror "Feature '$feature' not found, this will cause configuration failures."
+				    bberror "Check the SRC_URI for meta-data repositories or directories that may be missing"
+				    bbfatal_log "Set KERNEL_DANGLING_FEATURES_WARN_ONLY to ignore this issue"
+				fi
+			else
+				KERNEL_FEATURES_FINAL="$KERNEL_FEATURES_FINAL $feature"
+			fi
+		done
+        fi
+
 	# run1: pull all the configuration fragments, no matter where they come from
-	elements="`echo -n ${bsp_definition} $sccs_defconfig ${sccs} ${patches} ${KERNEL_FEATURES}`"
+	elements="`echo -n ${bsp_definition} $sccs_defconfig ${sccs} ${patches} $KERNEL_FEATURES_FINAL`"
 	if [ -n "${elements}" ]; then
 		echo "${bsp_definition}" > ${S}/${meta_dir}/bsp_definition
-		scc --force -o ${S}/${meta_dir}:cfg,merge,meta ${includes} $sccs_defconfig $bsp_definition $sccs $patches ${KERNEL_FEATURES}
+		scc --force -o ${S}/${meta_dir}:cfg,merge,meta ${includes} $sccs_defconfig $bsp_definition $sccs $patches $KERNEL_FEATURES_FINAL
 		if [ $? -ne 0 ]; then
 			bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
 		fi
@@ -230,9 +255,9 @@ do_kernel_metadata() {
 	fi
 
 	# run2: only generate patches for elements that have been passed on the SRC_URI
-	elements="`echo -n ${sccs} ${patches} ${KERNEL_FEATURES}`"
+	elements="`echo -n ${sccs} ${patches} $KERNEL_FEATURES_FINAL`"
 	if [ -n "${elements}" ]; then
-		scc --force -o ${S}/${meta_dir}:patch --cmds patch ${includes} ${sccs} ${patches} ${KERNEL_FEATURES}
+		scc --force -o ${S}/${meta_dir}:patch --cmds patch ${includes} ${sccs} ${patches} $KERNEL_FEATURES_FINAL
 		if [ $? -ne 0 ]; then
 			bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
 		fi
