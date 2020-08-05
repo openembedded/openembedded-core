@@ -13,7 +13,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
 
-SRC_URI[sha256sum] = "639c03bf8f0e920567f45c96cc7ef749a8fc29ff7fb3fb97263d67f66fb71aef"
+SRC_URI[sha256sum] = "df50bc3bd58679705714f17721acf619a8b0cedc694f8a97052aa5099626feca"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
