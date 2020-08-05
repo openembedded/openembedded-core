@@ -1,0 +1,43 @@
+From c5fec6d6368b4103557deb710150119dca438544 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 5 Aug 2020 10:46:39 -0700
+Subject: [PATCH] kexec: Fix build with -fno-common
+
+Ensure that my_debug is not doubly defined
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ kexec/arch/ppc64/kexec-elf-ppc64.c | 2 --
+ kexec/fs2dt.h                      | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index 3510b70..695b8b0 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -44,8 +44,6 @@
+ uint64_t initrd_base, initrd_size;
+ unsigned char reuse_initrd = 0;
+ const char *ramdisk;
+-/* Used for enabling printing message from purgatory code */
+-int my_debug = 0;
+ 
+ int elf_ppc64_probe(const char *buf, off_t len)
+ {
+diff --git a/kexec/fs2dt.h b/kexec/fs2dt.h
+index 7633273..fe24931 100644
+--- a/kexec/fs2dt.h
++++ b/kexec/fs2dt.h
+@@ -30,7 +30,7 @@ extern struct bootblock bb[1];
+ 
+ /* Used for enabling printing message from purgatory code
+  * Only has implemented for PPC64 */
+-int my_debug;
++extern int my_debug;
+ extern int dt_no_old_root;
+ 
+ void reserve(unsigned long long where, unsigned long long length);
+-- 
+2.28.0
+
