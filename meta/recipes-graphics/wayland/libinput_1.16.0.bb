@@ -16,8 +16,8 @@ SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BP}.tar.xz \
            file://run-ptest \
            file://determinism.patch \
            "
-SRC_URI[md5sum] = "b2388a1d6f0dcc944b49bc7239a53be8"
-SRC_URI[sha256sum] = "aeedea216a6317ddc6e27c3d54f26b987078780db6a8320cc09e19c25b307f1c"
+SRC_URI[md5sum] = "b518dae7f603040872739216971ee97b"
+SRC_URI[sha256sum] = "83f6d0c94e5e0dd87094ce73f0edb631919617d24a60ee0ab9bd9197411d76e8"
 
 UPSTREAM_CHECK_REGEX = "libinput-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
