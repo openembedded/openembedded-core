@@ -20,7 +20,9 @@ SRC_URI += "file://touchscreen.rules \
            file://99-default.preset \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
-           file://CVE-2020-13776.patch \
+           file://0021-Handle-missing-LOCK_EX.patch \
+           file://0022-Fix-incompatible-pointer-type-struct-sockaddr_un.patch \
+           file://0023-Fix-field-efi_loader_entry_one_shot_stat-has-incompl.patch \
            "
 
 # patches needed by musl
@@ -605,6 +607,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/v4l_id \
                ${rootlibexecdir}/udev/keymaps \
                ${rootlibexecdir}/udev/rules.d/50-udev-default.rules \
+               ${rootlibexecdir}/udev/rules.d/60-autosuspend.rules \
                ${rootlibexecdir}/udev/rules.d/60-autosuspend-chromiumos.rules \
                ${rootlibexecdir}/udev/rules.d/60-block.rules \
                ${rootlibexecdir}/udev/rules.d/60-cdrom_id.rules \
