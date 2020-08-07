@@ -1,7 +1,7 @@
-From 9cb0a756b017f5961b70ac781d3eaec6c82513cb Mon Sep 17 00:00:00 2001
+From bf1c4b2f01c5f86bb770fd1711a69ea727e0f56e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 May 2020 17:05:45 -0700
-Subject: [PATCH] wordsize.h: Unify the header between arm and aarch64
+Subject: [PATCH 29/29] wordsize.h: Unify the header between arm and aarch64
 
 This helps OE multilibs to not sythesize this header which causes all
 kind of recursions and other issues since wordsize is fundamental header
@@ -65,3 +65,6 @@ index ee01841773..34fcdef1f1 100644
  #endif
  
  #define __WORDSIZE_TIME64_COMPAT32	0
+-- 
+2.27.0
+

@@ -1,7 +1,7 @@
-From c421cd7e885497a99179b982dc4a27e8405f8857 Mon Sep 17 00:00:00 2001
+From 17a602b89cbe53a5a92d0153ccb013a737f028cb Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:31:06 +0000
-Subject: [PATCH] 'yes' within the path sets wrong config variables
+Subject: [PATCH 15/29] 'yes' within the path sets wrong config variables
 
 It seems that the 'AC_EGREP_CPP(yes...' example is quite popular
 but being such a short word to grep it is likely to produce
@@ -29,7 +29,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  12 files changed, 28 insertions(+), 28 deletions(-)
 
 diff --git a/sysdeps/aarch64/configure b/sysdeps/aarch64/configure
-index 5bd355a691..3bc5537bc0 100644
+index ac3cf6fd36..32add94df9 100644
 --- a/sysdeps/aarch64/configure
 +++ b/sysdeps/aarch64/configure
 @@ -148,12 +148,12 @@ else
@@ -48,7 +48,7 @@ index 5bd355a691..3bc5537bc0 100644
  else
    libc_cv_aarch64_be=no
 diff --git a/sysdeps/aarch64/configure.ac b/sysdeps/aarch64/configure.ac
-index 7851dd4dac..6e9238171f 100644
+index 8b042d6d05..3cdd262951 100644
 --- a/sysdeps/aarch64/configure.ac
 +++ b/sysdeps/aarch64/configure.ac
 @@ -10,8 +10,8 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
@@ -258,3 +258,6 @@ index f9cba6e15d..b21f72f1e4 100644
                         #endif
      ], libc_cv_ppc64_def_call_elf=yes, libc_cv_ppc64_def_call_elf=no)])
    if test $libc_cv_ppc64_def_call_elf = no; then
+-- 
+2.27.0
+

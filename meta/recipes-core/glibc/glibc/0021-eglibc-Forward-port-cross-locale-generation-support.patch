@@ -1,7 +1,7 @@
-From 30008327aadf0c775e644bb387d7c25952ed05b5 Mon Sep 17 00:00:00 2001
+From e4b8abdc2d884d721fd89d67b689546f2f780924 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:33:49 +0000
-Subject: [PATCH] eglibc: Forward port cross locale generation support
+Subject: [PATCH 21/29] eglibc: Forward port cross locale generation support
 
 Upstream-Status: Pending
 
@@ -23,7 +23,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  create mode 100644 locale/catnames.c
 
 diff --git a/locale/Makefile b/locale/Makefile
-index c9694e236e..ba7105fad6 100644
+index 49c0c78c7d..ebfcf4f4da 100644
 --- a/locale/Makefile
 +++ b/locale/Makefile
 @@ -26,7 +26,8 @@ headers		= langinfo.h locale.h bits/locale.h \
@@ -34,8 +34,8 @@ index c9694e236e..ba7105fad6 100644
 +		  newlocale duplocale freelocale uselocale \
 +		  catnames
  tests		= tst-C-locale tst-locname tst-duplocale
+ tests-container	= tst-localedef-path-norm
  categories	= ctype messages monetary numeric time paper name \
- 		  address telephone measurement identification collate
 diff --git a/locale/catnames.c b/locale/catnames.c
 new file mode 100644
 index 0000000000..538f3f5edb
@@ -361,7 +361,7 @@ index 7ebd933801..5753750756 100644
    size_t bufmax = 56;
  
 diff --git a/locale/programs/localedef.c b/locale/programs/localedef.c
-index dbbb0145c0..097a8b6193 100644
+index b048bd05b9..fed15c42ec 100644
 --- a/locale/programs/localedef.c
 +++ b/locale/programs/localedef.c
 @@ -109,6 +109,7 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
@@ -381,7 +381,7 @@ index dbbb0145c0..097a8b6193 100644
    { NULL, 0, NULL, 0, NULL }
  };
  
-@@ -242,12 +245,14 @@ main (int argc, char *argv[])
+@@ -243,12 +246,14 @@ main (int argc, char *argv[])
       ctype locale.  (P1003.2 4.35.5.2)  */
    setlocale (LC_CTYPE, "POSIX");
  
@@ -396,7 +396,7 @@ index dbbb0145c0..097a8b6193 100644
  
    /* Process charmap file.  */
    charmap = charmap_read (charmap_file, verbose, 1, be_quiet, 1);
-@@ -399,6 +404,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
+@@ -400,6 +405,9 @@ parse_opt (int key, char *arg, struct argp_state *state)
        /* Do not hard link to other locales.  */
        hard_links = false;
        break;
@@ -558,3 +558,6 @@ index 030f1727bd..096d8ed895 100644
  #ifdef NL_CURRENT_INDIRECT
  # define WEAK_POSTLOAD(postload) weak_extern (postload)
  #else
+-- 
+2.27.0
+

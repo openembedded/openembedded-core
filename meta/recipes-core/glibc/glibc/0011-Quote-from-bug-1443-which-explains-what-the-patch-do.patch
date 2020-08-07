@@ -1,7 +1,8 @@
-From 8ca8e5cd78cbd37a713e1181f8f6641b57352aa8 Mon Sep 17 00:00:00 2001
+From de7a7c04a92dbc5d35cb37e47c471e12784cc95e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:20:09 +0000
-Subject: [PATCH] Quote from bug 1443 which explains what the patch does :
+Subject: [PATCH 11/29] Quote from bug 1443 which explains what the patch does
+ :
 
   We build some random program and link it with -lust.  When we run it,
   it dies with a SIGSEGV before reaching main().
@@ -56,3 +57,6 @@ index 90856779b1..a29bb86c56 100644
  	  break;
  
  	case R_ARM_TLS_TPOFF32:
+-- 
+2.27.0
+
