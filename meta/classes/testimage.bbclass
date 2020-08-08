@@ -31,6 +31,7 @@ TESTIMAGE_AUTO ??= "0"
 # TEST_LOG_DIR contains a command ssh log and may contain infromation about what command is running, output and return codes and for qemu a boot log till login.
 # Booting is handled by this class, and it's not a test in itself.
 # TEST_QEMUBOOT_TIMEOUT can be used to set the maximum time in seconds the launch code will wait for the login prompt.
+# TEST_OVERALL_TIMEOUT can be used to set the maximum time in seconds the tests will be allowed to run (defaults to no limit).
 # TEST_QEMUPARAMS can be used to pass extra parameters to qemu, e.g. "-m 1024" for setting the amount of ram to 1 GB.
 # TEST_RUNQEMUPARAMS can be used to pass extra parameters to runqemu, e.g. "gl" to enable OpenGL acceleration.
 
@@ -75,6 +76,7 @@ DEFAULT_TEST_SUITES_remove_qemumips64 = "${MIPSREMOVE}"
 TEST_SUITES ?= "${DEFAULT_TEST_SUITES}"
 
 TEST_QEMUBOOT_TIMEOUT ?= "1000"
+TEST_OVERALL_TIMEOUT ?= ""
 TEST_TARGET ?= "qemu"
 TEST_QEMUPARAMS ?= ""
 TEST_RUNQEMUPARAMS ?= ""
@@ -204,6 +206,10 @@ def testimage_main(d):
         """
         Catch SIGTERM from worker in order to stop qemu.
         """
+        os.kill(os.getpid(), signal.SIGINT)
+
+    def handle_test_timeout(timeout):
+        bb.warn("Global test timeout reached (%s seconds), stopping the tests." %(timeout))
         os.kill(os.getpid(), signal.SIGINT)
 
     testimage_sanity(d)
@@ -363,6 +369,11 @@ def testimage_main(d):
         # We need to check if runqemu ends unexpectedly
         # or if the worker send us a SIGTERM
         tc.target.start(params=d.getVar("TEST_QEMUPARAMS"), runqemuparams=d.getVar("TEST_RUNQEMUPARAMS"))
+        import threading
+        try:
+            threading.Timer(int(d.getVar("TEST_OVERALL_TIMEOUT")), handle_test_timeout, (int(d.getVar("TEST_OVERALL_TIMEOUT")),)).start()
+        except ValueError:
+            pass
         results = tc.runTests()
     except (KeyboardInterrupt, BlockingIOError) as err:
         if isinstance(err, KeyboardInterrupt):
