@@ -585,10 +585,10 @@ class BaseConfig(object):
                 logger.error("For further help see:")
                 raise RunQemuError(yocto_paravirt_kvm_wiki)
 
-        if not os.access(dev_kvm, os.W_OK|os.R_OK):
+            if not os.access(dev_vhost, os.W_OK|os.R_OK):
                 logger.error("You have no read or write permission on /dev/vhost-net.")
                 logger.error("Please change the ownership of this file as described at:")
-                raise RunQemuError(yocto_kvm_wiki)
+                raise RunQemuError(yocto_paravirt_kvm_wiki)
 
     def check_fstype(self):
         """Check and setup FSTYPE"""
