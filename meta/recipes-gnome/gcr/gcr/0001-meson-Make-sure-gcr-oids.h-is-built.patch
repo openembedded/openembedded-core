@@ -10,7 +10,7 @@ Fixes https://gitlab.gnome.org/GNOME/gcr/-/issues/48
 
 --- end of original header ---
 
-Upstream-Status:  backport [https://github.com/GNOME/gcr.git]
+Upstream-Status: Backport  [https://github.com/GNOME/gcr.git]
 
 Signed-off-by: Joe Slater <joe.slater@windriver.com>
 
