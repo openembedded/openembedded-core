@@ -19,6 +19,7 @@ SRC_URI += "\
     file://0001-release-branch.go1.12-security-net-textproto-don-t-n.patch \
     file://0010-fix-CVE-2019-17596.patch \
     file://CVE-2020-15586.patch \
+    file://CVE-2020-16845.patch \
 "
 SRC_URI_append_libc-musl = " file://0009-ld-replace-glibc-dynamic-linker-with-musl.patch"
 
