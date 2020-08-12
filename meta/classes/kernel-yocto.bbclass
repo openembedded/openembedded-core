@@ -475,7 +475,7 @@ python do_kernel_configcheck() {
     # meta-series for processing
     kmeta = d.getVar("KMETA") or "meta"
     if not os.path.exists(kmeta):
-        kmeta = subprocess.check_output(['kgit', '--meta']).decode('utf-8').rstrip()
+        kmeta = subprocess.check_output(['kgit', '--meta'], cwd=d.getVar('S')).decode('utf-8').rstrip()
 
     s = d.getVar('S')
 
