@@ -87,6 +87,13 @@ def get_machine_branch(d, default):
 
 do_kernel_metadata() {
 	set +e
+
+	if [ -n "$1" ]; then
+		mode="$1"
+	else
+		mode="patch"
+	fi
+
 	cd ${S}
 	export KMETA=${KMETA}
 
@@ -120,14 +127,13 @@ do_kernel_metadata() {
 	if [ -n "${KBUILD_DEFCONFIG}" ]; then
 		if [ -f "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}" ]; then
 			if [ -f "${WORKDIR}/defconfig" ]; then
-				# If the two defconfig's are different, warn that we didn't overwrite the
-				# one already placed in WORKDIR by the fetcher.
+				# If the two defconfig's are different, warn that we overwrote the
+				# one already placed in WORKDIR
 				cmp "${WORKDIR}/defconfig" "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}"
 				if [ $? -ne 0 ]; then
-					bbwarn "defconfig detected in WORKDIR. ${KBUILD_DEFCONFIG} skipped"
-				else
-					cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
+					bbdebug 1 "detected SRC_URI or unpatched defconfig in WORKDIR. ${KBUILD_DEFCONFIG} copied over it"
 				fi
+				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
 			else
 				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${WORKDIR}/defconfig
 			fi
@@ -137,17 +143,19 @@ do_kernel_metadata() {
 		fi
 	fi
 
-	# was anyone trying to patch the kernel meta data ?, we need to do
-	# this here, since the scc commands migrate the .cfg fragments to the
-	# kernel source tree, where they'll be used later.
-	check_git_config
-	patches="${@" ".join(find_patches(d,'kernel-meta'))}"
-	for p in $patches; do
-	    (
-		cd ${WORKDIR}/kernel-meta
-		git am -s $p
-	    )
-	done
+	if [ "$mode" = "patch" ]; then
+		# was anyone trying to patch the kernel meta data ?, we need to do
+		# this here, since the scc commands migrate the .cfg fragments to the
+		# kernel source tree, where they'll be used later.
+		check_git_config
+		patches="${@" ".join(find_patches(d,'kernel-meta'))}"
+		for p in $patches; do
+		    (
+			cd ${WORKDIR}/kernel-meta
+			git am -s $p
+		    )
+		done
+	fi
 
 	sccs_from_src_uri="${@" ".join(find_sccs(d))}"
 	patches="${@" ".join(find_patches(d,''))}"
@@ -237,13 +245,15 @@ do_kernel_metadata() {
 		done
         fi
 
-	# run1: pull all the configuration fragments, no matter where they come from
-	elements="`echo -n ${bsp_definition} $sccs_defconfig ${sccs} ${patches} $KERNEL_FEATURES_FINAL`"
-	if [ -n "${elements}" ]; then
-		echo "${bsp_definition}" > ${S}/${meta_dir}/bsp_definition
-		scc --force -o ${S}/${meta_dir}:cfg,merge,meta ${includes} $sccs_defconfig $bsp_definition $sccs $patches $KERNEL_FEATURES_FINAL
-		if [ $? -ne 0 ]; then
-			bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
+	if [ "$mode" = "config" ]; then
+		# run1: pull all the configuration fragments, no matter where they come from
+		elements="`echo -n ${bsp_definition} $sccs_defconfig ${sccs} ${patches} $KERNEL_FEATURES_FINAL`"
+		if [ -n "${elements}" ]; then
+			echo "${bsp_definition}" > ${S}/${meta_dir}/bsp_definition
+			scc --force -o ${S}/${meta_dir}:cfg,merge,meta ${includes} $sccs_defconfig $bsp_definition $sccs $patches $KERNEL_FEATURES_FINAL
+			if [ $? -ne 0 ]; then
+				bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
+			fi
 		fi
 	fi
 
@@ -254,12 +264,14 @@ do_kernel_metadata() {
 		sccs="${bsp_definition} ${sccs}"
 	fi
 
-	# run2: only generate patches for elements that have been passed on the SRC_URI
-	elements="`echo -n ${sccs} ${patches} $KERNEL_FEATURES_FINAL`"
-	if [ -n "${elements}" ]; then
-		scc --force -o ${S}/${meta_dir}:patch --cmds patch ${includes} ${sccs} ${patches} $KERNEL_FEATURES_FINAL
-		if [ $? -ne 0 ]; then
-			bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
+	if [ "$mode" = "patch" ]; then
+		# run2: only generate patches for elements that have been passed on the SRC_URI
+		elements="`echo -n ${sccs} ${patches} $KERNEL_FEATURES_FINAL`"
+		if [ -n "${elements}" ]; then
+			scc --force -o ${S}/${meta_dir}:patch --cmds patch ${includes} ${sccs} ${patches} $KERNEL_FEATURES_FINAL
+			if [ $? -ne 0 ]; then
+				bbfatal_log "Could not generate configuration queue for ${KMACHINE}."
+			fi
 		fi
 	fi
 }
@@ -363,6 +375,8 @@ do_kernel_configme[depends] += "bc-native:do_populate_sysroot bison-native:do_po
 do_kernel_configme[depends] += "kern-tools-native:do_populate_sysroot"
 do_kernel_configme[dirs] += "${S} ${B}"
 do_kernel_configme() {
+	do_kernel_metadata config
+
 	# translate the kconfig_mode into something that merge_config.sh
 	# understands
 	case ${KCONFIG_MODE} in
