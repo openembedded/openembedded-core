@@ -23,8 +23,7 @@ SRC_URI += "file://gtk-option.patch \
             file://0001-Remove-non-reproducible-SRCDIR.patch \
 "
 
-SRC_URI[archive.md5sum] = "4949d313b0c5d9161a5c259104af5568"
-SRC_URI[archive.sha256sum] = "cff4dd3c3b78bfe99d8fcfad3b8ba1eee3289a0823c0e118d78106be6b84c92b"
+SRC_URI[archive.sha256sum] = "f7628905f1cada84e87e2b14883ed57d8094dca3281d5bcb24ece4279e9a92ba"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 
