@@ -139,6 +139,11 @@ do_install() {
     # Fix up shared library
     rm ${D}/${libdir}/perl5/${PV}/*/CORE/libperl.so
     ln -sf ../../../../libperl.so.${PERL_LIB_VER} $(echo ${D}/${libdir}/perl5/${PV}/*/CORE)/libperl.so
+
+    # Try to catch Bug #13946
+    if [ -e ${D}/${libdir}/perl5/${PV}/Storable.pm ]; then
+        bbfatal 'non-arch specific Storable.pm found! See https://bugzilla.yoctoproject.org/show_bug.cgi?id=13946'
+    fi
 }
 
 do_install_append_class-target() {
