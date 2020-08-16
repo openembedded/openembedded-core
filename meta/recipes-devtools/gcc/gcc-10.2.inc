@@ -2,13 +2,13 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "10.1.0"
+PV = "10.2.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "10.1.0"
+BINV = "10.2.0"
 
-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-10.1:${FILE_DIRNAME}/gcc-10.1/backport:"
+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
 DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native"
@@ -63,16 +63,14 @@ SRC_URI = "\
            file://0033-Re-introduce-spe-commandline-options.patch \
            file://0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
            file://0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
-           file://0036-Enable-CET-in-cross-compiler-if-possible.patch \
-           file://0037-mingw32-Enable-operation_not_supported.patch \
-           file://0038-libatomic-Do-not-enforce-march-on-aarch64.patch \
+           file://0036-mingw32-Enable-operation_not_supported.patch \
+           file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0001-aarch64-New-Straight-Line-Speculation-SLS-mitigation.patch \
            file://0002-aarch64-Introduce-SLS-mitigation-for-RET-and-BR-inst.patch \
            file://0003-aarch64-Mitigate-SLS-for-BLR-instruction.patch \
-           file://pr96130.patch \
            file://0001-aarch64-Fix-up-__aarch64_cas16_acq_rel-fallback.patch \
 "
-SRC_URI[sha256sum] = "b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2"
+SRC_URI[sha256sum] = "b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 # For dev release snapshotting
