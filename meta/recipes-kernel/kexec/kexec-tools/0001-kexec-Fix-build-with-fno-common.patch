@@ -12,8 +12,6 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  kexec/fs2dt.h                      | 2 +-
  2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index 3510b70..695b8b0 100644
 --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
 +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
 @@ -44,8 +44,6 @@
@@ -25,8 +23,6 @@ index 3510b70..695b8b0 100644
  
  int elf_ppc64_probe(const char *buf, off_t len)
  {
-diff --git a/kexec/fs2dt.h b/kexec/fs2dt.h
-index 7633273..fe24931 100644
 --- a/kexec/fs2dt.h
 +++ b/kexec/fs2dt.h
 @@ -30,7 +30,7 @@ extern struct bootblock bb[1];
@@ -38,6 +34,35 @@ index 7633273..fe24931 100644
  extern int dt_no_old_root;
  
  void reserve(unsigned long long where, unsigned long long length);
--- 
-2.28.0
-
+--- a/kexec/arch/arm64/kexec-arm64.h
++++ b/kexec/arch/arm64/kexec-arm64.h
+@@ -50,8 +50,8 @@ int zImage_arm64_load(int argc, char **a
+ void zImage_arm64_usage(void);
+ 
+ 
+-off_t initrd_base;
+-off_t initrd_size;
++extern off_t initrd_base;
++extern off_t initrd_size;
+ 
+ /**
+  * struct arm64_mem - Memory layout info.
+@@ -65,7 +65,7 @@ struct arm64_mem {
+ };
+ 
+ #define arm64_mem_ngv UINT64_MAX
+-struct arm64_mem arm64_mem;
++extern struct arm64_mem arm64_mem;
+ 
+ uint64_t get_phys_offset(void);
+ uint64_t get_vp_offset(void);
+--- a/kexec/arch/x86_64/kexec-bzImage64.c
++++ b/kexec/arch/x86_64/kexec-bzImage64.c
+@@ -42,7 +42,6 @@
+ #include <arch/options.h>
+ 
+ static const int probe_debug = 0;
+-int bzImage_support_efi_boot;
+ 
+ int bzImage64_probe(const char *buf, off_t len)
+ {
