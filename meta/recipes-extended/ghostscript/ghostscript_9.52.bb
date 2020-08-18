@@ -19,21 +19,22 @@ DEPENDS_class-native = "libpng-native"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs950/${BPN}-${PV}.tar.gz \
+def gs_verdir(v):
+    return "".join(v.split("."))
+
+
+SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${@gs_verdir("${PV}")}/${BPN}-${PV}.tar.gz \
                 file://ghostscript-9.15-parallel-make.patch \
                 file://ghostscript-9.16-Werror-return-type.patch \
                 file://do-not-check-local-libpng-source.patch \
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
-                file://CVE-2019-14869-0001.patch \
-                file://CVE-2020-15900.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.21-prevent_recompiling.patch \
-           file://ghostscript-9.02-genarch.patch \
-           file://objarch.h \
            file://cups-no-gcrypt.patch \
+           file://CVE-2020-15900.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -41,8 +42,8 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "00970cf622bd5b46f68eec9383753870"
-SRC_URI[sha256sum] = "0f53e89fd647815828fc5171613e860e8535b68f7afbc91bf89aee886769ce89"
+SRC_URI[md5sum] = "0f6964ab9b83a63b7e373f136243f901"
+SRC_URI[sha256sum] = "c2501d8e8e0814c4a5aa7e443e230e73d7af7f70287546f7b697e5ef49e32176"
 
 # Put something like
 #
@@ -73,7 +74,7 @@ EXTRA_OECONF_class-native = "--without-x --with-system-libtiff=no \
                              --without-jbig2dec --without-libpaper \
                              --with-fontpath=${datadir}/fonts \
                              --without-libidn --disable-fontconfig \
-                             --disable-freetype --disable-cups"
+                             --enable-freetype --disable-cups "
 
 # This has been fixed upstream but for now we need to subvert the check for time.h
 # http://bugs.ghostscript.com/show_bug.cgi?id=692443
@@ -81,15 +82,7 @@ EXTRA_OECONF_class-native = "--without-x --with-system-libtiff=no \
 CFLAGS += "-DHAVE_SYS_TIME_H=1"
 BUILD_CFLAGS += "-DHAVE_SYS_TIME_H=1"
 
-inherit autotools
-
-do_configure_prepend () {
-	mkdir -p obj
-	mkdir -p soobj
-	if [ -e ${WORKDIR}/objarch.h ]; then
-		cp ${WORKDIR}/objarch.h obj/arch.h
-	fi
-}
+inherit autotools-brokensep
 
 do_configure_append () {
 	# copy tools from the native ghostscript build
