@@ -34,6 +34,7 @@ LINUX_VERSION ?= "5.8"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
+DEPENDS += "gmp-native"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
