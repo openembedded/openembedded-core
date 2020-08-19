@@ -11,7 +11,7 @@ SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://avoid_parallel_tests.patch \
            "
 
-SRC_URI[sha256sum] = "c2e16f8bf510c5822f8e25061c2533972308a421767c54abcacb1038b08bb782"
+SRC_URI[sha256sum] = "91e8bbda48a7fd5d374efacca542364ceb3a6c1f286f024b64ec40ccc799e125"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/software/network/ethtool/"
 
@@ -29,7 +29,9 @@ do_compile_ptest() {
 do_install_ptest () {
    cp ${B}/Makefile                 ${D}${PTEST_PATH}
    install ${B}/test-cmdline        ${D}${PTEST_PATH}
-   install ${B}/test-features       ${D}${PTEST_PATH}
+   if ${@bb.utils.contains('PACKAGECONFIG', 'netlink', 'false', 'true', d)}; then
+       install ${B}/test-features       ${D}${PTEST_PATH}
+   fi
    install ${B}/ethtool             ${D}${PTEST_PATH}/ethtool
    sed -i 's/^Makefile/_Makefile/'  ${D}${PTEST_PATH}/Makefile
 }
