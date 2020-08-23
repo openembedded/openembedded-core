@@ -1,4 +1,4 @@
-From c832880c5242b454a2c9e61b6a2dc26aecdc51bd Mon Sep 17 00:00:00 2001
+From 15647f679834be633fb4a9aeff4671b9cb95ccb8 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 23 Jan 2018 00:54:13 +0000
 Subject: [PATCH] gettext: beat library detection into shape
@@ -25,7 +25,7 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
  8 files changed, 83 insertions(+), 450 deletions(-)
 
 diff --git a/gettext-tools/gnulib-m4/libxml.m4 b/gettext-tools/gnulib-m4/libxml.m4
-index 05b9550..031ee65 100644
+index 2f80c37..30ce58e 100644
 --- a/gettext-tools/gnulib-m4/libxml.m4
 +++ b/gettext-tools/gnulib-m4/libxml.m4
 @@ -13,6 +13,7 @@ dnl gl_LIBXML(FORCE-INCLUDED)
@@ -142,7 +142,7 @@ index 05b9550..031ee65 100644
    ])
    AC_SUBST([LIBXML])
 diff --git a/libtextstyle/gnulib-local/lib/term-styled-ostream.oo.c b/libtextstyle/gnulib-local/lib/term-styled-ostream.oo.c
-index 2cfd4a8..d42c8b4 100644
+index 2ff978f..5ffb17a 100644
 --- a/libtextstyle/gnulib-local/lib/term-styled-ostream.oo.c
 +++ b/libtextstyle/gnulib-local/lib/term-styled-ostream.oo.c
 @@ -22,15 +22,15 @@
@@ -166,7 +166,7 @@ index 2cfd4a8..d42c8b4 100644
 +#include <libcroco/cr-string.h>
  
  #include "term-ostream.h"
- #include "hash.h"
+ #include "mem-hash-map.h"
 diff --git a/libtextstyle/gnulib-local/m4/libcroco.m4 b/libtextstyle/gnulib-local/m4/libcroco.m4
 index bc53cc6..10b2455 100644
 --- a/libtextstyle/gnulib-local/m4/libcroco.m4
@@ -646,7 +646,7 @@ index 5853772..767fba2 100644
    AC_SUBST([LTLIBGLIB])
    AC_SUBST([INCGLIB])
 diff --git a/libtextstyle/lib/term-styled-ostream.c b/libtextstyle/lib/term-styled-ostream.c
-index 3675b5f..811e546 100644
+index 5484800..16793fa 100644
 --- a/libtextstyle/lib/term-styled-ostream.c
 +++ b/libtextstyle/lib/term-styled-ostream.c
 @@ -28,15 +28,15 @@
@@ -670,9 +670,9 @@ index 3675b5f..811e546 100644
 +#include <libcroco/cr-string.h>
  
  #include "term-ostream.h"
- #include "hash.h"
+ #include "mem-hash-map.h"
 diff --git a/libtextstyle/lib/term-styled-ostream.oo.c b/libtextstyle/lib/term-styled-ostream.oo.c
-index 2cfd4a8..d42c8b4 100644
+index 2ff978f..5ffb17a 100644
 --- a/libtextstyle/lib/term-styled-ostream.oo.c
 +++ b/libtextstyle/lib/term-styled-ostream.oo.c
 @@ -22,15 +22,15 @@
@@ -696,4 +696,4 @@ index 2cfd4a8..d42c8b4 100644
 +#include <libcroco/cr-string.h>
  
  #include "term-ostream.h"
- #include "hash.h"
+ #include "mem-hash-map.h"

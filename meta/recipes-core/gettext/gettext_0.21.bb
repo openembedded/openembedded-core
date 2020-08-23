@@ -18,15 +18,14 @@ PROVIDES_class-native = "virtual/gettext-native"
 RCONFLICTS_${PN} = "proxy-libintl"
 SRC_URI = "${GNU_MIRROR}/gettext/gettext-${PV}.tar.gz \
            file://parallel.patch \
-           file://add-with-bisonlocaledir.patch \
            file://use-pkgconfig.patch \
            file://run-ptest \
            file://serial-tests-config.patch \
            file://0001-tests-autopoint-3-unset-MAKEFLAGS.patch \
            file://0001-init-env.in-do-not-add-C-CXX-parameters.patch \
+           file://mingw.patch \
            "
-SRC_URI[md5sum] = "30fec34a895fab4c02584449c500aac2"
-SRC_URI[sha256sum] = "ecb9d0908ca41d5ca5fef974323b3bba6bec19eebba0b44f396de98cfcc089f1"
+SRC_URI[sha256sum] = "c77d0da3102aec9c07f43671e60611ebff89a996ef159497ce8e59d075786b12"
 
 inherit autotools texinfo pkgconfig ptest
 
@@ -130,7 +129,7 @@ do_install_append_class-native () {
 	rm ${D}${datadir}/gettext/po/remove-potcdate.sin
 
         create_wrapper ${D}${bindir}/msgfmt \
-                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-0.20.2/"
+                GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-${PV}/"
 
 }
 
