@@ -7,8 +7,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;md5=207f70f56526417514ac46b6680e314f"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "193d9223e9c6dbe1d928eaaecc1f68db"
-SRC_URI[sha256sum] = "5ba58d7b2b9a8929903b1cf791ed4edf72ab225678d5ea0a6b80dc090080ac33"
+SRC_URI[sha256sum] = "6e0b8ae23ee9467cee701f23dea908257a93e5fffa9e261b19a23efbd27e84a2"
 
 inherit manpages
 
