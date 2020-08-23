@@ -13,7 +13,7 @@ SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
            file://add-with-bisonlocaledir.patch \
            file://0001-bison-fix-the-parallel-build.patch \
            "
-SRC_URI[sha256sum] = "8b13473b31ca7fcf65e5e8a74224368ffd5df19275602a9c9567ba393f18577d"
+SRC_URI[sha256sum] = "55c215521a13982a9bee68cd42eed51a65713f96c530a739a57de4438ac1bb69"
 
 # No point in hardcoding path to m4, just use PATH
 EXTRA_OECONF += "M4=m4"
