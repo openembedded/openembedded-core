@@ -15,10 +15,8 @@ GNOMEBASEBUILDCLASS = "meson"
 
 inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even gobject-introspection
 
-SRC_URI += "file://run-ptest \
-            file://0001-Fix-build-reproducibility.patch"
-SRC_URI[archive.md5sum] = "c75cc5b833d934d98e83343832e20e5d"
-SRC_URI[archive.sha256sum] = "66a5b6cc13db73efed67b8e933584509f8ddb7b10a8a40c3850ca4a985ea1b1f"
+SRC_URI += " file://run-ptest"
+SRC_URI[archive.sha256sum] = "9a81572ebb946187fbdd69d5ffc57e2f7a1f768cd8d2fd89dbb03fb9002a99b5"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
 
