@@ -22,8 +22,7 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0008-do-not-auto-check-var-PYTHON.patch \
           "
 
-SRC_URI[md5sum] = "198f0a908ec3cd8f0ce9a4f3a4489645"
-SRC_URI[sha256sum] = "c4e30b227682374c23cddc7fdb9324a99694d907e79242a25a4deeedb393be46"
+SRC_URI[sha256sum] = "cef1f710a6b0d28f5b44242713ad373702d1466dcbe512eb4e754d7f35cd4307"
 
 DEPENDS = "libgpg-error libassuan"
 RDEPENDS_${PN}-cpp += "libstdc++"
