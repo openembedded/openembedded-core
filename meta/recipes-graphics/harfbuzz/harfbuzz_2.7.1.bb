@@ -10,18 +10,26 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8f787620b7d3866d9552fd1924c07572 \
 UPSTREAM_CHECK_URI = "https://github.com/${BPN}/${BPN}/releases"
 UPSTREAM_CHECK_REGEX = "harfbuzz-(?P<pver>\d+(\.\d+)+).tar"
 
-SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz"
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz \
+           file://0001-Do-not-disable-introspection-in-cross-builds.patch \
+           file://0001-src-hb-gobject-enums.cc.tmpl-write-out-only-the-file.patch \
+           "
 SRC_URI[sha256sum] = "e95ee43b6bd0d3d1307e2aacf0f9c0050e5baceb21988b367b833028114aa569"
 
-inherit autotools pkgconfig lib_package gtk-doc
+inherit meson pkgconfig lib_package gtk-doc gobject-introspection
+
+GIR_MESON_ENABLE_FLAG = 'enabled'
+GIR_MESON_DISABLE_FLAG = 'disabled'
+GTKDOC_MESON_ENABLE_FLAG = 'enabled'
+GTKDOC_MESON_DISABLE_FLAG = 'disabled'
 
 PACKAGECONFIG ??= "cairo fontconfig freetype glib icu"
-PACKAGECONFIG[cairo] = "--with-cairo,--without-cairo,cairo"
-PACKAGECONFIG[fontconfig] = "--with-fontconfig,--without-fontconfig,fontconfig"
-PACKAGECONFIG[freetype] = "--with-freetype,--without-freetype,freetype"
-PACKAGECONFIG[glib] = "--with-glib,--without-glib,glib-2.0"
-PACKAGECONFIG[graphite] = "--with-graphite2,--without-graphite2,graphite2"
-PACKAGECONFIG[icu] = "--with-icu,--without-icu,icu"
+PACKAGECONFIG[cairo] = "-Dcairo=enabled,-Dcairo=disabled,cairo"
+PACKAGECONFIG[fontconfig] = "-Dfontconfig=enabled,-Dfontconfig=disabled,fontconfig"
+PACKAGECONFIG[freetype] = "-Dfreetype=enabled,-Dfreetype=disabled,freetype"
+PACKAGECONFIG[glib] = "-Dglib=enabled,-Dglib=disabled,glib-2.0"
+PACKAGECONFIG[graphite] = "-Dgraphite=enabled,-Dgraphite=disabled,graphite2"
+PACKAGECONFIG[icu] = "-Dicu=enabled,-Dicu=disabled,icu"
 
 PACKAGES =+ "${PN}-icu ${PN}-icu-dev ${PN}-subset"
 
