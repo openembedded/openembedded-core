@@ -44,6 +44,7 @@ LTTNGTOOLS_arc = ""
 
 LTTNGMODULES = "lttng-modules"
 LTTNGMODULES_arc = ""
+LTTNGMODULES_riscv64 = ""
 
 BABELTRACE = "babeltrace"
 BABELTRACE2 = "babeltrace2"
