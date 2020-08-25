@@ -152,7 +152,7 @@ python do_symlink_kernsrc () {
             shutil.move(s, kernsrc)
             os.symlink(kernsrc, s)
 }
-addtask symlink_kernsrc before do_configure after do_unpack
+addtask symlink_kernsrc before do_patch after do_unpack
 
 inherit kernel-arch deploy
 
