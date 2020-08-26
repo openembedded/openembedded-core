@@ -41,6 +41,7 @@ LTTNGUST_arc = ""
 
 LTTNGTOOLS = "lttng-tools"
 LTTNGTOOLS_arc = ""
+LTTNGTOOLS_riscv64 = ""
 
 LTTNGMODULES = "lttng-modules"
 LTTNGMODULES_arc = ""

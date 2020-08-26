@@ -162,3 +162,6 @@ do_install_ptest () {
         esac
     done
 }
+
+COMPATIBLE_HOST_riscv64 = "null"
+
