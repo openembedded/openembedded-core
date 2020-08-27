@@ -16,11 +16,9 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
            file://0001-Do-not-fail-when-testing-config-scripts.patch \
-           file://0003-build-Fix-cross-compiling-into-a-separate-build-dir.patch \
-           file://0005-src-gen-lock-obj.sh-add-a-file.patch \
            "
 
-SRC_URI[sha256sum] = "d8988275aa69d7149f931c10442e9e34c0242674249e171592b430ff7b3afd02"
+SRC_URI[sha256sum] = "4a836edcae592094ef1c5a4834908f44986ab2b82e0824a0344b49df8cdb298f"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
