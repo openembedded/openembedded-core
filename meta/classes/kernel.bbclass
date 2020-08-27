@@ -748,7 +748,10 @@ kernel_do_deploy() {
 		done
 	fi
 }
-do_deploy[prefuncs] += "package_get_auto_pr"
+
+# We deploy to filenames that include PKGV and PKGR, read the saved data to
+# ensure we get the right values for both
+do_deploy[prefuncs] += "read_subpackage_metadata"
 
 addtask deploy after do_populate_sysroot do_packagedata
 
