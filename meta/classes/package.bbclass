@@ -1544,7 +1544,7 @@ fi
         # Symlinks needed for rprovides lookup
         rprov = d.getVar('RPROVIDES_%s' % pkg) or d.getVar('RPROVIDES')
         if rprov:
-            for p in rprov.strip().split():
+            for p in bb.utils.explode_deps(rprov):
                 subdata_sym = pkgdatadir + "/runtime-rprovides/%s/%s" % (p, pkg)
                 bb.utils.mkdirhier(os.path.dirname(subdata_sym))
                 oe.path.symlink("../../runtime/%s" % pkg, subdata_sym, True)
