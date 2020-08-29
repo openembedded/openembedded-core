@@ -5,7 +5,7 @@ SRC_URI = "git://github.com/NixOS/patchelf;protocol=https \
 LICENSE = "GPLv3"
 SUMMARY = "Tool to allow editing of RPATH and interpreter fields in ELF binaries"
 
-SRCREV = "d6b2a72d9ec3bdfde4b1aacdada823ce388968bb"
+SRCREV = "8d3a16e97294e3c5521c61b4c8835499c9918264"
 
 S = "${WORKDIR}/git"
 
