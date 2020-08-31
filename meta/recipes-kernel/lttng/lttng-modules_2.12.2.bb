@@ -36,7 +36,7 @@ SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.1
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
-SRCREV_class-devupstream = "11441f8f17f7825f529e2f6c54d3605771709260"
-PV_class-devupstream = "2.12.1+git${SRCPV}"
+SRCREV_class-devupstream = "57ccbfa6a8a79c7b84394c2097efaf7935607aa5"
+PV_class-devupstream = "2.12.2+git${SRCPV}"
 S_class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
