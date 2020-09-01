@@ -200,6 +200,15 @@ def license_deployed_manifest(d):
     image_license_manifest = os.path.join(lic_manifest_dir, 'image_license.manifest')
     write_license_files(d, image_license_manifest, man_dic, rootfs=False)
 
+    lic_manifest_symlink_dir = os.path.join(d.getVar('LICENSE_DIRECTORY'),
+                                    d.getVar('IMAGE_LINK_NAME'))
+    # remove old symlink
+    if os.path.islink(lic_manifest_symlink_dir):
+        os.unlink(lic_manifest_symlink_dir)
+
+    # create the image dir symlink
+    os.symlink(lic_manifest_dir, lic_manifest_symlink_dir)
+
 def get_deployed_dependencies(d):
     """
     Get all the deployed dependencies of an image
