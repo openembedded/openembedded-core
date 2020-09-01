@@ -6,7 +6,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 IMAGE_INSTALL = "packagegroup-core-boot packagegroup-core-ssh-openssh packagegroup-self-hosted \
-                 kernel-dev kernel-devsrc connman connman-plugin-ethernet dhcp-client \
+                 kernel-dev kernel-devsrc connman connman-plugin-ethernet dhcpcd \
                  tzdata python3-pip perl-misc"
 
 IMAGE_FEATURES += "x11-base package-management splash"
