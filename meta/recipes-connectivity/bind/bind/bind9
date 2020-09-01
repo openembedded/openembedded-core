@@ -1,2 +1,0 @@
-# startup options for the server
-OPTIONS="-u bind"
