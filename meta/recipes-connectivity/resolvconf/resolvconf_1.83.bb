@@ -16,7 +16,7 @@ SRC_URI = "git://salsa.debian.org/debian/resolvconf.git;protocol=https \
            file://99_resolvconf \
           "
 
-SRCREV = "cb19bbfbe7e52174332f68bf2f295b39d119fad3"
+SRCREV = "d001dd2b7ce4c854eaa29e46b9640ab66c6e70bb"
 
 S = "${WORKDIR}/git"
 
