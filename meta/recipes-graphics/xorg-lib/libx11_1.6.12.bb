@@ -14,7 +14,7 @@ SRC_URI += "file://Fix-hanging-issue-in-_XReply.patch \
             file://disable_tests.patch \
             file://libx11-whitespace.patch"
 
-SRC_URI[sha256sum] = "b1cc4b802058be7e3fb438ee2490f66fcc52ac3b2a14f47a22cbf77638e33606"
+SRC_URI[sha256sum] = "f108227469419ac04d196df0f3b80ce1f7f65059bb54c0de811f4d8e03fd6ec7"
 
 PROVIDES = "virtual/libx11"
 
