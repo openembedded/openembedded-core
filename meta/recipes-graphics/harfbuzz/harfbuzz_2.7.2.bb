@@ -14,7 +14,7 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}
            file://0001-Do-not-disable-introspection-in-cross-builds.patch \
            file://0001-src-hb-gobject-enums.cc.tmpl-write-out-only-the-file.patch \
            "
-SRC_URI[sha256sum] = "e95ee43b6bd0d3d1307e2aacf0f9c0050e5baceb21988b367b833028114aa569"
+SRC_URI[sha256sum] = "b8c048d7c2964a12f2c80deb6634dfc836b603dd12bf0d0a3df1627698e220ce"
 
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection
 
