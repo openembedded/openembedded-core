@@ -241,7 +241,7 @@ do_kernel_metadata() {
 		for feature in ${KERNEL_FEATURES}; do
 			feature_found=f
 			for d in $includes; do
-				path_to_check=$(echo $d | sed 's/-I//g')
+				path_to_check=$(echo $d | sed 's/^-I//')
 				if [ "$feature_found" = "f" ] && [ -e "$path_to_check/$feature" ]; then
 				    feature_found=t
 				fi
