@@ -5,6 +5,8 @@ SECTION = "connectivity"
 LICENSE = "MPL-2.0 & Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=68d95543d2096459290a4e6b9ceccffa"
 
+DEPENDS = "boost log4cplus openssl"
+
 SRC_URI = "\
     http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.gz \
     file://0001-remove-AC_TRY_RUN.patch \
@@ -30,6 +32,10 @@ DEBUG_OPTIMIZATION_append_mipsel = " -O"
 BUILD_OPTIMIZATION_remove_mipsel = " -Og"
 BUILD_OPTIMIZATION_append_mipsel = " -O"
 
+EXTRA_OECONF = "--with-boost-libs=-lboost_system \
+                --with-log4cplus=${STAGING_DIR_TARGET}${prefix} \
+                --with-openssl=${STAGING_DIR_TARGET}${prefix}"
+
 do_configure_prepend() {
     # replace abs_top_builddir to avoid introducing the build path
     # don't expand the abs_top_builddir on the target as the abs_top_builddir is meanlingless on the target
@@ -48,12 +54,6 @@ do_install_append() {
 do_install_append() {
     rm -rf "${D}${localstatedir}"
 }
-
-PACKAGECONFIG ??= "openssl log4cplus boost"
-
-PACKAGECONFIG[openssl] = "--with-openssl=${STAGING_DIR_TARGET}${prefix},,openssl,openssl"
-PACKAGECONFIG[log4cplus] = "--with-log4cplus=${STAGING_DIR_TARGET}${prefix},,log4cplus,log4cplus"
-PACKAGECONFIG[boost] = "--with-boost-libs=-lboost_system,,boost,boost"
 
 FILES_${PN}-staticdev += "${libdir}/kea/hooks/*.a ${libdir}/hooks/*.a"
 FILES_${PN} += "${libdir}/hooks/*.so"
