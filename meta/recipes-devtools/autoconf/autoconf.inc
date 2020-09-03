@@ -62,11 +62,6 @@ RDEPENDS_${PN}_class-nativesdk = "\
 		  nativesdk-perl-module-threads \
                   "
 
-
-
-SRC_URI = "${GNU_MIRROR}/autoconf/autoconf-${PV}.tar.gz \
-	   file://program_prefix.patch"
-
 inherit autotools texinfo
 
 PERL = "${USRBINPATH}/perl"
