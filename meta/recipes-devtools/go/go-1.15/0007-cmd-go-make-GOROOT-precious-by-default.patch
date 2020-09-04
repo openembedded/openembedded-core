@@ -63,7 +63,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  // Note that flags consulted by other parts of the code
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -464,6 +464,23 @@ func (b *Builder) build(a *Action) (err
+@@ -468,6 +468,23 @@ func (b *Builder) build(a *Action) (err
  		return errors.New("binary-only packages are no longer supported")
  	}
  
@@ -87,8 +87,8 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	if err := b.Mkdir(a.Objdir); err != nil {
  		return err
  	}
-@@ -1493,6 +1510,14 @@ func BuildInstallFunc(b *Builder, a *Act
- 		return nil
+@@ -1520,6 +1537,14 @@ func BuildInstallFunc(b *Builder, a *Act
+ 		return err
  	}
  
 +	if goRootPrecious && a.Package != nil {

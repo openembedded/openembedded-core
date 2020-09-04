@@ -25,7 +25,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
 
 --- a/src/cmd/go/internal/work/build.go
 +++ b/src/cmd/go/internal/work/build.go
-@@ -251,7 +251,13 @@ func AddBuildFlags(cmd *base.Command, ma
+@@ -254,7 +254,13 @@ func AddBuildFlags(cmd *base.Command, ma
  
  	cmd.Flag.Var(&load.BuildAsmflags, "asmflags", "")
  	cmd.Flag.Var(buildCompiler{}, "compiler", "")

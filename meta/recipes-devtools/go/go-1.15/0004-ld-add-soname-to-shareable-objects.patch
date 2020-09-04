@@ -19,7 +19,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
 
 --- a/src/cmd/link/internal/ld/lib.go
 +++ b/src/cmd/link/internal/ld/lib.go
-@@ -1280,6 +1280,7 @@ func (ctxt *Link) hostlink() {
+@@ -1446,6 +1446,7 @@ func (ctxt *Link) hostlink() {
  				argv = append(argv, "-Wl,-z,relro")
  			}
  			argv = append(argv, "-shared")
@@ -27,7 +27,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  			if ctxt.HeadType != objabi.Hwindows {
  				// Pass -z nodelete to mark the shared library as
  				// non-closeable: a dlclose will do nothing.
-@@ -1291,6 +1292,7 @@ func (ctxt *Link) hostlink() {
+@@ -1457,6 +1458,7 @@ func (ctxt *Link) hostlink() {
  			argv = append(argv, "-Wl,-z,relro")
  		}
  		argv = append(argv, "-shared")
@@ -35,7 +35,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	case BuildModePlugin:
  		if ctxt.HeadType == objabi.Hdarwin {
  			argv = append(argv, "-dynamiclib")
-@@ -1299,6 +1301,7 @@ func (ctxt *Link) hostlink() {
+@@ -1465,6 +1467,7 @@ func (ctxt *Link) hostlink() {
  				argv = append(argv, "-Wl,-z,relro")
  			}
  			argv = append(argv, "-shared")

@@ -17,7 +17,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
 
 --- a/src/cmd/go/internal/envcmd/env.go
 +++ b/src/cmd/go/internal/envcmd/env.go
-@@ -102,11 +102,11 @@ func MkEnv() []cfg.EnvVar {
+@@ -103,11 +103,11 @@ func MkEnv() []cfg.EnvVar {
  
  	cc := cfg.DefaultCC(cfg.Goos, cfg.Goarch)
  	if env := strings.Fields(cfg.Getenv("CC")); len(env) > 0 {

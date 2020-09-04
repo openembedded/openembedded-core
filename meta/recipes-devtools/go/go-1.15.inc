@@ -1,7 +1,7 @@
 require go-common.inc
 
-GO_BASEVERSION = "1.14"
-GO_MINOR = ".7"
+GO_BASEVERSION = "1.15"
+GO_MINOR = ".1"
 PV .= "${GO_MINOR}"
 FILESEXTRAPATHS_prepend := "${FILE_DIRNAME}/go-${GO_BASEVERSION}:"
 
@@ -17,5 +17,4 @@ SRC_URI += "\
     file://0007-cmd-go-make-GOROOT-precious-by-default.patch \
     file://0008-use-GOBUILDMODE-to-set-buildmode.patch \
 "
-SRC_URI_append_libc-musl = " file://0009-ld-replace-glibc-dynamic-linker-with-musl.patch"
-SRC_URI[main.sha256sum] = "064392433563660c73186991c0a315787688e7c38a561e26647686f89b6c30e3"
+SRC_URI[main.sha256sum] = "d3743752a421881b5cc007c76b4b68becc3ad053e61275567edab1c99e154d30"
