@@ -1507,6 +1507,11 @@ def main():
     try:
         config = BaseConfig()
 
+        renice = os.path.expanduser("~/bin/runqemu-renice")
+        if os.path.exists(renice):
+            logger.info('Using %s to renice' % renice)
+            subprocess.check_call([renice, str(os.getpid())])
+
         def sigterm_handler(signum, frame):
             logger.info("SIGTERM received")
             os.kill(config.qemupid, signal.SIGTERM)
