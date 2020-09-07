@@ -20,6 +20,8 @@ SRC_URI += "\
     file://0010-fix-CVE-2019-17596.patch \
     file://CVE-2020-15586.patch \
     file://CVE-2020-16845.patch \
+    file://0001-net-http-cgi-rename-a-test-file-to-be-less-cute.patch \
+    file://CVE-2020-24553.patch \
 "
 SRC_URI_append_libc-musl = " file://0009-ld-replace-glibc-dynamic-linker-with-musl.patch"
 
