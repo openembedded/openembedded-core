@@ -168,7 +168,7 @@ class TestImage(OESelftestTestCase):
         # remove the oeqa-feed-sign temporal directory
         shutil.rmtree(self.gpg_home, ignore_errors=True)
 
-    def test_testimage_virgl_gtk(self):
+    def disabled_test_testimage_virgl_gtk(self):
         """
         Summary: Check host-assisted accelerate OpenGL functionality in qemu with gtk frontend
         Expected: 1. Check that virgl kernel driver is loaded and 3d acceleration is enabled
