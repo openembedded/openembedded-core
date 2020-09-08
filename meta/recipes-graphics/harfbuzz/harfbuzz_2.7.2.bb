@@ -13,6 +13,7 @@ UPSTREAM_CHECK_REGEX = "harfbuzz-(?P<pver>\d+(\.\d+)+).tar"
 SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz \
            file://0001-Do-not-disable-introspection-in-cross-builds.patch \
            file://0001-src-hb-gobject-enums.cc.tmpl-write-out-only-the-file.patch \
+           file://version-race.patch \
            "
 SRC_URI[sha256sum] = "b8c048d7c2964a12f2c80deb6634dfc836b603dd12bf0d0a3df1627698e220ce"
 
