@@ -7,7 +7,7 @@ Subject: [PATCH] src/hb-gobject-enums.cc.tmpl: write out only the filename,
 This is beneficial for reproducible builds, as build paths can vary
 between builds.
 
-Upstream-Status: Pending
+Upstream-Status: Backport [https://github.com/harfbuzz/harfbuzz/commit/e876886d1e877ad90b6f02badefd6ebee1bc0b09]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  src/hb-gobject-enums.cc.tmpl | 2 +-
