@@ -22,6 +22,7 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://CVE-2020-13777-a.patch \
            file://CVE-2020-13777-b.patch \
            file://CVE-2020-13777-c.patch \
+           file://CVE-2020-24659.patch \
 "
 
 SRC_URI[md5sum] = "bb1fe696a11543433785b4fc70ca225f"
