@@ -14,7 +14,9 @@ SRC_URI = "http://curl.haxx.se/download/curl-${PV}.tar.bz2 \
 SRC_URI[md5sum] = "ec5fc263f898a3dfef08e805f1ecca42"
 SRC_URI[sha256sum] = "2ff5e5bd507adf6aa88ff4bbafd4c7af464867ffb688be93b9930717a56c4de8"
 
-CVE_PRODUCT = "curl libcurl"
+# Curl has used many names over the years...
+CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
+
 inherit autotools pkgconfig binconfig multilib_header
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} gnutls libidn proxy threaded-resolver verbose zlib"
