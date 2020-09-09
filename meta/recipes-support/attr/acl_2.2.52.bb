@@ -25,6 +25,9 @@ SRC_URI[sha256sum] = "179074bb0580c06c4b4137be4c5a92a701583277967acdb5546043c787
 
 require ea-acl.inc
 
+# Has issues with newer versions of make
+PARALLEL_MAKEINST = ""
+
 # avoid RPATH hardcode to staging dir
 do_configure_append() {
 	sed -i ${S}/config.status -e s,^\\\(hardcode_into_libs=\\\).*$,\\1\'no\',
