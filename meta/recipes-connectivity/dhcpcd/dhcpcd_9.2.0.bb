@@ -11,12 +11,17 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=9674cc803c5d71306941e6e8b5c002f2"
 
 UPSTREAM_CHECK_URI = "https://roy.marples.name/downloads/dhcpcd/"
 
-SRC_URI = "http://roy.marples.name/downloads/${BPN}/${BPN}-${PV}.tar.xz \
-           file://0001-remove-INCLUDEDIR-to-prevent-build-issues.patch"
+SRC_URI = "https://roy.marples.name/downloads/${BPN}/${BPN}-${PV}.tar.xz \
+           file://0001-remove-INCLUDEDIR-to-prevent-build-issues.patch \
+           file://dhcpcd.service \
+           file://dhcpcd@.service \
+           "
 
-SRC_URI[sha256sum] = "5fe133e5497d8af6d26bd6e6b8dd48ab12d124d6cc4cefe6de6536ff97f76820"
+SRC_URI[sha256sum] = "fcb2d19672d445bbfd38678fdee4f556ef967a3ea6bd81092d10545df2cb9666"
 
-inherit pkgconfig autotools-brokensep
+inherit pkgconfig autotools-brokensep systemd
+
+SYSTEMD_SERVICE_${PN} = "dhcpcd.service"
 
 PACKAGECONFIG ?= "udev ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 
@@ -24,5 +29,11 @@ PACKAGECONFIG[udev] = "--with-udev,--without-udev,udev,udev"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6"
 
 EXTRA_OECONF = "--enable-ipv4"
+
+do_install_append () {
+    # install systemd unit files
+    install -d ${D}${systemd_unitdir}/system
+    install -m 0644 ${WORKDIR}/dhcpcd*.service ${D}${systemd_unitdir}/system
+}
 
 FILES_${PN}-dbg += "${libdir}/dhcpcd/dev/.debug"
