@@ -7,8 +7,8 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[md5sum] = "f101d111b06293d15738afc904c1d931"
-SRC_URI[sha256sum] = "88da57de0a7e3c60bc341a974a80fdba091612db3547c410d6deab039ca5c05a"
+SRC_URI[md5sum] = "d01e5326b4eb15ac3c27eed73ecf26f1"
+SRC_URI[sha256sum] = "97417b909dbbf000e7b21062a13b2f1fd52a336f5a53925bb26d27b65ace6c54"
 
 X11DEPENDS = "virtual/libx11 libxi libxtst"
 
