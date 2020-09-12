@@ -38,14 +38,6 @@ do_install() {
 	sed -i 's,@LOCALSTATEDIR@,${localstatedir},g' ${D}${bindir}/weston-start
 }
 
-do_install_append_libc-musl_qemux86() {
-        echo "WESTON_DISABLE_ATOMIC=Y" >> ${D}${sysconfdir}/default/weston
-}
-
-do_install_append_libc-musl_qemux86-64() {
-        echo "WESTON_DISABLE_ATOMIC=Y" >> ${D}${sysconfdir}/default/weston
-}
-
 inherit update-rc.d features_check systemd
 
 # rdepends on weston which depends on virtual/egl
