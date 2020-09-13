@@ -15,6 +15,12 @@ SRC_URI = "file://init \
 
 S = "${WORKDIR}"
 
+DEFAULTBACKEND ??= ""
+DEFAULTBACKEND_qemuall ?= "fbdev"
+DEFAULTBACKEND_qemuarm64 = "drm"
+DEFAULTBACKEND_qemux86 = "drm"
+DEFAULTBACKEND_qemux86-64 = "drm"
+
 do_install() {
 	install -Dm755 ${WORKDIR}/init ${D}/${sysconfdir}/init.d/weston
 	install -D -p -m0644 ${WORKDIR}/weston.ini ${D}${sysconfdir}/xdg/weston/weston.ini
@@ -36,6 +42,9 @@ do_install() {
 	install -Dm755 ${WORKDIR}/weston-start ${D}${bindir}/weston-start
 	sed -i 's,@DATADIR@,${datadir},g' ${D}${bindir}/weston-start
 	sed -i 's,@LOCALSTATEDIR@,${localstatedir},g' ${D}${bindir}/weston-start
+        if [ -n "${DEFAULTBACKEND}" ]; then
+		sed -i -e "/^\[core\]/a backend=${DEFAULTBACKEND}-backend.so" ${D}${sysconfdir}/xdg/weston/weston.ini
+	fi
 }
 
 inherit update-rc.d features_check systemd
