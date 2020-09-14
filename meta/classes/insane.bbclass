@@ -27,6 +27,7 @@ WARN_QA ?= " libdir xorg-driver-abi \
             infodir build-deps src-uri-bad symlink-to-sysroot multilib \
             invalid-packageconfig host-user-contaminated uppercase-pn patch-fuzz \
             mime mime-xdg unlisted-pkg-lics unhandled-features-check \
+            missing-update-alternatives \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -988,6 +989,14 @@ def package_qa_check_unhandled_features_check(pn, d, messages):
                     var_set = True
         if var_set:
             package_qa_handle_error("unhandled-features-check", "%s: recipe doesn't inherit features_check" % pn, d)
+
+QARECIPETEST[missing-update-alternatives] = "package_qa_check_missing_update_alternatives"
+def package_qa_check_missing_update_alternatives(pn, d, messages):
+    # Look at all packages and find out if any of those sets ALTERNATIVE variable
+    # without inheriting update-alternatives class
+    for pkg in (d.getVar('PACKAGES') or '').split():
+        if d.getVar('ALTERNATIVE_%s' % pkg) and not bb.data.inherits_class('update-alternatives', d):
+            package_qa_handle_error("missing-update-alternatives", "%s: recipe defines ALTERNATIVE_%s but doesn't inherit update-alternatives. This might fail during do_rootfs later!" % (pn, pkg), d)
 
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
