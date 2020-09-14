@@ -1,0 +1,48 @@
+From 8c234bb39eb293a44ca58e15303a359bb782931f Mon Sep 17 00:00:00 2001
+From: Mingli Yu <mingli.yu@windriver.com>
+Date: Wed, 9 Sep 2020 08:41:27 +0000
+Subject: [PATCH] lockable.h: always define unknown_lock_type
+
+There comes below build failure when use gcc 10.1.0 and
+"-Og" passed to compiler.
+ | /usr/lib/gcc/x86_64-wrs-linux/10.1.0/../../../../x86_64-wrs-linux/bin/ld.bfd: /mnt/build/tmp/work/x86_64-linux/qemu-system-native/5.1.0-r0/qemu-5.1.0/fsdev/qemu-fsdev-throttle.c:25: undefined reference to `unknown_lock_type'
+ | /usr/lib/gcc/x86_64-wrs-linux/10.1.0/../../../../x86_64-wrs-linux/bin/ld.bfd: ../fsdev/qemu-fsdev-throttle.o: in function `fsdev_co_throttle_request':
+ | /mnt/build/tmp/work/x86_64-linux/qemu-system-native/5.1.0-r0/qemu-5.1.0/fsdev/qemu-fsdev-throttle.c:103: undefined reference to `unknown_lock_type'
+ | /usr/lib/gcc/x86_64-wrs-linux/10.1.0/../../../../x86_64-wrs-linux/bin/ld.bfd: ../fsdev/qemu-fsdev-throttle.o:/mnt/build/tmp/work/x86_64-linux/qemu-system-native/5.1.0-r0/qemu-5.1.0/fsdev/qemu-fsdev-throttle.c:103: more undefined references to `unknown_lock_type' follow
+ | collect2: error: ld returned 1 exit status
+
+So always define unknown_lock_type to fix the above error.
+
+Upstream-Status: Submitted [https://lists.nongnu.org/archive/html/qemu-devel/2020-09/msg03873.html]
+
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ include/qemu/lockable.h | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/include/qemu/lockable.h b/include/qemu/lockable.h
+index b620023141..e792ed9a69 100644
+--- a/include/qemu/lockable.h
++++ b/include/qemu/lockable.h
+@@ -25,17 +25,12 @@ struct QemuLockable {
+ };
+ 
+ /* This function gives an error if an invalid, non-NULL pointer type is passed
+- * to QEMU_MAKE_LOCKABLE.  For optimized builds, we can rely on dead-code elimination
+- * from the compiler, and give the errors already at link time.
++ * to QEMU_MAKE_LOCKABLE.
+  */
+-#if defined(__OPTIMIZE__) && !defined(__SANITIZE_ADDRESS__)
+-void unknown_lock_type(void *);
+-#else
+ static inline void unknown_lock_type(void *unused)
+ {
+     abort();
+ }
+-#endif
+ 
+ static inline __attribute__((__always_inline__)) QemuLockable *
+ qemu_make_lockable(void *x, QemuLockable *lockable)
+-- 
+2.26.2
+
