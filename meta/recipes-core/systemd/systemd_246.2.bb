@@ -232,7 +232,9 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/udev/rules.d/
 	install -d ${D}${sysconfdir}/tmpfiles.d
-	install -m 0644 ${WORKDIR}/*.rules ${D}${sysconfdir}/udev/rules.d/
+	for rule in $(find ${WORKDIR} -maxdepth 1 -type f -name "*.rules"); do
+		install -m 0644 $rule ${D}${sysconfdir}/udev/rules.d/
+	done
 
 	install -m 0644 ${WORKDIR}/00-create-volatile.conf ${D}${sysconfdir}/tmpfiles.d/
 
