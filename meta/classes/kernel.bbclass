@@ -718,8 +718,7 @@ kernel_do_deploy() {
 	for imageType in ${KERNEL_IMAGETYPES} ; do
 		base_name=$imageType-${KERNEL_IMAGE_NAME}
 		install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType $deployDir/$base_name.bin
-		symlink_name=$imageType-${KERNEL_IMAGE_LINK_NAME}
-		ln -sf $base_name.bin $deployDir/$symlink_name.bin
+		ln -sf $base_name.bin $deployDir/$imageType-${KERNEL_IMAGE_LINK_NAME}.bin
 		ln -sf $base_name.bin $deployDir/$imageType
 	done
 
@@ -742,9 +741,8 @@ kernel_do_deploy() {
 				continue
 			fi
 			initramfs_base_name=$imageType-${INITRAMFS_NAME}
-			initramfs_symlink_name=$imageType-${INITRAMFS_LINK_NAME}
 			install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType.initramfs $deployDir/$initramfs_base_name.bin
-			ln -sf $initramfs_base_name.bin $deployDir/$initramfs_symlink_name.bin
+			ln -sf $initramfs_base_name.bin $deployDir/$imageType-${INITRAMFS_LINK_NAME}.bin
 		done
 	fi
 }
