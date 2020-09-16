@@ -716,10 +716,10 @@ kernel_do_deploy() {
 	fi
 
 	for imageType in ${KERNEL_IMAGETYPES} ; do
-		base_name=$imageType-${KERNEL_IMAGE_NAME}
-		install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType $deployDir/$base_name.bin
-		ln -sf $base_name.bin $deployDir/$imageType-${KERNEL_IMAGE_LINK_NAME}.bin
-		ln -sf $base_name.bin $deployDir/$imageType
+		baseName=$imageType-${KERNEL_IMAGE_NAME}
+		install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType $deployDir/$baseName.bin
+		ln -sf $baseName.bin $deployDir/$imageType-${KERNEL_IMAGE_LINK_NAME}.bin
+		ln -sf $baseName.bin $deployDir/$imageType
 	done
 
 	if [ ${MODULE_TARBALL_DEPLOY} = "1" ] && (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
@@ -740,9 +740,9 @@ kernel_do_deploy() {
 			if [ "$imageType" = "fitImage" ] ; then
 				continue
 			fi
-			initramfs_base_name=$imageType-${INITRAMFS_NAME}
-			install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType.initramfs $deployDir/$initramfs_base_name.bin
-			ln -sf $initramfs_base_name.bin $deployDir/$imageType-${INITRAMFS_LINK_NAME}.bin
+			initramfsBaseName=$imageType-${INITRAMFS_NAME}
+			install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType.initramfs $deployDir/$initramfsBaseName.bin
+			ln -sf $initramfsBaseName.bin $deployDir/$imageType-${INITRAMFS_LINK_NAME}.bin
 		done
 	fi
 }
