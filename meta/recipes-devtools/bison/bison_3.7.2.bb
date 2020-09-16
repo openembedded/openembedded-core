@@ -11,18 +11,11 @@ DEPENDS = "bison-native flex-native"
 
 SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
            file://add-with-bisonlocaledir.patch \
-           file://0001-bison-fix-the-parallel-build.patch \
            "
 SRC_URI[sha256sum] = "7948d193104d979c0fb0294a1854c73c89d72ae41acfc081826142578a78a91b"
 
 # No point in hardcoding path to m4, just use PATH
 EXTRA_OECONF += "M4=m4"
-
-# Reset any loadavg set via environment, it breaks parallel build
-# | ../bison-3.5.2/lib/uniwidth/width.c:21:10: fatal error: uniwidth.h: No such file or directory
-# |  #include "uniwidth.h"
-# |           ^~~~~~~~~~~~
-EXTRA_OEMAKE_append = " -l"
 
 inherit autotools gettext texinfo
 
