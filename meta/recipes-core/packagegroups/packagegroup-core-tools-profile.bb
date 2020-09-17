@@ -37,6 +37,7 @@ SYSTEMTAP_riscv64 = ""
 
 LTTNGTOOLS = "lttng-tools"
 LTTNGTOOLS_arc = ""
+LTTNGTOOLS_riscv32_libc-musl = ""
 
 BABELTRACE = "babeltrace"
 BABELTRACE2 = "babeltrace2"
