@@ -9,6 +9,7 @@ DEPENDS = "boost log4cplus openssl"
 
 SRC_URI = "\
     http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.gz \
+    file://0001-keactrl.in-create-var-lib-kea-and-var-run-kea-folder.patch \
     file://kea-dhcp4.service \
     file://kea-dhcp6.service \
     file://kea-dhcp-ddns.service \
@@ -46,7 +47,7 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/kea-dhcp*service ${D}${systemd_system_unitdir}
     sed -i -e 's,@SBINDIR@,${sbindir},g' -e 's,@BASE_BINDIR@,${base_bindir},g' \
            -e 's,@LOCALSTATEDIR@,${localstatedir},g' -e 's,@SYSCONFDIR@,${sysconfdir},g' \
-           ${D}${systemd_system_unitdir}/kea-dhcp*service
+           ${D}${systemd_system_unitdir}/kea-dhcp*service ${D}${sbindir}/keactrl
 }
 
 do_install_append() {
