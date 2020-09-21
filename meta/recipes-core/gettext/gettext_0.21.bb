@@ -8,11 +8,8 @@ SECTION = "libs"
 LICENSE = "GPLv3+ & LGPL-2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e"
 
-# Because po-gram-gen.y has been modified by fix-CVE-2018-18751.patch,
-# it requires yacc which provided by bison-native
-# Please remove bison-native from DEPENDS* when next upgrade
-DEPENDS = "bison-native gettext-native virtual/libiconv"
-DEPENDS_class-native = "bison-native gettext-minimal-native"
+DEPENDS = "gettext-native virtual/libiconv"
+DEPENDS_class-native = "gettext-minimal-native"
 PROVIDES = "virtual/libintl virtual/gettext"
 PROVIDES_class-native = "virtual/gettext-native"
 RCONFLICTS_${PN} = "proxy-libintl"
