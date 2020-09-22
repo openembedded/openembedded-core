@@ -80,6 +80,9 @@ if [ -d "\$OECORE_NATIVE_SYSROOT/environment-setup.d" ]; then
 		. \$envfile
 	done
 fi
+# We have to unset this else it can confuse oe-selftest and other tools
+# which may also use the overlapping namespace.
+unset OECORE_NATIVE_SYSROOT
 EOF
 
 	if [ "${SDKMACHINE}" = "i686" ]; then
