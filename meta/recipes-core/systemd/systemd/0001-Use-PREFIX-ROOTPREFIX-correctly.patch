@@ -4,7 +4,7 @@ Date: Sun, 16 Aug 2020 16:07:12 +0000
 Subject: [PATCH] Use PREFIX/ROOTPREFIX correctly
 
 Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
-Upstream-status: Pending [https://github.com/systemd/systemd/issues/16773]
+Upstream-Status: Submitted [https://github.com/systemd/systemd/issues/16773]
 ---
  meson.build                      | 1 +
  src/core/systemd.pc.in           | 8 ++++----
