@@ -7,7 +7,7 @@ After=sys-subsystem-net-devices-%i.device
 
 [Service]
 Type=forking
-PIDFile=/run/dhcpcd-%I.pid
+PIDFile=/run/dhcpcd/%I.pid
 ExecStart=/usr/sbin/dhcpcd -q %I
 ExecStop=/usr/sbin/dhcpcd -x %I
 

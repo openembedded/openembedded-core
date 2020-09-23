@@ -30,6 +30,7 @@ PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6"
 
 EXTRA_OECONF = "--enable-ipv4 \
                 --dbdir=${localstatedir}/lib/${BPN} \
+                --runstatedir=/run \
                "
 
 do_install_append () {
