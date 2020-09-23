@@ -28,7 +28,9 @@ PACKAGECONFIG ?= "udev ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[udev] = "--with-udev,--without-udev,udev,udev"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6"
 
-EXTRA_OECONF = "--enable-ipv4"
+EXTRA_OECONF = "--enable-ipv4 \
+                --dbdir=${localstatedir}/lib/${BPN} \
+               "
 
 do_install_append () {
     # install systemd unit files
