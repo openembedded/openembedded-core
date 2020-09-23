@@ -20,7 +20,6 @@ SRC_URI += "file://touchscreen.rules \
            file://99-default.preset \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
-           file://0001-Use-PREFIX-ROOTPREFIX-correctly.patch \
            "
 
 # patches needed by musl
