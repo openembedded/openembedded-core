@@ -388,6 +388,11 @@ python () {
     oe.utils.features_backfill("DISTRO_FEATURES", d)
     oe.utils.features_backfill("MACHINE_FEATURES", d)
 
+    if d.getVar("WORKDIR") != d.getVar("S"):
+        d.appendVar("PSEUDO_IGNORE_PATHS", ",${S}")
+    if d.getVar("WORKDIR") != d.getVar("B"):
+        d.appendVar("PSEUDO_IGNORE_PATHS", ",${B}")
+
     # Handle PACKAGECONFIG
     #
     # These take the form:
