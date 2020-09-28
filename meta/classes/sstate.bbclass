@@ -787,7 +787,7 @@ sstate_create_package () {
 		return
 	fi
 
-	mkdir -p `dirname ${SSTATE_PKG}`
+	mkdir --mode=0775 -p `dirname ${SSTATE_PKG}`
 	TFILE=`mktemp ${SSTATE_PKG}.XXXXXXXX`
 
 	# Use pigz if available
