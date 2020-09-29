@@ -4,6 +4,7 @@ SRC_URI = "git://git.yoctoproject.org/pseudo;branch=oe-core \
            file://0001-configure-Prune-PIE-flags.patch \
            file://delete_mismatches.patch \
            file://add_ignore_paths.patch \
+           file://abort_on_mismatch.patch \
            file://fallback-passwd \
            file://fallback-group \
            "
