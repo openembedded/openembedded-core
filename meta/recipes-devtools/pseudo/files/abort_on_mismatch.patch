@@ -1,0 +1,64 @@
+Rather than mapping mismatched inode entries to paths, thrown an abort() 
+instead. Add a new result type to allow the server to pass back
+this instruction to the client.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Upstream-Status: Pending
+
+Index: git/pseudo.c
+===================================================================
+--- git.orig/pseudo.c
++++ git/pseudo.c
+@@ -695,17 +695,15 @@ pseudo_op(pseudo_msg_t *msg, const char
+ 						msg->path);
+ 					pdb_did_unlink_file(path_by_ino, &by_ino, by_ino.deleting);
+ 				} else {
+-					int flags = 0;
+-					if (msg->nlink > 1) {
+-						flags = PDBGF_FILE | PDBGF_VERBOSE;
+-					}
+-					pseudo_debug(flags, "path mismatch [%d link%s]: ino %llu db '%s' req '%s'.\n",
++					pseudo_diag("path mismatch [%d link%s]: ino %llu db '%s' req '%s'.\n",
+ 						msg->nlink,
+ 						msg->nlink == 1 ? "" : "s",
+ 						(unsigned long long) msg_header.ino,
+ 						path_by_ino ? path_by_ino : "no path",
+ 						msg->path);
+ 					found_ino = 0;
++					msg->result = RESULT_ABORT;
++					goto op_exit;
+ 				}
+ 			}
+ 		} else {
+@@ -1025,6 +1023,7 @@ pseudo_op(pseudo_msg_t *msg, const char
+ 		break;
+ 	}
+ 
++op_exit:
+ 	/* in the case of an exact match, we just used the pointer
+ 	 * rather than allocating space.
+ 	 */
+Index: git/pseudo_client.c
+===================================================================
+--- git.orig/pseudo_client.c
++++ git/pseudo_client.c
+@@ -1919,6 +1919,10 @@ pseudo_client_op(pseudo_op_t op, int acc
+ #endif
+ 		if (result) {
+ 			pseudo_debug(PDBGF_OP, "(%d) %s", getpid(), pseudo_res_name(result->result));
++			if (result->result == RESULT_ABORT) {
++				pseudo_diag("abort()ing pseudi client by server request. See https://wiki.yoctoproject.org/wiki/Pseudo_Abort for more details on this.\n");
++				abort();
++			}
+ 			if (op == OP_STAT || op == OP_FSTAT) {
+ 				pseudo_debug(PDBGF_OP, " mode 0%o uid %d:%d",
+ 					(int) result->mode,
+Index: git/enums/res.in
+===================================================================
+--- git.orig/enums/res.in
++++ git/enums/res.in
+@@ -2,3 +2,4 @@ res: RESULT
+ succeed
+ fail
+ error
++abort
