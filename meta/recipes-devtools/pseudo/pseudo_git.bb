@@ -5,6 +5,7 @@ SRC_URI = "git://git.yoctoproject.org/pseudo;branch=oe-core \
            file://delete_mismatches.patch \
            file://add_ignore_paths.patch \
            file://abort_on_mismatch.patch \
+           file://track_link_fds.patch \
            file://fallback-passwd \
            file://fallback-group \
            "

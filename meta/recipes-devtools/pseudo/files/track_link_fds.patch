@@ -1,0 +1,155 @@
+Consider what happens if a program does:
+
+fd = fopen("A")
+link("A", "B")
+unlink("A")
+fchown(fd)
+
+Assuming we can't use the database, in order to handle this correctly, 
+we need to change the open fd to point at B when A us unlinked.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Upstream-Status: Pending
+
+Index: git/ports/unix/guts/linkat.c
+===================================================================
+--- git.orig/ports/unix/guts/linkat.c
++++ git/ports/unix/guts/linkat.c
+@@ -116,6 +116,7 @@
+ 	 * if the thing linked is a symlink.
+ 	 */
+ 	pseudo_client_op(OP_LINK, 0, -1, -1, newpath, &buf);
++	pseudo_client_linked_paths(oldpath, newpath);
+ 
+ 	errno = save_errno;
+ 
+Index: git/pseudo_client.c
+===================================================================
+--- git.orig/pseudo_client.c
++++ git/pseudo_client.c
+@@ -70,6 +70,8 @@ int pseudo_umask = 022;
+ 
+ static char **fd_paths = NULL;
+ static int nfds = 0;
++static char **linked_fd_paths = NULL;
++static int linked_nfds = 0;
+ static const char **passwd_paths = NULL;
+ static int npasswd_paths = 0;
+ #ifdef PSEUDO_PROFILING
+@@ -889,39 +891,70 @@ fd_path(int fd) {
+ }
+ 
+ static void
+-pseudo_client_path(int fd, const char *path) {
++pseudo_client_path_set(int fd, const char *path, char ***patharray, int *len) {
+ 	if (fd < 0)
+ 		return;
+ 
+-	if (fd >= nfds) {
++	if (fd >= *len) {
+ 		int i;
+ 		pseudo_debug(PDBGF_CLIENT, "expanding fds from %d to %d\n",
+-			nfds, fd + 1);
+-		fd_paths = realloc(fd_paths, (fd + 1) * sizeof(char *));
+-		for (i = nfds; i < fd + 1; ++i)
+-			fd_paths[i] = 0;
+-		nfds = fd + 1;
++			*len, fd + 1);
++		(*patharray) = realloc((*patharray), (fd + 1) * sizeof(char *));
++		for (i = *len; i < fd + 1; ++i)
++			(*patharray)[i] = 0;
++		*len = fd + 1;
+ 	} else {
+-		if (fd_paths[fd]) {
++		if ((*patharray)[fd]) {
+ 			pseudo_debug(PDBGF_CLIENT, "reopening fd %d [%s] -- didn't see close\n",
+-				fd, fd_paths[fd]);
++				fd, (*patharray)[fd]);
+ 		}
+ 		/* yes, it is safe to free null pointers. yay for C89 */
+-		free(fd_paths[fd]);
+-		fd_paths[fd] = 0;
++		free((*patharray)[fd]);
++		(*patharray)[fd] = 0;
+ 	}
+ 	if (path) {
+-		fd_paths[fd] = strdup(path);
++		(*patharray)[fd] = strdup(path);
++	}
++}
++
++static void
++pseudo_client_path(int fd, const char *path) {
++	pseudo_client_path_set(fd, path, &fd_paths, &nfds);
++}
++
++void
++pseudo_client_linked_paths(const char *oldpath, const char *newpath) {
++	int fd;
++	for (fd = 3; fd < nfds; ++fd) {
++		if (fd_paths[fd] && !strcmp(oldpath, fd_paths[fd])) {
++			pseudo_client_path_set(fd, newpath, &linked_fd_paths, &linked_nfds);
++		}
+ 	}
+ }
+ 
+ static void
++pseudo_client_unlinked_path(const char *path) {
++	int fd;
++	for (fd = 0; fd < linked_nfds; ++fd) {
++		if (linked_fd_paths[fd] && fd_paths[fd] && !strcmp(path, fd_paths[fd])) {
++			pseudo_client_path(fd, linked_fd_paths[fd]);
++		}
++	}
++}
++
++
++static void
+ pseudo_client_close(int fd) {
+ 	if (fd < 0 || fd >= nfds)
+ 		return;
+ 
+ 	free(fd_paths[fd]);
+ 	fd_paths[fd] = 0;
++
++	if (fd < linked_nfds) {
++		free(linked_fd_paths[fd]);
++		linked_fd_paths[fd] = 0;
++	}
+ }
+ 
+ /* spawn server */
+@@ -1860,6 +1893,12 @@ pseudo_client_op(pseudo_op_t op, int acc
+ 			dirfd);
+ 		pseudo_client_path(dirfd, fd_path(fd));
+ 		break;
++	case OP_UNLINK:
++	case OP_DID_UNLINK:
++		if (path)
++			pseudo_client_unlinked_path(path);
++		do_request = 1;
++		break;
+ 	/* operations for which we should use the magic uid/gid */
+ 	case OP_CHMOD:
+ 	case OP_CREAT:
+@@ -1882,8 +1921,6 @@ pseudo_client_op(pseudo_op_t op, int acc
+ 	case OP_LINK:
+ 	case OP_RENAME:
+ 	case OP_STAT:
+-	case OP_UNLINK:
+-	case OP_DID_UNLINK:
+ 	case OP_CANCEL_UNLINK:
+ 	case OP_MAY_UNLINK:
+ 	case OP_GET_XATTR:
+Index: git/pseudo_client.h
+===================================================================
+--- git.orig/pseudo_client.h
++++ git/pseudo_client.h
+@@ -9,6 +9,7 @@
+ extern pseudo_msg_t *pseudo_client_op(pseudo_op_t op, int access, int fd, int dirfd, const char *path, const PSEUDO_STATBUF *buf, ...);
+ extern int pseudo_client_ignore_path(const char *path);
+ extern int pseudo_client_ignore_fd(int fd);
++extern void pseudo_client_linked_paths(const char *oldpath, const char *newpath);
+ #if PSEUDO_STATBUF_64
+ #define base_lstat real_lstat64
+ #define base_fstat real_fstat64
