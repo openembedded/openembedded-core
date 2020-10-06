@@ -14,11 +14,15 @@ BOOST_LIBS = "\
 	atomic \
 	chrono \
 	container \
+	context \
 	contract \
+	coroutine \
 	date_time \
 	exception \
+	fiber \
 	filesystem \
 	graph \
+	headers \
 	iostreams \
 	log \
 	math \
@@ -27,22 +31,12 @@ BOOST_LIBS = "\
 	regex \
 	serialization \
 	system \
-	timer \
 	test \
 	thread \
+	timer \
+	type_erasure \
 	wave \
 	"
-
-# only supported by x86 and powerpc
-BOOST_LIBS_append_x86 = " context coroutine"
-BOOST_LIBS_append_x86-64 = " context coroutine"
-BOOST_LIBS_append_powerpc = " context coroutine"
-BOOST_LIBS_append_arm = " context coroutine"
-BOOST_LIBS_append_aarch64 = " context coroutine"
-# need consistent settings for native builds (x86 override not applied for native)
-BOOST_LIBS_remove_class-native = " context coroutine"
-# does not compile
-BOOST_LIBS_remove_mips16e = "wave"
 
 # optional libraries
 PACKAGECONFIG ??= "locale python"
