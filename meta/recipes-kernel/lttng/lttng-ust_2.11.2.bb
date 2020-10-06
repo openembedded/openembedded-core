@@ -31,8 +31,8 @@ SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
            file://0001-python-lttngust-Makefile.am-Add-install-lib-to-setup.patch \
            "
 
-SRC_URI[md5sum] = "7de04a8ff1f0a4effa09a42620ec4081"
-SRC_URI[sha256sum] = "7fbab963d60741ffd4d8dd0a246f6cf168cdfe3b2385798bd90550f5f0bba869"
+SRC_URI[md5sum] = "82556e4ab28c818c80db84296fc28bb3"
+SRC_URI[sha256sum] = "6b481cec7fe748503c827319e3356137bceef4cce8adecbda3a94c6effcdd161"
 
 CVE_PRODUCT = "ust"
 
