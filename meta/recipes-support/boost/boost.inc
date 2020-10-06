@@ -1,6 +1,6 @@
 SUMMARY = "Free peer-reviewed portable C++ source libraries"
 SECTION = "libs"
-DEPENDS = "bjam-native zlib bzip2"
+DEPENDS = "boost-build-native zlib bzip2"
 
 CVE_PRODUCT = "boost:boost"
 
@@ -180,7 +180,7 @@ do_configure() {
 		echo "using mpi : : <find-shared-library>mpi ;" >> ${WORKDIR}/user-config.jam
 	fi
 
-	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=bjam --with-toolset=gcc
+	CC="${BUILD_CC}" CFLAGS="${BUILD_CFLAGS}" ./bootstrap.sh --with-bjam=b2 --with-toolset=gcc
 
 	# Boost can't be trusted to find Python on it's own, so remove any mention
 	# of it from the boost configuration
@@ -189,7 +189,7 @@ do_configure() {
 
 do_compile() {
 	cd ${S}
-	bjam ${BJAM_OPTS} \
+	b2 ${BJAM_OPTS} \
 		--prefix=${prefix} \
 		--exec-prefix=${exec_prefix} \
 		--libdir=${libdir} \
@@ -199,7 +199,7 @@ do_compile() {
 
 do_install() {
 	cd ${S}
-	bjam ${BJAM_OPTS} \
+	b2 ${BJAM_OPTS} \
 		--libdir=${D}${libdir} \
 		--includedir=${D}${includedir} \
 		install
