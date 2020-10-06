@@ -36,8 +36,8 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0001-tests-regression-disable-the-tools-live-tests.patch \
            "
 
-SRC_URI[md5sum] = "68ed78f7fa4235477ea577e48b3cd245"
-SRC_URI[sha256sum] = "936477305b25f65c5dd22db9161287d30a309ce868b6180857b1fd1fb5e6a56b"
+SRC_URI[md5sum] = "4bd983891f642d4139f80251f209ef81"
+SRC_URI[sha256sum] = "38167b49e4d1bf78fdd5c3156d411123713fd8f04b0067d4b1cd03742d0edfaa"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
