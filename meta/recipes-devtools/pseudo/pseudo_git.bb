@@ -9,6 +9,7 @@ SRC_URI = "git://git.yoctoproject.org/pseudo;branch=oe-core \
            file://xattr_fix.patch \
            file://mayunlink.patch \
            file://pathfix.patch \
+           file://statxfix.patch \
            file://fallback-passwd \
            file://fallback-group \
            "
