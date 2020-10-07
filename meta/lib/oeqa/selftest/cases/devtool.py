@@ -520,6 +520,10 @@ class DevtoolAddTests(DevtoolBase):
         self._test_recipe_contents(recipefile, checkvars, [])
 
     def test_devtool_add_npm(self):
+        collections = get_bb_var('BBFILE_COLLECTIONS').split()
+        if "openembedded-layer" not in collections:
+            self.skipTest("Test needs meta-oe for nodejs")
+
         pn = 'savoirfairelinux-node-server-example'
         pv = '1.0.0'
         url = 'npm://registry.npmjs.org;package=@savoirfairelinux/node-server-example;version=' + pv
