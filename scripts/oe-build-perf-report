@@ -353,7 +353,7 @@ def print_html_report(data, id_comp, buildstats):
             bs_key = test + '.' + meas
             rev = str(metadata['commit_num']['value'])
             comp_rev = str(metadata['commit_num']['value_old'])
-            if (rev in buildstats and bs_key in buildstats[rev] and
+            if (buildstats and rev in buildstats and bs_key in buildstats[rev] and
                     comp_rev in buildstats and bs_key in buildstats[comp_rev]):
                 new_meas['buildstats'] = BSSummary(buildstats[comp_rev][bs_key],
                                                    buildstats[rev][bs_key])
