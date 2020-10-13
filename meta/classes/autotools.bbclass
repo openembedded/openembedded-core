@@ -215,14 +215,6 @@ autotools_do_configure() {
 			PRUNE_M4="$PRUNE_M4 gettext.m4 iconv.m4 lib-ld.m4 lib-link.m4 lib-prefix.m4 nls.m4 po.m4 progtest.m4"
 		fi
 		mkdir -p m4
-		if grep -q "^[[:space:]]*[AI][CT]_PROG_INTLTOOL" $CONFIGURE_AC; then
-			if ! echo "${DEPENDS}" | grep -q intltool-native; then
-				bbwarn "Missing DEPENDS on intltool-native"
-			fi
-			PRUNE_M4="$PRUNE_M4 intltool.m4"
-			bbnote Executing intltoolize --copy --force --automake
-			intltoolize --copy --force --automake
-		fi
 
 		for i in $PRUNE_M4; do
 			find ${S} -ignore_readdir_race -name $i -delete
