@@ -55,7 +55,9 @@ def siteinfo_data_for_machine(arch, os, d):
         "riscv32": "endian-little bit-32 riscv-common",
         "riscv64": "endian-little bit-64 riscv-common",
         "sh3": "endian-little bit-32 sh-common",
+        "sh3eb": "endian-big bit-32 sh-common",
         "sh4": "endian-little bit-32 sh-common",
+        "sh4eb": "endian-big bit-32 sh-common",
         "sparc": "endian-big bit-32",
         "viac3": "endian-little bit-32 ix86-common",
         "x86_64": "endian-little", # bitinfo specified in targetinfo
