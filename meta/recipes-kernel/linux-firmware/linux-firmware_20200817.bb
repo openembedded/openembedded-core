@@ -288,6 +288,9 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2-mips \
              ${PN}-liquidio \
+             ${PN}-nvidia-license \
+             ${PN}-nvidia-tegra-k1 ${PN}-nvidia-tegra \
+             ${PN}-nvidia-gpu \
              ${PN}-netronome-license ${PN}-netronome \
              ${PN}-qat ${PN}-qat-license \
              ${PN}-qcom-license \
@@ -477,6 +480,27 @@ FILES_${PN}-netronome = " \
 "
 
 RDEPENDS_${PN}-netronome += "${PN}-netronome-license"
+
+# For Nvidia
+LICENSE_${PN}-nvidia-gpu = "Firmware-nvidia"
+LICENSE_${PN}-nvidia-tegra = "Firmware-nvidia"
+LICENSE_${PN}-nvidia-tegra-k1 = "Firmware-nvidia"
+LICENSE_${PN}-nvidia-license = "Firmware-nvidia"
+
+FILES_${PN}-nvidia-gpu = "${nonarch_base_libdir}/firmware/nvidia"
+FILES_${PN}-nvidia-tegra = " \
+  ${nonarch_base_libdir}/firmware/nvidia/tegra* \
+  ${nonarch_base_libdir}/firmware/nvidia/gm20b \
+  ${nonarch_base_libdir}/firmware/nvidia/gp10b \
+"
+FILES_${PN}-nvidia-tegra-k1 = " \
+  ${nonarch_base_libdir}/firmware/nvidia/tegra124 \
+  ${nonarch_base_libdir}/firmware/nvidia/gk20a \
+"
+FILES_${PN}-nvidia-license = "${nonarch_base_libdir}/firmware/LICENCE.nvidia"
+
+RDEPENDS_${PN}-nvidia-gpu += "${PN}-nvidia-license"
+RDEPENDS_${PN}-nvidia-tegra += "${PN}-nvidia-license"
 
 # For rtl
 LICENSE_${PN}-rtl8188 = "Firmware-rtlwifi_firmware"
