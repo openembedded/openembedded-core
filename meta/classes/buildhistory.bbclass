@@ -90,8 +90,7 @@ buildhistory_emit_sysroot() {
 python buildhistory_emit_pkghistory() {
     if d.getVar('BB_CURRENTTASK') in ['populate_sysroot', 'populate_sysroot_setscene']:
         bb.build.exec_func("buildhistory_emit_sysroot", d)
-
-    if not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
+    elif not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
         return 0
 
     if not "package" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
@@ -229,8 +228,9 @@ python buildhistory_emit_pkghistory() {
                     break
     except IOError as e:
         if e.errno == errno.ENOENT:
-            # Probably a -cross recipe, just ignore
-            return 0
+            if not bb.data.inherits_class('native', d):
+                # Probably a -cross recipe, just ignore
+                return 0
         else:
             raise
 
