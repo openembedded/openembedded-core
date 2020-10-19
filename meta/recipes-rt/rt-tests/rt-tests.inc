@@ -1,12 +1,7 @@
-# Version 1.1
-SRCREV = "dff174f994f547a5785d32454865f140daacb0f5"
+# Version 1.8
+SRCREV = "9f78b91f057e63b0c241012ce36b57168133eefb"
 PE = "1"
 
-SRC_URI = "git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git"
-# 1.2 and up seem to be development versions
-UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(?!1\.[2-8])(\d+(\.\d+)+))"
+SRC_URI = "git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git;branch=unstable/devel/latest"
 
 S = "${WORKDIR}/git"
-
-# calling 'uname -m' is broken on crossbuilds
-EXTRA_OEMAKE = "NUMA=0"
