@@ -23,9 +23,6 @@ SRC_URI = "git://github.com/numactl/numactl \
 
 S = "${WORKDIR}/git"
 
-# ARM does not currently support NUMA
-COMPATIBLE_HOST = "^((?!arm).*)$"
-
 do_install() {
     oe_runmake DESTDIR=${D} prefix=${D}/usr install
     #remove the empty man2 directory
