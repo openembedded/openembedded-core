@@ -69,6 +69,9 @@ SRC_URI = "\
            file://0037-CVE-2019-14250-Check-zero-value-in-simple_object_elf.patch \
            file://0038-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
            file://0039-process_alt_operands-Don-t-match-user-defined-regs-o.patch \
+           file://0001-aarch64-New-Straight-Line-Speculation-SLS-mitigation.patch \
+           file://0002-aarch64-Introduce-SLS-mitigation-for-RET-and-BR-inst.patch \
+           file://0003-aarch64-Mitigate-SLS-for-BLR-instruction.patch \
 "
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 SRC_URI[sha256sum] = "71e197867611f6054aa1119b13a0c0abac12834765fe2d81f35ac57f84f742d1"
