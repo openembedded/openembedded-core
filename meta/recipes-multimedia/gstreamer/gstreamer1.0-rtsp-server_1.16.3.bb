@@ -12,8 +12,8 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/${PNREAL}/${PNREAL}-${PV}.tar.x
            file://0001-meson-build-gir-even-when-cross-compiling-if-introsp.patch \
            "
 
-SRC_URI[md5sum] = "8a998725820c771ba45be6e18bfdf73a"
-SRC_URI[sha256sum] = "de07a2837b3b04820ce68264a4909f70c221b85dbff0cede7926e9cdbb1dc26e"
+SRC_URI[md5sum] = "f0d8263c9d61f6f05b59ae0f676a6406"
+SRC_URI[sha256sum] = "67886b872826d513c58f88d559d4dc4aa63382d03fb64ceac91a09537fe6fea0"
 
 S = "${WORKDIR}/${PNREAL}-${PV}"
 
