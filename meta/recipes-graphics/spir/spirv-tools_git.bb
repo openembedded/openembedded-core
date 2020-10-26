@@ -9,12 +9,12 @@ SECTION = "graphics"
 S = "${WORKDIR}/git"
 DEST_DIR = "${S}/external" 
 SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git;name=spirv-tools \
-	git://github.com/KhronosGroup/SPIRV-Headers.git;name=spirv-headers;destsuffix=${DEST_DIR}/spirv-headers \
-	git://github.com/google/effcee.git;name=effcee;destsuffix=${DEST_DIR}/effcee \
-	git://github.com/google/re2.git;name=re2;destsuffix=${DEST_DIR}/re2 \
-	git://github.com/google/googletest.git;name=googletest;destsuffix=${DEST_DIR}/googletest \
-        file://0001-Respect-CMAKE_INSTALL_LIBDIR-in-installed-CMake-file.patch \
-        file://0001-Avoid-pessimizing-std-move-3124.patch \
+           git://github.com/KhronosGroup/SPIRV-Headers.git;name=spirv-headers;destsuffix=${DEST_DIR}/spirv-headers \
+           git://github.com/google/effcee.git;name=effcee;destsuffix=${DEST_DIR}/effcee \
+           git://github.com/google/re2.git;name=re2;destsuffix=${DEST_DIR}/re2 \
+           git://github.com/google/googletest.git;name=googletest;destsuffix=${DEST_DIR}/googletest \
+           file://0001-Respect-CMAKE_INSTALL_LIBDIR-in-installed-CMake-file.patch;destsuffix=${DEST_DIR}/effcee \
+           file://0001-Avoid-pessimizing-std-move-3124.patch \
 "
 SRCREV_spirv-tools = "c413b982c316b14e784f50d941814fc737b55b4a"
 SRCREV_spirv-headers = "af64a9e826bf5bb5fcd2434dd71be1e41e922563"
@@ -28,9 +28,9 @@ EXTRA_OECMAKE += "-DSPIRV_WERROR=OFF"
 
 do_install_append() {
 	install -d ${D}/${includedir}/spirv
-	install -m 0644 ${DEST_DIR}/spirv-headers/include/spirv/1.2/* ${D}/${includedir}/spirv	
+	install -m 0644 ${DEST_DIR}/spirv-headers/include/spirv/1.2/* ${D}${includedir}/spirv
 	install -d ${D}/${includedir}/spirv/unified1
-	install -m 0644 ${DEST_DIR}/spirv-headers/include/spirv/unified1/* ${D}/${includedir}/spirv/unified1
+	install -m 0644 ${DEST_DIR}/spirv-headers/include/spirv/unified1/* ${D}${includedir}/spirv/unified1
 }
 
 FILES_SOLIBSDEV = ""
