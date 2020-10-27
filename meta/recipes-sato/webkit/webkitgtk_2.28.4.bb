@@ -94,6 +94,10 @@ EXTRA_OECMAKE_append_armv4 = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE_append_mipsarch = " -DUSE_LD_GOLD=OFF "
 EXTRA_OECMAKE_append_powerpc = " -DUSE_LD_GOLD=OFF "
 
+# JIT and gold linker does not work on RISCV
+EXTRA_OECMAKE_append_riscv32 = " -DUSE_LD_GOLD=OFF -DENABLE_JIT=OFF"
+EXTRA_OECMAKE_append_riscv64 = " -DUSE_LD_GOLD=OFF -DENABLE_JIT=OFF"
+
 # JIT not supported on MIPS either
 EXTRA_OECMAKE_append_mipsarch = " -DENABLE_JIT=OFF -DENABLE_C_LOOP=ON "
 
