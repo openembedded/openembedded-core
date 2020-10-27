@@ -1,5 +1,5 @@
 SUMMARY = "Wireless Central Regulatory Domain Database"
-HOMEPAGE = "http://wireless.kernel.org/en/developers/Regulatory/CRDA"
+HOMEPAGE = "https://wireless.wiki.kernel.org/en/developers/regulatory/crda"
 SECTION = "net"
 LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=07c4f6dea3845b02a18dc00c8c87699c"
