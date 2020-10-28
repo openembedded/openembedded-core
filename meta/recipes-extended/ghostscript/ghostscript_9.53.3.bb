@@ -34,7 +34,6 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
 SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.21-prevent_recompiling.patch \
            file://cups-no-gcrypt.patch \
-           file://CVE-2020-15900.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
@@ -42,8 +41,7 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[md5sum] = "0f6964ab9b83a63b7e373f136243f901"
-SRC_URI[sha256sum] = "c2501d8e8e0814c4a5aa7e443e230e73d7af7f70287546f7b697e5ef49e32176"
+SRC_URI[sha256sum] = "6eaf422f26a81854a230b80fd18aaef7e8d94d661485bd2e97e695b9dce7bf7f"
 
 # Put something like
 #
@@ -83,6 +81,10 @@ CFLAGS += "-DHAVE_SYS_TIME_H=1"
 BUILD_CFLAGS += "-DHAVE_SYS_TIME_H=1"
 
 inherit autotools-brokensep
+
+do_configure_prepend_class-target () {
+        rm -rf ${S}/jpeg/
+}
 
 do_configure_append () {
 	# copy tools from the native ghostscript build
