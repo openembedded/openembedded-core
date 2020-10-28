@@ -6,12 +6,12 @@ HOMEPAGE = "http://waterlan.home.xs4all.nl/dos2unix.html"
 SECTION = "support"
 
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://COPYING.txt;md5=0c977b18f0a384d03597a517d7d03e32"
+LIC_FILES_CHKSUM = "file://COPYING.txt;md5=8a7c3499a1142df819e727253cd53a12"
 
 SRC_URI = "git://git.code.sf.net/p/dos2unix/dos2unix"
 UPSTREAM_CHECK_GITTAGREGEX = "dos2unix-(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV = "0490f0723b1a0851b17343f6164915f3474b5197"
+SRCREV = "72596f0ae21faa25a07a872d4843bc885475115d"
 
 S = "${WORKDIR}/git/dos2unix"
 
