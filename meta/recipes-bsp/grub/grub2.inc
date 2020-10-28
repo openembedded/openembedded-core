@@ -19,6 +19,14 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://grub-module-explicitly-keeps-symbole-.module_license.patch \
            file://0001-grub.d-10_linux.in-add-oe-s-kernel-name.patch \
            file://CVE-2020-10713.patch \
+           file://0001-calloc-Make-sure-we-always-have-an-overflow-checking.patch \
+           file://0002-lvm-Add-LVM-cache-logical-volume-handling.patch \
+           file://0003-calloc-Use-calloc-at-most-places.patch \
+           file://0004-safemath-Add-some-arithmetic-primitives-that-check-f.patch \
+           file://0005-malloc-Use-overflow-checking-primitives-where-we-do-.patch \
+           file://0006-script-Remove-unused-fields-from-grub_script_functio.patch \
+           file://0007-script-Avoid-a-use-after-free-when-redefining-a-func.patch \
+           file://0008-linux-Fix-integer-overflows-in-initrd-size-handling.patch \
 "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
