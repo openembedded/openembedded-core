@@ -27,16 +27,12 @@ CFLAGS_append_x86-64 = " -fomit-frame-pointer"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "0d79a93e6ca44d9bc95973faea6bcd7b0c6d1f43"
+SRCREV = "da2f34028f046a208aa2fed5e287df2538e69f91"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-build-Add-option-to-select-libc-implementation.patch \
-           file://0004-guard-mallocopt-with-__GLIBC__.patch \
            file://0007-Fix-test_proc_kill-hanging.patch \
            file://0001-Add-more-musl-exclusions.patch \
-           file://0001-ptrace01-Fix-missing-format-string.patch \
-           file://0001-sigwaitinfo-Do-not-run-invalid-undefined-test-cases.patch \
-           file://0001-syscalls-copy_file_range02-Expect-EFBIG-in-subcase-m.patch \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            "
 
