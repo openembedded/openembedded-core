@@ -28,7 +28,7 @@ SRC_URI_append_libc-musl = " \
            file://0004-Fix-error-on-musl.patch \
            file://0015-config-eu.am-do-not-use-Werror.patch \
            "
-SRC_URI[sha256sum] = "b827b6e35c59d188ba97d7cf148fa8dc6f5c68eb6c5981888dfdbb758c0b569d"
+SRC_URI[sha256sum] = "29a6ad7421ec2acfee489bb4a699908281ead2cb63a20a027ce8804a165f0eb3"
 
 inherit autotools gettext ptest pkgconfig
 
@@ -40,6 +40,7 @@ DEPENDS_BZIP2_class-target = "bzip2"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[bzip2] = "--with-bzlib,--without-bzlib,${DEPENDS_BZIP2}"
 PACKAGECONFIG[xz] = "--with-lzma,--without-lzma,xz"
+PACKAGECONFIG[libdebuginfod] = "--enable-libdebuginfod,--disable-libdebuginfod,curl"
 
 RDEPENDS_${PN}-ptest += "libasm libelf bash make coreutils ${PN}-binutils"
 
@@ -59,6 +60,8 @@ do_install_ptest() {
 		install -d -m 755                       ${D}${PTEST_PATH}/src
 		install -d -m 755                       ${D}${PTEST_PATH}/libelf
 		install -d -m 755                       ${D}${PTEST_PATH}/libdw
+		install -d -m 755                       ${D}${PTEST_PATH}/libdwfl
+		install -d -m 755                       ${D}${PTEST_PATH}/libdwelf
 		install -d -m 755                       ${D}${PTEST_PATH}/libasm
 		for test_file in ${TEST_FILES}; do
 			if [ -f ${B}/src/${test_file} ]; then
@@ -68,6 +71,11 @@ do_install_ptest() {
 		cp ${D}${libdir}/libelf-${PV}.so ${D}${PTEST_PATH}/libelf/libelf.so
 		cp ${D}${libdir}/libdw-${PV}.so ${D}${PTEST_PATH}/libdw/libdw.so
 		cp ${D}${libdir}/libasm-${PV}.so ${D}${PTEST_PATH}/libasm/libasm.so
+		cp ${S}/libelf/*.h             ${D}${PTEST_PATH}/libelf/
+		cp ${S}/libdw/*.h              ${D}${PTEST_PATH}/libdw/
+		cp ${S}/libdwfl/*.h            ${D}${PTEST_PATH}/libdwfl/
+		cp ${S}/libdwelf/*.h           ${D}${PTEST_PATH}/libdwelf/
+		cp ${S}/libasm/*.h             ${D}${PTEST_PATH}/libasm/
 		cp -r ${S}/tests/                       ${D}${PTEST_PATH}
 		cp -r ${B}/tests/*                      ${D}${PTEST_PATH}/tests
 		cp -r ${B}/config.h                     ${D}${PTEST_PATH}
