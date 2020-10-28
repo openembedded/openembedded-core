@@ -15,11 +15,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c434e8128a68bedd59b80b2ac1eb1c4a \
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-${PV}.tar.xz \
            file://0001-giscanner-ignore-error-return-codes-from-ldd-wrapper.patch \
-           file://0001-gir-add-a-dependency-for-g-ir-compiler-for-building-.patch \
+           file://0001-meson.build-exclude-girepo_dep-if-introspection-data.patch \
            "
 
-SRC_URI[md5sum] = "3419dfd086efcf83768e0579ab6abd2b"
-SRC_URI[sha256sum] = "80beae6728c134521926affff9b2e97125749b38d38744dc901f4010ee3e7fa7"
+SRC_URI[sha256sum] = "dd44a55ee5f426ea22b6b89624708f9e8d53f5cc94e5485c15c87cb30e06161d"
 
 SRC_URI_append_class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
@@ -48,7 +47,7 @@ PACKAGECONFIG[doctool] = "-Ddoctool=enabled,-Ddoctool=disabled,python3-mako,"
 # Configure target build to use native tools of itself and to use a qemu wrapper
 # and optionally to generate introspection data
 EXTRA_OEMESON_class-target = " \
-    -Dgi_cross_use_host_gi=true \
+    -Dgi_cross_use_prebuilt_gi=true \
     -Dgi_cross_binary_wrapper=${B}/g-ir-scanner-qemuwrapper \
     -Dgi_cross_ldd_wrapper=${B}/g-ir-scanner-lddwrapper \
     -Dgi_cross_pkgconfig_sysroot_path=${PKG_CONFIG_SYSROOT_DIR} \
