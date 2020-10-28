@@ -22,9 +22,9 @@ HOMEPAGE = "http://www.rpm.org"
 
 # libraries are also LGPL - how to express this?
 LICENSE = "GPL-2.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c0bf017c0fd1920e6158a333acabfd4a"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c4eec0c20c6034b9407a09945b48a43f"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.15.x \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x \
            file://environment.d-rpm.sh \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
@@ -38,14 +38,12 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.15.x \
            file://0001-perl-disable-auto-reqs.patch \
            file://0001-rpm-rpmio.c-restrict-virtual-memory-usage-if-limit-s.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
-           file://0001-rpmplugins.c-call-dlerror-prior-to-dlsym.patch \
-           file://0001-rpmfc.c-do-not-run-file-classification-in-parallel.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
-           file://0001-Bump-up-the-limit-of-signature-header-to-64MB.patch \
+           file://0001-rpmdb.c-add-a-missing-include.patch \
            "
 
 PE = "1"
-SRCREV = "ab2179452c5be276a6b96c591afded485c7e58c3"
+SRCREV = "cd7f9303ef1070f027493cad7d00bc66935af2a0"
 
 S = "${WORKDIR}/git"
 
@@ -54,6 +52,8 @@ DEPENDS_append_class-native = " file-replacement-native bzip2-replacement-native
 
 inherit autotools gettext pkgconfig python3native
 export PYTHON_ABI
+
+AUTOTOOLS_AUXDIR = "${S}/build-aux"
 
 # OE-core patches autoreconf to additionally run gnu-configize, which fails with this recipe
 EXTRA_AUTORECONF_append = " --exclude=gnu-configize"
@@ -96,6 +96,10 @@ WRAPPER_TOOLS = " \
    ${bindir}/rpmspec \
    ${libdir}/rpm/rpmdeps \
 "
+
+do_configure_prepend() {
+        mkdir -p ${S}/build-aux
+}
 
 do_install_append_class-native() {
         for tool in ${WRAPPER_TOOLS}; do
