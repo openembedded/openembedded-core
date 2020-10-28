@@ -11,19 +11,9 @@ include lttng-platforms.inc
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
-           file://0001-Kconfig-fix-dependency-issue-when-building-in-tree-w.patch \
-           file://0002-fix-Move-mmutrace.h-into-the-mmu-sub-directory-v5.9.patch \
-           file://0003-fix-KVM-x86-mmu-Make-kvm_mmu_page-definition-and-acc.patch \
-           file://0004-fix-ext4-limit-the-length-of-per-inode-prealloc-list.patch \
-           file://0005-fix-ext4-indicate-via-a-block-bitmap-read-is-prefetc.patch \
-           file://0006-fix-removal-of-smp_-read_barrier_depends-v5.9.patch \
-           file://0007-fix-writeback-Drop-I_DIRTY_TIME_EXPIRE-v5.9.patch \
-           file://0008-fix-writeback-Fix-sync-livelock-due-to-b_dirty_time-.patch \
-           file://0009-fix-version-ranges-for-ext4_discard_preallocations-a.patch \
-           file://0010-Fix-system-call-filter-table.patch \
            "
 
-SRC_URI[sha256sum] = "df50bc3bd58679705714f17721acf619a8b0cedc694f8a97052aa5099626feca"
+SRC_URI[sha256sum] = "673ef85c9f03e9b8fed10795e09d4e68add39404b70068d08b10f7b85754d7f0"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
