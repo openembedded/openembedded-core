@@ -1,7 +1,7 @@
-From 72561a0fca562d03567ace7b4cfc94992cd6525c Mon Sep 17 00:00:00 2001
+From 3b05e91720c10fcf6e0e408595b7217f6fa145c2 Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Wed, 3 Feb 2016 18:05:41 -0800
-Subject: [PATCH] avoid including <sys/poll.h> directly
+Subject: [PATCH 2/4] avoid including <sys/poll.h> directly
 
 musl libc generates warnings if <sys/poll.h> is included directly.
 
@@ -13,7 +13,7 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sys/dvb/gstdvbsrc.c b/sys/dvb/gstdvbsrc.c
-index b93255f..49f145a 100644
+index ca6b92a..b2772db 100644
 --- a/sys/dvb/gstdvbsrc.c
 +++ b/sys/dvb/gstdvbsrc.c
 @@ -97,7 +97,7 @@
@@ -26,5 +26,5 @@ index b93255f..49f145a 100644
  #include <errno.h>
  #include <stdio.h>
 -- 
-1.9.1
+2.28.0
 

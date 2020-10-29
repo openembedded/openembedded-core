@@ -1,15 +1,13 @@
 require gstreamer1.0-plugins-common.inc
 
-SRC_URI = " \
-    https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-${PV}.tar.xz \
-    file://0001-meson-build-gir-even-when-cross-compiling-if-introsp.patch \
-    file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
-    file://avoid-including-sys-poll.h-directly.patch \
-    file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
-    file://opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
-"
-SRC_URI[md5sum] = "ccc7404230afddec723bbdb63c89feec"
-SRC_URI[sha256sum] = "f1cb7aa2389569a5343661aae473f0a940a90b872001824bc47fa8072a041e74"
+SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-${PV}.tar.xz \
+           file://0001-fix-maybe-uninitialized-warnings-when-compiling-with.patch \
+           file://0002-avoid-including-sys-poll.h-directly.patch \
+           file://0003-ensure-valid-sentinals-for-gst_structure_get-etc.patch \
+           file://0004-opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
+           "
+SRC_URI[md5sum] = "c1b5f2fb2d76ace6a3d04df73a8c72ea"
+SRC_URI[sha256sum] = "f382ab1caddd64aaa7acb7c4787487f63fd39bd0fde9c757655cbaa457c1185f"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
@@ -75,10 +73,9 @@ PACKAGECONFIG[srtp]            = "-Dsrtp=enabled,-Dsrtp=disabled,libsrtp"
 PACKAGECONFIG[tinyalsa]        = "-Dtinyalsa=enabled,-Dtinyalsa=disabled,tinyalsa"
 PACKAGECONFIG[ttml]            = "-Dttml=enabled,-Dttml=disabled,libxml2 pango cairo"
 PACKAGECONFIG[uvch264]         = "-Duvch264=enabled,-Duvch264=disabled,libusb1 libgudev"
-PACKAGECONFIG[vdpau]           = "-Dvdpau=enabled,-Dvdpau=disabled,libvdpau"
 PACKAGECONFIG[voaacenc]        = "-Dvoaacenc=enabled,-Dvoaacenc=disabled,vo-aacenc"
 PACKAGECONFIG[voamrwbenc]      = "-Dvoamrwbenc=enabled,-Dvoamrwbenc=disabled,vo-amrwbenc"
-PACKAGECONFIG[vulkan]          = "-Dvulkan=enabled,-Dvulkan=disabled,vulkan-loader"
+PACKAGECONFIG[vulkan]          = "-Dvulkan=enabled,-Dvulkan=disabled,vulkan-loader shaderc-native"
 PACKAGECONFIG[wayland]         = "-Dwayland=enabled,-Dwayland=disabled,wayland-native wayland wayland-protocols libdrm"
 PACKAGECONFIG[webp]            = "-Dwebp=enabled,-Dwebp=disabled,libwebp"
 PACKAGECONFIG[webrtc]          = "-Dwebrtc=enabled,-Dwebrtc=disabled,libnice"
@@ -93,6 +90,7 @@ PACKAGECONFIG[zbar]            = "-Dzbar=enabled,-Dzbar=disabled,zbar"
 #   winscreencap wpe x265
 
 EXTRA_OEMESON += " \
+    -Ddoc=disabled \
     -Ddecklink=enabled \
     -Ddvb=enabled \
     -Dfbdev=enabled \
@@ -118,8 +116,7 @@ EXTRA_OEMESON += " \
     -Dmpeg2enc=disabled \
     -Dmplex=disabled \
     -Dmusepack=disabled \
-    -Dnvdec=disabled \
-    -Dnvenc=disabled \
+    -Dnvcodec=disabled \
     -Dofa=disabled \
     -Dopenexr=disabled \
     -Dopenni2=disabled \
@@ -134,7 +131,6 @@ EXTRA_OEMESON += " \
     -Dwinscreencap=disabled \
     -Dwpe=disabled \
     -Dx265=disabled \
-    ${@bb.utils.contains("TUNE_FEATURES", "mx32", "-Dyadif=disabled", "", d)} \
 "
 
 export OPENCV_PREFIX = "${STAGING_DIR_TARGET}${prefix}"
@@ -144,4 +140,6 @@ ARM_INSTRUCTION_SET_armv5 = "arm"
 
 FILES_${PN}-freeverb += "${datadir}/gstreamer-1.0/presets/GstFreeverb.prs"
 FILES_${PN}-opencv += "${datadir}/gst-plugins-bad/1.0/opencv*"
+FILES_${PN}-transcode += "${datadir}/gstreamer-1.0/encoding-profiles"
 FILES_${PN}-voamrwbenc += "${datadir}/gstreamer-1.0/presets/GstVoAmrwbEnc.prs"
+
