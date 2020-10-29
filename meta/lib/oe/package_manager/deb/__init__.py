@@ -312,6 +312,8 @@ class DpkgPM(OpkgDpkgPM):
         if not pkgs:
             return
 
+        os.environ['INTERCEPT_DIR'] = self.intercepts_dir
+
         if with_dependencies:
             os.environ['APT_CONFIG'] = self.apt_conf_file
             cmd = "%s purge %s" % (self.apt_get_cmd, ' '.join(pkgs))
