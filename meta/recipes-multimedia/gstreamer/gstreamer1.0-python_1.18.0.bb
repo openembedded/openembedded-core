@@ -21,15 +21,3 @@ REQUIRED_DISTRO_FEATURES = "gobject-introspection-data"
 UNKNOWN_CONFIGURE_WHITELIST_append = " introspection"
 
 inherit meson pkgconfig distutils3-base upstream-version-is-even gobject-introspection features_check
-
-do_install_append() {
-
-    # Note that this particular find line is taken from the Debian packaging for
-    # gst-python1.0.
-    find "${D}" \
-        -name '*.pyc' -o \
-        -name '*.pyo' -o \
-        -name '*.la' -o \
-        -name 'libgstpythonplugin*' \
-        -delete
-}
