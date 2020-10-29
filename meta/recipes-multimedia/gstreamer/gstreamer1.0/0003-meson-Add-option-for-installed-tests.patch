@@ -1,7 +1,7 @@
-From b843400284751968862751dfe93853f151551c64 Mon Sep 17 00:00:00 2001
+From 24867db22a5cc35e7643bc218e959ce56c306aca Mon Sep 17 00:00:00 2001
 From: Carlos Rafael Giani <crg7475@mailbox.org>
 Date: Fri, 25 Oct 2019 00:06:26 +0200
-Subject: [PATCH] meson: Add option for installed tests
+Subject: [PATCH 3/4] meson: Add option for installed tests
 
 This adds an option for producing installed versions of the unit tests.
 These versions don't need meson to run (only a small shell script). This
@@ -77,10 +77,10 @@ index 0000000..5da86fb
 +write_template(args.output, build_template(args.test_execdir, args.testname))
 +os.chmod(args.output, 0o755)
 diff --git a/meson_options.txt b/meson_options.txt
-index 8afde39..8884dcc 100644
+index 72c3997..346c423 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -16,6 +16,8 @@ option('poisoning', type : 'boolean', value : false, description : 'Enable poiso
+@@ -15,6 +15,8 @@ option('poisoning', type : 'boolean', value : false, description : 'Enable poiso
  option('memory-alignment', type: 'combo',
         choices : ['1', '2', '4', '8', '16', '32', '64', '128', '256', '512', '1024', '2048', '4096', '8192', 'malloc', 'pagesize'],
         value: 'malloc')
@@ -90,10 +90,10 @@ index 8afde39..8884dcc 100644
  # Feature options
  option('check', type : 'feature', value : 'auto', description : 'Build unit test libraries')
 diff --git a/tests/check/meson.build b/tests/check/meson.build
-index 04da83f..2db7f76 100644
+index 372ea41..bb0dcfa 100644
 --- a/tests/check/meson.build
 +++ b/tests/check/meson.build
-@@ -118,11 +118,17 @@ if add_languages('cpp', required : false)
+@@ -120,11 +120,17 @@ if add_languages('cpp', native: false, required: false)
    ]
  endif
  
@@ -109,10 +109,10 @@ index 04da83f..2db7f76 100644
    '-DGST_CHECK_TEST_ENVIRONMENT_BEACON="GST_STATE_IGNORE_ELEMENTS"',
 -  '-DTESTFILE="' + meson.current_source_dir() + '/meson.build"',
 +  '-DTESTFILE="@0@"'.format(test_files_path + '/testfile'),
-   '-DGST_USE_UNSTABLE_API',
    '-DGST_DISABLE_DEPRECATED',
  ]
-@@ -137,6 +143,14 @@ endif
+ 
+@@ -138,6 +144,14 @@ endif
  glib_deps = [gio_dep, gobject_dep, gmodule_dep, glib_dep]
  gst_deps = [gst_dep, gst_base_dep, gst_check_dep, gst_net_dep, gst_controller_dep]
  
@@ -127,7 +127,7 @@ index 04da83f..2db7f76 100644
  foreach t : core_tests
    fname = t[0]
    test_name = fname.split('.')[0].underscorify()
-@@ -150,8 +164,38 @@ foreach t : core_tests
+@@ -151,8 +165,38 @@ foreach t : core_tests
          include_directories : [configinc],
          link_with : link_with_libs,
          dependencies : test_deps + glib_deps + gst_deps,
@@ -253,5 +253,5 @@ index 0000000..89954e0
 +................................................................................
 +................................................................................
 -- 
-2.17.1
+2.28.0
 
