@@ -14,6 +14,7 @@ SRC_URI[sha256sum] = "4e9c3082dff8896cb6b6bea9bb2200d82fb0d7c8d8c8fc9b18704fe553
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/netbase/"
 do_install () {
+
 	install -d ${D}/${mandir}/man8 ${D}${sysconfdir}
 	install -m 0644 ${S}/etc/rpc ${D}${sysconfdir}/rpc
 	install -m 0644 ${S}/etc/protocols ${D}${sysconfdir}/protocols
