@@ -19,7 +19,8 @@ GTKDOC_MESON_OPTION = "gtk_doc"
 GTKDOC_MESON_ENABLE_FLAG = 'enabled'
 GTKDOC_MESON_DISABLE_FLAG = 'disabled'
 
-SRC_URI += " file://run-ptest"
+SRC_URI += "file://run-ptest \
+            file://0001-json-glib-json-enum-types.c.in-fix-build-reproducibi.patch"
 SRC_URI[archive.sha256sum] = "0d7c67602c4161ea7070fab6c5823afd9bd7f7bc955f652a50d3753b08494e73"
 
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxslt-native xmlto-native"
