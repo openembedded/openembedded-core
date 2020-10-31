@@ -439,7 +439,6 @@ class GitApplyTree(PatchTree):
     def extractPatches(tree, startcommit, outdir, paths=None):
         import tempfile
         import shutil
-        import re
         tempdir = tempfile.mkdtemp(prefix='oepatch')
         try:
             shellcmd = ["git", "format-patch", "--no-signature", "--no-numbered", startcommit, "-o", tempdir]
@@ -455,13 +454,10 @@ class GitApplyTree(PatchTree):
                         try:
                             with open(srcfile, 'r', encoding=encoding) as f:
                                 for line in f:
-                                    checkline = line
-                                    if checkline.startswith('Subject: '):
-                                        checkline = re.sub(r'\[.+?\]\s*', '', checkline[9:])
-                                    if checkline.startswith(GitApplyTree.patch_line_prefix):
+                                    if line.startswith(GitApplyTree.patch_line_prefix):
                                         outfile = line.split()[-1].strip()
                                         continue
-                                    if checkline.startswith(GitApplyTree.ignore_commit_prefix):
+                                    if line.startswith(GitApplyTree.ignore_commit_prefix):
                                         continue
                                     patchlines.append(line)
                         except UnicodeDecodeError:
