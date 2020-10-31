@@ -15,8 +15,6 @@ UPSTREAM_CHECK_GITTAGREGEX = "gdb\-(?P<pver>.+)\-release"
 
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
-EXTRA_OEMAKE = "'SUBDIRS=intl mmalloc libiberty opcodes bfd sim gdb etc utils'"
-
 EXPAT = "--with-expat --with-libexpat-prefix=${STAGING_DIR_HOST}"
 
 EXTRA_OECONF = "--disable-gdbtk --disable-x --disable-werror \
@@ -39,6 +37,8 @@ PACKAGECONFIG[babeltrace] = "--with-babeltrace,--without-babeltrace,babeltrace"
 PACKAGECONFIG[tui] = "--enable-tui,--disable-tui"
 
 GDBPROPREFIX = "--program-prefix=''"
+
+DISABLE_STATIC = ""
 
 do_configure () {
 	# override this function to avoid the autoconf/automake/aclocal/autoheader
