@@ -8,8 +8,8 @@ SRC_URI = " \
     file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
     file://opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
 "
-SRC_URI[md5sum] = "ccc7404230afddec723bbdb63c89feec"
-SRC_URI[sha256sum] = "f1cb7aa2389569a5343661aae473f0a940a90b872001824bc47fa8072a041e74"
+SRC_URI[md5sum] = "8969ea1aec3411c13d0e7dd27ccaaef1"
+SRC_URI[sha256sum] = "84efe57011658f0a53a5d5b20f64ef109f5105dccb0808c21e069e946673514d"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
