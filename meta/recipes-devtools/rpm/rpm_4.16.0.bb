@@ -40,6 +40,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
            file://0001-rpmdb.c-add-a-missing-include.patch \
+           file://0001-tools-Add-error.h-for-non-glibc-case.patch \
            "
 
 PE = "1"
