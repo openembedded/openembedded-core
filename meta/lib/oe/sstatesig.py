@@ -162,12 +162,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
             else:
                 return super().get_taskhash(tid, deps, dataCaches)
 
-        # get_taskhash will call get_unihash internally in the parent class, we
-        # need to disable our filter of it whilst this runs else
-        # incorrect hashes can be calculated.
-        self._internal = True
         h = super().get_taskhash(tid, deps, dataCaches)
-        self._internal = False
 
         (mc, _, task, fn) = bb.runqueue.split_tid_mcfn(tid)
 
