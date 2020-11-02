@@ -9,8 +9,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-ba
            file://0002-ssaparse-enhance-SSA-text-lines-parsing.patch \
            file://0004-glimagesink-Downrank-to-marginal.patch \
            "
-SRC_URI[md5sum] = "5ea9dc2692335e03170c3639901c2d83"
-SRC_URI[sha256sum] = "762abdd1a950809a1cea62fff7f86b5f7d6bd5f6841e3e585c700b823cdb7897"
+SRC_URI[sha256sum] = "1ba654d7de30f7284b4c7071b32f881b609733ce02ab6d9d9ea29386a036c641"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 
