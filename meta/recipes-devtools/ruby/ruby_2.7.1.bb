@@ -6,6 +6,7 @@ SRC_URI += " \
            file://remove_has_include_macros.patch \
            file://run-ptest \
            file://0001-Modify-shebang-of-libexec-y2racc-and-libexec-racc2y.patch \
+           file://CVE-2020-25613.patch \
            "
 
 SRC_URI[md5sum] = "debb9c325bf65021214451660f46e909"
