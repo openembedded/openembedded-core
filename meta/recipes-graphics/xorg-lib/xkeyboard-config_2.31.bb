@@ -13,7 +13,7 @@ LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
 SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
-SRC_URI[sha256sum] = "095a524f7b633ed257617202d06c9c71fe020c8897b106cf0dcdd0c6e8b797d4"
+SRC_URI[sha256sum] = "da44181f2c8828789c720decf7d13acb3c3950e2a040af5132f50f04bb6aada3"
 
 SECTION = "x11/libs"
 DEPENDS = "util-macros libxslt-native"
@@ -22,7 +22,7 @@ EXTRA_OECONF = "--with-xkb-rules-symlink=xorg --disable-runtime-deps"
 
 FILES_${PN} += "${datadir}/X11/xkb"
 
-inherit autotools pkgconfig gettext
+inherit autotools pkgconfig gettext python3native
 
 do_install_append () {
     install -d ${D}${datadir}/X11/xkb/compiled
