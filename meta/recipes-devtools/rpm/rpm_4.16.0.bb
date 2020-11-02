@@ -48,7 +48,7 @@ SRCREV = "cd7f9303ef1070f027493cad7d00bc66935af2a0"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "openssl db file popt xz bzip2 elfutils python3"
+DEPENDS = "libgcrypt db file popt xz bzip2 elfutils python3"
 DEPENDS_append_class-native = " file-replacement-native bzip2-replacement-native"
 
 inherit autotools gettext pkgconfig python3native
@@ -59,7 +59,7 @@ AUTOTOOLS_AUXDIR = "${S}/build-aux"
 # OE-core patches autoreconf to additionally run gnu-configize, which fails with this recipe
 EXTRA_AUTORECONF_append = " --exclude=gnu-configize"
 
-EXTRA_OECONF_append = " --without-lua --enable-python --with-crypto=openssl"
+EXTRA_OECONF_append = " --without-lua --enable-python --with-crypto=libgcrypt"
 EXTRA_OECONF_append_libc-musl = " --disable-nls --disable-openmp"
 
 # --sysconfdir prevents rpm from attempting to access machine-specific configuration in sysroot/etc; we need to have it in rootfs
