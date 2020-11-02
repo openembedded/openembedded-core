@@ -12,8 +12,7 @@ DEPENDS = "libusb1 virtual/libiconv udev"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
           "
-SRC_URI[md5sum] = "7484445cbcf04b3eacac892fe58f8d9f"
-SRC_URI[sha256sum] = "ae2e10aad530d95839b6f4d46cd41715eae6f0f1789310d793e9be21b3e7ae20"
+SRC_URI[sha256sum] = "efdfd5403dbdd7412de6bb897d5fbaae65ef3eb4332032c0e1f216216618e9a9"
 
 inherit autotools pkgconfig update-alternatives
 
