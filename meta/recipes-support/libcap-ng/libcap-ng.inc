@@ -11,7 +11,6 @@ SRC_URI = "http://people.redhat.com/sgrubb/libcap-ng/libcap-ng-${PV}.tar.gz \
            file://python.patch \
 "
 
-SRC_URI[md5sum] = "5883ed10b621c87e29a05cff36d2928e"
-SRC_URI[sha256sum] = "85815c711862d01a440db471f12fba462c9949e923966f5859607e652d9c0ae9"
+SRC_URI[sha256sum] = "f14d23b60ae1465b032e4e8cbd4112006572c69a6017d55d5d3c6aad622a9e21"
 
 BBCLASSEXTEND = "native nativesdk"
