@@ -26,7 +26,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://0003-GCM-move-look-up-table-to-.data-section-and-unshare-.patch \
            file://determinism.patch \
 "
-SRC_URI[sha256sum] = "0cba2700617b99fc33864a0c16b1fa7fdf9781d9ed3509f5d767178e5fd7b975"
+SRC_URI[sha256sum] = "03b70f028299561b7034b8966d7dd77ef16ed139c43440925fe8782561974748"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
