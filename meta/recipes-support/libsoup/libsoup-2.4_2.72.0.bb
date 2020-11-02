@@ -10,8 +10,7 @@ DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 intltool-native libpsl"
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
 SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
-SRC_URI[md5sum] = "c539f5b5ab534f024dc4e6a14e6d3f54"
-SRC_URI[sha256sum] = "54b020f74aefa438918d8e53cff62e2b1e59efe2de53e06b19a4b07b1f4d5342"
+SRC_URI[sha256sum] = "170c3f8446b0f65f8e4b93603349172b1085fb8917c181d10962f02bb85f5387"
 
 CVE_PRODUCT = "libsoup"
 
