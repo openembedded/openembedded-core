@@ -8,10 +8,11 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20200929T025235Z/pool/main/
 # so we check the latest upstream from a directory that does get updated
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/d/${BPN}/"
 
-SRC_URI[sha256sum] = "8be869f19c55c18d53d9f0414b68bb966a068b2154e9fbbfc6193827d6af983c"
+SRC_URI[sha256sum] = "3b680e81709b740387335fac8f8806d71611dcf60874e1a792e862e48a1650de"
 
 inherit autotools update-alternatives
 
+S = "${WORKDIR}/debianutils"
 do_configure_prepend() {
     sed -i -e 's:tempfile.1 which.1:which.1:g' ${S}/Makefile.am
 }
