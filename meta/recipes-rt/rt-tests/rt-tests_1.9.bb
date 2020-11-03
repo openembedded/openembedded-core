@@ -16,6 +16,7 @@ SRC_URI += " \
 
 # rt-tests needs PI mutex support in libc
 COMPATIBLE_HOST_libc-musl = 'null'
+COMPATIBLE_HOST = "(i.86.*|x86_64.*|powerpc64.*)-linux"
 
 # Do not install hwlatdetect
 EXTRA_OEMAKE += "PYLIB=''"
