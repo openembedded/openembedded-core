@@ -7,7 +7,7 @@ Changes the comment and include to reference the file basename
 instead of the full path. This ensures that the generated file is
 reproducible when it is included in source packages meant for debugging.
 
-Upstream-Status: Pending
+Upstream-Status: Backport [6f3842abd5dff68b6ee5f2ef48a4ebf1cbebf434]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  json-glib/json-enum-types.c.in | 4 ++--
