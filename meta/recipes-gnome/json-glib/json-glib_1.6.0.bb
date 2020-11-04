@@ -23,13 +23,9 @@ SRC_URI += "file://run-ptest \
             file://0001-json-glib-json-enum-types.c.in-fix-build-reproducibi.patch"
 SRC_URI[archive.sha256sum] = "0d7c67602c4161ea7070fab6c5823afd9bd7f7bc955f652a50d3753b08494e73"
 
+PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxslt-native xmlto-native"
-
-do_install_append() {
-	if ! ${@bb.utils.contains('PTEST_ENABLED', '1', 'true', 'false', d)}; then
-		rm -rf ${D}${datadir}/installed-tests ${D}${libexecdir}
-	fi
-}
+PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false"
 
 BBCLASSEXTEND = "native nativesdk"
 
