@@ -22,6 +22,9 @@ SRC_URI = "git://github.com/numactl/numactl \
 
 S = "${WORKDIR}/git"
 
+LDFLAGS_append_riscv64 = " -latomic"
+LDFLAGS_append_riscv32 = " -latomic"
+
 do_install() {
     oe_runmake DESTDIR=${D} prefix=${D}/usr install
     #remove the empty man2 directory
