@@ -15,7 +15,7 @@ UPSTREAM_CHECK_URI = "http://xkbcommon.org/"
 
 inherit meson pkgconfig
 
-EXTRA_OEMESON = "-Denable-docs=false"
+EXTRA_OEMESON = "-Denable-docs=false -Denable-xkbregistry=false"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'x11 wayland', d)}"
 PACKAGECONFIG[x11] = "-Denable-x11=true,-Denable-x11=false,libxcb xkeyboard-config,"
