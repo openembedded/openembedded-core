@@ -34,6 +34,7 @@ PACKAGECONFIG[ypbind] = "--with-eghook=yp, , ,ypbind-mt"
 
 EXTRA_OECONF = "--enable-ipv4 \
                 --dbdir=${localstatedir}/lib/${BPN} \
+                --sbindir=${base_sbindir} \
                 --runstatedir=/run \
                 --enable-privsep \
                 --privsepuser=dhcpcd \
