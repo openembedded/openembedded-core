@@ -17,6 +17,7 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-Enable-THREADS_PREFER_PTHREAD_FLAG.patch \
            file://0001-Fix-build-with-musl.patch \
            file://include_array.patch \
+           file://include_xutil.patch \
            "
 SRC_URI[sha256sum] = "c467e0bc2bc610c2570928e3fd63cedaadc4719cbf9b04aa99f79dd71ad5682a"
 
