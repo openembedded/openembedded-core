@@ -17,7 +17,7 @@ SRC_URI = "https://roy.marples.name/downloads/${BPN}/${BPN}-${PV}.tar.xz \
            file://dhcpcd@.service \
            "
 
-SRC_URI[sha256sum] = "a0843233fdaecee971c38ceda53ad1450bb7b83aefbf1fa9642213224a9c415e"
+SRC_URI[sha256sum] = "6d49af5e766a2515e6366e4f669663df04ecdf90a1a60ddb1d7a2feb4b5d2566"
 
 inherit pkgconfig autotools-brokensep systemd useradd
 
