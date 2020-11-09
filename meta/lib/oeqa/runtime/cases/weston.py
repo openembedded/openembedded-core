@@ -51,10 +51,10 @@ class WestonTest(OERuntimeTestCase):
 
         return new_wl_processes, try_cnt
 
-    @OEHasPackage(['weston'])
-    def test_weston_info(self):
-        status, output = self.target.run(self.get_weston_command('weston-info'))
-        self.assertEqual(status, 0, msg='weston-info error: %s' % output)
+    @OEHasPackage(['wayland-utils'])
+    def test_wayland_info(self):
+        status, output = self.target.run(self.get_weston_command('wayland-info'))
+        self.assertEqual(status, 0, msg='wayland-info error: %s' % output)
 
     @OEHasPackage(['weston'])
     def test_weston_can_initialize_new_wayland_compositor(self):
