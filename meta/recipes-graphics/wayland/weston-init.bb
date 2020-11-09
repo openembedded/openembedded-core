@@ -26,7 +26,9 @@ DEFAULTBACKEND_qemux86 = "drm"
 DEFAULTBACKEND_qemux86-64 = "drm"
 
 do_install() {
-	install -Dm755 ${WORKDIR}/init ${D}/${sysconfdir}/init.d/weston
+        if [ "${VIRTUAL-RUNTIME_init_manager}" != "systemd" ]; then
+		install -Dm755 ${WORKDIR}/init ${D}/${sysconfdir}/init.d/weston
+        fi
 	install -D -p -m0644 ${WORKDIR}/weston.ini ${D}${sysconfdir}/xdg/weston/weston.ini
 	install -Dm644 ${WORKDIR}/weston.env ${D}${sysconfdir}/default/weston
 
@@ -55,10 +57,13 @@ do_install() {
 	fi
 }
 
+INHIBIT_UPDATERCD_BBCLASS = "${@oe.utils.conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', '1', '', d)}"
+
 inherit update-rc.d features_check systemd
 
 # rdepends on weston which depends on virtual/egl
-REQUIRED_DISTRO_FEATURES = "opengl"
+# requires pam enabled if started via systemd
+REQUIRED_DISTRO_FEATURES = "opengl ${@oe.utils.conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'pam', '', d)}"
 
 RDEPENDS_${PN} = "weston kbd"
 
