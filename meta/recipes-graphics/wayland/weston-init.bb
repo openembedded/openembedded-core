@@ -24,6 +24,9 @@ DEFAULTBACKEND_qemuall ?= "fbdev"
 DEFAULTBACKEND_qemuarm64 = "drm"
 DEFAULTBACKEND_qemux86 = "drm"
 DEFAULTBACKEND_qemux86-64 = "drm"
+# gallium swrast was found to crash weston on startup in x32 qemu
+DEFAULTBACKEND_qemux86-64_x86-x32 = "fbdev"
+DEFAULTBACKEND_x86-x32 = "fbdev"
 
 do_install() {
         if [ "${VIRTUAL-RUNTIME_init_manager}" != "systemd" ]; then
