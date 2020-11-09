@@ -18,6 +18,13 @@ LTO_pn-libcap = ""
 LTO_pn-libproxy = ""
 LTO_pn-libbsd = ""
 
+# Custom LTO flags
+# disable partitioning/streaming algorithm since its uses ASM
+# constructs not compatible with lto
+LTOEXTRA_pn-alsa-lib = "-flto-partition=none"
+
+LTOEXTRA ?= ""
+
 # Override it for additional or different options if needed e.g.
 # with clang thin-lto might be better for compile speed
 #
@@ -29,9 +36,9 @@ LTO_pn-libbsd = ""
 # -fuse-linker-plugin
 # ensures that libraries participate in LTO by supplying intermediate
 # code from .a files to linker
-LTO ?= "-flto -ffat-lto-objects -fuse-linker-plugin "
+LTO ?= "-flto -ffat-lto-objects -fuse-linker-plugin ${LTOEXTRA}"
 
 SELECTED_OPTIMIZATION_append = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${LTO}', '', d)}"
 TARGET_LDFLAGS_append_class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${LTO}', '', d)}"
 
-SELECTED_OPTIMIZATION[vardeps] += "LTO"
+SELECTED_OPTIMIZATION[vardeps] += "LTO LTOEXTRA"
