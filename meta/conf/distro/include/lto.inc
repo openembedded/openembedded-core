@@ -18,6 +18,7 @@ LTO_pn-curl = ""
 LTO_pn-libcap = ""
 LTO_pn-libproxy = ""
 LTO_pn-libbsd = ""
+LTO_pn-xserver-xorg = ""
 
 # Custom LTO flags
 # disable partitioning/streaming algorithm since its uses ASM
