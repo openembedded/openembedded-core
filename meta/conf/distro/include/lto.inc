@@ -20,7 +20,16 @@ LTO_pn-libbsd = ""
 
 # Override it for additional or different options if needed e.g.
 # with clang thin-lto might be better for compile speed
-LTO ?= "-flto"
+#
+# ffat-lto-objects
+# object files that contain both the intermediate
+# language and the object code. This makes them
+# usable for both LTO linking and normal linking
+#
+# -fuse-linker-plugin
+# ensures that libraries participate in LTO by supplying intermediate
+# code from .a files to linker
+LTO ?= "-flto -ffat-lto-objects -fuse-linker-plugin "
 
 SELECTED_OPTIMIZATION_append = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${LTO}', '', d)}"
 TARGET_LDFLAGS_append_class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${LTO}', '', d)}"
