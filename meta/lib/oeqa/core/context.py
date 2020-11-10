@@ -85,6 +85,7 @@ class OETestContext(object):
         self.skipTests(skips)
 
         self._run_start_time = time.time()
+        self._run_end_time = self._run_start_time
         if not processes:
             self.runner.buffer = True
         result = self.runner.run(self.prepareSuite(self.suites, processes))
