@@ -31,6 +31,9 @@ class OETestContext(object):
         self._registry = {}
         self._registry['cases'] = collections.OrderedDict()
 
+        self.results = unittest.TestResult()
+        unittest.registerResult(self.results)
+
     def _read_modules_from_manifest(self, manifest):
         if not os.path.exists(manifest):
             raise OEQAMissingManifest("Manifest does not exist on %s" % manifest)
