@@ -43,5 +43,6 @@ SRC_URI = "\
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
      file://0017-binutils-drop-redundant-program_name-definition-fno-.patch \
      file://CVE-2020-0551.patch \
+     file://0001-gas-improve-reproducibility-for-stabs-debugging-data.patch \
 "
 S  = "${WORKDIR}/git"
