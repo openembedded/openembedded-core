@@ -12,6 +12,7 @@ SRC_URI += " \
             file://run-ptest \
             file://rt_bmark.py \
             file://0001-Makefile-Allow-for-CC-and-AR-to-be-overridden.patch \
+            file://0001-rt-tests-oslat-Allow-build-for-not-supported-archs.patch \
            "
 
 # rt-tests needs PI mutex support in libc
