@@ -1,0 +1,14 @@
+
+diff -r e0220c4bc306 -r 2c13b7ca1997 acinclude/ac_check_define.m4
+--- a/acinclude/ac_check_define.m4	Mon Sep 07 20:10:50 2020 -0700
++++ b/acinclude/ac_check_define.m4	Wed Sep 16 08:00:20 2020 +0300
+@@ -1,4 +1,4 @@
+-AC_DEFUN([AC_CHECK_DEFINE],[dnl
++AC_DEFUN([AC_CHECK_DEFINE],[AC_REQUIRE([AC_PROG_CPP])dnl
+   AC_CACHE_CHECK(for $1 in $2, ac_cv_define_$1,
+     AC_EGREP_CPP([YES_IS_DEFINED], [
+ #include <$2>
+
+
+
+
