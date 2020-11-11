@@ -1,0 +1,12 @@
+A comma in AC_INIT parameters isn't valid with autoconf 2.70.
+
+Upstream-Status: Pending
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+
+--- a/configure.ac~	2020-11-11 12:56:07.000000000 +0000
++++ b/configure.ac	2020-11-11 15:17:54.308678232 +0000
+@@ -39,3 +39,3 @@
+ AC_PREREQ(2.59)
+-AC_INIT(GNU MP, GMP_VERSION, [gmp-bugs@gmplib.org, see https://gmplib.org/manual/Reporting-Bugs.html], gmp)
++AC_INIT(GNU MP, GMP_VERSION, [gmp-bugs@gmplib.org], gmp)
+ AC_CONFIG_SRCDIR(gmp-impl.h)
