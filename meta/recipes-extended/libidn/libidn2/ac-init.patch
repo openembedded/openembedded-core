@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index b9c0e73..aede921 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -14,7 +14,7 @@
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ AC_INIT([libidn2], [2.3.0], [help-libidn@gnu.org],,
+-  [https://www.gnu.org/software/libidn/#libidn2])
++  [https://www.gnu.org/software/libidn/])
+ 
+ # Library code modified:                              REVISION++
+ # Interfaces changed/added/removed:   CURRENT++       REVISION=0
