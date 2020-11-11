@@ -1,0 +1,24 @@
+diff --git a/gettext-runtime/configure.ac b/gettext-runtime/configure.ac
+index 458672d..a4bf67c 100644
+--- a/gettext-runtime/configure.ac
++++ b/gettext-runtime/configure.ac
+@@ -98,6 +98,7 @@ dnl Checks for libraries.
+ dnl These are the only lines required to internationalize the package.
+ dnl (OK, not quite, the AC_CONFIG_FILES has also some parts.)
+ AM_GNU_GETTEXT([use-libtool], [need-ngettext])
++AM_GNU_GETTEXT_VERSION([0.21])
+ dnl Conditionals for the intl/ directory.
+ AM_CONDITIONAL([USE_INCLUDED_LIBINTL], [test $USE_INCLUDED_LIBINTL = yes])
+ AM_CONDITIONAL([BUILD_INCLUDED_LIBINTL], [test $BUILD_INCLUDED_LIBINTL = yes])
+diff --git a/gettext-tools/configure.ac b/gettext-tools/configure.ac
+index 9f7504d..72d6bca 100644
+--- a/gettext-tools/configure.ac
++++ b/gettext-tools/configure.ac
+@@ -123,6 +123,7 @@ dnl Checks for libraries.
+ dnl These are the only lines required to internationalize the package.
+ dnl (OK, not quite, the AC_CONFIG_FILES has also some parts.)
+ AM_GNU_GETTEXT([use-libtool], [need-ngettext])
++AM_GNU_GETTEXT_VERSION([0.21])
+ dnl Conditionals for the intl/ directory.
+ AM_CONDITIONAL([USE_INCLUDED_LIBINTL], [test $USE_INCLUDED_LIBINTL = yes])
+ AM_CONDITIONAL([BUILD_INCLUDED_LIBINTL], [test $BUILD_INCLUDED_LIBINTL = yes])
