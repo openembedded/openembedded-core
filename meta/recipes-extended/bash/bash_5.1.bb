@@ -18,6 +18,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BP}.tar.gz;name=tarball \
            file://fix-run-builtins.patch \
            file://use_aclocal.patch \
            file://makerace.patch \
+           file://gettext-version.patch \
            "
 
 SRC_URI[tarball.sha256sum] = "cc012bc860406dcf42f64431bcd3d2fa7560c02915a601aba9cd597a39329baa"

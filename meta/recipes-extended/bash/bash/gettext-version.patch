@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 549adef..39d2b37 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -701,6 +701,7 @@ AC_C_RESTRICT
+ 
+ dnl initialize GNU gettext
+ AM_GNU_GETTEXT([no-libtool], [need-ngettext], [lib/intl])
++AM_GNU_GETTEXT_VERSION([0.21])
+ 
+ dnl header files
+ AC_HEADER_DIRENT
