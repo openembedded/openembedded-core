@@ -36,6 +36,7 @@ CVE_PRODUCT = "simple_directmedia_layer sdl"
 EXTRA_OECONF = "--disable-oss --disable-esd --disable-arts \
                 --disable-diskaudio --disable-nas --disable-esd-shared --disable-esdtest \
                 --disable-video-dummy \
+                --disable-video-rpi \
                 --enable-pthreads \
                 --enable-sdl-dlopen \
                 --disable-rpath \
