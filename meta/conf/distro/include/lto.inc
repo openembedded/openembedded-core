@@ -19,6 +19,8 @@ LTO_pn-libcap = ""
 LTO_pn-libproxy = ""
 LTO_pn-libbsd = ""
 LTO_pn-perf = ""
+# webkit is not linking properly with LTO, disable until next time
+LTO_pn-webkitgtk = ""
 LTO_pn-xserver-xorg = ""
 
 # Custom LTO flags
