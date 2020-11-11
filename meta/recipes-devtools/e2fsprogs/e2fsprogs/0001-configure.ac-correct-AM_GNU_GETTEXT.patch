@@ -15,12 +15,13 @@ diff --git a/configure.ac b/configure.ac
 index 654ff43d..4772b97b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -873,7 +873,7 @@ AC_SUBST(GETTEXT_PACKAGE)
+@@ -873,7 +873,8 @@ AC_SUBST(GETTEXT_PACKAGE)
  AC_SUBST(PACKAGE)
  AC_SUBST(VERSION)
  
 -AM_GNU_GETTEXT
 +AM_GNU_GETTEXT([external])
++AM_GNU_GETTEXT_VERSION([0.19.1])
  dnl @MKDIR_P@ is expanded in AM_GNU_GETTEXT
  AC_SUBST([mkdir_p],['$(MKDIR_P)'])
  dnl
