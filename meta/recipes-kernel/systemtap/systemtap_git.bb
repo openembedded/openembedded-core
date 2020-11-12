@@ -19,7 +19,7 @@ STAP_DOCS ?= "--disable-docs --disable-publican --disable-refdocs"
 EXTRA_OECONF += "${STAP_DOCS} "
 
 PACKAGECONFIG ??= "translator sqlite monitor python3-probes"
-PACKAGECONFIG[translator] = "--enable-translator,--disable-translator,boost,python3-core bash perl"
+PACKAGECONFIG[translator] = "--enable-translator,--disable-translator,boost,bash"
 PACKAGECONFIG[libvirt] = "--enable-libvirt,--disable-libvirt,libvirt"
 PACKAGECONFIG[sqlite] = "--enable-sqlite,--disable-sqlite,sqlite3"
 PACKAGECONFIG[monitor] = "--enable-monitor,--disable-monitor,ncurses json-c"
