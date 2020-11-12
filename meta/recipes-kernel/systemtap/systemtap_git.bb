@@ -38,6 +38,23 @@ RDEPENDS_${PN}-exporter = "${PN} python3-core python3-netclient"
 
 SYSTEMD_SERVICE_${PN}-exporter = "stap-exporter.service"
 
+PACKAGES =+ "${PN}-examples"
+FILES_${PN}-examples = "${datadir}/${BPN}/examples/"
+RDEPENDS_${PN}-examples += "${PN}"
+
+# don't complain that some examples involve bash, perl, php...
+INSANE_SKIP_${PN}-examples += "file-rdeps"
+
+PACKAGES =+ "${PN}-python"
+FILES_${PN}-python += "\
+ ${bindir}/dtrace \
+ ${libdir}/python*/ \
+ ${libexecdir}/${BPN}/python/ \
+"
+# python material requires sdt headers
+RDEPENDS_${PN}-python += "${PN}-dev python3-core"
+INSANE_SKIP_${PN}-python += "dev-deps"
+
 do_configure_prepend () {
     # Improve reproducibility for c++ object files
     reltivepath="${@os.path.relpath(d.getVar('STAGING_INCDIR'), d.getVar('S'))}"
