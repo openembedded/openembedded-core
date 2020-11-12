@@ -36,6 +36,15 @@ FILES_${PN}-exporter = "${sysconfdir}/stap-exporter/* \
 RDEPENDS_${PN}-exporter = "${PN} python3-core python3-netclient"
 SYSTEMD_SERVICE_${PN}-exporter = "stap-exporter.service"
 
+PACKAGES =+ "${PN}-runtime"
+FILES_${PN}-runtime = "\
+ ${bindir}/staprun \
+ ${bindir}/stap-merge \
+ ${bindir}/stapsh \
+ ${libexecdir}/${BPN}/stapio \
+"
+RDEPENDS_${PN}_class-target += "${PN}-runtime"
+
 PACKAGES =+ "${PN}-examples"
 FILES_${PN}-examples = "${datadir}/${BPN}/examples/"
 RDEPENDS_${PN}-examples += "${PN}"
