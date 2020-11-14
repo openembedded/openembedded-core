@@ -67,6 +67,7 @@ PACKAGECONFIG[sbc]             = "-Dsbc=enabled,-Dsbc=disabled,sbc"
 PACKAGECONFIG[sctp]            = "-Dsctp=enabled,-Dsctp=disabled,usrsctp"
 PACKAGECONFIG[smoothstreaming] = "-Dsmoothstreaming=enabled,-Dsmoothstreaming=disabled,libxml2"
 PACKAGECONFIG[sndfile]         = "-Dsndfile=enabled,-Dsndfile=disabled,libsndfile1"
+PACKAGECONFIG[srt]             = "-Dsrt=enabled,-Dsrt=disabled,srt"
 PACKAGECONFIG[srtp]            = "-Dsrtp=enabled,-Dsrtp=disabled,libsrtp"
 PACKAGECONFIG[tinyalsa]        = "-Dtinyalsa=enabled,-Dtinyalsa=disabled,tinyalsa"
 PACKAGECONFIG[ttml]            = "-Dttml=enabled,-Dttml=disabled,libxml2 pango cairo"
@@ -86,7 +87,7 @@ PACKAGECONFIG[v4l2codecs]      = "-D-Dv4l2codecs=enabled,-Dv4l2codecs=disabled,l
 #   aom androidmedia applemedia bs2b chromaprint d3dvideosink
 #   directsound dts fdkaac gme gsm iq kate ladspa lv2 mpeg2enc
 #   mplex musepack nvdec nvenc ofa openexr openni2 opensles
-#   soundtouch spandsp srt teletext wasapi wildmidi winks
+#   soundtouch spandsp teletext wasapi wildmidi winks
 #   winscreencap wpe x265
 
 EXTRA_OEMESON += " \
@@ -128,7 +129,6 @@ EXTRA_OEMESON += " \
     -Dopensles=disabled \
     -Dsoundtouch=disabled \
     -Dspandsp=disabled \
-    -Dsrt=disabled \
     -Dsvthevcenc=disabled \
     -Dteletext=disabled \
     -Dwasapi=disabled \
