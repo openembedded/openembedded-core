@@ -51,7 +51,7 @@ do_install() {
 	fi
 
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'no-idle-timeout', 'yes', 'no', d)}" = "yes" ]; then
-		echo "idle-time=0" >> ${D}${sysconfdir}/xdg/weston/weston.ini
+		sed -i -e "/^\[core\]/a idle-time=0" ${D}${sysconfdir}/xdg/weston/weston.ini
 	fi
 }
 
