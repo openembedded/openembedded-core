@@ -9,6 +9,7 @@ Documentation=man:weston(1) man:weston.ini(5)
 Documentation=http://wayland.freedesktop.org/
 
 # Make sure we are started after logins are permitted.
+Requires=systemd-user-sessions.service
 After=systemd-user-sessions.service
 
 # If Plymouth is used, we want to start when it is on its way out.
@@ -17,6 +18,9 @@ After=plymouth-quit-wait.service
 # D-Bus is necessary for contacting logind. Logind is required.
 Wants=dbus.socket
 After=dbus.socket
+
+# Ensure the socket is present
+Requires=weston.socket
 
 # Since we are part of the graphical session, make sure we are started before
 # it is complete.
@@ -37,10 +41,11 @@ TimeoutStartSec=60
 WatchdogSec=20
 
 # The user to run Weston as.
-User=%I
+User=weston
+Group=weston
 
-# Make sure working directory is users home directory
-WorkingDirectory=/home/%i
+# Make sure the working directory is the users home directory
+WorkingDirectory=/home/weston
 
 # Set up a full user session for the user, required by Weston.
 PAMName=weston-autologin
@@ -61,5 +66,6 @@ UtmpIdentifier=tty7
 UtmpMode=user
 
 [Install]
+# Note: If you only want weston to start on-demand, remove this line with a
+# service drop file
 WantedBy=graphical.target
-DefaultInstance=tty7
