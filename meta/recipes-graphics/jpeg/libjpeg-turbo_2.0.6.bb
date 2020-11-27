@@ -4,8 +4,8 @@ HOMEPAGE = "http://libjpeg-turbo.org/"
 
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=13;md5=8184bcc7c4ac7b9edc6a7bc00f231d0b \
-                    file://jpeglib.h;endline=16;md5=7ea97dc83b0f59052ee837e61ef0e08f \
-                    file://djpeg.c;endline=11;md5=c59e19811c006cb38f82d6477134d314 \
+                    file://jpeglib.h;endline=16;md5=52b5eaade8d5b6a452a7693dfe52c084 \
+                    file://djpeg.c;endline=11;md5=302e980133b5c0c7f4dcb4ca0df41090 \
 "
 DEPENDS_append_x86-64_class-target = " nasm-native"
 DEPENDS_append_x86_class-target = " nasm-native"
@@ -14,8 +14,8 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-libjpeg-turbo-fix-package_qa-error.patch \
            "
 
-SRC_URI[md5sum] = "3a7dc293918775fc933f81e2bce36464"
-SRC_URI[sha256sum] = "16f8f6f2715b3a38ab562a84357c793dd56ae9899ce130563c72cd93d8357b5d"
+SRC_URI[md5sum] = "4cada3f0bdc93d826fa31bf9e4469ef6"
+SRC_URI[sha256sum] = "d74b92ac33b0e3657123ddcf6728788c90dc84dcb6a52013d758af3c4af481bb"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libjpeg-turbo/files/"
 UPSTREAM_CHECK_REGEX = "/libjpeg-turbo/files/(?P<pver>(\d+[\.\-_]*)+)/"
 
