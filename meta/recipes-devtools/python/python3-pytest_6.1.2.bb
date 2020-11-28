@@ -10,21 +10,22 @@ SRC_URI[sha256sum] = "c0a7e94a8cdbc5422a51ccdad8e6f1024795939cc89159a0ae7f0b316a
 inherit update-alternatives pypi setuptools3
 
 RDEPENDS_${PN}_class-target += " \
+    ${PYTHON_PN}-atomicwrites \
     ${PYTHON_PN}-attrs \
     ${PYTHON_PN}-debugger \
     ${PYTHON_PN}-doctest \
+    ${PYTHON_PN}-importlib-metadata \
     ${PYTHON_PN}-iniconfig \
     ${PYTHON_PN}-json \
+    ${PYTHON_PN}-more-itertools \
+    ${PYTHON_PN}-packaging \
+    ${PYTHON_PN}-pathlib2 \
     ${PYTHON_PN}-pluggy \
     ${PYTHON_PN}-py \
     ${PYTHON_PN}-setuptools \
     ${PYTHON_PN}-six \
-    ${PYTHON_PN}-atomicwrites \
-    ${PYTHON_PN}-importlib-metadata \
-    ${PYTHON_PN}-pathlib2 \
+    ${PYTHON_PN}-toml \
     ${PYTHON_PN}-wcwidth \
-    ${PYTHON_PN}-more-itertools \
-    ${PYTHON_PN}-packaging \
 "
 
 ALTERNATIVE_${PN} += "py.test pytest"
