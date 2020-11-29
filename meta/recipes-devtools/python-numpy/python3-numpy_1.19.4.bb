@@ -8,6 +8,7 @@ SRCNAME = "numpy"
 SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            file://0001-numpy-core-Define-RISCV-32-support.patch \
+           file://run-ptest \
 "
 SRC_URI[sha256sum] = "fe836a685d6838dbb3f603caef01183ea98e88febf4ce956a2ea484a75378413"
 
@@ -16,7 +17,7 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
 DEPENDS += "python3-cython-native"
 
-inherit setuptools3
+inherit ptest setuptools3
 
 S = "${WORKDIR}/numpy-${PV}"
 
@@ -30,7 +31,6 @@ RDEPENDS_${PN} = "${PYTHON_PN}-unittest \
                   ${PYTHON_PN}-pprint \
                   ${PYTHON_PN}-pickle \
                   ${PYTHON_PN}-shell \
-                  ${PYTHON_PN}-nose \
                   ${PYTHON_PN}-doctest \
                   ${PYTHON_PN}-datetime \
                   ${PYTHON_PN}-distutils \
@@ -45,6 +45,12 @@ RDEPENDS_${PN} = "${PYTHON_PN}-unittest \
                   ${PYTHON_PN}-ctypes \
                   ${PYTHON_PN}-threading \
                   ${PYTHON_PN}-multiprocessing \
+"
+RDEPENDS_${PN}-ptest += "${PYTHON_PN}-pytest \
+                         ${PYTHON_PN}-hypothesis \
+                         ${PYTHON_PN}-sortedcontainers \
+                         ${PYTHON_PN}-resource \
+                         ldd \
 "
 
 RDEPENDS_${PN}_class-native = ""
