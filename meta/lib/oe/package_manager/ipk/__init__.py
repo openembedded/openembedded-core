@@ -172,12 +172,7 @@ class OpkgPM(OpkgDpkgPM):
         if prepare_index:
             create_packages_dir(self.d, self.deploy_dir, d.getVar("DEPLOY_DIR_IPK"), "package_write_ipk", filterbydependencies)
 
-        opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
-        if opkg_lib_dir[0] == "/":
-            opkg_lib_dir = opkg_lib_dir[1:]
-
-        self.opkg_dir = os.path.join(target_rootfs, opkg_lib_dir, "opkg")
-
+        self.opkg_dir = oe.path.join(target_rootfs, self.d.getVar('OPKGLIBDIR'), "opkg")
         bb.utils.mkdirhier(self.opkg_dir)
 
         self.saved_opkg_dir = self.d.expand('${T}/saved/%s' % self.task_name)
