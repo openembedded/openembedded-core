@@ -403,9 +403,9 @@ class OpkgPM(OpkgDpkgPM):
             bb.fatal(result)
 
     def remove_packaging_data(self):
+        cachedir = oe.path.join(self.target_rootfs, self.d.getVar("localstatedir"), "cache", "opkg")
         bb.utils.remove(self.opkg_dir, True)
-        # create the directory back, it's needed by PM lock
-        bb.utils.mkdirhier(self.opkg_dir)
+        bb.utils.remove(cachedir, True)
 
     def remove_lists(self):
         if not self.from_feeds:
