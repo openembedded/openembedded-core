@@ -83,7 +83,7 @@ class ReproducibleTests(OESelftestTestCase):
     package_classes = ['deb', 'ipk']
 
     # targets are the things we want to test the reproducibility of
-    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline']
+    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'world']
     # sstate targets are things to pull from sstate to potentially cut build/debugging time
     sstate_targets = []
     save_results = False
@@ -156,6 +156,8 @@ class ReproducibleTests(OESelftestTestCase):
             PACKAGE_CLASSES = "{package_classes}"
             INHIBIT_PACKAGE_STRIP = "1"
             TMPDIR = "{tmpdir}"
+            LICENSE_FLAGS_WHITELIST = "commercial"
+            DISTRO_FEATURES_append = ' systemd pam'
             ''').format(package_classes=' '.join('package_%s' % c for c in self.package_classes),
                         tmpdir=tmpdir)
 
