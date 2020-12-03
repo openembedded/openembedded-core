@@ -105,7 +105,7 @@ class DiffoscopeTests(OESelftestTestCase):
 
 class ReproducibleTests(OESelftestTestCase):
     package_classes = ['deb', 'ipk']
-    images = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline']
+    images = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'world']
     save_results = False
     if 'OEQA_DEBUGGING_SAVED_OUTPUT' in os.environ:
         save_results = os.environ['OEQA_DEBUGGING_SAVED_OUTPUT']
@@ -176,6 +176,8 @@ class ReproducibleTests(OESelftestTestCase):
             PACKAGE_CLASSES = "{package_classes}"
             INHIBIT_PACKAGE_STRIP = "1"
             TMPDIR = "{tmpdir}"
+            LICENSE_FLAGS_WHITELIST = "commercial"
+            DISTRO_FEATURES_append = ' systemd pam'
             ''').format(package_classes=' '.join('package_%s' % c for c in self.package_classes),
                         tmpdir=tmpdir)
 
