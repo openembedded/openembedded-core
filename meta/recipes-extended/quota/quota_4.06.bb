@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://rquota_server.c;beginline=1;endline=20;md5=fe7e0d7e11
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/linuxquota/quota-tools/${PV}/quota-${PV}.tar.gz \
            file://fcntl.patch \
+           file://0001-quota-Use-realloc-3-instead-of-reallocarray-3.patch \
           "
-SRC_URI[md5sum] = "1c1dbd2cd3d680ccac661239b067e147"
-SRC_URI[sha256sum] = "ef3b5b5d1014ed1344b46c1826145e20cbef8db967b522403c9a060761cf7ab9"
+SRC_URI[sha256sum] = "2f3e03039f378d4f0d97acdb49daf581dcaad64d2e1ddf129495fd579fbd268d"
 
 CVE_PRODUCT = "linux_diskquota"
 
