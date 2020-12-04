@@ -12,7 +12,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${
            file://0002-tests-do-not-run-target-executables.patch \
            file://0001-tests-do-not-statically-link-a-test.patch \
            "
-SRC_URI[sha256sum] = "92188359cd5be86e8e5bd3f6483ac6ce582264f912398937ef763def2205c8e1"
+SRC_URI[sha256sum] = "d66639f765c0e10557666b00f519caf0bd07a95f867dddaee131cd284fac3286"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/linux/libs/security/linux-privs/${BPN}2/"
 
