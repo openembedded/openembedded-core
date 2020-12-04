@@ -15,5 +15,4 @@ BBCLASSEXTEND = "native"
 
 EXTRA_OECONF += "--disable-selective-werror"
 
-SRC_URI[md5sum] = "6e4751d99373f85d459ab4dff28893f5"
-SRC_URI[sha256sum] = "06242c169fc11caf601cac46d781d467748c6a330e15b36dce46520b8ac8d435"
+SRC_URI[sha256sum] = "59cce603a607a17722a0a1cf99010f4894e7812beb5d695abbc08474d59af27e"
