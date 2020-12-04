@@ -14,7 +14,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https \
            file://run-ptest \
            ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://tweak-ptest-script.patch', '', d)} \
            "
-SRCREV = "4af76318cfc57f8e4a44d357104188666213bd4b"
+SRCREV = "c73226073e2b13970ca613b20a13b9c0253bf9da"
 
 S = "${WORKDIR}/git"
 
