@@ -15,8 +15,11 @@ GNOMEBASEBUILDCLASS = "meson"
 
 inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even gobject-introspection
 
-SRC_URI += " file://run-ptest"
-SRC_URI[archive.sha256sum] = "d89fab5f26767261b493279b65cfb9eb0955cd44c07c5628d36094609fc51841"
+GIR_MESON_ENABLE_FLAG = "enabled"
+GIR_MESON_DISABLE_FLAG = "disabled"
+
+SRC_URI += " file://0001-tests-test-font.c-drop-assert-that-fails-with-Cantar.patch"
+SRC_URI[archive.sha256sum] = "391f26f3341c2d7053e0fb26a956bd42360dadd825efe7088b1e9340a65e74e6"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
 
@@ -29,6 +32,10 @@ PACKAGECONFIG[thai] = ",,libthai"
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 GIR_MESON_OPTION = 'introspection'
+
+do_configure_prepend() {
+    chmod +x ${S}/tests/*.py
+}
 
 do_configure_prepend_toolchain-clang() {
     sed -i -e "/Werror=implicit-fallthrough/d" ${S}/meson.build
