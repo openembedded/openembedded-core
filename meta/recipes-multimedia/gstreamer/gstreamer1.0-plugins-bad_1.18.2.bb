@@ -27,6 +27,7 @@ PACKAGECONFIG ??= " \
     ttml uvch264 webp \
 "
 
+PACKAGECONFIG[aom]             = "-Daom=enabled,-Daom=disabled,aom"
 PACKAGECONFIG[assrender]       = "-Dassrender=enabled,-Dassrender=disabled,libass"
 PACKAGECONFIG[bluez]           = "-Dbluez=enabled,-Dbluez=disabled,bluez5"
 PACKAGECONFIG[bz2]             = "-Dbz2=enabled,-Dbz2=disabled,bzip2"
@@ -84,7 +85,7 @@ PACKAGECONFIG[webrtcdsp]       = "-Dwebrtcdsp=enabled,-Dwebrtcdsp=disabled,webrt
 PACKAGECONFIG[zbar]            = "-Dzbar=enabled,-Dzbar=disabled,zbar"
 
 # these plugins currently have no corresponding library in OE-core or meta-openembedded:
-#   aom androidmedia applemedia bs2b chromaprint d3dvideosink
+#   androidmedia applemedia bs2b chromaprint d3dvideosink
 #   directsound dts fdkaac gme gsm iq kate ladspa lv2 mpeg2enc
 #   mplex musepack nvdec nvenc ofa openexr openni2 opensles
 #   soundtouch spandsp teletext wasapi wildmidi winks
@@ -98,7 +99,6 @@ EXTRA_OEMESON += " \
     -Dipcpipeline=enabled \
     -Dnetsim=enabled \
     -Dshm=enabled \
-    -Daom=disabled \
     -Dandroidmedia=disabled \
     -Dapplemedia=disabled \
     -Davtp=disabled \
