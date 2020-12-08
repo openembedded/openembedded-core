@@ -7,11 +7,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d8045f3b8f929c1cb29a1e3fd737b499"
 
 SRC_URI = "git://pagure.io/libaio.git;protocol=https \
            file://00_arches.patch \
-           file://destdir.patch \
            file://libaio_fix_for_mips_syscalls.patch \
            file://system-linkage.patch \
            "
-SRCREV = "f66be22ab0a59a39858900ab72a8c6a6e8b0b7ec"
+SRCREV = "d025927efa75a0d1b46ca3a5ef331caa2f46ee0e"
 S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE =+ "prefix=${prefix} includedir=${includedir} libdir=${libdir}"
