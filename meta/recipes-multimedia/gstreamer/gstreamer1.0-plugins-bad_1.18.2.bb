@@ -85,13 +85,6 @@ PACKAGECONFIG[webrtcdsp]       = "-Dwebrtcdsp=enabled,-Dwebrtcdsp=disabled,webrt
 PACKAGECONFIG[zbar]            = "-Dzbar=enabled,-Dzbar=disabled,zbar"
 PACKAGECONFIG[x265]            = "-Dx265=enabled,-Dx265=disabled,x265"
 
-# these plugins currently have no corresponding library in OE-core or meta-openembedded:
-#   androidmedia applemedia bs2b chromaprint d3dvideosink
-#   directsound dts fdkaac gme gsm iq kate ladspa lv2 mpeg2enc
-#   mplex musepack nvdec nvenc ofa openexr openni2 opensles
-#   soundtouch spandsp teletext wasapi wildmidi winks
-#   winscreencap wpe
-
 EXTRA_OEMESON += " \
     -Ddoc=disabled \
     -Ddecklink=enabled \
