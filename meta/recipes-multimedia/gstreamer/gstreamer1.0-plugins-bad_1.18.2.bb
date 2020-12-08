@@ -91,7 +91,6 @@ EXTRA_OEMESON += " \
     -Ddvb=enabled \
     -Dfbdev=enabled \
     -Dipcpipeline=enabled \
-    -Dnetsim=enabled \
     -Dshm=enabled \
     -Dandroidmedia=disabled \
     -Dapplemedia=disabled \
