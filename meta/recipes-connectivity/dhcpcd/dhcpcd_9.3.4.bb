@@ -13,11 +13,12 @@ UPSTREAM_CHECK_URI = "https://roy.marples.name/downloads/dhcpcd/"
 
 SRC_URI = "https://roy.marples.name/downloads/${BPN}/${BPN}-${PV}.tar.xz \
            file://0001-remove-INCLUDEDIR-to-prevent-build-issues.patch \
+           file://0001-Linux-Fix-privsep-build-by-including-sys-termios.h-f.patch \
            file://dhcpcd.service \
            file://dhcpcd@.service \
            "
 
-SRC_URI[sha256sum] = "6d49af5e766a2515e6366e4f669663df04ecdf90a1a60ddb1d7a2feb4b5d2566"
+SRC_URI[sha256sum] = "5c823a0b981b52e7e0fd3183ae220422d6fcc3aa511af31dcb1a7ee6cb0f1c39"
 
 inherit pkgconfig autotools-brokensep systemd useradd
 
