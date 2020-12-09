@@ -15,9 +15,11 @@ RDEPENDS_${PN} = "\
     ${PYTHON_PN}-json \
     ${PYTHON_PN}-py \
     ${PYTHON_PN}-setuptools \
+    ${PYTHON_PN}-toml \
 "
 RDEPENDS_${PN}_class-native = "\
     ${PYTHON_PN}-setuptools-native \
+    ${PYTHON_PN}-toml-native \
 "
 
 BBCLASSEXTEND = "native nativesdk"
