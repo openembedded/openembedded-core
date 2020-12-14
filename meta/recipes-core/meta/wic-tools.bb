@@ -11,6 +11,7 @@ DEPENDS = "\
 DEPENDS_append_x86 = " syslinux-native syslinux grub-efi systemd-boot"
 DEPENDS_append_x86-64 = " syslinux-native syslinux grub-efi systemd-boot"
 DEPENDS_append_x86-x32 = " syslinux-native syslinux grub-efi"
+DEPENDS_append_aarch64 = " grub-efi systemd-boot"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
