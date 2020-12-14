@@ -20,8 +20,6 @@ SRC_URI += "file://touchscreen.rules \
            file://99-default.preset \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
-           file://CVE-2020-13776.patch \
-           file://systemd-udev-seclabel-options-crash-fix.patch \
            "
 
 # patches needed by musl
@@ -50,6 +48,9 @@ SRC_URI_MUSL = "\
                file://0003-src-basic-copy.c-include-signal.h.patch \
                file://0004-src-shared-cpu-set-util.h-add-__cpu_mask-definition.patch \
                "
+
+# already applied in 244.5
+CVE_CHECK_WHITELIST += "CVE-2020-13776"
 
 PAM_PLUGINS = " \
     pam-plugin-unix \
