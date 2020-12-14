@@ -47,16 +47,14 @@ RDEPENDS_${PN} += "virtual/systemd-bootconf"
 
 # Imported from the old gummiboot recipe
 TUNE_CCARGS_remove = "-mfpmath=sse"
+
 COMPATIBLE_HOST = "(x86_64.*|i.86.*)-linux"
 COMPATIBLE_HOST_x86-x32 = "null"
 
 do_compile() {
-	SYSTEMD_BOOT_EFI_ARCH="ia32"
-	if [ "${TARGET_ARCH}" = "x86_64" ]; then
-		SYSTEMD_BOOT_EFI_ARCH="x64"
-	fi
-
-	ninja src/boot/efi/${SYSTEMD_BOOT_IMAGE_PREFIX}${SYSTEMD_BOOT_IMAGE}
+	ninja \
+		src/boot/efi/${SYSTEMD_BOOT_IMAGE_PREFIX}${SYSTEMD_BOOT_IMAGE} \
+		src/boot/efi/linux${EFI_ARCH}.efi.stub
 }
 
 do_install() {
@@ -66,5 +64,7 @@ do_install() {
 
 do_deploy () {
 	install ${B}/src/boot/efi/systemd-boot*.efi ${DEPLOYDIR}
+	install ${B}/src/boot/efi/linux*.efi.stub ${DEPLOYDIR}
 }
+
 addtask deploy before do_build after do_compile
