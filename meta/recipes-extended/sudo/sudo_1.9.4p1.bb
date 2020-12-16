@@ -44,6 +44,16 @@ do_install_append () {
 	rmdir -p --ignore-fail-on-non-empty ${D}/run/sudo
 }
 
-FILES_${PN} += "${nonarch_libdir}/tmpfiles.d"
 FILES_${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/*.la \
                     ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la"
+
+SUDO_PACKAGES = "${PN}-sudo\
+                 ${PN}-lib"
+
+PACKAGE_BEFORE_PN = "${SUDO_PACKAGES}"
+
+RDEPENDS_${PN}-sudo = "${PN}-lib"
+RDEPENDS_${PN} += "${SUDO_PACKAGES}"
+
+FILES_${PN}-sudo = "${bindir}/sudo ${bindir}/sudoedit"
+FILES_${PN}-lib = "${localstatedir} ${libexecdir} ${sysconfdir} ${libdir} ${nonarch_libdir}"
