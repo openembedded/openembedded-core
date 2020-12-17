@@ -75,6 +75,10 @@ FIT_KEY_SIGN_PKCS ?= "-x509"
 # Description string
 FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 
+# mkimage command
+UBOOT_MKIMAGE ?= "uboot-mkimage"
+UBOOT_MKIMAGE_SIGN ?= "${UBOOT_MKIMAGE}"
+
 #
 # Emit the fitImage ITS header
 #
@@ -505,7 +509,7 @@ fitimage_assemble() {
 	#
 	# Step 6: Assemble the image
 	#
-	uboot-mkimage \
+	${UBOOT_MKIMAGE} \
 		${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
 		-f ${1} \
 		arch/${ARCH}/boot/${2}
@@ -521,7 +525,7 @@ fitimage_assemble() {
 			cp -P ${STAGING_DATADIR}/u-boot*.dtb ${B}
 			add_key_to_u_boot="-K ${B}/${UBOOT_DTB_BINARY}"
 		fi
-		uboot-mkimage \
+		${UBOOT_MKIMAGE_SIGN} \
 			${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
 			-F -k "${UBOOT_SIGN_KEYDIR}" \
 			$add_key_to_u_boot \
