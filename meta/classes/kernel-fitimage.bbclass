@@ -72,6 +72,9 @@ FIT_KEY_REQ_ARGS ?= "-batch -new"
 # Standard format for public key certificate
 FIT_KEY_SIGN_PKCS ?= "-x509"
 
+# Description string
+FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
+
 #
 # Emit the fitImage ITS header
 #
@@ -81,7 +84,7 @@ fitimage_emit_fit_header() {
 /dts-v1/;
 
 / {
-        description = "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}";
+        description = "${FIT_DESC}";
         #address-cells = <1>;
 EOF
 }
