@@ -79,6 +79,7 @@ EXTRA_OECONF = "\
 		ac_cv_header_valgrind_memcheck_h=no \
 		--disable-tests \
 		--disable-running-from-build-tree \
+		--disable-esound \
 "
 
 # soxr (the SoX Resampler library) doesn't seem to be currently packaged in
