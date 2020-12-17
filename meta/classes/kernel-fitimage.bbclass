@@ -79,6 +79,9 @@ FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 UBOOT_MKIMAGE ?= "uboot-mkimage"
 UBOOT_MKIMAGE_SIGN ?= "${UBOOT_MKIMAGE}"
 
+# Arguments passed to mkimage for signing
+UBOOT_MKIMAGE_SIGN_ARGS ?= ""
+
 #
 # Emit the fitImage ITS header
 #
@@ -529,7 +532,8 @@ fitimage_assemble() {
 			${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
 			-F -k "${UBOOT_SIGN_KEYDIR}" \
 			$add_key_to_u_boot \
-			-r arch/${ARCH}/boot/${2}
+			-r arch/${ARCH}/boot/${2} \
+			${UBOOT_MKIMAGE_SIGN_ARGS}
 	fi
 }
 
