@@ -75,6 +75,9 @@ FIT_KEY_SIGN_PKCS ?= "-x509"
 # Description string
 FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 
+# Sign individual images as well
+FIT_SIGN_INDIVIDUAL ?= "0"
+
 # mkimage command
 UBOOT_MKIMAGE ?= "uboot-mkimage"
 UBOOT_MKIMAGE_SIGN ?= "${UBOOT_MKIMAGE}"
@@ -142,6 +145,8 @@ EOF
 fitimage_emit_section_kernel() {
 
 	kernel_csum="${FIT_HASH_ALG}"
+	kernel_sign_algo="${FIT_SIGN_ALG}"
+	kernel_sign_keyname="${UBOOT_SIGN_KEYNAME}"
 
 	ENTRYPOINT="${UBOOT_ENTRYPOINT}"
 	if [ -n "${UBOOT_ENTRYSYMBOL}" ]; then
@@ -164,6 +169,17 @@ fitimage_emit_section_kernel() {
                         };
                 };
 EOF
+
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${FIT_SIGN_INDIVIDUAL}" = "1" -a -n "${kernel_sign_keyname}" ] ; then
+		sed -i '$ d' ${1}
+		cat << EOF >> ${1}
+                        signature@1 {
+                                algo = "${kernel_csum},${kernel_sign_algo}";
+                                key-name-hint = "${kernel_sign_keyname}";
+                        };
+                };
+EOF
+	fi
 }
 
 #
@@ -175,6 +191,8 @@ EOF
 fitimage_emit_section_dtb() {
 
 	dtb_csum="${FIT_HASH_ALG}"
+	dtb_sign_algo="${FIT_SIGN_ALG}"
+	dtb_sign_keyname="${UBOOT_SIGN_KEYNAME}"
 
 	dtb_loadline=""
 	dtb_ext=${DTB##*.}
@@ -198,6 +216,17 @@ fitimage_emit_section_dtb() {
                         };
                 };
 EOF
+
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${FIT_SIGN_INDIVIDUAL}" = "1" -a -n "${dtb_sign_keyname}" ] ; then
+		sed -i '$ d' ${1}
+		cat << EOF >> ${1}
+                        signature@1 {
+                                algo = "${dtb_csum},${dtb_sign_algo}";
+                                key-name-hint = "${dtb_sign_keyname}";
+                        };
+                };
+EOF
+	fi
 }
 
 #
@@ -236,6 +265,8 @@ EOF
 fitimage_emit_section_ramdisk() {
 
 	ramdisk_csum="${FIT_HASH_ALG}"
+	ramdisk_sign_algo="${FIT_SIGN_ALG}"
+	ramdisk_sign_keyname="${UBOOT_SIGN_KEYNAME}"
 	ramdisk_loadline=""
 	ramdisk_entryline=""
 
@@ -261,6 +292,17 @@ fitimage_emit_section_ramdisk() {
                         };
                 };
 EOF
+
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${FIT_SIGN_INDIVIDUAL}" = "1" -a -n "${ramdisk_sign_keyname}" ] ; then
+		sed -i '$ d' ${1}
+		cat << EOF >> ${1}
+                        signature@1 {
+                                algo = "${ramdisk_csum},${ramdisk_sign_algo}";
+                                key-name-hint = "${ramdisk_sign_keyname}";
+                        };
+                };
+EOF
+	fi
 }
 
 #
