@@ -48,10 +48,11 @@ do_install () {
 # The .so files in iproute2-tc are modules, not traditional libraries
 INSANE_SKIP_${PN}-tc = "dev-so"
 
-PACKAGES =+ "\
+IPROUTE2_PACKAGES =+ "\
     ${PN}-devlink \
     ${PN}-genl \
     ${PN}-ifstat \
+    ${PN}-ip \
     ${PN}-lnstat \
     ${PN}-nstat \
     ${PN}-rtacct \
@@ -60,12 +61,16 @@ PACKAGES =+ "\
     ${PN}-tipc \
 "
 
+PACKAGE_BEFORE_PN = "${IPROUTE2_PACKAGES}"
+RDEPENDS_${PN} += "${PN}-ip"
+
 FILES_${PN}-tc = "${base_sbindir}/tc* \
                   ${libdir}/tc/*.so"
 FILES_${PN}-lnstat = "${base_sbindir}/lnstat \
                       ${base_sbindir}/ctstat \
                       ${base_sbindir}/rtstat"
 FILES_${PN}-ifstat = "${base_sbindir}/ifstat"
+FILES_${PN}-ip = "${base_sbindir}/ip.${PN} ${sysconfdir}/iproute2"
 FILES_${PN}-genl = "${base_sbindir}/genl"
 FILES_${PN}-rtacct = "${base_sbindir}/rtacct"
 FILES_${PN}-nstat = "${base_sbindir}/nstat"
@@ -73,7 +78,7 @@ FILES_${PN}-ss = "${base_sbindir}/ss"
 FILES_${PN}-tipc = "${base_sbindir}/tipc"
 FILES_${PN}-devlink = "${base_sbindir}/devlink"
 
-ALTERNATIVE_${PN} = "ip"
+ALTERNATIVE_${PN}-ip = "ip"
 ALTERNATIVE_TARGET[ip] = "${base_sbindir}/ip.${BPN}"
 ALTERNATIVE_LINK_NAME[ip] = "${base_sbindir}/ip"
 ALTERNATIVE_PRIORITY = "100"
