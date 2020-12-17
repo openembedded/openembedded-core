@@ -35,6 +35,7 @@ UBOOT_RD_LOADADDRESS = "0x88000000"
 UBOOT_RD_ENTRYPOINT = "0x88000000"
 UBOOT_LOADADDRESS = "0x80080000"
 UBOOT_ENTRYPOINT = "0x80080000"
+FIT_DESC = "A model description"
 """
         self.write_config(config)
 
@@ -59,7 +60,9 @@ UBOOT_ENTRYPOINT = "0x80080000"
         # The order of fields in the below array is important. Not all the
         # fields are tested, only the key fields that wont vary between
         # different architectures.
-        its_field_check = ['type = "kernel";',
+        its_field_check = [
+            'description = "A model description";',
+            'type = "kernel";',
             'load = <0x80080000>;',
             'entry = <0x80080000>;',
             'type = "ramdisk";',
