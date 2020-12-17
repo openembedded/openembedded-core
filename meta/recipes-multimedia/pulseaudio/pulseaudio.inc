@@ -80,6 +80,7 @@ EXTRA_OECONF = "\
 		--disable-tests \
 		--disable-running-from-build-tree \
 		--disable-esound \
+		--disable-gconf \
 "
 
 # soxr (the SoX Resampler library) doesn't seem to be currently packaged in
@@ -108,7 +109,6 @@ PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez5'
 
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[bluez5] = "--enable-bluez5,--disable-bluez5,bluez5 sbc"
-PACKAGECONFIG[gconf] = "--enable-gconf,--disable-gconf,gconf"
 PACKAGECONFIG[gsettings] = "--enable-gsettings,--disable-gsettings,glib-2.0-native glib-2.0"
 PACKAGECONFIG[ofono] = "--enable-bluez5-ofono-headset,--disable-bluez5-ofono-headset,ofono"
 PACKAGECONFIG[gtk] = "--enable-gtk3,--disable-gtk3,gtk+3"
@@ -265,7 +265,6 @@ RDEPENDS_pulseaudio-module-console-kit =+ "${@bb.utils.contains('DISTRO_FEATURES
 RDEPENDS_pulseaudio-misc += "pulseaudio-module-cli-protocol-unix"
 
 FILES_${PN}-module-alsa-card += "${datadir}/pulseaudio/alsa-mixer"
-FILES_${PN}-module-gconf += "${libexecdir}/pulse/gconf-helper"
 
 GSETTINGS_PACKAGE = "${@bb.utils.contains('PACKAGECONFIG', 'gsettings', '${PN}-module-gsettings', '', d)}"
 FILES_${PN}-module-gsettings += "${libexecdir}/pulse/gsettings-helper ${datadir}/GConf/gsettings ${datadir}/glib-2.0/schemas"
