@@ -273,6 +273,13 @@ fitimage_emit_section_config() {
 		conf_sign_keyname="${UBOOT_SIGN_KEYNAME}"
 	fi
 
+	its_file="${1}"
+	kernel_id="${2}"
+	dtb_image="${3}"
+	ramdisk_id="${4}"
+	config_id="${5}"
+	default_flag="${6}"
+
 	# Test if we have any DTBs at all
 	sep=""
 	conf_desc=""
@@ -285,49 +292,49 @@ fitimage_emit_section_config() {
 
 	# conf node name is selected based on dtb ID if it is present,
 	# otherwise its selected based on kernel ID
-	if [ -n "${3}" ]; then
-		conf_node=$conf_node${3}
+	if [ -n "${dtb_image}" ]; then
+		conf_node=$conf_node${dtb_image}
 	else
-		conf_node=$conf_node${2}
+		conf_node=$conf_node${kernel_id}
 	fi
 
-	if [ -n "${2}" ]; then
+	if [ -n "${kernel_id}" ]; then
 		conf_desc="Linux kernel"
 		sep=", "
-		kernel_line="kernel = \"kernel@${2}\";"
+		kernel_line="kernel = \"kernel@${kernel_id}\";"
 	fi
 
-	if [ -n "${3}" ]; then
+	if [ -n "${dtb_image}" ]; then
 		conf_desc="${conf_desc}${sep}FDT blob"
 		sep=", "
-		fdt_line="fdt = \"fdt@${3}\";"
+		fdt_line="fdt = \"fdt@${dtb_image}\";"
 	fi
 
-	if [ -n "${4}" ]; then
+	if [ -n "${ramdisk_id}" ]; then
 		conf_desc="${conf_desc}${sep}ramdisk"
 		sep=", "
-		ramdisk_line="ramdisk = \"ramdisk@${4}\";"
+		ramdisk_line="ramdisk = \"ramdisk@${ramdisk_id}\";"
 	fi
 
-	if [ -n "${5}" ]; then
+	if [ -n "${config_id}" ]; then
 		conf_desc="${conf_desc}${sep}setup"
-		setup_line="setup = \"setup@${5}\";"
+		setup_line="setup = \"setup@${config_id}\";"
 	fi
 
-	if [ "${6}" = "1" ]; then
+	if [ "${default_flag}" = "1" ]; then
 		# default node is selected based on dtb ID if it is present,
 		# otherwise its selected based on kernel ID
-		if [ -n "${3}" ]; then
-			default_line="default = \"conf@${3}\";"
+		if [ -n "${dtb_image}" ]; then
+			default_line="default = \"conf@${dtb_image}\";"
 		else
-			default_line="default = \"conf@${2}\";"
+			default_line="default = \"conf@${kernel_id}\";"
 		fi
 	fi
 
-	cat << EOF >> ${1}
+	cat << EOF >> ${its_file}
                 ${default_line}
                 $conf_node {
-			description = "${6} ${conf_desc}";
+			description = "${default_flag} ${conf_desc}";
 			${kernel_line}
 			${fdt_line}
 			${ramdisk_line}
@@ -342,28 +349,28 @@ EOF
 		sign_line="sign-images = "
 		sep=""
 
-		if [ -n "${2}" ]; then
+		if [ -n "${kernel_id}" ]; then
 			sign_line="${sign_line}${sep}\"kernel\""
 			sep=", "
 		fi
 
-		if [ -n "${3}" ]; then
+		if [ -n "${dtb_image}" ]; then
 			sign_line="${sign_line}${sep}\"fdt\""
 			sep=", "
 		fi
 
-		if [ -n "${4}" ]; then
+		if [ -n "${ramdisk_id}" ]; then
 			sign_line="${sign_line}${sep}\"ramdisk\""
 			sep=", "
 		fi
 
-		if [ -n "${5}" ]; then
+		if [ -n "${config_id}" ]; then
 			sign_line="${sign_line}${sep}\"setup\""
 		fi
 
 		sign_line="${sign_line};"
 
-		cat << EOF >> ${1}
+		cat << EOF >> ${its_file}
                         signature@1 {
                                 algo = "${conf_csum},${conf_sign_algo}";
                                 key-name-hint = "${conf_sign_keyname}";
@@ -372,7 +379,7 @@ EOF
 EOF
 	fi
 
-	cat << EOF >> ${1}
+	cat << EOF >> ${its_file}
                 };
 EOF
 }
