@@ -209,6 +209,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Drootlibdir=${rootlibdir} \
                   -Drootprefix=${rootprefix} \
                   -Ddefault-locale=C \
+                  -Dmode=release \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot
