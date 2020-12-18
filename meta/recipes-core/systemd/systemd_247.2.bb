@@ -22,9 +22,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://0001-systemd.pc.in-use-ROOTPREFIX-without-suffixed-slash.patch \
-           file://selinux-hook-handling-to-enumerate-nexthop.patch \
            file://0001-logind-Restore-chvt-as-non-root-user-without-polkit.patch \
-           file://0001-meson-Fix-reallocarray-check.patch \
            "
 
 # patches needed by musl
@@ -35,26 +33,26 @@ SRC_URI_MUSL = "\
                file://0004-add-fallback-parse_printf_format-implementation.patch \
                file://0005-src-basic-missing.h-check-for-missing-strndupa.patch \
                file://0006-Include-netinet-if_ether.h.patch \
-               file://0007-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not.patch \
+               file://0007-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not-.patch \
                file://0008-add-missing-FTW_-macros-for-musl.patch \
-               file://0010-fix-missing-of-__register_atfork-for-non-glibc-build.patch \
-               file://0011-Use-uintmax_t-for-handling-rlim_t.patch \
-               file://0014-test-sizeof.c-Disable-tests-for-missing-typedefs-in-.patch \
-               file://0015-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
-               file://0016-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
-               file://0017-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
-               file://0018-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
-               file://0019-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
-               file://0020-missing_type.h-add-__compar_d_fn_t-definition.patch \
-               file://0021-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0021-Handle-missing-LOCK_EX.patch \
-               file://0022-Fix-incompatible-pointer-type-struct-sockaddr_un.patch \
-               file://0024-test-json.c-define-M_PIl.patch \
-               file://0001-do-not-disable-buffer-in-writing-files.patch \
-               file://0002-src-login-brightness.c-include-sys-wait.h.patch \
-               file://0003-src-basic-copy.c-include-signal.h.patch \
-               file://0004-src-shared-cpu-set-util.h-add-__cpu_mask-definition.patch \
-               file://0001-Handle-missing-gshadow.patch \
+               file://0009-fix-missing-of-__register_atfork-for-non-glibc-build.patch \
+               file://0010-Use-uintmax_t-for-handling-rlim_t.patch \
+               file://0011-test-sizeof.c-Disable-tests-for-missing-typedefs-in-.patch \
+               file://0012-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
+               file://0013-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
+               file://0014-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
+               file://0015-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
+               file://0016-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
+               file://0017-missing_type.h-add-__compar_d_fn_t-definition.patch \
+               file://0018-avoid-redefinition-of-prctl_mm_map-structure.patch \
+               file://0019-Handle-missing-LOCK_EX.patch \
+               file://0020-Fix-incompatible-pointer-type-struct-sockaddr_un.patch \
+               file://0021-test-json.c-define-M_PIl.patch \
+               file://0022-do-not-disable-buffer-in-writing-files.patch \
+               file://0023-Include-sys-wait.h.patch \
+               file://0024-Include-signal.h.patch \
+               file://0025-Handle-__cpu_mask-usage.patch \
+               file://0026-Handle-missing-gshadow.patch \
                "
 
 PAM_PLUGINS = " \
@@ -554,6 +552,8 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/resolv-conf.systemd \
                 ${sysconfdir}/X11/xinit/xinitrc.d/* \
                 ${rootlibexecdir}/systemd/* \
+                ${libdir}/pam.d \
+                ${nonarch_libdir}/pam.d \
                 ${systemd_unitdir}/* \
                 ${base_libdir}/security/*.so \
                 /cgroup \
@@ -582,6 +582,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${datadir}/dbus-1/system.d/org.freedesktop.login1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.timesync1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.portable1.conf \
+                ${datadir}/dbus-1/system.d/org.freedesktop.oom1.conf \
                "
 
 FILES_${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"

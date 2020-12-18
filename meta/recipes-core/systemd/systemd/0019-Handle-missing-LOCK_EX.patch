@@ -1,7 +1,7 @@
-From 190854c2114dc6e74c8859dc251e3737e3c0f353 Mon Sep 17 00:00:00 2001
+From e427f03de2c56e868bb0f24aa231315b2dae1b71 Mon Sep 17 00:00:00 2001
 From: Alex Kiernan <alex.kiernan@gmail.com>
 Date: Fri, 7 Aug 2020 15:19:27 +0000
-Subject: [PATCH] Handle missing LOCK_EX
+Subject: [PATCH 19/26] Handle missing LOCK_EX
 
 Upstream-Status: Inappropriate [musl specific]
 Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
@@ -10,10 +10,10 @@ Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/partition/makefs.c b/src/partition/makefs.c
-index 97f50c9033..7f55acd229 100644
+index fd924d2231..b97580fdcc 100644
 --- a/src/partition/makefs.c
 +++ b/src/partition/makefs.c
-@@ -5,6 +5,7 @@
+@@ -6,6 +6,7 @@
  #include <sys/stat.h>
  #include <sys/types.h>
  #include <unistd.h>
@@ -21,3 +21,6 @@ index 97f50c9033..7f55acd229 100644
  
  #include "alloc-util.h"
  #include "blockdev-util.h"
+-- 
+2.27.0
+
