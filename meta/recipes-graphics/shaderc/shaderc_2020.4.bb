@@ -6,7 +6,7 @@ HOMEPAGE = "https://github.com/google/shaderc"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
-SRCREV = "1fce59794079f90ceb091190adbbb5499acd4e95"
+SRCREV = "0dbd899941a43ffd55df527d65128b3b66e75c9c"
 SRC_URI = "git://github.com/google/shaderc.git;protocol=https;branch=main \
            file://0001-Fix-the-link-order-of-libglslang-and-libHLSL.patch \
            file://0003-cmake-de-vendor-libs-and-disable-git-versioning.patch \
