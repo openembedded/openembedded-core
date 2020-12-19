@@ -216,6 +216,8 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Drootlibdir=${rootlibdir} \
                   -Drootprefix=${rootprefix} \
                   -Ddefault-locale=C \
+                  -Dsystem-uid-max=999 \
+                  -Dsystem-gid-max=999 \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot
