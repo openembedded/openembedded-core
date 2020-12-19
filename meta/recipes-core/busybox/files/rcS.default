@@ -1,1 +1,2 @@
-# SULOGIN = "yes"
+# Indicate init system type
+INIT_SYSTEM=busybox
