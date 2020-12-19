@@ -15,8 +15,8 @@ SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git;name=spirv-tools \
            git://github.com/google/googletest.git;name=googletest;destsuffix=${DEST_DIR}/googletest \
            file://0001-Respect-CMAKE_INSTALL_LIBDIR-in-installed-CMake-file.patch;destsuffix=${DEST_DIR}/effcee \
 "
-SRCREV_spirv-tools = "b27e039c68dd9eb959bb9249fcb2c9a54841474b"
-SRCREV_spirv-headers = "3fdabd0da2932c276b25b9b4a988ba134eba1aa6"
+SRCREV_spirv-tools = "b27b1afd12d05bf238ac7368bb49de73cd620a8e"
+SRCREV_spirv-headers = "f027d53ded7e230e008d37c8b47ede7cd308e19d"
 SRCREV_effcee = "cd25ec17e9382f99a895b9ef53ff3c277464d07d"
 SRCREV_re2 = "5bd613749fd530b576b890283bfb6bc6ea6246cb"
 SRCREV_googletest = "f2fb48c3b3d79a75a88a99fba6576b25d42ec528"
