@@ -1,0 +1,24 @@
+The output in moddep.lst generated from syminfo.lst using genmoddep.awk is
+not deterministic since the order of the dependencies on each line can vary
+depending on how awk sorts the values in the array.
+
+Be deterministic in the output by sorting the dependencies on each line.
+
+Upstream-Status: Pending
+Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Index: grub-2.04/grub-core/genmoddep.awk
+===================================================================
+--- grub-2.04.orig/grub-core/genmoddep.awk
++++ grub-2.04/grub-core/genmoddep.awk
+@@ -59,7 +59,9 @@ END {
+     }
+     modlist = ""
+     depcount[mod] = 0
+-    for (depmod in uniqmods) {
++    n = asorti(uniqmods, w)
++    for (i = 1; i <= n; i++) {
++      depmod = w[i]
+       modlist = modlist " " depmod;
+       inverse_dependencies[depmod] = inverse_dependencies[depmod] " " mod
+       depcount[mod]++
