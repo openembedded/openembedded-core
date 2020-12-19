@@ -213,6 +213,10 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Drootprefix=${rootprefix} \
                   -Ddefault-locale=C \
                   -Dmode=release \
+                  -Dsystem-alloc-uid-min=101 \
+                  -Dsystem-uid-max=999 \
+                  -Dsystem-alloc-gid-min=101 \
+                  -Dsystem-gid-max=999 \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot
