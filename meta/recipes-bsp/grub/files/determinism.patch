@@ -4,6 +4,10 @@ depending on how awk sorts the values in the array.
 
 Be deterministic in the output by sorting the dependencies on each line.
 
+Also, the output of the SOURCES lines in grub-core/Makefile.core.am, generated
+from grub-core/Makefile.core.def with gentpl.py is not deterministic due to
+missing sorting of the list used to generate it. Add such a sort.
+
 Upstream-Status: Pending
 Richard Purdie <richard.purdie@linuxfoundation.org>
 
@@ -22,3 +26,15 @@ Index: grub-2.04/grub-core/genmoddep.awk
        modlist = modlist " " depmod;
        inverse_dependencies[depmod] = inverse_dependencies[depmod] " " mod
        depcount[mod]++
+Index: grub-2.04/gentpl.py
+===================================================================
+--- grub-2.04.orig/gentpl.py
++++ grub-2.04/gentpl.py
+@@ -568,6 +568,7 @@ def foreach_platform_value(defn, platfor
+     for group in RMAP[platform]:
+         for value in defn.find_all(group + suffix):
+             r.append(closure(value))
++    r.sort()
+     return ''.join(r)
+ 
+ def platform_conditional(platform, closure):
