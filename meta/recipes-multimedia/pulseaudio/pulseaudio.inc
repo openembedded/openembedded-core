@@ -133,7 +133,7 @@ set_cfg_value () {
 
 do_compile_append () {
 	if ${@bb.utils.contains('PACKAGECONFIG', 'autospawn-for-root', 'true', 'false', d)}; then
-		set_cfg_value src/client.conf allow-autospawn-for-root yes
+		set_cfg_value src/pulse/client.conf allow-autospawn-for-root yes
 	fi
 }
 
