@@ -14,6 +14,7 @@ UPSTREAM_CHECK_URI = "https://roy.marples.name/downloads/dhcpcd/"
 SRC_URI = "https://roy.marples.name/downloads/${BPN}/${BPN}-${PV}.tar.xz \
            file://0001-remove-INCLUDEDIR-to-prevent-build-issues.patch \
            file://0001-Linux-Fix-privsep-build-by-including-sys-termios.h-f.patch \
+           file://0001-privsep-Fix-Linux-i386-for-SECCOMP-as-it-just-uses-s.patch \
            file://dhcpcd.service \
            file://dhcpcd@.service \
            "
