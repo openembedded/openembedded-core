@@ -55,8 +55,15 @@ CFLAGS_append_class-native = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/built
 CFLAGS_append_class-nativesdk = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/builtin"
 
 # Disable deprecated crypto algorithms
-# Retained for compatibilty - des (curl), dh (python-ssl), dsa (rpm)
-DEPRECATED_CRYPTO_FLAGS = " no-ssl no-idea no-psk no-rc2 no-rc4 no-rc5 no-md2 no-md4 no-srp no-camellia no-bf no-mdc2 no-scrypt no-seed no-siphash no-sm2 no-sm3 no-sm4 no-whirlpool"
+# Retained for compatibilty
+# des (curl)
+# dh (python-ssl)
+# dsa (rpm)
+# md4 (cyrus-sasl freeradius hostapd)
+# bf (wvstreams postgresql x11vnc crda znc cfengine)
+# rc4 (freerdp librtorrent ettercap xrdp transmission pam-ssh-agent-auth php)
+# rc2 (mailx)
+DEPRECATED_CRYPTO_FLAGS = "no-ssl no-idea no-psk no-rc5 no-md2 no-srp no-camellia no-mdc2 no-scrypt no-seed no-siphash no-sm2 no-sm3 no-sm4 no-whirlpool"
 
 do_configure () {
 	os=${HOST_OS}
