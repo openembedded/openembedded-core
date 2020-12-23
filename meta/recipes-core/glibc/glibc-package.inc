@@ -139,6 +139,12 @@ do_install_append_class-target() {
 	fi
 
 }
+
+# provided by libnsl2
+do_install_append_class-nativesdk() {
+    rm -f ${D}${includedir}/rpcsvc/yppasswd.*
+}
+
 do_install_append_aarch64 () {
 	do_install_armmultilib
 }
