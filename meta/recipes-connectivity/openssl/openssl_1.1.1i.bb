@@ -63,7 +63,8 @@ CFLAGS_append_class-nativesdk = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/bu
 # bf (wvstreams postgresql x11vnc crda znc cfengine)
 # rc4 (freerdp librtorrent ettercap xrdp transmission pam-ssh-agent-auth php)
 # rc2 (mailx)
-DEPRECATED_CRYPTO_FLAGS = "no-ssl no-idea no-psk no-rc5 no-md2 no-srp no-camellia no-mdc2 no-scrypt no-seed no-siphash no-sm2 no-sm3 no-sm4 no-whirlpool"
+# psk (qt5)
+DEPRECATED_CRYPTO_FLAGS = "no-ssl no-idea no-rc5 no-md2 no-srp no-camellia no-mdc2 no-scrypt no-seed no-siphash no-sm2 no-sm3 no-sm4 no-whirlpool"
 
 do_configure () {
 	os=${HOST_OS}
