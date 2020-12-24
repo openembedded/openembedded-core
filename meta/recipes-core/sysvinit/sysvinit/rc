@@ -17,6 +17,7 @@
 
 . /etc/default/rcS
 export VERBOSE
+export PSPLASH_FIFO_DIR
 
 startup_progress() {
     step=$(($step + $step_change))
@@ -27,7 +28,7 @@ startup_progress() {
     fi
     #echo "PROGRESS is $progress $runlevel $first_step + ($step of $num_steps) $step_change $progress_size"
     if type psplash-write >/dev/null 2>&1; then
-        PSPLASH_FIFO_DIR=/mnt/.psplash psplash-write "PROGRESS $progress" || true
+        psplash-write "PROGRESS $progress" || true
     fi
 }
 
@@ -173,7 +174,7 @@ startup() {
 #Uncomment to cause psplash to exit manually, otherwise it exits when it sees a VC switch
 if [ "x$runlevel" != "xS" ] && [ ! -x /etc/rc${runlevel}.d/S??xserver-nodm ]; then
     if type psplash-write >/dev/null 2>&1; then
-        PSPLASH_FIFO_DIR=/mnt/.psplash psplash-write "QUIT" || true
+        psplash-write "QUIT" || true
     	umount -l /mnt/.psplash
     fi
 fi

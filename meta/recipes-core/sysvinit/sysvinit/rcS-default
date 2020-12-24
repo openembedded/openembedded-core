@@ -30,3 +30,5 @@ ROOTFS_READ_ONLY=no
 # rcS is also used when using busybox init and shares initscripts, some initscripts
 # need to have specific behavior depending on init system
 INIT_SYSTEM=sysvinit
+# set the psplash fifo directory
+PSPLASH_FIFO_DIR=/mnt/.psplash
