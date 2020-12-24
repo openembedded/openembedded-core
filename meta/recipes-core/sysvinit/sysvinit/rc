@@ -175,6 +175,5 @@ startup() {
 if [ "x$runlevel" != "xS" ] && [ ! -x /etc/rc${runlevel}.d/S??xserver-nodm ]; then
     if type psplash-write >/dev/null 2>&1; then
         psplash-write "QUIT" || true
-    	umount -l /mnt/.psplash
     fi
 fi

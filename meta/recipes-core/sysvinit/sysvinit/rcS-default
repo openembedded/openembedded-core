@@ -31,4 +31,4 @@ ROOTFS_READ_ONLY=no
 # need to have specific behavior depending on init system
 INIT_SYSTEM=sysvinit
 # set the psplash fifo directory
-PSPLASH_FIFO_DIR=/mnt/.psplash
+PSPLASH_FIFO_DIR=/mnt
