@@ -32,3 +32,5 @@ ROOTFS_READ_ONLY=no
 INIT_SYSTEM=sysvinit
 # set the psplash fifo directory
 PSPLASH_FIFO_DIR=/mnt
+# psplash textual updates knob
+PSPLASH_TEXT_UPDATES=#PSPLASH_TEXT#

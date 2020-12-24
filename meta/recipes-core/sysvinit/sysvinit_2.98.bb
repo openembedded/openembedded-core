@@ -29,6 +29,8 @@ inherit update-alternatives features_check
 DEPENDS_append = " update-rc.d-native base-passwd virtual/crypt"
 do_package_setscene[depends] = "${MLPREFIX}base-passwd:do_populate_sysroot"
 
+PACKAGECONFIG[psplash-text-updates] = ",,"
+
 REQUIRED_DISTRO_FEATURES = "sysvinit"
 
 ALTERNATIVE_${PN} = "init mountpoint halt reboot runlevel shutdown poweroff last lastb mesg utmpdump wall"
@@ -91,7 +93,10 @@ do_install () {
 		install -d ${D}${sysconfdir}/rc$level.d
 	done
 
-	install -m 0644    ${WORKDIR}/rcS-default	${D}${sysconfdir}/default/rcS
+	sed -e \
+		's:#PSPLASH_TEXT#:${@bb.utils.contains("PACKAGECONFIG","psplash-text-updates","yes","no", d)}:g' \
+		${WORKDIR}/rcS-default > ${D}${sysconfdir}/default/rcS
+	chmod 0644 ${D}${sysconfdir}/default/rcS
 	install -m 0755    ${WORKDIR}/rc		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/rcS		${D}${sysconfdir}/init.d
 	install -m 0755    ${WORKDIR}/bootlogd.init     ${D}${sysconfdir}/init.d/bootlogd
