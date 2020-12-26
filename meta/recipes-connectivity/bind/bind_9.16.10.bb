@@ -19,7 +19,7 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.xz \
            file://0001-avoid-start-failure-with-bind-user.patch \
            "
 
-SRC_URI[sha256sum] = "bcb292c4d738a46e3cbcb8afaa25ecf54f77652fa575135da9a2a1d525304a5a"
+SRC_URI[sha256sum] = "bc47fc019c6205e6a6bfb839c544a1472321df0537ba905b846a4cbffe3362b3"
 
 UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
 # stay at 9.16 follow the ESV versions divisible by 4
