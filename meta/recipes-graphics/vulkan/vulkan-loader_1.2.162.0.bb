@@ -9,8 +9,10 @@ SECTION = "libs"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=7dbefed23242760aa3475ee42801c5ac"
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-Loader.git;branch=sdk-1.2.154"
-SRCREV = "2aa801755eab3fab610d9676c4dd94054e30c854"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-Loader.git \
+           file://0001-Rename-LIB_SUFFIX-to-VULKAN_LIB_SUFFIX.patch \
+           "
+SRCREV = "7a313093b5c4af964d50a5a64e73d7df6152ea3f"
 
 S = "${WORKDIR}/git"
 
