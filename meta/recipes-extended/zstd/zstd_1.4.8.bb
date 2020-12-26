@@ -9,11 +9,11 @@ LICENSE = "BSD-3-Clause & GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c7f0b161edbe52f5f345a3d1311d0b32 \
                     file://COPYING;md5=39bba7d2cf0ba1036f2a6e2be52fe3f0"
 
-SRC_URI = "git://github.com/facebook/zstd.git;nobranch=1 \
-           file://0001-Fix-legacy-build-after-2103.patch \
+SRC_URI = "git://github.com/facebook/zstd.git;branch=release \
+           file://0001-Makefile-sort-all-wildcard-file-list-expansions.patch \
            "
 
-SRCREV = "b706286adbba780006a47ef92df0ad7a785666b6"
+SRCREV = "97a3da1df009d4dc67251de0c4b1c9d7fe286fc1"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
