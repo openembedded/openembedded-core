@@ -12,10 +12,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
 
 DEPENDS = "libsndfile1"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/${BP}.tar.xz"
+SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/${BP}.tar.xz \
+           file://0001-sbc_primitives-Fix-build-on-non-x86.patch \
+           "
 
-SRC_URI[md5sum] = "800fb0908899baa48dc216d8e156cc05"
-SRC_URI[sha256sum] = "518bf46e6bb3dc808a95e1eabad26fdebe8a099c1e781c27ed7fca6c2f4a54c9"
+SRC_URI[sha256sum] = "0cbad69823a99e8421fe0700e8cf9eeb8fa0c1ad28e8dbc2182b3353507931d2"
 
 inherit autotools pkgconfig
 
