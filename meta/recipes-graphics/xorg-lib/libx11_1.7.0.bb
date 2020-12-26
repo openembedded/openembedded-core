@@ -11,10 +11,10 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/libx11:"
 PE = "1"
 
 SRC_URI += "file://Fix-hanging-issue-in-_XReply.patch \
-            file://disable_tests.patch \
-            file://libx11-whitespace.patch"
+           file://disable_tests.patch \
+           "
 
-SRC_URI[sha256sum] = "f108227469419ac04d196df0f3b80ce1f7f65059bb54c0de811f4d8e03fd6ec7"
+SRC_URI[sha256sum] = "36c8f93b6595437c8cfbc9f08618bcb3041cbd303e140a0013f88e4c2977cb54"
 
 PROVIDES = "virtual/libx11"
 
