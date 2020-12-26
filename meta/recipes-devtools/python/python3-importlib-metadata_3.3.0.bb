@@ -5,8 +5,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e88ae122f3925d8bde8319060f2ddb8e"
 
 inherit pypi setuptools3
 
-SRC_URI = "https://files.pythonhosted.org/packages/3f/a8/16dc098b0addd1c20719c18a86e985be851b3ec1e103e703297169bb22cc/importlib_metadata-3.1.1.tar.gz"
-SRC_URI[sha256sum] = "b0c2d3b226157ae4517d9625decf63591461c66b3a808c2666d538946519d170"
+PYPI_PACKAGE = "importlib_metadata"
+UPSTREAM_CHECK_REGEX = "/importlib-metadata/(?P<pver>(\d+[\.\-_]*)+)/"
+
+SRC_URI[sha256sum] = "5c5a2720817414a6c41f0a49993908068243ae02c1635a228126519b509c8aed"
 
 S = "${WORKDIR}/importlib_metadata-${PV}"
 
