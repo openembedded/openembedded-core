@@ -14,9 +14,7 @@ SRC_URI_append_libc-musl = " \
     "
 
 
-# Modify these as desired
-PV = "233+git${SRCPV}"
-SRCREV = "fe1c5e41e6bdb78043dad8fa863fc2df66d1dadf"
+SRCREV = "8183cfd9dad8beca5434d625cf6b2df87775e956"
 
 S = "${WORKDIR}/git"
 
