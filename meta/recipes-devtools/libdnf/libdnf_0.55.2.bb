@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://enable_test_data_dir_set.patch \
            "
 
-SRCREV = "3f8981c9c5066e5243b695c904031b90f8d57d4a"
+SRCREV = "d2d0ec98fd2e0a2623123fb1ddf8fdd8936c6046"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
