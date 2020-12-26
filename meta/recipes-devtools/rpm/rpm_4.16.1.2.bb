@@ -39,12 +39,11 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x \
            file://0001-rpm-rpmio.c-restrict-virtual-memory-usage-if-limit-s.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
-           file://0001-rpmdb.c-add-a-missing-include.patch \
            file://0001-tools-Add-error.h-for-non-glibc-case.patch \
            "
 
 PE = "1"
-SRCREV = "cd7f9303ef1070f027493cad7d00bc66935af2a0"
+SRCREV = "278883a704ea36c97974d0f2d65d41abe78b0e2a"
 
 S = "${WORKDIR}/git"
 
