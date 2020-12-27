@@ -249,6 +249,10 @@ class ReproducibleTests(OESelftestTestCase):
             TMPDIR = "{tmpdir}"
             LICENSE_FLAGS_WHITELIST = "commercial"
             DISTRO_FEATURES_append = ' systemd pam'
+            USERADDEXTENSION = "useradd-staticids"
+            USERADD_ERROR_DYNAMIC = "skip"
+            USERADD_UID_TABLES += "files/static-passwd"
+            USERADD_GID_TABLES += "files/static-group"
             ''').format(package_classes=' '.join('package_%s' % c for c in self.package_classes),
                         tmpdir=tmpdir)
 
