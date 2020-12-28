@@ -5,14 +5,12 @@ stamp. It is a small-scale, yet fast entropy source that is viable in almost \
 all environments and on a lot of CPU architectures."
 HOMEPAGE = "http://www.chronox.de/jent.html"
 LICENSE = "GPLv2+ | BSD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=a95aadbdfae7ed812bb2b7b86eb5981c \
+LIC_FILES_CHKSUM = "file://COPYING;md5=fb16b29576d4c43a9dcd6a40fb3310c7 \
                     file://COPYING.gplv2;md5=eb723b61539feef013de476e68b5c50a \
                     file://COPYING.bsd;md5=66a5cedaf62c4b2637025f049f9b826f \
                     "
-SRC_URI = "git://github.com/smuellerDD/jitterentropy-library.git \
-           file://0001-Makefile-cleanup-install-for-rebuilds.patch \
-           file://0001-Make-man-pages-reproducible.patch"
-SRCREV = "933a44f33ed3d6612f7cfaa7ad1207c8da4886ba"
+SRC_URI = "git://github.com/smuellerDD/jitterentropy-library.git"
+SRCREV = "a37e57d9b939d1f93a1b92e1486edd44a3c1cb4c"
 S = "${WORKDIR}/git"
 
 do_configure[noexec] = "1"
