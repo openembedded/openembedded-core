@@ -6,7 +6,7 @@ DEPENDS = "ncurses bison-native virtual/libiconv"
 
 inherit autotools gettext texinfo update-alternatives ptest
 
-EXTRA_AUTORECONF += "--exclude=autoheader --exclude=aclocal"
+EXTRA_AUTORECONF += "--exclude=autoheader"
 EXTRA_OECONF = "--enable-job-control --without-bash-malloc bash_cv_wexitstatus_offset=8"
 
 # If NON_INTERACTIVE_LOGIN_SHELLS is defined, all login shells read the
@@ -37,6 +37,12 @@ RDEPENDS_${PN}-ptest_append_libc-glibc = " \
 	"
 
 CACHED_CONFIGUREVARS += "headersdir=${includedir}/${PN}"
+
+do_configure_prepend () {
+    if [ ! -e ${S}/acinclude.m4 ]; then
+       cat ${S}/aclocal.m4 > ${S}/acinclude.m4
+    fi
+}
 
 do_compile_prepend() {
     # Remove any leftover .build files. This ensures that bash always has the
