@@ -16,16 +16,13 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0001-powerpc-change-the-memory-size-limit.patch \
            file://0002-purgatory-Pass-r-directly-to-linker.patch \
            file://0003-kexec-ARM-Fix-add_buffer_phys_virt-align-issue.patch \
-           file://0004-x86_64-Add-support-to-build-kexec-tools-with-x32-ABI.patch \
            file://0005-Disable-PIE-during-link.patch \
-           file://0006-kexec-arm-undefine-__NR_kexec_file_load-for-arm.patch \
            file://0007-kexec-un-break-the-build-on-32-bit-x86.patch \
-           file://0001-kexec-Fix-build-with-fno-common.patch \
            file://0001-arm64-kexec-disabled-check-if-kaslr-seed-dtb-propert.patch \
+           file://0001-kexec-arch-ppc-kexec-ppc.c-correct-double-definition.patch \
            "
 
-SRC_URI[md5sum] = "46724b67f32501c5d3e778161347cad9"
-SRC_URI[sha256sum] = "cb16d79818e0c9de3bb3e33ede5677c34a1d28c646379c7ab44e0faa3eb57a16"
+SRC_URI[sha256sum] = "b3d4cfd2ba10d68ce341ea3b8ca414d00a0b6183b95686172154f94bce834f94"
 
 inherit autotools update-rc.d systemd
 
