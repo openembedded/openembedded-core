@@ -14,9 +14,8 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://ptest-spacesave.patch \
            file://uintptr_t.patch \
            file://0001-strace-fix-reproducibilty-issues.patch \
-           file://0001-xlat-Mark-IPPROTO_MAX-last-in-IPPROTO_-constants.patch \
            "
-SRC_URI[sha256sum] = "39473eb8465546c3e940fb663cb381eba5613160c7302794699d194a4d5d66d9"
+SRC_URI[sha256sum] = "fe3982ea4cd9aeb3b4ba35f6279f0b577a37175d3282be24b9a5537b56b8f01c"
 
 inherit autotools ptest
 
@@ -47,10 +46,14 @@ do_install_ptest() {
 	oe_runmake -C ${TESTDIR} install-ptest BUILDDIR=${B} DESTDIR=${D}${PTEST_PATH} TESTDIR=${TESTDIR}
 	install -m 755 ${S}/test-driver ${D}${PTEST_PATH}
 	install -m 644 ${B}/config.h ${D}${PTEST_PATH}
-        sed -i -e '/^src/s/strace.*[1-9]/ptest/' ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
+        sed -i -e '/^src/s/strace.*[0-9]/ptest/' ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
 RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
+
+RDEPENDS_${PN}-ptest_append_libc-glibc = "\
+     locale-base-en-us.iso-8859-1 \
+"
 
 BBCLASSEXTEND = "native"
 TOOLCHAIN = "gcc"
