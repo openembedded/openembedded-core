@@ -40,6 +40,7 @@ c_args = @CFLAGS
 c_link_args = @LDFLAGS
 cpp_args = @CPPFLAGS
 cpp_link_args = @LDFLAGS
+sys_root = @OECORE_TARGET_SYSROOT
 
 [host_machine]
 system = '${SDK_OS}'
