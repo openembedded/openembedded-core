@@ -6,8 +6,8 @@ LICENSE = "GPLv3"
 HOMEPAGE = "http://www.gnu.org/software/autoconf/"
 SECTION = "devel"
 
-DEPENDS = "m4-native gnu-config-native help2man-native"
-DEPENDS_remove_class-native = "help2man-native"
+DEPENDS = "m4-native autoconf-native automake-native gnu-config-native help2man-native"
+DEPENDS_remove_class-native = "autoconf-native automake-native help2man-native"
 
 RDEPENDS_${PN} = "m4 gnu-config \
 		  perl \
@@ -44,8 +44,8 @@ PERL_class-nativesdk = "/usr/bin/env perl"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_PERL='${PERL}'"
 
-do_configure() {
-	# manually install a newer config.guess/.sub
+do_configure_class-native() {
+	# To bootstrap we need to do things manually
 	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}/build-aux
 	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}/build-aux
 

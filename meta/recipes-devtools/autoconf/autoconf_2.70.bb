@@ -11,6 +11,7 @@ SRC_URI = "${GNU_MIRROR}/autoconf/${BP}.tar.gz \
            file://remove-usr-local-lib-from-m4.patch \
            file://preferbash.patch \
            file://autotest-automake-result-format.patch \
+           file://man-host-perl.patch \
            "
 
 SRC_URI[sha256sum] = "f05f410fda74323ada4bdc4610db37f8dbd556602ba65bc843edb4d4d4a1b2b7"
