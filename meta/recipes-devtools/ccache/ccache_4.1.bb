@@ -14,6 +14,7 @@ DEPENDS = "zstd"
 SRC_URI = "https://github.com/ccache/ccache/releases/download/v${PV}/${BP}.tar.gz \
            file://0001-Improve-SIMD-detection-735.patch \
            file://0002-Always-use-64bit-to-print-time_t.patch \
+           file://0001-blake3-Remove-asm-checks-for-sse-avx.patch \
            "
 SRC_URI[sha256sum] = "cdeefb827b3eef3b42b5454858123881a4a90abbd46cc72cf8c20b3bd039deb7"
 
