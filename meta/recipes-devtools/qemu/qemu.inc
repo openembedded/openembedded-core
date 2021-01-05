@@ -21,7 +21,6 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0002-Add-subpackage-ptest-which-runs-all-unit-test-cases-.patch \
            file://0003-qemu-Add-addition-environment-space-to-boot-loader-q.patch \
            file://0004-qemu-disable-Valgrind.patch \
-           file://0005-qemu-native-set-ld.bfd-fix-cflags-and-set-some-envir.patch \
            file://0006-chardev-connect-socket-to-a-spawned-command.patch \
            file://0007-apic-fixup-fallthrough-to-PIC.patch \
            file://0008-linux-user-Fix-webkitgtk-hangs-on-32-bit-x86-target.patch \
@@ -29,18 +28,13 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0010-configure-Add-pkg-config-handling-for-libgcrypt.patch \
            file://0001-Add-enable-disable-udev.patch \
            file://0001-qemu-Do-not-include-file-if-not-exists.patch \
-           file://find_datadir.patch \
-           file://usb-fix-setup_len-init.patch \
-           file://0001-target-mips-Increase-number-of-TLB-entries-on-the-34.patch \
-           file://CVE-2020-24352.patch \
-           file://CVE-2020-29129-CVE-2020-29130.patch \
-           file://CVE-2020-25624.patch \
-           file://CVE-2020-25723.patch \
-           file://CVE-2020-28916.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[sha256sum] = "c9174eb5933d9eb5e61f541cd6d1184cd3118dfe4c5c4955bc1bdc4d390fa4e5"
+SRC_URI[sha256sum] = "cb18d889b628fbe637672b0326789d9b0e3b8027e0445b936537c78549df17bc"
+
+SRC_URI_append_class-target = " file://cross.patch"
+SRC_URI_append_class-nativesdk = " file://cross.patch"
 
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
@@ -85,13 +79,14 @@ EXTRA_OECONF = " \
     --sysconfdir=${sysconfdir} \
     --libexecdir=${libexecdir} \
     --localstatedir=${localstatedir} \
-    --with-confsuffix=/${BPN} \
+    --with-suffix=${BPN} \
     --disable-strip \
     --disable-werror \
     --extra-cflags='${CFLAGS}' \
     --extra-ldflags='${LDFLAGS}' \
     --with-git=/bin/false \
     --disable-git-update \
+    --meson=meson \
     ${PACKAGECONFIG_CONFARGS} \
     "
 
@@ -99,7 +94,7 @@ export LIBTOOL="${HOST_SYS}-libtool"
 
 B = "${WORKDIR}/build"
 
-EXTRA_OECONF_append = " --python=${HOSTTOOLS_DIR}/python3"
+#EXTRA_OECONF_append = " --python=${HOSTTOOLS_DIR}/python3"
 
 do_configure_prepend_class-native() {
 	# Append build host pkg-config paths for native target since the host may provide sdl

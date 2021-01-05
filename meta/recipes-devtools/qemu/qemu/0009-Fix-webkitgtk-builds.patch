@@ -28,10 +28,10 @@ Signed-off-by: Sakib Sajal <sakib.sajal@windriver.com>
  linux-user/syscall.c    |  5 +----
  4 files changed, 10 insertions(+), 23 deletions(-)
 
-Index: qemu-5.1.0/include/exec/cpu-all.h
+Index: qemu-5.2.0/include/exec/cpu-all.h
 ===================================================================
---- qemu-5.1.0.orig/include/exec/cpu-all.h
-+++ qemu-5.1.0/include/exec/cpu-all.h
+--- qemu-5.2.0.orig/include/exec/cpu-all.h
++++ qemu-5.2.0/include/exec/cpu-all.h
 @@ -176,11 +176,8 @@ extern unsigned long reserved_va;
   * avoid setting bits at the top of guest addresses that might need
   * to be used for tags.
@@ -46,10 +46,10 @@ Index: qemu-5.1.0/include/exec/cpu-all.h
  #else
  
  #include "exec/hwaddr.h"
-Index: qemu-5.1.0/include/exec/cpu_ldst.h
+Index: qemu-5.2.0/include/exec/cpu_ldst.h
 ===================================================================
---- qemu-5.1.0.orig/include/exec/cpu_ldst.h
-+++ qemu-5.1.0/include/exec/cpu_ldst.h
+--- qemu-5.2.0.orig/include/exec/cpu_ldst.h
++++ qemu-5.2.0/include/exec/cpu_ldst.h
 @@ -75,7 +75,10 @@ typedef uint64_t abi_ptr;
  #if HOST_LONG_BITS <= TARGET_VIRT_ADDR_SPACE_BITS
  #define guest_addr_valid(x) (1)
@@ -62,20 +62,20 @@ Index: qemu-5.1.0/include/exec/cpu_ldst.h
  #endif
  #define h2g_valid(x) guest_addr_valid((unsigned long)(x) - guest_base)
  
-Index: qemu-5.1.0/linux-user/mmap.c
+Index: qemu-5.2.0/linux-user/mmap.c
 ===================================================================
---- qemu-5.1.0.orig/linux-user/mmap.c
-+++ qemu-5.1.0/linux-user/mmap.c
-@@ -71,7 +71,7 @@ int target_mprotect(abi_ulong start, abi
-         return -TARGET_EINVAL;
+--- qemu-5.2.0.orig/linux-user/mmap.c
++++ qemu-5.2.0/linux-user/mmap.c
+@@ -119,7 +119,7 @@ int target_mprotect(abi_ulong start, abi
+     }
      len = TARGET_PAGE_ALIGN(len);
      end = start + len;
 -    if (!guest_range_valid(start, len)) {
 +    if (end < start) {
          return -TARGET_ENOMEM;
      }
-     prot &= PROT_READ | PROT_WRITE | PROT_EXEC;
-@@ -467,8 +467,8 @@ abi_long target_mmap(abi_ulong start, ab
+     if (len == 0) {
+@@ -527,8 +527,8 @@ abi_long target_mmap(abi_ulong start, ab
           * It can fail only on 64-bit host with 32-bit target.
           * On any other target/host host mmap() handles this error correctly.
           */
@@ -86,7 +86,7 @@ Index: qemu-5.1.0/linux-user/mmap.c
              goto fail;
          }
  
-@@ -604,10 +604,8 @@ int target_munmap(abi_ulong start, abi_u
+@@ -664,10 +664,8 @@ int target_munmap(abi_ulong start, abi_u
      if (start & ~TARGET_PAGE_MASK)
          return -TARGET_EINVAL;
      len = TARGET_PAGE_ALIGN(len);
@@ -98,7 +98,7 @@ Index: qemu-5.1.0/linux-user/mmap.c
      mmap_lock();
      end = start + len;
      real_start = start & qemu_host_page_mask;
-@@ -662,13 +660,6 @@ abi_long target_mremap(abi_ulong old_add
+@@ -722,13 +720,6 @@ abi_long target_mremap(abi_ulong old_add
      int prot;
      void *host_addr;
  
@@ -112,11 +112,11 @@ Index: qemu-5.1.0/linux-user/mmap.c
      mmap_lock();
  
      if (flags & MREMAP_FIXED) {
-Index: qemu-5.1.0/linux-user/syscall.c
+Index: qemu-5.2.0/linux-user/syscall.c
 ===================================================================
---- qemu-5.1.0.orig/linux-user/syscall.c
-+++ qemu-5.1.0/linux-user/syscall.c
-@@ -4336,9 +4336,6 @@ static inline abi_ulong do_shmat(CPUArch
+--- qemu-5.2.0.orig/linux-user/syscall.c
++++ qemu-5.2.0/linux-user/syscall.c
+@@ -4590,9 +4590,6 @@ static inline abi_ulong do_shmat(CPUArch
              return -TARGET_EINVAL;
          }
      }
@@ -126,7 +126,7 @@ Index: qemu-5.1.0/linux-user/syscall.c
  
      mmap_lock();
  
-@@ -7376,7 +7373,7 @@ static int open_self_maps(void *cpu_env,
+@@ -7790,7 +7787,7 @@ static int open_self_maps(void *cpu_env,
              const char *path;
  
              max = h2g_valid(max - 1) ?

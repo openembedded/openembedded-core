@@ -6,7 +6,7 @@ require qemu.inc
 #            void (*_function)(sigval_t);
 COMPATIBLE_HOST_libc-musl = 'null'
 
-DEPENDS = "glib-2.0 zlib pixman bison-native"
+DEPENDS = "glib-2.0 zlib pixman bison-native ninja-native meson-native"
 
 RDEPENDS_${PN}_class-target += "bash"
 
