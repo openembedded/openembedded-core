@@ -8,11 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=241da1b9fe42e642cbb2c24d5e0c4d24"
 SRC_URI = "${GNU_MIRROR}/gdbm/gdbm-${PV}.tar.gz \
            file://run-ptest \
            file://ptest.patch \
-           file://gdbm-fix-link-failure-against-gcc-10.patch \
           "
 
-SRC_URI[md5sum] = "988dc82182121c7570e0cb8b4fcd5415"
-SRC_URI[sha256sum] = "86e613527e5dba544e73208f42b78b7c022d4fa5a6d5498bf18c8d6f745b91dc"
+SRC_URI[md5sum] = "aeb29c6a90350a4c959cd1df38cd0a7e"
+SRC_URI[sha256sum] = "37ed12214122b972e18a0d94995039e57748191939ef74115b1d41d8811364bc"
 
 inherit autotools gettext texinfo lib_package ptest
 
