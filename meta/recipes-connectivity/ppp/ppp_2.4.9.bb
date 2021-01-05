@@ -12,9 +12,6 @@ LIC_FILES_CHKSUM = "file://pppd/ccp.c;beginline=1;endline=29;md5=e2c43fe6e81ff77
                     file://chat/chat.c;beginline=1;endline=15;md5=0d374b8545ee5c62d7aff1acbd38add2"
 
 SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
-           file://makefile.patch \
-           file://pppd-resolv-varrun.patch \
-           file://makefile-remove-hard-usr-reference.patch \
            file://pon \
            file://poff \
            file://init \
@@ -22,26 +19,18 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
            file://ip-down \
            file://08setupdns \
            file://92removedns \
-           file://copts.patch \
            file://pap \
            file://ppp_on_boot \
            file://provider \
            file://ppp@.service \
-           file://fix-CVE-2015-3310.patch \
-           file://0001-ppp-Remove-unneeded-include.patch \
-           file://0001-pppd-Fix-bounds-check-in-EAP-code.patch \
            "
 
-SRC_URI_append_libc-musl = "\
-           file://0001-Fix-build-with-musl.patch \
-"
-SRC_URI[md5sum] = "2ca8342b9804be15103fd3f687af701c"
-SRC_URI[sha256sum] = "f6bf89beae26b2943dff8f1003533d6a5a4909a0fa6edfbec44fe039bbe61bc6"
+SRC_URI[sha256sum] = "f938b35eccde533ea800b15a7445b2f1137da7f88e32a16898d02dee8adc058d"
 
 inherit autotools-brokensep systemd
 
 TARGET_CC_ARCH += " ${LDFLAGS}"
-EXTRA_OEMAKE = "STRIPPROG=${STRIP} MANDIR=${D}${datadir}/man/man8 INCDIR=${D}${includedir} LIBDIR=${D}${libdir}/pppd/${PV} BINDIR=${D}${sbindir}"
+EXTRA_OEMAKE = "CC='${CC}' STRIPPROG=${STRIP} MANDIR=${D}${datadir}/man/man8 INCDIR=${D}${includedir} LIBDIR=${D}${libdir}/pppd/${PV} BINDIR=${D}${sbindir}"
 EXTRA_OECONF = "--disable-strip"
 
 # Package Makefile computes CFLAGS, referencing COPTS.
@@ -86,7 +75,7 @@ CONFFILES_${PN} = "${sysconfdir}/ppp/pap-secrets ${sysconfdir}/ppp/chap-secrets 
 PACKAGES =+ "${PN}-oa ${PN}-oe ${PN}-radius ${PN}-winbind ${PN}-minconn ${PN}-password ${PN}-l2tp ${PN}-tools"
 FILES_${PN}        = "${sysconfdir} ${bindir} ${sbindir}/chat ${sbindir}/pppd ${systemd_unitdir}/system/ppp@.service"
 FILES_${PN}-oa       = "${libdir}/pppd/${PV}/pppoatm.so"
-FILES_${PN}-oe       = "${sbindir}/pppoe-discovery ${libdir}/pppd/${PV}/rp-pppoe.so"
+FILES_${PN}-oe       = "${sbindir}/pppoe-discovery ${libdir}/pppd/${PV}/*pppoe.so"
 FILES_${PN}-radius   = "${libdir}/pppd/${PV}/radius.so ${libdir}/pppd/${PV}/radattr.so ${libdir}/pppd/${PV}/radrealms.so"
 FILES_${PN}-winbind  = "${libdir}/pppd/${PV}/winbind.so"
 FILES_${PN}-minconn  = "${libdir}/pppd/${PV}/minconn.so"
@@ -101,3 +90,6 @@ SUMMARY_${PN}-minconn  = "Plugin for PPP to set a delay before the idle timeout 
 SUMMARY_${PN}-password = "Plugin for PPP to get passwords via a pipe"
 SUMMARY_${PN}-l2tp     = "Plugin for PPP for l2tp support"
 SUMMARY_${PN}-tools    = "Additional tools for the PPP package"
+
+# Ignore compatibility symlink rp-pppoe.so->pppoe.so
+INSANE_SKIP_${PN}-oe += "dev-so"
