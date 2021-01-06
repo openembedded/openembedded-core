@@ -24,4 +24,4 @@ inherit cmake
 
 PATCHTOOL = "patch"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
