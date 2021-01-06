@@ -35,6 +35,10 @@ export CCACHE_CONFIGPATH ?= "${COREBASE}/meta/conf/ccache.conf"
 
 export CCACHE_DIR ?= "${CCACHE_TOP_DIR}/${MULTIMACH_TARGET_SYS}/${PN}"
 
+# Fixed errors:
+# ccache: error: Failed to create directory /run/user/0/ccache-tmp: Permission denied
+export CCACHE_TEMPDIR ?= "${CCACHE_DIR}/tmp"
+
 # We need to stop ccache considering the current directory or the
 # debug-prefix-map target directory to be significant when calculating
 # its hash. Without this the cache would be invalidated every time
