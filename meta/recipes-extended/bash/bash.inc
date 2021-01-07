@@ -14,6 +14,9 @@ EXTRA_OECONF = "--enable-job-control --without-bash-malloc bash_cv_wexitstatus_o
 # This is what other major distros do. And this is what we wanted. See bug#5359 and bug#7137.
 CFLAGS += "-DNON_INTERACTIVE_LOGIN_SHELLS"
 
+# This can vary depending upon the host
+CFLAGS += "-DHEREDOC_PIPESIZE=65536"
+
 ALTERNATIVE_${PN} = "bash sh"
 ALTERNATIVE_LINK_NAME[bash] = "${base_bindir}/bash"
 ALTERNATIVE_TARGET[bash] = "${base_bindir}/bash"
