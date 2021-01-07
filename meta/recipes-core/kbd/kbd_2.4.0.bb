@@ -29,6 +29,13 @@ FILES_${PN}-consoletrans = "${datadir}/consoletrans"
 FILES_${PN}-keymaps = "${datadir}/keymaps"
 FILES_${PN}-unimaps = "${datadir}/unimaps"
 
+do_install_append () {
+    if [ ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'yes', '', d)} = yes ] \
+    && [ -f ${D}${sysconfdir}/pam.d/vlock ]; then
+        mv -f ${D}${sysconfdir}/pam.d/vlock ${D}${sysconfdir}/pam.d/vlock.kbd
+    fi
+}
+
 inherit update-alternatives
 
 ALTERNATIVE_${PN} = "chvt deallocvt fgconsole openvt showkey \
