@@ -22,11 +22,9 @@ SRC_URI = "${BASE_SRC_URI} \
            file://no_packages.patch \
            file://tcl-remove-hardcoded-install-path.patch \
            file://alter-includedir.patch \
-           file://0001-Fix-abd4abedd2-Failed-to-build-tk-8.6.10-with-cross-.patch;patchdir=.. \
            file://run-ptest \
 "
-SRC_URI[md5sum] = "97c55573f8520bcab74e21bfd8d0aadc"
-SRC_URI[sha256sum] = "5196dbf6638e3df8d5c87b5815c8c2b758496eb6f0e41446596c9a4e638d87ed"
+SRC_URI[sha256sum] = "8c0486668586672c5693d7d95817cb05a18c5ecca2f40e2836b9578064088258"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
