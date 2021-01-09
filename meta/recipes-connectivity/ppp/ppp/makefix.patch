@@ -33,7 +33,7 @@ Index: ppp-2.4.9/pppd/Makefile.linux
  endif
  
 -ifeq ($(shell echo '\#include <crypt.h>' | $(CC) -E - >/dev/null 2>&1 && echo yes),yes)
-+CRYPTHEADER = "\#include <utmp.h>"
++CRYPTHEADER = "\#include <crypt.h>"
 +ifeq ($(shell echo $(CRYPTHEADER) | $(CC) -E - >/dev/null 2>&1 && echo yes),yes)
  CFLAGS  += -DHAVE_CRYPT_H=1
  LIBS	+= -lcrypt
