@@ -16,8 +16,6 @@ SRC_URI = "git://git.code.sf.net/p/net-tools/code;protocol=https \
     file://Bug_541172-netstat.c-exit-codes.patch \
 "
 
-UPSTREAM_VERSION_UNKNOWN = "1"
-
 S = "${WORKDIR}/git"
 
 inherit gettext
