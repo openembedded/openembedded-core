@@ -209,9 +209,10 @@ def get_deployed_dependencies(d):
     deploy = {}
     # Get all the dependencies for the current task (rootfs).
     taskdata = d.getVar("BB_TASKDEPDATA", False)
+    pn = d.getVar("PN", True)
     depends = list(set([dep[0] for dep
                     in list(taskdata.values())
-                    if not dep[0].endswith("-native")]))
+                    if not dep[0].endswith("-native") and not dep[0] == pn]))
 
     # To verify what was deployed it checks the rootfs dependencies against
     # the SSTATE_MANIFESTS for "deploy" task.
