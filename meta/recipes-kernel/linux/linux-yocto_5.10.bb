@@ -21,7 +21,7 @@ SRCREV_machine_qemux86 ?= "f08df324ccdbc73b9f0c2de2826a2843bcdf651b"
 SRCREV_machine_qemux86-64 ?= "f08df324ccdbc73b9f0c2de2826a2843bcdf651b"
 SRCREV_machine_qemumips64 ?= "a019b338648b95aa4d679ffdc01878dc660bcbac"
 SRCREV_machine ?= "f08df324ccdbc73b9f0c2de2826a2843bcdf651b"
-SRCREV_meta ?= "78dd53c2257380d5b8ef13e4ddae25c585154dac"
+SRCREV_meta ?= "47c7a3148a4d7653cec536ba202b25148d1952ad"
 
 # remap qemuarm to qemuarma15 for the 5.8 kernel
 # KMACHINE_qemuarm ?= "qemuarma15"
