@@ -14,10 +14,9 @@ DEPENDS = "dbus"
 inherit autotools pkgconfig
 
 SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz \
-           file://0001-ell-add-missing-include-in-dhcp-server.patch \
            file://0001-pem.c-do-not-use-rawmemchr.patch \
            "
-SRC_URI[sha256sum] = "2bfe9da7781f65f1cb1595a5a068a3ae74d4b68b74f287c6f0c892cfe623913f"
+SRC_URI[sha256sum] = "2f99e743a235b1c834b19112e4e0283d02da93b863899381466cde47bf159cf6"
 
 do_configure_prepend () {
     mkdir -p ${S}/build-aux
