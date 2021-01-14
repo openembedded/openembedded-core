@@ -12,8 +12,8 @@ DEPENDS = "flex-native bison-native"
 
 SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.gz \
            "
-SRC_URI[md5sum] = "21af603d9a591c7d96a6457021d84e6c"
-SRC_URI[sha256sum] = "635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094"
+SRC_URI[md5sum] = "8c12dc19dd7e0d02d2bb6596eb5a71c7"
+SRC_URI[sha256sum] = "8d12b42623eeefee872f123bd0dc85d535b00df4d42e865f993c40f7bfc92b1e"
 
 inherit autotools binconfig-disabled pkgconfig
 
