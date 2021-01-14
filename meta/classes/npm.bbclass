@@ -130,11 +130,17 @@ python npm_do_configure() {
     cached_manifest.pop("dependencies", None)
     cached_manifest.pop("devDependencies", None)
 
-    with open(orig_shrinkwrap_file, "r") as f:
-        orig_shrinkwrap = json.load(f)
+    has_shrinkwrap_file = True
 
-    cached_shrinkwrap = copy.deepcopy(orig_shrinkwrap)
-    cached_shrinkwrap.pop("dependencies", None)
+    try:
+        with open(orig_shrinkwrap_file, "r") as f:
+            orig_shrinkwrap = json.load(f)
+    except IOError:
+        has_shrinkwrap_file = False
+
+    if has_shrinkwrap_file:
+       cached_shrinkwrap = copy.deepcopy(orig_shrinkwrap)
+       cached_shrinkwrap.pop("dependencies", None)
 
     # Manage the dependencies
     progress = OutOfProgressHandler(d, r"^(\d+)/(\d+)$")
@@ -165,8 +171,10 @@ python npm_do_configure() {
             progress.write("%d/%d" % (progress_done, progress_total))
 
     dev = bb.utils.to_boolean(d.getVar("NPM_INSTALL_DEV"), False)
-    foreach_dependencies(orig_shrinkwrap, _count_dependency, dev)
-    foreach_dependencies(orig_shrinkwrap, _cache_dependency, dev)
+
+    if has_shrinkwrap_file:
+        foreach_dependencies(orig_shrinkwrap, _count_dependency, dev)
+        foreach_dependencies(orig_shrinkwrap, _cache_dependency, dev)
 
     # Configure the main package
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -181,16 +189,19 @@ python npm_do_configure() {
                 cached_manifest[depkey] = {}
             cached_manifest[depkey][name] = version
 
-    _update_manifest("dependencies")
+    if has_shrinkwrap_file:
+        _update_manifest("dependencies")
 
     if dev:
-        _update_manifest("devDependencies")
+        if has_shrinkwrap_file:
+            _update_manifest("devDependencies")
 
     with open(cached_manifest_file, "w") as f:
         json.dump(cached_manifest, f, indent=2)
 
-    with open(cached_shrinkwrap_file, "w") as f:
-        json.dump(cached_shrinkwrap, f, indent=2)
+    if has_shrinkwrap_file:
+        with open(cached_shrinkwrap_file, "w") as f:
+            json.dump(cached_shrinkwrap, f, indent=2)
 }
 
 python npm_do_compile() {
