@@ -29,6 +29,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://mingwfix.patch \
            file://mmap.patch \
            file://mmap2.patch \
+           file://0001-tests-meson.build-use-relative-path-to-refer-to-file.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
