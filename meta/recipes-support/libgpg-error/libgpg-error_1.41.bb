@@ -18,7 +18,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://0001-Do-not-fail-when-testing-config-scripts.patch \
            "
 
-SRC_URI[sha256sum] = "4a836edcae592094ef1c5a4834908f44986ab2b82e0824a0344b49df8cdb298f"
+SRC_URI[sha256sum] = "64b078b45ac3c3003d7e352a5e05318880a5778c42331ce1ef33d1a0d9922742"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
