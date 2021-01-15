@@ -21,7 +21,11 @@ which use .S files.
 RP
 2018/10/3
 
-Upstream-Status: Pending
+fixed in binutils 2.36 [1]
+
+[1] https://sourceware.org/bugzilla/show_bug.cgi?id=26822
+
+Upstream-Status: OE-Specific [ Drop when upgrading binutils 2.36+ ]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---

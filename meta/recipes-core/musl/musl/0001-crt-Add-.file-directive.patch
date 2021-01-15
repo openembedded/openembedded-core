@@ -10,7 +10,11 @@ source files and they are missing .file directive
 if we add .file <filename>.s in them then debug info encodes this
 value instead of absolute path in debug_line section
 
-Upstream-Status: Pending
+fixed in binutils 2.36 [1]
+
+[1] https://sourceware.org/bugzilla/show_bug.cgi?id=26822
+
+Upstream-Status: OE-Specific [ Drop when upgrading binutils 2.36+ ]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  crt/aarch64/crti.s    | 1 +
