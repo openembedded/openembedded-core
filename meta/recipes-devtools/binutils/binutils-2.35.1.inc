@@ -43,5 +43,6 @@ SRC_URI = "\
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
      file://0017-gas-improve-reproducibility-for-stabs-debugging-data.patch \
      file://0001-aarch64-Return-an-error-on-conditional-branch-to-an-.patch \
+     file://CVE-2020-35448.patch \
 "
 S  = "${WORKDIR}/git"
