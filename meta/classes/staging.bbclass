@@ -5,6 +5,7 @@ SYSROOT_DIRS = " \
     ${base_libdir} \
     ${nonarch_base_libdir} \
     ${datadir} \
+    /sysroot-only \
 "
 
 # These directories are also staged in the sysroot when they contain files that
