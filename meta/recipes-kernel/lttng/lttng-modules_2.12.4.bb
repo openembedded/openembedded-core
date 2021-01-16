@@ -11,16 +11,9 @@ include lttng-platforms.inc
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
-           file://0001-fix-btrfs-tracepoints-output-proper-root-owner-for-t.patch \
-           file://0007-fix-objtool-Rename-frame.h-objtool.h-v5.10.patch \
-           file://0009-fix-btrfs-make-ordered-extent-tracepoint-take-btrfs_.patch \
-           file://0010-fix-ext4-fast-commit-recovery-path-v5.10.patch \
-           file://0012-fix-kvm-x86-mmu-Add-TDP-MMU-PF-handler-v5.10.patch \
-           file://0014-fix-tracepoint-Optimize-using-static_call-v5.10.patch \
-           file://0016-fix-statedump-undefined-symbols-caused-by-incorrect-.patch \
            "
 
-SRC_URI[sha256sum] = "673ef85c9f03e9b8fed10795e09d4e68add39404b70068d08b10f7b85754d7f0"
+SRC_URI[sha256sum] = "fe66400fa1b85bff1b9ae24419c74e3bb7d358d643eade0594d81b48bd190688"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
