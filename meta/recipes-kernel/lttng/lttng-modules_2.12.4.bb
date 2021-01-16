@@ -10,7 +10,6 @@ include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
-           file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
 
 SRC_URI[sha256sum] = "fe66400fa1b85bff1b9ae24419c74e3bb7d358d643eade0594d81b48bd190688"
@@ -34,7 +33,6 @@ LIC_FILES_CHKSUM_class-devupstream = "file://LICENSE;md5=3f882d431dc0f32f1f44c07
 DEFAULT_PREFERENCE_class-devupstream = "-1"
 SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.12 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
-           file://BUILD_RUNTIME_BUG_ON-vs-gcc7.patch \
            "
 SRCREV_class-devupstream = "be71b60a327d7ad2588abc5cad2861177119972b"
 PV_class-devupstream = "2.12.3+git${SRCPV}"
