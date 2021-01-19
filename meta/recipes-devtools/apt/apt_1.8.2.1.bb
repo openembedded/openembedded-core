@@ -40,7 +40,11 @@ BBCLASSEXTEND = "native nativesdk"
 
 DEPENDS += "virtual/libiconv virtual/libintl db gnutls lz4 zlib bzip2 xz"
 
-EXTRA_OECMAKE_append = " -DCURRENT_VENDOR=debian -DWITH_DOC=False -DUSE_NLS=False -DDPKG_DATADIR=${datadir}/dpkg -DTRIEHASH_EXECUTABLE=${WORKDIR}/triehash"
+EXTRA_OECMAKE_append = " -DCURRENT_VENDOR=debian -DWITH_DOC=False \
+    -DUSE_NLS=False -DDPKG_DATADIR=${datadir}/dpkg \
+    -DTRIEHASH_EXECUTABLE=${WORKDIR}/triehash \
+    -DCMAKE_DISABLE_FIND_PACKAGE_Zstd=True \
+"
 
 do_configure_prepend () {
     echo "set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH )" >>  ${WORKDIR}/toolchain.cmake
