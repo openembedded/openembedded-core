@@ -9,7 +9,7 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-examples.git;protocol=http
            file://gst-player.desktop \
            "
 
-SRCREV = "45086d8ef2d75244d9d5c8f69c0f0e1dfd4200b3"
+SRCREV = "06599904baa5d0e47b5cb9501372156567760f8e"
 
 S = "${WORKDIR}/git"
 
