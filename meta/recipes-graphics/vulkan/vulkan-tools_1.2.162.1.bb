@@ -6,7 +6,7 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 SRC_URI = "git://github.com/KhronosGroup/Vulkan-Tools.git;branch=sdk-1.2.162"
-SRCREV = "9e9d7c24ed8b321815f77f31c100bbf9462193b4"
+SRCREV = "8f0c2e40d4134f53f82ce48de72c7be92baa6b3d"
 
 S = "${WORKDIR}/git"
 
