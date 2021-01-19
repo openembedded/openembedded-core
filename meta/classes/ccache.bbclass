@@ -1,7 +1,5 @@
 #
 # Usage:
-# - Install ccache package on the host distribution and set up a build directory
-#
 # - Enable ccache
 #   Add the following line to a conffile such as conf/local.conf:
 #   INHERIT += "ccache"
@@ -53,6 +51,7 @@ python() {
     # quilt-native doesn't need ccache since no c files
     if not (pn in ('ccache-native', 'quilt-native') or
             bb.utils.to_boolean(d.getVar('CCACHE_DISABLE'))):
+        d.appendVar('DEPENDS', ' ccache-native')
         d.setVar('CCACHE', 'ccache ')
 }
 
