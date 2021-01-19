@@ -3,11 +3,11 @@ HOMEPAGE = "http://lzip.nongnu.org/lzip.html"
 SECTION = "console/utils"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=76d6e300ffd8fb9d18bd9b136a9bba13 \
-                    file://decoder.cc;beginline=3;endline=16;md5=db09fe3f9573f94d0076f7f07959e6e1"
+                    file://decoder.cc;beginline=3;endline=16;md5=18c279060cd0be128188404b45837f88 \
+                    "
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/lzip/lzip-${PV}.tar.gz"
-SRC_URI[md5sum] = "c0061730d017ea593a09308edc547128"
-SRC_URI[sha256sum] = "e48b5039d3164d670791f9c5dbaa832bf2df080cb1fbb4f33aa7b3300b670d8b"
+SRC_URI[sha256sum] = "c3342d42e67139c165b8b128d033b5c96893a13ac5f25933190315214e87a948"
 
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
