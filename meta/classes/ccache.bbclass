@@ -49,7 +49,7 @@ python() {
     """
     pn = d.getVar('PN')
     # quilt-native doesn't need ccache since no c files
-    if not (pn in ('ccache-native', 'quilt-native') or
+    if not (bb.data.inherits_class("native", d) or
             bb.utils.to_boolean(d.getVar('CCACHE_DISABLE'))):
         d.appendVar('DEPENDS', ' ccache-native')
         d.setVar('CCACHE', 'ccache ')
