@@ -38,7 +38,7 @@ class ImageOptionsTests(OESelftestTestCase):
         p = bb_vars['SYSROOT_DESTDIR'] + bb_vars['bindir'] + "/" + "ccache"
         self.assertTrue(os.path.isfile(p), msg = "No ccache found (%s)" % p)
         self.write_config('INHERIT += "ccache"')
-        recipe = "binutils-cross-x86_64"
+        recipe = "libgcc-initial"
         self.add_command_to_tearDown('bitbake -c clean %s' % recipe)
         bitbake("%s -c clean" % recipe)
         bitbake("%s -f -c compile" % recipe)
