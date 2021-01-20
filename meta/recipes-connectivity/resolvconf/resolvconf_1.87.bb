@@ -11,12 +11,12 @@ AUTHOR = "Thomas Hood"
 HOMEPAGE = "http://packages.debian.org/resolvconf"
 RDEPENDS_${PN} = "bash"
 
-SRC_URI = "git://salsa.debian.org/debian/resolvconf.git;protocol=https \
+SRC_URI = "git://salsa.debian.org/debian/resolvconf.git;protocol=https;branch=unstable \
            file://fix-path-for-busybox.patch \
            file://99_resolvconf \
-          "
+           "
 
-SRCREV = "d001dd2b7ce4c854eaa29e46b9640ab66c6e70bb"
+SRCREV = "1dda36d8465e335c60190c41e7185d782da1bd7b"
 
 S = "${WORKDIR}/git"
 
