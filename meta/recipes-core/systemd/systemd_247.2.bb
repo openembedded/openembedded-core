@@ -24,6 +24,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-systemd.pc.in-use-ROOTPREFIX-without-suffixed-slash.patch \
            file://0001-logind-Restore-chvt-as-non-root-user-without-polkit.patch \
            file://0027-proc-dont-trigger-mount-error-with-invalid-options-o.patch \
+           file://0001-analyze-resolve-executable-path-if-it-is-relative.patch \
            "
 
 # patches needed by musl
