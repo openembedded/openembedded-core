@@ -1,4 +1,4 @@
-From 180250f098e0ab899eff0db3708d9693f3486ff4 Mon Sep 17 00:00:00 2001
+From a07ac322a5a5fd4f0339913eb4456321ad1a69fd Mon Sep 17 00:00:00 2001
 From: Jose Quaresma <quaresma.jose@gmail.com>
 Date: Sat, 17 Oct 2020 12:51:50 +0100
 Subject: [PATCH] cmake: de-vendor libs and disable git versioning
@@ -32,7 +32,7 @@ index 5c74cd8..9451fbc 100644
  add_custom_target(build-version
    ${PYTHON_EXECUTABLE}
 diff --git a/glslc/CMakeLists.txt b/glslc/CMakeLists.txt
-index 35b3f19..52006b8 100644
+index 31664d1..358d91b 100644
 --- a/glslc/CMakeLists.txt
 +++ b/glslc/CMakeLists.txt
 @@ -53,7 +53,6 @@ shaderc_default_compile_options(glslc_exe)

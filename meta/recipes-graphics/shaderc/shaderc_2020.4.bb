@@ -8,16 +8,20 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRCREV = "0dbd899941a43ffd55df527d65128b3b66e75c9c"
 SRC_URI = "git://github.com/google/shaderc.git;protocol=https;branch=main \
-           file://0001-Fix-the-link-order-of-libglslang-and-libHLSL.patch \
-           file://0003-cmake-de-vendor-libs-and-disable-git-versioning.patch \
+           file://0001-cmake-de-vendor-libs-and-disable-git-versioning.patch \
            "
+UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
 S = "${WORKDIR}/git"
 
 inherit cmake python3native
 
 DEPENDS = "spirv-tools glslang"
 
-EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release -DSHADERC_SKIP_TESTS=ON"
+EXTRA_OECMAKE = " \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSHADERC_SKIP_TESTS=ON \
+    -Dglslang_SOURCE_DIR=${STAGING_INCDIR}/glslang \
+"
 
 BBCLASSEXTEND = "native nativesdk"
 
