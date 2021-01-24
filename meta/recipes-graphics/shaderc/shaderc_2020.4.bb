@@ -19,15 +19,17 @@ DEPENDS = "spirv-tools glslang"
 
 EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release -DSHADERC_SKIP_TESTS=ON"
 
+BBCLASSEXTEND = "native nativesdk"
+
+# TODO: probably there is better solution for this.
+# I don't know any method for get the version of a receipe in DEPENDS,
+# so do this ugly hack
+inherit pkgconfig
+DEPENDS += "glslang-native"
 do_configure_prepend() {
-    # TODO: probably there is better solution for this.
-    # I dont know any method for get the version of a receipe in DEPENDS
-    # so do this ugly hack
     cat <<- EOF > ${S}/glslc/src/build-version.inc
 "${PV}\\n"
 "$(pkg-config --modversion SPIRV-Tools)\\n"
 "$(glslangValidator --version | head -1 | cut -d' ' -f3)\\n"
 EOF
 }
-
-BBCLASSEXTEND = "native nativesdk"
