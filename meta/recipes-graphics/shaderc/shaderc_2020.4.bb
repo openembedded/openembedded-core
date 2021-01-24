@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 inherit cmake python3native
 
-DEPENDS = "spirv-tools glslang"
+DEPENDS = "spirv-headers spirv-tools glslang"
 
 EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=Release \
