@@ -15,4 +15,14 @@ S = "${WORKDIR}/git"
 
 inherit cmake python3native
 
+EXTRA_OECMAKE = " \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=ON \
+    -DENABLE_CTEST=OFF \
+    -DBUILD_EXTERNAL=OFF \
+"
+
+SOLIBSDEV = "glslang.so"
+FILES_${PN} += "${libdir}/*.so"
+
 BBCLASSEXTEND = "native nativesdk"
