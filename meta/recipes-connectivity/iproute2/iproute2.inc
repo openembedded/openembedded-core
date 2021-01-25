@@ -19,8 +19,9 @@ PACKAGECONFIG ??= "tipc elf devlink"
 PACKAGECONFIG[tipc] = ",,libmnl,"
 PACKAGECONFIG[elf] = ",,elfutils,"
 PACKAGECONFIG[devlink] = ",,libmnl,"
+PACKAGECONFIG[rdma] = ",,libmnl,"
 
-IPROUTE2_MAKE_SUBDIRS = "lib tc ip bridge misc genl ${@bb.utils.filter('PACKAGECONFIG', 'devlink tipc', d)}"
+IPROUTE2_MAKE_SUBDIRS = "lib tc ip bridge misc genl ${@bb.utils.filter('PACKAGECONFIG', 'devlink tipc rdma', d)}"
 
 EXTRA_OEMAKE = "\
     CC='${CC}' \
@@ -59,6 +60,7 @@ IPROUTE2_PACKAGES =+ "\
     ${PN}-ss \
     ${PN}-tc \
     ${PN}-tipc \
+    ${PN}-rdma \
 "
 
 PACKAGE_BEFORE_PN = "${IPROUTE2_PACKAGES}"
@@ -77,6 +79,7 @@ FILES_${PN}-nstat = "${base_sbindir}/nstat"
 FILES_${PN}-ss = "${base_sbindir}/ss"
 FILES_${PN}-tipc = "${base_sbindir}/tipc"
 FILES_${PN}-devlink = "${base_sbindir}/devlink"
+FILES_${PN}-rdma = "${base_sbindir}/rdma"
 
 ALTERNATIVE_${PN}-ip = "ip"
 ALTERNATIVE_TARGET[ip] = "${base_sbindir}/ip.${BPN}"
