@@ -7,7 +7,7 @@ SRC_URI = "https://www.sudo.ws/dist/sudo-${PV}.tar.gz \
 
 PAM_SRC_URI = "file://sudo.pam"
 
-SRC_URI[sha256sum] = "4dddf37c22653defada299e5681e0daef54bb6f5fc950f63997bb8eb966b7882"
+SRC_URI[sha256sum] = "539e2ef43c8a55026697fb0474ab6a925a11206b5aa58710cb42a0e1c81f0978"
 
 DEPENDS += " virtual/crypt ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 RDEPENDS_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam-plugin-limits pam-plugin-keyinit', '', d)}"
