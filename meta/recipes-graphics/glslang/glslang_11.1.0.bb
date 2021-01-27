@@ -18,6 +18,7 @@ inherit cmake python3native
 EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=ON \
+    -DENABLE_PCH=OFF \
     -DENABLE_CTEST=OFF \
     -DBUILD_EXTERNAL=OFF \
 "
