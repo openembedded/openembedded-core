@@ -53,6 +53,4 @@ RDEPENDS_${PN}-ptest += "${PYTHON_PN}-pytest \
                          ldd \
 "
 
-RDEPENDS_${PN}_class-native = ""
-
 BBCLASSEXTEND = "native nativesdk"

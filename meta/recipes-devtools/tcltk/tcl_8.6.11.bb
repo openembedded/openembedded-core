@@ -69,7 +69,6 @@ ALTERNATIVE_LINK_NAME[Thread.3] = "${mandir}/man3/Thread.3"
 
 # isn't getting picked up by shlibs code
 RDEPENDS_${PN} += "tcl-lib"
-RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}-ptest += "libgcc"
 
 BBCLASSEXTEND = "native nativesdk"

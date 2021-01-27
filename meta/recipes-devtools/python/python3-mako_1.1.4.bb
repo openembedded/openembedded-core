@@ -15,6 +15,4 @@ RDEPENDS_${PN} = "${PYTHON_PN}-html \
                   ${PYTHON_PN}-threading \
 "
 
-RDEPENDS_${PN}_class-native = ""
-
 BBCLASSEXTEND = "native nativesdk"
