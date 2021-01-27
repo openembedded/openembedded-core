@@ -1367,30 +1367,31 @@ python () {
     for i in issues:
         package_qa_handle_error("pkgvarcheck", "%s: Variable %s is set as not being package specific, please fix this." % (d.getVar("FILE"), i), d)
 
-    for native_class in ['native', 'nativesdk']:
-        if bb.data.inherits_class(native_class, d):
+    if 'native-last' not in (d.getVar('INSANE_SKIP') or "").split():
+        for native_class in ['native', 'nativesdk']:
+            if bb.data.inherits_class(native_class, d):
 
-            inherited_classes = d.getVar('__inherit_cache', False) or []
-            needle = os.path.join('classes', native_class)
+                inherited_classes = d.getVar('__inherit_cache', False) or []
+                needle = os.path.join('classes', native_class)
 
-            bbclassextend = (d.getVar('BBCLASSEXTEND') or '').split()
-            # BBCLASSEXTEND items are always added in the end
-            skip_classes = bbclassextend
-            if bb.data.inherits_class('native', d) or 'native' in bbclassextend:
-                # native also inherits nopackages and relocatable bbclasses
-                skip_classes.extend(['nopackages', 'relocatable'])
+                bbclassextend = (d.getVar('BBCLASSEXTEND') or '').split()
+                # BBCLASSEXTEND items are always added in the end
+                skip_classes = bbclassextend
+                if bb.data.inherits_class('native', d) or 'native' in bbclassextend:
+                    # native also inherits nopackages and relocatable bbclasses
+                    skip_classes.extend(['nopackages', 'relocatable'])
 
-            for class_item in reversed(inherited_classes):
-                if needle not in class_item:
-                    for extend_item in skip_classes:
-                        if os.path.join('classes', '%s.bbclass' % extend_item) in class_item:
+                for class_item in reversed(inherited_classes):
+                    if needle not in class_item:
+                        for extend_item in skip_classes:
+                            if os.path.join('classes', '%s.bbclass' % extend_item) in class_item:
+                                break
+                        else:
+                            pn = d.getVar('PN')
+                            package_qa_handle_error("native-last", "%s: native/nativesdk class is not inherited last, this can result in unexpected behaviour. " % pn, d)
                             break
                     else:
-                        pn = d.getVar('PN')
-                        package_qa_handle_error("native-last", "%s: native/nativesdk class is not inherited last, this can result in unexpected behaviour. " % pn, d)
                         break
-                else:
-                    break
 
     qa_sane = d.getVar("QA_SANE")
     if not qa_sane:
