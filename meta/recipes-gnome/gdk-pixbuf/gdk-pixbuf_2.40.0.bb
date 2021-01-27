@@ -13,6 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 SECTION = "libs"
 
 DEPENDS = "glib-2.0 gdk-pixbuf-native shared-mime-info"
+DEPENDS_remove_class-native = "gdk-pixbuf-native"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
