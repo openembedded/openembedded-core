@@ -1381,6 +1381,7 @@ python () {
                     # native also inherits nopackages and relocatable bbclasses
                     skip_classes.extend(['nopackages', 'relocatable'])
 
+                broken_order = []
                 for class_item in reversed(inherited_classes):
                     if needle not in class_item:
                         for extend_item in skip_classes:
@@ -1388,10 +1389,13 @@ python () {
                                 break
                         else:
                             pn = d.getVar('PN')
-                            package_qa_handle_error("native-last", "%s: native/nativesdk class is not inherited last, this can result in unexpected behaviour. " % pn, d)
-                            break
+                            broken_order.append(os.path.basename(class_item))
                     else:
                         break
+                if broken_order:
+                    package_qa_handle_error("native-last", "%s: native/nativesdk class is not inherited last, this can result in unexpected behaviour. "
+                                             "Classes inherited after native/nativesdk: %s" % (pn, " ".join(broken_order)), d)
+
 
     qa_sane = d.getVar("QA_SANE")
     if not qa_sane:
