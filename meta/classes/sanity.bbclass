@@ -710,6 +710,14 @@ def check_sanity_version_change(status, d):
         if i and workdir.startswith(i):
             status.addresult("You are building in a path included in PSEUDO_IGNORE_PATHS " + str(i) + " please locate the build outside this path.\n")
 
+    # Check if PSEUDO_IGNORE_PATHS and ${S} overlap
+    pseudoignorepaths = d.getVar('PSEUDO_IGNORE_PATHS', expand=True).split(",")
+    sourcefile = d.getVar('S')
+    for i in pseudoignorepaths:
+        if i and sourcefile:
+            if sourcefile.startswith(i) or i.startswith(sourcefile):
+                status.addresult("a path included in PSEUDO_IGNORE_PATHS " + str(i) + " and ${S} (source files) path " + str(sourcefile) + " are overlapping each other, please set ${S} in your recipe to point to a different directory. \n")
+
     # Some third-party software apparently relies on chmod etc. being suid root (!!)
     import stat
     suid_check_bins = "chown chmod mknod".split()
