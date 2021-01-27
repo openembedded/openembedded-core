@@ -240,7 +240,7 @@ python(){
     # First set RPROVIDES for -native case
     # Hardcoded since it cant be python3-native-foo, should be python3-foo-native
     pn = 'python3'
-    rprovides = d.getVar('RPROVIDES').split()
+    rprovides = (d.getVar('RPROVIDES') or "").split()
 
     # ${PN}-misc-native is not in the manifest
     rprovides.append(pn + '-misc-native')
