@@ -22,7 +22,7 @@ PAM_DEPS = "libpam libpam-runtime pam-plugin-env pam-plugin-limits"
 RCONFLICTS_${PN} = "atd"
 RREPLACES_${PN} = "atd"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20180825T090248Z/pool/main/a/${BPN}/${BPN}_${PV}.orig.tar.gz \
+SRC_URI = "http://software.calhariz.com/at/${BPN}_${PV}.orig.tar.gz \
     file://fix_parallel_build_error.patch \
     file://posixtm.c \
     file://posixtm.h \
@@ -37,8 +37,7 @@ SRC_URI = "http://snapshot.debian.org/archive/debian/20180825T090248Z/pool/main/
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
 
-SRC_URI[md5sum] = "1cec945506b5ddf1d776c92c315fc581"
-SRC_URI[sha256sum] = "97450aa954aaa8a70218cc8e61a33df9fee9f86527e9f861de302fb7a3c81710"
+SRC_URI[sha256sum] = "aabe6e5cb6dd19fe9fb25c2747492f2db38762b95ea41b86f949609c39fb55c4"
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/a/at/"
 
