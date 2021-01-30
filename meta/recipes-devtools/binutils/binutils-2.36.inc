@@ -14,17 +14,17 @@ def binutils_branch_version(d):
     pvsplit = d.getVar('PV').split('.')
     return pvsplit[0] + "_" + pvsplit[1]
 
-# When upgrading to 2.35, please make sure there is no trailing .0, so
+# When upgrading to 2.37, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.35.1"
-CVE_VERSION = "2.35.1"
+PV = "2.36"
+CVE_VERSION = "2.36"
 BINUPV = "${@binutils_branch_version(d)}"
 #BRANCH = "binutils-${BINUPV}-branch"
-BRANCH ?= "binutils-2_35-branch"
+BRANCH ?= "binutils-2_36-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "7e46a74aa3713c563940960e361e08defda019c2"
+SRCREV ?= "fe0e833171513c1d89668bc5f454192d2db39bce"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${BRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -41,8 +41,5 @@ SRC_URI = "\
      file://0014-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
-     file://0017-gas-improve-reproducibility-for-stabs-debugging-data.patch \
-     file://0001-aarch64-Return-an-error-on-conditional-branch-to-an-.patch \
-     file://CVE-2020-35448.patch \
 "
 S  = "${WORKDIR}/git"
