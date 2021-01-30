@@ -38,7 +38,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
            file://0024-elf-dl-deps.c-Make-_dl_build_local_scope-breadth-fir.patch \
            file://0025-intl-Emit-no-lines-in-bison-generated-files.patch \
-           file://0026-inject-file-assembly-directives.patch \
            file://0027-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
            file://0028-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
            file://0029-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
