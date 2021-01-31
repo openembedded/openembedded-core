@@ -1003,8 +1003,7 @@ def package_qa_check_missing_update_alternatives(pn, d, messages):
 python do_package_qa () {
     import subprocess
     import oe.packagedata
-
-    bb.note("DO PACKAGE QA")
+    import re
 
     bb.build.exec_func("read_subpackage_metadata", d)
 
@@ -1037,6 +1036,9 @@ python do_package_qa () {
     # Scan the packages...
     pkgdest = d.getVar('PKGDEST')
     packages = set((d.getVar('PACKAGES') or '').split())
+    # no packages to be scanned
+    if not packages:
+        return
 
     global pkgfiles
     pkgfiles = {}
@@ -1053,11 +1055,6 @@ python do_package_qa () {
             for file in files:
                 pkgfiles[pkg].append(os.path.join(walkroot, file))
 
-    # no packages should be scanned
-    if not packages:
-        return
-
-    import re
     # The package name matches the [a-z0-9.+-]+ regular expression
     pkgname_pattern = re.compile(r"^[a-z0-9.+-]+$")
 
@@ -1114,7 +1111,6 @@ python do_package_qa () {
     qa_sane = d.getVar("QA_SANE")
     if not qa_sane:
         bb.fatal("QA run found fatal errors. Please consider fixing them.")
-    bb.note("DONE with PACKAGE QA")
 }
 
 # binutils is used for most checks, so need to set as dependency
@@ -1314,7 +1310,7 @@ do_unpack[postfuncs] += "do_qa_unpack"
 
 python () {
     import re
-    
+
     tests = d.getVar('ALL_QA').split()
     if "desktop" in tests:
         d.appendVar("PACKAGE_DEPENDS", " desktop-file-utils-native")
