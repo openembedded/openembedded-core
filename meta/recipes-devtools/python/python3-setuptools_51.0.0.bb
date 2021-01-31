@@ -28,6 +28,7 @@ RDEPENDS_${PN} = "\
   ${PYTHON_PN}-netserver \
   ${PYTHON_PN}-numbers \
   ${PYTHON_PN}-pickle \
+  ${PYTHON_PN}-pkg-resources \
   ${PYTHON_PN}-pkgutil \
   ${PYTHON_PN}-plistlib \
   ${PYTHON_PN}-shell \
