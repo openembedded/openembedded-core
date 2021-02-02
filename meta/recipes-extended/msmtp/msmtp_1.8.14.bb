@@ -10,8 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 UPSTREAM_CHECK_URI = "https://marlam.de/msmtp/download/"
 
-SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz \
-           file://autoconf270.patch"
+SRC_URI = "https://marlam.de/${BPN}/releases/${BP}.tar.xz"
 SRC_URI[sha256sum] = "d56f065d711486e9c234618515a02a48a48dab4051b34f3e108fbecb6fb773b4"
 
 inherit gettext autotools update-alternatives pkgconfig
