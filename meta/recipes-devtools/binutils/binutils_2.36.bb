@@ -52,6 +52,10 @@ do_install_class-native () {
 	rmdir ${D}/${libdir}64 || :
 }
 
+# libctf races with libbfd
+PARALLEL_MAKEINST_class-target = ""
+PARALLEL_MAKEINST_class-nativesdk = ""
+
 # Split out libbfd-*.so and libopcodes-*.so so including perf doesn't include
 # extra stuff
 PACKAGE_BEFORE_PN += "libbfd libopcodes"
