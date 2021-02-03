@@ -74,6 +74,9 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
 
 EXTRA_OECONF += "${@get_libc_fpu_setting(bb, d)}"
 
+EXTRA_OECONF_append_x86 = " --enable-cet"
+EXTRA_OECONF_append_x86-64 = " --enable-cet"
+
 PACKAGECONFIG ??= "nscd"
 PACKAGECONFIG[nscd] = "--enable-nscd,--disable-nscd"
 
