@@ -1,8 +1,7 @@
 require glibc.inc
 require glibc-version.inc
 
-# whitelist CVE's with fixes in latest release/2.32/master branch
-CVE_CHECK_WHITELIST += "CVE-2019-25013 CVE-2020-10029 CVE-2020-27618"
+CVE_CHECK_WHITELIST += "CVE-2020-10029"
 
 DEPENDS += "gperf-native bison-native make-native"
 
@@ -43,9 +42,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0028-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
            file://0029-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
            file://0030-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
-           file://0031-linux-Allow-adjtime-with-NULL-argument-BZ-26833.patch \
-           file://CVE-2020-29562.patch \
-           file://CVE-2020-29573.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
