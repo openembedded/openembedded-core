@@ -17,6 +17,10 @@ CFLAGS += "-DNON_INTERACTIVE_LOGIN_SHELLS"
 # This can vary depending upon the host
 CFLAGS += "-DHEREDOC_PIPESIZE=65536"
 
+# Disable bracketed paste mode by default (enabled by default in bash 5.1). It
+# causes a lot of garbage in non-interactive shells
+CFLAGS += "-DBRACKETED_PASTE_DEFAULT=0"
+
 ALTERNATIVE_${PN} = "bash sh"
 ALTERNATIVE_LINK_NAME[bash] = "${base_bindir}/bash"
 ALTERNATIVE_TARGET[bash] = "${base_bindir}/bash"
