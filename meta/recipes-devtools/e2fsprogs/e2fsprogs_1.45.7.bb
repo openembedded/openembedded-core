@@ -13,7 +13,7 @@ SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permissio
                                 file://big-inodes-for-small-fs.patch \
 "
 
-SRCREV = "506d96fe640f76ab04276e0a7c578aa108ce19f8"
+SRCREV = "5403970e44241cec26f98aaa0124b9881b4bbf4f"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
