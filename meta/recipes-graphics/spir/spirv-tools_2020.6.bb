@@ -17,6 +17,12 @@ DEPENDS = "spirv-headers"
 
 EXTRA_OECMAKE += "-DSPIRV-Headers_SOURCE_DIR=${STAGING_EXECPREFIXDIR}"
 
+do_install_append_class-target() {
+    # reproducibility: remove build host path
+    sed -i ${D}${libdir}/cmake/SPIRV-Tools/SPIRV-ToolsTarget.cmake \
+        -e 's:${STAGING_DIR_HOST}::g'
+}
+
 FILES_SOLIBSDEV = ""
 FILES_${PN} += "${libdir}/*.so"
 
