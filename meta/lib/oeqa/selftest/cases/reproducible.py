@@ -65,7 +65,6 @@ exclude_packages = [
 	'quilt-ptest',
 	'rsync',
 	'ruby',
-	'spirv-tools-dev',
 	'swig',
 	'syslinux-misc',
 	'systemd-bootchart',
