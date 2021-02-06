@@ -10,8 +10,7 @@ LICENSE = "GPLv3"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0c7051aef9219dc7237f206c5c4179a7"
 
-SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.gz \
-           file://version.patch \
+SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.xz \
            file://inetutils-1.8-0001-printf-parse-pull-in-features.h-for-__GLIBC__.patch \
            file://inetutils-1.8-0003-wchar.patch \
            file://rexec.xinetd.inetutils  \
@@ -21,13 +20,9 @@ SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.gz \
            file://tftpd.xinetd.inetutils \
            file://inetutils-1.9-PATH_PROCNET_DEV.patch \
            file://inetutils-only-check-pam_appl.h-when-pam-enabled.patch \
-           file://0001-rcp-fix-to-work-with-large-files.patch \
-           file://fix-buffer-fortify-tfpt.patch \
-           file://0001-ftpd-telnetd-Fix-multiple-definitions-of-errcatch-an.patch \
 "
 
-SRC_URI[md5sum] = "04852c26c47cc8c6b825f2b74f191f52"
-SRC_URI[sha256sum] = "be8f75eff936b8e41b112462db51adf689715658a1b09e0d6b05d11ec92cc616"
+SRC_URI[md5sum] = "5e1018502cd131ed8e42339f6b5c98aa"
 
 inherit autotools gettext update-alternatives texinfo
 
