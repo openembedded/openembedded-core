@@ -65,7 +65,7 @@ update_gnu_config() {
 	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}/build-aux
 	install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}/build-aux
 }
-do_configure[prefuncss] += "update_gnu_config"
+do_configure[prefuncs] += "update_gnu_config"
 
 do_configure_class-native() {
 	oe_runconf
