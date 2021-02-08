@@ -15,14 +15,13 @@ PACKAGECONFIG[popt] = "--without-included-popt,--with-included-popt,popt"
 RRECOMMENDS_${PN}-server = "avahi-daemon"
 
 SRC_URI = "git://github.com/distcc/distcc.git \
-           file://fix-gnome.patch \
-           file://separatebuilddir.patch \
-           file://0001-Fix-build-with-gcc-10-which-defaults-to-fno-common-c.patch \
            file://default \
            file://distcc \
-           file://distcc.service"
-SRCREV = "4cde9bcfbda589abd842e3bbc652ce369085eaae"
+           file://distcc.service \
+           "
+SRCREV = "8572e2a1af39e69b2a2d74622fed6d2dd7dca9b7"
 S = "${WORKDIR}/git"
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 inherit autotools pkgconfig update-rc.d useradd systemd
 
