@@ -39,8 +39,6 @@ PAM_SRC_URI = "file://pam.conf.patch \
 
 SRC_URI[sha256sum] = "aabe6e5cb6dd19fe9fb25c2747492f2db38762b95ea41b86f949609c39fb55c4"
 
-UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/a/at/"
-
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
                  --with-daemon_groupname=root \
