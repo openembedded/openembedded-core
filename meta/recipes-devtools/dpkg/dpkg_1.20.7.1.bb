@@ -1,7 +1,7 @@
 require dpkg.inc
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https \
+SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=sid \
            file://noman.patch \
            file://remove-tar-no-timestamp.patch \
            file://arch_pm.patch \
@@ -14,10 +14,11 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https \
            file://0001-dpkg-Support-muslx32-build.patch \
            file://pager.patch \
            file://0001-Add-support-for-riscv32-CPU.patch \
+           file://0013-scripts-dpkg-fsys-usrunmess.pl-correct-shebang.patch \
            "
 
 SRC_URI_append_class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
 
-SRCREV = "823a67d67538b1b403a32d1fef40e6e228265566"
+SRCREV = "667bf0aeb92e0e7bb225ee273569c5e2389083bd"
 
 S = "${WORKDIR}/git"
