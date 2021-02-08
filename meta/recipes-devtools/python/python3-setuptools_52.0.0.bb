@@ -2,9 +2,7 @@ SUMMARY = "Download, build, install, upgrade, and uninstall Python packages"
 HOMEPAGE = "https://pypi.org/project/setuptools"
 SECTION = "devel/python"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;beginline=1;endline=19;md5=9a33897f1bca1160d7aad3835152e158"
-
-PYPI_PACKAGE_EXT = "zip"
+LIC_FILES_CHKSUM = "file://LICENSE;beginline=1;endline=19;md5=7a7126e068206290f3fe9f8d6c713ea6"
 
 inherit pypi setuptools3
 
@@ -12,7 +10,7 @@ SRC_URI_append_class-native = " file://0001-conditionally-do-not-fetch-code-by-e
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
-SRC_URI[sha256sum] = "029c49fd713e9230f6a41c0298e6e1f5839f2cde7104c0ad5e053a37777e7688"
+SRC_URI[sha256sum] = "fb3a1ee622509550dbf1d419f241296169d7f09cb1eb5b1736f2f10965932b96"
 
 DEPENDS += "${PYTHON_PN}"
 
@@ -40,10 +38,6 @@ RDEPENDS_${PN} = "\
 
 do_install_prepend() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-}
-
-do_install_append() {
-    mv ${D}${bindir}/easy_install ${D}${bindir}/easy3_install
 }
 
 BBCLASSEXTEND = "native nativesdk"
