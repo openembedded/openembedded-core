@@ -5,13 +5,10 @@ DEPENDS_append_libc-musl = " libucontext"
 SRC_URI += " \
            file://remove_has_include_macros.patch \
            file://run-ptest \
-           file://0001-Modify-shebang-of-libexec-y2racc-and-libexec-racc2y.patch \
            file://0001-template-Makefile.in-do-not-write-host-cross-cc-item.patch \
-           file://autoconf270.patch \
            "
 
-SRC_URI[md5sum] = "2d4a28dcfa38352a627a597f6057c465"
-SRC_URI[sha256sum] = "6e5706d0d4ee4e1e2f883db9d768586b4d06567debea353c796ec45e8321c3d4"
+SRC_URI[sha256sum] = "a13ed141a1c18eb967aac1e33f4d6ad5f21be1ac543c344e0d6feeee54af8e28"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
