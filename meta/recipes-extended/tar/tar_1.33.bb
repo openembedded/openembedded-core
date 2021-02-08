@@ -6,12 +6,9 @@ SECTION = "base"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2 \
-           file://musl_dirent.patch \
-"
+SRC_URI = "${GNU_MIRROR}/tar/tar-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "17917356fff5cb4bd3cd5a6c3e727b05"
-SRC_URI[sha256sum] = "e4bb9e08e12e7fa9f11fef544efc85e59ba34538593d9ad38148c7ca2bfbb566"
+SRC_URI[sha256sum] = "85b6953f4bc9666eb7db61b48f150dca21b941d85090171ea8c4f89902e460af"
 
 inherit autotools gettext texinfo
 
