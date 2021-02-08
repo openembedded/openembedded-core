@@ -318,6 +318,7 @@ class Wic(WicTestCase):
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(self.resultdir + "tmp.wic*")))
 
     def test_debug_long(self):
         """Test --debug option"""
@@ -325,6 +326,7 @@ class Wic(WicTestCase):
                                    "--image-name=core-image-minimal "
                                    "--debug -o %s" % self.resultdir)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(self.resultdir + "tmp.wic*")))
 
     def test_skip_build_check_short(self):
         """Test -s option"""
