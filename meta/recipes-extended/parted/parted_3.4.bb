@@ -9,14 +9,11 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://no_check.patch \
            file://fix-doc-mandir.patch \
            file://0002-libparted_fs_resize-link-against-libuuid-explicitly-.patch \
-           file://0001-Move-python-helper-scripts-used-only-in-tests-to-Pyt.patch \
            file://run-ptest \
-           file://0001-libparted-fs-add-sourcedir-lib-to-include-paths.patch \
-           file://0002-tests-use-skip_-rather-than-skip_test_-which-is-unde.patch \
            "
 
-SRC_URI[md5sum] = "090655d05f3c471aa8e15a27536889ec"
-SRC_URI[sha256sum] = "57e2b4bd87018625c515421d4524f6e3b55175b472302056391c5f7eccb83d44"
+SRC_URI[md5sum] = "357d19387c6e7bc4a8a90fe2d015fe80"
+SRC_URI[sha256sum] = "e1298022472da5589b7f2be1d5ee3c1b66ec3d96dfbad03dc642afd009da5342"
 
 EXTRA_OECONF = "--disable-device-mapper"
 
@@ -48,7 +45,7 @@ do_install_ptest() {
 	sed -e 's| ../parted||' -i $t/tests/*.sh
 }
 
-RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup python3 make gawk e2fsprogs-mke2fs"
+RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup python3 make gawk e2fsprogs-mke2fs python3-core"
 RRECOMMENDS_${PN}-ptest = "kernel-module-scsi-debug"
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
         glibc-utils \
