@@ -79,7 +79,7 @@ class DpkgIndexer(Indexer):
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             raise NotImplementedError('Package feed signing not implementd for dpkg')
 
-class DpkgPkgsList(PkgsList):
+class PMPkgsList(PkgsList):
 
     def list_pkgs(self):
         cmd = [bb.utils.which(os.getenv('PATH'), "dpkg-query"),
@@ -282,12 +282,13 @@ class DpkgPM(OpkgDpkgPM):
 
         os.environ['APT_CONFIG'] = self.apt_conf_file
 
-        cmd = "%s %s install --force-yes --allow-unauthenticated --no-remove %s" % \
+        cmd = "%s %s install --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-unauthenticated --no-remove %s" % \
               (self.apt_get_cmd, self.apt_args, ' '.join(pkgs))
 
         try:
             bb.note("Installing the following packages: %s" % ' '.join(pkgs))
-            subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
+            output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
+            bb.note(output.decode("utf-8"))
         except subprocess.CalledProcessError as e:
             (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
                                               "Command '%s' returned %d:\n%s" %
@@ -311,6 +312,8 @@ class DpkgPM(OpkgDpkgPM):
     def remove(self, pkgs, with_dependencies=True):
         if not pkgs:
             return
+
+        os.environ['INTERCEPT_DIR'] = self.intercepts_dir
 
         if with_dependencies:
             os.environ['APT_CONFIG'] = self.apt_conf_file
@@ -341,8 +344,12 @@ class DpkgPM(OpkgDpkgPM):
         if feed_uris == "":
             return
 
+
         sources_conf = os.path.join("%s/etc/apt/sources.list"
                                     % self.target_rootfs)
+        if not os.path.exists(os.path.dirname(sources_conf)):
+            return
+
         arch_list = []
 
         if feed_archs is None:
@@ -360,11 +367,11 @@ class DpkgPM(OpkgDpkgPM):
                 if arch_list:
                     for arch in arch_list:
                         bb.note('Adding dpkg channel at (%s)' % uri)
-                        sources_file.write("deb %s/%s ./\n" %
+                        sources_file.write("deb [trusted=yes] %s/%s ./\n" %
                                            (uri, arch))
                 else:
                     bb.note('Adding dpkg channel at (%s)' % uri)
-                    sources_file.write("deb %s ./\n" % uri)
+                    sources_file.write("deb [trusted=yes] %s ./\n" % uri)
 
     def _create_configs(self, archs, base_archs):
         base_archs = re.sub(r"_", r"-", base_archs)
@@ -404,7 +411,7 @@ class DpkgPM(OpkgDpkgPM):
 
         with open(os.path.join(self.apt_conf_dir, "sources.list"), "w+") as sources_file:
             for arch in arch_list:
-                sources_file.write("deb file:%s/ ./\n" %
+                sources_file.write("deb [trusted=yes] file:%s/ ./\n" %
                                    os.path.join(self.deploy_dir, arch))
 
         base_arch_list = base_archs.split()
@@ -459,7 +466,7 @@ class DpkgPM(OpkgDpkgPM):
                      "returned %d:\n%s" % (cmd, e.returncode, e.output.decode("utf-8")))
 
     def list_installed(self):
-        return DpkgPkgsList(self.d, self.target_rootfs).list_pkgs()
+        return PMPkgsList(self.d, self.target_rootfs).list_pkgs()
 
     def package_info(self, pkg):
         """

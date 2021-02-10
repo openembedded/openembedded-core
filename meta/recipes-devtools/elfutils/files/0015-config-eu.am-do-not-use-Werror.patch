@@ -1,4 +1,4 @@
-From dce2187dd8f592316357b200ebbe8dbed9ee65cb Mon Sep 17 00:00:00 2001
+From 574ac484c01125a97ba8737cf7292ca926897310 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 22 Jun 2020 21:35:16 +0000
 Subject: [PATCH] config/eu.am: do not use -Werror
@@ -10,6 +10,7 @@ Werror.
 
 Upstream-Status: Inappropriate [oe core specific]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
 ---
  config/eu.am | 2 --
  1 file changed, 2 deletions(-)

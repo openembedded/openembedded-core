@@ -17,6 +17,7 @@ PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
+           file://0001-Use-cross-AR-during-compile.patch \
 "
 
 SRC_URI[md5sum] = "f719bc9966df28e67fc6ebc405e7ea03"
@@ -51,5 +52,9 @@ do_install_ptest() {
 }
 
 RDEPENDS_${PN}-ptest += "make"
+
+RDEPENDS_${PN}-ptest_append_libc-glibc = "\
+     locale-base-en-us.iso-8859-1 \
+"
 
 BBCLASSEXTEND = "native nativesdk"

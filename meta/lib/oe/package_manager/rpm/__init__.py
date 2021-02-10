@@ -33,6 +33,9 @@ class RpmIndexer(Indexer):
 class RpmSubdirIndexer(RpmIndexer):
     def write_index(self):
         bb.note("Generating package index for %s" %(self.deploy_dir))
+        # Remove the existing repodata to ensure that we re-generate it no matter what
+        bb.utils.remove(os.path.join(self.deploy_dir, "repodata"), recurse=True)
+
         self.do_write_index(self.deploy_dir)
         for entry in os.walk(self.deploy_dir):
             if os.path.samefile(self.deploy_dir, entry[0]):
@@ -43,7 +46,7 @@ class RpmSubdirIndexer(RpmIndexer):
                         self.do_write_index(dir_path)
 
 
-class RpmPkgsList(PkgsList):
+class PMPkgsList(PkgsList):
     def list_pkgs(self):
         return RpmPM(self.d, self.rootfs_dir, self.d.getVar('TARGET_VENDOR'), needfeed=False).list_installed()
 

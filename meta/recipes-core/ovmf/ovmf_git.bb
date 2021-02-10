@@ -16,11 +16,11 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0001-ovmf-update-path-to-native-BaseTools.patch \
            file://0002-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
            file://0003-ovmf-enable-long-path-file.patch \
-           file://0001-ovmf-Update-to-latest.patch \
-        "
+           file://0004-ovmf-Update-to-latest.patch \
+           "
 
-PV = "edk2-stable202005"
-SRCREV = "ca407c7246bf405da6d9b1b9d93e5e7f17b4b1f9"
+PV = "edk2-stable202011"
+SRCREV = "872f953262d68a11da7bc2fb3ded16df234b8700"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>edk2-stable.*)"
 
 inherit deploy

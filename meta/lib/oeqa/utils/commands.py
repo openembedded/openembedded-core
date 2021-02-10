@@ -125,11 +125,11 @@ class Command(object):
 
     def stop(self):
         for thread in self.threads:
-            if thread.isAlive():
+            if thread.is_alive():
                 self.process.terminate()
             # let's give it more time to terminate gracefully before killing it
             thread.join(5)
-            if thread.isAlive():
+            if thread.is_alive():
                 self.process.kill()
                 thread.join()
 
@@ -188,7 +188,10 @@ def runCmd(command, ignore_status=False, timeout=None, assert_error=True, sync=T
     # call sync around the tests to ensure the IO queue doesn't get too large, taking any IO
     # hit here rather than in bitbake shutdown.
     if sync:
+        p = os.environ['PATH']
+        os.environ['PATH'] = "/usr/bin:/bin:/usr/sbin:/sbin:" + p
         os.system("sync")
+        os.environ['PATH'] = p
 
     result.command = command
     result.status = cmd.status

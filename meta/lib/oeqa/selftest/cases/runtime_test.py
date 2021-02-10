@@ -276,7 +276,7 @@ class Postinst(OESelftestTestCase):
                     # run_serial()'s status code is useless.'
                     for filename in ("rootfs", "delayed-a", "delayed-b"):
                         status, output = qemu.run_serial("test -f %s && echo found" % os.path.join(targettestdir, filename))
-                        self.assertEqual(output, "found", "%s was not present on boot" % filename)
+                        self.assertIn("found", output, "%s was not present on boot" % filename)
 
 
 
@@ -384,7 +384,7 @@ KERNEL_EXTRA_FEATURES_append = " features/debug/debug-kernel.scc"
 KERNEL_EXTRA_FEATURES_append = " features/systemtap/systemtap.scc"
 
 # add systemtap run-time into target image if it is not there yet
-IMAGE_INSTALL_append = " systemtap"
+IMAGE_INSTALL_append = " systemtap-runtime"
 """
 
         def test_crosstap_helloworld(self):

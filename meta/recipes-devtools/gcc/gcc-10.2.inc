@@ -69,6 +69,7 @@ SRC_URI = "\
            file://0002-aarch64-Introduce-SLS-mitigation-for-RET-and-BR-inst.patch \
            file://0003-aarch64-Mitigate-SLS-for-BLR-instruction.patch \
            file://0001-aarch64-Fix-up-__aarch64_cas16_acq_rel-fallback.patch \
+           file://0001-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch \
 "
 SRC_URI[sha256sum] = "b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c"
 
@@ -81,14 +82,13 @@ S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 FORTRAN = ""
 JAVA = ""
 
-LTO = "--enable-lto"
 SSP ?= "--disable-libssp"
 SSP_mingw32 = "--enable-libssp"
 
 EXTRA_OECONF_BASE = "\
-    ${LTO} \
     ${SSP} \
     --enable-libitm \
+    --enable-lto \
     --disable-bootstrap \
     --with-system-zlib \
     ${@'--with-linker-hash-style=${LINKER_HASH_STYLE}' if '${LINKER_HASH_STYLE}' else ''} \

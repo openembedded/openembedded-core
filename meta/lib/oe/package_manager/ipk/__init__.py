@@ -59,9 +59,10 @@ class OpkgIndexer(Indexer):
                                    self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
                                    armor=is_ascii_sig)
 
-class OpkgPkgsList(PkgsList):
-    def __init__(self, d, rootfs_dir, config_file):
-        super(OpkgPkgsList, self).__init__(d, rootfs_dir)
+class PMPkgsList(PkgsList):
+    def __init__(self, d, rootfs_dir):
+        super(PMPkgsList, self).__init__(d, rootfs_dir)
+        config_file = d.getVar("IPKGCONF_TARGET")
 
         self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg")
         self.opkg_args = "-f %s -o %s " % (config_file, rootfs_dir)
@@ -171,12 +172,7 @@ class OpkgPM(OpkgDpkgPM):
         if prepare_index:
             create_packages_dir(self.d, self.deploy_dir, d.getVar("DEPLOY_DIR_IPK"), "package_write_ipk", filterbydependencies)
 
-        opkg_lib_dir = self.d.getVar('OPKGLIBDIR')
-        if opkg_lib_dir[0] == "/":
-            opkg_lib_dir = opkg_lib_dir[1:]
-
-        self.opkg_dir = os.path.join(target_rootfs, opkg_lib_dir, "opkg")
-
+        self.opkg_dir = oe.path.join(target_rootfs, self.d.getVar('OPKGLIBDIR'), "opkg")
         bb.utils.mkdirhier(self.opkg_dir)
 
         self.saved_opkg_dir = self.d.expand('${T}/saved/%s' % self.task_name)
@@ -407,16 +403,16 @@ class OpkgPM(OpkgDpkgPM):
             bb.fatal(result)
 
     def remove_packaging_data(self):
+        cachedir = oe.path.join(self.target_rootfs, self.d.getVar("localstatedir"), "cache", "opkg")
         bb.utils.remove(self.opkg_dir, True)
-        # create the directory back, it's needed by PM lock
-        bb.utils.mkdirhier(self.opkg_dir)
+        bb.utils.remove(cachedir, True)
 
     def remove_lists(self):
         if not self.from_feeds:
             bb.utils.remove(os.path.join(self.opkg_dir, "lists"), True)
 
     def list_installed(self):
-        return OpkgPkgsList(self.d, self.target_rootfs, self.config_file).list_pkgs()
+        return PMPkgsList(self.d, self.target_rootfs).list_pkgs()
 
     def dummy_install(self, pkgs):
         """
