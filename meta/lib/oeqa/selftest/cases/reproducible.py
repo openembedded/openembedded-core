@@ -68,8 +68,8 @@ def is_excluded(package):
     package_name = os.path.basename(package)
     for i in exclude_packages:
         if package_name.startswith(i):
-            return True
-    return False
+            return i
+    return None
 
 MISSING = 'MISSING'
 DIFFERENT = 'DIFFERENT'
@@ -95,14 +95,17 @@ class PackageCompareResults(object):
         self.different = []
         self.different_excluded = []
         self.same = []
+        self.active_exclusions = set()
 
     def add_result(self, r):
         self.total.append(r)
         if r.status == MISSING:
             self.missing.append(r)
         elif r.status == DIFFERENT:
-            if is_excluded(r.reference):
+            exclusion = is_excluded(r.reference)
+            if exclusion:
                 self.different_excluded.append(r)
+                self.active_exclusions.add(exclusion)
             else:
                 self.different.append(r)
         else:
@@ -116,7 +119,10 @@ class PackageCompareResults(object):
         self.same.sort()
 
     def __str__(self):
-        return 'same=%i different=%i different_excluded=%i missing=%i total=%i' % (len(self.same), len(self.different), len(self.different_excluded), len(self.missing), len(self.total))
+        return 'same=%i different=%i different_excluded=%i missing=%i total=%i\nunused_exclusions=%s' % (len(self.same), len(self.different), len(self.different_excluded), len(self.missing), len(self.total), self.unused_exclusions())
+
+    def unused_exclusions(self):
+        return set(exclude_packages) - self.active_exclusions
 
 def compare_file(reference, test, diffutils_sysroot):
     result = CompareResult()
