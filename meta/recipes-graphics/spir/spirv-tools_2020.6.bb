@@ -17,6 +17,8 @@ DEPENDS = "spirv-headers"
 
 EXTRA_OECMAKE += "\
     -DSPIRV-Headers_SOURCE_DIR=${STAGING_EXECPREFIXDIR} \
+    -DSPIRV_TOOLS_BUILD_STATIC=OFF \
+    -DBUILD_SHARED_LIBS=ON \
     -DSPIRV_SKIP_TESTS=ON \
 "
 
@@ -26,8 +28,9 @@ do_install_append_class-target() {
         -e 's:${STAGING_DIR_HOST}::g'
 }
 
+# all the libraries are unversioned, so don't pack it on PN-dev
+SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
-FILES_${PN} += "${libdir}/*.so"
 
 PACKAGES =+ "${PN}-lesspipe"
 FILES_${PN}-lesspipe = "${base_bindir}/spirv-lesspipe.sh"
