@@ -11,11 +11,14 @@ SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git"
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
 S = "${WORKDIR}/git"
 
-inherit cmake python3native
+inherit cmake
 
 DEPENDS = "spirv-headers"
 
-EXTRA_OECMAKE += "-DSPIRV-Headers_SOURCE_DIR=${STAGING_EXECPREFIXDIR}"
+EXTRA_OECMAKE += "\
+    -DSPIRV-Headers_SOURCE_DIR=${STAGING_EXECPREFIXDIR} \
+    -DSPIRV_SKIP_TESTS=ON \
+"
 
 do_install_append_class-target() {
     # reproducibility: remove build host path
