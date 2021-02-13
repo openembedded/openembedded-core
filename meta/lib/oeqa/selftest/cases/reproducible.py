@@ -122,7 +122,7 @@ class PackageCompareResults(object):
         return 'same=%i different=%i different_excluded=%i missing=%i total=%i\nunused_exclusions=%s' % (len(self.same), len(self.different), len(self.different_excluded), len(self.missing), len(self.total), self.unused_exclusions())
 
     def unused_exclusions(self):
-        return set(exclude_packages) - self.active_exclusions
+        return sorted(set(exclude_packages) - self.active_exclusions)
 
 def compare_file(reference, test, diffutils_sysroot):
     result = CompareResult()
