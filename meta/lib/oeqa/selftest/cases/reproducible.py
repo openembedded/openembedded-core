@@ -158,7 +158,7 @@ class ReproducibleTests(OESelftestTestCase):
             # mirror, forcing a complete build from scratch
             config += textwrap.dedent('''\
                 SSTATE_DIR = "${TMPDIR}/sstate"
-                SSTATE_MIRROR = ""
+                SSTATE_MIRRORS = ""
                 ''')
 
         self.write_config(config)
