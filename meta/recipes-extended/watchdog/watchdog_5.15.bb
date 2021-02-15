@@ -28,6 +28,7 @@ CFLAGS += "-I${STAGING_INCDIR}/tirpc"
 LDFLAGS += "-ltirpc"
 
 EXTRA_OECONF += " --disable-nfs "
+CACHED_CONFIGUREVARS += "ac_cv_path_PATH_SENDMAIL=${sbindir}/sendmail"
 
 INITSCRIPT_PACKAGES = "${PN} ${PN}-keepalive"
 
