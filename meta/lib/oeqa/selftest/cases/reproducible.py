@@ -24,6 +24,9 @@ import datetime
 # https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201127-hwds3mcl/
 # https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201203-sua0pzvc/
 # (both packages/ and packages-excluded/)
+
+# ruby-ri-docs, meson:
+#https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210215-0_td9la2/packages/diff-html/
 exclude_packages = [
 	'acpica-src',
 	'babeltrace2-ptest',
@@ -53,18 +56,17 @@ exclude_packages = [
 	'lttng-tools-dbg',
 	'lttng-tools-ptest',
 	'ltp',
+        'meson',
 	'ovmf-shell-efi',
 	'parted-ptest',
 	'perf',
 	'python3-cython',
 	'qemu',
 	'rsync',
+        'ruby-ri-docs',
 	'swig',
 	'syslinux-misc',
-	'systemd-bootchart',
-	'watchdog',
-	'xmlto',
-	'xorg-minimal-fonts'
+	'systemd-bootchart'
 	]
 
 def is_excluded(package):
