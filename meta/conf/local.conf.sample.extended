@@ -331,7 +331,7 @@
 # The INITRAMFS_IMAGE image variable will cause an additional recipe to
 # be built as a dependency to the what ever rootfs recipe you might be
 # using such as core-image-sato.  The initramfs might be needed for
-# the initial boot of of the target system such as to load kernel
+# the initial boot of the target system such as to load kernel
 # modules prior to mounting the root file system.
 #
 # INITRAMFS_IMAGE_BUNDLE variable controls if the image recipe
