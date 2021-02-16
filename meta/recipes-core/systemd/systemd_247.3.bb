@@ -51,8 +51,6 @@ SRC_URI_MUSL = "\
                file://0020-Fix-incompatible-pointer-type-struct-sockaddr_un.patch \
                file://0021-test-json.c-define-M_PIl.patch \
                file://0022-do-not-disable-buffer-in-writing-files.patch \
-               file://0023-Include-sys-wait.h.patch \
-               file://0024-Include-signal.h.patch \
                file://0025-Handle-__cpu_mask-usage.patch \
                file://0026-Handle-missing-gshadow.patch \
                "
