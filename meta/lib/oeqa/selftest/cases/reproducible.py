@@ -173,7 +173,7 @@ class DiffoscopeTests(OESelftestTestCase):
             self.assertTrue(os.path.exists(os.path.join(tmpdir, 'index.html')), "HTML index not found!")
 
 class ReproducibleTests(OESelftestTestCase):
-    package_classes = ['deb', 'ipk']
+    package_classes = ['deb', 'ipk', 'rpm']
     images = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'world']
     save_results = False
     if 'OEQA_DEBUGGING_SAVED_OUTPUT' in os.environ:
