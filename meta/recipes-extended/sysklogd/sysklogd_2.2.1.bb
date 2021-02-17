@@ -12,8 +12,10 @@ inherit update-rc.d update-alternatives systemd autotools
 
 SRC_URI = "git://github.com/troglobit/sysklogd.git;nobranch=1 \
            file://sysklogd \
-           file://0001-Makefile.am-fixup-issue-17.patch \
            "
+
+SRCREV = "b115c7ec4e6d9f3587ac8d212bfc454bfbfe7023"
+
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-systemd=${systemd_system_unitdir} --without-logger"
