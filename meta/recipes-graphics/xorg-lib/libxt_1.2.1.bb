@@ -24,8 +24,7 @@ XORG_PN = "libXt"
 
 SRC_URI += "file://libxt_fix_for_x32.patch"
 
-SRC_URI[md5sum] = "a9019421d3ee8b4937b6afd9025f018a"
-SRC_URI[sha256sum] = "b31df531dabed9f4611fc8980bc51d7782967e2aff44c4105251a1acb5a77831"
+SRC_URI[sha256sum] = "679cc08f1646dbd27f5e48ffe8dd49406102937109130caab02ca32c083a3d60"
 
 BBCLASSEXTEND = "native nativesdk"
 
