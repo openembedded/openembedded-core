@@ -175,8 +175,6 @@ do_install_ptest() {
 	   none/tests \
 	   tests \
 	   exp-bbv/tests \
-	   exp-dhat/tests \
-	   exp-sgcheck/tests \
 	"
         # Get the vg test scripts, filters, and expected files
         for dir in $subdirs ; do
