@@ -252,16 +252,9 @@ def return_spdx(d, license):
 def canonical_license(d, license):
     """
     Return the canonical (SPDX) form of the license if available (so GPLv3
-    becomes GPL-3.0), for the license named 'X+', return canonical form of
-    'X' if available and the tailing '+' (so GPLv3+ becomes GPL-3.0+),
-    or the passed license if there is no canonical form.
+    becomes GPL-3.0) or the passed license if there is no canonical form.
     """
-    lic = d.getVarFlag('SPDXLICENSEMAP', license) or ""
-    if not lic and license.endswith('+'):
-        lic = d.getVarFlag('SPDXLICENSEMAP', license.rstrip('+'))
-        if lic:
-            lic += '+'
-    return lic or license
+    return d.getVarFlag('SPDXLICENSEMAP', license) or license
 
 def available_licenses(d):
     """
