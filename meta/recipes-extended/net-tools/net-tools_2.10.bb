@@ -6,14 +6,11 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://ifconfig.c;beginline=11;endline=15;md5=d1ca372080ad5401e23ca0afc35cf9ba"
 
-PV = "1.60-20181103+git${SRCPV}"
-SRCREV = "0eebece8c964e3cfa8a018f42b2e7e751a7009a0"
+SRCREV = "80d7b95067f1f22fece9537dea6dff53081f4886"
 SRC_URI = "git://git.code.sf.net/p/net-tools/code;protocol=https \
     file://net-tools-config.h \
     file://net-tools-config.make \
     file://Add_missing_headers.patch \
-    file://Bug_443075-ifconfig.c-pointtopoint_spelling.patch \
-    file://Bug_541172-netstat.c-exit-codes.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -28,6 +25,8 @@ PACKAGECONFIG[hostname] = ""
 PACKAGECONFIG[arp] = ""
 PACKAGECONFIG[serial] = ""
 PACKAGECONFIG[plip] = ""
+PACKAGECONFIG[slattach] = ""
+PACKAGECONFIG[plipconfig] = ""
 
 do_configure() {
 	# net-tools has its own config mechanism requiring "make config"
