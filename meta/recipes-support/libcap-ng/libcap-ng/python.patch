@@ -13,10 +13,10 @@ Signed-off-by: Zang Ruochen <zangrc.fnst@cn.fujitsu.com>
  configure.ac                | 17 ++---------------
  2 files changed, 5 insertions(+), 16 deletions(-)
 
-diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-index 999b184..c8e49db 100644
---- a/bindings/python/Makefile.am
-+++ b/bindings/python/Makefile.am
+Index: libcap-ng-0.8.2/bindings/python/Makefile.am
+===================================================================
+--- libcap-ng-0.8.2.orig/bindings/python/Makefile.am
++++ libcap-ng-0.8.2/bindings/python/Makefile.am
 @@ -23,7 +23,9 @@
  SUBDIRS = test
  CONFIG_CLEAN_FILES = *.loT *.rej *.orig
@@ -28,11 +28,11 @@ index 999b184..c8e49db 100644
  SWIG_FLAGS = -python
  SWIG_INCLUDES = ${AM_CPPFLAGS}
  pyexec_PYTHON = capng.py
-diff --git a/configure.ac b/configure.ac
-index 8b46f51..2d7e00c 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -141,21 +141,8 @@ fi
+Index: libcap-ng-0.8.2/configure.ac
+===================================================================
+--- libcap-ng-0.8.2.orig/configure.ac
++++ libcap-ng-0.8.2/configure.ac
+@@ -169,21 +169,8 @@ fi
  
  # Setup Python2 with the interpreter found previously.
  AM_PATH_PYTHON
@@ -56,5 +56,3 @@ index 8b46f51..2d7e00c 100644
  fi
  AM_CONDITIONAL(HAVE_PYTHON, test ${python_found} = "yes")
  
--- 
-2.25.1
