@@ -38,6 +38,7 @@ exclude_packages = [
 	'go-helloworld',
 	'go-runtime',
 	'go_',
+	'go-',
 	'gst-devtools',
 	'gstreamer1.0-python',
 	'gtk-doc',
