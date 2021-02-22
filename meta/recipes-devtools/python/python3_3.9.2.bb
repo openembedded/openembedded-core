@@ -177,6 +177,10 @@ do_install_append() {
 }
 
 do_install_append_class-nativesdk () {
+    # Make sure we use /usr/bin/env python
+    for PYTHSCRIPT in `grep -rIl ${bindir}/python ${D}${bindir}`; do
+         sed -i -e '1s|^#!.*|#!/usr/bin/env python3|' $PYTHSCRIPT
+    done
     create_wrapper ${D}${bindir}/python${PYTHON_MAJMIN} TERMINFO_DIRS='${sysconfdir}/terminfo:/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo' PYTHONNOUSERSITE='1'
 }
 
