@@ -84,10 +84,6 @@ python create_source_date_epoch_stamp() {
 
     source_date_epoch = oe.reproducible.get_source_date_epoch(d, d.getVar('S'))
 
-    if source_date_epoch == 0 :
-        bb.debug(1, "source_date_epoch is 0, using SOURCE_DATE_EPOCH_FALLBACK instead.")
-        source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
-
     bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
     bb.utils.mkdirhier(d.getVar('SDE_DIR'))
     with open(epochfile, 'w') as f:
