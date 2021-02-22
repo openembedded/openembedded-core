@@ -23,7 +23,7 @@ SRC_URI_append_class-nativesdk = " \
            file://0001-Do-not-configure-packages-on-installation.patch \
            "
 
-SRC_URI[sha256sum] = "6d447f2e9437ec24e78350b63bb0592bee1f050811d51990b0c783183b0983f8"
+SRC_URI[sha256sum] = "f5030de22a5cc80db6fe0d42373b5df25d7dc56e94d9155f2eaa80dbd65e82fa"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 # the package is taken from snapshots.debian.org; that source is static and goes stale
