@@ -21,7 +21,6 @@ SRC_URI[sha256sum] = "ffdc865137ad5d8e53664bd22bad4de6ca136d1b4636720320cb52af0c
 # Can be dropped when the output next changes, avoids failures after
 # reproducibility issues
 PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".1"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/watchdog/files/watchdog/"
 UPSTREAM_CHECK_REGEX = "/watchdog/(?P<pver>(\d+[\.\-_]*)+)/"
