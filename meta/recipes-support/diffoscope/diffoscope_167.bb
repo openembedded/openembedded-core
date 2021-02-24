@@ -15,7 +15,10 @@ RDEPENDS_${PN} += "binutils vim squashfs-tools python3-libarchive-c python3-magi
 COMPATIBLE_HOST_libc-musl = 'null'
 
 do_install_append_class-native() {
-	create_wrapper ${D}${bindir}/diffoscope MAGIC=${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc
+	create_wrapper ${D}${bindir}/diffoscope \
+		MAGIC=${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc \
+		RPM_CONFIGDIR=${STAGING_LIBDIR_NATIVE}/rpm \
+		RPM_ETCCONFIGDIR=${STAGING_DIR_NATIVE}
 }
 
 BBCLASSEXTEND = "native"
