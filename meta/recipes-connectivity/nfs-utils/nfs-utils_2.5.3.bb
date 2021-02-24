@@ -31,7 +31,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://clang-warnings.patch \
            "
-SRC_URI[sha256sum] = "d493b81c9d3ffce5d10af701a63ed2b8a21768c23da4a2eceb4d708aea65d9de"
+SRC_URI[sha256sum] = "b54d6d8ea2ee62d64111278301ba4631b7bb19174e7f717a724fe5d463900c80"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
