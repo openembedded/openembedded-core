@@ -29,7 +29,6 @@ import datetime
 #https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210215-0_td9la2/packages/diff-html/
 exclude_packages = [
 	'bootchart2-doc',
-	'cups',
 	'efivar',
 	'epiphany',
 	'gcr',
