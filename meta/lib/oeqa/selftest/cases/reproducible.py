@@ -31,7 +31,6 @@ exclude_packages = [
 	'bootchart2-doc',
 	'efivar',
 	'epiphany',
-	'gcr',
 	'glide',
 	'go-dep',
 	'go-helloworld',
