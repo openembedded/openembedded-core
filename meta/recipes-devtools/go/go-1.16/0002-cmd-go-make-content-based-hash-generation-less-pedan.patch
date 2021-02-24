@@ -63,8 +63,8 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  		fmt.Fprintf(os.Stderr, "go: invalid cflags: %v\n", err)
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -33,6 +33,8 @@ import (
- 	"cmd/go/internal/str"
+@@ -37,6 +37,8 @@ import (
+ 	"cmd/go/internal/trace"
  )
  
 +var omitGopath = os.Getenv("GOPATH_OMIT_IN_ACTIONID") != ""
@@ -72,7 +72,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  // actionList returns the list of actions in the dag rooted at root
  // as visited in a depth-first post-order traversal.
  func actionList(root *Action) []*Action {
-@@ -209,7 +211,7 @@ func (b *Builder) buildActionID(a *Actio
+@@ -228,7 +230,7 @@ func (b *Builder) buildActionID(a *Actio
  	// Assume b.WorkDir is being trimmed properly.
  	// When -trimpath is used with a package built from the module cache,
  	// use the module path and version instead of the directory.
@@ -81,7 +81,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  		fmt.Fprintf(h, "dir %s\n", p.Dir)
  	} else if cfg.BuildTrimpath && p.Module != nil {
  		fmt.Fprintf(h, "module %s@%s\n", p.Module.Path, p.Module.Version)
-@@ -228,13 +230,13 @@ func (b *Builder) buildActionID(a *Actio
+@@ -247,13 +249,13 @@ func (b *Builder) buildActionID(a *Actio
  	}
  	if len(p.CgoFiles)+len(p.SwigFiles) > 0 {
  		fmt.Fprintf(h, "cgo %q\n", b.toolID("cgo"))
@@ -99,7 +99,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  		}
  		// TODO(rsc): Should we include the SWIG version or Fortran/GCC/G++/Objective-C compiler versions?
  	}
-@@ -2298,33 +2300,48 @@ var (
+@@ -2401,33 +2403,48 @@ var (
  // gccCmd returns a gcc command line prefix
  // defaultCC is defined in zdefaultcc.go, written by cmd/dist.
  func (b *Builder) GccCmd(incdir, workdir string) []string {
@@ -157,7 +157,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  }
  
  // compilerExe returns the compiler to use given an
-@@ -2333,11 +2350,16 @@ func (b *Builder) fcExe() []string {
+@@ -2436,11 +2453,16 @@ func (b *Builder) fcExe() []string {
  // of the compiler but can have additional arguments if they
  // were present in the environment value.
  // For example if CC="gcc -DGOPHER" then the result is ["gcc", "-DGOPHER"].
@@ -165,7 +165,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
 +func (b *Builder) compilerExe(envValue string, def string, filtered bool) []string {
  	compiler := strings.Fields(envValue)
  	if len(compiler) == 0 {
- 		compiler = []string{def}
+ 		compiler = strings.Fields(def)
  	}
 +
 +	if filtered {
@@ -175,7 +175,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	return compiler
  }
  
-@@ -2510,7 +2532,7 @@ func envList(key, def string) []string {
+@@ -2620,7 +2642,7 @@ func envList(key, def string) []string {
  }
  
  // CFlags returns the flags to use when invoking the C, C++ or Fortran compilers, or cgo.
@@ -184,7 +184,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	defaults := "-g -O2"
  
  	if cppflags, err = buildFlags("CPPFLAGS", "", p.CgoCPPFLAGS, checkCompilerFlags); err != nil {
-@@ -2529,6 +2551,14 @@ func (b *Builder) CFlags(p *load.Package
+@@ -2639,6 +2661,14 @@ func (b *Builder) CFlags(p *load.Package
  		return
  	}
  
@@ -199,7 +199,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	return
  }
  
-@@ -2543,7 +2573,7 @@ var cgoRe = lazyregexp.New(`[/\\:]`)
+@@ -2653,7 +2683,7 @@ var cgoRe = lazyregexp.New(`[/\\:]`)
  
  func (b *Builder) cgo(a *Action, cgoExe, objdir string, pcCFLAGS, pcLDFLAGS, cgofiles, gccfiles, gxxfiles, mfiles, ffiles []string) (outGo, outObj []string, err error) {
  	p := a.Package
@@ -208,7 +208,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	if err != nil {
  		return nil, nil, err
  	}
-@@ -2902,7 +2932,7 @@ func (b *Builder) swigIntSize(objdir str
+@@ -3104,7 +3134,7 @@ func (b *Builder) swigIntSize(objdir str
  
  // Run SWIG on one SWIG input file.
  func (b *Builder) swigOne(a *Action, p *load.Package, file, objdir string, pcCFLAGS []string, cxx bool, intgosize string) (outGo, outC string, err error) {
