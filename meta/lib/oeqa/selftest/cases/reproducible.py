@@ -41,8 +41,6 @@ exclude_packages = [
 	'libaprutil',
 	'libhandy-1-src',
 	'libid3tag',
-	'libsecret-dev',
-	'libsecret-src',
 	'lttng-tools-dbg',
 	'lttng-tools-ptest',
 	'ltp',

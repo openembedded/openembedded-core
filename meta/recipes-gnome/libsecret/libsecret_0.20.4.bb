@@ -13,6 +13,8 @@ inherit gnomebase gtk-doc vala gobject-introspection manpages
 
 DEPENDS += "glib-2.0 libgcrypt gettext-native"
 
+SRC_URI += " file://determinism.patch"
+
 SRC_URI[archive.sha256sum] = "325a4c54db320c406711bf2b55e5cb5b6c29823426aa82596a907595abb39d28"
 
 GTKDOC_MESON_OPTION = 'gtk_doc'
