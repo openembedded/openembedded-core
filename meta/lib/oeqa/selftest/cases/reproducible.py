@@ -48,7 +48,6 @@ exclude_packages = [
 	'ltp',
 	'meson',
 	'ovmf-shell-efi',
-	'parted-ptest',
 	'perf',
 	'python3-cython',
 	'qemu',
