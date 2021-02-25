@@ -1,4 +1,6 @@
 SUMMARY = "Advanced front-end for dpkg"
+DESCRIPTION = "APT is the Advanced Package Tool, an advanced interface to the Debian packaging system which provides the apt-get program."
+HOMEPAGE = "https://packages.debian.org/jessie/apt"
 LICENSE = "GPLv2.0+"
 SECTION = "base"
 

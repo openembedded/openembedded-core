@@ -1,5 +1,6 @@
 SUMMARY = "The Python Programming Language"
 HOMEPAGE = "http://www.python.org"
+DESCRIPTION = "Python is a programming language that lets you work more quickly and integrate your systems more effectively."
 LICENSE = "PSFv2"
 SECTION = "devel/python"
 

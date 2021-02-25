@@ -1,6 +1,7 @@
 SUMMARY = "log4cplus provides a simple C++ logging API for log management"
 SECTION = "libs"
 HOMEPAGE = "http://sourceforge.net/projects/log4cplus/"
+DESCRIPTION = "log4cplus is a simple to use C++ logging API providing thread-safe, flexible, and arbitrarily granular control over log management and configuration. It is modelled after the Java log4j API."
 BUGTRACKER = "http://sourceforge.net/p/log4cplus/bugs/"
 
 LICENSE = "Apache-2.0 & BSD-2-Clause"
