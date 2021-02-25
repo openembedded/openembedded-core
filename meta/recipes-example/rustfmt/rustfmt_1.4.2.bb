@@ -11,7 +11,7 @@ SRC_URI += "git://github.com/rust-lang/rustfmt/;protocol=https;nobranch=1"
 SRCREV = "aeb3496f31a0dfa90fc511520d2023634e885260"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = ""
-
+EXCLUDE_FROM_WORLD = "1"
 
 # please note if you have entries that do not begin with crate://
 # you must change them to how that package can be fetched

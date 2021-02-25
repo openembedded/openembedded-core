@@ -14,6 +14,7 @@ LIC_FILES_CHKSUM = " \
 
 S = "${RUSTSRC}/src/tools/cargo"
 CARGO_VENDORING_DIRECTORY = "${RUSTSRC}/vendor"
+EXCLUDE_FROM_WORLD = "1"
 
 inherit cargo
 
