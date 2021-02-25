@@ -173,7 +173,7 @@ RRECOMMENDS_packagegroup-base-vfat = "\
 SUMMARY_packagegroup-base-alsa = "ALSA sound support"
 RDEPENDS_packagegroup-base-alsa = "\
     alsa-utils-alsactl \
-    alsa-utils-alsamixer \
+    alsa-utils-amixer \
     ${VIRTUAL-RUNTIME_alsa-state}"
 
 RRECOMMENDS_packagegroup-base-alsa = "\
