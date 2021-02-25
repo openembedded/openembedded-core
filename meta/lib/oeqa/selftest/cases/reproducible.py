@@ -39,7 +39,6 @@ exclude_packages = [
 	'go-',
 	'gst-devtools',
 	'gstreamer1.0-python',
-	'gtk-doc',
 	'igt-gpu-tools',
 	'libaprutil',
 	'libhandy-1-src',
