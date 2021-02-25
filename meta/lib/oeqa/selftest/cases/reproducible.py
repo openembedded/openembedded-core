@@ -36,7 +36,6 @@ exclude_packages = [
 	'go-runtime',
 	'go_',
 	'go-',
-	'gst-devtools',
 	'gstreamer1.0-python',
 	'igt-gpu-tools',
 	'libaprutil',
