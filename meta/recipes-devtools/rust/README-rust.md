@@ -1,7 +1,7 @@
 ## Introduction
 
-This OpenEmbedded layer provides the rust compiler, tools for building packages
-(cargo), and a few example projects.
+This provides the Rust compiler, tools for building packages (cargo), and 
+a few example projects.
 
 ## What works:
 
@@ -12,8 +12,8 @@ This OpenEmbedded layer provides the rust compiler, tools for building packages
 
 ## What doesn't:
 
- - Using anything but x86_64 as the build environment
- - rust (built for target) issue #81
+ - Using anything but x86_64 or arm64 as the build environment
+ - rust (built for target) [issue #81](https://github.com/meta-rust/meta-rust/issues/81)
 
 ## What's untested:
 
@@ -24,13 +24,14 @@ This OpenEmbedded layer provides the rust compiler, tools for building packages
 When building a rust package in bitbake, it's usually easiest to build with
 cargo using cargo.bbclass.  If the package already has a Cargo.toml file (most
 rust packages do), then it's especially easy.  Otherwise you should probably
-get the code building in cargo first.
+get the code building in cargo first. 
 
 Once your package builds in cargo, you can use
 [cargo-bitbake](https://github.com/cardoe/cargo-bitbake) to generate a bitbake
 recipe for it.  This allows bitbake to fetch all the necessary dependent
 crates, as well as a pegged version of the crates.io index, to ensure maximum
-reproducibility.
+reproducibility. Once the Rust SDK support is added to oe-core, cargo-bitbake
+may also be added to the SDK.
 
 NOTE: You will have to edit the generated recipe based on the comments
 contained within it
@@ -50,18 +51,6 @@ On the host:
 On the target:
  - Any `-sys` packages your project might need must have RDEPENDs for
  the native library.
-
-## Maintainer(s) & Patch policy
-
-Open a Pull Request.
-
-The master branch supports the latest master of poky. When poky creates releases, we will create a branch with the same name as the poky release. This release branch should always work with that poky release. Note that these release branches will typically be less tested than the master branch.
-
-All new patches against rust, rust-llvm, and cargo must have referenced
-upstream issues or PRs opened or an explanation why the patch cannot be
-upstreamed. This cooresponds to the OpenEmbedded policy for other meta layers.
-
-More info can be seen on the wiki.
 
 ## Copyright
 
