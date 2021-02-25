@@ -30,7 +30,6 @@ import datetime
 exclude_packages = [
 	'bootchart2-doc',
 	'efivar',
-	'epiphany',
 	'glide',
 	'go-dep',
 	'go-helloworld',
