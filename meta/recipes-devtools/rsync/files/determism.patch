@@ -8,7 +8,13 @@ SHELL (/bin/sh) is dash or bash.
 Specify a C locale setting to be deterministic.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Upstream-Status: Pending
+Submitted: https://github.com/WayneD/rsync/pull/155
+
+Upstream-Status: Backport [ish, see below]
+
+After discussion upstream renamed util.c to util1.c which avoids the problem
+in a different way. This patch can be dropped when we upgrade to include:
+https://github.com/WayneD/rsync/commit/d3085f7add38a5cf833a0b31cb0637ff46c80f8d
 
 Index: rsync-3.2.3/Makefile.in
 ===================================================================
