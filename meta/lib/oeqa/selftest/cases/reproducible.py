@@ -39,7 +39,6 @@ exclude_packages = [
 	'gstreamer1.0-python',
 	'igt-gpu-tools',
 	'libaprutil',
-	'libhandy-1-src',
 	'libid3tag',
 	'lttng-tools-dbg',
 	'lttng-tools-ptest',
