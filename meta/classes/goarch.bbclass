@@ -98,7 +98,7 @@ def go_map_386(a, f, d):
         if ('core2' in f) or ('corei7' in f):
             return 'sse2'
         else:
-            return '387'
+            return 'softfloat'
     return ''
 
 def go_map_mips(a, f, d):
