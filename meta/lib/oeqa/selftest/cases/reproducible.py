@@ -78,8 +78,14 @@ def compare_file(reference, test, diffutils_sysroot):
     return result
 
 class ReproducibleTests(OESelftestTestCase):
+    # Test the reproducibility of whatever is built between sstate_targets and targets
+
     package_classes = ['deb', 'ipk']
-    images = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline']
+
+    # targets are the things we want to test the reproducibility of
+    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline']
+    # sstate targets are things to pull from sstate to potentially cut build/debugging time
+    sstate_targets = []
     save_results = False
     if 'OEQA_DEBUGGING_SAVED_OUTPUT' in os.environ:
         save_results = os.environ['OEQA_DEBUGGING_SAVED_OUTPUT']
@@ -154,6 +160,11 @@ class ReproducibleTests(OESelftestTestCase):
                         tmpdir=tmpdir)
 
         if not use_sstate:
+            if self.sstate_targets:
+               self.logger.info("Building prebuild for %s (sstate allowed)..." % (name))
+               self.write_config(config)
+               bitbake(' '.join(self.sstate_targets))
+
             # This config fragment will disable using shared and the sstate
             # mirror, forcing a complete build from scratch
             config += textwrap.dedent('''\
@@ -164,7 +175,8 @@ class ReproducibleTests(OESelftestTestCase):
         self.logger.info("Building %s (sstate%s allowed)..." % (name, '' if use_sstate else ' NOT'))
         self.write_config(config)
         d = get_bb_vars(capture_vars)
-        bitbake(' '.join(self.images))
+        # targets used to be called images
+        bitbake(' '.join(getattr(self, 'images', self.targets)))
         return d
 
     def test_reproducible_builds(self):
