@@ -45,7 +45,6 @@ exclude_packages = [
 	'qemu',
 	'ruby-ri-docs',
 	'swig',
-	'syslinux-misc',
 	'systemd-bootchart'
 	]
 
