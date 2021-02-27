@@ -37,7 +37,6 @@ exclude_packages = [
 	'go-',
 	'gstreamer1.0-python',
 	'libaprutil',
-	'libid3tag',
 	'lttng-tools-dbg',
 	'lttng-tools-ptest',
 	'ltp',
