@@ -36,7 +36,6 @@ exclude_packages = [
 	'go_',
 	'go-',
 	'gstreamer1.0-python',
-	'igt-gpu-tools',
 	'libaprutil',
 	'libid3tag',
 	'lttng-tools-dbg',
