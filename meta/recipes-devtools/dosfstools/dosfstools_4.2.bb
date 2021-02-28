@@ -9,23 +9,19 @@ SECTION = "base"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "https://github.com/dosfstools/dosfstools/releases/download/v${PV}/${BP}.tar.xz \
+SRC_URI = "https://github.com/dosfstools/dosfstools/releases/download/v${PV}/${BP}.tar.gz \
           "
-SRC_URI[md5sum] = "07a1050db1a898e9a2e03b0c4569c4bd"
-SRC_URI[sha256sum] = "e6b2aca70ccc3fe3687365009dd94a2e18e82b688ed4e260e04b7412471cc173"
+SRC_URI[sha256sum] = "64926eebf90092dca21b14259a5301b7b98e7b1943e8a201c7d726084809b527"
 
 UPSTREAM_CHECK_URI = "https://github.com/dosfstools/dosfstools/releases"
 
-inherit autotools pkgconfig update-alternatives
+inherit autotools gettext pkgconfig update-alternatives
 
-EXTRA_OECONF = "--without-udev --enable-compat-symlinks"
+EXTRA_OECONF = "--enable-compat-symlinks"
 
 CFLAGS += "-D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
 BBCLASSEXTEND = "native nativesdk"
-
-# Add codepage437 to avoid error from `dosfsck -l`
-RRECOMMENDS_${PN}_append_libc-glibc = " glibc-gconv-ibm437"
 
 ALTERNATIVE_PRIORITY = "100"
 ALTERNATIVE_${PN} = "mkfs.vfat"
