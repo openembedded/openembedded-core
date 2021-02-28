@@ -19,20 +19,18 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0001-libasm-may-link-with-libbz2-if-found.patch \
            file://0001-libelf-elf_end.c-check-data_list.data.d.d_buf-before.patch \
            file://0001-skip-the-test-when-gcc-not-deployed.patch \
-           file://0001-ppc_initreg.c-Incliude-asm-ptrace.h-for-pt_regs-defi.patch \
            file://run-ptest \
            file://ptest.patch \
            file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
            file://0001-add-support-for-ipkg-to-debuginfod.cxx.patch \
            "
 SRC_URI_append_libc-musl = " \
-           file://0001-musl-obstack-fts.patch \
            file://0002-musl-libs.patch \
            file://0003-musl-utils.patch \
            file://0004-Fix-error-on-musl.patch \
            file://0015-config-eu.am-do-not-use-Werror.patch \
            "
-SRC_URI[sha256sum] = "ecc406914edf335f0b7fc084ebe6c460c4d6d5175bfdd6688c1c78d9146b8858"
+SRC_URI[sha256sum] = "c3637c208d309d58714a51e61e63f1958808fead882e9b607506a29e5474f2c5"
 
 inherit autotools gettext ptest pkgconfig
 
@@ -68,6 +66,8 @@ do_install_ptest() {
 		install -d -m 755                       ${D}${PTEST_PATH}/libdwfl
 		install -d -m 755                       ${D}${PTEST_PATH}/libdwelf
 		install -d -m 755                       ${D}${PTEST_PATH}/libasm
+		install -d -m 755                       ${D}${PTEST_PATH}/libcpu
+		install -d -m 755                       ${D}${PTEST_PATH}/libebl
 		for test_file in ${TEST_FILES}; do
 			if [ -f ${B}/src/${test_file} ]; then
 				cp -r ${B}/src/${test_file} ${D}${PTEST_PATH}/src
@@ -76,6 +76,8 @@ do_install_ptest() {
 		cp ${D}${libdir}/libelf-${PV}.so ${D}${PTEST_PATH}/libelf/libelf.so
 		cp ${D}${libdir}/libdw-${PV}.so ${D}${PTEST_PATH}/libdw/libdw.so
 		cp ${D}${libdir}/libasm-${PV}.so ${D}${PTEST_PATH}/libasm/libasm.so
+		cp ${B}/libcpu/libcpu.a ${D}${PTEST_PATH}/libcpu/
+		cp ${B}/libebl/libebl.a ${D}${PTEST_PATH}/libebl/
 		cp ${S}/libelf/*.h             ${D}${PTEST_PATH}/libelf/
 		cp ${S}/libdw/*.h              ${D}${PTEST_PATH}/libdw/
 		cp ${S}/libdwfl/*.h            ${D}${PTEST_PATH}/libdwfl/
