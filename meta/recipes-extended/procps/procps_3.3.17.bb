@@ -14,8 +14,10 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "git://gitlab.com/procps-ng/procps.git;protocol=https \
            file://sysctl.conf \
+           file://0001-w.c-correct-musl-builds.patch \
+           file://0002-proc-escape.c-add-missing-include.patch \
            "
-SRCREV = "59c88e18f29000ceaf7e5f98181b07be443cf12f"
+SRCREV = "19a508ea121c0c4ac6d0224575a036de745eaaf8"
 
 S = "${WORKDIR}/git"
 
