@@ -11,9 +11,10 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://0001-Add-WITH_TESTS-option.patch \
            file://0001-Look-fo-sphinx-only-if-documentation-is-actually-ena.patch \
            file://enable_test_data_dir_set.patch \
+           file://0001-libdnf-config.h-include-the-correct-header-on-musl.patch \
            "
 
-SRCREV = "d2d0ec98fd2e0a2623123fb1ddf8fdd8936c6046"
+SRCREV = "85278894f21bc1957dc47a2a09ddacf59bc3cda8"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
