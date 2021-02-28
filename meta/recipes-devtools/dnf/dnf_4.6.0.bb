@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0001-dnf-write-the-log-lock-to-root.patch \
            "
 
-SRCREV = "36a3ffaee4db76a7efe7d40f4e42ce679b6a6920"
+SRCREV = "c826d7db401ebf9b59b2fa74570a919e4af2673e"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
