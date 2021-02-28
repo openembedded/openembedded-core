@@ -199,6 +199,10 @@ do_install_ptest () {
 
 	install -d ${D}${PTEST_PATH}/engines
 	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines
+
+        # seems to be needed with perl 5.32.1
+        install -d ${D}${PTEST_PATH}/util/perl/recipes
+        cp ${D}${PTEST_PATH}/test/recipes/tconversion.pl ${D}${PTEST_PATH}/util/perl/recipes/
 }
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
