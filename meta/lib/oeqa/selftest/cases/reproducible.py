@@ -42,8 +42,7 @@ exclude_packages = [
 	'perf',
 	'python3-cython',
 	'qemu',
-	'ruby-ri-docs',
-	'systemd-bootchart'
+	'ruby-ri-docs'
 	]
 
 def is_excluded(package):
