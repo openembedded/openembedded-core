@@ -1,33 +1,32 @@
-From e33bc310238bba1690f2c71ad333e10b9e422ea9 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
-Date: Sat, 19 Oct 2019 14:23:06 +0200
+From 378df7d6ef9207d3e11a3de54ffd05c04c6c0e0b Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Wed, 24 Feb 2021 20:28:22 +0000
 Subject: [PATCH] Use our hand-build native src-generator
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Upstream-Status: Inappropriate [oe-core specific]
-
-Signed-off-by: Andreas MÃ¼ller <schnitzeltony@gmail.com>
+Upstream-Status: Inappropriate [reported at https://github.com/libical/libical/issues/481]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- src/libical-glib/CMakeLists.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ src/libical-glib/CMakeLists.txt | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/src/libical-glib/CMakeLists.txt b/src/libical-glib/CMakeLists.txt
-index f3704e6..ce9db16 100644
+index 13f77aa..c337c9e 100644
 --- a/src/libical-glib/CMakeLists.txt
 +++ b/src/libical-glib/CMakeLists.txt
-@@ -63,8 +63,8 @@ endforeach()
+@@ -74,12 +74,7 @@ endforeach()
  
- add_custom_command (
-   OUTPUT ${LIBICAL_GLIB_SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/libical-glib-private.h ${CMAKE_CURRENT_BINARY_DIR}/i-cal-forward-declarations.h
--  COMMAND ${EXECUTABLE_OUTPUT_PATH}/src-generator "${CMAKE_CURRENT_SOURCE_DIR}/tools" "${CMAKE_CURRENT_SOURCE_DIR}/api"
--  DEPENDS ${EXECUTABLE_OUTPUT_PATH}/src-generator ${xml_files}
-+  COMMAND ${CMAKE_BINARY_DIR}/src-generator "${CMAKE_CURRENT_SOURCE_DIR}/tools" "${CMAKE_CURRENT_SOURCE_DIR}/api"
-+  DEPENDS ${CMAKE_BINARY_DIR}/src-generator ${xml_files}
- )
- 
- configure_file(
+ if(CMAKE_CROSSCOMPILING)
+   # import native ical-glib-src-generator when cross-compiling
+-  set(IMPORT_ICAL_GLIB_SRC_GENERATOR "ICAL_GLIB_SRC_GENERATOR-NOTFOUND"
+-    CACHE FILEPATH
+-    "Path to exported ical-glib-src-generator target from native build"
+-  )
+-  include(${IMPORT_ICAL_GLIB_SRC_GENERATOR})
+-  set(ical-glib-src-generator_EXE native-ical-glib-src-generator)
++  set(ical-glib-src-generator_EXE ${CMAKE_BINARY_DIR}/src-generator)
+ else()
+   set(ical-glib-src-generator_EXE ical-glib-src-generator)
+ endif()
 -- 
-2.21.0
+2.17.1
 

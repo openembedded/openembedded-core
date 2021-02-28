@@ -12,19 +12,16 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1910a2a76ddf6a9ba369182494170d87 \
                     "
 SECTION = "libs"
 
-SRC_URI = " \
-    https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
-    file://0001-Use-our-hand-build-native-src-generator.patch \
-    file://0001-Fix-build-with-icu-68.1.patch \
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
+           file://0001-Use-our-hand-build-native-src-generator.patch \
 "
-SRC_URI[md5sum] = "41bd1f1fcdcb4779cea478bb55cf07bf"
-SRC_URI[sha256sum] = "09fecacaf75ba5a242159e3a9758a5446b5ce4d0ab684f98a7040864e1d1286f"
+SRC_URI[sha256sum] = "bd26d98b7fcb2eb0cd5461747bbb02024ebe38e293ca53a7dfdcb2505265a728"
 UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake pkgconfig
 
 do_compile_prepend() {
-	# As long as https://github.com/libical/libical/issues/394 is open build native src-generator manually
+	# As long as https://github.com/libical/libical/issues/481 is open build native src-generator manually
 	NATIVE_CFLAGS="${BUILD_CFLAGS} `pkg-config-native --cflags glib-2.0` `pkg-config-native --cflags libxml-2.0`"
 	NATIVE_LDFLAGS="${BUILD_LDFLAGS} `pkg-config-native --libs glib-2.0` `pkg-config-native --libs libxml-2.0`"
 	${BUILD_CC} $NATIVE_CFLAGS ${S}/src/libical-glib/tools/generator.c ${S}/src/libical-glib/tools/xml-parser.c -o ${B}/src-generator $NATIVE_LDFLAGS
@@ -46,5 +43,6 @@ do_install_append () {
     sed -i \
        -e 's,${STAGING_LIBDIR},${libdir},g' \
        -e 's,${STAGING_INCDIR},${includedir},g' \
-       ${D}${libdir}/cmake/LibIcal/LibIcal*.cmake
+       ${D}${libdir}/cmake/LibIcal/LibIcal*.cmake \
+       ${D}${libdir}/cmake/LibIcal/Ical*.cmake
 }
