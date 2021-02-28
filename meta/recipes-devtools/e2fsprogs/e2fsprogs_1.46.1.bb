@@ -4,15 +4,14 @@ SRC_URI += "file://remove.ldconfig.call.patch \
            file://run-ptest \
            file://ptest.patch \
            file://mkdir_p.patch \
-           file://0001-configure.ac-correct-AM_GNU_GETTEXT.patch \
-           file://0001-intl-do-not-try-to-use-gettext-defines-that-no-longe.patch \
            "
 
 SRC_URI_append_class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
                                 file://quiet-debugfs.patch \
 "
 
-SRCREV = "5403970e44241cec26f98aaa0124b9881b4bbf4f"
+
+SRCREV = "3114c623f56b0d61f5f34b85f7b23d28f6c848c0"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
