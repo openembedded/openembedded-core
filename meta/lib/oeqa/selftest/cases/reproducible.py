@@ -35,7 +35,6 @@ exclude_packages = [
 	'go-runtime',
 	'go_',
 	'go-',
-	'gstreamer1.0-python',
 	'lttng-tools-dbg',
 	'lttng-tools-ptest',
 	'ltp',
