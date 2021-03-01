@@ -34,8 +34,6 @@ exclude_packages = [
 	'go-runtime',
 	'go_',
 	'go-',
-	'lttng-tools-dbg',
-	'lttng-tools-ptest',
 	'ltp',
 	'meson',
 	'ovmf-shell-efi',
