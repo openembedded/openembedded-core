@@ -152,7 +152,7 @@ class ReproducibleTests(OESelftestTestCase):
     package_classes = ['deb', 'ipk', 'rpm']
 
     # targets are the things we want to test the reproducibility of
-    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'world']
+    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'core-image-weston', 'world']
     # sstate targets are things to pull from sstate to potentially cut build/debugging time
     sstate_targets = []
     save_results = False
