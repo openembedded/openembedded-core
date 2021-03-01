@@ -34,7 +34,6 @@ exclude_packages = [
 	'go-runtime',
 	'go_',
 	'go-',
-	'ltp',
 	'meson',
 	'ovmf-shell-efi',
 	'perf',
