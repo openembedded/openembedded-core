@@ -41,7 +41,6 @@ exclude_packages = [
 	'ovmf-shell-efi',
 	'perf',
 	'python3-cython',
-	'qemu',
 	'ruby-ri-docs'
 	]
 
