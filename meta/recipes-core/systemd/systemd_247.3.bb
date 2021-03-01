@@ -489,6 +489,9 @@ RRECOMMENDS_${PN}-container += "\
                          ${PN}-journal-gatewayd \
                          ${PN}-journal-remote \
                          ${PN}-journal-upload \
+                         kernel-module-dm-mod \
+                         kernel-module-loop \
+                         kernel-module-tun \
                          tar \
                         "
 
