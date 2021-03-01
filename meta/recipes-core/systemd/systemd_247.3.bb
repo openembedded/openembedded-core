@@ -485,9 +485,9 @@ FILES_${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                         "
 
 RRECOMMENDS_${PN}-container += "\
-                         ${PN}-journal-upload \
-                         ${PN}-journal-remote \
                          ${PN}-journal-gatewayd \
+                         ${PN}-journal-remote \
+                         ${PN}-journal-upload \
                         "
 
 FILES_${PN}-extra-utils = "\
