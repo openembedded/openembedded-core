@@ -1,5 +1,7 @@
 SUMMARY = "IGT GPU Tools"
 DESCRIPTION = "IGT GPU Tools is a collection of tools for development and testing of the DRM drivers"
+HOMEPAGE = "https://gitlab.freedesktop.org/drm/igt-gpu-tools"
+BUGTRACKER = "https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/issues"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=67bfee4df38fa6ecbe3a675c552d4c08"
 

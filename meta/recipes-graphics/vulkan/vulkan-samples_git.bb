@@ -1,4 +1,6 @@
 DESCRIPTION = "The Vulkan Samples is collection of resources to help develop optimized Vulkan applications."
+HOMEPAGE = "https://www.khronos.org/vulkan/"
+BUGTRACKER = "https://github.com/KhronosGroup/Vulkan-Samples/issues"
 LICENSE = "Apache-2.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=48aa35cefb768436223a6e7f18dc2a2a"
