@@ -44,7 +44,6 @@ exclude_packages = [
 	'python3-cython',
 	'qemu',
 	'ruby-ri-docs',
-	'swig',
 	'systemd-bootchart'
 	]
 
