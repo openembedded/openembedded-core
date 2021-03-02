@@ -1,5 +1,10 @@
 SUMMARY = "in-depth comparison of files, archives, and directories"
+DESCRIPTION = "Tries to get to the bottom of what makes files or directories \
+different. It will recursively unpack archives of many kinds and transform \
+various binary formats into more human-readable form to compare them. \
+It can compare two tarballs, ISO images, or PDF just as easily."
 HOMEPAGE = "https://diffoscope.org/"
+BUGTRACKER = "https://salsa.debian.org/reproducible-builds/diffoscope/-/issues"
 LICENSE = "GPL-3.0+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
