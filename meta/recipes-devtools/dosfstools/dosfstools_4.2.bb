@@ -17,7 +17,7 @@ UPSTREAM_CHECK_URI = "https://github.com/dosfstools/dosfstools/releases"
 
 inherit autotools gettext pkgconfig update-alternatives
 
-EXTRA_OECONF = "--enable-compat-symlinks"
+EXTRA_OECONF = "--enable-compat-symlinks --without-iconv"
 
 CFLAGS += "-D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
