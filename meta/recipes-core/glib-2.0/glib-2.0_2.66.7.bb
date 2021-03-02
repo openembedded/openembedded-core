@@ -31,7 +31,7 @@ def find_meson_cross_files(d):
     if bb.data.inherits_class('native', d):
         return ""
 
-    thisdir = d.getVar("THISDIR")
+    thisdir = os.path.normpath(d.getVar("THISDIR"))
     import collections
     sitedata = siteinfo_data(d)
     # filename -> found
