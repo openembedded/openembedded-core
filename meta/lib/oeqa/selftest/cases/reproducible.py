@@ -37,7 +37,6 @@ exclude_packages = [
 	'meson',
 	'ovmf-shell-efi',
 	'perf',
-	'python3-cython',
 	'ruby-ri-docs'
 	]
 
