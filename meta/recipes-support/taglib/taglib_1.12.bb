@@ -9,13 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "zlib"
 
-SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz \
-           file://CVE-2017-12678.patch \
-           file://CVE-2018-11439.patch \
-          "
+SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "cee7be0ccfc892fa433d6c837df9522a"
-SRC_URI[sha256sum] = "b6d1a5a610aae6ff39d93de5efd0fdc787aa9e9dc1e7026fa4c961b26563526b"
+SRC_URI[md5sum] = "4313ed2671234e029b7af8f97c84e9af"
+SRC_URI[sha256sum] = "7fccd07669a523b07a15bd24c8da1bbb92206cb19e9366c3692af3d79253b703"
 
 UPSTREAM_CHECK_URI = "http://github.com/taglib/taglib/releases/"
 
