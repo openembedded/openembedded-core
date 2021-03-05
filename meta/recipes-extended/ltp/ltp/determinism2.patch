@@ -1,0 +1,24 @@
+testcases/kernel/io/disktest: Fix determinism issue
+
+The order of the objects linked into the test varies depending on the
+order of the files found on disk. This results in the disktest binary
+differing depending on that order.
+
+Sort the wildcard expansion of *.c which leads to reproducible binaries.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Upstream-Status: Pending
+
+Index: git/testcases/kernel/io/disktest/Makefile
+===================================================================
+--- git.orig/testcases/kernel/io/disktest/Makefile
++++ git/testcases/kernel/io/disktest/Makefile
+@@ -209,7 +209,7 @@ LDLIBS		+= -lpthread
+ 
+ MAKE_TARGETS	:= disktest
+ 
+-OBJS		:= $(patsubst $(abs_srcdir)/%.c,%.o,$(wildcard $(abs_srcdir)/*.c))
++OBJS		:= $(patsubst $(abs_srcdir)/%.c,%.o,$(sort $(wildcard $(abs_srcdir)/*.c)))
+ 
+ disktest-$(VER):
+ 	mkdir -p "$@"
