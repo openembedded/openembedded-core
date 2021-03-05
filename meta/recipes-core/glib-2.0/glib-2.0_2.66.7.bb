@@ -41,7 +41,8 @@ def find_meson_cross_files(d):
             filename = os.path.normpath(os.path.join(path, "meson.cross.d", element))
             sanitized_path = filename.replace(thisdir, "${THISDIR}")
             if sanitized_path == filename:
-                bb.error("Cannot add '%s' to --cross-file, because it's not relative to THISDIR '%s' and sstate signature would contain this full path" % (filename, thisdir))
+                if os.path.exists(filename):
+                    bb.error("Cannot add '%s' to --cross-file, because it's not relative to THISDIR '%s' and sstate signature would contain this full path" % (filename, thisdir))
                 continue
             files[filename.replace(thisdir, "${THISDIR}")] = os.path.exists(filename)
 
