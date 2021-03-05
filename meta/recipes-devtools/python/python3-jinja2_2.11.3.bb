@@ -7,6 +7,8 @@ SRC_URI[sha256sum] = "a6d58433de0ae800347cab1fa3043cebbabe8baa9d29e668f1c768cb87
 
 PYPI_PACKAGE = "Jinja2"
 
+CVE_PRODUCT = "jinja2 jinja"
+
 CLEANBROKEN = "1"
 
 inherit pypi setuptools3
