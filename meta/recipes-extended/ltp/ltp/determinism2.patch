@@ -22,3 +22,270 @@ Index: git/testcases/kernel/io/disktest/Makefile
  
  disktest-$(VER):
  	mkdir -p "$@"
+Index: git/testcases/commands/ldd/datafiles/Makefile
+===================================================================
+--- git.orig/testcases/commands/ldd/datafiles/Makefile
++++ git/testcases/commands/ldd/datafiles/Makefile
+@@ -21,7 +21,7 @@ CPPFLAGS		+= -fpic
+ 
+ INSTALL_TARGETS		:= ldd*.so lddfile.out
+ 
+-LDD_C_FILES		:= $(wildcard $(abs_srcdir)/lddfile*.c)
++LDD_C_FILES		:= $(sort $(wildcard $(abs_srcdir)/lddfile*.c))
+ LDD_SO_FILES		:= $(patsubst $(abs_srcdir)/%.c,%.obj.so,$(LDD_C_FILES))
+ MAKE_TARGETS		:= lddfile.out
+ CLEAN_TARGETS		+= *.obj $(LDD_SO_FILES)
+Index: git/testcases/kernel/hotplug/memory_hotplug/Makefile
+===================================================================
+--- git.orig/testcases/kernel/hotplug/memory_hotplug/Makefile
++++ git/testcases/kernel/hotplug/memory_hotplug/Makefile
+@@ -31,6 +31,7 @@ LDLIBS		:= $(filter-out -lltp,$(LDLIBS))
+ 
+ MAKE_TARGETS	:= memtoy
+ 
+-memtoy: $(patsubst $(abs_srcdir)/%.c,%.o,$(wildcard $(abs_srcdir)/*.c))
++memtoy: $(patsubst $(abs_srcdir)/%.c,%.o,$(sort $(wildcard $(abs_srcdir)/*.c)))
++
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: git/testcases/open_posix_testsuite/scripts/generate-makefiles.sh
+===================================================================
+--- git.orig/testcases/open_posix_testsuite/scripts/generate-makefiles.sh
++++ git/testcases/open_posix_testsuite/scripts/generate-makefiles.sh
+@@ -24,7 +24,7 @@ generate_locate_test_makefile() {
+ 
+ 	echo "Generating $maketype Makefiles"
+ 
+-	locate-test --$maketype | sed -e 's,^./,,g' | sort > make-gen.$maketype
++	locate-test --$maketype | sed -e 's,^./,,g' | LC_ALL=C sort > make-gen.$maketype
+ 
+ 	generate_makefiles make-gen.$maketype $*
+ 
+Index: git/testcases/kernel/syscalls/lchown/Makefile
+===================================================================
+--- git.orig/testcases/kernel/syscalls/lchown/Makefile
++++ git/testcases/kernel/syscalls/lchown/Makefile
+@@ -5,7 +5,7 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-SRCS			:= $(wildcard $(abs_srcdir)/lchown*.c)
++SRCS			:= $(sort $(wildcard $(abs_srcdir)/lchown*.c))
+ 
+ include $(abs_srcdir)/../utils/compat_16.mk
+ 
+Index: git/testcases/kernel/syscalls/migrate_pages/Makefile
+===================================================================
+--- git.orig/testcases/kernel/syscalls/migrate_pages/Makefile
++++ git/testcases/kernel/syscalls/migrate_pages/Makefile
+@@ -5,7 +5,7 @@ top_srcdir		?= ../../../..
+ 
+ include $(top_srcdir)/include/mk/testcases.mk
+ 
+-MAKE_TARGETS		:= $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/*[0-9].c))
++MAKE_TARGETS		:= $(patsubst $(abs_srcdir)/%.c,%,$(sort $(wildcard $(abs_srcdir)/*[0-9].c)))
+ $(MAKE_TARGETS): %: migrate_pages_common.o
+ 
+ CPPFLAGS		+= -I$(abs_srcdir)/../utils/
+Index: git/testcases/kernel/syscalls/utils/compat_16.mk
+===================================================================
+--- git.orig/testcases/kernel/syscalls/utils/compat_16.mk
++++ git/testcases/kernel/syscalls/utils/compat_16.mk
+@@ -50,7 +50,7 @@
+ 
+ CPPFLAGS		+= -I$(abs_srcdir) -I$(abs_srcdir)/../utils
+ 
+-SRCS			?= $(wildcard $(abs_srcdir)/*.c)
++SRCS			?= $(sort $(wildcard $(abs_srcdir)/*.c))
+ 
+ MAKE_TARGETS		:= $(notdir $(patsubst %.c,%,$(SRCS)))
+ MAKE_TARGETS_OBJS_WO_COMPAT_16	:= $(addsuffix .o,$(MAKE_TARGETS))
+Index: git/testcases/kernel/syscalls/utils/newer_64.mk
+===================================================================
+--- git.orig/testcases/kernel/syscalls/utils/newer_64.mk
++++ git/testcases/kernel/syscalls/utils/newer_64.mk
+@@ -25,7 +25,7 @@
+ 
+ CPPFLAGS		+= -I$(abs_srcdir) -I$(abs_srcdir)/../utils
+ 
+-SRCS			?= $(wildcard $(abs_srcdir)/*.c)
++SRCS			?= $(sort $(wildcard $(abs_srcdir)/*.c))
+ 
+ MAKE_TARGETS		:= $(notdir $(patsubst %.c,%,$(SRCS)))
+ 
+Index: git/include/mk/env_post.mk
+===================================================================
+--- git.orig/include/mk/env_post.mk
++++ git/include/mk/env_post.mk
+@@ -47,7 +47,7 @@ LDFLAGS				+= -L$(top_builddir)/lib/andr
+ LDFLAGS				+= -L$(top_builddir)/lib/android_librt
+ endif
+ 
+-MAKE_TARGETS			?= $(notdir $(patsubst %.c,%,$(wildcard $(abs_srcdir)/*.c)))
++MAKE_TARGETS			?= $(notdir $(patsubst %.c,%,$(sort $(wildcard $(abs_srcdir)/*.c))))
+ MAKE_TARGETS			:= $(filter-out $(FILTER_OUT_MAKE_TARGETS),$(MAKE_TARGETS))
+ 
+ # with only *.dwo, .[0-9]+.dwo can not be cleaned
+Index: git/include/mk/module.mk
+===================================================================
+--- git.orig/include/mk/module.mk
++++ git/include/mk/module.mk
+@@ -42,7 +42,7 @@ endif
+ 
+ ifneq ($(filter install clean,$(MAKECMDGOALS)),)
+ MAKE_TARGETS := $(filter-out %.ko, $(MAKE_TARGETS))
+-MAKE_TARGETS += $(wildcard *.ko)
++MAKE_TARGETS += $(sort $(wildcard *.ko))
+ endif
+ 
+ CLEAN_TARGETS += .dep_modules *.mod built-in.a
+Index: git/runtest/Makefile
+===================================================================
+--- git.orig/runtest/Makefile
++++ git/runtest/Makefile
+@@ -36,7 +36,7 @@ ifneq ($(WITH_POWER_MANAGEMENT_TESTSUITE
+ UNWANTED_FILES		+= power_management_tests
+ endif
+ 
+-INSTALL_TARGETS		:= $(filter-out $(UNWANTED_FILES),$(notdir $(patsubst $(abs_srcdir)/%,%,$(wildcard $(abs_srcdir)/*))))
++INSTALL_TARGETS		:= $(filter-out $(UNWANTED_FILES),$(notdir $(patsubst $(abs_srcdir)/%,%,$(sort $(wildcard $(abs_srcdir)/*)))))
+ 
+ MAKE_TARGETS		:=
+ 
+Index: git/scenario_groups/Makefile
+===================================================================
+--- git.orig/scenario_groups/Makefile
++++ git/scenario_groups/Makefile
+@@ -31,7 +31,7 @@ UNWANTED_FILES		:= Makefile
+ 
+ INSTALL_MODE		:= 00644
+ 
+-INSTALL_TARGETS		:= $(filter-out $(UNWANTED_FILES),$(notdir $(patsubst $(abs_srcdir)/%,%,$(wildcard $(abs_srcdir)/*))))
++INSTALL_TARGETS		:= $(filter-out $(UNWANTED_FILES),$(notdir $(patsubst $(abs_srcdir)/%,%,$(sort $(wildcard $(abs_srcdir)/*)))))
+ 
+ MAKE_TARGETS		:=
+ 
+Index: git/testcases/kernel/io/disktest/Makefile.linux
+===================================================================
+--- git.orig/testcases/kernel/io/disktest/Makefile.linux
++++ git/testcases/kernel/io/disktest/Makefile.linux
+@@ -167,8 +167,8 @@ mandir=/usr/share/man
+ 
+ VER=`grep VER_STR main.h | awk -F\" '{print $$2}'`
+ GBLHDRS=main.h globals.h defs.h
+-ALLHDRS=$(wildcard *.h)
+-SRCS=$(wildcard *.c)
++ALLHDRS=$(sort $(wildcard *.h))
++SRCS=$(sort $(wildcard *.c))
+ OBJS=$(SRCS:.c=.o)
+ 
+ CFLAGS += -g -Wall -O -D"LINUX" -D"_THREAD_SAFE" -D"_GNU_SOURCE" -D"_LARGE_FILES" -D"_LARGEFILE64_SOURCE" -D"_FILE_OFFSET_BITS=64" $(RPM_OPT_FLAGS)
+Index: git/testcases/kernel/sched/hyperthreading/ht_affinity/Makefile
+===================================================================
+--- git.orig/testcases/kernel/sched/hyperthreading/ht_affinity/Makefile
++++ git/testcases/kernel/sched/hyperthreading/ht_affinity/Makefile
+@@ -28,6 +28,6 @@ INSTALL_TARGETS		:= smt_smp_affinity.sh
+ 
+ MAKE_TARGETS		:= ht_affinity
+ 
+-$(MAKE_TARGETS): $(patsubst $(abs_srcdir)/%.c,%.o,$(wildcard $(abs_srcdir)/*.c))
++$(MAKE_TARGETS): $(patsubst $(abs_srcdir)/%.c,%.o,$(sort $(wildcard $(abs_srcdir)/*.c)))
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: git/testcases/kernel/sched/hyperthreading/ht_enabled/Makefile
+===================================================================
+--- git.orig/testcases/kernel/sched/hyperthreading/ht_enabled/Makefile
++++ git/testcases/kernel/sched/hyperthreading/ht_enabled/Makefile
+@@ -28,6 +28,6 @@ INSTALL_TARGETS		:= smt_smp_enabled.sh
+ 
+ MAKE_TARGETS		:= ht_enabled
+ 
+-$(MAKE_TARGETS): $(patsubst $(abs_srcdir)/%.c,%.o,$(wildcard $(abs_srcdir)/*.c))
++$(MAKE_TARGETS): $(patsubst $(abs_srcdir)/%.c,%.o,$(sort $(wildcard $(abs_srcdir)/*.c)))
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: git/testcases/kernel/sched/sched_stress/Makefile
+===================================================================
+--- git.orig/testcases/kernel/sched/sched_stress/Makefile
++++ git/testcases/kernel/sched/sched_stress/Makefile
+@@ -10,7 +10,7 @@ INSTALL_TARGETS		:= sched_stress.sh
+ 
+ LDLIBS			+= -lpthread
+ 
+-MAKE_TARGETS		:= $(filter-out sched,$(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/*.c)))
++MAKE_TARGETS		:= $(filter-out sched,$(patsubst $(abs_srcdir)/%.c,%,$(sort $(wildcard $(abs_srcdir)/*.c))))
+ 
+ RM			+= -r
+ 
+Index: git/testcases/kernel/syscalls/move_pages/Makefile
+===================================================================
+--- git.orig/testcases/kernel/syscalls/move_pages/Makefile
++++ git/testcases/kernel/syscalls/move_pages/Makefile
+@@ -7,7 +7,7 @@ include $(top_srcdir)/include/mk/testcas
+ 
+ CPPFLAGS		+= -I$(abs_srcdir)/../utils
+ 
+-MAKE_TARGETS		:= $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/*[0-9].c))
++MAKE_TARGETS		:= $(patsubst $(abs_srcdir)/%.c,%,$(sort $(wildcard $(abs_srcdir)/*[0-9].c)))
+ 
+ $(MAKE_TARGETS): %: move_pages_support.o
+ 
+Index: git/testcases/misc/math/float/Makefile
+===================================================================
+--- git.orig/testcases/misc/math/float/Makefile
++++ git/testcases/misc/math/float/Makefile
+@@ -27,6 +27,6 @@ include $(top_srcdir)/include/mk/testcas
+ LDLIBS		+= -lpthread -lm
+ 
+ # main.c doesn't compile...
+-MAKE_TARGETS	:= $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/float*.c))
++MAKE_TARGETS	:= $(patsubst $(abs_srcdir)/%.c,%,$(sort $(wildcard $(abs_srcdir)/float*.c)))
+ 
+ include $(top_srcdir)/include/mk/generic_trunk_target.mk
+Index: git/testcases/network/nfs/nfs_stress/nfs05_make_tree.c
+===================================================================
+--- git.orig/testcases/network/nfs/nfs_stress/nfs05_make_tree.c
++++ git/testcases/network/nfs/nfs_stress/nfs05_make_tree.c
+@@ -104,7 +104,7 @@ static void *thread_fn(LTP_ATTRIBUTE_UNU
+ 				"\treturn 0;\n}\n";
+ 
+ 	const char make_buf_n[] = "CFLAGS := -O -w -g\n"
+-				  "SRCS=$(wildcard *.c)\n"
++				  "SRCS=$(sort $(wildcard *.c))\n"
+ 				  "TARGETS=$(SRCS:.c=)\n"
+ 				  "all: $(TARGETS)\n"
+ 				  "$(TARGETS): %: %.c\n"
+@@ -114,7 +114,7 @@ static void *thread_fn(LTP_ATTRIBUTE_UNU
+ 
+ 	const char make_buf[] = "CFLAGS := -O -w -g\n"
+ 				"SUBDIR = dir\n"
+-				"SRCS=$(wildcard *.c)\n"
++				"SRCS=$(sort $(wildcard *.c))\n"
+ 				"TARGETS=$(SRCS:.c=)\n"
+ 				"all: $(SUBDIR) $(TARGETS)\n"
+ 				"$(TARGETS): %: %.c\n"
+Index: git/testcases/network/nfsv4/locks/Makefile
+===================================================================
+--- git.orig/testcases/network/nfsv4/locks/Makefile
++++ git/testcases/network/nfsv4/locks/Makefile
+@@ -28,6 +28,6 @@ MAKE_TARGETS		:= locktests
+ 
+ LDLIBS			+= -lpthread
+ 
+-$(MAKE_TARGETS): $(patsubst $(abs_srcdir)/%.c,%.o,$(wildcard $(abs_srcdir)/*.c))
++$(MAKE_TARGETS): $(patsubst $(abs_srcdir)/%.c,%.o,$(sort $(wildcard $(abs_srcdir)/*.c)))
+ 
+ include $(top_srcdir)/include/mk/generic_leaf_target.mk
+Index: git/utils/sctp/func_tests/Makefile
+===================================================================
+--- git.orig/utils/sctp/func_tests/Makefile
++++ git/utils/sctp/func_tests/Makefile
+@@ -30,7 +30,7 @@ LDFLAGS		+= $(addprefix -L$(abs_builddir
+ 
+ LDLIBS		+= -lsctputil -lsctp -lpthread
+ 
+-V4_TARGETS	:= $(patsubst $(abs_srcdir)/%.c,%,$(wildcard $(abs_srcdir)/*.c))
++V4_TARGETS	:= $(patsubst $(abs_srcdir)/%.c,%,$(sort $(wildcard $(abs_srcdir)/*.c)))
+ 
+ V6_TARGETS	:= test_basic_v6 test_fragments_v6 test_getname_v6 \
+ 		   test_inaddr_any_v6 test_peeloff_v6 \

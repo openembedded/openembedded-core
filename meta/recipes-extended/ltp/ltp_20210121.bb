@@ -30,8 +30,8 @@ CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 SRCREV = "4d005621edd109d119627eb9210b224a63bf22cb"
 
 # remove at next version upgrade or when output changes
-PR = "r2"
-HASHEQUIV_HASH_VERSION .= ".2"
+PR = "r3"
+HASHEQUIV_HASH_VERSION .= ".3"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-build-Add-option-to-select-libc-implementation.patch \
