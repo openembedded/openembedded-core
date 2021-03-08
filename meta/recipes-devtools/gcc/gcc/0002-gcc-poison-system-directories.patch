@@ -44,13 +44,17 @@ diff --git a/gcc/config.in b/gcc/config.in
 index 809e7b26823..5adeaeed36b 100644
 --- a/gcc/config.in
 +++ b/gcc/config.in
-@@ -224,6 +224,12 @@
+@@ -224,6 +224,16 @@
  #endif
  
  
 +/* Define to warn for use of native system header directories */
 +#ifndef USED_FOR_TARGET
 +#undef ENABLE_POISON_SYSTEM_DIRECTORIES
++#endif
++/* Define to warn for use of native system header directories */
++#ifndef USED_FOR_TARGET
++#undef POISON_BY_DEFAULT
 +#endif
 +
 +
@@ -78,7 +82,7 @@ index cd3d9516fce..8de766a942c 100755
    --enable-plugin         enable plugin support
    --enable-host-shared    build host code as shared libraries
    --disable-libquadmath-support
-@@ -30235,6 +30238,19 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
+@@ -30235,6 +30238,22 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
  fi
  
  
@@ -89,9 +93,12 @@ index cd3d9516fce..8de766a942c 100755
 +  enable_poison_system_directories=no
 +fi
 +
-+if test "x${enable_poison_system_directories}" = "xyes"; then
++if test "x${enable_poison_system_directories}" != "xno"; then
 +
 +$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
++if test "$enable_poison_system_directories" = "error"; then
++$as_echo "#define POISON_BY_DEFAULT 1" >>confdefs.h
++fi
 +
 +fi
 +
@@ -198,3 +205,46 @@ index 8a2bda00f80..9098ab044ab 100644
  }
  
  /* Use given -I paths for #include "..." but not #include <...>, and
+diff --git a/gcc/configure.ac b/gcc/configure.ac
+index f42006e5476..de7e176ea53 100644
+--- a/gcc/configure.ac
++++ b/gcc/configure.ac
+@@ -6602,12 +6602,18 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
+ 
+ AC_ARG_ENABLE([poison-system-directories],
+              AS_HELP_STRING([--enable-poison-system-directories],
+-                            [warn for use of native system header directories]),,
++                            [warn for use of native system header directories (no/yes/error)]),,
+              [enable_poison_system_directories=no])
++AC_MSG_NOTICE([poisoned directories $enable_poison_system_directories])
+-if test "x${enable_poison_system_directories}" = "xyes"; then
++if test "x${enable_poison_system_directories}" != "xno"; then
++  AC_MSG_NOTICE([poisoned directories enabled])
+   AC_DEFINE([ENABLE_POISON_SYSTEM_DIRECTORIES],
+            [1],
+            [Define to warn for use of native system header directories])
++  if test $enable_poison_system_directories = "error"; then
++   AC_MSG_NOTICE([poisoned directories are fatal])
++   AC_DEFINE([POISON_BY_DEFAULT], [1], [Define to make poison warnings errors])
++  fi
+ fi
+ 
+ # Substitute configuration variables
+diff --git a/gcc/gcc.c b/gcc/gcc.c
+index b2200c5185a..fa7b6fc8ddb 100644
+--- a/gcc/gcc.c
++++ b/gcc/gcc.c
+@@ -1136,8 +1136,11 @@ static const char *cpp_unique_options =
+ static const char *cpp_options =
+ "%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w}\
+  %{f*} %{g*:%{%:debug-level-gt(0):%{g*}\
+- %{!fno-working-directory:-fworking-directory}}} %{O*}\
+- %{undef} %{save-temps*:-fpch-preprocess}";
++ %{!fno-working-directory:-fworking-directory}}} %{O*}"
++#ifdef POISON_BY_DEFAULT
++ " -Werror=poison-system-directories"
++#endif
++ " %{undef} %{save-temps*:-fpch-preprocess}";
+ 
+ /* This contains cpp options which are not passed when the preprocessor
+    output will be used by another program.  */
