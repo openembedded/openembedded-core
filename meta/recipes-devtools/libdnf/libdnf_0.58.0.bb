@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://0001-Add-WITH_TESTS-option.patch \
            file://0001-Look-fo-sphinx-only-if-documentation-is-actually-ena.patch \
            file://enable_test_data_dir_set.patch \
-           file://0001-libdnf-config.h-include-the-correct-header-on-musl.patch \
+           file://0001-libdnf-config.h-avoid-the-use-of-non-portable-__WORD.patch \
            "
 
 SRCREV = "85278894f21bc1957dc47a2a09ddacf59bc3cda8"
