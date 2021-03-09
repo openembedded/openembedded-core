@@ -1,4 +1,5 @@
 SUMMARY = "Firmware files for use with Linux kernel"
+HOMEPAGE = "https://www.kernel.org/"
 DESCRIPTION = "Linux firmware is a package distributed alongside the Linux kernel \
 that contains firmware binary blobs necessary for partial or full functionality \
 of certain hardware devices."
