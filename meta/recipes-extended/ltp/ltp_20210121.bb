@@ -41,6 +41,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://determinism.patch \
            file://0001-open_posix_testsuite-generate-makefiles.sh-Avoid-inc.patch \
            file://0002-Makefile-Avoid-wildcard-determinism-issues.patch \
+           file://0003-syscalls-swapon-swapoff-Move-common-library-to-libs.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -57,14 +58,6 @@ EXTRA_AUTORECONF += "-I ${S}/testcases/realtime/m4"
 EXTRA_OECONF = " --with-realtime-testsuite --with-open-posix-testsuite "
 # ltp network/rpc test cases ftbfs when libtirpc is found
 EXTRA_OECONF += " --without-tirpc "
-
-do_compile_prepend() {
-	# Reported at http://lists.linux.it/pipermail/ltp/2021-March/021274.html
-	# Avoid a race over construction of libswapon.o which is built by swapon and swapoff
-	# but the object differs depending upon which one built it
-	# ("../swapon/libswapon.c" vs "libswapon.c" references)
-	make -C ${B}/testcases/kernel/syscalls/swapon/
-}
 
 do_install(){
     install -d ${D}${prefix}/
