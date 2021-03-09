@@ -23,6 +23,11 @@ SRC_URI_append_class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
+SRC_URI_append_riscv32 = " \
+           file://0003-Add-support-for-io_pgetevents_time64-syscall.patch \
+           file://0004-Fixup-support-for-io_pgetevents_time64-syscall.patch \
+           "
+
 SRC_URI[sha256sum] = "aaf2fcb575cdf6491b98ab4829abf78a3dec8402b8b81efc8f23c00d443981bf"
 
 inherit lib_package multilib_header multilib_script ptest
