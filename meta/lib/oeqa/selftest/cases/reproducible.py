@@ -36,7 +36,6 @@ exclude_packages = [
 	'go-',
 	'meson',
 	'ovmf-shell-efi',
-	'perf',
 	'ruby-ri-docs'
 	]
 
