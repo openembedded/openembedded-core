@@ -30,8 +30,8 @@ CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 SRCREV = "4d005621edd109d119627eb9210b224a63bf22cb"
 
 # remove at next version upgrade or when output changes
-PR = "r3"
-HASHEQUIV_HASH_VERSION .= ".3"
+PR = "r4"
+HASHEQUIV_HASH_VERSION .= ".4"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-build-Add-option-to-select-libc-implementation.patch \
@@ -39,7 +39,8 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-Add-more-musl-exclusions.patch \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://determinism.patch \
-           file://determinism2.patch \
+           file://0001-open_posix_testsuite-generate-makefiles.sh-Avoid-inc.patch \
+           file://0002-Makefile-Avoid-wildcard-determinism-issues.patch \
            "
 
 S = "${WORKDIR}/git"
