@@ -139,6 +139,7 @@ class BaseConfig(object):
                         'OE_TMPDIR',
                         'OECORE_NATIVE_SYSROOT',
                         'MULTICONFIG',
+                        'SERIAL_CONSOLES',
                         )
 
         self.qemu_opt = ''
@@ -464,7 +465,6 @@ class BaseConfig(object):
                 if ('gtk' in sys.argv):
                     raise RunQemuError('Option nographic makes no sense alongside the gtk option.' % (arg))
                 self.qemu_opt_script += ' -nographic'
-                self.kernel_cmdline_script += ' console=ttyS0'
             elif arg == 'sdl':
                 if 'gl' in sys.argv[1:]:
                     self.set_dri_path()
@@ -493,10 +493,8 @@ class BaseConfig(object):
             elif arg == 'novga':
                 self.qemu_opt_script += ' -vga none'
             elif arg == 'serial':
-                self.kernel_cmdline_script += ' console=ttyS0'
                 self.serialconsole = True
             elif arg == "serialstdio":
-                self.kernel_cmdline_script += ' console=ttyS0'
                 self.serialstdio = True
             elif arg == 'audio':
                 logger.info("Enabling audio in qemu")
@@ -1321,6 +1319,31 @@ class BaseConfig(object):
             raise RunQemuError("Failed to boot, QB_SYSTEM_NAME is NULL!")
         self.qemu_system = qemu_system
 
+    def setup_serial(self):
+        # Setup correct kernel command line for serial
+        if self.serialstdio == True or self.serialconsole == True or re.search("-nographic", self.qemu_opt) or self.tcpserial_portnum:
+            for entry in self.get('SERIAL_CONSOLES').split(' '):
+                self.kernel_cmdline_script += ' console=%s' %entry.split(';')[1]
+
+        if self.serialstdio == True or re.search("-nographic", self.qemu_opt):
+            self.qemu_opt += " -serial mon:stdio"
+        else:
+            self.qemu_opt += " -serial mon:vc"
+            if self.serialconsole:
+                if sys.stdin.isatty():
+                    subprocess.check_call(("stty", "intr", "^]"))
+                    logger.info("Interrupt character is '^]'")
+
+                self.qemu_opt += " %s" % self.get("QB_SERIAL_OPT")
+
+        # We always wants ttyS0 and ttyS1 in qemu machines (see SERIAL_CONSOLES).
+        # If no serial or serialtcp options were specified, only ttyS0 is created
+        # and sysvinit shows an error trying to enable ttyS1:
+        #     INIT: Id "S1" respawning too fast: disabled for 5 minutes
+        serial_num = len(re.findall("-serial", self.qemu_opt))
+        if serial_num < 2:
+            self.qemu_opt += " -serial null"
+
     def setup_final(self):
         qemu_bin = os.path.join(self.bindir_native, self.qemu_system)
 
@@ -1365,37 +1388,7 @@ class BaseConfig(object):
         if self.snapshot:
             self.qemu_opt += " -snapshot"
 
-        if self.serialconsole:
-            if sys.stdin.isatty():
-                subprocess.check_call(("stty", "intr", "^]"))
-                logger.info("Interrupt character is '^]'")
-
-            first_serial = ""
-            if not re.search("-nographic", self.qemu_opt):
-                first_serial = "-serial mon:vc"
-            # We always want a ttyS1. Since qemu by default adds a serial
-            # port when nodefaults is not specified, it seems that all that
-            # would be needed is to make sure a "-serial" is there. However,
-            # it appears that when "-serial" is specified, it ignores the
-            # default serial port that is normally added.  So here we make
-            # sure to add two -serial if there are none. And only one if
-            # there is one -serial already.
-            serial_num = len(re.findall("-serial", self.qemu_opt))
-            if serial_num == 0:
-                self.qemu_opt += " %s %s" % (first_serial, self.get("QB_SERIAL_OPT"))
-            elif serial_num == 1:
-                self.qemu_opt += " %s" % self.get("QB_SERIAL_OPT")
-
-        # We always wants ttyS0 and ttyS1 in qemu machines (see SERIAL_CONSOLES),
-        # if not serial or serialtcp options was specified only ttyS0 is created
-        # and sysvinit shows an error trying to enable ttyS1:
-        #     INIT: Id "S1" respawning too fast: disabled for 5 minutes
-        serial_num = len(re.findall("-serial", self.qemu_opt))
-        if serial_num == 0:
-            if re.search("-nographic", self.qemu_opt) or self.serialstdio:
-                self.qemu_opt += " -serial mon:stdio -serial null"
-            else:
-                self.qemu_opt += " -serial mon:vc -serial null"
+        self.setup_serial()
 
     def start_qemu(self):
         import shlex
