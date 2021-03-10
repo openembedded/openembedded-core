@@ -72,6 +72,9 @@
 #                      Can be used to automatically determine the image from the other variables
 #                      but define things link 'bootindex' when booting from EFI or 'readonly' when using squashfs
 #                      without the need to specify a dedicated qemu configuration
+#
+# QB_GRAPHICS: QEMU video card type (e.g. "-vga std")
+#
 # Usage:
 # IMAGE_CLASSES += "qemuboot"
 # See "runqemu help" for more info
@@ -86,6 +89,7 @@ QB_NETWORK_DEVICE ?= "-device virtio-net-pci,netdev=net0,mac=@MAC@"
 QB_CMDLINE_IP_SLIRP ?= "ip=dhcp"
 QB_CMDLINE_IP_TAP ?= "ip=192.168.7.@CLIENT@::192.168.7.@GATEWAY@:255.255.255.0"
 QB_ROOTFS_EXTRA_OPT ?= ""
+QB_GRAPHICS ?= ""
 
 # This should be kept align with ROOT_VM
 QB_DRIVE_TYPE ?= "/dev/sd"
