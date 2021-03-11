@@ -612,7 +612,7 @@ deltask do_populate_lic
 deltask do_populate_sysroot
 do_package[noexec] = "1"
 deltask do_package_qa
-do_packagedata[noexec] = "1"
+deltask do_packagedata
 deltask do_package_write_ipk
 deltask do_package_write_deb
 deltask do_package_write_rpm
