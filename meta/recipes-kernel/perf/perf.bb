@@ -250,6 +250,14 @@ do_configure_prepend () {
         # all the calls have YFLAGS, which contains prefix mapping information.
         sed -i -e 's,$(YACC),$(YACC) $(YFLAGS),g' ${S}/scripts/Makefile.host
     fi
+    if [ -e "${S}/tools/perf/pmu-events/Build" ]; then
+        target='$(OUTPUT)pmu-events/pmu-events.c $(V)'
+        replacement1='$(OUTPUT)pmu-events/pmu-events.c $(V)\n'
+        replacement2='\t$(srctree)/sort-pmuevents.py $(OUTPUT)pmu-events/pmu-events.c $(OUTPUT)pmu-events/pmu-events.c.new\n'
+        replacement3='\tcp $(OUTPUT)pmu-events/pmu-events.c.new $(OUTPUT)pmu-events/pmu-events.c'
+        sed -i -e "s,$target,$replacement1$replacement2$replacement3,g" \
+                       "${S}/tools/perf/pmu-events/Build"
+    fi
     # end reproducibility substitutions
 
     # We need to ensure the --sysroot option in CC is preserved
@@ -292,6 +300,14 @@ do_configure_prepend () {
     # so we copy it from the sysroot unistd.h to the perf unistd.h
     install -D -m0644 ${STAGING_INCDIR}/asm-generic/unistd.h ${S}/tools/include/uapi/asm-generic/unistd.h
     install -D -m0644 ${STAGING_INCDIR}/asm-generic/unistd.h ${S}/include/uapi/asm-generic/unistd.h
+
+    # the fetcher is inhibited by the 'inherit kernelsrc', so we do a quick check and
+    # copy for a helper script we need
+    for p in $(echo ${FILESPATH} | tr ':' '\n'); do
+	if [ -e $p/sort-pmuevents.py ]; then
+	    cp $p/sort-pmuevents.py ${S}
+	fi
+    done
 }
 
 python do_package_prepend() {
