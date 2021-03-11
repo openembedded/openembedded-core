@@ -10,7 +10,7 @@ SRC_URI_append_class-native = " file://0001-conditionally-do-not-fetch-code-by-e
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
-SRC_URI[sha256sum] = "36bc07925c77dd6e30c64c91c2d080212a46910aa79073990c11d4c48a006240"
+SRC_URI[sha256sum] = "1ce82798848a978696465866bb3aaab356003c42d6143e1111fcf069ac838274"
 
 DEPENDS += "${PYTHON_PN}"
 
