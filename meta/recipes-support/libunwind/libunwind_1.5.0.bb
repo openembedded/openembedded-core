@@ -25,3 +25,4 @@ COMPATIBLE_HOST_riscv32 = "null"
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
 
 SECURITY_LDFLAGS_append_libc-musl = " -lssp_nonshared"
+CACHED_CONFIGUREVARS_append_libc-musl = " LDFLAGS='${LDFLAGS} -lucontext'"
