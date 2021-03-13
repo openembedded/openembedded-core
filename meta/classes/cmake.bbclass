@@ -81,6 +81,8 @@ def map_host_os_to_system_name(host_os):
 def map_host_arch_to_uname_arch(host_arch):
     if host_arch == "powerpc":
         return "ppc"
+    if host_arch == "powerpc64le":
+        return "ppc64le"
     if host_arch == "powerpc64":
         return "ppc64"
     return host_arch
