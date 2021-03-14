@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/facebook/zstd.git;branch=release \
            file://0001-Makefile-sort-all-wildcard-file-list-expansions.patch \
            "
 
-SRCREV = "97a3da1df009d4dc67251de0c4b1c9d7fe286fc1"
+SRCREV = "e4558ffd1dc49399faf4ee5d85abed4386b4dcf5"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
