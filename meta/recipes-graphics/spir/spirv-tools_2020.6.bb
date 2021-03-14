@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git \
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
 S = "${WORKDIR}/git"
 
-inherit cmake
+inherit cmake python3native
 
 DEPENDS = "spirv-headers"
 
