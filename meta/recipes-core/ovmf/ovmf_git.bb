@@ -16,6 +16,7 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0001-ovmf-update-path-to-native-BaseTools.patch \
            file://0002-BaseTools-makefile-adjust-to-build-in-under-bitbake.patch \
            file://0004-ovmf-Update-to-latest.patch \
+           file://zero.patch \
            "
 
 PV = "edk2-stable202102"
