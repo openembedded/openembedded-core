@@ -10,9 +10,8 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=7dbefed23242760aa3475ee42801c5ac"
 SRC_URI = "git://github.com/KhronosGroup/Vulkan-Loader.git \
-           file://0001-Rename-LIB_SUFFIX-to-VULKAN_LIB_SUFFIX.patch \
            "
-SRCREV = "7a313093b5c4af964d50a5a64e73d7df6152ea3f"
+SRCREV = "c5678a03db383fd0dc5bfb8e9a383043bdbcb57b"
 
 S = "${WORKDIR}/git"
 
@@ -27,6 +26,8 @@ EXTRA_OECMAKE = "\
                  -DBUILD_TESTS=OFF \
                  -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
                  -DASSEMBLER_WORKS=FALSE \
+                 -DVulkanHeaders_INCLUDE_DIR=${STAGING_INCDIR} \
+                 -DVulkanRegistry_DIR=${RECIPE_SYSROOT}/${datadir} \
                  "
 
 # must choose x11 or wayland or both
