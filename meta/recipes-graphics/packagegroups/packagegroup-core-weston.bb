@@ -3,7 +3,9 @@ DESCRIPTION = "Packages required to set up a basic working Weston session"
 PR = "r1"
 
 inherit packagegroup features_check
-REQUIRED_DISTRO_FEATURES = "wayland"
+
+# weston-init requires pam enabled if started via systemd
+REQUIRED_DISTRO_FEATURES = "wayland ${@oe.utils.conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'pam', '', d)}"
 
 RDEPENDS_${PN} = "\
     weston \
