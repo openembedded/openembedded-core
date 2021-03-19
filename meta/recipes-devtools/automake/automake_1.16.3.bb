@@ -19,16 +19,14 @@ RDEPENDS_${PN} += "\
 RDEPENDS_${PN}_class-native = "autoconf-native hostperl-runtime-native"
 
 SRC_URI += "file://python-libdir.patch \
-            file://buildtest.patch \
-            file://performance.patch \
-            file://new_rt_path_for_test-driver.patch \
-            file://automake-replace-w-option-in-shebangs-with-modern-use-warnings.patch \
-            file://0001-automake-Add-default-libtool_tag-to-cppasm.patch \
-            file://0001-build-fix-race-in-parallel-builds.patch \
-            "
+           file://buildtest.patch \
+           file://performance.patch \
+           file://new_rt_path_for_test-driver.patch \
+           file://0001-automake-Add-default-libtool_tag-to-cppasm.patch \
+           file://0001-build-fix-race-in-parallel-builds.patch \
+           "
 
-SRC_URI[md5sum] = "f1a14f2ab2b0fb861a011e1d94e589e0"
-SRC_URI[sha256sum] = "b2f361094b410b4acbf4efba7337bdb786335ca09eb2518635a09fb7319ca5c1"
+SRC_URI[sha256sum] = "ce010788b51f64511a1e9bb2a1ec626037c6d0e7ede32c1c103611b9d3cba65f"
 
 PERL = "${USRBINPATH}/perl"
 PERL_class-native = "${USRBINPATH}/env perl"
