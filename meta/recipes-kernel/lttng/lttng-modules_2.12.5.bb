@@ -11,6 +11,10 @@ include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
+           file://0001-Fix-memory-leaks-on-event-destroy.patch \
+           file://0002-Fix-filter-interpreter-early-exits-on-uninitialized-.patch  \
+           file://0003-fix-mm-tracing-record-slab-name-for-kmem_cache_free-.patch \
+           file://0004-Fix-kretprobe-null-ptr-deref-on-session-destroy.patch \
            "
 
 SRC_URI[sha256sum] = "c4d1a1b42c728e37b6b7947ae16563a011c4b297311aa04d56f9a1791fb5a30a"
