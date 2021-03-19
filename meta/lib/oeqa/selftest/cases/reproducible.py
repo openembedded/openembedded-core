@@ -33,7 +33,6 @@ exclude_packages = [
 	'go-runtime',
 	'go_',
 	'go-',
-	'ovmf-shell-efi',
 	'ruby-ri-docs'
 	]
 
