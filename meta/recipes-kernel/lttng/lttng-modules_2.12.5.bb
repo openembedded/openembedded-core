@@ -35,7 +35,8 @@ DEFAULT_PREFERENCE_class-devupstream = "-1"
 SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.12 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            "
-SRCREV_class-devupstream = "be71b60a327d7ad2588abc5cad2861177119972b"
-PV_class-devupstream = "2.12.3+git${SRCPV}"
+
+SRCREV_class-devupstream = "92cc3e7f76a545a2cd4828576971f1eea83f4e68"
+PV_class-devupstream = "2.12.5+git${SRCPV}"
 S_class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
