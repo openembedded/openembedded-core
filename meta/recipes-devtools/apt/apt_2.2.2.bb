@@ -10,22 +10,19 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/${BPN}_${PV}.tar.xz \
            file://0001-Disable-documentation-directory-altogether.patch \
            file://0001-Fix-musl-build.patch \
            file://0001-CMakeLists.txt-avoid-changing-install-paths-based-on.patch \
-           file://0001-test-libapt-do-not-use-gtest-from-the-host.patch \
            "
      
 SRC_URI_append_class-native = " \
            file://0001-Do-not-init-tables-from-dpkg-configuration.patch \
            file://0001-Revert-always-run-dpkg-configure-a-at-the-end-of-our.patch \
-           file://0001-Do-not-configure-packages-on-installation.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
            file://0001-Do-not-init-tables-from-dpkg-configuration.patch \
            file://0001-Revert-always-run-dpkg-configure-a-at-the-end-of-our.patch \
-           file://0001-Do-not-configure-packages-on-installation.patch \
            "
 
-SRC_URI[sha256sum] = "f5030de22a5cc80db6fe0d42373b5df25d7dc56e94d9155f2eaa80dbd65e82fa"
+SRC_URI[sha256sum] = "c5449a4c2126a12497a9949cd10209926005d329f6ce7942a3781fa2fcf50487"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 # the package is taken from snapshots.debian.org; that source is static and goes stale
@@ -40,12 +37,12 @@ USERADD_PARAM_${PN} = "--system --home /nonexistent --no-create-home _apt"
 
 BBCLASSEXTEND = "native nativesdk"
 
-DEPENDS += "virtual/libiconv virtual/libintl db gnutls lz4 zlib bzip2 xz"
+DEPENDS += "db gnutls lz4 zlib bzip2 xz libgcrypt xxhash"
 
 EXTRA_OECMAKE_append = " -DCURRENT_VENDOR=debian -DWITH_DOC=False \
     -DUSE_NLS=False -DDPKG_DATADIR=${datadir}/dpkg \
     -DTRIEHASH_EXECUTABLE=${WORKDIR}/triehash \
-    -DCMAKE_DISABLE_FIND_PACKAGE_Zstd=True \
+    -DWITH_TESTS=False \
 "
 
 do_configure_prepend () {
