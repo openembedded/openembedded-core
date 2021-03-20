@@ -11,6 +11,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/${BPN}_${PV}.tar.xz \
            file://0001-Fix-musl-build.patch \
            file://0001-CMakeLists.txt-avoid-changing-install-paths-based-on.patch \
            file://0001-srvrec-Keep-support-for-older-resolver.patch \
+           file://0001-cmake-Do-not-build-po-files.patch \
            "
 
 SRC_URI_append_class-native = " \
@@ -41,7 +42,7 @@ BBCLASSEXTEND = "native nativesdk"
 DEPENDS += "db gnutls lz4 zlib bzip2 xz libgcrypt xxhash"
 
 EXTRA_OECMAKE_append = " -DCURRENT_VENDOR=debian -DWITH_DOC=False \
-    -DUSE_NLS=False -DDPKG_DATADIR=${datadir}/dpkg \
+    -DDPKG_DATADIR=${datadir}/dpkg \
     -DTRIEHASH_EXECUTABLE=${WORKDIR}/triehash \
     -DWITH_TESTS=False \
 "
