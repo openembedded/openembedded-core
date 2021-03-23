@@ -507,7 +507,7 @@ python () {
 # Compute the rootfs size
 #
 def get_rootfs_size(d):
-    import subprocess
+    import subprocess, oe.utils
 
     rootfs_alignment = int(d.getVar('IMAGE_ROOTFS_ALIGNMENT'))
     overhead_factor = float(d.getVar('IMAGE_OVERHEAD_FACTOR'))
@@ -518,9 +518,7 @@ def get_rootfs_size(d):
     initramfs_fstypes = d.getVar('INITRAMFS_FSTYPES') or ''
     initramfs_maxsize = d.getVar('INITRAMFS_MAXSIZE')
 
-    output = subprocess.check_output(['du', '-ks',
-                                      d.getVar('IMAGE_ROOTFS')])
-    size_kb = int(output.split()[0])
+    size_kb = oe.utils.directory_size(d.getVar("IMAGE_ROOTFS")) / 1024
 
     base_size = size_kb * overhead_factor
     bb.debug(1, '%f = %d * %f' % (base_size, size_kb, overhead_factor))
