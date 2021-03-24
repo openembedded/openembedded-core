@@ -2,7 +2,7 @@ require util-linux.inc
 
 #gtk-doc is not enabled as it requires xmlto which requires util-linux
 inherit autotools gettext manpages pkgconfig systemd update-alternatives python3-dir bash-completion ptest
-DEPENDS = "libcap-ng ncurses virtual/crypt zlib util-linux-uuid"
+DEPENDS = "libcap-ng ncurses virtual/crypt zlib util-linux-libuuid"
 
 PACKAGES =+ "${PN}-swaponoff"
 PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pylibmount', '${PN}-pylibmount', '', d)}"
@@ -49,7 +49,7 @@ python util_linux_binpackages () {
 # we must execute before update-alternatives PACKAGE_PREPROCESS_FUNCS
 PACKAGE_PREPROCESS_FUNCS =+ "util_linux_binpackages "
 
-# skip libuuid as it will be packaged by the util-linux-uuid recipe
+# skip libuuid as it will be packaged by the util-linux-libuuid recipe
 python util_linux_libpackages() {
     do_split_packages(d, root=d.getVar('UTIL_LINUX_LIBDIR'), file_regex=r'^lib(?!uuid)(.*)\.so\..*$',
                       output_pattern='${PN}-lib%s',
@@ -201,7 +201,7 @@ do_install_append_class-native () {
 	rm -f ${D}${base_bindir}/kill
 }
 
-# dm-verity support introduces a circular build dependency, so util-linux-uuid is split out for target builds
+# dm-verity support introduces a circular build dependency, so util-linux-libuuid is split out for target builds
 # Need to build libuuid for uuidgen, but then delete it and let the other recipe ship it
 do_install_append () {
 	rm -rf ${D}${includedir}/uuid ${D}${libdir}/pkgconfig/uuid.pc ${D}${libdir}/libuuid* ${D}${base_libdir}/libuuid*

@@ -7,11 +7,7 @@ inherit autotools gettext pkgconfig
 
 S = "${WORKDIR}/util-linux-${PV}"
 EXTRA_OECONF += "--disable-all-programs --enable-libuuid"
-PACKAGES = "util-linux-libuuid util-linux-libuuid-dev util-linux-libuuid-staticdev util-linux-libuuid-dbg"
-FILES_util-linux-libuuid = "${libdir}/libuuid.so.*"
-FILES_util-linux-libuuid-dev = "${libdir}/libuuid.so ${includedir} ${libdir}/pkgconfig"
-FILES_util-linux-libuuid-staticdev = "${libdir}/libuuid.a"
-FILES_util-linux-libuuid-dbg = "/usr/src ${libdir}/.debug"
+LICENSE = "BSD-3-Clause"
 
 do_install_append() {
 	rm -rf ${D}${datadir} ${D}${bindir} ${D}${base_bindir} ${D}${sbindir} ${D}${base_sbindir} ${D}${exec_prefix}/sbin

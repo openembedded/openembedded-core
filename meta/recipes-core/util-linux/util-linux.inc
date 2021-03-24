@@ -11,7 +11,6 @@ LICENSE_${PN}-libblkid = "LGPLv2.1+"
 LICENSE_${PN}-libfdisk = "LGPLv2.1+"
 LICENSE_${PN}-libmount = "LGPLv2.1+"
 LICENSE_${PN}-libsmartcols = "LGPLv2.1+"
-LICENSE_${PN}-libuuid = "BSD-3-Clause"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=0fd5c050c6187d2bf0a4492b7f4e33da \
                     file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
