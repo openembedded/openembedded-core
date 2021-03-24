@@ -7,7 +7,7 @@ LICENSE = "BSL-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=e4224ccaecb14d942c71d31bef20d78c"
 
 SRC_URI = "git://github.com/boostorg/build;protocol=https"
-SRCREV = "632ea768f3eb225b4472c5ed6d20afee708724ad"
+SRCREV = "76da80f33187a3d9e5336157cdfae12ce82e37eb"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+){2,}))"
 
