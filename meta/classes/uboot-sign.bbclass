@@ -65,27 +65,34 @@ SPL_NODTB_SYMLINK ?= "u-boot-spl-nodtb-${MACHINE}.bin"
 # U-Boot fitImage description
 UBOOT_FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 
-# fitImage Hash Algo
+# Kernel / U-Boot fitImage Hash Algo
 FIT_HASH_ALG ?= "sha256"
+UBOOT_FIT_HASH_ALG ?= "sha256"
 
-# fitImage Signature Algo
+# Kernel / U-Boot fitImage Signature Algo
 FIT_SIGN_ALG ?= "rsa2048"
+UBOOT_FIT_SIGN_ALG ?= "rsa2048"
 
-# Generate keys for signing fitImage
+# Generate keys for signing Kernel / U-Boot fitImage
 FIT_GENERATE_KEYS ?= "0"
+UBOOT_FIT_GENERATE_KEYS ?= "0"
 
-# Size of private key in number of bits
+# Size of private keys in number of bits
 FIT_SIGN_NUMBITS ?= "2048"
+UBOOT_FIT_SIGN_NUMBITS ?= "2048"
 
 # args to openssl genrsa (Default is just the public exponent)
 FIT_KEY_GENRSA_ARGS ?= "-F4"
+UBOOT_FIT_KEY_GENRSA_ARGS ?= "-F4"
 
 # args to openssl req (Default is -batch for non interactive mode and
 # -new for new certificate)
 FIT_KEY_REQ_ARGS ?= "-batch -new"
+UBOOT_FIT_KEY_REQ_ARGS ?= "-batch -new"
 
 # Standard format for public key certificate
 FIT_KEY_SIGN_PKCS ?= "-x509"
+UBOOT_FIT_KEY_SIGN_PKCS ?= "-x509"
 
 # Functions on this bbclass can apply to either U-boot or Kernel,
 # depending on the scenario
@@ -280,6 +287,32 @@ do_generate_rsa_keys() {
 				-out "${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_KEYNAME}".crt
 		fi
 	fi
+
+	if [ "${SPL_SIGN_ENABLE}" = "0" ] && [ "${UBOOT_FIT_GENERATE_KEYS}" = "1" ]; then
+		bbwarn "UBOOT_FIT_GENERATE_KEYS is set to 1 eventhough SPL_SIGN_ENABLE is set to 0. The keys will not be generated as they won't be used."
+	fi
+
+	if [ "${SPL_SIGN_ENABLE}" = "1" ] && [ "${UBOOT_FIT_GENERATE_KEYS}" = "1" ]; then
+
+		# Generate keys only if they don't already exist
+		if [ ! -f "${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".key ] || \
+			[ ! -f "${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".crt ]; then
+
+			# make directory if it does not already exist
+			mkdir -p "${SPL_SIGN_KEYDIR}"
+
+			echo "Generating RSA private key for signing U-Boot fitImage"
+			openssl genrsa ${UBOOT_FIT_KEY_GENRSA_ARGS} -out \
+				"${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".key \
+				"${UBOOT_FIT_SIGN_NUMBITS}"
+
+			echo "Generating certificate for signing U-Boot fitImage"
+			openssl req ${FIT_KEY_REQ_ARGS} "${UBOOT_FIT_KEY_SIGN_PKCS}" \
+				-key "${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".key \
+				-out "${SPL_SIGN_KEYDIR}/${SPL_SIGN_KEYNAME}".crt
+		fi
+	fi
+
 }
 
 addtask generate_rsa_keys before do_uboot_assemble_fitimage after do_compile
@@ -292,9 +325,9 @@ uboot_fitimage_assemble() {
 	uboot_dtb="${3}"
 	uboot_bin="${4}"
 	spl_dtb="${5}"
-	uboot_csum="${FIT_HASH_ALG}"
-	uboot_sign_algo="${FIT_SIGN_ALG}"
-	uboot_sign_keyname="${UBOOT_SIGN_KEYNAME}"
+	uboot_csum="${UBOOT_FIT_HASH_ALG}"
+	uboot_sign_algo="${UBOOT_FIT_SIGN_ALG}"
+	uboot_sign_keyname="${SPL_SIGN_KEYNAME}"
 
 	rm -f ${uboot_its} ${uboot_bin}
 
@@ -365,7 +398,7 @@ EOF
 	# Assemble the U-boot FIT image
 	#
 	${UBOOT_MKIMAGE} \
-		${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
+		${@'-D "${SPL_MKIMAGE_DTCOPTS}"' if len('${SPL_MKIMAGE_DTCOPTS}') else ''} \
 		-f ${uboot_its} \
 		${uboot_bin}
 
@@ -374,11 +407,11 @@ EOF
 		# Sign the U-boot FIT image and add public key to SPL dtb
 		#
 		${UBOOT_MKIMAGE_SIGN} \
-			${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
+			${@'-D "${SPL_MKIMAGE_DTCOPTS}"' if len('${SPL_MKIMAGE_DTCOPTS}') else ''} \
 			-F -k "${SPL_SIGN_KEYDIR}" \
 			-K "${spl_dtb}" \
 			-r ${uboot_bin} \
-			${UBOOT_MKIMAGE_SIGN_ARGS}
+			${SPL_MKIMAGE_SIGN_ARGS}
 	fi
 
 }

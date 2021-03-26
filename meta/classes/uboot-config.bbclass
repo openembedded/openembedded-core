@@ -61,6 +61,7 @@ UBOOT_EXTLINUX_SYMLINK ?= "${UBOOT_EXTLINUX_CONF_NAME}-${MACHINE}-${PR}"
 
 # Options for the device tree compiler passed to mkimage '-D' feature:
 UBOOT_MKIMAGE_DTCOPTS ??= ""
+SPL_MKIMAGE_DTCOPTS ??= ""
 
 # mkimage command
 UBOOT_MKIMAGE ?= "uboot-mkimage"
@@ -68,6 +69,7 @@ UBOOT_MKIMAGE_SIGN ?= "${UBOOT_MKIMAGE}"
 
 # Arguments passed to mkimage for signing
 UBOOT_MKIMAGE_SIGN_ARGS ?= ""
+SPL_MKIMAGE_SIGN_ARGS ?= ""
 
 python () {
     ubootmachine = d.getVar("UBOOT_MACHINE")
