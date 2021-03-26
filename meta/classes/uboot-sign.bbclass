@@ -31,6 +31,9 @@
 #
 # For more details on signature process, please refer to U-Boot documentation.
 
+# We need some variables from u-boot-config
+inherit uboot-config
+
 # Signature activation.
 UBOOT_SIGN_ENABLE ?= "0"
 
@@ -41,6 +44,38 @@ UBOOT_DTB_SYMLINK ?= "u-boot-${MACHINE}.dtb"
 UBOOT_NODTB_IMAGE ?= "u-boot-nodtb-${MACHINE}-${PV}-${PR}.${UBOOT_SUFFIX}"
 UBOOT_NODTB_BINARY ?= "u-boot-nodtb.${UBOOT_SUFFIX}"
 UBOOT_NODTB_SYMLINK ?= "u-boot-nodtb-${MACHINE}.${UBOOT_SUFFIX}"
+UBOOT_ITS_IMAGE ?= "u-boot-${MACHINE}-${PV}-${PR}.its"
+UBOOT_ITS ?= "u-boot.its"
+UBOOT_ITS_SYMLINK ?= "u-boot-${MACHINE}.its"
+SPL_DIR ?= "${@os.path.dirname(d.getVar("SPL_BINARY")) or '.'}"
+SPL_DTB_IMAGE ?= "u-boot-spl-${MACHINE}-${PV}-${PR}.dtb"
+SPL_DTB_BINARY ?= "u-boot-spl.dtb"
+SPL_DTB_SYMLINK ?= "u-boot-spl-${MACHINE}.dtb"
+SPL_NODTB_IMAGE ?= "${@os.path.splitext(d.getVar("SPL_BINARYNAME"))[0]}-nodtb-${MACHINE}-${PV}-${PR}${@os.path.splitext(d.getVar("SPL_BINARYNAME"))[1]}"
+SPL_NODTB_BINARY ?= "${@os.path.splitext(d.getVar("SPL_BINARYNAME"))[0]}-nodtb${@os.path.splitext(d.getVar("SPL_BINARYNAME"))[1]}"
+SPL_NODTB_SYMLINK ?= "${@os.path.splitext(d.getVar("SPL_BINARYNAME"))[0]}-nodtb-${MACHINE}${@os.path.splitext(d.getVar("SPL_BINARYNAME"))[1]}"
+
+# fitImage Hash Algo
+FIT_HASH_ALG ?= "sha256"
+
+# fitImage Signature Algo
+FIT_SIGN_ALG ?= "rsa2048"
+
+# Generate keys for signing fitImage
+FIT_GENERATE_KEYS ?= "0"
+
+# Size of private key in number of bits
+FIT_SIGN_NUMBITS ?= "2048"
+
+# args to openssl genrsa (Default is just the public exponent)
+FIT_KEY_GENRSA_ARGS ?= "-F4"
+
+# args to openssl req (Default is -batch for non interactive mode and
+# -new for new certificate)
+FIT_KEY_REQ_ARGS ?= "-batch -new"
+
+# Standard format for public key certificate
+FIT_KEY_SIGN_PKCS ?= "-x509"
 
 # Functions in this bbclass is for u-boot only
 UBOOT_PN = "${@d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'}"
