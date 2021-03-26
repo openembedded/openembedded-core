@@ -1,0 +1,29 @@
+From 0f1814a618eff4233e9e8379a8cb2dededdc5a8b Mon Sep 17 00:00:00 2001
+From: Yi Fan Yu <yifan.yu@windriver.com>
+Date: Tue, 23 Mar 2021 11:09:20 -0700
+Subject: [PATCH] Disable temporarily drd/tests/swapcontext.vgtest
+
+New test introduced in valgrind 3.17.0.
+Test fails on both qemuarm64 and qemux64.
+
+Upstream-Status: Pending [Needs more Investigation]
+[YOCTO #14324]
+
+Signed-off-by: Yi Fan Yu <yifan.yu@windriver.com>
+---
+ drd/tests/swapcontext.vgtest | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drd/tests/swapcontext.vgtest b/drd/tests/swapcontext.vgtest
+index 98e3712c4..5492da31d 100644
+--- a/drd/tests/swapcontext.vgtest
++++ b/drd/tests/swapcontext.vgtest
+@@ -1,4 +1,4 @@
+-prereq: test -e swapcontext && ./supported_libpthread
++prereq: false
+ vgopts: --read-var-info=yes --check-stack-var=yes --show-confl-seg=no --num-callers=2
+ prog: swapcontext
+ stderr_filter: filter_stderr
+-- 
+2.17.1
+
