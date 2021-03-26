@@ -1,0 +1,29 @@
+From bf248231cb4f9f966f0d57821dd0491af54d4a0b Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 26 Mar 2021 11:59:43 -0700
+Subject: [PATCH] RISC-V: Restore the typcast to long
+
+this makes the type promotions clear and explicit
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ util/grub-mkimagexx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/util/grub-mkimagexx.c b/util/grub-mkimagexx.c
+index 00f49cc..ab5523d 100644
+--- a/util/grub-mkimagexx.c
++++ b/util/grub-mkimagexx.c
+@@ -1242,7 +1242,7 @@ SUFFIX (relocate_addrs) (Elf_Ehdr *e, struct section_metadata *smd,
+ 		  */
+ 
+ 		 sym_addr += addend;
+-		 off = sym_addr - target_section_addr - offset - image_target->vaddr_offset;
++		 off = (long)sym_addr - target_section_addr - offset - image_target->vaddr_offset;
+ 
+ 		 switch (ELF_R_TYPE (info))
+ 		   {
+-- 
+2.31.0
+
