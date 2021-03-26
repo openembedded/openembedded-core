@@ -375,6 +375,10 @@ python copy_buildsystem () {
             # Map gcc-dependent uninative sstate cache for installer usage
             f.write('SSTATE_MIRRORS += " file://universal/(.*) file://universal-4.9/\\1 file://universal-4.9/(.*) file://universal-4.8/\\1"\n\n')
 
+            if d.getVar("PRSERV_HOST"):
+                # Override this, we now include PR data, so it should only point ot the local database
+                f.write('PRSERV_HOST = "localhost:0"\n\n')
+
             # Allow additional config through sdk-extra.conf
             fn = bb.cookerdata.findConfigFile('sdk-extra.conf', d)
             if fn:
@@ -397,6 +401,27 @@ python copy_buildsystem () {
         bb.parse.siggen.save_unitaskhashes()
         bb.utils.mkdirhier(os.path.join(baseoutpath, 'cache'))
         shutil.copyfile(builddir + '/cache/bb_unihashes.dat', baseoutpath + '/cache/bb_unihashes.dat')
+
+    # If PR Service is in use, we need to export this as well
+    bb.note('Do we have a pr database?')
+    if d.getVar("PRSERV_HOST"):
+        bb.note('Writing PR database...')
+        # Based on the code in classes/prexport.bbclass
+        import oe.prservice
+        #dump meta info of tables
+        localdata = d.createCopy()
+        localdata.setVar('PRSERV_DUMPOPT_COL', "1")
+        localdata.setVar('PRSERV_DUMPDIR', os.path.join(baseoutpath, 'conf'))
+        localdata.setVar('PRSERV_DUMPFILE', '${PRSERV_DUMPDIR}/prserv.inc')
+
+        bb.note('PR Database write to %s' % (localdata.getVar('PRSERV_DUMPFILE')))
+
+        retval = oe.prservice.prserv_dump_db(localdata)
+        if not retval:
+            bb.error("prexport_handler: export failed!")
+            return
+        (metainfo, datainfo) = retval
+        oe.prservice.prserv_export_tofile(localdata, metainfo, datainfo, True)
 
     # Use templateconf.cfg file from builddir if exists
     if os.path.exists(builddir + '/conf/templateconf.cfg') and use_custom_templateconf == '1':
