@@ -55,7 +55,7 @@ python __anonymous () {
 
 
 # Description string
-FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
+FIT_DESC ?= "Kernel fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 
 # Sign individual images as well
 FIT_SIGN_INDIVIDUAL ?= "0"
@@ -695,12 +695,22 @@ kernel_do_deploy_append() {
 				ln -snf fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.bin "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
 			fi
 		fi
-		if [ "${UBOOT_SIGN_ENABLE}" = "1" -a -n "${UBOOT_DTB_BINARY}" ] ; then
-			# UBOOT_DTB_IMAGE is a realfile, but we can't use
-			# ${UBOOT_DTB_IMAGE} since it contains ${PV} which is aimed
-			# for u-boot, but we are in kernel env now.
-			install -m 0644 ${B}/u-boot-${MACHINE}*.dtb "$deployDir/"
-		fi
+	fi
+	if [ "${UBOOT_SIGN_ENABLE}" = "1" -o "${UBOOT_FITIMAGE_ENABLE}" = "1" ] && \
+	   [ -n "${UBOOT_DTB_BINARY}" ] ; then
+		# UBOOT_DTB_IMAGE is a realfile, but we can't use
+		# ${UBOOT_DTB_IMAGE} since it contains ${PV} which is aimed
+		# for u-boot, but we are in kernel env now.
+		install -m 0644 ${B}/u-boot-${MACHINE}*.dtb "$deployDir/"
+	fi
+	if [ "${UBOOT_FITIMAGE_ENABLE}" = "1" -a -n "${UBOOT_BINARY}" -a -n "${SPL_DTB_BINARY}" ] ; then
+		# If we're also creating and/or signing the uboot fit, now we need to
+		# deploy it, it's its file, as well as u-boot-spl.dtb
+		install -m 0644 ${B}/u-boot-spl-${MACHINE}*.dtb "$deployDir/"
+		echo "Copying u-boot-fitImage file..."
+		install -m 0644 ${B}/u-boot-fitImage-* "$deployDir/"
+		echo "Copying u-boot-its file..."
+		install -m 0644 ${B}/u-boot-its-* "$deployDir/"
 	fi
 }
 
