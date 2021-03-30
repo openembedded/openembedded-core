@@ -320,6 +320,9 @@ python split_perl_packages () {
     # Read the pre-generated dependency file, and use it to set module dependecies
     for line in open(d.expand("${WORKDIR}") + '/perl-rdepends.txt').readlines():
         splitline = line.split()
+        # Filter empty lines and comments
+        if len(splitline) == 0 or splitline[0].startswith("#"):
+            continue
         if bb.data.inherits_class('native', d):
             module = splitline[0] + '-native'
             depends = "perl-native"
