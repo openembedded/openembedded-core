@@ -13,25 +13,24 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 Port patch to 2.48
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
-
 ---
  gio/giomodule.c | 12 +++++++++++-
  1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/gio/giomodule.c b/gio/giomodule.c
-index dc4d6d3..da46906 100644
+index ca1daf2..954a250 100644
 --- a/gio/giomodule.c
 +++ b/gio/giomodule.c
-@@ -49,6 +49,8 @@
- #include "gmemorymonitordbus.h"
+@@ -51,6 +51,8 @@
  #ifdef G_OS_WIN32
  #include "gregistrysettingsbackend.h"
+ #include "giowin32-priv.h"
 +#else
 +#include <dlfcn.h>
  #endif
  #include <glib/gstdio.h>
  
-@@ -1163,7 +1165,15 @@ get_gio_module_dir (void)
+@@ -1212,7 +1214,15 @@ get_gio_module_dir (void)
                                       NULL);
        g_free (install_dir);
  #else
@@ -48,3 +47,6 @@ index dc4d6d3..da46906 100644
  #endif
      }
  
+-- 
+2.25.1
+

@@ -14,25 +14,23 @@ Root cause is in ptest-runner, This is a workaround
 
 Uptream-Status: Inappropriate [other]
 
-
-
 Signed-off-by: Yi Fan Yu <yifan.yu@windriver.com>
 ---
  gio/tests/codegen.py | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/gio/tests/codegen.py b/gio/tests/codegen.py
-index 51de0ede4..cfa4db42e 100644
+index 0317765..f66b806 100644
 --- a/gio/tests/codegen.py
 +++ b/gio/tests/codegen.py
-@@ -250,7 +250,6 @@ class TestCodegen(unittest.TestCase):
+@@ -257,7 +257,6 @@ class TestCodegen(unittest.TestCase):
  
          result = Result(info, out, err, subs)
  
--        print('Output:', result.out)
+-        print("Output:", result.out)
          return result
  
      def runCodegenWithInterface(self, interface_contents, *args):
 -- 
-2.29.2
+2.25.1
 
