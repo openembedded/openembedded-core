@@ -41,7 +41,7 @@ SRC_URI_class-native = "${SRC_URI_BASE} \
                         file://base-genht.c-add-a-preprocessor-define-to-allow-fope.patch \
                         "
 
-SRC_URI[sha256sum] = "6eaf422f26a81854a230b80fd18aaef7e8d94d661485bd2e97e695b9dce7bf7f"
+SRC_URI[sha256sum] = "0646bb97f6f4d10a763f4919c54fa28b4fbdd3dff8e7de3410431c81762cade0"
 
 # Put something like
 #
