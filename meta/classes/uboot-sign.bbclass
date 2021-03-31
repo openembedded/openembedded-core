@@ -142,19 +142,12 @@ concat_spl_dtb_helper() {
 	# We only deploy symlinks to the u-boot-spl.dtb,as the KERNEL_PN will
 	# be responsible for deploying the real file
 	if [ -e "${SPL_DIR}/${SPL_DTB_BINARY}" ] ; then
-		deployed_spl_dtb_binary='${DEPLOY_DIR_IMAGE}/${SPL_DTB_IMAGE}'
 		ln -sf ${SPL_DTB_IMAGE} ${DEPLOYDIR}/${SPL_DTB_SYMLINK}
 		ln -sf ${SPL_DTB_IMAGE} ${DEPLOYDIR}/${SPL_DTB_BINARY}
 	fi
 
-	if [ -f "${SPL_DIR}/${SPL_NODTB_BINARY}" ] ; then
-		echo "Copying u-boot-nodtb binary..."
-		install -m 0644 ${SPL_DIR}/${SPL_NODTB_BINARY} ${DEPLOYDIR}/${SPL_NODTB_IMAGE}
-		ln -sf ${SPL_NODTB_IMAGE} ${DEPLOYDIR}/${SPL_NODTB_SYMLINK}
-		ln -sf ${SPL_NODTB_IMAGE} ${DEPLOYDIR}/${SPL_NODTB_BINARY}
-	fi
-
 	# Concatenate the SPL nodtb binary and u-boot.dtb
+	deployed_spl_dtb_binary='${DEPLOY_DIR_IMAGE}/${SPL_DTB_IMAGE}'
 	if [ -e "${DEPLOYDIR}/${SPL_NODTB_IMAGE}" -a -e "$deployed_spl_dtb_binary" ] ; then
 		cd ${DEPLOYDIR}
 		cat ${SPL_NODTB_IMAGE} $deployed_spl_dtb_binary | tee ${B}/${CONFIG_B_PATH}/${SPL_BINARY} > ${SPL_IMAGE}
@@ -343,8 +336,8 @@ uboot_fitimage_assemble() {
         uboot {
             description = "U-Boot image";
             data = /incbin/("${uboot_nodtb_bin}");
-            type = "uboot";
-            os = "U-Boot";
+            type = "standalone";
+            os = "u-boot";
             arch = "${UBOOT_ARCH}";
             compression = "none";
             load = <${UBOOT_LOADADDRESS}>;
@@ -438,6 +431,7 @@ do_uboot_assemble_fitimage() {
 		# do_assemble_fitimage task
 		cp -P ${STAGING_DATADIR}/u-boot-spl*.dtb ${B}
 		cp -P ${STAGING_DATADIR}/u-boot-nodtb*.bin ${B}
+		rm -rf ${B}/u-boot-fitImage-* ${B}/u-boot-its-*
 		kernel_uboot_fitimage_name=`basename ${STAGING_DATADIR}/u-boot-fitImage-*`
 		kernel_uboot_its_name=`basename ${STAGING_DATADIR}/u-boot-its-*`
 		cd ${B}
@@ -453,18 +447,29 @@ do_deploy_prepend_pn-${UBOOT_PN}() {
 	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a -n "${UBOOT_DTB_BINARY}" ] ; then
 		concat_dtb
 	fi
-	if [ "${SPL_SIGN_ENABLE}" = "1" -a -n "${SPL_DTB_BINARY}" ] ; then
-		concat_spl_dtb
-	fi
 
-	# We only deploy the symlinks to the uboot-fitImage and uboot-its
-	# images, as the KERNEL_PN will take care of deploying the real file
 	if [ "${UBOOT_FITIMAGE_ENABLE}" = "1" ] ; then
+	# Deploy the u-boot-nodtb binary and symlinks...
+		if [ -f "${SPL_DIR}/${SPL_NODTB_BINARY}" ] ; then
+			echo "Copying u-boot-nodtb binary..."
+			install -m 0644 ${SPL_DIR}/${SPL_NODTB_BINARY} ${DEPLOYDIR}/${SPL_NODTB_IMAGE}
+			ln -sf ${SPL_NODTB_IMAGE} ${DEPLOYDIR}/${SPL_NODTB_SYMLINK}
+			ln -sf ${SPL_NODTB_IMAGE} ${DEPLOYDIR}/${SPL_NODTB_BINARY}
+		fi
+
+
+		# We only deploy the symlinks to the uboot-fitImage and uboot-its
+		# images, as the KERNEL_PN will take care of deploying the real file
 		ln -sf ${UBOOT_FITIMAGE_IMAGE} ${DEPLOYDIR}/${UBOOT_FITIMAGE_BINARY}
 		ln -sf ${UBOOT_FITIMAGE_IMAGE} ${DEPLOYDIR}/${UBOOT_FITIMAGE_SYMLINK}
 		ln -sf ${UBOOT_ITS_IMAGE} ${DEPLOYDIR}/${UBOOT_ITS}
 		ln -sf ${UBOOT_ITS_IMAGE} ${DEPLOYDIR}/${UBOOT_ITS_SYMLINK}
 	fi
+
+	if [ "${SPL_SIGN_ENABLE}" = "1" -a -n "${SPL_DTB_BINARY}" ] ; then
+		concat_spl_dtb
+	fi
+
 
 }
 
@@ -496,9 +501,7 @@ python () {
         # If the Kernel fitImage is being signed, we need to
         # create the U-Boot fitImage after it
         if d.getVar('UBOOT_SIGN_ENABLE') == '1':
-            if d.getVar('INITRAMFS_IMAGE_BUNDLE') == "1":
-                d.appendVarFlag('do_uboot_assemble_fitimage', 'depends', ' %s:do_assemble_fitimage_initramfs' % d.getVar('KERNEL_PN'))
-            else:
-                d.appendVarFlag('do_uboot_assemble_fitimage', 'depends', ' %s:do_assemble_fitimage' % d.getVar('KERNEL_PN'))
+            d.appendVarFlag('do_uboot_assemble_fitimage', 'depends', ' %s:do_assemble_fitimage' % d.getVar('KERNEL_PN'))
+            d.appendVarFlag('do_uboot_assemble_fitimage', 'depends', ' %s:do_assemble_fitimage_initramfs' % d.getVar('KERNEL_PN'))
 
 }

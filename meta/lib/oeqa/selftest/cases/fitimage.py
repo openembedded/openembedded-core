@@ -293,7 +293,7 @@ FIT_SIGN_INDIVIDUAL = "1"
         # different architectures.
         its_field_check = [
             'description = "A model description";',
-            'type = "uboot";',
+            'type = "standalone";',
             'load = <0x80080000>;',
             'entry = <0x80080000>;',
             'default = "conf";',
@@ -376,7 +376,7 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot comment'"
         # different architectures.
         its_field_check = [
             'description = "A model description";',
-            'type = "uboot";',
+            'type = "standalone";',
             'load = <0x80080000>;',
             'entry = <0x80080000>;',
             'default = "conf";',
