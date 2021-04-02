@@ -1314,7 +1314,6 @@ class BaseConfig(object):
             if self.gtk == True:
                 raise RunQemuError('Option nographic makes no sense alongside the gtk option.')
             self.qemu_opt += ' -nographic'
-            return
 
         if self.novga == True:
             self.qemu_opt += ' -vga none'
