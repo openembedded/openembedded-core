@@ -48,11 +48,15 @@ _all__ = [
 #
 class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
 
-    def __init__(self, target, semaphore, threadnum, totalinprocess, totaltests):
+    def __init__(self, target, semaphore, threadnum, totalinprocess, totaltests, output, finalresult):
         super(BBThreadsafeForwardingResult, self).__init__(target, semaphore)
         self.threadnum = threadnum
         self.totalinprocess = totalinprocess
         self.totaltests = totaltests
+        self.buffer = True
+        self.outputbuf = output
+        self.finalresult = finalresult
+        self.finalresult.buffer = True
 
     def _add_result_with_semaphore(self, method, test, *args, **kwargs):
         self.semaphore.acquire()
@@ -71,6 +75,8 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
                     test.id())
         finally:
             self.semaphore.release()
+        self.finalresult._stderr_buffer = io.StringIO(initial_value=self.outputbuf.getvalue().decode("utf-8"))
+        self.finalresult._stdout_buffer = io.StringIO()
         super(BBThreadsafeForwardingResult, self)._add_result_with_semaphore(method, test, *args, **kwargs)
 
 class ProxyTestResult:
@@ -196,19 +202,11 @@ class ConcurrentTestSuite(unittest.TestSuite):
             queue = Queue()
             semaphore = threading.Semaphore(1)
             result.threadprogress = {}
-            for i, (testserver, testnum) in enumerate(testservers):
+            for i, (testserver, testnum, output) in enumerate(testservers):
                 result.threadprogress[i] = []
                 process_result = BBThreadsafeForwardingResult(
                         ExtraResultsDecoderTestResult(result),
-                        semaphore, i, testnum, totaltests)
-                # Force buffering of stdout/stderr so the console doesn't get corrupted by test output
-                # as per default in parent code
-                process_result.buffer = True
-                # We have to add a buffer object to stdout to keep subunit happy
-                process_result._stderr_buffer = io.StringIO()
-                process_result._stderr_buffer.buffer = dummybuf(process_result._stderr_buffer)
-                process_result._stdout_buffer = io.StringIO()
-                process_result._stdout_buffer.buffer = dummybuf(process_result._stdout_buffer)
+                        semaphore, i, testnum, totaltests, output, result)
                 reader_thread = threading.Thread(
                     target=self._run_test, args=(testserver, process_result, queue))
                 threads[testserver] = reader_thread, process_result
@@ -273,10 +271,11 @@ def fork_for_tests(concurrency_num, suite):
                 newsi = os.open(os.devnull, os.O_RDWR)
                 os.dup2(newsi, sys.stdin.fileno())
 
+                # Send stdout/stderr over the stream
+                os.dup2(c2pwrite, sys.stdout.fileno())
+                os.dup2(c2pwrite, sys.stderr.fileno())
+
                 subunit_client = TestProtocolClient(stream)
-                # Force buffering of stdout/stderr so the console doesn't get corrupted by test output
-                # as per default in parent code
-                subunit_client.buffer = True
                 subunit_result = AutoTimingTestResultDecorator(subunit_client)
                 unittest_result = process_suite.run(ExtraResultsEncoderTestResult(subunit_result))
                 if ourpid != os.getpid():
@@ -306,8 +305,10 @@ def fork_for_tests(concurrency_num, suite):
         else:
             os.close(c2pwrite)
             stream = os.fdopen(c2pread, 'rb', 1)
-            testserver = ProtocolTestCase(stream)
-            testservers.append((testserver, numtests))
+            # Collect stdout/stderr into an io buffer
+            output = io.BytesIO()
+            testserver = ProtocolTestCase(stream, passthrough=output)
+            testservers.append((testserver, numtests, output))
     return testservers, totaltests
 
 def partition_tests(suite, count):
