@@ -190,13 +190,13 @@ class ConcurrentTestSuite(unittest.TestSuite):
         self.removefunc = removefunc
 
     def run(self, result):
-        tests, totaltests = fork_for_tests(self.processes, self)
+        testservers, totaltests = fork_for_tests(self.processes, self)
         try:
             threads = {}
             queue = Queue()
             semaphore = threading.Semaphore(1)
             result.threadprogress = {}
-            for i, (test, testnum) in enumerate(tests):
+            for i, (testserver, testnum) in enumerate(testservers):
                 result.threadprogress[i] = []
                 process_result = BBThreadsafeForwardingResult(
                         ExtraResultsDecoderTestResult(result),
@@ -210,8 +210,8 @@ class ConcurrentTestSuite(unittest.TestSuite):
                 process_result._stdout_buffer = io.StringIO()
                 process_result._stdout_buffer.buffer = dummybuf(process_result._stdout_buffer)
                 reader_thread = threading.Thread(
-                    target=self._run_test, args=(test, process_result, queue))
-                threads[test] = reader_thread, process_result
+                    target=self._run_test, args=(testserver, process_result, queue))
+                threads[testserver] = reader_thread, process_result
                 reader_thread.start()
             while threads:
                 finished_test = queue.get()
@@ -222,13 +222,13 @@ class ConcurrentTestSuite(unittest.TestSuite):
                 process_result.stop()
             raise
         finally:
-            for test in tests:
-                test[0]._stream.close()
+            for testserver in testservers:
+                testserver[0]._stream.close()
 
-    def _run_test(self, test, process_result, queue):
+    def _run_test(self, testserver, process_result, queue):
         try:
             try:
-                test.run(process_result)
+                testserver.run(process_result)
             except Exception:
                 # The run logic itself failed
                 case = testtools.ErrorHolder(
@@ -236,10 +236,10 @@ class ConcurrentTestSuite(unittest.TestSuite):
                     error=sys.exc_info())
                 case.run(process_result)
         finally:
-            queue.put(test)
+            queue.put(testserver)
 
 def fork_for_tests(concurrency_num, suite):
-    result = []
+    testservers = []
     if 'BUILDDIR' in os.environ:
         selftestdir = get_test_layer()
 
@@ -306,9 +306,9 @@ def fork_for_tests(concurrency_num, suite):
         else:
             os.close(c2pwrite)
             stream = os.fdopen(c2pread, 'rb', 1)
-            test = ProtocolTestCase(stream)
-            result.append((test, numtests))
-    return result, totaltests
+            testserver = ProtocolTestCase(stream)
+            testservers.append((testserver, numtests))
+    return testservers, totaltests
 
 def partition_tests(suite, count):
     # Keep tests from the same class together but allow tests from modules
