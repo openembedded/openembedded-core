@@ -2,13 +2,13 @@ SUMMARY = "Virtual terminal emulator GTK+ widget library"
 DESCRIPTION = "VTE provides a virtual terminal widget for GTK applications."
 HOMEPAGE = "https://wiki.gnome.org/Apps/Terminal/VTE"
 BUGTRACKER = "https://bugzilla.gnome.org/buglist.cgi?product=vte"
-LICENSE = "GPLv3 & LGPLv3+ & LGPLv2.1+"
+LICENSE = "GPLv3 & LGPLv3+ & MIT-X"
 LICENSE_libvte = "LGPLv3+"
 
 LIC_FILES_CHKSUM = " \
-    file://COPYING.GPL3;md5=2f31b266d3440dd7ee50f92cf67d8e6c \
-    file://COPYING.LGPL2;md5=4fbd65380cdd255951079008b364516c \
+    file://COPYING.GPL3;md5=cc702cf3444d1f19680c794cc61948f9 \
     file://COPYING.LGPL3;md5=b52f2d57d10c4f7ee67a7eb9615d5d24 \
+    file://COPYING.XTERM;md5=d7fc3a23c16c039afafe2e042030f057 \
 "
 
 DEPENDS = "glib-2.0 gtk+3 libpcre2 libxml2-native gperf-native icu"
@@ -18,9 +18,12 @@ GIR_MESON_OPTION = 'gir'
 
 inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-introspection
 
+SRCREV = "2520d6b6785646ceb5f501f9c37a1a0307fa4486"
+SRC_URI = "git://gitlab.gnome.org/GNOME/vte.git;protocol=https;branch=vte-0-64"
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch"
-SRC_URI[archive.sha256sum] = "f5770285a52cc23a3c0428a43d492b7c0ba458ce7b8a73768a7d4f1e8a7db3b4"
+
+S = "${WORKDIR}/git"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
@@ -55,5 +58,7 @@ FILES_${PN}-prompt = " \
     ${sysconfdir}/profile.d \
     ${libexecdir}/vte-urlencode-cwd \
 "
+
+FILES_${PN}-dev += "${datadir}/glade/"
 
 BBCLASSEXTEND = "native nativesdk"
