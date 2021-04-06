@@ -17,6 +17,8 @@ SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://CVE-2020-8284.patch \
            file://CVE-2020-8285.patch \
            file://CVE-2020-8286.patch \
+           file://CVE-2021-22876.patch \
+           file://CVE-2021-22890.patch \
 "
 
 SRC_URI[md5sum] = "ec5fc263f898a3dfef08e805f1ecca42"
