@@ -7,7 +7,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 SRC_URI = "git://github.com/flatpak/${BPN}.git;protocol=https"
-SRCREV = "a609e06d0c4adc5c510cf9ac7b060db3d368e78f"
+SRCREV = "f68764e288ede516d902b131cc4fadded3804059"
 S = "${WORKDIR}/git"
 
 GTKDOC_MESON_OPTION = 'gtk_doc'
