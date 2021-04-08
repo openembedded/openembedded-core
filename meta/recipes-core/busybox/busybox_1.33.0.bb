@@ -46,7 +46,8 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0001-sysctl-ignore-EIO-of-stable_secret-below-proc-sys-ne.patch \
            file://rev.cfg \
            file://pgrep.cfg \
-"
+           file://0001-decompress_gunzip-Fix-DoS-if-gzip-is-corrupt.patch \
+           "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
 SRC_URI[tarball.sha256sum] = "d568681c91a85edc6710770cebc1e80e042ad74d305b5c2e6d57a5f3de3b8fbd"
