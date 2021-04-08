@@ -17,7 +17,7 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 DEPENDS = "m4-native flex-native bison-native"
 
 SRC_URI = "https://acpica.org/sites/acpica/files/acpica-unix-${PV}.tar.gz"
-SRC_URI[sha256sum] = "a9be7b749025e60f93fde2fe531bfe0d84a33641d3e0c9b0f6049f996dbb1ff8"
+SRC_URI[sha256sum] = "b49237a2c3df58b57310612ec3a6ebee69e1a525b5efeec7152faf32a03b7068"
 
 UPSTREAM_CHECK_URI = "https://acpica.org/downloads"
 
