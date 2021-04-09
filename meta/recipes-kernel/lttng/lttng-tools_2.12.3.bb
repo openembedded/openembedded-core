@@ -155,7 +155,7 @@ do_install_ptest () {
         -i ${D}${PTEST_PATH}/tests/unit/Makefile
 
     # Fix hardcoded build path
-    sed -e 's#TESTAPP_PATH=.*/tests/regression/#TESTAPP_PATH=${PTEST_PATH}/tests/regression/#' \
+    sed -e 's#TESTAPP_PATH=.*/tests/regression/#TESTAPP_PATH="${PTEST_PATH}/tests/regression/#' \
         -i ${D}${PTEST_PATH}/tests/regression/ust/python-logging/test_python_logging
 
     # Substitute links to installed binaries.
