@@ -1,4 +1,4 @@
-From 2824d2418605e092899117e77bc8ebf332321807 Mon Sep 17 00:00:00 2001
+From eb5a17c7b8ed676d83ce4dd0e9623e2ee0191f91 Mon Sep 17 00:00:00 2001
 From: Jakub Jelinek <jakub@redhat.com>
 Date: Fri, 15 Jan 2021 13:12:59 +0100
 Subject: [PATCH] libatomic, libgomp, libitc: Fix bootstrap [PR70454]
@@ -28,6 +28,7 @@ libitm/
 	__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.
 
 Upstream-Status: Backport [master post 10.x release]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  libatomic/configure.tgt | 56 +++++++++++++++++++++++------------------
  libgomp/configure.tgt   | 35 +++++++++++---------------
@@ -35,7 +36,7 @@ Upstream-Status: Backport [master post 10.x release]
  3 files changed, 64 insertions(+), 64 deletions(-)
 
 diff --git a/libatomic/configure.tgt b/libatomic/configure.tgt
-index 5dd0926d20..6ea082a29b 100644
+index 5dd0926d207..6ea082a29bc 100644
 --- a/libatomic/configure.tgt
 +++ b/libatomic/configure.tgt
 @@ -81,32 +81,40 @@ case "${target_cpu}" in
@@ -104,7 +105,7 @@ index 5dd0926d20..6ea082a29b 100644
  
    *)			ARCH="${target_cpu}" ;;
 diff --git a/libgomp/configure.tgt b/libgomp/configure.tgt
-index 4790a31e39..761ef2a7db 100644
+index 4790a31e394..761ef2a7db2 100644
 --- a/libgomp/configure.tgt
 +++ b/libgomp/configure.tgt
 @@ -70,28 +70,23 @@ if test x$enable_linux_futex = xyes; then
@@ -152,10 +153,10 @@ index 4790a31e39..761ef2a7db 100644
  
      # Note that sparcv7 and sparcv8 is not included here.  We need cas.
 diff --git a/libitm/configure.tgt b/libitm/configure.tgt
-index 04109160e9..ca62bac627 100644
+index d1beb5c9ec8..608462e184e 100644
 --- a/libitm/configure.tgt
 +++ b/libitm/configure.tgt
-@@ -58,16 +58,23 @@ case "${target_cpu}" in
+@@ -59,16 +59,23 @@ case "${target_cpu}" in
  
    arm*)		ARCH=arm ;;
  
@@ -189,7 +190,7 @@ index 04109160e9..ca62bac627 100644
  	XCFLAGS="${XCFLAGS} -mrtm"
  	ARCH=x86
  	;;
-@@ -102,16 +109,6 @@ case "${target_cpu}" in
+@@ -103,16 +110,6 @@ case "${target_cpu}" in
  	ARCH=sparc
  	;;
  

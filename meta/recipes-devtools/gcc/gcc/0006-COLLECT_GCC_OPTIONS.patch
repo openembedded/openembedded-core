@@ -1,4 +1,4 @@
-From a6c90d3a9c5010b4aa7cc30467cf81ca7e0f430e Mon Sep 17 00:00:00 2001
+From a03125f58038c89637445fdfbb6c38d2b276633e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 29 Mar 2013 09:16:28 +0400
 Subject: [PATCH] COLLECT_GCC_OPTIONS
@@ -14,10 +14,10 @@ Upstream-Status: Pending
  1 file changed, 9 insertions(+)
 
 diff --git a/gcc/gcc.c b/gcc/gcc.c
-index f8be58ce0a6..48b0f9dde81 100644
+index 1ee962acfaa..39b1635651a 100644
 --- a/gcc/gcc.c
 +++ b/gcc/gcc.c
-@@ -4806,6 +4806,15 @@ set_collect_gcc_options (void)
+@@ -4809,6 +4809,15 @@ set_collect_gcc_options (void)
  		sizeof ("COLLECT_GCC_OPTIONS=") - 1);
  
    first_time = TRUE;

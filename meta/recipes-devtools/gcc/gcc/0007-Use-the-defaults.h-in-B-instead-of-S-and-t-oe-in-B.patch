@@ -1,4 +1,4 @@
-From 5670d4489f119d2da661734895ac0be99b606d1b Mon Sep 17 00:00:00 2001
+From 938b65c6ba6cb4af24285f288126fe65b3e1fa9e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 29 Mar 2013 09:17:25 +0400
 Subject: [PATCH] Use the defaults.h in ${B} instead of ${S}, and t-oe in ${B}
@@ -26,7 +26,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  4 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-index 543b477ff18..a67d2cc18d6 100644
+index 646db219460..501a5f16d9f 100644
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -540,7 +540,7 @@ TARGET_SYSTEM_ROOT = @TARGET_SYSTEM_ROOT@
@@ -39,10 +39,10 @@ index 543b477ff18..a67d2cc18d6 100644
  TM_MULTILIB_CONFIG=@TM_MULTILIB_CONFIG@
  TM_MULTILIB_EXCEPTIONS_CONFIG=@TM_MULTILIB_EXCEPTIONS_CONFIG@
 diff --git a/gcc/configure b/gcc/configure
-index 8de766a942c..b26e8fc7fee 100755
+index 8976850dff6..4d903cf40e8 100755
 --- a/gcc/configure
 +++ b/gcc/configure
-@@ -12705,8 +12705,8 @@ for f in $tm_file; do
+@@ -12710,8 +12710,8 @@ for f in $tm_file; do
         tm_include_list="${tm_include_list} $f"
         ;;
      defaults.h )
@@ -54,10 +54,10 @@ index 8de766a942c..b26e8fc7fee 100755
      * )
         tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
 diff --git a/gcc/configure.ac b/gcc/configure.ac
-index 8bfd6feb780..26fa46802c7 100644
+index 13eace6cfc6..07aacfee055 100644
 --- a/gcc/configure.ac
 +++ b/gcc/configure.ac
-@@ -2138,8 +2138,8 @@ for f in $tm_file; do
+@@ -2143,8 +2143,8 @@ for f in $tm_file; do
         tm_include_list="${tm_include_list} $f"
         ;;
      defaults.h )

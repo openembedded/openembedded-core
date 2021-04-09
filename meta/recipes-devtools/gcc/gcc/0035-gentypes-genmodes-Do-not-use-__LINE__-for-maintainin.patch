@@ -1,4 +1,4 @@
-From 0395060a7dcf98c5f5a65103f6aaa71d6b862259 Mon Sep 17 00:00:00 2001
+From febc910933faf6868805546e0df4a8452a82c225 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Tue, 10 Mar 2020 08:26:53 -0700
 Subject: [PATCH] gentypes/genmodes: Do not use __LINE__ for maintaining
@@ -48,7 +48,7 @@ index 981577481af..d5700fff401 100644
        POS_HERE (do_scalar_typedef ("CUMULATIVE_ARGS", &pos));
        POS_HERE (do_scalar_typedef ("REAL_VALUE_TYPE", &pos));
 diff --git a/gcc/genmodes.c b/gcc/genmodes.c
-index bd78310ea24..dbd02c51a4c 100644
+index 21e5f536976..a22f65a232f 100644
 --- a/gcc/genmodes.c
 +++ b/gcc/genmodes.c
 @@ -430,7 +430,7 @@ complete_all_modes (void)

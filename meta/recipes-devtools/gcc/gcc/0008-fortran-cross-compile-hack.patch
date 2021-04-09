@@ -1,4 +1,4 @@
-From f05062625e7a4751be723595a2f7a4b7fbeff311 Mon Sep 17 00:00:00 2001
+From 660bf2b932273e2cde495f31cc031bb084572862 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 29 Mar 2013 09:20:01 +0400
 Subject: [PATCH] fortran cross-compile hack.
@@ -16,10 +16,10 @@ Upstream-Status: Inappropriate [embedded specific]
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/libgfortran/configure b/libgfortran/configure
-index b4cf854ddb3..e8e0ac3b1cf 100755
+index 1b4a8b10609..d7ab18fc9f9 100755
 --- a/libgfortran/configure
 +++ b/libgfortran/configure
-@@ -13090,7 +13090,7 @@ esac
+@@ -13092,7 +13092,7 @@ esac
  
  # We need gfortran to compile parts of the library
  #AC_PROG_FC(gfortran)
