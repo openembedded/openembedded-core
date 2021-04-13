@@ -130,7 +130,7 @@ def log_test_header(seq_no, nr_of_tests, name):
 #-------------------------------------------------------------------------------
 
 def start_stress(*args):
-        stress_cmd         = [ "stress-ng" ]
+        stress_cmd         = ["stress-ng"]
         added_stress_types = []
         req_stress_types   = set(args)
         cpu_cnt            = str(multiprocessing.cpu_count())
@@ -220,7 +220,7 @@ def set_hung_tmo(new_tmo):
 
         orig_tmo = int(subprocess.check_output(["cat", tmo_file]).strip())
         if new_tmo != orig_tmo:
-                cmd = ( "echo " + str(new_tmo) + " > " + tmo_file )
+                cmd = ("echo " + str(new_tmo) + " > " + tmo_file)
                 subprocess.check_output(cmd, shell=True)
                 log("Changed timeout for detection of hung tasks: ",
                     orig_tmo, " -> ", new_tmo)

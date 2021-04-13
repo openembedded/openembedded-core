@@ -72,7 +72,7 @@ class DevtoolTest(OESDKExtTestCase):
         req = 'https://github.com/rdfa/librdfa'
         recipe = "librdfa"
         self._run('devtool sdk-install libxml2')
-        self._run('devtool add %s %s' % (recipe, req) )
+        self._run('devtool add %s %s' % (recipe, req))
         try:
             self._run('devtool build %s' % recipe)
         finally:
@@ -81,7 +81,7 @@ class DevtoolTest(OESDKExtTestCase):
     def test_devtool_kernelmodule(self):
         docfile = 'https://git.yoctoproject.org/git/kernel-module-hello-world'
         recipe = 'kernel-module-hello-world'
-        self._run('devtool add %s %s' % (recipe, docfile) )
+        self._run('devtool add %s %s' % (recipe, docfile))
         try:
             self._run('devtool build %s' % recipe)
         finally:

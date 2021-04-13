@@ -91,22 +91,22 @@ qemux86_common = [
 ] + common_errors
 
 ignore_errors = {
-    'default' : common_errors,
-    'qemux86' : [
+    'default': common_errors,
+    'qemux86': [
         'Failed to access perfctr msr (MSR',
         'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
         ] + qemux86_common,
-    'qemux86-64' : qemux86_common,
-    'qemumips' : [
+    'qemux86-64': qemux86_common,
+    'qemumips': [
         'Failed to load module "glx"',
         'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
         'cacheinfo: Failed to find cpu0 device node',
         ] + common_errors,
-    'qemumips64' : [
+    'qemumips64': [
         'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
         'cacheinfo: Failed to find cpu0 device node',
          ] + common_errors,
-    'qemuppc' : [
+    'qemuppc': [
         'PCI 0000:00 Cannot reserve Legacy IO [io  0x0000-0x0fff]',
         'host side 80-wire cable detection failed, limiting max speed',
         'mode "640x480" test failed',
@@ -114,12 +114,12 @@ ignore_errors = {
         'can\'t handle BAR above 4GB',
         'Cannot reserve Legacy IO',
         ] + common_errors,
-    'qemuppc64' : [
+    'qemuppc64': [
         'vio vio: uevent: failed to send synthetic uevent',
         'synth uevent: /devices/vio: failed to send uevent',
         'PCI 0000:00 Cannot reserve Legacy IO [io  0x10000-0x10fff]',
         ] + common_errors,
-    'qemuarm' : [
+    'qemuarm': [
         'mmci-pl18x: probe of fpga:05 failed with error -22',
         'mmci-pl18x: probe of fpga:0b failed with error -22',
         'Failed to load module "glx"',
@@ -134,14 +134,14 @@ ignore_errors = {
         'Failed to initialize \'/amba/timer@101e3000\': -22',
         'jitterentropy: Initialization failed with host not compliant with requirements: 2',
         ] + common_errors,
-    'qemuarm64' : [
+    'qemuarm64': [
         'Fatal server error:',
         '(EE) Server terminated with error (1). Closing log file.',
         'dmi: Firmware registration failed.',
         'irq: type mismatch, failed to map hwirq-27 for /intc',
         'logind: failed to get session seat',
         ] + common_errors,
-    'intel-core2-32' : [
+    'intel-core2-32': [
         'ACPI: No _BQC method, cannot determine initial brightness',
         '[Firmware Bug]: ACPI: No _BQC method, cannot determine initial brightness',
         '(EE) Failed to load module "psb"',
@@ -153,7 +153,7 @@ ignore_errors = {
         'dmi: Firmware registration failed.',
         'ioremap error for 0x78',
         ] + x86_common,
-    'intel-corei7-64' : [
+    'intel-corei7-64': [
         'can\'t set Max Payload Size to 256',
         'intel_punit_ipc: can\'t request region for resource',
         '[drm] parse error at position 4 in video mode \'efifb\'',
@@ -168,8 +168,8 @@ ignore_errors = {
         'Bluetooth: hci0: Failed to send firmware data (-38)',
         'atkbd serio0: Failed to enable keyboard on isa0060/serio0',
         ] + x86_common,
-    'genericx86' : x86_common,
-    'genericx86-64' : [
+    'genericx86': x86_common,
+    'genericx86-64': [
         'Direct firmware load for i915',
         'Failed to load firmware i915',
         'Failed to fetch GuC',
@@ -177,13 +177,13 @@ ignore_errors = {
         'Failed to load DMC firmware',
         'The driver is built-in, so to load the firmware you need to',
         ] + x86_common,
-    'edgerouter' : [
+    'edgerouter': [
         'not creating \'/sys/firmware/fdt\'',
         'Failed to find cpu0 device node',
         'Fatal server error:',
         'Server terminated with error',
         ] + common_errors,
-    'beaglebone-yocto' : [
+    'beaglebone-yocto': [
         'Direct firmware load for regulatory.db',
         'failed to load regulatory.db',
         'l4_wkup_cm',

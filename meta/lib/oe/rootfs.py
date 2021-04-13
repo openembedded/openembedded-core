@@ -46,7 +46,7 @@ class Rootfs(object, metaclass=ABCMeta):
         # Ignore any lines containing log_check to avoid recursion, and ignore
         # lines beginning with a + since sh -x may emit code which isn't
         # actually executed, but may contain error messages
-        excludes = [ 'log_check', r'^\+' ]
+        excludes = ['log_check', r'^\+']
         if hasattr(self, 'log_check_expected_regexes'):
             excludes.extend(self.log_check_expected_regexes)
         # Insert custom log_check excludes

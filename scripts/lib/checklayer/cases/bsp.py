@@ -125,7 +125,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
                 if color.setdefault(task, WHITE) == WHITE:
                     visit(task)
 
-        taskname_order = dict([(task, index) for index, task in enumerate(taskname_list) ])
+        taskname_order = dict([(task, index) for index, task in enumerate(taskname_list)])
         def task_key(task):
             pn, taskname = task.rsplit(':', 1)
             return (pn, taskname_order.get(taskname, len(taskname_list)), taskname)

@@ -124,7 +124,7 @@ def main(argv=None):
 
 		if len(args) == 0:
 			print("No path given, trying /var/log/bootchart.tgz")
-			args = [ "/var/log/bootchart.tgz" ]
+			args = ["/var/log/bootchart.tgz"]
 
 		res = parsing.Trace(writer, args, options)
 
@@ -142,7 +142,7 @@ def main(argv=None):
 			print('%02d:%05.2f' % (math.floor(dur/60), dur - 60 * math.floor(dur/60)))
 		else:
 			if options.annotate_file:
-				f = open (options.annotate_file, "w")
+				f = open(options.annotate_file, "w")
 				try:
 					for time in res[4]:
 						if time is not None:

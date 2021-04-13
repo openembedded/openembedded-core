@@ -130,7 +130,7 @@ class ManualTestRunner(object):
         if testcase_config_file:
             test_case_config = load_json_file(testcase_config_file)
             test_case_to_execute = test_case_config['testcases']
-            for case in copy.deepcopy(cases) :
+            for case in copy.deepcopy(cases):
                 if case['test']['@alias'] not in test_case_to_execute:
                     cases.remove(case)
 

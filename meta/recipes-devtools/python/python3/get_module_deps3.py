@@ -105,7 +105,7 @@ for item in dif:
     if 'sitecustomize' in dep_path:
         dep_path = '${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py'
         # Prints out result, which is what will be used by create_manifest
-        print (dep_path)
+        print(dep_path)
         continue
 
     dep_path = fix_path(dep_path)
@@ -117,7 +117,7 @@ for item in dif:
         if (debug==True):
             log.write('Shared library found in %s' % dep_path)
         dep_path = dep_path.replace(soabi,'*')
-        print (dep_path)
+        print(dep_path)
         continue
     if "_sysconfigdata" in dep_path:
         dep_path = dep_path.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
@@ -125,7 +125,7 @@ for item in dif:
     if (debug==True):
         log.write(dep_path+'\n')
     # Prints out result, which is what will be used by create_manifest
-    print (dep_path)
+    print(dep_path)
 
 
     import imp
@@ -156,7 +156,7 @@ for item in dif:
         cached = cached.replace(cpython_tag,'*')
         if "_sysconfigdata" in cached:
             cached = cached.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
-        print (cached)
+        print(cached)
 
 if debug==True:
     log.close()

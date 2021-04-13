@@ -128,7 +128,7 @@ class ExtraResultsDecoderTestResult(ProxyTestResult):
 class ExtraResultsEncoderTestResult(ProxyTestResult):
     def _addResult(self, method, test, *args, exception=False, **kwargs):
         if hasattr(test, "extraresults"):
-            extras = lambda : [json.dumps(test.extraresults).encode()]
+            extras = lambda: [json.dumps(test.extraresults).encode()]
             kwargs = kwargs.copy()
             if "details" not in kwargs:
                 kwargs["details"] = {}

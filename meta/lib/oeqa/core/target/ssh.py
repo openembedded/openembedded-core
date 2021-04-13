@@ -38,11 +38,11 @@ class OESSHTarget(OETarget):
                 '-o', 'StrictHostKeyChecking=no',
                 '-o', 'LogLevel=ERROR'
                 ]
-        self.ssh = ['ssh', '-l', self.user ] + ssh_options
+        self.ssh = ['ssh', '-l', self.user] + ssh_options
         self.scp = ['scp'] + ssh_options
         if port:
-            self.ssh = self.ssh + [ '-p', port ]
-            self.scp = self.scp + [ '-P', port ]
+            self.ssh = self.ssh + ['-p', port]
+            self.scp = self.scp + ['-P', port]
 
     def start(self, **kwargs):
         pass

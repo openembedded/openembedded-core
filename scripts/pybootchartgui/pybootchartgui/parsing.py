@@ -52,7 +52,7 @@ class Trace:
         self.times = [] # Always empty, but expected by draw.py when drawing system charts.
 
         if len(paths):
-            parse_paths (writer, self, paths)
+            parse_paths(writer, self, paths)
             if not self.valid():
                 raise ParseError("empty state: '%s' does not contain a valid bootchart" % ", ".join(paths))
 
@@ -82,12 +82,12 @@ class Trace:
         # Crop the chart to the end of the first idle period after the given
         # process
         if options.crop_after:
-            idle = self.crop (writer, options.crop_after)
+            idle = self.crop(writer, options.crop_after)
         else:
             idle = None
 
         # Annotate other times as the first start point of given process lists
-        self.times = [ idle ]
+        self.times = [idle]
         if options.annotate:
             for procnames in options.annotate:
                 names = [x[:15] for x in procnames.split(",")]
@@ -135,9 +135,9 @@ class Trace:
                 # many of these double forks are so short lived
                 # that we have no samples, or process info for them
                 # so climb the parent hierarcy to find one
-                if int (ppid * 1000) not in self.ps_stats.process_map:
+                if int(ppid * 1000) not in self.ps_stats.process_map:
 #                    print "Pid '%d' short lived with no process" % ppid
-                    ppid = find_parent_id_for (ppid)
+                    ppid = find_parent_id_for(ppid)
 #                else:
 #                    print "Pid '%d' has an entry" % ppid
             else:
@@ -148,7 +148,7 @@ class Trace:
         # merge in the cmdline data
         if self.cmdline is not None:
             for proc in self.ps_stats.process_map.values():
-                rpid = int (proc.pid // 1000)
+                rpid = int(proc.pid // 1000)
                 if rpid in self.cmdline:
                     cmd = self.cmdline[rpid]
                     proc.exe = cmd['exe']
@@ -159,17 +159,17 @@ class Trace:
         # re-parent any stray orphans if we can
         if self.parent_map is not None:
             for process in self.ps_stats.process_map.values():
-                ppid = find_parent_id_for (int(process.pid // 1000))
+                ppid = find_parent_id_for(int(process.pid // 1000))
                 if ppid:
                     process.ppid = ppid * 1000
 
         # stitch the tree together with pointers
         for process in self.ps_stats.process_map.values():
-            process.set_parent (self.ps_stats.process_map)
+            process.set_parent(self.ps_stats.process_map)
 
         # count on fingers variously
         for process in self.ps_stats.process_map.values():
-            process.calc_stats (self.ps_stats.sample_period)
+            process.calc_stats(self.ps_stats.sample_period)
 
     def crop(self, writer, crop_after):
 
@@ -218,15 +218,15 @@ class Trace:
                 break
 
         if idle is None:
-            writer.warn ("not idle after proc '%s'" % crop_after)
+            writer.warn("not idle after proc '%s'" % crop_after)
             return None
 
         crop_at = idle + 300
-        writer.info ("cropping at time %d" % crop_at)
-        while len (self.cpu_stats) \
+        writer.info("cropping at time %d" % crop_at)
+        while len(self.cpu_stats) \
                     and self.cpu_stats[-1].time > crop_at:
             self.cpu_stats.pop()
-        while len (self.disk_stats) \
+        while len(self.disk_stats) \
                     and self.disk_stats[-1].time > crop_at:
             self.disk_stats.pop()
 
@@ -238,8 +238,8 @@ class Trace:
                 cropped_map[key] = value
 
         for proc in cropped_map.values():
-            proc.duration = min (proc.duration, crop_at - proc.start_time)
-            while len (proc.samples) \
+            proc.duration = min(proc.duration, crop_at - proc.start_time)
+            while len(proc.samples) \
                         and proc.samples[-1].time > crop_at:
                 proc.samples.pop()
 
@@ -262,7 +262,7 @@ def _parse_headers(file):
     def parse(acc, line):
         (headers, last) = acc
         if '=' in line:
-            last, value = map (lambda x: x.strip(), line.split('=', 1))
+            last, value = map(lambda x: x.strip(), line.split('=', 1))
         else:
             value = line.strip()
         headers[last] += value
@@ -326,13 +326,13 @@ def _parse_proc_ps_log(writer, file):
             process.last_sys_cpu_time = sysCpu
         ltime = time
 
-    if len (timed_blocks) < 2:
+    if len(timed_blocks) < 2:
         return None
 
     startTime = timed_blocks[0][0]
-    avgSampleLength = (ltime - startTime)/(len (timed_blocks) - 1)
+    avgSampleLength = (ltime - startTime)/(len(timed_blocks) - 1)
 
-    return ProcessStats (writer, processMap, len (timed_blocks), avgSampleLength, startTime, ltime)
+    return ProcessStats(writer, processMap, len(timed_blocks), avgSampleLength, startTime, ltime)
 
 def _parse_taskstats_log(writer, file):
     """
@@ -379,7 +379,7 @@ def _parse_taskstats_log(writer, file):
                     pid += 1
                     pidRewrites[opid] = pid
 #                                       print "process mutation ! '%s' vs '%s' pid %s -> pid %s\n" % (process.cmd, cmd, opid, pid)
-                    process = process.split (writer, pid, cmd, ppid, time)
+                    process = process.split(writer, pid, cmd, ppid, time)
                     processMap[pid] = process
                 else:
                     process.cmd = cmd
@@ -387,9 +387,9 @@ def _parse_taskstats_log(writer, file):
                 process = Process(writer, pid, cmd, ppid, time)
                 processMap[pid] = process
 
-            delta_cpu_ns = (float) (cpu_ns - process.last_cpu_ns)
-            delta_blkio_delay_ns = (float) (blkio_delay_ns - process.last_blkio_delay_ns)
-            delta_swapin_delay_ns = (float) (swapin_delay_ns - process.last_swapin_delay_ns)
+            delta_cpu_ns = (float)(cpu_ns - process.last_cpu_ns)
+            delta_blkio_delay_ns = (float)(blkio_delay_ns - process.last_blkio_delay_ns)
+            delta_swapin_delay_ns = (float)(swapin_delay_ns - process.last_swapin_delay_ns)
 
             # make up some state data ...
             if delta_cpu_ns > 0:
@@ -413,13 +413,13 @@ def _parse_taskstats_log(writer, file):
             process.last_swapin_delay_ns = swapin_delay_ns
         ltime = time
 
-    if len (timed_blocks) < 2:
+    if len(timed_blocks) < 2:
         return None
 
     startTime = timed_blocks[0][0]
     avgSampleLength = (ltime - startTime)/(len(timed_blocks)-1)
 
-    return ProcessStats (writer, processMap, len (timed_blocks), avgSampleLength, startTime, ltime)
+    return ProcessStats(writer, processMap, len(timed_blocks), avgSampleLength, startTime, ltime)
 
 def _parse_proc_stat_log(file):
     samples = []
@@ -430,7 +430,7 @@ def _parse_proc_stat_log(file):
             continue
         # CPU times {user, nice, system, idle, io_wait, irq, softirq}
         tokens = lines[0].split()
-        times = [ int(token) for token in tokens[1:] ]
+        times = [int(token) for token in tokens[1:]]
         if ltimes:
             user = float((times[0] + times[1]) - (ltimes[0] + ltimes[1]))
             system = float((times[2] + times[5] + times[6]) - (ltimes[2] + ltimes[5] + ltimes[6]))
@@ -438,7 +438,7 @@ def _parse_proc_stat_log(file):
             iowait = float(times[4] - ltimes[4])
 
             aSum = max(user + system + idle + iowait, 1)
-            samples.append( CPUSample(time, user/aSum, system/aSum, iowait/aSum) )
+            samples.append(CPUSample(time, user/aSum, system/aSum, iowait/aSum))
 
         ltimes = times
         # skip the rest of statistics lines
@@ -456,7 +456,7 @@ def _parse_proc_disk_stat_log(file):
     not sda1, sda2 etc. The format of relevant lines should be:
     {major minor name rio rmerge rsect ruse wio wmerge wsect wuse running use aveq}
     """
-    disk_regex_re = re.compile ('^([hsv]d.|mtdblock\d|mmcblk\d|cciss/c\d+d\d+.*)$')
+    disk_regex_re = re.compile('^([hsv]d.|mtdblock\d|mmcblk\d|cciss/c\d+d\d+.*)$')
 
     # this gets called an awful lot.
     def is_relevant_line(linetokens):
@@ -469,7 +469,7 @@ def _parse_proc_disk_stat_log(file):
 
     for time, lines in _parse_timed_blocks(file):
         sample = DiskStatSample(time)
-        relevant_tokens = [linetokens for linetokens in map (lambda x: x.split(),lines) if is_relevant_line(linetokens)]
+        relevant_tokens = [linetokens for linetokens in map(lambda x: x.split(),lines) if is_relevant_line(linetokens)]
 
         for tokens in relevant_tokens:
             disk, rsect, wsect, use = tokens[2], int(tokens[5]), int(tokens[9]), int(tokens[12])
@@ -482,10 +482,10 @@ def _parse_proc_disk_stat_log(file):
         interval = sample1.time - sample2.time
         if interval == 0:
             interval = 1
-        sums = [ a - b for a, b in zip(sample1.diskdata, sample2.diskdata) ]
+        sums = [a - b for a, b in zip(sample1.diskdata, sample2.diskdata)]
         readTput = sums[0] / 2.0 * 100.0 / interval
         writeTput = sums[1] / 2.0 * 100.0 / interval
-        util = float( sums[2] ) / 10 / interval
+        util = float(sums[2]) / 10 / interval
         util = max(0.0, min(1.0, util))
         disk_stats.append(DiskSample(sample2.time, readTput, writeTput, util))
 
@@ -570,8 +570,8 @@ def _parse_monitor_disk_log(file):
 # [    0.039993] calling  migration_init+0x0/0x6b @ 1
 # [    0.039993] initcall migration_init+0x0/0x6b returned 1 after 0 usecs
 def _parse_dmesg(writer, file):
-    timestamp_re = re.compile ("^\[\s*(\d+\.\d+)\s*]\s+(.*)$")
-    split_re = re.compile ("^(\S+)\s+([\S\+_-]+) (.*)$")
+    timestamp_re = re.compile("^\[\s*(\d+\.\d+)\s*]\s+(.*)$")
+    split_re = re.compile("^(\S+)\s+([\S\+_-]+) (.*)$")
     processMap = {}
     idx = 0
     inc = 1.0 / 1000000
@@ -580,12 +580,12 @@ def _parse_dmesg(writer, file):
     base_ts = False
     max_ts = 0
     for line in file.read().split('\n'):
-        t = timestamp_re.match (line)
+        t = timestamp_re.match(line)
         if t is None:
 #                       print "duff timestamp " + line
             continue
 
-        time_ms = float (t.group(1)) * 1000
+        time_ms = float(t.group(1)) * 1000
         # looks like we may have a huge diff after the clock
         # has been set up. This could lead to huge graph:
         # so huge we will be killed by the OOM.
@@ -599,7 +599,7 @@ def _parse_dmesg(writer, file):
         if base_ts:
 #                       print "fscked clock: used %f instead of %f" % (time_ms - base_ts, time_ms)
             time_ms -= base_ts
-        m = split_re.match (t.group(2))
+        m = split_re.match(t.group(2))
 
         if m is None:
             continue
@@ -608,19 +608,19 @@ def _parse_dmesg(writer, file):
         func = m.group(2)
         rest = m.group(3)
 
-        if t.group(2).startswith ('Write protecting the') or \
-           t.group(2).startswith ('Freeing unused kernel memory'):
+        if t.group(2).startswith('Write protecting the') or \
+           t.group(2).startswith('Freeing unused kernel memory'):
             kernel.duration = time_ms / 10
             continue
 
 #               print "foo: '%s' '%s' '%s'" % (type, func, rest)
         if type == "calling":
             ppid = kernel.pid
-            p = re.match ("\@ (\d+)", rest)
+            p = re.match("\@ (\d+)", rest)
             if p is not None:
-                ppid = float (p.group(1)) // 1000
+                ppid = float(p.group(1)) // 1000
 #                               print "match: '%s' ('%g') at '%s'" % (func, ppid, time_ms)
-            name = func.split ('+', 1) [0]
+            name = func.split('+', 1)[0]
             idx += inc
             processMap[func] = Process(writer, ppid + idx, name, ppid, time_ms / 10)
         elif type == "initcall":
@@ -655,13 +655,13 @@ def _parse_pacct(writer, file):
             print("Invalid version 0x%x" % (ord(ver)))
             return None
 
-        file.seek (14, 1)     # user, group etc.
-        pid = _read_le_int32 (file)
-        ppid = _read_le_int32 (file)
+        file.seek(14, 1)     # user, group etc.
+        pid = _read_le_int32(file)
+        ppid = _read_le_int32(file)
 #               print "Parent of %d is %d" % (pid, ppid)
         parent_map[pid] = ppid
-        file.seek (4 + 4 + 16, 1) # timings
-        file.seek (16, 1)         # acct_comm
+        file.seek(4 + 4 + 16, 1) # timings
+        file.seek(16, 1)         # acct_comm
     return parent_map
 
 def _parse_paternity_log(writer, file):
@@ -671,7 +671,7 @@ def _parse_paternity_log(writer, file):
         if not line:
             continue
         elems = line.split(' ') # <Child> <Parent>
-        if len (elems) >= 2:
+        if len(elems) >= 2:
 #                       print "paternity of %d is %d" % (int(elems[0]), int(elems[1]))
             parent_map[int(elems[0])] = int(elems[1])
         else:
@@ -682,9 +682,9 @@ def _parse_cmdline_log(writer, file):
     cmdLines = {}
     for block in file.read().split('\n\n'):
         lines = block.split('\n')
-        if len (lines) >= 3:
+        if len(lines) >= 3:
 #                       print "Lines '%s'" % (lines[0])
-            pid = int (lines[0])
+            pid = int(lines[0])
             values = {}
             values['exe'] = lines[1].lstrip(':')
             args = lines[2].lstrip(':').split('\0')
@@ -714,14 +714,14 @@ def get_num_cpus(headers):
     if headers is None:
         return 1
     if headers.get("system.cpu.num"):
-        return max (int (headers.get("system.cpu.num")), 1)
+        return max(int(headers.get("system.cpu.num")), 1)
     cpu_model = headers.get("system.cpu")
     if cpu_model is None:
         return 1
     mat = re.match(".*\\((\\d+)\\)", cpu_model)
     if mat is None:
         return 1
-    return max (int(mat.group(1)), 1)
+    return max(int(mat.group(1)), 1)
 
 def _do_parse(writer, state, filename, file):
     writer.info("parsing '%s'" % filename)

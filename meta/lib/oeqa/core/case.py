@@ -62,16 +62,16 @@ class OEPTestResultTestCase:
         logdata = log.encode("utf-8") if isinstance(log, str) else log
         logdata = zlib.compress(logdata)
         logdata = base64.b64encode(logdata).decode("utf-8")
-        return {"compressed" : logdata}
+        return {"compressed": logdata}
 
     def ptest_rawlog(self, log):
         if not hasattr(self, "extraresults"):
-            self.extraresults = {"ptestresult.sections" : {}}
-        self.extraresults["ptestresult.rawlogs"] = {"log" : self._compress_log(log)}
+            self.extraresults = {"ptestresult.sections": {}}
+        self.extraresults["ptestresult.rawlogs"] = {"log": self._compress_log(log)}
 
     def ptest_section(self, section, duration=None, log=None, logfile=None, exitcode=None):
         if not hasattr(self, "extraresults"):
-            self.extraresults = {"ptestresult.sections" : {}}
+            self.extraresults = {"ptestresult.sections": {}}
 
         sections = self.extraresults.get("ptestresult.sections")
         if section not in sections:
@@ -90,11 +90,11 @@ class OEPTestResultTestCase:
 
     def ptest_result(self, section, test, result):
         if not hasattr(self, "extraresults"):
-            self.extraresults = {"ptestresult.sections" : {}}
+            self.extraresults = {"ptestresult.sections": {}}
 
         sections = self.extraresults.get("ptestresult.sections")
         if section not in sections:
             sections[section] = {}
         resultname = "ptestresult.{}.{}".format(section, test)
-        self.extraresults[resultname] = {"status" : result}
+        self.extraresults[resultname] = {"status": result}
 

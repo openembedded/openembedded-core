@@ -33,7 +33,7 @@ class TestData(TestBase):
 
     def test_data_fail_wrong_variable(self):
         expectedError = 'AssertionError'
-        d = {'IMAGE' : 'core-image-sato', 'ARCH' : 'arm'}
+        d = {'IMAGE': 'core-image-sato', 'ARCH': 'arm'}
 
         tc = self._testLoader(d=d, modules=self.modules)
         results = tc.runTests()
@@ -46,7 +46,7 @@ class TestData(TestBase):
             self.assertTrue(expect)
 
     def test_data_ok(self):
-        d = {'IMAGE' : 'core-image-minimal', 'ARCH' : 'x86', 'MACHINE' : 'qemuarm'}
+        d = {'IMAGE': 'core-image-minimal', 'ARCH': 'x86', 'MACHINE': 'qemuarm'}
 
         tc = self._testLoader(d=d, modules=self.modules)
         self.assertEqual(True, tc.runTests().wasSuccessful())

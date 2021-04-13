@@ -140,7 +140,7 @@ class ImageFeatures(OESelftestTestCase):
         Author:      Tom Rini <trini@konsulko.com>
         """
 
-        img_types = [ 'vmdk', 'vdi', 'qcow2' ]
+        img_types = ['vmdk', 'vdi', 'qcow2']
         features = ""
         for itype in img_types:
             features += 'IMAGE_FSTYPES += "wic.%s"\n' % itype

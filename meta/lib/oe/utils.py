@@ -8,7 +8,7 @@ import traceback
 
 def read_file(filename):
     try:
-        f = open( filename, "r" )
+        f = open(filename, "r")
     except IOError as reason:
         return "" # WARNING: can't raise an error now because of the new RDEPENDS handling. This is a bit ugly. :M:
     else:

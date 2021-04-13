@@ -93,7 +93,7 @@ class OETestResult(_TestResult):
     def _getTestResultDetails(self, case):
         result_types = {'failures': 'FAILED', 'errors': 'ERROR', 'skipped': 'SKIPPED',
                         'expectedFailures': 'EXPECTEDFAIL', 'successes': 'PASSED',
-                        'unexpectedSuccesses' : 'PASSED'}
+                        'unexpectedSuccesses': 'PASSED'}
 
         for rtype in result_types:
             found = False

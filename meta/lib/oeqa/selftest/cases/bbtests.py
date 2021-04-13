@@ -51,7 +51,7 @@ class BitbakeTests(OESelftestTestCase):
         bitbake('m4-native -cclean')
         result = bitbake('m4-native')
         find_setscene = re.search("m4-native.*do_.*_setscene", result.output)
-        self.assertTrue(find_setscene, msg="No \"m4-native.*do_.*_setscene\" message found during bitbake m4-native. bitbake output: %s" % result.output )
+        self.assertTrue(find_setscene, msg="No \"m4-native.*do_.*_setscene\" message found during bitbake m4-native. bitbake output: %s" % result.output)
 
     def test_bitbake_invalid_recipe(self):
         result = bitbake('-b asdf', ignore_status=True)
@@ -191,7 +191,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
     def test_prefile(self):
         preconf = os.path.join(self.builddir, 'conf/prefile.conf')
         self.track_for_cleanup(preconf)
-        ftools.write_file(preconf ,"TEST_PREFILE=\"prefile\"")
+        ftools.write_file(preconf,"TEST_PREFILE=\"prefile\"")
         result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
         self.assertIn('prefile', result.output)
         self.write_config("TEST_PREFILE=\"localconf\"")
@@ -201,7 +201,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
     def test_postfile(self):
         postconf = os.path.join(self.builddir, 'conf/postfile.conf')
         self.track_for_cleanup(postconf)
-        ftools.write_file(postconf , "TEST_POSTFILE=\"postfile\"")
+        ftools.write_file(postconf, "TEST_POSTFILE=\"postfile\"")
         self.write_config("TEST_POSTFILE=\"localconf\"")
         result = runCmd('bitbake -R conf/postfile.conf -e | grep TEST_POSTFILE=')
         self.assertIn('postfile', result.output)
@@ -216,7 +216,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
 INHERIT_remove = \"report-error\"
 """)
         self.track_for_cleanup(os.path.join(self.builddir, "download-selftest"))
-        self.write_recipeinc('man-db',"\ndo_fail_task () {\nexit 1 \n}\n\naddtask do_fail_task before do_fetch\n" )
+        self.write_recipeinc('man-db',"\ndo_fail_task () {\nexit 1 \n}\n\naddtask do_fail_task before do_fetch\n")
         runCmd('bitbake -c cleanall man-db xcursor-transparent-theme')
         result = runCmd('bitbake -c unpack -k man-db xcursor-transparent-theme', ignore_status=True)
         errorpos = result.output.find('ERROR: Function failed: do_fail_task')

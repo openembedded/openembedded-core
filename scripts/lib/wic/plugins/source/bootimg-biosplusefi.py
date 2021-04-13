@@ -124,7 +124,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
         disk image.
         """
 
-        if ( (not cls.__imgEFIObj) or (not cls.__imgBiosObj) ):
+        if ((not cls.__imgEFIObj) or (not cls.__imgBiosObj)):
             cls.__instanciateSubClasses()
 
         cls.__imgEFIObj.do_install_disk(
@@ -155,7 +155,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
         Called before do_prepare_partition()
         """
 
-        if ( (not cls.__imgEFIObj) or (not cls.__imgBiosObj) ):
+        if ((not cls.__imgEFIObj) or (not cls.__imgBiosObj)):
             cls.__instanciateSubClasses()
 
         cls.__imgEFIObj.do_configure_partition(
@@ -187,7 +187,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
         'prepares' the partition to be incorporated into the image.
         """
 
-        if ( (not cls.__imgEFIObj) or (not cls.__imgBiosObj) ):
+        if ((not cls.__imgEFIObj) or (not cls.__imgBiosObj)):
             cls.__instanciateSubClasses()
 
         cls.__imgEFIObj.do_prepare_partition(

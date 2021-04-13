@@ -363,7 +363,7 @@ class Disk:
         cmd = "{} {} -wR 'rm \"{}\"'".format(self.debugfs,
                                             self._get_part_image(pnum),
                                             abs_path)
-        out = exec_cmd(cmd , as_shell=True)
+        out = exec_cmd(cmd, as_shell=True)
         for line in out.splitlines():
             if line.startswith("rm:"):
                 if "file is a directory" in line:
@@ -379,8 +379,7 @@ class Disk:
 
                     rmdir_out = exec_cmd("{} {} -wR 'rmdir \"{}\"'".format(self.debugfs,
                                                     self._get_part_image(pnum),
-                                                    abs_path.rstrip('/'))
-                                                    , as_shell=True)
+                                                    abs_path.rstrip('/')), as_shell=True)
 
                     for rmdir_line in rmdir_out.splitlines():
                         if "directory not empty" in rmdir_line:

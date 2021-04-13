@@ -54,7 +54,7 @@ class PtestRunnerTest(OERuntimeTestCase):
         ptest_runner_log = os.path.join(ptest_log_dir, 'ptest-runner.log')
 
         libdir = self.td.get('libdir', '')
-        ptest_dirs = [ '/usr/lib' ]
+        ptest_dirs = ['/usr/lib']
         if not libdir in ptest_dirs:
             ptest_dirs.append(libdir)
         status, output = self.target.run('ptest-runner -d \"{}\"'.format(' '.join(ptest_dirs)), 0)
@@ -95,7 +95,7 @@ class PtestRunnerTest(OERuntimeTestCase):
                 failed_tests[section] = sections[section]["log"]
 
         for section in results:
-            failed_testcases = [ "_".join(test.translate(trans).split()) for test in results[section] if results[section][test] == 'FAILED' ]
+            failed_testcases = ["_".join(test.translate(trans).split()) for test in results[section] if results[section][test] == 'FAILED']
             if failed_testcases:
                 failed_tests[section] = failed_testcases
 

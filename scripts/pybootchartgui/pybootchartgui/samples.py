@@ -19,7 +19,7 @@ class DiskStatSample:
         self.time = time
         self.diskdata = [0, 0, 0]
     def add_diskdata(self, new_diskdata):
-        self.diskdata = [ a + b for a, b in zip(self.diskdata, new_diskdata) ]
+        self.diskdata = [a + b for a, b in zip(self.diskdata, new_diskdata)]
 
 class CPUSample:
     def __init__(self, time, user, sys, io=0.0, swap=0.0):
@@ -35,7 +35,7 @@ class CPUSample:
 
     def __str__(self):
         return str(self.time) + "\t" + str(self.user) + "\t" + \
-               str(self.sys) + "\t" + str(self.io) + "\t" + str (self.swap)
+               str(self.sys) + "\t" + str(self.io) + "\t" + str(self.swap)
 
 class MemSample:
     used_values = ('MemTotal', 'MemFree', 'Buffers', 'Cached', 'SwapTotal', 'SwapFree',)
@@ -96,8 +96,8 @@ class ProcessStats:
         self.sample_period = sample_period
         self.start_time = start_time
         self.end_time = end_time
-        writer.info ("%d samples, avg. sample length %f" % (self.sample_count, self.sample_period))
-        writer.info ("process list size: %d" % len (self.process_map.values()))
+        writer.info("%d samples, avg. sample length %f" % (self.sample_count, self.sample_period))
+        writer.info("process list size: %d" % len(self.process_map.values()))
 
 class Process:
     def __init__(self, writer, pid, cmd, ppid, start_time):
@@ -123,7 +123,7 @@ class Process:
 
     # split this process' run - triggered by a name change
     def split(self, writer, pid, cmd, ppid, start_time):
-        split = Process (writer, pid, cmd, ppid, start_time)
+        split = Process(writer, pid, cmd, ppid, start_time)
 
         split.last_cpu_ns = self.last_cpu_ns
         split.last_blkio_delay_ns = self.last_blkio_delay_ns
@@ -132,7 +132,7 @@ class Process:
         return split
 
     def __str__(self):
-        return " ".join([str(self.pid), self.cmd, str(self.ppid), '[ ' + str(len(self.samples)) + ' samples ]' ])
+        return " ".join([str(self.pid), self.cmd, str(self.ppid), '[ ' + str(len(self.samples)) + ' samples ]'])
 
     def calc_stats(self, samplePeriod):
         if self.samples:
@@ -141,8 +141,8 @@ class Process:
             self.start_time = min(firstSample.time, self.start_time)
             self.duration = lastSample.time - self.start_time + samplePeriod
 
-        activeCount = sum( [1 for sample in self.samples if sample.cpu_sample and sample.cpu_sample.sys + sample.cpu_sample.user + sample.cpu_sample.io > 0.0] )
-        activeCount = activeCount + sum( [1 for sample in self.samples if sample.state == 'D'] )
+        activeCount = sum([1 for sample in self.samples if sample.cpu_sample and sample.cpu_sample.sys + sample.cpu_sample.user + sample.cpu_sample.io > 0.0])
+        activeCount = activeCount + sum([1 for sample in self.samples if sample.state == 'D'])
         self.active = (activeCount>2)
 
     def calc_load(self, userCpu, sysCpu, interval):
@@ -157,7 +157,7 @@ class Process:
 
     def set_parent(self, processMap):
         if self.ppid != None:
-            self.parent = processMap.get (self.ppid)
+            self.parent = processMap.get(self.ppid)
             if self.parent == None and self.pid // 1000 > 1 and \
                 not (self.ppid == 2000 or self.pid == 2000): # kernel threads: ppid=2
                 self.writer.warn("Missing CONFIG_PROC_EVENTS: no parent for pid '%i' ('%s') with ppid '%i'"

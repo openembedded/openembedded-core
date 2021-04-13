@@ -123,7 +123,7 @@ class oeRuntimeTest(oeTest):
             self.tc.host_dumper.dump_host()
             self.target.target_dumper.dump_target(
                     self.tc.host_dumper.dump_dir)
-            print ("%s dump data stored in %s" % (self._testMethodName,
+            print("%s dump data stored in %s" % (self._testMethodName,
                      self.tc.host_dumper.dump_dir))
 
         self.tearDownLocal()

@@ -80,7 +80,7 @@ def load_plugins(logger, plugins, pluginpath):
 
     def load_plugin(name):
         logger.debug('Loading plugin %s' % name)
-        spec = importlib.machinery.PathFinder.find_spec(name, path=[pluginpath] )
+        spec = importlib.machinery.PathFinder.find_spec(name, path=[pluginpath])
         if spec:
             return spec.loader.load_module()
 

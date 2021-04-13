@@ -107,7 +107,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         self.mismatch_msgs = []
         self.unlockedrecipes = (data.getVar("SIGGEN_UNLOCKED_RECIPES") or
                                 "").split()
-        self.unlockedrecipes = { k: "" for k in self.unlockedrecipes }
+        self.unlockedrecipes = {k: "" for k in self.unlockedrecipes}
         self.buildarch = data.getVar('BUILD_ARCH')
         self._internal = False
         pass
@@ -180,7 +180,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
 
             # If any unlocked recipe is in the direct dependencies then the
             # current recipe should be unlocked as well.
-            depnames = [ recipename_from_dep(x) for x in deps if mc == bb.runqueue.mc_from_tid(x)]
+            depnames = [recipename_from_dep(x) for x in deps if mc == bb.runqueue.mc_from_tid(x)]
             if any(x in y for y in depnames for x in self.unlockedrecipes):
                 self.unlockedrecipes[recipename] = ''
                 unlocked = True

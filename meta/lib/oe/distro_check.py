@@ -183,10 +183,10 @@ def update_distro_data(distro_check_dir, datetime, d):
     The operations has to be protected by a lock so that
     only one thread performes it at a time.
     """
-    if not os.path.isdir (distro_check_dir):
+    if not os.path.isdir(distro_check_dir):
         try:
-            bb.note ("Making new directory: %s" % distro_check_dir)
-            os.makedirs (distro_check_dir)
+            bb.note("Making new directory: %s" % distro_check_dir)
+            os.makedirs(distro_check_dir)
         except OSError:
             raise Exception('Unable to create directory %s' % (distro_check_dir))
 

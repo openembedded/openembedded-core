@@ -12,8 +12,7 @@ class KernelDev(OESelftestTestCase):
         cls.layername = 'meta-kerneltest'
         runCmd('bitbake-layers create-layer %s' % cls.layername)
         runCmd('mkdir -p %s/recipes-kernel/linux/linux-yocto' % cls.layername)
-        cls.recipes_linuxyocto_dir = os.path.join \
-            (cls.builddir, cls.layername, 'recipes-kernel', 'linux', 'linux-yocto')
+        cls.recipes_linuxyocto_dir = os.path.join(cls.builddir, cls.layername, 'recipes-kernel', 'linux', 'linux-yocto')
         cls.recipeskernel_dir = os.path.dirname(cls.recipes_linuxyocto_dir)
         runCmd('bitbake-layers add-layer %s' % cls.layername)
 

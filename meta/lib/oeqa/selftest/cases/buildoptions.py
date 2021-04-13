@@ -45,7 +45,7 @@ class ImageOptionsTests(OESelftestTestCase):
         log_compile = os.path.join(get_bb_var("WORKDIR", recipe), "temp/log.do_compile")
         with open(log_compile, "r") as f:
             loglines = "".join(f.readlines())
-        self.assertIn("ccache", loglines, msg="No match for ccache in %s log.do_compile. For further details: %s" % (recipe , log_compile))
+        self.assertIn("ccache", loglines, msg="No match for ccache in %s log.do_compile. For further details: %s" % (recipe, log_compile))
 
     def test_read_only_image(self):
         distro_features = get_bb_var('DISTRO_FEATURES')

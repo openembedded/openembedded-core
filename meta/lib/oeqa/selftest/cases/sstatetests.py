@@ -75,9 +75,9 @@ class SStateTests(SStateBase):
             file_tracker = results
 
         if should_pass:
-            self.assertTrue(file_tracker , msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
+            self.assertTrue(file_tracker, msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
         else:
-            self.assertTrue(not file_tracker , msg="Found sstate files in the wrong place for: %s (found %s)" % (', '.join(map(str, targets)), str(file_tracker)))
+            self.assertTrue(not file_tracker, msg="Found sstate files in the wrong place for: %s (found %s)" % (', '.join(map(str, targets)), str(file_tracker)))
 
     def test_sstate_creation_distro_specific_pass(self):
         self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)

@@ -17,8 +17,8 @@ class GccCompileTest(OESDKTestCase):
 
     @classmethod
     def setUpClass(self):
-        files = {'test.c' : self.tc.files_dir, 'test.cpp' : self.tc.files_dir,
-                'testsdkmakefile' : self.tc.sdk_files_dir} 
+        files = {'test.c': self.tc.files_dir, 'test.cpp': self.tc.files_dir,
+                'testsdkmakefile': self.tc.sdk_files_dir} 
         for f in files:
             shutil.copyfile(os.path.join(files[f], f),
                     os.path.join(self.tc.sdk_dir, f))

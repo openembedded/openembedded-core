@@ -42,7 +42,7 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta
         self.server_ip = d.getVar("TEST_SERVER_IP")
         if not self.server_ip:
             try:
-                self.server_ip = subprocess.check_output(['ip', 'route', 'get', self.ip ]).split("\n")[0].split()[-1]
+                self.server_ip = subprocess.check_output(['ip', 'route', 'get', self.ip]).split("\n")[0].split()[-1]
             except Exception as e:
                 bb.fatal("Failed to determine the host IP address (alternatively you can set TEST_SERVER_IP with the IP address of this machine): %s" % e)
         bb.note("Server IP: %s" % self.server_ip)
