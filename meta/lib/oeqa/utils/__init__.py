@@ -8,7 +8,7 @@ __path__ = extend_path(__path__, __name__)
 # Borrowed from CalledProcessError
 
 class CommandError(Exception):
-    def __init__(self, retcode, cmd, output = None):
+    def __init__(self, retcode, cmd, output=None):
         self.retcode = retcode
         self.cmd = cmd
         self.output = output

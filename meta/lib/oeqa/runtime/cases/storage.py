@@ -15,35 +15,35 @@ class StorageBase(OERuntimeTestCase):
         (status, output) = cls.target.run('mkdir -p %s' % cls.mount_point)
         (status, output) = cls.target.run('mount %s %s' % (cls.device, cls.mount_point))
         msg = ('Mount failed: %s.' % status)
-        cls.assertFalse(output, msg = msg)
+        cls.assertFalse(output, msg=msg)
         time.sleep(tmo)
         (status, output) = cls.target.run('cat /proc/mounts')
         match = re.search('%s' % cls.device, output)
         if match:
             msg = ('Device %s not mounted.' % cls.device)
-            cls.assertTrue(match, msg = msg)
+            cls.assertTrue(match, msg=msg)
 
         (status, output) = cls.target.run('mkdir -p %s' % cls.test_dir)
 
         (status, output) = cls.target.run('rm -f %s/*' % cls.test_dir)
         msg = ('Failed to cleanup files @ %s/*' % cls.test_dir)
-        cls.assertFalse(output, msg = msg)
+        cls.assertFalse(output, msg=msg)
 
 
     def storage_basic(cls):
         # create file on device
         (status, output) = cls.target.run('touch %s/%s' % (cls.test_dir, cls.test_file))
         msg = ('File %s not created on %s' % (cls.test_file, cls.device))
-        cls.assertFalse(status, msg = msg)
+        cls.assertFalse(status, msg=msg)
         # move file
         (status, output) = cls.target.run('mv %s/%s %s/%s1' %  
                 (cls.test_dir, cls.test_file, cls.test_dir, cls.test_file))
         msg = ('File %s not moved to %s' % (cls.test_file, cls.device))
-        cls.assertFalse(status, msg = msg)
+        cls.assertFalse(status, msg=msg)
         # remove file
         (status, output) = cls.target.run('rm %s/%s1' % (cls.test_dir, cls.test_file))
         msg = ('File %s not removed on %s' % (cls.test_file, cls.device))
-        cls.assertFalse(status, msg = msg)
+        cls.assertFalse(status, msg=msg)
 
     def storage_read(cls):
         # check if message is in file
@@ -52,14 +52,14 @@ class StorageBase(OERuntimeTestCase):
 
         match = re.search('%s' % cls.test_msg, output)
         msg = ('Test message %s not in file %s.' % (cls.test_msg, cls.test_file))
-        cls.assertEqual(status, 0,  msg = msg)
+        cls.assertEqual(status, 0,  msg=msg)
 
     def storage_write(cls):
         # create test message in file on device
         (status, output) = cls.target.run('echo "%s" >  %s/%s' % 
                 (cls.test_msg, cls.test_dir, cls.test_file))
         msg = ('File %s not create test message on %s' % (cls.test_file, cls.device))
-        cls.assertEqual(status, 0,  msg = msg)
+        cls.assertEqual(status, 0,  msg=msg)
 
     def storage_umount(cls, tmo=1):
         time.sleep(tmo)
@@ -70,13 +70,13 @@ class StorageBase(OERuntimeTestCase):
             return
         else:
             msg = ('Device not unmount %s' % cls.mount_point)
-            cls.assertEqual(status, 0,  msg = msg)
+            cls.assertEqual(status, 0,  msg=msg)
 
         (status, output) = cls.target.run('cat /proc/mounts')
         match = re.search('%s' % cls.device, output)
         if match:
             msg = ('Device %s still mounted.' % cls.device)
-            cls.assertTrue(match, msg = msg)
+            cls.assertTrue(match, msg=msg)
 
 
 class UsbTest(StorageBase):

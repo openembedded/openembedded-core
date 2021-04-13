@@ -15,7 +15,7 @@ def parse_values(content):
                 break
 
 class GlibcSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
-    def run_check(self, ssh = None):
+    def run_check(self, ssh=None):
         # configure ssh target
         features = []
         if ssh is not None:
@@ -61,7 +61,7 @@ class GlibcSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
             bitbake("core-image-minimal")
 
             # start runqemu
-            qemu = s.enter_context(runqemu("core-image-minimal", runqemuparams = "nographic"))
+            qemu = s.enter_context(runqemu("core-image-minimal", runqemuparams="nographic"))
 
             # validate that SSH is working
             status, _ = qemu.run("uname")
@@ -75,7 +75,7 @@ class GlibcSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
             if status != 0:
                 raise Exception("Failed to setup NFS mount on target ({})".format(repr(output)))
 
-            self.run_check(ssh = qemu.ip)
+            self.run_check(ssh=qemu.ip)
 
 @OETestTag("toolchain-user")
 class GlibcSelfTest(GlibcSelfTestBase):

@@ -66,7 +66,7 @@ class FakeTarget(object):
 
 
 class MyDataDict(dict):
-    def getVar(self, key, unused = None):
+    def getVar(self, key, unused=None):
         return self.get(key, "")
 
 def main():

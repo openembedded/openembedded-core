@@ -229,7 +229,7 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
     # until it exits.
     import tempfile
     import time
-    pidfile = tempfile.NamedTemporaryFile(delete = False).name
+    pidfile = tempfile.NamedTemporaryFile(delete=False).name
     try:
         sh_cmd = bb.utils.which(os.getenv('PATH'), "oe-gnome-terminal-phonehome") + " " + pidfile + " " + sh_cmd
         pipe = terminal(sh_cmd, title, env, d)

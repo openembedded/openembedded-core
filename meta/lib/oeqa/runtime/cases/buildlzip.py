@@ -16,7 +16,7 @@ class BuildLzipTest(OERuntimeTestCase):
         uri = '%s/lzip-1.19.tar.gz' % uri
         cls.project = TargetBuildProject(cls.tc.target,
                                          uri,
-                                         dl_dir = cls.tc.td['DL_DIR'])
+                                         dl_dir=cls.tc.td['DL_DIR'])
 
     @classmethod
     def tearDownClass(cls):

@@ -101,7 +101,7 @@ class oeRuntimeTest(oeTest):
         if self.tc.sigterm:
             self.fail("Got SIGTERM")
         elif (type(self.target).__name__ == "QemuTarget"):
-            self.assertTrue(self.target.check(), msg = "Qemu not running?")
+            self.assertTrue(self.target.check(), msg="Qemu not running?")
 
         self.setUpLocal()
 

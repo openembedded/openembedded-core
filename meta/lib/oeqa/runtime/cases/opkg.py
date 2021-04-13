@@ -10,7 +10,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 
 class OpkgTest(OERuntimeTestCase):
 
-    def pkg(self, command, expected = 0):
+    def pkg(self, command, expected=0):
         command = 'opkg %s' % command
         status, output = self.target.run(command, 1500)
         message = os.linesep.join([command, output])

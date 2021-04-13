@@ -16,7 +16,7 @@ from oeqa.core.utils.test import getCaseMethod, getSuiteCasesNames, getSuiteCase
 
 class TestTagDecorator(TestBase):
     def _runTest(self, modules, filterfn, expect):
-        tc = self._testLoader(modules = modules, tags_filter = filterfn)
+        tc = self._testLoader(modules=modules, tags_filter=filterfn)
         test_loaded = set(getSuiteCasesIDs(tc.suites))
         self.assertEqual(expect, test_loaded)
 

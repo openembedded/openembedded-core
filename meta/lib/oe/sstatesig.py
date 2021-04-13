@@ -90,7 +90,7 @@ class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
         self.abisaferecipes = (data.getVar("SIGGEN_EXCLUDERECIPES_ABISAFE") or "").split()
         self.saferecipedeps = (data.getVar("SIGGEN_EXCLUDE_SAFE_RECIPE_DEPS") or "").split()
         pass
-    def rundep_check(self, fn, recipename, task, dep, depname, dataCaches = None):
+    def rundep_check(self, fn, recipename, task, dep, depname, dataCaches=None):
         return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCaches)
 
 class SignatureGeneratorOEBasicHashMixIn(object):
@@ -131,7 +131,7 @@ class SignatureGeneratorOEBasicHashMixIn(object):
             newsafedeps.append(a1 + "->" + a2)
         self.saferecipedeps = newsafedeps
 
-    def rundep_check(self, fn, recipename, task, dep, depname, dataCaches = None):
+    def rundep_check(self, fn, recipename, task, dep, depname, dataCaches=None):
         return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCaches)
 
     def get_taskdata(self):

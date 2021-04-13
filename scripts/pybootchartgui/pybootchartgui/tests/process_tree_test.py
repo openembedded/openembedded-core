@@ -25,7 +25,7 @@ class TestProcessTree(unittest.TestCase):
         parsing.parse_file(writer, trace, self.mk_fname('proc_ps.log'))
         trace.compile(writer)
         self.processtree = process_tree.ProcessTree(writer, None, trace.ps_stats,
-            trace.ps_stats.sample_period, None, options.prune, None, None, False, for_testing = True)
+            trace.ps_stats.sample_period, None, options.prune, None, None, False, for_testing=True)
 
     def mk_fname(self,f):
         return os.path.join(self.rootdir, f)

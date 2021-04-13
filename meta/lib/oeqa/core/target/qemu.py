@@ -21,7 +21,7 @@ class OEQemuTarget(OESSHTarget):
             port=None, machine='', rootfs='', kernel='', kvm=False, slirp=False,
             dump_dir='', dump_host_cmds='', display='', bootlog='',
             tmpdir='', dir_image='', boottime=60, serial_ports=2,
-            boot_patterns = defaultdict(str), ovmf=False, tmpfsdir=None, **kwargs):
+            boot_patterns=defaultdict(str), ovmf=False, tmpfsdir=None, **kwargs):
 
         super(OEQemuTarget, self).__init__(logger, None, server_ip, timeout,
                 user, port)
@@ -41,7 +41,7 @@ class OEQemuTarget(OESSHTarget):
                                  logfile=bootlog, boottime=boottime,
                                  use_kvm=kvm, use_slirp=slirp, dump_dir=dump_dir,
                                  dump_host_cmds=dump_host_cmds, logger=logger,
-                                 serial_ports=serial_ports, boot_patterns = boot_patterns, 
+                                 serial_ports=serial_ports, boot_patterns=boot_patterns, 
                                  use_ovmf=ovmf, tmpfsdir=tmpfsdir)
         dump_target_cmds = kwargs.get("testimage_dump_target")
         self.target_dumper = TargetDumper(dump_target_cmds, dump_dir, self.runner)

@@ -223,4 +223,4 @@ class OePkgdataUtilTests(OESelftestTestCase):
         result = runCmd('oe-pkgdata-util', ignore_status=True)
         self.assertEqual(result.status, 2, "Status different than 2. output: %s" % result.output)
         currpos = result.output.find('usage: oe-pkgdata-util')
-        self.assertTrue(currpos != -1, msg = "Test is Failed. Help is not Displayed in %s" % result.output)
+        self.assertTrue(currpos != -1, msg="Test is Failed. Help is not Displayed in %s" % result.output)

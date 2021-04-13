@@ -104,7 +104,7 @@ def split_pntask(s):
     return (tmp.group(1), tmp.group(2))
 
 
-def print_added(d_new = None, d_old = None):
+def print_added(d_new=None, d_old=None):
     """
     Print the newly added tasks
     """
@@ -137,7 +137,7 @@ def print_added(d_new = None, d_old = None):
 
     return counter
 
-def print_vrchanged(d_new = None, d_old = None, vr = None):
+def print_vrchanged(d_new=None, d_old=None, vr=None):
     """
     Print the pv or pr changed tasks.
     The arg "vr" is "pv" or "pr"
@@ -165,7 +165,7 @@ def print_vrchanged(d_new = None, d_old = None, vr = None):
 
     return counter
 
-def print_depchanged(d_new = None, d_old = None, verbose = False):
+def print_depchanged(d_new=None, d_old=None, verbose=False):
     """
     Print the dependency changes
     """
@@ -210,7 +210,7 @@ def main():
     3) Use bb.siggen.compare_sigfiles to diff the old and new stamps
     """
 
-    parser = argparse_oe.ArgumentParser(usage = """%(prog)s [options] [package ...]
+    parser = argparse_oe.ArgumentParser(usage="""%(prog)s [options] [package ...]
 print what will be done between the current and last builds, for example:
 
     $ bitbake core-image-sato
@@ -226,7 +226,7 @@ Note:
 """
 )
     parser.add_argument("recipe", help="recipe to check")
-    parser.add_argument("-v", "--verbose", help = "print the verbose changes", action = "store_true")
+    parser.add_argument("-v", "--verbose", help="print the verbose changes", action="store_true")
     args = parser.parse_args()
 
     # Get the STAMPS_DIR

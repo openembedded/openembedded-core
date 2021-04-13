@@ -17,7 +17,7 @@ def read_file(filename):
         return data
     return None
 
-def ifelse(condition, iftrue = True, iffalse = False):
+def ifelse(condition, iftrue=True, iffalse=False):
     if condition:
         return iftrue
     else:

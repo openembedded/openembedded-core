@@ -17,7 +17,7 @@ class OEList(list):
 
     name = "list"
 
-    def __init__(self, value, separator = None):
+    def __init__(self, value, separator=None):
         if value is not None:
             list.__init__(self, value.split(separator))
         else:

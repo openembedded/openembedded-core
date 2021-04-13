@@ -32,6 +32,6 @@ class ScpTest(OERuntimeTestCase):
         self.assertEqual(status, 0, msg=msg)
 
         (status, output) = self.target.run('ls -la %s' % dst)
-        self.assertEqual(status, 0, msg = 'SCP test failed')
+        self.assertEqual(status, 0, msg='SCP test failed')
 
         self.target.run('rm %s' % dst)

@@ -37,7 +37,7 @@ class KeepAliveStreamHandler(logging.StreamHandler):
                         self.emit(logging.LogRecord("keepalive", logging.INFO,
                             None, None, "Keepalive message", None, None))
 
-        self._thread = threading.Thread(target = thread, daemon = True)
+        self._thread = threading.Thread(target=thread, daemon=True)
         self._thread.start()
 
     def close(self):

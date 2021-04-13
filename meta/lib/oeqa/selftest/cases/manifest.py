@@ -38,7 +38,7 @@ class VerifyManifest(OESelftestTestCase):
 
     #this will possibly move from here
     @classmethod
-    def get_dir_from_bb_var(self, bb_var, target = None):
+    def get_dir_from_bb_var(self, bb_var, target=None):
         target == self.buildtarget if target == None else target
         directory = get_bb_var(bb_var, target)
         if not directory or not os.path.isdir(directory):
@@ -81,8 +81,8 @@ class VerifyManifest(OESelftestTestCase):
         pkgdata_dir = reverse_dir = {}
         mfilename = mpath = m_entry = {}
         # get manifest location based on target to query about
-        d_target= dict(target = self.buildtarget,
-                         host = 'nativesdk-packagegroup-sdk-host')
+        d_target= dict(target=self.buildtarget,
+                         host='nativesdk-packagegroup-sdk-host')
         try:
             mdir = self.get_dir_from_bb_var('SDK_DEPLOY', self.buildtarget)
             for k in d_target.keys():

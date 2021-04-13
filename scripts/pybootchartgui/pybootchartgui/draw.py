@@ -395,7 +395,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
                     proc_tree, None)
 
         # render disk throughput
-        max_sample = max (trace.disk_stats, key = lambda s: s.tput)
+        max_sample = max (trace.disk_stats, key=lambda s: s.tput)
         if clip_visible (clip, chart_rect):
             draw_chart (ctx, DISK_TPUT_COLOR, False, chart_rect,
                     [(sample.time, sample.tput) for sample in trace.disk_stats],
@@ -782,7 +782,7 @@ class CumlSample:
 
     def merge_samples(self, proc):
         self.samples.extend (proc.samples)
-        self.samples.sort (key = lambda p: p.time)
+        self.samples.sort (key=lambda p: p.time)
 
     def next(self):
         global palette_idx

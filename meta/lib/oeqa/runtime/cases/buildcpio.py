@@ -15,7 +15,7 @@ class BuildCpioTest(OERuntimeTestCase):
         uri = 'https://downloads.yoctoproject.org/mirror/sources/cpio-2.13.tar.gz'
         cls.project = TargetBuildProject(cls.tc.target,
                                          uri,
-                                         dl_dir = cls.tc.td['DL_DIR'])
+                                         dl_dir=cls.tc.td['DL_DIR'])
 
     @classmethod
     def tearDownClass(cls):

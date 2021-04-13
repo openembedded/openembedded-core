@@ -215,7 +215,7 @@ class FileChange:
     changetype_link = 'L'
     changetype_move = 'M'
 
-    def __init__(self, path, changetype, oldvalue = None, newvalue = None):
+    def __init__(self, path, changetype, oldvalue=None, newvalue=None):
         self.path = path
         self.changetype = changetype
         self.oldvalue = oldvalue

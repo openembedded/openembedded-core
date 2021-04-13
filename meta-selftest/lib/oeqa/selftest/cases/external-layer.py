@@ -13,4 +13,4 @@ class ImportedTests(OESelftestTestCase):
         Author: Mariano Lopez <mariano.lopez@intel.com
         """
 
-        self.assertEqual(True, True, msg = "Impossible to fail this test")
+        self.assertEqual(True, True, msg="Impossible to fail this test")

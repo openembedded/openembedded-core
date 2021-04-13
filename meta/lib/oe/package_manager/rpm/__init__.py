@@ -181,7 +181,7 @@ class RpmPM(PackageManager):
         os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
 
 
-    def install(self, pkgs, attempt_only = False):
+    def install(self, pkgs, attempt_only=False):
         if len(pkgs) == 0:
             return
         self._prepare_pkg_transaction()
@@ -205,7 +205,7 @@ class RpmPM(PackageManager):
         if len(failed_scriptlets_pkgnames) > 0:
             failed_postinsts_abort(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
 
-    def remove(self, pkgs, with_dependencies = True):
+    def remove(self, pkgs, with_dependencies=True):
         if not pkgs:
             return
 
@@ -265,7 +265,7 @@ class RpmPM(PackageManager):
 
     def list_installed(self):
         output = self._invoke_dnf(["repoquery", "--installed", "--queryformat", "Package: %{name} %{arch} %{version} %{name}-%{version}-%{release}.%{arch}.rpm\nDependencies:\n%{requires}\nRecommendations:\n%{recommends}\nDependenciesEndHere:\n"],
-                                  print_output = False)
+                                  print_output=False)
         packages = {}
         current_package = None
         current_deps = None
@@ -297,7 +297,7 @@ class RpmPM(PackageManager):
     def update(self):
         self._invoke_dnf(["makecache", "--refresh"])
 
-    def _invoke_dnf(self, dnf_args, fatal = True, print_output = True ):
+    def _invoke_dnf(self, dnf_args, fatal=True, print_output=True ):
         os.environ['RPM_ETCCONFIGDIR'] = self.target_rootfs
 
         dnf_cmd = bb.utils.which(os.getenv('PATH'), "dnf")

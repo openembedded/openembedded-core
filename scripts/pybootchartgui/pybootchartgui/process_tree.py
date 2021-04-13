@@ -39,7 +39,7 @@ class ProcessTree:
 
     def __init__(self, writer, kernel, psstats, sample_period,
                  monitoredApp, prune, idle, taskstats,
-                 accurate_parentage, for_testing = False):
+                 accurate_parentage, for_testing=False):
         self.writer = writer
         self.process_tree = []
         self.taskstats = taskstats
@@ -49,7 +49,7 @@ class ProcessTree:
             process_list = psstats.process_map.values()
         else:
             process_list = list(kernel) + list(psstats.process_map.values())
-        self.process_list = sorted(process_list, key = lambda p: p.pid)
+        self.process_list = sorted(process_list, key=lambda p: p.pid)
         self.sample_period = sample_period
 
         self.build()
@@ -94,7 +94,7 @@ class ProcessTree:
     def sort(self, process_subtree):
         """Sort process tree."""
         for p in process_subtree:
-            p.child_list.sort(key = lambda p: p.pid)
+            p.child_list.sort(key=lambda p: p.pid)
             self.sort(p.child_list)
 
     def num_nodes(self, process_list):
@@ -284,7 +284,7 @@ class ProcessTree:
     def merge_processes(self, p1, p2):
         """Merges two process' samples."""
         p1.samples.extend(p2.samples)
-        p1.samples.sort( key = lambda p: p.time )
+        p1.samples.sort( key=lambda p: p.time )
         p1time = p1.start_time
         p2time = p2.start_time
         p1.start_time = min(p1time, p2time)

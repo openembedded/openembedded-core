@@ -130,7 +130,7 @@ class OETestResult(_TestResult):
 
         return 'UNKNOWN', None
 
-    def extractExtraResults(self, test, details = None):
+    def extractExtraResults(self, test, details=None):
         extraresults = None
         if details is not None and "extraresults" in details:
             extraresults = details.get("extraresults", {})
@@ -145,26 +145,26 @@ class OETestResult(_TestResult):
                 else:
                     self.extraresults[k] = v
 
-    def addError(self, test, *args, details = None):
-        self.extractExtraResults(test, details = details)
+    def addError(self, test, *args, details=None):
+        self.extractExtraResults(test, details=details)
         return super(OETestResult, self).addError(test, *args)
 
-    def addFailure(self, test, *args, details = None):
-        self.extractExtraResults(test, details = details)
+    def addFailure(self, test, *args, details=None):
+        self.extractExtraResults(test, details=details)
         return super(OETestResult, self).addFailure(test, *args)
 
-    def addSuccess(self, test, details = None):
+    def addSuccess(self, test, details=None):
         #Added so we can keep track of successes too
         self.successes.append((test, None))
-        self.extractExtraResults(test, details = details)
+        self.extractExtraResults(test, details=details)
         return super(OETestResult, self).addSuccess(test)
 
-    def addExpectedFailure(self, test, *args, details = None):
-        self.extractExtraResults(test, details = details)
+    def addExpectedFailure(self, test, *args, details=None):
+        self.extractExtraResults(test, details=details)
         return super(OETestResult, self).addExpectedFailure(test, *args)
 
-    def addUnexpectedSuccess(self, test, details = None):
-        self.extractExtraResults(test, details = details)
+    def addUnexpectedSuccess(self, test, details=None):
+        self.extractExtraResults(test, details=details)
         return super(OETestResult, self).addUnexpectedSuccess(test)
 
     def logDetails(self, json_file_dir=None, configuration=None, result_id=None,

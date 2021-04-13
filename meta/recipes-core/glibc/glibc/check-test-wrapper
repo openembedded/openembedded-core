@@ -64,7 +64,7 @@ else:
     sys.exit(-1)
 
 try:
-    r = subprocess.run(command, timeout = 1800, env = env)
+    r = subprocess.run(command, timeout=1800, env=env)
     sys.exit(r.returncode)
 except subprocess.TimeoutExpired:
     sys.exit(-1)
