@@ -24,7 +24,7 @@ class SystemdTest(OERuntimeTestCase):
         return output
 
     #TODO: use pyjournalctl instead
-    def journalctl(self, args='',l_match_units=None):
+    def journalctl(self, args='', l_match_units=None):
         """
         Request for the journalctl output to the current target system
 
@@ -110,7 +110,7 @@ class SystemdServiceTests(SystemdTest):
         self.systemctl('stop', 'avahi-daemon.service')
         self.systemctl('is-active', 'avahi-daemon.service',
                        expected=3, verbose=True)
-        self.systemctl('start','avahi-daemon.service')
+        self.systemctl('start', 'avahi-daemon.service')
         self.systemctl('is-active', 'avahi-daemon.service', verbose=True)
 
     @OETestDepends(['systemd.SystemdServiceTests.test_systemd_status'])
@@ -152,7 +152,7 @@ class SystemdJournalTests(SystemdTest):
         """
 
         # The expression chain that uniquely identifies the time boot message.
-        expr_items = ['Startup finished', 'kernel', 'userspace','\.$']
+        expr_items = ['Startup finished', 'kernel', 'userspace', '\.$']
         try:
             output = self.journalctl(args='-o cat --reverse')
         except AssertionError:

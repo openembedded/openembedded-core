@@ -454,7 +454,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
                             [(sample.time,
                               # Sum up used space of all volumes including the current one
                               # so that the graphs appear as stacked on top of each other.
-                              functools.reduce(lambda x,y: x + y,
+                              functools.reduce(lambda x, y: x + y,
                                      [sample.records[volume] - min_used[volume]
                                       for volume in volumes[0:i]
                                       if volume in sample.records],

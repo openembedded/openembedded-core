@@ -65,9 +65,9 @@ class RpmPM(PackageManager):
         self.target_vendor = target_vendor
         self.task_name = task_name
         if arch_var == None:
-            self.archs = self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS').replace("-","_")
+            self.archs = self.d.getVar('ALL_MULTILIB_PACKAGE_ARCHS').replace("-", "_")
         else:
-            self.archs = self.d.getVar(arch_var).replace("-","_")
+            self.archs = self.d.getVar(arch_var).replace("-", "_")
         if task_name == "host":
             self.primary_arch = self.d.getVar('SDK_ARCH')
         else:
@@ -277,7 +277,7 @@ class RpmPM(PackageManager):
                 package_arch = package_info[1]
                 package_version = package_info[2]
                 package_rpm = package_info[3]
-                packages[current_package] = {"arch":package_arch, "ver":package_version, "filename":package_rpm}
+                packages[current_package] = {"arch": package_arch, "ver": package_version, "filename": package_rpm}
                 current_deps = []
             elif line.startswith("Dependencies:"):
                 current_state = "dependencies"
@@ -312,7 +312,7 @@ class RpmPM(PackageManager):
         cmd = [dnf_cmd] + standard_dnf_args + dnf_args
         bb.note('Running %s' % ' '.join(cmd))
         try:
-            output = subprocess.check_output(cmd,stderr=subprocess.STDOUT).decode("utf-8")
+            output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode("utf-8")
             if print_output:
                 bb.debug(1, output)
             return output
@@ -349,7 +349,7 @@ class RpmPM(PackageManager):
         args = ["-q", "--root=%s" % self.target_rootfs, "--queryformat", "%{postin}", pkg]
 
         try:
-            output = subprocess.check_output([cmd] + args,stderr=subprocess.STDOUT).decode("utf-8")
+            output = subprocess.check_output([cmd] + args, stderr=subprocess.STDOUT).decode("utf-8")
         except subprocess.CalledProcessError as e:
             bb.fatal("Could not invoke rpm. Command "
                      "'%s' returned %d:\n%s" % (' '.join([cmd] + args), e.returncode, e.output.decode("utf-8")))

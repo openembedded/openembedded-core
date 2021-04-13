@@ -27,7 +27,7 @@ from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_r
 logger = logging.getLogger('devtool')
 
 def _run(cmd, cwd=''):
-    logger.debug("Running command %s> %s" % (cwd,cmd))
+    logger.debug("Running command %s> %s" % (cwd, cmd))
     return bb.process.run('%s' % cmd, cwd=cwd)
 
 def _get_srctree(tmpdir):
@@ -47,7 +47,7 @@ def _copy_source_code(orig, dest):
 def _remove_patch_dirs(recipefolder):
     for root, dirs, files in os.walk(recipefolder):
         for d in dirs:
-            shutil.rmtree(os.path.join(root,d))
+            shutil.rmtree(os.path.join(root, d))
 
 def _recipe_contains(rd, var):
     rf = rd.getVar('FILE')
@@ -235,7 +235,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         # Copy in new ones
         _copy_source_code(tmpsrctree, srctree)
 
-        (stdout,_) = __run('git ls-files --modified --others')
+        (stdout, _) = __run('git ls-files --modified --others')
         filelist = stdout.splitlines()
         pbar = bb.ui.knotty.BBProgress('Adding changed files', len(filelist))
         pbar.start()

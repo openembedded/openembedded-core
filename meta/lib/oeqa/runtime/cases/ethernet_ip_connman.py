@@ -19,7 +19,7 @@ class Ethernet_Test(OERuntimeTestCase):
         original_ip = output 
         virtual_ip = self.set_ip(original_ip)
         
-        (status, output) = self.target.run("ifconfig eth0:1 %s netmask 255.255.255.0 && sleep 2 && ping -c 5 %s && ifconfig eth0:1 down" % (virtual_ip,virtual_ip))
+        (status, output) = self.target.run("ifconfig eth0:1 %s netmask 255.255.255.0 && sleep 2 && ping -c 5 %s && ifconfig eth0:1 down" % (virtual_ip, virtual_ip))
         self.assertEqual(status, 0, msg='Failed to create virtual ip address, output: %s' % output)
         
     @OETestDepends(['ethernet_ip_connman.Ethernet_Test.test_set_virtual_ip'])  
@@ -32,5 +32,5 @@ class Ethernet_Test(OERuntimeTestCase):
         self.assertEqual(status, 0, msg='Failed to retrieve the default gateway, output: %s' % output)
         default_gateway = output
 
-        (status, output) = self.target.run("connmanctl config %s --ipv4 dhcp && sleep 2 && ping -c 5 %s" % (wired_interfaces,default_gateway))
+        (status, output) = self.target.run("connmanctl config %s --ipv4 dhcp && sleep 2 && ping -c 5 %s" % (wired_interfaces, default_gateway))
         self.assertEqual(status, 0, msg='Failed to get dynamic IP address via DHCP in connmand, output: %s' % output)

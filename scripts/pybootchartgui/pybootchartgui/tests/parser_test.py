@@ -28,7 +28,7 @@ class TestBCParser(unittest.TestCase):
 		self.name = "My first unittest"
 		self.rootdir = bootchart_dir
 
-	def mk_fname(self,f):
+	def mk_fname(self, f):
 		return os.path.join(self.rootdir, f)
 
 	def testParseHeader(self):

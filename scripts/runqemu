@@ -793,7 +793,7 @@ class BaseConfig(object):
 
         mach = self.get('MACHINE')
         if not mach.startswith('qemumips'):
-            self.kernel_cmdline_script += ' mem=%s' % self.get('QB_MEM').replace('-m','').strip() + 'M'
+            self.kernel_cmdline_script += ' mem=%s' % self.get('QB_MEM').replace('-m', '').strip() + 'M'
 
         self.qemu_opt_script += ' %s' % self.get('QB_MEM')
 
@@ -1235,7 +1235,7 @@ class BaseConfig(object):
                     elif drive_type.startswith("/dev/vdb"):
                         logger.info('Using block virtio drive')
                         vm_drive = '-drive id=disk0,file=%s,if=none,format=%s -device virtio-blk-device,drive=disk0%s' \
-                                    % (self.rootfs, rootfs_format,qb_rootfs_extra_opt)
+                                    % (self.rootfs, rootfs_format, qb_rootfs_extra_opt)
                     else:
                         # virtio might have been selected explicitly (just use it), or
                         # is used as fallback (then warn about that).

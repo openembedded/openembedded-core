@@ -94,7 +94,7 @@ class QemuTinyRunner(QemuRunner):
         self.qemuparams = '--append "root=/dev/ram0 console=ttyS0" -nographic -serial unix:%s,server,nowait' % self.socketfile
 
         launch_cmd = 'qemu-system-i386 -kernel %s -initrd %s %s' % (self.kernel, self.rootfs, self.qemuparams)
-        self.runqemu = subprocess.Popen(launch_cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,preexec_fn=os.setpgrp)
+        self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, preexec_fn=os.setpgrp)
 
         bb.note("runqemu started, pid is %s" % self.runqemu.pid)
         bb.note("waiting at most %s seconds for qemu pid" % self.runqemutime)
@@ -122,7 +122,7 @@ class QemuTinyRunner(QemuRunner):
         endtime = time.time() + timeout
         while time.time() < endtime and not stopread:
                 try:
-                        sread, _, _ = select.select([self.server_socket],[],[],1)
+                        sread, _, _ = select.select([self.server_socket], [], [], 1)
                 except InterruptedError:
                         continue
                 for sock in sread:
@@ -138,7 +138,7 @@ class QemuTinyRunner(QemuRunner):
             data += "<<< run_serial(): command timed out after %d seconds without output >>>\r\n\r\n" % timeout
         return (status, str(data))
 
-    def find_child(self,parent_pid):
+    def find_child(self, parent_pid):
         #
         # Walk the process tree from the process specified looking for a qemu-system. Return its [pid'cmd]
         #
@@ -179,4 +179,4 @@ class QemuTinyRunner(QemuRunner):
             basecmd = commands[p].split()[0]
             basecmd = os.path.basename(basecmd)
             if "qemu-system" in basecmd and "-serial unix" in commands[p]:
-                return [int(p),commands[p]]
+                return [int(p), commands[p]]

@@ -83,7 +83,7 @@ outf = open(outfile, 'w')
 print(preamble.group(1))
 outf.write(preamble.group(1))
 for d in entry_dict_sorted:
-    outf.write("struct %s %s[] = {\n" % (entry_dict_sorted[d]['type'],d))
+    outf.write("struct %s %s[] = {\n" % (entry_dict_sorted[d]['type'], d))
     for f in entry_dict_sorted[d]['fields']:
         outf.write(entry_dict_sorted[d]['fields'][f] + '\n')
 

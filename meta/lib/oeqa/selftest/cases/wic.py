@@ -244,7 +244,7 @@ class Wic(WicTestCase):
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
         images = glob(self.resultdir + "mkefidisk-*.direct")
         result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))       
-        self.assertIn("kernel",result.output)
+        self.assertIn("kernel", result.output)
 
     def test_sdimage_bootpart(self):
         """Test creation of sdimage-bootpart image"""
@@ -629,12 +629,12 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
                 config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "%s"\n' % wks_file
                 self.append_config(config)
                 bitbake('core-image-minimal')
-                tmpdir = os.path.join(get_bb_var('WORKDIR', 'core-image-minimal'),'build-wic')
+                tmpdir = os.path.join(get_bb_var('WORKDIR', 'core-image-minimal'), 'build-wic')
 
                 # check each partition for permission
                 for part in glob(os.path.join(tmpdir, 'temp-*.direct.p*')):
                     res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part))
-                    self.assertTrue(files_own_by_root(res.output),msg='Files permission incorrect using wks set "%s"' % test)
+                    self.assertTrue(files_own_by_root(res.output), msg='Files permission incorrect using wks set "%s"' % test)
 
                 # clean config and result directory for next cases
                 self.remove_config(config)
@@ -715,7 +715,7 @@ class Wic2(WicTestCase):
         wicvars = set(bb_vars['WICVARS'].split())
         # filter out optional variables
         wicvars = wicvars.difference(('DEPLOY_DIR_IMAGE', 'IMAGE_BOOT_FILES',
-                                      'INITRD', 'INITRD_LIVE', 'ISODIR','INITRAMFS_IMAGE',
+                                      'INITRD', 'INITRD_LIVE', 'ISODIR', 'INITRAMFS_IMAGE',
                                       'INITRAMFS_IMAGE_BUNDLE', 'INITRAMFS_LINK_NAME',
                                       'APPEND', 'IMAGE_EFI_BOOT_FILES'))
         with open(path) as envfile:

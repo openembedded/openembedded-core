@@ -80,7 +80,7 @@ def _get_needed_packages(json_file, test=None):
 
     with open(json_file) as f:
         test_packages = json.load(f)
-    for key,value in test_packages.items():
+    for key, value in test_packages.items():
         needed_packages[key] = value
 
     if test:
@@ -101,7 +101,7 @@ def extract_packages(d, needed_packages):
 
     extracted_path = d.getVar('TEST_EXTRACTED_DIR')
 
-    for key,value in needed_packages.items():
+    for key, value in needed_packages.items():
         packages = ()
         if isinstance(value, dict):
             packages = (value, )

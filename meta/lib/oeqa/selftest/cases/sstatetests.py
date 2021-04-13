@@ -558,7 +558,7 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps/")
         files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps/")
         # Remove items that are identical in both sets
-        for k,v in files1.items() & files2.items():
+        for k, v in files1.items() & files2.items():
             del files1[k]
             del files2[k]
         if not files1 and not files2:

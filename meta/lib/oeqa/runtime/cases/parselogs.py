@@ -193,7 +193,7 @@ ignore_errors = {
         ] + common_errors,
 }
 
-log_locations = ["/var/log/","/var/log/dmesg", "/tmp/dmesg_output.log"]
+log_locations = ["/var/log/", "/var/log/dmesg", "/tmp/dmesg_output.log"]
 
 class ParseLogsTest(OERuntimeTestCase):
 

@@ -353,7 +353,7 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None
     varfiles = get_var_files(fn, varlist, d)
     locs = localise_file_vars(fn, varfiles, varlist)
     patches = []
-    for f,v in locs.items():
+    for f, v in locs.items():
         vals = {k: varvalues[k] for k in v}
         f = os.path.abspath(f)
         if f == fn:
@@ -489,9 +489,9 @@ def get_recipe_local_files(d, patches=False, archives=False):
             if os.path.isdir(localpath):
                 for root, dirs, files in os.walk(localpath):
                     for fname in files:
-                        fileabspath = os.path.join(root,fname)
+                        fileabspath = os.path.join(root, fname)
                         srcdir = os.path.dirname(localpath)
-                        ret[os.path.relpath(fileabspath,srcdir)] = fileabspath
+                        ret[os.path.relpath(fileabspath, srcdir)] = fileabspath
             else:
                 ret[fname] = localpath
     return ret

@@ -11,7 +11,7 @@ def prserv_make_conn(d, check=False):
         if check:
             if not conn.ping():
                 raise Exception('service not available')
-        d.setVar("__PRSERV_CONN",conn)
+        d.setVar("__PRSERV_CONN", conn)
     except Exception as exc:
         bb.fatal("Connecting to PR service %s:%s failed: %s" % (host_params[0], host_params[1], str(exc)))
 
@@ -63,13 +63,13 @@ def prserv_import_db(d, filter_version=None, filter_pkgarch=None, filter_checksu
             try:
                 value = int(d.getVar(remain + '$' + version + '$' + pkgarch + '$' + checksum))
             except BaseException as exc:
-                bb.debug("Not valid value of %s:%s" % (v,str(exc)))
+                bb.debug("Not valid value of %s:%s" % (v, str(exc)))
                 continue
-            ret = conn.importone(version,pkgarch,checksum,value)
+            ret = conn.importone(version, pkgarch, checksum, value)
             if ret != value:
-                bb.error("importing(%s,%s,%s,%d) failed. DB may have larger value %d" % (version,pkgarch,checksum,value,ret))
+                bb.error("importing(%s,%s,%s,%d) failed. DB may have larger value %d" % (version, pkgarch, checksum, value, ret))
             else:
-               imported.append((version,pkgarch,checksum,value))
+               imported.append((version, pkgarch, checksum, value))
     return imported
 
 def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
@@ -112,7 +112,7 @@ def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
                     (str(datainfo[i]['version']), pkgarch, str(datainfo[i]['checksum']), str(value)))
             if not nomax:
                 for i in idx:
-                    f.write("PRAUTO_%s_%s = \"%s\"\n" % (str(datainfo[idx[i]]['version']),str(datainfo[idx[i]]['pkgarch']),str(datainfo[idx[i]]['value'])))
+                    f.write("PRAUTO_%s_%s = \"%s\"\n" % (str(datainfo[idx[i]]['version']), str(datainfo[idx[i]]['pkgarch']), str(datainfo[idx[i]]['value'])))
     bb.utils.unlockfile(lf)
 
 def prserv_check_avail(d):

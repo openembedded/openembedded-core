@@ -52,7 +52,7 @@ def export(args, config, basepath, workspace):
         logger.info('Workspace contains no recipes, nothing to export')
         return 0
     else:
-        for param, recipes in {'include':args.include,'exclude':args.exclude}.items():
+        for param, recipes in {'include': args.include, 'exclude': args.exclude}.items():
             for recipe in recipes:
                 if recipe not in workspace:
                     logger.error('Recipe (%s) on %s argument not in the current workspace' % (recipe, param))

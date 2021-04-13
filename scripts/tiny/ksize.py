@@ -80,8 +80,8 @@ class Report:
         self.title = title
         self.sizes = Sizes(glob)
         self.parts = []
-        self.totals = {"total":0, "text":0, "data":0, "bss":0}
-        self.deltas = {"total":0, "text":0, "data":0, "bss":0}
+        self.totals = {"total": 0, "text": 0, "data": 0, "bss": 0}
+        self.deltas = {"total": 0, "text": 0, "data": 0, "bss": 0}
 
     def show(self, indent=""):
         rule = str.ljust(indent, 80, '-')

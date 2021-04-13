@@ -33,7 +33,7 @@ class TestBlobParsing(OESelftestTestCase):
             return
 
         for k in to_remove:
-            self.var_map.pop(x,None)
+            self.var_map.pop(x, None)
         for k in to_add:
             self.var_map[k] = to_add[k]
 
@@ -62,7 +62,7 @@ class TestBlobParsing(OESelftestTestCase):
         """
         from oe.buildhistory_analysis import compare_dict_blobs
 
-        changesmap = {"foo-2": ("2", "8"), "bar": ("","4"), "bar-2": ("","5")}
+        changesmap = {"foo-2": ("2", "8"), "bar": ("", "4"), "bar-2": ("", "5")}
 
         self.commit_vars(to_add={"foo": "1", "foo-2": "2", "foo-3": "3"})
         blob1 = self.repo.heads.master.commit.tree.blobs[0]

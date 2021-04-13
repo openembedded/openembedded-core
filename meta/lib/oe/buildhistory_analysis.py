@@ -79,9 +79,9 @@ class ChangeRecord:
 
         def pkglist_combine(depver):
             pkglist = []
-            for k,v in depver.items():
+            for k, v in depver.items():
                 if v:
-                    pkglist.append("%s (%s)" % (k,v))
+                    pkglist.append("%s (%s)" % (k, v))
                 else:
                     pkglist.append(k)
             return pkglist
@@ -98,9 +98,9 @@ class ChangeRecord:
                 rename = False
                 for dir2, files2 in files_ba:
                     if files1 == files2 and not rename:
-                        renamed_dirs.append((dir1,dir2))
+                        renamed_dirs.append((dir1, dir2))
                         # Make sure that we don't use this (dir, files) pair again.
-                        files_ba.remove((dir2,files2))
+                        files_ba.remove((dir2, files2))
                         # If a dir has already been found to have a rename, stop and go no further.
                         rename = True
 
@@ -261,7 +261,7 @@ def blob_to_dict(blob):
     alines = [line for line in blob.data_stream.read().decode('utf-8').splitlines()]
     adict = {}
     for line in alines:
-        splitv = [i.strip() for i in line.split('=',1)]
+        splitv = [i.strip() for i in line.split('=', 1)]
         if len(splitv) > 1:
             adict[splitv[0]] = splitv[1]
     return adict
@@ -271,7 +271,7 @@ def file_list_to_dict(lines):
     adict = {}
     for line in lines:
         # Leave the last few fields intact so we handle file names containing spaces
-        splitv = line.split(None,4)
+        splitv = line.split(None, 4)
         # Grab the path and remove the leading .
         path = splitv[4][1:].strip()
         # Handle symlinks
@@ -639,7 +639,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
             elif filename == 'sysroot':
                 alines = d.a_blob.data_stream.read().decode('utf-8').splitlines()
                 blines = d.b_blob.data_stream.read().decode('utf-8').splitlines()
-                filechanges = compare_file_lists(alines,blines, compare_ownership=False)
+                filechanges = compare_file_lists(alines, blines, compare_ownership=False)
                 if filechanges:
                     chg = ChangeRecord(path, filename, None, None, True)
                     chg.filechanges = filechanges
@@ -651,7 +651,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
                 if filename == 'files-in-image.txt':
                     alines = d.a_blob.data_stream.read().decode('utf-8').splitlines()
                     blines = d.b_blob.data_stream.read().decode('utf-8').splitlines()
-                    filechanges = compare_file_lists(alines,blines)
+                    filechanges = compare_file_lists(alines, blines)
                     if filechanges:
                         chg = ChangeRecord(path, filename, None, None, True)
                         chg.filechanges = filechanges
@@ -659,7 +659,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
                 elif filename == 'installed-package-names.txt':
                     alines = d.a_blob.data_stream.read().decode('utf-8').splitlines()
                     blines = d.b_blob.data_stream.read().decode('utf-8').splitlines()
-                    filechanges = compare_lists(alines,blines)
+                    filechanges = compare_lists(alines, blines)
                     if filechanges:
                         chg = ChangeRecord(path, filename, None, None, True)
                         chg.filechanges = filechanges

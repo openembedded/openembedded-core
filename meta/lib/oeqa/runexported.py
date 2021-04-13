@@ -42,7 +42,7 @@ class FakeTarget(object):
         self.connection = None
         self.ip = None
         self.server_ip = None
-        self.datetime = time.strftime('%Y%m%d%H%M%S',time.gmtime())
+        self.datetime = time.strftime('%Y%m%d%H%M%S', time.gmtime())
         self.testdir = d.getVar("TEST_LOG_DIR")
         self.pn = d.getVar("PN")
 

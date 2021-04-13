@@ -82,8 +82,8 @@ def process_binaries(d, params):
         rpm_deploy_dir = d.getVar("DEPLOY_DIR_RPM")
         arch = get_dest_folder(d.getVar("TUNE_FEATURES"), os.listdir(rpm_deploy_dir))
         arch_rpm_dir = os.path.join(rpm_deploy_dir, arch)
-        extracted_bin_dir = os.path.join(exportpath,"binaries", arch, "extracted_binaries")
-        packaged_bin_dir = os.path.join(exportpath,"binaries", arch, "packaged_binaries")
+        extracted_bin_dir = os.path.join(exportpath, "binaries", arch, "extracted_binaries")
+        packaged_bin_dir = os.path.join(exportpath, "binaries", arch, "packaged_binaries")
         # creating necessary directory structure in case testing is done in poky env.
         if export_env == "0":
             if not os.path.exists(extracted_bin_dir):
@@ -104,7 +104,7 @@ def process_binaries(d, params):
             else: # nothing to do here; running tests under bitbake, so we asume native binaries are in sysroots dir.
                 if param_list[1] or param_list[4]:
                     bb.warn("Native binary %s %s%s. Running tests under bitbake environment. Version can't be checked except when the test itself does it"
-                            " and binary can't be removed." % (param_list[0],"has assigned ver. " + param_list[1] if param_list[1] else "",
+                            " and binary can't be removed." % (param_list[0], "has assigned ver. " + param_list[1] if param_list[1] else "",
                             ", is marked for removal" if param_list[4] else ""))
         else:# the package is target aka DUT intended and it is either required to be delivered in an extracted form or in a packaged version
             target_rpm_file_list = [item for item in os.listdir(arch_rpm_dir) if re.search(param_list[0] + "-([0-9]+\.*)", item)]
@@ -121,7 +121,7 @@ def process_binaries(d, params):
                 if param_list[1]: # the package is versioned
                     for item in target_rpm_file_list:
                         if re.match(".*-{}-.*\.rpm".format(param_list[1]), item):
-                            destination = os.path.join(extracted_bin_dir,param_list[0], param_list[1])
+                            destination = os.path.join(extracted_bin_dir, param_list[0], param_list[1])
                             bb.utils.mkdirhier(destination)
                             extract_binary(os.path.join(arch_rpm_dir, item), destination)
                             break
@@ -130,7 +130,7 @@ def process_binaries(d, params):
                         return ""
                     return "extracted"
                 else: # no version provided, just extract one binary
-                    destination = os.path.join(extracted_bin_dir,param_list[0],
+                    destination = os.path.join(extracted_bin_dir, param_list[0],
                                                re.search(".*-([0-9]+\.[0-9]+)-.*rpm", target_rpm_file_list[0]).group(1))
                     bb.utils.mkdirhier(destination)
                     extract_binary(os.path.join(arch_rpm_dir, target_rpm_file_list[0]), destination)
@@ -168,9 +168,9 @@ def process_binaries(d, params):
                 for item in packaged_bin_file_list:
                     if param_list[1]:
                         if re.match("%s-%s.*rpm" % (param_list[0], param_list[1]), item): # package with version
-                            if not os.path.exists(os.path.join(extracted_bin_path, param_list[0],param_list[1])):
+                            if not os.path.exists(os.path.join(extracted_bin_path, param_list[0], param_list[1])):
                                 os.makedirs(os.path.join(extracted_bin_path, param_list[0], param_list[1]))
-                                extract_binary(os.path.join(packaged_bin_path, item), os.path.join(extracted_bin_path, param_list[0],param_list[1]))
+                                extract_binary(os.path.join(packaged_bin_path, item), os.path.join(extracted_bin_path, param_list[0], param_list[1]))
                                 bb.plain("Using {} for {}".format(os.path.join(packaged_bin_path, item), param_list[0]))
                             break
                     else:
@@ -210,7 +210,7 @@ def files_to_copy(base_dir):
     return files_list
 
 
-def send_bin_to_DUT(d,params):
+def send_bin_to_DUT(d, params):
     from oeqa.oetest import oeRuntimeTest
     param_list = params
     cleanup_list = list()
@@ -264,7 +264,7 @@ def send_bin_to_DUT(d,params):
 def rm_bin(removal_list): # need to know both if the binary is sent archived and the path where it is sent if archived
     from oeqa.oetest import oeRuntimeTest
     for item in removal_list:
-        (status,output) = oeRuntimeTest.tc.target.run("rm " + item)
+        (status, output) = oeRuntimeTest.tc.target.run("rm " + item)
         if status != 0:
             bb.warn("Failed to remove: %s. Please ensure connection with the target device is up and running and "
                      "you have the needed rights." % item)

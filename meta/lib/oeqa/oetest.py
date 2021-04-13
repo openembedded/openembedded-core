@@ -81,7 +81,7 @@ class oeTest(unittest.TestCase):
         return False
 
     @classmethod
-    def hasFeature(self,feature):
+    def hasFeature(self, feature):
         if feature in oeTest.tc.imagefeatures or \
                 feature in oeTest.tc.distrofeatures:
             return True
@@ -431,7 +431,7 @@ class RuntimeTestContext(TestContext):
         extracted_path = self.d.getVar("TEST_EXTRACTED_DIR")
         packaged_path = self.d.getVar("TEST_PACKAGED_DIR")
 
-        for key,value in needed_packages.items():
+        for key, value in needed_packages.items():
             packages = ()
             if isinstance(value, dict):
                 packages = (value, )
@@ -491,7 +491,7 @@ class RuntimeTestContext(TestContext):
 
         with open(json_file) as f:
             test_packages = json.load(f)
-        for key,value in test_packages.items():
+        for key, value in test_packages.items():
             needed_packages[key] = value
 
         if test:

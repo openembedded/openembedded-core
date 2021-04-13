@@ -161,7 +161,7 @@ class Process:
             if self.parent == None and self.pid // 1000 > 1 and \
                 not (self.ppid == 2000 or self.pid == 2000): # kernel threads: ppid=2
                 self.writer.warn("Missing CONFIG_PROC_EVENTS: no parent for pid '%i' ('%s') with ppid '%i'"
-                                 % (self.pid,self.cmd,self.ppid))
+                                 % (self.pid, self.cmd, self.ppid))
 
     def get_end_time(self):
         return self.start_time + self.duration

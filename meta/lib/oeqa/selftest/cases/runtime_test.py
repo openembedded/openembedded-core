@@ -391,7 +391,7 @@ IMAGE_INSTALL_append = " systemtap-runtime"
         def test_crosstap_helloworld(self):
             self.write_config(self.default_config())
             bitbake('systemtap-native')
-            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR", "systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
             with runqemu(self.image) as qemu:
@@ -403,7 +403,7 @@ IMAGE_INSTALL_append = " systemtap-runtime"
             self.write_config(self.default_config())
 
             bitbake('systemtap-native')
-            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR", "systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
             with runqemu(self.image) as qemu:
@@ -415,7 +415,7 @@ IMAGE_INSTALL_append = " systemtap-runtime"
             self.write_config(self.default_config())
 
             bitbake('systemtap-native')
-            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR", "systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
             with runqemu(self.image) as qemu:
@@ -427,7 +427,7 @@ IMAGE_INSTALL_append = " systemtap-runtime"
             self.write_config(self.default_config())
 
             bitbake('systemtap-native')
-            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR", "systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
             with runqemu(self.image) as qemu:

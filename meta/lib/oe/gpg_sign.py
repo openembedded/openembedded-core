@@ -41,7 +41,7 @@ class LocalSigner(object):
 
         cmd = self.rpm_bin + " --addsign --define '_gpg_name %s'  " % keyid
         gpg_args = '--no-permission-warning --batch --passphrase=%s --agent-program=%s|--auto-expand-secmem' % (passphrase, self.gpg_agent_bin)
-        if self.gpg_version > (2,1,):
+        if self.gpg_version > (2, 1,):
             gpg_args += ' --pinentry-mode=loopback'
         cmd += "--define '_gpg_sign_cmd_extra_args %s' " % gpg_args
         cmd += "--define '_binary_filedigest_algorithm %s' " % digest
@@ -74,7 +74,7 @@ class LocalSigner(object):
 
         #gpg > 2.1 supports password pipes only through the loopback interface
         #gpg < 2.1 errors out if given unknown parameters
-        if self.gpg_version > (2,1,):
+        if self.gpg_version > (2, 1,):
             cmd += ['--pinentry-mode', 'loopback']
 
         cmd += [input_file]

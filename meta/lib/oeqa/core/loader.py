@@ -316,7 +316,7 @@ class OETestLoader(unittest.TestLoader):
 
     # XXX After Python 3.5, remove backward compatibility hacks for
     # use_load_tests deprecation via *args and **kws.  See issue 16662.
-    if sys.version_info >= (3,5):
+    if sys.version_info >= (3, 5):
         def loadTestsFromModule(self, module, *args, pattern=None, **kws):
             """
                 Returns a suite of all tests cases contained in module.

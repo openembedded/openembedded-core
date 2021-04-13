@@ -76,8 +76,8 @@ def opkg_query(cmd_output):
             if not filename:
                 filename = "%s_%s_%s.ipk" % (pkg, ver, arch)
             if pkg:
-                output[pkg] = {"arch":arch, "ver":ver,
-                        "filename":filename, "deps": dep, "pkgarch":pkgarch, "provs": prov}
+                output[pkg] = {"arch": arch, "ver": ver,
+                        "filename": filename, "deps": dep, "pkgarch": pkgarch, "provs": prov}
             pkg = ""
             arch = ""
             ver = ""

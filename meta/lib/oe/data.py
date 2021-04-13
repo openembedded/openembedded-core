@@ -21,7 +21,7 @@ def typed_value(key, d):
     except (TypeError, ValueError) as exc:
         bb.msg.fatal("Data", "%s: %s" % (key, str(exc)))
 
-def export2json(d, json_file, expand=True, searchString="",replaceString=""):
+def export2json(d, json_file, expand=True, searchString="", replaceString=""):
     data2export = {}
     keys2export = []
 
@@ -41,7 +41,7 @@ def export2json(d, json_file, expand=True, searchString="",replaceString=""):
 
     for key in keys2export:
         try:
-            data2export[key] = d.getVar(key, expand).replace(searchString,replaceString)
+            data2export[key] = d.getVar(key, expand).replace(searchString, replaceString)
         except bb.data_smart.ExpansionError:
             data2export[key] = ''
         except AttributeError:

@@ -31,7 +31,7 @@ __version__ = "0.2.1"
 def logger_create():
     logger = logging.getLogger("")
     loggerhandler = logging.StreamHandler()
-    loggerhandler.setFormatter(logging.Formatter("[%(asctime)s] %(message)s","%H:%M:%S"))
+    loggerhandler.setFormatter(logging.Formatter("[%(asctime)s] %(message)s", "%H:%M:%S"))
     logger.addHandler(loggerhandler)
     logger.setLevel(logging.INFO)
     return logger
@@ -159,7 +159,7 @@ class Configuration(object):
             dest_dir = os.path.normpath(self.repos[name].get("dest_dir", "."))
             self.repos[name]["dest_dir"] = "." if not dest_dir else dest_dir
         if msg != "":
-            logger.error("configuration file %s has the following error: %s" % (self.conffile,msg))
+            logger.error("configuration file %s has the following error: %s" % (self.conffile, msg))
             if self.localconffile and 'last_revision' in missing_options:
                 logger.error("local configuration file %s may be missing configuration for combo branch %s" % (self.localconffile, self.combobranch))
             sys.exit(1)
@@ -169,7 +169,7 @@ class Configuration(object):
             logger.error("ERROR: patchutils package is missing, please install it (e.g. # apt-get install patchutils)")
             sys.exit(1)
 
-def runcmd(cmd,destdir=None,printerr=True,out=None,env=None):
+def runcmd(cmd, destdir=None, printerr=True, out=None, env=None):
     """
         execute command, raise CalledProcessError if fail
         return output if succeed
@@ -686,7 +686,7 @@ def update_with_patches(conf, components, revisions, repos):
             patch_cmd_range = "%s..%s" % (repo['last_revision'], top_revision)
             rev_cmd_range = patch_cmd_range
 
-        file_filter = repo.get('file_filter',".")
+        file_filter = repo.get('file_filter', ".")
 
         # Filter out unwanted files
         exclude = repo.get('file_exclude', '')
@@ -696,7 +696,7 @@ def update_with_patches(conf, components, revisions, repos):
                 file_filter += " ':!%s'" % p
 
         patch_cmd = "git format-patch -N %s --output-directory %s %s -- %s" % \
-            (prefix,repo_patch_dir, patch_cmd_range, file_filter)
+            (prefix, repo_patch_dir, patch_cmd_range, file_filter)
         output = runcmd(patch_cmd, ldir)
         logger.debug("generated patch set:\n%s" % output)
         patchlist = output.splitlines()

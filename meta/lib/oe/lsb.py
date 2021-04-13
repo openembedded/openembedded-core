@@ -118,4 +118,4 @@ def distro_identifier(adjust_hook=None):
         id_str = '{0}-{1}'.format(distro_id, release)
     else:
         id_str = distro_id
-    return id_str.replace(' ','-').replace('/','-')
+    return id_str.replace(' ', '-').replace('/', '-')
