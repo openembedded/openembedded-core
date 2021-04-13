@@ -81,7 +81,7 @@ class TestBlobParsing(OESelftestTestCase):
         Test default values for comparisson of git blob dictionaries
         """
         from oe.buildhistory_analysis import compare_dict_blobs
-        defaultmap = {x: ("default", "1")  for x in ["PKG", "PKGE", "PKGV", "PKGR"]}
+        defaultmap = {x: ("default", "1") for x in ["PKG", "PKGE", "PKGV", "PKGR"]}
 
         self.commit_vars(to_add={"foo": "1"})
         blob1 = self.repo.heads.master.commit.tree.blobs[0]

@@ -39,11 +39,11 @@ class SystemdTest(OERuntimeTestCase):
         returned no entries
         """
 
-        query_units=''
+        query_units = ''
         if l_match_units:
-            query_units = ['_SYSTEMD_UNIT='+unit for unit in l_match_units]
+            query_units = ['_SYSTEMD_UNIT=' + unit for unit in l_match_units]
             query_units = ' '.join(query_units)
-        command = 'journalctl %s %s' %(args, query_units)
+        command = 'journalctl %s %s' % (args, query_units)
         status, output = self.target.run(command)
         if status:
             raise AssertionError("Command '%s' returned non-zero exit "
@@ -152,7 +152,7 @@ class SystemdJournalTests(SystemdTest):
         """
 
         # The expression chain that uniquely identifies the time boot message.
-        expr_items=['Startup finished', 'kernel', 'userspace','\.$']
+        expr_items = ['Startup finished', 'kernel', 'userspace','\.$']
         try:
             output = self.journalctl(args='-o cat --reverse')
         except AssertionError:

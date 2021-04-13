@@ -997,7 +997,7 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     if pos == -1:
         lines_before.extend(lines)
     else:
-        lines_before[pos:pos+1] = lines
+        lines_before[pos:pos + 1] = lines
 
     handled.append(('license', licvalues))
     return licvalues

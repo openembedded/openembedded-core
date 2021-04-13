@@ -217,7 +217,7 @@ class NpmRecipeHandler(RecipeHandler):
         extravalues["extrafiles"]["npm-shrinkwrap.json"] = shrinkwrap_copy
 
         url_local = "npmsw://%s" % shrinkwrap_file
-        url_recipe= "npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json"
+        url_recipe = "npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json"
 
         if dev:
             url_local += ";dev=1"

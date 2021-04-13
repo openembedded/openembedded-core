@@ -38,7 +38,7 @@ class Trace:
         self.min = None
         self.max = None
         self.headers = None
-        self.disk_stats =  []
+        self.disk_stats = []
         self.ps_stats = None
         self.taskstats = None
         self.cpu_stats = []
@@ -177,12 +177,12 @@ class Trace:
             k = j + 1
             while k < len(util) and util[k][0] < start + 300:
                 k += 1
-            k = min(k, len(util)-1)
+            k = min(k, len(util) - 1)
 
             if util[j][1] >= 0.25:
                 return False
 
-            avgload = sum(u[1] for u in util[j:k+1]) / (k-j+1)
+            avgload = sum(u[1] for u in util[j:k + 1]) / (k - j + 1)
             if avgload < 0.25:
                 return True
             else:
@@ -304,8 +304,8 @@ def _parse_proc_ps_log(writer, file):
                 continue
 
             offset = [index for index, token in enumerate(tokens[1:]) if token[-1] == ')'][0]
-            pid, cmd, state, ppid = int(tokens[0]), ' '.join(tokens[1:2+offset]), tokens[2+offset], int(tokens[3+offset])
-            userCpu, sysCpu, stime = int(tokens[13+offset]), int(tokens[14+offset]), int(tokens[21+offset])
+            pid, cmd, state, ppid = int(tokens[0]), ' '.join(tokens[1:2 + offset]), tokens[2 + offset], int(tokens[3 + offset])
+            userCpu, sysCpu, stime = int(tokens[13 + offset]), int(tokens[14 + offset]), int(tokens[21 + offset])
 
             # magic fixed point-ness ...
             pid *= 1000
@@ -330,7 +330,7 @@ def _parse_proc_ps_log(writer, file):
         return None
 
     startTime = timed_blocks[0][0]
-    avgSampleLength = (ltime - startTime)/(len(timed_blocks) - 1)
+    avgSampleLength = (ltime - startTime) / (len(timed_blocks) - 1)
 
     return ProcessStats(writer, processMap, len(timed_blocks), avgSampleLength, startTime, ltime)
 
@@ -417,7 +417,7 @@ def _parse_taskstats_log(writer, file):
         return None
 
     startTime = timed_blocks[0][0]
-    avgSampleLength = (ltime - startTime)/(len(timed_blocks)-1)
+    avgSampleLength = (ltime - startTime) / (len(timed_blocks) - 1)
 
     return ProcessStats(writer, processMap, len(timed_blocks), avgSampleLength, startTime, ltime)
 
@@ -438,7 +438,7 @@ def _parse_proc_stat_log(file):
             iowait = float(times[4] - ltimes[4])
 
             aSum = max(user + system + idle + iowait, 1)
-            samples.append(CPUSample(time, user/aSum, system/aSum, iowait/aSum))
+            samples.append(CPUSample(time, user / aSum, system / aSum, iowait / aSum))
 
         ltimes = times
         # skip the rest of statistics lines
@@ -644,7 +644,7 @@ def _parse_pacct(writer, file):
     # read LE int32
     def _read_le_int32(file):
         byts = file.read(4)
-        return (ord(byts[0]))       | (ord(byts[1]) << 8) | \
+        return (ord(byts[0])) | (ord(byts[1]) << 8) | \
                (ord(byts[2]) << 16) | (ord(byts[3]) << 24)
 
     parent_map = {}
@@ -746,7 +746,7 @@ def _do_parse(writer, state, filename, file):
     elif not filename.endswith('.log'):
         _parse_bitbake_buildstats(writer, state, filename, file)
     t2 = time.process_time()
-    writer.info("  %s seconds" % str(t2-t1))
+    writer.info("  %s seconds" % str(t2 - t1))
     return state
 
 def parse_file(writer, state, filename):

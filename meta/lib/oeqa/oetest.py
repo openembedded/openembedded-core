@@ -118,7 +118,7 @@ class oeRuntimeTest(oeTest):
         # for QemuTarget only
         if (type(self.target).__name__ == "QemuTarget" and
                 (self.id() in res.getErrorList() or
-                self.id() in  res.getFailList())):
+                self.id() in res.getFailList())):
             self.tc.host_dumper.create_dir(self._testMethodName)
             self.tc.host_dumper.dump_host()
             self.target.target_dumper.dump_target(

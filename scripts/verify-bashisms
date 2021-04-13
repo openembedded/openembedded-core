@@ -95,7 +95,7 @@ def get_tinfoil():
     # tinfoil.logger.setLevel(logging.WARNING)
     return tinfoil
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import argparse
     import shutil
 

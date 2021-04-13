@@ -60,7 +60,7 @@ class KSample(OERuntimeTestCase):
         # check result
         self.cmd_and_check("dmesg | grep \"test passed\" ", "test passed")
         # rmmod
-        self.cmd_and_check("rmmod %s" %  module_prename)
+        self.cmd_and_check("rmmod %s" % module_prename)
 
     def kprobe_func(self, name=''):
         # check config

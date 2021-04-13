@@ -6,7 +6,7 @@
 # Author: Alejandro Enedino Hernandez Samaniego "aehs29" <aehs29@gmail.com>
 
 # We can get a log per module, for all the dependencies that were found, but its messy.
-debug=False
+debug = False
 
 import sys
 import os
@@ -19,13 +19,13 @@ import os
 # We use importlib to achieve this, so we also need to know what modules importlib needs
 import importlib
 
-core_deps=set(sys.modules)
+core_deps = set(sys.modules)
 
 def fix_path(dep_path):
     import os
     # We DONT want the path on our HOST system
-    pivot='recipe-sysroot-native'
-    dep_path=dep_path[dep_path.find(pivot)+len(pivot):]
+    pivot = 'recipe-sysroot-native'
+    dep_path = dep_path[dep_path.find(pivot) + len(pivot):]
 
     if '/usr/bin' in dep_path:
         dep_path = dep_path.replace('/usr/bin''${bindir}')
@@ -40,13 +40,13 @@ def fix_path(dep_path):
     if '/usr/include' in dep_path:
         dep_path = dep_path.replace('/usr/include','${includedir}')
     if '__init__.' in dep_path:
-        dep_path =  os.path.split(dep_path)[0]
+        dep_path = os.path.split(dep_path)[0]
     return dep_path
 
 
 # Module to import was passed as an argument
-current_module =  str(sys.argv[1]).rstrip()
-if(debug==True):
+current_module = str(sys.argv[1]).rstrip()
+if(debug == True):
     log = open('log_%s' % current_module,'w')
     log.write('Module %s generated the following dependencies:\n' % current_module)
 try:
@@ -63,32 +63,32 @@ try:
             except:
                 pass # ignore all import or other exceptions raised during import
 except ImportError as e:
-    if (debug==True):
+    if (debug == True):
         log.write('Module was not found')
     pass
 
 
 # Get current module dependencies, dif will contain a list of specific deps for this module
-module_deps=set(sys.modules)
+module_deps = set(sys.modules)
 
 # We handle the core package (1st pass on create_manifest.py) as a special case
 if current_module == 'python-core-package':
     dif = core_deps
 else:
     # We know this is not the core package, so there must be a difference.
-    dif = module_deps-core_deps
+    dif = module_deps - core_deps
 
 
 # Check where each dependency came from
 for item in dif:
-    dep_path=''
+    dep_path = ''
     try:
-        if (debug==True):
+        if (debug == True):
             log.write('Calling: sys.modules[' + '%s' % item + '].__file__\n')
         dep_path = sys.modules['%s' % item].__file__
     except AttributeError as e:
         # Deals with thread (builtin module) not having __file__ attribute
-        if debug==True:
+        if debug == True:
             log.write(item + ' ')
             log.write(str(e))
             log.write('\n')
@@ -96,8 +96,8 @@ for item in dif:
     except NameError as e:
         # Deals with NameError: name 'dep_path' is not defined
         # because module is not found (wasn't compiled?), e.g. bddsm
-        if (debug==True):
-            log.write(item+' ') 
+        if (debug == True):
+            log.write(item + ' ') 
             log.write(str(e))                                              
         pass
 
@@ -111,10 +111,10 @@ for item in dif:
     dep_path = fix_path(dep_path)
 
     import sysconfig
-    soabi=sysconfig.get_config_var('SOABI')
+    soabi = sysconfig.get_config_var('SOABI')
     # Check if its a shared library and deconstruct it
     if soabi in dep_path:
-        if (debug==True):
+        if (debug == True):
             log.write('Shared library found in %s' % dep_path)
         dep_path = dep_path.replace(soabi,'*')
         print(dep_path)
@@ -122,35 +122,35 @@ for item in dif:
     if "_sysconfigdata" in dep_path:
         dep_path = dep_path.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
 
-    if (debug==True):
-        log.write(dep_path+'\n')
+    if (debug == True):
+        log.write(dep_path + '\n')
     # Prints out result, which is what will be used by create_manifest
     print(dep_path)
 
 
     import imp
     cpython_tag = imp.get_tag() 
-    cached=''
+    cached = ''
     # Theres no naive way to find *.pyc files on python3
     try:
-        if (debug==True):
+        if (debug == True):
             log.write('Calling: sys.modules[' + '%s' % item + '].__cached__\n')
         cached = sys.modules['%s' % item].__cached__
     except AttributeError as e:
         # Deals with thread (builtin module) not having __cached__ attribute
-        if debug==True:
+        if debug == True:
             log.write(item + ' ')
             log.write(str(e))
             log.write('\n')
         pass
     except NameError as e:
         # Deals with NameError: name 'cached' is not defined
-        if (debug==True):
-            log.write(item+' ') 
+        if (debug == True):
+            log.write(item + ' ') 
             log.write(str(e))                                              
         pass
     if cached is not None:
-        if (debug==True):
+        if (debug == True):
             log.write(cached)
         cached = fix_path(cached)
         cached = cached.replace(cpython_tag,'*')
@@ -158,5 +158,5 @@ for item in dif:
             cached = cached.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
         print(cached)
 
-if debug==True:
+if debug == True:
     log.close()

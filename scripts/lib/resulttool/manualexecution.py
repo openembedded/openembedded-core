@@ -182,7 +182,7 @@ class ManualTestRunner(object):
         logger.info('Configuration option file created at %s' % config_options_file)
 
     def make_testcase_config_file(self, logger, case_file, testcase_config_file):
-        if  testcase_config_file:
+        if testcase_config_file:
             if os.path.exists(testcase_config_file):
                 print('\nTest configuration file with name %s already exists. Please provide a unique file name' % (testcase_config_file))
                 return 0

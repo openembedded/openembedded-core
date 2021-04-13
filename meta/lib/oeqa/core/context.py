@@ -58,7 +58,7 @@ class OETestContext(object):
             if test.__class__ not in class_ids:
                 class_ids[test.__class__] = '.'.join(test.id().split('.')[:-1])
             for skip in skips:
-                if (test.id()+'.').startswith(skip+'.'):
+                if (test.id() + '.').startswith(skip + '.'):
                     setattr(test, 'setUp', skipfuncgen('Skip by the command line argument "%s"' % skip))
         for tclass in class_ids:
             cid = class_ids[tclass]
@@ -170,7 +170,7 @@ class OETestContextExecutor(object):
         self.tc_kwargs['init'] = {}
         self.tc_kwargs['load'] = {}
         self.tc_kwargs['list'] = {}
-        self.tc_kwargs['run']  = {}
+        self.tc_kwargs['run'] = {}
 
         self.tc_kwargs['init']['logger'] = self._setup_logger(logger, args)
         if args.test_data_file:

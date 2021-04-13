@@ -38,7 +38,7 @@ class CreatePlugin(LayerPlugin):
         layerid = args.layerid if args.layerid is not None else layername
 
         # Create the README from templates/README
-        readme_template =  read_template('README').format(layername=layername)
+        readme_template = read_template('README').format(layername=layername)
         readme = os.path.join(layerdir, 'README')
         with open(readme, 'w') as fd:
             fd.write(readme_template)

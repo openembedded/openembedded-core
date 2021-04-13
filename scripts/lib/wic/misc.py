@@ -117,7 +117,7 @@ def exec_cmd(cmd_and_args, as_shell=False):
 def find_executable(cmd, paths):
     recipe = cmd
     if recipe in NATIVE_RECIPES:
-        recipe =  NATIVE_RECIPES[recipe]
+        recipe = NATIVE_RECIPES[recipe]
     provided = get_bitbake_var("ASSUME_PROVIDED")
     if provided and "%s-native" % recipe in provided:
         return True

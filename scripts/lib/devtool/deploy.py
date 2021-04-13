@@ -188,7 +188,7 @@ def deploy(args, config, basepath, workspace):
                 if fstat.st_ino in inodes:
                     fsize = 0
                 else:
-                    fsize = int(math.ceil(float(fstat.st_size)/1024))
+                    fsize = int(math.ceil(float(fstat.st_size) / 1024))
                 inodes.add(fstat.st_ino)
                 ftotalsize += fsize
                 # The path as it would appear on the target

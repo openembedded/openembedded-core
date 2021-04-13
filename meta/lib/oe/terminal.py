@@ -274,7 +274,7 @@ def check_tmux_pane_size(tmux):
         else:
             raise
 
-    return size/2 >= 19
+    return size / 2 >= 19
 
 def check_terminal_version(terminalName):
     import subprocess as sub

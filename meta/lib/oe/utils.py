@@ -117,8 +117,8 @@ def features_backfill(var,d):
     # Distributions wanting to elide a value in DISTRO_FEATURES_BACKFILL should
     # add the feature to DISTRO_FEATURES_BACKFILL_CONSIDERED
     features = (d.getVar(var) or "").split()
-    backfill = (d.getVar(var+"_BACKFILL") or "").split()
-    considered = (d.getVar(var+"_BACKFILL_CONSIDERED") or "").split()
+    backfill = (d.getVar(var + "_BACKFILL") or "").split()
+    considered = (d.getVar(var + "_BACKFILL_CONSIDERED") or "").split()
 
     addfeatures = []
     for feature in backfill:
@@ -526,7 +526,7 @@ class ImageQAFailed(Exception):
     def __init__(self, description, name=None, logfile=None):
         self.description = description
         self.name = name
-        self.logfile=logfile
+        self.logfile = logfile
 
     def __str__(self):
         msg = 'Function failed: %s' % self.name

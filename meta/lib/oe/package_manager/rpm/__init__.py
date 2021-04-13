@@ -32,7 +32,7 @@ class RpmIndexer(Indexer):
 
 class RpmSubdirIndexer(RpmIndexer):
     def write_index(self):
-        bb.note("Generating package index for %s" %(self.deploy_dir))
+        bb.note("Generating package index for %s" % (self.deploy_dir))
         # Remove the existing repodata to ensure that we re-generate it no matter what
         bb.utils.remove(os.path.join(self.deploy_dir, "repodata"), recurse=True)
 
@@ -42,7 +42,7 @@ class RpmSubdirIndexer(RpmIndexer):
                 for dir in entry[1]:
                     if dir != 'repodata':
                         dir_path = oe.path.join(self.deploy_dir, dir)
-                        bb.note("Generating package index for %s" %(dir_path))
+                        bb.note("Generating package index for %s" % (dir_path))
                         self.do_write_index(dir_path)
 
 
@@ -94,7 +94,7 @@ class RpmPM(PackageManager):
             archs = archs + ["bogusarch"]
         # This architecture needs to be upfront so that packages using it are properly prioritized
         archs = ["sdk_provides_dummy_target"] + archs
-        confdir = "%s/%s" %(self.target_rootfs, "etc/dnf/vars/")
+        confdir = "%s/%s" % (self.target_rootfs, "etc/dnf/vars/")
         bb.utils.mkdirhier(confdir)
         open(confdir + "arch", 'w').write(":".join(archs))
         distro_codename = self.d.getVar('DISTRO_CODENAME')
@@ -107,8 +107,8 @@ class RpmPM(PackageManager):
         # We need to configure rpm to use our primary package architecture as the installation architecture,
         # and to make it compatible with other package architectures that we use.
         # Otherwise it will refuse to proceed with packages installation.
-        platformconfdir = "%s/%s" %(self.target_rootfs, "etc/rpm/")
-        rpmrcconfdir = "%s/%s" %(self.target_rootfs, "etc/")
+        platformconfdir = "%s/%s" % (self.target_rootfs, "etc/rpm/")
+        rpmrcconfdir = "%s/%s" % (self.target_rootfs, "etc/")
         bb.utils.mkdirhier(platformconfdir)
         open(platformconfdir + "platform", 'w').write("%s-pc-linux" % self.primary_arch)
         with open(rpmrcconfdir + "rpmrc", 'w') as f:
@@ -162,7 +162,7 @@ class RpmPM(PackageManager):
             if feed_archs is not None:
                 for arch in feed_archs.split():
                     repo_uri = uri + "/" + arch
-                    repo_id   = "oe-remote-repo"  + "-".join(urlparse(repo_uri).path.split("/"))
+                    repo_id = "oe-remote-repo" + "-".join(urlparse(repo_uri).path.split("/"))
                     repo_name = "OE Remote Repo:" + " ".join(urlparse(repo_uri).path.split("/"))
                     open(oe.path.join(self.target_rootfs, "etc", "yum.repos.d", repo_base + ".repo"), 'a').write(
                              "[%s]\nname=%s\nbaseurl=%s\n%s\n" % (repo_id, repo_name, repo_uri, gpg_opts))
@@ -215,7 +215,7 @@ class RpmPM(PackageManager):
             self._invoke_dnf(["remove"] + pkgs)
         else:
             cmd = bb.utils.which(os.getenv('PATH'), "rpm")
-            args = ["-e", "-v", "--nodeps", "--root=%s" %self.target_rootfs]
+            args = ["-e", "-v", "--nodeps", "--root=%s" % self.target_rootfs]
 
             try:
                 bb.note("Running %s" % ' '.join([cmd] + args + pkgs))
@@ -303,7 +303,7 @@ class RpmPM(PackageManager):
         dnf_cmd = bb.utils.which(os.getenv('PATH'), "dnf")
         standard_dnf_args = ["-v", "--rpmverbosity=info", "-y",
                              "-c", oe.path.join(self.target_rootfs, "etc/dnf/dnf.conf"),
-                             "--setopt=reposdir=%s" %(oe.path.join(self.target_rootfs, "etc/yum.repos.d")),
+                             "--setopt=reposdir=%s" % (oe.path.join(self.target_rootfs, "etc/yum.repos.d")),
                              "--installroot=%s" % (self.target_rootfs),
                              "--setopt=logdir=%s" % (self.d.getVar('T'))
                             ]
@@ -375,7 +375,7 @@ class RpmPM(PackageManager):
         output = self._invoke_dnf(["repoquery", "--queryformat", "%{location}", pkg])
         pkg_name = output.splitlines()[-1]
         if not pkg_name.endswith(".rpm"):
-            bb.fatal("dnf could not find package %s in repository: %s" %(pkg, output))
+            bb.fatal("dnf could not find package %s in repository: %s" % (pkg, output))
         pkg_path = oe.path.join(self.rpm_repo_dir, pkg_name)
 
         cpio_cmd = bb.utils.which(os.getenv("PATH"), "cpio")

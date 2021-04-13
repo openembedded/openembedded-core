@@ -81,7 +81,7 @@ class OESSHTarget(OETarget):
 
         if timeout:
             processTimeout = timeout
-        elif timeout==0:
+        elif timeout == 0:
             processTimeout = None
         else:
             processTimeout = self.timeout

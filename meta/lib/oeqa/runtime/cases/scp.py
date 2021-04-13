@@ -15,7 +15,7 @@ class ScpTest(OERuntimeTestCase):
     def setUpClass(cls):
         cls.tmp_fd, cls.tmp_path = mkstemp()
         with os.fdopen(cls.tmp_fd, 'w') as f:
-            f.seek(2 ** 22 -1)
+            f.seek(2 ** 22 - 1)
             f.write(os.linesep)
 
     @classmethod

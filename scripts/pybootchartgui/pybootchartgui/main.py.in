@@ -139,7 +139,7 @@ def main(argv=None):
 			else:
 			    duration = proc_tree.duration
 			dur = duration / 100.0
-			print('%02d:%05.2f' % (math.floor(dur/60), dur - 60 * math.floor(dur/60)))
+			print('%02d:%05.2f' % (math.floor(dur / 60), dur - 60 * math.floor(dur / 60)))
 		else:
 			if options.annotate_file:
 				f = open(options.annotate_file, "w")

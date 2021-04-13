@@ -135,7 +135,7 @@ class Archiver(OESelftestTestCase):
         target = 'selftest-ed-native'
 
         features = 'INHERIT += "archiver"\n'
-        features +=  'ARCHIVER_MODE[src] = "%s"\n' % (mode)
+        features += 'ARCHIVER_MODE[src] = "%s"\n' % (mode)
         if extra_config:
             features += extra_config
         self.write_config(features)
@@ -212,7 +212,7 @@ class Archiver(OESelftestTestCase):
         `ARCHIVER_MIRROR_EXCLUDE`.
         """
 
-        target='selftest-ed'
+        target = 'selftest-ed'
         target_file_name = 'ed-1.14.1.tar.lz'
 
         features = 'INHERIT += "archiver"\n'

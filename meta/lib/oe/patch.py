@@ -323,7 +323,7 @@ class GitApplyTree(PatchTree):
     def decodeAuthor(line):
         from email.header import decode_header
         authorval = line.split(':', 1)[1].strip().replace('"', '')
-        result =  decode_header(authorval)[0][0]
+        result = decode_header(authorval)[0][0]
         if hasattr(result, 'decode'):
             result = result.decode('utf-8')
         return result

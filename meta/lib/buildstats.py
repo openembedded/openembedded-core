@@ -121,7 +121,7 @@ class SystemStats:
             iowait = float(times[4] - self.stat_ltimes[4])
 
             aSum = max(user + system + idle + iowait, 1)
-            reduced = (time, (user/aSum, system/aSum, iowait/aSum))
+            reduced = (time, (user / aSum, system / aSum, iowait / aSum))
 
         self.stat_ltimes = times
         return reduced

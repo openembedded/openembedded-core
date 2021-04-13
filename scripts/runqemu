@@ -215,7 +215,7 @@ class BaseConfig(object):
         logger.debug("Acquiring lockfile %s..." % self.taplock)
         try:
             self.taplock_descriptor = open(self.taplock, 'w')
-            fcntl.flock(self.taplock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
+            fcntl.flock(self.taplock_descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except Exception as e:
             msg = "Acquiring lockfile %s failed: %s" % (self.taplock, e)
             if error:
@@ -259,7 +259,7 @@ class BaseConfig(object):
         try:
             portlock_descriptor = open(lockfile, 'w')
             self.portlocks.update({lockfile: portlock_descriptor})
-            fcntl.flock(self.portlocks[lockfile], fcntl.LOCK_EX|fcntl.LOCK_NB)
+            fcntl.flock(self.portlocks[lockfile], fcntl.LOCK_EX | fcntl.LOCK_NB)
         except Exception as e:
             msg = "Acquiring lockfile %s failed: %s" % (lockfile, e)
             logger.info(msg)
@@ -350,7 +350,7 @@ class BaseConfig(object):
         elif re.search('\.bin$', p) or re.search('bzImage', p) or \
              re.search('zImage', p) or re.search('vmlinux', p) or \
              re.search('fitImage', p) or re.search('uImage', p):
-            self.kernel =  p
+            self.kernel = p
         elif os.path.exists(p) and (not os.path.isdir(p)) and '-image-' in os.path.basename(p):
             self.rootfs = p
             # Check filename against self.fstypes can hanlde <file>.cpio.gz,
@@ -363,7 +363,7 @@ class BaseConfig(object):
             if not fst:
                 m = re.search('.*\.(.*)$', self.rootfs)
                 if m:
-                    fst =  m.group(1)
+                    fst = m.group(1)
             if fst:
                 self.check_arg_fstype(fst)
                 qb = re.sub('\.' + fst + "$", '', self.rootfs)
@@ -563,7 +563,7 @@ class BaseConfig(object):
             logger.error("For further help see:")
             raise RunQemuError(yocto_kvm_wiki)
 
-        if os.access(dev_kvm, os.W_OK|os.R_OK):
+        if os.access(dev_kvm, os.W_OK | os.R_OK):
             self.qemu_opt_script += ' -enable-kvm'
             if self.get('MACHINE') == "qemux86":
                 # Workaround for broken APIC window on pre 4.15 host kernels which causes boot hangs
@@ -581,7 +581,7 @@ class BaseConfig(object):
                 logger.error("For further help see:")
                 raise RunQemuError(yocto_paravirt_kvm_wiki)
 
-            if not os.access(dev_vhost, os.W_OK|os.R_OK):
+            if not os.access(dev_vhost, os.W_OK | os.R_OK):
                 logger.error("You have no read or write permission on /dev/vhost-net.")
                 logger.error("Please change the ownership of this file as described at:")
                 raise RunQemuError(yocto_paravirt_kvm_wiki)
@@ -854,7 +854,7 @@ class BaseConfig(object):
                 self.qemuboot = "%s/%s-%s.qemuboot.conf" % (deploy_dir_image,
                         self.rootfs, machine)
             else:
-                cmd = 'ls -t %s/*.qemuboot.conf' %  deploy_dir_image
+                cmd = 'ls -t %s/*.qemuboot.conf' % deploy_dir_image
                 logger.debug('Running %s...' % cmd)
                 try:
                     qbs = subprocess.check_output(cmd, shell=True).decode('utf-8')
@@ -956,7 +956,7 @@ class BaseConfig(object):
         except KeyError:
             fstype_flags = ''
         logoutput.append('FSTYPE: [%s%s]' % (self.fstype, fstype_flags))
-        if self.fstype  == 'nfs':
+        if self.fstype == 'nfs':
             logoutput.append('NFS_DIR: [%s]' % self.rootfs)
         else:
             logoutput.append('ROOTFS: [%s]' % self.rootfs)
@@ -996,7 +996,7 @@ class BaseConfig(object):
             # Use '%s' since they are integers
             os.putenv(k, '%s' % v)
 
-        self.unfs_opts="nfsvers=3,port=%s,tcp,mountport=%s" % (nfsd_port, mountd_port)
+        self.unfs_opts = "nfsvers=3,port=%s,tcp,mountport=%s" % (nfsd_port, mountd_port)
 
         # Extract .tar.bz2 or .tar.bz if no nfs dir
         if not (self.rootfs and os.path.isdir(self.rootfs)):
@@ -1124,7 +1124,7 @@ class BaseConfig(object):
             if self.acquire_taplock(error=False):
                 tap = p
                 logger.info("Using preconfigured tap device %s" % tap)
-                logger.info("If this is not intended, touch %s.skip to make runqemu skip %s." %(lockfile, tap))
+                logger.info("If this is not intended, touch %s.skip to make runqemu skip %s." % (lockfile, tap))
                 break
 
         if not tap:
@@ -1348,13 +1348,13 @@ class BaseConfig(object):
                     self.qemu_opt += 'gl=es,'
             self.qemu_opt += 'show-cursor=on'
 
-        self.qemu_opt += ' %s' %self.get('QB_GRAPHICS')
+        self.qemu_opt += ' %s' % self.get('QB_GRAPHICS')
 
     def setup_serial(self):
         # Setup correct kernel command line for serial
         if self.serialstdio == True or self.serialconsole == True or self.nographic == True or self.tcpserial_portnum:
             for entry in self.get('SERIAL_CONSOLES').split(' '):
-                self.kernel_cmdline_script += ' console=%s' %entry.split(';')[1]
+                self.kernel_cmdline_script += ' console=%s' % entry.split(';')[1]
 
         if self.serialstdio == True or self.nographic == True:
             self.qemu_opt += " -serial mon:stdio"

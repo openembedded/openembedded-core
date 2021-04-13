@@ -42,7 +42,7 @@ class BitbakeTests(OESelftestTestCase):
         result = bitbake('m4-native')
         find_build_started = re.search(r"NOTE: Test for bb\.event\.BuildStarted(\n.*)*NOTE: Executing.*Tasks", result.output)
         find_build_completed = re.search(r"Tasks Summary:.*(\n.*)*NOTE: Test for bb\.event\.BuildCompleted", result.output)
-        self.assertTrue(find_build_started, msg="Match failed in:\n%s"  % result.output)
+        self.assertTrue(find_build_started, msg="Match failed in:\n%s" % result.output)
         self.assertTrue(find_build_completed, msg="Match failed in:\n%s" % result.output)
         self.assertNotIn('Test for bb.event.InvalidEvent', result.output)
 

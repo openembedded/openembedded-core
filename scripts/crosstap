@@ -116,7 +116,7 @@ class BitbakeEnvInvocationException(Exception):
         self.message = message
 
 class BitbakeEnv(object):
-    BITBAKE="bitbake"
+    BITBAKE = "bitbake"
 
     def __init__(self, package):
         self.package = package
@@ -292,7 +292,7 @@ with --sysroot option.
     def __map_systemtap_arch(self):
         a = self.target_arch
         ret = a
-        if   re.match('(athlon|x86.64)$', a):
+        if re.match('(athlon|x86.64)$', a):
             ret = 'x86_64'
         elif re.match('i.86$', a):
             ret = 'i386'

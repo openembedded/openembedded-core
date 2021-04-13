@@ -31,7 +31,7 @@ old_prefix = re.compile(b("##DEFAULT_INSTALL_DIR##"))
 
 def get_arch():
     f.seek(0)
-    e_ident =f.read(16)
+    e_ident = f.read(16)
     ei_mag0,ei_mag1_3,ei_class = struct.unpack("<B3sB11x", e_ident)
 
     if (ei_mag0 != 0x7f and ei_mag1_3 != "ELF") or ei_class == 0:
@@ -217,10 +217,10 @@ executables_list = sys.argv[3:]
 
 for e in executables_list:
     perms = os.stat(e)[stat.ST_MODE]
-    if os.access(e, os.W_OK|os.R_OK):
+    if os.access(e, os.W_OK | os.R_OK):
         perms = None
     else:
-        os.chmod(e, perms|stat.S_IRWXU)
+        os.chmod(e, perms | stat.S_IRWXU)
 
     try:
         f = open(e, "r+b")

@@ -45,7 +45,7 @@ class LtpPosixBase(OERuntimeTestCase):
  
     @classmethod
     def ltp_finishup(cls):
-        cls.extras['ltpposixresult.sections'] =  cls.sections
+        cls.extras['ltpposixresult.sections'] = cls.sections
 
         # update symlink to ltp_log
         if os.path.exists(cls.ltptest_log_dir_link):
@@ -57,7 +57,7 @@ class LtpPosixBase(OERuntimeTestCase):
             cls.fail(cls.failmsg)
 
 class LtpPosixTest(LtpPosixBase):
-    posix_groups = ["AIO", "MEM", "MSG", "SEM", "SIG",  "THR", "TMR", "TPS"]
+    posix_groups = ["AIO", "MEM", "MSG", "SEM", "SIG", "THR", "TMR", "TPS"]
 
     def runltp(self, posix_group):
             cmd = "/opt/ltp/bin/run-posix-option-group-test.sh %s 2>@1 | tee /opt/ltp/results/%s" % (posix_group, posix_group)
@@ -71,11 +71,11 @@ class LtpPosixTest(LtpPosixBase):
             self.extras['ltpposixresult.rawlogs']['log'] = self.extras['ltpposixresult.rawlogs']['log'] + output
 
             parser = LtpComplianceParser()
-            results, sections  = parser.parse(os.path.join(self.ltptest_log_dir, "%s" % posix_group))
+            results, sections = parser.parse(os.path.join(self.ltptest_log_dir, "%s" % posix_group))
 
-            runtime = int(endtime-starttime)
+            runtime = int(endtime - starttime)
             sections['duration'] = runtime
-            self.sections[posix_group] =  sections
+            self.sections[posix_group] = sections
  
             failed_tests = {}
             for test in results:

@@ -247,7 +247,7 @@ class ParseLogsTest(OERuntimeTestCase):
         hwi += '*******************************\n'
         hwi += 'Machine name: ' + self.getMachine() + '\n'
         hwi += 'CPU: ' + str(cpu_name) + '\n'
-        hwi += 'Arch: ' + str(cpu_arch)+ '\n'
+        hwi += 'Arch: ' + str(cpu_arch) + '\n'
         hwi += 'Physical cores: ' + str(cpu_physical_cores) + '\n'
         hwi += 'Logical cores: ' + str(cpu_logical_cores) + '\n'
         hwi += '*******************************\n'
@@ -351,7 +351,7 @@ class ParseLogsTest(OERuntimeTestCase):
                         grep_output = check_output(cmd).decode('utf-8')
                     except:
                         pass
-                    results[log][xrez]=grep_output
+                    results[log][xrez] = grep_output
 
         return results
 
@@ -373,8 +373,8 @@ class ParseLogsTest(OERuntimeTestCase):
             for error in result[log]:
                 errcount += 1
                 self.msg += 'Central error: ' + str(error) + '\n'
-                self.msg +=  '***********************\n'
-                self.msg +=  result[str(log)][str(error)] + '\n'
-                self.msg +=  '***********************\n'
+                self.msg += '***********************\n'
+                self.msg += result[str(log)][str(error)] + '\n'
+                self.msg += '***********************\n'
         self.msg += '%s errors found in logs.' % errcount
         self.assertEqual(errcount, 0, msg=self.msg)

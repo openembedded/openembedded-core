@@ -14,7 +14,7 @@ class XorgTest(OERuntimeTestCase):
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['xserver-nodm-init'])
     def test_xorg_running(self):
-        cmd ='%s | grep -v xinit | grep [X]org' % self.tc.target_cmds['ps']
+        cmd = '%s | grep -v xinit | grep [X]org' % self.tc.target_cmds['ps']
         status, output = self.target.run(cmd)
         msg = ('Xorg does not appear to be running %s' %
               self.target.run(self.tc.target_cmds['ps'])[1])

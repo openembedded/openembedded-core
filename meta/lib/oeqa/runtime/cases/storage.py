@@ -52,14 +52,14 @@ class StorageBase(OERuntimeTestCase):
 
         match = re.search('%s' % cls.test_msg, output)
         msg = ('Test message %s not in file %s.' % (cls.test_msg, cls.test_file))
-        cls.assertEqual(status, 0,  msg=msg)
+        cls.assertEqual(status, 0, msg=msg)
 
     def storage_write(cls):
         # create test message in file on device
         (status, output) = cls.target.run('echo "%s" >  %s/%s' % 
                 (cls.test_msg, cls.test_dir, cls.test_file))
         msg = ('File %s not create test message on %s' % (cls.test_file, cls.device))
-        cls.assertEqual(status, 0,  msg=msg)
+        cls.assertEqual(status, 0, msg=msg)
 
     def storage_umount(cls, tmo=1):
         time.sleep(tmo)
@@ -70,7 +70,7 @@ class StorageBase(OERuntimeTestCase):
             return
         else:
             msg = ('Device not unmount %s' % cls.mount_point)
-            cls.assertEqual(status, 0,  msg=msg)
+            cls.assertEqual(status, 0, msg=msg)
 
         (status, output) = cls.target.run('cat /proc/mounts')
         match = re.search('%s' % cls.device, output)

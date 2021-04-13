@@ -123,7 +123,7 @@ def expand_tag_strings(repo, name_pattern, msg_subj_pattern, msg_body_pattern,
                 keyws['tag_number'] = int(match.group('tag_number')) + 1
 
     tag_name = format_str(name_pattern, keyws)
-    msg_subj= format_str(msg_subj_pattern.strip(), keyws)
+    msg_subj = format_str(msg_subj_pattern.strip(), keyws)
     msg_body = format_str(msg_body_pattern, keyws)
     return tag_name, msg_subj + '\n\n' + msg_body
 

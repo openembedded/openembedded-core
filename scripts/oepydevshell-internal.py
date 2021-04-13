@@ -22,7 +22,7 @@ def echonocbreak(fd):
 
 def cbreaknoecho(fd):
     old = termios.tcgetattr(fd)
-    old[3] = old[3] &~ termios.ECHO &~ termios.ICANON
+    old[3] = old[3] & ~ termios.ECHO & ~ termios.ICANON
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 if len(sys.argv) != 3 or sys.argv[1] in ('-h', '--help'):

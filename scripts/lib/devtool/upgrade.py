@@ -241,7 +241,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         pbar.start()
         batchsize = 100
         for i in range(0, len(filelist), batchsize):
-            batch = filelist[i:i+batchsize]
+            batch = filelist[i:i + batchsize]
             __run('git add -f -A %s' % ' '.join(['"%s"' % item for item in batch]))
             pbar.update(i)
         pbar.finish()
@@ -610,7 +610,7 @@ def check_upgrade_status(args, config, basepath, workspace):
                                                                result[1] if result[1] != 'UPDATE' else (result[3] if not result[3].endswith("new-commits-available") else "new commits"),
                                                                result[4],
                                                                result[5] if result[5] != 'N/A' else "",
-                                                               "cannot be updated due to: %s" %(result[6]) if result[6] else ""))
+                                                               "cannot be updated due to: %s" % (result[6]) if result[6] else ""))
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
@@ -621,7 +621,7 @@ def register_commands(subparsers, context):
                                            description='Upgrades an existing recipe to a new upstream version. Puts the upgraded recipe file into the workspace along with any associated files, and extracts the source tree to a specified location (in case patches need rebasing or adding to as a result of the upgrade).',
                                            group='starting')
     parser_upgrade.add_argument('recipename', help='Name of recipe to upgrade (just name - no version, path or extension)')
-    parser_upgrade.add_argument('srctree',  nargs='?', help='Path to where to extract the source tree. If not specified, a subdirectory of %s will be used.' % defsrctree)
+    parser_upgrade.add_argument('srctree', nargs='?', help='Path to where to extract the source tree. If not specified, a subdirectory of %s will be used.' % defsrctree)
     parser_upgrade.add_argument('--version', '-V', help='Version to upgrade to (PV). If omitted, latest upstream version will be determined and used, if possible.')
     parser_upgrade.add_argument('--srcrev', '-S', help='Source revision to upgrade to (useful when fetching from an SCM such as git)')
     parser_upgrade.add_argument('--srcbranch', '-B', help='Branch in source repository containing the revision to use (if fetching from an SCM such as git)')

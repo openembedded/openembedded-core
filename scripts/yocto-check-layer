@@ -216,7 +216,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        ret =  main()
+        ret = main()
     except Exception:
         ret = 1
         import traceback

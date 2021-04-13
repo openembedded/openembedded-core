@@ -81,7 +81,7 @@ class VerifyManifest(OESelftestTestCase):
         pkgdata_dir = reverse_dir = {}
         mfilename = mpath = m_entry = {}
         # get manifest location based on target to query about
-        d_target= dict(target=self.buildtarget,
+        d_target = dict(target=self.buildtarget,
                          host='nativesdk-packagegroup-sdk-host')
         try:
             mdir = self.get_dir_from_bb_var('SDK_DEPLOY', self.buildtarget)
@@ -120,7 +120,7 @@ class VerifyManifest(OESelftestTestCase):
             if m_entry[k].missing:
                 msg = '{}: {} Error has the following missing entries'\
                         .format(self.classname, m_entry[k].file)
-                logmsg = msg+':\n'+'\n'.join(m_entry[k].missing)
+                logmsg = msg + ':\n' + '\n'.join(m_entry[k].missing)
                 self.logger.debug(logmsg)
                 self.logger.info(msg)
                 self.fail(logmsg)
@@ -160,7 +160,7 @@ class VerifyManifest(OESelftestTestCase):
         if m_entry.missing:
             msg = '{}: {} Error has the following missing entries'\
                     .format(self.classname, m_entry.file)
-            logmsg = msg+':\n'+'\n'.join(m_entry.missing)
+            logmsg = msg + ':\n' + '\n'.join(m_entry.missing)
             self.logger.debug(logmsg)
             self.logger.info(msg)
             self.fail(logmsg)

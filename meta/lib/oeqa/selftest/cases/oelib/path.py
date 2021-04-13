@@ -14,32 +14,32 @@ class TestRealPath(TestCase):
     DIRS = ["a", "b", "etc", "sbin", "usr", "usr/bin", "usr/binX", "usr/sbin", "usr/include", "usr/include/gdbm"]
     FILES = ["etc/passwd", "b/file"]
     LINKS = [
-        ("bin",             "/usr/bin",             "/usr/bin"),
-        ("binX",            "usr/binX",             "/usr/binX"),
-        ("c",               "broken",               "/broken"),
-        ("etc/passwd-1",    "passwd",               "/etc/passwd"),
-        ("etc/passwd-2",    "passwd-1",             "/etc/passwd"),
-        ("etc/passwd-3",    "/etc/passwd-1",        "/etc/passwd"),
-        ("etc/shadow-1",    "/etc/shadow",          "/etc/shadow"),
-        ("etc/shadow-2",    "/etc/shadow-1",        "/etc/shadow"),
-        ("prog-A",          "bin/prog-A",           "/usr/bin/prog-A"),
-        ("prog-B",          "/bin/prog-B",          "/usr/bin/prog-B"),
-        ("usr/bin/prog-C",  "../../sbin/prog-C",    "/sbin/prog-C"),
-        ("usr/bin/prog-D",  "/sbin/prog-D",         "/sbin/prog-D"),
-        ("usr/binX/prog-E", "../sbin/prog-E",       None),
-        ("usr/bin/prog-F",  "../../../sbin/prog-F", "/sbin/prog-F"),
-        ("loop",            "a/loop",               None),
-        ("a/loop",          "../loop",              None),
-        ("b/test",          "file/foo",             "/b/file/foo"),
+        ("bin", "/usr/bin", "/usr/bin"),
+        ("binX", "usr/binX", "/usr/binX"),
+        ("c", "broken", "/broken"),
+        ("etc/passwd-1", "passwd", "/etc/passwd"),
+        ("etc/passwd-2", "passwd-1", "/etc/passwd"),
+        ("etc/passwd-3", "/etc/passwd-1", "/etc/passwd"),
+        ("etc/shadow-1", "/etc/shadow", "/etc/shadow"),
+        ("etc/shadow-2", "/etc/shadow-1", "/etc/shadow"),
+        ("prog-A", "bin/prog-A", "/usr/bin/prog-A"),
+        ("prog-B", "/bin/prog-B", "/usr/bin/prog-B"),
+        ("usr/bin/prog-C", "../../sbin/prog-C", "/sbin/prog-C"),
+        ("usr/bin/prog-D", "/sbin/prog-D", "/sbin/prog-D"),
+        ("usr/binX/prog-E", "../sbin/prog-E", None),
+        ("usr/bin/prog-F", "../../../sbin/prog-F", "/sbin/prog-F"),
+        ("loop", "a/loop", None),
+        ("a/loop", "../loop", None),
+        ("b/test", "file/foo", "/b/file/foo"),
     ]
 
     LINKS_PHYS = [
-        ("./",          "/",                ""),
+        ("./", "/", ""),
         ("binX/prog-E", "/usr/sbin/prog-E", "/sbin/prog-E"),
     ]
 
     EXCEPTIONS = [
-        ("loop",   errno.ELOOP),
+        ("loop", errno.ELOOP),
         ("b/test", errno.ENOENT),
     ]
 

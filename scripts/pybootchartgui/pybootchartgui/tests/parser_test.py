@@ -15,7 +15,7 @@ import pybootchartgui.main as main
 debug = False
 
 def floatEq(f1, f2):
-	return math.fabs(f1-f2) < 0.00001
+	return math.fabs(f1 - f2) < 0.00001
 
 bootchart_dir = os.path.join(os.path.dirname(sys.argv[0]), '../../examples/1/')
 parser = main._mk_options_parser()

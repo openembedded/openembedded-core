@@ -490,7 +490,7 @@ class FilemapNobmap(_FilemapBase):
         """Refer the '_FilemapBase' class for the documentation."""
         self._log.debug("FilemapNobmap: get_mapped_ranges(%d,  %d(%d))"
                         % (start, count, start + count - 1))
-        yield (start, start + count -1)
+        yield (start, start + count - 1)
 
 def filemap(image, log=None):
     """

@@ -56,7 +56,7 @@ class LocalSigner(object):
 
         # Sign in chunks
         for i in range(0, len(files), sign_chunk):
-            subprocess.check_output(shlex.split(cmd + ' '.join(files[i:i+sign_chunk])), stderr=subprocess.STDOUT)
+            subprocess.check_output(shlex.split(cmd + ' '.join(files[i:i + sign_chunk])), stderr=subprocess.STDOUT)
 
     def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
         """Create a detached signature of a file"""

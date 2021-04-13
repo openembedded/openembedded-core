@@ -24,17 +24,17 @@ class SyslogTestConfig(OERuntimeTestCase):
 
     def verif_not_running(self, pids):
         for pid in pids:
-            status, err_output = self.target.run('kill -0 %s' %pid)
+            status, err_output = self.target.run('kill -0 %s' % pid)
             if not status:
-                self.logger.debug("previous %s is still running" %pid)
+                self.logger.debug("previous %s is still running" % pid)
                 return 1
 
     def verify_running(self, names):
         pids = []
         for name in names:
-            status, pid = self.target.run('pidof %s' %name)
+            status, pid = self.target.run('pidof %s' % name)
             if status:
-                self.logger.debug("%s is not running" %name)
+                self.logger.debug("%s is not running" % name)
                 return 1, pids
             pids.append(pid)
         return 0, pids

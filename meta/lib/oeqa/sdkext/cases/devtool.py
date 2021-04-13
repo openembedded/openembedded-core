@@ -93,7 +93,7 @@ class DevtoolTest(OESDKExtTestCase):
         try:
             self._run('devtool build %s ' % package_nodejs)
         finally:
-            self._run('devtool reset %s '% package_nodejs)
+            self._run('devtool reset %s ' % package_nodejs)
 
 class SdkUpdateTest(OESDKExtTestCase):
     @classmethod

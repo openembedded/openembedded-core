@@ -31,7 +31,7 @@ def store(args, logger):
         if resultutils.is_url(args.source) or os.path.isfile(args.source):
             resultutils.append_resultsdata(results, args.source, configvars=configvars)
         else:
-            for root, dirs,  files in os.walk(args.source):
+            for root, dirs, files in os.walk(args.source):
                 for name in files:
                     f = os.path.join(root, name)
                     if name == "testresults.json":
@@ -78,7 +78,7 @@ def store(args, logger):
                                   [], [], False, keywords, logger)
 
     finally:
-        subprocess.check_call(["rm", "-rf",  tempdir])
+        subprocess.check_call(["rm", "-rf", tempdir])
 
     return 0
 

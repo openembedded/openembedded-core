@@ -42,7 +42,7 @@ def opkg_query(cmd_output):
     dep = []
     prov = []
     pkgarch = ""
-    for line in cmd_output.splitlines()+['']:
+    for line in cmd_output.splitlines() + ['']:
         line = line.rstrip()
         if ':' in line:
             if line.startswith("Package: "):
@@ -92,7 +92,7 @@ def failed_postinsts_abort(pkgs, log_path):
     bb.fatal("""Postinstall scriptlets of %s have failed. If the intention is to defer them to first boot,
 then please place them into pkg_postinst_ontarget_${PN} ().
 Deferring to first boot via 'exit 1' is no longer supported.
-Details of the failure are in %s.""" %(pkgs, log_path))
+Details of the failure are in %s.""" % (pkgs, log_path))
 
 def generate_locale_archive(d, rootfs, target_arch, localedir):
     # Pretty sure we don't need this for locale archive generation but

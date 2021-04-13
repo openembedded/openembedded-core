@@ -37,8 +37,8 @@ img_monitor_files = ['installed-package-names.txt', 'files-in-image.txt']
 
 colours = {
     'colour_default': '',
-    'colour_add':     '',
-    'colour_remove':  '',
+    'colour_add': '',
+    'colour_remove': '',
 }
 
 def init_colours(use_colours):
@@ -46,14 +46,14 @@ def init_colours(use_colours):
     if use_colours:
         colours = {
             'colour_default': '\033[0m',
-            'colour_add':     '\033[1;32m',
-            'colour_remove':  '\033[1;31m',
+            'colour_add': '\033[1;32m',
+            'colour_remove': '\033[1;31m',
         }
     else:
         colours = {
             'colour_default': '',
-            'colour_add':     '',
-            'colour_remove':  '',
+            'colour_add': '',
+            'colour_remove': '',
         }
 
 class ChangeRecord:
@@ -358,8 +358,8 @@ def compare_file_lists(alines, blines, compare_ownership=True):
                 if commondir[i] != commondir2[i]:
                     idx = i
                     break
-            commondir = "/".join(commondir[:i+1])
-            commondir2 = "/".join(commondir2[:i+1])
+            commondir = "/".join(commondir[:i + 1])
+            commondir2 = "/".join(commondir2[:i + 1])
             # If the common parent is in one dict and not the other its likely a rename
             # so iterate through those files and process as such
             if commondir2 not in bdict and commondir not in adict:
@@ -593,7 +593,7 @@ def compare_siglists(a_blob, b_blob, taskdiff=False):
             elif len(tasks) == 2:
                 desc = '%s and %s' % (tasks[0], tasks[1])
             else:
-                desc = '%s and %d others' % (tasks[-1], len(tasks)-1)
+                desc = '%s and %d others' % (tasks[-1], len(tasks) - 1)
             out.append('%s: %s' % (desc, line))
     else:
         for key in keys:

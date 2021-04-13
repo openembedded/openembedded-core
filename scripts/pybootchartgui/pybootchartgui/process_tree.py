@@ -246,11 +246,11 @@ class ProcessTree:
         """
         num_removed = 0
         idx = 0
-        while idx < len(process_subtree)-1:
+        while idx < len(process_subtree) - 1:
             p = process_subtree[idx]
-            nextp = process_subtree[idx+1]
+            nextp = process_subtree[idx + 1]
             if nextp.cmd == p.cmd:
-                process_subtree.pop(idx+1)
+                process_subtree.pop(idx + 1)
                 idx -= 1
                 num_removed += 1
                 p.child_list.extend(nextp.child_list)
