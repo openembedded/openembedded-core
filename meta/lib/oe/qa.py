@@ -2,7 +2,9 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-import os, struct, mmap
+import os
+import struct
+import mmap
 
 class NotELFFileError(Exception):
     pass

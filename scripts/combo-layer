@@ -11,7 +11,8 @@
 #
 
 import fnmatch
-import os, sys
+import os
+import sys
 import optparse
 import logging
 import subprocess

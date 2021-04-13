@@ -3,7 +3,11 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-import sys, os, subprocess, re, shutil
+import sys
+import os
+import subprocess
+import re
+import shutil
 
 whitelist = (
     # type is supported by dash
@@ -92,7 +96,8 @@ def get_tinfoil():
     return tinfoil
 
 if __name__=='__main__':
-    import argparse, shutil
+    import argparse
+    import shutil
 
     parser = argparse.ArgumentParser(description='Bashim detector for shell fragments in recipes.')
     parser.add_argument("recipes", metavar="RECIPE", nargs="*", help="recipes to check (if not specified, all will be checked)")

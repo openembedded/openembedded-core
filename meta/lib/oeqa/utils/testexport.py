@@ -6,7 +6,11 @@
 
 # Provides functions to help with exporting binaries obtained from built targets
 
-import os, re, glob as g, shutil as sh,sys
+import os
+import re
+import glob as g
+import shutil as sh
+import sys
 from time import sleep
 from .commands import runCmd
 from difflib import SequenceMatcher as SM

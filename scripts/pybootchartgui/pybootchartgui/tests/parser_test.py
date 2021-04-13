@@ -1,4 +1,9 @@
-import sys, os, re, struct, operator, math
+import sys
+import os
+import re
+import struct
+import operator
+import math
 from collections import defaultdict
 import unittest
 

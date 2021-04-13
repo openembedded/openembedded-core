@@ -28,7 +28,9 @@
 # of the executable from argv[0] and emulate the corresponding program, so
 # multiple copies of this script will exist under different names.
 
-import sys, os, argparse
+import sys
+import os
+import argparse
 
 
 this_binary = sys.argv[0].split("/")[-1]

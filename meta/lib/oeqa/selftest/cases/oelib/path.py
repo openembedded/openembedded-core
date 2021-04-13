@@ -3,7 +3,8 @@
 #
 
 from unittest.case import TestCase
-import oe, oe.path
+import oe
+import oe.path
 import tempfile
 import os
 import errno

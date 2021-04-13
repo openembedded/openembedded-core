@@ -10,7 +10,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-import urllib.request, urllib.error
+import urllib.request
+import urllib.error
 import sys
 import json
 import os

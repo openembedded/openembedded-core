@@ -107,7 +107,10 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, d, qa_already_stripp
     :param qa_already_stripped: Set to True if already-stripped' in ${INSANE_SKIP}
     This is for proper logging and messages only.
     """
-    import stat, errno, oe.path, oe.utils
+    import stat
+    import errno
+    import oe.path
+    import oe.utils
 
     elffiles = {}
     inodes = {}
@@ -187,7 +190,9 @@ def file_translate(file):
     return ft
 
 def filedeprunner(arg):
-    import re, subprocess, shlex
+    import re
+    import subprocess
+    import shlex
 
     (pkg, pkgfiles, rpmdeps, pkgdest) = arg
     provides = {}

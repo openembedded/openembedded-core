@@ -95,7 +95,8 @@ class TestSDK(TestSDKBase):
         processes = d.getVar("TESTIMAGE_NUMBER_THREADS") or d.getVar("BB_NUMBER_THREADS")
         if processes:
             try:
-                import testtools, subunit
+                import testtools
+                import subunit
             except ImportError:
                 bb.warn("Failed to import testtools or subunit, the testcases will run serially")
                 processes = None
