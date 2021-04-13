@@ -30,7 +30,7 @@ class TestSDKExt(TestSDKBase):
 
         tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.sh")
         if not os.path.exists(tcname):
-            bb.fatal("The toolchain ext %s is not built. Build it before running the" \
+            bb.fatal("The toolchain ext %s is not built. Build it before running the"
                     " tests: 'bitbake <image> -c populate_sdk_ext' ." % tcname)
 
         tdname = d.expand("${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.testdata.json")
@@ -73,7 +73,7 @@ class TestSDKExt(TestSDKBase):
                 f.write('PREMIRRORS_prepend = " git://git.yoctoproject.org/.* git://%s/git2/git.yoctoproject.org.BASENAME \\n "\n' % test_data.get('DL_DIR'))
 
             # We need to do this in case we have a minimal SDK
-            subprocess.check_output(". %s > /dev/null; devtool sdk-install meta-extsdk-toolchain" % \
+            subprocess.check_output(". %s > /dev/null; devtool sdk-install meta-extsdk-toolchain" %
                     sdk_env, cwd=sdk_dir, shell=True, stderr=subprocess.STDOUT)
 
             tc = OESDKExtTestContext(td=test_data, logger=logger, sdk_dir=sdk_dir,

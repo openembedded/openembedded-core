@@ -23,14 +23,14 @@ class VerifyManifest(OESelftestTestCase):
             with open(manifest, "r") as mfile:
                 for line in mfile:
                     manifest_entry = os.path.join(path, line.split()[0])
-                    self.logger.debug("{}: looking for {}"\
+                    self.logger.debug("{}: looking for {}"
                                     .format(self.classname, manifest_entry))
                     if not os.path.isfile(manifest_entry):
                         manifest_errors.append(manifest_entry)
-                        self.logger.debug("{}: {} not found"\
+                        self.logger.debug("{}: {} not found"
                                     .format(self.classname, manifest_entry))
         except OSError as e:
-            self.logger.debug("{}: checking of {} failed"\
+            self.logger.debug("{}: checking of {} failed"
                     .format(self.classname, manifest))
             raise e
 
@@ -40,9 +40,9 @@ class VerifyManifest(OESelftestTestCase):
     @classmethod
     def get_dir_from_bb_var(self, bb_var, target = None):
         target == self.buildtarget if target == None else target
-        directory = get_bb_var(bb_var, target);
+        directory = get_bb_var(bb_var, target)
         if not directory or not os.path.isdir(directory):
-            self.logger.debug("{}: {} points to {} when target = {}"\
+            self.logger.debug("{}: {} points to {} when target = {}"
                     .format(self.classname, bb_var, directory, target))
             raise OSError
         return directory
@@ -54,12 +54,12 @@ class VerifyManifest(OESelftestTestCase):
         self.buildtarget = 'core-image-minimal'
         self.classname = 'VerifyManifest'
 
-        self.logger.info("{}: doing bitbake {} as a prerequisite of the test"\
+        self.logger.info("{}: doing bitbake {} as a prerequisite of the test"
                 .format(self.classname, self.buildtarget))
         if bitbake(self.buildtarget).status:
-            self.logger.debug("{} Failed to setup {}"\
+            self.logger.debug("{} Failed to setup {}"
                     .format(self.classname, self.buildtarget))
-            self.skipTest("{}: Cannot setup testing scenario"\
+            self.skipTest("{}: Cannot setup testing scenario"
                     .format(self.classname))
 
     def test_SDK_manifest_entries(self):
@@ -69,12 +69,12 @@ class VerifyManifest(OESelftestTestCase):
         # to do an additional setup for the sdk
         sdktask = '-c populate_sdk'
         bbargs = sdktask + ' ' + self.buildtarget
-        self.logger.debug("{}: doing bitbake {} as a prerequisite of the test"\
+        self.logger.debug("{}: doing bitbake {} as a prerequisite of the test"
                 .format(self.classname, bbargs))
         if bitbake(bbargs).status:
-            self.logger.debug("{} Failed to bitbake {}"\
+            self.logger.debug("{} Failed to bitbake {}"
                     .format(self.classname, bbargs))
-            self.skipTest("{}: Cannot setup testing scenario"\
+            self.skipTest("{}: Cannot setup testing scenario"
                     .format(self.classname))
 
 
@@ -104,7 +104,7 @@ class VerifyManifest(OESelftestTestCase):
                         self.classname, reverse_dir[k]))
                     raise IOError
         except OSError:
-            raise self.skipTest("{}: Error in obtaining manifest dirs"\
+            raise self.skipTest("{}: Error in obtaining manifest dirs"
                 .format(self.classname))
         except IOError:
             msg = "{}: Error cannot find manifests in the specified dir:\n{}"\
@@ -115,7 +115,7 @@ class VerifyManifest(OESelftestTestCase):
             self.logger.debug("{}: Check manifest {}".format(
                 self.classname, m_entry[k].file))
 
-            m_entry[k].missing = self.check_manifest_entries(\
+            m_entry[k].missing = self.check_manifest_entries(
                                                m_entry[k].file,reverse_dir[k])
             if m_entry[k].missing:
                 msg = '{}: {} Error has the following missing entries'\
@@ -135,25 +135,27 @@ class VerifyManifest(OESelftestTestCase):
             mfilename = get_bb_var("IMAGE_LINK_NAME", self.buildtarget)\
                     + ".manifest"
             mpath = os.path.join(mdir, mfilename)
-            if not os.path.isfile(mpath): raise IOError
+            if not os.path.isfile(mpath):
+                raise IOError
             m_entry = ManifestEntry(mpath)
 
             pkgdata_dir = {}
             pkgdata_dir = self.get_dir_from_bb_var('PKGDATA_DIR',
                                                 self.buildtarget)
             revdir = os.path.join(pkgdata_dir, 'runtime-reverse')
-            if not os.path.exists(revdir): raise IOError
+            if not os.path.exists(revdir):
+                raise IOError
         except OSError:
-            raise self.skipTest("{}: Error in obtaining manifest dirs"\
+            raise self.skipTest("{}: Error in obtaining manifest dirs"
                 .format(self.classname))
         except IOError:
             msg = "{}: Error cannot find manifests in dir:\n{}"\
                     .format(self.classname, mdir)
             self.fail(msg)
 
-        self.logger.debug("{}: Check manifest {}"\
+        self.logger.debug("{}: Check manifest {}"
                             .format(self.classname, m_entry.file))
-        m_entry.missing = self.check_manifest_entries(\
+        m_entry.missing = self.check_manifest_entries(
                                                     m_entry.file, revdir)
         if m_entry.missing:
             msg = '{}: {} Error has the following missing entries'\

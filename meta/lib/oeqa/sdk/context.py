@@ -120,7 +120,7 @@ class OESDKTestContextExecutor(OETestContextExecutor):
         return sdk_env
 
     def _display_sdk_envs(self, log, args, sdk_envs):
-        log("Available SDK environments at directory %s:" \
+        log("Available SDK environments at directory %s:"
                 % args.sdk_dir)
         log("")
         for env in sdk_envs:
@@ -130,12 +130,12 @@ class OESDKTestContextExecutor(OETestContextExecutor):
         import argparse_oe
 
         if not args.sdk_dir:
-            raise argparse_oe.ArgumentUsageError("No SDK directory "\
+            raise argparse_oe.ArgumentUsageError("No SDK directory "
                    "specified please do, --sdk-dir SDK_DIR", self.name)
 
         sdk_envs = OESDKTestContextExecutor._get_sdk_environs(args.sdk_dir)
         if not sdk_envs:
-            raise argparse_oe.ArgumentUsageError("No available SDK "\
+            raise argparse_oe.ArgumentUsageError("No available SDK "
                    "environments found at %s" % args.sdk_dir, self.name)
 
         if args.list_sdk_env:
@@ -144,7 +144,7 @@ class OESDKTestContextExecutor(OETestContextExecutor):
 
         if not args.sdk_env in sdk_envs:
             self._display_sdk_envs(logger.error, args, sdk_envs)
-            raise argparse_oe.ArgumentUsageError("No valid SDK "\
+            raise argparse_oe.ArgumentUsageError("No valid SDK "
                    "environment (%s) specified" % args.sdk_env, self.name)
 
         self.sdk_env = sdk_envs[args.sdk_env]

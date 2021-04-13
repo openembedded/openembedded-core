@@ -99,7 +99,7 @@ def _exec_cmd(cmd_and_args, as_shell=False):
         ret, out = runtool(args)
     out = out.strip()
     if ret != 0:
-        raise WicError("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" % \
+        raise WicError("_exec_cmd: %s returned '%s' instead of 0\noutput: %s" %
                        (cmd_and_args, ret, out))
 
     logger.debug("_exec_cmd: output for %s (rc = %d): %s",

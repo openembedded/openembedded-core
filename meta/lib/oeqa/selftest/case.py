@@ -55,13 +55,13 @@ class OESelftestTestCase(OETestCase):
         if "#include added by oe-selftest" \
             not in ftools.read_file(os.path.join(cls.builddir, "conf/local.conf")):
                 cls.logger.info("Adding: \"include selftest.inc\" in %s" % os.path.join(cls.builddir, "conf/local.conf"))
-                ftools.append_file(os.path.join(cls.builddir, "conf/local.conf"), \
+                ftools.append_file(os.path.join(cls.builddir, "conf/local.conf"),
                         "\n#include added by oe-selftest\ninclude machine.inc\ninclude selftest.inc")
 
         if "#include added by oe-selftest" \
             not in ftools.read_file(os.path.join(cls.builddir, "conf/bblayers.conf")):
                 cls.logger.info("Adding: \"include bblayers.inc\" in bblayers.conf")
-                ftools.append_file(os.path.join(cls.builddir, "conf/bblayers.conf"), \
+                ftools.append_file(os.path.join(cls.builddir, "conf/bblayers.conf"),
                         "\n#include added by oe-selftest\ninclude bblayers.inc")
 
     @classmethod
@@ -69,13 +69,13 @@ class OESelftestTestCase(OETestCase):
         if "#include added by oe-selftest.py" \
             in ftools.read_file(os.path.join(cls.builddir, "conf/local.conf")):
                 cls.logger.info("Removing the include from local.conf")
-                ftools.remove_from_file(os.path.join(cls.builddir, "conf/local.conf"), \
+                ftools.remove_from_file(os.path.join(cls.builddir, "conf/local.conf"),
                         "\n#include added by oe-selftest.py\ninclude machine.inc\ninclude selftest.inc")
 
         if "#include added by oe-selftest.py" \
             in ftools.read_file(os.path.join(cls.builddir, "conf/bblayers.conf")):
                 cls.logger.info("Removing the include from bblayers.conf")
-                ftools.remove_from_file(os.path.join(cls.builddir, "conf/bblayers.conf"), \
+                ftools.remove_from_file(os.path.join(cls.builddir, "conf/bblayers.conf"),
                         "\n#include added by oe-selftest.py\ninclude bblayers.inc")
 
     @classmethod

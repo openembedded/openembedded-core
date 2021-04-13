@@ -302,10 +302,10 @@ Note:
 
         print("\n=== Summary: (%s changed, %s unchanged)" % (total_changed, cnt_unchanged))
         if args.verbose:
-            print("Newly added: %s\nDependencies changed: %s\n" % \
+            print("Newly added: %s\nDependencies changed: %s\n" %
                 (cnt_added, cnt_dep))
         else:
-            print("Newly added: %s\nPV changed: %s\nPR changed: %s\nDependencies changed: %s\n" % \
+            print("Newly added: %s\nPV changed: %s\nPR changed: %s\nDependencies changed: %s\n" %
                 (cnt_added, cnt_rv.get('pv') or 0, cnt_rv.get('pr') or 0, cnt_dep))
     except:
         print("ERROR occurred!")

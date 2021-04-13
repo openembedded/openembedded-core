@@ -97,7 +97,7 @@ Details of the failure are in %s.""" %(pkgs, log_path))
 def generate_locale_archive(d, rootfs, target_arch, localedir):
     # Pretty sure we don't need this for locale archive generation but
     # keeping it to be safe...
-    locale_arch_options = { \
+    locale_arch_options = {
         "arc": ["--uint32-align=4", "--little-endian"],
         "arceb": ["--uint32-align=4", "--big-endian"],
         "arm": ["--uint32-align=4", "--little-endian"],
@@ -239,7 +239,8 @@ class PackageManager(object, metaclass=ABCMeta):
 
             try:
                 output = subprocess.check_output(script_full, stderr=subprocess.STDOUT)
-                if output: bb.note(output.decode("utf-8"))
+                if output:
+                    bb.note(output.decode("utf-8"))
             except subprocess.CalledProcessError as e:
                 bb.note("Exit code %d. Output:\n%s" % (e.returncode, e.output.decode("utf-8")))
                 if populate_sdk == 'host':
@@ -331,7 +332,8 @@ class PackageManager(object, metaclass=ABCMeta):
             bb.note('Running %s' % cmd)
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = proc.communicate()
-            if stderr: bb.note(stderr.decode("utf-8"))
+            if stderr:
+                bb.note(stderr.decode("utf-8"))
             pkgs = stdout.decode("utf-8")
             self.install(pkgs.split(), attempt_only=True)
         except subprocess.CalledProcessError as e:
@@ -390,7 +392,8 @@ class PackageManager(object, metaclass=ABCMeta):
                 bb.note('Running %s' % cmd)
                 proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = proc.communicate()
-                if stderr: bb.note(stderr.decode("utf-8"))
+                if stderr:
+                    bb.note(stderr.decode("utf-8"))
                 complementary_pkgs = stdout.decode("utf-8")
                 complementary_pkgs = set(complementary_pkgs.split())
                 skip_pkgs = sorted(complementary_pkgs & provided_pkgs)

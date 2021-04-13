@@ -158,7 +158,7 @@ def _find_layer_depends(depend, layers):
 
 def add_layer_dependencies(bblayersconf, layer, layers, logger):
     def recurse_dependencies(depends, layer, layers, logger, ret = []):
-        logger.debug('Processing dependencies %s for layer %s.' % \
+        logger.debug('Processing dependencies %s for layer %s.' %
                     (depends, layer['name']))
 
         for depend in depends.split():
@@ -168,7 +168,7 @@ def add_layer_dependencies(bblayersconf, layer, layers, logger):
 
             layer_depend = _find_layer_depends(depend, layers)
             if not layer_depend:
-                logger.error('Layer %s depends on %s and isn\'t found.' % \
+                logger.error('Layer %s depends on %s and isn\'t found.' %
                         (layer['name'], depend))
                 ret = None
                 continue

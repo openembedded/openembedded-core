@@ -150,8 +150,8 @@ def sdk_update(args, config, basepath, workspace):
             if not out:
                 ret = subprocess.call("git fetch --all; git reset --hard @{u}", shell=True, cwd=layers_dir)
             else:
-                logger.error("Failed to update metadata as there have been changes made to it. Aborting.");
-                logger.error("Changed files:\n%s" % out);
+                logger.error("Failed to update metadata as there have been changes made to it. Aborting.")
+                logger.error("Changed files:\n%s" % out)
                 return -1
         else:
             ret = -1

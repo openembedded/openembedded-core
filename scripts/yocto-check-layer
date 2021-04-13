@@ -107,12 +107,12 @@ def main():
     logger.info("Detected layers:")
     for layer in layers:
         if layer['type'] == LayerType.ERROR_BSP_DISTRO:
-            logger.error("%s: Can't be DISTRO and BSP type at the same time."\
-                     " Both conf/distro and conf/machine folders were found."\
+            logger.error("%s: Can't be DISTRO and BSP type at the same time."
+                     " Both conf/distro and conf/machine folders were found."
                      % layer['name'])
             layers.remove(layer)
         elif layer['type'] == LayerType.ERROR_NO_LAYER_CONF:
-            logger.error("%s: Don't have conf/layer.conf file."\
+            logger.error("%s: Don't have conf/layer.conf file."
                      % layer['name'])
             layers.remove(layer)
         else:

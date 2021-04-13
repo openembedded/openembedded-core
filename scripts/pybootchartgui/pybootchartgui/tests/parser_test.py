@@ -51,7 +51,7 @@ class TestBCParser(unittest.TestCase):
 
 		ps_data = open(self.mk_fname('extract2.proc_ps.log'))
 		for index, line in enumerate(ps_data):
-			tokens = line.split();
+			tokens = line.split()
 			process = sorted_processes[index]
 			if debug:
 				print(tokens[0:4])

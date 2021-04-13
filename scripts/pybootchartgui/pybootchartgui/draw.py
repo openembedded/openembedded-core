@@ -152,7 +152,7 @@ STATE_WAITING   = 3
 STATE_STOPPED   = 4
 STATE_ZOMBIE    = 5
 
-STATE_COLORS = [(0, 0, 0, 0), PROC_COLOR_R, PROC_COLOR_S, PROC_COLOR_D, \
+STATE_COLORS = [(0, 0, 0, 0), PROC_COLOR_R, PROC_COLOR_S, PROC_COLOR_D,
         PROC_COLOR_T, PROC_COLOR_Z, PROC_COLOR_X, PROC_COLOR_W]
 
 # CumulativeStats Types
@@ -256,7 +256,7 @@ def draw_chart(ctx, color, fill, chart_bounds, data, proc_tree, data_range):
     ctx.set_line_width(0.5)
     x_shift = proc_tree.start_time
 
-    def transform_point_coords(point, x_base, y_base, \
+    def transform_point_coords(point, x_base, y_base,
                    xscale, yscale, x_trans, y_trans):
         x = (point[0] - x_base) * xscale + x_trans
         y = (point[1] - y_base) * -yscale + y_trans + chart_bounds[3]
@@ -278,15 +278,15 @@ def draw_chart(ctx, color, fill, chart_bounds, data, proc_tree, data_range):
         yscale = float(chart_bounds[3]) / max_y
         ybase = 0
 
-    first = transform_point_coords (data[0], x_shift, ybase, xscale, yscale, \
+    first = transform_point_coords (data[0], x_shift, ybase, xscale, yscale,
                         chart_bounds[0], chart_bounds[1])
-    last =  transform_point_coords (data[-1], x_shift, ybase, xscale, yscale, \
+    last =  transform_point_coords (data[-1], x_shift, ybase, xscale, yscale,
                         chart_bounds[0], chart_bounds[1])
 
     ctx.set_source_rgba(*color)
     ctx.move_to(*first)
     for point in data:
-        x, y = transform_point_coords (point, x_shift, ybase, xscale, yscale, \
+        x, y = transform_point_coords (point, x_shift, ybase, xscale, yscale,
                            chart_bounds[0], chart_bounds[1])
         ctx.line_to(x, y)
     if fill:
@@ -370,12 +370,12 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
         if clip_visible (clip, chart_rect):
             draw_box_ticks (ctx, chart_rect, sec_w)
             draw_annotations (ctx, proc_tree, trace.times, chart_rect)
-            draw_chart (ctx, IO_COLOR, True, chart_rect, \
-                    [(sample.time, sample.user + sample.sys + sample.io) for sample in trace.cpu_stats], \
+            draw_chart (ctx, IO_COLOR, True, chart_rect,
+                    [(sample.time, sample.user + sample.sys + sample.io) for sample in trace.cpu_stats],
                     proc_tree, None)
             # render CPU load
-            draw_chart (ctx, CPU_COLOR, True, chart_rect, \
-                    [(sample.time, sample.user + sample.sys) for sample in trace.cpu_stats], \
+            draw_chart (ctx, CPU_COLOR, True, chart_rect,
+                    [(sample.time, sample.user + sample.sys) for sample in trace.cpu_stats],
                     proc_tree, None)
 
         curr_y = curr_y + 30 + bar_h
@@ -390,15 +390,15 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
         if clip_visible (clip, chart_rect):
             draw_box_ticks (ctx, chart_rect, sec_w)
             draw_annotations (ctx, proc_tree, trace.times, chart_rect)
-            draw_chart (ctx, IO_COLOR, True, chart_rect, \
-                    [(sample.time, sample.util) for sample in trace.disk_stats], \
+            draw_chart (ctx, IO_COLOR, True, chart_rect,
+                    [(sample.time, sample.util) for sample in trace.disk_stats],
                     proc_tree, None)
 
         # render disk throughput
         max_sample = max (trace.disk_stats, key = lambda s: s.tput)
         if clip_visible (clip, chart_rect):
-            draw_chart (ctx, DISK_TPUT_COLOR, False, chart_rect, \
-                    [(sample.time, sample.tput) for sample in trace.disk_stats], \
+            draw_chart (ctx, DISK_TPUT_COLOR, False, chart_rect,
+                    [(sample.time, sample.tput) for sample in trace.disk_stats],
                     proc_tree, None)
 
         pos_x = off_x + ((max_sample.time - proc_tree.start_time) * w / proc_tree.duration)
@@ -450,7 +450,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
             draw_box_ticks (ctx, chart_rect, sec_w)
             draw_annotations (ctx, proc_tree, trace.times, chart_rect)
             for i in range(len(volumes), 0, -1):
-                draw_chart (ctx, VOLUME_COLORS[(i - 1) % len(VOLUME_COLORS)], True, chart_rect, \
+                draw_chart (ctx, VOLUME_COLORS[(i - 1) % len(VOLUME_COLORS)], True, chart_rect,
                             [(sample.time,
                               # Sum up used space of all volumes including the current one
                               # so that the graphs appear as stacked on top of each other.
@@ -472,21 +472,21 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
         draw_legend_box(ctx, "Mem cached (scale: %u MiB)" % (float(mem_scale) / 1024), MEM_CACHED_COLOR, off_x, curr_y+20, leg_s)
         draw_legend_box(ctx, "Used", MEM_USED_COLOR, off_x + 240, curr_y+20, leg_s)
         draw_legend_box(ctx, "Buffers", MEM_BUFFERS_COLOR, off_x + 360, curr_y+20, leg_s)
-        draw_legend_line(ctx, "Swap (scale: %u MiB)" % max([(sample.swap)/1024 for sample in mem_stats]), \
+        draw_legend_line(ctx, "Swap (scale: %u MiB)" % max([(sample.swap)/1024 for sample in mem_stats]),
                  MEM_SWAP_COLOR, off_x + 480, curr_y+20, leg_s)
         draw_box_ticks(ctx, chart_rect, sec_w)
         draw_annotations(ctx, proc_tree, trace.times, chart_rect)
-        draw_chart(ctx, MEM_BUFFERS_COLOR, True, chart_rect, \
-               [(sample.time, sample.buffers) for sample in trace.mem_stats], \
+        draw_chart(ctx, MEM_BUFFERS_COLOR, True, chart_rect,
+               [(sample.time, sample.buffers) for sample in trace.mem_stats],
                proc_tree, [0, mem_scale])
-        draw_chart(ctx, MEM_USED_COLOR, True, chart_rect, \
-               [(sample.time, sample.used) for sample in mem_stats], \
+        draw_chart(ctx, MEM_USED_COLOR, True, chart_rect,
+               [(sample.time, sample.used) for sample in mem_stats],
                proc_tree, [0, mem_scale])
-        draw_chart(ctx, MEM_CACHED_COLOR, True, chart_rect, \
-               [(sample.time, sample.cached) for sample in mem_stats], \
+        draw_chart(ctx, MEM_CACHED_COLOR, True, chart_rect,
+               [(sample.time, sample.cached) for sample in mem_stats],
                proc_tree, [0, mem_scale])
-        draw_chart(ctx, MEM_SWAP_COLOR, False, chart_rect, \
-               [(sample.time, float(sample.swap)) for sample in mem_stats], \
+        draw_chart(ctx, MEM_SWAP_COLOR, False, chart_rect,
+               [(sample.time, float(sample.swap)) for sample in mem_stats],
                proc_tree, None)
 
         curr_y = curr_y + meminfo_bar_h
@@ -496,17 +496,17 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
 def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
     chart_rect = [off_x, curr_y+header_h, w, h - curr_y - 1 * off_y - header_h  ]
 
-    draw_legend_box (ctx, "Configure", \
+    draw_legend_box (ctx, "Configure",
              TASK_COLOR_CONFIGURE, off_x  , curr_y + 45, leg_s)
-    draw_legend_box (ctx, "Compile", \
+    draw_legend_box (ctx, "Compile",
              TASK_COLOR_COMPILE, off_x+120, curr_y + 45, leg_s)
-    draw_legend_box (ctx, "Install", \
+    draw_legend_box (ctx, "Install",
              TASK_COLOR_INSTALL, off_x+240, curr_y + 45, leg_s)
-    draw_legend_box (ctx, "Populate Sysroot", \
+    draw_legend_box (ctx, "Populate Sysroot",
              TASK_COLOR_SYSROOT, off_x+360, curr_y + 45, leg_s)
-    draw_legend_box (ctx, "Package", \
+    draw_legend_box (ctx, "Package",
              TASK_COLOR_PACKAGE, off_x+480, curr_y + 45, leg_s)
-    draw_legend_box (ctx, "Package Write", \
+    draw_legend_box (ctx, "Package Write",
              TASK_COLOR_PACKAGE_WRITE, off_x+600, curr_y + 45, leg_s)
 
     ctx.set_font_size(PROC_TEXT_FONT_SIZE)
@@ -575,7 +575,7 @@ def render(ctx, options, xscale, trace):
     ctx.select_font_face(FONT_NAME)
     draw_fill_rect(ctx, WHITE, (0, 0, max(w, MIN_IMG_W), h))
     w -= 2*off_x
-    curr_y = off_y;
+    curr_y = off_y
 
     if options.charts:
         curr_y = render_charts (ctx, options, clip, trace, curr_y, w, h, sec_w)
@@ -595,7 +595,7 @@ def render(ctx, options, xscale, trace):
     if not options.kernel_only:
         curr_y = draw_header (ctx, trace.headers, duration)
     else:
-        curr_y = off_y;
+        curr_y = off_y
 
     # draw process boxes
     proc_height = h

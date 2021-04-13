@@ -215,7 +215,7 @@ class FilemapSeek(_FilemapBase):
         try:
             tmp_obj = tempfile.TemporaryFile("w+", dir=directory)
         except IOError as err:
-            raise ErrorNotSupp("cannot create a temporary in \"%s\": %s" \
+            raise ErrorNotSupp("cannot create a temporary in \"%s\": %s"
                               % (directory, err))
 
         try:

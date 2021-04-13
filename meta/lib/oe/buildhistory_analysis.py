@@ -89,9 +89,9 @@ class ChangeRecord:
         def detect_renamed_dirs(aitems, bitems):
             adirs = set(map(os.path.dirname, aitems))
             bdirs = set(map(os.path.dirname, bitems))
-            files_ab = [(name, sorted(os.path.basename(item) for item in aitems if os.path.dirname(item) == name)) \
+            files_ab = [(name, sorted(os.path.basename(item) for item in aitems if os.path.dirname(item) == name))
                                 for name in adirs - bdirs]
-            files_ba = [(name, sorted(os.path.basename(item) for item in bitems if os.path.dirname(item) == name)) \
+            files_ba = [(name, sorted(os.path.basename(item) for item in bitems if os.path.dirname(item) == name))
                                 for name in bdirs - adirs]
             renamed_dirs = []
             for dir1, files1 in files_ab:

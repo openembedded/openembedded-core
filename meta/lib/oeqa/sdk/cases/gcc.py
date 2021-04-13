@@ -43,7 +43,7 @@ class GccCompileTest(OESDKTestCase):
 
     @classmethod
     def tearDownClass(self):
-        files = [os.path.join(self.tc.sdk_dir, f) \
+        files = [os.path.join(self.tc.sdk_dir, f)
                 for f in ['test.c', 'test.cpp', 'test.o', 'test',
                     'testsdkmakefile']]
         for f in files:

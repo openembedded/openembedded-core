@@ -82,7 +82,7 @@ def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
     with open(df, "a") as f:
         if metainfo:
             #dump column info
-            f.write("#PR_core_ver = \"%s\"\n\n" % metainfo['core_ver']);
+            f.write("#PR_core_ver = \"%s\"\n\n" % metainfo['core_ver'])
             f.write("#Table: %s\n" % metainfo['tbl_name'])
             f.write("#Columns:\n")
             f.write("#name      \t type    \t notn    \t dflt    \t pk\n")

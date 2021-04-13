@@ -216,7 +216,7 @@ class KickStart():
                         line_args = shlex.split(line)
                         parsed = parser.parse_args(line_args)
                     except ArgumentError as err:
-                        raise KickStartError('%s:%d: %s' % \
+                        raise KickStartError('%s:%d: %s' %
                                              (confpath, lineno, err))
                     if line.startswith('part'):
                         # SquashFS does not support filesystem UUID
@@ -281,7 +281,7 @@ class KickStart():
                             # Concatenate the strings set in APPEND
                             append_var = get_bitbake_var("APPEND")
                             if append_var:
-                                self.bootloader.append = ' '.join(filter(None, \
+                                self.bootloader.append = ' '.join(filter(None,
                                                          (self.bootloader.append, append_var)))
                         else:
                             err = "%s:%d: more than one bootloader specified" \

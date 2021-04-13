@@ -67,7 +67,7 @@ def main():
         minsize = int(sys.argv[1])
     rootfs = Record.create(".")
     total = rootfs.show(minsize)
-    print("Displayed %d/%d bytes (%.2f%%)" % \
+    print("Displayed %d/%d bytes (%.2f%%)" %
           (total, rootfs.size, 100 * float(total) / rootfs.size))
 
 

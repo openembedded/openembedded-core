@@ -19,6 +19,6 @@ class OESDKExtTestCase(OESDKTestCase):
         paths_to_avoid = ['bitbake/bin', 'poky/scripts']
         env['PATH'] = avoid_paths_in_environ(paths_to_avoid)
 
-        return subprocess.check_output(". %s > /dev/null;"\
+        return subprocess.check_output(". %s > /dev/null;"
             " %s;" % (self.tc.sdk_env, cmd), stderr=subprocess.STDOUT,
             shell=True, env=env, universal_newlines=True)

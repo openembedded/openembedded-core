@@ -86,8 +86,10 @@ def process_binaries(d, params):
         packaged_bin_dir = os.path.join(exportpath,"binaries", arch, "packaged_binaries")
         # creating necessary directory structure in case testing is done in poky env.
         if export_env == "0":
-            if not os.path.exists(extracted_bin_dir): bb.utils.mkdirhier(extracted_bin_dir)
-            if not os.path.exists(packaged_bin_dir): bb.utils.mkdirhier(packaged_bin_dir)
+            if not os.path.exists(extracted_bin_dir):
+                bb.utils.mkdirhier(extracted_bin_dir)
+            if not os.path.exists(packaged_bin_dir):
+                bb.utils.mkdirhier(packaged_bin_dir)
 
         if param_list[3] == "native":
             if export_env == "1": #this is a native package and we only need to copy it. no need for extraction

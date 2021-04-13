@@ -519,7 +519,7 @@ class BaseConfig(object):
                     unknown_arg = arg
                 else:
                     raise RunQemuError("Can't handle two unknown args: %s %s\n"
-                                       "Try 'runqemu help' on how to use it" % \
+                                       "Try 'runqemu help' on how to use it" %
                                         (unknown_arg, arg))
         # Check to make sure it is a valid machine
         if unknown_arg and self.get('MACHINE') != unknown_arg:
@@ -1233,7 +1233,7 @@ class BaseConfig(object):
                         logger.info('Using ide drive')
                         vm_drive = "-drive file=%s,format=%s" % (self.rootfs, rootfs_format)
                     elif drive_type.startswith("/dev/vdb"):
-                        logger.info('Using block virtio drive');
+                        logger.info('Using block virtio drive')
                         vm_drive = '-drive id=disk0,file=%s,if=none,format=%s -device virtio-blk-device,drive=disk0%s' \
                                     % (self.rootfs, rootfs_format,qb_rootfs_extra_opt)
                     else:

@@ -46,7 +46,7 @@ class CommonCheckLayer(OECheckLayerTestCase):
     def test_signatures(self):
         if self.tc.layer['type'] == LayerType.SOFTWARE and \
            not self.tc.test_software_layer_signatures:
-            raise unittest.SkipTest("Not testing for signature changes in a software layer %s." \
+            raise unittest.SkipTest("Not testing for signature changes in a software layer %s."
                      % self.tc.layer['name'])
 
         curr_sigs, _ = get_signatures(self.td['builddir'], failsafe=True)
@@ -56,5 +56,5 @@ class CommonCheckLayer(OECheckLayerTestCase):
 
     def test_layerseries_compat(self):
         for collection_name, collection_data in self.tc.layer['collections'].items():
-            self.assertTrue(collection_data['compat'], "Collection %s from layer %s does not set compatible oe-core versions via LAYERSERIES_COMPAT_collection." \
+            self.assertTrue(collection_data['compat'], "Collection %s from layer %s does not set compatible oe-core versions via LAYERSERIES_COMPAT_collection."
                  % (collection_name, self.tc.layer['name']))

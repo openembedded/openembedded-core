@@ -19,7 +19,7 @@ from .draw import RenderOptions
 
 def render(writer, trace, app_options, filename):
     handlers = {
-        "png": (lambda w, h: cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h), \
+        "png": (lambda w, h: cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h),
                 lambda sfc: sfc.write_to_png(filename)),
         "pdf": (lambda w, h: cairo.PDFSurface(filename, w, h), lambda sfc: 0),
         "svg": (lambda w, h: cairo.SVGSurface(filename, w, h), lambda sfc: 0)

@@ -209,7 +209,7 @@ class DirectPlugin(ImagerPlugin):
             logger.debug("Generating bmap file for %s", disk_name)
             python = os.path.join(self.native_sysroot, 'usr/bin/python3-native/python3')
             bmaptool = os.path.join(self.native_sysroot, 'usr/bin/bmaptool')
-            exec_native_cmd("%s %s create %s -o %s.bmap" % \
+            exec_native_cmd("%s %s create %s -o %s.bmap" %
                             (python, bmaptool, full_path, full_path), self.native_sysroot)
         # Compress the image
         if self.compressor:
@@ -377,14 +377,14 @@ class PartitionedImage():
             part = self.partitions[num]
 
             if self.ptable_format == 'msdos' and part.part_name:
-                raise WicError("setting custom partition name is not " \
+                raise WicError("setting custom partition name is not "
                                "implemented for msdos partitions")
 
             if self.ptable_format == 'msdos' and part.part_type:
                 # The --part-type can also be implemented for MBR partitions,
                 # in which case it would map to the 1-byte "partition type"
                 # filed at offset 3 of the partition entry.
-                raise WicError("setting custom partition type is not " \
+                raise WicError("setting custom partition type is not "
                                "implemented for msdos partitions")
 
             # Get the disk where the partition is located
@@ -562,28 +562,28 @@ class PartitionedImage():
             if part.part_name:
                 logger.debug("partition %d: set name to %s",
                              part.num, part.part_name)
-                exec_native_cmd("sgdisk --change-name=%d:%s %s" % \
+                exec_native_cmd("sgdisk --change-name=%d:%s %s" %
                                          (part.num, part.part_name,
                                           self.path), self.native_sysroot)
 
             if part.part_type:
                 logger.debug("partition %d: set type UID to %s",
                              part.num, part.part_type)
-                exec_native_cmd("sgdisk --typecode=%d:%s %s" % \
+                exec_native_cmd("sgdisk --typecode=%d:%s %s" %
                                          (part.num, part.part_type,
                                           self.path), self.native_sysroot)
 
             if part.uuid and self.ptable_format == "gpt":
                 logger.debug("partition %d: set UUID to %s",
                              part.num, part.uuid)
-                exec_native_cmd("sgdisk --partition-guid=%d:%s %s" % \
+                exec_native_cmd("sgdisk --partition-guid=%d:%s %s" %
                                 (part.num, part.uuid, self.path),
                                 self.native_sysroot)
 
             if part.label and self.ptable_format == "gpt":
                 logger.debug("partition %d: set name to %s",
                              part.num, part.label)
-                exec_native_cmd("parted -s %s name %d %s" % \
+                exec_native_cmd("parted -s %s name %d %s" %
                                 (self.path, part.num, part.label),
                                 self.native_sysroot)
 
@@ -591,11 +591,11 @@ class PartitionedImage():
                 flag_name = "legacy_boot" if self.ptable_format == 'gpt' else "boot"
                 logger.debug("Set '%s' flag for partition '%s' on disk '%s'",
                              flag_name, part.num, self.path)
-                exec_native_cmd("parted -s %s set %d %s on" % \
+                exec_native_cmd("parted -s %s set %d %s on" %
                                 (self.path, part.num, flag_name),
                                 self.native_sysroot)
             if part.system_id:
-                exec_native_cmd("sfdisk --part-type %s %s %s" % \
+                exec_native_cmd("sfdisk --part-type %s %s %s" %
                                 (self.path, part.num, part.system_id),
                                 self.native_sysroot)
 
