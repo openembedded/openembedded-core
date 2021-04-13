@@ -10,22 +10,16 @@ LIC_FILES_CHKSUM="\
     file://bfd/COPYING;md5=d32239bcb673463ab874e80d47fae504\
     "
 
-def binutils_branch_version(d):
-    pvsplit = d.getVar('PV').split('.')
-    return pvsplit[0] + "_" + pvsplit[1]
-
 # When upgrading to 2.37, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
 PV = "2.36.1"
 CVE_VERSION = "2.36.1"
-BINUPV = "${@binutils_branch_version(d)}"
-#BRANCH = "binutils-${BINUPV}-branch"
-BRANCH ?= "binutils-2_36-branch"
+SRCBRANCH ?= "binutils-2_36-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
 SRCREV ?= "7651a4871c225925ffdfda0a8c91a6ed370cd9a1"
-BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${BRANCH};protocol=git"
+BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
      file://0004-configure-widen-the-regexp-for-SH-architectures.patch \
