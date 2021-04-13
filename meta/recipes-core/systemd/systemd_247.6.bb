@@ -55,6 +55,7 @@ SRC_URI_MUSL = "\
                file://0022-do-not-disable-buffer-in-writing-files.patch \
                file://0025-Handle-__cpu_mask-usage.patch \
                file://0026-Handle-missing-gshadow.patch \
+               file://0028-missing_syscall.h-Define-MIPS-ABI-defines-for-musl.patch \
                "
 
 PAM_PLUGINS = " \
