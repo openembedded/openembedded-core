@@ -14,6 +14,7 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.utils.logparser import LtpComplianceParser
 
+
 class LtpPosixBase(OERuntimeTestCase):
 
     @classmethod
@@ -42,7 +43,6 @@ class LtpPosixBase(OERuntimeTestCase):
         cls.extras = cls.tc.extraresults
         cls.extras['ltpposixresult.rawlogs'] = {'log': ""}
 
- 
     @classmethod
     def ltp_finishup(cls):
         cls.extras['ltpposixresult.sections'] = cls.sections
@@ -55,6 +55,7 @@ class LtpPosixBase(OERuntimeTestCase):
 
         if cls.failmsg:
             cls.fail(cls.failmsg)
+
 
 class LtpPosixTest(LtpPosixBase):
     posix_groups = ["AIO", "MEM", "MSG", "SEM", "SIG", "THR", "TMR", "TPS"]

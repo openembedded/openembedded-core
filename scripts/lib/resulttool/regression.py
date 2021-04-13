@@ -12,6 +12,7 @@ import json
 from oeqa.utils.git import GitRepo
 import oeqa.utils.gitarchive as gitarchive
 
+
 def compare_result(logger, base_name, target_name, base_result, target_result):
     base_result = base_result.get('result')
     target_result = target_result.get('result')
@@ -35,14 +36,17 @@ def compare_result(logger, base_name, target_name, base_result, target_result):
         resultstring = "Match: %s\n       %s" % (base_name, target_name)
     return result, resultstring
 
+
 def get_results(logger, source):
     return resultutils.load_resultsdata(source, configmap=resultutils.regression_map)
+
 
 def regression(args, logger):
     base_results = get_results(logger, args.base_result)
     target_results = get_results(logger, args.target_result)
 
     regression_common(args, logger, base_results, target_results)
+
 
 def regression_common(args, logger, base_results, target_results):
     if args.base_result_id:
@@ -81,6 +85,7 @@ def regression_common(args, logger, base_results, target_results):
     print("\n".join(sorted(notfound)))
 
     return 0
+
 
 def regression_git(args, logger):
     base_results = {}
@@ -146,6 +151,7 @@ def regression_git(args, logger):
     regression_common(args, logger, base_results, target_results)
 
     return 0
+
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""

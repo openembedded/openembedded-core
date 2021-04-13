@@ -16,6 +16,7 @@ if len(sys.argv) != 2:
 topdir = sys.argv[1]
 topdir = os.path.abspath(topdir)
 
+
 def handlelink(filep, subdir):
     link = os.readlink(filep)
     if link[0] != "/":
@@ -26,6 +27,7 @@ def handlelink(filep, subdir):
     print("Replacing %s with %s for %s" % (link, os.path.relpath(topdir + link, subdir), filep))
     os.unlink(filep)
     os.symlink(os.path.relpath(topdir + link, subdir), filep)
+
 
 for subdir, dirs, files in os.walk(topdir):
     for f in dirs + files:

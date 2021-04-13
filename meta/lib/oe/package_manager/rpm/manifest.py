@@ -4,10 +4,12 @@
 
 from oe.manifest import Manifest
 
+
 class PkgManifest(Manifest):
     """
     Returns a dictionary object with mip and mlp packages.
     """
+
     def _split_multilib(self, pkg_list):
         pkgs = dict()
 

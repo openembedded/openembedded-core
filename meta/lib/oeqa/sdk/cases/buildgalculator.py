@@ -11,10 +11,12 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
+
 class GalculatorTest(OESDKTestCase):
     """
     Test that autotools and GTK+ 3 compiles correctly.
     """
+
     def setUp(self):
         if not (self.tc.hasTargetPackage("gtk+3", multilib=True) or
                 self.tc.hasTargetPackage("libgtk-3.0", multilib=True)):

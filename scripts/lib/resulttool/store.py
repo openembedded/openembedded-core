@@ -82,6 +82,7 @@ def store(args, logger):
 
     return 0
 
+
 def register_commands(subparsers):
     """Register subcommands from this plugin"""
     parser_build = subparsers.add_parser('store', help='store test results into a git repository',

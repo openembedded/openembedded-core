@@ -16,8 +16,10 @@ from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, Devtool
 
 logger = logging.getLogger('devtool')
 
+
 class TargetNotImageError(Exception):
     pass
+
 
 def _get_packages(tinfoil, workspace, config):
     """Get list of packages from recipes in the workspace."""
@@ -31,6 +33,7 @@ def _get_packages(tinfoil, workspace, config):
                 logger.warning("Skipping recipe %s as it doesn't produce a "
                                "package with the same name", recipe)
     return result
+
 
 def build_image(args, config, basepath, workspace):
     """Entry point for the devtool 'build-image' subcommand."""
@@ -61,6 +64,7 @@ def build_image(args, config, basepath, workspace):
         logger.info('Successfully built %s. You can find output files in %s'
                     % (image, outputdir))
     return result
+
 
 def build_image_task(config, basepath, workspace, image, add_packages=None, task=None, extra_append=None):
     # remove <image>.bbappend to make sure setup_tinfoil doesn't

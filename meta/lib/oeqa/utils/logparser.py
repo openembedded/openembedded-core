@@ -7,6 +7,8 @@ import os
 import re
 
 # A parser that can be used to identify weather a line is a test result or a section statement.
+
+
 class PtestParser(object):
     def __init__(self):
         self.results = {}

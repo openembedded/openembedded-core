@@ -8,12 +8,14 @@ from oeqa.core.case import OEPTestResultTestCase
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars
 
+
 def parse_values(content):
     for i in content:
         for v in ["PASS", "FAIL", "XPASS", "XFAIL", "UNRESOLVED", "UNSUPPORTED", "UNTESTED", "ERROR", "WARNING"]:
             if i.startswith(v + ": "):
                 yield i[len(v) + 2:].strip(), v
                 break
+
 
 @OETestTag("toolchain-user", "toolchain-system")
 class BinutilsCrossSelfTest(OESelftestTestCase, OEPTestResultTestCase):

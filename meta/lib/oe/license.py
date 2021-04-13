@@ -7,6 +7,7 @@ import ast
 import re
 from fnmatch import fnmatchcase as fnmatch
 
+
 def license_ok(license, dont_want_licenses):
     """ Return False if License exist in dont_want_licenses else True """
     for dwl in dont_want_licenses:
@@ -14,8 +15,10 @@ def license_ok(license, dont_want_licenses):
             return False
     return True
 
+
 class LicenseError(Exception):
     pass
+
 
 class LicenseSyntaxError(LicenseError):
     def __init__(self, licensestr, exc):
@@ -26,6 +29,7 @@ class LicenseSyntaxError(LicenseError):
     def __str__(self):
         return "error in '%s': %s" % (self.licensestr, self.exc)
 
+
 class InvalidLicense(LicenseError):
     def __init__(self, license):
         self.license = license
@@ -34,12 +38,15 @@ class InvalidLicense(LicenseError):
     def __str__(self):
         return "invalid characters in license '%s'" % self.license
 
+
 license_operator_chars = '&|() '
 license_operator = re.compile(r'([' + license_operator_chars + '])')
 license_pattern = re.compile(r'[a-zA-Z0-9.+_\-]+$')
 
+
 class LicenseVisitor(ast.NodeVisitor):
     """Get elements based on OpenEmbedded license strings"""
+
     def get_elements(self, licensestr):
         new_elements = []
         elements = list([x for x in license_operator.split(licensestr) if x.strip()])
@@ -56,16 +63,20 @@ class LicenseVisitor(ast.NodeVisitor):
 
     """Syntax tree visitor which can accept elements previously generated with
     OpenEmbedded license string"""
+
     def visit_elements(self, elements):
         self.visit(ast.parse(' '.join(elements)))
 
     """Syntax tree visitor which can accept OpenEmbedded license strings"""
+
     def visit_string(self, licensestr):
         self.visit_elements(self.get_elements(licensestr))
+
 
 class FlattenVisitor(LicenseVisitor):
     """Flatten a license tree (parsed from a string) by selecting one of each
     set of OR options, in the way the user specifies"""
+
     def __init__(self, choose_licenses):
         self.choose_licenses = choose_licenses
         self.licenses = []
@@ -87,6 +98,7 @@ class FlattenVisitor(LicenseVisitor):
         else:
             self.generic_visit(node)
 
+
 def flattened_licenses(licensestr, choose_licenses):
     """Given a license string and choose_licenses function, return a flat list of licenses"""
     flatten = FlattenVisitor(choose_licenses)
@@ -95,6 +107,7 @@ def flattened_licenses(licensestr, choose_licenses):
     except SyntaxError as exc:
         raise LicenseSyntaxError(licensestr, exc)
     return flatten.licenses
+
 
 def is_included(licensestr, whitelist=None, blacklist=None):
     """Given a license string and whitelist and blacklist, determine if the
@@ -142,9 +155,11 @@ def is_included(licensestr, whitelist=None, blacklist=None):
     else:
         return True, included
 
+
 class ManifestVisitor(LicenseVisitor):
     """Walk license tree (parsed from a string) removing the incompatible
     licenses specified"""
+
     def __init__(self, dont_want_licenses, canonical_license, d):
         self._dont_want_licenses = dont_want_licenses
         self._canonical_license = canonical_license
@@ -198,6 +213,7 @@ class ManifestVisitor(LicenseVisitor):
 
         self.generic_visit(node)
 
+
 def manifest_licenses(licensestr, dont_want_licenses, canonical_license, d):
     """Given a license string and dont_want_licenses list,
        return license string filtered and a list of licenses"""
@@ -219,13 +235,16 @@ def manifest_licenses(licensestr, dont_want_licenses, canonical_license, d):
 
     return (manifest.licensestr, manifest.licenses)
 
+
 class ListVisitor(LicenseVisitor):
     """Record all different licenses found in the license string"""
+
     def __init__(self):
         self.licenses = set()
 
     def visit_Str(self, node):
         self.licenses.add(node.s)
+
 
 def list_licenses(licensestr):
     """Simply get a list of all licenses mentioned in a license string.

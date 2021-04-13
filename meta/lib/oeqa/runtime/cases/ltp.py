@@ -14,6 +14,7 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.utils.logparser import LtpParser
 
+
 class LtpTestBase(OERuntimeTestCase):
 
     @classmethod
@@ -42,7 +43,6 @@ class LtpTestBase(OERuntimeTestCase):
         cls.extras = cls.tc.extraresults
         cls.extras['ltpresult.rawlogs'] = {'log': ""}
 
- 
     @classmethod
     def ltp_finishup(cls):
         cls.extras['ltpresult.sections'] = cls.sections
@@ -54,6 +54,7 @@ class LtpTestBase(OERuntimeTestCase):
 
         if cls.failmsg:
             cls.fail(cls.failmsg)
+
 
 class LtpTest(LtpTestBase):
 

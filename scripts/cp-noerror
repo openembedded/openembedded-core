@@ -11,6 +11,7 @@ import sys
 import os
 import shutil
 
+
 def copytree(src, dst, symlinks=False, ignore=None):
     """Based on shutil.copytree"""
     names = os.listdir(src)
@@ -45,6 +46,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
         errors.extend((src, dst, str(why)))
     if errors:
         raise shutil.Error(errors)
+
 
 try:
     copytree(sys.argv[1], sys.argv[2])

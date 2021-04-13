@@ -23,6 +23,7 @@ import optparse
 from . import parsing
 from . import batch
 
+
 def _mk_options_parser():
 	"""Make an options parser."""
 	usage = "%prog [options] /path/to/tmp/buildstats/<recipe-machine>/<BUILDNAME>/"
@@ -67,6 +68,7 @@ def _mk_options_parser():
 			  help="display the full time regardless of which processes are currently shown")
 	return parser
 
+
 class Writer:
 	def __init__(self, write, options):
 		self.write = write
@@ -87,11 +89,13 @@ class Writer:
 		if not self.options.quiet:
 			self.write(msg)
 
+
 def _mk_writer(options):
 	def write(s):
 		print(s)
 	return Writer(write, options)
 	
+
 def _get_filename(path):
 	"""Construct a usable filename for outputs"""
 	dname = "."
@@ -102,6 +106,7 @@ def _get_filename(path):
 		else:
 			fname = path
 	return os.path.join(dname, fname)
+
 
 def main(argv=None):
 	try:
@@ -161,6 +166,7 @@ def main(argv=None):
 				else:
 					f = filename + s % n + options.format
 					n = n + 1
+
 				def render():
 					batch.render(writer, r, options, f)
 				if options.profile:

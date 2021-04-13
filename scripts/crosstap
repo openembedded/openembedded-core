@@ -27,6 +27,7 @@ import subprocess
 import os
 import optparse
 
+
 class Stap(object):
     def __init__(self, script, module, remote):
         self.script = script
@@ -111,9 +112,11 @@ class Stap(object):
             print("export %s=\"%s\"" % (e, additional_env[e]))
         print(" ".join(command))
 
+
 class BitbakeEnvInvocationException(Exception):
     def __init__(self, message):
         self.message = message
+
 
 class BitbakeEnv(object):
     BITBAKE = "bitbake"
@@ -168,6 +171,7 @@ class BitbakeEnv(object):
             ret = ret[0]
 
         return ret
+
 
 class ParamDiscovery(object):
     SYMBOLS_CHECK_MESSAGE = """
@@ -454,5 +458,6 @@ IMAGE_INSTALL_append = " systemtap"
                     print(" ".join(cmd))
 
                 os.execve(cmd[0], cmd, env)
+
 
 main()

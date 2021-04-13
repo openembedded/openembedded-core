@@ -7,6 +7,7 @@
 from oeqa.core.loader import OETestLoader
 from oeqa.runtime.case import OERuntimeTestCase
 
+
 class OERuntimeTestLoader(OETestLoader):
     caseClass = OERuntimeTestCase
 

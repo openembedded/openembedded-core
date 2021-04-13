@@ -11,6 +11,7 @@ from oe.utils import execute_pre_post_process
 from oe.package_manager.ipk.manifest import PkgManifest
 from oe.package_manager.ipk import OpkgPM
 
+
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
         super(DpkgOpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
@@ -121,6 +122,7 @@ class DpkgOpkgRootfs(Rootfs):
 
             num += 1
 
+
 class PkgRootfs(DpkgOpkgRootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
         super(PkgRootfs, self).__init__(d, progress_reporter, logcatcher)
@@ -173,6 +175,7 @@ class PkgRootfs(DpkgOpkgRootfs):
          creation and the file has been changed, so we need to
          prelink the other one and compare them.
     '''
+
     def _file_equal(self, key, f1, f2):
 
         # Both of them are not prelinked
@@ -198,6 +201,7 @@ class PkgRootfs(DpkgOpkgRootfs):
     See commit: "image.bbclass: Added variables for multilib support." by
     Lianhao Lu.
     """
+
     def _multilib_sanity_test(self, dirs):
 
         allow_replace = self.d.getVar("MULTILIBRE_ALLOW_REP")
@@ -259,6 +263,7 @@ class PkgRootfs(DpkgOpkgRootfs):
     unneeded pkgs by comparing the old full manifest in previous existing
     image and the new full manifest in the current image.
     '''
+
     def _remove_extra_packages(self, pkgs_initial_install):
         if self.inc_opkg_image_gen == "1":
             # Parse full manifest in previous existing image creation session
@@ -286,6 +291,7 @@ class PkgRootfs(DpkgOpkgRootfs):
     The conditions include any of 'PACKAGE_EXCLUDE, NO_RECOMMENDATIONS
     and BAD_RECOMMENDATIONS' has been changed.
     '''
+
     def _remove_old_rootfs(self):
         if self.inc_opkg_image_gen != "1":
             return True

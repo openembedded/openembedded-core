@@ -7,6 +7,7 @@
 import os
 import resulttool.resultutils as resultutils
 
+
 def show_ptest(result, ptest, logger):
     logdata = resultutils.ptestresult_get_log(result, ptest)
     if logdata is not None:
@@ -16,6 +17,7 @@ def show_ptest(result, ptest, logger):
     print("ptest '%s' log not found" % ptest)
     return 1
 
+
 def show_reproducible(result, reproducible, logger):
     try:
         print(result['reproducible'][reproducible]['diffoscope.text'])
@@ -24,6 +26,7 @@ def show_reproducible(result, reproducible, logger):
     except KeyError:
         print("reproducible '%s' not found" % reproducible)
         return 1
+
 
 def log(args, logger):
     results = resultutils.load_resultsdata(args.source)
@@ -77,6 +80,7 @@ def log(args, logger):
         for reproducible in args.reproducible:
             if not show_reproducible(r, reproducible, logger):
                 return 1
+
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""

@@ -17,6 +17,7 @@ import cairo
 from . import draw
 from .draw import RenderOptions
 
+
 def render(writer, trace, app_options, filename):
     handlers = {
         "png": (lambda w, h: cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h),

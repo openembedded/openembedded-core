@@ -329,6 +329,7 @@ def _check_compatible_recipe(pn, d):
                            "from working. You will need to disable this "
                            "first." % pn)
 
+
 def _dry_run_copy(src, dst, dry_run_outdir, base_outdir):
     """Common function for copying a file to the dry run output directory"""
     relpath = os.path.relpath(dst, base_outdir)
@@ -344,6 +345,7 @@ def _dry_run_copy(src, dst, dry_run_outdir, base_outdir):
     if not os.path.exists(dst):
         shutil.copy(src, dst)
 
+
 def _move_file(src, dst, dry_run_outdir=None, base_outdir=None):
     """Move a file. Creates all the directory components of destination path."""
     dry_run_suffix = ' (dry-run)' if dry_run_outdir else ''
@@ -357,6 +359,7 @@ def _move_file(src, dst, dry_run_outdir=None, base_outdir=None):
             bb.utils.mkdirhier(dst_d)
         shutil.move(src, dst)
 
+
 def _copy_file(src, dst, dry_run_outdir=None):
     """Copy a file. Creates all the directory components of destination path."""
     dry_run_suffix = ' (dry-run)' if dry_run_outdir else ''
@@ -368,6 +371,7 @@ def _copy_file(src, dst, dry_run_outdir=None):
         if dst_d:
             bb.utils.mkdirhier(dst_d)
         shutil.copy(src, dst)
+
 
 def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
     """List contents of a git treeish"""
@@ -384,6 +388,7 @@ def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
                 ret[split[3]] = split[0:3]
     return ret
 
+
 def _git_exclude_path(srctree, path):
     """Return pathspec (list of paths) that excludes certain path"""
     # NOTE: "Filtering out" files/paths in this way is not entirely reliable -
@@ -399,6 +404,7 @@ def _git_exclude_path(srctree, path):
         return git_files
     else:
         return ['.']
+
 
 def _ls_tree(directory):
     """Recursive listing of files in a directory"""
@@ -433,6 +439,7 @@ def extract(args, config, basepath, workspace):
     finally:
         tinfoil.shutdown()
 
+
 def sync(args, config, basepath, workspace):
     """Entry point for the devtool 'sync' subcommand"""
     import bb
@@ -456,6 +463,7 @@ def sync(args, config, basepath, workspace):
             return 1
     finally:
         tinfoil.shutdown()
+
 
 def symlink_oelocal_files_srctree(rd, srctree):
     import oe.patch
@@ -697,6 +705,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
             shutil.rmtree(tempdir)
     return initial_rev, srcsubdir_rel
 
+
 def _add_md5(config, recipename, filename):
     """Record checksum of a file (or recursively for a directory) to the md5-file of the workspace"""
     import bb.utils
@@ -715,6 +724,7 @@ def _add_md5(config, recipename, filename):
                 addfile(os.path.join(root, f))
     else:
         addfile(filename)
+
 
 def _check_preserve(config, recipename):
     """Check if a file was manually changed and needs to be saved in 'attic'
@@ -748,6 +758,7 @@ def _check_preserve(config, recipename):
                     tf.write(line)
     os.rename(newfile, origfile)
 
+
 def get_staging_kver(srcdir):
     # Kernel version from work-shared
     kerver = []
@@ -760,12 +771,14 @@ def get_staging_kver(srcdir):
             staging_kerVer = ".".join(kerver)
     return staging_kerVer
 
+
 def get_staging_kbranch(srcdir):
     staging_kbranch = ""
     if os.path.exists(srcdir) and os.listdir(srcdir):
         (branch, _) = bb.process.run('git branch | grep \* | cut -d \' \' -f2', cwd=srcdir)
         staging_kbranch = "".join(branch.split('\n')[0])
     return staging_kbranch
+
 
 def modify(args, config, basepath, workspace):
     """Entry point for the devtool 'modify' subcommand"""
@@ -1236,6 +1249,7 @@ def _get_patchset_revs(srctree, recipe_path, initial_rev=None, force_patch_refre
 
     return initial_rev, update_rev, changed_revs, patches
 
+
 def _remove_file_entries(srcuri, filelist):
     """Remove file:// entries from SRC_URI"""
     remaining = filelist[:]
@@ -1251,6 +1265,7 @@ def _remove_file_entries(srcuri, filelist):
                 break
     return entries, remaining
 
+
 def _replace_srcuri_entry(srcuri, filename, newentry):
     """Replace entry corresponding to specified file with a new entry"""
     basename = os.path.basename(filename)
@@ -1259,6 +1274,7 @@ def _replace_srcuri_entry(srcuri, filename, newentry):
             srcuri.pop(i)
             srcuri.insert(i, newentry)
             break
+
 
 def _remove_source_files(append, files, destpath, no_report_remove=False, dry_run=False):
     """Unlink existing patch files"""
@@ -1597,6 +1613,7 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
     _remove_source_files(appendlayerdir, remove_files, destpath, no_report_remove, dry_run=dry_run_outdir)
     return True, appendfile, remove_files
 
+
 def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove, initial_rev, dry_run_outdir=None, force_patch_refresh=False):
     """Implement the 'patch' mode of update-recipe"""
     import bb
@@ -1739,6 +1756,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
     _remove_source_files(appendlayerdir, remove_files, destpath, no_report_remove, dry_run=dry_run_outdir)
     return True, appendfile, remove_files
 
+
 def _guess_recipe_update_mode(srctree, rdata):
     """Guess the recipe update mode to use"""
     src_uri = (rdata.getVar('SRC_URI') or '').split()
@@ -1760,6 +1778,7 @@ def _guess_recipe_update_mode(srctree, rdata):
         return 'srcrev'
 
     return 'patch'
+
 
 def _update_recipe(recipename, workspace, rd, mode, appendlayerdir, wildcard_version, no_remove, initial_rev, no_report_remove=False, dry_run_outdir=None, no_overrides=False, force_patch_refresh=False):
     srctree = workspace[recipename]['srctree']
@@ -1828,6 +1847,7 @@ def _update_recipe(recipename, workspace, rd, mode, appendlayerdir, wildcard_ver
             bb.process.run('git checkout %s' % startbranch, cwd=srctree)
 
     return anyupdated, appendfile, allremoved
+
 
 def update_recipe(args, config, basepath, workspace):
     """Entry point for the devtool 'update-recipe' subcommand"""
@@ -1937,6 +1957,7 @@ def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
             os.remove(appendfile)
 
         preservepath = os.path.join(config.workspace_path, 'attic', pn, pn)
+
         def preservedir(origdir):
             if os.path.exists(origdir):
                 for root, dirs, files in os.walk(origdir):
@@ -1972,6 +1993,7 @@ def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
                 os.rmdir(srctreebase)
 
         clean_preferred_provider(pn, config.workspace_path)
+
 
 def reset(args, config, basepath, workspace):
     """Entry point for the devtool 'reset' subcommand"""
@@ -2210,6 +2232,7 @@ def get_default_srctree(config, recipename=''):
         return os.path.join(srctreeparent, 'sources', recipename)
     else:
         return os.path.join(srctreeparent, 'sources')
+
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

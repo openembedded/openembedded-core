@@ -12,6 +12,7 @@ from oeqa.selftest.cases.buildhistory import BuildhistoryBase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 import oeqa.utils.ftools as ftools
 
+
 class ImageOptionsTests(OESelftestTestCase):
 
     def test_incremental_image_generation(self):
@@ -55,6 +56,7 @@ class ImageOptionsTests(OESelftestTestCase):
         bitbake("core-image-sato")
         # do_image will fail if there are any pending postinsts
 
+
 class DiskMonTest(OESelftestTestCase):
 
     def test_stoptask_behavior(self):
@@ -69,6 +71,7 @@ class DiskMonTest(OESelftestTestCase):
         self.write_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},100000G,100K"')
         res = bitbake("delay -c delay")
         self.assertTrue('WARNING: The free space' in res.output, msg="A warning should have been displayed for disk monitor is set to WARN: %s" % res.output)
+
 
 class SanityOptionsTest(OESelftestTestCase):
     def getline(self, res, line):
@@ -148,6 +151,7 @@ class BuildhistoryTests(BuildhistoryBase):
         self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
         self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True, error_regex=error)
 
+
 class ArchiverTest(OESelftestTestCase):
     def test_arch_work_dir_and_export_source(self):
         """
@@ -162,6 +166,7 @@ class ArchiverTest(OESelftestTestCase):
         tar_file_glob = str(pkgs_path[0]) + "/xcursor*.tar.gz"
         self.assertTrue((g.glob(src_file_glob) and g.glob(tar_file_glob)), "Couldn't find .src.rpm and .tar.gz files under %s/allarch*/xcursor*" % deploy_dir_src)
 
+
 class ToolchainOptions(OESelftestTestCase):
     def test_toolchain_fortran(self):
         """
@@ -171,6 +176,7 @@ class ToolchainOptions(OESelftestTestCase):
         features = 'FORTRAN_forcevariable = ",fortran"\n'
         self.write_config(features)
         bitbake('fortran-helloworld')
+
 
 class SourceMirroring(OESelftestTestCase):
     # Can we download everything from the Yocto Sources Mirror over http only

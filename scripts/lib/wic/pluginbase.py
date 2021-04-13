@@ -24,6 +24,7 @@ logger = logging.getLogger('wic')
 
 PLUGINS = defaultdict(dict)
 
+
 class PluginMgr:
     _plugin_dirs = []
 
@@ -58,6 +59,7 @@ class PluginMgr:
 
         return PLUGINS.get(ptype)
 
+
 class PluginMeta(type):
     def __new__(cls, name, bases, attrs):
         class_type = type.__new__(cls, name, bases, attrs)
@@ -66,12 +68,14 @@ class PluginMeta(type):
 
         return class_type
 
+
 class ImagerPlugin(metaclass=PluginMeta):
     wic_plugin_type = "imager"
 
     def do_create(self):
         raise WicError("Method %s.do_create is not implemented" %
                        self.__class__.__name__)
+
 
 class SourcePlugin(metaclass=PluginMeta):
     wic_plugin_type = "source"

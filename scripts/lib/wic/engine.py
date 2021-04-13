@@ -31,6 +31,7 @@ from wic.misc import get_bitbake_var, exec_cmd
 
 logger = logging.getLogger('wic')
 
+
 def verify_build_env():
     """
     Verify that the build environment is sane.
@@ -47,6 +48,7 @@ CANNED_IMAGE_DIR = "lib/wic/canned-wks" # relative to scripts
 SCRIPTS_CANNED_IMAGE_DIR = "scripts/" + CANNED_IMAGE_DIR
 WIC_DIR = "wic"
 
+
 def build_canned_image_list(path):
     layers_path = get_bitbake_var("BBLAYERS")
     canned_wks_layer_dirs = []
@@ -62,6 +64,7 @@ def build_canned_image_list(path):
     canned_wks_layer_dirs.append(cpath)
 
     return canned_wks_layer_dirs
+
 
 def find_canned_image(scripts_path, wks_file):
     """
@@ -553,6 +556,7 @@ class Disk:
                 elif part['type'] != 'f':
                     logger.warning("skipping partition {}: unsupported fstype {}".format(pnum, fstype))
 
+
 def wic_ls(args, native_sysroot):
     """List contents of partitioned image or vfat partition."""
     disk = Disk(args.path.image, native_sysroot)
@@ -566,6 +570,7 @@ def wic_ls(args, native_sysroot):
     else:
         path = args.path.path or '/'
         print(disk.dir(args.path.part, path))
+
 
 def wic_cp(args, native_sysroot):
     """
@@ -587,12 +592,14 @@ def wic_rm(args, native_sysroot):
     disk = Disk(args.path.image, native_sysroot)
     disk.remove(args.path.part, args.path.path, args.recursive_delete)
 
+
 def wic_write(args, native_sysroot):
     """
     Write image to a target device.
     """
     disk = Disk(args.image, native_sysroot, ('fat', 'ext', 'linux-swap'))
     disk.write(args.target, args.expand)
+
 
 def find_canned(scripts_path, file_name):
     """
@@ -610,6 +617,7 @@ def find_canned(scripts_path, file_name):
                 if fname == file_name:
                     fullpath = os.path.join(canned_wks_dir, fname)
                     return fullpath
+
 
 def get_custom_config(boot_file):
     """

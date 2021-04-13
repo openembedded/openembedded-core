@@ -17,8 +17,10 @@ import codecs
 
 logger = logging.getLogger('devtool')
 
+
 class DevtoolError(Exception):
     """Exception for handling devtool errors"""
+
     def __init__(self, message, exitcode=1):
         super(DevtoolError, self).__init__(message)
         self.exitcode = exitcode
@@ -48,6 +50,7 @@ def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
     else:
         return bb.process.run('%s%s' % (init_prefix, cmd), **options)
 
+
 def exec_watch(cmd, **options):
     """Run program with stdout shown on sys.stdout"""
     import bb
@@ -74,6 +77,7 @@ def exec_watch(cmd, **options):
 
     return buf, None
 
+
 def exec_fakeroot(d, cmd, **kwargs):
     """Run a command under fakeroot (pseudo, in fact) so that it picks up the appropriate file permissions"""
     # Grab the command and check it actually exists
@@ -89,6 +93,7 @@ def exec_fakeroot(d, cmd, **kwargs):
             splitval = varvalue.split('=', 1)
             newenv[splitval[0]] = splitval[1]
     return subprocess.call("%s %s" % (fakerootcmd, cmd), env=newenv, **kwargs)
+
 
 def setup_tinfoil(config_only=False, basepath=None, tracking=False):
     """Initialize tinfoil api from bitbake"""
@@ -117,6 +122,7 @@ def setup_tinfoil(config_only=False, basepath=None, tracking=False):
         os.chdir(orig_cwd)
     return tinfoil
 
+
 def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
     """Parse the specified recipe"""
     try:
@@ -138,6 +144,7 @@ def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
         logger.error(str(e))
         return None
     return rd
+
 
 def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
     """
@@ -169,6 +176,7 @@ def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
 
     return workspacepn
 
+
 def use_external_build(same_dir, no_same_dir, d):
     """
     Determine if we should use B!=S (separate build and source directories) or not
@@ -186,6 +194,7 @@ def use_external_build(same_dir, no_same_dir, d):
     else:
         b_is_s = False
     return b_is_s
+
 
 def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
     """
@@ -233,6 +242,7 @@ def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
     bb.process.run('git checkout -b %s' % devbranch, cwd=repodir)
     bb.process.run('git tag -f %s' % basetag, cwd=repodir)
 
+
 def recipe_to_append(recipefile, config, wildcard=False):
     """
     Convert a recipe file to a bbappend file path within the workspace.
@@ -247,6 +257,7 @@ def recipe_to_append(recipefile, config, wildcard=False):
     appendfile = os.path.join(appendpath, appendname + '.bbappend')
     return appendfile
 
+
 def get_bbclassextend_targets(recipefile, pn):
     """
     Cheap function to get BBCLASSEXTEND and then convert that to the
@@ -255,6 +266,7 @@ def get_bbclassextend_targets(recipefile, pn):
     import bb.utils
 
     values = {}
+
     def get_bbclassextend_varfunc(varname, origvalue, op, newlines):
         values[varname] = origvalue
         return origvalue, None, 0, True
@@ -270,6 +282,7 @@ def get_bbclassextend_targets(recipefile, pn):
             elif variant in ['native', 'cross', 'crosssdk']:
                 targets.append('%s-%s' % (pn, variant))
     return targets
+
 
 def replace_from_file(path, old, new):
     """Replace strings on a file"""
@@ -325,6 +338,7 @@ def update_unlockedsigs(basepath, workspace, fixed_setup, extra=None):
 
     # Get current unlocked list if any
     values = {}
+
     def get_unlockedsigs_varfunc(varname, origvalue, op, newlines):
         values[varname] = origvalue
         return origvalue, None, 0, True
@@ -348,6 +362,7 @@ def update_unlockedsigs(basepath, workspace, fixed_setup, extra=None):
                 f.write('    ' + pn)
             f.write('"')
 
+
 def check_prerelease_version(ver, operation):
     if 'pre' in ver or 'rc' in ver:
         logger.warning('Version "%s" looks like a pre-release version. '
@@ -361,10 +376,12 @@ def check_prerelease_version(ver, operation):
                        'the version after %s succeeds using "devtool rename" '
                        'with -V/--version.' % (ver, operation))
 
+
 def check_git_repo_dirty(repodir):
     """Check if a git repository is clean or not"""
     stdout, _ = bb.process.run('git status --porcelain', cwd=repodir)
     return stdout
+
 
 def check_git_repo_op(srctree, ignoredirs=None):
     """Check if a git repository is in the middle of a rebase"""

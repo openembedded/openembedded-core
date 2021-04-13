@@ -7,12 +7,14 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runqemu, Command
 from oeqa.utils.nfs import unfs_server
 
+
 def parse_values(content):
     for i in content:
         for v in ["PASS", "FAIL", "XPASS", "XFAIL", "UNRESOLVED", "UNSUPPORTED", "UNTESTED", "ERROR", "WARNING"]:
             if i.startswith(v + ": "):
                 yield i[len(v) + 2:].strip(), v
                 break
+
 
 class GlibcSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
     def run_check(self, ssh=None):
@@ -77,10 +79,12 @@ class GlibcSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
 
             self.run_check(ssh=qemu.ip)
 
+
 @OETestTag("toolchain-user")
 class GlibcSelfTest(GlibcSelfTestBase):
     def test_glibc(self):
         self.run_check()
+
 
 @OETestTag("toolchain-system")
 class GlibcSelfTestSystemEmulated(GlibcSelfTestBase):

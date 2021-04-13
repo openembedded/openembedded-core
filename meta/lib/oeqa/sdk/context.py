@@ -11,6 +11,7 @@ import re
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 
+
 class OESDKTestContext(OETestContext):
     sdk_files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
 
@@ -47,6 +48,7 @@ class OESDKTestContext(OETestContext):
                 if ('ml' + ml) in self.sdk_env:
                     pkg = ml + '-' + pkg
         return self._hasPackage(self.target_pkg_manifest, pkg, regex=regex)
+
 
 class OESDKTestContextExecutor(OETestContextExecutor):
     _context_class = OESDKTestContext
@@ -149,5 +151,6 @@ class OESDKTestContextExecutor(OETestContextExecutor):
 
         self.sdk_env = sdk_envs[args.sdk_env]
         return super(OESDKTestContextExecutor, self).run(logger, args)
+
 
 _executor_class = OESDKTestContextExecutor

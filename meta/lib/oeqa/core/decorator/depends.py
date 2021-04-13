@@ -10,6 +10,7 @@ from oeqa.core.exception import OEQADependency
 
 from . import OETestDiscover, registerDecorator
 
+
 def _add_depends(registry, case, depends):
     module_name = case.__module__
     class_name = case.__class__.__name__
@@ -31,6 +32,7 @@ def _add_depends(registry, case, depends):
         if not depend_id in registry[case_id]:
             registry[case_id].append(depend_id)
 
+
 def _validate_test_case_depends(cases, depends):
     for case in depends:
         if not case in cases:
@@ -39,6 +41,7 @@ def _validate_test_case_depends(cases, depends):
             if not dep in cases:
                 raise OEQADependency("TestCase %s depends on %s and isn't available"
                        ", cases available %s." % (case, dep, str(cases.keys())))
+
 
 def _order_test_case_by_depends(cases, depends):
     def _dep_resolve(graph, node, resolved, seen):
@@ -65,6 +68,7 @@ def _order_test_case_by_depends(cases, depends):
 
     return [cases[case_id] for case_id in cases_ordered]
 
+
 def _skipTestDependency(case, depends):
     for dep in depends:
         found = False
@@ -75,6 +79,7 @@ def _skipTestDependency(case, depends):
         if not found:
             raise SkipTest("Test case %s depends on %s but it didn't pass/run."
                         % (case.id(), dep))
+
 
 @registerDecorator
 class OETestDepends(OETestDiscover):

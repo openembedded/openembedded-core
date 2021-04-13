@@ -12,6 +12,7 @@ from wic.filemap import sparse_copy
 
 logger = logging.getLogger('wic')
 
+
 class RawCopyPlugin(SourcePlugin):
     """
     Populate partition content from raw image file.

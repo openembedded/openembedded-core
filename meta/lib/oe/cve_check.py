@@ -7,6 +7,7 @@ _Version = collections.namedtuple(
     "_Version", ["release", "patch_l", "pre_l", "pre_v"]
 )
 
+
 @functools.total_ordering
 class Version():
 
@@ -49,6 +50,7 @@ class Version():
         if not isinstance(other, Version):
             return NotImplemented
         return self._key > other._key
+
 
 def _cmpkey(release, patch_l, pre_l, pre_v):
     # remove leading 0

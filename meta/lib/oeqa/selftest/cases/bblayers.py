@@ -10,6 +10,7 @@ from oeqa.utils.commands import runCmd, get_bb_var, get_bb_vars
 
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class BitbakeLayers(OESelftestTestCase):
 
     def test_bitbakelayers_showcrossdepends(self):

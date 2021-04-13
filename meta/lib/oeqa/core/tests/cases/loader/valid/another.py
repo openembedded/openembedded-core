@@ -6,6 +6,7 @@
 
 from oeqa.core.case import OETestCase
 
+
 class AnotherTest(OETestCase):
 
     def testAnother(self):

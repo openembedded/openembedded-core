@@ -29,6 +29,7 @@ from wic.misc import get_bitbake_var, exec_cmd, exec_native_cmd
 
 logger = logging.getLogger('wic')
 
+
 class DirectPlugin(ImagerPlugin):
     """
     Install a system into a file containing a partitioned disk image.
@@ -279,6 +280,7 @@ class DirectPlugin(ImagerPlugin):
         if not self.debug:
             shutil.rmtree(self.workdir, ignore_errors=True)
 
+
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1
 
@@ -287,6 +289,7 @@ GPT_OVERHEAD = 34
 
 # Size of a sector in bytes
 SECTOR_SIZE = 512
+
 
 class PartitionedImage():
     """

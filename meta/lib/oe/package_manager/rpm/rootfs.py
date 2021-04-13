@@ -8,6 +8,7 @@ from oe.utils import execute_pre_post_process
 from oe.package_manager.rpm.manifest import PkgManifest
 from oe.package_manager.rpm import RpmPM
 
+
 class PkgRootfs(Rootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
         super(PkgRootfs, self).__init__(d, progress_reporter, logcatcher)
@@ -36,6 +37,7 @@ class PkgRootfs(Rootfs):
     unneeded pkgs by comparing the new install solution manifest and the
     old installed manifest.
     '''
+
     def _create_incremental(self, pkgs_initial_install):
         if self.inc_rpm_image_gen == "1":
 
@@ -117,7 +119,6 @@ class PkgRootfs(Rootfs):
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
-
 
     @staticmethod
     def _depends_list():

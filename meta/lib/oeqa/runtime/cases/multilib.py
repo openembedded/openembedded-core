@@ -9,6 +9,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 
 import subprocess
 
+
 class MultilibTest(OERuntimeTestCase):
 
     def archtest(self, binary, arch):

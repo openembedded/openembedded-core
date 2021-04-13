@@ -142,7 +142,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
                    [('SKIPPED', t, m) for t, m in self.skipped]
         return sorted(compound, key=lambda info: info[1].start_time)
 
-
     def write_buildstats_json(self):
         """Write buildstats file"""
         buildstats = OrderedDict()
@@ -151,7 +150,6 @@ class BuildPerfTestResult(unittest.TextTestResult):
                 buildstats[test.name + '.' + key] = val
         with open(os.path.join(self.out_dir, 'buildstats.json'), 'w') as fobj:
             json.dump(buildstats, fobj, cls=ResultsJsonEncoder)
-
 
     def write_results_json(self):
         """Write test results into a json-formatted file"""

@@ -6,14 +6,18 @@ import sys
 import argparse
 from collections import defaultdict, OrderedDict
 
+
 class ArgumentUsageError(Exception):
     """Exception class you can raise (and catch) in order to show the help"""
+
     def __init__(self, message, subcommand=None):
         self.message = message
         self.subcommand = subcommand
 
+
 class ArgumentParser(argparse.ArgumentParser):
     """Our own version of argparse's ArgumentParser"""
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('formatter_class', OeHelpFormatter)
         self._subparser_groups = OrderedDict()
@@ -171,6 +175,7 @@ class OeHelpFormatter(argparse.HelpFormatter):
             return '\n'.join(lines)
         else:
             return super(OeHelpFormatter, self)._format_action(action)
+
 
 def int_positive(value):
     ivalue = int(value)

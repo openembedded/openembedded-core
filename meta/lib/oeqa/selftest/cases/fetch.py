@@ -9,6 +9,7 @@ import oe.path
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake
 
+
 class Fetch(OESelftestTestCase):
     def test_git_mirrors(self):
         """

@@ -25,6 +25,7 @@ locations = list()
 
 class SystemdFile():
     """Class representing a single systemd configuration file"""
+
     def __init__(self, root, path):
         self.sections = dict()
         self._parse(root, path)
@@ -95,6 +96,7 @@ class SystemdFile():
 
 class Presets():
     """Class representing all systemd presets"""
+
     def __init__(self, scope, root):
         self.directives = list()
         self._collect_presets(scope, root)

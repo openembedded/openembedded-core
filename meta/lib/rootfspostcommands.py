@@ -4,6 +4,7 @@
 
 import os
 
+
 def sort_file(filename, mapping):
     """
     Sorts a passwd or group file based on the numeric ID in the third column.
@@ -33,6 +34,7 @@ def sort_file(filename, mapping):
         f.write(b''.join(lines))
     return new_mapping
 
+
 def remove_backup(filename):
     """
     Removes the backup file for files like /etc/passwd.
@@ -40,6 +42,7 @@ def remove_backup(filename):
     backup_filename = filename + '-'
     if os.path.exists(backup_filename):
         os.unlink(backup_filename)
+
 
 def sort_passwd(sysconfdir):
     """

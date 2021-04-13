@@ -6,6 +6,7 @@ from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.runtime.decorator.package import OEHasPackage
 
+
 class SSHTest(OERuntimeTestCase):
 
     @OETestDepends(['ping.PingTest.test_ping'])

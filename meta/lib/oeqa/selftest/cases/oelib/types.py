@@ -5,6 +5,7 @@
 from unittest.case import TestCase
 from oe.maketype import create
 
+
 class TestBooleanType(TestCase):
     def test_invalid(self):
         self.assertRaises(ValueError, create, '', 'boolean')
@@ -34,6 +35,7 @@ class TestBooleanType(TestCase):
         self.assertNotEqual(create('n', 'boolean'), True)
         self.assertEqual(create('y', 'boolean'), True)
         self.assertNotEqual(create('y', 'boolean'), False)
+
 
 class TestList(TestCase):
     def assertListEqual(self, value, valid, sep=None):

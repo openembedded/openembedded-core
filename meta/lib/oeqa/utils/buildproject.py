@@ -14,6 +14,7 @@ import tempfile
 
 from abc import ABCMeta, abstractmethod
 
+
 class BuildProject(metaclass=ABCMeta):
     def __init__(self, uri, foldername=None, tmpdir=None, dl_dir=None):
         self.uri = uri

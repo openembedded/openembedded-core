@@ -30,6 +30,7 @@ import bb.cooker
 import bb.providers
 import bb.tinfoil
 
+
 def get_fnlist(bbhandler, pkg_pn, preferred):
     ''' Get all recipe file names '''
     if preferred:
@@ -43,6 +44,7 @@ def get_fnlist(bbhandler, pkg_pn, preferred):
             fn_list.extend(pkg_pn[pn])
 
     return fn_list
+
 
 def get_recipesdata(bbhandler, preferred):
     ''' Get data of all available recipes which have PACKAGECONFIG flags '''
@@ -58,6 +60,7 @@ def get_recipesdata(bbhandler, preferred):
 
     return data_dict
 
+
 def collect_pkgs(data_dict):
     ''' Collect available pkgs in which have PACKAGECONFIG flags '''
     # pkg_dict = {'pkg1': ['flag1', 'flag2',...]}
@@ -69,6 +72,7 @@ def collect_pkgs(data_dict):
         pkg_dict[pkgname] = sorted(pkgconfigflags.keys())
 
     return pkg_dict
+
 
 def collect_flags(pkg_dict):
     ''' Collect available PACKAGECONFIG flags and all affected pkgs '''
@@ -82,6 +86,7 @@ def collect_flags(pkg_dict):
                 flag_dict[flag] = [pkgname]
 
     return flag_dict
+
 
 def display_pkgs(pkg_dict):
     ''' Display available pkgs which have PACKAGECONFIG flags '''
@@ -109,6 +114,7 @@ def display_flags(flag_dict):
     for flag in sorted(flag_dict):
         print('%-*s%s' % (flag_len, flag, '  '.join(sorted(flag_dict[flag]))))
 
+
 def display_all(data_dict):
     ''' Display all pkgs and PACKAGECONFIG information '''
     print(str("").ljust(50, '='))
@@ -125,6 +131,7 @@ def display_all(data_dict):
                 continue
             print('PACKAGECONFIG[%s] %s' % (flag, flag_val))
         print('')
+
 
 def main():
     pkg_dict = {}
@@ -162,6 +169,7 @@ def main():
             display_pkgs(pkg_dict)
         elif options.listtype == 'all':
             display_all(data_dict)
+
 
 if __name__ == "__main__":
     main()

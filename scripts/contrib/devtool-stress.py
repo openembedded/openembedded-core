@@ -27,6 +27,7 @@ import scriptutils
 import argparse_oe
 logger = scriptutils.logger_create('devtool-stress')
 
+
 def select_recipes(args):
     import bb.tinfoil
     tinfoil = bb.tinfoil.Tinfoil()
@@ -240,6 +241,7 @@ def main():
     logger.debug('Found bitbake path: %s' % bitbakepath)
 
     ret = args.func(args)
+
 
 if __name__ == "__main__":
     main()

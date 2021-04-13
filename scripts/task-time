@@ -51,6 +51,7 @@ field_regexes = (("elapsed", ".*Elapsed time: ([0-9.]+)"),
 # buildstat file and <dict> maps fields from the file to their values
 task_infos = []
 
+
 def save_times_for_task(path):
     """Saves information for the buildstat file 'path' in 'task_infos'."""
 
@@ -77,6 +78,7 @@ def save_times_for_task(path):
 
         task_infos.append((path, fields))
 
+
 def save_times_for_dir(path):
     """Runs save_times_for_task() for each file in path and its subdirs, recursively."""
 
@@ -88,20 +90,25 @@ def save_times_for_dir(path):
         for fname in files:
             save_times_for_task(os.path.join(root, fname))
 
+
 for path in args.paths:
     if os.path.isfile(path):
         save_times_for_task(path)
     else:
         save_times_for_dir(path)
 
+
 def elapsed_time(task_info):
     return task_info[1]["elapsed"]
+
 
 def tot_user_time(task_info):
     return task_info[1]["user"] + task_info[1]["child user"]
 
+
 def tot_sys_time(task_info):
     return task_info[1]["sys"] + task_info[1]["child sys"]
+
 
 if args.sort != "none":
     sort_fn = {"real": elapsed_time, "user": tot_user_time, "sys": tot_sys_time}

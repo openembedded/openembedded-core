@@ -1,6 +1,7 @@
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 
+
 class Selftest(OERuntimeTestCase):
 
     @OETestDepends(['ssh.SSHTest.test_ssh'])

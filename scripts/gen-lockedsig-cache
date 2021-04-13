@@ -9,6 +9,7 @@ import shutil
 import errno
 import time
 
+
 def mkdir(d):
     try:
         os.makedirs(d)
@@ -17,11 +18,15 @@ def mkdir(d):
             raise e
 
 # extract the hash from past the last colon to last underscore
+
+
 def extract_sha(filename):
     return filename.split(':')[7].split('_')[0]
 
 # get all files in a directory, extract hash and make
 # a map from hash to list of file with that hash
+
+
 def map_sha_to_files(dir_, prefix, sha_map):
     sstate_prefix_path = dir_ + '/' + prefix + '/'
     if not os.path.exists(sstate_prefix_path):
@@ -37,6 +42,8 @@ def map_sha_to_files(dir_, prefix, sha_map):
             continue
 
 # given a prefix build a map of hash to list of files
+
+
 def build_sha_cache(prefix):
     sha_map = {}
 
@@ -47,6 +54,7 @@ def build_sha_cache(prefix):
     map_sha_to_files(native_sstate_dir, prefix, sha_map)
 
     return sha_map
+
 
 if len(sys.argv) < 5:
     print("Incorrect number of arguments specified")

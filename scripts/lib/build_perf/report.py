@@ -293,6 +293,7 @@ class SizeVal(MeasurementVal):
             return "null"
         return self / 1024
 
+
 def measurement_stats(meas, prefix=''):
     """Get statistics of a measurement"""
     if not meas:

@@ -19,10 +19,12 @@ def load_json_file(f):
     with open(f, "r") as filedata:
         return json.load(filedata)
 
+
 def write_json_file(f, json_data):
     os.makedirs(os.path.dirname(f), exist_ok=True)
     with open(f, 'w') as filedata:
         filedata.write(json.dumps(json_data, sort_keys=True, indent=4))
+
 
 class ManualTestRunner(object):
 
@@ -205,6 +207,7 @@ class ManualTestRunner(object):
         write_json_file(testcase_config_file, new_testcase_config)
         logger.info('Testcase Configuration file created at %s' % testcase_config_file)
 
+
 def manualexecution(args, logger):
     testrunner = ManualTestRunner()
     if args.make_config_options_file:
@@ -217,6 +220,7 @@ def manualexecution(args, logger):
     resultjsonhelper = OETestResultJSONHelper()
     resultjsonhelper.dump_testresult_file(write_dir, configurations, result_id, test_results)
     return 0
+
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""

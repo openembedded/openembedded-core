@@ -12,6 +12,7 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
+
 class GccCompileTest(OESDKTestCase):
     td_vars = ['MACHINE']
 

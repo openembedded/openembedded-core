@@ -34,6 +34,7 @@ from oeqa.utils.decorators import LogResults, gettag, getResults
 
 logger = logging.getLogger("BitBake")
 
+
 def getVar(obj):
     #extend form dict, if a variable didn't exists, need find it in testcase
     class VarDict(dict):
@@ -41,8 +42,10 @@ def getVar(obj):
             return gettag(obj, key)
     return VarDict()
 
+
 def checkTags(tc, tagexp):
     return eval(tagexp, None, getVar(tc))
+
 
 def filterByTagExp(testsuite, tagexp):
     if not tagexp:
@@ -55,6 +58,7 @@ def filterByTagExp(testsuite, tagexp):
         else:
             caseList.append(filterByTagExp(each, tagexp))
     return testsuite.__class__(caseList)
+
 
 @LogResults
 class oeTest(unittest.TestCase):
@@ -87,6 +91,7 @@ class oeTest(unittest.TestCase):
             return True
         else:
             return False
+
 
 class oeRuntimeTest(oeTest):
     def __init__(self, methodName='runTest'):
@@ -132,6 +137,7 @@ class oeRuntimeTest(oeTest):
     def tearDownLocal(self):
         pass
 
+
 def getmodule(pos=2):
     # stack returns a list of tuples containg frame information
     # First element of the list the is current frame, caller is 1
@@ -139,6 +145,7 @@ def getmodule(pos=2):
     modname = inspect.getmodulename(frameinfo[1])
     #modname = inspect.getmodule(frameinfo[0]).__name__
     return modname
+
 
 def skipModule(reason, pos=2):
     modname = getmodule(pos)
@@ -149,17 +156,22 @@ def skipModule(reason, pos=2):
                 "\nTest was required in TEST_SUITES, so either the condition for skipping is wrong"
                 "\nor the image really doesn't have the required feature/package when it should." % (modname, reason))
 
+
 def skipModuleIf(cond, reason):
 
     if cond:
         skipModule(reason, 3)
+
 
 def skipModuleUnless(cond, reason):
 
     if not cond:
         skipModule(reason, 3)
 
+
 _buffer_logger = ""
+
+
 def custom_verbose(msg, *args, **kwargs):
     global _buffer_logger
     if msg[-1] != "\n":
@@ -171,6 +183,7 @@ def custom_verbose(msg, *args, **kwargs):
         except NameError:
             logger.info(_buffer_logger.rstrip("\n"), *args, **kwargs)
         _buffer_logger = ""
+
 
 class TestContext(object):
     def __init__(self, d, exported=False):
@@ -360,6 +373,7 @@ class TestContext(object):
             runner.stream.write = custom_verbose
 
         return runner.run(self.suite)
+
 
 class RuntimeTestContext(TestContext):
     def __init__(self, d, target, exported=False):
@@ -569,6 +583,7 @@ class RuntimeTestContext(TestContext):
             elif not install and rm:
                 self.target.connection.delete_dir_structure(src_dir, "/")
 
+
 class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
         super(ImageTestContext, self).__init__(d, target)
@@ -593,6 +608,7 @@ class ImageTestContext(RuntimeTestContext):
 
         pkg_dir = self.d.getVar("TEST_EXTRACTED_DIR")
         super(ImageTestContext, self).install_uninstall_packages(test_id, pkg_dir, install)
+
 
 class ExportTestContext(RuntimeTestContext):
     def __init__(self, d, target, exported=False, parsedArgs={}):

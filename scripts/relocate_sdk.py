@@ -29,6 +29,7 @@ else:
 
 old_prefix = re.compile(b("##DEFAULT_INSTALL_DIR##"))
 
+
 def get_arch():
     f.seek(0)
     e_ident = f.read(16)
@@ -41,6 +42,7 @@ def get_arch():
         return 32
     elif ei_class == 2:
         return 64
+
 
 def parse_elf_header():
     global e_type, e_machine, e_version, e_entry, e_phoff, e_shoff, e_flags,\
@@ -61,6 +63,7 @@ def parse_elf_header():
     e_type, e_machine, e_version, e_entry, e_phoff, e_shoff, e_flags,\
     e_ehsize, e_phentsize, e_phnum, e_shentsize, e_shnum, e_shstrndx =\
         struct.unpack(hdr_fmt, elf_header[16:hdr_size])
+
 
 def change_interpreter(elf_file_name):
     if arch == 32:
@@ -102,6 +105,7 @@ def change_interpreter(elf_file_name):
             f.seek(p_offset)
             f.write(dl_path)
             break
+
 
 def change_dl_sysdirs(elf_file_name):
     if arch == 32:
@@ -199,6 +203,7 @@ def change_dl_sysdirs(elf_file_name):
         f.write(sysdirs)
         f.seek(sysdirslen_off)
         f.write(sysdirslen)
+
 
 # MAIN
 if len(sys.argv) < 4:

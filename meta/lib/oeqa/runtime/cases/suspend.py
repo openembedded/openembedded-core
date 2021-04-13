@@ -4,6 +4,7 @@ from oeqa.core.decorator.data import skipIfQemu
 import threading
 import time
 
+
 class Suspend_Test(OERuntimeTestCase):
 
     def test_date(self): 

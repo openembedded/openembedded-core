@@ -18,6 +18,7 @@ from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, Devtool
 
 logger = logging.getLogger('devtool')
 
+
 def parse_locked_sigs(sigfile_path):
     """Return <pn:task>:<hash> dictionary"""
     sig_dict = {}
@@ -28,6 +29,7 @@ def parse_locked_sigs(sigfile_path):
                 taskkey, _, hashval = line.rpartition(':')
                 sig_dict[taskkey.strip()] = hashval.split()[0]
     return sig_dict
+
 
 def generate_update_dict(sigfile_new, sigfile_old):
     """Return a dict containing <pn:task>:<hash> which indicates what need to be updated"""
@@ -42,6 +44,7 @@ def generate_update_dict(sigfile_new, sigfile_old):
             update_dict[k] = sigdict_new[k]
             continue
     return update_dict
+
 
 def get_sstate_objects(update_dict, sstate_dir):
     """Return a list containing sstate objects which are to be installed"""
@@ -61,12 +64,14 @@ def get_sstate_objects(update_dict, sstate_dir):
 
     return sstate_objects
 
+
 def mkdir(d):
     try:
         os.makedirs(d)
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise e
+
 
 def install_sstate_objects(sstate_objects, src_sdk, dest_sdk):
     """Install sstate objects into destination SDK"""
@@ -80,6 +85,7 @@ def install_sstate_objects(sstate_objects, src_sdk, dest_sdk):
         mkdir(destdir)
         logger.debug("Copying %s to %s" % (sb, dst))
         shutil.copy(sb, dst)
+
 
 def check_manifest(fn, basepath):
     import bb.utils
@@ -95,6 +101,7 @@ def check_manifest(fn, basepath):
                     logger.debug('File %s changed: old csum = %s, new = %s' % (os.path.join(basepath, fpath), curr_chksum, chksum))
                     changedfiles.append(fpath)
     return changedfiles
+
 
 def sdk_update(args, config, basepath, workspace):
     """Entry point for devtool sdk-update command"""
@@ -238,6 +245,7 @@ def sdk_update(args, config, basepath, workspace):
             return -1
     return 0
 
+
 def sdk_install(args, config, basepath, workspace):
     """Entry point for the devtool sdk-install command"""
 
@@ -250,6 +258,7 @@ def sdk_install(args, config, basepath, workspace):
 
     tasks = ['do_populate_sysroot', 'do_packagedata']
     stampprefixes = {}
+
     def checkstamp(recipe):
         stampprefix = stampprefixes[recipe]
         stamps = glob.glob(stampprefix + '*')

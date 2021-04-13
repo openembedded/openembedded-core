@@ -37,6 +37,8 @@ from oeqa.utils.sshcontrol import SSHControl
 # this isn't pretty but we need a fake target object
 # for running the tests externally as we don't care
 # about deploy/start we only care about the connection methods (run, copy)
+
+
 class FakeTarget(object):
     def __init__(self, d):
         self.connection = None
@@ -68,6 +70,7 @@ class FakeTarget(object):
 class MyDataDict(dict):
     def getVar(self, key, unused=None):
         return self.get(key, "")
+
 
 def main():
 
@@ -124,6 +127,7 @@ def main():
 
     return 0
 
+
 def extract_sdk(d):
     """
     Extract SDK if needed
@@ -142,6 +146,7 @@ def extract_sdk(d):
                 print("Setting up SDK environment...")
                 env_file = os.path.join(extract_path, f)
                 updateEnv(env_file)
+
 
 if __name__ == "__main__":
     try:

@@ -20,6 +20,7 @@ import threading
 import importlib
 from importlib import machinery
 
+
 class KeepAliveStreamHandler(logging.StreamHandler):
     def __init__(self, keepalive=True, **kwargs):
         super().__init__(**kwargs)
@@ -55,6 +56,7 @@ class KeepAliveStreamHandler(logging.StreamHandler):
         with self._timeout:
             self._timeout.notify()
 
+
 def logger_create(name, stream=None, keepalive=None):
     logger = logging.getLogger(name)
     if keepalive is not None:
@@ -65,6 +67,7 @@ def logger_create(name, stream=None, keepalive=None):
     logger.addHandler(loggerhandler)
     logger.setLevel(logging.INFO)
     return logger
+
 
 def logger_setup_color(logger, color='auto'):
     from bb.msg import BBLogFormatter
@@ -109,6 +112,7 @@ def git_convert_standalone_clone(repodir):
             bb.process.run('git repack -a', cwd=repodir)
             os.remove(alternatesfile)
 
+
 def _get_temp_recipe_dir(d):
     # This is a little bit hacky but we need to find a place where we can put
     # the recipe so that bitbake can find it. We're going to delete it at the
@@ -125,11 +129,14 @@ def _get_temp_recipe_dir(d):
                     break
     return fetchrecipedir
 
+
 class FetchUrlFailure(Exception):
     def __init__(self, url):
         self.url = url
+
     def __str__(self):
         return "Failed to fetch URL %s" % self.url
+
 
 def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirrors=False):
     """
@@ -255,6 +262,7 @@ def run_editor(fn, logger=None):
         logger.error("Execution of '%s' failed: %s" % (editor, exc))
         return 1
 
+
 def is_src_url(param):
     """
     Check if a parameter is a URL and return True if so
@@ -267,6 +275,7 @@ def is_src_url(param):
     elif param.startswith('git@') or ('@' in param and param.endswith('.git')):
         return True
     return False
+
 
 def filter_src_subdirs(pth):
     """

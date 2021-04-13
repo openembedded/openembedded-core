@@ -24,6 +24,7 @@ from gi.repository import GObject
 from . import draw
 from .draw import RenderOptions
 
+
 class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
     __gsignals__ = {
             'clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING, Gdk.Event)),
@@ -237,6 +238,7 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
         #self.hadj.value_changed()
         self.vadj.set_value(y * self.zoom_ratio)
 
+
 class PyBootchartShell(gtk.VBox):
     ui = '''
     <ui>
@@ -251,6 +253,7 @@ class PyBootchartShell(gtk.VBox):
             </toolbar>
     </ui>
     '''
+
     def __init__(self, window, trace, options, xscale):
         gtk.VBox.__init__(self)
 

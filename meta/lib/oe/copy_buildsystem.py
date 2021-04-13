@@ -13,6 +13,7 @@
 import stat
 import shutil
 
+
 def _smart_copy(src, dest):
     import subprocess
     # smart_copy will choose the correct function depending on whether the
@@ -26,6 +27,7 @@ def _smart_copy(src, dest):
     else:
         shutil.copyfile(src, dest)
         shutil.copymode(src, dest)
+
 
 class BuildSystem(object):
     def __init__(self, context, d):
@@ -171,11 +173,13 @@ class BuildSystem(object):
 
         return copied_corebase, layers_copied
 
+
 def generate_locked_sigs(sigfile, d):
     bb.utils.mkdirhier(os.path.dirname(sigfile))
     depd = d.getVar('BB_TASKDEPDATA', False)
     tasks = ['%s:%s' % (v[2], v[1]) for v in depd.values()]
     bb.parse.siggen.dump_lockedsigs(sigfile, tasks)
+
 
 def prune_lockedsigs(excluded_tasks, excluded_targets, lockedsigs, onlynative, pruned_output):
     with open(lockedsigs, 'r') as infile:
@@ -198,6 +202,7 @@ def prune_lockedsigs(excluded_tasks, excluded_targets, lockedsigs, onlynative, p
                 elif line.startswith('SIGGEN_LOCKEDSIGS'):
                     invalue = True
                     f.write(line)
+
 
 def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_output, copy_output=None):
     merged = {}
@@ -254,6 +259,7 @@ def merge_lockedsigs(copy_tasks, lockedsigs_main, lockedsigs_extra, merged_outpu
     if merged_output:
         write_sigs_file(merged_output, arch_order, merged)
 
+
 def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cache, d, fixedlsbstring="", filterfile=None):
     import shutil
     bb.note('Generating sstate-cache...')
@@ -274,6 +280,7 @@ def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cac
                     else:
                         bb.utils.mkdirhier(os.path.dirname(dest))
                         shutil.move(src, dest)
+
 
 def check_sstate_task_list(d, targets, filteroutfile, cmdprefix='', cwd=None, logfile=None):
     import subprocess

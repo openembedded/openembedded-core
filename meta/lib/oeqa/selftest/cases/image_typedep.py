@@ -7,6 +7,7 @@ import os
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake
 
+
 class ImageTypeDepTests(OESelftestTestCase):
 
     # Verify that when specifying a IMAGE_TYPEDEP_ of the form "foo.bar" that

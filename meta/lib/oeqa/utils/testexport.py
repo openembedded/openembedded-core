@@ -21,12 +21,15 @@ except ImportError:
     class my_log():
         def __init__(self):
             pass
+
         def plain(self, msg):
             if msg:
                 print(msg)
+
         def warn(self, msg):
             if msg:
                 print("WARNING: " + msg)
+
         def fatal(self, msg):
             if msg:
                 print("FATAL:" + msg)

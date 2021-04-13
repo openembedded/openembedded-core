@@ -41,6 +41,7 @@ colours = {
     'colour_remove': '',
 }
 
+
 def init_colours(use_colours):
     global colours
     if use_colours:
@@ -55,6 +56,7 @@ def init_colours(use_colours):
             'colour_add': '',
             'colour_remove': '',
         }
+
 
 class ChangeRecord:
     def __init__(self, path, fieldname, oldvalue, newvalue, monitored):
@@ -206,6 +208,7 @@ class ChangeRecord:
 
         return '%s%s' % (prefix, out) if out else ''
 
+
 class FileChange:
     changetype_add = 'A'
     changetype_remove = 'R'
@@ -257,6 +260,7 @@ class FileChange:
         else:
             return '%s changed (unknown)' % self.path
 
+
 def blob_to_dict(blob):
     alines = [line for line in blob.data_stream.read().decode('utf-8').splitlines()]
     adict = {}
@@ -283,7 +287,9 @@ def file_list_to_dict(lines):
             adict[path] = splitv[0:3]
     return adict
 
+
 numeric_removal = str.maketrans('0123456789', 'XXXXXXXXXX')
+
 
 def compare_file_lists(alines, blines, compare_ownership=True):
     adict = file_list_to_dict(alines)
@@ -523,6 +529,7 @@ def compare_siglists(a_blob, b_blob, taskdiff=False):
     blines = b_blob.data_stream.read().decode('utf-8').splitlines()
     keys = []
     pnmap = {}
+
     def readsigs(lines):
         sigs = {}
         for line in lines:

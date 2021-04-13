@@ -23,7 +23,6 @@ class ResultsTextReport(object):
                              'failed': ['FAILED', 'failed', 'FAIL', 'ERROR', 'error', 'UNKNOWN', 'XPASS'],
                              'skipped': ['SKIPPED', 'skipped', 'UNSUPPORTED', 'UNTESTED', 'UNRESOLVED']}
 
-
     def handle_ptest_result(self, k, status, result, machine):
         if machine not in self.ptests:
             self.ptests[machine] = {}
@@ -284,11 +283,13 @@ class ResultsTextReport(object):
                 test_count_reports.append(test_count_report)
         self.print_test_report('test_report_full_text.txt', test_count_reports)
 
+
 def report(args, logger):
     report = ResultsTextReport()
     report.view_test_report(logger, args.source_dir, args.branch, args.commit, args.tag, args.use_regression_map,
                             args.raw_test_only, args.selected_test_case_only)
     return 0
+
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""

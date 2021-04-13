@@ -19,12 +19,15 @@ import glob
 import configparser
 import signal
 
+
 class RunQemuError(Exception):
     """Custom exception to raise on known errors."""
     pass
 
+
 class OEPathError(RunQemuError):
     """Custom Exception to give better guidance on missing binaries"""
+
     def __init__(self, message):
         super().__init__("In order for this script to dynamically infer paths\n \
 kernels or filesystem images, you either need bitbake in your PATH\n \
@@ -52,7 +55,9 @@ def create_logger():
 
     return logger
 
+
 logger = create_logger()
+
 
 def print_usage():
     print("""
@@ -104,6 +109,7 @@ Examples:
   runqemu path/to/<image>-<machine>.wic.vhd
 """)
 
+
 def check_tun():
     """Check /dev/net/tun"""
     dev_tun = '/dev/net/tun'
@@ -112,6 +118,7 @@ def check_tun():
 
     if not os.access(dev_tun, os.W_OK):
         raise RunQemuError("TUN control device %s is not writable, please fix (e.g. sudo chmod 666 %s)" % (dev_tun, dev_tun))
+
 
 def get_first_file(cmds):
     """Return first file found in wildcard cmds"""
@@ -122,6 +129,7 @@ def get_first_file(cmds):
                 if not os.path.isdir(f):
                     return f
     return ''
+
 
 class BaseConfig(object):
     def __init__(self):
@@ -766,7 +774,6 @@ class BaseConfig(object):
 
         if not os.path.exists(self.bios):
             raise RunQemuError("KERNEL %s not found" % self.bios)
-
 
     def check_mem(self):
         """
@@ -1585,6 +1592,7 @@ def main():
         config.cleanup()
         # Deliberately ignore the return code of 'tput smam'.
         subprocess.call(["tput", "smam"])
+
 
 if __name__ == "__main__":
     sys.exit(main())

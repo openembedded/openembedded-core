@@ -9,6 +9,7 @@ from time import sleep
 from oeqa.core.case import OETestCase
 from oeqa.core.decorator.oetimeout import OETimeout
 
+
 class TimeoutTest(OETestCase):
 
     @OETimeout(1)

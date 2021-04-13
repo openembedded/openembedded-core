@@ -65,6 +65,7 @@ wildcards = []
 hasfolders = []
 allfolders = []
 
+
 def isFolder(value):
     value = value.replace('${PYTHON_MAJMIN}', pyversion)
     if os.path.isdir(value.replace('${libdir}', nativelibfolder + '/usr/lib')) or os.path.isdir(value.replace('${libdir}', nativelibfolder + '/usr/lib64')) or os.path.isdir(value.replace('${libdir}', nativelibfolder + '/usr/lib32')):
@@ -72,17 +73,20 @@ def isFolder(value):
     else:
         return False
 
+
 def isCached(item):
     if '__pycache__' in item:
         return True
     else:
         return False
 
+
 def prepend_comments(comments, json_manifest):
     with open(json_manifest, 'r+') as manifest:
         json_contents = manifest.read()
         manifest.seek(0, 0)
         manifest.write(comments + json_contents)
+
 
 # Read existing JSON manifest
 with open('python3-manifest.json') as manifest:
@@ -149,7 +153,6 @@ for filedep in old_manifest['core']['files']:
     # Get actual module name , shouldnt be affected by libdir/bindir, etc.
     pymodule = os.path.splitext(os.path.basename(os.path.normpath(filedep)))[0]
 
-
     # We now know that were dealing with a python module, so we can import it
     # and check what its dependencies are.
     # We launch a separate task for each module for deterministic behavior.
@@ -160,7 +163,6 @@ for filedep in old_manifest['core']['files']:
     output = subprocess.check_output([sys.executable, 'get_module_deps3.py', '%s' % pymodule]).decode('utf8')
     print('The following dependencies were found for module %s:\n' % pymodule)
     print(output)
-
 
     for pymodule_dep in output.split():
         pymodule_dep = pymodule_dep.replace(pyversion, '${PYTHON_MAJMIN}')
@@ -188,7 +190,6 @@ for pypkg in old_manifest:
                 hasfolders.append(pypkg)
             if filedep not in allfolders:
                 allfolders.append(filedep)
-
 
 
 # This is the main loop that will handle each package.
@@ -271,8 +272,6 @@ for pypkg in old_manifest:
             else:
                 pymodule = path
 
-
-
         # We now know that were dealing with a python module, so we can import it
         # and check what its dependencies are.
         # We launch a separate task for each module for deterministic behavior.
@@ -336,8 +335,6 @@ for pypkg in old_manifest:
             if inFolders:
                 continue
 
-
-
             # No directories beyond this point
             # We might already have this module on the dictionary since it could depend on a (previously checked) module
             if pymodule_dep not in new_manifest[pypkg]['files'] and pymodule_dep not in new_manifest[pypkg]['cached']:
@@ -358,7 +355,6 @@ for pypkg in old_manifest:
                         if pymodule_dep not in repeated:
                             repeated.append(pymodule_dep)
                 else:
-
 
                     # Last step: Figure out if we this belongs to FILES or RDEPENDS
                     # We check if this module is already contained on another package, so we add that one

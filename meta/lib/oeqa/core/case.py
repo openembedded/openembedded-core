@@ -10,12 +10,14 @@ import unittest
 
 from oeqa.core.exception import OEQAMissingVariable
 
+
 def _validate_td_vars(td, td_vars, type_msg):
     if td_vars:
         for v in td_vars:
             if not v in td:
                 raise OEQAMissingVariable("Test %s need %s variable but"
                         " isn't into td" % (type_msg, v))
+
 
 class OETestCase(unittest.TestCase):
     # TestContext and Logger instance set by OETestLoader.
@@ -51,6 +53,7 @@ class OETestCase(unittest.TestCase):
         for d in self.decorators:
             d.tearDownDecorator()
         self.tearDownMethod()
+
 
 class OEPTestResultTestCase:
     """

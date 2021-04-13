@@ -17,6 +17,8 @@ import signal
 from functools import wraps
 
 #get the "result" object from one of the upper frames provided that one of these upper frames is a unittest.case frame
+
+
 class getResults(object):
     def __init__(self):
         #dynamically determine the unittest.case frame and use it to get the name of the test method
@@ -53,6 +55,7 @@ class getResults(object):
     def getSkipList(self):
         return self.skiplist
 
+
 class skipIfFailure(object):
 
     def __init__(self, testcase):
@@ -68,6 +71,7 @@ class skipIfFailure(object):
         wrapped_f.__name__ = f.__name__
         return wrapped_f
 
+
 class skipIfSkipped(object):
 
     def __init__(self, testcase):
@@ -82,6 +86,7 @@ class skipIfSkipped(object):
             return f(*args, **kwargs)
         wrapped_f.__name__ = f.__name__
         return wrapped_f
+
 
 class skipUnlessPassed(object):
 
@@ -101,6 +106,7 @@ class skipUnlessPassed(object):
         wrapped_f._depends_on = self.testcase
         return wrapped_f
 
+
 class testcase(object):
     def __init__(self, test_case):
         self.test_case = test_case
@@ -113,11 +119,14 @@ class testcase(object):
         wrapped_f.__name__ = func.__name__
         return wrapped_f
 
+
 class NoParsingFilter(logging.Filter):
     def filter(self, record):
         return record.levelno == 100
 
+
 import inspect
+
 
 def LogResults(original_class):
     orig_method = original_class.run
@@ -215,8 +224,10 @@ def LogResults(original_class):
 
     return original_class
 
+
 class TimeOut(BaseException):
     pass
+
 
 def timeout(seconds):
     def decorator(fn):
@@ -224,6 +235,7 @@ def timeout(seconds):
             @wraps(fn)
             def wrapped_f(*args, **kw):
                 current_frame = sys._getframe()
+
                 def raiseTimeOut(signal, frame):
                     if frame is not current_frame:
                         raise TimeOut('%s seconds' % seconds)
@@ -239,7 +251,10 @@ def timeout(seconds):
             return fn
     return decorator
 
+
 __tag_prefix = "tag__"
+
+
 def tag(*args, **kwargs):
     """Decorator that adds attributes to classes or functions
     for use with the Attribute (-a) plugin.
@@ -252,6 +267,7 @@ def tag(*args, **kwargs):
         return ob
     return wrap_ob
 
+
 def gettag(obj, key, default=None):
     key = __tag_prefix + key
     if not isinstance(obj, unittest.TestCase):
@@ -259,6 +275,7 @@ def gettag(obj, key, default=None):
     tc_method = getattr(obj, obj._testMethodName)
     ret = getattr(tc_method, key, getattr(obj, key, default))
     return ret
+
 
 def getAllTags(obj):
     def __gettags(o):
@@ -271,12 +288,14 @@ def getAllTags(obj):
     ret.update(__gettags(tc_method))
     return ret
 
+
 def timeout_handler(seconds):
     def decorator(fn):
         if hasattr(signal, 'alarm'):
             @wraps(fn)
             def wrapped_f(self, *args, **kw):
                 current_frame = sys._getframe()
+
                 def raiseTimeOut(signal, frame):
                     if frame is not current_frame:
                         try:

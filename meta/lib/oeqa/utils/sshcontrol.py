@@ -97,6 +97,7 @@ class SSHProcess(object):
             raise
         return (self.status, self.output)
 
+
 class SSHControl(object):
     def __init__(self, ip, logfile=None, timeout=300, user='root', port=None):
         self.ip = ip
@@ -179,7 +180,6 @@ class SSHControl(object):
                 src_file = os.path.join(root, f)
                 self.copy_to(src_file, dst_file)
 
-
     def delete_files(self, remotepath, files):
         """
         Delete files in target's remote path.
@@ -194,7 +194,6 @@ class SSHControl(object):
 
         self.run(cmd)
 
-
     def delete_dir(self, remotepath):
         """
         Delete remotepath directory in target.
@@ -202,7 +201,6 @@ class SSHControl(object):
 
         cmd = "rmdir %s" % remotepath
         self.run(cmd)
-
 
     def delete_dir_structure(self, localpath, remotepath):
         """

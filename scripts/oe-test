@@ -31,6 +31,7 @@ from oeqa.core.exception import OEQAPreRun
 
 logger = scriptutils.logger_create('oe-test', stream=sys.stdout)
 
+
 def main():
     parser = argparse_oe.ArgumentParser(description="OpenEmbedded test tool",
                                         add_help=False,
@@ -72,6 +73,7 @@ def main():
         ret = 1
 
     return ret
+
 
 if __name__ == '__main__':
     try:

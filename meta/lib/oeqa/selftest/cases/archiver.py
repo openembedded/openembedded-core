@@ -7,6 +7,7 @@ import glob
 from oeqa.utils.commands import bitbake, get_bb_vars
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class Archiver(OESelftestTestCase):
 
     def test_archiver_allows_to_filter_on_recipe_name(self):
@@ -116,8 +117,6 @@ class Archiver(OESelftestTestCase):
 
         excluded_present = len(glob.glob(src_path_target + '/%s-*' % target_recipes[1]))
         self.assertFalse(excluded_present, 'Recipe %s was not excluded.' % target_recipes[1])
-
-
 
     def test_archiver_srpm_mode(self):
         """

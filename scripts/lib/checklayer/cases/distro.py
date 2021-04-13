@@ -8,6 +8,7 @@ import unittest
 from checklayer import LayerType
 from checklayer.case import OECheckLayerTestCase
 
+
 class DistroCheckLayer(OECheckLayerTestCase):
     @classmethod
     def setUpClass(self):

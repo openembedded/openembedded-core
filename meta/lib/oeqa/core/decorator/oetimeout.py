@@ -8,12 +8,14 @@ import signal
 from . import OETestDecorator, registerDecorator
 from oeqa.core.exception import OEQATimeoutError
 
+
 @registerDecorator
 class OETimeout(OETestDecorator):
     attrs = ('oetimeout',)
 
     def setUpDecorator(self):
         timeout = self.oetimeout
+
         def _timeoutHandler(signum, frame):
             raise OEQATimeoutError("Timed out after %s "
                     "seconds of execution" % timeout)

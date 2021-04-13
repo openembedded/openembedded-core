@@ -34,7 +34,6 @@ class Signing(OESelftestTestCase):
         runCmd('gpg --agent-program=`which gpg-agent`\|--auto-expand-secmem --batch --homedir %s --import %s %s' % (self.gpg_dir, self.pub_key_path, self.secret_key_path), native_sysroot=nsysroot)
         return nsysroot + get_bb_var("bindir_native")
 
-
     @contextmanager
     def create_new_builddir(self, builddir, newbuilddir):
         bb.utils.mkdirhier(newbuilddir)
@@ -119,7 +118,6 @@ class Signing(OESelftestTestCase):
         self.add_command_to_tearDown('bitbake -c clean core-image-minimal')
         bitbake('-c clean core-image-minimal')
         bitbake('core-image-minimal')
-
 
     def test_signing_sstate_archive(self):
         """

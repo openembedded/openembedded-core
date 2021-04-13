@@ -26,9 +26,11 @@ from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_r
 
 logger = logging.getLogger('devtool')
 
+
 def _run(cmd, cwd=''):
     logger.debug("Running command %s> %s" % (cwd, cmd))
     return bb.process.run('%s' % cmd, cwd=cwd)
+
 
 def _get_srctree(tmpdir):
     srctree = tmpdir
@@ -37,6 +39,7 @@ def _get_srctree(tmpdir):
         srctree = os.path.join(tmpdir, dirs[0])
     return srctree
 
+
 def _copy_source_code(orig, dest):
     for path in standard._ls_tree(orig):
         dest_dir = os.path.join(dest, os.path.dirname(path))
@@ -44,10 +47,12 @@ def _copy_source_code(orig, dest):
         dest_path = os.path.join(dest, path)
         shutil.move(os.path.join(orig, path), dest_path)
 
+
 def _remove_patch_dirs(recipefolder):
     for root, dirs, files in os.walk(recipefolder):
         for d in dirs:
             shutil.rmtree(os.path.join(root, d))
+
 
 def _recipe_contains(rd, var):
     rf = rd.getVar('FILE')
@@ -56,6 +61,7 @@ def _recipe_contains(rd, var):
         if fn and fn.startswith(os.path.dirname(rf) + os.sep):
             return True
     return False
+
 
 def _rename_recipe_dirs(oldpv, newpv, path):
     for root, dirs, files in os.walk(path):
@@ -73,6 +79,7 @@ def _rename_recipe_dirs(oldpv, newpv, path):
                     if oldfile != newfile:
                         os.rename(os.path.join(path, oldfile), os.path.join(path, newfile))
 
+
 def _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path):
     oldrecipe = os.path.basename(oldrecipe)
     if oldrecipe.endswith('_%s.bb' % oldpv):
@@ -83,9 +90,11 @@ def _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path):
         newrecipe = oldrecipe
     return os.path.join(path, newrecipe)
 
+
 def _rename_recipe_files(oldrecipe, bpn, oldpv, newpv, path):
     _rename_recipe_dirs(oldpv, newpv, path)
     return _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path)
+
 
 def _write_append(rc, srctree, same_dir, no_same_dir, rev, copied, workspace, d):
     """Writes an append file"""
@@ -118,6 +127,7 @@ def _write_append(rc, srctree, same_dir, no_same_dir, rev, copied, workspace, d)
             f.write('# original_files: %s\n' % ' '.join(copied))
     return af
 
+
 def _cleanup_on_error(rf, srctree):
     rfp = os.path.split(rf)[0] # recipe folder
     rfpp = os.path.split(rfp)[0] # recipes folder
@@ -129,6 +139,7 @@ def _cleanup_on_error(rf, srctree):
     if os.path.exists(srctree):
         shutil.rmtree(srctree)
 
+
 def _upgrade_error(e, rf, srctree, keep_failure=False, extramsg=None):
     if rf and not keep_failure:
         _cleanup_on_error(rf, srctree)
@@ -138,6 +149,7 @@ def _upgrade_error(e, rf, srctree, keep_failure=False, extramsg=None):
     if keep_failure:
         logger.info('Preserving failed upgrade files (--keep-failure)')
     sys.exit(1)
+
 
 def _get_uri(rd):
     srcuris = rd.getVar('SRC_URI').split()
@@ -161,6 +173,7 @@ def _get_uri(rd):
             srcrev = res.group(1)
             srcuri = rev_re.sub('', srcuri)
     return srcuri, srcrev
+
 
 def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, keep_temp, tinfoil, rd):
     """Extract sources of a recipe with a new version"""
@@ -286,6 +299,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
 
     return (rev, md5, sha256, srcbranch, srcsubdir_rel)
 
+
 def _add_license_diff_to_recipe(path, diff):
     notice_text = """# FIXME: the LIC_FILES_CHKSUM values have been updated by 'devtool upgrade'.
 # The following is the difference between the old and the new license text.
@@ -304,6 +318,7 @@ def _add_license_diff_to_recipe(path, diff):
         f.write(commented_diff.encode())
         f.write("\n#\n\n".encode())
         f.write(orig_content)
+
 
 def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, srcsubdir_new, workspace, tinfoil, rd, license_diff, new_licenses, srctree, keep_failure):
     """Creates the new recipe under workspace"""
@@ -452,6 +467,7 @@ def _check_git_config():
     if configerr:
         raise DevtoolError('Your git configuration is incomplete which will prevent rebases from working:\n' + '\n'.join(configerr))
 
+
 def _extract_licenses(srcpath, recipe_licenses):
     licenses = []
     for url in recipe_licenses.split():
@@ -478,6 +494,7 @@ def _extract_licenses(srcpath, recipe_licenses):
         licenses.append(license)
     return licenses
 
+
 def _generate_license_diff(old_licenses, new_licenses):
     need_diff = False
     for l in new_licenses:
@@ -493,6 +510,7 @@ def _generate_license_diff(old_licenses, new_licenses):
         for line in difflib.unified_diff(old['text'], new['text'], old['path'], new['path']):
             diff = diff + line
     return diff
+
 
 def upgrade(args, config, basepath, workspace):
     """Entry point for the devtool 'upgrade' subcommand"""
@@ -578,6 +596,7 @@ def upgrade(args, config, basepath, workspace):
         tinfoil.shutdown()
     return 0
 
+
 def latest_version(args, config, basepath, workspace):
     """Entry point for the devtool 'latest_version' subcommand"""
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
@@ -598,6 +617,7 @@ def latest_version(args, config, basepath, workspace):
         tinfoil.shutdown()
     return 0
 
+
 def check_upgrade_status(args, config, basepath, workspace):
     if not args.recipe:
         logger.info("Checking the upstream status for all recipes may take a few minutes")
@@ -611,6 +631,7 @@ def check_upgrade_status(args, config, basepath, workspace):
                                                                result[4],
                                                                result[5] if result[5] != 'N/A' else "",
                                                                "cannot be updated due to: %s" % (result[6]) if result[6] else ""))
+
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

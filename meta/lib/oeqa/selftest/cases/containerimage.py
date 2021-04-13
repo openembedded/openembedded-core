@@ -20,6 +20,8 @@ from oeqa.utils.commands import bitbake, get_bb_vars, runCmd
 # of them, but this test is more to catch if other packages get added by
 # default other than what is in ROOTFS_BOOTSTRAP_INSTALL.
 #
+
+
 class ContainerImageTests(OESelftestTestCase):
 
     # Verify that when specifying a IMAGE_TYPEDEP_ of the form "foo.bar" that

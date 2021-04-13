@@ -72,7 +72,9 @@ def wic_logger():
 
     return logger
 
+
 logger = wic_logger()
+
 
 def rootfs_dir_to_args(krootfs_dir):
     """
@@ -236,12 +238,14 @@ def wic_ls_subcommand(args, usage_str):
     """
     engine.wic_ls(args, args.native_sysroot)
 
+
 def wic_cp_subcommand(args, usage_str):
     """
     Command-line handling for copying files/dirs to images.
     The real work is done by engine.wic_cp()
     """
     engine.wic_cp(args, args.native_sysroot)
+
 
 def wic_rm_subcommand(args, usage_str):
     """
@@ -250,12 +254,14 @@ def wic_rm_subcommand(args, usage_str):
     """
     engine.wic_rm(args, args.native_sysroot)
 
+
 def wic_write_subcommand(args, usage_str):
     """
     Command-line handling for writing images.
     The real work is done by engine.wic_write()
     """
     engine.wic_write(args, args.native_sysroot)
+
 
 def wic_help_subcommand(args, usage_str):
     """
@@ -360,6 +366,7 @@ def wic_init_parser_list(subparser):
                              "defined inside the .wks file")
     return
 
+
 def imgtype(arg):
     """
     Custom type for ArgumentParser
@@ -380,17 +387,20 @@ def imgtype(arg):
 
     return namedtuple('ImgType', 'image part path')(image, part, path)
 
+
 def wic_init_parser_ls(subparser):
     subparser.add_argument("path", type=imgtype,
                         help="image spec: <image>[:<vfat partition>[<path>]]")
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
 
+
 def imgpathtype(arg):
     img = imgtype(arg)
     if img.part is None:
         raise argparse.ArgumentTypeError("partition number is not specified")
     return img
+
 
 def wic_init_parser_cp(subparser):
     subparser.add_argument("src",
@@ -400,6 +410,7 @@ def wic_init_parser_cp(subparser):
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
 
+
 def wic_init_parser_rm(subparser):
     subparser.add_argument("path", type=imgpathtype,
                         help="path: <image>:<vfat partition><path>")
@@ -408,6 +419,7 @@ def wic_init_parser_rm(subparser):
     subparser.add_argument("-r", dest="recursive_delete", action="store_true", default=False,
                         help="remove directories and their contents recursively, "
                         " this only applies to ext* partition")
+
 
 def expandtype(rules):
     """
@@ -440,6 +452,7 @@ def expandtype(rules):
 
     return result
 
+
 def wic_init_parser_write(subparser):
     subparser.add_argument("image",
                         help="path to the wic image")
@@ -449,6 +462,7 @@ def wic_init_parser_write(subparser):
                         help="expand rules: auto or <partition>:<size>[,<partition>:<size>]")
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
+
 
 def wic_init_parser_help(subparser):
     helpparsers = subparser.add_subparsers(dest='help_topic', help=hlp.wic_usage)
@@ -500,9 +514,11 @@ def init_parser(parser):
         subparser = subparsers.add_parser(subcmd, help=subcommands[subcmd][2])
         subcommands[subcmd][3](subparser)
 
+
 class WicArgumentParser(argparse.ArgumentParser):
      def format_help(self):
          return hlp.wic_help
+
 
 def main(argv):
     parser = WicArgumentParser(

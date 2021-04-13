@@ -8,6 +8,7 @@ from oeqa.core.exception import OEQAMissingVariable
 
 from . import OETestDecorator, registerDecorator
 
+
 def has_feature(td, feature):
     """
         Checks for feature in DISTRO_FEATURES or IMAGE_FEATURES.
@@ -18,6 +19,7 @@ def has_feature(td, feature):
         return True
     return False
 
+
 def has_machine(td, machine):
     """
         Checks for MACHINE.
@@ -26,6 +28,7 @@ def has_machine(td, machine):
     if (machine in td.get('MACHINE', '')):
         return True
     return False
+
 
 def is_qemu(td, qemu):
     """
@@ -37,6 +40,7 @@ def is_qemu(td, qemu):
     machine.startswith('qemu')):
         return True
     return False
+
 
 @registerDecorator
 class skipIfDataVar(OETestDecorator):
@@ -57,6 +61,7 @@ class skipIfDataVar(OETestDecorator):
         if self.case.td.get(self.var) == self.value:
             self.case.skipTest(self.msg)
 
+
 @registerDecorator
 class skipIfNotDataVar(OETestDecorator):
     """
@@ -76,6 +81,7 @@ class skipIfNotDataVar(OETestDecorator):
         if not self.case.td.get(self.var) == self.value:
             self.case.skipTest(self.msg)
 
+
 @registerDecorator
 class skipIfInDataVar(OETestDecorator):
     """
@@ -83,12 +89,14 @@ class skipIfInDataVar(OETestDecorator):
     """
 
     attrs = ('var', 'value', 'msg')
+
     def setUpDecorator(self):
         msg = ('Checking if %r value contains %r to skip '
               'the test' % (self.var, self.value))
         self.logger.debug(msg)
         if self.value in (self.case.td.get(self.var)):
             self.case.skipTest(self.msg)
+
 
 @registerDecorator
 class skipIfNotInDataVar(OETestDecorator):
@@ -97,12 +105,14 @@ class skipIfNotInDataVar(OETestDecorator):
     """
 
     attrs = ('var', 'value', 'msg')
+
     def setUpDecorator(self):
         msg = ('Checking if %r value contains %r to run '
               'the test' % (self.var, self.value))
         self.logger.debug(msg)
         if not self.value in (self.case.td.get(self.var) or ""):
             self.case.skipTest(self.msg)
+
 
 @registerDecorator
 class OETestDataDepends(OETestDecorator):
@@ -115,6 +125,7 @@ class OETestDataDepends(OETestDecorator):
             except KeyError:
                 raise OEQAMissingVariable("Test case need %s variable but"
                         " isn't into td" % v)
+
 
 @registerDecorator
 class skipIfNotFeature(OETestDecorator):
@@ -134,6 +145,7 @@ class skipIfNotFeature(OETestDecorator):
         if not has_feature(self.case.td, self.value):
             self.case.skipTest(self.msg)
 
+
 @registerDecorator
 class skipIfFeature(OETestDecorator):
     """
@@ -152,6 +164,7 @@ class skipIfFeature(OETestDecorator):
         if has_feature(self.case.td, self.value):
             self.case.skipTest(self.msg)
 
+
 @registerDecorator
 class skipIfNotMachine(OETestDecorator):
     """
@@ -168,6 +181,7 @@ class skipIfNotMachine(OETestDecorator):
         self.logger.debug(msg)
         if not has_machine(self.case.td, self.value):
             self.case.skipTest(self.msg)
+
 
 @registerDecorator
 class skipIfMachine(OETestDecorator):
@@ -186,6 +200,7 @@ class skipIfMachine(OETestDecorator):
         if has_machine(self.case.td, self.value):
             self.case.skipTest(self.msg)
 
+
 @registerDecorator
 class skipIfNotQemu(OETestDecorator):
     """
@@ -202,6 +217,7 @@ class skipIfNotQemu(OETestDecorator):
         self.logger.debug(msg)
         if not is_qemu(self.case.td, self.value):
             self.case.skipTest(self.msg)
+
 
 @registerDecorator
 class skipIfQemu(OETestDecorator):

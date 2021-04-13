@@ -10,6 +10,7 @@ import os
 import errno
 import stat as statmod
 
+
 class CachedPath(object):
     def __init__(self):
         self.statcache = {}

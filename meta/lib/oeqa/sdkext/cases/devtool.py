@@ -14,6 +14,7 @@ from oeqa.utils.httpserver import HTTPService
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
+
 class DevtoolTest(OESDKExtTestCase):
     @classmethod
     def setUpClass(cls):
@@ -94,6 +95,7 @@ class DevtoolTest(OESDKExtTestCase):
             self._run('devtool build %s ' % package_nodejs)
         finally:
             self._run('devtool reset %s ' % package_nodejs)
+
 
 class SdkUpdateTest(OESDKExtTestCase):
     @classmethod

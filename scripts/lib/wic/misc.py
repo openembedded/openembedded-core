@@ -50,6 +50,7 @@ NATIVE_RECIPES = {"bmaptool": "bmap-tools",
                   "tar": "tar"
                  }
 
+
 def runtool(cmdln_or_args):
     """ wrapper for most of the subprocess calls
     input:
@@ -83,6 +84,7 @@ def runtool(cmdln_or_args):
 
     return process.returncode, out
 
+
 def _exec_cmd(cmd_and_args, as_shell=False):
     """
     Execute command, catching stderr, stdout
@@ -114,6 +116,7 @@ def exec_cmd(cmd_and_args, as_shell=False):
     """
     return _exec_cmd(cmd_and_args, as_shell)[1]
 
+
 def find_executable(cmd, paths):
     recipe = cmd
     if recipe in NATIVE_RECIPES:
@@ -123,6 +126,7 @@ def find_executable(cmd, paths):
         return True
 
     return spawn.find_executable(cmd, paths)
+
 
 def exec_native_cmd(cmd_and_args, native_sysroot, pseudo=""):
     """
@@ -174,12 +178,15 @@ def exec_native_cmd(cmd_and_args, native_sysroot, pseudo=""):
 
     return ret, out
 
+
 BOOTDD_EXTRA_SPACE = 16384
+
 
 class BitbakeVars(defaultdict):
     """
     Container for Bitbake variables.
     """
+
     def __init__(self):
         defaultdict.__init__(self, dict)
 
@@ -253,8 +260,10 @@ class BitbakeVars(defaultdict):
 
         return result
 
+
 # Create BB_VARS singleton
 BB_VARS = BitbakeVars()
+
 
 def get_bitbake_var(var, image=None, cache=True):
     """

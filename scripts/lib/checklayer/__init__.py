@@ -12,12 +12,14 @@ from enum import Enum
 
 import bb.tinfoil
 
+
 class LayerType(Enum):
     BSP = 0
     DISTRO = 1
     SOFTWARE = 2
     ERROR_NO_LAYER_CONF = 98
     ERROR_BSP_DISTRO = 99
+
 
 def _get_configurations(path):
     configs = []
@@ -27,6 +29,7 @@ def _get_configurations(path):
         if os.path.isfile(file_path) and f.endswith('.conf'):
             configs.append(f[:-5]) # strip .conf
     return configs
+
 
 def _get_layer_collections(layer_path, lconf=None, data=None):
     import bb.parse
@@ -70,6 +73,7 @@ def _get_layer_collections(layer_path, lconf=None, data=None):
         collections[name]['compat'] = compat
 
     return collections
+
 
 def _detect_layer(layer_path):
     """
@@ -121,6 +125,7 @@ def _detect_layer(layer_path):
 
     return layer
 
+
 def detect_layers(layer_directories, no_auto):
     layers = []
 
@@ -146,6 +151,7 @@ def detect_layers(layer_directories, no_auto):
 
     return layers
 
+
 def _find_layer_depends(depend, layers):
     for layer in layers:
         if 'collections' not in layer:
@@ -155,6 +161,7 @@ def _find_layer_depends(depend, layers):
             if depend == collection:
                 return layer
     return None
+
 
 def add_layer_dependencies(bblayersconf, layer, layers, logger):
     def recurse_dependencies(depends, layer, layers, logger, ret=[]):
@@ -210,6 +217,7 @@ def add_layer_dependencies(bblayersconf, layer, layers, logger):
 
     return True
 
+
 def add_layers(bblayersconf, layers, logger):
     # Don't add a layer that is already present.
     added = set()
@@ -229,6 +237,7 @@ def add_layers(bblayersconf, layers, logger):
                 f.write("\nBBLAYERS += \"%s\"\n" % path)
     return True
 
+
 def check_bblayers(bblayersconf, layer_path, logger):
     '''
     If layer_path found in BBLAYERS return True
@@ -243,6 +252,7 @@ def check_bblayers(bblayersconf, layer_path, logger):
 
     return False
 
+
 def check_command(error_msg, cmd, cwd=None):
     '''
     Run a command under a shell, capture stdout and stderr in a single stream,
@@ -255,6 +265,7 @@ def check_command(error_msg, cmd, cwd=None):
         msg = "%s\nCommand: %s\nOutput:\n%s" % (error_msg, cmd, output.decode('utf-8'))
         raise RuntimeError(msg)
     return output
+
 
 def get_signatures(builddir, failsafe=False, machine=None):
     import re
@@ -318,6 +329,7 @@ def get_signatures(builddir, failsafe=False, machine=None):
 
     return (sigs, tune2tasks)
 
+
 def get_depgraph(targets=['world'], failsafe=False):
     '''
     Returns the dependency graph for the given target(s).
@@ -353,6 +365,7 @@ def get_depgraph(targets=['world'], failsafe=False):
         raise RuntimeError('Could not retrieve the depgraph.')
     return depgraph
 
+
 def compare_signatures(old_sigs, curr_sigs):
     '''
     Compares the result of two get_signatures() calls. Returns None if no
@@ -376,6 +389,7 @@ def compare_signatures(old_sigs, curr_sigs):
     def sig2graph(task):
         pn, taskname = task.rsplit(':', 1)
         return pn + '.' + taskname
+
     def graph2sig(task):
         pn, taskname = task.rsplit('.', 1)
         return pn + ':' + taskname

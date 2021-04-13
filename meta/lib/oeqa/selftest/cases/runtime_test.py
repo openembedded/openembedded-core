@@ -12,6 +12,7 @@ import shutil
 import oe.lsb
 from oeqa.core.decorator.data import skipIfNotQemu
 
+
 class TestExport(OESelftestTestCase):
 
     @classmethod
@@ -241,6 +242,7 @@ class TestImage(OESelftestTestCase):
         bitbake('core-image-minimal')
         bitbake('-c testimage core-image-minimal')
 
+
 class Postinst(OESelftestTestCase):
 
     def init_manager_loop(self, init_manager):
@@ -279,8 +281,6 @@ class Postinst(OESelftestTestCase):
                         status, output = qemu.run_serial("test -f %s && echo found" % os.path.join(targettestdir, filename))
                         self.assertIn("found", output, "%s was not present on boot" % filename)
 
-
-
     @skipIfNotQemu('qemuall', 'Test only runs in qemu')
     def test_postinst_rootfs_and_boot_sysvinit(self):
         """
@@ -300,7 +300,6 @@ class Postinst(OESelftestTestCase):
 
         """
         self.init_manager_loop("sysvinit")
-
 
     @skipIfNotQemu('qemuall', 'Test only runs in qemu')
     def test_postinst_rootfs_and_boot_systemd(self):
@@ -322,7 +321,6 @@ class Postinst(OESelftestTestCase):
         """
 
         self.init_manager_loop("systemd")
-
 
     def test_failing_postinst(self):
         """
@@ -357,6 +355,7 @@ class Postinst(OESelftestTestCase):
                                     "rootfs-before-failure file was not created")
                 self.assertFalse(os.path.isfile(os.path.join(hosttestdir, "rootfs-after-failure")),
                                     "rootfs-after-failure file was created")
+
 
 class SystemTap(OESelftestTestCase):
         """

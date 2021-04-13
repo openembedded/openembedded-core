@@ -6,8 +6,10 @@ import os
 import struct
 import mmap
 
+
 class NotELFFileError(Exception):
     pass
+
 
 class ELFFile:
     EI_NIDENT = 16
@@ -151,6 +153,7 @@ class ELFFile:
             bb.note("%s %s %s failed: %s" % (objdump, cmd, self.name, e))
             return ""
 
+
 def elf_machine_to_string(machine):
     """
     Return the name of a given ELF e_machine field or the hex value as a string
@@ -172,6 +175,7 @@ def elf_machine_to_string(machine):
         }[machine]
     except:
         return "Unknown (%s)" % repr(machine)
+
 
 if __name__ == "__main__":
     import sys

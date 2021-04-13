@@ -6,6 +6,7 @@ import stat
 import mmap
 import subprocess
 
+
 def runstrip(arg):
     # Function to strip a single file, called from split_and_strip_files below
     # A working 'file' (one which works on the target architecture)
@@ -51,11 +52,15 @@ def runstrip(arg):
         os.chmod(file, origmode)
 
 # Detect .ko module by searching for "vermagic=" string
+
+
 def is_kernel_module(path):
     with open(path) as f:
         return mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ).find(b"vermagic=") >= 0
 
 # Detect if .ko module is signed
+
+
 def is_kernel_module_signed(path):
     with open(path, "rb") as f:
         f.seek(-28, 2)
@@ -69,6 +74,8 @@ def is_kernel_module_signed(path):
 # 4 - executable
 # 8 - shared library
 # 16 - kernel module
+
+
 def is_elf(path):
     exec_type = 0
     result = subprocess.check_output(["file", "-b", path], stderr=subprocess.STDOUT).decode("utf-8")
@@ -86,6 +93,7 @@ def is_elf(path):
                 exec_type |= 16
     return (path, exec_type)
 
+
 def is_static_lib(path):
     if path.endswith('.a') and not os.path.islink(path):
         with open(path, 'rb') as fh:
@@ -95,6 +103,7 @@ def is_static_lib(path):
             start = fh.read(len(magic))
             return start == magic
     return False
+
 
 def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, d, qa_already_stripped=False):
     """
@@ -188,6 +197,7 @@ def file_translate(file):
     ft = ft.replace("]", "@closebrace@")
     ft = ft.replace("_", "@underscore@")
     return ft
+
 
 def filedeprunner(arg):
     import re

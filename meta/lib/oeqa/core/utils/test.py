@@ -8,6 +8,7 @@ import os
 import inspect
 import unittest
 
+
 def getSuiteCases(suite):
     """
         Returns individual test from a test suite.
@@ -22,6 +23,7 @@ def getSuiteCases(suite):
 
     return tests
 
+
 def getSuiteModules(suite):
     """
         Returns modules in a test suite.
@@ -30,6 +32,7 @@ def getSuiteModules(suite):
     for test in getSuiteCases(suite):
         modules.add(getCaseModule(test))
     return modules
+
 
 def getSuiteCasesInfo(suite, func):
     """
@@ -40,11 +43,13 @@ def getSuiteCasesInfo(suite, func):
         tests.append(func(test))
     return tests
 
+
 def getSuiteCasesNames(suite):
     """
         Returns test case names from suite.
     """
     return getSuiteCasesInfo(suite, getCaseMethod)
+
 
 def getSuiteCasesIDs(suite):
     """
@@ -52,11 +57,13 @@ def getSuiteCasesIDs(suite):
     """
     return getSuiteCasesInfo(suite, getCaseID)
 
+
 def getSuiteCasesFiles(suite):
     """
         Returns test case files paths from suite.
     """
     return getSuiteCasesInfo(suite, getCaseFile)
+
 
 def getCaseModule(test_case):
     """
@@ -64,11 +71,13 @@ def getCaseModule(test_case):
     """
     return test_case.__module__
 
+
 def getCaseClass(test_case):
     """
         Returns test case class name.
     """
     return test_case.__class__.__name__
+
 
 def getCaseID(test_case):
     """
@@ -76,11 +85,13 @@ def getCaseID(test_case):
     """
     return test_case.id()
 
+
 def getCaseFile(test_case):
     """
         Returns test case file path.
     """
     return inspect.getsourcefile(test_case.__class__)
+
 
 def getCaseMethod(test_case):
     """

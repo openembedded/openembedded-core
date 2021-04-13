@@ -8,9 +8,11 @@ import shutil
 import subprocess
 import os.path
 
+
 def join(*paths):
     """Like os.path.join but doesn't treat absolute RHS specially"""
     return os.path.normpath("/".join(paths))
+
 
 def relative(src, dest):
     """ Return a relative path from src to dest.
@@ -26,6 +28,7 @@ def relative(src, dest):
     """
 
     return os.path.relpath(dest, src)
+
 
 def make_relative_symlink(path):
     """ Convert an absolute symlink to a relative one """
@@ -54,6 +57,7 @@ def make_relative_symlink(path):
     os.remove(path)
     os.symlink(base, path)
 
+
 def replace_absolute_symlinks(basedir, d):
     """
     Walk basedir looking for absolute symlinks and replacing them with relative ones.
@@ -75,6 +79,7 @@ def replace_absolute_symlinks(basedir, d):
             os.remove(path)
             os.symlink(base, path)
 
+
 def format_display(path, metadata):
     """ Prepare a path for display to the user. """
     rel = relative(metadata.getVar("TOPDIR"), path)
@@ -82,6 +87,7 @@ def format_display(path, metadata):
         return path
     else:
         return rel
+
 
 def copytree(src, dst):
     # We could use something like shutil.copytree here but it turns out to
@@ -92,6 +98,7 @@ def copytree(src, dst):
     bb.utils.mkdirhier(dst)
     cmd = "tar --xattrs --xattrs-include='*' -cf - -S -C %s -p . | tar --xattrs --xattrs-include='*' -xf - -C %s" % (src, dst)
     subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+
 
 def copyhardlinktree(src, dst):
     """Make a tree of hard links when possible, otherwise copy."""
@@ -133,6 +140,7 @@ def copyhardlinktree(src, dst):
     else:
         copytree(src, dst)
 
+
 def copyhardlink(src, dst):
     """Make a hard link when possible, otherwise copy."""
 
@@ -140,6 +148,7 @@ def copyhardlink(src, dst):
         os.link(src, dst)
     except OSError:
         shutil.copy(src, dst)
+
 
 def remove(path, recurse=True):
     """
@@ -159,6 +168,7 @@ def remove(path, recurse=True):
             elif exc.errno != errno.ENOENT:
                 raise
 
+
 def symlink(source, destination, force=False):
     """Create a symbolic link"""
     try:
@@ -168,6 +178,7 @@ def symlink(source, destination, force=False):
     except OSError as e:
         if e.errno != errno.EEXIST or os.readlink(destination) != source:
             raise
+
 
 def find(dir, **walkoptions):
     """ Given a directory, recurses into that directory,
@@ -181,6 +192,7 @@ def find(dir, **walkoptions):
 ## realpath() related functions
 def __is_path_below(file, root):
     return (file + os.path.sep).startswith(root)
+
 
 def __realpath_rel(start, rel_path, root, loop_cnt, assume_dir):
     """Calculates real path of symlink 'start' + 'rel_path' below
@@ -206,6 +218,7 @@ def __realpath_rel(start, rel_path, root, loop_cnt, assume_dir):
 
     return start
 
+
 def __realpath(file, root, loop_cnt, assume_dir):
     while os.path.islink(file) and len(file) >= len(root):
         if loop_cnt == 0:
@@ -228,6 +241,7 @@ def __realpath(file, root, loop_cnt, assume_dir):
         is_dir = false
 
     return (file, is_dir)
+
 
 def realpath(file, root, use_physdir=True, loop_cnt=100, assume_dir=False):
     """ Returns the canonical path of 'file' with assuming a
@@ -265,6 +279,7 @@ def realpath(file, root, use_physdir=True, loop_cnt=100, assume_dir=False):
 
     return file
 
+
 def is_path_parent(possible_parent, *paths):
     """
     Return True if a path is the parent of another, False otherwise.
@@ -286,6 +301,7 @@ def is_path_parent(possible_parent, *paths):
         if not path_abs.startswith(possible_parent_abs):
             return False
     return True
+
 
 def which_wild(pathname, path=None, mode=os.F_OK, *, reverse=False, candidates=False):
     """Search a search path for pathname, supporting wildcards.
@@ -319,6 +335,7 @@ def which_wild(pathname, path=None, mode=os.F_OK, *, reverse=False, candidates=F
                         files.append(found_path)
 
     return files
+
 
 def canonicalize(paths, sep=','):
     """Given a string with paths (separated by commas by default), expand

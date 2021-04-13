@@ -7,6 +7,7 @@ import shutil
 import subprocess
 from oe.package_manager import *
 
+
 class OpkgIndexer(Indexer):
     def write_index(self):
         arch_vars = ["ALL_MULTILIB_PACKAGE_ARCHS",
@@ -59,6 +60,7 @@ class OpkgIndexer(Indexer):
                                    self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
                                    armor=is_ascii_sig)
 
+
 class PMPkgsList(PkgsList):
     def __init__(self, d, rootfs_dir):
         super(PMPkgsList, self).__init__(d, rootfs_dir)
@@ -85,7 +87,6 @@ class PMPkgsList(PkgsList):
                      "returned %d and stderr:\n%s" % (cmd, p.returncode, cmd_stderr))
 
         return opkg_query(cmd_output)
-
 
 
 class OpkgDpkgPM(PackageManager):
@@ -154,6 +155,7 @@ class OpkgDpkgPM(PackageManager):
 
     def _handle_intercept_failure(self, registered_pkgs):
         self.mark_packages("unpacked", registered_pkgs.split())
+
 
 class OpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, config_file, archs, task_name='target', ipk_repo_workdir="oe-rootfs-repo", filterbydependencies=True, prepare_index=True):
@@ -264,7 +266,6 @@ class OpkgPM(OpkgDpkgPM):
                             cfg_file.write("option info_dir     %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'info'))
                             cfg_file.write("option lists_dir    %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'lists'))
                             cfg_file.write("option status_file  %s\n" % os.path.join(self.d.getVar('OPKGLIBDIR'), 'opkg', 'status'))
-
 
     def _create_config(self):
         with open(self.config_file, "w+") as config_file:

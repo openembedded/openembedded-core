@@ -14,6 +14,7 @@ setup_sys_path()
 from oeqa.core.exception import OEQADependency
 from oeqa.core.utils.test import getCaseMethod, getSuiteCasesNames, getSuiteCasesIDs
 
+
 class TestTagDecorator(TestBase):
     def _runTest(self, modules, filterfn, expect):
         tc = self._testLoader(modules=modules, tags_filter=filterfn)
@@ -67,6 +68,7 @@ class TestTagDecorator(TestBase):
                 'oetag.TagClassTest.testTagNone',
                 })
 
+
 class TestDependsDecorator(TestBase):
     modules = ['depends']
 
@@ -112,6 +114,7 @@ class TestDependsDecorator(TestBase):
             msg = 'Expected OEQADependency exception having a circular dependency'
             self.assertTrue(result, msg=msg)
 
+
 class TestTimeoutDecorator(TestBase):
     modules = ['timeout']
 
@@ -132,6 +135,7 @@ class TestTimeoutDecorator(TestBase):
         self.assertFalse(tc.runTests().wasSuccessful(), msg=msg)
         msg = "OETestTimeout didn't restore SIGALRM"
         self.assertIs(alarm_signal, signal.getsignal(signal.SIGALRM), msg=msg)
+
 
 if __name__ == '__main__':
     unittest.main()

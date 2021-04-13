@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+
 def get_os_release():
     """Get all key-value pairs from /etc/os-release as a dict"""
     from collections import OrderedDict
@@ -17,6 +18,7 @@ def get_os_release():
                 data[key.strip()] = val.strip('"')
     return data
 
+
 def release_dict_osr():
     """ Populate a dict with pertinent values from /etc/os-release """
     data = {}
@@ -27,6 +29,7 @@ def release_dict_osr():
         data['DISTRIB_RELEASE'] = os_release['VERSION_ID']
 
     return data
+
 
 def release_dict_lsb():
     """ Return the output of lsb_release -ir as a dictionary """
@@ -56,6 +59,7 @@ def release_dict_lsb():
         return None
 
     return data
+
 
 def release_dict_file():
     """ Try to gather release information manually when other methods fail """
@@ -88,6 +92,7 @@ def release_dict_file():
     except IOError:
         return {}
     return data
+
 
 def distro_identifier(adjust_hook=None):
     """Return a distro identifier string based upon lsb_release -ri,

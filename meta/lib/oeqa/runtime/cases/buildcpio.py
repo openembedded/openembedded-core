@@ -8,6 +8,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 
 from oeqa.runtime.utils.targetbuildproject import TargetBuildProject
 
+
 class BuildCpioTest(OERuntimeTestCase):
 
     @classmethod

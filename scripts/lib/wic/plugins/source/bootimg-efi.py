@@ -25,6 +25,7 @@ from wic.misc import (exec_cmd, exec_native_cmd,
 
 logger = logging.getLogger('wic')
 
+
 class BootimgEFIPlugin(SourcePlugin):
     """
     Create EFI boot partition.
@@ -188,7 +189,6 @@ class BootimgEFIPlugin(SourcePlugin):
         cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
         cfg.write(boot_conf)
         cfg.close()
-
 
     @classmethod
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,

@@ -22,11 +22,13 @@ logger = logging.getLogger('recipetool')
 tinfoil = None
 plugins = None
 
+
 def log_error_cond(message, debugonly):
     if debugonly:
         logger.debug(message)
     else:
         logger.error(message)
+
 
 def log_info_cond(message, debugonly):
     if debugonly:
@@ -34,14 +36,17 @@ def log_info_cond(message, debugonly):
     else:
         logger.info(message)
 
+
 def plugin_init(pluginlist):
     # Take a reference to the list so we can use it later
     global plugins
     plugins = pluginlist
 
+
 def tinfoil_init(instance):
     global tinfoil
     tinfoil = instance
+
 
 class RecipeHandler(object):
     recipelibmap = {}
@@ -264,6 +269,7 @@ def validate_pv(pv):
         return False
     return True
 
+
 def determine_from_filename(srcfile):
     """Determine name and version from a filename"""
     if is_package(srcfile):
@@ -311,6 +317,7 @@ def determine_from_filename(srcfile):
     logger.debug('determine_from_filename: name = "%s" version = "%s"' % (pn, pv))
     return (pn, pv)
 
+
 def determine_from_url(srcuri):
     """Determine name and version from a URL"""
     pn = None
@@ -345,6 +352,7 @@ def determine_from_url(srcuri):
     logger.debug('Determined from source URL: name = "%s", version = "%s"' % (pn, pv))
     return (pn, pv)
 
+
 def supports_srcrev(uri):
     localdata = bb.data.createCopy(tinfoil.config_data)
     # This is a bit sad, but if you don't have this set there can be some
@@ -362,6 +370,7 @@ def supports_srcrev(uri):
         if uri.startswith(('git://', 'gitsm://')):
             return True
     return False
+
 
 def reformat_git_uri(uri):
     '''Convert any http[s]://....git URI into git://...;protocol=http[s]'''
@@ -395,12 +404,14 @@ def reformat_git_uri(uri):
     else:
         return uri
 
+
 def is_package(url):
     '''Check if a URL points to a package'''
     checkurl = url.split(';', 1)[0]
     if checkurl.endswith(('.deb', '.ipk', '.rpm', '.srpm')):
         return True
     return False
+
 
 def create_recipe(args):
     import bb.process
@@ -904,6 +915,7 @@ def create_recipe(args):
 
     return 0
 
+
 def check_single_file(fn, fetchuri):
     """Determine if a single downloaded file is something we can't handle"""
     with open(fn, 'r', errors='surrogateescape') as f:
@@ -911,11 +923,13 @@ def check_single_file(fn, fetchuri):
             logger.error('Fetching "%s" returned a single HTML page - check the URL is correct and functional' % fetchuri)
             sys.exit(1)
 
+
 def split_value(value):
     if isinstance(value, str):
         return value.split()
     else:
         return value
+
 
 def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     lichandled = [x for x in handled if x[0] == 'license']
@@ -1002,6 +1016,7 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     handled.append(('license', licvalues))
     return licvalues
 
+
 def get_license_md5sums(d, static_only=False):
     import bb.utils
     md5sums = {}
@@ -1052,6 +1067,7 @@ def get_license_md5sums(d, static_only=False):
     md5sums['54c7042be62e169199200bc6477f04d1'] = 'BSD-3-Clause'
     md5sums['bfe1f75d606912a4111c90743d6c7325'] = 'MPL-1.1'
     return md5sums
+
 
 def crunch_license(licfile):
     '''
@@ -1127,6 +1143,7 @@ def crunch_license(licfile):
     license = crunched_md5sums.get(md5val, None)
     return license, md5val, lictext
 
+
 def guess_license(srctree, d):
     import bb
     md5sums = get_license_md5sums(d)
@@ -1153,6 +1170,7 @@ def guess_license(srctree, d):
     # FIXME should we grab at least one source file with a license header and add that too?
 
     return licenses
+
 
 def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn='${PN}'):
     """
@@ -1181,6 +1199,7 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn
         outlicenses[pkgname] = license.split()
     return outlicenses
 
+
 def read_pkgconfig_provides(d):
     pkgdatadir = d.getVar('PKGDATA_DIR')
     pkgmap = {}
@@ -1197,6 +1216,7 @@ def read_pkgconfig_provides(d):
                     if line.startswith('PN: '):
                         recipemap[pc] = line.split(':', 1)[1].strip()
     return recipemap
+
 
 def convert_debian(debpath):
     value_map = {'Package': 'PN',
@@ -1267,6 +1287,7 @@ def convert_debian(debpath):
     #    values['DEPENDS'] = ' '.join(depends)
 
     return values
+
 
 def convert_rpm_xml(xmlfile):
     '''Converts the output from rpm -qp --xml to a set of variable values'''

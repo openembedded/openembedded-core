@@ -19,6 +19,8 @@ import hashlib
 import fnmatch
 
 # this can be used by all PM backends to create the index files in parallel
+
+
 def create_index(arg):
     index_cmd = arg
 
@@ -26,6 +28,7 @@ def create_index(arg):
     result = subprocess.check_output(index_cmd, stderr=subprocess.STDOUT, shell=True).decode("utf-8")
     if result:
         bb.note(result)
+
 
 def opkg_query(cmd_output):
     """
@@ -88,11 +91,13 @@ def opkg_query(cmd_output):
 
     return output
 
+
 def failed_postinsts_abort(pkgs, log_path):
     bb.fatal("""Postinstall scriptlets of %s have failed. If the intention is to defer them to first boot,
 then please place them into pkg_postinst_ontarget_${PN} ().
 Deferring to first boot via 'exit 1' is no longer supported.
 Details of the failure are in %s.""" % (pkgs, log_path))
+
 
 def generate_locale_archive(d, rootfs, target_arch, localedir):
     # Pretty sure we don't need this for locale archive generation but
@@ -140,6 +145,7 @@ def generate_locale_archive(d, rootfs, target_arch, localedir):
             cmd += ["--add-to-archive", path]
             subprocess.check_output(cmd, env=env, stderr=subprocess.STDOUT)
 
+
 class Indexer(object, metaclass=ABCMeta):
     def __init__(self, d, deploy_dir):
         self.d = d
@@ -149,6 +155,7 @@ class Indexer(object, metaclass=ABCMeta):
     def write_index(self):
         pass
 
+
 class PkgsList(object, metaclass=ABCMeta):
     def __init__(self, d, rootfs_dir):
         self.d = d
@@ -157,6 +164,7 @@ class PkgsList(object, metaclass=ABCMeta):
     @abstractmethod
     def list_pkgs(self):
         pass
+
 
 class PackageManager(object, metaclass=ABCMeta):
     """
@@ -211,7 +219,6 @@ class PackageManager(object, metaclass=ABCMeta):
 
                 # call the backend dependent handler
                 self._handle_intercept_failure(registered_pkgs)
-
 
     def run_intercepts(self, populate_sdk=None):
         intercepts_dir = self.intercepts_dir
@@ -450,6 +457,7 @@ class PackageManager(object, metaclass=ABCMeta):
                     res.append(a1)
             return res
         return _append(uris, base_paths)
+
 
 def create_packages_dir(d, subrepo_dir, deploydir, taskname, filterbydependencies):
     """

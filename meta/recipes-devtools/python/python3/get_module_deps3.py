@@ -21,6 +21,7 @@ import importlib
 
 core_deps = set(sys.modules)
 
+
 def fix_path(dep_path):
     import os
     # We DONT want the path on our HOST system
@@ -126,7 +127,6 @@ for item in dif:
         log.write(dep_path + '\n')
     # Prints out result, which is what will be used by create_manifest
     print(dep_path)
-
 
     import imp
     cpython_tag = imp.get_tag() 

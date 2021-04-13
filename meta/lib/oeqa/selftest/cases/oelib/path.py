@@ -10,6 +10,7 @@ import os
 import errno
 import shutil
 
+
 class TestRealPath(TestCase):
     DIRS = ["a", "b", "etc", "sbin", "usr", "usr/bin", "usr/binX", "usr/sbin", "usr/include", "usr/include/gdbm"]
     FILES = ["etc/passwd", "b/file"]

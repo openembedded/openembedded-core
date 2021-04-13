@@ -9,6 +9,7 @@ import datetime
 import itertools
 from .commands import runCmd
 
+
 class BaseDumper(object):
     """ Base class to dump commands from host/target """
 
@@ -77,6 +78,7 @@ class HostDumper(BaseDumper):
         for cmd in self.cmds:
             result = runCmd(cmd, ignore_status=True, env=env)
             self._write_dump(cmd.split()[0], result.output)
+
 
 class TargetDumper(BaseDumper):
     """ Class to get dumps from target, it only works with QemuRunner """

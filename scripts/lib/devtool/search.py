@@ -16,6 +16,7 @@ from devtool import setup_tinfoil, parse_recipe, DevtoolError
 
 logger = logging.getLogger('devtool')
 
+
 def search(args, config, basepath, workspace):
     """Entry point for the devtool 'search' subcommand"""
 
@@ -34,7 +35,6 @@ def search(args, config, basepath, workspace):
             if summary == rd.expand(defsummary):
                 summary = ''
             print("%s  %s" % (pn.ljust(20), summary))
-
 
         matches = []
         if os.path.exists(pkgdata_dir):
@@ -98,6 +98,7 @@ def search(args, config, basepath, workspace):
         tinfoil.shutdown()
 
     return 0
+
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

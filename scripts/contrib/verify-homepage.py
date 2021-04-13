@@ -26,6 +26,7 @@ import bb.tinfoil
 
 logger = scriptutils.logger_create('verify_homepage')
 
+
 def wgetHomepage(pn, homepage):
     result = subprocess.call('wget ' + '-q -T 5 -t 1 --spider ' + homepage, shell=True)
     if result:
@@ -33,6 +34,7 @@ def wgetHomepage(pn, homepage):
         return 1
     else:
         return 0
+
 
 def verifyHomepage(bbhandler):
     pkg_pn = bbhandler.cooker.recipecaches[''].pkg_pn
@@ -54,6 +56,7 @@ def verifyHomepage(bbhandler):
                     count = count + wgetHomepage(os.path.basename(realfn), homepage)
             checked.append(realfn)
     return count
+
 
 if __name__ == '__main__':
     with bb.tinfoil.Tinfoil() as bbhandler:

@@ -7,6 +7,7 @@ from oeqa.utils.commands import runCmd
 import oeqa.selftest
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class ExternalLayer(OESelftestTestCase):
 
     def test_list_imported(self):
@@ -33,6 +34,7 @@ class ExternalLayer(OESelftestTestCase):
         found_method = search_method(test_module, method_name)
         self.assertTrue(method_name, msg="Can't find %s method" % method_name)
 
+
 def search_test_file(file_name):
     for layer_path in oeqa.selftest.__path__:
         for _, _, files in os.walk(layer_path):
@@ -40,6 +42,7 @@ def search_test_file(file_name):
                 if f == file_name:
                     return True
     return False
+
 
 def search_method(module, method):
     modlib = importlib.import_module(module)

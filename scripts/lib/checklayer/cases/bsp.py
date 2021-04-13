@@ -8,6 +8,7 @@ import unittest
 from checklayer import LayerType, get_signatures, check_command, get_depgraph
 from checklayer.case import OECheckLayerTestCase
 
+
 class BSPCheckLayer(OECheckLayerTestCase):
     @classmethod
     def setUpClass(self):
@@ -26,7 +27,6 @@ class BSPCheckLayer(OECheckLayerTestCase):
         self.assertEqual(self.td['bbvars']['MACHINE'], machine,
                 msg="Layer %s modified machine %s -> %s" %
                     (self.tc.layer['name'], self.td['bbvars']['MACHINE'], machine))
-
 
     def test_machine_world(self):
         '''
@@ -111,6 +111,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
             BLACK = 3
             color = {}
             found = set()
+
             def visit(task):
                 color[task] = GRAY
                 for dep in depends.get(task, ()):
@@ -126,6 +127,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
                     visit(task)
 
         taskname_order = dict([(task, index) for index, task in enumerate(taskname_list)])
+
         def task_key(task):
             pn, taskname = task.rsplit(':', 1)
             return (pn, taskname_order.get(taskname, len(taskname_list)), taskname)

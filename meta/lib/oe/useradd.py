@@ -4,6 +4,7 @@
 import argparse
 import re
 
+
 class myArgumentParser(argparse.ArgumentParser):
     def _print_message(self, message, file=None):
         bb.warn("%s - %s: %s" % (d.getVar('PN'), pkg, message))
@@ -16,15 +17,18 @@ class myArgumentParser(argparse.ArgumentParser):
     def error(self, message):
         bb.fatal(message)
 
+
 def split_commands(params):
     params = re.split('''[ \t]*;[ \t]*(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', params.strip())
     # Remove any empty items
     return [x for x in params if x]
 
+
 def split_args(params):
     params = re.split('''[ \t]+(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', params.strip())
     # Remove any empty items
     return [x for x in params if x]
+
 
 def build_useradd_parser():
     # The following comes from --help on useradd from shadow
@@ -54,6 +58,7 @@ def build_useradd_parser():
     parser.add_argument("LOGIN", help="Login name of the new user")
 
     return parser
+
 
 def build_groupadd_parser():
     # The following comes from --help on groupadd from shadow

@@ -2,6 +2,7 @@ from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfQemu
 
+
 class Ethernet_Test(OERuntimeTestCase):
 
     def set_ip(self, x): 

@@ -19,9 +19,11 @@ except ImportError:
 
 available_types = {}
 
+
 class MissingFlag(TypeError):
     """A particular flag is required to construct the type, but has not been
     provided."""
+
     def __init__(self, flag, type):
         self.flag = flag
         self.type = type
@@ -29,6 +31,7 @@ class MissingFlag(TypeError):
 
     def __str__(self):
         return "Type '%s' requires flag '%s'" % (self.type, self.flag)
+
 
 def factory(var_type):
     """Return the factory for a specified type."""
@@ -40,6 +43,7 @@ def factory(var_type):
     except KeyError:
         raise TypeError("Invalid type '%s':\n  Valid types: %s" %
                         (var_type, ', '.join(available_types)))
+
 
 def create(value, var_type, **flags):
     """Create an object of the specified type, given the specified flags and
@@ -54,6 +58,7 @@ def create(value, var_type, **flags):
             objflags[flag] = flags[flag]
 
     return obj(value, **objflags)
+
 
 def get_callable_args(obj):
     """Grab all but the first argument of the specified callable, returning
@@ -76,6 +81,7 @@ def get_callable_args(obj):
         optional |= set(flaglist[-len(defaults):])
     return flaglist, optional
 
+
 def factory_setup(name, obj):
     """Prepare a factory for use."""
     args, optional = get_callable_args(obj)
@@ -88,6 +94,7 @@ def factory_setup(name, obj):
 
     if not hasattr(obj, 'name'):
         obj.name = name
+
 
 def register(name, factory):
     """Register a type, given its name and a factory callable.

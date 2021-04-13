@@ -5,6 +5,7 @@
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.runtime.decorator.package import OEHasPackage
 
+
 class GstreamerCliTest(OERuntimeTestCase):
 
     @OEHasPackage(['gstreamer1.0'])

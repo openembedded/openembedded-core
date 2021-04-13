@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+
 def prserv_make_conn(d, check=False):
     import prserv.serv
     host_params = list([_f for _f in (d.getVar("PRSERV_HOST") or '').split(':') if _f])
@@ -16,6 +17,7 @@ def prserv_make_conn(d, check=False):
         bb.fatal("Connecting to PR service %s:%s failed: %s" % (host_params[0], host_params[1], str(exc)))
 
     return conn
+
 
 def prserv_dump_db(d):
     if not d.getVar('PRSERV_HOST'):
@@ -35,6 +37,7 @@ def prserv_dump_db(d):
     opt_checksum = d.getVar('PRSERV_DUMPOPT_CHECKSUM')
     opt_col = ("1" == d.getVar('PRSERV_DUMPOPT_COL'))
     return conn.export(opt_version, opt_pkgarch, opt_checksum, opt_col)
+
 
 def prserv_import_db(d, filter_version=None, filter_pkgarch=None, filter_checksum=None):
     if not d.getVar('PRSERV_HOST'):
@@ -71,6 +74,7 @@ def prserv_import_db(d, filter_version=None, filter_pkgarch=None, filter_checksu
             else:
                imported.append((version, pkgarch, checksum, value))
     return imported
+
 
 def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
     import bb.utils
@@ -114,6 +118,7 @@ def prserv_export_tofile(d, metainfo, datainfo, lockdown, nomax=False):
                 for i in idx:
                     f.write("PRAUTO_%s_%s = \"%s\"\n" % (str(datainfo[idx[i]]['version']), str(datainfo[idx[i]]['pkgarch']), str(datainfo[idx[i]]['value'])))
     bb.utils.unlockfile(lf)
+
 
 def prserv_check_avail(d):
     host_params = list([_f for _f in (d.getVar("PRSERV_HOST") or '').split(':') if _f])

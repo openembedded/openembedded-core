@@ -22,6 +22,7 @@ logger = logging.getLogger('pythondeps')
 
 suffixes = importlib.machinery.all_suffixes()
 
+
 class PythonDepError(Exception):
     pass
 

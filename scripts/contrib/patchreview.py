@@ -10,6 +10,7 @@
 
 status_values = ("accepted", "pending", "inappropriate", "backport", "submitted", "denied")
 
+
 class Result:
     # Whether the patch has an Upstream-Status or not
     missing_upstream_status = False
@@ -28,6 +29,7 @@ class Result:
     # Whether a patch looks like a CVE but doesn't have a CVE tag
     missing_cve = False
 
+
 def blame_patch(patch):
     """
     From a patch filename, return a list of "commit summary (author name <author
@@ -38,6 +40,7 @@ def blame_patch(patch):
                                     "--follow", "--find-renames", "--diff-filter=A",
                                     "--format=%s (%aN <%aE>)",
                                     "--", patch)).decode("utf-8").splitlines()
+
 
 def patchreview(path, patches):
     import re
@@ -70,7 +73,6 @@ def patchreview(path, patches):
             result.sob = match.group(2)
         else:
             result.missing_sob = True
-
 
         # Find the Upstream-Status tag
         match = status_re.search(content)
@@ -186,7 +188,6 @@ Patches in Pending state: %s""" % (total_patches,
                                    percent(missing_status),
                                    percent(malformed_status),
                                    percent(pending_patches)))
-
 
 
 def histogram(results):

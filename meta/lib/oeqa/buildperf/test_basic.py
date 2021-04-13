@@ -10,6 +10,7 @@ import oe.path
 from oeqa.buildperf import BuildPerfTestCase
 from oeqa.utils.commands import get_bb_var, get_bb_vars
 
+
 class Test1P1(BuildPerfTestCase):
     build_target = 'core-image-sato'
 

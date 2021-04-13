@@ -5,12 +5,14 @@
 import oe.path
 import oe.types
 
+
 class NotFoundError(bb.BBHandledException):
     def __init__(self, path):
         self.path = path
 
     def __str__(self):
         return "Error: %s not found." % self.path
+
 
 class CmdError(bb.BBHandledException):
     def __init__(self, command, exitstatus, output):
@@ -56,12 +58,14 @@ def runcmd(args, dir=None):
         if dir:
             os.chdir(olddir)
 
+
 class PatchError(Exception):
     def __init__(self, msg):
         self.msg = msg
 
     def __str__(self):
         return "Patch Error: %s" % self.msg
+
 
 class PatchSet(object):
     defaults = {
@@ -289,6 +293,7 @@ class PatchTree(PatchSet):
     def Clean(self):
         """"""
         self.Pop(all=True)
+
 
 class GitApplyTree(PatchTree):
     patch_line_prefix = '%% original patch'
@@ -569,7 +574,6 @@ class QuiltTree(PatchSet):
     def _quiltpatchpath(self, file):
         return os.path.join(self.dir, "patches", os.path.basename(file))
 
-
     def __init__(self, dir, d):
         PatchSet.__init__(self, dir, d)
         self.initialized = False
@@ -632,7 +636,6 @@ class QuiltTree(PatchSet):
 
         self.patches.insert(self._current or 0, patch)
 
-
     def Push(self, force=False, all=False, run=True):
         # quilt push [-f]
 
@@ -690,6 +693,7 @@ class QuiltTree(PatchSet):
                 args.append(os.path.basename(self.patches[kwargs["patch"]]["quiltfile"]))
             self._runcmd(args)
 
+
 class Resolver(object):
     def __init__(self, patchset, terminal):
         raise NotImplementedError()
@@ -702,6 +706,7 @@ class Resolver(object):
 
     def Finalize(self):
         raise NotImplementedError()
+
 
 class NOOPResolver(Resolver):
     def __init__(self, patchset, terminal):
@@ -721,6 +726,8 @@ class NOOPResolver(Resolver):
 # Patch resolver which relies on the user doing all the work involved in the
 # resolution, with the exception of refreshing the remote copy of the patch
 # files (the urls).
+
+
 class UserResolver(Resolver):
     def __init__(self, patchset, terminal):
         self.patchset = patchset
@@ -803,6 +810,7 @@ def patch_path(url, fetch, workdir, expand=True):
 
     return local
 
+
 def src_patches(d, all=False, expand=True):
     workdir = d.getVar('WORKDIR')
     fetch = bb.fetch2.Fetch([], d)
@@ -865,7 +873,6 @@ def should_apply(parm, d):
 
         if "mindate" in parm and parm["mindate"] > srcdate:
             return False, 'is predated'
-
 
     if "minrev" in parm:
         srcrev = d.getVar('SRCREV')

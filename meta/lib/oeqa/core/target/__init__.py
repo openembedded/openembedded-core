@@ -6,6 +6,7 @@
 
 from abc import abstractmethod
 
+
 class OETarget(object):
 
     def __init__(self, logger, *args, **kwargs):

@@ -25,6 +25,8 @@ PackageColumns = enum.IntEnum("PackageColumns", {"Package": 0, "Size": 1})
 FileColumns = enum.IntEnum("FileColumns", {"Filename": 0, "Size": 1})
 
 import time
+
+
 def timeit(f):
     def timed(*args, **kw):
         ts = time.time()
@@ -35,6 +37,7 @@ def timeit(f):
           (f.__name__, args, kw, te - ts))
         return result
     return timed
+
 
 def human_size(nbytes):
     import math
@@ -47,6 +50,7 @@ def human_size(nbytes):
         human = nbytes / (1000.0 ** rank)
     f = ('%.2f' % human).rstrip('0').rstrip('.')
     return '%s %s' % (f, suffixes[rank])
+
 
 def load(filename, suffix=None):
     from configparser import ConfigParser
@@ -63,6 +67,7 @@ def load(filename, suffix=None):
     # values to ints?
     return parser["fake"]
 
+
 def find_pkgdata():
     import subprocess
     output = subprocess.check_output(("bitbake", "-e"), universal_newlines=True)
@@ -72,6 +77,7 @@ def find_pkgdata():
     # TODO exception or something
     return None
 
+
 def packages_in_recipe(pkgdata, recipe):
     """
     Load the recipe pkgdata to determine the list of runtime packages.
@@ -80,12 +86,15 @@ def packages_in_recipe(pkgdata, recipe):
     packages = data["PACKAGES"].split()
     return packages
 
+
 def load_runtime_package(pkgdata, package):
     return load(os.path.join(pkgdata, "runtime", package), suffix=package)
+
 
 def recipe_from_package(pkgdata, package):
     data = load(os.path.join(pkgdata, "runtime", package), suffix=package)
     return data["PN"]
+
 
 def summary(data):
     s = ""
@@ -242,6 +251,7 @@ class PkgUi():
         for recipe in sorted(os.listdir(pkgdata)):
             if os.path.isfile(os.path.join(pkgdata, recipe)):
                 self.recipe_iters[recipe] = self.recipe_store.append([recipe])
+
 
 if __name__ == "__main__":
     import argparse

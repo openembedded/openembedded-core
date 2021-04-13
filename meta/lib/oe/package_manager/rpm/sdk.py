@@ -9,6 +9,7 @@ from oe.manifest import Manifest
 from oe.package_manager.rpm.manifest import PkgManifest
 from oe.package_manager.rpm import RpmPM
 
+
 class PkgSdk(Sdk):
     def __init__(self, d, manifest_dir=None, rpm_workdir="oe-sdk-repo"):
         super(PkgSdk, self).__init__(d, manifest_dir)

@@ -12,6 +12,7 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfNotDataVar, skipIfNotFeature, skipIfInDataVar, skipIfNotInDataVar
 from oeqa.runtime.decorator.package import OEHasPackage
 
+
 class DnfTest(OERuntimeTestCase):
 
     def dnf(self, command, expected=0):
@@ -20,6 +21,7 @@ class DnfTest(OERuntimeTestCase):
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
         return output
+
 
 class DnfBasicTest(DnfTest):
 
@@ -47,6 +49,7 @@ class DnfBasicTest(DnfTest):
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
     def test_dnf_history(self):
         self.dnf('history')
+
 
 class DnfRepoTest(DnfTest):
 

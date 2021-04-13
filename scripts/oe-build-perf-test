@@ -66,6 +66,7 @@ def pre_run_sanity_check():
         return False
     return True
 
+
 def setup_file_logging(log_file):
     """Setup loggin to file"""
     log_dir = os.path.dirname(log_file)

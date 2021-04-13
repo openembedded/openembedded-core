@@ -23,6 +23,7 @@ logger = logging.getLogger('recipetool')
 
 tinfoil = None
 
+
 def tinfoil_init(instance):
     global tinfoil
     tinfoil = instance
@@ -33,6 +34,7 @@ def tinfoil_init(instance):
 
 class InvalidTargetFileError(Exception):
     pass
+
 
 def find_target_file(targetpath, d, pkglist=None):
     """Find the recipe installing the specified target path, optionally limited to a select list of packages"""
@@ -87,6 +89,7 @@ def find_target_file(targetpath, d, pkglist=None):
                             recipes[targetpath].append('!%s' % pn)
     return recipes
 
+
 def _parse_recipe(pn, tinfoil):
     try:
         rd = tinfoil.parse_recipe(pn)
@@ -94,6 +97,7 @@ def _parse_recipe(pn, tinfoil):
         logger.error(str(e))
         return None
     return rd
+
 
 def determine_file_source(targetpath, rd):
     """Assuming we know a file came from a specific recipe, figure out exactly where it came from"""
@@ -144,6 +148,7 @@ def determine_file_source(targetpath, rd):
 
     return (srcfile, elements, modpatches)
 
+
 def get_source_path(cmdelements):
     """Find the source path specified within a command"""
     command = cmdelements[0]
@@ -178,6 +183,7 @@ def get_source_path(cmdelements):
     else:
         raise Exception('get_source_path: no handling for command "%s"')
 
+
 def get_func_deps(func, d):
     """Find the function dependencies of a shell function"""
     deps = bb.codeparser.ShellParser(func, logger).parse_shell(d.getVar(func))
@@ -187,6 +193,7 @@ def get_func_deps(func, d):
         if d.getVarFlag(dep, 'func'):
             funcdeps.append(dep)
     return funcdeps
+
 
 def check_do_install(rd, targetpath):
     """Look at do_install for a command that installs/copies the specified target path"""

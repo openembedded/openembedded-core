@@ -8,6 +8,7 @@ import os
 import json
 import re
 
+
 class FitImageTests(OESelftestTestCase):
 
     def test_fit_image(self):
@@ -86,7 +87,6 @@ FIT_DESC = "A model description"
             self.assertTrue(field_index == len(its_field_check),
                 "Fields in Image Tree Source File %s did not match, error in finding %s"
                 % (fitimage_its_path, its_field_check[field_index]))
-
 
     def test_sign_fit_image(self):
         """
@@ -397,7 +397,6 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot comment'"
                 "Fields in Image Tree Source File %s did not match, error in finding %s"
                 % (fitimage_its_path, its_field_check[field_index]))
 
-
     def test_sign_standalone_uboot_fit_image(self):
         """
         Summary:     Check if U-Boot FIT image and Image Tree Source (its) are
@@ -696,8 +695,6 @@ FIT_SIGN_INDIVIDUAL = "1"
         self.assertEqual(result.status, 0, 'UBOOT_MKIMAGE did not work')
         result = runCmd('grep "### uboot-mkimage signing wrapper message" %s/log.do_uboot_assemble_fitimage' % tempdir, ignore_status=True)
         self.assertEqual(result.status, 0, 'UBOOT_MKIMAGE_SIGN did not work')
-
-
 
     def test_initramfs_bundle(self):
         """

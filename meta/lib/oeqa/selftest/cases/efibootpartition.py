@@ -10,6 +10,7 @@ import re
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, runqemu, get_bb_var
 
+
 class GenericEFITest(OESelftestTestCase):
     """EFI booting test class"""
 

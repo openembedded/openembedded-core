@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+
 def toList(obj, obj_type, obj_name="Object"):
     if isinstance(obj, obj_type):
         return [obj]
@@ -11,6 +12,7 @@ def toList(obj, obj_type, obj_name="Object"):
         return obj
     else:
         raise TypeError("%s must be %s or list" % (obj_name, obj_type))
+
 
 def toSet(obj, obj_type, obj_name="Object"):
     if isinstance(obj, obj_type):
@@ -22,14 +24,18 @@ def toSet(obj, obj_type, obj_name="Object"):
     else:
         raise TypeError("%s must be %s or set" % (obj_name, obj_type))
 
+
 def strToList(obj, obj_name="Object"):
     return toList(obj, str, obj_name)
+
 
 def strToSet(obj, obj_name="Object"):
     return toSet(obj, str, obj_name)
 
+
 def intToList(obj, obj_name="Object"):
     return toList(obj, int, obj_name)
+
 
 def dataStoteToDict(d, variables):
     data = {}
@@ -38,6 +44,7 @@ def dataStoteToDict(d, variables):
         data[v] = d.getVar(v)
 
     return data
+
 
 def updateTestData(d, td, variables):
     """

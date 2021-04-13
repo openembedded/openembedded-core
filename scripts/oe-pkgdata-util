@@ -25,6 +25,7 @@ import scriptutils
 import argparse_oe
 logger = scriptutils.logger_create('pkgdatautil')
 
+
 def tinfoil_init():
     import bb.tinfoil
     import logging
@@ -82,8 +83,10 @@ def glob(args):
             # Define some functions
             def revpkgdata(pkgn):
                 return os.path.join(args.pkgdata_dir, "runtime-reverse", pkgn)
+
             def fwdpkgdata(pkgn):
                 return os.path.join(args.pkgdata_dir, "runtime", pkgn)
+
             def readpn(pkgdata_file):
                 pn = ""
                 with open(pkgdata_file, 'r') as f:
@@ -91,6 +94,7 @@ def glob(args):
                         if line.startswith("PN:"):
                             pn = line.split(': ')[1].rstrip()
                 return pn
+
             def readrenamed(pkgdata_file):
                 renamed = ""
                 pn = os.path.basename(pkgdata_file)
@@ -146,6 +150,7 @@ def glob(args):
 
     print("\n".join(mappedpkgs - skippedpkgs))
 
+
 def read_value(args):
     # Handle both multiple arguments and multiple values within an arg (old syntax)
     packages = []
@@ -197,6 +202,7 @@ def read_value(args):
         else:
             logger.debug("revlink %s does not exist", revlink)
 
+
 def lookup_pkglist(pkgs, pkgdata_dir, reverse):
     if reverse:
         mappings = OrderedDict()
@@ -217,6 +223,7 @@ def lookup_pkglist(pkgs, pkgdata_dir, reverse):
                             mappings[pkg].append(fields[1])
                             break
     return mappings
+
 
 def lookup_pkg(args):
     # Handle both multiple arguments and multiple values within an arg (old syntax)
@@ -239,6 +246,7 @@ def lookup_pkg(args):
             items.extend(mappings.get(pkg, []))
 
     print('\n'.join(items))
+
 
 def lookup_recipe(args):
     def parse_pkgdatafile(pkgdatafile):
@@ -276,6 +284,7 @@ def lookup_recipe(args):
             else:
                 logger.error("The following packages could not be found: %s" % pkg)
                 sys.exit(1)
+
 
 def package_info(args):
     def parse_pkgdatafile(pkgdatafile):
@@ -339,6 +348,7 @@ def package_info(args):
             sys.exit(1)
         parse_pkgdatafile(pkgdatafile)
 
+
 def get_recipe_pkgs(pkgdata_dir, recipe, unpackaged):
     recipedatafile = os.path.join(pkgdata_dir, recipe)
     if not os.path.exists(recipedatafile):
@@ -360,6 +370,7 @@ def get_recipe_pkgs(pkgdata_dir, recipe, unpackaged):
         return pkglist
     else:
         return packages
+
 
 def list_pkgs(args):
     found = False
@@ -423,8 +434,10 @@ def list_pkgs(args):
             logger.error("No packages found")
         sys.exit(1)
 
+
 def list_pkg_files(args):
     import json
+
     def parse_pkgdatafile(pkgdatafile, long=False):
         with open(pkgdatafile, 'r') as f:
             found = False
@@ -444,7 +457,6 @@ def list_pkg_files(args):
             if not found:
                 logger.error("Unable to find FILES_INFO entry in %s" % pkgdatafile)
                 sys.exit(1)
-
 
     if args.recipe:
         if args.pkg:
@@ -490,6 +502,7 @@ def list_pkg_files(args):
                 logger.error("Unable to find any built recipe-space package named %s" % pkg)
                 sys.exit(1)
             parse_pkgdatafile(pkgdatafile, args.long)
+
 
 def find_path(args):
     import json
@@ -584,7 +597,6 @@ def main():
     parser_glob.add_argument('glob', nargs="+", help='Glob expression for package names, e.g. *-dev')
     parser_glob.add_argument('-x', '--exclude', help='Exclude packages matching specified regex from the glob operation')
     parser_glob.set_defaults(func=glob)
-
 
     args = parser.parse_args()
 

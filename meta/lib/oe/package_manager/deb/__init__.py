@@ -6,6 +6,7 @@ import re
 import subprocess
 from oe.package_manager import *
 
+
 class DpkgIndexer(Indexer):
     def _create_configs(self):
         bb.utils.mkdirhier(self.apt_conf_dir)
@@ -79,6 +80,7 @@ class DpkgIndexer(Indexer):
         if self.d.getVar('PACKAGE_FEED_SIGN') == '1':
             raise NotImplementedError('Package feed signing not implementd for dpkg')
 
+
 class PMPkgsList(PkgsList):
 
     def list_pkgs(self):
@@ -95,6 +97,7 @@ class PMPkgsList(PkgsList):
                      "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
 
         return opkg_query(cmd_output)
+
 
 class OpkgDpkgPM(PackageManager):
     def __init__(self, d, target_rootfs):
@@ -162,6 +165,7 @@ class OpkgDpkgPM(PackageManager):
 
     def _handle_intercept_failure(self, registered_pkgs):
         self.mark_packages("unpacked", registered_pkgs.split())
+
 
 class DpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None, deb_repo_workdir="oe-rootfs-repo", filterbydependencies=True):
@@ -308,7 +312,6 @@ class DpkgPM(OpkgDpkgPM):
                     os.rename(os.path.join(root, file),
                               os.path.join(root, new_file))
 
-
     def remove(self, pkgs, with_dependencies=True):
         if not pkgs:
             return
@@ -347,7 +350,6 @@ class DpkgPM(OpkgDpkgPM):
     def insert_feeds_uris(self, feed_uris, feed_base_paths, feed_archs):
         if feed_uris == "":
             return
-
 
         sources_conf = os.path.join("%s/etc/apt/sources.list"
                                     % self.target_rootfs)

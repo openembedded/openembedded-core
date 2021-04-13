@@ -6,6 +6,7 @@
 
 from oeqa.utils.buildproject import BuildProject
 
+
 class TargetBuildProject(BuildProject):
 
     def __init__(self, target, uri, foldername=None, dl_dir=None):

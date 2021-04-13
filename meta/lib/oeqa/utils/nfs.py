@@ -7,6 +7,7 @@ import socket
 from oeqa.utils.commands import bitbake, get_bb_var, Command
 from oeqa.utils.network import get_free_port
 
+
 @contextlib.contextmanager
 def unfs_server(directory, logger=None):
     unfs_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "unfs3-native")

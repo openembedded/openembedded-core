@@ -7,8 +7,10 @@ import os
 import subprocess
 import signal
 
+
 def reenable_sigint():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
+
 
 def run_command_interruptible(cmd):
     """
@@ -22,6 +24,7 @@ def run_command_interruptible(cmd):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
     return ret
 
+
 def get_last_consolelog():
     '''Return the most recent console log file'''
     logdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'tmp', 'log', 'cooker')
@@ -34,6 +37,7 @@ def get_last_consolelog():
             if logfiles:
                 return os.path.join(logdir, logfiles[-1])
     return None
+
 
 def main():
     if len(sys.argv) < 2:
@@ -80,6 +84,7 @@ def main():
         if ret:
             print('ERROR: SDK preparation failed: error log written to %s' % logfile)
             return ret
+
 
 if __name__ == "__main__":
     try:

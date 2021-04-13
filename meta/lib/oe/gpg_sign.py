@@ -9,8 +9,10 @@ import bb
 import subprocess
 import shlex
 
+
 class LocalSigner(object):
     """Class for handling local (on the build host) signing"""
+
     def __init__(self, d):
         self.gpg_bin = d.getVar('GPG_BIN') or \
                   bb.utils.which(os.getenv('PATH'), 'gpg')
@@ -24,7 +26,6 @@ class LocalSigner(object):
         self.gpg_path = d.getVar('GPG_PATH')
         self.rpm_bin = bb.utils.which(os.getenv('PATH'), "rpmsign")
         self.gpg_version = self.get_gpg_version()
-
 
     def export_pubkey(self, output_file, keyid, armor=True):
         """Export GPG public key to a file"""
@@ -98,7 +99,6 @@ class LocalSigner(object):
             bb.error("OS error (%s): %s" % (e.errno, e.strerror))
             raise Exception("Failed to sign '%s" % input_file)
 
-
     def get_gpg_version(self):
         """Return the gpg version as a tuple of ints"""
         try:
@@ -107,7 +107,6 @@ class LocalSigner(object):
             return tuple([int(i) for i in ver_str.split("-")[0].split('.')])
         except subprocess.CalledProcessError as e:
             bb.fatal("Could not get gpg version: %s" % e)
-
 
     def verify(self, sig_file):
         """Verify signature"""

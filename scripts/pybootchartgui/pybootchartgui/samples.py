@@ -18,8 +18,10 @@ class DiskStatSample:
     def __init__(self, time):
         self.time = time
         self.diskdata = [0, 0, 0]
+
     def add_diskdata(self, new_diskdata):
         self.diskdata = [a + b for a, b in zip(self.diskdata, new_diskdata)]
+
 
 class CPUSample:
     def __init__(self, time, user, sys, io=0.0, swap=0.0):
@@ -37,6 +39,7 @@ class CPUSample:
         return str(self.time) + "\t" + str(self.user) + "\t" + \
                str(self.sys) + "\t" + str(self.io) + "\t" + str(self.swap)
 
+
 class MemSample:
     used_values = ('MemTotal', 'MemFree', 'Buffers', 'Cached', 'SwapTotal', 'SwapFree',)
 
@@ -53,12 +56,14 @@ class MemSample:
         # discard incomplete samples
         return [v for v in MemSample.used_values if v not in keys] == []
 
+
 class DrawMemSample:
     """
     Condensed version of a MemSample with exactly the values used by the drawing code.
     Initialized either from a valid MemSample or
     a tuple/list of buffer/used/cached/swap values.
     """
+
     def __init__(self, mem_sample):
         self.time = mem_sample.time
         if isinstance(mem_sample, MemSample):
@@ -68,6 +73,7 @@ class DrawMemSample:
             self.swap = mem_sample.records['SwapTotal'] - mem_sample.records['SwapFree']
         else:
             self.buffers, self.used, self.cached, self.swap = mem_sample
+
 
 class DiskSpaceSample:
     def __init__(self, time):
@@ -80,6 +86,7 @@ class DiskSpaceSample:
     def valid(self):
         return bool(self.records)
 
+
 class ProcessSample:
     def __init__(self, time, state, cpu_sample):
         self.time = time
@@ -88,6 +95,7 @@ class ProcessSample:
 
     def __str__(self):
         return str(self.time) + "\t" + str(self.state) + "\t" + str(self.cpu_sample)
+
 
 class ProcessStats:
     def __init__(self, writer, process_map, sample_count, sample_period, start_time, end_time):
@@ -98,6 +106,7 @@ class ProcessStats:
         self.end_time = end_time
         writer.info("%d samples, avg. sample length %f" % (self.sample_count, self.sample_period))
         writer.info("process list size: %d" % len(self.process_map.values()))
+
 
 class Process:
     def __init__(self, writer, pid, cmd, ppid, start_time):
@@ -165,6 +174,7 @@ class Process:
 
     def get_end_time(self):
         return self.start_time + self.duration
+
 
 class DiskSample:
     def __init__(self, time, read, write, util):

@@ -36,6 +36,7 @@ exclude_packages = [
 	'ruby-ri-docs'
 	]
 
+
 def is_excluded(package):
     package_name = os.path.basename(package)
     for i in exclude_packages:
@@ -43,9 +44,11 @@ def is_excluded(package):
             return i
     return None
 
+
 MISSING = 'MISSING'
 DIFFERENT = 'DIFFERENT'
 SAME = 'SAME'
+
 
 @functools.total_ordering
 class CompareResult(object):
@@ -59,6 +62,7 @@ class CompareResult(object):
 
     def __lt__(self, other):
         return (self.status, self.test) < (other.status, other.test)
+
 
 class PackageCompareResults(object):
     def __init__(self):
@@ -96,6 +100,7 @@ class PackageCompareResults(object):
     def unused_exclusions(self):
         return sorted(set(exclude_packages) - self.active_exclusions)
 
+
 def compare_file(reference, test, diffutils_sysroot):
     result = CompareResult()
     result.reference = reference
@@ -114,9 +119,11 @@ def compare_file(reference, test, diffutils_sysroot):
     result.status = SAME
     return result
 
+
 def run_diffoscope(a_dir, b_dir, html_dir, **kwargs):
     return runCmd(['diffoscope', '--no-default-limits', '--exclude-directory-metadata', 'yes', '--html-dir', html_dir, a_dir, b_dir],
                 **kwargs)
+
 
 class DiffoscopeTests(OESelftestTestCase):
     diffoscope_test_files = os.path.join(os.path.dirname(os.path.abspath(__file__)), "diffoscope")
@@ -139,6 +146,7 @@ class DiffoscopeTests(OESelftestTestCase):
 
             self.assertNotEqual(r.status, 0, msg="diffoscope was successful when an error was expected")
             self.assertTrue(os.path.exists(os.path.join(tmpdir, 'index.html')), "HTML index not found!")
+
 
 class ReproducibleTests(OESelftestTestCase):
     # Test the reproducibility of whatever is built between sstate_targets and targets

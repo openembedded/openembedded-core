@@ -37,9 +37,11 @@ def _set_file_values(fn, values):
             f.writelines(newlines)
     return updated
 
+
 def _get_build_tasks(config):
     tasks = config.get('Build', 'build_task', 'populate_sysroot,packagedata').split(',')
     return ['do_%s' % task.strip() for task in tasks]
+
 
 def build(args, config, basepath, workspace):
     """Entry point for the devtool 'build' subcommand"""
@@ -80,6 +82,7 @@ def build(args, config, basepath, workspace):
             _set_file_values(bbappend, {'PARALLEL_MAKE': None})
 
     return 0
+
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

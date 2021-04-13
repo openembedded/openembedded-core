@@ -22,6 +22,7 @@ from oeqa.core.exception import OEQAPreRun, OEQATestNotFound
 
 from oeqa.utils.commands import runCmd, get_bb_vars, get_test_layer
 
+
 class NonConcurrentTestSuite(unittest.TestSuite):
     def __init__(self, suite, processes, setupfunc, removefunc):
         super().__init__([suite])
@@ -36,6 +37,7 @@ class NonConcurrentTestSuite(unittest.TestSuite):
         os.chdir(builddir)
         if newbuilddir and ret.wasSuccessful() and self.removefunc:
             self.removefunc(newbuilddir)
+
 
 def removebuilddir(d):
     delay = 5
@@ -52,6 +54,7 @@ def removebuilddir(d):
         except subprocess.CalledProcessError:
             pass
     bb.utils.prunedir(d, ionice=True)
+
 
 class OESelftestTestContext(OETestContext):
     def __init__(self, td=None, logger=None, machines=None, config_paths=None, newbuilddir=None, keep_builddir=None):
@@ -139,6 +142,7 @@ class OESelftestTestContext(OETestContext):
 
     def listTests(self, display_type, machine=None):
         return super(OESelftestTestContext, self).listTests(display_type)
+
 
 class OESelftestTestContextExecutor(OETestContextExecutor):
     _context_class = OESelftestTestContext
@@ -408,5 +412,6 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             os.symlink(args.output_log, output_link)
 
         return rc
+
 
 _executor_class = OESelftestTestContextExecutor

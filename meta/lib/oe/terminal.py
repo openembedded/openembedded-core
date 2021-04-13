@@ -13,6 +13,7 @@ logger = logging.getLogger('BitBake.OE.Terminal')
 class UnsupportedTerminal(Exception):
     pass
 
+
 class NoSupportedTerminals(Exception):
     def __init__(self, terms):
         self.terms = terms
@@ -48,11 +49,13 @@ class Terminal(Popen, metaclass=Registry):
         else:
             return [element.format(**fmt) for element in self.command]
 
+
 class XTerminal(Terminal):
     def __init__(self, sh_cmd, title=None, env=None, d=None):
         Terminal.__init__(self, sh_cmd, title, env, d)
         if not os.environ.get('DISPLAY'):
             raise UnsupportedTerminal(self.name)
+
 
 class Gnome(XTerminal):
     command = 'gnome-terminal -t "{title}" -- {command}'
@@ -68,17 +71,21 @@ class Gnome(XTerminal):
 
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
+
 class Mate(XTerminal):
     command = 'mate-terminal --disable-factory -t "{title}" -x {command}'
     priority = 2
+
 
 class Xfce(XTerminal):
     command = 'xfce4-terminal -T "{title}" -e "{command}"'
     priority = 2
 
+
 class Terminology(XTerminal):
     command = 'terminology -T="{title}" -e {command}'
     priority = 2
+
 
 class Konsole(XTerminal):
     command = 'konsole --separate --workdir . -p tabtitle="{title}" -e {command}'
@@ -95,13 +102,16 @@ class Konsole(XTerminal):
             self.command = 'konsole --nofork --workdir . -p tabtitle="{title}" -e {command}'
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
+
 class XTerm(XTerminal):
     command = 'xterm -T "{title}" -e {command}'
     priority = 1
 
+
 class Rxvt(XTerminal):
     command = 'rxvt -T "{title}" -e {command}'
     priority = 1
+
 
 class Screen(Terminal):
     command = 'screen -D -m -t "{title}" -S devshell {command}'
@@ -117,6 +127,7 @@ class Screen(Terminal):
                                               0.5, 10), d)
         else:
             logger.warning(msg)
+
 
 class TmuxRunning(Terminal):
     """Open a new pane in the current running tmux window"""
@@ -136,6 +147,7 @@ class TmuxRunning(Terminal):
 
         Terminal.__init__(self, sh_cmd, title, env, d)
 
+
 class TmuxNewWindow(Terminal):
     """Open a new window in the current running tmux session"""
     name = 'tmux-new-window'
@@ -150,6 +162,7 @@ class TmuxNewWindow(Terminal):
             raise UnsupportedTerminal('tmux is not running')
 
         Terminal.__init__(self, sh_cmd, title, env, d)
+
 
 class Tmux(Terminal):
     """Start a new tmux session and window"""
@@ -174,6 +187,7 @@ class Tmux(Terminal):
         else:
             logger.warning(msg)
 
+
 class Custom(Terminal):
     command = 'false' # This is a placeholder
     priority = 3
@@ -193,6 +207,7 @@ class Custom(Terminal):
 def prioritized():
     return Registry.prioritized()
 
+
 def get_cmd_list():
     terms = Registry.prioritized()
     cmds = []
@@ -200,6 +215,7 @@ def get_cmd_list():
         if term.command:
             cmds.append(term.command)
     return cmds
+
 
 def spawn_preferred(sh_cmd, title=None, env=None, d=None):
     """Spawn the first supported terminal, by priority"""
@@ -214,6 +230,7 @@ def spawn_preferred(sh_cmd, title=None, env=None, d=None):
     # when we've run out of options
     else:
         raise NoSupportedTerminals(get_cmd_list())
+
 
 def spawn(name, sh_cmd, title=None, env=None, d=None):
     """Spawn the specified terminal, by name"""
@@ -254,6 +271,7 @@ def spawn(name, sh_cmd, title=None, env=None, d=None):
         except OSError:
            return
 
+
 def check_tmux_pane_size(tmux):
     import subprocess as sub
     # On older tmux versions (<1.9), return false. The reason
@@ -275,6 +293,7 @@ def check_tmux_pane_size(tmux):
             raise
 
     return size / 2 >= 19
+
 
 def check_terminal_version(terminalName):
     import subprocess as sub
@@ -306,6 +325,7 @@ def check_terminal_version(terminalName):
         if ver.startswith('tmux next-'):
             vernum = ver.split()[-1][5:]
     return vernum
+
 
 def distro_name():
     try:

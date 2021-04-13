@@ -7,6 +7,7 @@ from oeqa.utils.commands import get_bb_var, get_bb_vars, bitbake, runCmd
 import oe.path
 import os
 
+
 class LibOE(OESelftestTestCase):
 
     @classmethod

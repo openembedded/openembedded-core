@@ -11,6 +11,7 @@ from oeqa.core.decorator.data import skipIfDataVar, skipIfNotDataVar
 from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.core.decorator.data import skipIfNotFeature, skipIfFeature
 
+
 class SystemdTest(OERuntimeTestCase):
 
     def systemctl(self, action='', target='', expected=0, verbose=False):
@@ -52,6 +53,7 @@ class SystemdTest(OERuntimeTestCase):
             raise ValueError('List of units to match: %s, returned no entries'
                     % l_match_units)
         return output
+
 
 class SystemdBasicTests(SystemdTest):
 
@@ -133,6 +135,7 @@ class SystemdServiceTests(SystemdTest):
         finally:
             status = self.target.run('mount -oro,remount /')[0]
             self.assertTrue(status == 0, msg='Remounting / as r/o failed')
+
 
 class SystemdJournalTests(SystemdTest):
 

@@ -6,6 +6,7 @@
 
 from oeqa.sdk.context import OESDKTestContext, OESDKTestContextExecutor
 
+
 class TestSDKBase(object):
     @staticmethod
     def get_sdk_configuration(d, test_type):
@@ -33,6 +34,7 @@ class TestSDKBase(object):
     @staticmethod
     def get_sdk_result_id(configuration):
         return '%s_%s_%s_%s_%s' % (configuration['TEST_TYPE'], configuration['IMAGE_BASENAME'], configuration['SDKMACHINE'], configuration['MACHINE'], configuration['STARTTIME'])
+
 
 class TestSDK(TestSDKBase):
     context_executor_class = OESDKTestContextExecutor

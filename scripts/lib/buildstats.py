@@ -144,6 +144,7 @@ class BSTaskAggregate(object):
 
 class BSRecipe(object):
     """Class representing buildstats of one recipe"""
+
     def __init__(self, name, epoch, version, revision):
         self.name = name
         self.epoch = epoch
@@ -208,7 +209,6 @@ class BuildStats(dict):
         with open(path) as fobj:
             bs_json = json.load(fobj)
         return BuildStats.from_json(bs_json)
-
 
     @staticmethod
     def split_nevr(nevr):
@@ -312,6 +312,7 @@ def diff_buildstats(bs1, bs2, stat_attr, min_val=None, min_absdiff=None, only_ta
 
 class BSVerDiff(object):
     """Class representing recipe version differences between two buildstats"""
+
     def __init__(self, bs1, bs2):
         RecipeVerDiff = namedtuple('RecipeVerDiff', 'left right')
 

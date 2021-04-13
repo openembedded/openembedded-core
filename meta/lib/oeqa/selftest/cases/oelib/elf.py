@@ -5,6 +5,7 @@
 from unittest.case import TestCase
 import oe.qa
 
+
 class TestElf(TestCase):
     def test_machine_name(self):
         """

@@ -9,7 +9,6 @@
 # It provides a class and methods for running commands on the host in a convienent way for tests.
 
 
-
 import os
 import sys
 import signal
@@ -26,6 +25,7 @@ try:
     import bb
 except ImportError:
     pass
+
 
 class Command(object):
     def __init__(self, command, bg=False, timeout=None, data=None, output_log=None, **options):
@@ -241,6 +241,7 @@ def get_bb_env(target=None, postconfig=None):
     else:
         return bitbake("-e", postconfig=postconfig).output
 
+
 def get_bb_vars(variables=None, target=None, postconfig=None):
     """Get values of multiple bitbake variables"""
     bbenv = get_bb_env(target, postconfig=postconfig)
@@ -280,8 +281,10 @@ def get_bb_vars(variables=None, target=None, postconfig=None):
             values[var] = None
     return values
 
+
 def get_bb_var(var, target=None, postconfig=None):
     return get_bb_vars([var], target, postconfig)[var]
+
 
 def get_test_layer():
     layers = get_bb_var("BBLAYERS").split()
@@ -294,6 +297,7 @@ def get_test_layer():
             break
     return testlayer
 
+
 def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec='recipes-*/*'):
     os.makedirs(os.path.join(templayerdir, 'conf'))
     with open(os.path.join(templayerdir, 'conf', 'layer.conf'), 'w') as f:
@@ -305,6 +309,7 @@ def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec=
         f.write('BBFILE_PRIORITY_%s = "%d"\n' % (templayername, priority))
         f.write('BBFILE_PATTERN_IGNORE_EMPTY_%s = "1"\n' % templayername)
         f.write('LAYERSERIES_COMPAT_%s = "${LAYERSERIES_COMPAT_core}"\n' % templayername)
+
 
 @contextlib.contextmanager
 def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, qemuparams=None, overrides={}, discard_writes=True):
@@ -363,6 +368,7 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
     finally:
         targetlogger.removeHandler(handler)
         qemu.stop()
+
 
 def updateEnv(env_file):
     """
