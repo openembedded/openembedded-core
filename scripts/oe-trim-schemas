@@ -61,4 +61,3 @@ for schema in child(xml.getroot(), "schemalist").getchildren():
                 locale.remove(e)
 
 xml.write(sys.stdout, "UTF-8")
-

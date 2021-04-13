@@ -49,4 +49,3 @@ class BinutilsCrossSelfTest(OESelftestTestCase, OEPTestResultTestCase):
         with open(sumspath, "r") as f:
             for test, result in parse_values(f):
                 self.ptest_result(ptestsuite, test, result)
-

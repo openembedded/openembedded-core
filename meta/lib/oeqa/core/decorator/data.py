@@ -235,4 +235,3 @@ class skipIfQemu(OETestDecorator):
         self.logger.debug(msg)
         if is_qemu(self.case.td, self.value):
              self.case.skipTest(self.msg)
-

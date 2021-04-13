@@ -42,7 +42,7 @@ class OEQemuTarget(OESSHTarget):
                                  logfile=bootlog, boottime=boottime,
                                  use_kvm=kvm, use_slirp=slirp, dump_dir=dump_dir,
                                  dump_host_cmds=dump_host_cmds, logger=logger,
-                                 serial_ports=serial_ports, boot_patterns=boot_patterns, 
+                                 serial_ports=serial_ports, boot_patterns=boot_patterns,
                                  use_ovmf=ovmf, tmpfsdir=tmpfsdir)
         dump_target_cmds = kwargs.get("testimage_dump_target")
         self.target_dumper = TargetDumper(dump_target_cmds, dump_dir, self.runner)

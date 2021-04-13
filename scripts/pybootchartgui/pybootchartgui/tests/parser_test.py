@@ -26,7 +26,7 @@ writer = main._mk_writer(options)
 
 
 class TestBCParser(unittest.TestCase):
-    
+
 	def setUp(self):
 		self.name = "My first unittest"
 		self.rootdir = bootchart_dir
@@ -43,7 +43,7 @@ class TestBCParser(unittest.TestCase):
 	def test_parseTimedBlocks(self):
 		trace = parsing.Trace(writer, args, options)
 		state = parsing.parse_file(writer, trace, self.mk_fname('proc_diskstats.log'))
-		self.assertEqual(141, len(state.disk_stats))		
+		self.assertEqual(141, len(state.disk_stats))
 
 	def testParseProcPsLog(self):
 		trace = parsing.Trace(writer, args, options)
@@ -78,17 +78,17 @@ class TestBCParser(unittest.TestCase):
 		for index, line in enumerate(diskstats_data):
 			tokens = line.split('\t')
 			sample = samples[index]
-			if debug:		
+			if debug:
 				print(line.rstrip())
 				print(sample)
 				print('-------------------')
-			
+
 			self.assertEqual(tokens[0], str(sample.time))
 			self.assert_(floatEq(float(tokens[1]), sample.read))
 			self.assert_(floatEq(float(tokens[2]), sample.write))
 			self.assert_(floatEq(float(tokens[3]), sample.util))
 		diskstats_data.close()
-	
+
 	def testparseProcStatLog(self):
 		trace = parsing.Trace(writer, args, options)
 		samples = parsing.parse_file(writer, trace, self.mk_fname('proc_stat.log')).cpu_stats
@@ -111,4 +111,3 @@ class TestBCParser(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

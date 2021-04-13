@@ -21,4 +21,3 @@ def findFile(file_name, directory):
 def remove_safe(path):
     if os.path.exists(path):
         os.remove(path)
-

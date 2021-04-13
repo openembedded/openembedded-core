@@ -139,7 +139,7 @@ def get_extra_sdkinfo(sstate_dir):
     This function is going to be used for generating the target and host manifest files packages of eSDK.
     """
     import math
-    
+
     extra_info = {}
     extra_info['tasksizes'] = {}
     extra_info['filesizes'] = {}

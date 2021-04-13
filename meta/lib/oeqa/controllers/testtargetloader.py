@@ -11,8 +11,8 @@ import os
 
 class TestTargetLoader:
 
-    # Search oeqa.controllers module directory for and return a controller  
-    # corresponding to the given target name. 
+    # Search oeqa.controllers module directory for and return a controller
+    # corresponding to the given target name.
     # AttributeError raised if not found.
     # ImportError raised if a provided module can not be imported.
     def get_controller_module(self, target, bbpath):
@@ -46,7 +46,7 @@ class TestTargetLoader:
         return controllerslist
 
     # Search for and return a controller from given target name and
-    # set of module names. 
+    # set of module names.
     # Raise AttributeError if not found.
     # Raise ImportError if a provided module can not be imported
     def load_controller_from_name(self, target, modulenames):
@@ -65,7 +65,7 @@ class TestTargetLoader:
         # is valid that a module may not have the target class.
         try:
             obj = getattr(module, target)
-            if obj: 
+            if obj:
                 from oeqa.targetcontrol import BaseTarget
                 if(not issubclass(obj, BaseTarget)):
                     bb.warn("Target {0} found, but subclass is not BaseTarget".format(target))

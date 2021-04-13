@@ -80,7 +80,7 @@ class OESDKTestContextExecutor(OETestContextExecutor):
         # required options, seems that don't keep track of already parsed
         # options
         sdk_rgroup = self.parser.add_argument_group('sdk required options')
-        sdk_rgroup.add_argument('--sdk-dir', required=False, action='store', 
+        sdk_rgroup.add_argument('--sdk-dir', required=False, action='store',
             help='sdk installed directory')
 
         self.parser.add_argument('-j', '--num-processes', dest='processes', action='store',

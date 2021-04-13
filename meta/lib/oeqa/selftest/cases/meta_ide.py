@@ -23,7 +23,7 @@ class MetaIDE(OESelftestTestCase):
         cls.environment_script_path = '%s/%s' % (cls.tmpdir, cls.environment_script)
         cls.corebasedir = bb_vars['COREBASE']
         cls.tmpdir_metaideQA = tempfile.mkdtemp(prefix='metaide')
-        
+
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir_metaideQA, ignore_errors=True)

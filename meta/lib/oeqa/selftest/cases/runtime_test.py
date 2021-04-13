@@ -394,7 +394,7 @@ IMAGE_INSTALL_append = " systemtap-runtime"
             bitbake(self.image)
 
             with runqemu(self.image) as qemu:
-                cmd = "crosstap -r root@192.168.7.2 -s %s/general/helloworld.stp " % systemtap_examples 
+                cmd = "crosstap -r root@192.168.7.2 -s %s/general/helloworld.stp " % systemtap_examples
                 result = runCmd(cmd)
                 self.assertEqual(0, result.status, 'crosstap helloworld returned a non 0 status:%s' % result.output)
 
@@ -433,4 +433,3 @@ IMAGE_INSTALL_append = " systemtap-runtime"
                 cmd = "crosstap -r root@192.168.7.2 -s %s/process/ syscalls_by_pid.stp" % systemtap_examples
                 result = runCmd(cmd)
                 self.assertEqual(0, result.status, 'crosstap  syscalls_by_pid returned a non 0 status:%s' % result.output)
-

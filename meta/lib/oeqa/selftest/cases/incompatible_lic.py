@@ -135,4 +135,3 @@ RDEPENDS_packagegroup-core-full-cmdline-multiuser_remove = "gzip"\n
 """)
         bitbake('core-image-full-cmdline')
         bitbake('-c testimage core-image-full-cmdline')
-

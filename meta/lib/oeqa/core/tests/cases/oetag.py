@@ -37,4 +37,3 @@ class TagClassTest(OETestCase):
 
     def testTagNone(self):
         self.assertTrue(True, msg='How is this possible?')
-

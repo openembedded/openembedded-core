@@ -274,7 +274,7 @@ PNBLACKLIST[busybox] = "Don't build this"
         Author:      Humberto Ibarra <humberto.ibarra.lopez@intel.com>
                      Yeoh Ee Peng <ee.peng.yeoh@intel.com>
         """
-      
+
         image_name = 'core-image-minimal'
         features = 'IMAGE_GEN_DEBUGFS = "1"\n'
         features += 'IMAGE_FSTYPES_DEBUGFS = "tar.bz2"\n'

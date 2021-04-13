@@ -43,7 +43,7 @@ class CachedPath(object):
             self.statcache[path] = False
             return False
 
-    # We might as well call lstat and then only 
+    # We might as well call lstat and then only
     # call stat as well in the symbolic link case
     # since this turns out to be much more optimal
     # in real world usage of this cache
@@ -183,7 +183,7 @@ class CachedPath(object):
 
             loop_cnt -= 1
             target = os.path.normpath(os.readlink(file))
-    
+
             if not os.path.isabs(target):
                 tdir = os.path.dirname(file)
                 assert(self.__is_path_below(tdir, root))

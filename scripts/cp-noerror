@@ -17,7 +17,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
     names = os.listdir(src)
     try:
         os.makedirs(dst)
-    except OSError: 
+    except OSError:
         # Already exists
         pass
     errors = []

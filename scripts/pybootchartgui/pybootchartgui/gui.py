@@ -14,7 +14,7 @@
 #  along with pybootchartgui. If not, see <http://www.gnu.org/licenses/>.
 
 import gi
-gi.require_version('Gtk', '3.0') 
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk as gtk
 from gi.repository import Gtk
 from gi.repository import Gdk

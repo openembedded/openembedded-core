@@ -32,4 +32,3 @@ class BuildLzipTest(OERuntimeTestCase):
         self.project.run_configure()
         self.project.run_make()
         self.project.run_install()
-

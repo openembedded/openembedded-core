@@ -77,14 +77,14 @@ class LtpPosixTest(LtpPosixBase):
             runtime = int(endtime - starttime)
             sections['duration'] = runtime
             self.sections[posix_group] = sections
- 
+
             failed_tests = {}
             for test in results:
                 result = results[test]
                 testname = ("ltpposixresult." + posix_group + "." + test)
                 self.extras[testname] = {'status': result}
                 if result == 'FAILED':
-                    failed_tests[posix_group] = test 
+                    failed_tests[posix_group] = test
 
             if failed_tests:
                 self.failmsg = self.failmsg + "Failed ptests:\n%s" % pprint.pformat(failed_tests)
@@ -94,5 +94,5 @@ class LtpPosixTest(LtpPosixBase):
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(["ltp"])
     def test_posix_groups(self):
-        for posix_group in self.posix_groups: 
+        for posix_group in self.posix_groups:
             self.runltp(posix_group)

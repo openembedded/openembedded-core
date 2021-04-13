@@ -17,7 +17,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
                 self.tc.layer['name'])
 
     def test_bsp_defines_machines(self):
-        self.assertTrue(self.tc.layer['conf']['machines'], 
+        self.assertTrue(self.tc.layer['conf']['machines'],
                 "Layer is BSP but doesn't defines machines.")
 
     def test_bsp_no_set_machine(self):

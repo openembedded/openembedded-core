@@ -257,4 +257,3 @@ for e in executables_list:
     if old_size != os.path.getsize(e):
         print("New file size for %s is different. Looks like a relocation error!", e)
         sys.exit(-1)
-

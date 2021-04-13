@@ -619,5 +619,3 @@ def OEOuthashBasic(path, sigfile, task, d):
         os.chdir(prev_dir)
 
     return h.hexdigest()
-
-

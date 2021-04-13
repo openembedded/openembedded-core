@@ -22,4 +22,3 @@ def print_table(rows, row_fmt=None):
 
     for row in rows:
         print(*[row_fmt[i].format(col, wid=col_widths[i]) for i, col in enumerate(row)])
-

@@ -18,4 +18,3 @@ with open(sys.argv[1], 'w') as f:
         f.write('%s = ' % k)
         pprint.pprint(l[k], stream=f, width=sys.maxsize)
         f.write('\n')
-

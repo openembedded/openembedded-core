@@ -334,4 +334,3 @@ class ReproducibleTests(OESelftestTestCase):
 
         if fails:
             self.fail('\n'.join(fails))
-

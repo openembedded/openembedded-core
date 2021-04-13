@@ -6,7 +6,7 @@
 def machine_dict(d):
 #           TARGET_OS  TARGET_ARCH   MACHINE, OSABI, ABIVERSION, Little Endian, 32bit?
     machdata = {
-            "darwin9": { 
+            "darwin9": {
                         "arm": (40, 0, 0, True, 32),
                       },
             "eabi": {
@@ -28,7 +28,7 @@ def machine_dict(d):
                         "riscv32": (243, 0, 0, True, 32),
                         "riscv64": (243, 0, 0, True, 64),
                       },
-            "linux": { 
+            "linux": {
                         "aarch64": (183, 0, 0, True, 64),
                         "aarch64_be": (183, 0, 0, False, 64),
                         "arm": (40, 97, 0, True, 32),
@@ -62,7 +62,7 @@ def machine_dict(d):
                         "microblaze": (189, 0, 0, False, 32),
                         "microblazeel": (189, 0, 0, True, 32),
                       },
-            "linux-musl": { 
+            "linux-musl": {
                         "aarch64": (183, 0, 0, True, 64),
                         "aarch64_be": (183, 0, 0, False, 64),
                         "arm": (40, 97, 0, True, 32),
@@ -87,7 +87,7 @@ def machine_dict(d):
                       },
             "uclinux-uclibc": {
                         "bfin": (106, 0, 0, True, 32),
-                      }, 
+                      },
             "linux-gnueabi": {
                         "arm": (40, 0, 0, True, 32),
                         "armeb": (40, 0, 0, False, 32),

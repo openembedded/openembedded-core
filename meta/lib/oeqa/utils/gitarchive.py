@@ -241,4 +241,3 @@ def rev_find(revs, attr, val):
         if getattr(rev, attr) == val:
             return i
     raise ValueError("Unable to find '{}' value '{}'".format(attr, val))
-

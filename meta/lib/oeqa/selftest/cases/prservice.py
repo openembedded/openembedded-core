@@ -123,4 +123,3 @@ class BitbakePrTests(OESelftestTestCase):
         ret = runCmd('bitbake-prserv --host localhost --port %s --loglevel=DEBUG --stop' % port)
 
         self.assertEqual(ret.status, 0)
-

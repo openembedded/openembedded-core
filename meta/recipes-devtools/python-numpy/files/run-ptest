@@ -2,4 +2,3 @@
 
 import numpy
 numpy.test(label='full', verbose=2)
-

@@ -14,4 +14,3 @@ if failed_to_build != -1:
 
 if necessary_bits != -1 or failed_to_build != -1:
     sys.exit(1)
-

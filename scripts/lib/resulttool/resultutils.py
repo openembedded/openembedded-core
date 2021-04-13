@@ -237,4 +237,3 @@ def test_run_results(results):
             if not 'result' in test_run:
                 continue
             yield path, run_name, test_run, test_run['result']
-

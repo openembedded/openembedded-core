@@ -1,5 +1,5 @@
 # This script is launched on separate task for each python module
-# It checks for dependencies for that specific module and prints 
+# It checks for dependencies for that specific module and prints
 # them out, the output of this execution will have all dependencies
 # for a specific module, which will be parsed an dealt on create_manifest.py
 #
@@ -98,8 +98,8 @@ for item in dif:
         # Deals with NameError: name 'dep_path' is not defined
         # because module is not found (wasn't compiled?), e.g. bddsm
         if (debug == True):
-            log.write(item + ' ') 
-            log.write(str(e))                                              
+            log.write(item + ' ')
+            log.write(str(e))
         pass
 
     # Site-customize is a special case since we (OpenEmbedded) put it there manually
@@ -129,7 +129,7 @@ for item in dif:
     print(dep_path)
 
     import imp
-    cpython_tag = imp.get_tag() 
+    cpython_tag = imp.get_tag()
     cached = ''
     # Theres no naive way to find *.pyc files on python3
     try:
@@ -146,8 +146,8 @@ for item in dif:
     except NameError as e:
         # Deals with NameError: name 'cached' is not defined
         if (debug == True):
-            log.write(item + ' ') 
-            log.write(str(e))                                              
+            log.write(item + ' ')
+            log.write(str(e))
         pass
     if cached is not None:
         if (debug == True):

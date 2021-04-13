@@ -5,7 +5,7 @@
 # packages only when the user needs them, hence why we split upstream python
 # into several packages.
 #
-# In a very simplistic way what this does is: 
+# In a very simplistic way what this does is:
 # Launch python and see specifically what is required for it to run at a minimum
 #
 # Go through the python-manifest file and launch a separate task for every single
@@ -125,9 +125,9 @@ for coredep in output.split():
 
 
 # The second step is to loop through the existing files contained in the core package
-# according to the old manifest, identify if they are  modules, or some other type 
+# according to the old manifest, identify if they are  modules, or some other type
 # of file that we cant import (directories, binaries, configs) in which case we
-# can only assume they were added correctly (manually) so we ignore those and 
+# can only assume they were added correctly (manually) so we ignore those and
 # pass them to the manifest directly.
 
 for filedep in old_manifest['core']['files']:
@@ -204,7 +204,7 @@ for pypkg in old_manifest:
 # each of them by launching a separate task.
 # The output of that task is then parsed and the manifest is updated
 # accordingly, wether it should add the module on FILES for the current package
-# or if that module already belongs to another package then the current one 
+# or if that module already belongs to another package then the current one
 # will RDEPEND on it
 
 for pypkg in old_manifest:
@@ -225,7 +225,7 @@ for pypkg in old_manifest:
     print('Handling package %s' % pypkg)
     print('--------------------------')
 
-    # Handle special cases, we assume that when they were manually added 
+    # Handle special cases, we assume that when they were manually added
     # to the manifest we knew what we were doing.
     special_packages = ['misc', 'modules', 'dev', 'tests']
     if pypkg in special_packages or 'staticdev' in pypkg:
@@ -303,7 +303,7 @@ for pypkg in old_manifest:
             #
             # 2 - We do it the other way around, checking if the folder is contained in the path
             #   e.g. path/folder1/folder2/filename  folder_string= path/folder1/folder2
-            #   is folder_string inside path/folder1/folder2/filename?, 
+            #   is folder_string inside path/folder1/folder2/filename?,
             #   Yes, it works, but we waste a couple of milliseconds.
 
             pymodule_dep = pymodule_dep.replace(pyversion, '${PYTHON_MAJMIN}')
@@ -426,4 +426,3 @@ if (repeated):
     error_msg += '\n'.join(repeated)
     error_msg += '\n'
     sys.exit(error_msg)
-

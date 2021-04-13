@@ -201,7 +201,7 @@ class OETestLoader(unittest.TestLoader):
             # a setUpDecorators/tearDownDecorators that methods
             # will call setUp/tearDown original methods.
             setattr(testCaseClass, 'setUpMethod',
-                    getattr(testCaseClass, 'setUp')) 
+                    getattr(testCaseClass, 'setUp'))
             setattr(testCaseClass, 'tearDownMethod',
                     getattr(testCaseClass, 'tearDown'))
             setattr(testCaseClass, 'setUp', testCaseClass._oeSetUp)

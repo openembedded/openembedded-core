@@ -78,5 +78,3 @@ class GitRepo(object):
             return self.run_cmd(['symbolic-ref', 'HEAD'])[11:]
         except GitError:
             return None
-
-

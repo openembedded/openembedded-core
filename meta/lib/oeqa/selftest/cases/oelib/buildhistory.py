@@ -144,4 +144,3 @@ class TestFileListCompare(OESelftestTestCase):
 
         self.maxDiff = None
         self.assertCountEqual(rendered, expectedResult)
-

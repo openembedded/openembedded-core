@@ -36,7 +36,7 @@ class StorageBase(OERuntimeTestCase):
         msg = ('File %s not created on %s' % (cls.test_file, cls.device))
         cls.assertFalse(status, msg=msg)
         # move file
-        (status, output) = cls.target.run('mv %s/%s %s/%s1' %  
+        (status, output) = cls.target.run('mv %s/%s %s/%s1' %
                 (cls.test_dir, cls.test_file, cls.test_dir, cls.test_file))
         msg = ('File %s not moved to %s' % (cls.test_file, cls.device))
         cls.assertFalse(status, msg=msg)
@@ -47,7 +47,7 @@ class StorageBase(OERuntimeTestCase):
 
     def storage_read(cls):
         # check if message is in file
-        (status, output) = cls.target.run('cat  %s/%s' % 
+        (status, output) = cls.target.run('cat  %s/%s' %
                 (cls.test_dir, cls.test_file))
 
         match = re.search('%s' % cls.test_msg, output)
@@ -56,7 +56,7 @@ class StorageBase(OERuntimeTestCase):
 
     def storage_write(cls):
         # create test message in file on device
-        (status, output) = cls.target.run('echo "%s" >  %s/%s' % 
+        (status, output) = cls.target.run('echo "%s" >  %s/%s' %
                 (cls.test_msg, cls.test_dir, cls.test_file))
         msg = ('File %s not create test message on %s' % (cls.test_file, cls.device))
         cls.assertEqual(status, 0, msg=msg)

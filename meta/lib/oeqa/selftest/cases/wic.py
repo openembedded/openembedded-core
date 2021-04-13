@@ -247,7 +247,7 @@ class Wic(WicTestCase):
         runCmd(cmd)
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
         images = glob(self.resultdir + "mkefidisk-*.direct")
-        result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))       
+        result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))
         self.assertIn("kernel", result.output)
 
     def test_sdimage_bootpart(self):

@@ -91,7 +91,7 @@ def format_display(path, metadata):
 
 def copytree(src, dst):
     # We could use something like shutil.copytree here but it turns out to
-    # to be slow. It takes twice as long copying to an empty directory. 
+    # to be slow. It takes twice as long copying to an empty directory.
     # If dst already has contents performance can be 15 time slower
     # This way we also preserve hardlinks between files in the tree.
 
@@ -122,7 +122,7 @@ def copyhardlinktree(src, dst):
             bb.debug(2, "Hardlink test failed with " + str(e))
 
     if (canhard):
-        # Need to copy directories only with tar first since cp will error if two 
+        # Need to copy directories only with tar first since cp will error if two
         # writers try and create a directory at the same time
         cmd = "cd %s; find . -type d -print | tar --xattrs --xattrs-include='*' -cf - -S -C %s -p --no-recursion --files-from - | tar --xattrs --xattrs-include='*' -xhf - -C %s" % (src, src, dst)
         subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
