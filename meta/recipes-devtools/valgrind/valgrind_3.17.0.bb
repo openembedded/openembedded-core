@@ -55,7 +55,6 @@ COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64).*-linux'
 # argument. Change expected stderr files accordingly.
 do_patch_append() {
     bb.build.exec_func('do_sed_paths', d)
-    
 }
 
 do_sed_paths() {
@@ -157,7 +156,7 @@ do_install_ptest() {
     #
     # The regression tests require scripts and data files that are not
     # copied to the build directory.  They must be copied from the
-    # source directory. 
+    # source directory.
     saved_dir=$PWD
     for parent_dir in ${S} ${B} ; do
         cd $parent_dir
