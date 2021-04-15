@@ -11,10 +11,9 @@ PROVIDES = "drm"
 DEPENDS = "libpthread-stubs"
 
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.xz \
-           file://0001-meson-Also-search-for-rst2man.py.patch \
           "
 
-SRC_URI[sha256sum] = "d66ad8b5c2441015ac1333e40137bb803c3bde3612ff040286fcc12158ea1bcb"
+SRC_URI[sha256sum] = "1d1d024b7cadc63e2b59cddaca94f78864940ab440843841113fbac6afaf2a46"
 
 inherit meson pkgconfig manpages
 
