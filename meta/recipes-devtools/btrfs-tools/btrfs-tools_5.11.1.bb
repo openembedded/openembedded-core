@@ -15,12 +15,12 @@ LIC_FILES_CHKSUM = " \
 SECTION = "base"
 DEPENDS = "lzo util-linux zlib"
 DEPENDS_append_class-target = " udev"
-RDEPENDS_${PN} = "libgcc"
 
-SRCREV = "8d5051f279f7994fb80536ef8f846f06d121d898"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
+SRCREV = "8d5051f279f7994fb80536ef8f846f06d121d898"
+S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
     programs \
@@ -58,12 +58,13 @@ do_configure_prepend() {
 	cp -f $(automake --print-libdir)/install-sh ${S}/config/
 }
 
-S = "${WORKDIR}/git"
 
 do_install_append() {
     if [ "${@bb.utils.filter('PACKAGECONFIG', 'python', d)}" ]; then
         oe_runmake 'DESTDIR=${D}' 'PYTHON_SITEPACKAGES_DIR=${PYTHON_SITEPACKAGES_DIR}' install_python
     fi
 }
+
+RDEPENDS_${PN} = "libgcc"
 
 BBCLASSEXTEND = "native nativesdk"
