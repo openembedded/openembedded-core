@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = " \
     file://libbtrfsutil/COPYING.LESSER;md5=3000208d539ec061b899bce1d9ce9404 \
 "
 SECTION = "base"
-DEPENDS = "util-linux attr e2fsprogs lzo acl"
+DEPENDS = "lzo util-linux zlib"
 DEPENDS_append_class-target = " udev"
 RDEPENDS_${PN} = "libgcc"
 
@@ -22,16 +22,30 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
 
-PACKAGECONFIG ??= "python"
+PACKAGECONFIG ??= " \
+    programs \
+    convert \
+    python \
+    crypto-builtin \
+"
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
+PACKAGECONFIG[programs] = "--enable-programs,--disable-programs"
+PACKAGECONFIG[convert] = "--enable-convert --with-convert=ext2,--disable-convert --without-convert,e2fsprogs"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python3-setuptools-native"
 PACKAGECONFIG[zstd] = "--enable-zstd,--disable-zstd,zstd"
+
+# Pick only one crypto provider
+PACKAGECONFIG[crypto-builtin] = "--with-crypto=builtin"
+PACKAGECONFIG[crypto-libgcrypt] = "--with-crypto=libgcrypt,,libgcrypt"
+PACKAGECONFIG[crypto-libsodium] = "--with-crypto=libsodium,,libsodium"
+PACKAGECONFIG[crypto-libkcapi] = "--with-crypto=libkcapi,,libkcapi"
 
 inherit autotools-brokensep pkgconfig manpages
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'python', 'distutils3-base', '', d)}
 
 CLEANBROKEN = "1"
 
+EXTRA_OECONF = "--enable-largefile"
 EXTRA_OECONF_append_libc-musl = " --disable-backtrace "
 EXTRA_PYTHON_CFLAGS = "${DEBUG_PREFIX_MAP}"
 EXTRA_PYTHON_CFLAGS_class-native = ""
