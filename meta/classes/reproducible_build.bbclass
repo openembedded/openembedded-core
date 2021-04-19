@@ -66,7 +66,7 @@ python do_deploy_source_date_epoch_setscene () {
     if os.path.exists(sde_file):
         target = d.getVar('SDE_FILE')
         bb.debug(1, "Moving setscene SDE file %s -> %s" % (sde_file, target))
-        os.rename(sde_file, target)
+        bb.utils.rename(sde_file, target)
     else:
         bb.debug(1, "%s not found!" % sde_file)
 }
