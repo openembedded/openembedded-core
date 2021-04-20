@@ -29,6 +29,9 @@ SRC_URI_append_libc-musl = " \
            file://0004-Fix-error-on-musl.patch \
            file://0015-config-eu.am-do-not-use-Werror.patch \
            "
+SRC_URI_append_x86-x32 = " \
+           file://0001-debuginfod-debuginfod-client.c-correct-string-format.patch \
+           "
 SRC_URI[sha256sum] = "c3637c208d309d58714a51e61e63f1958808fead882e9b607506a29e5474f2c5"
 
 inherit autotools gettext ptest pkgconfig

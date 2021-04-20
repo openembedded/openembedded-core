@@ -1,0 +1,60 @@
+From f4231bfbb61cd4962638766a7072f4295ed39150 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Mon, 19 Apr 2021 23:29:10 +0200
+Subject: [PATCH] debuginfod/debuginfod-client.c: correct string format on x32
+
+Upstream-Status: Inappropriate [x32-specific; few, if any people care about it anymore]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+---
+ debuginfod/debuginfod-client.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/debuginfod/debuginfod-client.c b/debuginfod/debuginfod-client.c
+index de26af5..a840f23 100644
+--- a/debuginfod/debuginfod-client.c
++++ b/debuginfod/debuginfod-client.c
+@@ -229,7 +229,7 @@ debuginfod_init_cache (char *cache_path, char *interval_path, char *maxage_path)
+   if (fd < 0)
+     return -errno;
+ 
+-  if (dprintf(fd, "%ld", cache_clean_default_interval_s) < 0)
++  if (dprintf(fd, "%lld", cache_clean_default_interval_s) < 0)
+     return -errno;
+ 
+   /* init max age config file.  */
+@@ -237,7 +237,7 @@ debuginfod_init_cache (char *cache_path, char *interval_path, char *maxage_path)
+       && (fd = open(maxage_path, O_CREAT | O_RDWR, DEFFILEMODE)) < 0)
+     return -errno;
+ 
+-  if (dprintf(fd, "%ld", cache_default_max_unused_age_s) < 0)
++  if (dprintf(fd, "%lld", cache_default_max_unused_age_s) < 0)
+     return -errno;
+ 
+   return 0;
+@@ -263,7 +263,7 @@ debuginfod_clean_cache(debuginfod_client *c,
+       if (interval_file == NULL)
+         return -errno;
+ 
+-      int rc = fprintf(interval_file, "%ld", cache_clean_default_interval_s);
++      int rc = fprintf(interval_file, "%lld", cache_clean_default_interval_s);
+       fclose(interval_file);
+ 
+       if (rc < 0)
+@@ -275,7 +275,7 @@ debuginfod_clean_cache(debuginfod_client *c,
+   interval_file = fopen(interval_path, "r");
+   if (interval_file)
+     {
+-      if (fscanf(interval_file, "%ld", &clean_interval) != 1)
++      if (fscanf(interval_file, "%lld", &clean_interval) != 1)
+         clean_interval = cache_clean_default_interval_s;
+       fclose(interval_file);
+     }
+@@ -291,7 +291,7 @@ debuginfod_clean_cache(debuginfod_client *c,
+   max_unused_file = fopen(max_unused_path, "r");
+   if (max_unused_file)
+     {
+-      if (fscanf(max_unused_file, "%ld", &max_unused_age) != 1)
++      if (fscanf(max_unused_file, "%lld", &max_unused_age) != 1)
+         max_unused_age = cache_default_max_unused_age_s;
+       fclose(max_unused_file);
+     }
