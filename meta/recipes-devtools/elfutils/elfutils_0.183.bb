@@ -47,7 +47,7 @@ PACKAGECONFIG[xz] = "--with-lzma,--without-lzma,xz"
 PACKAGECONFIG[libdebuginfod] = "--enable-libdebuginfod,--disable-libdebuginfod,curl"
 PACKAGECONFIG[debuginfod] = "--enable-debuginfod,--disable-debuginfod,libarchive sqlite3 libmicrohttpd"
 
-RDEPENDS_${PN}-ptest += "libasm libelf bash make coreutils ${PN}-binutils"
+RDEPENDS_${PN}-ptest += "libasm libelf bash make coreutils ${PN}-binutils iproute2-ss bsdtar"
 
 EXTRA_OECONF_append_class-target = " --disable-tests-rpath"
 
@@ -89,6 +89,7 @@ do_install_ptest() {
 		cp -r ${B}/tests/*                      ${D}${PTEST_PATH}/tests
 		cp -r ${B}/config.h                     ${D}${PTEST_PATH}
 		cp -r ${B}/backends                     ${D}${PTEST_PATH}
+		cp -r ${B}/debuginfod                   ${D}${PTEST_PATH}
 		sed -i '/^Makefile:/c Makefile:'        ${D}${PTEST_PATH}/tests/Makefile
 		find ${D}${PTEST_PATH} -type f -name *.[hoc] | xargs -i rm {}
 	fi
@@ -145,6 +146,7 @@ INHIBIT_PACKAGE_STRIP_FILES = "\
     ${PKGD}${PTEST_PATH}/tests/backtrace-data \
     ${PKGD}${PTEST_PATH}/tests/backtrace-dwarf \
     ${PKGD}${PTEST_PATH}/tests/deleted \
+    ${PKGD}${PTEST_PATH}/tests/dwfllines \
     ${PKGD}${PTEST_PATH}/src/strip \
     ${PKGD}${PTEST_PATH}/src/addr2line \
     ${PKGD}${PTEST_PATH}/src/elfcmp \
@@ -162,4 +164,4 @@ INHIBIT_PACKAGE_STRIP_FILES = "\
     ${PKGD}${PTEST_PATH}/backends/libebl_x86_64.so \
 "
 
-PRIVATE_LIBS_${PN}-ptest = "libdw.so.1 libelf.so.1 libasm.so.1"
+PRIVATE_LIBS_${PN}-ptest = "libdw.so.1 libelf.so.1 libasm.so.1 libdebuginfod.so.1"
