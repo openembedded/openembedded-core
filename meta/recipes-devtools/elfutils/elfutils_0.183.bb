@@ -22,15 +22,13 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://ptest.patch \
            file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
            file://0001-add-support-for-ipkg-to-debuginfod.cxx.patch \
+           file://0001-debuginfod-debuginfod-client.c-correct-string-format.patch \
            "
 SRC_URI_append_libc-musl = " \
            file://0002-musl-libs.patch \
            file://0003-musl-utils.patch \
            file://0004-Fix-error-on-musl.patch \
            file://0015-config-eu.am-do-not-use-Werror.patch \
-           "
-SRC_URI_append_x86-x32 = " \
-           file://0001-debuginfod-debuginfod-client.c-correct-string-format.patch \
            "
 SRC_URI[sha256sum] = "c3637c208d309d58714a51e61e63f1958808fead882e9b607506a29e5474f2c5"
 
