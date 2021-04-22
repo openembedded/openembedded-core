@@ -113,40 +113,6 @@
     },
     {
         "test": {
-            "@alias": "bsps-hw.bsps-hw.standby",
-            "author": [
-                {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "boot system and launch terminal; check output of \"date\" and launch script \"continue.sh\"",
-                    "expected_results": ""
-                },
-                "2": {
-                    "action": "echo \"mem\" > /sys/power/state",
-                    "expected_results": ""
-                },
-                "3": {
-                    "action": "After system go into S3 mode, move mouse or press any key to make it resume (on NUC press power button)",
-                    "expected_results": ""
-                },
-                "4": {
-                    "action": "Check \"date\" and script \"continue.sh\"",
-                    "expected_results": ""
-                },
-                "5": {
-                    "action": "Check if application can work as normal \ncontinue.sh as below: \n \n#!/bin/sh \n \ni=1 \nwhile [ 0 ] \ndo \n echo $i \n sleep 1 \n i=$((i+1)) \ndone ",
-                    "expected_results": "Screen should resume back and script can run continuously incrementing the i's value from where it was before going to standby state. Date should be the same with the corresponding time increment."
-                }
-            },
-            "summary": "standby"
-        }
-    },
-    {
-        "test": {
             "@alias": "bsps-hw.bsps-hw.check_CPU_utilization_after_standby",
             "author": [
                 {
@@ -173,36 +139,6 @@
                 }
             },
             "summary": "check_CPU_utilization_after_standby"
-        }
-    },
-    {
-        "test": {
-            "@alias": "bsps-hw.bsps-hw.Test_if_LAN_device_works_well_after_resume_from_suspend_state",
-            "author": [
-                {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "boot system and launch terminal",
-                    "expected_results": ""
-                },
-                "2": {
-                    "action": "echo \"mem\" > /sys/power/state",
-                    "expected_results": ""
-                },
-                "3": {
-                    "action": "After system go into S3 mode, move mouse or press any key to make it resume",
-                    "expected_results": ""
-                },
-                "4": {
-                    "action": "check ping status  \n\nNote: This TC apply only for core-image-full-cmd.",
-                    "expected_results": "ping should always work before/after standby"
-                }
-            },
-            "summary": "Test_if_LAN_device_works_well_after_resume_from_suspend_state"
         }
     },
     {
