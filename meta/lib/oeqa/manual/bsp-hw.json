@@ -625,40 +625,6 @@
     },
     {
         "test": {
-            "@alias": "bsps-hw.bsps-hw.Check_if_RTC_(Real_Time_Clock)_can_work_correctly",
-            "author": [
-                {
-                    "email": "yi.zhao@windriver.com",
-                    "name": "yi.zhao@windriver.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "Read time from RTC registers.  root@localhost:/root> hwclock -r  Sun Mar 22 04:05:47 1970 -0.001948 seconds ",
-                    "expected_results": "Can read and set the time from RTC.\n"
-                },
-                "2": {
-                    "action": "Set system current time  root@localhost:/root> date 062309452008 ",
-                    "expected_results": ""
-                },
-                "3": {
-                    "action": "Synchronize the system current time to RTC registers  root@localhost:/root> hwclock -w ",
-                    "expected_results": ""
-                },
-                "4": {
-                    "action": "Read time from RTC registers  root@localhost:/root> hwclock -r ",
-                    "expected_results": ""
-                },
-                "5": {
-                    "action": "Reboot target and read time from RTC again\n",
-                    "expected_results": ""
-                }
-            },
-            "summary": "Check_if_RTC_(Real_Time_Clock)_can_work_correctly"
-        }
-    },
-    {
-        "test": {
             "@alias": "bsps-hw.bsps-hw.System_can_boot_up_via_NFS",
             "author": [
                 {
