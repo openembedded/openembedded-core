@@ -143,36 +143,6 @@
     },
     {
         "test": {
-            "@alias": "bsps-hw.bsps-hw.Test_if_usb_hid_device_works_well_after_resume_from_suspend_state",
-            "author": [
-                {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "boot system and launch terminal",
-                    "expected_results": ""
-                },
-                "2": {
-                    "action": "echo \"mem\" > /sys/power/state",
-                    "expected_results": ""
-                },
-                "3": {
-                    "action": "After system go into S3 mode, resume the device by pressing the power button or using HID devices",
-                    "expected_results": "Devices resumes "
-                },
-                "4": {
-                    "action": "check usb mouse and keyboard",
-                    "expected_results": "Usb mouse and keyboard should work"
-                }
-            },
-            "summary": "Test_if_usb_hid_device_works_well_after_resume_from_suspend_state"
-        }
-    },
-    {
-        "test": {
             "@alias": "bsps-hw.bsps-hw.Add_multiple_files_in_media_player",
             "author": [
                 {
