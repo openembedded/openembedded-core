@@ -173,28 +173,6 @@
     },
     {
         "test": {
-            "@alias": "bsps-hw.bsps-hw.click_terminal_icon_on_X_desktop",
-            "author": [
-                {
-                    "email": "alexandru.c.georgescu@intel.com",
-                    "name": "alexandru.c.georgescu@intel.com"
-                }
-            ],
-            "execution": {
-                "1": {
-                    "action": "After system launch and X start up, click terminal icon on desktop",
-                    "expected_results": ""
-                },
-                "2": {
-                    "action": "Check if only one terminal window launched and no other problem met",
-                    "expected_results": "There should be no problem after launching terminal . "
-                }
-            },
-            "summary": "click_terminal_icon_on_X_desktop"
-        }
-    },
-    {
-        "test": {
             "@alias": "bsps-hw.bsps-hw.Add_multiple_files_in_media_player",
             "author": [
                 {
