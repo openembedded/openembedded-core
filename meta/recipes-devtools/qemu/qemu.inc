@@ -43,6 +43,16 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2021-3409_4.patch \
            file://CVE-2021-3409_5.patch \
            file://CVE-2021-3409_6.patch \
+           file://CVE-2021-3416_1.patch \
+           file://CVE-2021-3416_2.patch \
+           file://CVE-2021-3416_3.patch \
+           file://CVE-2021-3416_4.patch \
+           file://CVE-2021-3416_5.patch \
+           file://CVE-2021-3416_6.patch \
+           file://CVE-2021-3416_7.patch \
+           file://CVE-2021-3416_8.patch \
+           file://CVE-2021-3416_9.patch \
+           file://CVE-2021-3416_10.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
