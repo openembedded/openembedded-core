@@ -1,5 +1,6 @@
 SUMMARY = "Python support for YAML"
 DEPENDS += "libyaml ${PYTHON_PN}-cython-native"
+HOMEPAGE = "https://pyyaml.org/"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6d8242660a8371add5fe547adf083079"
