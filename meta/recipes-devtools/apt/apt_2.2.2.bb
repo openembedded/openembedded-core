@@ -12,6 +12,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/${BPN}_${PV}.tar.xz \
            file://0001-CMakeLists.txt-avoid-changing-install-paths-based-on.patch \
            file://0001-srvrec-Keep-support-for-older-resolver.patch \
            file://0001-cmake-Do-not-build-po-files.patch \
+           file://0001-Hide-fstatat64-and-prlimit64-defines-on-musl.patch \
            "
 
 SRC_URI_append_class-native = " \
