@@ -42,6 +42,10 @@ do_install_ptest() {
     for file in $(find tools/* -executable -type f); do
         install -m 744 ${S}/${file} ${D}/${PTEST_PATH}/tools
     done
+    # Overwrite libtool wrappers with real executables
+    for file in $(find tools/.libs/* -executable -type f); do
+        install -m 744 ${S}/${file} ${D}/${PTEST_PATH}/tools
+    done
 }
 
 FILES_${PN} = "${bindir} ${libdir}/${BPN}.so*"
