@@ -25,4 +25,5 @@ timeout ${TIMEOUT} dd if=/dev/zero of=oe-time-dd-test.dat bs=1024 count=$1 conv=
 if [ $? -ne 0 ]; then
 	echo "Timeout used: ${TIMEOUT}"
 	top -c -b -n1 -w 512
+	tail -30 tmp*/log/cooker/*/console-latest.log
 fi
