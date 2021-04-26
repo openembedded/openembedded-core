@@ -145,12 +145,13 @@ def write_license_files(d, license_manifest, pkg_dic, rootfs=True):
                             continue
 
                         # Make sure we use only canonical name for the license file
-                        rootfs_license = os.path.join(rootfs_license_dir, "generic_%s" % generic_lic)
+                        generic_lic_file = "generic_%s" % generic_lic
+                        rootfs_license = os.path.join(rootfs_license_dir, generic_lic_file)
                         if not os.path.exists(rootfs_license):
                             oe.path.copyhardlink(pkg_license, rootfs_license)
 
                         if not os.path.exists(pkg_rootfs_license):
-                            os.symlink(os.path.join('..', lic), pkg_rootfs_license)
+                            os.symlink(os.path.join('..', generic_lic_file), pkg_rootfs_license)
                     else:
                         if (oe.license.license_ok(canonical_license(d,
                                 lic), bad_licenses) == False or
