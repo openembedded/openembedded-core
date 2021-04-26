@@ -30,7 +30,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://mmap2.patch \
            file://determinism.patch \
            file://0001-tests-meson.build-use-relative-path-to-refer-to-file.patch \
-	   file://CVE-2021-20203.patch \
+           file://CVE-2021-20203.patch \
            file://CVE-2020-35517_1.patch \
            file://CVE-2020-35517_2.patch \
            file://CVE-2020-35517_3.patch \
