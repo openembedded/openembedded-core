@@ -34,9 +34,7 @@ PR = "r4"
 HASHEQUIV_HASH_VERSION .= ".4"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
-           file://0001-build-Add-option-to-select-libc-implementation.patch \
            file://0007-Fix-test_proc_kill-hanging.patch \
-           file://0001-Add-more-musl-exclusions.patch \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://determinism.patch \
            file://0001-open_posix_testsuite-generate-makefiles.sh-Avoid-inc.patch \
@@ -78,7 +76,7 @@ do_install(){
     find ${D}${prefix} -name Makefile | xargs -n 1 sed -i \
          -e 's@[^ ]*-fdebug-prefix-map=[^ "]*@@g' \
          -e 's@[^ ]*-fmacro-prefix-map=[^ "]*@@g' \
-         -e 's@[^ ]*--sysroot=[^ "]*@@g' 
+         -e 's@[^ ]*--sysroot=[^ "]*@@g'
 
     # The controllers memcg_stree test seems to cause us hangs and takes 900s
     # (maybe we expect more regular output?), anyhow, skip it
@@ -120,6 +118,26 @@ FILES_${PN} += "${prefix}/* ${prefix}/runtest/* ${prefix}/scenario_groups/* ${pr
 # Avoid stripping some generated binaries otherwise some of the ltp tests such as ldd01 & nm01 fail
 INHIBIT_PACKAGE_STRIP_FILES = "${prefix}/testcases/bin/nm01 ${prefix}/testcases/bin/ldd01"
 INSANE_SKIP_${PN} += "already-stripped staticdev"
+
+remove_broken_musl_sources() {
+	[ "${TCLIBC}" = "musl" ] || return 0
+
+	cd ${S}
+	echo "WARNING: remove unsupported tests (until they're fixed)"
+
+	# sync with upstream
+	# https://github.com/linux-test-project/ltp/blob/master/travis/alpine.sh#L33
+	rm -rfv \
+		testcases/kernel/sched/process_stress/process.c \
+		testcases/kernel/syscalls/confstr/confstr01.c \
+		testcases/kernel/syscalls/fmtmsg/fmtmsg01.c \
+		testcases/kernel/syscalls/getcontext/getcontext01.c \
+		testcases/kernel/syscalls/rt_tgsigqueueinfo/rt_tgsigqueueinfo01.c \
+		testcases/kernel/syscalls/timer_create/timer_create01.c \
+		testcases/kernel/syscalls/timer_create/timer_create03.c \
+		utils/benchmark/ebizzy-0.3
+}
+do_patch[postfuncs] += "remove_broken_musl_sources"
 
 # Avoid file dependency scans, as LTP checks for things that may or may not
 # exist on the running system.  For instance it has specific checks for
