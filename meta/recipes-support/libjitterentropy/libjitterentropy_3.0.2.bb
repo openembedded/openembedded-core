@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c69090e97c8fd6372d03099c0a5bc382 \
                     file://COPYING.bsd;md5=66a5cedaf62c4b2637025f049f9b826f \
                     "
 SRC_URI = "git://github.com/smuellerDD/jitterentropy-library.git"
-SRCREV = "747bf030b0ea9c44548b4e29bcfab7ae416675fc"
+SRCREV = "a0c51e21c2d4322681a320a22de5e2ef13c08196"
 S = "${WORKDIR}/git"
 
 do_configure[noexec] = "1"
