@@ -60,6 +60,7 @@ DEBUG_PREFIX_MAP_class-target = " \
    -fdebug-prefix-map=${S}/libiberty=${REL_S}/libstdc++-v3/../libiberty \
    -fdebug-prefix-map=${S}/libgcc=${REL_S}/libstdc++-v3/../libgcc \
    -fdebug-prefix-map=${B}=${REL_S} \
+   -ffile-prefix-map=${B}/${HOST_SYS}/libstdc++-v3/include=${includedir}/c++/${BINV} \
    "
 
 do_configure () {
