@@ -10,7 +10,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "git://gitlab.gnome.org/GNOME/libhandy.git;protocol=https"
-SRCREV = "e6e5b4f747d43f10ad2af18060bf1c1d034c9c1a"
+SRCREV = "09f36006b26f41a2bb383b0c853e954c5792cfe1"
 S = "${WORKDIR}/git"
 
 GIR_MESON_ENABLE_FLAG = 'enabled'
