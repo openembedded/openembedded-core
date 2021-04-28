@@ -76,6 +76,7 @@ do_install(){
     find ${D}${prefix} -name Makefile | xargs -n 1 sed -i \
          -e 's@[^ ]*-fdebug-prefix-map=[^ "]*@@g' \
          -e 's@[^ ]*-fmacro-prefix-map=[^ "]*@@g' \
+         -e 's@[^ ]*-ffile-prefix-map=[^ "]*@@g' \
          -e 's@[^ ]*--sysroot=[^ "]*@@g'
 
     # The controllers memcg_stree test seems to cause us hangs and takes 900s
