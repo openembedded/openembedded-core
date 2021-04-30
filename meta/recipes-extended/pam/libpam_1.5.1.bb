@@ -154,6 +154,7 @@ do_install_ptest() {
     if [ ${PTEST_ENABLED} = "1" ]; then
         mkdir -p ${D}${PTEST_PATH}/tests
         install -m 0755 ${B}/tests/.libs/* ${D}${PTEST_PATH}/tests
+        install -m 0644 ${S}/tests/confdir ${D}${PTEST_PATH}/tests
     fi
 }
 
