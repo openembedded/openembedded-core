@@ -1,4 +1,4 @@
-From 4b0d41a315e66f688fef7b0c2e2b6ce9fa16ec93 Mon Sep 17 00:00:00 2001
+From 133870f12ba36686dd8df1311fac32a4c5b28579 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:24:46 +0000
 Subject: [PATCH] __ieee754_sqrt{,f} are now inline functions and call out

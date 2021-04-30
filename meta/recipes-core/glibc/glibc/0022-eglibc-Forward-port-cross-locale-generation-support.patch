@@ -1,4 +1,4 @@
-From 557ed640b26bd208ce8d4a6fd725b124893668d7 Mon Sep 17 00:00:00 2001
+From 4e5de801a39d66b8bd93d09f5912dcbe5db4ef04 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 01:33:49 +0000
 Subject: [PATCH] eglibc: Forward port cross locale generation support
@@ -148,7 +148,7 @@ index 4841bfd05d..ffcba1fd79 100644
    return NULL;
  }
 diff --git a/locale/programs/ld-collate.c b/locale/programs/ld-collate.c
-index 0af21e05e2..4980b0c52f 100644
+index b6406b775d..bfa4adba9c 100644
 --- a/locale/programs/ld-collate.c
 +++ b/locale/programs/ld-collate.c
 @@ -349,7 +349,7 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
@@ -160,7 +160,7 @@ index 0af21e05e2..4980b0c52f 100644
        uint32_t zero = 0;
        /* Handle <U0000> as a single character.  */
        if (nwcs == 0)
-@@ -1772,8 +1772,7 @@ symbol `%s' has the same encoding as"), (*eptr)->name);
+@@ -1775,8 +1775,7 @@ symbol `%s' has the same encoding as"), (*eptr)->name);
  
  	      if ((*eptr)->nwcs == runp->nwcs)
  		{
@@ -170,7 +170,7 @@ index 0af21e05e2..4980b0c52f 100644
  
  		  if (c == 0)
  		    {
-@@ -2000,9 +1999,9 @@ add_to_tablewc (uint32_t ch, struct element_t *runp)
+@@ -2003,9 +2002,9 @@ add_to_tablewc (uint32_t ch, struct element_t *runp)
  	     one consecutive entry.  */
  	  if (runp->wcnext != NULL
  	      && runp->nwcs == runp->wcnext->nwcs
@@ -183,7 +183,7 @@ index 0af21e05e2..4980b0c52f 100644
  	      && (runp->wcs[runp->nwcs - 1]
  		  == runp->wcnext->wcs[runp->nwcs - 1] + 1))
  	    {
-@@ -2026,9 +2025,9 @@ add_to_tablewc (uint32_t ch, struct element_t *runp)
+@@ -2029,9 +2028,9 @@ add_to_tablewc (uint32_t ch, struct element_t *runp)
  		runp = runp->wcnext;
  	      while (runp->wcnext != NULL
  		     && runp->nwcs == runp->wcnext->nwcs

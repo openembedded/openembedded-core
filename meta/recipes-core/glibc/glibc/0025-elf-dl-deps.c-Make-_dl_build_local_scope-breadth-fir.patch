@@ -1,4 +1,4 @@
-From f8289aa320b00f6db43213979cceab2325a7a611 Mon Sep 17 00:00:00 2001
+From 50b605dece16606dd9d1c737e579c13725eab11d Mon Sep 17 00:00:00 2001
 From: Mark Hatle <mark.hatle@windriver.com>
 Date: Thu, 18 Aug 2016 14:07:58 -0500
 Subject: [PATCH] elf/dl-deps.c: Make _dl_build_local_scope breadth first

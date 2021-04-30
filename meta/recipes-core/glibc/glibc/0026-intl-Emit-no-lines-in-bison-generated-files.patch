@@ -1,4 +1,4 @@
-From 3156464f9a95bf1dafd2e22d19d7bf89c520acc1 Mon Sep 17 00:00:00 2001
+From 99ab34278a6ebec134267412b4f619f43e278dea Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 3 Aug 2018 09:44:00 -0700
 Subject: [PATCH] intl: Emit no lines in bison generated files
