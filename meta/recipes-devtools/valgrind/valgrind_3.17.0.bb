@@ -233,6 +233,9 @@ do_install_ptest() {
     # https://bugs.kde.org/show_bug.cgi?id=402833
     rm ${D}${PTEST_PATH}/memcheck/tests/overlap.vgtest
 
+    # This is known failure see https://bugs.kde.org/show_bug.cgi?id=435732
+    rm ${D}${PTEST_PATH}/memcheck/tests/leak_cpp_interior.vgtest
+
     # As the binary isn't stripped or debug-splitted, the source file isn't fetched
     # via dwarfsrcfiles either, so it needs to be installed manually.
     mkdir -p ${D}/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}/${BP}/none/tests/
