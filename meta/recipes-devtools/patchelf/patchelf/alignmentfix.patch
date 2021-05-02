@@ -31,12 +31,14 @@ Index: git/src/patchelf.cc
 ===================================================================
 --- git.orig/src/patchelf.cc
 +++ git/src/patchelf.cc
-@@ -1035,6 +1035,8 @@ void ElfFile<ElfFileParamNames>::normali
-                 phdrs.push_back(new_phdr);
- 
-             curr_off += size;
-+            /* The next section offset would be aligned */
-+            curr_off = roundUp(curr_off, sectionAlignment);
-         }
-     }
-     wri(hdr->e_phnum, phdrs.size());
+@@ -1010,8 +1010,9 @@ void ElfFile<ElfFileParamNames>::normali
+             size_t size = 0;
+             for (const auto & shdr : shdrs) {
+                 if (rdi(shdr.sh_type) != SHT_NOTE) continue;
+-                if (rdi(shdr.sh_offset) != curr_off) continue;
++                if (rdi(shdr.sh_offset) != roundUp(curr_off, rdi(shdr.sh_addralign))) continue;
+                 size = rdi(shdr.sh_size);
++                curr_off = roundUp(curr_off, rdi(shdr.sh_addralign));
+                 break;
+             }
+             if (size == 0)
