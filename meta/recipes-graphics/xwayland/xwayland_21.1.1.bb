@@ -17,5 +17,10 @@ REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
 DEPENDS += "xorgproto xtrans pixman libxkbfile libxfont2 wayland wayland-native wayland-protocols libdrm libepoxy"
 
+do_install_append() {
+    # remove files not needed and clashing with xserver-xorg
+    rm -rf ${D}/${libdir}/xorg/
+}
+
 FILES_${PN} += "${libdir}/xorg/protocol.txt"
 
