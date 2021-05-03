@@ -18,8 +18,8 @@ S = "${WORKDIR}/gstreamer-${PV}"
 SRC_URI = "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz \
            file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
            file://0002-Remove-unused-valgrind-detection.patch \
-           file://0003-meson-Add-option-for-installed-tests.patch \
-           file://0001-tests-seek-Don-t-use-too-strict-timeout-for-validati.patch \
+           file://0003-tests-seek-Don-t-use-too-strict-timeout-for-validati.patch \
+           file://0004-meson-Add-option-for-installed-tests.patch \
            "
 SRC_URI[sha256sum] = "9aeec99b38e310817012aa2d1d76573b787af47f8a725a65b833880a094dfbc5"
 
