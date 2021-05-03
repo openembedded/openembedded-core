@@ -47,6 +47,7 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://rev.cfg \
            file://pgrep.cfg \
            file://0001-decompress_gunzip-Fix-DoS-if-gzip-is-corrupt.patch \
+           file://0001-gen_build_files-Use-C-locale-when-calling-sed-on-glo.patch \
            "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
