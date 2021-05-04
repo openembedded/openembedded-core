@@ -95,7 +95,6 @@ do_configure_class-nativesdk() {
 do_configure_class-native() {
     ./configure --prefix=${prefix} \
     -Dbin=${bindir}/perl-native \
-    -Dperlpath=${bindir}/perl-native/perl \
     -Duseshrplib \
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
@@ -172,8 +171,8 @@ do_install_append_class-native () {
     create_wrapper ${D}${bindir}/perl-native/perl PERL5LIB='$PERL5LIB:${STAGING_LIBDIR}/perl5/site_perl/${PV}:${STAGING_LIBDIR}/perl5/vendor_perl/${PV}:${STAGING_LIBDIR}/perl5/${PV}'
 
     # Use /usr/bin/env nativeperl for the perl script.
-    for f in `grep -Il '#! *${bindir}/perl-native.*/perl' ${D}/${bindir}/*`; do
-            sed -i -e 's|${bindir}/perl-native.*/perl|/usr/bin/env nativeperl|' $f
+    for f in `grep -Il '#! *${bindir}/perl' ${D}/${bindir}/*`; do
+            sed -i -e 's|${bindir}/perl|/usr/bin/env nativeperl|' $f
     done
 }
 
