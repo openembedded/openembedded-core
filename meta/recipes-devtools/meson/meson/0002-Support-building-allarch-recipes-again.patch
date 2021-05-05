@@ -1,4 +1,4 @@
-From 6efb6114836fd4a1e012aa03b37f3beeeb22b466 Mon Sep 17 00:00:00 2001
+From ac1021a3abf612e8be9b19eecb97062e0c314701 Mon Sep 17 00:00:00 2001
 From: Peter Kjellerstedt <pkj@axis.com>
 Date: Thu, 26 Jul 2018 16:32:49 +0200
 Subject: [PATCH] Support building allarch recipes again
