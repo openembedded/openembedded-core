@@ -15,7 +15,6 @@ inherit autotools gettext texinfo pkgconfig
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-Use-pkg-config-to-find-pth-instead-of-pth-config.patch \
            file://0002-use-pkgconfig-instead-of-npth-config.patch \
            file://0003-dirmngr-uses-libgpg-error.patch \
            file://0004-autogen.sh-fix-find-version-for-beta-checking.patch \
@@ -25,7 +24,7 @@ SRC_URI_append_class-native = " file://0001-configure.ac-use-a-custom-value-for-
                                 file://relocate.patch"
 SRC_URI_append_class-nativesdk = " file://relocate.patch"
 
-SRC_URI[sha256sum] = "34e60009014ea16402069136e0a5f63d9b65f90096244975db5cea74b3d02399"
+SRC_URI[sha256sum] = "c498db346a9b9a4b399e514c8f56dfc0a888ce8f327f10376ff984452cd154ec"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
