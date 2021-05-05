@@ -16,9 +16,11 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git \
            file://0030-Run-python-scripts-using-env.patch \
            file://0001-set-python-path-for-completion_helper.patch \
            file://0001-dnf-write-the-log-lock-to-root.patch \
+           file://0001-dnf-rpm-miscutils.py-fix-usage-of-_.patch \
+           file://0002-dnf-rpm-miscutils.py-do-not-hardcode-usr-bin-rpmkeys.patch \
            "
 
-SRCREV = "c826d7db401ebf9b59b2fa74570a919e4af2673e"
+SRCREV = "395541fbf8f87f81cdca7567f22be1182e55bea7"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
