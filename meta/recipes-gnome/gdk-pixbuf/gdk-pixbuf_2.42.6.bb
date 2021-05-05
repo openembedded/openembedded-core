@@ -22,41 +22,30 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://fatal-loader.patch \
            file://0001-Work-around-thumbnailer-cross-compile-failure.patch \
            file://0001-Fix-a-couple-of-decisions-around-cross-compilation.patch \
-           file://0004-Do-not-run-tests-when-building.patch \
            file://0006-Build-thumbnailer-and-tests-also-in-cross-builds.patch \
-           file://missing-test-data.patch \
-           file://CVE-2020-29385.patch \
+           file://0001-Work-around-thumbnailer-and-pixdata-cross-compile-fa.patch \
            "
 
-SRC_URI_append_class-target = " \
-           file://0003-target-only-Work-around-thumbnailer-cross-compile-fa.patch \
-           "
-SRC_URI_append_class-nativesdk = " \
-           file://0003-target-only-Work-around-thumbnailer-cross-compile-fa.patch \
-           "
-
-SRC_URI[md5sum] = "05eb1ebc258ba905f1c8644ef49de064"
-SRC_URI[sha256sum] = "1582595099537ca8ff3b99c6804350b4c058bb8ad67411bbaae024ee7cead4e6"
+SRC_URI[sha256sum] = "c4a6b75b7ed8f58ca48da830b9fa00ed96d668d3ab4b1f723dcf902f78bde77f"
 
 inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gtk-doc lib_package
 
-GIR_MESON_OPTION = 'gir'
+GIR_MESON_OPTION = 'introspection'
+GIR_MESON_ENABLE_FLAG = "enabled"
+GIR_MESON_DISABLE_FLAG = "disabled"
 
 LIBV = "2.10.0"
 
 GDK_PIXBUF_LOADERS ?= "png jpeg"
 
 PACKAGECONFIG = "${GDK_PIXBUF_LOADERS} \
-                 ${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} \
                  ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 PACKAGECONFIG_class-native = "${GDK_PIXBUF_LOADERS}"
 
 PACKAGECONFIG[png] = "-Dpng=true,-Dpng=false,libpng"
 PACKAGECONFIG[jpeg] = "-Djpeg=true,-Djpeg=false,jpeg"
 PACKAGECONFIG[tiff] = "-Dtiff=true,-Dtiff=false,tiff"
-PACKAGECONFIG[jpeg2000] = "-Djasper=true,-Djasper=false,jasper"
 PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
-PACKAGECONFIG[x11] = "-Dx11=true,-Dx11=false,virtual/libx11"
 
 PACKAGES =+ "${PN}-xlib"
 
