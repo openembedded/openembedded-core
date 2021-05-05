@@ -21,8 +21,7 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/acl/${BP}.tar.gz \
            file://0001-test-patch-out-failing-bits.patch \
            "
 
-SRC_URI[md5sum] = "007aabf1dbb550bcddde52a244cd1070"
-SRC_URI[sha256sum] = "06be9865c6f418d851ff4494e12406568353b891ffe1f596b34693c387af26c7"
+SRC_URI[sha256sum] = "760c61c68901b37fdd5eefeeaf4c0c7a26bdfdd8ac747a1edff1ce0e243c11af"
 
 inherit autotools gettext ptest
 
