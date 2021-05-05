@@ -1,4 +1,3 @@
-
 SUMMARY = "X Window System unified protocol definitions"
 DESCRIPTION = "This package provides the headers and specification documents defining \
 the core protocol and (many) extensions for the X Window System"
@@ -7,11 +6,10 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xorg"
 
 SECTION = "x11/libs"
 LICENSE = "MIT-style"
-LIC_FILES_CHKSUM = "file://COPYING-x11proto;md5=b9e051107d5628966739a0b2e9b32676"
+LIC_FILES_CHKSUM = "file://COPYING-x11proto;md5=dfc4bd2b0568b31725b85b0604e69b56"
 
 SRC_URI = "${XORG_MIRROR}/individual/proto/${BP}.tar.bz2"
-SRC_URI[md5sum] = "c29f4fa78f53b52b3efdc71ebd9506b6"
-SRC_URI[sha256sum] = "54a153f139035a376c075845dd058049177212da94d7a9707cf9468367b699d2"
+SRC_URI[sha256sum] = "4c732b14fc7c7db64306374d9e8386d6172edbb93f587614df1938b9d9b9d737"
 
 inherit meson
 
