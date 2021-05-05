@@ -16,5 +16,4 @@ PE = "1"
 
 XORG_PN = "libXres"
 
-SRC_URI[md5sum] = "5d6d443d1abc8e1f6fc1c57fb27729bb"
-SRC_URI[sha256sum] = "ff75c1643488e64a7cfbced27486f0f944801319c84c18d3bd3da6bf28c812d4"
+SRC_URI[sha256sum] = "b6e6fb1ebb61610e56017edd928fb89a5f53b3f4f990078309877468663b2b11"
