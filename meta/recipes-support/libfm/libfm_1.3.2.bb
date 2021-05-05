@@ -18,8 +18,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pcmanfm/libfm-${PV}.tar.xz \
            file://0001-Do-not-add-library-path-to-avoid-host-contamination.patch \
            "
 
-SRC_URI[md5sum] = "c15ecd2c9317e2c385cd3f046d0b61ba"
-SRC_URI[sha256sum] = "96b1244bde41ca0eef0332cfb5c67bb16725dfd102128f3e6f74fadc13a1cfe4"
+SRC_URI[sha256sum] = "a5042630304cf8e5d8cff9d565c6bd546f228b48c960153ed366a34e87cad1e5"
 
 inherit autotools pkgconfig gtk-doc gettext features_check mime mime-xdg
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
