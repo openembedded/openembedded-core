@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 
 GNOMEBASEBUILDCLASS = "meson"
 
-inherit gnomebase gtk-doc ptest-gnome upstream-version-is-even gobject-introspection
+inherit gnomebase gi-docgen ptest-gnome upstream-version-is-even gobject-introspection
 
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
@@ -31,7 +31,6 @@ PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
 PACKAGECONFIG[tests] = "-Dinstall-tests=true, -Dinstall-tests=false"
 PACKAGECONFIG[thai] = ",,libthai"
 
-GTKDOC_MESON_OPTION = "gtk_doc"
 GIR_MESON_OPTION = 'introspection'
 
 do_configure_prepend() {
