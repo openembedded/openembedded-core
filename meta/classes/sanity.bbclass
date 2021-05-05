@@ -392,9 +392,12 @@ def check_connectivity(d):
             msg = data.getVar('CONNECTIVITY_CHECK_MSG') or ""
             if len(msg) == 0:
                 msg = "%s.\n" % err
-                msg += "    Please ensure your host's network is configured correctly,\n"
-                msg += "    or set BB_NO_NETWORK = \"1\" to disable network access if\n"
-                msg += "    all required sources are on local disk.\n"
+                msg += "    Please ensure your host's network is configured correctly.\n"
+                msg += "    If your ISP or network is blocking the above URL,\n"
+                msg += "    try with another domain name, for example by setting:\n"
+                msg += "    CONNECTIVITY_CHECK_URIS = \"https://www.yoctoproject.org/\""
+                msg += "    You could also set BB_NO_NETWORK = \"1\" to disable network\n"
+                msg += "    access if all required sources are on local disk.\n"
             retval = msg
 
     return retval
