@@ -18,12 +18,9 @@ GIR_MESON_OPTION = 'gir'
 
 inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-introspection
 
-SRCREV = "2520d6b6785646ceb5f501f9c37a1a0307fa4486"
-SRC_URI = "git://gitlab.gnome.org/GNOME/vte.git;protocol=https;branch=vte-0-64"
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch"
-
-S = "${WORKDIR}/git"
+SRC_URI[archive.sha256sum] = "c0c60b8dc343167437c86d984b0cf134df86034180ed70513f683006ada3ec41"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
