@@ -304,7 +304,7 @@ class QemuRunner:
                 self.logger.debug("QMP Port does not exist waiting for it to be created")
                 endtime = time.time() + self.runqemutime
                 while not os.path.exists(qmp_port) and self.is_alive() and time.time() < endtime:
-                   self.logger.warning("QMP port does not exist yet!")
+                   self.logger.info("QMP port does not exist yet!")
                    time.sleep(0.5)
                 if not os.path.exists(qmp_port) and self.is_alive():
                     self.logger.warning("QMP Port still does not exist but QEMU is alive")
