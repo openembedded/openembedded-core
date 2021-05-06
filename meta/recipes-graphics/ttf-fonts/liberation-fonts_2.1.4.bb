@@ -2,7 +2,7 @@ SUMMARY = "Liberation(tm) Fonts"
 DESCRIPTION = "The Liberation(tm) Fonts is a font family originally \
 created by Ascender(c) which aims at metric compatibility with \
 Arial, Times New Roman, Courier New."
-HOMEPAGE = "https://releases.pagure.org/liberation-fonts/"
+HOMEPAGE = "https://github.com/liberationfonts/liberation-fonts"
 BUGTRACKER = "https://bugzilla.redhat.com/"
 
 SECTION = "x11/fonts"
@@ -10,21 +10,13 @@ LICENSE = "OFL-1.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f96db970a9a46c5369142b99f530366b"
 PE = "1"
 
-# remove at next version upgrade or when output changes
-PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".2"
-
-inherit allarch fontcache
-
-FONT_PACKAGES = "${PN}"
-
-SRC_URI = "https://releases.pagure.org/liberation-fonts/liberation-fonts-ttf-${PV}.tar.gz \
+SRC_URI = "https://github.com/liberationfonts/liberation-fonts/files/6418984/liberation-fonts-ttf-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
+SRC_URI[sha256sum] = "26f85412dd0aa9d061504a1cc8aaf0aa12a70710e8d47d8b65a1251757c1a5ef"
 
 S = "${WORKDIR}/liberation-fonts-ttf-${PV}"
 
-SRC_URI[md5sum] = "5c781723a0d9ed6188960defba8e91cf"
-SRC_URI[sha256sum] = "7890278a6cd17873c57d9cd785c2d230d9abdea837e96516019c5885dd271504"
+inherit allarch fontcache
 
 do_install () {
 	install -d ${D}${datadir}/fonts/ttf/
