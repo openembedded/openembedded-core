@@ -14,6 +14,7 @@ PTESTS_FAST = "\
     diffutils-ptest \
     elfutils-ptest \
     ethtool-ptest \
+    expat-ptest \
     flex-ptest \
     gawk-ptest \
     gdbm-ptest \
