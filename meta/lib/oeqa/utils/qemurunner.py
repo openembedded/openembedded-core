@@ -646,7 +646,7 @@ class LoggingThread(threading.Thread):
             data = self.readsock.recv(count)
         except socket.error as e:
             if e.errno == errno.EAGAIN or e.errno == errno.EWOULDBLOCK:
-                return ''
+                return b''
             else:
                 raise
 
@@ -659,7 +659,7 @@ class LoggingThread(threading.Thread):
             # until qemu exits.
             if not self.canexit:
                 raise Exception("Console connection closed unexpectedly")
-            return ''
+            return b''
 
         return data
 
