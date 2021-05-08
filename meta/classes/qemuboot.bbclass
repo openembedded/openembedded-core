@@ -83,7 +83,7 @@
 # See "runqemu help" for more info
 
 QB_MEM ?= "-m 256"
-QB_SMP ?= "-smp 4"
+QB_SMP ?= ""
 QB_SERIAL_OPT ?= "-serial mon:stdio -serial null"
 QB_DEFAULT_KERNEL ?= "${KERNEL_IMAGETYPE}"
 QB_DEFAULT_FSTYPE ?= "ext4"

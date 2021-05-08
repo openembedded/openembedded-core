@@ -1,5 +1,6 @@
 # For runqemu
 IMAGE_CLASSES += "qemuboot"
+QB_SMP = "-smp 4"
 QB_CPU_x86 = "-cpu core2duo"
 QB_CPU_KVM_x86 = "-cpu core2duo"
 
