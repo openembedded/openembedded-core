@@ -22,7 +22,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0001-kexec-arch-ppc-kexec-ppc.c-correct-double-definition.patch \
            "
 
-SRC_URI[sha256sum] = "b3d4cfd2ba10d68ce341ea3b8ca414d00a0b6183b95686172154f94bce834f94"
+SRC_URI[sha256sum] = "40623d4321be2865ef9ea2cd6ec998d31dcf93d0f74353cbd3aa06d8821e3e41"
 
 inherit autotools update-rc.d systemd
 
