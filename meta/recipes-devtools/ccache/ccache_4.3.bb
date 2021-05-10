@@ -11,10 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=698a26b57e513d678e1e7727bf56395b"
 
 DEPENDS = "zstd"
 
-SRC_URI = "https://github.com/ccache/ccache/releases/download/v${PV}/${BP}.tar.gz \
-           file://0001-doc-allow-disabling-docs-man-page-generation.patch \
-	   "
-SRC_URI[sha256sum] = "320d2b17d2f76393e5d4bb28c8dee5ca783248e9cd23dff0654694d60f8a4b62"
+SRC_URI = "https://github.com/ccache/ccache/releases/download/v${PV}/${BP}.tar.gz"
+SRC_URI[sha256sum] = "b9789c42e52c73e99428f311a34def9ffec3462736439afd12dbacc7987c1533"
 
 UPSTREAM_CHECK_URI = "https://github.com/ccache/ccache/releases/"
 
@@ -24,4 +22,4 @@ PATCHTOOL = "patch"
 
 BBCLASSEXTEND = "native nativesdk"
 
-PACKAGECONFIG[docs] = "-DBUILD_DOCS=ON,-DBUILD_DOCS=OFF,asciidoc"
+PACKAGECONFIG[docs] = "-DENABLE_DOCUMENTATION=ON,-DENABLE_DOCUMENTATION=OFF,asciidoc"
