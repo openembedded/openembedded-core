@@ -68,6 +68,10 @@ CVE_CHECK_WHITELIST += "CVE-2017-5957"
 # enable it by default.
 CVE_CHECK_WHITELIST += "CVE-2007-0998"
 
+# 'The issues identified by this CVE were determined to not constitute a vulnerability.'
+# https://bugzilla.redhat.com/show_bug.cgi?id=1609015#c11
+CVE_CHECK_WHITELIST += "CVE-2018-18438"
+
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
 
