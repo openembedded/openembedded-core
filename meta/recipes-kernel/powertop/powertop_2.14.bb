@@ -9,21 +9,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 SRC_URI = "git://github.com/fenrus75/powertop;protocol=https \
     file://0001-wakeup_xxx.h-include-limits.h.patch \
 "
-SRCREV = "184cee06b2d64679bae5f806fe0a218827fdde99"
+SRCREV = "52f022f9bbe6e060fba11701d657a8d9762702ba"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gettext pkgconfig bash-completion
+LDFLAGS_append = " -pthread"
 
-# we do not want libncursesw if we can
-do_configure_prepend() {
-    # configure.ac checks for delwin() in "ncursesw ncurses" so let's drop first one
-    sed -i -e "s/ncursesw//g" ${S}/configure.ac
-    mkdir -p ${B}/src/tuning/
-    echo "${PV}" > ${S}/version-long
-    echo "${PV}" > ${S}/version-short
-    cp ${STAGING_DATADIR}/aclocal/ax_require_defined.m4 ${S}/m4/
-}
+inherit autotools gettext pkgconfig bash-completion
 
 inherit update-alternatives
 ALTERNATIVE_${PN} = "powertop"
