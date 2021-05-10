@@ -13,6 +13,7 @@ PE = "1"
 SRC_URI = "https://github.com/liberationfonts/liberation-fonts/files/6418984/liberation-fonts-ttf-${PV}.tar.gz \
            file://30-liberation-aliases.conf"
 SRC_URI[sha256sum] = "26f85412dd0aa9d061504a1cc8aaf0aa12a70710e8d47d8b65a1251757c1a5ef"
+UPSTREAM_CHECK_URI = "https://github.com/liberationfonts/liberation-fonts/releases"
 
 S = "${WORKDIR}/liberation-fonts-ttf-${PV}"
 
