@@ -103,15 +103,15 @@ EXTRA_OECONF = " \
     \
     --cross-prefix=${TARGET_PREFIX} \
     \
-    --ld="${CCLD}" \
-    --cc="${CC}" \
-    --cxx="${CXX}" \
+    --ld='${CCLD}' \
+    --cc='${CC}' \
+    --cxx='${CXX}' \
     --arch=${TARGET_ARCH} \
-    --target-os="linux" \
+    --target-os='linux' \
     --enable-cross-compile \
-    --extra-cflags="${CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}" \
-    --extra-ldflags="${LDFLAGS}" \
-    --sysroot="${STAGING_DIR_TARGET}" \
+    --extra-cflags='${CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}' \
+    --extra-ldflags='${LDFLAGS}' \
+    --sysroot='${STAGING_DIR_TARGET}' \
     ${EXTRA_FFCONF} \
     --libdir=${libdir} \
     --shlibdir=${libdir} \
@@ -121,6 +121,14 @@ EXTRA_OECONF = " \
 "
 
 EXTRA_OECONF_append_linux-gnux32 = " --disable-asm"
+
+EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'mipsisa64r6', '--disable-mips64r2 --disable-mips32r2', '', d)}"
+EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'mipsisa64r2', '--disable-mips64r6 --disable-mips32r6', '', d)}"
+EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'mips32r2', '--disable-mips64r6 --disable-mips32r6', '', d)}"
+EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'mips32r6', '--disable-mips64r2 --disable-mips32r2', '', d)}"
+EXTRA_OECONF_append_mips = " --extra-libs=-latomic --disable-mips32r5 --disable-mipsdsp --disable-mipsdspr2 \
+                             --disable-loongson2 --disable-loongson3 --disable-mmi --disable-msa --disable-msa2"
+
 # gold crashes on x86, another solution is to --disable-asm but thats more hacky
 # ld.gold: internal error in relocate_section, at ../../gold/i386.cc:3684
 
