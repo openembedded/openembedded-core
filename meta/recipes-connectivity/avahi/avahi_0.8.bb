@@ -36,7 +36,7 @@ CVE_CHECK_WHITELIST += "CVE-2021-26720"
 DEPENDS = "expat libcap libdaemon glib-2.0 intltool-native"
 
 # For gtk related PACKAGECONFIGs: gtk, gtk3
-AVAHI_GTK ?= "gtk3"
+AVAHI_GTK ?= ""
 
 PACKAGECONFIG ??= "dbus ${@bb.utils.contains_any('DISTRO_FEATURES','x11 wayland','${AVAHI_GTK}','',d)}"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
