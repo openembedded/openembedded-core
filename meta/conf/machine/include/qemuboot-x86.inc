@@ -1,11 +1,11 @@
 # For runqemu
 IMAGE_CLASSES += "qemuboot"
 QB_SMP = "-smp 4"
-QB_CPU_x86 = "-cpu core2duo"
-QB_CPU_KVM_x86 = "-cpu core2duo"
+QB_CPU_x86 = "-cpu IvyBridge -machine q35"
+QB_CPU_KVM_x86 = "-cpu IvyBridge -machine q35"
 
-QB_CPU_x86-64 = "-cpu core2duo"
-QB_CPU_KVM_x86-64 = "-cpu core2duo"
+QB_CPU_x86-64 = "-cpu IvyBridge -machine q35"
+QB_CPU_KVM_x86-64 = "-cpu IvyBridge -machine q35"
 
 QB_AUDIO_DRV = "alsa"
 QB_AUDIO_OPT = "-soundhw ac97,es1370"
