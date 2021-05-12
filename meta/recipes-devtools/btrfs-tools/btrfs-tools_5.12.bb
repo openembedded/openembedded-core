@@ -7,10 +7,10 @@ btrfs and an utility (btrfs-convert) to make a btrfs filesystem from an ext3."
 
 HOMEPAGE = "https://btrfs.wiki.kernel.org"
 
-LICENSE = "GPLv2 & LGPLv3+"
+LICENSE = "GPLv2 & LGPLv2.1+"
 LIC_FILES_CHKSUM = " \
     file://COPYING;md5=fcb02dc552a041dee27e4b85c7396067 \
-    file://libbtrfsutil/COPYING.LESSER;md5=3000208d539ec061b899bce1d9ce9404 \
+    file://libbtrfsutil/COPYING;md5=4fbd65380cdd255951079008b364516c \
 "
 SECTION = "base"
 DEPENDS = "lzo util-linux zlib"
@@ -19,7 +19,7 @@ DEPENDS_append_class-target = " udev"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
-SRCREV = "8d5051f279f7994fb80536ef8f846f06d121d898"
+SRCREV = "b16b0a766f06138de2ee32d4d84b7110e469ff49"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
@@ -31,6 +31,7 @@ PACKAGECONFIG ??= " \
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
 PACKAGECONFIG[programs] = "--enable-programs,--disable-programs"
 PACKAGECONFIG[convert] = "--enable-convert --with-convert=ext2,--disable-convert --without-convert,e2fsprogs"
+PACKAGECONFIG[zoned] = "--enable-zoned,--disable-zoned"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python3-setuptools-native"
 PACKAGECONFIG[zstd] = "--enable-zstd,--disable-zstd,zstd"
 
