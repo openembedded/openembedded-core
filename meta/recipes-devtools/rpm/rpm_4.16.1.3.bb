@@ -47,6 +47,10 @@ SRCREV = "3659b8a04f5b8bacf6535e0124e7fe23f15286bd"
 
 S = "${WORKDIR}/git"
 
+# Fix https://github.com/rpm-software-management/rpm/commit/d6a86b5e69e46cc283b1e06c92343319beb42e21
+# included in 4.16.1.3
+CVE_CHECK_WHIETLIST += "CVE-2021-20271"
+
 DEPENDS = "libgcrypt db file popt xz bzip2 elfutils python3"
 DEPENDS_append_class-native = " file-replacement-native bzip2-replacement-native"
 
