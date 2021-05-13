@@ -12,16 +12,13 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            file://0003-native_bindir.patch \
            file://0001-python-module-do-not-manipulate-the-environment-when.patch \
            file://disable-rpath-handling.patch \
-           file://cross-prop-default.patch \
            file://0001-modules-python.py-do-not-substitute-python-s-install.patch \
            file://gi-target-dep.patch \
+           file://0001-Make-CPU-family-warnings-fatal.patch \
+           file://0002-Support-building-allarch-recipes-again.patch \
+           file://4e312c19e693a69b0650ce6c8a8903163c959996.patch \
            "
-SRC_URI[sha256sum] = "3a83e7b1c5de94fa991ec34d9b198d94f38ed699d3524cb0fdf3b99fd23d4cc5"
-
-SRC_URI_append_class-native = " \
-    file://0001-Make-CPU-family-warnings-fatal.patch \
-    file://0002-Support-building-allarch-recipes-again.patch \
-"
+SRC_URI[sha256sum] = "f4820df0bc969c99019fd4af8ca5f136ee94c63d8a5ad67e7eb73bdbc9182fdd"
 
 UPSTREAM_CHECK_URI = "https://github.com/mesonbuild/meson/releases"
 UPSTREAM_CHECK_REGEX = "meson-(?P<pver>\d+(\.\d+)+)\.tar"

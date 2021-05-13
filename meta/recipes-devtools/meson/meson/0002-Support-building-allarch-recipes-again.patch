@@ -1,19 +1,18 @@
-From ac1021a3abf612e8be9b19eecb97062e0c314701 Mon Sep 17 00:00:00 2001
+From 656bf55fed01df2d2e2ad6d9d9887173cb16b85c Mon Sep 17 00:00:00 2001
 From: Peter Kjellerstedt <pkj@axis.com>
 Date: Thu, 26 Jul 2018 16:32:49 +0200
-Subject: [PATCH] Support building allarch recipes again
+Subject: [PATCH 2/2] Support building allarch recipes again
 
 This registers "allarch" as a known CPU family.
 
 Upstream-Status: Inappropriate [OE specific]
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
-
 ---
  mesonbuild/envconfig.py | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/mesonbuild/envconfig.py b/mesonbuild/envconfig.py
-index 2d3c34c..b9e7908 100644
+index 4d58c91..ff01ad1 100644
 --- a/mesonbuild/envconfig.py
 +++ b/mesonbuild/envconfig.py
 @@ -36,6 +36,7 @@ from pathlib import Path
@@ -24,3 +23,6 @@ index 2d3c34c..b9e7908 100644
      'aarch64',
      'alpha',
      'arc',
+-- 
+2.24.0
+
