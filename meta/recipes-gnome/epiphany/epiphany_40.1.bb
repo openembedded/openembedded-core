@@ -12,7 +12,7 @@ DEPENDS = "libsoup-2.4 webkitgtk gtk+3 iso-codes avahi libnotify gcr gnutls \
 	   libarchive"
 
 GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase gsettings features_check upstream-version-is-even gettext mime-xdg
+inherit gnomebase gsettings features_check gettext mime-xdg
 REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
 SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@oe.utils.trim_version("${PV}", 1)}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive \

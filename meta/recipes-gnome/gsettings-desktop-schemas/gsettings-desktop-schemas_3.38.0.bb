@@ -11,6 +11,6 @@ DEPENDS = "glib-2.0"
 
 GNOMEBASEBUILDCLASS = "meson"
 
-inherit gnomebase gsettings gobject-introspection gettext upstream-version-is-even
+inherit gnomebase gsettings gobject-introspection gettext
 
 SRC_URI[archive.sha256sum] = "5704c8266004b296036671f223c705dc046aa694a1b1abb87c67e7d2747a8c67"
