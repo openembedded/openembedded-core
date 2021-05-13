@@ -1,20 +1,10 @@
 include meson.inc
 
-inherit siteinfo
+inherit meson-routines
 inherit nativesdk
 
 SRC_URI += "file://meson-setup.py \
             file://meson-wrapper"
-
-def meson_endian(prefix, d):
-    arch, os = d.getVar(prefix + "_ARCH"), d.getVar(prefix + "_OS")
-    sitedata = siteinfo_data_for_machine(arch, os, d)
-    if "endian-little" in sitedata:
-        return "little"
-    elif "endian-big" in sitedata:
-        return "big"
-    else:
-        bb.fatal("Cannot determine endianism for %s-%s" % (arch, os))
 
 # The cross file logic is similar but not identical to that in meson.bbclass,
 # since it's generating for an SDK rather than a cross-compile. Important
@@ -44,7 +34,7 @@ sys_root = @OECORE_TARGET_SYSROOT
 
 [host_machine]
 system = '${SDK_OS}'
-cpu_family = '${SDK_ARCH}'
+cpu_family = '${@meson_cpu_family("SDK_ARCH", d)}'
 cpu = '${SDK_ARCH}'
 endian = '${@meson_endian("SDK", d)}'
 EOF
