@@ -11,7 +11,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 SRC_URI = "git://github.com/KhronosGroup/Vulkan-Headers.git;branch=master"
 
-SRCREV = "1d99b835ec3cd5a7fb2f2a2dd9a615ee2d1f0101"
+SRCREV = "074fa3055cfee530992bcbfa0fcb23106a82c1ab"
 
 S = "${WORKDIR}/git"
 
