@@ -37,13 +37,13 @@ python do_package_prepend() {
 }
 
 BBCLASSEXTEND = "devupstream:target"
-LIC_FILES_CHKSUM_class-devupstream = "file://LICENSE;md5=3f882d431dc0f32f1f44c0707aa41128"
+LIC_FILES_CHKSUM_class-devupstream = "file://LICENSE;md5=0464cff101a009c403cd2ed65d01d4c4"
 DEFAULT_PREFERENCE_class-devupstream = "-1"
-SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.12 \
-           file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
+SRC_URI_class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.13 \
+           file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
            "
 
-SRCREV_class-devupstream = "92cc3e7f76a545a2cd4828576971f1eea83f4e68"
-PV_class-devupstream = "2.12.5+git${SRCPV}"
+SRCREV_class-devupstream = "f982b51a98a29cb4aaf607cb9bbf2b509d8e6933"
+PV_class-devupstream = "2.13.0-rc2+git${SRCPV}"
 S_class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
