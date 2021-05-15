@@ -19,7 +19,7 @@ DEPENDS_append_class-target = " udev"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
-SRCREV = "b16b0a766f06138de2ee32d4d84b7110e469ff49"
+SRCREV = "96d77fcefdd3b9fd297b5aabbce6dc43e2315ee2"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
