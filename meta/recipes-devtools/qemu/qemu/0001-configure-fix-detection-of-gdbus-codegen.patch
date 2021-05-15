@@ -26,20 +26,20 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  configure | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/configure b/configure
-index 18c26e0389..4c36e221d3 100755
---- a/configure
-+++ b/configure
-@@ -3496,7 +3496,7 @@ if $pkg_config --atleast-version=$glib_req_ver gio-2.0; then
-     gio_cflags=$($pkg_config --cflags gio-2.0)
-     gio_libs=$($pkg_config --libs gio-2.0)
-     gdbus_codegen=$($pkg_config --variable=gdbus_codegen gio-2.0)
--    if [ ! -x "$gdbus_codegen" ]; then
-+    if ! has "$gdbus_codegen"; then
-         gdbus_codegen=
-     fi
-     # Check that the libraries actually work -- Ubuntu 18.04 ships
-@@ -6172,6 +6172,8 @@ if test "$gio" = "yes" ; then
+Index: qemu-6.0.0/configure
+===================================================================
+--- qemu-6.0.0.orig/configure
++++ qemu-6.0.0/configure
+@@ -3366,7 +3366,7 @@ if ! test "$gio" = "no"; then
+         gio_cflags=$($pkg_config --cflags gio-2.0)
+         gio_libs=$($pkg_config --libs gio-2.0)
+         gdbus_codegen=$($pkg_config --variable=gdbus_codegen gio-2.0)
+-        if [ ! -x "$gdbus_codegen" ]; then
++        if ! has "$gdbus_codegen"; then
+             gdbus_codegen=
+         fi
+         # Check that the libraries actually work -- Ubuntu 18.04 ships
+@@ -5704,6 +5704,8 @@ if test "$gio" = "yes" ; then
      echo "CONFIG_GIO=y" >> $config_host_mak
      echo "GIO_CFLAGS=$gio_cflags" >> $config_host_mak
      echo "GIO_LIBS=$gio_libs" >> $config_host_mak
@@ -48,6 +48,3 @@ index 18c26e0389..4c36e221d3 100755
      echo "GDBUS_CODEGEN=$gdbus_codegen" >> $config_host_mak
  fi
  echo "CONFIG_TLS_PRIORITY=\"$tls_priority\"" >> $config_host_mak
--- 
-2.24.0
-
