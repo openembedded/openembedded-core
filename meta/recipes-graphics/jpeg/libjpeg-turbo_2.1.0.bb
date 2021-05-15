@@ -3,10 +3,10 @@ DESCRIPTION = "libjpeg-turbo is a derivative of libjpeg that uses SIMD instructi
 HOMEPAGE = "http://libjpeg-turbo.org/"
 
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=13;md5=8184bcc7c4ac7b9edc6a7bc00f231d0b \
+LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=13;md5=8a61af33cc1c681cd5cc297150bbb5bd \
                     file://jpeglib.h;endline=16;md5=52b5eaade8d5b6a452a7693dfe52c084 \
-                    file://djpeg.c;endline=11;md5=302e980133b5c0c7f4dcb4ca0df41090 \
-"
+                    file://djpeg.c;endline=11;md5=b61f01ad6aff437b34d1f9e8004280a4 \
+                    "
 DEPENDS_append_x86-64_class-target = " nasm-native"
 DEPENDS_append_x86_class-target = " nasm-native"
 
@@ -14,8 +14,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-libjpeg-turbo-fix-package_qa-error.patch \
            "
 
-SRC_URI[md5sum] = "4cada3f0bdc93d826fa31bf9e4469ef6"
-SRC_URI[sha256sum] = "d74b92ac33b0e3657123ddcf6728788c90dc84dcb6a52013d758af3c4af481bb"
+SRC_URI[sha256sum] = "bef89803e506f27715c5627b1e3219c95b80fc31465d4452de2a909d382e4444"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libjpeg-turbo/files/"
 UPSTREAM_CHECK_REGEX = "/libjpeg-turbo/files/(?P<pver>(\d+[\.\-_]*)+)/"
 
