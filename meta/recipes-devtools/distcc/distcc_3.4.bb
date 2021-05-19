@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/distcc/distcc.git \
            file://distcc \
            file://distcc.service \
            "
-SRCREV = "8572e2a1af39e69b2a2d74622fed6d2dd7dca9b7"
+SRCREV = "50d821efe99cae82c05be0a4ab3b4035ef0d3883"
 S = "${WORKDIR}/git"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
