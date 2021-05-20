@@ -15,10 +15,25 @@ SRC_URI = "${GNU_MIRROR}/bison/bison-${PV}.tar.xz \
            "
 SRC_URI[sha256sum] = "67d68ce1e22192050525643fc0a7a22297576682bef6a5c51446903f5aeef3cf"
 
-# No point in hardcoding path to m4, just use PATH
-EXTRA_OECONF += "M4=m4"
-
 inherit autotools gettext texinfo
+
+# No point in hardcoding path to m4, just use PATH
+CACHED_CONFIGUREVARS = "ac_cv_path_M4=m4"
+
+PACKAGECONFIG ??= "readline ${@ 'textstyle' if d.getVar('USE_NLS') == 'yes' else ''}"
+PACKAGECONFIG_class-native ??= ""
+
+# Make readline and textstyle optional. There are recipie for these, but leave them
+# disabled for the native recipe. This prevents host contamination of the native tool.
+PACKAGECONFIG[readline] = "--with-libreadline-prefix,--without-libreadline-prefix,readline"
+PACKAGECONFIG[textstyle] = "--with-libtextstyle-prefix,--without-libtextstyle-prefix,gettext"
+
+# Include the cached configure variables, configure is really good at finding
+# libreadline, even if we don't want it.
+CACHED_CONFIGUREVARS += "${@bb.utils.contains('PACKAGECONFIG', 'readline', '', ' \
+                           ac_cv_header_readline_history_h=no \
+                           ac_cv_header_readline_readline_h=no \
+                           gl_cv_lib_readline=no', d)}"
 
 # The automatic m4 path detection gets confused, so force the right value
 acpaths = "-I ./m4"
