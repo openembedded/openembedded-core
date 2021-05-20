@@ -6,6 +6,7 @@ provide the minimal server-side support necessary to eliminate problems \
 caused by these workarounds."
 
 require xorg-lib-common.inc
+SRC_URI[sha256sum] = "a7c1a24da53e0b46cac5aea79094b4b2257321c621b258729bc3139149245b4c"
 
 LICENSE = "MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3c1ce42c334a6f5cccb0277556a053e0"
@@ -17,7 +18,3 @@ PE = "1"
 XORG_PN = "libXfixes"
 
 BBCLASSEXTEND = "native nativesdk"
-
-SRC_URI[md5sum] = "07e01e046a0215574f36a3aacb148be0"
-SRC_URI[sha256sum] = "de1cd33aff226e08cefd0e6759341c2c8e8c9faf8ce9ac6ec38d43e287b22ad6"
-
