@@ -48,6 +48,10 @@ EXTRA_OEMESON_class-target = " \
     -Duse_prebuilt_tools=true \
 "
 
+EXTRA_OEMESON_class-nativesdk = " \
+    -Duse_prebuilt_tools=true \
+"
+
 PACKAGES =+ "${PN}-xlib"
 
 # For GIO image type sniffing
