@@ -217,13 +217,13 @@ fitimage_emit_section_boot_script() {
 	bootscr_sign_keyname="${UBOOT_SIGN_KEYNAME}"
 
         cat << EOF >> ${1}
-                bootscr@${2} {
+                bootscr-${2} {
                         description = "U-boot script";
                         data = /incbin/("${3}");
                         type = "script";
                         arch = "${UBOOT_ARCH}";
                         compression = "none";
-                        hash@1 {
+                        hash-1 {
                                 algo = "${bootscr_csum}";
                         };
                 };
@@ -232,7 +232,7 @@ EOF
 	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a "${FIT_SIGN_INDIVIDUAL}" = "1" -a -n "${bootscr_sign_keyname}" ] ; then
 		sed -i '$ d' ${1}
 		cat << EOF >> ${1}
-                        signature@1 {
+                        signature-1 {
                                 algo = "${bootscr_csum},${bootscr_sign_algo}";
                                 key-name-hint = "${bootscr_sign_keyname}";
                         };
@@ -383,7 +383,7 @@ fitimage_emit_section_config() {
 	if [ -n "${bootscr_id}" ]; then
 		conf_desc="${conf_desc}${sep}u-boot script"
 		sep=", "
-		bootscr_line="bootscr = \"bootscr@${bootscr_id}\";"
+		bootscr_line="bootscr = \"bootscr-${bootscr_id}\";"
 	fi
 
 	if [ -n "${config_id}" ]; then
