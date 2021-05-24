@@ -6,7 +6,7 @@ Subject: [PATCH] Add use_prebuilt_tools option
 This allows using the gdk-pixbuf tools from the host to
 build and install tests in a cross-compile scenarion.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/merge_requests/119]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 
 ---
