@@ -12,7 +12,7 @@ UPSTREAM_CHECK_REGEX = "harfbuzz-(?P<pver>\d+(\.\d+)+).tar"
 
 SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz \
            "
-SRC_URI[sha256sum] = "a1079fd021adaf5683351f34587a255975cc3bcadba31246ae40ebebb95ecd42"
+SRC_URI[sha256sum] = "4124f663ec4bf4e294d9cf230668370b4249a48ff34deaf0f06e8fc82d891300"
 
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection
 
@@ -21,9 +21,8 @@ GIR_MESON_DISABLE_FLAG = 'disabled'
 GTKDOC_MESON_ENABLE_FLAG = 'enabled'
 GTKDOC_MESON_DISABLE_FLAG = 'disabled'
 
-PACKAGECONFIG ??= "cairo fontconfig freetype glib icu"
+PACKAGECONFIG ??= "cairo freetype glib icu"
 PACKAGECONFIG[cairo] = "-Dcairo=enabled,-Dcairo=disabled,cairo"
-PACKAGECONFIG[fontconfig] = "-Dfontconfig=enabled,-Dfontconfig=disabled,fontconfig"
 PACKAGECONFIG[freetype] = "-Dfreetype=enabled,-Dfreetype=disabled,freetype"
 PACKAGECONFIG[glib] = "-Dglib=enabled,-Dglib=disabled,glib-2.0"
 PACKAGECONFIG[graphite] = "-Dgraphite=enabled,-Dgraphite=disabled,graphite2"
