@@ -1,4 +1,4 @@
-From 5c82d20a00749e9106db78cdd23a09609dd3511c Mon Sep 17 00:00:00 2001
+From 04e4999c6fa2e9810634745a07f1e380f27b8e61 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 17 Mar 2021 13:24:57 -0700
 Subject: [PATCH] reduce thread stack and heap usage for javascriptcore on musl
@@ -20,12 +20,12 @@ Upstream-Status: Accepted
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 ---
- Source/JavaScriptCore/runtime/OptionsList.h | 20 ++++++++++++++++----
+ Source/JavaScriptCore/runtime/OptionsList.h | 18 +++++++++++++++---
  Source/WTF/wtf/Threading.h                  |  4 ++++
- 2 files changed, 20 insertions(+), 4 deletions(-)
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/Source/JavaScriptCore/runtime/OptionsList.h b/Source/JavaScriptCore/runtime/OptionsList.h
-index bc1cedb9..a6209742 100644
+index bb6d2f1d..a6209742 100644
 --- a/Source/JavaScriptCore/runtime/OptionsList.h
 +++ b/Source/JavaScriptCore/runtime/OptionsList.h
 @@ -71,6 +71,18 @@ JS_EXPORT_PRIVATE bool canUseJITCage();
@@ -60,15 +60,6 @@ index bc1cedb9..a6209742 100644
      \
      v(Bool, crashOnDisallowedVMEntry, ASSERT_ENABLED, Normal, "Forces a crash if we attempt to enter the VM when disallowed") \
      v(Bool, crashIfCantAllocateJITMemory, false, Normal, nullptr) \
-@@ -608,7 +620,7 @@ public:
-     bool init(const char*);
-     bool isInRange(unsigned);
-     const char* rangeString() const { return (m_state > InitError) ? m_rangeString : s_nullRangeStr; }
--    
-+
-     void dump(PrintStream& out) const;
- 
- private:
 diff --git a/Source/WTF/wtf/Threading.h b/Source/WTF/wtf/Threading.h
 index 9495d6c1..190b3811 100644
 --- a/Source/WTF/wtf/Threading.h
