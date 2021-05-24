@@ -14,8 +14,8 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://0001-libdnf-config.h-avoid-the-use-of-non-portable-__WORD.patch \
            "
 
-SRCREV = "9a0e17562b19586b3ffa70fa93eb961b558794c7"
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
+SRCREV = "669a5c691acba91693d238d6262ac99a440aa9b3"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
