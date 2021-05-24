@@ -37,7 +37,7 @@ SRC_URI = "http://software.calhariz.com/at/${BPN}_${PV}.orig.tar.gz \
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
 
-SRC_URI[sha256sum] = "aabe6e5cb6dd19fe9fb25c2747492f2db38762b95ea41b86f949609c39fb55c4"
+SRC_URI[sha256sum] = "2211da14914fde1f9cc83592838fb6385a32fb11fcecb7816c77700df6559088"
 
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
@@ -72,4 +72,5 @@ do_install () {
 	if [ "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}" ]; then
 		install -D -m 0644 ${WORKDIR}/${BP}/pam.conf ${D}${sysconfdir}/pam.d/atd
 	fi
+        rm -f ${D}${datadir}/at/batch-job
 }
