@@ -14,7 +14,8 @@ inherit useradd pkgconfig meson perlnative update-rc.d update-alternatives qemu 
 # that we don't build both udev and systemd in world builds.
 REQUIRED_DISTRO_FEATURES = "systemd"
 
-SRC_URI += "file://touchscreen.rules \
+SRC_URI += " \
+           file://touchscreen.rules \
            file://00-create-volatile.conf \
            ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://org.freedesktop.hostname1_no_polkit.conf', '', d)} \
            ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://00-hostnamed-network-user.conf', '', d)} \
@@ -24,9 +25,6 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://0001-systemd.pc.in-use-ROOTPREFIX-without-suffixed-slash.patch \
-           file://0001-logind-Restore-chvt-as-non-root-user-without-polkit.patch \
-           file://0027-proc-dont-trigger-mount-error-with-invalid-options-o.patch \
-           file://0001-analyze-resolve-executable-path-if-it-is-relative.patch \
            "
 
 # patches needed by musl
@@ -474,6 +472,7 @@ FILES_${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${rootlibexecdir}/systemd/systemd-machined \
                          ${rootlibexecdir}/systemd/systemd-pull \
                          ${exec_prefix}/lib/tmpfiles.d/systemd-nspawn.conf \
+                         ${exec_prefix}/lib/tmpfiles.d/README \
                          ${systemd_system_unitdir}/systemd-nspawn@.service \
                          ${libdir}/libnss_mymachines.so.2 \
                          ${datadir}/dbus-1/system-services/org.freedesktop.import1.service \
@@ -605,6 +604,7 @@ FILES_${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/environment.d \
                 ${localstatedir} \
                 ${rootlibexecdir}/modprobe.d/systemd.conf \
+                ${rootlibexecdir}/modprobe.d/README \
                 ${datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.locale1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.network1.conf \
@@ -647,6 +647,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/ata_id \
                ${rootlibexecdir}/udev/cdrom_id \
                ${rootlibexecdir}/udev/collect \
+               ${rootlibexecdir}/udev/dmi_memory_id \
                ${rootlibexecdir}/udev/fido_id \
                ${rootlibexecdir}/udev/findkeyboards \
                ${rootlibexecdir}/udev/keyboard-force-release.sh \
@@ -674,6 +675,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/rules.d/61-autosuspend-manual.rules \
                ${rootlibexecdir}/udev/rules.d/64-btrfs.rules \
                ${rootlibexecdir}/udev/rules.d/70-joystick.rules \
+               ${rootlibexecdir}/udev/rules.d/70-memory.rules \
                ${rootlibexecdir}/udev/rules.d/70-mouse.rules \
                ${rootlibexecdir}/udev/rules.d/70-power-switch.rules \
                ${rootlibexecdir}/udev/rules.d/70-touchpad.rules \
@@ -683,6 +685,7 @@ FILES_udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/rules.d/80-drivers.rules \
                ${rootlibexecdir}/udev/rules.d/80-net-setup-link.rules \
                ${rootlibexecdir}/udev/rules.d/90-vconsole.rules \
+               ${rootlibexecdir}/udev/rules.d/README \
                ${sysconfdir}/udev \
                ${sysconfdir}/init.d/systemd-udevd \
                ${systemd_unitdir}/system/*udev* \
