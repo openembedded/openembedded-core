@@ -27,19 +27,10 @@ CFLAGS_append_x86-64 = " -fomit-frame-pointer"
 
 CFLAGS_append_powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS_append_mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "4d005621edd109d119627eb9210b224a63bf22cb"
-
-# remove at next version upgrade or when output changes
-PR = "r4"
-HASHEQUIV_HASH_VERSION .= ".4"
+SRCREV = "0fb171f2beddaf64bd27597577c206c0f892b3cd"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
-           file://0007-Fix-test_proc_kill-hanging.patch \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
-           file://determinism.patch \
-           file://0001-open_posix_testsuite-generate-makefiles.sh-Avoid-inc.patch \
-           file://0002-Makefile-Avoid-wildcard-determinism-issues.patch \
-           file://0003-syscalls-swapon-swapoff-Move-common-library-to-libs.patch \
            file://disable_hanging_tests.patch \
            "
 
