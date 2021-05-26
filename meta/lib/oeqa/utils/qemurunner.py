@@ -342,7 +342,24 @@ class QemuRunner:
         finally:
             os.chdir(origpath)
 
-        # Release the qemu porcess to continue running
+        # We worry that mmap'd libraries may cause page faults which hang the qemu VM for periods
+        # causing failures. Before we "start" qemu, read through it's mapped files to try and 
+        # ensure we don't hit page faults later
+        mapdir = "/proc/" + str(self.qemupid) + "/map_files/"
+        try:
+            for f in os.listdir(mapdir):
+                linktarget = os.readlink(os.path.join(mapdir, f))
+                if not linktarget.startswith("/") or linktarget.startswith("/dev") or "deleted" in linktarget:
+                    continue
+                with open(linktarget, "rb") as readf:
+                    data = True
+                    while data:
+                        data = readf.read(4096)
+        # Centos7 doesn't allow us to read /map_files/
+        except PermissionError:
+            pass
+
+        # Release the qemu process to continue running
         self.run_monitor('cont')
 
         # We are alive: qemu is running
