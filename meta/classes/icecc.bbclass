@@ -358,7 +358,7 @@ set_icecc_env() {
     ICECC_WHICH_AS="${@bb.utils.which(os.getenv('PATH'), 'as')}"
     if [ ! -x "${ICECC_CC}" -o ! -x "${ICECC_CXX}" ]
     then
-        bbwarn "Cannot use icecc: could not get ICECC_CC or ICECC_CXX"
+        bbnote "Cannot use icecc: could not get ICECC_CC or ICECC_CXX"
         return
     fi
 
