@@ -59,4 +59,4 @@ FILES_${PN}-tools += "${bindir} ${datadir}/wayland"
 
 BBCLASSEXTEND = "native nativesdk"
 
-RDEPENDS_${PN}-ptest += "binutils sed"
+RDEPENDS_${PN}-ptest += "binutils sed ${PN}-tools"
