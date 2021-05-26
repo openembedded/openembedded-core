@@ -138,10 +138,6 @@ def use_icecc(bb,d):
     if icecc_is_cross_canadian(bb, d):
         return "no"
 
-    if d.getVar('INHIBIT_DEFAULT_DEPS', False):
-        # We don't have a compiler, so no icecc
-        return "no"
-
     pn = d.getVar('PN')
     bpn = d.getVar('BPN')
 
