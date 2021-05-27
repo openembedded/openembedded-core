@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6eed01fa0e673c76f5a5715438f65b1d"
 SECTION = "libs"
 DEPENDS = ""
 
-PV = "0.10+${SRCPV}"
-SRCREV = "19fa1bbfc26efb92147b5e85cc0ca02a0e837561"
+PV = "1.1+${SRCPV}"
+SRCREV = "335ee864ef6f4a5d4b525453fd9dbfb3507cfecc"
 SRC_URI = "git://github.com/kaniini/libucontext \
 "
 
