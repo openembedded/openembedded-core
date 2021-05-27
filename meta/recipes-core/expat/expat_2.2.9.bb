@@ -20,3 +20,5 @@ do_configure_prepend () {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+CVE_PRODUCT = "expat libexpat"
