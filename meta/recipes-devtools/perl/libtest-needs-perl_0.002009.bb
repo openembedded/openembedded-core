@@ -17,8 +17,8 @@ DEPENDS += "perl"
 
 SRC_URI = "https://cpan.metacpan.org/authors/id/H/HA/${CPAN_AUTHOR}/${CPAN_NAME}-${PV}.tar.gz"
 
-SRC_URI[md5sum] = "d5c96d51d8d5510f7c0b7f354c49af1c"
-SRC_URI[sha256sum] = "77f9fff0c96c5e09f34d0416b3533c3319f7cd0bb1f7fe8f8072ad59f433f0e5"
+SRC_URI[md5sum] = "5643cd323afb77d20363acbaf9b12bcc"
+SRC_URI[sha256sum] = "571c21193ad16195df58b06b268798796a391b398c443271721d2cc0fb7c4ac3"
 
 S = "${WORKDIR}/${CPAN_NAME}-${PV}"
 
