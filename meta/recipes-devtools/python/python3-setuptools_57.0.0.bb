@@ -8,9 +8,10 @@ inherit pypi setuptools3
 
 SRC_URI_append_class-native = " file://0001-conditionally-do-not-fetch-code-by-easy_install.patch"
 
-SRC_URI += "file://0001-change-shebang-to-python3.patch"
+SRC_URI += "file://0001-change-shebang-to-python3.patch \
+            file://reproducibility.patch"
 
-SRC_URI[sha256sum] = "7bb5652625e94e73b9358b7ed8c6431b732e80cf31f4e0972294c64f0e5b849e"
+SRC_URI[sha256sum] = "401cbf33a7bf817d08014d51560fc003b895c4cdc1a5b521ad2969e928a07535"
 
 DEPENDS += "${PYTHON_PN}"
 
