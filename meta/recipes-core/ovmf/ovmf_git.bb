@@ -19,6 +19,7 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://zero.patch \
            file://debug_prefix_map.patch \
            file://reproducible.patch \
+           file://0001-Fix-VLA-parameter-warning.patch \
            "
 
 PV = "edk2-stable202102"
