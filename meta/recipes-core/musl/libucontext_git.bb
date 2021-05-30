@@ -11,7 +11,8 @@ DEPENDS = ""
 PV = "1.1+${SRCPV}"
 SRCREV = "335ee864ef6f4a5d4b525453fd9dbfb3507cfecc"
 SRC_URI = "git://github.com/kaniini/libucontext \
-"
+           file://0001-meson-Add-option-to-pass-cpu.patch \
+           "
 
 S = "${WORKDIR}/git"
 
@@ -49,16 +50,5 @@ def map_kernel_arch(a, d):
             return a
         bb.error("cannot map '%s' to a linux kernel architecture" % a)
 
-export ARCH = "${@map_kernel_arch(d.getVar('TARGET_ARCH'), d)}"
-
-CFLAGS += "-Iarch/${ARCH} -Iarch/common"
-
-EXTRA_OEMAKE = "CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}' LIBDIR='${base_libdir}'"
-
-do_compile() {
-    oe_runmake ARCH=${ARCH}
-}
-
-do_install() {
-    oe_runmake ARCH="${ARCH}" DESTDIR="${D}" install
-}
+EXTRA_OEMESON = "-Dcpu=${@map_kernel_arch(d.getVar('TARGET_ARCH'), d)}"
+inherit meson
