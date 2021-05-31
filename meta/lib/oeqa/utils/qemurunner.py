@@ -277,14 +277,33 @@ class QemuRunner:
 
         if self.runqemu_exited:
             self.logger.warning("runqemu after timeout")
-            return False
 
         if self.runqemu.returncode:
             self.logger.warning('runqemu exited with code %d' % self.runqemu.returncode)
-            return False
 
         if not self.is_alive():
-            self.logger.warning('is_alive() failed later')
+            self.logger.error("Qemu pid didn't appear in %s seconds (%s)" %
+                              (self.runqemutime, time.strftime("%D %H:%M:%S")))
+
+            qemu_pid = None
+            if os.path.isfile(self.qemu_pidfile):
+                with open(self.qemu_pidfile, 'r') as f:
+                    qemu_pid = f.read().strip()
+
+            self.logger.error("Status information, poll status: %s, pidfile exists: %s, pidfile contents %s, proc pid exists %s"
+                % (self.runqemu.poll(), os.path.isfile(self.qemu_pidfile), str(qemu_pid), os.path.exists("/proc/" + str(qemu_pid))))
+
+            # Dump all processes to help us to figure out what is going on...
+            ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command '], stdout=subprocess.PIPE).communicate()[0]
+            processes = ps.decode("utf-8")
+            self.logger.debug("Running processes:\n%s" % processes)
+            self._dump_host()
+            op = self.getOutput(output)
+            self.stop()
+            if op:
+                self.logger.error("Output from runqemu:\n%s" % op)
+            else:
+                self.logger.error("No output from runqemu.\n")
             return False
 
         # Create the client socket for the QEMU Monitor Control Socket
@@ -325,31 +344,6 @@ class QemuRunner:
 
         # Release the qemu porcess to continue running
         self.run_monitor('cont')
-
-        if not self.is_alive():
-            self.logger.error("Qemu pid didn't appear in %s seconds (%s)" %
-                              (self.runqemutime, time.strftime("%D %H:%M:%S")))
-
-            qemu_pid = None
-            if os.path.isfile(self.qemu_pidfile):
-                with open(self.qemu_pidfile, 'r') as f:
-                    qemu_pid = f.read().strip()
-
-            self.logger.error("Status information, poll status: %s, pidfile exists: %s, pidfile contents %s, proc pid exists %s"
-                % (self.runqemu.poll(), os.path.isfile(self.qemu_pidfile), str(qemu_pid), os.path.exists("/proc/" + str(qemu_pid))))
-
-            # Dump all processes to help us to figure out what is going on...
-            ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command '], stdout=subprocess.PIPE).communicate()[0]
-            processes = ps.decode("utf-8")
-            self.logger.debug("Running processes:\n%s" % processes)
-            self._dump_host()
-            op = self.getOutput(output)
-            self.stop()
-            if op:
-                self.logger.error("Output from runqemu:\n%s" % op)
-            else:
-                self.logger.error("No output from runqemu.\n")
-            return False
 
         # We are alive: qemu is running
         out = self.getOutput(output)
