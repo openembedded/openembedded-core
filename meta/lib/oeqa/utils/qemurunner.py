@@ -65,7 +65,7 @@ class QemuRunner:
         self.boot_patterns = boot_patterns
         self.tmpfsdir = tmpfsdir
 
-        self.runqemutime = 120
+        self.runqemutime = 300
         if not workdir:
             workdir = os.getcwd()
         self.qemu_pidfile = workdir + '/pidfile_' + str(os.getpid())
