@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/riscv/opensbi.git;branch=master \
 
 S = "${WORKDIR}/git"
 
-EXTRA_OEMAKE += "PLATFORM=${RISCV_SBI_PLAT} I=${D}"
+EXTRA_OEMAKE += "PLATFORM=${RISCV_SBI_PLAT} I=${D} FW_PIC=n"
 # If RISCV_SBI_PAYLOAD is set then include it as a payload
 EXTRA_OEMAKE_append = " ${@riscv_get_extra_oemake_image(d)}"
 
