@@ -1,0 +1,37 @@
+From b20cb6ef5e3f331181b93e39293602ad2c774af8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Thu, 3 Jun 2021 16:07:10 +0200
+Subject: [PATCH] utils.c: Include limits.h explicitly to fix build on musl
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixes:
+| ../../alsa-utils-1.2.5/alsactl/utils.c: In function 'snd_card_clean_cfgdir':
+| ../../alsa-utils-1.2.5/alsactl/utils.c:309:19: error: 'PATH_MAX' undeclared (first use in this function)
+|   309 |         char path[PATH_MAX];
+|       |                   ^~~~~~~~
+| ../../alsa-utils-1.2.5/alsactl/utils.c:309:19: note: each undeclared identifier is reported only once for each function it appears in
+
+Upstream-Status: Submitted [https://github.com/alsa-project/alsa-utils/pull/92]
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+---
+ alsactl/utils.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/alsactl/utils.c b/alsactl/utils.c
+index 881b505..1a4896b 100644
+--- a/alsactl/utils.c
++++ b/alsactl/utils.c
+@@ -30,6 +30,7 @@
+ #include <syslog.h>
+ #include <sys/stat.h>
+ #include <sys/mman.h>
++#include <limits.h>
+ #include "alsactl.h"
+ 
+ int file_map(const char *filename, char **buf, size_t *bufsize)
+-- 
+2.31.1
+
