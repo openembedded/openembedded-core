@@ -1,0 +1,41 @@
+From 26ab44c99e9f370e3da0c18982fa482e2e55f0a8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@gmail.com>
+Date: Thu, 3 Jun 2021 12:29:03 +0200
+Subject: [PATCH] ucm_exec.c: Include limits.h explicitly to fix build on musl
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixes:
+| ../../../alsa-lib-1.2.5/src/ucm/ucm_exec.c: In function 'find_exec':
+| ../../../alsa-lib-1.2.5/src/ucm/ucm_exec.c:43:18: error: 'PATH_MAX' undeclared (first use in this function)
+|    43 |         char bin[PATH_MAX];
+|       |                  ^~~~~~~~
+| ../../../alsa-lib-1.2.5/src/ucm/ucm_exec.c:43:18: note: each undeclared identifier is reported only once for each function it appears in
+| ../../../alsa-lib-1.2.5/src/ucm/ucm_exec.c: In function 'uc_mgr_exec':
+| ../../../alsa-lib-1.2.5/src/ucm/ucm_exec.c:177:18: error: 'PATH_MAX' undeclared (first use in this function)
+|   177 |         char bin[PATH_MAX];
+|       |                  ^~~~~~~~
+
+Upstream-Status: Submitted [https://github.com/alsa-project/alsa-lib/pull/145]
+
+Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
+---
+ src/ucm/ucm_exec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/ucm/ucm_exec.c b/src/ucm/ucm_exec.c
+index d83206d0..4ddf5d15 100644
+--- a/src/ucm/ucm_exec.c
++++ b/src/ucm/ucm_exec.c
+@@ -30,6 +30,7 @@
+ #include "ucm_local.h"
+ #include <sys/stat.h>
+ #include <sys/wait.h>
++#include <limits.h>
+ #include <dirent.h>
+ 
+ static pthread_mutex_t fork_lock = PTHREAD_MUTEX_INITIALIZER;
+-- 
+2.31.1
+
