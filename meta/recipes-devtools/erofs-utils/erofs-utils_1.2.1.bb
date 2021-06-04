@@ -7,6 +7,8 @@ HOMEPAGE = "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.gi
 SRCREV = "d1f4953edfcf4f51c71ba91586e21fc6ce9f6db9"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git"
 
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
+
 S = "${WORKDIR}/git"
 
 DEPENDS = "util-linux-libuuid"
