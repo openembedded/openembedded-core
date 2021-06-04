@@ -9,13 +9,14 @@ PYPI_PACKAGE = "libarchive-c"
 
 inherit pypi setuptools3
 
-SRC_URI[md5sum] = "920885f5910aa8245e30896996e0415b"
-SRC_URI[sha256sum] = "6f12fa9cf0e44579e5f45bbf11aa455a930fbfdb13ea0ce3c3dfe7b9b9a452ba"
+SRC_URI[md5sum] = "8c62da42a8b9bd24642e5430427e6f5a"
+SRC_URI[sha256sum] = "618a7ecfbfb58ca15e11e3138d4a636498da3b6bc212811af158298530fbb87e"
 
 RDEPENDS_${PN} += "\
   libarchive \
   ${PYTHON_PN}-ctypes \
   ${PYTHON_PN}-mmap \
+  ${PYTHON_PN}-logging \
 "
 
 BBCLASSEXTEND = "native"
