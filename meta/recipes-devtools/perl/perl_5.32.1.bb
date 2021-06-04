@@ -9,18 +9,14 @@ LIC_FILES_CHKSUM = "file://Copying;md5=5b122a36d0f6dc55279a0ebc69f3c60b \
 
 
 SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
-           https://github.com/arsv/perl-cross/releases/download/1.3.5/perl-cross-1.3.5.tar.gz;name=perl-cross \
            file://perl-rdepends.txt \
-           file://0001-configure_tool.sh-do-not-quote-the-argument-to-comma.patch \
            file://0001-ExtUtils-MakeMaker-add-LDFLAGS-when-linking-binary-m.patch \
            file://0001-Somehow-this-module-breaks-through-the-perl-wrapper-.patch \
            file://errno_ver.diff \
            file://native-perlinc.patch \
-           file://0001-perl-cross-add-LDFLAGS-when-linking-libperl.patch \
            file://perl-dynloader.patch \
-           file://0001-configure_path.sh-do-not-hardcode-prefix-lib-as-libr.patch \
            file://0002-Constant-Fix-up-shebang.patch \
-           file://determinism.patch  \
+           file://determinism.patch \
            "
 SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
@@ -30,13 +26,12 @@ SRC_URI_append_class-target = " \
 "
 
 SRC_URI[perl.sha256sum] = "03b693901cd8ae807231b1787798cf1f2e0b8a56218d07b7da44f784a7caeb2c"
-SRC_URI[perl-cross.sha256sum] = "91c66f6b2b99fccfd4fee14660b677380b0c98f9456359e91449798c2ad2ef25"
 
 S = "${WORKDIR}/perl-${PV}"
 
 inherit upstream-version-is-even update-alternatives
 
-DEPENDS += "zlib virtual/crypt"
+DEPENDS += "perlcross-native zlib virtual/crypt"
 
 PERL_LIB_VER = "${@'.'.join(d.getVar('PV').split('.')[0:2])}.0"
 
@@ -47,12 +42,8 @@ PACKAGECONFIG[gdbm] = ",-Ui_gdbm,gdbm"
 # Don't generate comments in enc2xs output files. They are not reproducible
 export ENC2XS_NO_COMMENTS = "1"
 
-do_unpack_append() {
-    bb.build.exec_func('do_copy_perlcross', d)
-}
-
-do_copy_perlcross() {
-    cp -rfp ${WORKDIR}/perl-cross*/* ${S}
+do_configure_prepend() {
+    cp -rfp ${STAGING_DATADIR_NATIVE}/perl-cross/* ${S}
 }
 
 do_configure_class-target() {
