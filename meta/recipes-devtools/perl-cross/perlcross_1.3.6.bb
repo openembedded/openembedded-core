@@ -16,10 +16,11 @@ SRC_URI = "https://github.com/arsv/perl-cross/releases/download/${PV}/perl-cross
            file://0001-perl-cross-add-LDFLAGS-when-linking-libperl.patch \
            file://0001-configure_path.sh-do-not-hardcode-prefix-lib-as-libr.patch \
            file://determinism.patch \
-"
+           file://0001-cnf-configure_func_sel.sh-disable-thread_safe_nl_lan.patch \
+           "
 UPSTREAM_CHECK_URI = "https://github.com/arsv/perl-cross/releases/"
 
-SRC_URI[perl-cross.sha256sum] = "91c66f6b2b99fccfd4fee14660b677380b0c98f9456359e91449798c2ad2ef25"
+SRC_URI[perl-cross.sha256sum] = "4010f41870d64e3957b4b8ce70ebba10a7c4a3e86c5551acb4099c3fcbb37ce5"
 
 S = "${WORKDIR}/perl-cross-${PV}"
 
