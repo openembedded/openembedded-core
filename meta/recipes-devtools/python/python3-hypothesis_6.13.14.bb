@@ -7,8 +7,8 @@ PYPI_PACKAGE = "hypothesis"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "262bb8cee0293ad06c453e78cf89bddcb613b91f82ea5587f3787611ee62861b"
+SRC_URI[sha256sum] = "36ef2d58f600be2973f694f45a55a5502de705d7594f9cf841276aec9082c414"
 
-RDEPENDS_${PN} += "python3-attrs python3-core python3-sortedcontainers"
+RDEPENDS_${PN} += "python3-attrs python3-core python3-sortedcontainers python3-unittest"
 
 BBCLASSEXTEND = "native nativesdk"
