@@ -34,7 +34,7 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://resize.cfg \
            ${@["", "file://init.cfg"][(d.getVar('VIRTUAL-RUNTIME_init_manager') == 'busybox')]} \
            ${@["", "file://mdev.cfg"][(d.getVar('VIRTUAL-RUNTIME_dev_manager') == 'busybox-mdev')]} \
-           ${@["", "file://syslog.cfg"][(d.getVar('VIRTUAL-RUNTIME_base-utils-syslog') == 'busybox-syslog')]} \
+           file://syslog.cfg \
            file://unicode.cfg \
            file://rcS \
            file://rcK \
