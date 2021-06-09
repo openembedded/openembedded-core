@@ -60,6 +60,19 @@ do_install_ptest () {
 	sed -i -e '/@PYTHONPATH=. $(PYTHON) $^/a\\t@if [ "$$?" != "0" ];then echo "FAIL:"$^;else echo "PASS:"$^;fi' ${D}${PTEST_PATH}/tests/Makefile
 }
 
+WARN_QA_append += "openssl-deprecation"
+QAPKGTEST[openssl-deprecation] = "package_qa_check_openssl_deprecation"
+def package_qa_check_openssl_deprecation (package, d, messages):
+    sane = True
+
+    pkgconfig = (d.getVar("PACKAGECONFIG") or "").split()
+    if pkgconfig and 'openssl' in pkgconfig:
+        package_qa_add_message(messages, 'openssl-deprecation', '"openssl" in opkg.bb PACKAGECONFIG. Feed signature checking with OpenSSL will be deprecated in the next opkg release. Consider using GPG checking instead.')
+        sane = False
+
+    return sane
+
+
 RDEPENDS_${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config libarchive"
 RDEPENDS_${PN}_class-native = ""
 RDEPENDS_${PN}_class-nativesdk = ""
