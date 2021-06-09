@@ -12,8 +12,8 @@ SRC_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/${BPN}/snapshot/${BPN}-${PV
            "
 UPSTREAM_CHECK_URI = "http://git.yoctoproject.org/cgit/cgit.cgi/opkg-utils/refs/"
 
-SRC_URI[md5sum] = "7bbadb3c381f3ea935b21d3bb8cc4671"
-SRC_URI[sha256sum] = "046517600fb0aed6c4645edefe02281f4fa2f1c02f71596152d93172452c0b01"
+SRC_URI[md5sum] = "025b19744e5c7fc1c8380e17df1fcc64"
+SRC_URI[sha256sum] = "528635e674addea5c2b3a3268404ad04a952c4f410d17c3d754f5dd5529770c9"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
