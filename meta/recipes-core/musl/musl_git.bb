@@ -84,3 +84,5 @@ RPROVIDES_${PN} += "ldd libsegfault rtld(GNU_HASH)"
 LEAD_SONAME = "libc.so"
 INSANE_SKIP_${PN}-dev = "staticdev"
 INSANE_SKIP_${PN} = "libdir"
+
+UPSTREAM_CHECK_COMMITS = "1"
