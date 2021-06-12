@@ -34,6 +34,8 @@ do_compile () {
 do_install () {
 	oe_runmake install 'DESTDIR=${D}'
 }
+
+RPROVIDES_${PN} += "musl-glibc-compat"
 #
 # We will skip parsing for non-musl systems
 #
