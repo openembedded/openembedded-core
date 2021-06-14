@@ -10,10 +10,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5eb289217c160e2920d2e35bddc36453 \
                     file://pcap.h;beginline=1;endline=32;md5=39af3510e011f34b8872f120b1dc31d2"
 DEPENDS = "flex-native bison-native"
 
-SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.gz \
-           "
-SRC_URI[md5sum] = "8c12dc19dd7e0d02d2bb6596eb5a71c7"
-SRC_URI[sha256sum] = "8d12b42623eeefee872f123bd0dc85d535b00df4d42e865f993c40f7bfc92b1e"
+SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.gz"
+SRC_URI[sha256sum] = "ed285f4accaf05344f90975757b3dbfe772ba41d1c401c2648b7fa45b711bdd4"
 
 inherit autotools binconfig-disabled pkgconfig
 
