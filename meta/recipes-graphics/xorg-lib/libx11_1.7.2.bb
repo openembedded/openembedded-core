@@ -31,9 +31,6 @@ EXTRA_OEMAKE += 'CWARNFLAGS=""'
 PACKAGECONFIG ??= "xcms"
 PACKAGECONFIG[xcms] = "--enable-xcms,--disable-xcms"
 
-# src/util/makekeys is built natively but needs -D_GNU_SOURCE defined.
-CPPFLAGS_FOR_BUILD += "-D_GNU_SOURCE"
-
 PACKAGES =+ "${PN}-xcb"
 
 inherit gettext
