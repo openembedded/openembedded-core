@@ -46,6 +46,8 @@ do_install_ptest() {
                 chmod 0755 ${D}${PTEST_PATH}/tests/test-mbrtowc-w32-1.sh  ${D}${PTEST_PATH}/tests/test-spawn-pipe-main \
                      ${D}${PTEST_PATH}/tests/test-spawn-pipe-child ${D}${PTEST_PATH}/tests/test-version-etc \
                      ${D}${PTEST_PATH}/tests/test-xalloc-die
+
+                ln -s ptest ${D}${libdir}/${BPN}/${BP} 
 }
 
 
