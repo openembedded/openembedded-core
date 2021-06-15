@@ -1,7 +1,7 @@
-From ad06fcf1e08736e79221cd6863ff2e3c9254f261 Mon Sep 17 00:00:00 2001
+From 67267d8cc31df16a3608cad1a17c5f1470ef8bbd Mon Sep 17 00:00:00 2001
 From: Steve Langasek <steve.langasek@ubuntu.com>
 Date: Sat, 10 Jun 2017 01:39:36 -0700
-Subject: [PATCH 4/4] ovmf: Update to latest
+Subject: [PATCH 3/6] ovmf: Update to latest
 
 Description: pass -fno-stack-protector to all GCC toolchains
  The upstream build rules inexplicably pass -fno-stack-protector only
@@ -9,16 +9,15 @@ Description: pass -fno-stack-protector to all GCC toolchains
  generic rules for gcc 4.4 and later.
 Last-Updated: 2016-04-12
 Upstream-Status: Pending
-
 ---
  BaseTools/Conf/tools_def.template | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
-index 933b3160fd..c2fbbf0c38 100755
+index 498696e583..36241b6ede 100755
 --- a/BaseTools/Conf/tools_def.template
 +++ b/BaseTools/Conf/tools_def.template
-@@ -1952,10 +1952,10 @@ DEFINE GCC_RISCV64_RC_FLAGS        = -I binary -O elf64-littleriscv   -B riscv
+@@ -1897,10 +1897,10 @@ DEFINE GCC_RISCV64_RC_FLAGS        = -I binary -O elf64-littleriscv   -B riscv
  # GCC Build Flag for included header file list generation
  DEFINE GCC_DEPS_FLAGS              = -MMD -MF $@.deps
  
@@ -32,7 +31,7 @@ index 933b3160fd..c2fbbf0c38 100755
  DEFINE GCC48_IA32_X64_ASLDLINK_FLAGS = DEF(GCC48_IA32_X64_DLINK_COMMON) -Wl,--entry,ReferenceAcpiTable -u ReferenceAcpiTable
  DEFINE GCC48_IA32_X64_DLINK_FLAGS    = DEF(GCC48_IA32_X64_DLINK_COMMON) -Wl,--entry,$(IMAGE_ENTRY_POINT) -u $(IMAGE_ENTRY_POINT) -Wl,-Map,$(DEST_DIR_DEBUG)/$(BASE_NAME).map,--whole-archive
  DEFINE GCC48_IA32_DLINK2_FLAGS       = -Wl,--defsym=PECOFF_HEADER_SIZE=0x220 DEF(GCC_DLINK2_FLAGS_COMMON)
-@@ -1964,7 +1964,7 @@ DEFINE GCC48_X64_DLINK2_FLAGS        = -Wl,--defsym=PECOFF_HEADER_SIZE=0x228 DEF
+@@ -1909,7 +1909,7 @@ DEFINE GCC48_X64_DLINK2_FLAGS        = -Wl,--defsym=PECOFF_HEADER_SIZE=0x228 DEF
  DEFINE GCC48_ASM_FLAGS               = DEF(GCC_ASM_FLAGS)
  DEFINE GCC48_ARM_ASM_FLAGS           = $(ARCHASM_FLAGS) $(PLATFORM_FLAGS) DEF(GCC_ASM_FLAGS) -mlittle-endian
  DEFINE GCC48_AARCH64_ASM_FLAGS       = $(ARCHASM_FLAGS) $(PLATFORM_FLAGS) DEF(GCC_ASM_FLAGS) -mlittle-endian
@@ -42,5 +41,5 @@ index 933b3160fd..c2fbbf0c38 100755
  DEFINE GCC48_AARCH64_CC_FLAGS        = $(ARCHCC_FLAGS) $(PLATFORM_FLAGS) -mcmodel=large DEF(GCC_AARCH64_CC_FLAGS)
  DEFINE GCC48_AARCH64_CC_XIPFLAGS     = DEF(GCC_AARCH64_CC_XIPFLAGS)
 -- 
-2.28.0
+2.32.0
 
