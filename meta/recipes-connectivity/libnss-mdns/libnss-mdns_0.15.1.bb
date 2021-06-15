@@ -11,7 +11,7 @@ DEPENDS = "avahi"
 SRC_URI = "git://github.com/lathiat/nss-mdns \
            "
 
-SRCREV = "65ad25563937682ab2770c36d56667a754837102"
+SRCREV = "4b3cfe818bf72d99a02b8ca8b8813cb2d6b40633"
 
 S = "${WORKDIR}/git"
 
