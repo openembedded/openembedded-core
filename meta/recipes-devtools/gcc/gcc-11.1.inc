@@ -68,7 +68,7 @@ SRC_URI = "\
            file://0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
            file://0036-mingw32-Enable-operation_not_supported.patch \
            file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch \
-           file://0001-Revert-libstdc-Install-libstdc-gdb.py-more-robustly-.patch \
+           file://0001-libstdc-Fix-installation-of-python-hooks-PR-99453.patch \
            file://0038-arc-Update-64bit-move-split-patterns.patch \
            file://0039-arc-Fix-u-maddhisi-patterns.patch \
            file://0040-arc-Update-doloop_end-patterns.patch \
