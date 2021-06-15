@@ -1,4 +1,2 @@
 helgrind/tests/hg05_race2
 helgrind/tests/tc09_bad_unlock
-drd/tests/bar_bad
-drd/tests/bar_bad_xml
