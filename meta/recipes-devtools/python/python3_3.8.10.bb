@@ -41,8 +41,8 @@ SRC_URI_append_class-native = " \
            file://0001-Don-t-search-system-for-headers-libraries.patch \
            "
 
-SRC_URI[md5sum] = "51b5bbf2ab447e66d15af4883db1c133"
-SRC_URI[sha256sum] = "5e391f3ec45da2954419cab0beaefd8be38895ea5ce33577c3ec14940c4b9572"
+SRC_URI[md5sum] = "d9eee4b20155553830a2025e4dcaa7b3"
+SRC_URI[sha256sum] = "6af24a66093dd840bcccf371d4044a3027e655cf24591ce26e48022bc79219d9"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
