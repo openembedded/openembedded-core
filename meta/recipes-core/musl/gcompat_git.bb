@@ -14,14 +14,16 @@ SRCREV = "af5a49e489fdc04b9cf02547650d7aeaccd43793"
 
 S = "${WORKDIR}/git"
 
-inherit pkgconfig linuxloader
+inherit pkgconfig linuxloader siteinfo
 
 DEPENDS += "musl-obstack"
 
 GLIBC_LDSO = "${@get_glibc_loader(d)}"
 MUSL_LDSO = "${@get_musl_loader(d)}"
 
-EXTRA_OEMAKE = "LINKER_PATH=${MUSL_LDSO} LOADER_NAME=`basename ${@get_glibc_loader(d)}`"
+EXTRA_OEMAKE = "LINKER_PATH=${MUSL_LDSO} \
+                LOADER_NAME=`basename ${GLIBC_LDSO}` \
+                "
 
 do_configure () {
 	:
@@ -33,7 +35,15 @@ do_compile () {
 
 do_install () {
 	oe_runmake install 'DESTDIR=${D}'
+	if [ "${SITEINFO_BITS}" = "64" ]; then
+		install -d ${D}/lib64
+		lnr ${D}${GLIBC_LDSO} ${D}/lib64/`basename ${GLIBC_LDSO}`
+	fi
 }
+
+FILES_${PN} += "/lib64"
+
+INSANE_SKIP_${PN} = "libdir"
 
 RPROVIDES_${PN} += "musl-glibc-compat"
 #
