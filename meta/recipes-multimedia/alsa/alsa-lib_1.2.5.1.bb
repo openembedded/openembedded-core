@@ -9,9 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
                     file://src/socket.c;md5=285675b45e83f571c6a957fe4ab79c93;beginline=9;endline=24 \
                     "
 
-SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2 \
-           file://0001-ucm_exec.c-Include-limits.h-explicitly-to-fix-build-.patch"
-SRC_URI[sha256sum] = "9092894a8c083b33acf8d6deb901b58f5d20d6da583789f814e8e46f2850ef18"
+SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2"
+SRC_URI[sha256sum] = "628421d950cecaf234de3f899d520c0a6923313c964ad751ffac081df331438e"
 
 inherit autotools pkgconfig
 
