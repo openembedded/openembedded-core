@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/rpm-software-management/libcomps.git \
            file://0002-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            "
 
-SRCREV = "f3289ed1d812648558ab48ade4fae850b375fa65"
+SRCREV = "dfaffdce1969042bda4a184865861573bb07a5a3"
 
 S = "${WORKDIR}/git"
 
