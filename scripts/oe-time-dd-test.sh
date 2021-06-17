@@ -26,7 +26,11 @@ if [ $? -ne 0 ]; then
 	echo "Timeout used: ${TIMEOUT}"
 	echo "start: top output"
 	top -c -b -n1 -w 512
-	echo "end: top output\n\nstart: cooker log"
+	echo "end: top output"
+	echo "start: iostat"
+	iostat -y -z -x 5 1
+	echo "end: iostat"
+	echo "start: cooker log"
 	tail -30 tmp*/log/cooker/*/console-latest.log
 	echo "end: cooker log"
 fi
