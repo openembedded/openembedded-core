@@ -192,6 +192,12 @@ class QemuRunner:
         qmp_file = "." + next(tempfile._get_candidate_names())
         qmp_param = ' -S -qmp unix:./%s,server,wait' % (qmp_file)
         qmp_port = self.tmpdir + "/" + qmp_file
+        # Create a second socket connection for debugging use, 
+        # note this will NOT cause qemu to block waiting for the connection
+        qmp_file2 = "." + next(tempfile._get_candidate_names())
+        qmp_param += ' -qmp unix:./%s,server,nowait' % (qmp_file2)
+        qmp_port2 = self.tmpdir + "/" + qmp_file2
+        self.logger.info("QMP Available for connection at %s" % (qmp_port2))
 
         try:
             if self.serial_ports >= 2:
