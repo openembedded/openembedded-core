@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
   python3-io \
   python3-html \
   python3-json \
+  python3-multiprocessing \
   python3-netserver \
   python3-setuptools \
   python3-unixadmin \
