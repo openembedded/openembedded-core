@@ -13,7 +13,6 @@ inherit autotools
 
 SRC_URI = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz"
 
-SRC_URI[md5sum] = "e1b07516533f351b3aba3423fafeffd6"
-SRC_URI[sha256sum] = "0d0671e1b45189c5fc8ade4b3b01635fb9eeab45cf54f57db23e4c4c1a17d261"
+SRC_URI[sha256sum] = "87daefacd7958b4a69f88c6856dbd1634261963c414079d0c371f589cd66a2e3"
 
 BBCLASSEXTEND = "native"
