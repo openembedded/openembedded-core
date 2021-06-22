@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://0001-drop-FindPythonInstDir.cmake.patch \
            "
 
-SRCREV = "669a5c691acba91693d238d6262ac99a440aa9b3"
+SRCREV = "8e451380bf84bd76e3925cbae2a06bb0e56f5cd9"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
