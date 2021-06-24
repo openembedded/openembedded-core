@@ -236,6 +236,7 @@ class QemuRunner:
         # to be a proper fix but this will suffice for now.
         self.runqemu = subprocess.Popen(launch_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, preexec_fn=os.setpgrp, env=env, cwd=self.tmpdir)
         output = self.runqemu.stdout
+        launch_time = time.time()
 
         #
         # We need the preexec_fn above so that all runqemu processes can easily be killed
@@ -339,6 +340,10 @@ class QemuRunner:
 
             try:
                 self.qmp.connect()
+                connect_time = time.time()
+                self.logger.info("QMP connected to QEMU at %s and took %s seconds" %
+                                  (time.strftime("%D %H:%M:%S"),
+                                   time.time() - launch_time))
             except OSError as msg:
                 self.logger.warning("Failed to connect qemu monitor socket: %s File: %s" % (msg, msg.filename))
                 return False
@@ -367,6 +372,9 @@ class QemuRunner:
 
         # Release the qemu process to continue running
         self.run_monitor('cont')
+        self.logger.info("QMP released QEMU at %s and took %s seconds from connect" %
+                          (time.strftime("%D %H:%M:%S"),
+                           time.time() - connect_time))
 
         # We are alive: qemu is running
         out = self.getOutput(output)
