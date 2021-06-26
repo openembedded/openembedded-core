@@ -17,6 +17,22 @@ REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
 DEPENDS += "xorgproto xtrans pixman libxkbfile libxfont2 wayland wayland-native wayland-protocols libdrm libepoxy"
 
+OPENGL_PKGCONFIGS = "glx glamor dri3"
+PACKAGECONFIG ??= "${XORG_CRYPTO} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '${OPENGL_PKGCONFIGS}', '', d)} \
+"
+PACKAGECONFIG[dri3] = "-Ddri3=true,-Ddri3=false"
+PACKAGECONFIG[glx] = "-Dglx=true,-Dglx=false,virtual/libgl virtual/libx11"
+PACKAGECONFIG[glamor] = "-Dglamor=true,-Dglamor=false,libepoxy virtual/libgbm,libegl"
+PACKAGECONFIG[unwind] = "-Dlibunwind=true,-Dlibunwind=false,libunwind"
+PACKAGECONFIG[xinerama] = "-Dxinerama=true,-Dxinerama=false"
+
+# Xorg requires a SHA1 implementation, pick one
+XORG_CRYPTO ??= "openssl"
+PACKAGECONFIG[openssl] = "-Dsha1=libcrypto,,openssl"
+PACKAGECONFIG[nettle] = "-Dsha1=libnettle,,nettle"
+PACKAGECONFIG[gcrypt] = "-Dsha1=libgcrypt,,libgcrypt"
+
 do_install_append() {
     # remove files not needed and clashing with xserver-xorg
     rm -rf ${D}/${libdir}/xorg/
