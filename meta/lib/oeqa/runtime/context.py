@@ -62,15 +62,15 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         runtime_group.add_argument('--target-type', action='store',
                 default=self.default_target_type, choices=['simpleremote', 'qemu'],
-                help="Target type of device under test, default: %s" \
+                help="Target type of device under test, default: %s"
                 % self.default_target_type)
         runtime_group.add_argument('--target-ip', action='store',
                 default=self.default_target_ip,
-                help="IP address of device under test, default: %s" \
+                help="IP address of device under test, default: %s"
                 % self.default_target_ip)
         runtime_group.add_argument('--server-ip', action='store',
                 default=self.default_target_ip,
-                help="IP address of device under test, default: %s" \
+                help="IP address of device under test, default: %s"
                 % self.default_server_ip)
 
         runtime_group.add_argument('--host-dumper-dir', action='store',
@@ -78,12 +78,12 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         runtime_group.add_argument('--packages-manifest', action='store',
                 default=self.default_manifest,
-                help="Package manifest of the image under test, default: %s" \
+                help="Package manifest of the image under test, default: %s"
                 % self.default_manifest)
 
         runtime_group.add_argument('--extract-dir', action='store',
                 default=self.default_extract_dir,
-                help='Directory where extracted packages reside, default: %s' \
+                help='Directory where extracted packages reside, default: %s'
                 % self.default_extract_dir)
 
         runtime_group.add_argument('--qemu-boot', action='store',

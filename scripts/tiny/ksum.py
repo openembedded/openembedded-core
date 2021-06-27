@@ -78,7 +78,7 @@ def add_ko_file(filename):
         if len(output) > 2:
             sizes = output[-1].split()[0:4]
             if verbose:
-                print("     %10d %10d %10d %10d\t" % \
+                print("     %10d %10d %10d %10d\t" %
                     (int(sizes[0]), int(sizes[1]), int(sizes[2]), int(sizes[3])), end=' ')
                 print("%s" % filename[len(os.getcwd()) + 1:])
             global n_ko_files, ko_text, ko_data, ko_bss, ko_total
@@ -94,7 +94,7 @@ def get_vmlinux_totals():
         if len(output) > 2:
             sizes = output[-1].split()[0:4]
             if verbose:
-                print("     %10d %10d %10d %10d\t" % \
+                print("     %10d %10d %10d %10d\t" %
                     (int(sizes[0]), int(sizes[1]), int(sizes[2]), int(sizes[3])), end=' ')
                 print("%s" % vmlinux_file[len(os.getcwd()) + 1:])
             global vmlinux_text, vmlinux_data, vmlinux_bss, vmlinux_total
@@ -132,16 +132,16 @@ def main():
     print("\nTotals:")
     print("\nvmlinux:")
     print("    text\tdata\t\tbss\t\ttotal")
-    print("    %-10d\t%-10d\t%-10d\t%-10d" % \
+    print("    %-10d\t%-10d\t%-10d\t%-10d" %
         (vmlinux_text, vmlinux_data, vmlinux_bss, vmlinux_total))
     print("\nmodules (%d):" % n_ko_files)
     print("    text\tdata\t\tbss\t\ttotal")
-    print("    %-10d\t%-10d\t%-10d\t%-10d" % \
+    print("    %-10d\t%-10d\t%-10d\t%-10d" %
         (ko_text, ko_data, ko_bss, ko_total))
     print("\nvmlinux + modules:")
     print("    text\tdata\t\tbss\t\ttotal")
-    print("    %-10d\t%-10d\t%-10d\t%-10d" % \
-        (vmlinux_text + ko_text, vmlinux_data + ko_data, \
+    print("    %-10d\t%-10d\t%-10d\t%-10d" %
+        (vmlinux_text + ko_text, vmlinux_data + ko_data,
          vmlinux_bss + ko_bss, vmlinux_total + ko_total))
 
 if __name__ == "__main__":

@@ -95,7 +95,7 @@ def change_interpreter(elf_file_name):
             if p_filesz == 0:
                 break
             if (len(new_dl_path) >= p_filesz):
-                print("ERROR: could not relocate %s, interp size = %i and %i is needed." \
+                print("ERROR: could not relocate %s, interp size = %i and %i is needed."
                     % (elf_file_name, p_memsz, len(new_dl_path) + 1))
                 break
             dl_path = new_dl_path + b("\0") * (p_filesz - len(new_dl_path))
@@ -149,7 +149,7 @@ def change_dl_sysdirs(elf_file_name):
                 new_ldsocache_path = old_prefix.sub(new_prefix, ldsocache_path)
                 new_ldsocache_path = new_ldsocache_path.rstrip(b("\0"))
                 if (len(new_ldsocache_path) >= sh_size):
-                    print("ERROR: could not relocate %s, .ldsocache section size = %i and %i is needed." \
+                    print("ERROR: could not relocate %s, .ldsocache section size = %i and %i is needed."
                     % (elf_file_name, sh_size, len(new_ldsocache_path)))
                     sys.exit(-1)
                 # pad with zeros
@@ -164,7 +164,7 @@ def change_dl_sysdirs(elf_file_name):
                     new_path = old_prefix.sub(new_prefix, path)
                     new_path = new_path.rstrip(b("\0"))
                     if (len(new_path) >= 4096):
-                        print("ERROR: could not relocate %s, max path size = 4096 and %i is needed." \
+                        print("ERROR: could not relocate %s, max path size = 4096 and %i is needed."
                         % (elf_file_name, len(new_path)))
                         sys.exit(-1)
                     # pad with zeros
@@ -227,8 +227,8 @@ for e in executables_list:
     except IOError:
         exctype, ioex = sys.exc_info()[:2]
         if ioex.errno == errno.ETXTBSY:
-            print("Could not open %s. File used by another process.\nPlease "\
-                  "make sure you exit all processes that might use any SDK "\
+            print("Could not open %s. File used by another process.\nPlease "
+                  "make sure you exit all processes that might use any SDK "
                   "binaries." % e)
         else:
             print("Could not open %s: %s(%d)" % (e, ioex.strerror, ioex.errno))

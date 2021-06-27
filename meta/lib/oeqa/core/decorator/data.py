@@ -113,7 +113,7 @@ class OETestDataDepends(OETestDecorator):
             try:
                 value = self.case.td[v]
             except KeyError:
-                raise OEQAMissingVariable("Test case need %s variable but"\
+                raise OEQAMissingVariable("Test case need %s variable but"
                         " isn't into td" % v)
 
 @registerDecorator

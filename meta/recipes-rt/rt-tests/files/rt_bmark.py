@@ -193,7 +193,7 @@ def end_stress(p):
 def us2hms_str(us):
         s = (us+500000) // 1000000 # Round microseconds to s
         m = s//60
-        s -= 60*m;
+        s -= 60*m
         h = m//60
         m -= 60*h
 

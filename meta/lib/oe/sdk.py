@@ -93,7 +93,7 @@ class Sdk(object, metaclass=ABCMeta):
             if linguas == "all":
                 pm.install_glob("nativesdk-glibc-binary-localedata-*.utf-8", sdk=True)
             else:
-                pm.install(["nativesdk-glibc-binary-localedata-%s.utf-8" % \
+                pm.install(["nativesdk-glibc-binary-localedata-%s.utf-8" %
                            lang for lang in linguas.split()])
             # Generate a locale archive of them
             target_arch = self.d.getVar('SDK_ARCH')

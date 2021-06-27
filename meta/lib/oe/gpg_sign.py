@@ -82,7 +82,7 @@ class LocalSigner(object):
         try:
             if passphrase_file:
                 with open(passphrase_file) as fobj:
-                    passphrase = fobj.readline();
+                    passphrase = fobj.readline()
 
             job = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
             (_, stderr) = job.communicate(passphrase.encode("utf-8"))

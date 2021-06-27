@@ -39,7 +39,7 @@ class Sizes:
             self.text = self.data = self.bss = self.total = 0
 
     def show(self, indent=""):
-        print("%-32s %10d | %10d %10d %10d" % \
+        print("%-32s %10d | %10d %10d %10d" %
               (indent+self.title, self.total, self.text, self.data, self.bss))
 
 
@@ -85,7 +85,7 @@ class Report:
 
     def show(self, indent=""):
         rule = str.ljust(indent, 80, '-')
-        print("%-32s %10s | %10s %10s %10s" % \
+        print("%-32s %10s | %10s %10s %10s" %
               (indent+self.title, "total", "text", "data", "bss"))
         print(rule)
         self.sizes.show(indent)
@@ -94,10 +94,10 @@ class Report:
             if p.sizes.total > 0:
                 p.sizes.show(indent)
         print(rule)
-        print("%-32s %10d | %10d %10d %10d" % \
+        print("%-32s %10d | %10d %10d %10d" %
               (indent+"sum", self.totals["total"], self.totals["text"],
                self.totals["data"], self.totals["bss"]))
-        print("%-32s %10d | %10d %10d %10d" % \
+        print("%-32s %10d | %10d %10d %10d" %
               (indent+"delta", self.deltas["total"], self.deltas["text"],
                self.deltas["data"], self.deltas["bss"]))
         print("\n")

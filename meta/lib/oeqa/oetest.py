@@ -145,8 +145,8 @@ def skipModule(reason, pos=2):
     if modname not in oeTest.tc.testsrequired:
         raise unittest.SkipTest("%s: %s" % (modname, reason))
     else:
-        raise Exception("\nTest %s wants to be skipped.\nReason is: %s" \
-                "\nTest was required in TEST_SUITES, so either the condition for skipping is wrong" \
+        raise Exception("\nTest %s wants to be skipped.\nReason is: %s"
+                "\nTest was required in TEST_SUITES, so either the condition for skipping is wrong"
                 "\nor the image really doesn't have the required feature/package when it should." % (modname, reason))
 
 def skipModuleIf(cond, reason):

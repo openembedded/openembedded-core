@@ -133,7 +133,7 @@ class OESelftestTestContext(OETestContext):
             self.custommachine = machine
             if machine == 'random':
                 self.custommachine = choice(self.machines)
-            self.logger.info('Run tests with custom MACHINE set to: %s' % \
+            self.logger.info('Run tests with custom MACHINE set to: %s' %
                     self.custommachine)
         return super(OESelftestTestContext, self).runTests(processes, skips)
 
@@ -289,7 +289,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
         def _add_layer_libs():
             bbpath = self.tc.td['BBPATH'].split(':')
-            layer_libdirs = [p for p in (os.path.join(l, 'lib') \
+            layer_libdirs = [p for p in (os.path.join(l, 'lib')
                     for l in bbpath) if os.path.exists(p)]
             if layer_libdirs:
                 self.tc.logger.info("Adding layer libraries:")

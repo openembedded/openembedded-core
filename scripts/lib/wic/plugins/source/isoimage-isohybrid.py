@@ -170,24 +170,24 @@ class IsoImagePlugin(SourcePlugin):
             # Create initrd from rootfs directory
             initrd = "%s/initrd.cpio.gz" % cr_workdir
             initrd_dir = "%s/INITRD" % cr_workdir
-            shutil.copytree("%s" % rootfs_dir, \
+            shutil.copytree("%s" % rootfs_dir,
                             "%s" % initrd_dir, symlinks=True)
 
             if os.path.isfile("%s/init" % rootfs_dir):
                 shutil.copy2("%s/init" % rootfs_dir, "%s/init" % initrd_dir)
             elif os.path.lexists("%s/init" % rootfs_dir):
-                os.symlink(os.readlink("%s/init" % rootfs_dir), \
+                os.symlink(os.readlink("%s/init" % rootfs_dir),
                             "%s/init" % initrd_dir)
             elif os.path.isfile("%s/sbin/init" % rootfs_dir):
-                shutil.copy2("%s/sbin/init" % rootfs_dir, \
+                shutil.copy2("%s/sbin/init" % rootfs_dir,
                             "%s" % initrd_dir)
             elif os.path.lexists("%s/sbin/init" % rootfs_dir):
-                os.symlink(os.readlink("%s/sbin/init" % rootfs_dir), \
+                os.symlink(os.readlink("%s/sbin/init" % rootfs_dir),
                             "%s/init" % initrd_dir)
             else:
                 raise WicError("Couldn't find or build initrd, exiting.")
 
-            exec_cmd("cd %s && find . | cpio -o -H newc -R root:root >%s/initrd.cpio " \
+            exec_cmd("cd %s && find . | cpio -o -H newc -R root:root >%s/initrd.cpio "
                      % (initrd_dir, cr_workdir), as_shell=True)
             exec_cmd("gzip -f -9 %s/initrd.cpio" % cr_workdir, as_shell=True)
             shutil.rmtree(initrd_dir)

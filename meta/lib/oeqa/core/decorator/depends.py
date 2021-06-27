@@ -37,7 +37,7 @@ def _validate_test_case_depends(cases, depends):
             continue
         for dep in depends[case]:
             if not dep in cases:
-                raise OEQADependency("TestCase %s depends on %s and isn't available"\
+                raise OEQADependency("TestCase %s depends on %s and isn't available"
                        ", cases available %s." % (case, dep, str(cases.keys())))
 
 def _order_test_case_by_depends(cases, depends):
@@ -46,7 +46,7 @@ def _order_test_case_by_depends(cases, depends):
         for edge in graph[node]:
             if edge not in resolved:
                 if edge in seen:
-                    raise OEQADependency("Test cases %s and %s have a circular" \
+                    raise OEQADependency("Test cases %s and %s have a circular"
                                        " dependency." % (node, edge))
                 _dep_resolve(graph, edge, resolved, seen)
         resolved.append(node)
@@ -73,7 +73,7 @@ def _skipTestDependency(case, depends):
                 found = True
                 break
         if not found:
-            raise SkipTest("Test case %s depends on %s but it didn't pass/run." \
+            raise SkipTest("Test case %s depends on %s but it didn't pass/run."
                         % (case.id(), dep))
 
 @registerDecorator

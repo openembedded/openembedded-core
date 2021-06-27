@@ -241,7 +241,7 @@ class BootimgEFIPlugin(SourcePlugin):
                 logger.debug('Destination entry: %r', dst_entry)
                 deploy_files.append(dst_entry)
 
-            cls.install_task = [];
+            cls.install_task = []
             for deploy_entry in deploy_files:
                 src, dst = deploy_entry
                 if '*' in src:

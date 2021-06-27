@@ -52,7 +52,7 @@ class DevtoolTest(OESDKExtTestCase):
 
     def test_devtool_location(self):
         output = self._run('which devtool')
-        self.assertEqual(output.startswith(self.tc.sdk_dir), True, \
+        self.assertEqual(output.startswith(self.tc.sdk_dir), True,
             msg="Seems that devtool isn't the eSDK one: %s" % output)
 
     def test_devtool_add_reset(self):

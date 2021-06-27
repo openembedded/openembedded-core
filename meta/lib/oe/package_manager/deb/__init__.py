@@ -419,7 +419,7 @@ class DpkgPM(OpkgDpkgPM):
                                    os.path.join(self.deploy_dir, arch))
 
         base_arch_list = base_archs.split()
-        multilib_variants = self.d.getVar("MULTILIB_VARIANTS");
+        multilib_variants = self.d.getVar("MULTILIB_VARIANTS")
         for variant in multilib_variants.split():
             localdata = bb.data.createCopy(self.d)
             variant_tune = localdata.getVar("DEFAULTTUNE_virtclass-multilib-" + variant, False)
@@ -437,7 +437,7 @@ class DpkgPM(OpkgDpkgPM):
                     if match_arch:
                         for base_arch in base_arch_list:
                             architectures += "\"%s\";" % base_arch
-                        apt_conf.write("  Architectures {%s};\n" % architectures);
+                        apt_conf.write("  Architectures {%s};\n" % architectures)
                         apt_conf.write("  Architecture \"%s\";\n" % base_archs)
                     else:
                         line = re.sub(r"#ROOTFS#", self.target_rootfs, line)

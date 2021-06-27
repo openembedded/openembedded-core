@@ -517,10 +517,10 @@ def drop_to_shell(workdir=None):
         return False
 
     shell = os.environ.get('SHELL', 'bash')
-    print('Dropping to shell "%s"\n' \
-          'When you are finished, run the following to continue:\n' \
-          '       exit    -- continue to apply the patches\n' \
-          '       exit 1  -- abort\n' % shell);
+    print('Dropping to shell "%s"\n'
+          'When you are finished, run the following to continue:\n'
+          '       exit    -- continue to apply the patches\n'
+          '       exit 1  -- abort\n' % shell)
     ret = subprocess.call([shell], cwd=workdir)
     if ret != 0:
         print("Aborting")
@@ -725,8 +725,8 @@ def update_with_patches(conf, components, revisions, repos):
 
     # Step 5: invoke bash for user to edit patch and patch list
     if conf.interactive:
-        print('You may now edit the patch and patch list in %s\n' \
-              'For example, you can remove unwanted patch entries from patchlist-*, so that they will be not applied later' % patch_dir);
+        print('You may now edit the patch and patch list in %s\n'
+              'For example, you can remove unwanted patch entries from patchlist-*, so that they will be not applied later' % patch_dir)
         if not drop_to_shell(patch_dir):
             sys.exit(1)
 

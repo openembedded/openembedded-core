@@ -12,7 +12,7 @@ class DistroCheckLayer(OECheckLayerTestCase):
     @classmethod
     def setUpClass(self):
         if self.tc.layer['type'] != LayerType.DISTRO:
-            raise unittest.SkipTest("DistroCheckLayer: Layer %s isn't Distro one." %\
+            raise unittest.SkipTest("DistroCheckLayer: Layer %s isn't Distro one." %
                 self.tc.layer['name'])
 
     def test_distro_defines_distros(self):
@@ -24,5 +24,5 @@ class DistroCheckLayer(OECheckLayerTestCase):
 
         distro = get_bb_var('DISTRO')
         self.assertEqual(self.td['bbvars']['DISTRO'], distro,
-                msg="Layer %s modified distro %s -> %s" % \
+                msg="Layer %s modified distro %s -> %s" %
                     (self.tc.layer['name'], self.td['bbvars']['DISTRO'], distro))

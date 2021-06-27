@@ -63,7 +63,8 @@ class Gnome(XTerminal):
         # https://bugzilla.gnome.org/show_bug.cgi?id=732127; as a workaround,
         # clearing the LC_ALL environment variable so it uses the locale.
         # Once fixed on the gnome-terminal project, this should be removed.
-        if os.getenv('LC_ALL'): os.putenv('LC_ALL','')
+        if os.getenv('LC_ALL'):
+            os.putenv('LC_ALL','')
 
         XTerminal.__init__(self, sh_cmd, title, env, d)
 

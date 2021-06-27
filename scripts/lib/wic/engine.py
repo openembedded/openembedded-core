@@ -76,7 +76,7 @@ def find_canned_image(scripts_path, wks_file):
             for fname in files:
                 if fname.endswith("~") or fname.endswith("#"):
                     continue
-                if ((fname.endswith(".wks") and wks_file + ".wks" == fname) or \
+                if ((fname.endswith(".wks") and wks_file + ".wks" == fname) or
                    (fname.endswith(".wks.in") and wks_file + ".wks.in" == fname)):
                     fullpath = os.path.join(canned_wks_dir, fname)
                     return fullpath
@@ -519,7 +519,7 @@ class Disk:
                         partimg = self._get_part_image(pnum)
                         sparse_copy(partimg, partfname)
                         exec_cmd("{} -pf {}".format(self.e2fsck, partfname))
-                        exec_cmd("{} {} {}s".format(\
+                        exec_cmd("{} {} {}s".format(
                                  self.resize2fs, partfname, part['size']))
                     elif fstype.startswith('fat'):
                         logger.info("copying content of the fat partition {}".format(pnum))
@@ -561,7 +561,7 @@ def wic_ls(args, native_sysroot):
         if disk.partitions:
             print('Num     Start        End          Size      Fstype')
             for part in disk.partitions.values():
-                print("{:2d}  {:12d} {:12d} {:12d}  {}".format(\
+                print("{:2d}  {:12d} {:12d} {:12d}  {}".format(
                           part.pnum, part.start, part.end,
                           part.size, part.fstype))
     else:

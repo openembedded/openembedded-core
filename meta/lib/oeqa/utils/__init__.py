@@ -69,13 +69,13 @@ def load_test_components(logger, executor):
                 comp_name = file
                 comp_context = os.path.join(base_dir, file, 'context.py')
                 if os.path.exists(comp_context):
-                    comp_plugin = importlib.import_module('oeqa.%s.%s' % \
+                    comp_plugin = importlib.import_module('oeqa.%s.%s' %
                             (comp_name, 'context'))
                     try:
                         if not issubclass(comp_plugin._executor_class,
                                 OETestContextExecutor):
-                            raise TypeError("Component %s in %s, _executor_class "\
-                                "isn't derived from OETestContextExecutor."\
+                            raise TypeError("Component %s in %s, _executor_class "
+                                "isn't derived from OETestContextExecutor."
                                 % (comp_name, comp_context))
 
                         if comp_plugin._executor_class._script_executor \
@@ -84,7 +84,7 @@ def load_test_components(logger, executor):
 
                         components[comp_name] = comp_plugin._executor_class()
                     except AttributeError:
-                        raise AttributeError("Component %s in %s don't have "\
+                        raise AttributeError("Component %s in %s don't have "
                                 "_executor_class defined." % (comp_name, comp_context))
 
     return components

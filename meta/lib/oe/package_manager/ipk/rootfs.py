@@ -82,8 +82,8 @@ class DpkgOpkgRootfs(Rootfs):
             for edge in graph[node]:
                 if edge not in resolved:
                     if edge in seen:
-                        raise RuntimeError("Packages %s and %s have " \
-                                "a circular dependency in postinsts scripts." \
+                        raise RuntimeError("Packages %s and %s have "
+                                "a circular dependency in postinsts scripts."
                                 % (node, edge))
                     _dep_resolve(graph, edge, resolved, seen)
 

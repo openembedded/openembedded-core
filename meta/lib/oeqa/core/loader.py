@@ -106,7 +106,7 @@ class OETestLoader(unittest.TestLoader):
         def _handle(obj):
             if isinstance(obj, OETestDecorator):
                 if not obj.__class__ in decoratorClasses:
-                    raise Exception("Decorator %s isn't registered" \
+                    raise Exception("Decorator %s isn't registered"
                             " in decoratorClasses." % obj.__name__)
                 obj.bind(self.tc._registry, case)
 
@@ -217,11 +217,11 @@ class OETestLoader(unittest.TestLoader):
             Returns a suite of all tests cases contained in testCaseClass.
         """
         if issubclass(testCaseClass, unittest.suite.TestSuite):
-            raise TypeError("Test cases should not be derived from TestSuite." \
-                                " Maybe you meant to derive %s from TestCase?" \
+            raise TypeError("Test cases should not be derived from TestSuite."
+                                " Maybe you meant to derive %s from TestCase?"
                                 % testCaseClass.__name__)
         if not issubclass(testCaseClass, unittest.case.TestCase):
-            raise TypeError("Test %s is not derived from %s" % \
+            raise TypeError("Test %s is not derived from %s" %
                     (testCaseClass.__name__, unittest.case.TestCase.__name__))
 
         testCaseNames = self.getTestCaseNames(testCaseClass)
@@ -262,7 +262,7 @@ class OETestLoader(unittest.TestLoader):
                     break
 
             if not found:
-                raise OEQATestNotFound("Not found %s in loaded test cases" % \
+                raise OEQATestNotFound("Not found %s in loaded test cases" %
                         module)
 
     def discover(self):
@@ -300,14 +300,14 @@ class OETestLoader(unittest.TestLoader):
         # module list.
         # Underscore modules are loaded only if specified in module list.
         load_module = True if not module_name.startswith('_') \
-                              and (not self.modules \
-                                   or module_name in self.modules \
-                                   or module_name_small in self.modules \
+                              and (not self.modules
+                                   or module_name in self.modules
+                                   or module_name_small in self.modules
                                    or 'auto' in self.modules) \
                            else False
 
         load_underscore = True if module_name.startswith('_') \
-                                  and (module_name in self.modules or \
+                                  and (module_name in self.modules or
                                   module_name_small in self.modules) \
                                else False
 

@@ -59,7 +59,7 @@ def extract_files(debugfs_output):
      /92/040755/1002/1002/tmp//\n
     """
     # NOTE the occasional ^M in file names
-    return [line.split('/')[5].strip() for line in \
+    return [line.split('/')[5].strip() for line in
             debugfs_output.strip().split('/\n')]
 
 def files_own_by_root(debugfs_output):
@@ -402,7 +402,7 @@ part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path usr
 part /usr --source rootfs --ondisk mmcblk0 --fstype=ext4 --rootfs-dir %s/usr
 part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --rootfs-dir %s/usr"""
                           % (rootfs_dir, rootfs_dir))
-            runCmd("wic create %s -e core-image-minimal -o %s" \
+            runCmd("wic create %s -e core-image-minimal -o %s"
                                        % (wks_file, self.resultdir))
 
             os.remove(wks_file)
@@ -433,7 +433,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
             # Test partition 1, should contain the normal root directories, except
             # /usr.
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % \
+            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" %
                              os.path.join(self.resultdir, "selftest_img.part1"))
             files = extract_files(res.output)
             self.assertIn("etc", files)
@@ -441,7 +441,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
             # Partition 2, should contain common directories for /usr, not root
             # directories.
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % \
+            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" %
                              os.path.join(self.resultdir, "selftest_img.part2"))
             files = extract_files(res.output)
             self.assertNotIn("etc", files)
@@ -450,14 +450,14 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
             # Partition 3, should contain the same as partition 2, including the bin
             # directory, but not the files inside it.
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % \
+            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" %
                              os.path.join(self.resultdir, "selftest_img.part3"))
             files = extract_files(res.output)
             self.assertNotIn("etc", files)
             self.assertNotIn("usr", files)
             self.assertIn("share", files)
             self.assertIn("bin", files)
-            res = runCmd("debugfs -R 'ls -p bin' %s 2>/dev/null" % \
+            res = runCmd("debugfs -R 'ls -p bin' %s 2>/dev/null" %
                              os.path.join(self.resultdir, "selftest_img.part3"))
             files = extract_files(res.output)
             self.assertIn(".", files)
@@ -489,7 +489,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 part /part1 --source rootfs --ondisk mmcblk0 --fstype=ext4
 part /part2 --source rootfs --ondisk mmcblk0 --fstype=ext4 --include-path %s"""
                           % (include_path))
-            runCmd("wic create %s -e core-image-minimal -o %s" \
+            runCmd("wic create %s -e core-image-minimal -o %s"
                                        % (wks_file, self.resultdir))
 
             part1 = glob(os.path.join(self.resultdir, 'temp-*.direct.p1'))[0]
@@ -526,7 +526,7 @@ part /part2 --source rootfs --ondisk mmcblk0 --fstype=ext4 --include-path %s"""
                 wks.write("""
 part / --source rootfs  --fstype=ext4 --include-path %s --include-path core-image-minimal-mtdutils export/"""
                           % (include_path))
-            runCmd("wic create %s -e core-image-minimal -o %s" \
+            runCmd("wic create %s -e core-image-minimal -o %s"
                                        % (wks_file, self.resultdir))
 
             part1 = glob(os.path.join(self.resultdir, 'temp-*.direct.p1'))[0]
@@ -551,21 +551,21 @@ part / --source rootfs  --fstype=ext4 --include-path %s --include-path core-imag
         # Absolute argument.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --fstype=ext4 --include-path core-image-minimal-mtdutils /export")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
         # Argument pointing to parent directory.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --fstype=ext4 --include-path core-image-minimal-mtdutils ././..")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
         # 3 Argument pointing to parent directory.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --fstype=ext4 --include-path core-image-minimal-mtdutils export/ dummy")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
@@ -576,14 +576,14 @@ part / --source rootfs  --fstype=ext4 --include-path %s --include-path core-imag
         # Absolute argument.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path /usr")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
         # Argument pointing to parent directory.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path ././..")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
@@ -619,7 +619,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
                 wks_file = os.path.join(include_path, 'temp.wks')
                 with open(wks_file, 'w') as wks:
                     wks.write(test)
-                runCmd("wic create %s -e core-image-minimal -o %s" \
+                runCmd("wic create %s -e core-image-minimal -o %s"
                                        % (wks_file, self.resultdir))
 
                 for part in glob(os.path.join(self.resultdir, 'temp-*.direct.p*')):
@@ -656,7 +656,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
             wks_file = os.path.join(include_path, 'temp.wks')
             with open(wks_file, 'w') as wks:
                 wks.write("part /etc --source rootfs --fstype=ext4 --change-directory=etc")
-            runCmd("wic create %s -e core-image-minimal -o %s" \
+            runCmd("wic create %s -e core-image-minimal -o %s"
                                        % (wks_file, self.resultdir))
 
             part1 = glob(os.path.join(self.resultdir, 'temp-*.direct.p1'))[0]
@@ -675,14 +675,14 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
         # Absolute argument.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --fstype=ext4 --change-directory /usr")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
         # Argument pointing to parent directory.
         with open(wks_file, 'w') as wks:
             wks.write("part / --source rootfs --fstype=ext4 --change-directory ././..")
-        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s" \
+        self.assertNotEqual(0, runCmd("wic create %s -e core-image-minimal -o %s"
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
@@ -816,7 +816,7 @@ class Wic2(WicTestCase):
         """
         with NamedTemporaryFile("w", suffix=".wks", delete=False) as tempf:
             wkspath = tempf.name
-            tempf.write("part " \
+            tempf.write("part "
                      "--source rootfs --ondisk hda --align 4 --fixed-size %d "
                      "--fstype=ext4\n" % size)
 
@@ -881,8 +881,8 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are placed at the correct offsets, default KB
-            tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 100M --fstype=ext4\n" \
+            tempf.write("bootloader --ptable gpt\n"
+                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 100M --fstype=ext4\n"
                         "part /bar                 --ondisk hda --offset 102432 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -894,8 +894,8 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are placed at the correct offsets, same with explicit KB
-            tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32K     --fixed-size 100M --fstype=ext4\n" \
+            tempf.write("bootloader --ptable gpt\n"
+                        "part /    --source rootfs --ondisk hda --offset 32K     --fixed-size 100M --fstype=ext4\n"
                         "part /bar                 --ondisk hda --offset 102432K --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -907,8 +907,8 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are placed at the correct offsets using MB
-            tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32K  --fixed-size 100M --fstype=ext4\n" \
+            tempf.write("bootloader --ptable gpt\n"
+                        "part /    --source rootfs --ondisk hda --offset 32K  --fixed-size 100M --fstype=ext4\n"
                         "part /bar                 --ondisk hda --offset 101M --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -920,8 +920,8 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions can be placed on a 512 byte sector boundary
-            tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 65s --fixed-size 99M --fstype=ext4\n" \
+            tempf.write("bootloader --ptable gpt\n"
+                        "part /    --source rootfs --ondisk hda --offset 65s --fixed-size 99M --fstype=ext4\n"
                         "part /bar                 --ondisk hda --offset 102432 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -933,7 +933,7 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that a partition can be placed immediately after a MSDOS partition table
-            tempf.write("bootloader --ptable msdos\n" \
+            tempf.write("bootloader --ptable msdos\n"
                         "part /    --source rootfs --ondisk hda --offset 1s --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -944,8 +944,8 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that image creation fails if the partitions would overlap
-            tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 100M --fstype=ext4\n" \
+            tempf.write("bootloader --ptable gpt\n"
+                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 100M --fstype=ext4\n"
                         "part /bar                 --ondisk hda --offset 102431 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -954,7 +954,7 @@ class Wic2(WicTestCase):
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are not allowed to overlap with the booloader
-            tempf.write("bootloader --ptable gpt\n" \
+            tempf.write("bootloader --ptable gpt\n"
                         "part /    --source rootfs --ondisk hda --offset 8 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
@@ -965,7 +965,7 @@ class Wic2(WicTestCase):
         native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
-            tempf.write("bootloader --ptable gpt\n" \
+            tempf.write("bootloader --ptable gpt\n"
                         "part /     --source rootfs --ondisk hda --extra-space 200M --fstype=ext4\n")
             tempf.flush()
 
@@ -1002,7 +1002,7 @@ class Wic2(WicTestCase):
         machine = get_bb_var('MACHINE', img)
         with NamedTemporaryFile("w", suffix=".wks") as wks:
             wks.writelines(['part /boot --active --source bootimg-pcbios\n',
-                            'part / --source rawcopy --sourceparams="file=%s-%s.ext4" --use-uuid\n'\
+                            'part / --source rawcopy --sourceparams="file=%s-%s.ext4" --use-uuid\n'
                              % (img, machine),
                             'bootloader --timeout=0 --append="console=ttyS0,115200n8"\n'])
             wks.flush()
@@ -1080,7 +1080,7 @@ class Wic2(WicTestCase):
         img = 'core-image-minimal'
         with NamedTemporaryFile("w", suffix=".wks") as wks:
             wks.writelines(['part /boot --active --source bootimg-biosplusefi --sourceparams="loader=grub-efi"\n',
-                            'part / --source rootfs --fstype=ext4 --align 1024 --use-uuid\n'\
+                            'part / --source rootfs --fstype=ext4 --align 1024 --use-uuid\n'
                             'bootloader --timeout=0 --append="console=ttyS0,115200n8"\n'])
             wks.flush()
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
@@ -1111,7 +1111,7 @@ class Wic2(WicTestCase):
     def test_kickstart_parser(self):
         """Test wks parser options"""
         with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.writelines(['part / --fstype ext3 --source rootfs --system-id 0xFF '\
+            wks.writelines(['part / --fstype ext3 --source rootfs --system-id 0xFF '
                             '--overhead-factor 1.2 --size 100k\n'])
             wks.flush()
             cmd = "wic create %s -e core-image-minimal -o %s" % (wks.name, self.resultdir)

@@ -12,7 +12,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
     @classmethod
     def setUpClass(self):
         if self.tc.layer['type'] != LayerType.BSP:
-            raise unittest.SkipTest("BSPCheckLayer: Layer %s isn't BSP one." %\
+            raise unittest.SkipTest("BSPCheckLayer: Layer %s isn't BSP one." %
                 self.tc.layer['name'])
 
     def test_bsp_defines_machines(self):
@@ -24,7 +24,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
 
         machine = get_bb_var('MACHINE')
         self.assertEqual(self.td['bbvars']['MACHINE'], machine,
-                msg="Layer %s modified machine %s -> %s" % \
+                msg="Layer %s modified machine %s -> %s" %
                     (self.tc.layer['name'], self.td['bbvars']['MACHINE'], machine))
 
 

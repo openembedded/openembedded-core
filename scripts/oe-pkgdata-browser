@@ -31,7 +31,7 @@ def timeit(f):
         print ("func:%r calling" % f.__name__)
         result = f(*args, **kw)
         te = time.time()
-        print ('func:%r args:[%r, %r] took: %2.4f sec' % \
+        print ('func:%r args:[%r, %r] took: %2.4f sec' %
           (f.__name__, args, kw, te-ts))
         return result
     return timed

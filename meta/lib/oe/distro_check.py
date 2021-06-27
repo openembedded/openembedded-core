@@ -69,7 +69,8 @@ def get_source_package_list_from_url_by_letter(url, section, d):
         try:
             packages |= get_source_package_list_from_url(url + "/" + letter, section, d)
         except HTTPError as e:
-            if e.code != 404: raise
+            if e.code != 404:
+                raise
     return packages
 
 def get_latest_released_fedora_source_package_list(d):

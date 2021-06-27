@@ -297,7 +297,8 @@ def _parse_proc_ps_log(writer, file):
     timed_blocks = _parse_timed_blocks(file)
     for time, lines in timed_blocks:
         for line in lines:
-            if not line: continue
+            if not line:
+                continue
             tokens = line.split(' ')
             if len(tokens) < 21:
                 continue
@@ -352,7 +353,8 @@ def _parse_taskstats_log(writer, file):
             ltime = time
 #                       continue
         for line in lines:
-            if not line: continue
+            if not line:
+                continue
             tokens = line.split(' ')
             if len(tokens) != 6:
                 continue
@@ -380,7 +382,7 @@ def _parse_taskstats_log(writer, file):
                     process = process.split (writer, pid, cmd, ppid, time)
                     processMap[pid] = process
                 else:
-                    process.cmd = cmd;
+                    process.cmd = cmd
             else:
                 process = Process(writer, pid, cmd, ppid, time)
                 processMap[pid] = process

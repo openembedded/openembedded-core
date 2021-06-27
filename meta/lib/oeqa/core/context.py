@@ -144,7 +144,7 @@ class OETestContextExecutor(object):
         if self.default_cases:
             self.parser.add_argument('CASES_PATHS', action='store',
                     default=self.default_cases, nargs='*',
-                    help="paths to directories with test cases, default: %s"\
+                    help="paths to directories with test cases, default: %s"
                             % self.default_cases)
         else:
             self.parser.add_argument('CASES_PATHS', action='store',
@@ -153,7 +153,7 @@ class OETestContextExecutor(object):
         self.parser.set_defaults(func=self.run)
 
     def _setup_logger(self, logger, args):
-        formatter = logging.Formatter('%(asctime)s - ' + self.name + \
+        formatter = logging.Formatter('%(asctime)s - ' + self.name +
                 ' - %(levelname)s - %(message)s')
         sh = logger.handlers[0]
         sh.setFormatter(formatter)
