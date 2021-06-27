@@ -12,26 +12,26 @@ class NotELFFileError(Exception):
 class ELFFile:
     EI_NIDENT = 16
 
-    EI_CLASS      = 4
-    EI_DATA       = 5
-    EI_VERSION    = 6
-    EI_OSABI      = 7
+    EI_CLASS = 4
+    EI_DATA = 5
+    EI_VERSION = 6
+    EI_OSABI = 7
     EI_ABIVERSION = 8
 
-    E_MACHINE    = 0x12
+    E_MACHINE = 0x12
 
     # possible values for EI_CLASS
     ELFCLASSNONE = 0
-    ELFCLASS32   = 1
-    ELFCLASS64   = 2
+    ELFCLASS32 = 1
+    ELFCLASS64 = 2
 
     # possible value for EI_VERSION
-    EV_CURRENT   = 1
+    EV_CURRENT = 1
 
     # possible values for EI_DATA
-    EI_DATA_NONE  = 0
-    EI_DATA_LSB  = 1
-    EI_DATA_MSB  = 2
+    EI_DATA_NONE = 0
+    EI_DATA_LSB = 1
+    EI_DATA_MSB = 2
 
     PT_INTERP = 3
 

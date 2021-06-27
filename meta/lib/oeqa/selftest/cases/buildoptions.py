@@ -68,7 +68,7 @@ class DiskMonTest(OESelftestTestCase):
         self.assertEqual(res.status, 1, msg="bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
         self.write_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},100000G,100K"\nBB_HEARTBEAT_EVENT = "1"')
         res = bitbake("delay -c delay")
-        self.assertTrue('WARNING: The free space' in res.output, msg="A warning should have been displayed for disk monitor is set to WARN: %s" %res.output)
+        self.assertTrue('WARNING: The free space' in res.output, msg="A warning should have been displayed for disk monitor is set to WARN: %s" % res.output)
 
 class SanityOptionsTest(OESelftestTestCase):
     def getline(self, res, line):

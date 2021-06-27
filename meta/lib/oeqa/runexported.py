@@ -52,7 +52,7 @@ class FakeTarget(object):
         if os.path.lexists(sshloglink):
             os.remove(sshloglink)
         os.symlink(self.sshlog, sshloglink)
-        print("SSH log file: %s" %  self.sshlog)
+        print("SSH log file: %s" % self.sshlog)
         self.connection = SSHControl(self.ip, logfile=self.sshlog)
 
     def run(self, cmd, timeout=None):

@@ -61,7 +61,7 @@ class oeGoToolchainSelfTest(OESelftestTestCase):
         url = "https://%s/%s/archive/%s%s" % (proj, name, ver, archive)
 
         runCmd("cd %s; wget %s" % (self.tmpdir_SDKQA, url))
-        runCmd("cd %s; tar -xf %s" % (self.tmpdir_SDKQA, ver+archive))
+        runCmd("cd %s; tar -xf %s" % (self.tmpdir_SDKQA, ver + archive))
         runCmd("mkdir -p %s/src/%s" % (self.go_path, proj))
         runCmd("mv %s/direnv-2.27.0 %s/src/%s/%s"
                % (self.tmpdir_SDKQA, self.go_path, proj, name))

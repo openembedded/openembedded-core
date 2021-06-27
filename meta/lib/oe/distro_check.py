@@ -22,8 +22,8 @@ def get_links_from_url(url, d):
 
 def find_latest_numeric_release(url, d):
     "Find the latest listed numeric release on the given url"
-    max=0
-    maxstr=""
+    max = 0
+    maxstr = ""
     for link in get_links_from_url(url, d):
         try:
             # TODO use LooseVersion

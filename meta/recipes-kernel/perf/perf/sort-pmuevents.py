@@ -37,7 +37,7 @@ preamble_regex = re.compile('^(.*?)^struct', re.MULTILINE | re.DOTALL)
 
 preamble = re.search(preamble_regex, data)
 struct_block_regex = re.compile('^struct.*?(\w+) (.*?)\[\] = {(.*?)^};', re.MULTILINE | re.DOTALL)
-field_regex =  re.compile('{.*?},', re.MULTILINE | re.DOTALL)
+field_regex = re.compile('{.*?},', re.MULTILINE | re.DOTALL)
 cpuid_regex = re.compile('\.cpuid = (.*?),', re.MULTILINE | re.DOTALL)
 name_regex = re.compile('\.name = (.*?),', re.MULTILINE | re.DOTALL)
 

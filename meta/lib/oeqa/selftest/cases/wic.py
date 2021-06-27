@@ -424,7 +424,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
             for part in [1, 2, 3]:
                 part_file = os.path.join(self.resultdir, "selftest_img.part%d" % part)
-                partln = partlns[part-1].split(":")
+                partln = partlns[part - 1].split(":")
                 self.assertEqual(7, len(partln))
                 start = int(partln[1].rstrip("B")) / 512
                 length = int(partln[3].rstrip("B")) / 512
@@ -1133,7 +1133,7 @@ class Wic2(WicTestCase):
         """Test sparse_copy with FIEMAP and SEEK_HOLE filemap APIs"""
         libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'wic')
         sys.path.insert(0, libpath)
-        from  filemap import FilemapFiemap, FilemapSeek, sparse_copy, ErrorNotSupp
+        from filemap import FilemapFiemap, FilemapSeek, sparse_copy, ErrorNotSupp
         with NamedTemporaryFile("w", suffix=".wic-sparse") as sparse:
             src_name = sparse.name
             src_size = 1024 * 10

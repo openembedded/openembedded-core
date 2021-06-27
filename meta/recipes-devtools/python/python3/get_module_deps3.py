@@ -29,7 +29,7 @@ def fix_path(dep_path):
     import os
     # We DONT want the path on our HOST system
     pivot = 'recipe-sysroot-native'
-    dep_path = dep_path[dep_path.find(pivot)+len(pivot):]
+    dep_path = dep_path[dep_path.find(pivot) + len(pivot):]
 
     if '/usr/bin' in dep_path:
         dep_path = dep_path.replace('/usr/bin''${bindir}')
@@ -44,12 +44,12 @@ def fix_path(dep_path):
     if '/usr/include' in dep_path:
         dep_path = dep_path.replace('/usr/include','${includedir}')
     if '__init__.' in dep_path:
-        dep_path =  os.path.split(dep_path)[0]
+        dep_path = os.path.split(dep_path)[0]
     return dep_path
 
 
 # Module to import was passed as an argument
-current_module =  str(sys.argv[1]).rstrip()
+current_module = str(sys.argv[1]).rstrip()
 if debug == True:
     log = open('temp/log_%s' % current_module.strip('.*'),'w')
     log.write('Module %s generated the following dependencies:\n' % current_module)
@@ -80,7 +80,7 @@ if current_module == 'python-core-package':
     dif = core_deps
 else:
     # We know this is not the core package, so there must be a difference.
-    dif = module_deps-core_deps
+    dif = module_deps - core_deps
 
 
 # Check where each dependency came from
@@ -105,7 +105,7 @@ for item in dif:
         # Deals with NameError: name 'dep_path' is not defined
         # because module is not found (wasn't compiled?), e.g. bddsm
         if debug == True:
-            log.write(item+' ') 
+            log.write(item + ' ') 
             log.write(str(e))                                              
         pass
 
@@ -136,7 +136,7 @@ for item in dif:
         dep_path = dep_path.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
 
     if debug == True:
-        log.write(dep_path+'\n')
+        log.write(dep_path + '\n')
     # Prints out result, which is what will be used by create_manifest
     print(dep_path)
 
@@ -158,7 +158,7 @@ for item in dif:
     except NameError as e:
         # Deals with NameError: name 'cached' is not defined
         if debug == True:
-            log.write(item+' ') 
+            log.write(item + ' ') 
             log.write(str(e))                                              
         pass
     if cached is not None:

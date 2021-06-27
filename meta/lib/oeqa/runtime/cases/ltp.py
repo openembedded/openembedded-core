@@ -45,7 +45,7 @@ class LtpTestBase(OERuntimeTestCase):
  
     @classmethod
     def ltp_finishup(cls):
-        cls.extras['ltpresult.sections'] =  cls.sections
+        cls.extras['ltpresult.sections'] = cls.sections
 
         # update symlink to ltp_log
         if os.path.exists(cls.ltptest_log_dir_link):
@@ -76,7 +76,7 @@ class LtpTest(LtpTestBase):
             self.extras['ltpresult.rawlogs']['log'] = self.extras['ltpresult.rawlogs']['log'] + output
 
             # copy nice log from DUT
-            dst = os.path.join(self.ltptest_log_dir, "%s" %  ltp_group)
+            dst = os.path.join(self.ltptest_log_dir, "%s" % ltp_group)
             remote_src = "/opt/ltp/results/%s" % ltp_group 
             (status, output) = self.target.copyFrom(remote_src, dst, True)
             msg = 'File could not be copied. Output: %s' % output
@@ -84,11 +84,11 @@ class LtpTest(LtpTestBase):
                 self.target.logger.warning(msg)
 
             parser = LtpParser()
-            results, sections  = parser.parse(dst)
+            results, sections = parser.parse(dst)
 
-            runtime = int(endtime-starttime)
+            runtime = int(endtime - starttime)
             sections['duration'] = runtime
-            self.sections[ltp_group] =  sections
+            self.sections[ltp_group] = sections
 
             failed_tests = {}
             for test in results:

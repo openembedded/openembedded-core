@@ -66,7 +66,7 @@ def edit_content(json_file_path):
 
 def prepare_data(args):
     # attempt to get the max_log_size from the server's settings
-    max_log_size = getPayloadLimit(args.protocol+args.server+"/ClientPost/JSON")
+    max_log_size = getPayloadLimit(args.protocol + args.server + "/ClientPost/JSON")
 
     if not os.path.isfile(args.error_file):
         log.error("No data file found.")
@@ -89,7 +89,7 @@ def prepare_data(args):
         pass
 
     if args.assume_yes == True and len(args.name) == 0:
-        log.error("Name needs to be provided either via "+userfile+" or as an argument (-n).")
+        log.error("Name needs to be provided either via " + userfile + " or as an argument (-n).")
         sys.exit(1)
 
     while len(args.name) <= 0 or len(args.name) > 50:
@@ -133,12 +133,12 @@ def prepare_data(args):
 
 
 def send_data(data, args):
-    headers={'Content-type': 'application/json', 'User-Agent': "send-error-report/"+version}
+    headers = {'Content-type': 'application/json', 'User-Agent': "send-error-report/" + version}
 
     if args.json:
-        url = args.protocol+args.server+"/ClientPost/JSON/"
+        url = args.protocol + args.server + "/ClientPost/JSON/"
     else:
-        url = args.protocol+args.server+"/ClientPost/"
+        url = args.protocol + args.server + "/ClientPost/"
 
     req = urllib.request.Request(url, data=data, headers=headers)
     try:
@@ -201,7 +201,7 @@ if __name__ == '__main__':
     args = arg_parse.parse_args()
 
     if (args.json == False):
-        print("Preparing to send errors to: "+args.server)
+        print("Preparing to send errors to: " + args.server)
 
     data = prepare_data(args)
     send_data(data, args)

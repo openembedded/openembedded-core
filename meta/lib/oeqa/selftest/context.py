@@ -279,7 +279,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                 meta_selftestdir = os.path.join(
                     self.tc.td["BBLAYERS_FETCH_DIR"], 'meta-selftest')
                 if os.path.isdir(meta_selftestdir):
-                    runCmd("bitbake-layers add-layer %s" %meta_selftestdir)
+                    runCmd("bitbake-layers add-layer %s" % meta_selftestdir)
                     # reload data is needed because a meta-selftest layer was add
                     self.tc.td = get_bb_vars()
                     self.tc.config_paths['testlayer_path'] = get_test_layer()

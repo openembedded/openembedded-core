@@ -19,7 +19,7 @@ class WestonTest(OERuntimeTestCase):
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['weston'])
     def test_weston_running(self):
-        cmd ='%s | grep [w]eston-desktop-shell' % self.tc.target_cmds['ps']
+        cmd = '%s | grep [w]eston-desktop-shell' % self.tc.target_cmds['ps']
         status, output = self.target.run(cmd)
         msg = ('Weston does not appear to be running %s' %
               self.target.run(self.tc.target_cmds['ps'])[1])
@@ -42,7 +42,7 @@ class WestonTest(OERuntimeTestCase):
     def get_new_wayland_processes(self, existing_wl_processes):
         try_cnt = 0
         while try_cnt < 5:
-            time.sleep(5 + 5*try_cnt)
+            time.sleep(5 + 5 * try_cnt)
             try_cnt += 1
             wl_processes = self.get_processes_of('weston-desktop-shell', 'existing and new')
             new_wl_processes = [x for x in wl_processes if x not in existing_wl_processes]

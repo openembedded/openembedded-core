@@ -320,7 +320,7 @@ def export_manifest_info(args):
         json.dump(config, sys.stdout, indent=2)
         print('')
 
-    tmpoutdir = tempfile.mkdtemp(prefix=os.path.basename(__file__)+'-')
+    tmpoutdir = tempfile.mkdtemp(prefix=os.path.basename(__file__) + '-')
     logger.debug('tmp dir: %s' % tmpoutdir)
 
     # export manifest

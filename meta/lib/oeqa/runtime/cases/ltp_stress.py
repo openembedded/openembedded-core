@@ -46,7 +46,7 @@ class LtpStressBase(OERuntimeTestCase):
  
     @classmethod
     def ltp_finishup(cls):
-        cls.extras['ltpstressresult.sections'] =  cls.sections
+        cls.extras['ltpstressresult.sections'] = cls.sections
 
         # update symlink to ltp_log
         if os.path.exists(cls.ltptest_log_dir_link):
@@ -70,11 +70,11 @@ class LtpStressTest(LtpStressBase):
             self.extras['ltpstressresult.rawlogs']['log'] = self.extras['ltpstressresult.rawlogs']['log'] + output
 
             parser = LtpParser()
-            results, sections  = parser.parse(os.path.join(self.ltptest_log_dir, "%s" % stress_group))
+            results, sections = parser.parse(os.path.join(self.ltptest_log_dir, "%s" % stress_group))
 
-            runtime = int(endtime-starttime)
+            runtime = int(endtime - starttime)
             sections['duration'] = runtime
-            self.sections[stress_group] =  sections
+            self.sections[stress_group] = sections
  
             failed_tests = {}
             for test in results:

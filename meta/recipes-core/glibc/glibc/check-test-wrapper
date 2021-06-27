@@ -50,7 +50,7 @@ if targettype == "user":
     # tests e.g. nptl/tst-pthread-timedlock-lockloop
     # Cap at 8GB since no test should need more than that
     # (5GB adds 7 failures for qemuarm glibc test run)
-    limit = 8*1024*1024*1024
+    limit = 8 * 1024 * 1024 * 1024
     resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
 
 elif targettype == "ssh":

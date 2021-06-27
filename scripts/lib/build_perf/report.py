@@ -268,7 +268,7 @@ class TimeVal(MeasurementVal):
         if self != self:
             return "null"
         hh, mm, ss = self.hms()
-        return [hh, mm, int(ss), int(ss*1000) % 1000]
+        return [hh, mm, int(ss), int(ss * 1000) % 1000]
 
 
 class SizeVal(MeasurementVal):

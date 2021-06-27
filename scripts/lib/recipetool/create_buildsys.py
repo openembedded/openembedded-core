@@ -446,7 +446,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
         def process_value(value):
             value = value.replace('[', '').replace(']', '')
             if value.startswith('m4_esyscmd(') or value.startswith('m4_esyscmd_s('):
-                cmd = subst_defines(value[value.index('(')+1:-1])
+                cmd = subst_defines(value[value.index('(') + 1:-1])
                 try:
                     if '|' in cmd:
                         cmd = 'set -o pipefail; ' + cmd

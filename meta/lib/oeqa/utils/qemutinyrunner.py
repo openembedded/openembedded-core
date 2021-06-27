@@ -115,12 +115,12 @@ class QemuTinyRunner(QemuRunner):
         return self.is_alive()
 
     def run_serial(self, command, timeout=60):
-        self.server_socket.sendall(command+'\n')
+        self.server_socket.sendall(command + '\n')
         data = ''
         status = 0
         stopread = False
-        endtime = time.time()+timeout
-        while time.time()<endtime and not stopread:
+        endtime = time.time() + timeout
+        while time.time() < endtime and not stopread:
                 try:
                         sread, _, _ = select.select([self.server_socket],[],[],1)
                 except InterruptedError:

@@ -80,7 +80,7 @@ def get_provides(path):
     else:
         libdir = ''
 
-    package_relpath = pkg_path[len(libdir)+1:]
+    package_relpath = pkg_path[len(libdir) + 1:]
     package = '.'.join(package_relpath.split(os.sep))
     if not isdir:
         yield package, path
@@ -89,7 +89,7 @@ def get_provides(path):
             yield package, path
 
         for dirpath, dirnames, filenames in os.walk(path):
-            relpath = dirpath[len(path)+1:]
+            relpath = dirpath[len(path) + 1:]
             if relpath:
                 if '__init__.py' not in filenames:
                     dirnames[:] = []

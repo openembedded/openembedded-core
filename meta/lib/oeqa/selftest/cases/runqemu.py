@@ -21,7 +21,7 @@ class RunqemuTests(OESelftestTestCase):
     def setUpLocal(self):
         super(RunqemuTests, self).setUpLocal()
         self.recipe = 'core-image-minimal'
-        self.machine =  'qemux86-64'
+        self.machine = 'qemux86-64'
         self.fstypes = "ext4 iso hddimg wic.vmdk wic.qcow2 wic.vdi"
         self.cmd_common = "runqemu nographic"
 
@@ -155,8 +155,8 @@ class QemuTest(OESelftestTestCase):
     def setUpClass(cls):
         super(QemuTest, cls).setUpClass()
         cls.recipe = 'core-image-minimal'
-        cls.machine =  get_bb_var('MACHINE')
-        cls.deploy_dir_image =  get_bb_var('DEPLOY_DIR_IMAGE')
+        cls.machine = get_bb_var('MACHINE')
+        cls.deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
         cls.cmd_common = "runqemu nographic"
         cls.qemuboot_conf = "%s-%s.qemuboot.conf" % (cls.recipe, cls.machine)
         cls.qemuboot_conf = os.path.join(cls.deploy_dir_image, cls.qemuboot_conf)

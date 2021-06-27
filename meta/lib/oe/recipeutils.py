@@ -133,8 +133,8 @@ def split_var_value(value, assignment=True):
                 assigfound = True
             if assigfound:
                 if '"' in item or "'" in item:
-                    outlist = [' '.join(out[:idx+1])]
-                    outlist.extend(out[idx+1:])
+                    outlist = [' '.join(out[:idx + 1])]
+                    outlist.extend(out[idx + 1:])
                     break
     return outlist
 
@@ -224,7 +224,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
             # (that we'd want to ensure remain leading the next value)
             for i, ln in reversed(list(enumerate(lines))):
                 if not ln.startswith('#'):
-                    lines[i+1:i+1] = addlines
+                    lines[i + 1:i + 1] = addlines
                     break
             else:
                 lines.extend(addlines)
@@ -1003,7 +1003,7 @@ def get_recipe_upstream_version(rd):
 
     # XXX: we suppose that the first entry points to the upstream sources
     src_uri = src_uris.split()[0]
-    uri_type, _, _, _, _, _ =  decodeurl(src_uri)
+    uri_type, _, _, _, _, _ = decodeurl(src_uri)
 
     (pv, pfx, sfx) = get_recipe_pv_without_srcpv(rd.getVar('PV'), uri_type)
     ru['current_version'] = pv
@@ -1023,7 +1023,7 @@ def get_recipe_upstream_version(rd):
 
     elif uri_type == "file":
         # files are always up-to-date
-        ru['version'] =  pv
+        ru['version'] = pv
         ru['type'] = 'A'
         ru['datetime'] = datetime.now()
     else:

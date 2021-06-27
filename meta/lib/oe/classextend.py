@@ -48,7 +48,7 @@ class ClassExtender(object):
         newvar = []
         for v in var:
             newvar.append(self.extend_name(v))
-        newdata =  " ".join(newvar)
+        newdata = " ".join(newvar)
         if setvar:
             self.d.setVar(varname, newdata)
         return newdata
@@ -66,7 +66,7 @@ class ClassExtender(object):
                 newvar.append("^" + self.extname + "-" + v[1:])
             else:
                 newvar.append(self.extend_name(v))
-        newdata =  " ".join(newvar)
+        newdata = " ".join(newvar)
         if setvar:
             self.d.setVar(varname, newdata)
         return newdata

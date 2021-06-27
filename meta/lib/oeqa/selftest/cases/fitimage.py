@@ -80,7 +80,7 @@ FIT_DESC = "A model description"
                 if field_index == len(its_field_check):
                     break
                 if its_field_check[field_index] in line:
-                    field_index +=1
+                    field_index += 1
 
         if field_index != len(its_field_check): # if its equal, the test passed
             self.assertTrue(field_index == len(its_field_check),
@@ -307,7 +307,7 @@ FIT_SIGN_INDIVIDUAL = "1"
                 if field_index == len(its_field_check):
                     break
                 if its_field_check[field_index] in line:
-                    field_index +=1
+                    field_index += 1
 
         if field_index != len(its_field_check): # if its equal, the test passed
             self.assertTrue(field_index == len(its_field_check),
@@ -390,7 +390,7 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot comment'"
                 if field_index == len(its_field_check):
                     break
                 if its_field_check[field_index] in line:
-                    field_index +=1
+                    field_index += 1
 
         if field_index != len(its_field_check): # if its equal, the test passed
             self.assertTrue(field_index == len(its_field_check),
@@ -776,7 +776,7 @@ FIT_HASH_ALG = "sha256"
             'load = <' + kernel_load + '>;',
             'entry = <' + kernel_entry + '>;',
             'hash-1 {',
-            'algo = "' + fit_hash_alg +'";',
+            'algo = "' + fit_hash_alg + '";',
             '};',
             '};'
         ]
@@ -803,7 +803,7 @@ FIT_HASH_ALG = "sha256"
             line_idx = cfg_start_idx + 2
             node_end = False
             while node_end == False:
-                if its_lines[line_idx] == "};" and its_lines[line_idx-1] == "};":
+                if its_lines[line_idx] == "};" and its_lines[line_idx - 1] == "};":
                     node_end = True
                 line_idx = line_idx + 1
 

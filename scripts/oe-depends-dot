@@ -51,9 +51,9 @@ class Dot(object):
             if rdep in chain:
                 continue
             else:
-                for i in range(0, len(chain)-1):
-                    if chain[i] in alldeps[rdep] and rdep in alldeps[chain[i+1]]:
-                        chain.insert(i+1, rdep)
+                for i in range(0, len(chain) - 1):
+                    if chain[i] in alldeps[rdep] and rdep in alldeps[chain[i + 1]]:
+                        chain.insert(i + 1, rdep)
                         inserted_elements.append(rdep)
                         break
                 if chain[-1] in alldeps[rdep] and rdep not in chain:
@@ -120,7 +120,7 @@ class Dot(object):
                         child_deps |= depends[dep]
 
                 reduced_depends[k] = deps - child_deps
-                outfile= '%s-reduced%s' % (self.args.dotfile[0][:-4], self.args.dotfile[0][-4:])
+                outfile = '%s-reduced%s' % (self.args.dotfile[0][:-4], self.args.dotfile[0][-4:])
             with open(outfile, 'w') as f:
                 print('Saving reduced dot file to %s' % outfile)
                 f.write('digraph depends {\n')

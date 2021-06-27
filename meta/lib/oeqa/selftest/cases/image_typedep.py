@@ -44,7 +44,7 @@ inherit image
         bitbake('-g emptytest')
 
         taskdependsfile = os.path.join(self.builddir, 'task-depends.dot')
-        dep =  dep + ".do_populate_sysroot"
+        dep = dep + ".do_populate_sysroot"
         depfound = False
         expectedline = '"emptytest.do_rootfs" -> "{}"'.format(dep)
 

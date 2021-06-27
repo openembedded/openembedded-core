@@ -71,7 +71,7 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
                     self.totalinprocess,
                     totalprogress,
                     self.totaltests,
-                    "{0:.2f}".format(time.time()-self._test_start.timestamp()),
+                    "{0:.2f}".format(time.time() - self._test_start.timestamp()),
                     test.id())
         finally:
             self.semaphore.release()

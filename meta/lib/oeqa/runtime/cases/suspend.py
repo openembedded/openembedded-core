@@ -8,7 +8,7 @@ class Suspend_Test(OERuntimeTestCase):
 
     def test_date(self): 
         (status, output) = self.target.run('date')
-        self.assertEqual(status, 0,  msg='Failed to run date command, output : %s' % output)
+        self.assertEqual(status, 0, msg='Failed to run date command, output : %s' % output)
         
     def test_ping(self):
         t_thread = threading.Thread(target=self.target.run, args=("ping 8.8.8.8",))
@@ -21,7 +21,7 @@ class Suspend_Test(OERuntimeTestCase):
         
     def set_suspend(self): 
         (status, output) = self.target.run('sudo rtcwake -m mem -s 10')
-        self.assertEqual(status, 0,  msg='Failed to suspends your system to RAM, output : %s' % output)
+        self.assertEqual(status, 0, msg='Failed to suspends your system to RAM, output : %s' % output)
     
     @skipIfQemu('qemuall', 'Test only runs on real hardware')
     @OETestDepends(['ssh.SSHTest.test_ssh'])

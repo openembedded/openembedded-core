@@ -271,7 +271,7 @@ class ResultsTextReport(object):
                     testtype = str(key).split('.')[0]
                     if ((machine in self.ltptests and testtype == "ltpiresult" and self.ltptests[machine]) or
                         (machine in self.ltpposixtests and testtype == "ltpposixresult" and self.ltpposixtests[machine])):
-                        print("Already have test results for %s on %s, skipping %s" %(str(key).split('.')[0], machine, resultid))
+                        print("Already have test results for %s on %s, skipping %s" % (str(key).split('.')[0], machine, resultid))
                         skip = True
                         break
                 if skip:

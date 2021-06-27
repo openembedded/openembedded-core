@@ -57,7 +57,7 @@ pyversion = str(sys.argv[1])
 pivot = 'recipe-sysroot-native'
 for p in sys.path:
     if pivot in p:
-        nativelibfolder = p[:p.find(pivot)+len(pivot)]
+        nativelibfolder = p[:p.find(pivot) + len(pivot)]
 
 # Empty dict to hold the whole manifest
 new_manifest = collections.OrderedDict()
@@ -72,7 +72,7 @@ allfolders = []
 
 def isFolder(value):
     value = value.replace('${PYTHON_MAJMIN}',pyversion)
-    if os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib32')):
+    if os.path.isdir(value.replace('${libdir}',nativelibfolder + '/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder + '/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder + '/usr/lib32')):
         return True
     else:
         return False
@@ -98,7 +98,7 @@ def print_indent(msg, offset):
 # Read existing JSON manifest
 with open('python3-manifest.json') as manifest:
     # The JSON format doesn't allow comments so we hack the call to keep the comments using a marker
-    manifest_str =  manifest.read()
+    manifest_str = manifest.read()
     json_start = manifest_str.find('# EOC') + 6 # EOC + \n
     manifest.seek(0)
     comments = manifest.read(json_start)

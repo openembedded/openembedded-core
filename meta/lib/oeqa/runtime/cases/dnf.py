@@ -63,8 +63,8 @@ class DnfRepoTest(DnfTest):
 
     def dnf_with_repo(self, command):
         pkgarchs = os.listdir(os.path.join(self.tc.td['WORKDIR'], 'oe-testimage-repo'))
-        deploy_url = 'http://%s:%s/' %(self.target.server_ip, self.repo_server.port)
-        cmdlinerepoopts = ["--repofrompath=oe-testimage-repo-%s,%s%s" %(arch, deploy_url, arch) for arch in pkgarchs]
+        deploy_url = 'http://%s:%s/' % (self.target.server_ip, self.repo_server.port)
+        cmdlinerepoopts = ["--repofrompath=oe-testimage-repo-%s,%s%s" % (arch, deploy_url, arch) for arch in pkgarchs]
 
         output = self.dnf(" ".join(cmdlinerepoopts) + " --nogpgcheck " + command)
         return output
@@ -108,7 +108,7 @@ class DnfRepoTest(DnfTest):
         output = subprocess.check_output('%s %s -name run-postinsts-dev*' % (bb.utils.which(os.getenv('PATH'), "find"),
                                                                            os.path.join(self.tc.td['WORKDIR'], 'oe-testimage-repo')), shell=True).decode("utf-8")
         rpm_path = output.split("/")[-2] + "/" + output.split("/")[-1]
-        url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, rpm_path)
+        url = 'http://%s:%s/%s' % (self.target.server_ip, self.repo_server.port, rpm_path)
         self.dnf_with_repo('remove -y run-postinsts-dev')
         self.dnf_with_repo('install -y %s' % url)
 
@@ -152,8 +152,8 @@ class DnfRepoTest(DnfTest):
         #installroot directory.
         self.target.run('mkdir -p %s/etc' % rootpath, 1500)
         self.target.run('mkdir -p %s/usr/bin %s/usr/sbin' % (rootpath, rootpath), 1500)
-        self.target.run('ln -sf -r %s/usr/bin %s/bin'  % (rootpath, rootpath), 1500)
-        self.target.run('ln -sf -r %s/usr/sbin %s/sbin'  % (rootpath, rootpath), 1500)
+        self.target.run('ln -sf -r %s/usr/bin %s/bin' % (rootpath, rootpath), 1500)
+        self.target.run('ln -sf -r %s/usr/sbin %s/sbin' % (rootpath, rootpath), 1500)
         self.target.run('mkdir -p %s/dev' % rootpath, 1500)
         #Handle different architectures lib dirs
         self.target.run('mkdir -p %s/usr/lib' % rootpath, 1500)
@@ -183,9 +183,9 @@ class DnfRepoTest(DnfTest):
         #Avoid remove dependencies to skip some errors on different archs and images
         self.dnf_with_repo('remove --setopt=clean_requirements_on_remove=0 -y curl*')
         #check curl-dev is not installed adter removing all curl occurrences
-        status, output = self.target.run('dnf list --installed | grep %s'% excludepkg, 1500)
-        self.assertEqual(1, status, "%s was not removed,  is listed as installed"%excludepkg)
+        status, output = self.target.run('dnf list --installed | grep %s' % excludepkg, 1500)
+        self.assertEqual(1, status, "%s was not removed,  is listed as installed" % excludepkg)
         self.dnf_with_repo('install -y --exclude=%s --exclude=curl-staticdev curl*' % excludepkg)
         #check curl-dev is not installed after being excluded
-        status, output = self.target.run('dnf list --installed | grep %s'% excludepkg, 1500)
-        self.assertEqual(1, status, "%s was not excluded, is listed as installed"%excludepkg)
+        status, output = self.target.run('dnf list --installed | grep %s' % excludepkg, 1500)
+        self.assertEqual(1, status, "%s was not excluded, is listed as installed" % excludepkg)

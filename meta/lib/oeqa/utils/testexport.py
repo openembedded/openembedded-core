@@ -104,7 +104,7 @@ def process_binaries(d, params):
             else: # nothing to do here; running tests under bitbake, so we asume native binaries are in sysroots dir.
                 if param_list[1] or param_list[4]:
                     bb.warn("Native binary %s %s%s. Running tests under bitbake environment. Version can't be checked except when the test itself does it"
-                            " and binary can't be removed."%(param_list[0],"has assigned ver. " + param_list[1] if param_list[1] else "",
+                            " and binary can't be removed." % (param_list[0],"has assigned ver. " + param_list[1] if param_list[1] else "",
                             ", is marked for removal" if param_list[4] else ""))
         else:# the package is target aka DUT intended and it is either required to be delivered in an extracted form or in a packaged version
             target_rpm_file_list = [item for item in os.listdir(arch_rpm_dir) if re.search(param_list[0] + "-([0-9]+\.*)", item)]
@@ -237,7 +237,7 @@ def send_bin_to_DUT(d,params):
     def send_rpm(remote_path): # if it is not required to have an extracted binary, but to send an .rpm file
         rpm_to_send = ""
         for item in os.listdir(arch_rpms_dir):
-            if param_list[1] and re.match("%s-%s-.*rpm"%(param_list[0], param_list[1]), item):
+            if param_list[1] and re.match("%s-%s-.*rpm" % (param_list[0], param_list[1]), item):
                 rpm_to_send = item
                 break
             elif re.match("%s-[0-9]+\.[0-9]+-.*rpm" % param_list[0], item):
@@ -249,7 +249,7 @@ def send_bin_to_DUT(d,params):
             return
         (status, output) = oeRuntimeTest.tc.target.copy_to(os.path.join(arch_rpms_dir, rpm_to_send), remote_path)
         if status != 0:
-                bb.warn("Failed to copy %s on the remote target: %s" %(param_list[0], d.getVar("MACHINE")))
+                bb.warn("Failed to copy %s on the remote target: %s" % (param_list[0], d.getVar("MACHINE")))
                 return
         if param_list[4] == "rm":
             cleanup_list.append(os.path.join(remote_path, rpm_to_send))

@@ -23,9 +23,9 @@ def handlelink(filep, subdir):
     if link.startswith(topdir):
         return
     #print("Replacing %s with %s for %s" % (link, topdir+link, filep))
-    print("Replacing %s with %s for %s" % (link, os.path.relpath(topdir+link, subdir), filep))
+    print("Replacing %s with %s for %s" % (link, os.path.relpath(topdir + link, subdir), filep))
     os.unlink(filep)
-    os.symlink(os.path.relpath(topdir+link, subdir), filep)
+    os.symlink(os.path.relpath(topdir + link, subdir), filep)
 
 for subdir, dirs, files in os.walk(topdir):
     for f in dirs + files:

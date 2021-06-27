@@ -314,7 +314,7 @@ def which_wild(pathname, path=None, mode=os.F_OK, *, reverse=False, candidates=F
                 if rel not in seen:
                     seen.add(rel)
                     if candidates:
-                        files.append((found_path, [os.path.join(p, rel) for p in paths[:index+1]]))
+                        files.append((found_path, [os.path.join(p, rel) for p in paths[:index + 1]]))
                     else:
                         files.append(found_path)
 

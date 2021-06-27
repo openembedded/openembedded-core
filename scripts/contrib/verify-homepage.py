@@ -55,7 +55,7 @@ def verifyHomepage(bbhandler):
             checked.append(realfn)
     return count
 
-if __name__=='__main__':
+if __name__ == '__main__':
     with bb.tinfoil.Tinfoil() as bbhandler:
         bbhandler.prepare()
         logger.info("Start verifying HOMEPAGE:")

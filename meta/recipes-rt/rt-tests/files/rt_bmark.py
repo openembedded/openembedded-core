@@ -130,10 +130,10 @@ def log_test_header(seq_no, nr_of_tests, name):
 #-------------------------------------------------------------------------------
 
 def start_stress(*args):
-        stress_cmd         = ["stress-ng"]
+        stress_cmd = ["stress-ng"]
         added_stress_types = []
-        req_stress_types   = set(args)
-        cpu_cnt            = str(multiprocessing.cpu_count())
+        req_stress_types = set(args)
+        cpu_cnt = str(multiprocessing.cpu_count())
 
         # The function cond_add_stress appends the options to the stress
         # command if the stress type is in the set of requested stress types
@@ -146,10 +146,10 @@ def start_stress(*args):
 
         #----------
 
-        cond_add_stress("io",  ["-i", cpu_cnt])
+        cond_add_stress("io", ["-i", cpu_cnt])
         cond_add_stress("cpu", ["-c", cpu_cnt])
         cond_add_stress("hdd", ["-d", cpu_cnt, "--hdd-bytes", "20M"])
-        cond_add_stress("vm",  ["-m", cpu_cnt, "--vm-bytes", "10M"])
+        cond_add_stress("vm", ["-m", cpu_cnt, "--vm-bytes", "10M"])
 
         unknown = ", ".join(req_stress_types)
         if unknown != "":
@@ -159,7 +159,7 @@ def start_stress(*args):
                 log("No stress requested")
                 return None
 
-        added          = "+".join(added_stress_types)
+        added = "+".join(added_stress_types)
         stress_cmd_str = " ".join(stress_cmd)
 
         log("Starting stress(", added, ")")
@@ -191,11 +191,11 @@ def end_stress(p):
 #-------------------------------------------------------------------------------
 
 def us2hms_str(us):
-        s = (us+500000) // 1000000 # Round microseconds to s
-        m = s//60
-        s -= 60*m
-        h = m//60
-        m -= 60*h
+        s = (us + 500000) // 1000000 # Round microseconds to s
+        m = s // 60
+        s -= 60 * m
+        h = m // 60
+        m -= 60 * h
 
         return "%d:%02d:%02d" % (h, m, s)
 
@@ -254,8 +254,8 @@ def gen_minmax_list(max_list):
 #         of cpus
 
 interval_core_0 = 100     # Timer interval on core 0 [us]
-interval_delta  = 20      # Interval increment for each core [us]
-loop_count      = 30000   # Number of loops (on core 0).
+interval_delta = 20      # Interval increment for each core [us]
+loop_count = 30000   # Number of loops (on core 0).
 
 cmd = ("cyclictest",
        "-S",             # Standard SMP testing. See below
@@ -298,16 +298,16 @@ def run_cyclictest_once():
 # A precondition for the tracking of min-max values is that
 # the suite size os a power of 2.
 
-N          = 5
+N = 5
 suite_size = 2**N
 
-est_exec_time_once  = interval_core_0 * loop_count
+est_exec_time_once = interval_core_0 * loop_count
 est_exec_time_suite = suite_size * est_exec_time_once
 
 def run_cyclictest_suite():
         log("Starting cyclictest")
         log("  Command          : ", " ".join(cmd))
-        log("  Number of cycles : ", loop_count*suite_size,
+        log("  Number of cycles : ", loop_count * suite_size,
             " (", suite_size, " sets of ", loop_count, " cycles)")
         log("  Exec. time (est) : ", us2hms_str(est_exec_time_suite))
         log()
@@ -327,9 +327,9 @@ def run_cyclictest_suite():
         for i in range(0, suite_size):
                 tmp_min, tmp_avg, tmp_max = run_cyclictest_once()
 
-                msg = "%2d/%2d:" % (i+1, suite_size)
+                msg = "%2d/%2d:" % (i + 1, suite_size)
                 msg += " min: %4d" % tmp_min
-                msg += " avg: %5.1f" % (float(tmp_avg[0])/tmp_avg[1])
+                msg += " avg: %5.1f" % (float(tmp_avg[0]) / tmp_avg[1])
                 msg += " max: %4d" % tmp_max
                 log_ts(msg)
 
@@ -343,13 +343,13 @@ def run_cyclictest_suite():
                 ack_avg[0] += tmp_avg[0]
                 ack_avg[1] += tmp_avg[1]
 
-        t = time.time()-t
+        t = time.time() - t
         log_ts("Cyclictest completed. Actual execution time:",
-               us2hms_str(t*1000000))
+               us2hms_str(t * 1000000))
         log()
         set_hung_tmo(orig_tmo)
 
-        return ack_min, float(ack_avg[0])/ack_avg[1], gen_minmax_list(max_list)
+        return ack_min, float(ack_avg[0]) / ack_avg[1], gen_minmax_list(max_list)
 
 #-------------------------------------------------------------------------------
 
@@ -400,10 +400,10 @@ class cyclictest_runner:
 runner = cyclictest_runner()
 
 tests = (("no_stress", []),
-         ("cpu",  ["cpu"]),
-         ("hdd",  ["hdd"]),
-         ("io",   ["io"]),
-         ("vm",   ["vm"]),
+         ("cpu", ["cpu"]),
+         ("hdd", ["hdd"]),
+         ("io", ["io"]),
+         ("vm", ["vm"]),
          ("full", ["io", "cpu", "hdd", "vm"]),
          )
 

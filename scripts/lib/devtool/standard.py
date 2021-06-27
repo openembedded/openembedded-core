@@ -751,7 +751,7 @@ def _check_preserve(config, recipename):
 def get_staging_kver(srcdir):
     # Kernel version from work-shared
     kerver = []
-    staging_kerVer=""
+    staging_kerVer = ""
     if os.path.exists(srcdir) and os.listdir(srcdir):
         with open(os.path.join(srcdir,"Makefile")) as f:
             version = [next(f) for x in range(5)][1:4]
@@ -846,7 +846,7 @@ def modify(args, config, basepath, workspace):
 
                 # Ignore local files with subdir={BP}
                 srcabspath = os.path.abspath(srcsubdir)
-                local_files = [fname for fname in local_files if os.path.exists(os.path.join(workdir, fname)) and  (srcabspath == workdir or not  os.path.join(workdir, fname).startswith(srcabspath + os.sep))]
+                local_files = [fname for fname in local_files if os.path.exists(os.path.join(workdir, fname)) and (srcabspath == workdir or not os.path.join(workdir, fname).startswith(srcabspath + os.sep))]
                 if local_files:
                     for fname in local_files:
                         _move_file(os.path.join(workdir, fname), os.path.join(srctree, 'oe-local-files', fname))
@@ -1079,7 +1079,7 @@ def rename(args, config, basepath, workspace):
 
     if newver:
         newappend = '%s_%s.bbappend' % (newname, newver)
-        newfile =  '%s_%s.bb' % (newname, newver)
+        newfile = '%s_%s.bb' % (newname, newver)
     else:
         newappend = '%s.bbappend' % newname
         newfile = '%s.bb' % newname
@@ -1555,7 +1555,7 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
                           key, val in list(upd_f.items()) + list(new_f.items()))
             removevalues = {}
             if update_srcuri:
-                removevalues  = {'SRC_URI': removedentries}
+                removevalues = {'SRC_URI': removedentries}
                 patchfields['SRC_URI'] = '\\\n    '.join(srcuri)
             if dry_run_outdir:
                 logger.info('Creating bbappend (dry-run)')
@@ -1575,7 +1575,7 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
                 else:
                     _move_file(os.path.join(local_files_dir, basepath), path,
                                dry_run_outdir=dry_run_outdir, base_outdir=recipedir)
-                update_srcuri= True
+                update_srcuri = True
             for basepath, path in new_f.items():
                 logger.info('Adding new file %s%s' % (basepath, dry_run_suffix))
                 _move_file(os.path.join(local_files_dir, basepath),
@@ -1960,7 +1960,7 @@ def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
             if os.listdir(srctreebase):
                     if remove_work:
                         logger.info('-r argument used on %s, removing source tree.'
-                                    ' You will lose any unsaved work' %pn)
+                                    ' You will lose any unsaved work' % pn)
                         shutil.rmtree(srctreebase)
                     else:
                         # We don't want to risk wiping out any work in progress
@@ -2046,7 +2046,7 @@ def finish(args, config, basepath, workspace):
             raise DevtoolError('Source tree is not clean:\n\n%s\nEnsure you have committed your changes or use -f/--force if you are sure there\'s nothing that needs to be committed' % dirty)
 
     no_clean = args.no_clean
-    remove_work=args.remove_work
+    remove_work = args.remove_work
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
         rd = parse_recipe(config, tinfoil, args.recipename, True)

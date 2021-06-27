@@ -495,7 +495,7 @@ class DpkgPM(OpkgDpkgPM):
         pkg_info = self.package_info(pkg)
         if not pkg_info:
             bb.fatal("Unable to get information for package '%s' while "
-                     "trying to extract the package."  % pkg)
+                     "trying to extract the package." % pkg)
 
         tmp_dir = super(DpkgPM, self).extract(pkg, pkg_info)
         bb.utils.remove(os.path.join(tmp_dir, "data.tar.xz"))

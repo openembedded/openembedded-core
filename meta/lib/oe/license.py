@@ -45,7 +45,7 @@ class LicenseVisitor(ast.NodeVisitor):
         elements = list([x for x in license_operator.split(licensestr) if x.strip()])
         for pos, element in enumerate(elements):
             if license_pattern.match(element):
-                if pos > 0 and license_pattern.match(elements[pos-1]):
+                if pos > 0 and license_pattern.match(elements[pos - 1]):
                     new_elements.append('&')
                 element = '"' + element + '"'
             elif not license_operator.match(element):

@@ -284,7 +284,7 @@ class OETestRunner(_TestRunner):
                 curr['module'] = case.__module__
                 logger.info(curr['module'])
 
-            if not 'class' in curr  or curr['class'] != \
+            if not 'class' in curr or curr['class'] != \
                     case.__class__.__name__:
                 curr['class'] = case.__class__.__name__
                 logger.info(" -- %s" % curr['class'])

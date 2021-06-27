@@ -58,7 +58,7 @@ class SStateTests(SStateBase):
     def run_test_sstate_creation(self, targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True, should_pass=True):
         self.config_sstate(temp_sstate_location, [self.sstate_path])
 
-        if  self.temp_sstate_location:
+        if self.temp_sstate_location:
             bitbake(['-cclean'] + targets)
         else:
             bitbake(['-ccleansstate'] + targets)
@@ -80,10 +80,10 @@ class SStateTests(SStateBase):
             self.assertTrue(not file_tracker, msg="Found sstate files in the wrong place for: %s (found %s)" % (', '.join(map(str, targets)), str(file_tracker)))
 
     def test_sstate_creation_distro_specific_pass(self):
-        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
+        self.run_test_sstate_creation(['binutils-cross-' + self.tune_arch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
     def test_sstate_creation_distro_specific_fail(self):
-        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
+        self.run_test_sstate_creation(['binutils-cross-' + self.tune_arch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
 
     def test_sstate_creation_distro_nonspecific_pass(self):
         self.run_test_sstate_creation(['linux-libc-headers'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
@@ -109,7 +109,7 @@ class SStateTests(SStateBase):
         self.assertTrue(not tgz_removed, msg="do_cleansstate didn't remove .tgz sstate files for: %s (%s)" % (', '.join(map(str, targets)), str(tgz_removed)))
 
     def test_cleansstate_task_distro_specific_nonspecific(self):
-        targets = ['binutils-cross-'+ self.tune_arch, 'binutils-native']
+        targets = ['binutils-cross-' + self.tune_arch, 'binutils-native']
         targets.append('linux-libc-headers')
         self.run_test_cleansstate_task(targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True)
 
@@ -117,7 +117,7 @@ class SStateTests(SStateBase):
         self.run_test_cleansstate_task(['linux-libc-headers'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
 
     def test_cleansstate_task_distro_specific(self):
-        targets = ['binutils-cross-'+ self.tune_arch, 'binutils-native']
+        targets = ['binutils-cross-' + self.tune_arch, 'binutils-native']
         targets.append('linux-libc-headers')
         self.run_test_cleansstate_task(targets, distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
@@ -211,7 +211,7 @@ class SStateTests(SStateBase):
         target_config = []
         global_config.append('')
         target_config.append('PR = "0"')
-        self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
+        self.run_test_sstate_cache_management_script('m4', global_config, target_config, ignore_patterns=['populate_lic'])
 
     def test_sstate_cache_management_script_using_pr_2(self):
         global_config = []
@@ -220,7 +220,7 @@ class SStateTests(SStateBase):
         target_config.append('PR = "0"')
         global_config.append('')
         target_config.append('PR = "1"')
-        self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
+        self.run_test_sstate_cache_management_script('m4', global_config, target_config, ignore_patterns=['populate_lic'])
 
     def test_sstate_cache_management_script_using_pr_3(self):
         global_config = []
@@ -231,7 +231,7 @@ class SStateTests(SStateBase):
         target_config.append('PR = "1"')
         global_config.append('MACHINE = "qemux86"')
         target_config.append('PR = "1"')
-        self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
+        self.run_test_sstate_cache_management_script('m4', global_config, target_config, ignore_patterns=['populate_lic'])
 
     def test_sstate_cache_management_script_using_machine(self):
         global_config = []
@@ -240,7 +240,7 @@ class SStateTests(SStateBase):
         target_config.append('')
         global_config.append('MACHINE = "qemux86"')
         target_config.append('')
-        self.run_test_sstate_cache_management_script('m4', global_config,  target_config, ignore_patterns=['populate_lic'])
+        self.run_test_sstate_cache_management_script('m4', global_config, target_config, ignore_patterns=['populate_lic'])
 
     def test_sstate_32_64_same_hash(self):
         """

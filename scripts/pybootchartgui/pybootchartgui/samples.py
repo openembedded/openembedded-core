@@ -143,7 +143,7 @@ class Process:
 
         activeCount = sum([1 for sample in self.samples if sample.cpu_sample and sample.cpu_sample.sys + sample.cpu_sample.user + sample.cpu_sample.io > 0.0])
         activeCount = activeCount + sum([1 for sample in self.samples if sample.state == 'D'])
-        self.active = (activeCount>2)
+        self.active = (activeCount > 2)
 
     def calc_load(self, userCpu, sysCpu, interval):
         userCpuLoad = float(userCpu - self.last_user_cpu_time) / interval

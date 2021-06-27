@@ -41,11 +41,11 @@ sorted in descending order from the highest value.
 args = arg_parser.parse_args()
 
 # Field names and regexes for parsing out their values from buildstat files
-field_regexes = (("elapsed",    ".*Elapsed time: ([0-9.]+)"),
-                 ("user",       "rusage ru_utime: ([0-9.]+)"),
-                 ("sys",        "rusage ru_stime: ([0-9.]+)"),
+field_regexes = (("elapsed", ".*Elapsed time: ([0-9.]+)"),
+                 ("user", "rusage ru_utime: ([0-9.]+)"),
+                 ("sys", "rusage ru_stime: ([0-9.]+)"),
                  ("child user", "Child rusage ru_utime: ([0-9.]+)"),
-                 ("child sys",  "Child rusage ru_stime: ([0-9.]+)"))
+                 ("child sys", "Child rusage ru_stime: ([0-9.]+)"))
 
 # A list of (<path>, <dict>) tuples, where <path> is the path of a do_* task
 # buildstat file and <dict> maps fields from the file to their values
@@ -127,9 +127,9 @@ try:
               "user\t{}m{:.3f}s\n"
               "sys\t{}m{:.3f}s"
               .format(task_info[0],
-                      int(real//60), real%60,
-                      int(user//60), user%60,
-                      int(sys//60), sys%60))
+                      int(real // 60), real % 60,
+                      int(user // 60), user % 60,
+                      int(sys // 60), sys % 60))
 
 except BrokenPipeError:
     pass

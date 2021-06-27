@@ -21,7 +21,7 @@ class SkeletonBasicTest(OERuntimeTestCase):
         msg = 'skeleton init script not found. Output:\n%s' % output
         self.assertEqual(status, 0, msg=msg)
 
-        status, output =  self.target.run('ls /usr/sbin/skeleton-test')
+        status, output = self.target.run('ls /usr/sbin/skeleton-test')
         msg = 'skeleton-test not found. Output:\n%s' % output
         self.assertEqual(status, 0, msg=msg)
 

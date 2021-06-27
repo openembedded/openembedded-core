@@ -44,7 +44,7 @@ class OESDKTestContext(OETestContext):
             # match multilib according to sdk_env
             mls = self.td.get('MULTILIB_VARIANTS', '').split()
             for ml in mls:
-                if ('ml'+ml) in self.sdk_env:
+                if ('ml' + ml) in self.sdk_env:
                     pkg = ml + '-' + pkg
         return self._hasPackage(self.target_pkg_manifest, pkg, regex=regex)
 

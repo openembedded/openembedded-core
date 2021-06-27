@@ -130,7 +130,7 @@ class OeRunNativeTest(OESelftestTestCase):
 
 class OEListPackageconfigTests(OEScriptTests):
     #oe-core.scripts.List_all_the_PACKAGECONFIG's_flags
-    def check_endlines(self, results,  expected_endlines): 
+    def check_endlines(self, results, expected_endlines): 
         for line in results.output.splitlines():
             for el in expected_endlines:
                 if line.split() == el.split():

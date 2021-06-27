@@ -216,7 +216,7 @@ class TestImage(OESelftestTestCase):
         try:
             content = os.listdir("/dev/dri")
             if len([i for i in content if i.startswith('render')]) == 0:
-                self.skipTest("No render nodes found in /dev/dri: %s" %(content))
+                self.skipTest("No render nodes found in /dev/dri: %s" % (content))
         except FileNotFoundError:
             self.skipTest("/dev/dri directory does not exist; no render nodes available on this machine.")
         try:
@@ -345,7 +345,7 @@ class Postinst(OESelftestTestCase):
                 self.write_config(features)
                 bb_result = bitbake('core-image-minimal', ignore_status=True)
                 self.assertGreaterEqual(bb_result.output.find("Postinstall scriptlets of ['postinst-rootfs-failing'] have failed."), 0,
-                    "Warning about a failed scriptlet not found in bitbake output: %s" %(bb_result.output))
+                    "Warning about a failed scriptlet not found in bitbake output: %s" % (bb_result.output))
 
                 self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs-before-failure")),
                                     "rootfs-before-failure file was not created")

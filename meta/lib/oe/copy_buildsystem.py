@@ -76,7 +76,7 @@ class BuildSystem(object):
                 workspace_newname = '%s-%d' % (workspace_name, extranum)
 
         corebase_files = self.d.getVar('COREBASE_FILES').split()
-        corebase_files = [corebase + '/' +x for x in corebase_files]
+        corebase_files = [corebase + '/' + x for x in corebase_files]
         # Make sure bitbake goes in
         bitbake_dir = bb.__file__.rsplit('/', 3)[0]
         corebase_files.append(bitbake_dir)

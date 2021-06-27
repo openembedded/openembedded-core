@@ -107,7 +107,7 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
         self.queue_draw()
 
     def zoom_to_rect(self, rect):
-        zoom_ratio = float(rect.width)/float(self.chart_width)
+        zoom_ratio = float(rect.width) / float(self.chart_width)
         self.zoom_image(zoom_ratio)
         self.x = 0
         self.position_changed()
@@ -148,13 +148,13 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
 
     def on_key_press_event(self, widget, event):
         if event.keyval == Gdk.keyval_from_name("Left"):
-            self.x -= self.POS_INCREMENT/self.zoom_ratio
+            self.x -= self.POS_INCREMENT / self.zoom_ratio
         elif event.keyval == Gdk.keyval_from_name("Right"):
-            self.x += self.POS_INCREMENT/self.zoom_ratio
+            self.x += self.POS_INCREMENT / self.zoom_ratio
         elif event.keyval == Gdk.keyval_from_name("Up"):
-            self.y -= self.POS_INCREMENT/self.zoom_ratio
+            self.y -= self.POS_INCREMENT / self.zoom_ratio
         elif event.keyval == Gdk.keyval_from_name("Down"):
-            self.y += self.POS_INCREMENT/self.zoom_ratio
+            self.y += self.POS_INCREMENT / self.zoom_ratio
         else:
             return False
         self.bound_vals()
@@ -196,8 +196,8 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
         if state & Gdk.ModifierType.BUTTON2_MASK or state & Gdk.ModifierType.BUTTON1_MASK:
             x, y = int(event.x), int(event.y)
             # pan the image
-            self.x += (self.prevmousex - x)/self.zoom_ratio
-            self.y += (self.prevmousey - y)/self.zoom_ratio
+            self.x += (self.prevmousex - x) / self.zoom_ratio
+            self.y += (self.prevmousey - y) / self.zoom_ratio
             self.bound_vals()
             self.queue_draw()
             self.prevmousex = x

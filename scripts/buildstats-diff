@@ -203,14 +203,14 @@ def print_task_diff(bs1, bs2, val_type, min_val=0, min_absdiff=0, sort_by=('absd
     total2 = sum_vals(bs2)
     print("\nCumulative {}:".format(val_type))
     print("  {}    {:+.1f}%    {} ({}) -> {} ({})".format(
-                val_to_str(total2 - total1), 100 * (total2-total1) / total1,
+                val_to_str(total2 - total1), 100 * (total2 - total1) / total1,
                 val_to_str(total1, True), val_to_str(total1),
                 val_to_str(total2, True), val_to_str(total2)))
 
 
 def parse_args(argv):
     """Parse cmdline arguments"""
-    description="""
+    description = """
 Script for comparing buildstats of two separate builds."""
     parser = argparse.ArgumentParser(
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,

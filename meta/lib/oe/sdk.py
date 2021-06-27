@@ -64,17 +64,17 @@ class Sdk(object, metaclass=ABCMeta):
             # something goes wrong
             if (bb.utils.movefile(sourcefile, destdir) == None):
                 raise OSError("moving %s to %s failed"
-                        %(sourcefile, destdir))
+                        % (sourcefile, destdir))
         #FIXME: using umbrella exc catching because bb.utils method raises it
         except Exception as e:
-            bb.debug(1, "printing the stack trace\n %s" %traceback.format_exc())
+            bb.debug(1, "printing the stack trace\n %s" % traceback.format_exc())
             bb.error("unable to place %s in final SDK location" % sourcefile)
 
     def mkdirhier(self, dirpath):
         try:
             bb.utils.mkdirhier(dirpath)
         except OSError as e:
-            bb.debug(1, "printing the stack trace\n %s" %traceback.format_exc())
+            bb.debug(1, "printing the stack trace\n %s" % traceback.format_exc())
             bb.fatal("cannot make dir for SDK: %s" % dirpath)
 
     def remove(self, path, recurse=False):
@@ -82,7 +82,7 @@ class Sdk(object, metaclass=ABCMeta):
             bb.utils.remove(path, recurse)
         #FIXME: using umbrella exc catching because bb.utils method raises it
         except Exception as e:
-            bb.debug(1, "printing the stack trace\n %s" %traceback.format_exc())
+            bb.debug(1, "printing the stack trace\n %s" % traceback.format_exc())
             bb.warn("cannot remove SDK dir: %s" % path)
 
     def install_locales(self, pm):

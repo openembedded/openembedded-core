@@ -121,7 +121,7 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
 
         # Make sure that some database files are under /var/lib/rpm as '__db.xxx'
         status, output = self.target.run(db_files_cmd)
-        msg =  'Failed to find database files under /var/lib/rpm/ as __db.xxx'
+        msg = 'Failed to find database files under /var/lib/rpm/ as __db.xxx'
         self.assertEqual(0, status, msg=msg)
 
         self.tc.target.copyTo(self.test_file, self.dst)

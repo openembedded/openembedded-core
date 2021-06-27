@@ -71,7 +71,7 @@ class TestDependsDecorator(TestBase):
     modules = ['depends']
 
     def test_depends_order(self):
-        tests =  ['depends.DependsTest.testDependsFirst',
+        tests = ['depends.DependsTest.testDependsFirst',
                   'depends.DependsTest.testDependsSecond',
                   'depends.DependsTest.testDependsThird',
                   'depends.DependsTest.testDependsFourth',
@@ -88,7 +88,7 @@ class TestDependsDecorator(TestBase):
     def test_depends_fail_missing_dependency(self):
         expect = "TestCase depends.DependsTest.testDependsSecond depends on "\
                  "depends.DependsTest.testDependsFirst and isn't available"
-        tests =  ['depends.DependsTest.testDependsSecond']
+        tests = ['depends.DependsTest.testDependsSecond']
         try:
             # Must throw OEQADependency because missing 'testDependsFirst'
             tc = self._testLoader(modules=self.modules, tests=tests)
@@ -100,7 +100,7 @@ class TestDependsDecorator(TestBase):
 
     def test_depends_fail_circular_dependency(self):
         expect = 'have a circular dependency'
-        tests =  ['depends.DependsTest.testDependsCircular1',
+        tests = ['depends.DependsTest.testDependsCircular1',
                   'depends.DependsTest.testDependsCircular2',
                   'depends.DependsTest.testDependsCircular3']
         try:

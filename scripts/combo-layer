@@ -142,7 +142,7 @@ class Configuration(object):
         self.repos[repo][option] = value
 
     def sanity_check(self, initmode=False):
-        required_options=["src_uri", "local_repo_dir", "dest_dir", "last_revision"]
+        required_options = ["src_uri", "local_repo_dir", "dest_dir", "last_revision"]
         if initmode:
             required_options.remove("last_revision")
         msg = ""
@@ -150,7 +150,7 @@ class Configuration(object):
         for name in self.repos:
             for option in required_options:
                 if option not in self.repos[name]:
-                    msg = "%s\nOption %s is not defined for component %s" %(msg, option, name)
+                    msg = "%s\nOption %s is not defined for component %s" % (msg, option, name)
                     missing_options.append(option)
             # Sanitize dest_dir so that we do not have to deal with edge cases
             # (unset, empty string, double slashes) in the rest of the code.
@@ -201,7 +201,7 @@ def action_init(conf, args):
     for name in conf.repos:
         ldir = conf.repos[name]['local_repo_dir']
         if not os.path.exists(ldir):
-            logger.info("cloning %s to %s" %(conf.repos[name]['src_uri'], ldir))
+            logger.info("cloning %s to %s" % (conf.repos[name]['src_uri'], ldir))
             subprocess.check_call("git clone %s %s" % (conf.repos[name]['src_uri'], ldir), shell=True)
     if not os.path.exists(".git"):
         runcmd("git init")
@@ -269,7 +269,7 @@ def action_init(conf, args):
                 # directory and optionally tell tar to strip the path
                 # prefix when the files were already moved.
                 subdir_components = len(subdir.split(os.path.sep)) if subdir else 0
-                strip=('--strip-components=%d' % subdir_components) if subdir else ''
+                strip = ('--strip-components=%d' % subdir_components) if subdir else ''
                 # TODO: file_filter wild cards do not work (and haven't worked before either), because
                 # a) GNU tar requires a --wildcards parameter before turning on wild card matching.
                 # b) The semantic is not as intendend (src/*.c also matches src/foo/bar.c,
@@ -467,7 +467,7 @@ def check_repo_clean(repodir):
         check if the repo is clean
         exit if repo is dirty
     """
-    output=runcmd("git status --porcelain", repodir)
+    output = runcmd("git status --porcelain", repodir)
     r = re.compile('\?\? patch-.*/')
     dirtyout = [item for item in output.splitlines() if not r.match(item)]
     if dirtyout:
@@ -591,15 +591,15 @@ def action_pull(conf, args):
             try:
                 runcmd("git checkout %s" % branch, ldir, printerr=False)
             except subprocess.CalledProcessError:
-                output=runcmd("git fetch", ldir)
+                output = runcmd("git fetch", ldir)
                 logger.info(output)
                 runcmd("git checkout %s" % branch, ldir)
                 runcmd("git pull --ff-only", ldir)
             else:
-                output=runcmd("git pull --ff-only", ldir)
+                output = runcmd("git pull --ff-only", ldir)
                 logger.info(output)
         else:
-            output=runcmd("git fetch", ldir)
+            output = runcmd("git fetch", ldir)
             logger.info(output)
             runcmd("git checkout %s" % branch, ldir)
             runcmd("git reset --hard FETCH_HEAD", ldir)
@@ -707,20 +707,20 @@ def update_with_patches(conf, components, revisions, repos):
         # Step 3: Call repo specific hook to adjust patch
         if 'hook' in repo:
             # hook parameter is: ./hook patchpath revision reponame
-            count=len(revlist)-1
+            count = len(revlist) - 1
             for patch in patchlist:
                 runcmd("%s %s %s %s" % (repo['hook'], patch, revlist[count], name))
-                count=count-1
+                count = count - 1
 
         # Step 4: write patch list and revision list to file, for user to edit later
         patchlist_file = os.path.join(os.getcwd(), patch_dir, "patchlist-%s" % name)
         repo['patchlist'] = patchlist_file
         f = open(patchlist_file, 'w')
-        count=len(revlist)-1
+        count = len(revlist) - 1
         for patch in patchlist:
             f.write("%s %s\n" % (patch, revlist[count]))
             check_patch(os.path.join(patch_dir, patch))
-            count=count-1
+            count = count - 1
         f.close()
 
     # Step 5: invoke bash for user to edit patch and patch list
@@ -1206,7 +1206,7 @@ def find_revs(old2new, head):
     num_known = len(old2new)
     log = runcmd("git log --grep='From .* rev: [a-fA-F0-9][a-fA-F0-9]*' --pretty=format:%H%x00%B%x00 " + head).split(chr(0))
     regex = re.compile(r'From .* rev: ([a-fA-F0-9]+)')
-    for new_rev, body in zip(*[iter(log)]* 2):
+    for new_rev, body in zip(*[iter(log)] * 2):
         # Use the last one, in the unlikely case there are more than one.
         rev = regex.findall(body)[-1]
         if rev not in old2new:
@@ -1232,7 +1232,7 @@ def apply_commit(parent, rev, largs, wargs, dest_dir, file_filter=None):
     if parent:
         # Apply delta.
         changes = runcmd("git diff-tree --no-commit-id --no-renames --name-status -r --raw -z %s %s" % (parent, rev), **largs).split(chr(0))
-        for status, name in zip(*[iter(changes)]*2):
+        for status, name in zip(*[iter(changes)] * 2):
             if status[0] in "ACMRT":
                 update.append(name)
             elif status[0] in "D":

@@ -303,10 +303,10 @@ def diff_buildstats(bs1, bs2, stat_attr, min_val=None, min_absdiff=None, only_ta
                 continue
             if min_absdiff and abs(val2 - val1) < min_absdiff:
                 log.debug("Filtering out %s:%s (difference of %s)", pkg, task,
-                          val2-val1)
+                          val2 - val1)
                 continue
             tasks_diff.append(TaskDiff(pkg, pkg_op, task, task_op, val1, val2,
-                                       val2-val1, reldiff))
+                                       val2 - val1, reldiff))
     return tasks_diff
 
 

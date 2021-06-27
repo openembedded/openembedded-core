@@ -125,8 +125,8 @@ def LogResults(original_class):
     from time import strftime, gmtime
     caller = os.path.basename(sys.argv[0])
     timestamp = strftime('%Y%m%d%H%M%S',gmtime())
-    logfile = os.path.join(os.getcwd(),'results-'+caller+'.'+timestamp+'.log')
-    linkfile = os.path.join(os.getcwd(),'results-'+caller+'.log')
+    logfile = os.path.join(os.getcwd(),'results-' + caller + '.' + timestamp + '.log')
+    linkfile = os.path.join(os.getcwd(),'results-' + caller + '.log')
 
     def get_class_that_defined_method(meth):
         if inspect.ismethod(meth):
@@ -177,20 +177,20 @@ def LogResults(original_class):
         tcid = self.id()
         for (name, msg) in result.errors:
             if tcid == name.id():
-                local_log.results("Testcase "+str(test_case)+": ERROR")
-                local_log.results("Testcase "+str(test_case)+":\n"+msg)
+                local_log.results("Testcase " + str(test_case) + ": ERROR")
+                local_log.results("Testcase " + str(test_case) + ":\n" + msg)
                 passed = False
         for (name, msg) in result.failures:
             if tcid == name.id():
-                local_log.results("Testcase "+str(test_case)+": FAILED")
-                local_log.results("Testcase "+str(test_case)+":\n"+msg)
+                local_log.results("Testcase " + str(test_case) + ": FAILED")
+                local_log.results("Testcase " + str(test_case) + ":\n" + msg)
                 passed = False
         for (name, msg) in result.skipped:
             if tcid == name.id():
-                local_log.results("Testcase "+str(test_case)+": SKIPPED")
+                local_log.results("Testcase " + str(test_case) + ": SKIPPED")
                 passed = False
         if passed:
-            local_log.results("Testcase "+str(test_case)+": PASSED")
+            local_log.results("Testcase " + str(test_case) + ": PASSED")
 
         # XXX: In order to avoid race condition when test if exists the linkfile
         # use bb.utils.lock, the best solution is to create a unique name for the

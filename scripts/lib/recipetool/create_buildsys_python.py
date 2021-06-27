@@ -607,7 +607,7 @@ def gather_setup_info(fileobj):
         if key == 'ext_modules':
             if isinstance(value, list):
                 for ext in value:
-                    if  (isinstance(ext, ast.Call) and
+                    if (isinstance(ext, ast.Call) and
                          isinstance(ext.func, ast.Name) and
                          ext.func.id == 'Extension' and
                          not has_non_literals(ext.args)):

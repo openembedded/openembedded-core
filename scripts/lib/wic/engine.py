@@ -263,7 +263,7 @@ class Disk:
             splitted = out.splitlines()
             # skip over possible errors in exec_cmd output
             try:
-                idx =splitted.index("BYT;")
+                idx = splitted.index("BYT;")
             except ValueError:
                 raise WicError("Error getting partition information from %s" % (self.parted))
             lsector_size, psector_size, self._ptable_format = splitted[idx + 1].split(":")[3:6]
@@ -328,7 +328,7 @@ class Disk:
 
     def copy(self, src, dest):
         """Copy partition image into wic image."""
-        pnum =  dest.part if isinstance(src, str) else src.part
+        pnum = dest.part if isinstance(src, str) else src.part
 
         if self.partitions[pnum].fstype.startswith('ext'):
             if isinstance(src, str):
@@ -543,7 +543,7 @@ class Disk:
                         label = part.get("name")
                         label_str = "-L {}".format(label) if label else ''
                         out = exec_cmd("{} --probe {}".format(self.blkid, self._get_part_image(pnum)))
-                        uuid = out[out.index("UUID=\"")+6:out.index("UUID=\"")+42]
+                        uuid = out[out.index("UUID=\"") + 6:out.index("UUID=\"") + 42]
                         uuid_str = "-U {}".format(uuid) if uuid else ''
                         with open(partfname, 'w') as sparse:
                             os.ftruncate(sparse.fileno(), part['size'] * self._lsector_size)

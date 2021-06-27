@@ -26,7 +26,7 @@ from collections import defaultdict
 import importlib
 
 # Get Unicode non printable control chars
-control_range = list(range(0,32))+list(range(127,160))
+control_range = list(range(0,32)) + list(range(127,160))
 control_chars = [chr(x) for x in control_range
                 if chr(x) not in string.printable]
 re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
@@ -228,7 +228,7 @@ class QemuRunner:
         self.origchldhandler = signal.getsignal(signal.SIGCHLD)
         signal.signal(signal.SIGCHLD, self.handleSIGCHLD)
 
-        self.logger.debug('launchcmd=%s'%(launch_cmd))
+        self.logger.debug('launchcmd=%s' % (launch_cmd))
 
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
         # blocking at the end of the runqemu script when using this within
@@ -402,7 +402,7 @@ class QemuRunner:
             except (IndexError, ValueError):
                 # Try to get network configuration from runqemu output
                 match = re.match(r'.*Network configuration: (?:ip=)*([0-9.]+)::([0-9.]+):([0-9.]+)$.*',
-                                 out, re.MULTILINE|re.DOTALL)
+                                 out, re.MULTILINE | re.DOTALL)
                 if match:
                     self.ip, self.server_ip, self.netmask = match.groups()
                     # network configuration is required as we couldn't get it
@@ -641,13 +641,13 @@ class QemuRunner:
                 status = 1
             else:
                 # Remove first line (command line) and last line (prompt)
-                data = data[data.find('$?\r\n')+4:data.rfind('\r\n')]
+                data = data[data.find('$?\r\n') + 4:data.rfind('\r\n')]
                 index = data.rfind('\r\n')
                 if index == -1:
                     status_cmd = data
                     data = ""
                 else:
-                    status_cmd = data[index+2:]
+                    status_cmd = data[index + 2:]
                     data = data[:index]
                 if (status_cmd == "0"):
                     status = 1
