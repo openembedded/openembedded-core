@@ -346,4 +346,3 @@ def partition_tests(suite, count):
 
     # No point in empty threads so drop them
     return [p for p in partitions if p]
-

@@ -27,7 +27,7 @@ def runstrip(arg):
 
     stripcmd = [strip]
     skip_strip = False
-    # kernel module    
+    # kernel module
     if elftype & 16:
         if is_kernel_module_signed(file):
             bb.debug(1, "Skip strip on signed module %s" % file)

@@ -76,14 +76,14 @@ class LtpStressTest(LtpStressBase):
             runtime = int(endtime - starttime)
             sections['duration'] = runtime
             self.sections[stress_group] = sections
- 
+
             failed_tests = {}
             for test in results:
                 result = results[test]
                 testname = ("ltpstressresult." + stress_group + "." + test)
                 self.extras[testname] = {'status': result}
                 if result == 'FAILED':
-                    failed_tests[stress_group] = test 
+                    failed_tests[stress_group] = test
 
             if failed_tests:
                 self.failmsg = self.failmsg + "Failed ptests:\n%s" % pprint.pformat(failed_tests)

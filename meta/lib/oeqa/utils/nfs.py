@@ -37,4 +37,3 @@ def unfs_server(directory, logger=None):
         if exports is not None:
             # clean up exports file
             os.unlink(exports.name)
-

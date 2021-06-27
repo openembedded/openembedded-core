@@ -31,7 +31,7 @@ class SystemdFile():
         self._parse(root, path)
         dirname = os.path.basename(path.name) + ".d"
         for location in locations:
-            for path2 in sorted((root / location / "system" / dirname).glob("*.conf")):                
+            for path2 in sorted((root / location / "system" / dirname).glob("*.conf")):
                 self._parse(root, path2)
 
     def _parse(self, root, path):

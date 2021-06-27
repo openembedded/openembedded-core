@@ -336,4 +336,3 @@ def measurement_stats(meas, prefix=''):
     stats[prefix + 'plus'] = val_cls(max_val - mean_val)
 
     return stats
-

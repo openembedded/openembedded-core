@@ -74,7 +74,7 @@ try:
                     if readdata:
                         i = i + readdata.decode('utf-8')
                 if i:
-                    # Write a page at a time to avoid overflowing output 
+                    # Write a page at a time to avoid overflowing output
                     # d.keys() is a good way to do that
                     sys.stdout.write(i[:4096])
                     sys.stdout.flush()

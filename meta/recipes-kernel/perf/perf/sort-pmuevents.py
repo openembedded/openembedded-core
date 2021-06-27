@@ -55,12 +55,12 @@ for struct in re.findall(struct_block_regex, data):
         if cpuid:
             #print( "    cpuid found: %s" % cpuid.group(1) )
             entry_dict[struct[1]]['fields'][cpuid.group(1)] = entry
-            
+
         name = re.search(name_regex, entry)
         if name:
             #print( "    name found: %s" % name.group(1) )
             entry_dict[struct[1]]['fields'][name.group(1)] = entry
-        
+
 
 # created ordered dictionaries from the captured values. These are ordered by
 # a sorted() iteration of the keys. We don't care about the order we read
@@ -75,7 +75,7 @@ for i in sorted(entry_dict.keys()):
     entry_dict_sorted[i]['type'] = entry_dict[i]['type']
     entry_dict_sorted[i]['fields'] = {}
     for f in sorted(entry_dict[i]['fields'].keys()):
-        entry_dict_sorted[i]['fields'][f] = entry_dict[i]['fields'][f] 
+        entry_dict_sorted[i]['fields'][f] = entry_dict[i]['fields'][f]
 
 # dump the sorted elements to the outfile
 outf = open(outfile, 'w')
@@ -90,4 +90,3 @@ for d in entry_dict_sorted:
     outf.write("};\n")
 
 outf.close()
-    

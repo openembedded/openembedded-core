@@ -130,7 +130,7 @@ class Signing(OESelftestTestCase):
 
         test_recipe = 'ed'
 
-        # Since we need gpg but we can't use gpg-native for sstate signatures, we 
+        # Since we need gpg but we can't use gpg-native for sstate signatures, we
         # build gpg-native in our original builddir then run the tests in a second one.
         builddir = os.environ.get('BUILDDIR') + "-testsign"
         sstatedir = os.path.join(builddir, 'test-sstate')

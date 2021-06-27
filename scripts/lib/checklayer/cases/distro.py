@@ -17,7 +17,7 @@ class DistroCheckLayer(OECheckLayerTestCase):
                 self.tc.layer['name'])
 
     def test_distro_defines_distros(self):
-        self.assertTrue(self.tc.layer['conf']['distros'], 
+        self.assertTrue(self.tc.layer['conf']['distros'],
                 "Layer is BSP but doesn't defines machines.")
 
     def test_distro_no_set_distros(self):

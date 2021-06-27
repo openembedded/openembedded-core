@@ -190,7 +190,7 @@ class ManifestVisitor(LicenseVisitor):
                             elif ops[-1] in ['[', ']']:
                                 ops.append(op)
                             else:
-                                ops[-1] = op 
+                                ops[-1] = op
 
                     for op in ops:
                         if op == '[' or op == ']':

@@ -53,4 +53,3 @@ def search_method(module, method):
                 if m == method:
                     return True
     return False
-

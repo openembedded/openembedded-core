@@ -81,4 +81,3 @@ def OETestTag(*tags):
             item.__oeqa_testtags = expandedtags
         return item
     return decorator
-

@@ -34,7 +34,7 @@ except ImportError:
             if msg:
                 print("FATAL:" + msg)
                 sys.exit(1)
-    bb = my_log()    
+    bb = my_log()
 
 
 def determine_if_poky_env():
@@ -271,4 +271,3 @@ def rm_bin(removal_list): # need to know both if the binary is sent archived and
         if status != 0:
             bb.warn("Failed to remove: %s. Please ensure connection with the target device is up and running and "
                      "you have the needed rights." % item)
-

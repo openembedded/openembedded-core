@@ -118,4 +118,3 @@ SSTATE_MIRRORS =  "file://.* file://%s/PATH"
         image = 'core-image-minimal'
         cmd = "devtool build-image %s" % image
         oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
-

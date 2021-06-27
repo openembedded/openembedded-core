@@ -165,4 +165,3 @@ class GccLibItmSelfTestSystemEmulated(GccSelfTestBase):
     def test_libitm(self):
         self.check_skip("libitm")
         self.run_check_emulated("libitm")
-

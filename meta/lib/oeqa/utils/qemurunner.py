@@ -192,7 +192,7 @@ class QemuRunner:
         qmp_file = "." + next(tempfile._get_candidate_names())
         qmp_param = ' -S -qmp unix:./%s,server,wait' % (qmp_file)
         qmp_port = self.tmpdir + "/" + qmp_file
-        # Create a second socket connection for debugging use, 
+        # Create a second socket connection for debugging use,
         # note this will NOT cause qemu to block waiting for the connection
         qmp_file2 = "." + next(tempfile._get_candidate_names())
         qmp_param += ' -qmp unix:./%s,server,nowait' % (qmp_file2)
@@ -354,7 +354,7 @@ class QemuRunner:
             os.chdir(origpath)
 
         # We worry that mmap'd libraries may cause page faults which hang the qemu VM for periods
-        # causing failures. Before we "start" qemu, read through it's mapped files to try and 
+        # causing failures. Before we "start" qemu, read through it's mapped files to try and
         # ensure we don't hit page faults later
         mapdir = "/proc/" + str(self.qemupid) + "/map_files/"
         try:

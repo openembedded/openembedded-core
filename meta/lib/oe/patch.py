@@ -218,7 +218,7 @@ class PatchTree(PatchSet):
         with open(self.seriespath, 'w') as f:
             for p in patches:
                 f.write(p)
-         
+
     def Import(self, patch, force=None):
         """"""
         PatchSet.Import(self, patch, force)
@@ -905,4 +905,3 @@ def should_apply(parm, d):
             return False, "applies to later version"
 
     return True, None
-

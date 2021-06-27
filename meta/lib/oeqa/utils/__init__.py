@@ -46,8 +46,8 @@ def avoid_paths_in_environ(paths):
 def make_logger_bitbake_compatible(logger):
     import logging
 
-    """ 
-    We need to raise the log level of the info output so unittest 
+    """
+    We need to raise the log level of the info output so unittest
     messages are visible on the console.
     """
     def _bitbake_log_info(msg, *args, **kwargs):

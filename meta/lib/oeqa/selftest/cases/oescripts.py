@@ -109,7 +109,7 @@ class OEGitproxyTests(OESelftestTestCase):
         res = runCmd('%s%s/oe-git-proxy 127.1.2.3 9418' %
                      (prefix, self.scripts_dir))
         self.assertIn('TCP:', res.output)
-        
+
         # test that * globbering is off
         os.environ['NO_PROXY'] = "*"
         res = runCmd('%s%s/oe-git-proxy host.example.com 9418' %
@@ -135,7 +135,7 @@ class OeRunNativeTest(OESelftestTestCase):
 
 class OEListPackageconfigTests(OEScriptTests):
     #oe-core.scripts.List_all_the_PACKAGECONFIG's_flags
-    def check_endlines(self, results, expected_endlines): 
+    def check_endlines(self, results, expected_endlines):
         for line in results.output.splitlines():
             for el in expected_endlines:
                 if line.split() == el.split():
@@ -188,4 +188,3 @@ class OEListPackageconfigTests(OEScriptTests):
         expected_endlines.append("pinentry                     gtk2 libcap ncurses qt secret")
 
         self.check_endlines(results, expected_endlines)
-

@@ -141,5 +141,3 @@ class RpmInstallRemoveTest(OERuntimeTestCase):
             self.assertEqual(0, status, msg=msg)
 
         self.tc.target.run('rm -f %s' % self.dst)
-
-

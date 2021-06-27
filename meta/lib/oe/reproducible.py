@@ -111,4 +111,3 @@ def get_source_date_epoch(d, sourcedir):
         get_source_date_epoch_from_youngest_file(d, sourcedir) or
         fixed_source_date_epoch(d)       # Last resort
     )
-

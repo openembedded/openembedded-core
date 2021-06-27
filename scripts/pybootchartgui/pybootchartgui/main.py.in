@@ -29,7 +29,7 @@ def _mk_options_parser():
 	usage = "%prog [options] /path/to/tmp/buildstats/<recipe-machine>/<BUILDNAME>/"
 	version = "%prog v1.0.0"
 	parser = optparse.OptionParser(usage, version=version)
-	parser.add_option("-i", "--interactive", action="store_true", dest="interactive", default=False, 
+	parser.add_option("-i", "--interactive", action="store_true", dest="interactive", default=False,
 			  help="start in active mode")
 	parser.add_option("-f", "--format", dest="format", default="png", choices=["png", "svg", "pdf"],
 			  help="image format (png, svg, pdf); default format png")
@@ -46,7 +46,7 @@ def _mk_options_parser():
 	parser.add_option("-q", "--quiet", action="store_true", dest="quiet", default=False,
 			  help="suppress informational messages")
 #	parser.add_option("-t", "--boot-time", action="store_true", dest="boottime", default=False,
-#			  help="only display the boot time of the boot in text format (stdout)")	
+#			  help="only display the boot time of the boot in text format (stdout)")
 	parser.add_option("--very-quiet", action="store_true", dest="veryquiet", default=False,
 			  help="suppress all messages except errors")
 	parser.add_option("--verbose", action="store_true", dest="verbose", default=False,
@@ -73,7 +73,7 @@ class Writer:
 	def __init__(self, write, options):
 		self.write = write
 		self.options = options
-		
+
 	def error(self, msg):
 		self.write(msg)
 
@@ -94,7 +94,7 @@ def _mk_writer(options):
 	def write(s):
 		print(s)
 	return Writer(write, options)
-	
+
 
 def _get_filename(path):
 	"""Construct a usable filename for outputs"""
@@ -112,7 +112,7 @@ def main(argv=None):
 	try:
 		if argv is None:
 			argv = sys.argv[1:]
-	
+
 		parser = _mk_options_parser()
 		options, args = parser.parse_args(argv)
 

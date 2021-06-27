@@ -5,7 +5,7 @@ import time
 
 
 class RunLevel_Test(OERuntimeTestCase):
-    
+
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     def test_runlevel_3(self):
         (status, output) = self.target.run("init 3 && sleep 5 && runlevel")
@@ -13,8 +13,8 @@ class RunLevel_Test(OERuntimeTestCase):
         self.assertEqual(output, runlevel, msg='Failed to set current runlevel to runlevel 3, current runlevel : %s' % output[-1])
         (status, output) = self.target.run("uname -a")
         self.assertEqual(status, 0, msg='Failed to run uname command, output: %s' % output)
-        
-    @OETestDepends(['runlevel.RunLevel_Test.test_runlevel_3']) 
+
+    @OETestDepends(['runlevel.RunLevel_Test.test_runlevel_3'])
     def test_runlevel_5(self):
         (status, output) = self.target.run("init 5 && sleep 5 && runlevel")
         runlevel = '3 5'

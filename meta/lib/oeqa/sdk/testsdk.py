@@ -144,5 +144,3 @@ class TestSDK(TestSDKBase):
 
         if fail:
             bb.fatal("%s - FAILED - check the task log and the commands log" % pn)
-
-

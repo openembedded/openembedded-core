@@ -16,7 +16,7 @@ class SysrootTests(OESelftestTestCase):
         sysroot is correctly cleaned up. The files in the two providers overlap
         so can cause errors if the sysroot code doesn't function correctly.
         Yes, sysroot-test should be machine specific really to avoid this, however
-        the sysroot cleanup should also work [YOCTO #13702]. 
+        the sysroot cleanup should also work [YOCTO #13702].
         """
 
         uuid1 = uuid.uuid4()

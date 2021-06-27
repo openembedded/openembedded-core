@@ -22,7 +22,7 @@ class RTCTest(OERuntimeTestCase):
     def test_rtc(self):
         (status, output) = self.target.run('hwclock -r')
         self.assertEqual(status, 0, msg='Failed to get RTC time, output: %s' % output)
-        
+
         (status, current_datetime) = self.target.run('date +"%m%d%H%M%Y"')
         self.assertEqual(status, 0, msg='Failed to get system current date & time, output: %s' % current_datetime)
 
@@ -33,7 +33,6 @@ class RTCTest(OERuntimeTestCase):
 
         (status, output) = self.target.run('date %s' % current_datetime)
         self.assertEqual(status, 0, msg='Failed to reset system date & time, output: %s' % output)
-        
+
         (status, output) = self.target.run('hwclock -w')
         self.assertEqual(status, 0, msg='Failed to reset RTC time, output: %s' % output)
-        

@@ -37,20 +37,20 @@ class LogrotateTest(OERuntimeTestCase):
         status, output = self.target.run('echo "create \n olddir $HOME/logrotate_dir \n include /etc/logrotate.d/wtmp" > /tmp/logrotate-test.conf')
         msg = ('Could not write to /tmp/logrotate-test.conf')
         self.assertEqual(status, 0, msg=msg)
-        
+
         # If logrotate fails to rotate the log, view the verbose output of logrotate to see what prevented it
         _, logrotate_output = self.target.run('logrotate -vf /tmp/logrotate-test.conf')
         status, _ = self.target.run('find $HOME/logrotate_dir -type f | grep wtmp.1')
         msg = ("logrotate did not successfully rotate the wtmp log. Output from logrotate -vf: \n%s" % (logrotate_output))
         self.assertEqual(status, 0, msg=msg)
-       
+
     @OETestDepends(['logrotate.LogrotateTest.test_logrotate_wtmp'])
     def test_logrotate_newlog(self):
-        
+
         status, output = self.target.run('echo "oeqa logrotate test file" > /var/log/logrotate_testfile')
         msg = ('Could not create logrotate test file in /var/log')
         self.assertEqual(status, 0, msg=msg)
-        
+
         status, output = self.target.run('echo "/var/log/logrotate_testfile {\n missingok \n monthly \n rotate 1" > /etc/logrotate.d/logrotate_testfile')
         msg = ('Could not write to /etc/logrotate.d/logrotate_testfile')
         self.assertEqual(status, 0, msg=msg)
@@ -68,5 +68,3 @@ class LogrotateTest(OERuntimeTestCase):
         status, _ = self.target.run('find $HOME/logrotate_dir -type f | grep logrotate_testfile.1')
         msg = ('logrotate did not successfully rotate the logrotate_test log. Output from logrotate -vf: \n%s' % (logrotate_output))
         self.assertEqual(status, 0, msg=msg)
-
-

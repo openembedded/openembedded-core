@@ -78,7 +78,7 @@ class LtpTest(LtpTestBase):
 
             # copy nice log from DUT
             dst = os.path.join(self.ltptest_log_dir, "%s" % ltp_group)
-            remote_src = "/opt/ltp/results/%s" % ltp_group 
+            remote_src = "/opt/ltp/results/%s" % ltp_group
             (status, output) = self.target.copyFrom(remote_src, dst, True)
             msg = 'File could not be copied. Output: %s' % output
             if status:
@@ -97,7 +97,7 @@ class LtpTest(LtpTestBase):
                 testname = ("ltpresult." + ltp_group + "." + test)
                 self.extras[testname] = {'status': result}
                 if result == 'FAILED':
-                    failed_tests[ltp_group] = test 
+                    failed_tests[ltp_group] = test
 
             if failed_tests:
                 self.failmsg = self.failmsg + "Failed ptests:\n%s" % pprint.pformat(failed_tests)
@@ -112,7 +112,7 @@ class LtpTest(LtpTestBase):
 
     @OETestDepends(['ltp.LtpTest.test_ltp_help'])
     def test_ltp_groups(self):
-        for ltp_group in self.ltp_groups: 
+        for ltp_group in self.ltp_groups:
             self.runltp(ltp_group)
 
     @OETestDepends(['ltp.LtpTest.test_ltp_groups'])

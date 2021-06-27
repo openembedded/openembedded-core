@@ -105,4 +105,3 @@ class OEPTestResultTestCase:
             sections[section] = {}
         resultname = "ptestresult.{}.{}".format(section, test)
         self.extraresults[resultname] = {"status": result}
-

@@ -105,4 +105,3 @@ def register_commands(subparsers):
             help='show raw ptest log')
     parser.add_argument('--raw-reproducible', action='store_true',
             help='show raw reproducible build logs')
-

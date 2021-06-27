@@ -40,11 +40,11 @@ class OpkgRepoTest(OpkgTest):
         apt_get_source_server = 'http://%s:%s/' % (self.tc.target.server_ip, self.repo_server.port)
         apt_get_sourceslist_dir = '/etc/opkg/'
         self.target.run('cd %s; echo src/gz all %s >> opkg.conf' % (apt_get_sourceslist_dir, apt_get_source_server))
-        
+
     def cleanup_source_config_for_package_install(self):
         apt_get_sourceslist_dir = '/etc/opkg/'
         self.target.run('cd %s; sed -i "/^src/d" opkg.conf' % (apt_get_sourceslist_dir))
-        
+
     @skipIfNotFeature('package-management',
                       'Test requires package-management to be in IMAGE_FEATURES')
     @skipIfNotDataVar('IMAGE_PKGTYPE', 'ipk',

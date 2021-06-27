@@ -90,4 +90,3 @@ class GlibcSelfTest(GlibcSelfTestBase):
 class GlibcSelfTestSystemEmulated(GlibcSelfTestBase):
     def test_glibc(self):
         self.run_check_emulated()
-

@@ -69,4 +69,3 @@ for line in fileinput.input(args):
                     for rec in recs:
                         rec = verregex.sub('', rec)
                         print("%s|%s [REC]" % (pkg, rec))
-
