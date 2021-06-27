@@ -14,7 +14,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 
 class DnfTest(OERuntimeTestCase):
 
-    def dnf(self, command, expected = 0):
+    def dnf(self, command, expected=0):
         command = 'dnf %s' % command
         status, output = self.target.run(command, 1500)
         message = os.linesep.join([command, output])

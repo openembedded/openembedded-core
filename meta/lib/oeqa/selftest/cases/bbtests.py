@@ -20,21 +20,21 @@ class BitbakeTests(OESelftestTestCase):
     # Test bitbake can run from the <builddir>/conf directory
     def test_run_bitbake_from_dir_1(self):
         os.chdir(os.path.join(self.builddir, 'conf'))
-        self.assertEqual(bitbake('-e').status, 0, msg = "bitbake couldn't run from \"conf\" dir")
+        self.assertEqual(bitbake('-e').status, 0, msg="bitbake couldn't run from \"conf\" dir")
 
     # Test bitbake can run from the <builddir>'s parent directory
     def test_run_bitbake_from_dir_2(self):
         my_env = os.environ.copy()
         my_env['BBPATH'] = my_env['BUILDDIR']
         os.chdir(os.path.dirname(os.environ['BUILDDIR']))
-        self.assertEqual(bitbake('-e', env=my_env).status, 0, msg = "bitbake couldn't run from builddir's parent directory")
+        self.assertEqual(bitbake('-e', env=my_env).status, 0, msg="bitbake couldn't run from builddir's parent directory")
 
     # Test bitbake can run from some other random system location (we use /tmp/)
     def test_run_bitbake_from_dir_3(self):
         my_env = os.environ.copy()
         my_env['BBPATH'] = my_env['BUILDDIR']
         os.chdir("/tmp/")
-        self.assertEqual(bitbake('-e', env=my_env).status, 0, msg = "bitbake couldn't run from /tmp/")
+        self.assertEqual(bitbake('-e', env=my_env).status, 0, msg="bitbake couldn't run from /tmp/")
 
 
     def test_event_handler(self):
@@ -42,8 +42,8 @@ class BitbakeTests(OESelftestTestCase):
         result = bitbake('m4-native')
         find_build_started = re.search(r"NOTE: Test for bb\.event\.BuildStarted(\n.*)*NOTE: Executing.*Tasks", result.output)
         find_build_completed = re.search(r"Tasks Summary:.*(\n.*)*NOTE: Test for bb\.event\.BuildCompleted", result.output)
-        self.assertTrue(find_build_started, msg = "Match failed in:\n%s"  % result.output)
-        self.assertTrue(find_build_completed, msg = "Match failed in:\n%s" % result.output)
+        self.assertTrue(find_build_started, msg="Match failed in:\n%s"  % result.output)
+        self.assertTrue(find_build_completed, msg="Match failed in:\n%s" % result.output)
         self.assertNotIn('Test for bb.event.InvalidEvent', result.output)
 
     def test_local_sstate(self):
@@ -51,11 +51,11 @@ class BitbakeTests(OESelftestTestCase):
         bitbake('m4-native -cclean')
         result = bitbake('m4-native')
         find_setscene = re.search("m4-native.*do_.*_setscene", result.output)
-        self.assertTrue(find_setscene, msg = "No \"m4-native.*do_.*_setscene\" message found during bitbake m4-native. bitbake output: %s" % result.output )
+        self.assertTrue(find_setscene, msg="No \"m4-native.*do_.*_setscene\" message found during bitbake m4-native. bitbake output: %s" % result.output )
 
     def test_bitbake_invalid_recipe(self):
         result = bitbake('-b asdf', ignore_status=True)
-        self.assertTrue("ERROR: Unable to find any recipe file matching 'asdf'" in result.output, msg = "Though asdf recipe doesn't exist, bitbake didn't output any err. message. bitbake output: %s" % result.output)
+        self.assertTrue("ERROR: Unable to find any recipe file matching 'asdf'" in result.output, msg="Though asdf recipe doesn't exist, bitbake didn't output any err. message. bitbake output: %s" % result.output)
 
     def test_bitbake_invalid_target(self):
         result = bitbake('asdf', ignore_status=True)
@@ -79,7 +79,7 @@ class BitbakeTests(OESelftestTestCase):
         for l in result.output.split('\n'):
             if l.startswith("ERROR:") and "failed" in l and "do_patch" in l:
                 found = l
-        self.assertTrue(found and found.startswith("ERROR:"), msg = "Incorrectly formed patch application didn't fail. bitbake output: %s" % result.output)
+        self.assertTrue(found and found.startswith("ERROR:"), msg="Incorrectly formed patch application didn't fail. bitbake output: %s" % result.output)
 
     def test_force_task_1(self):
         # test 1 from bug 5875
@@ -123,7 +123,7 @@ class BitbakeTests(OESelftestTestCase):
         result = bitbake('-g %s' % recipe)
         for f in ['pn-buildlist', 'task-depends.dot']:
             self.addCleanup(os.remove, f)
-        self.assertTrue('Task dependencies saved to \'task-depends.dot\'' in result.output, msg = "No task dependency \"task-depends.dot\" file was generated for the given task target. bitbake output: %s" % result.output)
+        self.assertTrue('Task dependencies saved to \'task-depends.dot\'' in result.output, msg="No task dependency \"task-depends.dot\" file was generated for the given task target. bitbake output: %s" % result.output)
         self.assertIn(recipe, ftools.read_file(os.path.join(self.builddir, 'task-depends.dot')))
 
     def test_image_manifest(self):
@@ -150,7 +150,7 @@ INHERIT_remove = \"report-error\"
         self.assertEqual(result.status, 1, msg="Command succeded when it should have failed. bitbake output: %s" % result.output)
         self.assertIn('Fetcher failure: Unable to find file file://invalid anywhere. The paths that were searched were:', result.output)
         line = self.getline(result, 'Fetcher failure for URL: \'file://invalid\'. Unable to fetch URL from any source.')
-        self.assertTrue(line and line.startswith("ERROR:"), msg = "\"invalid\" file \
+        self.assertTrue(line and line.startswith("ERROR:"), msg="\"invalid\" file \
 doesn't exist, yet fetcher didn't report any error. bitbake output: %s" % result.output)
 
     def test_rename_downloaded_file(self):
@@ -165,9 +165,9 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
         self.write_recipeinc('aspell', data)
         result = bitbake('-f -c fetch aspell', ignore_status=True)
         self.delete_recipeinc('aspell')
-        self.assertEqual(result.status, 0, msg = "Couldn't fetch aspell. %s" % result.output)
+        self.assertEqual(result.status, 0, msg="Couldn't fetch aspell. %s" % result.output)
         dl_dir = get_bb_var("DL_DIR")
-        self.assertTrue(os.path.isfile(os.path.join(dl_dir, 'test-aspell.tar.gz')), msg = "File rename failed. No corresponding test-aspell.tar.gz file found under %s" % dl_dir)
+        self.assertTrue(os.path.isfile(os.path.join(dl_dir, 'test-aspell.tar.gz')), msg="File rename failed. No corresponding test-aspell.tar.gz file found under %s" % dl_dir)
         self.assertTrue(os.path.isfile(os.path.join(dl_dir, 'test-aspell.tar.gz.done')), "File rename failed. No corresponding test-aspell.tar.gz.done file found under %s" % dl_dir)
 
     def test_environment(self):
@@ -208,7 +208,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
 
     def test_checkuri(self):
         result = runCmd('bitbake -c checkuri m4')
-        self.assertEqual(0, result.status, msg = "\"checkuri\" task was not executed. bitbake output: %s" % result.output)
+        self.assertEqual(0, result.status, msg="\"checkuri\" task was not executed. bitbake output: %s" % result.output)
 
     def test_continue(self):
         self.write_config("""DL_DIR = \"${TOPDIR}/download-selftest\"
@@ -222,7 +222,7 @@ INHERIT_remove = \"report-error\"
         errorpos = result.output.find('ERROR: Function failed: do_fail_task')
         manver = re.search("NOTE: recipe xcursor-transparent-theme-(.*?): task do_unpack: Started", result.output)
         continuepos = result.output.find('NOTE: recipe xcursor-transparent-theme-%s: task do_unpack: Started' % manver.group(1))
-        self.assertLess(errorpos,continuepos, msg = "bitbake didn't pass do_fail_task. bitbake output: %s" % result.output)
+        self.assertLess(errorpos,continuepos, msg="bitbake didn't pass do_fail_task. bitbake output: %s" % result.output)
 
     def test_non_gplv3(self):
         self.write_config('INCOMPATIBLE_LICENSE = "GPLv3"')

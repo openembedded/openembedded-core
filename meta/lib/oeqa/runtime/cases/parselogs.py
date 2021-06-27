@@ -328,7 +328,7 @@ class ParseLogsTest(OERuntimeTestCase):
     # Grep only the errors so that their context could be collected.
     # Default context is 10 lines before and after the error itself
     def parse_logs(self, errors, ignore_errors, logs,
-                   lines_before = 10, lines_after = 10):
+                   lines_before=10, lines_after=10):
         results = {}
         rez = []
         grep_output = ''

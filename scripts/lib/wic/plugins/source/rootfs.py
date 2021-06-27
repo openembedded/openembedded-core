@@ -230,4 +230,4 @@ class RootfsPlugin(SourcePlugin):
 
         part.prepare_rootfs(cr_workdir, oe_builddir,
                             new_rootfs or part.rootfs_dir, native_sysroot,
-                            pseudo_dir = new_pseudo or pseudo_dir)
+                            pseudo_dir=new_pseudo or pseudo_dir)

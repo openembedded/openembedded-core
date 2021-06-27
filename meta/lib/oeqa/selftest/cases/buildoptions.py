@@ -26,17 +26,17 @@ class ImageOptionsTests(OESelftestTestCase):
         log_data_created = ftools.read_file(log_data_file)
         incremental_created = re.search(r"Installing\s*:\s*packagegroup-core-ssh-openssh", log_data_created)
         self.remove_config('IMAGE_FEATURES += "ssh-server-openssh"')
-        self.assertTrue(incremental_created, msg = "Match failed in:\n%s" % log_data_created)
+        self.assertTrue(incremental_created, msg="Match failed in:\n%s" % log_data_created)
         bitbake("core-image-minimal")
         log_data_removed = ftools.read_file(log_data_file)
         incremental_removed = re.search(r"Erasing\s*:\s*packagegroup-core-ssh-openssh", log_data_removed)
-        self.assertTrue(incremental_removed, msg = "Match failed in:\n%s" % log_data_removed)
+        self.assertTrue(incremental_removed, msg="Match failed in:\n%s" % log_data_removed)
 
     def test_ccache_tool(self):
         bitbake("ccache-native")
         bb_vars = get_bb_vars(['SYSROOT_DESTDIR', 'bindir'], 'ccache-native')
         p = bb_vars['SYSROOT_DESTDIR'] + bb_vars['bindir'] + "/" + "ccache"
-        self.assertTrue(os.path.isfile(p), msg = "No ccache found (%s)" % p)
+        self.assertTrue(os.path.isfile(p), msg="No ccache found (%s)" % p)
         self.write_config('INHERIT += "ccache"')
         recipe = "libgcc-initial"
         self.add_command_to_tearDown('bitbake -c clean %s' % recipe)
@@ -59,16 +59,16 @@ class DiskMonTest(OESelftestTestCase):
 
     def test_stoptask_behavior(self):
         self.write_config('BB_DISKMON_DIRS = "STOPTASKS,${TMPDIR},100000G,100K"\nBB_HEARTBEAT_EVENT = "1"')
-        res = bitbake("delay -c delay", ignore_status = True)
-        self.assertTrue('ERROR: No new tasks can be executed since the disk space monitor action is "STOPTASKS"!' in res.output, msg = "Tasks should have stopped. Disk monitor is set to STOPTASK: %s" % res.output)
-        self.assertEqual(res.status, 1, msg = "bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
+        res = bitbake("delay -c delay", ignore_status=True)
+        self.assertTrue('ERROR: No new tasks can be executed since the disk space monitor action is "STOPTASKS"!' in res.output, msg="Tasks should have stopped. Disk monitor is set to STOPTASK: %s" % res.output)
+        self.assertEqual(res.status, 1, msg="bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
         self.write_config('BB_DISKMON_DIRS = "ABORT,${TMPDIR},100000G,100K"\nBB_HEARTBEAT_EVENT = "1"')
-        res = bitbake("delay -c delay", ignore_status = True)
+        res = bitbake("delay -c delay", ignore_status=True)
         self.assertTrue('ERROR: Immediately abort since the disk space monitor action is "ABORT"!' in res.output, "Tasks should have been aborted immediatelly. Disk monitor is set to ABORT: %s" % res.output)
-        self.assertEqual(res.status, 1, msg = "bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
+        self.assertEqual(res.status, 1, msg="bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
         self.write_config('BB_DISKMON_DIRS = "WARN,${TMPDIR},100000G,100K"\nBB_HEARTBEAT_EVENT = "1"')
         res = bitbake("delay -c delay")
-        self.assertTrue('WARNING: The free space' in res.output, msg = "A warning should have been displayed for disk monitor is set to WARN: %s" %res.output)
+        self.assertTrue('WARNING: The free space' in res.output, msg="A warning should have been displayed for disk monitor is set to WARN: %s" %res.output)
 
 class SanityOptionsTest(OESelftestTestCase):
     def getline(self, res, line):
@@ -88,7 +88,7 @@ class SanityOptionsTest(OESelftestTestCase):
         self.delete_recipeinc('xcursor-transparent-theme')
         line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
         self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
-        self.assertEqual(res.status, 1, msg = "bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
+        self.assertEqual(res.status, 1, msg="bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         self.append_config('ERROR_QA_remove = "packages-list"')
         self.append_config('WARN_QA_append = " packages-list"')

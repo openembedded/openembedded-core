@@ -40,7 +40,7 @@ class ClassExtender(object):
             return self.extname + "-" + name
         return name
 
-    def map_variable(self, varname, setvar = True):
+    def map_variable(self, varname, setvar=True):
         var = self.d.getVar(varname)
         if not var:
             return ""
@@ -53,7 +53,7 @@ class ClassExtender(object):
             self.d.setVar(varname, newdata)
         return newdata
 
-    def map_regexp_variable(self, varname, setvar = True):
+    def map_regexp_variable(self, varname, setvar=True):
         var = self.d.getVar(varname)
         if not var:
             return ""
@@ -84,7 +84,7 @@ class ClassExtender(object):
                         return dep
             return self.extend_name(dep)
 
-    def map_depends_variable(self, varname, suffix = ""):
+    def map_depends_variable(self, varname, suffix=""):
         # We need to preserve EXTENDPKGV so it can be expanded correctly later
         if suffix:
             varname = varname + "_" + suffix

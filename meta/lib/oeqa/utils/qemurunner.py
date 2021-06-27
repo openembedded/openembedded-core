@@ -34,7 +34,7 @@ re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds,
-                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns = defaultdict(str), use_ovmf=False, workdir=None, tmpfsdir=None):
+                 use_kvm, logger, use_slirp=False, serial_ports=2, boot_patterns=defaultdict(str), use_ovmf=False, workdir=None, tmpfsdir=None):
 
         # Popen object for runqemu
         self.runqemu = None
@@ -134,7 +134,7 @@ class QemuRunner:
                 self.stop()
                 self._dump_host()
 
-    def start(self, qemuparams = None, get_ip = True, extra_bootparams = None, runqemuparams='', launch_cmd=None, discard_writes=True):
+    def start(self, qemuparams=None, get_ip=True, extra_bootparams=None, runqemuparams='', launch_cmd=None, discard_writes=True):
         env = os.environ.copy()
         if self.display:
             env["DISPLAY"] = self.display
@@ -175,7 +175,7 @@ class QemuRunner:
 
         return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams, env=env)
 
-    def launch(self, launch_cmd, get_ip = True, qemuparams = None, extra_bootparams = None, env = None):
+    def launch(self, launch_cmd, get_ip=True, qemuparams=None, extra_bootparams=None, env=None):
         # use logfile to determine the recipe-sysroot-native path and
         # then add in the site-packages path components and add that
         # to the python sys.path so qmp.py can be found.
@@ -574,7 +574,7 @@ class QemuRunner:
         if self.thread:
             self.thread.allowexit()
 
-    def restart(self, qemuparams = None):
+    def restart(self, qemuparams=None):
         self.logger.warning("Restarting qemu process")
         if self.runqemu.poll() is None:
             self.stop()

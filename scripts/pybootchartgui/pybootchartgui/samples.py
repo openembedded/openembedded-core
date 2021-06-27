@@ -22,7 +22,7 @@ class DiskStatSample:
         self.diskdata = [ a + b for a, b in zip(self.diskdata, new_diskdata) ]
 
 class CPUSample:
-    def __init__(self, time, user, sys, io = 0.0, swap = 0.0):
+    def __init__(self, time, user, sys, io=0.0, swap=0.0):
         self.time = time
         self.user = user
         self.sys = sys

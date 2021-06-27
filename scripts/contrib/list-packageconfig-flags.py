@@ -132,18 +132,18 @@ def main():
 
     # Collect and validate input
     parser = optparse.OptionParser(
-        description = "Lists recipes and PACKAGECONFIG flags. Without -a or -f, recipes and their available PACKAGECONFIG flags are listed.",
-        usage = """
+        description="Lists recipes and PACKAGECONFIG flags. Without -a or -f, recipes and their available PACKAGECONFIG flags are listed.",
+        usage="""
     %prog [options]""")
 
     parser.add_option("-f", "--flags",
-            help = "list available PACKAGECONFIG flags and affected recipes",
+            help="list available PACKAGECONFIG flags and affected recipes",
             action="store_const", dest="listtype", const="flags", default="recipes")
     parser.add_option("-a", "--all",
-            help = "list all recipes and PACKAGECONFIG information",
+            help="list all recipes and PACKAGECONFIG information",
             action="store_const", dest="listtype", const="all")
     parser.add_option("-p", "--preferred-only",
-            help = "where multiple recipe versions are available, list only the preferred version",
+            help="where multiple recipe versions are available, list only the preferred version",
             action="store_true", dest="preferred", default=False)
 
     options, args = parser.parse_args(sys.argv)

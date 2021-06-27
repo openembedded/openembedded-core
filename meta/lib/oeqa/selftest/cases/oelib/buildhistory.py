@@ -28,7 +28,7 @@ class TestBlobParsing(OESelftestTestCase):
         import shutil
         shutil.rmtree(self.repo_path)
 
-    def commit_vars(self, to_add={}, to_remove = [], msg="A commit message"):
+    def commit_vars(self, to_add={}, to_remove=[], msg="A commit message"):
         if len(to_add) == 0 and len(to_remove) == 0:
             return
 
@@ -50,7 +50,7 @@ class TestBlobParsing(OESelftestTestCase):
         """
         from oe.buildhistory_analysis import blob_to_dict
         valuesmap = { "foo" : "1", "bar" : "2" }
-        self.commit_vars(to_add = valuesmap)
+        self.commit_vars(to_add=valuesmap)
 
         blob = self.repo.head.commit.tree.blobs[0]
         self.assertEqual(valuesmap, blob_to_dict(blob),
@@ -64,10 +64,10 @@ class TestBlobParsing(OESelftestTestCase):
 
         changesmap = { "foo-2" : ("2", "8"), "bar" : ("","4"), "bar-2" : ("","5")}
 
-        self.commit_vars(to_add = { "foo" : "1", "foo-2" : "2", "foo-3" : "3" })
+        self.commit_vars(to_add={ "foo" : "1", "foo-2" : "2", "foo-3" : "3" })
         blob1 = self.repo.heads.master.commit.tree.blobs[0]
 
-        self.commit_vars(to_add = { "foo-2" : "8", "bar" : "4", "bar-2" : "5" })
+        self.commit_vars(to_add={ "foo-2" : "8", "bar" : "4", "bar-2" : "5" })
         blob2 = self.repo.heads.master.commit.tree.blobs[0]
 
         change_records = compare_dict_blobs(os.path.join(self.repo_path, self.test_file),
@@ -83,10 +83,10 @@ class TestBlobParsing(OESelftestTestCase):
         from oe.buildhistory_analysis import compare_dict_blobs
         defaultmap = { x : ("default", "1")  for x in ["PKG", "PKGE", "PKGV", "PKGR"]}
 
-        self.commit_vars(to_add = { "foo" : "1" })
+        self.commit_vars(to_add={ "foo" : "1" })
         blob1 = self.repo.heads.master.commit.tree.blobs[0]
 
-        self.commit_vars(to_add = { "PKG" : "1", "PKGE" : "1", "PKGV" : "1", "PKGR" : "1" })
+        self.commit_vars(to_add={ "PKG" : "1", "PKGE" : "1", "PKGV" : "1", "PKGR" : "1" })
         blob2 = self.repo.heads.master.commit.tree.blobs[0]
 
         change_records = compare_dict_blobs(os.path.join(self.repo_path, self.test_file),

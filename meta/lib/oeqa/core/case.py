@@ -74,7 +74,7 @@ class OEPTestResultTestCase:
             self.extraresults = {"ptestresult.sections" : {}}
         self.extraresults["ptestresult.rawlogs"] = {"log" : self._compress_log(log)}
 
-    def ptest_section(self, section, duration = None, log = None, logfile = None, exitcode = None):
+    def ptest_section(self, section, duration=None, log=None, logfile=None, exitcode=None):
         if not hasattr(self, "extraresults"):
             self.extraresults = {"ptestresult.sections" : {}}
 

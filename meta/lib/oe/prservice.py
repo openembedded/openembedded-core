@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-def prserv_make_conn(d, check = False):
+def prserv_make_conn(d, check=False):
     import prserv.serv
     host_params = list([_f for _f in (d.getVar("PRSERV_HOST") or '').split(':') if _f])
     try:

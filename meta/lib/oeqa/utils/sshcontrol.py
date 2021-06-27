@@ -120,7 +120,7 @@ class SSHControl(object):
             with open(self.logfile, "a") as f:
                 f.write("%s\n" % msg)
 
-    def _internal_run(self, command, timeout=None, ignore_status = True):
+    def _internal_run(self, command, timeout=None, ignore_status=True):
         self.log("[Running]$ %s" % " ".join(command))
 
         proc = SSHProcess()

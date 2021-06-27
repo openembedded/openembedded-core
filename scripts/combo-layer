@@ -746,7 +746,7 @@ def conf_commit_msg(conf, components):
 
     # expand the template with known values
     template = Template(conf.commit_msg_template)
-    msg = template.substitute(components = component_str)
+    msg = template.substitute(components=component_str)
     return msg
 
 def commit_conf_file(conf, components, commit=True):
@@ -1307,8 +1307,8 @@ actions = {
 
 def main():
     parser = optparse.OptionParser(
-        version = "Combo Layer Repo Tool version %s" % __version__,
-        usage = """%prog [options] action
+        version="Combo Layer Repo Tool version %s" % __version__,
+        usage="""%prog [options] action
 
 Create and update a combination layer repository from multiple component repositories.
 
@@ -1318,24 +1318,24 @@ Action:
   pull [components]    just pull component repos only
   splitpatch [commit]  generate commit patch and split per component, default commit is HEAD""")
 
-    parser.add_option("-c", "--conf", help = "specify the config file (conf/combo-layer.conf is the default).",
-               action = "store", dest = "conffile", default = "conf/combo-layer.conf")
+    parser.add_option("-c", "--conf", help="specify the config file (conf/combo-layer.conf is the default).",
+               action="store", dest="conffile", default="conf/combo-layer.conf")
 
-    parser.add_option("-i", "--interactive", help = "interactive mode, user can edit the patch list and patches",
-               action = "store_true", dest = "interactive", default = False)
+    parser.add_option("-i", "--interactive", help="interactive mode, user can edit the patch list and patches",
+               action="store_true", dest="interactive", default=False)
 
-    parser.add_option("-D", "--debug", help = "output debug information",
-               action = "store_true", dest = "debug", default = False)
+    parser.add_option("-D", "--debug", help="output debug information",
+               action="store_true", dest="debug", default=False)
 
-    parser.add_option("-n", "--no-pull", help = "skip pulling component repos during update",
-               action = "store_true", dest = "nopull", default = False)
+    parser.add_option("-n", "--no-pull", help="skip pulling component repos during update",
+               action="store_true", dest="nopull", default=False)
 
     parser.add_option("--hard-reset",
-               help = "instead of pull do fetch and hard-reset in component repos",
-               action = "store_true", dest = "hard_reset", default = False)
+               help="instead of pull do fetch and hard-reset in component repos",
+               action="store_true", dest="hard_reset", default=False)
 
-    parser.add_option("-H", "--history", help = "import full history of components during init",
-                      action = "store_true", default = False)
+    parser.add_option("-H", "--history", help="import full history of components during init",
+                      action="store_true", default=False)
 
     options, args = parser.parse_args(sys.argv)
 

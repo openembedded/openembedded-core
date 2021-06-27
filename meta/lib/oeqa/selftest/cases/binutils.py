@@ -43,7 +43,7 @@ class BinutilsCrossSelfTest(OESelftestTestCase, OEPTestResultTestCase):
         logpath = os.path.splitext(sumspath)[0] + ".log"
 
         ptestsuite = "binutils-{}".format(suite) if suite != "binutils" else suite
-        self.ptest_section(ptestsuite, logfile = logpath)
+        self.ptest_section(ptestsuite, logfile=logpath)
         with open(sumspath, "r") as f:
             for test, result in parse_values(f):
                 self.ptest_result(ptestsuite, test, result)

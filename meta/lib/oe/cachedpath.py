@@ -198,7 +198,7 @@ class CachedPath(object):
 
         return (file, is_dir)
 
-    def realpath(self, file, root, use_physdir = True, loop_cnt = 100, assume_dir = False):
+    def realpath(self, file, root, use_physdir=True, loop_cnt=100, assume_dir=False):
         """ Returns the canonical path of 'file' with assuming a
         toplevel 'root' directory. When 'use_physdir' is set, all
         preceding path components of 'file' will be resolved first;

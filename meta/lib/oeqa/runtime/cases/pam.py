@@ -20,19 +20,19 @@ class PamBasicTest(OERuntimeTestCase):
         status, output = self.target.run('login --help')
         msg = ('login command does not work as expected. '
                'Status and output:%s and %s' % (status, output))
-        self.assertEqual(status, 1, msg = msg)
+        self.assertEqual(status, 1, msg=msg)
 
         status, output = self.target.run('passwd --help')
         msg = ('passwd command does not work as expected. '
                'Status and output:%s and %s' % (status, output))
-        self.assertEqual(status, 0, msg = msg)
+        self.assertEqual(status, 0, msg=msg)
 
         status, output = self.target.run('su --help')
         msg = ('su command does not work as expected. '
                'Status and output:%s and %s' % (status, output))
-        self.assertEqual(status, 0, msg = msg)
+        self.assertEqual(status, 0, msg=msg)
 
         status, output = self.target.run('useradd --help')
         msg = ('useradd command does not work as expected. '
                'Status and output:%s and %s' % (status, output))
-        self.assertEqual(status, 0, msg = msg)
+        self.assertEqual(status, 0, msg=msg)

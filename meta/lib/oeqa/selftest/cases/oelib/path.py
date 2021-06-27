@@ -44,7 +44,7 @@ class TestRealPath(TestCase):
     ]
 
     def setUp(self):
-        self.tmpdir = tempfile.mkdtemp(prefix = "oe-test_path")
+        self.tmpdir = tempfile.mkdtemp(prefix="oe-test_path")
         self.root = os.path.join(self.tmpdir, "R")
 
         os.mkdir(os.path.join(self.tmpdir, "_real"))
@@ -60,9 +60,9 @@ class TestRealPath(TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmpdir)
 
-    def __realpath(self, file, use_physdir, assume_dir = True):
+    def __realpath(self, file, use_physdir, assume_dir=True):
         return oe.path.realpath(os.path.join(self.root, file), self.root,
-                                use_physdir, assume_dir = assume_dir)
+                                use_physdir, assume_dir=assume_dir)
 
     def test_norm(self):
         for l in self.LINKS:

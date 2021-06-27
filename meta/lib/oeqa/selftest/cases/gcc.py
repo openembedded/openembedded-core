@@ -18,7 +18,7 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
         if suite not in targets:
             self.skipTest("Target does not use {0}".format(suite))
 
-    def run_check(self, *suites, ssh = None):
+    def run_check(self, *suites, ssh=None):
         targets = set()
         for s in suites:
             if s == "gcc":
@@ -54,7 +54,7 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
 
             ptestsuite = "gcc-{}".format(suite) if suite != "gcc" else suite
             ptestsuite = ptestsuite + "-user" if ssh is None else ptestsuite
-            self.ptest_section(ptestsuite, logfile = logpath)
+            self.ptest_section(ptestsuite, logfile=logpath)
             with open(sumspath, "r") as f:
                 for test, result in parse_values(f):
                     self.ptest_result(ptestsuite, test, result)
@@ -69,7 +69,7 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
         bitbake("core-image-minimal")
 
         # wrap the execution with a qemu instance
-        with runqemu("core-image-minimal", runqemuparams = "nographic") as qemu:
+        with runqemu("core-image-minimal", runqemuparams="nographic") as qemu:
             # validate that SSH is working
             status, _ = qemu.run("uname")
             self.assertEqual(status, 0)

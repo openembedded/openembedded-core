@@ -229,7 +229,7 @@ def __realpath(file, root, loop_cnt, assume_dir):
 
     return (file, is_dir)
 
-def realpath(file, root, use_physdir = True, loop_cnt = 100, assume_dir = False):
+def realpath(file, root, use_physdir=True, loop_cnt=100, assume_dir=False):
     """ Returns the canonical path of 'file' with assuming a
     toplevel 'root' directory. When 'use_physdir' is set, all
     preceding path components of 'file' will be resolved first;

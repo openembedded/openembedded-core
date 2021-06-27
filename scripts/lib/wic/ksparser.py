@@ -169,7 +169,7 @@ class KickStart():
         part.add_argument('--part-type')
         part.add_argument('--rootfs-dir')
         part.add_argument('--type', default='primary',
-                choices = ('primary', 'logical'))
+                choices=('primary', 'logical'))
 
         # --size and --fixed-size cannot be specified together; options
         # ----extra-space and --overhead-factor should also raise a parser

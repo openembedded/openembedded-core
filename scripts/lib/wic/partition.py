@@ -199,7 +199,7 @@ class Partition():
                            (self.mountpoint, self.size, self.fixed_size))
 
     def prepare_rootfs(self, cr_workdir, oe_builddir, rootfs_dir,
-                       native_sysroot, real_rootfs = True, pseudo_dir = None):
+                       native_sysroot, real_rootfs=True, pseudo_dir=None):
         """
         Prepare content for a rootfs partition i.e. create a partition
         and fill it from a /rootfs dir.

@@ -23,7 +23,7 @@ class CmdError(bb.BBHandledException):
                 (self.command, self.status, self.output)
 
 
-def runcmd(args, dir = None):
+def runcmd(args, dir=None):
     import pipes
     import subprocess
 
@@ -106,7 +106,7 @@ class PatchSet(object):
     def Pop(self, force):
         raise NotImplementedError()
 
-    def Refresh(self, remote = None, all = None):
+    def Refresh(self, remote=None, all=None):
         raise NotImplementedError()
 
     @staticmethod
@@ -199,7 +199,7 @@ class PatchTree(PatchSet):
         patch['strippath'] = p.split(",")[1]
         self._applypatch(patch, False, True)
 
-    def _removePatchFile(self, all = False):
+    def _removePatchFile(self, all=False):
         if not os.path.exists(self.seriespath):
             return
         with open(self.seriespath, 'r+') as f:
@@ -215,7 +215,7 @@ class PatchTree(PatchSet):
             for p in patches:
                 f.write(p)
          
-    def Import(self, patch, force = None):
+    def Import(self, patch, force=None):
         """"""
         PatchSet.Import(self, patch, force)
 
@@ -225,7 +225,7 @@ class PatchTree(PatchSet):
             i = 0
         self.patches.insert(i, patch)
 
-    def _applypatch(self, patch, force = False, reverse = False, run = True):
+    def _applypatch(self, patch, force=False, reverse=False, run=True):
         shellcmd = ["cat", patch['file'], "|", "patch", "--no-backup-if-mismatch", "-p", patch['strippath']]
         if reverse:
             shellcmd.append('-R')
@@ -253,7 +253,7 @@ class PatchTree(PatchSet):
 
         return output
 
-    def Push(self, force = False, all = False, run = True):
+    def Push(self, force=False, all=False, run=True):
         bb.note("self._current is %s" % self._current)
         bb.note("patches is %s" % self.patches)
         if all:
@@ -273,7 +273,7 @@ class PatchTree(PatchSet):
             self._current = next
             return ret
 
-    def Pop(self, force = None, all = None):
+    def Pop(self, force=None, all=None):
         if all:
             self._removePatchFile(True)
             self._current = None
@@ -478,10 +478,10 @@ class GitApplyTree(PatchTree):
         finally:
             shutil.rmtree(tempdir)
 
-    def _applypatch(self, patch, force = False, reverse = False, run = True):
+    def _applypatch(self, patch, force=False, reverse=False, run=True):
         import shutil
 
-        def _applypatchhelper(shellcmd, patch, force = False, reverse = False, run = True):
+        def _applypatchhelper(shellcmd, patch, force=False, reverse=False, run=True):
             if reverse:
                 shellcmd.append('-R')
 
@@ -560,7 +560,7 @@ class GitApplyTree(PatchTree):
 
 
 class QuiltTree(PatchSet):
-    def _runcmd(self, args, run = True):
+    def _runcmd(self, args, run=True):
         quiltrc = self.d.getVar('QUILTRCFILE')
         if not run:
             return ["quilt"] + ["--quiltrc"] + [quiltrc] + args
@@ -616,7 +616,7 @@ class QuiltTree(PatchSet):
                     self._current = self.patches.index(patch)
         self.initialized = True
 
-    def Import(self, patch, force = None):
+    def Import(self, patch, force=None):
         if not self.initialized:
             self.InitFromDir()
         PatchSet.Import(self, patch, force)
@@ -633,7 +633,7 @@ class QuiltTree(PatchSet):
         self.patches.insert(self._current or 0, patch)
 
 
-    def Push(self, force = False, all = False, run = True):
+    def Push(self, force=False, all=False, run=True):
         # quilt push [-f]
 
         args = ["push"]
@@ -651,7 +651,7 @@ class QuiltTree(PatchSet):
         else:
             self._current = 0
 
-    def Pop(self, force = None, all = None):
+    def Pop(self, force=None, all=None):
         # quilt pop [-f]
         args = ["pop"]
         if force:

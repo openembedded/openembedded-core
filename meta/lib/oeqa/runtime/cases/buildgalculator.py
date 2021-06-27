@@ -15,7 +15,7 @@ class GalculatorTest(OERuntimeTestCase):
         uri = 'http://galculator.mnim.org/downloads/galculator-2.1.4.tar.bz2'
         cls.project = TargetBuildProject(cls.tc.target,
                                          uri,
-                                         dl_dir = cls.tc.td['DL_DIR'])
+                                         dl_dir=cls.tc.td['DL_DIR'])
 
     @classmethod
     def tearDownClass(cls):
