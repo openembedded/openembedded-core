@@ -13,7 +13,7 @@ DEPENDS = "gnutls"
 SRC_URI = "git://github.com/iputils/iputils \
            file://0001-rarpd-rdisc-Drop-PrivateUsers.patch \
            "
-SRCREV = "23c3782ae0c7f9c6ae59dbed8ad9204f8758542b"
+SRCREV = "cc16da6b574ce6637f3e6e9ab3c1a728663006ff"
 
 S = "${WORKDIR}/git"
 
