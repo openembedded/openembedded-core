@@ -11,6 +11,7 @@ import argparse
 import logging
 import re
 
+
 class Dot(object):
     def __init__(self):
         parser = argparse.ArgumentParser(
@@ -145,6 +146,7 @@ class Dot(object):
                     reverse_deps.append(k)
             print('Because: %s' % ' '.join(reverse_deps))
             Dot.print_dep_chains(self.args.key, reverse_deps, depends)
+
 
 if __name__ == "__main__":
     try:

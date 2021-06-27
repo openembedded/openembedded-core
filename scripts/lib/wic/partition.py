@@ -20,6 +20,7 @@ from wic.pluginbase import PluginMgr
 
 logger = logging.getLogger('wic')
 
+
 class Partition():
 
     def __init__(self, args, lineno):

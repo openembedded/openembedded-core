@@ -8,6 +8,7 @@ from oeqa.core.decorator.data import skipIfDataVar
 from oeqa.runtime.decorator.package import OEHasPackage
 import time
 
+
 class SyslogTest(OERuntimeTestCase):
 
     @OETestDepends(['ssh.SSHTest.test_ssh'])
@@ -19,6 +20,7 @@ class SyslogTest(OERuntimeTestCase):
         msg = "No syslog daemon process; %s output:\n%s" % (self.tc.target_cmds['ps'], output)
         hasdaemon = "syslogd" in output or "syslog-ng" in output or "svlogd" in output
         self.assertTrue(hasdaemon, msg=msg)
+
 
 class SyslogTestConfig(OERuntimeTestCase):
 
@@ -38,7 +40,6 @@ class SyslogTestConfig(OERuntimeTestCase):
                 return 1, pids
             pids.append(pid)
         return 0, pids
-
 
     def restart_sanity(self, names, restart_cmd, pidchange=True):
         status, original_pids = self.verify_running(names)
@@ -98,7 +99,6 @@ class SyslogTestConfig(OERuntimeTestCase):
                ' Output: %s ' % output)
         self.assertEqual(status, 0, msg=msg)
 
-
     @OETestDepends(['oe_syslog.SyslogTest.test_syslog_running'])
     def test_syslog_restart(self):
         if self.restart_sanity(['systemd-journald'], 'systemctl restart syslog.service', pidchange=False):
@@ -109,7 +109,6 @@ class SyslogTestConfig(OERuntimeTestCase):
             pass
         else:
             self.logger.info("No syslog found to restart, ignoring")
-
 
     @OETestDepends(['oe_syslog.SyslogTestConfig.test_syslog_logger'])
     @OEHasPackage(["busybox-syslog"])

@@ -3,6 +3,7 @@
 #
 import subprocess
 
+
 class OETestCalledProcessError(subprocess.CalledProcessError):
     def __str__(self):
         def strify(o):
@@ -17,6 +18,7 @@ class OETestCalledProcessError(subprocess.CalledProcessError):
         if hasattr(self, "stderr") and self.stderr:
             s = s + "\nStandard Error: " + strify(self.stderr)
         return s
+
 
 def errors_have_output():
     subprocess.CalledProcessError = OETestCalledProcessError

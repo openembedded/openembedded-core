@@ -10,6 +10,7 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
 
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class BitbakeTests(OESelftestTestCase):
 
     def getline(self, res, line):
@@ -35,7 +36,6 @@ class BitbakeTests(OESelftestTestCase):
         my_env['BBPATH'] = my_env['BUILDDIR']
         os.chdir("/tmp/")
         self.assertEqual(bitbake('-e', env=my_env).status, 0, msg="bitbake couldn't run from /tmp/")
-
 
     def test_event_handler(self):
         self.write_config("INHERIT += \"test_events\"")

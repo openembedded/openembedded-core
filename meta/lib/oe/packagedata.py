@@ -5,8 +5,10 @@
 import codecs
 import os
 
+
 def packaged(pkg, d):
     return os.access(get_subpkgedata_fn(pkg, d) + '.packaged', os.R_OK)
+
 
 def read_pkgdatafile(fn):
     pkgdata = {}
@@ -27,18 +29,23 @@ def read_pkgdatafile(fn):
 
     return pkgdata
 
+
 def get_subpkgedata_fn(pkg, d):
     return d.expand('${PKGDATA_DIR}/runtime/%s' % pkg)
+
 
 def has_subpkgdata(pkg, d):
     return os.access(get_subpkgedata_fn(pkg, d), os.R_OK)
 
+
 def read_subpkgdata(pkg, d):
     return read_pkgdatafile(get_subpkgedata_fn(pkg, d))
+
 
 def has_pkgdata(pn, d):
     fn = d.expand('${PKGDATA_DIR}/%s' % pn)
     return os.access(fn, os.R_OK)
+
 
 def read_pkgdata(pn, d):
     fn = d.expand('${PKGDATA_DIR}/%s' % pn)
@@ -47,6 +54,8 @@ def read_pkgdata(pn, d):
 #
 # Collapse FOO_pkg variables into FOO
 #
+
+
 def read_subpkgdata_dict(pkg, d):
     ret = {}
     subd = read_pkgdatafile(get_subpkgedata_fn(pkg, d))
@@ -56,6 +65,7 @@ def read_subpkgdata_dict(pkg, d):
             continue
         ret[newvar] = subd[var]
     return ret
+
 
 def _pkgmap(d):
     """Return a dictionary mapping package to recipe name."""
@@ -81,6 +91,7 @@ def _pkgmap(d):
 
     return pkgmap
 
+
 def pkgmap(d):
     """Return a dictionary mapping package to recipe name.
     Cache the mapping in the metadata"""
@@ -91,6 +102,7 @@ def pkgmap(d):
         d.setVar("__pkgmap_data", pkgmap_data)
 
     return pkgmap_data
+
 
 def recipename(pkg, d):
     """Return the recipe name for the given binary package name."""

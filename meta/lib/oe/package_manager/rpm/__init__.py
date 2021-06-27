@@ -6,6 +6,7 @@ import shutil
 import subprocess
 from oe.package_manager import *
 
+
 class RpmIndexer(Indexer):
     def write_index(self):
         self.do_write_index(self.deploy_dir)
@@ -30,6 +31,7 @@ class RpmIndexer(Indexer):
                                self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
                                armor=is_ascii_sig)
 
+
 class RpmSubdirIndexer(RpmIndexer):
     def write_index(self):
         bb.note("Generating package index for %s" % (self.deploy_dir))
@@ -49,6 +51,7 @@ class RpmSubdirIndexer(RpmIndexer):
 class PMPkgsList(PkgsList):
     def list_pkgs(self):
         return RpmPM(self.d, self.rootfs_dir, self.d.getVar('TARGET_VENDOR'), needfeed=False).list_installed()
+
 
 class RpmPM(PackageManager):
     def __init__(self,
@@ -101,7 +104,6 @@ class RpmPM(PackageManager):
         open(confdir + "releasever", 'w').write(distro_codename if distro_codename is not None else '')
 
         open(oe.path.join(self.target_rootfs, "etc/dnf/dnf.conf"), 'w').write("")
-
 
     def _configure_rpm(self):
         # We need to configure rpm to use our primary package architecture as the installation architecture,
@@ -179,7 +181,6 @@ class RpmPM(PackageManager):
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['INTERCEPT_DIR'] = self.intercepts_dir
         os.environ['NATIVE_ROOT'] = self.d.getVar('STAGING_DIR_NATIVE')
-
 
     def install(self, pkgs, attempt_only=False):
         if len(pkgs) == 0:

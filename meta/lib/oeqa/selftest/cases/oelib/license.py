@@ -5,6 +5,7 @@
 from unittest.case import TestCase
 import oe.license
 
+
 class SeenVisitor(oe.license.LicenseVisitor):
     def __init__(self):
         self.seen = []
@@ -12,6 +13,7 @@ class SeenVisitor(oe.license.LicenseVisitor):
 
     def visit_Str(self, node):
         self.seen.append(node.s)
+
 
 class TestSingleLicense(TestCase):
     licenses = [
@@ -41,6 +43,7 @@ class TestSingleLicense(TestCase):
                 self.parse(license)
             self.assertEqual(cm.exception.license, license)
 
+
 class TestSimpleCombinations(TestCase):
     tests = {
         "FOO&BAR": ["FOO", "BAR"],
@@ -62,6 +65,7 @@ class TestSimpleCombinations(TestCase):
             licenses = oe.license.flattened_licenses(license, choose)
             self.assertListEqual(licenses, expected)
 
+
 class TestComplexCombinations(TestSimpleCombinations):
     tests = {
         "FOO & (BAR | BAZ)&MOO": ["FOO", "BAR", "MOO"],
@@ -70,6 +74,7 @@ class TestComplexCombinations(TestSimpleCombinations):
         "(GPL-2.0|Proprietary)&BSD-4-clause&MIT": ["GPL-2.0", "BSD-4-clause", "MIT"],
     }
     preferred = ["BAR", "OMEGA", "BETA", "GPL-2.0"]
+
 
 class TestIsIncluded(TestCase):
     tests = {

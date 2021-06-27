@@ -14,8 +14,10 @@ from operator import attrgetter
 from collections import namedtuple
 from oeqa.utils.git import GitRepo, GitError
 
+
 class ArchiveError(Exception):
     """Internal error handling of this script"""
+
 
 def format_str(string, fields):
     """Format string using the given fields (dict)"""
@@ -127,6 +129,7 @@ def expand_tag_strings(repo, name_pattern, msg_subj_pattern, msg_body_pattern,
     msg_body = format_str(msg_body_pattern, keyws)
     return tag_name, msg_subj + '\n\n' + msg_body
 
+
 def gitarchive(data_dir, git_dir, no_create, bare, commit_msg_subject, commit_msg_body, branch_name, no_tag, tagname, tag_msg_subject, tag_msg_body, exclude, notes, push, keywords, log):
 
     if not os.path.isdir(data_dir):
@@ -166,8 +169,10 @@ def gitarchive(data_dir, git_dir, no_create, bare, commit_msg_subject, commit_ms
         log.info("Pushing data to remote")
         data_repo.run_cmd(cmd)
 
+
 # Container class for tester revisions
 TestedRev = namedtuple('TestedRev', 'commit commit_number tags')
+
 
 def get_test_runs(log, repo, tag_name, **kwargs):
     """Get a sorted list of test runs, matching given pattern"""
@@ -205,6 +210,7 @@ def get_test_runs(log, repo, tag_name, **kwargs):
     # Return field names and a sorted list of revs
     return undef_fields, sorted(revs)
 
+
 def get_test_revs(log, repo, tag_name, **kwargs):
     """Get list of all tested revisions"""
     fields, runs = get_test_runs(log, repo, tag_name, **kwargs)
@@ -227,6 +233,7 @@ def get_test_revs(log, repo, tag_name, **kwargs):
     log.debug("Found %d tested revisions:\n    %s", len(revs),
               "\n    ".join(['{} ({})'.format(rev.commit_number, rev.commit) for rev in revs]))
     return revs
+
 
 def rev_find(revs, attr, val):
     """Search from a list of TestedRev"""

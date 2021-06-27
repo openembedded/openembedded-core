@@ -3,6 +3,7 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfQemu
 from oeqa.runtime.decorator.package import OEHasPackage
 
+
 class USB_HID_Test(OERuntimeTestCase):
 
     def keyboard_mouse_simulation(self): 

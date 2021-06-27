@@ -15,6 +15,7 @@ from oeqa.core.loader import OETestLoader
 from oeqa.core.runner import OETestRunner
 from oeqa.core.exception import OEQAMissingManifest, OEQATestNotFound
 
+
 class OETestContext(object):
     loaderClass = OETestLoader
     runnerClass = OETestRunner
@@ -49,6 +50,7 @@ class OETestContext(object):
     def skipTests(self, skips):
         if not skips:
             return
+
         def skipfuncgen(skipmsg):
             def func():
                 raise unittest.SkipTest(skipmsg)
@@ -96,6 +98,7 @@ class OETestContext(object):
     def listTests(self, display_type):
         self.runner = self.runnerClass(self, verbosity=2)
         return self.runner.list_tests(self.suites, display_type)
+
 
 class OETestContextExecutor(object):
     _context_class = OETestContext
@@ -242,5 +245,6 @@ class OETestContextExecutor(object):
         os.symlink(args.output_log, output_link)
 
         return rc
+
 
 _executor_class = OETestContextExecutor

@@ -73,6 +73,7 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 4):
 # to run on versions of python earlier than what bitbake
 # supports (e.g. less than Python 3.5 for YP 3.1 release)
 
+
 def _hasher(method, filename):
     import mmap
 
@@ -93,6 +94,7 @@ def md5_file(filename):
     """
     import hashlib
     return _hasher(hashlib.md5(), filename)
+
 
 def sha256_file(filename):
     """

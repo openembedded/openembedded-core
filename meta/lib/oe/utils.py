@@ -6,6 +6,7 @@ import subprocess
 import multiprocessing
 import traceback
 
+
 def read_file(filename):
     try:
         f = open(filename, "r")
@@ -17,17 +18,20 @@ def read_file(filename):
         return data
     return None
 
+
 def ifelse(condition, iftrue=True, iffalse=False):
     if condition:
         return iftrue
     else:
         return iffalse
 
+
 def conditional(variable, checkvalue, truevalue, falsevalue, d):
     if d.getVar(variable) == checkvalue:
         return truevalue
     else:
         return falsevalue
+
 
 def vartrue(var, iftrue, iffalse, d):
     import oe.types
@@ -36,11 +40,13 @@ def vartrue(var, iftrue, iffalse, d):
     else:
         return iffalse
 
+
 def less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
     if float(d.getVar(variable)) <= float(checkvalue):
         return truevalue
     else:
         return falsevalue
+
 
 def version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
     result = bb.utils.vercmp_string(d.getVar(variable), checkvalue)
@@ -48,6 +54,7 @@ def version_less_or_equal(variable, checkvalue, truevalue, falsevalue, d):
         return truevalue
     else:
         return falsevalue
+
 
 def both_contain(variable1, variable2, checkvalue, d):
     val1 = d.getVar(variable1)
@@ -62,6 +69,7 @@ def both_contain(variable1, variable2, checkvalue, d):
         return " ".join(checkvalue)
     else:
         return ""
+
 
 def set_intersect(variable1, variable2, d):
     """
@@ -78,6 +86,7 @@ def set_intersect(variable1, variable2, d):
     val2 = set(d.getVar(variable2).split())
     return " ".join(val1 & val2)
 
+
 def prune_suffix(var, suffixes, d):
     # See if var ends with any of the suffixes listed and
     # remove it if found
@@ -91,21 +100,26 @@ def prune_suffix(var, suffixes, d):
 
     return var
 
+
 def str_filter(f, str, d):
     from re import match
     return " ".join([x for x in str.split() if match(f, x, 0)])
+
 
 def str_filter_out(f, str, d):
     from re import match
     return " ".join([x for x in str.split() if not match(f, x, 0)])
 
+
 def build_depends_string(depends, task):
     """Append a taskname to a string of dependencies as used by the [depends] flag"""
     return " ".join(dep + ":" + task for dep in depends.split())
 
+
 def inherits(d, *classes):
     """Return True if the metadata inherits any of the specified classes"""
     return any(bb.data.inherits_class(cls, d) for cls in classes)
+
 
 def features_backfill(var, d):
     # This construct allows the addition of new features to variable specified
@@ -128,6 +142,7 @@ def features_backfill(var, d):
     if addfeatures:
         d.appendVar(var, " " + " ".join(addfeatures))
 
+
 def all_distro_features(d, features, truevalue="1", falsevalue=""):
     """
     Returns truevalue if *all* given features are set in DISTRO_FEATURES,
@@ -147,6 +162,7 @@ def all_distro_features(d, features, truevalue="1", falsevalue=""):
        require ${@ oe.utils.all_distro_features(d, "foo bar", "foo-and-bar.inc")
     """
     return bb.utils.contains("DISTRO_FEATURES", features, truevalue, falsevalue, d)
+
 
 def any_distro_features(d, features, truevalue="1", falsevalue=""):
     """
@@ -168,6 +184,7 @@ def any_distro_features(d, features, truevalue="1", falsevalue=""):
 
     """
     return bb.utils.contains_any("DISTRO_FEATURES", features, truevalue, falsevalue, d)
+
 
 def parallel_make(d, makeinst=False):
     """
@@ -195,6 +212,7 @@ def parallel_make(d, makeinst=False):
 
     return ''
 
+
 def parallel_make_argument(d, fmt, limit=None, makeinst=False):
     """
     Helper utility to construct a parallel make argument from the number of
@@ -215,6 +233,7 @@ def parallel_make_argument(d, fmt, limit=None, makeinst=False):
         return fmt % v
     return ''
 
+
 def packages_filter_out_system(d):
     """
     Return a list of packages from PACKAGES with the "system" packages such as
@@ -229,6 +248,7 @@ def packages_filter_out_system(d):
         if pkg not in blacklist and localepkg not in pkg:
             pkgs.append(pkg)
     return pkgs
+
 
 def getstatusoutput(cmd):
     return subprocess.getstatusoutput(cmd)
@@ -248,9 +268,11 @@ def trim_version(version, num_parts=2):
     trimmed = ".".join(parts[:num_parts])
     return trimmed
 
+
 def cpu_count(at_least=1):
     cpus = len(os.sched_getaffinity(0))
     return max(cpus, at_least)
+
 
 def execute_pre_post_process(d, cmds):
     if cmds is None:
@@ -265,6 +287,8 @@ def execute_pre_post_process(d, cmds):
 # For each item in items, call the function 'target' with item as the first 
 # argument, extraargs as the other arguments and handle any exceptions in the
 # parent thread
+
+
 def multiprocess_launch(target, items, d, extraargs=None):
 
     class ProcessLaunch(multiprocessing.Process):
@@ -340,9 +364,11 @@ def multiprocess_launch(target, items, d, extraargs=None):
         bb.fatal("Fatal errors occurred in subprocesses:\n%s" % msg)
     return results
 
+
 def squashspaces(string):
     import re
     return re.sub(r"\s+", " ", string).strip()
+
 
 def format_pkg_list(pkg_dict, ret_format=None):
     output = []
@@ -452,11 +478,14 @@ def get_multilib_datastore(variant, d):
 # so implement a version here
 #
 
+
 from queue import Queue
 from threading import Thread
 
+
 class ThreadedWorker(Thread):
     """Thread executing tasks from a given tasks queue"""
+
     def __init__(self, tasks, worker_init, worker_end):
         Thread.__init__(self)
         self.tasks = tasks
@@ -486,8 +515,10 @@ class ThreadedWorker(Thread):
             finally:
                 self.tasks.task_done()
 
+
 class ThreadedPool:
     """Pool of threads consuming tasks from a queue"""
+
     def __init__(self, num_workers, num_tasks, worker_init=None,
             worker_end=None):
         self.tasks = Queue(num_tasks)
@@ -511,6 +542,7 @@ class ThreadedPool:
         for worker in self.workers:
             worker.join()
 
+
 def write_ld_so_conf(d):
     # Some utils like prelink may not have the correct target library paths
     # so write an ld.so.conf to help them
@@ -521,6 +553,7 @@ def write_ld_so_conf(d):
     with open(ldsoconf, "w") as f:
         f.write(d.getVar("base_libdir") + '\n')
         f.write(d.getVar("libdir") + '\n')
+
 
 class ImageQAFailed(Exception):
     def __init__(self, description, name=None, logfile=None):
@@ -535,9 +568,11 @@ class ImageQAFailed(Exception):
 
         return msg
 
+
 def sh_quote(string):
     import shlex
     return shlex.quote(string)
+
 
 def directory_size(root, blocksize=4096):
     """

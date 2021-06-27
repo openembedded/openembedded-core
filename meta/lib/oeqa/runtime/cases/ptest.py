@@ -13,6 +13,7 @@ from oeqa.core.decorator.data import skipIfNotFeature
 from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.utils.logparser import PtestParser
 
+
 class PtestRunnerTest(OERuntimeTestCase):
 
     @skipIfNotFeature('ptest', 'Test requires ptest to be in DISTRO_FEATURES')

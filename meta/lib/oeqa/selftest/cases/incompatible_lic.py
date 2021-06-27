@@ -1,6 +1,7 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake
 
+
 class IncompatibleLicenseTests(OESelftestTestCase):
 
     def lic_test(self, pn, pn_lic, lic):
@@ -82,6 +83,7 @@ class IncompatibleLicenseTests(OESelftestTestCase):
     def test_incompatible_nonspdx_license(self):
         self.lic_test('incompatible-nonspdx-license', 'FooLicense', 'FooLicense')
 
+
 class IncompatibleLicensePerImageTests(OESelftestTestCase):
     def default_config(self):
         return """
@@ -114,6 +116,7 @@ INCOMPATIBLE_LICENSE_pn-core-image-minimal = "GPL-3.0 LGPL-3.0"
         self.write_config(self.default_config() + '\nWHITELIST_GPL-3.0_pn-core-image-minimal = "bash"')
 
         bitbake('core-image-minimal')
+
 
 class NoGPL3InImagesTests(OESelftestTestCase):
     def test_core_image_minimal(self):

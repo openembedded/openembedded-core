@@ -10,6 +10,7 @@ import os
 import oe.path
 import re
 
+
 class VersionOrdering(OESelftestTestCase):
     # version1, version2, sort order
     tests = (
@@ -88,6 +89,7 @@ class VersionOrdering(OESelftestTestCase):
             self.assertIn(status, (99, 100, 101))
             self.assertEqual(status - 100, sort, "%s %s (%d) failed" % (ver1, ver2, sort))
 
+
 class PackageTests(OESelftestTestCase):
     # Verify that a recipe which sets up hardlink files has those preserved into split packages
     # Also test file sparseness is preserved
@@ -159,6 +161,7 @@ class PackageTests(OESelftestTestCase):
         bitbake("core-image-minimal")
 
         sysconfdir = get_bb_var('sysconfdir', 'selftest-chown')
+
         def check_ownership(qemu, gid, uid, path):
             self.logger.info("Check ownership of %s", path)
             status, output = qemu.run_serial(r'/bin/stat -c "%U %G" ' + path, timeout=60)

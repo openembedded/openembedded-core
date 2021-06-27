@@ -45,6 +45,7 @@ import resulttool.manualexecution
 import resulttool.log
 logger = scriptutils.logger_create('resulttool')
 
+
 def main():
     parser = argparse_oe.ArgumentParser(description="OEQA test result manipulation tool.",
                                         epilog="Use %(prog)s <subcommand> --help to get help on a specific command")
@@ -73,6 +74,7 @@ def main():
     except argparse_oe.ArgumentUsageError as ae:
         parser.error_subcommand(ae.message, ae.subcommand)
     return ret
+
 
 if __name__ == "__main__":
     sys.exit(main())

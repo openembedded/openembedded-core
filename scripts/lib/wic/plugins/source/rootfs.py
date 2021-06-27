@@ -25,6 +25,7 @@ from wic.misc import get_bitbake_var, exec_native_cmd
 
 logger = logging.getLogger('wic')
 
+
 class RootfsPlugin(SourcePlugin):
     """
     Populate partition content from a rootfs directory.

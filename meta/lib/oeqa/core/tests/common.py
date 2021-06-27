@@ -18,11 +18,13 @@ formatter = logging.Formatter('OEQATest: %(message)s')
 consoleHandler.setFormatter(formatter)
 logger.addHandler(consoleHandler)
 
+
 def setup_sys_path():
     directory = os.path.dirname(os.path.abspath(__file__))
     oeqa_lib = os.path.realpath(os.path.join(directory, '../../../'))
     if not oeqa_lib in sys.path:
         sys.path.insert(0, oeqa_lib)
+
 
 class TestBase(unittest.TestCase):
     def setUp(self):

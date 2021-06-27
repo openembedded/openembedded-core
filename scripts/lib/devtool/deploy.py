@@ -22,6 +22,7 @@ logger = logging.getLogger('devtool')
 
 deploylist_path = '/.devtool'
 
+
 def _prepare_remote_script(deploy, verbose=False, dryrun=False, undeployall=False, nopreserve=False, nocheckspace=False):
     """
     Prepare a shell script for running on the target to
@@ -132,7 +133,6 @@ def _prepare_remote_script(deploy, verbose=False, dryrun=False, undeployall=Fals
     lines.append('')
 
     return '\n'.join(lines)
-
 
 
 def deploy(args, config, basepath, workspace):
@@ -266,6 +266,7 @@ def deploy(args, config, basepath, workspace):
         tinfoil.shutdown()
 
     return 0
+
 
 def undeploy(args, config, basepath, workspace):
     """Entry point for the devtool 'undeploy' subcommand"""

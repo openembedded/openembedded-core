@@ -12,18 +12,22 @@ import termios
 import readline
 import signal
 
+
 def nonblockingfd(fd):
     fcntl.fcntl(fd, fcntl.F_SETFL, fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK)
+
 
 def echonocbreak(fd):
     old = termios.tcgetattr(fd)
     old[3] = old[3] | termios.ECHO | termios.ICANON
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
+
 def cbreaknoecho(fd):
     old = termios.tcgetattr(fd)
     old[3] = old[3] & ~ termios.ECHO & ~ termios.ICANON
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
 
 if len(sys.argv) != 3 or sys.argv[1] in ('-h', '--help'):
     print('oepydevshell-internal.py: error: the following arguments are required: pty, pid\n'

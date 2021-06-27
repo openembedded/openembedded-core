@@ -15,6 +15,7 @@ import sys
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
 
+
 class OEStreamLogger(object):
     def __init__(self, logger):
         self.logger = logger
@@ -34,6 +35,7 @@ class OEStreamLogger(object):
     def flush(self):
         for handler in self.logger.handlers:
             handler.flush()
+
 
 class OETestResult(_TestResult):
     def __init__(self, tc, *args, **kwargs):
@@ -229,9 +231,11 @@ class OETestResult(_TestResult):
         # Override as we unexpected successes aren't failures for us
         return (len(self.failures) == len(self.errors) == 0)
 
+
 class OEListTestsResult(object):
     def wasSuccessful(self):
         return True
+
 
 class OETestRunner(_TestRunner):
     streamLoggerClass = OEStreamLogger
@@ -279,6 +283,7 @@ class OETestRunner(_TestRunner):
         self._walked_cases = 0
 
         curr = {}
+
         def _list_classes(logger, case):
             if not 'module' in curr or curr['module'] != case.__module__:
                 curr['module'] = case.__module__
@@ -298,6 +303,7 @@ class OETestRunner(_TestRunner):
         self._walked_cases = 0
 
         listed = []
+
         def _list_modules(logger, case):
             if not case.__module__ in listed:
                 if case.__module__.startswith('_'):
@@ -318,6 +324,7 @@ class OETestRunner(_TestRunner):
             self._list_tests_module(suite)
 
         return OEListTestsResult()
+
 
 class OETestResultJSONHelper(object):
 

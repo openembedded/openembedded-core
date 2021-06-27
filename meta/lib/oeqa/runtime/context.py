@@ -13,6 +13,7 @@ from oeqa.utils.dump import HostDumper
 
 from oeqa.runtime.loader import OERuntimeTestLoader
 
+
 class OERuntimeTestContext(OETestContext):
     loaderClass = OERuntimeTestLoader
     runtime_files_dir = os.path.join(
@@ -34,6 +35,7 @@ class OERuntimeTestContext(OETestContext):
         self.target_cmds['ps'] = 'ps'
         if 'procps' in self.image_packages:
             self.target_cmds['ps'] = self.target_cmds['ps'] + ' -ef'
+
 
 class OERuntimeTestContextExecutor(OETestContextExecutor):
     _context_class = OERuntimeTestContext
@@ -223,5 +225,6 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 OERuntimeTestContextExecutor.readPackagesManifest(
                         args.packages_manifest)
         self.tc_kwargs['init']['extract_dir'] = args.extract_dir
+
 
 _executor_class = OERuntimeTestContextExecutor

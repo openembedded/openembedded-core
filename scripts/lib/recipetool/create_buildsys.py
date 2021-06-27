@@ -15,10 +15,12 @@ logger = logging.getLogger('recipetool')
 tinfoil = None
 plugins = None
 
+
 def plugin_init(pluginlist):
     # Take a reference to the list so we can use it later
     global plugins
     plugins = pluginlist
+
 
 def tinfoil_init(instance):
     global tinfoil
@@ -279,6 +281,7 @@ class CmakeRecipeHandler(RecipeHandler):
 
 class CmakeExtensionHandler(object):
     '''Base class for CMake extension handlers'''
+
     def process_line(self, srctree, fn, line, libdeps, pcdeps, deps, outlines, inherits, values):
         '''
         Handle a line parsed out of an CMake file.
@@ -298,7 +301,6 @@ class CmakeExtensionHandler(object):
         Apply any desired post-processing on the output
         '''
         return
-
 
 
 class SconsRecipeHandler(RecipeHandler):
@@ -435,6 +437,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
         version_re = re.compile('([0-9.]+)')
 
         defines = {}
+
         def subst_defines(value):
             newvalue = value
             for define, defval in defines.items():
@@ -703,6 +706,7 @@ class AutotoolsRecipeHandler(RecipeHandler):
 
 class AutotoolsExtensionHandler(object):
     '''Base class for Autotools extension handlers'''
+
     def process_macro(self, srctree, keyword, value, process_value, libdeps, pcdeps, deps, outlines, inherits, values):
         '''
         Handle a macro parsed out of an autotools file. Note that if you want this to be called
@@ -861,6 +865,7 @@ class SpecFileRecipeHandler(RecipeHandler):
             else:
                 lines_before.append(liccomment)
         extravalues.update(foundvalues)
+
 
 def register_recipe_handlers(handlers):
     # Set priorities with some gaps so that other plugins can insert

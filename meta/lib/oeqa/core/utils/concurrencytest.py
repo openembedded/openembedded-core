@@ -46,6 +46,8 @@ _all__ = [
 # Patch the version from testtools to allow access to _test_start and allow
 # computation of timing information and threading progress
 #
+
+
 class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
 
     def __init__(self, target, semaphore, threadnum, totalinprocess, totaltests, output, finalresult):
@@ -79,6 +81,7 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
         self.finalresult._stdout_buffer = io.StringIO()
         super(BBThreadsafeForwardingResult, self)._add_result_with_semaphore(method, test, *args, **kwargs)
 
+
 class ProxyTestResult:
     # a very basic TestResult proxy, in order to modify add* calls
     def __init__(self, target):
@@ -111,6 +114,7 @@ class ProxyTestResult:
     def __getattr__(self, attr):
         return getattr(self.result, attr)
 
+
 class ExtraResultsDecoderTestResult(ProxyTestResult):
     def _addResult(self, method, test, *args, exception=False, **kwargs):
         if "details" in kwargs and "extraresults" in kwargs["details"]:
@@ -124,6 +128,7 @@ class ExtraResultsDecoderTestResult(ProxyTestResult):
                 extraresults = json.loads(data.decode())
                 kwargs["details"]["extraresults"] = extraresults
         return method(test, *args, **kwargs)
+
 
 class ExtraResultsEncoderTestResult(ProxyTestResult):
     def _addResult(self, method, test, *args, exception=False, **kwargs):
@@ -147,6 +152,8 @@ class ExtraResultsEncoderTestResult(ProxyTestResult):
 # outside of a running test case. This can happen if classSetUp() fails
 # for a class of tests. This unfortunately has horrible internal knowledge.
 #
+
+
 def outSideTestaddError(self, offset, line):
     """An 'error:' directive has been read."""
     test_name = line[offset:-1].decode('utf8')
@@ -156,12 +163,15 @@ def outSideTestaddError(self, offset, line):
     self.parser._reading_error_details.set_simple()
     self.parser.subunitLineReceived(line)
 
+
 subunit._OutSideTest.addError = outSideTestaddError
 
 # Like outSideTestaddError above, we need an equivalent for skips
 # happening at the setUpClass() level, otherwise we will see "UNKNOWN"
 # as a result for concurrent tests
 #
+
+
 def outSideTestaddSkip(self, offset, line):
     """A 'skip:' directive has been read."""
     test_name = line[offset:-1].decode('utf8')
@@ -171,6 +181,7 @@ def outSideTestaddSkip(self, offset, line):
     self.parser._reading_skip_details.set_simple()
     self.parser.subunitLineReceived(line)
 
+
 subunit._OutSideTest.addSkip = outSideTestaddSkip
 
 #
@@ -178,15 +189,20 @@ subunit._OutSideTest.addSkip = outSideTestaddSkip
 # is available and accepts writes. This allows unittest with buffer=True
 # to interact ok with subunit which wants to access sys.stdout.buffer.
 #
+
+
 class dummybuf(object):
    def __init__(self, parent):
        self.p = parent
+
    def write(self, data):
        self.p.write(data.decode("utf-8"))
 
 #
 # Taken from testtools.ConncurrencyTestSuite but modified for OE use
 #
+
+
 class ConcurrentTestSuite(unittest.TestSuite):
 
     def __init__(self, suite, processes, setupfunc, removefunc):
@@ -235,6 +251,7 @@ class ConcurrentTestSuite(unittest.TestSuite):
                 case.run(process_result)
         finally:
             queue.put(testserver)
+
 
 def fork_for_tests(concurrency_num, suite):
     testservers = []
@@ -310,6 +327,7 @@ def fork_for_tests(concurrency_num, suite):
             testserver = ProtocolTestCase(stream, passthrough=output)
             testservers.append((testserver, numtests, output))
     return testservers, totaltests
+
 
 def partition_tests(suite, count):
     # Keep tests from the same class together but allow tests from modules

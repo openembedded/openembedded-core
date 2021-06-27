@@ -8,6 +8,7 @@ import shutil
 from oeqa.utils.commands import bitbake, get_test_layer
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class Pseudo(OESelftestTestCase):
 
     def test_pseudo_pyc_creation(self):

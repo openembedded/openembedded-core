@@ -7,6 +7,7 @@ import os
 import re
 import bb
 
+
 class Manifest(object, metaclass=ABCMeta):
     """
     This is an abstract class. Do not instantiate this directly.
@@ -84,6 +85,7 @@ class Manifest(object, metaclass=ABCMeta):
     This creates a standard initial manifest for core-image-(minimal|sato|sato-sdk).
     This will be used for testing until the class is implemented properly!
     """
+
     def _create_dummy_initial(self):
         image_rootfs = self.d.getVar('IMAGE_ROOTFS')
         pkg_list = dict()
@@ -144,6 +146,7 @@ class Manifest(object, metaclass=ABCMeta):
     The following function parses an initial manifest and returns a dictionary
     object with the must install, attempt only, multilib and language packages.
     """
+
     def parse_initial_manifest(self):
         pkgs = dict()
 
@@ -175,6 +178,7 @@ class Manifest(object, metaclass=ABCMeta):
     This following function parses a full manifest and return a list
     object with packages.
     '''
+
     def parse_full_manifest(self):
         installed_pkgs = list()
         if not os.path.exists(self.full_manifest):
@@ -186,7 +190,6 @@ class Manifest(object, metaclass=ABCMeta):
                 installed_pkgs.append(pkg.strip())
 
         return installed_pkgs
-
 
 
 def create_manifest(d, final_manifest=False, manifest_dir=None,

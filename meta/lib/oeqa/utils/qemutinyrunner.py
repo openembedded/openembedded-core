@@ -17,6 +17,7 @@ import select
 import bb
 from .qemurunner import QemuRunner
 
+
 class QemuTinyRunner(QemuRunner):
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, kernel, boottime, logger, tmpfsdir=None):
@@ -44,7 +45,6 @@ class QemuTinyRunner(QemuRunner):
         self.server_socket = None
         self.kernel = kernel
         self.logger = logger
-
 
     def create_socket(self):
         tries = 3
@@ -86,7 +86,6 @@ class QemuTinyRunner(QemuRunner):
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
         if self.tmpfsdir:
             env["RUNQEMU_TMPFS_DIR"] = self.tmpfsdir
-
 
         # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
         # badly with screensavers.

@@ -9,17 +9,20 @@ try:
 except:
     import xml.etree.ElementTree as etree
 
+
 def child(elem, name):
     for e in elem.getchildren():
         if e.tag == name:
             return e
     return None
 
+
 def children(elem, name=None):
     l = elem.getchildren()
     if name:
         l = [e for e in l if e.tag == name]
     return l
+
 
 if len(sys.argv) < 2 or sys.argv[1] in ('-h', '--help'):
     print('oe-trim-schemas: error: the following arguments are required: schema\n'

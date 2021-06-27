@@ -20,6 +20,7 @@ from wic.misc import exec_cmd, exec_native_cmd, get_bitbake_var
 
 logger = logging.getLogger('wic')
 
+
 class IsoImagePlugin(SourcePlugin):
     """
     Create a bootable ISO image

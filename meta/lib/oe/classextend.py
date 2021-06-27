@@ -4,14 +4,17 @@
 
 import collections
 
+
 def get_packages(d):
     pkgs = d.getVar("PACKAGES_NONML")
     extcls = d.getVar("EXTENDERCLASS")
     return extcls.rename_packages_internal(pkgs)
 
+
 def get_depends(varprefix, d):
     extcls = d.getVar("EXTENDERCLASS")
     return extcls.map_depends_variable(varprefix + "_NONML")
+
 
 class ClassExtender(object):
     def __init__(self, extname, d):
@@ -143,6 +146,7 @@ class ClassExtender(object):
                 continue
             for subs in variables:
                 self.d.renameVar("%s_%s" % (subs, pkg_mapping[0]), "%s_%s" % (subs, pkg_mapping[1]))
+
 
 class NativesdkClassExtender(ClassExtender):
     def map_depends(self, dep):

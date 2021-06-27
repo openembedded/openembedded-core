@@ -9,6 +9,7 @@ from oe.package_manager import *
 import os
 import traceback
 
+
 class Sdk(object, metaclass=ABCMeta):
     def __init__(self, d, manifest_dir):
         self.d = d
@@ -120,6 +121,7 @@ def sdk_list_installed_packages(d, target, rootfs_dir=None):
     cls = importlib.import_module('oe.package_manager.' + img_type)
     return cls.PMPkgsList(d, rootfs_dir).list_pkgs()
 
+
 def populate_sdk(d, manifest_dir=None):
     env_bkp = os.environ.copy()
 
@@ -130,6 +132,7 @@ def populate_sdk(d, manifest_dir=None):
 
     os.environ.clear()
     os.environ.update(env_bkp)
+
 
 def get_extra_sdkinfo(sstate_dir):
     """
@@ -149,6 +152,7 @@ def get_extra_sdkinfo(sstate_dir):
                 extra_info['tasksizes'][task] = origtotal + fsize
                 extra_info['filesizes'][fn] = fsize
     return extra_info
+
 
 if __name__ == "__main__":
     pass

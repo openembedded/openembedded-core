@@ -4,8 +4,10 @@ import os
 import string
 import sys
 
+
 class Template(string.Template):
     delimiter = "@"
+
 
 class Environ():
     def __getitem__(self, name):
@@ -18,6 +20,7 @@ class Environ():
         elif val:
             val = "'%s'" % val.pop()
         return val
+
 
 try:
     sysroot = os.environ['OECORE_NATIVE_SYSROOT']

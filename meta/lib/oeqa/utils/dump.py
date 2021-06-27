@@ -10,6 +10,7 @@ import datetime
 import itertools
 from .commands import runCmd
 
+
 class BaseDumper(object):
     """ Base class to dump commands from host/target """
 
@@ -68,6 +69,7 @@ class BaseDumper(object):
             with open(fullname, 'w') as dump_file:
                 dump_file.write(output)
 
+
 class HostDumper(BaseDumper):
     """ Class to get dumps from the host running the tests """
 
@@ -83,6 +85,7 @@ class HostDumper(BaseDumper):
         for cmd in self.cmds:
             result = runCmd(cmd, ignore_status=True, env=env)
             self._write_dump(cmd.split()[0], result.output)
+
 
 class TargetDumper(BaseDumper):
     """ Class to get dumps from target, it only works with QemuRunner """
@@ -103,6 +106,7 @@ class TargetDumper(BaseDumper):
                 print("Tried to dump info from target but "
                         "serial console failed")
                 print("Failed CMD: %s" % (cmd))
+
 
 class MonitorDumper(BaseDumper):
     """ Class to get dumps via the Qemu Monitor, it only works with QemuRunner """

@@ -8,6 +8,7 @@ from oeqa.core.decorator.data import skipIfNotInDataVar
 
 import subprocess
 
+
 class X32libTest(OERuntimeTestCase):
 
     @skipIfNotInDataVar('DEFAULTTUNE', 'x86-64-x32',

@@ -10,6 +10,7 @@ from oe.package_manager.ipk.manifest import PkgManifest
 from oe.manifest import Manifest
 from oe.package_manager.ipk import OpkgPM
 
+
 class PkgSdk(Sdk):
     def __init__(self, d, manifest_dir=None):
         super(PkgSdk, self).__init__(d, manifest_dir)

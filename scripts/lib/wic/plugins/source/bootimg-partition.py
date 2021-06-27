@@ -23,6 +23,7 @@ from wic.misc import exec_cmd, get_bitbake_var
 
 logger = logging.getLogger('wic')
 
+
 class BootimgPartitionPlugin(SourcePlugin):
     """
     Create an image of boot partition, copying over files
@@ -159,7 +160,6 @@ class BootimgPartitionPlugin(SourcePlugin):
         cfg.write(extlinux_conf)
         cfg.close()
 
-
     @classmethod
     def do_prepare_partition(cls, part, source_params, cr, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
@@ -179,7 +179,6 @@ class BootimgPartitionPlugin(SourcePlugin):
                 raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
 
         logger.debug('Kernel dir: %s', bootimg_dir)
-
 
         for task in cls.install_task:
             src_path, dst_path = task

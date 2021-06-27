@@ -7,11 +7,14 @@ import os
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import get_bb_var, get_bb_vars, bitbake
 
+
 class ManifestEntry:
     '''A manifest item of a collection able to list missing packages'''
+
     def __init__(self, entry):
         self.file = entry
         self.missing = []
+
 
 class VerifyManifest(OESelftestTestCase):
     '''Tests for the manifest files and contents of an image'''
@@ -76,7 +79,6 @@ class VerifyManifest(OESelftestTestCase):
                     .format(self.classname, bbargs))
             self.skipTest("{}: Cannot setup testing scenario"
                     .format(self.classname))
-
 
         pkgdata_dir = reverse_dir = {}
         mfilename = mpath = m_entry = {}

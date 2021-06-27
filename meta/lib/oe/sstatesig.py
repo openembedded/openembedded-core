@@ -5,23 +5,30 @@ import bb.siggen
 import bb.runqueue
 import oe
 
+
 def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCaches):
     # Return True if we should keep the dependency, False to drop it
     def isNative(x):
         return x.endswith("-native")
+
     def isCross(x):
         return "-cross-" in x
+
     def isNativeSDK(x):
         return x.startswith("nativesdk-")
+
     def isKernel(mc, fn):
         inherits = " ".join(dataCaches[mc].inherits[fn])
         return inherits.find("/module-base.bbclass") != -1 or inherits.find("/linux-kernel-base.bbclass") != -1
+
     def isPackageGroup(mc, fn):
         inherits = " ".join(dataCaches[mc].inherits[fn])
         return "/packagegroup.bbclass" in inherits
+
     def isAllArch(mc, fn):
         inherits = " ".join(dataCaches[mc].inherits[fn])
         return "/allarch.bbclass" in inherits
+
     def isImage(mc, fn):
         return "/image.bbclass" in " ".join(dataCaches[mc].inherits[fn])
 
@@ -71,6 +78,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCaches):
     # Default to keep dependencies
     return True
 
+
 def sstate_lockedsigs(d):
     sigs = {}
     types = (d.getVar("SIGGEN_LOCKEDSIGS_TYPES") or "").split()
@@ -84,14 +92,18 @@ def sstate_lockedsigs(d):
             sigs[pn][task] = [h, siggen_lockedsigs_var]
     return sigs
 
+
 class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
     name = "OEBasic"
+
     def init_rundepcheck(self, data):
         self.abisaferecipes = (data.getVar("SIGGEN_EXCLUDERECIPES_ABISAFE") or "").split()
         self.saferecipedeps = (data.getVar("SIGGEN_EXCLUDE_SAFE_RECIPE_DEPS") or "").split()
         pass
+
     def rundep_check(self, fn, recipename, task, dep, depname, dataCaches=None):
         return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCaches)
+
 
 class SignatureGeneratorOEBasicHashMixIn(object):
     supports_multiconfig_datacaches = True
@@ -301,8 +313,10 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         if error_msgs:
             bb.fatal("\n".join(error_msgs))
 
+
 class SignatureGeneratorOEBasicHash(SignatureGeneratorOEBasicHashMixIn, bb.siggen.SignatureGeneratorBasicHash):
     name = "OEBasicHash"
+
 
 class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHashMixIn, bb.siggen.SignatureGeneratorUniHashMixIn, bb.siggen.SignatureGeneratorBasicHash):
     name = "OEEquivHash"
@@ -315,6 +329,7 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHashMixIn, bb.sigge
         self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
         if not self.method:
             bb.fatal("OEEquivHash requires SSTATE_HASHEQUIV_METHOD to be set")
+
 
 # Insert these classes into siggen's namespace so it can see and select them
 bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
@@ -415,6 +430,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     else:
         return filedates
 
+
 bb.siggen.find_siginfo = find_siginfo
 
 
@@ -428,6 +444,7 @@ def sstate_get_manifest_filename(task, d):
     if extrainf:
         d2.setVar("SSTATE_MANMACH", extrainf)
     return (d2.expand("${SSTATE_MANFILEPREFIX}.%s" % task), d2)
+
 
 def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
     d2 = d
@@ -466,6 +483,7 @@ def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
             return manifest, d2
     bb.fatal("Manifest %s not found in %s (variant '%s')?" % (manifest, d2.expand(" ".join(pkgarchs)), variant))
     return None, d2
+
 
 def OEOuthashBasic(path, sigfile, task, d):
     """

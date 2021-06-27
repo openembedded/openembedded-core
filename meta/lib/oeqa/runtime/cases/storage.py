@@ -9,6 +9,7 @@ from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfQemu
 
+
 class StorageBase(OERuntimeTestCase):
     def storage_mount(cls, tmo=1):
 
@@ -28,7 +29,6 @@ class StorageBase(OERuntimeTestCase):
         (status, output) = cls.target.run('rm -f %s/*' % cls.test_dir)
         msg = ('Failed to cleanup files @ %s/*' % cls.test_dir)
         cls.assertFalse(output, msg=msg)
-
 
     def storage_basic(cls):
         # create file on device

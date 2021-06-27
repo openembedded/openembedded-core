@@ -14,13 +14,16 @@ import pybootchartgui.main as main
 
 debug = False
 
+
 def floatEq(f1, f2):
 	return math.fabs(f1 - f2) < 0.00001
+
 
 bootchart_dir = os.path.join(os.path.dirname(sys.argv[0]), '../../examples/1/')
 parser = main._mk_options_parser()
 options, args = parser.parse_args(['--q', bootchart_dir])
 writer = main._mk_writer(options)
+
 
 class TestBCParser(unittest.TestCase):
     
@@ -104,6 +107,7 @@ class TestBCParser(unittest.TestCase):
 			self.assert_(floatEq(float(tokens[2]), sample.sys))
 			self.assert_(floatEq(float(tokens[3]), sample.io))
 		stat_data.close()
+
 
 if __name__ == '__main__':
     unittest.main()

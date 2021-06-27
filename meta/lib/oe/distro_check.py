@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+
 def create_socket(url, d):
     import urllib
     from bb.utils import export_proxies
 
     export_proxies(d)
     return urllib.request.urlopen(url)
+
 
 def get_links_from_url(url, d):
     "Return all the href links found on the web location"
@@ -19,6 +21,7 @@ def get_links_from_url(url, d):
     for line in soup.find_all('a', href=True):
         hyperlinks.append(line['href'].strip('/'))
     return hyperlinks
+
 
 def find_latest_numeric_release(url, d):
     "Find the latest listed numeric release on the given url"
@@ -35,9 +38,11 @@ def find_latest_numeric_release(url, d):
             maxstr = link
     return maxstr
 
+
 def is_src_rpm(name):
     "Check if the link is pointing to a src.rpm file"
     return name.endswith(".src.rpm")
+
 
 def package_name_from_srpm(srpm):
     "Strip out the package name from the src.rpm filename"
@@ -46,6 +51,7 @@ def package_name_from_srpm(srpm):
     # ^name           ^ver     ^release^removed
     (name, version, release) = srpm.replace(".src.rpm", "").rsplit("-", 2)
     return name
+
 
 def get_source_package_list_from_url(url, section, d):
     "Return a sectioned list of package names from a URL list"
@@ -60,6 +66,7 @@ def get_source_package_list_from_url(url, section, d):
        new_pkgs.add(pkgs + ":" + section)
     return new_pkgs
 
+
 def get_source_package_list_from_url_by_letter(url, section, d):
     import string
     from urllib.error import HTTPError
@@ -73,12 +80,14 @@ def get_source_package_list_from_url_by_letter(url, section, d):
                 raise
     return packages
 
+
 def get_latest_released_fedora_source_package_list(d):
     "Returns list of all the name os packages in the latest fedora distro"
     latest = find_latest_numeric_release("http://archive.fedoraproject.org/pub/fedora/linux/releases/", d)
     package_names = get_source_package_list_from_url_by_letter("http://archive.fedoraproject.org/pub/fedora/linux/releases/%s/Everything/source/tree/Packages/" % latest, "main", d)
     package_names |= get_source_package_list_from_url_by_letter("http://archive.fedoraproject.org/pub/fedora/linux/updates/%s/SRPMS/" % latest, "updates", d)
     return latest, package_names
+
 
 def get_latest_released_opensuse_source_package_list(d):
     "Returns list of all the name os packages in the latest opensuse distro"
@@ -88,10 +97,12 @@ def get_latest_released_opensuse_source_package_list(d):
     package_names |= get_source_package_list_from_url("http://download.opensuse.org/update/leap/%s/oss/src/" % latest, "updates", d)
     return latest, package_names
 
+
 def get_latest_released_clear_source_package_list(d):
     latest = find_latest_numeric_release("https://download.clearlinux.org/releases/", d)
     package_names = get_source_package_list_from_url("https://download.clearlinux.org/releases/%s/clear/source/SRPMS/" % latest, "main", d)
     return latest, package_names
+
 
 def find_latest_debian_release(url, d):
     "Find the latest listed debian release on the given url"
@@ -105,6 +116,7 @@ def find_latest_debian_release(url, d):
     except:
         return "_NotFound_"
 
+
 def get_debian_style_source_package_list(url, section, d):
     "Return the list of package-names stored in the debian style Sources.gz file"
     import gzip
@@ -116,6 +128,7 @@ def get_debian_style_source_package_list(url, section, d):
             package_names.add(pkg + ":" + section)
     return package_names
 
+
 def get_latest_released_debian_source_package_list(d):
     "Returns list of all the name of packages in the latest debian distro"
     latest = find_latest_debian_release("http://ftp.debian.org/debian/dists/", d)
@@ -124,6 +137,7 @@ def get_latest_released_debian_source_package_list(d):
     url = "http://ftp.debian.org/debian/dists/stable-proposed-updates/main/source/Sources.gz"
     package_names |= get_debian_style_source_package_list(url, "updates", d)
     return latest, package_names
+
 
 def find_latest_ubuntu_release(url, d):
     """
@@ -139,6 +153,7 @@ def find_latest_ubuntu_release(url, d):
             return distro
     return "_NotFound_"
 
+
 def get_latest_released_ubuntu_source_package_list(d):
     "Returns list of all the name os packages in the latest ubuntu distro"
     latest = find_latest_ubuntu_release("http://archive.ubuntu.com/ubuntu/dists/", d)
@@ -147,6 +162,7 @@ def get_latest_released_ubuntu_source_package_list(d):
     url = "http://archive.ubuntu.com/ubuntu/dists/%s-updates/main/source/Sources.gz" % latest
     package_names |= get_debian_style_source_package_list(url, "updates", d)
     return latest, package_names
+
 
 def create_distro_packages_list(distro_check_dir, d):
     import shutil
@@ -177,6 +193,7 @@ def create_distro_packages_list(distro_check_dir, d):
             for pkg in sorted(package_list):
                 f.write(pkg + "\n")
 
+
 def update_distro_data(distro_check_dir, datetime, d):
     """
     If distro packages list data is old then rebuild it.
@@ -189,7 +206,6 @@ def update_distro_data(distro_check_dir, datetime, d):
             os.makedirs(distro_check_dir)
         except OSError:
             raise Exception('Unable to create directory %s' % (distro_check_dir))
-
 
     datetime_file = os.path.join(distro_check_dir, "build_datetime")
     saved_datetime = "_invalid_"
@@ -213,6 +229,7 @@ def update_distro_data(distro_check_dir, datetime, d):
     finally:
         fcntl.lockf(f, fcntl.LOCK_UN)
         f.close()
+
 
 def compare_in_distro_packages_list(distro_check_dir, d):
     if not os.path.isdir(distro_check_dir):
@@ -277,6 +294,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
         matching_distros.append(item)
     bb.note("Matching: %s" % matching_distros)
     return matching_distros
+
 
 def create_log_file(d, logname):
     logpath = d.getVar('LOG_DIR')

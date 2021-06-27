@@ -41,6 +41,7 @@ import bb.process
 stamp_re = re.compile("(?P<pv>.*)-(?P<pr>r\d+)\.(?P<task>do_\w+)\.(?P<hash>[^\.]*)")
 sigdata_re = re.compile(".*\.sigdata\..*")
 
+
 def gen_dict(stamps):
     """
     Generate the dict from the stamps dir.
@@ -73,6 +74,8 @@ def gen_dict(stamps):
     return d
 
 # Re-construct the dict
+
+
 def recon_dict(dict_in):
     """
     The output dict format is:
@@ -95,6 +98,7 @@ def recon_dict(dict_in):
         dict_out[pn_task] = subdict
 
     return dict_out
+
 
 def split_pntask(s):
     """
@@ -137,6 +141,7 @@ def print_added(d_new=None, d_old=None):
 
     return counter
 
+
 def print_vrchanged(d_new=None, d_old=None, vr=None):
     """
     Print the pv or pr changed tasks.
@@ -164,6 +169,7 @@ def print_vrchanged(d_new=None, d_old=None, vr=None):
         print("  %s: %s" % (k, pvchanged.get(k)))
 
     return counter
+
 
 def print_depchanged(d_new=None, d_old=None, verbose=False):
     """
@@ -315,6 +321,7 @@ Note:
         if os.path.exists(new_stampsdir):
             print("Removing the newly generated stamps dir ...")
             shutil.rmtree(new_stampsdir)
+
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -4,6 +4,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 
 import re
 
+
 class RTCTest(OERuntimeTestCase):
 
     def setUp(self):

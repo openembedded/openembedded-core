@@ -10,13 +10,13 @@ from oe.manifest import Manifest
 from oe.package_manager.deb import DpkgPM
 from oe.package_manager.deb.manifest import PkgManifest
 
+
 class PkgSdk(Sdk):
     def __init__(self, d, manifest_dir=None):
         super(PkgSdk, self).__init__(d, manifest_dir)
 
         self.target_conf_dir = os.path.join(self.d.getVar("APTCONF_TARGET"), "apt")
         self.host_conf_dir = os.path.join(self.d.getVar("APTCONF_TARGET"), "apt-sdk")
-
 
         self.target_manifest = PkgManifest(d, self.manifest_dir,
                                             Manifest.MANIFEST_TYPE_SDK_TARGET)

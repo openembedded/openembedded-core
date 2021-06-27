@@ -88,6 +88,7 @@ has_hung_task_detection = True
 
 #-------------------------------------------------------------------------------
 
+
 class TestFail(Exception):
         def __init__(self, msg):
                 self.msg = msg
@@ -97,12 +98,14 @@ class TestFail(Exception):
 
 #-------------------------------------------------------------------------------
 
+
 def tc_name(sub_name):
         return "rt_bmark.intlat." + sub_name
 
 #-------------------------------------------------------------------------------
 # log() does the same job as print except that a '#' is added at the beginning
 # of each line. This causes TEFEL to ignore it
+
 
 def log(*msg):
         tmp = "".join(map(str, msg)) # 'map(str, ...' allows numbers
@@ -112,12 +115,14 @@ def log(*msg):
 #-------------------------------------------------------------------------------
 # Like log(), but with a timestamp added
 
+
 def log_ts(*msg):
         ts = time.localtime()
         stamp = "%2d:%02d:%02d: " % (ts.tm_hour, ts.tm_min, ts.tm_sec)
         log(stamp, *msg)
 
 #-------------------------------------------------------------------------------
+
 
 def log_test_header(seq_no, nr_of_tests, name):
         log("=" * 78)
@@ -128,6 +133,7 @@ def log_test_header(seq_no, nr_of_tests, name):
         log()
 
 #-------------------------------------------------------------------------------
+
 
 def start_stress(*args):
         stress_cmd = ["stress-ng"]
@@ -177,6 +183,7 @@ def start_stress(*args):
 
 #-------------------------------------------------------------------------------
 
+
 def end_stress(p):
         if p is None:
                 # The value None indicates that no stress scenario was started
@@ -189,6 +196,7 @@ def end_stress(p):
         log("Terminated stress")
 
 #-------------------------------------------------------------------------------
+
 
 def us2hms_str(us):
         s = (us + 500000) // 1000000 # Round microseconds to s
@@ -203,6 +211,7 @@ def us2hms_str(us):
 # Sometime the hung task supervision is triggered during execution of
 # cyclictest (cyclictest starves stress). To avoid that, the supervision
 # is temporarily disabled
+
 
 def set_hung_tmo(new_tmo):
         global has_hung_task_detection
@@ -229,6 +238,7 @@ def set_hung_tmo(new_tmo):
 
 #-------------------------------------------------------------------------------
 
+
 def gen_minmax_list(max_list):
         res = [min(max_list)]
 
@@ -253,6 +263,7 @@ def gen_minmax_list(max_list):
 #    -t: (without argument) Set number of threads to the number
 #         of cpus
 
+
 interval_core_0 = 100     # Timer interval on core 0 [us]
 interval_delta = 20      # Interval increment for each core [us]
 loop_count = 30000   # Number of loops (on core 0).
@@ -266,6 +277,7 @@ cmd = ("cyclictest",
        "-l", str(loop_count)
        )
 rex = re.compile(b"C:\s*(\d+).*Min:\s*(\d+).*Avg:\s*(\d+).*Max:\s*(\d+)")
+
 
 def run_cyclictest_once():
         res = subprocess.check_output(cmd)
@@ -298,11 +310,13 @@ def run_cyclictest_once():
 # A precondition for the tracking of min-max values is that
 # the suite size os a power of 2.
 
+
 N = 5
 suite_size = 2**N
 
 est_exec_time_once = interval_core_0 * loop_count
 est_exec_time_suite = suite_size * est_exec_time_once
+
 
 def run_cyclictest_suite():
         log("Starting cyclictest")
@@ -353,6 +367,7 @@ def run_cyclictest_suite():
 
 #-------------------------------------------------------------------------------
 
+
 class cyclictest_runner:
         def run_test(self, seq_no, nr_of_tests, name, stressparams):
 
@@ -396,6 +411,7 @@ class cyclictest_runner:
                         print()
 
 #-------------------------------------------------------------------------------
+
 
 runner = cyclictest_runner()
 

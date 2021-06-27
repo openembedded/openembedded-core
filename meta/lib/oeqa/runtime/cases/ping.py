@@ -7,6 +7,7 @@ from subprocess import Popen, PIPE
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.oetimeout import OETimeout
 
+
 class PingTest(OERuntimeTestCase):
 
     @OETimeout(30)

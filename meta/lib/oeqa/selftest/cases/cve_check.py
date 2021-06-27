@@ -1,6 +1,7 @@
 from oe.cve_check import Version
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class CVECheck(OESelftestTestCase):
 
     def test_version_compare(self):

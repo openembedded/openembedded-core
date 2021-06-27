@@ -9,6 +9,7 @@ import subprocess
 
 from oeqa.core.case import OETestCase
 
+
 class OESDKTestCase(OETestCase):
     def _run(self, cmd):
         return subprocess.check_output(". %s > /dev/null; %s;" %

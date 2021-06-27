@@ -197,6 +197,7 @@ ignore_errors = {
 
 log_locations = ["/var/log/", "/var/log/dmesg", "/tmp/dmesg_output.log"]
 
+
 class ParseLogsTest(OERuntimeTestCase):
 
     @classmethod

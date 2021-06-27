@@ -11,6 +11,7 @@ from oeqa.selftest.cases.buildhistory import BuildhistoryBase
 from oeqa.utils.commands import Command, runCmd, bitbake, get_bb_var, get_test_layer
 from oeqa.utils import CommandError
 
+
 class BuildhistoryDiffTests(BuildhistoryBase):
 
     def test_buildhistory_diff(self):
@@ -34,6 +35,7 @@ class BuildhistoryDiffTests(BuildhistoryBase):
         if expected_endlines:
             self.fail('Missing expected line endings:\n  %s' % '\n  '.join(expected_endlines))
 
+
 @unittest.skipUnless(importlib.util.find_spec("cairo"), "Python cairo module is not present")
 class OEScriptTests(OESelftestTestCase):
 
@@ -46,6 +48,7 @@ class OEScriptTests(OESelftestTestCase):
         cls.buildstats = cls.tmpdir + "/buildstats/" + sorted(os.listdir(cls.tmpdir + "/buildstats"))[-1]
 
     scripts_dir = os.path.join(get_bb_var('COREBASE'), 'scripts')
+
 
 class OEPybootchartguyTests(OEScriptTests):
 
@@ -122,11 +125,13 @@ class OEGitproxyTests(OESelftestTestCase):
             self.skipTest("No \"dash\" found on test system.")
         self.run_oegitproxy(custom_shell=dash)
 
+
 class OeRunNativeTest(OESelftestTestCase):
     def test_oe_run_native(self):
         bitbake("qemu-helper-native -c addto_recipe_sysroot")
         result = runCmd("oe-run-native qemu-helper-native tunctl -h")
         self.assertIn("Delete: tunctl -d device-name [-f tun-clone-device]", result.output)
+
 
 class OEListPackageconfigTests(OEScriptTests):
     #oe-core.scripts.List_all_the_PACKAGECONFIG's_flags
@@ -140,8 +145,8 @@ class OEListPackageconfigTests(OEScriptTests):
         if expected_endlines:
             self.fail('Missing expected listings:\n  %s' % '\n  '.join(expected_endlines))
 
-
     #oe-core.scripts.List_all_the_PACKAGECONFIG's_flags
+
     def test_packageconfig_flags_help(self):
         runCmd('%s/contrib/list-packageconfig-flags.py -h' % self.scripts_dir)
 
@@ -153,7 +158,6 @@ class OEListPackageconfigTests(OEScriptTests):
         expected_endlines.append("tar                          acl")
 
         self.check_endlines(results, expected_endlines)
-
 
     def test_packageconfig_flags_option_flags(self):
         results = runCmd('%s/contrib/list-packageconfig-flags.py -f' % self.scripts_dir)

@@ -9,6 +9,7 @@ import subprocess
 
 from oeqa.utils.buildproject import BuildProject
 
+
 class SDKBuildProject(BuildProject):
     def __init__(self, testpath, sdkenv, uri, testlogdir, builddatetime,
             foldername=None, dl_dir=None):

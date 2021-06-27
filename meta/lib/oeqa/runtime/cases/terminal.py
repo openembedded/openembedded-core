@@ -5,6 +5,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 import threading
 import time
 
+
 class TerminalTest(OERuntimeTestCase):
 
     @OEHasPackage(['matchbox-terminal'])

@@ -7,6 +7,7 @@
 from oeqa.core.case import OETestCase
 from oeqa.core.decorator import OETestTag
 
+
 class TagTest(OETestCase):
     @OETestTag('goodTag')
     def testTagGood(self):
@@ -22,6 +23,7 @@ class TagTest(OETestCase):
 
     def testTagNone(self):
         self.assertTrue(True, msg='How is this possible?')
+
 
 @OETestTag('classTag')
 class TagClassTest(OETestCase):

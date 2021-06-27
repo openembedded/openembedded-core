@@ -12,6 +12,7 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 from oeqa.utils.network import get_free_port
 
+
 class BitbakePrTests(OESelftestTestCase):
 
     @classmethod

@@ -13,6 +13,7 @@ logger = logging.getLogger('recipetool')
 
 tinfoil = None
 
+
 def tinfoil_init(instance):
     global tinfoil
     tinfoil = instance
@@ -32,6 +33,7 @@ class KernelRecipeHandler(RecipeHandler):
         del lines_after[:]
         del classes[:]
         template = os.path.join(tinfoil.config_data.getVar('COREBASE'), 'meta-skeleton', 'recipes-kernel', 'linux', 'linux-yocto-custom.bb')
+
         def handle_var(varname, origvalue, op, newlines):
             if varname in ['SRCREV', 'SRCREV_machine']:
                 while newlines[-1].startswith('#'):
@@ -84,6 +86,7 @@ class KernelRecipeHandler(RecipeHandler):
         lines_before[:] = [line.rstrip('\n') for line in newlines]
 
         return True
+
 
 def register_recipe_handlers(handlers):
     handlers.append((KernelRecipeHandler(), 100))

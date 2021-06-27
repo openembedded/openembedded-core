@@ -10,6 +10,7 @@ import os
 import json
 import resulttool.resultutils as resultutils
 
+
 def merge(args, logger):
     configvars = {}
     if not args.not_add_testseries:
@@ -29,6 +30,7 @@ def merge(args, logger):
     logger.info('Merged results to %s' % os.path.dirname(args.target_results))
 
     return 0
+
 
 def register_commands(subparsers):
     """Register subcommands from this plugin"""

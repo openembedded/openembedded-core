@@ -28,6 +28,7 @@ from functools import reduce
 
 __version__ = "0.2.1"
 
+
 def logger_create():
     logger = logging.getLogger("")
     loggerhandler = logging.StreamHandler()
@@ -36,7 +37,9 @@ def logger_create():
     logger.setLevel(logging.INFO)
     return logger
 
+
 logger = logger_create()
+
 
 def get_current_branch(repodir=None):
     try:
@@ -50,6 +53,7 @@ def get_current_branch(repodir=None):
     except subprocess.CalledProcessError:
         return ""
 
+
 class Configuration(object):
     """
     Manages the configuration
@@ -57,6 +61,7 @@ class Configuration(object):
     For an example config file, see combo-layer.conf.example
 
     """
+
     def __init__(self, options):
         for key, val in options.__dict__.items():
             setattr(self, key, val)
@@ -169,6 +174,7 @@ class Configuration(object):
             logger.error("ERROR: patchutils package is missing, please install it (e.g. # apt-get install patchutils)")
             sys.exit(1)
 
+
 def runcmd(cmd, destdir=None, printerr=True, out=None, env=None):
     """
         execute command, raise CalledProcessError if fail
@@ -192,6 +198,7 @@ def runcmd(cmd, destdir=None, printerr=True, out=None, env=None):
     output = err.read().decode('utf-8')
     logger.debug("output: %s" % output.replace(chr(0), '\\0'))
     return output
+
 
 def action_init(conf, args):
     """
@@ -253,6 +260,7 @@ def action_init(conf, args):
                 extract_dir = os.getcwd()
             file_filter = repo.get('file_filter', "")
             exclude_patterns = repo.get('file_exclude', '').split()
+
             def copy_selected_files(initialrev, extract_dir, file_filter, exclude_patterns, ldir,
                                     subdir=""):
                 # When working inside a filtered branch which had the
@@ -474,6 +482,7 @@ def check_repo_clean(repodir):
         logger.error("git repo %s is dirty, please fix it first", repodir)
         sys.exit(1)
 
+
 def check_patch(patchfile):
     f = open(patchfile, 'rb')
     ln = f.readline()
@@ -511,6 +520,7 @@ def check_patch(patchfile):
         of.close()
         bb.utils.rename(patchfile + '.tmp', patchfile)
 
+
 def drop_to_shell(workdir=None):
     if not sys.stdin.isatty():
         print("Not a TTY so can't drop to shell for resolution, exiting.")
@@ -527,6 +537,7 @@ def drop_to_shell(workdir=None):
         return False
     else:
         return True
+
 
 def check_rev_branch(component, repodir, rev, branch):
     try:
@@ -551,6 +562,7 @@ def check_rev_branch(component, repodir, rev, branch):
         return False
     return True
 
+
 def get_repos(conf, repo_names):
     repos = []
     for name in repo_names:
@@ -567,6 +579,7 @@ def get_repos(conf, repo_names):
         repos = [repo for repo in conf.repos if conf.repos[repo].get("update", True)]
 
     return repos
+
 
 def action_pull(conf, args):
     """
@@ -603,6 +616,7 @@ def action_pull(conf, args):
             logger.info(output)
             runcmd("git checkout %s" % branch, ldir)
             runcmd("git reset --hard FETCH_HEAD", ldir)
+
 
 def action_update(conf, args):
     """
@@ -652,6 +666,7 @@ def action_update(conf, args):
         update_with_history(conf, components, revisions, repos)
     else:
         update_with_patches(conf, components, revisions, repos)
+
 
 def update_with_patches(conf, components, revisions, repos):
     import uuid
@@ -737,6 +752,7 @@ def update_with_patches(conf, components, revisions, repos):
     # Step 7: commit the updated config file if it's being tracked
     commit_conf_file(conf, components)
 
+
 def conf_commit_msg(conf, components):
     # create the "components" string
     component_str = "all components"
@@ -748,6 +764,7 @@ def conf_commit_msg(conf, components):
     template = Template(conf.commit_msg_template)
     msg = template.substitute(components=component_str)
     return msg
+
 
 def commit_conf_file(conf, components, commit=True):
     relpath = os.path.relpath(conf.conffile)
@@ -766,6 +783,7 @@ def commit_conf_file(conf, components, commit=True):
                 runcmd('git add %s' % relpath)
             return True
     return False
+
 
 def apply_patchlist(conf, repos):
     """
@@ -844,6 +862,7 @@ def apply_patchlist(conf, repos):
         if lastrev != repo['last_revision']:
             conf.update(name, "last_revision", lastrev)
 
+
 def action_splitpatch(conf, args):
     """
         generate the commit patch and
@@ -882,6 +901,7 @@ def action_splitpatch(conf, args):
             logger.info("(skipping %s - no changes)", name)
         else:
             logger.info(patch_filename)
+
 
 def update_with_history(conf, components, revisions, repos):
     '''Update all components with full history.
@@ -998,7 +1018,6 @@ def update_with_history(conf, components, revisions, repos):
                 else:
                     index += 1
 
-
         # Generate the revision list.
         logger.info("Analyzing commits from %s..." % name)
         top_revision = revision or branch
@@ -1046,6 +1065,7 @@ def update_with_history(conf, components, revisions, repos):
 
         # Now import each revision.
         logger.info("Importing commits from %s..." % name)
+
         def import_rev(rev):
             global scanned_revs
 
@@ -1198,6 +1218,8 @@ def update_with_history(conf, components, revisions, repos):
 
 
 scanned_revs = False
+
+
 def find_revs(old2new, head):
     '''Construct mapping from original commit hash to commit hash in
     combined repo by looking at the commit messages. Depends on the
@@ -1295,8 +1317,10 @@ def apply_commit(parent, rev, largs, wargs, dest_dir, file_filter=None):
                 path = os.path.join(dest_dir, path)
         runcmd("git rm -f --ignore-unmatch".split() + [os.path.join(dest_dir, x) for x in delete], **wargs)
 
+
 def action_error(conf, args):
     logger.info("invalid action %s" % args[0])
+
 
 actions = {
     "init": action_init,
@@ -1304,6 +1328,7 @@ actions = {
     "pull": action_pull,
     "splitpatch": action_splitpatch,
 }
+
 
 def main():
     parser = optparse.OptionParser(
@@ -1356,6 +1381,7 @@ Action:
         initmode = (args[1] == 'init')
         confdata.sanity_check(initmode)
         actions.get(args[1], action_error)(confdata, args[1:])
+
 
 if __name__ == "__main__":
     try:

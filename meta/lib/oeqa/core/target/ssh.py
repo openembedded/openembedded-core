@@ -13,6 +13,7 @@ import codecs
 
 from . import OETarget
 
+
 class OESSHTarget(OETarget):
     def __init__(self, logger, ip, server_ip, timeout=300, user='root',
                  port=None, server_port=0, **kwargs):
@@ -169,7 +170,6 @@ class OESSHTarget(OETarget):
 
         self.run(cmd)
 
-
     def deleteDir(self, remotePath):
         """
             Deletes target's remotePath directory.
@@ -177,7 +177,6 @@ class OESSHTarget(OETarget):
 
         cmd = "rmdir %s" % remotePath
         self.run(cmd)
-
 
     def deleteDirStructure(self, localPath, remotePath):
         """
@@ -216,6 +215,7 @@ class OESSHTarget(OETarget):
                 tmpDir = os.path.join(root, d).replace(localPath, "")
                 remoteDir = os.path.join(remotePath, tmpDir.lstrip("/"))
                 self.deleteDir(remoteDir)
+
 
 def SSHCall(command, logger, timeout=None, **opts):
 

@@ -14,6 +14,7 @@ from wic.pluginbase import SourcePlugin
 
 logger = logging.getLogger('wic')
 
+
 class EmptyPartitionPlugin(SourcePlugin):
     """
     Populate unformatted empty partition.

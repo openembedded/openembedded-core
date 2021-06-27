@@ -9,6 +9,7 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfNotFeature
 from oeqa.runtime.decorator.package import OEHasPackage
 
+
 class KernelModuleTest(OERuntimeTestCase):
 
     @classmethod

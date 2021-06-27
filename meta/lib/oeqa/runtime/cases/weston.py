@@ -9,6 +9,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 import threading
 import time
 
+
 class WestonTest(OERuntimeTestCase):
     weston_log_file = '/tmp/weston.log'
 

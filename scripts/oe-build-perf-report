@@ -38,6 +38,7 @@ import oeqa.utils.gitarchive as gitarchive
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 log = logging.getLogger('oe-build-perf-report')
 
+
 def list_test_revs(repo, tag_name, verbosity, **kwargs):
     """Get list of all tested revisions"""
     valid_kwargs = dict([(k, v) for k, v in kwargs.items() if v is not None])
@@ -63,7 +64,6 @@ def list_test_revs(repo, tag_name, verbosity, **kwargs):
         # Only use fields that we want to print
         cols = [rev[i] for i in print_fields]
 
-
         if cols != prev:
             commit_cnt = 1
             test_run_cnt = 1
@@ -87,6 +87,7 @@ def list_test_revs(repo, tag_name, verbosity, **kwargs):
 
     print_table(rows)
 
+
 def is_xml_format(repo, commit):
     """Check if the commit contains xml (or json) data"""
     if repo.rev_parse(commit + ':results.xml'):
@@ -95,6 +96,7 @@ def is_xml_format(repo, commit):
     else:
         log.debug("No xml report in %s, assuming json formatted results", commit)
         return False
+
 
 def read_results(repo, tags, xml=True):
     """Read result files from repo"""
@@ -194,7 +196,6 @@ def print_diff_report(metadata_l, data_l, metadata_r, data_r):
         else:
             rows.append([val['title'] + ':', val['value'], val['value_old']])
     print_table(rows, row_fmt)
-
 
     # Print test results
     print("\nTEST RESULTS:\n=============")
@@ -316,7 +317,6 @@ def print_html_report(data, id_comp, buildstats):
             else:
                 new_test['message'] = test_r['message']
 
-
         # Generate the list of measurements
         for meas in test_r['measurements'].keys():
             meas_r = test_r['measurements'][meas]
@@ -357,7 +357,6 @@ def print_html_report(data, id_comp, buildstats):
                     comp_rev in buildstats and bs_key in buildstats[comp_rev]):
                 new_meas['buildstats'] = BSSummary(buildstats[comp_rev][bs_key],
                                                    buildstats[rev][bs_key])
-
 
             new_test['measurements'].append(new_meas)
         tests.append(new_test)
@@ -610,6 +609,7 @@ def main(argv=None):
         print_html_report(data, index_l - index_0, buildstats)
 
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

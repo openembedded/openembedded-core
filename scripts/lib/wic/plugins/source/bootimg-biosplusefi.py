@@ -23,6 +23,7 @@ import types
 from wic.pluginbase import SourcePlugin
 from importlib.machinery import SourceFileLoader
 
+
 class BootimgBiosPlusEFIPlugin(SourcePlugin):
     """
     Create MBR + EFI boot partition

@@ -15,6 +15,7 @@ setup_sys_path()
 from oeqa.core.exception import OEQAMissingVariable
 from oeqa.core.utils.test import getCaseMethod, getSuiteCasesNames
 
+
 class TestData(TestBase):
     modules = ['data']
 
@@ -50,6 +51,7 @@ class TestData(TestBase):
 
         tc = self._testLoader(d=d, modules=self.modules)
         self.assertEqual(True, tc.runTests().wasSuccessful())
+
 
 if __name__ == '__main__':
     unittest.main()

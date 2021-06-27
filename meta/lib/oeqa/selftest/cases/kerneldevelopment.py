@@ -3,6 +3,7 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, get_bb_var
 from oeqa.utils.git import GitRepo
 
+
 class KernelDev(OESelftestTestCase):
 
     @classmethod

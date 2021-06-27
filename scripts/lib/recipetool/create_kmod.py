@@ -13,6 +13,7 @@ logger = logging.getLogger('recipetool')
 
 tinfoil = None
 
+
 def tinfoil_init(instance):
     global tinfoil
     tinfoil = instance
@@ -137,6 +138,7 @@ class KernelModuleRecipeHandler(RecipeHandler):
             return True
 
         return False
+
 
 def register_recipe_handlers(handlers):
     handlers.append((KernelModuleRecipeHandler(), 15))

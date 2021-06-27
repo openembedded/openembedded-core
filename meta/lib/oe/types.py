@@ -31,6 +31,7 @@ class OEList(list):
     def __str__(self):
         return self.separator.join(self)
 
+
 def choice(value, choices):
     """OpenEmbedded 'choice' type
 
@@ -47,8 +48,10 @@ def choice(value, choices):
                          (value, choices))
     return value
 
+
 class NoMatch(object):
     """Stub python regex pattern object which never matches anything"""
+
     def findall(self, string, flags=0):
         return None
 
@@ -70,7 +73,9 @@ class NoMatch(object):
     def subn(pattern, repl, string, count=0):
         return None
 
+
 NoMatch = NoMatch()
+
 
 def regex(value, regexflags=None):
     """OpenEmbedded 'regex' type
@@ -103,6 +108,7 @@ def regex(value, regexflags=None):
         raise ValueError("Invalid regex value '%s': %s" %
                          (value, exc.args[0]))
 
+
 def boolean(value):
     """OpenEmbedded 'boolean' type
 
@@ -125,6 +131,7 @@ def boolean(value):
         return False
     raise ValueError("Invalid boolean value '%s'" % value)
 
+
 def integer(value, numberbase=10):
     """OpenEmbedded 'integer' type
 
@@ -133,7 +140,10 @@ def integer(value, numberbase=10):
 
     return int(value, int(numberbase))
 
+
 _float = float
+
+
 def float(value, fromhex='false'):
     """OpenEmbedded floating point type
 
@@ -145,6 +155,7 @@ def float(value, fromhex='false'):
         return _float.fromhex(value)
     else:
         return _float(value)
+
 
 def path(value, relativeto='', normalize='true', mustexist='false'):
     value = os.path.join(relativeto, value)
@@ -162,6 +173,7 @@ def path(value, relativeto='', normalize='true', mustexist='false'):
 
     return value
 
+
 def is_x86(arch):
     """
     Check whether arch is x86 or x86_64
@@ -170,6 +182,7 @@ def is_x86(arch):
         return True
     else:
         return False
+
 
 def qemu_use_kvm(kvm, target_arch):
     """

@@ -9,6 +9,7 @@ from oeqa.core.decorator import OETestTag
 import tempfile
 import shutil
 
+
 @OETestTag("machine")
 class MetaIDE(OESelftestTestCase):
 

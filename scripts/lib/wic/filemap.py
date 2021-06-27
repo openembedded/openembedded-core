@@ -25,6 +25,7 @@ import fcntl
 import tempfile
 import logging
 
+
 def get_block_size(file_obj):
     """
     Returns block size for file object 'file_obj'. Errors are indicated by the
@@ -48,12 +49,14 @@ def get_block_size(file_obj):
             raise IOError("Unable to determine block size")
     return bsize
 
+
 class ErrorNotSupp(Exception):
     """
     An exception of this type is raised when the 'FIEMAP' or 'SEEK_HOLE' feature
     is not supported either by the kernel or the file-system.
     """
     pass
+
 
 class Error(Exception):
     """A class for all the other exceptions raised by this module."""
@@ -160,6 +163,7 @@ class _FilemapBase(object):
 _SEEK_DATA = 3
 _SEEK_HOLE = 4
 
+
 def _lseek(file_obj, offset, whence):
     """This is a helper function which invokes 'os.lseek' for file object
     'file_obj' and with specified 'offset' and 'whence'. The 'whence'
@@ -179,6 +183,7 @@ def _lseek(file_obj, offset, whence):
                                "\"SEEK_HOLE\" and \"SEEK_DATA\"")
         else:
             raise
+
 
 class FilemapSeek(_FilemapBase):
     """
@@ -303,6 +308,7 @@ _FIEMAP_FLAG_SYNC = 0x00000001
 # when invoking the FIEMAP ioctl. The larger is the buffer, the less times the
 # FIEMAP ioctl will be invoked.
 _FIEMAP_BUFFER_SIZE = 256 * 1024
+
 
 class FilemapFiemap(_FilemapBase):
     """
@@ -469,6 +475,7 @@ class FilemapFiemap(_FilemapBase):
                         % (first_prev, last_prev))
         yield (first_prev, last_prev)
 
+
 class FilemapNobmap(_FilemapBase):
     """
     This class is used when both the 'SEEK_DATA/HOLE' and FIEMAP are not
@@ -492,6 +499,7 @@ class FilemapNobmap(_FilemapBase):
                         % (start, count, start + count - 1))
         yield (start, start + count - 1)
 
+
 def filemap(image, log=None):
     """
     Create and return an instance of a Filemap class - 'FilemapFiemap' or
@@ -509,6 +517,7 @@ def filemap(image, log=None):
             return FilemapSeek(image, log)
         except ErrorNotSupp:
             return FilemapNobmap(image, log)
+
 
 def sparse_copy(src_fname, dst_fname, skip=0, seek=0,
                 length=0, api=None):

@@ -15,7 +15,6 @@
 # E.g: "oe-selftest -r bblayers.BitbakeLayers" will run just the BitbakeLayers class from meta/lib/oeqa/selftest/bblayers.py
 
 
-
 import os
 import sys
 import argparse
@@ -34,6 +33,7 @@ from oeqa.utils import load_test_components
 from oeqa.core.exception import OEQAPreRun
 
 logger = scriptutils.logger_create('oe-selftest', stream=sys.stdout, keepalive=True)
+
 
 def main():
     description = "Script that runs unit tests against bitbake and other Yocto related tools. The goal is to validate tools functionality and metadata integrity. Refer to https://wiki.yoctoproject.org/wiki/Oe-selftest for more information."
@@ -54,6 +54,7 @@ def main():
         ret = 1
 
     return ret
+
 
 if __name__ == '__main__':
     try:

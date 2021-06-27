@@ -47,6 +47,7 @@ def metadata_from_bb():
         info_dict['config'][var] = data_dict[var]
     return info_dict
 
+
 def metadata_from_data_store(d):
     """ Returns test's metadata as OrderedDict.
 
@@ -55,6 +56,7 @@ def metadata_from_data_store(d):
     # TODO: Getting metadata from the data store would
     # be useful when running within bitbake.
     pass
+
 
 def git_rev_info(path):
     """Get git revision information as a dict"""
@@ -89,6 +91,7 @@ def git_rev_info(path):
         info['branch'] = '(nobranch)'
     return info
 
+
 def get_layers(layers):
     """Returns layer information in dict format"""
     layer_dict = OrderedDict()
@@ -97,6 +100,7 @@ def get_layers(layers):
         layer_dict[layer_name] = git_rev_info(layer)
     return layer_dict
 
+
 def write_metadata_file(file_path, metadata):
     """ Writes metadata to a XML file in directory. """
 
@@ -104,6 +108,7 @@ def write_metadata_file(file_path, metadata):
     xml_doc = parseString(tostring(xml).decode('UTF-8'))
     with open(file_path, 'w') as f:
         f.write(xml_doc.toprettyxml())
+
 
 def dict_to_XML(tag, dictionary, **kwargs):
     """ Return XML element converting dicts recursively. """

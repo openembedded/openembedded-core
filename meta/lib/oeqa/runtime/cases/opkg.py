@@ -8,6 +8,7 @@ from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.data import skipIfNotDataVar, skipIfNotFeature, skipIfFeature
 from oeqa.runtime.decorator.package import OEHasPackage
 
+
 class OpkgTest(OERuntimeTestCase):
 
     def pkg(self, command, expected=0):
@@ -16,6 +17,7 @@ class OpkgTest(OERuntimeTestCase):
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
         return output
+
 
 class OpkgRepoTest(OpkgTest):
 

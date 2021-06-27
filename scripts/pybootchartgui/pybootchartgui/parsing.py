@@ -30,6 +30,7 @@ if sys.version_info >= (3, 0):
 
 # Parsing produces as its end result a 'Trace'
 
+
 class Trace:
     def __init__(self, writer, paths, options):
         self.processes = {}
@@ -60,10 +61,10 @@ class Trace:
                 self.min = min(self.start.keys())
                 self.max = max(self.end.keys())
 
-
         # Rendering system charts depends on start and end
         # time. Provide them where the original drawing code expects
         # them, i.e. in proc_tree.
+
         class BitbakeProcessTree:
             def __init__(self, start_time, end_time):
                 self.start_time = start_time
@@ -71,7 +72,6 @@ class Trace:
                 self.duration = self.end_time - self.start_time
         self.proc_tree = BitbakeProcessTree(min(self.start.keys()),
                                             max(self.end.keys()))
-
 
         return
 
@@ -187,6 +187,7 @@ class Trace:
                 return True
             else:
                 return False
+
         def is_idle(util, start):
             for j in range(0, len(util)):
                 if util[j][0] < start:
@@ -203,7 +204,6 @@ class Trace:
                 break
         if proc is None:
             writer.warn("no selected crop proc '%s' in list" % crop_after)
-
 
         cpu_util = [(sample.time, sample.user + sample.sys + sample.io) for sample in self.cpu_stats]
         disk_util = [(sample.time, sample.util) for sample in self.disk_stats]
@@ -248,14 +248,15 @@ class Trace:
         return idle
 
 
-
 class ParseError(Exception):
     """Represents errors during parse of the bootchart."""
+
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
         return self.value
+
 
 def _parse_headers(file):
     """Parses the headers of the bootchart."""
@@ -268,6 +269,7 @@ def _parse_headers(file):
         headers[last] += value
         return headers, last
     return reduce(parse, file.read().split('\n'), (defaultdict(str), ''))[0]
+
 
 def _parse_timed_blocks(file):
     """Parses (ie., splits) a file into so-called timed-blocks. A
@@ -283,6 +285,7 @@ def _parse_timed_blocks(file):
             raise ParseError("expected a timed-block, but timestamp '%s' is not an integer" % lines[0])
     blocks = file.read().split('\n\n')
     return [parse(block) for block in blocks if block.strip() and not block.endswith(' not running\n')]
+
 
 def _parse_proc_ps_log(writer, file):
     """
@@ -333,6 +336,7 @@ def _parse_proc_ps_log(writer, file):
     avgSampleLength = (ltime - startTime) / (len(timed_blocks) - 1)
 
     return ProcessStats(writer, processMap, len(timed_blocks), avgSampleLength, startTime, ltime)
+
 
 def _parse_taskstats_log(writer, file):
     """
@@ -421,6 +425,7 @@ def _parse_taskstats_log(writer, file):
 
     return ProcessStats(writer, processMap, len(timed_blocks), avgSampleLength, startTime, ltime)
 
+
 def _parse_proc_stat_log(file):
     samples = []
     ltimes = None
@@ -444,11 +449,13 @@ def _parse_proc_stat_log(file):
         # skip the rest of statistics lines
     return samples
 
+
 def _parse_reduced_log(file, sample_class):
     samples = []
     for time, lines in _parse_timed_blocks(file):
         samples.append(sample_class(time, *[float(x) for x in lines[0].split()]))
     return samples
+
 
 def _parse_proc_disk_stat_log(file):
     """
@@ -491,6 +498,7 @@ def _parse_proc_disk_stat_log(file):
 
     return disk_stats
 
+
 def _parse_reduced_proc_meminfo_log(file):
     """
     Parse file for global memory statistics with
@@ -509,6 +517,7 @@ def _parse_reduced_proc_meminfo_log(file):
             mem_stats.append(DrawMemSample(sample))
 
     return mem_stats
+
 
 def _parse_proc_meminfo_log(file):
     """
@@ -533,6 +542,7 @@ def _parse_proc_meminfo_log(file):
             mem_stats.append(DrawMemSample(sample))
 
     return mem_stats
+
 
 def _parse_monitor_disk_log(file):
     """
@@ -640,6 +650,8 @@ def _parse_dmesg(writer, file):
 # Parse binary pacct accounting file output if we have one
 # cf. /usr/include/linux/acct.h
 #
+
+
 def _parse_pacct(writer, file):
     # read LE int32
     def _read_le_int32(file):
@@ -664,6 +676,7 @@ def _parse_pacct(writer, file):
         file.seek(16, 1)         # acct_comm
     return parent_map
 
+
 def _parse_paternity_log(writer, file):
     parent_map = {}
     parent_map[0] = 0
@@ -677,6 +690,7 @@ def _parse_paternity_log(writer, file):
         else:
             print("Odd paternity line '%s'" % (line))
     return parent_map
+
 
 def _parse_cmdline_log(writer, file):
     cmdLines = {}
@@ -693,6 +707,7 @@ def _parse_cmdline_log(writer, file):
             cmdLines[pid] = values
     return cmdLines
 
+
 def _parse_bitbake_buildstats(writer, state, filename, file):
     paths = filename.split("/")
     task = paths[-1]
@@ -706,6 +721,7 @@ def _parse_bitbake_buildstats(writer, state, filename, file):
             end = int(float(line.split()[-1]))
     if start and end:
         state.add_process(pn + ":" + task, start, end)
+
 
 def get_num_cpus(headers):
     """Get the number of CPUs from the system.cpu header property. As the
@@ -722,6 +738,7 @@ def get_num_cpus(headers):
     if mat is None:
         return 1
     return max(int(mat.group(1)), 1)
+
 
 def _do_parse(writer, state, filename, file):
     writer.info("parsing '%s'" % filename)
@@ -749,12 +766,14 @@ def _do_parse(writer, state, filename, file):
     writer.info("  %s seconds" % str(t2 - t1))
     return state
 
+
 def parse_file(writer, state, filename):
     if state.filename is None:
         state.filename = filename
     basename = os.path.basename(filename)
     with open(filename, "r") as file:
         return _do_parse(writer, state, filename, file)
+
 
 def parse_paths(writer, state, paths):
     for path in paths:
@@ -788,6 +807,7 @@ def parse_paths(writer, state, paths):
         else:
             state = parse_file(writer, state, path)
     return state
+
 
 def split_res(res, options):
     """ Split the res into n pieces """

@@ -23,14 +23,17 @@ whitelist = (
     '. $target_sdk_dir/${oe_init_build_env_path} $target_sdk_dir >> $LOGFILE'
     )
 
+
 def is_whitelisted(s):
     for w in whitelist:
         if w in s:
             return True
     return False
 
+
 SCRIPT_LINENO_RE = re.compile(r' line (\d+) ')
 BASHISM_WARNING = re.compile(r'^(possible bashism in.*)$', re.MULTILINE)
+
 
 def process(filename, function, lineno, script):
     import tempfile
@@ -83,6 +86,7 @@ def process(filename, function, lineno, script):
         else:
             return None
 
+
 def get_tinfoil():
     scripts_path = os.path.dirname(os.path.realpath(__file__))
     lib_path = scripts_path + '/lib'
@@ -94,6 +98,7 @@ def get_tinfoil():
     tinfoil.prepare()
     # tinfoil.logger.setLevel(logging.WARNING)
     return tinfoil
+
 
 if __name__ == '__main__':
     import argparse
@@ -154,7 +159,6 @@ if __name__ == '__main__':
                             # line number.
                             attributes = (filename or realfn, key, lineno)
                             scripts.setdefault(attributes, script)
-
 
     print("Scanning scripts...\n")
     for result in pool.imap(func, scripts.items()):

@@ -38,17 +38,21 @@ store_map = {
     "manual": ['TEST_TYPE', 'TEST_MODULE', 'MACHINE', 'IMAGE_BASENAME']
 }
 
+
 def is_url(p):
     """
     Helper for determining if the given path is a URL
     """
     return p.startswith('http://') or p.startswith('https://')
 
+
 extra_configvars = {'TESTSERIES': ''}
 
 #
 # Load the json file and append the results data into the provided results dict
 #
+
+
 def append_resultsdata(results, f, configmap=store_map, configvars=extra_configvars):
     if type(f) is str:
         if is_url(f):
@@ -83,6 +87,8 @@ def append_resultsdata(results, f, configmap=store_map, configvars=extra_configv
 # Walk a directory and find/load results data
 # or load directly from a file
 #
+
+
 def load_resultsdata(source, configmap=store_map, configvars=extra_configvars):
     results = {}
     if is_url(source) or os.path.isfile(source):
@@ -95,6 +101,7 @@ def load_resultsdata(source, configmap=store_map, configvars=extra_configvars):
                 append_resultsdata(results, f, configmap, configvars)
     return results
 
+
 def filter_resultsdata(results, resultid):
     newresults = {}
     for r in results:
@@ -103,6 +110,7 @@ def filter_resultsdata(results, resultid):
                  newresults[r] = {}
                  newresults[r][i] = results[r][i]
     return newresults
+
 
 def strip_ptestresults(results):
     newresults = copy.deepcopy(results)
@@ -119,6 +127,7 @@ def strip_ptestresults(results):
                     del newresults[res]['result']['ptestresult.sections'][i]['log']
     return newresults
 
+
 def decode_log(logdata):
     if isinstance(logdata, str):
         return logdata
@@ -129,6 +138,7 @@ def decode_log(logdata):
             data = zlib.decompress(data)
             return data.decode("utf-8", errors='ignore')
     return None
+
 
 def generic_get_log(sectionname, results, section):
     if sectionname not in results:
@@ -141,8 +151,10 @@ def generic_get_log(sectionname, results, section):
         return None
     return decode_log(ptest['log'])
 
+
 def ptestresult_get_log(results, section):
     return generic_get_log('ptestresuls.sections', results, section)
+
 
 def generic_get_rawlogs(sectname, results):
     if sectname not in results:
@@ -151,8 +163,10 @@ def generic_get_rawlogs(sectname, results):
         return None
     return decode_log(results[sectname]['log'])
 
+
 def ptestresult_get_rawlogs(results):
     return generic_get_rawlogs('ptestresult.rawlogs', results)
+
 
 def save_resultsdata(results, destdir, fn="testresults.json", ptestjson=False, ptestlogs=False):
     for res in results:
@@ -180,6 +194,7 @@ def save_resultsdata(results, destdir, fn="testresults.json", ptestjson=False, p
                             with open(dst.replace(fn, "ptest-%s.log" % i), "w+") as f:
                                 f.write(sectionlog)
 
+
 def git_get_result(repo, tags, configmap=store_map):
     git_objs = []
     for tag in tags:
@@ -206,6 +221,7 @@ def git_get_result(repo, tags, configmap=store_map):
         append_resultsdata(results, obj, configmap=configmap)
 
     return results
+
 
 def test_run_results(results):
     """

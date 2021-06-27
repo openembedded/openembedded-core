@@ -14,6 +14,7 @@ from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recip
 
 logger = logging.getLogger('devtool')
 
+
 def package(args, config, basepath, workspace):
     """Entry point for the devtool 'package' subcommand"""
     check_workspace_recipe(workspace, args.recipename)
@@ -38,6 +39,7 @@ def package(args, config, basepath, workspace):
     logger.info('Your packages are in %s' % deploy_dir_pkg)
 
     return 0
+
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from the package plugin"""

@@ -10,9 +10,11 @@ from oeqa.core.utils.misc import strToList
 
 decoratorClasses = set()
 
+
 def registerDecorator(cls):
     decoratorClasses.add(cls)
     return cls
+
 
 class OETestDecorator(object, metaclass=ABCMeta):
     case = None # Reference of OETestCase decorated
@@ -56,6 +58,7 @@ class OETestDecorator(object, metaclass=ABCMeta):
     def tearDownDecorator(self):
         pass
 
+
 class OETestDiscover(OETestDecorator):
 
     # OETestLoader call it after discover test cases
@@ -64,10 +67,12 @@ class OETestDiscover(OETestDecorator):
     def discover(registry):
         return registry['cases']
 
+
 def OETestTag(*tags):
     expandedtags = []
     for tag in tags:
         expandedtags += strToList(tag)
+
     def decorator(item):
         if hasattr(item, "__oeqa_testtags"):
             # do not append, create a new list (to handle classes with inheritance)

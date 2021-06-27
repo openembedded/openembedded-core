@@ -22,6 +22,7 @@ from wic.misc import (exec_cmd, exec_native_cmd,
 
 logger = logging.getLogger('wic')
 
+
 class BootimgPcbiosPlugin(SourcePlugin):
     """
     Create MBR boot partition and install syslinux on it.

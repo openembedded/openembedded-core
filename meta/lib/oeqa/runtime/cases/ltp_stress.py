@@ -15,6 +15,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.core.decorator.data import skipIfQemu
 from oeqa.utils.logparser import LtpParser
 
+
 class LtpStressBase(OERuntimeTestCase):
 
     @classmethod
@@ -43,7 +44,6 @@ class LtpStressBase(OERuntimeTestCase):
         cls.extras = cls.tc.extraresults
         cls.extras['ltpstressresult.rawlogs'] = {'log': ""}
 
- 
     @classmethod
     def ltp_finishup(cls):
         cls.extras['ltpstressresult.sections'] = cls.sections
@@ -56,6 +56,7 @@ class LtpStressBase(OERuntimeTestCase):
 
         if cls.failmsg:
             cls.fail(cls.failmsg)
+
 
 class LtpStressTest(LtpStressBase):
 
@@ -90,7 +91,6 @@ class LtpStressTest(LtpStressBase):
     # LTP stress runtime tests
     #
     @skipIfQemu('qemuall', 'Test only runs on real hardware')
-
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(["ltp"])
     def test_ltp_stress(self):

@@ -22,6 +22,7 @@ import colorsys
 import functools
 from operator import itemgetter
 
+
 class RenderOptions:
 
     def __init__(self, app_options):
@@ -36,6 +37,7 @@ class RenderOptions:
             return trace.kernel_tree
         else:
             return trace.proc_tree
+
 
 # Process tree background color.
 BACK_COLOR = (1.0, 1.0, 1.0, 1.0)
@@ -160,34 +162,42 @@ STAT_TYPE_CPU = 0
 STAT_TYPE_IO = 1
 
 # Convert ps process state to an int
+
+
 def get_proc_state(flag):
     return "RSDTZXW".find(flag) + 1
+
 
 def draw_text(ctx, text, color, x, y):
     ctx.set_source_rgba(*color)
     ctx.move_to(x, y)
     ctx.show_text(text)
 
+
 def draw_fill_rect(ctx, color, rect):
     ctx.set_source_rgba(*color)
     ctx.rectangle(*rect)
     ctx.fill()
+
 
 def draw_rect(ctx, color, rect):
     ctx.set_source_rgba(*color)
     ctx.rectangle(*rect)
     ctx.stroke()
 
+
 def draw_legend_box(ctx, label, fill_color, x, y, s):
     draw_fill_rect(ctx, fill_color, (x, y - s, s, s))
     draw_rect(ctx, PROC_BORDER_COLOR, (x, y - s, s, s))
     draw_text(ctx, label, TEXT_COLOR, x + s + 5, y)
+
 
 def draw_legend_line(ctx, label, fill_color, x, y, s):
     draw_fill_rect(ctx, fill_color, (x, y - s / 2, s + 1, 3))
     ctx.arc(x + (s + 1) / 2.0, y - (s - 3) / 2.0, 2.5, 0, 2.0 * math.pi)
     ctx.fill()
     draw_text(ctx, label, TEXT_COLOR, x + s + 5, y)
+
 
 def draw_label_in_box(ctx, color, label, x, y, w, maxx):
     label_w = ctx.text_extents(label)[2]
@@ -197,6 +207,7 @@ def draw_label_in_box(ctx, color, label, x, y, w, maxx):
     if label_x + label_w > maxx:
         label_x = x - label_w - 5
     draw_text(ctx, label, color, label_x, y)
+
 
 def draw_sec_labels(ctx, options, rect, sec_w, nsecs):
     ctx.set_font_size(AXIS_FONT_SIZE)
@@ -212,6 +223,7 @@ def draw_sec_labels(ctx, options, rect, sec_w, nsecs):
             if x >= prev_x:
                 draw_text(ctx, label, TEXT_COLOR, x, rect[1] - 2)
                 prev_x = x + label_w
+
 
 def draw_box_ticks(ctx, rect, sec_w):
     draw_rect(ctx, BORDER_COLOR, tuple(rect))
@@ -236,6 +248,7 @@ def draw_box_ticks(ctx, rect, sec_w):
 
     ctx.set_line_cap(cairo.LINE_CAP_BUTT)
 
+
 def draw_annotations(ctx, proc_tree, times, rect):
     ctx.set_line_cap(cairo.LINE_CAP_SQUARE)
     ctx.set_source_rgba(*ANNOTATION_COLOR)
@@ -251,6 +264,7 @@ def draw_annotations(ctx, proc_tree, times, rect):
 
     ctx.set_line_cap(cairo.LINE_CAP_BUTT)
     ctx.set_dash([])
+
 
 def draw_chart(ctx, color, fill, chart_bounds, data, proc_tree, data_range):
     ctx.set_line_width(0.5)
@@ -299,6 +313,7 @@ def draw_chart(ctx, color, fill, chart_bounds, data, proc_tree, data_range):
         ctx.stroke()
     ctx.set_line_width(1.0)
 
+
 bar_h = 55
 meminfo_bar_h = 2 * bar_h
 header_h = 60
@@ -310,6 +325,7 @@ leg_s = 10
 MIN_IMG_W = 800
 CUML_HEIGHT = 2000 # Increased value to accommodate CPU and I/O Graphs
 OPTIONS = None
+
 
 def extents(options, xscale, trace):
     start = min(trace.start.keys())
@@ -348,12 +364,14 @@ def extents(options, xscale, trace):
 
     return (w, h)
 
+
 def clip_visible(clip, rect):
     xmax = max(clip[0], rect[0])
     ymax = max(clip[1], rect[1])
     xmin = min(clip[0] + clip[2], rect[0] + rect[2])
     ymin = min(clip[1] + clip[3], rect[1] + rect[3])
     return (xmin > xmax and ymin > ymax)
+
 
 def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
     proc_tree = options.proc_tree(trace)
@@ -493,6 +511,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
 
     return curr_y
 
+
 def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
     chart_rect = [off_x, curr_y + header_h, w, h - curr_y - 1 * off_y - header_h]
 
@@ -562,6 +581,8 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
 #
 # Render the chart.
 #
+
+
 def render(ctx, options, xscale, trace):
     (w, h) = extents(options, xscale, trace)
     global OPTIONS
@@ -620,6 +641,7 @@ def render(ctx, options, xscale, trace):
         cuml_rect = (off_x, curr_y + off_y * 100, w, CUML_HEIGHT / 2 - off_y * 2)
         if clip_visible(clip, cuml_rect):
             draw_cuml_graph(ctx, proc_tree, cuml_rect, duration, sec_w, STAT_TYPE_IO)
+
 
 def draw_process_bar_chart(ctx, clip, options, proc_tree, times, curr_y, w, h, sec_w):
     header_size = 0
@@ -683,6 +705,7 @@ def draw_header(ctx, headers, duration):
     draw_text(ctx, txt, TEXT_COLOR, off_x, header_y)
 
     return header_y
+
 
 def draw_processes_recursively(ctx, proc, proc_tree, y, proc_h, rect, clip):
     x = rect[0] + ((proc.start_time - proc_tree.start_time) * rect[2] / proc_tree.duration)
@@ -752,6 +775,7 @@ def draw_process_activity_colors(ctx, proc, proc_tree, x, y, w, proc_h, rect, cl
 
         draw_fill_rect(ctx, color, (tx, y, tw, proc_h))
 
+
 def draw_process_connecting_lines(ctx, px, py, x, y, proc_h):
     ctx.set_source_rgba(*DEP_COLOR)
     ctx.set_dash([2, 2])
@@ -770,8 +794,11 @@ def draw_process_connecting_lines(ctx, px, py, x, y, proc_h):
     ctx.set_dash([])
 
 # elide the bootchart collector - it is quite distorting
+
+
 def elide_bootchart(proc):
     return proc.cmd == 'bootchartd' or proc.cmd == 'bootchart-colle'
+
 
 class CumlSample:
     def __init__(self, proc):

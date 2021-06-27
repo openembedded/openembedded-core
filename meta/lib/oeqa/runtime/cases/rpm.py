@@ -12,6 +12,7 @@ from oeqa.core.decorator.data import skipIfDataVar
 from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.core.utils.path import findFile
 
+
 class RpmBasicTest(OERuntimeTestCase):
 
     @OEHasPackage(['rpm'])

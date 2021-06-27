@@ -15,6 +15,7 @@ import getopt
 import os
 from subprocess import *
 
+
 def usage():
     prog = os.path.basename(sys.argv[0])
     print('Usage: %s [OPTION]...' % prog)

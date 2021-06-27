@@ -61,7 +61,6 @@ class RecipeUtilsTests(OESelftestTestCase):
         self.maxDiff = None
         self.assertEqual(''.join(patchlines).strip(), expected_patch.strip())
 
-
     def test_patch_recipe_singleappend(self):
         import oe.recipeutils
         rd = tinfoil.parse_recipe('recipeutils-test')
@@ -88,7 +87,6 @@ class RecipeUtilsTests(OESelftestTestCase):
                 patchlines.append(line)
         self.assertEqual(''.join(patchlines).strip(), expected_patch.strip())
 
-
     def test_patch_recipe_appends(self):
         import oe.recipeutils
         rd = tinfoil.parse_recipe('recipeutils-test')
@@ -112,7 +110,6 @@ class RecipeUtilsTests(OESelftestTestCase):
             for line in f:
                 patchlines.append(line)
         self.assertEqual(''.join(patchlines).strip(), expected_patch.strip())
-
 
     def test_validate_pn(self):
         import oe.recipeutils

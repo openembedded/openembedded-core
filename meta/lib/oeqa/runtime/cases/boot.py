@@ -10,6 +10,7 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.oetimeout import OETimeout
 from oeqa.core.decorator.data import skipIfQemu
 
+
 class BootTest(OERuntimeTestCase):
 
     @OETimeout(120)

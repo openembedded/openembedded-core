@@ -19,6 +19,7 @@ import scriptpath
 scriptpath.add_bitbake_lib_path()
 import bb.tinfoil
 
+
 def usage():
     print('Usage: %s -d FILENAME [-d FILENAME]*' % os.path.basename(sys.argv[0]))
     print('  -d FILENAME         documentation file to search')
@@ -26,12 +27,14 @@ def usage():
     print('  -t FILENAME         documentation config file (for doc tags)')
     print('  -T                  Only display variables with doc tags (requires -t)')
 
+
 def bbvar_is_documented(var, documented_vars):
     ''' Check if variable (var) is in the list of documented variables(documented_vars) '''
     if var in documented_vars:
         return True
     else:
         return False
+
 
 def collect_documented_vars(docfiles):
     ''' Walk the docfiles and collect the documented variables '''
@@ -43,6 +46,7 @@ def collect_documented_vars(docfiles):
             documented_vars += var_prog.findall(f.read())
 
     return documented_vars
+
 
 def bbvar_doctag(var, docconf):
     prog = re.compile('^%s\[doc\] *= *"(.*)"' % (var))
@@ -61,6 +65,7 @@ def bbvar_doctag(var, docconf):
 
     f.close()
     return ""
+
 
 def main():
     docfiles = []

@@ -3,6 +3,7 @@ from oeqa.core.decorator.depends import OETestDepends
 
 import time
 
+
 class RunLevel_Test(OERuntimeTestCase):
     
     @OETestDepends(['ssh.SSHTest.test_ssh'])

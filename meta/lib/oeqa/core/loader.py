@@ -31,11 +31,13 @@ _failed_test_args = inspect.getfullargspec(unittest.loader._make_failed_test).ar
 exec("""def _make_failed_test(%s): raise exception""" % ', '.join(_failed_test_args))
 unittest.loader._make_failed_test = _make_failed_test
 
+
 def _find_duplicated_modules(suite, directory):
     for module in getSuiteModules(suite):
         path = findFile('%s.py' % module, directory)
         if path:
             raise ImportError("Duplicated %s module found in %s" % (module, path))
+
 
 def _built_modules_dict(modules):
     modules_dict = {}
@@ -60,6 +62,7 @@ def _built_modules_dict(modules):
             modules_dict[module_name][class_name].append(test_name)
 
     return modules_dict
+
 
 class OETestLoader(unittest.TestLoader):
     caseClass = OETestCase
@@ -312,7 +315,6 @@ class OETestLoader(unittest.TestLoader):
                                else False
 
         return (load_module, load_underscore)
-
 
     # XXX After Python 3.5, remove backward compatibility hacks for
     # use_load_tests deprecation via *args and **kws.  See issue 16662.

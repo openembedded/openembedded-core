@@ -7,6 +7,7 @@
 from oeqa.core.case import OETestCase
 from oeqa.core.decorator.depends import OETestDepends
 
+
 class DependsTest(OETestCase):
 
     def testDependsFirst(self):

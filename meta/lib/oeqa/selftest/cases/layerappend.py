@@ -8,6 +8,7 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
 import oeqa.utils.ftools as ftools
 
+
 class LayerAppendTests(OESelftestTestCase):
     layerconf = """
 # We have a conf and classes directory, append to BBPATH

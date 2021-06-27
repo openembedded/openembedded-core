@@ -2,11 +2,13 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+
 class ClassRegistryMeta(type):
     """Give each ClassRegistry their own registry"""
     def __init__(cls, name, bases, attrs):
         cls.registry = {}
         type.__init__(cls, name, bases, attrs)
+
 
 class ClassRegistry(type, metaclass=ClassRegistryMeta):
     """Maintain a registry of classes, indexed by name.
@@ -22,6 +24,7 @@ Subclasses of ClassRegistry may define an 'implemented' property to exert
 control over whether the class will be added to the registry (e.g. to keep
 abstract base classes out of the registry)."""
     priority = 0
+
     def __init__(cls, name, bases, attrs):
         super(ClassRegistry, cls).__init__(name, bases, attrs)
         try:

@@ -11,10 +11,12 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
+
 class EpoxyTest(OESDKTestCase):
     """
     Test that Meson builds correctly.
     """
+
     def setUp(self):
         if not (self.tc.hasHostPackage("nativesdk-meson")):
             raise unittest.SkipTest("GalculatorTest class: SDK doesn't contain Meson")

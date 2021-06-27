@@ -5,6 +5,7 @@
 #
 """Build performance test library functions"""
 
+
 def print_table(rows, row_fmt=None):
     """Print data table"""
     if not rows:

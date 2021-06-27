@@ -8,6 +8,7 @@ import tempfile
 import operator
 from oeqa.utils.commands import get_bb_var
 
+
 class TestBlobParsing(OESelftestTestCase):
 
     def setUp(self):
@@ -98,6 +99,7 @@ class TestBlobParsing(OESelftestTestCase):
             var_changes[x.fieldname] = (oldvalue, x.newvalue)
 
         self.assertEqual(defaultmap, var_changes, "Defaults not set properly")
+
 
 class TestFileListCompare(OESelftestTestCase):
 

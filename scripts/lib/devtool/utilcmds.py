@@ -20,6 +20,7 @@ from devtool import parse_recipe
 
 logger = logging.getLogger('devtool')
 
+
 def _find_recipe_path(args, config, basepath, workspace):
     if args.any_recipe:
         logger.warning('-a/--any-recipe option is now always active, and thus the option will be removed in a future release')

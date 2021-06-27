@@ -31,6 +31,7 @@ control_chars = [chr(x) for x in control_range
                 if chr(x) not in string.printable]
 re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 
+
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, dump_host_cmds,
@@ -124,7 +125,6 @@ class QemuRunner:
         fl = fcntl.fcntl(o, fcntl.F_GETFL)
         fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
         return os.read(o.fileno(), 1000000).decode("utf-8")
-
 
     def handleSIGCHLD(self, signum, frame):
         if self.runqemu and self.runqemu.poll():
@@ -653,7 +653,6 @@ class QemuRunner:
                     status = 1
         return (status, str(data))
 
-
     def _dump_host(self):
         self.host_dumper.create_dir("qemu")
         self.logger.warning("Qemu ended unexpectedly, dump data from host"
@@ -664,6 +663,8 @@ class QemuRunner:
 # to be processed. It's completely event driven and has a straightforward
 # event loop. The mechanism for stopping the thread is a simple pipe which
 # will wake up the poll and allow for tearing everything down.
+
+
 class LoggingThread(threading.Thread):
     def __init__(self, logfunc, sock, logger):
         self.connection_established = threading.Event()

@@ -16,6 +16,7 @@ from oeqa.utils.commands import get_bb_vars, runqemu, get_test_layer
 
 oldmetapath = None
 
+
 def setUpModule():
     import bb.utils
 
@@ -67,9 +68,11 @@ def setUpModule():
             return layerpath
     bb.utils.edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
 
+
 def tearDownModule():
     if oldmetapath:
         edited_layers = []
+
         def bblayers_edit_cb(layerpath, canonical_layerpath):
             if not edited_layers and canonical_layerpath.endswith('/meta'):
                 edited_layers.append(layerpath)
@@ -79,6 +82,7 @@ def tearDownModule():
         bblayers_conf = os.path.join(os.environ['BUILDDIR'], 'conf', 'bblayers.conf')
         bb.utils.edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
     shutil.rmtree(templayerdir)
+
 
 class DevtoolBase(OESelftestTestCase):
 
@@ -173,7 +177,6 @@ class DevtoolBase(OESelftestTestCase):
                             value = set(value.split())
                     self.assertEqual(value, needvalue, 'values for %s do not match' % var)
 
-
         missingvars = {}
         for var, value in checkvars.items():
             if value is not None:
@@ -260,6 +263,7 @@ class DevtoolTests(DevtoolBase):
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn(tempdir, result.output)
         self.assertIn(self.workspacedir, result.output)
+
 
 class DevtoolAddTests(DevtoolBase):
 
@@ -536,6 +540,7 @@ class DevtoolAddTests(DevtoolBase):
         # Test devtool build
         result = runCmd('devtool build %s' % pn)
 
+
 class DevtoolModifyTests(DevtoolBase):
 
     def test_devtool_modify(self):
@@ -599,6 +604,7 @@ class DevtoolModifyTests(DevtoolBase):
         def assertFile(path, *paths):
             f = os.path.join(path, *paths)
             self.assertExists(f)
+
         def assertNoFile(path, *paths):
             f = os.path.join(path, *paths)
             self.assertNotExists(f)
@@ -697,6 +703,7 @@ class DevtoolModifyTests(DevtoolBase):
 
         self.assertTrue(bbclassextended, 'None of these recipes are BBCLASSEXTENDed to native - need to adjust testrecipes list: %s' % ', '.join(testrecipes))
         self.assertTrue(inheritnative, 'None of these recipes do "inherit native" - need to adjust testrecipes list: %s' % ', '.join(testrecipes))
+
     def test_devtool_modify_localfiles_only(self):
         # Check preconditions
         testrecipe = 'base-files'
@@ -824,6 +831,7 @@ class DevtoolModifyTests(DevtoolBase):
 
         self._check_src_repo(tempdir)
         source = os.path.join(tempdir, "source")
+
         def check(branch, expected):
             runCmd('git -C %s checkout %s' % (tempdir, branch))
             with open(source, "rt") as f:
@@ -833,6 +841,7 @@ class DevtoolModifyTests(DevtoolBase):
         check('devtool-no-overrides', 'This is a test for something\n')
         check('devtool-override-qemuarm', 'This is a test for qemuarm\n')
         check('devtool-override-qemux86', 'This is a test for qemux86\n')
+
 
 class DevtoolUpdateTests(DevtoolBase):
 
@@ -1295,6 +1304,7 @@ class DevtoolUpdateTests(DevtoolBase):
         expected_status = []
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
+
 class DevtoolExtractTests(DevtoolBase):
 
     def test_devtool_extract(self):
@@ -1460,6 +1470,7 @@ class DevtoolExtractTests(DevtoolBase):
                         reqpkgs.remove(pkg)
         if reqpkgs:
             self.fail('The following packages were not present in the image as expected: %s' % ', '.join(reqpkgs))
+
 
 class DevtoolUpgradeTests(DevtoolBase):
 
@@ -1667,7 +1678,6 @@ class DevtoolUpgradeTests(DevtoolBase):
         self.assertIn("0002-Add-a-comment-to-the-code.patch", newcontent, "New patch should have been added to the recipe but wasn't")
         self.assertIn("http://www.ivarch.com/programs/sources/pv-${PV}.tar.gz", newcontent, "New recipe no longer has upstream source in SRC_URI")
 
-
     def test_devtool_finish_upgrade_otherlayer(self):
         recipe, oldrecipefile, recipedir, olddir, newversion, patchfn, backportedpatchfn = self._setup_test_devtool_finish_upgrade()
         # Ensure the recipe is where we think it should be (so that cleanup doesn't trash things)
@@ -1789,6 +1799,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         recipever = '3.1.2'
         recipefile = os.path.join(self.workspacedir, 'recipes', recipename, '%s_%s.bb' % (recipename, recipever))
         url = 'http://downloads.yoctoproject.org/mirror/sources/i2c-tools-%s.tar.bz2' % recipever
+
         def add_recipe():
             result = runCmd('devtool add %s' % url)
             self.assertExists(recipefile, 'Expected recipe file not created')

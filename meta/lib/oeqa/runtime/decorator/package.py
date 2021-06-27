@@ -7,6 +7,7 @@
 from oeqa.core.decorator import OETestDecorator, registerDecorator
 from oeqa.core.utils.misc import strToSet
 
+
 @registerDecorator
 class OEHasPackage(OETestDecorator):
     """
@@ -57,6 +58,7 @@ class OEHasPackage(OETestDecorator):
 
     def _decorator_fail(self, msg):
         self.case.skipTest(msg)
+
 
 @registerDecorator
 class OERequirePackage(OEHasPackage):

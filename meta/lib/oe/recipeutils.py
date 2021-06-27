@@ -232,6 +232,7 @@ def patch_recipe_lines(fromlines, values, trailing_newline=True):
             lines.extend(addlines)
 
     existingnames = []
+
     def patch_recipe_varfunc(varname, origvalue, op, newlines):
         if modifying:
             # Insert anything that should come before this variable
@@ -334,11 +335,13 @@ def localise_file_vars(fn, varfiles, varlist):
 
     return filevars
 
+
 def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None):
     """Modify a list of variable values in the specified recipe. Handles inc files if
     used by the recipe.
     """
     overrides = d.getVar('OVERRIDES').split(':')
+
     def override_applicable(hevent):
         op = hevent['op']
         if '[' in op:
@@ -389,7 +392,6 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None
         return None
 
 
-
 def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True, all_variants=False):
     """Copy (local) recipe files, including both files included via include/require,
     and files referred to in the SRC_URI variable."""
@@ -400,6 +402,7 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True, all_variants=F
 
     uri_values = []
     localpaths = []
+
     def fetch_urls(rdata):
         # Collect the local paths from SRC_URI
         srcuri = rdata.getVar('SRC_URI') or ""
@@ -611,6 +614,7 @@ def get_bbfile_path(d, destdir, extrapathhint=None):
             if fnmatch.fnmatchcase(bbfilepath, bbfilespec):
                 return pathoption
     return None
+
 
 def get_bbappend_path(d, destlayerdir, wildcardver=False):
     """Determine how a bbappend for a recipe should be named and located within another layer"""
@@ -942,6 +946,7 @@ def replace_dir_vars(path, d):
         path = path.replace(dirpath, '${%s}' % dirvars[dirpath])
     return path
 
+
 def get_recipe_pv_without_srcpv(pv, uri_type):
     """
     Get PV without SRCPV common in SCM's for now only
@@ -968,6 +973,7 @@ def get_recipe_pv_without_srcpv(pv, uri_type):
             pfx = m.group('pfx')
 
     return (pv, pfx, sfx)
+
 
 def get_recipe_upstream_version(rd):
     """
@@ -1048,6 +1054,7 @@ def get_recipe_upstream_version(rd):
 
     return ru
 
+
 def _get_recipe_upgrade_status(data):
     uv = get_recipe_upstream_version(data)
 
@@ -1072,6 +1079,7 @@ def _get_recipe_upgrade_status(data):
     no_upgrade_reason = data.getVar('RECIPE_NO_UPDATE_REASON')
 
     return (pn, status, cur_ver, next_ver, maintainer, revision, no_upgrade_reason)
+
 
 def get_recipe_upgrade_status(recipes=None):
     pkgs_list = []

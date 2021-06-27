@@ -4,6 +4,7 @@
 
 from oe.manifest import Manifest
 
+
 class PkgManifest(Manifest):
     def create_initial(self):
         with open(self.initial_manifest, "w+") as manifest:

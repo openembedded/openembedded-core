@@ -22,6 +22,7 @@ logger = scriptutils.logger_create('recipetool')
 
 plugins = []
 
+
 def tinfoil_init(parserecipes):
     import bb.tinfoil
     import logging
@@ -29,6 +30,7 @@ def tinfoil_init(parserecipes):
     tinfoil.logger.setLevel(logger.getEffectiveLevel())
     tinfoil.prepare(not parserecipes)
     return tinfoil
+
 
 def main():
 

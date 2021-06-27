@@ -9,6 +9,7 @@ import time
 import re
 import bb.event
 
+
 class SystemStats:
     def __init__(self, d):
         bn = d.getVar('BUILDNAME')
@@ -102,7 +103,6 @@ class SystemStats:
         self.diskstats_ltime = time
         self.diskstats_data = diskdata
         return reduced
-
 
     def _reduce_nop(self, time, data):
         return (time, data)

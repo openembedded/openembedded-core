@@ -11,6 +11,8 @@ from oeqa.core.decorator.data import skipIfNotFeature
 
 # need some kernel fragments
 # echo "KERNEL_FEATURES_append += \" features\/kernel\-sample\/kernel\-sample.scc\"" >> local.conf
+
+
 class KSample(OERuntimeTestCase):
     def cmd_and_check(self, cmd='', match_string=''):
         status, output = self.target.run(cmd)
@@ -96,6 +98,7 @@ class KSample(OERuntimeTestCase):
         self.cmd_and_check("ls /sys/kernel/%s/" % sysmbol_name, "bar")
         # rmmod
         self.cmd_and_check("rmmod %s" % module_prename)
+
 
 class KSampleTest(KSample):
     # kfifo

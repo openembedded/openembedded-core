@@ -14,6 +14,7 @@ setup_sys_path()
 from oeqa.core.exception import OEQADependency
 from oeqa.core.utils.test import getSuiteModules, getSuiteCasesIDs
 
+
 class TestLoader(TestBase):
     @unittest.skip("invalid directory is missing oetag.py")
     def test_fail_duplicated_module(self):
@@ -58,6 +59,7 @@ class TestLoader(TestBase):
         self.cases_path = cases_path
         msg = 'Expected modules from two different paths'
         self.assertEqual(modules, expected_modules, msg=msg)
+
 
 if __name__ == '__main__':
     unittest.main()

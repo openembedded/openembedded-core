@@ -44,6 +44,7 @@ def only_for_arch(archs, image='core-image-minimal'):
         return wrapped_f
     return wrapper
 
+
 def extract_files(debugfs_output):
     """
     extract file names from the output of debugfs -R 'ls -p',
@@ -62,12 +63,14 @@ def extract_files(debugfs_output):
     return [line.split('/')[5].strip() for line in
             debugfs_output.strip().split('/\n')]
 
+
 def files_own_by_root(debugfs_output):
     for line in debugfs_output.strip().split('/\n'):
         if line.split('/')[3:5] != ['0', '0']:
             print(debugfs_output)
             return False
     return True
+
 
 class WicTestCase(OESelftestTestCase):
     """Wic test class."""
@@ -109,6 +112,7 @@ class WicTestCase(OESelftestTestCase):
             machine = bb_vars['MACHINE']
             WicTestCase.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
         return WicTestCase.wicenv_cache[image]
+
 
 class Wic(WicTestCase):
 
@@ -685,6 +689,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
                                       % (wks_file, self.resultdir), ignore_status=True).status)
         os.remove(wks_file)
 
+
 class Wic2(WicTestCase):
 
     def test_bmap_short(self):
@@ -1220,7 +1225,6 @@ class Wic2(WicTestCase):
                     os.path.basename(testfile.name), dest, sysroot))
             self.assertTrue(os.path.exists(dest))
 
-
     def test_wic_rm(self):
         """Test removing files and directories from the the wic image."""
         runCmd("wic create mkefidisk "
@@ -1368,7 +1372,6 @@ class Wic2(WicTestCase):
             # check for the file size to validate the copy
             runCmd("wic cp %s:2/etc/fstab %s -n %s" % (images[0], testfile.name, sysroot))
             self.assertTrue(os.stat(testfile.name).st_size > 0)
-
 
     def test_wic_rm_ext(self):
         """Test removing files from the ext partition."""

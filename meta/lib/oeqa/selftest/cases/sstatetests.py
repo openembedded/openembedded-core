@@ -14,6 +14,7 @@ from oeqa.selftest.cases.sstate import SStateBase
 
 import bb.siggen
 
+
 class SStateTests(SStateBase):
     def test_autorev_sstate_works(self):
         # Test that a git repository which changes is correctly handled by SRCREV = ${AUTOREV}
@@ -53,8 +54,8 @@ class SStateTests(SStateBase):
         result = runCmd('git add bar.txt; git commit -asm "add bar"', cwd=srcdir)
         bitbake("dbus-wait-test -c unpack")
 
-
     # Test sstate files creation and their location
+
     def run_test_sstate_creation(self, targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True, should_pass=True):
         self.config_sstate(temp_sstate_location, [self.sstate_path])
 
@@ -121,8 +122,8 @@ class SStateTests(SStateBase):
         targets.append('linux-libc-headers')
         self.run_test_cleansstate_task(targets, distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
 
-
     # Test rebuilding of distro-specific sstate files
+
     def run_test_rebuild_distro_specific_sstate(self, targets, temp_sstate_location=True):
         self.config_sstate(temp_sstate_location, [self.sstate_path])
 
@@ -163,9 +164,9 @@ class SStateTests(SStateBase):
     def test_rebuild_distro_specific_sstate_native_target(self):
         self.run_test_rebuild_distro_specific_sstate(['binutils-native'], temp_sstate_location=True)
 
-
     # Test the sstate-cache-management script. Each element in the global_config list is used with the corresponding element in the target_config list
     # global_config elements are expected to not generate any sstate files that would be removed by sstate-cache-management.sh (such as changing the value of MACHINE)
+
     def run_test_sstate_cache_management_script(self, target, global_config=[''], target_config=[''], ignore_patterns=[]):
         self.assertTrue(global_config)
         self.assertTrue(target_config)
@@ -290,7 +291,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash").replace("i686-linux", "x86_64-linux").replace("i686" + self.target_vendor + "-linux", "x86_64" + self.target_vendor + "-linux", ) for x in files2]
         self.maxDiff = None
         self.assertCountEqual(files1, files2)
-
 
     def test_sstate_nativelsbstring_same_hash(self):
         """
@@ -448,7 +448,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         self.maxDiff = None
         self.assertCountEqual(files1, files2)
 
-
     def test_sstate_multilib_or_not_native_samesigs(self):
         """The sstate checksums of two native recipes (and their dependencies)
         where the target is using multilib in one but not the other
@@ -487,7 +486,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
         self.maxDiff = None
         self.assertCountEqual(files1, files2)
-
 
     def test_sstate_noop_samesigs(self):
         """

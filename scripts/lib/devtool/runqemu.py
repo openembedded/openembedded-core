@@ -16,6 +16,7 @@ from devtool import exec_build_env_command, setup_tinfoil, DevtoolError
 
 logger = logging.getLogger('devtool')
 
+
 def runqemu(args, config, basepath, workspace):
     """Entry point for the devtool 'runqemu' subcommand"""
 
@@ -51,6 +52,7 @@ def runqemu(args, config, basepath, workspace):
         return e.exitcode
 
     return 0
+
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

@@ -19,10 +19,12 @@ from recipetool.create import split_pkg_licenses
 
 TINFOIL = None
 
+
 def tinfoil_init(instance):
     """Initialize tinfoil"""
     global TINFOIL
     TINFOIL = instance
+
 
 class NpmRecipeHandler(RecipeHandler):
     """Class to handle the npm recipe creation"""
@@ -253,6 +255,7 @@ class NpmRecipeHandler(RecipeHandler):
         handled.append("buildsystem")
 
         return True
+
 
 def register_recipe_handlers(handlers):
     """Register the npm handler"""

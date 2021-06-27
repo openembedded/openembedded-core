@@ -12,6 +12,7 @@ from resulttool import regression as regression
 from resulttool import resultutils as resultutils
 from oeqa.selftest.case import OESelftestTestCase
 
+
 class ResultToolTests(OESelftestTestCase):
     base_results_data = {'base_result1': {'configuration': {"TEST_TYPE": "runtime",
                                                             "TESTSERIES": "series1",

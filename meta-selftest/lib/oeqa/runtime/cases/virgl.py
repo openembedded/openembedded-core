@@ -3,6 +3,7 @@ from oeqa.core.decorator.depends import OETestDepends
 import subprocess
 import oe.lsb
 
+
 class VirglTest(OERuntimeTestCase):
 
     @OETestDepends(['ssh.SSHTest.test_ssh'])

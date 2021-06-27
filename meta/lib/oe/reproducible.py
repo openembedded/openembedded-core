@@ -5,6 +5,7 @@ import os
 import subprocess
 import bb
 
+
 def get_source_date_epoch_from_known_files(d, sourcedir):
     source_date_epoch = None
     newest_file = None
@@ -20,6 +21,7 @@ def get_source_date_epoch_from_known_files(d, sourcedir):
     if newest_file:
         bb.debug(1, "SOURCE_DATE_EPOCH taken from: %s" % newest_file)
     return source_date_epoch
+
 
 def find_git_folder(d, sourcedir):
     # First guess: WORKDIR/git
@@ -46,6 +48,7 @@ def find_git_folder(d, sourcedir):
     bb.warn("Failed to find a git repository in WORKDIR: %s" % workdir)
     return None
 
+
 def get_source_date_epoch_from_git(d, sourcedir):
     if not "git://" in d.getVar('SRC_URI') and not "gitsm://" in d.getVar('SRC_URI'):
         return None
@@ -64,6 +67,7 @@ def get_source_date_epoch_from_git(d, sourcedir):
     bb.debug(1, "git repository: %s" % gitpath)
     p = subprocess.run(['git', '--git-dir', gitpath, 'log', '-1', '--pretty=%ct'], check=True, stdout=subprocess.PIPE)
     return int(p.stdout.decode('utf-8'))
+
 
 def get_source_date_epoch_from_youngest_file(d, sourcedir):
     if sourcedir == d.getVar('WORKDIR'):
@@ -90,6 +94,7 @@ def get_source_date_epoch_from_youngest_file(d, sourcedir):
         bb.debug(1, "Newest file found: %s" % newest_file)
     return source_date_epoch
 
+
 def fixed_source_date_epoch(d):
     bb.debug(1, "No tarball or git repo found to determine SOURCE_DATE_EPOCH")
     source_date_epoch = d.getVar('SOURCE_DATE_EPOCH_FALLBACK')
@@ -97,6 +102,7 @@ def fixed_source_date_epoch(d):
         bb.debug(1, "Using SOURCE_DATE_EPOCH_FALLBACK")
         return int(source_date_epoch)
     return 0
+
 
 def get_source_date_epoch(d, sourcedir):
     return (

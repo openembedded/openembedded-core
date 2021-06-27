@@ -24,6 +24,7 @@ from oeqa.utils import CommandError
 
 from abc import ABCMeta, abstractmethod
 
+
 class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta):
 
     supported_image_fstypes = ['tar.gz', 'tar.bz2']

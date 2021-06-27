@@ -11,6 +11,7 @@ import threading
 import time
 import signal
 
+
 class MemLogger(object):
     def __init__(self):
         self.info_msgs = []
@@ -21,6 +22,7 @@ class MemLogger(object):
 
     def error(self, msg):
         self.error_msgs.append(msg)
+
 
 class RunCmdTests(OESelftestTestCase):
     """ Basic tests for runCmd() utility function """

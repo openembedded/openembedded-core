@@ -69,7 +69,6 @@ class ConfigHandler(object):
         self.workspace_path = self.get('General', 'workspace_path', os.path.join(basepath, 'workspace'))
         return True
 
-
     def write(self):
         logger.debug('writing to config file %s' % self.config_file)
         self.config_obj.set('General', 'workspace_path', self.workspace_path)
@@ -80,6 +79,7 @@ class ConfigHandler(object):
         if not self.config_obj.has_section(section):
             self.config_obj.add_section(section)
         self.config_obj.set(section, option, value)
+
 
 class Context:
     def __init__(self, **kwargs):
@@ -128,6 +128,7 @@ def read_workspace():
                 logger.debug('Found recipe %s' % pnvalues)
                 workspace[pn] = pnvalues
 
+
 def create_workspace(args, config, basepath, workspace):
     if args.layerpath:
         workspacedir = os.path.abspath(args.layerpath)
@@ -136,6 +137,7 @@ def create_workspace(args, config, basepath, workspace):
     _create_workspace(workspacedir, config, basepath)
     if not args.create_only:
         _enable_workspace_layer(workspacedir, config, basepath)
+
 
 def _create_workspace(workspacedir, config, basepath):
     import bb
@@ -173,6 +175,7 @@ def _create_workspace(workspacedir, config, basepath):
             f.write('will place it in a subdirectory of a "sources" subdirectory of the\n')
             f.write('layer. If you prefer it to be elsewhere you can specify the source\n')
             f.write('tree path on the command line.\n')
+
 
 def _enable_workspace_layer(workspacedir, config, basepath):
     """Ensure the workspace layer is in bblayers.conf"""

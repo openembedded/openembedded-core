@@ -23,6 +23,7 @@ import sys
 import getopt
 from subprocess import *
 
+
 def usage():
     prog = os.path.basename(sys.argv[0])
     print('Usage: %s [OPTION]...' % prog)
@@ -30,6 +31,7 @@ def usage():
     print('  -h, --help          display this help and exit')
     print('')
     print('Run %s from the top-level Linux kernel build directory.' % prog)
+
 
 verbose = False
 
@@ -49,6 +51,7 @@ vmlinux_data = 0
 vmlinux_bss = 0
 vmlinux_total = 0
 
+
 def is_vmlinux_file(filename):
     global vmlinux_level
     if filename == ("vmlinux") and vmlinux_level == 0:
@@ -56,10 +59,12 @@ def is_vmlinux_file(filename):
         return True
     return False
 
+
 def is_ko_file(filename):
     if filename.endswith(".ko"):
         return True
     return False
+
 
 def collect_object_files():
     print("Collecting object files recursively from %s..." % os.getcwd())
@@ -71,6 +76,7 @@ def collect_object_files():
                 global vmlinux_file
                 vmlinux_file = os.path.join(dirpath, filename)
     print("Collecting object files [DONE]")
+
 
 def add_ko_file(filename):
         p = Popen("size -t " + filename, shell=True, stdout=PIPE, stderr=PIPE)
@@ -88,6 +94,7 @@ def add_ko_file(filename):
             ko_total += int(sizes[3])
             n_ko_files += 1
 
+
 def get_vmlinux_totals():
         p = Popen("size -t " + vmlinux_file, shell=True, stdout=PIPE, stderr=PIPE)
         output = p.communicate()[0].splitlines()
@@ -103,9 +110,11 @@ def get_vmlinux_totals():
             vmlinux_bss += int(sizes[2])
             vmlinux_total += int(sizes[3])
 
+
 def sum_ko_files():
     for ko_file in ko_file_list:
         add_ko_file(ko_file)
+
 
 def main():
     try:
@@ -143,6 +152,7 @@ def main():
     print("    %-10d\t%-10d\t%-10d\t%-10d" %
         (vmlinux_text + ko_text, vmlinux_data + ko_data,
          vmlinux_bss + ko_bss, vmlinux_total + ko_total))
+
 
 if __name__ == "__main__":
     try:

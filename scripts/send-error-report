@@ -28,6 +28,7 @@ version = "0.3"
 log = logging.getLogger("send-error-report")
 logging.basicConfig(format='%(levelname)s: %(message)s')
 
+
 def getPayloadLimit(url):
     req = urllib.request.Request(url, None)
     try:
@@ -46,11 +47,13 @@ def getPayloadLimit(url):
 
     return 0
 
+
 def ask_for_contactdetails():
     print("Please enter your name and your email (optionally), they'll be saved in the file you send.")
     username = input("Name (required): ")
     email = input("E-mail (not required): ")
     return username, email
+
 
 def edit_content(json_file_path):
     edit = input("Review information before sending? (y/n): ")
@@ -63,6 +66,7 @@ def edit_content(json_file_path):
             sys.exit(1)
         return True
     return False
+
 
 def prepare_data(args):
     # attempt to get the max_log_size from the server's settings
@@ -122,7 +126,6 @@ def prepare_data(args):
     with open(args.error_file, "w") as json_fp:
         if data:
             json_fp.write(data)
-
 
     if args.assume_yes == False and edit_content(args.error_file):
         #We'll need to re-read the content if we edited it
@@ -195,8 +198,6 @@ if __name__ == '__main__':
                            help="Use http instead of https protocol",
                            dest="protocol",
                            action="store_const", const="http://", default="https://")
-
-
 
     args = arg_parse.parse_args()
 

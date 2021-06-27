@@ -8,6 +8,7 @@ import shutil
 
 from oeqa.core.utils.test import getCaseFile, getCaseMethod
 
+
 def get_package_manager(d, root_path):
     """
     Returns an OE package manager that can install packages in root_path.
@@ -43,6 +44,7 @@ def get_package_manager(d, root_path):
 
     return pm
 
+
 def find_packages_to_extract(test_suite):
     """
     Returns packages to extract required by runtime tests.
@@ -59,6 +61,7 @@ def find_packages_to_extract(test_suite):
 
     return needed_packages
 
+
 def _get_json_file(module_path):
     """
     Returns the path of the JSON file for a module, empty if doesn't exitst.
@@ -69,6 +72,7 @@ def _get_json_file(module_path):
         return json_file
     else:
         return ''
+
 
 def _get_needed_packages(json_file, test=None):
     """
@@ -90,6 +94,7 @@ def _get_needed_packages(json_file, test=None):
             needed_packages = {}
 
     return needed_packages
+
 
 def extract_packages(d, needed_packages):
     """
@@ -133,6 +138,7 @@ def extract_packages(d, needed_packages):
                 #logger.debug('Copying %s' % pkg)
                 _copy_package(d, pkg)
 
+
 def _extract_in_tmpdir(d, pkg):
     """"
     Returns path to a temp directory where the package was
@@ -147,6 +153,7 @@ def _extract_in_tmpdir(d, pkg):
     shutil.rmtree(pkg_path)
 
     return extract_dir
+
 
 def _copy_package(d, pkg):
     """
@@ -163,6 +170,7 @@ def _copy_package(d, pkg):
     shutil.copy2(file_path, dst_dir)
     shutil.rmtree(pkg_path)
 
+
 def install_package(test_case):
     """
     Installs package in DUT if required.
@@ -171,6 +179,7 @@ def install_package(test_case):
     if needed_packages:
         _install_uninstall_packages(needed_packages, test_case, True)
 
+
 def uninstall_package(test_case):
     """
     Uninstalls package in DUT if required.
@@ -178,6 +187,7 @@ def uninstall_package(test_case):
     needed_packages = test_needs_package(test_case)
     if needed_packages:
         _install_uninstall_packages(needed_packages, test_case, False)
+
 
 def test_needs_package(test_case):
     """
@@ -193,6 +203,7 @@ def test_needs_package(test_case):
             return needed_packages
 
     return None
+
 
 def _install_uninstall_packages(needed_packages, test_case, install=True):
     """

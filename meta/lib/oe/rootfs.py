@@ -11,6 +11,7 @@ import os
 import subprocess
 import re
 
+
 class Rootfs(object, metaclass=ABCMeta):
     """
     This is an abstract class. Do not instantiate this directly.
@@ -93,7 +94,6 @@ class Rootfs(object, metaclass=ABCMeta):
             self.pm.insert_feeds_uris(self.d.getVar('PACKAGE_FEED_URIS') or "",
                 self.d.getVar('PACKAGE_FEED_BASE_PATHS') or "",
                 self.d.getVar('PACKAGE_FEED_ARCHS'))
-
 
     """
     The _cleanup() method should be used to clean-up stuff that we don't really
@@ -248,7 +248,6 @@ class Rootfs(object, metaclass=ABCMeta):
         if self.progress_reporter:
             self.progress_reporter.next_stage()
 
-
     def _uninstall_unneeded(self):
         # Remove the run-postinsts package if no delayed postinsts are found
         delayed_postinsts = self._get_delayed_postinsts()
@@ -337,6 +336,7 @@ class Rootfs(object, metaclass=ABCMeta):
     If neither are specified then the default name of files/device_table-minimal.txt
     is searched for in the BBPATH (same as the old version.)
     """
+
     def _create_devfs(self):
         devtable_list = []
         devtable = self.d.getVar('IMAGE_DEVICE_TABLE')
@@ -359,10 +359,12 @@ def get_class_for_type(imgtype):
     mod = importlib.import_module('oe.package_manager.' + imgtype + '.rootfs')
     return mod.PkgRootfs
 
+
 def variable_depends(d, manifest_dir=None):
     img_type = d.getVar('IMAGE_PKGTYPE')
     cls = get_class_for_type(img_type)
     return cls._depends_list()
+
 
 def create_rootfs(d, manifest_dir=None, progress_reporter=None, logcatcher=None):
     env_bkp = os.environ.copy()
@@ -384,6 +386,7 @@ def image_list_installed_packages(d, rootfs_dir=None):
     import importlib
     cls = importlib.import_module('oe.package_manager.' + img_type)
     return cls.PMPkgsList(d, rootfs_dir).list_pkgs()
+
 
 if __name__ == "__main__":
     """

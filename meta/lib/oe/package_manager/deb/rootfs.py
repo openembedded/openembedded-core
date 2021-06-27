@@ -10,6 +10,7 @@ from oe.utils import execute_pre_post_process
 from oe.package_manager.deb.manifest import PkgManifest
 from oe.package_manager.deb import DpkgPM
 
+
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
         super(DpkgOpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
@@ -120,6 +121,7 @@ class DpkgOpkgRootfs(Rootfs):
 
             num += 1
 
+
 class PkgRootfs(DpkgOpkgRootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
         super(PkgRootfs, self).__init__(d, progress_reporter, logcatcher)
@@ -135,7 +137,6 @@ class PkgRootfs(DpkgOpkgRootfs):
         self.pm = DpkgPM(d, d.getVar('IMAGE_ROOTFS'),
                          d.getVar('PACKAGE_ARCHS'),
                          d.getVar('DPKG_ARCH'))
-
 
     def _create(self):
         pkgs_to_install = self.manifest.parse_initial_manifest()

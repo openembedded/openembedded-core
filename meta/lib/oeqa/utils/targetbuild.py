@@ -13,6 +13,7 @@ import subprocess
 import tempfile
 from abc import ABCMeta, abstractmethod
 
+
 class BuildProject(metaclass=ABCMeta):
 
     def __init__(self, d, uri, foldername=None, tmpdir=None):
@@ -74,6 +75,7 @@ class BuildProject(metaclass=ABCMeta):
         self._run('rm -rf %s' % self.targetdir)
         subprocess.check_call('rm -f %s' % self.localarchive, shell=True)
         pass
+
 
 class TargetBuildProject(BuildProject):
 

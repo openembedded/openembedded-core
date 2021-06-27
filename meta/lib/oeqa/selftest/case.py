@@ -16,6 +16,7 @@ from oeqa.core.case import OETestCase
 
 import bb.utils
 
+
 class OESelftestTestCase(OETestCase):
     def __init__(self, methodName="runTest"):
         self._extra_tear_down_commands = []
@@ -229,6 +230,7 @@ class OESelftestTestCase(OETestCase):
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
+
     def write_bblayers_config(self, data):
         """Write to <builddir>/conf/bblayers.inc"""
         self.logger.debug("Writing to: %s\n%s\n" % (self.testinc_bblayers_path, data))

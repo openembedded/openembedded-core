@@ -5,6 +5,7 @@
 import json
 import oe.maketype
 
+
 def typed_value(key, d):
     """Construct a value for the specified metadata variable, using its flags
     to determine the type and parameters for construction."""
@@ -20,6 +21,7 @@ def typed_value(key, d):
         return oe.maketype.create(d.getVar(key) or '', var_type, **flags)
     except (TypeError, ValueError) as exc:
         bb.msg.fatal("Data", "%s: %s" % (key, str(exc)))
+
 
 def export2json(d, json_file, expand=True, searchString="", replaceString=""):
     data2export = {}

@@ -28,6 +28,7 @@ from devtool import setup_tinfoil, parse_recipe, DevtoolError, standard, exec_bu
 from devtool import check_workspace_recipe
 logger = logging.getLogger('devtool')
 
+
 def menuconfig(args, config, basepath, workspace):
     """Entry point for the devtool 'menuconfig' subcommand"""
 
@@ -71,6 +72,7 @@ def menuconfig(args, config, basepath, workspace):
     res = standard._create_kconfig_diff(pn_src, rd, fragment)
 
     return 0
+
 
 def register_commands(subparsers, context):
     """register devtool subcommands from this plugin"""

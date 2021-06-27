@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from io import StringIO
 from oe.utils import packages_filter_out_system, trim_version, multiprocess_launch
 
+
 class TestPackagesFilterOutSystem(TestCase):
     def test_filter(self):
         """
@@ -70,6 +71,7 @@ class TestMultiprocessLaunch(TestCase):
 
         def dummyerror(msg):
             print("ERROR: %s" % msg)
+
         def dummyfatal(msg):
             print("ERROR: %s" % msg)
             raise bb.BBHandledException()

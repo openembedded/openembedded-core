@@ -9,6 +9,7 @@ import glob
 import os
 import json
 
+
 class ImageFeatures(OESelftestTestCase):
 
     test_user = 'tester'
@@ -66,7 +67,6 @@ class ImageFeatures(OESelftestTestCase):
                     self.assertNotEqual(status, 0, 'ssh to user root was allowed when it should not have been')
                 else:
                     self.assertEqual(status, 0, 'ssh to user tester failed with %s' % output)
-
 
     def test_wayland_support_in_image(self):
         """

@@ -11,6 +11,7 @@ import pybootchartgui.main as main
 if sys.version_info >= (3, 0):
     long = int
 
+
 class TestProcessTree(unittest.TestCase):
 
     def setUp(self):
@@ -87,6 +88,7 @@ class TestProcessTree(unittest.TestCase):
         self.processtree.merge_runs(self.processtree.process_tree)
         process_tree = self.processtree.process_tree
         self.checkAgainstJavaExtract(self.mk_fname('extract.processtree.3e.log'), process_tree)
+
 
 if __name__ == '__main__':
     unittest.main()

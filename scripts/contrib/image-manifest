@@ -39,6 +39,7 @@ import bb.utils
 import oe.utils
 import oe.recipeutils
 
+
 def get_pkg_list(manifest):
     pkglist = []
     with open(manifest, 'r') as f:
@@ -52,10 +53,12 @@ def get_pkg_list(manifest):
                 pkglist.append(linesplit[0])
     return sorted(pkglist)
 
+
 def list_packages(args):
     pkglist = get_pkg_list(args.manifest)
     for pkg in pkglist:
         print('%s' % pkg)
+
 
 def pkg2recipe(tinfoil, pkg):
     if "-native" in pkg:
@@ -75,6 +78,7 @@ def pkg2recipe(tinfoil, pkg):
         logger.warning('%s is missing' % pkgdatafile)
         return None
 
+
 def get_recipe_list(manifest, tinfoil):
     pkglist = get_pkg_list(manifest)
     recipelist = []
@@ -86,6 +90,7 @@ def get_recipe_list(manifest, tinfoil):
 
     return sorted(recipelist)
 
+
 def list_recipes(args):
     import bb.tinfoil
     with bb.tinfoil.Tinfoil() as tinfoil:
@@ -94,6 +99,7 @@ def list_recipes(args):
         recipelist = get_recipe_list(args.manifest, tinfoil)
         for recipe in sorted(recipelist):
             print('%s' % recipe)
+
 
 def list_layers(args):
 
@@ -173,6 +179,7 @@ def list_layers(args):
 
     json.dump(layers, args.output, indent=2)
 
+
 def get_recipe(args):
     with bb.tinfoil.Tinfoil() as tinfoil:
         tinfoil.logger.setLevel(logger.getEffectiveLevel())
@@ -180,6 +187,7 @@ def get_recipe(args):
 
         recipe = pkg2recipe(tinfoil, args.package)
         print(' %s package provided by %s' % (args.package, recipe))
+
 
 def pkg_dependencies(args):
     def get_recipe_info(tinfoil, recipe):
@@ -262,6 +270,7 @@ def pkg_dependencies(args):
                 if "cross" in data.pn:
                     print(" %s(%s)" % (data.pn, p))
 
+
 def default_config():
     vlist = OrderedDict()
     vlist['PV'] = 'yes'
@@ -295,11 +304,13 @@ def default_config():
     clist['packagedir'] = 'no'
     return clist
 
+
 def dump_config(args):
     config = default_config()
     f = open('default_config.json', 'w')
     json.dump(config, f, indent=2)
     logger.info('Default config list dumped to default_config.json')
+
 
 def export_manifest_info(args):
 

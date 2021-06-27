@@ -9,6 +9,7 @@ from oeqa.utils.ftools import write_file
 
 import oe.recipeutils
 
+
 class Distrodata(OESelftestTestCase):
 
     def test_checkpkg(self):

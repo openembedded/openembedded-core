@@ -21,6 +21,7 @@ from oeqa.utils.dump import MonitorDumper
 from oeqa.controllers.testtargetloader import TestTargetLoader
 from abc import ABCMeta, abstractmethod
 
+
 class BaseTarget(object, metaclass=ABCMeta):
 
     supported_image_fstypes = []
@@ -85,7 +86,6 @@ class BaseTarget(object, metaclass=ABCMeta):
 
     def copy_from(self, remotepath, localpath):
         return self.connection.copy_from(remotepath, localpath)
-
 
 
 class QemuTarget(BaseTarget):

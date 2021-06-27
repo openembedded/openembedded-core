@@ -13,6 +13,7 @@ from oeqa.selftest.cases import devtool
 
 templayerdir = None
 
+
 def setUpModule():
     global templayerdir
     templayerdir = tempfile.mkdtemp(prefix='recipetoolqa')
@@ -650,8 +651,6 @@ class RecipetoolAppendsrcBase(RecipetoolBase):
         filesdir = os.path.join(os.path.dirname(bbappendfile), testrecipe)
         filesextrapaths = bb_vars['FILESEXTRAPATHS'].split(':')
         self.assertIn(filesdir, filesextrapaths)
-
-
 
 
 class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):

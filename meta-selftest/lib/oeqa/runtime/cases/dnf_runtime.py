@@ -3,6 +3,7 @@ from oeqa.runtime.cases.dnf import DnfTest
 from oeqa.utils.httpserver import HTTPService
 from oeqa.core.decorator.data import skipIfDataVar
 
+
 class DnfSelftest(DnfTest):
 
     @classmethod

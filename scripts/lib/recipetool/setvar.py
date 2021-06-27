@@ -19,9 +19,11 @@ logger = logging.getLogger('recipetool')
 tinfoil = None
 plugins = None
 
+
 def tinfoil_init(instance):
     global tinfoil
     tinfoil = instance
+
 
 def setvar(args):
     import oe.recipeutils

@@ -19,6 +19,7 @@ logger = logging.getLogger('devtool')
 default_arcname_prefix = "workspace-export"
 metadata = '.export_metadata'
 
+
 def export(args, config, basepath, workspace):
     """Entry point for the devtool 'export' subcommand"""
 
@@ -45,7 +46,6 @@ def export(args, config, basepath, workspace):
 
         for name, arcname in arcnames:
             tar.add(name, arcname=arcname)
-
 
     # Make sure workspace is non-empty and possible listed include/excluded recipes are in workspace
     if not workspace:
@@ -93,6 +93,7 @@ def export(args, config, basepath, workspace):
 
     logger.info('Tar archive created at %s with the following recipes: %s' % (name, ', '.join(exported)))
     return 0
+
 
 def register_commands(subparsers, context):
     """Register devtool export subcommands"""

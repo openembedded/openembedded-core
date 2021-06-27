@@ -14,6 +14,7 @@ setup_sys_path()
 
 from oeqa.core.runner import OEStreamLogger
 
+
 class TestRunner(TestBase):
     def test_stream_logger(self):
         fp = tempfile.TemporaryFile(mode='w+')
@@ -35,6 +36,7 @@ class TestRunner(TestBase):
             self.assertEqual(lines[i], fp_line)
 
         fp.close()
+
 
 if __name__ == '__main__':
     unittest.main()

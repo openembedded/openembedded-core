@@ -9,6 +9,7 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake
 from oeqa.utils import CommandError
 
+
 class LicenseTests(OESelftestTestCase):
 
     # Verify that changing a license file that has an absolute path causes

@@ -5,5 +5,6 @@
 
 from oeqa.core.case import OETestCase
 
+
 class OECheckLayerTestCase(OETestCase):
     pass

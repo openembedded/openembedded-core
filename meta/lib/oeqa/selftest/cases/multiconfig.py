@@ -7,6 +7,7 @@ import textwrap
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake
 
+
 class MultiConfig(OESelftestTestCase):
 
     def test_multiconfig(self):

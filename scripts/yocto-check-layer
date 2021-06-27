@@ -32,6 +32,7 @@ CASES_PATHS = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
                 'lib', 'checklayer', 'cases')]
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
+
 def test_layer(td, layer, test_software_layer_signatures):
     from checklayer.context import CheckLayerTestContext
     logger.info("Starting to analyze: %s" % layer['name'])
@@ -40,6 +41,7 @@ def test_layer(td, layer, test_software_layer_signatures):
     tc = CheckLayerTestContext(td=td, logger=logger, layer=layer, test_software_layer_signatures=test_software_layer_signatures)
     tc.loadTests(CASES_PATHS)
     return tc.runTests()
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -122,6 +124,7 @@ def main():
         return 1
 
     shutil.copyfile(bblayersconf, bblayersconf + '.backup')
+
     def cleanup_bblayers(signum, frame):
         shutil.copyfile(bblayersconf + '.backup', bblayersconf)
         os.unlink(bblayersconf + '.backup')
@@ -216,6 +219,7 @@ def main():
     cleanup_bblayers(None, None)
 
     return ret
+
 
 if __name__ == '__main__':
     try:

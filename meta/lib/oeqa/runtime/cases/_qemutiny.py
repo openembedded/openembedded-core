@@ -4,6 +4,7 @@
 
 from oeqa.runtime.case import OERuntimeTestCase
 
+
 class QemuTinyTest(OERuntimeTestCase):
 
     def test_boot_tiny(self):

@@ -177,6 +177,7 @@ def scrape_html_report(report, outdir, phantomjs_extra_args=None):
     finally:
         shutil.rmtree(tmpdir)
 
+
 def send_email(text_fn, html_fn, image_fns, subject, recipients, copy=[],
                blind_copy=[]):
     """Send email"""

@@ -13,14 +13,17 @@ from bblayers.common import LayerPlugin
 
 logger = logging.getLogger('bitbake-layers')
 
+
 def plugin_init(plugins):
     return CreatePlugin()
+
 
 def read_template(template, template_dir='templates'):
     lines = str()
     with open(os.path.join(os.path.dirname(__file__), template_dir, template)) as fd:
         lines = ''.join(fd.readlines())
     return lines
+
 
 class CreatePlugin(LayerPlugin):
     def do_create_layer(self, args):

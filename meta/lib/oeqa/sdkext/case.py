@@ -10,6 +10,7 @@ import subprocess
 from oeqa.utils import avoid_paths_in_environ
 from oeqa.sdk.case import OESDKTestCase
 
+
 class OESDKExtTestCase(OESDKTestCase):
     def _run(self, cmd):
         # extensible sdk shows a warning if found bitbake in the path

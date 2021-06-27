@@ -27,6 +27,7 @@ logger = logging.getLogger('wic')
 
 __expand_var_regexp__ = re.compile(r"\${[^{}@\n\t :]+}")
 
+
 def expand_line(line):
     while True:
         m = __expand_var_regexp__.search(line)
@@ -39,17 +40,21 @@ def expand_line(line):
             return line
         line = line[:m.start()] + val + line[m.end():]
 
+
 class KickStartError(Exception):
     """Custom exception."""
     pass
+
 
 class KickStartParser(ArgumentParser):
     """
     This class overwrites error method to throw exception
     instead of producing usage message(default argparse behavior).
     """
+
     def error(self, message):
         raise ArgumentError(None, message)
+
 
 def sizetype(default, size_in_bytes=False):
     def f(arg):
@@ -66,7 +71,6 @@ def sizetype(default, size_in_bytes=False):
                 size = int(arg[:-1])
             except ValueError:
                 raise ArgumentTypeError("Invalid size: %r" % arg)
-
 
         if size_in_bytes:
             if suffix == 's' or suffix == 'S':
@@ -85,6 +89,7 @@ def sizetype(default, size_in_bytes=False):
         raise ArgumentTypeError("Invalid size: %r" % arg)
     return f
 
+
 def overheadtype(arg):
     """
     Custom type for ArgumentParser
@@ -100,6 +105,7 @@ def overheadtype(arg):
 
     return result
 
+
 def cannedpathtype(arg):
     """
     Custom type for ArgumentParser
@@ -110,6 +116,7 @@ def cannedpathtype(arg):
     if not result:
         raise ArgumentTypeError("file not found: %s" % arg)
     return result
+
 
 def systemidtype(arg):
     """
@@ -128,6 +135,7 @@ def systemidtype(arg):
         raise ArgumentTypeError(error)
 
     return arg
+
 
 class KickStart():
     """Kickstart parser implementation."""
