@@ -280,7 +280,7 @@ class Disk:
     def __getattr__(self, name):
         """Get path to the executable in a lazy way."""
         if name in ("mdir", "mcopy", "mdel", "mdeltree", "sfdisk", "e2fsck",
-                    "resize2fs", "mkswap", "mkdosfs", "debugfs","blkid"):
+                    "resize2fs", "mkswap", "mkdosfs", "debugfs", "blkid"):
             aname = "_%s" % name
             if aname not in self.__dict__:
                 setattr(self, aname, find_executable(name, self.paths))

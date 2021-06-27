@@ -14,6 +14,6 @@ class DfTest(OERuntimeTestCase):
     @skipIfInDataVar('IMAGE_FEATURES', 'read-only-rootfs', 'Test case df requires a writable rootfs')
     def test_df(self):
         cmd = "df -P / | sed -n '2p' | awk '{print $4}'"
-        (status,output) = self.target.run(cmd)
+        (status, output) = self.target.run(cmd)
         msg = 'Not enough space on image. Current size is %s' % output
         self.assertTrue(int(output) > 5120, msg=msg)

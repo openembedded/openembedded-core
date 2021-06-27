@@ -267,7 +267,7 @@ def _parse_headers(file):
             value = line.strip()
         headers[last] += value
         return headers, last
-    return reduce(parse, file.read().split('\n'), (defaultdict(str),''))[0]
+    return reduce(parse, file.read().split('\n'), (defaultdict(str), ''))[0]
 
 def _parse_timed_blocks(file):
     """Parses (ie., splits) a file into so-called timed-blocks. A
@@ -469,7 +469,7 @@ def _parse_proc_disk_stat_log(file):
 
     for time, lines in _parse_timed_blocks(file):
         sample = DiskStatSample(time)
-        relevant_tokens = [linetokens for linetokens in map(lambda x: x.split(),lines) if is_relevant_line(linetokens)]
+        relevant_tokens = [linetokens for linetokens in map(lambda x: x.split(), lines) if is_relevant_line(linetokens)]
 
         for tokens in relevant_tokens:
             disk, rsect, wsect, use = tokens[2], int(tokens[5]), int(tokens[9]), int(tokens[12])

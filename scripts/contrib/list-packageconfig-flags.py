@@ -120,7 +120,7 @@ def display_all(data_dict):
             packageconfig = 'None'
         print('PACKAGECONFIG %s' % packageconfig)
 
-        for flag,flag_val in data_dict[fn].getVarFlags("PACKAGECONFIG").items():
+        for flag, flag_val in data_dict[fn].getVarFlags("PACKAGECONFIG").items():
             if flag == "doc":
                 continue
             print('PACKAGECONFIG[%s] %s' % (flag, flag_val))

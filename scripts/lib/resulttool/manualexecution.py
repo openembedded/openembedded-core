@@ -98,10 +98,10 @@ class ManualTestRunner(object):
                 print('Expected output: %s' % expected_output)
         while True:
             done = input('\nPlease provide test results: (P)assed/(F)ailed/(B)locked/(S)kipped? \n').lower()
-            result_types = {'p':'PASSED',
-                            'f':'FAILED',
-                            'b':'BLOCKED',
-                            's':'SKIPPED'}
+            result_types = {'p': 'PASSED',
+                            'f': 'FAILED',
+                            'b': 'BLOCKED',
+                            's': 'SKIPPED'}
             if done in result_types:
                 for r in result_types:
                     if done == r:

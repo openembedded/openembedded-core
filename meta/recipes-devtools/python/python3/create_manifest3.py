@@ -71,8 +71,8 @@ hasfolders = []
 allfolders = []
 
 def isFolder(value):
-    value = value.replace('${PYTHON_MAJMIN}',pyversion)
-    if os.path.isdir(value.replace('${libdir}',nativelibfolder + '/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder + '/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder + '/usr/lib32')):
+    value = value.replace('${PYTHON_MAJMIN}', pyversion)
+    if os.path.isdir(value.replace('${libdir}', nativelibfolder + '/usr/lib')) or os.path.isdir(value.replace('${libdir}', nativelibfolder + '/usr/lib64')) or os.path.isdir(value.replace('${libdir}', nativelibfolder + '/usr/lib32')):
         return True
     else:
         return False
@@ -122,7 +122,7 @@ print_indent('Getting dependencies for package: core', 0)
 
 output = subprocess.check_output([sys.executable, 'get_module_deps3.py', 'python-core-package', '%s' % debugFlag]).decode('utf8')
 for coredep in output.split():
-    coredep = coredep.replace(pyversion,'${PYTHON_MAJMIN}')
+    coredep = coredep.replace(pyversion, '${PYTHON_MAJMIN}')
     if isCached(coredep):
         if coredep not in old_manifest['core']['cached']:
             old_manifest['core']['cached'].append(coredep)
@@ -173,7 +173,7 @@ for filedep in old_manifest['core']['files']:
 
 
     for pymodule_dep in output.split():
-        pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
+        pymodule_dep = pymodule_dep.replace(pyversion, '${PYTHON_MAJMIN}')
 
         if isCached(pymodule_dep):
             if pymodule_dep not in old_manifest['core']['cached']:
@@ -254,7 +254,7 @@ for pypkg in old_manifest:
         if isFolder(filedep):
             new_manifest[pypkg]['files'].append(filedep)
             # Asyncio (and others) are both the package and the folder name, we should not skip those...
-            path,mod = os.path.split(filedep)
+            path, mod = os.path.split(filedep)
             if mod != pypkg:
                 continue
         if '${bindir}' in filedep:
@@ -318,7 +318,7 @@ for pypkg in old_manifest:
             #   is folder_string inside path/folder1/folder2/filename?, 
             #   Yes, it works, but we waste a couple of milliseconds.
 
-            pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
+            pymodule_dep = pymodule_dep.replace(pyversion, '${PYTHON_MAJMIN}')
             inFolders = False
             for folder in allfolders:
                 # The module could have a directory named after it, e.g. xml, if we take out the filename from the path
@@ -427,11 +427,11 @@ for pypkg in new_manifest:
     new_manifest[pypkg]['rdepends'].sort()
 
 # Create the manifest from the data structure that was built
-with open('python3-manifest.json.new','w') as outfile:
-    json.dump(new_manifest,outfile, indent=4)
+with open('python3-manifest.json.new', 'w') as outfile:
+    json.dump(new_manifest, outfile, indent=4)
     outfile.write('\n')
 
-prepend_comments(comments,'python3-manifest.json.new')
+prepend_comments(comments, 'python3-manifest.json.new')
 
 if (repeated):
     error_msg = '\n\nERROR:\n'

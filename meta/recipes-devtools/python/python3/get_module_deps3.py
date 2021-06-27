@@ -36,13 +36,13 @@ def fix_path(dep_path):
 
     # Handle multilib, is there a better way?
     if '/usr/lib32' in dep_path:
-        dep_path = dep_path.replace('/usr/lib32','${libdir}')
+        dep_path = dep_path.replace('/usr/lib32', '${libdir}')
     if '/usr/lib64' in dep_path:
-        dep_path = dep_path.replace('/usr/lib64','${libdir}')
+        dep_path = dep_path.replace('/usr/lib64', '${libdir}')
     if '/usr/lib' in dep_path:
-        dep_path = dep_path.replace('/usr/lib','${libdir}')
+        dep_path = dep_path.replace('/usr/lib', '${libdir}')
     if '/usr/include' in dep_path:
-        dep_path = dep_path.replace('/usr/include','${includedir}')
+        dep_path = dep_path.replace('/usr/include', '${includedir}')
     if '__init__.' in dep_path:
         dep_path = os.path.split(dep_path)[0]
     return dep_path
@@ -51,7 +51,7 @@ def fix_path(dep_path):
 # Module to import was passed as an argument
 current_module = str(sys.argv[1]).rstrip()
 if debug == True:
-    log = open('temp/log_%s' % current_module.strip('.*'),'w')
+    log = open('temp/log_%s' % current_module.strip('.*'), 'w')
     log.write('Module %s generated the following dependencies:\n' % current_module)
 try:
     m = importlib.import_module(current_module)
@@ -129,7 +129,7 @@ for item in dif:
     if soabi in dep_path:
         if debug == True:
             log.write('Shared library found in %s\n' % dep_path)
-        dep_path = dep_path.replace(soabi,'*')
+        dep_path = dep_path.replace(soabi, '*')
         print(dep_path)
         continue
     if "_sysconfigdata" in dep_path:
@@ -165,7 +165,7 @@ for item in dif:
         if debug == True:
             log.write(cached + '\n')
         cached = fix_path(cached)
-        cached = cached.replace(cpython_tag,'*')
+        cached = cached.replace(cpython_tag, '*')
         if "_sysconfigdata" in cached:
             cached = cached.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
         print(cached)

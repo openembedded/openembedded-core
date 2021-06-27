@@ -32,7 +32,7 @@ old_prefix = re.compile(b("##DEFAULT_INSTALL_DIR##"))
 def get_arch():
     f.seek(0)
     e_ident = f.read(16)
-    ei_mag0,ei_mag1_3,ei_class = struct.unpack("<B3sB11x", e_ident)
+    ei_mag0, ei_mag1_3, ei_class = struct.unpack("<B3sB11x", e_ident)
 
     if (ei_mag0 != 0x7f and ei_mag1_3 != "ELF") or ei_class == 0:
         return 0
@@ -69,7 +69,7 @@ def change_interpreter(elf_file_name):
         ph_fmt = "<IIQQQQQQ"
 
     """ look for PT_INTERP section """
-    for i in range(0,e_phnum):
+    for i in range(0, e_phnum):
         f.seek(e_phoff + i * e_phentsize)
         ph_hdr = f.read(e_phentsize)
         if arch == 32:
@@ -123,7 +123,7 @@ def change_dl_sysdirs(elf_file_name):
     sysdirs = sysdirs_len = ""
 
     """ change ld.so.cache path and default libs path for dynamic loader """
-    for i in range(0,e_shnum):
+    for i in range(0, e_shnum):
         f.seek(e_shoff + i * e_shentsize)
         sh_hdr = f.read(e_shentsize)
 

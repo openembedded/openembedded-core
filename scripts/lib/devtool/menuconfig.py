@@ -45,19 +45,19 @@ def menuconfig(args, config, basepath, workspace):
         check_workspace_recipe(workspace, args.component)
         pn = rd.getVar('PN', True)
 
-        if not rd.getVarFlag('do_menuconfig','task'):
+        if not rd.getVarFlag('do_menuconfig', 'task'):
             raise DevtoolError("This recipe does not support menuconfig option")
 
-        workspace_dir = os.path.join(config.workspace_path,'sources')
+        workspace_dir = os.path.join(config.workspace_path, 'sources')
         kconfigpath = rd.getVar('B')
-        pn_src = os.path.join(workspace_dir,pn)
+        pn_src = os.path.join(workspace_dir, pn)
 
         # add check to see if oe_local_files exists or not
-        localfilesdir = os.path.join(pn_src,'oe-local-files')
+        localfilesdir = os.path.join(pn_src, 'oe-local-files')
         if not os.path.exists(localfilesdir):
             bb.utils.mkdirhier(localfilesdir)
             # Add gitignore to ensure source tree is clean
-            gitignorefile = os.path.join(localfilesdir,'.gitignore')
+            gitignorefile = os.path.join(localfilesdir, '.gitignore')
             with open(gitignorefile, 'w') as f:
                 f.write('# Ignore local files, by default. Remove this file if you want to commit the directory to Git\n')
                 f.write('*\n')
@@ -68,12 +68,12 @@ def menuconfig(args, config, basepath, workspace):
     logger.info('Launching menuconfig')
     exec_build_env_command(config.init_path, basepath, 'bitbake -c menuconfig %s' % pn, watch=True)
     fragment = os.path.join(localfilesdir, 'devtool-fragment.cfg')
-    res = standard._create_kconfig_diff(pn_src,rd,fragment)
+    res = standard._create_kconfig_diff(pn_src, rd, fragment)
 
     return 0
 
 def register_commands(subparsers, context):
     """register devtool subcommands from this plugin"""
-    parser_menuconfig = subparsers.add_parser('menuconfig',help='Alter build-time configuration for a recipe', description='Launches the make menuconfig command (for recipes where do_menuconfig is available), allowing users to make changes to the build-time configuration. Creates a config fragment corresponding to changes made.', group='advanced')
+    parser_menuconfig = subparsers.add_parser('menuconfig', help='Alter build-time configuration for a recipe', description='Launches the make menuconfig command (for recipes where do_menuconfig is available), allowing users to make changes to the build-time configuration. Creates a config fragment corresponding to changes made.', group='advanced')
     parser_menuconfig.add_argument('component', help='compenent to alter config')
-    parser_menuconfig.set_defaults(func=menuconfig,fixed_setup=context.fixed_setup)
+    parser_menuconfig.set_defaults(func=menuconfig, fixed_setup=context.fixed_setup)

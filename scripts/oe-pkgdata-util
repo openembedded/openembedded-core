@@ -497,7 +497,7 @@ def find_path(args):
     found = False
     for root, dirs, files in os.walk(os.path.join(args.pkgdata_dir, 'runtime')):
         for fn in files:
-            with open(os.path.join(root,fn)) as f:
+            with open(os.path.join(root, fn)) as f:
                 for line in f:
                     if line.startswith('FILES_INFO:'):
                         val = line.split(':', 1)[1].strip()

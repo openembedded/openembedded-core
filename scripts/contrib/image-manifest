@@ -79,7 +79,7 @@ def get_recipe_list(manifest, tinfoil):
     pkglist = get_pkg_list(manifest)
     recipelist = []
     for pkg in pkglist:
-        recipe = pkg2recipe(tinfoil,pkg)
+        recipe = pkg2recipe(tinfoil, pkg)
         if recipe:
             if not recipe in recipelist:
                 recipelist.append(recipe)
@@ -251,16 +251,16 @@ def pkg_dependencies(args):
             data = recipe_info[p]
             if "-native" not in data.pn:
                 if "cross" not in data.pn:
-                    print(" %s (%s)" % (data.pn,p))
+                    print(" %s (%s)" % (data.pn, p))
 
         if args.native:
             print('\nThe following native packages are required to build %s' % recipe)
             for p in sorted(packages):
                 data = recipe_info[p]
                 if "-native" in data.pn:
-                    print(" %s(%s)" % (data.pn,p))
+                    print(" %s(%s)" % (data.pn, p))
                 if "cross" in data.pn:
-                    print(" %s(%s)" % (data.pn,p))
+                    print(" %s(%s)" % (data.pn, p))
 
 def default_config():
     vlist = OrderedDict()
@@ -324,7 +324,7 @@ def export_manifest_info(args):
     logger.debug('tmp dir: %s' % tmpoutdir)
 
     # export manifest
-    shutil.copy2(args.manifest,os.path.join(tmpoutdir, "manifest"))
+    shutil.copy2(args.manifest, os.path.join(tmpoutdir, "manifest"))
 
     with bb.tinfoil.Tinfoil(tracking=True) as tinfoil:
         tinfoil.logger.setLevel(logger.getEffectiveLevel())
@@ -339,7 +339,7 @@ def export_manifest_info(args):
 
         recipelist = []
         for pkg in pkglist:
-            recipe = pkg2recipe(tinfoil,pkg)
+            recipe = pkg2recipe(tinfoil, pkg)
             if recipe:
                 if not recipe in recipelist:
                     recipelist.append(recipe)

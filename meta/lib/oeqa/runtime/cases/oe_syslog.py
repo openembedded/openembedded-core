@@ -122,7 +122,7 @@ class SyslogTestConfig(OERuntimeTestCase):
         self.test_syslog_restart()
 
         cmd = 'logger foobar && grep foobar /var/log/test'
-        status,output = self.target.run(cmd)
+        status, output = self.target.run(cmd)
         msg = 'Test log string not found. Output: %s ' % output
         self.assertEqual(status, 0, msg=msg)
 

@@ -167,7 +167,7 @@ class ResultsTextReport(object):
         reportvalues = []
         machines = []
         cols = ['passed', 'failed', 'skipped']
-        maxlen = {'passed': 0, 'failed': 0, 'skipped': 0, 'result_id': 0, 'testseries': 0, 'ptest': 0,'ltptest': 0, 'ltpposixtest': 0}
+        maxlen = {'passed': 0, 'failed': 0, 'skipped': 0, 'result_id': 0, 'testseries': 0, 'ptest': 0, 'ltptest': 0, 'ltpposixtest': 0}
         for line in test_count_reports:
             total_tested = line['passed'] + line['failed'] + line['skipped']
             vals = {}

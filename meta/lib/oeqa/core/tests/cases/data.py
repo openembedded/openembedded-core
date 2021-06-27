@@ -11,7 +11,7 @@ from oeqa.core.decorator.data import OETestDataDepends
 class DataTest(OETestCase):
     data_vars = ['IMAGE', 'ARCH']
 
-    @OETestDataDepends(['MACHINE',])
+    @OETestDataDepends(['MACHINE', ])
     @OETestTag('dataTestOk')
     def testDataOk(self):
         self.assertEqual(self.td.get('IMAGE'), 'core-image-minimal')

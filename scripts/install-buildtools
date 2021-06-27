@@ -55,7 +55,7 @@ import scriptpath
 PROGNAME = 'install-buildtools'
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
-DEFAULT_INSTALL_DIR = os.path.join(os.path.split(scripts_path)[0],'buildtools')
+DEFAULT_INSTALL_DIR = os.path.join(os.path.split(scripts_path)[0], 'buildtools')
 DEFAULT_BASE_URL = 'http://downloads.yoctoproject.org/releases/yocto'
 DEFAULT_RELEASE = 'yocto-3.2_M3'
 DEFAULT_INSTALLER_VERSION = '3.1+snapshot'

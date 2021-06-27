@@ -24,21 +24,21 @@ class CVECheck(OESelftestTestCase):
 
         # ignore "p1" and "p2", so these should be equal
         result = Version("1.0p2") == Version("1.0p1")
-        self.assertTrue(result,msg="Failed to compare version '1.0p2' to '1.0p1'")
+        self.assertTrue(result, msg="Failed to compare version '1.0p2' to '1.0p1'")
         # ignore the "b" and "r"
         result = Version("1.0b") == Version("1.0r")
-        self.assertTrue(result,msg="Failed to compare version '1.0b' to '1.0r'")
+        self.assertTrue(result, msg="Failed to compare version '1.0b' to '1.0r'")
 
         # consider the trailing alphabet as patched level when comparing
-        result = Version("1.0b","alphabetical") < Version("1.0r","alphabetical")
-        self.assertTrue(result,msg="Failed to compare version with suffix '1.0b' < '1.0r'")
-        result = Version("1.0b","alphabetical") > Version("1.0","alphabetical")
-        self.assertTrue(result,msg="Failed to compare version with suffix '1.0b' > '1.0'")
+        result = Version("1.0b", "alphabetical") < Version("1.0r", "alphabetical")
+        self.assertTrue(result, msg="Failed to compare version with suffix '1.0b' < '1.0r'")
+        result = Version("1.0b", "alphabetical") > Version("1.0", "alphabetical")
+        self.assertTrue(result, msg="Failed to compare version with suffix '1.0b' > '1.0'")
 
         # consider the trailing "p" and "patch" as patched released when comparing
-        result = Version("1.0","patch") < Version("1.0p1","patch")
-        self.assertTrue(result,msg="Failed to compare version with suffix '1.0' < '1.0p1'")
-        result = Version("1.0p2","patch") > Version("1.0p1","patch")
-        self.assertTrue(result,msg="Failed to compare version with suffix '1.0p2' > '1.0p1'")
-        result = Version("1.0_patch2","patch") < Version("1.0_patch3","patch")
-        self.assertTrue(result,msg="Failed to compare version with suffix '1.0_patch2' < '1.0_patch3'")
+        result = Version("1.0", "patch") < Version("1.0p1", "patch")
+        self.assertTrue(result, msg="Failed to compare version with suffix '1.0' < '1.0p1'")
+        result = Version("1.0p2", "patch") > Version("1.0p1", "patch")
+        self.assertTrue(result, msg="Failed to compare version with suffix '1.0p2' > '1.0p1'")
+        result = Version("1.0_patch2", "patch") < Version("1.0_patch3", "patch")
+        self.assertTrue(result, msg="Failed to compare version with suffix '1.0_patch2' < '1.0_patch3'")

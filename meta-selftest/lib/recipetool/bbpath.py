@@ -14,7 +14,7 @@ def print_name(opts):
     print(__file__)
 
 def print_bbdir(opts):
-    print(__file__.replace('/lib/recipetool/bbpath.py',''))
+    print(__file__.replace('/lib/recipetool/bbpath.py', ''))
 
 def print_registered(opts):
     #global kept_context

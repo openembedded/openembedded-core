@@ -88,7 +88,7 @@ class OEGitproxyTests(OESelftestTestCase):
 
         # outside, use the proxy
         res = runCmd('%s%s/oe-git-proxy host.outside-example.com 9418' %
-                     (prefix,self.scripts_dir))
+                     (prefix, self.scripts_dir))
         self.assertIn('PROXY:', res.output)
         # match with wildcard suffix
         res = runCmd('%s%s/oe-git-proxy host.example.com 9418' %

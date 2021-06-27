@@ -290,5 +290,5 @@ PNBLACKLIST[busybox] = "Don't build this"
         res_dir = get_bb_var('DEPLOY_DIR_IMAGE')
         images = os.path.join(res_dir, "test-empty-image-*.manifest")
         result = glob.glob(images)
-        with open(result[1],"r") as f:
-                self.assertEqual(len(f.read().strip()),0)
+        with open(result[1], "r") as f:
+                self.assertEqual(len(f.read().strip()), 0)

@@ -49,7 +49,7 @@ def find_target_file(targetpath, d, pkglist=None):
                       '/etc/group': '/etc/group should be managed through the useradd and extrausers classes',
                       '/etc/shadow': '/etc/shadow should be managed through the useradd and extrausers classes',
                       '/etc/gshadow': '/etc/gshadow should be managed through the useradd and extrausers classes',
-                      '${sysconfdir}/hostname': '${sysconfdir}/hostname contents should be set by setting hostname_pn-base-files = "value" in configuration',}
+                      '${sysconfdir}/hostname': '${sysconfdir}/hostname contents should be set by setting hostname_pn-base-files = "value" in configuration', }
 
     for pthspec, message in invalidtargets.items():
         if fnmatch.fnmatchcase(targetpath, d.expand(pthspec)):
@@ -231,7 +231,7 @@ def appendfile(args):
             logger.warning('This file looks like it is a binary or otherwise the output of compilation. If it is, you should consider building it properly instead of substituting a binary file directly.')
 
     if args.recipe:
-        recipes = {args.targetpath: [args.recipe],}
+        recipes = {args.targetpath: [args.recipe], }
     else:
         try:
             recipes = find_target_file(args.targetpath, tinfoil.config_data)

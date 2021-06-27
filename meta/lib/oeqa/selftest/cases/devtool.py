@@ -1873,7 +1873,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         #Here is just generated the config file instead of all the kernel to optimize the
         #time of executing this test case.
         bitbake('%s -c configure' % kernel_provider)
-        bbconfig = os.path.join(get_bb_var('B', kernel_provider),'.config')
+        bbconfig = os.path.join(get_bb_var('B', kernel_provider), '.config')
         #Step 2
         runCmd('cp %s %s' % (bbconfig, tempdir_cfg))
         self.assertExists(os.path.join(tempdir_cfg, '.config'), 'Could not copy .config file from kernel')
@@ -1885,34 +1885,34 @@ class DevtoolUpgradeTests(DevtoolBase):
         runCmd('devtool modify virtual/kernel -x %s' % tempdir)
         self.assertExists(os.path.join(tempdir, 'Makefile'), 'Extracted source could not be found')
         #Step 4.2
-        configfile = os.path.join(tempdir,'.config')
+        configfile = os.path.join(tempdir, '.config')
         diff = runCmd('diff %s %s' % (tmpconfig, configfile))
-        self.assertEqual(0,diff.status,'Kernel .config file is not the same using bitbake and devtool')
+        self.assertEqual(0, diff.status, 'Kernel .config file is not the same using bitbake and devtool')
         #Step 4.3
         #NOTE: virtual/kernel is mapped to kernel_provider
         result = runCmd('devtool build %s' % kernel_provider)
-        self.assertEqual(0,result.status,'Cannot build kernel using `devtool build`')
+        self.assertEqual(0, result.status, 'Cannot build kernel using `devtool build`')
         kernelfile = os.path.join(get_bb_var('KBUILD_OUTPUT', kernel_provider), 'vmlinux')
         self.assertExists(kernelfile, 'Kernel was not build correctly')
 
         #Modify the kernel source
-        modfile = os.path.join(tempdir,'arch/x86/boot/header.S')
+        modfile = os.path.join(tempdir, 'arch/x86/boot/header.S')
         modstring = "Use a boot loader. Devtool testing."
         modapplied = runCmd("sed -i 's/Use a boot loader./%s/' %s" % (modstring, modfile))
-        self.assertEqual(0,modapplied.status,'Modification to %s on kernel source failed' % modfile)
+        self.assertEqual(0, modapplied.status, 'Modification to %s on kernel source failed' % modfile)
         #Modify the configuration
-        codeconfigfile = os.path.join(tempdir,'.config.new')
+        codeconfigfile = os.path.join(tempdir, '.config.new')
         modconfopt = "CONFIG_SG_POOL=n"
         modconf = runCmd("sed -i 's/CONFIG_SG_POOL=y/%s/' %s" % (modconfopt, codeconfigfile))
-        self.assertEqual(0,modconf.status,'Modification to %s failed' % codeconfigfile)
+        self.assertEqual(0, modconf.status, 'Modification to %s failed' % codeconfigfile)
         #Build again kernel with devtool
         rebuild = runCmd('devtool build %s' % kernel_provider)
-        self.assertEqual(0,rebuild.status,'Fail to build kernel after modification of source and config')
+        self.assertEqual(0, rebuild.status, 'Fail to build kernel after modification of source and config')
         #Step 4.4
         bzimagename = 'bzImage-' + get_bb_var('KERNEL_VERSION_NAME', kernel_provider)
-        bzimagefile = os.path.join(get_bb_var('D', kernel_provider),'boot', bzimagename)
+        bzimagefile = os.path.join(get_bb_var('D', kernel_provider), 'boot', bzimagename)
         checkmodcode = runCmd("grep '%s' %s" % (modstring, bzimagefile))
-        self.assertEqual(0,checkmodcode.status,'Modification on kernel source failed')
+        self.assertEqual(0, checkmodcode.status, 'Modification on kernel source failed')
         #Step 4.5
         checkmodconfg = runCmd("grep %s %s" % (modconfopt, codeconfigfile))
-        self.assertEqual(0,checkmodconfg.status,'Modification to configuration file failed')
+        self.assertEqual(0, checkmodconfg.status, 'Modification to configuration file failed')

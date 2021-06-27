@@ -245,7 +245,7 @@ def filedeprunner(arg):
                 dep = dep.split()[0]
 
             # Put parentheses around any version specifications.
-            dep = r.sub(r'(\g<0>)',dep)
+            dep = r.sub(r'(\g<0>)', dep)
 
             if file not in i:
                 i[file] = []

@@ -26,7 +26,7 @@ from collections import defaultdict
 import importlib
 
 # Get Unicode non printable control chars
-control_range = list(range(0,32)) + list(range(127,160))
+control_range = list(range(0, 32)) + list(range(127, 160))
 control_chars = [chr(x) for x in control_range
                 if chr(x) not in string.printable]
 re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
@@ -99,7 +99,7 @@ class QemuRunner:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.setblocking(0)
-            sock.bind(("127.0.0.1",0))
+            sock.bind(("127.0.0.1", 0))
             sock.listen(2)
             port = sock.getsockname()[1]
             self.logger.debug("Created listening socket for qemu serial console on: 127.0.0.1:%s" % port)
@@ -621,7 +621,7 @@ class QemuRunner:
                 data += "<<< run_serial(): command timed out after %d seconds without output >>>\r\n\r\n" % timeout
                 break
             try:
-                sread, _, _ = select.select([self.server_socket],[],[], end - now)
+                sread, _, _ = select.select([self.server_socket], [], [], end - now)
             except InterruptedError:
                 continue
             if sread:

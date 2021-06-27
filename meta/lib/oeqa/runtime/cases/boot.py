@@ -29,5 +29,5 @@ class BootTest(OERuntimeTestCase):
             else:
                 count = 0
         msg = ('Expected 5 consecutive, got %d.\n'
-               'ping output is:\n%s' % (count,output))
+               'ping output is:\n%s' % (count, output))
         self.assertEqual(count, 5, msg=msg)

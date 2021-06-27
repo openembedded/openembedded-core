@@ -107,7 +107,7 @@ def inherits(d, *classes):
     """Return True if the metadata inherits any of the specified classes"""
     return any(bb.data.inherits_class(cls, d) for cls in classes)
 
-def features_backfill(var,d):
+def features_backfill(var, d):
     # This construct allows the addition of new features to variable specified
     # as var
     # Example for var = "DISTRO_FEATURES"

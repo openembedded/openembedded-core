@@ -747,7 +747,7 @@ FIT_HASH_ALG = "sha256"
         machine = get_bb_var('MACHINE')
         fitimage_its_path = os.path.join(deploy_dir_image,
                     "fitImage-its-%s-%s-%s" % (image_type, machine, machine))
-        fitimage_path = os.path.join(deploy_dir_image,"fitImage")
+        fitimage_path = os.path.join(deploy_dir_image, "fitImage")
 
         self.assertTrue(os.path.exists(fitimage_its_path),
             "%s image tree source doesn't exist" % (fitimage_its_path))
@@ -793,7 +793,7 @@ FIT_HASH_ALG = "sha256"
             if node == exp_node_lines:
                 print("kernel node verified")
             else:
-                self.assertTrue(test_passed == True,"kernel node does not match expectation")
+                self.assertTrue(test_passed == True, "kernel node does not match expectation")
 
         rx_configs = re.compile("^conf-.*")
         its_configs = list(filter(rx_configs.match, its_lines))
@@ -811,23 +811,23 @@ FIT_HASH_ALG = "sha256"
             print("checking configuration " + cfg_str.rstrip(" {"))
             rx_desc_line = re.compile("^description.*1 Linux kernel.*")
             if len(list(filter(rx_desc_line.match, node))) != 1:
-                self.assertTrue(test_passed == True,"kernel keyword not found in the description line")
+                self.assertTrue(test_passed == True, "kernel keyword not found in the description line")
                 break
             else:
                 print("kernel keyword found in the description line")
 
             if 'kernel = "kernel-1";' not in node:
-                self.assertTrue(test_passed == True,"kernel line not found")
+                self.assertTrue(test_passed == True, "kernel line not found")
                 break
             else:
                 print("kernel line found")
 
             rx_sign_line = re.compile("^sign-images.*kernel.*")
             if len(list(filter(rx_sign_line.match, node))) != 1:
-                self.assertTrue(test_passed == True,"kernel hash not signed")
+                self.assertTrue(test_passed == True, "kernel hash not signed")
                 break
             else:
                 print("kernel hash signed")
 
             test_passed = True
-            self.assertTrue(test_passed == True,"Initramfs bundle test success")
+            self.assertTrue(test_passed == True, "Initramfs bundle test success")

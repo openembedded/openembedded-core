@@ -32,7 +32,7 @@ class getResults(object):
                 s = i[0].id()
                 #Handle the _ErrorHolder objects from skipModule failures
                 if "setUpModule (" in s:
-                    ret.append(s.replace("setUpModule (", "").replace(")",""))
+                    ret.append(s.replace("setUpModule (", "").replace(")", ""))
                 else:
                     ret.append(s)
                 # Append also the test without the full path
@@ -55,10 +55,10 @@ class getResults(object):
 
 class skipIfFailure(object):
 
-    def __init__(self,testcase):
+    def __init__(self, testcase):
         self.testcase = testcase
 
-    def __call__(self,f):
+    def __call__(self, f):
         @wraps(f)
         def wrapped_f(*args, **kwargs):
             res = getResults()
@@ -70,10 +70,10 @@ class skipIfFailure(object):
 
 class skipIfSkipped(object):
 
-    def __init__(self,testcase):
+    def __init__(self, testcase):
         self.testcase = testcase
 
-    def __call__(self,f):
+    def __call__(self, f):
         @wraps(f)
         def wrapped_f(*args, **kwargs):
             res = getResults()
@@ -85,10 +85,10 @@ class skipIfSkipped(object):
 
 class skipUnlessPassed(object):
 
-    def __init__(self,testcase):
+    def __init__(self, testcase):
         self.testcase = testcase
 
-    def __call__(self,f):
+    def __call__(self, f):
         @wraps(f)
         def wrapped_f(*args, **kwargs):
             res = getResults()
@@ -124,9 +124,9 @@ def LogResults(original_class):
 
     from time import strftime, gmtime
     caller = os.path.basename(sys.argv[0])
-    timestamp = strftime('%Y%m%d%H%M%S',gmtime())
-    logfile = os.path.join(os.getcwd(),'results-' + caller + '.' + timestamp + '.log')
-    linkfile = os.path.join(os.getcwd(),'results-' + caller + '.log')
+    timestamp = strftime('%Y%m%d%H%M%S', gmtime())
+    logfile = os.path.join(os.getcwd(), 'results-' + caller + '.' + timestamp + '.log')
+    linkfile = os.path.join(os.getcwd(), 'results-' + caller + '.log')
 
     def get_class_that_defined_method(meth):
         if inspect.ismethod(meth):
@@ -262,7 +262,7 @@ def gettag(obj, key, default=None):
 
 def getAllTags(obj):
     def __gettags(o):
-        r = {k[len(__tag_prefix):]:getattr(o,k) for k in dir(o) if k.startswith(__tag_prefix)}
+        r = {k[len(__tag_prefix):]: getattr(o, k) for k in dir(o) if k.startswith(__tag_prefix)}
         return r
     if not isinstance(obj, unittest.TestCase):
         return __gettags(obj)

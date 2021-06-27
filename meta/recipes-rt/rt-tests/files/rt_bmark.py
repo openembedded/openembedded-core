@@ -378,7 +378,7 @@ class cyclictest_runner:
 
                         print()
                         print(tc_name(name), "[Min/us,Avg/us,Max/us]:",)
-                        print("%d,%.1f,%d" % (bm_min,bm_avg, bm_max))
+                        print("%d,%.1f,%d" % (bm_min, bm_avg, bm_max))
                         print("PASS:", tc_name(name))
                         print()
 

@@ -27,7 +27,7 @@ class Version():
             raise Exception("Invalid version: '{0}'".format(version))
 
         self._version = _Version(
-            release=tuple(int(i) for i in match.group("release").replace("-",".").split(".")),
+            release=tuple(int(i) for i in match.group("release").replace("-", ".").split(".")),
             patch_l=match.group("patch_l") if str(suffix) in suffixes and match.group("patch_l") else "",
             pre_l=match.group("pre_l"),
             pre_v=match.group("pre_v")

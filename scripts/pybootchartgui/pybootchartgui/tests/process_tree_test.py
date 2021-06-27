@@ -27,7 +27,7 @@ class TestProcessTree(unittest.TestCase):
         self.processtree = process_tree.ProcessTree(writer, None, trace.ps_stats,
             trace.ps_stats.sample_period, None, options.prune, None, None, False, for_testing=True)
 
-    def mk_fname(self,f):
+    def mk_fname(self, f):
         return os.path.join(self.rootdir, f)
 
     def flatten(self, process_tree):

@@ -14,7 +14,7 @@ def print_name(args, config, basepath, workspace):
     print(__file__)
 
 def print_bbdir(args, config, basepath, workspace):
-    print(__file__.replace('/lib/devtool/bbpath.py',''))
+    print(__file__.replace('/lib/devtool/bbpath.py', ''))
 
 def print_registered(args, config, basepath, workspace):
     global kept_context

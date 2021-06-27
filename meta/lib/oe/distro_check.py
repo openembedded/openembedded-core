@@ -14,7 +14,7 @@ def get_links_from_url(url, d):
 
     from bs4 import BeautifulSoup, SoupStrainer
 
-    soup = BeautifulSoup(create_socket(url,d), "html.parser", parse_only=SoupStrainer("a"))
+    soup = BeautifulSoup(create_socket(url, d), "html.parser", parse_only=SoupStrainer("a"))
     hyperlinks = []
     for line in soup.find_all('a', href=True):
         hyperlinks.append(line['href'].strip('/'))
@@ -246,7 +246,7 @@ def compare_in_distro_packages_list(distro_check_dir, d):
 
     bb.note("Recipe: %s" % recipe_name)
 
-    distro_exceptions = dict({"OE-Core":'OE-Core', "OpenedHand":'OpenedHand', "Intel":'Intel', "Upstream":'Upstream', "Windriver":'Windriver', "OSPDT":'OSPDT Approved', "Poky":'poky'})
+    distro_exceptions = dict({"OE-Core": 'OE-Core', "OpenedHand": 'OpenedHand', "Intel": 'Intel', "Upstream": 'Upstream', "Windriver": 'Windriver', "OSPDT": 'OSPDT Approved', "Poky": 'poky'})
     tmp = localdata.getVar('DISTRO_PN_ALIAS') or ""
     for str in tmp.split():
         if str and str.find("=") == -1 and distro_exceptions[str]:

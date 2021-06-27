@@ -64,7 +64,7 @@ class Gnome(XTerminal):
         # clearing the LC_ALL environment variable so it uses the locale.
         # Once fixed on the gnome-terminal project, this should be removed.
         if os.getenv('LC_ALL'):
-            os.putenv('LC_ALL','')
+            os.putenv('LC_ALL', '')
 
         XTerminal.__init__(self, sh_cmd, title, env, d)
 
@@ -274,7 +274,7 @@ def check_tmux_pane_size(tmux):
         return False
     try:
         p = sub.Popen('%s list-panes -F "#{?pane_active,#{pane_height},}"' % tmux,
-                shell=True,stdout=sub.PIPE,stderr=sub.PIPE)
+                shell=True, stdout=sub.PIPE, stderr=sub.PIPE)
         out, err = p.communicate()
         size = int(out.strip())
     except OSError as exc:

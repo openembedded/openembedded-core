@@ -1113,7 +1113,7 @@ def crunch_license(licfile):
             # Squash spaces, and replace smart quotes, double quotes
             # and backticks with single quotes
             line = oe.utils.squashspaces(line.strip())
-            line = line.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(u"\u201c","'").replace(u"\u201d", "'").replace('"', '\'').replace('`', '\'')
+            line = line.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(u"\u201c", "'").replace(u"\u201d", "'").replace('"', '\'').replace('`', '\'')
             if line:
                 lictext.append(line)
 

@@ -116,7 +116,7 @@ class VerifyManifest(OESelftestTestCase):
                 self.classname, m_entry[k].file))
 
             m_entry[k].missing = self.check_manifest_entries(
-                                               m_entry[k].file,reverse_dir[k])
+                                               m_entry[k].file, reverse_dir[k])
             if m_entry[k].missing:
                 msg = '{}: {} Error has the following missing entries'\
                         .format(self.classname, m_entry[k].file)

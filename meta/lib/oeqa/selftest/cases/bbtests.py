@@ -191,7 +191,7 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
     def test_prefile(self):
         preconf = os.path.join(self.builddir, 'conf/prefile.conf')
         self.track_for_cleanup(preconf)
-        ftools.write_file(preconf,"TEST_PREFILE=\"prefile\"")
+        ftools.write_file(preconf, "TEST_PREFILE=\"prefile\"")
         result = runCmd('bitbake -r conf/prefile.conf -e | grep TEST_PREFILE=')
         self.assertIn('prefile', result.output)
         self.write_config("TEST_PREFILE=\"localconf\"")
@@ -216,13 +216,13 @@ SSTATE_DIR = \"${TOPDIR}/download-selftest\"
 INHERIT_remove = \"report-error\"
 """)
         self.track_for_cleanup(os.path.join(self.builddir, "download-selftest"))
-        self.write_recipeinc('man-db',"\ndo_fail_task () {\nexit 1 \n}\n\naddtask do_fail_task before do_fetch\n")
+        self.write_recipeinc('man-db', "\ndo_fail_task () {\nexit 1 \n}\n\naddtask do_fail_task before do_fetch\n")
         runCmd('bitbake -c cleanall man-db xcursor-transparent-theme')
         result = runCmd('bitbake -c unpack -k man-db xcursor-transparent-theme', ignore_status=True)
         errorpos = result.output.find('ERROR: Function failed: do_fail_task')
         manver = re.search("NOTE: recipe xcursor-transparent-theme-(.*?): task do_unpack: Started", result.output)
         continuepos = result.output.find('NOTE: recipe xcursor-transparent-theme-%s: task do_unpack: Started' % manver.group(1))
-        self.assertLess(errorpos,continuepos, msg="bitbake didn't pass do_fail_task. bitbake output: %s" % result.output)
+        self.assertLess(errorpos, continuepos, msg="bitbake didn't pass do_fail_task. bitbake output: %s" % result.output)
 
     def test_non_gplv3(self):
         self.write_config('INCOMPATIBLE_LICENSE = "GPLv3"')
