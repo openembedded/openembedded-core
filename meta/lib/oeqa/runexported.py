@@ -135,7 +135,7 @@ def extract_sdk(d):
     tarball_path = os.path.join(export_dir, tools_dir, tarball_name)
     extract_path = os.path.join(export_dir, "sysroot")
     if os.path.isfile(tarball_path):
-        print ("Found SDK tarball %s. Extracting..." % tarball_path)
+        print("Found SDK tarball %s. Extracting..." % tarball_path)
         result = runCmd("%s -y -d %s" % (tarball_path, extract_path))
         for f in os.listdir(extract_path):
             if f.startswith("environment-setup"):

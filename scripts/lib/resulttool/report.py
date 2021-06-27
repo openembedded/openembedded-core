@@ -33,7 +33,7 @@ class ResultsTextReport(object):
             for suite in result['ptestresult.sections']:
                 if suite not in self.ptests[machine]:
                     self.ptests[machine][suite] = {
-                            'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-',
+                            'passed': 0, 'failed': 0, 'skipped': 0, 'duration': '-',
                             'failed_testcases': [], "testcases": set(),
                             }
                 if 'duration' in result['ptestresult.sections'][suite]:
@@ -59,7 +59,7 @@ class ResultsTextReport(object):
 
         if suite not in self.ptests[machine]:
             self.ptests[machine][suite] = {
-                    'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-',
+                    'passed': 0, 'failed': 0, 'skipped': 0, 'duration': '-',
                     'failed_testcases': [], "testcases": set(),
                     }
 
@@ -82,7 +82,7 @@ class ResultsTextReport(object):
             # Ensure tests without any test results still show up on the report
             for suite in result['ltpresult.sections']:
                 if suite not in self.ltptests[machine]:
-                    self.ltptests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+                    self.ltptests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration': '-', 'failed_testcases': []}
                 if 'duration' in result['ltpresult.sections'][suite]:
                     self.ltptests[machine][suite]['duration'] = result['ltpresult.sections'][suite]['duration']
                 if 'timeout' in result['ltpresult.sections'][suite]:
@@ -101,7 +101,7 @@ class ResultsTextReport(object):
             except ValueError:
                 pass
         if suite not in self.ltptests[machine]:
-            self.ltptests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+            self.ltptests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration': '-', 'failed_testcases': []}
         for tk in self.result_types:
             if status in self.result_types[tk]:
                 self.ltptests[machine][suite][tk] += 1
@@ -114,7 +114,7 @@ class ResultsTextReport(object):
             # Ensure tests without any test results still show up on the report
             for suite in result['ltpposixresult.sections']:
                 if suite not in self.ltpposixtests[machine]:
-                    self.ltpposixtests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+                    self.ltpposixtests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration': '-', 'failed_testcases': []}
                 if 'duration' in result['ltpposixresult.sections'][suite]:
                     self.ltpposixtests[machine][suite]['duration'] = result['ltpposixresult.sections'][suite]['duration']
             return
@@ -131,7 +131,7 @@ class ResultsTextReport(object):
             except ValueError:
                 pass
         if suite not in self.ltpposixtests[machine]:
-            self.ltpposixtests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration' : '-', 'failed_testcases': []}
+            self.ltpposixtests[machine][suite] = {'passed': 0, 'failed': 0, 'skipped': 0, 'duration': '-', 'failed_testcases': []}
         for tk in self.result_types:
             if status in self.result_types[tk]:
                 self.ltpposixtests[machine][suite][tk] += 1
@@ -167,7 +167,7 @@ class ResultsTextReport(object):
         reportvalues = []
         machines = []
         cols = ['passed', 'failed', 'skipped']
-        maxlen = {'passed' : 0, 'failed' : 0, 'skipped' : 0, 'result_id': 0, 'testseries' : 0, 'ptest' : 0 ,'ltptest': 0, 'ltpposixtest': 0}
+        maxlen = {'passed': 0, 'failed': 0, 'skipped': 0, 'result_id': 0, 'testseries': 0, 'ptest': 0,'ltptest': 0, 'ltpposixtest': 0}
         for line in test_count_reports:
             total_tested = line['passed'] + line['failed'] + line['skipped']
             vals = {}

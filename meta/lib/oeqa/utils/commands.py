@@ -223,7 +223,7 @@ def bitbake(command, ignore_status=False, timeout=None, postconfig=None, output_
     if isinstance(command, str):
         cmd = "bitbake " + extra_args + " " + command
     else:
-        cmd = [ "bitbake" ] + [a for a in (command + extra_args.split(" ")) if a not in [""]]
+        cmd = ["bitbake"] + [a for a in (command + extra_args.split(" ")) if a not in [""]]
 
     try:
         return runCmd(cmd, ignore_status, timeout, output_log=output_log, **options)

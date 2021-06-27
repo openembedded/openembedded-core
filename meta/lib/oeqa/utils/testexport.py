@@ -245,7 +245,7 @@ def send_bin_to_DUT(d,params):
                 break
         else:
             bb.warn("No rpm package found for %s %s in .rpm files dir %s. Skipping deployment." %
-                    (param_list[0], "ver. " + param_list[1] if param_list[1] else "", rpms_file_dir) )
+                    (param_list[0], "ver. " + param_list[1] if param_list[1] else "", rpms_file_dir))
             return
         (status, output) = oeRuntimeTest.tc.target.copy_to(os.path.join(arch_rpms_dir, rpm_to_send), remote_path)
         if status != 0:

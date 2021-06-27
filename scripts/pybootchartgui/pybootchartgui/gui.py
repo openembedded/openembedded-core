@@ -26,9 +26,9 @@ from .draw import RenderOptions
 
 class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
     __gsignals__ = {
-            'clicked' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING, Gdk.Event)),
-            'position-changed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT)),
-            'set-scroll-adjustments' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gtk.Adjustment, gtk.Adjustment))
+            'clicked': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_STRING, Gdk.Event)),
+            'position-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT)),
+            'set-scroll-adjustments': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, (gtk.Adjustment, gtk.Adjustment))
     }
 
     hadjustment = GObject.property(type=Gtk.Adjustment,
@@ -101,12 +101,12 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
 
     ZOOM_INCREMENT = 1.25
 
-    def zoom_image (self, zoom_ratio):
+    def zoom_image(self, zoom_ratio):
         self.zoom_ratio = zoom_ratio
         self._set_scroll_adjustments()
         self.queue_draw()
 
-    def zoom_to_rect (self, rect):
+    def zoom_to_rect(self, rect):
         zoom_ratio = float(rect.width)/float(self.chart_width)
         self.zoom_image(zoom_ratio)
         self.x = 0
@@ -117,13 +117,13 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
         self.xscale = xscale
         self.chart_width, self.chart_height = draw.extents(self.options, self.xscale, self.trace)
         new_x = old_mid_x
-        self.zoom_image (self.zoom_ratio)
+        self.zoom_image(self.zoom_ratio)
 
     def on_expand(self, action):
-        self.set_xscale (int(self.xscale * 1.5 + 0.5))
+        self.set_xscale(int(self.xscale * 1.5 + 0.5))
 
     def on_contract(self, action):
-        self.set_xscale (max(int(self.xscale / 1.5), 1))
+        self.set_xscale(max(int(self.xscale / 1.5), 1))
 
     def on_zoom_in(self, action):
         self.zoom_image(self.zoom_ratio * self.ZOOM_INCREMENT)
@@ -139,7 +139,7 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
         self.set_xscale(1.0)
 
     def show_toggled(self, button):
-        self.options.app_options.show_all = button.get_property ('active')
+        self.options.app_options.show_all = button.get_property('active')
         self.chart_width, self.chart_height = draw.extents(self.options, self.xscale, self.trace)
         self._set_scroll_adjustments()
         self.queue_draw()
@@ -224,8 +224,8 @@ class PyBootchartWidget(gtk.DrawingArea, gtk.Scrollable):
             adj.set_upper(upper)
 
     def _set_scroll_adjustments(self):
-        self._set_adj_upper (self.hadj, self.zoom_ratio * (self.chart_width - self.our_width))
-        self._set_adj_upper (self.vadj, self.zoom_ratio * (self.chart_height - self.our_height))
+        self._set_adj_upper(self.hadj, self.zoom_ratio * (self.chart_width - self.our_width))
+        self._set_adj_upper(self.vadj, self.zoom_ratio * (self.chart_height - self.our_height))
 
     def on_adjustments_changed(self, adj):
         self.x = self.hadj.get_value() / self.zoom_ratio
@@ -301,9 +301,9 @@ class PyBootchartShell(gtk.VBox):
         if not options.kernel_only:
             # Misc. options
             button = gtk.CheckButton("Show more")
-            button.connect ('toggled', self.widget2.show_toggled)
+            button.connect('toggled', self.widget2.show_toggled)
             button.set_active(options.app_options.show_all)
-            hbox.pack_start (button, False, True, 0)
+            hbox.pack_start(button, False, True, 0)
 
         self.pack_start(hbox, False, True, 0)
         self.pack_start(scrolled, True, True, 0)
@@ -328,15 +328,15 @@ class PyBootchartWindow(gtk.Window):
 
         full_opts = RenderOptions(app_options)
         full_tree = PyBootchartShell(window, trace, full_opts, 1.0)
-        tab_page.append_page (full_tree, gtk.Label("Full tree"))
+        tab_page.append_page(full_tree, gtk.Label("Full tree"))
 
-        if trace.kernel is not None and len (trace.kernel) > 2:
+        if trace.kernel is not None and len(trace.kernel) > 2:
             kernel_opts = RenderOptions(app_options)
             kernel_opts.cumulative = False
             kernel_opts.charts = False
             kernel_opts.kernel_only = True
             kernel_tree = PyBootchartShell(window, trace, kernel_opts, 5.0)
-            tab_page.append_page (kernel_tree, gtk.Label("Kernel boot"))
+            tab_page.append_page(kernel_tree, gtk.Label("Kernel boot"))
 
         full_tree.grab_focus(self)
         self.show()

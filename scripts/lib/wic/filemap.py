@@ -401,7 +401,7 @@ class FilemapFiemap(_FilemapBase):
 
         offset = _FIEMAP_SIZE + _FIEMAP_EXTENT_SIZE * index
         return struct.unpack(_FIEMAP_EXTENT_FORMAT,
-                             self._buf[offset : offset + _FIEMAP_EXTENT_SIZE])
+                             self._buf[offset: offset + _FIEMAP_EXTENT_SIZE])
 
     def _do_get_mapped_ranges(self, start, count):
         """

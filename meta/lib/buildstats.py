@@ -92,10 +92,10 @@ class SystemStats:
             # for that point in the past.
             interval = time - self.diskstats_ltime
             if interval > 0:
-                sums = [ a - b for a, b in zip(diskdata, self.diskstats_data) ]
+                sums = [a - b for a, b in zip(diskdata, self.diskstats_data)]
                 readTput = sums[0] / 2.0 * 100.0 / interval
                 writeTput = sums[1] / 2.0 * 100.0 / interval
-                util = float( sums[2] ) / 10 / interval
+                util = float(sums[2]) / 10 / interval
                 util = max(0.0, min(1.0, util))
                 reduced = (self.diskstats_ltime, (readTput, writeTput, util))
 
@@ -112,7 +112,7 @@ class SystemStats:
             return None
         # CPU times {user, nice, system, idle, io_wait, irq, softirq} from first line
         tokens = data.split(b'\n', 1)[0].split()
-        times = [ int(token) for token in tokens[1:] ]
+        times = [int(token) for token in tokens[1:]]
         reduced = None
         if self.stat_ltimes:
             user = float((times[0] + times[1]) - (self.stat_ltimes[0] + self.stat_ltimes[1]))

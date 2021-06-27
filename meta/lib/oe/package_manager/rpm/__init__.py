@@ -300,7 +300,7 @@ class RpmPM(PackageManager):
     def update(self):
         self._invoke_dnf(["makecache", "--refresh"])
 
-    def _invoke_dnf(self, dnf_args, fatal=True, print_output=True ):
+    def _invoke_dnf(self, dnf_args, fatal=True, print_output=True):
         os.environ['RPM_ETCCONFIGDIR'] = self.target_rootfs
 
         dnf_cmd = bb.utils.which(os.getenv('PATH'), "dnf")

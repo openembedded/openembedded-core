@@ -42,7 +42,7 @@ class Terminal(Popen, metaclass=Registry):
                 raise
 
     def format_command(self, sh_cmd, title):
-        fmt = {'title': title or 'Terminal', 'command': sh_cmd, 'cwd': os.getcwd() }
+        fmt = {'title': title or 'Terminal', 'command': sh_cmd, 'cwd': os.getcwd()}
         if isinstance(self.command, str):
             return shlex.split(self.command.format(**fmt))
         else:

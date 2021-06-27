@@ -29,7 +29,7 @@ class PtestParser(object):
         markers = ("PASS:", "FAIL:", "SKIP:", "BEGIN:", "END:", "DURATION:", "ERROR: Exit", "TIMEOUT:")
 
         def newsection():
-            return { 'name': "No-section", 'log': [] }
+            return {'name': "No-section", 'log': []}
 
         current_section = newsection()
 

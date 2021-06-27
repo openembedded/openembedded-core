@@ -63,7 +63,7 @@ try:
             writers = []
             if i:
                 writers.append(sys.stdout)
-            (ready, _, _) = select.select([pty, sys.stdin], writers , [], 0)
+            (ready, _, _) = select.select([pty, sys.stdin], writers, [], 0)
             try:
                 if pty in ready:
                     readdata = pty.read()

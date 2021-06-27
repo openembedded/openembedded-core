@@ -37,7 +37,7 @@ def release_dict_lsb():
     except bb.process.CmdError as exc:
         return {}
 
-    lsb_map = { 'Distributor ID': 'DISTRIB_ID',
+    lsb_map = {'Distributor ID': 'DISTRIB_ID',
                 'Release': 'DISTRIB_RELEASE'}
     lsb_keys = lsb_map.keys()
 

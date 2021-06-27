@@ -65,7 +65,7 @@ class TestTargetLoader:
             obj = getattr(module, target)
             if obj: 
                 from oeqa.targetcontrol import BaseTarget
-                if( not issubclass(obj, BaseTarget)):
+                if(not issubclass(obj, BaseTarget)):
                     bb.warn("Target {0} found, but subclass is not BaseTarget".format(target))
         except:
             obj = None

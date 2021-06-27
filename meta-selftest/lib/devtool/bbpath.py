@@ -11,10 +11,10 @@ def plugin_init(plugins):
     already_loaded = plugin_name(__file__) in (plugin_name(p.__name__) for p in plugins)
 
 def print_name(args, config, basepath, workspace):
-    print (__file__)
+    print(__file__)
 
 def print_bbdir(args, config, basepath, workspace):
-    print (__file__.replace('/lib/devtool/bbpath.py',''))
+    print(__file__.replace('/lib/devtool/bbpath.py',''))
 
 def print_registered(args, config, basepath, workspace):
     global kept_context

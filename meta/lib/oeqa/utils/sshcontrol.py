@@ -109,11 +109,11 @@ class SSHControl(object):
                 '-o', 'StrictHostKeyChecking=no',
                 '-o', 'LogLevel=ERROR'
                 ]
-        self.ssh = ['ssh', '-l', self.user ] + self.ssh_options
+        self.ssh = ['ssh', '-l', self.user] + self.ssh_options
         self.scp = ['scp'] + self.ssh_options
         if port:
-            self.ssh = self.ssh + [ '-p', port ]
-            self.scp = self.scp + [ '-P', port ]
+            self.ssh = self.ssh + ['-p', port]
+            self.scp = self.scp + ['-P', port]
 
     def log(self, msg):
         if self.logfile:

@@ -28,7 +28,7 @@ class ContainerImageTests(OESelftestTestCase):
 
         def get_each_path_part(path):
             if path:
-                part = [ '.' + path + '/' ]
+                part = ['.' + path + '/']
                 result = get_each_path_part(path.rsplit('/', 1)[0])
                 if result:
                     return part + result
@@ -63,10 +63,10 @@ IMAGE_INSTALL_remove = "ssh-pregen-hostkeys"
                     '.{localstatedir}/lib/'
                 ]
 
-        expected_files = [ x.format(bindir=bbvars['bindir'],
+        expected_files = [x.format(bindir=bbvars['bindir'],
                                     sysconfdir=bbvars['sysconfdir'],
                                     localstatedir=bbvars['localstatedir'])
-                                    for x in expected_files ]
+                                    for x in expected_files]
 
         # Since tar lists all directories individually, make sure each element
         # from bindir, sysconfdir, etc is added

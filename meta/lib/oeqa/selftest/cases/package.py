@@ -43,33 +43,33 @@ class VersionOrdering(OESelftestTestCase):
 
     def test_dpkg(self):
         for ver1, ver2, sort in self.tests:
-            op = { -1: "<<", 0: "=", 1: ">>" }[sort]
+            op = {-1: "<<", 0: "=", 1: ">>"}[sort]
             status = subprocess.call((oe.path.join(self.bindir, "dpkg"), "--compare-versions", ver1, op, ver2))
             self.assertEqual(status, 0, "%s %s %s failed" % (ver1, op, ver2))
 
             # Now do it again but with incorrect operations
-            op = { -1: ">>", 0: ">>", 1: "<<" }[sort]
+            op = {-1: ">>", 0: ">>", 1: "<<"}[sort]
             status = subprocess.call((oe.path.join(self.bindir, "dpkg"), "--compare-versions", ver1, op, ver2))
             self.assertNotEqual(status, 0, "%s %s %s failed" % (ver1, op, ver2))
 
             # Now do it again but with incorrect operations
-            op = { -1: "=", 0: "<<", 1: "=" }[sort]
+            op = {-1: "=", 0: "<<", 1: "="}[sort]
             status = subprocess.call((oe.path.join(self.bindir, "dpkg"), "--compare-versions", ver1, op, ver2))
             self.assertNotEqual(status, 0, "%s %s %s failed" % (ver1, op, ver2))
 
     def test_opkg(self):
         for ver1, ver2, sort in self.tests:
-            op = { -1: "<<", 0: "=", 1: ">>" }[sort]
+            op = {-1: "<<", 0: "=", 1: ">>"}[sort]
             status = subprocess.call((oe.path.join(self.bindir, "opkg"), "compare-versions", ver1, op, ver2))
             self.assertEqual(status, 0, "%s %s %s failed" % (ver1, op, ver2))
 
             # Now do it again but with incorrect operations
-            op = { -1: ">>", 0: ">>", 1: "<<" }[sort]
+            op = {-1: ">>", 0: ">>", 1: "<<"}[sort]
             status = subprocess.call((oe.path.join(self.bindir, "opkg"), "compare-versions", ver1, op, ver2))
             self.assertNotEqual(status, 0, "%s %s %s failed" % (ver1, op, ver2))
 
             # Now do it again but with incorrect operations
-            op = { -1: "=", 0: "<<", 1: "=" }[sort]
+            op = {-1: "=", 0: "<<", 1: "="}[sort]
             status = subprocess.call((oe.path.join(self.bindir, "opkg"), "compare-versions", ver1, op, ver2))
             self.assertNotEqual(status, 0, "%s %s %s failed" % (ver1, op, ver2))
 
@@ -163,13 +163,13 @@ class PackageTests(OESelftestTestCase):
             self.logger.info("Check ownership of %s", path)
             status, output = qemu.run_serial(r'/bin/stat -c "%U %G" ' + path, timeout=60)
             output = output.split(" ")
-            if output[0] != uid or output[1] != gid :
+            if output[0] != uid or output[1] != gid:
                 self.logger.error("Incrrect ownership %s [%s:%s]", path, output[0], output[1])
                 return False
             return True
 
         with runqemu('core-image-minimal') as qemu:
-            for path in [ sysconfdir + "/selftest-chown/file",
+            for path in [sysconfdir + "/selftest-chown/file",
                           sysconfdir + "/selftest-chown/dir",
                           sysconfdir + "/selftest-chown/symlink",
                           sysconfdir + "/selftest-chown/fifotest/fifo"]:

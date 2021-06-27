@@ -785,7 +785,7 @@ FIT_HASH_ALG = "sha256"
 
         test_passed = False
 
-        print ("checking kernel node\n")
+        print("checking kernel node\n")
 
         if node_str in its_lines:
             node_start_idx = its_lines.index(node_str)
@@ -803,7 +803,7 @@ FIT_HASH_ALG = "sha256"
             line_idx = cfg_start_idx + 2
             node_end = False
             while node_end == False:
-                if its_lines[line_idx] == "};" and its_lines[line_idx-1] == "};" :
+                if its_lines[line_idx] == "};" and its_lines[line_idx-1] == "};":
                     node_end = True
                 line_idx = line_idx + 1
 

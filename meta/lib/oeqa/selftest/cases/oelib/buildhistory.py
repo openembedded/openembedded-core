@@ -49,7 +49,7 @@ class TestBlobParsing(OESelftestTestCase):
         Test conversion of git blobs to dictionary
         """
         from oe.buildhistory_analysis import blob_to_dict
-        valuesmap = { "foo" : "1", "bar" : "2" }
+        valuesmap = {"foo": "1", "bar": "2"}
         self.commit_vars(to_add=valuesmap)
 
         blob = self.repo.head.commit.tree.blobs[0]
@@ -62,18 +62,18 @@ class TestBlobParsing(OESelftestTestCase):
         """
         from oe.buildhistory_analysis import compare_dict_blobs
 
-        changesmap = { "foo-2" : ("2", "8"), "bar" : ("","4"), "bar-2" : ("","5")}
+        changesmap = {"foo-2": ("2", "8"), "bar": ("","4"), "bar-2": ("","5")}
 
-        self.commit_vars(to_add={ "foo" : "1", "foo-2" : "2", "foo-3" : "3" })
+        self.commit_vars(to_add={"foo": "1", "foo-2": "2", "foo-3": "3"})
         blob1 = self.repo.heads.master.commit.tree.blobs[0]
 
-        self.commit_vars(to_add={ "foo-2" : "8", "bar" : "4", "bar-2" : "5" })
+        self.commit_vars(to_add={"foo-2": "8", "bar": "4", "bar-2": "5"})
         blob2 = self.repo.heads.master.commit.tree.blobs[0]
 
         change_records = compare_dict_blobs(os.path.join(self.repo_path, self.test_file),
             blob1, blob2, False, False)
 
-        var_changes = { x.fieldname : (x.oldvalue, x.newvalue) for x in change_records}
+        var_changes = {x.fieldname: (x.oldvalue, x.newvalue) for x in change_records}
         self.assertEqual(changesmap, var_changes, "Changes not reported correctly")
 
     def test_compare_dict_blobs_default(self):
@@ -81,12 +81,12 @@ class TestBlobParsing(OESelftestTestCase):
         Test default values for comparisson of git blob dictionaries
         """
         from oe.buildhistory_analysis import compare_dict_blobs
-        defaultmap = { x : ("default", "1")  for x in ["PKG", "PKGE", "PKGV", "PKGR"]}
+        defaultmap = {x: ("default", "1")  for x in ["PKG", "PKGE", "PKGV", "PKGR"]}
 
-        self.commit_vars(to_add={ "foo" : "1" })
+        self.commit_vars(to_add={"foo": "1"})
         blob1 = self.repo.heads.master.commit.tree.blobs[0]
 
-        self.commit_vars(to_add={ "PKG" : "1", "PKGE" : "1", "PKGV" : "1", "PKGR" : "1" })
+        self.commit_vars(to_add={"PKG": "1", "PKGE": "1", "PKGV": "1", "PKGR": "1"})
         blob2 = self.repo.heads.master.commit.tree.blobs[0]
 
         change_records = compare_dict_blobs(os.path.join(self.repo_path, self.test_file),

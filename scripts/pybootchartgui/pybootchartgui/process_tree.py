@@ -111,7 +111,7 @@ class ProcessTree:
         """
         if not process_subtree:
             return 100000000
-        return min( [min(proc.start_time, self.get_start_time(proc.child_list)) for proc in process_subtree] )
+        return min([min(proc.start_time, self.get_start_time(proc.child_list)) for proc in process_subtree])
 
     def get_end_time(self, process_subtree):
         """Returns the end time of the process subtree.  This is the end time
@@ -120,13 +120,13 @@ class ProcessTree:
         """
         if not process_subtree:
             return -100000000
-        return max( [max(proc.start_time + proc.duration, self.get_end_time(proc.child_list)) for proc in process_subtree] )
+        return max([max(proc.start_time + proc.duration, self.get_end_time(proc.child_list)) for proc in process_subtree])
 
     def get_max_pid(self, process_subtree):
         """Returns the max PID found in the process tree."""
         if not process_subtree:
             return -100000000
-        return max( [max(proc.pid, self.get_max_pid(proc.child_list)) for proc in process_subtree] )
+        return max([max(proc.pid, self.get_max_pid(proc.child_list)) for proc in process_subtree])
 
     def update_ppids_for_daemons(self, process_list):
         """Fedora hack: when loading the system services from rc, runuser(1)
@@ -284,7 +284,7 @@ class ProcessTree:
     def merge_processes(self, p1, p2):
         """Merges two process' samples."""
         p1.samples.extend(p2.samples)
-        p1.samples.sort( key=lambda p: p.time )
+        p1.samples.sort(key=lambda p: p.time)
         p1time = p1.start_time
         p2time = p2.start_time
         p1.start_time = min(p1time, p2time)

@@ -564,7 +564,7 @@ def get_repos(conf, repo_names):
             sys.exit(1)
 
     if not repos:
-        repos = [ repo for repo in conf.repos if conf.repos[repo].get("update", True) ]
+        repos = [repo for repo in conf.repos if conf.repos[repo].get("update", True)]
 
     return repos
 

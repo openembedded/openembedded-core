@@ -634,8 +634,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
                 # check each partition for permission
                 for part in glob(os.path.join(tmpdir, 'temp-*.direct.p*')):
                     res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part))
-                    self.assertTrue(files_own_by_root(res.output)
-                        ,msg='Files permission incorrect using wks set "%s"' % test)
+                    self.assertTrue(files_own_by_root(res.output),msg='Files permission incorrect using wks set "%s"' % test)
 
                 # clean config and result directory for next cases
                 self.remove_config(config)

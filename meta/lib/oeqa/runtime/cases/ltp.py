@@ -76,7 +76,7 @@ class LtpTest(LtpTestBase):
             self.extras['ltpresult.rawlogs']['log'] = self.extras['ltpresult.rawlogs']['log'] + output
 
             # copy nice log from DUT
-            dst = os.path.join(self.ltptest_log_dir, "%s" %  ltp_group )
+            dst = os.path.join(self.ltptest_log_dir, "%s" %  ltp_group)
             remote_src = "/opt/ltp/results/%s" % ltp_group 
             (status, output) = self.target.copyFrom(remote_src, dst, True)
             msg = 'File could not be copied. Output: %s' % output

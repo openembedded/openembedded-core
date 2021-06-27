@@ -187,5 +187,5 @@ class DnfRepoTest(DnfTest):
         self.assertEqual(1, status, "%s was not removed,  is listed as installed"%excludepkg)
         self.dnf_with_repo('install -y --exclude=%s --exclude=curl-staticdev curl*' % excludepkg)
         #check curl-dev is not installed after being excluded
-        status, output = self.target.run('dnf list --installed | grep %s'% excludepkg , 1500)
+        status, output = self.target.run('dnf list --installed | grep %s'% excludepkg, 1500)
         self.assertEqual(1, status, "%s was not excluded, is listed as installed"%excludepkg)

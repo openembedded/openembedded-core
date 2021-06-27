@@ -9,13 +9,13 @@ try:
 except:
     import xml.etree.ElementTree as etree
 
-def child (elem, name):
+def child(elem, name):
     for e in elem.getchildren():
         if e.tag == name:
             return e
     return None
 
-def children (elem, name=None):
+def children(elem, name=None):
     l = elem.getchildren()
     if name:
         l = [e for e in l if e.tag == name]

@@ -327,7 +327,7 @@ for pypkg in old_manifest:
                     check_path = pymodule_dep
                 else:
                     check_path = os.path.dirname(pymodule_dep)
-                if folder in check_path :
+                if folder in check_path:
                     inFolders = True # Did we find a folder?
                     folderFound = False # Second flag to break inner for
                     # Loop only through packages which contain folders
@@ -336,7 +336,7 @@ for pypkg in old_manifest:
                             # print('Checking folder %s on package %s' % (pymodule_dep,pypkg_with_folder))
                             for folder_dep in old_manifest[pypkg_with_folder]['files'] or folder_dep in old_manifest[pypkg_with_folder]['cached']:
                                 if folder_dep == folder:
-                                    print ('%s directory found in %s' % (folder, pypkg_with_folder))
+                                    print('%s directory found in %s' % (folder, pypkg_with_folder))
                                     folderFound = True
                                     if pypkg_with_folder not in new_manifest[pypkg]['rdepends'] and pypkg_with_folder != pypkg:
                                         new_manifest[pypkg]['rdepends'].append(pypkg_with_folder)

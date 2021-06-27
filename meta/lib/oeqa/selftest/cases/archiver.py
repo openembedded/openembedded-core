@@ -86,8 +86,8 @@ class Archiver(OESelftestTestCase):
         Author:      André Draszik <adraszik@tycoint.com>
         """
 
-        target_recipes = [ 'initscripts', 'selftest-ed' ]
-        native_recipes = [ 'update-rc.d-native', 'selftest-ed-native' ]
+        target_recipes = ['initscripts', 'selftest-ed']
+        native_recipes = ['update-rc.d-native', 'selftest-ed-native']
 
         features = 'INHERIT += "archiver"\n'
         features += 'ARCHIVER_MODE[src] = "original"\n'

@@ -35,7 +35,7 @@ def runcmd(args, dir=None):
         # print("cwd: %s -> %s" % (olddir, dir))
 
     try:
-        args = [ pipes.quote(str(arg)) for arg in args ]
+        args = [pipes.quote(str(arg)) for arg in args]
         cmd = " ".join(args)
         # print("cmd: %s" % cmd)
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
@@ -190,7 +190,7 @@ class PatchTree(PatchSet):
     def _appendPatchFile(self, patch, strippath):
         with open(self.seriespath, 'a') as f:
             f.write(os.path.basename(patch) + "," + strippath + "\n")
-        shellcmd = ["cat", patch, ">" , self.patchdir + "/" + os.path.basename(patch)]
+        shellcmd = ["cat", patch, ">", self.patchdir + "/" + os.path.basename(patch)]
         runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
 
     def _removePatch(self, p):
