@@ -40,7 +40,8 @@ def blame_patch(patch):
                                     "--", patch)).decode("utf-8").splitlines()
 
 def patchreview(path, patches):
-    import re, os.path
+    import re
+    import os.path
 
     # General pattern: start of line, optional whitespace, tag with optional
     # hyphen or spaces, maybe a colon, some whitespace, then the value, all case
@@ -198,7 +199,9 @@ def histogram(results):
 
 
 if __name__ == "__main__":
-    import argparse, subprocess, os
+    import argparse
+    import subprocess
+    import os
 
     args = argparse.ArgumentParser(description="Patch Review Tool")
     args.add_argument("-b", "--blame", action="store_true", help="show blame for malformed patches")
@@ -213,7 +216,9 @@ if __name__ == "__main__":
     analyse(results, want_blame=args.blame, verbose=args.verbose)
 
     if args.json:
-        import json, os.path, collections
+        import json
+        import os.path
+        import collections
         if os.path.isfile(args.json):
             data = json.load(open(args.json))
         else:

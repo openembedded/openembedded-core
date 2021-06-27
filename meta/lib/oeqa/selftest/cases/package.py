@@ -5,7 +5,8 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var, runqemu
 import stat
-import subprocess, os
+import subprocess
+import os
 import oe.path
 import re
 
@@ -150,7 +151,9 @@ class PackageTests(OESelftestTestCase):
                     self.fail('GDB %s failed' % binary)
 
     def test_preserve_ownership(self):
-        import os, stat, oe.cachedpath
+        import os
+        import stat
+        import oe.cachedpath
         features = 'IMAGE_INSTALL_append = " selftest-chown"\n'
         self.write_config(features)
         bitbake("core-image-minimal")

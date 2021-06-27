@@ -9,7 +9,9 @@
 
 # It also has some helper functions and it's responsible for actually starting the tests
 
-import os, re, sys
+import os
+import re
+import sys
 import unittest
 import inspect
 import subprocess

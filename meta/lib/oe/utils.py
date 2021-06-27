@@ -376,7 +376,8 @@ def format_pkg_list(pkg_dict, ret_format=None):
 # Helper function to get the host compiler version
 # Do not assume the compiler is gcc
 def get_host_compiler_version(d, taskcontextonly=False):
-    import re, subprocess
+    import re
+    import subprocess
 
     if taskcontextonly and d.getVar('BB_WORKERCONTEXT') != '1':
         return
@@ -404,7 +405,8 @@ def get_host_compiler_version(d, taskcontextonly=False):
 
 
 def host_gcc_version(d, taskcontextonly=False):
-    import re, subprocess
+    import re
+    import subprocess
 
     if taskcontextonly and d.getVar('BB_WORKERCONTEXT') != '1':
         return

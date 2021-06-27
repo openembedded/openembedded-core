@@ -211,7 +211,8 @@ class TestImage(OESelftestTestCase):
         Product: oe-core
         Author: Alexander Kanavin <alex.kanavin@gmail.com>
         """
-        import subprocess, os
+        import subprocess
+        import os
         try:
             content = os.listdir("/dev/dri")
             if len([i for i in content if i.startswith('render')]) == 0:

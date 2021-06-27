@@ -6,7 +6,8 @@
 # Create a *relative* symlink, just like ln --relative does but without needing
 # coreutils 8.16.
 
-import sys, os
+import sys
+import os
 
 if len(sys.argv) != 3:
    print("$ lnr TARGET LINK_NAME")

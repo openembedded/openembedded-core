@@ -1,6 +1,9 @@
 #! /usr/bin/env python3
 
-import os, sys, enum, ast
+import os
+import sys
+import enum
+import ast
 
 scripts_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = scripts_path + '/lib'

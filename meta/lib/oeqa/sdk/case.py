@@ -35,7 +35,8 @@ class OESDKTestCase(OETestCase):
         OS/architecture, or if not specified the currently configured MACHINE's
         OS/architecture.
         """
-        import oe.qa, oe.elf
+        import oe.qa
+        import oe.elf
 
         if not target_os or not target_arch:
             output = self._run("echo $OECORE_TARGET_OS:$OECORE_TARGET_ARCH")
