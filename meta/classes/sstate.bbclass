@@ -703,6 +703,10 @@ def sstate_package(ss, d):
             os.utime(siginfo, None)
         except PermissionError:
             pass
+        except OSError as e:
+            # Handle read-only file systems gracefully
+            if e.errno != errno.EROFS:
+                raise e
 
     return
 
@@ -1145,6 +1149,10 @@ python sstate_eventhandler() {
                 os.utime(siginfo, None)
             except PermissionError:
                 pass
+            except OSError as e:
+                # Handle read-only file systems gracefully
+                if e.errno != errno.EROFS:
+                    raise e
 
 }
 
