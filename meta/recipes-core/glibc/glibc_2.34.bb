@@ -79,7 +79,6 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --enable-tunables \
                 --enable-bind-now \
                 --enable-stack-protector=strong \
-                --enable-stackguard-randomization \
                 --disable-crypt \
                 --with-default-link \
                 ${@bb.utils.contains_any('SELECTED_OPTIMIZATION', '-O0 -Og', '--disable-werror', '', d)} \
