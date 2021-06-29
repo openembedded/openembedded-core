@@ -602,8 +602,12 @@ class QemuRunner:
                         return True
         return False
 
-    def run_monitor(self, command, timeout=60):
-        return self.qmp.cmd(command)
+    def run_monitor(self, command, args=None, timeout=60):
+        if hasattr(self, 'qmp') and self.qmp:
+            if args is not None:
+                return self.qmp.cmd(command, args)
+            else:
+                return self.qmp.cmd(command)
 
     def run_serial(self, command, raw=False, timeout=60):
         # We assume target system have echo to get command status
