@@ -8,19 +8,13 @@ library really only provides the lowest, machine dependent layer of a fully feat
 A layer must exist above `libffi' that handles type conversions for values passed between the two languages."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=492385fe22195952f5b9b197868ba268"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=679b5c9bdc79a2b93ee574e193e7a7bc"
 
 SRC_URI = "https://github.com/libffi/libffi/releases/download/v${PV}/${BPN}-${PV}.tar.gz \
            file://not-win32.patch \
-           file://0001-Fixed-missed-ifndef-for-__mips_soft_float.patch \
            file://0001-arm-sysv-reverted-clang-VFP-mitigation.patch \
-           file://0001-powerpc-fix-build-failure-on-power7-and-older-532.patch \
-           file://0001-Address-platforms-with-no-__int128.patch \
-           file://0001-Address-platforms-with-no-__int128-part2.patch \
-           file://0001-ffi_powerpc.h-fix-build-failure-with-powerpc7.patch \
            "
-SRC_URI[md5sum] = "6313289e32f1d38a9df4770b014a2ca7"
-SRC_URI[sha256sum] = "72fba7922703ddfa7a028d513ac15a85c8d54c8d67f55fa5a4802885dc652056"
+SRC_URI[sha256sum] = "540fb721619a6aba3bdeef7d940d8e9e0e6d2c193595bc243241b77ff9e93620"
 UPSTREAM_CHECK_URI = "https://github.com/libffi/libffi/releases/"
 UPSTREAM_CHECK_REGEX = "libffi-(?P<pver>\d+(\.\d+)+)\.tar"
 
