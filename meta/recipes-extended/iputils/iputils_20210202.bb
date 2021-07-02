@@ -17,7 +17,7 @@ SRCREV = "cc16da6b574ce6637f3e6e9ab3c1a728663006ff"
 
 S = "${WORKDIR}/git"
 
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>s\d+)"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>20\d+)"
 
 # Fixed in 2000-10-10, but the versioning of iputils
 # breaks the version order.
