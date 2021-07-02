@@ -163,6 +163,14 @@ do_install() {
             cp -a --parents arch/arm64/kernel/vdso/gen_vdso_offsets.sh $kerneldir/build/
 
             cp -a --parents arch/arm64/kernel/module.lds $kerneldir/build/ 2>/dev/null || :
+
+            # 5.13+ needs these tools
+            cp -a --parents arch/arm64/tools/gen-cpucaps.awk $kerneldir/build/ 2>/dev/null || :
+            cp -a --parents arch/arm64/tools/cpucaps $kerneldir/build/ 2>/dev/null || :
+
+            if [ -e $kerneldir/build/arch/arm64/tools/gen-cpucaps.awk ]; then
+                 sed -i -e "s,#!.*awk.*,#!${USRBINPATH}/env awk," $kerneldir/build/arch/arm64/tools/gen-cpucaps.awk
+            fi
 	fi
 
 	if [ "${ARCH}" = "powerpc" ]; then
@@ -307,3 +315,5 @@ RDEPENDS_${PN} += "openssl-dev util-linux"
 RDEPENDS_${PN} += "${@bb.utils.contains('ARCH', 'x86', 'elfutils', '', d)}"
 # 5.8+ needs gcc-plugins libmpc-dev
 RDEPENDS_${PN} += "gcc-plugins libmpc-dev"
+# 5.13+ needs awk for arm64
+RDEPENDS_${PN}_append_aarch64 = " gawk"
