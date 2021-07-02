@@ -4,10 +4,10 @@ SECTION = "console/utils"
 HOMEPAGE = "http://www.kernel.org/pub/linux/docs/man-pages"
 LICENSE = "GPLv2+"
 
-LIC_FILES_CHKSUM = "file://README;md5=207f70f56526417514ac46b6680e314f"
+LIC_FILES_CHKSUM = "file://README;md5=92cd5ee2e0b35d782817e7e277b6ce4b"
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/${BP}.tar.gz"
 
-SRC_URI[sha256sum] = "3759aee7cd4a229173d3cb651fbba438777bee6206da8d75ea04caaa7c8662b0"
+SRC_URI[sha256sum] = "2684d42ab53184d7607105834e277577daa7e854cdce0d4aacf9f7ad8437c7ce"
 
 inherit manpages
 
@@ -20,7 +20,7 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
 do_install() {
-        oe_runmake install DESTDIR=${D}
+        oe_runmake install prefix=${prefix} DESTDIR=${D}
 }
 
 # Only deliveres man-pages so FILES_${PN} gets everything
