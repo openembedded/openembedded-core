@@ -71,7 +71,7 @@ EXTRA_OECONF = "\
     --enable-mount --enable-partx --enable-raw --enable-rfkill \
     --enable-unshare --enable-write \
     \
-    --disable-bfs --disable-chfn-chsh --disable-login \
+    --disable-bfs --disable-login \
     --disable-makeinstall-chown --disable-minix --disable-newgrp \
     --disable-use-tty-group --disable-vipw \
     \
@@ -209,6 +209,8 @@ ALTERNATIVE_PRIORITY = "80"
 ALTERNATIVE_LINK_NAME[blkid] = "${base_sbindir}/blkid"
 ALTERNATIVE_LINK_NAME[blockdev] = "${base_sbindir}/blockdev"
 ALTERNATIVE_LINK_NAME[cal] = "${bindir}/cal"
+ALTERNATIVE_LINK_NAME[chfn] = "${bindir}/chfn"
+ALTERNATIVE_LINK_NAME[chsh] = "${bindir}/chsh"
 ALTERNATIVE_LINK_NAME[chrt] = "${bindir}/chrt"
 ALTERNATIVE_LINK_NAME[dmesg] = "${base_bindir}/dmesg"
 ALTERNATIVE_LINK_NAME[eject] = "${bindir}/eject"
