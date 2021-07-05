@@ -21,7 +21,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-futex.h-Define-__NR_futex-if-it-does-not-exist.patch \
            "
 
-SRC_URI[sha256sum] = "cbe221282670875ffd762247b6a2c95dcee91d0a34c29802c75ef761fc891e69"
+SRC_URI[sha256sum] = "1f177f44098164b65731c5ded4c928fd58b14f6c9d2087aa0e37bc79bf79e90b"
 
 UPSTREAM_CHECK_GITTAGREGEX = "mesa-(?P<pver>\d+(\.\d+)+)"
 
