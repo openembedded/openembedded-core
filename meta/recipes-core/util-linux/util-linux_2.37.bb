@@ -132,8 +132,8 @@ RDEPENDS_${PN}-dev += " util-linux-libuuid-dev"
 RPROVIDES_${PN}-dev = "${PN}-libblkid-dev ${PN}-libmount-dev"
 
 RDEPENDS_${PN}-bash-completion += "${PN}-lsblk"
-RDEPENDS_${PN}-ptest += "bash bc btrfs-tools coreutils e2fsprogs grep iproute2 kmod mdadm procps sed socat which xz"
-RRECOMMENDS_${PN}-ptest += "kernel-module-scsi-debug"
+RDEPENDS_${PN}-ptest += "bash bc btrfs-tools coreutils e2fsprogs findutils grep iproute2 kmod mdadm procps sed socat which xz"
+RRECOMMENDS_${PN}-ptest += "kernel-module-scsi-debug kernel-module-sd-mod kernel-module-loop"
 RDEPENDS_${PN}-swaponoff = "${PN}-swapon ${PN}-swapoff"
 ALLOW_EMPTY_${PN}-swaponoff = "1"
 
