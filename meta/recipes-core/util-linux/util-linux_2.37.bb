@@ -280,25 +280,10 @@ do_install_ptest() {
     cp -pR ${S}/tests/ts ${D}${PTEST_PATH}/tests/
     cp ${WORKDIR}/build/config.h ${D}${PTEST_PATH}
 
-    # The original paths of executables to be tested point to a local folder containing
-    # the executables. We want to test the installed executables, not the local copies.
-    # So strip the paths, the executables will be located via "which"
-    sed  -i \
-         -e '/^TS_CMD/ s|$top_builddir/||g' \
-         -e '/^TS_HELPER/ s|$top_builddir|${PTEST_PATH}|g' \
-         ${D}${PTEST_PATH}/tests/commands.sh
+    sed -i 's|@base_sbindir@|${base_sbindir}|g' ${D}${PTEST_PATH}/run-ptest
 
-    # Change 'if [ ! -x "$1" ]' to 'if [ ! -x "`which $1 2>/dev/null`"]'
-    sed -i -e \
-        '/^\tif[[:space:]]\[[[:space:]]![[:space:]]-x[[:space:]]"$1"/s|$1|`which $1 2>/dev/null`|g' \
-         ${D}${PTEST_PATH}/tests/functions.sh
-
-    # Running "kill" without the the complete path would use the shell's built-in kill
-    sed -i -e \
-         '/^TS_CMD_KILL/ s|kill|${PTEST_PATH}/bin/kill|g' \
-         ${D}${PTEST_PATH}/tests/commands.sh
-
-
-    sed -i 's|@base_sbindir@|${base_sbindir}|g'       ${D}${PTEST_PATH}/run-ptest
-
+    # chfn needs PAM
+    if ! ${@bb.utils.contains('PACKAGECONFIG', 'pam', 'true', 'false', d)}; then
+        rm -rf ${D}${PTEST_PATH}/tests/ts/chfn
+    fi
 }
