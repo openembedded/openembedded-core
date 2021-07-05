@@ -29,15 +29,13 @@ TARGET_PATCH = "file://use_host_makedoc.patch"
 TARGET_PATCH_class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
-           file://texinfo-4.12-zlib.patch \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
            ${TARGET_PATCH} \
            "
 
-SRC_URI[md5sum] = "f0c1782f68ef73738d74bd1e9e30793a"
-SRC_URI[sha256sum] = "a52d05076b90032cb2523673c50e53185938746482cf3ca0213e9b4b50ac2d3e"
+SRC_URI[sha256sum] = "8e09cf753ad1833695d2bac0f57dc3bd6bcbbfbf279450e1ba3bc2d7fb297d08"
 
 tex_texinfo = "texmf/tex/texinfo"
 
