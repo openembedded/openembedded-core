@@ -5,12 +5,12 @@ SECTION = "devel/tcltk"
 
 # http://www.tcl.tk/software/tcltk/license.html
 LICENSE = "tcl & BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://../license.terms;md5=058f6229798281bbcac4239c788cfa38 \
-    file://../compat/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
-    file://../library/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
-    file://../macosx/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
-    file://../tests/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
-    file://../win/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+LIC_FILES_CHKSUM = "file://license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://compat/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://library/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://macosx/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://tests/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
+    file://win/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
 "
 
 DEPENDS = "tcl-native zlib"
@@ -28,17 +28,17 @@ SRC_URI[sha256sum] = "cfb49aab82bd179651e23eeeb69606f51b0ddc575ca55c3d35e2457469
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
-S = "${WORKDIR}/${BPN}${PV}/unix"
+S = "${WORKDIR}/${BPN}${PV}"
 
-PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/${BPN}${PV}"
 VER = "${PV}"
 
 inherit autotools ptest binconfig
 
+AUTOTOOLS_SCRIPT_PATH = "${S}/unix"
 EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix"
 
 do_compile_prepend() {
-	echo > ${S}/../compat/fixstrtod.c
+	echo > ${S}/compat/fixstrtod.c
 }
 
 do_install() {
@@ -53,7 +53,7 @@ do_install() {
 	install -m 0755 tclConfig.sh ${D}${libdir}
 	for dir in compat generic unix; do
 		install -d ${D}${includedir}/${BPN}${VER}/$dir
-		install -m 0644 ${S}/../$dir/*.h ${D}${includedir}/${BPN}${VER}/$dir/
+		install -m 0644 ${S}/$dir/*.h ${D}${includedir}/${BPN}${VER}/$dir/
 	done
 }
 
@@ -76,8 +76,8 @@ do_compile_ptest() {
 
 do_install_ptest() {
 	cp ${B}/tcltest ${D}${PTEST_PATH}
-	cp -r ${S}/../library ${D}${PTEST_PATH}
-	cp -r ${S}/../tests ${D}${PTEST_PATH}
+	cp -r ${S}/library ${D}${PTEST_PATH}
+	cp -r ${S}/tests ${D}${PTEST_PATH}
 }
 
 # Fix some paths that might be used by Tcl extensions
