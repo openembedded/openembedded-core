@@ -36,7 +36,7 @@ VER = "${PV}"
 
 inherit autotools ptest binconfig
 
-EXTRA_OECONF = "--enable-threads --disable-rpath --libdir=${libdir} --enable-man-suffix"
+EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix"
 
 do_compile_prepend() {
 	echo > ${S}/../compat/fixstrtod.c
