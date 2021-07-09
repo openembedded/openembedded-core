@@ -34,9 +34,9 @@ S = "${WORKDIR}/${BPN}${PV}/unix"
 PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/${BPN}${PV}"
 VER = "${PV}"
 
-inherit autotools ptest binconfig update-alternatives
+inherit autotools ptest binconfig
 
-EXTRA_OECONF = "--enable-threads --disable-rpath --libdir=${libdir}"
+EXTRA_OECONF = "--enable-threads --disable-rpath --libdir=${libdir} --enable-man-suffix"
 
 do_compile_prepend() {
 	echo > ${S}/../compat/fixstrtod.c
@@ -64,9 +64,6 @@ PACKAGES =+ "tcl-lib"
 FILES_tcl-lib = "${libdir}/libtcl8.6.so.*"
 FILES_${PN} += "${libdir}/tcl${VER} ${libdir}/tcl8.6 ${libdir}/tcl8"
 FILES_${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
-
-ALTERNATIVE_${PN}-doc = "Thread.3"
-ALTERNATIVE_LINK_NAME[Thread.3] = "${mandir}/man3/Thread.3"
 
 # isn't getting picked up by shlibs code
 RDEPENDS_${PN} += "tcl-lib"
