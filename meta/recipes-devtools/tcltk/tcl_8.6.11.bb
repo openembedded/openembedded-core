@@ -15,17 +15,16 @@ LIC_FILES_CHKSUM = "file://../license.terms;md5=058f6229798281bbcac4239c788cfa38
 
 DEPENDS = "tcl-native zlib"
 
-BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/${BPN}${PV}-src.tar.gz \
+BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
                 file://tcl-add-soname.patch"
 SRC_URI = "${BASE_SRC_URI} \
            file://fix_non_native_build_issue.patch \
            file://fix_issue_with_old_distro_glibc.patch \
-           file://no_packages.patch \
            file://tcl-remove-hardcoded-install-path.patch \
            file://alter-includedir.patch \
            file://run-ptest \
 "
-SRC_URI[sha256sum] = "8c0486668586672c5693d7d95817cb05a18c5ecca2f40e2836b9578064088258"
+SRC_URI[sha256sum] = "cfb49aab82bd179651e23eeeb69606f51b0ddc575ca55c3d35e2457469024cfa"
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
