@@ -37,10 +37,6 @@ inherit autotools ptest binconfig
 AUTOTOOLS_SCRIPT_PATH = "${S}/unix"
 EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix"
 
-do_compile_prepend() {
-	echo > ${S}/compat/fixstrtod.c
-}
-
 do_install() {
 	autotools_do_install
 	oe_runmake 'DESTDIR=${D}' install-private-headers
