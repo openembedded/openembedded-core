@@ -7,10 +7,7 @@ Remove hardcoded library install path. Change $(prefix)/lib/ to ${libdir}.
 
 [YOCTO #2876]
 
-This is not a bug, but libraries should be installed into directory .../lib/.
-On 64bit target that should be lib64/.
-
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Pending
 
 Signed-off-by: Song.Li <Song.Li@windriver.com>
 Signed-off-by: Kai Kang <kai.kang@windriver.com>
