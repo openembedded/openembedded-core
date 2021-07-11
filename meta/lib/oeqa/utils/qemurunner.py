@@ -359,13 +359,16 @@ class QemuRunner:
         mapdir = "/proc/" + str(self.qemupid) + "/map_files/"
         try:
             for f in os.listdir(mapdir):
-                linktarget = os.readlink(os.path.join(mapdir, f))
-                if not linktarget.startswith("/") or linktarget.startswith("/dev") or "deleted" in linktarget:
+                try:
+                    linktarget = os.readlink(os.path.join(mapdir, f))
+                    if not linktarget.startswith("/") or linktarget.startswith("/dev") or "deleted" in linktarget:
+                        continue
+                    with open(linktarget, "rb") as readf:
+                        data = True
+                        while data:
+                            data = readf.read(4096)
+                except FileNotFoundError:
                     continue
-                with open(linktarget, "rb") as readf:
-                    data = True
-                    while data:
-                        data = readf.read(4096)
         # Centos7 doesn't allow us to read /map_files/
         except PermissionError:
             pass
