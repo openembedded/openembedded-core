@@ -22,6 +22,7 @@ SRC_URI = "${BASE_SRC_URI} \
            file://fix_issue_with_old_distro_glibc.patch \
            file://tcl-remove-hardcoded-install-path.patch \
            file://alter-includedir.patch \
+           file://interp.patch \
            file://run-ptest \
 "
 SRC_URI[sha256sum] = "cfb49aab82bd179651e23eeeb69606f51b0ddc575ca55c3d35e2457469024cfa"
