@@ -8,7 +8,7 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            file://0003-Add-disable-opengl-configure-option.patch \
            file://link_fribidi.patch \
            "
-SRC_URI[sha256sum] = "f57ec4ade8f15cab0c23a80dcaee85b876e70a8823d9105f067ce335a8268caa"
+SRC_URI[sha256sum] = "ba75bfff320ad1f4cfbee92ba813ec336322cc3c660d406aad014b07087a3ba9"
 
 S = "${WORKDIR}/gtk+-${PV}"
 
