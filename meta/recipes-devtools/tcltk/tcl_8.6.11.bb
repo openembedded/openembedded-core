@@ -29,6 +29,8 @@ SRC_URI[sha256sum] = "cfb49aab82bd179651e23eeeb69606f51b0ddc575ca55c3d35e2457469
 
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
+UPSTREAM_CHECK_REGEX = "tcl(?P<pver>\d+(\.\d+)+)-src"
+
 S = "${WORKDIR}/${BPN}${PV}"
 
 VER = "${PV}"
