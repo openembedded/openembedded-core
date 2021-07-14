@@ -8,7 +8,7 @@ SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.pat
            file://0001-Avoid-duplicate-definitions-of-IOPortBase.patch \
            file://0001-Fix-segfault-on-probing-a-non-PCI-platform-device-on.patch \
            "
-SRC_URI[sha256sum] = "914c796e3ffabe1af48071d40ccc85e92117c97a9082ed1df29e4d64e3c34c49"
+SRC_URI[sha256sum] = "336dc093431d81ecc03fa36af771f1181334f2746b7de7796f3cc6a8fa9e8cac"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
