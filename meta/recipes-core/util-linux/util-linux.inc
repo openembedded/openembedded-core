@@ -41,6 +41,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://tests-ul.patch \
            file://tests-eject.patch \
            file://tests-lscpu.patch \
+           file://0001-login-fix-close_range-use.patch \
            "
 
 SRC_URI[sha256sum] = "bd07b7e98839e0359842110525a3032fdb8eaf3a90bedde3dd1652d32d15cce5"
