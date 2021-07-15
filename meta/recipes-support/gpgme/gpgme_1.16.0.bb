@@ -20,7 +20,8 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0006-fix-build-path-issue.patch \
            file://0007-python-Add-variables-to-tests.patch \
            file://0008-do-not-auto-check-var-PYTHON.patch \
-          "
+           file://0001-use-closefrom-on-linux-and-glibc-2.34.patch \
+           "
 
 SRC_URI[sha256sum] = "6c8cc4aedb10d5d4c905894ba1d850544619ee765606ac43df7405865de29ed0"
 
