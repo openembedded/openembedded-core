@@ -25,6 +25,16 @@ SRCREV_machine_qemumips64 ?= "b74fe3dcca0653609fcb75aad883b1db07619081"
 SRCREV_machine ?= "b1cead8d98582ca687f93e06438543b97144e5bf"
 SRCREV_meta ?= "ceb5fa598d08902fe2934c041875aa92d9a6fa19"
 
+# set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
+# get the <version>/base branch, which is pure upstream -stable, and the same
+# meta SRCREV as the linux-yocto-standard builds. Select your version using the
+# normal PREFERRED_VERSION settings.
+BBCLASSEXTEND = "devupstream:target"
+DEFAULT_PREFERENCE_class-devupstream = "-1"
+SRCREV_class-devupstream = "62fb9874f5da54fdb243003b386128037319b219"
+PN_class-devupstream = "linux-yocto-upstream"
+KBRANCH_class-devupstream = "v5.13/base"
+
 # remap qemuarm to qemuarma15 for the 5.8 kernel
 # KMACHINE_qemuarm ?= "qemuarma15"
 
