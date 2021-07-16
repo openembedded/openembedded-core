@@ -49,7 +49,7 @@ do_install_ptest() {
 	sed -e 's| ../parted||' -i $t/tests/*.sh
 }
 RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup util-linux-mkswap python3 make gawk e2fsprogs-mke2fs e2fsprogs-tune2fs python3-core dosfstools"
-RRECOMMENDS_${PN}-ptest = "kernel-module-scsi-debug kernel-module-loop kernel-module-vfat"
+RRECOMMENDS_${PN}-ptest += "kernel-module-scsi-debug kernel-module-loop kernel-module-vfat"
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
         glibc-utils \
         locale-base-en-us \
