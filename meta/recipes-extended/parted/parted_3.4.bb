@@ -11,6 +11,7 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://fix-doc-mandir.patch \
            file://0002-libparted_fs_resize-link-against-libuuid-explicitly-.patch \
            file://run-ptest \
+           file://check-vfat.patch \
            "
 
 SRC_URI[md5sum] = "357d19387c6e7bc4a8a90fe2d015fe80"
