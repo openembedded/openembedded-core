@@ -72,9 +72,7 @@ PACKAGES =. "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3-gpg ', ''
 FILES_${PN}-cpp = "${libdir}/libgpgmepp.so.*"
 FILES_python2-gpg = "${PYTHON_SITEPACKAGES_DIR}/*"
 FILES_python3-gpg = "${PYTHON_SITEPACKAGES_DIR}/*"
-FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/* \
-                    ${libdir}/cmake/* \
-"
+FILES_${PN}-dev += "${datadir}/common-lisp/source/gpgme/*"
 
 CFLAGS_append_libc-musl = " -D__error_t_defined "
 do_configure_prepend () {
