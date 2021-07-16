@@ -7,7 +7,6 @@ SECTION = "console/tools"
 DEPENDS = "ncurses util-linux virtual/libiconv"
 
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
-           file://no_check.patch \
            file://fix-doc-mandir.patch \
            file://0002-libparted_fs_resize-link-against-libuuid-explicitly-.patch \
            file://run-ptest \
