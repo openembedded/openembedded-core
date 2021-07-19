@@ -12,13 +12,13 @@ LIC_FILES_CHKSUM="\
 
 # When upgrading to 2.37, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.36.1"
-CVE_VERSION = "2.36.1"
-SRCBRANCH ?= "binutils-2_36-branch"
+PV = "2.37"
+CVE_VERSION = "2.37"
+SRCBRANCH ?= "binutils-2_37-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "7651a4871c225925ffdfda0a8c91a6ed370cd9a1"
+SRCREV ?= "87d4632d36323091e731eb07b8aa65f90293da66"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -35,8 +35,5 @@ SRC_URI = "\
      file://0014-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
-     file://0017-Add-support-for-the-DW_FORM_strx-forms-to-the-BFD-li.patch \
-     file://0018-Add-DWARF-5-support-in-gold.patch \
-     file://CVE-2021-20197.patch \
 "
 S  = "${WORKDIR}/git"
