@@ -16,11 +16,10 @@ SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
 SRC_URI[md5sum] = "357d19387c6e7bc4a8a90fe2d015fe80"
 SRC_URI[sha256sum] = "e1298022472da5589b7f2be1d5ee3c1b66ec3d96dfbad03dc642afd009da5342"
 
-EXTRA_OECONF = "--disable-device-mapper"
-
 inherit autotools pkgconfig gettext texinfo ptest
 
 PACKAGECONFIG ?= "readline"
+PACKAGECONFIG[device-mapper] = "--enable-device-mapper,--disable-device-mapper,libdevmapper lvm2"
 PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
 
 BBCLASSEXTEND = "native nativesdk"
@@ -49,6 +48,7 @@ do_install_ptest() {
 	done
 	sed -e 's| ../parted||' -i $t/tests/*.sh
 }
+
 RDEPENDS_${PN}-ptest = "bash coreutils perl util-linux-losetup util-linux-mkswap python3 make gawk e2fsprogs-mke2fs e2fsprogs-tune2fs python3-core dosfstools"
 RRECOMMENDS_${PN}-ptest += "kernel-module-scsi-debug kernel-module-loop kernel-module-vfat"
 RDEPENDS_${PN}-ptest_append_libc-glibc = "\
