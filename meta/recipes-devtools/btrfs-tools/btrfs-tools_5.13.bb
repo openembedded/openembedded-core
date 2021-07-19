@@ -19,8 +19,9 @@ DEPENDS_append_class-target = " udev"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            file://0001-btrfs-tools-include-linux-const.h-to-fix-build-with-.patch \
+           file://0001-fix-error-for-undeclared-macro-on-musl.patch \
            "
-SRCREV = "96d77fcefdd3b9fd297b5aabbce6dc43e2315ee2"
+SRCREV = "de4914dbfd7e419d1c534b3d2ec8728e702114bf"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
