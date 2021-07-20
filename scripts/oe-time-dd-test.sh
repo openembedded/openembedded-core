@@ -25,7 +25,6 @@ usage() {
 }
 
 run_cmds() {
-    uptime
     echo "start: top output"
 	top -c -b -n1 -w 512
 	echo "end: top output"
@@ -85,6 +84,7 @@ done
 
 
 if [ "$LOG_ONLY" = "true" ] ; then
+    uptime
     run_cmds
     exit
 fi
@@ -94,6 +94,7 @@ if [ -z ${TIMEOUT+x} ] || [ -z ${COUNT+x} ] ; then
     exit 1
 fi
 
+uptime
 echo "Timeout used: ${TIMEOUT}"
 timeout ${TIMEOUT} dd if=/dev/zero of=oe-time-dd-test.dat bs=1024 count=${COUNT} conv=fsync
 if [ $? -ne 0 ]; then
