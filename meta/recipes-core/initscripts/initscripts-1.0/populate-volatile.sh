@@ -201,7 +201,7 @@ apply_cfgfile() {
 			"f")  [ "${VERBOSE}" != "no" ] && echo "Creating file -${TNAME}-."
 				TSOURCE="$TLTARGET"
 				[ "${TSOURCE}" = "none" ] && TSOURCE=""
-				create_file "${TNAME}" "${TSOURCE}" &
+				create_file "${TNAME}" "${TSOURCE}"
 				;;
 			"d")  [ "${VERBOSE}" != "no" ] && echo "Creating directory -${TNAME}-."
 				mk_dir "${TNAME}"
