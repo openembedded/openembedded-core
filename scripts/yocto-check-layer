@@ -158,9 +158,7 @@ def main():
                 if not add_layer_dependencies(bblayersconf, additional_layer, dep_layers, logger):
                     missing_dependencies = True
                     break
-        if not add_layer_dependencies(bblayersconf, layer, dep_layers, logger) or \
-           any(map(lambda additional_layer: not add_layer_dependencies(bblayersconf, additional_layer, dep_layers, logger),
-                   additional_layers)):
+        if missing_dependencies:
             logger.info('Skipping %s due to missing dependencies.' % layer['name'])
             results[layer['name']] = None
             results_status[layer['name']] = 'SKIPPED (Missing dependencies)'
