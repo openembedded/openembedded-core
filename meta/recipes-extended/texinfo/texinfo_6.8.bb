@@ -29,6 +29,7 @@ TARGET_PATCH = "file://use_host_makedoc.patch"
 TARGET_PATCH_class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
+           file://0001-gnulib-Update.patch \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
