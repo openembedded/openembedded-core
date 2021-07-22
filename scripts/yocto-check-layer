@@ -152,8 +152,6 @@ def main():
         logger.info("Setting up for %s(%s), %s" % (layer['name'], layer['type'],
             layer['path']))
 
-        shutil.copyfile(bblayersconf + '.backup', bblayersconf)
-
         missing_dependencies = not add_layer_dependencies(bblayersconf, layer, dep_layers, logger)
         if not missing_dependencies:
             for additional_layer in additional_layers:
