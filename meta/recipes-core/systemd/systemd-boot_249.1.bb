@@ -3,7 +3,7 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/systemd:"
 
 require conf/image-uefi.conf
 
-DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native"
+DEPENDS = "intltool-native libcap util-linux gnu-efi gperf-native python3-jinja2-native"
 
 inherit meson pkgconfig gettext
 inherit deploy
