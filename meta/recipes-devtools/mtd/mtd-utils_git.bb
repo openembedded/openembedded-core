@@ -11,16 +11,14 @@ inherit autotools pkgconfig update-alternatives
 DEPENDS = "zlib e2fsprogs util-linux"
 RDEPENDS_mtd-utils-tests += "bash"
 
-PV = "2.1.2"
+PV = "2.1.3"
 
-SRCREV = "7b986779342021bda87c04da3bf729718736d8ab"
+SRCREV = "42ea7cd48d2b3c306d59bb6c530d79f8c25bf9f5"
 SRC_URI = "git://git.infradead.org/mtd-utils.git \
            file://add-exclusion-to-mkfs-jffs2-git-2.patch \
            "
 
 S = "${WORKDIR}/git"
-
-EXTRA_OECONF += "--enable-install-tests"
 
 # xattr support creates an additional compile-time dependency on acl because
 # the sys/acl.h header is needed. libacl is not needed and thus enabling xattr
