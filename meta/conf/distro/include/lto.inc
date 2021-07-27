@@ -22,6 +22,8 @@ LTO:pn-perf = ""
 # webkit is not linking properly with LTO, disable until next time
 LTO:pn-webkitgtk = ""
 LTO:pn-xserver-xorg = ""
+LTO:pn-grub = ""
+LTO:pn-grub-efi = ""
 
 # Custom LTO flags
 # disable partitioning/streaming algorithm since its uses ASM
