@@ -4,7 +4,7 @@ inherit cmake bash-completion
 
 DEPENDS += "curl expat zlib libarchive xz ncurses bzip2"
 
-SRC_URI_append_class-nativesdk = " \
+SRC_URI:append:class-nativesdk = " \
     file://OEToolchainConfig.cmake \
     file://environment.d-cmake.sh \
     file://0001-CMakeDetermineSystem-use-oe-environment-vars-to-load.patch \
@@ -36,7 +36,7 @@ EXTRA_OECMAKE=" \
     -DKWSYS_LFS_WORKS=1 \
 "
 
-do_install_append_class-nativesdk() {
+do_install:append:class-nativesdk() {
     mkdir -p ${D}${datadir}/cmake
     install -m 644 ${WORKDIR}/OEToolchainConfig.cmake ${D}${datadir}/cmake/
 
@@ -44,10 +44,10 @@ do_install_append_class-nativesdk() {
     install -m 644 ${WORKDIR}/environment.d-cmake.sh ${D}${SDKPATHNATIVE}/environment-setup.d/cmake.sh
 }
 
-FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}"
+FILES:${PN}:append:class-nativesdk = " ${SDKPATHNATIVE}"
 
-FILES_${PN} += "${datadir}/cmake-${CMAKE_MAJOR_VERSION} ${datadir}/cmake ${datadir}/aclocal ${datadir}/emacs ${datadir}/vim"
-FILES_${PN}-doc += "${docdir}/cmake-${CMAKE_MAJOR_VERSION}"
-FILES_${PN}-dev = ""
+FILES:${PN} += "${datadir}/cmake-${CMAKE_MAJOR_VERSION} ${datadir}/cmake ${datadir}/aclocal ${datadir}/emacs ${datadir}/vim"
+FILES:${PN}-doc += "${docdir}/cmake-${CMAKE_MAJOR_VERSION}"
+FILES:${PN}-dev = ""
 
 BBCLASSEXTEND = "nativesdk"

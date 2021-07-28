@@ -21,6 +21,6 @@ EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release"
 
 DEPENDS = "zlib"
 PROVIDES += "u-boot-fw-utils"
-RPROVIDES_${PN}-bin += "u-boot-fw-utils"
+RPROVIDES:${PN}-bin += "u-boot-fw-utils"
 
 BBCLASSEXTEND = "native"

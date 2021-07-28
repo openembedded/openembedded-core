@@ -474,7 +474,7 @@ python do_config_analysis() {
     env['srctree'] = s
 
     # read specific symbols from the kernel recipe or from local.conf
-    # i.e.: CONFIG_ANALYSIS_pn-linux-yocto-dev = 'NF_CONNTRACK LOCALVERSION'
+    # i.e.: CONFIG_ANALYSIS:pn-linux-yocto-dev = 'NF_CONNTRACK LOCALVERSION'
     config = d.getVar( 'CONFIG_ANALYSIS' )
     if not config:
        config = [ "" ]

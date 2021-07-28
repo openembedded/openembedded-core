@@ -4,8 +4,8 @@
 #
 # Usage:
 # BBCLASSEXTEND = "devupstream:target"
-# SRC_URI_class-devupstream = "git://git.example.com/example"
-# SRCREV_class-devupstream = "abcdef"
+# SRC_URI:class-devupstream = "git://git.example.com/example"
+# SRCREV:class-devupstream = "abcdef"
 #
 # If the first entry in SRC_URI is a git: URL then S is rewritten to
 # WORKDIR/git.

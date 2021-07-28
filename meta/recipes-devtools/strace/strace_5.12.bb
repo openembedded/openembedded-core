@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "29171edf9d252f89c988a4c340dfdec662f458cb8c63d85431d64bab59
 
 inherit autotools ptest
 
-PACKAGECONFIG_class-target ??= "\
+PACKAGECONFIG:class-target ??= "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez', '', d)} \
 "
 
@@ -28,7 +28,7 @@ PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
 
 EXTRA_OECONF += "--enable-mpers=no --disable-gcc-Werror"
 
-CFLAGS_append_libc-musl = " -Dsigcontext_struct=sigcontext"
+CFLAGS:append:libc-musl = " -Dsigcontext_struct=sigcontext"
 
 TESTDIR = "tests"
 PTEST_BUILD_HOST_PATTERN = "^(DEB_CHANGELOGTIME|RPM_CHANGELOGTIME|WARN_CFLAGS_FOR_BUILD|LDFLAGS_FOR_BUILD)"
@@ -46,9 +46,9 @@ do_install_ptest() {
         sed -i -e '/^src/s/strace.*[0-9]/ptest/' ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
-RDEPENDS_${PN}-ptest += "make coreutils grep gawk sed"
+RDEPENDS:${PN}-ptest += "make coreutils grep gawk sed"
 
-RDEPENDS_${PN}-ptest_append_libc-glibc = "\
+RDEPENDS:${PN}-ptest:append:libc-glibc = "\
      locale-base-en-us.iso-8859-1 \
 "
 

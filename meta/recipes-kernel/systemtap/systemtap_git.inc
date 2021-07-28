@@ -11,7 +11,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git \
            "
 
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel|mips).*-linux'
-COMPATIBLE_HOST_libc-musl = 'null'
+COMPATIBLE_HOST:libc-musl = 'null'
 
 S = "${WORKDIR}/git"
 

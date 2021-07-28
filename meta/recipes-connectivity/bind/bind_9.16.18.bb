@@ -44,7 +44,7 @@ EXTRA_OECONF = " --with-libtool --disable-devpoll --disable-auto-validation --en
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_DIR_HOST}${prefix} \
                "
-LDFLAGS_append = " -lz"
+LDFLAGS:append = " -lz"
 
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native distutils3-base', '', d)}
 
@@ -52,15 +52,15 @@ inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native distutil
 REMOVE_LIBTOOL_LA = "0"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} = "--system --home ${localstatedir}/cache/bind --no-create-home \
+USERADD_PARAM:${PN} = "--system --home ${localstatedir}/cache/bind --no-create-home \
                        --user-group bind"
 
 INITSCRIPT_NAME = "bind"
 INITSCRIPT_PARAMS = "defaults"
 
-SYSTEMD_SERVICE_${PN} = "named.service"
+SYSTEMD_SERVICE:${PN} = "named.service"
 
-do_install_append() {
+do_install:append() {
 
 	install -d -o bind "${D}${localstatedir}/cache/bind"
 	install -d "${D}${sysconfdir}/bind"
@@ -94,7 +94,7 @@ do_install_append() {
     oe_multilib_header isc/platform.h
 }
 
-CONFFILES_${PN} = " \
+CONFFILES:${PN} = " \
 	${sysconfdir}/bind/named.conf \
 	${sysconfdir}/bind/named.conf.local \
 	${sysconfdir}/bind/named.conf.options \
@@ -105,25 +105,25 @@ CONFFILES_${PN} = " \
 	${sysconfdir}/bind/db.root \
 	"
 
-ALTERNATIVE_${PN}-utils = "nslookup"
+ALTERNATIVE:${PN}-utils = "nslookup"
 ALTERNATIVE_LINK_NAME[nslookup] = "${bindir}/nslookup"
 ALTERNATIVE_PRIORITY = "100"
 
 PACKAGE_BEFORE_PN += "${PN}-utils"
-FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/mdig ${bindir}/nslookup ${bindir}/nsupdate"
-FILES_${PN}-dev += "${bindir}/isc-config.h"
-FILES_${PN} += "${sbindir}/generate-rndc-key.sh"
+FILES:${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/mdig ${bindir}/nslookup ${bindir}/nsupdate"
+FILES:${PN}-dev += "${bindir}/isc-config.h"
+FILES:${PN} += "${sbindir}/generate-rndc-key.sh"
 
 PACKAGE_BEFORE_PN += "${PN}-libs"
 # special arrangement below due to
 # https://github.com/isc-projects/bind9/commit/0e25af628cd776f98c04fc4cc59048f5448f6c88
 FILES_SOLIBSDEV = "${libdir}/*[!0-9].so ${libdir}/libbind9.so"
-FILES_${PN}-libs = "${libdir}/named/*.so* ${libdir}/*-${PV}.so"
-FILES_${PN}-staticdev += "${libdir}/*.la"
+FILES:${PN}-libs = "${libdir}/named/*.so* ${libdir}/*-${PV}.so"
+FILES:${PN}-staticdev += "${libdir}/*.la"
 
 PACKAGE_BEFORE_PN += "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3-bind', '', d)}"
-FILES_python3-bind = "${sbindir}/dnssec-coverage ${sbindir}/dnssec-checkds \
+FILES:python3-bind = "${sbindir}/dnssec-coverage ${sbindir}/dnssec-checkds \
                 ${sbindir}/dnssec-keymgr ${PYTHON_SITEPACKAGES_DIR}"
 
-RDEPENDS_${PN}-dev = ""
-RDEPENDS_python3-bind = "python3-core python3-ply"
+RDEPENDS:${PN}-dev = ""
+RDEPENDS:python3-bind = "python3-core python3-ply"

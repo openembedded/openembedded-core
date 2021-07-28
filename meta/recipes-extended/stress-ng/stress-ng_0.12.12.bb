@@ -13,9 +13,9 @@ SRC_URI[sha256sum] = "f27af50f6f2308e707fef927674bdd209a046b116734281b792aeca35a
 DEPENDS = "coreutils-native"
 
 PROVIDES = "stress"
-RPROVIDES_${PN} = "stress"
-RREPLACES_${PN} = "stress"
-RCONFLICTS_${PN} = "stress"
+RPROVIDES:${PN} = "stress"
+RREPLACES:${PN} = "stress"
+RCONFLICTS:${PN} = "stress"
 
 inherit bash-completion
 

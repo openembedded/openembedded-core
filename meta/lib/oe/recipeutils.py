@@ -414,7 +414,7 @@ def copy_recipe_files(d, tgt_dir, whole_dir=False, download=True, all_variants=F
 
     fetch_urls(d)
     if all_variants:
-        # Get files for other variants e.g. in the case of a SRC_URI_append
+        # Get files for other variants e.g. in the case of a SRC_URI:append
         localdata = bb.data.createCopy(d)
         variants = (localdata.getVar('BBCLASSEXTEND') or '').split()
         if variants:
@@ -753,7 +753,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
 
     destsubdir = rd.getVar('PN')
     if srcfiles:
-        bbappendlines.append(('FILESEXTRAPATHS_prepend', ':=', '${THISDIR}/${PN}:'))
+        bbappendlines.append(('FILESEXTRAPATHS:prepend', ':=', '${THISDIR}/${PN}:'))
 
     appendoverride = ''
     if machine:
@@ -772,7 +772,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                 # FIXME do we care if the entry is added by another bbappend that might go away?
                 if not srcurientry in rd.getVar('SRC_URI').split():
                     if machine:
-                        appendline('SRC_URI_append%s' % appendoverride, '=', ' ' + srcurientry)
+                        appendline('SRC_URI:append%s' % appendoverride, '=', ' ' + srcurientry)
                     else:
                         appendline('SRC_URI', '+=', srcurientry)
             copyfiles[newfile] = srcfile
@@ -786,7 +786,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                         instfunclines.append(instdirline)
                     instfunclines.append('install -m %s ${WORKDIR}/%s ${D}%s' % (perms, os.path.basename(srcfile), instdestpath))
         if instfunclines:
-            bbappendlines.append(('do_install_append%s()' % appendoverride, '', instfunclines))
+            bbappendlines.append(('do_install:append%s()' % appendoverride, '', instfunclines))
 
     if redirect_output:
         bb.note('Writing append file %s (dry-run)' % appendpath)
@@ -804,15 +804,15 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         extvars = {'destsubdir': destsubdir}
 
         def appendfile_varfunc(varname, origvalue, op, newlines):
-            if varname == 'FILESEXTRAPATHS_prepend':
+            if varname == 'FILESEXTRAPATHS:prepend':
                 if origvalue.startswith('${THISDIR}/'):
-                    popline('FILESEXTRAPATHS_prepend')
+                    popline('FILESEXTRAPATHS:prepend')
                     extvars['destsubdir'] = rd.expand(origvalue.split('${THISDIR}/', 1)[1].rstrip(':'))
             elif varname == 'PACKAGE_ARCH':
                 if machine:
                     popline('PACKAGE_ARCH')
                     return (machine, None, 4, False)
-            elif varname.startswith('do_install_append'):
+            elif varname.startswith('do_install:append'):
                 func = popline(varname)
                 if func:
                     instfunclines = [line.strip() for line in origvalue.strip('\n').splitlines()]
@@ -824,7 +824,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                 splitval = split_var_value(origvalue, assignment=False)
                 changed = False
                 removevar = varname
-                if varname in ['SRC_URI', 'SRC_URI_append%s' % appendoverride]:
+                if varname in ['SRC_URI', 'SRC_URI:append%s' % appendoverride]:
                     removevar = 'SRC_URI'
                     line = popline(varname)
                     if line:

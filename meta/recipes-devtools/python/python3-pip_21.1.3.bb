@@ -12,12 +12,12 @@ SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
 SRC_URI[sha256sum] = "b5b1eb91b36894bd01b8e5a56a422c2f3838573da0b0a1c63a096bb454e3b23f"
 
-do_install_append() {
+do_install:append() {
     # Install as pip3 and leave pip2 as default
     rm ${D}/${bindir}/pip
 }
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
   python3-compile \
   python3-io \
   python3-html \

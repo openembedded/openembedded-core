@@ -2,10 +2,10 @@ require vim.inc
 
 PROVIDES = "xxd"
 
-PACKAGECONFIG_class-native = ""
+PACKAGECONFIG:class-native = ""
 BBCLASSEXTEND = "native nativesdk"
 
-ALTERNATIVE_${PN}_append = " xxd"
+ALTERNATIVE:${PN}:append = " xxd"
 ALTERNATIVE_TARGET[xxd] = "${bindir}/xxd"
 ALTERNATIVE_LINK_NAME[xxd] = "${bindir}/xxd"
 

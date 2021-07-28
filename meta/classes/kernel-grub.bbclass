@@ -97,9 +97,9 @@ python __anonymous () {
 
     for type in imagetypes.split():
         typelower = type.lower()
-        preinst_append = preinst.replace('KERNEL_IMAGETYPE', type)
-        postinst_prepend = postinst.replace('KERNEL_IMAGETYPE', type)
-        d.setVar('pkg_preinst_kernel-image-' + typelower + '_append', preinst_append)
-        d.setVar('pkg_postinst_kernel-image-' + typelower + '_prepend', postinst_prepend)
+        preinst:append = preinst.replace('KERNEL_IMAGETYPE', type)
+        postinst:prepend = postinst.replace('KERNEL_IMAGETYPE', type)
+        d.setVar('pkg_preinst:kernel-image-' + typelower + '_append', preinst:append)
+        d.setVar('pkg_postinst:kernel-image-' + typelower + '_prepend', postinst:prepend)
 }
 

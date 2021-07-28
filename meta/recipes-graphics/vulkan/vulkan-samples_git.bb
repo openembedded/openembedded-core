@@ -20,7 +20,7 @@ REQUIRED_DISTRO_FEATURES = 'vulkan'
 
 inherit cmake features_check
 
-FILES_${PN} += "${datadir}"
+FILES:${PN} += "${datadir}"
 
 #
 # There is code to remove the prefix CMAKE_SOURCE_DIR from __FILENAME__ paths

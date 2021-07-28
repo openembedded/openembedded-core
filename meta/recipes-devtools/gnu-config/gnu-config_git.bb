@@ -5,7 +5,7 @@ SECTION = "devel"
 LICENSE = "GPL-3.0-with-autoconf-exception"
 LIC_FILES_CHKSUM = "file://config.guess;beginline=9;endline=29;md5=b75d42f59f706ea56d6a8e00216fca6a"
 
-DEPENDS_class-native = "hostperl-runtime-native"
+DEPENDS:class-native = "hostperl-runtime-native"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -36,6 +36,6 @@ do_install () {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} = "${bindir} ${datadir}/gnu-config"
+FILES:${PN} = "${bindir} ${datadir}/gnu-config"
 
 BBCLASSEXTEND = "native nativesdk"

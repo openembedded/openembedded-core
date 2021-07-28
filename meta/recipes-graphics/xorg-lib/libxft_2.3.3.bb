@@ -29,5 +29,5 @@ BBCLASSEXTEND = "native nativesdk"
 
 python () {
         if d.getVar('DEBIAN_NAMES'):
-            d.setVar('PKG_${PN}', '${MLPREFIX}libxft2')
+            d.setVar('PKG:${PN}', '${MLPREFIX}libxft2')
 }

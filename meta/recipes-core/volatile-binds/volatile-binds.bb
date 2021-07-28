@@ -33,9 +33,9 @@ def volatile_systemd_services(d):
         services.append("%s.service" % what[1:].replace("/", "-"))
     return " ".join(services)
 
-SYSTEMD_SERVICE_${PN} = "${@volatile_systemd_services(d)}"
+SYSTEMD_SERVICE:${PN} = "${@volatile_systemd_services(d)}"
 
-FILES_${PN} += "${systemd_unitdir}/system/*.service ${servicedir}"
+FILES:${PN} += "${systemd_unitdir}/system/*.service ${servicedir}"
 
 do_compile () {
     while read spec mountpoint; do

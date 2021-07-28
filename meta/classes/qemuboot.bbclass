@@ -43,7 +43,7 @@
 #                    a custom one, but that may cause conflicts when multiple qemus are
 #                    running on the same host.
 #                    Note: If more than one interface of type -device virtio-net-device gets added,
-#                          QB_NETWORK_DEVICE_prepend might be used, since Qemu enumerates the eth*
+#                          QB_NETWORK_DEVICE:prepend might be used, since Qemu enumerates the eth*
 #                          devices in reverse order to -device arguments.
 #
 # QB_TAP_OPT: network option for 'tap' mode, e.g.,

@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${BUILD_ARCH}"
 
 # used by cmake class
 OECMAKE_RPATH = "${libdir}"
-OECMAKE_RPATH_class-native = "${libdir}"
+OECMAKE_RPATH:class-native = "${libdir}"
 
 TARGET_ARCH = "${BUILD_ARCH}"
 TARGET_OS = "${BUILD_OS}"
@@ -106,7 +106,7 @@ CLASSOVERRIDE = "class-native"
 MACHINEOVERRIDES = ""
 MACHINE_FEATURES = ""
 
-PATH_prepend = "${COREBASE}/scripts/native-intercept:"
+PATH:prepend = "${COREBASE}/scripts/native-intercept:"
 
 # This class encodes staging paths into its scripts data so can only be
 # reused if we manipulate the paths.

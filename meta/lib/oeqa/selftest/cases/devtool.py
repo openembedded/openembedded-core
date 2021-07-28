@@ -975,7 +975,7 @@ class DevtoolUpdateTests(DevtoolBase):
         self.assertExists(patchfile, 'Patch file not created')
 
         # Check bbappend contents
-        expectedlines = ['FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n',
+        expectedlines = ['FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n',
                          '\n',
                          'SRC_URI += "file://0001-Add-our-custom-version.patch"\n',
                          '\n']
@@ -990,7 +990,7 @@ class DevtoolUpdateTests(DevtoolBase):
         result = runCmd('git reset HEAD^', cwd=tempsrcdir)
         result = runCmd('devtool update-recipe %s -a %s' % (testrecipe, templayerdir))
         self.assertNotExists(patchfile, 'Patch file not deleted')
-        expectedlines2 = ['FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n',
+        expectedlines2 = ['FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n',
                          '\n']
         with open(bbappendfile, 'r') as f:
             self.assertEqual(expectedlines2, f.readlines())

@@ -14,12 +14,12 @@ inherit pypi setuptools3
 
 SRC_URI[sha256sum] = "8ac0cad150914bab2a53caa3f21876a78b092f3d2a36b9134874cd5c04a26b2e"
 
-RDEPENDS_${PN} += "binutils vim squashfs-tools python3-libarchive-c python3-magic python3-rpm"
+RDEPENDS:${PN} += "binutils vim squashfs-tools python3-libarchive-c python3-magic python3-rpm"
 
 # Dependencies don't build for musl
-COMPATIBLE_HOST_libc-musl = 'null'
+COMPATIBLE_HOST:libc-musl = 'null'
 
-do_install_append_class-native() {
+do_install:append:class-native() {
 	create_wrapper ${D}${bindir}/diffoscope \
 		MAGIC=${STAGING_DIR_NATIVE}${datadir_native}/misc/magic.mgc \
 		RPM_CONFIGDIR=${STAGING_LIBDIR_NATIVE}/rpm \

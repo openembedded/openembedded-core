@@ -22,17 +22,17 @@ PACKAGECONFIG[curses] = "--enable-curses,--disable-curses,ncurses"
 
 PACKAGES += "libaspell libpspell aspell-utils"
 
-RDEPENDS_${PN}-utils += "perl"
+RDEPENDS:${PN}-utils += "perl"
 
-FILES_libaspell = "${libdir}/libaspell.so.* ${libdir}/aspell*"
-FILES_aspell-utils = "${bindir}/word-list-compress ${bindir}/aspell-import ${bindir}/run-with-aspell ${bindir}/pre*"
-FILES_${PN} = "${bindir}/aspell"
-FILES_libpspell = "${libdir}/libpspell.so.*"
-FILES_${PN}-dev += "${bindir}/pspell-config"
+FILES:libaspell = "${libdir}/libaspell.so.* ${libdir}/aspell*"
+FILES:aspell-utils = "${bindir}/word-list-compress ${bindir}/aspell-import ${bindir}/run-with-aspell ${bindir}/pre*"
+FILES:${PN} = "${bindir}/aspell"
+FILES:libpspell = "${libdir}/libpspell.so.*"
+FILES:${PN}-dev += "${bindir}/pspell-config"
 
-ARM_INSTRUCTION_SET_armv4 = "arm"
-ARM_INSTRUCTION_SET_armv5 = "arm"
-ARM_INSTRUCTION_SET_armv6 = "arm"
+ARM_INSTRUCTION_SET:armv4 = "arm"
+ARM_INSTRUCTION_SET:armv5 = "arm"
+ARM_INSTRUCTION_SET:armv6 = "arm"
 
 inherit autotools-brokensep gettext texinfo binconfig-disabled
 

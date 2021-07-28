@@ -42,7 +42,7 @@ EXTRA_OEMESON += "--prefix=${root_prefix}/"
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_${PN}-ping = "ping"
+ALTERNATIVE:${PN}-ping = "ping"
 ALTERNATIVE_LINK_NAME[ping] = "${base_bindir}/ping"
 
 SPLITPKGS = "${PN}-ping ${PN}-arping ${PN}-tracepath ${PN}-clockdiff ${PN}-rdisc \
@@ -51,21 +51,21 @@ SPLITPKGS = "${PN}-ping ${PN}-arping ${PN}-tracepath ${PN}-clockdiff ${PN}-rdisc
              ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', '${PN}-traceroute6 ${PN}-ninfod', '', d)}"
 PACKAGES += "${SPLITPKGS}"
 
-ALLOW_EMPTY_${PN} = "1"
-RDEPENDS_${PN} += "${SPLITPKGS}"
+ALLOW_EMPTY:${PN} = "1"
+RDEPENDS:${PN} += "${SPLITPKGS}"
 
-FILES_${PN} = ""
-FILES_${PN}-ping = "${base_bindir}/ping.${BPN}"
-FILES_${PN}-arping = "${base_bindir}/arping"
-FILES_${PN}-tracepath = "${base_bindir}/tracepath"
-FILES_${PN}-traceroute6	= "${base_bindir}/traceroute6"
-FILES_${PN}-clockdiff = "${base_bindir}/clockdiff"
-FILES_${PN}-tftpd = "${base_bindir}/tftpd ${sysconfdir}/xinetd.d/tftp"
-FILES_${PN}-rarpd = "${base_sbindir}/rarpd  ${systemd_unitdir}/system/rarpd@.service"
-FILES_${PN}-rdisc = "${base_sbindir}/rdisc"
-FILES_${PN}-ninfod = "${base_sbindir}/ninfod ${sysconfdir}/init.d/ninfod.sh"
+FILES:${PN} = ""
+FILES:${PN}-ping = "${base_bindir}/ping.${BPN}"
+FILES:${PN}-arping = "${base_bindir}/arping"
+FILES:${PN}-tracepath = "${base_bindir}/tracepath"
+FILES:${PN}-traceroute6	= "${base_bindir}/traceroute6"
+FILES:${PN}-clockdiff = "${base_bindir}/clockdiff"
+FILES:${PN}-tftpd = "${base_bindir}/tftpd ${sysconfdir}/xinetd.d/tftp"
+FILES:${PN}-rarpd = "${base_sbindir}/rarpd  ${systemd_unitdir}/system/rarpd@.service"
+FILES:${PN}-rdisc = "${base_sbindir}/rdisc"
+FILES:${PN}-ninfod = "${base_sbindir}/ninfod ${sysconfdir}/init.d/ninfod.sh"
 
 SYSTEMD_PACKAGES = "${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', '${PN}-ninfod', '', d)} \
                     ${PN}-rdisc"
-SYSTEMD_SERVICE_${PN}-ninfod = "ninfod.service"
-SYSTEMD_SERVICE_${PN}-rdisc = "rdisc.service"
+SYSTEMD_SERVICE:${PN}-ninfod = "ninfod.service"
+SYSTEMD_SERVICE:${PN}-rdisc = "rdisc.service"

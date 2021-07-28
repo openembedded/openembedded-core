@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS += "virtual/libiconv"
 
-RDEPENDS_${PN}_libc-glibc = "glibc-gconv-ibm850"
-RRECOMMENDS_${PN}_libc-glibc = "\
+RDEPENDS:${PN}:libc-glibc = "glibc-gconv-ibm850"
+RRECOMMENDS:${PN}:libc-glibc = "\
 	glibc-gconv-ibm437 \
 	glibc-gconv-ibm737 \
 	glibc-gconv-ibm775 \
@@ -32,7 +32,7 @@ SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
            file://clang_UNUSED.patch \
            "
 
-SRC_URI_append_class-native = " file://disable-hardcoded-configs.patch"
+SRC_URI:append:class-native = " file://disable-hardcoded-configs.patch"
 
 inherit autotools texinfo
 
@@ -43,7 +43,7 @@ BBCLASSEXTEND = "native nativesdk"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[libbsd] = "ac_cv_lib_bsd_main=yes,ac_cv_lib_bsd_main=no,libbsd"
 
-do_install_prepend () {
+do_install:prepend () {
     # Create bindir to fix parallel installation issues
     mkdir -p ${D}/${bindir}
     mkdir -p ${D}/${datadir}

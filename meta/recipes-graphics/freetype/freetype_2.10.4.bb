@@ -39,7 +39,7 @@ EXTRA_OECONF = "CC_BUILD='${BUILD_CC}'"
 
 TARGET_CPPFLAGS += "-D_FILE_OFFSET_BITS=64"
 
-do_install_append() {
+do_install:append() {
 	oe_multilib_header freetype2/freetype/config/ftconfig.h
 }
 

@@ -21,8 +21,8 @@ CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl dan
 inherit autotools pkgconfig binconfig multilib_header
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} ssl libidn proxy threaded-resolver verbose zlib"
-PACKAGECONFIG_class-native = "ipv6 proxy ssl threaded-resolver verbose zlib"
-PACKAGECONFIG_class-nativesdk = "ipv6 proxy ssl threaded-resolver verbose zlib"
+PACKAGECONFIG:class-native = "ipv6 proxy ssl threaded-resolver verbose zlib"
+PACKAGECONFIG:class-nativesdk = "ipv6 proxy ssl threaded-resolver verbose zlib"
 
 # 'ares' and 'threaded-resolver' are mutually exclusive
 PACKAGECONFIG[ares] = "--enable-ares,--disable-ares,c-ares,,,threaded-resolver"
@@ -68,7 +68,7 @@ EXTRA_OECONF = " \
     --disable-curldebug \
 "
 
-do_install_append_class-target() {
+do_install:append:class-target() {
 	# cleanup buildpaths from curl-config
 	sed -i \
 	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
@@ -79,10 +79,10 @@ do_install_append_class-target() {
 
 PACKAGES =+ "lib${BPN}"
 
-FILES_lib${BPN} = "${libdir}/lib*.so.*"
-RRECOMMENDS_lib${BPN} += "ca-certificates"
+FILES:lib${BPN} = "${libdir}/lib*.so.*"
+RRECOMMENDS:lib${BPN} += "ca-certificates"
 
-FILES_${PN} += "${datadir}/zsh"
+FILES:${PN} += "${datadir}/zsh"
 
 inherit multilib_script
 MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/curl-config"

@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://cdjpeg.h;endline=13;md5=8a61af33cc1c681cd5cc297150bbb
                     file://jpeglib.h;endline=16;md5=52b5eaade8d5b6a452a7693dfe52c084 \
                     file://djpeg.c;endline=11;md5=b61f01ad6aff437b34d1f9e8004280a4 \
                     "
-DEPENDS_append_x86-64_class-target = " nasm-native"
-DEPENDS_append_x86_class-target = " nasm-native"
+DEPENDS:append:x86-64:class-target = " nasm-native"
+DEPENDS:append:x86:class-target = " nasm-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
            file://0001-libjpeg-turbo-fix-package_qa-error.patch \
@@ -22,40 +22,40 @@ PE = "1"
 
 # Drop-in replacement for jpeg
 PROVIDES = "jpeg"
-RPROVIDES_${PN} += "jpeg"
-RREPLACES_${PN} += "jpeg"
-RCONFLICTS_${PN} += "jpeg"
+RPROVIDES:${PN} += "jpeg"
+RREPLACES:${PN} += "jpeg"
+RCONFLICTS:${PN} += "jpeg"
 
 inherit cmake pkgconfig
 
 export NASMENV = "--reproducible --debug-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
 
 # Add nasm-native dependency consistently for all build arches is hard
-EXTRA_OECMAKE_append_class-native = " -DWITH_SIMD=False"
-EXTRA_OECMAKE_append_class-nativesdk = " -DWITH_SIMD=False"
+EXTRA_OECMAKE:append:class-native = " -DWITH_SIMD=False"
+EXTRA_OECMAKE:append:class-nativesdk = " -DWITH_SIMD=False"
 
 # Work around missing x32 ABI support
-EXTRA_OECMAKE_append_class-target = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", "-DWITH_SIMD=False", "", d)}"
+EXTRA_OECMAKE:append:class-target = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", "-DWITH_SIMD=False", "", d)}"
 
 # Work around missing non-floating point ABI support in MIPS
-EXTRA_OECMAKE_append_class-target = " ${@bb.utils.contains("MIPSPKGSFX_FPU", "-nf", "-DWITH_SIMD=False", "", d)}"
+EXTRA_OECMAKE:append:class-target = " ${@bb.utils.contains("MIPSPKGSFX_FPU", "-nf", "-DWITH_SIMD=False", "", d)}"
 
-EXTRA_OECMAKE_append_class-target_arm = " ${@bb.utils.contains("TUNE_FEATURES", "neon", "", "-DWITH_SIMD=False", d)}"
-EXTRA_OECMAKE_append_class-target_armeb = " ${@bb.utils.contains("TUNE_FEATURES", "neon", "", "-DWITH_SIMD=False", d)}"
+EXTRA_OECMAKE:append:class-target:arm = " ${@bb.utils.contains("TUNE_FEATURES", "neon", "", "-DWITH_SIMD=False", d)}"
+EXTRA_OECMAKE:append:class-target:armeb = " ${@bb.utils.contains("TUNE_FEATURES", "neon", "", "-DWITH_SIMD=False", d)}"
 
 # Provide a workaround if Altivec unit is not present in PPC
-EXTRA_OECMAKE_append_class-target_powerpc = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "", "-DWITH_SIMD=False", d)}"
-EXTRA_OECMAKE_append_class-target_powerpc64 = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "", "-DWITH_SIMD=False", d)}"
+EXTRA_OECMAKE:append:class-target:powerpc = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "", "-DWITH_SIMD=False", d)}"
+EXTRA_OECMAKE:append:class-target:powerpc64 = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "", "-DWITH_SIMD=False", d)}"
 
-DEBUG_OPTIMIZATION_append_armv4 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
-DEBUG_OPTIMIZATION_append_armv5 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
+DEBUG_OPTIMIZATION:append:armv4 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
+DEBUG_OPTIMIZATION:append:armv5 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
 
 PACKAGES =+ "jpeg-tools libturbojpeg"
 
-DESCRIPTION_jpeg-tools = "The jpeg-tools package includes client programs to access libjpeg functionality.  These tools allow for the compression, decompression, transformation and display of JPEG files and benchmarking of the libjpeg library."
-FILES_jpeg-tools = "${bindir}/*"
+DESCRIPTION:jpeg-tools = "The jpeg-tools package includes client programs to access libjpeg functionality.  These tools allow for the compression, decompression, transformation and display of JPEG files and benchmarking of the libjpeg library."
+FILES:jpeg-tools = "${bindir}/*"
 
-DESCRIPTION_libturbojpeg = "A SIMD-accelerated JPEG codec which provides only TurboJPEG APIs"
-FILES_libturbojpeg = "${libdir}/libturbojpeg.so.*"
+DESCRIPTION:libturbojpeg = "A SIMD-accelerated JPEG codec which provides only TurboJPEG APIs"
+FILES:libturbojpeg = "${libdir}/libturbojpeg.so.*"
 
 BBCLASSEXTEND = "native nativesdk"

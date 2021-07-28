@@ -36,8 +36,8 @@ PACKAGES =+ "${PN}-xcb"
 
 inherit gettext
 
-FILES_${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${datadir}/X11/Xcms.txt"
-FILES_${PN}-xcb += "${libdir}/libX11-xcb.so.*"
-FILES_${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
+FILES:${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${datadir}/X11/Xcms.txt"
+FILES:${PN}-xcb += "${libdir}/libX11-xcb.so.*"
+FILES:${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
 
 BBCLASSEXTEND = "native nativesdk"

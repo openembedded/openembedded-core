@@ -38,7 +38,7 @@ EXTRA_OECONF = "--includedir=${includedir}/security \
                 --disable-doc \
 		--disable-prelude"
 
-CFLAGS_append = " -fPIC "
+CFLAGS:append = " -fPIC "
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
@@ -49,10 +49,10 @@ PACKAGECONFIG[audit] = "--enable-audit,--disable-audit,audit,"
 PACKAGECONFIG[userdb] = "--enable-db=db,--enable-db=no,db,"
 
 PACKAGES += "${PN}-runtime ${PN}-xtests"
-FILES_${PN} = "${base_libdir}/lib*${SOLIBS}"
-FILES_${PN}-dev += "${base_libdir}/security/*.la ${base_libdir}/*.la ${base_libdir}/lib*${SOLIBSDEV}"
-FILES_${PN}-runtime = "${sysconfdir} ${sbindir} ${systemd_system_unitdir}"
-FILES_${PN}-xtests = "${datadir}/Linux-PAM/xtests"
+FILES:${PN} = "${base_libdir}/lib*${SOLIBS}"
+FILES:${PN}-dev += "${base_libdir}/security/*.la ${base_libdir}/*.la ${base_libdir}/lib*${SOLIBSDEV}"
+FILES:${PN}-runtime = "${sysconfdir} ${sbindir} ${systemd_system_unitdir}"
+FILES:${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
 PACKAGES_DYNAMIC += "^${MLPREFIX}pam-plugin-.*"
 
@@ -62,16 +62,16 @@ def get_multilib_bit(d):
 
 libpam_suffix = "suffix${@get_multilib_bit(d)}"
 
-RPROVIDES_${PN} += "${PN}-${libpam_suffix}"
-RPROVIDES_${PN}-runtime += "${PN}-runtime-${libpam_suffix}"
+RPROVIDES:${PN} += "${PN}-${libpam_suffix}"
+RPROVIDES:${PN}-runtime += "${PN}-runtime-${libpam_suffix}"
 
-RDEPENDS_${PN}-runtime = "${PN}-${libpam_suffix} \
+RDEPENDS:${PN}-runtime = "${PN}-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-deny-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-permit-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-warn-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-unix-${libpam_suffix} \
     "
-RDEPENDS_${PN}-xtests = "${PN}-${libpam_suffix} \
+RDEPENDS:${PN}-xtests = "${PN}-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-access-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-debug-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-pwhistory-${libpam_suffix} \
@@ -80,27 +80,27 @@ RDEPENDS_${PN}-xtests = "${PN}-${libpam_suffix} \
     bash coreutils"
 
 # FIXME: Native suffix breaks here, disable it for now
-RRECOMMENDS_${PN} = "${PN}-runtime-${libpam_suffix}"
-RRECOMMENDS_${PN}_class-native = ""
+RRECOMMENDS:${PN} = "${PN}-runtime-${libpam_suffix}"
+RRECOMMENDS:${PN}:class-native = ""
 
-python populate_packages_prepend () {
+python populate_packages:prepend () {
     def pam_plugin_hook(file, pkg, pattern, format, basename):
         pn = d.getVar('PN')
         libpam_suffix = d.getVar('libpam_suffix')
 
-        rdeps = d.getVar('RDEPENDS_' + pkg)
+        rdeps = d.getVar('RDEPENDS:' + pkg)
         if rdeps:
             rdeps = rdeps + " " + pn + "-" + libpam_suffix
         else:
             rdeps = pn + "-" + libpam_suffix
-        d.setVar('RDEPENDS_' + pkg, rdeps)
+        d.setVar('RDEPENDS:' + pkg, rdeps)
 
-        provides = d.getVar('RPROVIDES_' + pkg)
+        provides = d.getVar('RPROVIDES:' + pkg)
         if provides:
             provides = provides + " " + pkg + "-" + libpam_suffix
         else:
             provides = pkg + "-" + libpam_suffix
-        d.setVar('RPROVIDES_' + pkg, provides)
+        d.setVar('RPROVIDES:' + pkg, provides)
 
     mlprefix = d.getVar('MLPREFIX') or ''
     dvar = d.expand('${WORKDIR}/package')
@@ -158,7 +158,7 @@ do_install_ptest() {
     fi
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
          if [ -z "$D" ] && [ -e /etc/init.d/populate-volatile.sh ] ; then
                  /etc/init.d/populate-volatile.sh update
          fi
@@ -169,12 +169,12 @@ REQUIRED_DISTRO_FEATURES = "pam"
 
 BBCLASSEXTEND = "nativesdk native"
 
-CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-session"
-CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-auth"
-CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-password"
-CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-session-noninteractive"
-CONFFILES_${PN}-runtime += "${sysconfdir}/pam.d/common-account"
-CONFFILES_${PN}-runtime += "${sysconfdir}/security/limits.conf"
+CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-session"
+CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-auth"
+CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-password"
+CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-session-noninteractive"
+CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-account"
+CONFFILES:${PN}-runtime += "${sysconfdir}/security/limits.conf"
 
 UPSTREAM_CHECK_URI = "https://github.com/linux-pam/linux-pam/releases"
 

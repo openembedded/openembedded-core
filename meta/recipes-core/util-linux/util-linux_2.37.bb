@@ -10,12 +10,12 @@ PACKAGES += "${@bb.utils.contains('PACKAGECONFIG', 'pylibmount', '${PN}-pylibmou
 python util_linux_binpackages () {
     def pkg_hook(f, pkg, file_regex, output_pattern, modulename):
         pn = d.getVar('PN')
-        d.appendVar('RRECOMMENDS_%s' % pn, ' %s' % pkg)
+        d.appendVar('RRECOMMENDS:%s' % pn, ' %s' % pkg)
 
-        if d.getVar('ALTERNATIVE_' + pkg):
+        if d.getVar('ALTERNATIVE:' + pkg):
             return
         if d.getVarFlag('ALTERNATIVE_LINK_NAME', modulename):
-            d.setVar('ALTERNATIVE_' + pkg, modulename)
+            d.setVar('ALTERNATIVE:' + pkg, modulename)
 
     bindirs = sorted(list(set(d.expand("${base_sbindir} ${base_bindir} ${sbindir} ${bindir}").split())))
     for dir in bindirs:
@@ -41,9 +41,9 @@ python util_linux_binpackages () {
 
     pn = d.getVar('PN')
     for pkg, links in extras.items():
-        of = d.getVar('FILES_' + pn + '-' + pkg)
+        of = d.getVar('FILES:' + pn + '-' + pkg)
         links = of + links
-        d.setVar('FILES_' + pn + '-' + pkg, links)
+        d.setVar('FILES:' + pn + '-' + pkg, links)
 }
 
 # we must execute before update-alternatives PACKAGE_PREPROCESS_FUNCS
@@ -63,7 +63,7 @@ PACKAGES_DYNAMIC = "^${PN}-.*"
 
 CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 UTIL_LINUX_LIBDIR = "${libdir}"
-UTIL_LINUX_LIBDIR_class-target = "${base_libdir}"
+UTIL_LINUX_LIBDIR:class-target = "${base_libdir}"
 EXTRA_OECONF = "\
     --enable-libuuid --enable-libblkid \
     \
@@ -81,17 +81,17 @@ EXTRA_OECONF = "\
     --libdir='${UTIL_LINUX_LIBDIR}' \
 "
 
-EXTRA_OECONF_append_class-target = " --enable-setpriv"
-EXTRA_OECONF_append_class-native = " --without-cap-ng --disable-setpriv"
-EXTRA_OECONF_append_class-nativesdk = " --without-cap-ng --disable-setpriv"
-EXTRA_OECONF_append = " --disable-hwclock-gplv3"
+EXTRA_OECONF:append:class-target = " --enable-setpriv"
+EXTRA_OECONF:append:class-native = " --without-cap-ng --disable-setpriv"
+EXTRA_OECONF:append:class-nativesdk = " --without-cap-ng --disable-setpriv"
+EXTRA_OECONF:append = " --disable-hwclock-gplv3"
 
 # enable pcre2 for native/nativesdk to match host distros
 # this helps to keep same expectations when using the SDK or
 # build host versions during development
 #
 PACKAGECONFIG ?= "pcre2"
-PACKAGECONFIG_class-target ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'chfn-chsh pam', '', d)}"
+PACKAGECONFIG:class-target ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'chfn-chsh pam', '', d)}"
 PACKAGECONFIG[pam] = "--enable-su --enable-runuser,--disable-su --disable-runuser, libpam,"
 # Respect the systemd feature for uuidd
 PACKAGECONFIG[systemd] = "--with-systemd --with-systemdsystemunitdir=${systemd_system_unitdir}, --without-systemd --without-systemdsystemunitdir,systemd"
@@ -106,43 +106,43 @@ PACKAGECONFIG[chfn-chsh] = "--enable-chfn-chsh,--disable-chfn-chsh,"
 
 EXTRA_OEMAKE = "ARCH=${TARGET_ARCH} CPU= CPUOPT= 'OPT=${CFLAGS}'"
 
-ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = ""
-FILES_${PN}-doc += "${datadir}/getopt/getopt-*.*"
-FILES_${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.la"
-FILES_${PN}-mount = "${sysconfdir}/default/mountall"
-FILES_${PN}-runuser = "${sysconfdir}/pam.d/runuser*"
-FILES_${PN}-su = "${sysconfdir}/pam.d/su-l"
-CONFFILES_${PN}-su = "${sysconfdir}/pam.d/su-l"
-FILES_${PN}-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so \
+ALLOW_EMPTY:${PN} = "1"
+FILES:${PN} = ""
+FILES:${PN}-doc += "${datadir}/getopt/getopt-*.*"
+FILES:${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.la"
+FILES:${PN}-mount = "${sysconfdir}/default/mountall"
+FILES:${PN}-runuser = "${sysconfdir}/pam.d/runuser*"
+FILES:${PN}-su = "${sysconfdir}/pam.d/su-l"
+CONFFILES:${PN}-su = "${sysconfdir}/pam.d/su-l"
+FILES:${PN}-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__init__.* \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__pycache__/*"
 
 # Util-linux' blkid replaces the e2fsprogs one
-RCONFLICTS_${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
-RREPLACES_${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
+RCONFLICTS:${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
+RREPLACES:${PN}-blkid = "${MLPREFIX}e2fsprogs-blkid"
 
-RRECOMMENDS_${PN}_class-native = ""
-RRECOMMENDS_${PN}_class-nativesdk = ""
-RDEPENDS_${PN}_class-native = ""
-RDEPENDS_${PN}_class-nativesdk = ""
+RRECOMMENDS:${PN}:class-native = ""
+RRECOMMENDS:${PN}:class-nativesdk = ""
+RDEPENDS:${PN}:class-native = ""
+RDEPENDS:${PN}:class-nativesdk = ""
 
-RDEPENDS_${PN} += " util-linux-libuuid"
-RDEPENDS_${PN}-dev += " util-linux-libuuid-dev"
+RDEPENDS:${PN} += " util-linux-libuuid"
+RDEPENDS:${PN}-dev += " util-linux-libuuid-dev"
 
-RPROVIDES_${PN}-dev = "${PN}-libblkid-dev ${PN}-libmount-dev"
+RPROVIDES:${PN}-dev = "${PN}-libblkid-dev ${PN}-libmount-dev"
 
-RDEPENDS_${PN}-bash-completion += "${PN}-lsblk"
-RDEPENDS_${PN}-ptest += "bash bc btrfs-tools coreutils e2fsprogs findutils grep iproute2 kmod mdadm procps sed socat which xz"
-RRECOMMENDS_${PN}-ptest += "kernel-module-scsi-debug kernel-module-sd-mod kernel-module-loop"
-RDEPENDS_${PN}-swaponoff = "${PN}-swapon ${PN}-swapoff"
-ALLOW_EMPTY_${PN}-swaponoff = "1"
+RDEPENDS:${PN}-bash-completion += "${PN}-lsblk"
+RDEPENDS:${PN}-ptest += "bash bc btrfs-tools coreutils e2fsprogs findutils grep iproute2 kmod mdadm procps sed socat which xz"
+RRECOMMENDS:${PN}-ptest += "kernel-module-scsi-debug kernel-module-sd-mod kernel-module-loop"
+RDEPENDS:${PN}-swaponoff = "${PN}-swapon ${PN}-swapoff"
+ALLOW_EMPTY:${PN}-swaponoff = "1"
 
 #SYSTEMD_PACKAGES = "${PN}-uuidd ${PN}-fstrim"
-SYSTEMD_SERVICE_${PN}-uuidd = "uuidd.socket uuidd.service"
-SYSTEMD_AUTO_ENABLE_${PN}-uuidd = "disable"
-SYSTEMD_SERVICE_${PN}-fstrim = "fstrim.timer fstrim.service"
-SYSTEMD_AUTO_ENABLE_${PN}-fstrim = "disable"
+SYSTEMD_SERVICE:${PN}-uuidd = "uuidd.socket uuidd.service"
+SYSTEMD_AUTO_ENABLE:${PN}-uuidd = "disable"
+SYSTEMD_SERVICE:${PN}-fstrim = "fstrim.timer fstrim.service"
+SYSTEMD_AUTO_ENABLE:${PN}-fstrim = "disable"
 
 do_install () {
 	# with ccache the timestamps on compiled files may
@@ -181,7 +181,7 @@ do_install () {
 	rm -f ${D}${bindir}/chkdupexe
 }
 
-do_install_append_class-target () {
+do_install:append:class-target () {
 	if [ "${@bb.utils.filter('PACKAGECONFIG', 'pam', d)}" ]; then
 		install -d ${D}${sysconfdir}/pam.d
 		install -m 0644 ${WORKDIR}/runuser.pamd ${D}${sysconfdir}/pam.d/runuser
@@ -194,14 +194,14 @@ do_install_append_class-target () {
 }
 # nologin causes a conflict with shadow-native
 # kill causes a conflict with coreutils-native (if ${bindir}==${base_bindir})
-do_install_append_class-native () {
+do_install:append:class-native () {
 	rm -f ${D}${base_sbindir}/nologin
 	rm -f ${D}${base_bindir}/kill
 }
 
 # dm-verity support introduces a circular build dependency, so util-linux-libuuid is split out for target builds
 # Need to build libuuid for uuidgen, but then delete it and let the other recipe ship it
-do_install_append () {
+do_install:append () {
 	rm -rf ${D}${includedir}/uuid ${D}${libdir}/pkgconfig/uuid.pc ${D}${libdir}/libuuid* ${D}${base_libdir}/libuuid*
 }
 
@@ -222,14 +222,14 @@ ALTERNATIVE_LINK_NAME[fsck] = "${base_sbindir}/fsck"
 ALTERNATIVE_LINK_NAME[fsfreeze] = "${sbindir}/fsfreeze"
 ALTERNATIVE_LINK_NAME[fstrim] = "${base_sbindir}/fstrim"
 ALTERNATIVE_LINK_NAME[getopt] = "${base_bindir}/getopt"
-ALTERNATIVE_${PN}-agetty = "getty"
+ALTERNATIVE:${PN}-agetty = "getty"
 ALTERNATIVE_LINK_NAME[getty] = "${base_sbindir}/getty"
 ALTERNATIVE_TARGET[getty] = "${base_sbindir}/agetty"
 ALTERNATIVE_LINK_NAME[hexdump] = "${bindir}/hexdump"
 ALTERNATIVE_LINK_NAME[hwclock] = "${base_sbindir}/hwclock"
 ALTERNATIVE_LINK_NAME[ionice] = "${bindir}/ionice"
 ALTERNATIVE_LINK_NAME[kill] = "${base_bindir}/kill"
-ALTERNATIVE_${PN}-last = "last lastb"
+ALTERNATIVE:${PN}-last = "last lastb"
 ALTERNATIVE_LINK_NAME[last] = "${bindir}/last"
 ALTERNATIVE_LINK_NAME[lastb] = "${bindir}/lastb"
 ALTERNATIVE_LINK_NAME[logger] = "${bindir}/logger"

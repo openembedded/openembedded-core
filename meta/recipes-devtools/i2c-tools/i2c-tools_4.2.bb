@@ -22,20 +22,20 @@ do_install() {
 }
 
 PACKAGES =+ "${PN}-misc"
-FILES_${PN}-misc = "${sbindir}/i2c-stub-from-dump \
+FILES:${PN}-misc = "${sbindir}/i2c-stub-from-dump \
                         ${bindir}/ddcmon \
                         ${bindir}/decode-edid \
                         ${bindir}/decode-dimms \
                         ${bindir}/decode-vaio \
                        "
-RDEPENDS_${PN}-misc = "${PN} perl perl-module-posix \
+RDEPENDS:${PN}-misc = "${PN} perl perl-module-posix \
                        perl-module-constant perl-module-file-basename \
                        perl-module-fcntl perl-module-strict perl-module-vars \
 		       perl-module-carp \
                       "
 
 ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE_${PN} = "i2cdetect i2cdump i2cget i2cset i2ctransfer"
+ALTERNATIVE:${PN} = "i2cdetect i2cdump i2cget i2cset i2ctransfer"
 ALTERNATIVE_LINK_NAME[i2cdetect] = "${sbindir}/i2cdetect"
 ALTERNATIVE_LINK_NAME[i2cdump] = "${sbindir}/i2cdump"
 ALTERNATIVE_LINK_NAME[i2cget] = "${sbindir}/i2cget"

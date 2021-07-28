@@ -7,10 +7,10 @@ disk partitioning, kernel message management, filesystem creation, and system lo
 SECTION = "base"
 
 LICENSE = "GPLv2+ & LGPLv2.1+ & BSD-3-Clause & BSD-4-Clause"
-LICENSE_${PN}-libblkid = "LGPLv2.1+"
-LICENSE_${PN}-libfdisk = "LGPLv2.1+"
-LICENSE_${PN}-libmount = "LGPLv2.1+"
-LICENSE_${PN}-libsmartcols = "LGPLv2.1+"
+LICENSE:${PN}-libblkid = "LGPLv2.1+"
+LICENSE:${PN}-libfdisk = "LGPLv2.1+"
+LICENSE:${PN}-libmount = "LGPLv2.1+"
+LICENSE:${PN}-libsmartcols = "LGPLv2.1+"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=0fd5c050c6187d2bf0a4492b7f4e33da \
                     file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
@@ -25,7 +25,7 @@ LIC_FILES_CHKSUM = "file://README.licensing;md5=0fd5c050c6187d2bf0a4492b7f4e33da
                     file://libsmartcols/COPYING;md5=693bcbbe16d3a4a4b37bc906bc01cc04 \
 "
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/util-linux:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/util-linux:"
 MAJOR_VERSION = "${@'.'.join(d.getVar('PV').split('.')[0:2])}"
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-linux-${PV}.tar.xz \
            file://configure-sbindir.patch \
