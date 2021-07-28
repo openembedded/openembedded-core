@@ -183,9 +183,9 @@ class RecipetoolTests(RecipetoolBase):
                          '\n',
                          'PACKAGE_ARCH = "${MACHINE_ARCH}"\n',
                          '\n',
-                         'SRC_URI:append_mymachine = " file://testfile"\n',
+                         'SRC_URI:append:mymachine = " file://testfile"\n',
                          '\n',
-                         'do_install:append_mymachine() {\n',
+                         'do_install:append:mymachine() {\n',
                          '    install -d ${D}${datadir}\n',
                          '    install -m 0644 ${WORKDIR}/testfile ${D}${datadir}/something\n',
                          '}\n']

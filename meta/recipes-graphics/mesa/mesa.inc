@@ -231,7 +231,7 @@ python __anonymous() {
         mlprefix = d.getVar("MLPREFIX")
         fullp = mlprefix + p[1] + "-mesa" + suffix
         mlprefix = d.getVar("MLPREFIX")
-        pkgs = " ".join(mlprefix + x + suffix for x in p[1:])
+        pkgs = " " + " ".join(mlprefix + x + suffix for x in p[1:])
         d.setVar("DEBIAN_NOAUTONAME:" + fullp, "1")
         d.appendVar("RREPLACES:" + fullp, pkgs)
         d.appendVar("RPROVIDES:" + fullp, pkgs)
@@ -241,7 +241,7 @@ python __anonymous() {
 
         # For -dev, the first element is both the Debian and original name
         fullp = mlprefix + p[1] + "-mesa-dev" + suffix
-        pkgs = mlprefix + p[1] + "-dev" + suffix
+        pkgs = " " + mlprefix + p[1] + "-dev" + suffix
         d.setVar("DEBIAN_NOAUTONAME:" + fullp, "1")
         d.appendVar("RREPLACES:" + fullp, pkgs)
         d.appendVar("RPROVIDES:" + fullp, pkgs)

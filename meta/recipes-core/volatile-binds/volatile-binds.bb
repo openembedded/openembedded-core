@@ -68,7 +68,7 @@ do_install () {
     install -m 0755 mount-copybind ${D}${base_sbindir}/
 
     install -d ${D}${systemd_unitdir}/system
-    for service in ${SYSTEMD_SERVICE_${PN}}; do
+    for service in ${SYSTEMD_SERVICE:${PN}}; do
         install -m 0644 $service ${D}${systemd_unitdir}/system/
     done
 

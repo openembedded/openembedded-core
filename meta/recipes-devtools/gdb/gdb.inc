@@ -2,7 +2,7 @@ require gdb-common.inc
 
 inherit gettext
 
-#LDFLAGS_append = " -s"
+#LDFLAGS:append = " -s"
 #export CFLAGS:append=" -L${STAGING_LIBDIR}"
 
 # cross-canadian must not see this

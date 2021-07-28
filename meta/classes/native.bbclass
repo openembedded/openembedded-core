@@ -133,7 +133,7 @@ python native_virtclass_handler () {
 
     def map_dependencies(varname, d, suffix = "", selfref=True):
         if suffix:
-            varname = varname + "_" + suffix
+            varname = varname + ":" + suffix
         deps = d.getVar(varname)
         if not deps:
             return

@@ -26,7 +26,7 @@ class GenericEFITest(OESelftestTestCase):
         self.write_config(self,
 """
 EFI_PROVIDER = "%s"
-IMAGE_FSTYPES:pn-%s_append = " wic"
+IMAGE_FSTYPES:pn-%s:append = " wic"
 MACHINE = "%s"
 MACHINE_FEATURES:append = " efi"
 WKS_FILE = "efi-bootdisk.wks.in"

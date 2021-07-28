@@ -122,6 +122,8 @@ python do_write_qemuboot_conf() {
     cf = configparser.ConfigParser()
     cf.add_section('config_bsp')
     for k in sorted(qemuboot_vars(d)):
+        if ":" in k:
+            continue
         # qemu-helper-native sysroot is not removed by rm_work and
         # contains all tools required by runqemu
         if k == 'STAGING_BINDIR_NATIVE':

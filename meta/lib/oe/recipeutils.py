@@ -47,7 +47,7 @@ def simplify_history(history, d):
                 continue
             has_set = True
         elif event['op'] in ('append', 'prepend', 'postdot', 'predot'):
-            # Reminder: "append" and "prepend" mean += and =+ respectively, NOT _append / _prepend
+            # Reminder: "append" and "prepend" mean += and =+ respectively, NOT :append / :prepend
             if has_set:
                 continue
         ret_history.insert(0, event)
@@ -342,7 +342,7 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None
     def override_applicable(hevent):
         op = hevent['op']
         if '[' in op:
-            opoverrides = op.split('[')[1].split(']')[0].split('_')
+            opoverrides = op.split('[')[1].split(']')[0].split(':')
             for opoverride in opoverrides:
                 if not opoverride in overrides:
                     return False
@@ -368,13 +368,13 @@ def patch_recipe(d, fn, varvalues, patch=False, relpath='', redirect_output=None
                                 recipe_set = True
                     if not recipe_set:
                         for event in history:
-                            if event['op'].startswith('_remove'):
+                            if event['op'].startswith(':remove'):
                                 continue
                             if not override_applicable(event):
                                 continue
                             newvalue = value.replace(event['detail'], '')
-                            if newvalue == value and os.path.abspath(event['file']) == fn and event['op'].startswith('_'):
-                                op = event['op'].replace('[', '_').replace(']', '')
+                            if newvalue == value and os.path.abspath(event['file']) == fn and event['op'].startswith(':'):
+                                op = event['op'].replace('[', ':').replace(']', '')
                                 extravals[var + op] = None
                             value = newvalue
                             vals[var] = ('+=', value)
@@ -758,7 +758,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
     appendoverride = ''
     if machine:
         bbappendlines.append(('PACKAGE_ARCH', '=', '${MACHINE_ARCH}'))
-        appendoverride = '_%s' % machine
+        appendoverride = ':%s' % machine
     copyfiles = {}
     if srcfiles:
         instfunclines = []
@@ -853,11 +853,11 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                     newvalue = splitval
                     if len(newvalue) == 1:
                         # Ensure it's written out as one line
-                        if '_append' in varname:
+                        if ':append' in varname:
                             newvalue = ' ' + newvalue[0]
                         else:
                             newvalue = newvalue[0]
-                    if not newvalue and (op in ['+=', '.='] or '_append' in varname):
+                    if not newvalue and (op in ['+=', '.='] or ':append' in varname):
                         # There's no point appending nothing
                         newvalue = None
                     if varname.endswith('()'):

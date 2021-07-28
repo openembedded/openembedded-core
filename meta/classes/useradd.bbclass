@@ -199,7 +199,7 @@ python __anonymous() {
 def get_all_cmd_params(d, cmd_type):
     import string
     
-    param_type = cmd_type.upper() + "_PARAM_%s"
+    param_type = cmd_type.upper() + "_PARAM:%s"
     params = []
 
     useradd_packages = d.getVar('USERADD_PACKAGES') or ""

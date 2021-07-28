@@ -199,7 +199,7 @@ def check_toolchain_tune_args(data, tune, multilib, errs):
 
 def check_toolchain_args_present(data, tune, multilib, tune_errors, which):
     args_set = (data.getVar("TUNE_%s" % which) or "").split()
-    args_wanted = (data.getVar("TUNEABI_REQUIRED_%s_tune-%s" % (which, tune)) or "").split()
+    args_wanted = (data.getVar("TUNEABI_REQUIRED_%s:tune-%s" % (which, tune)) or "").split()
     args_missing = []
 
     # If no args are listed/required, we are done.

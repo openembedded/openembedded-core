@@ -1306,7 +1306,7 @@ python () {
     # Checking ${FILESEXTRAPATHS}
     extrapaths = (d.getVar("FILESEXTRAPATHS") or "")
     if '__default' not in extrapaths.split(":"):
-        msg = "FILESEXTRAPATHS-variable, must always use _prepend (or _append)\n"
+        msg = "FILESEXTRAPATHS-variable, must always use :prepend (or :append)\n"
         msg += "type of assignment, and don't forget the colon.\n"
         msg += "Please assign it with the format of:\n"
         msg += "  FILESEXTRAPATHS:append := \":${THISDIR}/Your_Files_Path\" or\n"
