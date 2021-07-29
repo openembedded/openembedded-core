@@ -97,7 +97,7 @@ ICECC_SYSTEM_CLASS_BL += "\
     image \
     "
 
-def icecc_dep_prepend(d):
+def get_icecc_dep(d):
     # INHIBIT_DEFAULT_DEPS doesn't apply to the patch command.  Whether or  not
     # we need that built is the responsibility of the patch function / class, not
     # the application.
@@ -105,7 +105,7 @@ def icecc_dep_prepend(d):
         return "icecc-create-env-native"
     return ""
 
-DEPENDS_prepend = "${@icecc_dep_prepend(d)} "
+DEPENDS_prepend = "${@get_icecc_dep(d)} "
 
 get_cross_kernel_cc[vardepsexclude] += "KERNEL_CC"
 def get_cross_kernel_cc(bb,d):

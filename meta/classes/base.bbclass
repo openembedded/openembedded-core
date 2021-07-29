@@ -66,7 +66,7 @@ oe_runmake() {
 }
 
 
-def base_dep_prepend(d):
+def get_base_dep(d):
     if d.getVar('INHIBIT_DEFAULT_DEPS', False):
         return ""
     return "${BASE_DEFAULT_DEPS}"
@@ -74,8 +74,8 @@ def base_dep_prepend(d):
 BASE_DEFAULT_DEPS = "virtual/${TARGET_PREFIX}gcc virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
 
 BASEDEPENDS = ""
-BASEDEPENDS_class-target = "${@base_dep_prepend(d)}"
-BASEDEPENDS_class-nativesdk = "${@base_dep_prepend(d)}"
+BASEDEPENDS_class-target = "${@get_base_dep(d)}"
+BASEDEPENDS_class-nativesdk = "${@get_base_dep(d)}"
 
 DEPENDS_prepend="${BASEDEPENDS} "
 

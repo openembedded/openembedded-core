@@ -1,4 +1,4 @@
-def autotools_dep_prepend(d):
+def get_autotools_dep(d):
     if d.getVar('INHIBIT_AUTOTOOLS_DEPS'):
         return ''
 
@@ -19,7 +19,7 @@ def autotools_dep_prepend(d):
 
     return deps
 
-DEPENDS_prepend = "${@autotools_dep_prepend(d)} "
+DEPENDS_prepend = "${@get_autotools_dep(d)} "
 
 inherit siteinfo
 
