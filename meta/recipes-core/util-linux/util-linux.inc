@@ -35,13 +35,6 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://run-ptest \
            file://display_testname_for_subtest.patch \
            file://avoid_parallel_tests.patch \
-           file://8a3a74160b96498d672e3652827aa7e6d7f3a120.patch \
-           file://tests-kill.patch \
-           file://tests-blkdiscard.patch \
-           file://tests-ul.patch \
-           file://tests-eject.patch \
-           file://tests-lscpu.patch \
-           file://0001-login-fix-close_range-use.patch \
            "
 
-SRC_URI[sha256sum] = "bd07b7e98839e0359842110525a3032fdb8eaf3a90bedde3dd1652d32d15cce5"
+SRC_URI[sha256sum] = "8e4bd42053b726cf86eb4d13a73bc1d9225a2c2e1a2e0d2a891f1020f83e6b76"
