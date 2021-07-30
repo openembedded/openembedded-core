@@ -582,6 +582,9 @@ def upgrade(args, config, basepath, workspace):
         logger.info('New recipe is %s' % rf)
         if license_diff:
             logger.info('License checksums have been updated in the new recipe; please refer to it for the difference between the old and the new license texts.')
+        preferred_version = rd.getVar('PREFERRED_VERSION_%s' % rd.getVar('PN'))
+        if preferred_version:
+            logger.warning('Version is pinned to %s via PREFERRED_VERSION; it may need adjustment to match the new version before any further steps are taken' % preferred_version)
     finally:
         tinfoil.shutdown()
     return 0
