@@ -148,7 +148,7 @@ FILES:${PN}-dev += "${libdir}/rpm-plugins/*.la \
                     "
 PACKAGE_BEFORE_PN += "${PN}-build ${PN}-sign ${PN}-archive"
 
-RRECOMMENDS:${PN} += "rpm-build rpm-sign rpm-archive"
+RRECOMMENDS:${PN} += "rpm-sign rpm-archive"
 
 FILES:${PN}-build = "\
     ${bindir}/rpmbuild \
