@@ -102,12 +102,6 @@ def processfile(fn):
                             skip = True
                             if "ptest_append" in line or "ptest_remove" in line or "ptest_prepend" in line:
                                 skip = False
-                    if "base_dep_prepend" in line and line.startswith("BASEDEPENDS_class"):
-                        line = line.replace("BASEDEPENDS_class", "BASEDEPENDS:class")
-                        skip = True
-                    if "autotools_dep_prepend" in line and line.startswith("DEPENDS_prepend"):
-                        line = line.replace("DEPENDS_prepend", "DEPENDS:prepend")
-                        skip = True
                     for sub in subs:
                         if sub in line:
                             line = line.replace(sub, subs[sub])
