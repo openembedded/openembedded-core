@@ -23,11 +23,9 @@ import tempfile
 import shutil
 import mimetypes
 
-if len(sys.argv) != 2:
+if len(sys.argv) < 2:
     print("Please specify a directory to run the conversion script against.")
     sys.exit(1)
-
-targetdir = sys.argv[1]
 
 # List of strings to treat as overrides
 vars = ["append", "prepend", "remove"]
@@ -125,15 +123,17 @@ def processfile(fn):
 ourname = os.path.basename(sys.argv[0])
 ourversion = "0.9.1"
 
-for root, dirs, files in os.walk(targetdir):
-   for name in files:
-      if name == ourname:
-          continue
-      fn = os.path.join(root, name)
-      if os.path.islink(fn):
-          continue
-      if "/.git/" in fn or fn.endswith(".html") or fn.endswith(".patch") or fn.endswith(".m4") or fn.endswith(".diff"):
-          continue
-      processfile(fn)
+for targetdir in sys.argv[1:]:
+    print("processing directory '%s'" % targetdir)
+    for root, dirs, files in os.walk(targetdir):
+        for name in files:
+            if name == ourname:
+                continue
+            fn = os.path.join(root, name)
+            if os.path.islink(fn):
+                continue
+            if "/.git/" in fn or fn.endswith(".html") or fn.endswith(".patch") or fn.endswith(".m4") or fn.endswith(".diff"):
+                continue
+            processfile(fn)
 
 print("All files processed with version %s" % ourversion)
