@@ -90,6 +90,7 @@ subs = {
 }
 
 def processfile(fn):
+    print("processing file '%s'" % fn)
     try:
         fh, abs_path = tempfile.mkstemp()
         with os.fdopen(fh, 'w') as new_file:
@@ -128,6 +129,7 @@ def processfile(fn):
         pass
 
 ourname = os.path.basename(sys.argv[0])
+ourversion = "0.9.0"
 
 for root, dirs, files in os.walk(targetdir):
    for name in files:
@@ -139,3 +141,5 @@ for root, dirs, files in os.walk(targetdir):
       if "/.git/" in fn or fn.endswith(".html") or fn.endswith(".patch") or fn.endswith(".m4") or fn.endswith(".diff"):
           continue
       processfile(fn)
+
+print("All files processed with version %s" % ourversion)
