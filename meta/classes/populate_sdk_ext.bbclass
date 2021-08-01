@@ -2,14 +2,10 @@
 
 inherit populate_sdk_base
 
-# NOTE: normally you cannot use task overrides for this kind of thing - this
-# only works because of get_sdk_ext_rdepends()
-
-TOOLCHAIN_HOST_TASK:task-populate-sdk-ext = " \
+# Used to override TOOLCHAIN_HOST_TASK in the eSDK case
+TOOLCHAIN_HOST_TASK_ESDK = " \
     meta-environment-extsdk-${MACHINE} \
     "
-
-TOOLCHAIN_TARGET_TASK:task-populate-sdk-ext = ""
 
 SDK_RELOCATE_AFTER_INSTALL:task-populate-sdk-ext = "0"
 
@@ -755,6 +751,10 @@ fakeroot python do_populate_sdk_ext() {
     if d.getVar('BB_CURRENT_MC') != 'default':
         bb.fatal('The extensible SDK can currently only be built for the default multiconfig.  Currently trying to build for %s.' % d.getVar('BB_CURRENT_MC'))
 
+    # eSDK dependencies don't use the traditional variables and things don't work properly if they are set
+    d.setVar("TOOLCHAIN_HOST_TASK", "${TOOLCHAIN_HOST_TASK_ESDK}")
+    d.setVar("TOOLCHAIN_TARGET_TASK", "")
+
     d.setVar('SDK_INSTALL_TARGETS', get_sdk_install_targets(d))
     if d.getVar('SDK_INCLUDE_BUILDTOOLS') == '1':
         buildtools_fn = get_current_buildtools(d)
@@ -800,12 +800,7 @@ do_sdk_depends[dirs] = "${WORKDIR}"
 do_sdk_depends[depends] = "${@get_ext_sdk_depends(d)} meta-extsdk-toolchain:do_populate_sysroot"
 do_sdk_depends[recrdeptask] = "${@d.getVarFlag('do_populate_sdk', 'recrdeptask', False)}"
 do_sdk_depends[recrdeptask] += "do_populate_lic do_package_qa do_populate_sysroot do_deploy ${SDK_RECRDEP_TASKS}"
-do_sdk_depends[rdepends] = "${@get_sdk_ext_rdepends(d)}"
-
-def get_sdk_ext_rdepends(d):
-    localdata = d.createCopy()
-    localdata.appendVar('OVERRIDES', ':task-populate-sdk-ext')
-    return localdata.getVarFlag('do_populate_sdk', 'rdepends')
+do_sdk_depends[rdepends] = "${@' '.join([x + ':do_package_write_${IMAGE_PKGTYPE} ' + x + ':do_packagedata' for x in d.getVar('TOOLCHAIN_HOST_TASK_ESDK').split()])}"
 
 do_populate_sdk_ext[dirs] = "${@d.getVarFlag('do_populate_sdk', 'dirs', False)}"
 
