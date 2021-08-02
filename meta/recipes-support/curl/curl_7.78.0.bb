@@ -13,7 +13,7 @@ SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
 "
 
-SRC_URI[sha256sum] = "6c0c28868cb82593859fc43b9c8fdb769314c855c05cf1b56b023acf855df8ea"
+SRC_URI[sha256sum] = "98530b317dc95ccb324bbe4f834f07bb642fbc393b794ddf3434f246a71ea44a"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
@@ -61,7 +61,6 @@ EXTRA_OECONF = " \
     --disable-ntlm-wb \
     --enable-crypto-auth \
     --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
-    --without-libmetalink \
     --without-libpsl \
     --enable-debug \
     --enable-optimize \
