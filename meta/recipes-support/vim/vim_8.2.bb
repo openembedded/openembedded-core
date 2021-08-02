@@ -2,6 +2,10 @@ require vim.inc
 
 PROVIDES = "xxd"
 
+RDEPENDS:${PN} = "ncurses-terminfo-base"
+# Recommend that runtime data is installed along with vim
+RRECOMMENDS:${PN} = "${PN}-syntax ${PN}-help ${PN}-tutor ${PN}-vimrc ${PN}-common"
+
 PACKAGECONFIG:class-native = ""
 BBCLASSEXTEND = "native nativesdk"
 
