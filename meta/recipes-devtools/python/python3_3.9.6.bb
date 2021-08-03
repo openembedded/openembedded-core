@@ -74,6 +74,9 @@ DEPENDS = "bzip2-replacement-native libffi bzip2 openssl sqlite3 zlib virtual/li
 DEPENDS:append:class-target = " python3-native"
 DEPENDS:append:class-nativesdk = " python3-native"
 
+# force to use the mutex+cond implementation (https://bugs.python.org/issue41710)
+CFLAGS += "-DHAVE_BROKEN_POSIX_SEMAPHORES"
+
 EXTRA_OECONF = " --without-ensurepip --enable-shared --with-platlibdir=${baselib}"
 EXTRA_OECONF:append:class-native = " --bindir=${bindir}/${PN}"
 
