@@ -12,6 +12,7 @@ DEPENDS = "gnutls"
 
 SRC_URI = "git://github.com/iputils/iputils \
            file://0001-rarpd-rdisc-Drop-PrivateUsers.patch \
+           file://0001-meson-Make-tests-optional.patch \
            "
 SRCREV = "71bb2a6c72e9f658e90ac618c73d873a76bbaa81"
 
@@ -38,7 +39,7 @@ PACKAGECONFIG[docs] = "-DBUILD_HTML_MANS=true -DBUILD_MANS=true,-DBUILD_HTML_MAN
 
 inherit meson systemd update-alternatives
 
-EXTRA_OEMESON += "--prefix=${root_prefix}/"
+EXTRA_OEMESON += "--prefix=${root_prefix}/ -DSKIP_TESTS=true"
 
 ALTERNATIVE_PRIORITY = "100"
 
