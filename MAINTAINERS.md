@@ -38,6 +38,8 @@ Component/Subsystem Maintainers
 * Toolchain: Khem Raj
 * ptest-runner: Aníbal Limón
 * opkg: Alex Stewart
+* devtool: Saul Wold
+* eSDK: Saul Wold
 
 Maintainers needed
 ------------------
@@ -53,8 +55,6 @@ Maintainers needed
 * Prelink-cross
 * Matchbox
 * Sato
-* devtool
-* eSDK
 * Autobuilder
 
 Layer Maintainers needed
