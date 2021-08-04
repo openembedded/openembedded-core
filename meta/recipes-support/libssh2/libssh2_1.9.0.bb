@@ -14,7 +14,7 @@ SRC_URI = "http://www.libssh2.org/download/${BP}.tar.gz \
            file://0001-kex.c-move-EC-macro-outside-of-if-check-549-550.patch \
 "
 
-SRC_URI:append_ptest = " file://0001-Don-t-let-host-enviroment-to-decide-if-a-test-is-bui.patch"
+SRC_URI:append:ptest = " file://0001-Don-t-let-host-enviroment-to-decide-if-a-test-is-bui.patch"
 
 SRC_URI[md5sum] = "1beefafe8963982adc84b408b2959927"
 SRC_URI[sha256sum] = "d5fb8bd563305fd1074dda90bd053fb2d29fc4bce048d182f96eaa466dfadafd"
