@@ -6,7 +6,7 @@
 # This makes it simpler to write .bbappends that only change the
 # task signatures of the recipe if the change is really enabled,
 # for example with:
-#   do_install:append_df-my-feature () { ... }
+#   do_install:append:df-my-feature () { ... }
 # where "my-feature" is a DISTRO_FEATURE.
 #
 # The class is meant to be used in a layer.conf or distro
