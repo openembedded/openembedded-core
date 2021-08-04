@@ -382,8 +382,8 @@ python () {
         if t.startswith("debugfs_"):
             t = t[8:]
             debug = "debugfs_"
-        deps = (d.getVar('IMAGE_TYPEDEP_' + t) or "").split()
-        vardeps.add('IMAGE_TYPEDEP_' + t)
+        deps = (d.getVar('IMAGE_TYPEDEP:' + t) or "").split()
+        vardeps.add('IMAGE_TYPEDEP:' + t)
         if baset not in typedeps:
             typedeps[baset] = set()
         deps = [debug + dep for dep in deps]

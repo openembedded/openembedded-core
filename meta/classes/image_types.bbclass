@@ -29,7 +29,7 @@ def imagetypes_getdepends(d):
         if d.getVar(var) is not None:
             deprecated.add(var)
 
-        for typedepends in (d.getVar("IMAGE_TYPEDEP_%s" % basetype) or "").split():
+        for typedepends in (d.getVar("IMAGE_TYPEDEP:%s" % basetype) or "").split():
             base, rest = split_types(typedepends)
             resttypes += rest
 
@@ -197,7 +197,7 @@ IMAGE_CMD:multiubi () {
 IMAGE_CMD:ubi () {
 	multiubi_mkfs "${MKUBIFS_ARGS}" "${UBINIZE_ARGS}"
 }
-IMAGE_TYPEDEP_ubi = "ubifs"
+IMAGE_TYPEDEP:ubi = "ubifs"
 
 IMAGE_CMD:ubifs = "mkfs.ubifs -r ${IMAGE_ROOTFS} -o ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ubifs ${MKUBIFS_ARGS}"
 

@@ -64,7 +64,7 @@ skips = skips + ["get_appends_for_files", "test_doubleref_remove", "test_bitbake
 skips = skips + ["test_rpm_remove", "test_bitbakelayers_add_remove", "recipe_append_file", "log_data_removed", "recipe_append", "systemd_machine_unit_append"]
 skips = skips + ["recipetool_append", "changetype_remove", "try_appendfile_wc", "test_qemux86_directdisk", "test_layer_appends", "tgz_removed"]
 
-imagevars = ["IMAGE_CMD", "EXTRA_IMAGECMD"]
+imagevars = ["IMAGE_CMD", "EXTRA_IMAGECMD", "IMAGE_TYPEDEP"]
 packagevars = packagevars + imagevars
 
 vars_re = {}
