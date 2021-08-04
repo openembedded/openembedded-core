@@ -7,7 +7,7 @@ PYPI_PACKAGE = "hypothesis"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "1c8776d9fc8c598cf1b93b99bd87976f9d9b589fc58843d85a30090700f14a8a"
+SRC_URI[sha256sum] = "0563b9711fd9bf478cb591580a575c369d2c396f283efa85d0f9a75b26db65b5"
 
 RDEPENDS:${PN} += " \
     python3-attrs \
