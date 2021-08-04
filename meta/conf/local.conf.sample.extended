@@ -381,7 +381,7 @@
 # Enable LTO system-wide
 #
 #require conf/distro/include/lto.inc
-#DISTRO_FEATURES_append = " lto"
+#DISTRO_FEATURES:append = " lto"
 
 #
 # Set PS1 for SDK
