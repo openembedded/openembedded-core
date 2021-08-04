@@ -110,7 +110,7 @@ EXTRA_OEMAKE += "\
 # that it has to be done this way rather than by passing -j1, since
 # perf's build system by default ignores any -j argument, but does
 # honour a JOBS variable.
-EXTRA_OEMAKE:append_task-configure = " JOBS=1"
+EXTRA_OEMAKE:append:task-configure = " JOBS=1"
 
 PERF_SRC ?= "Makefile \
              tools/arch \

@@ -59,7 +59,7 @@ do_install:append() {
 	rm -f ${D}${infodir}/bfd.info
 }
 
-RRECOMMENDS:gdb:append_linux = " glibc-thread-db "
-RRECOMMENDS:gdb:append_linux-gnueabi = " glibc-thread-db "
-RRECOMMENDS:gdbserver:append_linux = " glibc-thread-db "
-RRECOMMENDS:gdbserver:append_linux-gnueabi = " glibc-thread-db "
+RRECOMMENDS:gdb:append:linux = " glibc-thread-db "
+RRECOMMENDS:gdb:append:linux-gnueabi = " glibc-thread-db "
+RRECOMMENDS:gdbserver:append:linux = " glibc-thread-db "
+RRECOMMENDS:gdbserver:append:linux-gnueabi = " glibc-thread-db "

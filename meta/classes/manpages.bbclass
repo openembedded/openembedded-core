@@ -12,7 +12,7 @@ MAN_PKG ?= "${PN}-doc"
 # only add man-db to RDEPENDS when manual files are built and installed
 RDEPENDS:${MAN_PKG} += "${@bb.utils.contains('PACKAGECONFIG', 'manpages', 'man-db', '', d)}"
 
-pkg_postinst:append_${MAN_PKG} () {
+pkg_postinst:append:${MAN_PKG} () {
 	# only update manual page index caches when manual files are built and installed
 	if ${@bb.utils.contains('PACKAGECONFIG', 'manpages', 'true', 'false', d)}; then
 		if test -n "$D"; then
@@ -36,7 +36,7 @@ pkg_postinst:append_${MAN_PKG} () {
 	fi
 }
 
-pkg_postrm:append_${MAN_PKG} () {
+pkg_postrm:append:${MAN_PKG} () {
 	# only update manual page index caches when manual files are built and installed
 	if ${@bb.utils.contains('PACKAGECONFIG', 'manpages', 'true', 'false', d)}; then
 		mandb -q

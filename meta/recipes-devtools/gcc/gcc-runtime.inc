@@ -281,7 +281,7 @@ SUMMARY:libitm-staticdev = "GNU transactional memory support library - static de
 
 require gcc-testsuite.inc
 
-EXTRA_OEMAKE:prepend_task-check = "${PARALLEL_MAKE} "
+EXTRA_OEMAKE:prepend:task-check = "${PARALLEL_MAKE} "
 
 MAKE_CHECK_TARGETS ??= "check-gcc ${@" ".join("check-target-" + i for i in d.getVar("RUNTIMETARGET").split())}"
 # prettyprinters and xmethods require gdb tooling
