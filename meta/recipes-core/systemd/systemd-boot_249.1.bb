@@ -19,11 +19,14 @@ objcopy = ${@meson_array('OBJCOPY', d)}
 EOF
 }
 
+# need to use ${HOST_PREFIX} here, otherwise ld.bfd could be used from HOSTTOOLS_NONFATAL
+EFI_LD = "${HOST_PREFIX}ld.bfd"
+
 EXTRA_OEMESON += "-Defi=true \
                   -Dgnu-efi=true \
                   -Defi-includedir=${STAGING_INCDIR}/efi \
                   -Defi-libdir=${STAGING_LIBDIR} \
-                  -Defi-ld=${@ d.getVar('LD').split()[0]} \
+                  -Defi-ld=${EFI_LD} \
                   -Dman=false \
                   --cross-file ${WORKDIR}/meson-${PN}.cross \
                   "
