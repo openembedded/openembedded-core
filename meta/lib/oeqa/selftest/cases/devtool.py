@@ -373,7 +373,7 @@ class DevtoolAddTests(DevtoolBase):
         recipefile = '%s/recipes/libftdi/libftdi_%s.bb' % (self.workspacedir, version)
         result = runCmd('recipetool setvar %s EXTRA_OECMAKE -- \'-DPYTHON_BINDINGS=OFF -DLIBFTDI_CMAKE_CONFIG_DIR=${datadir}/cmake/Modules\'' % recipefile)
         with open(recipefile, 'a') as f:
-            f.write('\nFILES_${PN}-dev += "${datadir}/cmake/Modules"\n')
+            f.write('\nFILES:${PN}-dev += "${datadir}/cmake/Modules"\n')
             # We don't have the ability to pick up this dependency automatically yet...
             f.write('\nDEPENDS += "libusb1"\n')
             f.write('\nTESTLIBOUTPUT = "${COMPONENTS_DIR}/${TUNE_PKGARCH}/${PN}/${libdir}"\n')
