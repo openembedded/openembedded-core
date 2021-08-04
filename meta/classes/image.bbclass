@@ -457,11 +457,11 @@ python () {
                     # Create input image first.
                     gen_conversion_cmds(type)
                     localdata.setVar('type', type)
-                    cmd = "\t" + (localdata.getVar("CONVERSION_CMD_" + ctype) or localdata.getVar("COMPRESS_CMD_" + ctype))
+                    cmd = "\t" + (localdata.getVar("CONVERSION_CMD:" + ctype) or localdata.getVar("COMPRESS_CMD:" + ctype))
                     if cmd not in cmds:
                         cmds.append(cmd)
-                    vardeps.add('CONVERSION_CMD_' + ctype)
-                    vardeps.add('COMPRESS_CMD_' + ctype)
+                    vardeps.add('CONVERSION_CMD:' + ctype)
+                    vardeps.add('COMPRESS_CMD:' + ctype)
                     subimage = type + "." + ctype
                     if subimage not in subimages:
                         subimages.append(subimage)
