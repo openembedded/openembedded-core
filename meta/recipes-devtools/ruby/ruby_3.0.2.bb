@@ -55,6 +55,10 @@ do_install:append:class-target () {
            -e 's:${RECIPE_SYSROOT}::g' \
            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
         ${D}$rbconfig_rb
+
+    sed -i -e 's|${DEBUG_PREFIX_MAP}||g' \
+        ${D}${libdir}/pkgconfig/*.pc
+
 }
 
 do_install_ptest () {
