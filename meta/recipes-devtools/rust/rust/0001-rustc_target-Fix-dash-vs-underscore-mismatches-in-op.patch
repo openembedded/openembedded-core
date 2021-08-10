@@ -1,0 +1,75 @@
+From dd682cb48c8b667859dded98a4bbfbd891a1eca4 Mon Sep 17 00:00:00 2001
+From: Vadim Petrochenkov <vadim.petrochenkov@gmail.com>
+Date: Thu, 12 Nov 2020 19:16:59 +0300
+Subject: [PATCH] rustc_target: Fix dash vs underscore mismatches in option
+ names
+
+---
+ compiler/rustc_target/src/spec/mod.rs | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/compiler/rustc_target/src/spec/mod.rs b/compiler/rustc_target/src/spec/mod.rs
+index f949bf95a50..f837114ee74 100644
+--- a/compiler/rustc_target/src/spec/mod.rs
++++ b/compiler/rustc_target/src/spec/mod.rs
+@@ -1428,8 +1428,8 @@ pub fn from_json(obj: Json) -> Result<Target, String> {
+         }
+ 
+         key!(is_builtin, bool);
+-        key!(endian = "target_endian");
+-        key!(c_int_width = "target_c_int_width");
++        key!(endian = "target-endian");
++        key!(c_int_width = "target-c-int-width");
+         key!(os);
+         key!(env);
+         key!(vendor);
+@@ -1466,7 +1466,7 @@ pub fn from_json(obj: Json) -> Result<Target, String> {
+         key!(exe_suffix);
+         key!(staticlib_prefix);
+         key!(staticlib_suffix);
+-        key!(os_family = "target_family", optional);
++        key!(os_family = "target-family", optional);
+         key!(abi_return_struct_as_int, bool);
+         key!(is_like_osx, bool);
+         key!(is_like_solaris, bool);
+@@ -1511,7 +1511,7 @@ pub fn from_json(obj: Json) -> Result<Target, String> {
+         key!(limit_rdylib_exports, bool);
+         key!(override_export_symbols, opt_list);
+         key!(merge_functions, MergeFunctions)?;
+-        key!(mcount = "target_mcount");
++        key!(mcount = "target-mcount");
+         key!(llvm_abiname);
+         key!(relax_elf_relocations, bool);
+         key!(llvm_args, list);
+@@ -1663,8 +1663,8 @@ fn to_json(&self) -> Json {
+         target_val!(data_layout);
+ 
+         target_option_val!(is_builtin);
+-        target_option_val!(endian, "target_endian");
+-        target_option_val!(c_int_width, "target_c_int_width");
++        target_option_val!(endian, "target-endian");
++        target_option_val!(c_int_width, "target-c-int-width");
+         target_option_val!(os);
+         target_option_val!(env);
+         target_option_val!(vendor);
+@@ -1701,7 +1701,7 @@ fn to_json(&self) -> Json {
+         target_option_val!(exe_suffix);
+         target_option_val!(staticlib_prefix);
+         target_option_val!(staticlib_suffix);
+-        target_option_val!(os_family, "target_family");
++        target_option_val!(os_family, "target-family");
+         target_option_val!(abi_return_struct_as_int);
+         target_option_val!(is_like_osx);
+         target_option_val!(is_like_solaris);
+@@ -1746,7 +1746,7 @@ fn to_json(&self) -> Json {
+         target_option_val!(limit_rdylib_exports);
+         target_option_val!(override_export_symbols);
+         target_option_val!(merge_functions);
+-        target_option_val!(mcount, "target_mcount");
++        target_option_val!(mcount, "target-mcount");
+         target_option_val!(llvm_abiname);
+         target_option_val!(relax_elf_relocations);
+         target_option_val!(llvm_args);
+-- 
+2.28.0
+
