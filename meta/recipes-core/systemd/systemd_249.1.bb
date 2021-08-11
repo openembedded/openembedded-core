@@ -93,7 +93,7 @@ PACKAGECONFIG ??= " \
     userdb \
     utmp \
     vconsole \
-    xz \
+    zstd \
 "
 
 PACKAGECONFIG:remove:libc-musl = " \
