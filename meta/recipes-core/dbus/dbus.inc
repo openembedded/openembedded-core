@@ -8,6 +8,7 @@ SRC_URI = "https://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
            file://tmpdir.patch \
            file://dbus-1.init \
            file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
+           file://stop_using_selinux_set_mapping.patch \
 "
 
 SRC_URI[md5sum] = "dfe8a71f412e0b53be26ed4fbfdc91c4"
