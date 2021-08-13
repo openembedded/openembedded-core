@@ -248,6 +248,8 @@ def arch_to_rust_target_arch(arch):
         return "mips64"
     elif arch == "armv7":
         return "arm"
+    elif arch == "powerpc64le":
+        return "powerpc64"
     else:
         return arch
 
