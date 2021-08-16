@@ -1,6 +1,6 @@
 DEFAULTTUNE ?= "mips64r2"
 
-require conf/machine/include/tune-mips64.inc
+require conf/machine/include/mips/tune-mips64.inc
 
 TUNEVALID[mips64r2] = "Enable mips64r2 specific processor optimizations"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'mips64r2', ' -march=mips64r2', '', d)}"

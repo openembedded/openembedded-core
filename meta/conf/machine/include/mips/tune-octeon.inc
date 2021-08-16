@@ -1,6 +1,6 @@
 DEFAULTTUNE ?="octeon2"
 
-require conf/machine/include/tune-mips64.inc
+require conf/machine/include/mips/tune-mips64.inc
 
 AVAILTUNES += "octeon2 octeon2_64 octeon3 octeon3_64"
 

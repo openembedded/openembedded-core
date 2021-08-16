@@ -9,7 +9,7 @@
 DEFAULTTUNE ?= "corei7-64"
 
 # Include the previous tune to pull in PACKAGE_EXTRA_ARCHS
-require conf/machine/include/tune-core2.inc
+require conf/machine/include/x86/tune-core2.inc
 
 # Extra tune features
 TUNEVALID[corei7] = "Enable corei7 specific processor optimizations"

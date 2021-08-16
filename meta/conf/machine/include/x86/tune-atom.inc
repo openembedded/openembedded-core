@@ -1,2 +1,2 @@
 # Atom tunings are the same as core2 for now...
-require conf/machine/include/tune-core2.inc
+require conf/machine/include/x86/tune-core2.inc

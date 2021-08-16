@@ -13,7 +13,7 @@ DEFAULTTUNE ?= "i686"
 X86ARCH32 ?= "i686"
 
 # Include the previous tune to pull in PACKAGE_EXTRA_ARCHS
-require conf/machine/include/tune-i586.inc
+require conf/machine/include/x86/tune-i586.inc
 
 # Extra tune features
 TUNEVALID[i686] = "Enable i686 specific processor optimizations"
