@@ -1670,7 +1670,7 @@ fi
             for dfile in (d.getVar('FILERDEPENDSFLIST:' + pkg) or "").split():
                 write_if_exists(sf, pkg, 'FILERDEPENDS:' + dfile)
 
-            sf.write('%s_%s: %d\n' % ('PKGSIZE', pkg, total_size))
+            sf.write('%s:%s: %d\n' % ('PKGSIZE', pkg, total_size))
 
         # Symlinks needed for rprovides lookup
         rprov = d.getVar('RPROVIDES:%s' % pkg) or d.getVar('RPROVIDES')
