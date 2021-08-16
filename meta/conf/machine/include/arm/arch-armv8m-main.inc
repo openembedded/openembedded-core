@@ -21,7 +21,7 @@ TUNEVALID[vfpv5spd16] = "Enable Vector Floating Point Version 5, Single Precisio
 TUNE_CCARGS_MFPU .= "${@bb.utils.contains('TUNE_FEATURES', 'vfpv5spd16', 'fpv5-sp-d16', '', d)}"
 MARCH_FPU = "${@bb.utils.contains('TUNE_FEATURES', [ 'vfpv5spd16' ], '+fp', '+nofp', d)}"
 
-AVAILTUNES                                      += "armv8m-main armv8m-mainearmv8m-main-vfpv5spd16 armv8m-maine-vfpv5spd16"
+AVAILTUNES                                      += "armv8m-main armv8m-maine armv8m-main-vfpv5spd16 armv8m-maine-vfpv5spd16"
 ARMPKGARCH:tune-armv8m-main                      = "armv8m-main"
 ARMPKGARCH:tune-armv8m-maine                     = "armv8m-main"
 ARMPKGARCH:tune-armv8m-main-vfpv5spd16           = "armv8m-main"
