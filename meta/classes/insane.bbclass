@@ -808,11 +808,11 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     # For Saving the FILERPROVIDES, RPROVIDES and FILES_INFO
                     rdep_data = oe.packagedata.read_subpkgdata(rdep, d)
                     for key in rdep_data:
-                        if key.startswith("FILERPROVIDES_") or key.startswith("RPROVIDES:"):
+                        if key.startswith("FILERPROVIDES:") or key.startswith("RPROVIDES:"):
                             for subkey in bb.utils.explode_deps(rdep_data[key]):
                                 filerdepends.pop(subkey,None)
                         # Add the files list to the rprovides
-                        if key == "FILES_INFO":
+                        if key.startswith("FILES_INFO:"):
                             # Use eval() to make it as a dict
                             for subkey in eval(rdep_data[key]):
                                 filerdepends.pop(subkey,None)
