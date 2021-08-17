@@ -991,6 +991,9 @@ DESCRIPTION
                              multiple partitions and we want to keep the right
                              permissions and usernames in all the partitions.
 
+         --no-fstab-update: This option is specific to wic. It does not update the
+                            '/etc/fstab' stock file for the given partition.
+
          --extra-space: This option is specific to wic. It adds extra
                         space after the space filled by the content
                         of the partition. The final size can go
