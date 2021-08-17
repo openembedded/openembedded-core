@@ -13,37 +13,25 @@ available, allowing it to be kept being pulled by default.
 Upstream-Status: Inappropriate [embedded specific]
 
 Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+[bva: modified for lttng-modules 2.13+ context]
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
  Makefile | 9 +++++----
  1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 8602649..75550cc 100644
---- a/Makefile
-+++ b/Makefile
-@@ -8,10 +8,7 @@ ifneq ($(KERNELRELEASE),)
-   # and defines the modules to be built.
+Index: lttng-modules-2.13.0/Makefile
+===================================================================
+--- lttng-modules-2.13.0.orig/Makefile
++++ lttng-modules-2.13.0/Makefile
+@@ -7,6 +7,11 @@
  
-   ifdef CONFIG_LOCALVERSION	# Check if dot-config is included.
--    ifeq ($(CONFIG_TRACEPOINTS),)
--      $(error The option CONFIG_TRACEPOINTS needs to be enabled in your kernel configuration)
--    endif # CONFIG_TRACEPOINTS
--  endif # ifdef CONFIG_LOCALVERSION
+ obj-$(CONFIG_LTTNG) += src/
+ 
++  ifdef CONFIG_LOCALVERSION	# Check if dot-config is included.
 +    ifneq ($(CONFIG_TRACEPOINTS),)
- 
-   TOP_LTTNG_MODULES_DIR := $(shell dirname $(lastword $(MAKEFILE_LIST)))
- 
-@@ -94,6 +91,10 @@ ifneq ($(KERNELRELEASE),)
-   obj-$(CONFIG_LTTNG) += lib/
-   obj-$(CONFIG_LTTNG) += tests/
- 
-+    else
 +      $(warning The option CONFIG_TRACEPOINTS needs to be enabled in your kernel configuration)
 +    endif # CONFIG_TRACEPOINTS
 +  endif # ifdef CONFIG_LOCALVERSION
  else # KERNELRELEASE
  
  # This part of the Makefile is used when the 'make' command is runned in the
--- 
-2.1.4
-

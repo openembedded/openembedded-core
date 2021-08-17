@@ -3,7 +3,7 @@ SUMMARY = "Linux Trace Toolkit KERNEL MODULE"
 DESCRIPTION = "The lttng-modules 2.0 package contains the kernel tracer modules"
 HOMEPAGE = "https://lttng.org/"
 LICENSE = "LGPLv2.1 & GPLv2 & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=3f882d431dc0f32f1f44c0707aa41128"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=0464cff101a009c403cd2ed65d01d4c4"
 
 inherit module
 
@@ -13,11 +13,13 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            "
 
-SRC_URI[sha256sum] = "95ac2a2cf92d85d23ffbdaca6a1ec0d7c167211d1e0fb850ab90004a3f475eaa"
+SRC_URI[sha256sum] = "5ebf2b3cd128b3a1c8afaea1e98d5a6f7f0676fd524fcf72361c34d9dc603356"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
 EXTRA_OEMAKE += "KERNELDIR='${STAGING_KERNEL_DIR}'"
+
+MODULES_MODULE_SYMVERS_LOCATION = "src"
 
 do_install:append() {
 	# Delete empty directories to avoid QA failures if no modules were built
