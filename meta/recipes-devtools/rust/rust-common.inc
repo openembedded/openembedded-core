@@ -70,6 +70,7 @@ def llvm_features_from_tune(d):
     if ('riscv64' in feat) or ('riscv32' in feat):
         f.append("+a,+c,+d,+f,+m")
     return f
+llvm_features_from_tune[vardepvalue] = "${@llvm_features_from_tune(d)}"
 
 # TARGET_CC_ARCH changes from build/cross/target so it'll do the right thing
 # this should go away when https://github.com/rust-lang/rust/pull/31709 is

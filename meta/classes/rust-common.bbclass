@@ -48,6 +48,7 @@ def target_is_armv7(d):
         return False
     else:
         return True
+target_is_armv7[vardepvalue] = "${@target_is_armv7(d)}"
 
 # Responsible for taking Yocto triples and converting it to Rust triples
 def rust_base_triple(d, thing):
