@@ -1,2 +1,3 @@
-# Note: TUNEVALID set in conf/machine/include/arm/arch-armv5-dsp.inc
+ARMPKGSFX_DSP = "${@bb.utils.contains('TUNE_FEATURES', [ 'dsp' ], 'e', '', d)}"
+TUNEVALID[dsp] = "ARM DSP functionality"
 TUNE_CCARGS_MARCH_OPTS .= "${@bb.utils.contains('TUNE_FEATURES', [ 'dsp' ], '+dsp', '', d)}"
