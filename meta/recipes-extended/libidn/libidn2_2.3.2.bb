@@ -10,8 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=2d834ea7d480438ada04e5d846152395 \
                     file://lib/idn2.h.in;endline=27;md5=d0fc8ec628be130a1d5b889107e92477"
 
 SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz"
-SRC_URI[md5sum] = "cda07f5ac55fccfafdf7ee01828adad5"
-SRC_URI[sha256sum] = "8af684943836b8b53965d5f5b6714ef13c26c91eaa36ce7d242e3d21f5d40f2d"
+SRC_URI[sha256sum] = "76940cd4e778e8093579a9d195b25fff5e936e9dc6242068528b437a76764f91"
 
 DEPENDS = "virtual/libiconv libunistring"
 
