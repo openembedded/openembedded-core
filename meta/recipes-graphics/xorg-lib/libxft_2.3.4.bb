@@ -20,8 +20,7 @@ PROVIDES = "xft"
 
 PE = "1"
 
-SRC_URI[md5sum] = "4a433c24627b4ff60a4dd403a0990796"
-SRC_URI[sha256sum] = "225c68e616dd29dbb27809e45e9eadf18e4d74c50be43020ef20015274529216"
+SRC_URI[sha256sum] = "57dedaab20914002146bdae0cb0c769ba3f75214c4c91bd2613d6ef79fc9abdd"
 
 XORG_PN = "libXft"
 
