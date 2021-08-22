@@ -5,9 +5,7 @@ other programming languages, such as Javascript, because of GObject \
 introspection support."
 HOMEPAGE = "https://wiki.gnome.org/Projects/libgudev"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/libgudev/issues"
-SRC_URI[archive.sha256sum] = "e50369d06d594bae615eb7aeb787de304ebaad07a26d1043cef8e9c7ab7c9524"
-
-SRC_URI:append = " file://0001-gudevenumtypes-make-deterministic.patch"
+SRC_URI[archive.sha256sum] = "0d06b21170d20c93e4f0534dbb9b0a8b4f1119ffb00b4031aaeb5b9148b686aa"
 
 DEPENDS = "glib-2.0 udev"
 
