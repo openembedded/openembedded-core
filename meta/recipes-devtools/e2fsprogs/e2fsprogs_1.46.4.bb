@@ -4,17 +4,14 @@ SRC_URI += "file://remove.ldconfig.call.patch \
            file://run-ptest \
            file://ptest.patch \
            file://mkdir_p.patch \
-           file://0001-lib-ext2fs-unix_io.c-do-unlock-on-error.patch \
-           file://0001-lib-ext2fs-unix_io.c-revert-parts-of-libext2fs-fix-p.patch \
+           file://0001-tests-u_direct_io-expect-correct-expected-output.patch \
            "
 
 SRC_URI:append:class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
                                 file://quiet-debugfs.patch \
-                                file://big-inodes-for-small-fs.patch \
 "
 
-
-SRCREV = "1eea0e2bd9a6760ebad834d5d2cf700fffe5ebe2"
+SRCREV = "849005eac51ea2097bd9e5f2b0adc16b53c5486d"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
