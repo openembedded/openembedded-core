@@ -8,13 +8,14 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS = "sysfsutils openssl"
 
-SRC_URI = "\
-    git://github.com/nhorman/rng-tools.git \
-    file://init \
-    file://default \
-    file://rngd.service \
-"
-SRCREV = "d8dac0e8bede73e42b3d59f3b48c662ad0032e8c"
+SRC_URI = "git://github.com/nhorman/rng-tools.git \
+           file://init \
+           file://default \
+           file://rngd.service \
+           file://0001-Adding-ability-to-detect-non-posix-extensions-for-pt.patch \
+           file://0002-Allow-for-use-of-either-pthread-affinity-set-methods.patch \
+           "
+SRCREV = "c16176d3800b91f4d016b66733b384493b06f294"
 
 S = "${WORKDIR}/git"
 
