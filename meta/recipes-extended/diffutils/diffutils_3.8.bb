@@ -6,13 +6,14 @@ require diffutils.inc
 SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
            file://run-ptest \
            file://0001-Skip-strip-trailing-cr-test-case.patch \
-           file://0001-c-stack-stop-using-SIGSTKSZ.patch \
-"
+           "
 
-SRC_URI[md5sum] = "4824adc0e95dbbf11dfbdfaad6a1e461"
-SRC_URI[sha256sum] = "b3a7a6221c3dc916085f0d205abf6b8e1ba443d4dd965118da364a1dc1cb3a26"
+SRC_URI[sha256sum] = "a6bdd7d1b31266d11c4f4de6c1b748d4607ab0231af5188fc2533d0ae2438fec"
 
 EXTRA_OECONF += "ac_cv_path_PR_PROGRAM=${bindir}/pr --without-libsigsegv-prefix"
+
+# latest gnulib is no longer able to handle this - I dare not try to fix that maze of abstractions and generators
+CFLAGS:mingw32 = " -DSA_RESTART=0"
 
 # Fix "Argument list too long" error when len(TMPDIR) = 410
 acpaths = "-I ./m4"
