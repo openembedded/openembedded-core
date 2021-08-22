@@ -8,7 +8,6 @@ PE = "1"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=3ea51b365051ac32d1813a7dbaa4bfc6"
 
-SRC_URI[md5sum] = "6f0543ec84283df5743eeafc173bea4a"
-SRC_URI[sha256sum] = "57bcec0d2d167af9e5d44d0dbd74c6d7c0f0591cd0608952b23c749fdd910553"
+SRC_URI[sha256sum] = "f8a17e23146bef1ab345a1e303c6749e42aaa7bcf4f25428afad41770721b6db"
 
-DEPENDS += "libxau libxt libxext libxmu libxrender"
+DEPENDS += "libxau libxt libxext libxmu libxrender libxi"
