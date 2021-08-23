@@ -11,3 +11,10 @@ do_compile () {
 rust_do_install() {
     rust_runx install
 }
+
+python () {
+    pn = d.getVar('PN')
+
+    if not pn.endswith("-native"):
+        raise bb.parse.SkipRecipe("Rust recipe doesn't work for target builds at this time. Fixes welcome.")
+}
