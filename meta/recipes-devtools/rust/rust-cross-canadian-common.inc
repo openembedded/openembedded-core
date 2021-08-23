@@ -1,7 +1,9 @@
 
 RUST_ALTERNATE_EXE_PATH = "${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config"
 
-require rust-target.inc
+require rust.inc
+
+DEPENDS += "rust-llvm (=${PV})"
 
 inherit cross-canadian
 
