@@ -43,8 +43,6 @@ do_install () {
 # Needed for pkg-config to be used
 export LIBSSH2_SYS_USE_PKG_CONFIG = "1"
 
-BBCLASSEXTEND = "native nativesdk"
-
 # When building cargo-native we don't have cargo-native to use and depend on,
 # so we must use the locally set up snapshot to bootstrap the build.
 BASEDEPENDS:remove:class-native = "cargo-native"
