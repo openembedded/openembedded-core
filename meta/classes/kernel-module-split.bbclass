@@ -44,16 +44,19 @@ python split_kernel_module_packages () {
     def extract_modinfo(file):
         import tempfile, subprocess
         tempfile.tempdir = d.getVar("WORKDIR")
-        compressed = re.match( r'.*\.([xg])z$', file)
+        compressed = re.match( r'.*\.(gz|xz|zst)$', file)
         tf = tempfile.mkstemp()
         tmpfile = tf[1]
         if compressed:
             tmpkofile = tmpfile + ".ko"
-            if compressed.group(1) == 'g':
+            if compressed.group(1) == 'gz':
                 cmd = "gunzip -dc %s > %s" % (file, tmpkofile)
                 subprocess.check_call(cmd, shell=True)
-            elif compressed.group(1) == 'x':
+            elif compressed.group(1) == 'xz':
                 cmd = "xz -dc %s > %s" % (file, tmpkofile)
+                subprocess.check_call(cmd, shell=True)
+            elif compressed.group(1) == 'zst':
+                cmd = "zstd -dc %s > %s" % (file, tmpkofile)
                 subprocess.check_call(cmd, shell=True)
             else:
                 msg = "Cannot decompress '%s'" % file
@@ -153,7 +156,7 @@ python split_kernel_module_packages () {
     kernel_package_name = d.getVar("KERNEL_PACKAGE_NAME") or "kernel"
     kernel_version = d.getVar("KERNEL_VERSION")
 
-    module_regex = r'^(.*)\.k?o(?:\.[xg]z)?$'
+    module_regex = r'^(.*)\.k?o(?:\.(gz|xz|zst))?$'
 
     module_pattern_prefix = d.getVar('KERNEL_MODULE_PACKAGE_PREFIX')
     module_pattern_suffix = d.getVar('KERNEL_MODULE_PACKAGE_SUFFIX')
