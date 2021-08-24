@@ -12,7 +12,8 @@ DEPENDS = "file-replacement-native"
 DEPENDS_class-native = "bzip2-replacement-native"
 
 SRC_URI = "git://github.com/file/file.git \
-           file://0001-src-compress.c-correct-header-define-for-xz-lzma.patch"
+           file://0001-src-compress.c-correct-header-define-for-xz-lzma.patch \
+           file://0001-Fix-close_on_exec-multithreaded-decompression-issue.patch"
 
 SRCREV = "87731415de945660b00f02207d8e9d986ef9b82e"
 S = "${WORKDIR}/git"
