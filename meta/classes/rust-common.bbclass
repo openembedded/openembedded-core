@@ -161,7 +161,7 @@ do_rust_create_wrappers () {
 	create_wrapper "${RUST_BUILD_AR}" "${BUILD_AR}"
 
 	# Yocto Target / Rust Target C compiler
-	create_wrapper "${RUST_TARGET_CC}" "${WRAPPER_TARGET_CC}"
+	create_wrapper "${RUST_TARGET_CC}" "${WRAPPER_TARGET_CC}" "${WRAPPER_TARGET_LDFLAGS}"
 	# Yocto Target / Rust Target C++ compiler
 	create_wrapper "${RUST_TARGET_CXX}" "${WRAPPER_TARGET_CXX}"
 	# Yocto Target / Rust Target linker
