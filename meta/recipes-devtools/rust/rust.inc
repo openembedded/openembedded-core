@@ -50,6 +50,14 @@ do_rust_setup_snapshot () {
     # and fail without it there.
     mkdir -p ${RUSTSRC}/build/${BUILD_SYS}
     ln -sf ${WORKDIR}/rust-snapshot/ ${RUSTSRC}/build/${BUILD_SYS}/stage0
+
+    # Need to use uninative's loader if enabled/present since the library paths
+    # are used internally by rust and result in symbol mismatches if we don't
+    if [ ! -z "${UNINATIVE_LOADER}" -a -e "${UNINATIVE_LOADER}" ]; then
+        for bin in cargo rustc rustdoc; do
+            patchelf-uninative ${WORKDIR}/rust-snapshot/bin/$bin --set-interpreter ${UNINATIVE_LOADER}
+        done
+    fi
 }
 addtask rust_setup_snapshot after do_unpack before do_configure
 do_rust_setup_snapshot[dirs] += "${WORKDIR}/rust-snapshot"
