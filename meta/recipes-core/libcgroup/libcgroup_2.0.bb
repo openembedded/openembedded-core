@@ -27,6 +27,7 @@ PACKAGECONFIG[pam] = "--enable-pam-module-dir=${base_libdir}/security --enable-p
 PACKAGES =+ "cgroups-pam-plugin"
 FILES:cgroups-pam-plugin = "${base_libdir}/security/pam_cgroup.so*"
 FILES:${PN}-dev += "${base_libdir}/security/*.la"
+FILES:${PN}-staticdev += "${base_libdir}/security/pam_cgroup.a"
 
 do_install:append() {
 	# Until we ship the test suite, this library isn't useful
