@@ -64,8 +64,8 @@ PRIVATE_LIBS:${PN}-ptest = "libfoo.so"
 
 do_install:append () {
     # install systemd unit file
-    install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/lttng-sessiond.service ${D}${systemd_unitdir}/system
+    install -d ${D}${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/lttng-sessiond.service ${D}${systemd_system_unitdir}
 }
 
 do_install_ptest () {

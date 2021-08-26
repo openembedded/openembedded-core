@@ -56,8 +56,8 @@ do_install() {
 	oe_runmake install INSTALLROOT=${D}
 	install -d ${D}${sysconfdir}/init.d/
 	install -m 0755 ${WORKDIR}/tcf-agent.init ${D}${sysconfdir}/init.d/tcf-agent
-	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/tcf-agent.service ${D}${systemd_unitdir}/system
-	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/tcf-agent.service
+	install -d ${D}${systemd_system_unitdir}
+	install -m 0644 ${WORKDIR}/tcf-agent.service ${D}${systemd_system_unitdir}
+	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_system_unitdir}/tcf-agent.service
 }
 

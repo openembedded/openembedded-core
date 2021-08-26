@@ -241,7 +241,7 @@ do_install() {
 	install -d ${D}/${base_sbindir}
 	if ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'false', 'true', d)}; then
 		# Provided by a separate recipe
-		rm ${D}${systemd_unitdir}/system/serial-getty* -f
+		rm ${D}${systemd_system_unitdir}/serial-getty* -f
 	fi
 
 	# Provide support for initramfs
@@ -260,7 +260,7 @@ do_install() {
 		install -d ${D}${sysconfdir}/init.d
 		install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/systemd-udevd
 		sed -i s%@UDEVD@%${rootlibexecdir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
-		install -Dm 0755 ${S}/src/systemctl/systemd-sysv-install.SKELETON ${D}${systemd_unitdir}/systemd-sysv-install
+		install -Dm 0755 ${S}/src/systemctl/systemd-sysv-install.SKELETON ${D}${systemd_system_unitdir}d-sysv-install
 	fi
 
 	chown root:systemd-journal ${D}/${localstatedir}/log/journal
@@ -271,19 +271,19 @@ do_install() {
 	# journal-remote creates this at start
 	rm -rf ${D}/${localstatedir}/log/journal/remote
 
-	install -d ${D}${systemd_unitdir}/system/graphical.target.wants
-	install -d ${D}${systemd_unitdir}/system/multi-user.target.wants
-	install -d ${D}${systemd_unitdir}/system/poweroff.target.wants
-	install -d ${D}${systemd_unitdir}/system/reboot.target.wants
-	install -d ${D}${systemd_unitdir}/system/rescue.target.wants
+	install -d ${D}${systemd_system_unitdir}/graphical.target.wants
+	install -d ${D}${systemd_system_unitdir}/multi-user.target.wants
+	install -d ${D}${systemd_system_unitdir}/poweroff.target.wants
+	install -d ${D}${systemd_system_unitdir}/reboot.target.wants
+	install -d ${D}${systemd_system_unitdir}/rescue.target.wants
 
 	# Create symlinks for systemd-update-utmp-runlevel.service
 	if ${@bb.utils.contains('PACKAGECONFIG', 'utmp', 'true', 'false', d)}; then
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/graphical.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/multi-user.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/poweroff.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/reboot.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_unitdir}/system/rescue.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/graphical.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/multi-user.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/poweroff.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/reboot.target.wants/systemd-update-utmp-runlevel.service
+		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/rescue.target.wants/systemd-update-utmp-runlevel.service
 	fi
 
 	# this file is needed to exist if networkd is disabled but timesyncd is still in use since timesyncd checks it
@@ -316,8 +316,8 @@ do_install() {
 	# If polkit is not available and a fallback was requested, install a drop-in that allows networkd to
 	# request hostname changes via DBUS without elevating its privileges
 	if ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'true', 'false', d)}; then
-		install -d ${D}${systemd_unitdir}/system/systemd-hostnamed.service.d/
-		install -m 0644 ${WORKDIR}/00-hostnamed-network-user.conf ${D}${systemd_unitdir}/system/systemd-hostnamed.service.d/
+		install -d ${D}${systemd_system_unitdir}/systemd-hostnamed.service.d/
+		install -m 0644 ${WORKDIR}/00-hostnamed-network-user.conf ${D}${systemd_system_unitdir}/systemd-hostnamed.service.d/
 		install -d ${D}${datadir}/dbus-1/system.d/
 		install -m 0644 ${WORKDIR}/org.freedesktop.hostname1_no_polkit.conf ${D}${datadir}/dbus-1/system.d/
 	fi
@@ -331,7 +331,7 @@ do_install() {
 
 	# install default policy for presets
 	# https://www.freedesktop.org/wiki/Software/systemd/Preset/#howto
-	install -Dm 0644 ${WORKDIR}/99-default.preset ${D}${systemd_unitdir}/system-preset/99-default.preset
+	install -Dm 0644 ${WORKDIR}/99-default.preset ${D}${systemd_system_unitdir}-preset/99-default.preset
 
 	# add a profile fragment to disable systemd pager with busybox less
 	install -Dm 0644 ${WORKDIR}/systemd-pager.sh ${D}${sysconfdir}/profile.d/systemd-pager.sh
@@ -406,8 +406,8 @@ RDEPENDS:${PN}-initramfs = "${PN}"
 FILES:${PN}-gui = "${bindir}/systemadm"
 
 FILES:${PN}-vconsole-setup = "${rootlibexecdir}/systemd/systemd-vconsole-setup \
-                              ${systemd_unitdir}/system/systemd-vconsole-setup.service \
-                              ${systemd_unitdir}/system/sysinit.target.wants/systemd-vconsole-setup.service"
+                              ${systemd_system_unitdir}/systemd-vconsole-setup.service \
+                              ${systemd_system_unitdir}/sysinit.target.wants/systemd-vconsole-setup.service"
 
 RDEPENDS:${PN}-kernel-install += "bash"
 FILES:${PN}-kernel-install = "${bindir}/kernel-install \
@@ -422,8 +422,8 @@ FILES:${PN}-zsh-completion = "${datadir}/zsh/site-functions"
 FILES:${PN}-binfmt = "${sysconfdir}/binfmt.d/ \
                       ${exec_prefix}/lib/binfmt.d \
                       ${rootlibexecdir}/systemd/systemd-binfmt \
-                      ${systemd_unitdir}/system/proc-sys-fs-binfmt_misc.* \
-                      ${systemd_unitdir}/system/systemd-binfmt.service"
+                      ${systemd_system_unitdir}/proc-sys-fs-binfmt_misc.* \
+                      ${systemd_system_unitdir}/systemd-binfmt.service"
 RRECOMMENDS:${PN}-binfmt = "kernel-module-binfmt-misc"
 
 RRECOMMENDS:${PN}-vconsole-setup = "kbd kbd-consolefonts kbd-keymaps"
@@ -512,31 +512,31 @@ FILES:${PN}-extra-utils = "\
                         ${bindir}/systemd-sysext \
                         ${base_bindir}/systemd-ask-password \
                         ${base_bindir}/systemd-tty-ask-password-agent \
-                        ${systemd_unitdir}/system/systemd-ask-password-console.path \
-                        ${systemd_unitdir}/system/systemd-ask-password-console.service \
-                        ${systemd_unitdir}/system/systemd-ask-password-wall.path \
-                        ${systemd_unitdir}/system/systemd-ask-password-wall.service \
-                        ${systemd_unitdir}/system/sysinit.target.wants/systemd-ask-password-console.path \
-                        ${systemd_unitdir}/system/sysinit.target.wants/systemd-ask-password-wall.path \
-                        ${systemd_unitdir}/system/multi-user.target.wants/systemd-ask-password-wall.path \
+                        ${systemd_system_unitdir}/systemd-ask-password-console.path \
+                        ${systemd_system_unitdir}/systemd-ask-password-console.service \
+                        ${systemd_system_unitdir}/systemd-ask-password-wall.path \
+                        ${systemd_system_unitdir}/systemd-ask-password-wall.service \
+                        ${systemd_system_unitdir}/sysinit.target.wants/systemd-ask-password-console.path \
+                        ${systemd_system_unitdir}/sysinit.target.wants/systemd-ask-password-wall.path \
+                        ${systemd_system_unitdir}/multi-user.target.wants/systemd-ask-password-wall.path \
                         ${rootlibexecdir}/systemd/systemd-resolve-host \
                         ${rootlibexecdir}/systemd/systemd-ac-power \
                         ${rootlibexecdir}/systemd/systemd-activate \
                         ${rootlibexecdir}/systemd/systemd-bus-proxyd \
-                        ${systemd_unitdir}/system/systemd-bus-proxyd.service \
-                        ${systemd_unitdir}/system/systemd-bus-proxyd.socket \
+                        ${systemd_system_unitdir}/systemd-bus-proxyd.service \
+                        ${systemd_system_unitdir}/systemd-bus-proxyd.socket \
                         ${rootlibexecdir}/systemd/systemd-socket-proxyd \
                         ${rootlibexecdir}/systemd/systemd-reply-password \
                         ${rootlibexecdir}/systemd/systemd-sleep \
                         ${rootlibexecdir}/systemd/system-sleep \
-                        ${systemd_unitdir}/system/systemd-hibernate.service \
-                        ${systemd_unitdir}/system/systemd-hybrid-sleep.service \
-                        ${systemd_unitdir}/system/systemd-suspend.service \
-                        ${systemd_unitdir}/system/sleep.target \
+                        ${systemd_system_unitdir}/systemd-hibernate.service \
+                        ${systemd_system_unitdir}/systemd-hybrid-sleep.service \
+                        ${systemd_system_unitdir}/systemd-suspend.service \
+                        ${systemd_system_unitdir}/sleep.target \
                         ${rootlibexecdir}/systemd/systemd-initctl \
-                        ${systemd_unitdir}/system/systemd-initctl.service \
-                        ${systemd_unitdir}/system/systemd-initctl.socket \
-                        ${systemd_unitdir}/system/sockets.target.wants/systemd-initctl.socket \
+                        ${systemd_system_unitdir}/systemd-initctl.service \
+                        ${systemd_system_unitdir}/systemd-initctl.socket \
+                        ${systemd_system_unitdir}/sockets.target.wants/systemd-initctl.socket \
                         ${rootlibexecdir}/systemd/system-generators/systemd-gpt-auto-generator \
                         ${rootlibexecdir}/systemd/systemd-cgroups-agent \
 "
@@ -694,14 +694,14 @@ FILES:udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/rules.d/README \
                ${sysconfdir}/udev \
                ${sysconfdir}/init.d/systemd-udevd \
-               ${systemd_unitdir}/system/*udev* \
-               ${systemd_unitdir}/system/*.wants/*udev* \
+               ${systemd_system_unitdir}/*udev* \
+               ${systemd_system_unitdir}/*.wants/*udev* \
                ${base_bindir}/systemd-hwdb \
                ${base_bindir}/udevadm \
                ${base_sbindir}/udevadm \
                ${libexecdir}/${MLPREFIX}udevadm \
                ${datadir}/bash-completion/completions/udevadm \
-               ${systemd_unitdir}/system/systemd-hwdb-update.service \
+               ${systemd_system_unitdir}/systemd-hwdb-update.service \
               "
 
 FILES:udev-hwdb = "${rootlibexecdir}/udev/hwdb.d \

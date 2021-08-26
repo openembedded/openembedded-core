@@ -39,11 +39,11 @@ do_install:append() {
        install -m 644 "${WORKDIR}/xinetd.default" "${D}${sysconfdir}/default/xinetd"
 
        # Install systemd unit files
-       install -d ${D}${systemd_unitdir}/system
-       install -m 0644 ${WORKDIR}/xinetd.service ${D}${systemd_unitdir}/system
+       install -d ${D}${systemd_system_unitdir}
+       install -m 0644 ${WORKDIR}/xinetd.service ${D}${systemd_system_unitdir}
        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
               -e 's,@SBINDIR@,${sbindir},g' \
-              ${D}${systemd_unitdir}/system/xinetd.service
+              ${D}${systemd_system_unitdir}/xinetd.service
 }
 
 RDEPENDS:${PN} += "perl"

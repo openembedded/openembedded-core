@@ -67,7 +67,7 @@ EXTRA_OECONF = "--with-avahi-priv-access-group=adm \
 
 # The distro choice determines what init scripts are installed
 EXTRA_OECONF_SYSVINIT = "${@bb.utils.contains('DISTRO_FEATURES','sysvinit','--with-distro=debian','--with-distro=none',d)}"
-EXTRA_OECONF_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES','systemd','--with-systemdsystemunitdir=${systemd_unitdir}/system/','--without-systemdsystemunitdir',d)}"
+EXTRA_OECONF_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES','systemd','--with-systemdsystemunitdir=${systemd_system_unitdir}/','--without-systemdsystemunitdir',d)}"
 
 do_configure:prepend() {
     # This m4 file will get in the way of our introspection.m4 with special cross-compilation fixes
