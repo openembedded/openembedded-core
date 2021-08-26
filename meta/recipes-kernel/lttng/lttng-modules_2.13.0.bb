@@ -23,7 +23,9 @@ MODULES_MODULE_SYMVERS_LOCATION = "src"
 
 do_install:append() {
 	# Delete empty directories to avoid QA failures if no modules were built
-	find ${D}/${nonarch_base_libdir} -depth -type d -empty -exec rmdir {} \;
+	if [ -d ${D}/${nonarch_base_libdir} ]; then
+		find ${D}/${nonarch_base_libdir} -depth -type d -empty -exec rmdir {} \;
+	fi
 }
 
 python do_package:prepend() {
