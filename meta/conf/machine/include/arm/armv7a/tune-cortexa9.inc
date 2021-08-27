@@ -1,4 +1,4 @@
-DEFAULTTUNE ?= "armv7athf-neon"
+DEFAULTTUNE ?= "cortexa9thf-neon"
 
 require conf/machine/include/arm/arch-armv7a.inc
 
