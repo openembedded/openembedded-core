@@ -216,6 +216,7 @@ class TestImage(OESelftestTestCase):
         Author: Alexander Kanavin <alex.kanavin@gmail.com>
         """
         import subprocess, os
+        self.skipTest("Crashes in mesa observed with this test on dunfell: https://bugzilla.yoctoproject.org/show_bug.cgi?id=14527")
         try:
             content = os.listdir("/dev/dri")
             if len([i for i in content if i.startswith('render')]) == 0:
