@@ -8,6 +8,8 @@ SRC_URI += "\
     file://0001-enable-LTO.patch \
     "
 
+UPSTREAM_CHECK_COMMITS = "1"
+
 SUMMARY = "Hello World by Cargo for Rust"
 HOMEPAGE = "https://github.com/meta-rust/rust-hello-world"
 LICENSE = "MIT | Apache-2.0"
