@@ -446,7 +446,7 @@ def buildhistory_list_installed(d, rootfs_type="image"):
         output_file_full = os.path.join(d.getVar('WORKDIR'), output_file)
 
         with open(output_file_full, 'w') as output:
-            output.write(format_pkg_list(pkgs, output_type))
+            output.write(format_pkg_list(pkgs, output_type, d.getVar('PKGDATA_DIR')))
 
 python buildhistory_list_installed_image() {
     buildhistory_list_installed(d)
@@ -487,6 +487,8 @@ buildhistory_get_installed() {
 	       -e 's:|: -> :' \
 	       -e 's:"\[REC\]":[style=dotted]:' \
 	       -e 's:"\([<>=]\+\)" "\([^"]*\)":[label="\1 \2"]:' \
+	       -e 's:"\([*]\+\)" "\([^"]*\)":[label="\2"]:' \
+	       -e 's:"\[RPROVIDES\]":[style=dashed]:' \
 		$1/depends.tmp
 	# Add header, sorted and de-duped contents and footer and then delete the temp file
 	printf "digraph depends {\n    node [shape=plaintext]\n" > $1/depends.dot
