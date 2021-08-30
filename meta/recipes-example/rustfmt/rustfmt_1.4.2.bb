@@ -7,7 +7,7 @@ inherit cargo
 
 # how to get rustfmt-nightly could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/rustfmt-nightly/1.4.2"
-SRC_URI += "git://github.com/rust-lang/rustfmt/;protocol=https;nobranch=1"
+SRC_URI += "git://github.com/rust-lang/rustfmt.git;protocol=https;nobranch=1"
 SRCREV = "aeb3496f31a0dfa90fc511520d2023634e885260"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = ""
