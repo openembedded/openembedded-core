@@ -674,7 +674,16 @@ python image_combine_spdx() {
 
             tar.addfile(info, fileobj=index_str)
 
-    spdx_tar_link = imgdeploydir / (image_link_name + ".spdx.tar.zst")
-    spdx_tar_link.symlink_to(os.path.relpath(spdx_tar_path, spdx_tar_link.parent))
+    def make_image_link(target_path, suffix):
+        link = imgdeploydir / (image_link_name + suffix)
+        link.symlink_to(os.path.relpath(target_path, link.parent))
+
+    make_image_link(spdx_tar_path, ".spdx.tar.zst")
+
+    spdx_index_path = imgdeploydir / (image_name + ".spdx.index.json")
+    with spdx_index_path.open("w") as f:
+        json.dump(index, f, sort_keys=True)
+
+    make_image_link(spdx_index_path, ".spdx.index.json")
 }
 
