@@ -344,7 +344,6 @@ python do_create_spdx() {
         else:
             yield None
 
-    bb.build.exec_func("read_subpackage_metadata", d)
 
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     spdx_workdir = Path(d.getVar("SPDXWORK"))
@@ -352,6 +351,7 @@ python do_create_spdx() {
     include_sources = d.getVar("SPDX_INCLUDE_SOURCES") == "1"
     archive_sources = d.getVar("SPDX_ARCHIVE_SOURCES") == "1"
     archive_packaged = d.getVar("SPDX_ARCHIVE_PACKAGED") == "1"
+    is_native = bb.data.inherits_class("native", d)
 
     creation_time = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -442,62 +442,65 @@ python do_create_spdx() {
 
     sources = collect_dep_sources(d, dep_recipes)
 
-    pkgdest = Path(d.getVar("PKGDEST"))
-    for package in d.getVar("PACKAGES").split():
-        if not oe.packagedata.packaged(package, d):
-            continue
+    if not is_native:
+        bb.build.exec_func("read_subpackage_metadata", d)
 
-        package_doc = oe.spdx.SPDXDocument()
-        pkg_name = d.getVar("PKG:%s" % package) or package
-        package_doc.name = pkg_name
-        package_doc.documentNamespace = get_doc_namespace(d, package_doc)
-        package_doc.creationInfo.created = creation_time
-        package_doc.creationInfo.comment = "This document was created by analyzing packages created during the build."
-        package_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
-        package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
-        package_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
-        package_doc.creationInfo.creators.append("Person: N/A ()")
+        pkgdest = Path(d.getVar("PKGDEST"))
+        for package in d.getVar("PACKAGES").split():
+            if not oe.packagedata.packaged(package, d):
+                continue
 
-        recipe_ref = oe.spdx.SPDXExternalDocumentRef()
-        recipe_ref.externalDocumentId = "DocumentRef-recipe-" + recipe.name
-        recipe_ref.spdxDocument = doc.documentNamespace
-        recipe_ref.checksum.algorithm = "SHA1"
-        recipe_ref.checksum.checksumValue = doc_sha1
+            package_doc = oe.spdx.SPDXDocument()
+            pkg_name = d.getVar("PKG:%s" % package) or package
+            package_doc.name = pkg_name
+            package_doc.documentNamespace = get_doc_namespace(d, package_doc)
+            package_doc.creationInfo.created = creation_time
+            package_doc.creationInfo.comment = "This document was created by analyzing packages created during the build."
+            package_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+            package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
+            package_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
+            package_doc.creationInfo.creators.append("Person: N/A ()")
 
-        package_doc.externalDocumentRefs.append(recipe_ref)
+            recipe_ref = oe.spdx.SPDXExternalDocumentRef()
+            recipe_ref.externalDocumentId = "DocumentRef-recipe-" + recipe.name
+            recipe_ref.spdxDocument = doc.documentNamespace
+            recipe_ref.checksum.algorithm = "SHA1"
+            recipe_ref.checksum.checksumValue = doc_sha1
 
-        package_license = d.getVar("LICENSE:%s" % package) or d.getVar("LICENSE")
+            package_doc.externalDocumentRefs.append(recipe_ref)
 
-        spdx_package = oe.spdx.SPDXPackage()
+            package_license = d.getVar("LICENSE:%s" % package) or d.getVar("LICENSE")
 
-        spdx_package.SPDXID = oe.sbom.get_package_spdxid(pkg_name)
-        spdx_package.name = pkg_name
-        spdx_package.versionInfo = d.getVar("PV")
-        spdx_package.licenseDeclared = convert_license_to_spdx(package_license, package_doc, d)
+            spdx_package = oe.spdx.SPDXPackage()
 
-        package_doc.packages.append(spdx_package)
+            spdx_package.SPDXID = oe.sbom.get_package_spdxid(pkg_name)
+            spdx_package.name = pkg_name
+            spdx_package.versionInfo = d.getVar("PV")
+            spdx_package.licenseDeclared = convert_license_to_spdx(package_license, package_doc, d)
 
-        package_doc.add_relationship(spdx_package, "GENERATED_FROM", "%s:%s" % (recipe_ref.externalDocumentId, recipe.SPDXID))
-        package_doc.add_relationship(package_doc, "DESCRIBES", spdx_package)
+            package_doc.packages.append(spdx_package)
 
-        package_archive = deploy_dir_spdx / "packages" / (package_doc.name + ".tar.zst")
-        with optional_tarfile(package_archive, archive_packaged) as archive:
-            package_files = add_package_files(
-                d,
-                package_doc,
-                spdx_package,
-                pkgdest / package,
-                lambda file_counter: oe.sbom.get_packaged_file_spdxid(pkg_name, file_counter),
-                lambda filepath: ["BINARY"],
-                archive=archive,
-            )
+            package_doc.add_relationship(spdx_package, "GENERATED_FROM", "%s:%s" % (recipe_ref.externalDocumentId, recipe.SPDXID))
+            package_doc.add_relationship(package_doc, "DESCRIBES", spdx_package)
 
-            if archive is not None:
-                spdx_package.packageFileName = str(package_archive.name)
+            package_archive = deploy_dir_spdx / "packages" / (package_doc.name + ".tar.zst")
+            with optional_tarfile(package_archive, archive_packaged) as archive:
+                package_files = add_package_files(
+                    d,
+                    package_doc,
+                    spdx_package,
+                    pkgdest / package,
+                    lambda file_counter: oe.sbom.get_packaged_file_spdxid(pkg_name, file_counter),
+                    lambda filepath: ["BINARY"],
+                    archive=archive,
+                )
 
-        add_package_sources_from_debug(d, package_doc, spdx_package, package, package_files, sources)
+                if archive is not None:
+                    spdx_package.packageFileName = str(package_archive.name)
 
-        oe.sbom.write_doc(d, package_doc, "packages")
+            add_package_sources_from_debug(d, package_doc, spdx_package, package, package_files, sources)
+
+            oe.sbom.write_doc(d, package_doc, "packages")
 }
 # NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
 addtask do_create_spdx after do_package do_packagedata do_unpack before do_build do_rm_work
@@ -557,106 +560,108 @@ python do_create_runtime_spdx() {
 
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     spdx_deploy = Path(d.getVar("SPDXRUNTIMEDEPLOY"))
+    is_native = bb.data.inherits_class("native", d)
 
     creation_time = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     providers = collect_package_providers(d)
 
-    bb.build.exec_func("read_subpackage_metadata", d)
+    if not is_native:
+        bb.build.exec_func("read_subpackage_metadata", d)
 
-    dep_package_cache = {}
+        dep_package_cache = {}
 
-    pkgdest = Path(d.getVar("PKGDEST"))
-    for package in d.getVar("PACKAGES").split():
-        localdata = bb.data.createCopy(d)
-        pkg_name = d.getVar("PKG:%s" % package) or package
-        localdata.setVar("PKG", pkg_name)
-        localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + package)
+        pkgdest = Path(d.getVar("PKGDEST"))
+        for package in d.getVar("PACKAGES").split():
+            localdata = bb.data.createCopy(d)
+            pkg_name = d.getVar("PKG:%s" % package) or package
+            localdata.setVar("PKG", pkg_name)
+            localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + package)
 
-        if not oe.packagedata.packaged(package, localdata):
-            continue
-
-        pkg_spdx_path = deploy_dir_spdx / "packages" / (pkg_name + ".spdx.json")
-
-        package_doc, package_doc_sha1 = oe.sbom.read_doc(pkg_spdx_path)
-
-        for p in package_doc.packages:
-            if p.name == pkg_name:
-                spdx_package = p
-                break
-        else:
-            bb.fatal("Package '%s' not found in %s" % (pkg_name, pkg_spdx_path))
-
-        runtime_doc = oe.spdx.SPDXDocument()
-        runtime_doc.name = "runtime-" + pkg_name
-        runtime_doc.documentNamespace = get_doc_namespace(localdata, runtime_doc)
-        runtime_doc.creationInfo.created = creation_time
-        runtime_doc.creationInfo.comment = "This document was created by analyzing package runtime dependencies."
-        runtime_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
-        runtime_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
-        runtime_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
-        runtime_doc.creationInfo.creators.append("Person: N/A ()")
-
-        package_ref = oe.spdx.SPDXExternalDocumentRef()
-        package_ref.externalDocumentId = "DocumentRef-package-" + package
-        package_ref.spdxDocument = package_doc.documentNamespace
-        package_ref.checksum.algorithm = "SHA1"
-        package_ref.checksum.checksumValue = package_doc_sha1
-
-        runtime_doc.externalDocumentRefs.append(package_ref)
-
-        runtime_doc.add_relationship(
-            runtime_doc.SPDXID,
-            "AMENDS",
-            "%s:%s" % (package_ref.externalDocumentId, package_doc.SPDXID)
-        )
-
-        deps = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS") or "")
-        seen_deps = set()
-        for dep, _ in deps.items():
-            if dep in seen_deps:
+            if not oe.packagedata.packaged(package, localdata):
                 continue
 
-            dep = providers[dep]
+            pkg_spdx_path = deploy_dir_spdx / "packages" / (pkg_name + ".spdx.json")
 
-            if not oe.packagedata.packaged(dep, localdata):
-                continue
+            package_doc, package_doc_sha1 = oe.sbom.read_doc(pkg_spdx_path)
 
-            dep_pkg_data = oe.packagedata.read_subpkgdata_dict(dep, d)
-            dep_pkg = dep_pkg_data["PKG"]
-
-            if dep in dep_package_cache:
-                (dep_spdx_package, dep_package_ref) = dep_package_cache[dep]
+            for p in package_doc.packages:
+                if p.name == pkg_name:
+                    spdx_package = p
+                    break
             else:
-                dep_path = deploy_dir_spdx / "packages" / ("%s.spdx.json" % dep_pkg)
+                bb.fatal("Package '%s' not found in %s" % (pkg_name, pkg_spdx_path))
 
-                spdx_dep_doc, spdx_dep_sha1 = oe.sbom.read_doc(dep_path)
+            runtime_doc = oe.spdx.SPDXDocument()
+            runtime_doc.name = "runtime-" + pkg_name
+            runtime_doc.documentNamespace = get_doc_namespace(localdata, runtime_doc)
+            runtime_doc.creationInfo.created = creation_time
+            runtime_doc.creationInfo.comment = "This document was created by analyzing package runtime dependencies."
+            runtime_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+            runtime_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
+            runtime_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
+            runtime_doc.creationInfo.creators.append("Person: N/A ()")
 
-                for pkg in spdx_dep_doc.packages:
-                    if pkg.name == dep_pkg:
-                        dep_spdx_package = pkg
-                        break
-                else:
-                    bb.fatal("Package '%s' not found in %s" % (dep_pkg, dep_path))
+            package_ref = oe.spdx.SPDXExternalDocumentRef()
+            package_ref.externalDocumentId = "DocumentRef-package-" + package
+            package_ref.spdxDocument = package_doc.documentNamespace
+            package_ref.checksum.algorithm = "SHA1"
+            package_ref.checksum.checksumValue = package_doc_sha1
 
-                dep_package_ref = oe.spdx.SPDXExternalDocumentRef()
-                dep_package_ref.externalDocumentId = "DocumentRef-runtime-dependency-" + spdx_dep_doc.name
-                dep_package_ref.spdxDocument = spdx_dep_doc.documentNamespace
-                dep_package_ref.checksum.algorithm = "SHA1"
-                dep_package_ref.checksum.checksumValue = spdx_dep_sha1
-
-                dep_package_cache[dep] = (dep_spdx_package, dep_package_ref)
-
-            runtime_doc.externalDocumentRefs.append(dep_package_ref)
+            runtime_doc.externalDocumentRefs.append(package_ref)
 
             runtime_doc.add_relationship(
-                "%s:%s" % (dep_package_ref.externalDocumentId, dep_spdx_package.SPDXID),
-                "RUNTIME_DEPENDENCY_OF",
-                "%s:%s" % (package_ref.externalDocumentId, spdx_package.SPDXID)
+                runtime_doc.SPDXID,
+                "AMENDS",
+                "%s:%s" % (package_ref.externalDocumentId, package_doc.SPDXID)
             )
-            seen_deps.add(dep)
 
-        oe.sbom.write_doc(d, runtime_doc, "runtime", spdx_deploy)
+            deps = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS") or "")
+            seen_deps = set()
+            for dep, _ in deps.items():
+                if dep in seen_deps:
+                    continue
+
+                dep = providers[dep]
+
+                if not oe.packagedata.packaged(dep, localdata):
+                    continue
+
+                dep_pkg_data = oe.packagedata.read_subpkgdata_dict(dep, d)
+                dep_pkg = dep_pkg_data["PKG"]
+
+                if dep in dep_package_cache:
+                    (dep_spdx_package, dep_package_ref) = dep_package_cache[dep]
+                else:
+                    dep_path = deploy_dir_spdx / "packages" / ("%s.spdx.json" % dep_pkg)
+
+                    spdx_dep_doc, spdx_dep_sha1 = oe.sbom.read_doc(dep_path)
+
+                    for pkg in spdx_dep_doc.packages:
+                        if pkg.name == dep_pkg:
+                            dep_spdx_package = pkg
+                            break
+                    else:
+                        bb.fatal("Package '%s' not found in %s" % (dep_pkg, dep_path))
+
+                    dep_package_ref = oe.spdx.SPDXExternalDocumentRef()
+                    dep_package_ref.externalDocumentId = "DocumentRef-runtime-dependency-" + spdx_dep_doc.name
+                    dep_package_ref.spdxDocument = spdx_dep_doc.documentNamespace
+                    dep_package_ref.checksum.algorithm = "SHA1"
+                    dep_package_ref.checksum.checksumValue = spdx_dep_sha1
+
+                    dep_package_cache[dep] = (dep_spdx_package, dep_package_ref)
+
+                runtime_doc.externalDocumentRefs.append(dep_package_ref)
+
+                runtime_doc.add_relationship(
+                    "%s:%s" % (dep_package_ref.externalDocumentId, dep_spdx_package.SPDXID),
+                    "RUNTIME_DEPENDENCY_OF",
+                    "%s:%s" % (package_ref.externalDocumentId, spdx_package.SPDXID)
+                )
+                seen_deps.add(dep)
+
+            oe.sbom.write_doc(d, runtime_doc, "runtime", spdx_deploy)
 }
 
 addtask do_create_runtime_spdx after do_create_spdx before do_build do_rm_work
