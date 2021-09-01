@@ -190,6 +190,7 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
             continue
 
         for debugsrc in file_data["debugsrc"]:
+            ref_id = "NOASSERTION"
             for search in debug_search_paths:
                 debugsrc_path = search / debugsrc.lstrip("/")
                 if not debugsrc_path.exists():
@@ -205,31 +206,26 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
 
                 file_sha256 = sha.hexdigest()
 
-                if not file_sha256 in sources:
+                if file_sha256 in sources:
+                    source_file = sources[file_sha256]
+
+                    doc_ref = package_doc.find_external_document_ref(source_file.doc.documentNamespace)
+                    if doc_ref is None:
+                        doc_ref = oe.spdx.SPDXExternalDocumentRef()
+                        doc_ref.externalDocumentId = "DocumentRef-dependency-" + source_file.doc.name
+                        doc_ref.spdxDocument = source_file.doc.documentNamespace
+                        doc_ref.checksum.algorithm = "SHA1"
+                        doc_ref.checksum.checksumValue = source_file.doc_sha1
+                        package_doc.externalDocumentRefs.append(doc_ref)
+
+                    ref_id = "%s:%s" % (doc_ref.externalDocumentId, source_file.file.SPDXID),
+                else:
                     bb.debug(1, "Debug source %s with SHA256 %s not found in any dependency" % (str(debugsrc_path), file_sha256))
-                    continue
-
-                source_file = sources[file_sha256]
-
-                doc_ref = package_doc.find_external_document_ref(source_file.doc.documentNamespace)
-                if doc_ref is None:
-                    doc_ref = oe.spdx.SPDXExternalDocumentRef()
-                    doc_ref.externalDocumentId = "DocumentRef-dependency-" + source_file.doc.name
-                    doc_ref.spdxDocument = source_file.doc.documentNamespace
-                    doc_ref.checksum.algorithm = "SHA1"
-                    doc_ref.checksum.checksumValue = source_file.doc_sha1
-                    package_doc.externalDocumentRefs.append(doc_ref)
-
-                package_doc.add_relationship(
-                    pkg_file,
-                    "GENERATED_FROM",
-                    "%s:%s" % (doc_ref.externalDocumentId, source_file.file.SPDXID),
-                    comment=debugsrc
-                )
                 break
             else:
                 bb.debug(1, "Debug source %s not found" % debugsrc)
 
+            package_doc.add_relationship(pkg_file, "GENERATED_FROM", ref_id, comment=debugsrc)
 
 def collect_dep_recipes(d, doc, spdx_recipe):
     from pathlib import Path
