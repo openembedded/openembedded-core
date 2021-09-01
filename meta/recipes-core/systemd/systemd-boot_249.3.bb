@@ -46,7 +46,7 @@ python __anonymous () {
 
 FILES:${PN} = "${EFI_FILES_PATH}/${SYSTEMD_BOOT_IMAGE}"
 
-RDEPENDS:${PN} += "virtual/systemd-bootconf"
+RDEPENDS:${PN} += "virtual-systemd-bootconf"
 
 # Imported from the old gummiboot recipe
 TUNE_CCARGS:remove = "-mfpmath=sse"
