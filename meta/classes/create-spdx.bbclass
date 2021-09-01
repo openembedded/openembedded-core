@@ -122,6 +122,8 @@ def add_package_files(d, doc, spdx_pkg, topdir, get_spdxid, get_types, *, archiv
     import hashlib
 
     source_date_epoch = d.getVar("SOURCE_DATE_EPOCH")
+    if source_date_epoch:
+        source_date_epoch = int(source_date_epoch)
 
     sha1s = []
     spdx_files = []
@@ -143,22 +145,8 @@ def add_package_files(d, doc, spdx_pkg, topdir, get_spdxid, get_types, *, archiv
                     spdx_file.fileTypes.append(t)
                 spdx_file.fileName = filename
 
-                hashes = {
-                    "SHA1": hashlib.sha1(),
-                    "SHA256": hashlib.sha256(),
-                }
-
-                with filepath.open("rb") as f:
-                    while True:
-                        chunk = f.read(4096)
-                        if not chunk:
-                            break
-
-                        for h in hashes.values():
-                            h.update(chunk)
-
-                    if archive is not None:
-                        f.seek(0)
+                if archive is not None:
+                    with filepath.open("rb") as f:
                         info = archive.gettarinfo(fileobj=f)
                         info.name = filename
                         info.uid = 0
@@ -166,18 +154,21 @@ def add_package_files(d, doc, spdx_pkg, topdir, get_spdxid, get_types, *, archiv
                         info.uname = "root"
                         info.gname = "root"
 
-                        if source_date_epoch is not None and info.mtime > int(source_date_epoch):
-                            info.mtime = int(source_date_epoch)
+                        if source_date_epoch is not None and info.mtime > source_date_epoch:
+                            info.mtime = source_date_epoch
 
                         archive.addfile(info, f)
 
-                for k, v in hashes.items():
-                    spdx_file.checksums.append(oe.spdx.SPDXChecksum(
-                        algorithm=k,
-                        checksumValue=v.hexdigest(),
+                sha1 = bb.utils.sha1_file(filepath)
+                sha1s.append(sha1)
+                spdx_file.checksums.append(oe.spdx.SPDXChecksum(
+                        algorithm="SHA1",
+                        checksumValue=sha1,
                     ))
-
-                sha1s.append(hashes["SHA1"].hexdigest())
+                spdx_file.checksums.append(oe.spdx.SPDXChecksum(
+                        algorithm="SHA256",
+                        checksumValue=bb.utils.sha256_file(filepath),
+                    ))
 
                 doc.files.append(spdx_file)
                 doc.add_relationship(spdx_pkg, "CONTAINS", spdx_file)
@@ -231,15 +222,7 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
                 if not debugsrc_path.exists():
                     continue
 
-                with debugsrc_path.open("rb") as f:
-                    sha = hashlib.sha256()
-                    while True:
-                        chunk = f.read(4096)
-                        if not chunk:
-                            break
-                        sha.update(chunk)
-
-                file_sha256 = sha.hexdigest()
+                file_sha256 = bb.utils.sha256_file(debugsrc_path)
 
                 if file_sha256 in sources:
                     source_file = sources[file_sha256]
