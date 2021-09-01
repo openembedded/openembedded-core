@@ -23,6 +23,8 @@ SPDX_ARCHIVE_PACKAGED ??= "0"
 SPDX_UUID_NAMESPACE ??= "sbom.openembedded.org"
 SPDX_NAMESPACE_PREFIX ??= "http://spdx.org/spdxdoc"
 
+SPDX_LICENSES ??= "${COREBASE}/meta/files/spdx-licenses.json"
+
 do_image_complete[depends] = "virtual/kernel:do_create_spdx"
 
 def get_doc_namespace(d, doc):
@@ -36,21 +38,54 @@ def is_work_shared(d):
     return bb.data.inherits_class('kernel', d) or pn.startswith('gcc-source')
 
 
-def convert_license_to_spdx(lic, d):
+python() {
+    import json
+    if d.getVar("SPDX_LICENSE_DATA"):
+        return
+
+    with open(d.getVar("SPDX_LICENSES"), "r") as f:
+        d.setVar("SPDX_LICENSE_DATA", json.load(f))
+}
+
+def convert_license_to_spdx(lic, document, d):
+    import oe.spdx
+
+    license_data = d.getVar("SPDX_LICENSE_DATA")
     def convert(l):
+        if l == "(" or l == ")":
+            return l
+
         if l == "&":
             return "AND"
 
         if l == "|":
             return "OR"
 
-        spdx = d.getVarFlag('SPDXLICENSEMAP', l)
-        if spdx is not None:
-            return spdx
+        spdx_license = d.getVarFlag("SPDXLICENSEMAP", l) or l
+        for lic_data in license_data["licenses"]:
+            if lic_data["licenseId"] == spdx_license:
+                return spdx_license
 
-        return l
+        spdx_license = "LicenseRef-" + l
+        for spdx_lic in document.hasExtractedLicensingInfos:
+            if spdx_lic.licenseId == spdx_license:
+                return spdx_license
 
-    return ' '.join(convert(l) for l in lic.split())
+        bb.warn("No SPDX License found for %s. Creating a place holder" % l)
+
+        spdx_lic = oe.spdx.SPDXExtractedLicensingInfo()
+        spdx_lic.name = l
+        spdx_lic.licenseId = spdx_license
+        # TODO: Extract the actual license text from the common license files
+        spdx_lic.extractedText = "This software is licensed under the %s license" % l
+
+        document.hasExtractedLicensingInfos.append(spdx_lic)
+
+        return spdx_license
+
+    lic_split = lic.replace("(", " ( ").replace(")", " ) ").split()
+
+    return ' '.join(convert(l) for l in lic_split)
 
 
 def process_sources(d):
@@ -334,6 +369,7 @@ python do_create_spdx() {
     doc.documentNamespace = get_doc_namespace(d, doc)
     doc.creationInfo.created = creation_time
     doc.creationInfo.comment = "This document was created by analyzing recipe files during the build."
+    doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
     doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
     doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
     doc.creationInfo.creators.append("Person: N/A ()")
@@ -353,7 +389,7 @@ python do_create_spdx() {
 
     license = d.getVar("LICENSE")
     if license:
-        recipe.licenseDeclared = convert_license_to_spdx(license, d)
+        recipe.licenseDeclared = convert_license_to_spdx(license, doc, d)
 
     summary = d.getVar("SUMMARY")
     if summary:
@@ -422,6 +458,7 @@ python do_create_spdx() {
         package_doc.documentNamespace = get_doc_namespace(d, package_doc)
         package_doc.creationInfo.created = creation_time
         package_doc.creationInfo.comment = "This document was created by analyzing packages created during the build."
+        package_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
         package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
         package_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
         package_doc.creationInfo.creators.append("Person: N/A ()")
@@ -441,7 +478,7 @@ python do_create_spdx() {
         spdx_package.SPDXID = oe.sbom.get_package_spdxid(pkg_name)
         spdx_package.name = pkg_name
         spdx_package.versionInfo = d.getVar("PV")
-        spdx_package.licenseDeclared = convert_license_to_spdx(package_license, d)
+        spdx_package.licenseDeclared = convert_license_to_spdx(package_license, package_doc, d)
 
         package_doc.packages.append(spdx_package)
 
@@ -561,6 +598,7 @@ python do_create_runtime_spdx() {
         runtime_doc.documentNamespace = get_doc_namespace(localdata, runtime_doc)
         runtime_doc.creationInfo.created = creation_time
         runtime_doc.creationInfo.comment = "This document was created by analyzing package runtime dependencies."
+        runtime_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
         runtime_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
         runtime_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
         runtime_doc.creationInfo.creators.append("Person: N/A ()")
@@ -720,6 +758,7 @@ python image_combine_spdx() {
     doc.documentNamespace = get_doc_namespace(d, doc)
     doc.creationInfo.created = creation_time
     doc.creationInfo.comment = "This document was created by analyzing the source of the Yocto recipe during the build."
+    doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
     doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
     doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
     doc.creationInfo.creators.append("Person: N/A ()")

@@ -189,6 +189,13 @@ class SPDXExternalDocumentRef(SPDXObject):
     checksum = _Object(SPDXChecksum)
 
 
+class SPDXExtractedLicensingInfo(SPDXObject):
+    name = _String()
+    comment = _String()
+    licenseId = _String()
+    extractedText = _String()
+
+
 class SPDXDocument(SPDXObject):
     spdxVersion = _String(default="SPDX-" + SPDX_VERSION)
     dataLicense = _String(default="CC0-1.0")
@@ -200,6 +207,7 @@ class SPDXDocument(SPDXObject):
     files = _ObjectList(SPDXFile)
     relationships = _ObjectList(SPDXRelationship)
     externalDocumentRefs = _ObjectList(SPDXExternalDocumentRef)
+    hasExtractedLicensingInfos = _ObjectList(SPDXExtractedLicensingInfo)
 
     def __init__(self, **d):
         super().__init__(**d)
