@@ -335,9 +335,9 @@ python do_create_spdx() {
     doc.name = "recipe-" + d.getVar("PN")
     doc.documentNamespace = get_doc_namespace(d, doc)
     doc.creationInfo.created = creation_time
-    doc.creationInfo.comment = "This document was created by analyzing the source of the Yocto recipe during the build."
-    doc.creationInfo.creators.append("Tool: meta-doubleopen")
-    doc.creationInfo.creators.append("Organization: Double Open Project ()")
+    doc.creationInfo.comment = "This document was created by analyzing recipe files during the build."
+    doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
+    doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
     doc.creationInfo.creators.append("Person: N/A ()")
 
     recipe = oe.spdx.SPDXPackage()
@@ -423,9 +423,9 @@ python do_create_spdx() {
         package_doc.name = pkg_name
         package_doc.documentNamespace = get_doc_namespace(d, package_doc)
         package_doc.creationInfo.created = creation_time
-        package_doc.creationInfo.comment = "This document was created by analyzing the source of the Yocto recipe during the build."
-        package_doc.creationInfo.creators.append("Tool: meta-doubleopen")
-        package_doc.creationInfo.creators.append("Organization: Double Open Project ()")
+        package_doc.creationInfo.comment = "This document was created by analyzing packages created during the build."
+        package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
+        package_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
         package_doc.creationInfo.creators.append("Person: N/A ()")
 
         recipe_ref = oe.spdx.SPDXExternalDocumentRef()
