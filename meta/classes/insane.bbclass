@@ -27,7 +27,7 @@ WARN_QA ?= " libdir xorg-driver-abi \
             infodir build-deps src-uri-bad symlink-to-sysroot multilib \
             invalid-packageconfig host-user-contaminated uppercase-pn patch-fuzz \
             mime mime-xdg unlisted-pkg-lics unhandled-features-check \
-            missing-update-alternatives native-last \
+            missing-update-alternatives native-last missing-ptest \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
