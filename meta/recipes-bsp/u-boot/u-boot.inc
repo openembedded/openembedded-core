@@ -316,7 +316,7 @@ do_deploy () {
                     if [ $j -eq $i ]
                     then
                         install -m 644 ${B}/${config}/${SPL_BINARY} ${DEPLOYDIR}/${SPL_BINARYNAME}-${type}-${PV}-${PR}
-                        rm -f ${DEPLOYDIR}/${SPL_BINARYNAME} ${DEPLOYDIR}/${SPL_SYMLINK}-${type}
+                        rm -f ${DEPLOYDIR}/${SPL_BINARYNAME} ${DEPLOYDIR}/${SPL_SYMLINK}
                         ln -sf ${SPL_BINARYNAME}-${type}-${PV}-${PR} ${DEPLOYDIR}/${SPL_BINARYNAME}-${type}
                         ln -sf ${SPL_BINARYNAME}-${type}-${PV}-${PR} ${DEPLOYDIR}/${SPL_BINARYNAME}
                         ln -sf ${SPL_BINARYNAME}-${type}-${PV}-${PR} ${DEPLOYDIR}/${SPL_SYMLINK}-${type}
