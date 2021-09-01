@@ -1,0 +1,63 @@
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
+import collections
+
+DepRecipe = collections.namedtuple("DepRecipe", ("doc", "doc_sha1", "recipe"))
+DepSource = collections.namedtuple("DepSource", ("doc", "doc_sha1", "recipe", "file"))
+
+
+def get_recipe_spdxid(d):
+    return "SPDXRef-%s-%s" % ("Recipe", d.getVar("PN"))
+
+
+def get_package_spdxid(pkg):
+    return "SPDXRef-Package-%s" % pkg
+
+
+def get_source_file_spdxid(d, idx):
+    return "SPDXRef-SourceFile-%s-%d" % (d.getVar("PN"), idx)
+
+
+def get_packaged_file_spdxid(pkg, idx):
+    return "SPDXRef-PackagedFile-%s-%d" % (pkg, idx)
+
+
+def get_image_spdxid(img):
+    return "SPDXRef-Image-%s" % img
+
+
+def write_doc(d, spdx_doc, subdir):
+    from pathlib import Path
+
+    spdx_deploy = Path(d.getVar("SPDXDEPLOY"))
+
+    dest = spdx_deploy / subdir / (spdx_doc.name + ".spdx.json")
+    dest.parent.mkdir(exist_ok=True, parents=True)
+    with dest.open("wb") as f:
+        doc_sha1 = spdx_doc.to_json(f, sort_keys=True)
+
+    l = spdx_deploy / "by-namespace" / spdx_doc.documentNamespace.replace("/", "_")
+    l.parent.mkdir(exist_ok=True, parents=True)
+    l.symlink_to(os.path.relpath(dest, l.parent))
+
+    return doc_sha1
+
+
+def read_doc(filename):
+    import hashlib
+    import oe.spdx
+
+    with filename.open("rb") as f:
+        sha1 = hashlib.sha1()
+        while True:
+            chunk = f.read(4096)
+            if not chunk:
+                break
+            sha1.update(chunk)
+
+        f.seek(0)
+        doc = oe.spdx.SPDXDocument.from_json(f)
+
+    return (doc, sha1.hexdigest())
