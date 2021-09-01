@@ -362,9 +362,12 @@ python do_create_spdx() {
     recipe.versionInfo = d.getVar("PV")
     recipe.SPDXID = oe.sbom.get_recipe_spdxid(d)
 
-    src_uri = d.getVar('SRC_URI')
-    if src_uri:
-        recipe.downloadLocation = src_uri.split()[0]
+    for s in d.getVar('SRC_URI').split():
+        if not s.startswith("file://"):
+            recipe.downloadLocation = s
+            break
+    else:
+        recipe.downloadLocation = "NOASSERTION"
 
     homepage = d.getVar("HOMEPAGE")
     if homepage:
