@@ -720,8 +720,8 @@ python image_combine_spdx() {
     doc.documentNamespace = get_doc_namespace(d, doc)
     doc.creationInfo.created = creation_time
     doc.creationInfo.comment = "This document was created by analyzing the source of the Yocto recipe during the build."
-    doc.creationInfo.creators.append("Tool: meta-doubleopen")
-    doc.creationInfo.creators.append("Organization: Double Open Project ()")
+    doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
+    doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
     doc.creationInfo.creators.append("Person: N/A ()")
 
     image = oe.spdx.SPDXPackage()
