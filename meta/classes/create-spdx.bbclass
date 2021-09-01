@@ -427,7 +427,7 @@ python do_create_spdx() {
         package_doc.creationInfo.creators.append("Person: N/A ()")
 
         recipe_ref = oe.spdx.SPDXExternalDocumentRef()
-        recipe_ref.externalDocumentId = "DocumentRef-recipe"
+        recipe_ref.externalDocumentId = "DocumentRef-recipe-" + recipe.name
         recipe_ref.spdxDocument = doc.documentNamespace
         recipe_ref.checksum.algorithm = "SHA1"
         recipe_ref.checksum.checksumValue = doc_sha1
@@ -566,7 +566,7 @@ python do_create_runtime_spdx() {
         runtime_doc.creationInfo.creators.append("Person: N/A ()")
 
         package_ref = oe.spdx.SPDXExternalDocumentRef()
-        package_ref.externalDocumentId = "DocumentRef-package"
+        package_ref.externalDocumentId = "DocumentRef-package-" + package
         package_ref.spdxDocument = package_doc.documentNamespace
         package_ref.checksum.algorithm = "SHA1"
         package_ref.checksum.checksumValue = package_doc_sha1
