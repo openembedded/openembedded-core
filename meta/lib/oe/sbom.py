@@ -45,11 +45,21 @@ def write_doc(d, spdx_doc, subdir):
     return doc_sha1
 
 
-def read_doc(filename):
+def read_doc(fn):
     import hashlib
     import oe.spdx
+    import io
+    import contextlib
 
-    with filename.open("rb") as f:
+    @contextlib.contextmanager
+    def get_file():
+        if isinstance(fn, io.IOBase):
+            yield fn
+        else:
+            with fn.open("rb") as f:
+                yield f
+
+    with get_file() as f:
         sha1 = hashlib.sha1()
         while True:
             chunk = f.read(4096)

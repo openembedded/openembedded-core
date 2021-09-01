@@ -627,7 +627,7 @@ python image_combine_spdx() {
                 visited_docs.add(path)
 
                 with path.open("rb") as f:
-                    doc = oe.spdx.SPDXDocument.from_json(f)
+                    doc, sha1 = oe.sbom.read_doc(f)
                     f.seek(0)
 
                     if doc.documentNamespace in visited_docs:
@@ -651,6 +651,7 @@ python image_combine_spdx() {
                     index["documents"].append({
                         "filename": info.name,
                         "documentNamespace": doc.documentNamespace,
+                        "sha1": sha1,
                     })
 
                 for ref in doc.externalDocumentRefs:
