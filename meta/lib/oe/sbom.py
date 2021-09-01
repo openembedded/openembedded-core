@@ -28,10 +28,11 @@ def get_image_spdxid(img):
     return "SPDXRef-Image-%s" % img
 
 
-def write_doc(d, spdx_doc, subdir):
+def write_doc(d, spdx_doc, subdir, spdx_deploy=None):
     from pathlib import Path
 
-    spdx_deploy = Path(d.getVar("SPDXDEPLOY"))
+    if spdx_deploy is None:
+        spdx_deploy = Path(d.getVar("SPDXDEPLOY"))
 
     dest = spdx_deploy / subdir / (spdx_doc.name + ".spdx.json")
     dest.parent.mkdir(exist_ok=True, parents=True)
