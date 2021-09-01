@@ -528,8 +528,7 @@ def collect_package_providers(d):
 
     taskdepdata = d.getVar("BB_TASKDEPDATA", False)
     deps = sorted(set(
-        dep[0] for dep in taskdepdata.values() if
-            dep[1] == "do_create_spdx" and dep[0] != d.getVar("PN")
+        dep[0] for dep in taskdepdata.values() if dep[0] != d.getVar("PN")
     ))
     deps.append(d.getVar("PN"))
 
