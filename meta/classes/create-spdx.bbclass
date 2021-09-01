@@ -88,7 +88,8 @@ def convert_license_to_spdx(lic, document, d):
         if l == "PD":
             add_extracted_license(spdx_license, l, "Software released to the public domain")
         elif add_extracted_license(spdx_license, l, "This software is licensed under the %s license" % l):
-            bb.warn("No SPDX License found for %s. Creating a place holder" % l)
+            pass
+            #bb.warn("No SPDX License found for %s. Creating a place holder" % l)
 
         return spdx_license
 
