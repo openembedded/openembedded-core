@@ -51,6 +51,23 @@ def convert_license_to_spdx(lic, document, d):
     import oe.spdx
 
     license_data = d.getVar("SPDX_LICENSE_DATA")
+
+    def add_extracted_license(ident, name, text):
+        nonlocal document
+
+        for lic_data in license_data["licenses"]:
+            if lic_data["licenseId"] == ident:
+                return False
+
+        spdx_lic = oe.spdx.SPDXExtractedLicensingInfo()
+        spdx_lic.name = name
+        spdx_lic.licenseId = ident
+        spdx_lic.extractedText = text
+
+        document.hasExtractedLicensingInfos.append(spdx_lic)
+
+        return True
+
     def convert(l):
         if l == "(" or l == ")":
             return l
@@ -67,19 +84,11 @@ def convert_license_to_spdx(lic, document, d):
                 return spdx_license
 
         spdx_license = "LicenseRef-" + l
-        for spdx_lic in document.hasExtractedLicensingInfos:
-            if spdx_lic.licenseId == spdx_license:
-                return spdx_license
 
-        bb.warn("No SPDX License found for %s. Creating a place holder" % l)
-
-        spdx_lic = oe.spdx.SPDXExtractedLicensingInfo()
-        spdx_lic.name = l
-        spdx_lic.licenseId = spdx_license
-        # TODO: Extract the actual license text from the common license files
-        spdx_lic.extractedText = "This software is licensed under the %s license" % l
-
-        document.hasExtractedLicensingInfos.append(spdx_lic)
+        if l == "PD":
+            add_extracted_license(spdx_license, l, "Software released to the public domain")
+        elif add_extracted_license(spdx_license, l, "This software is licensed under the %s license" % l):
+            bb.warn("No SPDX License found for %s. Creating a place holder" % l)
 
         return spdx_license
 
