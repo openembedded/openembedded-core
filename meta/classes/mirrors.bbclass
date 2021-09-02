@@ -73,4 +73,5 @@ git://git.gnome.org/.*        git://gitlab.gnome.org/GNOME/PATH;protocol=https \
 git://git.savannah.gnu.org/.* git://git.savannah.gnu.org/git/PATH;protocol=https \n \
 git://git.yoctoproject.org/.* git://git.yoctoproject.org/git/PATH;protocol=https \n \
 git://.*/.*                   git://HOST/PATH;protocol=https \n \
+git://.*/.*                   git://HOST/git/PATH;protocol=https \n \
 "
