@@ -132,9 +132,8 @@ PACKAGECONFIG[v3d] = ""
 GALLIUMDRIVERS = "swrast"
 # gallium swrast was found to crash Xorg on startup in x32 qemu
 GALLIUMDRIVERS:x86-x32 = ""
-# Add crocus when 21.2 is out to the list below to support the full range of Intel GPUs
-GALLIUMDRIVERS:append:x86:class-target = ",i915,iris"
-GALLIUMDRIVERS:append:x86-64:class-target = ",i915,iris"
+GALLIUMDRIVERS:append:x86:class-target = ",i915,iris,crocus"
+GALLIUMDRIVERS:append:x86-64:class-target = ",i915,iris,crocus"
 
 GALLIUMDRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'etnaviv', ',etnaviv', '', d)}"
 GALLIUMDRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'freedreno', ',freedreno', '', d)}"
