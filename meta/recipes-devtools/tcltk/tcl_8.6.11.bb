@@ -30,6 +30,9 @@ SRC_URI[sha256sum] = "8c0486668586672c5693d7d95817cb05a18c5ecca2f40e2836b9578064
 SRC_URI_class-native = "${BASE_SRC_URI}"
 
 S = "${WORKDIR}/${BPN}${PV}/unix"
+# Upstream don't believe this is an exploitable issue
+# https://core.tcl-lang.org/tcl/info/7079e4f91601e9c7
+CVE_CHECK_WHITELIST += "CVE-2021-35331"
 
 PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/${BPN}${PV}"
 VER = "${PV}"
