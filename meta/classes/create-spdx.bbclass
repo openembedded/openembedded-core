@@ -58,9 +58,6 @@ def convert_license_to_spdx(lic, document, d):
     def add_extracted_license(ident, name, text):
         nonlocal document
 
-        if ident in license_data["licenses"]:
-            return False
-
         spdx_lic = oe.spdx.SPDXExtractedLicensingInfo()
         spdx_lic.name = name
         spdx_lic.licenseId = ident
