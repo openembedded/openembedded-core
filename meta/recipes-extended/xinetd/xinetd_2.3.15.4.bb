@@ -2,9 +2,7 @@ SUMMARY = "Socket-based service activation daemon"
 HOMEPAGE = "https://github.com/xinetd-org/xinetd"
 DESCRIPTION = "xinetd is a powerful replacement for inetd, xinetd has access control mechanisms, extensive logging capabilities, the ability to make services available based on time, can place limits on the number of servers that can be started, and has deployable defence mechanisms to protect against port scanners, among other things."
 
-# xinetd is a BSD-like license
-# Apple and Gentoo say BSD here.
-LICENSE = "BSD"
+LICENSE = "xinetd"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=55c5fdf02cfcca3fc9621b6f2ceae10f"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
