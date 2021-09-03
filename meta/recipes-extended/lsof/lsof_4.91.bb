@@ -18,6 +18,9 @@ SRC_URI = "http://www.mirrorservice.org/sites/lsof.itap.purdue.edu/pub/tools/uni
 SRC_URI[md5sum] = "148ed410cb52e08c2adc0c60f480f11f"
 SRC_URI[sha256sum] = "c9da946a525fbf82ff80090b6d1879c38df090556f3fe0e6d782cb44172450a3"
 
+UPSTREAM_CHECK_URI = "https://github.com/lsof-org/lsof/releases/"
+UPSTREAM_CHECK_REGEX = "lsof_(?P<pver>.*)\.linux\.tar"
+
 LOCALSRC = "file://${WORKDIR}/lsof_${PV}/lsof_${PV}_src.tar"
 
 S = "${WORKDIR}/lsof_${PV}_src"
