@@ -50,7 +50,7 @@ python() {
         d.setVar("SPDX_LICENSE_DATA", data)
 }
 
-def convert_license_to_spdx(lic, document, d):
+def convert_license_to_spdx(lic, document, d, existing={}):
     from pathlib import Path
     import oe.spdx
 
@@ -109,8 +109,11 @@ def convert_license_to_spdx(lic, document, d):
         if spdx_license in license_data["licenses"]:
             return spdx_license
 
-        spdx_license = "LicenseRef-" + l
-        add_extracted_license(spdx_license, l)
+        try:
+            spdx_license = existing[l]
+        except KeyError:
+            spdx_license = "LicenseRef-" + l
+            add_extracted_license(spdx_license, l)
 
         return spdx_license
 
@@ -462,7 +465,14 @@ python do_create_spdx() {
     doc_sha1 = oe.sbom.write_doc(d, doc, "recipes")
     dep_recipes.append(oe.sbom.DepRecipe(doc, doc_sha1, recipe))
 
+    recipe_ref = oe.spdx.SPDXExternalDocumentRef()
+    recipe_ref.externalDocumentId = "DocumentRef-recipe-" + recipe.name
+    recipe_ref.spdxDocument = doc.documentNamespace
+    recipe_ref.checksum.algorithm = "SHA1"
+    recipe_ref.checksum.checksumValue = doc_sha1
+
     sources = collect_dep_sources(d, dep_recipes)
+    found_licenses = {license.name:recipe_ref.externalDocumentId + ":" + license.licenseId for license in doc.hasExtractedLicensingInfos}
 
     if not is_native:
         bb.build.exec_func("read_subpackage_metadata", d)
@@ -482,13 +492,6 @@ python do_create_spdx() {
             package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
             package_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
             package_doc.creationInfo.creators.append("Person: N/A ()")
-
-            recipe_ref = oe.spdx.SPDXExternalDocumentRef()
-            recipe_ref.externalDocumentId = "DocumentRef-recipe-" + recipe.name
-            recipe_ref.spdxDocument = doc.documentNamespace
-            recipe_ref.checksum.algorithm = "SHA1"
-            recipe_ref.checksum.checksumValue = doc_sha1
-
             package_doc.externalDocumentRefs.append(recipe_ref)
 
             package_license = d.getVar("LICENSE:%s" % package) or d.getVar("LICENSE")
@@ -498,7 +501,7 @@ python do_create_spdx() {
             spdx_package.SPDXID = oe.sbom.get_package_spdxid(pkg_name)
             spdx_package.name = pkg_name
             spdx_package.versionInfo = d.getVar("PV")
-            spdx_package.licenseDeclared = convert_license_to_spdx(package_license, package_doc, d)
+            spdx_package.licenseDeclared = convert_license_to_spdx(package_license, package_doc, d, found_licenses)
 
             package_doc.packages.append(spdx_package)
 
