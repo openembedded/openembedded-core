@@ -51,21 +51,49 @@ python() {
 }
 
 def convert_license_to_spdx(lic, document, d):
+    from pathlib import Path
     import oe.spdx
 
+    available_licenses = d.getVar("AVAILABLE_LICENSES").split()
     license_data = d.getVar("SPDX_LICENSE_DATA")
+    extracted = {}
 
-    def add_extracted_license(ident, name, text):
+    def add_extracted_license(ident, name):
         nonlocal document
 
-        spdx_lic = oe.spdx.SPDXExtractedLicensingInfo()
-        spdx_lic.name = name
-        spdx_lic.licenseId = ident
-        spdx_lic.extractedText = text
+        if name in extracted:
+            return
 
-        document.hasExtractedLicensingInfos.append(spdx_lic)
+        extracted_info = oe.spdx.SPDXExtractedLicensingInfo()
+        extracted_info.name = name
+        extracted_info.licenseId = ident
 
-        return True
+        if name == "PD":
+            # Special-case this.
+            extracted_info.extractedText = "Software released to the public domain"
+        elif name in available_licenses:
+            # This license can be found in COMMON_LICENSE_DIR or LICENSE_PATH
+            for directory in [d.getVar('COMMON_LICENSE_DIR')] + d.getVar('LICENSE_PATH').split():
+                try:
+                    with (Path(directory) / name).open(errors="replace") as f:
+                        extracted_info.extractedText = f.read()
+                        break
+                except Exception as e:
+                    # Error out, as the license was in available_licenses so
+                    # should be on disk somewhere.
+                    bb.error(f"Cannot find text for license {name}: {e}")
+        else:
+            # If it's not SPDX, or PD, or in available licenses, then NO_GENERIC_LICENSE must be set
+            filename = d.getVarFlag('NO_GENERIC_LICENSE', name)
+            if filename:
+                filename = d.expand("${S}/" + filename)
+                with open(filename, errors="replace") as f:
+                    extracted_info.extractedText = f.read()
+            else:
+                bb.error(f"Cannot find any text for license {name}")
+
+        extracted[name] = extracted_info
+        document.hasExtractedLicensingInfos.append(extracted_info)
 
     def convert(l):
         if l == "(" or l == ")":
@@ -82,12 +110,7 @@ def convert_license_to_spdx(lic, document, d):
             return spdx_license
 
         spdx_license = "LicenseRef-" + l
-
-        if l == "PD":
-            add_extracted_license(spdx_license, l, "Software released to the public domain")
-        elif add_extracted_license(spdx_license, l, "This software is licensed under the %s license" % l):
-            pass
-            #bb.warn("No SPDX License found for %s. Creating a place holder" % l)
+        add_extracted_license(spdx_license, l)
 
         return spdx_license
 
