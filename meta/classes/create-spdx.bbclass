@@ -44,7 +44,10 @@ python() {
         return
 
     with open(d.getVar("SPDX_LICENSES"), "r") as f:
-        d.setVar("SPDX_LICENSE_DATA", json.load(f))
+        data = json.load(f)
+        # Transform the license array to a dictionary
+        data["licenses"] = {l["licenseId"]: l for l in data["licenses"]}
+        d.setVar("SPDX_LICENSE_DATA", data)
 }
 
 def convert_license_to_spdx(lic, document, d):
@@ -55,9 +58,8 @@ def convert_license_to_spdx(lic, document, d):
     def add_extracted_license(ident, name, text):
         nonlocal document
 
-        for lic_data in license_data["licenses"]:
-            if lic_data["licenseId"] == ident:
-                return False
+        if ident in license_data["licenses"]:
+            return False
 
         spdx_lic = oe.spdx.SPDXExtractedLicensingInfo()
         spdx_lic.name = name
@@ -79,9 +81,8 @@ def convert_license_to_spdx(lic, document, d):
             return "OR"
 
         spdx_license = d.getVarFlag("SPDXLICENSEMAP", l) or l
-        for lic_data in license_data["licenses"]:
-            if lic_data["licenseId"] == spdx_license:
-                return spdx_license
+        if spdx_license in license_data["licenses"]:
+            return spdx_license
 
         spdx_license = "LicenseRef-" + l
 
