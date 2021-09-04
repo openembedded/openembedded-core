@@ -69,6 +69,7 @@ PACKAGECONFIG[tiny] = "--with-features=tiny,--with-features=big,,"
 PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux,"
 PACKAGECONFIG[elfutils] = "--enable-elf-check,,elfutils,"
 PACKAGECONFIG[nls] = "--enable-nls,--disable-nls,,"
+PACKAGECONFIG[sound] = "--enable-canberra,--disable-canberra,canberra,"
 
 EXTRA_OECONF = " \
     --disable-gpm \
