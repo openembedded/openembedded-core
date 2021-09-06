@@ -105,6 +105,9 @@ def convert_license_to_spdx(lic, document, d, existing={}):
         if l == "|":
             return "OR"
 
+        if l == "CLOSED":
+            return "NONE"
+
         spdx_license = d.getVarFlag("SPDXLICENSEMAP", l) or l
         if spdx_license in license_data["licenses"]:
             return spdx_license
