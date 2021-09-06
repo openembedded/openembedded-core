@@ -25,7 +25,7 @@ PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
                  am_cv_python_pythondir='${PYTHON_SITEPACKAGES_DIR}' \
                  PYTHON_INCLUDE='-I${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}' \
 "
-PACKAGECONFIG ??= "${LTTNGUST}"
+PACKAGECONFIG ??= "${LTTNGUST} kmod"
 PACKAGECONFIG[python] = "--enable-python-bindings ${PYTHON_OPTION},,python3 swig-native"
 PACKAGECONFIG[lttng-ust] = "--with-lttng-ust, --without-lttng-ust, lttng-ust"
 PACKAGECONFIG[kmod] = "--with-kmod, --without-kmod, kmod"
@@ -35,13 +35,16 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0001-tests-do-not-strip-a-helper-library.patch \
            file://run-ptest \
            file://lttng-sessiond.service \
-           file://0001-tests-regression-disable-the-tools-live-tests.patch \
            file://determinism.patch \
+           file://0001-src-common-correct-header-location.patch \
+           file://0001-tests-wait-some-more-before-analysing-traces-or-star.patch \
            "
 
-SRC_URI[sha256sum] = "d729f8c2373a41194f171aeb0da0a9bb35ac181f31afa7e260786d19a500dea1"
+SRC_URI[sha256sum] = "8dc894f9a7a840e943c1c344345c75f001a9529daa9157f1a0e6175c081c29e6"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
+
+CACHED_CONFIGUREVARS = "PGREP=/usr/bin/pgrep"
 
 SYSTEMD_SERVICE:${PN} = "lttng-sessiond.service"
 SYSTEMD_AUTO_ENABLE = "disable"
@@ -72,13 +75,17 @@ do_install_ptest () {
     for f in Makefile tests/Makefile tests/utils/utils.sh tests/regression/tools/save-load/*.lttng \
             tests/regression/tools/save-load/configuration/load-42*.lttng tests/regression/tools/health/test_health.sh \
             tests/regression/tools/metadata/utils.sh tests/regression/tools/rotation/rotate_utils.sh \
+            tests/regression/tools/notification/util_event_generator.sh \
             tests/regression/tools/base-path/*.lttng; do
         install -D "${B}/$f" "${D}${PTEST_PATH}/$f"
     done
 
-    for f in config/tap-driver.sh config/test-driver src/common/config/session.xsd src/common/mi-lttng-4.0.xsd; do
+    for f in tests/utils/tap-driver.sh config/test-driver src/common/config/session.xsd src/common/mi-lttng-4.1.xsd; do
         install -D "${S}/$f" "${D}${PTEST_PATH}/$f"
     done
+
+    # Patch in the correct path for the custom libraries a helper executable needs
+    sed -i -e 's!FIXMEPTESTPATH!${PTEST_PATH}!' "${D}${PTEST_PATH}/run-ptest"
 
     # Prevent 'make check' from recursing into non-test subdirectories.
     sed -i -e 's!^SUBDIRS = .*!SUBDIRS = tests!' "${D}${PTEST_PATH}/Makefile"
@@ -107,7 +114,7 @@ do_install_ptest () {
         for f in $(find "${B}/tests/$d" -maxdepth 1 -executable -type f -printf '%P ') ; do
             cp ${B}/tests/$d/$f ${D}${PTEST_PATH}/tests/`dirname $d`/$f
             case $f in
-                *.so)
+                *.so|userspace-probe-elf-binary)
                     install -d ${D}${PTEST_PATH}/tests/$d/
                     ln -s  ../$f ${D}${PTEST_PATH}/tests/$d/$f
                     # Remove any rpath/runpath to pass QA check.
@@ -175,3 +182,8 @@ do_install_ptest () {
         esac
     done
 }
+
+INHIBIT_PACKAGE_STRIP_FILES = "\
+    ${PKGD}${PTEST_PATH}/tests/utils/testapp/userspace-probe-elf-binary/userspace-probe-elf-binary \
+    ${PKGD}${PTEST_PATH}/tests/utils/testapp/userspace-probe-elf-binary/.libs/userspace-probe-elf-binary \
+    "
