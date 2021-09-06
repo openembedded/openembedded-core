@@ -30,7 +30,6 @@ oe_libinstall() {
 	silent=""
 	require_static=""
 	require_shared=""
-	staging_install=""
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-C)
@@ -61,10 +60,6 @@ oe_libinstall() {
 	destpath="$1"
 	if [ -z "$destpath" ]; then
 		bbfatal "oe_libinstall: no destination path specified"
-	fi
-	if echo "$destpath/" | egrep '^${STAGING_LIBDIR}/' >/dev/null
-	then
-		staging_install=1
 	fi
 
 	__runcmd () {
