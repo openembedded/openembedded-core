@@ -72,6 +72,7 @@ PTESTS_SLOW = "\
     coreutils-ptest \
     dbus-test-ptest \
     e2fsprogs-ptest \
+    findutils-ptest \
     glib-2.0-ptest \
     gstreamer1.0-ptest \
     libevent-ptest \
