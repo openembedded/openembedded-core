@@ -24,7 +24,7 @@ HOMEPAGE = "http://www.rpm.org"
 LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c4eec0c20c6034b9407a09945b48a43f"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.17.x \
            file://environment.d-rpm.sh \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
@@ -32,23 +32,21 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.16.x \
            file://0001-Do-not-reset-the-PATH-environment-variable-before-ru.patch \
            file://0002-Add-support-for-prefixing-etc-from-RPM_ETCCONFIGDIR-.patch \
            file://0001-Do-not-hardcode-lib-rpm-as-the-installation-path-for.patch \
-           file://0001-Fix-build-with-musl-C-library.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
-           file://0011-Do-not-require-that-ELF-binaries-are-executable-to-b.patch \
            file://0001-perl-disable-auto-reqs.patch \
-           file://0001-rpm-rpmio.c-restrict-virtual-memory-usage-if-limit-s.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
            file://0001-tools-Add-error.h-for-non-glibc-case.patch \
+           file://0001-docs-do-not-build-manpages-requires-pandoc.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
            "
 
 PE = "1"
-SRCREV = "3659b8a04f5b8bacf6535e0124e7fe23f15286bd"
+SRCREV = "3e74e8ba2dd5e76a5353d238dc7fc38651ce27b3"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "libgcrypt file popt xz bzip2 elfutils python3"
+DEPENDS = "lua libgcrypt file popt xz bzip2 elfutils python3"
 DEPENDS:append:class-native = " file-replacement-native bzip2-replacement-native"
 
 inherit autotools gettext pkgconfig python3native
@@ -60,7 +58,7 @@ AUTOTOOLS_AUXDIR = "${S}/build-aux"
 EXTRA_AUTORECONF:append = " --exclude=gnu-configize"
 
 # Vendor is detected differently on x86 and aarch64 hosts and can feed into target packages
-EXTRA_OECONF:append = " --without-lua --enable-python --with-crypto=libgcrypt --with-vendor=pc"
+EXTRA_OECONF:append = " --enable-python --with-crypto=libgcrypt --with-vendor=pc"
 EXTRA_OECONF:append:libc-musl = " --disable-nls --disable-openmp"
 
 # --sysconfdir prevents rpm from attempting to access machine-specific configuration in sysroot/etc; we need to have it in rootfs
@@ -72,15 +70,18 @@ EXTRA_OECONF:append:class-nativesdk = " --sysconfdir=/etc --disable-plugins"
 
 BBCLASSEXTEND = "native nativesdk"
 
-PACKAGECONFIG ??= "bdb ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'inhibit', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'inhibit', '', d)} sqlite zstd"
 # The inhibit plugin serves no purpose outside of the target
 PACKAGECONFIG:remove:class-native = "inhibit"
 PACKAGECONFIG:remove:class-nativesdk = "inhibit"
 
-PACKAGECONFIG[bdb] = "--enable-bdb,--disable-bdb,db"
 PACKAGECONFIG[imaevm] = "--with-imaevm,,ima-evm-utils"
 PACKAGECONFIG[inhibit] = "--enable-inhibit-plugin,--disable-inhibit-plugin,dbus"
 PACKAGECONFIG[rpm2archive] = "--with-archive,--without-archive,libarchive"
+PACKAGECONFIG[sqlite] = "--enable-sqlite=yes,--enable-sqlite=no,sqlite3"
+PACKAGECONFIG[ndb] = "--enable-ndb,--disable-ndb"
+PACKAGECONFIG[bdb-ro] = "--enable-bdb-ro,--disable-bdb-ro"
+PACKAGECONFIG[zstd] = "--enable-zstd=yes,--enable-zstd=no,zstd"
 
 ASNEEDED = ""
 
@@ -138,8 +139,6 @@ do_install:append () {
 	sed -i -e 's:${HOSTTOOLS_DIR}/::g' \
 	    ${D}/${libdir}/rpm/macros
 
-	sed -i -e 's|/usr/bin/python|${USRBINPATH}/env ${PYTHON_PN}|' \
-	    ${D}${libdir}/rpm/pythondistdeps.py
 }
 
 FILES:${PN} += "${libdir}/rpm-plugins/*.so \
