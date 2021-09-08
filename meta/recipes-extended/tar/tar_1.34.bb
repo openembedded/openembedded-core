@@ -16,6 +16,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG:append:class-target = " ${@bb.utils.filter('DISTRO_FEATURES', 'acl', d)}"
 
 PACKAGECONFIG[acl] = "--with-posix-acls,--without-posix-acls,acl"
+PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux,libselinux"
 
 EXTRA_OECONF += "DEFAULT_RMT_DIR=${sbindir}"
 
