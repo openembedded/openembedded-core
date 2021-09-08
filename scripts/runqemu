@@ -1350,7 +1350,7 @@ class BaseConfig(object):
 
         if self.sdl == True or self.gtk == True or self.egl_headless == True:
             self.set_dri_path()
-            self.qemu_opt += ' -vga virtio -display '
+            self.qemu_opt += ' -device virtio-vga-gl -display '
             if self.egl_headless == True:
                 self.qemu_opt += 'egl-headless,'
             else:
