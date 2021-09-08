@@ -9,8 +9,8 @@ BUGTRACKER = "https://gitlab.gnome.org/GNOME/libhandy/-/issues"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-SRC_URI = "git://gitlab.gnome.org/GNOME/libhandy.git;protocol=https;branch=libhandy-1-2"
-SRCREV = "e9ca4ac4b134bbd6ab91b6f916a915192fd3a465"
+SRC_URI = "git://gitlab.gnome.org/GNOME/libhandy.git;protocol=https"
+SRCREV = "f8626427acebfa08b2b4ee1166d51e416d3d7407"
 S = "${WORKDIR}/git"
 
 GIR_MESON_ENABLE_FLAG = 'enabled'
