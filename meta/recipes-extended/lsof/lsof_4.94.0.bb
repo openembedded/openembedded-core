@@ -11,33 +11,13 @@ LIC_FILES_CHKSUM = "file://00README;beginline=645;endline=679;md5=964df275d26429
 # https://people.freebsd.org/~abe/ ). http://www.mirrorservice.org seems to be
 # the most commonly used alternative.
 
-SRC_URI = "http://www.mirrorservice.org/sites/lsof.itap.purdue.edu/pub/tools/unix/lsof/lsof_${PV}.tar.bz2 \
+SRC_URI = "git://github.com/lsof-org/lsof \
            file://lsof-remove-host-information.patch \
           "
 
-SRC_URI[md5sum] = "148ed410cb52e08c2adc0c60f480f11f"
-SRC_URI[sha256sum] = "c9da946a525fbf82ff80090b6d1879c38df090556f3fe0e6d782cb44172450a3"
+SRCREV = "005e014e1abdadb2493d8b3ce87b37a2c0a2351d"
 
-UPSTREAM_CHECK_URI = "https://github.com/lsof-org/lsof/releases/"
-UPSTREAM_CHECK_REGEX = "lsof_(?P<pver>.*)\.linux\.tar"
-
-LOCALSRC = "file://${WORKDIR}/lsof_${PV}/lsof_${PV}_src.tar"
-
-S = "${WORKDIR}/lsof_${PV}_src"
-
-python do_unpack () {
-    if not bb.data.inherits_class('externalsrc', d) or not d.getVar('EXTERNALSRC'):
-        # temporarily change S for unpack of lsof_${PV}
-        s = d.getVar('S', False)
-        d.setVar('S', '${WORKDIR}/lsof_${PV}')
-        bb.build.exec_func('base_do_unpack', d)
-        # temporarily change SRC_URI for unpack of lsof_${PV}_src
-        src_uri = d.getVar('SRC_URI', False)
-        d.setVar('SRC_URI', '${LOCALSRC}')
-        d.setVar('S', s)
-        bb.build.exec_func('base_do_unpack', d)
-        d.setVar('SRC_URI', src_uri)
-}
+S = "${WORKDIR}/git"
 
 export LSOF_INCLUDE = "${STAGING_INCDIR}"
 
@@ -62,5 +42,5 @@ do_compile () {
 do_install () {
 	install -d ${D}${sbindir} ${D}${mandir}/man8
 	install -m 0755 lsof ${D}${sbindir}/lsof
-	install -m 0644 lsof.8 ${D}${mandir}/man8/lsof.8
+	install -m 0644 Lsof.8 ${D}${mandir}/man8/lsof.8
 }
