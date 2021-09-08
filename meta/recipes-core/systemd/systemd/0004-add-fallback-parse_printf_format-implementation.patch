@@ -1,4 +1,4 @@
-From b19f800e178516d4f4d344457647e4a018bd6855 Mon Sep 17 00:00:00 2001
+From fcac5d47366085b29460590d36efafa87ccfe3b2 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Sat, 22 May 2021 20:26:24 +0200
 Subject: [PATCH] add fallback parse_printf_format implementation
