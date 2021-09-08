@@ -36,5 +36,4 @@ do_install_ptest() {
             ${B}/tests/Makefile > ${D}${PTEST_PATH}/src/tests/Makefile
 }
 
-SRC_URI[md5sum] = "cf9ee51aff167ff69844d5d7d71c8b20"
-SRC_URI[sha256sum] = "c91f74430bf7bc20402e1f657d0b252cb80aa66ba333a25704512af346633c68"
+SRC_URI[sha256sum] = "3e8a0e0c45bad3009341dce17d71536c4c655d9313039021ce7554a26cd50ed9"
