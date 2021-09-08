@@ -7,10 +7,8 @@ SECTION = "graphics"
 LICENSE  = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRCREV = "e198c6a785d388db68eb9166b43ac5e5208fd5cc"
-SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git \
-           file://0001-fix-strncpy-bound-error.patch \
-          "
+SRCREV = "1fbed83c8aab8517d821fcb4164c08567951938f"
+SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git"
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
 S = "${WORKDIR}/git"
 
