@@ -13,6 +13,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://enable_test_data_dir_set.patch \
            file://0001-libdnf-config.h-avoid-the-use-of-non-portable-__WORD.patch \
            file://0001-drop-FindPythonInstDir.cmake.patch \
+           file://0001-libdnf-dnf-context.cpp-do-not-try-to-access-BDB-data.patch \
            "
 
 SRCREV = "8e451380bf84bd76e3925cbae2a06bb0e56f5cd9"
