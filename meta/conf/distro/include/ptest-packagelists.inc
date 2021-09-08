@@ -40,6 +40,7 @@ PTESTS_FAST = "\
     libxml-sax-base-perl-ptest \
     libxml-simple-perl-ptest \
     libxml2-ptest \
+    lua-ptest \
     lzo-ptest \
     m4-ptest \
     nettle-ptest \
