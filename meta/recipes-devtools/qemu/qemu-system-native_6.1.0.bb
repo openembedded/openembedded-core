@@ -25,7 +25,8 @@ do_install:append() {
     rm -f ${D}${datadir}/qemu/trace-events-all
     rm -rf ${D}${datadir}/qemu/keymaps
     rm -rf ${D}${datadir}/icons/
+    rm -rf ${D}${includedir}/qemu-plugin.h
 
     # Install qmp.py to be used with testimage
-    install -D ${S}/python/qemu/qmp.py ${D}${PYTHON_SITEPACKAGES_DIR}/qmp.py
+    install -D ${S}/python/qemu/qmp/__init__.py ${D}${PYTHON_SITEPACKAGES_DIR}/qmp.py
 }

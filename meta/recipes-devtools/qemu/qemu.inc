@@ -19,31 +19,17 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://run-ptest \
            file://0001-qemu-Add-missing-wacom-HID-descriptor.patch \
            file://0003-qemu-Add-addition-environment-space-to-boot-loader-q.patch \
-           file://0004-qemu-disable-Valgrind.patch \
            file://0006-chardev-connect-socket-to-a-spawned-command.patch \
            file://0007-apic-fixup-fallthrough-to-PIC.patch \
            file://0010-configure-Add-pkg-config-handling-for-libgcrypt.patch \
-           file://0001-Add-enable-disable-udev.patch \
            file://0001-qemu-Do-not-include-file-if-not-exists.patch \
            file://mmap2.patch \
            file://determinism.patch \
            file://0001-tests-meson.build-use-relative-path-to-refer-to-file.patch \
-           file://0001-configure-fix-detection-of-gdbus-codegen.patch \
-           file://0001-vhost-user-gpu-fix-memory-disclosure-in-virgl_cmd_ge.patch \
-           file://0002-vhost-user-gpu-fix-resource-leak-in-vg_resource_crea.patch \
-           file://0003-vhost-user-gpu-fix-memory-leak-in-vg_resource_attach.patch \
-           file://0004-vhost-user-gpu-fix-memory-leak-while-calling-vg_reso.patch \
-           file://0005-vhost-user-gpu-fix-memory-leak-in-virgl_cmd_resource.patch \
-           file://0006-vhost-user-gpu-fix-memory-leak-in-virgl_resource_att.patch \
-           file://0007-vhost-user-gpu-fix-OOB-write-in-virgl_cmd_get_capset.patch \
-           file://0001-linux-user-Tag-vsx-with-ieee128-fpbits.patch \
-           file://CVE-2021-3527-1.patch \
-           file://CVE-2021-3527-2.patch \
-           file://CVE-2021-3682.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[sha256sum] = "87bc1a471ca24b97e7005711066007d443423d19aacda3d442558ae032fa30b9"
+SRC_URI[sha256sum] = "eebc089db3414bbeedf1e464beda0a7515aad30f73261abc246c9b27503a3c96"
 
 SRC_URI:append:class-target = " file://cross.patch"
 SRC_URI:append:class-nativesdk = " file://cross.patch"
@@ -80,6 +66,9 @@ do_install_ptest() {
 
 	# Strip the paths from the QEMU variable, we can use PATH
 	sed -i -e "s#^QEMU=.*/qemu-#QEMU=qemu-#g" ${D}${PTEST_PATH}/tests/tcg/*.mak
+
+        # Strip compiler flags as they break reproducibility
+        sed -i -e "s,CROSS_CC_GUEST=.*,CROSS_CC_GUEST=," ${D}${PTEST_PATH}/tests/tcg/*.mak
 }
 
 # QEMU_TARGETS is overridable variable
