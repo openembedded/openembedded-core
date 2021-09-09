@@ -46,6 +46,12 @@ if [ -d "$mountpoint" ]; then
         fi
 
         mount -o "bind$options" "$spec" "$mountpoint"
+        # restore the selinux context.
+        if command -v selinuxenabled > /dev/null 2>&1; then
+            if selinuxenabled; then
+                restorecon -R "$mountpoint"
+            fi
+        fi
     fi
 elif [ -f "$mountpoint" ]; then
     if [ ! -f "$spec" ]; then
@@ -53,4 +59,10 @@ elif [ -f "$mountpoint" ]; then
     fi
 
     mount -o "bind$options" "$spec" "$mountpoint"
+    # restore the selinux context.
+    if command -v selinuxenabled > /dev/null 2>&1; then
+        if selinuxenabled; then
+            restorecon -R "$mountpoint"
+        fi
+    fi
 fi
