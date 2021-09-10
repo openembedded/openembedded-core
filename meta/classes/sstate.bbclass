@@ -731,6 +731,7 @@ def pstaging_fetch(sstatefetch, d):
     localdata.setVar('FILESPATH', dldir)
     localdata.setVar('DL_DIR', dldir)
     localdata.setVar('PREMIRRORS', mirrors)
+    localdata.setVar('SRCPV', d.getVar('SRCPV'))
 
     # if BB_NO_NETWORK is set but we also have SSTATE_MIRROR_ALLOW_NETWORK,
     # we'll want to allow network access for the current set of fetches.
@@ -754,6 +755,9 @@ def pstaging_fetch(sstatefetch, d):
 
         except bb.fetch2.BBFetchException:
             pass
+
+pstaging_fetch[vardepsexclude] += "SRCPV"
+
 
 def sstate_setscene(d):
     shared_state = sstate_state_fromvars(d)
