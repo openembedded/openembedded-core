@@ -33,10 +33,8 @@ BB_GENERATE_MIRROR_TARBALLS ??= "0"
 
 NO32LIBS ??= "1"
 
-# Default logger already emits logfiles if a build fails, setting this to any non-empty value would just include more copies (prefixed with "|") in the output
-# https://bugzilla.yoctoproject.org/show_bug.cgi?id=14542
-BBINCLUDELOGS ??= ""
-
+# Default to emitting logfiles if a build fails.
+BBINCLUDELOGS ??= "yes"
 SDK_VERSION ??= "nodistro.0"
 DISTRO_VERSION ??= "nodistro.0"
 
