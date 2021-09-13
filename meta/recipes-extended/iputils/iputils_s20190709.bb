@@ -20,6 +20,7 @@ SRC_URI = "git://github.com/iputils/iputils \
            file://0003-arping-Fix-comparison-of-different-signedness-warnin.patch \
            file://0004-arping-return-success-when-unsolicited-ARP-mode-dest.patch \
            file://0005-arping-use-additional-timerfd-to-control-when-timeou.patch \
+           file://0001-arping-make-update-neighbours-work-again.patch \
            "
 SRCREV = "13e00847176aa23683d68fce1d17ffb523510946"
 
