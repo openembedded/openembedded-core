@@ -67,6 +67,7 @@ def convert_license_to_spdx(lic, document, d, existing={}):
         extracted_info = oe.spdx.SPDXExtractedLicensingInfo()
         extracted_info.name = name
         extracted_info.licenseId = ident
+        extracted_info.extractedText = None
 
         if name == "PD":
             # Special-case this.
@@ -78,10 +79,12 @@ def convert_license_to_spdx(lic, document, d, existing={}):
                     with (Path(directory) / name).open(errors="replace") as f:
                         extracted_info.extractedText = f.read()
                         break
-                except Exception as e:
-                    # Error out, as the license was in available_licenses so
-                    # should be on disk somewhere.
-                    bb.error(f"Cannot find text for license {name}: {e}")
+                except FileNotFoundError:
+                    pass
+            if extracted_info.extractedText is None:
+                # Error out, as the license was in available_licenses so should
+                # be on disk somewhere.
+                bb.error("Cannot find text for license %s" % name)
         else:
             # If it's not SPDX, or PD, or in available licenses, then NO_GENERIC_LICENSE must be set
             filename = d.getVarFlag('NO_GENERIC_LICENSE', name)
@@ -90,7 +93,7 @@ def convert_license_to_spdx(lic, document, d, existing={}):
                 with open(filename, errors="replace") as f:
                     extracted_info.extractedText = f.read()
             else:
-                bb.error(f"Cannot find any text for license {name}")
+                bb.error("Cannot find any text for license %s" % name)
 
         extracted[name] = extracted_info
         document.hasExtractedLicensingInfos.append(extracted_info)
