@@ -8,6 +8,7 @@ SRC_URI += " \
            file://0001-template-Makefile.in-do-not-write-host-cross-cc-item.patch \
            file://CVE-2021-31810.patch \
            file://CVE-2021-32066.patch \
+           file://CVE-2021-31799.patch \
            "
 
 SRC_URI[sha256sum] = "369825db2199f6aeef16b408df6a04ebaddb664fb9af0ec8c686b0ce7ab77727"
