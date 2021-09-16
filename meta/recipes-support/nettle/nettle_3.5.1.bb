@@ -18,6 +18,8 @@ SRC_URI = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz \
            file://Add-target-to-only-build-tests-not-run-them.patch \
            file://run-ptest \
            file://check-header-files-of-openssl-only-if-enable_.patch \
+           file://CVE-2021-3580_1.patch \
+           file://CVE-2021-3580_2.patch \
            "
 
 SRC_URI_append_class-target = "\
