@@ -4,7 +4,7 @@
 #
 # Please submit any patches against recipes in meta to the
 # OE-Core mail list (openembedded-core@lists.openembedded.org)
-# For recipes in meta-yocto please use the Poky list (poky@yoctoproject.org)
+# For recipes in meta-yocto please use the Poky list (poky@lists.yoctoproject.org)
 #
 # If you have problems with or questions about a particular recipe, feel
 # free to contact the maintainer directly (cc:ing the appropriate mailing list
