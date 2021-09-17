@@ -11,6 +11,7 @@ PV = "4.4"
 SRCREV = "52eb4c279cd283ed9802dd1ceb686560b22ffb67"
 SRC_URI = "git://github.com/plougher/squashfs-tools.git;protocol=https \
            file://0001-squashfs-tools-fix-build-failure-against-gcc-10.patch;striplevel=2 \
+           file://CVE-2021-40153.patch;striplevel=2 \
 "
 
 S = "${WORKDIR}/git/squashfs-tools"
