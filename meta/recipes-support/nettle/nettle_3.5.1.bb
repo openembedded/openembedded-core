@@ -20,6 +20,11 @@ SRC_URI = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz \
            file://check-header-files-of-openssl-only-if-enable_.patch \
            file://CVE-2021-3580_1.patch \
            file://CVE-2021-3580_2.patch \
+           file://CVE-2021-20305-1.patch \
+           file://CVE-2021-20305-2.patch \
+           file://CVE-2021-20305-3.patch \
+           file://CVE-2021-20305-4.patch \
+           file://CVE-2021-20305-5.patch \
            "
 
 SRC_URI_append_class-target = "\
