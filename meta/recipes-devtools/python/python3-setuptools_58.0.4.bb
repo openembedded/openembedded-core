@@ -15,25 +15,25 @@ SRC_URI[sha256sum] = "f10059f0152e0b7fb6b2edd77bcb1ecd4c9ed7048a826eb2d79f72fd2e
 DEPENDS += "${PYTHON_PN}"
 
 RDEPENDS:${PN} = "\
-  ${PYTHON_PN}-2to3 \
-  ${PYTHON_PN}-compile \
-  ${PYTHON_PN}-compression \
-  ${PYTHON_PN}-ctypes \
-  ${PYTHON_PN}-distutils \
-  ${PYTHON_PN}-email \
-  ${PYTHON_PN}-html \
-  ${PYTHON_PN}-json \
-  ${PYTHON_PN}-netserver \
-  ${PYTHON_PN}-numbers \
-  ${PYTHON_PN}-pickle \
-  ${PYTHON_PN}-pkg-resources \
-  ${PYTHON_PN}-pkgutil \
-  ${PYTHON_PN}-plistlib \
-  ${PYTHON_PN}-shell \
-  ${PYTHON_PN}-stringold \
-  ${PYTHON_PN}-threading \
-  ${PYTHON_PN}-unittest \
-  ${PYTHON_PN}-xml \
+    ${PYTHON_PN}-2to3 \
+    ${PYTHON_PN}-compile \
+    ${PYTHON_PN}-compression \
+    ${PYTHON_PN}-ctypes \
+    ${PYTHON_PN}-distutils \
+    ${PYTHON_PN}-email \
+    ${PYTHON_PN}-html \
+    ${PYTHON_PN}-json \
+    ${PYTHON_PN}-netserver \
+    ${PYTHON_PN}-numbers \
+    ${PYTHON_PN}-pickle \
+    ${PYTHON_PN}-pkg-resources \
+    ${PYTHON_PN}-pkgutil \
+    ${PYTHON_PN}-plistlib \
+    ${PYTHON_PN}-shell \
+    ${PYTHON_PN}-stringold \
+    ${PYTHON_PN}-threading \
+    ${PYTHON_PN}-unittest \
+    ${PYTHON_PN}-xml \
 "
 
 do_install:prepend() {
@@ -48,8 +48,8 @@ BBCLASSEXTEND = "native nativesdk"
 PACKAGES =+ "${PYTHON_PN}-pkg-resources "
 FILES:${PYTHON_PN}-pkg-resources = "${PYTHON_SITEPACKAGES_DIR}/pkg_resources/*"
 RDEPENDS:${PYTHON_PN}-pkg-resources = "\
-  ${PYTHON_PN}-compression \
-  ${PYTHON_PN}-email \
-  ${PYTHON_PN}-plistlib \
-  ${PYTHON_PN}-pprint \
+    ${PYTHON_PN}-compression \
+    ${PYTHON_PN}-email \
+    ${PYTHON_PN}-plistlib \
+    ${PYTHON_PN}-pprint \
 "
