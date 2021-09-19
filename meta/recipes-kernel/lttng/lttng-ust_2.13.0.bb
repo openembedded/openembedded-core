@@ -11,7 +11,7 @@ PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
                  PYTHON_INCLUDE='-I${STAGING_INCDIR}/python${PYTHON_BASEVERSION}${PYTHON_ABI}' \
 "
 
-inherit autotools lib_package manpages python3native
+inherit autotools lib_package manpages python3native pkgconfig
 
 include lttng-platforms.inc
 
