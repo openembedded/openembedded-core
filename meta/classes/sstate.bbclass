@@ -1060,6 +1060,10 @@ def setscene_depvalid(task, taskdependees, notneeded, d, log=None):
     if taskdependees[task][1] == "do_populate_lic":
         return True
 
+    # We only need to trigger deploy_source_date_epoch through direct dependencies
+    if taskdependees[task][1] == "do_deploy_source_date_epoch":
+        return True
+
     # stash_locale and gcc_stash_builddir are never needed as a dependency for built objects
     if taskdependees[task][1] == "do_stash_locale" or taskdependees[task][1] == "do_gcc_stash_builddir":
         return True
