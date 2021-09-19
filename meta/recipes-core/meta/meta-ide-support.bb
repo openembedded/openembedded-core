@@ -6,7 +6,7 @@ DEPENDS = "virtual/libc gdb-cross-${TARGET_ARCH} qemu-native qemu-helper-native 
 PR = "r3"
 RM_WORK_EXCLUDE += "${PN}"
 
-inherit meta toolchain-scripts nopackages
+inherit toolchain-scripts nopackages
 
 do_populate_ide_support () {
   toolchain_create_tree_env_script
