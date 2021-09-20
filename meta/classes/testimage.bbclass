@@ -64,8 +64,6 @@ BASICTESTSUITE = "\
 
 DEFAULT_TEST_SUITES = "${BASICTESTSUITE}"
 
-# aarch64 has no graphics
-DEFAULT_TEST_SUITES:remove:aarch64 = "xorg"
 # musl doesn't support systemtap
 DEFAULT_TEST_SUITES:remove:libc-musl = "stap"
 
