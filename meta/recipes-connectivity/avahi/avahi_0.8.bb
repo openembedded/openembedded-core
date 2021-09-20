@@ -35,7 +35,7 @@ SRC_URI[sha256sum] = "060309d7a333d38d951bc27598c677af1796934dbd98e1024e7ad8de79
 # Issue only affects Debian/SUSE, not us
 CVE_CHECK_WHITELIST += "CVE-2021-26720"
 
-DEPENDS = "expat libcap libdaemon glib-2.0 intltool-native"
+DEPENDS = "expat libcap libdaemon glib-2.0"
 
 # For gtk related PACKAGECONFIGs: gtk, gtk3
 AVAHI_GTK ?= ""
