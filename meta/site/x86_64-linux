@@ -73,9 +73,6 @@ am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 #gcc
 ac_cv_lib_m_sin=${ac_cv_lib_m_sin=yes}
 
-#orbit
-libIDL_cv_long_long_format=ll
-
 # bash
 bash_cv_func_sigsetjmp=${bash_cv_func_sigsetjmp=present}
 
