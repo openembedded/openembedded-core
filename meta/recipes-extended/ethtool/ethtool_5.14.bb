@@ -11,7 +11,7 @@ SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://avoid_parallel_tests.patch \
            "
 
-SRC_URI[sha256sum] = "e66ab0d74d2a888fd64a0053290dbea66ddc9b75b3d21d117b7edd9576b9db60"
+SRC_URI[sha256sum] = "9868604c913e5483000c00d5dcb2bb3169a05252de47f62174702ff19cf6de7a"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/software/network/ethtool/"
 
