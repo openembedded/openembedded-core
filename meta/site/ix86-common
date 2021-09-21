@@ -118,20 +118,6 @@ with_broken_putenv=${with_broken_putenv=no}
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=yes}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=yes}
 
-# ORBit2
-ac_cv_alignof_CORBA_boolean=1
-ac_cv_alignof_CORBA_char=1
-ac_cv_alignof_CORBA_double=4
-ac_cv_alignof_CORBA_float=4
-ac_cv_alignof_CORBA_long=4
-ac_cv_alignof_CORBA_long_double=4
-ac_cv_alignof_CORBA_long_long=4
-ac_cv_alignof_CORBA_octet=1
-ac_cv_alignof_CORBA_pointer=4
-ac_cv_alignof_CORBA_short=2
-ac_cv_alignof_CORBA_struct=4
-ac_cv_alignof_CORBA_wchar=2
-
 # php
 ac_cv_pread=${ac_cv_pread=no}
 ac_cv_pwrite=${ac_cv_pwrite=no}
