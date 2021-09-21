@@ -12,4 +12,10 @@ do_populate_ide_support () {
   toolchain_create_tree_env_script
 }
 
+python () {
+    sitefiles, searched = siteinfo_get_files(d, sysrootcache=False)
+    d.setVar("CONFIG_SITE", " ".join(sitefiles))
+    d.appendVarFlag("do_populate_ide_support", "file-checksums", " " + " ".join(searched))
+}
+
 addtask populate_ide_support before do_build after do_install
