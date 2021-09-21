@@ -106,6 +106,8 @@ python create_source_date_epoch_stamp() {
     os.rename(tmp_file, epochfile)
 }
 
+EPOCHTASK = "do_deploy_source_date_epoch"
+
 # Generate the stamp after do_unpack runs
 do_unpack[postfuncs] += "create_source_date_epoch_stamp"
 
