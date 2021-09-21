@@ -6,11 +6,15 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=9e2ce3b3c4c0f2670883a23bbd7c37a9"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/expat/expat-${PV}.tar.bz2 \
+VERSION_TAG = "${@d.getVar('PV').replace('.', '_')}"
+
+SRC_URI = "https://github.com/libexpat/libexpat/releases/download/R_${VERSION_TAG}/expat-${PV}.tar.bz2  \
            file://libtool-tag.patch \
 	   file://run-ptest \
 	   file://0001-Add-output-of-tests-result.patch \
 	  "
+
+UPSTREAM_CHECK_URI = "https://github.com/libexpat/libexpat/releases/"
 
 SRC_URI[sha256sum] = "b2c160f1b60e92da69de8e12333096aeb0c3bf692d41c60794de278af72135a5"
 
