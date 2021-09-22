@@ -17,7 +17,7 @@ inherit autotools pkgconfig
 SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz \
            file://0001-pem.c-do-not-use-rawmemchr.patch \
            "
-SRC_URI[sha256sum] = "b6c75895ad64bf78f5b5c464de871048d02f9403be518084e0d64b58f508c9fc"
+SRC_URI[sha256sum] = "41a6f8fa4d285b52cb7a5a87bda3e7370ecaac02d94aaa7ec1a23f0480b8bc3f"
 
 do_configure:prepend () {
     mkdir -p ${S}/build-aux
