@@ -14,5 +14,7 @@ SRC_URI:append = "\
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
-SRC_URI[md5sum] = "76c60fb304510a7bbd9c838790bc5fe4"
-SRC_URI[sha256sum] = "3f6baa97f37518439f51df2e4f3d65a822ca5ff016aa8e60d2cc53b95a6c89d9"
+SRC_URI[md5sum] = "a082ef5748b813abca0649dab8be5f52"
+SRC_URI[sha256sum] = "7e068b5e0d26a62b10e5320b25dce57588cbbc6f781c090442138c9c9c3271b2"
+
+
