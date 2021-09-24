@@ -9,7 +9,10 @@ inherit module
 
 include lttng-platforms.inc
 
-SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2"
+SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://0001-fix-cpu-hotplug-Remove-deprecated-CPU-hotplug-functi.patch \
+           file://0002-fix-Revert-Makefile-Enable-Wimplicit-fallthrough-for.patch \
+          "
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
