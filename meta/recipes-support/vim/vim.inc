@@ -17,6 +17,8 @@ SRC_URI = "git://github.com/vim/vim.git \
            file://0001-src-Makefile-improve-reproducibility.patch \
            file://no-path-adjust.patch \
            file://racefix.patch \
+           file://CVE-2021-3778.patch \
+           file://CVE-2021-3796.patch \
 "
 SRCREV = "98056533b96b6b5d8849641de93185dd7bcadc44"
 
