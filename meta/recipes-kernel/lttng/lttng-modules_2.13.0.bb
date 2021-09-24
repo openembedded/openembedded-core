@@ -38,7 +38,7 @@ LIC_FILES_CHKSUM:class-devupstream = "file://LICENSE;md5=0464cff101a009c403cd2ed
 DEFAULT_PREFERENCE:class-devupstream = "-1"
 SRC_URI:class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.13"
 
-SRCREV:class-devupstream = "f982b51a98a29cb4aaf607cb9bbf2b509d8e6933"
-PV:class-devupstream = "2.13.0-rc2+git${SRCPV}"
+SRCREV:class-devupstream = "c570be0da77e963d77bac099d468bc0cd5f1bd63"
+PV:class-devupstream = "2.13.0+git${SRCPV}"
 S:class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
