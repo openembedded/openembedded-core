@@ -123,6 +123,12 @@ class SPDXObject(metaclass=MetaSPDXObject):
         raise KeyError("%r is not a valid SPDX property" % name)
 
 
+class SPDXAnnotation(SPDXObject):
+    annotationDate = _String()
+    annotationType = _String()
+    annotator = _String()
+    comment = _String()
+
 class SPDXChecksum(SPDXObject):
     algorithm = _String()
     checksumValue = _String()
@@ -164,6 +170,7 @@ class SPDXPackage(SPDXObject):
     packageVerificationCode = _Object(SPDXPackageVerificationCode)
     hasFiles = _StringList()
     packageFileName = _String()
+    annotations = _ObjectList(SPDXAnnotation)
 
 
 class SPDXFile(SPDXObject):
