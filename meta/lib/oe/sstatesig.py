@@ -108,7 +108,6 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         self.unlockedrecipes = (data.getVar("SIGGEN_UNLOCKED_RECIPES") or
                                 "").split()
         self.unlockedrecipes = { k: "" for k in self.unlockedrecipes }
-        self.buildarch = data.getVar('BUILD_ARCH')
         self._internal = False
         pass
 
@@ -147,13 +146,6 @@ class SignatureGeneratorOEBasicHashMixIn(object):
         self.dump_lockedsigs(sigfile)
         return super(bb.siggen.SignatureGeneratorBasicHash, self).dump_sigs(dataCache, options)
 
-    def prep_taskhash(self, tid, deps, dataCaches):
-        super().prep_taskhash(tid, deps, dataCaches)
-        if hasattr(self, "extramethod"):
-            (mc, _, _, fn) = bb.runqueue.split_tid_mcfn(tid)
-            inherits = " ".join(dataCaches[mc].inherits[fn])
-            if inherits.find("/native.bbclass") != -1 or inherits.find("/cross.bbclass") != -1:
-                self.extramethod[tid] = ":" + self.buildarch
 
     def get_taskhash(self, tid, deps, dataCaches):
         if tid in self.lockedhashes:
