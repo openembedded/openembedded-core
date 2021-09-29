@@ -195,6 +195,14 @@ do_install:append:class-nativesdk () {
 }
 
 SSTATE_SCAN_FILES += "Makefile _sysconfigdata.py"
+SSTATE_HASHEQUIV_FILEMAP = " \
+    populate_sysroot:*/lib*/python3*/_sysconfigdata*.py:${TMPDIR} \
+    populate_sysroot:*/lib*/python3*/_sysconfigdata*.py:${COREBASE} \
+    populate_sysroot:*/lib*/python3*/config-*/Makefile:${TMPDIR} \
+    populate_sysroot:*/lib*/python3*/config-*/Makefile:${COREBASE} \
+    populate_sysroot:*/lib*/python-sysconfigdata/_sysconfigdata.py:${TMPDIR} \
+    populate_sysroot:*/lib*/python-sysconfigdata/_sysconfigdata.py:${COREBASE} \
+    "
 PACKAGE_PREPROCESS_FUNCS += "py_package_preprocess"
 
 py_package_preprocess () {

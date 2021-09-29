@@ -195,3 +195,8 @@ rpm_package_preprocess () {
 	sed -i -e 's:--sysroot[^ ]*::g' \
 	    ${PKGD}/${libdir}/rpm/macros
 }
+
+SSTATE_HASHEQUIV_FILEMAP = " \
+    populate_sysroot:*/rpm/macros:${TMPDIR} \
+    populate_sysroot:*/rpm/macros:${COREBASE} \
+    "
