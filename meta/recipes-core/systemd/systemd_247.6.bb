@@ -31,6 +31,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0002-sd-dhcp-client-shorten-code-a-bit.patch \
            file://0003-sd-dhcp-client-logs-when-dhcp-client-unexpectedly-ga.patch \
            file://0004-sd-dhcp-client-tentatively-ignore-FORCERENEW-command.patch \
+           file://0001-basic-unit-name-do-not-use-strdupa-on-a-path.patch \
            "
 
 # patches needed by musl
