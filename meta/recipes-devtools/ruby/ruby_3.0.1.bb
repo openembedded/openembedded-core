@@ -9,6 +9,10 @@ SRC_URI += " \
            file://CVE-2021-31810.patch \
            file://CVE-2021-32066.patch \
            file://CVE-2021-31799.patch \
+           file://0003-rdoc-build-reproducible-documentation.patch \
+           file://0004-lib-mkmf.rb-sort-list-of-object-files-in-generated-M.patch \
+           file://0005-Mark-Gemspec-reproducible-change-fixing-784225-too.patch \
+           file://0006-Make-gemspecs-reproducible.patch \
            "
 
 SRC_URI[sha256sum] = "369825db2199f6aeef16b408df6a04ebaddb664fb9af0ec8c686b0ce7ab77727"
