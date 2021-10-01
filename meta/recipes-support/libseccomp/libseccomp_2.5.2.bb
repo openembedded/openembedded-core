@@ -8,12 +8,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;beginline=0;endline=1;md5=8eac08d22113880357c
 DEPENDS += "gperf-native"
 
 PV .= "+git${SRCPV}"
-SRCREV = "5822e50c2920ce597d038077dea4a0eedf193f86"
+SRCREV = "2457dec1a90101d720e89e8027376742e2f3c327"
 
 SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=main \
            file://0001-configure.ac-Bump-version-to-2.5.99.patch \
            file://0001-arch-Add-riscv32-architecture-support.patch \
-           file://0002-Regenerate-syscall-cvs-file-from-5.13-rc5-kernel.patch \
+           file://0002-man-Add-RISCV64-to-arch-list.patch \
+           file://0003-syscalls-update-the-syscall-defs-for-Linux-v5.15.0-r.patch \
+           file://0004-syscalls-Add-quotactl_path.patch \
            file://run-ptest \
            "
 
