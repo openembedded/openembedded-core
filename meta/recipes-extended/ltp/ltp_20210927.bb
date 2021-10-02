@@ -5,13 +5,8 @@ SECTION = "console/utils"
 LICENSE = "GPLv2 & GPLv2+ & LGPLv2+ & LGPLv2.1+ & BSD-2-Clause"
 LIC_FILES_CHKSUM = "\
     file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-    file://testcases/kernel/controllers/freezer/COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
-    file://testcases/kernel/controllers/freezer/run_freezer.sh;beginline=5;endline=17;md5=86a61d2c042d59836ffb353a21456498 \
-    file://testcases/kernel/hotplug/memory_hotplug/COPYING;md5=e04a2e542b2b8629bf9cd2ba29b0fe41 \
-    file://testcases/kernel/hotplug/cpu_hotplug/COPYING;md5=e04a2e542b2b8629bf9cd2ba29b0fe41 \
     file://testcases/open_posix_testsuite/COPYING;md5=48b1c5ec633e3e30ec2cf884ae699947 \
-    file://testcases/realtime/COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
-    file://utils/benchmark/kernbench-0.42/COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
+    file://testcases/network/can/filter-tests/COPYING;md5=5b155ea7d7f86eae8e8832955d8b70bc \
 "
 
 DEPENDS = "attr libaio libcap acl openssl zip-native"
@@ -27,11 +22,14 @@ CFLAGS:append:x86-64 = " -fomit-frame-pointer"
 
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "0fb171f2beddaf64bd27597577c206c0f892b3cd"
+SRCREV = "12beeda351b5d758a729aaf695b836ccc9eb5304"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
-           file://0001-syscalls-ioctl_ns05.c-ioctl_ns06.c-Fix-too-small-buf.patch \
+           file://0002-lib-fix-MemAvailable-parsing.patch \
+           file://0003-lapi-rtnetlink.h-Fix-include-guards.patch \
+           file://0004-lapi-Create-if_addr.h-and-reuse-it-in-rtnetlink.h.patch \
+           file://0005-lapi-if_addr.h-Define-IFA_FLAGS.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -119,9 +117,8 @@ remove_broken_musl_sources() {
 	echo "WARNING: remove unsupported tests (until they're fixed)"
 
 	# sync with upstream
-	# https://github.com/linux-test-project/ltp/blob/master/travis/alpine.sh#L33
+	# https://github.com/linux-test-project/ltp/blob/master/ci/alpine.sh#L33
 	rm -rfv \
-		testcases/kernel/sched/process_stress/process.c \
 		testcases/kernel/syscalls/confstr/confstr01.c \
 		testcases/kernel/syscalls/fmtmsg/fmtmsg01.c \
 		testcases/kernel/syscalls/getcontext/getcontext01.c \
