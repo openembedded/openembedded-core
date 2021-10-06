@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Huawei Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 [Unit]
 Description=Weston Wayland Compositor
 RequiresMountsFor=/run
@@ -5,6 +9,8 @@ Conflicts=plymouth-quit.service
 After=systemd-user-sessions.service plymouth-quit-wait.service
 
 [Service]
+Type=notify
+NotifyAccess=all
 User=%i
 PAMName=login
 EnvironmentFile=-/etc/default/weston
