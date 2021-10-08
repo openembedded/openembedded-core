@@ -1002,11 +1002,11 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     handled.append(('license', licvalues))
     return licvalues
 
-def get_license_md5sums(d, static_only=False):
+def get_license_md5sums(d, static_only=False, linenumbers=False):
     import bb.utils
     import csv
     md5sums = {}
-    if not static_only:
+    if not static_only and not linenumbers:
         # Gather md5sums of license files in common license dir
         commonlicdir = d.getVar('COMMON_LICENSE_DIR')
         for fn in os.listdir(commonlicdir):
@@ -1024,10 +1024,14 @@ def get_license_md5sums(d, static_only=False):
         csv_path = os.path.join(path, 'lib', 'recipetool', 'licenses.csv')
         if os.path.isfile(csv_path):
             with open(csv_path, newline='') as csv_file:
-                fieldnames = ['md5sum', 'license']
+                fieldnames = ['md5sum', 'license', 'beginline', 'endline', 'md5']
                 reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
                 for row in reader:
-                    md5sums[row['md5sum']] = row['license']
+                    if linenumbers:
+                        md5sums[row['md5sum']] = (
+                            row['license'], row['beginline'], row['endline'], row['md5'])
+                    else:
+                        md5sums[row['md5sum']] = row['license']
 
     return md5sums
 
