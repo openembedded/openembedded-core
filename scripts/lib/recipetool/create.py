@@ -1128,6 +1128,9 @@ def guess_license(srctree, d):
             license, crunched_md5, lictext = crunch_license(licfile)
             if lictext and not license:
                 license = 'Unknown'
+                logger.info("Please add the following line for '%s' to a 'lib/recipetool/licenses.csv' " \
+                    "and replace `Unknown` with the license:\n" \
+                    "%s,Unknown" % (os.path.relpath(licfile, srctree), md5value))
         if license:
             licenses.append((license, os.path.relpath(licfile, srctree), md5value))
 
