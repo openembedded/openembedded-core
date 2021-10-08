@@ -115,17 +115,9 @@ class NpmRecipeHandler(RecipeHandler):
 
     def _handle_licenses(self, srctree, shrinkwrap_file, dev):
         """Return the extra license files and the list of packages"""
-        licfiles = []
         packages = {}
 
-        def _licfiles_append(licfile):
-            """Append 'licfile' to the license files list"""
-            licfilepath = os.path.join(srctree, licfile)
-            licmd5 = bb.utils.md5_file(licfilepath)
-            licfiles.append("file://%s;md5=%s" % (licfile, licmd5))
-
         # Handle the parent package
-        _licfiles_append("package.json")
         packages["${PN}"] = ""
 
         # Handle the dependencies
@@ -133,7 +125,6 @@ class NpmRecipeHandler(RecipeHandler):
             suffix = "-".join([self._npm_name(dep) for dep in deptree])
             destdirs = [os.path.join("node_modules", dep) for dep in deptree]
             destdir = os.path.join(*destdirs)
-            _licfiles_append(os.path.join(destdir, "package.json"))
             packages["${PN}-" + suffix] = destdir
 
         with open(shrinkwrap_file, "r") as f:
@@ -246,7 +237,6 @@ class NpmRecipeHandler(RecipeHandler):
 
         bb.note("Handling licences ...")
         (licfiles, packages) = self._handle_licenses(srctree, shrinkwrap_file, dev)
-        extravalues["LIC_FILES_CHKSUM"] = licfiles
         split_pkg_licenses(guess_license(srctree, d), packages, lines_after, [])
 
         classes.append("npm")
