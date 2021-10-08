@@ -22,6 +22,8 @@ inherit python3native
 DEPENDS:prepend = "nodejs-native "
 RDEPENDS:${PN}:append:class-target = " nodejs"
 
+EXTRA_OENPM = ""
+
 NPM_INSTALL_DEV ?= "0"
 
 def npm_target_arch_map(target_arch):
@@ -260,7 +262,8 @@ python npm_do_compile() {
 
         # Pack and install the main package
         tarball = npm_pack(env, d.getVar("NPM_PACKAGE"), tmpdir)
-        env.run("npm install %s" % shlex.quote(tarball), args=args, configs=configs)
+        cmd = "npm install %s %s" % (shlex.quote(tarball), d.getVar("EXTRA_OENPM"))
+        env.run(cmd, args=args, configs=configs)
 }
 
 npm_do_install() {
