@@ -1126,9 +1126,10 @@ def guess_license(srctree, d):
         license = md5sums.get(md5value, None)
         if not license:
             license, crunched_md5, lictext = crunch_license(licfile)
-            if not license:
+            if lictext and not license:
                 license = 'Unknown'
-        licenses.append((license, os.path.relpath(licfile, srctree), md5value))
+        if license:
+            licenses.append((license, os.path.relpath(licfile, srctree), md5value))
 
     # FIXME should we grab at least one source file with a license header and add that too?
 
