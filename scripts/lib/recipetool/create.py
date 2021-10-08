@@ -1004,6 +1004,7 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
 
 def get_license_md5sums(d, static_only=False):
     import bb.utils
+    import csv
     md5sums = {}
     if not static_only:
         # Gather md5sums of license files in common license dir
@@ -1011,46 +1012,23 @@ def get_license_md5sums(d, static_only=False):
         for fn in os.listdir(commonlicdir):
             md5value = bb.utils.md5_file(os.path.join(commonlicdir, fn))
             md5sums[md5value] = fn
+
     # The following were extracted from common values in various recipes
     # (double checking the license against the license file itself, not just
     # the LICENSE value in the recipe)
-    md5sums['94d55d512a9ba36caa9b7df079bae19f'] = 'GPLv2'
-    md5sums['b234ee4d69f5fce4486a80fdaf4a4263'] = 'GPLv2'
-    md5sums['59530bdf33659b29e73d4adb9f9f6552'] = 'GPLv2'
-    md5sums['0636e73ff0215e8d672dc4c32c317bb3'] = 'GPLv2'
-    md5sums['eb723b61539feef013de476e68b5c50a'] = 'GPLv2'
-    md5sums['751419260aa954499f7abaabaa882bbe'] = 'GPLv2'
-    md5sums['393a5ca445f6965873eca0259a17f833'] = 'GPLv2'
-    md5sums['12f884d2ae1ff87c09e5b7ccc2c4ca7e'] = 'GPLv2'
-    md5sums['8ca43cbc842c2336e835926c2166c28b'] = 'GPLv2'
-    md5sums['ebb5c50ab7cab4baeffba14977030c07'] = 'GPLv2'
-    md5sums['c93c0550bd3173f4504b2cbd8991e50b'] = 'GPLv2'
-    md5sums['9ac2e7cff1ddaf48b6eab6028f23ef88'] = 'GPLv2'
-    md5sums['4325afd396febcb659c36b49533135d4'] = 'GPLv2'
-    md5sums['18810669f13b87348459e611d31ab760'] = 'GPLv2'
-    md5sums['d7810fab7487fb0aad327b76f1be7cd7'] = 'GPLv2' # the Linux kernel's COPYING file
-    md5sums['bbb461211a33b134d42ed5ee802b37ff'] = 'LGPLv2.1'
-    md5sums['7fbc338309ac38fefcd64b04bb903e34'] = 'LGPLv2.1'
-    md5sums['4fbd65380cdd255951079008b364516c'] = 'LGPLv2.1'
-    md5sums['2d5025d4aa3495befef8f17206a5b0a1'] = 'LGPLv2.1'
-    md5sums['fbc093901857fcd118f065f900982c24'] = 'LGPLv2.1'
-    md5sums['a6f89e2100d9b6cdffcea4f398e37343'] = 'LGPLv2.1'
-    md5sums['d8045f3b8f929c1cb29a1e3fd737b499'] = 'LGPLv2.1'
-    md5sums['fad9b3332be894bab9bc501572864b29'] = 'LGPLv2.1'
-    md5sums['3bf50002aefd002f49e7bb854063f7e7'] = 'LGPLv2'
-    md5sums['9f604d8a4f8e74f4f5140845a21b6674'] = 'LGPLv2'
-    md5sums['5f30f0716dfdd0d91eb439ebec522ec2'] = 'LGPLv2'
-    md5sums['55ca817ccb7d5b5b66355690e9abc605'] = 'LGPLv2'
-    md5sums['252890d9eee26aab7b432e8b8a616475'] = 'LGPLv2'
-    md5sums['3214f080875748938ba060314b4f727d'] = 'LGPLv2'
-    md5sums['db979804f025cf55aabec7129cb671ed'] = 'LGPLv2'
-    md5sums['d32239bcb673463ab874e80d47fae504'] = 'GPLv3'
-    md5sums['f27defe1e96c2e1ecd4e0c9be8967949'] = 'GPLv3'
-    md5sums['6a6a8e020838b23406c81b19c1d46df6'] = 'LGPLv3'
-    md5sums['3b83ef96387f14655fc854ddc3c6bd57'] = 'Apache-2.0'
-    md5sums['385c55653886acac3821999a3ccd17b3'] = 'Artistic-1.0 | GPL-2.0' # some perl modules
-    md5sums['54c7042be62e169199200bc6477f04d1'] = 'BSD-3-Clause'
-    md5sums['bfe1f75d606912a4111c90743d6c7325'] = 'MPL-1.1'
+
+    # Read license md5sums from csv file
+    scripts_path = os.path.dirname(os.path.realpath(__file__))
+    for path in (d.getVar('BBPATH').split(':')
+                + [os.path.join(scripts_path, '..', '..')]):
+        csv_path = os.path.join(path, 'lib', 'recipetool', 'licenses.csv')
+        if os.path.isfile(csv_path):
+            with open(csv_path, newline='') as csv_file:
+                fieldnames = ['md5sum', 'license']
+                reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
+                for row in reader:
+                    md5sums[row['md5sum']] = row['license']
+
     return md5sums
 
 def crunch_license(licfile):
