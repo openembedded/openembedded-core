@@ -1114,6 +1114,8 @@ def guess_license(srctree, d):
     licfiles = []
     for root, dirs, files in os.walk(srctree):
         for fn in files:
+            if fn.endswith(".html") or fn.endswith(".js") or fn.endswith(".json") or fn.endswith(".svg") or fn.endswith(".ts"):
+                continue
             for spec in licspecs:
                 if fnmatch.fnmatch(fn, spec):
                     fullpath = os.path.join(root, fn)
