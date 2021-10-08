@@ -61,8 +61,8 @@ def npm_pack(env, srcdir, workdir):
     """Run 'npm pack' on a specified directory"""
     import shlex
     cmd = "npm pack %s" % shlex.quote(srcdir)
-    configs = [("ignore-scripts", "true")]
-    tarball = env.run(cmd, configs=configs, workdir=workdir).strip("\n")
+    args = [("ignore-scripts", "true")]
+    tarball = env.run(cmd, args=args, workdir=workdir).strip("\n")
     return os.path.join(workdir, tarball)
 
 python npm_do_configure() {
@@ -228,15 +228,11 @@ python npm_do_compile() {
 
     bb.utils.remove(d.getVar("NPM_BUILD"), recurse=True)
 
-    env = NpmEnvironment(d, configs=npm_global_configs(d))
-
-    dev = bb.utils.to_boolean(d.getVar("NPM_INSTALL_DEV"), False)
-
     with tempfile.TemporaryDirectory() as tmpdir:
         args = []
-        configs = []
+        configs = npm_global_configs(d)
 
-        if dev:
+        if bb.utils.to_boolean(d.getVar("NPM_INSTALL_DEV"), False):
             configs.append(("also", "development"))
         else:
             configs.append(("only", "production"))
@@ -253,6 +249,8 @@ python npm_do_compile() {
         configs.append(("release", "true"))
         configs.append(("nodedir", d.getVar("NPM_NODEDIR")))
         configs.append(("python", d.getVar("PYTHON")))
+
+        env = NpmEnvironment(d, configs)
 
         # Add node-pre-gyp configuration
         args.append(("target_arch", d.getVar("NPM_ARCH")))
