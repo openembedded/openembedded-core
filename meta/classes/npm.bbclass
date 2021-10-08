@@ -26,6 +26,8 @@ EXTRA_OENPM = ""
 
 NPM_INSTALL_DEV ?= "0"
 
+NPM_NODEDIR ?= "${RECIPE_SYSROOT_NATIVE}${prefix_native}"
+
 def npm_target_arch_map(target_arch):
     """Maps arch names to npm arch names"""
     import re
@@ -249,11 +251,7 @@ python npm_do_compile() {
         # Add node-gyp configuration
         configs.append(("arch", d.getVar("NPM_ARCH")))
         configs.append(("release", "true"))
-        nodedir = d.getVar("NPM_NODEDIR")
-        if not nodedir:
-            sysroot = d.getVar("RECIPE_SYSROOT_NATIVE")
-            nodedir = os.path.join(sysroot, d.getVar("prefix_native").strip("/"))
-        configs.append(("nodedir", nodedir))
+        configs.append(("nodedir", d.getVar("NPM_NODEDIR")))
         configs.append(("python", d.getVar("PYTHON")))
 
         # Add node-pre-gyp configuration
