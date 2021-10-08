@@ -1134,7 +1134,7 @@ def guess_license(srctree, d):
 
     return licenses
 
-def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn='${PN}'):
+def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=[], pn='${PN}'):
     """
     Given a list of (license, path, md5sum) as returned by guess_license(),
     a dict of package name to path mappings, write out a set of
