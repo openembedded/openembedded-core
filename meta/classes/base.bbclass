@@ -160,7 +160,7 @@ python base_do_fetch() {
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.download()
     except bb.fetch2.BBFetchException as e:
-        bb.fatal(str(e))
+        bb.fatal("Bitbake Fetcher Error: " + repr(e))
 }
 
 addtask unpack after do_fetch
@@ -177,7 +177,7 @@ python base_do_unpack() {
         fetcher = bb.fetch2.Fetch(src_uri, d)
         fetcher.unpack(d.getVar('WORKDIR'))
     except bb.fetch2.BBFetchException as e:
-        bb.fatal(str(e))
+        bb.fatal("Bitbake Fetcher Error: " + repr(e))
 }
 
 def get_layers_branch_rev(d):
