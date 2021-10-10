@@ -1,0 +1,49 @@
+From c66987d6fa9f9e442eb7dac947f469bcf8c35d48 Mon Sep 17 00:00:00 2001
+From: Federico Mena Quintero <federico@gnome.org>
+Date: Tue, 21 Sep 2021 12:54:12 -0500
+Subject: [PATCH] impl ToPixel for CairoARGB
+
+Part-of: <https://gitlab.gnome.org/GNOME/librsvg/-/merge_requests/592>
+Upstream-Status: Backport
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ src/surface_utils/mod.rs            | 12 ++++++++++++
+ src/surface_utils/shared_surface.rs |  2 +-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/src/surface_utils/mod.rs b/src/surface_utils/mod.rs
+index 3f915cd01..4f751ece4 100644
+--- a/src/surface_utils/mod.rs
++++ b/src/surface_utils/mod.rs
+@@ -93,6 +93,18 @@ impl ToGdkPixbufRGBA for Pixel {
+     }
+ }
+ 
++impl ToPixel for CairoARGB {
++    #[inline]
++    fn to_pixel(&self) -> Pixel {
++        Pixel {
++            r: self.r,
++            g: self.g,
++            b: self.b,
++            a: self.a,
++        }
++    }
++}
++
+ impl ToPixel for GdkPixbufRGBA {
+     #[inline]
+     fn to_pixel(&self) -> Pixel {
+diff --git a/src/surface_utils/shared_surface.rs b/src/surface_utils/shared_surface.rs
+index 34dfc992e..20cd0f40b 100644
+--- a/src/surface_utils/shared_surface.rs
++++ b/src/surface_utils/shared_surface.rs
+@@ -343,7 +343,7 @@ impl ImageSurface<Shared> {
+             .map(|row| row.as_rgba_mut())
+             .zip(self.rows())
+             .flat_map(|(dest_row, src_row)| src_row.iter().zip(dest_row.iter_mut()))
+-            .for_each(|(src, dest)| *dest = Pixel::from(*src).unpremultiply().to_pixbuf_rgba());
++            .for_each(|(src, dest)| *dest = src.to_pixel().unpremultiply().to_pixbuf_rgba());
+ 
+         Some(pixbuf)
+     }

@@ -16,9 +16,13 @@ BBCLASSEXTEND = "native"
 
 inherit gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspection rust
 
-SRC_URI += " file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
-             file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
-"
+SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
+           file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
+           file://0001-GdkPixbufRGBA-ToGdkPixbufRGBA-start-naming-types-and.patch \
+           file://0002-New-ToPixel-trait.patch \
+           file://0003-New-ToCairoARGB-trait.patch \
+           file://0004-impl-ToPixel-for-CairoARGB.patch \
+           "
 
 SRC_URI[archive.sha256sum] = "bd821fb3e16494b61f5185addd23b726b064f203122b3ab4b3d5d7a44e6bf393"
 
