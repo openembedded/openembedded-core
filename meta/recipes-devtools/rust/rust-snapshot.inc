@@ -2,17 +2,17 @@
 ## snapshot info is taken from rust/src/stage0.txt
 ## TODO: find a way to add additional SRC_URIs based on the contents of an
 ##       earlier SRC_URI.
-RS_VERSION = "1.53.0"
-CARGO_VERSION = "1.53.0"
+RS_VERSION = "1.54.0"
+CARGO_VERSION = "1.54.0"
 
 # TODO: Add hashes for other architecture toolchains as well. Make a script?
-SRC_URI[rust-std-snapshot-x86_64.sha256sum] = "66d5257bbd194db08e67ca63a74cc80cdc4a36eaa30bf7dfe65861d9deaff7f7"
-SRC_URI[rustc-snapshot-x86_64.sha256sum] = "9c2f0443a546dd18f1f020c7711a7b9864432545ceb812e79315c1e76508b193"
-SRC_URI[cargo-snapshot-x86_64.sha256sum] = "e4437f6c83574fc60e183f4df439190f7610e4a669476802795645da66fbb83b"
+SRC_URI[rust-std-snapshot-x86_64.sha256sum] = "a22e19859b3c5032daac1633637546a986c51bdfa3ad0db6e394e6cc461f466b"
+SRC_URI[rustc-snapshot-x86_64.sha256sum] = "eafc06aba7128ee8592c16d7e3ae7b877e82c5d9779c9d07099558ed7e286296"
+SRC_URI[cargo-snapshot-x86_64.sha256sum] = "8a9c80b7dc5d47e6eafe173b81ad96244522c97d74214ba7da57a502d49b231c"
 
-SRC_URI[rust-std-snapshot-aarch64.sha256sum] = "fc261d0ff057c58b36057c30217bad1a29a9a3f257c70f5df88ad3f1d982386e"
-SRC_URI[rustc-snapshot-aarch64.sha256sum] = "a857e5c615f6b5b3afc6b707ae007b3b4624585b0b2ba9b38b553114db37f8d5"
-SRC_URI[cargo-snapshot-aarch64.sha256sum] = "4fa425a2d4633aeca67fa42695b3b9100f8b988dd1c21e60d6b2aa1164e55c0c"
+SRC_URI[rust-std-snapshot-aarch64.sha256sum] = "a1a77737d218087eb7d3613adcde2c9e383d758cdf128646a0ee63396145270b"
+SRC_URI[rustc-snapshot-aarch64.sha256sum] = "0e771c06435b6fa3087ce054c7f2f94b8ee36717997f32f97e2e3425739ac2b4"
+SRC_URI[cargo-snapshot-aarch64.sha256sum] = "b3b6e5358bf1ecd5d8d7e258a5632dac7d923b2aa8ab1c8c0f6aad62d9307b37"
 
 SRC_URI += " \
     https://static.rust-lang.org/dist/${RUST_STD_SNAPSHOT}.tar.xz;name=rust-std-snapshot-${BUILD_ARCH};subdir=rust-snapshot-components \
