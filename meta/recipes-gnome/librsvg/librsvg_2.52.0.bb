@@ -23,6 +23,7 @@ SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.pat
            file://0003-New-ToCairoARGB-trait.patch \
            file://0004-impl-ToPixel-for-CairoARGB.patch \
            file://0001-crossbeam-utils-check-only-the-architecture-not-the-.patch \
+           file://0001-vendor-system-deps-sort-dependencies-before-using-th.patch \
            "
 
 SRC_URI[archive.sha256sum] = "bd821fb3e16494b61f5185addd23b726b064f203122b3ab4b3d5d7a44e6bf393"
