@@ -321,7 +321,6 @@ def rust_gen_target(d, thing, wd, features, cpu, arch):
     tspec['vendor'] = "unknown"
     tspec['target-family'] = "unix"
     tspec['linker'] = "{}{}gcc".format(d.getVar('CCACHE'), prefix)
-    tspec['ar'] = "{}ar".format(prefix)
     tspec['cpu'] = cpu
     if features != "":
         tspec['features'] = features
