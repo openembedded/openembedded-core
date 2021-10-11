@@ -10,12 +10,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=243b725d71bb5df4a1e5920b344b86ad"
 def version_underscore(v):
     return "_".join(v.split("."))
 
-SRC_URI = "https://github.com/libexif/libexif/releases/download/libexif-${@version_underscore("${PV}")}-release/libexif-${PV}.tar.xz \
-           file://CVE-2020-0198.patch \
-           file://CVE-2020-0452.patch \
+SRC_URI = "https://github.com/libexif/libexif/releases/download/v${PV}/libexif-${PV}.tar.xz \
            "
 
-SRC_URI[sha256sum] = "5048f1c8fc509cc636c2f97f4b40c293338b6041a5652082d5ee2cf54b530c56"
+SRC_URI[sha256sum] = "a740a99920eb81ae0aa802bb46e683ce6e0cde061c210f5d5bde5b8572380431"
 
 UPSTREAM_CHECK_URI = "https://github.com/libexif/libexif/releases/"
 
