@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.gnu.org/software/coreutils/"
 BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://src/ls.c;beginline=1;endline=15;md5=b7d80abf5b279320fb0e4b1007ed108b \
+                    file://src/ls.c;beginline=1;endline=15;md5=3b8fbaee597c8a9bb88d30840d53048c \
                     "
 DEPENDS = "gmp libcap"
 DEPENDS:class-native = ""
@@ -17,21 +17,17 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
            file://fix-selinux-flask.patch \
            file://0001-uname-report-processor-and-hardware-correctly.patch \
-           file://disable-ls-output-quoting.patch \
            file://0001-local.mk-fix-cross-compiling-problem.patch \
+           file://e8b56ebd536e82b15542a00c888109471936bfda.patch \
            file://run-ptest \
-           file://0001-ls-restore-8.31-behavior-on-removed-directories.patch \
-           file://0001-fts-remove-NOSTAT_LEAF_OPTIMIZATION.patch \
            "
 
-SRC_URI[md5sum] = "022042695b7d5bcf1a93559a9735e668"
-SRC_URI[sha256sum] = "4458d8de7849df44ccab15e16b1548b285224dbba5f08fac070c1c0e0bcc4cfa"
+SRC_URI[sha256sum] = "ce30acdf4a41bc5bb30dd955e9eaa75fa216b4e3deb08889ed32433c7b3b97ce"
 
 # http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=v8.27-101-gf5d7c0842
 # runcon is not really a sandbox command, use `runcon ... setsid ...` to avoid this particular issue.
 CVE_CHECK_WHITELIST += "CVE-2016-2781"
 
-EXTRA_OECONF:class-native = "--without-gmp"
 EXTRA_OECONF:class-target = "--enable-install-program=arch,hostname --libexecdir=${libdir}"
 EXTRA_OECONF:class-nativesdk = "--enable-install-program=arch,hostname"
 
