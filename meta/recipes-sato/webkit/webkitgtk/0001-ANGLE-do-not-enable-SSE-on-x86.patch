@@ -1,0 +1,26 @@
+From c71a4e18afb4869a0fbb0efd59c4860b72f493f7 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Tue, 5 Oct 2021 13:32:28 +0200
+Subject: [PATCH] ANGLE: do not enable SSE on x86
+
+The code does not actually build there.
+
+Upstream-Status: Pending
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ Source/ThirdParty/ANGLE/src/common/platform.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/ThirdParty/ANGLE/src/common/platform.h b/Source/ThirdParty/ANGLE/src/common/platform.h
+index 41f3cf4f..cab85a82 100644
+--- a/Source/ThirdParty/ANGLE/src/common/platform.h
++++ b/Source/ThirdParty/ANGLE/src/common/platform.h
+@@ -89,7 +89,7 @@
+ #if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64)
+ #    include <intrin.h>
+ #    define ANGLE_USE_SSE
+-#elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
++#elif defined(__GNUC__) && (defined(__x86_64__))
+ #    include <x86intrin.h>
+ #    define ANGLE_USE_SSE
+ #endif
