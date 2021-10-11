@@ -4,7 +4,7 @@ DESCRIPTION = "Python is a programming language that lets you work more quickly 
 LICENSE = "PSFv2"
 SECTION = "devel/python"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=c22d2438294c784731bf9dd224a467b7"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3dd7bed622743ef9b77169b3736f7990"
 
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://run-ptest \
@@ -28,18 +28,20 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-setup.py-pass-missing-libraries-to-Extension-for-mul.patch \
            file://0001-Makefile-do-not-compile-.pyc-in-parallel.patch \
            file://0020-configure.ac-setup.py-do-not-add-a-curses-include-pa.patch \
-           file://0001-Lib-sysconfig.py-use-libdir-values-from-configuratio.patch \
            file://0001-Skip-failing-tests-due-to-load-variability-on-YP-AB.patch \
            file://0001-test_ctypes.test_find-skip-without-tools-sdk.patch \
            file://makerace.patch \
+           file://0001-sysconfig.py-use-platlibdir-also-for-purelib.patch \
+           file://0001-Lib-pty.py-handle-stdin-I-O-errors-same-way-as-maste.patch \
            "
 
 SRC_URI:append:class-native = " \
+           file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
            file://0001-distutils-sysconfig-append-STAGING_LIBDIR-python-sys.patch \
            file://12-distutils-prefix-is-inside-staging-area.patch \
            file://0001-Don-t-search-system-for-headers-libraries.patch \
            "
-SRC_URI[sha256sum] = "f8145616e68c00041d1a6399b76387390388f8359581abc24432bb969b5e3c57"
+SRC_URI[sha256sum] = "5a99f8e7a6a11a7b98b4e75e0d1303d3832cada5534068f69c7b6222a7b1b002"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
@@ -55,7 +57,7 @@ CVE_CHECK_WHITELIST += "CVE-2019-18348"
 # This is windows only issue.
 CVE_CHECK_WHITELIST += "CVE-2020-15523"
 
-PYTHON_MAJMIN = "3.9"
+PYTHON_MAJMIN = "3.10"
 
 S = "${WORKDIR}/Python-${PV}"
 
