@@ -6,10 +6,18 @@ BUGTRACKER = "https://gitlab.gnome.org/GNOME/epiphany"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-DEPENDS = "libsoup-2.4 webkitgtk gtk+3 iso-codes avahi libnotify gcr gnutls \
-	   gsettings-desktop-schemas libxml2-native \
-	   glib-2.0 glib-2.0-native json-glib libdazzle libhandy libportal \
-	   libarchive"
+DEPENDS = " \
+          webkitgtk \
+          gcr \
+          gsettings-desktop-schemas \
+          nettle \
+          json-glib \
+          libarchive \
+          libdazzle \
+          libhandy \
+          libportal \
+          glib-2.0-native \
+          "
 
 GNOMEBASEBUILDCLASS = "meson"
 inherit gnomebase gsettings features_check gettext mime-xdg
