@@ -11,13 +11,13 @@ inherit autotools python3native
 
 DEPENDS = "libxml2-native"
 
-SRC_URI = "http://files.itstool.org/${BPN}/${BPN}-${PV}.tar.bz2"
+SRC_URI = "http://files.itstool.org/${BPN}/${BPN}-${PV}.tar.bz2 \
+           "
 SRC_URI:append:class-native = " file://0001-Native-Don-t-use-build-time-hardcoded-python-binary-.patch"
 SRC_URI:append:class-nativesdk = " file://0001-Native-Don-t-use-build-time-hardcoded-python-binary-.patch"
 SRC_URI:append:class-target = " file://0002-Don-t-use-build-time-hardcoded-python-binary-path.patch"
 
-SRC_URI[md5sum] = "4306eeba4f4aee6b393d14f9c3c57ca1"
-SRC_URI[sha256sum] = "6233cc22726a9a5a83664bf67d1af79549a298c23185d926c3677afa917b92a9"
+SRC_URI[sha256sum] = "6b9a7cd29a12bb95598f5750e8763cee78836a1a207f85b74d8b3275b27e87ca"
 
 BBCLASSEXTEND = "native nativesdk"
 
