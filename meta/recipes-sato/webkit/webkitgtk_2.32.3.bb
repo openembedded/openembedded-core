@@ -30,12 +30,20 @@ REQUIRED_DISTRO_FEATURES = "${@bb.utils.contains('DISTRO_FEATURES', 'wayland', '
 
 CVE_PRODUCT = "webkitgtk webkitgtk\+"
 
-DEPENDS = "zlib libsoup-2.4 curl libxml2 cairo libxslt libgcrypt \
-           gtk+3 gstreamer1.0 gstreamer1.0-plugins-base flex-native gperf-native sqlite3 \
-	   pango icu bison-native gawk intltool-native libwebp \
-	   atk udev harfbuzz jpeg libpng librsvg libtheora libvorbis \
-	   ruby-native libnotify gstreamer1.0-plugins-bad \
-	   gettext-native glib-2.0 glib-2.0-native libtasn1 \
+DEPENDS = " \
+          ruby-native \
+          cairo \
+          harfbuzz \
+          jpeg \
+          atk \
+          libwebp \
+          gtk+3 \
+          libsoup-2.4 \
+          libxslt \
+          libtasn1 \
+          libnotify \
+          gstreamer1.0 \
+          gstreamer1.0-plugins-base \
           "
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd wayland x11', d)} \
