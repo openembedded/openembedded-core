@@ -147,8 +147,10 @@ do_install() {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		echo "session optional pam_systemd.so" >> ${D}${sysconfdir}/pam.d/common-session
 	fi
-        install -d ${D}/${libdir}/
-	mv ${D}/${base_libdir}/pkgconfig ${D}/${libdir}/
+	if ${@bb.utils.contains('DISTRO_FEATURES','usrmerge','false','true',d)}; then
+		install -d ${D}/${libdir}/
+		mv ${D}/${base_libdir}/pkgconfig ${D}/${libdir}/
+	fi
 }
 
 do_install_ptest() {
