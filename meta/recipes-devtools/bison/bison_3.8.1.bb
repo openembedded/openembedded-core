@@ -32,7 +32,9 @@ PACKAGECONFIG[textstyle] = "--with-libtextstyle-prefix,--without-libtextstyle-pr
 CACHED_CONFIGUREVARS += "${@bb.utils.contains('PACKAGECONFIG', 'readline', '', ' \
                            ac_cv_header_readline_history_h=no \
                            ac_cv_header_readline_readline_h=no \
-                           gl_cv_lib_readline=no', d)}"
+                           gl_cv_lib_readline=no', d)} \
+                         ${@bb.utils.contains('PACKAGECONFIG', 'textstyle', '', ' \
+                           ac_cv_libtextstyle=no', d)}"
 
 # The automatic m4 path detection gets confused, so force the right value
 acpaths = "-I ./m4"
