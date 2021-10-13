@@ -116,6 +116,9 @@ SSTATE_SIG_KEY ?= ""
 SSTATE_SIG_PASSPHRASE ?= ""
 # Whether to verify the GnUPG signatures when extracting sstate archives
 SSTATE_VERIFY_SIG ?= "0"
+# List of signatures to consider valid.
+SSTATE_VALID_SIGS ??= ""
+SSTATE_VALID_SIGS[vardepvalue] = ""
 
 SSTATE_HASHEQUIV_METHOD ?= "oe.sstatesig.OEOuthashBasic"
 SSTATE_HASHEQUIV_METHOD[doc] = "The fully-qualified function used to calculate \
@@ -372,7 +375,7 @@ def sstate_installpkg(ss, d):
             bb.warn("No signature file for sstate package %s, skipping acceleration..." % sstatepkg)
             return False
         signer = get_signer(d, 'local')
-        if not signer.verify(sstatepkg + '.sig'):
+        if not signer.verify(sstatepkg + '.sig', d.getVar("SSTATE_VALID_SIGS")):
             bb.warn("Cannot verify signature on sstate package %s, skipping acceleration..." % sstatepkg)
             return False
 
