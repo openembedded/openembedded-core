@@ -702,8 +702,6 @@ def package_qa_recipe(warnfuncs, errorfuncs, pn, d):
 
 # Walk over all files in a directory and call func
 def package_qa_walk(warnfuncs, errorfuncs, package, d):
-    import oe.qa
-
     #if this will throw an exception, then fix the dict above
     target_os   = d.getVar('TARGET_OS')
     target_arch = d.getVar('TARGET_ARCH')
