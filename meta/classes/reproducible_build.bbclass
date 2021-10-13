@@ -58,9 +58,6 @@ SDE_DIR = "${WORKDIR}/source-date-epoch"
 SDE_FILE = "${SDE_DIR}/__source_date_epoch.txt"
 SDE_DEPLOYDIR = "${WORKDIR}/deploy-source-date-epoch"
 
-# Enable compiler warning when the __TIME__, __DATE__ and __TIMESTAMP__ macros are used.
-TARGET_CC_ARCH:append:class-target = " -Wdate-time"
-
 # A SOURCE_DATE_EPOCH of '0' might be misinterpreted as no SDE
 export SOURCE_DATE_EPOCH_FALLBACK ??= "1302044400"
 
