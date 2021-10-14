@@ -95,15 +95,8 @@ CACHED_CONFIGUREVARS = " \
                 ac_cv_working_tzset=yes \
 "
 
-def possibly_include_pgo(d):
-    # PGO currently causes builds to not be reproducible, so disable it for
-    # now. See YOCTO #13407
-    if bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', True, False, d) and d.getVar('BUILD_REPRODUCIBLE_BINARIES') != '1':
-        return 'pgo'
-    
-    return ''
-
-PACKAGECONFIG:class-target ??= "readline ${@possibly_include_pgo(d)} gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
+# PGO currently causes builds to not be reproducible so disable by default, see YOCTO #13407
+PACKAGECONFIG:class-target ??= "readline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 PACKAGECONFIG:class-native ??= "readline gdbm"
 PACKAGECONFIG:class-nativesdk ??= "readline gdbm"
 PACKAGECONFIG[readline] = ",,readline"
@@ -320,6 +313,9 @@ python(){
     d.setVar('PACKAGES', ' '.join(packages))
     d.setVar('ALLOW_EMPTY:${PN}-modules', '1')
     d.setVar('ALLOW_EMPTY:${PN}-pkgutil', '1')
+
+    if "pgo" in d.getVar("PACKAGECONFIG").split() and not bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', True, False, d):
+        bb.fatal("pgo cannot be enabled as there is no qemu-usermode support for this architecture/machine")
 }
 
 # Files needed to create a new manifest
