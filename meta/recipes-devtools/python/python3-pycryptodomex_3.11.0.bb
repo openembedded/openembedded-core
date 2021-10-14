@@ -1,7 +1,7 @@
 require python-pycryptodome.inc
 inherit setuptools3
 
-SRC_URI[sha256sum] = "541cd3e3e252fb19a7b48f420b798b53483302b7fe4d9954c947605d0a263d62"
+SRC_URI[sha256sum] = "0398366656bb55ebdb1d1d493a7175fc48ade449283086db254ac44c7d318d6d"
 
 FILES:${PN}-tests = " \
     ${PYTHON_SITEPACKAGES_DIR}/Cryptodome/SelfTest/ \
