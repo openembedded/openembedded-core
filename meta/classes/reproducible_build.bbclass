@@ -91,19 +91,8 @@ addtask do_deploy_source_date_epoch_setscene
 addtask do_deploy_source_date_epoch before do_configure after do_patch
 
 python create_source_date_epoch_stamp() {
-    import oe.reproducible
-
-    epochfile = d.getVar('SDE_FILE')
-    tmp_file = "%s.new" % epochfile
-
     source_date_epoch = oe.reproducible.get_source_date_epoch(d, d.getVar('S'))
-
-    bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
-    bb.utils.mkdirhier(d.getVar('SDE_DIR'))
-    with open(tmp_file, 'w') as f:
-        f.write(str(source_date_epoch))
-
-    os.rename(tmp_file, epochfile)
+    oe.reproducible.epochfile_write(source_date_epoch, d.getVar('SDE_FILE'), d)
 }
 
 EPOCHTASK = "do_deploy_source_date_epoch"
@@ -112,29 +101,7 @@ EPOCHTASK = "do_deploy_source_date_epoch"
 do_unpack[postfuncs] += "create_source_date_epoch_stamp"
 
 def get_source_date_epoch_value(d):
-    epochfile = d.getVar('SDE_FILE')
-    cached, efile = d.getVar('__CACHED_SOURCE_DATE_EPOCH') or (None, None)
-    if cached and efile == epochfile:
-        return cached
-
-    if cached and epochfile != efile:
-        bb.debug(1, "Epoch file changed from %s to %s" % (efile, epochfile))
-
-    source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
-    try:
-        with open(epochfile, 'r') as f:
-            s = f.read()
-            try:
-                source_date_epoch = int(s)
-            except ValueError:
-                bb.warn("SOURCE_DATE_EPOCH value '%s' is invalid. Reverting to SOURCE_DATE_EPOCH_FALLBACK" % s)
-                source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
-        bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
-    except FileNotFoundError:
-        bb.debug(1, "Cannot find %s. SOURCE_DATE_EPOCH will default to %d" % (epochfile, source_date_epoch))
-
-    d.setVar('__CACHED_SOURCE_DATE_EPOCH', (str(source_date_epoch), epochfile))
-    return str(source_date_epoch)
+    return oe.reproducible.epochfile_read(d.getVar('SDE_FILE'), d)
 
 export SOURCE_DATE_EPOCH ?= "${@get_source_date_epoch_value(d)}"
 BB_HASHBASE_WHITELIST += "SOURCE_DATE_EPOCH"

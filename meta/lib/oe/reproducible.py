@@ -106,3 +106,36 @@ def get_source_date_epoch(d, sourcedir):
         fixed_source_date_epoch(d)       # Last resort
     )
 
+def epochfile_read(epochfile, d):
+    cached, efile = d.getVar('__CACHED_SOURCE_DATE_EPOCH') or (None, None)
+    if cached and efile == epochfile:
+        return cached
+
+    if cached and epochfile != efile:
+        bb.debug(1, "Epoch file changed from %s to %s" % (efile, epochfile))
+
+    source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
+    try:
+        with open(epochfile, 'r') as f:
+            s = f.read()
+            try:
+                source_date_epoch = int(s)
+            except ValueError:
+                bb.warn("SOURCE_DATE_EPOCH value '%s' is invalid. Reverting to SOURCE_DATE_EPOCH_FALLBACK" % s)
+                source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
+        bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
+    except FileNotFoundError:
+        bb.debug(1, "Cannot find %s. SOURCE_DATE_EPOCH will default to %d" % (epochfile, source_date_epoch))
+
+    d.setVar('__CACHED_SOURCE_DATE_EPOCH', (str(source_date_epoch), epochfile))
+    return str(source_date_epoch)
+
+def epochfile_write(source_date_epoch, epochfile, d):
+
+    bb.debug(1, "SOURCE_DATE_EPOCH: %d" % source_date_epoch)
+    bb.utils.mkdirhier(os.path.dirname(epochfile))
+
+    tmp_file = "%s.new" % epochfile
+    with open(tmp_file, 'w') as f:
+        f.write(str(source_date_epoch))
+    os.rename(tmp_file, epochfile)
