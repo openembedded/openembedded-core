@@ -180,6 +180,44 @@ python base_do_unpack() {
         bb.fatal("Bitbake Fetcher Error: " + repr(e))
 }
 
+SSTATETASKS += "do_deploy_source_date_epoch"
+
+do_deploy_source_date_epoch () {
+    mkdir -p ${SDE_DEPLOYDIR}
+    if [ -e ${SDE_FILE} ]; then
+        echo "Deploying SDE from ${SDE_FILE} -> ${SDE_DEPLOYDIR}."
+        cp -p ${SDE_FILE} ${SDE_DEPLOYDIR}/__source_date_epoch.txt
+    else
+        echo "${SDE_FILE} not found!"
+    fi
+}
+
+python do_deploy_source_date_epoch_setscene () {
+    sstate_setscene(d)
+    bb.utils.mkdirhier(d.getVar('SDE_DIR'))
+    sde_file = os.path.join(d.getVar('SDE_DEPLOYDIR'), '__source_date_epoch.txt')
+    if os.path.exists(sde_file):
+        target = d.getVar('SDE_FILE')
+        bb.debug(1, "Moving setscene SDE file %s -> %s" % (sde_file, target))
+        bb.utils.rename(sde_file, target)
+    else:
+        bb.debug(1, "%s not found!" % sde_file)
+}
+
+do_deploy_source_date_epoch[dirs] = "${SDE_DEPLOYDIR}"
+do_deploy_source_date_epoch[sstate-plaindirs] = "${SDE_DEPLOYDIR}"
+addtask do_deploy_source_date_epoch_setscene
+addtask do_deploy_source_date_epoch before do_configure after do_patch
+
+python create_source_date_epoch_stamp() {
+    source_date_epoch = oe.reproducible.get_source_date_epoch(d, d.getVar('S'))
+    oe.reproducible.epochfile_write(source_date_epoch, d.getVar('SDE_FILE'), d)
+}
+do_unpack[postfuncs] += "create_source_date_epoch_stamp"
+
+def get_source_date_epoch_value(d):
+    return oe.reproducible.epochfile_read(d.getVar('SDE_FILE'), d)
+
 def get_layers_branch_rev(d):
     layers = (d.getVar("BBLAYERS") or "").split()
     layers_branch_rev = ["%-20s = \"%s:%s\"" % (os.path.basename(i), \
