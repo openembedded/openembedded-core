@@ -51,15 +51,6 @@
 #
 # Once the value is determined, it is stored in the recipe's SDE_FILE.
 
-BUILD_REPRODUCIBLE_BINARIES ??= '1'
-inherit reproducible_build_simple
-
-SDE_DIR = "${WORKDIR}/source-date-epoch"
-SDE_FILE = "${SDE_DIR}/__source_date_epoch.txt"
-SDE_DEPLOYDIR = "${WORKDIR}/deploy-source-date-epoch"
-
-# A SOURCE_DATE_EPOCH of '0' might be misinterpreted as no SDE
-export SOURCE_DATE_EPOCH_FALLBACK ??= "1302044400"
 
 SSTATETASKS += "do_deploy_source_date_epoch"
 
@@ -103,5 +94,3 @@ do_unpack[postfuncs] += "create_source_date_epoch_stamp"
 def get_source_date_epoch_value(d):
     return oe.reproducible.epochfile_read(d.getVar('SDE_FILE'), d)
 
-export SOURCE_DATE_EPOCH ?= "${@get_source_date_epoch_value(d)}"
-BB_HASHBASE_WHITELIST += "SOURCE_DATE_EPOCH"
