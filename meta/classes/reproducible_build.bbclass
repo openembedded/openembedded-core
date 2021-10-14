@@ -129,10 +129,6 @@ def get_source_date_epoch_value(d):
             s = f.read()
             try:
                 source_date_epoch = int(s)
-                # workaround for old sstate with SDE_FILE content being 0 - use SOURCE_DATE_EPOCH_FALLBACK
-                if source_date_epoch == 0 :
-                    source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
-                    bb.warn("SOURCE_DATE_EPOCH value from sstate '%s' is deprecated/invalid. Reverting to SOURCE_DATE_EPOCH_FALLBACK '%s'" % (s, source_date_epoch))
             except ValueError:
                 bb.warn("SOURCE_DATE_EPOCH value '%s' is invalid. Reverting to SOURCE_DATE_EPOCH_FALLBACK" % s)
                 source_date_epoch = int(d.getVar('SOURCE_DATE_EPOCH_FALLBACK'))
