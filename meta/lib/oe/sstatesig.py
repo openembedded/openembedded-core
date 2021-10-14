@@ -489,7 +489,7 @@ def OEOuthashBasic(path, sigfile, task, d):
     include_timestamps = False
     include_root = True
     if task == "package":
-        include_timestamps = d.getVar('BUILD_REPRODUCIBLE_BINARIES') == '1'
+        include_timestamps = True
         include_root = False
     extra_content = d.getVar('HASHEQUIV_HASH_VERSION')
 
