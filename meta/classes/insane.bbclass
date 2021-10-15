@@ -26,6 +26,8 @@ WARN_QA ?= " libdir xorg-driver-abi \
             invalid-packageconfig host-user-contaminated uppercase-pn patch-fuzz \
             mime mime-xdg unlisted-pkg-lics unhandled-features-check \
             missing-update-alternatives native-last missing-ptest \
+            license-exists license-no-generic license-syntax license-format \
+            license-incompatible license-file-missing \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
