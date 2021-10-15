@@ -194,6 +194,7 @@ PACKAGECONFIG[pie] = "--enable-pie,--disable-pie,,"
 PACKAGECONFIG[seccomp] = "--enable-seccomp,--disable-seccomp,libseccomp"
 # libnfs is currently provided by meta-kodi
 PACKAGECONFIG[libnfs] = "--enable-libnfs,--disable-libnfs,libnfs"
+PACKAGECONFIG[pmem] = "--enable-libpmem,--disable-libpmem,pmdk"
 
 INSANE_SKIP:${PN} = "arch"
 
