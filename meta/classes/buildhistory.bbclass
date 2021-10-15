@@ -287,7 +287,7 @@ python buildhistory_emit_pkghistory() {
             r = bb.utils.vercmp((pkge, pkgv, pkgr), (last_pkge, last_pkgv, last_pkgr))
             if r < 0:
                 msg = "Package version for package %s went backwards which would break package feeds (from %s:%s-%s to %s:%s-%s)" % (pkg, last_pkge, last_pkgv, last_pkgr, pkge, pkgv, pkgr)
-                package_qa_handle_error("version-going-backwards", msg, d)
+                oe.qa.handle_error("version-going-backwards", msg, d)
 
         pkginfo = PackageInfo(pkg)
         # Apparently the version can be different on a per-package basis (see Python)
@@ -321,6 +321,7 @@ python buildhistory_emit_pkghistory() {
 
     # Create files-in-<package-name>.txt files containing a list of files of each recipe's package
     bb.build.exec_func("buildhistory_list_pkg_files", d)
+    oe.qa.exit_if_errors(d)
 }
 
 python buildhistory_emit_outputsigs() {
