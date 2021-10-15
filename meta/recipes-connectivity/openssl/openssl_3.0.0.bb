@@ -18,11 +18,6 @@ SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI:append:riscv32 = " \
-           file://0003-Add-support-for-io_pgetevents_time64-syscall.patch \
-           file://0004-Fixup-support-for-io_pgetevents_time64-syscall.patch \
-           "
-
 SRC_URI[sha256sum] = "59eedfcb46c25214c9bd37ed6078297b4df01d012267fe9e9eee31f61bc70536"
 
 inherit lib_package multilib_header multilib_script ptest perlnative
