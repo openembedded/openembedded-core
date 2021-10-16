@@ -30,5 +30,7 @@ def riscv_get_do_compile_depends(d):
         return "virtual/kernel:do_deploy"
     if 'u-boot.bin' in sbi_payload:
         return "virtual/bootloader:do_deploy"
+    if sbi_fdt != "":
+        return "virtual/kernel:do_deploy"
 
     return ""
