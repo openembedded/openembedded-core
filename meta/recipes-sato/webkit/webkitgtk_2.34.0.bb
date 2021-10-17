@@ -33,6 +33,7 @@ CVE_PRODUCT = "webkitgtk webkitgtk\+"
 
 DEPENDS = " \
           ruby-native \
+          gperf-native \
           cairo \
           harfbuzz \
           jpeg \
