@@ -37,6 +37,8 @@ REQUIRED_DISTRO_FEATURES += "systemd overlayfs"
 inherit systemd features_check
 
 python do_create_overlayfs_units() {
+    from oe.overlayfs import mountUnitName
+
     CreateDirsUnitTemplate = """[Unit]
 Description=Overlayfs directories setup
 Requires={DATA_MOUNT_UNIT}
@@ -66,9 +68,22 @@ Options=lowerdir={LOWERDIR},upperdir={DATA_MOUNT_POINT}/upper{LOWERDIR},workdir=
 [Install]
 WantedBy=multi-user.target
 """
+    AllOverlaysTemplate = """[Unit]
+Description=Groups all overlays required by {PN} in one unit
+After={ALL_OVERLAYFS_UNITS}
+Requires={ALL_OVERLAYFS_UNITS}
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+RemainAfterExit=true
+
+[Install]
+WantedBy=local-fs.target
+"""
 
     def prepareUnits(data, lower):
-        from oe.overlayfs import mountUnitName, helperUnitName
+        from oe.overlayfs import helperUnitName
 
         args = {
             'DATA_MOUNT_POINT': data,
@@ -83,10 +98,27 @@ WantedBy=multi-user.target
         with open(os.path.join(d.getVar('WORKDIR'), helperUnitName(lower)), 'w') as f:
             f.write(CreateDirsUnitTemplate.format(**args))
 
+    def prepareGlobalUnit(dependentUnits):
+        from oe.overlayfs import allOverlaysUnitName
+        args = {
+            'ALL_OVERLAYFS_UNITS': " ".join(dependentUnits),
+            'PN': d.getVar('PN')
+        }
+
+        with open(os.path.join(d.getVar('WORKDIR'), allOverlaysUnitName(d)), 'w') as f:
+            f.write(AllOverlaysTemplate.format(**args))
+
+    mountUnitList = []
     overlayMountPoints = d.getVarFlags("OVERLAYFS_MOUNT_POINT")
     for mountPoint in overlayMountPoints:
         for lower in d.getVarFlag('OVERLAYFS_WRITABLE_PATHS', mountPoint).split():
             prepareUnits(d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint), lower)
+            mountUnitList.append(mountUnitName(lower))
+
+    # set up one unit, which depends on all mount units, so users can set
+    # only one dependency in their units to make sure software starts
+    # when all overlays are mounted
+    prepareGlobalUnit(mountUnitList)
 }
 
 # we need to generate file names early during parsing stage
@@ -95,7 +127,7 @@ python () {
 
     unitList = unitFileList(d)
     for unit in unitList:
-        d.appendVar('SYSTEMD_SERVICE:' + d.getVar('PN'), ' ' + unit);
+        d.appendVar('SYSTEMD_SERVICE:' + d.getVar('PN'), ' ' + unit)
         d.appendVar('FILES:' + d.getVar('PN'), ' ' + strForBash(unit))
 
     d.setVar('OVERLAYFS_UNIT_LIST', ' '.join([strForBash(s) for s in unitList]))
