@@ -9,5 +9,5 @@ inherit pypi setuptools3
 
 BBCLASSEXTEND = "native"
 
-DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
-RDEPENDS:${PN} += "${PYTHON_PN}-six ${PYTHON_PN}-pyparsing"
+DEPENDS += "${PYTHON_PN}-setuptools-native"
+RDEPENDS:${PN} += "${PYTHON_PN}-pyparsing"
