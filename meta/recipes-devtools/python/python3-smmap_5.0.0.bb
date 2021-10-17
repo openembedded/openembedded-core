@@ -7,11 +7,11 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://PKG-INFO;beginline=8;endline=8;md5=e910b35b0ef4e1f665b9a75d6afb7709"
 
-inherit pypi
+inherit pypi setuptools3
 
 PYPI_PACKAGE = "smmap"
 
-SRC_URI[sha256sum] = "7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182"
+SRC_URI[sha256sum] = "c840e62059cd3be204b0c9c9f74be2c09d5648eddd4580d9314c3ecde0b30936"
 
 RDEPENDS:${PN} += "${PYTHON_PN}-codecs \
                    ${PYTHON_PN}-mmap \
