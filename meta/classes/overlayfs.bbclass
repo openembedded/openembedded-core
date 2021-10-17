@@ -92,9 +92,11 @@ WantedBy=local-fs.target
             'LOWERDIR': lower,
         }
 
+        bb.debug(1, "Generate systemd unit %s" % mountUnitName(lower))
         with open(os.path.join(d.getVar('WORKDIR'), mountUnitName(lower)), 'w') as f:
             f.write(MountUnitTemplate.format(**args))
 
+        bb.debug(1, "Generate helper systemd unit %s" % helperUnitName(lower))
         with open(os.path.join(d.getVar('WORKDIR'), helperUnitName(lower)), 'w') as f:
             f.write(CreateDirsUnitTemplate.format(**args))
 
@@ -105,13 +107,17 @@ WantedBy=local-fs.target
             'PN': d.getVar('PN')
         }
 
+        bb.debug(1, "Generate systemd unit with all overlays %s" % allOverlaysUnitName(d))
         with open(os.path.join(d.getVar('WORKDIR'), allOverlaysUnitName(d)), 'w') as f:
             f.write(AllOverlaysTemplate.format(**args))
 
     mountUnitList = []
     overlayMountPoints = d.getVarFlags("OVERLAYFS_MOUNT_POINT")
     for mountPoint in overlayMountPoints:
+        bb.debug(1, "Process variable flag %s" % mountPoint)
         for lower in d.getVarFlag('OVERLAYFS_WRITABLE_PATHS', mountPoint).split():
+            bb.debug(1, "Prepare mount unit for %s with data mount point %s" %
+                     (lower, d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint)))
             prepareUnits(d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint), lower)
             mountUnitList.append(mountUnitName(lower))
 
