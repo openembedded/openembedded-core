@@ -8,10 +8,13 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 class OverlayFSTests(OESelftestTestCase):
     """Overlayfs class usage tests"""
 
-    def getline(self, res, line):
-        for l in res.output.split('\n'):
+    def getline_qemu(self, out, line):
+        for l in out.split('\n'):
             if line in l:
                 return l
+
+    def getline(self, res, line):
+        return self.getline_qemu(res.output, line)
 
     def add_overlay_conf_to_machine(self):
         machine_inc = """
@@ -154,18 +157,13 @@ EOT
 
         bitbake('core-image-minimal')
 
-        def getline_qemu(out, line):
-            for l in out.split('\n'):
-                if line in l:
-                    return l
-
         with runqemu('core-image-minimal') as qemu:
             # Check that we have /mnt/overlay fs mounted as tmpfs and
             # /usr/share/my-application as an overlay (see overlayfs-user recipe)
             status, output = qemu.run_serial("/bin/mount -t tmpfs,overlay")
 
-            line = getline_qemu(output, "on /mnt/overlay")
+            line = self.getline_qemu(output, "on /mnt/overlay")
             self.assertTrue(line and line.startswith("tmpfs"), msg=output)
 
-            line = getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/my-application")
+            line = self.getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/my-application")
             self.assertTrue(line and line.startswith("overlay"), msg=output)
