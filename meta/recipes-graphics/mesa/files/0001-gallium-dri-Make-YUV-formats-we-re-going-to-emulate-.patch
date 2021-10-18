@@ -1,0 +1,52 @@
+commit 8bd63cd28939d79d6681943b840627eaa3614ee4
+Author: Pablo Saavedra <psaavedra@igalia.com>
+Date:   Mon Oct 18 15:48:42 2021 +0200
+
+    gallium/dri: Make YUV formats we're going to emulate external-only.
+    
+    If we're going to have to bind them as separate planes with colorspace
+    conversion for sampling on the frontend, then we need to report that
+    they're only for external-image samplers, otherwise the lowering won't be
+    applied.
+    
+    Fixes: 4e3a7dcf ("gallium: enable EGL_EXT_image_dma_buf_import_modifiers unconditionally")
+    Reviewed-by: Jose Maria Casanova Crespo <jmcasanova@igalia.com>
+    Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/13038>
+
+Upstream-Status: Backport [https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/13038]
+
+diff --git a/src/gallium/frontends/dri/dri2.c b/src/gallium/frontends/dri/dri2.c
+index b0c0d7e..ef8df5a 100644
+--- a/src/gallium/frontends/dri/dri2.c
++++ b/src/gallium/frontends/dri/dri2.c
+@@ -1445,16 +1445,24 @@ dri2_query_dma_buf_modifiers(__DRIscreen *_screen, int fourcc, int max,
+ 
+    format = map->pipe_format;
+ 
++   bool native_sampling = pscreen->is_format_supported(pscreen, format, screen->target, 0, 0,
++                                                       PIPE_BIND_SAMPLER_VIEW);
+    if (pscreen->is_format_supported(pscreen, format, screen->target, 0, 0,
+-                                     PIPE_BIND_RENDER_TARGET) ||
+-        pscreen->is_format_supported(pscreen, format, screen->target, 0, 0,
+-                                     PIPE_BIND_SAMPLER_VIEW) ||
+-        dri2_yuv_dma_buf_supported(screen, map)) {
+-      if (pscreen->query_dmabuf_modifiers != NULL)
++                                    PIPE_BIND_RENDER_TARGET) ||
++       native_sampling ||
++       dri2_yuv_dma_buf_supported(screen, map))  {
++      if (pscreen->query_dmabuf_modifiers != NULL) {
+          pscreen->query_dmabuf_modifiers(pscreen, format, max, modifiers,
+                                          external_only, count);
+-      else
++         if (!native_sampling && external_only) {
++            /* To support it using YUV lowering, we need it to be samplerExternalOES.
++             */
++            for (int i = 0; i < *count; i++)
++               external_only[i] = true;
++         }
++      } else {
+          *count = 0;
++      }
+       return true;
+    }
+    return false;
