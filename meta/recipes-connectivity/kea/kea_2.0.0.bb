@@ -3,12 +3,11 @@ DESCRIPTION = "Kea is the next generation of DHCP software developed by ISC. It 
 HOMEPAGE = "http://kea.isc.org"
 SECTION = "connectivity"
 LICENSE = "MPL-2.0 & Apache-2.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=68d95543d2096459290a4e6b9ceccffa"
+LIC_FILES_CHKSUM = "file://COPYING;md5=07b7477a1d815a4aacab73b1531f577a"
 
 DEPENDS = "boost log4cplus openssl"
 
 SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.gz \
-           file://0001-keactrl.in-create-var-lib-kea-and-var-run-kea-folder.patch \
            file://kea-dhcp4.service \
            file://kea-dhcp6.service \
            file://kea-dhcp-ddns.service \
@@ -18,11 +17,8 @@ SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.gz \
            file://fix-multilib-conflict.patch \
            file://fix_pid_keactrl.patch \
            file://0001-src-lib-log-logger_unittest_support.cc-do-not-write-.patch \
-           file://0001-ax_cpp11.m4-Include-memory-header.patch \
-           file://0001-include-limits.h.patch \
-           file://0001-add-missing-headers-in-timer_mgr.cc.patch \
            "
-SRC_URI[sha256sum] = "486ca7abedb9d6fdf8e4344ad8688d1171f2ef0f5506d118988aadeae80a1d39"
+SRC_URI[sha256sum] = "05854e0c3871b452edace18eccc6ab618940e0249fbe7c232a36d06ae59bf41d"
 
 inherit autotools systemd update-rc.d upstream-version-is-even
 
