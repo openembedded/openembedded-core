@@ -18,10 +18,10 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
            file://lighttpd.conf \
            file://lighttpd \
            file://0001-Use-pkg-config-for-pcre-dependency-instead-of-config.patch \
-           file://0001-meson-add-with_zstd-to-meson_options.txt.patch \
+           file://0002-define-__BEGIN_DECLS-__END_DECLS-if-needed.patch \
            "
 
-SRC_URI[sha256sum] = "fb953db273daef08edb6e202556cae8a3d07eed6081c96bd9903db957d1084d5"
+SRC_URI[sha256sum] = "4bb1dd859e541a3131e5be101557d2e1195b4129d3a849a3a6fbd21fe1c946f0"
 
 DEPENDS = "virtual/crypt"
 
