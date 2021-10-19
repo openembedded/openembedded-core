@@ -13,7 +13,7 @@ inherit autotools
 SRC_URI = "http://www.thrysoee.dk/editline/${BP}.tar.gz \
            file://stdc-predef.patch \
           "
-SRC_URI[sha256sum] = "3023b498ad593fd7745ae3b20abad546de506b67b8fbb5579637ca69ab82dbc9"
+SRC_URI[sha256sum] = "6792a6a992050762edcca28ff3318cdb7de37dccf7bc30db59fcd7017eed13c5"
 
 BBCLASSEXTEND = "native nativesdk"
 
