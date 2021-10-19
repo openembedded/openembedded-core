@@ -17,7 +17,7 @@ SRC_URI = "git://git.tartarus.org/simon/puzzles.git;branch=main \
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "8f3413c31ffd43c4ebde40894ac1b2f7cdf222c3"
+SRCREV = "42cbd7688a7f05e0a5d56a603a04293307c1e1b2"
 PE = "2"
 PV = "0.0+git${SRCPV}"
 
