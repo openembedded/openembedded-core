@@ -11,12 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=425f6fdc767cc067518eef9bbdf4ab7b"
 
 SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://0001-replace-krb5-config-with-pkg-config.patch \
-           file://cve-2021-22945.patch \
-           file://cve-2021-22946.patch \
-           file://cve-2021-22947.patch \
-"
+           "
 
-SRC_URI[sha256sum] = "98530b317dc95ccb324bbe4f834f07bb642fbc393b794ddf3434f246a71ea44a"
+SRC_URI[sha256sum] = "de62c4ab9a9316393962e8b94777a570bb9f71feb580fb4475e412f2f9387851"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
