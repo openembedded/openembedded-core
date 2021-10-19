@@ -14,13 +14,12 @@ LIC_FILES_CHKSUM = " \
 "
 SECTION = "base"
 DEPENDS = "lzo util-linux zlib"
-DEPENDS:append:class-target = " udev"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            file://0001-btrfs-tools-include-linux-const.h-to-fix-build-with-.patch \
            "
-SRCREV = "e4ac7d4f67b330a3b27a4a50f73e94b1e072ae56"
+SRCREV = "35f17bc49cdf760d8f3710fe2c301b933d991fd6"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
@@ -35,6 +34,7 @@ PACKAGECONFIG[convert] = "--enable-convert --with-convert=ext2,--disable-convert
 PACKAGECONFIG[zoned] = "--enable-zoned,--disable-zoned"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python3-setuptools-native"
 PACKAGECONFIG[zstd] = "--enable-zstd,--disable-zstd,zstd"
+PACKAGECONFIG[udev] = "--enable-libudev,--disable-libudev,udev"
 
 # Pick only one crypto provider
 PACKAGECONFIG[crypto-builtin] = "--with-crypto=builtin"
