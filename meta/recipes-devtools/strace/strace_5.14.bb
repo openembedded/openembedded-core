@@ -52,4 +52,3 @@ RDEPENDS:${PN}-ptest:append:libc-glibc = "\
 "
 
 BBCLASSEXTEND = "native"
-TOOLCHAIN = "gcc"
