@@ -108,7 +108,7 @@ do_compile () {
         fi
     fi
 
-    if [ -n "${UBOOT_ENV}" && "${UBOOT_ENV_SUFFIX}" = "scr" ]
+    if [ -n "${UBOOT_ENV}" ] && [ "${UBOOT_ENV_SUFFIX}" = "scr" ]
     then
         ${UBOOT_MKIMAGE} -C none -A ${UBOOT_ARCH} -T script -d ${WORKDIR}/${UBOOT_ENV_SRC} ${WORKDIR}/${UBOOT_ENV_BINARY}
     fi
