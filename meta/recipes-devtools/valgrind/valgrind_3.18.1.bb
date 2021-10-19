@@ -43,15 +43,8 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://s390x_vec_op_t.patch \
            file://0001-none-tests-fdleak_cmsg.stderr.exp-adjust-tmp-paths.patch \
            file://0001-memcheck-tests-Fix-timerfd-syscall-test.patch \
-           file://0001-Add-missing-musl.supp.patch \
-           file://0001-drd-tests-swapcontext-Add-SIGALRM-handler-to-avoid-s.patch \
-           file://6da22a4d246519cd1a638cfc7eff00cdd74413c4.patch \
-           file://200b6a5a0ea3e1e154663b0fc575bfe2becf177d.patch \
-           file://a1364805fc74b5690f763033c0c9b43f27613572.patch \
-           file://52ed51fc35f8a6148c2940eb46932b02dd3b9b23.patch \
            "
-SRC_URI[md5sum] = "afe11b5572c3121a781433b7c0ab741b"
-SRC_URI[sha256sum] = "ad3aec668e813e40f238995f60796d9590eee64a16dff88421430630e69285a2"
+SRC_URI[sha256sum] = "00859aa13a772eddf7822225f4b46ee0d39afbe071d32778da4d99984081f7f5"
 UPSTREAM_CHECK_REGEX = "valgrind-(?P<pver>\d+(\.\d+)+)\.tar"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64).*-linux'
