@@ -111,6 +111,9 @@ PACKAGECONFIG:remove:libc-musl = " \
     utmp \
 "
 
+# https://github.com/seccomp/libseccomp/issues/347
+PACKAGECONFIG:remove:mipsarch = "seccomp"
+
 CFLAGS:append:libc-musl = " -D__UAPI_DEF_ETHHDR=0 "
 
 # Some of the dependencies are weak-style recommends - if not available at runtime,
