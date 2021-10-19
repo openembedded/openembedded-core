@@ -13,4 +13,4 @@ GNOMEBASEBUILDCLASS = "meson"
 
 inherit gnomebase gsettings gobject-introspection gettext
 
-SRC_URI[archive.sha256sum] = "f1b83bf023c0261eacd0ed36066b76f4a520bbcb14bb69c402b7959257125685"
+SRC_URI[archive.sha256sum] = "77289972e596d044583f0c056306d8f1dbd8adcf912910a50da0a663e65332ed"
