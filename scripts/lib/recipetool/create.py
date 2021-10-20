@@ -1188,10 +1188,11 @@ def guess_license(srctree, d):
 
     licenses = []
     licspecs = ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp]l-v10']
+    skip_extensions = (".html", ".js", ".json", ".svg", ".ts")
     licfiles = []
     for root, dirs, files in os.walk(srctree):
         for fn in files:
-            if fn.endswith(".html") or fn.endswith(".js") or fn.endswith(".json") or fn.endswith(".svg") or fn.endswith(".ts"):
+            if fn.endswith(skip_extensions):
                 continue
             for spec in licspecs:
                 if fnmatch.fnmatch(fn, spec):
