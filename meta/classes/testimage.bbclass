@@ -317,10 +317,6 @@ def testimage_main(d):
     if d.getVar("TESTIMAGE_BOOT_PATTERNS"):
         target_kwargs['boot_patterns'] = get_testimage_boot_patterns(d)
 
-    # TODO: Currently BBPATH is needed for custom loading of targets.
-    # It would be better to find these modules using instrospection.
-    target_kwargs['target_modules_path'] = d.getVar('BBPATH')
-
     # hardware controlled targets might need further access
     target_kwargs['powercontrol_cmd'] = d.getVar("TEST_POWERCONTROL_CMD") or None
     target_kwargs['powercontrol_extra_args'] = d.getVar("TEST_POWERCONTROL_EXTRA_ARGS") or ""
