@@ -5,6 +5,7 @@
 #
 
 import os
+import sys
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 from oeqa.core.target.ssh import OESSHTarget
@@ -119,8 +120,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
             # XXX: Don't base your targets on this code it will be refactored
             # in the near future.
             # Custom target module loading
-            target_modules_path = kwargs.get('target_modules_path', '')
-            controller = OERuntimeTestContextExecutor.getControllerModule(target_type, target_modules_path)
+            controller = OERuntimeTestContextExecutor.getControllerModule(target_type)
             target = controller(logger, target_ip, server_ip, **kwargs)
 
         return target
@@ -130,15 +130,15 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     # AttributeError raised if not found.
     # ImportError raised if a provided module can not be imported.
     @staticmethod
-    def getControllerModule(target, target_modules_path):
-        controllerslist = OERuntimeTestContextExecutor._getControllerModulenames(target_modules_path)
+    def getControllerModule(target):
+        controllerslist = OERuntimeTestContextExecutor._getControllerModulenames()
         controller = OERuntimeTestContextExecutor._loadControllerFromName(target, controllerslist)
         return controller
 
     # Return a list of all python modules in lib/oeqa/controllers for each
     # layer in bbpath
     @staticmethod
-    def _getControllerModulenames(target_modules_path):
+    def _getControllerModulenames():
 
         controllerslist = []
 
@@ -153,9 +153,8 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 else:
                     raise RuntimeError("Duplicate controller module found for %s. Layers should create unique controller module names" % module)
 
-        extpath = target_modules_path.split(':')
-        for p in extpath:
-            controllerpath = os.path.join(p, 'lib', 'oeqa', 'controllers')
+        for p in sys.path:
+            controllerpath = os.path.join(p, 'oeqa', 'controllers')
             if os.path.exists(controllerpath):
                 add_controller_list(controllerpath)
         return controllerslist
