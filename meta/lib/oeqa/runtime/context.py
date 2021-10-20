@@ -175,16 +175,12 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     # Search for and return a controller or None from given module name
     @staticmethod
     def _loadControllerFromModule(target, modulename):
-        obj = None
-        # import module, allowing it to raise import exception
-        module = __import__(modulename, globals(), locals(), [target])
-        # look for target class in the module, catching any exceptions as it
-        # is valid that a module may not have the target class.
         try:
-            obj = getattr(module, target)
-        except:
-            obj = None
-        return obj
+            import importlib
+            module = importlib.import_module(modulename)
+            return getattr(module, target)
+        except AttributeError:
+            return None
 
     @staticmethod
     def readPackagesManifest(manifest):
