@@ -31,7 +31,6 @@ exclude_packages = [
 	'bootchart2-doc',
 	'epiphany',
 	'gcr',
-	'git',
 	'glide',
 	'go-dep',
 	'go-helloworld',
@@ -44,7 +43,6 @@ exclude_packages = [
 	'libcap-ng',
 	'libjson',
 	'libproxy',
-	'lsb-release',
 	'lttng-tools-dbg',
 	'lttng-tools-ptest',
 	'ltp',
@@ -55,15 +53,12 @@ exclude_packages = [
 	'pybootchartgui',
 	'qemu',
 	'quilt-ptest',
-	"rpm",
 	'rsync',
 	'ruby',
 	'stress-ng',
 	'systemd-bootchart',
 	'systemtap',
 	'valgrind-ptest',
-	'vim',
-	'webkitgtk',
 	]
 
 def is_excluded(package):
