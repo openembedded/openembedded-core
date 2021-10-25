@@ -1,7 +1,5 @@
-From df2cd898e48208f26320d40c3ed6b19c75c27142 Mon Sep 17 00:00:00 2001
 From: Marek Vasut <marex@denx.de>
-Date: Thu, 17 Sep 2015 00:43:15 +0200
-Subject: [PATCH] libtool: Fix support for NIOS2 processor
+Subject: [PATCH 07/12] libtool: Fix support for NIOS2 processor
 
 The name of the system contains the string "nios2". This string
 is caught by the some of the greedy checks for OS/2 in libtool,
@@ -13,7 +11,10 @@ checks to prevent the OS/2 check incorrectly trapping the nios2
 as well.
 
 Signed-off-by: Marek Vasut <marex@denx.de>
-Upstream-Status: Submitted
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00021.html]
+
 ---
  build-aux/ltmain.in | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)

@@ -1,7 +1,5 @@
-From e82c06584f02e3e4487aa73aa05981e2a35dc6d1 Mon Sep 17 00:00:00 2001
 From: Mingli Yu <mingli.yu@windriver.com>
-Date: Tue, 13 Apr 2021 07:17:29 +0000
-Subject: [PATCH] Makefile.am: make sure autoheader run before automake
+Subject: [PATCH 10/12] Makefile.am: make sure autoheader run before automake
 
 When use automake to generate Makefile.in from Makefile.am, there
 comes below race:
@@ -10,7 +8,10 @@ comes below race:
 It is because the file config-h.in in updating process by autoheader,
 so make automake run after autoheader to avoid the above race.
 
-Upstream-Status: Submitted [libtool-patches@gnu.org maillist]
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00020.html]
 
 Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
 ---

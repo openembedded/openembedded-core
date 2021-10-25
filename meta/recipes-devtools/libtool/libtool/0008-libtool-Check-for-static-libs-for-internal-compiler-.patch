@@ -1,8 +1,7 @@
-From 40a2da75e6d95cc7c498ebda95ab19ae0db2ebfb Mon Sep 17 00:00:00 2001
+From b9993338080325a6e2b2ec94ca0ece80e7fa3fb6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 26 Jan 2019 12:54:26 -0800
-Subject: [PATCH] libtool: Check for static libs for internal compiler
- libraries
+Subject: [PATCH 08/12] libtool: Check for static libs for internal compiler libraries
 
 Libtool checks only for libraries linked as -l* when trying to
 find internal compiler libraries. Clang, however uses the absolute
@@ -10,11 +9,13 @@ path to link its internal libraries e.g. compiler_rt. This patch
 handles clang's statically linked libraries when finding internal
 compiler libraries.
 
-https://crbug.com/749263
-
-Upstream-Status: Submitted [https://debbugs.gnu.org/cgi/bugreport.cgi?bug=27866]
-
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+https://crbug.com/749263
+https://debbugs.gnu.org/cgi/bugreport.cgi?bug=27866
+
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00016.html]
 ---
  m4/libtool.m4 | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

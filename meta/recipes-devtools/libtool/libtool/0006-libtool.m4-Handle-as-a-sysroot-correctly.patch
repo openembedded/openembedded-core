@@ -1,16 +1,18 @@
-Upstream-Status: Pending
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH 06/12] libtool.m4: Handle "/" as a sysroot correctly
 
-This patch updates libtool.m4 (and its output) to resolve a problem
-with variable 'lt_sysroot' not being properly updated if the option
-'--with[-libtool]-sysroot' is not provided when running the 'configure'
-script for a package.
+Update libtool.m4 to resolve a problem with lt_sysroot not being properly
+updated if the option '--with[-libtool]-sysroot' is not provided when
+running the 'configure' script for a package so that "/" as a sysroot
+is handled correctly by libtool.
 
-I have also reported the problem to libtool here
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
+Upstream Report:
 http://lists.gnu.org/archive/html/bug-libtool/2013-09/msg00005.html
 
-Signed-off-by: Hans Beckerus <hans.beckerus at gmail.com>
-Updated by: Robert Yang <liezhi.yang@windriver.com>
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00018.html]
+
 ---
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
 --- a/m4/libtool.m4

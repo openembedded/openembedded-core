@@ -1,13 +1,13 @@
-Upstream-Status: Inappropriate [embedded specific]
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH 04/12] ltmain.sh: Fix sysroot paths being encoded into RPATHs
 
-Enalbing sysroot support exposed a bug where the final library
-had an RPATH encoded into it which still pointed to the sysroot.
-This works around the issue until it gets sorted out upstream.
+There is a bug where RPATHs could end up containing sysroot values when
+cross compiling which is obviously incorrect. Strip out sysroot components
+from libdir when building RPATH values to avoid this.
 
-Fix suggested by Richard Purdie <richard.purdie@intel.com>
-Signed-off-by: Scott Garman <scott.a.garman@intel.com>
-Signed-off-by: Randy Witt <randy.e.witt@linux.intel.com>
-Updated by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00009.html]
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
 --- a/build-aux/ltmain.in
