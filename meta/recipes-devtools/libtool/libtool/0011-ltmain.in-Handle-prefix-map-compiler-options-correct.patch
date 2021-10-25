@@ -1,8 +1,12 @@
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH 11/12] ltmain.in: Handle prefix-map compiler options correctly
+
 If lto is enabled, we need the prefix-map variables to be passed to the linker.
 Add these to the list of options libtool passes through.
 
-Upstream-Status: Pending
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00019.html]
 
 Index: libtool-2.4.6/build-aux/ltmain.in
 ===================================================================

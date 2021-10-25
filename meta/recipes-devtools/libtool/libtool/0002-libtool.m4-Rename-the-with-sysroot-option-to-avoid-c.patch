@@ -1,16 +1,17 @@
-Upstream-Status: Pending
+From: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH 02/12] libtool.m4: Rename the --with-sysroot option to avoid conflict with gcc/binutils
 
 This patch renames the --with-sysroot option to --with-libtool-sysroot
 to avoid namespace conflict with binutils, gcc and other toolchain
-components.
+components since these componets also add that option to configure
+and this becomes confusing and conflicting otherwise.
 
-I also reported the problem to libtool here
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
+Upstream report:
 http://lists.gnu.org/archive/html/libtool/2010-10/msg00048.html
 
--Khem Raj <raj.khem@gmail.com>
-
-Updated by: Robert Yang <liezhi.yang@windriver.com>
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00014.html]
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
 --- a/m4/libtool.m4
