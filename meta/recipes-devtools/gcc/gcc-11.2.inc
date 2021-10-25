@@ -42,7 +42,6 @@ SRC_URI = "\
            file://0010-MIPS64-Default-to-N64-ABI.patch \
            file://0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch \
            file://0012-gcc-Fix-argument-list-too-long-error.patch \
-           file://0013-Disable-sdt.patch \
            file://0014-libtool.patch \
            file://0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
            file://0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
