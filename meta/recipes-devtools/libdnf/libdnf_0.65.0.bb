@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master \
            file://0001-libdnf-dnf-context.cpp-do-not-try-to-access-BDB-data.patch \
            "
 
-SRCREV = "e5ecbc1e5062631f44cb94a3b73d9310db0ff386"
+SRCREV = "cee3e1c59f849d9be1bb8d7db3090cea5c59f4b6"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
