@@ -50,8 +50,6 @@ SRC_URI = "\
            file://0018-export-CPP.patch \
            file://0019-Ensure-target-gcc-headers-can-be-included.patch \
            file://0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch \
-           file://0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
-           file://0022-aarch64-Add-support-for-musl-ldso.patch \
            file://0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch \
            file://0024-handle-sysroot-support-for-nativesdk-gcc.patch \
            file://0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch \
