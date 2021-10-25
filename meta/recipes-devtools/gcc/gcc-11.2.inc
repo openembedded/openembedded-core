@@ -51,7 +51,6 @@ SRC_URI = "\
            file://0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch \
            file://0024-handle-sysroot-support-for-nativesdk-gcc.patch \
            file://0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch \
-           file://0026-Fix-various-_FOR_BUILD-and-related-variables.patch \
            file://0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch \
            file://0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch \
            file://0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
@@ -64,6 +63,7 @@ SRC_URI = "\
            file://0036-mingw32-Enable-operation_not_supported.patch \
            file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0041-apply-debug-prefix-maps-before-checksumming-DIEs.patch \
+           file://0006-If-CXXFLAGS-contains-something-unsupported-by-the-bu.patch \
 "
 SRC_URI[sha256sum] = "d08edc536b54c372a1010ff6619dd274c0f1603aa49212ba20f7aa2cda36fa8b"
 
