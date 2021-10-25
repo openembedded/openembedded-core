@@ -24,12 +24,14 @@ nm = @NM
 strip = @STRIP
 pkgconfig = 'pkg-config'
 
-[properties]
-needs_exe_wrapper = true
+[built-in options]
 c_args = @CFLAGS
 c_link_args = @LDFLAGS
 cpp_args = @CPPFLAGS
 cpp_link_args = @LDFLAGS
+
+[properties]
+needs_exe_wrapper = true
 sys_root = @OECORE_TARGET_SYSROOT
 
 [host_machine]
