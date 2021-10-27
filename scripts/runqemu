@@ -1349,9 +1349,14 @@ class BaseConfig(object):
             raise RunQemuError('Option gl/gl-es needs gtk or sdl option.')
 
         if self.sdl == True or self.gtk == True or self.egl_headless == True:
-            self.set_dri_path()
-            self.qemu_opt += ' -device virtio-vga-gl -display '
+            if self.gl or self.gl_es or self.egl_headless:
+                self.qemu_opt += ' -device virtio-vga-gl '
+            else:
+                self.qemu_opt += ' -device virtio-vga '
+
+            self.qemu_opt += '-display '
             if self.egl_headless == True:
+                self.set_dri_path()
                 self.qemu_opt += 'egl-headless,'
             else:
                 if self.sdl == True:
@@ -1360,8 +1365,10 @@ class BaseConfig(object):
                     self.qemu_opt += 'gtk,'
 
                 if self.gl == True:
+                    self.set_dri_path()
                     self.qemu_opt += 'gl=on,'
                 elif self.gl_es == True:
+                    self.set_dri_path()
                     self.qemu_opt += 'gl=es,'
             self.qemu_opt += 'show-cursor=on'
 
