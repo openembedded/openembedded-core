@@ -6,9 +6,18 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7"
 
 GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase distutils3-base gobject-introspection upstream-version-is-even
+inherit gnomebase distutils3-base upstream-version-is-even
 
 DEPENDS += "python3 glib-2.0"
+
+# Generating introspection data depends on a combination of native and target
+# introspection tools, and qemu to run the target tools.
+DEPENDS:append:class-target = " gobject-introspection gobject-introspection-native qemu-native prelink-native"
+
+# Even though introspection is disabled on -native, gobject-introspection package is still
+# needed for m4 macros.
+DEPENDS:append:class-native = " gobject-introspection-native"
+DEPENDS:append:class-nativesdk = " gobject-introspection-native"
 
 SRCNAME="pygobject"
 
@@ -17,8 +26,6 @@ SRC_URI = " \
     file://0001-Do-not-build-tests.patch \
 "
 SRC_URI[sha256sum] = "9b12616e32cfc792f9dc841d9c472a41a35b85ba67d3a6eb427e307a6fe4367b"
-
-UNKNOWN_CONFIGURE_WHITELIST = "introspection"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
