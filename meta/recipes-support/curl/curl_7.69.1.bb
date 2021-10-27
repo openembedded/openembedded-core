@@ -34,6 +34,11 @@ SRC_URI[sha256sum] = "2ff5e5bd507adf6aa88ff4bbafd4c7af464867ffb688be93b9930717a5
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
 CVE_CHECK_WHITELIST = "CVE-2021-22922 CVE-2021-22923 CVE-2021-22926 CVE-22945"
 
+# As per link https://security-tracker.debian.org/tracker/CVE-2021-22897
+# and https://ubuntu.com/security/CVE-2021-22897
+# This CVE issue affects Windows only Hence whitelisting this CVE
+CVE_CHECK_WHITELIST += "CVE-2021-22897"
+
 inherit autotools pkgconfig binconfig multilib_header
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} gnutls libidn proxy threaded-resolver verbose zlib"
