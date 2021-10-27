@@ -8,8 +8,8 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4e5d1baf6f20559e3bec172226a47e4e \
                     file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263 "
 
-SRC_URI = "git://github.com/asciidoc/asciidoc-py3;protocol=https;branch=9.x"
-SRCREV = "08b430eb317c584aa6f02a3c4372035a4d8b92c4"
+SRC_URI = "git://github.com/asciidoc/asciidoc-py3;protocol=https;branch=main"
+SRCREV = "4667219e473a24e8e645eb9b9fb0a7ddba322f44"
 
 DEPENDS = "libxml2-native libxslt-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
@@ -19,13 +19,8 @@ S = "${WORKDIR}/git"
 # opens /etc/xml/catalog on the host. Depends on auto-catalogs.patch
 export SGML_CATALOG_FILES="file://${STAGING_ETCDIR_NATIVE}/xml/catalog"
 
-# Not using automake
-inherit autotools-brokensep
+inherit setuptools3
 CLEANBROKEN = "1"
-
-# target and nativesdk needs python3, but for native we can use the host.
-RDEPENDS:${PN} += "python3"
-RDEPENDS:remove:class-native = "python3"
 
 BBCLASSEXTEND = "native nativesdk"
 
