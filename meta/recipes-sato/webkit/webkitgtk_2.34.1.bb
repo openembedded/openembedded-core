@@ -18,7 +18,6 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://include_xutil.patch \
            file://reduce-memory-overheads.patch \
            file://musl-lower-stack-usage.patch \
-           file://0001-ANGLE-do-not-enable-SSE-on-x86.patch \
            file://0001-Fix-build-without-opengl-or-es.patch \
            "
 
