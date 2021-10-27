@@ -10,7 +10,7 @@ inherit pypi distutils3
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
-SRC_URI[sha256sum] = "741a61baab1dbce2d8ca415effa48a2b6a964564f81a9f4f1fce4c433346c034"
+SRC_URI[sha256sum] = "fd11ba3d0fdb4c07fbc5ecbba0b1b719809420f25038f8ee3cd913d3faa3033a"
 
 do_install:append() {
     # Install as pip3 and leave pip2 as default
