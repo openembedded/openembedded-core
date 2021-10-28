@@ -15,3 +15,7 @@ do_install() {
 
 FILES_${PN} = "${sysconfdir}/pulse/client.conf.d/50-sato.conf"
 CONFFILES_${PN} = "${sysconfdir}/pulse/client.conf.d/50-sato.conf"
+
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"

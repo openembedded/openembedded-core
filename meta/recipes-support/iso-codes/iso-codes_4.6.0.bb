@@ -20,3 +20,7 @@ S = "${WORKDIR}/git"
 inherit allarch autotools
 
 FILES_${PN} += "${datadir}/xml/"
+
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"

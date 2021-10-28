@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 
 SRC_URI = "file://shutdown.desktop"
 
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}"
 
@@ -22,3 +22,6 @@ pkg_postinst_${PN} () {
 }
 
 inherit allarch
+
+# remove at next version upgrade or when output changes
+HASHEQUIV_HASH_VERSION .= ".1"

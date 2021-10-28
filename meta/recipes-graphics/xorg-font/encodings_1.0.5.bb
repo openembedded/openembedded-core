@@ -23,3 +23,7 @@ EXTRA_OECONF += "--with-encodingsdir=${datadir}/fonts/X11/encodings"
 # postinst from .inc doesn't apply to this recipe
 pkg_postinst_${PN} () {
 }
+
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"

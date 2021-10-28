@@ -21,3 +21,7 @@ do_install() {
 PACKAGES = "${PN}"
 
 FILES_${PN} = "*"
+
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"
