@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https \
            file://0001-Do-not-preserve-ownership-when-installing-example-jo.patch \
+           file://0001-Makefile-do-not-write-the-timestamp-into-compressed-.patch \
            "
 SRCREV = "e045bcd711178c11b7e797ef6b4c524658468596"
 S = "${WORKDIR}/git"
