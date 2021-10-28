@@ -36,7 +36,6 @@ SRC_URI = "\
            file://0005-optional-libstdc.patch \
            file://0006-COLLECT_GCC_OPTIONS.patch \
            file://0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
-           file://0008-fortran-cross-compile-hack.patch \
            file://0009-cpp-honor-sysroot.patch \
            file://0010-MIPS64-Default-to-N64-ABI.patch \
            file://0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch \
