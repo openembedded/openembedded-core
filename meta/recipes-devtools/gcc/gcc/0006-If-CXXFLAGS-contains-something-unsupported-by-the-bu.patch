@@ -19,6 +19,8 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
  Makefile.tpl | 2 ++
  2 files changed, 4 insertions(+)
 
+Upstream-Status: Pending [should be submittable]
+
 Index: gcc-11.2.0/Makefile.in
 ===================================================================
 --- gcc-11.2.0.orig/Makefile.in
