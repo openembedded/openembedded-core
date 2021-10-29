@@ -270,13 +270,16 @@ do_install() {
 		install -Dm 0755 ${S}/src/systemctl/systemd-sysv-install.SKELETON ${D}${systemd_system_unitdir}d-sysv-install
 	fi
 
-	chown root:systemd-journal ${D}/${localstatedir}/log/journal
+	if "${@'true' if oe.types.boolean(d.getVar('VOLATILE_LOG_DIR')) else 'false'}"; then
+		# /var/log is typically a symbolic link to inside /var/volatile,
+		# which is expected to be empty.
+		rm -rf ${D}${localstatedir}/log
+	else
+		chown root:systemd-journal ${D}${localstatedir}/log/journal
 
-	# Delete journal README, as log can be symlinked inside volatile.
-	rm -f ${D}/${localstatedir}/log/README
-
-	# journal-remote creates this at start
-	rm -rf ${D}/${localstatedir}/log/journal/remote
+		# journal-remote creates this at start
+		rm -rf ${D}${localstatedir}/log/journal/remote
+	fi
 
 	install -d ${D}${systemd_system_unitdir}/graphical.target.wants
 	install -d ${D}${systemd_system_unitdir}/multi-user.target.wants
