@@ -276,7 +276,7 @@ diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
 +
 +	modprobe capability >/dev/null 2>&1 || true
 +	if [ ! -f /etc/bind/rndc.key ]; then
-+	    /usr/sbin/rndc-confgen -a -b 512 -r /dev/urandom
++	    /usr/sbin/rndc-confgen -a -b 512
 +	    chmod 0640 /etc/bind/rndc.key
 +	fi
 +	if [ -f /var/run/named/named.pid ]; then

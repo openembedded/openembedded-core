@@ -17,7 +17,7 @@ index b2eec60..6e03936 100644
 @@ -57,6 +57,7 @@ case "$1" in
  	modprobe capability >/dev/null 2>&1 || true
  	if [ ! -f /etc/bind/rndc.key ]; then
- 	    /usr/sbin/rndc-confgen -a -b 512 -r /dev/urandom
+ 	    /usr/sbin/rndc-confgen -a -b 512
 +	    chown root:bind /etc/bind/rndc.key >/dev/null 2>&1 || true
  	    chmod 0640 /etc/bind/rndc.key
  	fi
