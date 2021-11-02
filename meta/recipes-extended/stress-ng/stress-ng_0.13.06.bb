@@ -7,9 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master \
            file://0001-Do-not-preserve-ownership-when-installing-example-jo.patch \
-           file://0001-Makefile-do-not-write-the-timestamp-into-compressed-.patch \
            "
-SRCREV = "61b454b4a3a9d052e63c78a9574ccf8a650575dc"
+SRCREV = "97fc3d7795bd36a516b5ec80a9ef85d682d234ca"
 S = "${WORKDIR}/git"
 
 DEPENDS = "coreutils-native"
