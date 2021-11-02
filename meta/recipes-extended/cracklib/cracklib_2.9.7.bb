@@ -9,18 +9,21 @@ DEPENDS = "cracklib-native zlib"
 
 EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/cracklib/cracklib-${PV}.tar.gz \
+SRC_URI = "git://github.com/cracklib/cracklib;protocol=https;branch=master \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
-           file://0001-Apply-patch-to-fix-CVE-2016-6318.patch \
            file://0002-craklib-fix-testnum-and-teststr-failed.patch"
 
-SRC_URI[md5sum] = "376790a95c1fb645e59e6e9803c78582"
-SRC_URI[sha256sum] = "59ab0138bc8cf90cccb8509b6969a024d5e58d2d02bcbdccbb9ba9b88be3fa33"
-
-UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/cracklib/files/cracklib/"
-UPSTREAM_CHECK_REGEX = "/cracklib/(?P<pver>(\d+[\.\-_]*)+)/"
+SRCREV = "f83934cf3cced0c9600c7d81332f4169f122a2cf"
+S = "${WORKDIR}/git/src"
 
 inherit autotools gettext
+
+# This is custom stuff from upstream's autogen.sh
+do_configure:prepend() {
+    mkdir -p ${S}/m4
+    echo EXTRA_DIST = *.m4 > ${S}/m4/Makefile.am
+    touch ${S}/ABOUT-NLS
+}
 
 do_install:append:class-target() {
 	create-cracklib-dict -o ${D}${datadir}/cracklib/pw_dict ${D}${datadir}/cracklib/cracklib-small
