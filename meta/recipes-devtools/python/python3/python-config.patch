@@ -14,7 +14,6 @@ as appropriate.
 Upstream-Status: Inappropriate [Embedded Specific]
 
 Signed-off-by: Tyler Hall <tylerwhall@gmail.com>
-:
 
 ---
  Misc/python-config.in | 10 +++++-----
@@ -24,11 +23,13 @@ diff --git a/Misc/python-config.in b/Misc/python-config.in
 index ebd99da..13e57ae 100644
 --- a/Misc/python-config.in
 +++ b/Misc/python-config.in
-@@ -6,7 +6,7 @@
+@@ -6,7 +6,9 @@
  import getopt
  import os
  import sys
 -import sysconfig
++import warnings
++warnings.filterwarnings("ignore", category=DeprecationWarning)
 +from distutils import sysconfig
  
  valid_opts = ['prefix', 'exec-prefix', 'includes', 'libs', 'cflags',
