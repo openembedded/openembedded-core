@@ -10,7 +10,7 @@ DEPENDS += "gperf-native"
 PV .= "+git${SRCPV}"
 SRCREV = "2457dec1a90101d720e89e8027376742e2f3c327"
 
-SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=main \
+SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=main;protocol=https \
            file://0001-configure.ac-Bump-version-to-2.5.99.patch \
            file://0001-arch-Add-riscv32-architecture-support.patch \
            file://0002-man-Add-RISCV64-to-arch-list.patch \
