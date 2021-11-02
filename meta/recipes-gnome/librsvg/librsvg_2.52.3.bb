@@ -23,10 +23,10 @@ SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.pat
            file://0005-Add-base-definitions-for-riscv64-musl-libc-0.2.93.patch \
            file://0006-FIXUP-linux-musl-mod.rs-add-riscv64-to-b64-set-libc-.patch \
            file://0007-FIXUP-Correct-definitions-to-match-musl-libc-0.2.93.patch \
-           file://0008-Update-checksums-for-modified-files-for-rust-1.54.0-.patch \
+           file://0001-Update-checksums-for-modified-files-for-libc.patch \
            "
 
-SRC_URI[archive.sha256sum] = "03d2887c18ffb906e1a60f97fe46a7169f69aa28d6db5d285748f3618b093427"
+SRC_URI[archive.sha256sum] = "36e7f5bc88d78608ea7f6c05e4afe4acc1606b9af13c2845d4385073d082b8a4"
 
 # librsvg is still autotools-based, but is calling cargo from its automake-driven makefiles
 # so we cannot use cargo class directly, but still need bits and pieces from it 
