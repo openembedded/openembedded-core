@@ -17,12 +17,10 @@ PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
-           file://0001-Use-cross-AR-during-compile.patch \
            file://test-time.patch \
-"
+           "
 
-SRC_URI[md5sum] = "f719bc9966df28e67fc6ebc405e7ea03"
-SRC_URI[sha256sum] = "03a0360edcd84bec156fe211bbc4fc8c78790973ce4e8b990a11d778d40b1a26"
+SRC_URI[sha256sum] = "6168d8d1dc8f74bd17d9dc22fa9634c49070f232343b744901da15fb4f06bffd"
 
 inherit autotools gettext texinfo update-alternatives
 
