@@ -6,8 +6,8 @@ same results on all platforms."
 HOMEPAGE = "http://site.icu-project.org/"
 
 LICENSE = "ICU"
-DEPENDS = "icu-native"
-DEPENDS:class-native = ""
+DEPENDS = "icu-native autoconf-archive"
+DEPENDS:class-native = "autoconf-archive-native"
 
 CVE_PRODUCT = "international_components_for_unicode"
 
@@ -83,7 +83,7 @@ FILES:libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=002d2fdc32d17f0ec06e9a47f2c0c8d0"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=dc9d616e558490c389609a0e8b81ae6d"
 
 def icu_download_version(d):
     pvsplit = d.getVar('PV').split('.')
@@ -112,8 +112,8 @@ SRC_URI = "${BASE_SRC_URI};name=code \
 SRC_URI:append:class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[code.sha256sum] = "4cba7b7acd1d3c42c44bb0c14be6637098c7faf2b330ce876bc5f3b915d09745"
-SRC_URI[data.sha256sum] = "4fc2d8cfc3343673123586fca3967404abd4e346fba5515829204533b3bae4bf"
+SRC_URI[code.sha256sum] = "8d205428c17bf13bb535300669ed28b338a157b1c01ae66d31d0d3e2d47c3fd5"
+SRC_URI[data.sha256sum] = "c72723ddba3300ffb231d6b09e2a728ea6e89de10ed5927f74bacbd77042336e"
 
 UPSTREAM_CHECK_REGEX = "icu4c-(?P<pver>\d+(_\d+)+)-src"
 UPSTREAM_CHECK_URI = "https://github.com/unicode-org/icu/releases"
