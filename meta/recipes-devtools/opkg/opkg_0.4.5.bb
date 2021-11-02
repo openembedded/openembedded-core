@@ -67,7 +67,7 @@ def package_qa_check_openssl_deprecation (package, d, messages):
 
     pkgconfig = (d.getVar("PACKAGECONFIG") or "").split()
     if pkgconfig and 'openssl' in pkgconfig:
-        package_qa_add_message(messages, 'openssl-deprecation', '"openssl" in opkg.bb PACKAGECONFIG. Feed signature checking with OpenSSL will be deprecated in the next opkg release. Consider using GPG checking instead.')
+        oe.qa.add_message(messages, 'openssl-deprecation', '"openssl" in opkg.bb PACKAGECONFIG. Feed signature checking with OpenSSL will be deprecated in the next opkg release. Consider using GPG checking instead.')
         sane = False
 
     return sane
