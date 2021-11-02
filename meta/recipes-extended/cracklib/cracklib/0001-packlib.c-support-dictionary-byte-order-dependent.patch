@@ -9,7 +9,7 @@ Create the dict files in big endian, and convert to host endian while
 load them. This could fix the endian issue on multiple platform.
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/cracklib/cracklib/pull/41]
 
 We can't use the endian.h, htobe* and be*toh functions because they are
 not available on older versions of glibc, such as that found in RHEL
