@@ -1376,7 +1376,7 @@ class BaseConfig(object):
 
     def setup_serial(self):
         # Setup correct kernel command line for serial
-        if self.serialstdio == True or self.serialconsole == True or self.nographic == True or self.tcpserial_portnum:
+        if self.get('SERIAL_CONSOLES') and (self.serialstdio == True or self.serialconsole == True or self.nographic == True or self.tcpserial_portnum):
             for entry in self.get('SERIAL_CONSOLES').split(' '):
                 self.kernel_cmdline_script += ' console=%s' %entry.split(';')[1]
 
