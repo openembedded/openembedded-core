@@ -19,18 +19,32 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 def processfile(fn):
+    def matchline(line):
+        if "MIRROR" in line or ".*" in line or "GNOME_GIT" in line:
+            return False
+        return True
     print("processing file '%s'" % fn)
     try:
+        if "distro_alias.inc" in fn or "linux-yocto-custom.bb" in fn:
+            return
         fh, abs_path = tempfile.mkstemp()
         modified = False
         with os.fdopen(fh, 'w') as new_file:
             with open(fn, "r") as old_file:
                 for line in old_file:
-                    if ("git://" in line or "gitsm://" in line) and "branch=" not in line and "MIRROR" not in line and ".*" not in line:
+                    if ("git://" in line or "gitsm://" in line) and "branch=" not in line and matchline(line):
                         if line.endswith('"\n'):
                             line = line.replace('"\n', ';branch=master"\n')
                         elif line.endswith(" \\\n"):
                             line = line.replace(' \\\n', ';branch=master \\\n')
+                        modified = True
+                    if ("git://" in line or "gitsm://" in line) and "github.com" in line and "protocol=https" not in line and matchline(line):
+                        if "protocol=git" in line:
+                            line = line.replace('protocol=git', 'protocol=https')
+                        elif line.endswith('"\n'):
+                            line = line.replace('"\n', ';protocol=https"\n')
+                        elif line.endswith(" \\\n"):
+                            line = line.replace(' \\\n', ';protocol=https \\\n')
                         modified = True
                     new_file.write(line)
         if modified:
