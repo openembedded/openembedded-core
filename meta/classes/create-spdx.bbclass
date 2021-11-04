@@ -28,6 +28,8 @@ SPDX_NAMESPACE_PREFIX ??= "http://spdx.org/spdxdoc"
 
 SPDX_LICENSES ??= "${COREBASE}/meta/files/spdx-licenses.json"
 
+SPDX_ORG ??= "OpenEmbedded ()"
+
 do_image_complete[depends] = "virtual/kernel:do_create_spdx"
 
 def get_doc_namespace(d, doc):
@@ -415,7 +417,7 @@ python do_create_spdx() {
     doc.creationInfo.comment = "This document was created by analyzing recipe files during the build."
     doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
     doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
-    doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
+    doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
     doc.creationInfo.creators.append("Person: N/A ()")
 
     recipe = oe.spdx.SPDXPackage()
@@ -519,7 +521,7 @@ python do_create_spdx() {
             package_doc.creationInfo.comment = "This document was created by analyzing packages created during the build."
             package_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
             package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
-            package_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
+            package_doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
             package_doc.creationInfo.creators.append("Person: N/A ()")
             package_doc.externalDocumentRefs.append(recipe_ref)
 
@@ -653,7 +655,7 @@ python do_create_runtime_spdx() {
             runtime_doc.creationInfo.comment = "This document was created by analyzing package runtime dependencies."
             runtime_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
             runtime_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
-            runtime_doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
+            runtime_doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
             runtime_doc.creationInfo.creators.append("Person: N/A ()")
 
             package_ref = oe.spdx.SPDXExternalDocumentRef()
@@ -813,7 +815,7 @@ python image_combine_spdx() {
     doc.creationInfo.comment = "This document was created by analyzing the source of the Yocto recipe during the build."
     doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
     doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
-    doc.creationInfo.creators.append("Organization: OpenEmbedded ()")
+    doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
     doc.creationInfo.creators.append("Person: N/A ()")
 
     image = oe.spdx.SPDXPackage()
