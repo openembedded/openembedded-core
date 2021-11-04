@@ -1,7 +1,7 @@
-From 26e406962cf7298837b350b979afff0ac34ecb0b Mon Sep 17 00:00:00 2001
+From d86ff49710210fb10d149121fa9a04c7cf41cb8b Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 02:31:12 +0000
-Subject: [PATCH 04/11] Add support for Renesas SH (sh4) architecture.
+Subject: [PATCH 04/10] Add support for Renesas SH (sh4) architecture.
 
 gdb (7.4-1~cvs20111117.2) experimental; urgency=low
  .
@@ -14,7 +14,7 @@ Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  gdb/Makefile.in                      |   2 +
- gdb/configure.host                   |   1 +
+ gdb/configure.host                   |   2 +
  gdb/sh-linux-tdep.c                  | 519 +++++++++++++++++++++++++++
  gdb/sh-tdep.c                        |  52 +--
  gdb/sh-tdep.h                        |  49 +++
@@ -24,15 +24,15 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gdb/testsuite/gdb.base/annota3.c     |   4 +
  gdb/testsuite/gdb.base/sigall.c      |   3 +
  gdb/testsuite/gdb.base/signals.c     |   4 +
- 11 files changed, 617 insertions(+), 28 deletions(-)
+ 11 files changed, 618 insertions(+), 28 deletions(-)
 
 diff --git a/gdb/Makefile.in b/gdb/Makefile.in
-index 4808357e651..a009004ab05 100644
+index b8729ed7b2e..ae5c05e1dbe 100644
 --- a/gdb/Makefile.in
 +++ b/gdb/Makefile.in
-@@ -2273,6 +2273,8 @@ ALLDEPFILES = \
- 	sh-nbsd-nat.c \
- 	sh-nbsd-tdep.c \
+@@ -2284,6 +2284,8 @@ ALLDEPFILES = \
+ 	sh-netbsd-nat.c \
+ 	sh-netbsd-tdep.c \
  	sh-tdep.c \
 +	sh-linux-tdep.c \
 +	sh-linux-nat.c \
@@ -40,19 +40,20 @@ index 4808357e651..a009004ab05 100644
  	solib-aix.c \
  	solib-svr4.c \
 diff --git a/gdb/configure.host b/gdb/configure.host
-index ce528237291..5b5173a71aa 100644
+index e94a19b0332..08b8478b56b 100644
 --- a/gdb/configure.host
 +++ b/gdb/configure.host
-@@ -148,6 +148,7 @@ riscv*-*-linux*)	gdb_host=linux ;;
+@@ -151,6 +151,8 @@ riscv*-*-linux*)	gdb_host=linux ;;
  
  s390*-*-linux*)		gdb_host=linux ;;
  
 +sh*-*-linux*)		gdb_host=linux ;;
++
  sh*-*-netbsdelf* | sh*-*-knetbsd*-gnu)
  			gdb_host=nbsd ;;
  sh*-*-openbsd*)		gdb_host=nbsd ;;
 diff --git a/gdb/sh-linux-tdep.c b/gdb/sh-linux-tdep.c
-index 5d2f38f5801..06a45b74827 100644
+index 700df35bc3b..aaed47ded81 100644
 --- a/gdb/sh-linux-tdep.c
 +++ b/gdb/sh-linux-tdep.c
 @@ -18,14 +18,37 @@
@@ -596,11 +597,11 @@ index 5d2f38f5801..06a45b74827 100644
 +    set_gdbarch_regset_from_core_section (gdbarch,
 +                                         sh_linux_regset_from_core_section);
 +
-   linux_init_abi (info, gdbarch);
+   linux_init_abi (info, gdbarch, 0);
  
    /* GNU/Linux uses SVR4-style shared libraries.  */
 diff --git a/gdb/sh-tdep.c b/gdb/sh-tdep.c
-index 7aadf9165ca..e173e215a2d 100644
+index bfb220adf79..6a077b235bf 100644
 --- a/gdb/sh-tdep.c
 +++ b/gdb/sh-tdep.c
 @@ -21,6 +21,9 @@
@@ -694,7 +695,7 @@ index 7aadf9165ca..e173e215a2d 100644
  
    if (regnum < SH_NUM_REGS && cache->saved_regs[regnum] != -1)
      return frame_unwind_got_memory (this_frame, regnum,
-@@ -2234,8 +2221,8 @@ sh_return_in_first_hidden_param_p (struct gdbarch *gdbarch,
+@@ -2236,8 +2223,8 @@ sh_return_in_first_hidden_param_p (struct gdbarch *gdbarch,
  static struct gdbarch *
  sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
  {
@@ -704,7 +705,7 @@ index 7aadf9165ca..e173e215a2d 100644
  
    /* If there is already a candidate, use it.  */
    arches = gdbarch_list_lookup_by_info (arches, &info);
-@@ -2247,6 +2234,18 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
+@@ -2249,6 +2236,18 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
    tdep = XCNEW (struct gdbarch_tdep);
    gdbarch = gdbarch_alloc (&info, tdep);
  
@@ -723,7 +724,7 @@ index 7aadf9165ca..e173e215a2d 100644
    set_gdbarch_short_bit (gdbarch, 2 * TARGET_CHAR_BIT);
    set_gdbarch_int_bit (gdbarch, 4 * TARGET_CHAR_BIT);
    set_gdbarch_long_bit (gdbarch, 4 * TARGET_CHAR_BIT);
-@@ -2398,10 +2397,11 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
+@@ -2400,10 +2399,11 @@ sh_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
        break;
      }
  
@@ -737,7 +738,7 @@ index 7aadf9165ca..e173e215a2d 100644
    frame_unwind_append_unwinder (gdbarch, &sh_frame_unwind);
  
 diff --git a/gdb/sh-tdep.h b/gdb/sh-tdep.h
-index 76e2e76e39b..2710f63010c 100644
+index 737b6dc6bdc..8d82e819b8c 100644
 --- a/gdb/sh-tdep.h
 +++ b/gdb/sh-tdep.h
 @@ -21,6 +21,12 @@
@@ -820,7 +821,7 @@ index 76e2e76e39b..2710f63010c 100644
       where each general-purpose register is stored inside the associated
       core file section.  */
 diff --git a/gdb/testsuite/gdb.asm/asm-source.exp b/gdb/testsuite/gdb.asm/asm-source.exp
-index 4914498f98c..6e25cbed185 100644
+index dedcd92f2df..ae81b8becd3 100644
 --- a/gdb/testsuite/gdb.asm/asm-source.exp
 +++ b/gdb/testsuite/gdb.asm/asm-source.exp
 @@ -116,6 +116,11 @@ switch -glob -- [istarget] {
@@ -909,5 +910,5 @@ index 756606880fa..1205a9bc9c5 100644
  static int count = 0;
  
 -- 
-2.29.2
+2.33.1
 

@@ -1,7 +1,7 @@
-From 73a3babe48c7948f71683d0862eddc1609fdaa3d Mon Sep 17 00:00:00 2001
+From 4ee7e8afb9ff259e889ac938c673fda9ddc5e15a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 10 May 2016 08:47:05 -0700
-Subject: [PATCH 09/11] resolve restrict keyword conflict
+Subject: [PATCH 08/10] resolve restrict keyword conflict
 
 GCC detects that we call 'restrict' as param name in function
 signatures and complains since both params are called 'restrict'
@@ -15,7 +15,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/gnulib/import/sys_time.in.h b/gnulib/import/sys_time.in.h
-index d30b26719b2..fd76af5e6d9 100644
+index 90a67d18426..664641a1fe8 100644
 --- a/gnulib/import/sys_time.in.h
 +++ b/gnulib/import/sys_time.in.h
 @@ -93,20 +93,20 @@ struct timeval
@@ -44,5 +44,5 @@ index d30b26719b2..fd76af5e6d9 100644
  _GL_CXXALIASWARN (gettimeofday);
  # if defined __cplusplus && defined GNULIB_NAMESPACE
 -- 
-2.29.2
+2.33.1
 
