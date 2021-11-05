@@ -18,7 +18,6 @@ inherit gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspec
 
 SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
            file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
-           file://0001-crossbeam-utils-check-only-the-architecture-not-the-.patch \
            file://0001-vendor-system-deps-sort-dependencies-before-using-th.patch \
            file://0005-Add-base-definitions-for-riscv64-musl-libc-0.2.93.patch \
            file://0006-FIXUP-linux-musl-mod.rs-add-riscv64-to-b64-set-libc-.patch \
@@ -38,6 +37,9 @@ export RUSTFLAGS
 export RUST_TARGET_PATH
 
 export RUST_TARGET = "${HOST_SYS}"
+
+RUSTFLAGS:append:mips = " --cfg crossbeam_no_atomic_64"
+RUSTFLAGS:append:powerpc = " --cfg crossbeam_no_atomic_64"
 
 # rust-cross writes the target linker binary into target json definition without any flags.
 # This breaks here because the linker isn't going to work without at least knowing where
