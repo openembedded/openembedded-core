@@ -39,7 +39,9 @@ export RUST_TARGET_PATH
 export RUST_TARGET = "${HOST_SYS}"
 
 RUSTFLAGS:append:mips = " --cfg crossbeam_no_atomic_64"
+RUSTFLAGS:append:mipsel = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:powerpc = " --cfg crossbeam_no_atomic_64"
+RUSTFLAGS:append:riscv32 = " --cfg crossbeam_no_atomic_64"
 
 # rust-cross writes the target linker binary into target json definition without any flags.
 # This breaks here because the linker isn't going to work without at least knowing where
