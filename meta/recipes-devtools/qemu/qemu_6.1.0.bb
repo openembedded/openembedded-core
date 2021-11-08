@@ -4,6 +4,8 @@ require qemu.inc
 
 DEPENDS = "glib-2.0 zlib pixman bison-native ninja-native meson-native"
 
+DEPENDS:append:libc-musl = " libucontext"
+
 RDEPENDS:${PN}:class-target += "bash"
 
 EXTRA_OECONF:append:class-target = " --target-list=${@get_qemu_target_list(d)}"
