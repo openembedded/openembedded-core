@@ -14,7 +14,7 @@ SRC_URI = "http://www.kernel.org/pub/software/network/iw/${BP}.tar.gz \
            file://separate-objdir.patch \
 "
 
-SRC_URI[sha256sum] = "6e7d3c9f8b4ee68e412f20fe229c9854c2dba383e3e650ce6af8eb8dbd12efc3"
+SRC_URI[sha256sum] = "9c91f2560b258d9660e656ad37fa5bd100ac255865dcfb26076a576b10d8f3a7"
 
 inherit pkgconfig
 
