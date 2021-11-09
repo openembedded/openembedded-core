@@ -989,10 +989,8 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
                 fetcher.checkstatus()
                 bb.debug(2, "SState: Successful fetch test for %s" % srcuri)
                 found.add(tid)
-                if tid in missed:
-                    missed.remove(tid)
+                missed.remove(tid)
             except bb.fetch2.FetchError as e:
-                missed.add(tid)
                 bb.debug(2, "SState: Unsuccessful fetch test for %s (%s)" % (srcuri, e))
             except Exception as e:
                 bb.error("SState: cannot test %s: %s" % (srcuri, e))
@@ -1001,9 +999,7 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
                 bb.event.fire(bb.event.ProcessProgress(msg, len(tasklist) - thread_worker.tasks.qsize()), d)
 
         tasklist = []
-        for tid in sq_data['hash']:
-            if tid in found:
-                continue
+        for tid in missed:
             spec, extrapath, tname = getpathcomponents(tid, d)
             sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, siginfo, d))
             tasklist.append((tid, sstatefile))
