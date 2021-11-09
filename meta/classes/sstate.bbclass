@@ -934,12 +934,13 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
         return spec, extrapath, tname
 
+    def getsstatefile(tid, siginfo, d):
+        spec, extrapath, tname = getpathcomponents(tid, d)
+        return extrapath + generate_sstatefn(spec, gethash(tid), tname, siginfo, d)
 
     for tid in sq_data['hash']:
 
-        spec, extrapath, tname = getpathcomponents(tid, d)
-
-        sstatefile = d.expand("${SSTATE_DIR}/" + extrapath + generate_sstatefn(spec, gethash(tid), tname, siginfo, d))
+        sstatefile = d.expand("${SSTATE_DIR}/" + getsstatefile(tid, siginfo, d))
 
         if os.path.exists(sstatefile):
             found.add(tid)
@@ -1000,8 +1001,7 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
         tasklist = []
         for tid in missed:
-            spec, extrapath, tname = getpathcomponents(tid, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, siginfo, d))
+            sstatefile = d.expand(getsstatefile(tid, siginfo, d))
             tasklist.append((tid, sstatefile))
 
         if tasklist:
@@ -1028,12 +1028,10 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
     if "toaster" in inheritlist:
         evdata = {'missed': [], 'found': []};
         for tid in missed:
-            spec, extrapath, tname = getpathcomponents(tid, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, False, d))
+            sstatefile = d.expand(getsstatefile(tid, False, d))
             evdata['missed'].append((bb.runqueue.fn_from_tid(tid), bb.runqueue.taskname_from_tid(tid), gethash(tid), sstatefile ) )
         for tid in found:
-            spec, extrapath, tname = getpathcomponents(tid, d)
-            sstatefile = d.expand(extrapath + generate_sstatefn(spec, gethash(tid), tname, False, d))
+            sstatefile = d.expand(getsstatefile(tid, False, d))
             evdata['found'].append((bb.runqueue.fn_from_tid(tid), bb.runqueue.taskname_from_tid(tid), gethash(tid), sstatefile ) )
         bb.event.fire(bb.event.MetadataEvent("MissedSstate", evdata), d)
 
