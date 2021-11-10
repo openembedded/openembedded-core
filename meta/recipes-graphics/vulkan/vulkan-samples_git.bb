@@ -11,12 +11,13 @@ SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=master;prot
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "d2187278cb6632ce35920575832eb6f6e2b2e46c"
+SRCREV = "ae6e4a3712cebde49a29e5996a3bd2f403566890"
 
 UPSTREAM_CHECK_GITTAGREGEX = "These are not the releases you're looking for"
 S = "${WORKDIR}/git"
 
 REQUIRED_DISTRO_FEATURES = 'vulkan'
+COMPATIBLE_HOST:x86 = "null"
 
 inherit cmake features_check
 
