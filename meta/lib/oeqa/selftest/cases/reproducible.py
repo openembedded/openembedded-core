@@ -59,6 +59,7 @@ exclude_packages = [
 	'systemd-bootchart',
 	'systemtap',
 	'valgrind-ptest',
+	'webkitgtk',
 	]
 
 def is_excluded(package):
