@@ -242,10 +242,10 @@ do_install() {
             mv ${D}${libdir}/libtinfo.so.* ${D}${base_libdir}
             rm ${D}${libdir}/libtinfo.so
 
-            # Use lnr to ensure this is a relative link despite absolute paths
+            # Use ln -rs to ensure this is a relative link despite absolute paths
             # (as we can't know the relationship between base_libdir and libdir).
             # At some point we can rely on coreutils 8.16 which has ln -r.
-            lnr ${D}${base_libdir}/libtinfo.so.5 ${D}${libdir}/libtinfo.so
+            ln -rs ${D}${base_libdir}/libtinfo.so.5 ${D}${libdir}/libtinfo.so
         fi
         if [ -d "${D}${includedir}/ncurses" ]; then
             for f in `find ${D}${includedir}/ncurses -name "*.h"`

@@ -63,8 +63,8 @@ RRECOMMENDS:${PN}:class-target += "gnupg"
 # .spec file in dnf source tree does (and then Fedora and dnf documentation
 # says that dnf binary is plain 'dnf').
 do_install:append() {
-        lnr ${D}/${bindir}/dnf-3 ${D}/${bindir}/dnf
-        lnr ${D}/${bindir}/dnf-automatic-3 ${D}/${bindir}/dnf-automatic
+        ln -rs ${D}/${bindir}/dnf-3 ${D}/${bindir}/dnf
+        ln -rs ${D}/${bindir}/dnf-automatic-3 ${D}/${bindir}/dnf-automatic
 }
 
 # Direct dnf-native to read rpm configuration from our sysroot, not the one it was compiled in

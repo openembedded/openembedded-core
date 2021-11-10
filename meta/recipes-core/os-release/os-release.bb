@@ -47,7 +47,7 @@ do_compile[vardeps] += "${OS_RELEASE_FIELDS}"
 do_install () {
     install -d ${D}${nonarch_libdir} ${D}${sysconfdir}
     install -m 0644 os-release ${D}${nonarch_libdir}/
-    lnr ${D}${nonarch_libdir}/os-release ${D}${sysconfdir}/os-release
+    ln -rs ${D}${nonarch_libdir}/os-release ${D}${sysconfdir}/os-release
 }
 
 FILES:${PN} += "${nonarch_libdir}/os-release"

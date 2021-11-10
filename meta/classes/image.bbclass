@@ -622,20 +622,20 @@ deltask do_package_write_rpm
 create_merged_usr_symlinks() {
     root="$1"
     install -d $root${base_bindir} $root${base_sbindir} $root${base_libdir}
-    lnr $root${base_bindir} $root/bin
-    lnr $root${base_sbindir} $root/sbin
-    lnr $root${base_libdir} $root/${baselib}
+    ln -rs $root${base_bindir} $root/bin
+    ln -rs $root${base_sbindir} $root/sbin
+    ln -rs $root${base_libdir} $root/${baselib}
 
     if [ "${nonarch_base_libdir}" != "${base_libdir}" ]; then
        install -d $root${nonarch_base_libdir}
-       lnr $root${nonarch_base_libdir} $root/lib
+       ln -rs $root${nonarch_base_libdir} $root/lib
     fi
 
     # create base links for multilibs
     multi_libdirs="${@d.getVar('MULTILIB_VARIANTS')}"
     for d in $multi_libdirs; do
         install -d $root${exec_prefix}/$d
-        lnr $root${exec_prefix}/$d $root/$d
+        ln -rs $root${exec_prefix}/$d $root/$d
     done
 }
 

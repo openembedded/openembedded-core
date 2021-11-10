@@ -19,9 +19,9 @@ do_install:append () {
         install -dm755 ${D}${base_bindir}
         install -dm755 ${D}${base_sbindir}
         # add symlinks to kmod
-        lnr ${D}${base_bindir}/kmod ${D}${base_bindir}/lsmod
+        ln -rs ${D}${base_bindir}/kmod ${D}${base_bindir}/lsmod
         for tool in insmod rmmod depmod modinfo modprobe; do
-                lnr ${D}${base_bindir}/kmod ${D}${base_sbindir}/${tool}
+                ln -rs ${D}${base_bindir}/kmod ${D}${base_sbindir}/${tool}
         done
         # configuration directories
         install -dm755 ${D}${nonarch_base_libdir}/depmod.d

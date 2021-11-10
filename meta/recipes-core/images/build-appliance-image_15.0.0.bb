@@ -87,7 +87,7 @@ fakeroot do_populate_poky_src () {
 
 	# Load tap/tun at startup
 	rm -f ${IMAGE_ROOTFS}/sbin/iptables
-	lnr ${IMAGE_ROOTFS}/usr/sbin/iptables ${IMAGE_ROOTFS}/sbin/iptables
+	ln -rs ${IMAGE_ROOTFS}/usr/sbin/iptables ${IMAGE_ROOTFS}/sbin/iptables
 	echo "tun" >> ${IMAGE_ROOTFS}/etc/modules
 
 	# Use Clearlooks GTK+ theme

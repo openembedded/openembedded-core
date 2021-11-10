@@ -66,7 +66,7 @@ do_install() {
         echo "${base_libdir}" > ${D}${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path
         echo "${libdir}" >> ${D}${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path
 	rm -f ${D}${bindir}/ldd ${D}${GLIBC_LDSO}
-	lnr ${D}${libdir}/libc.so ${D}${bindir}/ldd
+	ln -rs ${D}${libdir}/libc.so ${D}${bindir}/ldd
 }
 
 FILES:${PN} += "/lib/ld-musl-${MUSL_LDSO_ARCH}.so.1 ${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path"
