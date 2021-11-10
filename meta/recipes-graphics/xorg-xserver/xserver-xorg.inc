@@ -28,7 +28,7 @@ inherit autotools pkgconfig
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "x11"
 
-LIB_DEPS = "pixman libxfont2 xtrans libxau libxext libxdmcp libdrm libxkbfile libpciaccess"
+LIB_DEPS = "pixman libxfont2 xtrans libxau libxext libxdmcp libdrm libxkbfile libpciaccess libxcvt"
 DEPENDS = "xorgproto ${LIB_DEPS} font-util"
 
 # Split out some modules and extensions from the main package
@@ -78,7 +78,7 @@ RRECOMMENDS:${PN}-xwayland += "${XSERVER_RRECOMMENDS}"
 RDEPENDS:${PN}-xvfb += "xkeyboard-config"
 RDEPENDS:${PN}-module-exa = "${PN} (= ${EXTENDPKGV})"
 
-FILES:${PN} = "${bindir} ${libdir}/X11/Options ${libdir}/X11/Cards ${libdir}/X11/getconfig ${libdir}/X11/etc ${libdir}/modules/*.so ${libdir}/xorg/modules/*.so /etc/X11 ${libdir}/xorg/protocol.txt ${datadir}/X11/xorg.conf.d"
+FILES:${PN} = "${bindir} ${libdir}/X11/Options ${libdir}/X11/Cards ${libdir}/X11/getconfig ${libdir}/X11/etc ${libdir}/modules/*.so ${libdir}/xorg/modules/input/*.so ${libdir}/xorg/modules/*.so /etc/X11 ${libdir}/xorg/protocol.txt ${datadir}/X11/xorg.conf.d"
 FILES:${PN}-dev += "${libdir}/xorg/modules/*.la ${libdir}/xorg/modules/*/*.la"
 FILES:${PN}-doc += "${libdir}/X11/doc ${datadir}/X11/xkb/compiled/README.compiled ${localstatedir}/lib/xkb/README.compiled"
 FILES:${PN}-sdl = "${bindir}/Xsdl"
@@ -109,7 +109,6 @@ EXTRA_OECONF += "--with-fop=no \
                  --with-pic \
                  --disable-static \
                  --disable-record \
-                 --disable-dmx \
                  --disable-xnest \
                  --enable-xvfb \
                  --enable-composite \
@@ -118,7 +117,6 @@ EXTRA_OECONF += "--with-fop=no \
                  --sysconfdir=/etc/X11 \
                  --localstatedir=/var \
                  --with-xkb-output=/var/lib/xkb \
-                 --with-os-name=Linux \
 "
 
 OPENGL_PKGCONFIGS = "dri glx glamor dri3 xshmfence"
@@ -141,7 +139,6 @@ PACKAGECONFIG[xmlto] = "--with-xmlto, --without-xmlto, xmlto-native docbook-xml-
 PACKAGECONFIG[systemd-logind] = "--enable-systemd-logind=yes,--enable-systemd-logind=no,dbus,"
 PACKAGECONFIG[systemd] = "--with-systemd-daemon,--without-systemd-daemon,systemd"
 PACKAGECONFIG[xinerama] = "--enable-xinerama,--disable-xinerama"
-PACKAGECONFIG[xwayland] = "--enable-xwayland,--disable-xwayland,wayland wayland-native wayland-protocols libepoxy"
 
 # Xorg requires a SHA1 implementation, pick one
 XORG_CRYPTO ??= "openssl"
