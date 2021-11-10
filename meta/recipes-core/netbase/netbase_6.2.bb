@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=3dd6192d306f582dee7687da3d8748ab"
 PE = "1"
 
-SRC_URI = "git://salsa.debian.org/md/netbase.git;protocol=https"
+SRC_URI = "git://salsa.debian.org/md/netbase.git;protocol=https;branch=master"
 SRCREV = "1c892c96a078ef28ec1a94681b3a0da7a3d545f7"
 
 inherit allarch

@@ -14,7 +14,7 @@ RDEPENDS_mtd-utils-tests += "bash"
 PV = "2.1.2"
 
 SRCREV = "7b986779342021bda87c04da3bf729718736d8ab"
-SRC_URI = "git://git.infradead.org/mtd-utils.git \
+SRC_URI = "git://git.infradead.org/mtd-utils.git;branch=master \
            file://add-exclusion-to-mkfs-jffs2-git-2.patch \
            "
 

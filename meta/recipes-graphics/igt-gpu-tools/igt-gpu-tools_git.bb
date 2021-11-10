@@ -12,7 +12,7 @@ inherit meson
 SRCREV = "d16ad07e7f2a028e14d61f570931c87fa5ce404c"
 PV = "1.25+git${SRCPV}"
 
-SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https \
+SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;branch=master \
            file://0001-lib-igt_edid-Allocate-raw-8-bytes-for-VSDB.patch \
            file://reproducibility.patch"
 

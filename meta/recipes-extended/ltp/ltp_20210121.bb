@@ -33,7 +33,7 @@ SRCREV = "4d005621edd109d119627eb9210b224a63bf22cb"
 PR = "r4"
 HASHEQUIV_HASH_VERSION .= ".4"
 
-SRC_URI = "git://github.com/linux-test-project/ltp.git \
+SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
            file://0001-build-Add-option-to-select-libc-implementation.patch \
            file://0007-Fix-test_proc_kill-hanging.patch \
            file://0001-Add-more-musl-exclusions.patch \
