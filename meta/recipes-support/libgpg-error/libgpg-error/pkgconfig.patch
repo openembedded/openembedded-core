@@ -3,7 +3,7 @@ From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Thu, 29 Mar 2018 15:12:17 +0800
 Subject: [PATCH] support pkgconfig
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [gnupg upstream will not take this, it has been tried with other components]
 
 Rebase to 1.28
 
