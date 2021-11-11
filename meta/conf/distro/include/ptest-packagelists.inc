@@ -63,7 +63,9 @@ PTESTS_FAST = "\
     zlib-ptest \
 "
 PTESTS_FAST:remove:mips64 = "qemu-ptest"
-PTESTS_PROBLEMS:append:mips64 = "qemu-ptest"
+PTESTS_PROBLEMS:append:mips64 = " qemu-ptest"
+PTESTS_FAST:remove:riscv32 = "qemu-ptest"
+PTESTS_PROBLEMS:append:riscv32 = " qemu-ptest"
 
 PTESTS_SLOW = "\
     babeltrace-ptest \
