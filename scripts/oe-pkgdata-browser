@@ -49,11 +49,11 @@ def load(filename, suffix=None):
     from configparser import ConfigParser
     from itertools import chain
 
-    parser = ConfigParser()
+    parser = ConfigParser(delimiters=('='))
     if suffix:
-        parser.optionxform = lambda option: option.replace("_" + suffix, "")
+        parser.optionxform = lambda option: option.replace(":" + suffix, "")
     with open(filename) as lines:
-        lines = chain(("[fake]",), lines)
+        lines = chain(("[fake]",), (line.replace(": ", " = ", 1) for line in lines))
         parser.read_file(lines)
 
     # TODO extract the data and put it into a real dict so we can transform some
