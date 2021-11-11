@@ -137,7 +137,6 @@ PACKAGECONFIG[nettle] = "-Dsha1=libnettle,,nettle"
 PACKAGECONFIG[gcrypt] = "-Dsha1=libgcrypt,,libgcrypt"
 
 do_install:append () {
-	# Its assumed base-files creates this for us
         sed -i -e 's,${libdir}/xorg/modules,${prefix}/lib*/xorg/modules,' ${D}${mandir}/man5/xorg.conf.5
 }
 
