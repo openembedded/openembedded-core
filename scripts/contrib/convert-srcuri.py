@@ -35,16 +35,16 @@ def processfile(fn):
                     if ("git://" in line or "gitsm://" in line) and "branch=" not in line and matchline(line):
                         if line.endswith('"\n'):
                             line = line.replace('"\n', ';branch=master"\n')
-                        elif line.endswith(" \\\n"):
-                            line = line.replace(' \\\n', ';branch=master \\\n')
+                        elif re.search('\s*\\\\$', line):
+                            line = re.sub('\s*\\\\$', ';branch=master \\\\', line)
                         modified = True
                     if ("git://" in line or "gitsm://" in line) and "github.com" in line and "protocol=https" not in line and matchline(line):
                         if "protocol=git" in line:
                             line = line.replace('protocol=git', 'protocol=https')
                         elif line.endswith('"\n'):
                             line = line.replace('"\n', ';protocol=https"\n')
-                        elif line.endswith(" \\\n"):
-                            line = line.replace(' \\\n', ';protocol=https \\\n')
+                        elif re.search('\s*\\\\$', line):
+                            line = re.sub('\s*\\\\$', ';protocol=https \\\\', line)
                         modified = True
                     new_file.write(line)
         if modified:
