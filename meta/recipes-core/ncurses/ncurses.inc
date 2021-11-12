@@ -18,6 +18,7 @@ SRC_URI = "git://salsa.debian.org/debian/ncurses.git;protocol=https;branch=maste
 EXTRA_AUTORECONF = "-I m4"
 
 CACHED_CONFIGUREVARS = "cf_cv_func_nanosleep=yes"
+CACHED_CONFIGUREVARS:append:linux = " cf_cv_working_poll=yes"
 
 EXTRASITECONFIG = "CFLAGS='${CFLAGS} -I${SYSROOT_DESTDIR}${includedir}'"
 
@@ -98,10 +99,6 @@ ncurses_configure() {
 # patched autoconf213 to generate the configure script. This autoconf
 # is not available so that the shipped script will be used.
 do_configure() {
-        # check does not work with cross-compiling and is generally
-        # broken because it requires stdin to be pollable (which is
-        # not the case for /dev/null redirections)
-        export cf_cv_working_poll=yes
 	#Remove ${includedir} from CPPFLAGS, need for cross compile
 	sed -i 's#-I${cf_includedir}##g' ${S}/configure || die "sed CPPFLAGS"
 
