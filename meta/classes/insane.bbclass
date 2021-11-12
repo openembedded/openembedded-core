@@ -1229,15 +1229,12 @@ Rerun configure task after fixing this."""
     ###########################################################################
     # Check unrecognised configure options (with a white list)
     ###########################################################################
-    if bb.data.inherits_class("autotools", d) or bb.data.inherits_class("meson", d):
+    if bb.data.inherits_class("autotools", d):
         bb.note("Checking configure output for unrecognised options")
         try:
             if bb.data.inherits_class("autotools", d):
                 flag = "WARNING: unrecognized options:"
                 log = os.path.join(d.getVar('B'), 'config.log')
-            if bb.data.inherits_class("meson", d):
-                flag = "WARNING: Unknown options:"
-                log = os.path.join(d.getVar('T'), 'log.do_configure')
             output = subprocess.check_output(['grep', '-F', flag, log]).decode("utf-8").replace(', ', ' ').replace('"', '')
             options = set()
             for line in output.splitlines():
