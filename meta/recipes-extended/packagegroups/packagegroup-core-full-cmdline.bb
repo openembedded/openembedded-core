@@ -10,7 +10,6 @@ inherit packagegroup
 
 PACKAGES = "\
     packagegroup-core-full-cmdline \
-    packagegroup-core-full-cmdline-libs \
     packagegroup-core-full-cmdline-utils \
     packagegroup-core-full-cmdline-extended \
     packagegroup-core-full-cmdline-dev-utils \
@@ -23,7 +22,6 @@ python __anonymous () {
     # For backwards compatibility after rename
     namemap = {}
     namemap["packagegroup-core-full-cmdline"] = "packagegroup-core-basic"
-    namemap["packagegroup-core-full-cmdline-libs"] = "packagegroup-core-basic-libs"
     namemap["packagegroup-core-full-cmdline-utils"] = "packagegroup-core-basic-utils"
     namemap["packagegroup-core-full-cmdline-extended"] = "packagegroup-core-basic-extended"
     namemap["packagegroup-core-full-cmdline-dev-utils"] = "packagegroup-core-dev-utils"
@@ -56,17 +54,12 @@ python __anonymous () {
 
 
 RDEPENDS:packagegroup-core-full-cmdline = "\
-    packagegroup-core-full-cmdline-libs \
     packagegroup-core-full-cmdline-utils \
     packagegroup-core-full-cmdline-extended \
     packagegroup-core-full-cmdline-dev-utils \
     packagegroup-core-full-cmdline-multiuser \
     packagegroup-core-full-cmdline-initscripts \
     packagegroup-core-full-cmdline-sys-services \
-    "
-
-RDEPENDS:packagegroup-core-full-cmdline-libs = "\
-    glib-2.0 \
     "
 
 RDEPENDS:packagegroup-core-full-cmdline-utils = "\
@@ -81,7 +74,6 @@ RDEPENDS:packagegroup-core-full-cmdline-utils = "\
     file \
     findutils \
     gawk \
-    gmp \
     grep \
     less \
     makedevs \
