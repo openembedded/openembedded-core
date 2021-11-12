@@ -36,6 +36,8 @@
 #         in system mode, where system is experiencing entropy starvation
 #
 # QB_KERNEL_ROOT: kernel's root, e.g., /dev/vda
+#                 By default "/dev/vda rw" gets passed to the kernel.
+#                 To mount the rootfs read-only QB_KERNEL_ROOT can be set to e.g. "/dev/vda ro".
 #
 # QB_NETWORK_DEVICE: network device, e.g., "-device virtio-net-pci,netdev=net0,mac=@MAC@",
 #                    it needs work with QB_TAP_OPT and QB_SLIRP_OPT.
