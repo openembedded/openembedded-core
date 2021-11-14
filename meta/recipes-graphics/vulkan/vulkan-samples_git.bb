@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=48aa35cefb768436223a6e7f18dc2a2a"
 
 SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=master;protocol=https \
            file://0001-CMakeLists.txt-do-not-hardcode-lib-as-installation-t.patch \
+           file://0001-framework-do-not-mix-plain-and-keyword-target_link_l.patch \
+           file://0001-framework-core-Add-explicit-static_cast-from-vk-Buff.patch \
            file://debugfix.patch \
            "
 
