@@ -47,6 +47,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-unittest \
                   ${PYTHON_PN}-ctypes \
                   ${PYTHON_PN}-threading \
                   ${PYTHON_PN}-multiprocessing \
+                  ${PYTHON_PN}-json \
 "
 RDEPENDS:${PN}-ptest += "${PYTHON_PN}-pytest \
                          ${PYTHON_PN}-hypothesis \
