@@ -9,9 +9,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=80c550b3197bcb8da7d7557ebcc3fc46 \
                     "
 
-SRC_URI = "http://www.freedesktop.org/software/libevdev/${BP}.tar.xz \
-           file://determinism.patch"
-SRC_URI[sha256sum] = "63f4ea1489858a109080e0b40bd43e4e0903a1e12ea888d581db8c495747c2d0"
+SRC_URI = "http://www.freedesktop.org/software/libevdev/${BP}.tar.xz"
+SRC_URI[sha256sum] = "2f729e3480695791f9482e8388bd723402b89f0eaf118057bbdea3cecee9b237"
 
 inherit autotools pkgconfig
 
