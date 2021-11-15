@@ -16,8 +16,7 @@ SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
 
 DEPENDS = "bison-native"
 
-SRC_URI[md5sum] = "c46f6eb3bd1287031ae5d36465094402"
-SRC_URI[sha256sum] = "ece7551cea7922b8e10d7ebc70bc2248d1fdd73351646a2d6a8d68a9421c45a5"
+SRC_URI[sha256sum] = "4365c154953563d64c67a024b607d1ee75c6db76e0d0f65709ea80a334cd1898"
 
 inherit autotools texinfo lib_package gtk-doc
 
