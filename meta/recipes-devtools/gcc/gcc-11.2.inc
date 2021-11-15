@@ -62,6 +62,10 @@ SRC_URI = "\
            file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0041-apply-debug-prefix-maps-before-checksumming-DIEs.patch \
            file://0006-If-CXXFLAGS-contains-something-unsupported-by-the-bu.patch \
+           file://0001-CVE-2021-35465.patch \
+           file://0002-CVE-2021-35465.patch \
+           file://0003-CVE-2021-35465.patch \
+           file://0004-CVE-2021-35465.patch \
 "
 SRC_URI[sha256sum] = "d08edc536b54c372a1010ff6619dd274c0f1603aa49212ba20f7aa2cda36fa8b"
 
