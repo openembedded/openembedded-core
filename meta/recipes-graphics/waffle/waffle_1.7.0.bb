@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 
 inherit meson features_check lib_package bash-completion pkgconfig
 
-DEPENDS:append = " python3"
+DEPENDS:append = " python3 cmake-native"
 
 # This should be overridden per-machine to reflect the capabilities of the GL
 # stack.
