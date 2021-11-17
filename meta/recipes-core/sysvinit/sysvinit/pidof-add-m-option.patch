@@ -10,7 +10,7 @@ each other's pids.
 
 https://bugzilla.redhat.com/show_bug.cgi?id=883856
 
-Upstream-Status: backport
+Upstream-Status: Backport
 Imported patch from: https://bugzilla.redhat.com/attachment.cgi?id=658166
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>

@@ -73,7 +73,7 @@ See upstream commit by the man himself:
 
     so if clang ever fixes its bad behavior we can try enabling it there again.
 
-Upstream-Status: backport [https://git.lttng.org/?p=lttng-modules.git;a=commit;h=c190d76e8c7b44d62b3651ab845b765c1b1f8104]
+Upstream-Status: Backport [https://git.lttng.org/?p=lttng-modules.git;a=commit;h=c190d76e8c7b44d62b3651ab845b765c1b1f8104]
 
 Change-Id: Iea69849592fb69ac04fb9bb28efcd6b8dce8ba88
 Signed-off-by: Michael Jeanson <mjeanson@efficios.com>

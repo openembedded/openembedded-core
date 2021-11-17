@@ -24,7 +24,7 @@ check_ipx.
 
 Closes: https://github.com/strace/strace/issues/201
 
-Upstream-Status: backport [commit cca828197c0e1 branch esyr/5.15]
+Upstream-Status: Backport [commit cca828197c0e1 branch esyr/5.15]
 
 [bva: changed context to apply to a released strace 5.14 tarball]
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>

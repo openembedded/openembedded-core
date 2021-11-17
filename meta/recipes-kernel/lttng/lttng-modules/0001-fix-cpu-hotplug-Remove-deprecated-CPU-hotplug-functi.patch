@@ -37,7 +37,7 @@ Introduced in v4.13 :
 
     Rename all instances in the cpu hotplug code while at it.
 
-Upstream-Status: backport [https://git.lttng.org/?p=lttng-modules.git;a=commit;h=ffcc873470121ef1ebb110df3d9038a38d9cb7cb]
+Upstream-Status: Backport [https://git.lttng.org/?p=lttng-modules.git;a=commit;h=ffcc873470121ef1ebb110df3d9038a38d9cb7cb]
 
 Change-Id: I5a37cf5afc075a402b7347989fac637dfa60a1ed
 Signed-off-by: Michael Jeanson <mjeanson@efficios.com>

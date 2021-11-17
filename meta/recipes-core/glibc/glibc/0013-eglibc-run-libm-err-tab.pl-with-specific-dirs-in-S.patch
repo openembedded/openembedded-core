@@ -10,7 +10,7 @@ ${S}/.pc/aarch64-0001-glibc-fsf-v1-eaf6f205.patch/ports/sysdeps/
 aarch64/libm-test-ulps), run libm-err-tab.pl with specific dirs
 in ${S}.
 
-Upstream-Status: inappropriate [OE specific]
+Upstream-Status: Inappropriate [OE specific]
 
 Signed-off-by: Ting Liu <b28495@freescale.com>
 ---

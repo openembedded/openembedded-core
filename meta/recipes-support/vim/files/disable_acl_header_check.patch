@@ -5,7 +5,7 @@ Subject: [PATCH] disable acl header check
 
 Don't check 'sys/acl.h' if acl support disabled for vim/vim-tiny.
 
-Upstream-Status: pending
+Upstream-Status: Pending
 
 Signed-off-by: Wenzong Fan <wenzong.fan@windriver.com>
 Signed-off-by: Changqing Li <changqing.li@windriver.com>
