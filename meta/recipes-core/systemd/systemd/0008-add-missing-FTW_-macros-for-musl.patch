@@ -1,4 +1,4 @@
-From 45b78e3dc3edead4fc9883dd5a9877f473367bf7 Mon Sep 17 00:00:00 2001
+From 0c49f309d60aa3751add1b8261bc69840e269c50 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 15:00:06 +0800
 Subject: [PATCH] add missing FTW_ macros for musl
@@ -10,6 +10,7 @@ This is to avoid build failures like below for musl.
 Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+
 ---
  src/basic/missing_type.h | 20 ++++++++++++++++++++
  src/shared/mount-setup.c |  1 +

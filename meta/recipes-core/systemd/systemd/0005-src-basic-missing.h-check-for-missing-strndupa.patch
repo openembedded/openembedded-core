@@ -1,4 +1,4 @@
-From 95c61768e1f8d76a7bd28355429fc4b7b428ad61 Mon Sep 17 00:00:00 2001
+From 0dfa2bcd34e10b354177a988c8be433de782f1c7 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 14:18:21 +0800
 Subject: [PATCH] src/basic/missing.h: check for missing strndupa
@@ -73,7 +73,7 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
  51 files changed, 62 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index 11cf56efee..5bd6602e03 100644
+index 3421da3a4d..ddef6fba91 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -480,6 +480,7 @@ foreach ident : ['secure_getenv', '__secure_getenv']
@@ -297,7 +297,7 @@ index ca9b399d8c..b864480a8c 100644
  int bus_property_get_triggered_unit(
                  sd_bus *bus,
 diff --git a/src/core/execute.c b/src/core/execute.c
-index 2a337b55a2..2a64675c5f 100644
+index 2f2de4d9cf..515b2fe748 100644
 --- a/src/core/execute.c
 +++ b/src/core/execute.c
 @@ -98,6 +98,7 @@
@@ -321,7 +321,7 @@ index a56f12f47f..6b8729ef67 100644
  #if HAVE_KMOD
  #include "module-util.h"
 diff --git a/src/core/service.c b/src/core/service.c
-index 701c145565..4ddc20ed7e 100644
+index 7b90822f68..4af076eeba 100644
 --- a/src/core/service.c
 +++ b/src/core/service.c
 @@ -41,6 +41,7 @@
@@ -669,7 +669,7 @@ index 65c40de4c8..4ef9a0c6c8 100644
  _printf_(2,3)
  static void path_prepend(char **path, const char *fmt, ...) {
 diff --git a/src/udev/udev-event.c b/src/udev/udev-event.c
-index b28089be71..a7e2232299 100644
+index 9854270b27..71b5fab1e7 100644
 --- a/src/udev/udev-event.c
 +++ b/src/udev/udev-event.c
 @@ -34,6 +34,7 @@
