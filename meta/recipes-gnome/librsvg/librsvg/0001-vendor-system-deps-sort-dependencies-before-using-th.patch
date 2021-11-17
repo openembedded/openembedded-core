@@ -6,10 +6,7 @@ Subject: [PATCH] vendor/system-deps: sort dependencies before using them
 Otherwise they come out in non-reproducible order, leaking into
 target binaries.
 
-Upstream-Status: Pending
-Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-
-
+Upstream-Status: Submitted [https://github.com/gdesmott/system-deps/pull/56]
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
  vendor/system-deps/.cargo-checksum.json | 3 ++-
