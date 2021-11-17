@@ -22,6 +22,7 @@ DEPENDS = "gperf-native"
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
            file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
+           file://0001-Make-gl_INIT_PACKAGE-work-with-Automake-1.16.4.patch \
 "
 SRC_URI[md5sum] = "0d3274e9838396b12200f8b54ddaf43b"
 SRC_URI[sha256sum] = "a82e5b333339a88ea4608e4635479a1cfb2e01aafb925e1290b65710d43f610b"
