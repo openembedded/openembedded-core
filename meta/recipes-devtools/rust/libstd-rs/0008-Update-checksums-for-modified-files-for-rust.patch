@@ -3,6 +3,7 @@ From: Ralf Anton Beier <ralf_beier@me.com>
 Date: Sun, 8 Aug 2021 11:19:24 +0200
 Subject: [PATCH 8/8] Update checksums for modified files for rust
 
+Upstream-Status: Inappropriate [previous patches need to be upstreamed]
 Signed-off-by: Ralf Anton Beier <ralf_beier@me.com>
 ---
  vendor/libc-0.2.93/.cargo-checksum.json | 2 +-

@@ -5,6 +5,7 @@ Subject: [PATCH 5/8] Add base definitions for riscv64 + musl
 
 https://github.com/rust-lang/libc/pull/1994/commits/030a07761f61f3293d53752e60edbd330a9d718d
 
+Upstream-Status: Submitted [https://github.com/rust-lang/libc/pull/2537]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Ralf Anton Beier <ralf_beier@me.com>
 ---

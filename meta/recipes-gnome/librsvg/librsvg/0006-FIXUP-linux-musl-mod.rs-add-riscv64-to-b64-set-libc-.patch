@@ -6,6 +6,7 @@ Subject: [PATCH 6/8] FIXUP: linux/musl/mod.rs: add riscv64 to b64 set -
 
 https://github.com/rust-lang/libc/pull/1994/commits/30070c822be2ef399b2ba38cdc1d72ac694d65a3
 
+Upstream-Status: Submitted [https://github.com/rust-lang/libc/pull/2537]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Ralf Anton Beier <ralf_beier@me.com>
 ---
