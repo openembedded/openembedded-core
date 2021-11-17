@@ -7,12 +7,12 @@ HOMEPAGE = "http://ccache.samba.org"
 SECTION = "devel"
 
 LICENSE = "GPLv3+"
-LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=985be6d06a50f60a9893a19a6d2550b8"
+LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=8fe0fdfdc7a892516526b86c28d06a16"
 
 DEPENDS = "zstd"
 
 SRC_URI = "https://github.com/ccache/ccache/releases/download/v${PV}/${BP}.tar.gz"
-SRC_URI[sha256sum] = "357a2ac55497b39ad6885c14b00cda6cf21d1851c6290f4288e62972665de417"
+SRC_URI[sha256sum] = "8f1c6495a06ae0a9ff311c9d43096233702a2045c476ca1ae393b434abf1f528"
 
 UPSTREAM_CHECK_URI = "https://github.com/ccache/ccache/releases/"
 
