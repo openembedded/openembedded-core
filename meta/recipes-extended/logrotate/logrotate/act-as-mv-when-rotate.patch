@@ -6,7 +6,7 @@ Subject: [PATCH] Act as the "mv" command when rotate log
 Act as the "mv" command when rotate log, first rename, if failed, then
 read and write.
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [needs a rework according to https://github.com/logrotate/logrotate/pull/429]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 
