@@ -53,10 +53,8 @@ def recipe_spdx_is_native(d, recipe):
       a.annotator == "Tool: %s - %s" % (d.getVar("SPDX_TOOL_NAME"), d.getVar("SPDX_TOOL_VERSION")) and
       a.comment == "isNative" for a in recipe.annotations)
 
-def is_work_shared(d):
-    pn = d.getVar('PN')
-    return bb.data.inherits_class('kernel', d) or pn.startswith('gcc-source')
-
+def is_work_shared_spdx(d):
+    return bb.data.inherits_class('kernel', d) or ('work-shared' in d.getVar('WORKDIR'))
 
 python() {
     import json
@@ -747,7 +745,7 @@ def spdx_get_src(d):
 
     try:
         # The kernel class functions require it to be on work-shared, so we dont change WORKDIR
-        if not is_work_shared(d):
+        if not is_work_shared_spdx(d):
             # Change the WORKDIR to make do_unpack do_patch run in another dir.
             d.setVar('WORKDIR', spdx_workdir)
             # Restore the original path to recipe's native sysroot (it's relative to WORKDIR).
@@ -760,7 +758,7 @@ def spdx_get_src(d):
 
             bb.build.exec_func('do_unpack', d)
         # Copy source of kernel to spdx_workdir
-        if is_work_shared(d):
+        if is_work_shared_spdx(d):
             d.setVar('WORKDIR', spdx_workdir)
             d.setVar('STAGING_DIR_NATIVE', spdx_sysroot_native)
             src_dir = spdx_workdir + "/" + d.getVar('PN')+ "-" + d.getVar('PV') + "-" + d.getVar('PR')
@@ -776,7 +774,7 @@ def spdx_get_src(d):
                 shutils.rmtree(git_path)
 
         # Make sure gcc and kernel sources are patched only once
-        if not (d.getVar('SRC_URI') == "" or is_work_shared(d)):
+        if not (d.getVar('SRC_URI') == "" or is_work_shared_spdx(d)):
             bb.build.exec_func('do_patch', d)
 
         # Some userland has no source.
