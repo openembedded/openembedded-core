@@ -25,7 +25,7 @@ SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.pat
            file://0001-Update-checksums-for-modified-files-for-libc.patch \
            "
 
-SRC_URI[archive.sha256sum] = "36e7f5bc88d78608ea7f6c05e4afe4acc1606b9af13c2845d4385073d082b8a4"
+SRC_URI[archive.sha256sum] = "660ec8836a3a91587bc9384920132d4c38d1d1718c67fe160c5213fe4dec2928"
 
 # librsvg is still autotools-based, but is calling cargo from its automake-driven makefiles
 # so we cannot use cargo class directly, but still need bits and pieces from it 
