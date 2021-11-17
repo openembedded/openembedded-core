@@ -18,7 +18,8 @@ RDEPENDS:${PN} += "\
 
 RDEPENDS:${PN}:class-native = "autoconf-native hostperl-runtime-native"
 
-SRC_URI += "file://python-libdir.patch \
+SRC_URI += "\
+           file://0001-automake-Update-for-python.m4-to-respect-libdir.patch \
            file://buildtest.patch \
            file://performance.patch \
            file://new_rt_path_for_test-driver.patch \
@@ -26,7 +27,7 @@ SRC_URI += "file://python-libdir.patch \
            file://0001-build-fix-race-in-parallel-builds.patch \
            "
 
-SRC_URI[sha256sum] = "ce010788b51f64511a1e9bb2a1ec626037c6d0e7ede32c1c103611b9d3cba65f"
+SRC_URI[sha256sum] = "07bd24ad08a64bc17250ce09ec56e921d6343903943e99ccf63bbf0705e34605"
 
 PERL = "${USRBINPATH}/perl"
 PERL:class-native = "${USRBINPATH}/env perl"
