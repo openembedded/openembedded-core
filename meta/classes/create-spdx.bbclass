@@ -92,7 +92,7 @@ def convert_license_to_spdx(lic, document, d, existing={}):
             extracted_info.extractedText = "Software released to the public domain"
         elif name in available_licenses:
             # This license can be found in COMMON_LICENSE_DIR or LICENSE_PATH
-            for directory in [d.getVar('COMMON_LICENSE_DIR')] + d.getVar('LICENSE_PATH').split():
+            for directory in [d.getVar('COMMON_LICENSE_DIR')] + (d.getVar('LICENSE_PATH') or '').split():
                 try:
                     with (Path(directory) / name).open(errors="replace") as f:
                         extracted_info.extractedText = f.read()
@@ -144,7 +144,6 @@ def convert_license_to_spdx(lic, document, d, existing={}):
     lic_split = lic.replace("(", " ( ").replace(")", " ) ").split()
 
     return ' '.join(convert(l) for l in lic_split)
-
 
 def process_sources(d):
     pn = d.getVar('PN')
