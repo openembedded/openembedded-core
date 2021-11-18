@@ -675,6 +675,9 @@ python do_create_runtime_spdx() {
                 if dep in seen_deps:
                     continue
 
+                if dep not in providers:
+                    continue
+
                 dep = providers[dep]
 
                 if not oe.packagedata.packaged(dep, localdata):
