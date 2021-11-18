@@ -19,6 +19,8 @@ python __anonymous() {
 
        d.setVar("BBCLASSEXTEND", "")
        d.setVar("RRECOMMENDS", "")
+       d.setVar("SYSTEMD_SERVICE:nscd", "")
+       d.setVar("SYSTEMD_PACKAGES", "")
 }
 
 # Remove any leftovers from original glibc recipe
