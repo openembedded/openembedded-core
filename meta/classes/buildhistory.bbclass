@@ -934,22 +934,12 @@ def _get_srcrev_values(d):
         if urldata[u].method.supports_srcrev():
             scms.append(u)
 
-    autoinc_templ = 'AUTOINC+'
     dict_srcrevs = {}
     dict_tag_srcrevs = {}
     for scm in scms:
         ud = urldata[scm]
         for name in ud.names:
-            try:
-                rev = ud.method.sortable_revision(ud, d, name)
-            except TypeError:
-                # support old bitbake versions
-                rev = ud.method.sortable_revision(scm, ud, d, name)
-            # Clean this up when we next bump bitbake version
-            if type(rev) != str:
-                autoinc, rev = rev
-            elif rev.startswith(autoinc_templ):
-                rev = rev[len(autoinc_templ):]
+            autoinc, rev = ud.method.sortable_revision(ud, d, name)
             dict_srcrevs[name] = rev
             if 'tag' in ud.parm:
                 tag = ud.parm['tag'];
