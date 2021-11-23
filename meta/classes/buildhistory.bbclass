@@ -91,11 +91,17 @@ buildhistory_emit_sysroot() {
 python buildhistory_emit_pkghistory() {
     if d.getVar('BB_CURRENTTASK') in ['populate_sysroot', 'populate_sysroot_setscene']:
         bb.build.exec_func("buildhistory_emit_sysroot", d)
-
-    if not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
         return 0
 
     if not "package" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
+        return 0
+
+    if d.getVar('BB_CURRENTTASK') in ['package', 'package_setscene']:
+        # Create files-in-<package-name>.txt files containing a list of files of each recipe's package
+        bb.build.exec_func("buildhistory_list_pkg_files", d)
+        return 0
+
+    if not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
         return 0
 
     import re
@@ -319,8 +325,6 @@ python buildhistory_emit_pkghistory() {
 
         write_pkghistory(pkginfo, d)
 
-    # Create files-in-<package-name>.txt files containing a list of files of each recipe's package
-    bb.build.exec_func("buildhistory_list_pkg_files", d)
     oe.qa.exit_if_errors(d)
 }
 
