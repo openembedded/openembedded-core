@@ -39,8 +39,16 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
 DEPENDS += "gmp-native libmpc-native"
-# yaml and dtschema are required for 5.16+ device tree validation
-DEPENDS += "libyaml-native python3-dtschema-native"
+
+# yaml and dtschema are required for 5.16+ device tree validation, libyaml is checked
+# via pkgconfig, so must always be present, but we can wrap the others to make them
+# conditional
+DEPENDS += "libyaml-native"
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[dt-validation] = ",,python3-dtschema-native"
+# we need the wrappers if validation isn't in the packageconfig
+DEPENDS += "${@bb.utils.contains('PACKAGECONFIG', 'dt-validation', '', 'python3-dtschema-wrapper-native', d)}"
 
 COMPATIBLE_MACHINE = "(qemuarm|qemux86|qemuppc|qemumips|qemumips64|qemux86-64|qemuriscv64)"
 
