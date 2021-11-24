@@ -1,4 +1,4 @@
-From c3055ce9eb32d0d24abc5cea5e1d231c499312a7 Mon Sep 17 00:00:00 2001
+From 38ddd0d1863f83e8ec545d0160bdf00bbb5569ba Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 19 Apr 2021 23:29:10 +0200
 Subject: [PATCH] debuginfod/debuginfod-client.c: correct string format on
@@ -12,20 +12,20 @@ architectures, therefore directly using integer printf formats will not
 work portably, use intmax_t to typecast time_t into printf family of
 functions
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [via email to mark@klomp.org,elfutils-devel@sourceware.org]
 
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 ---
- debuginfod/debuginfod-client.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ debuginfod/debuginfod-client.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/debuginfod/debuginfod-client.c b/debuginfod/debuginfod-client.c
-index ee7eda2..083ec2c 100644
+index c875ee6..df9737d 100644
 --- a/debuginfod/debuginfod-client.c
 +++ b/debuginfod/debuginfod-client.c
-@@ -226,7 +226,7 @@ debuginfod_config_cache(char *config_path,
+@@ -231,15 +231,15 @@ debuginfod_config_cache(char *config_path,
        if (fd < 0)
          return -errno;
  
@@ -34,16 +34,17 @@ index ee7eda2..083ec2c 100644
          return -errno;
      }
  
-@@ -234,7 +234,7 @@ debuginfod_config_cache(char *config_path,
+-  long cache_config;
++  int cache_config;
    FILE *config_file = fopen(config_path, "r");
    if (config_file)
      {
 -      if (fscanf(config_file, "%ld", &cache_config) != 1)
-+      if (fscanf(config_file, "%jd", (intmax_t*)(&cache_config)) != 1)
++      if (fscanf(config_file, "%d", &cache_config) != 1)
          cache_config = cache_config_default_s;
        fclose(config_file);
      }
-@@ -267,7 +267,7 @@ debuginfod_init_cache (char *cache_path, char *interval_path, char *maxage_path)
+@@ -272,7 +272,7 @@ debuginfod_init_cache (char *cache_path, char *interval_path, char *maxage_path)
    if (fd < 0)
      return -errno;
  
@@ -52,7 +53,7 @@ index ee7eda2..083ec2c 100644
      return -errno;
  
    /* init max age config file.  */
-@@ -275,7 +275,7 @@ debuginfod_init_cache (char *cache_path, char *interval_path, char *maxage_path)
+@@ -280,7 +280,7 @@ debuginfod_init_cache (char *cache_path, char *interval_path, char *maxage_path)
        && (fd = open(maxage_path, O_CREAT | O_RDWR, DEFFILEMODE)) < 0)
      return -errno;
  
