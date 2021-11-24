@@ -1,0 +1,35 @@
+From bdd2a528da59c28db8ae2986834926de7cebf3ab Mon Sep 17 00:00:00 2001
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+Date: Thu, 4 Nov 2021 16:55:12 +0100
+Subject: [PATCH] Set REPO_REV to v2.17.3
+
+repo is an unusual tool because it downloads all of its own Python modules
+using GPG-signed git tags, and stores those files as part of the project
+that it is working with.
+
+So in order to have a reproducible repo installation within the project
+folders, we hardcode the default REPO_REV to a SHA1 that corresponds to
+the version of the recipe. REPO_REV can still be overwriten by the user,
+by specifying the REPO_REV environment variable.
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+---
+ repo | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/repo b/repo
+index 4cddbf1..5c3551f 100755
+--- a/repo
++++ b/repo
+@@ -144,7 +144,7 @@ if not REPO_URL:
+   REPO_URL = 'https://gerrit.googlesource.com/git-repo'
+ REPO_REV = os.environ.get('REPO_REV')
+ if not REPO_REV:
+-  REPO_REV = 'stable'
++  REPO_REV = '11b30b91df1f0e03b53da970ec2588e85817bacc'
+ # URL to file bug reports for repo tool issues.
+ BUG_URL = 'https://bugs.chromium.org/p/gerrit/issues/entry?template=Repo+tool+issue'
+ 
+-- 
+2.34.0
