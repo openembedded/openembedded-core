@@ -1014,7 +1014,8 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
             bb.event.enable_threadlock()
             pool = oe.utils.ThreadedPool(nproc, len(tasklist),
-                    worker_init=checkstatus_init, worker_end=checkstatus_end)
+                    worker_init=checkstatus_init, worker_end=checkstatus_end,
+                    name="sstate_checkhashes-")
             for t in tasklist:
                 pool.add_task(checkstatus, t)
             pool.start()
