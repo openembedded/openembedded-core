@@ -1,4 +1,4 @@
-From 8a64ec1087c161be3985f16e7f37e1beed6623f6 Mon Sep 17 00:00:00 2001
+From 3b42a888685aee1776a12cff84a5fe0063378483 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 13:55:12 +0800
 Subject: [PATCH] missing_type.h: add __compare_fn_t and comparison_fn_t
