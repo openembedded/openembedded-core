@@ -248,9 +248,9 @@ def trim_version(version, num_parts=2):
     trimmed = ".".join(parts[:num_parts])
     return trimmed
 
-def cpu_count(at_least=1):
+def cpu_count(at_least=1, at_most=64):
     cpus = len(os.sched_getaffinity(0))
-    return max(cpus, at_least)
+    return max(min(cpus, at_most), at_least)
 
 def execute_pre_post_process(d, cmds):
     if cmds is None:
