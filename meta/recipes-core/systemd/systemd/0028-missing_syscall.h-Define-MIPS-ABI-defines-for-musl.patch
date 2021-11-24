@@ -1,4 +1,4 @@
-From 51b1dd6db0239a1d3cf62aac84685fd02bba69e6 Mon Sep 17 00:00:00 2001
+From 6f0dd2ba75b68036d7b4ebfe47ac5eaf44d26f06 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 12 Apr 2021 23:44:53 -0700
 Subject: [PATCH] missing_syscall.h: Define MIPS ABI defines for musl

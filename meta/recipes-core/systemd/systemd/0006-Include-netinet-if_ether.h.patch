@@ -1,4 +1,4 @@
-From a434f2b4815a48d4cf007482ef64c288c73e120f Mon Sep 17 00:00:00 2001
+From a3be3b7160856ffb8259ede9e2e0168d74bf126e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 26 Oct 2017 22:10:42 -0700
 Subject: [PATCH] Include netinet/if_ether.h
