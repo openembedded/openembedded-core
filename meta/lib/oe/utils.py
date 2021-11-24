@@ -483,8 +483,8 @@ from threading import Thread
 
 class ThreadedWorker(Thread):
     """Thread executing tasks from a given tasks queue"""
-    def __init__(self, tasks, worker_init, worker_end):
-        Thread.__init__(self)
+    def __init__(self, tasks, worker_init, worker_end, name=None):
+        Thread.__init__(self, name=name)
         self.tasks = tasks
         self.daemon = True
 
@@ -515,13 +515,12 @@ class ThreadedWorker(Thread):
 
 class ThreadedPool:
     """Pool of threads consuming tasks from a queue"""
-    def __init__(self, num_workers, num_tasks, worker_init=None,
-            worker_end=None):
+    def __init__(self, num_workers, num_tasks, worker_init=None, worker_end=None, name="ThreadedPool-"):
         self.tasks = Queue(num_tasks)
         self.workers = []
 
-        for _ in range(num_workers):
-            worker = ThreadedWorker(self.tasks, worker_init, worker_end)
+        for i in range(num_workers):
+            worker = ThreadedWorker(self.tasks, worker_init, worker_end, name=name + str(i))
             self.workers.append(worker)
 
     def start(self):
