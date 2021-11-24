@@ -14,7 +14,6 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=1.20.
            file://0001-dpkg-Support-muslx32-build.patch \
            file://pager.patch \
            file://0001-Add-support-for-riscv32-CPU.patch \
-           file://0013-scripts-dpkg-fsys-usrunmess.pl-correct-shebang.patch \
            file://0014-arch-Add-support-for-ARCv2-CPU.patch \
            "
 
