@@ -52,7 +52,6 @@ SRC_URI = "\
            file://0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch \
            file://0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
            file://0030-sync-gcc-stddef.h-with-musl.patch \
-           file://0031-fix-segmentation-fault-in-precompiled-header-generat.patch \
            file://0033-Re-introduce-spe-commandline-options.patch \
            file://0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
            file://0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
