@@ -1,4 +1,5 @@
 SUMMARY = "Parsing and validation of URIs (RFC 3986) and IRIs (RFC 3987)"
+HOMEPAGE = "https://pypi.org/project/rfc3987/"
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://PKG-INFO;beginline=8;endline=9;md5=2b723edf67b2f3088bc5e339b1ceda2d"
 

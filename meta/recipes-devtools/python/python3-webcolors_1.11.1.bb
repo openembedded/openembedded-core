@@ -1,4 +1,5 @@
 SUMMARY = "Simple Python module for working with HTML/CSS color definitions."
+HOMEPAGE = "https://pypi.org/project/webcolors/"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=25b90379a52351261c51272e7923d240"
 
