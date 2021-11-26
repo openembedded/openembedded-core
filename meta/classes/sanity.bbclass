@@ -462,13 +462,12 @@ def check_sanity_validmachine(sanity_data):
 # Patch before 2.7 can't handle all the features in git-style diffs.  Some
 # patches may incorrectly apply, and others won't apply at all.
 def check_patch_version(sanity_data):
-    from distutils.version import LooseVersion
     import re, subprocess
 
     try:
         result = subprocess.check_output(["patch", "--version"], stderr=subprocess.STDOUT).decode('utf-8')
         version = re.search(r"[0-9.]+", result.splitlines()[0]).group()
-        if LooseVersion(version) < LooseVersion("2.7"):
+        if bb.utils.vercmp_string_op(version, "2.7", "<"):
             return "Your version of patch is older than 2.7 and has bugs which will break builds. Please install a newer version of patch.\n"
         else:
             return None
@@ -478,7 +477,6 @@ def check_patch_version(sanity_data):
 # Unpatched versions of make 3.82 are known to be broken.  See GNU Savannah Bug 30612.
 # Use a modified reproducer from http://savannah.gnu.org/bugs/?30612 to validate.
 def check_make_version(sanity_data):
-    from distutils.version import LooseVersion
     import subprocess
 
     try:
@@ -486,7 +484,7 @@ def check_make_version(sanity_data):
     except subprocess.CalledProcessError as e:
         return "Unable to execute make --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[2]
-    if LooseVersion(version) == LooseVersion("3.82"):
+    if bb.utils.vercmp_string_op(version, "3.82", "=="):
         # Construct a test file
         f = open("makefile_test", "w")
         f.write("makefile_test.a: makefile_test_a.c makefile_test_b.c makefile_test.a( makefile_test_a.c makefile_test_b.c)\n")
@@ -539,12 +537,11 @@ def check_wsl(d):
 # built buildtools-extended-tarball)
 #
 def check_gcc_version(sanity_data):
-    from distutils.version import LooseVersion
     import subprocess
     
     build_cc, version = oe.utils.get_host_compiler_version(sanity_data)
     if build_cc.strip() == "gcc":
-        if LooseVersion(version) < LooseVersion("7.5"):
+        if bb.utils.vercmp_string_op(version, "7.5", "<"):
             return "Your version of gcc is older than 7.5 and will break builds. Please install a newer version of gcc (you could use the project's buildtools-extended-tarball or use scripts/install-buildtools).\n"
     return None
 
@@ -552,14 +549,13 @@ def check_gcc_version(sanity_data):
 # but earlier versions do not; this needs to work properly for sstate
 # Version 1.28 is needed so opkg-build works correctly when reproducibile builds are enabled
 def check_tar_version(sanity_data):
-    from distutils.version import LooseVersion
     import subprocess
     try:
         result = subprocess.check_output(["tar", "--version"], stderr=subprocess.STDOUT).decode('utf-8')
     except subprocess.CalledProcessError as e:
         return "Unable to execute tar --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[3]
-    if LooseVersion(version) < LooseVersion("1.28"):
+    if bb.utils.vercmp_string_op(version, "1.28", "<"):
         return "Your version of tar is older than 1.28 and does not have the support needed to enable reproducible builds. Please install a newer version of tar (you could use the project's buildtools-tarball from our last release or use scripts/install-buildtools).\n"
     return None
 
@@ -567,14 +563,13 @@ def check_tar_version(sanity_data):
 # The kernel tools assume git >= 1.8.3.1 (verified needed > 1.7.9.5) see #6162 
 # The git fetcher also had workarounds for git < 1.7.9.2 which we've dropped
 def check_git_version(sanity_data):
-    from distutils.version import LooseVersion
     import subprocess
     try:
         result = subprocess.check_output(["git", "--version"], stderr=subprocess.DEVNULL).decode('utf-8')
     except subprocess.CalledProcessError as e:
         return "Unable to execute git --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[2]
-    if LooseVersion(version) < LooseVersion("1.8.3.1"):
+    if bb.utils.vercmp_string_op(version, "1.8.3.1", "<"):
         return "Your version of git is older than 1.8.3.1 and has bugs which will break builds. Please install a newer version of git.\n"
     return None
 
@@ -796,9 +791,8 @@ def check_sanity_everybuild(status, d):
         status.addresult('The system requires at least Python 3.6 to run. Please update your Python interpreter.\n')
 
     # Check the bitbake version meets minimum requirements
-    from distutils.version import LooseVersion
     minversion = d.getVar('BB_MIN_VERSION')
-    if (LooseVersion(bb.__version__) < LooseVersion(minversion)):
+    if bb.utils.vercmp_string_op(bb.__version__, minversion, "<"):
         status.addresult('Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__))
 
     sanity_check_locale(d)
