@@ -9,6 +9,7 @@ SRC_URI[md5sum] = "47f7657b790aaf6011a1ab3d86c6be95"
 SRC_URI[sha256sum] = "3d44bde7921b3b9ec3ae4e3adca370438eccebc676456449b145d533b240d055"
 
 PYPI_PACKAGE = "rfc3986_validator"
+UPSTREAM_CHECK_REGEX = "/rfc3986-validator/(?P<pver>(\d+[\.\-_]*)+)/"
 
 inherit pypi setuptools3
 
