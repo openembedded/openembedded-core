@@ -4,7 +4,7 @@ Date: Mon, 4 Jun 2018 18:33:50 +0300
 Subject: [PATCH] ExtUtils-MakeMaker: add $(LDFLAGS) when linking binary
  modules
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/pull/405]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 
 ---
