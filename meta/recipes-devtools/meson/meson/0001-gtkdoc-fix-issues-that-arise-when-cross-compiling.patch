@@ -3,16 +3,10 @@ From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 4 Aug 2017 16:16:41 +0300
 Subject: [PATCH] gtkdoc: fix issues that arise when cross-compiling
 
-Specifically:
-1) Make it possible to specify a wrapper for executing binaries
+Make it possible to specify a wrapper for executing binaries
 (usually, some kind of target hardware emulator, such as qemu)
-2) Explicitly provide CC and LD via command line, as otherwise gtk-doc will
-try to guess them, incorrectly.
-3) If things break down, print the full command with arguments,
-not just the binary name.
-4) Correctly determine the compiler/linker executables and cross-options when cross-compiling
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/mesonbuild/meson/pull/9627]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 
 ---
