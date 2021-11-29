@@ -11,6 +11,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=master;protoco
            file://0001-Add-WITH_TESTS-option.patch \
            file://0001-include-stdexcept-for-runtime_error.patch \
            file://fix-deprecation-warning.patch \
+           file://0040-Mark-job-goal.upgrade-with-sltr-as-target.patch \
            "
 
 SRCREV = "751f89045b80d58c0d05800f74357cf78cdf7e77"
