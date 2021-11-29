@@ -24,8 +24,8 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0001-Fix-VLA-parameter-warning.patch \
            "
 
-PV = "edk2-stable202108"
-SRCREV = "7b4a99be8a39c12d3a7fc4b8db9f0eab4ac688d5"
+PV = "edk2-stable202111"
+SRCREV = "bb1bba3d776733c41dbfa2d1dc0fe234819a79f2"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>edk2-stable.*)"
 
 inherit deploy
