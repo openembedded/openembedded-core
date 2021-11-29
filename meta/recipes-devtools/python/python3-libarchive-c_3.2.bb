@@ -9,8 +9,7 @@ PYPI_PACKAGE = "libarchive-c"
 
 inherit pypi setuptools3
 
-SRC_URI[md5sum] = "8c62da42a8b9bd24642e5430427e6f5a"
-SRC_URI[sha256sum] = "618a7ecfbfb58ca15e11e3138d4a636498da3b6bc212811af158298530fbb87e"
+SRC_URI[sha256sum] = "21ad493f4628972fc82440bff54c834a9fbe13be3893037a4bad332b9ee741e5"
 
 RDEPENDS:${PN} += "\
   libarchive \
