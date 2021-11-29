@@ -1,17 +1,14 @@
 require libunwind.inc
 
 SRC_URI = "http://download.savannah.nongnu.org/releases/libunwind/libunwind-${PV}.tar.gz \
-           file://0001-Add-AO_REQUIRE_CAS-to-fix-build-on-ARM-v6.patch \
            file://0003-x86-Stub-out-x86_local_resume.patch \
            file://0004-Fix-build-on-mips-musl.patch \
            file://0005-ppc32-Consider-ucontext-mismatches-between-glibc-and.patch \
            file://0006-Fix-for-X32.patch \
-           file://0001-configure-Do-not-enforce-libdir-for-ppc64.patch \
            "
 SRC_URI:append:libc-musl = " file://musl-header-conflict.patch"
 
-SRC_URI[md5sum] = "c6923dda0675f6a4ef21426164dc8b6a"
-SRC_URI[sha256sum] = "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017"
+SRC_URI[sha256sum] = "7194c20dda841b26917c0579e6467b53f7ad2e3f9452e5c77f3c3829c4656b70"
 
 EXTRA_OECONF:append:libc-musl = " --disable-documentation --disable-tests --enable-static"
 
