@@ -6,6 +6,7 @@
 import glob
 import os
 import unittest
+import re
 from checklayer import get_signatures, LayerType, check_command, get_depgraph, compare_signatures
 from checklayer.case import OECheckLayerTestCase
 
@@ -25,6 +26,11 @@ class CommonCheckLayer(OECheckLayerTestCase):
             data = f.read()
         self.assertTrue(data,
                 msg="Layer contains a README file but it is empty.")
+        self.assertIn('maintainer',data)
+        self.assertIn('patch',data)
+        # Check that there is an email address in the README
+        email_regex = re.compile(r"[^@]+@[^@]+")
+        self.assertTrue(email_regex.match(data))
 
     def test_parse(self):
         check_command('Layer %s failed to parse.' % self.tc.layer['name'],
