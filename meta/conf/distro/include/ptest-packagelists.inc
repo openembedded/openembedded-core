@@ -56,6 +56,7 @@ PTESTS_FAST = "\
     python3-more-itertools-ptest \
     python3-pluggy-ptest \
     python3-wcwidth-ptest \
+    python3-webcolors-ptest \
     qemu-ptest \
     quilt-ptest \
     sed-ptest \
