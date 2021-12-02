@@ -23,6 +23,7 @@ KEXECTOOLS:riscv32 ?= ""
 # gccgo may do better
 GOTOOLS ?= "go-helloworld"
 GOTOOLS:powerpc ?= ""
+GOTOOLS:riscv32 ?= ""
 
 GSTEXAMPLES ?= "gst-examples"
 GSTEXAMPLES:riscv64 = ""
