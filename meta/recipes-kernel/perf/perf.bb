@@ -31,7 +31,6 @@ PACKAGECONFIG[coresight] = "CORESIGHT=1,,opencsd"
 
 # libunwind is not yet ported for some architectures
 PACKAGECONFIG:remove:arc = "libunwind"
-PACKAGECONFIG:remove:riscv64 = "libunwind"
 PACKAGECONFIG:remove:riscv32 = "libunwind"
 
 DEPENDS = " \
