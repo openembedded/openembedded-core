@@ -9,17 +9,8 @@ If one thread was blocking waiting for an event and another thread sent a
 reply to the X server, both threads got blocked until an event was
 received.
 
-Upstream-Status: Submitted [https://patchwork.freedesktop.org/patch/171458/]
-
-This patch needs to be removed once the corresponding patch has been merged upstream.
-
-https://patchwork.freedesktop.org/patch/171458/
-
-Signed-off-by: Tatu Frisk <tatu.frisk@ge.com>
-Signed-off-by: Jose Alarcon <jose.alarcon@ge.com>
-
-[Refreshed for 1.6.7 update]
-Signed-off-by: Armin Kuster <akuster808@gmail.com>
+Upstream-Status: Backport [93a050c3ad2d2264d3880db3791387b1a9bf2e9e]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 
 ---
  src/xcb_io.c | 19 +++++++------------
