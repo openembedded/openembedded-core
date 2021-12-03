@@ -5,7 +5,7 @@ HOMEPAGE = "http://www.xkbcommon.org"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e525ed9809e1f8a07cf4bce8b09e8b87"
 LICENSE = "MIT & MIT-style"
 
-DEPENDS = "util-macros flex-native bison-native"
+DEPENDS = "flex-native bison-native"
 
 SRC_URI = "http://xkbcommon.org/download/${BPN}-${PV}.tar.xz"
 
