@@ -24,7 +24,13 @@ PACKAGECONFIG[wayland] = "-Denable-wayland=true,-Denable-wayland=false,wayland-n
 PACKAGECONFIG[x11] = "-Denable-x11=true,-Denable-x11=false,libxcb xkeyboard-config,"
 
 PACKAGE_BEFORE_PN += "xkbcli"
+FILES:${PN} = ""
 FILES:xkbcli = "${bindir}/xkbcli ${libexecdir}/xkbcommon/xkbcli-*"
+
+python populate_packages:prepend () {
+    # Put the libraries into separate packages to avoid dependency creep
+    do_split_packages(d, d.expand('${libdir}'), r'^(lib.*)\.so\.*', '%s', '%s library', extra_depends='', allow_links=True)
+}
 
 # Fix a following runtime error:
 # xkbcommon: ERROR: couldn't find a Compose file for locale "C"
