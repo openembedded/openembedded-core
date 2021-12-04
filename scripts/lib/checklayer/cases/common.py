@@ -31,8 +31,8 @@ class CommonCheckLayer(OECheckLayerTestCase):
         if re.search('README', data, re.IGNORECASE):
             return
 
-        self.assertIn('maintainer', data)
-        self.assertIn('patch',data)
+        self.assertIn('maintainer', data.lower())
+        self.assertIn('patch', data.lower())
         # Check that there is an email address in the README
         email_regex = re.compile(r"[^@]+@[^@]+")
         self.assertTrue(email_regex.match(data))
