@@ -6,7 +6,7 @@ Subject: [PATCH] libavutil: include assembly with full path from source root
 Otherwise nasm writes the full host-specific paths into .o
 output, which breaks binary reproducibility.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [by email to jamrial@gmail.com,ffmpeg-devel@ffmpeg.org]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  libavutil/x86/cpuid.asm      | 2 +-
