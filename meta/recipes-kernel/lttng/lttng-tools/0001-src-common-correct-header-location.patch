@@ -6,7 +6,7 @@ Subject: [PATCH] src/common: correct header location
 sys/unistd.h is not guaranteed to exist, and does not with
 e.g. musl C library.
 
-Upstream-Status: Pending
+Upstream-Status: Backport [http://git.lttng.org/?p=lttng-tools.git;a=commitdiff;h=8f14767d33f786d895e50633fb46b880249b6c54]
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
  src/common/kernel-probe.c    | 2 +-
