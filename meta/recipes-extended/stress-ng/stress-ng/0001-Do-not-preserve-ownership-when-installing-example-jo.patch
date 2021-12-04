@@ -3,7 +3,7 @@ From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Tue, 30 Jul 2019 18:38:03 +0200
 Subject: [PATCH] Do not preserve ownership when installing example jobs
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/ColinIanKing/stress-ng/pull/162]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 
 ---
