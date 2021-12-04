@@ -3,13 +3,19 @@ From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Thu, 16 Jan 2020 12:34:20 +0100
 Subject: [PATCH] Makefile: do not compile .pyc in parallel
 
-This was found to break reproducibility, and produce strange file ownership
+This was found to lock up builds, break reproducibility, and produce strange file ownership
 races.
 
 The upstream commit introducing the change was:
 https://github.com/python/cpython/commit/1a2dd82f56bd813aacc570e172cefe55a8a41504
 
-Upstream-Status: Pending
+The build lock up issue is reported here:
+https://bugs.python.org/issue45945
+
+The repro failures are documented here:
+https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20211130-yr_o1a8d/packages/diff-html/
+
+Upstream-Status: Inappropriate [see issues above]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  Makefile.pre.in | 12 ++++++------
