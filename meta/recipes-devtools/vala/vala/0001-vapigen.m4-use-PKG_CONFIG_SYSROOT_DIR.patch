@@ -6,7 +6,7 @@ Subject: [PATCH] vapigen.m4: use $PKG_CONFIG_SYSROOT_DIR
 This is necessary in cross-compiling environments, where directories
 returned by pkg-config should be prefixed with sysroot location.
 
-Upstream-Status: Pending [review in oe-core list]
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/vala/-/merge_requests/218]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
  vapigen/vapigen.m4 | 8 ++++----
