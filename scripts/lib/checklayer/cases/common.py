@@ -26,7 +26,12 @@ class CommonCheckLayer(OECheckLayerTestCase):
             data = f.read()
         self.assertTrue(data,
                 msg="Layer contains a README file but it is empty.")
-        self.assertIn('maintainer',data)
+
+        # If a layer's README references another README, then the checks below are not valid
+        if re.search('README', data, re.IGNORECASE):
+            return
+
+        self.assertIn('maintainer', data)
         self.assertIn('patch',data)
         # Check that there is an email address in the README
         email_regex = re.compile(r"[^@]+@[^@]+")
