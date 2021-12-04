@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://Copying;md5=5b122a36d0f6dc55279a0ebc69f3c60b \
 
 SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://perl-rdepends.txt \
-           file://0001-ExtUtils-MakeMaker-add-LDFLAGS-when-linking-binary-m.patch \
            file://0001-Somehow-this-module-breaks-through-the-perl-wrapper-.patch \
            file://errno_ver.diff \
            file://native-perlinc.patch \
@@ -59,6 +58,7 @@ do_configure:class-target() {
     -Darchlibexp=${STAGING_LIBDIR}/perl5/${PV}/${TARGET_ARCH}-linux \
     -Dlibpth='${libdir} ${base_libdir}' \
     -Dglibpth='${libdir} ${base_libdir}' \
+    -Alddlflags=' ${LDFLAGS}' \
     ${PACKAGECONFIG_CONFARGS}
 
     #perl.c uses an ARCHLIB_EXP define to generate compile-time code that
@@ -83,6 +83,7 @@ do_configure:class-nativesdk() {
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
     -Darchlibexp=${STAGING_LIBDIR}/perl5/${PV}/${TARGET_ARCH}-linux \
+    -Alddlflags=' ${LDFLAGS}' \
     ${PACKAGECONFIG_CONFARGS}
 
     # See the comment above
@@ -96,6 +97,7 @@ do_configure:class-native() {
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
     -Ui_xlocale \
+    -Alddlflags=' ${LDFLAGS}' \
     ${PACKAGECONFIG_CONFARGS}
 }
 
