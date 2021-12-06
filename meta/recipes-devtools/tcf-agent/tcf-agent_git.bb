@@ -11,7 +11,6 @@ PV = "1.7.0+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 SRC_URI = "git://git.eclipse.org/r/tcf/org.eclipse.tcf.agent.git;protocol=https;branch=master \
-           file://fix_ranlib.patch \
            file://ldflags.patch \
            file://tcf-agent.init \
            file://tcf-agent.service \
