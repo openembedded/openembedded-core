@@ -12,12 +12,17 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 SRC_URI = "git://gerrit.googlesource.com/git-repo.git;protocol=https;branch=main"
 SRCREV = "11b30b91df1f0e03b53da970ec2588e85817bacc"
 
-SRC_URI += "file://0001-python3-shebang.patch \
-            file://0001-Set-REPO_REV-to-v2.17.3.patch"
+SRC_URI += "file://0001-python3-shebang.patch"
 
 MIRRORS += "git://gerrit.googlesource.com/git-repo.git git://github.com/GerritCodeReview/git-repo.git"
 
 S = "${WORKDIR}/git"
+
+do_set_fixed_rev() {
+    sed -Ei "s/REPO_REV\s*=\s*('|\")stable('|\")/REPO_REV = '${SRCREV}'/g" ${S}/repo
+}
+
+do_patch[postfuncs] += "do_set_fixed_rev"
 
 do_install() {
 	install -D ${WORKDIR}/git/repo ${D}${bindir}/repo
