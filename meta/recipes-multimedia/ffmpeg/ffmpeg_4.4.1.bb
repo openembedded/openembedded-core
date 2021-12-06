@@ -131,6 +131,7 @@ EXTRA_OECONF:append:mips = " --extra-libs=-latomic --disable-mips32r5 --disable-
                              --disable-loongson2 --disable-loongson3 --disable-mmi --disable-msa --disable-msa2"
 EXTRA_OECONF:append:riscv32 = " --extra-libs=-latomic"
 EXTRA_OECONF:append:armv5 = " --extra-libs=-latomic"
+EXTRA_OECONF:append:powerpc = " --extra-libs=-latomic"
 
 # gold crashes on x86, another solution is to --disable-asm but thats more hacky
 # ld.gold: internal error in relocate_section, at ../../gold/i386.cc:3684
