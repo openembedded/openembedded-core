@@ -10,7 +10,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://gerrit.googlesource.com/git-repo.git;protocol=https;branch=main"
-SRCREV = "11b30b91df1f0e03b53da970ec2588e85817bacc"
+SRCREV = "4a478edb443864561089b2699c9e65c85fc5e036"
 
 SRC_URI += "file://0001-python3-shebang.patch"
 
