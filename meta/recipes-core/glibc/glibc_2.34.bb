@@ -34,7 +34,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://makedbs.sh \
            \
            ${NATIVESDKFIXES} \
-           file://0013-eglibc-run-libm-err-tab.pl-with-specific-dirs-in-S.patch \
            file://0015-sysdeps-gnu-configure.ac-handle-correctly-libc_cv_ro.patch \
            file://0016-yes-within-the-path-sets-wrong-config-variables.patch \
            file://0017-timezone-re-written-tzselect-as-posix-sh.patch \
