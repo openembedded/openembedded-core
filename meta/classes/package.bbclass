@@ -1878,7 +1878,7 @@ python package_do_shlibs() {
                         sonames.add(prov)
                 if libdir_re.match(os.path.dirname(file)):
                     needs_ldconfig = True
-                if snap_symlinks and (os.path.basename(file) != this_soname):
+                if needs_ldconfig and snap_symlinks and (os.path.basename(file) != this_soname):
                     renames.append((file, os.path.join(os.path.dirname(file), this_soname)))
         return (needs_ldconfig, needed, sonames, renames)
 
