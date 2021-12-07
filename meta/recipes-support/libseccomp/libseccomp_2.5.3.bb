@@ -7,15 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;beginline=0;endline=1;md5=8eac08d22113880357c
 
 DEPENDS += "gperf-native"
 
-PV .= "+git${SRCPV}"
-SRCREV = "2457dec1a90101d720e89e8027376742e2f3c327"
+SRCREV = "57357d2741a3b3d3e8425889a6b79a130e0fa2f3"
 
-SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=main;protocol=https \
-           file://0001-configure.ac-Bump-version-to-2.5.99.patch \
-           file://0001-arch-Add-riscv32-architecture-support.patch \
-           file://0002-man-Add-RISCV64-to-arch-list.patch \
-           file://0003-syscalls-update-the-syscall-defs-for-Linux-v5.15.0-r.patch \
-           file://0004-syscalls-Add-quotactl_path.patch \
+SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.5;protocol=https \
            file://run-ptest \
            "
 
@@ -56,3 +50,5 @@ FILES:${PN} = "${bindir} ${libdir}/${BPN}.so*"
 FILES:${PN}-dbg += "${libdir}/${PN}/tests/.debug/* ${libdir}/${PN}/tools/.debug"
 
 RDEPENDS:${PN}-ptest = "coreutils bash"
+
+PV = "2.5.3"
