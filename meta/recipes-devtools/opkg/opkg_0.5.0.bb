@@ -18,8 +18,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "5dc41ad37d88803b5e0f456a9c5a0811"
-SRC_URI[sha256sum] = "a1214a75fa34fb9228db8da47308e0e711b1c93fd8938cf164c10fd28eb50f1e"
+SRC_URI[sha256sum] = "559c3e1b893abaa1dd473ce3a9a5f7dd3f60ceb6cd14caaef76ddf0f7721ad1c"
 
 # This needs to be before ptest inherit, otherwise all ptest files end packaged
 # in libopkg package if OPKGLIBDIR == libdir, because default
@@ -39,11 +38,9 @@ PACKAGECONFIG[gpg] = "--enable-gpg,--disable-gpg,\
     "
 PACKAGECONFIG[curl] = "--enable-curl,--disable-curl,curl"
 PACKAGECONFIG[ssl-curl] = "--enable-ssl-curl,--disable-ssl-curl,curl openssl"
-PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[sha256] = "--enable-sha256,--disable-sha256"
 PACKAGECONFIG[libsolv] = "--with-libsolv,--without-libsolv,libsolv"
 
-EXTRA_OECONF += " --disable-pathfinder"
 EXTRA_OECONF:class-native = "--localstatedir=/${@os.path.relpath('${localstatedir}', '${STAGING_DIR_NATIVE}')} --sysconfdir=/${@os.path.relpath('${sysconfdir}', '${STAGING_DIR_NATIVE}')}"
 
 do_install:append () {
@@ -59,19 +56,6 @@ do_install_ptest () {
 	sed -i -e '/@echo $^/d' ${D}${PTEST_PATH}/tests/Makefile
 	sed -i -e '/@PYTHONPATH=. $(PYTHON) $^/a\\t@if [ "$$?" != "0" ];then echo "FAIL:"$^;else echo "PASS:"$^;fi' ${D}${PTEST_PATH}/tests/Makefile
 }
-
-WARN_QA:append = " openssl-deprecation"
-QAPKGTEST[openssl-deprecation] = "package_qa_check_openssl_deprecation"
-def package_qa_check_openssl_deprecation (package, d, messages):
-    sane = True
-
-    pkgconfig = (d.getVar("PACKAGECONFIG") or "").split()
-    if pkgconfig and 'openssl' in pkgconfig:
-        oe.qa.add_message(messages, 'openssl-deprecation', '"openssl" in opkg.bb PACKAGECONFIG. Feed signature checking with OpenSSL will be deprecated in the next opkg release. Consider using GPG checking instead.')
-        sane = False
-
-    return sane
-
 
 RDEPENDS:${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config libarchive"
 RDEPENDS:${PN}:class-native = ""
