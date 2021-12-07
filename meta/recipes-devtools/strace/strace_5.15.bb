@@ -13,9 +13,8 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://0001-caps-abbrev.awk-fix-gawk-s-path.patch \
            file://ptest-spacesave.patch \
            file://0001-strace-fix-reproducibilty-issues.patch \
-           file://0001-Avoid-relying-on-presence-of-ipx.h.patch \
            "
-SRC_URI[sha256sum] = "901bee6db5e17debad4530dd9ffb4dc9a96c4a656edbe1c3141b7cb307b11e73"
+SRC_URI[sha256sum] = "ebcac22f297335294dc654425cbc3ce013343bece6da2699e3aec86aee8d72dc"
 
 inherit autotools ptest
 
