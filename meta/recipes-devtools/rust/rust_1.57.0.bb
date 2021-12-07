@@ -18,3 +18,4 @@ python () {
     if not pn.endswith("-native"):
         raise bb.parse.SkipRecipe("Rust recipe doesn't work for target builds at this time. Fixes welcome.")
 }
+
