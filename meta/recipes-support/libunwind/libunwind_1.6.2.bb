@@ -8,7 +8,7 @@ SRC_URI = "http://download.savannah.nongnu.org/releases/libunwind/libunwind-${PV
            "
 SRC_URI:append:libc-musl = " file://musl-header-conflict.patch"
 
-SRC_URI[sha256sum] = "7194c20dda841b26917c0579e6467b53f7ad2e3f9452e5c77f3c3829c4656b70"
+SRC_URI[sha256sum] = "4a6aec666991fb45d0889c44aede8ad6eb108071c3554fcdff671f9c94794976"
 
 EXTRA_OECONF:append:libc-musl = " --disable-documentation --disable-tests --enable-static"
 
