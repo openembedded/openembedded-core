@@ -5,6 +5,5 @@ EXTRA_OECONF += "ac_cv_snprintf_returns_bogus=no \
                  "
 EXTRA_OEMAKE += "NO_GETTEXT=1"
 
-SRC_URI[tarball.sha256sum] = "0ce6222bfd31938b29360150286b51c77c643fa97740b1d35b6d1ceef8b0ecd7"
-SRC_URI[manpages.sha256sum] = "fe66a69244def488306c3e05c1362ea53d8626d2a7e57cd7311df2dab1ef8356"
-
+SRC_URI[tarball.sha256sum] = "fc4eb5ecb9299db91cdd156c06cdeb41833f53adc5631ddf8c0cb13eaa2911c1"
+SRC_URI[manpages.sha256sum] = "220f1ed68582caeddf79c4db15e4eaa4808ec01fd11889e19232f0a74d7f31b0"
