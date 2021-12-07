@@ -70,6 +70,9 @@ do_configure () {
 	esac
 	target="$os-${HOST_ARCH}"
 	case $target in
+	linux-arc)
+		target=linux-latomic
+		;;
 	linux-arm*)
 		target=linux-armv4
 		;;
