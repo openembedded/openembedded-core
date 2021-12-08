@@ -12,7 +12,7 @@ PYPI_PACKAGE = "diffoscope"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "ae2774334fce7905f1b938a155d487d55b9fef9da9a9d18eda3d74951a8a8084"
+SRC_URI[sha256sum] = "3d28f0325e00effc6c23c50f916d153524aa393623df2fd1fc8ae0f6a12daf94"
 
 RDEPENDS:${PN} += "binutils vim squashfs-tools python3-libarchive-c python3-magic python3-rpm"
 
