@@ -1,25 +1,32 @@
-puzzles: avoid compiler unitialized variable error
+tree123: avoid compiler unitialized variable error
 
 The compiler does not realize that we must go through the while()
 loop at least once, so we replace it with a for() loop.
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [email discussion with upstream]
 
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Signed-off-by: Joe Slater <joe.slater@windriver.com>
 
---- a/tree234.c
-+++ b/tree234.c
-@@ -326,8 +326,11 @@ static void *add234_internal(tree234 *t,
- 	return orig_e;
+Index: git/tree234.c
+===================================================================
+--- git.orig/tree234.c
++++ git/tree234.c
+@@ -335,7 +335,7 @@ static void *add234_internal(tree234 *t,
      }
  
--    n = t->root;
+     n = t->root;
 -    while (n) {
-+    /*
-+     * We know t->root is not NULL.  The logic
-+     * to break out of this is at the end of the loop.
-+     */
-+    for (n = t->root;;) {
++    do {
  	LOG(("  node %p: %p/%d \"%s\" %p/%d \"%s\" %p/%d \"%s\" %p/%d\n",
  	     n,
  	     n->kids[0], n->counts[0], n->elems[0],
+@@ -388,7 +388,7 @@ static void *add234_internal(tree234 *t,
+ 	if (!n->kids[ki])
+ 	    break;
+ 	n = n->kids[ki];
+-    }
++    } while (n);
+ 
+     add234_insert(NULL, e, NULL, &t->root, n, ki);
+ 

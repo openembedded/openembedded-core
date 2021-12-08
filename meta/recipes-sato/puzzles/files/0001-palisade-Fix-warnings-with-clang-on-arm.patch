@@ -1,7 +1,6 @@
-From 453587d714473b806473b309727f865b673cbc06 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 13 Jan 2016 23:10:19 -0800
-Subject: [PATCH] palisade: Fix warnings with clang on arm
+
+palisade: Fix warnings with clang on arm
 
 ARM treats 'char' as unsigned char when 'char' is not qualified with
 'signed' or 'unsigned' explicitly.
@@ -15,54 +14,59 @@ type 'clue' (aka 'char') is always false
 
 Therefore, typcast the contant to char in such places to be explicit
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Upstream-Status: Submitted
----
- palisade.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Upstream-Status: Submitted [email discussion with upstream]
 
-diff --git a/palisade.c b/palisade.c
-index 6ffbf2d..8b54d42 100644
---- a/palisade.c
-+++ b/palisade.c
-@@ -304,11 +304,11 @@ static void solver_connected_clues_versus_region_size(solver_ctx *ctx)
-      * If p = q = 3 then the region has size exactly 2. */
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: git/palisade.c
+===================================================================
+--- git.orig/palisade.c
++++ git/palisade.c
+@@ -46,7 +46,7 @@ struct game_params {
+     int w, h, k;
+ };
  
-     for (i = 0; i < wh; ++i) {
--        if (ctx->clues[i] == EMPTY) continue;
-+        if (ctx->clues[i] == (char)EMPTY) continue;
-         for (dir = 0; dir < 4; ++dir) {
-             int j = i + dx[dir] + w*dy[dir];
-             if (disconnected(ctx, i, j, dir)) continue;
--            if (ctx->clues[j] == EMPTY) continue;
-+            if (ctx->clues[j] == (char)EMPTY) continue;
-             if ((8 - ctx->clues[i] - ctx->clues[j] > ctx->params->k) ||
-                 (ctx->clues[i] == 3 && ctx->clues[j] == 3 &&
-                  ctx->params->k != 2))
-@@ -326,7 +326,7 @@ static bool solver_number_exhausted(solver_ctx *ctx)
-     bool changed = false;
+-typedef char clue;
++typedef signed char clue;
+ typedef unsigned char borderflag;
  
-     for (i = 0; i < wh; ++i) {
--        if (ctx->clues[i] == EMPTY) continue;
-+        if (ctx->clues[i] == (char)EMPTY) continue;
+ typedef struct shared_state {
+@@ -242,7 +242,7 @@ typedef struct solver_ctx {
+  * thing is done.  See how it is propagated across multiple squares.]
+  */
  
-         if (bitcount[(ctx->borders[i] & BORDER_MASK)] == ctx->clues[i]) {
-             for (dir = 0; dir < 4; ++dir) {
-@@ -538,7 +538,7 @@ static bool is_solved(const game_params *params, clue *clues,
-     for (i = 0; i < wh; ++i) {
-         if (dsf[i] == UNVISITED) dfs_dsf(i, params->w, border, dsf, true);
-         if (dsf_size(dsf, i) != k) goto error;
--        if (clues[i] == EMPTY) continue;
-+        if (clues[i] == (char)EMPTY) continue;
-         if (clues[i] != bitcount[border[i] & BORDER_MASK]) goto error;
-     }
+-#define EMPTY (~0)
++#define EMPTY ((clue)-1)
  
-@@ -685,7 +685,7 @@ static char *new_game_desc(const game_params *params, random_state *rs,
-     p = numbers;
+ #define BIT(i) (1 << (i))
+ #define BORDER(i) BIT(i)
+@@ -622,7 +622,7 @@ static char *new_game_desc(const game_pa
+ {
+     int w = params->w, h = params->h, wh = w*h, k = params->k;
+ 
+-    clue *numbers = snewn(wh + 1, clue), *p;
++    clue *numbers = snewn(wh + 1, clue);
+     borderflag *rim = snewn(wh, borderflag);
+     borderflag *scratch_borders = snewn(wh, borderflag);
+ 
+@@ -682,7 +682,8 @@ static char *new_game_desc(const game_pa
+     sfree(shuf);
+     sfree(dsf);
+ 
+-    p = numbers;
++    char *output = snewn(wh + 1, char), *p = output;
++
      r = 0;
      for (i = 0; i < wh; ++i) {
--        if (numbers[i] != EMPTY) {
-+        if (numbers[i] != (char)EMPTY) {
-             while (r) {
-                 while (r > 26) {
-                     *p++ = 'z';
+         if (numbers[i] != EMPTY) {
+@@ -699,7 +700,8 @@ static char *new_game_desc(const game_pa
+     }
+     *p++ = '\0';
+ 
+-    return sresize(numbers, p - numbers, clue);
++    sfree(numbers);
++    return sresize(output, p - output, char);
+ }
+ 
+ static const char *validate_desc(const game_params *params, const char *desc)

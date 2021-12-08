@@ -1,7 +1,5 @@
-From 3d78d4cffcdc1242892b6c21c26d1c96938c48d1 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Sat, 27 Feb 2021 10:02:43 -0800
-Subject: [PATCH] map: Fix stringop-overflow warning
+map: Fix stringop-overflow warning
 
 Fixes
 
@@ -14,29 +12,23 @@ Fixes
  1663 |         ret[retlen++] = ',';
       |         ~~~~~~~~~~~~~~^~~~~
 
-Upstream-Status: Pending
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- map.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Upstream-Status: Submitted [email discussion with upstream]
 
-diff --git a/map.c b/map.c
-index 412305c..fa0c493 100644
---- a/map.c
-+++ b/map.c
-@@ -1659,8 +1659,10 @@ static char *new_game_desc(const game_params *params, random_state *rs,
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: git/map.c
+===================================================================
+--- git.orig/map.c
++++ git/map.c
+@@ -1659,6 +1659,10 @@ static char *new_game_desc(const game_pa
  	    }
  	}
  
--	ret[retlen++] = 'a'-1 + run;
--	ret[retlen++] = ',';
-+	if(ret != NULL) {
-+		ret[retlen++] = 'a'-1 + run;
-+		ret[retlen++] = ',';
-+	}
++        if (retlen + 10 >= retsize) {
++            retsize = retlen + 256;
++            ret = sresize(ret, retsize, char);
++        }
+ 	ret[retlen++] = 'a'-1 + run;
+ 	ret[retlen++] = ',';
  
- 	run = 0;
- 	for (i = 0; i < n; i++) {
--- 
-2.30.1
-
