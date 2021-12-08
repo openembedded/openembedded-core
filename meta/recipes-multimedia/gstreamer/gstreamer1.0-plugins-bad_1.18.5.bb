@@ -18,6 +18,10 @@ S = "${WORKDIR}/gst-plugins-bad-${PV}"
 LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"
+
 DEPENDS += "gstreamer1.0-plugins-base"
 
 inherit gobject-introspection
