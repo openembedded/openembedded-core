@@ -25,7 +25,7 @@ def tearDownModule():
     runCmd('rm -rf %s' % templayerdir)
 
 
-class RecipetoolBase(devtool.DevtoolBase):
+class RecipetoolBase(devtool.DevtoolTestCase):
 
     def setUpLocal(self):
         super(RecipetoolBase, self).setUpLocal()
@@ -72,7 +72,7 @@ class RecipetoolAppendTests(RecipetoolBase):
 
     @classmethod
     def setUpClass(cls):
-        super(RecipetoolTests, cls).setUpClass()
+        super(RecipetoolAppendTests, cls).setUpClass()
         # Ensure we have the right data in shlibs/pkgdata
         cls.logger.info('Running bitbake to generate pkgdata')
         bitbake('-c packagedata base-files coreutils busybox selftest-recipetool-appendfile')
