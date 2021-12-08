@@ -350,7 +350,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SRC_URI[sha256sum]'] = '2e6a401cac9024db2288297e3be1a8ab60e7401ba8e91225218aaf4a27e82a07'
         self._test_recipe_contents(recipefile, checkvars, [])
 
-    def test_recipetool_create_git(self):
+    def test_recipetool_create_autotools(self):
         if 'x11' not in get_bb_var('DISTRO_FEATURES'):
             self.skipTest('Test requires x11 as distro feature')
         # Ensure we have the right data in shlibs/pkgdata
@@ -359,7 +359,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         tempsrc = os.path.join(self.tempdir, 'srctree')
         os.makedirs(tempsrc)
         recipefile = os.path.join(self.tempdir, 'libmatchbox.bb')
-        srcuri = 'git://git.yoctoproject.org/libmatchbox;branch=master'
+        srcuri = 'git://git.yoctoproject.org/libmatchbox'
         result = runCmd(['recipetool', 'create', '-o', recipefile, srcuri + ";rev=9f7cf8895ae2d39c465c04cc78e918c157420269", '-x', tempsrc])
         self.assertTrue(os.path.isfile(recipefile), 'recipetool did not create recipe file; output:\n%s' % result.output)
         checkvars = {}
@@ -367,7 +367,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34'
         checkvars['S'] = '${WORKDIR}/git'
         checkvars['PV'] = '1.11+git${SRCPV}'
-        checkvars['SRC_URI'] = srcuri
+        checkvars['SRC_URI'] = srcuri + ';branch=master'
         checkvars['DEPENDS'] = set(['libcheck', 'libjpeg-turbo', 'libpng', 'libx11', 'libxext', 'pango'])
         inherits = ['autotools', 'pkgconfig']
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -506,19 +506,35 @@ class RecipetoolCreateTests(RecipetoolBase):
         inherits = ['setuptools3']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
-    def test_recipetool_create_git_http(self):
+    def _test_recipetool_create_git(self, srcuri, branch=None):
         # Basic test to check http git URL mangling works
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
-        recipefile = os.path.join(temprecipe, 'matchbox-terminal_git.bb')
-        srcuri = 'http://git.yoctoproject.org/git/matchbox-terminal'
-        result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        name = srcuri.split(';')[0].split('/')[-1]
+        recipefile = os.path.join(temprecipe, name + '_git.bb')
+        options = ' -B %s' % branch if branch else ''
+        result = runCmd('recipetool create -o %s%s "%s"' % (temprecipe, options, srcuri))
         self.assertTrue(os.path.isfile(recipefile))
         checkvars = {}
-        checkvars['LICENSE'] = set(['GPLv2'])
-        checkvars['SRC_URI'] = 'git://git.yoctoproject.org/git/matchbox-terminal;protocol=http;branch=master'
-        inherits = ['pkgconfig', 'autotools']
-        self._test_recipe_contents(recipefile, checkvars, inherits)
+        checkvars['SRC_URI'] = srcuri
+        for scheme in ['http', 'https']:
+            if srcuri.startswith(scheme + ":"):
+                checkvars['SRC_URI'] = 'git%s;protocol=%s' % (srcuri[len(scheme):], scheme)
+        if ';branch=' not in srcuri:
+            checkvars['SRC_URI'] += ';branch=' + (branch or 'master')
+        self._test_recipe_contents(recipefile, checkvars, [])
+
+    def test_recipetool_create_git_http(self):
+        self._test_recipetool_create_git('http://git.yoctoproject.org/git/matchbox-keyboard')
+
+    def test_recipetool_create_git_srcuri_master(self):
+        self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;branch=master')
+
+    def test_recipetool_create_git_srcuri_branch(self):
+        self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;branch=matchbox-keyboard-0-1')
+
+    def test_recipetool_create_git_srcbranch(self):
+        self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard', 'matchbox-keyboard-0-1')
 
 
 class RecipetoolTests(RecipetoolBase):
