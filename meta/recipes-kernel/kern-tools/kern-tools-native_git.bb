@@ -15,7 +15,6 @@ inherit native
 
 SRC_URI = "git://git.yoctoproject.org/yocto-kernel-tools.git;branch=master"
 S = "${WORKDIR}/git"
-UPSTREAM_CHECK_COMMITS = "1"
 
 do_configure() {
 	:
