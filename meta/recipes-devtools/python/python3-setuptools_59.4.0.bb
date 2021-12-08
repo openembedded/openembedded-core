@@ -13,7 +13,7 @@ SRC_URI += "\
     file://0001-_distutils-sysconfig-append-STAGING_LIBDIR-python-sy.patch \
 "
 
-SRC_URI[sha256sum] = "157d21de9d055ab9e8ea3186d91e7f4f865e11f42deafa952d90842671fc2576"
+SRC_URI[sha256sum] = "b4c634615a0cf5b02cf83c7bedffc8da0ca439f00e79452699454da6fbd4153d"
 
 DEPENDS += "${PYTHON_PN}"
 
