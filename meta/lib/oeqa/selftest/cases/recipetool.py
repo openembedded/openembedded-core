@@ -68,7 +68,7 @@ class RecipetoolBase(devtool.DevtoolBase):
         return bbappendfile, result.output
 
 
-class RecipetoolTests(RecipetoolBase):
+class RecipetoolAppendTests(RecipetoolBase):
 
     @classmethod
     def setUpClass(cls):
@@ -76,9 +76,8 @@ class RecipetoolTests(RecipetoolBase):
         # Ensure we have the right data in shlibs/pkgdata
         cls.logger.info('Running bitbake to generate pkgdata')
         bitbake('-c packagedata base-files coreutils busybox selftest-recipetool-appendfile')
-        bb_vars = get_bb_vars(['COREBASE', 'BBPATH'])
+        bb_vars = get_bb_vars(['COREBASE'])
         cls.corebase = bb_vars['COREBASE']
-        cls.bbpath = bb_vars['BBPATH']
 
     def _try_recipetool_appendfile(self, testrecipe, destfile, newfile, options, expectedlines, expectedfiles):
         cmd = 'recipetool appendfile %s %s %s %s' % (self.templayerdir, destfile, newfile, options)
@@ -332,6 +331,9 @@ class RecipetoolTests(RecipetoolBase):
         filename = try_appendfile_wc('-w')
         self.assertEqual(filename, recipefn.split('_')[0] + '_%.bbappend')
 
+
+class RecipetoolCreateTests(RecipetoolBase):
+
     def test_recipetool_create(self):
         # Try adding a recipe
         tempsrc = os.path.join(self.tempdir, 'srctree')
@@ -517,6 +519,15 @@ class RecipetoolTests(RecipetoolBase):
         checkvars['SRC_URI'] = 'git://git.yoctoproject.org/git/matchbox-terminal;protocol=http;branch=master'
         inherits = ['pkgconfig', 'autotools']
         self._test_recipe_contents(recipefile, checkvars, inherits)
+
+
+class RecipetoolTests(RecipetoolBase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(RecipetoolTests, cls).setUpClass()
+        bb_vars = get_bb_vars(['BBPATH'])
+        cls.bbpath = bb_vars['BBPATH']
 
     def _copy_file_with_cleanup(self, srcfile, basedstdir, *paths):
         dstdir = basedstdir
