@@ -16,7 +16,7 @@ inherit autotools pkgconfig
 
 SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz \
            "
-SRC_URI[sha256sum] = "fedfcceee56eb63ab1eb98bf120a3cfbecee50bcd893874328c889f1b381e7d7"
+SRC_URI[sha256sum] = "f4fc647eff32f622e21f8851ed0c8b7270f4800149c91be601754e22d82cbb4d"
 
 do_configure:prepend () {
     mkdir -p ${S}/build-aux
