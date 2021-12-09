@@ -1,4 +1,4 @@
-From f6411021856bafedd784748ec33494151e783b51 Mon Sep 17 00:00:00 2001
+From 99cfdb5f3debd38f50b73a7713161f8b56ce842e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 14 May 2013 15:00:26 -0700
 Subject: [PATCH] python3: Add target and native recipes
@@ -12,6 +12,7 @@ Signed-Off: Michael 'Mickey' Lauer <mickey@vanille-media.de>
 Signed-off-by: Phil Blundell <philb@gnu.org>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Alejandro Hernandez <alejandro.hernandez@linux.intel.com>
+
 ---
  Lib/distutils/sysconfig.py | 14 +++++++++++---
  1 file changed, 11 insertions(+), 3 deletions(-)
@@ -55,6 +56,3 @@ index 3414a76..361d3a1 100644
                                   "python" + get_python_version())
          if standard_lib:
              return libpython
--- 
-2.20.1
-
