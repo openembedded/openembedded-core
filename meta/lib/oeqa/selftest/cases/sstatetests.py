@@ -11,6 +11,7 @@ import tempfile
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_test_layer, create_temp_layer
 from oeqa.selftest.cases.sstate import SStateBase
+import oe
 
 import bb.siggen
 
@@ -573,3 +574,44 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         compare_sigfiles(rest, files1, files2, compare=False)
 
         self.fail("sstate hashes not identical.")
+
+    def test_sstate_movelayer_samesigs(self):
+        """
+        The sstate checksums of two builds with the same oe-core layer in two
+        different locations should be the same.
+        """
+        core_layer = os.path.join(
+                    self.tc.td["COREBASE"], 'meta')
+        copy_layer_1 = self.topdir + "/meta-copy1/meta"
+        copy_layer_2 = self.topdir + "/meta-copy2/meta"
+
+        oe.path.copytree(core_layer, copy_layer_1)
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
+""")
+        bblayers_conf = 'BBLAYERS += "%s"\nBBLAYERS:remove = "%s"' % (copy_layer_1, core_layer)
+        self.write_bblayers_config(bblayers_conf)
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash")
+        bitbake("bash -S none")
+
+        oe.path.copytree(core_layer, copy_layer_2)
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
+""")
+        bblayers_conf = 'BBLAYERS += "%s"\nBBLAYERS:remove = "%s"' % (copy_layer_2, core_layer)
+        self.write_bblayers_config(bblayers_conf)
+        self.track_for_cleanup(self.topdir + "/tmp-sstatesamehash2")
+        bitbake("bash -S none")
+
+        def get_files(d):
+            f = []
+            for root, dirs, files in os.walk(d):
+                for name in files:
+                    f.append(os.path.join(root, name))
+            return f
+        files1 = get_files(self.topdir + "/tmp-sstatesamehash/stamps")
+        files2 = get_files(self.topdir + "/tmp-sstatesamehash2/stamps")
+        files2 = [x.replace("tmp-sstatesamehash2", "tmp-sstatesamehash") for x in files2]
+        self.maxDiff = None
+        self.assertCountEqual(files1, files2)
+
