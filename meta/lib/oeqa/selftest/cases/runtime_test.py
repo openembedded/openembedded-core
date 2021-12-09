@@ -185,6 +185,8 @@ class TestImage(OESelftestTestCase):
             self.skipTest('virgl isn\'t working with Debian 9')
         if distro and distro == 'centos-7':
             self.skipTest('virgl isn\'t working with Centos 7')
+        if distro and distro == 'centos-8':
+            self.skipTest('virgl isn\'t working with Centos 8')
         if distro and distro == 'opensuseleap-15.0':
             self.skipTest('virgl isn\'t working with Opensuse 15.0')
 
