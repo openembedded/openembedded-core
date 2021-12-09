@@ -29,7 +29,6 @@ SRC_URI = "\
      file://0009-Change-default-emulation-for-mips64-linux.patch \
      file://0010-Add-support-for-Netlogic-XLP.patch \
      file://0011-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
-     file://0012-Detect-64-bit-MIPS-targets.patch \
      file://0013-Use-libtool-2.4.patch \
      file://0014-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
