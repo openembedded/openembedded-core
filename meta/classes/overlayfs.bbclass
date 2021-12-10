@@ -31,6 +31,7 @@
 #   OVERLAYFS_WRITABLE_PATHS[mnt-overlay] = "/usr/share/another-application"
 #
 # Note: the class does not support /etc directory itself, because systemd depends on it
+# For /etc directory use overlayfs-etc class
 
 REQUIRED_DISTRO_FEATURES += "systemd overlayfs"
 
