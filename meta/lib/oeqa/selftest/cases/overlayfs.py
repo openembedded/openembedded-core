@@ -209,3 +209,187 @@ EOT
 
             line = getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/another-overlay-mount")
             self.assertTrue(line and line.startswith("overlay"), msg=output)
+
+class OverlayFSEtcRunTimeTests(OESelftestTestCase):
+    """overlayfs-etc class tests"""
+
+    def test_all_required_variables_set(self):
+        """
+        Summary:   Check that required variables are set
+        Expected:  Fail when any of required variables is missing
+        Author:    Vyacheslav Yurkov <uvv.mail@gmail.com>
+        """
+
+        configBase = """
+DISTRO_FEATURES += "systemd"
+
+# Use systemd as init manager
+VIRTUAL-RUNTIME_init_manager = "systemd"
+
+# enable overlayfs in the kernel
+KERNEL_EXTRA_FEATURES:append = " features/overlayfs/overlayfs.scc"
+
+# Image configuration for overlayfs-etc
+EXTRA_IMAGE_FEATURES += "overlayfs-etc"
+IMAGE_FEATURES:remove = "package-management"
+"""
+        configMountPoint = """
+OVERLAYFS_ETC_MOUNT_POINT = "/data"
+"""
+        configDevice = """
+OVERLAYFS_ETC_DEVICE = "/dev/mmcblk0p1"
+"""
+
+        self.write_config(configBase)
+        res = bitbake('core-image-minimal', ignore_status=True)
+        line = getline(res, "OVERLAYFS_ETC_MOUNT_POINT must be set in your MACHINE configuration")
+        self.assertTrue(line, msg=res.output)
+
+        self.append_config(configMountPoint)
+        res = bitbake('core-image-minimal', ignore_status=True)
+        line = getline(res, "OVERLAYFS_ETC_DEVICE must be set in your MACHINE configuration")
+        self.assertTrue(line, msg=res.output)
+
+        self.append_config(configDevice)
+        res = bitbake('core-image-minimal', ignore_status=True)
+        line = getline(res, "OVERLAYFS_ETC_FSTYPE should contain a valid file system type on /dev/mmcblk0p1")
+        self.assertTrue(line, msg=res.output)
+
+    def test_image_feature_conflict(self):
+        """
+        Summary:   Overlayfs-etc is not allowed to be used with package-management
+        Expected:  Feature conflict
+        Author:    Vyacheslav Yurkov <uvv.mail@gmail.com>
+        """
+
+        config = """
+DISTRO_FEATURES += "systemd"
+
+# Use systemd as init manager
+VIRTUAL-RUNTIME_init_manager = "systemd"
+
+# enable overlayfs in the kernel
+KERNEL_EXTRA_FEATURES:append = " features/overlayfs/overlayfs.scc"
+EXTRA_IMAGE_FEATURES += "overlayfs-etc"
+EXTRA_IMAGE_FEATURES += "package-management"
+"""
+
+        self.write_config(config)
+
+        res = bitbake('core-image-minimal', ignore_status=True)
+        line = getline(res, "contains conflicting IMAGE_FEATURES")
+        self.assertTrue("overlayfs-etc" in res.output, msg=res.output)
+        self.assertTrue("package-management" in res.output, msg=res.output)
+
+    def test_image_feature_is_missing_class_included(self):
+        configAppend = """
+INHERIT += "overlayfs-etc"
+"""
+        self.run_check_image_feature(configAppend)
+
+    def test_image_feature_is_missing(self):
+        self.run_check_image_feature()
+
+    def run_check_image_feature(self, appendToConfig=""):
+        """
+        Summary:   Overlayfs-etc class is not applied when image feature is not set
+                   even if we inherit it directly,
+        Expected:  Image is created successfully but /etc is not an overlay
+        Author:    Vyacheslav Yurkov <uvv.mail@gmail.com>
+        """
+
+        config = f"""
+DISTRO_FEATURES += "systemd"
+
+# Use systemd as init manager
+VIRTUAL-RUNTIME_init_manager = "systemd"
+
+# enable overlayfs in the kernel
+KERNEL_EXTRA_FEATURES:append = " features/overlayfs/overlayfs.scc"
+
+IMAGE_FSTYPES += "wic"
+WKS_FILE = "overlayfs_etc.wks.in"
+
+EXTRA_IMAGE_FEATURES += "read-only-rootfs"
+# Image configuration for overlayfs-etc
+OVERLAYFS_ETC_MOUNT_POINT = "/data"
+OVERLAYFS_ETC_DEVICE = "/dev/sda3"
+{appendToConfig}
+"""
+
+        self.write_config(config)
+
+        bitbake('core-image-minimal')
+
+        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+            status, output = qemu.run_serial("/bin/mount")
+
+            line = getline_qemu(output, "upperdir=/data/overlay-etc/upper")
+            self.assertFalse(line, msg=output)
+
+    def test_sbin_init_preinit(self):
+        self.run_sbin_init(False)
+
+    def test_sbin_init_original(self):
+        self.run_sbin_init(True)
+
+    def run_sbin_init(self, origInit):
+        """
+        Summary:   Confirm we can replace original init and mount overlay on top of /etc
+        Expected:  Image is created successfully and /etc is mounted as an overlay
+        Author:    Vyacheslav Yurkov <uvv.mail@gmail.com>
+        """
+
+        config = """
+DISTRO_FEATURES += "systemd"
+
+# Use systemd as init manager
+VIRTUAL-RUNTIME_init_manager = "systemd"
+
+# enable overlayfs in the kernel
+KERNEL_EXTRA_FEATURES:append = " features/overlayfs/overlayfs.scc"
+
+IMAGE_FSTYPES += "wic"
+OVERLAYFS_INIT_OPTION = "{OVERLAYFS_INIT_OPTION}"
+WKS_FILE = "overlayfs_etc.wks.in"
+
+EXTRA_IMAGE_FEATURES += "read-only-rootfs"
+# Image configuration for overlayfs-etc
+EXTRA_IMAGE_FEATURES += "overlayfs-etc"
+IMAGE_FEATURES:remove = "package-management"
+OVERLAYFS_ETC_MOUNT_POINT = "/data"
+OVERLAYFS_ETC_FSTYPE = "ext4"
+OVERLAYFS_ETC_DEVICE = "/dev/sda3"
+OVERLAYFS_ETC_USE_ORIG_INIT_NAME = "{OVERLAYFS_ETC_USE_ORIG_INIT_NAME}"
+"""
+
+        args = {
+            'OVERLAYFS_INIT_OPTION': "" if origInit else "init=/sbin/preinit",
+            'OVERLAYFS_ETC_USE_ORIG_INIT_NAME': int(origInit == True)
+        }
+
+        self.write_config(config.format(**args))
+
+        bitbake('core-image-minimal')
+        testFile = "/etc/my-test-data"
+
+        with runqemu('core-image-minimal', image_fstype='wic', discard_writes=False) as qemu:
+            status, output = qemu.run_serial("/bin/mount")
+
+            line = getline_qemu(output, "/dev/sda3")
+            self.assertTrue("/data" in output, msg=output)
+
+            line = getline_qemu(output, "upperdir=/data/overlay-etc/upper")
+            self.assertTrue(line and line.startswith("/data/overlay-etc/upper on /etc type overlay"), msg=output)
+
+            status, output = qemu.run_serial("touch " + testFile)
+            status, output = qemu.run_serial("sync")
+            status, output = qemu.run_serial("ls -1 " + testFile)
+            line = getline_qemu(output, testFile)
+            self.assertTrue(line and line.startswith(testFile), msg=output)
+
+        # Check that file exists in /etc after reboot
+        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+            status, output = qemu.run_serial("ls -1 " + testFile)
+            line = getline_qemu(output, testFile)
+            self.assertTrue(line and line.startswith(testFile), msg=output)
