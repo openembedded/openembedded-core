@@ -32,5 +32,6 @@ SRC_URI = "\
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
      file://0017-bfd-Close-the-file-descriptor-if-there-is-no-archive.patch \
+     file://0001-elf-Discard-input-.note.gnu.build-id-sections.patch \
 "
 S  = "${WORKDIR}/git"
