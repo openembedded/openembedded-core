@@ -37,51 +37,19 @@ REQUIRED_DISTRO_FEATURES += "systemd overlayfs"
 
 inherit systemd features_check
 
+OVERLAYFS_CREATE_DIRS_TEMPLATE ??= "${COREBASE}/meta/files/overlayfs-create-dirs.service.in"
+OVERLAYFS_MOUNT_UNIT_TEMPLATE ??= "${COREBASE}/meta/files/overlayfs-unit.mount.in"
+OVERLAYFS_ALL_OVERLAYS_TEMPLATE ??= "${COREBASE}/meta/files/overlayfs-all-overlays.service.in"
+
 python do_create_overlayfs_units() {
     from oe.overlayfs import mountUnitName
 
-    CreateDirsUnitTemplate = """[Unit]
-Description=Overlayfs directories setup
-Requires={DATA_MOUNT_UNIT}
-After={DATA_MOUNT_UNIT}
-DefaultDependencies=no
-
-[Service]
-Type=oneshot
-ExecStart=mkdir -p {DATA_MOUNT_POINT}/workdir{LOWERDIR} && mkdir -p {DATA_MOUNT_POINT}/upper{LOWERDIR}
-RemainAfterExit=true
-StandardOutput=journal
-
-[Install]
-WantedBy=multi-user.target
-"""
-    MountUnitTemplate = """[Unit]
-Description=Overlayfs mount unit
-Requires={CREATE_DIRS_SERVICE}
-After={CREATE_DIRS_SERVICE}
-
-[Mount]
-What=overlay
-Where={LOWERDIR}
-Type=overlay
-Options=lowerdir={LOWERDIR},upperdir={DATA_MOUNT_POINT}/upper{LOWERDIR},workdir={DATA_MOUNT_POINT}/workdir{LOWERDIR}
-
-[Install]
-WantedBy=multi-user.target
-"""
-    AllOverlaysTemplate = """[Unit]
-Description=Groups all overlays required by {PN} in one unit
-After={ALL_OVERLAYFS_UNITS}
-Requires={ALL_OVERLAYFS_UNITS}
-
-[Service]
-Type=oneshot
-ExecStart=/bin/true
-RemainAfterExit=true
-
-[Install]
-WantedBy=local-fs.target
-"""
+    with open(d.getVar("OVERLAYFS_CREATE_DIRS_TEMPLATE"), "r") as f:
+        CreateDirsUnitTemplate = f.read()
+    with open(d.getVar("OVERLAYFS_MOUNT_UNIT_TEMPLATE"), "r") as f:
+        MountUnitTemplate = f.read()
+    with open(d.getVar("OVERLAYFS_ALL_OVERLAYS_TEMPLATE"), "r") as f:
+        AllOverlaysTemplate = f.read()
 
     def prepareUnits(data, lower):
         from oe.overlayfs import helperUnitName
