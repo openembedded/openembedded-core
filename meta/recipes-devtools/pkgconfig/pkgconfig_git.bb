@@ -14,7 +14,6 @@ PV = "0.29.2+git${SRCPV}"
 SRC_URI = "git://gitlab.freedesktop.org/pkg-config/pkg-config.git;branch=master;protocol=https \
            file://pkg-config-esdk.in \
            file://pkg-config-native.in \
-           file://fix-glib-configure-libtool-usage.patch \
            file://0001-glib-gettext.m4-Update-AM_GLIB_GNU_GETTEXT-to-match-.patch \
            file://0001-autotools-remove-support-for-the-__int64-type.-See-1.patch \
            file://0001-autotools-use-C99-printf-format-specifiers-on-Window.patch \
