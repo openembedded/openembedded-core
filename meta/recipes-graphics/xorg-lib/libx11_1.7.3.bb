@@ -10,12 +10,13 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/libx11:"
 
 PE = "1"
 
-SRC_URI += "file://Fix-hanging-issue-in-_XReply.patch \
-           file://disable_tests.patch \
-           file://keysym.patch \
-           "
+# temporarily override SRC_URI which is hard-coded in xorg-lib-common.inc
+# since new versions of packages use a new compression format - .tar.gz
+SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "1cfa35e37aaabbe4792e9bb690468efefbfbf6b147d9c69d6f90d13c3092ea6c"
+SRC_URI += "file://disable_tests.patch \
+           "
+SRC_URI[sha256sum] = "dfd1343db3a0e523f1bb97d5ba71453c79eee78a77e51ca9f8dfef7131c6f0fe"
 
 PROVIDES = "virtual/libx11"
 
@@ -23,8 +24,12 @@ XORG_PN = "libX11"
 LICENSE = "MIT & MIT-style & BSD-1-Clause & HPND & HPND-sell-variant"
 LIC_FILES_CHKSUM = "file://COPYING;md5=172255dee66bb0151435b2d5d709fcf7"
 
-DEPENDS += "xorgproto xtrans libxcb"
-DEPENDS += "xorgproto-native"
+DEPENDS += "xorgproto \
+            xtrans \
+            libxcb \
+            xorgproto-native \
+            autoconf-archive \
+           "
 
 EXTRA_OECONF += "--with-keysymdefdir=${STAGING_INCDIR}/X11/ --disable-xf86bigfont"
 EXTRA_OEMAKE += 'CWARNFLAGS=""'
