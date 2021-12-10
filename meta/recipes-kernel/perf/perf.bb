@@ -125,9 +125,11 @@ PERF_SRC ?= "Makefile \
 
 PERF_EXTRA_LDFLAGS = ""
 
-# MIPS N32
+# MIPS N32/N64
 PERF_EXTRA_LDFLAGS:mipsarchn32eb = "-m elf32btsmipn32"
 PERF_EXTRA_LDFLAGS:mipsarchn32el = "-m elf32ltsmipn32"
+PERF_EXTRA_LDFLAGS:mipsarchn64eb = "-m elf64btsmip"
+PERF_EXTRA_LDFLAGS:mipsarchn64el = "-m elf64ltsmip"
 
 do_compile() {
 	# Linux kernel build system is expected to do the right thing
