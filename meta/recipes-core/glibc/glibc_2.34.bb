@@ -36,7 +36,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            ${NATIVESDKFIXES} \
            file://0015-sysdeps-gnu-configure.ac-handle-correctly-libc_cv_ro.patch \
            file://0016-yes-within-the-path-sets-wrong-config-variables.patch \
-           file://0017-timezone-re-written-tzselect-as-posix-sh.patch \
            file://0018-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0019-eglibc-Cross-building-and-testing-instructions.patch \
            file://0020-eglibc-Help-bootstrap-cross-toolchain.patch \
@@ -53,6 +52,7 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0002-CVE-2021-38604.patch \
            file://0001-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
            file://CVE-2021-43396.patch \
+           file://0001-Make-shell-interpreter-overridable-in-tzselect.ksh.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
