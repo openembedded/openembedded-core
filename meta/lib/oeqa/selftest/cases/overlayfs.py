@@ -5,16 +5,16 @@
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 
+def getline_qemu(out, line):
+    for l in out.split('\n'):
+        if line in l:
+            return l
+
+def getline(res, line):
+    return getline_qemu(res.output, line)
+
 class OverlayFSTests(OESelftestTestCase):
     """Overlayfs class usage tests"""
-
-    def getline_qemu(self, out, line):
-        for l in out.split('\n'):
-            if line in l:
-                return l
-
-    def getline(self, res, line):
-        return self.getline_qemu(res.output, line)
 
     def add_overlay_conf_to_machine(self):
         machine_inc = """
@@ -40,7 +40,7 @@ inherit overlayfs
         self.write_recipeinc('overlayfs-user', overlayfs_recipe_append)
 
         res = bitbake('core-image-minimal', ignore_status=True)
-        line = self.getline(res, "overlayfs-user was skipped: missing required distro features")
+        line = getline(res, "overlayfs-user was skipped: missing required distro features")
         self.assertTrue("overlayfs" in res.output, msg=res.output)
         self.assertTrue("systemd" in res.output, msg=res.output)
         self.assertTrue("ERROR: Required build target 'core-image-minimal' has no buildable providers." in res.output, msg=res.output)
@@ -61,9 +61,9 @@ DISTRO_FEATURES += "systemd overlayfs"
         self.add_overlay_conf_to_machine()
 
         res = bitbake('core-image-minimal', ignore_status=True)
-        line = self.getline(res, "Unit name mnt-overlay.mount not found in systemd unit directories")
+        line = getline(res, "Unit name mnt-overlay.mount not found in systemd unit directories")
         self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
-        line = self.getline(res, "Not all mount units are installed by the BSP")
+        line = getline(res, "Not all mount units are installed by the BSP")
         self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
 
     def test_mount_unit_not_set(self):
@@ -81,7 +81,7 @@ DISTRO_FEATURES += "systemd overlayfs"
         self.write_config(config)
 
         res = bitbake('core-image-minimal', ignore_status=True)
-        line = self.getline(res, "A recipe uses overlayfs class but there is no OVERLAYFS_MOUNT_POINT set in your MACHINE configuration")
+        line = getline(res, "A recipe uses overlayfs class but there is no OVERLAYFS_MOUNT_POINT set in your MACHINE configuration")
         self.assertTrue(line and line.startswith("Parsing recipes...ERROR:"), msg=res.output)
 
     def test_wrong_mount_unit_set(self):
@@ -104,7 +104,7 @@ OVERLAYFS_MOUNT_POINT[usr-share-overlay] = "/usr/share/overlay"
         self.set_machine_config(wrong_machine_config)
 
         res = bitbake('core-image-minimal', ignore_status=True)
-        line = self.getline(res, "Missing required mount point for OVERLAYFS_MOUNT_POINT[mnt-overlay] in your MACHINE configuration")
+        line = getline(res, "Missing required mount point for OVERLAYFS_MOUNT_POINT[mnt-overlay] in your MACHINE configuration")
         self.assertTrue(line and line.startswith("Parsing recipes...ERROR:"), msg=res.output)
 
     def test_correct_image(self):
@@ -201,11 +201,11 @@ EOT
             # /usr/share/my-application as an overlay (see overlayfs-user recipe)
             status, output = qemu.run_serial("/bin/mount -t tmpfs,overlay")
 
-            line = self.getline_qemu(output, "on /mnt/overlay")
+            line = getline_qemu(output, "on /mnt/overlay")
             self.assertTrue(line and line.startswith("tmpfs"), msg=output)
 
-            line = self.getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/my-application")
+            line = getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/my-application")
             self.assertTrue(line and line.startswith("overlay"), msg=output)
 
-            line = self.getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/another-overlay-mount")
+            line = getline_qemu(output, "upperdir=/mnt/overlay/upper/usr/share/another-overlay-mount")
             self.assertTrue(line and line.startswith("overlay"), msg=output)
