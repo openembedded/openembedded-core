@@ -7,7 +7,7 @@ LICENSE = "GPLv3"
 SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master \
            file://handle-read-only-files.patch \
            "
-SRCREV = "2ac5798fdc79762ceee520b2b3b4758f7f97b17e"
+SRCREV = "bf3f37ec29edcdb3e2a163edaf84aeece39f8c9d"
 
 S = "${WORKDIR}/git"
 
