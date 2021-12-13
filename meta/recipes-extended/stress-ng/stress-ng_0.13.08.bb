@@ -5,10 +5,8 @@ HOMEPAGE = "https://github.com/ColinIanKing/stress-ng#readme"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master \
-           file://0001-Do-not-preserve-ownership-when-installing-example-jo.patch \
-           "
-SRCREV = "924a37f50f73207fa230ae27a63897c77ff8e6cc"
+SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master"
+SRCREV = "0af163e0e378e5c62abb9328a27b653289c05679"
 S = "${WORKDIR}/git"
 
 DEPENDS = "coreutils-native"
