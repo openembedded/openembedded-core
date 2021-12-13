@@ -94,6 +94,7 @@ SRC_URI = "git://github.com/xrmx/bootchart.git;branch=master;protocol=https \
            file://bootchartd_stop.sh \
            file://0001-collector-Allocate-space-on-heap-for-chunks.patch \
            file://0001-bootchart2-support-usrmerge.patch \
+           file://0001-bootchartd.in-make-sure-only-one-bootchartd-process.patch \
           "
 
 S = "${WORKDIR}/git"
