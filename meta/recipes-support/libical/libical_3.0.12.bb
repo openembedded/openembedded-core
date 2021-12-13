@@ -12,14 +12,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1910a2a76ddf6a9ba369182494170d87 \
                     "
 SECTION = "libs"
 
-SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
-"
-SRC_URI[sha256sum] = "1e6c5e10c5a48f7a40c68958055f0e2759d9ab3563aca17273fe35a5df7dbbf1"
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz"
+SRC_URI[sha256sum] = "35095a4cc1a061a3de0f332c2dc728226cf127fa0baa818e9f8856cee6d35830"
 UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake pkgconfig
 
-DEPENDS:append:class-target = " libical-native"
+DEPENDS += "libical-native"
 
 PACKAGECONFIG ??= "icu glib"
 PACKAGECONFIG[bdb] = ",-DCMAKE_DISABLE_FIND_PACKAGE_BDB=True,db"
@@ -29,13 +28,16 @@ PACKAGECONFIG[icu] = ",-DCMAKE_DISABLE_FIND_PACKAGE_ICU=True,icu"
 
 # No need to use perl-native, the host perl is sufficient.
 EXTRA_OECMAKE += "-DPERL_EXECUTABLE=${HOSTTOOLS_DIR}/perl"
+# Disable the test suite as we can't install it
+EXTRA_OECMAKE += "-DLIBICAL_BUILD_TESTING=false"
 # doc build fails with linker error (??) for libical-glib so disable it
 EXTRA_OECMAKE += "-DICAL_BUILD_DOCS=false"
 
+# Tell the cross-libical where the tool it needs to build is
 EXTRA_OECMAKE:append:class-target = " -DIMPORT_ICAL_GLIB_SRC_GENERATOR=${STAGING_LIBDIR_NATIVE}/cmake/LibIcal/IcalGlibSrcGenerator.cmake"
 
 do_install:append () {
-    # Remove build host references
+    # Remove build host references (https://github.com/libical/libical/issues/532)
     sed -i \
        -e 's,${STAGING_LIBDIR},${libdir},g' \
        -e 's,${STAGING_INCDIR},${includedir},g' \
