@@ -1,0 +1,218 @@
+Upstream-Status: Backport
+
+From 87250ba19aec78f36e301494a03f5678fcb6fbb4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=A9r=C3=A9mie=20Galarneau?=
+ <jeremie.galarneau@efficios.com>
+Date: Mon, 1 Nov 2021 15:43:55 -0400
+Subject: [PATCH] Fix: relayd: live: mishandled initial null trace chunk
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Observed issue
+==============
+
+As reported in #1323 (https://bugs.lttng.org/issues/1323), crashes of
+the relay daemon are observed when running the user space clear tests.
+
+The crash occurs with the following stack trace:
+  #0  0x000055fbb861d6ae in urcu_ref_get_unless_zero (ref=0x28) at /usr/local/include/urcu/ref.h:85
+  #1  lttng_trace_chunk_get (chunk=0x0) at trace-chunk.c:1836
+  #2  0x000055fbb86051e2 in make_viewer_streams (relay_session=relay_session@entry=0x7f6ea002d540, viewer_session=<optimized out>, seek_t=seek_t@entry=LTTNG_VIEWER_SEEK_BEGINNING, nb_total=nb_total@entry=0x7f6ea9607b00, nb_unsent=nb_unsent@entry=0x7f6ea9607aec, nb_created=nb_created@entry=0x7f6ea9607ae8, closed=<optimized out>) at live.c:405
+  #3  0x000055fbb86061d9 in viewer_get_new_streams (conn=0x7f6e94000fc0) at live.c:1155
+  #4  process_control (conn=0x7f6e94000fc0, recv_hdr=0x7f6ea9607af0) at live.c:2353
+  #5  thread_worker (data=<optimized out>) at live.c:2515
+  #6  0x00007f6eae86a609 in start_thread () from /lib/x86_64-linux-gnu/libpthread.so.0
+  #7  0x00007f6eae78f293 in clone () from /lib/x86_64-linux-gnu/libc.so.6
+
+The race window during which this occurs seems very small as it can take
+hours to reproduce this crash. However, a minimal reproducer could be
+identified, as stated in the bug report.
+
+Essentially, the same crash can be reproduced by attaching a live viewer
+to a session that has seen events being produced, been stopped and been
+cleared.
+
+Cause
+=====
+
+The crash occurs as an attempt is made to take a reference to a viewer
+session’s trace chunk as viewer streams are created. The crux of the
+problem is that the code doesn’t expect a viewer session’s trace chunk
+to be NULL.
+
+The viewer session’s current trace chunk is initially set, when a viewer
+attaches to the viewer session, to a copy the corresponding
+relay_session’s current trace chunk.
+
+A live session always attempts to "catch-up" to the newest available
+trace chunk. This means that when a viewer reaches the end of a trace
+chunk, the viewer session may not transition to the "next" one: it jumps
+to the most recent trace chunk available (the one being produced by the
+relay_session). Hence, if the producer performs multiple rotations
+before a viewer completes the consumption of a trace chunk, it will skip
+over those "intermediary" trace chunks.
+
+A viewer session updates its current trace chunk when:
+  1) new viewer streams are created,
+  2) a new index is requested,
+  3) metadata is requested.
+
+Hence, as a general principle, the viewer session will reference the
+most recent trace chunk available _even if its streams do not point to
+it_. It indicates which trace chunk viewer streams should transition to
+when the end of their current trace chunk is reached.
+
+The live code properly handles transitions to a null chunk. This can be
+verified by attaching a viewer to a live session, stopping the session,
+clearing it (thus entering a null trace chunk), and resuming tracing.
+
+The only issue is that the case where the first trace chunk of a viewer
+session is "null" (no active trace chunk) is mishandled in two places:
+  1) in make_viewer_streams(), where the crash is observed,
+  2) in viewer_get_metadata().
+
+Solution
+========
+
+In make_viewer_streams(), it is assumed that a viewer session will have
+a non-null trace chunk whenever a rotation is not ongoing. This is
+reflected by the fact that a reference is always acquired on the viewer
+session’s trace chunk.
+
+That code is one of the three places that can cause a viewer session’s
+trace chunk to be updated. We still want to update the viewer session to
+the most recently seen trace chunk (null, in this case). However, there
+is no reference to acquire and the trace chunk to use for the creation
+of the viewer stream is NULL. This is properly handled by
+viewer_stream_create().
+
+The second site to change is viewer_get_metadata() which doesn’t handle
+a viewer metadata stream not having an active trace chunk at all.
+Thankfully, the protocol allows us to express this condition by
+returning the LTTNG_VIEWER_NO_NEW_METADATA status code when a viewer
+metadata stream doesn’t have an open file and doesn’t have a current
+trace chunk.
+
+Surprisingly, this bug didn’t trigger in the case where a transition to
+a null chunk occurred _after_ attaching to a viewer session.
+
+This is because viewers will typically ask for metadata as a result of an
+LTTNG_VIEWER_FLAG_NEW_METADATA reply to the GET_NEXT_INDEX command. When
+a session is stopped and all data was consumed, this command returns
+that no new data is available, causing the viewers to wait and ask again
+later.
+
+However, when attaching, babeltrace2 (at least, and probably babeltrace 1.x)
+always asks for an initial segment of metadata before asking for an
+index.
+
+Known drawbacks
+===============
+
+None.
+
+Fixes: #1323
+
+Signed-off-by: Jérémie Galarneau <jeremie.galarneau@efficios.com>
+Change-Id: I516fca60755e6897f6b7170c12d706ef57ad61a5
+---
+ src/bin/lttng-relayd/live.c   | 47 ++++++++++++++++++++++++-----------
+ src/bin/lttng-relayd/stream.h |  5 ++++
+ 2 files changed, 38 insertions(+), 14 deletions(-)
+
+Index: lttng-tools-2.13.1/src/bin/lttng-relayd/live.c
+===================================================================
+--- lttng-tools-2.13.1.orig/src/bin/lttng-relayd/live.c
++++ lttng-tools-2.13.1/src/bin/lttng-relayd/live.c
+@@ -384,8 +384,6 @@ static int make_viewer_streams(struct re
+ 						goto error_unlock;
+ 					}
+ 				} else {
+-					bool reference_acquired;
+-
+ 					/*
+ 					 * Transition the viewer session into the newest trace chunk available.
+ 					 */
+@@ -402,11 +400,26 @@ static int make_viewer_streams(struct re
+ 						}
+ 					}
+ 
+-					reference_acquired = lttng_trace_chunk_get(
+-							viewer_session->current_trace_chunk);
+-					assert(reference_acquired);
+-					viewer_stream_trace_chunk =
+-							viewer_session->current_trace_chunk;
++					if (relay_stream->trace_chunk) {
++						/*
++						 * If the corresponding relay
++						 * stream's trace chunk is set,
++						 * the viewer stream will be
++						 * created under it.
++						 *
++						 * Note that a relay stream can
++						 * have a NULL output trace
++						 * chunk (for instance, after a
++						 * clear against a stopped
++						 * session).
++						 */
++						const bool reference_acquired = lttng_trace_chunk_get(
++								viewer_session->current_trace_chunk);
++
++						assert(reference_acquired);
++						viewer_stream_trace_chunk =
++								viewer_session->current_trace_chunk;
++					}
+ 				}
+ 
+ 				viewer_stream = viewer_stream_create(
+@@ -2016,8 +2029,9 @@ int viewer_get_metadata(struct relay_con
+ 		}
+ 	}
+ 
+-	if (conn->viewer_session->current_trace_chunk !=
+-			vstream->stream_file.trace_chunk) {
++	if (conn->viewer_session->current_trace_chunk &&
++			conn->viewer_session->current_trace_chunk !=
++					vstream->stream_file.trace_chunk) {
+ 		bool acquired_reference;
+ 
+ 		DBG("Viewer session and viewer stream chunk differ: "
+@@ -2034,11 +2048,16 @@ int viewer_get_metadata(struct relay_con
+ 
+ 	len = vstream->stream->metadata_received - vstream->metadata_sent;
+ 
+-	/*
+-	 * Either this is the first time the metadata file is read, or a
+-	 * rotation of the corresponding relay stream has occurred.
+-	 */
+-	if (!vstream->stream_file.handle && len > 0) {
++	if (!vstream->stream_file.trace_chunk) {
++		reply.status = htobe32(LTTNG_VIEWER_NO_NEW_METADATA);
++		len = 0;
++		goto send_reply;
++	} else if (vstream->stream_file.trace_chunk &&
++			!vstream->stream_file.handle && len > 0) {
++		/*
++		 * Either this is the first time the metadata file is read, or a
++		 * rotation of the corresponding relay stream has occurred.
++		 */
+ 		struct fs_handle *fs_handle;
+ 		char file_path[LTTNG_PATH_MAX];
+ 		enum lttng_trace_chunk_status status;
+Index: lttng-tools-2.13.1/src/bin/lttng-relayd/stream.h
+===================================================================
+--- lttng-tools-2.13.1.orig/src/bin/lttng-relayd/stream.h
++++ lttng-tools-2.13.1/src/bin/lttng-relayd/stream.h
+@@ -174,6 +174,11 @@ struct relay_stream {
+ 	/*
+ 	 * The trace chunk to which the file currently being produced (if any)
+ 	 * belongs.
++	 *
++	 * Note that a relay stream can have no output trace chunk. For
++	 * instance, after a session stop followed by a session clear,
++	 * streams will not have an output trace chunk until the session
++	 * is resumed.
+ 	 */
+ 	struct lttng_trace_chunk *trace_chunk;
+ 	LTTNG_OPTIONAL(struct relay_stream_rotation) ongoing_rotation;

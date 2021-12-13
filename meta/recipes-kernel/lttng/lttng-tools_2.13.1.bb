@@ -37,6 +37,8 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://lttng-sessiond.service \
            file://determinism.patch \
            file://0001-src-common-correct-header-location.patch \
+           file://8f0646a03fbf31c19b85ec367dc2c3db56e6dbf7.patch \
+           file://87250ba19aec78f36e301494a03f5678fcb6fbb4.patch \
            "
 
 SRC_URI[sha256sum] = "cfe6df7da831fc07fd07ce46b442c2ec1074c167af73f3a1b1d2fba0c453c8b5"
