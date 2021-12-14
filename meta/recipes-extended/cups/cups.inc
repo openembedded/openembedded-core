@@ -40,7 +40,7 @@ SYSTEMD_SERVICE:${PN} = "cups.socket cups.path cups.service cups-lpd.socket"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'pam systemd', d)}"
-PACKAGECONFIG[avahi] = "--with-dnssd=avahi,--with-dnsssd=no,avahi"
+PACKAGECONFIG[avahi] = "--with-dnssd=avahi,--with-dnssd=no,avahi"
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
 PACKAGECONFIG[gnutls] = "--with-tls=gnutls,--with-tls=no,gnutls"
 PACKAGECONFIG[pam] = "--enable-pam --with-pam-module=unix, --disable-pam, libpam"
