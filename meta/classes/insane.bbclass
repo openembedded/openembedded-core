@@ -968,17 +968,6 @@ def package_qa_check_host_user(path, name, d, elf, messages):
             return False
     return True
 
-QARECIPETEST[src-uri-bad] = "package_qa_check_src_uri"
-def package_qa_check_src_uri(pn, d, messages):
-    import re
-
-    if "${PN}" in d.getVar("SRC_URI", False):
-        oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
-
-    for url in d.getVar("SRC_URI").split():
-        if re.search(r"git(hu|la)b\.com/.+/.+/archive/.+", url):
-            oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub/GitLab archives, convert recipe to use git protocol" % pn, d)
-
 QARECIPETEST[unhandled-features-check] = "package_qa_check_unhandled_features_check"
 def package_qa_check_unhandled_features_check(pn, d, messages):
     if not bb.data.inherits_class('features_check', d):
@@ -1285,11 +1274,28 @@ Rerun configure task after fixing this."""
     oe.qa.exit_if_errors(d)
 }
 
+def unpack_check_src_uri(pn, d):
+    import re
+
+    skip = (d.getVar('INSANE_SKIP') or "").split()
+    if 'src-uri-bad' in skip:
+        bb.note("Recipe %s skipping qa checking: src-uri-bad" % d.getVar('PN'))
+        return
+
+    if "${PN}" in d.getVar("SRC_URI", False):
+        oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
+
+    for url in d.getVar("SRC_URI").split():
+        if re.search(r"git(hu|la)b\.com/.+/.+/archive/.+", url):
+            oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub/GitLab archives, convert recipe to use git protocol" % pn, d)
+
 python do_qa_unpack() {
     src_uri = d.getVar('SRC_URI')
     s_dir = d.getVar('S')
     if src_uri and not os.path.exists(s_dir):
         bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN'), d.getVar('S', False), s_dir))
+
+    unpack_check_src_uri(d.getVar('PN'), d)
 }
 
 # The Staging Func, to check all staging
