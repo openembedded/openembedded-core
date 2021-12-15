@@ -1201,7 +1201,7 @@ def guess_license(srctree, d):
                     fullpath = os.path.join(root, fn)
                     if not fullpath in licfiles:
                         licfiles.append(fullpath)
-    for licfile in licfiles:
+    for licfile in sorted(licfiles):
         md5value = bb.utils.md5_file(licfile)
         license = md5sums.get(md5value, None)
         if not license:
