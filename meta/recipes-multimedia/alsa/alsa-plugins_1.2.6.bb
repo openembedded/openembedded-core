@@ -23,7 +23,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
                     "
 
 SRC_URI = "https://www.alsa-project.org/files/pub/plugins/${BP}.tar.bz2"
-SRC_URI[sha256sum] = "42eef98433d2c8d11f1deeeb459643619215a75aa5a5bbdd06a794e4c413df20"
+SRC_URI[sha256sum] = "068818a4b55d8c029daa00015d853d45113f56b224b7c64e1e117988c825b2a0"
 
 DEPENDS += "alsa-lib"
 
