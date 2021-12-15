@@ -22,7 +22,7 @@ SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[sha256sum] = "65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b"
+SRC_URI[sha256sum] = "94d40cd73dbfa10bb6eadfbc28f355992bb2d6ef6761ad9d4074eff95ee5711c"
 
 inherit autotools lib_package binconfig-disabled pkgconfig
 
@@ -35,7 +35,6 @@ EXTRA_OECONF = "--disable-oss --disable-esd --disable-arts \
                 --disable-video-dummy \
                 --disable-video-rpi \
                 --enable-pthreads \
-                --enable-sdl-dlopen \
                 --disable-rpath \
                 --disable-sndio \
                 --disable-fcitx --disable-ibus \
