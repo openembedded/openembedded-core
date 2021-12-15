@@ -541,9 +541,13 @@ class RecipetoolTests(RecipetoolBase):
 
     @classmethod
     def setUpClass(cls):
+        import sys
+
         super(RecipetoolTests, cls).setUpClass()
         bb_vars = get_bb_vars(['BBPATH'])
         cls.bbpath = bb_vars['BBPATH']
+        libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'recipetool')
+        sys.path.insert(0, libpath)
 
     def _copy_file_with_cleanup(self, srcfile, basedstdir, *paths):
         dstdir = basedstdir
@@ -587,6 +591,66 @@ class RecipetoolTests(RecipetoolBase):
         finally:
             with open(srcfile, 'w') as fh:
                 fh.writelines(plugincontent)
+
+    def test_recipetool_split_pkg_licenses(self):
+        from create import split_pkg_licenses
+        licvalues = [
+            # Duplicate licenses
+            ('BSD-2-Clause', 'x/COPYING', None),
+            ('BSD-2-Clause', 'x/LICENSE', None),
+            # Multiple licenses
+            ('MIT', 'x/a/LICENSE.MIT', None),
+            ('ISC', 'x/a/LICENSE.ISC', None),
+            # Alternative licenses
+            ('(MIT | ISC)', 'x/b/LICENSE', None),
+            # Alternative licenses without brackets
+            ('MIT | BSD-2-Clause', 'x/c/LICENSE', None),
+            # Multi licenses with alternatives
+            ('MIT', 'x/d/COPYING', None),
+            ('MIT | BSD-2-Clause', 'x/d/LICENSE', None),
+            # Multi licenses with alternatives and brackets
+            ('Apache-2.0 & ((MIT | ISC) & BSD-3-Clause)', 'x/e/LICENSE', None)
+        ]
+        packages = {
+            '${PN}': '',
+            'a': 'x/a',
+            'b': 'x/b',
+            'c': 'x/c',
+            'd': 'x/d',
+            'e': 'x/e',
+            'f': 'x/f',
+            'g': 'x/g',
+        }
+        fallback_licenses = {
+            # Ignored
+            'a': 'BSD-3-Clause',
+            # Used
+            'f': 'BSD-3-Clause'
+        }
+        outlines = []
+        outlicenses = split_pkg_licenses(licvalues, packages, outlines, fallback_licenses)
+        expected_outlicenses = {
+            '${PN}': ['BSD-2-Clause'],
+            'a': ['ISC', 'MIT'],
+            'b': ['(ISC | MIT)'],
+            'c': ['(BSD-2-Clause | MIT)'],
+            'd': ['(BSD-2-Clause | MIT)', 'MIT'],
+            'e': ['(ISC | MIT)', 'Apache-2.0', 'BSD-3-Clause'],
+            'f': ['BSD-3-Clause'],
+            'g': ['Unknown']
+        }
+        self.assertEqual(outlicenses, expected_outlicenses)
+        expected_outlines = [
+            'LICENSE:${PN} = "BSD-2-Clause"',
+            'LICENSE:a = "ISC & MIT"',
+            'LICENSE:b = "(ISC | MIT)"',
+            'LICENSE:c = "(BSD-2-Clause | MIT)"',
+            'LICENSE:d = "(BSD-2-Clause | MIT) & MIT"',
+            'LICENSE:e = "(ISC | MIT) & Apache-2.0 & BSD-3-Clause"',
+            'LICENSE:f = "BSD-3-Clause"',
+            'LICENSE:g = "Unknown"'
+        ]
+        self.assertEqual(outlines, expected_outlines)
 
 
 class RecipetoolAppendsrcBase(RecipetoolBase):
