@@ -19,7 +19,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;b
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            file://0001-btrfs-tools-include-linux-const.h-to-fix-build-with-.patch \
            "
-SRCREV = "4d06e4a13d1ce1849a60b68969bc385ab736ddf7"
+SRCREV = "c0ad9bde429196db7e8710ea1abfab7a2bca2e43"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
