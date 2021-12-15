@@ -592,6 +592,68 @@ class RecipetoolTests(RecipetoolBase):
             with open(srcfile, 'w') as fh:
                 fh.writelines(plugincontent)
 
+    def test_recipetool_handle_license_vars(self):
+        from create import handle_license_vars
+        from unittest.mock import Mock
+
+        commonlicdir = get_bb_var('COMMON_LICENSE_DIR')
+
+        d = bb.tinfoil.TinfoilDataStoreConnector
+        d.getVar = Mock(return_value=commonlicdir)
+
+        srctree = tempfile.mkdtemp(prefix='recipetoolqa')
+        self.track_for_cleanup(srctree)
+
+        # Multiple licenses
+        licenses = ['MIT', 'ISC', 'BSD-3-Clause', 'Apache-2.0']
+        for licence in licenses:
+            shutil.copy(os.path.join(commonlicdir, licence), os.path.join(srctree, 'LICENSE.' + licence))
+        # Duplicate license
+        shutil.copy(os.path.join(commonlicdir, 'MIT'), os.path.join(srctree, 'LICENSE'))
+
+        extravalues = {
+            # Duplicate and missing licenses
+            'LICENSE': 'Zlib & BSD-2-Clause & Zlib',
+            'LIC_FILES_CHKSUM': [
+                'file://README.md;md5=0123456789abcdef0123456789abcd'
+            ]
+        }
+        lines_before = []
+        handled = []
+        licvalues = handle_license_vars(srctree, lines_before, handled, extravalues, d)
+        expected_lines_before = [
+            '# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is',
+            '# your responsibility to verify that the values are complete and correct.',
+            '# NOTE: Original package / source metadata indicates license is: BSD-2-Clause & Zlib',
+            '#',
+            '# NOTE: multiple licenses have been detected; they have been separated with &',
+            '# in the LICENSE value for now since it is a reasonable assumption that all',
+            '# of the licenses apply. If instead there is a choice between the multiple',
+            '# licenses then you should change the value to separate the licenses with |',
+            '# instead of &. If there is any doubt, check the accompanying documentation',
+            '# to determine which situation is applicable.',
+            'LICENSE = "Apache-2.0 & BSD-2-Clause & BSD-3-Clause & ISC & MIT & Zlib"',
+            'LIC_FILES_CHKSUM = "file://LICENSE;md5=0835ade698e0bcf8506ecda2f7b4f302 \\\n'
+            '                    file://LICENSE.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10 \\\n'
+            '                    file://LICENSE.BSD-3-Clause;md5=550794465ba0ec5312d6919e203a55f9 \\\n'
+            '                    file://LICENSE.ISC;md5=f3b90e78ea0cffb20bf5cca7947a896d \\\n'
+            '                    file://LICENSE.MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \\\n'
+            '                    file://README.md;md5=0123456789abcdef0123456789abcd"',
+            ''
+        ]
+        self.assertEqual(lines_before, expected_lines_before)
+        expected_licvalues = [
+            ('MIT', 'LICENSE', '0835ade698e0bcf8506ecda2f7b4f302'),
+            ('Apache-2.0', 'LICENSE.Apache-2.0', '89aea4e17d99a7cacdbeed46a0096b10'),
+            ('BSD-3-Clause', 'LICENSE.BSD-3-Clause', '550794465ba0ec5312d6919e203a55f9'),
+            ('ISC', 'LICENSE.ISC', 'f3b90e78ea0cffb20bf5cca7947a896d'),
+            ('MIT', 'LICENSE.MIT', '0835ade698e0bcf8506ecda2f7b4f302')
+        ]
+        self.assertEqual(handled, [('license', expected_licvalues)])
+        self.assertEqual(extravalues, {})
+        self.assertEqual(licvalues, expected_licvalues)
+
+
     def test_recipetool_split_pkg_licenses(self):
         from create import split_pkg_licenses
         licvalues = [
