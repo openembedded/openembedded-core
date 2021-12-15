@@ -89,7 +89,6 @@ TZ_PACKAGES = " \
 PACKAGES = "${TZ_PACKAGES} ${PN}"
 
 FILES:tzdata-africa += "${datadir}/zoneinfo/Africa/*"
-RPROVIDES:tzdata-africa = "tzdata-africa"
 
 FILES:tzdata-americas += "${datadir}/zoneinfo/America/*  \
                 ${datadir}/zoneinfo/US/*                \
@@ -97,36 +96,26 @@ FILES:tzdata-americas += "${datadir}/zoneinfo/America/*  \
                 ${datadir}/zoneinfo/Canada/*            \
                 ${datadir}/zoneinfo/Mexico/*            \
                 ${datadir}/zoneinfo/Chile/*"
-RPROVIDES:tzdata-americas = "tzdata-americas"
 
 FILES:tzdata-antarctica += "${datadir}/zoneinfo/Antarctica/*"
-RPROVIDES:tzdata-antarctica = "tzdata-antarctica"
 
 FILES:tzdata-arctic += "${datadir}/zoneinfo/Arctic/*"
-RPROVIDES:tzdata-arctic = "tzdata-arctic"
 
 FILES:tzdata-asia += "${datadir}/zoneinfo/Asia/*        \
                 ${datadir}/zoneinfo/Indian/*            \
                 ${datadir}/zoneinfo/Mideast/*"
-RPROVIDES:tzdata-asia = "tzdata-asia"
 
 FILES:tzdata-atlantic += "${datadir}/zoneinfo/Atlantic/*"
-RPROVIDES:tzdata-atlantic = "tzdata-atlantic"
 
 FILES:tzdata-australia += "${datadir}/zoneinfo/Australia/*"
-RPROVIDES:tzdata-australia = "tzdata-australia"
 
 FILES:tzdata-europe += "${datadir}/zoneinfo/Europe/*"
-RPROVIDES:tzdata-europe = "tzdata-europe"
 
 FILES:tzdata-pacific += "${datadir}/zoneinfo/Pacific/*"
-RPROVIDES:tzdata-pacific = "tzdata-pacific"
 
 FILES:tzdata-posix += "${datadir}/zoneinfo/posix/*"
-RPROVIDES:tzdata-posix = "tzdata-posix"
 
 FILES:tzdata-right += "${datadir}/zoneinfo/right/*"
-RPROVIDES:tzdata-right = "tzdata-right"
 
 FILES:tzdata-misc += "${datadir}/zoneinfo/Cuba           \
                 ${datadir}/zoneinfo/Egypt                \
@@ -146,7 +135,6 @@ FILES:tzdata-misc += "${datadir}/zoneinfo/Cuba           \
                 ${datadir}/zoneinfo/Portugal             \
                 ${datadir}/zoneinfo/Singapore            \
                 ${datadir}/zoneinfo/Turkey"
-RPROVIDES:tzdata-misc = "tzdata-misc"
 
 FILES:tzdata-core += " \
                 ${sysconfdir}/localtime                  \
