@@ -11,17 +11,8 @@ LICENSE = "OFL-1.1 & Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fb1ef92b6909969a472a6ea3c4e99cb7"
 
 inherit gnomebase meson allarch fontcache pkgconfig
-SRC_URI[archive.sha256sum] = "3d35db0ac03f9e6b0d5a53577591b714238985f4cfc31a0aa17f26cd74675e83"
-
-# remove at next version upgrade or when output changes
-PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".2"
+SRC_URI[archive.sha256sum] = "f9463a0659c63e57e381fdd753cf1929225395c5b49135989424761830530411"
 
 EXTRA_OEMESON += "-Duseprebuilt=true -Dbuildappstream=false"
 
 FILES:${PN} = "${datadir}/fonts ${datadir}/fontconfig"
-
-# This isn't a GNOME-style version do gnome_verdir fails. Just return the
-# version as that is how the directory is structured.
-def gnome_verdir(v):
-    return v
