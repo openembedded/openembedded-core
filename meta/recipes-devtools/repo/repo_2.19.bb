@@ -9,10 +9,10 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI = "git://gerrit.googlesource.com/git-repo.git;protocol=https;branch=main"
-SRCREV = "4a478edb443864561089b2699c9e65c85fc5e036"
-
-SRC_URI += "file://0001-python3-shebang.patch"
+SRC_URI = "git://gerrit.googlesource.com/git-repo.git;protocol=https;branch=main \
+           file://0001-python3-shebang.patch \
+           "
+SRCREV = "2a089cfee4a3eb0c28cfb441861fc1fcb05797d3"
 
 MIRRORS += "git://gerrit.googlesource.com/git-repo.git git://github.com/GerritCodeReview/git-repo.git"
 
