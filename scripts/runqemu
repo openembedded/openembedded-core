@@ -474,6 +474,7 @@ class BaseConfig(object):
 
         if 'gl' not in sys.argv[1:] and 'gl-es' not in sys.argv[1:]:
             os.environ['SDL_RENDER_DRIVER'] = 'software'
+            os.environ['SDL_FRAMEBUFFER_ACCELERATION'] = 'false'
 
         unknown_arg = ""
         for arg in sys.argv[1:]:
