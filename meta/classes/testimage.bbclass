@@ -61,7 +61,7 @@ BASICTESTSUITE = "\
     ping date df ssh scp python perl gi ptest parselogs \
     logrotate connman systemd oe_syslog pam stap ldd xorg \
     kernelmodule gcc buildcpio buildlzip buildgalculator \
-    dnf rpm opkg apt weston go"
+    dnf rpm opkg apt weston go rust"
 
 DEFAULT_TEST_SUITES = "${BASICTESTSUITE}"
 
