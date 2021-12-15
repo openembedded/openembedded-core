@@ -426,7 +426,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars = {}
         checkvars['SUMMARY'] = 'Node Server Example'
         checkvars['HOMEPAGE'] = 'https://github.com/savoirfairelinux/node-server-example#readme'
-        checkvars['LICENSE'] = set(['MIT', 'ISC', 'Unknown'])
+        checkvars['LICENSE'] = 'BSD-3-Clause & ISC & MIT & Unknown'
         urls = []
         urls.append('npm://registry.npmjs.org/;package=@savoirfairelinux/node-server-example;version=${PV}')
         urls.append('npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json')
@@ -483,7 +483,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
         self.assertTrue(os.path.isfile(recipefile))
         checkvars = {}
-        checkvars['LICENSE'] = set(['PSF', '&', 'BSD-3-Clause', 'GPL'])
+        checkvars['LICENSE'] = 'BSD-3-Clause & GPL & PSF'
         checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING.txt;md5=35a23d42b615470583563132872c97d6'
         checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/84/f4/5771e41fdf52aabebbadecc9381d11dea0fa34e4759b4071244fa094804c/docutils-${PV}.tar.gz'
         checkvars['SRC_URI[md5sum]'] = 'c53768d63db3873b7d452833553469de'

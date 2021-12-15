@@ -919,6 +919,22 @@ def split_value(value):
     else:
         return value
 
+def fixup_license(value):
+    # Ensure licenses with OR starts and ends with brackets
+    if '|' in value:
+        return '(' + value + ')'
+    return value
+
+def tidy_licenses(value):
+    """Flat, split and sort licenses"""
+    from oe.license import flattened_licenses
+    def _choose(a, b):
+        str_a, str_b  = sorted((" & ".join(a), " & ".join(b)), key=str.casefold)
+        return ["(%s | %s)" % (str_a, str_b)]
+    if not isinstance(value, str):
+        value = " & ".join(value)
+    return sorted(list(set(flattened_licenses(value, _choose))), key=str.casefold)
+
 def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     lichandled = [x for x in handled if x[0] == 'license']
     if lichandled:
@@ -932,10 +948,13 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     lines = []
     if licvalues:
         for licvalue in licvalues:
-            if not licvalue[0] in licenses:
-                licenses.append(licvalue[0])
+            license = licvalue[0]
+            lics = tidy_licenses(fixup_license(license))
+            lics = [lic for lic in lics if lic not in licenses]
+            if len(lics):
+                licenses.extend(lics)
             lic_files_chksum.append('file://%s;md5=%s' % (licvalue[1], licvalue[2]))
-            if licvalue[0] == 'Unknown':
+            if license == 'Unknown':
                 lic_unknown.append(licvalue[1])
         if lic_unknown:
             lines.append('#')
@@ -944,9 +963,7 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
             for licfile in lic_unknown:
                 lines.append('#   %s' % licfile)
 
-    extra_license = split_value(extravalues.pop('LICENSE', []))
-    if '&' in extra_license:
-        extra_license.remove('&')
+    extra_license = tidy_licenses(extravalues.pop('LICENSE', ''))
     if extra_license:
         if licenses == ['Unknown']:
             licenses = extra_license
@@ -987,7 +1004,7 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
         lines.append('# instead of &. If there is any doubt, check the accompanying documentation')
         lines.append('# to determine which situation is applicable.')
 
-    lines.append('LICENSE = "%s"' % ' & '.join(licenses))
+    lines.append('LICENSE = "%s"' % ' & '.join(sorted(licenses, key=str.casefold)))
     lines.append('LIC_FILES_CHKSUM = "%s"' % ' \\\n                    '.join(lic_files_chksum))
     lines.append('')
 
@@ -1226,6 +1243,7 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=[], pn='
     """
     pkglicenses = {pn: []}
     for license, licpath, _ in licvalues:
+        license = fixup_license(license)
         for pkgname, pkgpath in packages.items():
             if licpath.startswith(pkgpath + '/'):
                 if pkgname in pkglicenses:
@@ -1238,11 +1256,14 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=[], pn='
             pkglicenses[pn].append(license)
     outlicenses = {}
     for pkgname in packages:
-        license = ' '.join(list(set(pkglicenses.get(pkgname, ['Unknown'])))) or 'Unknown'
+        # Assume AND operator between license files
+        license = ' & '.join(list(set(pkglicenses.get(pkgname, ['Unknown'])))) or 'Unknown'
         if license == 'Unknown' and pkgname in fallback_licenses:
             license = fallback_licenses[pkgname]
+        licenses = tidy_licenses(license)
+        license = ' & '.join(licenses)
         outlines.append('LICENSE:%s = "%s"' % (pkgname, license))
-        outlicenses[pkgname] = license.split()
+        outlicenses[pkgname] = licenses
     return outlicenses
 
 def read_pkgconfig_provides(d):
