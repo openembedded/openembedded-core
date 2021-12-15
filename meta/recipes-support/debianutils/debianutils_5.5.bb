@@ -8,25 +8,26 @@ SECTION = "base"
 LICENSE = "GPLv2 & SMAIL_GPL"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=9b912cd0cc654134c0ef3424a0705b94"
 
-SRC_URI = "http://snapshot.debian.org/archive/debian/20200929T025235Z/pool/main/d/${BPN}/${BPN}_${PV}.tar.xz"
-# the package is taken from snapshots.debian.org; that source is static and goes stale
-# so we check the latest upstream from a directory that does get updated
-UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/d/${BPN}/"
+SRC_URI = "git://salsa.debian.org/debian/debianutils.git;protocol=https;branch=master \
+           "
 
-SRC_URI[sha256sum] = "3b680e81709b740387335fac8f8806d71611dcf60874e1a792e862e48a1650de"
+SRCREV = "4c420893485ad07d771c327ef899819d4846408f"
 
 inherit autotools update-alternatives
 
-S = "${WORKDIR}/debianutils"
+S = "${WORKDIR}/git"
+
+# Disable po4a (translated manpages) sub-directory, as that requires po4a to build
 do_configure:prepend() {
-    sed -i -e 's:tempfile.1 which.1:which.1:g' ${S}/Makefile.am
+    sed -i -e 's:po4a::g' ${S}/Makefile.am
 }
+
 
 do_install:append() {
     if [ "${base_bindir}" != "${bindir}" ]; then
         # Debian places some utils into ${base_bindir} as does busybox
         install -d ${D}${base_bindir}
-        for app in run-parts tempfile; do
+        for app in run-parts; do
             mv ${D}${bindir}/$app ${D}${base_bindir}/$app
         done
     fi
@@ -41,7 +42,7 @@ RDEPENDS:${PN} += "${PN}-run-parts"
 RDEPENDS:${PN}:class-native = ""
 
 ALTERNATIVE_PRIORITY = "30"
-ALTERNATIVE:${PN} = "add-shell installkernel remove-shell savelog tempfile which"
+ALTERNATIVE:${PN} = "add-shell installkernel remove-shell savelog which"
 
 ALTERNATIVE_PRIORITY_${PN}-run-parts = "60"
 ALTERNATIVE:${PN}-run-parts = "run-parts"
@@ -54,7 +55,6 @@ ALTERNATIVE_LINK_NAME[installkernel] = "${sbindir}/installkernel"
 ALTERNATIVE_LINK_NAME[remove-shell] = "${sbindir}/remove-shell"
 ALTERNATIVE_LINK_NAME[run-parts] = "${base_bindir}/run-parts"
 ALTERNATIVE_LINK_NAME[savelog] = "${bindir}/savelog"
-ALTERNATIVE_LINK_NAME[tempfile] = "${base_bindir}/tempfile"
 ALTERNATIVE_LINK_NAME[which] = "${bindir}/which"
 
 BBCLASSEXTEND = "native"
