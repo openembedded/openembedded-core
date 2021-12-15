@@ -23,6 +23,9 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
 PV .= ".3752"
 SRCREV = "8603be338ac810446f23c092f21bc6082f787519"
 
+# Remove when 8.3 is out
+UPSTREAM_VERSION_UNKNOWN = "1"
+
 # Do not consider .z in x.y.z, as that is updated with every commit
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+)\.0"
 
