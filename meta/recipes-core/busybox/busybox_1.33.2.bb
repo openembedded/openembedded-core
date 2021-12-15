@@ -51,4 +51,4 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
-SRC_URI[tarball.sha256sum] = "12cec6bd2b16d8a9446dd16130f2b92982f1819f6e1c5f5887b6db03f5660d28"
+SRC_URI[tarball.sha256sum] = "6843ba7977081e735fa0fdb05893e3c002c8c5ad7c9c80da206e603cc0ac47e7"
