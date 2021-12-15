@@ -61,6 +61,8 @@ PROV:class-nativesdk = ""
 
 PROVIDES += "${PROV}"
 
+FILES:${PN} += "${datadir}/zsh"
+
 PACKAGES =+ "update-alternatives-dpkg"
 FILES:update-alternatives-dpkg = "${bindir}/update-alternatives ${localstatedir}/lib/dpkg/alternatives ${sysconfdir}/alternatives"
 RPROVIDES:update-alternatives-dpkg += "update-alternatives"
