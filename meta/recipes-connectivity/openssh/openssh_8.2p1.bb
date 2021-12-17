@@ -51,6 +51,15 @@ CVE_CHECK_WHITELIST += "CVE-2020-15778"
 # https://www.securityfocus.com/bid/30794
 CVE_CHECK_WHITELIST += "CVE-2008-3844"
 
+# openssh-ssh1 is provided for compatibility with old devices that
+# cannot be upgraded to modern protocols. Thus they may not provide security
+# support for this package because doing so would prevent access to equipment.
+# The upstream OpenSSH developers see this as an important
+# security feature and do not intend to 'fix' it.
+# https://security-tracker.debian.org/tracker/CVE-2016-20012
+# https://ubuntu.com/security/CVE-2016-20012
+CVE_CHECK_WHITELIST += "CVE-2016-20012"
+
 PAM_SRC_URI = "file://sshd"
 
 inherit manpages useradd update-rc.d update-alternatives systemd
