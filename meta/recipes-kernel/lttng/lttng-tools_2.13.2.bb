@@ -36,13 +36,10 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://run-ptest \
            file://lttng-sessiond.service \
            file://determinism.patch \
-           file://0001-src-common-correct-header-location.patch \
-           file://8f0646a03fbf31c19b85ec367dc2c3db56e6dbf7.patch \
-           file://87250ba19aec78f36e301494a03f5678fcb6fbb4.patch \
            file://disable-tests.patch \
            "
 
-SRC_URI[sha256sum] = "cfe6df7da831fc07fd07ce46b442c2ec1074c167af73f3a1b1d2fba0c453c8b5"
+SRC_URI[sha256sum] = "ced2ba00020da77fd17ac92b5a53825502409a07e3aeca28f9515d4a844fd7bd"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
