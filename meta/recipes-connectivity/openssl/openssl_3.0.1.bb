@@ -12,15 +12,13 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://0001-buildinfo-strip-sysroot-and-debug-prefix-map-from-co.patch \
            file://afalg.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
-           file://armv8-32bit.patch \
-           file://0001-Fix-EVP_PKEY_CTX_get_rsa_pss_saltlen-no.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI[sha256sum] = "59eedfcb46c25214c9bd37ed6078297b4df01d012267fe9e9eee31f61bc70536"
+SRC_URI[sha256sum] = "c311ad853353bce796edad01a862c50a8a587f62e7e2100ef465ab53ec9b06d1"
 
 inherit lib_package multilib_header multilib_script ptest perlnative
 MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
@@ -194,21 +192,21 @@ do_install_ptest () {
 	install -m755 ${B}/apps/CA.pl ${D}${PTEST_PATH}/apps
 
 	install -d ${D}${PTEST_PATH}/engines
-	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines
+	install -m755 ${B}/engines/dasync.so ${D}${PTEST_PATH}/engines
 	install -m755 ${B}/engines/loader_attic.so ${D}${PTEST_PATH}/engines
+	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines
 
 	install -d ${D}${PTEST_PATH}/providers
 	install -m755 ${B}/providers/legacy.so ${D}${PTEST_PATH}/providers
 
-        install -d ${D}${PTEST_PATH}/Configurations
-        cp -rf ${S}/Configurations/* ${D}${PTEST_PATH}/Configurations/
+	install -d ${D}${PTEST_PATH}/Configurations
+	cp -rf ${S}/Configurations/* ${D}${PTEST_PATH}/Configurations/
 
-        # seems to be needed with perl 5.32.1
-        install -d ${D}${PTEST_PATH}/util/perl/recipes
-        cp ${D}${PTEST_PATH}/test/recipes/tconversion.pl ${D}${PTEST_PATH}/util/perl/recipes/
+	# seems to be needed with perl 5.32.1
+	install -d ${D}${PTEST_PATH}/util/perl/recipes
+	cp ${D}${PTEST_PATH}/test/recipes/tconversion.pl ${D}${PTEST_PATH}/util/perl/recipes/
 
 	sed 's|${S}|${PTEST_PATH}|g' -i ${D}${PTEST_PATH}/util/wrap.pl
-
 }
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
@@ -234,7 +232,7 @@ CONFFILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 
 RRECOMMENDS:libcrypto += "openssl-conf"
 RDEPENDS:${PN}-misc = "perl"
-RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash"
+RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed"
 
 RDEPENDS:${PN}-bin += "openssl-conf"
 
