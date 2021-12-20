@@ -21,7 +21,7 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/sysvinit/sysvinit-${PV}.tar.xz \
            file://bootlogd.init \
            file://01_bootlogd \
            "
-SRC_URI[sha256sum] = "ed6bc20adb6735389841e7d3eb8650fa750c76af20bf4ed73b1330a4d4c14017"
+SRC_URI[sha256sum] = "68b11a4772cdacce5fb65a4cbead324a2ce3999d138b4ff61dc2d59e57ef5793"
 
 S = "${WORKDIR}/sysvinit-${PV}"
 
