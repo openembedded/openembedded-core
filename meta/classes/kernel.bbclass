@@ -769,8 +769,12 @@ kernel_do_deploy() {
 	for imageType in ${KERNEL_IMAGETYPES} ; do
 		baseName=$imageType-${KERNEL_IMAGE_NAME}
 		install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType $deployDir/$baseName.bin
-		ln -sf $baseName.bin $deployDir/$imageType-${KERNEL_IMAGE_LINK_NAME}.bin
-		ln -sf $baseName.bin $deployDir/$imageType
+		if [ -n "${KERNEL_IMAGE_LINK_NAME}" ] ; then
+			ln -sf $baseName.bin $deployDir/$imageType-${KERNEL_IMAGE_LINK_NAME}.bin
+		fi
+		if [ "${KERNEL_IMAGETYPE_SYMLINK}" = "1" ] ; then
+			ln -sf $baseName.bin $deployDir/$imageType
+		fi
 	done
 
 	if [ ${MODULE_TARBALL_DEPLOY} = "1" ] && (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
@@ -783,7 +787,9 @@ kernel_do_deploy() {
 		TAR_ARGS="$TAR_ARGS --owner=0 --group=0"
 		tar $TAR_ARGS -cv -C ${D}${root_prefix} lib | gzip -9n > $deployDir/modules-${MODULE_TARBALL_NAME}.tgz
 
-		ln -sf modules-${MODULE_TARBALL_NAME}.tgz $deployDir/modules-${MODULE_TARBALL_LINK_NAME}.tgz
+		if [ -n "${MODULE_TARBALL_LINK_NAME}" ] ; then
+			ln -sf modules-${MODULE_TARBALL_NAME}.tgz $deployDir/modules-${MODULE_TARBALL_LINK_NAME}.tgz
+		fi
 	fi
 
 	if [ ! -z "${INITRAMFS_IMAGE}" -a x"${INITRAMFS_IMAGE_BUNDLE}" = x1 ]; then
@@ -793,7 +799,9 @@ kernel_do_deploy() {
 			fi
 			initramfsBaseName=$imageType-${INITRAMFS_NAME}
 			install -m 0644 ${KERNEL_OUTPUT_DIR}/$imageType.initramfs $deployDir/$initramfsBaseName.bin
-			ln -sf $initramfsBaseName.bin $deployDir/$imageType-${INITRAMFS_LINK_NAME}.bin
+			if [ -n "${INITRAMFS_LINK_NAME}" ] ; then
+				ln -sf $initramfsBaseName.bin $deployDir/$imageType-${INITRAMFS_LINK_NAME}.bin
+			fi
 		done
 	fi
 }
