@@ -24,17 +24,19 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git;branch=master
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF += "--enable-tools --with-zlib"
+EXTRA_OECONF += "--enable-tools"
 
+PACKAGECONFIG ??= "zlib"
 PACKAGECONFIG[debug] = "--enable-debug,--disable-debug"
 PACKAGECONFIG[logging] = " --enable-logging,--disable-logging"
 PACKAGECONFIG[manpages] = "--enable-manpages, --disable-manpages, libxslt-native xmlto-native"
-PACKAGECONFIG[xz] = "--with-xz,--without-xz,xz"
 PACKAGECONFIG[openssl] = "--with-openssl,--without-openssl,openssl"
+PACKAGECONFIG[xz] = "--with-xz,--without-xz,xz"
+PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib"
+PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
 
 GTKDOC_DOCDIR = "${S}/libkmod/docs"
 
-DEPENDS += "zlib"
 PROVIDES += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RPROVIDES:${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
 RCONFLICTS:${PN} += "module-init-tools-insmod-static module-init-tools-depmod module-init-tools"
