@@ -33,5 +33,6 @@ SRC_URI = "\
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
      file://0017-bfd-Close-the-file-descriptor-if-there-is-no-archive.patch \
      file://0001-elf-Discard-input-.note.gnu.build-id-sections.patch \
+     file://0001-CVE-2021-42574.patch \
 "
 S  = "${WORKDIR}/git"
