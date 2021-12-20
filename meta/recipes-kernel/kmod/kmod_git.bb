@@ -33,10 +33,6 @@ do_install:append () {
         install -Dm644 "${WORKDIR}/depmod-search.conf" "${D}${nonarch_base_libdir}/depmod.d/search.conf"
 }
 
-do_compile:prepend() {
-            sed -i 's/ac_pwd=/#ac_pwd=/' config.status ; sed -i "/#ac_pwd=/a\ac_pwd='.'" config.status
-}
-
 inherit update-alternatives bash-completion
 
 ALTERNATIVE_PRIORITY = "70"
