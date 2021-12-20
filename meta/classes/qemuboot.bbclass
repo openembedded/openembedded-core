@@ -118,7 +118,10 @@ python do_write_qemuboot_conf() {
     import configparser
 
     qemuboot = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE_NAME'))
-    qemuboot_link = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE_LINK_NAME'))
+    if d.getVar('IMAGE_LINK_NAME'):
+        qemuboot_link = "%s/%s.qemuboot.conf" % (d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE_LINK_NAME'))
+    else:
+        qemuboot_link = ""
     finalpath = d.getVar("DEPLOY_DIR_IMAGE")
     topdir = d.getVar('TOPDIR')
     cf = configparser.ConfigParser()
@@ -153,7 +156,7 @@ python do_write_qemuboot_conf() {
     with open(qemuboot, 'w') as f:
         cf.write(f)
 
-    if qemuboot_link != qemuboot:
+    if qemuboot_link and qemuboot_link != qemuboot:
         if os.path.lexists(qemuboot_link):
            os.remove(qemuboot_link)
         os.symlink(os.path.basename(qemuboot), qemuboot_link)
