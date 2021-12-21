@@ -13,7 +13,6 @@ TZONES = " \
     africa antarctica asia australasia europe northamerica southamerica \
     factory etcetera backward \
 "
-# pacificnew
 
 # "slim" is the default since 2020b
 # "fat" is needed by e.g. MariaDB's mysql_tzinfo_to_sql
@@ -201,9 +200,3 @@ CONFFILES:tzdata-core = "${sysconfdir}/localtime ${sysconfdir}/timezone"
 ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} = "${TZ_PACKAGES}"
-RCONFLICTS:${PN} = " \
-    timezones timezone-africa timezone-america timezone-antarctica \
-    timezone-arctic timezone-asia timezone-atlantic timezone-australia \
-    timezone-europe timezone-indian timezone-iso3166.tab timezone-pacific \
-    timezone-zone.tab \
-"
