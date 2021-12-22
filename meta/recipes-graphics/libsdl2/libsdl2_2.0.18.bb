@@ -18,6 +18,7 @@ PROVIDES = "virtual/libsdl2"
 
 SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
            file://more-gen-depends.patch \
+           file://0001-Fix-build-against-wayland-1.20.patch \
 "
 
 S = "${WORKDIR}/SDL2-${PV}"
