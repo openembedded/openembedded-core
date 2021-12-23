@@ -8,8 +8,9 @@ BUGTRACKER = "https://github.com/vim/vim/issues"
 DEPENDS = "ncurses gettext-native"
 # vimdiff doesn't like busybox diff
 RSUGGESTS_${PN} = "diffutils"
+
 LICENSE = "vim"
-LIC_FILES_CHKSUM = "file://runtime/doc/uganda.txt;endline=287;md5=a19edd7ec70d573a005d9e509375a99a"
+LIC_FILES_CHKSUM = "file://runtime/doc/uganda.txt;endline=287;md5=909f1394892b7e0f9c2a95306c0c552b"
 
 SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://disable_acl_header_check.patch \
@@ -17,17 +18,10 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://0001-src-Makefile-improve-reproducibility.patch \
            file://no-path-adjust.patch \
            file://racefix.patch \
-           file://CVE-2021-3778.patch \
-           file://CVE-2021-3796.patch \
-           file://b7081e135a16091c93f6f5f7525a5c58fb7ca9f9.patch \
-           file://CVE-2021-3903.patch \
-           file://CVE-2021-3872.patch \
-           file://CVE-2021-3875.patch \
-           file://CVE-2021-3927.patch \
-           file://CVE-2021-3928.patch \
 "
 
-SRCREV = "98056533b96b6b5d8849641de93185dd7bcadc44"
+PV .= ".3752"
+SRCREV = "8603be338ac810446f23c092f21bc6082f787519"
 
 # Do not consider .z in x.y.z, as that is updated with every commit
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+)\.0"
