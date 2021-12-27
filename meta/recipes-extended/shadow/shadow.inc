@@ -4,8 +4,9 @@ DESCRIPTION = "${SUMMARY}"
 BUGTRACKER = "http://github.com/shadow-maint/shadow/issues"
 SECTION = "base/utils"
 LICENSE = "BSD-3-Clause | Artistic-1.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ed80ff1c2b40843cf5768e5229cf16e5 \
-                    file://src/passwd.c;beginline=2;endline=30;md5=5720ff729a6ff39ecc9f64555d75f4af"
+LIC_FILES_CHKSUM = "file://COPYING;md5=24f172951acb1904c9273a6a016b0b36 \
+                    file://src/passwd.c;beginline=2;endline=30;md5=5720ff729a6ff39ecc9f64555d75f4af \
+                    "
 
 DEPENDS = "virtual/crypt"
 
@@ -14,9 +15,6 @@ SRC_URI = "https://github.com/shadow-maint/shadow/releases/download/v${PV}/${BP}
            file://shadow-4.1.3-dots-in-usernames.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://shadow-relaxed-usernames.patch \
-           file://0001-Fix-out-of-tree-builds-with-respect-to-libsubid-incl.patch \
-           file://0001-libsubid-link-to-PAM-libraries.patch \
-           file://0001-libmisc-fix-default-value-in-SHA_get_salt_rounds.patch \
            file://useradd \
            "
 
@@ -33,7 +31,7 @@ SRC_URI:append:class-nativesdk = " \
            file://0001-Disable-use-of-syslog-for-sysroot.patch \
            "
 
-SRC_URI[sha256sum] = "6c4627ff9c9422b96664517ae753c944f2902e92809d0698b65f5fef11985212"
+SRC_URI[sha256sum] = "efa9b89b5901644890dbf230b8e9e3dbcdb51ffb6be145afc57f3012861aeddf"
 
 # Additional Policy files for PAM
 PAM_SRC_URI = "file://pam.d/chfn \
