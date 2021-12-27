@@ -12,7 +12,7 @@ SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${S
            file://0001-numpy-core-Define-RISCV-32-support.patch \
            file://run-ptest \
 "
-SRC_URI[sha256sum] = "5d412381aa489b8be82ac5c6a9e99c3eb3f754245ad3f90ab5c339d92f25fb47"
+SRC_URI[sha256sum] = "1a7ee0ffb35dc7489aebe5185a483f4c43b0d2cf784c3c9940f975a7dde56506"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
