@@ -133,7 +133,8 @@ RDEPENDS:${PN}-ptest += " bash coreutils curl file \
    perl-module-file-basename perl-module-file-glob perl-module-getopt-long \
    perl-module-overloading perl-module-cwd perl-module-ipc-open3 \
    perl-module-carp perl-module-symbol \
-   procps sed ${PN}-dbg ${PN}-src ${TCLIBC}-src gcc-runtime-dbg"
+   procps sed ${PN}-dbg ${PN}-src ${TCLIBC}-src gcc-runtime-dbg \
+   util-linux-taskset"
 RDEPENDS:${PN}-ptest:append:libc-glibc = " glibc-utils"
 
 # One of the tests contains a bogus interpreter path on purpose.
