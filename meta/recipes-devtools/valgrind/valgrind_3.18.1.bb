@@ -42,6 +42,7 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://s390x_vec_op_t.patch \
            file://0001-none-tests-fdleak_cmsg.stderr.exp-adjust-tmp-paths.patch \
            file://0001-memcheck-tests-Fix-timerfd-syscall-test.patch \
+           file://0001-Implement-linux-rseq-syscall-as-ENOSYS.patch \
            "
 SRC_URI[sha256sum] = "00859aa13a772eddf7822225f4b46ee0d39afbe071d32778da4d99984081f7f5"
 UPSTREAM_CHECK_REGEX = "valgrind-(?P<pver>\d+(\.\d+)+)\.tar"
