@@ -14,6 +14,8 @@ SRC_URI += "\
     file://0007-cmd-go-make-GOROOT-precious-by-default.patch \
     file://0008-use-GOBUILDMODE-to-set-buildmode.patch \
     file://0009-Revert-cmd-go-make-sure-CC-and-CXX-are-absolute.patch \
+    file://0001-exec.go-do-not-write-linker-flags-into-buildids.patch \
+    file://0001-src-cmd-dist-buildgo.go-do-not-hardcode-host-compile.patch \
 "
 SRC_URI[main.sha256sum] = "3defb9a09bed042403195e872dcbc8c6fae1485963332279668ec52e80a95a2d"
 
