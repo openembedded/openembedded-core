@@ -2,6 +2,8 @@ inherit goarch
 
 GO_PARALLEL_BUILD ?= "${@oe.utils.parallel_make_argument(d, '-p %d')}"
 
+export GODEBUG = "gocachehash=1"
+
 GOROOT:class-native = "${STAGING_LIBDIR_NATIVE}/go"
 GOROOT:class-nativesdk = "${STAGING_DIR_TARGET}${libdir}/go"
 GOROOT = "${STAGING_LIBDIR}/go"
