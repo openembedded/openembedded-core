@@ -17,24 +17,11 @@ import stat
 import os
 import datetime
 
-# For sample packages, see:
-# https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201127-0t7wr_oo/
-# https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201127-4s9ejwyp/
-# https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201127-haiwdlbr/
-# https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201127-hwds3mcl/
-# https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20201203-sua0pzvc/
-# (both packages/ and packages-excluded/)
-
 # ruby-ri-docs, meson:
 #https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210215-0_td9la2/packages/diff-html/
 # rust-llvm:
 #https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210825-kaihham6/
 exclude_packages = [
-	'glide',
-	'go-helloworld',
-	'go-runtime',
-	'go_',
-	'go-',
 	'ruby-ri-docs',
 	'rust-llvm-liblto',
 	'rust-llvm-staticdev'
