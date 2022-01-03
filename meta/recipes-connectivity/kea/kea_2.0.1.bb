@@ -18,7 +18,7 @@ SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.gz \
            file://fix_pid_keactrl.patch \
            file://0001-src-lib-log-logger_unittest_support.cc-do-not-write-.patch \
            "
-SRC_URI[sha256sum] = "05854e0c3871b452edace18eccc6ab618940e0249fbe7c232a36d06ae59bf41d"
+SRC_URI[sha256sum] = "f50bb9a954e314316b4033a175dc807496bb9c1754110bd92a21c165a9e84c57"
 
 inherit autotools systemd update-rc.d upstream-version-is-even
 
