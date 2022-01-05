@@ -75,6 +75,11 @@ SRC_URI = "\
            file://0003-CVE-2021-35465.patch \
            file://0004-CVE-2021-35465.patch \
            file://0039-arm64-neoverse-n2-support.patch \
+           file://0001-CVE-2021-42574.patch \
+           file://0002-CVE-2021-42574.patch \
+           file://0003-CVE-2021-42574.patch \
+           file://0004-CVE-2021-42574.patch \
+           file://0005-CVE-2021-42574.patch \
 "
 SRC_URI[sha256sum] = "b8dd4368bb9c7f0b98188317ee0254dd8cc99d1e3a18d0ff146c855fe16c1d8c"
 
