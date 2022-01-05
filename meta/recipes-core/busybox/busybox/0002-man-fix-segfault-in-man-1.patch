@@ -1,0 +1,30 @@
+From 4975cace9bf96bfde174f8bb5cc4068d2ea294d4 Mon Sep 17 00:00:00 2001
+From: Denys Vlasenko <vda.linux@googlemail.com>
+Date: Tue, 15 Jun 2021 14:47:46 +0200
+Subject: [PATCH] man: fix segfault in "man 1"
+
+function                                             old     new   delta
+man_main                                             942     954     +12
+
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+
+Upstream-Status: Backport [4d4fc5ca5ee4f]
+CVE: CVE-2021-42373
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ miscutils/man.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/miscutils/man.c b/miscutils/man.c
+index 722f6641e..d319e8bba 100644
+--- a/miscutils/man.c
++++ b/miscutils/man.c
+@@ -324,7 +324,7 @@ int man_main(int argc UNUSED_PARAM, char **argv)
+ 
+ 	/* is 1st ARG a SECTION? */
+ 	sec_list = conf_sec_list;
+-	if (is_section_name(conf_sec_list, *argv)) {
++	if (is_section_name(conf_sec_list, *argv) && argv[1]) {
+ 		/* yes */
+ 		sec_list = *argv++;
+ 	}

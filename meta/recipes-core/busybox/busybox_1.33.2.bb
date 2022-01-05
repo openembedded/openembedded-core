@@ -48,6 +48,8 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0001-sysctl-ignore-EIO-of-stable_secret-below-proc-sys-ne.patch \
            file://0001-gen_build_files-Use-C-locale-when-calling-sed-on-glo.patch \
            file://0001-mktemp-add-tmpdir-option.patch \
+           file://0001-awk-fix-CVEs.patch \
+           file://0002-man-fix-segfault-in-man-1.patch \
            "
 SRC_URI_append_libc-musl = " file://musl.cfg "
 
