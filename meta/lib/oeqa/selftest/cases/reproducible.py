@@ -105,8 +105,9 @@ def compare_file(reference, test, diffutils_sysroot):
     result.status = SAME
     return result
 
-def run_diffoscope(a_dir, b_dir, html_dir, **kwargs):
-    return runCmd(['diffoscope', '--no-default-limits', '--exclude-directory-metadata', 'yes', '--html-dir', html_dir, a_dir, b_dir],
+def run_diffoscope(a_dir, b_dir, html_dir, max_report_size=0, **kwargs):
+    return runCmd(['diffoscope', '--no-default-limits', '--max-report-size', str(max_report_size),
+                   '--exclude-directory-metadata', 'yes', '--html-dir', html_dir, a_dir, b_dir],
                 **kwargs)
 
 class DiffoscopeTests(OESelftestTestCase):
@@ -135,6 +136,9 @@ class ReproducibleTests(OESelftestTestCase):
     # Test the reproducibility of whatever is built between sstate_targets and targets
 
     package_classes = ['deb', 'ipk', 'rpm']
+
+    # Maximum report size, in bytes
+    max_report_size = 250 * 1024 * 1024
 
     # targets are the things we want to test the reproducibility of
     targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'core-image-weston', 'world']
@@ -311,7 +315,7 @@ class ReproducibleTests(OESelftestTestCase):
                 # Copy jquery to improve the diffoscope output usability
                 self.copy_file(os.path.join(jquery_sysroot, 'usr/share/javascript/jquery/jquery.min.js'), os.path.join(package_html_dir, 'jquery.js'))
 
-                run_diffoscope('reproducibleA', 'reproducibleB', package_html_dir,
+                run_diffoscope('reproducibleA', 'reproducibleB', package_html_dir, max_report_size=self.max_report_size,
                         native_sysroot=diffoscope_sysroot, ignore_status=True, cwd=package_dir)
 
         if fails:
