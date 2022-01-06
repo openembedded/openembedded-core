@@ -59,6 +59,7 @@ SRC_URI = "\
            file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0041-apply-debug-prefix-maps-before-checksumming-DIEs.patch \
            file://0006-If-CXXFLAGS-contains-something-unsupported-by-the-bu.patch \
+           file://0001-Fix-install-path-of-linux64.h.patch \
            file://0001-CVE-2021-35465.patch \
            file://0002-CVE-2021-35465.patch \
            file://0003-CVE-2021-35465.patch \
