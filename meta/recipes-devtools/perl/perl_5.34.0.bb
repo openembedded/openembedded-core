@@ -53,6 +53,7 @@ do_configure:class-target() {
     ./configure --prefix=${prefix} --libdir=${libdir} \
     --target=${TARGET_SYS} \
     -Duseshrplib \
+    -Dusethreads \
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
     -Darchlibexp=${STAGING_LIBDIR}/perl5/${PV}/${TARGET_ARCH}-linux \
@@ -80,6 +81,7 @@ do_configure:class-nativesdk() {
     ./configure --prefix=${prefix} \
     --target=${TARGET_SYS} \
     -Duseshrplib \
+    -Dusethreads \
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
     -Darchlibexp=${STAGING_LIBDIR}/perl5/${PV}/${TARGET_ARCH}-linux \
@@ -94,6 +96,7 @@ do_configure:class-native() {
     ./configure --prefix=${prefix} \
     -Dbin=${bindir}/perl-native \
     -Duseshrplib \
+    -Dusethreads \
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
     -Ui_xlocale \
