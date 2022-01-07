@@ -37,7 +37,16 @@ EXTRA_OECMAKE = "-DSDL_OSS=OFF -DSDL_ESD=OFF -DSDL_ARTS=OFF \
                  -DSDL_PTHREADS=ON \
                  -DSDL_RPATH=OFF \
                  -DSDL_SNDIO=OFF \
-                "
+                 -DSDL_X11_XVM=OFF \
+                 -DSDL_X11_XCURSOR=OFF \
+                 -DSDL_X11_XINERAMA=OFF \
+                 -DSDL_X11_XDBE=OFF \
+                 -DSDL_X11_XFIXES=OFF \
+                 -DSDL_X11_XINPUT=OFF \
+                 -DSDL_X11_XRANDR=OFF \
+                 -DSDL_X11_XSCRNSAVER=OFF \
+                 -DSDL_X11_XSHAPE=OFF \
+"
 
 # opengl packageconfig factored out to make it easy for distros
 # and BSP layers to pick either (desktop) opengl, gles2, or no GL
