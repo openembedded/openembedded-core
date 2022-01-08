@@ -15,7 +15,7 @@ SRC_URI[sha256sum] = "bff0d8cffeeceb35159d6f4aa6bab18c807b80642c9d50f66cba52ecf7
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
-inherit allarch meson pkgconfig
+inherit meson pkgconfig allarch
 
 EXTRA_OEMESON += "-Dtests=false"
 
