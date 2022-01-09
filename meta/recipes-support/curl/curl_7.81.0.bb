@@ -3,15 +3,14 @@ DESCRIPTION = "It uses URL syntax to transfer data to and from servers. \
 curl is a widely used because of its ability to be flexible and complete \
 complex tasks. For example, you can use curl for things like user authentication, \
 HTTP post, SSL connections, proxy support, FTP uploads, and more!"
-HOMEPAGE = "http://curl.haxx.se/"
-BUGTRACKER = "http://curl.haxx.se/mail/list.cgi?list=curl-tracker"
+HOMEPAGE = "https://curl.se/"
+BUGTRACKER = "https://github.com/curl/curl/issues"
 SECTION = "console/network"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=425f6fdc767cc067518eef9bbdf4ab7b"
 
-SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2"
-
-SRC_URI[sha256sum] = "dd0d150e49cd950aff35e16b628edf04927f0289df42883750cf952bb858189c"
+SRC_URI = "https://curl.se/download/${BP}.tar.xz"
+SRC_URI[sha256sum] = "a067b688d1645183febc31309ec1f3cdce9213d02136b6a6de3d50f69c95a7d3"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
@@ -53,6 +52,7 @@ PACKAGECONFIG[tftp] = "--enable-tftp,--disable-tftp,"
 PACKAGECONFIG[threaded-resolver] = "--enable-threaded-resolver,--disable-threaded-resolver,,,,ares"
 PACKAGECONFIG[verbose] = "--enable-verbose,--disable-verbose"
 PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
+PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
 
 EXTRA_OECONF = " \
     --disable-libcurl-option \
