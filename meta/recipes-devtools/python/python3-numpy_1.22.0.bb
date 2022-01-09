@@ -11,8 +11,9 @@ SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${S
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            file://0001-numpy-core-Define-RISCV-32-support.patch \
            file://run-ptest \
-"
-SRC_URI[sha256sum] = "1a7ee0ffb35dc7489aebe5185a483f4c43b0d2cf784c3c9940f975a7dde56506"
+           file://0001-numpy-core-setup.py-disable-svml-for-now.patch \
+           "
+SRC_URI[sha256sum] = "f2be14ba396780a6f662b8ba1a24466c9cf18a6a386174f614668e58387a13d7"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
