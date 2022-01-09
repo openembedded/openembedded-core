@@ -3,15 +3,15 @@ DESCRIPTION = "It provides simple asynchronous wrappers for most Flatpak portals
 with a familiar GObject API along side the D-Bus API"
 HOMEPAGE = "https://github.com/flatpak/libportal"
 BUGTRACKER = "https://github.com/flatpak/libportal/issues"
-LICENSE = "LGPLv2.1"
-LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
+LICENSE = "LGPLv3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=3000208d539ec061b899bce1d9ce9404"
 
 SRC_URI = "git://github.com/flatpak/${BPN}.git;protocol=https;branch=master"
-SRCREV = "f68764e288ede516d902b131cc4fadded3804059"
+SRCREV = "467a397fd7996557f837cdc26ac07c01c62810e5"
 S = "${WORKDIR}/git"
 
-GTKDOC_MESON_OPTION = 'gtk_doc'
+inherit meson gtk-doc gobject-introspection
 
-inherit meson gtk-doc
+DEPENDS += "glib-2.0 glib-2.0-native gtk+3"
 
-DEPENDS += "glib-2.0 glib-2.0-native"
+EXTRA_OEMESON = "-Dbackends=gtk3 -Dvapi=false"
