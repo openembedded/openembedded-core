@@ -17,6 +17,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 SRCREV = "402280118fe082122437638f53a0019c4aea81aa"
 SRCBRANCH = "v250-stable"
 SRC_URI = "git://github.com/systemd/systemd-stable.git;protocol=https;branch=${SRCBRANCH} \
-"
+           file://0001-src-fundamental-list-fundamental_source_paths-using-.patch \
+           "
 
 S = "${WORKDIR}/git"
