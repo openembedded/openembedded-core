@@ -688,6 +688,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/rules.d/60-serial.rules \
                ${rootlibexecdir}/udev/rules.d/61-autosuspend-manual.rules \
                ${rootlibexecdir}/udev/rules.d/64-btrfs.rules \
+               ${rootlibexecdir}/udev/rules.d/70-camera.rules \
                ${rootlibexecdir}/udev/rules.d/70-joystick.rules \
                ${rootlibexecdir}/udev/rules.d/70-memory.rules \
                ${rootlibexecdir}/udev/rules.d/70-mouse.rules \
