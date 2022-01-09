@@ -12,11 +12,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://run-ptest \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
-           file://mdadm-fix-ptest-build-errors.patch \
            file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
            file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
            file://0001-Use-CC-to-check-for-implicit-fallthrough-warning-sup.patch \
-           file://0001-Compute-abs-diff-in-a-standard-compliant-way.patch \
            file://0001-fix-gcc-8-format-truncation-warning.patch \
            file://debian-no-Werror.patch \
            file://0001-Revert-tests-wait-for-complete-rebuild-in-integrity-.patch \
@@ -26,10 +24,11 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://0001-mdadm-skip-test-11spare-migration.patch \
            "
 
-SRC_URI[md5sum] = "51bf3651bd73a06c413a2f964f299598"
-SRC_URI[sha256sum] = "ab7688842908d3583a704d491956f31324c3a5fc9f6a04653cb75d19f1934f4a"
+SRC_URI[sha256sum] = "461c215670864bb74a4d1a3620684aa2b2f8296dffa06743f26dda5557acf01d"
 
 inherit autotools-brokensep ptest systemd
+
+DEPENDS = "udev"
 
 SYSTEMD_SERVICE:${PN} = "mdmonitor.service"
 SYSTEMD_AUTO_ENABLE = "disable"
