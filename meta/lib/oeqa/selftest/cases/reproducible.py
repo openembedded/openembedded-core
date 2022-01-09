@@ -17,11 +17,7 @@ import stat
 import os
 import datetime
 
-# rust-llvm:
-#https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210825-kaihham6/
 exclude_packages = [
-	'rust-llvm-liblto',
-	'rust-llvm-staticdev'
 	]
 
 def is_excluded(package):
