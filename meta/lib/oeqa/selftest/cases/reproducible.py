@@ -17,12 +17,9 @@ import stat
 import os
 import datetime
 
-# ruby-ri-docs, meson:
-#https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210215-0_td9la2/packages/diff-html/
 # rust-llvm:
 #https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20210825-kaihham6/
 exclude_packages = [
-	'ruby-ri-docs',
 	'rust-llvm-liblto',
 	'rust-llvm-staticdev'
 	]

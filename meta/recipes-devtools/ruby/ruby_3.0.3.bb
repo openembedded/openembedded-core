@@ -21,6 +21,9 @@ PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[valgrind] = "--with-valgrind=yes, --with-valgrind=no, valgrind"
 PACKAGECONFIG[gmp] = "--with-gmp=yes, --with-gmp=no, gmp"
 PACKAGECONFIG[ipv6] = "--enable-ipv6, --disable-ipv6,"
+# rdoc is off by default due to non-reproducibility reported in
+# https://bugs.ruby-lang.org/issues/18456
+PACKAGECONFIG[rdoc] = "--enable-install-rdoc,--disable-install-rdoc,"
 
 EXTRA_OECONF = "\
     --disable-versioned-paths \
