@@ -62,6 +62,8 @@ common_errors = [
     "[rndr  ]: Initialization Failed",
     "[pulseaudio] authkey.c: Failed to open cookie file",
     "[pulseaudio] authkey.c: Failed to load authentication key",
+    "was skipped because of a failed condition check",
+    "was skipped because all trigger condition checks failed",
     ]
 
 video_related = [
