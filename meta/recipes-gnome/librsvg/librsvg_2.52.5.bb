@@ -18,14 +18,9 @@ inherit gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspec
 
 SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
            file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
-           file://0001-vendor-system-deps-sort-dependencies-before-using-th.patch \
-           file://0005-Add-base-definitions-for-riscv64-musl-libc-0.2.93.patch \
-           file://0006-FIXUP-linux-musl-mod.rs-add-riscv64-to-b64-set-libc-.patch \
-           file://0007-FIXUP-Correct-definitions-to-match-musl-libc-0.2.93.patch \
-           file://0001-Update-checksums-for-modified-files-for-libc.patch \
            "
 
-SRC_URI[archive.sha256sum] = "660ec8836a3a91587bc9384920132d4c38d1d1718c67fe160c5213fe4dec2928"
+SRC_URI[archive.sha256sum] = "407cbbab518137ea18a3f3220bea180fbee75f3e5bd6ba10a7a862c1a6f74d82"
 
 # librsvg is still autotools-based, but is calling cargo from its automake-driven makefiles
 # so we cannot use cargo class directly, but still need bits and pieces from it 
