@@ -100,9 +100,9 @@ class TinfoilTests(OESelftestTestCase):
             eventreceived = False
             commandcomplete = False
             start = time.time()
-            # Wait for maximum 60s in total so we'd detect spurious heartbeat events for example
+            # Wait for maximum 120s in total so we'd detect spurious heartbeat events for example
             while (not (eventreceived == True and commandcomplete == True) 
-                    and (time.time() - start < 60)):
+                    and (time.time() - start < 120)):
                 # if we received both events (on let's say a good day), we are done  
                 event = tinfoil.wait_event(1)
                 if event:
