@@ -23,7 +23,7 @@ index 9b17d120a..d175ec4e3 100644
  	  "$(srcdir)"/config/* | "$(srcdir)"/common/config/* \
  	  | "$(srcdir)"/c-family/* | "$(srcdir)"/*.def ) \
  	    base=`echo "$$path" | sed -e "s|$$srcdirstrip/||"`;; \
-+	  ./linux64.h ) \
++	  */linux64.h ) \
 +	    base=`dirname $$path`;;\
  	  *) base=`basename $$path` ;; \
  	  esac; \
