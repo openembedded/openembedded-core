@@ -13,7 +13,7 @@ SRC_URI += " \
            file://0006-Make-gemspecs-reproducible.patch \
            "
 
-SRC_URI[sha256sum] = "3586861cb2df56970287f0fd83f274bd92058872d830d15570b36def7f1a92ac"
+SRC_URI[sha256sum] = "50a0504c6edcb4d61ce6b8cfdbddaa95707195fab0ecd7b5e92654b2a9412854"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
@@ -32,6 +32,7 @@ EXTRA_OECONF = "\
     --enable-shared \
     --enable-load-relative \
     --with-pkg-config=pkg-config \
+    --with-static-linked-ext \
 "
 
 EXTRA_OECONF:append:libc-musl = "\
@@ -67,6 +68,8 @@ do_install:append:class-target () {
     sed -i -e 's|${DEBUG_PREFIX_MAP}||g' \
         ${D}${libdir}/pkgconfig/*.pc
 
+    # logs that may contain host-specific paths
+    find ${D} -name gem_make.out -delete
 }
 
 do_install_ptest () {
@@ -78,9 +81,14 @@ do_install_ptest () {
     cp -r ${S}/lib/did_you_mean ${S}/lib/rdoc ${D}${PTEST_PATH}/lib
 
     # install test-binaries
-    find $(find ./.ext -path '*/-test-') -name '*.so' -print0 \
-        | tar --no-recursion --null -T - --no-same-owner --preserve-permissions -cf - \
-        | tar -C ${D}${libdir}/ruby/${SHRT_VER}.0/ --no-same-owner --preserve-permissions --strip-components=2 -xf -
+    # These .so files have sporadic reproducibility fails as seen here:
+    # https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20220107-rm1diuww/packages/diff-html/
+    # As they are needed only in ruby-ptest, and that is currently altogether disabled, let's take them out.
+    # If someone wants to look at where the non-determinism comes from, one possible reason is use of
+    # -rdynamic -Wl,-export-dynamic
+    #find $(find ./.ext -path '*/-test-') -name '*.so' -print0 \
+    #    | tar --no-recursion --null -T - --no-same-owner --preserve-permissions -cf - \
+    #    | tar -C ${D}${libdir}/ruby/${SHRT_VER}.0/ --no-same-owner --preserve-permissions --strip-components=2 -xf -
     # adjust path to not assume build directory layout
     sed -e 's|File.expand_path(.*\.\./bin/erb[^)]*|File.expand_path("${bindir}/erb"|g' \
         -i ${D}${PTEST_PATH}/test/erb/test_erb_command.rb
