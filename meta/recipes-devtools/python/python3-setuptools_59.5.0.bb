@@ -22,7 +22,6 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-compile \
     ${PYTHON_PN}-compression \
     ${PYTHON_PN}-ctypes \
-    ${PYTHON_PN}-distutils \
     ${PYTHON_PN}-email \
     ${PYTHON_PN}-html \
     ${PYTHON_PN}-json \
