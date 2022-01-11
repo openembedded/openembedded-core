@@ -23,7 +23,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
 
-inherit cmake gettext bash-completion distutils3-base systemd
+inherit cmake gettext bash-completion setuptools3-base systemd
 
 DEPENDS += "libdnf librepo libcomps python3-iniparse"
 
