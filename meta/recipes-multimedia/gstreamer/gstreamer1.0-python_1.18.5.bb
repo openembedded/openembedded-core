@@ -23,4 +23,4 @@ EXTRA_OEMESON += "-Dlibpython-dir=${libdir}"
 REQUIRED_DISTRO_FEATURES = "gobject-introspection-data"
 GIR_MESON_OPTION = ""
 
-inherit meson pkgconfig distutils3-base upstream-version-is-even gobject-introspection features_check
+inherit meson pkgconfig setuptools3-base upstream-version-is-even gobject-introspection features_check
