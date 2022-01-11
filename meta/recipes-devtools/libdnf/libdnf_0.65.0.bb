@@ -22,7 +22,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "glib-2.0 libsolv libcheck librepo rpm gtk-doc libmodulemd json-c swig-native"
 
-inherit gtk-doc gobject-introspection cmake pkgconfig distutils3-base
+inherit gtk-doc gobject-introspection cmake pkgconfig setuptools3-base
 
 EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DWITH_MAN=OFF -DPYTHON_DESIRED=3 \
                   ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DWITH_GIR=ON', '-DWITH_GIR=OFF', d)} \
