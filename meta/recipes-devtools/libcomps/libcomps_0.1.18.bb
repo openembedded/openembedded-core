@@ -12,7 +12,7 @@ SRCREV = "dee4ae37f7818709802de28c4d16fa823bd83ae2"
 
 S = "${WORKDIR}/git"
 
-inherit cmake distutils3-base
+inherit cmake setuptools3-base
 
 DEPENDS += "libxml2 expat libcheck"
 
