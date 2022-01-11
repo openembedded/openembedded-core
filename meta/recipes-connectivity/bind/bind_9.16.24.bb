@@ -46,7 +46,7 @@ EXTRA_OECONF = " --with-libtool --disable-devpoll --disable-auto-validation --en
                "
 LDFLAGS:append = " -lz"
 
-inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native distutils3-base', '', d)}
+inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native setuptools3-base', '', d)}
 
 # dhcp needs .la so keep them
 REMOVE_LIBTOOL_LA = "0"
