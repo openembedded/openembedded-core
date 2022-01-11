@@ -8,7 +8,7 @@ RDEPENDS:${PN} += "\
 # running build_ext a second time during install fails, because Python
 # would then attempt to import cythonized modules built for the target
 # architecture.
-DISTUTILS_INSTALL_ARGS += "--skip-build"
+SETUPTOOLS_INSTALL_ARGS += "--skip-build"
 
 do_install:append() {
     # rename scripts that would conflict with the Python 2 build of Cython
