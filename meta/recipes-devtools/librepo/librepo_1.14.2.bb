@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "curl glib-2.0 openssl attr gpgme libxml2"
 
-inherit cmake distutils3-base pkgconfig
+inherit cmake setuptools3-base pkgconfig
 
 EXTRA_OECMAKE = " \
     -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} \
