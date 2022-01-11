@@ -38,7 +38,6 @@ RDEPENDS:${PN} += " \
   python3-netclient \
   python3-email \
   python3-threading \
-  python3-distutils \
   python3-logging \
   python3-fcntl \
   librepo \
