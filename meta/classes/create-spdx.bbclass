@@ -254,6 +254,7 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
         Path(d.getVar('PKGD')),
         Path(d.getVar('STAGING_DIR_TARGET')),
         Path(d.getVar('STAGING_DIR_NATIVE')),
+        Path(d.getVar('STAGING_KERNEL_DIR')),
     ]
 
     pkg_data = oe.packagedata.read_subpkgdata_extended(package, d)
@@ -275,7 +276,10 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
         for debugsrc in file_data["debugsrc"]:
             ref_id = "NOASSERTION"
             for search in debug_search_paths:
-                debugsrc_path = search / debugsrc.lstrip("/")
+                if debugsrc.startswith("/usr/src/kernel"):
+                    debugsrc_path = search / debugsrc.replace('/usr/src/kernel/', '')
+                else:
+                    debugsrc_path = search / debugsrc.lstrip("/")
                 if not debugsrc_path.exists():
                     continue
 
