@@ -185,37 +185,6 @@ def raise_sanity_error(msg, d, network_error=False):
     
     %s""" % msg)
 
-# Check flags associated with a tuning.
-def check_toolchain_tune_args(data, tune, multilib, errs):
-    found_errors = False
-    if check_toolchain_args_present(data, tune, multilib, errs, 'CCARGS'):
-        found_errors = True
-    if check_toolchain_args_present(data, tune, multilib, errs, 'ASARGS'):
-        found_errors = True
-    if check_toolchain_args_present(data, tune, multilib, errs, 'LDARGS'):
-        found_errors = True
-
-    return found_errors
-
-def check_toolchain_args_present(data, tune, multilib, tune_errors, which):
-    args_set = (data.getVar("TUNE_%s" % which) or "").split()
-    args_wanted = (data.getVar("TUNEABI_REQUIRED_%s:tune-%s" % (which, tune)) or "").split()
-    args_missing = []
-
-    # If no args are listed/required, we are done.
-    if not args_wanted:
-        return
-    for arg in args_wanted:
-        if arg not in args_set:
-            args_missing.append(arg)
-
-    found_errors = False
-    if args_missing:
-        found_errors = True
-        tune_errors.append("TUNEABI for %s requires '%s' in TUNE_%s (%s)." %
-                       (tune, ' '.join(args_missing), which, ' '.join(args_set)))
-    return found_errors
-
 # Check a single tune for validity.
 def check_toolchain_tune(data, tune, multilib):
     tune_errors = []
@@ -247,17 +216,6 @@ def check_toolchain_tune(data, tune, multilib):
             bb.debug(2, "  %s: %s" % (feature, valid_tunes[feature]))
         else:
             tune_errors.append("Feature '%s' is not defined." % feature)
-    whitelist = localdata.getVar("TUNEABI_WHITELIST")
-    if whitelist:
-        tuneabi = localdata.getVar("TUNEABI:tune-%s" % tune)
-        if not tuneabi:
-            tuneabi = tune
-        if True not in [x in whitelist.split() for x in tuneabi.split()]:
-            tune_errors.append("Tuning '%s' (%s) cannot be used with any supported tuning/ABI." %
-                (tune, tuneabi))
-        else:
-            if not check_toolchain_tune_args(localdata, tuneabi, multilib, tune_errors):
-                bb.debug(2, "Sanity check: Compiler args OK for %s." % tune)
     if tune_errors:
         return "Tuning '%s' has the following errors:\n" % tune + '\n'.join(tune_errors)
 
