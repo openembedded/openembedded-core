@@ -901,7 +901,7 @@ sstate_unpack_package () {
 		ZSTD="pzstd -p ${ZSTD_THREADS}"
 	fi
 
-	tar -I "$ZSTD" -xvf ${SSTATE_PKG}
+	tar -I "$ZSTD" -xvpf ${SSTATE_PKG}
 	# update .siginfo atime on local/NFS mirror if it is a symbolic link
 	[ ! -h ${SSTATE_PKG}.siginfo ] || touch -a ${SSTATE_PKG}.siginfo 2>/dev/null || true
 	# update each symbolic link instead of any referenced file
