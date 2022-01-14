@@ -10,13 +10,11 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-fix-cpu-hotplug-Remove-deprecated-CPU-hotplug-functi.patch \
-           file://0002-fix-Revert-Makefile-Enable-Wimplicit-fallthrough-for.patch \
           "
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "5ebf2b3cd128b3a1c8afaea1e98d5a6f7f0676fd524fcf72361c34d9dc603356"
+SRC_URI[sha256sum] = "a7c86d91c9bbe66d27f025aa04b8cfc6d7785ed2fc7ef774930800ee44d7f343"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
