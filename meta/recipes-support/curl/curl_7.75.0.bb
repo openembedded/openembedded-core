@@ -21,12 +21,19 @@ SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://CVE-2021-22901.patch \
            file://CVE-2021-22924.patch \
            file://CVE-2021-22926.patch \
+           file://CVE-2021-22945.patch \
+           file://CVE-2021-22946.patch \
+           file://CVE-2021-22947.patch \
 "
 
 SRC_URI[sha256sum] = "50552d4501c178e4cc68baaecc487f466a3d6d19bbf4e50a01869effb316d026"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
+
+# These only apply when using --with-libmetalink, but --without-libmetalink is
+# set below.
+CVE_CHECK_WHITELIST += "CVE-2021-22922 CVE-2021-22923"
 
 inherit autotools pkgconfig binconfig multilib_header
 
@@ -65,6 +72,7 @@ PACKAGECONFIG[threaded-resolver] = "--enable-threaded-resolver,--disable-threade
 PACKAGECONFIG[verbose] = "--enable-verbose,--disable-verbose"
 PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
 
+# Keep --without-libmetalink to mitigate CVE-2021-22922 and CVE-2021-22923
 EXTRA_OECONF = " \
     --disable-libcurl-option \
     --disable-ntlm-wb \
