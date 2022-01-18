@@ -18,7 +18,7 @@ class StapTest(OERuntimeTestCase):
         status, output = self.target.run(cmd, 900)
         self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
 
-        cmd = 'stap -v --disable-cache -DSTP_NO_VERREL_CHECK -e \'probe oneshot { print("Hello, "); println("world!") }\''
+        cmd = 'stap -v --disable-cache -DSTP_NO_VERREL_CHECK -s1 -e \'probe oneshot { print("Hello, "); println("world!") }\''
         status, output = self.target.run(cmd, 900)
         self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
         self.assertIn('Hello, world!', output, msg='\n'.join([cmd, output]))
