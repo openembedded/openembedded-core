@@ -3,9 +3,9 @@ HOMEPAGE = "http://github.com/shadow-maint/shadow"
 DESCRIPTION = "${SUMMARY}"
 BUGTRACKER = "http://github.com/shadow-maint/shadow/issues"
 SECTION = "base/utils"
-LICENSE = "BSD-3-Clause | Artistic-1.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=24f172951acb1904c9273a6a016b0b36 \
-                    file://src/passwd.c;beginline=2;endline=30;md5=5720ff729a6ff39ecc9f64555d75f4af \
+LICENSE = "BSD-3-Clause"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c9a450b7be84eac23e6353efecb60b5b \
+                    file://src/passwd.c;beginline=2;endline=30;md5=758c26751513b6795395275969dd3be1 \
                     "
 
 DEPENDS = "virtual/crypt"
@@ -31,7 +31,7 @@ SRC_URI:append:class-nativesdk = " \
            file://0001-Disable-use-of-syslog-for-sysroot.patch \
            "
 
-SRC_URI[sha256sum] = "efa9b89b5901644890dbf230b8e9e3dbcdb51ffb6be145afc57f3012861aeddf"
+SRC_URI[sha256sum] = "f262089be6a1011d50ec7849e14571b7b2e788334368f3dccb718513f17935ed"
 
 # Additional Policy files for PAM
 PAM_SRC_URI = "file://pam.d/chfn \
