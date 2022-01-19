@@ -11,7 +11,6 @@ LICENSE:libavcodec = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LG
 LICENSE:libavdevice = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LGPLv2.1+', d)}"
 LICENSE:libavfilter = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LGPLv2.1+', d)}"
 LICENSE:libavformat = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LGPLv2.1+', d)}"
-LICENSE:libavresample = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LGPLv2.1+', d)}"
 LICENSE:libavutil = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LGPLv2.1+', d)}"
 LICENSE:libpostproc = "GPLv2+"
 LICENSE:libswresample = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPLv2+', 'LGPLv2.1+', d)}"
@@ -26,7 +25,7 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
            "
-SRC_URI[sha256sum] = "eadbad9e9ab30b25f5520fbfde99fae4a92a1ae3c0257a8d68569a4651e30e02"
+SRC_URI[sha256sum] = "51e919f7d205062c0fd4fae6243a84850391115104ccf1efc451733bc0ac7298"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
@@ -41,7 +40,7 @@ DEPENDS = "nasm-native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc avresample \
+PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc \
                    alsa bzlib lzma pic pthreads shared theora zlib \
                    ${@bb.utils.contains('AVAILTUNES', 'mips32r2', 'mips32r2', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv xcb', '', d)}"
@@ -54,7 +53,6 @@ PACKAGECONFIG[avformat] = "--enable-avformat,--disable-avformat"
 PACKAGECONFIG[swresample] = "--enable-swresample,--disable-swresample"
 PACKAGECONFIG[swscale] = "--enable-swscale,--disable-swscale"
 PACKAGECONFIG[postproc] = "--enable-postproc,--disable-postproc"
-PACKAGECONFIG[avresample] = "--enable-avresample,--disable-avresample"
 
 # features to support
 PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
@@ -153,7 +151,6 @@ PACKAGES =+ "libavcodec \
              libavdevice \
              libavfilter \
              libavformat \
-             libavresample \
              libavutil \
              libpostproc \
              libswresample \
@@ -163,7 +160,6 @@ FILES:libavcodec = "${libdir}/libavcodec${SOLIBS}"
 FILES:libavdevice = "${libdir}/libavdevice${SOLIBS}"
 FILES:libavfilter = "${libdir}/libavfilter${SOLIBS}"
 FILES:libavformat = "${libdir}/libavformat${SOLIBS}"
-FILES:libavresample = "${libdir}/libavresample${SOLIBS}"
 FILES:libavutil = "${libdir}/libavutil${SOLIBS}"
 FILES:libpostproc = "${libdir}/libpostproc${SOLIBS}"
 FILES:libswresample = "${libdir}/libswresample${SOLIBS}"
@@ -175,7 +171,6 @@ INSANE_SKIP:${MLPREFIX}libavdevice = "textrel"
 INSANE_SKIP:${MLPREFIX}libavfilter = "textrel"
 INSANE_SKIP:${MLPREFIX}libavformat = "textrel"
 INSANE_SKIP:${MLPREFIX}libavutil = "textrel"
-INSANE_SKIP:${MLPREFIX}libavresample = "textrel"
 INSANE_SKIP:${MLPREFIX}libswscale = "textrel"
 INSANE_SKIP:${MLPREFIX}libswresample = "textrel"
 INSANE_SKIP:${MLPREFIX}libpostproc = "textrel"
