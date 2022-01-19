@@ -13,19 +13,15 @@ DESCRIPTION = "Text files are nowadays usually encoded in Unicode, and may\
 
 HOMEPAGE = "http://www.gnu.org/software/libunistring/"
 SECTION = "devel"
-LICENSE = "LGPLv3+ | GPLv2"
+LICENSE = "LGPLv3+ | GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
-                    file://README;beginline=45;endline=65;md5=08287d16ba8d839faed8d2dc14d7d6a5 \
-                    file://doc/libunistring.texi;md5=287fa6075f78a3c85c1a52b0a92547cd \
+                    file://README;beginline=45;endline=65;md5=3a896a943b4da2c551e6be1af27eff8d \
+                    file://doc/libunistring.texi;md5=266e4297d7c18f197be3d9622ba99685 \
                    "
 DEPENDS = "gperf-native"
 
-SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz \
-           file://0001-Unset-need_charset_alias-when-building-for-musl.patch \
-           file://0001-Make-gl_INIT_PACKAGE-work-with-Automake-1.16.4.patch \
-"
-SRC_URI[md5sum] = "0d3274e9838396b12200f8b54ddaf43b"
-SRC_URI[sha256sum] = "a82e5b333339a88ea4608e4635479a1cfb2e01aafb925e1290b65710d43f610b"
+SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz"
+SRC_URI[sha256sum] = "3c0184c0e492d7c208ce31d25dd1d2c58f0c3ed6cbbe032c5b248cddad318544"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
