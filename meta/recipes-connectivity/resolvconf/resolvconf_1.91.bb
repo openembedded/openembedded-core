@@ -12,11 +12,10 @@ HOMEPAGE = "http://packages.debian.org/resolvconf"
 RDEPENDS:${PN} = "bash"
 
 SRC_URI = "git://salsa.debian.org/debian/resolvconf.git;protocol=https;branch=unstable \
-           file://fix-path-for-busybox.patch \
            file://99_resolvconf \
            "
 
-SRCREV = "1dda36d8465e335c60190c41e7185d782da1bd7b"
+SRCREV = "859209d573e7aec0e95d812c6b52444591a628d1"
 
 S = "${WORKDIR}/git"
 
