@@ -42,3 +42,4 @@ do_install:append() {
 
 FILES:${PN} += "${libdir}/xorg/protocol.txt"
 
+RDEPENDS:${PN} += "xkbcomp"
