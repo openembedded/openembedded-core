@@ -23,15 +23,6 @@ add_openvt_argument() {
 	openvt_args="$openvt_args $1"
 }
 
-## Add module to --modules argument
-add_weston_module() {
-	if [ -z "${weston_modules}" ]; then
-		weston_modules="--modules "
-	fi;
-	weston_modules="${weston_modules}${1},"
-}
-
-
 if [ -n "$WAYLAND_DISPLAY" ]; then
 	echo "ERROR: A Wayland compositor is already running, nested Weston instance is not supported yet."
 	exit 1
@@ -74,9 +65,6 @@ if [ -d "$modules_dir" ]; then
 		# process module
 		. $m
 	done
-	if [ -n "${weston_modules}" ]; then
-		add_weston_argument "${weston_modules} "
-	fi;
 fi
 
 if test -z "$XDG_RUNTIME_DIR"; then

@@ -2,5 +2,6 @@
 
 if type Xwayland  >/dev/null 2>/dev/null; then
 	mkdir -p /tmp/.X11-unix
-	add_weston_module "xwayland.so"
+
+	add_weston_argument "--modules=xwayland.so"
 fi
