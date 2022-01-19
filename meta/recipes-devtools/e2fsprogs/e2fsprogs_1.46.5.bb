@@ -4,14 +4,13 @@ SRC_URI += "file://remove.ldconfig.call.patch \
            file://run-ptest \
            file://ptest.patch \
            file://mkdir_p.patch \
-           file://0001-tests-u_direct_io-expect-correct-expected-output.patch \
+           "
+SRC_URI:append:class-native = " \
+           file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
+           file://quiet-debugfs.patch \
            "
 
-SRC_URI:append:class-native = " file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
-                                file://quiet-debugfs.patch \
-"
-
-SRCREV = "849005eac51ea2097bd9e5f2b0adc16b53c5486d"
+SRCREV = "02540dedd3ddc52c6ae8aaa8a95ce75c3f8be1c0"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
