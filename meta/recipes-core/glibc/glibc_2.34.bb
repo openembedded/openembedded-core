@@ -55,6 +55,8 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0001-Make-shell-interpreter-overridable-in-tzselect.ksh.patch \
            file://0001-CVE-2022-23218.patch \
            file://0002-CVE-2022-23218.patch \
+           file://0001-CVE-2022-23219.patch \
+           file://0002-CVE-2022-23219.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
