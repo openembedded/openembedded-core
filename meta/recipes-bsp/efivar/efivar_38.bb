@@ -7,10 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6626bb1e20189cfa95f2c508ba286393"
 
 COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
-SRC_URI = "git://github.com/rhinstaller/efivar.git;branch=master;protocol=https \
-           file://determinism.patch \
-           file://no-werror.patch"
-SRCREV = "c1d6b10e1ed4ba2be07f385eae5bceb694478a10"
+SRC_URI = "git://github.com/rhinstaller/efivar.git;branch=main;protocol=https \
+           file://0001-docs-do-not-build-efisecdb-manpage.patch \
+           file://0001-src-Makefile-build-util.c-separately-for-makeguids.patch \
+           "
+SRCREV = "1753149d4176ebfb2b135ac0aaf79340bf0e7a93"
 
 S = "${WORKDIR}/git"
 
@@ -22,12 +23,8 @@ export CCLD_FOR_BUILD = "${BUILD_CCLD}"
 # enforce BFD.
 LDFLAGS += "-fuse-ld=bfd"
 
-do_compile:prepend() {
-    # Remove when https://github.com/rhboot/efivar/issues/130 is fixed
-    oe_runmake \
-        CFLAGS="${BUILD_CFLAGS}" \
-        LDFLAGS="${BUILD_LDFLAGS}" \
-        -C src makeguids
+do_compile() {
+    oe_runmake ERRORS= HOST_CFLAGS="${BUILD_CFLAGS}" HOST_LDFLAGS="${BUILD_LDFLAGS}"
 }
 
 do_install() {
@@ -39,3 +36,5 @@ BBCLASSEXTEND = "native"
 RRECOMMENDS:${PN}:class-target = "kernel-module-efivarfs"
 
 CLEANBROKEN = "1"
+# https://github.com/rhboot/efivar/issues/202
+COMPATIBLE_HOST:libc-musl = 'null'
