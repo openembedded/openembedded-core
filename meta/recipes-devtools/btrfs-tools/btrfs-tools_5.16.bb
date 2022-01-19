@@ -17,9 +17,9 @@ DEPENDS = "lzo util-linux zlib"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
-           file://0001-btrfs-tools-include-linux-const.h-to-fix-build-with-.patch \
+           file://0001-btrfs-progs-kerncompat-add-local-definition-for-alig.patch \
            "
-SRCREV = "c0ad9bde429196db7e8710ea1abfab7a2bca2e43"
+SRCREV = "8ad326b2f28c044cb6ed9016d7c3285e23b673c8"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
