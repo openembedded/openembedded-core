@@ -1,7 +1,7 @@
-From 9d240d05c6e6620f36e4ddbcbcb5862fb3269d9f Mon Sep 17 00:00:00 2001
+From a811c933372b18b98fdef3d5901b512131b27b1c Mon Sep 17 00:00:00 2001
 From: Ralf Anton Beier <ralf_beier@me.com>
 Date: Sun, 8 Aug 2021 11:09:17 +0200
-Subject: [PATCH 7/8] FIXUP Correct definitions to match musl
+Subject: [PATCH 3/4] FIXUP Correct definitions to match musl
 
 https://github.com/rust-lang/libc/pull/1994/commits/5f6a4d9745c79c81be63c708515ab116786554a3
 
@@ -9,9 +9,11 @@ Upstream-Status: Submitted [https://github.com/rust-lang/libc/pull/2537]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Ralf Anton Beier <ralf_beier@me.com>
 ---
- .../linux_like/linux/musl/b64/riscv64/mod.rs  | 708 ++++++++----------
- 1 file changed, 311 insertions(+), 397 deletions(-)
+ .../linux_like/linux/musl/b64/riscv64/mod.rs  | 655 +++++++++---------
+ 1 file changed, 312 insertions(+), 343 deletions(-)
 
+diff --git a/vendor/libc/src/unix/linux_like/linux/musl/b64/riscv64/mod.rs b/vendor/libc/src/unix/linux_like/linux/musl/b64/riscv64/mod.rs
+index c656189c4..1799539c2 100644
 --- a/vendor/libc/src/unix/linux_like/linux/musl/b64/riscv64/mod.rs
 +++ b/vendor/libc/src/unix/linux_like/linux/musl/b64/riscv64/mod.rs
 @@ -191,351 +191,8 @@ s! {
@@ -366,7 +368,7 @@ Signed-off-by: Ralf Anton Beier <ralf_beier@me.com>
  pub const SYS_read: ::c_long = 63;
  pub const SYS_write: ::c_long = 64;
  pub const SYS_close: ::c_long = 57;
-@@ -830,3 +487,315 @@ pub const SYS_faccessat2: ::c_long = 439
+@@ -830,3 +487,315 @@ pub const SYS_faccessat2: ::c_long = 439;
  pub const SYS_process_madvise: ::c_long = 440;
  pub const SYS_epoll_pwait2: ::c_long = 441;
  pub const SYS_mount_setattr: ::c_long = 442;
@@ -682,3 +684,6 @@ Signed-off-by: Ralf Anton Beier <ralf_beier@me.com>
 +extern "C" {
 +    pub fn ioctl(fd: ::c_int, request: ::c_int, ...) -> ::c_int;
 +}
+-- 
+2.20.1
+
