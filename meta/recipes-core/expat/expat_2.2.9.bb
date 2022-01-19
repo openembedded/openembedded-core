@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5b8620d98e49772d95fc1d291c26aa79"
 SRC_URI = "git://github.com/libexpat/libexpat.git;protocol=https;branch=master \
            file://CVE-2013-0340.patch \
            file://CVE-2021-45960.patch \
+           file://CVE-2021-46143.patch \
            file://CVE-2022-22822-27.patch \
            file://libtool-tag.patch \
          "
