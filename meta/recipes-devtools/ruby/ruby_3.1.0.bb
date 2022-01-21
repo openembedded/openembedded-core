@@ -48,9 +48,7 @@ EXTRA_OECONF:append:libc-musl:riscv32 = "\
     --with-coroutine=copy \
 "
 
-do_install() {
-    oe_runmake 'DESTDIR=${D}' install
-}
+PARALLEL_MAKEINST = ""
 
 do_install:append:class-target () {
     # Find out rbconfig.rb from .installed.list
