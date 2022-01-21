@@ -28,6 +28,11 @@ SRC_URI += "file://touchscreen.rules \
            file://network-merge-link_drop-and-link_detach_from_manager.patch \
            file://network-also-drop-requests-when-link-enters-linger-state.patch \
            file://network-fix-Link-reference-counter-issue.patch \
+           file://rm-rf-refactor-rm-rf-children-split-out-body-of-directory.patch \
+           file://rm-rf-optionally-fsync-after-removing-directory-tree.patch \
+           file://CVE-2021-3997-1.patch \
+           file://CVE-2021-3997-2.patch \
+           file://CVE-2021-3997-3.patch \
            "
 
 # patches needed by musl
