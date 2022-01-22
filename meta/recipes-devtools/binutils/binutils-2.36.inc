@@ -24,7 +24,7 @@ BRANCH ?= "binutils-2_36-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "7651a4871c225925ffdfda0a8c91a6ed370cd9a1"
+SRCREV ?= "a281816c8aeb12619d34eec8959a43dfa5c6b4ec"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${BRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -41,9 +41,6 @@ SRC_URI = "\
      file://0014-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0015-sync-with-OE-libtool-changes.patch \
      file://0016-Check-for-clang-before-checking-gcc-version.patch \
-     file://0001-CVE-2021-20197.patch \
-     file://0002-CVE-2021-20197.patch \
-     file://0003-CVE-2021-20197.patch \
      file://0017-CVE-2021-3530.patch \
      file://0018-CVE-2021-3530.patch \
      file://0001-CVE-2021-42574.patch \
