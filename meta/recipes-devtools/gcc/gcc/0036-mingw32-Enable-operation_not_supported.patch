@@ -16,11 +16,11 @@ index 68ac72a78fb..71cd5815b81 100644
 --- a/libstdc++-v3/config/os/mingw32/error_constants.h
 +++ b/libstdc++-v3/config/os/mingw32/error_constants.h
 @@ -107,7 +107,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
- #ifdef _GLIBCXX_HAVE_EPERM
+ #ifdef EPERM
        operation_not_permitted = 		EPERM,
  #endif
 -//    operation_not_supported = 		EOPNOTSUPP,
 +      operation_not_supported = 		EOPNOTSUPP,
- #ifdef _GLIBCXX_HAVE_EWOULDBLOCK
+ #ifdef EWOULDBLOCK
        operation_would_block = 			EWOULDBLOCK,
  #endif

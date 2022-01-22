@@ -33,6 +33,6 @@ index f95b8279270..0e52d51409d 100644
 +Target RejectNegative Var(rs6000_spe_abi, 0)
 +Do not use the SPE ABI extensions.
 +
+ ; Altivec ABI
  mabi=altivec
  Target RejectNegative Var(rs6000_altivec_abi) Save
- Use the AltiVec ABI extensions.
