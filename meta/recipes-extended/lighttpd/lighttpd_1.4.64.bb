@@ -14,13 +14,12 @@ RRECOMMENDS:${PN} = "lighttpd-module-access \
                      lighttpd-module-accesslog"
 
 SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.xz \
-           file://0001-mod_extforward-fix-out-of-bounds-OOB-write-fixes-313.patch \
            file://index.html.lighttpd \
            file://lighttpd.conf \
            file://lighttpd \
            "
 
-SRC_URI[sha256sum] = "2aef7f0102ebf54a1241a1c3ea8976892f8684bfb21697c9fffb8de0e2d6eab9"
+SRC_URI[sha256sum] = "e1489d9fa7496fbf2e071c338b593b2300d38c23f1e5967e52c9ef482e1b0e26"
 
 DEPENDS = "virtual/crypt"
 
@@ -39,8 +38,6 @@ PACKAGECONFIG[zlib] = "-Dwith_zlib=true,-Dwith_zlib=false,zlib"
 PACKAGECONFIG[bzip2] = "-Dwith_bzip=true,-Dwith_bzip=false,bzip2"
 PACKAGECONFIG[webdav-props] = "-Dwith_webdav_props=true,-Dwith_webdav_props=false,libxml2 sqlite3"
 PACKAGECONFIG[webdav-locks] = "-Dwith_webdav_locks=true,-Dwith_webdav_locks=false,util-linux"
-PACKAGECONFIG[gdbm] = "-Dwith_gdbm=true,-Dwith_gdbm=false,gdbm"
-PACKAGECONFIG[memcache] = "-Dwith_memcached=true,-Dwith_memcached=false,libmemcached"
 PACKAGECONFIG[lua] = "-Dwith_lua=true,-Dwith_lua=false,lua"
 PACKAGECONFIG[zstd] = "-Dwith_zstd=true,-Dwith_zstd=false,zstd"
 
