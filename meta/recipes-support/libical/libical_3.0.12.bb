@@ -16,7 +16,7 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.g
 SRC_URI[sha256sum] = "35095a4cc1a061a3de0f332c2dc728226cf127fa0baa818e9f8856cee6d35830"
 UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
-inherit cmake pkgconfig
+inherit cmake pkgconfig gobject-introspection vala
 
 DEPENDS += "libical-native"
 
@@ -32,6 +32,11 @@ EXTRA_OECMAKE += "-DPERL_EXECUTABLE=${HOSTTOOLS_DIR}/perl"
 EXTRA_OECMAKE += "-DLIBICAL_BUILD_TESTING=false"
 # doc build fails with linker error (??) for libical-glib so disable it
 EXTRA_OECMAKE += "-DICAL_BUILD_DOCS=false"
+# gobject-introspection
+EXTRA_OECMAKE:append:class-target = " -DGObjectIntrospection_COMPILER=${STAGING_BINDIR}/g-ir-compiler-wrapper"
+EXTRA_OECMAKE:append:class-target = " -DGObjectIntrospection_SCANNER=${STAGING_BINDIR}/g-ir-scanner-wrapper"
+EXTRA_OECMAKE += "-DVAPIGEN=${STAGING_BINDIR_NATIVE}/vapigen"
+EXTRA_OECMAKE += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DGOBJECT_INTROSPECTION=ON -DICAL_GLIB_VAPI=ON', '-DGOBJECT_INTROSPECTION=OFF', d)}"
 
 # Tell the cross-libical where the tool it needs to build is
 EXTRA_OECMAKE:append:class-target = " -DIMPORT_ICAL_GLIB_SRC_GENERATOR=${STAGING_LIBDIR_NATIVE}/cmake/LibIcal/IcalGlibSrcGenerator.cmake"
