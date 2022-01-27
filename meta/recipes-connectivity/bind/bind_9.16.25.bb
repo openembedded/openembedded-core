@@ -4,7 +4,7 @@ DESCRIPTION = "BIND 9 provides a full-featured Domain Name Server system"
 SECTION = "console/network"
 
 LICENSE = "MPL-2.0"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=ef10b4de6371115dcecdc38ca2af4561"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4e7b3c52170a348459a4ff3f5ce95e37"
 
 DEPENDS = "openssl libcap zlib libuv"
 
@@ -20,7 +20,7 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.xz \
            file://0001-avoid-start-failure-with-bind-user.patch \
            "
 
-SRC_URI[sha256sum] = "5582f3734bd6232284f93f14206b8a46d1f819dea4797ae157066f6963b08507"
+SRC_URI[sha256sum] = "9fa328850f82843ef8b7bf1ff5322cb68b110273a33f375ba41f35270f5e1ff3"
 
 UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
 # stay at 9.16 follow the ESV versions divisible by 4
