@@ -22,14 +22,11 @@ CFLAGS:append:x86-64 = " -fomit-frame-pointer"
 
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "12beeda351b5d758a729aaf695b836ccc9eb5304"
+SRCREV = "b0561ad8d9ee9fe1244b5385e941eb65a21e91a1"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
-           file://0002-lib-fix-MemAvailable-parsing.patch \
-           file://0003-lapi-rtnetlink.h-Fix-include-guards.patch \
-           file://0004-lapi-Create-if_addr.h-and-reuse-it-in-rtnetlink.h.patch \
-           file://0005-lapi-if_addr.h-Define-IFA_FLAGS.patch \
+           file://0001-metadata-parse.sh-sort-filelist-for-reproducibility.patch \
            "
 
 S = "${WORKDIR}/git"
@@ -46,6 +43,10 @@ EXTRA_AUTORECONF += "-I ${S}/testcases/realtime/m4"
 EXTRA_OECONF = " --with-realtime-testsuite --with-open-posix-testsuite "
 # ltp network/rpc test cases ftbfs when libtirpc is found
 EXTRA_OECONF += " --without-tirpc "
+
+do_compile() {
+    oe_runmake HOSTCC="${CC_FOR_BUILD}" HOST_CFLAGS="${CFLAGS_FOR_BUILD}" HOST_LDFLAGS="${LDFLAGS_FOR_BUILD}"
+}
 
 do_install(){
     install -d ${D}${prefix}/
