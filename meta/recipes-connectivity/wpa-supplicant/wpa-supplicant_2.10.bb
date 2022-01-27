@@ -4,9 +4,9 @@ DESCRIPTION = "wpa_supplicant is a WPA Supplicant for Linux, BSD, Mac OS X, and 
 BUGTRACKER = "http://w1.fi/security/"
 SECTION = "network"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=279b4f5abb9c153c285221855ddb78cc \
-                    file://README;beginline=1;endline=56;md5=e7d3dbb01f75f0b9799e192731d1e1ff \
-                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=0a8b56d3543498b742b9c0e94cc2d18b"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5ebcb90236d1ad640558c3d3cd3035df \
+                    file://README;beginline=1;endline=56;md5=e3d2f6c2948991e37c1ca4960de84747 \
+                    file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=76306a95306fee9a976b0ac1be70f705"
 DEPENDS = "dbus libnl"
 RRECOMMENDS:${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
 
@@ -19,23 +19,14 @@ inherit pkgconfig systemd
 SYSTEMD_SERVICE:${PN} = "wpa_supplicant.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
-SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
+SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://defconfig \
            file://wpa-supplicant.sh \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
-           file://0001-replace-systemd-install-Alias-with-WantedBy.patch \
-           file://0001-AP-Silently-ignore-management-frame-from-unexpected-.patch \
-           file://0001-WPS-UPnP-Do-not-allow-event-subscriptions-with-URLs-.patch \
-           file://0002-WPS-UPnP-Fix-event-message-generation-using-a-long-U.patch \
-           file://0003-WPS-UPnP-Handle-HTTP-initiation-failures-for-events-.patch \
-           file://CVE-2021-0326.patch \
-           file://CVE-2021-27803.patch \
-           file://CVE-2021-30004.patch \
-          "
-SRC_URI[md5sum] = "2d2958c782576dc9901092fbfecb4190"
-SRC_URI[sha256sum] = "fcbdee7b4a64bea8177973299c8c824419c413ec2e3a95db63dd6a5dc3541f17"
+           "
+SRC_URI[sha256sum] = "20df7ae5154b3830355f8ab4269123a87affdea59fe74fe9292a91d0d7e17b2f"
 
 CVE_PRODUCT = "wpa_supplicant"
 
