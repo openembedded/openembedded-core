@@ -837,8 +837,6 @@ python image_combine_spdx() {
 
     doc.packages.append(image)
 
-    spdx_package = oe.spdx.SPDXPackage()
-
     packages = image_list_installed_packages(d)
 
     for name in sorted(packages.keys()):
