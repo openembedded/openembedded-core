@@ -23,7 +23,7 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://arm_eabi.patch \
            "
 
-SRC_URI[sha256sum] = "646e6c5a9a185faa4cea796d378a1ba8e1148dbb197ca6605f95986a25af2752"
+SRC_URI[sha256sum] = "fc59c43bc31ab20a6977ff083029277a31935b8355ce387b634fa433f8f6c49a"
 
 inherit autotools texinfo pkgconfig gettext lib_package gtk-doc
 
@@ -42,7 +42,6 @@ EXTRA_OECONF = " \
     --disable-libdane \
     --disable-guile \
     --disable-rpath \
-    --enable-local-libopts \
     --enable-openssl-compatibility \
     --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
     --with-librt-prefix=${STAGING_DIR_HOST}${prefix} \
