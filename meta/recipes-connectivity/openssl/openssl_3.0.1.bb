@@ -160,7 +160,8 @@ do_install:append:class-native () {
 	    OPENSSL_CONF=${libdir}/ssl-3/openssl.cnf \
 	    SSL_CERT_DIR=${libdir}/ssl-3/certs \
 	    SSL_CERT_FILE=${libdir}/ssl-3/cert.pem \
-	    OPENSSL_ENGINES=${libdir}/engines-3
+	    OPENSSL_ENGINES=${libdir}/engines-3 \
+	    OPENSSL_MODULES=${libdir}/ossl-modules
 }
 
 do_install:append:class-nativesdk () {
