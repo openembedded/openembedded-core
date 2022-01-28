@@ -15,13 +15,19 @@ LIC_FILES_CHKSUM = " \
 		file://newlib/libc/sys/linux/linuxthreads/LICENSE;md5=73640207fbc79b198c7ffd4ad4d97aa0 \
 		"
 
-SRC_URI = "https://sourceware.org/pub/newlib/newlib-${PV}.tar.gz"
-SRC_URI[sha256sum] = "f296e372f51324224d387cc116dc37a6bd397198756746f93a2b02e9a5d40154"
+# Newlib maintainers sometimes publish the source
+# from a specific snapshot, after an upgrade we can
+# delete the following line and keep the empty default
+NEWLIB_SNAPSHOT = ".20211231"
+NEWLIB_SNAPSHOT ?= ""
+SRC_URI = "https://sourceware.org/pub/newlib/newlib-${PV}${NEWLIB_SNAPSHOT}.tar.gz"
+SRC_URI[sha256sum] = "c3a0e8b63bc3bef1aeee4ca3906b53b3b86c8d139867607369cb2915ffc54435"
+
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "virtual/${TARGET_PREFIX}gcc"
 
-S = "${WORKDIR}/newlib-${PV}"
+S = "${WORKDIR}/newlib-${PV}${NEWLIB_SNAPSHOT}"
 B = "${WORKDIR}/build"
 
 ## disable stdlib
