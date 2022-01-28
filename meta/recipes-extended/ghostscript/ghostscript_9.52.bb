@@ -39,6 +39,8 @@ SRC_URI = "${SRC_URI_BASE} \
            file://ghostscript-9.21-prevent_recompiling.patch \
            file://cups-no-gcrypt.patch \
            file://CVE-2020-15900.patch \
+           file://check-stack-limits-after-function-evalution.patch \
+           file://CVE-2021-45949.patch \
            "
 
 SRC_URI_class-native = "${SRC_URI_BASE} \
