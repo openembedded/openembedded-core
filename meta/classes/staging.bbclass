@@ -624,3 +624,36 @@ python staging_taskhandler() {
 }
 staging_taskhandler[eventmask] = "bb.event.RecipeTaskPreProcess"
 addhandler staging_taskhandler
+
+
+#
+# Target build output, stored in do_populate_sysroot or do_package can depend
+# not only upon direct dependencies but also indirect ones. A good example is
+# linux-libc-headers. The toolchain depends on this but most target recipes do
+# not. There are some headers which are not used by the toolchain build and do
+# not change the toolchain task output, hence the task hashes can change without
+# changing the sysroot output of that recipe yet they can influence others.
+#
+# A specific example is rtc.h which can change rtcwake.c in util-linux but is not
+# used in the glibc or gcc build. To account for this, we need to account for the
+# populate_sysroot hashes in the task output hashes.
+#
+python target_add_sysroot_deps () {
+    current_task = "do_" + d.getVar("BB_CURRENTTASK")
+    if current_task not in ["do_populate_sysroot", "do_package"]:
+        return
+
+    pn = d.getVar("PN")
+    if pn.endswith("-native"):
+        return
+
+    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
+    deps = {}
+    for dep in taskdepdata.values():
+        if dep[1] == "do_populate_sysroot" and not dep[0].endswith(("-native", "-initial")) and "-cross-" not in dep[0]:
+            deps[dep[0]] = dep[6]
+
+    d.setVar("HASHEQUIV_EXTRA_SIGDATA", "\n".join("%s: %s" % (k, deps[k]) for k in sorted(deps.keys())))
+}
+SSTATECREATEFUNCS += "target_add_sysroot_deps"
+
