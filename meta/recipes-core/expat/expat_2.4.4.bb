@@ -14,7 +14,7 @@ SRC_URI = "https://github.com/libexpat/libexpat/releases/download/R_${VERSION_TA
 
 UPSTREAM_CHECK_URI = "https://github.com/libexpat/libexpat/releases/"
 
-SRC_URI[sha256sum] = "6f262e216a494fbf42d8c22bc841b3e117c21f2467a19dc4c27c991b5622f986"
+SRC_URI[sha256sum] = "14c58c2a0b5b8b31836514dfab41bd191836db7aa7b84ae5c47bc0327a20d64a"
 
 EXTRA_OECMAKE:class-native += "-DEXPAT_BUILD_DOCS=OFF"
 
