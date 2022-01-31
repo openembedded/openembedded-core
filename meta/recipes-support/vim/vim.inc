@@ -20,8 +20,8 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://racefix.patch \
 "
 
-PV .= ".4118"
-SRCREV = "0023f82a76cf43a12b41e71f97a2e860d0444e1b"
+PV .= ".4269"
+SRCREV = "48a604845e33399893d6bf293e71bcd2a412800d"
 
 # Do not consider .z in x.y.z, as that is updated with every commit
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+)\.0"
