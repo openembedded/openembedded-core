@@ -49,9 +49,10 @@ sysroot_stage_dir() {
 	fi
 
 	mkdir -p "$dest"
+	rdest=$(realpath --relative-to="$src" "$dest")
 	(
 		cd $src
-		find . -print0 | cpio --null -pdlu $dest
+		find . -print0 | cpio --null -pdlu $rdest
 	)
 }
 
