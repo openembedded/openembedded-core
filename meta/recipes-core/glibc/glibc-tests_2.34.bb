@@ -102,7 +102,7 @@ EXCLUDE_FROM_SHLIBS = "1"
 # It is more handy to have _all_ the sources and symbols in one
 # place (package) as this recipe will be used for validation and
 # debugging.
-PACKAGE_DEBUG_SPLIT_STYLE = "debug"
+PACKAGE_DEBUG_SPLIT_STYLE = ".debug"
 
 # glibc test cases violate by default some Yocto/OE checks (staticdev,
 # textrel)
