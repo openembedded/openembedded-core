@@ -282,7 +282,7 @@ def check_command(error_msg, cmd, cwd=None):
         raise RuntimeError(msg)
     return output
 
-def get_signatures(builddir, failsafe=False, machine=None):
+def get_signatures(builddir, failsafe=False, machine=None, extravars=None):
     import re
 
     # some recipes needs to be excluded like meta-world-pkgdata
@@ -294,6 +294,9 @@ def get_signatures(builddir, failsafe=False, machine=None):
     tune2tasks = {}
 
     cmd = 'BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BB_SIGNATURE_HANDLER" BB_SIGNATURE_HANDLER="OEBasicHash" '
+    if extravars:
+        cmd += extravars
+        cmd += ' '
     if machine:
         cmd += 'MACHINE=%s ' % machine
     cmd += 'bitbake '
