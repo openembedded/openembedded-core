@@ -39,7 +39,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://disable-tests.patch \
            "
 
-SRC_URI[sha256sum] = "ced2ba00020da77fd17ac92b5a53825502409a07e3aeca28f9515d4a844fd7bd"
+SRC_URI[sha256sum] = "565f3102410a53d484f4c8ff517978f1dc59f67f9d16f872f4357f3ca12200f6"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
