@@ -24,7 +24,7 @@ import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
 
-from checklayer import LayerType, detect_layers, add_layers, add_layer_dependencies, get_layer_dependencies, get_signatures, check_bblayers
+from checklayer import LayerType, detect_layers, add_layers, add_layer_dependencies, get_layer_dependencies, get_signatures, check_bblayers, sanity_check_layers
 from oeqa.utils.commands import get_bb_vars
 
 PROGNAME = 'yocto-check-layer'
@@ -118,6 +118,10 @@ def main():
     logger.debug("Found dependency layers:")
     for l in dep_layers:
         dump_layer_debug(l)
+
+    if not sanity_check_layers(additional_layers + dep_layers, logger):
+        logger.error("Failed layer validation")
+        return 1
 
     logger.info("Detected layers:")
     for layer in layers:
