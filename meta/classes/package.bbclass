@@ -367,7 +367,7 @@ def source_info(file, d, fatal=True):
 
     return list(debugsources)
 
-def splitdebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, d):
+def splitdebuginfo(file, dvar, dv, d):
     # Function to split a single file into two components, one is the stripped
     # target system binary, the other contains any debugging information. The
     # two files are linked to reference each other.
@@ -378,7 +378,7 @@ def splitdebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, 
     import subprocess
 
     src = file[len(dvar):]
-    dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
+    dest = dv["libdir"] + os.path.dirname(src) + dv["dir"] + "/" + os.path.basename(src) + dv["append"]
     debugfile = dvar + dest
     sources = []
 
@@ -397,7 +397,7 @@ def splitdebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, 
         os.chmod(file, newmode)
 
     # We need to extract the debug src information here...
-    if debugsrcdir:
+    if dv["srcdir"]:
         sources = source_info(file, d)
 
     bb.utils.mkdirhier(os.path.dirname(debugfile))
@@ -412,7 +412,7 @@ def splitdebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, 
 
     return (file, sources)
 
-def splitstaticdebuginfo(file, dvar, debugstaticdir, debugstaticlibdir, debugstaticappend, debugsrcdir, d):
+def splitstaticdebuginfo(file, dvar, dv, d):
     # Unlike the function above, there is no way to split a static library
     # two components.  So to get similar results we will copy the unmodified
     # static library (containing the debug symbols) into a new directory.
@@ -425,7 +425,7 @@ def splitstaticdebuginfo(file, dvar, debugstaticdir, debugstaticlibdir, debugsta
     import shutil
 
     src = file[len(dvar):]
-    dest = debugstaticlibdir + os.path.dirname(src) + debugstaticdir + "/" + os.path.basename(src) + debugstaticappend
+    dest = dv["staticlibdir"] + os.path.dirname(src) + dv["staticdir"] + "/" + os.path.basename(src) + dv["staticappend"]
     debugfile = dvar + dest
     sources = []
 
@@ -442,7 +442,7 @@ def splitstaticdebuginfo(file, dvar, debugstaticdir, debugstaticlibdir, debugsta
         os.chmod(file, newmode)
 
     # We need to extract the debug src information here...
-    if debugsrcdir:
+    if dv["srcdir"]:
         sources = source_info(file, d)
 
     bb.utils.mkdirhier(os.path.dirname(debugfile))
@@ -455,7 +455,7 @@ def splitstaticdebuginfo(file, dvar, debugstaticdir, debugstaticlibdir, debugsta
 
     return (file, sources)
 
-def inject_minidebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsrcdir, d):
+def inject_minidebuginfo(file, dvar, dv, d):
     # Extract just the symbols from debuginfo into minidebuginfo,
     # compress it with xz and inject it back into the binary in a .gnu_debugdata section.
     # https://sourceware.org/gdb/onlinedocs/gdb/MiniDebugInfo.html
@@ -469,7 +469,7 @@ def inject_minidebuginfo(file, dvar, debugdir, debuglibdir, debugappend, debugsr
     minidebuginfodir = d.expand('${WORKDIR}/minidebuginfo')
 
     src = file[len(dvar):]
-    dest = debuglibdir + os.path.dirname(src) + debugdir + "/" + os.path.basename(src) + debugappend
+    dest = dv["libdir"] + os.path.dirname(src) + dv["dir"] + "/" + os.path.basename(src) + dv["append"]
     debugfile = dvar + dest
     minidebugfile = minidebuginfodir + src + '.minidebug'
     bb.utils.mkdirhier(os.path.dirname(minidebugfile))
@@ -1244,11 +1244,11 @@ python split_and_strip_files () {
     # First lets process debug splitting
     #
     if (d.getVar('INHIBIT_PACKAGE_DEBUG_SPLIT') != '1'):
-        results = oe.utils.multiprocess_launch(splitdebuginfo, list(elffiles), d, extraargs=(dvar, dv["dir"], dv["libdir"], dv["append"], dv["srcdir"], d))
+        results = oe.utils.multiprocess_launch(splitdebuginfo, list(elffiles), d, extraargs=(dvar, dv, d))
 
         if dv["srcdir"] and not hostos.startswith("mingw"):
             if (d.getVar('PACKAGE_DEBUG_STATIC_SPLIT') == '1'):
-                results = oe.utils.multiprocess_launch(splitstaticdebuginfo, staticlibs, d, extraargs=(dvar, dv["staticdir"], dv["staticlibdir"], dv["staticappend"], dv["srcdir"], d))
+                results = oe.utils.multiprocess_launch(splitstaticdebuginfo, staticlibs, d, extraargs=(dvar, dv, d))
             else:
                 for file in staticlibs:
                     results.append( (file,source_info(file, d)) )
@@ -1329,7 +1329,7 @@ python split_and_strip_files () {
     # Build "minidebuginfo" and reinject it back into the stripped binaries
     if d.getVar('PACKAGE_MINIDEBUGINFO') == '1':
         oe.utils.multiprocess_launch(inject_minidebuginfo, list(elffiles), d,
-                                     extraargs=(dvar, dv["dir"], dv["libdir"], dv["append"], dv["srcdir"], d))
+                                     extraargs=(dvar, dv, d))
 
     #
     # End of strip
