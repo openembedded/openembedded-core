@@ -159,6 +159,9 @@ PACKAGECONFIG[kmod] = "-Dkmod=true,-Dkmod=false,kmod"
 PACKAGECONFIG[ldconfig] = "-Dldconfig=true,-Dldconfig=false,,ldconfig"
 PACKAGECONFIG[libidn] = "-Dlibidn=true,-Dlibidn=false,libidn,,libidn"
 PACKAGECONFIG[libidn2] = "-Dlibidn2=true,-Dlibidn2=false,libidn2,,libidn2"
+# Link udev shared with systemd helper library.
+# If enabled the udev package depends on the systemd package (which has the needed shared library).
+PACKAGECONFIG[link-udev-shared] = "-Dlink-udev-shared=true,-Dlink-udev-shared=false"
 PACKAGECONFIG[localed] = "-Dlocaled=true,-Dlocaled=false"
 PACKAGECONFIG[logind] = "-Dlogind=true,-Dlogind=false"
 PACKAGECONFIG[lz4] = "-Dlz4=true,-Dlz4=false,lz4"
@@ -217,11 +220,6 @@ PACKAGECONFIG[zstd] = "-Dzstd=true,-Dzstd=false,zstd"
 rootprefix ?= "${root_prefix}"
 rootlibdir ?= "${base_libdir}"
 rootlibexecdir = "${rootprefix}/lib"
-
-# This links udev statically with systemd helper library.
-# Otherwise udev package would depend on systemd package (which has the needed shared library),
-# and always pull it into images.
-EXTRA_OEMESON += "-Dlink-udev-shared=false"
 
 EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dnobody-group=nobody \
