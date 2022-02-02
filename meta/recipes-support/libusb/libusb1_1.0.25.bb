@@ -16,7 +16,7 @@ SRC_URI = "https://github.com/libusb/libusb/releases/download/v${PV}/libusb-${PV
 
 UPSTREAM_CHECK_URI = "https://github.com/libusb/libusb/releases"
 
-SRC_URI[sha256sum] = "7efd2685f7b327326dcfb85cee426d9b871fd70e22caa15bb68d595ce2a2b12a"
+SRC_URI[sha256sum] = "8a28ef197a797ebac2702f095e81975e2b02b2eeff2774fa909c78a74ef50849"
 
 S = "${WORKDIR}/libusb-${PV}"
 
