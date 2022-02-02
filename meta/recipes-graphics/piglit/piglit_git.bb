@@ -10,15 +10,11 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/piglit.git;protocol=https;branch=ma
            file://0001-cmake-install-bash-completions-in-the-right-place.patch \
            file://0001-cmake-use-proper-WAYLAND_INCLUDE_DIRS-variable.patch \
            file://0001-Add-a-missing-include-for-htobe32-definition.patch \
-           file://0001-generated_tests-gen_tcs-tes_input_tests.py-do-not-ha.patch \
            file://0002-tests-util-piglit-shader.c-do-not-hardcode-build-pat.patch \
-           file://0001-serializer.py-make-.gz-files-reproducible.patch \
-           file://0001-framework-profile.py-make-test-lists-reproducible.patch \
-           file://0001-tests-shader.py-sort-the-file-list-before-working-on.patch \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-SRCREV = "11ee10ba04a95d4b36ef844420f0a5838002b5a8"
+SRCREV = "f328af2ddd0d1bab0f3d149373a36657b252b337"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr${SRCPV}"
 
