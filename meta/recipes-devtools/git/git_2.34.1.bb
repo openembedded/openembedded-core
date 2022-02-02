@@ -8,7 +8,6 @@ DEPENDS = "openssl curl zlib expat"
 PROVIDES:append:class-native = " git-replacement-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
-           ${KERNELORG_MIRROR}/software/scm/git/git-manpages-${PV}.tar.gz;name=manpages \
            file://fixsort.patch \
 "
 
@@ -21,6 +20,7 @@ CVE_PRODUCT = "git-scm:git"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[cvsserver] = ""
 PACKAGECONFIG[svn] = ""
+PACKAGECONFIG[manpages] = ",,asciidoc-native xmlto-native"
 
 EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 		--without-tcltk \
@@ -29,7 +29,7 @@ EXTRA_OECONF = "--with-perl=${STAGING_BINDIR_NATIVE}/perl-native/perl \
 EXTRA_OECONF:append:class-nativesdk = " --with-gitconfig=/etc/gitconfig "
 
 # Needs brokensep as this doesn't use automake
-inherit autotools-brokensep perlnative bash-completion
+inherit autotools-brokensep perlnative bash-completion manpages
 
 EXTRA_OEMAKE = "NO_PYTHON=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
 EXTRA_OEMAKE += "'PERL_PATH=/usr/bin/env perl'"
@@ -40,19 +40,22 @@ do_compile:prepend () {
 	# Remove perl/perl.mak to fix the out-of-date perl.mak error
 	# during rebuild
 	rm -f perl/perl.mak
+
+        if [ "${@bb.utils.filter('PACKAGECONFIG', 'manpages', d)}" ]; then
+            oe_runmake man
+        fi
 }
 
 do_install () {
 	oe_runmake install DESTDIR="${D}" bindir=${bindir} \
 		template_dir=${datadir}/git-core/templates
 
-	for section in man1 man5 man7; do
-		install -d ${D}/${mandir}/$section
-		install -t ${D}/${mandir}/$section ${WORKDIR}/$section/*
-	done
-
 	install -d ${D}/${datadir}/bash-completion/completions/
 	install -m 644 ${S}/contrib/completion/git-completion.bash ${D}/${datadir}/bash-completion/completions/git
+
+        if [ "${@bb.utils.filter('PACKAGECONFIG', 'manpages', d)}" ]; then
+            oe_runmake install-man DESTDIR="${D}"
+        fi
 }
 
 perl_native_fixup () {
@@ -146,4 +149,3 @@ EXTRA_OECONF += "ac_cv_snprintf_returns_bogus=no \
 EXTRA_OEMAKE += "NO_GETTEXT=1"
 
 SRC_URI[tarball.sha256sum] = "fc4eb5ecb9299db91cdd156c06cdeb41833f53adc5631ddf8c0cb13eaa2911c1"
-SRC_URI[manpages.sha256sum] = "220f1ed68582caeddf79c4db15e4eaa4808ec01fd11889e19232f0a74d7f31b0"
