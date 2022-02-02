@@ -1065,17 +1065,7 @@ python fixup_perms () {
                     fix_perms(each_file, fs_perms_table[dir].fmode, fs_perms_table[dir].fuid, fs_perms_table[dir].fgid, dir)
 }
 
-python split_and_strip_files () {
-    import stat, errno
-    import subprocess
-
-    dvar = d.getVar('PKGD')
-    pn = d.getVar('PN')
-    hostos = d.getVar('HOST_OS')
-
-    oldcwd = os.getcwd()
-    os.chdir(dvar)
-
+def package_debug_vars(d):
     # We default to '.debug' style
     if d.getVar('PACKAGE_DEBUG_SPLIT_STYLE') == 'debug-file-directory':
         # Single debug-file-directory style debug info
@@ -1112,6 +1102,23 @@ python split_and_strip_files () {
         debuglibdir = ""
         debugstaticlibdir = ""
         debugsrcdir = "/usr/src/debug"
+
+    return (debugappend, debugstaticappend, debugdir, debugstaticdir,
+            debuglibdir, debugstaticlibdir, debugsrcdir)
+
+python split_and_strip_files () {
+    import stat, errno
+    import subprocess
+
+    dvar = d.getVar('PKGD')
+    pn = d.getVar('PN')
+    hostos = d.getVar('HOST_OS')
+
+    oldcwd = os.getcwd()
+    os.chdir(dvar)
+
+    debugappend, debugstaticappend, debugdir, debugstaticdir, \
+    debuglibdir, debugstaticlibdir, debugsrcdir = package_debug_vars(d)
 
     #
     # First lets figure out all of the files we may have to process ... do this only once!
