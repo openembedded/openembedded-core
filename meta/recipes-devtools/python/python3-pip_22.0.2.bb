@@ -2,7 +2,7 @@ SUMMARY = "The PyPA recommended tool for installing Python packages"
 HOMEPAGE = "https://pypi.org/project/pip"
 SECTION = "devel/python"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=c4fa2b50f55649f43060fa04b0919b9b"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=63ec52baf95163b597008bb46db68030"
 
 DEPENDS += "python3 python3-setuptools-native"
 
@@ -10,7 +10,7 @@ inherit pypi setuptools3
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
-SRC_URI[sha256sum] = "fd11ba3d0fdb4c07fbc5ecbba0b1b719809420f25038f8ee3cd913d3faa3033a"
+SRC_URI[sha256sum] = "27b4b70c34ec35f77947f777070d8331adbb1e444842e98e7150c288dc0caea4"
 
 do_install:append() {
     # Install as pip3 and leave pip2 as default
