@@ -78,7 +78,7 @@ FILES:${PN}-dev =+ "${libdir}/libcrypt.a ${libdir}/libdl.a ${libdir}/libm.a \
 
 RDEPENDS:${PN}-dev += "linux-libc-headers-dev bsd-headers-dev libssp-nonshared-staticdev"
 RPROVIDES:${PN}-dev += "libc-dev virtual-libc-dev"
-RPROVIDES:${PN} += "ldd libsegfault rtld(GNU_HASH)"
+RPROVIDES:${PN} += "ldd rtld(GNU_HASH)"
 
 LEAD_SONAME = "libc.so"
 INSANE_SKIP:${PN}-dev = "staticdev"
