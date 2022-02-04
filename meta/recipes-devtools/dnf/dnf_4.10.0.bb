@@ -87,4 +87,4 @@ SYSTEMD_SERVICE:${PN} = "dnf-makecache.service dnf-makecache.timer \
 "
 SYSTEMD_AUTO_ENABLE ?= "disable"
 
-PNBLACKLIST[dnf] ?= "${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', '', 'does not build without package_rpm in PACKAGE_CLASSES due disabled rpm support in libsolv', d)}"
+SKIP_RECIPE[dnf] ?= "${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', '', 'does not build without package_rpm in PACKAGE_CLASSES due disabled rpm support in libsolv', d)}"
