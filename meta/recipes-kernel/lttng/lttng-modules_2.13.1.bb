@@ -10,6 +10,13 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://0001-fix-block-remove-GENHD_FL_SUPPRESS_PARTITION_INFO-v5.patch \
+           file://0002-fix-block-remove-the-rq_disk-field-in-struct-request.patch \
+           file://0003-fix-mm-compaction-fix-the-migration-stats-in-trace_m.patch \
+           file://0004-fix-btrfs-pass-fs_info-to-trace_btrfs_transaction_co.patch \
+           file://0005-fix-random-rather-than-entropy_store-abstraction-use.patch \
+           file://0006-fix-net-skb-introduce-kfree_skb_reason-v5.17.patch \
+           file://0007-fix-net-socket-rename-SKB_DROP_REASON_SOCKET_FILTER-.patch \
           "
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
