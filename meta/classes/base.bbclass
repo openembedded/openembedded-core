@@ -438,6 +438,14 @@ python () {
     if os.path.normpath(d.getVar("WORKDIR")) != os.path.normpath(d.getVar("B")):
         d.appendVar("PSEUDO_IGNORE_PATHS", ",${B}")
 
+    # To add a recipe to the skip list , set:
+    #   SKIP_RECIPE[pn] = "message"
+    pn = d.getVar('PN')
+    skip_msg = d.getVarFlag('SKIP_RECIPE', pn)
+    if skip_msg:
+        bb.debug(1, "Skipping %s %s" % (pn, skip_msg))
+        raise bb.parse.SkipRecipe("Recipe will be skipped because: %s" % (skip_msg))
+
     # Handle PACKAGECONFIG
     #
     # These take the form:
