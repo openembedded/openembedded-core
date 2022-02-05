@@ -1,7 +1,7 @@
-From baba3c6021340a9070b734f931a15cea4cfe6c31 Mon Sep 17 00:00:00 2001
+From 4d6bce6b106d9d9a629aadba74d74cd8a500ccbf Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 May 2020 17:05:45 -0700
-Subject: [PATCH] wordsize.h: Unify the header between arm and aarch64
+Subject: [PATCH 18/24] wordsize.h: Unify the header between arm and aarch64
 
 This helps OE multilibs to not sythesize this header which causes all
 kind of recursions and other issues since wordsize is fundamental header
@@ -17,7 +17,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  copy sysdeps/{aarch64 => arm}/bits/wordsize.h (80%)
 
 diff --git a/sysdeps/aarch64/bits/wordsize.h b/sysdeps/aarch64/bits/wordsize.h
-index 91da566b74..9a754514b3 100644
+index 4635431f0e..5ef0ed21f3 100644
 --- a/sysdeps/aarch64/bits/wordsize.h
 +++ b/sysdeps/aarch64/bits/wordsize.h
 @@ -17,12 +17,16 @@
@@ -43,9 +43,17 @@ diff --git a/sysdeps/aarch64/bits/wordsize.h b/sysdeps/arm/bits/wordsize.h
 similarity index 80%
 copy from sysdeps/aarch64/bits/wordsize.h
 copy to sysdeps/arm/bits/wordsize.h
-index 91da566b74..34fcdef1f1 100644
+index 4635431f0e..34fcdef1f1 100644
 --- a/sysdeps/aarch64/bits/wordsize.h
 +++ b/sysdeps/arm/bits/wordsize.h
+@@ -1,6 +1,6 @@
+ /* Determine the wordsize from the preprocessor defines.
+ 
+-   Copyright (C) 2016-2022 Free Software Foundation, Inc.
++   Copyright (C) 2016-2020 Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
 @@ -17,12 +17,16 @@
     License along with the GNU C Library; if not, see
     <https://www.gnu.org/licenses/>.  */
@@ -65,3 +73,6 @@ index 91da566b74..34fcdef1f1 100644
  #endif
  
  #define __WORDSIZE_TIME64_COMPAT32	0
+-- 
+2.34.1
+

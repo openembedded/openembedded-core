@@ -1,4 +1,4 @@
-From 13bc0e53cc91e102472d532f28b3d44c30d291fc Mon Sep 17 00:00:00 2001
+From 32c2e23ad29f63f57f544daf1a59259147cd1008 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 3 Aug 2018 09:42:06 -0700
 Subject: [PATCH] localedef --add-to-archive uses a hard-coded locale path
@@ -18,10 +18,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 25 insertions(+), 10 deletions(-)
 
 diff --git a/locale/programs/locarchive.c b/locale/programs/locarchive.c
-index f38e835c52..8d8f8699b2 100644
+index 477499bd40..fe7b5ff60c 100644
 --- a/locale/programs/locarchive.c
 +++ b/locale/programs/locarchive.c
-@@ -340,12 +340,24 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
+@@ -339,12 +339,24 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
    struct namehashent *oldnamehashtab;
    struct locarhandle new_ah;
    size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
@@ -51,7 +51,7 @@ index f38e835c52..8d8f8699b2 100644
    strcpy (stpcpy (fname, archivefname), ".XXXXXX");
  
    /* Not all of the old file has to be mapped.  Change this now this
-@@ -569,10 +581,13 @@ open_archive (struct locarhandle *ah, bool readonly)
+@@ -568,10 +580,13 @@ open_archive (struct locarhandle *ah, bool readonly)
    /* If ah has a non-NULL fname open that otherwise open the default.  */
    if (archivefname == NULL)
      {
@@ -69,7 +69,7 @@ index f38e835c52..8d8f8699b2 100644
      }
  
    while (1)
-@@ -585,7 +600,7 @@ open_archive (struct locarhandle *ah, bool readonly)
+@@ -584,7 +599,7 @@ open_archive (struct locarhandle *ah, bool readonly)
  	     the default locale archive we ignore the failure and
  	     list an empty archive, otherwise we print an error
  	     and exit.  */

@@ -1,7 +1,7 @@
-From 76d170fbbfd07b26a0288212201e5d15558db36f Mon Sep 17 00:00:00 2001
+From c0f251c58655e3377fe1c67a026c21ef68d2abcf Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 9 Dec 2021 15:14:42 -0800
-Subject: [PATCH] Make shell interpreter overridable in tzselect.ksh
+Subject: [PATCH] timezone: Make shell interpreter overridable in tzselect.ksh
 
 define new macro called KSHELL which can be used to define default shell
 use Bash by default
@@ -14,10 +14,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 10 insertions(+)
 
 diff --git a/Makeconfig b/Makeconfig
-index 3fa2f13003..a1ea5d5571 100644
+index 775bf12b65..7b9a8f0a94 100644
 --- a/Makeconfig
 +++ b/Makeconfig
-@@ -292,6 +292,15 @@ ifndef sysincludedir
+@@ -293,6 +293,15 @@ ifndef sysincludedir
  sysincludedir = /usr/include
  endif
  
@@ -45,6 +45,3 @@ index c624a189b3..dc8f5277de 100644
  	    < $< > $@.new
  	chmod 555 $@.new
  	mv -f $@.new $@
--- 
-2.34.1
-

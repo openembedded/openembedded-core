@@ -25,14 +25,14 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0001-localedef-Add-hardlink-resolver-from-util-linux.patch \
            file://0002-localedef-fix-ups-hardlink-to-make-it-compile.patch \
            \
-           file://0018-Remove-bash-dependency-for-nscd-init-script.patch \
-           file://0019-eglibc-Cross-building-and-testing-instructions.patch \
-           file://0020-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0021-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
-           file://0024-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0001-Make-shell-interpreter-overridable-in-tzselect.ksh.patch \
-"
+           file://0010-eglibc-Cross-building-and-testing-instructions.patch \
+           file://0011-eglibc-Help-bootstrap-cross-toolchain.patch \
+           file://0012-eglibc-Resolve-__fpscr_values-on-SH4.patch \
+           file://0013-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0014-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://0021-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
+           file://0023-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
+           "
 # Makes for a rather long rev (22 characters), but...
 #
 SRCREV_FORMAT = "glibc_localedef"

@@ -34,32 +34,19 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://makedbs.sh \
            \
            ${NATIVESDKFIXES} \
-           file://0015-sysdeps-gnu-configure.ac-handle-correctly-libc_cv_ro.patch \
-           file://0016-yes-within-the-path-sets-wrong-config-variables.patch \
-           file://0018-Remove-bash-dependency-for-nscd-init-script.patch \
-           file://0019-eglibc-Cross-building-and-testing-instructions.patch \
-           file://0020-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0021-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0022-eglibc-Forward-port-cross-locale-generation-support.patch \
-           file://0024-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0026-intl-Emit-no-lines-in-bison-generated-files.patch \
-           file://0027-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
-           file://0028-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
-           file://0029-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
-           file://0030-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
-           file://0001-CVE-2021-38604.patch \
-           file://0002-CVE-2021-38604.patch \
-           file://0001-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
-           file://CVE-2021-43396.patch \
-           file://0001-Make-shell-interpreter-overridable-in-tzselect.ksh.patch \
-           file://0001-CVE-2022-23218.patch \
-           file://0002-CVE-2022-23218.patch \
-           file://0001-CVE-2022-23219.patch \
-           file://0002-CVE-2022-23219.patch \
-           file://0001-CVE-2021-3998.patch \
-           file://0002-CVE-2021-3998.patch \
-           file://0001-CVE-2021-3999.patch \
-           file://0002-CVE-2021-3999.patch \
+           file://0009-yes-within-the-path-sets-wrong-config-variables.patch \
+           file://0010-eglibc-Cross-building-and-testing-instructions.patch \
+           file://0011-eglibc-Help-bootstrap-cross-toolchain.patch \
+           file://0012-eglibc-Resolve-__fpscr_values-on-SH4.patch \
+           file://0013-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0014-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://0016-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           file://0017-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
+           file://0018-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
+           file://0019-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
+           file://0021-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
+           file://0022-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
+           file://0023-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"

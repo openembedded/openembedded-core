@@ -1,11 +1,11 @@
-From b4613f814ba7ba5db95d18116172f81a83ac8f5b Mon Sep 17 00:00:00 2001
+From 5d1384d86fc44404ca32c6fda2d46ec357337c91 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:27:10 +0000
-Subject: [PATCH] sysdeps/gnu/configure.ac: handle correctly
- $libc_cv_rootsbindir
+Subject: [PATCH] sysdeps/gnu/configure.ac: Set libc_cv_rootsbindir only if its empty
 
-Upstream-Status: Pending
+This ensures that it can be set in build environment
 
+Upstream-Status: Submitted [https://patchwork.sourceware.org/project/glibc/patch/20211209203557.1318333-2-raj.khem@gmail.com/]
 Signed-off-by: Matthieu Crapet <Matthieu.Crapet@ingenico.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sysdeps/gnu/configure b/sysdeps/gnu/configure
-index c15d1087e8..37cc983f2a 100644
+index c15d1087e8..d30d6e37ae 100644
 --- a/sysdeps/gnu/configure
 +++ b/sysdeps/gnu/configure
 @@ -32,6 +32,6 @@ case "$prefix" in
@@ -22,11 +22,11 @@ index c15d1087e8..37cc983f2a 100644
      libc_cv_localstatedir=$localstatedir
     fi
 -  libc_cv_rootsbindir=/sbin
-+  test -n "$libc_cv_rootsbindir" || libc_cv_rootsbindir=/sbin
++  libc_cv_rootsbindir=${libc_cv_rootsbindir:=/sbin}
    ;;
  esac
 diff --git a/sysdeps/gnu/configure.ac b/sysdeps/gnu/configure.ac
-index 634fe4de2a..3db1697f4f 100644
+index 634fe4de2a..492112e0fd 100644
 --- a/sysdeps/gnu/configure.ac
 +++ b/sysdeps/gnu/configure.ac
 @@ -21,6 +21,6 @@ case "$prefix" in
@@ -34,6 +34,6 @@ index 634fe4de2a..3db1697f4f 100644
      libc_cv_localstatedir=$localstatedir
     fi
 -  libc_cv_rootsbindir=/sbin
-+  test -n "$libc_cv_rootsbindir" || libc_cv_rootsbindir=/sbin
++  libc_cv_rootsbindir=${libc_cv_rootsbindir:=/sbin}
    ;;
  esac
