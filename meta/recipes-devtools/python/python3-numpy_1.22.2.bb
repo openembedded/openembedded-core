@@ -11,9 +11,8 @@ SRC_URI = "https://github.com/${SRCNAME}/${SRCNAME}/releases/download/v${PV}/${S
            file://0001-Don-t-search-usr-and-so-on-for-libraries-by-default-.patch \
            file://0001-numpy-core-Define-RISCV-32-support.patch \
            file://run-ptest \
-           file://0001-numpy-core-setup.py-disable-svml-for-now.patch \
            "
-SRC_URI[sha256sum] = "dd1968402ae20dfd59b34acd799b494be340c774f6295e9bf1c2b9842a5e416d"
+SRC_URI[sha256sum] = "093d513a460fd94f94c16193c3ef29b2d69a33e482071e3d6d6e561a700587a6"
 
 UPSTREAM_CHECK_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
@@ -25,6 +24,10 @@ inherit ptest setuptools3
 S = "${WORKDIR}/numpy-${PV}"
 
 CLEANBROKEN = "1"
+
+do_compile:prepend() {
+    export NPY_DISABLE_SVML=1
+}
 
 FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a"
 
