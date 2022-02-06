@@ -684,6 +684,10 @@ def package_qa_recipe(warnfuncs, errorfuncs, pn, d):
 
     return len(errors) == 0
 
+def prepopulate_objdump_p(elf, d):
+    output = elf.run_objdump("-p", d)
+    return (elf.name, output)
+
 # Walk over all files in a directory and call func
 def package_qa_walk(warnfuncs, errorfuncs, package, d):
     #if this will throw an exception, then fix the dict above
@@ -692,18 +696,32 @@ def package_qa_walk(warnfuncs, errorfuncs, package, d):
 
     warnings = {}
     errors = {}
+    elves = {}
     for path in pkgfiles[package]:
             elf = None
             if os.path.isfile(path):
                 elf = oe.qa.ELFFile(path)
                 try:
                     elf.open()
+                    elf.close()
                 except oe.qa.NotELFFileError:
                     elf = None
+            if elf:
+                elves[path] = elf
+
+    results = oe.utils.multiprocess_launch(prepopulate_objdump_p, elves.values(), d, extraargs=(d,))
+    for item in results:
+        elves[item[0]].set_objdump("-p", item[1])
+
+    for path in pkgfiles[package]:
+            if path in elves:
+                elves[path].open()
             for func in warnfuncs:
-                func(path, package, d, elf, warnings)
+                func(path, package, d, elves.get(path), warnings)
             for func in errorfuncs:
-                func(path, package, d, elf, errors)
+                func(path, package, d, elves.get(path), errors)
+            if path in elves:
+                elves[path].close()
 
     for w in warnings:
         oe.qa.handle_error(w, warnings[w], d)
