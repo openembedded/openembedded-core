@@ -9,6 +9,7 @@ SRC_URI  = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
             file://CVE-2021-26675.patch \
             file://CVE-2021-26676-0001.patch \
             file://CVE-2021-26676-0002.patch \
+            file://CVE-2021-33833.patch \
             file://CVE-2022-23096-7.patch \
             file://CVE-2022-23098.patch \
 "
