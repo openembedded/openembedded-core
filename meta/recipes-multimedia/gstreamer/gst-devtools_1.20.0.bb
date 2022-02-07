@@ -12,7 +12,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-devtools/gst-devtools-${PV}
            file://0001-connect-has-a-different-signature-on-musl.patch \
            "
 
-SRC_URI[sha256sum] = "fecffc86447daf5c2a06843c757a991d745caa2069446a0d746e99b13f7cb079"
+SRC_URI[sha256sum] = "69fc8756ec9d93e5c5258c99088434f203e91fdbc5af28d1f2c583fd819b7a1d"
 
 DEPENDS = "json-glib glib-2.0 glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base"
 RRECOMMENDS:${PN} = "git"
@@ -29,6 +29,9 @@ def gettext_oemeson(d):
     if d.getVar('INHIBIT_DEFAULT_DEPS') and not oe.utils.inherits(d, 'cross-canadian'):
         return '-Dnls=disabled'
     return '-Dnls=enabled'
+
+# Build GstValidateVideo
+PACKAGECONFIG[cairo] = "-Dcairo=enabled,-Dcairo=disabled,cairo"
 
 EXTRA_OEMESON += " \
     -Ddoc=disabled \
