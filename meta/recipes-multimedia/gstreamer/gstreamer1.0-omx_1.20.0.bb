@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 
 SRC_URI = "https://gstreamer.freedesktop.org/src/gst-omx/gst-omx-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "2cd457c1e8deb1a9b39608048fb36a44f6c9a864a6b6115b1453a32e7be93b42"
+SRC_URI[sha256sum] = "c1e46b70ac379ac7b3646506370c9e1007b56ae293f4d334bc0e724c76c345dd"
 
 S = "${WORKDIR}/gst-omx-${PV}"
 
