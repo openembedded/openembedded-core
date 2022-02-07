@@ -309,7 +309,7 @@ wait_for_file() {
     local TIMEOUT=$2
     until [ -f "$FILE_TO_TEST" ]
     do
-        TIME_ELAPSED=`expr $TIME_ELAPSED + 1`
+        TIME_ELAPSED=$(expr $TIME_ELAPSED + 1)
         if [ $TIME_ELAPSED -gt $TIMEOUT ]
         then
             return 1
@@ -362,8 +362,8 @@ set_icecc_env() {
         return
     fi
 
-    ICE_VERSION=`$ICECC_CC -dumpversion`
-    ICECC_VERSION=`echo ${ICECC_VERSION} | sed -e "s/@VERSION@/$ICE_VERSION/g"`
+    ICE_VERSION="$($ICECC_CC -dumpversion)"
+    ICECC_VERSION=$(echo ${ICECC_VERSION} | sed -e "s/@VERSION@/$ICE_VERSION/g")
     if [ ! -x "${ICECC_ENV_EXEC}" ]
     then
         bbwarn "Cannot use icecc: invalid ICECC_ENV_EXEC"
@@ -390,18 +390,18 @@ set_icecc_env() {
         chmod 775 $ICE_PATH/$compiler
     done
 
-    ICECC_AS="`${ICECC_CC} -print-prog-name=as`"
+    ICECC_AS="$(${ICECC_CC} -print-prog-name=as)"
     # for target recipes should return something like:
     # /OE/tmp-eglibc/sysroots/x86_64-linux/usr/libexec/arm920tt-oe-linux-gnueabi/gcc/arm-oe-linux-gnueabi/4.8.2/as
     # and just "as" for native, if it returns "as" in current directory (for whatever reason) use "as" from PATH
-    if [ "`dirname "${ICECC_AS}"`" = "." ]
+    if [ "$(dirname "${ICECC_AS}")" = "." ]
     then
         ICECC_AS="${ICECC_WHICH_AS}"
     fi
 
     if [ ! -f "${ICECC_VERSION}.done" ]
     then
-        mkdir -p "`dirname "${ICECC_VERSION}"`"
+        mkdir -p "$(dirname "${ICECC_VERSION}")"
 
         # the ICECC_VERSION generation step must be locked by a mutex
         # in order to prevent race conditions
