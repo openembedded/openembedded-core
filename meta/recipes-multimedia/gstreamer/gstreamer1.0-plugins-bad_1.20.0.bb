@@ -11,16 +11,12 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad
            file://0004-opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
            file://0005-msdk-fix-includedir-path.patch \
            "
-SRC_URI[sha256sum] = "a164923b94f0d08578a6fcaeaac6e0c05da788a46903a1086870e9ca45ad678e"
+SRC_URI[sha256sum] = "015b8d4d9a395ebf444d40876867a2034dd3304b3ad48bc3a0dd0c1ee71dc11d"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
 LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
-
-# remove at next version upgrade or when output changes
-PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".1"
 
 DEPENDS += "gstreamer1.0-plugins-base"
 
@@ -48,7 +44,6 @@ PACKAGECONFIG[dc1394]          = "-Ddc1394=enabled,-Ddc1394=disabled,libdc1394"
 PACKAGECONFIG[directfb]        = "-Ddirectfb=enabled,-Ddirectfb=disabled,directfb"
 PACKAGECONFIG[dtls]            = "-Ddtls=enabled,-Ddtls=disabled,openssl"
 PACKAGECONFIG[faac]            = "-Dfaac=enabled,-Dfaac=disabled,faac"
-PACKAGECONFIG[faad]            = "-Dfaad=enabled,-Dfaad=disabled,faad2"
 PACKAGECONFIG[fluidsynth]      = "-Dfluidsynth=enabled,-Dfluidsynth=disabled,fluidsynth"
 PACKAGECONFIG[hls]             = "-Dhls=enabled,-Dhls=disabled,"
 # Pick atleast one crypto backend below when enabling hls
@@ -61,7 +56,6 @@ PACKAGECONFIG[gcrypt]          = "-Dhls-crypto=libgcrypt,,libgcrypt"
 PACKAGECONFIG[gl]              = "-Dgl=enabled,-Dgl=disabled,"
 PACKAGECONFIG[kms]             = "-Dkms=enabled,-Dkms=disabled,libdrm"
 PACKAGECONFIG[libde265]        = "-Dlibde265=enabled,-Dlibde265=disabled,libde265"
-PACKAGECONFIG[libmms]          = "-Dlibmms=enabled,-Dlibmms=disabled,libmms"
 PACKAGECONFIG[libssh2]         = "-Dcurl-ssh2=enabled,-Dcurl-ssh2=disabled,libssh2"
 PACKAGECONFIG[lcms2]           = "-Dcolormanagement=enabled,-Dcolormanagement=disabled,lcms"
 PACKAGECONFIG[modplug]         = "-Dmodplug=enabled,-Dmodplug=disabled,libmodplug"
@@ -75,7 +69,6 @@ PACKAGECONFIG[openmpt]         = "-Dopenmpt=enabled,-Dopenmpt=disabled,libopenmp
 # the opus encoder/decoder elements are now in the -base package,
 # but the opus parser remains in -bad
 PACKAGECONFIG[opusparse]       = "-Dopus=enabled,-Dopus=disabled,libopus"
-PACKAGECONFIG[resindvd]        = "-Dresindvd=enabled,-Dresindvd=disabled,libdvdread libdvdnav"
 PACKAGECONFIG[rsvg]            = "-Drsvg=enabled,-Drsvg=disabled,librsvg"
 PACKAGECONFIG[rtmp]            = "-Drtmp=enabled,-Drtmp=disabled,rtmpdump"
 PACKAGECONFIG[sbc]             = "-Dsbc=enabled,-Dsbc=disabled,sbc"
@@ -98,10 +91,17 @@ PACKAGECONFIG[webrtc]          = "-Dwebrtc=enabled,-Dwebrtc=disabled,libnice"
 PACKAGECONFIG[webrtcdsp]       = "-Dwebrtcdsp=enabled,-Dwebrtcdsp=disabled,webrtc-audio-processing"
 PACKAGECONFIG[zbar]            = "-Dzbar=enabled,-Dzbar=disabled,zbar"
 PACKAGECONFIG[x11]             = "-Dx11=enabled,-Dx11=disabled,libxcb libxkbcommon"
+
+# GPL - only built if gpl option is also enabled!
+PACKAGECONFIG[gpl]             = "-Dgpl=enabled,-Dgpl=disabled"
+PACKAGECONFIG[faad]            = "-Dfaad=enabled,-Dfaad=disabled,faad2"
+PACKAGECONFIG[resindvd]        = "-Dresindvd=enabled,-Dresindvd=disabled,libdvdread libdvdnav"
 PACKAGECONFIG[x265]            = "-Dx265=enabled,-Dx265=disabled,x265"
 
 EXTRA_OEMESON += " \
     -Ddoc=disabled \
+    -Daes=enabled \
+    -Dcodecalpha=enabled \
     -Ddecklink=enabled \
     -Ddvb=enabled \
     -Dfbdev=enabled \
@@ -110,6 +110,7 @@ EXTRA_OEMESON += " \
     -Dtranscode=enabled \
     -Dandroidmedia=disabled \
     -Dapplemedia=disabled \
+    -Dasio=disabled \
     -Davtp=disabled \
     -Dbs2b=disabled \
     -Dchromaprint=disabled \
@@ -120,10 +121,12 @@ EXTRA_OEMESON += " \
     -Dfdkaac=disabled \
     -Dflite=disabled \
     -Dgme=disabled \
+    -Dgs=disabled \
     -Dgsm=disabled \
     -Diqa=disabled \
     -Dkate=disabled \
     -Dladspa=disabled \
+    -Dldac=disabled \
     -Dlv2=disabled \
     -Dmagicleap=disabled \
     -Dmediafoundation=disabled \
@@ -132,10 +135,12 @@ EXTRA_OEMESON += " \
     -Dmplex=disabled \
     -Dmusepack=disabled \
     -Dnvcodec=disabled \
-    -Dofa=disabled \
     -Dopenexr=disabled \
     -Dopenni2=disabled \
+    -Dopenaptx=disabled \
     -Dopensles=disabled \
+    -Donnx=disabled \
+    -Dqroverlay=disabled \
     -Dsoundtouch=disabled \
     -Dspandsp=disabled \
     -Dsvthevcenc=disabled \
