@@ -12,7 +12,7 @@ UPSTREAM_CHECK_URI = "https://github.com/${BPN}/${BPN}/releases"
 UPSTREAM_CHECK_REGEX = "harfbuzz-(?P<pver>\d+(\.\d+)+).tar"
 
 SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "8c083384838f39f4a4856a6584def595b10cc071754a08d5e999293462b34296"
+SRC_URI[sha256sum] = "1c13bca136c4f66658059853e2c1253f34c88f4b5c5aba6050aba7b5e0ce2503"
 
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection
 
