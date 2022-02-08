@@ -2,13 +2,13 @@ SUMMARY = "An implementation of the standard Unix documentation system accessed 
 HOMEPAGE = "http://man-db.nongnu.org/"
 DESCRIPTION = "man-db is an implementation of the standard Unix documentation system accessed using the man command. It uses a Berkeley DB database in place of the traditional flat-text whatis databases."
 LICENSE = "LGPLv2.1 & GPLv2"
-LIC_FILES_CHKSUM = "file://docs/COPYING.LIB;md5=a6f89e2100d9b6cdffcea4f398e37343 \
-                    file://docs/COPYING;md5=eb723b61539feef013de476e68b5c50a"
+LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
+                    file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
            file://99_mandb \
            file://man_db.conf-avoid-multilib-install-file-conflict.patch"
-SRC_URI[sha256sum] = "b66c99edfad16ad928c889f87cf76380263c1609323c280b3a9e6963fdb16756"
+SRC_URI[sha256sum] = "0a8629022f7117dc7fc6473c6fdb14913b24b106059bb056abee87dbd6070c79"
 
 # remove at next version upgrade or when output changes
 PR = "r1"
