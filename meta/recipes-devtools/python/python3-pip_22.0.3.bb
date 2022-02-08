@@ -10,7 +10,7 @@ inherit pypi setuptools3
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
-SRC_URI[sha256sum] = "27b4b70c34ec35f77947f777070d8331adbb1e444842e98e7150c288dc0caea4"
+SRC_URI[sha256sum] = "f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0"
 
 do_install:append() {
     # Install as pip3 and leave pip2 as default
