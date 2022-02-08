@@ -13,9 +13,13 @@ S = "${WORKDIR}/git"
 
 inherit meson pkgconfig update-rc.d
 
-PACKAGECONFIG ?= "libseat-builtin"
+PACKAGECONFIG ?= " \
+	${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
+	libseat-builtin \
+"
 
 PACKAGECONFIG[libseat-builtin] = "-Dlibseat-builtin=enabled,-Dlibseat-builtin=disabled"
+PACKAGECONFIG[systemd] = ",,systemd"
 
 do_install:append() {
         if [ "${VIRTUAL-RUNTIME_init_manager}" != "systemd" ]; then
@@ -26,4 +30,3 @@ do_install:append() {
 INITSCRIPT_NAME = "seatd"
 INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
 INHIBIT_UPDATERCD_BBCLASS = "${@oe.utils.conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', '1', '', d)}"
-
