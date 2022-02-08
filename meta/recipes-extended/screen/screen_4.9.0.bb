@@ -21,11 +21,9 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            file://0002-comm.h-now-depends-on-term.h.patch \
            file://0001-fix-for-multijob-build.patch \
            file://0001-Remove-more-compatibility-stuff.patch \
-           file://CVE-2021-26937.patch \
           "
 
-SRC_URI[md5sum] = "d276213d3acd10339cd37848b8c4ab1e"
-SRC_URI[sha256sum] = "6e11b13d8489925fde25dfb0935bf6ed71f9eb47eff233a181e078fde5655aa1"
+SRC_URI[sha256sum] = "f9335281bb4d1538ed078df78a20c2f39d3af9a4e91c57d084271e0289c730f4"
 
 inherit autotools texinfo
 
