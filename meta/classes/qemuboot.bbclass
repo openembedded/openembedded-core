@@ -131,6 +131,8 @@ python do_write_qemuboot_conf() {
                                'qemu-helper-native/1.0-r1/recipe-sysroot-native/usr/bin/')
         else:
             val = d.getVar(k)
+        if val is None:
+            continue
         # we only want to write out relative paths so that we can relocate images
         # and still run them
         if val.startswith(topdir):
