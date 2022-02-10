@@ -312,3 +312,27 @@ INHERIT:remove = \"report-error\"
         self.assertFalse(fatal, "Failed to patch using PATCHTOOL=\"git\"")
         self.delete_recipeinc(test_recipe)
         bitbake('-cclean man-db')
+
+    def test_git_unpack_nonetwork(self):
+        """
+        Test that a recipe with a floating tag that needs to be resolved upstream doesn't
+        access the network in a patch task run in a separate builld invocation
+        """
+
+        # Enable the recipe to float using a distro override
+        self.write_config("DISTROOVERRIDES .= \":gitunpack-enable-recipe\"")
+
+        bitbake('gitunpackoffline -c fetch')
+        bitbake('gitunpackoffline -c patch')
+
+    def test_git_unpack_nonetwork_fail(self):
+        """
+        Test that a recipe with a floating tag which doesn't call get_srcrev() in the fetcher
+        raises an error when the fetcher is called.
+        """
+
+        # Enable the recipe to float using a distro override
+        self.write_config("DISTROOVERRIDES .= \":gitunpack-enable-recipe\"")
+
+        result = bitbake('gitunpackoffline-fail -c fetch', ignore_status=True)
+        self.assertTrue("Recipe uses a floating tag/branch without a fixed SRCREV" in result.output, msg = "Recipe without PV set to SRCPV should have failed: %s" % result.output)
