@@ -110,4 +110,5 @@ python do_testsdk() {
 }
 addtask testsdk
 do_testsdk[nostamp] = "1"
+do_testsdk[network] = "1"
 do_testsdk[depends] += "xz-native:do_populate_sysroot"
