@@ -13,8 +13,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5b8c87559868796979806100db3f3805 \
                     file://LEGAL;md5=f260190bc1e92e363f0ee3c0463d4c7c \
                     "
 
-DEPENDS = "ruby-native zlib openssl libyaml gdbm readline libffi"
-DEPENDS:class-native = "openssl-native libyaml-native readline-native zlib-native"
+DEPENDS = "zlib openssl libyaml gdbm readline libffi"
+DEPENDS:class-target:append = " ruby-native"
 
 SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
