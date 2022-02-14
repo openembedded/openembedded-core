@@ -12,10 +12,8 @@ SRC_URI = "git://github.com/nhorman/rng-tools.git;branch=master;protocol=https \
            file://init \
            file://default \
            file://rngd.service \
-           file://0001-Adding-ability-to-detect-non-posix-extensions-for-pt.patch \
-           file://0002-Allow-for-use-of-either-pthread-affinity-set-methods.patch \
            "
-SRCREV = "c16176d3800b91f4d016b66733b384493b06f294"
+SRCREV = "381f69828b782afda574f259c1b7549f48f9bb77"
 
 S = "${WORKDIR}/git"
 
