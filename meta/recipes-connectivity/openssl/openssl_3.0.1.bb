@@ -55,6 +55,15 @@ CFLAGS:append:class-nativesdk = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/bu
 DEPRECATED_CRYPTO_FLAGS ?= ""
 
 do_configure () {
+	# When we upgrade glibc but not uninative we see obtuse failures in openssl. Make
+	# the issue really clear that perl isn't functional due to symbol mismatch issues.
+	cat <<- EOF > ${WORKDIR}/perltest
+	#!/usr/bin/env perl
+	use POSIX;
+	EOF
+	chmod a+x ${WORKDIR}/perltest
+	${WORKDIR}/perltest
+
 	os=${HOST_OS}
 	case $os in
 	linux-gnueabi |\
