@@ -18,6 +18,7 @@ CFLAGS:mingw32 = " -DSA_RESTART=0"
 # Fix "Argument list too long" error when len(TMPDIR) = 410
 acpaths = "-I ./m4"
 
+EXTRA_OEMAKE:append:mingw32 = " LIBS='-lbcrypt'"
 inherit ptest
 
 RDEPENDS:${PN}-ptest += "make perl"
