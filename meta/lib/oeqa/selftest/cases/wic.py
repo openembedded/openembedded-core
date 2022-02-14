@@ -851,7 +851,7 @@ class Wic2(WicTestCase):
         self.assertEqual(0, bitbake('wic-image-minimal').status)
         self.remove_config(config)
 
-        with runqemu('wic-image-minimal', ssh=False) as qemu:
+        with runqemu('wic-image-minimal', ssh=False, runqemuparams='nographic') as qemu:
             cmd = "mount | grep '^/dev/' | cut -f1,3 -d ' ' | egrep -c -e '/dev/sda1 /boot' " \
                   "-e '/dev/root /|/dev/sda2 /' -e '/dev/sda3 /media' -e '/dev/sda4 /mnt'"
             status, output = qemu.run_serial(cmd)
@@ -871,7 +871,7 @@ class Wic2(WicTestCase):
         self.remove_config(config)
 
         with runqemu('core-image-minimal', ssh=False,
-                     runqemuparams='ovmf', image_fstype='wic') as qemu:
+                     runqemuparams='nographic ovmf', image_fstype='wic') as qemu:
             cmd = "grep sda. /proc/partitions  |wc -l"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
@@ -1059,7 +1059,8 @@ class Wic2(WicTestCase):
         self.assertEqual(0, bitbake('core-image-minimal-mtdutils').status)
         self.remove_config(config)
 
-        with runqemu('core-image-minimal-mtdutils', ssh=False, image_fstype='wic') as qemu:
+        with runqemu('core-image-minimal-mtdutils', ssh=False,
+                     runqemuparams='nographic', image_fstype='wic') as qemu:
             cmd = "grep sda. /proc/partitions  |wc -l"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
@@ -1119,7 +1120,8 @@ class Wic2(WicTestCase):
         self.assertEqual(0, bitbake('core-image-minimal').status)
         self.remove_config(config)
 
-        with runqemu('core-image-minimal', ssh=False, image_fstype='wic') as qemu:
+        with runqemu('core-image-minimal', ssh=False,
+                     runqemuparams='nographic', image_fstype='wic') as qemu:
             # Check that we have ONLY two /dev/sda* partitions (/boot and /)
             cmd = "grep sda. /proc/partitions | wc -l"
             status, output = qemu.run_serial(cmd)
@@ -1180,7 +1182,7 @@ class Wic2(WicTestCase):
         self.remove_config(config)
 
         with runqemu('core-image-minimal', ssh=False,
-                     runqemuparams='ovmf', image_fstype='wic') as qemu:
+                     runqemuparams='nographic ovmf', image_fstype='wic') as qemu:
             # Check that /boot has EFI bootx64.efi (required for EFI)
             cmd = "ls /boot/EFI/BOOT/bootx64.efi | wc -l"
             status, output = qemu.run_serial(cmd)
@@ -1418,7 +1420,7 @@ class Wic2(WicTestCase):
             bb.utils.rename(new_image_path, image_path)
 
             # Check if it boots in qemu
-            with runqemu('core-image-minimal', ssh=False) as qemu:
+            with runqemu('core-image-minimal', ssh=False, runqemuparams='nographic') as qemu:
                 cmd = "ls /etc/"
                 status, output = qemu.run_serial('true')
                 self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
