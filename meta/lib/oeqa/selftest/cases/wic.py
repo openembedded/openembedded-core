@@ -1065,19 +1065,31 @@ class Wic2(WicTestCase):
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '2')
 
-    def test_rawcopy_plugin(self):
+    def _rawcopy_plugin(self, fstype):
         """Test rawcopy plugin"""
         img = 'core-image-minimal'
         machine = get_bb_var('MACHINE', img)
+        params = ',unpack' if fstype.endswith('.gz') else ''
         with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.write('part / --source rawcopy --sourceparams="file=%s-%s.ext4"\n'\
-                      % (img, machine))
+            wks.write('part / --source rawcopy --sourceparams="file=%s-%s.%s%s"\n'\
+                      % (img, machine, fstype, params))
             wks.flush()
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             runCmd(cmd)
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
+
+    def test_rawcopy_plugin(self):
+        self._rawcopy_plugin('ext4')
+
+    def test_rawcopy_plugin_unpack(self):
+        fstype = 'ext4.gz'
+        config = 'IMAGE_FSTYPES = "%s"\n' % fstype
+        self.append_config(config)
+        self.assertEqual(0, bitbake('core-image-minimal').status)
+        self.remove_config(config)
+        self._rawcopy_plugin(fstype)
 
     def test_empty_plugin(self):
         """Test empty plugin"""
