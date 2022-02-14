@@ -1070,10 +1070,8 @@ class Wic2(WicTestCase):
         img = 'core-image-minimal'
         machine = get_bb_var('MACHINE', img)
         with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.writelines(['part /boot --active --source bootimg-pcbios\n',
-                            'part / --source rawcopy --sourceparams="file=%s-%s.ext4" --use-uuid\n'\
-                             % (img, machine),
-                            'bootloader --timeout=0 --append="console=ttyS0,115200n8"\n'])
+            wks.write('part / --source rawcopy --sourceparams="file=%s-%s.ext4"\n'\
+                      % (img, machine))
             wks.flush()
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             runCmd(cmd)
