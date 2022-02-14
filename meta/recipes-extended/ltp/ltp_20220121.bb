@@ -27,6 +27,7 @@ SRCREV = "b0561ad8d9ee9fe1244b5385e941eb65a21e91a1"
 SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://0001-metadata-parse.sh-sort-filelist-for-reproducibility.patch \
+           file://disable_hanging_tests.patch \
            "
 
 S = "${WORKDIR}/git"
