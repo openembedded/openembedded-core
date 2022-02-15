@@ -20,7 +20,7 @@ SRC_URI[sha256sum] = "eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a3
 acpaths = ""
 
 EXTRA_OECONF += " --enable-cxx=detect"
-EXTRA_OECONF:mipsarchr6:append = " --disable-assembly"
+EXTRA_OECONF:append:mipsarchr6 = " --disable-assembly"
 
 PACKAGES =+ "libgmpxx"
 FILES:libgmpxx = "${libdir}/libgmpxx${SOLIBS}"
