@@ -992,7 +992,7 @@ def package_qa_check_unhandled_features_check(pn, d, messages):
         var_set = False
         for kind in ['DISTRO', 'MACHINE', 'COMBINED']:
             for var in ['ANY_OF_' + kind + '_FEATURES', 'REQUIRED_' + kind + '_FEATURES', 'CONFLICT_' + kind + '_FEATURES']:
-                if d.getVar(var) is not None or d.overridedata.get(var) is not None:
+                if d.getVar(var) is not None or d.hasOverrides(var):
                     var_set = True
         if var_set:
             oe.qa.handle_error("unhandled-features-check", "%s: recipe doesn't inherit features_check" % pn, d)
