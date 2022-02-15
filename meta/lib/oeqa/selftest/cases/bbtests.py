@@ -63,8 +63,8 @@ class BitbakeTests(OESelftestTestCase):
 
     def test_warnings_errors(self):
         result = bitbake('-b asdf', ignore_status=True)
-        find_warnings = re.search("Summary: There w.{2,3}? [1-9][0-9]* WARNING messages* shown", result.output)
-        find_errors = re.search("Summary: There w.{2,3}? [1-9][0-9]* ERROR messages* shown", result.output)
+        find_warnings = re.search("Summary: There w.{2,3}? [1-9][0-9]* WARNING messages*", result.output)
+        find_errors = re.search("Summary: There w.{2,3}? [1-9][0-9]* ERROR messages*", result.output)
         self.assertTrue(find_warnings, msg="Did not find the mumber of warnings at the end of the build:\n" + result.output)
         self.assertTrue(find_errors, msg="Did not find the mumber of errors at the end of the build:\n" + result.output)
 
