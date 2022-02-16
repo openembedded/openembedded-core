@@ -329,7 +329,7 @@ python base_eventhandler() {
         source_mirror_fetch = d.getVar('SOURCE_MIRROR_FETCH', False)
         if not source_mirror_fetch:
             provs = (d.getVar("PROVIDES") or "").split()
-            multiwhitelist = (d.getVar("MULTI_PROVIDER_WHITELIST") or "").split()
+            multiwhitelist = (d.getVar("BB_MULTI_PROVIDER_ALLOWED") or "").split()
             for p in provs:
                 if p.startswith("virtual/") and p not in multiwhitelist:
                     profprov = d.getVar("PREFERRED_PROVIDER_" + p)
