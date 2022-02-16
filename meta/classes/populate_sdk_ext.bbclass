@@ -22,8 +22,8 @@ SDK_INCLUDE_BUILDTOOLS ?= '1'
 SDK_RECRDEP_TASKS ?= ""
 SDK_CUSTOM_TEMPLATECONF ?= "0"
 
-SDK_LOCAL_CONF_WHITELIST ?= ""
-SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
+ESDK_LOCALCONF_ALLOW ?= ""
+ESDK_LOCALCONF_REMOVE ?= "CONF_VERSION \
                              BB_NUMBER_THREADS \
                              BB_NUMBER_PARSE_THREADS \
                              PARALLEL_MAKE \
@@ -34,7 +34,7 @@ SDK_LOCAL_CONF_BLACKLIST ?= "CONF_VERSION \
                              TMPDIR \
                              BB_SERVER_TIMEOUT \
                             "
-SDK_INHERIT_BLACKLIST ?= "buildhistory icecc"
+ESDK_CLASS_INHERIT_DISABLE ?= "buildhistory icecc"
 SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
@@ -294,8 +294,8 @@ python copy_buildsystem () {
     if derivative:
         shutil.copyfile(builddir + '/conf/local.conf', baseoutpath + '/conf/local.conf')
     else:
-        local_conf_whitelist = (d.getVar('SDK_LOCAL_CONF_WHITELIST') or '').split()
-        local_conf_blacklist = (d.getVar('SDK_LOCAL_CONF_BLACKLIST') or '').split()
+        local_conf_whitelist = (d.getVar('ESDK_LOCALCONF_ALLOW') or '').split()
+        local_conf_blacklist = (d.getVar('ESDK_LOCALCONF_REMOVE') or '').split()
         def handle_var(varname, origvalue, op, newlines):
             if varname in local_conf_blacklist or (origvalue.strip().startswith('/') and not varname in local_conf_whitelist):
                 newlines.append('# Removed original setting of %s\n' % varname)
@@ -338,7 +338,7 @@ python copy_buildsystem () {
             f.write('CONF_VERSION = "%s"\n\n' % d.getVar('CONF_VERSION', False))
 
             # Some classes are not suitable for SDK, remove them from INHERIT
-            f.write('INHERIT:remove = "%s"\n' % d.getVar('SDK_INHERIT_BLACKLIST', False))
+            f.write('INHERIT:remove = "%s"\n' % d.getVar('ESDK_CLASS_INHERIT_DISABLE', False))
 
             # Bypass the default connectivity check if any
             f.write('CONNECTIVITY_CHECK_URIS = ""\n\n')

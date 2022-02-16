@@ -30,7 +30,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
 SRC_URI[sha256sum] = "ea849c83a72454e3ed4267697e8ca03390aee972ab421e7df69dfe42b65caaf7"
 
 # Below whitelisted CVEs are disputed and not affecting crypto libraries for any distro.
-CVE_CHECK_WHITELIST += "CVE-2018-12433 CVE-2018-12438"
+CVE_CHECK_IGNORE += "CVE-2018-12433 CVE-2018-12438"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 

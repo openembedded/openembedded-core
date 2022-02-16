@@ -24,7 +24,7 @@ SYSROOT_DIRS:append:class-cross = " ${SYSROOT_DIRS_NATIVE}"
 SYSROOT_DIRS:append:class-crosssdk = " ${SYSROOT_DIRS_NATIVE}"
 
 # These directories will not be staged in the sysroot
-SYSROOT_DIRS_BLACKLIST = " \
+SYSROOT_DIRS_IGNORE = " \
     ${mandir} \
     ${docdir} \
     ${infodir} \
@@ -65,7 +65,7 @@ sysroot_stage_dirs() {
 	done
 
 	# Remove directories we do not care about
-	for dir in ${SYSROOT_DIRS_BLACKLIST}; do
+	for dir in ${SYSROOT_DIRS_IGNORE}; do
 		rm -rf "$to$dir"
 	done
 }

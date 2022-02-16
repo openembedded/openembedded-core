@@ -51,7 +51,7 @@ do_compile:prepend() {
 }
 
 # Issue only on windows
-CVE_CHECK_WHITELIST += "CVE-2018-1000041"
+CVE_CHECK_IGNORE += "CVE-2018-1000041"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 

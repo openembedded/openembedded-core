@@ -63,7 +63,7 @@ ARCHIVER_WORKDIR = "${WORKDIR}/archiver-work/"
 # When producing a combined mirror directory, allow duplicates for the case
 # where multiple recipes use the same SRC_URI.
 ARCHIVER_COMBINED_MIRRORDIR = "${ARCHIVER_TOPDIR}/mirror"
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_SRC}/mirror"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_SRC}/mirror"
 
 do_dumpdata[dirs] = "${ARCHIVER_OUTDIR}"
 do_ar_recipe[dirs] = "${ARCHIVER_OUTDIR}"

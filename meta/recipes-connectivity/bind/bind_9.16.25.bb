@@ -28,7 +28,7 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>9.(16|20|24|28)(\.\d+)+(-P\d+)*)/"
 
 # Issue only affects dhcpd with recent bind versions. We don't ship dhcpd anymore
 # so the issue doesn't affect us.
-CVE_CHECK_WHITELIST += "CVE-2019-6470"
+CVE_CHECK_IGNORE += "CVE-2019-6470"
 
 inherit autotools update-rc.d systemd useradd pkgconfig multilib_header update-alternatives
 

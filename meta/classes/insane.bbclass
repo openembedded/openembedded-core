@@ -48,7 +48,7 @@ enabled tests are listed here, the do_package_qa task will run under fakeroot."
 
 ALL_QA = "${WARN_QA} ${ERROR_QA}"
 
-UNKNOWN_CONFIGURE_WHITELIST ?= "--enable-nls --disable-nls --disable-silent-rules --disable-dependency-tracking --with-libtool-sysroot --disable-static"
+UNKNOWN_CONFIGURE_OPT_IGNORE ?= "--enable-nls --disable-nls --disable-silent-rules --disable-dependency-tracking --with-libtool-sysroot --disable-static"
 
 # This is a list of directories that are expected to be empty.
 QA_EMPTY_DIRS ?= " \
@@ -1270,7 +1270,7 @@ Rerun configure task after fixing this."""
             options = set()
             for line in output.splitlines():
                 options |= set(line.partition(flag)[2].split())
-            whitelist = set(d.getVar("UNKNOWN_CONFIGURE_WHITELIST").split())
+            whitelist = set(d.getVar("UNKNOWN_CONFIGURE_OPT_IGNORE").split())
             options -= whitelist
             if options:
                 pn = d.getVar('PN')

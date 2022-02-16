@@ -31,7 +31,7 @@ UPSTREAM_CHECK_REGEX = "flex-(?P<pver>\d+(\.\d+)+)\.tar"
 # Disputed - yes there is stack exhaustion but no bug and it is building the
 # parser, not running it, effectively similar to a compiler ICE. Upstream no plans to address
 # https://github.com/westes/flex/issues/414
-CVE_CHECK_WHITELIST += "CVE-2019-6293"
+CVE_CHECK_IGNORE += "CVE-2019-6293"
 
 inherit autotools gettext texinfo ptest
 

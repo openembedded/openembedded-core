@@ -20,7 +20,7 @@ UPSTREAM_CHECK_REGEX = "tiff-(?P<pver>\d+(\.\d+)+).tar"
 
 # Tested with check from https://security-tracker.debian.org/tracker/CVE-2015-7313
 # and 4.3.0 doesn't have the issue
-CVE_CHECK_WHITELIST += "CVE-2015-7313"
+CVE_CHECK_IGNORE += "CVE-2015-7313"
 
 inherit autotools multilib_header
 

@@ -22,4 +22,4 @@ SRC_URI[main.sha256sum] = "c108cd33b73b1911a02b697741df3dea43e01a5c4e08e409e8b3a
 # Upstream don't believe it is a signifiant real world issue and will only
 # fix in 1.17 onwards where we can drop this.
 # https://github.com/golang/go/issues/30999#issuecomment-910470358
-CVE_CHECK_WHITELIST += "CVE-2021-29923"
+CVE_CHECK_IGNORE += "CVE-2021-29923"

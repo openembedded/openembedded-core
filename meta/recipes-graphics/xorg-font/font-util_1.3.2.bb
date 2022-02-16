@@ -19,4 +19,4 @@ BBCLASSEXTEND = "native"
 SRC_URI[md5sum] = "3d6adb76fdd072db8c8fae41b40855e8"
 SRC_URI[sha256sum] = "3ad880444123ac06a7238546fa38a2a6ad7f7e0cc3614de7e103863616522282"
 
-SYSROOT_DIRS_BLACKLIST:remove = "${datadir}/fonts"
+SYSROOT_DIRS_IGNORE:remove = "${datadir}/fonts"

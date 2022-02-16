@@ -20,7 +20,7 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/src/${BP}.tar.gz \
 SRC_URI[sha256sum] = "becc3c504ceea499f4167a260040ccf4d9f2ef9499ad5683c179a697146ce50e"
 
 # -16548 required for v3.1.3pre1. Already in v3.1.3.
-CVE_CHECK_WHITELIST += " CVE-2017-16548 "
+CVE_CHECK_IGNORE += " CVE-2017-16548 "
 
 inherit autotools-brokensep
 

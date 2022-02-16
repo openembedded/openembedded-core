@@ -36,15 +36,15 @@ SRC_URI:append:class-target = " file://cross.patch"
 SRC_URI:append:class-nativesdk = " file://cross.patch"
 
 # Applies against virglrender < 0.6.0 and not qemu itself
-CVE_CHECK_WHITELIST += "CVE-2017-5957"
+CVE_CHECK_IGNORE += "CVE-2017-5957"
 
 # The VNC server can expose host files uder some circumstances. We don't
 # enable it by default.
-CVE_CHECK_WHITELIST += "CVE-2007-0998"
+CVE_CHECK_IGNORE += "CVE-2007-0998"
 
 # 'The issues identified by this CVE were determined to not constitute a vulnerability.'
 # https://bugzilla.redhat.com/show_bug.cgi?id=1609015#c11
-CVE_CHECK_WHITELIST += "CVE-2018-18438"
+CVE_CHECK_IGNORE += "CVE-2018-18438"
 
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"

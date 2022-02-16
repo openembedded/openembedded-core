@@ -27,4 +27,4 @@ UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
 # This is specific to the npm package that installs cmake, so isn't
 # relevant to OpenEmbedded
-CVE_CHECK_WHITELIST += "CVE-2016-10642"
+CVE_CHECK_IGNORE += "CVE-2016-10642"

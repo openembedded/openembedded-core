@@ -50,21 +50,21 @@ SSTATE_EXTRAPATH[vardepvalue] = ""
 SSTATE_EXTRAPATHWILDCARD[vardepvalue] = ""
 
 # For multilib rpm the allarch packagegroup files can overwrite (in theory they're identical)
-SSTATE_DUPWHITELIST = "${DEPLOY_DIR}/licenses/"
+SSTATE_ALLOW_OVERLAP_FILES = "${DEPLOY_DIR}/licenses/"
 # Avoid docbook/sgml catalog warnings for now
-SSTATE_DUPWHITELIST += "${STAGING_ETCDIR_NATIVE}/sgml ${STAGING_DATADIR_NATIVE}/sgml"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_ETCDIR_NATIVE}/sgml ${STAGING_DATADIR_NATIVE}/sgml"
 # sdk-provides-dummy-nativesdk and nativesdk-buildtools-perl-dummy overlap for different SDKMACHINE
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_RPM}/sdk_provides_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/sdk-provides-dummy-nativesdk/"
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_RPM}/buildtools_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/buildtools-dummy-nativesdk/"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_RPM}/sdk_provides_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/sdk-provides-dummy-nativesdk/"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_RPM}/buildtools_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/buildtools-dummy-nativesdk/"
 # target-sdk-provides-dummy overlaps that allarch is disabled when multilib is used
-SSTATE_DUPWHITELIST += "${COMPONENTS_DIR}/sdk-provides-dummy-target/ ${DEPLOY_DIR_RPM}/sdk_provides_dummy_target/ ${DEPLOY_DIR_IPK}/sdk-provides-dummy-target/"
+SSTATE_ALLOW_OVERLAP_FILES += "${COMPONENTS_DIR}/sdk-provides-dummy-target/ ${DEPLOY_DIR_RPM}/sdk_provides_dummy_target/ ${DEPLOY_DIR_IPK}/sdk-provides-dummy-target/"
 # Archive the sources for many architectures in one deploy folder
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_SRC}"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_SRC}"
 # ovmf/grub-efi/systemd-boot/intel-microcode multilib recipes can generate identical overlapping files
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/ovmf"
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/grub-efi"
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/systemd-boot"
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}/microcode"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/ovmf"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/grub-efi"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/systemd-boot"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/microcode"
 
 SSTATE_SCAN_FILES ?= "*.la *-config *_config postinst-*"
 SSTATE_SCAN_CMD ??= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES").split())}" \) -type f'
@@ -260,7 +260,7 @@ def sstate_install(ss, d):
                 shareddirs.append(dstdir)
 
     # Check the file list for conflicts against files which already exist
-    whitelist = (d.getVar("SSTATE_DUPWHITELIST") or "").split()
+    whitelist = (d.getVar("SSTATE_ALLOW_OVERLAP_FILES") or "").split()
     match = []
     for f in sharedfiles:
         if os.path.exists(f) and not os.path.islink(f):
@@ -296,7 +296,7 @@ def sstate_install(ss, d):
           "DISTRO_FEATURES on an existing build directory is not supported - you " \
           "should really clean out tmp and rebuild (reusing sstate should be safe). " \
           "It could be the overlapping files detected are harmless in which case " \
-          "adding them to SSTATE_DUPWHITELIST may be the correct solution. It could " \
+          "adding them to SSTATE_ALLOW_OVERLAP_FILES may be the correct solution. It could " \
           "also be your build is including two different conflicting versions of " \
           "things (e.g. bluez 4 and bluez 5 and the correct solution for that would " \
           "be to resolve the conflict. If in doubt, please ask on the mailing list, " \
@@ -350,7 +350,7 @@ def sstate_install(ss, d):
     for lock in locks:
         bb.utils.unlockfile(lock)
 
-sstate_install[vardepsexclude] += "SSTATE_DUPWHITELIST STATE_MANMACH SSTATE_MANFILEPREFIX"
+sstate_install[vardepsexclude] += "SSTATE_ALLOW_OVERLAP_FILES STATE_MANMACH SSTATE_MANFILEPREFIX"
 sstate_install[vardeps] += "${SSTATEPOSTINSTFUNCS}"
 
 def sstate_installpkg(ss, d):

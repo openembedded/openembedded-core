@@ -26,7 +26,7 @@ SRC_URI[sha256sum] = "ce30acdf4a41bc5bb30dd955e9eaa75fa216b4e3deb08889ed32433c7b
 
 # http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=v8.27-101-gf5d7c0842
 # runcon is not really a sandbox command, use `runcon ... setsid ...` to avoid this particular issue.
-CVE_CHECK_WHITELIST += "CVE-2016-2781"
+CVE_CHECK_IGNORE += "CVE-2016-2781"
 
 EXTRA_OECONF:class-target = "--enable-install-program=arch,hostname --libexecdir=${libdir}"
 EXTRA_OECONF:class-nativesdk = "--enable-install-program=arch,hostname"

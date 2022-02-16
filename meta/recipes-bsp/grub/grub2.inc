@@ -27,7 +27,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
 SRC_URI[sha256sum] = "23b64b4c741569f9426ed2e3d0e6780796fca081bee4c99f62aa3f53ae803f5f"
 
 # Applies only to RHEL
-CVE_CHECK_WHITELIST += "CVE-2019-14865"
+CVE_CHECK_IGNORE += "CVE-2019-14865"
 
 DEPENDS = "flex-native bison-native gettext-native"
 

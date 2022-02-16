@@ -20,7 +20,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 S = "${WORKDIR}/git"
 
 # Fixed in r118, which is larger than the current version.
-CVE_CHECK_WHITELIST += "CVE-2014-4715"
+CVE_CHECK_IGNORE += "CVE-2014-4715"
 
 EXTRA_OEMAKE = "PREFIX=${prefix} CC='${CC}' CFLAGS='${CFLAGS}' DESTDIR=${D} LIBDIR=${libdir} INCLUDEDIR=${includedir} BUILD_STATIC=no"
 
