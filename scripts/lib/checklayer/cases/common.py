@@ -61,7 +61,7 @@ class CommonCheckLayer(OECheckLayerTestCase):
         '''
         msg = []
         try:
-            get_signatures(self.td['builddir'], failsafe=False, machine=None, extravars='BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE INHERIT" INHERIT="yocto-check-layer"')
+            get_signatures(self.td['builddir'], failsafe=False, machine=None, extravars='BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS INHERIT" INHERIT="yocto-check-layer"')
         except RuntimeError as ex:
             msg.append(str(ex))
         if msg:

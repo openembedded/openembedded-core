@@ -293,7 +293,7 @@ def get_signatures(builddir, failsafe=False, machine=None, extravars=None):
     sigs = {}
     tune2tasks = {}
 
-    cmd = 'BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BB_SIGNATURE_HANDLER" BB_SIGNATURE_HANDLER="OEBasicHash" '
+    cmd = 'BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS BB_SIGNATURE_HANDLER" BB_SIGNATURE_HANDLER="OEBasicHash" '
     if extravars:
         cmd += extravars
         cmd += ' '

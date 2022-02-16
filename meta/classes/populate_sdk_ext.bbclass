@@ -282,7 +282,7 @@ python copy_buildsystem () {
         bb.utils.mkdirhier(uninative_outdir)
         shutil.copy(uninative_file, uninative_outdir)
 
-    env_whitelist = (d.getVar('BB_ENV_EXTRAWHITE') or '').split()
+    env_whitelist = (d.getVar('BB_ENV_PASSTHROUGH_ADDITIONS') or '').split()
     env_whitelist_values = {}
 
     # Create local.conf
@@ -436,7 +436,7 @@ python copy_buildsystem () {
             f.write('meta/conf\n')
 
     # Ensure any variables set from the external environment (by way of
-    # BB_ENV_EXTRAWHITE) are set in the SDK's configuration
+    # BB_ENV_PASSTHROUGH_ADDITIONS) are set in the SDK's configuration
     extralines = []
     for name, value in env_whitelist_values.items():
         actualvalue = d.getVar(name) or ''
