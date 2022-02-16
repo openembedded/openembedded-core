@@ -3,13 +3,13 @@
 # SPDX-License-Identifier: MIT
 #
 # This module adds support to testimage.bbclass to deploy images and run
-# tests using a "master image" - this is a "known good" image that is
+# tests using a "controller image" - this is a "known good" image that is
 # installed onto the device as part of initial setup and will be booted into
 # with no interaction; we can then use it to deploy the image to be tested
 # to a second partition before running the tests.
 #
-# For an example master image, see core-image-testmaster
-# (meta/recipes-extended/images/core-image-testmaster.bb)
+# For an example controller image, see core-image-testcontroller
+# (meta/recipes-extended/images/core-image-testcontroller.bb)
 
 import os
 import bb
@@ -24,12 +24,12 @@ from oeqa.utils import CommandError
 
 from abc import ABCMeta, abstractmethod
 
-class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta):
+class ControllerImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta):
 
     supported_image_fstypes = ['tar.gz', 'tar.bz2']
 
     def __init__(self, d):
-        super(MasterImageHardwareTarget, self).__init__(d)
+        super(ControllerImageHardwareTarget, self).__init__(d)
 
         # target ip
         addr = d.getVar("TEST_TARGET_IP") or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
@@ -61,8 +61,8 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta
         if not os.path.isfile(self.kernel):
             bb.fatal("No kernel found. Expected path: %s" % self.kernel)
 
-        # master ssh connection
-        self.master = None
+        # controller ssh connection
+        self.controller = None
         # if the user knows what they are doing, then by all means...
         self.user_cmds = d.getVar("TEST_DEPLOY_CMDS")
         self.deploy_cmds = None
@@ -119,19 +119,19 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta
 
     def deploy(self):
         # base class just sets the ssh log file for us
-        super(MasterImageHardwareTarget, self).deploy()
-        self.master = sshcontrol.SSHControl(ip=self.ip, logfile=self.sshlog, timeout=600, port=self.port)
-        status, output = self.master.run("cat /etc/masterimage")
+        super(ControllerImageHardwareTarget, self).deploy()
+        self.controller = sshcontrol.SSHControl(ip=self.ip, logfile=self.sshlog, timeout=600, port=self.port)
+        status, output = self.controller.run("cat /etc/controllerimage")
         if status != 0:
-            # We're not booted into the master image, so try rebooting
-            bb.plain("%s - booting into the master image" % self.pn)
+            # We're not booted into the controller image, so try rebooting
+            bb.plain("%s - booting into the controller image" % self.pn)
             self.power_ctl("cycle")
             self._wait_until_booted()
 
         bb.plain("%s - deploying image on target" % self.pn)
-        status, output = self.master.run("cat /etc/masterimage")
+        status, output = self.controller.run("cat /etc/controllerimage")
         if status != 0:
-            bb.fatal("No ssh connectivity or target isn't running a master image.\n%s" % output)
+            bb.fatal("No ssh connectivity or target isn't running a controller image.\n%s" % output)
         if self.user_cmds:
             self.deploy_cmds = self.user_cmds.split("\n")
         try:
@@ -156,10 +156,10 @@ class MasterImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABCMeta
 
     def stop(self):
         bb.plain("%s - reboot/powercycle target" % self.pn)
-        self.power_cycle(self.master)
+        self.power_cycle(self.controller)
 
 
-class SystemdbootTarget(MasterImageHardwareTarget):
+class SystemdbootTarget(ControllerImageHardwareTarget):
 
     def __init__(self, d):
         super(SystemdbootTarget, self).__init__(d)
@@ -184,16 +184,16 @@ class SystemdbootTarget(MasterImageHardwareTarget):
 
     def _deploy(self):
         # make sure these aren't mounted
-        self.master.run("umount /boot; umount /mnt/testrootfs; umount /sys/firmware/efi/efivars;")
+        self.controller.run("umount /boot; umount /mnt/testrootfs; umount /sys/firmware/efi/efivars;")
         # from now on, every deploy cmd should return 0
         # else an exception will be thrown by sshcontrol
-        self.master.ignore_status = False
-        self.master.copy_to(self.rootfs, "~/test-rootfs." + self.image_fstype)
-        self.master.copy_to(self.kernel, "~/test-kernel")
+        self.controller.ignore_status = False
+        self.controller.copy_to(self.rootfs, "~/test-rootfs." + self.image_fstype)
+        self.controller.copy_to(self.kernel, "~/test-kernel")
         for cmd in self.deploy_cmds:
-            self.master.run(cmd)
+            self.controller.run(cmd)
 
     def _start(self, params=None):
-        self.power_cycle(self.master)
+        self.power_cycle(self.controller)
         # there are better ways than a timeout but this should work for now
         time.sleep(120)

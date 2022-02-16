@@ -1,4 +1,4 @@
-DESCRIPTION = "A master image to be deployed on a target useful for testing other images"
+DESCRIPTION = "A test controller image to be deployed on a target useful for testing other images using the OEQA runtime tests"
 
 IMAGE_FEATURES += "ssh-server-openssh package-management"
 
@@ -14,5 +14,5 @@ IMAGE_INSTALL += "\
 # we need a particular initramfs for live images
 # that pulls custom install scripts which take
 # care of partitioning for us
-INITRD_IMAGE = "core-image-testmaster-initramfs"
+INITRD_IMAGE = "core-image-testcontroller-initramfs"
 
