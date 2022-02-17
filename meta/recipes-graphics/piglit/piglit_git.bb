@@ -14,7 +14,7 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/piglit.git;protocol=https;branch=ma
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-SRCREV = "f328af2ddd0d1bab0f3d149373a36657b252b337"
+SRCREV = "2f80c7cc9c02d37574dc8ba3140b7dd8eb3cbf82"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr${SRCPV}"
 
