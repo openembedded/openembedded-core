@@ -14,7 +14,6 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-When-building-introspection-files-add-CMAKE_C_FLAGS-.patch \
            file://0001-Fix-racy-parallel-build-of-WebKit2-4.0.gir.patch \
            file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
-           file://0001-Enable-THREADS_PREFER_PTHREAD_FLAG.patch \
            file://reduce-memory-overheads.patch \
            file://0001-Fix-build-without-opengl-or-es.patch \
            file://reproducibility.patch \
