@@ -15,6 +15,7 @@ SRC_URI = "git://gitlab.gnome.org/GNOME/libhandy.git;protocol=https;branch=maste
 SRCREV = "8fa8306a79215fc6ebf2483145da98bf9b2495ab"
 S = "${WORKDIR}/git"
 
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.(\d*[02468])+(\.\d+))"
 GIR_MESON_ENABLE_FLAG = 'enabled'
 GIR_MESON_DISABLE_FLAG = 'disabled'
 GTKDOC_MESON_OPTION = 'gtk_doc'
