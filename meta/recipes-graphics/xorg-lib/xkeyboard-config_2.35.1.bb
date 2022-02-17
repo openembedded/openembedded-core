@@ -12,8 +12,8 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xkeyboard-confi
 LICENSE = "MIT & MIT-style"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0e7f21ca7db975c63467d2e7624a12f9"
 
-SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.bz2"
-SRC_URI[sha256sum] = "b321d27686ee7e6610ffe7b56e28d5bbf60625a1f595124cd320c0caa717b8ce"
+SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.xz"
+SRC_URI[sha256sum] = "18ce50ff0c74ae6093062bce1aeab3d363913ea35162fe271f8a0ce399de85cc"
 
 SECTION = "x11/libs"
 DEPENDS = "util-macros libxslt-native"
@@ -22,7 +22,7 @@ EXTRA_OECONF = "--with-xkb-rules-symlink=xorg --disable-runtime-deps"
 
 FILES:${PN} += "${datadir}/X11/xkb"
 
-inherit autotools pkgconfig gettext python3native
+inherit meson pkgconfig gettext python3native
 
 do_install:append () {
     install -d ${D}${datadir}/X11/xkb/compiled
