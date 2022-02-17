@@ -16,7 +16,6 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-Tweak-gtkdoc-settings-so-that-gtkdoc-generation-work.patch \
            file://0001-Enable-THREADS_PREFER_PTHREAD_FLAG.patch \
            file://reduce-memory-overheads.patch \
-           file://musl-lower-stack-usage.patch \
            file://0001-Fix-build-without-opengl-or-es.patch \
            file://reproducibility.patch \
            "
