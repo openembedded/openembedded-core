@@ -232,6 +232,9 @@ class TestImage(OESelftestTestCase):
             dripath = subprocess.check_output("pkg-config --variable=dridriverdir dri", shell=True)
         except subprocess.CalledProcessError as e:
             self.skipTest("Could not determine the path to dri drivers on the host via pkg-config.\nPlease install Mesa development files (particularly, dri.pc) on the host machine.")
+        distro = oe.lsb.distro_identifier()
+        if distro and distro == 'fedora-34':
+            self.skipTest('virgl isn\'t working with Fedora 34')
         qemu_distrofeatures = get_bb_var('DISTRO_FEATURES', 'qemu-system-native')
         features = 'INHERIT += "testimage"\n'
         if 'opengl' not in qemu_distrofeatures:
