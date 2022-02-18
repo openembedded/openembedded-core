@@ -5,7 +5,7 @@ calendar clients can communicate with calendar servers so users can store \
 their calendar data and arrange meetings with other users. "
 HOMEPAGE = "https://github.com/libical/libical"
 BUGTRACKER = "https://github.com/libical/libical/issues"
-LICENSE = "LGPLv2.1 | MPL-2.0"
+LICENSE = "LGPL-2.1-only | MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1910a2a76ddf6a9ba369182494170d87 \
                     file://LICENSE.LGPL21.txt;md5=933adb561f159e7c3da079536f0ed871 \
                     file://LICENSE.MPL2.txt;md5=f75d2927d3c1ed2414ef72048f5ad640 \

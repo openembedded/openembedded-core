@@ -2,7 +2,7 @@ SUMMARY = "Tool to allow editing of RPATH and interpreter fields in ELF binaries
 DESCRIPTION = "PatchELF is a simple utility for modifying existing ELF executables and libraries."
 HOMEPAGE = "https://github.com/NixOS/patchelf"
 
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 
 SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master \
            file://handle-read-only-files.patch \

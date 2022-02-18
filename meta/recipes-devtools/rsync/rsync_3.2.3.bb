@@ -5,7 +5,7 @@ BUGTRACKER = "http://rsync.samba.org/bugzilla.html"
 SECTION = "console/network"
 # GPLv2+ (<< 3.0.0), GPLv3+ (>= 3.0.0)
 # Includes opennsh and xxhash dynamic link exception
-LICENSE = "GPLv3+"
+LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9e5a4f9b3a253d51520617aa54f8eb26"
 
 DEPENDS = "popt"

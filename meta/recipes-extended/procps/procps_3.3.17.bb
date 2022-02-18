@@ -3,7 +3,7 @@ DESCRIPTION = "Procps contains a set of system utilities that provide system inf
 the /proc filesystem. The package includes the programs ps, top, vmstat, w, kill, and skill."
 HOMEPAGE = "https://gitlab.com/procps-ng/procps"
 SECTION = "base"
-LICENSE = "GPLv2+ & LGPLv2+"
+LICENSE = "GPL-2.0-or-later & LGPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.LIB;md5=4cf66a4984120007c9881cc871cf49db \
                     "

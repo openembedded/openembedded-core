@@ -3,7 +3,7 @@ HOMEPAGE = "http://blog.calhariz.com/"
 DESCRIPTION = "At allows for commands to be run at a particular time.  Batch will execute commands when \
 the system load levels drop to a particular level."
 SECTION = "base"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4325afd396febcb659c36b49533135d4"
 DEPENDS = "flex flex-native bison-native \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"

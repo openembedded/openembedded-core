@@ -9,7 +9,7 @@ DEPENDS = "ncurses gettext-native"
 # vimdiff doesn't like busybox diff
 RSUGGESTS:${PN} = "diffutils"
 
-LICENSE = "vim"
+LICENSE = "Vim"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6b30ea4fa660c483b619924bc709ef99 \
                     file://runtime/doc/uganda.txt;md5=600a38dc53e8931fdfb1238276ee09b0"
 

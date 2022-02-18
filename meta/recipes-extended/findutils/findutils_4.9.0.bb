@@ -1,7 +1,7 @@
 require findutils.inc
 
 # GPLv2+ (<< 4.2.32), GPLv3+ (>= 4.2.32)
-LICENSE = "GPLv3+"
+LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 DEPENDS = "bison-native"

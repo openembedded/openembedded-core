@@ -4,7 +4,7 @@ AUTHOR = "Philipp Rumpf, Jeff Garzik <jgarzik@pobox.com>, \
           Henrique de Moraes Holschuh <hmh@debian.org>"
 HOMEPAGE = "https://github.com/nhorman/rng-tools"
 BUGTRACKER = "https://github.com/nhorman/rng-tools/issues"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS = "sysfsutils openssl"
 

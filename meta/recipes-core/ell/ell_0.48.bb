@@ -7,7 +7,7 @@ libdl (for dynamic linking). While ELL is designed to be efficient \
 and compact enough for use on embedded Linux platforms, it is not \
 limited to resource-constrained systems."
 SECTION = "libs"
-LICENSE  = "LGPLv2.1"
+LICENSE  = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fb504b67c50331fc78734fed90fb0e09"
 
 DEPENDS = "dbus"

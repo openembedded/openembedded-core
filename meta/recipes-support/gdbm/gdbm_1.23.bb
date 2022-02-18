@@ -4,7 +4,7 @@ and work similar to the standard UNIX dbm. These routines are provided \
 to a programmer needing to create and manipulate a hashed database."
 HOMEPAGE = "http://www.gnu.org/software/gdbm/"
 SECTION = "libs"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=241da1b9fe42e642cbb2c24d5e0c4d24"
 
 

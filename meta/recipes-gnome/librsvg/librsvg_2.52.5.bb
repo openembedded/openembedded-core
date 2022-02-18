@@ -6,7 +6,7 @@ the screen or to generate output for printing."
 HOMEPAGE = "https://gitlab.gnome.org/GNOME/librsvg"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/librsvg/issues"
 
-LICENSE = "LGPLv2.1+"
+LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
                    "
 

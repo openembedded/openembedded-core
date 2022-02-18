@@ -2,7 +2,7 @@ SUMMARY = "Rotates, compresses, removes and mails system log files"
 SECTION = "console/utils"
 HOMEPAGE = "https://github.com/logrotate/logrotate/"
 DESCRIPTION = "The logrotate utility is designed to simplify the administration of log files on a system which generates a lot of log files."
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 # TODO: Document coreutils dependency. Why not RDEPENDS? Why not busybox?
 

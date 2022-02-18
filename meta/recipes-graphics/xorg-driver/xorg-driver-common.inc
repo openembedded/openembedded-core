@@ -2,7 +2,7 @@ SUMMARY = "X driver"
 HOMEPAGE = "http://www.x.org"
 BUGTRACKER = "https://bugs.freedesktop.org"
 SECTION = "x11/drivers"
-LICENSE = "MIT-X"
+LICENSE = "MIT"
 
 PE = "2"
 

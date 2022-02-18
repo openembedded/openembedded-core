@@ -3,7 +3,7 @@ DESCRIPTION = "libxkbcommon is a keymap compiler and support library which \
 processes a reduced subset of keymaps as defined by the XKB specification."
 HOMEPAGE = "http://www.xkbcommon.org"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e525ed9809e1f8a07cf4bce8b09e8b87"
-LICENSE = "MIT & MIT-style"
+LICENSE = "MIT & MIT"
 
 DEPENDS = "flex-native bison-native"
 

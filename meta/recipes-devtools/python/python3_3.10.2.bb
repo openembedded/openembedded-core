@@ -1,7 +1,7 @@
 SUMMARY = "The Python Programming Language"
 HOMEPAGE = "http://www.python.org"
 DESCRIPTION = "Python is a programming language that lets you work more quickly and integrate your systems more effectively."
-LICENSE = "PSFv2"
+LICENSE = "PSF-2.0"
 SECTION = "devel/python"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4b8801e752a2c70ac41a5f9aa243f766"

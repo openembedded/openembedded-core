@@ -2,7 +2,7 @@ HOMEPAGE = "http://www.x.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xorg"
 
 SECTION = "x11/libs"
-LICENSE = "MIT-X"
+LICENSE = "MIT"
 DEPENDS = "util-macros"
 
 XORG_PN = "${BPN}"

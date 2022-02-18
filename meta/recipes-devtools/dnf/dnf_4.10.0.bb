@@ -3,7 +3,7 @@ DESCRIPTION = "Software package manager that installs, updates, and removes \
 packages on RPM-based Linux distributions. It automatically computes \
 dependencies and determines the actions required to install packages."
 HOMEPAGE = "https://github.com/rpm-software-management/dnf"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://PACKAGE-LICENSING;md5=4a0548e303dbc77f067335b4d688e745 \
                     "

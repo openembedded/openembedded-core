@@ -5,7 +5,7 @@ various binary formats into more human-readable form to compare them. \
 It can compare two tarballs, ISO images, or PDF just as easily."
 HOMEPAGE = "https://diffoscope.org/"
 BUGTRACKER = "https://salsa.debian.org/reproducible-builds/diffoscope/-/issues"
-LICENSE = "GPL-3.0+"
+LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PYPI_PACKAGE = "diffoscope"

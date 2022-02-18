@@ -6,11 +6,11 @@ disk partitioning, kernel message management, filesystem creation, and system lo
 
 SECTION = "base"
 
-LICENSE = "GPLv2+ & LGPLv2.1+ & BSD-3-Clause & BSD-4-Clause"
-LICENSE:${PN}-libblkid = "LGPLv2.1+"
-LICENSE:${PN}-libfdisk = "LGPLv2.1+"
-LICENSE:${PN}-libmount = "LGPLv2.1+"
-LICENSE:${PN}-libsmartcols = "LGPLv2.1+"
+LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later & BSD-3-Clause & BSD-4-Clause"
+LICENSE:${PN}-libblkid = "LGPL-2.1-or-later"
+LICENSE:${PN}-libfdisk = "LGPL-2.1-or-later"
+LICENSE:${PN}-libmount = "LGPL-2.1-or-later"
+LICENSE:${PN}-libsmartcols = "LGPL-2.1-or-later"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=0fd5c050c6187d2bf0a4492b7f4e33da \
                     file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \

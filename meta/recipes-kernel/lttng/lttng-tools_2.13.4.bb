@@ -5,7 +5,7 @@ to extract program execution details from the Linux operating system \
 and interpret them."
 HOMEPAGE = "https://github.com/lttng/lttng-tools"
 
-LICENSE = "GPLv2 & LGPLv2.1"
+LICENSE = "GPL-2.0-only & LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=40ef17463fbd6f377db3c47b1cbaded8 \
                     file://LICENSES/GPL-2.0;md5=e68f69a54b44ba526ad7cb963e18fbce \
                     file://LICENSES/LGPL-2.1;md5=9920968d0f2ff585ce61fae30344dd95"

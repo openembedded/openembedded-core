@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.mega-nerd.com/libsndfile"
 AUTHOR = "Erik de Castro Lopo"
 DEPENDS = "flac libogg libvorbis"
 SECTION = "libs/multimedia"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 
 SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz \
            file://CVE-2017-6892.patch \

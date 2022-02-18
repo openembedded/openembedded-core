@@ -6,7 +6,7 @@ to extend Gtk by providing mobile-friendly widgets and make the creation of \
 responsive apps easier."
 HOMEPAGE = "https://gitlab.gnome.org/GNOME/libhandy"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/libhandy/-/issues"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "git://gitlab.gnome.org/GNOME/libhandy.git;protocol=https;branch=master \
