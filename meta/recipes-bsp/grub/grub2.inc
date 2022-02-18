@@ -47,7 +47,8 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://CVE-2020-27779_7.patch \
            file://CVE-2020-25632.patch \
            file://CVE-2020-25647.patch \
-"
+           file://0001-mmap-Fix-memory-leak-when-iterating-over-mapped-memo.patch \
+           "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
 
