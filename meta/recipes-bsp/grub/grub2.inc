@@ -60,6 +60,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0011-gnulib-regexec-Fix-possible-null-dereference.patch \
            file://0012-gnulib-regcomp-Fix-uninitialized-re_token.patch \
            file://0013-io-lzopio-Resolve-unnecessary-self-assignment-errors.patch \
+           file://0014-zstd-Initialize-seq_t-structure-fully.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
