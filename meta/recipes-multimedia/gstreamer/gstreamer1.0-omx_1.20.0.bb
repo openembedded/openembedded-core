@@ -3,7 +3,7 @@ DESCRIPTION = "Wraps available OpenMAX IL components and makes them available as
 HOMEPAGE = "http://gstreamer.freedesktop.org/"
 SECTION = "multimedia"
 
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-or-later"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
                     file://omx/gstomx.h;beginline=1;endline=21;md5=5c8e1fca32704488e76d2ba9ddfa935f"
