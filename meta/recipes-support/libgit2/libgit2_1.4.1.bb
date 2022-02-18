@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e5a9227de4cb6afb5d35ed7b0fdf480d"
 
 DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 
-SRC_URI = "git://github.com/libgit2/libgit2.git;branch=main;protocol=https"
-SRCREV = "1d5b9bd86dccc7347aaadf5e3ab122eed9413404"
+SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.4;protocol=https"
+SRCREV = "fdd15bcfca6b2ec4b7ecad1aa11a396cb15bd064"
 
 S = "${WORKDIR}/git"
 
