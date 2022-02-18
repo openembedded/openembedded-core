@@ -63,6 +63,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0014-zstd-Initialize-seq_t-structure-fully.patch \
            file://0015-kern-partition-Check-for-NULL-before-dereferencing-i.patch \
            file://0016-disk-ldm-Make-sure-comp-data-is-freed-before-exiting.patch \
+           file://0017-disk-ldm-If-failed-then-free-vg-variable-too.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
