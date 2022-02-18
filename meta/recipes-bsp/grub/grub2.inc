@@ -80,6 +80,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0031-video-efi_gop-Remove-unnecessary-return-value-of-gru.patch \
            file://0032-video-fb-fbfill-Fix-potential-integer-overflow.patch \
            file://0033-video-fb-video_fb-Fix-multiple-integer-overflows.patch \
+           file://0034-video-fb-video_fb-Fix-possible-integer-overflow.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
