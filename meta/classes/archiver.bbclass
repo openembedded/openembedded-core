@@ -5,7 +5,7 @@
 #  1) original (or unpacked) source: ARCHIVER_MODE[src] = "original"
 #  2) patched source: ARCHIVER_MODE[src] = "patched" (default)
 #  3) configured source: ARCHIVER_MODE[src] = "configured"
-#  4) source mirror: ARCHIVE_MODE[src] = "mirror"
+#  4) source mirror: ARCHIVER_MODE[src] = "mirror"
 #  5) The patches between do_unpack and do_patch:
 #     ARCHIVER_MODE[diff] = "1"
 #     And you can set the one that you'd like to exclude from the diff:
