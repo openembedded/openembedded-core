@@ -50,6 +50,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0001-mmap-Fix-memory-leak-when-iterating-over-mapped-memo.patch \
            file://0002-net-net-Fix-possible-dereference-to-of-a-NULL-pointe.patch \
            file://0003-net-tftp-Fix-dangling-memory-pointer.patch \
+           file://0004-kern-parser-Fix-resource-leak-if-argc-0.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
