@@ -53,6 +53,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0004-kern-parser-Fix-resource-leak-if-argc-0.patch \
            file://0005-efi-Fix-some-malformed-device-path-arithmetic-errors.patch \
            file://0006-kern-efi-Fix-memory-leak-on-failure.patch \
+           file://0007-kern-efi-mm-Fix-possible-NULL-pointer-dereference.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
