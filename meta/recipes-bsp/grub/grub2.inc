@@ -76,6 +76,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0027-libgcrypt-mpi-Fix-possible-NULL-dereference.patch \
            file://0028-syslinux-Fix-memory-leak-while-parsing.patch \
            file://0029-normal-completion-Fix-leaking-of-memory-when-process.patch \
+           file://0030-commands-hashsum-Fix-a-memory-leak.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
