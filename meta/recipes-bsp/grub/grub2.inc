@@ -85,6 +85,7 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0036-gfxmenu-gui_list-Remove-code-that-coverity-is-flaggi.patch \
            file://0037-loader-bsd-Check-for-NULL-arg-up-front.patch \
            file://0038-loader-xnu-Fix-memory-leak.patch \
+           file://0039-loader-xnu-Free-driverkey-data-when-an-error-is-dete.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
