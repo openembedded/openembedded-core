@@ -1022,15 +1022,18 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
                 msg = "Checking sstate mirror object availability"
                 bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
 
-            bb.event.enable_threadlock()
-            pool = oe.utils.ThreadedPool(nproc, len(tasklist),
-                    worker_init=checkstatus_init, worker_end=checkstatus_end,
-                    name="sstate_checkhashes-")
-            for t in tasklist:
-                pool.add_task(checkstatus, t)
-            pool.start()
-            pool.wait_completion()
-            bb.event.disable_threadlock()
+            # Have to setup the fetcher environment here rather than in each thread as it would race
+            fetcherenv = bb.fetch2.get_fetcher_environment(d)
+            with bb.utils.environment(**fetcherenv):
+                bb.event.enable_threadlock()
+                pool = oe.utils.ThreadedPool(nproc, len(tasklist),
+                        worker_init=checkstatus_init, worker_end=checkstatus_end,
+                        name="sstate_checkhashes-")
+                for t in tasklist:
+                    pool.add_task(checkstatus, t)
+                pool.start()
+                pool.wait_completion()
+                bb.event.disable_threadlock()
 
             if progress:
                 bb.event.fire(bb.event.ProcessFinished(msg), d)
