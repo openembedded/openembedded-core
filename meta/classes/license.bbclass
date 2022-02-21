@@ -392,7 +392,7 @@ def check_license_flags(d):
 
     license_flags = d.getVar('LICENSE_FLAGS')
     if license_flags:
-        whitelist = d.getVar('LICENSE_FLAGS_WHITELIST')
+        whitelist = d.getVar('LICENSE_FLAGS_ACCEPTED')
         if not whitelist:
             return license_flags.split()
         unmatched_flags = all_license_flags_match(license_flags, whitelist)
