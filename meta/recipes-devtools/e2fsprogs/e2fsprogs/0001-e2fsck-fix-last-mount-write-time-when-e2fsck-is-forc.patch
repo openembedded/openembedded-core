@@ -1,0 +1,66 @@
+From 2c69c94217b6db083d601d4fd62d6ab6c1628fee Mon Sep 17 00:00:00 2001
+From: Lukas Czerner <lczerner@redhat.com>
+Date: Mon, 14 Jun 2021 15:27:25 +0200
+Subject: [PATCH] e2fsck: fix last mount/write time when e2fsck is forced
+
+With commit c52d930f e2fsck is no longer able to fix bad last
+mount/write time by default because it is conditioned on s_checkinterval
+not being zero, which it is by default.
+
+One place where it matters is when other e2fsprogs tools require to run
+full file system check before a certain operation. If the last mount
+time is for any reason in future, it will not allow it to run even if
+full e2fsck is ran.
+
+Fix it by checking the last mount/write time when the e2fsck is forced,
+except for the case where we know the system clock is broken.
+
+[ Reworked the conditionals so error messages claiming that the last
+  write/mount time were corrupted wouldn't be always printed when the
+  e2fsck was run with the -f option, thus causing 299 out of 372
+  regression tests to fail.  -- TYT ]
+
+Fixes: c52d930f ("e2fsck: don't check for future superblock times if checkinterval == 0")
+Reported-by: Dusty Mabe <dustymabe@redhat.com>
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+
+Upstream-Status: Backport [https://github.com/tytso/e2fsprogs/commit/2c69c94217b6db083d601d4fd62d6ab6c1628fee]
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ e2fsck/super.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/e2fsck/super.c b/e2fsck/super.c
+index e1c3f935..31e2ffb2 100644
+--- a/e2fsck/super.c
++++ b/e2fsck/super.c
+@@ -1038,9 +1038,9 @@ void check_super_block(e2fsck_t ctx)
+ 	 * Check to see if the superblock last mount time or last
+ 	 * write time is in the future.
+ 	 */
+-	if (!broken_system_clock && fs->super->s_checkinterval &&
+-	    !(ctx->flags & E2F_FLAG_TIME_INSANE) &&
+-	    fs->super->s_mtime > (__u32) ctx->now) {
++	if (((ctx->options & E2F_OPT_FORCE) || fs->super->s_checkinterval) &&
++	    !broken_system_clock && !(ctx->flags & E2F_FLAG_TIME_INSANE) &&
++	    (fs->super->s_mtime > (__u32) ctx->now)) {
+ 		pctx.num = fs->super->s_mtime;
+ 		problem = PR_0_FUTURE_SB_LAST_MOUNT;
+ 		if (fs->super->s_mtime <= (__u32) ctx->now + ctx->time_fudge)
+@@ -1050,9 +1050,9 @@ void check_super_block(e2fsck_t ctx)
+ 			fs->flags |= EXT2_FLAG_DIRTY;
+ 		}
+ 	}
+-	if (!broken_system_clock && fs->super->s_checkinterval &&
+-	    !(ctx->flags & E2F_FLAG_TIME_INSANE) &&
+-	    fs->super->s_wtime > (__u32) ctx->now) {
++	if (((ctx->options & E2F_OPT_FORCE) || fs->super->s_checkinterval) &&
++	    !broken_system_clock && !(ctx->flags & E2F_FLAG_TIME_INSANE) &&
++	    (fs->super->s_wtime > (__u32) ctx->now)) {
+ 		pctx.num = fs->super->s_wtime;
+ 		problem = PR_0_FUTURE_SB_LAST_WRITE;
+ 		if (fs->super->s_wtime <= (__u32) ctx->now + ctx->time_fudge)
+-- 
+2.25.1
+
