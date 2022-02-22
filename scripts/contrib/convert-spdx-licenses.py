@@ -114,6 +114,7 @@ def processfile(fn):
                     if orig != line:
                         modified = True
                     new_file.write(line)
+        new_file.close()
         if modified:
             shutil.copymode(fn, abs_path)
             os.remove(fn)
