@@ -48,6 +48,8 @@ do_install:append () {
 FILES:${PN}-dev += "${libdir}/${BPN}/lib*${SOLIBSDEV} ${libdir}/${BPN}/*.la \
                     ${libdir}/lib*${SOLIBSDEV} ${libdir}/*.la"
 
+CONFFILES:${PN}-lib = "${sysconfdir}/sudoers"
+
 SUDO_PACKAGES = "${PN}-sudo\
                  ${PN}-lib"
 

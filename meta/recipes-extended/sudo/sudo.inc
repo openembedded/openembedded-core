@@ -24,8 +24,6 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 PACKAGECONFIG[pam-wheel] = ",,,pam-plugin-wheel"
 
-CONFFILES:${PN} = "${sysconfdir}/sudoers"
-
 EXTRA_OECONF = "--with-editor=${base_bindir}/vi --with-env-editor"
 
 EXTRA_OECONF:append:libc-musl = " --disable-hardening "
