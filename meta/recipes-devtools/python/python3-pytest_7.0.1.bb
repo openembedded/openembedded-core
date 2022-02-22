@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=bd27e41b6550fe0fc45356d1d81ee37c"
 
 SRC_URI[sha256sum] = "e30905a0c131d3d94b89624a1cc5afec3e0ba2fbdb151867d8e0ebd49850f171"
 
-DEPENDS = "python3-setuptools-scm-native"
+DEPENDS += "python3-setuptools-scm-native"
 
-inherit update-alternatives pypi setuptools3
+inherit update-alternatives pypi setuptools_build_meta
 
 RDEPENDS:${PN}:class-target += " \
     ${PYTHON_PN}-atomicwrites \
