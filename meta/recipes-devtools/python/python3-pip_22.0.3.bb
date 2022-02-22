@@ -4,17 +4,32 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=63ec52baf95163b597008bb46db68030"
 
+inherit pypi setuptools_build_meta
+
 DEPENDS += "python3 python3-setuptools-native"
 
-inherit pypi setuptools3
+# To avoid a dependency loop; we bootstrap -native
+DEPENDS:remove:class-native = "python3-pip-native"
+DEPENDS:append:class-native = " unzip-native"
 
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 
 SRC_URI[sha256sum] = "f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0"
 
+PYPA_WHEEL ?= "${B}/dist/${PYPI_PACKAGE}-${PV}-*.whl"
+
+do_install:class-native() {
+    # Bootstrap to prevent dependency loop in python3-pip-native
+    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
+    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PYPA_WHEEL} || \
+    bbfatal_log "Failed to unzip wheel: ${PYPA_WHEEL}. Check the logs."
+}
+
 do_install:append() {
     # Install as pip3 and leave pip2 as default
-    rm ${D}/${bindir}/pip
+    if [ -e ${D}/${bindir}/pip ]; then
+        rm ${D}/${bindir}/pip
+    fi
 }
 
 RDEPENDS:${PN} = "\
