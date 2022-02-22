@@ -1468,10 +1468,10 @@ python populate_packages () {
     os.umask(oldumask)
     os.chdir(workdir)
 
-    # Handle LICENSE_EXCLUSION
+    # Handle excluding packages with incompatible licenses
     package_list = []
     for pkg in packages:
-        licenses = d.getVar('LICENSE_EXCLUSION-' + pkg)
+        licenses = d.getVar('_exclude_incompatible-' + pkg)
         if licenses:
             msg = "Excluding %s from packaging as it has incompatible license(s): %s" % (pkg, licenses)
             oe.qa.handle_error("incompatible-license", msg, d)
@@ -2353,7 +2353,7 @@ def gen_packagevar(d, pkgvars="PACKAGEVARS"):
 
         # Ensure that changes to INCOMPATIBLE_LICENSE re-run do_package for
         # affected recipes.
-        ret.append('LICENSE_EXCLUSION-%s' % p)
+        ret.append('_exclude_incompatible-%s' % p)
     return " ".join(ret)
 
 PACKAGE_PREPROCESS_FUNCS ?= ""
