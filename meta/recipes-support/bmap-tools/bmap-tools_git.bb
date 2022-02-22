@@ -13,7 +13,8 @@ SRC_URI = "git://github.com/intel/${BPN};branch=master;protocol=https"
 
 SRCREV = "c0673962a8ec1624b5189dc1d24f33fe4f06785a"
 S = "${WORKDIR}/git"
-PV .= "+git${SRCPV}"
+BASEVER = "3.6"
+PV = "${BASEVER}+git${SRCPV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
@@ -22,5 +23,8 @@ RDEPENDS:${PN} = "python3-core python3-compression python3-mmap python3-setuptoo
 
 inherit python3native
 inherit setuptools3
+
+PIP_INSTALL_PACKAGE = "bmap_tools"
+PYPA_WHEEL = "${PIP_INSTALL_DIST_PATH}/${PIP_INSTALL_PACKAGE}-${BASEVER}-*.whl"
 
 BBCLASSEXTEND = "native nativesdk"
