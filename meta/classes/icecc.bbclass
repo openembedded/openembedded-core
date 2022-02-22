@@ -148,9 +148,9 @@ def use_icecc(bb,d):
 
     class_disable = (d.getVar('ICECC_CLASS_DISABLE') or "").split()
 
-    for class in class_disable:
-        if bb.data.inherits_class(class, d):
-            bb.debug(1, "%s: class %s found in disable, disable icecc" % (pn, class))
+    for bbclass in class_disable:
+        if bb.data.inherits_class(bbclass, d):
+            bb.debug(1, "%s: bbclass %s found in disable, disable icecc" % (pn, bbclass))
             return "no"
 
     disabled_recipes = (d.getVar('ICECC_RECIPE_DISABLE') or "").split()
