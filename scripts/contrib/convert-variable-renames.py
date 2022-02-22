@@ -84,6 +84,7 @@ def processfile(fn):
                         if re.search(check_word, line, re.IGNORECASE):
                             print("%s needs further work at line %s since it contains %s"% (fn, lineno, check_word))
                     new_file.write(line)
+            new_file.close()
             if modified:
                 print("*** Modified file '%s'" % (fn))
                 shutil.copymode(fn, abs_path)
