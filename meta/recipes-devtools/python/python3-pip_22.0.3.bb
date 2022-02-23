@@ -24,6 +24,23 @@ do_install:class-native() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
     unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PYPA_WHEEL} || \
     bbfatal_log "Failed to unzip wheel: ${PYPA_WHEEL}. Check the logs."
+
+    # pip install would normally generate [console_scripts] in ${bindir}
+    install -d ${D}/${bindir}
+    # We will skip the ${bindir}/pip variant as we would just remove it in the do_install:append
+    cat << EOF >> ${D}/${bindir}/pip3 | tee ${D}/${bindir}/pip${PYTHON_BASEVERSION}
+#!/bin/sh
+'''exec' ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} "\$0" "\$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pip._internal.cli.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
+EOF
+    chmod 0755 ${D}${bindir}/pip3 ${D}${bindir}/pip${PYTHON_BASEVERSION}
 }
 
 do_install:append() {
