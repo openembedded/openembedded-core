@@ -18,6 +18,22 @@ do_install:class-native () {
     PYPA_WHEEL="${B}/dist/${PYPI_PACKAGE}-${PV}-*.whl"
     unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PYPA_WHEEL} || \
     bbfatal_log "Failed to install"
+
+    # pip install would normally generate [project.scripts] in ${bindir}
+    install -d ${D}/${bindir}
+    cat << EOF >> ${D}/${bindir}/wheel
+#!/bin/sh
+'''exec' ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} "\$0" "\$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from wheel.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
+EOF
+    chmod 0755 ${D}${bindir}/wheel
 }
 
 BBCLASSEXTEND = "native nativesdk"
