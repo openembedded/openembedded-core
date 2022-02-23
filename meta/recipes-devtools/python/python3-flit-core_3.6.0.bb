@@ -1,3 +1,10 @@
+SUMMARY = "This provides a PEP 517 build backend for packages using Flit."
+DESCRIPTION = "This provides a PEP 517 build backend for packages using \
+Flit. The only public interface is the API specified by PEP 517, at \
+flit_core.buildapi."
+HOMEPAGE = "https://github.com/pypa/flit"
+BUGTRACKER = "https://github.com/pypa/flit/issues"
+
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=41eb78fa8a872983a882c694a8305f08"
 
