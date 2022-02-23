@@ -6,7 +6,7 @@ PYPA_WHEEL ??= "${PIP_INSTALL_DIST_PATH}/${PIP_INSTALL_PACKAGE}-${PV}-*.whl"
 
 PIP_INSTALL_ARGS ?= "\
     -vvvv \
-    --force-reinstall \
+    --ignore-installed \
     --no-cache \
     --no-deps \
     --no-index \
