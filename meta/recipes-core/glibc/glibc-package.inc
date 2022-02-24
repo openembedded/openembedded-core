@@ -162,6 +162,7 @@ do_install_armmultilib () {
 	oe_multilib_header bits/shm.h bits/sigstack.h bits/stat.h bits/statfs.h bits/typesizes.h
 	oe_multilib_header bits/procfs-id.h bits/procfs.h bits/shmlba.h
 	oe_multilib_header bits/struct_stat.h bits/pthread_stack_min.h
+	oe_multilib_header bits/dl_find_object.h bits/rseq.h bits/timesize.h
 
 	oe_multilib_header fpu_control.h gnu/lib-names.h gnu/stubs.h ieee754.h
 
