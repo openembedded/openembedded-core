@@ -595,46 +595,35 @@ python () {
         if check_license and bad_licenses:
             bad_licenses = expand_wildcard_licenses(d, bad_licenses)
 
-            whitelist = []
-            for lic in bad_licenses:
-                spdx_license = return_spdx(d, lic)
-                whitelist.extend((d.getVar("WHITELIST_" + lic) or "").split())
-                if spdx_license:
-                    whitelist.extend((d.getVar("WHITELIST_" + spdx_license) or "").split())
+            exceptions = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
 
-            if pn in whitelist:
-                '''
-                We need to track what we are whitelisting and why. If pn is
-                incompatible we need to be able to note that the image that
-                is created may infact contain incompatible licenses despite
-                INCOMPATIBLE_LICENSE being set.
-                '''
-                bb.note("Including %s as buildable despite it having an incompatible license because it has been whitelisted" % pn)
-            else:
-                pkgs = d.getVar('PACKAGES').split()
-                skipped_pkgs = {}
-                unskipped_pkgs = []
-                for pkg in pkgs:
-                    incompatible_lic = incompatible_license(d, bad_licenses, pkg)
-                    if incompatible_lic:
-                        skipped_pkgs[pkg] = incompatible_lic
-                    else:
-                        unskipped_pkgs.append(pkg)
-                if unskipped_pkgs:
-                    for pkg in skipped_pkgs:
-                        bb.debug(1, "Skipping the package %s at do_rootfs because of incompatible license(s): %s" % (pkg, ' '.join(skipped_pkgs[pkg])))
-                        d.setVar('_exclude_incompatible-' + pkg, ' '.join(skipped_pkgs[pkg]))
-                    for pkg in unskipped_pkgs:
-                        bb.debug(1, "Including the package %s" % pkg)
+            pkgs = d.getVar('PACKAGES').split()
+            skipped_pkgs = {}
+            unskipped_pkgs = []
+            for pkg in pkgs:
+                remaining_bad_licenses = oe.license.apply_pkg_license_exception(pkg, bad_licenses, exceptions)
+
+                incompatible_lic = incompatible_license(d, remaining_bad_licenses, pkg)
+                if incompatible_lic:
+                    skipped_pkgs[pkg] = incompatible_lic
                 else:
-                    incompatible_lic = incompatible_license(d, bad_licenses)
-                    for pkg in skipped_pkgs:
-                        incompatible_lic += skipped_pkgs[pkg]
-                    incompatible_lic = sorted(list(set(incompatible_lic)))
+                    unskipped_pkgs.append(pkg)
 
-                    if incompatible_lic:
-                        bb.debug(1, "Skipping recipe %s because of incompatible license(s): %s" % (pn, ' '.join(incompatible_lic)))
-                        raise bb.parse.SkipRecipe("it has incompatible license(s): %s" % ' '.join(incompatible_lic))
+            if unskipped_pkgs:
+                for pkg in skipped_pkgs:
+                    bb.debug(1, "Skipping the package %s at do_rootfs because of incompatible license(s): %s" % (pkg, ' '.join(skipped_pkgs[pkg])))
+                    d.setVar('_exclude_incompatible-' + pkg, ' '.join(skipped_pkgs[pkg]))
+                for pkg in unskipped_pkgs:
+                    bb.debug(1, "Including the package %s" % pkg)
+            else:
+                incompatible_lic = incompatible_license(d, bad_licenses)
+                for pkg in skipped_pkgs:
+                    incompatible_lic += skipped_pkgs[pkg]
+                incompatible_lic = sorted(list(set(incompatible_lic)))
+
+                if incompatible_lic:
+                    bb.debug(1, "Skipping recipe %s because of incompatible license(s): %s" % (pn, ' '.join(incompatible_lic)))
+                    raise bb.parse.SkipRecipe("it has incompatible license(s): %s" % ' '.join(incompatible_lic))
 
     needsrcrev = False
     srcuri = d.getVar('SRC_URI')

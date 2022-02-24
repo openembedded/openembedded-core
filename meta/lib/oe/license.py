@@ -242,3 +242,8 @@ def list_licenses(licensestr):
     except SyntaxError as exc:
         raise LicenseSyntaxError(licensestr, exc)
     return visitor.licenses
+
+def apply_pkg_license_exception(pkg, bad_licenses, exceptions):
+    """Return remaining bad licenses after removing any package exceptions"""
+
+    return [lic for lic in bad_licenses if pkg + ':' + lic not in exceptions]
