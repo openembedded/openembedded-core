@@ -325,8 +325,8 @@ def package_qa_check_arch(path,name,d, elf, messages):
     if not elf:
         return
 
-    target_os   = d.getVar('TARGET_OS')
-    target_arch = d.getVar('TARGET_ARCH')
+    target_os   = d.getVar('HOST_OS')
+    target_arch = d.getVar('HOST_ARCH')
     provides = d.getVar('PROVIDES')
     bpn = d.getVar('BPN')
 
@@ -691,8 +691,8 @@ def prepopulate_objdump_p(elf, d):
 # Walk over all files in a directory and call func
 def package_qa_walk(warnfuncs, errorfuncs, package, d):
     #if this will throw an exception, then fix the dict above
-    target_os   = d.getVar('TARGET_OS')
-    target_arch = d.getVar('TARGET_ARCH')
+    target_os   = d.getVar('HOST_OS')
+    target_arch = d.getVar('HOST_ARCH')
 
     warnings = {}
     errors = {}
