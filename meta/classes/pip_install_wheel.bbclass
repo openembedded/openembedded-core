@@ -32,6 +32,11 @@ pip_install_wheel_do_install () {
             sed -i -e "1s,#!.*nativepython3,#!${USRBINPATH}/env ${PIP_INSTALL_PYTHON}," $i
             sed -i -e "s:${PYTHON}:${USRBINPATH}/env\ ${PIP_INSTALL_PYTHON}:g" $i
             sed -i -e "s:${STAGING_BINDIR_NATIVE}:${bindir}:g" $i
+            # Recompile after modifying it
+            cd ${D}
+            file=`echo $i | sed 's:^${D}/::'`
+            ${STAGING_BINDIR_NATIVE}/python3-native/python3 -c "from py_compile import compile; compile('$file')"
+            cd -
         fi
     done
 }
