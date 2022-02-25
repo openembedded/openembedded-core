@@ -135,10 +135,10 @@ def is_included(licensestr, include_licenses=None, exclude_licenses=None):
             return beta
 
     if not include_licenses:
-        include = ['*']
+        include_licenses = ['*']
 
     if not exclude_licenses:
-        exclude = []
+        exclude_licenses = []
 
     licenses = flattened_licenses(licensestr, choose_licenses)
     excluded = [lic for lic in licenses if exclude_license(lic)]
