@@ -100,16 +100,13 @@ def flattened_licenses(licensestr, choose_licenses):
     return flatten.licenses
 
 def is_included(licensestr, include_licenses=None, exclude_licenses=None):
-    """Given a license a list of list to include and a list of
-        licenses to exclude, determine if the license string
-        matches the an include list and does not match the 
-        exclude list.
+    """Given a license string, a list of licenses to include and a list of
+    licenses to exclude, determine if the license string matches the include
+    list and does not match the exclude list.
 
-        Returns a tuple holding the boolean state and a list of
-        the applicable licenses that were excluded if state is
-        False, or the licenses that were included if the state
-        is True.
-    """
+    Returns a tuple holding the boolean state and a list of the applicable
+    licenses that were excluded if state is False, or the licenses that were
+    included if the state is True."""
 
     def include_license(license):
         return any(fnmatch(license, pattern) for pattern in include_licenses)
