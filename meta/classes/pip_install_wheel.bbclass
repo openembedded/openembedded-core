@@ -1,6 +1,10 @@
 DEPENDS:append = " python3-pip-native"
 
-PIP_INSTALL_PACKAGE ?= "${PYPI_PACKAGE}"
+def guess_pip_install_package_name(d):
+    '''https://www.python.org/dev/peps/pep-0491/#escaping-and-unicode'''
+    return (d.getVar('PYPI_PACKAGE') or d.getVar('PN')).replace('-', '_')
+
+PIP_INSTALL_PACKAGE ?= "${@guess_pip_install_package_name(d)}"
 PIP_INSTALL_DIST_PATH ?= "${B}/dist"
 PYPA_WHEEL ??= "${PIP_INSTALL_DIST_PATH}/${PIP_INSTALL_PACKAGE}-${PV}-*.whl"
 
