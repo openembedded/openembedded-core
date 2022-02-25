@@ -1,4 +1,4 @@
-inherit pip_install_wheel python3native python3-dir
+inherit pip_install_wheel python3native python3-dir setuptools3-base
 
 DEPENDS += "python3 python3-flit-core-native python3-pip-native"
 
