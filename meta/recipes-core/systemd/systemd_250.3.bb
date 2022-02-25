@@ -371,6 +371,7 @@ PACKAGE_BEFORE_PN = "\
     ${PN}-journal-remote \
     ${PN}-extra-utils \
     ${PN}-udev-rules \
+    libsystemd-shared \
     udev \
     udev-hwdb \
 "
@@ -386,6 +387,8 @@ DESCRIPTION:${PN}-journal-upload = "systemd-journal-upload uploads journal entri
 
 SUMMARY:${PN}-journal-remote = "Receive journal messages over the network"
 DESCRIPTION:${PN}-journal-remote = "systemd-journal-remote is a command to receive serialized journal events and store them to journal files."
+
+SUMMARY:libsystemd-shared = "Systemd shared library"
 
 SYSTEMD_PACKAGES = "${@bb.utils.contains('PACKAGECONFIG', 'binfmt', '${PN}-binfmt', '', d)} \
                     ${@bb.utils.contains('PACKAGECONFIG', 'microhttpd', '${PN}-journal-gatewayd', '', d)} \
@@ -653,6 +656,9 @@ RRECOMMENDS:${PN} += "systemd-extra-utils \
 INSANE_SKIP:${PN} += "dev-so libdir"
 INSANE_SKIP:${PN}-dbg += "libdir"
 INSANE_SKIP:${PN}-doc += " libdir"
+INSANE_SKIP:libsystemd-shared += "libdir"
+
+FILES:libsystemd-shared = "${rootlibexecdir}/systemd/libsystemd-shared*.so"
 
 RPROVIDES:udev = "hotplug"
 
