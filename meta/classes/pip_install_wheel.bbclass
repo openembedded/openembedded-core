@@ -2,7 +2,7 @@ DEPENDS:append = " python3-pip-native"
 
 def guess_pip_install_package_name(d):
     '''https://www.python.org/dev/peps/pep-0491/#escaping-and-unicode'''
-    return (d.getVar('PYPI_PACKAGE') or d.getVar('PN')).replace('-', '_')
+    return (d.getVar('PYPI_PACKAGE') or d.getVar('BPN')).replace('-', '_')
 
 PIP_INSTALL_PACKAGE ?= "${@guess_pip_install_package_name(d)}"
 PIP_INSTALL_DIST_PATH ?= "${B}/dist"
