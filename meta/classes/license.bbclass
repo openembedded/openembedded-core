@@ -193,7 +193,7 @@ def find_license_files(d):
                                     os.path.join(srcdir, non_generic_lic), None, None))
             non_generic_lics[non_generic_lic] = license_type
         else:
-            # Add explicity avoid of CLOSED license because this isn't generic
+            # Explicitly avoid the CLOSED license because this isn't generic
             if license_type != 'CLOSED':
                 # And here is where we warn people that their licenses are lousy
                 oe.qa.handle_error("license-exists",
@@ -252,7 +252,7 @@ def return_spdx(d, license):
 def canonical_license(d, license):
     """
     Return the canonical (SPDX) form of the license if available (so GPLv3
-    becomes GPL-3.0) or the passed license if there is no canonical form.
+    becomes GPL-3.0-only) or the passed license if there is no canonical form.
     """
     return d.getVarFlag('SPDXLICENSEMAP', license) or license
 
@@ -287,7 +287,8 @@ def expand_wildcard_licenses(d, wildcard_licenses):
     for wld_lic in wildcard_licenses:
         spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
         licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
-        # Assume if we're passed "GPLv3" or "*GPLv3" it means -or-later as well
+        # Assume that if we are passed "GPL-3.0" or "*GPL-3.0", then it means
+        # "-or-later" as well.
         if not wld_lic.endswith(("-or-later", "-only", "*", "+")):
             spdxflags = fnmatch.filter(spdxmapkeys, wld_lic + "+")
             licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
