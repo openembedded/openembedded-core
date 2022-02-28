@@ -34,6 +34,8 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
                 file://avoid-host-contamination.patch \
                 file://mkdir-p.patch \
                 file://0001-Bug-704342-Include-device-specifier-strings-in-acces.patch \
+                file://check-stack-limits-after-function-evalution.patch \
+                file://CVE-2021-45949.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
