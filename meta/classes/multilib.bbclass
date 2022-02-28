@@ -77,9 +77,10 @@ python multilib_virtclass_handler () {
 
     # Expand WHITELIST_GPL-3.0 with multilib prefix
     pkgs = e.data.getVar("WHITELIST_GPL-3.0")
-    for pkg in pkgs.split():
-        pkgs += " " + variant + "-" + pkg
-    e.data.setVar("WHITELIST_GPL-3.0", pkgs)
+    if pkgs:
+        for pkg in pkgs.split():
+            pkgs += " " + variant + "-" + pkg
+        e.data.setVar("WHITELIST_GPL-3.0", pkgs)
 
     # DEFAULTTUNE can change TARGET_ARCH override so expand this now before update_data
     newtune = e.data.getVar("DEFAULTTUNE:" + "virtclass-multilib-" + variant, False)
