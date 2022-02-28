@@ -277,28 +277,27 @@ AVAILABLE_LICENSES := "${@' '.join(available_licenses(d))}"
 
 def expand_wildcard_licenses(d, wildcard_licenses):
     """
-    Return actual spdx format license names if wildcards are used. We expand
-    wildcards from SPDXLICENSEMAP flags and AVAILABLE_LICENSES.
+    There are some common wildcard values users may want to use. Support them
+    here.
     """
-    import fnmatch
+    licenses = set(wildcard_licenses)
+    mapping = {
+        "GPL-3.0*" : ["GPL-3.0-only", "GPL-3.0-or-later"],
+        "LGPL-3.0*" : ["LGPL-3.0-only", "LGPL-3.0-or-later"],
+    }
+    for k in mapping:
+        if k in wildcard_licenses:
+            licenses.remove(k)
+            for item in mapping[k]:
+                licenses.add(item)
 
-    licenses = wildcard_licenses[:]
-    spdxmapkeys = d.getVarFlags('SPDXLICENSEMAP').keys()
-    for wld_lic in wildcard_licenses:
-        spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
-        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
-        # Assume that if we are passed "GPL-3.0" or "*GPL-3.0", then it means
-        # "-or-later" as well.
-        if not wld_lic.endswith(("-or-later", "-only", "*", "+")):
-            spdxflags = fnmatch.filter(spdxmapkeys, wld_lic + "+")
-            licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
+    for l in licenses:
+        if l in oe.license.obsolete_license_list():
+            bb.fatal("Error, %s is an obsolete license, please use an SPDX reference in INCOMPATIBLE_LICENSE" % l)
+        if "*" in l:
+            bb.fatal("Error, %s is an invalid license wildcard entry" % l)
 
-    spdx_lics = d.getVar('AVAILABLE_LICENSES').split()
-    for wld_lic in wildcard_licenses:
-        licenses += fnmatch.filter(spdx_lics, wld_lic)
-
-    licenses = list(set(licenses))
-    return licenses
+    return list(licenses)
 
 def incompatible_license_contains(license, truevalue, falsevalue, d):
     license = canonical_license(d, license)
