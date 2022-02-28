@@ -27,7 +27,7 @@ WARN_QA ?= " libdir xorg-driver-abi \
             mime mime-xdg unlisted-pkg-lics unhandled-features-check \
             missing-update-alternatives native-last missing-ptest \
             license-exists license-no-generic license-syntax license-format \
-            license-incompatible license-file-missing \
+            license-incompatible license-file-missing obsolete-license \
             "
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
@@ -909,14 +909,19 @@ def package_qa_check_unlisted_pkg_lics(package, d, messages):
         return True
 
     recipe_lics_set = oe.license.list_licenses(d.getVar('LICENSE'))
-    unlisted = oe.license.list_licenses(pkg_lics) - recipe_lics_set
-    if not unlisted:
-        return True
-
-    oe.qa.add_message(messages, "unlisted-pkg-lics",
-                           "LICENSE:%s includes licenses (%s) that are not "
-                           "listed in LICENSE" % (package, ' '.join(unlisted)))
-    return False
+    package_lics = oe.license.list_licenses(pkg_lics)
+    unlisted = package_lics - recipe_lics_set
+    if unlisted:
+        oe.qa.add_message(messages, "unlisted-pkg-lics",
+                               "LICENSE:%s includes licenses (%s) that are not "
+                               "listed in LICENSE" % (package, ' '.join(unlisted)))
+        return False
+    obsolete = set(oe.license.obsolete_license_list()) & package_lics - recipe_lics_set
+    if obsolete:
+        oe.qa.add_message(messages, "obsolete-license",
+                               "LICENSE:%s includes obsolete licenses %s" % (package, ' '.join(obsolete)))
+        return False
+    return True
 
 QAPKGTEST[empty-dirs] = "package_qa_check_empty_dirs"
 def package_qa_check_empty_dirs(pkg, d, messages):
@@ -1011,6 +1016,14 @@ python do_package_qa () {
     import oe.packagedata
 
     bb.note("DO PACKAGE QA")
+
+    main_lic = d.getVar('LICENSE')
+
+    # Check for obsolete license references in main LICENSE (packages are checked below for any changes)
+    main_licenses = oe.license.list_licenses(d.getVar('LICENSE'))
+    obsolete = set(oe.license.obsolete_license_list()) & main_licenses
+    if obsolete:
+        oe.qa.handle_error("obsolete-license", "Recipe LICENSE includes obsolete licenses %s" % ' '.join(obsolete), d)
 
     bb.build.exec_func("read_subpackage_metadata", d)
 

@@ -597,6 +597,12 @@ python () {
 
             exceptions = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
 
+            for lic_exception in exceptions:
+                if ":" in lic_exception:
+                    lic_exception.split(":")[0]
+                if lic_exception in oe.license.obsolete_license_list():
+                    bb.fatal("Invalid license %s used in INCOMPATIBLE_LICENSE_EXCEPTIONS" % lic_exception)
+
             pkgs = d.getVar('PACKAGES').split()
             skipped_pkgs = {}
             unskipped_pkgs = []
