@@ -36,7 +36,7 @@ SRC_URI = "http://software.calhariz.com/at/${BPN}_${PV}.orig.tar.gz \
 PAM_SRC_URI = "file://pam.conf.patch \
                file://configure-add-enable-pam.patch"
 
-SRC_URI[sha256sum] = "76990cbb6f4b9bfedb926637904fdcc0d4fa20b6596b9c932117a49a0624c684"
+SRC_URI[sha256sum] = "bb066b389d7c9bb9d84a35738032b85c30cba7d949f758192adc72c9477fd3b8"
 
 EXTRA_OECONF += "ac_cv_path_SENDMAIL=/bin/true \
                  --with-daemon_username=root \
