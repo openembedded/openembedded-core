@@ -18,6 +18,8 @@ UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake pkgconfig gobject-introspection vala
 
+CFLAGS += "${TOOLCHAIN_OPTIONS}"
+
 DEPENDS += "libical-native"
 
 PACKAGECONFIG ??= "icu glib"
