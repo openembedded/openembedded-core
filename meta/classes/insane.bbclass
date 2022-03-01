@@ -549,7 +549,7 @@ python populate_lic_qa_checksum() {
                 import hashlib
                 lineno = 0
                 license = []
-                m = hashlib.md5()
+                m = hashlib.new('MD5', usedforsecurity=False)
                 for line in f:
                     lineno += 1
                     if (lineno >= beginline):
