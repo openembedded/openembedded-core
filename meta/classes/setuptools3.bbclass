@@ -28,6 +28,7 @@ setuptools3_do_compile() {
         bbfatal_log "'${PYTHON_PN} setup.py bdist_wheel ${SETUPTOOLS_BUILD_ARGS}' execution failed."
 }
 setuptools3_do_compile[vardepsexclude] = "MACHINE"
+do_compile[cleandirs] += "${SETUPTOOLS_SETUP_PATH}/dist"
 
 setuptools3_do_install() {
         cd ${SETUPTOOLS_SETUP_PATH}
