@@ -3,6 +3,7 @@
 #
 
 from oe.manifest import Manifest
+import re
 
 class PkgManifest(Manifest):
     """
