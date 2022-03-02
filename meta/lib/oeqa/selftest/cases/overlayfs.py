@@ -61,9 +61,9 @@ DISTRO_FEATURES += "systemd overlayfs"
         self.add_overlay_conf_to_machine()
 
         res = bitbake('core-image-minimal', ignore_status=True)
-        line = getline(res, "Unit name mnt-overlay.mount not found in systemd unit directories")
+        line = getline(res, " Mount path /mnt/overlay not found in fstat and unit mnt-overlay.mount not found in systemd unit directories")
         self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
-        line = getline(res, "Not all mount units are installed by the BSP")
+        line = getline(res, "Not all mount paths and units are installed in the image")
         self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
 
     def test_mount_unit_not_set(self):
