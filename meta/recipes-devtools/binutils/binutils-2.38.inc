@@ -31,5 +31,6 @@ SRC_URI = "\
      file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
      file://0011-sync-with-OE-libtool-changes.patch \
      file://0012-Check-for-clang-before-checking-gcc-version.patch \
+     file://0013-Avoid-as-info-race-condition.patch \
 "
 S  = "${WORKDIR}/git"
