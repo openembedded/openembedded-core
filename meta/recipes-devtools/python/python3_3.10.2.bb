@@ -156,14 +156,19 @@ do_install:append:class-native() {
         # Remove the opt-1.pyc and opt-2.pyc files. There are over 3,000 of them
         # and the overhead in each recipe-sysroot-native isn't worth it, particularly
         # when they're only used for python called with -O or -OO.
-        find ${D} -name *opt-*.pyc -delete
+        #find ${D} -name *opt-*.pyc -delete
+        # Remove all pyc files. There are a ton of them and it is probably faster to let
+        # python create the ones it wants at runtime rather than manage in the sstate 
+        # tarballs and sysroot creation.
+        find ${D} -name *.pyc -delete
+
 }
 
 do_install:append() {
         for c in ${D}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
             python3 ${WORKDIR}/reformat_sysconfig.py $c
         done
-        rm ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata*.cpython*
+        rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata*.cpython*
 
         mkdir -p ${D}${libdir}/python-sysconfigdata
         sysconfigfile=`find ${D} -name _sysconfig*.py`
@@ -182,8 +187,8 @@ do_install:append() {
         # Upstream is discussing ways to solve the issue properly, until then let's
         # just not install the problematic files.
         # More info: http://benno.id.au/blog/2013/01/15/python-determinism
-        rm ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_range.cpython*
-        rm ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_xml_etree.cpython*
+        rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_range.cpython*
+        rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_xml_etree.cpython*
 }
 
 do_install:append:class-nativesdk () {
