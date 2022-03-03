@@ -46,6 +46,9 @@ do_install() {
 	install -m 644 ${WORKDIR}/OEToolchainConfig.cmake ${D}${datadir}/cmake/
 	mkdir -p ${D}${base_prefix}/environment-setup.d
 	install -m 644 ${WORKDIR}/environment.d-cmake.sh ${D}${base_prefix}/environment-setup.d/cmake.sh
+
+	# Help docs create tons of files in the native sysroot and aren't needed there
+	rm -rf ${D}${datadir}/cmake-*/Help
 }
 
 do_compile[progress] = "percent"
