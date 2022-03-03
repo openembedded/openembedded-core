@@ -189,6 +189,11 @@ do_install:append() {
         # More info: http://benno.id.au/blog/2013/01/15/python-determinism
         rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_range.cpython*
         rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_xml_etree.cpython*
+
+        # Remove the opt-1.pyc and opt-2.pyc files. They effectively waste space on embedded
+        # style targets as they're only used when python is called with the -O or -OO options
+        # which is rare.
+        find ${D} -name *opt-*.pyc -delete
 }
 
 do_install:append:class-nativesdk () {
