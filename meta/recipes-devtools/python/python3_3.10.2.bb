@@ -152,6 +152,11 @@ do_install:append:class-native() {
         # (these often end up too long for the #! parser in the kernel as the
         # buffer is 128 bytes long).
         ln -s python3-native/python3 ${D}${bindir}/nativepython3
+
+        # Remove the opt-1.pyc and opt-2.pyc files. There are over 3,000 of them
+        # and the overhead in each recipe-sysroot-native isn't worth it, particularly
+        # when they're only used for python called with -O or -OO.
+        find ${D} -name *opt-*.pyc -delete
 }
 
 do_install:append() {
