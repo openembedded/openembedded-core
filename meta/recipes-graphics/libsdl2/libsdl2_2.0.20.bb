@@ -27,6 +27,8 @@ SRC_URI[sha256sum] = "c56aba1d7b5b0e7e999e4a7698c70b63a3394ff9704b5f6e1c57e0c16f
 
 inherit cmake lib_package binconfig-disabled pkgconfig
 
+DEPENDS:class-native += "libunwind-native"
+
 BINCONFIG = "${bindir}/sdl2-config"
 
 CVE_PRODUCT = "simple_directmedia_layer sdl"
