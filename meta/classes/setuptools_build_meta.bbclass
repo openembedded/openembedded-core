@@ -1,6 +1,6 @@
 inherit pip_install_wheel setuptools3-base
 
-DEPENDS += "python3 python3-setuptools-native python3-wheel-native"
+DEPENDS += "python3-setuptools-native python3-wheel-native"
 
 setuptools_build_meta_do_configure () {
     mkdir -p ${S}/dist
