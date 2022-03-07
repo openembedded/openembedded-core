@@ -19,8 +19,6 @@ DEPENDS += "iso-codes util-linux zlib"
 
 inherit gobject-introspection
 
-PACKAGES_DYNAMIC =+ "^libgst.*"
-
 # opengl packageconfig factored out to make it easy for distros
 # and BSP layers to choose OpenGL APIs/platforms/window systems
 PACKAGECONFIG_GL ?= "${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gles2 egl', '', d)}"
