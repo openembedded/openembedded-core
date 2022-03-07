@@ -20,29 +20,21 @@ PIP_INSTALL_ARGS ?= "\
     --prefix=${prefix} \
 "
 
-pip_install_wheel_do_install:prepend () {
-    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-}
-
-export PYPA_WHEEL
-
 PIP_INSTALL_PYTHON = "python3"
 PIP_INSTALL_PYTHON:class-native = "nativepython3"
 
 pip_install_wheel_do_install () {
     nativepython3 -m pip install ${PIP_INSTALL_ARGS} ${PYPA_WHEEL} ||
-    bbfatal_log "Failed to pip install wheel. Check the logs."
+      bbfatal_log "Failed to pip install wheel. Check the logs."
 
+    cd ${D}
     for i in ${D}${bindir}/* ${D}${sbindir}/*; do
         if [ -f "$i" ]; then
             sed -i -e "1s,#!.*nativepython3,#!${USRBINPATH}/env ${PIP_INSTALL_PYTHON}," $i
             sed -i -e "s:${PYTHON}:${USRBINPATH}/env\ ${PIP_INSTALL_PYTHON}:g" $i
             sed -i -e "s:${STAGING_BINDIR_NATIVE}:${bindir}:g" $i
-            # Recompile after modifying it
-            cd ${D}
-            file=`echo $i | sed 's:^${D}/::'`
-            ${STAGING_BINDIR_NATIVE}/python3-native/python3 -c "from py_compile import compile; compile('$file')"
-            cd -
+            # Not everything we find may be Python, so ignore errors
+            nativepython3 -mpy_compile $(realpath --relative-to=${D} $i) || true
         fi
     done
 }
