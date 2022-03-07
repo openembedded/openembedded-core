@@ -282,6 +282,7 @@ def expand_wildcard_licenses(d, wildcard_licenses):
     """
     licenses = set(wildcard_licenses)
     mapping = {
+        "AGPL-3.0*" : ["AGPL-3.0-only", "AGPL-3.0-or-later"],
         "GPL-3.0*" : ["GPL-3.0-only", "GPL-3.0-or-later"],
         "LGPL-3.0*" : ["LGPL-3.0-only", "LGPL-3.0-or-later"],
     }
