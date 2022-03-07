@@ -13,7 +13,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://Makefile-Do-not-fail-if-CONFIG_TRACEPOINTS-is-not-en.patch \
            "
 
-SRC_URI[sha256sum] = "95ac2a2cf92d85d23ffbdaca6a1ec0d7c167211d1e0fb850ab90004a3f475eaa"
+SRC_URI[sha256sum] = "32ab2d17d513cd2f458f8844c66a0d013283301fc7329b55d6503153cf8cb253"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
