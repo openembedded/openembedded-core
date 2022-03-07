@@ -45,7 +45,6 @@ EOF
 }
 
 do_install:append() {
-    # Install as pip3 and leave pip2 as default
     if [ -e ${D}/${bindir}/pip ]; then
         rm ${D}/${bindir}/pip
     fi
