@@ -10,7 +10,7 @@ PIP_INSTALL_PACKAGE ?= "${@guess_pip_install_package_name(d)}"
 PIP_INSTALL_DIST_PATH ?= "${@d.getVar('SETUPTOOLS_SETUP_PATH') or d.getVar('B')}/dist"
 PYPA_WHEEL ??= "${PIP_INSTALL_DIST_PATH}/${PIP_INSTALL_PACKAGE}-*-*.whl"
 
-PIP_INSTALL_ARGS ?= "\
+PIP_INSTALL_ARGS = "\
     -vvvv \
     --ignore-installed \
     --no-cache \
