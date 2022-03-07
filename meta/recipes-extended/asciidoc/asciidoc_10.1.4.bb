@@ -5,11 +5,12 @@ articles, books and UNIX man pages."
 HOMEPAGE = "http://asciidoc.org/"
 
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4e5d1baf6f20559e3bec172226a47e4e \
-                    file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263 "
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=aaee33adce0fc7cc40fee23f82f7f101 \
+                    file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    "
 
 SRC_URI = "git://github.com/asciidoc/asciidoc-py;protocol=https;branch=main"
-SRCREV = "342639edbbc0dcc64354a0291d2214d4d5e65cab"
+SRCREV = "c724bbf95b1840b04bb298a61a72b6a5ea94c2ef"
 
 DEPENDS = "libxml2-native libxslt-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
 
