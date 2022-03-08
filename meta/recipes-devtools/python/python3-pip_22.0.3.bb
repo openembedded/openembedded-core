@@ -18,13 +18,10 @@ SRC_URI += "file://reproducible.patch"
 
 SRC_URI[sha256sum] = "f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0"
 
-PYPA_WHEEL ?= "${B}/dist/${PYPI_PACKAGE}-${PV}-*.whl"
-
 do_install:class-native() {
     # Bootstrap to prevent dependency loop in python3-pip-native
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PYPA_WHEEL} || \
-    bbfatal_log "Failed to unzip wheel: ${PYPA_WHEEL}. Check the logs."
+    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PIP_INSTALL_DIST_PATH}/*.whl
 
     # pip install would normally generate [console_scripts] in ${bindir}
     install -d ${D}/${bindir}
