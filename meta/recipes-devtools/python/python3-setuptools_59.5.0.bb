@@ -21,13 +21,10 @@ DEPENDS += "${PYTHON_PN}"
 DEPENDS:remove:class-native = "python3-pip-native python3-setuptools-native"
 DEPENDS:append:class-native = " unzip-native"
 
-PYPA_WHEEL ?= "${B}/dist/${PYPI_PACKAGE}-${PV}-*.whl"
-
 do_install:class-native() {
     # Bootstrap to prevent dependency loop in python3-pip-native
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PYPA_WHEEL} || \
-    bbfatal_log "Failed to unzip wheel: ${PYPA_WHEEL}. Check the logs."
+    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PIP_INSTALL_DIST_PATH}/*.whl
 }
 
 RDEPENDS:${PN} = "\
