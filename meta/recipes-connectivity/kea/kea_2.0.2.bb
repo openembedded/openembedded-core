@@ -3,7 +3,7 @@ DESCRIPTION = "Kea is the next generation of DHCP software developed by ISC. It 
 HOMEPAGE = "http://kea.isc.org"
 SECTION = "connectivity"
 LICENSE = "MPL-2.0 & Apache-2.0"
-LIC_FILES_CHKSUM = "file://COPYING;md5=07b7477a1d815a4aacab73b1531f577a"
+LIC_FILES_CHKSUM = "file://COPYING;md5=b4ecee995eeb6780a17dd7e539e97abc"
 
 DEPENDS = "boost log4cplus openssl"
 
@@ -18,7 +18,7 @@ SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.gz \
            file://fix_pid_keactrl.patch \
            file://0001-src-lib-log-logger_unittest_support.cc-do-not-write-.patch \
            "
-SRC_URI[sha256sum] = "f50bb9a954e314316b4033a175dc807496bb9c1754110bd92a21c165a9e84c57"
+SRC_URI[sha256sum] = "8d28213bdc8e2bb870a383b30ac1e53d54e1eba43d2f86e5151b08b66aa6cf32"
 
 inherit autotools systemd update-rc.d upstream-version-is-even
 
