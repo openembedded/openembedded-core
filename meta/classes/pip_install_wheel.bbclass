@@ -7,7 +7,12 @@ def guess_pip_install_package_name(d):
     return name.replace('-', '_')
 
 PIP_INSTALL_PACKAGE ?= "${@guess_pip_install_package_name(d)}"
-PIP_INSTALL_DIST_PATH ?= "${@d.getVar('SETUPTOOLS_SETUP_PATH') or d.getVar('B')}/dist"
+
+# The directory where wheels should be written too. Build classes
+# will ideally [cleandirs] this but we don't do that here in case
+# a recipe wants to install prebuilt wheels.
+PIP_INSTALL_DIST_PATH ?= "${WORKDIR}/dist"
+
 PYPA_WHEEL ??= "${PIP_INSTALL_DIST_PATH}/${PIP_INSTALL_PACKAGE}-*-*.whl"
 
 PIP_INSTALL_ARGS = "\
