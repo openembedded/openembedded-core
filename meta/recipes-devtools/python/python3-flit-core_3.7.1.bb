@@ -10,30 +10,21 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=41eb78fa8a872983a882c694a8305f08"
 
 SRC_URI[sha256sum] = "3c9bd9c140515bfe62dd938c6610d10d6efb9e35cc647fc614fe5fb3a5036682"
 
-inherit pip_install_wheel python3native python3-dir pypi setuptools3-base
+inherit pypi flit_core
 
+# Need to install by hand as there's a dependency loop
 DEPENDS:remove:class-native = " python3-pip-native"
 DEPENDS:append:class-native = " unzip-native"
 
 # We need the full flit tarball
 PYPI_PACKAGE = "flit"
-
+PEP517_SOURCE_PATH = "${S}/flit_core"
 PIP_INSTALL_PACKAGE = "flit_core"
-PIP_INSTALL_DIST_PATH = "${S}/flit_core/dist"
-
-do_compile () {
-    nativepython3 flit_core/build_dists.py
-}
 
 do_install:class-native () {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ./flit_core/dist/flit_core-${PV}-py3-none-any.whl
+    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PIP_INSTALL_DIST_PATH}/flit_core*.whl
 }
-
-FILES:${PN} += "\
-    ${PYTHON_SITEPACKAGES_DIR}/flit_core/* \
-    ${PYTHON_SITEPACKAGES_DIR}/flit_core-${PV}.dist-info/* \
-"
 
 PACKAGES =+ "${PN}-tests"
 
@@ -42,4 +33,3 @@ FILES:${PN}-tests += "\
 "
 
 BBCLASSEXTEND = "native nativesdk"
-
