@@ -17,11 +17,11 @@ setuptools3_do_compile() {
         STAGING_INCDIR=${STAGING_INCDIR} \
         STAGING_LIBDIR=${STAGING_LIBDIR} \
         ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} setup.py \
-        bdist_wheel --verbose ${SETUPTOOLS_BUILD_ARGS} || \
+        bdist_wheel --verbose --dist-dir ${PIP_INSTALL_DIST_PATH} ${SETUPTOOLS_BUILD_ARGS} || \
         bbfatal_log "'${PYTHON_PN} setup.py bdist_wheel ${SETUPTOOLS_BUILD_ARGS}' execution failed."
 }
 setuptools3_do_compile[vardepsexclude] = "MACHINE"
-do_compile[cleandirs] += "${SETUPTOOLS_SETUP_PATH}/dist"
+do_compile[cleandirs] += "${PIP_INSTALL_DIST_PATH}"
 
 setuptools3_do_install() {
         pip_install_wheel_do_install
