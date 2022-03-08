@@ -8,8 +8,8 @@ flit_core_do_configure () {
 
 # TODO: ideally this uses pypa/build
 flit_core_do_compile () {
-    mkdir -p ${S}/dist
-    nativepython3 -c "from flit_core import buildapi; buildapi.build_wheel('./dist')"
+    nativepython3 -mflit_core.wheel --outdir ${PIP_INSTALL_DIST_PATH}
 }
+do_compile[cleandirs] += "${PIP_INSTALL_DIST_PATH}"
 
 EXPORT_FUNCTIONS do_configure do_compile
