@@ -5,8 +5,8 @@ Ssh (Secure Shell) is a program for logging into a remote machine \
 and for executing commands on a remote machine."
 HOMEPAGE = "http://www.openssh.com/"
 SECTION = "console/network"
-LICENSE = "BSD-2-Clause & BSD-3-Clause & BSD-4-Clause & ISC & MIT"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=d9d2753bdef9f19466dc7bc959114b11"
+LICENSE = "BSD-2-Clause & BSD-3-Clause & ISC & MIT"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=8baf365614c9bdd63705f298c9afbfb9"
 
 DEPENDS = "zlib openssl virtual/crypt"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
@@ -24,8 +24,9 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
            file://sshd_check_keys \
            file://add-test-support-for-busybox.patch \
+           file://f107467179428a0e3ea9e4aa9738ac12ff02822d.patch \
            "
-SRC_URI[sha256sum] = "4590890ea9bb9ace4f71ae331785a3a5823232435161960ed5fc86588f331fe9"
+SRC_URI[sha256sum] = "fd497654b7ab1686dac672fb83dfb4ba4096e8b5ffcdaccd262380ae58bec5e7"
 
 # This CVE is specific to OpenSSH with the pam opie which we don't build/use here
 CVE_CHECK_IGNORE += "CVE-2007-2768"
@@ -76,6 +77,9 @@ EXTRA_OECONF = "'LOGIN_PROGRAM=${base_bindir}/login' \
 # musl doesn't implement wtmp/utmp and logwtmp
 EXTRA_OECONF:append:libc-musl = " --disable-wtmp --disable-lastlog"
 
+# https://bugzilla.mindrot.org/show_bug.cgi?id=3398
+EXTRA_OECONF:append:powerpc = " --with-sandbox=no"
+
 # Since we do not depend on libbsd, we do not want configure to use it
 # just because it finds libutil.h.  But, specifying --disable-libutil
 # causes compile errors, so...
@@ -94,10 +98,7 @@ do_configure:prepend () {
 }
 
 do_compile_ptest() {
-        # skip regress/unittests/ binaries: this will silently skip
-        # unittests in run-ptests which is good because they are so slow.
-        oe_runmake regress/modpipe regress/setuid-allowed regress/netcat \
-                   regress/check-perm regress/mkdtemp
+	oe_runmake regress-binaries regress-unit-binaries
 }
 
 do_install:append () {
@@ -145,6 +146,7 @@ do_install:append () {
 do_install_ptest () {
 	sed -i -e "s|^SFTPSERVER=.*|SFTPSERVER=${libexecdir}/sftp-server|" regress/test-exec.sh
 	cp -r regress ${D}${PTEST_PATH}
+	cp config.h ${D}${PTEST_PATH}
 }
 
 ALLOW_EMPTY:${PN} = "1"
