@@ -441,7 +441,8 @@ def package_qa_hash_style(path, name, d, elf, messages):
 QAPATHTEST[buildpaths] = "package_qa_check_buildpaths"
 def package_qa_check_buildpaths(path, name, d, elf, messages):
     """
-    Check for build paths inside target files and error if not found in the whitelist
+    Check for build paths inside target files and error if paths are not
+    explicitly ignored.
     """
     # Ignore .debug files, not interesting
     if path.find(".debug") != -1:
@@ -1283,8 +1284,8 @@ Rerun configure task after fixing this."""
             options = set()
             for line in output.splitlines():
                 options |= set(line.partition(flag)[2].split())
-            whitelist = set(d.getVar("UNKNOWN_CONFIGURE_OPT_IGNORE").split())
-            options -= whitelist
+            ignore_opts = set(d.getVar("UNKNOWN_CONFIGURE_OPT_IGNORE").split())
+            options -= ignore_opts
             if options:
                 pn = d.getVar('PN')
                 error_msg = pn + ": configure was passed unrecognised options: " + " ".join(options)
