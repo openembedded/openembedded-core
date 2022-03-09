@@ -28,7 +28,6 @@ do_install:append() {
     install -d ${D}${mandir}/man1
     mv ${D}${prefix}/scons*.1 ${D}${mandir}/man1/
 }
-FILES:${PN}-doc += "${mandir}/man1/scons*.1"
 
 do_install:append:class-native() {
     create_wrapper ${D}${bindir}/scons SCONS_LIB_DIR='${STAGING_DIR_HOST}/${PYTHON_SITEPACKAGES_DIR}' PYTHONNOUSERSITE='1'
