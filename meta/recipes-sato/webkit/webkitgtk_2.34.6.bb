@@ -98,6 +98,9 @@ EXTRA_OECMAKE:append:arc = " -DENABLE_JIT=OFF "
 CFLAGS:append:arc = " -mlong-calls"
 CXXFLAGS:append:arc = " -mlong-calls"
 
+# Needed for non-mesa graphics stacks when x11 is disabled
+CXXFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', '-DEGL_NO_X11=1', d)}"
+
 # Javascript JIT is not supported on powerpc
 EXTRA_OECMAKE:append:powerpc = " -DENABLE_JIT=OFF "
 EXTRA_OECMAKE:append:powerpc64 = " -DENABLE_JIT=OFF "
