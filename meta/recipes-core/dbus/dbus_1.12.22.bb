@@ -5,10 +5,7 @@ SECTION = "base"
 
 require dbus.inc
 
-DEPENDS = "expat virtual/libintl autoconf-archive"
-PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'ptest', '${PN}-ptest', '', d)}"
-ALLOW_EMPTY:dbus-ptest = "1"
-RDEPENDS:dbus-ptest:class-target = "dbus-test-ptest"
+DEPENDS = "expat virtual/libintl autoconf-archive glib-2.0"
 RDEPENDS:${PN} += "${PN}-common ${PN}-tools"
 RDEPENDS:${PN}:class-native = ""
 
@@ -73,6 +70,8 @@ FILES:${PN}-lib = "${libdir}/lib*.so.*"
 RRECOMMENDS:${PN}-lib = "${PN}"
 FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-test-tool ${datadir}/xml/dbus-1"
 
+RDEPENDS:${PN}-ptest += "bash make dbus"
+
 PACKAGE_WRITE_DEPS += "${@bb.utils.contains('DISTRO_FEATURES','systemd sysvinit','systemd-systemctl-native','',d)}"
 pkg_postinst:dbus() {
 	# If both systemd and sysvinit are enabled, mask the dbus-1 init script
@@ -88,8 +87,6 @@ pkg_postinst:dbus() {
 	fi
 }
 
-
-EXTRA_OECONF += "--disable-tests"
 
 do_install() {
 	autotools_do_install
@@ -149,5 +146,3 @@ do_install:class-nativesdk() {
 	rm -rf ${D}${localstatedir}/run
 }
 BBCLASSEXTEND = "native nativesdk"
-
-INSANE_SKIP:${PN}-ptest += "build-deps"
