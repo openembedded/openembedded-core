@@ -3,7 +3,45 @@ DESCRIPTION = "D-Bus is a message bus system, a simple way for applications to t
 HOMEPAGE = "https://dbus.freedesktop.org"
 SECTION = "base"
 
-require dbus.inc
+inherit autotools pkgconfig gettext upstream-version-is-even ptest-gnome
+
+LICENSE = "AFL-2.1 | GPL-2.0-or-later"
+LIC_FILES_CHKSUM = "file://COPYING;md5=10dded3b58148f3f1fd804b26354af3e \
+                    file://dbus/dbus.h;beginline=6;endline=20;md5=7755c9d7abccd5dbd25a6a974538bb3c"
+
+SRC_URI = "https://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.gz \
+           file://run-ptest \
+           file://python-config.patch \
+           file://tmpdir.patch \
+           file://dbus-1.init \
+           file://clear-guid_from_server-if-send_negotiate_unix_f.patch \
+           file://stop_using_selinux_set_mapping.patch \
+"
+
+SRC_URI[sha256sum] = "8d25785c798ec4f892e6f9d177fb0ceeb8b29867b119798f9d5228561d3ad474"
+
+EXTRA_OECONF = "--disable-xml-docs \
+                --disable-doxygen-docs \
+                --enable-largefile \
+                --with-system-socket=/run/dbus/system_bus_socket \
+                --enable-tests \
+                --enable-checks \
+                --enable-asserts \
+                "
+EXTRA_OECONF:append:class-target = " SYSTEMCTL=${base_bindir}/systemctl"
+
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)} \
+                   user-session \
+                  "
+PACKAGECONFIG:class-native = ""
+PACKAGECONFIG:class-nativesdk = ""
+
+PACKAGECONFIG[systemd] = "--enable-systemd --with-systemdsystemunitdir=${systemd_system_unitdir},--disable-systemd --without-systemdsystemunitdir,systemd"
+PACKAGECONFIG[x11] = "--with-x --enable-x11-autolaunch,--without-x --disable-x11-autolaunch, virtual/libx11 libsm"
+PACKAGECONFIG[user-session] = "--enable-user-session --with-systemduserunitdir=${systemd_user_unitdir},--disable-user-session"
+PACKAGECONFIG[verbose-mode] = "--enable-verbose-mode,,,"
+PACKAGECONFIG[audit] = "--enable-libaudit,--disable-libaudit,audit"
+PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux"
 
 DEPENDS = "expat virtual/libintl autoconf-archive glib-2.0"
 RDEPENDS:${PN} += "${PN}-common ${PN}-tools"
