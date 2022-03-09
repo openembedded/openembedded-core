@@ -1,19 +1,9 @@
 DEPENDS:append = " python3-pip-native"
 
-def guess_pip_install_package_name(d):
-    import re
-    '''https://www.python.org/dev/peps/pep-0491/#escaping-and-unicode'''
-    name = d.getVar('PYPI_PACKAGE') or re.sub(r"^python3-", "", d.getVar('BPN'))
-    return name.replace('-', '_')
-
-PIP_INSTALL_PACKAGE ?= "${@guess_pip_install_package_name(d)}"
-
 # The directory where wheels should be written too. Build classes
 # will ideally [cleandirs] this but we don't do that here in case
 # a recipe wants to install prebuilt wheels.
 PIP_INSTALL_DIST_PATH ?= "${WORKDIR}/dist"
-
-PYPA_WHEEL ??= "${PIP_INSTALL_DIST_PATH}/${PIP_INSTALL_PACKAGE}-*-*.whl"
 
 PIP_INSTALL_ARGS = "\
     -vvvv \
@@ -29,8 +19,14 @@ PIP_INSTALL_PYTHON = "python3"
 PIP_INSTALL_PYTHON:class-native = "nativepython3"
 
 pip_install_wheel_do_install () {
-    nativepython3 -m pip install ${PIP_INSTALL_ARGS} ${PYPA_WHEEL} ||
-      bbfatal_log "Failed to pip install wheel. Check the logs."
+    COUNT=$(find ${PIP_INSTALL_DIST_PATH} -name '*.whl' | wc -l)
+    if test $COUNT -eq 0; then
+        bbfatal No wheels found in ${PIP_INSTALL_DIST_PATH}
+    elif test $COUNT -gt 1; then
+        bbfatal More than one wheel found in ${PIP_INSTALL_DIST_PATH}, this should not happen
+    fi
+
+    nativepython3 -m pip install ${PIP_INSTALL_ARGS} ${PIP_INSTALL_DIST_PATH}/*.whl
 
     cd ${D}
     for i in ${D}${bindir}/* ${D}${sbindir}/*; do
