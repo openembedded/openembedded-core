@@ -1,0 +1,37 @@
+From c3b90d6107a1b638477d5f4dcee48af289647af7 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 9 Mar 2022 12:52:51 -0800
+Subject: [PATCH] ltmain.in: Parse additional clang options
+
+clang uses -rtlib and --unwindlib to select proper compiler runtime in
+some cases. There fore pass these options to linker when found in
+ldflags
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ build-aux/ltmain.in | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 6a7bb72..c355c0c 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5423,10 +5423,13 @@ func_mode_link ()
+       # --sysroot=*          for sysroot support
+       # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+       # -stdlib=*            select c++ std lib with clang
++      # -rtlib=*             select c runtime lib with clang
++      # --unwindlib=*        select unwinder library with clang
+       # -f*-prefix-map*      needed for lto linking
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*|-f*-prefix-map*)
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
++      -rtlib=*|--unwindlib=*|-f*-prefix-map*)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"
+-- 
+2.35.1
+
