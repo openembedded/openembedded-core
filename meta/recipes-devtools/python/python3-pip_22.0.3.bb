@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=63ec52baf95163b597008bb46db68030"
 
 inherit pypi setuptools_build_meta
 
-DEPENDS += "python3 python3-setuptools-native"
+DEPENDS += "python3"
 
 # To avoid a dependency loop; we bootstrap -native
 DEPENDS:remove:class-native = "python3-pip-native"
