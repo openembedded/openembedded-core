@@ -6,9 +6,9 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=715a99d2dd552e6188e74d4ed2914d5a"
 
-SRC_URI = "git://git.sr.ht/~kennylevinsen/seatd;protocol=https;branch=master \
+SRC_URI = "git://git.sr.ht/~kennylevinsen/seatd;protocol=https;nobranch=1 \
            file://init"
-SRCREV = "88db55f6068c1c01d85b61aa6adff0a6b2a8dce8"
+SRCREV = "df13d03f9cfd0dc0c2b3298cd0e5eb4e4a10835e"
 S = "${WORKDIR}/git"
 
 inherit meson pkgconfig update-rc.d
