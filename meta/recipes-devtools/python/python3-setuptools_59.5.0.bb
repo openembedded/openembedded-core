@@ -22,9 +22,7 @@ DEPENDS:remove:class-native = "python3-pip-native python3-setuptools-native"
 DEPENDS:append:class-native = " unzip-native"
 
 do_install:class-native() {
-    # Bootstrap to prevent dependency loop in python3-pip-native
-    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PIP_INSTALL_DIST_PATH}/*.whl
+    pip_install_wheel_do_bootstrap_install
 }
 
 RDEPENDS:${PN} = "\

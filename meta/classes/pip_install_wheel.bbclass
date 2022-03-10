@@ -40,4 +40,10 @@ pip_install_wheel_do_install () {
     done
 }
 
+# A manual do_install that just uses unzip for bootstrapping purposes. Callers should DEPEND on unzip-native.
+pip_install_wheel_do_bootstrap_install () {
+    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
+    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PIP_INSTALL_DIST_PATH}/*.whl
+}
+
 EXPORT_FUNCTIONS do_install

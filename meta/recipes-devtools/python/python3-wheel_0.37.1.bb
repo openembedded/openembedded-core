@@ -13,9 +13,7 @@ SRC_URI += " file://0001-Backport-pyproject.toml-from-flit-backend-branch.patch"
 DEPENDS:remove:class-native = "python3-pip-native"
 
 do_install:class-native () {
-    # We need to bootstrap python3-wheel-native
-    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PIP_INSTALL_DIST_PATH}/*.whl
+    pip_install_wheel_do_bootstrap_install
 
     # pip install would normally generate [project.scripts] in ${bindir}
     install -d ${D}/${bindir}
