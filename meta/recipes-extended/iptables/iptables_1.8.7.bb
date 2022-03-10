@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
+           file://0001-Makefile.am-do-not-install-etc-ethertypes.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
            file://iptables.service \
            file://iptables.rules \
