@@ -2,9 +2,6 @@ inherit setuptools3-base python_pep517
 
 DEPENDS += "python3-setuptools-native python3-wheel-native"
 
-# Where to execute the build process from
-PEP517_SOURCE_PATH ?= "${S}"
-
 setuptools_build_meta_do_configure () {
     :
 }

@@ -6,9 +6,6 @@ flit_core_do_configure () {
     :
 }
 
-# Where to execute the build process from
-PEP517_SOURCE_PATH ?= "${S}"
-
 # TODO: ideally this uses pypa/build
 flit_core_do_compile () {
     cd ${PEP517_SOURCE_PATH}

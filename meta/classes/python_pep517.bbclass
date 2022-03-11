@@ -3,6 +3,9 @@
 
 DEPENDS:append = " python3-pip-native"
 
+# Where to execute the build process from
+PEP517_SOURCE_PATH ?= "${S}"
+
 # The directory where wheels should be written too. Build classes
 # will ideally [cleandirs] this but we don't do that here in case
 # a recipe wants to install prebuilt wheels.
