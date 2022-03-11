@@ -22,7 +22,7 @@ DEPENDS:remove:class-native = "python3-pip-native python3-setuptools-native"
 DEPENDS:append:class-native = " unzip-native"
 
 do_install:class-native() {
-    pip_install_wheel_do_bootstrap_install
+    python_pep517_do_bootstrap_install
 }
 
 RDEPENDS:${PN} = "\

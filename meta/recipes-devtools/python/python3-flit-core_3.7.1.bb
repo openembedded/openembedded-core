@@ -21,7 +21,7 @@ PYPI_PACKAGE = "flit"
 PEP517_SOURCE_PATH = "${S}/flit_core"
 
 do_install:class-native () {
-    pip_install_wheel_do_bootstrap_install
+    python_pep517_do_bootstrap_install
 }
 
 PACKAGES =+ "${PN}-tests"
