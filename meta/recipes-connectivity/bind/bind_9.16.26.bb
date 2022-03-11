@@ -23,8 +23,8 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.xz \
 SRC_URI[sha256sum] = "70b39a5eb71650358ec9ba41da3050d32aeac0aeb4a466684b23f35affa7fb45"
 
 UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
-# stay at 9.16 follow the ESV versions divisible by 4
-UPSTREAM_CHECK_REGEX = "(?P<pver>9.(16|20|24|28)(\.\d+)+(-P\d+)*)/"
+# follow the ESV versions divisible by 2
+UPSTREAM_CHECK_REGEX = "(?P<pver>9.(\d*[02468])+(\.\d+)+(-P\d+)*)/"
 
 # Issue only affects dhcpd with recent bind versions. We don't ship dhcpd anymore
 # so the issue doesn't affect us.
