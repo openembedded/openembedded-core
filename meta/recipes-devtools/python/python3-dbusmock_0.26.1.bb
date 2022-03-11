@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e6a600fd5e1d9cbde2d983680233ad02"
 SRC_URI[sha256sum] = "0e95ef6ec1e6b58aeb0e08839a76972debea94184570f09e29e5f12551399e55"
 
 PYPI_PACKAGE = "python-dbusmock"
-PIP_INSTALL_PACKAGE = "python_dbusmock"
 
 inherit pypi setuptools3
 

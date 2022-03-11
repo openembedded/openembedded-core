@@ -20,7 +20,6 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 DEPENDS += "python3-cython-native"
 
 inherit ptest setuptools3
-PIP_INSTALL_PACKAGE = "numpy"
 
 S = "${WORKDIR}/numpy-${PV}"
 

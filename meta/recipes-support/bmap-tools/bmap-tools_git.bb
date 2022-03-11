@@ -23,6 +23,4 @@ RDEPENDS:${PN} = "python3-core python3-compression python3-mmap python3-setuptoo
 
 inherit setuptools3
 
-PIP_INSTALL_PACKAGE = "bmap_tools"
-
 BBCLASSEXTEND = "native nativesdk"

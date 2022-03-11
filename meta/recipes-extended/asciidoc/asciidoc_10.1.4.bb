@@ -21,7 +21,6 @@ S = "${WORKDIR}/git"
 export SGML_CATALOG_FILES="file://${STAGING_ETCDIR_NATIVE}/xml/catalog"
 
 inherit setuptools3
-PIP_INSTALL_PACKAGE = "asciidoc"
 CLEANBROKEN = "1"
 
 BBCLASSEXTEND = "native nativesdk"

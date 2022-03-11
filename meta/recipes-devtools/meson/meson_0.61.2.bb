@@ -23,8 +23,6 @@ UPSTREAM_CHECK_REGEX = "meson-(?P<pver>\d+(\.\d+)+)\.tar"
 
 inherit setuptools_build_meta
 
-PIP_INSTALL_PACKAGE = "meson"
-
 RDEPENDS:${PN} = "ninja python3-modules python3-pkg-resources"
 
 FILES:${PN} += "${datadir}/polkit-1"

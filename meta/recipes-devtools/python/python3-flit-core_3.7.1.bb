@@ -19,7 +19,6 @@ DEPENDS:append:class-native = " unzip-native"
 # We need the full flit tarball
 PYPI_PACKAGE = "flit"
 PEP517_SOURCE_PATH = "${S}/flit_core"
-PIP_INSTALL_PACKAGE = "flit_core"
 
 do_install:class-native () {
     pip_install_wheel_do_bootstrap_install
