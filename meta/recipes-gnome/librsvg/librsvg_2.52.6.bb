@@ -14,7 +14,7 @@ SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libcroco libxml2 pango"
 BBCLASSEXTEND = "native"
 
-inherit gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspection rust
+inherit gnomebase gtk-doc pixbufcache upstream-version-is-even gobject-introspection rust vala
 
 SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
            file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
