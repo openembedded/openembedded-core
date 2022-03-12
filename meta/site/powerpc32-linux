@@ -241,10 +241,3 @@ samba_cv_have_setresuid=${samba_cv_have_setresuid=yes}
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=no}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
-
-
-# libc
-libc_cv_ppc_machine=${libc_cv_ppc_machine=yes}
-libc_cv_mlong_double_128ibm=${libc_cv_mlong_double_128ibm=yes}
-libc_cv_mabi_ibmlongdouble=${libc_cv_mabi_ibmlongdouble=yes}
-libc_cv_mlong_double_128=${libc_cv_mlong_double_128=yes}
