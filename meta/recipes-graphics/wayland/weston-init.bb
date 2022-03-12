@@ -17,6 +17,7 @@ S = "${WORKDIR}"
 PACKAGECONFIG ??= ""
 
 PACKAGECONFIG[no-idle-timeout] = ",,"
+PACKAGECONFIG[use-pixman] = ",,"
 
 DEFAULTBACKEND ??= ""
 DEFAULTBACKEND:qemuall ?= "drm"
@@ -49,6 +50,10 @@ do_install() {
 
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'no-idle-timeout', 'yes', 'no', d)}" = "yes" ]; then
 		sed -i -e "/^\[core\]/a idle-time=0" ${D}${sysconfdir}/xdg/weston/weston.ini
+	fi
+
+	if [ "${@bb.utils.contains('PACKAGECONFIG', 'use-pixman', 'yes', 'no', d)}" = "yes" ]; then
+		sed -i -e "/^\[core\]/a use-pixman=true" ${D}${sysconfdir}/xdg/weston/weston.ini
 	fi
 
 	install -dm 755 -o weston -g weston ${D}/home/weston
