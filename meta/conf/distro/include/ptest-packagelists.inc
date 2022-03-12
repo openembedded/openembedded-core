@@ -86,6 +86,7 @@ PTESTS_SLOW = "\
     openssh-ptest \
     openssl-ptest \
     perl-ptest \
+    python3-cryptography-ptest \
     python3-ptest \
     strace-ptest \
     tcl-ptest \
