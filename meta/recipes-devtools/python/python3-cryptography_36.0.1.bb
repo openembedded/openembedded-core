@@ -18,7 +18,7 @@ SRC_URI += " \
     file://0002-Cargo.toml-edition-2018-2021.patch \
 "
 
-inherit pypi setuptools3_rust
+inherit pypi python_setuptools3_rust
 
 PIP_INSTALL_DIST_PATH = "${S}/dist"
 
