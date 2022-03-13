@@ -13,7 +13,7 @@ export RUSTFLAGS
 export PYO3_PYTHON="${PYTHON}"
 export PYO3_CONFIG_FILE="${WORKDIR}/pyo3.config"
 
-pyo3_do_configure () {
+python_pyo3_do_configure () {
     cat > ${WORKDIR}/pyo3.config << EOF
 implementation=CPython
 version=${PYTHON_BASEVERSION}
