@@ -27,7 +27,6 @@ do_compile() {
 	./make.bash ${GOMAKEARGS}
 	cd ${B}
 }
-do_compile[dirs] =+ "${GOTMPDIR} ${B}/bin"
 do_compile[cleandirs] += "${GOTMPDIR} ${B}/bin"
 
 make_wrapper() {
