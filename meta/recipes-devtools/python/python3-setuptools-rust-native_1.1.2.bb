@@ -17,10 +17,6 @@ SRC_URI[sha256sum] = "a0adb9b503c0ffc4e8fe80b7c617898cefa78049983aaaea7f747e153a
 # until that can be resolved
 inherit cargo pypi setuptools3 native
 
-# For some reason the wheel is built in ${S} not ${B}
-PIP_INSTALL_DIST_PATH = "${S}/dist"
-PIP_INSTALL_PACKAGE = "setuptools_rust"
-
 DEPENDS += "python3-setuptools-scm-native python3-wheel-native"
 
 RDEPENDS:${PN}:class-native += " \
