@@ -21,8 +21,6 @@ SRC_URI += " \
 
 inherit pypi python_setuptools3_rust
 
-PIP_INSTALL_DIST_PATH = "${S}/dist"
-
 DEPENDS += " \
     ${PYTHON_PN}-asn1crypto-native \
     ${PYTHON_PN}-cffi-native \
