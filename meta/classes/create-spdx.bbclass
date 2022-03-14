@@ -600,7 +600,7 @@ python do_create_spdx_setscene () {
 }
 addtask do_create_spdx_setscene
 
-do_create_spdx[dirs] = "${SPDXDEPLOY} ${SPDXWORK}"
+do_create_spdx[dirs] = "${SPDXWORK}"
 do_create_spdx[cleandirs] = "${SPDXDEPLOY} ${SPDXWORK}"
 do_create_spdx[depends] += "${PATCHDEPENDENCY}"
 do_create_spdx[deptask] = "do_create_spdx"
