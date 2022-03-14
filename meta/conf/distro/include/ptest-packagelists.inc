@@ -49,12 +49,14 @@ PTESTS_FAST = "\
     pango-ptest \
     parted-ptest \
     python3-atomicwrites-ptest \
+    python3-bcrypt-ptest \
     python3-hypothesis-ptest \
     python3-jinja2-ptest \
     python3-jsonpointer-ptest \
     python3-markupsafe-ptest \
     python3-more-itertools-ptest \
     python3-pluggy-ptest \
+    python3-pytz-ptest \
     python3-wcwidth-ptest \
     python3-webcolors-ptest \
     qemu-ptest \
