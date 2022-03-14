@@ -17,14 +17,6 @@ SRC_URI[sha256sum] = "d144f85102f999444d06f9c0e8c737fd0194f10f2f7e5fdb77573f6e2f
 
 DEPENDS += "${PYTHON_PN}"
 
-# Avoid dependency loop; we bootstrap -native
-DEPENDS:remove:class-native = "python3-pip-native python3-setuptools-native"
-DEPENDS:append:class-native = " unzip-native"
-
-do_install:class-native() {
-    python_pep517_do_bootstrap_install
-}
-
 RDEPENDS:${PN} = "\
     ${PYTHON_PN}-2to3 \
     ${PYTHON_PN}-compile \
@@ -59,3 +51,7 @@ RDEPENDS:${PYTHON_PN}-pkg-resources = "\
     ${PYTHON_PN}-plistlib \
     ${PYTHON_PN}-pprint \
 "
+
+# This used to use the bootstrap install which didn't compile. Until we bump the
+# tmpdir version we can't compile the native otherwise the sysroot unpack fails
+INSTALL_WHEEL_COMPILE_BYTECODE:class-native = "--no-compile-bytecode"

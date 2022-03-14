@@ -10,26 +10,8 @@ inherit flit_core pypi
 
 SRC_URI += " file://0001-Backport-pyproject.toml-from-flit-backend-branch.patch"
 
-DEPENDS:remove:class-native = "python3-pip-native"
-
-do_install:class-native () {
-    python_pep517_do_bootstrap_install
-
-    # pip install would normally generate [project.scripts] in ${bindir}
-    install -d ${D}/${bindir}
-    cat << EOF >> ${D}/${bindir}/wheel
-#!/bin/sh
-'''exec' ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} "\$0" "\$@"
-' '''
-# -*- coding: utf-8 -*-
-import re
-import sys
-from wheel.cli import main
-if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
-    sys.exit(main())
-EOF
-    chmod 0755 ${D}${bindir}/wheel
-}
-
 BBCLASSEXTEND = "native nativesdk"
+
+# This used to use the bootstrap install which didn't compile. Until we bump the
+# tmpdir version we can't compile the native otherwise the sysroot unpack fails
+INSTALL_WHEEL_COMPILE_BYTECODE:class-native = "--no-compile-bytecode"

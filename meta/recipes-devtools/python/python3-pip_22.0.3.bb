@@ -6,43 +6,14 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=63ec52baf95163b597008bb46db68030"
 
 inherit pypi setuptools_build_meta
 
-DEPENDS += "python3"
-
-# To avoid a dependency loop; we bootstrap -native
-DEPENDS:remove:class-native = "python3-pip-native"
-DEPENDS:append:class-native = " unzip-native"
-
 SRC_URI += "file://0001-change-shebang-to-python3.patch"
 SRC_URI += "file://no_shebang_mangling.patch"
 SRC_URI += "file://reproducible.patch"
 
 SRC_URI[sha256sum] = "f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0"
 
-do_install:class-native() {
-    python_pep517_do_bootstrap_install
-
-    # pip install would normally generate [console_scripts] in ${bindir}
-    install -d ${D}/${bindir}
-    # We will skip the ${bindir}/pip variant as we would just remove it in the do_install:append
-    cat << EOF >> ${D}/${bindir}/pip3 | tee ${D}/${bindir}/pip${PYTHON_BASEVERSION}
-#!/bin/sh
-'''exec' ${STAGING_BINDIR_NATIVE}/${PYTHON_PN}-native/${PYTHON_PN} "\$0" "\$@"
-' '''
-# -*- coding: utf-8 -*-
-import re
-import sys
-from pip._internal.cli.main import main
-if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
-    sys.exit(main())
-EOF
-    chmod 0755 ${D}${bindir}/pip3 ${D}${bindir}/pip${PYTHON_BASEVERSION}
-}
-
 do_install:append() {
-    if [ -e ${D}/${bindir}/pip ]; then
-        rm ${D}/${bindir}/pip
-    fi
+    rm -f ${D}/${bindir}/pip
 }
 
 RDEPENDS:${PN} = "\
@@ -59,3 +30,7 @@ RDEPENDS:${PN} = "\
 "
 
 BBCLASSEXTEND = "native nativesdk"
+
+# This used to use the bootstrap install which didn't compile. Until we bump the
+# tmpdir version we can't compile the native otherwise the sysroot unpack fails
+INSTALL_WHEEL_COMPILE_BYTECODE:class-native = "--no-compile-bytecode"
