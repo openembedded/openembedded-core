@@ -271,10 +271,6 @@ def available_licenses(d):
     licenses = sorted(licenses)
     return licenses
 
-# Only determine the list of all available licenses once. This assumes that any
-# additions to LICENSE_PATH have been done before this file is parsed.
-AVAILABLE_LICENSES := "${@' '.join(available_licenses(d))}"
-
 def expand_wildcard_licenses(d, wildcard_licenses):
     """
     There are some common wildcard values users may want to use. Support them
