@@ -34,11 +34,6 @@ python do_package:prepend() {
 }
 
 BBCLASSEXTEND = "devupstream:target"
-LIC_FILES_CHKSUM:class-devupstream = "file://LICENSE;md5=0464cff101a009c403cd2ed65d01d4c4"
-DEFAULT_PREFERENCE:class-devupstream = "-1"
 SRC_URI:class-devupstream = "git://git.lttng.org/lttng-modules;branch=stable-2.13"
-
 SRCREV:class-devupstream = "7584cfc04914cb0842a986e9808686858b9c8630"
-PV:class-devupstream = "2.13.1+git${SRCPV}"
-S:class-devupstream = "${WORKDIR}/git"
 SRCREV_FORMAT ?= "lttng_git"
