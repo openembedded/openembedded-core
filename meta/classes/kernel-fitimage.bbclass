@@ -64,6 +64,9 @@ FIT_DESC ?= "Kernel fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 # Sign individual images as well
 FIT_SIGN_INDIVIDUAL ?= "0"
 
+FIT_CONF_PREFIX ?= "conf-"
+FIT_CONF_PREFIX[doc] = "Prefix to use for FIT configuration node name"
+
 # Keys used to sign individually image nodes.
 # The keys to sign image nodes must be different from those used to sign
 # configuration nodes, otherwise the "required" property, from
@@ -358,7 +361,7 @@ fitimage_emit_section_config() {
 	# Test if we have any DTBs at all
 	sep=""
 	conf_desc=""
-	conf_node="conf-"
+	conf_node="${FIT_CONF_PREFIX}"
 	kernel_line=""
 	fdt_line=""
 	ramdisk_line=""
@@ -407,9 +410,9 @@ fitimage_emit_section_config() {
 		# default node is selected based on dtb ID if it is present,
 		# otherwise its selected based on kernel ID
 		if [ -n "$dtb_image" ]; then
-			default_line="default = \"conf-$dtb_image\";"
+			default_line="default = \"${FIT_CONF_PREFIX}$dtb_image\";"
 		else
-			default_line="default = \"conf-$kernel_id\";"
+			default_line="default = \"${FIT_CONF_PREFIX}$kernel_id\";"
 		fi
 	fi
 
