@@ -11,11 +11,9 @@ inherit autotools pkgconfig
 
 DEPENDS = "bison-native flex-native"
 
-SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.bz2 \
-           file://musl-decls-compat.patch \
-           file://module.patch"
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v${PV}/${BP}.tar.gz"
 
-SRC_URI[sha256sum] = "11a2fbf0e42f46089f406b8b0dca7fef04aec2f21600b70e402c5db3661305d7"
+SRC_URI[sha256sum] = "2dd9c566a90a053e7a5f47607e225648ba7aa9bb7763514dd4778e2ed530fe90"
 UPSTREAM_CHECK_URI = "https://github.com/libcgroup/libcgroup/releases/"
 
 DEPENDS:append:libc-musl = " fts "
