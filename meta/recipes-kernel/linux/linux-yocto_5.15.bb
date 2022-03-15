@@ -30,7 +30,6 @@ SRCREV_meta ?= "ea948a0983d7b7820814e5bce4eda3079201bd95"
 # meta SRCREV as the linux-yocto-standard builds. Select your version using the
 # normal PREFERRED_VERSION settings.
 BBCLASSEXTEND = "devupstream:target"
-DEFAULT_PREFERENCE:class-devupstream = "-1"
 SRCREV_machine:class-devupstream ?= "8993e6067f263765fd26edabf3e3012e3ec4d81e"
 PN:class-devupstream = "linux-yocto-upstream"
 KBRANCH:class-devupstream = "v5.15/base"
