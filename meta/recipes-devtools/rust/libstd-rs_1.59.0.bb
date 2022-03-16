@@ -8,3 +8,5 @@ SRC_URI += " \
 "
 # libstd moved from src/libstd to library/std in 1.47+
 S = "${RUSTSRC}/library/std"
+
+BBCLASSEXTEND = "nativesdk"
