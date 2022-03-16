@@ -6,6 +6,9 @@ DEPENDS:append = " python3-installer-native"
 # Where to execute the build process from
 PEP517_SOURCE_PATH ?= "${S}"
 
+# The PEP517 build API entry point
+PEP517_BUILD_API ?= "unset"
+
 # The directory where wheels should be written too. Build classes
 # will ideally [cleandirs] this but we don't do that here in case
 # a recipe wants to install prebuilt wheels.
@@ -15,6 +18,14 @@ PEP517_INSTALL_PYTHON = "python3"
 PEP517_INSTALL_PYTHON:class-native = "nativepython3"
 
 INSTALL_WHEEL_COMPILE_BYTECODE ?= "--compile-bytecode=0"
+
+# When we have Python 3.11 we can parse pyproject.toml to determine the build
+# API entry point directly
+python_pep517_do_compile () {
+    cd ${PEP517_SOURCE_PATH}
+    nativepython3 -c "import ${PEP517_BUILD_API} as api; api.build_wheel('${PEP517_WHEEL_PATH}')"
+}
+do_compile[cleandirs] += "${PEP517_WHEEL_PATH}"
 
 python_pep517_do_install () {
     COUNT=$(find ${PEP517_WHEEL_PATH} -name '*.whl' | wc -l)
@@ -33,4 +44,4 @@ python_pep517_do_bootstrap_install () {
     unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PEP517_WHEEL_PATH}/*.whl
 }
 
-EXPORT_FUNCTIONS do_install
+EXPORT_FUNCTIONS do_compile do_install
