@@ -14,3 +14,5 @@ TOOLCHAIN_HOST_TASK += "\
 TOOLCHAIN_OUTPUTNAME = "${SDK_ARCH}-buildtools-docs-nativesdk-standalone-${DISTRO_VERSION}"
 
 SDK_TITLE = "Docs Build tools tarball"
+
+TESTSDK_CASES = "buildtools-docs-cases"
