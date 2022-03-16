@@ -1,4 +1,5 @@
 SUMMARY = "Universal encoding detector for Python 2 and 3"
+HOMEPAGE = "https://pypi.org/project/chardet/"
 LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a6f89e2100d9b6cdffcea4f398e37343"
 
