@@ -22,6 +22,12 @@ PEP517_INSTALL_PYTHON:class-native = "nativepython3"
 # pypa/installer option to control the bytecode compilation
 INSTALL_WHEEL_COMPILE_BYTECODE ?= "--compile-bytecode=0"
 
+# PEP517 doesn't have a specific configure step, so set an empty do_configure to avoid
+# running base_do_configure.
+python_pep517_do_configure () {
+    :
+}
+
 # When we have Python 3.11 we can parse pyproject.toml to determine the build
 # API entry point directly
 python_pep517_do_compile () {
@@ -47,4 +53,4 @@ python_pep517_do_bootstrap_install () {
     unzip -d ${D}${PYTHON_SITEPACKAGES_DIR} ${PEP517_WHEEL_PATH}/*.whl
 }
 
-EXPORT_FUNCTIONS do_compile do_install
+EXPORT_FUNCTIONS do_configure do_compile do_install
