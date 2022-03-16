@@ -4,7 +4,7 @@ DEPENDS += "python3 python3-flit-core-native"
 
 PEP517_BUILD_API = "flit_core.buildapi"
 
-flit_core_do_configure () {
+python_flit_core_do_configure () {
     :
 }
 

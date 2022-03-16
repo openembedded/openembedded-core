@@ -10,7 +10,7 @@ SRC_URI += "file://interpreter.patch"
 
 SRC_URI[sha256sum] = "f970995ec2bb815e2fdaf7977b26b2091e1e386f0f42eafd5ac811953dc5d445"
 
-inherit pypi flit_core
+inherit pypi python_flit_core
 
 DEPENDS:remove:class-native = "python3-installer-native"
 DEPENDS:append:class-native = " unzip-native"

@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=41eb78fa8a872983a882c694a8305f08"
 
 SRC_URI[sha256sum] = "3c9bd9c140515bfe62dd938c6610d10d6efb9e35cc647fc614fe5fb3a5036682"
 
-inherit pypi flit_core
+inherit pypi python_flit_core
 
 # Need to install by hand as there's a dependency loop
 DEPENDS:remove:class-native = " python3-installer-native"
