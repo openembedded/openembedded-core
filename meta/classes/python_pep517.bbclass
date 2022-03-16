@@ -1,5 +1,8 @@
 # Common infrastructure for Python packages that use PEP-517 compliant packaging.
 # https://www.python.org/dev/peps/pep-0517/
+#
+# This class will build a wheel in do_compile, and use pypa/installer to install
+# it in do_install.
 
 DEPENDS:append = " python3-installer-native"
 
@@ -9,14 +12,14 @@ PEP517_SOURCE_PATH ?= "${S}"
 # The PEP517 build API entry point
 PEP517_BUILD_API ?= "unset"
 
-# The directory where wheels should be written too. Build classes
-# will ideally [cleandirs] this but we don't do that here in case
-# a recipe wants to install prebuilt wheels.
+# The directory where wheels will be written
 PEP517_WHEEL_PATH ?= "${WORKDIR}/dist"
 
+# The interpreter to use for installed scripts
 PEP517_INSTALL_PYTHON = "python3"
 PEP517_INSTALL_PYTHON:class-native = "nativepython3"
 
+# pypa/installer option to control the bytecode compilation
 INSTALL_WHEEL_COMPILE_BYTECODE ?= "--compile-bytecode=0"
 
 # When we have Python 3.11 we can parse pyproject.toml to determine the build
