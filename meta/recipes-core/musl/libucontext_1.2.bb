@@ -4,14 +4,12 @@
 SUMMARY = "ucontext implementation featuring glibc-compatible ABI"
 HOMEPAGE = "https://github.com/kaniini/libucontext"
 LICENSE = "ISC"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=6eed01fa0e673c76f5a5715438f65b1d"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ebea527af0602d509b7f4c49533fb1bd"
 SECTION = "libs"
 DEPENDS = ""
 
-PV = "1.1+${SRCPV}"
-SRCREV = "335ee864ef6f4a5d4b525453fd9dbfb3507cfecc"
+SRCREV = "4dde3417b4bb4b1b1545bd913be337680b5e28c3"
 SRC_URI = "git://github.com/kaniini/libucontext;branch=master;protocol=https \
-           file://0001-meson-Add-option-to-pass-cpu.patch \
            "
 
 S = "${WORKDIR}/git"
