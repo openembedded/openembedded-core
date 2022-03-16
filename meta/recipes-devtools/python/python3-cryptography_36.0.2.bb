@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=bf405a8056a6647e7d077b0e7bc36aba \
                    "
 LDSHARED += "-pthread"
 
-SRC_URI[sha256sum] = "53e5c1dc3d7a953de055d77bef2ff607ceef7a2aac0353b5d630ab67f7423638"
+SRC_URI[sha256sum] = "70f8f4f7bb2ac9f340655cbac89d68c527af5bb4387522a8413e841e3e6628c9"
 
 SRC_URI += " \
     file://run-ptest \
@@ -42,7 +42,7 @@ SRC_URI += " \
     crate://crates.io/indoc/0.3.6 \
     crate://crates.io/instant/0.1.12 \
     crate://crates.io/lazy_static/1.4.0 \
-    crate://crates.io/libc/0.2.112 \
+    crate://crates.io/libc/0.2.120 \
     crate://crates.io/lock_api/0.4.5 \
     crate://crates.io/num-integer/0.1.44 \
     crate://crates.io/num-traits/0.2.14 \
