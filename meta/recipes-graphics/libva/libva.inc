@@ -33,3 +33,5 @@ PACKAGECONFIG[glx] = "-Dwith_glx=yes,-Dwith_glx=no,virtual/mesa"
 
 PACKAGECONFIG[wayland] = "-Dwith_wayland=yes,-Dwith_wayland=no,wayland-native wayland"
 
+BBCLASSEXTEND = "native nativesdk"
+
