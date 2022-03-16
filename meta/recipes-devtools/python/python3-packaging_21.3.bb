@@ -9,5 +9,4 @@ inherit pypi setuptools_build_meta
 
 BBCLASSEXTEND = "native nativesdk"
 
-DEPENDS += "${PYTHON_PN}-setuptools-native"
 RDEPENDS:${PN} += "${PYTHON_PN}-pyparsing"
