@@ -220,7 +220,7 @@ ALTERNATIVE_PRIORITY = "100"
 
 ALTERNATIVE:${PN}-misc = "corelist cpan enc2xs encguess h2ph h2xs instmodsh json_pp libnetcfg \
                      piconv pl2pm pod2html pod2man pod2text pod2usage podchecker \
-                     prove ptar ptardiff ptargrep shasum splain xsubpp zipdetails"
+                     prove ptar ptardiff ptargrep shasum splain streamzip xsubpp zipdetails"
 ALTERNATIVE_LINK_NAME[corelist] = "${bindir}/corelist"
 ALTERNATIVE_LINK_NAME[cpan] = "${bindir}/cpan"
 ALTERNATIVE_LINK_NAME[enc2xs] = "${bindir}/enc2xs"
@@ -243,6 +243,7 @@ ALTERNATIVE_LINK_NAME[ptardiff] = "${bindir}/ptardiff"
 ALTERNATIVE_LINK_NAME[ptargrep] = "${bindir}/ptargrep"
 ALTERNATIVE_LINK_NAME[shasum] = "${bindir}/shasum"
 ALTERNATIVE_LINK_NAME[splain] = "${bindir}/splain"
+ALTERNATIVE_LINK_NAME[streamzip] = "${bindir}/streamzip"
 ALTERNATIVE_LINK_NAME[xsubpp] = "${bindir}/xsubpp"
 ALTERNATIVE_LINK_NAME[zipdetails] = "${bindir}/zipdetails"
 
