@@ -91,7 +91,7 @@ RDEPENDS:${PN}:append:class-target = " \
 
 RDEPENDS:${PN}-ptest += " \
     ${PYTHON_PN}-bcrypt \
-    ${PYTHON_PN}-cryptography-vectors \
+    ${PYTHON_PN}-cryptography-vectors (= ${PV}) \
     ${PYTHON_PN}-hypothesis \
     ${PYTHON_PN}-iso8601 \
     ${PYTHON_PN}-pretend \
