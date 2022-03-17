@@ -17,20 +17,16 @@ SRC_URI = "${GNU_MIRROR}/libtool/libtool-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
            file://0006-libtool.m4-Handle-as-a-sysroot-correctly.patch \
            file://nohardcodepaths.patch \
-           file://unwind-opt-parsing.patch \
            file://0007-libtool-Fix-support-for-NIOS2-processor.patch \
            file://0008-libtool-Check-for-static-libs-for-internal-compiler-.patch \
            file://0009-Makefile.am-make-sure-autoheader-run-before-autoconf.patch \
            file://0010-Makefile.am-make-sure-autoheader-run-before-automake.patch \
            file://0011-ltmain.in-Handle-prefix-map-compiler-options-correct.patch \
            file://0012-libtool.m4-For-reproducibility-stop-encoding-hostnam.patch \
-           file://libool.m4-add-ARFLAGS-variable.patch \
-           file://ARFLAGS-use-cr-instead-of-cru-by-default.patch \
            file://0001-ltmain.in-Parse-additional-clang-options.patch \
           "
 
-SRC_URI[md5sum] = "addf44b646ddb4e3919805aa88fa7c5e"
-SRC_URI[sha256sum] = "e3bd4d5d3d025a36c21dd6af7ea818a2afcd4dfc1ea5a17b39d7854bcd0c06e3"
+SRC_URI[sha256sum] = "04e96c2404ea70c590c546eba4202a4e12722c640016c12b9b2f1ce3d481e9a8"
 
 do_compile:prepend () {
 	# Sometimes this file doesn't get rebuilt, force the issue
