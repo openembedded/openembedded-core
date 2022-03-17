@@ -10,6 +10,12 @@ SRC_URI[sha256sum] = "6caad9786055cb1fa22b4a365c1775816b876f91966481765d7d50e9f0
 
 inherit setuptools3 pypi
 
+ 
+do_install:append () {
+	# The cache format of "{None, 'en', 'ja'}" doesn't seem to be consistent (dict ordering?)
+	rm ${D}${libdir}/${PYTHON_DIR}/site-packages/sphinx/writers/__pycache__/*latex*
+}
+
 RDEPENDS:${PN} = "\
     python3-packaging python3-docutils python3-requests \
     python3-imagesize python3-alabaster python3-jinja2 \
