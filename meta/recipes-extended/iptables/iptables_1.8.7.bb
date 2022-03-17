@@ -66,6 +66,11 @@ do_install:append() {
             -e 's,@RULESDIR@,${IPTABLES_RULES_DIR},g' \
             ${D}${systemd_system_unitdir}/ip6tables.service
     fi
+
+    # if libnftnl is included, make the iptables symlink point to the nft-based binary by default
+    if ${@bb.utils.contains('PACKAGECONFIG', 'libnftnl', 'true', 'false', d)} ; then
+        ln -sf ${sbindir}/xtables-nft-multi ${D}${sbindir}/iptables 
+    fi
 }
 
 PACKAGES =+ "${PN}-modules ${PN}-apply"
