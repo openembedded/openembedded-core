@@ -56,6 +56,7 @@ PTESTS_FAST = "\
     python3-markupsafe-ptest \
     python3-more-itertools-ptest \
     python3-pluggy-ptest \
+    python3-pyasn1-ptest \
     python3-pytz-ptest \
     python3-wcwidth-ptest \
     python3-webcolors-ptest \
