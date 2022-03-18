@@ -8,7 +8,7 @@ DEPENDS += "${PYTHON_PN}-cffi-native"
 SRC_URI[md5sum] = "fe31390dab603728f756cd3d6830c80a"
 SRC_URI[sha256sum] = "5b93c1726e50a93a033c36e5ca7fdcd29a5c7395af50a6892f5d9e7c6cfbfb29"
 
-inherit pypi setuptools_build_meta ptest
+inherit pypi python_setuptools_build_meta ptest
 
 SRC_URI += " \
 	file://run-ptest \

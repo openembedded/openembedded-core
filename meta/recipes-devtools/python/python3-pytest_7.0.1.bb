@@ -9,7 +9,7 @@ SRC_URI[sha256sum] = "e30905a0c131d3d94b89624a1cc5afec3e0ba2fbdb151867d8e0ebd498
 
 DEPENDS += "python3-setuptools-scm-native"
 
-inherit update-alternatives pypi setuptools_build_meta
+inherit update-alternatives pypi python_setuptools_build_meta
 
 RDEPENDS:${PN}:class-target += " \
     ${PYTHON_PN}-atomicwrites \

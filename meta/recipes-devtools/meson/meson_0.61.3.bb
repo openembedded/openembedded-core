@@ -21,7 +21,7 @@ SRC_URI[sha256sum] = "9c884434469471f3fe0cbbceb9b9ea0c8047f19e792940e1df6595741a
 UPSTREAM_CHECK_URI = "https://github.com/mesonbuild/meson/releases"
 UPSTREAM_CHECK_REGEX = "meson-(?P<pver>\d+(\.\d+)+)\.tar"
 
-inherit setuptools_build_meta
+inherit python_setuptools_build_meta
 
 RDEPENDS:${PN} = "ninja python3-modules python3-pkg-resources"
 
