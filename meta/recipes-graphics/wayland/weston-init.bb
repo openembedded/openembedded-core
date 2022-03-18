@@ -16,6 +16,7 @@ S = "${WORKDIR}"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG:append:qemuriscv64 = " use-pixman"
+PACKAGECONFIG:append:qemuppc64 = " use-pixman"
 
 PACKAGECONFIG[no-idle-timeout] = ",,"
 PACKAGECONFIG[use-pixman] = ",,"
