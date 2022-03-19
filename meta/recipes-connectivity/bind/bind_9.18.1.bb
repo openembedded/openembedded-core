@@ -4,7 +4,7 @@ DESCRIPTION = "BIND 9 provides a full-featured Domain Name Server system"
 SECTION = "console/network"
 
 LICENSE = "MPL-2.0"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=4e7b3c52170a348459a4ff3f5ce95e37"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=9a4a897f202c0710e07f2f2836bc2b62"
 
 DEPENDS = "openssl libcap zlib libuv"
 
@@ -20,7 +20,7 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.xz \
            file://0001-avoid-start-failure-with-bind-user.patch \
            "
 
-SRC_URI[sha256sum] = "70b39a5eb71650358ec9ba41da3050d32aeac0aeb4a466684b23f35affa7fb45"
+SRC_URI[sha256sum] = "57c7afd871694d615cb4defb1c1bd6ed023350943d7458414db8d493ef560427"
 
 UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
 # follow the ESV versions divisible by 2
@@ -35,11 +35,11 @@ inherit autotools update-rc.d systemd useradd pkgconfig multilib_header update-a
 # PACKAGECONFIGs readline and libedit should NOT be set at same time
 PACKAGECONFIG ?= "readline"
 PACKAGECONFIG[httpstats] = "--with-libxml2=${STAGING_DIR_HOST}${prefix},--without-libxml2,libxml2"
-PACKAGECONFIG[readline] = "--with-readline=-lreadline,,readline"
-PACKAGECONFIG[libedit] = "--with-readline=-ledit,,libedit"
-PACKAGECONFIG[python3] = "--with-python=yes --with-python-install-dir=${PYTHON_SITEPACKAGES_DIR} , --without-python, python3-ply-native,"
+PACKAGECONFIG[readline] = "--with-readline=readline,,readline"
+PACKAGECONFIG[libedit] = "--with-readline=libedit,,libedit"
+PACKAGECONFIG[dns-over-http] = "--enable-doh,--disable-doh,nghttp2"
 
-EXTRA_OECONF = " --with-libtool --disable-devpoll --disable-auto-validation --enable-epoll \
+EXTRA_OECONF = " --disable-devpoll --disable-auto-validation --enable-epoll \
                  --with-gssapi=no --with-lmdb=no --with-zlib \
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_DIR_HOST}${prefix} \
@@ -90,8 +90,6 @@ do_install:append() {
 		install -d ${D}${sysconfdir}/tmpfiles.d
 		echo "d /run/named 0755 bind bind - -" > ${D}${sysconfdir}/tmpfiles.d/bind.conf
 	fi
-
-    oe_multilib_header isc/platform.h
 }
 
 CONFFILES:${PN} = " \
