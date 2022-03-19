@@ -1,14 +1,9 @@
 inherit kernel-uboot kernel-artifact-names uboot-sign
 
-KERNEL_IMAGETYPE_REPLACEMENT = ""
-
-python __anonymous () {
+def get_fit_replacement_type(d):
     kerneltypes = d.getVar('KERNEL_IMAGETYPES') or ""
+    replacementtype = ""
     if 'fitImage' in kerneltypes.split():
-        depends = d.getVar("DEPENDS")
-        depends = "%s u-boot-tools-native dtc-native" % depends
-        d.setVar("DEPENDS", depends)
-
         uarch = d.getVar("UBOOT_ARCH")
         if uarch == "arm64":
             replacementtype = "Image"
@@ -22,15 +17,18 @@ python __anonymous () {
             replacementtype = "linux.bin"
         else:
             replacementtype = "zImage"
+    return replacementtype
 
-        d.setVar("KERNEL_IMAGETYPE_REPLACEMENT", replacementtype)
+KERNEL_IMAGETYPE_REPLACEMENT ?= "${@get_fit_replacement_type(d)}"
+DEPENDS:append = " ${@'u-boot-tools-native dtc-native' if 'fitImage' in (d.getVar('KERNEL_IMAGETYPES') or '').split() else ''}"
 
+python __anonymous () {
         # Override KERNEL_IMAGETYPE_FOR_MAKE variable, which is internal
         # to kernel.bbclass . We have to override it, since we pack zImage
         # (at least for now) into the fitImage .
         typeformake = d.getVar("KERNEL_IMAGETYPE_FOR_MAKE") or ""
         if 'fitImage' in typeformake.split():
-            d.setVar('KERNEL_IMAGETYPE_FOR_MAKE', typeformake.replace('fitImage', replacementtype))
+            d.setVar('KERNEL_IMAGETYPE_FOR_MAKE', typeformake.replace('fitImage', d.getVar('KERNEL_IMAGETYPE_REPLACEMENT')))
 
         image = d.getVar('INITRAMFS_IMAGE')
         if image:
