@@ -16,10 +16,6 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://perl-dynloader.patch \
            file://0002-Constant-Fix-up-shebang.patch \
            file://determinism.patch \
-           file://CVE-2021-36770.patch \
-           file://aacd2398e766500cb5d83c4d76b642fcf31d997a.patch \
-           file://ea57297a58b8f10ab885c19eec48ea076116cc1f.patch \
-           file://5bc1e5fdd87aa205011512cd1e6cc655bcf677fd.patch \
            file://0001-cpan-Sys-Syslog-Makefile.PL-Fix-_PATH_LOG-for-determ.patch \
            "
 SRC_URI:append:class-native = " \
@@ -29,7 +25,7 @@ SRC_URI:append:class-target = " \
            file://encodefix.patch \
 "
 
-SRC_URI[perl.sha256sum] = "551efc818b968b05216024fb0b727ef2ad4c100f8cb6b43fab615fa78ae5be9a"
+SRC_URI[perl.sha256sum] = "357951a491b0ba1ce3611263922feec78ccd581dddc24a446b033e25acf242a1"
 
 S = "${WORKDIR}/perl-${PV}"
 
