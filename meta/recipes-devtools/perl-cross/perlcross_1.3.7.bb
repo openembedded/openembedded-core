@@ -12,16 +12,13 @@ inherit allarch
 
 SRC_URI = "https://github.com/arsv/perl-cross/releases/download/${PV}/perl-cross-${PV}.tar.gz;name=perl-cross \
            file://README.md \
-           file://0001-configure_tool.sh-do-not-quote-the-argument-to-comma.patch \
            file://0001-perl-cross-add-LDFLAGS-when-linking-libperl.patch \
-           file://0001-configure_path.sh-do-not-hardcode-prefix-lib-as-libr.patch \
            file://determinism.patch \
-           file://0001-cnf-configure_func_sel.sh-disable-thread_safe_nl_lan.patch \
            file://0001-Makefile-check-the-file-if-patched-or-not.patch \
            "
 UPSTREAM_CHECK_URI = "https://github.com/arsv/perl-cross/releases/"
 
-SRC_URI[perl-cross.sha256sum] = "4010f41870d64e3957b4b8ce70ebba10a7c4a3e86c5551acb4099c3fcbb37ce5"
+SRC_URI[perl-cross.sha256sum] = "77f13ca84a63025053852331b72d4046c1f90ded98bd45ccedea738621907335"
 
 S = "${WORKDIR}/perl-cross-${PV}"
 

@@ -57,6 +57,7 @@ do_configure:class-target() {
     -Dusethreads \
     -Dsoname=libperl.so.5 \
     -Dvendorprefix=${prefix} \
+    -Dvendorlibdir=${libdir} \
     -Darchlibexp=${STAGING_LIBDIR}/perl5/${PV}/${TARGET_ARCH}-linux \
     -Dlibpth='${libdir} ${base_libdir}' \
     -Dglibpth='${libdir} ${base_libdir}' \
