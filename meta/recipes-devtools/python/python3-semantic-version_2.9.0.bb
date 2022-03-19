@@ -10,3 +10,5 @@ PYPI_PACKAGE = "semantic_version"
 inherit pypi setuptools3
 
 BBCLASSEXTEND = "native nativesdk"
+
+UPSTREAM_CHECK_REGEX = "/semantic-version/(?P<pver>(\d+[\.\-_]*)+)/"
