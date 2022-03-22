@@ -13,17 +13,17 @@ KBRANCH:qemux86  ?= "v5.15/standard/base"
 KBRANCH:qemux86-64 ?= "v5.15/standard/base"
 KBRANCH:qemumips64 ?= "v5.15/standard/mti-malta64"
 
-SRCREV_machine:qemuarm ?= "f68974a8286c17346ca33b50617eccdf1becd1aa"
-SRCREV_machine:qemuarm64 ?= "72bd53de75fa937660c2bd25931ffaa05086e990"
-SRCREV_machine:qemumips ?= "334923580808976e3e7497dedfeb065c0c1ea977"
-SRCREV_machine:qemuppc ?= "418dd4b6087d1a3a3e9dd47b4cae0dcda27867e5"
-SRCREV_machine:qemuriscv64 ?= "81bdce5b5876571ef092b0392fd56d4f754789b9"
-SRCREV_machine:qemuriscv32 ?= "81bdce5b5876571ef092b0392fd56d4f754789b9"
-SRCREV_machine:qemux86 ?= "81bdce5b5876571ef092b0392fd56d4f754789b9"
-SRCREV_machine:qemux86-64 ?= "81bdce5b5876571ef092b0392fd56d4f754789b9"
-SRCREV_machine:qemumips64 ?= "7b53697cddec0526e8c10f25e1a6c2bea7d240d2"
-SRCREV_machine ?= "81bdce5b5876571ef092b0392fd56d4f754789b9"
-SRCREV_meta ?= "18436b6ebc61f77ab111a8daeafbdb3534613ee8"
+SRCREV_machine:qemuarm ?= "97c2224cc9dc67dfbc1b42486046c34cef015365"
+SRCREV_machine:qemuarm64 ?= "c1855ad93c8de958c11563b7bdb083d169327468"
+SRCREV_machine:qemumips ?= "46d4a01ac6f017ce92cdb24e5bf916b57a6af9db"
+SRCREV_machine:qemuppc ?= "db0ff027bc782f6ae6d67f2ddcfc71d2ec1d31f2"
+SRCREV_machine:qemuriscv64 ?= "81b54a76d48d941632e36e1d68e53e07e5ba695a"
+SRCREV_machine:qemuriscv32 ?= "81b54a76d48d941632e36e1d68e53e07e5ba695a"
+SRCREV_machine:qemux86 ?= "81b54a76d48d941632e36e1d68e53e07e5ba695a"
+SRCREV_machine:qemux86-64 ?= "81b54a76d48d941632e36e1d68e53e07e5ba695a"
+SRCREV_machine:qemumips64 ?= "4ae738aae43cbee8798b4142bb7169b3794e2969"
+SRCREV_machine ?= "81b54a76d48d941632e36e1d68e53e07e5ba695a"
+SRCREV_meta ?= "2f5c61a31c735701fdb4fb9615a31c43db40cf11"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
@@ -41,7 +41,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRA
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.15;destsuffix=${KMETA}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-LINUX_VERSION ?= "5.15.26"
+LINUX_VERSION ?= "5.15.27"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
