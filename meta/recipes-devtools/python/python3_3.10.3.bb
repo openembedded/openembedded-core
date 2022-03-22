@@ -40,7 +40,7 @@ SRC_URI:append:class-native = " \
            file://12-distutils-prefix-is-inside-staging-area.patch \
            file://0001-Don-t-search-system-for-headers-libraries.patch \
            "
-SRC_URI[sha256sum] = "17de3ac7da9f2519aa9d64378c603a73a0e9ad58dffa8812e45160c086de64c7"
+SRC_URI[sha256sum] = "596c72de998dc39205bc4f70ef0dbf7edec740a306d09b49a9bd0a77806730dc"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
