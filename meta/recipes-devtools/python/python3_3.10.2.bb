@@ -52,9 +52,8 @@ CVE_PRODUCT = "python"
 CVE_CHECK_IGNORE += "CVE-2007-4559"
 # This is not exploitable when glibc has CVE-2016-10739 fixed.
 CVE_CHECK_IGNORE += "CVE-2019-18348"
-
-# This is windows only issue.
-CVE_CHECK_IGNORE += "CVE-2020-15523"
+# These are specific to Microsoft Windows
+CVE_CHECK_IGNORE += "CVE-2020-15523 CVE-2022-26488"
 
 PYTHON_MAJMIN = "3.10"
 
