@@ -11,7 +11,7 @@ python () {
         raise bb.parse.SkipRecipe("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-rt to enable it")
 }
 
-SRCREV_machine ?= "3a5aeefb2543901e06f3ad90b690c2c01e846a20"
+SRCREV_machine ?= "931d5079b9fc28bf11bf0a13e2fd49049422674c"
 SRCREV_meta ?= "2f5c61a31c735701fdb4fb9615a31c43db40cf11"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;branch=${KBRANCH};name=machine \
