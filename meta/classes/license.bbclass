@@ -256,21 +256,6 @@ def canonical_license(d, license):
     """
     return d.getVarFlag('SPDXLICENSEMAP', license) or license
 
-def available_licenses(d):
-    """
-    Return the available licenses by searching the directories specified by
-    COMMON_LICENSE_DIR and LICENSE_PATH.
-    """
-    lic_dirs = ((d.getVar('COMMON_LICENSE_DIR') or '') + ' ' +
-                (d.getVar('LICENSE_PATH') or '')).split()
-
-    licenses = []
-    for lic_dir in lic_dirs:
-        licenses += os.listdir(lic_dir)
-
-    licenses = sorted(licenses)
-    return licenses
-
 def expand_wildcard_licenses(d, wildcard_licenses):
     """
     There are some common wildcard values users may want to use. Support them
