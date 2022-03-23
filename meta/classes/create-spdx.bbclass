@@ -94,7 +94,6 @@ def convert_license_to_spdx(lic, document, d, existing={}):
     from pathlib import Path
     import oe.spdx
 
-    avail_licenses = available_licenses(d)
     license_data = d.getVar("SPDX_LICENSE_DATA")
     extracted = {}
 
@@ -112,8 +111,8 @@ def convert_license_to_spdx(lic, document, d, existing={}):
         if name == "PD":
             # Special-case this.
             extracted_info.extractedText = "Software released to the public domain"
-        elif name in avail_licenses:
-            # This license can be found in COMMON_LICENSE_DIR or LICENSE_PATH
+        else:
+            # Seach for the license in COMMON_LICENSE_DIR and LICENSE_PATH
             for directory in [d.getVar('COMMON_LICENSE_DIR')] + (d.getVar('LICENSE_PATH') or '').split():
                 try:
                     with (Path(directory) / name).open(errors="replace") as f:
@@ -122,18 +121,14 @@ def convert_license_to_spdx(lic, document, d, existing={}):
                 except FileNotFoundError:
                     pass
             if extracted_info.extractedText is None:
-                # Error out, as the license was in avail_licenses so should
-                # be on disk somewhere.
-                bb.error("Cannot find text for license %s" % name)
-        else:
-            # If it's not SPDX, or PD, or in avail_licenses, then NO_GENERIC_LICENSE must be set
-            filename = d.getVarFlag('NO_GENERIC_LICENSE', name)
-            if filename:
-                filename = d.expand("${S}/" + filename)
-                with open(filename, errors="replace") as f:
-                    extracted_info.extractedText = f.read()
-            else:
-                bb.error("Cannot find any text for license %s" % name)
+                # If it's not SPDX or PD, then NO_GENERIC_LICENSE must be set
+                filename = d.getVarFlag('NO_GENERIC_LICENSE', name)
+                if filename:
+                    filename = d.expand("${S}/" + filename)
+                    with open(filename, errors="replace") as f:
+                        extracted_info.extractedText = f.read()
+                else:
+                    bb.error("Cannot find any text for license %s" % name)
 
         extracted[name] = extracted_info
         document.hasExtractedLicensingInfos.append(extracted_info)
