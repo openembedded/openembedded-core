@@ -29,6 +29,7 @@ SRC_URI += "http://www.w3.org/XML/Test/xmlts20080827.tar.gz;subdir=${BP};name=te
            file://CVE-2021-3518.patch \
            file://CVE-2021-3541.patch \
            file://CVE-2022-23308.patch \
+           file://CVE-2022-23308-fix-regression.patch \
            "
 
 SRC_URI[archive.sha256sum] = "593b7b751dd18c2d6abcd0c4bcb29efc203d0b4373a6df98e3a455ea74ae2813"
