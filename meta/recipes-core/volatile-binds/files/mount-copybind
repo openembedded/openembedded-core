@@ -48,7 +48,7 @@ if [ -d "$mountpoint" ]; then
     # If that fails, fall back to slower copy.
     if command -v selinuxenabled > /dev/null 2>&1; then
         if selinuxenabled; then
-            mountcontext=",rootcontext=$(matchpathcon -n $mountpoint)"
+            mountcontext=",rootcontext=$(matchpathcon -n "$mountpoint")"
         fi
     fi
     if ! mount -t overlay overlay -olowerdir="$mountpoint",upperdir="$spec",workdir="$overlay_workdir""$mountcontext" "$mountpoint" > /dev/null 2>&1; then
