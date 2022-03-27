@@ -38,7 +38,6 @@ S = "${WORKDIR}/glib-${PV}"
 
 PACKAGECONFIG ??= "libmount \
                    ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
-# To use the system pcre it must be configured with --enable-unicode-properties
 PACKAGECONFIG[libmount] = "-Dlibmount=enabled,-Dlibmount=disabled,util-linux"
 PACKAGECONFIG[manpages] = "-Dman=true, -Dman=false, libxslt-native xmlto-native"
 # libelf is auto-detected without a configuration option
