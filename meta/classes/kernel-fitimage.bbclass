@@ -568,13 +568,12 @@ fitimage_assemble() {
 		# Find and use the first initramfs image archive type we find
 		for img in cpio.lz4 cpio.lzo cpio.lzma cpio.xz cpio.zst cpio.gz ext2.gz cpio; do
 			initramfs_path="${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE_NAME}.$img"
-			echo -n "Searching for $initramfs_path..."
 			if [ -e "$initramfs_path" ]; then
-				echo "found"
+				bbnote "Found initramfs image: $initramfs_path"
 				fitimage_emit_section_ramdisk $1 "$ramdiskcount" "$initramfs_path"
 				break
 			else
-				echo "not found"
+				bbnote "Did not find initramfs image: $initramfs_path"
 			fi
 		done
 	fi
@@ -686,12 +685,12 @@ do_kernel_generate_rsa_keys() {
 			# make directory if it does not already exist
 			mkdir -p "${UBOOT_SIGN_KEYDIR}"
 
-			echo "Generating RSA private key for signing fitImage"
+			bbnote "Generating RSA private key for signing fitImage"
 			openssl genrsa ${FIT_KEY_GENRSA_ARGS} -out \
 				"${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_KEYNAME}".key \
 			"${FIT_SIGN_NUMBITS}"
 
-			echo "Generating certificate for signing fitImage"
+			bbnote "Generating certificate for signing fitImage"
 			openssl req ${FIT_KEY_REQ_ARGS} "${FIT_KEY_SIGN_PKCS}" \
 				-key "${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_KEYNAME}".key \
 				-out "${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_KEYNAME}".crt
@@ -704,12 +703,12 @@ do_kernel_generate_rsa_keys() {
 			# make directory if it does not already exist
 			mkdir -p "${UBOOT_SIGN_KEYDIR}"
 
-			echo "Generating RSA private key for signing fitImage"
+			bbnote "Generating RSA private key for signing fitImage"
 			openssl genrsa ${FIT_KEY_GENRSA_ARGS} -out \
 				"${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_IMG_KEYNAME}".key \
 			"${FIT_SIGN_NUMBITS}"
 
-			echo "Generating certificate for signing fitImage"
+			bbnote "Generating certificate for signing fitImage"
 			openssl req ${FIT_KEY_REQ_ARGS} "${FIT_KEY_SIGN_PKCS}" \
 				-key "${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_IMG_KEYNAME}".key \
 				-out "${UBOOT_SIGN_KEYDIR}/${UBOOT_SIGN_IMG_KEYNAME}".crt
@@ -725,13 +724,13 @@ kernel_do_deploy:append() {
 	if echo ${KERNEL_IMAGETYPES} | grep -wq "fitImage"; then
 
 		if [ "${INITRAMFS_IMAGE_BUNDLE}" != "1" ]; then
-			echo "Copying fit-image.its source file..."
+			bbnote "Copying fit-image.its source file..."
 			install -m 0644 ${B}/fit-image.its "$deployDir/fitImage-its-${KERNEL_FIT_NAME}.its"
 			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
 				ln -snf fitImage-its-${KERNEL_FIT_NAME}.its "$deployDir/fitImage-its-${KERNEL_FIT_LINK_NAME}"
 			fi
 
-			echo "Copying linux.bin file..."
+			bbnote "Copying linux.bin file..."
 			install -m 0644 ${B}/linux.bin $deployDir/fitImage-linux.bin-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT}
 			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
 				ln -snf fitImage-linux.bin-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT} "$deployDir/fitImage-linux.bin-${KERNEL_FIT_LINK_NAME}"
@@ -739,14 +738,14 @@ kernel_do_deploy:append() {
 		fi
 
 		if [ -n "${INITRAMFS_IMAGE}" ]; then
-			echo "Copying fit-image-${INITRAMFS_IMAGE}.its source file..."
+			bbnote "Copying fit-image-${INITRAMFS_IMAGE}.its source file..."
 			install -m 0644 ${B}/fit-image-${INITRAMFS_IMAGE}.its "$deployDir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its"
 			if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
 				ln -snf fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its "$deployDir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
 			fi
 
 			if [ "${INITRAMFS_IMAGE_BUNDLE}" != "1" ]; then
-				echo "Copying fitImage-${INITRAMFS_IMAGE} file..."
+				bbnote "Copying fitImage-${INITRAMFS_IMAGE} file..."
 				install -m 0644 ${B}/arch/${ARCH}/boot/fitImage-${INITRAMFS_IMAGE} "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT}"
 				if [ -n "${KERNEL_FIT_LINK_NAME}" ] ; then
 					ln -snf fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT} "$deployDir/fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
@@ -765,9 +764,9 @@ kernel_do_deploy:append() {
 		# If we're also creating and/or signing the uboot fit, now we need to
 		# deploy it, it's its file, as well as u-boot-spl.dtb
 		install -m 0644 ${B}/u-boot-spl-${MACHINE}*.dtb "$deployDir/"
-		echo "Copying u-boot-fitImage file..."
+		bbnote "Copying u-boot-fitImage file..."
 		install -m 0644 ${B}/u-boot-fitImage-* "$deployDir/"
-		echo "Copying u-boot-its file..."
+		bbnote "Copying u-boot-its file..."
 		install -m 0644 ${B}/u-boot-its-* "$deployDir/"
 	fi
 }
