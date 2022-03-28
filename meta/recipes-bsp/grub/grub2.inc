@@ -15,6 +15,8 @@ CVE_PRODUCT = "grub2"
 
 # Applies only to RHEL
 CVE_CHECK_WHITELIST += "CVE-2019-14865"
+# Applies only to SUSE
+CVE_CHECK_WHITELIST += "CVE-2021-46705"
 
 SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0001-Disable-mfpmath-sse-as-well-when-SSE-is-disabled.patch \
