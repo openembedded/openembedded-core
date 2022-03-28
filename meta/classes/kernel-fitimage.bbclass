@@ -65,6 +65,8 @@ FIT_SIGN_INDIVIDUAL ?= "0"
 FIT_CONF_PREFIX ?= "conf-"
 FIT_CONF_PREFIX[doc] = "Prefix to use for FIT configuration node name"
 
+FIT_SUPPORTED_INITRAMFS_FSTYPES ?= "cpio.lz4 cpio.lzo cpio.lzma cpio.xz cpio.zst cpio.gz ext2.gz cpio"
+
 # Keys used to sign individually image nodes.
 # The keys to sign image nodes must be different from those used to sign
 # configuration nodes, otherwise the "required" property, from
@@ -566,16 +568,22 @@ fitimage_assemble() {
 	#
 	if [ "x${ramdiskcount}" = "x1" ] && [ "${INITRAMFS_IMAGE_BUNDLE}" != "1" ]; then
 		# Find and use the first initramfs image archive type we find
-		for img in cpio.lz4 cpio.lzo cpio.lzma cpio.xz cpio.zst cpio.gz ext2.gz cpio; do
+		found=
+		for img in ${FIT_SUPPORTED_INITRAMFS_FSTYPES}; do
 			initramfs_path="${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE_NAME}.$img"
 			if [ -e "$initramfs_path" ]; then
 				bbnote "Found initramfs image: $initramfs_path"
+				found=true
 				fitimage_emit_section_ramdisk $1 "$ramdiskcount" "$initramfs_path"
 				break
 			else
 				bbnote "Did not find initramfs image: $initramfs_path"
 			fi
 		done
+
+		if [ -z "$found" ]; then
+			bbfatal "Could not find a valid initramfs type for ${INITRAMFS_IMAGE_NAME}, the supported types are: ${FIT_SUPPORTED_INITRAMFS_FSTYPES}"
+		fi
 	fi
 
 	fitimage_emit_section_maint $1 sectend
