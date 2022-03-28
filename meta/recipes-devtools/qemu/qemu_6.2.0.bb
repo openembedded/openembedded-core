@@ -23,3 +23,5 @@ PACKAGECONFIG ??= " \
 PACKAGECONFIG:class-nativesdk ??= "fdt sdl kvm pie \
     ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'virglrenderer epoxy', '', d)} \
 "
+# ppc32 hosts are no longer supported in qemu
+COMPATIBLE_HOST:powerpc = "null"
