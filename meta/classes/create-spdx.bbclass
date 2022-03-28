@@ -40,7 +40,7 @@ do_image_complete[depends] = "virtual/kernel:do_create_spdx"
 def extract_licenses(filename):
     import re
 
-    lic_regex = re.compile(b'^\W*SPDX-License-Identifier:\s*([ \w\d.()+-]+?)(?:\s+\W*)?$', re.MULTILINE)
+    lic_regex = re.compile(rb'^\W*SPDX-License-Identifier:\s*([ \w\d.()+-]+?)(?:\s+\W*)?$', re.MULTILINE)
 
     try:
         with open(filename, 'rb') as f:
