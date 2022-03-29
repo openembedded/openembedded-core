@@ -6,8 +6,8 @@ SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.pat
            file://sdksyms-no-build-path.patch \
            file://0001-drmmode_display.c-add-missing-mi.h-include.patch \
            "
-SRC_URI[md5sum] = "8775d8c22de768107978202fcf240e2e"
-SRC_URI[sha256sum] = "71687561262e4527a7ef779193725416f70c3e0424daaa9a6617bd37dc7701bb"
+SRC_URI[md5sum] = "1724c6efe8599fb0dc6c69c5f268de71"
+SRC_URI[sha256sum] = "26f801f4d92216995f389873cf3b4e90069cf63e94bc5dd09ebbf7fd7e1ddcc2"
 
 CFLAGS += "-fcommon"
 
