@@ -29,7 +29,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
 
 --- a/src/cmd/go/internal/work/action.go
 +++ b/src/cmd/go/internal/work/action.go
-@@ -670,6 +670,9 @@ func (b *Builder) addTransitiveLinkDeps(
+@@ -673,6 +673,9 @@ func (b *Builder) addTransitiveLinkDeps(
  			if p1 == nil || p1.Shlib == "" || haveShlib[filepath.Base(p1.Shlib)] {
  				continue
  			}
@@ -41,7 +41,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  			// we'll end up building an overall library or executable that depends at runtime
 --- a/src/cmd/go/internal/work/build.go
 +++ b/src/cmd/go/internal/work/build.go
-@@ -167,6 +167,8 @@ See also: go install, go get, go clean.
+@@ -197,6 +197,8 @@ See also: go install, go get, go clean.
  
  const concurrentGCBackendCompilationEnabledByDefault = true
  
@@ -50,7 +50,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  func init() {
  	// break init cycle
  	CmdBuild.Run = runBuild
-@@ -179,6 +181,10 @@ func init() {
+@@ -209,6 +211,10 @@ func init() {
  
  	AddBuildFlags(CmdBuild, DefaultBuildFlags)
  	AddBuildFlags(CmdInstall, DefaultBuildFlags)
@@ -63,7 +63,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  // Note that flags consulted by other parts of the code
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -468,6 +468,23 @@ func (b *Builder) build(a *Action) (err
+@@ -535,6 +535,23 @@ func (b *Builder) build(ctx context.Cont
  		return errors.New("binary-only packages are no longer supported")
  	}
  
@@ -87,7 +87,7 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  	if err := b.Mkdir(a.Objdir); err != nil {
  		return err
  	}
-@@ -1520,6 +1537,14 @@ func BuildInstallFunc(b *Builder, a *Act
+@@ -1585,6 +1602,14 @@ func (b *Builder) linkShared(ctx context
  		return err
  	}
  

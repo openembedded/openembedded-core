@@ -17,11 +17,9 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/make.bash | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/src/make.bash b/src/make.bash
-index 7986125..dd67029 100755
 --- a/src/make.bash
 +++ b/src/make.bash
-@@ -181,7 +181,7 @@ if [ "$GOROOT_BOOTSTRAP" = "$GOROOT" ]; then
+@@ -195,7 +195,7 @@ if [ "$GOROOT_BOOTSTRAP" = "$GOROOT" ];
  	exit 1
  fi
  rm -f cmd/dist/dist
@@ -30,7 +28,7 @@ index 7986125..dd67029 100755
  
  # -e doesn't propagate out of eval, so check success by hand.
  eval $(./cmd/dist/dist env -p || echo FAIL=true)
-@@ -206,7 +206,7 @@ fi
+@@ -220,7 +220,7 @@ fi
  # Run dist bootstrap to complete make.bash.
  # Bootstrap installs a proper cmd/dist, built with the new toolchain.
  # Throw ours, built with Go 1.4, away after bootstrap.

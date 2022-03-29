@@ -13,8 +13,6 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  src/cmd/dist/buildgo.go | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/src/cmd/dist/buildgo.go b/src/cmd/dist/buildgo.go
-index caafc13..4eb1c96 100644
 --- a/src/cmd/dist/buildgo.go
 +++ b/src/cmd/dist/buildgo.go
 @@ -34,8 +34,8 @@ func mkzdefaultcc(dir, file string) {

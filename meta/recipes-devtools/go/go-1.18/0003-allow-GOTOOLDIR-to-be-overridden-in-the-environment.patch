@@ -18,11 +18,9 @@ Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
  src/cmd/go/internal/cfg/cfg.go | 6 +++++-
  2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/src/cmd/dist/build.go b/src/cmd/dist/build.go
-index bec1769..d82f612 100644
 --- a/src/cmd/dist/build.go
 +++ b/src/cmd/dist/build.go
-@@ -248,7 +248,9 @@ func xinit() {
+@@ -251,7 +251,9 @@ func xinit() {
  	}
  	xatexit(rmworkdir)
  
@@ -33,11 +31,9 @@ index bec1769..d82f612 100644
  }
  
  // compilerEnv returns a map from "goos/goarch" to the
-diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 57a3c1f..825d8c7 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -67,7 +67,11 @@ func defaultContext() build.Context {
+@@ -76,7 +76,11 @@ func defaultContext() build.Context {
  		// variables. This matches the initialization of ToolDir in
  		// go/build, except for using ctxt.GOROOT rather than
  		// runtime.GOROOT.
@@ -49,4 +45,4 @@ index 57a3c1f..825d8c7 100644
 +		}
  	}
  
- 	ctxt.GOPATH = envOr("GOPATH", ctxt.GOPATH)
+ 	ctxt.GOPATH = envOr("GOPATH", gopath(ctxt))
