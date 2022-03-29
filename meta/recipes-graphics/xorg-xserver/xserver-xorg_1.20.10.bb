@@ -5,11 +5,9 @@ SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.pat
            file://0001-test-xtest-Initialize-array-with-braces.patch \
            file://sdksyms-no-build-path.patch \
            file://0001-drmmode_display.c-add-missing-mi.h-include.patch \
-           file://CVE-2020-14360.patch \
-           file://CVE-2020-25712.patch \
            "
-SRC_URI[md5sum] = "afcae2f46d47c33863cab7fd9db7279a"
-SRC_URI[sha256sum] = "e219f2e0dfe455467939149d7cd2ee53b79b512cc1d2094ae4f5c9ed9ccd3571"
+SRC_URI[md5sum] = "8cf8bd1f33e3736bc8dd279b20a32399"
+SRC_URI[sha256sum] = "977420c082450dc808de301ef56af4856d653eea71519a973c3490a780cb7c99"
 
 CFLAGS += "-fcommon"
 
