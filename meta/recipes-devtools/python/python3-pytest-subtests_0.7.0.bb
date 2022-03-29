@@ -7,7 +7,7 @@ BUGTRACKER = "https://github.com/pytest-dev/pytest-subtests/issues"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=242b4e17fa287dcf7aef372f6bc3dcb1"
 
-SRC_URI[sha256sum] = "3ebd306a8dcf75133f1742f288c82f36426ebcf8a132d4ee89782d20e84fc13a"
+SRC_URI[sha256sum] = "95c44c77e3fbede9848bb88ca90b384815fcba8090ef9a9f55659ab163b1681c"
 
 inherit pypi setuptools3
 
