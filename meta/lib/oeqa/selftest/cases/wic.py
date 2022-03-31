@@ -22,26 +22,22 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
 
 
-@lru_cache(maxsize=32)
-def get_host_arch(recipe):
-    """A cached call to get_bb_var('HOST_ARCH', <recipe>)"""
-    return get_bb_var('HOST_ARCH', recipe)
+@lru_cache()
+def get_host_arch():
+    return get_bb_var('HOST_ARCH')
 
 
-def only_for_arch(archs, image='core-image-minimal'):
+def only_for_arch(archs):
     """Decorator for wrapping test cases that can be run only for specific target
     architectures. A list of compatible architectures is passed in `archs`.
-    Current architecture will be determined by parsing bitbake output for
-    `image` recipe.
     """
     def wrapper(func):
         @wraps(func)
         def wrapped_f(*args, **kwargs):
-            arch = get_host_arch(image)
+            arch = get_host_arch()
             if archs and arch not in archs:
                 raise unittest.SkipTest("Testcase arch dependency not met: %s" % arch)
             return func(*args, **kwargs)
-        wrapped_f.__name__ = func.__name__
         return wrapped_f
     return wrapper
 
