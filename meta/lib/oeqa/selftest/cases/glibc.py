@@ -83,6 +83,7 @@ class GlibcSelfTest(GlibcSelfTestBase):
         self.run_check()
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GlibcSelfTestSystemEmulated(GlibcSelfTestBase):
     def test_glibc(self):
         self.run_check_emulated()

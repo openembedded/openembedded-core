@@ -19,6 +19,7 @@ from functools import wraps, lru_cache
 from tempfile import NamedTemporaryFile
 
 from oeqa.selftest.case import OESelftestTestCase
+from oeqa.core.decorator import OETestTag
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
 
 
@@ -843,6 +844,7 @@ class Wic2(WicTestCase):
 
     # TODO this should work on aarch64
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
     def test_qemu(self):
         """Test wic-image-minimal under qemu"""
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
@@ -863,6 +865,7 @@ class Wic2(WicTestCase):
             self.assertEqual(output, 'UUID=2c71ef06-a81d-4735-9d3a-379b69c6bdba\t/media\text4\tdefaults\t0\t0')
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
     def test_qemu_efi(self):
         """Test core-image-minimal efi image under qemu"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "mkefidisk.wks"\n'
@@ -1046,6 +1049,7 @@ class Wic2(WicTestCase):
             self.assertGreaterEqual(size, 204800)
 
     @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
+    @OETestTag("runqemu")
     def test_rawcopy_plugin_qemu(self):
         """Test rawcopy plugin in qemu"""
         # build ext4 and then use it for a wic image
@@ -1113,6 +1117,7 @@ class Wic2(WicTestCase):
         self.assertEqual('1', result.output)
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
     def test_biosplusefi_plugin_qemu(self):
         """Test biosplusefi plugin in qemu"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "test_biosplusefi_plugin.wks"\nMACHINE_FEATURES:append = " efi"\n'
@@ -1172,6 +1177,7 @@ class Wic2(WicTestCase):
 
     # TODO this test could also work on aarch64
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
     def test_efi_plugin_unified_kernel_image_qemu(self):
         """Test efi plugin's Unified Kernel Image feature in qemu"""
         config = 'IMAGE_FSTYPES = "wic"\n'\
@@ -1381,6 +1387,7 @@ class Wic2(WicTestCase):
             self.assertEqual(1, len(out))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
     def test_expand_mbr_image(self):
         """Test wic write --expand command for mbr image"""
         # build an image
