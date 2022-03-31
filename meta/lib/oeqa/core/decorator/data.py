@@ -13,8 +13,8 @@ def has_feature(td, feature):
         Checks for feature in DISTRO_FEATURES or IMAGE_FEATURES.
     """
 
-    if (feature in td.get('DISTRO_FEATURES', '') or
-        feature in td.get('IMAGE_FEATURES', '')):
+    if (feature in td.get('DISTRO_FEATURES', '').split() or
+        feature in td.get('IMAGE_FEATURES', '').split()):
         return True
     return False
 
@@ -23,7 +23,7 @@ def has_machine(td, machine):
         Checks for MACHINE.
     """
 
-    if (machine in td.get('MACHINE', '')):
+    if (machine == td.get('MACHINE', '')):
         return True
     return False
 
