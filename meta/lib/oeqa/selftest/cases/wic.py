@@ -104,7 +104,7 @@ class WicTestCase(OESelftestTestCase):
     def _get_image_env_path(self, image):
         """Generate and obtain the path to <image>.env"""
         if image not in WicTestCase.wicenv_cache:
-            self.assertEqual(0, bitbake('%s -c do_rootfs_wicenv' % image).status)
+            bitbake('%s -c do_rootfs_wicenv' % image)
             bb_vars = get_bb_vars(['STAGING_DIR', 'MACHINE'], image)
             stdir = bb_vars['STAGING_DIR']
             machine = bb_vars['MACHINE']
@@ -694,7 +694,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
         os.environ['PATH'] = get_bb_var("PATH", "wic-tools")
 
         # Get stock fstab from base-files recipe
-        self.assertEqual(0, bitbake('base-files -c do_install').status)
+        bitbake('base-files -c do_install')
         bf_fstab = os.path.join(get_bb_var('D', 'base-files'), 'etc/fstab')
         self.assertEqual(True, os.path.exists(bf_fstab))
         bf_fstab_md5sum = runCmd('md5sum %s 2>/dev/null' % bf_fstab).output.split(" ")[0]
@@ -828,7 +828,7 @@ class Wic2(WicTestCase):
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
                  'MACHINE_FEATURES:append = " efi"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('wic-image-minimal').status)
+        bitbake('wic-image-minimal')
         self.remove_config(config)
 
         bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
@@ -848,7 +848,7 @@ class Wic2(WicTestCase):
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
                  'MACHINE_FEATURES:append = " efi"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('wic-image-minimal').status)
+        bitbake('wic-image-minimal')
         self.remove_config(config)
 
         with runqemu('wic-image-minimal', ssh=False, runqemuparams='nographic') as qemu:
@@ -867,7 +867,7 @@ class Wic2(WicTestCase):
         """Test core-image-minimal efi image under qemu"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "mkefidisk.wks"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal ovmf').status)
+        bitbake('core-image-minimal ovmf')
         self.remove_config(config)
 
         with runqemu('core-image-minimal', ssh=False,
@@ -1051,12 +1051,12 @@ class Wic2(WicTestCase):
         # build ext4 and then use it for a wic image
         config = 'IMAGE_FSTYPES = "ext4"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal').status)
+        bitbake('core-image-minimal')
         self.remove_config(config)
 
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "test_rawcopy_plugin.wks.in"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal-mtdutils').status)
+        bitbake('core-image-minimal-mtdutils')
         self.remove_config(config)
 
         with runqemu('core-image-minimal-mtdutils', ssh=False,
@@ -1096,7 +1096,7 @@ class Wic2(WicTestCase):
         """Test empty plugin"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "test_empty_plugin.wks"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal').status)
+        bitbake('core-image-minimal')
         self.remove_config(config)
 
         bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
@@ -1117,7 +1117,7 @@ class Wic2(WicTestCase):
         """Test biosplusefi plugin in qemu"""
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "test_biosplusefi_plugin.wks"\nMACHINE_FEATURES:append = " efi"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal').status)
+        bitbake('core-image-minimal')
         self.remove_config(config)
 
         with runqemu('core-image-minimal', ssh=False,
@@ -1155,7 +1155,7 @@ class Wic2(WicTestCase):
         # The easiest way to work-around this issue is to make sure we already built an image here, hence the bitbake call
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "test_biosplusefi_plugin.wks"\nMACHINE_FEATURES:append = " efi"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal').status)
+        bitbake('core-image-minimal')
         self.remove_config(config)
 
         img = 'core-image-minimal'
@@ -1178,7 +1178,7 @@ class Wic2(WicTestCase):
                  'WKS_FILE = "test_efi_plugin.wks"\n'\
                  'MACHINE_FEATURES:append = " efi"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal core-image-minimal-initramfs ovmf').status)
+        bitbake('core-image-minimal core-image-minimal-initramfs ovmf')
         self.remove_config(config)
 
         with runqemu('core-image-minimal', ssh=False,
@@ -1382,7 +1382,7 @@ class Wic2(WicTestCase):
         # build an image
         config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "directdisk.wks"\n'
         self.append_config(config)
-        self.assertEqual(0, bitbake('core-image-minimal').status)
+        bitbake('core-image-minimal')
 
         # get path to the image
         bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
