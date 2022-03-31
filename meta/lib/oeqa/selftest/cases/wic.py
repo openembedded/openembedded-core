@@ -1337,21 +1337,23 @@ class Wic2(WicTestCase):
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+        # Not bulletproof but hopefully sufficient
+        kerneltype = get_bb_var('KERNEL_IMAGETYPE', 'virtual/kernel')
 
         # list directory content of the first partition
         result = runCmd("wic ls %s:1 -n %s" % (images[0], sysroot))
-        self.assertIn('\nBZIMAGE        ', result.output)
+        self.assertIn('\n%s        ' % kerneltype.upper(), result.output)
         self.assertIn('\nEFI          <DIR>     ', result.output)
 
-        # remove file
-        runCmd("wic rm %s:1/bzimage -n %s" % (images[0], sysroot))
+        # remove file. EFI partitions are case-insensitive so exercise that too
+        runCmd("wic rm %s:1/%s -n %s" % (images[0], kerneltype.lower(), sysroot))
 
         # remove directory
         runCmd("wic rm %s:1/efi -n %s" % (images[0], sysroot))
 
         # check if they're removed
         result = runCmd("wic ls %s:1 -n %s" % (images[0], sysroot))
-        self.assertNotIn('\nBZIMAGE        ', result.output)
+        self.assertNotIn('\n%s        ' % kerneltype.upper(), result.output)
         self.assertNotIn('\nEFI          <DIR>     ', result.output)
 
     def test_mkfs_extraopts(self):
