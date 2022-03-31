@@ -170,14 +170,14 @@ class Wic(WicTestCase):
         """Test wic create wictestdisk --image-name=core-image-minimal"""
         cmd = "wic create wictestdisk --image-name=core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join (self.resultdir, "wictestdisk-*.direct"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_gpt_image(self):
         """Test creation of core-image-minimal with gpt table and UUID boot"""
         cmd = "wic create directdisk-gpt --image-name core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "directdisk-*.direct"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_iso_image(self):
@@ -190,22 +190,22 @@ class Wic(WicTestCase):
         self.remove_config(config)
         cmd = "wic create mkhybridiso --image-name core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "HYBRID_ISO_IMG-*.iso")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "HYBRID_ISO_IMG-*.direct"))))
+        self.assertEqual(1, len(glob(os.path.join (self.resultdir, "HYBRID_ISO_IMG-*.iso"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_qemux86_directdisk(self):
         """Test creation of qemux-86-directdisk image"""
         cmd = "wic create qemux86-directdisk -e core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "qemux86-directdisk-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "qemux86-directdisk-*direct"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_mkefidisk(self):
         """Test creation of mkefidisk image"""
         cmd = "wic create mkefidisk -e core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "mkefidisk-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "mkefidisk-*direct"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_bootloader_config(self):
@@ -216,7 +216,7 @@ class Wic(WicTestCase):
         self.remove_config(config)
         cmd = "wic create directdisk-bootloader-config -e core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-bootloader-config-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "directdisk-bootloader-config-*direct"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_systemd_bootdisk(self):
@@ -227,7 +227,7 @@ class Wic(WicTestCase):
         self.remove_config(config)
         cmd = "wic create systemd-bootdisk -e core-image-minimal -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "systemd-bootdisk-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "systemd-bootdisk-*direct"))))
 
     def test_efi_bootpart(self):
         """Test creation of efi-bootpart image"""
@@ -236,7 +236,7 @@ class Wic(WicTestCase):
         self.append_config('IMAGE_EFI_BOOT_FILES = "%s;kernel"\n' % kimgtype)
         runCmd(cmd)
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
-        images = glob(self.resultdir + "mkefidisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "mkefidisk-*.direct"))
         result = runCmd("wic ls %s:1/ -n %s" % (images[0], sysroot))       
         self.assertIn("kernel",result.output)
 
@@ -246,7 +246,7 @@ class Wic(WicTestCase):
         kimgtype = get_bb_var('KERNEL_IMAGETYPE', 'core-image-minimal')
         self.write_config('IMAGE_BOOT_FILES = "%s"\n' % kimgtype)
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "sdimage-bootpart-*direct"))))
 
     # TODO this doesn't have to be x86-specific
     @only_for_arch(['i586', 'i686', 'x86_64'])
@@ -277,28 +277,28 @@ class Wic(WicTestCase):
                         "-n %(recipe_sysroot_native)s "
                         "-r %(image_rootfs)s "
                         "-o %(resultdir)s" % bbvars)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "directdisk-*.direct"))))
 
     def test_compress_gzip(self):
         """Test compressing an image with gzip"""
         runCmd("wic create wictestdisk "
                                    "--image-name core-image-minimal "
                                    "-c gzip -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct.gz")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct.gz"))))
 
     def test_compress_bzip2(self):
         """Test compressing an image with bzip2"""
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-c bzip2 -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct.bz2")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct.bz2"))))
 
     def test_compress_xz(self):
         """Test compressing an image with xz"""
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "--compress-with=xz -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct.xz")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct.xz"))))
 
     def test_wrong_compressor(self):
         """Test how wic breaks if wrong compressor is provided"""
@@ -312,23 +312,23 @@ class Wic(WicTestCase):
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "tmp.wic*")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "tmp.wic*"))))
 
     def test_debug_long(self):
         """Test --debug option"""
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "--debug -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "tmp.wic*")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "tmp.wic*"))))
 
     def test_skip_build_check_short(self):
         """Test -s option"""
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-s -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))))
 
     def test_skip_build_check_long(self):
         """Test --skip-build-check option"""
@@ -336,14 +336,14 @@ class Wic(WicTestCase):
                                    "--image-name=core-image-minimal "
                                    "--skip-build-check "
                                    "--outdir %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))))
 
     def test_build_rootfs_short(self):
         """Test -f option"""
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-f -o %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))))
 
     def test_build_rootfs_long(self):
         """Test --build-rootfs option"""
@@ -351,7 +351,7 @@ class Wic(WicTestCase):
                                    "--image-name=core-image-minimal "
                                    "--build-rootfs "
                                    "--outdir %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))))
 
     # TODO this doesn't have to be x86-specific
     @only_for_arch(['i586', 'i686', 'x86_64'])
@@ -362,7 +362,7 @@ class Wic(WicTestCase):
                         "--rootfs rootfs1=core-image-minimal "
                         "--rootfs rootfs2=core-image-minimal "
                         "--outdir %s" % self.resultdir)
-        self.assertEqual(1, len(glob(self.resultdir + "directdisk-multi-rootfs*.direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "directdisk-multi-rootfs*.direct"))))
 
     # TODO this doesn't have to be x86-specific
     @only_for_arch(['i586', 'i686', 'x86_64'])
@@ -382,7 +382,7 @@ class Wic(WicTestCase):
                         "--rootfs-dir rootfs1=%(image_rootfs)s "
                         "--rootfs-dir rootfs2=%(image_rootfs)s "
                         "--outdir %(resultdir)s" % bbvars)
-        self.assertEqual(1, len(glob(self.resultdir + "%(wks)s-*.direct" % bbvars)))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "%(wks)s-*.direct" % bbvars))))
 
     def test_exclude_path(self):
         """Test --exclude-path wks option."""
@@ -403,7 +403,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
                                        % (wks_file, self.resultdir))
 
             os.remove(wks_file)
-            wicout = glob(self.resultdir + "%s-*direct" % 'temp')
+            wicout = glob(os.path.join(self.resultdir, "%s-*direct" % 'temp'))
             self.assertEqual(1, len(wicout))
 
             wicimg = wicout[0]
@@ -691,7 +691,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
 
         # Get stock fstab from base-files recipe
         bitbake('base-files -c do_install')
-        bf_fstab = os.path.join(get_bb_var('D', 'base-files'), 'etc/fstab')
+        bf_fstab = os.path.join(get_bb_var('D', 'base-files'), 'etc', 'fstab')
         self.assertEqual(True, os.path.exists(bf_fstab))
         bf_fstab_md5sum = runCmd('md5sum %s 2>/dev/null' % bf_fstab).output.split(" ")[0]
 
@@ -746,7 +746,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
         runCmd("wic create wictestdisk "
                                    "--image-name core-image-minimal "
                                    "--extra-space %i -o %s" % (extraspace ,self.resultdir))
-        wicout = glob(self.resultdir + "wictestdisk-*.direct")
+        wicout = glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))
         self.assertEqual(1, len(wicout))
         size = os.path.getsize(wicout[0])
         self.assertTrue(size > extraspace)
@@ -757,15 +757,15 @@ class Wic2(WicTestCase):
         """Test generation of .bmap file -m option"""
         cmd = "wic create wictestdisk -e core-image-minimal -m -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct.bmap")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct"))))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct.bmap"))))
 
     def test_bmap_long(self):
         """Test generation of .bmap file --bmap option"""
         cmd = "wic create wictestdisk -e core-image-minimal --bmap -o %s" % self.resultdir
         runCmd(cmd)
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct.bmap")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct"))))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct.bmap"))))
 
     def test_image_env(self):
         """Test generation of <image>.env files."""
@@ -801,7 +801,7 @@ class Wic2(WicTestCase):
                                    "--image-name=%s -v %s -n %s -o %s"
                                    % (image, imgenvdir, native_sysroot,
                                       self.resultdir))
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct"))))
 
     def test_image_vars_dir_long(self):
         """Test image vars directory selection --vars option"""
@@ -816,7 +816,7 @@ class Wic2(WicTestCase):
                                    "--outdir %s"
                                    % (image, imgenvdir, native_sysroot,
                                       self.resultdir))
-        self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct"))))
 
     @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_wic_image_type(self):
@@ -899,7 +899,7 @@ class Wic2(WicTestCase):
 
         wksname = os.path.splitext(os.path.basename(wkspath))[0]
 
-        wicout = glob(self.resultdir + "%s-*direct" % wksname)
+        wicout = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
 
         if not wicout:
             return (p, None)
@@ -1078,7 +1078,7 @@ class Wic2(WicTestCase):
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             runCmd(cmd)
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            out = glob(self.resultdir + "%s-*direct" % wksname)
+            out = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
             self.assertEqual(1, len(out))
 
     def test_rawcopy_plugin(self):
@@ -1168,7 +1168,7 @@ class Wic2(WicTestCase):
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             runCmd(cmd)
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            out = glob(self.resultdir + "%s-*.direct" % wksname)
+            out = glob(os.path.join(self.resultdir, "%s-*.direct" % wksname))
             self.assertEqual(1, len(out))
 
     # TODO this test could also work on aarch64
@@ -1218,7 +1218,7 @@ class Wic2(WicTestCase):
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             runCmd(cmd)
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            out = glob(self.resultdir + "%s-*direct" % wksname)
+            out = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
             self.assertEqual(1, len(out))
 
     def test_kickstart_parser(self):
@@ -1230,7 +1230,7 @@ class Wic2(WicTestCase):
             cmd = "wic create %s -e core-image-minimal -o %s" % (wks.name, self.resultdir)
             runCmd(cmd)
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            out = glob(self.resultdir + "%s-*direct" % wksname)
+            out = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
             self.assertEqual(1, len(out))
 
     def test_image_bootpart_globbed(self):
@@ -1241,7 +1241,7 @@ class Wic2(WicTestCase):
         self.append_config(config)
         runCmd(cmd)
         self.remove_config(config)
-        self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
+        self.assertEqual(1, len(glob(os.path.join(self.resultdir, "sdimage-bootpart-*direct"))))
 
     def test_sparse_copy(self):
         """Test sparse_copy with FIEMAP and SEEK_HOLE filemap APIs"""
@@ -1287,7 +1287,7 @@ class Wic2(WicTestCase):
             cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
             runCmd(cmd)
             wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            out = glob(self.resultdir + "%s-*direct" % wksname)
+            out = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
             self.assertEqual(1, len(out))
 
     @only_for_arch(['i586', 'i686', 'x86_64'])
@@ -1351,7 +1351,7 @@ class ModifyTests(WicTestCase):
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        images = glob(self.resultdir + "wictestdisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
@@ -1369,7 +1369,7 @@ class ModifyTests(WicTestCase):
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        images = glob(self.resultdir + "wictestdisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
@@ -1415,7 +1415,7 @@ class ModifyTests(WicTestCase):
         runCmd("wic create mkefidisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        images = glob(self.resultdir + "mkefidisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "mkefidisk-*.direct"))
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
@@ -1443,7 +1443,7 @@ class ModifyTests(WicTestCase):
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        images = glob(self.resultdir + "wictestdisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
@@ -1458,7 +1458,7 @@ class ModifyTests(WicTestCase):
         runCmd("wic create wictestdisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        images = glob(self.resultdir + "wictestdisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "wictestdisk-*.direct"))
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
@@ -1494,7 +1494,7 @@ class ModifyTests(WicTestCase):
         runCmd("wic create mkefidisk "
                                    "--image-name=core-image-minimal "
                                    "-D -o %s" % self.resultdir)
-        images = glob(self.resultdir + "mkefidisk-*.direct")
+        images = glob(os.path.join(self.resultdir, "mkefidisk-*.direct"))
         self.assertEqual(1, len(images))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
