@@ -203,7 +203,7 @@ class Wic(WicTestCase):
         runCmd(cmd)
         self.assertEqual(1, len(glob(self.resultdir + "qemux86-directdisk-*direct")))
 
-    @only_for_arch(['i586', 'i686', 'x86_64'])
+    @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_mkefidisk(self):
         """Test creation of mkefidisk image"""
         cmd = "wic create mkefidisk -e core-image-minimal -o %s" % self.resultdir
@@ -221,7 +221,7 @@ class Wic(WicTestCase):
         runCmd(cmd)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-bootloader-config-*direct")))
 
-    @only_for_arch(['i586', 'i686', 'x86_64'])
+    @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_systemd_bootdisk(self):
         """Test creation of systemd-bootdisk image"""
         config = 'MACHINE_FEATURES:append = " efi"\n'
@@ -251,6 +251,7 @@ class Wic(WicTestCase):
         runCmd(cmd)
         self.assertEqual(1, len(glob(self.resultdir + "sdimage-bootpart-*direct")))
 
+    # TODO this doesn't have to be x86-specific
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_default_output_dir(self):
         """Test default output location"""
@@ -355,6 +356,7 @@ class Wic(WicTestCase):
                                    "--outdir %s" % self.resultdir)
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*.direct")))
 
+    # TODO this doesn't have to be x86-specific
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_rootfs_indirect_recipes(self):
         """Test usage of rootfs plugin with rootfs recipes"""
@@ -365,6 +367,7 @@ class Wic(WicTestCase):
                         "--outdir %s" % self.resultdir)
         self.assertEqual(1, len(glob(self.resultdir + "directdisk-multi-rootfs*.direct")))
 
+    # TODO this doesn't have to be x86-specific
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
@@ -818,7 +821,7 @@ class Wic2(WicTestCase):
                                       self.resultdir))
         self.assertEqual(1, len(glob(self.resultdir + "wictestdisk-*direct")))
 
-    @only_for_arch(['i586', 'i686', 'x86_64'])
+    @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_wic_image_type(self):
         """Test building wic images by bitbake"""
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
@@ -838,6 +841,7 @@ class Wic2(WicTestCase):
             self.assertTrue(os.path.islink(path))
             self.assertTrue(os.path.isfile(os.path.realpath(path)))
 
+    # TODO this should work on aarch64
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_qemu(self):
         """Test wic-image-minimal under qemu"""
@@ -1041,7 +1045,7 @@ class Wic2(WicTestCase):
             size = int(size[:-3])
             self.assertGreaterEqual(size, 204800)
 
-    @only_for_arch(['i586', 'i686', 'x86_64'])
+    @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
     def test_rawcopy_plugin_qemu(self):
         """Test rawcopy plugin in qemu"""
         # build ext4 and then use it for a wic image
@@ -1166,6 +1170,7 @@ class Wic2(WicTestCase):
             out = glob(self.resultdir + "%s-*.direct" % wksname)
             self.assertEqual(1, len(out))
 
+    # TODO this test could also work on aarch64
     @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_efi_plugin_unified_kernel_image_qemu(self):
         """Test efi plugin's Unified Kernel Image feature in qemu"""
@@ -1375,6 +1380,7 @@ class Wic2(WicTestCase):
             out = glob(self.resultdir + "%s-*direct" % wksname)
             self.assertEqual(1, len(out))
 
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_expand_mbr_image(self):
         """Test wic write --expand command for mbr image"""
         # build an image
