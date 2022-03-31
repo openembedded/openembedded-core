@@ -75,22 +75,18 @@ class WicTestCase(OESelftestTestCase):
 
     def setUpLocal(self):
         """This code is executed before each test method."""
-        self.resultdir = self.builddir + "/wic-tmp/"
+        self.resultdir = os.path.join(self.builddir, "wic-tmp")
         super(WicTestCase, self).setUpLocal()
 
         # Do this here instead of in setUpClass as the base setUp does some
         # clean up which can result in the native tools built earlier in
         # setUpClass being unavailable.
         if not WicTestCase.image_is_ready:
-            if get_bb_var('USE_NLS') == 'yes':
-                bitbake('wic-tools')
-            else:
-                self.skipTest('wic-tools cannot be built due its (intltool|gettext)-native dependency and NLS disable')
+            if get_bb_var('USE_NLS') != 'yes':
+                self.skipTest('wic-tools needs USE_NLS=yes')
 
-            bitbake('core-image-minimal')
-            bitbake('core-image-minimal-mtdutils')
+            bitbake('wic-tools core-image-minimal core-image-minimal-mtdutils')
             WicTestCase.image_is_ready = True
-
         rmtree(self.resultdir, ignore_errors=True)
 
     def tearDownLocal(self):
