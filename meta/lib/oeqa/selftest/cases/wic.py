@@ -82,7 +82,7 @@ class WicTestCase(OESelftestTestCase):
         # clean up which can result in the native tools built earlier in
         # setUpClass being unavailable.
         if not WicTestCase.image_is_ready:
-            if get_bb_var('USE_NLS') != 'yes':
+            if self.td['USE_NLS'] != 'yes':
                 self.skipTest('wic-tools needs USE_NLS=yes')
 
             bitbake('wic-tools core-image-minimal core-image-minimal-mtdutils')
@@ -98,9 +98,8 @@ class WicTestCase(OESelftestTestCase):
         """Generate and obtain the path to <image>.env"""
         if image not in WicTestCase.wicenv_cache:
             bitbake('%s -c do_rootfs_wicenv' % image)
-            bb_vars = get_bb_vars(['STAGING_DIR', 'MACHINE'], image)
-            stdir = bb_vars['STAGING_DIR']
-            machine = bb_vars['MACHINE']
+            stdir = get_bb_var('STAGING_DIR', image)
+            machine = self.td["MACHINE"]
             WicTestCase.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
         return WicTestCase.wicenv_cache[image]
 
@@ -827,9 +826,8 @@ class Wic2(WicTestCase):
         bitbake('wic-image-minimal')
         self.remove_config(config)
 
-        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
-        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
-        machine = bb_vars['MACHINE']
+        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+        machine = self.td['MACHINE']
         prefix = os.path.join(deploy_dir, 'wic-image-minimal-%s.' % machine)
         # check if we have result image and manifests symlinks
         # pointing to existing files
@@ -1069,7 +1067,7 @@ class Wic2(WicTestCase):
     def _rawcopy_plugin(self, fstype):
         """Test rawcopy plugin"""
         img = 'core-image-minimal'
-        machine = get_bb_var('MACHINE', img)
+        machine = self.td["MACHINE"]
         params = ',unpack' if fstype.endswith('.gz') else ''
         with NamedTemporaryFile("w", suffix=".wks") as wks:
             wks.write('part / --source rawcopy --sourceparams="file=%s-%s.%s%s"\n'\
@@ -1098,12 +1096,11 @@ class Wic2(WicTestCase):
         self.append_config(config)
         bitbake('core-image-minimal')
         self.remove_config(config)
+        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+        machine = self.td['MACHINE']
 
-        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
-        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
-        machine = bb_vars['MACHINE']
         image_path = os.path.join(deploy_dir, 'core-image-minimal-%s.wic' % machine)
-        self.assertEqual(True, os.path.exists(image_path))
+        self.assertTrue(os.path.exists(image_path))
 
         sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
 
@@ -1245,7 +1242,7 @@ class Wic2(WicTestCase):
 
     def test_sparse_copy(self):
         """Test sparse_copy with FIEMAP and SEEK_HOLE filemap APIs"""
-        libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'wic')
+        libpath = os.path.join(self.td['COREBASE'], 'scripts', 'lib', 'wic')
         sys.path.insert(0, libpath)
         from  filemap import FilemapFiemap, FilemapSeek, sparse_copy, ErrorNotSupp
         with NamedTemporaryFile("w", suffix=".wic-sparse") as sparse:
@@ -1300,9 +1297,8 @@ class Wic2(WicTestCase):
         bitbake('core-image-minimal')
 
         # get path to the image
-        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
-        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
-        machine = bb_vars['MACHINE']
+        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+        machine = self.td['MACHINE']
         image_path = os.path.join(deploy_dir, 'core-image-minimal-%s.wic' % machine)
 
         self.remove_config(config)
