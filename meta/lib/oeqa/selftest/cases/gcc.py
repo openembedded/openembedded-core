@@ -3,7 +3,7 @@ import os
 from oeqa.core.decorator import OETestTag
 from oeqa.core.case import OEPTestResultTestCase
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runqemu, Command
+from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runqemu
 
 def parse_values(content):
     for i in content:

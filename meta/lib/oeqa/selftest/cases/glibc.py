@@ -4,7 +4,7 @@ import contextlib
 from oeqa.core.decorator import OETestTag
 from oeqa.core.case import OEPTestResultTestCase
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runqemu, Command
+from oeqa.utils.commands import bitbake, get_bb_var, runqemu
 from oeqa.utils.nfs import unfs_server
 
 def parse_values(content):
