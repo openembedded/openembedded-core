@@ -104,8 +104,7 @@ class WicTestCase(OESelftestTestCase):
             WicTestCase.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
         return WicTestCase.wicenv_cache[image]
 
-class Wic(WicTestCase):
-
+class CLITests(OESelftestTestCase):
     def test_version(self):
         """Test wic --version"""
         runCmd('wic --version')
@@ -166,6 +165,7 @@ class Wic(WicTestCase):
         """Test wic without command"""
         self.assertEqual(1, runCmd('wic', ignore_status=True).status)
 
+class Wic(WicTestCase):
     def test_build_image_name(self):
         """Test wic create wictestdisk --image-name=core-image-minimal"""
         cmd = "wic create wictestdisk --image-name=core-image-minimal -o %s" % self.resultdir
@@ -1271,6 +1271,81 @@ class Wic2(WicTestCase):
                 self.assertEqual(dest_stat.st_blocks, 8)
             os.unlink(dest)
 
+    def test_mkfs_extraopts(self):
+        """Test wks option --mkfs-extraopts for empty and not empty partitions"""
+        img = 'core-image-minimal'
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(
+                ['part ext2   --fstype ext2     --source rootfs --mkfs-extraopts "-D -F -i 8192"\n',
+                 "part btrfs  --fstype btrfs    --source rootfs --size 40M --mkfs-extraopts='--quiet'\n",
+                 'part squash --fstype squashfs --source rootfs --mkfs-extraopts "-no-sparse -b 4096"\n',
+                 'part emptyvfat   --fstype vfat   --size 1M --mkfs-extraopts "-S 1024 -s 64"\n',
+                 'part emptymsdos  --fstype msdos  --size 1M --mkfs-extraopts "-S 1024 -s 64"\n',
+                 'part emptyext2   --fstype ext2   --size 1M --mkfs-extraopts "-D -F -i 8192"\n',
+                 'part emptybtrfs  --fstype btrfs  --size 100M --mkfs-extraopts "--mixed -K"\n'])
+            wks.flush()
+            cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
+            runCmd(cmd)
+            wksname = os.path.splitext(os.path.basename(wks.name))[0]
+            out = glob(self.resultdir + "%s-*direct" % wksname)
+            self.assertEqual(1, len(out))
+
+    @only_for_arch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
+    def test_expand_mbr_image(self):
+        """Test wic write --expand command for mbr image"""
+        # build an image
+        config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "directdisk.wks"\n'
+        self.append_config(config)
+        bitbake('core-image-minimal')
+
+        # get path to the image
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
+        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
+        machine = bb_vars['MACHINE']
+        image_path = os.path.join(deploy_dir, 'core-image-minimal-%s.wic' % machine)
+
+        self.remove_config(config)
+
+        try:
+            # expand image to 1G
+            new_image_path = None
+            with NamedTemporaryFile(mode='wb', suffix='.wic.exp',
+                                    dir=deploy_dir, delete=False) as sparse:
+                sparse.truncate(1024 ** 3)
+                new_image_path = sparse.name
+
+            sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+            cmd = "wic write -n %s --expand 1:0 %s %s" % (sysroot, image_path, new_image_path)
+            runCmd(cmd)
+
+            # check if partitions are expanded
+            orig = runCmd("wic ls %s -n %s" % (image_path, sysroot))
+            exp = runCmd("wic ls %s -n %s" % (new_image_path, sysroot))
+            orig_sizes = [int(line.split()[3]) for line in orig.output.split('\n')[1:]]
+            exp_sizes = [int(line.split()[3]) for line in exp.output.split('\n')[1:]]
+            self.assertEqual(orig_sizes[0], exp_sizes[0]) # first partition is not resized
+            self.assertTrue(orig_sizes[1] < exp_sizes[1])
+
+            # Check if all free space is partitioned
+            result = runCmd("%s/usr/sbin/sfdisk -F %s" % (sysroot, new_image_path))
+            self.assertTrue("0 B, 0 bytes, 0 sectors" in result.output)
+
+            os.rename(image_path, image_path + '.bak')
+            os.rename(new_image_path, image_path)
+
+            # Check if it boots in qemu
+            with runqemu('core-image-minimal', ssh=False, runqemuparams='nographic') as qemu:
+                cmd = "ls /etc/"
+                status, output = qemu.run_serial('true')
+                self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+        finally:
+            if os.path.exists(new_image_path):
+                os.unlink(new_image_path)
+            if os.path.exists(image_path + '.bak'):
+                os.rename(image_path + '.bak', image_path)
+
+class ModifyTests(WicTestCase):
     def test_wic_ls(self):
         """Test listing image content using 'wic ls'"""
         runCmd("wic create wictestdisk "
@@ -1362,81 +1437,6 @@ class Wic2(WicTestCase):
         result = runCmd("wic ls %s:1 -n %s" % (images[0], sysroot))
         self.assertNotIn('\n%s        ' % kerneltype.upper(), result.output)
         self.assertNotIn('\nEFI          <DIR>     ', result.output)
-
-    def test_mkfs_extraopts(self):
-        """Test wks option --mkfs-extraopts for empty and not empty partitions"""
-        img = 'core-image-minimal'
-        with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.writelines(
-                ['part ext2   --fstype ext2     --source rootfs --mkfs-extraopts "-D -F -i 8192"\n',
-                 "part btrfs  --fstype btrfs    --source rootfs --size 40M --mkfs-extraopts='--quiet'\n",
-                 'part squash --fstype squashfs --source rootfs --mkfs-extraopts "-no-sparse -b 4096"\n',
-                 'part emptyvfat   --fstype vfat   --size 1M --mkfs-extraopts "-S 1024 -s 64"\n',
-                 'part emptymsdos  --fstype msdos  --size 1M --mkfs-extraopts "-S 1024 -s 64"\n',
-                 'part emptyext2   --fstype ext2   --size 1M --mkfs-extraopts "-D -F -i 8192"\n',
-                 'part emptybtrfs  --fstype btrfs  --size 100M --mkfs-extraopts "--mixed -K"\n'])
-            wks.flush()
-            cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
-            runCmd(cmd)
-            wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            out = glob(self.resultdir + "%s-*direct" % wksname)
-            self.assertEqual(1, len(out))
-
-    @only_for_arch(['i586', 'i686', 'x86_64'])
-    @OETestTag("runqemu")
-    def test_expand_mbr_image(self):
-        """Test wic write --expand command for mbr image"""
-        # build an image
-        config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "directdisk.wks"\n'
-        self.append_config(config)
-        bitbake('core-image-minimal')
-
-        # get path to the image
-        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'])
-        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
-        machine = bb_vars['MACHINE']
-        image_path = os.path.join(deploy_dir, 'core-image-minimal-%s.wic' % machine)
-
-        self.remove_config(config)
-
-        try:
-            # expand image to 1G
-            new_image_path = None
-            with NamedTemporaryFile(mode='wb', suffix='.wic.exp',
-                                    dir=deploy_dir, delete=False) as sparse:
-                sparse.truncate(1024 ** 3)
-                new_image_path = sparse.name
-
-            sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
-            cmd = "wic write -n %s --expand 1:0 %s %s" % (sysroot, image_path, new_image_path)
-            runCmd(cmd)
-
-            # check if partitions are expanded
-            orig = runCmd("wic ls %s -n %s" % (image_path, sysroot))
-            exp = runCmd("wic ls %s -n %s" % (new_image_path, sysroot))
-            orig_sizes = [int(line.split()[3]) for line in orig.output.split('\n')[1:]]
-            exp_sizes = [int(line.split()[3]) for line in exp.output.split('\n')[1:]]
-            self.assertEqual(orig_sizes[0], exp_sizes[0]) # first partition is not resized
-            self.assertTrue(orig_sizes[1] < exp_sizes[1])
-
-            # Check if all free space is partitioned
-            result = runCmd("%s/usr/sbin/sfdisk -F %s" % (sysroot, new_image_path))
-            self.assertTrue("0 B, 0 bytes, 0 sectors" in result.output)
-
-            os.rename(image_path, image_path + '.bak')
-            os.rename(new_image_path, image_path)
-
-            # Check if it boots in qemu
-            with runqemu('core-image-minimal', ssh=False, runqemuparams='nographic') as qemu:
-                cmd = "ls /etc/"
-                status, output = qemu.run_serial('true')
-                self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
-        finally:
-            if os.path.exists(new_image_path):
-                os.unlink(new_image_path)
-            if os.path.exists(image_path + '.bak'):
-                os.rename(image_path + '.bak', image_path)
-
 
     def test_wic_ls_ext(self):
         """Test listing content of the ext partition using 'wic ls'"""
