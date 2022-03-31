@@ -20,8 +20,8 @@ PACKAGECONFIG_CONFARGS ??= ""
 def oe_import(d):
     import sys
 
-    bbpath = d.getVar("BBPATH").split(":")
-    sys.path[0:0] = [os.path.join(dir, "lib") for dir in bbpath]
+    bbpath = [os.path.join(dir, "lib") for dir in d.getVar("BBPATH").split(":")]
+    sys.path[0:0] = [dir for dir in bbpath if dir not in sys.path]
 
     def inject(name, value):
         """Make a python object accessible from the metadata"""
