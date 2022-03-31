@@ -281,7 +281,7 @@ class Postinst(OESelftestTestCase):
 
 
 
-    @skipIfNotQemu('qemuall', 'Test only runs in qemu')
+    @skipIfNotQemu()
     def test_postinst_rootfs_and_boot_sysvinit(self):
         """
         Summary:        The purpose of this test case is to verify Post-installation
@@ -302,7 +302,7 @@ class Postinst(OESelftestTestCase):
         self.init_manager_loop("sysvinit")
 
 
-    @skipIfNotQemu('qemuall', 'Test only runs in qemu')
+    @skipIfNotQemu()
     def test_postinst_rootfs_and_boot_systemd(self):
         """
         Summary:        The purpose of this test case is to verify Post-installation
