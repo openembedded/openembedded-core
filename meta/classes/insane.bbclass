@@ -1182,9 +1182,9 @@ python do_qa_patch() {
             msg += "    devtool modify %s\n" % d.getVar('PN')
             msg += "    devtool finish --force-patch-refresh %s <layer_path>\n\n" % d.getVar('PN')
             msg += "Don't forget to review changes done by devtool!\n"
-            if 'patch-fuzz' in d.getVar('ERROR_QA'):
+            if bb.utils.filter('ERROR_QA', 'patch-fuzz', d):
                 bb.error(msg)
-            elif 'patch-fuzz' in d.getVar('WARN_QA'):
+            elif bb.utils.filter('WARN_QA', 'patch-fuzz', d):
                 bb.warn(msg)
             msg = "Patch log indicates that patches do not apply cleanly."
             oe.qa.handle_error("patch-fuzz", msg, d)
