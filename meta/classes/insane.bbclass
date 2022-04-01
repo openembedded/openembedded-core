@@ -1117,6 +1117,7 @@ python do_package_qa () {
 # binutils is used for most checks, so need to set as dependency
 # POPULATESYSROOTDEPS is defined in staging class.
 do_package_qa[depends] += "${POPULATESYSROOTDEPS}"
+do_package_qa[vardeps] = "${@bb.utils.contains('ERROR_QA', 'empty-dirs', 'QA_EMPTY_DIRS', '', d)}"
 do_package_qa[vardepsexclude] = "BB_TASKDEPDATA"
 do_package_qa[rdeptask] = "do_packagedata"
 addtask do_package_qa after do_packagedata do_package before do_build
