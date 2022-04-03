@@ -12,9 +12,10 @@ HOMEPAGE = "http://www.fontconfig.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 
 LICENSE = "MIT & MIT & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=7a0449e9bc5370402a94c00204beca3d \
-                    file://src/fcfreetype.c;endline=45;md5=5d9513e3196a1fbfdfa94051c09dfc84 \
-                    file://src/fccache.c;beginline=1671;endline=1686;md5=0326cfeb4a7333dd4dd25fbbc4b9f27f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=00252fd272bf2e722925613ad74cb6c7 \
+                    file://src/fcfreetype.c;endline=45;md5=ce976b310a013a6ace6b60afa71851c1 \
+                    file://src/fccache.c;beginline=1671;endline=1686;md5=906c2f04b0c79a1bcc84ecfca4de5619 \
+                    "
 
 SECTION = "libs"
 
@@ -24,8 +25,7 @@ SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://revert-static-pkgconfig.patch \
            "
 
-SRC_URI[md5sum] = "690c6cb840a92fa8908cdf462d19ec66"
-SRC_URI[sha256sum] = "9f0d852b39d75fc655f9f53850eb32555394f36104a044bb2b2fc9e66dbbfa7f"
+SRC_URI[sha256sum] = "b8f607d556e8257da2f3616b4d704be30fd73bd71e367355ca78963f9a7f0434"
 
 UPSTREAM_CHECK_REGEX = "fontconfig-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
