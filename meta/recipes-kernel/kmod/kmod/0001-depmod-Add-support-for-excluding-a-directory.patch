@@ -1,6 +1,6 @@
-From 01f3fe68a7a42b06eb318f3b09fa5e5ea75d46c4 Mon Sep 17 00:00:00 2001
+From f50e2d67575ac5f256fb853ca9d29aeac92d9a57 Mon Sep 17 00:00:00 2001
 From: Saul Wold <saul.wold@windriver.com>
-Date: Tue, 22 Mar 2022 12:11:45 -0700
+Date: Thu, 31 Mar 2022 14:56:28 -0700
 Subject: [PATCH] depmod: Add support for excluding a directory
 
 This adds support to depmod to enable a new exclude directive in
@@ -12,13 +12,15 @@ via a new exclude directive.
 depmod.d/exclude.conf example:
 exclude	.debug
 
-Upstream-Status: Submitted
+Upstream-Status: Accepted
 
 Signed-off-by: Saul Wold <saul.wold@windriver.com>
+[ Fix warnings and make should_exclude_dir() return bool ]
+Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 ---
- man/depmod.d.xml | 14 +++++++++++
- tools/depmod.c   | 65 +++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 75 insertions(+), 4 deletions(-)
+ man/depmod.d.xml | 14 ++++++++++
+ tools/depmod.c   | 66 +++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 76 insertions(+), 4 deletions(-)
 
 diff --git a/man/depmod.d.xml b/man/depmod.d.xml
 index b315e93..76548e9 100644
@@ -46,7 +48,7 @@ index b315e93..76548e9 100644
    </refsect1>
  
 diff --git a/tools/depmod.c b/tools/depmod.c
-index eb810b8..ac365e9 100644
+index 07a35ba..4117dd1 100644
 --- a/tools/depmod.c
 +++ b/tools/depmod.c
 @@ -458,6 +458,11 @@ struct cfg_external {
@@ -125,32 +127,33 @@ index eb810b8..ac365e9 100644
  }
  
  
-@@ -1229,6 +1270,24 @@ add:
+@@ -1229,6 +1270,25 @@ add:
  	return 0;
  }
  
-+static int should_exclude_dir(struct cfg *cfg, char *name)
++static bool should_exclude_dir(const struct cfg *cfg, const char *name)
 +{
 +	struct cfg_exclude *exc;
 +
 +	if (name[0] == '.' && (name[1] == '\0' ||
 +			(name[1] == '.' && name[2] == '\0')))
-+		return 1;
++		return true;
++
 +	if (streq(name, "build") || streq(name, "source"))
-+		return 1;
++		return true;
 +
 +	for (exc = cfg->excludes; exc != NULL; exc = exc->next) {
-+		if (streq(name, exc->exclude_dir)) {
-+			return 1;
-+		}
++		if (streq(name, exc->exclude_dir))
++			return true;
 +	}
-+	return 0;
++
++	return false;
 +}
 +
  static int depmod_modules_search_dir(struct depmod *depmod, DIR *d, size_t baselen, struct scratchbuf *s_path)
  {
  	struct dirent *de;
-@@ -1240,11 +1299,9 @@ static int depmod_modules_search_dir(struct depmod *depmod, DIR *d, size_t basel
+@@ -1240,11 +1300,9 @@ static int depmod_modules_search_dir(struct depmod *depmod, DIR *d, size_t basel
  		size_t namelen;
  		uint8_t is_dir;
  
