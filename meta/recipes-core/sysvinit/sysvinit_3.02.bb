@@ -20,8 +20,9 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/sysvinit/sysvinit-${PV}.tar.xz \
            file://rcS \
            file://bootlogd.init \
            file://01_bootlogd \
+           file://0001-Fixed-compile-error-on-GNU-Hurd.patch \
            "
-SRC_URI[sha256sum] = "68b11a4772cdacce5fb65a4cbead324a2ce3999d138b4ff61dc2d59e57ef5793"
+SRC_URI[sha256sum] = "4ca03ffdbefb5a99a60b94a021693686c2b498a08ff8aa4e859821fa7c39a792"
 
 S = "${WORKDIR}/sysvinit-${PV}"
 
