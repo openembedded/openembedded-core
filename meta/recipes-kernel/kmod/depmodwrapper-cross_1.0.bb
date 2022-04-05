@@ -30,7 +30,7 @@ if [ -r "${PKGDATA_DIR}/kernel-depmod/kernel-abiversion" ]; then
     kernelabi=\$(cat "${PKGDATA_DIR}/kernel-depmod/kernel-abiversion")
 fi
 
-if [ ! -e "\3${nonarch_base_libdir}/depmod.d/exclude.conf" ]; then
+if [ ! -e "\$3${nonarch_base_libdir}/depmod.d/exclude.conf" ]; then
     mkdir -p "\$3${nonarch_base_libdir}/depmod.d"
     echo "exclude .debug" > "\$3${nonarch_base_libdir}/depmod.d/exclude.conf"
 fi
