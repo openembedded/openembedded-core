@@ -23,7 +23,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-Add-use_prebuilt_tools-option.patch \
            "
 
-SRC_URI[sha256sum] = "c4a6b75b7ed8f58ca48da830b9fa00ed96d668d3ab4b1f723dcf902f78bde77f"
+SRC_URI[sha256sum] = "84acea3acb2411b29134b32015a5b1aaa62844b19c4b1ef8b8971c6b0759f4c6"
 
 inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package
 
@@ -39,9 +39,9 @@ PACKAGECONFIG = "${GDK_PIXBUF_LOADERS} \
                  ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 PACKAGECONFIG:class-native = "${GDK_PIXBUF_LOADERS}"
 
-PACKAGECONFIG[png] = "-Dpng=true,-Dpng=false,libpng"
-PACKAGECONFIG[jpeg] = "-Djpeg=true,-Djpeg=false,jpeg"
-PACKAGECONFIG[tiff] = "-Dtiff=true,-Dtiff=false,tiff"
+PACKAGECONFIG[png] = "-Dpng=enabled,-Dpng=disabled,libpng"
+PACKAGECONFIG[jpeg] = "-Djpeg=enabled,-Djpeg=disabled,jpeg"
+PACKAGECONFIG[tiff] = "-Dtiff=enabled,-Dtiff=disabled,tiff"
 PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
 
 EXTRA_OEMESON:class-target = " \
