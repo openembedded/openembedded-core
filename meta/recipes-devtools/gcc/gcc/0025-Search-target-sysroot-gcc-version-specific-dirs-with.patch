@@ -46,14 +46,15 @@ Upstream-Status: Pending
 RP 2015/7/31
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Bernhard Rosenkränzer <bernhard.rosenkraenzer.ext@huawei.com> [ported to gcc 12]
 ---
- gcc/gcc.c | 29 ++++++++++++++++++++++++++++-
+ gcc/gcc.cc | 29 ++++++++++++++++++++++++++++-
  1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/gcc/gcc.c b/gcc/gcc.c
+diff --git a/gcc/gcc.cc b/gcc/gcc.cc
 index aa6fbe43965..f8a71a13826 100644
---- a/gcc/gcc.c
-+++ b/gcc/gcc.c
+--- a/gcc/gcc.cc
++++ b/gcc/gcc.cc
 @@ -2811,7 +2811,7 @@ for_each_path (const struct path_prefix *paths,
        if (path == NULL)
  	{

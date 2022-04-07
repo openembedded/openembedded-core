@@ -34,21 +34,22 @@ if the executable is moved.  (These paths were missed in the original
 implementation.)
 
 Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
+Signed-off-by: Bernhard Rosenkränzer <bernhard.rosenkraenzer.ext@huawei.com> [ported to gcc 12]
 ---
- gcc/c-family/c-opts.c     |  4 +--
+ gcc/c-family/c-opts.cc    |  4 +--
  gcc/config/linux.h        | 24 +++++++--------
  gcc/config/rs6000/sysv4.h | 24 +++++++--------
- gcc/cppdefault.c          | 63 ++++++++++++++++++++++++---------------
+ gcc/cppdefault.cc         | 63 ++++++++++++++++++++++++---------------
  gcc/cppdefault.h          | 13 ++++----
- gcc/gcc.c                 | 20 +++++++++----
- gcc/incpath.c             | 12 ++++----
- gcc/prefix.c              |  6 ++--
+ gcc/gcc.cc                | 20 +++++++++----
+ gcc/incpath.cc            | 12 ++++----
+ gcc/prefix.cc             |  6 ++--
  8 files changed, 94 insertions(+), 72 deletions(-)
 
-diff --git a/gcc/c-family/c-opts.c b/gcc/c-family/c-opts.c
+diff --git a/gcc/c-family/c-opts.cc b/gcc/c-family/c-opts.cc
 index 89e05a4c551..5577383665d 100644
---- a/gcc/c-family/c-opts.c
-+++ b/gcc/c-family/c-opts.c
+--- a/gcc/c-family/c-opts.cc
++++ b/gcc/c-family/c-opts.cc
 @@ -1436,8 +1436,8 @@ add_prefixed_path (const char *suffix, incpath_kind chain)
    size_t prefix_len, suffix_len;
  
@@ -216,10 +217,10 @@ index 0c2bba5ea32..313a8de4417 100644
      { 0, 0, 0, 0, 0, 0 }				\
    }
  #endif
-diff --git a/gcc/cppdefault.c b/gcc/cppdefault.c
+diff --git a/gcc/cppdefault.cc b/gcc/cppdefault.cc
 index d54d6ce0076..784a92a0c24 100644
---- a/gcc/cppdefault.c
-+++ b/gcc/cppdefault.c
+--- a/gcc/cppdefault.cc
++++ b/gcc/cppdefault.cc
 @@ -35,6 +35,30 @@
  # undef CROSS_INCLUDE_DIR
  #endif
@@ -377,10 +378,10 @@ index fd3c655db1c..20669ac427d 100644
  /* The run-time execution prefix.  This is typically the lib/gcc
     subdirectory of the actual installation.  */
  extern const char *gcc_exec_prefix;
-diff --git a/gcc/gcc.c b/gcc/gcc.c
+diff --git a/gcc/gcc.cc b/gcc/gcc.cc
 index 8737bae5353..aa6fbe43965 100644
---- a/gcc/gcc.c
-+++ b/gcc/gcc.c
+--- a/gcc/gcc.cc
++++ b/gcc/gcc.cc
 @@ -252,6 +252,8 @@ FILE *report_times_to_file = NULL;
  #endif
  static const char *target_system_root = DEFAULT_TARGET_SYSTEM_ROOT;
@@ -437,10 +438,10 @@ index 8737bae5353..aa6fbe43965 100644
  	  case 'S':
  	    value = do_spec_1 (startfile_spec, 0, NULL);
  	    if (value != 0)
-diff --git a/gcc/incpath.c b/gcc/incpath.c
+diff --git a/gcc/incpath.cc b/gcc/incpath.cc
 index fbfc0ce03b8..a82e543428b 100644
---- a/gcc/incpath.c
-+++ b/gcc/incpath.c
+--- a/gcc/incpath.cc
++++ b/gcc/incpath.cc
 @@ -131,7 +131,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
    int relocated = cpp_relocated ();
    size_t len;
@@ -484,10 +485,10 @@ index fbfc0ce03b8..a82e543428b 100644
  			     NULL);
  	      str = update_path (ostr, p->component);
  	      free (ostr);
-diff --git a/gcc/prefix.c b/gcc/prefix.c
+diff --git a/gcc/prefix.cc b/gcc/prefix.cc
 index 747c09de638..f728638dc65 100644
---- a/gcc/prefix.c
-+++ b/gcc/prefix.c
+--- a/gcc/prefix.cc
++++ b/gcc/prefix.cc
 @@ -72,7 +72,9 @@ License along with GCC; see the file COPYING3.  If not see
  #include "prefix.h"
  #include "common/common-target.h"

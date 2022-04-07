@@ -32,16 +32,17 @@ gcc/Changelog:
 Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Bernhard Rosenkränzer <bernhard.rosenkraenzer.ext@huawei.com> [ported to gcc 12]
 ---
- gcc/config/i386/i386-expand.c | 4 ++--
- libgcc/config/i386/cpuinfo.c  | 6 +++---
- libgcc/config/i386/t-linux    | 2 +-
+ gcc/config/i386/i386-expand.cc | 4 ++--
+ libgcc/config/i386/cpuinfo.c   | 6 +++---
+ libgcc/config/i386/t-linux     | 2 +-
  3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/gcc/config/i386/i386-expand.c b/gcc/config/i386/i386-expand.c
+diff --git a/gcc/config/i386/i386-expand.cc b/gcc/config/i386/i386-expand.cc
 index ac69eed4d32..ffaa44a16fc 100644
---- a/gcc/config/i386/i386-expand.c
-+++ b/gcc/config/i386/i386-expand.c
+--- a/gcc/config/i386/i386-expand.cc
++++ b/gcc/config/i386/i386-expand.cc
 @@ -11038,10 +11038,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
      {
      case IX86_BUILTIN_CPU_INIT:

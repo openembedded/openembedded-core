@@ -14,14 +14,15 @@ wants this to be a failure, they can add "-Werror=poison-system-directories".
 Upstream-Status: Pending
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Bernhard Rosenkränzer <bernhard.rosenkraenzer.ext@huawei.com> [ported to gcc 12]
 ---
  gcc/common.opt      |  4 ++++
  gcc/config.in       | 10 ++++++++++
  gcc/configure       | 19 +++++++++++++++++++
  gcc/configure.ac    | 16 ++++++++++++++++
  gcc/doc/invoke.texi |  9 +++++++++
- gcc/gcc.c           |  9 +++++++--
- gcc/incpath.c       | 21 +++++++++++++++++++++
+ gcc/gcc.cc          |  9 +++++++--
+ gcc/incpath.cc      | 21 +++++++++++++++++++++
  7 files changed, 86 insertions(+), 2 deletions(-)
 
 diff --git a/gcc/common.opt b/gcc/common.opt
@@ -158,10 +159,10 @@ index 7a368959e5e..6659a903bf0 100644
  @item -Wfloat-equal
  @opindex Wfloat-equal
  @opindex Wno-float-equal
-diff --git a/gcc/gcc.c b/gcc/gcc.c
+diff --git a/gcc/gcc.cc b/gcc/gcc.cc
 index 7837553958b..19c75b6e20d 100644
---- a/gcc/gcc.c
-+++ b/gcc/gcc.c
+--- a/gcc/gcc.cc
++++ b/gcc/gcc.cc
 @@ -1152,6 +1152,8 @@ proper position among the other output files.  */
     "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
     "%X %{o*} %{e*} %{N} %{n} %{r}\
@@ -185,10 +186,10 @@ index 7837553958b..19c75b6e20d 100644
  
  /* Pass -d* flags, possibly modifying -dumpdir, -dumpbase et al.
  
-diff --git a/gcc/incpath.c b/gcc/incpath.c
+diff --git a/gcc/incpath.cc b/gcc/incpath.cc
 index 446d280321d..fbfc0ce03b8 100644
---- a/gcc/incpath.c
-+++ b/gcc/incpath.c
+--- a/gcc/incpath.cc
++++ b/gcc/incpath.cc
 @@ -26,6 +26,7 @@
  #include "intl.h"
  #include "incpath.h"

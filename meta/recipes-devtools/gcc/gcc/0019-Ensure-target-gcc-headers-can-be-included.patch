@@ -21,7 +21,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gcc/Makefile.in           | 2 ++
  gcc/config/linux.h        | 8 ++++++++
  gcc/config/rs6000/sysv4.h | 8 ++++++++
- gcc/cppdefault.c          | 4 ++++
+ gcc/cppdefault.cc         | 4 ++++
  4 files changed, 22 insertions(+)
 
 diff --git a/gcc/Makefile.in b/gcc/Makefile.in
@@ -96,10 +96,10 @@ index 510abe169c5..0c2bba5ea32 100644
      INCLUDE_DEFAULTS_MUSL_NATIVE			\
      { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },		\
      { 0, 0, 0, 0, 0, 0 }				\
-diff --git a/gcc/cppdefault.c b/gcc/cppdefault.c
+diff --git a/gcc/cppdefault.cc b/gcc/cppdefault.cc
 index c503d14fc3f..d54d6ce0076 100644
---- a/gcc/cppdefault.c
-+++ b/gcc/cppdefault.c
+--- a/gcc/cppdefault.cc
++++ b/gcc/cppdefault.cc
 @@ -64,6 +64,10 @@ const struct default_include cpp_include_defaults[]
      /* This is the dir for gcc's private headers.  */
      { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },

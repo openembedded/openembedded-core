@@ -4,6 +4,7 @@ Date: Fri, 29 Mar 2013 08:37:11 +0400
 Subject: [PATCH] gcc-4.3.1: ARCH_FLAGS_FOR_TARGET
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Bernhard Rosenkraenzer <bernhard.rosenkraenzer.ext@huawei.com> [ported to gcc 12]
 
 Upstream-Status: Inappropriate [embedded specific]
 ---
@@ -12,10 +13,10 @@ Upstream-Status: Inappropriate [embedded specific]
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/configure b/configure
-index 504f6410274..bcebad264ec 100755
+index f7e0fa46c9c..ce1f596e4ca 100755
 --- a/configure
 +++ b/configure
-@@ -9728,7 +9728,7 @@ fi
+@@ -10177,7 +10177,7 @@ fi
  # for target_alias and gcc doesn't manage it consistently.
  target_configargs="--cache-file=./config.cache ${target_configargs}"
  
@@ -25,10 +26,10 @@ index 504f6410274..bcebad264ec 100755
   *" newlib "*)
    case " $target_configargs " in
 diff --git a/configure.ac b/configure.ac
-index 088e735c5db..1289fe08760 100644
+index 434b1a267a4..a139a3c80ad 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -3240,7 +3240,7 @@ fi
+@@ -3348,7 +3348,7 @@ fi
  # for target_alias and gcc doesn't manage it consistently.
  target_configargs="--cache-file=./config.cache ${target_configargs}"
  

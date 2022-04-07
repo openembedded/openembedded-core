@@ -22,13 +22,14 @@ gcc/ChangeLog:
     * gcc.c: Pass sysroot options to cpp for preprocessed source
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Bernhard Rosenkränzer <bernhard.rosenkraenzer.ext@huawei.com> [ported to gcc 12]
 
 [YOCTO #2074]
 
 Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2021-October/582725.html]
 ---
  gcc/cp/lang-specs.h | 2 +-
- gcc/gcc.c           | 2 +-
+ gcc/gcc.cc          | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 Index: gcc-11.2.0/gcc/cp/lang-specs.h
@@ -44,10 +45,10 @@ Index: gcc-11.2.0/gcc/cp/lang-specs.h
        "  %{!fsyntax-only:"
        "    %{fmodule-only:%{!S:-o %g.s%V}}"
        "    %{!fmodule-only:%{!fmodule-header*:%(invoke_as)}}}"
-Index: gcc-11.2.0/gcc/gcc.c
+Index: gcc-11.2.0/gcc/gcc.cc
 ===================================================================
---- gcc-11.2.0.orig/gcc/gcc.c
-+++ gcc-11.2.0/gcc/gcc.c
+--- gcc-11.2.0.orig/gcc/gcc.cc
++++ gcc-11.2.0/gcc/gcc.cc
 @@ -1470,7 +1470,7 @@ static const struct compiler default_com
  					   %W{o*:--output-pch=%*}}%V}}}}}}}", 0, 0, 0},
    {".i", "@cpp-output", 0, 0, 0},
