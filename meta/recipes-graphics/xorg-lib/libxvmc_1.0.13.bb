@@ -4,6 +4,7 @@ DESCRIPTION = "XvMC extends the X Video extension (Xv) and enables \
 hardware rendered motion compensation support."
 
 require xorg-lib-common.inc
+SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.tar.xz"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0a207f08d4961489c55046c9a5e500da \
@@ -15,5 +16,4 @@ PE = "1"
 
 XORG_PN = "libXvMC"
 
-SRC_URI[md5sum] = "3569ff7f3e26864d986d6a21147eaa58"
-SRC_URI[sha256sum] = "6b3da7977b3f7eaf4f0ac6470ab1e562298d82c4e79077765787963ab7966dcd"
+SRC_URI[sha256sum] = "0a9ebe6dea7888a747e5aca1b891d53cd7d3a5f141a9645f77d9b6a12cee657c"
