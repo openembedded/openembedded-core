@@ -29,12 +29,12 @@ HOMEPAGE = "https://libbsd.freedesktop.org/wiki/"
 # License: public-domain-Colin-Plumb
 LICENSE = "BSD-3-Clause & BSD-4-Clause & ISC & PD"
 LICENSE:${PN} = "BSD-3-Clause & ISC & PD"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0b31944ca2c1075410a30f0c17379d3b"
+LIC_FILES_CHKSUM = "file://COPYING;md5=c2c635b94c8dcd3593f53e10fa8a499e"
 SECTION = "libs"
 
 SRC_URI = "https://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "1a9c952525635c1bb6770cb22e969b938d8e6a9d7912362b98ee8370599b0efd"
+SRC_URI[sha256sum] = "19b38f3172eaf693e6e1c68714636190c7e48851e45224d720b3b5bc0499b5df"
 
 inherit autotools pkgconfig
 
