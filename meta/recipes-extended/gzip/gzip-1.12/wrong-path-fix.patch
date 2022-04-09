@@ -18,19 +18,19 @@ Upstream-Status: Pending
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index d4ecc3f..e4657d2 100644
+index 4f51b61..80a5ddf 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -82,8 +82,7 @@ SUFFIXES = .in
+@@ -93,8 +93,7 @@ SUFFIXES = .in
  .in:
  	$(AM_V_GEN)rm -f $@-t $@ \
-           && sed \
+ 	  && sed \
 -		-e 's|/bin/sh|$(SHELL)|g' \
 -		-e 's|[@]GREP@|$(GREP)|g' \
 +		-e 's|[@]GREP@|$(base_bindir)/grep|g' \
- 		-e 's|[@]VERSION@|$(VERSION)|g' \
- 		$(srcdir)/$@.in >$@-t \
- 	  && chmod a=rx $@-t \
--- 
+ 		-e "s|'gzip'|$(GZIP_TRANSFORMED)|g" \
+ 		-e "s|'zdiff'|$(ZDIFF_TRANSFORMED)|g" \
+ 		-e "s|'zgrep'|$(ZGREP_TRANSFORMED)|g" \
+--
 2.7.4
 
