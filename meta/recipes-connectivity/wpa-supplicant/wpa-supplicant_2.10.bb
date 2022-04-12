@@ -11,7 +11,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5ebcb90236d1ad640558c3d3cd3035df \
 DEPENDS = "dbus libnl"
 
 SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
-           file://defconfig \
            file://wpa-supplicant.sh \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
@@ -25,7 +24,7 @@ S = "${WORKDIR}/wpa_supplicant-${PV}"
 
 inherit pkgconfig systemd
 
-PACKAGECONFIG ??= "openssl"
+PACKAGECONFIG ?= "openssl"
 PACKAGECONFIG[gnutls] = ",,gnutls libgcrypt"
 PACKAGECONFIG[openssl] = ",,openssl"
 
@@ -33,15 +32,12 @@ CVE_PRODUCT = "wpa_supplicant"
 
 do_configure () {
 	${MAKE} -C wpa_supplicant clean
-	install -m 0755 ${WORKDIR}/defconfig wpa_supplicant/.config
+	sed -e '/CONFIG_TLS=/d' <wpa_supplicant/defconfig >wpa_supplicant/.config
 
-	if echo "${PACKAGECONFIG}" | grep -qw "openssl"; then
-        	ssl=openssl
-	elif echo "${PACKAGECONFIG}" | grep -qw "gnutls"; then
-        	ssl=gnutls
-	fi
-	if [ -n "$ssl" ]; then
-        	sed -i "s/%ssl%/$ssl/" wpa_supplicant/.config
+	if ${@ bb.utils.contains('PACKAGECONFIG', 'openssl', 'true', 'false', d) }; then
+		echo 'CONFIG_TLS=openssl' >>wpa_supplicant/.config
+	elif ${@ bb.utils.contains('PACKAGECONFIG', 'gnutls', 'true', 'false', d) }; then
+		echo 'CONFIG_TLS=gnutls' >>wpa_supplicant/.config
 	fi
 
 	# For rebuild
