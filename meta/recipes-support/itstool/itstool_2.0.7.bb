@@ -5,7 +5,10 @@ XML files. It determines what to translate and how to chunk it into \
 messages using the W3C Internationalization Tag Set (ITS). "
 HOMEPAGE = "http://itstool.org/"
 LICENSE = "GPL-3.0-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=59c57b95fd7d0e9e238ebbc7ad47c5a5"
+LIC_FILES_CHKSUM = "\
+    file://COPYING;md5=59c57b95fd7d0e9e238ebbc7ad47c5a5 \
+    file://COPYING.GPL3;md5=d32239bcb673463ab874e80d47fae504 \
+"
 
 inherit autotools python3native
 
