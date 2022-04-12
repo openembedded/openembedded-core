@@ -96,15 +96,15 @@ pkg_postinst:${PN} () {
 	fi
 }
 
-PACKAGES:prepend = "wpa-supplicant-passphrase wpa-supplicant-cli "
+PACKAGE_BEFORE_PN += "${PN}-passphrase ${PN}-cli"
 
-FILES:wpa-supplicant-passphrase = "${bindir}/wpa_passphrase"
-FILES:wpa-supplicant-cli = "${sbindir}/wpa_cli"
+FILES:${PN}-passphrase = "${bindir}/wpa_passphrase"
+FILES:${PN}-cli = "${sbindir}/wpa_cli"
 FILES:${PN} += "${datadir}/dbus-1/system-services/* ${systemd_system_unitdir}/*"
 
 CONFFILES:${PN} += "${sysconfdir}/wpa_supplicant.conf"
 
-RRECOMMENDS:${PN} = "wpa-supplicant-passphrase wpa-supplicant-cli"
+RRECOMMENDS:${PN} = "${PN}-passphrase ${PN}-cli"
 
 SYSTEMD_SERVICE:${PN} = "wpa_supplicant.service"
 SYSTEMD_AUTO_ENABLE = "disable"
