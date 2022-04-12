@@ -55,6 +55,9 @@ do_compile () {
 	unset CFLAGS CPPFLAGS CXXFLAGS
 	sed -e "s:CFLAGS\ =.*:& \$(EXTRA_CFLAGS):g" -i ${S}/src/lib.rules
 	oe_runmake -C wpa_supplicant
+	if [ -z "${DISABLE_STATIC}" ]; then
+		oe_runmake -C wpa_supplicant libwpa_client.a
+	fi
 }
 
 do_install () {
@@ -89,6 +92,14 @@ do_install () {
 
 	install -d ${D}/etc/default/volatiles
 	install -m 0644 ${WORKDIR}/99_wpa_supplicant ${D}/etc/default/volatiles
+
+	install -d ${D}${includedir}
+	install -m 0644 ${S}/src/common/wpa_ctrl.h ${D}${includedir}
+
+	if [ -z "${DISABLE_STATIC}" ]; then
+		install -d ${D}${libdir}
+		install -m 0644 wpa_supplicant/libwpa_client.a ${D}${libdir}
+	fi
 }
 
 pkg_postinst:${PN} () {
