@@ -6,7 +6,9 @@ HOMEPAGE = "https://sourceware.org/systemtap/"
 
 require systemtap_git.inc
 
-SRC_URI += "file://0001-improve-reproducibility-for-c-compiling.patch"
+SRC_URI += "file://0001-improve-reproducibility-for-c-compiling.patch \
+            file://0001-gcc12-c-compatibility-re-tweak-for-rhel6-use-functio.patch \
+           "
 
 DEPENDS = "elfutils"
 
