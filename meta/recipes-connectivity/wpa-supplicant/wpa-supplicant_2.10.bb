@@ -30,6 +30,8 @@ PACKAGECONFIG[openssl] = ",,openssl"
 
 CVE_PRODUCT = "wpa_supplicant"
 
+EXTRA_OEMAKE = "'LIBDIR=${libdir}' 'INCDIR=${includedir}' 'BINDIR=${sbindir}'"
+
 do_configure () {
 	${MAKE} -C wpa_supplicant clean
 	sed -e '/CONFIG_TLS=/d' <wpa_supplicant/defconfig >wpa_supplicant/.config
@@ -44,12 +46,7 @@ do_configure () {
 	rm -f wpa_supplicant/*.d wpa_supplicant/dbus/*.d
 }
 
-export EXTRA_CFLAGS = "${CFLAGS}"
-export BINDIR = "${sbindir}"
-
 do_compile () {
-	unset CFLAGS CPPFLAGS CXXFLAGS
-	sed -e "s:CFLAGS\ =.*:& \$(EXTRA_CFLAGS):g" -i ${S}/src/lib.rules
 	oe_runmake -C wpa_supplicant
 	if [ -z "${DISABLE_STATIC}" ]; then
 		oe_runmake -C wpa_supplicant libwpa_client.a
@@ -57,12 +54,7 @@ do_compile () {
 }
 
 do_install () {
-	install -d ${D}${sbindir}
-	install -m 755 wpa_supplicant/wpa_supplicant ${D}${sbindir}
-	install -m 755 wpa_supplicant/wpa_cli        ${D}${sbindir}
-
-	install -d ${D}${bindir}
-	install -m 755 wpa_supplicant/wpa_passphrase ${D}${bindir}
+	oe_runmake -C wpa_supplicant DESTDIR="${D}" install
 
 	install -d ${D}${docdir}/wpa_supplicant
 	install -m 644 wpa_supplicant/README ${WORKDIR}/wpa_supplicant.conf ${D}${docdir}/wpa_supplicant
