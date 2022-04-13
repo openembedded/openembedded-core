@@ -12,9 +12,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c84cac88e46fc07647ea07e6c24eeb7c \
 
 inherit allarch autotools pkgconfig gettext gtk-icon-cache gnomebase
 
-SRC_URI += " file://0001-Don-t-use-AC_CANONICAL_HOST.patch"
+SRC_URI += " \
+           file://0001-Don-t-use-AC_CANONICAL_HOST.patch \
+           file://0001-Run-installation-commands-as-shell-jobs.patch \
+           "
 
-SRC_URI[archive.sha256sum] = "5e85b5adc8dee666900fcaf271ba717f7dcb9d0a03d96dae08f9cbd27e18b1e0"
+SRC_URI[archive.sha256sum] = "ef5339d8c35fcad5d10481b70480803f0fa20b3d3cbc339238fcaceeaee01eba"
 
 DEPENDS += "librsvg-native"
 
