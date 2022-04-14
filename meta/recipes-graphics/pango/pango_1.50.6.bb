@@ -18,7 +18,9 @@ inherit gnomebase gi-docgen ptest-gnome upstream-version-is-even gobject-introsp
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 
-SRC_URI += "file://run-ptest"
+SRC_URI += "file://run-ptest \
+            file://0001-Skip-running-test-layout-test.patch \
+"
 
 SRC_URI[archive.sha256sum] = "a998bcf36881c3ac20495d40bceb304f4eaa9175bd2967c85656434cbdafe86a"
 
