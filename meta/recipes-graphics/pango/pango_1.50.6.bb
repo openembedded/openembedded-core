@@ -37,10 +37,6 @@ do_configure:prepend() {
     chmod +x ${S}/tests/*.py
 }
 
-do_configure:prepend:toolchain-clang() {
-    sed -i -e "/Werror=implicit-fallthrough/d" ${S}/meson.build
-}
-
 LEAD_SONAME = "libpango-1.0*"
 
 FILES:${PN} = "${bindir}/* ${libdir}/libpango*${SOLIBS}"
