@@ -2,7 +2,7 @@ SUMMARY = "Distributed version control system"
 HOMEPAGE = "http://git-scm.com"
 DESCRIPTION = "Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency."
 SECTION = "console/utils"
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPL-2.0-only & GPL-2.0-or-later & BSD-3-Clause & MIT & BSL-1.0 & LGPL-2.1-or-later"
 DEPENDS = "openssl zlib"
 
 PROVIDES:append:class-native = " git-replacement-native"
@@ -14,7 +14,16 @@ SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
 
 S = "${WORKDIR}/git-${PV}"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=7c0d7ef03a7eb04ce795b0f60e68e7e1"
+LIC_FILES_CHKSUM = "\
+	file://COPYING;md5=7c0d7ef03a7eb04ce795b0f60e68e7e1 \
+	file://reftable/LICENSE;md5=1a6424cafc4c9c88c689848e165af33b \
+	file://sha1dc/LICENSE.txt;md5=9bbe4c990a9e98ea4b98ef5d3bcb8a7a \
+	file://compat/nedmalloc/License.txt;md5=e4224ccaecb14d942c71d31bef20d78c \
+	file://compat/inet_ntop.c;md5=76593c6f74e8ced5b24520175688d59b;endline=16 \
+	file://compat/obstack.h;md5=08ad25fee5428cd879ceef451ce3a22e;endline=18 \
+	file://compat/poll/poll.h;md5=9fc00170a53b8e3e52157c91ac688dd1;endline=19 \
+	file://compat/regex/regex.h;md5=30cc8af0e6f0f8a25acec6d8783bb763;beginline=4;endline=22 \
+"
 
 CVE_PRODUCT = "git-scm:git"
 
