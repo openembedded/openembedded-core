@@ -11,11 +11,11 @@ SRC_URI += "file://OEToolchainConfig.cmake \
 
 LICENSE:append = " & BSD-1-Clause & MIT & BSD-2-Clause"
 LIC_FILES_CHKSUM:append = " \
-    file://Utilities/cmjsoncpp/LICENSE;md5=fa2a23dd1dc6c139f35105379d76df2b \
+    file://Utilities/cmjsoncpp/LICENSE;md5=5d73c165a0f9e86a1342f32d19ec5926 \
     file://Utilities/cmlibarchive/COPYING;md5=d499814247adaee08d88080841cb5665 \
     file://Utilities/cmexpat/COPYING;md5=9e2ce3b3c4c0f2670883a23bbd7c37a9 \
     file://Utilities/cmlibrhash/COPYING;md5=a8c2a557a5c53b1c12cddbee98c099af \
-    file://Utilities/cmlibuv/LICENSE;md5=a68902a430e32200263d182d44924d47 \
+    file://Utilities/cmlibuv/LICENSE;md5=ad93ca1fffe931537fcf64f6fcce084d \
 "
 
 B = "${WORKDIR}/build"
