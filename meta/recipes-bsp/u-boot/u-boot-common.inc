@@ -18,4 +18,7 @@ SRC_URI = "git://source.denx.de/u-boot/u-boot.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
+
+inherit pkgconfig
+
 do_configure[cleandirs] = "${B}"
