@@ -10,7 +10,7 @@ SRC_URI = "git://pagure.io/libaio.git;protocol=https;branch=master \
            file://libaio_fix_for_mips_syscalls.patch \
            file://system-linkage.patch \
            "
-SRCREV = "d025927efa75a0d1b46ca3a5ef331caa2f46ee0e"
+SRCREV = "1b18bfafc6a2f7b9fa2c6be77a95afed8b7be448"
 S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE =+ "prefix=${prefix} includedir=${includedir} libdir=${libdir}"
