@@ -24,10 +24,8 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://fix-potential-signed-overflow-in-pointer-arithmatic.patch \
            file://sshd_check_keys \
            file://add-test-support-for-busybox.patch \
-           file://f107467179428a0e3ea9e4aa9738ac12ff02822d.patch \
-           file://0001-Default-to-not-using-sandbox-when-cross-compiling.patch \
            "
-SRC_URI[sha256sum] = "fd497654b7ab1686dac672fb83dfb4ba4096e8b5ffcdaccd262380ae58bec5e7"
+SRC_URI[sha256sum] = "03974302161e9ecce32153cfa10012f1e65c8f3750f573a73ab1befd5972a28a"
 
 # This CVE is specific to OpenSSH with the pam opie which we don't build/use here
 CVE_CHECK_IGNORE += "CVE-2007-2768"
