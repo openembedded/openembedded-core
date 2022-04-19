@@ -17,13 +17,16 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://pkgconfig.patch \
            file://0001-Do-not-fail-when-testing-config-scripts.patch \
+           file://run-ptest \
            "
 
 SRC_URI[sha256sum] = "8e3d2da7a8b9a104dd8e9212ebe8e0daf86aa838cc1314ba6bc4de8f2d8a1ff9"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
-inherit autotools binconfig-disabled pkgconfig gettext multilib_header multilib_script
+inherit autotools binconfig-disabled pkgconfig gettext multilib_header multilib_script ptest
+
+RDEPENDS:${PN}-ptest:append = " make"
 
 MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/gpgrt-config"
 
@@ -33,6 +36,15 @@ do_install:append() {
 	# we don't have common lisp in OE
 	rm -rf "${D}${datadir}/common-lisp/"
 	oe_multilib_header gpg-error.h gpgrt.h
+}
+
+do_compile_ptest() {
+    oe_runmake -C tests buildtest-TESTS
+}
+
+do_install_ptest() {
+    install ${B}/tests/t-*[!\.o] ${D}${PTEST_PATH}
+    install ${B}/tests/Makefile ${D}${PTEST_PATH}
 }
 
 FILES:${PN}-dev += "${bindir}/gpg-error"
