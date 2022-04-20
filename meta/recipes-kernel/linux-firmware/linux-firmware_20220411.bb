@@ -267,7 +267,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-bcm4373 \
              ${PN}-bcm43xx \
              ${PN}-bcm43xx-hdr \
-             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k \
+             ${PN}-atheros-license ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k ${PN}-ath3k \
              ${PN}-gplv2-license ${PN}-carl9170 \
              ${PN}-ar3k-license ${PN}-ar3k ${PN}-ath10k-license ${PN}-ath10k ${PN}-ath11k ${PN}-qca \
              \
@@ -316,6 +316,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
 
 # For atheros
 LICENSE:${PN}-ar9170 = "Firmware-atheros_firmware"
+LICENSE:${PN}-ath3k = "Firmware-atheros_firmware"
 LICENSE:${PN}-ath6k = "Firmware-atheros_firmware"
 LICENSE:${PN}-ath9k = "Firmware-atheros_firmware"
 LICENSE:${PN}-atheros-license = "Firmware-atheros_firmware"
@@ -323,6 +324,9 @@ LICENSE:${PN}-atheros-license = "Firmware-atheros_firmware"
 FILES:${PN}-atheros-license = "${nonarch_base_libdir}/firmware/LICENCE.atheros_firmware"
 FILES:${PN}-ar9170 = " \
   ${nonarch_base_libdir}/firmware/ar9170*.fw \
+"
+FILES:${PN}-ath3k = " \
+  ${nonarch_base_libdir}/firmware/ath3k*fw \
 "
 FILES:${PN}-ath6k = " \
   ${nonarch_base_libdir}/firmware/ath6k \
