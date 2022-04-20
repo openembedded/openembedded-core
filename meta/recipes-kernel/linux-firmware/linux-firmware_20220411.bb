@@ -352,7 +352,7 @@ FILES_${PN}-carl9170 = " \
 RDEPENDS_${PN}-carl9170 += "${PN}-gplv2-license"
 
 # For QualCommAthos
-LICENSE_${PN}-ar3k = "Firmware-qualcommAthos_ar3k"
+LICENSE_${PN}-ar3k = "Firmware-qualcommAthos_ar3k & Firmware-atheros_firmware"
 LICENSE_${PN}-ar3k-license = "Firmware-qualcommAthos_ar3k"
 LICENSE_${PN}-ath10k = "Firmware-qualcommAthos_ath10k"
 LICENSE_${PN}-ath10k-license = "Firmware-qualcommAthos_ath10k"
@@ -376,7 +376,7 @@ FILES_${PN}-qca = " \
   ${nonarch_base_libdir}/firmware/qca \
 "
 
-RDEPENDS_${PN}-ar3k += "${PN}-ar3k-license"
+RDEPENDS_${PN}-ar3k += "${PN}-ar3k-license ${PN}-atheros-license"
 RDEPENDS_${PN}-ath10k += "${PN}-ath10k-license"
 RDEPENDS_${PN}-ath11k += "${PN}-ath10k-license"
 RDEPENDS_${PN}-qca += "${PN}-ath10k-license"
