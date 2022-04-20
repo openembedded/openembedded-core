@@ -7,9 +7,10 @@ can exist in several sizes and the library automatically picks the best \
 size."
 
 require xorg-lib-common.inc
+SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.tar.xz"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=8902e6643f7bcd7793b23dcd5d8031a4"
+LIC_FILES_CHKSUM = "file://COPYING;md5=dbf3bd0f2348eeccd0f217146ba26250"
 
 DEPENDS += "libxrender libxfixes"
 
@@ -17,7 +18,6 @@ PE = "1"
 
 XORG_PN = "libXcursor"
 
-SRC_URI[md5sum] = "9b9be0e289130fb820aedf67705fc549"
-SRC_URI[sha256sum] = "3ad3e9f8251094af6fe8cb4afcf63e28df504d46bfa5a5529db74a505d628782"
+SRC_URI[sha256sum] = "46c143731610bafd2070159a844571b287ac26192537d047a39df06155492104"
 
 BBCLASSEXTEND = "native nativesdk"
