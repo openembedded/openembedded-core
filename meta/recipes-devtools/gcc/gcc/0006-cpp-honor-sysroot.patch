@@ -1,4 +1,4 @@
-From e6a820a19c4cd115d8af7c235c5f9700c7a24730 Mon Sep 17 00:00:00 2001
+From abc3b82ab24169277f2090e9df1ceac3573142be Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 29 Mar 2013 09:22:00 +0400
 Subject: [PATCH] cpp: honor sysroot.
@@ -19,14 +19,14 @@ RP 2012/04/13
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2021-October/582725.html]
+Upstream-Status: Pending
 ---
  gcc/cp/lang-specs.h | 2 +-
- gcc/gcc.c           | 2 +-
+ gcc/gcc.cc          | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/gcc/cp/lang-specs.h b/gcc/cp/lang-specs.h
-index 8902ae1d2ed..e99e2fcd6ad 100644
+index f35c9fab76b..19ddc98ce7f 100644
 --- a/gcc/cp/lang-specs.h
 +++ b/gcc/cp/lang-specs.h
 @@ -116,7 +116,7 @@ along with GCC; see the file COPYING3.  If not see
@@ -38,11 +38,11 @@ index 8902ae1d2ed..e99e2fcd6ad 100644
        "  %{!fsyntax-only:"
        "    %{fmodule-only:%{!S:-o %g.s%V}}"
        "    %{!fmodule-only:%{!fmodule-header*:%(invoke_as)}}}"
-diff --git a/gcc/gcc.c b/gcc/gcc.c
-index b047fc31c2f..bdee2671532 100644
---- a/gcc/gcc.c
-+++ b/gcc/gcc.c
-@@ -1469,7 +1469,7 @@ static const struct compiler default_compilers[] =
+diff --git a/gcc/gcc.cc b/gcc/gcc.cc
+index ce161d3c853..aa4cf92fb78 100644
+--- a/gcc/gcc.cc
++++ b/gcc/gcc.cc
+@@ -1476,7 +1476,7 @@ static const struct compiler default_compilers[] =
  					   %W{o*:--output-pch=%*}}%V}}}}}}}", 0, 0, 0},
    {".i", "@cpp-output", 0, 0, 0},
    {"@cpp-output",

@@ -1,4 +1,4 @@
-From 1766cf28fd7d917df510b1c262c47211b9ea70fa Mon Sep 17 00:00:00 2001
+From 5455fc1de74897a27c1199dc5611ec02243e24af Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 29 Mar 2013 09:17:25 +0400
 Subject: [PATCH] Use the defaults.h in ${B} instead of ${S}, and t-oe in ${B}
@@ -26,10 +26,10 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  4 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-index 7bfd6ce653f..95962ae37b6 100644
+index 31ff95500c9..a8277254696 100644
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
-@@ -552,7 +552,7 @@ TARGET_SYSTEM_ROOT = @TARGET_SYSTEM_ROOT@
+@@ -553,7 +553,7 @@ TARGET_SYSTEM_ROOT = @TARGET_SYSTEM_ROOT@
  TARGET_SYSTEM_ROOT_DEFINE = @TARGET_SYSTEM_ROOT_DEFINE@
  
  xmake_file=@xmake_file@
@@ -39,10 +39,10 @@ index 7bfd6ce653f..95962ae37b6 100644
  TM_MULTILIB_CONFIG=@TM_MULTILIB_CONFIG@
  TM_MULTILIB_EXCEPTIONS_CONFIG=@TM_MULTILIB_EXCEPTIONS_CONFIG@
 diff --git a/gcc/configure b/gcc/configure
-index d7445339f9a..f5b99d1cf7d 100755
+index dc2d59701ad..3fc0e2f5813 100755
 --- a/gcc/configure
 +++ b/gcc/configure
-@@ -13131,8 +13131,8 @@ for f in $tm_file; do
+@@ -13381,8 +13381,8 @@ for f in $tm_file; do
         tm_include_list="${tm_include_list} $f"
         ;;
      defaults.h )
@@ -54,10 +54,10 @@ index d7445339f9a..f5b99d1cf7d 100755
      * )
         tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
 diff --git a/gcc/configure.ac b/gcc/configure.ac
-index fe488f2232b..29005f6d18f 100644
+index 36ce78924de..46de496b256 100644
 --- a/gcc/configure.ac
 +++ b/gcc/configure.ac
-@@ -2294,8 +2294,8 @@ for f in $tm_file; do
+@@ -2332,8 +2332,8 @@ for f in $tm_file; do
         tm_include_list="${tm_include_list} $f"
         ;;
      defaults.h )
@@ -69,7 +69,7 @@ index fe488f2232b..29005f6d18f 100644
      * )
         tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
 diff --git a/gcc/mkconfig.sh b/gcc/mkconfig.sh
-index c49acd8f7e4..a0a657bdbb9 100644
+index 91cc43f69ff..8de33713cd8 100644
 --- a/gcc/mkconfig.sh
 +++ b/gcc/mkconfig.sh
 @@ -77,7 +77,7 @@ if [ -n "$HEADERS" ]; then

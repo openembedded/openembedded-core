@@ -1,10 +1,10 @@
-From 2c2a92573598ddbc33c023fe5d499191491fb523 Mon Sep 17 00:00:00 2001
+From 7f40f8321fb999e9b34d948724517d3fb0d26820 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Thu, 28 Oct 2021 11:33:40 +0100
-Subject: [PATCH] If CXXFLAGS contains something unsupported by the build CXX,
- we see build failures (e.g. using -fmacro-prefix-map for the target).
+Subject: [PATCH] Pass CXXFLAGS_FOR_BUILD in a couple of places to avoid these
+ errors.
 
-Pass CXXFLAGS_FOR_BUILD in a couple of places to avoid these errors.
+If CXXFLAGS contains something unsupported by the build CXX, we see build failures (e.g. using -fmacro-prefix-map for the target).
 
 2021-10-28 Richard Purdie <richard.purdie@linuxfoundation.org>
 
@@ -23,7 +23,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 4 insertions(+)
 
 diff --git a/Makefile.in b/Makefile.in
-index 33476d53327..b949dffee0e 100644
+index 593495e1650..1d9c83cc566 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -176,6 +176,7 @@ BUILD_EXPORTS = \
@@ -43,7 +43,7 @@ index 33476d53327..b949dffee0e 100644
  	DSYMUTIL="$(DSYMUTIL)"; export DSYMUTIL; \
  	LD="$(LD)"; export LD; \
 diff --git a/Makefile.tpl b/Makefile.tpl
-index e39d85d1109..d8520cbb164 100644
+index ef58fac2b9a..bab04f335c2 100644
 --- a/Makefile.tpl
 +++ b/Makefile.tpl
 @@ -179,6 +179,7 @@ BUILD_EXPORTS = \

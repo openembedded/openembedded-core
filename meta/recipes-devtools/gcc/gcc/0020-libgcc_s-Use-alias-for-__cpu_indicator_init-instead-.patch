@@ -1,4 +1,4 @@
-From b3957bc1fd52ec427a1b71b10055905cab4bbc7c Mon Sep 17 00:00:00 2001
+From a32c75b37209d6836eaaa943dc6b1207acba5d27 Mon Sep 17 00:00:00 2001
 From: Szabolcs Nagy <nsz@port70.net>
 Date: Sat, 24 Oct 2015 20:09:53 +0000
 Subject: [PATCH] libgcc_s: Use alias for __cpu_indicator_init instead of
@@ -33,30 +33,30 @@ Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- gcc/config/i386/i386-expand.c | 4 ++--
- libgcc/config/i386/cpuinfo.c  | 6 +++---
- libgcc/config/i386/t-linux    | 2 +-
+ gcc/config/i386/i386-expand.cc | 4 ++--
+ libgcc/config/i386/cpuinfo.c   | 6 +++---
+ libgcc/config/i386/t-linux     | 2 +-
  3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/gcc/config/i386/i386-expand.c b/gcc/config/i386/i386-expand.c
-index 31eae75d277..ec7e858ec83 100644
---- a/gcc/config/i386/i386-expand.c
-+++ b/gcc/config/i386/i386-expand.c
-@@ -11066,10 +11066,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
+diff --git a/gcc/config/i386/i386-expand.cc b/gcc/config/i386/i386-expand.cc
+index 68978ef8dc2..0c71f36b572 100644
+--- a/gcc/config/i386/i386-expand.cc
++++ b/gcc/config/i386/i386-expand.cc
+@@ -12321,10 +12321,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
      {
      case IX86_BUILTIN_CPU_INIT:
        {
--	/* Make it call __cpu_indicator_init in libgcc. */
-+	/* Make it call __cpu_indicator_init_local in libgcc.a. */
+-	/* Make it call __cpu_indicator_init in libgcc.  */
++	/* Make it call __cpu_indicator_init_local in libgcc.a.  */
  	tree call_expr, fndecl, type;
-         type = build_function_type_list (integer_type_node, NULL_TREE); 
+ 	type = build_function_type_list (integer_type_node, NULL_TREE);
 -	fndecl = build_fn_decl ("__cpu_indicator_init", type);
 +	fndecl = build_fn_decl ("__cpu_indicator_init_local", type);
- 	call_expr = build_call_expr (fndecl, 0); 
+ 	call_expr = build_call_expr (fndecl, 0);
  	return expand_expr (call_expr, target, mode, EXPAND_NORMAL);
        }
 diff --git a/libgcc/config/i386/cpuinfo.c b/libgcc/config/i386/cpuinfo.c
-index ef463848f9d..1a3de052c80 100644
+index dab1d98060f..cf824b4114a 100644
 --- a/libgcc/config/i386/cpuinfo.c
 +++ b/libgcc/config/i386/cpuinfo.c
 @@ -63,7 +63,7 @@ __cpu_indicator_init (void)

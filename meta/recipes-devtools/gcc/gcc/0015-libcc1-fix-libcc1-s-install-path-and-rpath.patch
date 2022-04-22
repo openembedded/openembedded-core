@@ -1,4 +1,4 @@
-From fd862c8c112067d8613d921ae89c99056aca54a1 Mon Sep 17 00:00:00 2001
+From bf918db7117f41d3c04162095641165ca241707d Mon Sep 17 00:00:00 2001
 From: Robert Yang <liezhi.yang@windriver.com>
 Date: Sun, 5 Jul 2015 20:25:18 -0700
 Subject: [PATCH] libcc1: fix libcc1's install path and rpath
@@ -20,10 +20,10 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/libcc1/Makefile.am b/libcc1/Makefile.am
-index 3b75e7d9290..d3a4c4f9ddf 100644
+index 6e3a34ff7e2..3f3f6391aba 100644
 --- a/libcc1/Makefile.am
 +++ b/libcc1/Makefile.am
-@@ -41,8 +41,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
+@@ -40,8 +40,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
  	    $(Wc)$(libiberty_normal)))
  libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
  
@@ -35,10 +35,10 @@ index 3b75e7d9290..d3a4c4f9ddf 100644
  if ENABLE_PLUGIN
  plugin_LTLIBRARIES = libcc1plugin.la libcp1plugin.la
 diff --git a/libcc1/Makefile.in b/libcc1/Makefile.in
-index 07fa9d94c83..a9f737d78f2 100644
+index f8f590d71e9..56462492045 100644
 --- a/libcc1/Makefile.in
 +++ b/libcc1/Makefile.in
-@@ -398,8 +398,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
+@@ -396,8 +396,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
  	    $(Wc)$(libiberty_normal)))
  
  libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))

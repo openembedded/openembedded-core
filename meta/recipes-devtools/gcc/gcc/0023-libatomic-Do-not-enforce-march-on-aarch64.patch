@@ -1,4 +1,4 @@
-From df1c63bbd7a520e8c6d0d0692b4d8bff56952394 Mon Sep 17 00:00:00 2001
+From 52931ec7a708b58d68e69ce9eb99001ae9f099dd Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 13 May 2020 15:10:38 -0700
 Subject: [PATCH] libatomic: Do not enforce march on aarch64
@@ -17,7 +17,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 2 deletions(-)
 
 diff --git a/libatomic/Makefile.am b/libatomic/Makefile.am
-index ab8c2da24a1..f614a46b34d 100644
+index d88515e4a03..e0e2f8b442a 100644
 --- a/libatomic/Makefile.am
 +++ b/libatomic/Makefile.am
 @@ -125,7 +125,6 @@ libatomic_la_LIBADD = $(foreach s,$(SIZES),$(addsuffix _$(s)_.lo,$(SIZEOBJS)))
