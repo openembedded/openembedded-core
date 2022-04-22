@@ -99,6 +99,7 @@ pkg_postinst:${PN} () {
 }
 
 PACKAGE_BEFORE_PN += "${PN}-passphrase ${PN}-cli"
+PACKAGES =+ "${PN}-lib"
 PACKAGES += "${PN}-plugins"
 ALLOW_EMPTY:${PN}-plugins = "1"
 
@@ -107,8 +108,9 @@ NOAUTOPACKAGEDEBUG = "1"
 
 FILES:${PN}-passphrase = "${sbindir}/wpa_passphrase"
 FILES:${PN}-cli = "${sbindir}/wpa_cli"
+FILES:${PN}-lib = "${libdir}/libwpa_client*${SOLIBSDEV}"
 FILES:${PN} += "${datadir}/dbus-1/system-services/* ${systemd_system_unitdir}/*"
-FILES:${PN}-dbg += "${sbindir}/.debug"
+FILES:${PN}-dbg += "${sbindir}/.debug ${libdir}/.debug"
 
 CONFFILES:${PN} += "${sysconfdir}/wpa_supplicant.conf"
 
