@@ -1,7 +1,8 @@
-From 7cc2df084b7977653a9b59cbc34a9ad500ae619c Mon Sep 17 00:00:00 2001
+From 49008eeedc97014f44e12afe179d3785e4438372 Mon Sep 17 00:00:00 2001
 From: Richard Biener <rguenther@suse.de>
 Date: Tue, 20 Jul 2021 11:00:33 +0200
-Subject: [PATCH] debug/101473 - apply debug prefix maps before checksumming DIEs
+Subject: [PATCH] debug/101473 - apply debug prefix maps before checksumming
+ DIEs
 
 The following makes sure to apply the debug prefix maps to filenames
 before checksumming DIEs to create the global symbol for the CU DIE
@@ -36,10 +37,15 @@ The upstream patch was modified to compensate for the definition of
 this version of gcc.
 
 Signed-off-by: Tony Battersby <tonyb@cybernetics.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
-diff -urpN a/gcc/dwarf2out.c b/gcc/dwarf2out.c
---- a/gcc/dwarf2out.c	2021-04-27 06:00:13.000000000 -0400
-+++ b/gcc/dwarf2out.c	2021-07-23 16:40:06.141886167 -0400
+ gcc/dwarf2out.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/gcc/dwarf2out.c b/gcc/dwarf2out.c
+index e5d3ce4966d..41ac3008507 100644
+--- a/gcc/dwarf2out.c
++++ b/gcc/dwarf2out.c
 @@ -1283,6 +1283,7 @@ dwarf2out_switch_text_section (void)
  
  /* Data about a single source file.  */
@@ -48,7 +54,7 @@ diff -urpN a/gcc/dwarf2out.c b/gcc/dwarf2out.c
    const char * filename;
    int emitted_number;
  };
-@@ -12334,7 +12335,7 @@ file_name_acquire (dwarf_file_data **slo
+@@ -12335,7 +12336,7 @@ file_name_acquire (dwarf_file_data **slot, file_name_acquire_data *fnad)
  
    fi = fnad->files + fnad->used_files++;
  
@@ -57,7 +63,7 @@ diff -urpN a/gcc/dwarf2out.c b/gcc/dwarf2out.c
  
    /* Skip all leading "./".  */
    while (f[0] == '.' && IS_DIR_SEPARATOR (f[1]))
-@@ -27231,13 +27232,13 @@ dwarf2out_ignore_block (const_tree block
+@@ -27259,13 +27260,13 @@ dwarf2out_ignore_block (const_tree block)
  bool
  dwarf_file_hasher::equal (dwarf_file_data *p1, const char *p2)
  {
@@ -73,7 +79,7 @@ diff -urpN a/gcc/dwarf2out.c b/gcc/dwarf2out.c
  }
  
  /* Lookup FILE_NAME (in the list of filenames that we know about here in
-@@ -27267,7 +27268,8 @@ lookup_filename (const char *file_name)
+@@ -27295,7 +27296,8 @@ lookup_filename (const char *file_name)
      return *slot;
  
    created = ggc_alloc<dwarf_file_data> ();
@@ -83,7 +89,7 @@ diff -urpN a/gcc/dwarf2out.c b/gcc/dwarf2out.c
    created->emitted_number = 0;
    *slot = created;
    return created;
-@@ -27293,8 +27295,7 @@ maybe_emit_file (struct dwarf_file_data
+@@ -27321,8 +27323,7 @@ maybe_emit_file (struct dwarf_file_data * fd)
        if (output_asm_line_debug_info ())
  	{
  	  fprintf (asm_out_file, "\t.file %u ", fd->emitted_number);

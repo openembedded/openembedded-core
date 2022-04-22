@@ -1,4 +1,4 @@
-From 745a2ac7825c73102b888226c54397d21512f86b Mon Sep 17 00:00:00 2001
+From af72a47a677ce98c08cb73444bdd741ca8e28422 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 27 Jun 2017 18:10:54 -0700
 Subject: [PATCH] Add ssp_nonshared to link commandline for musl targets
@@ -22,9 +22,11 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gcc/config/rs6000/linux64.h | 10 ++++++++++
  3 files changed, 27 insertions(+)
 
+diff --git a/gcc/config/linux.h b/gcc/config/linux.h
+index ba02c013e30..8fcaa0c9faf 100644
 --- a/gcc/config/linux.h
 +++ b/gcc/config/linux.h
-@@ -203,6 +203,13 @@ see the files COPYING3 and COPYING.RUNTI
+@@ -203,6 +203,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
      { GCC_INCLUDE_DIRVAR, "GCC", 0, 1, 0, 0 },		\
      { 0, 0, 0, 0, 0, 0 }				\
    }
@@ -38,6 +40,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  #endif
  
  #if (DEFAULT_LIBC == LIBC_UCLIBC) && defined (SINGLE_LIBC) /* uClinux */
+diff --git a/gcc/config/rs6000/linux.h b/gcc/config/rs6000/linux.h
+index 47c9d9ac0b6..d065f88b377 100644
 --- a/gcc/config/rs6000/linux.h
 +++ b/gcc/config/rs6000/linux.h
 @@ -94,6 +94,16 @@
@@ -57,6 +61,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  #undef LINK_OS_LINUX_SPEC
  #define LINK_OS_LINUX_SPEC LINK_OS_LINUX_EMUL " %{!shared: %{!static: \
    %{!static-pie: \
+diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
+index a11e01faa3d..ce464f3626b 100644
 --- a/gcc/config/rs6000/linux64.h
 +++ b/gcc/config/rs6000/linux64.h
 @@ -369,6 +369,16 @@ extern int dot_symbols;
