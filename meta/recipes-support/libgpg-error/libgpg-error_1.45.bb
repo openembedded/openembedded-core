@@ -20,7 +20,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgpg-error/libgpg-error-${PV}.tar.bz2 \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "8e3d2da7a8b9a104dd8e9212ebe8e0daf86aa838cc1314ba6bc4de8f2d8a1ff9"
+SRC_URI[sha256sum] = "570f8ee4fb4bff7b7495cff920c275002aea2147e9a1d220c068213267f80a26"
 
 BINCONFIG = "${bindir}/gpg-error-config"
 
