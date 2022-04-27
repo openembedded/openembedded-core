@@ -83,7 +83,7 @@ FILES:libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=dc9d616e558490c389609a0e8b81ae6d"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=a89d03060ff9c46552434dbd1fe3ed1f"
 
 def icu_download_version(d):
     pvsplit = d.getVar('PV').split('.')
@@ -112,8 +112,8 @@ SRC_URI = "${BASE_SRC_URI};name=code \
 SRC_URI:append:class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[code.sha256sum] = "8d205428c17bf13bb535300669ed28b338a157b1c01ae66d31d0d3e2d47c3fd5"
-SRC_URI[data.sha256sum] = "c72723ddba3300ffb231d6b09e2a728ea6e89de10ed5927f74bacbd77042336e"
+SRC_URI[code.sha256sum] = "67a7e6e51f61faf1306b6935333e13b2c48abd8da6d2f46ce6adca24b1e21ebf"
+SRC_URI[data.sha256sum] = "e3882b4fece6e5e039f22c3189b7ba224180fd26fdbfa9db284617455b93e804"
 
 UPSTREAM_CHECK_REGEX = "icu4c-(?P<pver>\d+(_\d+)+)-src"
 UPSTREAM_CHECK_URI = "https://github.com/unicode-org/icu/releases"
