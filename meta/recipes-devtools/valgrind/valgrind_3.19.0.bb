@@ -19,22 +19,18 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://remove-for-aarch64 \
            file://remove-for-all \
            file://taskset_nondeterministic_tests \
-           file://0004-Fix-out-of-tree-builds.patch \
            file://0005-Modify-vg_test-wrapper-to-support-PTEST-formats.patch \
            file://use-appropriate-march-mcpu-mfpu-for-ARM-test-apps.patch \
            file://avoid-neon-for-targets-which-don-t-support-it.patch \
            file://valgrind-make-ld-XXX.so-strlen-intercept-optional.patch \
            file://0001-makefiles-Drop-setting-mcpu-to-cortex-a8-on-arm-arch.patch \
-           file://0001-str_tester.c-Limit-rawmemchr-test-to-glibc.patch \
            file://0001-sigqueue-Rename-_sifields-to-__si_fields-on-musl.patch \
            file://0002-context-APIs-are-not-available-on-musl.patch \
            file://0003-correct-include-directive-path-for-config.h.patch \
-           file://0005-tc20_verifywrap.c-Fake-__GLIBC_PREREQ-with-musl.patch \
            file://0001-memcheck-arm64-Define-__THROW-if-not-already-defined.patch \
            file://0002-memcheck-x86-Define-__THROW-if-not-defined.patch \
            file://0003-tests-seg_override-Replace-__modify_ldt-with-syscall.patch \
            file://0001-fix-opcode-not-supported-on-mips32-linux.patch \
-           file://0001-Guard-against-__GLIBC_PREREQ-for-musl-libc.patch \
            file://0001-Make-local-functions-static-to-avoid-assembler-error.patch \
            file://0001-Return-a-valid-exit_code-from-vg_regtest.patch \
            file://0001-valgrind-filter_xml_frames-do-not-filter-usr.patch \
@@ -42,10 +38,10 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://s390x_vec_op_t.patch \
            file://0001-none-tests-fdleak_cmsg.stderr.exp-adjust-tmp-paths.patch \
            file://0001-memcheck-tests-Fix-timerfd-syscall-test.patch \
-           file://0001-Implement-linux-rseq-syscall-as-ENOSYS.patch \
            file://0001-docs-Disable-manual-validation.patch \
+           file://0001-Fix-drd-tests-shared_timed_mutex.cpp.patch \
            "
-SRC_URI[sha256sum] = "00859aa13a772eddf7822225f4b46ee0d39afbe071d32778da4d99984081f7f5"
+SRC_URI[sha256sum] = "dd5e34486f1a483ff7be7300cc16b4d6b24690987877c3278d797534d6738f02"
 UPSTREAM_CHECK_REGEX = "valgrind-(?P<pver>\d+(\.\d+)+)\.tar"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64).*-linux'
@@ -145,8 +141,9 @@ SKIP_FILEDEPS:${PN}-ptest = '1'
 INSANE_SKIP:${PN}-ptest = "debug-deps"
 
 do_compile_ptest() {
-    oe_runmake check
+    oe_runmake ${PARALLEL_MAKE} check
 }
+
 
 do_install_ptest() {
     chmod +x ${B}/tests/vg_regtest
@@ -236,6 +233,9 @@ do_install_ptest() {
 
     # This is known failure see https://bugs.kde.org/show_bug.cgi?id=435732
     rm ${D}${PTEST_PATH}/memcheck/tests/leak_cpp_interior.vgtest
+
+    # https://bugs.kde.org/show_bug.cgi?id=445743
+    rm ${D}${PTEST_PATH}/drd/tests/pth_mutex_signal
 
     # As the binary isn't stripped or debug-splitted, the source file isn't fetched
     # via dwarfsrcfiles either, so it needs to be installed manually.
