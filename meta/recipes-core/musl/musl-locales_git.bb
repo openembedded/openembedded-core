@@ -14,14 +14,12 @@ SRCREV = "1101fb2bcdd189cd9415b8bd1c775eb43527d25c"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "virtual/libintl"
+DEPENDS = "virtual/libintl gettext-native"
 
 PROVIDES = "virtual/libc-locale"
 
-inherit cmake gettext
+inherit cmake
 
-EXTRA_OECMAKE = ""
-#
 # We will skip parsing for non-musl systems
 python () {
     if d.getVar('TCLIBC') != "musl":
