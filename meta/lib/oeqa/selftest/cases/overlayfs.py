@@ -62,10 +62,28 @@ DISTRO_FEATURES += "systemd overlayfs"
         self.add_overlay_conf_to_machine()
 
         res = bitbake('core-image-minimal', ignore_status=True)
-        line = getline(res, " Mount path /mnt/overlay not found in fstat and unit mnt-overlay.mount not found in systemd unit directories")
+        line = getline(res, " Mount path /mnt/overlay not found in fstab and unit mnt-overlay.mount not found in systemd unit directories")
         self.assertTrue(line and line.startswith("WARNING:"), msg=res.output)
         line = getline(res, "Not all mount paths and units are installed in the image")
         self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
+
+    def test_not_all_units_installed_but_qa_skipped(self):
+        """
+        Summary:   Test skipping the QA check
+        Expected:  Image is created successfully
+        Author:    Claudius Heine <ch@denx.de>
+        """
+
+        config = """
+IMAGE_INSTALL:append = " overlayfs-user"
+DISTRO_FEATURES += "systemd overlayfs"
+OVERLAYFS_QA_SKIP[mnt-overlay] = "mount-configured"
+"""
+
+        self.write_config(config)
+        self.add_overlay_conf_to_machine()
+
+        bitbake('core-image-minimal')
 
     def test_mount_unit_not_set(self):
         """
