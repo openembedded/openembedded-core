@@ -398,6 +398,10 @@ python overlayfs_qa_check() {
 
     allUnitExist = True;
     for mountPoint in overlayMountPoints:
+        qaSkip = (d.getVarFlag("OVERLAYFS_QA_SKIP", mountPoint) or "").split()
+        if "mount-configured" in qaSkip:
+            continue
+
         mountPath = d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint)
         if mountPath in fstabDevices:
             continue
@@ -407,8 +411,10 @@ python overlayfs_qa_check() {
                for dirpath in searchpaths):
             continue
 
-        bb.warn('Mount path %s not found in fstat and unit %s not found '
-                'in systemd unit directories' % (mountPath, mountUnit))
+        bb.warn(f'Mount path {mountPath} not found in fstab and unit '
+                f'{mountUnit} not found in systemd unit directories.')
+        bb.warn(f'Skip this check by setting OVERLAYFS_QA_SKIP[{mountPoint}] = '
+                '"mount-configured"')
         allUnitExist = False;
 
     if not allUnitExist:
