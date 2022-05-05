@@ -9,11 +9,9 @@ DEPENDS = "ncurses util-linux virtual/libiconv"
 SRC_URI = "${GNU_MIRROR}/parted/parted-${PV}.tar.xz \
            file://fix-doc-mandir.patch \
            file://run-ptest \
-           file://check-vfat.patch \
            "
 
-SRC_URI[md5sum] = "357d19387c6e7bc4a8a90fe2d015fe80"
-SRC_URI[sha256sum] = "e1298022472da5589b7f2be1d5ee3c1b66ec3d96dfbad03dc642afd009da5342"
+SRC_URI[sha256sum] = "4938dd5c1c125f6c78b1f4b3e297526f18ee74aa43d45c248578b1d2470c05a2"
 
 inherit autotools pkgconfig gettext texinfo ptest
 
