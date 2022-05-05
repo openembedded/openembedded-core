@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;beginline=0;endline=1;md5=8eac08d22113880357c
 
 DEPENDS += "gperf-native"
 
-SRCREV = "57357d2741a3b3d3e8425889a6b79a130e0fa2f3"
+SRCREV = "f33f95014b36f97b42f0c2290e96d5c31647ed10"
 
 SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.5;protocol=https \
            file://run-ptest \
@@ -51,4 +51,4 @@ FILES:${PN}-dbg += "${libdir}/${PN}/tests/.debug/* ${libdir}/${PN}/tools/.debug"
 
 RDEPENDS:${PN}-ptest = "coreutils bash"
 
-PV = "2.5.3"
+PV = "2.5.4"
