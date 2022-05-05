@@ -1,4 +1,4 @@
-From a6a25e1ecae91f48a4f87bf0cc17eaaf0a919ffe Mon Sep 17 00:00:00 2001
+From d2f3293ceb22731e0e97945f0d1132e356b66d07 Mon Sep 17 00:00:00 2001
 From: Alex Kiernan <alex.kiernan@gmail.com>
 Date: Fri, 7 Aug 2020 15:20:17 +0000
 Subject: [PATCH] Fix incompatible pointer type struct sockaddr_un *
@@ -23,9 +23,11 @@ Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
  src/nspawn/nspawn.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/src/nspawn/nspawn.c b/src/nspawn/nspawn.c
+index a2af4948c0..fb6af295b5 100644
 --- a/src/nspawn/nspawn.c
 +++ b/src/nspawn/nspawn.c
-@@ -5389,7 +5389,7 @@ static int cant_be_in_netns(void) {
+@@ -5399,7 +5399,7 @@ static int cant_be_in_netns(void) {
          if (fd < 0)
                  return log_error_errno(errno, "Failed to allocate udev control socket: %m");
  

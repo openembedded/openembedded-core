@@ -1,4 +1,4 @@
-From 5d730902f47498a2866b46875352f6810a01d67c Mon Sep 17 00:00:00 2001
+From c542d2d93cf536e91d4edb8791fdc0de732b0a52 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 13:41:41 +0800
 Subject: [PATCH] don't use glibc-specific qsort_r
@@ -19,9 +19,11 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
  src/shared/hwdb-util.c    | 19 ++++++++++++++-----
  3 files changed, 38 insertions(+), 31 deletions(-)
 
+diff --git a/src/basic/sort-util.h b/src/basic/sort-util.h
+index 02a6784d99..cb448df109 100644
 --- a/src/basic/sort-util.h
 +++ b/src/basic/sort-util.h
-@@ -61,18 +61,4 @@ static inline void _qsort_safe(void *bas
+@@ -61,18 +61,4 @@ static inline void _qsort_safe(void *base, size_t nmemb, size_t size, comparison
                  _qsort_safe((p), (n), sizeof((p)[0]), (comparison_fn_t) _func_); \
          })
  
@@ -40,9 +42,11 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
 -        })
 -
  int cmp_int(const int *a, const int *b);
+diff --git a/src/shared/format-table.c b/src/shared/format-table.c
+index b95680b365..5ffa208615 100644
 --- a/src/shared/format-table.c
 +++ b/src/shared/format-table.c
-@@ -1324,30 +1324,32 @@ static int cell_data_compare(TableData *
+@@ -1324,30 +1324,32 @@ static int cell_data_compare(TableData *a, size_t index_a, TableData *b, size_t
          return CMP(index_a, index_b);
  }
  
@@ -99,7 +103,7 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
          }
  
          if (t->display_map)
-@@ -2647,7 +2654,12 @@ int table_to_json(Table *t, JsonVariant
+@@ -2647,7 +2654,12 @@ int table_to_json(Table *t, JsonVariant **ret) {
                  for (size_t i = 0; i < n_rows; i++)
                          sorted[i] = i * t->n_columns;
  
@@ -113,9 +117,11 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
          }
  
          if (t->display_map)
+diff --git a/src/shared/hwdb-util.c b/src/shared/hwdb-util.c
+index fe4785f3e5..827e1639c3 100644
 --- a/src/shared/hwdb-util.c
 +++ b/src/shared/hwdb-util.c
-@@ -127,9 +127,13 @@ static struct trie* trie_free(struct tri
+@@ -127,9 +127,13 @@ static struct trie* trie_free(struct trie *trie) {
  
  DEFINE_TRIVIAL_CLEANUP_FUNC(struct trie*, trie_free);
  
@@ -132,7 +138,7 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
  }
  
  static int trie_node_add_value(struct trie *trie, struct trie_node *node,
-@@ -157,7 +161,10 @@ static int trie_node_add_value(struct tr
+@@ -157,7 +161,10 @@ static int trie_node_add_value(struct trie *trie, struct trie_node *node,
                          .value_off = v,
                  };
  
@@ -144,7 +150,7 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
                  if (val) {
                          /* At this point we have 2 identical properties on the same match-string.
                           * Since we process files in order, we just replace the previous value. */
-@@ -183,7 +190,9 @@ static int trie_node_add_value(struct tr
+@@ -183,7 +190,9 @@ static int trie_node_add_value(struct trie *trie, struct trie_node *node,
                  .line_number = line_number,
          };
          node->values_count++;

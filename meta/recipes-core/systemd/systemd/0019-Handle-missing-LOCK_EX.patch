@@ -1,4 +1,4 @@
-From 2284f2f44b1b30f10b9196e0f5c6d0a2e0c1871f Mon Sep 17 00:00:00 2001
+From f1574cf91340800cf8253e922b2c613d6b9b5e4a Mon Sep 17 00:00:00 2001
 From: Alex Kiernan <alex.kiernan@gmail.com>
 Date: Fri, 7 Aug 2020 15:19:27 +0000
 Subject: [PATCH] Handle missing LOCK_EX
@@ -11,7 +11,7 @@ Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/src/partition/makefs.c b/src/partition/makefs.c
-index 7c94fbfedb..42f966722d 100644
+index b6979b7e4f..63d70d861e 100644
 --- a/src/partition/makefs.c
 +++ b/src/partition/makefs.c
 @@ -6,6 +6,7 @@

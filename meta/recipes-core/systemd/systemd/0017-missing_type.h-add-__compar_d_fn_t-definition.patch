@@ -1,4 +1,4 @@
-From 64f4d2eb976b9f23ce85b3655a876f7299eafd58 Mon Sep 17 00:00:00 2001
+From 68bb59615e91c4d3e5eb2076979c2b760f4bf027 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 15:27:54 +0800
 Subject: [PATCH] missing_type.h: add __compar_d_fn_t definition
