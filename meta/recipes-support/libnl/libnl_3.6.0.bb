@@ -18,10 +18,10 @@ SRC_URI = " \
            https://github.com/thom311/${BPN}/releases/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
            file://enable-serial-tests.patch \
            file://run-ptest \
+           file://fa7f97f8982544c4fcb403893bae6701230d5165.patch \
           "
 
-SRC_URI[md5sum] = "74ba57b1b1d6f9f92268aa8141d8e8e4"
-SRC_URI[sha256sum] = "352133ec9545da76f77e70ccb48c9d7e5324d67f6474744647a7ed382b5e05fa"
+SRC_URI[sha256sum] = "532155fd011e5a805bd67121b87a01c757e2bb24112ac17e69cb86013b970009"
 
 
 UPSTREAM_CHECK_URI = "https://github.com/thom311/${BPN}/releases"
@@ -54,6 +54,7 @@ RREPLACES:${PN}-genl = "libnl-genl2"
 RCONFLICTS:${PN}-genl = "libnl-genl2"
 
 RDEPENDS:${PN}-ptest += "libcheck"
+RRECOMMENDS:${PN}-ptest += "kernel-module-dummy kernel-module-bonding"
 DEPENDS += "${@bb.utils.contains('PTEST_ENABLED', '1', 'libcheck', '', d)}"
 
 # make sure the tests don't link against wrong so file
@@ -70,6 +71,8 @@ do_install_ptest(){
     # upstream are not running these tests in their CI pipeline
     # issue opened https://github.com/thom311/libnl/issues/270
     install -m 0755 tests/.libs/* ${D}${PTEST_PATH}/
+    # contains build paths
+    rm ${D}${PTEST_PATH}/*.la
 }
 
 BBCLASSEXTEND = "native nativesdk"
