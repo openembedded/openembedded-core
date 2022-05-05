@@ -7,10 +7,9 @@ BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 SECTION = "libs"
 
 # helper program gcryptrnd and getrandom are under GPL, rest LGPL
-LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later & GPL-3.0-or-later"
+LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
 LICENSE:${PN} = "LGPL-2.1-or-later"
 LICENSE:${PN}-dev = "GPL-2.0-or-later & LGPL-2.1-or-later"
-LICENSE:dumpsexp-dev = "GPL-3.0-or-later"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://COPYING.LIB;md5=bbb461211a33b134d42ed5ee802b37ff \
@@ -65,9 +64,6 @@ do_install_ptest() {
     | xargs sed -e "s|${WORKDIR}|${PTEST_PATH}|g" -e "s|${WORKDIR}/recipe-sysroot-native||g" -i
 }
 
-PACKAGES =+ "dumpsexp-dev"
-
-FILES:${PN}-dev += "${bindir}/hmac256"
-FILES:dumpsexp-dev += "${bindir}/dumpsexp"
+FILES:${PN}-dev += "${bindir}/hmac256 ${bindir}/dumpsexp"
 
 BBCLASSEXTEND = "native nativesdk"
