@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https \
            file://lsof-remove-host-information.patch \
           "
 
-SRCREV = "005e014e1abdadb2493d8b3ce87b37a2c0a2351d"
+SRCREV = "67d8c828e7bdc01ba93f8ff79765dd424da0c9d7"
 
 S = "${WORKDIR}/git"
 
