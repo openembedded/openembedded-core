@@ -11,7 +11,7 @@ DEPENDS = "zlib kmod"
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
            file://configure.patch"
 
-SRC_URI[sha256sum] = "9d40b97be8b6a2cdf96aead5a61881d1f7e4e0da9544a9bac4fba1ae9dcd40eb"
+SRC_URI[sha256sum] = "91edbd0429a84705c9ad156d4ff38ccc724d41ea54c4c5b88e38e996f8a34f05"
 
 inherit multilib_header pkgconfig
 
@@ -46,7 +46,6 @@ do_install () {
 	oe_runmake DESTDIR=${D} install install-lib
 
 	install -d ${D}${bindir}
-	ln -s ../sbin/lspci ${D}${bindir}/lspci
 
 	oe_multilib_header pci/config.h
 }
