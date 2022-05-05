@@ -20,7 +20,7 @@ RCONFLICTS:${PN} = "stress"
 
 inherit bash-completion
 
-do_configure:prepend() {
+do_compile:prepend() {
     mkdir -p configs
     touch configs/HAVE_APPARMOR
 }
