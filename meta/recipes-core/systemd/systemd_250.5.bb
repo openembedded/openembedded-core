@@ -25,7 +25,6 @@ SRC_URI += "file://touchscreen.rules \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://0001-systemd.pc.in-use-ROOTPREFIX-without-suffixed-slash.patch \
            file://0001-test-parse-argument-Include-signal.h.patch \
-           file://0029-network-enable-KeepConfiguration-when-running-on-net.patch \
            "
 
 # patches needed by musl
