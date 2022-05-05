@@ -1,7 +1,7 @@
-From ce1eceab2350d27960ec254650717085f6a11c9a Mon Sep 17 00:00:00 2001
+From de64af82950a6908f9407dfc92b83c17e2af3eab Mon Sep 17 00:00:00 2001
 From: Jason Wessel <jason.wessel@windriver.com>
 Date: Fri, 28 Mar 2014 17:42:43 +0800
-Subject: [PATCH] qemu: Add addition environment space to boot loader
+Subject: [PATCH 01/12] qemu: Add addition environment space to boot loader
  qemu-system-mips
 
 Upstream-Status: Inappropriate - OE uses deep paths
@@ -18,11 +18,11 @@ Signed-off-by: Roy Li <rongqing.li@windriver.com>
  hw/mips/malta.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: qemu-6.0.0/hw/mips/malta.c
-===================================================================
---- qemu-6.0.0.orig/hw/mips/malta.c
-+++ qemu-6.0.0/hw/mips/malta.c
-@@ -65,7 +65,7 @@
+diff --git a/hw/mips/malta.c b/hw/mips/malta.c
+index 628851172..12d37f35d 100644
+--- a/hw/mips/malta.c
++++ b/hw/mips/malta.c
+@@ -61,7 +61,7 @@
  #define ENVP_PADDR          0x2000
  #define ENVP_VADDR          cpu_mips_phys_to_kseg0(NULL, ENVP_PADDR)
  #define ENVP_NB_ENTRIES     16
@@ -31,3 +31,6 @@ Index: qemu-6.0.0/hw/mips/malta.c
  
  /* Hardware addresses */
  #define FLASH_ADDRESS       0x1e000000ULL
+-- 
+2.30.2
+

@@ -1,7 +1,7 @@
-From b51e6dd833172954c718bd600d846540eeb07220 Mon Sep 17 00:00:00 2001
+From d8265abdce5dc2bf74b3fccdf2b7257b4f3894f0 Mon Sep 17 00:00:00 2001
 From: He Zhe <zhe.he@windriver.com>
 Date: Wed, 28 Aug 2019 19:56:28 +0800
-Subject: [PATCH] configure: Add pkg-config handling for libgcrypt
+Subject: [PATCH 04/12] configure: Add pkg-config handling for libgcrypt
 
 libgcrypt may also be controlled by pkg-config, this patch adds pkg-config
 handling for libgcrypt.
@@ -15,10 +15,10 @@ Signed-off-by: He Zhe <zhe.he@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index b3e7ec0e9..4cbe715b7 100644
+index 861de93c4..d45ff2d7c 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -874,7 +874,7 @@ endif
+@@ -1063,7 +1063,7 @@ endif
  if not gnutls_crypto.found()
    if (not get_option('gcrypt').auto() or have_system) and not get_option('nettle').enabled()
      gcrypt = dependency('libgcrypt', version: '>=1.8',
@@ -27,3 +27,6 @@ index b3e7ec0e9..4cbe715b7 100644
                          required: get_option('gcrypt'),
                          kwargs: static_kwargs)
      # Debian has removed -lgpg-error from libgcrypt-config
+-- 
+2.30.2
+
