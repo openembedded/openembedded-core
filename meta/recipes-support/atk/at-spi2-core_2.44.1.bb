@@ -9,11 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
-           file://08036a4c4491eea57d7b713bb4440f541584204b.patch \
-          "
+SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "7eee3cf285b089060fd6b6e51b3eb2cacf752cca3a082c7f4c2c5ab841e51353"
+SRC_URI[sha256sum] = "4beb23270ba6cf7caf20b597354d75194d89afb69d2efcf15f4271688ba6f746"
 
 X11DEPENDS = "virtual/libx11 libxi libxtst"
 
