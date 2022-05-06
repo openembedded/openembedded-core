@@ -10,7 +10,14 @@ os.environ['PSEUDO_UNLOAD'] = '1'
 
 # calculate path to the real 'git'
 path = os.environ['PATH']
-path = path.replace(os.path.dirname(sys.argv[0]), '')
+# we need to remove our path but also any other copy of this script which
+# may be present, e.g. eSDK.
+replacements = [os.path.dirname(sys.argv[0])]
+for p in path.split(":"):
+    if p.endswith("/scripts"):
+        replacements.append(p)
+for r in replacements:
+    path = path.replace(r, '/ignoreme')
 real_git = shutil.which('git', path=path)
 
 if len(sys.argv) == 1:
