@@ -1,5 +1,5 @@
 SUMMARY = "eudev is a fork of systemd's udev"
-HOMEPAGE = "https://wiki.gentoo.org/wiki/Eudev"
+HOMEPAGE = "https://github.com/eudev-project/eudev"
 DESCRIPTION = "eudev is Gentoo's fork of udev, systemd's device file manager for the Linux kernel. It manages device nodes in /dev and handles all user space actions when adding or removing devices."
 LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
 LICENSE:libudev = "LGPL-2.1-or-later"
@@ -9,15 +9,15 @@ DEPENDS = "glib-2.0 glib-2.0-native gperf-native kmod libxslt-native util-linux"
 
 PROVIDES = "udev"
 
-SRC_URI = "https://dev.gentoo.org/~blueness/${BPN}/${BP}.tar.gz \
-           file://0014-Revert-rules-remove-firmware-loading-rules.patch \
-           file://Revert-udev-remove-userspace-firmware-loading-suppor.patch \
+SRC_URI = "https://github.com/eudev-project/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
            file://init \
            file://local.rules \
 "
 
-SRC_URI[md5sum] = "60b135a189523f333cea5f71a3345c8d"
-SRC_URI[sha256sum] = "87bb028d470fd1b85169349b44c55d5b733733dc2d50ddf1196e026725ead034"
+SRC_URI[sha256sum] = "19847cafec67897da855fde56f9dc7d92e21c50e450aa79068a7e704ed44558b"
+
+UPSTREAM_CHECK_URI = "https://github.com/eudev-project/eudev/releases"
+UPSTREAM_CHECK_REGEX = "eudev-(?P<pver>\d+(\.\d+)+)\.tar"
 
 inherit autotools update-rc.d qemu pkgconfig features_check
 
