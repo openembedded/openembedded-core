@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     "
 
 DEPENDS = "libgpg-error"
-RDEPENDS:${PN}-ptest = "bash"
+RDEPENDS:${PN}-ptest = "bash make"
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
@@ -60,6 +60,12 @@ do_install_ptest() {
     cp -r --preserve=mode,links -v ${B} ${D}${PTEST_PATH}
     rm ${D}${PTEST_PATH}/build/cipher/gost-s-box
     rm ${D}${PTEST_PATH}/build/doc/yat2m
+    rm ${D}${PTEST_PATH}/build/libtool
+    rm ${D}${PTEST_PATH}/build/config.status
+    rm ${D}${PTEST_PATH}/build/config.log
+    rm ${D}${PTEST_PATH}/build/src/mpicalc
+    rm ${D}${PTEST_PATH}/${BP}/autom4te* -rf
+    sed -i -e 's/Makefile:.*/Makefile-disabled:/' ${D}${PTEST_PATH}/build/Makefile
     find ${D}/${PTEST_PATH}/build -name "*.cmake" -or -name "Makefile" \
     | xargs sed -e "s|${WORKDIR}|${PTEST_PATH}|g" -e "s|${WORKDIR}/recipe-sysroot-native||g" -i
 }
