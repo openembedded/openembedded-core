@@ -5,7 +5,7 @@ LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
 LICENSE:libudev = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-DEPENDS = "glib-2.0 glib-2.0-native gperf-native kmod libxslt-native util-linux"
+DEPENDS = "glib-2.0 glib-2.0-native gperf-native kmod util-linux"
 
 PROVIDES = "udev"
 
@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "19847cafec67897da855fde56f9dc7d92e21c50e450aa79068a7e704ed
 UPSTREAM_CHECK_URI = "https://github.com/eudev-project/eudev/releases"
 UPSTREAM_CHECK_REGEX = "eudev-(?P<pver>\d+(\.\d+)+)\.tar"
 
-inherit autotools update-rc.d qemu pkgconfig features_check
+inherit autotools update-rc.d qemu pkgconfig features_check manpages
 
 CONFLICT_DISTRO_FEATURES = "systemd"
 
@@ -30,8 +30,12 @@ EXTRA_OECONF = " \
     --with-rootprefix= \
 "
 
-PACKAGECONFIG ??= "hwdb"
+PACKAGECONFIG ?= "hwdb \
+                  ${@bb.utils.filter('DISTRO_FEATURES', 'selinux', d)} \
+"
 PACKAGECONFIG[hwdb] = "--enable-hwdb,--disable-hwdb"
+PACKAGECONFIG[manpages] = "--enable-manpages,--disable-manpages"
+PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux"
 
 do_install:append() {
 	install -d ${D}${sysconfdir}/init.d
@@ -59,7 +63,6 @@ INITSCRIPT_PARAMS = "start 04 S ."
 
 PACKAGES =+ "libudev"
 PACKAGES =+ "eudev-hwdb"
-
 
 FILES:${PN} += "${libexecdir} ${nonarch_base_libdir}/udev ${bindir}/udevadm"
 FILES:${PN}-dev = "${datadir}/pkgconfig/udev.pc \
