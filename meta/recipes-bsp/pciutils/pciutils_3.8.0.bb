@@ -6,7 +6,10 @@ SECTION = "console/utils"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
-DEPENDS = "zlib kmod"
+# Can drop make-native when all systems have make 4.3
+# https://git.savannah.gnu.org/cgit/make.git/commit/?id=b90fabc8d6f34fb37d428dc0fb1b8b1951a9fbed
+# causes space issues in lib/libpci.pc
+DEPENDS = "zlib kmod make-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
            file://configure.patch"
