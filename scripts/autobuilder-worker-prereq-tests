@@ -51,6 +51,21 @@ if (( $WATCHES < 65000 )); then
     echo 'Need to increase watches (echo fs.inotify.max_user_watches=65536 | sudo tee -a /etc/sysctl.conf'
     exit 1
 fi
+OPEN_FILES=$(ulimit -n)
+if (( $OPEN_FILES < 65535 )); then
+    echo 'Increase maximum open files in /etc/security/limits.conf'
+    echo '*            soft    nofile           131072'
+    echo '*            hard    nofile           131072'
+    exit 1
+fi
+MAX_PROCESSES=$(ulimit -u)
+if (( $MAX_PROCESSES < 514542 )); then
+    echo 'Increase maximum user processes in /etc/security/limits.conf'
+    echo '*            hard    nproc           515294'
+    echo '*            soft    nproc           514543'
+    exit 1
+fi
+
 mkdir -p tmp/deploy/images/qemux86-64
 pushd tmp/deploy/images/qemux86-64
 if [ ! -e core-image-minimal-qemux86-64.ext4 ]; then
