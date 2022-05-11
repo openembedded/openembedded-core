@@ -54,13 +54,13 @@ fi
 mkdir -p tmp/deploy/images/qemux86-64
 pushd tmp/deploy/images/qemux86-64
 if [ ! -e core-image-minimal-qemux86-64.ext4 ]; then
-    wget http://downloads.yoctoproject.org/releases/yocto/yocto-2.5.1/machines/qemu/qemux86-64/core-image-minimal-qemux86-64.ext4
+    wget http://downloads.yoctoproject.org/releases/yocto/yocto-4.0/machines/qemu/qemux86-64/core-image-minimal-qemux86-64.ext4
 fi
 if [ ! -e core-image-minimal-qemux86-64.qemuboot.conf ]; then
-    wget http://downloads.yoctoproject.org/releases/yocto/yocto-2.5.1/machines/qemu/qemux86-64/core-image-minimal-qemux86-64.qemuboot.conf
+    wget http://downloads.yoctoproject.org/releases/yocto/yocto-4.0/machines/qemu/qemux86-64/core-image-minimal-qemux86-64.qemuboot.conf
 fi
 if [ ! -e bzImage-qemux86-64.bin ]; then
-    wget http://downloads.yoctoproject.org/releases/yocto/yocto-2.5.1/machines/qemu/qemux86-64/bzImage-qemux86-64.bin
+    wget http://downloads.yoctoproject.org/releases/yocto/yocto-4.0/machines/qemu/qemux86-64/bzImage-qemux86-64.bin
 fi
 popd
 bitbake qemu-helper-native
