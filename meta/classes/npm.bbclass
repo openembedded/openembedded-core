@@ -81,6 +81,7 @@ python npm_do_configure() {
     import json
     import re
     import shlex
+    import stat
     import tempfile
     from bb.fetch2.npm import NpmEnvironment
     from bb.fetch2.npm import npm_unpack
@@ -202,6 +203,7 @@ python npm_do_configure() {
         if has_shrinkwrap_file:
             _update_manifest("devDependencies")
 
+    os.chmod(cached_manifest_file, os.stat(cached_manifest_file).st_mode | stat.S_IWUSR)
     with open(cached_manifest_file, "w") as f:
         json.dump(cached_manifest, f, indent=2)
 
