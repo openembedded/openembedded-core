@@ -307,10 +307,6 @@ npm_do_install() {
     # Remove the shrinkwrap file which does not need to be packed
     rm -f ${D}/${nonarch_libdir}/node_modules/*/npm-shrinkwrap.json
     rm -f ${D}/${nonarch_libdir}/node_modules/@*/*/npm-shrinkwrap.json
-
-    # node(1) is using /usr/lib/node as default include directory and npm(1) is
-    # using /usr/lib/node_modules as install directory. Let's make both happy.
-    ln -fs node_modules ${D}/${nonarch_libdir}/node
 }
 
 FILES:${PN} += " \
