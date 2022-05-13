@@ -222,6 +222,7 @@ if __name__ == "__main__":
         row = collections.Counter()
         row["total"] = len(results)
         row["date"] = subprocess.check_output(["git", "-C", args.directory, "show", "-s", "--pretty=format:%cd", "--date=format:%s"]).decode("utf-8").strip()
+        row["commit"] = subprocess.check_output(["git", "-C", args.directory, "show", "-s", "--pretty=format:%H"]).decode("utf-8").strip()
         for r in results.values():
             if r.upstream_status in status_values:
                 row[r.upstream_status] += 1
