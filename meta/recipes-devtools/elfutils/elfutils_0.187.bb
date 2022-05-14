@@ -33,6 +33,8 @@ PTEST_ENABLED:libc-musl = "0"
 
 EXTRA_OECONF = "--program-prefix=eu-"
 
+BUILD_CFLAGS += "-Wno-error=stringop-overflow"
+
 DEPENDS_BZIP2 = "bzip2-replacement-native"
 DEPENDS_BZIP2:class-target = "bzip2"
 
