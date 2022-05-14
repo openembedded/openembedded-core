@@ -5,26 +5,29 @@ SECTION = "base"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-RECIPE_NO_UPDATE_REASON = "Version 3.5.38 requires cdebconf for update-passwd utility"
-
-SRC_URI = "https://launchpad.net/debian/+archive/primary/+files/${BPN}_${PV}.tar.gz \
+SRC_URI = "https://launchpad.net/debian/+archive/primary/+files/${BPN}_${PV}.tar.xz \
            file://0001-Add-a-shutdown-group.patch \
            file://0002-Use-bin-sh-instead-of-bin-bash-for-the-root-user.patch \
            file://0003-Remove-for-root-since-we-do-not-have-an-etc-shadow.patch \
            file://0004-Add-an-input-group-for-the-dev-input-devices.patch \
            file://0005-Add-kvm-group.patch \
-           file://0006-Disable-shell-for-default-users.patch \
-           file://0007-Disable-generation-of-the-documentation.patch \
+           file://0006-Make-it-possible-to-build-without-debconf-support.patch \
+           file://0007-Make-it-possible-to-disable-the-generation-of-the-do.patch \
            "
 
-SRC_URI[md5sum] = "6beccac48083fe8ae5048acd062e5421"
-SRC_URI[sha256sum] = "f0b66388b2c8e49c15692439d2bee63bcdd4bbbf7a782c7f64accc55986b6a36"
+SRC_URI[sha256sum] = "5dfec6556b5a16ecf14dd3f7c95b591d929270289268123f31a3d6317f95ccea"
 
 # the package is taken from launchpad; that source is static and goes stale
 # so we check the latest upstream from a directory that does get updated
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/b/base-passwd/"
 
+S = "${WORKDIR}/work"
+
 inherit autotools
+
+EXTRA_OECONF += "--disable-debconf --disable-docs"
+
+NOLOGIN ?= "${base_sbindir}/nologin"
 
 do_install () {
 	install -d -m 755 ${D}${sbindir}
@@ -37,6 +40,7 @@ do_install () {
 	install -d -m 755 ${D}${datadir}/base-passwd
 	install -o root -g root -p -m 644 ${S}/passwd.master ${D}${datadir}/base-passwd/
 	sed -i 's#:/root:#:${ROOT_HOME}:#' ${D}${datadir}/base-passwd/passwd.master
+	sed -i 's#/usr/sbin/nologin#${NOLOGIN}#' ${D}${datadir}/base-passwd/passwd.master
 	install -o root -g root -p -m 644 ${S}/group.master ${D}${datadir}/base-passwd/
 
 	install -d -m 755 ${D}${docdir}/${BPN}
