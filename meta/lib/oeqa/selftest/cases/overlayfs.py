@@ -55,7 +55,7 @@ inherit overlayfs
 
         config = """
 IMAGE_INSTALL:append = " overlayfs-user"
-DISTRO_FEATURES += "systemd overlayfs"
+DISTRO_FEATURES:append = " systemd overlayfs"
 """
 
         self.write_config(config)
@@ -94,7 +94,7 @@ OVERLAYFS_QA_SKIP[mnt-overlay] = "mount-configured"
 
         config = """
 IMAGE_INSTALL:append = " overlayfs-user"
-DISTRO_FEATURES += "systemd overlayfs"
+DISTRO_FEATURES:append = " systemd overlayfs"
 """
 
         self.write_config(config)
@@ -112,7 +112,7 @@ DISTRO_FEATURES += "systemd overlayfs"
 
         config = """
 IMAGE_INSTALL:append = " overlayfs-user"
-DISTRO_FEATURES += "systemd overlayfs"
+DISTRO_FEATURES:append = " systemd overlayfs"
 """
 
         wrong_machine_config = """
@@ -136,7 +136,7 @@ OVERLAYFS_MOUNT_POINT[usr-share-overlay] = "/usr/share/overlay"
 
         config = """
 IMAGE_INSTALL:append = " overlayfs-user systemd-machine-units"
-DISTRO_FEATURES += "systemd overlayfs"
+DISTRO_FEATURES:append = " systemd overlayfs"
 
 # Use systemd as init manager
 VIRTUAL-RUNTIME_init_manager = "systemd"
@@ -271,7 +271,7 @@ class OverlayFSEtcRunTimeTests(OESelftestTestCase):
         """
 
         configBase = """
-DISTRO_FEATURES += "systemd"
+DISTRO_FEATURES:append = " systemd"
 
 # Use systemd as init manager
 VIRTUAL-RUNTIME_init_manager = "systemd"
@@ -313,7 +313,7 @@ OVERLAYFS_ETC_DEVICE = "/dev/mmcblk0p1"
         """
 
         config = """
-DISTRO_FEATURES += "systemd"
+DISTRO_FEATURES:append = " systemd"
 
 # Use systemd as init manager
 VIRTUAL-RUNTIME_init_manager = "systemd"
@@ -349,7 +349,7 @@ INHERIT += "overlayfs-etc"
         """
 
         config = f"""
-DISTRO_FEATURES += "systemd"
+DISTRO_FEATURES:append = " systemd"
 
 # Use systemd as init manager
 VIRTUAL-RUNTIME_init_manager = "systemd"
@@ -391,7 +391,7 @@ OVERLAYFS_ETC_DEVICE = "/dev/sda3"
         """
 
         config = """
-DISTRO_FEATURES += "systemd"
+DISTRO_FEATURES:append = " systemd"
 
 # Use systemd as init manager
 VIRTUAL-RUNTIME_init_manager = "systemd"
