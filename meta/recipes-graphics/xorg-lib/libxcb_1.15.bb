@@ -9,11 +9,9 @@ SECTION = "x11/libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d763b081cb10c223435b01e00dc0aba7"
 
-SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.xz \
-           file://disable-check.patch \
-          "
+SRC_URI = "http://xcb.freedesktop.org/dist/libxcb-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "a55ed6db98d43469801262d81dc2572ed124edc3db31059d4e9916eb9f844c34"
+SRC_URI[sha256sum] = "cc38744f817cf6814c847e2df37fcb8997357d72fa4bcbc228ae0fe47219a059"
 
 BBCLASSEXTEND = "native nativesdk"
 
