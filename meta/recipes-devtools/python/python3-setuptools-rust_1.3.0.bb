@@ -10,9 +10,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=011cd92e702dd9e6b1a26157b6fd53f5"
 
 SRC_URI = "https://files.pythonhosted.org/packages/67/08/e1aa2c582c62ac76e4d60f8e454bd3bba933781a06a88b4e38797445822a/setuptools-rust-${PV}.tar.gz"
-SRC_URI[sha256sum] = "a0adb9b503c0ffc4e8fe80b7c617898cefa78049983aaaea7f747e153a3e65d1"
+SRC_URI[sha256sum] = "958c5bf4ab6483d59dab888538121871cc5006354a42fb0fbd50acf03caad1de"
 
-inherit cargo pypi python_setuptools_build_meta native
+inherit cargo pypi python_setuptools_build_meta
 
 DEPENDS += "python3-setuptools-scm-native python3-wheel-native"
 
@@ -24,3 +24,5 @@ RDEPENDS:${PN}:class-native += " \
     python3-typing-extensions-native \
     python3-wheel-native \
 "
+
+BBCLASSEXTEND = "native"
