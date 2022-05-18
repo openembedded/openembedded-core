@@ -22,7 +22,7 @@ inherit gnomebase gtk-doc features_check gobject-introspection
 # depends on gtk+3 if tests are enabled
 ANY_OF_DISTRO_FEATURES = "${@bb.utils.contains('PACKAGECONFIG', 'tests', '${GTK3DISTROFEATURES}', '', d)}"
 
-SRC_URI[archive.sha256sum] = "dd5682ec68220339e11c5159b7e012204a318dd1b3683a09c482ca421ab07375"
+SRC_URI[archive.sha256sum] = "744b2b37508135f8261b755a9debe6e09add421adc75bde930f6e198b70ab46e"
 
 EXTRA_OEMESON = "-Dman=false"
 
