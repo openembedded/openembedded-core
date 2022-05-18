@@ -12,12 +12,14 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
            file://0001-Makefile.am-do-not-install-etc-ethertypes.patch \
            file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
+           file://format-security.patch \
            file://iptables.service \
            file://iptables.rules \
            file://ip6tables.service \
            file://ip6tables.rules \
+           file://0001-iptables-xshared.h-add-missing-sys.types.h-include.patch \
            "
-SRC_URI[sha256sum] = "c109c96bb04998cd44156622d36f8e04b140701ec60531a10668cfdff5e8d8f0"
+SRC_URI[sha256sum] = "71c75889dc710676631553eb1511da0177bbaaf1b551265b912d236c3f51859f"
 
 SYSTEMD_SERVICE:${PN} = "\
     iptables.service \
@@ -27,6 +29,8 @@ SYSTEMD_SERVICE:${PN} = "\
 inherit autotools pkgconfig systemd
 
 EXTRA_OECONF = "--with-kernel=${STAGING_INCDIR}"
+
+CFLAGS:append:libc-musl = " -D__UAPI_DEF_ETHHDR=0"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
@@ -41,6 +45,9 @@ do_configure:prepend() {
     # Remove some libtool m4 files
     # Keep ax_check_linker_flags.m4 which belongs to autoconf-archive.
     rm -f libtool.m4 lt~obsolete.m4 ltoptions.m4 ltsugar.m4 ltversion.m4
+
+    # Copy a header to fix out of tree builds
+    cp -f ${S}/libiptc/linux_list.h ${S}/include/libiptc/
 }
 
 IPTABLES_RULES_DIR ?= "${sysconfdir}/${BPN}"
@@ -108,7 +115,7 @@ RDEPENDS:${PN}-apply = "${PN} bash"
 
 # Include the symlinks as well in respective packages
 FILES:${PN}-module-xt-conntrack += "${libdir}/xtables/libxt_state.so"
-FILES:${PN}-module-xt-ct += "${libdir}/xtables/libxt_NOTRACK.so"
+FILES:${PN}-module-xt-ct += "${libdir}/xtables/libxt_NOTRACK.so ${libdir}/xtables/libxt_REDIRECT.so"
 
 ALLOW_EMPTY:${PN}-modules = "1"
 
