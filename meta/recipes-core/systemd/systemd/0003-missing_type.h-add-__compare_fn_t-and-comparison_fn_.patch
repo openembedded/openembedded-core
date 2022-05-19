@@ -6,6 +6,9 @@ Subject: [PATCH] missing_type.h: add __compare_fn_t and comparison_fn_t
 Make it work with musl where comparison_fn_t and __compare_fn_t
 is not provided.
 
+Revisit this when upgrading to 251+ systemd since systemd does not need
+__compare_fn_t anymore
+
 Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>

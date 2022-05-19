@@ -7,6 +7,9 @@ This is to avoid build failures like below for musl.
 
   locale-util.c:296:24: error: 'FTW_STOP' undeclared
 
+Revisit this when upgrading to 251+ since most of these defines are not
+needed anymore except FTW_CONTINUE
+
 Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>

@@ -8,6 +8,10 @@ src/test/test-json.c:305:50: error: 'M_PIl' undeclared (first use in this functi
 
 Upstream-Status: Inappropriate [musl specific]
 
+This is fixed upstream where systemd no longer needs M_PIl so it could
+be dropped when upgrading to 251+ see
+https://github.com/systemd/systemd/commit/f9a1fd2a3b2d8212ba84ef1c3b55657ced34475e
+
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 
 ---
