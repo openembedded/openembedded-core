@@ -19,7 +19,7 @@
 
 inherit python3native
 
-DEPENDS:prepend = "nodejs-native "
+DEPENDS:prepend = "nodejs-native nodejs-oe-cache-native "
 RDEPENDS:${PN}:append:class-target = " nodejs"
 
 EXTRA_OENPM = ""
@@ -46,6 +46,7 @@ NPM_ARCH ?= "${@npm_target_arch_map(d.getVar("TARGET_ARCH"))}"
 NPM_PACKAGE = "${WORKDIR}/npm-package"
 NPM_CACHE = "${WORKDIR}/npm-cache"
 NPM_BUILD = "${WORKDIR}/npm-build"
+NPM_REGISTRY = "${WORKDIR}/npm-registry"
 
 def npm_global_configs(d):
     """Get the npm global configuration"""
@@ -109,16 +110,18 @@ python npm_do_configure() {
     from bb.fetch2.npm import npm_unpack
     from bb.fetch2.npmsw import foreach_dependencies
     from bb.progress import OutOfProgressHandler
+    from oe.npm_registry import NpmRegistry
 
     bb.utils.remove(d.getVar("NPM_CACHE"), recurse=True)
     bb.utils.remove(d.getVar("NPM_PACKAGE"), recurse=True)
 
     env = NpmEnvironment(d, configs=npm_global_configs(d))
+    registry = NpmRegistry(d.getVar('NPM_REGISTRY'), d.getVar('NPM_CACHE'))
 
-    def _npm_cache_add(tarball):
-        """Run 'npm cache add' for a specified tarball"""
-        cmd = "npm cache add %s" % shlex.quote(tarball)
-        env.run(cmd)
+    def _npm_cache_add(tarball, pkg):
+        """Add tarball to local registry and register it in the
+           cache"""
+        registry.add_pkg(tarball, pkg)
 
     def _npm_integrity(tarball):
         """Return the npm integrity of a specified tarball"""
@@ -182,7 +185,7 @@ python npm_do_configure() {
             # Add the dependency to the npm cache
             destdir = os.path.join(d.getVar("S"), destsuffix)
             (tarball, pkg) = npm_pack(env, destdir, tmpdir)
-            _npm_cache_add(tarball)
+            _npm_cache_add(tarball, pkg)
             # Add its signature to the cached shrinkwrap
             dep = _npmsw_dependency_dict(cached_shrinkwrap, deptree)
             dep["version"] = pkg['version']
