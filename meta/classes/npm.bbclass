@@ -86,7 +86,7 @@ def npm_pack(env, srcdir, workdir):
                     '.'],
                    check = True, cwd = srcdir)
 
-    return tarball
+    return (tarball, j)
 
 python npm_do_configure() {
     """
@@ -186,7 +186,7 @@ python npm_do_configure() {
         with tempfile.TemporaryDirectory() as tmpdir:
             # Add the dependency to the npm cache
             destdir = os.path.join(d.getVar("S"), destsuffix)
-            tarball = npm_pack(env, destdir, tmpdir)
+            (tarball, pkg) = npm_pack(env, destdir, tmpdir)
             _npm_cache_add(tarball)
             # Add its signature to the cached shrinkwrap
             dep = _npmsw_dependency_dict(cached_shrinkwrap, deptree)
@@ -207,7 +207,7 @@ python npm_do_configure() {
 
     # Configure the main package
     with tempfile.TemporaryDirectory() as tmpdir:
-        tarball = npm_pack(env, d.getVar("S"), tmpdir)
+        (tarball, _) = npm_pack(env, d.getVar("S"), tmpdir)
         npm_unpack(tarball, d.getVar("NPM_PACKAGE"), d)
 
     # Configure the cached manifest file and cached shrinkwrap file
@@ -280,7 +280,7 @@ python npm_do_compile() {
         args.append(("build-from-source", "true"))
 
         # Pack and install the main package
-        tarball = npm_pack(env, d.getVar("NPM_PACKAGE"), tmpdir)
+        (tarball, _) = npm_pack(env, d.getVar("NPM_PACKAGE"), tmpdir)
         cmd = "npm install %s %s" % (shlex.quote(tarball), d.getVar("EXTRA_OENPM"))
         env.run(cmd, args=args)
 }
