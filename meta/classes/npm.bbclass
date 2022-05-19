@@ -125,11 +125,6 @@ python npm_do_configure() {
         sha512 = bb.utils.sha512_file(tarball)
         return "sha512-" + base64.b64encode(bytes.fromhex(sha512)).decode()
 
-    def _npm_version(tarball):
-        """Return the version of a specified tarball"""
-        regex = r"-(\d+\.\d+\.\d+(-.*)?(\+.*)?)\.tgz"
-        return re.search(regex, tarball).group(1)
-
     def _npmsw_dependency_dict(orig, deptree):
         """
         Return the sub dictionary in the 'orig' dictionary corresponding to the
@@ -190,7 +185,7 @@ python npm_do_configure() {
             _npm_cache_add(tarball)
             # Add its signature to the cached shrinkwrap
             dep = _npmsw_dependency_dict(cached_shrinkwrap, deptree)
-            dep["version"] = _npm_version(tarball)
+            dep["version"] = pkg['version']
             dep["integrity"] = _npm_integrity(tarball)
             if params.get("dev", False):
                 dep["dev"] = True
