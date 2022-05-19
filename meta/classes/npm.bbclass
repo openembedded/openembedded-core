@@ -57,13 +57,36 @@ def npm_global_configs(d):
     configs.append(("cache", d.getVar("NPM_CACHE")))
     return configs
 
+## 'npm pack' runs 'prepare' and 'prepack' scripts. Support for
+## 'ignore-scripts' which prevents this behavior has been removed
+## from nodejs 16.  Use simple 'tar' instead of.
 def npm_pack(env, srcdir, workdir):
-    """Run 'npm pack' on a specified directory"""
-    import shlex
-    cmd = "npm pack %s" % shlex.quote(srcdir)
-    args = [("ignore-scripts", "true")]
-    tarball = env.run(cmd, args=args, workdir=workdir).strip("\n")
-    return os.path.join(workdir, tarball)
+    """Emulate 'npm pack' on a specified directory"""
+    import subprocess
+    import os
+    import json
+
+    src = os.path.join(srcdir, 'package.json')
+    with open(src) as f:
+        j = json.load(f)
+
+    # base does not really matter and is for documentation purposes
+    # only.  But the 'version' part must exist because other parts of
+    # the bbclass rely on it.
+    base = j['name'].split('/')[-1]
+    tarball = os.path.join(workdir, "%s-%s.tgz" % (base, j['version']));
+
+    # TODO: real 'npm pack' does not include directories while 'tar'
+    # does.  But this does not seem to matter...
+    subprocess.run(['tar', 'czf', tarball,
+                    '--exclude', './node-modules',
+                    '--exclude-vcs',
+                    '--transform', 's,^\./,package/,',
+                    '--mtime', '1985-10-26T08:15:00.000Z',
+                    '.'],
+                   check = True, cwd = srcdir)
+
+    return tarball
 
 python npm_do_configure() {
     """
