@@ -5,6 +5,9 @@ Subject: [PATCH] fix missing of __register_atfork for non-glibc builds
 
 Upstream-Status: Inappropriate [musl specific]
 
+Drop this when upgrading to 251+, systemd does not use
+__register_atfork anymore
+
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 
 ---
