@@ -44,7 +44,6 @@ SRC_URI_MUSL = "\
                file://0013-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
                file://0014-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
                file://0015-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
-               file://0016-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
                file://0018-avoid-redefinition-of-prctl_mm_map-structure.patch \
                file://0021-test-json.c-define-M_PIl.patch \
                file://0022-do-not-disable-buffer-in-writing-files.patch \
