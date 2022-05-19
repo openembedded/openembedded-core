@@ -45,10 +45,7 @@ SRC_URI_MUSL = "\
                file://0014-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
                file://0015-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
                file://0016-Hide-__start_BUS_ERROR_MAP-and-__stop_BUS_ERROR_MAP.patch \
-               file://0017-missing_type.h-add-__compar_d_fn_t-definition.patch \
                file://0018-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0019-Handle-missing-LOCK_EX.patch \
-               file://0020-Fix-incompatible-pointer-type-struct-sockaddr_un.patch \
                file://0021-test-json.c-define-M_PIl.patch \
                file://0022-do-not-disable-buffer-in-writing-files.patch \
                file://0025-Handle-__cpu_mask-usage.patch \
