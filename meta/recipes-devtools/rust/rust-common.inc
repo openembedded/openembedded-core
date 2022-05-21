@@ -360,6 +360,8 @@ def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
     with open(wd + sys + '.json', 'w') as f:
         json.dump(tspec, f, indent=4)
 
+do_rust_gen_targets[vardeps] += "DATA_LAYOUT LLVM_TARGET TARGET_ENDIAN TARGET_POINTER_WIDTH TARGET_C_INT_WIDTH MAX_ATOMIC_WIDTH FEATURES"
+
 python do_rust_gen_targets () {
     wd = d.getVar('WORKDIR') + '/targets/'
     build_arch = d.getVar('BUILD_ARCH')
