@@ -347,6 +347,9 @@ def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
     with open(wd + sys + '.json', 'w') as f:
         json.dump(tspec, f, indent=4)
 
+# These are accounted for in tmpdir path names so don't need to be in the task sig
+rust_gen_target[vardepsexclude] += "RUST_HOST_SYS RUST_TARGET_SYS"
+
 do_rust_gen_targets[vardeps] += "DATA_LAYOUT TARGET_ENDIAN TARGET_POINTER_WIDTH TARGET_C_INT_WIDTH MAX_ATOMIC_WIDTH FEATURES"
 
 python do_rust_gen_targets () {
