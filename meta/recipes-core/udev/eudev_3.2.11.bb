@@ -5,13 +5,14 @@ LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
 LICENSE:libudev = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-DEPENDS = "glib-2.0 glib-2.0-native gperf-native kmod util-linux"
+DEPENDS = "gperf-native"
 
 PROVIDES = "udev"
 
 SRC_URI = "https://github.com/eudev-project/${BPN}/releases/download/v${PV}/${BP}.tar.gz \
            file://init \
            file://local.rules \
+           file://0001-build-Remove-dead-g-i-r-configuration.patch \
 "
 
 SRC_URI[sha256sum] = "19847cafec67897da855fde56f9dc7d92e21c50e450aa79068a7e704ed44558b"
@@ -30,11 +31,14 @@ EXTRA_OECONF = " \
     --with-rootprefix= \
 "
 
-PACKAGECONFIG ?= "hwdb \
+PACKAGECONFIG ?= "blkid hwdb kmod \
                   ${@bb.utils.filter('DISTRO_FEATURES', 'selinux', d)} \
 "
+PACKAGECONFIG[blkid] = "--enable-blkid,--disable-blkid,util-linux"
 PACKAGECONFIG[hwdb] = "--enable-hwdb,--disable-hwdb"
+PACKAGECONFIG[kmod] = "--enable-kmod,--disable-kmod,kmod"
 PACKAGECONFIG[manpages] = "--enable-manpages,--disable-manpages"
+PACKAGECONFIG[rule-generator] = "--enable-rule-generator,--disable-rule-generator"
 PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux"
 
 do_install:append() {
