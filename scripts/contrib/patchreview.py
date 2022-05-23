@@ -232,7 +232,7 @@ if __name__ == "__main__":
                 row['malformed-sob'] += 1
 
         data.append(row)
-        json.dump(data, open(args.json, "w"))
+        json.dump(data, open(args.json, "w"), sort_keys=True, indent="\t")
 
     if args.histogram:
         print()
