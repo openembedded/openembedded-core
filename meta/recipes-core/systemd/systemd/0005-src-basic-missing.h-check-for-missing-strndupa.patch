@@ -1,4 +1,4 @@
-From 55d48dd81e57add5b2d4b5a7d697c575a0f37ef5 Mon Sep 17 00:00:00 2001
+From 106b7bd7186c9d6c1dcd72bd4ca6457d3fa72d0b Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 14:18:21 +0800
 Subject: [PATCH] src/basic/missing.h: check for missing strndupa
@@ -17,7 +17,6 @@ Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
 [rebased for systemd 244]
 [Rebased for v247]
 Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
-
 ---
  meson.build                                |  1 +
  src/backlight/backlight.c                  |  1 +
@@ -74,7 +73,7 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
  52 files changed, 63 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index ae53345260..8c8a6c9bdf 100644
+index cb9936ee8b..7ab201c6d9 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -507,6 +507,7 @@ foreach ident : ['secure_getenv', '__secure_getenv']
@@ -310,13 +309,13 @@ index 0b20d386d3..fccfb9268c 100644
  #define IDLE_TIMEOUT_USEC (5*USEC_PER_SEC)
  #define IDLE_TIMEOUT2_USEC (1*USEC_PER_SEC)
 diff --git a/src/core/kmod-setup.c b/src/core/kmod-setup.c
-index d3bf55acbe..63dd807b8a 100644
+index d054668b8e..9b4caa7651 100644
 --- a/src/core/kmod-setup.c
 +++ b/src/core/kmod-setup.c
-@@ -11,6 +11,7 @@
+@@ -10,6 +10,7 @@
+ #include "macro.h"
  #include "recurse-dir.h"
  #include "string-util.h"
- #include "missing_type.h"
 +#include "missing_stdlib.h"
  
  #if HAVE_KMOD
@@ -705,3 +704,6 @@ index 1a384d6b38..0089833e3f 100644
  
  #define RULES_DIRS (const char* const*) CONF_PATHS_STRV("udev/rules.d")
  
+-- 
+2.34.1
+
