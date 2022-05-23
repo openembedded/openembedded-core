@@ -30,7 +30,6 @@ SRC_URI += "file://touchscreen.rules \
 # patches needed by musl
 SRC_URI:append:libc-musl = " ${SRC_URI_MUSL}"
 SRC_URI_MUSL = "\
-               file://0002-don-t-use-glibc-specific-qsort_r.patch \
                file://0003-missing_type.h-add-comparison_fn_t.patch \
                file://0004-add-fallback-parse_printf_format-implementation.patch \
                file://0005-src-basic-missing.h-check-for-missing-strndupa.patch \
