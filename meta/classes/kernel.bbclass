@@ -110,7 +110,7 @@ python __anonymous () {
 
         d.setVar('PKG:%s-image-%s' % (kname,typelower), '%s-image-%s-${KERNEL_VERSION_PKG_NAME}' % (kname, typelower))
         d.setVar('ALLOW_EMPTY:%s-image-%s' % (kname, typelower), '1')
-        d.setVar('pkg_postinst:%s-image-%s' % (kname,typelower), """set +e
+        d.prependVar('pkg_postinst:%s-image-%s' % (kname,typelower), """set +e
 if [ -n "$D" ]; then
     ln -sf %s-${KERNEL_VERSION} $D/${KERNEL_IMAGEDEST}/%s > /dev/null 2>&1
 else
