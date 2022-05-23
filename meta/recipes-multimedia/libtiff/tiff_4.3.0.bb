@@ -28,6 +28,9 @@ UPSTREAM_CHECK_REGEX = "tiff-(?P<pver>\d+(\.\d+)+).tar"
 # Tested with check from https://security-tracker.debian.org/tracker/CVE-2015-7313
 # and 4.3.0 doesn't have the issue
 CVE_CHECK_IGNORE += "CVE-2015-7313"
+# These issues only affect libtiff post-4.3.0 but before 4.4.0,
+# caused by 3079627e and fixed by b4e79bfa.
+CVE_CHECK_IGNORE += "CVE-2022-1622 CVE-2022-1623"
 
 inherit autotools multilib_header
 
