@@ -11,7 +11,7 @@ PYPI_PACKAGE = "python-magic"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "21f5f542aa0330f5c8a64442528542f6215c8e18d2466b399b0d9d39356d83fc"
+SRC_URI[sha256sum] = "8262c13001f904ad5b724d38b5e5b5f17ec0450ae249def398a62e4e33108a50"
 
 RDEPENDS:${PN} += "file \
                    ${PYTHON_PN}-ctypes \
