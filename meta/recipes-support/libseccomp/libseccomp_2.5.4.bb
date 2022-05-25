@@ -37,6 +37,10 @@ do_install_ptest() {
     for file in $(find tests/*.tests -type f); do
         install -m 744 ${S}/${file} ${D}/${PTEST_PATH}/tests
     done
+        for file in $(find tests/*.pfc -type f); do
+        install -m 644 ${S}/${file} ${D}/${PTEST_PATH}/tests
+    done
+    install -m 644 ${S}/tests/valgrind_test.supp ${D}/${PTEST_PATH}/tests
     for file in $(find tools/* -executable -type f); do
         install -m 744 ${S}/${file} ${D}/${PTEST_PATH}/tools
     done
