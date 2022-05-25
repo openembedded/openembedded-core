@@ -13,10 +13,11 @@ LIC_FILES_CHKSUM = " \
     file://libbtrfsutil/COPYING;md5=4fbd65380cdd255951079008b364516c \
 "
 SECTION = "base"
-DEPENDS = "lzo util-linux zlib"
+DEPENDS = "util-linux zlib"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
+           file://lzo-option.patch \
            "
 SRCREV = "31458c9c81935abbed010221261897273a98d2c1"
 S = "${WORKDIR}/git"
@@ -32,6 +33,7 @@ PACKAGECONFIG[programs] = "--enable-programs,--disable-programs"
 PACKAGECONFIG[convert] = "--enable-convert --with-convert=ext2,--disable-convert --without-convert,e2fsprogs"
 PACKAGECONFIG[zoned] = "--enable-zoned,--disable-zoned"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python3-setuptools-native"
+PACKAGECONFIG[lzo] = "--enable-lzo,--disable-lzo,lzo"
 PACKAGECONFIG[zstd] = "--enable-zstd,--disable-zstd,zstd"
 PACKAGECONFIG[udev] = "--enable-libudev,--disable-libudev,udev"
 
