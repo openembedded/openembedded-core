@@ -37,7 +37,7 @@ SRC_URI += "file://0001-change-shebang-to-python3.patch"
 SRC_URI += "file://no_shebang_mangling.patch"
 SRC_URI += "file://reproducible.patch"
 
-SRC_URI[sha256sum] = "2debf847016cfe643fa1512e2d781d3ca9e5c878ba0652583842d50cc2bcc605"
+SRC_URI[sha256sum] = "8dfb15d8a1c3d3085a4cbe11f29e19527dfaf2ba99354326fd62cec013eaee81"
 
 do_install:append() {
     rm -f ${D}/${bindir}/pip
