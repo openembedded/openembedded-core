@@ -12,6 +12,10 @@ SRC_URI += " \
 SRC_URI[md5sum] = "f972fb0cce662966bec10d5c5f32d042"
 SRC_URI[sha256sum] = "e7203b0cc09442ed2c08936d483f8ac140ec1c72e37bb5c401646b7866cb5d10"
 
+# CVE-2021-28966 is Windows specific and not affects Linux OS
+# https://security-tracker.debian.org/tracker/CVE-2021-28966
+CVE_CHECK_WHITELIST += "CVE-2021-28966"
+
 PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 
