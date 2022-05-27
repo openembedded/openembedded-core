@@ -238,6 +238,9 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
                   -Dnologin-path=${base_sbindir}/nologin \
                   -Dumount-path=${base_bindir}/umount"
 
+# The 60 seconds is watchdog's default vaule.
+WATCHDOG_TIMEOUT ??= "60"
+
 do_install() {
 	meson_do_install
 	install -d ${D}/${base_sbindir}
@@ -337,6 +340,11 @@ do_install() {
 
 	# add a profile fragment to disable systemd pager with busybox less
 	install -Dm 0644 ${WORKDIR}/systemd-pager.sh ${D}${sysconfdir}/profile.d/systemd-pager.sh
+
+    if [ -n "${WATCHDOG_TIMEOUT}" ]; then
+        sed -i -e 's/#RebootWatchdogSec=10min/RebootWatchdogSec=${WATCHDOG_TIMEOUT}/' \
+            ${D}/${sysconfdir}/systemd/system.conf
+    fi
 }
 
 python populate_packages:prepend (){
