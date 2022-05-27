@@ -165,6 +165,9 @@ do_install:append:class-native() {
         # tarballs and sysroot creation.
         find ${D} -name *.pyc -delete
 
+        # Nothing should be looking into ${B} for python3-native
+        sed -i -e 's:${B}:/build/path/unavailable/:g' \
+                ${D}/${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile
 }
 
 do_install:append() {
@@ -175,15 +178,16 @@ do_install:append() {
 
         mkdir -p ${D}${libdir}/python-sysconfigdata
         sysconfigfile=`find ${D} -name _sysconfig*.py`
-        cp $sysconfigfile ${D}${libdir}/python-sysconfigdata/_sysconfigdata.py
-
         sed -i  \
                 -e "s,^ 'LIBDIR'.*, 'LIBDIR': '${STAGING_LIBDIR}'\,,g" \
                 -e "s,^ 'INCLUDEDIR'.*, 'INCLUDEDIR': '${STAGING_INCDIR}'\,,g" \
                 -e "s,^ 'CONFINCLUDEDIR'.*, 'CONFINCLUDEDIR': '${STAGING_INCDIR}'\,,g" \
                 -e "/^ 'INCLDIRSTOMAKE'/{N; s,/usr/include,${STAGING_INCDIR},g}" \
                 -e "/^ 'INCLUDEPY'/s,/usr/include,${STAGING_INCDIR},g" \
-                ${D}${libdir}/python-sysconfigdata/_sysconfigdata.py
+                -e "s,${B},/build/path/unavailable/,g" \
+                $sysconfigfile
+        cp $sysconfigfile ${D}${libdir}/python-sysconfigdata/_sysconfigdata.py
+
 
         # Unfortunately the following pyc files are non-deterministc due to 'frozenset'
         # being written without strict ordering, even with PYTHONHASHSEED = 0
