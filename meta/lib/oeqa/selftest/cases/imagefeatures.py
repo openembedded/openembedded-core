@@ -164,14 +164,14 @@ class ImageFeatures(OESelftestTestCase):
         """
         Summary:     Check for chaining many CONVERSION_CMDs together
         Expected:    1. core-image-minimal can be built with
-                        ext4.bmap.gz.bz2.lzo.xz.u-boot and also create a
+                        ext4.bmap.gz.bz2.zst.xz.u-boot and also create a
                         sha256sum
                      2. The above image has a valid sha256sum
         Product:     oe-core
         Author:      Tom Rini <trini@konsulko.com>
         """
 
-        conv = "ext4.bmap.gz.bz2.lzo.xz.u-boot"
+        conv = "ext4.bmap.gz.bz2.zst.xz.u-boot"
         features = 'IMAGE_FSTYPES += "%s %s.sha256sum"' % (conv, conv)
         self.write_config(features)
 
