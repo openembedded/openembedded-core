@@ -32,6 +32,9 @@ CVE_CHECK_IGNORE += "CVE-2015-7313"
 # caused by 3079627e and fixed by b4e79bfa.
 CVE_CHECK_IGNORE += "CVE-2022-1622 CVE-2022-1623"
 
+# Issue is in jbig which we don't enable
+CVE_CHECK_IGNORE += "CVE-2022-1210"
+
 inherit autotools multilib_header
 
 CACHED_CONFIGUREVARS = "ax_cv_check_gl_libgl=no"
@@ -40,6 +43,7 @@ PACKAGECONFIG ?= "cxx jpeg zlib lzma \
                   strip-chopping extrasample-as-alpha check-ycbcr-subsampling"
 
 PACKAGECONFIG[cxx] = "--enable-cxx,--disable-cxx,,"
+PACKAGECONFIG[jbig] = "--enable-jbig,--disable-jbig,jbig,"
 PACKAGECONFIG[jpeg] = "--enable-jpeg,--disable-jpeg,jpeg,"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib,"
 PACKAGECONFIG[lzma] = "--enable-lzma,--disable-lzma,xz,"
