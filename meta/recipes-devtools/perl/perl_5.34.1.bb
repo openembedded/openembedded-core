@@ -33,6 +33,8 @@ S = "${WORKDIR}/perl-${PV}"
 inherit upstream-version-is-even update-alternatives
 
 DEPENDS += "perlcross-native zlib virtual/crypt"
+# make 4.1 has race issues with the double-colon usage of MakeMaker, see #14096
+DEPENDS += "make-native"
 
 PERL_LIB_VER = "${@'.'.join(d.getVar('PV').split('.')[0:2])}.0"
 
