@@ -491,10 +491,10 @@ python copy_buildsystem () {
     else:
         tasklistfn = None
 
-    if os.path.exists(builddir + '/cache/bb_unihashes.dat'):
-        bb.parse.siggen.save_unitaskhashes()
-        bb.utils.mkdirhier(os.path.join(baseoutpath, 'cache'))
-        shutil.copyfile(builddir + '/cache/bb_unihashes.dat', baseoutpath + '/cache/bb_unihashes.dat')
+
+    cachedir = os.path.join(baseoutpath, 'cache')
+    bb.utils.mkdirhier(cachedir)
+    bb.parse.siggen.copy_unitaskhashes(cachedir)
 
     # Add packagedata if enabled
     if d.getVar('SDK_INCLUDE_PKGDATA') == '1':
