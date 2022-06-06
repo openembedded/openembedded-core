@@ -25,7 +25,7 @@ PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook
 
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
-SRC_URI[sha256sum] = "6a1efd8a1f1d9d38e489633eaec1fffa5c315663b316cab804be486887e6145d"
+SRC_URI[sha256sum] = "e906bf2404ff04c448eaa3d226d283a62b9a283f12e4fd8457fb24bac274e678"
 
 # On build machines with python-docutils (not python3-docutils !!) installed
 # rst2man (not rst2man.py) is detected and compile fails with
@@ -62,7 +62,7 @@ RDEPENDS:${PN} += "${ALSA_UTILS_PKGS}"
 FILES:${PN} = ""
 ALLOW_EMPTY:alsa-utils = "1"
 FILES:alsa-utils-alsabat     = "${bindir}/alsabat"
-FILES:alsa-utils-alsatplg    = "${bindir}/alsatplg"
+FILES:alsa-utils-alsatplg    = "${bindir}/alsatplg ${libdir}/alsa-topology"
 FILES:alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord ${bindir}/axfer"
 FILES:alsa-utils-amixer      = "${bindir}/amixer"
 FILES:alsa-utils-alsamixer   = "${bindir}/alsamixer"
