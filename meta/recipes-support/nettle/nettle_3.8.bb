@@ -24,7 +24,7 @@ SRC_URI:append:class-target = "\
             file://dlopen-test.patch \
             "
 
-SRC_URI[sha256sum] = "661f5eb03f048a3b924c3a8ad2515d4068e40f67e774e8a26827658007e3bcf0"
+SRC_URI[sha256sum] = "7576c68481c198f644b08c160d1a4850ba9449e308069455b5213319f234e8e6"
 
 UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
