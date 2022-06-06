@@ -17,9 +17,8 @@ DEPENDS = "util-linux zlib"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
-           file://lzo-option.patch \
            "
-SRCREV = "31458c9c81935abbed010221261897273a98d2c1"
+SRCREV = "f9e303584272b81b05b926a0cc9010f43af12a03"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
@@ -28,7 +27,7 @@ PACKAGECONFIG ??= " \
     python \
     crypto-builtin \
 "
-PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
+PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, python3-sphinx-native"
 PACKAGECONFIG[programs] = "--enable-programs,--disable-programs"
 PACKAGECONFIG[convert] = "--enable-convert --with-convert=ext2,--disable-convert --without-convert,e2fsprogs"
 PACKAGECONFIG[zoned] = "--enable-zoned,--disable-zoned"
