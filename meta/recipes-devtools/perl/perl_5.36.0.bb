@@ -113,6 +113,7 @@ print(datetime.fromtimestamp($SOURCE_DATE_EPOCH, timezone.utc).strftime('%a %b %
             ")"
         echo "#define PERL_BUILD_DATE \"$PERL_BUILD_DATE\"" >> config.h
     fi
+    oe_runmake clean
 }
 
 do_compile() {
