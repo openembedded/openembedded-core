@@ -35,7 +35,7 @@ index 5478447..31e0ee8 100644
 +    if [ \( ! \( $(VERSION) -ge 6 \
 +      -o \( $(VERSION) -eq 5 -a $(PATCHLEVEL) -ge 18 \) \
 +      -o \( $(VERSION) -eq 5 -a $(PATCHLEVEL) -eq 15 -a $(SUBLEVEL) -ge 44 \) \
-+      -o \( $(VERSION) -eq 5 -a $(PATCHLEVEL) -eq 10 -a $(SUBLEVEL) -ge 119\) \) \) \
++      -o \( $(VERSION) -eq 5 -a $(PATCHLEVEL) -eq 10 -a $(SUBLEVEL) -ge 119 \) \) \) \
        -a \
        $(VERSION) -ge 4 \
        -o \( $(VERSION) -eq 3 -a $(PATCHLEVEL) -ge 6 \) \
