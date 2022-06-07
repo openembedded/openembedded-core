@@ -1,0 +1,29 @@
+From b7ce611887cfac633aacc052b2e71a7f195418b8 Mon Sep 17 00:00:00 2001
+From: Tomas Mraz <tomas@openssl.org>
+Date: Wed, 1 Jun 2022 13:06:46 +0200
+Subject: [PATCH] ct_test.c: Update the epoch time
+
+Reviewed-by: Matt Caswell <matt@openssl.org>
+Reviewed-by: Dmitry Belyavskiy <beldmit@gmail.com>
+(Merged from https://github.com/openssl/openssl/pull/18446)
+
+Upstream-Status: Backport [https://github.com/openssl/openssl/commit/b7ce611887cfac633aacc052b2e71a7f195418b8]
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+
+---
+ test/ct_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/ct_test.c b/test/ct_test.c
+index 78d11ca98cf7..535897d09a77 100644
+--- a/test/ct_test.c
++++ b/test/ct_test.c
+@@ -63,7 +63,7 @@ static CT_TEST_FIXTURE *set_up(const char *const test_case_name)
+     if (!TEST_ptr(fixture = OPENSSL_zalloc(sizeof(*fixture))))
+         goto end;
+     fixture->test_case_name = test_case_name;
+-    fixture->epoch_time_in_ms = 1473269626000ULL; /* Sep 7 17:33:46 2016 GMT */
++    fixture->epoch_time_in_ms = 1580335307000ULL; /* Wed 29 Jan 2020 10:01:47 PM UTC */
+     if (!TEST_ptr(fixture->ctlog_store = CTLOG_STORE_new())
+             || !TEST_int_eq(
+                     CTLOG_STORE_load_default_file(fixture->ctlog_store), 1))

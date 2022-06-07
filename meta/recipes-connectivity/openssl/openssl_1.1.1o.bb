@@ -19,6 +19,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://reproducible.patch \
            file://reproducibility.patch \
            file://73db5d82489b3ec09ccc772dfcee14fef0e8e908.patch \
+           file://b7ce611887cfac633aacc052b2e71a7f195418b8.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
