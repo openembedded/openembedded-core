@@ -7,12 +7,11 @@ inherit staging
 inherit mirrors
 inherit utils
 inherit utility-tasks
-inherit metadata_scm
 inherit logging
 
 OE_EXTRA_IMPORTS ?= ""
 
-OE_IMPORTS += "os sys time oe.path oe.utils oe.types oe.package oe.packagegroup oe.sstatesig oe.lsb oe.cachedpath oe.license oe.qa oe.reproducible oe.rust ${OE_EXTRA_IMPORTS}"
+OE_IMPORTS += "os sys time oe.path oe.utils oe.types oe.package oe.packagegroup oe.sstatesig oe.lsb oe.cachedpath oe.license oe.qa oe.reproducible oe.rust oe.buildcfg ${OE_EXTRA_IMPORTS}"
 OE_IMPORTS[type] = "list"
 
 PACKAGECONFIG_CONFARGS ??= ""
@@ -34,6 +33,8 @@ def oe_import(d):
 
 # We need the oe module name space early (before INHERITs get added)
 OE_IMPORTED := "${@oe_import(d)}"
+
+inherit metadata_scm
 
 def lsb_distro_identifier(d):
     adjust = d.getVar('LSB_DISTRO_ADJUST')
@@ -219,8 +220,8 @@ def get_source_date_epoch_value(d):
 def get_layers_branch_rev(d):
     layers = (d.getVar("BBLAYERS") or "").split()
     layers_branch_rev = ["%-20s = \"%s:%s\"" % (os.path.basename(i), \
-        base_get_metadata_git_branch(i, None).strip(), \
-        base_get_metadata_git_revision(i, None)) \
+        oe.buildcfg.get_metadata_git_branch(i, None).strip(), \
+        oe.buildcfg.get_metadata_git_revision(i, None)) \
             for i in layers]
     i = len(layers_branch_rev)-1
     p1 = layers_branch_rev[i].find("=")

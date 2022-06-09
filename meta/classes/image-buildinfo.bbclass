@@ -46,8 +46,8 @@ def get_layer_git_status(path):
 def get_layer_revs(d):
     layers = (d.getVar("BBLAYERS") or "").split()
     medadata_revs = ["%-17s = %s:%s %s" % (os.path.basename(i), \
-        base_get_metadata_git_branch(i, None).strip(), \
-        base_get_metadata_git_revision(i, None), \
+        oe.buildcfg.get_metadata_git_branch(i, None).strip(), \
+        oe.buildcfg.get_metadata_git_revision(i, None), \
         get_layer_git_status(i)) \
             for i in layers]
     return '\n'.join(medadata_revs)
