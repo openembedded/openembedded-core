@@ -33,6 +33,12 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig
 
+# Version 20220527 added KVM test infrastructure which currently fails to build with gold due to
+# SORT_NONE in linker script which isn't supported by gold:
+# https://sourceware.org/bugzilla/show_bug.cgi?id=18097
+# https://github.com/linux-test-project/ltp/commit/3fce2064b54843218d085aae326c8f7ecf3a8c41#diff-39268f0855c634ca48c8993fcd2c95b12a65b79e8d9fa5ccd6b0f5a8785c0dd6R36
+LDFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd', '', d)}"
+
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 export prefix = "/opt/${PN}"
