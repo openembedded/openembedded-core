@@ -26,29 +26,13 @@ def image_buildinfo_outputvars(vars, d):
         ret += "%s = %s\n" % (var, value)
     return ret.rstrip('\n')
 
-# Gets git branch's status (clean or dirty)
-def get_layer_git_status(path):
-    import subprocess
-    try:
-        subprocess.check_output("""cd %s; export PSEUDO_UNLOAD=1; set -e;
-                                git diff --quiet --no-ext-diff
-                                git diff --quiet --no-ext-diff --cached""" % path,
-                                shell=True,
-                                stderr=subprocess.STDOUT)
-        return ""
-    except subprocess.CalledProcessError as ex:
-        # Silently treat errors as "modified", without checking for the
-        # (expected) return code 1 in a modified git repo. For example, we get
-        # output and a 129 return code when a layer isn't a git repo at all.
-        return "-- modified"
-
 # Returns layer revisions along with their respective status
 def get_layer_revs(d):
     layers = (d.getVar("BBLAYERS") or "").split()
     medadata_revs = ["%-17s = %s:%s %s" % (os.path.basename(i), \
         oe.buildcfg.get_metadata_git_branch(i, None).strip(), \
         oe.buildcfg.get_metadata_git_revision(i, None), \
-        get_layer_git_status(i)) \
+        oe.buildcfg.is_layer_modified(i)) \
             for i in layers]
     return '\n'.join(medadata_revs)
 
