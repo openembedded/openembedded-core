@@ -40,3 +40,10 @@ def is_layer_modified(path):
         # (expected) return code 1 in a modified git repo. For example, we get
         # output and a 129 return code when a layer isn't a git repo at all.
         return " -- modified"
+
+def get_layer_revisions(d):
+    layers = (d.getVar("BBLAYERS") or "").split()
+    revisions = []
+    for i in layers:
+        revisions.append((i, os.path.basename(i), get_metadata_git_branch(i, None).strip(), get_metadata_git_revision(i, None), is_layer_modified(i)))
+    return revisions

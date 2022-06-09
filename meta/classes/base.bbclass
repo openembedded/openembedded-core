@@ -218,11 +218,8 @@ def get_source_date_epoch_value(d):
     return oe.reproducible.epochfile_read(d.getVar('SDE_FILE'), d)
 
 def get_layers_branch_rev(d):
-    layers = (d.getVar("BBLAYERS") or "").split()
-    layers_branch_rev = ["%-20s = \"%s:%s\"" % (os.path.basename(i), \
-        oe.buildcfg.get_metadata_git_branch(i, None).strip(), \
-        oe.buildcfg.get_metadata_git_revision(i, None)) \
-            for i in layers]
+    revisions = oe.buildcfg.get_layer_revisions(d)
+    layers_branch_rev = ["%-20s = \"%s:%s\"" % (r[1], r[2], r[3]) for r in revisions]
     i = len(layers_branch_rev)-1
     p1 = layers_branch_rev[i].find("=")
     s1 = layers_branch_rev[i][p1:]

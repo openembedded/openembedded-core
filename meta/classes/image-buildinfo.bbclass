@@ -28,12 +28,8 @@ def image_buildinfo_outputvars(vars, d):
 
 # Returns layer revisions along with their respective status
 def get_layer_revs(d):
-    layers = (d.getVar("BBLAYERS") or "").split()
-    medadata_revs = ["%-17s = %s:%s %s" % (os.path.basename(i), \
-        oe.buildcfg.get_metadata_git_branch(i, None).strip(), \
-        oe.buildcfg.get_metadata_git_revision(i, None), \
-        oe.buildcfg.is_layer_modified(i)) \
-            for i in layers]
+    revisions = oe.buildcfg.get_layer_revisions(d)
+    medadata_revs = ["%-17s = %s:%s%s" % (r[1], r[2], r[3], r[4]) for r in revisions]
     return '\n'.join(medadata_revs)
 
 def buildinfo_target(d):
