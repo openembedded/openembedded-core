@@ -5,7 +5,7 @@ DESCRIPTION = "XML::NamespaceSupport offers a simple way to process namespace-ba
                 basic checks. "
 
 SECTION = "libs"
-LICENSE = "Artistic-1.0 | GPL-1.0+"
+LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
 
 SRCNAME = "XML-NamespaceSupport"
 
@@ -21,7 +21,7 @@ S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit cpan ptest-perl
 
-RDEPENDS_${PN}-ptest += "perl-module-test-more"
+RDEPENDS:${PN}-ptest += "perl-module-test-more"
 
 BBCLASSEXTEND="native nativesdk"
 

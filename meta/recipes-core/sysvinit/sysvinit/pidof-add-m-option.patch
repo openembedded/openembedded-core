@@ -1,4 +1,7 @@
-pidof: add -m option
+From 0e441712d0e366a0384ff3fa879f5a2d2607c24f Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 24 Jul 2013 17:07:22 +0800
+Subject: [PATCH] pidof: add -m option
 
 When used with -o, will also omit any processes that have the same
 argv[0] and argv[1] as any explicitly omitted process ids. This can be
@@ -7,29 +10,31 @@ each other's pids.
 
 https://bugzilla.redhat.com/show_bug.cgi?id=883856
 
-Upstream-Status: backport
+Upstream-Status: Backport
 Imported patch from: https://bugzilla.redhat.com/attachment.cgi?id=658166
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+
 ---
- man/pidof.8    |  6 ++++++
- src/killall5.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ man/pidof.8    |  6 +++++
+ src/killall5.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++---
  2 files changed, 65 insertions(+), 3 deletions(-)
 
 diff --git a/man/pidof.8 b/man/pidof.8
+index 6866cb3..a87d878 100644
 --- a/man/pidof.8
 +++ b/man/pidof.8
-@@ -24,6 +24,7 @@ pidof -- find the process ID of a running program.
- .RB [ \-c ]
+@@ -25,6 +25,7 @@ pidof - find the process ID of a running program
  .RB [ \-n ]
  .RB [ \-x ]
+ .RB [ \-z ]
 +.RB [ \-m ]
  .RB [ \-o
- .IR omitpid[,omitpid..] ]
+ .IR omitpid[,omitpid...] ]
  .RB [ \-o
-@@ -63,6 +64,11 @@ shells running the named scripts.
+@@ -77,6 +78,11 @@ is shown. The default separator is a space.
  Tells \fIpidof\fP to omit processes with that process id. The special
- pid \fB%PPID\fP can be used to name the parent process of the \fIpidof\fP
+ pid \fB%PPID\fP can be used to name the parent process of the \fBpidof\fP
  program, in other words the calling shell or shell script.
 +.IP -m
 +When used with -o, will also omit any processes that have the same
@@ -40,10 +45,10 @@ diff --git a/man/pidof.8 b/man/pidof.8
  .TP
  .B 0
 diff --git a/src/killall5.c b/src/killall5.c
-index 5937d98..e73885e 100644
+index b0728fa..72289e3 100644
 --- a/src/killall5.c
 +++ b/src/killall5.c
-@@ -118,6 +118,7 @@ typedef struct _s_nfs
+@@ -121,6 +121,7 @@ typedef struct _s_nfs
  
  /* List of processes. */
  PROC *plist;
@@ -51,7 +56,7 @@ index 5937d98..e73885e 100644
  
  /* List of processes to omit. */
  OMIT *omit;
-@@ -345,6 +346,20 @@ static void clear_mnt(void)
+@@ -356,6 +357,20 @@ static void clear_mnt(void)
  	}
  }
  
@@ -70,17 +75,17 @@ index 5937d98..e73885e 100644
 +}
 +
  /*
-  *     Check if path is ia shadow off a NFS partition.
+  *     Check if path is a shadow off a NFS partition.
   */
-@@ -452,6 +467,7 @@ int readproc(int do_stat)
+@@ -481,6 +496,7 @@ int readproc()
  	DIR		*dir;
  	FILE		*fp;
  	PROC		*p, *n;
 +	OMIT		*o, *m;
  	struct dirent	*d;
- 	struct stat	st;
  	char		path[PATH_MAX+1];
-@@ -624,6 +640,17 @@ int readproc(int do_stat)
+ 	char		buf[PATH_MAX+1];
+@@ -670,6 +686,17 @@ int readproc()
  		p->next = plist;
  		plist = p;
  		p->pid = pid;
@@ -98,7 +103,7 @@ index 5937d98..e73885e 100644
  	}
  	closedir(dir);
  
-@@ -813,6 +840,26 @@ PIDQ_HEAD *pidof(char *prog)
+@@ -870,6 +897,26 @@ PIDQ_HEAD *pidof(char *prog)
  	return q;
  }
  
@@ -125,42 +130,42 @@ index 5937d98..e73885e 100644
  /* Give usage message and exit. */
  void usage(void)
  {
-@@ -845,6 +892,7 @@ void nsyslog(int pri, char *fmt, ...)
- #define PIDOF_SINGLE	0x01
+@@ -920,6 +967,7 @@ void nsyslog(int pri, char *fmt, ...)
  #define PIDOF_OMIT	0x02
  #define PIDOF_NETFS	0x04
+ #define PIDOF_QUIET     0x08
 +#define PIDOF_OMIT_OMIT_MATCHES	0x08
  
  /*
   *	Pidof functionality.
-@@ -861,6 +909,7 @@ int main_pidof(int argc, char **argv)
- 	struct stat	st;
+@@ -937,6 +985,7 @@ int main_pidof(int argc, char **argv)
  	char		tmp[512];
+         char            sep = ' ';
  
 +	olist = (PROC*)0;
  	omit = (OMIT*)0;
  	nlist = (NFS*)0;
  	opterr = 0;
-@@ -868,7 +917,7 @@ int main_pidof(int argc, char **argv)
+@@ -944,7 +993,7 @@ int main_pidof(int argc, char **argv)
  	if ((token = getenv("PIDOF_NETFS")) && (strcmp(token,"no") != 0))
  		flags |= PIDOF_NETFS;
  
--	while ((opt = getopt(argc,argv,"hco:sxn")) != EOF) switch (opt) {
-+	while ((opt = getopt(argc,argv,"hcmo:sxn")) != EOF) switch (opt) {
+-	while ((opt = getopt(argc,argv,"qhco:d:sxzn")) != EOF) switch (opt) {
++	while ((opt = getopt(argc,argv,"qhcmo:d:sxzn")) != EOF) switch (opt) {
  		case '?':
  			nsyslog(LOG_ERR,"invalid options on command line!\n");
  			closelog();
-@@ -907,6 +956,9 @@ int main_pidof(int argc, char **argv)
- 		case 'x':
- 			scripts_too++;
- 			break;
+@@ -995,6 +1044,9 @@ int main_pidof(int argc, char **argv)
+                 case 'z':
+                         list_dz_processes = TRUE;
+                         break;
 +		case 'm':
 +			flags |= PIDOF_OMIT_OMIT_MATCHES;
 +			break;
  		case 'n':
  			flags |= PIDOF_NETFS;
  			break;
-@@ -938,10 +990,13 @@ int main_pidof(int argc, char **argv)
+@@ -1026,10 +1078,13 @@ int main_pidof(int argc, char **argv)
  			pid_t spid = 0;
  			while ((p = get_next_from_pid_q(q))) {
  				if ((flags & PIDOF_OMIT) && omit) {
@@ -176,14 +181,11 @@ index 5937d98..e73885e 100644
  					}
  
  					/*
-@@ -977,6 +1032,7 @@ int main_pidof(int argc, char **argv)
- 	if (!first)
+@@ -1071,6 +1126,7 @@ int main_pidof(int argc, char **argv)
  		printf("\n");
+         }
  
 +	clear_omit();
  	clear_mnt();
  
  	closelog();
--- 
-1.8.1.2
-

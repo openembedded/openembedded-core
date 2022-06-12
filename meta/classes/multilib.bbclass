@@ -35,7 +35,7 @@ python multilib_virtclass_handler () {
         e.data.setVar('SDKTARGETSYSROOT', e.data.getVar('SDKTARGETSYSROOT'))
         override = ":virtclass-multilib-" + variant
         e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
-        target_vendor = e.data.getVar("TARGET_VENDOR_" + "virtclass-multilib-" + variant, False)
+        target_vendor = e.data.getVar("TARGET_VENDOR:" + "virtclass-multilib-" + variant, False)
         if target_vendor:
             e.data.setVar("TARGET_VENDOR", target_vendor)
         return
@@ -65,24 +65,25 @@ python multilib_virtclass_handler () {
  
     override = ":virtclass-multilib-" + variant
 
-    blacklist = e.data.getVarFlag('PNBLACKLIST', e.data.getVar('PN'))
-    if blacklist:
+    skip_msg = e.data.getVarFlag('SKIP_RECIPE', e.data.getVar('PN'))
+    if skip_msg:
         pn_new = variant + "-" + e.data.getVar('PN')
-        if not e.data.getVarFlag('PNBLACKLIST', pn_new):
-            e.data.setVarFlag('PNBLACKLIST', pn_new, blacklist)
+        if not e.data.getVarFlag('SKIP_RECIPE', pn_new):
+            e.data.setVarFlag('SKIP_RECIPE', pn_new, skip_msg)
 
     e.data.setVar("MLPREFIX", variant + "-")
     e.data.setVar("PN", variant + "-" + e.data.getVar("PN", False))
     e.data.setVar("OVERRIDES", e.data.getVar("OVERRIDES", False) + override)
 
-    # Expand WHITELIST_GPL-3.0 with multilib prefix
-    pkgs = e.data.getVar("WHITELIST_GPL-3.0")
-    for pkg in pkgs.split():
-        pkgs += " " + variant + "-" + pkg
-    e.data.setVar("WHITELIST_GPL-3.0", pkgs)
+    # Expand INCOMPATIBLE_LICENSE_EXCEPTIONS with multilib prefix
+    pkgs = e.data.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS")
+    if pkgs:
+        for pkg in pkgs.split():
+            pkgs += " " + variant + "-" + pkg
+        e.data.setVar("INCOMPATIBLE_LICENSE_EXCEPTIONS", pkgs)
 
     # DEFAULTTUNE can change TARGET_ARCH override so expand this now before update_data
-    newtune = e.data.getVar("DEFAULTTUNE_" + "virtclass-multilib-" + variant, False)
+    newtune = e.data.getVar("DEFAULTTUNE:" + "virtclass-multilib-" + variant, False)
     if newtune:
         e.data.setVar("DEFAULTTUNE", newtune)
 }
@@ -91,13 +92,16 @@ addhandler multilib_virtclass_handler
 multilib_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
 python __anonymous () {
-    variant = d.getVar("BBEXTENDVARIANT")
-
-    import oe.classextend
-
-    clsextend = oe.classextend.ClassExtender(variant, d)
-
     if bb.data.inherits_class('image', d):
+        # set rpm preferred file color for 32-bit multilib image
+        if d.getVar("SITEINFO_BITS") == "32":
+            d.setVar("RPM_PREFER_ELF_ARCH", "1")
+
+        variant = d.getVar("BBEXTENDVARIANT")
+        import oe.classextend
+
+        clsextend = oe.classextend.ClassExtender(variant, d)
+
         clsextend.map_depends_variable("PACKAGE_INSTALL")
         clsextend.map_depends_variable("LINGUAS_INSTALL")
         clsextend.map_depends_variable("RDEPENDS")
@@ -106,8 +110,23 @@ python __anonymous () {
         d.setVar("LINGUAS_INSTALL", "")
         # FIXME, we need to map this to something, not delete it!
         d.setVar("PACKAGE_INSTALL_ATTEMPTONLY", "")
-        bb.build.deltask('do_populate_sdk', d)
         bb.build.deltask('do_populate_sdk_ext', d)
+        return
+}
+
+python multilib_virtclass_handler_postkeyexp () {
+    cls = d.getVar("BBEXTENDCURR")
+    variant = d.getVar("BBEXTENDVARIANT")
+    if cls != "multilib" or not variant:
+        return
+
+    variant = d.getVar("BBEXTENDVARIANT")
+
+    import oe.classextend
+
+    clsextend = oe.classextend.ClassExtender(variant, d)
+
+    if bb.data.inherits_class('image', d):
         return
 
     clsextend.map_depends_variable("DEPENDS")
@@ -128,6 +147,9 @@ python __anonymous () {
 
     reset_alternative_priority(d)
 }
+
+addhandler multilib_virtclass_handler_postkeyexp
+multilib_virtclass_handler_postkeyexp[eventmask] = "bb.event.RecipePostKeyExpansion"
 
 def reset_alternative_priority(d):
     if not bb.data.inherits_class('update-alternatives', d):
@@ -159,7 +181,7 @@ def reset_alternative_priority(d):
                 bb.debug(1, '%s: Setting ALTERNATIVE_PRIORITY_%s to %s' % (pkg, pkg, reset_priority))
                 d.setVar('ALTERNATIVE_PRIORITY_%s' % pkg, reset_priority)
 
-        for alt_name in (d.getVar('ALTERNATIVE_%s' % pkg) or "").split():
+        for alt_name in (d.getVar('ALTERNATIVE:%s' % pkg) or "").split():
             # ALTERNATIVE_PRIORITY_pkg[tool]  = priority
             alt_priority_pkg_name = d.getVarFlag('ALTERNATIVE_PRIORITY_%s' % pkg, alt_name)
             # ALTERNATIVE_PRIORITY[tool] = priority
@@ -174,25 +196,26 @@ def reset_alternative_priority(d):
                 bb.debug(1, '%s: Setting ALTERNATIVE_PRIORITY[%s] to %s' % (pkg, alt_name, reset_priority))
                 d.setVarFlag('ALTERNATIVE_PRIORITY', alt_name, reset_priority)
 
-PACKAGEFUNCS_append = " do_package_qa_multilib"
+PACKAGEFUNCS:append = " do_package_qa_multilib"
 
 python do_package_qa_multilib() {
 
     def check_mlprefix(pkg, var, mlprefix):
-        values = bb.utils.explode_deps(d.getVar('%s_%s' % (var, pkg)) or d.getVar(var) or "")
+        values = bb.utils.explode_deps(d.getVar('%s:%s' % (var, pkg)) or d.getVar(var) or "")
         candidates = []
         for i in values:
             if i.startswith('virtual/'):
                 i = i[len('virtual/'):]
-            if (not i.startswith('kernel-module')) and (not i.startswith(mlprefix)) and \
-                (not 'cross-canadian' in i) and (not i.startswith("nativesdk-")) and \
-                (not i.startswith("rtld")) and (not i.startswith('kernel-vmlinux')) \
-                and (not i.startswith("kernel-image")) and (not i.startswith("/")):
+
+            if (not (i.startswith(mlprefix) or i.startswith("kernel-") \
+                    or ('cross-canadian' in i) or i.startswith("nativesdk-") \
+                    or i.startswith("rtld") or i.startswith("/"))):
                 candidates.append(i)
+
         if len(candidates) > 0:
             msg = "%s package %s - suspicious values '%s' in %s" \
                    % (d.getVar('PN'), pkg, ' '.join(candidates), var)
-            package_qa_handle_error("multilib", msg, d)
+            oe.qa.handle_error("multilib", msg, d)
 
     ml = d.getVar('MLPREFIX')
     if not ml:
@@ -210,4 +233,5 @@ python do_package_qa_multilib() {
         check_mlprefix(pkg, 'RSUGGESTS', ml)
         check_mlprefix(pkg, 'RREPLACES', ml)
         check_mlprefix(pkg, 'RCONFLICTS', ml)
+    oe.qa.exit_if_errors(d)
 }

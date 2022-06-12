@@ -1,48 +1,29 @@
 SUMMARY = "Simon Tatham's Portable Puzzle Collection"
+DESCRIPTION = "Collection of small computer programs which implement one-player puzzle games."
 HOMEPAGE = "http://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENCE;md5=da6110d4ed1225a287eab2bf0ac0193b"
+LIC_FILES_CHKSUM = "file://LICENCE;md5=6e7d24cf1c949887ee9447a1e2a4a24c"
 
-DEPENDS = "libxt"
-
-# The libxt requires x11 in DISTRO_FEATURES
+# gtk support includes a bunch of x11 headers
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRC_URI = "git://git.tartarus.org/simon/puzzles.git \
-           file://fix-compiling-failure-with-option-g-O.patch \
-           file://0001-Use-labs-instead-of-abs.patch \
-           file://0001-palisade-Fix-warnings-with-clang-on-arm.patch \
-           file://0001-Use-Wno-error-format-overflow-if-the-compiler-suppor.patch \
-           file://0001-pattern.c-Change-string-lenght-parameter-to-be-size_.patch \
-           file://fix-ki-uninitialized.patch \
-           "
+SRC_URI = "git://git.tartarus.org/simon/puzzles.git;branch=main"
 
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "c6e0161dd475415316ed66dc82794d68e52f0025"
+SRCREV = "c43a34fbfe430d235bafc379595761880a19ed9f"
 PE = "2"
 PV = "0.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools distro_features_check pkgconfig
+inherit cmake features_check pkgconfig
 
-PACKAGECONFIG ??= "gtk3"
-PACKAGECONFIG[gtk2] = "--with-gtk=2,,gtk+,"
-PACKAGECONFIG[gtk3] = "--with-gtk=3,,gtk+3,"
+DEPENDS += "gtk+3"
 
-CFLAGS_append = " -Wno-deprecated-declarations"
-
-ASNEEDED = ""
-
-do_configure_prepend () {
-    cd ${S}
-    ./mkfiles.pl
-    cd ${B}
-}
-
-do_install_append () {
+do_install:append () {
     # net conflicts with Samba, so rename it
     mv ${D}${bindir}/net ${D}${bindir}/puzzles-net
+    rm ${D}/${datadir}/applications/net.desktop
 
     # Create desktop shortcuts
     install -d ${D}/${datadir}/applications/
@@ -66,16 +47,3 @@ STOP
     done
 }
 
-PACKAGES += "${PN}-extra"
-
-FILES_${PN} = ""
-FILES_${PN}-extra = "${prefix}/bin ${datadir}/applications"
-
-python __anonymous () {
-    var = d.expand("FILES_${PN}")
-    data = d.getVar(var, False)
-    for name in ("bridges", "fifteen", "inertia", "map", "samegame", "slant"):
-        data = data + " ${bindir}/%s" % name
-        data = data + " ${datadir}/applications/%s.desktop" % name
-    d.setVar(var, data)
-}

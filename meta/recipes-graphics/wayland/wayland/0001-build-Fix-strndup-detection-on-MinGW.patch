@@ -1,0 +1,41 @@
+From b4c64b6f07743e3fb63ce52359bc664ab7d60df0 Mon Sep 17 00:00:00 2001
+From: Joshua Watt <JPEWhacker@gmail.com>
+Date: Thu, 20 Feb 2020 15:20:45 -0600
+Subject: [PATCH] build: Fix strndup detection on MinGW
+
+GCC and meson conspire together to incorrectly detect that strndup()
+exists on MinGW as __builtin_strndup, when no such function exists. As a
+work around, meson will skip looking for __builtin functions if an
+'#include' is in the prefix, so add '#include <string.h>' when looking
+for strndup().
+
+See: https://github.com/mesonbuild/meson/issues/3672
+
+Upstream-Status: Submitted [https://gitlab.freedesktop.org/wayland/wayland/merge_requests/63]
+
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Denys Dmytriyenko <denis@denix.org>
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 3bc25c9..adde7b9 100644
+--- a/meson.build
++++ b/meson.build
+@@ -38,11 +38,11 @@ have_funcs = [
+ 	'prctl',
+ 	'memfd_create',
+ 	'mremap',
+-	'strndup',
+ ]
+ foreach f: have_funcs
+ 	config_h.set('HAVE_' + f.underscorify().to_upper(), cc.has_function(f))
+ endforeach
++config_h.set('HAVE_STRNDUP', cc.has_function('strndup') and cc.has_header_symbol('string.h', 'strndup'))
+ config_h.set10('HAVE_XUCRED_CR_PID', cc.has_member('struct xucred', 'cr_pid', prefix : '#include <sys/ucred.h>'))
+ have_broken_msg_cmsg_cloexec = false
+ if host_machine.system() == 'freebsd'
+-- 
+2.7.4
+

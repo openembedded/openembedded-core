@@ -4,7 +4,7 @@
 # depends are correct
 #
 # Custom library package names can be defined setting
-# DEBIANNAME_ + pkgname to the desired name.
+# DEBIANNAME: + pkgname to the desired name.
 #
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
@@ -14,6 +14,10 @@ AUTO_LIBNAME_PKGS = "${PACKAGES}"
 inherit package
 
 DEBIANRDEP = "do_packagedata"
+do_package_write_ipk[deptask] = "${DEBIANRDEP}"
+do_package_write_deb[deptask] = "${DEBIANRDEP}"
+do_package_write_tar[deptask] = "${DEBIANRDEP}"
+do_package_write_rpm[deptask] = "${DEBIANRDEP}"
 do_package_write_ipk[rdeptask] = "${DEBIANRDEP}"
 do_package_write_deb[rdeptask] = "${DEBIANRDEP}"
 do_package_write_tar[rdeptask] = "${DEBIANRDEP}"
@@ -51,11 +55,11 @@ python debian_package_name_hook () {
         return (s[stat.ST_MODE] & stat.S_IEXEC)
 
     def add_rprovides(pkg, d):
-        newpkg = d.getVar('PKG_' + pkg)
+        newpkg = d.getVar('PKG:' + pkg)
         if newpkg and newpkg != pkg:
-            provs = (d.getVar('RPROVIDES_' + pkg) or "").split()
+            provs = (d.getVar('RPROVIDES:' + pkg) or "").split()
             if pkg not in provs:
-                d.appendVar('RPROVIDES_' + pkg, " " + pkg + " (=" + d.getVar("PKGV") + ")")
+                d.appendVar('RPROVIDES:' + pkg, " " + pkg + " (=" + d.getVar("PKGV") + ")")
 
     def auto_libname(packages, orig_pkg):
         p = lambda var: pathlib.PurePath(d.getVar(var))
@@ -110,10 +114,10 @@ python debian_package_name_hook () {
             if soname_result:
                 (pkgname, devname) = soname_result
                 for pkg in packages.split():
-                    if (d.getVar('PKG_' + pkg, False) or d.getVar('DEBIAN_NOAUTONAME_' + pkg, False)):
+                    if (d.getVar('PKG:' + pkg, False) or d.getVar('DEBIAN_NOAUTONAME:' + pkg, False)):
                         add_rprovides(pkg, d)
                         continue
-                    debian_pn = d.getVar('DEBIANNAME_' + pkg, False)
+                    debian_pn = d.getVar('DEBIANNAME:' + pkg, False)
                     if debian_pn:
                         newpkg = debian_pn
                     elif pkg == orig_pkg:
@@ -126,7 +130,7 @@ python debian_package_name_hook () {
                             newpkg = mlpre + newpkg
                     if newpkg != pkg:
                         bb.note("debian: renaming %s to %s" % (pkg, newpkg))
-                        d.setVar('PKG_' + pkg, newpkg)
+                        d.setVar('PKG:' + pkg, newpkg)
                         add_rprovides(pkg, d)
         else:
             add_rprovides(orig_pkg, d)

@@ -1,6 +1,11 @@
-inherit siteinfo python3native
+inherit python3native meson-routines qemu
 
-DEPENDS_append = " meson-native ninja-native"
+DEPENDS:append = " meson-native ninja-native"
+
+EXEWRAPPER_ENABLED:class-native = "False"
+EXEWRAPPER_ENABLED:class-nativesdk = "False"
+EXEWRAPPER_ENABLED ?= "${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'True', 'False', d)}"
+DEPENDS:append = "${@' qemu-native' if d.getVar('EXEWRAPPER_ENABLED') == 'True' else ''}"
 
 # As Meson enforces out-of-tree builds we can just use cleandirs
 B = "${WORKDIR}/build"
@@ -12,8 +17,10 @@ MESON_SOURCEPATH = "${S}"
 def noprefix(var, d):
     return d.getVar(var).replace(d.getVar('prefix') + '/', '', 1)
 
+MESON_BUILDTYPE ?= "${@oe.utils.vartrue('DEBUG_BUILD', 'debug', 'plain', d)}"
+MESON_BUILDTYPE[vardeps] += "DEBUG_BUILD"
 MESONOPTS = " --prefix ${prefix} \
-              --buildtype plain \
+              --buildtype ${MESON_BUILDTYPE} \
               --bindir ${@noprefix('bindir', d)} \
               --sbindir ${@noprefix('sbindir', d)} \
               --datadir ${@noprefix('datadir', d)} \
@@ -24,93 +31,117 @@ MESONOPTS = " --prefix ${prefix} \
               --infodir ${@noprefix('infodir', d)} \
               --sysconfdir ${sysconfdir} \
               --localstatedir ${localstatedir} \
-              --sharedstatedir ${sharedstatedir} "
+              --sharedstatedir ${sharedstatedir} \
+              --wrap-mode nodownload \
+              --native-file ${WORKDIR}/meson.native"
 
-EXTRA_OEMESON_append = " ${PACKAGECONFIG_CONFARGS}"
+EXTRA_OEMESON:append = " ${PACKAGECONFIG_CONFARGS}"
 
 MESON_CROSS_FILE = ""
-MESON_CROSS_FILE_class-target = "--cross-file ${WORKDIR}/meson.cross"
-MESON_CROSS_FILE_class-nativesdk = "--cross-file ${WORKDIR}/meson.cross"
+MESON_CROSS_FILE:class-target = "--cross-file ${WORKDIR}/meson.cross"
+MESON_CROSS_FILE:class-nativesdk = "--cross-file ${WORKDIR}/meson.cross"
 
-def meson_array(var, d):
-    items = d.getVar(var).split()
-    return repr(items[0] if len(items) == 1 else items)
+# Needed to set up qemu wrapper below
+export STAGING_DIR_HOST
 
-# Map our ARCH values to what Meson expects:
-# http://mesonbuild.com/Reference-tables.html#cpu-families
-def meson_cpu_family(var, d):
-    import re
-    arch = d.getVar(var)
-    if arch == 'powerpc':
-        return 'ppc'
-    elif arch == 'powerpc64':
-        return 'ppc64'
-    elif arch == 'armeb':
-        return 'arm'
-    elif arch == 'aarch64_be':
-        return 'aarch64'
-    elif arch == 'mipsel':
-        return 'mips'
-    elif arch == 'mips64el':
-        return 'mips64'
-    elif re.match(r"i[3-6]86", arch):
-        return "x86"
-    elif arch == "microblazeel" or arch == "microblazeeb":
-        return "microblaze"
-    else:
-        return arch
-
-def meson_endian(prefix, d):
-    arch, os = d.getVar(prefix + "_ARCH"), d.getVar(prefix + "_OS")
-    sitedata = siteinfo_data_for_machine(arch, os, d)
-    if "endian-little" in sitedata:
-        return "little"
-    elif "endian-big" in sitedata:
-        return "big"
-    else:
-        bb.fatal("Cannot determine endianism for %s-%s" % (arch, os))
+def rust_tool(d, target_var):
+    rustc = d.getVar('RUSTC')
+    if not rustc:
+        return ""
+    cmd = [rustc, "--target", d.getVar(target_var)] + d.getVar("RUSTFLAGS").split()
+    return "rust = %s" % repr(cmd)
 
 addtask write_config before do_configure
-do_write_config[vardeps] += "CC CXX LD AR NM STRIP READELF CFLAGS CXXFLAGS LDFLAGS"
+do_write_config[vardeps] += "CC CXX LD AR NM STRIP READELF CFLAGS CXXFLAGS LDFLAGS RUSTC RUSTFLAGS"
 do_write_config() {
     # This needs to be Py to split the args into single-element lists
     cat >${WORKDIR}/meson.cross <<EOF
 [binaries]
 c = ${@meson_array('CC', d)}
 cpp = ${@meson_array('CXX', d)}
+cython = 'cython3'
 ar = ${@meson_array('AR', d)}
 nm = ${@meson_array('NM', d)}
-ld = ${@meson_array('LD', d)}
 strip = ${@meson_array('STRIP', d)}
 readelf = ${@meson_array('READELF', d)}
+objcopy = ${@meson_array('OBJCOPY', d)}
 pkgconfig = 'pkg-config'
 llvm-config = 'llvm-config${LLVMVERSION}'
+cups-config = 'cups-config'
+g-ir-scanner = '${STAGING_BINDIR}/g-ir-scanner-wrapper'
+g-ir-compiler = '${STAGING_BINDIR}/g-ir-compiler-wrapper'
+${@rust_tool(d, "HOST_SYS")}
+${@"exe_wrapper = '${WORKDIR}/meson-qemuwrapper'" if d.getVar('EXEWRAPPER_ENABLED') == 'True' else ""}
 
-[properties]
-needs_exe_wrapper = true
+[built-in options]
 c_args = ${@meson_array('CFLAGS', d)}
 c_link_args = ${@meson_array('LDFLAGS', d)}
 cpp_args = ${@meson_array('CXXFLAGS', d)}
 cpp_link_args = ${@meson_array('LDFLAGS', d)}
-gtkdoc_exe_wrapper = '${B}/gtkdoc-qemuwrapper'
+
+[properties]
+needs_exe_wrapper = true
 
 [host_machine]
-system = '${HOST_OS}'
+system = '${@meson_operating_system('HOST_OS', d)}'
 cpu_family = '${@meson_cpu_family('HOST_ARCH', d)}'
 cpu = '${HOST_ARCH}'
 endian = '${@meson_endian('HOST', d)}'
 
 [target_machine]
-system = '${TARGET_OS}'
+system = '${@meson_operating_system('TARGET_OS', d)}'
 cpu_family = '${@meson_cpu_family('TARGET_ARCH', d)}'
 cpu = '${TARGET_ARCH}'
 endian = '${@meson_endian('TARGET', d)}'
 EOF
+
+    cat >${WORKDIR}/meson.native <<EOF
+[binaries]
+c = ${@meson_array('BUILD_CC', d)}
+cpp = ${@meson_array('BUILD_CXX', d)}
+cython = 'cython3'
+ar = ${@meson_array('BUILD_AR', d)}
+nm = ${@meson_array('BUILD_NM', d)}
+strip = ${@meson_array('BUILD_STRIP', d)}
+readelf = ${@meson_array('BUILD_READELF', d)}
+objcopy = ${@meson_array('BUILD_OBJCOPY', d)}
+pkgconfig = 'pkg-config-native'
+${@rust_tool(d, "BUILD_SYS")}
+
+[built-in options]
+c_args = ${@meson_array('BUILD_CFLAGS', d)}
+c_link_args = ${@meson_array('BUILD_LDFLAGS', d)}
+cpp_args = ${@meson_array('BUILD_CXXFLAGS', d)}
+cpp_link_args = ${@meson_array('BUILD_LDFLAGS', d)}
+EOF
 }
 
+do_write_config:append:class-target() {
+    # Write out a qemu wrapper that will be used as exe_wrapper so that meson
+    # can run target helper binaries through that.
+    qemu_binary="${@qemu_wrapper_cmdline(d, '$STAGING_DIR_HOST', ['$STAGING_DIR_HOST/${libdir}','$STAGING_DIR_HOST/${base_libdir}'])}"
+    cat > ${WORKDIR}/meson-qemuwrapper << EOF
+#!/bin/sh
+# Use a modules directory which doesn't exist so we don't load random things
+# which may then get deleted (or their dependencies) and potentially segfault
+export GIO_MODULE_DIR=${STAGING_LIBDIR}/gio/modules-dummy
+
+# meson sets this wrongly (only to libs in build-dir), qemu_wrapper_cmdline() and GIR_EXTRA_LIBS_PATH take care of it properly
+unset LD_LIBRARY_PATH
+
+$qemu_binary "\$@"
+EOF
+    chmod +x ${WORKDIR}/meson-qemuwrapper
+}
+
+# Tell externalsrc that changes to this file require a reconfigure
 CONFIGURE_FILES = "meson.build"
 
 meson_do_configure() {
+    # Meson requires this to be 'bfd, 'lld' or 'gold' from 0.53 onwards
+    # https://github.com/mesonbuild/meson/commit/ef9aeb188ea2bc7353e59916c18901cde90fa2b3
+    unset LD
+
     # Work around "Meson fails if /tmp is mounted with noexec #2972"
     mkdir -p "${B}/meson-private/tmp"
     export TMPDIR="${B}/meson-private/tmp"
@@ -120,32 +151,15 @@ meson_do_configure() {
     fi
 }
 
-override_native_tools() {
-    # Set these so that meson uses the native tools for its build sanity tests,
-    # which require executables to be runnable. The cross file will still
-    # override these for the target build.
-    export CC="${BUILD_CC}"
-    export CXX="${BUILD_CXX}"
-    export LD="${BUILD_LD}"
-    export AR="${BUILD_AR}"
-    export STRIP="${BUILD_STRIP}"
-    # These contain *target* flags but will be used as *native* flags.  The
-    # correct native flags will be passed via -Dc_args and so on, unset them so
-    # they don't interfere with tools invoked by Meson (such as g-ir-scanner)
-    unset CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
+python meson_do_qa_configure() {
+    import re
+    warn_re = re.compile(r"^WARNING: Cross property (.+) is using default value (.+)$", re.MULTILINE)
+    with open(d.expand("${B}/meson-logs/meson-log.txt")) as logfile:
+        log = logfile.read()
+    for (prop, value) in warn_re.findall(log):
+        bb.warn("Meson cross property %s used without explicit assignment, defaulting to %s" % (prop, value))
 }
-
-meson_do_configure_prepend_class-target() {
-    override_native_tools
-}
-
-meson_do_configure_prepend_class-nativesdk() {
-    override_native_tools
-}
-
-meson_do_configure_prepend_class-native() {
-    export PKG_CONFIG="pkg-config-native"
-}
+do_configure[postfuncs] += "meson_do_qa_configure"
 
 do_compile[progress] = "outof:^\[(\d+)/(\d+)\]\s+"
 meson_do_compile() {

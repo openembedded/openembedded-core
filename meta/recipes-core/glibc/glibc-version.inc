@@ -1,7 +1,7 @@
-SRCBRANCH ?= "release/2.30/master"
-PV = "2.30"
-SRCREV_glibc ?= "be9a328c93834648e0bec106a1f86357d1a8c7e1"
-SRCREV_localedef ?= "cd9f958c4c94a638fa7b2b4e21627364f1a1a655"
+SRCBRANCH ?= "release/2.35/master"
+PV = "2.35"
+SRCREV_glibc ?= "499a60179657d2945c6ad01bdac90e8427a6310e"
+SRCREV_localedef ?= "794da69788cbf9bf57b59a852f9f11307663fa87"
 
 GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 

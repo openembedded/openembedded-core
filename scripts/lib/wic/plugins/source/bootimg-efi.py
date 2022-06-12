@@ -12,7 +12,11 @@
 
 import logging
 import os
+import tempfile
 import shutil
+import re
+
+from glob import glob
 
 from wic import WicError
 from wic.engine import get_custom_config
@@ -116,12 +120,13 @@ class BootimgEFIPlugin(SourcePlugin):
         bootloader = creator.ks.bootloader
 
         loader_conf = ""
-        loader_conf += "default boot\n"
+        if source_params.get('create-unified-kernel-image') != "true":
+            loader_conf += "default boot\n"
         loader_conf += "timeout %d\n" % bootloader.timeout
 
         initrd = source_params.get('initrd')
 
-        if initrd:
+        if initrd and source_params.get('create-unified-kernel-image') != "true":
             # obviously we need to have a common common deploy var
             bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
             if not bootimg_dir:
@@ -180,11 +185,12 @@ class BootimgEFIPlugin(SourcePlugin):
                 for rd in initrds:
                     boot_conf += "initrd /%s\n" % rd
 
-        logger.debug("Writing systemd-boot config "
-                     "%s/hdd/boot/loader/entries/boot.conf", cr_workdir)
-        cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
-        cfg.write(boot_conf)
-        cfg.close()
+        if source_params.get('create-unified-kernel-image') != "true":
+            logger.debug("Writing systemd-boot config "
+                         "%s/hdd/boot/loader/entries/boot.conf", cr_workdir)
+            cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
+            cfg.write(boot_conf)
+            cfg.close()
 
 
     @classmethod
@@ -209,6 +215,57 @@ class BootimgEFIPlugin(SourcePlugin):
         except KeyError:
             raise WicError("bootimg-efi requires a loader, none specified")
 
+        if get_bitbake_var("IMAGE_EFI_BOOT_FILES") is None:
+            logger.debug('No boot files defined in IMAGE_EFI_BOOT_FILES')
+        else:
+            boot_files = None
+            for (fmt, id) in (("_uuid-%s", part.uuid), ("_label-%s", part.label), (None, None)):
+                if fmt:
+                    var = fmt % id
+                else:
+                    var = ""
+
+                boot_files = get_bitbake_var("IMAGE_EFI_BOOT_FILES" + var)
+                if boot_files:
+                    break
+
+            logger.debug('Boot files: %s', boot_files)
+
+            # list of tuples (src_name, dst_name)
+            deploy_files = []
+            for src_entry in re.findall(r'[\w;\-\./\*]+', boot_files):
+                if ';' in src_entry:
+                    dst_entry = tuple(src_entry.split(';'))
+                    if not dst_entry[0] or not dst_entry[1]:
+                        raise WicError('Malformed boot file entry: %s' % src_entry)
+                else:
+                    dst_entry = (src_entry, src_entry)
+
+                logger.debug('Destination entry: %r', dst_entry)
+                deploy_files.append(dst_entry)
+
+            cls.install_task = [];
+            for deploy_entry in deploy_files:
+                src, dst = deploy_entry
+                if '*' in src:
+                    # by default install files under their basename
+                    entry_name_fn = os.path.basename
+                    if dst != src:
+                        # unless a target name was given, then treat name
+                        # as a directory and append a basename
+                        entry_name_fn = lambda name: \
+                                        os.path.join(dst,
+                                                     os.path.basename(name))
+
+                    srcs = glob(os.path.join(kernel_dir, src))
+
+                    logger.debug('Globbed sources: %s', ', '.join(srcs))
+                    for entry in srcs:
+                        src = os.path.relpath(entry, kernel_dir)
+                        entry_dst_name = entry_name_fn(entry)
+                        cls.install_task.append((src, entry_dst_name))
+                else:
+                    cls.install_task.append((src, dst))
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
@@ -234,10 +291,67 @@ class BootimgEFIPlugin(SourcePlugin):
                 kernel = "%s-%s.bin" % \
                     (get_bitbake_var("KERNEL_IMAGETYPE"), get_bitbake_var("INITRAMFS_LINK_NAME"))
 
-        install_cmd = "install -m 0644 %s/%s %s/%s" % \
-            (staging_kernel_dir, kernel, hdddir, kernel)
-        exec_cmd(install_cmd)
+        if source_params.get('create-unified-kernel-image') == "true":
+            initrd = source_params.get('initrd')
+            if not initrd:
+                raise WicError("initrd= must be specified when create-unified-kernel-image=true, exiting")
 
+            deploy_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
+            efi_stub = glob("%s/%s" % (deploy_dir, "linux*.efi.stub"))
+            if len(efi_stub) == 0:
+                raise WicError("Unified Kernel Image EFI stub not found, exiting")
+            efi_stub = efi_stub[0]
+
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                label = source_params.get('label')
+                label_conf = "root=%s" % creator.rootdev
+                if label:
+                    label_conf = "LABEL=%s" % label
+
+                bootloader = creator.ks.bootloader
+                cmdline = open("%s/cmdline" % tmp_dir, "w")
+                cmdline.write("%s %s" % (label_conf, bootloader.append))
+                cmdline.close()
+
+                initrds = initrd.split(';')
+                initrd = open("%s/initrd" % tmp_dir, "wb")
+                for f in initrds:
+                    with open("%s/%s" % (deploy_dir, f), 'rb') as in_file:
+                        shutil.copyfileobj(in_file, initrd)
+                initrd.close()
+
+                # Searched by systemd-boot:
+                # https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
+                install_cmd = "install -d %s/EFI/Linux" % hdddir
+                exec_cmd(install_cmd)
+
+                staging_dir_host = get_bitbake_var("STAGING_DIR_HOST")
+
+                # https://www.freedesktop.org/software/systemd/man/systemd-stub.html
+                objcopy_cmd = "objcopy \
+                    --add-section .osrel=%s --change-section-vma .osrel=0x20000 \
+                    --add-section .cmdline=%s --change-section-vma .cmdline=0x30000 \
+                    --add-section .linux=%s --change-section-vma .linux=0x2000000 \
+                    --add-section .initrd=%s --change-section-vma .initrd=0x3000000 \
+                    %s %s" % \
+                    ("%s/usr/lib/os-release" % staging_dir_host,
+                    cmdline.name,
+                    "%s/%s" % (staging_kernel_dir, kernel),
+                    initrd.name,
+                    efi_stub,
+                    "%s/EFI/Linux/linux.efi" % hdddir)
+                exec_cmd(objcopy_cmd)
+        else:
+            install_cmd = "install -m 0644 %s/%s %s/%s" % \
+                (staging_kernel_dir, kernel, hdddir, kernel)
+            exec_cmd(install_cmd)
+
+        if get_bitbake_var("IMAGE_EFI_BOOT_FILES"):
+            for src_path, dst_path in cls.install_task:
+                install_cmd = "install -m 0644 -D %s %s" \
+                              % (os.path.join(kernel_dir, src_path),
+                                 os.path.join(hdddir, dst_path))
+                exec_cmd(install_cmd)
 
         try:
             if source_params['loader'] == 'grub-efi':

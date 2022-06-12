@@ -4,20 +4,15 @@
 
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu
-from oeqa.utils.sshcontrol import SSHControl
+from oeqa.core.decorator import OETestTag
 import os
-import re
 import tempfile
-import shutil
 import oe.lsb
+from oeqa.core.decorator.data import skipIfNotQemu
 
 class TestExport(OESelftestTestCase):
 
-    @classmethod
-    def tearDownClass(cls):
-        runCmd("rm -rf /tmp/sdk")
-        super(TestExport, cls).tearDownClass()
-
+    @OETestTag("runqemu")
     def test_testexport_basic(self):
         """
         Summary: Check basic testexport functionality with only ping test enabled.
@@ -94,21 +89,23 @@ class TestExport(OESelftestTestCase):
         msg = "Couldn't find SDK tarball: %s" % tarball_path
         self.assertEqual(os.path.isfile(tarball_path), True, msg)
 
-        # Extract SDK and run tar from SDK
-        result = runCmd("%s -y -d /tmp/sdk" % tarball_path)
-        self.assertEqual(0, result.status, "Couldn't extract SDK")
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            # Extract SDK and run tar from SDK
+            result = runCmd("%s -y -d %s" % (tarball_path, tmpdirname))
+            self.assertEqual(0, result.status, "Couldn't extract SDK")
 
-        env_script = result.output.split()[-1]
-        result = runCmd(". %s; which tar" % env_script, shell=True)
-        self.assertEqual(0, result.status, "Couldn't setup SDK environment")
-        is_sdk_tar = True if "/tmp/sdk" in result.output else False
-        self.assertTrue(is_sdk_tar, "Couldn't setup SDK environment")
+            env_script = result.output.split()[-1]
+            result = runCmd(". %s; which tar" % env_script, shell=True)
+            self.assertEqual(0, result.status, "Couldn't setup SDK environment")
+            is_sdk_tar = True if tmpdirname in result.output else False
+            self.assertTrue(is_sdk_tar, "Couldn't setup SDK environment")
 
-        tar_sdk = result.output
-        result = runCmd("%s --version" % tar_sdk)
-        self.assertEqual(0, result.status, "Couldn't run tar from SDK")
+            tar_sdk = result.output
+            result = runCmd("%s --version" % tar_sdk)
+            self.assertEqual(0, result.status, "Couldn't run tar from SDK")
 
 
+@OETestTag("runqemu")
 class TestImage(OESelftestTestCase):
 
     def test_testimage_install(self):
@@ -123,11 +120,10 @@ class TestImage(OESelftestTestCase):
             self.skipTest('core-image-full-cmdline not buildable for poky-tiny')
 
         features = 'INHERIT += "testimage"\n'
-        features += 'IMAGE_INSTALL_append = " libssl"\n'
+        features += 'IMAGE_INSTALL:append = " libssl"\n'
         features += 'TEST_SUITES = "ping ssh selftest"\n'
         self.write_config(features)
 
-        # Build core-image-sato and testimage
         bitbake('core-image-full-cmdline socat')
         bitbake('-c testimage core-image-full-cmdline')
 
@@ -155,20 +151,58 @@ class TestImage(OESelftestTestCase):
         self.gpg_home = tempfile.mkdtemp(prefix="oeqa-feed-sign-")
         self.track_for_cleanup(self.gpg_home)
         signing_key_dir = os.path.join(self.testlayer_path, 'files', 'signing')
-        runCmd('gpg --batch --homedir %s --import %s' % (self.gpg_home, os.path.join(signing_key_dir, 'key.secret')), native_sysroot=get_bb_var("RECIPE_SYSROOT_NATIVE", "gnupg-native"))
+        runCmd('gpgconf --list-dirs --homedir %s; gpg -v --batch --homedir %s --import %s' % (self.gpg_home, self.gpg_home, os.path.join(signing_key_dir, 'key.secret')), native_sysroot=get_bb_var("RECIPE_SYSROOT_NATIVE", "gnupg-native"), shell=True)
         features += 'INHERIT += "sign_package_feed"\n'
         features += 'PACKAGE_FEED_GPG_NAME = "testuser"\n'
         features += 'PACKAGE_FEED_GPG_PASSPHRASE_FILE = "%s"\n' % os.path.join(signing_key_dir, 'key.passphrase')
         features += 'GPG_PATH = "%s"\n' % self.gpg_home
+        features += 'PSEUDO_IGNORE_PATHS .= ",%s"\n' % self.gpg_home
+        self.write_config(features)
+
+        bitbake('core-image-full-cmdline socat')
+        bitbake('-c testimage core-image-full-cmdline')
+
+    def test_testimage_apt(self):
+        """
+        Summary: Check package feeds functionality for apt
+        Expected: 1. Check that remote package feeds can be accessed
+        Product: oe-core
+        Author: Ferry Toth <fntoth@gmail.com>
+        """
+        if get_bb_var('DISTRO') == 'poky-tiny':
+            self.skipTest('core-image-full-cmdline not buildable for poky-tiny')
+
+        features = 'INHERIT += "testimage"\n'
+        features += 'TEST_SUITES = "ping ssh apt.AptRepoTest.test_apt_install_from_repo"\n'
+        # We don't yet know what the server ip and port will be - they will be patched
+        # in at the start of the on-image test
+        features += 'PACKAGE_FEED_URIS = "http://bogus_ip:bogus_port"\n'
+        features += 'EXTRA_IMAGE_FEATURES += "package-management"\n'
+        features += 'PACKAGE_CLASSES = "package_deb"\n'
+        # We need  gnupg on the target to install keys
+        features += 'IMAGE_INSTALL:append:pn-core-image-full-cmdline = " gnupg"\n'
+
+        bitbake('gnupg-native -c addto_recipe_sysroot')
+
+        # Enable package feed signing
+        self.gpg_home = tempfile.mkdtemp(prefix="oeqa-feed-sign-")
+        self.track_for_cleanup(self.gpg_home)
+        signing_key_dir = os.path.join(self.testlayer_path, 'files', 'signing')
+        runCmd('gpgconf --list-dirs --homedir %s; gpg -v --batch --homedir %s --import %s' % (self.gpg_home, self.gpg_home, os.path.join(signing_key_dir, 'key.secret')), native_sysroot=get_bb_var("RECIPE_SYSROOT_NATIVE", "gnupg-native"), shell=True)
+        features += 'INHERIT += "sign_package_feed"\n'
+        features += 'PACKAGE_FEED_GPG_NAME = "testuser"\n'
+        features += 'PACKAGE_FEED_GPG_PASSPHRASE_FILE = "%s"\n' % os.path.join(signing_key_dir, 'key.passphrase')
+        features += 'GPG_PATH = "%s"\n' % self.gpg_home
+        features += 'PSEUDO_IGNORE_PATHS .= ",%s"\n' % self.gpg_home
         self.write_config(features)
 
         # Build core-image-sato and testimage
         bitbake('core-image-full-cmdline socat')
         bitbake('-c testimage core-image-full-cmdline')
 
-    def test_testimage_virgl_gtk(self):
+    def test_testimage_virgl_gtk_sdl(self):
         """
-        Summary: Check host-assisted accelerate OpenGL functionality in qemu with gtk frontend
+        Summary: Check host-assisted accelerate OpenGL functionality in qemu with gtk and SDL frontends
         Expected: 1. Check that virgl kernel driver is loaded and 3d acceleration is enabled
                   2. Check that kmscube demo runs without crashing.
         Product: oe-core
@@ -179,22 +213,31 @@ class TestImage(OESelftestTestCase):
         distro = oe.lsb.distro_identifier()
         if distro and distro == 'debian-8':
             self.skipTest('virgl isn\'t working with Debian 8')
+        if distro and distro == 'debian-9':
+            self.skipTest('virgl isn\'t working with Debian 9')
         if distro and distro == 'centos-7':
             self.skipTest('virgl isn\'t working with Centos 7')
+        if distro and distro == 'opensuseleap-15.0':
+            self.skipTest('virgl isn\'t working with Opensuse 15.0')
 
         qemu_packageconfig = get_bb_var('PACKAGECONFIG', 'qemu-system-native')
+        qemu_distrofeatures = get_bb_var('DISTRO_FEATURES', 'qemu-system-native')
         features = 'INHERIT += "testimage"\n'
         if 'gtk+' not in qemu_packageconfig:
-            features += 'PACKAGECONFIG_append_pn-qemu-system-native = " gtk+"\n'
-        if 'virglrenderer' not in qemu_packageconfig:
-            features += 'PACKAGECONFIG_append_pn-qemu-system-native = " virglrenderer"\n'
-        if 'glx' not in qemu_packageconfig:
-            features += 'PACKAGECONFIG_append_pn-qemu-system-native = " glx"\n'
+            features += 'PACKAGECONFIG:append:pn-qemu-system-native = " gtk+"\n'
+        if 'sdl' not in qemu_packageconfig:
+            features += 'PACKAGECONFIG:append:pn-qemu-system-native = " sdl"\n'
+        if 'opengl' not in qemu_distrofeatures:
+            features += 'DISTRO_FEATURES:append = " opengl"\n'
         features += 'TEST_SUITES = "ping ssh virgl"\n'
-        features += 'IMAGE_FEATURES_append = " ssh-server-dropbear"\n'
-        features += 'IMAGE_INSTALL_append = " kmscube"\n'
-        features += 'TEST_RUNQEMUPARAMS = "gtk gl"\n'
-        self.write_config(features)
+        features += 'IMAGE_FEATURES:append = " ssh-server-dropbear"\n'
+        features += 'IMAGE_INSTALL:append = " kmscube"\n'
+        features_gtk = features + 'TEST_RUNQEMUPARAMS = "gtk gl"\n'
+        self.write_config(features_gtk)
+        bitbake('core-image-minimal')
+        bitbake('-c testimage core-image-minimal')
+        features_sdl = features + 'TEST_RUNQEMUPARAMS = "sdl gl"\n'
+        self.write_config(features_sdl)
         bitbake('core-image-minimal')
         bitbake('-c testimage core-image-minimal')
 
@@ -207,32 +250,77 @@ class TestImage(OESelftestTestCase):
         Author: Alexander Kanavin <alex.kanavin@gmail.com>
         """
         import subprocess, os
+
+        distro = oe.lsb.distro_identifier()
+        if distro and distro in ['debian-9', 'debian-10', 'centos-7', 'centos-8', 'ubuntu-16.04', 'ubuntu-18.04', 'almalinux-8.5', 'almalinux-8.6']:
+            self.skipTest('virgl headless cannot be tested with %s' %(distro))
+
+        render_hint = """If /dev/dri/renderD* is absent due to lack of suitable GPU, 'modprobe vgem' will create one suitable for mesa llvmpipe software renderer."""
         try:
             content = os.listdir("/dev/dri")
             if len([i for i in content if i.startswith('render')]) == 0:
-                self.skipTest("No render nodes found in /dev/dri: %s" %(content))
+                self.fail("No render nodes found in /dev/dri: %s. %s" %(content, render_hint))
         except FileNotFoundError:
-            self.skipTest("/dev/dri directory does not exist; no render nodes available on this machine.")
+            self.fail("/dev/dri directory does not exist; no render nodes available on this machine. %s" %(render_hint))
         try:
             dripath = subprocess.check_output("pkg-config --variable=dridriverdir dri", shell=True)
         except subprocess.CalledProcessError as e:
-            self.skipTest("Could not determine the path to dri drivers on the host via pkg-config.\nPlease install Mesa development files (particularly, dri.pc) on the host machine.")
-        qemu_packageconfig = get_bb_var('PACKAGECONFIG', 'qemu-system-native')
+            self.fail("Could not determine the path to dri drivers on the host via pkg-config.\nPlease install Mesa development files (particularly, dri.pc) on the host machine.")
+        qemu_distrofeatures = get_bb_var('DISTRO_FEATURES', 'qemu-system-native')
         features = 'INHERIT += "testimage"\n'
-        if 'virglrenderer' not in qemu_packageconfig:
-            features += 'PACKAGECONFIG_append_pn-qemu-system-native = " virglrenderer"\n'
-        if 'glx' not in qemu_packageconfig:
-            features += 'PACKAGECONFIG_append_pn-qemu-system-native = " glx"\n'
+        if 'opengl' not in qemu_distrofeatures:
+            features += 'DISTRO_FEATURES:append = " opengl"\n'
         features += 'TEST_SUITES = "ping ssh virgl"\n'
-        features += 'IMAGE_FEATURES_append = " ssh-server-dropbear"\n'
-        features += 'IMAGE_INSTALL_append = " kmscube"\n'
+        features += 'IMAGE_FEATURES:append = " ssh-server-dropbear"\n'
+        features += 'IMAGE_INSTALL:append = " kmscube"\n'
         features += 'TEST_RUNQEMUPARAMS = "egl-headless"\n'
         self.write_config(features)
         bitbake('core-image-minimal')
         bitbake('-c testimage core-image-minimal')
 
+@OETestTag("runqemu")
 class Postinst(OESelftestTestCase):
-    def test_postinst_rootfs_and_boot(self):
+
+    def init_manager_loop(self, init_manager):
+        import oe.path
+
+        vars = get_bb_vars(("IMAGE_ROOTFS", "sysconfdir"), "core-image-minimal")
+        rootfs = vars["IMAGE_ROOTFS"]
+        self.assertIsNotNone(rootfs)
+        sysconfdir = vars["sysconfdir"]
+        self.assertIsNotNone(sysconfdir)
+        # Need to use oe.path here as sysconfdir starts with /
+        hosttestdir = oe.path.join(rootfs, sysconfdir, "postinst-test")
+        targettestdir = os.path.join(sysconfdir, "postinst-test")
+
+        for classes in ("package_rpm", "package_deb", "package_ipk"):
+            with self.subTest(init_manager=init_manager, package_class=classes):
+                features = 'CORE_IMAGE_EXTRA_INSTALL = "postinst-delayed-b"\n'
+                features += 'IMAGE_FEATURES += "package-management empty-root-password"\n'
+                features += 'PACKAGE_CLASSES = "%s"\n' % classes
+                if init_manager == "systemd":
+                    features += 'DISTRO_FEATURES:append = " systemd"\n'
+                    features += 'VIRTUAL-RUNTIME_init_manager = "systemd"\n'
+                    features += 'DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"\n'
+                    features += 'VIRTUAL-RUNTIME_initscripts = ""\n'
+                self.write_config(features)
+
+                bitbake('core-image-minimal')
+
+                self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs")),
+                                "rootfs state file was not created")
+
+                with runqemu('core-image-minimal') as qemu:
+                    # Make the test echo a string and search for that as
+                    # run_serial()'s status code is useless.'
+                    for filename in ("rootfs", "delayed-a", "delayed-b"):
+                        status, output = qemu.run_serial("test -f %s && echo found" % os.path.join(targettestdir, filename))
+                        self.assertIn("found", output, "%s was not present on boot" % filename)
+
+
+
+    @skipIfNotQemu()
+    def test_postinst_rootfs_and_boot_sysvinit(self):
         """
         Summary:        The purpose of this test case is to verify Post-installation
                         scripts are called when rootfs is created and also test
@@ -246,46 +334,32 @@ class Postinst(OESelftestTestCase):
                            created by postinst_boot recipe is present on image.
         Expected:       The files are successfully created during rootfs and boot
                         time for 3 different package managers: rpm,ipk,deb and
-                        for initialization managers: sysvinit and systemd.
+                        for initialization managers: sysvinit.
+
+        """
+        self.init_manager_loop("sysvinit")
+
+
+    @skipIfNotQemu()
+    def test_postinst_rootfs_and_boot_systemd(self):
+        """
+        Summary:        The purpose of this test case is to verify Post-installation
+                        scripts are called when rootfs is created and also test
+                        that script can be delayed to run at first boot.
+        Dependencies:   NA
+        Steps:          1. Add proper configuration to local.conf file
+                        2. Build a "core-image-minimal" image
+                        3. Verify that file created by postinst_rootfs recipe is
+                           present on rootfs dir.
+                        4. Boot the image created on qemu and verify that the file
+                           created by postinst_boot recipe is present on image.
+        Expected:       The files are successfully created during rootfs and boot
+                        time for 3 different package managers: rpm,ipk,deb and
+                        for initialization managers: systemd.
 
         """
 
-        import oe.path
-
-        vars = get_bb_vars(("IMAGE_ROOTFS", "sysconfdir"), "core-image-minimal")
-        rootfs = vars["IMAGE_ROOTFS"]
-        self.assertIsNotNone(rootfs)
-        sysconfdir = vars["sysconfdir"]
-        self.assertIsNotNone(sysconfdir)
-        # Need to use oe.path here as sysconfdir starts with /
-        hosttestdir = oe.path.join(rootfs, sysconfdir, "postinst-test")
-        targettestdir = os.path.join(sysconfdir, "postinst-test")
-
-        for init_manager in ("sysvinit", "systemd"):
-            for classes in ("package_rpm", "package_deb", "package_ipk"):
-                with self.subTest(init_manager=init_manager, package_class=classes):
-                    features = 'CORE_IMAGE_EXTRA_INSTALL = "postinst-delayed-b"\n'
-                    features += 'IMAGE_FEATURES += "package-management empty-root-password"\n'
-                    features += 'PACKAGE_CLASSES = "%s"\n' % classes
-                    if init_manager == "systemd":
-                        features += 'DISTRO_FEATURES_append = " systemd"\n'
-                        features += 'VIRTUAL-RUNTIME_init_manager = "systemd"\n'
-                        features += 'DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"\n'
-                        features += 'VIRTUAL-RUNTIME_initscripts = ""\n'
-                    self.write_config(features)
-
-                    bitbake('core-image-minimal')
-
-                    self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs")),
-                                    "rootfs state file was not created")
-
-                    with runqemu('core-image-minimal') as qemu:
-                        # Make the test echo a string and search for that as
-                        # run_serial()'s status code is useless.'
-                        for filename in ("rootfs", "delayed-a", "delayed-b"):
-                            status, output = qemu.run_serial("test -f %s && echo found" % os.path.join(targettestdir, filename))
-                            self.assertEqual(output, "found", "%s was not present on boot" % filename)
-
+        self.init_manager_loop("systemd")
 
 
     def test_failing_postinst(self):
@@ -322,3 +396,80 @@ class Postinst(OESelftestTestCase):
                 self.assertFalse(os.path.isfile(os.path.join(hosttestdir, "rootfs-after-failure")),
                                     "rootfs-after-failure file was created")
 
+@OETestTag("runqemu")
+class SystemTap(OESelftestTestCase):
+        """
+        Summary:        The purpose of this test case is to verify native crosstap
+                        works while talking to a target.
+        Expected:       The script should successfully connect to the qemu machine
+                        and run some systemtap examples on a qemu machine.
+        """
+
+        @classmethod
+        def setUpClass(cls):
+            super(SystemTap, cls).setUpClass()
+            cls.image = "core-image-minimal"
+
+        def default_config(self):
+            return """
+# These aren't the actual IP addresses but testexport class needs something defined
+TEST_SERVER_IP = "192.168.7.1"
+TEST_TARGET_IP = "192.168.7.2"
+
+EXTRA_IMAGE_FEATURES += "tools-profile dbg-pkgs"
+IMAGE_FEATURES:append = " ssh-server-dropbear"
+
+# enables kernel debug symbols
+KERNEL_EXTRA_FEATURES:append = " features/debug/debug-kernel.scc"
+KERNEL_EXTRA_FEATURES:append = " features/systemtap/systemtap.scc"
+
+# add systemtap run-time into target image if it is not there yet
+IMAGE_INSTALL:append = " systemtap-runtime"
+"""
+
+        def test_crosstap_helloworld(self):
+            self.write_config(self.default_config())
+            bitbake('systemtap-native')
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            bitbake(self.image)
+
+            with runqemu(self.image) as qemu:
+                cmd = "crosstap -r root@192.168.7.2 -s %s/general/helloworld.stp " % systemtap_examples 
+                result = runCmd(cmd)
+                self.assertEqual(0, result.status, 'crosstap helloworld returned a non 0 status:%s' % result.output)
+
+        def test_crosstap_pstree(self):
+            self.write_config(self.default_config())
+
+            bitbake('systemtap-native')
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            bitbake(self.image)
+
+            with runqemu(self.image) as qemu:
+                cmd = "crosstap -r root@192.168.7.2 -s %s/process/pstree.stp" % systemtap_examples
+                result = runCmd(cmd)
+                self.assertEqual(0, result.status, 'crosstap pstree returned a non 0 status:%s' % result.output)
+
+        def test_crosstap_syscalls_by_proc(self):
+            self.write_config(self.default_config())
+
+            bitbake('systemtap-native')
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            bitbake(self.image)
+
+            with runqemu(self.image) as qemu:
+                cmd = "crosstap -r root@192.168.7.2 -s %s/process/ syscalls_by_proc.stp" % systemtap_examples
+                result = runCmd(cmd)
+                self.assertEqual(0, result.status, 'crosstap  syscalls_by_proc returned a non 0 status:%s' % result.output)
+
+        def test_crosstap_syscalls_by_pid(self):
+            self.write_config(self.default_config())
+
+            bitbake('systemtap-native')
+            systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
+            bitbake(self.image)
+
+            with runqemu(self.image) as qemu:
+                cmd = "crosstap -r root@192.168.7.2 -s %s/process/ syscalls_by_pid.stp" % systemtap_examples
+                result = runCmd(cmd)
+                self.assertEqual(0, result.status, 'crosstap  syscalls_by_pid returned a non 0 status:%s' % result.output)

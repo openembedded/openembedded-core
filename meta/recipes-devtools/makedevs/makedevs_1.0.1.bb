@@ -1,13 +1,13 @@
 SUMMARY = "Tool for creating device nodes"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
+DESCRIPTION = "${SUMMARY}"
+LICENSE = "GPL-2.0-only"
+LIC_FILES_CHKSUM = "file://makedevs.c;beginline=2;endline=2;md5=c3817b10013a30076c68a90e40a55570"
 SECTION = "base"
-SRC_URI = "file://makedevs.c \
-           file://COPYING.patch"
+SRC_URI = "file://makedevs.c"
 
 S = "${WORKDIR}"
 
-FILES_${PN}_append_class-nativesdk = " ${datadir}"
+FILES:${PN}:append:class-nativesdk = " ${datadir}"
 
 do_compile() {
 	${CC} ${CFLAGS} ${LDFLAGS} -o ${S}/makedevs ${S}/makedevs.c
@@ -18,7 +18,7 @@ do_install() {
 	install -m 0755 ${S}/makedevs ${D}${base_sbindir}/makedevs
 }
 
-do_install_append_class-nativesdk() {
+do_install:append:class-nativesdk() {
 	install -d ${D}${datadir}
 	install -m 644 ${COREBASE}/meta/files/device_table-minimal.txt ${D}${datadir}/
 }

@@ -18,7 +18,8 @@ import sys
 import tempfile
 import threading
 import importlib
-from importlib import machinery
+import importlib.machinery
+import importlib.util
 
 class KeepAliveStreamHandler(logging.StreamHandler):
     def __init__(self, keepalive=True, **kwargs):
@@ -77,13 +78,14 @@ def logger_setup_color(logger, color='auto'):
 
 
 def load_plugins(logger, plugins, pluginpath):
-    import imp
 
     def load_plugin(name):
         logger.debug('Loading plugin %s' % name)
         spec = importlib.machinery.PathFinder.find_spec(name, path=[pluginpath] )
         if spec:
-            return spec.loader.load_module()
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
 
     def plugin_name(filename):
         return os.path.splitext(os.path.basename(filename))[0]
@@ -177,6 +179,7 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirr
                 f.write('BB_STRICT_CHECKSUM = "ignore"\n')
                 f.write('SRC_URI = "%s"\n' % srcuri)
                 f.write('SRCREV = "%s"\n' % srcrev)
+                f.write('PV = "0.0+${SRCPV}"\n')
                 f.write('WORKDIR = "%s"\n' % tmpworkdir)
                 # Set S out of the way so it doesn't get created under the workdir
                 f.write('S = "%s"\n' % os.path.join(tmpdir, 'emptysrc'))
@@ -216,7 +219,8 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirr
                 pathvars = ['T', 'RECIPE_SYSROOT', 'RECIPE_SYSROOT_NATIVE']
                 for pathvar in pathvars:
                     path = rd.getVar(pathvar)
-                    shutil.rmtree(path)
+                    if os.path.exists(path):
+                        shutil.rmtree(path)
         finally:
             if fetchrecipe:
                 try:
@@ -268,3 +272,13 @@ def is_src_url(param):
     elif param.startswith('git@') or ('@' in param and param.endswith('.git')):
         return True
     return False
+
+def filter_src_subdirs(pth):
+    """
+    Filter out subdirectories of initial unpacked source trees that we do not care about.
+    Used by devtool and recipetool.
+    """
+    dirlist = os.listdir(pth)
+    filterout = ['git.indirectionsymlink', 'source-date-epoch']
+    dirlist = [x for x in dirlist if x not in filterout]
+    return dirlist

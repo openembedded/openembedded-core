@@ -2,24 +2,26 @@ SUMMARY = "X driver"
 HOMEPAGE = "http://www.x.org"
 BUGTRACKER = "https://bugs.freedesktop.org"
 SECTION = "x11/drivers"
-LICENSE = "MIT-X"
+LICENSE = "MIT"
 
 PE = "2"
-INC_PR = "r21"
 
 DEPENDS = "virtual/xserver xorgproto util-macros"
 
-SRC_URI = "${XORG_MIRROR}/individual/driver/${BPN}-${PV}.tar.bz2"
+XORG_DRIVER_COMPRESSOR ?= ".tar.bz2"
+SRC_URI = "${XORG_MIRROR}/individual/driver/${BPN}-${PV}${XORG_DRIVER_COMPRESSOR}"
 
-FILES_${PN} += " ${libdir}/xorg/modules/drivers/*.so"
+FILES:${PN} += " ${libdir}/xorg/modules/drivers/*.so"
 
-inherit autotools pkgconfig distro_features_check
+XORGBUILDCLASS ??= "autotools"
+inherit ${XORGBUILDCLASS} pkgconfig features_check
+
 # depends on virtual/xserver
 REQUIRED_DISTRO_FEATURES = "x11"
 
 # FIXME: We don't want to include the libtool archives (*.la) from modules
 # directory, as they serve no useful purpose. Upstream should fix Makefile.am
-do_install_append() {
+do_install:append() {
 	find ${D}${libdir}/xorg/modules -regex ".*\.la$" | xargs rm -f --
 }
 
@@ -37,6 +39,6 @@ def _add_xorg_abi_depends(d, name):
     abi = "%sxorg-abi-%s-%s" % (mlprefix, name, output.split(".")[0])
 
     pn = d.getVar("PN")
-    d.appendVar('RDEPENDS_' + pn, ' ' + abi)
+    d.appendVar('RDEPENDS:' + pn, ' ' + abi)
 
 SECURITY_LDFLAGS = "${SECURITY_X_LDFLAGS}"

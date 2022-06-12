@@ -341,12 +341,15 @@ DESCRIPTION
 
 wic_cp_usage = """
 
- Copy files and directories to the vfat or ext* partition
+ Copy files and directories to/from the vfat or ext* partition
 
- usage: wic cp <src> <image>:<partition>[<path>] [--native-sysroot <path>]
+ usage: wic cp <src> <dest> [--native-sysroot <path>]
 
- This command  copies local files or directories to the vfat or ext* partitions
-of partitioned  image.
+ source/destination image in format <image>:<partition>[<path>]
+
+ This command copies files or directories either
+  - from local to vfat or ext* partitions of partitioned image
+  - from vfat or ext* partitions of partitioned image to local
 
  See 'wic help cp' for more detailed instructions.
 
@@ -355,16 +358,18 @@ of partitioned  image.
 wic_cp_help = """
 
 NAME
-    wic cp - copy files and directories to the vfat or ext* partitions
+    wic cp - copy files and directories to/from the vfat or ext* partitions
 
 SYNOPSIS
-    wic cp <src> <image>:<partition>
-    wic cp <src> <image>:<partition><path>
-    wic cp <src> <image>:<partition><path> --native-sysroot <path>
+    wic cp <src> <dest>:<partition>
+    wic cp <src>:<partition> <dest>
+    wic cp <src> <dest-image>:<partition><path>
+    wic cp <src> <dest-image>:<partition><path> --native-sysroot <path>
 
 DESCRIPTION
-    This command copies files and directories to the vfat or ext* partition of
-    the partitioned image.
+    This command copies files or directories either
+      - from local to vfat or ext* partitions of partitioned image
+      - from vfat or ext* partitions of partitioned image to local
 
     The first form of it copies file or directory to the root directory of
     the partition:
@@ -397,6 +402,10 @@ DESCRIPTION
                4 files                   0 bytes
                                 15 675 392 bytes free
 
+    The third form of the command copies file or directory from the specified directory
+    on the partition to local:
+       $ wic cp tmp/deploy/images/qemux86-64/core-image-minimal-qemux86-64.wic:1/vmlinuz test
+
     The -n option is used to specify the path to the native sysroot
     containing the tools(parted and mtools) to use.
 """
@@ -422,6 +431,7 @@ NAME
 SYNOPSIS
     wic rm <src> <image>:<partition><path>
     wic rm <src> <image>:<partition><path> --native-sysroot <path>
+    wic rm -r <image>:<partition><path>
 
 DESCRIPTION
     This command removes files or directories from the vfat or ext* partition of the
@@ -456,6 +466,9 @@ DESCRIPTION
 
     The -n option is used to specify the path to the native sysroot
     containing the tools(parted and mtools) to use.
+
+    The -r option is used to remove directories and their contents
+    recursively,this only applies to ext* partition.
 """
 
 wic_write_usage = """
@@ -523,7 +536,8 @@ DESCRIPTION
 
     Source plugins can also be implemented and added by external
     layers - any plugins found in a scripts/lib/wic/plugins/source/
-    directory in an external layer will also be made available.
+    or lib/wic/plugins/source/ directory in an external layer will
+    also be made available.
 
     When the wic implementation needs to invoke a partition-specific
     implementation, it looks for the plugin that has the same name as
@@ -623,7 +637,7 @@ DESCRIPTION
     oe-core: directdisk.bbclass and mkefidisk.sh.  The difference
     between wic and those examples is that with wic the functionality
     of those scripts is implemented by a general-purpose partitioning
-    'language' based on Redhat kickstart syntax).
+    'language' based on Red Hat kickstart syntax).
 
     The initial motivation and design considerations that lead to the
     current tool are described exhaustively in Yocto Bug #3847
@@ -826,8 +840,8 @@ DESCRIPTION
     meanings. The commands are based on the Fedora kickstart
     documentation but with modifications to reflect wic capabilities.
 
-      http://fedoraproject.org/wiki/Anaconda/Kickstart#part_or_partition
-      http://fedoraproject.org/wiki/Anaconda/Kickstart#bootloader
+      https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#part-or-partition
+      https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html#bootloader
 
   Commands
 
@@ -916,6 +930,7 @@ DESCRIPTION
              ext4
              btrfs
              squashfs
+             erofs
              swap
 
          --fsoptions: Specifies a free-form string of options to be
@@ -924,6 +939,12 @@ DESCRIPTION
                       installed system and should be enclosed in
                       quotes.  If not specified, the default string is
                       "defaults".
+
+         --fspassno: Specifies the order in which filesystem checks are done
+                     at boot time by fsck.  See fs_passno parameter of
+                     fstab(5).  This parameter will be copied into the
+                     /etc/fstab file of the installed system.  If not
+                     specified the default value of "0" will be used.
 
          --label label: Specifies the label to give to the filesystem
                         to be made on the partition. If the given
@@ -955,6 +976,29 @@ DESCRIPTION
                          ends with a slash, only the content of the directory
                          is omitted, not the directory itself. This option only
                          has an effect with the rootfs source plugin.
+
+         --include-path: This option is specific to wic. It adds the contents
+                         of the given path or a rootfs to the resulting image.
+                         The option contains two fields, the origin and the
+                         destination. When the origin is a rootfs, it follows
+                         the same logic as the rootfs-dir argument and the
+                         permissions and owners are kept. When the origin is a
+                         path, it is relative to the directory in which wic is
+                         running not the rootfs itself so use of an absolute
+                         path is recommended, and the owner and group is set to
+                         root:root. If no destination is given it is
+                         automatically set to the root of the rootfs. This
+                         option only has an effect with the rootfs source
+                         plugin.
+
+         --change-directory: This option is specific to wic. It changes to the
+                             given directory before copying the files. This
+                             option is useful when we want to split a rootfs in
+                             multiple partitions and we want to keep the right
+                             permissions and usernames in all the partitions.
+
+         --no-fstab-update: This option is specific to wic. It does not update the
+                            '/etc/fstab' stock file for the given partition.
 
          --extra-space: This option is specific to wic. It adds extra
                         space after the space filled by the content
@@ -1045,4 +1089,60 @@ NAME
 
 DESCRIPTION
     Specify a help topic to display it. Topics are shown above.
+"""
+
+
+wic_help = """
+Creates a customized OpenEmbedded image.
+
+Usage:  wic [--version]
+        wic help [COMMAND or TOPIC]
+        wic COMMAND [ARGS]
+
+    usage 1: Returns the current version of Wic
+    usage 2: Returns detailed help for a COMMAND or TOPIC
+    usage 3: Executes COMMAND
+
+
+COMMAND:
+
+    list   -   List available canned images and source plugins
+    ls     -   List contents of partitioned image or partition
+    rm     -   Remove files or directories from the vfat or ext* partitions
+    help   -   Show help for a wic COMMAND or TOPIC
+    write  -   Write an image to a device
+    cp     -   Copy files and directories to the vfat or ext* partitions
+    create -   Create a new OpenEmbedded image
+
+
+TOPIC:
+    overview  - Presents an overall overview of Wic
+    plugins   - Presents an overview and API for Wic plugins
+    kickstart - Presents a Wic kicstart file reference
+
+
+Examples:
+
+    $ wic --version
+
+    Returns the current version of Wic
+
+
+    $ wic help cp
+
+    Returns the SYNOPSIS and DESCRIPTION for the Wic "cp" command.
+
+
+    $ wic list images
+
+    Returns the list of canned images (i.e. *.wks files located in
+    the /scripts/lib/wic/canned-wks directory.
+
+
+    $ wic create mkefidisk -e core-image-minimal
+
+    Creates an EFI disk image from artifacts used in a previous
+    core-image-minimal build in standard BitBake locations
+    (e.g. Cooked Mode).
+
 """

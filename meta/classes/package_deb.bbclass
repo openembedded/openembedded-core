@@ -81,7 +81,7 @@ def deb_write_pkg(pkg, d):
 
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
-        pkgname = localdata.getVar('PKG_%s' % pkg)
+        pkgname = localdata.getVar('PKG:%s' % pkg)
         if not pkgname:
             pkgname = pkg
         localdata.setVar('PKG', pkgname)
@@ -182,7 +182,8 @@ def deb_write_pkg(pkg, d):
             #   '<' = less or equal
             #   '>' = greater or equal
             # adjust these to the '<<' and '>>' equivalents
-            #
+            # Also, "=" specifiers only work if they have the PR in, so 1.2.3 != 1.2.3-r0
+            # so to avoid issues, map this to ">= 1.2.3 << 1.2.3.0"
             for dep in list(var.keys()):
                 if '(' in dep or '/' in dep:
                     newdep = re.sub(r'[(:)/]', '__', dep)
@@ -197,6 +198,10 @@ def deb_write_pkg(pkg, d):
                         var[dep][i] = var[dep][i].replace("< ", "<< ")
                     elif (v or "").startswith("> "):
                         var[dep][i] = var[dep][i].replace("> ", ">> ")
+                    elif (v or "").startswith("= ") and "-r" not in v:
+                        ver = var[dep][i].replace("= ", "")
+                        var[dep][i] = var[dep][i].replace("= ", ">= ")
+                        var[dep].append("<< " + ver + ".0")
 
         rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS") or "")
         debian_cmp_remap(rdepends)
@@ -283,8 +288,9 @@ def deb_write_pkg(pkg, d):
 # Otherwise allarch packages may change depending on override configuration
 deb_write_pkg[vardepsexclude] = "OVERRIDES"
 
-# Indirect references to these vars
-do_package_write_deb[vardeps] += "PKGV PKGR PKGV DESCRIPTION SECTION PRIORITY MAINTAINER DPKG_ARCH PN HOMEPAGE"
+# Have to list any variables referenced as X_<pkg> that aren't in pkgdata here
+DEBEXTRAVARS = "PKGV PKGR PKGV DESCRIPTION SECTION PRIORITY MAINTAINER DPKG_ARCH PN HOMEPAGE PACKAGE_ADD_METADATA_DEB"
+do_package_write_deb[vardeps] += "${@gen_packagevar(d, 'DEBEXTRAVARS')}"
 
 SSTATETASKS += "do_package_write_deb"
 do_package_write_deb[sstate-inputdirs] = "${PKGWRITEDIRDEB}"
@@ -313,12 +319,9 @@ python do_package_write_deb () {
 }
 do_package_write_deb[dirs] = "${PKGWRITEDIRDEB}"
 do_package_write_deb[cleandirs] = "${PKGWRITEDIRDEB}"
-do_package_write_deb[umask] = "022"
 do_package_write_deb[depends] += "${@oe.utils.build_depends_string(d.getVar('PACKAGE_WRITE_DEPS'), 'do_populate_sysroot')}"
-addtask package_write_deb after do_packagedata do_package
-
+addtask package_write_deb after do_packagedata do_package do_deploy_source_date_epoch before do_build
+do_build[rdeptask] += "do_package_write_deb"
 
 PACKAGEINDEXDEPS += "dpkg-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "apt-native:do_populate_sysroot"
-
-do_build[recrdeptask] += "do_package_write_deb"

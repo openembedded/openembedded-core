@@ -59,9 +59,14 @@ def _get_layer_collections(layer_path, lconf=None, data=None):
         pattern = ldata.getVar('BBFILE_PATTERN_%s' % name)
         depends = ldata.getVar('LAYERDEPENDS_%s' % name)
         compat = ldata.getVar('LAYERSERIES_COMPAT_%s' % name)
+        try:
+            depDict = bb.utils.explode_dep_versions2(depends or "")
+        except bb.utils.VersionStringException as vse:
+            bb.fatal('Error parsing LAYERDEPENDS_%s: %s' % (name, str(vse)))
+
         collections[name]['priority'] = priority
         collections[name]['pattern'] = pattern
-        collections[name]['depends'] = depends
+        collections[name]['depends'] = ' '.join(depDict.keys())
         collections[name]['compat'] = compat
 
     return collections
@@ -141,14 +146,38 @@ def detect_layers(layer_directories, no_auto):
 
     return layers
 
-def _find_layer_depends(depend, layers):
+def _find_layer(depend, layers):
     for layer in layers:
+        if 'collections' not in layer:
+            continue
+
         for collection in layer['collections']:
             if depend == collection:
                 return layer
     return None
 
-def add_layer_dependencies(bblayersconf, layer, layers, logger):
+def sanity_check_layers(layers, logger):
+    """
+    Check that we didn't find duplicate collection names, as the layer that will
+    be used is non-deterministic. The precise check is duplicate collections
+    with different patterns, as the same pattern being repeated won't cause
+    problems.
+    """
+    import collections
+
+    passed = True
+    seen = collections.defaultdict(set)
+    for layer in layers:
+        for name, data in layer.get("collections", {}).items():
+            seen[name].add(data["pattern"])
+
+    for name, patterns in seen.items():
+        if len(patterns) > 1:
+            passed = False
+            logger.error("Collection %s found multiple times: %s" % (name, ", ".join(patterns)))
+    return passed
+
+def get_layer_dependencies(layer, layers, logger):
     def recurse_dependencies(depends, layer, layers, logger, ret = []):
         logger.debug('Processing dependencies %s for layer %s.' % \
                     (depends, layer['name']))
@@ -158,7 +187,7 @@ def add_layer_dependencies(bblayersconf, layer, layers, logger):
             if depend == 'core':
                 continue
 
-            layer_depend = _find_layer_depends(depend, layers)
+            layer_depend = _find_layer(depend, layers)
             if not layer_depend:
                 logger.error('Layer %s depends on %s and isn\'t found.' % \
                         (layer['name'], depend))
@@ -195,6 +224,11 @@ def add_layer_dependencies(bblayersconf, layer, layers, logger):
         layer_depends = recurse_dependencies(depends, layer, layers, logger, layer_depends)
 
     # Note: [] (empty) is allowed, None is not!
+    return layer_depends
+
+def add_layer_dependencies(bblayersconf, layer, layers, logger):
+
+    layer_depends = get_layer_dependencies(layer, layers, logger)
     if layer_depends is None:
         return False
     else:
@@ -221,6 +255,20 @@ def add_layers(bblayersconf, layers, logger):
                 f.write("\nBBLAYERS += \"%s\"\n" % path)
     return True
 
+def check_bblayers(bblayersconf, layer_path, logger):
+    '''
+    If layer_path found in BBLAYERS return True
+    '''
+    import bb.parse
+    import bb.data
+
+    ldata = bb.parse.handle(bblayersconf, bb.data.init(), include=True)
+    for bblayer in (ldata.getVar('BBLAYERS') or '').split():
+        if os.path.normpath(bblayer) == os.path.normpath(layer_path):
+            return True
+
+    return False
+
 def check_command(error_msg, cmd, cwd=None):
     '''
     Run a command under a shell, capture stdout and stderr in a single stream,
@@ -234,7 +282,7 @@ def check_command(error_msg, cmd, cwd=None):
         raise RuntimeError(msg)
     return output
 
-def get_signatures(builddir, failsafe=False, machine=None):
+def get_signatures(builddir, failsafe=False, machine=None, extravars=None):
     import re
 
     # some recipes needs to be excluded like meta-world-pkgdata
@@ -245,7 +293,10 @@ def get_signatures(builddir, failsafe=False, machine=None):
     sigs = {}
     tune2tasks = {}
 
-    cmd = 'BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE BB_SIGNATURE_HANDLER" BB_SIGNATURE_HANDLER="OEBasicHash" '
+    cmd = 'BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS BB_SIGNATURE_HANDLER" BB_SIGNATURE_HANDLER="OEBasicHash" '
+    if extravars:
+        cmd += extravars
+        cmd += ' '
     if machine:
         cmd += 'MACHINE=%s ' % machine
     cmd += 'bitbake '

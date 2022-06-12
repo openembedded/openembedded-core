@@ -9,16 +9,18 @@ __all__ = ['ImagerPlugin', 'SourcePlugin']
 
 import os
 import logging
+import types
 
 from collections import defaultdict
-from importlib.machinery import SourceFileLoader
+import importlib
+import importlib.util
 
 from wic import WicError
 from wic.misc import get_bitbake_var
 
 PLUGIN_TYPES = ["imager", "source"]
 
-SCRIPTS_PLUGIN_DIR = "scripts/lib/wic/plugins"
+SCRIPTS_PLUGIN_DIR = ["scripts/lib/wic/plugins", "lib/wic/plugins"]
 
 logger = logging.getLogger('wic')
 
@@ -38,10 +40,11 @@ class PluginMgr:
             cls._plugin_dirs = [os.path.join(os.path.dirname(__file__), 'plugins')]
             layers = get_bitbake_var("BBLAYERS") or ''
             for layer_path in layers.split():
-                path = os.path.join(layer_path, SCRIPTS_PLUGIN_DIR)
-                path = os.path.abspath(os.path.expanduser(path))
-                if path not in cls._plugin_dirs and os.path.isdir(path):
-                    cls._plugin_dirs.insert(0, path)
+                for script_plugin_dir in SCRIPTS_PLUGIN_DIR:
+                    path = os.path.join(layer_path, script_plugin_dir)
+                    path = os.path.abspath(os.path.expanduser(path))
+                    if path not in cls._plugin_dirs and os.path.isdir(path):
+                        cls._plugin_dirs.insert(0, path)
 
         if ptype not in PLUGINS:
             # load all ptype plugins
@@ -53,7 +56,9 @@ class PluginMgr:
                             mname = fname[:-3]
                             mpath = os.path.join(ppath, fname)
                             logger.debug("loading plugin module %s", mpath)
-                            SourceFileLoader(mname, mpath).load_module()
+                            spec = importlib.util.spec_from_file_location(mname, mpath)
+                            module = importlib.util.module_from_spec(spec)
+                            spec.loader.exec_module(module)
 
         return PLUGINS.get(ptype)
 

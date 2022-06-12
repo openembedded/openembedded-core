@@ -24,7 +24,7 @@ import scriptpath
 scriptpath.add_oe_lib_path()
 scriptpath.add_bitbake_lib_path()
 
-from checklayer import LayerType, detect_layers, add_layers, add_layer_dependencies, get_signatures
+from checklayer import LayerType, detect_layers, add_layers, add_layer_dependencies, get_layer_dependencies, get_signatures, check_bblayers, sanity_check_layers
 from oeqa.utils.commands import get_bb_vars
 
 PROGNAME = 'yocto-check-layer'
@@ -41,6 +41,12 @@ def test_layer(td, layer, test_software_layer_signatures):
     tc.loadTests(CASES_PATHS)
     return tc.runTests()
 
+def dump_layer_debug(layer):
+    logger.debug("Found layer %s (%s)" % (layer["name"], layer["path"]))
+    collections = layer.get("collections", {})
+    if collections:
+        logger.debug("%s collections: %s" % (layer["name"], ", ".join(collections)))
+
 def main():
     parser = argparse.ArgumentParser(
             description="Yocto Project layer checking tool",
@@ -51,6 +57,8 @@ def main():
             help='File to output log (optional)', action='store')
     parser.add_argument('--dependency', nargs="+",
             help='Layers to process for dependencies', action='store')
+    parser.add_argument('--no-auto-dependency', help='Disable automatic testing of dependencies',
+            action='store_true')
     parser.add_argument('--machines', nargs="+",
             help='List of MACHINEs to be used during testing', action='store')
     parser.add_argument('--additional-layers', nargs="+",
@@ -84,7 +92,7 @@ def main():
         logger.setLevel(logging.ERROR)
 
     if not 'BUILDDIR' in os.environ:
-        logger.error("You must source the environment before run this script.")
+        logger.error("You must source the environment before running this script.")
         logger.error("$ source oe-init-build-env")
         return 1
     builddir = os.environ['BUILDDIR']
@@ -92,7 +100,7 @@ def main():
 
     layers = detect_layers(args.layers, args.no_auto)
     if not layers:
-        logger.error("Fail to detect layers")
+        logger.error("Failed to detect layers")
         return 1
     if args.additional_layers:
         additional_layers = detect_layers(args.additional_layers, args.no_auto)
@@ -104,15 +112,26 @@ def main():
     else:
         dep_layers = layers
 
+    logger.debug("Found additional layers:")
+    for l in additional_layers:
+        dump_layer_debug(l)
+    logger.debug("Found dependency layers:")
+    for l in dep_layers:
+        dump_layer_debug(l)
+
+    if not sanity_check_layers(additional_layers + dep_layers, logger):
+        logger.error("Failed layer validation")
+        return 1
+
     logger.info("Detected layers:")
     for layer in layers:
         if layer['type'] == LayerType.ERROR_BSP_DISTRO:
             logger.error("%s: Can't be DISTRO and BSP type at the same time."\
-                     " The conf/distro and conf/machine folders was found."\
+                     " Both conf/distro and conf/machine folders were found."\
                      % layer['name'])
             layers.remove(layer)
         elif layer['type'] == LayerType.ERROR_NO_LAYER_CONF:
-            logger.error("%s: Don't have conf/layer.conf file."\
+            logger.info("%s: Doesn't have conf/layer.conf file, so ignoring"\
                      % layer['name'])
             layers.remove(layer)
         else:
@@ -120,6 +139,21 @@ def main():
                 layer['path']))
     if not layers:
         return 1
+
+    # Find all dependencies, and get them checked too
+    if not args.no_auto_dependency:
+        depends = []
+        for layer in layers:
+            layer_depends = get_layer_dependencies(layer, dep_layers, logger)
+            if layer_depends:
+                for d in layer_depends:
+                    if d not in depends:
+                        depends.append(d)
+
+        for d in depends:
+            if d not in layers:
+                logger.info("Adding %s to the list of layers to test, as a dependency", d['name'])
+                layers.append(d)
 
     shutil.copyfile(bblayersconf, bblayersconf + '.backup')
     def cleanup_bblayers(signum, frame):
@@ -138,11 +172,19 @@ def main():
                 layer['type'] == LayerType.ERROR_BSP_DISTRO:
             continue
 
+        # Reset to a clean backup copy for each run
+        shutil.copyfile(bblayersconf + '.backup', bblayersconf)
+
+        if check_bblayers(bblayersconf, layer['path'], logger):
+            logger.info("%s already in %s. To capture initial signatures, layer under test should not present "
+               "in BBLAYERS. Please remove %s from BBLAYERS." % (layer['name'], bblayersconf, layer['name']))
+            results[layer['name']] = None
+            results_status[layer['name']] = 'SKIPPED (Layer under test should not present in BBLAYERS)'
+            continue
+
         logger.info('')
         logger.info("Setting up for %s(%s), %s" % (layer['name'], layer['type'],
             layer['path']))
-
-        shutil.copyfile(bblayersconf + '.backup', bblayersconf)
 
         missing_dependencies = not add_layer_dependencies(bblayersconf, layer, dep_layers, logger)
         if not missing_dependencies:
@@ -150,9 +192,7 @@ def main():
                 if not add_layer_dependencies(bblayersconf, additional_layer, dep_layers, logger):
                     missing_dependencies = True
                     break
-        if not add_layer_dependencies(bblayersconf, layer, dep_layers, logger) or \
-           any(map(lambda additional_layer: not add_layer_dependencies(bblayersconf, additional_layer, dep_layers, logger),
-                   additional_layers)):
+        if missing_dependencies:
             logger.info('Skipping %s due to missing dependencies.' % layer['name'])
             results[layer['name']] = None
             results_status[layer['name']] = 'SKIPPED (Missing dependencies)'

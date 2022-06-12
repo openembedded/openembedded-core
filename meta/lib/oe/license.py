@@ -10,16 +10,19 @@ from fnmatch import fnmatchcase as fnmatch
 def license_ok(license, dont_want_licenses):
     """ Return False if License exist in dont_want_licenses else True """
     for dwl in dont_want_licenses:
-        # If you want to exclude license named generically 'X', we
-        # surely want to exclude 'X+' as well.  In consequence, we
-        # will exclude a trailing '+' character from LICENSE in
-        # case INCOMPATIBLE_LICENSE is not a 'X+' license.
-        lic = license
-        if not re.search(r'\+$', dwl):
-            lic = re.sub(r'\+', '', license)
-        if fnmatch(lic, dwl):
+        if fnmatch(license, dwl):
             return False
     return True
+
+def obsolete_license_list():
+    return ["AGPL-3", "AGPL-3+", "AGPLv3", "AGPLv3+", "AGPLv3.0", "AGPLv3.0+", "AGPL-3.0", "AGPL-3.0+", "BSD-0-Clause",
+            "GPL-1", "GPL-1+", "GPLv1", "GPLv1+", "GPLv1.0", "GPLv1.0+", "GPL-1.0", "GPL-1.0+", "GPL-2", "GPL-2+", "GPLv2",
+            "GPLv2+", "GPLv2.0", "GPLv2.0+", "GPL-2.0", "GPL-2.0+", "GPL-3", "GPL-3+", "GPLv3", "GPLv3+", "GPLv3.0", "GPLv3.0+",
+            "GPL-3.0", "GPL-3.0+", "LGPLv2", "LGPLv2+", "LGPLv2.0", "LGPLv2.0+", "LGPL-2.0", "LGPL-2.0+", "LGPL2.1", "LGPL2.1+",
+            "LGPLv2.1", "LGPLv2.1+", "LGPL-2.1", "LGPL-2.1+", "LGPLv3", "LGPLv3+", "LGPL-3.0", "LGPL-3.0+", "MPL-1", "MPLv1",
+            "MPLv1.1", "MPLv2", "MIT-X", "MIT-style", "openssl", "PSF", "PSFv2", "Python-2", "Apachev2", "Apache-2", "Artisticv1",
+            "Artistic-1", "AFL-2", "AFL-1", "AFLv2", "AFLv1", "CDDLv1", "CDDL-1", "EPLv1.0", "FreeType", "Nauman",
+            "tcl", "vim", "SGIv1"]
 
 class LicenseError(Exception):
     pass
@@ -81,6 +84,9 @@ class FlattenVisitor(LicenseVisitor):
     def visit_Str(self, node):
         self.licenses.append(node.s)
 
+    def visit_Constant(self, node):
+        self.licenses.append(node.value)
+
     def visit_BinOp(self, node):
         if isinstance(node.op, ast.BitOr):
             left = FlattenVisitor(self.choose_licenses)
@@ -103,26 +109,26 @@ def flattened_licenses(licensestr, choose_licenses):
         raise LicenseSyntaxError(licensestr, exc)
     return flatten.licenses
 
-def is_included(licensestr, whitelist=None, blacklist=None):
-    """Given a license string and whitelist and blacklist, determine if the
-    license string matches the whitelist and does not match the blacklist.
+def is_included(licensestr, include_licenses=None, exclude_licenses=None):
+    """Given a license string, a list of licenses to include and a list of
+    licenses to exclude, determine if the license string matches the include
+    list and does not match the exclude list.
 
     Returns a tuple holding the boolean state and a list of the applicable
     licenses that were excluded if state is False, or the licenses that were
-    included if the state is True.
-    """
+    included if the state is True."""
 
     def include_license(license):
-        return any(fnmatch(license, pattern) for pattern in whitelist)
+        return any(fnmatch(license, pattern) for pattern in include_licenses)
 
     def exclude_license(license):
-        return any(fnmatch(license, pattern) for pattern in blacklist)
+        return any(fnmatch(license, pattern) for pattern in exclude_licenses)
 
     def choose_licenses(alpha, beta):
         """Select the option in an OR which is the 'best' (has the most
         included licenses and no excluded licenses)."""
         # The factor 1000 below is arbitrary, just expected to be much larger
-        # that the number of licenses actually specified. That way the weight
+        # than the number of licenses actually specified. That way the weight
         # will be negative if the list of licenses contains an excluded license,
         # but still gives a higher weight to the list with the most included
         # licenses.
@@ -135,11 +141,11 @@ def is_included(licensestr, whitelist=None, blacklist=None):
         else:
             return beta
 
-    if not whitelist:
-        whitelist = ['*']
+    if not include_licenses:
+        include_licenses = ['*']
 
-    if not blacklist:
-        blacklist = []
+    if not exclude_licenses:
+        exclude_licenses = []
 
     licenses = flattened_licenses(licensestr, choose_licenses)
     excluded = [lic for lic in licenses if exclude_license(lic)]
@@ -234,6 +240,9 @@ class ListVisitor(LicenseVisitor):
     def visit_Str(self, node):
         self.licenses.add(node.s)
 
+    def visit_Constant(self, node):
+        self.licenses.add(node.value)
+
 def list_licenses(licensestr):
     """Simply get a list of all licenses mentioned in a license string.
        Binary operators are not applied or taken into account in any way"""
@@ -243,3 +252,8 @@ def list_licenses(licensestr):
     except SyntaxError as exc:
         raise LicenseSyntaxError(licensestr, exc)
     return visitor.licenses
+
+def apply_pkg_license_exception(pkg, bad_licenses, exceptions):
+    """Return remaining bad licenses after removing any package exceptions"""
+
+    return [lic for lic in bad_licenses if pkg + ':' + lic not in exceptions]

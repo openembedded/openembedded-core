@@ -3,11 +3,11 @@ HOMEPAGE = "http://github.com/philb/update-rc.d/"
 DESCRIPTION = "update-rc.d is a utility that allows the management of symlinks to the initscripts in the /etc/rcN.d directory structure."
 SECTION = "base"
 
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://update-rc.d;beginline=5;endline=15;md5=d40a07c27f535425934bb5001f2037d9"
 
-SRC_URI = "git://git.yoctoproject.org/update-rc.d"
-SRCREV = "4b150b25b38de688d25cde2b2d22c268ed65a748"
+SRC_URI = "git://git.yoctoproject.org/update-rc.d;branch=master"
+SRCREV = "8636cf478d426b568c1be11dbd9346f67e03adac"
 
 UPSTREAM_CHECK_COMMITS = "1"
 

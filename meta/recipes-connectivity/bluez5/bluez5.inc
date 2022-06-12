@@ -2,15 +2,15 @@ SUMMARY = "Linux Bluetooth Stack Userland V5"
 DESCRIPTION = "Linux Bluetooth stack V5 userland components.  These include a system configurations, daemons, tools and system libraries."
 HOMEPAGE = "http://www.bluez.org"
 SECTION = "libs"
-LICENSE = "GPLv2+ & LGPLv2.1+"
+LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://COPYING.LIB;md5=fb504b67c50331fc78734fed90fb0e09 \
-                    file://src/main.c;beginline=1;endline=24;md5=9bc54b93cd7e17bf03f52513f39f926e"
+                    file://src/main.c;beginline=1;endline=24;md5=0ad83ca0dc37ab08af448777c581e7ac"
 DEPENDS = "dbus glib-2.0"
 PROVIDES += "bluez-hcidump"
-RPROVIDES_${PN} += "bluez-hcidump"
+RPROVIDES:${PN} += "bluez-hcidump"
 
-RCONFLICTS_${PN} = "bluez4"
+RCONFLICTS:${PN} = "bluez4"
 
 PACKAGECONFIG ??= "obex-profiles \
     readline \
@@ -42,34 +42,30 @@ PACKAGECONFIG[sixaxis] = "--enable-sixaxis,--disable-sixaxis"
 PACKAGECONFIG[tools] = "--enable-tools,--disable-tools"
 PACKAGECONFIG[threads] = "--enable-threads,--disable-threads"
 PACKAGECONFIG[deprecated] = "--enable-deprecated,--disable-deprecated"
-PACKAGECONFIG[mesh] = "--enable-mesh,--disable-mesh, json-c ell"
-PACKAGECONFIG[btpclient] = "--enable-btpclient,--disable-btpclient, ell"
+PACKAGECONFIG[mesh] = "--enable-mesh --enable-external-ell,--disable-mesh, json-c ell"
+PACKAGECONFIG[btpclient] = "--enable-btpclient --enable-external-ell,--disable-btpclient, ell"
 PACKAGECONFIG[udev] = "--enable-udev,--disable-udev,udev"
+PACKAGECONFIG[manpages] = "--enable-manpages,--disable-manpages,python3-docutils-native"
 
-SRC_URI = "\
-    ${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
-    file://out-of-tree.patch \
-    file://init \
-    file://run-ptest \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'file://0001-Allow-using-obexd-without-systemd-in-the-user-sessio.patch', d)} \
-    file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
-    file://0001-test-gatt-Fix-hung-issue.patch \
-    file://0001-Makefile.am-Fix-a-race-issue-for-tools.patch \
-    file://CVE-2018-10910.patch \
-    file://gcc9-fixes.patch \
-    file://0001-tools-Fix-build-after-y2038-changes-in-glibc.patch \
-    file://0001-tools-btpclient.c-include-signal.h.patch \
-"
+SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
+           file://init \
+           file://run-ptest \
+           ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'file://0001-Allow-using-obexd-without-systemd-in-the-user-sessio.patch', d)} \
+           file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
+           file://0001-test-gatt-Fix-hung-issue.patch \
+           file://fix_service.patch \
+           "
 S = "${WORKDIR}/bluez-${PV}"
 
 CVE_PRODUCT = "bluez"
 
-inherit autotools pkgconfig systemd update-rc.d distro_features_check ptest gobject-introspection-data
+inherit autotools pkgconfig systemd update-rc.d ptest gobject-introspection-data
 
 EXTRA_OECONF = "\
   --enable-test \
   --enable-datafiles \
   --enable-library \
+  --without-zsh-completion-dir \
 "
 
 # bluez5 builds a large number of useful utilities but does not
@@ -83,7 +79,7 @@ NOINST_TOOLS = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'tools', '${NOINST_TOOLS_BT}', '', d)} \
 "
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${INIT_D_DIR}
 	install -m 0755 ${WORKDIR}/init ${D}${INIT_D_DIR}/bluetooth
 
@@ -111,25 +107,25 @@ do_install_append() {
 
 PACKAGES =+ "${PN}-testtools ${PN}-obex ${PN}-noinst-tools"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${libdir}/bluetooth/plugins/*.so \
     ${systemd_unitdir}/ ${datadir}/dbus-1 \
     ${libdir}/cups \
 "
-FILES_${PN}-dev += " \
+FILES:${PN}-dev += " \
     ${libdir}/bluetooth/plugins/*.la \
 "
 
-FILES_${PN}-obex = "${libexecdir}/bluetooth/obexd \
+FILES:${PN}-obex = "${libexecdir}/bluetooth/obexd \
                     ${exec_prefix}/lib/systemd/user/obex.service \
                     ${systemd_system_unitdir}/obex.service \
                     ${sysconfdir}/systemd/system/multi-user.target.wants/obex.service \
                     ${datadir}/dbus-1/services/org.bluez.obex.service \
                     ${sysconfdir}/dbus-1/system.d/obexd.conf \
                    "
-SYSTEMD_SERVICE_${PN}-obex = "obex.service"
+SYSTEMD_SERVICE:${PN}-obex = "obex.service"
 
-FILES_${PN}-testtools = "${libdir}/bluez/test/*"
+FILES:${PN}-testtools = "${libdir}/bluez/test/*"
 
 def get_noinst_tools_paths (d, bb, tools):
     s = list()
@@ -139,14 +135,14 @@ def get_noinst_tools_paths (d, bb, tools):
         s.append("%s/%s" % (bindir, f))
     return "\n".join(s)
 
-FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
+FILES:${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
-RDEPENDS_${PN}-testtools += "python3-core python3-dbus"
-RDEPENDS_${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python3-pygobject', '', d)}"
+RDEPENDS:${PN}-testtools += "python3-core python3-dbus"
+RDEPENDS:${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python3-pygobject', '', d)}"
 
-SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
+SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
 INITSCRIPT_PACKAGES = "${PN}"
-INITSCRIPT_NAME_${PN} = "bluetooth"
+INITSCRIPT_NAME:${PN} = "bluetooth"
 
 do_compile_ptest() {
 	oe_runmake buildtests
@@ -157,4 +153,4 @@ do_install_ptest() {
 	rm -f ${D}${PTEST_PATH}/unit/*.o
 }
 
-RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-gconv-utf-16"
+RDEPENDS:${PN}-ptest:append:libc-glibc = " glibc-gconv-utf-16"

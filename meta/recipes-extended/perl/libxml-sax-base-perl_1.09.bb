@@ -7,8 +7,8 @@ use this module as a base class so you don't have to, for example, \
 implement the characters() callback."
 
 SECTION = "libs"
-LICENSE = "Artistic-1.0 | GPL-1.0+"
-RDEPENDS_${PN} += "perl-module-extutils-makemaker"
+LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
+RDEPENDS:${PN} += "perl-module-extutils-makemaker"
 
 LIC_FILES_CHKSUM = "file://dist.ini;endline=5;md5=8f9c9a55340aefaee6e9704c88466446"
 
@@ -21,6 +21,6 @@ S = "${WORKDIR}/XML-SAX-Base-${PV}"
 
 inherit cpan ptest-perl
 
-RDEPENDS_${PN}-ptest += "perl-module-test perl-module-test-more"
+RDEPENDS:${PN}-ptest += "perl-module-test perl-module-test-more"
 
 BBCLASSEXTEND = "native nativesdk"

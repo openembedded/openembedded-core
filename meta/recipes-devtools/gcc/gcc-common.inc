@@ -1,5 +1,6 @@
 SUMMARY = "GNU cc and gcc C compilers"
 HOMEPAGE = "http://www.gnu.org/software/gcc/"
+DESCRIPTION = "The GNU Compiler Collection includes front ends for C, C++, Objective-C, Fortran, Ada, Go, and D, as well as libraries for these languages (libstdc++,...). GCC was originally written as the compiler for the GNU operating system."
 SECTION = "devel"
 LICENSE = "GPL"
 
@@ -11,7 +12,7 @@ inherit autotools gettext texinfo
 
 BPN = "gcc"
 COMPILERDEP = "virtual/${MLPREFIX}${TARGET_PREFIX}gcc:do_gcc_stash_builddir"
-COMPILERDEP_class-nativesdk = "virtual/${TARGET_PREFIX}gcc-crosssdk:do_gcc_stash_builddir"
+COMPILERDEP:class-nativesdk = "virtual/${TARGET_PREFIX}gcc-crosssdk:do_gcc_stash_builddir"
 
 python extract_stashed_builddir () {
     src = d.expand("${COMPONENTS_DIR}/${BUILD_ARCH}/gcc-stashed-builddir-${TARGET_SYS}")
@@ -47,6 +48,7 @@ def get_gcc_multiarch_setting(bb, d):
         "i586":    "--enable-targets=all",
         "i686":    "--enable-targets=all",
         "powerpc": "--enable-targets=powerpc64",
+        "powerpc64le": "--enable-targets=powerpcle",
         "mips":    "--enable-targets=all",
         "sparc":   "--enable-targets=all",
     }
@@ -81,14 +83,10 @@ def get_tune_parameters(tune, d):
 
 get_tune_parameters[vardepsexclude] = "AVAILTUNES TUNE_CCARGS OVERRIDES TUNE_FEATURES BASE_LIB BASELIB TUNE_ARCH ABIEXTENSION TARGET_FPU TUNE_PKGARCH PACKAGE_EXTRA_ARCHS"
 
-DEBIANNAME_${MLPREFIX}libgcc = "libgcc1"
+DEBIANNAME:${MLPREFIX}libgcc = "libgcc1"
 
 MIRRORS =+ "\
-${GNU_MIRROR}/gcc    ftp://gcc.gnu.org/pub/gcc/releases/ \n \
-${GNU_MIRROR}/gcc	ftp://gd.tuwien.ac.at/gnu/gcc/ \n \
-${GNU_MIRROR}/gcc	http://mirrors.rcn.net/pub/sourceware/gcc/releases/ \n \
-${GNU_MIRROR}/gcc   http://gcc.get-software.com/releases/ \n \
-${GNU_MIRROR}/gcc	http://gcc.get-software.com/releases/ \n \
+    ${GNU_MIRROR}/gcc https://gcc.gnu.org/pub/gcc/releases/ \
 "
 #
 # Set some default values

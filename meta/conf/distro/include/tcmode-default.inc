@@ -16,23 +16,22 @@ PREFERRED_PROVIDER_virtual/${SDK_PREFIX}compilerlibs = "nativesdk-gcc-runtime"
 # Default libc config
 PREFERRED_PROVIDER_virtual/gettext ??= "gettext"
 
-GCCVERSION ?= "9.%"
+GCCVERSION ?= "12.%"
 SDKGCCVERSION ?= "${GCCVERSION}"
-BINUVERSION ?= "2.32%"
-GDBVERSION ?= "8.3%"
-GLIBCVERSION ?= "2.30%"
-LINUXLIBCVERSION ?= "5.2%"
-QEMUVERSION ?= "4.1%"
-GOVERSION ?= "1.12%"
+BINUVERSION ?= "2.38%"
+GDBVERSION ?= "12.%"
+GLIBCVERSION ?= "2.35"
+LINUXLIBCVERSION ?= "5.16%"
+QEMUVERSION ?= "7.0%"
+GOVERSION ?= "1.18%"
 # This can not use wildcards like 8.0.% since it is also used in mesa to denote
 # llvm version being used, so always bump it with llvm recipe version bump
-LLVMVERSION ?= "9.0.0"
+LLVMVERSION ?= "14.0.4"
+RUSTVERSION ?= "1.60%"
 
 PREFERRED_VERSION_gcc ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-cross-${TARGET_ARCH} ?= "${GCCVERSION}"
-PREFERRED_VERSION_gcc-cross-initial-${TARGET_ARCH} ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-crosssdk-${SDK_SYS} ?= "${SDKGCCVERSION}"
-PREFERRED_VERSION_gcc-crosssdk-initial-${SDK_SYS} ?= "${SDKGCCVERSION}"
 PREFERRED_VERSION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-runtime ?= "${GCCVERSION}"
 PREFERRED_VERSION_gcc-sanitizers ?= "${GCCVERSION}"
@@ -66,6 +65,10 @@ PREFERRED_VERSION_qemu ?= "${QEMUVERSION}"
 PREFERRED_VERSION_qemu-native ?= "${QEMUVERSION}"
 PREFERRED_VERSION_nativesdk-qemu ?= "${QEMUVERSION}"
 
+# Bootstrap Go using a binary release from golang.org.  If you want to bootstrap
+# from source using the C-implemented Go 1.4 (only supports x86-64 hosts) then use
+# go-native.
+PREFERRED_PROVIDER_go-native ?= "go-binary-native"
 PREFERRED_VERSION_virtual/${TARGET_PREFIX}go ?= "${GOVERSION}"
 PREFERRED_VERSION_go-cross-${TUNE_PKGARCH} ?= "${GOVERSION}"
 PREFERRED_VERSION_go-crosssdk-${SDK_ARCH} ?= "${GOVERSION}"
@@ -79,3 +82,15 @@ PREFERRED_VERSION_nativesdk-go-runtime ?= "${GOVERSION}"
 PREFERRED_VERSION_llvm = "${LLVMVERSION}"
 PREFERRED_VERSION_llvm-native = "${LLVMVERSION}"
 PREFERRED_VERSION_nativesdk-llvm = "${LLVMVERSION}"
+
+# Rust toolchain preferred versions:
+
+PREFERRED_VERSION_cargo ?= "${RUSTVERSION}"
+PREFERRED_VERSION_cargo-native ?= "${RUSTVERSION}"
+PREFERRED_VERSION_libstd-rs ?= "${RUSTVERSION}"
+PREFERRED_VERSION_rust ?= "${RUSTVERSION}"
+PREFERRED_VERSION_rust-cross-${TARGET_ARCH} ?= "${RUSTVERSION}"
+PREFERRED_VERSION_rust-llvm ?= "${RUSTVERSION}"
+PREFERRED_VERSION_rust-llvm-native ?= "${RUSTVERSION}"
+PREFERRED_VERSION_rust-native ?= "${RUSTVERSION}"
+

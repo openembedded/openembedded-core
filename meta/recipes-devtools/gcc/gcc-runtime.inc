@@ -6,7 +6,7 @@ SUMMARY = "Runtime libraries from GCC"
 # All gcc-runtime packages are now covered by the runtime exception.
 LICENSE = "GPL-3.0-with-GCC-exception"
 
-CXXFLAGS_remove = "-fvisibility-inlines-hidden"
+CXXFLAGS:remove = "-fvisibility-inlines-hidden"
 
 EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=${includedir}/c++/${BINV} \
@@ -14,47 +14,61 @@ EXTRA_OECONF_PATHS = "\
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
 
-EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
-EXTRA_OECONF_append = " --cache-file=${B}/config.cache"
+EXTRA_OECONF:append:linuxstdbase = " --enable-clocale=gnu"
+EXTRA_OECONF:append = " --cache-file=${B}/config.cache"
+EXTRA_OECONF:append:libc-newlib = " --with-newlib"
 
 # Disable ifuncs for libatomic on arm conflicts -march/-mcpu
-EXTRA_OECONF_append_arm = " libat_cv_have_ifunc=no "
+EXTRA_OECONF:append:arm = " libat_cv_have_ifunc=no "
+EXTRA_OECONF:append:armeb = " libat_cv_have_ifunc=no "
+
+DISABLE_STATIC:class-nativesdk ?= ""
+
+# Newlib does not support symbol versioning on libsdtcc++
+SYMVERS_CONF:libc-newlib = ""
 
 # Building with thumb enabled on armv6t fails
-ARM_INSTRUCTION_SET_armv6 = "arm"
+ARM_INSTRUCTION_SET:armv6 = "arm"
 
 RUNTIMELIBITM = "libitm"
-RUNTIMELIBITM_arc = ""
-RUNTIMELIBITM_mipsarch = ""
-RUNTIMELIBITM_nios2 = ""
-RUNTIMELIBITM_microblaze = ""
-RUNTIMELIBITM_riscv32 = ""
-RUNTIMELIBITM_riscv64 = ""
+RUNTIMELIBITM:arc = ""
+RUNTIMELIBITM:mipsarch = ""
+RUNTIMELIBITM:nios2 = ""
+RUNTIMELIBITM:microblaze = ""
+RUNTIMELIBITM:riscv32 = ""
+RUNTIMELIBITM:riscv64 = ""
 RUNTIMELIBSSP ?= ""
-RUNTIMELIBSSP_mingw32 ?= "libssp"
+RUNTIMELIBSSP:mingw32 ?= "libssp"
 
 RUNTIMETARGET = "${RUNTIMELIBSSP} libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
     ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
 "
+# Only build libstdc++ for newlib
+RUNTIMETARGET:libc-newlib = "libstdc++-v3"
 
 # libiberty
-# libmudflap
 # libgfortran needs separate recipe due to libquadmath dependency
 
-SLIB = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
-SLIB_NEW = "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
+# Relative path to be repaced into debug info
+REL_S = "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
 
-DEBUG_PREFIX_MAP_class-target = " \
+DEBUG_PREFIX_MAP:class-target = " \
    -fdebug-prefix-map=${WORKDIR}/recipe-sysroot= \
    -fdebug-prefix-map=${WORKDIR}/recipe-sysroot-native= \
-   -fdebug-prefix-map=${SLIB}=${SLIB_NEW} \
-   -fdebug-prefix-map=${SLIB}/include=${SLIB_NEW}/libstdc++-v3/../include \
-   -fdebug-prefix-map=${SLIB}/libiberty=${SLIB_NEW}/libstdc++-v3/../libiberty \
-   -fdebug-prefix-map=${B}=${SLIB_NEW} \
+   -fdebug-prefix-map=${S}=${REL_S} \
+   -fdebug-prefix-map=${S}/include=${REL_S}/libstdc++-v3/../include \
+   -fdebug-prefix-map=${S}/libiberty=${REL_S}/libstdc++-v3/../libiberty \
+   -fdebug-prefix-map=${S}/libgcc=${REL_S}/libstdc++-v3/../libgcc \
+   -fdebug-prefix-map=${B}=${REL_S} \
+   -ffile-prefix-map=${B}/${HOST_SYS}/libstdc++-v3/include=${includedir}/c++/${BINV} \
    "
 
 do_configure () {
-	export CXX="${CXX} -nostdinc++ -nostdlib++"
+	export CXX="${CXX} -nostdinc++ -L${WORKDIR}/dummylib"
+	# libstdc++ isn't built yet so CXX would error not able to find it which breaks stdc++'s configure
+	# tests. Create a dummy empty lib for the purposes of configure.
+	mkdir -p ${WORKDIR}/dummylib
+	touch ${WORKDIR}/dummylib/libstdc++.so
 	for d in libgcc ${RUNTIMETARGET}; do
 		echo "Configuring $d"
 		rm -rf ${B}/${TARGET_SYS}/$d/
@@ -99,7 +113,7 @@ do_install () {
 	fi
 }
 
-do_install_append_class-target () {
+do_install:append:class-target () {
 	if [ "${TARGET_OS}" = "linux-gnuspe" ]; then
 		ln -s ${TARGET_SYS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-linux
 	fi
@@ -130,6 +144,10 @@ do_install_append_class-target () {
 		ln -s ../${TARGET_SYS}/ext ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR_MULTILIB_ORIGINAL}-${TARGET_OS}/ext
 	fi
 
+	if [ "${TARGET_ARCH}" == "x86_64" -a "${MULTILIB_VARIANTS}" != "" ];then
+		ln -sf ../${X86ARCH32}${TARGET_VENDOR}-${TARGET_OS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}/32
+	fi
+
 	if [ "${TCLIBC}" != "glibc" ]; then
 		case "${TARGET_OS}" in
 			"linux-musl" | "linux-*spe") extra_target_os="linux";;
@@ -158,9 +176,6 @@ PACKAGES = "\
     libssp \
     libssp-dev \
     libssp-staticdev \
-    libmudflap \
-    libmudflap-dev \
-    libmudflap-staticdev \
     libquadmath \
     libquadmath-dev \
     libquadmath-staticdev \
@@ -175,112 +190,102 @@ PACKAGES = "\
     libitm-staticdev \
 "
 # The base package doesn't exist, so we clear the recommends.
-RRECOMMENDS_${PN}-dbg = ""
+RRECOMMENDS:${PN}-dbg = ""
 
 # include python debugging scripts
-FILES_${PN}-dbg += "\
-    ${libdir}/libstdc++.so.*-gdb.py \
+FILES:${PN}-dbg += "\
+    ${libdir}/libstdc++.*-gdb.py \
     ${datadir}/gcc-${BINV}/python/libstdcxx \
 "
 
-FILES_libg2c = "${target_libdir}/libg2c.so.*"
-SUMMARY_libg2c = "Companion runtime library for g77"
-FILES_libg2c-dev = "\
+FILES:libg2c = "${target_libdir}/libg2c.so.*"
+SUMMARY:libg2c = "Companion runtime library for g77"
+FILES:libg2c-dev = "\
     ${libdir}/libg2c.so \
     ${libdir}/libg2c.a \
     ${libdir}/libfrtbegin.a \
 "
-SUMMARY_libg2c-dev = "Companion runtime library for g77 - development files"
+SUMMARY:libg2c-dev = "Companion runtime library for g77 - development files"
 
-FILES_libstdc++ = "${libdir}/libstdc++.so.*"
-SUMMARY_libstdc++ = "GNU standard C++ library"
-FILES_libstdc++-dev = "\
+FILES:libstdc++ = "${libdir}/libstdc++.so.*"
+SUMMARY:libstdc++ = "GNU standard C++ library"
+FILES:libstdc++-dev = "\
     ${includedir}/c++/ \
     ${libdir}/libstdc++.so \
     ${libdir}/libstdc++*.la \
     ${libdir}/libsupc++.la \
 "
-SUMMARY_libstdc++-dev = "GNU standard C++ library - development files"
-FILES_libstdc++-staticdev = "\
+SUMMARY:libstdc++-dev = "GNU standard C++ library - development files"
+FILES:libstdc++-staticdev = "\
     ${libdir}/libstdc++*.a \
     ${libdir}/libsupc++.a \
 "
-SUMMARY_libstdc++-staticdev = "GNU standard C++ library - static development files"
+SUMMARY:libstdc++-staticdev = "GNU standard C++ library - static development files"
 
-FILES_libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
-SUMMARY_libstdc++-precompile-dev = "GNU standard C++ library - precompiled header files"
+FILES:libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
+SUMMARY:libstdc++-precompile-dev = "GNU standard C++ library - precompiled header files"
 
-FILES_libssp = "${libdir}/libssp.so.*"
-SUMMARY_libssp = "GNU stack smashing protection library"
-FILES_libssp-dev = "\
+FILES:libssp = "${libdir}/libssp.so.*"
+SUMMARY:libssp = "GNU stack smashing protection library"
+FILES:libssp-dev = "\
     ${libdir}/libssp*.so \
     ${libdir}/libssp*_nonshared.a \
     ${libdir}/libssp*.la \
     ${libdir}/${TARGET_SYS}/${BINV}/include/ssp \
 "
-SUMMARY_libssp-dev = "GNU stack smashing protection library - development files"
-FILES_libssp-staticdev = "${libdir}/libssp*.a"
-SUMMARY_libssp-staticdev = "GNU stack smashing protection library - static development files"
+SUMMARY:libssp-dev = "GNU stack smashing protection library - development files"
+FILES:libssp-staticdev = "${libdir}/libssp*.a"
+SUMMARY:libssp-staticdev = "GNU stack smashing protection library - static development files"
 
-FILES_libquadmath = "${libdir}/libquadmath*.so.*"
-SUMMARY_libquadmath = "GNU quad-precision math library"
-FILES_libquadmath-dev = "\
+FILES:libquadmath = "${libdir}/libquadmath*.so.*"
+SUMMARY:libquadmath = "GNU quad-precision math library"
+FILES:libquadmath-dev = "\
     ${libdir}/${TARGET_SYS}/${BINV}/include/quadmath* \
     ${libdir}/libquadmath*.so \
     ${libdir}/libquadmath.la \
 "
-SUMMARY_libquadmath-dev = "GNU quad-precision math library - development files"
-FILES_libquadmath-staticdev = "${libdir}/libquadmath.a"
-SUMMARY_libquadmath-staticdev = "GNU quad-precision math library - static development files"
+SUMMARY:libquadmath-dev = "GNU quad-precision math library - development files"
+FILES:libquadmath-staticdev = "${libdir}/libquadmath.a"
+SUMMARY:libquadmath-staticdev = "GNU quad-precision math library - static development files"
 
-# NOTE: mudflap has been removed as of gcc 4.9 and has been superseded by the address sanitiser
-FILES_libmudflap = "${libdir}/libmudflap*.so.*"
-SUMMARY_libmudflap = "Pointer debugging library for gcc"
-FILES_libmudflap-dev = "\
-    ${libdir}/libmudflap*.so \
-    ${libdir}/libmudflap.la \
-"
-SUMMARY_libmudflap-dev = "Pointer debugging library for gcc - development files"
-FILES_libmudflap-staticdev = "${libdir}/libmudflap.a"
-SUMMARY_libmudflap-staticdev = "Pointer debugging library for gcc - static development files"
-
-FILES_libgomp = "${libdir}/libgomp*${SOLIBS}"
-SUMMARY_libgomp = "GNU OpenMP parallel programming library"
-FILES_libgomp-dev = "\
+FILES:libgomp = "${libdir}/libgomp*${SOLIBS}"
+SUMMARY:libgomp = "GNU OpenMP parallel programming library"
+FILES:libgomp-dev = "\
     ${libdir}/libgomp*${SOLIBSDEV} \
     ${libdir}/libgomp*.la \
     ${libdir}/libgomp.spec \
+    ${libdir}/${TARGET_SYS}/${BINV}/include/acc_prof.h \
     ${libdir}/${TARGET_SYS}/${BINV}/include/omp.h \
     ${libdir}/${TARGET_SYS}/${BINV}/include/openacc.h \
 "
-SUMMARY_libgomp-dev = "GNU OpenMP parallel programming library - development files"
-FILES_libgomp-staticdev = "${libdir}/libgomp*.a"
-SUMMARY_libgomp-staticdev = "GNU OpenMP parallel programming library - static development files"
+SUMMARY:libgomp-dev = "GNU OpenMP parallel programming library - development files"
+FILES:libgomp-staticdev = "${libdir}/libgomp*.a"
+SUMMARY:libgomp-staticdev = "GNU OpenMP parallel programming library - static development files"
 
-FILES_libatomic = "${libdir}/libatomic.so.*"
-SUMMARY_libatomic = "GNU C++11 atomics support library"
-FILES_libatomic-dev = "\
+FILES:libatomic = "${libdir}/libatomic.so.*"
+SUMMARY:libatomic = "GNU C++11 atomics support library"
+FILES:libatomic-dev = "\
     ${libdir}/libatomic.so \
     ${libdir}/libatomic.la \
 "
-SUMMARY_libatomic-dev = "GNU C++11 atomics support library - development files"
-FILES_libatomic-staticdev = "${libdir}/libatomic.a"
-SUMMARY_libatomic-staticdev = "GNU C++11 atomics support library - static development files"
+SUMMARY:libatomic-dev = "GNU C++11 atomics support library - development files"
+FILES:libatomic-staticdev = "${libdir}/libatomic.a"
+SUMMARY:libatomic-staticdev = "GNU C++11 atomics support library - static development files"
 
-FILES_libitm = "${libdir}/libitm.so.*"
-SUMMARY_libitm = "GNU transactional memory support library"
-FILES_libitm-dev = "\
+FILES:libitm = "${libdir}/libitm.so.*"
+SUMMARY:libitm = "GNU transactional memory support library"
+FILES:libitm-dev = "\
     ${libdir}/libitm.so \
     ${libdir}/libitm.la \
     ${libdir}/libitm.spec \
 "
-SUMMARY_libitm-dev = "GNU transactional memory support library - development files"
-FILES_libitm-staticdev = "${libdir}/libitm.a"
-SUMMARY_libitm-staticdev = "GNU transactional memory support library - static development files"
+SUMMARY:libitm-dev = "GNU transactional memory support library - development files"
+FILES:libitm-staticdev = "${libdir}/libitm.a"
+SUMMARY:libitm-staticdev = "GNU transactional memory support library - static development files"
 
 require gcc-testsuite.inc
 
-EXTRA_OEMAKE_prepend_task-check = "${PARALLEL_MAKE} "
+EXTRA_OEMAKE:prepend:task-check = "${PARALLEL_MAKE} "
 
 MAKE_CHECK_TARGETS ??= "check-gcc ${@" ".join("check-target-" + i for i in d.getVar("RUNTIMETARGET").split())}"
 # prettyprinters and xmethods require gdb tooling
@@ -301,11 +306,7 @@ do_check() {
     export DEJAGNU="${WORKDIR}/dejagnu/site.exp"
 
     # HACK: this works around the configure setting CXX with -nostd* args
-    sed -i 's/-nostdinc++ -nostdlib++//g' $(find ${B} -name testsuite_flags | head -1)
-    # HACK: this works around the de-stashing changes to configargs.h, as well as recipe-sysroot changing the content
-    sed -i '/static const char configuration_arguments/d' ${B}/gcc/configargs.h
-    ${CC} -v 2>&1 | grep "^Configured with:" | \
-        sed 's/Configured with: \(.*\)/static const char configuration_arguments[] = "\1";/g' >> ${B}/gcc/configargs.h
+    sed -i 's#-nostdinc++ -L${WORKDIR}/dummylib##g' $(find ${B} -name testsuite_flags | head -1)
 
     if [ "${TOOLCHAIN_TEST_TARGET}" = "user" ]; then
         # qemu user has issues allocating large amounts of memory

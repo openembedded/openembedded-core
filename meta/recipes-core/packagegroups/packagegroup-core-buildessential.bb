@@ -5,9 +5,12 @@
 
 SUMMARY = "Essential build dependencies"
 
+# libstdc++ gets debian renamed
+PACKAGE_ARCH = "${TUNE_PKGARCH}"
+
 inherit packagegroup
 
-RDEPENDS_packagegroup-core-buildessential = "\
+RDEPENDS:packagegroup-core-buildessential = "\
     autoconf \
     automake \
     binutils \

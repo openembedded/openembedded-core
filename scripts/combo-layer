@@ -80,7 +80,7 @@ class Configuration(object):
         logger.debug("Loading config file %s" % self.conffile)
         self.parser = configparser.ConfigParser()
         with open(self.conffile) as f:
-            self.parser.readfp(f)
+            self.parser.read_file(f)
 
         # initialize default values
         self.commit_msg_template = "Automatic commit to update last_revision"
@@ -508,7 +508,7 @@ def check_patch(patchfile):
     f.close()
     if of:
         of.close()
-        os.rename(patchfile + '.tmp', patchfile)
+        bb.utils.rename(patchfile + '.tmp', patchfile)
 
 def drop_to_shell(workdir=None):
     if not sys.stdin.isatty():

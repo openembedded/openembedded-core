@@ -1,6 +1,9 @@
 SUMMARY = "ATSC A/52 surround sound stream decoder"
+DESCRIPTION = "Library for decoding ATSC A/52 streams. The A/52 standard \
+is used in a variety of applications, including digital television \
+and DVD. It is also known as AC-3."
 HOMEPAGE = "http://liba52.sourceforge.net/"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 			file://include/a52.h;beginline=1;endline=12;md5=81152ceb3562bf20a60d1b6018175dd1"
 SECTION = "libs"
@@ -22,5 +25,5 @@ EXTRA_OECONF = " --enable-shared "
 
 PACKAGES =+ "a52dec a52dec-doc"
 
-FILES_a52dec = " ${bindir}/* "
-FILES_a52dec-doc = " ${mandir}/man1/* "
+FILES:a52dec = " ${bindir}/* "
+FILES:a52dec-doc = " ${mandir}/man1/* "

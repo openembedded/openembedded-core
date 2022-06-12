@@ -1,21 +1,23 @@
 DEPENDS = "virtual/${TUNE_PKGARCH}-go go-native"
-DEPENDS_class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk go-native"
+DEPENDS:class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk go-native"
 
-export GOHOSTOS = "${BUILD_GOOS}"
-export GOHOSTARCH = "${BUILD_GOARCH}"
-export GOOS = "${TARGET_GOOS}"
-export GOARCH = "${TARGET_GOARCH}"
-export GOARM = "${TARGET_GOARM}"
-export GO386 = "${TARGET_GO386}"
-export GOMIPS = "${TARGET_GOMIPS}"
-export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
-export GOROOT_FINAL = "${libdir}/go"
+DEBUG_PREFIX_MAP = "\
+                     -fdebug-prefix-map=${STAGING_DIR_HOST}= \
+                     -fdebug-prefix-map=${STAGING_DIR_NATIVE}= \
+"
+
+export CGO_CFLAGS = "${CFLAGS}"
+export CGO_CPPFLAGS = "${CPPFLAGS}"
+export CGO_CXXFLAGS = "${CXXFLAGS}"
+# Filter out -fdebug-prefix-map options as they clash with the GO's build system
+export CGO_LDFLAGS = "${@ ' '.join(filter(lambda f: not f.startswith('-fdebug-prefix-map'), d.getVar('LDFLAGS').split())) }"
+
 export GOCACHE = "${B}/.cache"
 GO_LDFLAGS = ""
-GO_LDFLAGS_class-nativesdk = "-linkmode external"
+GO_LDFLAGS:class-nativesdk = " -linkmode external"
 export GO_LDFLAGS
-
-CC_append_class-nativesdk = " ${SECURITY_NOPIE_CFLAGS}"
+export GOBUILDFLAGS = "-gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -trimpath"
+CC:append:class-nativesdk = " ${SECURITY_NOPIE_CFLAGS}"
 
 do_configure[noexec] = "1"
 
@@ -27,7 +29,6 @@ do_compile() {
 	./make.bash --target-only --no-banner
 	cd ${B}
 }
-do_compile[dirs] =+ "${GOTMPDIR} ${B}/bin ${B}/pkg"
 do_compile[cleandirs] += "${GOTMPDIR} ${B}/bin ${B}/pkg"
 
 do_install() {
@@ -43,12 +44,12 @@ do_install() {
 		install -m 0755 $f ${D}${libdir}/go/bin/
 		ln -sf ../${baselib}/go/bin/$name ${D}${bindir}/
 	done
+	rm -rf ${D}${libdir}/go/src
 }
 
 PACKAGES = "${PN} ${PN}-dev"
-FILES_${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir}"
-FILES_${PN}-dev = "${libdir}/go"
-RDEPENDS_${PN}-dev = "perl bash"
-INSANE_SKIP_${PN} = "ldflags"
+FILES:${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir}"
+RDEPENDS:${PN} = "go-runtime"
+INSANE_SKIP:${PN} = "ldflags"
 
 BBCLASSEXTEND = "nativesdk"

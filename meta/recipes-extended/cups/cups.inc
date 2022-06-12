@@ -5,72 +5,71 @@ Protocol (IPP), and has its own filtering driver model for handling various \
 document types."
 HOMEPAGE = "https://www.cups.org/"
 SECTION = "console/utils"
-LICENSE = "GPLv2 & LGPLv2"
-DEPENDS = "gnutls libpng jpeg dbus zlib libusb1"
+LICENSE = "Apache-2.0"
+DEPENDS = "libpng jpeg dbus zlib libusb1"
 
-SRC_URI = "https://github.com/apple/cups/releases/download/v${PV}/${BP}-source.tar.gz \
-           file://use_echo_only_in_init.patch \
-           file://0001-don-t-try-to-run-generated-binaries.patch \
-           file://cups_serverbin.patch \
-           file://cups-avoid-install-file-conflicts.patch \
+SRC_URI = "https://github.com/OpenPrinting/cups/releases/download/v${PV}/cups-${PV}-source.tar.gz \
+           file://0001-use-echo-only-in-init.patch \
+           file://0002-don-t-try-to-run-generated-binaries.patch \
+           file://libexecdir.patch \
+           file://0004-cups-fix-multilib-install-file-conflicts.patch \
+           file://volatiles.99_cups \
+           file://cups-volatiles.conf \
            "
 
-UPSTREAM_CHECK_URI = "https://github.com/apple/cups/releases"
-UPSTREAM_CHECK_REGEX = "cups-(?P<pver>\d+\.\d+(\.\d+)?)-source.tar"
+UPSTREAM_CHECK_URI = "https://github.com/OpenPrinting/cups/releases"
+UPSTREAM_CHECK_REGEX = "cups-(?P<pver>(?!.+\d(b|rc)\d.+).+)-source.tar"
+
+# Issue only applies to MacOS
+CVE_CHECK_IGNORE += "CVE-2008-1033"
+# Issue affects pdfdistiller plugin used with but not part of cups
+CVE_CHECK_IGNORE += "CVE-2009-0032"
+# This is an Ubuntu only issue.
+CVE_CHECK_IGNORE += "CVE-2018-6553"
 
 LEAD_SONAME = "libcupsdriver.so"
 
 CLEANBROKEN = "1"
 
-inherit autotools-brokensep binconfig useradd systemd pkgconfig
+inherit autotools-brokensep binconfig useradd systemd pkgconfig multilib_script
 
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "--system lpadmin"
+GROUPADD_PARAM:${PN} = "--system lpadmin"
 
-SYSTEMD_SERVICE_${PN} = "org.cups.cupsd.socket org.cups.cupsd.path org.cups.cupsd.service org.cups.cups-lpd.socket org.cups.cups-lpd@.service"
+SYSTEMD_SERVICE:${PN} = "cups.socket cups.path cups.service cups-lpd.socket"
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', 'avahi', '', d)} \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'pam systemd', d)}"
-PACKAGECONFIG[avahi] = "--enable-avahi,--disable-avahi,avahi"
+PACKAGECONFIG[avahi] = "--with-dnssd=avahi,--with-dnssd=no,avahi"
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl"
+PACKAGECONFIG[gnutls] = "--with-tls=gnutls,--with-tls=no,gnutls"
 PACKAGECONFIG[pam] = "--enable-pam --with-pam-module=unix, --disable-pam, libpam"
 PACKAGECONFIG[systemd] = "--with-systemd=${systemd_system_unitdir},--without-systemd,systemd"
 PACKAGECONFIG[xinetd] = "--with-xinetd=${sysconfdir}/xinetd.d,--without-xinetd,xinetd"
 
 EXTRA_OECONF = " \
-               --enable-gnutls \
                --enable-dbus \
+               --with-dbusdir=${sysconfdir}/dbus-1 \
                --enable-browsing \
                --disable-gssapi \
                --enable-debug \
                --disable-relro \
                --enable-libusb \
-               --without-php \
-               --without-perl \
-               --without-python \
-               --without-java \
+               --with-system-groups=lpadmin \
+               --with-cups-group=lp \
+               --with-domainsocket=/run/cups/cups.sock \
+               --with-pkgconfpath=${libdir}/pkgconfig \
                DSOFLAGS='${LDFLAGS}' \
                "
 
 EXTRA_AUTORECONF += "--exclude=autoheader"
 
-do_compile () {
-	echo "all:"    >  man/Makefile
-	echo "libs:" >> man/Makefile
-	echo "install:" >> man/Makefile
-	echo "install-data:" >> man/Makefile
-	echo "install-exec:" >> man/Makefile
-	echo "install-headers:" >> man/Makefile
-	echo "install-libs:" >> man/Makefile
-
-	oe_runmake
-}
-
 do_install () {
-	oe_runmake "DSTROOT=${D}" install
+	oe_runmake "DESTDIR=${D}" install
 
 	# Remove /var/run from package as cupsd will populate it on startup
 	rm -fr ${D}/${localstatedir}/run
+	rm -fr ${D}/${localstatedir}/log
 	rmdir ${D}/${libexecdir}/${BPN}/driver
 
 	# Fix the pam configuration file permissions
@@ -82,34 +81,41 @@ do_install () {
 	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','false','true',d)}; then
 	    rm -rf ${D}${sysconfdir}/init.d/
 	    rm -rf ${D}${sysconfdir}/rc*
+	    install -d ${D}${sysconfdir}/tmpfiles.d
+	    install -m 0644 ${WORKDIR}/cups-volatiles.conf \
+		    ${D}${sysconfdir}/tmpfiles.d/cups.conf
+	else
+	    install -d ${D}${sysconfdir}/default/volatiles
+	    install -m 0644 ${WORKDIR}/volatiles.99_cups \
+		    ${D}${sysconfdir}/default/volatiles/99_cups
 	fi
 }
 
 PACKAGES =+ "${PN}-lib ${PN}-libimage"
 
-RDEPENDS_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'procps', '', d)}"
-FILES_${PN} += "${libdir}/cups/backend \
-		${libdir}/cups/cgi-bin \
-		${libdir}/cups/filter \
-		${libdir}/cups/monitor \
-		${libdir}/cups/notifier \
-		${libdir}/cups/daemon \
-	       "
+RDEPENDS:${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'procps', '', d)}"
+FILES:${PN} += "${libexecdir}/cups/"
 
-FILES_${PN}-lib = "${libdir}/libcups.so.*"
+FILES:${PN}-lib = "${libdir}/libcups.so.*"
 
-FILES_${PN}-libimage = "${libdir}/libcupsimage.so.*"
+FILES:${PN}-libimage = "${libdir}/libcupsimage.so.*"
 
 #package the html for the webgui inside the main packages (~1MB uncompressed)
 
-FILES_${PN} += "${datadir}/doc/cups/images \
+FILES:${PN} += "${datadir}/doc/cups/images \
                 ${datadir}/doc/cups/*html \
                 ${datadir}/doc/cups/*.css \
                 ${datadir}/icons/ \
                "
-CONFFILES_${PN} += "${sysconfdir}/cups/cupsd.conf"
+CONFFILES:${PN} += "${sysconfdir}/cups/cupsd.conf"
+
+MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/cups-config"
 
 SYSROOT_PREPROCESS_FUNCS += "cups_sysroot_preprocess"
 cups_sysroot_preprocess () {
-	sed -i ${SYSROOT_DESTDIR}${bindir_crossscripts}/cups-config -e 's:cups_datadir=.*:cups_datadir=${datadir}/cups:' -e 's:cups_serverbin=.*:cups_serverbin=${libdir}/cups:'
+	sed -i ${SYSROOT_DESTDIR}${bindir_crossscripts}/cups-config -e 's:cups_datadir=.*:cups_datadir=${datadir}/cups:' -e 's:cups_serverbin=.*:cups_serverbin=${libexecdir}/cups:'
 }
+
+# -25317 concerns /var/log/cups having lp ownership.  Our /var/log/cups is
+# root:root, so this doesn't apply.
+CVE_CHECK_IGNORE += "CVE-2021-25317"

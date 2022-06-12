@@ -88,6 +88,12 @@ python build_efi_cfg() {
     for label in labels.split():
         localdata = d.createCopy()
 
+        overrides = localdata.getVar('OVERRIDES')
+        if not overrides:
+            bb.fatal('OVERRIDES not defined')
+
+        localdata.setVar('OVERRIDES', 'grub_' + label + ':' + overrides)
+
         for btype in btypes:
             cfgfile.write('\nmenuentry \'%s%s\'{\n' % (label, btype[0]))
             lb = label
@@ -114,3 +120,4 @@ python build_efi_cfg() {
 
     cfgfile.close()
 }
+build_efi_cfg[vardepsexclude] += "OVERRIDES"

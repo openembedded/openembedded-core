@@ -1,9 +1,10 @@
 SUMMARY = "Matchbox virtual keyboard for X11"
+DESCRIPTION = "An on screen 'virtual' or 'software' keyboard."
 HOMEPAGE = "http://matchbox-project.org"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 SECTION = "x11"
 
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
                     file://src/matchbox-keyboard.h;endline=17;md5=9d6586c69e4a926f3cb0b4425f24ba3c \
                     file://applet/applet.c;endline=18;md5=4a0f721724746b14d95b51ddd42b95e7"
@@ -18,7 +19,7 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1 \
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig gettext gtk-immodules-cache distro_features_check
+inherit autotools pkgconfig gettext gtk-immodules-cache features_check
 
 # The libxft, libfakekey and matchbox-panel-2 requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
@@ -32,19 +33,19 @@ PACKAGECONFIG[gtk3-im] = "--enable-gtk3-im,--disable-gtk3-im,gtk+3"
 
 PACKAGES += "${PN}-im ${PN}-applet"
 
-FILES_${PN} = "${bindir}/ \
+FILES:${PN} = "${bindir}/ \
 	       ${sysconfdir} \
 	       ${datadir}/applications \
 	       ${datadir}/pixmaps \
 	       ${datadir}/matchbox-keyboard"
 
-FILES_${PN}-im = "${libdir}/gtk-2.0/*/immodules/*.so \
+FILES:${PN}-im = "${libdir}/gtk-2.0/*/immodules/*.so \
                   ${libdir}/gtk-3.0/*/immodules/*.so"
 
-FILES_${PN}-applet = "${libdir}/matchbox-panel/*.so"
+FILES:${PN}-applet = "${libdir}/matchbox-panel/*.so"
 
 
-do_install_append () {
+do_install:append () {
 	install -d ${D}/${sysconfdir}/X11/Xsession.d/
 	install -m 755 ${WORKDIR}/80matchboxkeyboard.sh ${D}/${sysconfdir}/X11/Xsession.d/
 
@@ -55,5 +56,5 @@ do_install_append () {
 
 GTKIMMODULES_PACKAGES = "${PN}-im"
 
-RDEPENDS_${PN} = "formfactor dbus-wait"
-RRECOMMENDS_${PN} = "${PN}-applet"
+RDEPENDS:${PN} = "formfactor dbus-wait"
+RRECOMMENDS:${PN} = "${PN}-applet"

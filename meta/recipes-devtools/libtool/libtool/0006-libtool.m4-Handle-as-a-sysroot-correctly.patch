@@ -1,0 +1,43 @@
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: [PATCH 06/12] libtool.m4: Handle "/" as a sysroot correctly
+
+Update libtool.m4 to resolve a problem with lt_sysroot not being properly
+updated if the option '--with[-libtool]-sysroot' is not provided when
+running the 'configure' script for a package so that "/" as a sysroot
+is handled correctly by libtool.
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Upstream Report:
+http://lists.gnu.org/archive/html/bug-libtool/2013-09/msg00005.html
+
+Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00018.html]
+
+Index: libtool-2.4.7/m4/libtool.m4
+===================================================================
+--- libtool-2.4.7.orig/m4/libtool.m4
++++ libtool-2.4.7/m4/libtool.m4
+@@ -1254,16 +1254,20 @@ dnl lt_sysroot will always be passed unq
+ dnl in case the user passed a directory name.
+ lt_sysroot=
+ case $with_libtool_sysroot in #(
+- yes)
++ no)
+    if test yes = "$GCC"; then
+      lt_sysroot=`$CC --print-sysroot 2>/dev/null`
++     # Treat "/" the same a an unset sysroot.
++     if test "$lt_sysroot" = /; then
++       lt_sysroot=
++     fi
+    fi
+    ;; #(
++ yes|''|/)
++   ;; #(
+  /*)
+    lt_sysroot=`echo "$with_libtool_sysroot" | $SED -e "$sed_quote_subst"`
+    ;; #(
+- no|'')
+-   ;; #(
+  *)
+    AC_MSG_RESULT([$with_libtool_sysroot])
+    AC_MSG_ERROR([The sysroot must be an absolute path.])

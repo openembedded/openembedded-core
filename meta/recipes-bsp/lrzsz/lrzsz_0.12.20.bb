@@ -5,7 +5,7 @@ These programs use error correcting protocols ({z,x,y}modem) to send (sz, sx, sb
 receive (rz, rx, rb) files over a dial-in serial port from a variety of programs \
 running under various operating systems. "
 HOMEPAGE = "http://www.ohse.de/uwe/software/lrzsz.html"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 			file://src/lrz.c;beginline=1;endline=10;md5=5276956373ff7d8758837f6399a1045f"
 SECTION = "console/network"
@@ -13,14 +13,13 @@ DEPENDS = ""
 PR = "r6"
 
 SRC_URI = "http://www.ohse.de/uwe/releases/lrzsz-${PV}.tar.gz \
+           file://autotools-update.patch \
 	   file://autotools.patch \
 	   file://makefile.patch \
-	   file://gettext.patch \
-	   file://acdefine.patch \
-	   file://lrzsz_fix_for_automake-1.12.patch \
            file://lrzsz-check-locale.h.patch \
            file://cve-2018-10195.patch \
            file://include.patch \
+           file://0001-Fix-cross-compilation-using-autoconf-detected-AR.patch \
            "
 
 SRC_URI[md5sum] = "b5ce6a74abc9b9eb2af94dffdfd372a4"
@@ -39,7 +38,7 @@ inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_${PN} = "rz rx rb sz sx sb"
+ALTERNATIVE:${PN} = "rz rx rb sz sx sb"
 
 ALTERNATIVE_TARGET[rz] = "${bindir}/lrz"
 ALTERNATIVE_TARGET[rx] = "${bindir}/lrz"

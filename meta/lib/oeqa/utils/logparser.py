@@ -25,13 +25,20 @@ class PtestParser(object):
         section_regex['exitcode'] = re.compile(r"^ERROR: Exit status is (.+)")
         section_regex['timeout'] = re.compile(r"^TIMEOUT: .*/(.+)/ptest")
 
+        # Cache markers so we don't take the re.search() hit all the time.
+        markers = ("PASS:", "FAIL:", "SKIP:", "BEGIN:", "END:", "DURATION:", "ERROR: Exit", "TIMEOUT:")
+
         def newsection():
-            return { 'name': "No-section", 'log': "" }
+            return { 'name': "No-section", 'log': [] }
 
         current_section = newsection()
 
         with open(logfile, errors='replace') as f:
             for line in f:
+                if not line.startswith(markers):
+                    current_section['log'].append(line)
+                    continue
+
                 result = section_regex['begin'].search(line)
                 if result:
                     current_section['name'] = result.group(1)
@@ -61,7 +68,7 @@ class PtestParser(object):
                         current_section[t] = result.group(1)
                         continue
 
-                current_section['log'] = current_section['log'] + line 
+                current_section['log'].append(line)
 
                 for t in test_regex:
                     result = test_regex[t].search(line)
@@ -69,6 +76,11 @@ class PtestParser(object):
                         if current_section['name'] not in self.results:
                             self.results[current_section['name']] = {}
                         self.results[current_section['name']][result.group(1).strip()] = t
+
+        # Python performance for repeatedly joining long strings is poor, do it all at once at the end.
+        # For 2.1 million lines in a log this reduces 18 hours to 12s.
+        for section in self.sections:
+            self.sections[section]['log'] = "".join(self.sections[section]['log'])
 
         return self.results, self.sections
 
@@ -123,30 +135,27 @@ class LtpComplianceParser(object):
 
     def parse(self, logfile):
         test_regex = {}
-        test_regex['PASSED'] = re.compile(r"^PASS")
-        test_regex['FAILED'] = re.compile(r"^FAIL")
-        test_regex['SKIPPED'] = re.compile(r"(?:UNTESTED)|(?:UNSUPPORTED)")
+        test_regex['FAILED'] = re.compile(r"FAIL")
 
         section_regex = {}
-        section_regex['test'] = re.compile(r"^Testing")
+        section_regex['test'] = re.compile(r"^Executing")
 
         with open(logfile, errors='replace') as f:
+            name = logfile
+            result = "PASSED"
             for line in f:
-                result = section_regex['test'].search(line)
-                if result:
-                    self.name = ""
-                    self.name = line.split()[1].strip()
-                    self.results[self.name] = "PASSED"
-                    failed = 0
+                regex_result = section_regex['test'].search(line)
+                if regex_result:
+                    name = line.split()[1].strip()
 
-                failed_result = test_regex['FAILED'].search(line)
-                if failed_result:
-                    failed = line.split()[1].strip()
-                    if int(failed) > 0:
-                        self.results[self.name] = "FAILED"
+                regex_result = test_regex['FAILED'].search(line)
+                if regex_result:
+                    result = "FAILED"
+            self.results[name] = result
 
         for test in self.results:
             result = self.results[test]
+            print (self.results)
             self.section['log'] = self.section['log'] + ("%s: %s\n" % (result.strip()[:-2], test.strip()))
 
         return self.results, self.section

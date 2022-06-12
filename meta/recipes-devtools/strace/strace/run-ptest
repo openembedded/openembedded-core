@@ -1,3 +1,11 @@
 #!/bin/sh
-export TIMEOUT_DURATION=30
+
+set -u
+
+export TIMEOUT_DURATION=240
 make -B -C tests -k test-suite.log
+res=$?
+if [ $res -ne 0 ]; then
+    cat tests/test-suite.log
+fi
+exit $res

@@ -1,5 +1,5 @@
 SUMMARY = "Simple Xserver Init Script (no dm)"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SECTION = "x11"
 PR = "r31"
@@ -10,6 +10,7 @@ SRC_URI = "file://xserver-nodm \
            file://gplv2-license.patch \
            file://xserver-nodm.service.in \
            file://xserver-nodm.conf.in \
+           file://capability.conf \
 "
 
 S = "${WORKDIR}"
@@ -17,9 +18,9 @@ S = "${WORKDIR}"
 # Since we refer to ROOTLESS_X which is normally enabled per-machine
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit update-rc.d systemd distro_features_check
+inherit update-rc.d systemd features_check
 
-REQUIRED_DISTRO_FEATURES = "x11"
+REQUIRED_DISTRO_FEATURES = "x11 ${@oe.utils.conditional('ROOTLESS_X', '1', 'pam', '', d)}"
 
 PACKAGECONFIG ??= "blank"
 # dpms and screen saver will be on only if 'blank' is in PACKAGECONFIG
@@ -40,6 +41,8 @@ do_install() {
     if [ "${ROOTLESS_X}" = "1" ] ; then
         XUSER_HOME="/home/xuser"
         XUSER="xuser"
+        install -D capability.conf ${D}${sysconfdir}/security/capability.conf
+        sed -i "s:@USER@:${XUSER}:" ${D}${sysconfdir}/security/capability.conf
     else
         XUSER_HOME=${ROOT_HOME}
         XUSER="root"
@@ -49,9 +52,9 @@ do_install() {
     sed -i "s:@NO_CURSOR_ARG@:${NO_CURSOR_ARG}:" ${D}${sysconfdir}/default/xserver-nodm
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -d ${D}${systemd_unitdir}/system
-        install -m 0644 ${WORKDIR}/xserver-nodm.service.in ${D}${systemd_unitdir}/system/xserver-nodm.service
-        sed -i "s:@USER@:${XUSER}:" ${D}${systemd_unitdir}/system/xserver-nodm.service
+        install -d ${D}${systemd_system_unitdir}
+        install -m 0644 ${WORKDIR}/xserver-nodm.service.in ${D}${systemd_system_unitdir}/xserver-nodm.service
+        sed -i "s:@USER@:${XUSER}:" ${D}${systemd_system_unitdir}/xserver-nodm.service
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
@@ -60,10 +63,10 @@ do_install() {
     fi
 }
 
-RDEPENDS_${PN} = "xinit ${@oe.utils.conditional('ROOTLESS_X', '1', 'xuser-account', '', d)}"
+RDEPENDS:${PN} = "xinit ${@oe.utils.conditional('ROOTLESS_X', '1', 'xuser-account libcap libcap-bin', '', d)}"
 
 INITSCRIPT_NAME = "xserver-nodm"
 INITSCRIPT_PARAMS = "start 9 5 . stop 20 0 1 2 3 6 ."
-SYSTEMD_SERVICE_${PN} = "xserver-nodm.service"
+SYSTEMD_SERVICE:${PN} = "xserver-nodm.service"
 
-RCONFLICTS_${PN} = "xserver-common (< 1.34-r9) x11-common"
+RCONFLICTS:${PN} = "xserver-common (< 1.34-r9) x11-common"

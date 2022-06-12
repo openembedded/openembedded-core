@@ -25,11 +25,8 @@ class TestSDKExt(TestSDKBase):
 
         subprocesstweak.errors_have_output()
 
-        # extensible sdk can be contaminated if native programs are
-        # in PATH, i.e. use perl-native instead of eSDK one.
-        paths_to_avoid = [d.getVar('STAGING_DIR'),
-                        d.getVar('BASE_WORKDIR')]
-        os.environ['PATH'] = avoid_paths_in_environ(paths_to_avoid)
+        # We need the original PATH for testing the eSDK, not with our manipulations
+        os.environ['PATH'] = d.getVar("BB_ORIGENV", False).getVar("PATH")
 
         tcname = d.expand("${SDK_DEPLOY}/${TOOLCHAINEXT_OUTPUTNAME}.sh")
         if not os.path.exists(tcname):
@@ -70,10 +67,10 @@ class TestSDKExt(TestSDKBase):
             # and we don't spend hours downloading kernels for the kernel module test
             # Abuse auto.conf since local.conf would be overwritten by the SDK
             with open(os.path.join(sdk_dir, 'conf', 'auto.conf'), 'a+') as f:
-                f.write('SSTATE_MIRRORS += " \\n file://.* file://%s/PATH"\n' % test_data.get('SSTATE_DIR'))
+                f.write('SSTATE_MIRRORS += "file://.* file://%s/PATH"\n' % test_data.get('SSTATE_DIR'))
                 f.write('SOURCE_MIRROR_URL = "file://%s"\n' % test_data.get('DL_DIR'))
                 f.write('INHERIT += "own-mirrors"\n')
-                f.write('PREMIRRORS_prepend = " git://git.yoctoproject.org/.* git://%s/git2/git.yoctoproject.org.BASENAME \\n "\n' % test_data.get('DL_DIR'))
+                f.write('PREMIRRORS:prepend = "git://git.yoctoproject.org/.* git://%s/git2/git.yoctoproject.org.BASENAME "\n' % test_data.get('DL_DIR'))
 
             # We need to do this in case we have a minimal SDK
             subprocess.check_output(". %s > /dev/null; devtool sdk-install meta-extsdk-toolchain" % \
@@ -101,6 +98,9 @@ class TestSDKExt(TestSDKBase):
 
             if not result.wasSuccessful():
                 fail = True
+
+            # Clean the workspace/sources to avoid `devtool add' failure because of non-empty source directory
+            bb.utils.remove(sdk_dir+'workspace/sources', True)
 
         if fail:
             bb.fatal("%s - FAILED - check the task log and the commands log" % pn)

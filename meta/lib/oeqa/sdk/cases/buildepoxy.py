@@ -17,7 +17,7 @@ class EpoxyTest(OESDKTestCase):
     """
     def setUp(self):
         if not (self.tc.hasHostPackage("nativesdk-meson")):
-            raise unittest.SkipTest("GalculatorTest class: SDK doesn't contain Meson")
+            raise unittest.SkipTest("EpoxyTest class: SDK doesn't contain Meson")
 
     def test_epoxy(self):
         with tempfile.TemporaryDirectory(prefix="epoxy", dir=self.tc.sdk_dir) as testdir:
@@ -28,7 +28,7 @@ class EpoxyTest(OESDKTestCase):
             dirs["build"] = os.path.join(testdir, "build")
             dirs["install"] = os.path.join(testdir, "install")
 
-            subprocess.check_output(["tar", "xf", tarball, "-C", testdir])
+            subprocess.check_output(["tar", "xf", tarball, "-C", testdir], stderr=subprocess.STDOUT)
             self.assertTrue(os.path.isdir(dirs["source"]))
             os.makedirs(dirs["build"])
 

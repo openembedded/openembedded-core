@@ -1,0 +1,68 @@
+From 593256a3e386a4e17fe26cfbfb813cf4996447d7 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Mon, 4 Apr 2022 19:46:44 +0200
+Subject: [PATCH] Disable opus library
+
+We don't have opus in OE-Core which causes all the external libs to be disabled
+silently. The silent issue is discussed in the link below and hints a patch
+to make things configurable may be accepted.
+
+This patch removing the opus piece at least gets most of the functionality
+we previously used back whilst the issue is discussed.
+
+Upstream-Status: Denied [https://github.com/libsndfile/libsndfile/pull/812]
+
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ configure.ac   | 10 +++++-----
+ src/ogg_opus.c |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 727b67bc..f9d2e447 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -373,13 +373,13 @@ AS_IF([test -n "$PKG_CONFIG"], [
+ 				enable_external_libs=yes
+ 			])
+ 
+-			AS_IF([test "x$ac_cv_flac$ac_cv_ogg$ac_cv_vorbis$ac_cv_vorbisenc$ac_cv_opus" = "xyesyesyesyesyes"], [
++			AS_IF([test "x$ac_cv_flac$ac_cv_ogg$ac_cv_vorbis$ac_cv_vorbisenc" = "xyesyesyesyes"], [
+ 					HAVE_EXTERNAL_XIPH_LIBS=1
+ 					enable_external_libs=yes
+ 
+-					EXTERNAL_XIPH_CFLAGS="$FLAC_CFLAGS $VORBIS_CFLAGS $VORBISENC_CFLAGS $SPEEX_CFLAGS $OPUS_CFLAGS $OGG_CFLAGS "
+-					EXTERNAL_XIPH_LIBS="$FLAC_LIBS $VORBIS_LIBS $VORBISENC_LIBS $SPEEX_LIBS $OPUS_LIBS $OGG_LIBS "
+-					EXTERNAL_XIPH_REQUIRE="flac ogg vorbis vorbisenc opus"
++					EXTERNAL_XIPH_CFLAGS="$FLAC_CFLAGS $VORBIS_CFLAGS $VORBISENC_CFLAGS $SPEEX_CFLAGS $OGG_CFLAGS "
++					EXTERNAL_XIPH_LIBS="$FLAC_LIBS $VORBIS_LIBS $VORBISENC_LIBS $SPEEX_LIBS $OGG_LIBS "
++					EXTERNAL_XIPH_REQUIRE="flac ogg vorbis vorbisenc"
+ 
+ 					if test x$ac_cv_speex = "xyes" ; then
+ 						EXTERNAL_XIPH_REQUIRE="$EXTERNAL_XIPH_REQUIRE speex"
+@@ -788,7 +788,7 @@ AC_MSG_RESULT([
+ 
+     Experimental code : ................... ${enable_experimental:-no}
+     Using ALSA in example programs : ...... ${enable_alsa:-no}
+-    External FLAC/Ogg/Vorbis/Opus : ....... ${enable_external_libs:-no}
++    External FLAC/Ogg/Vorbis : ....... ${enable_external_libs:-no}
+     External MPEG Lame/MPG123 : ........... ${enable_mpeg:-no}
+     Building Octave interface : ........... ${OCTAVE_BUILD}
+ 
+diff --git a/src/ogg_opus.c b/src/ogg_opus.c
+index dfa446ee..0d4fe57b 100644
+--- a/src/ogg_opus.c
++++ b/src/ogg_opus.c
+@@ -159,7 +159,7 @@
+ #include "sfendian.h"
+ #include "common.h"
+ 
+-#if HAVE_EXTERNAL_XIPH_LIBS
++#if 0
+ 
+ #include <ogg/ogg.h>
+ #include <opus/opus.h>
+-- 
+2.30.2
+

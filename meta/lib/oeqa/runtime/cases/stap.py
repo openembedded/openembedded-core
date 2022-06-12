@@ -5,33 +5,28 @@
 import os
 
 from oeqa.runtime.case import OERuntimeTestCase
-from oeqa.core.decorator.depends import OETestDepends
 from oeqa.core.decorator.data import skipIfNotFeature
 from oeqa.runtime.decorator.package import OEHasPackage
 
 class StapTest(OERuntimeTestCase):
-
-    @classmethod
-    def setUp(cls):
-        src = os.path.join(cls.tc.runtime_files_dir, 'hello.stp')
-        dst = '/tmp/hello.stp'
-        cls.tc.target.copyTo(src, dst)
-
-    @classmethod
-    def tearDown(cls):
-        files = '/tmp/hello.stp'
-        cls.tc.target.run('rm %s' % files)
-
-    @skipIfNotFeature('tools-profile',
-                      'Test requires tools-profile to be in IMAGE_FEATURES')
-    @OETestDepends(['kernelmodule.KernelModuleTest.test_kernel_module'])
+    @skipIfNotFeature('tools-profile', 'Test requires tools-profile to be in IMAGE_FEATURES')
     @OEHasPackage(['systemtap'])
+    @OEHasPackage(['gcc-symlinks'])
+    @OEHasPackage(['kernel-devsrc'])
     def test_stap(self):
-        cmds = [
-            'cd /usr/src/kernel && make scripts prepare',
-            'cd /lib/modules/`uname -r` && (if [ ! -e build ]; then ln -s /usr/src/kernel build; fi)',
-            'stap --disable-cache -DSTP_NO_VERREL_CHECK /tmp/hello.stp'
-            ]
-        for cmd in cmds:
+        try:
+            cmd = 'make -j -C /usr/src/kernel scripts prepare'
             status, output = self.target.run(cmd, 900)
             self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
+
+            cmd = 'stap -v -p4 -m stap-hello --disable-cache -DSTP_NO_VERREL_CHECK -e \'probe oneshot { print("Hello, "); println("SystemTap!") }\''
+            status, output = self.target.run(cmd, 900)
+            self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
+
+            cmd = 'staprun -v -R -b1 stap-hello.ko'
+            self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
+            self.assertIn('Hello, SystemTap!', output, msg='\n'.join([cmd, output]))
+        except:
+            status, dmesg = self.target.run('dmesg')
+            if status == 0:
+                print(dmesg)

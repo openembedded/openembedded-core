@@ -10,7 +10,6 @@ inherit packagegroup
 
 PACKAGES = "\
     packagegroup-core-full-cmdline \
-    packagegroup-core-full-cmdline-libs \
     packagegroup-core-full-cmdline-utils \
     packagegroup-core-full-cmdline-extended \
     packagegroup-core-full-cmdline-dev-utils \
@@ -19,42 +18,7 @@ PACKAGES = "\
     packagegroup-core-full-cmdline-sys-services \
     "
 
-python __anonymous () {
-    # For backwards compatibility after rename
-    namemap = {}
-    namemap["packagegroup-core-full-cmdline"] = "packagegroup-core-basic"
-    namemap["packagegroup-core-full-cmdline-libs"] = "packagegroup-core-basic-libs"
-    namemap["packagegroup-core-full-cmdline-utils"] = "packagegroup-core-basic-utils"
-    namemap["packagegroup-core-full-cmdline-extended"] = "packagegroup-core-basic-extended"
-    namemap["packagegroup-core-full-cmdline-dev-utils"] = "packagegroup-core-dev-utils"
-    namemap["packagegroup-core-full-cmdline-multiuser"] = "packagegroup-core-multiuser"
-    namemap["packagegroup-core-full-cmdline-initscripts"] = "packagegroup-core-initscripts"
-    namemap["packagegroup-core-full-cmdline-sys-services"] = "packagegroup-core-sys-services"
-
-    packages = d.getVar("PACKAGES").split()
-    for pkg in packages:
-        if pkg.endswith('-dev'):
-            mapped = namemap.get(pkg[:-4], None)
-            if mapped:
-                mapped += '-dev'
-        elif pkg.endswith('-dbg'):
-            mapped = namemap.get(pkg[:-4], None)
-            if mapped:
-                mapped += '-dbg'
-        else:
-            mapped = namemap.get(pkg, None)
-
-        if mapped:
-            oldtaskname = mapped.replace("packagegroup-core", "task-core")
-            mapstr = " %s %s" % (mapped, oldtaskname)
-            d.appendVar("RPROVIDES_%s" % pkg, mapstr)
-            d.appendVar("RREPLACES_%s" % pkg, mapstr)
-            d.appendVar("RCONFLICTS_%s" % pkg, mapstr)
-}
-
-
-RDEPENDS_packagegroup-core-full-cmdline = "\
-    packagegroup-core-full-cmdline-libs \
+RDEPENDS:packagegroup-core-full-cmdline = "\
     packagegroup-core-full-cmdline-utils \
     packagegroup-core-full-cmdline-extended \
     packagegroup-core-full-cmdline-dev-utils \
@@ -63,11 +27,7 @@ RDEPENDS_packagegroup-core-full-cmdline = "\
     packagegroup-core-full-cmdline-sys-services \
     "
 
-RDEPENDS_packagegroup-core-full-cmdline-libs = "\
-    glib-2.0 \
-    "
-
-RDEPENDS_packagegroup-core-full-cmdline-utils = "\
+RDEPENDS:packagegroup-core-full-cmdline-utils = "\
     bash \
     acl \
     attr \
@@ -79,8 +39,8 @@ RDEPENDS_packagegroup-core-full-cmdline-utils = "\
     file \
     findutils \
     gawk \
-    gmp \
     grep \
+    less \
     makedevs \
     mc \
     mc-fish \
@@ -96,7 +56,7 @@ RDEPENDS_packagegroup-core-full-cmdline-utils = "\
     util-linux \
     "
 
-RDEPENDS_packagegroup-core-full-cmdline-extended = "\
+RDEPENDS:packagegroup-core-full-cmdline-extended = "\
     iproute2 \
     iputils \
     iptables \
@@ -104,7 +64,7 @@ RDEPENDS_packagegroup-core-full-cmdline-extended = "\
     openssl \
     "
 
-RDEPENDS_packagegroup-core-full-cmdline-dev-utils = "\
+RDEPENDS:packagegroup-core-full-cmdline-dev-utils = "\
     diffutils \
     m4 \
     make \
@@ -112,7 +72,7 @@ RDEPENDS_packagegroup-core-full-cmdline-dev-utils = "\
     "
 
 VIRTUAL-RUNTIME_syslog ?= "sysklogd"
-RDEPENDS_packagegroup-core-full-cmdline-initscripts = "\
+RDEPENDS:packagegroup-core-full-cmdline-initscripts = "\
     ${VIRTUAL-RUNTIME_initscripts} \
     ${VIRTUAL-RUNTIME_init_manager} \
     ethtool \
@@ -120,7 +80,7 @@ RDEPENDS_packagegroup-core-full-cmdline-initscripts = "\
     ${VIRTUAL-RUNTIME_syslog} \
     "
 
-RDEPENDS_packagegroup-core-full-cmdline-multiuser = "\
+RDEPENDS:packagegroup-core-full-cmdline-multiuser = "\
     bzip2 \
     cracklib \
     gzip \
@@ -128,7 +88,7 @@ RDEPENDS_packagegroup-core-full-cmdline-multiuser = "\
     sudo \
     "
 
-RDEPENDS_packagegroup-core-full-cmdline-sys-services = "\
+RDEPENDS:packagegroup-core-full-cmdline-sys-services = "\
     at \
     cronie \
     logrotate \

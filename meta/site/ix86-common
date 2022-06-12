@@ -27,10 +27,7 @@ ac_cv_func_stat_empty_string_bug=${ac_cv_func_stat_empty_string_bug=no}
 ac_cv_func_stat_ignores_trailing_slash=${ac_cv_func_stat_ignores_trailing_slash=no}
 ac_cv_va_val_copy=${ac_cv_va_val_copy=yes}
 
-ac_cv_header_netinet_sctp_h=${ac_cv_header_netinet_sctp_h=no}
-ac_cv_header_netinet_sctp_uio_h=${ac_cv_header_netinet_sctp_uio_h=no}
 ac_cv_linux_vers=${ac_cv_linux_vers=2}
-ac_cv_sctp=${ac_cv_sctp=no}
 
 ac_cv_path_ESD_CONFIG=no
 lf_cv_sane_realloc=yes
@@ -110,9 +107,6 @@ ac_cv_sizeof_wchar_t=4
 ac_cv_need_trio=${ac_cv_need_trio=no}
 lftp_cv_va_val_copy=${lftp_cv_va_val_copy=yes}
 
-# libidl
-libIDL_cv_long_long_format=${libIDL_cv_long_long_format=ll}
-
 # libnet 
 ac_cv_lbl_unaligned_fail=${ac_cv_lbl_unaligned_fail=no}
 ac_libnet_have_packet_socket=${ac_libnet_have_packet_socket=yes}
@@ -123,20 +117,6 @@ with_broken_putenv=${with_broken_putenv=no}
 # mysql
 mysql_cv_func_atomic_sub=${mysql_cv_func_atomic_sub=yes}
 mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=yes}
-
-# ORBit2
-ac_cv_alignof_CORBA_boolean=1
-ac_cv_alignof_CORBA_char=1
-ac_cv_alignof_CORBA_double=4
-ac_cv_alignof_CORBA_float=4
-ac_cv_alignof_CORBA_long=4
-ac_cv_alignof_CORBA_long_double=4
-ac_cv_alignof_CORBA_long_long=4
-ac_cv_alignof_CORBA_octet=1
-ac_cv_alignof_CORBA_pointer=4
-ac_cv_alignof_CORBA_short=2
-ac_cv_alignof_CORBA_struct=4
-ac_cv_alignof_CORBA_wchar=2
 
 # php
 ac_cv_pread=${ac_cv_pread=no}

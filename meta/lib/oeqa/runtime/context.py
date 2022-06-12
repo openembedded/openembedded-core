@@ -5,6 +5,7 @@
 #
 
 import os
+import sys
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
 from oeqa.core.target.ssh import OESSHTarget
@@ -47,6 +48,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     default_data = None
     default_test_data = 'data/testdata.json'
     default_tests = ''
+    default_json_result_dir = '%s-results' % name
 
     default_target_type = 'simpleremote'
     default_manifest = 'data/manifest'
@@ -77,7 +79,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
 
         runtime_group.add_argument('--packages-manifest', action='store',
                 default=self.default_manifest,
-                help="Package manifest of the image under testi, default: %s" \
+                help="Package manifest of the image under test, default: %s" \
                 % self.default_manifest)
 
         runtime_group.add_argument('--extract-dir', action='store',
@@ -98,6 +100,12 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 target_ip = target_ip_port[0]
                 kwargs['port'] = target_ip_port[1]
 
+        if server_ip:
+            server_ip_port = server_ip.split(':')
+            if len(server_ip_port) == 2:
+                server_ip = server_ip_port[0]
+                kwargs['server_port'] = int(server_ip_port[1])
+
         if target_type == 'simpleremote':
             target = OESSHTarget(logger, target_ip, server_ip, **kwargs)
         elif target_type == 'qemu':
@@ -112,8 +120,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
             # XXX: Don't base your targets on this code it will be refactored
             # in the near future.
             # Custom target module loading
-            target_modules_path = kwargs.get('target_modules_path', '')
-            controller = OERuntimeTestContextExecutor.getControllerModule(target_type, target_modules_path)
+            controller = OERuntimeTestContextExecutor.getControllerModule(target_type)
             target = controller(logger, target_ip, server_ip, **kwargs)
 
         return target
@@ -123,15 +130,15 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     # AttributeError raised if not found.
     # ImportError raised if a provided module can not be imported.
     @staticmethod
-    def getControllerModule(target, target_modules_path):
-        controllerslist = OERuntimeTestContextExecutor._getControllerModulenames(target_modules_path)
+    def getControllerModule(target):
+        controllerslist = OERuntimeTestContextExecutor._getControllerModulenames()
         controller = OERuntimeTestContextExecutor._loadControllerFromName(target, controllerslist)
         return controller
 
     # Return a list of all python modules in lib/oeqa/controllers for each
     # layer in bbpath
     @staticmethod
-    def _getControllerModulenames(target_modules_path):
+    def _getControllerModulenames():
 
         controllerslist = []
 
@@ -146,9 +153,12 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
                 else:
                     raise RuntimeError("Duplicate controller module found for %s. Layers should create unique controller module names" % module)
 
-        extpath = target_modules_path.split(':')
-        for p in extpath:
-            controllerpath = os.path.join(p, 'lib', 'oeqa', 'controllers')
+        # sys.path can contain duplicate paths, but because of the login in
+        # add_controller_list this doesn't work and causes testimage to abort.
+        # Remove duplicates using an intermediate dictionary to ensure this
+        # doesn't happen.
+        for p in list(dict.fromkeys(sys.path)):
+            controllerpath = os.path.join(p, 'oeqa', 'controllers')
             if os.path.exists(controllerpath):
                 add_controller_list(controllerpath)
         return controllerslist
@@ -168,17 +178,13 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     # Search for and return a controller or None from given module name
     @staticmethod
     def _loadControllerFromModule(target, modulename):
-        obj = None
-        # import module, allowing it to raise import exception
-        module = __import__(modulename, globals(), locals(), [target])
-        # look for target class in the module, catching any exceptions as it
-        # is valid that a module may not have the target class.
         try:
-            obj = getattr(module, target)
-        except:
-            obj = None
-        return obj
-        
+            import importlib
+            module = importlib.import_module(modulename)
+            return getattr(module, target)
+        except AttributeError:
+            return None
+
     @staticmethod
     def readPackagesManifest(manifest):
         if not manifest or not os.path.exists(manifest):

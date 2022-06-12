@@ -8,7 +8,7 @@ TEST_EXPORT_SDK_PACKAGES ??= ""
 
 TOOLCHAIN_TARGET_TASK ?= ""
 
-TOOLCHAIN_HOST_TASK ?= "${TEST_EXPORT_SDK_PACKAGES}"
+TOOLCHAIN_HOST_TASK ?= "${TEST_EXPORT_SDK_PACKAGES} nativesdk-sdk-provides-dummy"
 
 MULTIMACH_TARGET_SYS = "${SDK_ARCH}-nativesdk${SDK_VENDOR}-${SDK_OS}"
 PACKAGE_ARCH = "${SDK_ARCH}_${SDK_OS}"
@@ -26,7 +26,6 @@ RDEPENDS = "${TOOLCHAIN_HOST_TASK}"
 
 EXCLUDE_FROM_WORLD = "1"
 
-inherit meta
 inherit populate_sdk
 inherit toolchain-scripts-base
 inherit nopackages
@@ -38,7 +37,7 @@ do_populate_sdk[stamp-extra-info] = "${PACKAGE_ARCH}"
 
 REAL_MULTIMACH_TARGET_SYS = "none"
 
-create_sdk_files_append () {
+create_sdk_files:append () {
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/site-config-*
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/environment-setup-*
 	rm -f ${SDK_OUTPUT}/${SDKPATH}/version-*
@@ -58,8 +57,8 @@ create_sdk_files_append () {
 
 	if [ "${SDKMACHINE}" = "i686" ]; then
 		echo 'export NO32LIBS="0"' >>$script
-		echo 'echo "$BB_ENV_EXTRAWHITE" | grep -q "NO32LIBS"' >>$script
-		echo '[ $? != 0 ] && export BB_ENV_EXTRAWHITE="NO32LIBS $BB_ENV_EXTRAWHITE"' >>$script
+		echo 'echo "$BB_ENV_PASSTHROUGH_ADDITIONS" | grep -q "NO32LIBS"' >>$script
+		echo '[ $? != 0 ] && export BB_ENV_PASSTHROUGH_ADDITIONS="NO32LIBS $BB_ENV_PASSTHROUGH_ADDITIONS"' >>$script
 	fi
 }
 

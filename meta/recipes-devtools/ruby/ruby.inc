@@ -6,16 +6,15 @@ It is simple, straight-forward, and extensible. \
 "
 HOMEPAGE = "http://www.ruby-lang.org/"
 SECTION = "devel/ruby"
-LICENSE = "Ruby | BSD-2-Clause | BSD-3-Clause | GPLv2 | ISC | MIT"
-LIC_FILES_CHKSUM = "\
-    file://COPYING;md5=340948e1882e579731841bf49cdc22c1 \
-    file://BSDL;md5=19aaf65c88a40b508d17ae4be539c4b5\
-    file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263\
-    file://LEGAL;md5=4ac0b84d1f7f420bca282e1adefc7f99 \
-"
+LICENSE = "Ruby | BSD-2-Clause | BSD-3-Clause | GPL-2.0-only | ISC | MIT"
+LIC_FILES_CHKSUM = "file://COPYING;md5=5b8c87559868796979806100db3f3805 \
+                    file://BSDL;md5=8b50bc6de8f586dc66790ba11d064d75 \
+                    file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://LEGAL;md5=f260190bc1e92e363f0ee3c0463d4c7c \
+                    "
 
-DEPENDS = "ruby-native zlib openssl tcl libyaml gdbm readline libffi"
-DEPENDS_class-native = "openssl-native libyaml-native readline-native zlib-native"
+DEPENDS = "zlib openssl libyaml gdbm readline libffi"
+DEPENDS:append:class-target = " ruby-native"
 
 SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
@@ -24,7 +23,7 @@ SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
            "
 UPSTREAM_CHECK_URI = "https://www.ruby-lang.org/en/downloads/"
 
-inherit autotools ptest
+inherit autotools ptest pkgconfig
 
 
 # This snippet lets compiled extensions which rely on external libraries,
@@ -34,7 +33,7 @@ inherit autotools ptest
 # that the libraries aren't available and hence that the extension can't be
 # built.
 
-do_configure_prepend() {
-    sed -i "s#%%TARGET_CFLAGS%%#$TARGET_CFLAGS#; s#%%TARGET_LDFLAGS%%#$TARGET_LDFLAGS#" ${S}/common.mk
+do_configure:prepend() {
+    sed -i "s#%%TARGET_CFLAGS%%#$CFLAGS#; s#%%TARGET_LDFLAGS%%#$LDFLAGS#" ${S}/common.mk
     rm -rf ${S}/ruby/
 }

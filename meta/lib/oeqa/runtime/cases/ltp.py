@@ -57,9 +57,9 @@ class LtpTestBase(OERuntimeTestCase):
 
 class LtpTest(LtpTestBase):
 
-    ltp_groups = ["math", "syscalls", "dio", "io", "mm", "ipc", "sched", "nptl", "pty", "containers", "controllers", "filecaps", "cap_bounds", "fcntl-locktests", "connectors","timers", "commands", "net.ipv6_lib", "input","fs_perms_simple"]
+    ltp_groups = ["math", "syscalls", "dio", "io", "mm", "ipc", "sched", "nptl", "pty", "containers", "controllers", "filecaps", "cap_bounds", "fcntl-locktests", "connectors", "commands", "net.ipv6_lib", "input","fs_perms_simple"]
 
-    ltp_fs = ["fs", "fsx", "fs_bind", "fs_ext4"]
+    ltp_fs = ["fs", "fsx", "fs_bind"]
     # skip kernel cpuhotplug
     ltp_kernel = ["power_management_tests", "hyperthreading ", "kernel_misc", "hugetlb"]
     ltp_groups += ltp_fs
@@ -78,9 +78,10 @@ class LtpTest(LtpTestBase):
             # copy nice log from DUT
             dst = os.path.join(self.ltptest_log_dir, "%s" %  ltp_group )
             remote_src = "/opt/ltp/results/%s" % ltp_group 
-            (status, output) = self.target.copyFrom(remote_src, dst)
+            (status, output) = self.target.copyFrom(remote_src, dst, True)
             msg = 'File could not be copied. Output: %s' % output
-            self.assertEqual(status, 0, msg=msg)
+            if status:
+                self.target.logger.warning(msg)
 
             parser = LtpParser()
             results, sections  = parser.parse(dst)

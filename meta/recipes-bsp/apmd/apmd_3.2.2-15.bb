@@ -4,7 +4,7 @@ access to battery status information and a set of tools for managing \
 notebook power consumption."
 HOMEPAGE = "http://apenwarr.ca/apmd/"
 SECTION = "base"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://apm.h;beginline=6;endline=18;md5=7d4acc1250910a89f84ce3cc6557c4c2"
 DEPENDS = "libtool-cross"
@@ -36,14 +36,14 @@ inherit update-rc.d systemd
 INITSCRIPT_NAME = "apmd"
 INITSCRIPT_PARAMS = "defaults"
 
-SYSTEMD_SERVICE_${PN} = "apmd.service"
+SYSTEMD_SERVICE:${PN} = "apmd.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 do_compile() {
 	# apmd doesn't use whole autotools. Just libtool for installation
-	oe_runmake "LIBTOOL=${STAGING_BINDIR_CROSS}/${HOST_SYS}-libtool" apm apmd
+	oe_runmake apm apmd
 }
 
 do_install() {
@@ -73,13 +73,13 @@ do_install() {
 	sed -e 's,/usr/sbin,${sbindir},g; s,/etc,${sysconfdir},g;' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/apmd
 	chmod 755 ${D}${sysconfdir}/init.d/apmd
 
-	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/apmd.service ${D}${systemd_unitdir}/system/
+	install -d ${D}${systemd_system_unitdir}
+	install -m 0644 ${WORKDIR}/apmd.service ${D}${systemd_system_unitdir}/
 	sed -i -e 's,@SYSCONFDIR@,${sysconfdir},g' \
-		-e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/apmd.service
+		-e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_system_unitdir}/apmd.service
 }
 
 PACKAGES =+ "libapm apm"
 
-FILES_libapm = "${libdir}/libapm${SOLIBS}"
-FILES_apm = "${bindir}/apm*"
+FILES:libapm = "${libdir}/libapm${SOLIBS}"
+FILES:apm = "${bindir}/apm*"

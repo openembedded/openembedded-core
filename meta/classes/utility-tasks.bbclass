@@ -19,7 +19,7 @@ python do_listtasks() {
 
 CLEANFUNCS ?= ""
 
-T_task-clean = "${LOG_DIR}/cleanlogs/${PN}"
+T:task-clean = "${LOG_DIR}/cleanlogs/${PN}"
 addtask clean
 do_clean[nostamp] = "1"
 python do_clean() {
@@ -38,6 +38,7 @@ python do_clean() {
 
 addtask checkuri
 do_checkuri[nostamp] = "1"
+do_checkuri[network] = "1"
 python do_checkuri() {
     src_uri = (d.getVar('SRC_URI') or "").split()
     if len(src_uri) == 0:

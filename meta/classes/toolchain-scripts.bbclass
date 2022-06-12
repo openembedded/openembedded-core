@@ -3,10 +3,12 @@ inherit toolchain-scripts-base siteinfo kernel-arch
 # We want to be able to change the value of MULTIMACH_TARGET_SYS, because it
 # doesn't always match our expectations... but we default to the stock value
 REAL_MULTIMACH_TARGET_SYS ?= "${MULTIMACH_TARGET_SYS}"
-TARGET_CC_ARCH_append_libc-musl = " -mmusl"
+TARGET_CC_ARCH:append:libc-musl = " -mmusl"
 
 # default debug prefix map isn't valid in the SDK
 DEBUG_PREFIX_MAP = ""
+
+EXPORT_SDK_PS1 = "${@ 'export PS1=\\"%s\\"' % d.getVar('SDK_PS1') if d.getVar('SDK_PS1') else ''}"
 
 # This function creates an environment-setup-script for use in a deployable SDK
 toolchain_create_sdk_env_script () {
@@ -39,6 +41,7 @@ toolchain_create_sdk_env_script () {
 	echo '    return 1' >> $script
 	echo 'fi' >> $script
 
+	echo "${EXPORT_SDK_PS1}" >> $script
 	echo 'export SDKTARGETSYSROOT='"$sysroot" >> $script
 	EXTRAPATH=""
 	for i in ${CANADIANEXTRAOS}; do
@@ -62,6 +65,7 @@ toolchain_create_sdk_env_script () {
 
 # This function creates an environment-setup-script in the TMPDIR which enables
 # a OE-core IDE to integrate with the build tree
+# Caller must ensure CONFIG_SITE is setup
 toolchain_create_tree_env_script () {
 	script=${TMPDIR}/environment-setup-${REAL_MULTIMACH_TARGET_SYS}
 	rm -f $script
@@ -70,7 +74,7 @@ toolchain_create_tree_env_script () {
 	echo 'export PATH=${STAGING_DIR_NATIVE}/usr/bin:${STAGING_BINDIR_TOOLCHAIN}:$PATH' >> $script
 	echo 'export PKG_CONFIG_SYSROOT_DIR=${PKG_CONFIG_SYSROOT_DIR}' >> $script
 	echo 'export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}' >> $script
-	echo 'export CONFIG_SITE="${@siteinfo_get_files(d)}"' >> $script
+	echo 'export CONFIG_SITE="${CONFIG_SITE}"' >> $script
 	echo 'export SDKTARGETSYSROOT=${STAGING_DIR_TARGET}' >> $script
 	echo 'export OECORE_NATIVE_SYSROOT="${STAGING_DIR_NATIVE}"' >> $script
 	echo 'export OECORE_TARGET_SYSROOT="${STAGING_DIR_TARGET}"' >> $script
@@ -105,6 +109,7 @@ toolchain_shared_env_script () {
 	echo 'export OECORE_SDK_VERSION="${SDK_VERSION}"' >> $script
 	echo 'export ARCH=${ARCH}' >> $script
 	echo 'export CROSS_COMPILE=${TARGET_PREFIX}' >> $script
+	echo 'export OECORE_TUNE_CCARGS="${TUNE_CCARGS}"' >> $script
 
     cat >> $script <<EOF
 
@@ -158,7 +163,7 @@ EOF
 }
 
 #we get the cached site config in the runtime
-TOOLCHAIN_CONFIGSITE_NOCACHE = "${@siteinfo_get_files(d)}"
+TOOLCHAIN_CONFIGSITE_NOCACHE = "${@' '.join(siteinfo_get_files(d)[0])}"
 TOOLCHAIN_CONFIGSITE_SYSROOTCACHE = "${STAGING_DIR}/${MLPREFIX}${MACHINE}/${target_datadir}/${TARGET_SYS}_config_site.d"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE ??= "virtual/${MLPREFIX}libc ncurses"
 DEPENDS += "${TOOLCHAIN_NEED_CONFIGSITE_CACHE}"

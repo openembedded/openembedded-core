@@ -1,22 +1,3 @@
-def machine_paths(d):
-    """List any existing machine specific filespath directories"""
-    machine = d.getVar("MACHINE")
-    filespathpkg = d.getVar("FILESPATHPKG").split(":")
-    for basepath in d.getVar("FILESPATHBASE").split(":"):
-        for pkgpath in filespathpkg:
-            machinepath = os.path.join(basepath, pkgpath, machine)
-            if os.path.isdir(machinepath):
-                yield machinepath
-
-def is_machine_specific(d):
-    """Determine whether the current recipe is machine specific"""
-    machinepaths = set(machine_paths(d))
-    srcuri = d.getVar("SRC_URI").split()
-    for url in srcuri:
-        fetcher = bb.fetch2.Fetch([srcuri], d)
-        if url.startswith("file://"):
-            if any(fetcher.localpath(url).startswith(mp + "/") for mp in machinepaths):
-                return True
 
 oe_soinstall() {
 	# Purpose: Install shared library file and
@@ -49,7 +30,6 @@ oe_libinstall() {
 	silent=""
 	require_static=""
 	require_shared=""
-	staging_install=""
 	while [ "$#" -gt 0 ]; do
 		case "$1" in
 		-C)
@@ -80,10 +60,6 @@ oe_libinstall() {
 	destpath="$1"
 	if [ -z "$destpath" ]; then
 		bbfatal "oe_libinstall: no destination path specified"
-	fi
-	if echo "$destpath/" | egrep '^${STAGING_LIBDIR}/' >/dev/null
-	then
-		staging_install=1
 	fi
 
 	__runcmd () {
@@ -178,36 +154,6 @@ oe_libinstall() {
 	__runcmd cd "$olddir"
 }
 
-oe_machinstall() {
-	# Purpose: Install machine dependent files, if available
-	#          If not available, check if there is a default
-	#          If no default, just touch the destination
-	# Example:
-	#                $1  $2   $3         $4
-	# oe_machinstall -m 0644 fstab ${D}/etc/fstab
-	#
-	# TODO: Check argument number?
-	#
-	filename=`basename $3`
-	dirname=`dirname $3`
-
-	for o in `echo ${OVERRIDES} | tr ':' ' '`; do
-		if [ -e $dirname/$o/$filename ]; then
-			bbnote $dirname/$o/$filename present, installing to $4
-			install $1 $2 $dirname/$o/$filename $4
-			return
-		fi
-	done
-#	bbnote overrides specific file NOT present, trying default=$3...
-	if [ -e $3 ]; then
-		bbnote $3 present, installing to $4
-		install $1 $2 $3 $4
-	else
-		bbnote $3 NOT present, touching empty $4
-		touch $4
-	fi
-}
-
 create_cmdline_wrapper () {
 	# Create a wrapper script where commandline options are needed
 	#
@@ -233,7 +179,7 @@ create_cmdline_wrapper () {
 #!/bin/bash
 realpath=\`readlink -fn \$0\`
 realdir=\`dirname \$realpath\`
-exec -a \`dirname \$realpath\`/$cmdname \`dirname \$realpath\`/$cmdname.real $cmdoptions "\$@"
+exec -a \$realdir/$cmdname \$realdir/$cmdname.real $cmdoptions "\$@"
 END
 	chmod +x $cmd
 }

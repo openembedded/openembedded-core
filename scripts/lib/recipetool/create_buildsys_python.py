@@ -8,7 +8,7 @@
 import ast
 import codecs
 import collections
-import distutils.command.build_py
+import setuptools.command.build_py
 import email
 import imp
 import glob
@@ -45,9 +45,9 @@ class PythonRecipeHandler(RecipeHandler):
         'Summary': 'SUMMARY',
         'Description': 'DESCRIPTION',
         'License': 'LICENSE',
-        'Requires': 'RDEPENDS_${PN}',
-        'Provides': 'RPROVIDES_${PN}',
-        'Obsoletes': 'RREPLACES_${PN}',
+        'Requires': 'RDEPENDS:${PN}',
+        'Provides': 'RPROVIDES:${PN}',
+        'Obsoletes': 'RREPLACES:${PN}',
     }
     # PN/PV are already set by recipetool core & desc can be extremely long
     excluded_fields = [
@@ -101,30 +101,39 @@ class PythonRecipeHandler(RecipeHandler):
         'License :: OSI Approved :: Apple Public Source License': 'APSL',
         'License :: OSI Approved :: Artistic License': 'Artistic',
         'License :: OSI Approved :: Attribution Assurance License': 'AAL',
-        'License :: OSI Approved :: BSD License': 'BSD',
+        'License :: OSI Approved :: BSD License': 'BSD-3-Clause',
+        'License :: OSI Approved :: Boost Software License 1.0 (BSL-1.0)': 'BSL-1.0',
+        'License :: OSI Approved :: CEA CNRS Inria Logiciel Libre License, version 2.1 (CeCILL-2.1)': 'CECILL-2.1',
+        'License :: OSI Approved :: Common Development and Distribution License 1.0 (CDDL-1.0)': 'CDDL-1.0',
         'License :: OSI Approved :: Common Public License': 'CPL',
+        'License :: OSI Approved :: Eclipse Public License 1.0 (EPL-1.0)': 'EPL-1.0',
+        'License :: OSI Approved :: Eclipse Public License 2.0 (EPL-2.0)': 'EPL-2.0',
         'License :: OSI Approved :: Eiffel Forum License': 'EFL',
         'License :: OSI Approved :: European Union Public Licence 1.0 (EUPL 1.0)': 'EUPL-1.0',
         'License :: OSI Approved :: European Union Public Licence 1.1 (EUPL 1.1)': 'EUPL-1.1',
-        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)': 'AGPL-3.0+',
-        'License :: OSI Approved :: GNU Affero General Public License v3': 'AGPL-3.0',
+        'License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)': 'EUPL-1.2',
+        'License :: OSI Approved :: GNU Affero General Public License v3': 'AGPL-3.0-only',
+        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)': 'AGPL-3.0-or-later',
         'License :: OSI Approved :: GNU Free Documentation License (FDL)': 'GFDL',
         'License :: OSI Approved :: GNU General Public License (GPL)': 'GPL',
-        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)': 'GPL-2.0',
-        'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)': 'GPL-2.0+',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)': 'GPL-3.0',
-        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)': 'GPL-3.0+',
-        'License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)': 'LGPL-2.0',
-        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)': 'LGPL-2.0+',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)': 'LGPL-3.0',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)': 'LGPL-3.0+',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)': 'GPL-2.0-only',
+        'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)': 'GPL-2.0-or-later',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)': 'GPL-3.0-only',
+        'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)': 'GPL-3.0-or-later',
+        'License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)': 'LGPL-2.0-only',
+        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)': 'LGPL-2.0-or-later',
+        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)': 'LGPL-3.0-only',
+        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)': 'LGPL-3.0-or-later',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)': 'LGPL',
+        'License :: OSI Approved :: Historical Permission Notice and Disclaimer (HPND)': 'HPND',
         'License :: OSI Approved :: IBM Public License': 'IPL',
         'License :: OSI Approved :: ISC License (ISCL)': 'ISC',
         'License :: OSI Approved :: Intel Open Source License': 'Intel',
         'License :: OSI Approved :: Jabber Open Source License': 'Jabber',
         'License :: OSI Approved :: MIT License': 'MIT',
+        'License :: OSI Approved :: MIT No Attribution License (MIT-0)': 'MIT-0',
         'License :: OSI Approved :: MITRE Collaborative Virtual Workspace License (CVW)': 'CVWL',
+        'License :: OSI Approved :: MirOS License (MirOS)': 'MirOS',
         'License :: OSI Approved :: Motosoto License': 'Motosoto',
         'License :: OSI Approved :: Mozilla Public License 1.0 (MPL)': 'MPL-1.0',
         'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)': 'MPL-1.1',
@@ -132,19 +141,26 @@ class PythonRecipeHandler(RecipeHandler):
         'License :: OSI Approved :: Nethack General Public License': 'NGPL',
         'License :: OSI Approved :: Nokia Open Source License': 'Nokia',
         'License :: OSI Approved :: Open Group Test Suite License': 'OGTSL',
+        'License :: OSI Approved :: Open Software License 3.0 (OSL-3.0)': 'OSL-3.0',
+        'License :: OSI Approved :: PostgreSQL License': 'PostgreSQL',
         'License :: OSI Approved :: Python License (CNRI Python License)': 'CNRI-Python',
-        'License :: OSI Approved :: Python Software Foundation License': 'PSF',
+        'License :: OSI Approved :: Python Software Foundation License': 'PSF-2.0',
         'License :: OSI Approved :: Qt Public License (QPL)': 'QPL',
         'License :: OSI Approved :: Ricoh Source Code Public License': 'RSCPL',
+        'License :: OSI Approved :: SIL Open Font License 1.1 (OFL-1.1)': 'OFL-1.1',
         'License :: OSI Approved :: Sleepycat License': 'Sleepycat',
-        'License :: OSI Approved :: Sun Industry Standards Source License (SISSL)': '--  Sun Industry Standards Source License (SISSL)',
+        'License :: OSI Approved :: Sun Industry Standards Source License (SISSL)': 'SISSL',
         'License :: OSI Approved :: Sun Public License': 'SPL',
+        'License :: OSI Approved :: The Unlicense (Unlicense)': 'Unlicense',
+        'License :: OSI Approved :: Universal Permissive License (UPL)': 'UPL-1.0',
         'License :: OSI Approved :: University of Illinois/NCSA Open Source License': 'NCSA',
         'License :: OSI Approved :: Vovida Software License 1.0': 'VSL-1.0',
         'License :: OSI Approved :: W3C License': 'W3C',
         'License :: OSI Approved :: X.Net License': 'Xnet',
         'License :: OSI Approved :: Zope Public License': 'ZPL',
         'License :: OSI Approved :: zlib/libpng License': 'Zlib',
+        'License :: Other/Proprietary License': 'Proprietary',
+        'License :: Public Domain': 'PD',
     }
 
     def __init__(self):
@@ -301,7 +317,7 @@ class PythonRecipeHandler(RecipeHandler):
                 inst_req_deps = ('python3-' + r.replace('.', '-').lower() for r in sorted(inst_reqs))
                 lines_after.append('# WARNING: the following rdepends are from setuptools install_requires. These')
                 lines_after.append('# upstream names may not correspond exactly to bitbake package names.')
-                lines_after.append('RDEPENDS_${{PN}} += "{}"'.format(' '.join(inst_req_deps)))
+                lines_after.append('RDEPENDS:${{PN}} += "{}"'.format(' '.join(inst_req_deps)))
 
         if mapped_deps:
             name = info.get('Name')
@@ -313,7 +329,7 @@ class PythonRecipeHandler(RecipeHandler):
                 lines_after.append('')
             lines_after.append('# WARNING: the following rdepends are determined through basic analysis of the')
             lines_after.append('# python sources, and might not be 100% accurate.')
-            lines_after.append('RDEPENDS_${{PN}} += "{}"'.format(' '.join(sorted(mapped_deps))))
+            lines_after.append('RDEPENDS:${{PN}} += "{}"'.format(' '.join(sorted(mapped_deps))))
 
         unmapped_deps -= set(extensions)
         unmapped_deps -= set(self.assume_provided)
@@ -459,9 +475,13 @@ class PythonRecipeHandler(RecipeHandler):
         else:
             package_dir = {}
 
-        class PackageDir(distutils.command.build_py.build_py):
+        dist = setuptools.Distribution()
+
+        class PackageDir(setuptools.command.build_py.build_py):
             def __init__(self, package_dir):
                 self.package_dir = package_dir
+                self.dist = dist
+                super().__init__(self.dist)
 
         pd = PackageDir(package_dir)
         to_scan = []
@@ -545,7 +565,7 @@ class PythonRecipeHandler(RecipeHandler):
             with open(pkgdatafile, 'r') as f:
                 for line in f.readlines():
                     field, value = line.split(': ', 1)
-                    if field == 'FILES_INFO':
+                    if field.startswith('FILES_INFO'):
                         files_info = ast.literal_eval(value)
                         break
                 else:

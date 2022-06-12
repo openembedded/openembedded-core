@@ -1,8 +1,22 @@
-FILES_${PN} += "${datadir}/icons/hicolor"
+FILES:${PN} += "${datadir}/icons/hicolor"
 
-DEPENDS +=" ${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk+3-native"
+GTKIC_VERSION ??= '3'
 
-PACKAGE_WRITE_DEPS += "gtk+3-native gdk-pixbuf-native"
+GTKPN = "${@ 'gtk4' if d.getVar('GTKIC_VERSION') == '4' else 'gtk+3' }"
+GTKIC_CMD = "${@ 'gtk-update-icon-cache-3.0.0' if d.getVar('GTKIC_VERSION') == '4' else 'gtk4-update-icon-cache' }"
+
+#gtk+3/gtk4 require GTK3DISTROFEATURES, DEPENDS on it make all the
+#recipes inherit this class require GTK3DISTROFEATURES
+inherit features_check
+ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
+
+DEPENDS +=" ${@ '' if d.getVar('BPN') == 'hicolor-icon-theme' else 'hicolor-icon-theme' } \
+            ${@ '' if d.getVar('BPN') == 'gdk-pixbuf' else 'gdk-pixbuf' } \
+            ${@ '' if d.getVar('BPN') == d.getVar('GTKPN') else d.getVar('GTKPN') } \
+            ${GTKPN}-native \
+"
+
+PACKAGE_WRITE_DEPS += "${GTKPN}-native gdk-pixbuf-native"
 
 gtk_icon_cache_postinst() {
 if [ "x$D" != "x" ]; then
@@ -16,7 +30,7 @@ else
 
 	for icondir in /usr/share/icons/* ; do
 		if [ -d $icondir ] ; then
-			gtk-update-icon-cache -fqt  $icondir
+			${GTKIC_CMD} -fqt  $icondir
 		fi
 	done
 fi
@@ -30,13 +44,13 @@ if [ "x$D" != "x" ]; then
 else
 	for icondir in /usr/share/icons/* ; do
 		if [ -d $icondir ] ; then
-			gtk-update-icon-cache -qt  $icondir
+			${GTKIC_CMD} -qt  $icondir
 		fi
 	done
 fi
 }
 
-python populate_packages_append () {
+python populate_packages:append () {
     packages = d.getVar('PACKAGES').split()
     pkgdest =  d.getVar('PKGDEST')
     
@@ -47,20 +61,29 @@ python populate_packages_append () {
 
         bb.note("adding hicolor-icon-theme dependency to %s" % pkg)
         rdepends = ' ' + d.getVar('MLPREFIX', False) + "hicolor-icon-theme"
-        d.appendVar('RDEPENDS_%s' % pkg, rdepends)
-    
+        d.appendVar('RDEPENDS:%s' % pkg, rdepends)
+
+        #gtk_icon_cache_postinst depend on gdk-pixbuf and gtk+3/gtk4
+        bb.note("adding gdk-pixbuf dependency to %s" % pkg)
+        rdepends = ' ' + d.getVar('MLPREFIX', False) + "gdk-pixbuf"
+        d.appendVar('RDEPENDS:%s' % pkg, rdepends)
+
+        bb.note("adding %s dependency to %s" % (d.getVar('GTKPN'), pkg))
+        rdepends = ' ' + d.getVar('MLPREFIX', False) + d.getVar('GTKPN')
+        d.appendVar('RDEPENDS:%s' % pkg, rdepends)
+
         bb.note("adding gtk-icon-cache postinst and postrm scripts to %s" % pkg)
-        
-        postinst = d.getVar('pkg_postinst_%s' % pkg)
+
+        postinst = d.getVar('pkg_postinst:%s' % pkg)
         if not postinst:
             postinst = '#!/bin/sh\n'
         postinst += d.getVar('gtk_icon_cache_postinst')
-        d.setVar('pkg_postinst_%s' % pkg, postinst)
+        d.setVar('pkg_postinst:%s' % pkg, postinst)
 
-        postrm = d.getVar('pkg_postrm_%s' % pkg)
+        postrm = d.getVar('pkg_postrm:%s' % pkg)
         if not postrm:
             postrm = '#!/bin/sh\n'
         postrm += d.getVar('gtk_icon_cache_postrm')
-        d.setVar('pkg_postrm_%s' % pkg, postrm)
+        d.setVar('pkg_postrm:%s' % pkg, postrm)
 }
 

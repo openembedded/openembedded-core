@@ -36,10 +36,12 @@ python () {
         return
 
     tos = d.getVar("TARGET_OS")
-    whitelist = []
+    tos_known = ["mingw32"]
     extralibcs = [""]
     if "musl" in d.getVar("BASECANADIANEXTRAOS"):
         extralibcs.append("musl")
+    if "android" in tos:
+        extralibcs.append("android")
     for variant in ["", "spe", "x32", "eabi", "n32", "_ilp32"]:
         for libc in extralibcs:
             entry = "linux"
@@ -49,8 +51,8 @@ python () {
                 entry = entry + "-gnu" + variant
             elif libc:
                 entry = entry + "-" + libc
-            whitelist.append(entry)
-    if tos not in whitelist:
+            tos_known.append(entry)
+    if tos not in tos_known:
         bb.fatal("Building cross-candian for an unknown TARGET_SYS (%s), please update cross-canadian.bbclass" % d.getVar("TARGET_SYS"))
 
     for n in ["PROVIDES", "DEPENDS"]:
@@ -104,7 +106,7 @@ STAGING_DIR_HOST = "${RECIPE_SYSROOT}"
 
 TOOLCHAIN_OPTIONS = " --sysroot=${RECIPE_SYSROOT}"
 
-PATH_append = ":${TMPDIR}/sysroots/${HOST_ARCH}/${bindir_cross}"
+PATH:append = ":${TMPDIR}/sysroots/${HOST_ARCH}/${bindir_cross}"
 PKGHIST_DIR = "${TMPDIR}/pkghistory/${HOST_ARCH}-${SDKPKGSUFFIX}${HOST_VENDOR}-${HOST_OS}/"
 
 HOST_ARCH = "${SDK_ARCH}"
@@ -129,7 +131,7 @@ LDFLAGS = "${BUILDSDK_LDFLAGS} \
 # We need chrpath >= 0.14 to ensure we can deal with 32 and 64 bit
 # binaries
 #
-DEPENDS_append = " chrpath-replacement-native"
+DEPENDS:append = " chrpath-replacement-native"
 EXTRANATIVEPATH += "chrpath-native"
 
 # Path mangling needed by the cross packaging
@@ -153,9 +155,9 @@ base_sbindir = "${bindir}"
 libdir = "${exec_prefix}/lib/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 libexecdir = "${exec_prefix}/libexec/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
-FILES_${PN} = "${prefix}"
+FILES:${PN} = "${prefix}"
 
-export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${layout_libdir}/pkgconfig"
+export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${exec_prefix}/lib/pkgconfig"
 export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
 
 do_populate_sysroot[stamp-extra-info] = ""
@@ -167,7 +169,7 @@ USE_NLS = "${SDKUSE_NLS}"
 # and not any particular tune that is enabled.
 TARGET_ARCH[vardepsexclude] = "TUNE_ARCH"
 
-PKGDATA_DIR = "${TMPDIR}/pkgdata/${SDK_SYS}"
+PKGDATA_DIR = "${PKGDATA_DIR_SDK}"
 # If MLPREFIX is set by multilib code, shlibs
 # points to the wrong place so force it
 SHLIBSDIRS = "${PKGDATA_DIR}/nativesdk-shlibs2"

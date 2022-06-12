@@ -32,7 +32,7 @@ common_errors = [
     "Failed to load module \"fbdev\"",
     "Failed to load module fbdev",
     "Failed to load module glx",
-    "[drm] Cannot find any crtc or sizes - going 1024x768",
+    "[drm] Cannot find any crtc or sizes",
     "_OSC failed (AE_NOT_FOUND); disabling ASPM",
     "Open ACPI failed (/var/run/acpid.socket) (No such file or directory)",
     "NX (Execute Disable) protection cannot be enabled: non-PAE kernel!",
@@ -55,11 +55,18 @@ common_errors = [
     "Failed to read /var/lib/nfs/statd/state: Success",
     "error retry time-out =",
     "logind: cannot setup systemd-logind helper (-61), using legacy fallback",
-    "Error changing net interface name 'eth0' to "
+    "Failed to rename network interface",
+    "Failed to process device, ignoring: Device or resource busy",
+    "Cannot find a map file",
+    "[rdrand]: Initialization Failed",
+    "[rndr  ]: Initialization Failed",
+    "[pulseaudio] authkey.c: Failed to open cookie file",
+    "[pulseaudio] authkey.c: Failed to load authentication key",
+    "was skipped because of a failed condition check",
+    "was skipped because all trigger condition checks failed",
     ]
 
 video_related = [
-    "uvesafb",
 ]
 
 x86_common = [
@@ -81,12 +88,12 @@ qemux86_common = [
     "fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.",
     "can't claim BAR ",
     'amd_nb: Cannot enumerate AMD northbridges',
-    'uvesafb: 5000 ms task timeout, infinitely waiting',
     'tsc: HPET/PMTIMER calibration failed',
     "modeset(0): Failed to initialize the DRI2 extension",
-    "uvesafb: cannot reserve video memory at",
-    "uvesafb: probe of uvesafb.0 failed with error",
     "glamor initialization failed",
+    "blk_update_request: I/O error, dev fd0, sector 0 op 0x0:(READ)",
+    "floppy: error",
+    'failed to IDENTIFY (I/O error, err_mask=0x4)',
 ] + common_errors
 
 ignore_errors = {
@@ -113,7 +120,12 @@ ignore_errors = {
         'can\'t handle BAR above 4GB',
         'Cannot reserve Legacy IO',
         ] + common_errors,
-    'qemuarm' : [
+    'qemuppc64' : [
+        'vio vio: uevent: failed to send synthetic uevent',
+        'synth uevent: /devices/vio: failed to send uevent',
+        'PCI 0000:00 Cannot reserve Legacy IO [io  0x10000-0x10fff]',
+        ] + common_errors,
+    'qemuarmv5' : [
         'mmci-pl18x: probe of fpga:05 failed with error -22',
         'mmci-pl18x: probe of fpga:0b failed with error -22',
         'Failed to load module "glx"',
@@ -127,12 +139,14 @@ ignore_errors = {
         'OF: amba_device_add() failed (-19) for /amba/fpga/sci@a000',
         'Failed to initialize \'/amba/timer@101e3000\': -22',
         'jitterentropy: Initialization failed with host not compliant with requirements: 2',
+        'clcd-pl11x: probe of 10120000.display failed with error -2',
         ] + common_errors,
     'qemuarm64' : [
         'Fatal server error:',
         '(EE) Server terminated with error (1). Closing log file.',
         'dmi: Firmware registration failed.',
         'irq: type mismatch, failed to map hwirq-27 for /intc',
+        'logind: failed to get session seat',
         ] + common_errors,
     'intel-core2-32' : [
         'ACPI: No _BQC method, cannot determine initial brightness',
@@ -183,11 +197,6 @@ ignore_errors = {
         'Failed to load module "glx"',
         'Failed to make EGL context current',
         'glamor initialization failed',
-        ] + common_errors,
-    'mpc8315e-rdb' : [
-        'of_irq_parse_pci: failed with',
-        'Fatal server error:',
-        'Server terminated with error',
         ] + common_errors,
 }
 
@@ -296,7 +305,7 @@ class ParseLogsTest(OERuntimeTestCase):
         grepcmd = 'grep '
         grepcmd += '-Ei "'
         for error in errors:
-            grepcmd += '\<' + error + '\>' + '|'
+            grepcmd += r'\<' + error + r'\>' + '|'
         grepcmd = grepcmd[:-1]
         grepcmd += '" ' + str(log) + " | grep -Eiv \'"
 
@@ -307,13 +316,13 @@ class ParseLogsTest(OERuntimeTestCase):
             errorlist = ignore_errors['default']
 
         for ignore_error in errorlist:
-            ignore_error = ignore_error.replace('(', '\(')
-            ignore_error = ignore_error.replace(')', '\)')
+            ignore_error = ignore_error.replace('(', r'\(')
+            ignore_error = ignore_error.replace(')', r'\)')
             ignore_error = ignore_error.replace("'", '.')
-            ignore_error = ignore_error.replace('?', '\?')
-            ignore_error = ignore_error.replace('[', '\[')
-            ignore_error = ignore_error.replace(']', '\]')
-            ignore_error = ignore_error.replace('*', '\*')
+            ignore_error = ignore_error.replace('?', r'\?')
+            ignore_error = ignore_error.replace('[', r'\[')
+            ignore_error = ignore_error.replace(']', r'\]')
+            ignore_error = ignore_error.replace('*', r'\*')
             ignore_error = ignore_error.replace('0-9', '[0-9]')
             grepcmd += ignore_error + '|'
         grepcmd = grepcmd[:-1]

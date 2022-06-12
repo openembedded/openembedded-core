@@ -1,8 +1,8 @@
 SUMMARY = "Modular initramfs system"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-RDEPENDS_${PN} += "${VIRTUAL-RUNTIME_base-utils}"
-RRECOMMENDS_${PN} = "${VIRTUAL-RUNTIME_base-utils-syslog}"
+RDEPENDS:${PN} += "${VIRTUAL-RUNTIME_base-utils}"
+RRECOMMENDS:${PN} = "${VIRTUAL-RUNTIME_base-utils-syslog}"
 
 PR = "r4"
 
@@ -18,6 +18,7 @@ SRC_URI = "file://init \
            file://e2fs \
            file://debug \
            file://lvm \
+           file://overlayroot \
           "
 
 S = "${WORKDIR}"
@@ -31,7 +32,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
-	# exec
+    # exec
     install -m 0755 ${WORKDIR}/exec ${D}/init.d/89-exec
 
     # mdev
@@ -49,6 +50,9 @@ do_install() {
     # lvm
     install -m 0755 ${WORKDIR}/lvm ${D}/init.d/09-lvm
 
+    # overlayroot needs to run after rootfs module but before finish
+    install -m 0755 ${WORKDIR}/overlayroot ${D}/init.d/91-overlayroot
+
     # Create device nodes expected by some kernels in initramfs
     # before even executing /init.
     install -d ${D}/dev
@@ -64,9 +68,10 @@ PACKAGES = "${PN}-base \
             initramfs-module-rootfs \
             initramfs-module-debug \
             initramfs-module-lvm \
+            initramfs-module-overlayroot \
            "
 
-FILES_${PN}-base = "/init /init.d/99-finish /dev"
+FILES:${PN}-base = "/init /init.d/99-finish /dev"
 
 # 99-finish in base depends on some other module which mounts
 # the rootfs, like 90-rootfs. To replace that default, use
@@ -74,36 +79,40 @@ FILES_${PN}-base = "/init /init.d/99-finish /dev"
 # initramfs recipe and install something else, or install
 # something that runs earlier (for example, a 89-my-rootfs)
 # and mounts the rootfs. Then 90-rootfs will proceed immediately.
-RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
+RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
 
-SUMMARY_initramfs-module-exec = "initramfs support for easy execution of applications"
-RDEPENDS_initramfs-module-exec = "${PN}-base"
-FILES_initramfs-module-exec = "/init.d/89-exec"
+SUMMARY:initramfs-module-exec = "initramfs support for easy execution of applications"
+RDEPENDS:initramfs-module-exec = "${PN}-base"
+FILES:initramfs-module-exec = "/init.d/89-exec"
 
-SUMMARY_initramfs-module-mdev = "initramfs support for mdev"
-RDEPENDS_initramfs-module-mdev = "${PN}-base busybox-mdev"
-FILES_initramfs-module-mdev = "/init.d/01-mdev"
+SUMMARY:initramfs-module-mdev = "initramfs support for mdev"
+RDEPENDS:initramfs-module-mdev = "${PN}-base busybox-mdev"
+FILES:initramfs-module-mdev = "/init.d/01-mdev"
 
-SUMMARY_initramfs-module-udev = "initramfs support for udev"
-RDEPENDS_initramfs-module-udev = "${PN}-base udev"
-FILES_initramfs-module-udev = "/init.d/01-udev"
+SUMMARY:initramfs-module-udev = "initramfs support for udev"
+RDEPENDS:initramfs-module-udev = "${PN}-base udev"
+FILES:initramfs-module-udev = "/init.d/01-udev"
 
-SUMMARY_initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
-RDEPENDS_initramfs-module-e2fs = "${PN}-base"
-FILES_initramfs-module-e2fs = "/init.d/10-e2fs"
+SUMMARY:initramfs-module-e2fs = "initramfs support for ext4/ext3/ext2 filesystems"
+RDEPENDS:initramfs-module-e2fs = "${PN}-base"
+FILES:initramfs-module-e2fs = "/init.d/10-e2fs"
 
-SUMMARY_initramfs-module-nfsrootfs = "initramfs support for locating and mounting the root partition via nfs"
-RDEPENDS_initramfs-module-nfsrootfs = "${PN}-base"
-FILES_initramfs-module-nfsrootfs = "/init.d/85-nfsrootfs"
+SUMMARY:initramfs-module-nfsrootfs = "initramfs support for locating and mounting the root partition via nfs"
+RDEPENDS:initramfs-module-nfsrootfs = "${PN}-base"
+FILES:initramfs-module-nfsrootfs = "/init.d/85-nfsrootfs"
 
-SUMMARY_initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
-RDEPENDS_initramfs-module-rootfs = "${PN}-base"
-FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
+SUMMARY:initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
+RDEPENDS:initramfs-module-rootfs = "${PN}-base"
+FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
-SUMMARY_initramfs-module-debug = "initramfs dynamic debug support"
-RDEPENDS_initramfs-module-debug = "${PN}-base"
-FILES_initramfs-module-debug = "/init.d/00-debug"
+SUMMARY:initramfs-module-debug = "initramfs dynamic debug support"
+RDEPENDS:initramfs-module-debug = "${PN}-base"
+FILES:initramfs-module-debug = "/init.d/00-debug"
 
-SUMMARY_initramfs-module-lvm = "initramfs lvm rootfs support"
-RDEPENDS_initramfs-module-lvm = "${PN}-base"
-FILES_initramfs-module-lvm = "/init.d/09-lvm"
+SUMMARY:initramfs-module-lvm = "initramfs lvm rootfs support"
+RDEPENDS:initramfs-module-lvm = "${PN}-base"
+FILES:initramfs-module-lvm = "/init.d/09-lvm"
+
+SUMMARY:initramfs-module-overlayroot = "initramfs support for mounting a RW overlay on top of a RO root filesystem"
+RDEPENDS:initramfs-module-overlayroot = "${PN}-base initramfs-module-rootfs"
+FILES:initramfs-module-overlayroot = "/init.d/91-overlayroot"

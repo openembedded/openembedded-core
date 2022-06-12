@@ -8,13 +8,14 @@ python () {
 
 require xorg-lib-common.inc
 
-LICENSE = "MIT & MIT-style & BSD"
+LICENSE = "MIT & MIT & BSD-1-Clause & HPND & HPND-sell-variant"
 LIC_FILES_CHKSUM = "file://COPYING;md5=172255dee66bb0151435b2d5d709fcf7"
 
 SRC_URI[md5sum] = "c5fa5a86a20e3591bed6c046498d4b8f"
 SRC_URI[sha256sum] = "b289a845c189e251e0e884cc0f9269bbe97c238df3741e854ec4c17c21e473d5"
 
-SRC_URI += "file://0001-Drop-x11-dependencies.patch"
+SRC_URI += "file://0001-Drop-x11-dependencies.patch \
+           "
 
 XORG_PN = "libX11"
 
@@ -22,7 +23,7 @@ EXTRA_OECONF += "--disable-xkb"
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = "${datadir}/X11/locale ${libdir}/X11/locale"
+FILES:${PN} = "${datadir}/X11/locale ${libdir}/X11/locale"
 
 do_compile() {
     oe_runmake -C nls

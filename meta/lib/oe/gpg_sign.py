@@ -58,7 +58,7 @@ class LocalSigner(object):
         for i in range(0, len(files), sign_chunk):
             subprocess.check_output(shlex.split(cmd + ' '.join(files[i:i+sign_chunk])), stderr=subprocess.STDOUT)
 
-    def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True):
+    def detach_sign(self, input_file, keyid, passphrase_file, passphrase=None, armor=True, output_suffix=None, use_sha256=False):
         """Create a detached signature of a file"""
 
         if passphrase_file and passphrase:
@@ -71,6 +71,10 @@ class LocalSigner(object):
             cmd += ['--homedir', self.gpg_path]
         if armor:
             cmd += ['--armor']
+        if output_suffix:
+            cmd += ['-o', input_file + "." + output_suffix]
+        if use_sha256:
+            cmd += ['--digest-algo', "SHA256"]
 
         #gpg > 2.1 supports password pipes only through the loopback interface
         #gpg < 2.1 errors out if given unknown parameters
@@ -109,16 +113,33 @@ class LocalSigner(object):
             bb.fatal("Could not get gpg version: %s" % e)
 
 
-    def verify(self, sig_file):
+    def verify(self, sig_file, valid_sigs = ''):
         """Verify signature"""
-        cmd = self.gpg_cmd + [" --verify", "--no-permission-warning"]
+        cmd = self.gpg_cmd + ["--verify", "--no-permission-warning", "--status-fd", "1"]
         if self.gpg_path:
             cmd += ["--homedir", self.gpg_path]
 
         cmd += [sig_file]
-        status = subprocess.call(cmd)
-        ret = False if status else True
-        return ret
+        status = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Valid if any key matches if unspecified
+        if not valid_sigs:
+            ret = False if status.returncode else True
+            return ret
+
+        import re
+        goodsigs = []
+        sigre = re.compile(r'^\[GNUPG:\] GOODSIG (\S+)\s(.*)$')
+        for l in status.stdout.decode("utf-8").splitlines():
+            s = sigre.match(l)
+            if s:
+                goodsigs += [s.group(1)]
+
+        for sig in valid_sigs.split():
+            if sig in goodsigs:
+                return True
+        if len(goodsigs):
+            bb.warn('No accepted signatures found. Good signatures found: %s.' % ' '.join(goodsigs))
+        return False
 
 
 def get_signer(d, backend):

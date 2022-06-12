@@ -172,36 +172,27 @@
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/compileall.py",
+            "${libdir}/python${PYTHON_MAJMIN}/filecmp.py",
             "${libdir}/python${PYTHON_MAJMIN}/py_compile.py"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/compileall.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/filecmp.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/py_compile.*.pyc"
         ]
     },
     "compression": {
         "summary": "Python high-level compression support",
         "rdepends": [
-            "core",
-            "shell",
-            "unixadmin"
+            "core"
         ],
         "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/_compression.py",
-            "${libdir}/python${PYTHON_MAJMIN}/bz2.py",
             "${libdir}/python${PYTHON_MAJMIN}/gzip.py",
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_bz2.*.so",
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_lzma.*.so",
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/zlib.*.so",
-            "${libdir}/python${PYTHON_MAJMIN}/lzma.py",
             "${libdir}/python${PYTHON_MAJMIN}/tarfile.py",
             "${libdir}/python${PYTHON_MAJMIN}/zipfile.py"
         ],
         "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_compression.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/bz2.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/gzip.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/lzma.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/tarfile.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/zipfile.*.pyc"
         ]
@@ -210,12 +201,10 @@
         "summary": "Python interpreter and core modules",
         "rdepends": [],
         "files": [
-            "${bindir}/python3",
             "${bindir}/python${PYTHON_MAJMIN}",
             "${bindir}/python${PYTHON_MAJMIN}.real",
-            "${bindir}/python${PYTHON_BINABI}",
-            "${includedir}/python${PYTHON_BINABI}/pyconfig*.h",
-            "${prefix}/lib/python${PYTHON_MAJMIN}/config*/*[!.a]",
+            "${bindir}/python3",
+            "${includedir}/python${PYTHON_MAJMIN}/pyconfig*.h",
             "${libdir}/python${PYTHON_MAJMIN}/UserDict.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserList.py",
             "${libdir}/python${PYTHON_MAJMIN}/UserString.py",
@@ -223,6 +212,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/_abcoll.py",
             "${libdir}/python${PYTHON_MAJMIN}/_bootlocale.py",
             "${libdir}/python${PYTHON_MAJMIN}/_collections_abc.py",
+            "${libdir}/python${PYTHON_MAJMIN}/_compression.py",
             "${libdir}/python${PYTHON_MAJMIN}/_markupbase.py",
             "${libdir}/python${PYTHON_MAJMIN}/_sitebuiltins.py",
             "${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py",
@@ -231,6 +221,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/argparse.py",
             "${libdir}/python${PYTHON_MAJMIN}/ast.py",
             "${libdir}/python${PYTHON_MAJMIN}/bisect.py",
+            "${libdir}/python${PYTHON_MAJMIN}/bz2.py",
             "${libdir}/python${PYTHON_MAJMIN}/code.py",
             "${libdir}/python${PYTHON_MAJMIN}/codecs.py",
             "${libdir}/python${PYTHON_MAJMIN}/codeop.py",
@@ -247,6 +238,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/encodings/latin_1.py",
             "${libdir}/python${PYTHON_MAJMIN}/encodings/utf_8.py",
             "${libdir}/python${PYTHON_MAJMIN}/enum.py",
+            "${libdir}/python${PYTHON_MAJMIN}/fnmatch.py",
             "${libdir}/python${PYTHON_MAJMIN}/functools.py",
             "${libdir}/python${PYTHON_MAJMIN}/genericpath.py",
             "${libdir}/python${PYTHON_MAJMIN}/getopt.py",
@@ -267,13 +259,16 @@
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/__pycache__/time.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/__pycache__/xreadlines.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_bisect.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_bz2.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_csv.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_heapq.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_lzma.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_opcode.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_posixsubprocess.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_struct.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/array.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/binascii.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/grp.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/math.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/parser.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/readline.*.so",
@@ -281,14 +276,18 @@
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/time.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/unicodedata.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/xreadlines.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/zlib.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/linecache.py",
             "${libdir}/python${PYTHON_MAJMIN}/locale.py",
+            "${libdir}/python${PYTHON_MAJMIN}/lzma.py",
             "${libdir}/python${PYTHON_MAJMIN}/new.py",
             "${libdir}/python${PYTHON_MAJMIN}/ntpath.py",
             "${libdir}/python${PYTHON_MAJMIN}/opcode.py",
             "${libdir}/python${PYTHON_MAJMIN}/operator.py",
             "${libdir}/python${PYTHON_MAJMIN}/optparse.py",
             "${libdir}/python${PYTHON_MAJMIN}/os.py",
+            "${libdir}/python${PYTHON_MAJMIN}/pathlib.py",
+            "${libdir}/python${PYTHON_MAJMIN}/pkgutil.py",
             "${libdir}/python${PYTHON_MAJMIN}/platform.py",
             "${libdir}/python${PYTHON_MAJMIN}/posixpath.py",
             "${libdir}/python${PYTHON_MAJMIN}/re.py",
@@ -296,6 +295,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/rlcompleter.py",
             "${libdir}/python${PYTHON_MAJMIN}/runpy.py",
             "${libdir}/python${PYTHON_MAJMIN}/selectors.py",
+            "${libdir}/python${PYTHON_MAJMIN}/shutil.py",
             "${libdir}/python${PYTHON_MAJMIN}/signal.py",
             "${libdir}/python${PYTHON_MAJMIN}/site.py",
             "${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py",
@@ -314,21 +314,27 @@
             "${libdir}/python${PYTHON_MAJMIN}/tokenize.py",
             "${libdir}/python${PYTHON_MAJMIN}/traceback.py",
             "${libdir}/python${PYTHON_MAJMIN}/types.py",
+            "${libdir}/python${PYTHON_MAJMIN}/typing.py",
+            "${libdir}/python${PYTHON_MAJMIN}/urllib",
+            "${libdir}/python${PYTHON_MAJMIN}/urllib/parse.py",
             "${libdir}/python${PYTHON_MAJMIN}/warnings.py",
-            "${libdir}/python${PYTHON_MAJMIN}/weakref.py"
+            "${libdir}/python${PYTHON_MAJMIN}/weakref.py",
+            "${prefix}/lib/python${PYTHON_MAJMIN}/config*/*[!.a]"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/__future__.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_bootlocale.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_collections_abc.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_compression.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_markupbase.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sitebuiltins.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata*.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_weakrefset.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/abc.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/argparse.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/ast.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/bisect.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/bz2.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/code.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/codecs.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/codeop.*.pyc",
@@ -339,6 +345,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/csv.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/dis.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/enum.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/fnmatch.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/functools.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/genericpath.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/getopt.*.pyc",
@@ -350,10 +357,14 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/keyword.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/linecache.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/locale.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/lzma.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/ntpath.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/opcode.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/operator.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/optparse.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/os.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/pathlib.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/pkgutil.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/platform.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/posixpath.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/re.*.pyc",
@@ -361,6 +372,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/rlcompleter.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/runpy.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/selectors.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/shutil.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/signal.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/site.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/sre_compile.*.pyc",
@@ -378,6 +390,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/tokenize.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/traceback.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/types.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/typing.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/warnings.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/weakref.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/collections/__pycache__",
@@ -389,7 +402,9 @@
             "${libdir}/python${PYTHON_MAJMIN}/importlib/__pycache__",
             "${libdir}/python${PYTHON_MAJMIN}/importlib/__pycache__/abc.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/importlib/__pycache__/machinery.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/importlib/__pycache__/util.*.pyc"
+            "${libdir}/python${PYTHON_MAJMIN}/importlib/__pycache__/util.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/urllib/__pycache__",
+            "${libdir}/python${PYTHON_MAJMIN}/urllib/__pycache__/parse.*.pyc"
         ]
     },
     "crypt": {
@@ -405,10 +420,10 @@
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_blake2.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_crypt.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_hashlib.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_md5.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha1.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha256.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha3.*.so",
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha1.*.so",
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_md5.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_sha512.*.so"
         ],
         "cached": [
@@ -419,7 +434,10 @@
     "ctypes": {
         "summary": "Python C types support",
         "rdepends": [
-            "core"
+            "core",
+            "crypt",
+            "io",
+            "math"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/ctypes",
@@ -519,19 +537,20 @@
         ]
     },
     "distutils-windows": {
-        "cached": [],
-        "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/distutils/command/wininst-*.exe"
-        ],
+        "summary": "Python distribution utilities (Windows installer stubs)",
         "rdepends": [
-            "distutils"
+            "core"
         ],
-        "summary": "Python distribution utilities (Windows installer stubs)"
+        "files": [],
+        "cached": []
     },
     "distutils": {
         "summary": "Python Distribution Utilities",
         "rdepends": [
-            "core"
+            "compression",
+            "core",
+            "email",
+            "stringold"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/distutils"
@@ -544,7 +563,6 @@
             "core",
             "debugger",
             "difflib",
-            "logging",
             "pprint",
             "shell",
             "stringold",
@@ -565,7 +583,9 @@
             "datetime",
             "io",
             "math",
-            "netclient"
+            "mime",
+            "netclient",
+            "stringold"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/email",
@@ -636,13 +656,11 @@
     "io": {
         "summary": "Python low-level I/O",
         "rdepends": [
-            "compression",
             "core",
             "crypt",
             "math",
             "netclient",
-            "shell",
-            "unixadmin"
+            "shell"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/_pyio.py",
@@ -679,7 +697,11 @@
         "summary": "Python logging support",
         "rdepends": [
             "core",
-            "stringold"
+            "io",
+            "netserver",
+            "pickle",
+            "stringold",
+            "threading"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/logging"
@@ -792,12 +814,12 @@
             "shell",
             "smtpd",
             "sqlite3",
+	    "statistics",
             "stringold",
             "syslog",
             "terminal",
             "threading",
             "tkinter",
-            "typing",
             "unittest",
             "unixadmin",
             "venv",
@@ -813,11 +835,18 @@
         "summary": "Python multiprocessing support",
         "rdepends": [
             "core",
+            "crypt",
+            "ctypes",
             "io",
-            "pickle"
+            "math",
+            "mmap",
+            "netclient",
+            "pickle",
+            "threading"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_multiprocessing.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_posixshmem.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/multiprocessing"
         ],
         "cached": []
@@ -844,10 +873,9 @@
             "${libdir}/python${PYTHON_MAJMIN}/mimetypes.py",
             "${libdir}/python${PYTHON_MAJMIN}/nntplib.py",
             "${libdir}/python${PYTHON_MAJMIN}/poplib.py",
+            "${libdir}/python${PYTHON_MAJMIN}/secrets.py",
             "${libdir}/python${PYTHON_MAJMIN}/smtplib.py",
             "${libdir}/python${PYTHON_MAJMIN}/telnetlib.py",
-            "${libdir}/python${PYTHON_MAJMIN}/urllib",
-            "${libdir}/python${PYTHON_MAJMIN}/urllib/__pycache__",
             "${libdir}/python${PYTHON_MAJMIN}/uuid.py"
         ],
         "cached": [
@@ -857,6 +885,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/mimetypes.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/nntplib.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/poplib.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/secrets.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/smtplib.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/telnetlib.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/uuid.*.pyc"
@@ -865,7 +894,6 @@
     "netserver": {
         "summary": "Python Internet Protocol servers",
         "rdepends": [
-            "compression",
             "core",
             "crypt",
             "datetime",
@@ -875,9 +903,7 @@
             "math",
             "mime",
             "netclient",
-            "shell",
-            "stringold",
-            "unixadmin"
+            "stringold"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/cgi.py",
@@ -934,12 +960,8 @@
         "rdepends": [
             "core"
         ],
-        "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/pkgutil.py"
-        ],
-        "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/pkgutil.*.pyc"
-        ]
+        "files": [],
+        "cached": []
     },
     "plistlib": {
         "summary": "Generate and parse Mac OS X .plist files",
@@ -958,7 +980,8 @@
     "pprint": {
         "summary": "Python pretty-print support",
         "rdepends": [
-            "core"
+            "core",
+	    "profile"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/pprint.py"
@@ -974,12 +997,14 @@
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/cProfile.py",
+            "${libdir}/python${PYTHON_MAJMIN}/dataclasses.py",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_lsprof.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/profile.py",
             "${libdir}/python${PYTHON_MAJMIN}/pstats.py"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/cProfile.*.pyc",
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/dataclasses.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/profile.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/pstats.*.pyc"
         ]
@@ -987,9 +1012,7 @@
     "pydoc": {
         "summary": "Python interactive help support",
         "rdepends": [
-            "core",
-            "netclient",
-            "pkgutil"
+            "core"
         ],
         "files": [
             "${bindir}/pydoc*",
@@ -1013,24 +1036,18 @@
     "shell": {
         "summary": "Python shell-like functionality",
         "rdepends": [
-            "compression",
             "core",
-            "stringold",
-            "unixadmin"
+            "stringold"
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/cmd.py",
-            "${libdir}/python${PYTHON_MAJMIN}/fnmatch.py",
             "${libdir}/python${PYTHON_MAJMIN}/glob.py",
-            "${libdir}/python${PYTHON_MAJMIN}/shlex.py",
-            "${libdir}/python${PYTHON_MAJMIN}/shutil.py"
+            "${libdir}/python${PYTHON_MAJMIN}/shlex.py"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/cmd.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/fnmatch.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/glob.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/shlex.*.pyc",
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/shutil.*.pyc"
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/shlex.*.pyc"
         ]
     },
     "smtpd": {
@@ -1069,6 +1086,20 @@
             "${libdir}/python${PYTHON_MAJMIN}/sqlite3"
         ],
         "cached": []
+    },
+    "statistics": {
+	"summary": "Basic statistics module",
+	"rdepends": [
+	    "core",
+	    "math",
+	    "numbers"
+	],
+	"files": [
+	    "${libdir}/python${PYTHON_MAJMIN}/statistics.py"
+	],
+	"cached": [
+	    "${libdir}/python${PYTHON_MAJMIN}/__pycache__/statistics.*.pyc"
+	]
     },
     "stringold": {
         "summary": "Python string APIs [deprecated]",
@@ -1113,13 +1144,11 @@
             "core"
         ],
         "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/_dummy_thread.py",
             "${libdir}/python${PYTHON_MAJMIN}/_threading_local.py",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_queue.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/queue.py"
         ],
         "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_dummy_thread.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/_threading_local.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/queue.*.pyc"
         ]
@@ -1130,31 +1159,22 @@
             "core"
         ],
         "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_tkinter.*.so",
+	    "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_tkinter.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/tkinter"
         ],
         "cached": []
     },
-    "typing": {
-        "summary": "Python typing support",
-        "rdepends": [
-            "core"
-        ],
-        "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/typing.py"
-        ],
-        "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/typing.*.pyc"
-        ]
-    },
     "unittest": {
         "summary": "Python unit testing framework",
         "rdepends": [
+            "asyncio",
             "core",
             "difflib",
+            "io",
             "logging",
+            "netclient",
+            "numbers",
             "pprint",
-            "shell",
             "stringold"
         ],
         "files": [
@@ -1172,7 +1192,6 @@
         ],
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/getpass.py",
-            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/grp.*.so",
             "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/nis.*.so"
         ],
         "cached": [
@@ -1182,12 +1201,9 @@
     "venv": {
         "summary": "Provides support for creating lightweight virtual environments with their own site directories, optionally isolated from system site directories.",
         "rdepends": [
-            "compression",
             "core",
             "logging",
-            "shell",
-            "stringold",
-            "unixadmin"
+            "stringold"
         ],
         "files": [
             "${bindir}/pyvenv*",
@@ -1210,7 +1226,21 @@
     "xmlrpc": {
         "summary": "Python XML-RPC support",
         "rdepends": [
+            "compression",
             "core",
+            "crypt",
+            "datetime",
+            "email",
+            "fcntl",
+            "html",
+            "io",
+            "math",
+            "mime",
+            "netclient",
+            "netserver",
+            "numbers",
+            "pydoc",
+            "stringold",
             "xml"
         ],
         "files": [

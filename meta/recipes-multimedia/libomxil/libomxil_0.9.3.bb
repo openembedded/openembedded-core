@@ -3,8 +3,8 @@ DESCRIPTION = "Bellagio is an opensource implementation of the Khronos OpenMAX \
                Integration Layer API to access multimedia components."
 HOMEPAGE = "http://omxil.sourceforge.net/"
 
-LICENSE = "LGPLv2.1+"
-LICENSE_FLAGS = "commercial"
+LICENSE = "LGPL-2.1-or-later"
+LICENSE_FLAGS = "${@bb.utils.contains('PACKAGECONFIG', 'amr', 'commercial', '', d)}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ae6f0f4dbc7ac193b50f323a6ae191cb \
                     file://src/omxcore.h;beginline=1;endline=27;md5=806b1e5566c06486fe8e42b461e03a90"
 
@@ -24,14 +24,22 @@ inherit autotools
 
 EXTRA_OECONF += "--disable-doc --disable-Werror"
 
+PROVIDES += "virtual/libomxil"
+
+CFLAGS += "-fcommon"
+
+PACKAGECONFIG ??= ""
+
+PACKAGECONFIG[amr] = "--enable-amr,,"
+
 #
 # The .so files under ${libdir}/bellagio are not intended to be versioned and symlinked.
 # Make sure they get packaged in the main package.
 #
-FILES_${PN} += "${libdir}/bellagio/*.so \
+FILES:${PN} += "${libdir}/bellagio/*.so \
                 ${libdir}/omxloaders/*${SOLIBS}"
-FILES_${PN}-staticdev += "${libdir}/bellagio/*.a \
+FILES:${PN}-staticdev += "${libdir}/bellagio/*.a \
                           ${libdir}/omxloaders/*.a"
-FILES_${PN}-dev += "${libdir}/bellagio/*.la \
+FILES:${PN}-dev += "${libdir}/bellagio/*.la \
                     ${libdir}/omxloaders/*.la \
                     ${libdir}/omxloaders/*${SOLIBSDEV}"

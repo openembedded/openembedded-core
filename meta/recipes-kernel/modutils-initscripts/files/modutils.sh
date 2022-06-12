@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# SPDX-License-Identifier: MIT
+#
+
 ### BEGIN INIT INFO
 # Provides:          module-init-tools
 # Required-Start:    
@@ -13,13 +17,16 @@
 
 LOAD_MODULE=modprobe
 [ -f /proc/modules ] || exit 0
+[ -d /lib/modules/`uname -r` ] || exit 0
+
+# Test if modules.dep exists and has a size greater than zero
+if [ ! -s /lib/modules/`uname -r`/modules.dep ]; then
+	[ "$VERBOSE" != no ] && echo "Calculating module dependencies ..."
+	depmod -a
+fi
+
 [ -f /etc/modules ] || [ -d /etc/modules-load.d ] || exit 0
 [ -e /sbin/modprobe ] || LOAD_MODULE=insmod
-
-if [ ! -f /lib/modules/`uname -r`/modules.dep ]; then
-	[ "$VERBOSE" != no ] && echo "Calculating module dependencies ..."
-	depmod -Ae
-fi
 
 loaded_modules=" "
 

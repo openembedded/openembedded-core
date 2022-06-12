@@ -229,7 +229,7 @@ if [ -d /tgt_root/etc/ ] ; then
     echo "UUID=$boot_uuid              /boot            vfat       defaults              1  2" >> /tgt_root/etc/fstab
     # We dont want udev to mount our root device while we're booting...
     if [ -d /tgt_root/etc/udev/ ] ; then
-        echo "${device}" >> /tgt_root/etc/udev/mount.blacklist
+        echo "${device}" >> /tgt_root/etc/udev/mount.ignorelist
     fi
 fi
 
@@ -278,6 +278,11 @@ if [ -d /run/media/$1/loader ]; then
 fi
 
 umount /tgt_root
+
+# copy any extra files needed for ESP
+if [ -d /run/media/$1/esp ]; then
+    cp -r /run/media/$1/esp/* /boot
+fi
 
 # Copy kernel artifacts. To add more artifacts just add to types
 # For now just support kernel types already being used by something in OE-core

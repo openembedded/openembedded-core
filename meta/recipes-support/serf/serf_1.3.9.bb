@@ -1,4 +1,9 @@
 SUMMARY = "High-Performance Asynchronous HTTP Client Library"
+DESCRIPTION = "The Apache Serf library is a C-based HTTP client library built upon the Apache \
+Portable Runtime (APR) library. It multiplexes connections, running the \
+read/write communication asynchronously. Memory copies and transformations are \
+kept to a minimum to provide high performance operation."
+HOMEPAGE = "http://serf.apache.org/"
 SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://norpath.patch \
            file://env.patch \
@@ -7,6 +12,7 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0003-gen_def.patch \
            file://0004-Follow-up-to-r1811083-fix-building-with-scons-3.0.0-.patch \
            file://SConstruct.stop.creating.directories.without.sandbox-install.prefix.patch \
+           file://0001-buckets-ssl_buckets.c-do-not-use-ERR_GET_FUNC.patch \
            "
 
 SRC_URI[md5sum] = "370a6340ff20366ab088012cd13f2b57"
@@ -30,4 +36,9 @@ EXTRA_OESCONS = " \
                   OPENSSL="${STAGING_EXECPREFIXDIR}" \
                   "
 
-BBCLASSEXTEND = "native"
+# scons creates non-reproducible archives
+do_install:append() {
+	rm ${D}/${libdir}/*.a
+}
+
+BBCLASSEXTEND = "native nativesdk"

@@ -1,21 +1,29 @@
-DESCRIPTION = "Demo application to showcase 3D graphics using kms and gbm"
+SUMMARY = "Demo application to showcase 3D graphics using kms and gbm"
+DESCRIPTION = "kmscube is a little demonstration program for how to drive bare metal graphics \
+without a compositor like X11, wayland or similar, using DRM/KMS (kernel mode \
+setting), GBM (graphics buffer manager) and EGL for rendering content using \
+OpenGL or OpenGL ES."
 HOMEPAGE = "https://cgit.freedesktop.org/mesa/kmscube/"
 LICENSE = "MIT"
 SECTION = "graphics"
-DEPENDS = "virtual/libgles2 virtual/egl libdrm"
+DEPENDS = "virtual/libgles3 virtual/libgles2 virtual/egl libdrm"
 
 LIC_FILES_CHKSUM = "file://kmscube.c;beginline=1;endline=23;md5=8b309d4ee67b7315ff7381270dd631fb"
 
-SRCREV = "f632b23a528ed6b4e1fddd774db005c30ab65568"
-SRC_URI = "git://gitlab.freedesktop.org/mesa/kmscube;branch=master;protocol=https \
-    file://detect-gst_bo_map-_unmap-and-use-it-or-avoid-it.patch"
+SRCREV = "9f63f359fab1b5d8e862508e4e51c9dfe339ccb0"
+SRC_URI = "git://gitlab.freedesktop.org/mesa/kmscube;branch=master;protocol=https"
+SRC_URI += "file://0001-texturator-Use-correct-GL-extension-header.patch"
 UPSTREAM_CHECK_COMMITS = "1"
 
 S = "${WORKDIR}/git"
 
-inherit meson pkgconfig distro_features_check
+inherit meson pkgconfig features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
+DEPENDS = "virtual/libgbm"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[gstreamer] = "-Dgstreamer=enabled,-Dgstreamer=disabled,gstreamer1.0 gstreamer1.0-plugins-base"
+
+CFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', '-DEGL_NO_X11=1', d)}"
+

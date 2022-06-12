@@ -2,18 +2,18 @@ SUMMARY = "Custom Matchbox session files for the Sato environment"
 HOMEPAGE = "http://www.matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 
-LICENSE = "GPLv2.0+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://session;endline=3;md5=f8a5c5b9c279e52dc094d10e11c2be63"
 
 SECTION = "x11"
-RDEPENDS_${PN} = "formfactor matchbox-theme-sato matchbox-panel-2 matchbox-desktop matchbox-session gconf"
+RDEPENDS:${PN} = "formfactor matchbox-theme-sato matchbox-panel-2 matchbox-desktop matchbox-session gconf"
 PR = "r30"
 
 # This package is architecture specific because the session script is modified
 # based on the machine architecture.
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit distro_features_check
+inherit features_check
 
 # The matchbox-theme-sato requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
@@ -22,7 +22,7 @@ SRC_URI = "file://session \
            file://index.theme"
 S = "${WORKDIR}"
 
-FILES_${PN} += "${datadir}/themes/Sato/index.theme"
+FILES:${PN} += "${datadir}/themes/Sato/index.theme"
 
 do_install() {
 	# This is the set of machine features that the script has markers for
@@ -43,7 +43,7 @@ do_install() {
 }
 
 PACKAGE_WRITE_DEPS += "gconf-native"
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 	set_value() {
 		#type, name, value
 		gconftool-2 --config-source=xml::$D${sysconfdir}/gconf/gconf.xml.defaults --direct --type $1 --set /desktop/poky/interface/$2 "$3"

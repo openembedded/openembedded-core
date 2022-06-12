@@ -6,10 +6,12 @@ The program supports recursive retrieval of web-authoring pages as well as \
 FTP sites"
 HOMEPAGE = "https://www.gnu.org/software/wget/"
 SECTION = "console/network"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e"
 
 inherit autotools gettext texinfo update-alternatives pkgconfig
+
+DEPENDS += "autoconf-archive"
 
 EXTRA_OECONF = "--without-libgnutls-prefix --without-libssl-prefix \
                 --disable-rpath"
@@ -17,11 +19,11 @@ EXTRA_OECONF = "--without-libgnutls-prefix --without-libssl-prefix \
 EXTRA_OEMAKE += 'TOOLCHAIN_OPTIONS="${TOOLCHAIN_OPTIONS}" \
                  DEBUG_PREFIX_MAP="${DEBUG_PREFIX_MAP}"'
 
-ALTERNATIVE_${PN} = "wget"
-ALTERNATIVE_${PN}_class-nativesdk = ""
+ALTERNATIVE:${PN} = "wget"
+ALTERNATIVE:${PN}:class-nativesdk = ""
 ALTERNATIVE_PRIORITY = "100"
 
-RRECOMMENDS_${PN} += "ca-certificates"
+RRECOMMENDS:${PN} += "ca-certificates"
 
 BBCLASSEXTEND = "nativesdk"
 

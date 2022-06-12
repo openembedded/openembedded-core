@@ -5,19 +5,11 @@ inherit relocatable
 # no need for them to be a direct target of 'world'
 EXCLUDE_FROM_WORLD = "1"
 
-PACKAGES = ""
-PACKAGES_class-native = ""
-PACKAGES_DYNAMIC = ""
-PACKAGES_DYNAMIC_class-native = ""
 PACKAGE_ARCH = "${BUILD_ARCH}"
 
 # used by cmake class
 OECMAKE_RPATH = "${libdir}"
-OECMAKE_RPATH_class-native = "${libdir}"
-
-# When this class has packaging enabled, setting 
-# RPROVIDES becomes unnecessary.
-RPROVIDES = "${PN}"
+OECMAKE_RPATH:class-native = "${libdir}"
 
 TARGET_ARCH = "${BUILD_ARCH}"
 TARGET_OS = "${BUILD_OS}"
@@ -114,7 +106,7 @@ CLASSOVERRIDE = "class-native"
 MACHINEOVERRIDES = ""
 MACHINE_FEATURES = ""
 
-PATH_prepend = "${COREBASE}/scripts/native-intercept:"
+PATH:prepend = "${COREBASE}/scripts/native-intercept:"
 
 # This class encodes staging paths into its scripts data so can only be
 # reused if we manipulate the paths.
@@ -127,6 +119,7 @@ python native_virtclass_handler () {
     pn = e.data.getVar("PN")
     if not pn.endswith("-native"):
         return
+    bpn = e.data.getVar("BPN")
 
     # Set features here to prevent appends and distro features backfill
     # from modifying native distro features
@@ -138,9 +131,9 @@ python native_virtclass_handler () {
     if "native" not in classextend:
         return
 
-    def map_dependencies(varname, d, suffix = ""):
+    def map_dependencies(varname, d, suffix = "", selfref=True):
         if suffix:
-            varname = varname + "_" + suffix
+            varname = varname + ":" + suffix
         deps = d.getVar(varname)
         if not deps:
             return
@@ -148,22 +141,28 @@ python native_virtclass_handler () {
         newdeps = []
         for dep in deps:
             if dep == pn:
-                continue
+                if not selfref:
+                    continue
+                newdeps.append(dep)
             elif "-cross-" in dep:
                 newdeps.append(dep.replace("-cross", "-native"))
             elif not dep.endswith("-native"):
-                newdeps.append(dep + "-native")
+                # Replace ${PN} with ${BPN} in the dependency to make sure
+                # dependencies on, e.g., ${PN}-foo become ${BPN}-foo-native
+                # rather than ${BPN}-native-foo-native.
+                newdeps.append(dep.replace(pn, bpn) + "-native")
             else:
                 newdeps.append(dep)
-        d.setVar(varname, " ".join(newdeps))
+        d.setVar(varname, " ".join(newdeps), parsing=True)
 
-    map_dependencies("DEPENDS", e.data)
-    for pkg in [e.data.getVar("PN"), "", "${PN}"]:
+    map_dependencies("DEPENDS", e.data, selfref=False)
+    for pkg in e.data.getVar("PACKAGES", False).split():
         map_dependencies("RDEPENDS", e.data, pkg)
         map_dependencies("RRECOMMENDS", e.data, pkg)
         map_dependencies("RSUGGESTS", e.data, pkg)
         map_dependencies("RPROVIDES", e.data, pkg)
         map_dependencies("RREPLACES", e.data, pkg)
+    map_dependencies("PACKAGES", e.data)
 
     provides = e.data.getVar("PROVIDES")
     nprovides = []
@@ -171,7 +170,7 @@ python native_virtclass_handler () {
         if prov.find(pn) != -1:
             nprovides.append(prov)
         elif not prov.endswith("-native"):
-            nprovides.append(prov.replace(prov, prov + "-native"))
+            nprovides.append(prov + "-native")
         else:
             nprovides.append(prov)
     e.data.setVar("PROVIDES", ' '.join(nprovides))
@@ -186,13 +185,44 @@ python do_addto_recipe_sysroot () {
     bb.build.exec_func("extend_recipe_sysroot", d)
 }
 addtask addto_recipe_sysroot after do_populate_sysroot
+do_addto_recipe_sysroot[deptask] = "do_populate_sysroot"
 
 inherit nopackages
 
 do_packagedata[stamp-extra-info] = ""
-do_populate_sysroot[stamp-extra-info] = ""
 
 USE_NLS = "no"
 
 RECIPERDEPTASK = "do_populate_sysroot"
 do_populate_sysroot[rdeptask] = "${RECIPERDEPTASK}"
+
+#
+# Native task outputs are directly run on the target (host) system after being
+# built. Even if the output of this recipe doesn't change, a change in one of
+# its dependencies may cause a change in the output it generates (e.g. rpm
+# output depends on the output of its dependent zstd library).
+#
+# This can cause poor interactions with hash equivalence, since this recipes
+# output-changing dependency is "hidden" and downstream task only see that this
+# recipe has the same outhash and therefore is equivalent. This can result in
+# different output in different cases.
+#
+# To resolve this, unhide the output-changing dependency by adding its unihash
+# to this tasks outhash calculation. Unfortunately, don't know specifically
+# know which dependencies are output-changing, so we have to add all of them.
+#
+python native_add_do_populate_sysroot_deps () {
+    current_task = "do_" + d.getVar("BB_CURRENTTASK")
+    if current_task != "do_populate_sysroot":
+        return
+
+    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
+    pn = d.getVar("PN")
+    deps = {
+        dep[0]:dep[6] for dep in taskdepdata.values() if
+            dep[1] == current_task and dep[0] != pn
+    }
+
+    d.setVar("HASHEQUIV_EXTRA_SIGDATA", "\n".join("%s: %s" % (k, deps[k]) for k in sorted(deps.keys())))
+}
+SSTATECREATEFUNCS += "native_add_do_populate_sysroot_deps"

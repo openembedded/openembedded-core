@@ -3,7 +3,7 @@
 #
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, create_temp_layer
 import os
 import oe
 import glob
@@ -44,7 +44,9 @@ class Signing(OESelftestTestCase):
         origenv = os.environ.copy()
 
         for e in os.environ:
-            if builddir in os.environ[e]:
+            if builddir + "/" in os.environ[e]:
+                os.environ[e] = os.environ[e].replace(builddir + "/", newbuilddir + "/")
+            if os.environ[e].endswith(builddir):
                 os.environ[e] = os.environ[e].replace(builddir, newbuilddir)
 
         os.chdir(newbuilddir)
@@ -143,7 +145,7 @@ class Signing(OESelftestTestCase):
         feature += 'GPG_PATH = "%s"\n' % self.gpg_dir
         feature += 'SSTATE_DIR = "%s"\n' % sstatedir
         # Any mirror might have partial sstate without .sig files, triggering failures
-        feature += 'SSTATE_MIRRORS_forcevariable = ""\n'
+        feature += 'SSTATE_MIRRORS:forcevariable = ""\n'
 
         self.write_config(feature)
 
@@ -157,13 +159,13 @@ class Signing(OESelftestTestCase):
             bitbake('-c clean %s' % test_recipe)
             bitbake('-c populate_lic %s' % test_recipe)
 
-            recipe_sig = glob.glob(sstatedir + '/*/*:ed:*_populate_lic.tgz.sig')
-            recipe_tgz = glob.glob(sstatedir + '/*/*:ed:*_populate_lic.tgz')
+            recipe_sig = glob.glob(sstatedir + '/*/*/*:ed:*_populate_lic.tar.zst.sig')
+            recipe_archive = glob.glob(sstatedir + '/*/*/*:ed:*_populate_lic.tar.zst')
 
             self.assertEqual(len(recipe_sig), 1, 'Failed to find .sig file.')
-            self.assertEqual(len(recipe_tgz), 1, 'Failed to find .tgz file.')
+            self.assertEqual(len(recipe_archive), 1, 'Failed to find .tar.zst file.')
 
-            ret = runCmd('gpg --homedir %s --verify %s %s' % (self.gpg_dir, recipe_sig[0], recipe_tgz[0]))
+            ret = runCmd('gpg --homedir %s --verify %s %s' % (self.gpg_dir, recipe_sig[0], recipe_archive[0]))
             # gpg: Signature made Thu 22 Oct 2015 01:45:09 PM EEST using RSA key ID 61EEFB30
             # gpg: Good signature from "testuser (nocomment) <testuser@email.com>"
             self.assertIn('gpg: Good signature from', ret.output, 'Package signed incorrectly.')
@@ -185,8 +187,6 @@ class LockedSignatures(OESelftestTestCase):
         test_recipe = 'ed'
         locked_sigs_file = 'locked-sigs.inc'
 
-        self.add_command_to_tearDown('rm -f %s' % os.path.join(self.builddir, locked_sigs_file))
-
         bitbake(test_recipe)
         # Generate locked sigs include file
         bitbake('-S none %s' % test_recipe)
@@ -198,16 +198,23 @@ class LockedSignatures(OESelftestTestCase):
         # Build a locked recipe
         bitbake(test_recipe)
 
+        templayerdir = tempfile.mkdtemp(prefix='signingqa')
+        create_temp_layer(templayerdir, 'selftestsigning')
+        runCmd('bitbake-layers add-layer %s' % templayerdir)
+
         # Make a change that should cause the locked task signature to change
         # Use uuid so hash equivalance server isn't triggered
         recipe_append_file = test_recipe + '_' + get_bb_var('PV', test_recipe) + '.bbappend'
-        recipe_append_path = os.path.join(self.testlayer_path, 'recipes-test', test_recipe, recipe_append_file)
-        feature = 'SUMMARY_${PN} = "test locked signature%s"\n' % uuid.uuid4()
+        recipe_append_path = os.path.join(templayerdir, 'recipes-test', test_recipe, recipe_append_file)
+        feature = 'SUMMARY:${PN} = "test locked signature%s"\n' % uuid.uuid4()
 
-        os.mkdir(os.path.join(self.testlayer_path, 'recipes-test', test_recipe))
+        os.mkdir(os.path.join(templayerdir, 'recipes-test'))
+        os.mkdir(os.path.join(templayerdir, 'recipes-test', test_recipe))
         write_file(recipe_append_path, feature)
 
-        self.add_command_to_tearDown('rm -rf %s' % os.path.join(self.testlayer_path, 'recipes-test', test_recipe))
+        self.add_command_to_tearDown('bitbake-layers remove-layer %s' % templayerdir)
+        self.add_command_to_tearDown('rm -f %s' % os.path.join(self.builddir, locked_sigs_file))
+        self.add_command_to_tearDown('rm -rf %s' % templayerdir)
 
         # Build the recipe again
         ret = bitbake(test_recipe)

@@ -4,7 +4,7 @@
 
 PR = "r40"
 
-inherit packagegroup distro_features_check
+inherit packagegroup features_check
 REQUIRED_DISTRO_FEATURES = "x11"
 
 PACKAGES = "${PN} ${PN}-utils"
@@ -16,13 +16,13 @@ VIRTUAL-RUNTIME_xserver_common ?= ""
 VIRTUAL-RUNTIME_graphical_init_manager ?= "xserver-nodm-init"
 
 SUMMARY = "X11 display server and basic utilities"
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
     ${PN}-xserver \
     ${PN}-utils \
     "
 
-SUMMARY_${PN}-utils = "X11 basic utilities and init"
-RDEPENDS_${PN}-utils = "\
+SUMMARY:${PN}-utils = "X11 basic utilities and init"
+RDEPENDS:${PN}-utils = "\
     ${VIRTUAL-RUNTIME_xserver_common} \
     ${VIRTUAL-RUNTIME_graphical_init_manager} \
     xauth \

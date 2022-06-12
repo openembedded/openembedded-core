@@ -145,8 +145,8 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' --src-subdir "%s"' % args.src_subdir
     if args.autorev:
         extracmdopts += ' -a'
-    if args.fetch_dev:
-        extracmdopts += ' --fetch-dev'
+    if args.npm_dev:
+        extracmdopts += ' --npm-dev'
     if args.mirrors:
         extracmdopts += ' --mirrors'
     if args.srcrev:
@@ -254,20 +254,16 @@ def add(args, config, basepath, workspace):
                 f.write('\n# initial_rev: %s\n' % initial_rev)
 
             if args.binary:
-                f.write('do_install_append() {\n')
+                f.write('do_install:append() {\n')
                 f.write('    rm -rf ${D}/.git\n')
                 f.write('    rm -f ${D}/singletask.lock\n')
                 f.write('}\n')
 
             if bb.data.inherits_class('npm', rd):
-                f.write('do_install_append() {\n')
-                f.write('    # Remove files added to source dir by devtool/externalsrc\n')
-                f.write('    rm -f ${NPM_INSTALLDIR}/singletask.lock\n')
-                f.write('    rm -rf ${NPM_INSTALLDIR}/.git\n')
-                f.write('    rm -rf ${NPM_INSTALLDIR}/oe-local-files\n')
-                f.write('    for symlink in ${EXTERNALSRC_SYMLINKS} ; do\n')
-                f.write('        rm -f ${NPM_INSTALLDIR}/${symlink%%:*}\n')
-                f.write('    done\n')
+                f.write('python do_configure:append() {\n')
+                f.write('    pkgdir = d.getVar("NPM_PACKAGE")\n')
+                f.write('    lockfile = os.path.join(pkgdir, "singletask.lock")\n')
+                f.write('    bb.utils.remove(lockfile)\n')
                 f.write('}\n')
 
         # Check if the new layer provides recipes whose priorities have been
@@ -322,10 +318,6 @@ def _check_compatible_recipe(pn, d):
         raise DevtoolError("The %s recipe is a packagegroup, and therefore is "
                            "not supported by this tool" % pn, 4)
 
-    if bb.data.inherits_class('meta', d):
-        raise DevtoolError("The %s recipe is a meta-recipe, and therefore is "
-                           "not supported by this tool" % pn, 4)
-
     if bb.data.inherits_class('externalsrc', d) and d.getVar('EXTERNALSRC'):
         # Not an incompatibility error per se, so we don't pass the error code
         raise DevtoolError("externalsrc is currently enabled for the %s "
@@ -361,7 +353,7 @@ def _move_file(src, dst, dry_run_outdir=None, base_outdir=None):
             bb.utils.mkdirhier(dst_d)
         shutil.move(src, dst)
 
-def _copy_file(src, dst, dry_run_outdir=None):
+def _copy_file(src, dst, dry_run_outdir=None, base_outdir=None):
     """Copy a file. Creates all the directory components of destination path."""
     dry_run_suffix = ' (dry-run)' if dry_run_outdir else ''
     logger.debug('Copying %s to %s%s' % (src, dst, dry_run_suffix))
@@ -478,7 +470,11 @@ def symlink_oelocal_files_srctree(rd,srctree):
                 destpth = os.path.join(srctree, relpth, fn)
                 if os.path.exists(destpth):
                     os.unlink(destpth)
-                os.symlink('oe-local-files/%s' % fn, destpth)
+                if relpth != '.':
+                    back_relpth = os.path.relpath(local_files_dir, root)
+                    os.symlink('%s/oe-local-files/%s/%s' % (back_relpth, relpth, fn), destpth)
+                else:
+                    os.symlink('oe-local-files/%s' % fn, destpth)
                 addfiles.append(os.path.join(relpth, fn))
         if addfiles:
             bb.process.run('git add %s' % ' '.join(addfiles), cwd=srctree)
@@ -523,7 +519,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
         history = d.varhistory.variable('SRC_URI')
         for event in history:
             if not 'flag' in event:
-                if event['op'].startswith(('_append[', '_prepend[')):
+                if event['op'].startswith((':append[', ':prepend[')):
                     extra_overrides.append(event['op'].split('[')[1].split(']')[0])
         # We want to remove duplicate overrides. If a recipe had multiple
         # SRC_URI_override += values it would cause mulitple instances of
@@ -535,7 +531,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
 
     initial_rev = None
 
-    appendexisted = False
     recipefile = d.getVar('FILE')
     appendfile = recipe_to_append(recipefile, config)
     is_kernel_yocto = bb.data.inherits_class('kernel-yocto', d)
@@ -594,6 +589,16 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
             else:
                 task = 'do_patch'
 
+                if 'noexec' in (d.getVarFlags(task, False) or []) or 'task' not in (d.getVarFlags(task, False) or []):
+                    logger.info('The %s recipe has %s disabled. Running only '
+                                       'do_configure task dependencies' % (pn, task))
+
+                    if 'depends' in d.getVarFlags('do_configure', False):
+                        pn = d.getVarFlags('do_configure', False)['depends']
+                        pn = pn.replace('${PV}', d.getVar('PV'))
+                        pn = pn.replace('${COMPILERDEP}', d.getVar('COMPILERDEP'))
+                        task = None
+
             # Run the fetch + unpack tasks
             res = tinfoil.build_targets(pn,
                                         task,
@@ -604,6 +609,17 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
 
         if not res:
             raise DevtoolError('Extracting source for %s failed' % pn)
+
+        if not is_kernel_yocto and ('noexec' in (d.getVarFlags('do_patch', False) or []) or 'task' not in (d.getVarFlags('do_patch', False) or [])):
+            workshareddir = d.getVar('S')
+            if os.path.islink(srctree):
+                os.unlink(srctree)
+
+            os.symlink(workshareddir, srctree)
+
+            # The initial_rev file is created in devtool_post_unpack function that will not be executed if
+            # do_unpack/do_patch tasks are disabled so we have to directly say that source extraction was successful
+            return True, True
 
         try:
             with open(os.path.join(tempdir, 'initial_rev'), 'r') as f:
@@ -726,7 +742,7 @@ def _check_preserve(config, recipename):
                         os.remove(removefile)
                 else:
                     tf.write(line)
-    os.rename(newfile, origfile)
+    bb.utils.rename(newfile, origfile)
 
 def get_staging_kver(srcdir):
     # Kernel version from work-shared
@@ -852,10 +868,11 @@ def modify(args, config, basepath, workspace):
             if not initial_rev:
                 return 1
             logger.info('Source tree extracted to %s' % srctree)
-            # Get list of commits since this revision
-            (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_rev, cwd=srctree)
-            commits = stdout.split()
-            check_commits = True
+            if os.path.exists(os.path.join(srctree, '.git')):
+                # Get list of commits since this revision
+                (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_rev, cwd=srctree)
+                commits = stdout.split()
+                check_commits = True
         else:
             if os.path.exists(os.path.join(srctree, '.git')):
                 # Check if it's a tree previously extracted by us. This is done
@@ -915,33 +932,40 @@ def modify(args, config, basepath, workspace):
 
         bb.utils.mkdirhier(os.path.dirname(appendfile))
         with open(appendfile, 'w') as f:
-            f.write('FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"\n')
+            f.write('FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n')
             # Local files can be modified/tracked in separate subdir under srctree
             # Mostly useful for packages with S != WORKDIR
-            f.write('FILESPATH_prepend := "%s:"\n' %
+            f.write('FILESPATH:prepend := "%s:"\n' %
                     os.path.join(srctreebase, 'oe-local-files'))
             f.write('# srctreebase: %s\n' % srctreebase)
 
             f.write('\ninherit externalsrc\n')
             f.write('# NOTE: We use pn- overrides here to avoid affecting multiple variants in the case where the recipe uses BBCLASSEXTEND\n')
-            f.write('EXTERNALSRC_pn-%s = "%s"\n' % (pn, srctree))
+            f.write('EXTERNALSRC:pn-%s = "%s"\n' % (pn, srctree))
 
             b_is_s = use_external_build(args.same_dir, args.no_same_dir, rd)
             if b_is_s:
-                f.write('EXTERNALSRC_BUILD_pn-%s = "%s"\n' % (pn, srctree))
+                f.write('EXTERNALSRC_BUILD:pn-%s = "%s"\n' % (pn, srctree))
 
             if bb.data.inherits_class('kernel', rd):
                 f.write('SRCTREECOVEREDTASKS = "do_validate_branches do_kernel_checkout '
-                        'do_fetch do_unpack do_kernel_configme do_kernel_configcheck"\n')
+                        'do_fetch do_unpack do_kernel_configcheck"\n')
                 f.write('\ndo_patch[noexec] = "1"\n')
-                f.write('\ndo_configure_append() {\n'
+                f.write('\ndo_configure:append() {\n'
                         '    cp ${B}/.config ${S}/.config.baseline\n'
                         '    ln -sfT ${B}/.config ${S}/.config.new\n'
                         '}\n')
+                f.write('\ndo_kernel_configme:prepend() {\n'
+                        '    if [ -e ${S}/.config ]; then\n'
+                        '        mv ${S}/.config ${S}/.config.old\n'
+                        '    fi\n'
+                        '}\n')
             if rd.getVarFlag('do_menuconfig','task'):
-                f.write('\ndo_configure_append() {\n'
-                '    cp ${B}/.config ${S}/.config.baseline\n'
-                '    ln -sfT ${B}/.config ${S}/.config.new\n'
+                f.write('\ndo_configure:append() {\n'
+                '    if [ ! ${DEVTOOL_DISABLE_MENUCONFIG} ]; then\n'
+                '        cp ${B}/.config ${S}/.config.baseline\n'
+                '        ln -sfT ${B}/.config ${S}/.config.new\n'
+                '    fi\n'
                 '}\n')
             if initial_rev:
                 f.write('\n# initial_rev: %s\n' % initial_rev)
@@ -1066,10 +1090,10 @@ def rename(args, config, basepath, workspace):
 
     # Rename bbappend
     logger.info('Renaming %s to %s' % (append, newappend))
-    os.rename(append, newappend)
+    bb.utils.rename(append, newappend)
     # Rename recipe file
     logger.info('Renaming %s to %s' % (recipefile, newfile))
-    os.rename(recipefile, newfile)
+    bb.utils.rename(recipefile, newfile)
 
     # Rename source tree if it's the default path
     appendmd5 = None
@@ -1305,7 +1329,7 @@ def _export_patches(srctree, rd, start_rev, destdir, changed_revs=None):
         if match_name:
             # Rename patch files
             if new_patch != match_name:
-                os.rename(os.path.join(destdir, new_patch),
+                bb.utils.rename(os.path.join(destdir, new_patch),
                           os.path.join(destdir, match_name))
             # Need to pop it off the list now before checking changed_revs
             oldpath = existing_patches.pop(old_patch)
@@ -1713,7 +1737,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
 
 def _guess_recipe_update_mode(srctree, rdata):
     """Guess the recipe update mode to use"""
-    src_uri = (rdata.getVar('SRC_URI', False) or '').split()
+    src_uri = (rdata.getVar('SRC_URI') or '').split()
     git_uris = [uri for uri in src_uri if uri.startswith('git://')]
     if not git_uris:
         return 'patch'
@@ -2021,7 +2045,7 @@ def finish(args, config, basepath, workspace):
     remove_work=args.remove_work
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
-        rd = parse_recipe(config, tinfoil, args.recipename, True, False)
+        rd = parse_recipe(config, tinfoil, args.recipename, True)
         if not rd:
             return 1
 
@@ -2197,7 +2221,7 @@ def register_commands(subparsers, context):
     group.add_argument('--same-dir', '-s', help='Build in same directory as source', action="store_true")
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_add.add_argument('--fetch', '-f', help='Fetch the specified URI and extract it to create the source tree (deprecated - pass as positional argument instead)', metavar='URI')
-    parser_add.add_argument('--fetch-dev', help='For npm, also fetch devDependencies', action="store_true")
+    parser_add.add_argument('--npm-dev', help='For npm, also fetch devDependencies', action="store_true")
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.add_argument('--no-git', '-g', help='If fetching source, do not set up source tree as a git repository', action="store_true")
     group = parser_add.add_mutually_exclusive_group()

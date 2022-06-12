@@ -48,7 +48,6 @@ DUMMYPROVIDES_PACKAGES = "\
 "
 
 DUMMYPROVIDES = "\
-    ${@' '.join([multilib_pkg_extend(d, pkg) for pkg in d.getVar('DUMMYPROVIDES_PACKAGES').split()])} \
     /bin/sh \
     /bin/bash \
     /usr/bin/env \
@@ -59,4 +58,4 @@ DUMMYPROVIDES = "\
 
 require dummy-sdk-package.inc
 
-SSTATE_DUPWHITELIST += "${PKGDATA_DIR}/${PN} ${PKGDATA_DIR}/runtime/${PN}"
+SSTATE_ALLOW_OVERLAP_FILES += "${PKGDATA_DIR}/${PN} ${PKGDATA_DIR}/runtime/${PN}"

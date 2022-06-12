@@ -1,8 +1,8 @@
-From 98254e4798e79d52ac6b562616cd244120f6e239 Mon Sep 17 00:00:00 2001
+From f9974d7dc289551bfbf823b716fd32b43c54e465 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Thu, 21 Feb 2019 16:23:24 +0800
-Subject: [PATCH 1/5] binfmt: Don't install dependency links at install time 
- for the binfmt services
+Subject: [PATCH] binfmt: Don't install dependency links at install time for
+ the binfmt services
 
 use [Install] blocks so that they get created when the service is enabled
 like a traditional service.
@@ -18,6 +18,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 [rebased for systemd 243]
 Signed-off-by: Scott Murray <scott.murray@konsulko.com>
+
 ---
  units/meson.build                       | 6 ++----
  units/proc-sys-fs-binfmt_misc.automount | 3 +++
@@ -25,34 +26,34 @@ Signed-off-by: Scott Murray <scott.murray@konsulko.com>
  3 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/units/meson.build b/units/meson.build
-index e1ee9f86c3..6bb7771b36 100644
+index a9bf28f6d9..11d3644168 100644
 --- a/units/meson.build
 +++ b/units/meson.build
-@@ -46,8 +46,7 @@ units = [
+@@ -63,8 +63,7 @@ units = [
          ['poweroff.target',                     '',
-          'runlevel0.target'],
+          (with_runlevels ? 'runlevel0.target' : '')],
          ['printer.target',                      ''],
 -        ['proc-sys-fs-binfmt_misc.automount',   'ENABLE_BINFMT',
 -         'sysinit.target.wants/'],
 +        ['proc-sys-fs-binfmt_misc.automount',   'ENABLE_BINFMT'],
          ['proc-sys-fs-binfmt_misc.mount',       'ENABLE_BINFMT'],
          ['reboot.target',                       '',
-          'runlevel6.target ctrl-alt-del.target'],
-@@ -130,8 +129,7 @@ in_units = [
-         ['systemd-ask-password-console.service', ''],
-         ['systemd-ask-password-wall.service',    ''],
+          'ctrl-alt-del.target' + (with_runlevels ? ' runlevel6.target' : '')],
+@@ -184,8 +183,7 @@ in_units = [
+         ['rescue.service',                       ''],
+         ['serial-getty@.service',                ''],
          ['systemd-backlight@.service',           'ENABLE_BACKLIGHT'],
 -        ['systemd-binfmt.service',               'ENABLE_BINFMT',
 -         'sysinit.target.wants/'],
 +        ['systemd-binfmt.service',               'ENABLE_BINFMT'],
-         ['systemd-bless-boot.service',           'ENABLE_EFI HAVE_BLKID'],
+         ['systemd-bless-boot.service',           'HAVE_GNU_EFI HAVE_BLKID'],
          ['systemd-boot-check-no-failures.service', ''],
-         ['systemd-boot-system-token.service',    'ENABLE_EFI',
+         ['systemd-coredump@.service',            'ENABLE_COREDUMP'],
 diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
-index 30a6bc9918..4231f3b70f 100644
+index 172c8757ab..f65d8930c6 100644
 --- a/units/proc-sys-fs-binfmt_misc.automount
 +++ b/units/proc-sys-fs-binfmt_misc.automount
-@@ -18,3 +18,6 @@ ConditionPathIsReadWrite=/proc/sys/
+@@ -19,3 +19,6 @@ ConditionPathIsReadWrite=/proc/sys/
  
  [Automount]
  Where=/proc/sys/fs/binfmt_misc
@@ -60,7 +61,7 @@ index 30a6bc9918..4231f3b70f 100644
 +[Install]
 +WantedBy=sysinit.target
 diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
-index e940c7c9ad..6be7f5cc9b 100644
+index 96f595ad72..7c010bb224 100644
 --- a/units/systemd-binfmt.service.in
 +++ b/units/systemd-binfmt.service.in
 @@ -14,6 +14,7 @@ Documentation=https://www.kernel.org/doc/html/latest/admin-guide/binfmt-misc.htm
@@ -69,11 +70,11 @@ index e940c7c9ad..6be7f5cc9b 100644
  Conflicts=shutdown.target
 +Wants=proc-sys-fs-binfmt_misc.automount
  After=proc-sys-fs-binfmt_misc.automount
- Before=sysinit.target shutdown.target
- ConditionPathIsReadWrite=/proc/sys/
-@@ -28,3 +29,6 @@ Type=oneshot
- RemainAfterExit=yes
- ExecStart=@rootlibexecdir@/systemd-binfmt
+ After=proc-sys-fs-binfmt_misc.mount
+ After=local-fs.target
+@@ -31,3 +32,6 @@ RemainAfterExit=yes
+ ExecStart={{ROOTLIBEXECDIR}}/systemd-binfmt
+ ExecStop={{ROOTLIBEXECDIR}}/systemd-binfmt --unregister
  TimeoutSec=90s
 +
 +[Install]

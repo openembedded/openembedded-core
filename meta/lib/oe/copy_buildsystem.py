@@ -20,7 +20,7 @@ def _smart_copy(src, dest):
     mode = os.stat(src).st_mode
     if stat.S_ISDIR(mode):
         bb.utils.mkdirhier(dest)
-        cmd = "tar --exclude='.git' --xattrs --xattrs-include='*' -chf - -C %s -p . \
+        cmd = "tar --exclude='.git' --exclude='__pycache__' --xattrs --xattrs-include='*' -chf - -C %s -p . \
         | tar --xattrs --xattrs-include='*' -xf - -C %s" % (src, dest)
         subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
     else:
@@ -45,9 +45,6 @@ class BuildSystem(object):
 
         corebase = os.path.abspath(self.d.getVar('COREBASE'))
         layers.append(corebase)
-        # Get relationship between TOPDIR and COREBASE
-        # Layers should respect it
-        corebase_relative = os.path.dirname(os.path.relpath(os.path.abspath(self.d.getVar('TOPDIR')), corebase))
         # The bitbake build system uses the meta-skeleton layer as a layout
         # for common recipies, e.g: the recipetool script to create kernel recipies
         # Add the meta-skeleton layer to be included as part of the eSDK installation
@@ -100,11 +97,10 @@ class BuildSystem(object):
             layerdestpath = destdir
             if corebase == os.path.dirname(layer):
                 layerdestpath += '/' + os.path.basename(corebase)
-            else:
-                layer_relative = os.path.relpath(layer, corebase)
-                if os.path.dirname(layer_relative) == corebase_relative:
-                    layer_relative = os.path.dirname(corebase_relative) + '/' + layernewname
-                layer_relative = os.path.basename(corebase) + '/' + layer_relative
+            # If the layer is located somewhere under the same parent directory
+            # as corebase we keep the layer structure.
+            elif os.path.commonpath([layer, corebase]) == os.path.dirname(corebase):
+                layer_relative = os.path.relpath(layer, os.path.dirname(corebase))
                 if os.path.dirname(layer_relative) != layernewname:
                     layerdestpath += '/' + os.path.dirname(layer_relative)
 
@@ -259,7 +255,7 @@ def create_locked_sstate_cache(lockedsigs, input_sstate_cache, output_sstate_cac
     bb.note('Generating sstate-cache...')
 
     nativelsbstring = d.getVar('NATIVELSBSTRING')
-    bb.process.run("gen-lockedsig-cache %s %s %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache, nativelsbstring, filterfile or ''))
+    bb.process.run("PYTHONDONTWRITEBYTECODE=1 gen-lockedsig-cache %s %s %s %s %s" % (lockedsigs, input_sstate_cache, output_sstate_cache, nativelsbstring, filterfile or ''))
     if fixedlsbstring and nativelsbstring != fixedlsbstring:
         nativedir = output_sstate_cache + '/' + nativelsbstring
         if os.path.isdir(nativedir):
@@ -286,7 +282,7 @@ def check_sstate_task_list(d, targets, filteroutfile, cmdprefix='', cwd=None, lo
         logparam = '-l %s' % logfile
     else:
         logparam = ''
-    cmd = "%sBB_SETSCENE_ENFORCE=1 PSEUDO_DISABLED=1 oe-check-sstate %s -s -o %s %s" % (cmdprefix, targets, filteroutfile, logparam)
+    cmd = "%sPYTHONDONTWRITEBYTECODE=1 BB_SETSCENE_ENFORCE=1 PSEUDO_DISABLED=1 oe-check-sstate %s -s -o %s %s" % (cmdprefix, targets, filteroutfile, logparam)
     env = dict(d.getVar('BB_ORIGENV', False))
     env.pop('BUILDDIR', '')
     env.pop('BBPATH', '')

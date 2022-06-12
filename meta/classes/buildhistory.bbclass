@@ -7,6 +7,8 @@
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
 
+inherit image-artifact-names
+
 BUILDHISTORY_FEATURES ?= "image package sdk"
 BUILDHISTORY_DIR ?= "${TOPDIR}/buildhistory"
 BUILDHISTORY_DIR_IMAGE = "${BUILDHISTORY_DIR}/images/${MACHINE_ARCH}/${TCLIBC}/${IMAGE_BASENAME}"
@@ -29,7 +31,7 @@ BUILDHISTORY_DIR_PACKAGE = "${BUILDHISTORY_DIR}/packages/${MULTIMACH_TARGET_SYS}
 # of failed builds.
 #
 # The expected usage is via auto.conf, but passing via the command line also works
-# with: BB_ENV_EXTRAWHITE=BUILDHISTORY_RESET BUILDHISTORY_RESET=1
+# with: BB_ENV_PASSTHROUGH_ADDITIONS=BUILDHISTORY_RESET BUILDHISTORY_RESET=1
 BUILDHISTORY_RESET ?= ""
 
 BUILDHISTORY_OLD_DIR = "${BUILDHISTORY_DIR}/${@ "old" if "${BUILDHISTORY_RESET}" else ""}"
@@ -40,15 +42,17 @@ BUILDHISTORY_SDK_FILES ?= "conf/local.conf conf/bblayers.conf conf/auto.conf con
 BUILDHISTORY_COMMIT ?= "1"
 BUILDHISTORY_COMMIT_AUTHOR ?= "buildhistory <buildhistory@${DISTRO}>"
 BUILDHISTORY_PUSH_REPO ?= ""
+BUILDHISTORY_TAG ?= "build"
+BUILDHISTORY_PATH_PREFIX_STRIP ?= ""
 
-SSTATEPOSTINSTFUNCS_append = " buildhistory_emit_pkghistory"
+SSTATEPOSTINSTFUNCS:append = " buildhistory_emit_pkghistory"
 # We want to avoid influencing the signatures of sstate tasks - first the function itself:
 sstate_install[vardepsexclude] += "buildhistory_emit_pkghistory"
 # then the value added to SSTATEPOSTINSTFUNCS:
 SSTATEPOSTINSTFUNCS[vardepvalueexclude] .= "| buildhistory_emit_pkghistory"
 
 # Similarly for our function that gets the output signatures
-SSTATEPOSTUNPACKFUNCS_append = " buildhistory_emit_outputsigs"
+SSTATEPOSTUNPACKFUNCS:append = " buildhistory_emit_outputsigs"
 sstate_installpkgdir[vardepsexclude] += "buildhistory_emit_outputsigs"
 SSTATEPOSTUNPACKFUNCS[vardepvalueexclude] .= "| buildhistory_emit_outputsigs"
 
@@ -87,11 +91,17 @@ buildhistory_emit_sysroot() {
 python buildhistory_emit_pkghistory() {
     if d.getVar('BB_CURRENTTASK') in ['populate_sysroot', 'populate_sysroot_setscene']:
         bb.build.exec_func("buildhistory_emit_sysroot", d)
-
-    if not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
         return 0
 
     if not "package" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
+        return 0
+
+    if d.getVar('BB_CURRENTTASK') in ['package', 'package_setscene']:
+        # Create files-in-<package-name>.txt files containing a list of files of each recipe's package
+        bb.build.exec_func("buildhistory_list_pkg_files", d)
+        return 0
+
+    if not d.getVar('BB_CURRENTTASK') in ['packagedata', 'packagedata_setscene']:
         return 0
 
     import re
@@ -112,6 +122,9 @@ python buildhistory_emit_pkghistory() {
             self.packages = ""
             self.srcrev = ""
             self.layer = ""
+            self.license = ""
+            self.config = ""
+            self.src_uri = ""
 
 
     class PackageInfo:
@@ -213,6 +226,7 @@ python buildhistory_emit_pkghistory() {
     pv = d.getVar('PV')
     pr = d.getVar('PR')
     layer = bb.utils.get_file_layer(d.getVar('FILE'), d)
+    license = d.getVar('LICENSE')
 
     pkgdata_dir = d.getVar('PKGDATA_DIR')
     packages = ""
@@ -253,22 +267,20 @@ python buildhistory_emit_pkghistory() {
     rcpinfo.depends = sortlist(oe.utils.squashspaces(d.getVar('DEPENDS') or ""))
     rcpinfo.packages = packages
     rcpinfo.layer = layer
+    rcpinfo.license = license
+    rcpinfo.config = sortlist(oe.utils.squashspaces(d.getVar('PACKAGECONFIG') or ""))
+    rcpinfo.src_uri = oe.utils.squashspaces(d.getVar('SRC_URI') or "")
     write_recipehistory(rcpinfo, d)
 
-    pkgdest = d.getVar('PKGDEST')
-    for pkg in packagelist:
-        pkgdata = {}
-        with open(os.path.join(pkgdata_dir, 'runtime', pkg)) as f:
-            for line in f.readlines():
-                item = line.rstrip('\n').split(': ', 1)
-                key = item[0]
-                if key.endswith('_' + pkg):
-                    key = key[:-len(pkg)-1]
-                pkgdata[key] = item[1].encode('latin-1').decode('unicode_escape')
+    bb.build.exec_func("read_subpackage_metadata", d)
 
-        pkge = pkgdata.get('PKGE', '0')
-        pkgv = pkgdata['PKGV']
-        pkgr = pkgdata['PKGR']
+    for pkg in packagelist:
+        localdata = d.createCopy()
+        localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + pkg)
+
+        pkge = localdata.getVar("PKGE") or '0'
+        pkgv = localdata.getVar("PKGV")
+        pkgr = localdata.getVar("PKGR")
         #
         # Find out what the last version was
         # Make sure the version did not decrease
@@ -280,41 +292,40 @@ python buildhistory_emit_pkghistory() {
             last_pkgr = lastversion.pkgr
             r = bb.utils.vercmp((pkge, pkgv, pkgr), (last_pkge, last_pkgv, last_pkgr))
             if r < 0:
-                msg = "Package version for package %s went backwards which would break package feeds from (%s:%s-%s to %s:%s-%s)" % (pkg, last_pkge, last_pkgv, last_pkgr, pkge, pkgv, pkgr)
-                package_qa_handle_error("version-going-backwards", msg, d)
+                msg = "Package version for package %s went backwards which would break package feeds (from %s:%s-%s to %s:%s-%s)" % (pkg, last_pkge, last_pkgv, last_pkgr, pkge, pkgv, pkgr)
+                oe.qa.handle_error("version-going-backwards", msg, d)
 
         pkginfo = PackageInfo(pkg)
         # Apparently the version can be different on a per-package basis (see Python)
-        pkginfo.pe = pkgdata.get('PE', '0')
-        pkginfo.pv = pkgdata['PV']
-        pkginfo.pr = pkgdata['PR']
-        pkginfo.pkg = pkgdata['PKG']
+        pkginfo.pe = localdata.getVar("PE") or '0'
+        pkginfo.pv = localdata.getVar("PV")
+        pkginfo.pr = localdata.getVar("PR")
+        pkginfo.pkg = localdata.getVar("PKG")
         pkginfo.pkge = pkge
         pkginfo.pkgv = pkgv
         pkginfo.pkgr = pkgr
-        pkginfo.rprovides = sortpkglist(oe.utils.squashspaces(pkgdata.get('RPROVIDES', "")))
-        pkginfo.rdepends = sortpkglist(oe.utils.squashspaces(pkgdata.get('RDEPENDS', "")))
-        pkginfo.rrecommends = sortpkglist(oe.utils.squashspaces(pkgdata.get('RRECOMMENDS', "")))
-        pkginfo.rsuggests = sortpkglist(oe.utils.squashspaces(pkgdata.get('RSUGGESTS', "")))
-        pkginfo.rreplaces = sortpkglist(oe.utils.squashspaces(pkgdata.get('RREPLACES', "")))
-        pkginfo.rconflicts = sortpkglist(oe.utils.squashspaces(pkgdata.get('RCONFLICTS', "")))
-        pkginfo.files = oe.utils.squashspaces(pkgdata.get('FILES', ""))
+        pkginfo.rprovides = sortpkglist(oe.utils.squashspaces(localdata.getVar("RPROVIDES") or ""))
+        pkginfo.rdepends = sortpkglist(oe.utils.squashspaces(localdata.getVar("RDEPENDS") or ""))
+        pkginfo.rrecommends = sortpkglist(oe.utils.squashspaces(localdata.getVar("RRECOMMENDS") or ""))
+        pkginfo.rsuggests = sortpkglist(oe.utils.squashspaces(localdata.getVar("RSUGGESTS") or ""))
+        pkginfo.replaces = sortpkglist(oe.utils.squashspaces(localdata.getVar("RREPLACES") or ""))
+        pkginfo.rconflicts = sortpkglist(oe.utils.squashspaces(localdata.getVar("RCONFLICTS") or ""))
+        pkginfo.files = oe.utils.squashspaces(localdata.getVar("FILES") or "")
         for filevar in pkginfo.filevars:
-            pkginfo.filevars[filevar] = pkgdata.get(filevar, "")
+            pkginfo.filevars[filevar] = localdata.getVar(filevar) or ""
 
         # Gather information about packaged files
-        val = pkgdata.get('FILES_INFO', '')
+        val = localdata.getVar('FILES_INFO') or ''
         dictval = json.loads(val)
         filelist = list(dictval.keys())
         filelist.sort()
         pkginfo.filelist = " ".join([shlex.quote(x) for x in filelist])
 
-        pkginfo.size = int(pkgdata['PKGSIZE'])
+        pkginfo.size = int(localdata.getVar('PKGSIZE') or '0')
 
         write_pkghistory(pkginfo, d)
 
-    # Create files-in-<package-name>.txt files containing a list of files of each recipe's package
-    bb.build.exec_func("buildhistory_list_pkg_files", d)
+    oe.qa.exit_if_errors(d)
 }
 
 python buildhistory_emit_outputsigs() {
@@ -367,6 +378,9 @@ def write_recipehistory(rcpinfo, d):
         f.write(u"DEPENDS = %s\n" %  rcpinfo.depends)
         f.write(u"PACKAGES = %s\n" %  rcpinfo.packages)
         f.write(u"LAYER = %s\n" %  rcpinfo.layer)
+        f.write(u"LICENSE = %s\n" %  rcpinfo.license)
+        f.write(u"CONFIG = %s\n" %  rcpinfo.config)
+        f.write(u"SRC_URI = %s\n" %  rcpinfo.src_uri)
 
     write_latest_srcrev(d, pkghistdir)
 
@@ -425,19 +439,24 @@ def buildhistory_list_installed(d, rootfs_type="image"):
     from oe.sdk import sdk_list_installed_packages
     from oe.utils import format_pkg_list
 
-    process_list = [('file', 'bh_installed_pkgs.txt'),\
-                    ('deps', 'bh_installed_pkgs_deps.txt')]
+    process_list = [('file', 'bh_installed_pkgs_%s.txt' % os.getpid()),\
+                    ('deps', 'bh_installed_pkgs_deps_%s.txt' % os.getpid())]
 
     if rootfs_type == "image":
         pkgs = image_list_installed_packages(d)
     else:
         pkgs = sdk_list_installed_packages(d, rootfs_type == "sdk_target")
 
+    if rootfs_type == "sdk_host":
+        pkgdata_dir = d.getVar('PKGDATA_DIR_SDK')
+    else:
+        pkgdata_dir = d.getVar('PKGDATA_DIR')
+
     for output_type, output_file in process_list:
         output_file_full = os.path.join(d.getVar('WORKDIR'), output_file)
 
         with open(output_file_full, 'w') as output:
-            output.write(format_pkg_list(pkgs, output_type))
+            output.write(format_pkg_list(pkgs, output_type, pkgdata_dir))
 
 python buildhistory_list_installed_image() {
     buildhistory_list_installed(d)
@@ -456,9 +475,10 @@ buildhistory_get_installed() {
 
 	# Get list of installed packages
 	pkgcache="$1/installed-packages.tmp"
-	cat ${WORKDIR}/bh_installed_pkgs.txt | sort > $pkgcache && rm ${WORKDIR}/bh_installed_pkgs.txt
+	cat ${WORKDIR}/bh_installed_pkgs_${PID}.txt | sort > $pkgcache && rm ${WORKDIR}/bh_installed_pkgs_${PID}.txt
 
 	cat $pkgcache | awk '{ print $1 }' > $1/installed-package-names.txt
+
 	if [ -s $pkgcache ] ; then
 		cat $pkgcache | awk '{ print $2 }' | xargs -n1 basename > $1/installed-packages.txt
 	else
@@ -467,8 +487,8 @@ buildhistory_get_installed() {
 
 	# Produce dependency graph
 	# First, quote each name to handle characters that cause issues for dot
-	sed 's:\([^| ]*\):"\1":g' ${WORKDIR}/bh_installed_pkgs_deps.txt > $1/depends.tmp &&
-		rm ${WORKDIR}/bh_installed_pkgs_deps.txt
+	sed 's:\([^| ]*\):"\1":g' ${WORKDIR}/bh_installed_pkgs_deps_${PID}.txt > $1/depends.tmp &&
+		rm ${WORKDIR}/bh_installed_pkgs_deps_${PID}.txt
 	# Remove lines with rpmlib(...) and config(...) dependencies, change the
 	# delimiter from pipe to "->", set the style for recommend lines and
 	# turn versioned dependencies into edge labels.
@@ -477,6 +497,8 @@ buildhistory_get_installed() {
 	       -e 's:|: -> :' \
 	       -e 's:"\[REC\]":[style=dotted]:' \
 	       -e 's:"\([<>=]\+\)" "\([^"]*\)":[label="\1 \2"]:' \
+	       -e 's:"\([*]\+\)" "\([^"]*\)":[label="\2"]:' \
+	       -e 's:"\[RPROVIDES\]":[style=dashed]:' \
 		$1/depends.tmp
 	# Add header, sorted and de-duped contents and footer and then delete the temp file
 	printf "digraph depends {\n    node [shape=plaintext]\n" > $1/depends.dot
@@ -484,10 +506,21 @@ buildhistory_get_installed() {
 	echo "}" >>  $1/depends.dot
 	rm $1/depends.tmp
 
+	# Set correct pkgdatadir
+	pkgdatadir=${PKGDATA_DIR}
+	if [ "$2" = "sdk" ] && [ "$3" = "host" ] ; then
+		pkgdatadir="${PKGDATA_DIR_SDK}"
+	fi
+
 	# Produce installed package sizes list
-	oe-pkgdata-util -p ${PKGDATA_DIR} read-value "PKGSIZE" -n -f $pkgcache > $1/installed-package-sizes.tmp
+	oe-pkgdata-util -p $pkgdatadir read-value "PKGSIZE" -n -f $pkgcache > $1/installed-package-sizes.tmp
 	cat $1/installed-package-sizes.tmp | awk '{print $2 "\tKiB\t" $1}' | sort -n -r > $1/installed-package-sizes.txt
 	rm $1/installed-package-sizes.tmp
+
+	# Produce package info: runtime_name, buildtime_name, recipe, version, size
+	oe-pkgdata-util -p $pkgdatadir read-value "PACKAGE,PN,PV,PKGSIZE" -n -f $pkgcache > $1/installed-package-info.tmp
+	cat $1/installed-package-info.tmp | sort -n -r -k 5 > $1/installed-package-info.txt
+	rm $1/installed-package-info.tmp
 
 	# We're now done with the cache, delete it
 	rm $pkgcache
@@ -525,7 +558,7 @@ buildhistory_get_sdk_installed() {
 		return
 	fi
 
-	buildhistory_get_installed ${BUILDHISTORY_DIR_SDK}/$1 sdk
+	buildhistory_get_installed ${BUILDHISTORY_DIR_SDK}/$1 sdk $1
 }
 
 buildhistory_get_sdk_installed_host() {
@@ -666,16 +699,19 @@ IMAGE_POSTPROCESS_COMMAND[vardepvalueexclude] .= "| buildhistory_get_imageinfo ;
 IMAGE_POSTPROCESS_COMMAND[vardepsexclude] += "buildhistory_get_imageinfo"
 
 # We want these to be the last run so that we get called after complementary package installation
-POPULATE_SDK_POST_TARGET_COMMAND_append = " buildhistory_list_installed_sdk_target;"
-POPULATE_SDK_POST_TARGET_COMMAND_append = " buildhistory_get_sdk_installed_target;"
+POPULATE_SDK_POST_TARGET_COMMAND:append = " buildhistory_list_installed_sdk_target;"
+POPULATE_SDK_POST_TARGET_COMMAND:append = " buildhistory_get_sdk_installed_target;"
 POPULATE_SDK_POST_TARGET_COMMAND[vardepvalueexclude] .= "| buildhistory_list_installed_sdk_target;| buildhistory_get_sdk_installed_target;"
+POPULATE_SDK_POST_TARGET_COMMAND[vardepsexclude] += "buildhistory_list_installed_sdk_target buildhistory_get_sdk_installed_target"
 
-POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_list_installed_sdk_host;"
-POPULATE_SDK_POST_HOST_COMMAND_append = " buildhistory_get_sdk_installed_host;"
+POPULATE_SDK_POST_HOST_COMMAND:append = " buildhistory_list_installed_sdk_host;"
+POPULATE_SDK_POST_HOST_COMMAND:append = " buildhistory_get_sdk_installed_host;"
 POPULATE_SDK_POST_HOST_COMMAND[vardepvalueexclude] .= "| buildhistory_list_installed_sdk_host;| buildhistory_get_sdk_installed_host;"
+POPULATE_SDK_POST_HOST_COMMAND[vardepsexclude] += "buildhistory_list_installed_sdk_host buildhistory_get_sdk_installed_host"
 
-SDK_POSTPROCESS_COMMAND_append = " buildhistory_get_sdkinfo ; buildhistory_get_extra_sdkinfo; "
+SDK_POSTPROCESS_COMMAND:append = " buildhistory_get_sdkinfo ; buildhistory_get_extra_sdkinfo; "
 SDK_POSTPROCESS_COMMAND[vardepvalueexclude] .= "| buildhistory_get_sdkinfo ; buildhistory_get_extra_sdkinfo; "
+SDK_POSTPROCESS_COMMAND[vardepsexclude] += "buildhistory_get_sdkinfo buildhistory_get_extra_sdkinfo"
 
 python buildhistory_write_sigs() {
     if not "task" in (d.getVar('BUILDHISTORY_FEATURES') or "").split():
@@ -685,7 +721,7 @@ python buildhistory_write_sigs() {
     if hasattr(bb.parse.siggen, 'dump_siglist'):
         taskoutdir = os.path.join(d.getVar('BUILDHISTORY_DIR'), 'task')
         bb.utils.mkdirhier(taskoutdir)
-        bb.parse.siggen.dump_siglist(os.path.join(taskoutdir, 'tasksigs.txt'))
+        bb.parse.siggen.dump_siglist(os.path.join(taskoutdir, 'tasksigs.txt'), d.getVar("BUILDHISTORY_PATH_PREFIX_STRIP"))
 }
 
 def buildhistory_get_build_id(d):
@@ -705,30 +741,10 @@ def buildhistory_get_build_id(d):
     statusheader = d.getVar('BUILDCFG_HEADER')
     return('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
 
-def buildhistory_get_modified(path):
-    # copied from get_layer_git_status() in image-buildinfo.bbclass
-    import subprocess
-    try:
-        subprocess.check_output("""cd %s; export PSEUDO_UNLOAD=1; set -e;
-                                git diff --quiet --no-ext-diff
-                                git diff --quiet --no-ext-diff --cached""" % path,
-                                shell=True,
-                                stderr=subprocess.STDOUT)
-        return ""
-    except subprocess.CalledProcessError as ex:
-        # Silently treat errors as "modified", without checking for the
-        # (expected) return code 1 in a modified git repo. For example, we get
-        # output and a 129 return code when a layer isn't a git repo at all.
-        return " -- modified"
-
 def buildhistory_get_metadata_revs(d):
-    # We want an easily machine-readable format here, so get_layers_branch_rev isn't quite what we want
-    layers = (d.getVar("BBLAYERS") or "").split()
-    medadata_revs = ["%-17s = %s:%s%s" % (os.path.basename(i), \
-        base_get_metadata_git_branch(i, None).strip(), \
-        base_get_metadata_git_revision(i, None), \
-        buildhistory_get_modified(i)) \
-            for i in layers]
+    # We want an easily machine-readable format here
+    revisions = oe.buildcfg.get_layer_revisions(d)
+    medadata_revs = ["%-17s = %s:%s%s" % (r[1], r[2], r[3], r[4]) for r in revisions]
     return '\n'.join(medadata_revs)
 
 def outputvars(vars, listvars, d):
@@ -753,11 +769,11 @@ def buildhistory_get_imagevars(d):
 def buildhistory_get_sdkvars(d):
     if d.getVar('BB_WORKERCONTEXT') != '1':
         return ""
-    sdkvars = "DISTRO DISTRO_VERSION SDK_NAME SDK_VERSION SDKMACHINE SDKIMAGE_FEATURES BAD_RECOMMENDATIONS NO_RECOMMENDATIONS PACKAGE_EXCLUDE"
+    sdkvars = "DISTRO DISTRO_VERSION SDK_NAME SDK_VERSION SDKMACHINE SDKIMAGE_FEATURES TOOLCHAIN_HOST_TASK TOOLCHAIN_TARGET_TASK BAD_RECOMMENDATIONS NO_RECOMMENDATIONS PACKAGE_EXCLUDE"
     if d.getVar('BB_CURRENTTASK') == 'populate_sdk_ext':
         # Extensible SDK uses some additional variables
-        sdkvars += " SDK_LOCAL_CONF_WHITELIST SDK_LOCAL_CONF_BLACKLIST SDK_INHERIT_BLACKLIST SDK_UPDATE_URL SDK_EXT_TYPE SDK_RECRDEP_TASKS SDK_INCLUDE_PKGDATA SDK_INCLUDE_TOOLCHAIN"
-    listvars = "SDKIMAGE_FEATURES BAD_RECOMMENDATIONS PACKAGE_EXCLUDE SDK_LOCAL_CONF_WHITELIST SDK_LOCAL_CONF_BLACKLIST SDK_INHERIT_BLACKLIST"
+        sdkvars += " ESDK_LOCALCONF_ALLOW ESDK_LOCALCONF_REMOVE ESDK_CLASS_INHERIT_DISABLE SDK_UPDATE_URL SDK_EXT_TYPE SDK_RECRDEP_TASKS SDK_INCLUDE_PKGDATA SDK_INCLUDE_TOOLCHAIN"
+    listvars = "SDKIMAGE_FEATURES BAD_RECOMMENDATIONS PACKAGE_EXCLUDE ESDK_LOCALCONF_ALLOW ESDK_LOCALCONF_REMOVE ESDK_CLASS_INHERIT_DISABLE"
     return outputvars(sdkvars, listvars, d)
 
 
@@ -824,9 +840,9 @@ END
 		if [ ! -e .git ] ; then
 			git init -q
 		else
-			git tag -f build-minus-3 build-minus-2 > /dev/null 2>&1 || true
-			git tag -f build-minus-2 build-minus-1 > /dev/null 2>&1 || true
-			git tag -f build-minus-1 > /dev/null 2>&1 || true
+			git tag -f ${BUILDHISTORY_TAG}-minus-3 ${BUILDHISTORY_TAG}-minus-2 > /dev/null 2>&1 || true
+			git tag -f ${BUILDHISTORY_TAG}-minus-2 ${BUILDHISTORY_TAG}-minus-1 > /dev/null 2>&1 || true
+			git tag -f ${BUILDHISTORY_TAG}-minus-1 > /dev/null 2>&1 || true
 		fi
 
 		check_git_config
@@ -850,7 +866,7 @@ END
 }
 
 python buildhistory_eventhandler() {
-    if e.data.getVar('BUILDHISTORY_FEATURES').strip():
+    if (e.data.getVar('BUILDHISTORY_FEATURES') or "").strip():
         reset = e.data.getVar("BUILDHISTORY_RESET")
         olddir = e.data.getVar("BUILDHISTORY_OLD_DIR")
         if isinstance(e, bb.event.BuildStarted):
@@ -860,10 +876,11 @@ python buildhistory_eventhandler() {
                 if os.path.isdir(olddir):
                     shutil.rmtree(olddir)
                 rootdir = e.data.getVar("BUILDHISTORY_DIR")
+                bb.utils.mkdirhier(rootdir)
                 entries = [ x for x in os.listdir(rootdir) if not x.startswith('.') ]
                 bb.utils.mkdirhier(olddir)
                 for entry in entries:
-                    os.rename(os.path.join(rootdir, entry),
+                    bb.utils.rename(os.path.join(rootdir, entry),
                               os.path.join(olddir, entry))
         elif isinstance(e, bb.event.BuildCompleted):
             if reset:
@@ -902,22 +919,12 @@ def _get_srcrev_values(d):
         if urldata[u].method.supports_srcrev():
             scms.append(u)
 
-    autoinc_templ = 'AUTOINC+'
     dict_srcrevs = {}
     dict_tag_srcrevs = {}
     for scm in scms:
         ud = urldata[scm]
         for name in ud.names:
-            try:
-                rev = ud.method.sortable_revision(ud, d, name)
-            except TypeError:
-                # support old bitbake versions
-                rev = ud.method.sortable_revision(scm, ud, d, name)
-            # Clean this up when we next bump bitbake version
-            if type(rev) != str:
-                autoinc, rev = rev
-            elif rev.startswith(autoinc_templ):
-                rev = rev[len(autoinc_templ):]
+            autoinc, rev = ud.method.sortable_revision(ud, d, name)
             dict_srcrevs[name] = rev
             if 'tag' in ud.parm:
                 tag = ud.parm['tag'];
@@ -948,23 +955,19 @@ def write_latest_srcrev(d, pkghistdir):
                         value = value.replace('"', '').strip()
                         old_tag_srcrevs[key] = value
         with open(srcrevfile, 'w') as f:
-            orig_srcrev = d.getVar('SRCREV', False) or 'INVALID'
-            if orig_srcrev != 'INVALID':
-                f.write('# SRCREV = "%s"\n' % orig_srcrev)
-            if len(srcrevs) > 1:
-                for name, srcrev in sorted(srcrevs.items()):
-                    orig_srcrev = d.getVar('SRCREV_%s' % name, False)
-                    if orig_srcrev:
-                        f.write('# SRCREV_%s = "%s"\n' % (name, orig_srcrev))
-                    f.write('SRCREV_%s = "%s"\n' % (name, srcrev))
-            else:
-                f.write('SRCREV = "%s"\n' % next(iter(srcrevs.values())))
-            if len(tag_srcrevs) > 0:
-                for name, srcrev in sorted(tag_srcrevs.items()):
-                    f.write('# tag_%s = "%s"\n' % (name, srcrev))
-                    if name in old_tag_srcrevs and old_tag_srcrevs[name] != srcrev:
-                        pkg = d.getVar('PN')
-                        bb.warn("Revision for tag %s in package %s was changed since last build (from %s to %s)" % (name, pkg, old_tag_srcrevs[name], srcrev))
+            for name, srcrev in sorted(srcrevs.items()):
+                suffix = "_" + name
+                if name == "default":
+                    suffix = ""
+                orig_srcrev = d.getVar('SRCREV%s' % suffix, False)
+                if orig_srcrev:
+                    f.write('# SRCREV%s = "%s"\n' % (suffix, orig_srcrev))
+                f.write('SRCREV%s = "%s"\n' % (suffix, srcrev))
+            for name, srcrev in sorted(tag_srcrevs.items()):
+                f.write('# tag_%s = "%s"\n' % (name, srcrev))
+                if name in old_tag_srcrevs and old_tag_srcrevs[name] != srcrev:
+                    pkg = d.getVar('PN')
+                    bb.warn("Revision for tag %s in package %s was changed since last build (from %s to %s)" % (name, pkg, old_tag_srcrevs[name], srcrev))
 
     else:
         if os.path.exists(srcrevfile):

@@ -54,15 +54,16 @@ class DirectPlugin(ImagerPlugin):
         self.native_sysroot = native_sysroot
         self.oe_builddir = oe_builddir
 
+        self.debug = options.debug
         self.outdir = options.outdir
         self.compressor = options.compressor
         self.bmap = options.bmap
         self.no_fstab_update = options.no_fstab_update
-        self.original_fstab = None
+        self.updated_fstab_path = None
 
         self.name = "%s-%s" % (os.path.splitext(os.path.basename(wks_file))[0],
                                strftime("%Y%m%d%H%M"))
-        self.workdir = tempfile.mkdtemp(dir=self.outdir, prefix='tmp.wic.')
+        self.workdir = self.setup_workdir(options.workdir)
         self._image = None
         self.ptable_format = self.ks.bootloader.ptable
         self.parts = self.ks.partitions
@@ -76,7 +77,18 @@ class DirectPlugin(ImagerPlugin):
 
         image_path = self._full_path(self.workdir, self.parts[0].disk, "direct")
         self._image = PartitionedImage(image_path, self.ptable_format,
-                                       self.parts, self.native_sysroot)
+                                       self.parts, self.native_sysroot,
+                                       options.extra_space)
+
+    def setup_workdir(self, workdir):
+        if workdir:
+            if os.path.exists(workdir):
+                raise WicError("Internal workdir '%s' specified in wic arguments already exists!" % (workdir))
+
+            os.makedirs(workdir)
+            return workdir
+        else:
+            return tempfile.mkdtemp(dir=self.outdir, prefix='tmp.wic.')
 
     def do_create(self):
         """
@@ -90,11 +102,8 @@ class DirectPlugin(ImagerPlugin):
         finally:
             self.cleanup()
 
-    def _write_fstab(self, image_rootfs):
-        """overriden to generate fstab (temporarily) in rootfs. This is called
-        from _create, make sure it doesn't get called from
-        BaseImage.create()
-        """
+    def update_fstab(self, image_rootfs):
+        """Assume partition order same as in wks"""
         if not image_rootfs:
             return
 
@@ -104,20 +113,11 @@ class DirectPlugin(ImagerPlugin):
 
         with open(fstab_path) as fstab:
             fstab_lines = fstab.readlines()
-            self.original_fstab = fstab_lines.copy()
 
-        if self._update_fstab(fstab_lines, self.parts):
-            with open(fstab_path, "w") as fstab:
-                fstab.writelines(fstab_lines)
-        else:
-            self.original_fstab = None
-
-    def _update_fstab(self, fstab_lines, parts):
-        """Assume partition order same as in wks"""
         updated = False
-        for part in parts:
+        for part in self.parts:
             if not part.realnum or not part.mountpoint \
-               or part.mountpoint == "/":
+               or not part.mountpoint.startswith('/'):
                 continue
 
             if part.use_uuid:
@@ -138,13 +138,17 @@ class DirectPlugin(ImagerPlugin):
                 device_name = "/dev/%s%s%d" % (part.disk, prefix, part.realnum)
 
             opts = part.fsopts if part.fsopts else "defaults"
+            passno = part.fspassno if part.fspassno else "0"
             line = "\t".join([device_name, part.mountpoint, part.fstype,
-                              opts, "0", "0"]) + "\n"
+                              opts, "0", passno]) + "\n"
 
             fstab_lines.append(line)
             updated = True
 
-        return updated
+        if updated:
+            self.updated_fstab_path = os.path.join(self.workdir, "fstab")
+            with open(self.updated_fstab_path, "w") as f:
+                f.writelines(fstab_lines)
 
     def _full_path(self, path, name, extention):
         """ Construct full file path to a file we generate. """
@@ -160,7 +164,7 @@ class DirectPlugin(ImagerPlugin):
         a partitioned image.
         """
         if not self.no_fstab_update:
-            self._write_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
+            self.update_fstab(self.rootfs_dir.get("ROOTFS_DIR"))
 
         for part in self.parts:
             # get rootfs size from bitbake variable if it's not set in .ks file
@@ -256,6 +260,8 @@ class DirectPlugin(ImagerPlugin):
             if part.mountpoint == "/":
                 if part.uuid:
                     return "PARTUUID=%s" % part.uuid
+                elif part.label and self.ptable_format != 'msdos':
+                    return "PARTLABEL=%s" % part.label
                 else:
                     suffix = 'p' if part.disk.startswith('mmcblk') else ''
                     return "/dev/%s%s%-d" % (part.disk, suffix, part.realnum)
@@ -273,14 +279,9 @@ class DirectPlugin(ImagerPlugin):
             if os.path.isfile(path):
                 shutil.move(path, os.path.join(self.outdir, fname))
 
-        #Restore original fstab
-        if self.original_fstab:
-            fstab_path = self.rootfs_dir.get("ROOTFS_DIR") + "/etc/fstab"
-            with open(fstab_path, "w") as fstab:
-                fstab.writelines(self.original_fstab)
-
-        # remove work directory
-        shutil.rmtree(self.workdir, ignore_errors=True)
+        # remove work directory when it is not in debugging mode
+        if not self.debug:
+            shutil.rmtree(self.workdir, ignore_errors=True)
 
 # Overhead of the MBR partitioning scheme (just one sector)
 MBR_OVERHEAD = 1
@@ -296,7 +297,7 @@ class PartitionedImage():
     Partitioned image in a file.
     """
 
-    def __init__(self, path, ptable_format, partitions, native_sysroot=None):
+    def __init__(self, path, ptable_format, partitions, native_sysroot=None, extra_space=0):
         self.path = path  # Path to the image file
         self.numpart = 0  # Number of allocated partitions
         self.realpart = 0 # Number of partitions in the partition table
@@ -317,6 +318,7 @@ class PartitionedImage():
         self.sector_size = SECTOR_SIZE
         self.native_sysroot = native_sysroot
         num_real_partitions = len([p for p in self.partitions if not p.no_table])
+        self.extra_space = extra_space
 
         # calculate the real partition number, accounting for partitions not
         # in the partition table and logical partitions
@@ -343,6 +345,13 @@ class PartitionedImage():
                     part.fsuuid = '0x' + str(uuid.uuid4())[:8].upper()
                 else:
                     part.fsuuid = str(uuid.uuid4())
+            else:
+                #make sure the fsuuid for vfat/msdos align with format 0xYYYYYYYY
+                if part.fstype == 'vfat' or part.fstype == 'msdos':
+                    if part.fsuuid.upper().startswith("0X"):
+                        part.fsuuid = '0x' + part.fsuuid.upper()[2:].rjust(8,"0")
+                    else:
+                        part.fsuuid = '0x' + part.fsuuid.upper().rjust(8,"0")
 
     def prepare(self, imager):
         """Prepare an image. Call prepare method of all image partitions."""
@@ -351,7 +360,8 @@ class PartitionedImage():
             # sizes before we can add them and do the layout.
             part.prepare(imager, imager.workdir, imager.oe_builddir,
                          imager.rootfs_dir, imager.bootimg_dir,
-                         imager.kernel_dir, imager.native_sysroot)
+                         imager.kernel_dir, imager.native_sysroot,
+                         imager.updated_fstab_path)
 
             # Converting kB to sectors for parted
             part.size_sec = part.disk_size * 1024 // self.sector_size
@@ -403,7 +413,7 @@ class PartitionedImage():
                 # Reserve a sector for EBR for every logical partition
                 # before alignment is performed.
                 if part.type == 'logical':
-                    self.offset += 1
+                    self.offset += 2
 
             align_sectors = 0
             if part.align:
@@ -428,6 +438,21 @@ class PartitionedImage():
                     # increase the offset so we actually start the partition on right alignment
                     self.offset += align_sectors
 
+            if part.offset is not None:
+                offset = part.offset // self.sector_size
+
+                if offset * self.sector_size != part.offset:
+                    raise WicError("Could not place %s%s at offset %d with sector size %d" % (part.disk, self.numpart, part.offset, self.sector_size))
+
+                delta = offset - self.offset
+                if delta < 0:
+                    raise WicError("Could not place %s%s at offset %d: next free sector is %d (delta: %d)" % (part.disk, self.numpart, part.offset, self.offset, delta))
+
+                logger.debug("Skipping %d sectors to place %s%s at offset %dK",
+                             delta, part.disk, self.numpart, part.offset)
+
+                self.offset = offset
+
             part.start = self.offset
             self.offset += part.size_sec
 
@@ -446,7 +471,7 @@ class PartitionedImage():
                         self.extendedpart = part.num
                     else:
                         self.extended_size_sec += align_sectors
-                    self.extended_size_sec += part.size_sec + 1
+                    self.extended_size_sec += part.size_sec + 2
                 else:
                     self.primary_part_num += 1
                     part.num = self.primary_part_num
@@ -463,6 +488,7 @@ class PartitionedImage():
             self.min_size += GPT_OVERHEAD
 
         self.min_size *= self.sector_size
+        self.min_size += self.extra_space
 
     def _create_partition(self, device, parttype, fstype, start, size):
         """ Create a partition on an image described by the 'device' object. """
@@ -512,7 +538,7 @@ class PartitionedImage():
                 # add a sector at the back, so that there is enough
                 # room for all logical partitions.
                 self._create_partition(self.path, "extended",
-                                       None, part.start - 1,
+                                       None, part.start - 2,
                                        self.extended_size_sec)
 
             if part.fstype == "swap":
@@ -580,9 +606,7 @@ class PartitionedImage():
                                 self.native_sysroot)
 
     def cleanup(self):
-        # remove partition images
-        for image in set(self.partimages):
-            os.remove(image)
+        pass
 
     def assemble(self):
         logger.debug("Installing partitions")

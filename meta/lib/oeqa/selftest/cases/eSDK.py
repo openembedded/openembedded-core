@@ -8,7 +8,7 @@ import os
 import glob
 import time
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars
+from oeqa.utils.commands import runCmd, bitbake, get_bb_vars
 
 class oeSDKExtSelfTest(OESelftestTestCase):
     """
@@ -63,7 +63,7 @@ class oeSDKExtSelfTest(OESelftestTestCase):
         cls.env_eSDK = oeSDKExtSelfTest.get_esdk_environment('', cls.tmpdir_eSDKQA)
 
         sstate_config="""
-SDK_LOCAL_CONF_WHITELIST = "SSTATE_MIRRORS"
+ESDK_LOCALCONF_ALLOW = "SSTATE_MIRRORS"
 SSTATE_MIRRORS =  "file://.* file://%s/PATH"
 CORE_IMAGE_EXTRA_INSTALL = "perl"
         """ % sstate_dir
@@ -91,7 +91,7 @@ CORE_IMAGE_EXTRA_INSTALL = "perl"
 
         # Configure eSDK to use sstate mirror from poky
         sstate_config="""
-SDK_LOCAL_CONF_WHITELIST = "SSTATE_MIRRORS"
+ESDK_LOCALCONF_ALLOW = "SSTATE_MIRRORS"
 SSTATE_MIRRORS =  "file://.* file://%s/PATH"
             """ % bb_vars["SSTATE_DIR"]
         with open(os.path.join(cls.tmpdir_eSDKQA, 'conf', 'local.conf'), 'a+') as f:
@@ -100,7 +100,7 @@ SSTATE_MIRRORS =  "file://.* file://%s/PATH"
     @classmethod
     def tearDownClass(cls):
         for i in range(0, 10):
-            if os.path.exists(os.path.join(cls.tmpdir_eSDKQA, 'bitbake.lock')):
+            if os.path.exists(os.path.join(cls.tmpdir_eSDKQA, 'bitbake.lock')) or os.path.exists(os.path.join(cls.tmpdir_eSDKQA, 'cache/hashserv.db-wal')):
                 time.sleep(1)
             else:
                 break

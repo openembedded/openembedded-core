@@ -17,7 +17,7 @@ class MultiConfig(OESelftestTestCase):
         """
 
         config = """
-IMAGE_INSTALL_append_pn-core-image-full-cmdline = " multiconfig-image-packager-tiny multiconfig-image-packager-musl"
+IMAGE_INSTALL:append:pn-core-image-full-cmdline = " multiconfig-image-packager-tiny multiconfig-image-packager-musl"
 BBMULTICONFIG = "tiny musl"
 """
         self.write_config(config)
@@ -52,7 +52,7 @@ TMPDIR = "${TOPDIR}/tmp-mc-tiny"
         self.write_config(config)
 
         testconfig = textwrap.dedent('''\
-                MCTESTVAR_append = "1"
+                MCTESTVAR:append = "1"
                 ''')
         self.write_config(testconfig, 'test')
 
@@ -64,9 +64,22 @@ TMPDIR = "${TOPDIR}/tmp-mc-tiny"
         self.assertIn('MCTESTVAR=test1', result.output.splitlines())
 
         testconfig = textwrap.dedent('''\
-                MCTESTVAR_append = "2"
+                MCTESTVAR:append = "2"
                 ''')
         self.write_config(testconfig, 'test')
 
         result = bitbake('mc:test:multiconfig-test-parse -c showvar')
         self.assertIn('MCTESTVAR=test2', result.output.splitlines())
+
+    def test_multiconfig_inlayer(self):
+        """
+        Test that a multiconfig from meta-selftest works.
+        """
+
+        config = """
+BBMULTICONFIG = "muslmc"
+"""
+        self.write_config(config)
+
+        # Build a core-image-minimal, only dry run needed to check config is present
+        bitbake('mc:muslmc:bash -n')

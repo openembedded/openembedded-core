@@ -1,4 +1,4 @@
-From 59c077f32e81190955910cae02599c7a3edfa7fb Mon Sep 17 00:00:00 2001
+From 89ae4f03307104689e1857d9857d452af6b35ac4 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Wed, 19 Sep 2018 14:44:40 +0100
 Subject: [PATCH] Allow the environment to override where gnupg looks for its
@@ -7,83 +7,76 @@ Subject: [PATCH] Allow the environment to override where gnupg looks for its
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+
 ---
- common/homedir.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ common/homedir.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/common/homedir.c b/common/homedir.c
-index e9e75d0..19140aa 100644
+index 260aeb2..1aeb08d 100644
 --- a/common/homedir.c
 +++ b/common/homedir.c
-@@ -760,7 +760,7 @@ gnupg_socketdir (void)
+@@ -1143,7 +1143,7 @@ gnupg_socketdir (void)
    if (!name)
      {
        unsigned int dummy;
 -      name = _gnupg_socketdir_internal (0, &dummy);
 +      name = getenv("GNUPG_SOCKETDIR") ?: _gnupg_socketdir_internal (0, &dummy);
+       gpgrt_annotate_leaked_object (name);
      }
  
-   return name;
-@@ -786,7 +786,7 @@ gnupg_sysconfdir (void)
-     }
-   return name;
- #else /*!HAVE_W32_SYSTEM*/
--  return GNUPG_SYSCONFDIR;
-+  return getenv("GNUPG_SYSCONFDIR") ?: GNUPG_SYSCONFDIR;
- #endif /*!HAVE_W32_SYSTEM*/
- }
- 
-@@ -815,7 +815,7 @@ gnupg_bindir (void)
+@@ -1175,7 +1175,7 @@ gnupg_sysconfdir (void)
+   if (dir)
+     return dir;
    else
-     return rdir;
- #else /*!HAVE_W32_SYSTEM*/
--  return GNUPG_BINDIR;
-+  return getenv("GNUPG_BINDIR") ?: GNUPG_BINDIR;
+-    return GNUPG_SYSCONFDIR;
++    return getenv("GNUPG_SYSCONFDIR") ?: GNUPG_SYSCONFDIR;
  #endif /*!HAVE_W32_SYSTEM*/
  }
  
-@@ -828,7 +828,7 @@ gnupg_libexecdir (void)
- #ifdef HAVE_W32_SYSTEM
-   return gnupg_bindir ();
- #else /*!HAVE_W32_SYSTEM*/
--  return GNUPG_LIBEXECDIR;
-+  return getenv("GNUPG_LIBEXECDIR") ?: GNUPG_LIBEXECDIR;
- #endif /*!HAVE_W32_SYSTEM*/
- }
- 
-@@ -842,7 +842,7 @@ gnupg_libdir (void)
-     name = xstrconcat (w32_rootdir (), DIRSEP_S "lib" DIRSEP_S "gnupg", NULL);
-   return name;
- #else /*!HAVE_W32_SYSTEM*/
--  return GNUPG_LIBDIR;
-+  return getenv("GNUPG_LIBDIR") ?: GNUPG_LIBDIR;
- #endif /*!HAVE_W32_SYSTEM*/
- }
- 
-@@ -856,7 +856,7 @@ gnupg_datadir (void)
-     name = xstrconcat (w32_rootdir (), DIRSEP_S "share" DIRSEP_S "gnupg", NULL);
-   return name;
- #else /*!HAVE_W32_SYSTEM*/
--  return GNUPG_DATADIR;
-+  return getenv("GNUPG_DATADIR") ?: GNUPG_DATADIR;
- #endif /*!HAVE_W32_SYSTEM*/
- }
- 
-@@ -872,7 +872,7 @@ gnupg_localedir (void)
-                        NULL);
-   return name;
- #else /*!HAVE_W32_SYSTEM*/
--  return LOCALEDIR;
-+  return getenv("LOCALEDIR") ?: LOCALEDIR;
- #endif /*!HAVE_W32_SYSTEM*/
- }
- 
-@@ -940,7 +940,7 @@ gnupg_cachedir (void)
+@@ -1211,7 +1211,7 @@ gnupg_bindir (void)
+       return name;
      }
-   return dir;
- #else /*!HAVE_W32_SYSTEM*/
--  return GNUPG_LOCALSTATEDIR "/cache/" PACKAGE_NAME;
-+  return getenv("GNUPG_LOCALSTATEDIR") ?: GNUPG_LOCALSTATEDIR "/cache/" PACKAGE_NAME;
+   else
+-    return GNUPG_BINDIR;
++    return getenv("GNUPG_BINDIR") ?: GNUPG_BINDIR;
+ #endif /*!HAVE_W32_SYSTEM*/
+ }
+ 
+@@ -1238,7 +1238,7 @@ gnupg_libexecdir (void)
+       return name;
+     }
+   else
+-    return GNUPG_LIBEXECDIR;
++    return getenv("GNUPG_LIBEXECDIR") ?: GNUPG_LIBEXECDIR;
+ #endif /*!HAVE_W32_SYSTEM*/
+ }
+ 
+@@ -1268,7 +1268,7 @@ gnupg_libdir (void)
+       return name;
+     }
+   else
+-    return GNUPG_LIBDIR;
++    return getenv("GNUPG_LIBDIR") ?: GNUPG_LIBDIR;
+ #endif /*!HAVE_W32_SYSTEM*/
+ }
+ 
+@@ -1299,7 +1299,7 @@ gnupg_datadir (void)
+       return name;
+     }
+   else
+-    return GNUPG_DATADIR;
++    return getenv("GNUPG_DATADIR") ?: GNUPG_DATADIR;
+ #endif /*!HAVE_W32_SYSTEM*/
+ }
+ 
+@@ -1331,7 +1331,7 @@ gnupg_localedir (void)
+       return name;
+     }
+   else
+-    return LOCALEDIR;
++    return getenv("LOCALEDIR") ?: LOCALEDIR;
  #endif /*!HAVE_W32_SYSTEM*/
  }
  

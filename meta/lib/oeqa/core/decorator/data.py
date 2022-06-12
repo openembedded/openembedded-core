@@ -13,8 +13,17 @@ def has_feature(td, feature):
         Checks for feature in DISTRO_FEATURES or IMAGE_FEATURES.
     """
 
-    if (feature in td.get('DISTRO_FEATURES', '') or
-        feature in td.get('IMAGE_FEATURES', '')):
+    if (feature in td.get('DISTRO_FEATURES', '').split() or
+        feature in td.get('IMAGE_FEATURES', '').split()):
+        return True
+    return False
+
+def has_machine(td, machine):
+    """
+        Checks for MACHINE.
+    """
+
+    if (machine == td.get('MACHINE', '')):
         return True
     return False
 
@@ -131,3 +140,57 @@ class skipIfFeature(OETestDecorator):
         self.logger.debug(msg)
         if has_feature(self.case.td, self.value):
             self.case.skipTest(self.msg)
+
+@registerDecorator
+class skipIfNotMachine(OETestDecorator):
+    """
+        Skip test based on MACHINE.
+
+        value must be match MACHINE or it will skip the test
+        with msg as the reason.
+    """
+
+    attrs = ('value', 'msg')
+
+    def setUpDecorator(self):
+        msg = ('Checking if %s is not this MACHINE' % self.value)
+        self.logger.debug(msg)
+        if not has_machine(self.case.td, self.value):
+            self.case.skipTest(self.msg)
+
+@registerDecorator
+class skipIfMachine(OETestDecorator):
+    """
+        Skip test based on Machine.
+
+        value must not be this machine or it will skip the test
+        with msg as the reason.
+    """
+
+    attrs = ('value', 'msg')
+
+    def setUpDecorator(self):
+        msg = ('Checking if %s is this MACHINE' % self.value)
+        self.logger.debug(msg)
+        if has_machine(self.case.td, self.value):
+            self.case.skipTest(self.msg)
+
+@registerDecorator
+class skipIfNotQemu(OETestDecorator):
+    """
+    Skip test if MACHINE is not qemu*
+    """
+    def setUpDecorator(self):
+        self.logger.debug("Checking if not qemu MACHINE")
+        if not self.case.td.get('MACHINE', '').startswith('qemu'):
+            self.case.skipTest('Test only runs on qemu machines')
+
+@registerDecorator
+class skipIfQemu(OETestDecorator):
+    """
+    Skip test if MACHINE is qemu*
+    """
+    def setUpDecorator(self):
+        self.logger.debug("Checking if qemu MACHINE")
+        if self.case.td.get('MACHINE', '').startswith('qemu'):
+             self.case.skipTest('Test only runs on real hardware')

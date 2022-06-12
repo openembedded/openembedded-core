@@ -15,7 +15,7 @@ from . import OETarget
 
 class OESSHTarget(OETarget):
     def __init__(self, logger, ip, server_ip, timeout=300, user='root',
-                 port=None, **kwargs):
+                 port=None, server_port=0, **kwargs):
         if not logger:
             logger = logging.getLogger('target')
             logger.setLevel(logging.INFO)
@@ -30,6 +30,7 @@ class OESSHTarget(OETarget):
         super(OESSHTarget, self).__init__(logger)
         self.ip = ip
         self.server_ip = server_ip
+        self.server_port = server_port
         self.timeout = timeout
         self.user = user
         ssh_options = [
@@ -42,12 +43,23 @@ class OESSHTarget(OETarget):
         if port:
             self.ssh = self.ssh + [ '-p', port ]
             self.scp = self.scp + [ '-P', port ]
+        self._monitor_dumper = None
+        self.target_dumper = None
 
     def start(self, **kwargs):
         pass
 
     def stop(self, **kwargs):
         pass
+
+    @property
+    def monitor_dumper(self):
+        return self._monitor_dumper
+
+    @monitor_dumper.setter
+    def monitor_dumper(self, dumper):
+        self._monitor_dumper = dumper
+        self.monitor_dumper.dump_monitor()
 
     def _run(self, command, timeout=None, ignore_status=True):
         """
@@ -86,7 +98,15 @@ class OESSHTarget(OETarget):
             processTimeout = self.timeout
 
         status, output = self._run(sshCmd, processTimeout, True)
-        self.logger.debug('Command: %s\nOutput:  %s\n' % (command, output))
+        self.logger.debug('Command: %s\nStatus: %d Output:  %s\n' % (command, status, output))
+        if (status == 255) and (('No route to host') in output):
+            if self.monitor_dumper:
+                self.monitor_dumper.dump_monitor()
+        if status == 255:
+            if self.target_dumper:
+                self.target_dumper.dump_target()
+            if self.monitor_dumper:
+                self.monitor_dumper.dump_monitor()
         return (status, output)
 
     def copyTo(self, localSrc, remoteDst):
@@ -106,13 +126,16 @@ class OESSHTarget(OETarget):
             scpCmd = self.scp + [localSrc, remotePath]
             return self._run(scpCmd, ignore_status=False)
 
-    def copyFrom(self, remoteSrc, localDst):
+    def copyFrom(self, remoteSrc, localDst, warn_on_failure=False):
         """
             Copy file from target.
         """
         remotePath = '%s@%s:%s' % (self.user, self.ip, remoteSrc)
         scpCmd = self.scp + [remotePath, localDst]
-        return self._run(scpCmd, ignore_status=False)
+        (status, output) = self._run(scpCmd, ignore_status=warn_on_failure)
+        if warn_on_failure and status:
+            self.logger.warning("Copy returned non-zero exit status %d:\n%s" % (status, output))
+        return (status, output)
 
     def copyDirTo(self, localSrc, remoteDst):
         """
@@ -246,7 +269,7 @@ def SSHCall(command, logger, timeout=None, **opts):
         "stdin": None,
         "shell": False,
         "bufsize": -1,
-        "preexec_fn": os.setsid,
+        "start_new_session": True,
     }
     options.update(opts)
     output = ''

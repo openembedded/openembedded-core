@@ -2,6 +2,8 @@ inherit terminal
 
 DEVSHELL = "${SHELL}"
 
+PATH:prepend:task-devshell = "${COREBASE}/scripts/git-intercept:"
+
 python do_devshell () {
     if d.getVarFlag("do_devshell", "manualfakeroot"):
        d.prependVar("DEVSHELL", "pseudo ")
@@ -21,6 +23,7 @@ addtask devshell after do_patch do_prepare_recipe_sysroot
 DEVSHELL_STARTDIR ?= "${S}"
 do_devshell[dirs] = "${DEVSHELL_STARTDIR}"
 do_devshell[nostamp] = "1"
+do_devshell[network] = "1"
 
 # devshell and fakeroot/pseudo need careful handling since only the final
 # command should run under fakeroot emulation, any X connection should
@@ -34,7 +37,7 @@ python () {
        d.delVarFlag("do_devshell", "fakeroot")
 } 
 
-def devpyshell(d):
+def pydevshell(d):
 
     import code
     import select
@@ -128,6 +131,7 @@ def devpyshell(d):
                     more = i.runsource(source, "<pyshell>")
                     if not more:
                         buf = []
+                    sys.stderr.flush()
                     prompt(more)
             except KeyboardInterrupt:
                 i.write("\nKeyboardInterrupt\n")
@@ -139,17 +143,18 @@ def devpyshell(d):
                 os.kill(child, signal.SIGTERM)
                 break
 
-python do_devpyshell() {
+python do_pydevshell() {
     import signal
 
     try:
-        devpyshell(d)
+        pydevshell(d)
     except SystemExit:
         # Stop the SIGTERM above causing an error exit code
         return
     finally:
         return
 }
-addtask devpyshell after do_patch
+addtask pydevshell after do_patch
 
-do_devpyshell[nostamp] = "1"
+do_pydevshell[nostamp] = "1"
+do_pydevshell[network] = "1"

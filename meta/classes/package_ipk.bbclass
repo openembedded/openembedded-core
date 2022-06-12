@@ -4,6 +4,7 @@ IMAGE_PKGTYPE ?= "ipk"
 
 IPKGCONF_TARGET = "${WORKDIR}/opkg.conf"
 IPKGCONF_SDK =  "${WORKDIR}/opkg-sdk.conf"
+IPKGCONF_SDK_TARGET = "${WORKDIR}/opkg-sdk-target.conf"
 
 PKGWRITEDIRIPK = "${WORKDIR}/deploy-ipks"
 
@@ -45,6 +46,7 @@ def ipk_write_pkg(pkg, d):
     import subprocess
     import textwrap
     import collections
+    import glob
 
     def cleanupcontrol(root):
         for p in ['CONTROL', 'DEBIAN']:
@@ -63,7 +65,7 @@ def ipk_write_pkg(pkg, d):
     try:
         localdata.setVar('ROOT', '')
         localdata.setVar('ROOT_%s' % pkg, root)
-        pkgname = localdata.getVar('PKG_%s' % pkg)
+        pkgname = localdata.getVar('PKG:%s' % pkg)
         if not pkgname:
             pkgname = pkg
         localdata.setVar('PKG', pkgname)
@@ -101,8 +103,7 @@ def ipk_write_pkg(pkg, d):
         bb.utils.mkdirhier(pkgoutdir)
         os.chdir(root)
         cleanupcontrol(root)
-        from glob import glob
-        g = glob('*')
+        g = glob.glob('*')
         if not g and localdata.getVar('ALLOW_EMPTY', False) != "1":
             bb.note("Not creating empty archive for %s-%s-%s" % (pkg, localdata.getVar('PKGV'), localdata.getVar('PKGR')))
             return
@@ -154,7 +155,6 @@ def ipk_write_pkg(pkg, d):
                     ctrlfile.write('%s\n' % textwrap.fill(description, width=74, initial_indent=' ', subsequent_indent=' '))
             else:
                 ctrlfile.write(c % tuple(pullData(fs, localdata)))
-        # more fields
 
         custom_fields_chunk = get_package_additional_metadata("ipk", localdata)
         if custom_fields_chunk is not None:
@@ -168,13 +168,18 @@ def ipk_write_pkg(pkg, d):
             #   '<' = less or equal
             #   '>' = greater or equal
             # adjust these to the '<<' and '>>' equivalents
-            #
+            # Also, "=" specifiers only work if they have the PR in, so 1.2.3 != 1.2.3-r0
+            # so to avoid issues, map this to ">= 1.2.3 << 1.2.3.0"
             for dep in var:
                 for i, v in enumerate(var[dep]):
                     if (v or "").startswith("< "):
                         var[dep][i] = var[dep][i].replace("< ", "<< ")
                     elif (v or "").startswith("> "):
                         var[dep][i] = var[dep][i].replace("> ", ">> ")
+                    elif (v or "").startswith("= ") and "-r" not in v:
+                        ver = var[dep][i].replace("= ", "")
+                        var[dep][i] = var[dep][i].replace("= ", ">= ")
+                        var[dep].append("<< " + ver + ".0")
 
         rdepends = bb.utils.explode_dep_versions2(localdata.getVar("RDEPENDS") or "")
         debian_cmp_remap(rdepends)
@@ -230,13 +235,17 @@ def ipk_write_pkg(pkg, d):
                                 shell=True)
 
         if d.getVar('IPK_SIGN_PACKAGES') == '1':
-            ipkver = "%s-%s" % (d.getVar('PKGV'), d.getVar('PKGR'))
-            ipk_to_sign = "%s/%s_%s_%s.ipk" % (pkgoutdir, pkgname, ipkver, d.getVar('PACKAGE_ARCH'))
+            ipkver = "%s-%s" % (localdata.getVar('PKGV'), localdata.getVar('PKGR'))
+            ipk_to_sign = "%s/%s_%s_%s.ipk" % (pkgoutdir, pkgname, ipkver, localdata.getVar('PACKAGE_ARCH'))
             sign_ipk(d, ipk_to_sign)
 
     finally:
         cleanupcontrol(root)
         bb.utils.unlockfile(lf)
+
+# Have to list any variables referenced as X_<pkg> that aren't in pkgdata here
+IPKEXTRAVARS = "PRIORITY MAINTAINER PACKAGE_ARCH HOMEPAGE PACKAGE_ADD_METADATA_IPK"
+ipk_write_pkg[vardeps] += "${@gen_packagevar(d, 'IPKEXTRAVARS')}"
 
 # Otherwise allarch packages may change depending on override configuration
 ipk_write_pkg[vardepsexclude] = "OVERRIDES"
@@ -269,11 +278,9 @@ python do_package_write_ipk () {
 }
 do_package_write_ipk[dirs] = "${PKGWRITEDIRIPK}"
 do_package_write_ipk[cleandirs] = "${PKGWRITEDIRIPK}"
-do_package_write_ipk[umask] = "022"
 do_package_write_ipk[depends] += "${@oe.utils.build_depends_string(d.getVar('PACKAGE_WRITE_DEPS'), 'do_populate_sysroot')}"
-addtask package_write_ipk after do_packagedata do_package
+addtask package_write_ipk after do_packagedata do_package do_deploy_source_date_epoch before do_build
+do_build[rdeptask] += "do_package_write_ipk"
 
 PACKAGEINDEXDEPS += "opkg-utils-native:do_populate_sysroot"
 PACKAGEINDEXDEPS += "opkg-native:do_populate_sysroot"
-
-do_build[recrdeptask] += "do_package_write_ipk"

@@ -9,6 +9,7 @@ NATIVESDKLIBC ?= "libc-glibc"
 LIBCOVERRIDE = ":${NATIVESDKLIBC}"
 CLASSOVERRIDE = "class-nativesdk"
 MACHINEOVERRIDES = ""
+MACHINE_FEATURES = ""
 
 MULTILIBS = ""
 
@@ -27,10 +28,10 @@ PACKAGE_ARCHS = "${SDK_PACKAGE_ARCHS}"
 # We need chrpath >= 0.14 to ensure we can deal with 32 and 64 bit
 # binaries
 #
-DEPENDS_append = " chrpath-replacement-native"
+DEPENDS:append = " chrpath-replacement-native"
 EXTRANATIVEPATH += "chrpath-native"
 
-PKGDATA_DIR = "${TMPDIR}/pkgdata/${SDK_SYS}"
+PKGDATA_DIR = "${PKGDATA_DIR_SDK}"
 
 HOST_ARCH = "${SDK_ARCH}"
 HOST_VENDOR = "${SDK_VENDOR}"
@@ -57,7 +58,7 @@ EXTRA_OECONF_GCC_FLOAT = ""
 
 CPPFLAGS = "${BUILDSDK_CPPFLAGS}"
 CFLAGS = "${BUILDSDK_CFLAGS}"
-CXXFLAGS = "${BUILDSDK_CFLAGS}"
+CXXFLAGS = "${BUILDSDK_CXXFLAGS}"
 LDFLAGS = "${BUILDSDK_LDFLAGS}"
 
 # Change to place files in SDKPATH
@@ -107,9 +108,10 @@ python () {
 addhandler nativesdk_virtclass_handler
 nativesdk_virtclass_handler[eventmask] = "bb.event.RecipePreFinalise"
 
-do_populate_sysroot[stamp-extra-info] = ""
 do_packagedata[stamp-extra-info] = ""
 
 USE_NLS = "${SDKUSE_NLS}"
 
 OLDEST_KERNEL = "${SDK_OLDEST_KERNEL}"
+
+PATH:prepend = "${COREBASE}/scripts/nativesdk-intercept:"

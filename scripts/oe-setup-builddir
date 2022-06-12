@@ -42,7 +42,7 @@ if [ -f "$BUILDDIR/conf/templateconf.cfg" ]; then
     TEMPLATECONF=$(cat "$BUILDDIR/conf/templateconf.cfg")
 fi
 
-. $OEROOT/.templateconf
+. "$OEROOT"/.templateconf
 
 if [ ! -f "$BUILDDIR/conf/templateconf.cfg" ]; then
     echo "$TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
@@ -79,7 +79,7 @@ example, select a different MACHINE (target hardware). See conf/local.conf
 for more information as common configuration options are commented.
 
 EOM
-    cp -f $OECORELOCALCONF "$BUILDDIR/conf/local.conf"
+    cp -f "$OECORELOCALCONF" "$BUILDDIR/conf/local.conf"
     SHOWYPDOC=yes
 fi
 
@@ -94,13 +94,13 @@ into your configuration please add entries to conf/bblayers.conf.
 
 EOM
 
-    # Put the abosolute path to the layers in bblayers.conf so we can run
-    # bitbake without the init script after the first run
-    # ##COREBASE## is deprecated as it's meaning was inconsistent, but continue
+    # Put the absolute path to the layers in bblayers.conf so we can run
+    # bitbake without the init script after the first run.
+    # ##COREBASE## is deprecated as its meaning was inconsistent, but continue
     # to replace it for compatibility.
     sed -e "s|##OEROOT##|$OEROOT|g" \
         -e "s|##COREBASE##|$OEROOT|g" \
-        $OECORELAYERCONF > "$BUILDDIR/conf/bblayers.conf"
+        "$OECORELAYERCONF" > "$BUILDDIR/conf/bblayers.conf"
     SHOWYPDOC=yes
 fi
 
@@ -113,10 +113,10 @@ if [ ! -z "$SHOWYPDOC" ]; then
     cat <<EOM
 The Yocto Project has extensive documentation about OE including a reference
 manual which can be found at:
-    http://yoctoproject.org/documentation
+    https://docs.yoctoproject.org
 
-For more information about OpenEmbedded see their website:
-    http://www.openembedded.org/
+For more information about OpenEmbedded see the website:
+    https://www.openembedded.org/
 
 EOM
 #    unset SHOWYPDOC
@@ -125,5 +125,5 @@ fi
 if [ -z "$OECORENOTESCONF" ]; then
     OECORENOTESCONF="$OEROOT/meta/conf/conf-notes.txt"
 fi
-[ ! -r "$OECORENOTESCONF" ] || cat $OECORENOTESCONF
+[ ! -r "$OECORENOTESCONF" ] || cat "$OECORENOTESCONF"
 unset OECORENOTESCONF

@@ -6,7 +6,7 @@
 LICENSE_DIRECTORY ??= "${DEPLOY_DIR}/licenses"
 LICSSTATEDIR = "${WORKDIR}/license-destdir/"
 
-# Create extra package with license texts and add it to RRECOMMENDS_${PN}
+# Create extra package with license texts and add it to RRECOMMENDS:${PN}
 LICENSE_CREATE_PACKAGE[type] = "boolean"
 LICENSE_CREATE_PACKAGE ??= "0"
 LICENSE_PACKAGE_SUFFIX ??= "-lic"
@@ -29,10 +29,12 @@ python do_populate_lic() {
     with open(os.path.join(destdir, "recipeinfo"), "w") as f:
         for key in sorted(info.keys()):
             f.write("%s: %s\n" % (key, info[key]))
+    oe.qa.exit_if_errors(d)
 }
 
-# it would be better to copy them in do_install_append, but find_license_filesa is python
-python perform_packagecopy_prepend () {
+PSEUDO_IGNORE_PATHS .= ",${@','.join(((d.getVar('COMMON_LICENSE_DIR') or '') + ' ' + (d.getVar('LICENSE_PATH') or '') + ' ' + d.getVar('COREBASE') + '/meta/COPYING').split())}"
+# it would be better to copy them in do_install:append, but find_license_filesa is python
+python perform_packagecopy:prepend () {
     enabled = oe.data.typed_value('LICENSE_CREATE_PACKAGE', d)
     if d.getVar('CLASSOVERRIDE') == 'class-target' and enabled:
         lic_files_paths = find_license_files(d)
@@ -61,15 +63,7 @@ def add_package_and_files(d):
     else:
         # first in PACKAGES to be sure that nothing else gets LICENSE_FILES_DIRECTORY
         d.setVar('PACKAGES', "%s %s" % (pn_lic, packages))
-        d.setVar('FILES_' + pn_lic, files)
-    for pn in packages.split():
-        if pn == pn_lic:
-            continue
-        rrecommends_pn = d.getVar('RRECOMMENDS_' + pn)
-        if rrecommends_pn:
-            d.setVar('RRECOMMENDS_' + pn, "%s %s" % (pn_lic, rrecommends_pn))
-        else:
-            d.setVar('RRECOMMENDS_' + pn, "%s" % (pn_lic))
+        d.setVar('FILES:' + pn_lic, files)
 
 def copy_license_files(lic_files_paths, destdir):
     import shutil
@@ -90,17 +84,17 @@ def copy_license_files(lic_files_paths, destdir):
                     os.link(src, dst)
                 except OSError as err:
                     if err.errno == errno.EXDEV:
-                        # Copy license files if hard-link is not possible even if st_dev is the
+                        # Copy license files if hardlink is not possible even if st_dev is the
                         # same on source and destination (docker container with device-mapper?)
                         canlink = False
                     else:
                         raise
-                # Only chown if we did hardling, and, we're running under pseudo
+                # Only chown if we did hardlink and we're running under pseudo
                 if canlink and os.environ.get('PSEUDO_DISABLED') == '0':
                     os.chown(dst,0,0)
             if not canlink:
-                begin_idx = int(beginline)-1 if beginline is not None else None
-                end_idx = int(endline) if endline is not None else None
+                begin_idx = max(0, int(beginline) - 1) if beginline is not None else None
+                end_idx = max(0, int(endline)) if endline is not None else None
                 if begin_idx is None and end_idx is None:
                     shutil.copyfile(src, dst)
                 else:
@@ -152,6 +146,10 @@ def find_license_files(d):
             find_license(node.s.replace("+", "").replace("*", ""))
             self.generic_visit(node)
 
+        def visit_Constant(self, node):
+            find_license(node.value.replace("+", "").replace("*", ""))
+            self.generic_visit(node)
+
     def find_license(license_type):
         try:
             bb.utils.mkdirhier(gen_lic_dest)
@@ -185,7 +183,8 @@ def find_license_files(d):
             # The user may attempt to use NO_GENERIC_LICENSE for a generic license which doesn't make sense
             # and should not be allowed, warn the user in this case.
             if d.getVarFlag('NO_GENERIC_LICENSE', license_type):
-                bb.warn("%s: %s is a generic license, please don't use NO_GENERIC_LICENSE for it." % (pn, license_type))
+                oe.qa.handle_error("license-no-generic",
+                    "%s: %s is a generic license, please don't use NO_GENERIC_LICENSE for it." % (pn, license_type), d)
 
         elif non_generic_lic and non_generic_lic in lic_chksums:
             # if NO_GENERIC_LICENSE is set, we copy the license files from the fetched source
@@ -194,10 +193,11 @@ def find_license_files(d):
                                     os.path.join(srcdir, non_generic_lic), None, None))
             non_generic_lics[non_generic_lic] = license_type
         else:
-            # Add explicity avoid of CLOSED license because this isn't generic
+            # Explicitly avoid the CLOSED license because this isn't generic
             if license_type != 'CLOSED':
                 # And here is where we warn people that their licenses are lousy
-                bb.warn("%s: No generic license file exists for: %s in any provider" % (pn, license_type))
+                oe.qa.handle_error("license-exists",
+                    "%s: No generic license file exists for: %s in any provider" % (pn, license_type), d)
             pass
 
     if not generic_directory:
@@ -222,7 +222,8 @@ def find_license_files(d):
     except oe.license.InvalidLicense as exc:
         bb.fatal('%s: %s' % (d.getVar('PF'), exc))
     except SyntaxError:
-        bb.warn("%s: Failed to parse it's LICENSE field." % (d.getVar('PF')))
+        oe.qa.handle_error("license-syntax",
+            "%s: Failed to parse it's LICENSE field." % (d.getVar('PF')), d)
     # Add files from LIC_FILES_CHKSUM to list of license files
     lic_chksum_paths = defaultdict(OrderedDict)
     for path, data in sorted(lic_chksums.items()):
@@ -251,35 +252,34 @@ def return_spdx(d, license):
 def canonical_license(d, license):
     """
     Return the canonical (SPDX) form of the license if available (so GPLv3
-    becomes GPL-3.0), for the license named 'X+', return canonical form of
-    'X' if availabel and the tailing '+' (so GPLv3+ becomes GPL-3.0+), 
-    or the passed license if there is no canonical form.
+    becomes GPL-3.0-only) or the passed license if there is no canonical form.
     """
-    lic = d.getVarFlag('SPDXLICENSEMAP', license) or ""
-    if not lic and license.endswith('+'):
-        lic = d.getVarFlag('SPDXLICENSEMAP', license.rstrip('+'))
-        if lic:
-            lic += '+'
-    return lic or license
+    return d.getVarFlag('SPDXLICENSEMAP', license) or license
 
 def expand_wildcard_licenses(d, wildcard_licenses):
     """
-    Return actual spdx format license names if wildcard used. We expand
-    wildcards from SPDXLICENSEMAP flags and SRC_DISTRIBUTE_LICENSES values.
+    There are some common wildcard values users may want to use. Support them
+    here.
     """
-    import fnmatch
-    licenses = wildcard_licenses[:]
-    spdxmapkeys = d.getVarFlags('SPDXLICENSEMAP').keys()
-    for wld_lic in wildcard_licenses:
-        spdxflags = fnmatch.filter(spdxmapkeys, wld_lic)
-        licenses += [d.getVarFlag('SPDXLICENSEMAP', flag) for flag in spdxflags]
+    licenses = set(wildcard_licenses)
+    mapping = {
+        "AGPL-3.0*" : ["AGPL-3.0-only", "AGPL-3.0-or-later"],
+        "GPL-3.0*" : ["GPL-3.0-only", "GPL-3.0-or-later"],
+        "LGPL-3.0*" : ["LGPL-3.0-only", "LGPL-3.0-or-later"],
+    }
+    for k in mapping:
+        if k in wildcard_licenses:
+            licenses.remove(k)
+            for item in mapping[k]:
+                licenses.add(item)
 
-    spdx_lics = (d.getVar('SRC_DISTRIBUTE_LICENSES', False) or '').split()
-    for wld_lic in wildcard_licenses:
-        licenses += fnmatch.filter(spdx_lics, wld_lic)
+    for l in licenses:
+        if l in oe.license.obsolete_license_list():
+            bb.fatal("Error, %s is an obsolete license, please use an SPDX reference in INCOMPATIBLE_LICENSE" % l)
+        if "*" in l:
+            bb.fatal("Error, %s is an invalid license wildcard entry" % l)
 
-    licenses = list(set(licenses))
-    return licenses
+    return list(licenses)
 
 def incompatible_license_contains(license, truevalue, falsevalue, d):
     license = canonical_license(d, license)
@@ -291,15 +291,21 @@ def incompatible_pkg_license(d, dont_want_licenses, license):
     # Handles an "or" or two license sets provided by
     # flattened_licenses(), pick one that works if possible.
     def choose_lic_set(a, b):
-        return a if all(oe.license.license_ok(canonical_license(d, lic), 
+        return a if all(oe.license.license_ok(canonical_license(d, lic),
                             dont_want_licenses) for lic in a) else b
 
     try:
         licenses = oe.license.flattened_licenses(license, choose_lic_set)
     except oe.license.LicenseError as exc:
         bb.fatal('%s: %s' % (d.getVar('P'), exc))
-    return any(not oe.license.license_ok(canonical_license(d, l), \
-               dont_want_licenses) for l in licenses)
+
+    incompatible_lic = []
+    for l in licenses:
+        license = canonical_license(d, l)
+        if not oe.license.license_ok(license, dont_want_licenses):
+            incompatible_lic.append(license)
+
+    return sorted(incompatible_lic)
 
 def incompatible_license(d, dont_want_licenses, package=None):
     """
@@ -308,7 +314,7 @@ def incompatible_license(d, dont_want_licenses, package=None):
     as canonical (SPDX) names.
     """
     import oe.license
-    license = d.getVar("LICENSE_%s" % package) if package else None
+    license = d.getVar("LICENSE:%s" % package) if package else None
     if not license:
         license = d.getVar('LICENSE')
 
@@ -317,30 +323,31 @@ def incompatible_license(d, dont_want_licenses, package=None):
 def check_license_flags(d):
     """
     This function checks if a recipe has any LICENSE_FLAGS that
-    aren't whitelisted.
+    aren't acceptable.
 
-    If it does, it returns the all LICENSE_FLAGS missing from the whitelist, or
-    all of the LICENSE_FLAGS if there is no whitelist.
+    If it does, it returns the all LICENSE_FLAGS missing from the list
+    of acceptable license flags, or all of the LICENSE_FLAGS if there
+    is no list of acceptable flags.
 
-    If everything is is properly whitelisted, it returns None.
+    If everything is is acceptable, it returns None.
     """
 
-    def license_flag_matches(flag, whitelist, pn):
+    def license_flag_matches(flag, acceptlist, pn):
         """
-        Return True if flag matches something in whitelist, None if not.
+        Return True if flag matches something in acceptlist, None if not.
 
-        Before we test a flag against the whitelist, we append _${PN}
+        Before we test a flag against the acceptlist, we append _${PN}
         to it.  We then try to match that string against the
-        whitelist.  This covers the normal case, where we expect
+        acceptlist.  This covers the normal case, where we expect
         LICENSE_FLAGS to be a simple string like 'commercial', which
-        the user typically matches exactly in the whitelist by
+        the user typically matches exactly in the acceptlist by
         explicitly appending the package name e.g 'commercial_foo'.
         If we fail the match however, we then split the flag across
         '_' and append each fragment and test until we either match or
         run out of fragments.
         """
         flag_pn = ("%s_%s" % (flag, pn))
-        for candidate in whitelist:
+        for candidate in acceptlist:
             if flag_pn == candidate:
                     return True
 
@@ -351,27 +358,27 @@ def check_license_flags(d):
             if flag_cur:
                 flag_cur += "_"
             flag_cur += flagment
-            for candidate in whitelist:
+            for candidate in acceptlist:
                 if flag_cur == candidate:
                     return True
         return False
 
-    def all_license_flags_match(license_flags, whitelist):
+    def all_license_flags_match(license_flags, acceptlist):
         """ Return all unmatched flags, None if all flags match """
         pn = d.getVar('PN')
-        split_whitelist = whitelist.split()
+        split_acceptlist = acceptlist.split()
         flags = []
         for flag in license_flags.split():
-            if not license_flag_matches(flag, split_whitelist, pn):
+            if not license_flag_matches(flag, split_acceptlist, pn):
                 flags.append(flag)
         return flags if flags else None
 
     license_flags = d.getVar('LICENSE_FLAGS')
     if license_flags:
-        whitelist = d.getVar('LICENSE_FLAGS_WHITELIST')
-        if not whitelist:
+        acceptlist = d.getVar('LICENSE_FLAGS_ACCEPTED')
+        if not acceptlist:
             return license_flags.split()
-        unmatched_flags = all_license_flags_match(license_flags, whitelist)
+        unmatched_flags = all_license_flags_match(license_flags, acceptlist)
         if unmatched_flags:
             return unmatched_flags
     return None
@@ -390,20 +397,22 @@ def check_license_format(d):
     for pos, element in enumerate(elements):
         if license_pattern.match(element):
             if pos > 0 and license_pattern.match(elements[pos - 1]):
-                bb.warn('%s: LICENSE value "%s" has an invalid format - license names ' \
+                oe.qa.handle_error('license-format',
+                        '%s: LICENSE value "%s" has an invalid format - license names ' \
                         'must be separated by the following characters to indicate ' \
                         'the license selection: %s' %
-                        (pn, licenses, license_operator_chars))
+                        (pn, licenses, license_operator_chars), d)
         elif not license_operator.match(element):
-            bb.warn('%s: LICENSE value "%s" has an invalid separator "%s" that is not ' \
+            oe.qa.handle_error('license-format',
+                    '%s: LICENSE value "%s" has an invalid separator "%s" that is not ' \
                     'in the valid list of separators (%s)' %
-                    (pn, licenses, element, license_operator_chars))
+                    (pn, licenses, element, license_operator_chars), d)
 
 SSTATETASKS += "do_populate_lic"
 do_populate_lic[sstate-inputdirs] = "${LICSSTATEDIR}"
 do_populate_lic[sstate-outputdirs] = "${LICENSE_DIRECTORY}/"
 
-IMAGE_CLASSES_append = " license_image"
+IMAGE_CLASSES:append = " license_image"
 
 python do_populate_lic_setscene () {
     sstate_setscene(d)

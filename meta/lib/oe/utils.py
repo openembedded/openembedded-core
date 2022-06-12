@@ -169,7 +169,7 @@ def any_distro_features(d, features, truevalue="1", falsevalue=""):
     """
     return bb.utils.contains_any("DISTRO_FEATURES", features, truevalue, falsevalue, d)
 
-def parallel_make(d):
+def parallel_make(d, makeinst=False):
     """
     Return the integer value for the number of parallel threads to use when
     building, scraped out of PARALLEL_MAKE. If no parallelization option is
@@ -177,7 +177,10 @@ def parallel_make(d):
 
     e.g. if PARALLEL_MAKE = "-j 10", this will return 10 as an integer.
     """
-    pm = (d.getVar('PARALLEL_MAKE') or '').split()
+    if makeinst:
+        pm = (d.getVar('PARALLEL_MAKEINST') or '').split()
+    else:
+        pm = (d.getVar('PARALLEL_MAKE') or '').split()
     # look for '-j' and throw other options (e.g. '-l') away
     while pm:
         opt = pm.pop(0)
@@ -190,9 +193,9 @@ def parallel_make(d):
 
         return int(v)
 
-    return None
+    return ''
 
-def parallel_make_argument(d, fmt, limit=None):
+def parallel_make_argument(d, fmt, limit=None, makeinst=False):
     """
     Helper utility to construct a parallel make argument from the number of
     parallel threads specified in PARALLEL_MAKE.
@@ -205,7 +208,7 @@ def parallel_make_argument(d, fmt, limit=None):
     e.g. if PARALLEL_MAKE = "-j 10", parallel_make_argument(d, "-n %d") will return
     "-n 10"
     """
-    v = parallel_make(d)
+    v = parallel_make(d, makeinst)
     if v:
         if limit:
             v = min(limit, v)
@@ -218,12 +221,12 @@ def packages_filter_out_system(d):
     PN-dbg PN-doc PN-locale-eb-gb removed.
     """
     pn = d.getVar('PN')
-    blacklist = [pn + suffix for suffix in ('', '-dbg', '-dev', '-doc', '-locale', '-staticdev', '-src')]
+    pkgfilter = [pn + suffix for suffix in ('', '-dbg', '-dev', '-doc', '-locale', '-staticdev', '-src')]
     localepkg = pn + "-locale-"
     pkgs = []
 
     for pkg in d.getVar('PACKAGES').split():
-        if pkg not in blacklist and localepkg not in pkg:
+        if pkg not in pkgfilter and localepkg not in pkg:
             pkgs.append(pkg)
     return pkgs
 
@@ -245,9 +248,9 @@ def trim_version(version, num_parts=2):
     trimmed = ".".join(parts[:num_parts])
     return trimmed
 
-def cpu_count():
-    import multiprocessing
-    return multiprocessing.cpu_count()
+def cpu_count(at_least=1, at_most=64):
+    cpus = len(os.sched_getaffinity(0))
+    return max(min(cpus, at_most), at_least)
 
 def execute_pre_post_process(d, cmds):
     if cmds is None:
@@ -341,7 +344,29 @@ def squashspaces(string):
     import re
     return re.sub(r"\s+", " ", string).strip()
 
-def format_pkg_list(pkg_dict, ret_format=None):
+def rprovides_map(pkgdata_dir, pkg_dict):
+    # Map file -> pkg provider
+    rprov_map = {}
+
+    for pkg in pkg_dict:
+        path_to_pkgfile = os.path.join(pkgdata_dir, 'runtime-reverse', pkg)
+        if not os.path.isfile(path_to_pkgfile):
+            continue
+        with open(path_to_pkgfile) as f:
+            for line in f:
+                if line.startswith('RPROVIDES') or line.startswith('FILERPROVIDES'):
+                    # List all components provided by pkg.
+                    # Exclude version strings, i.e. those starting with (
+                    provides = [x for x in line.split()[1:] if not x.startswith('(')]
+                    for prov in provides:
+                        if prov in rprov_map:
+                            rprov_map[prov].append(pkg)
+                        else:
+                            rprov_map[prov] = [pkg]
+
+    return rprov_map
+
+def format_pkg_list(pkg_dict, ret_format=None, pkgdata_dir=None):
     output = []
 
     if ret_format == "arch":
@@ -354,9 +379,15 @@ def format_pkg_list(pkg_dict, ret_format=None):
         for pkg in sorted(pkg_dict):
             output.append("%s %s %s" % (pkg, pkg_dict[pkg]["arch"], pkg_dict[pkg]["ver"]))
     elif ret_format == "deps":
+        rprov_map = rprovides_map(pkgdata_dir, pkg_dict)
         for pkg in sorted(pkg_dict):
             for dep in pkg_dict[pkg]["deps"]:
-                output.append("%s|%s" % (pkg, dep))
+                if dep in rprov_map:
+                    # There could be multiple providers within the image
+                    for pkg_provider in rprov_map[dep]:
+                        output.append("%s|%s * %s [RPROVIDES]" % (pkg, pkg_provider, dep))
+                else:
+                    output.append("%s|%s" % (pkg, dep))
     else:
         for pkg in sorted(pkg_dict):
             output.append(pkg)
@@ -368,6 +399,37 @@ def format_pkg_list(pkg_dict, ret_format=None):
         output_str += '\n'
 
     return output_str
+
+
+# Helper function to get the host compiler version
+# Do not assume the compiler is gcc
+def get_host_compiler_version(d, taskcontextonly=False):
+    import re, subprocess
+
+    if taskcontextonly and d.getVar('BB_WORKERCONTEXT') != '1':
+        return
+
+    compiler = d.getVar("BUILD_CC")
+    # Get rid of ccache since it is not present when parsing.
+    if compiler.startswith('ccache '):
+        compiler = compiler[7:]
+    try:
+        env = os.environ.copy()
+        # datastore PATH does not contain session PATH as set by environment-setup-...
+        # this breaks the install-buildtools use-case
+        # env["PATH"] = d.getVar("PATH")
+        output = subprocess.check_output("%s --version" % compiler, \
+                    shell=True, env=env, stderr=subprocess.STDOUT).decode("utf-8")
+    except subprocess.CalledProcessError as e:
+        bb.fatal("Error running %s --version: %s" % (compiler, e.output.decode("utf-8")))
+
+    match = re.match(r".* (\d+\.\d+)\.\d+.*", output.split('\n')[0])
+    if not match:
+        bb.fatal("Can't get compiler version from %s --version output" % compiler)
+
+    version = match.group(1)
+    return compiler, version
+
 
 def host_gcc_version(d, taskcontextonly=False):
     import re, subprocess
@@ -387,7 +449,7 @@ def host_gcc_version(d, taskcontextonly=False):
     except subprocess.CalledProcessError as e:
         bb.fatal("Error running %s --version: %s" % (compiler, e.output.decode("utf-8")))
 
-    match = re.match(r".* (\d\.\d)\.\d.*", output.split('\n')[0])
+    match = re.match(r".* (\d+\.\d+)\.\d+.*", output.split('\n')[0])
     if not match:
         bb.fatal("Can't get compiler version from %s --version output" % compiler)
 
@@ -421,8 +483,8 @@ from threading import Thread
 
 class ThreadedWorker(Thread):
     """Thread executing tasks from a given tasks queue"""
-    def __init__(self, tasks, worker_init, worker_end):
-        Thread.__init__(self)
+    def __init__(self, tasks, worker_init, worker_end, name=None):
+        Thread.__init__(self, name=name)
         self.tasks = tasks
         self.daemon = True
 
@@ -446,19 +508,19 @@ class ThreadedWorker(Thread):
             try:
                 func(self, *args, **kargs)
             except Exception as e:
-                print(e)
+                # Eat all exceptions
+                bb.mainlogger.debug("Worker task raised %s" % e, exc_info=e)
             finally:
                 self.tasks.task_done()
 
 class ThreadedPool:
     """Pool of threads consuming tasks from a queue"""
-    def __init__(self, num_workers, num_tasks, worker_init=None,
-            worker_end=None):
+    def __init__(self, num_workers, num_tasks, worker_init=None, worker_end=None, name="ThreadedPool-"):
         self.tasks = Queue(num_tasks)
         self.workers = []
 
-        for _ in range(num_workers):
-            worker = ThreadedWorker(self.tasks, worker_init, worker_end)
+        for i in range(num_workers):
+            worker = ThreadedWorker(self.tasks, worker_init, worker_end, name=name + str(i))
             self.workers.append(worker)
 
     def start(self):
@@ -474,17 +536,6 @@ class ThreadedPool:
         self.tasks.join()
         for worker in self.workers:
             worker.join()
-
-def write_ld_so_conf(d):
-    # Some utils like prelink may not have the correct target library paths
-    # so write an ld.so.conf to help them
-    ldsoconf = d.expand("${STAGING_DIR_TARGET}${sysconfdir}/ld.so.conf")
-    if os.path.exists(ldsoconf):
-        bb.utils.remove(ldsoconf)
-    bb.utils.mkdirhier(os.path.dirname(ldsoconf))
-    with open(ldsoconf, "w") as f:
-        f.write(d.getVar("base_libdir") + '\n')
-        f.write(d.getVar("libdir") + '\n')
 
 class ImageQAFailed(Exception):
     def __init__(self, description, name=None, logfile=None):
@@ -502,3 +553,34 @@ class ImageQAFailed(Exception):
 def sh_quote(string):
     import shlex
     return shlex.quote(string)
+
+def directory_size(root, blocksize=4096):
+    """
+    Calculate the size of the directory, taking into account hard links,
+    rounding up every size to multiples of the blocksize.
+    """
+    def roundup(size):
+        """
+        Round the size up to the nearest multiple of the block size.
+        """
+        import math
+        return math.ceil(size / blocksize) * blocksize
+
+    def getsize(filename):
+        """
+        Get the size of the filename, not following symlinks, taking into
+        account hard links.
+        """
+        stat = os.lstat(filename)
+        if stat.st_ino not in inodes:
+            inodes.add(stat.st_ino)
+            return stat.st_size
+        else:
+            return 0
+
+    inodes = set()
+    total = 0
+    for root, dirs, files in os.walk(root):
+        total += sum(roundup(getsize(os.path.join(root, name))) for name in files)
+        total += roundup(getsize(root))
+    return total

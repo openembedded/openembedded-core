@@ -3,7 +3,7 @@ import os
 from oeqa.core.decorator import OETestTag
 from oeqa.core.case import OEPTestResultTestCase
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runqemu, Command
+from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runqemu
 
 def parse_values(content):
     for i in content:
@@ -21,8 +21,10 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
     def run_check(self, *suites, ssh = None):
         targets = set()
         for s in suites:
-            if s in ["gcc", "g++"]:
-                targets.add("check-gcc")
+            if s == "gcc":
+                targets.add("check-gcc-c")
+            elif s == "g++":
+                targets.add("check-gcc-c++")
             else:
                 targets.add("check-target-{}".format(s))
 
@@ -77,7 +79,12 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
 @OETestTag("toolchain-user")
 class GccCrossSelfTest(GccSelfTestBase):
     def test_cross_gcc(self):
-        self.run_check("gcc", "g++")
+        self.run_check("gcc")
+
+@OETestTag("toolchain-user")
+class GxxCrossSelfTest(GccSelfTestBase):
+    def test_cross_gxx(self):
+        self.run_check("g++")
 
 @OETestTag("toolchain-user")
 class GccLibAtomicSelfTest(GccSelfTestBase):
@@ -107,32 +114,44 @@ class GccLibItmSelfTest(GccSelfTestBase):
         self.run_check("libitm")
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GccCrossSelfTestSystemEmulated(GccSelfTestBase):
     def test_cross_gcc(self):
-        self.run_check_emulated("gcc", "g++")
+        self.run_check_emulated("gcc")
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
+class GxxCrossSelfTestSystemEmulated(GccSelfTestBase):
+    def test_cross_gxx(self):
+        self.run_check_emulated("g++")
+
+@OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GccLibAtomicSelfTestSystemEmulated(GccSelfTestBase):
     def test_libatomic(self):
         self.run_check_emulated("libatomic")
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GccLibGompSelfTestSystemEmulated(GccSelfTestBase):
     def test_libgomp(self):
         self.run_check_emulated("libgomp")
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GccLibStdCxxSelfTestSystemEmulated(GccSelfTestBase):
     def test_libstdcxx(self):
         self.run_check_emulated("libstdc++-v3")
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GccLibSspSelfTestSystemEmulated(GccSelfTestBase):
     def test_libssp(self):
         self.check_skip("libssp")
         self.run_check_emulated("libssp")
 
 @OETestTag("toolchain-system")
+@OETestTag("runqemu")
 class GccLibItmSelfTestSystemEmulated(GccSelfTestBase):
     def test_libitm(self):
         self.check_skip("libitm")

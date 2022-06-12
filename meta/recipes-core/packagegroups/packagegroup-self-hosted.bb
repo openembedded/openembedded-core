@@ -8,7 +8,7 @@ PR = "r13"
 
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
-inherit packagegroup  distro_features_check
+inherit packagegroup  features_check
 # rdepends on libx11-dev
 REQUIRED_DISTRO_FEATURES = "x11"
 
@@ -24,7 +24,7 @@ PACKAGES = "\
     packagegroup-self-hosted-host-tools \
     "
 
-RDEPENDS_packagegroup-self-hosted = "\
+RDEPENDS:packagegroup-self-hosted = "\
     packagegroup-self-hosted-debug \
     packagegroup-self-hosted-sdk \
     packagegroup-self-hosted-extended \
@@ -32,7 +32,7 @@ RDEPENDS_packagegroup-self-hosted = "\
     packagegroup-self-hosted-host-tools \
     "
 
-RDEPENDS_packagegroup-self-hosted-host-tools = "\
+RDEPENDS:packagegroup-self-hosted-host-tools = "\
     e2fsprogs \
     e2fsprogs-e2fsck \
     e2fsprogs-mke2fs \
@@ -49,9 +49,9 @@ RDEPENDS_packagegroup-self-hosted-host-tools = "\
     screen \
     "
 PSEUDO = "pseudo"
-PSEUDO_libc-musl = ""
+PSEUDO:libc-musl = ""
 
-RRECOMMENDS_packagegroup-self-hosted-host-tools = "\
+RRECOMMENDS:packagegroup-self-hosted-host-tools = "\
     kernel-module-tun \
     kernel-module-iptable-raw \
     kernel-module-iptable-nat \
@@ -59,7 +59,7 @@ RRECOMMENDS_packagegroup-self-hosted-host-tools = "\
     kernel-module-iptable-filter \
 	"
 
-RDEPENDS_packagegroup-self-hosted-sdk = "\
+RDEPENDS:packagegroup-self-hosted-sdk = "\
     autoconf \
     automake \
     binutils \
@@ -75,7 +75,6 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     g++-symlinks \
     gcc \
     gcc-symlinks \
-    intltool \
     ldd \
     less \
     libstdc++ \
@@ -88,18 +87,18 @@ RDEPENDS_packagegroup-self-hosted-sdk = "\
     quilt \
     sed \
     "
-RDEPENDS_packagegroup-self-hosted-sdk_append_mingw32 = "\
+RDEPENDS:packagegroup-self-hosted-sdk:append:mingw32 = "\
     libssp \
     libssp-dev \
     libssp-staticdev \
     "
 # rpcsvc-proto: for rpcgen
-RDEPENDS_packagegroup-self-hosted-sdk_append_libc-glibc = "\
+RDEPENDS:packagegroup-self-hosted-sdk:append:libc-glibc = "\
     glibc-gconv-ibm850 \
     glibc-utils \
     rpcsvc-proto \
     "
-RDEPENDS_packagegroup-self-hosted-debug = " \
+RDEPENDS:packagegroup-self-hosted-debug = " \
     gdb \
     gdbserver \
     rsync \
@@ -107,9 +106,8 @@ RDEPENDS_packagegroup-self-hosted-debug = " \
     tcf-agent"
 
 
-RDEPENDS_packagegroup-self-hosted-extended = "\
+RDEPENDS:packagegroup-self-hosted-extended = "\
     bzip2 \
-    chkconfig \
     chrpath \
     cpio \
     curl \
@@ -131,7 +129,6 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     libusb1 \
     libxml2 \
     lsof \
-    lzo \
     man \
     man-pages \
     mdadm \
@@ -153,8 +150,6 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     perl-misc \
     perl-modules \
     perl-pod \
-    python \
-    python-modules \
     python3 \
     python3-modules \
     python3-git \
@@ -168,7 +163,6 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     sysstat \
     tar \
     tcl \
-    texi2html \
     texinfo \
     unzip \
     usbutils \
@@ -182,7 +176,7 @@ RDEPENDS_packagegroup-self-hosted-extended = "\
     "
 
 
-RDEPENDS_packagegroup-self-hosted-graphics = "\
+RDEPENDS:packagegroup-self-hosted-graphics = "\
     builder \
     libgl \
     libgl-dev \

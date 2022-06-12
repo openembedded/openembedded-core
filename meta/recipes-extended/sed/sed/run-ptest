@@ -1,0 +1,5 @@
+#!/bin/sh
+
+chown nobody testsuite
+chown nobody ../ptest
+su nobody -s /bin/sh -c "make test-suite.log"

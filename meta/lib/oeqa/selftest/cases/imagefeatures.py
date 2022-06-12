@@ -3,8 +3,10 @@
 #
 
 from oeqa.selftest.case import OESelftestTestCase
+from oeqa.core.decorator import OETestTag
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 from oeqa.utils.sshcontrol import SSHControl
+import glob
 import os
 import json
 
@@ -13,6 +15,7 @@ class ImageFeatures(OESelftestTestCase):
     test_user = 'tester'
     root_user = 'root'
 
+    @OETestTag("runqemu")
     def test_non_root_user_can_connect_via_ssh_without_password(self):
         """
         Summary: Check if non root user can connect via ssh without password
@@ -38,6 +41,7 @@ class ImageFeatures(OESelftestTestCase):
                 status, output = ssh.run("true")
                 self.assertEqual(status, 0, 'ssh to user %s failed with %s' % (user, output))
 
+    @OETestTag("runqemu")
     def test_all_users_can_connect_via_ssh_without_password(self):
         """
         Summary:     Check if all users can connect via ssh without password
@@ -66,18 +70,6 @@ class ImageFeatures(OESelftestTestCase):
                 else:
                     self.assertEqual(status, 0, 'ssh to user tester failed with %s' % output)
 
-
-    def test_clutter_image_can_be_built(self):
-        """
-        Summary:     Check if clutter image can be built
-        Expected:    1. core-image-clutter can be built
-        Product:     oe-core
-        Author:      Ionut Chisanovici <ionutx.chisanovici@intel.com>
-        AutomatedBy: Daniel Istrate <daniel.alexandrux.istrate@intel.com>
-        """
-
-        # Build a core-image-clutter
-        bitbake('core-image-clutter')
 
     def test_wayland_support_in_image(self):
         """
@@ -172,14 +164,14 @@ class ImageFeatures(OESelftestTestCase):
         """
         Summary:     Check for chaining many CONVERSION_CMDs together
         Expected:    1. core-image-minimal can be built with
-                        ext4.bmap.gz.bz2.lzo.xz.u-boot and also create a
+                        ext4.bmap.gz.bz2.zst.xz.u-boot and also create a
                         sha256sum
                      2. The above image has a valid sha256sum
         Product:     oe-core
         Author:      Tom Rini <trini@konsulko.com>
         """
 
-        conv = "ext4.bmap.gz.bz2.lzo.xz.u-boot"
+        conv = "ext4.bmap.gz.bz2.zst.xz.u-boot"
         features = 'IMAGE_FSTYPES += "%s %s.sha256sum"' % (conv, conv)
         self.write_config(features)
 
@@ -208,13 +200,13 @@ class ImageFeatures(OESelftestTestCase):
         """
         image_name = 'core-image-minimal'
 
-        img_types = [itype for itype in get_bb_var("IMAGE_TYPES", image_name).split() \
-                         if itype not in ('container', 'elf', 'f2fs', 'multiubi')]
+        all_image_types = set(get_bb_var("IMAGE_TYPES", image_name).split())
+        skip_image_types = set(('container', 'elf', 'f2fs', 'multiubi', 'tar.zst', 'wic.zst', 'squashfs-lzo'))
+        img_types = all_image_types - skip_image_types
 
         config = 'IMAGE_FSTYPES += "%s"\n'\
                  'MKUBIFS_ARGS ?= "-m 2048 -e 129024 -c 2047"\n'\
                  'UBINIZE_ARGS ?= "-m 2048 -p 128KiB -s 512"' % ' '.join(img_types)
-
         self.write_config(config)
 
         bitbake(image_name)
@@ -239,11 +231,11 @@ USERADD_GID_TABLES += "files/static-group"
 
     def test_no_busybox_base_utils(self):
         config = """
-# Enable x11
-DISTRO_FEATURES_append += "x11"
+# Enable wayland
+DISTRO_FEATURES:append = " pam opengl wayland"
 
 # Switch to systemd
-DISTRO_FEATURES += "systemd"
+DISTRO_FEATURES:append = " systemd"
 VIRTUAL-RUNTIME_init_manager = "systemd"
 VIRTUAL-RUNTIME_initscripts = ""
 VIRTUAL-RUNTIME_syslog = ""
@@ -256,9 +248,50 @@ VIRTUAL-RUNTIME_base-utils = "packagegroup-core-base-utils"
 VIRTUAL-RUNTIME_base-utils-hwclock = "util-linux-hwclock"
 VIRTUAL-RUNTIME_base-utils-syslog = ""
 
-# Blacklist busybox
-PNBLACKLIST[busybox] = "Don't build this"
+# Skip busybox
+SKIP_RECIPE[busybox] = "Don't build this"
 """
         self.write_config(config)
 
-        bitbake("--graphviz core-image-sato")
+        bitbake("--graphviz core-image-weston")
+
+    def test_image_gen_debugfs(self):
+        """
+        Summary:     Check debugfs generation
+        Expected:    1. core-image-minimal can be build with IMAGE_GEN_DEBUGFS variable set
+                     2. debug filesystem is created when variable set
+                     3. debug symbols available
+        Product:     oe-core
+        Author:      Humberto Ibarra <humberto.ibarra.lopez@intel.com>
+                     Yeoh Ee Peng <ee.peng.yeoh@intel.com>
+        """
+      
+        image_name = 'core-image-minimal'
+        features = 'IMAGE_GEN_DEBUGFS = "1"\n'
+        features += 'IMAGE_FSTYPES_DEBUGFS = "tar.bz2"\n'
+        features += 'MACHINE = "genericx86-64"\n'
+        self.write_config(features)
+
+        bitbake(image_name)
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        dbg_tar_file = os.path.join(deploy_dir_image, "*-dbg.rootfs.tar.bz2")
+        debug_files = glob.glob(dbg_tar_file)
+        self.assertNotEqual(len(debug_files), 0, 'debug filesystem not generated at %s' % dbg_tar_file)
+        result = runCmd('cd %s; tar xvf %s' % (deploy_dir_image, dbg_tar_file))
+        self.assertEqual(result.status, 0, msg='Failed to extract %s: %s' % (dbg_tar_file, result.output))
+        result = runCmd('find %s -name %s' % (deploy_dir_image, "udevadm"))
+        self.assertTrue("udevadm" in result.output, msg='Failed to find udevadm: %s' % result.output)
+        dbg_symbols_targets = result.output.splitlines()
+        self.assertTrue(dbg_symbols_targets, msg='Failed to split udevadm: %s' % dbg_symbols_targets)
+        for t in dbg_symbols_targets:
+            result = runCmd('objdump --syms %s | grep debug' % t)
+            self.assertTrue("debug" in result.output, msg='Failed to find debug symbol: %s' % result.output)
+
+    def test_empty_image(self):
+        """Test creation of image with no packages"""
+        bitbake('test-empty-image')
+        res_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+        images = os.path.join(res_dir, "test-empty-image-*.manifest")
+        result = glob.glob(images)
+        with open(result[1],"r") as f:
+                self.assertEqual(len(f.read().strip()),0)

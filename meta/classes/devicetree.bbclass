@@ -15,10 +15,10 @@
 SECTION ?= "bsp"
 
 # The default inclusion of kernel device tree includes and headers means that
-# device trees built with them are at least GPLv2 (and in some cases dual
-# licensed). Default to GPLv2 if the recipe does not specify a license.
-LICENSE ?= "GPLv2"
-LIC_FILES_CHKSUM ?= "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
+# device trees built with them are at least GPL-2.0-only (and in some cases dual
+# licensed). Default to GPL-2.0-only if the recipe does not specify a license.
+LICENSE ?= "GPL-2.0-only"
+LIC_FILES_CHKSUM ?= "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS += "dtc-native"
@@ -32,7 +32,7 @@ PROVIDES = "virtual/dtb"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SYSROOT_DIRS += "/boot/devicetree"
-FILES_${PN} = "/boot/devicetree/*.dtb /boot/devicetree/*.dtbo"
+FILES:${PN} = "/boot/devicetree/*.dtb /boot/devicetree/*.dtbo"
 
 S = "${WORKDIR}"
 B = "${WORKDIR}/build"
@@ -59,7 +59,7 @@ DT_BOOT_CPU ??= "0"
 
 DTC_FLAGS ?= "-R ${DT_RESERVED_MAP} -b ${DT_BOOT_CPU}"
 DTC_PPFLAGS ?= "-nostdinc -undef -D__DTS__ -x assembler-with-cpp"
-DTC_BFLAGS ?= "-p ${DT_PADDING_SIZE}"
+DTC_BFLAGS ?= "-p ${DT_PADDING_SIZE} -@"
 DTC_OFLAGS ?= "-p 0 -@ -H epapr"
 
 python () {
