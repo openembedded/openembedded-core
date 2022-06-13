@@ -60,6 +60,13 @@ CVE_CHECK_WHITELIST += "CVE-2008-3844"
 # https://ubuntu.com/security/CVE-2016-20012
 CVE_CHECK_WHITELIST += "CVE-2016-20012"
 
+# As per debian, the issue is fixed by a feature called "agent restriction" in openssh 8.9
+# Urgency is unimportant as per debian, Hence this CVE is whitelisting.
+# https://security-tracker.debian.org/tracker/CVE-2021-36368
+# https://bugzilla.mindrot.org/show_bug.cgi?id=3316#c2
+# https://docs.ssh-mitm.at/trivialauth.html
+CVE_CHECK_WHITELIST += "CVE-2021-36368"
+
 PAM_SRC_URI = "file://sshd"
 
 inherit manpages useradd update-rc.d update-alternatives systemd
