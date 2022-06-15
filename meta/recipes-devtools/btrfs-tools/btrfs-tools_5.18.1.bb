@@ -18,7 +18,7 @@ DEPENDS = "util-linux zlib"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
-SRCREV = "f9e303584272b81b05b926a0cc9010f43af12a03"
+SRCREV = "47b5cf867fc37411ef51eb5c09893a95f7f6c3b7"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
