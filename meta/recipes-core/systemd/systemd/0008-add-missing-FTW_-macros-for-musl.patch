@@ -21,12 +21,12 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
  3 files changed, 22 insertions(+)
 
 diff --git a/src/basic/missing_type.h b/src/basic/missing_type.h
-index aeaf6ad5ec..3df1084ef2 100644
+index 6c0456349d..5140892e22 100644
 --- a/src/basic/missing_type.h
 +++ b/src/basic/missing_type.h
-@@ -19,3 +19,23 @@ typedef int (*comparison_fn_t)(const void *, const void *);
- #define __COMPAR_FN_T
- typedef int (*__compar_fn_t)(const void *, const void *);
+@@ -14,3 +14,23 @@
+ #ifndef __GLIBC__
+ typedef int (*comparison_fn_t)(const void *, const void *);
  #endif
 +
 +#ifndef FTW_ACTIONRETVAL
