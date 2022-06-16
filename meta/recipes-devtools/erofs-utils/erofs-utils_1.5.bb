@@ -1,13 +1,12 @@
 SUMMARY = "Tools for erofs filesystems"
+# liberofs also available under Apache 2.0
 LICENSE = "GPL-2.0-or-later"
 SECTION = "base"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94fa01670a2a8f2d3ab2de15004e0848"
+LIC_FILES_CHKSUM = "file://COPYING;md5=73001d804ea1e3d84365f652242cca20"
 HOMEPAGE = "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/README"
 
-SRCREV = "ee97fe5fb77c737df0f77d92ab0d92edd3a11be6"
-SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git;branch=master \
-           file://0001-fsck-main.c-add-missing-include.patch \
-           "
+SRCREV = "a2821a66b42aee5430bccee82c280e38d1e9ab29"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git;branch=master"
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
 
