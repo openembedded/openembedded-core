@@ -45,6 +45,13 @@ automount_systemd() {
         return
     fi
 
+    # Only go for auto-mounting when the device has been cleaned up in remove
+    # or has not been identified yet
+    if [ -e "/tmp/.automount-$name" ]; then
+            logger "mount.sh/automount" "[$MOUNT_BASE/$name] is already cached"
+            return
+    fi
+
     # Skip the partition which are already in /etc/fstab
     grep "^[[:space:]]*$DEVNAME" /etc/fstab && return
     for n in LABEL PARTLABEL UUID PARTUUID; do
@@ -99,6 +106,13 @@ automount() {
 
 	# Get the unique name for mount point
 	get_label_name "${DEVNAME}"
+
+        # Only go for auto-mounting when the device has been cleaned up in remove
+        # or has not been identified yet
+        if [ -e "/tmp/.automount-$name" ]; then
+                logger "mount.sh/automount" "[$MOUNT_BASE/$name] is already cached"
+                return
+        fi
 
 	! test -d "$MOUNT_BASE/$name" && mkdir -p "$MOUNT_BASE/$name"
 	# Silent util-linux's version of mounting auto
@@ -172,12 +186,18 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 fi
 
 if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [ -n "$DEVNAME" ]; then
-    for mnt in `cat /proc/mounts | grep "$DEVNAME" | cut -f 2 -d " " `
-    do
-        $UMOUNT $mnt
-    done
-
-    # Remove empty directories from auto-mounter
     name="`basename "$DEVNAME"`"
-    test -e "/tmp/.automount-$name" && rm_dir "$MOUNT_BASE/$name"
+    tmpfile=`find /tmp | grep "\.automount-.*${name}$"`
+    if [ ! -e "/sys/$DEVPATH" -a -e "$tmpfile" ]; then
+        logger "mount.sh/remove" "cleaning up $DEVNAME, was mounted by the auto-mounter"
+        for mnt in `cat /proc/mounts | grep "$DEVNAME" | cut -f 2 -d " " `
+        do
+                $UMOUNT $mnt
+        done
+        # Remove mount directory created by the auto-mounter
+        # and clean up our tmp cache file
+        mntdir=`cat "$tmpfile"`
+        rm_dir "$MOUNT_BASE/$mntdir"
+        rm "$tmpfile"
+    fi
 fi
