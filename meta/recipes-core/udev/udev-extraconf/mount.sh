@@ -126,7 +126,10 @@ automount() {
 		rm_dir "$MOUNT_BASE/$name"
 	else
 		logger "mount.sh/automount" "Auto-mount of [$MOUNT_BASE/$name] successful"
-		touch "/tmp/.automount-$name"
+		# The actual device might not be present in the remove event so blkid cannot
+		# be used to calculate what name was generated here. Simply save the mount
+		# name in our tmp file.
+		echo "$name" > "/tmp/.automount-$name"
 	fi
 }
 	
