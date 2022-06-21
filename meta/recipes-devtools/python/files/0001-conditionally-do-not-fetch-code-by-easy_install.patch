@@ -1,4 +1,4 @@
-From d03595e69cc532e27c0d3d535f08107349669d3d Mon Sep 17 00:00:00 2001
+From 5dfa8a8e0b1ad4712a8b8309c8663b7b598ba2a8 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Tue, 17 Jul 2018 10:13:38 +0800
 Subject: [PATCH] conditionally do not fetch code by easy_install
