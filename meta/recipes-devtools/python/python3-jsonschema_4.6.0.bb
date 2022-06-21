@@ -4,11 +4,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7a60a81c146ec25599a3e1dabb8610a8 \
                     file://json/LICENSE;md5=9d4de43111d33570c8fe49b4cb0e01af"
 
-SRC_URI[sha256sum] = "7c6d882619340c3347a1bf7315e147e6d3dae439033ae6383d6acb908c101dfc"
+SRC_URI[sha256sum] = "9d6397ba4a6c0bf0300736057f649e3e12ecbc07d3e81a0dacb72de4e9801957"
 
-inherit pypi python_setuptools_build_meta
+inherit pypi python_hatchling
 
-DEPENDS += "${PYTHON_PN}-vcversioner-native ${PYTHON_PN}-setuptools-scm-native"
+DEPENDS += "${PYTHON_PN}-hatch-vcs-native"
 
 PACKAGECONFIG ??= "format"
 PACKAGECONFIG[format] = ",,,\
