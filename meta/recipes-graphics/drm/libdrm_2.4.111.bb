@@ -13,12 +13,11 @@ DEPENDS = "libpthread-stubs"
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.xz \
           "
 
-SRC_URI[sha256sum] = "eecee4c4b47ed6d6ce1a9be3d6d92102548ea35e442282216d47d05293cf9737"
+SRC_URI[sha256sum] = "1ad7164f77424de6f4ecba7c262bde196a214c6e19a6fbf497f0815f4d7ab2a9"
 
 inherit meson pkgconfig manpages
 
-PACKAGECONFIG ??= "libkms intel radeon amdgpu nouveau vmwgfx omap freedreno vc4 etnaviv install-test-programs"
-PACKAGECONFIG[libkms] = "-Dlibkms=true,-Dlibkms=false"
+PACKAGECONFIG ??= "intel radeon amdgpu nouveau vmwgfx omap freedreno vc4 etnaviv install-test-programs"
 PACKAGECONFIG[intel] = "-Dintel=true,-Dintel=false,libpciaccess"
 PACKAGECONFIG[radeon] = "-Dradeon=true,-Dradeon=false"
 PACKAGECONFIG[amdgpu] = "-Damdgpu=true,-Damdgpu=false"
