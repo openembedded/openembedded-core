@@ -35,7 +35,6 @@ SRC_URI_MUSL = "\
                file://0005-src-basic-missing.h-check-for-missing-strndupa.patch \
                file://0007-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not-.patch \
                file://0008-add-missing-FTW_-macros-for-musl.patch \
-               file://0009-fix-missing-of-__register_atfork-for-non-glibc-build.patch \
                file://0010-Use-uintmax_t-for-handling-rlim_t.patch \
                file://0011-test-sizeof.c-Disable-tests-for-missing-typedefs-in-.patch \
                file://0012-don-t-pass-AT_SYMLINK_NOFOLLOW-flag-to-faccessat.patch \
@@ -43,7 +42,6 @@ SRC_URI_MUSL = "\
                file://0014-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
                file://0015-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
                file://0018-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0021-test-json.c-define-M_PIl.patch \
                file://0022-do-not-disable-buffer-in-writing-files.patch \
                file://0025-Handle-__cpu_mask-usage.patch \
                file://0026-Handle-missing-gshadow.patch \
