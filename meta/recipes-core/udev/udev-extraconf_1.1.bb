@@ -38,7 +38,7 @@ do_install() {
 }
 
 FILES:${PN} = "${sysconfdir}/udev"
-RDEPENDS:${PN} = "udev"
+RDEPENDS:${PN} = "udev util-linux-blkid"
 CONFFILES:${PN} = "${sysconfdir}/udev/mount.ignorelist"
 
 # to replace udev-extra-rules from meta-oe

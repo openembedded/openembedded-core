@@ -54,6 +54,9 @@ automount_systemd() {
         grep "^[[:space:]]*$tmp" /etc/fstab && return
     done
 
+    # Get the unique name for mount point
+    get_label_name "${DEVNAME}"
+
     [ -d "$MOUNT_BASE/$name" ] || mkdir -p "$MOUNT_BASE/$name"
 
     MOUNT="$MOUNT -o silent"
@@ -94,6 +97,9 @@ automount() {
 	# configured in fstab
 	grep -q "^$DEVNAME " /proc/mounts && return
 
+	# Get the unique name for mount point
+	get_label_name "${DEVNAME}"
+
 	! test -d "$MOUNT_BASE/$name" && mkdir -p "$MOUNT_BASE/$name"
 	# Silent util-linux's version of mounting auto
 	if [ "x`readlink $MOUNT`" = "x/bin/mount.util-linux" ] ;
@@ -131,6 +137,18 @@ rm_dir() {
 		! test -z "$1" && rm -r "$1"
 	else
 		logger "mount.sh/automount" "Not removing non-empty directory [$1]"
+	fi
+}
+
+get_label_name() {
+	# Get the LABEL or PARTLABEL
+	LABEL=`/sbin/blkid | grep "$1:" | grep -o 'LABEL=".*"' | cut -d '"' -f2`
+	# If the $DEVNAME has a LABEL or a PARTLABEL
+	if [ -n "$LABEL" ]; then
+	        # Set the mount location dir name to LABEL appended
+        	# with $name e.g. label-sda. That would avoid overlapping
+	        # mounts in case two devices have same LABEL
+        	name="${LABEL}-${name}"
 	fi
 }
 
