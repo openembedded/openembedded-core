@@ -51,11 +51,17 @@ class SystemStats:
         # Last time that we sampled /proc data resp. recorded disk monitoring data.
         self.last_proc = 0
         self.last_disk_monitor = 0
-        # Minimum number of seconds between recording a sample. This
-        # becames relevant when we get called very often while many
-        # short tasks get started. Sampling during quiet periods
+        # Minimum number of seconds between recording a sample. This becames relevant when we get
+        # called very often while many short tasks get started. Sampling during quiet periods
         # depends on the heartbeat event, which fires less often.
-        self.min_seconds = 1
+        # By default, the Heartbeat events occur roughly once every second but the actual time
+        # between these events deviates by a few milliseconds, in most cases. Hence
+        # pick a somewhat arbitary tolerance such that we sample a large majority
+        # of the Heartbeat events. This ignores rare events that fall outside the minimum
+        # and may lead an extra sample in a given second every so often. However, it allows for fairly
+        # consistent intervals between samples without missing many events.
+        self.tolerance = 0.01
+        self.min_seconds = 1.0 - self.tolerance
 
         self.meminfo_regex = re.compile(rb'^(MemTotal|MemFree|Buffers|Cached|SwapTotal|SwapFree):\s*(\d+)')
         self.diskstats_regex = re.compile(rb'^([hsv]d.|mtdblock\d|mmcblk\d|cciss/c\d+d\d+.*)$')
@@ -164,6 +170,12 @@ class SystemStats:
         return reduced
 
     def sample(self, event, force):
+        """
+        Collect and log proc or disk_monitor stats periodically.
+        Return True if a new sample is collected and hence the value last_proc or last_disk_monitor
+        is changed.
+        """
+        retval = False
         now = time.time()
         if (now - self.last_proc > self.min_seconds) or force:
             for filename, output, handler in self.proc_files:
@@ -187,6 +199,7 @@ class SystemStats:
                                  data +
                                  b'\n')
             self.last_proc = now
+            retval = True
 
         if isinstance(event, bb.event.MonitorDiskEvent) and \
            ((now - self.last_disk_monitor > self.min_seconds) or force):
@@ -196,3 +209,5 @@ class SystemStats:
                               for dev, sample in event.disk_usage.items()]).encode('ascii') +
                      b'\n')
             self.last_disk_monitor = now
+            retval = True
+        return retval
