@@ -945,7 +945,7 @@ def package_qa_check_host_user(path, name, d, elf, messages):
 
     dest = d.getVar('PKGDEST')
     pn = d.getVar('PN')
-    home = os.path.join(dest, 'home')
+    home = os.path.join(dest, name, 'home')
     if path == home or path.startswith(home + os.sep):
         return
 
