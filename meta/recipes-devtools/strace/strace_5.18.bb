@@ -33,7 +33,7 @@ TESTDIR = "tests"
 PTEST_BUILD_HOST_PATTERN = "^(DEB_CHANGELOGTIME|RPM_CHANGELOGTIME|WARN_CFLAGS_FOR_BUILD|LDFLAGS_FOR_BUILD)"
 
 do_compile_ptest() {
-	oe_runmake ${PARALLEL_MAKE} -C ${TESTDIR} buildtest-TESTS
+	oe_runmake -C ${TESTDIR} buildtest-TESTS
 }
 
 do_install_ptest() {
