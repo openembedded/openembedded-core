@@ -66,18 +66,11 @@ SRC_URI += "file://run-ptest \
 inherit pypi python_setuptools3_rust
 
 DEPENDS += " \
-    ${PYTHON_PN}-asn1crypto-native \
     ${PYTHON_PN}-cffi-native \
-    ${PYTHON_PN}-setuptools-rust-native \
-    ${PYTHON_PN}-six-native \
 "
 
 RDEPENDS:${PN} += " \
-    ${PYTHON_PN}-asn1crypto \
     ${PYTHON_PN}-cffi \
-    ${PYTHON_PN}-idna \
-    ${PYTHON_PN}-setuptools \
-    ${PYTHON_PN}-six \
 "
 
 RDEPENDS:${PN}:append:class-target = " \
