@@ -18,7 +18,8 @@ python __anonymous() {
        d.setVar("PROVIDES", "${PN} ${PN}-ptest")
        d.setVar("RPROVIDES", "${PN} ${PN}-ptest")
 
-       d.setVar("BBCLASSEXTEND", "")
+       bbclassextend = d.getVar("BBCLASSEXTEND").replace("nativesdk", "").strip()
+       d.setVar("BBCLASSEXTEND", bbclassextend)
        d.setVar("RRECOMMENDS", "")
        d.setVar("SYSTEMD_SERVICE:nscd", "")
        d.setVar("SYSTEMD_PACKAGES", "")
@@ -95,7 +96,7 @@ python populate_packages:prepend () {
         d.setVar('DEBIAN_NAMES', '')
 }
 
-FILES:${PN} = "${PTEST_PATH}/* /usr/src/debug/glibc-tests/*"
+FILES:${PN} = "${PTEST_PATH}/* /usr/src/debug/${PN}/*"
 
 EXCLUDE_FROM_SHLIBS = "1"
 
