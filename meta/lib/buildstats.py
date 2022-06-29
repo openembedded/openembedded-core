@@ -23,8 +23,8 @@ class SystemStats:
         # and ensure that the reduce_proc_pressure directory is not created.
         if os.path.exists("/proc/pressure"):
             try:
-                source = open('/proc/pressure/cpu', 'rb')
-                source.read()
+                with open('/proc/pressure/cpu', 'rb') as source:
+                    source.read()
                 pressuredir = os.path.join(bsdir, 'reduced_proc_pressure')
                 bb.utils.mkdirhier(pressuredir)
                 file_handlers.extend([('pressure/cpu', self._reduce_pressure),
