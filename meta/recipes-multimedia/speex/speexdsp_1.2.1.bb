@@ -3,14 +3,13 @@ DESCRIPTION = "SpeexDSP is a patent-free, Open Source/Free Software DSP library.
 HOMEPAGE = "http://www.speex.org"
 SECTION = "libs"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=314649d8ba9dd7045dfb6683f298d0a8"
+LIC_FILES_CHKSUM = "file://COPYING;md5=eff3f76350f52a99a3df5eec6b79c02a"
 
 SRC_URI = "http://downloads.xiph.org/releases/speex/speexdsp-${PV}.tar.gz"
 
 UPSTREAM_CHECK_REGEX = "speexdsp-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[md5sum] = "b722df341576dc185d897131321008fc"
-SRC_URI[sha256sum] = "682042fc6f9bee6294ec453f470dadc26c6ff29b9c9e9ad2ffc1f4312fd64771"
+SRC_URI[sha256sum] = "8c777343e4a6399569c72abc38a95b24db56882c83dbdb6c6424a5f4aeb54d3d"
 
 inherit autotools pkgconfig
 
