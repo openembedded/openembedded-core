@@ -3,17 +3,15 @@ DESCRIPTION = "Speex is an Open Source/Free Software patent-free audio compressi
 HOMEPAGE = "http://www.speex.org"
 SECTION = "libs"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=314649d8ba9dd7045dfb6683f298d0a8 \
-                    file://include/speex/speex.h;beginline=1;endline=34;md5=ef8c8ea4f7198d71cf3509c6ed05ea50"
+LIC_FILES_CHKSUM = "file://COPYING;md5=eff3f76350f52a99a3df5eec6b79c02a \
+                    file://include/speex/speex.h;beginline=1;endline=34;md5=ef8c8ea4f7198d71cf3509c6ed05ea50 \
+                    "
 DEPENDS = "libogg speexdsp"
 
-SRC_URI = "http://downloads.xiph.org/releases/speex/speex-${PV}.tar.gz \
-           file://CVE-2020-23903.patch \
-           "
+SRC_URI = "http://downloads.xiph.org/releases/speex/speex-${PV}.tar.gz"
 UPSTREAM_CHECK_REGEX = "speex-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[md5sum] = "8ab7bb2589110dfaf0ed7fa7757dc49c"
-SRC_URI[sha256sum] = "eaae8af0ac742dc7d542c9439ac72f1f385ce838392dc849cae4536af9210094"
+SRC_URI[sha256sum] = "4b44d4f2b38a370a2d98a78329fefc56a0cf93d1c1be70029217baae6628feea"
 
 inherit autotools pkgconfig lib_package
 
