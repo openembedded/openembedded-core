@@ -1151,13 +1151,14 @@ python do_package_qa_setscene () {
 }
 addtask do_package_qa_setscene
 
-python do_qa_staging() {
-    bb.note("QA checking staging")
+python do_qa_sysroot() {
+    bb.note("QA checking do_populate_sysroot")
     sysroot_destdir = d.expand('${SYSROOT_DESTDIR}')
     for sysroot_dir in d.expand('${SYSROOT_DIRS}').split():
         qa_check_staged(sysroot_destdir + sysroot_dir, d)
-    oe.qa.exit_with_message_if_errors("QA staging was broken by the package built above", d)
+    oe.qa.exit_with_message_if_errors("do_populate_sysroot for this recipe installed files with QA issues", d)
 }
+do_populate_sysroot[postfuncs] += "do_qa_sysroot"
 
 python do_qa_patch() {
     import subprocess
@@ -1348,10 +1349,6 @@ python do_qa_unpack() {
 
     unpack_check_src_uri(d.getVar('PN'), d)
 }
-
-# The Staging Func, to check all staging
-#addtask qa_staging after do_populate_sysroot before do_build
-do_populate_sysroot[postfuncs] += "do_qa_staging "
 
 # Check for patch fuzz
 do_patch[postfuncs] += "do_qa_patch "
