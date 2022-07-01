@@ -553,13 +553,25 @@ def copydebugsources(debugsrcdir, sources, d):
         strip = d.getVar("STRIP")
         objcopy = d.getVar("OBJCOPY")
         workdir = d.getVar("WORKDIR")
+        sdir = d.getVar("S")
+        sparentdir = os.path.dirname(os.path.dirname(sdir))
+        sbasedir = os.path.basename(os.path.dirname(sdir)) + "/" + os.path.basename(sdir)
         workparentdir = os.path.dirname(os.path.dirname(workdir))
         workbasedir = os.path.basename(os.path.dirname(workdir)) + "/" + os.path.basename(workdir)
+
+        # If S isnt based on WORKDIR we can infer our sources are located elsewhere,
+        # e.g. using externalsrc; use S as base for our dirs
+        if workdir in sdir:
+            basedir = workbasedir
+            parentdir = workparentdir
+        else:
+            basedir = sbasedir
+            parentdir = sparentdir
 
         # If build path exists in sourcefile, it means toolchain did not use
         # -fdebug-prefix-map to compile
         if checkbuildpath(sourcefile, d):
-            localsrc_prefix = workparentdir + "/"
+            localsrc_prefix = parentdir + "/"
         else:
             localsrc_prefix = "/usr/src/debug/"
 
@@ -581,7 +593,7 @@ def copydebugsources(debugsrcdir, sources, d):
         processdebugsrc += "sed 's#%s##g' | "
         processdebugsrc += "(cd '%s' ; cpio -pd0mlL --no-preserve-owner '%s%s' 2>/dev/null)"
 
-        cmd = processdebugsrc % (sourcefile, workbasedir, localsrc_prefix, workparentdir, dvar, debugsrcdir)
+        cmd = processdebugsrc % (sourcefile, basedir, localsrc_prefix, parentdir, dvar, debugsrcdir)
         try:
             subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError:
@@ -591,8 +603,21 @@ def copydebugsources(debugsrcdir, sources, d):
         # cpio seems to have a bug with -lL together and symbolic links are just copied, not dereferenced.
         # Work around this by manually finding and copying any symbolic links that made it through.
         cmd = "find %s%s -type l -print0 -delete | sed s#%s%s/##g | (cd '%s' ; cpio -pd0mL --no-preserve-owner '%s%s')" % \
-                (dvar, debugsrcdir, dvar, debugsrcdir, workparentdir, dvar, debugsrcdir)
+                (dvar, debugsrcdir, dvar, debugsrcdir, parentdir, dvar, debugsrcdir)
         subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+
+
+        # debugsources.list may be polluted from the host if we used externalsrc,
+        # cpio uses copy-pass and may have just created a directory structure
+        # matching the one from the host, if thats the case move those files to
+        # debugsrcdir to avoid host contamination.
+        # Empty dir structure will be deleted in the next step.
+
+        # Same check as above for externalsrc
+        if workdir not in sdir:
+            if os.path.exists(dvar + debugsrcdir + sdir):
+                cmd = "mv %s%s%s/* %s%s" % (dvar, debugsrcdir, sdir, dvar,debugsrcdir)
+                subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
         # The copy by cpio may have resulted in some empty directories!  Remove these
         cmd = "find %s%s -empty -type d -delete" % (dvar, debugsrcdir)
