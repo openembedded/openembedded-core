@@ -20,7 +20,7 @@
 
 # Elect whether a given type of error is a warning or error, they may
 # have been set by other files.
-WARN_QA ?= " libdir xorg-driver-abi \
+WARN_QA ?= " libdir xorg-driver-abi buildpaths \
             textrel incompatible-license files-invalid \
             infodir build-deps src-uri-bad symlink-to-sysroot multilib \
             invalid-packageconfig host-user-contaminated uppercase-pn patch-fuzz \
