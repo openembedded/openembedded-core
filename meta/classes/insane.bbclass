@@ -444,12 +444,14 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
     Check for build paths inside target files and error if paths are not
     explicitly ignored.
     """
+    import stat
     # Ignore .debug files, not interesting
     if path.find(".debug") != -1:
         return
 
-    # Ignore symlinks
-    if os.path.islink(path):
+    # Ignore symlinks/devs/fifos
+    mode = os.lstat(path).st_mode
+    if stat.S_ISLNK(mode) or stat.S_ISBLK(mode) or stat.S_ISFIFO(mode) or stat.S_ISCHR(mode) or stat.S_ISSOCK(mode):
         return
 
     tmpdir = bytes(d.getVar('TMPDIR'), encoding="utf-8")
