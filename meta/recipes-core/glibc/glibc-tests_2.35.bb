@@ -5,6 +5,7 @@ inherit ptest features_check
 REQUIRED_DISTRO_FEATURES = "ptest"
 
 SRC_URI:append = " \
+	file://reproducible-paths.patch \
 	file://run-ptest \
 "
 
@@ -30,6 +31,8 @@ RPROVIDES:${PN} = "${PN}"
 RRECOMMENDS:${PN} = ""
 RDEPENDS:${PN} = " glibc sed"
 DEPENDS:append = " sed"
+
+export oe_srcdir="${exec_prefix}/src/debug/glibc/${PV}/"
 
 # Just build tests for target - do not run them
 do_check:append () {
