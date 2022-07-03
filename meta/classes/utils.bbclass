@@ -202,6 +202,9 @@ create_cmdline_shebang_wrapper () {
 	argument="$(sed -ne 's/^#! *//p;q' $cmd)"
 	# strip the shebang from the real script as we do not want it to be usable anyway
 	tail -n +2 $cmd > $cmd.real
+	chown --reference=$cmd $cmd.real
+	chmod --reference=$cmd $cmd.real
+	rm -f $cmd
 	cmdname=$(basename $cmd)
 	dirname=$(dirname $cmd)
 	cmdoptions=$@
