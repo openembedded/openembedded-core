@@ -45,6 +45,7 @@ TESTSTRING:pn-sysroot-test-arch2 = "%s"
         expected = "maximum shebang size exceeded, the maximum size is 128. [shebang-size]"
         res = bitbake("sysroot-shebang-test-native -c populate_sysroot", ignore_status=True)
         self.assertTrue(expected in res.output, msg=res.output)
+        self.assertTrue(res.status != 0)
 
     def test_sysroot_la(self):
         """
@@ -57,10 +58,12 @@ TESTSTRING:pn-sysroot-test-arch2 = "%s"
         res = bitbake("sysroot-la-test -c populate_sysroot", ignore_status=True)
         self.assertTrue(expected in res.output, msg=res.output)
         self.assertTrue('[la]' in res.output, msg=res.output)
+        self.assertTrue(res.status != 0)
 
         res = bitbake("sysroot-la-test-native -c populate_sysroot", ignore_status=True)
         self.assertTrue(expected in res.output, msg=res.output)
         self.assertTrue('[la]' in res.output, msg=res.output)
+        self.assertTrue(res.status != 0)
 
     def test_sysroot_pkgconfig(self):
         """
@@ -73,7 +76,9 @@ TESTSTRING:pn-sysroot-test-arch2 = "%s"
         res = bitbake("sysroot-pc-test -c populate_sysroot", ignore_status=True)
         self.assertTrue('[pkgconfig]' in res.output, msg=res.output)
         self.assertTrue(expected in res.output, msg=res.output)
+        self.assertTrue(res.status != 0)
 
         res = bitbake("sysroot-pc-test-native -c populate_sysroot", ignore_status=True)
         self.assertTrue(expected in res.output, msg=res.output)
         self.assertTrue('[pkgconfig]' in res.output, msg=res.output)
+        self.assertTrue(res.status != 0)
