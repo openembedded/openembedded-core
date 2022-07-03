@@ -188,7 +188,7 @@ create_cmdline_shebang_wrapper () {
 	# Create a wrapper script where commandline options are needed
 	#
 	# These are useful to work around shebang relocation issues, where shebangs are too
-  # long or have arguments in them, thus preventing them from using the /usr/bin/env
+	# long or have arguments in them, thus preventing them from using the /usr/bin/env
 	# shebang
 	#
 	# Usage: create_cmdline_wrapper FILENAME <extra-options>
@@ -198,10 +198,10 @@ create_cmdline_shebang_wrapper () {
 
 	echo "Generating wrapper script for $cmd"
 
-  # Strip #! and get remaining interpreter + arg
-  argument="$(basename "$(head -n1 $cmd | sed -e 's|#![ ]*||g' )")"
-  # strip the shebang from the real script as we do not want it to be usable anyway
-  tail -n +2 $cmd > $cmd.real
+	# Strip #! and get remaining interpreter + arg
+	argument="$(sed -ne 's/^#! *//p;q' $cmd)"
+	# strip the shebang from the real script as we do not want it to be usable anyway
+	tail -n +2 $cmd > $cmd.real
 	cmdname=$(basename $cmd)
 	dirname=$(dirname $cmd)
 	cmdoptions=$@
