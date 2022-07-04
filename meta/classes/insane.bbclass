@@ -445,9 +445,6 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
     explicitly ignored.
     """
     import stat
-    # Ignore .debug files, not interesting
-    if path.find(".debug") != -1:
-        return
 
     # Ignore symlinks/devs/fifos
     mode = os.lstat(path).st_mode
