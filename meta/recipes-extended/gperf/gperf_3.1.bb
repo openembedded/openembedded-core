@@ -9,6 +9,8 @@ SRC_URI  = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz"
 SRC_URI[md5sum] = "9e251c0a618ad0824b51117d5d9db87e"
 SRC_URI[sha256sum] = "588546b945bba4b70b6a3a616e80b4ab466e3f33024a352fc2198112cdbb3ae2"
 
+SRC_URI:append = " file://reproducibility.patch"
+
 inherit autotools
 
 # The nested configures don't find the parent aclocal.m4 out of the box, so tell
