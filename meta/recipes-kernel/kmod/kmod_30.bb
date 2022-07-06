@@ -15,12 +15,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                    "
 inherit autotools bash-completion gtk-doc pkgconfig manpages update-alternatives
 
-SRCREV = "b6ecfc916a17eab8f93be5b09f4e4f845aabd3d1"
+SRCREV = "5d46434a63ae0160150a0efdde1914873697e273"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git;branch=master \
            file://depmod-search.conf \
            file://avoid_parallel_tests.patch \
-           file://0001-depmod-Add-support-for-excluding-a-directory.patch \
            "
 
 S = "${WORKDIR}/git"
