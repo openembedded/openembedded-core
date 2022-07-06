@@ -12,13 +12,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=190c514872597083303371684954f238"
 SRC_URI = " \
     https://curl.se/download/${BP}.tar.xz \
     file://0001-easy_lock.h-include-sched.h-if-available-to-fix-buil.patch \
+    file://run-ptest \
+    file://disable-tests \
 "
 SRC_URI[sha256sum] = "2d118b43f547bfe5bae806d8d47b4e596ea5b25a6c1f080aef49fbcd817c5db8"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
 
-inherit autotools pkgconfig binconfig multilib_header
+inherit autotools pkgconfig binconfig multilib_header ptest
 
 # Entropy source for random PACKAGECONFIG option
 RANDOM ?= "/dev/urandom"
@@ -82,6 +84,23 @@ do_install:append:class-target() {
 	    -e 's|${@" ".join(d.getVar("DEBUG_PREFIX_MAP").split())}||g' \
 	    ${D}${bindir}/curl-config
 }
+
+do_compile_ptest() {
+	oe_runmake test
+	oe_runmake -C ${B}/tests/server
+}
+
+do_install_ptest() {
+	cat  ${WORKDIR}/disable-tests >> ${S}/tests/data/DISABLED
+	rm  ${B}/tests/configurehelp.pm
+	cp -rf ${B}/tests ${D}${PTEST_PATH}
+	cp -rf ${S}/tests ${D}${PTEST_PATH}
+	install -d ${D}${PTEST_PATH}/src
+	ln -sf ${bindir}/curl   ${D}${PTEST_PATH}/src/curl
+	cp -rf ${D}${bindir}/curl-config ${D}${PTEST_PATH}
+}
+
+RDEPENDS:${PN}-ptest += "bash perl-modules"
 
 PACKAGES =+ "lib${BPN}"
 
