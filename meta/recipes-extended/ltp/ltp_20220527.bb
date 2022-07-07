@@ -80,6 +80,9 @@ do_install(){
     # The controllers memcg_stree test seems to cause us hangs and takes 900s
     # (maybe we expect more regular output?), anyhow, skip it
     sed -e '/^memcg_stress/d' -i ${D}${prefix}/runtest/controllers
+
+    # We don't need to ship the compile logs that open_posix_testsuite writes
+    rm -f ${D}${prefix}/testcases/open_posix_testsuite/logfile.*
 }
 
 RDEPENDS:${PN} = "\
