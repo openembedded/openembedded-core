@@ -21,8 +21,8 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://racefix.patch \
            "
 
-PV .= ".0005"
-SRCREV = "040674129f3382822eeb7b590380efa5228124a8"
+PV .= ".0021"
+SRCREV = "5e59ea54c0c37c2f84770f068d95280069828774"
 
 # Remove when 8.3 is out
 UPSTREAM_VERSION_UNKNOWN = "1"
