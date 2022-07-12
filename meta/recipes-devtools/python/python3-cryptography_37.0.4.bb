@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=bf405a8056a6647e7d077b0e7bc36aba \
                    "
 LDSHARED += "-pthread"
 
-SRC_URI[sha256sum] = "ae430d51c67ac638dfbb42edf56c669ca9c74744f4d225ad11c6f3d355858187"
+SRC_URI[sha256sum] = "63f9c17c0e2474ccbebc9302ce2f07b55b3b3fcb211ded18a42d5764f5c10a82"
 
 SRC_URI += "file://run-ptest \
            file://check-memfree.py \
