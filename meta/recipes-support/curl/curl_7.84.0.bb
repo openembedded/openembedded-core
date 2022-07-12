@@ -12,6 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=190c514872597083303371684954f238"
 SRC_URI = " \
     https://curl.se/download/${BP}.tar.xz \
     file://0001-easy_lock.h-include-sched.h-if-available-to-fix-buil.patch \
+    file://0001-easy_lock-switch-to-using-atomic_int-instead-of-bool.patch \
     file://run-ptest \
     file://disable-tests \
 "
