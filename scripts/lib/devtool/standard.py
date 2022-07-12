@@ -520,7 +520,9 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
         for event in history:
             if not 'flag' in event:
                 if event['op'].startswith((':append[', ':prepend[')):
-                    extra_overrides.append(event['op'].split('[')[1].split(']')[0])
+                    override = event['op'].split('[')[1].split(']')[0]
+                    if not override.startswith('pn-'):
+                        extra_overrides.append(override)
         # We want to remove duplicate overrides. If a recipe had multiple
         # SRC_URI_override += values it would cause mulitple instances of
         # overrides. This doesn't play nicely with things like creating a
