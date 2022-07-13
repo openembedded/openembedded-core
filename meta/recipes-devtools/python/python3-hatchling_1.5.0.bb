@@ -10,10 +10,6 @@ DEPENDS:remove:class-native = "python3-hatchling-native"
 
 SRC_URI[sha256sum] = "9ca409a41140cc662164680b78adcd3ba77b23a945984bd9970d11fe38e86a38"
 
-# Until we have a proper tool to invoke PEP517 builds, hatchling can't
-# bootstrap itself automatically.
-PEP517_BUILD_API = "hatchling.ouroboros"
-
 do_compile:prepend() {
     export PYTHONPATH=src
 }
