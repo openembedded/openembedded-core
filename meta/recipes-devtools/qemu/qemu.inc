@@ -188,6 +188,7 @@ PACKAGECONFIG[bpf] = "--enable-bpf,--disable-bpf,libbpf"
 PACKAGECONFIG[capstone] = "--enable-capstone,--disable-capstone"
 PACKAGECONFIG[rdma] = "--enable-rdma,--disable-rdma"
 PACKAGECONFIG[vde] = "--enable-vde,--disable-vde"
+PACKAGECONFIG[slirp] = "--enable-slirp=internal,--disable-slirp"
 
 INSANE_SKIP:${PN} = "arch"
 
