@@ -20,6 +20,10 @@ DEPENDS:append:class-native = " unzip-native"
 PYPI_PACKAGE = "flit"
 PEP517_SOURCE_PATH = "${S}/flit_core"
 
+do_compile:class-native () {
+    python_flit_core_do_manual_build
+}
+
 do_install:class-native () {
     python_pep517_do_bootstrap_install
 }
