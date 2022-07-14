@@ -8,6 +8,9 @@ ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'deb
 # Allow dropbear/openssh to accept root logins if debug-tweaks or allow-root-login is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'debug-tweaks', 'allow-root-login' ], "ssh_allow_root_login; ", "",d)}'
 
+# Autologin the root user on the serial console, if debug-tweaks or empty-root-password are active
+ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'debug-tweaks', 'empty-root-password' ], "serial_autologin_root; ", "",d)}'
+
 # Enable postinst logging if debug-tweaks or post-install-logging is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'debug-tweaks', 'post-install-logging' ], "postinst_enable_logging; ", "",d)}'
 
@@ -195,6 +198,18 @@ ssh_allow_root_login () {
 		fi
 	fi
 }
+
+#
+# Autologin the 'root' user on the serial terminal,
+# if empty-root-password is enabled
+#
+serial_root_autologin () {
+	if [ -e ${IMAGE_ROOTFS}${systemd_system_unitdir}/serial-getty@.service ]; then
+		sed -i '/^\s*ExecStart\b/ s/getty /&--autologin root /' \
+			"${IMAGE_ROOTFS}${systemd_system_unitdir}/serial-getty@.service"
+	fi
+}
+
 
 python sort_passwd () {
     import rootfspostcommands
