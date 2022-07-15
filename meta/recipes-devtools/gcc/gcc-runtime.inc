@@ -53,7 +53,7 @@ RUNTIMETARGET:libc-newlib = "libstdc++-v3"
 REL_S = "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
 
 DEBUG_PREFIX_MAP:class-target = " \
-   -fdebug-prefix-map=${WORKDIR}/recipe-sysroot= \
+   -fdebug-prefix-map=${WORKDIR}/${MLPREFIX}recipe-sysroot= \
    -fdebug-prefix-map=${WORKDIR}/recipe-sysroot-native= \
    -fdebug-prefix-map=${S}=${REL_S} \
    -fdebug-prefix-map=${S}/include=${REL_S}/libstdc++-v3/../include \
