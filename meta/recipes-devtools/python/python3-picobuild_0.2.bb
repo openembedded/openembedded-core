@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6c811a9fbdf5641ff0b0d43fbbb440e5 \
                     "
 
 SRC_URI = "git://gitlab.com/rossburton/picobuild.git;protocol=https;branch=main"
-SRCREV = "3441d5500a5ad23a44027576cf5261c3b7c1d6b0"
+SRCREV = "ed3b16ce48d91df181e5f5d77b9bbc2577b3fd9d"
 PV .= "+git${SRCPV}"
 
 S = "${WORKDIR}/git"
