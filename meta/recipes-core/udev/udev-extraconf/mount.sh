@@ -40,10 +40,13 @@ automount_systemd() {
     name="`basename "$DEVNAME"`"
 
     # Skip already mounted partitions
-    if [ -f /run/systemd/transient/run-media-$name.mount ]; then
+    if [ -f /run/systemd/transient/$(echo $MOUNT_BASE | cut -d '/' -f 2- | sed 's#/#-#g')-*$name.mount ]; then
         logger "mount.sh/automount" "$MOUNT_BASE/$name already mounted"
         return
     fi
+
+    # Get the unique name for mount point
+    get_label_name "${DEVNAME}"
 
     # Only go for auto-mounting when the device has been cleaned up in remove
     # or has not been identified yet
@@ -60,9 +63,6 @@ automount_systemd() {
         tmp="$n=$tmp"
         grep "^[[:space:]]*$tmp" /etc/fstab && return
     done
-
-    # Get the unique name for mount point
-    get_label_name "${DEVNAME}"
 
     [ -d "$MOUNT_BASE/$name" ] || mkdir -p "$MOUNT_BASE/$name"
 
