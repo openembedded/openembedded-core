@@ -1,3 +1,0 @@
-.include @systemd_unitdir@/system/systemd-udevd.service
-[Service]
-MountFlags=shared
