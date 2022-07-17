@@ -4,9 +4,12 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7a60a81c146ec25599a3e1dabb8610a8 \
                     file://json/LICENSE;md5=9d4de43111d33570c8fe49b4cb0e01af"
 
-SRC_URI[sha256sum] = "25203dbebd62a1179f810f14339f7a638baaf279b5cc3b738a58c3744af56d65"
+SRC_URI[sha256sum] = "73764f461d61eb97a057c929368610a134d1d1fffd858acfe88864ee94f1f1d3"
 
 inherit pypi python_hatchling
+
+PACKAGES =+ "${PN}-tests"
+FILES:${PN}-tests = "${libdir}/${PYTHON_DIR}/site-packages/jsonschema/tests"
 
 DEPENDS += "${PYTHON_PN}-hatch-vcs-native"
 
@@ -35,14 +38,11 @@ RDEPENDS:${PN} += " \
     ${PYTHON_PN}-json \
     ${PYTHON_PN}-netclient \
     ${PYTHON_PN}-numbers \
-    ${PYTHON_PN}-pkgutil \
     ${PYTHON_PN}-pprint \
     ${PYTHON_PN}-pyrsistent \
-    ${PYTHON_PN}-shell \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-unittest \
-    ${PYTHON_PN}-setuptools-scm \
     ${PYTHON_PN}-zipp \
 "
+
+RDEPENDS:${PN}-tests = "${PN}"
 
 BBCLASSEXTEND = "native nativesdk"
