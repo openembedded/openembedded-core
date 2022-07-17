@@ -76,6 +76,8 @@ automount_systemd() {
         ;;
     swap)
         return ;;
+    lvm*|LVM*)
+        return ;;
     # TODO
     *)
         ;;
@@ -129,6 +131,8 @@ automount() {
 		;;
 	swap)
 		return ;;
+	lvm*|LVM*)
+                return ;;
 	# TODO
 	*)
 		;;
