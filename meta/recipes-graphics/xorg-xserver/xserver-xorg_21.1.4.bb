@@ -1,10 +1,9 @@
 require xserver-xorg.inc
 
 SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.patch \
-            file://0001-Avoid-duplicate-definitions-of-IOPortBase.patch \
-            file://0001-render-Fix-build-with-gcc-12.patch \
-            "
-SRC_URI[sha256sum] = "61d6aad5b6b47a116b960bd7f0cba4ee7e6da95d6bb0b127bde75d7d1acdebe5"
+           file://0001-Avoid-duplicate-definitions-of-IOPortBase.patch \
+           "
+SRC_URI[sha256sum] = "5cc4be8ee47edb58d4a90e603a59d56b40291ad38371b0bd2471fc3cbee1c587"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
