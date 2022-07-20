@@ -16,7 +16,8 @@ RDEPENDS:${PN}:class-native = ""
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[md5sum] = "3d6adb76fdd072db8c8fae41b40855e8"
-SRC_URI[sha256sum] = "3ad880444123ac06a7238546fa38a2a6ad7f7e0cc3614de7e103863616522282"
+SRC_URI[sha256sum] = "e791c890779c40056ab63aaed5e031bb6e2890a98418ca09c534e6261a2eebd2"
 
 SYSROOT_DIRS_IGNORE:remove = "${datadir}/fonts"
+
+SRC_URI_EXT = "xz"
