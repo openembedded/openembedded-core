@@ -7,14 +7,14 @@ require xorg-font-common.inc
 LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9da93f2daf2d5572faa2bfaf0dbd9e76"
 PE = "1"
-PR = "r3"
 
 DEPENDS = "mkfontscale-native mkfontdir-native font-util-native"
 RDEPENDS:${PN} = ""
 
 SRC_URI += "file://nocompiler.patch"
-SRC_URI[md5sum] = "bbae4f247b88ccde0e85ed6a403da22a"
-SRC_URI[sha256sum] = "bd96e16143a044b19e87f217cf6a3763a70c561d1076aad6f6d862ec41774a31"
+SRC_URI[sha256sum] = "77e301de661f35a622b18f60b555a7e7d8c4d5f43ed41410e830d5ac9084fc26"
+
+SRC_URI_EXT = "xz"
 
 inherit allarch
 
