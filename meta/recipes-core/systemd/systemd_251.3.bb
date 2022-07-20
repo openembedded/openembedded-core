@@ -14,7 +14,8 @@ inherit useradd pkgconfig meson perlnative update-rc.d update-alternatives qemu 
 # that we don't build both udev and systemd in world builds.
 REQUIRED_DISTRO_FEATURES = "systemd"
 
-SRC_URI += "file://touchscreen.rules \
+SRC_URI += " \
+           file://touchscreen.rules \
            file://00-create-volatile.conf \
            ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://org.freedesktop.hostname1_no_polkit.conf', '', d)} \
            ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://00-hostnamed-network-user.conf', '', d)} \
@@ -24,7 +25,6 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://0001-Move-sysusers.d-sysctl.d-binfmt.d-modules-load.d-to-.patch \
-           file://0001-shared-utmp-wtmp-fix-build-without-utmp.patch \
            "
 
 # patches needed by musl
