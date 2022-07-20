@@ -9,8 +9,9 @@ BUGTRACKER = "https://github.com/PyO3/setuptools-rust/issues"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=011cd92e702dd9e6b1a26157b6fd53f5"
 
-SRC_URI = "https://files.pythonhosted.org/packages/67/08/e1aa2c582c62ac76e4d60f8e454bd3bba933781a06a88b4e38797445822a/setuptools-rust-${PV}.tar.gz"
-SRC_URI[sha256sum] = "958c5bf4ab6483d59dab888538121871cc5006354a42fb0fbd50acf03caad1de"
+SRC_URI = "https://files.pythonhosted.org/packages/67/08/e1aa2c582c62ac76e4d60f8e454bd3bba933781a06a88b4e38797445822a/setuptools-rust-${PV}.tar.gz \
+           file://8e9892f08b1248dc03862da86915c2745e0ff7ec.patch"
+SRC_URI[sha256sum] = "18ff850831f58ee21d5783825c99fad632da21e47645e9427fd7dec048029e76"
 
 inherit cargo pypi python_setuptools_build_meta
 
