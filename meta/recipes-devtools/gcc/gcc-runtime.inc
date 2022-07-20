@@ -50,19 +50,6 @@ RUNTIMETARGET:libc-newlib = "libstdc++-v3"
 # libiberty
 # libgfortran needs separate recipe due to libquadmath dependency
 
-# Relative path to be repaced into debug info
-DEBUGSOURCE = "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
-
-DEBUG_PREFIX_MAP = " \
-   -ffile-prefix-map=${WORKDIR}/${MLPREFIX}recipe-sysroot= \
-   -ffile-prefix-map=${WORKDIR}/recipe-sysroot-native= \
-   -ffile-prefix-map=${B}=${DEBUGSOURCE} \
-   -ffile-prefix-map=${S}=${DEBUGSOURCE} \
-   -fdebug-prefix-map=${B}=${DEBUGSOURCE} \
-   -fdebug-prefix-map=${S}=${DEBUGSOURCE} \
-   -ffile-prefix-map=${B}/${HOST_SYS}/libstdc++-v3/include=${includedir}/c++/${BINV} \
-   "
-
 do_configure () {
 	export CXX="${CXX} -nostdinc++ -L${WORKDIR}/dummylib"
 	# libstdc++ isn't built yet so CXX would error not able to find it which breaks stdc++'s configure
