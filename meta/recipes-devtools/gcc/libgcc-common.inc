@@ -4,14 +4,21 @@ require gcc-configure-common.inc
 
 INHIBIT_DEFAULT_DEPS = "1"
 
+DEBUGSOURCE = "/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
+DEBUG_PREFIX_MAP = " \
+   -fdebug-prefix-map=${WORKDIR}/${MLPREFIX}recipe-sysroot= \
+   -fdebug-prefix-map=${WORKDIR}/recipe-sysroot-native= \
+   -fdebug-prefix-map=${B}=${DEBUGSOURCE} \
+   -fdebug-prefix-map=${S}=${DEBUGSOURCE} \
+   "
+
 do_configure () {
 	install -d ${D}${base_libdir} ${D}${libdir}
 	mkdir -p ${B}/${BPN}
 	mkdir -p ${B}/${TARGET_SYS}/${BPN}/
 	cd ${B}/${BPN}
 	chmod a+x ${S}/${BPN}/configure
-	relpath=${@os.path.relpath("${S}/${BPN}", "${B}/${BPN}")}
-	$relpath/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
+	${S}/${BPN}/configure ${CONFIGUREOPTS} ${EXTRA_OECONF}
 }
 EXTRACONFFUNCS += "extract_stashed_builddir"
 do_configure[depends] += "${COMPILERDEP}"
