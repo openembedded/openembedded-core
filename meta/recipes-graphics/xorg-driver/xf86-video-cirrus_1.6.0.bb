@@ -7,7 +7,8 @@ the driver is still useful."
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6ddc7ca860dc5fd014e7f160ea699295"
 
-SRC_URI[md5sum] = "7d7dfd4cdc42aa8b6e923510fa00ad2b"
-SRC_URI[sha256sum] = "edc87b20a55259126b5239b5c1ef913419eab7ded0ed12ae9ae989460d7351ab"
+SRC_URI[sha256sum] = "0ef3fa0083de3d9a040f11b3af38598d8405f1165b908fdd6712c30038326401"
 
 DEPENDS += "libpciaccess"
+
+XORG_DRIVER_COMPRESSOR = ".tar.xz"
