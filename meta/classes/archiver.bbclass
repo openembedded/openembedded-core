@@ -459,7 +459,9 @@ def create_diff_gz(d, src_orig, src, ar_outdir):
 
 def is_work_shared(d):
     pn = d.getVar('PN')
-    return bb.data.inherits_class('kernel', d) or pn.startswith('gcc-source')
+    return pn.startswith('gcc-source') or \
+        bb.data.inherits_class('kernel', d) or \
+        (bb.data.inherits_class('kernelsrc', d) and d.getVar('S') == d.getVar('STAGING_KERNEL_DIR'))
 
 # Run do_unpack and do_patch
 python do_unpack_and_patch() {
