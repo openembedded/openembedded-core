@@ -117,6 +117,7 @@ def llvm_features(d):
                     llvm_features_from_cc_arch(d) +
                     llvm_features_from_target_fpu(d))
 
+llvm_features[vardepvalue] = "${@llvm_features(d)}"
 
 ## arm-unknown-linux-gnueabihf
 DATA_LAYOUT[arm-eabi] = "e-m:e-p:32:32-i64:64-v128:64:128-a:0:32-n32-S64"
@@ -232,12 +233,6 @@ TARGET_POINTER_WIDTH[riscv64] = "64"
 TARGET_C_INT_WIDTH[riscv64] = "64"
 MAX_ATOMIC_WIDTH[riscv64] = "64"
 
-def sys_for(d, thing):
-    return d.getVar('{}_SYS'.format(thing))
-
-def prefix_for(d, thing):
-    return d.getVar('{}_PREFIX'.format(thing))
-
 # Convert a normal arch (HOST_ARCH, TARGET_ARCH, BUILD_ARCH, etc) to something
 # rust's internals won't choke on.
 def arch_to_rust_target_arch(arch):
@@ -285,20 +280,24 @@ def llvm_cpu(d):
     except:
         return trans.get(target, "generic")
 
-TARGET_LLVM_CPU="${@llvm_cpu(d)}"
-TARGET_LLVM_FEATURES = "${@llvm_features(d)}"
+llvm_cpu[vardepvalue] = "${@llvm_cpu(d)}"
 
-# class-native implies TARGET=HOST, and TUNE_FEATURES only describes the real
-# (original) target.
-TARGET_LLVM_FEATURES:class-native = "${@','.join(llvm_features_from_cc_arch(d))}"
-
-def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
+def rust_gen_target(d, thing, wd, arch):
     import json
-    sys = sys_for(d, thing)
-    prefix = prefix_for(d, thing)
+    sys = d.getVar('{}_SYS'.format(thing))
+    prefix = d.getVar('{}_PREFIX'.format(thing))
+
+    abi = None
+    cpu = "generic"
+    features = ""
 
     if thing == "TARGET":
         abi = d.getVar('ABIEXTENSION')
+        cpu = llvm_cpu(d)
+        if bb.data.inherits_class('native', d):
+            features = ','.join(llvm_features_from_cc_arch(d))
+        else:
+            features = llvm_features(d) or ""
         # arm and armv7 have different targets in llvm
         if arch == "arm" and target_is_armv7(d):
             arch = 'armv7'
@@ -355,14 +354,14 @@ def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
         json.dump(tspec, f, indent=4)
 
 # These are accounted for in tmpdir path names so don't need to be in the task sig
-rust_gen_target[vardepsexclude] += "RUST_HOST_SYS RUST_TARGET_SYS"
+rust_gen_target[vardepsexclude] += "RUST_HOST_SYS RUST_TARGET_SYS ABIEXTENSION llvm_cpu"
 
 do_rust_gen_targets[vardeps] += "DATA_LAYOUT TARGET_ENDIAN TARGET_POINTER_WIDTH TARGET_C_INT_WIDTH MAX_ATOMIC_WIDTH FEATURES"
 
 python do_rust_gen_targets () {
     wd = d.getVar('WORKDIR') + '/targets/'
     build_arch = d.getVar('BUILD_ARCH')
-    rust_gen_target(d, 'BUILD', wd, "", "generic", build_arch)
+    rust_gen_target(d, 'BUILD', wd, build_arch)
 }
 
 addtask rust_gen_targets after do_patch before do_compile

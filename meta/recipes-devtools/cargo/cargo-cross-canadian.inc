@@ -31,8 +31,8 @@ PN = "cargo-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 python do_rust_gen_targets () {
     wd = d.getVar('WORKDIR') + '/targets/'
 
-    rust_gen_target(d, 'BUILD', wd, "", "generic", d.getVar('BUILD_ARCH'))
-    rust_gen_target(d, 'HOST', wd, "", "generic", d.getVar('HOST_ARCH'))
+    rust_gen_target(d, 'BUILD', wd, d.getVar('BUILD_ARCH'))
+    rust_gen_target(d, 'HOST', wd, d.getVar('HOST_ARCH'))
 }
 
 do_compile:prepend () {
