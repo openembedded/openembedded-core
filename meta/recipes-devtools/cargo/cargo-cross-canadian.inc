@@ -5,7 +5,7 @@ RUST_ALTERNATE_EXE_PATH = "${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config"
 HOST_SYS = "${HOST_ARCH}-unknown-linux-gnu"
 CARGO_RUST_TARGET_CCLD = "${RUST_BUILD_CCLD}"
 
-require recipes-devtools/rust/rust-common.inc
+inherit rust-target-config
 require cargo.inc
 
 CARGO = "${WORKDIR}/${CARGO_SNAPSHOT}/bin/cargo"
