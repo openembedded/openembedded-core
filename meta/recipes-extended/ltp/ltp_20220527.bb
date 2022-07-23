@@ -29,6 +29,12 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=ht
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://disable_hanging_tests.patch \
            file://0001-kvm-use-LD-instead-of-hardcoding-ld.patch \
+           file://0001-nfs05_make_tree-Restore-5-min-timeout.patch \
+           file://0001-syscalls-migrate_pages03-restore-runtime-to-5m.patch \
+           file://0001-mountns0-1-3-wait-for-umount-completed-in-thread_b.patch \
+           file://0001-netstress-Restore-runtime-to-5m.patch \
+           file://0001-net_stress-Fix-usage-of-variables-from-tst_net.sh.patch \
+           file://0001-memcg-functional-Fix-usage-of-PAGESIZE-from-memcg_li.patch \
            "
 
 S = "${WORKDIR}/git"
