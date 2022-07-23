@@ -28,12 +28,7 @@ inherit cross-canadian
 
 PN = "cargo-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
-python do_rust_gen_targets () {
-    wd = d.getVar('WORKDIR') + '/targets/'
-
-    rust_gen_target(d, 'BUILD', wd, d.getVar('BUILD_ARCH'))
-    rust_gen_target(d, 'HOST', wd, d.getVar('HOST_ARCH'))
-}
+RUST_TARGETGENS = "BUILD HOST"
 
 do_compile:prepend () {
 	PKG_CONFIG_PATH="${RECIPE_SYSROOT_NATIVE}/usr/lib/pkgconfig:${PKG_CONFIG_PATH}"

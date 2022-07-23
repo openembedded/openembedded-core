@@ -25,13 +25,7 @@ DEBUG_PREFIX_MAP = "-fdebug-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDP
                     -fdebug-prefix-map=${STAGING_DIR_NATIVE}= \
                     "
 
-python do_rust_gen_targets () {
-    wd = d.getVar('WORKDIR') + '/targets/'
-    # Order of BUILD, HOST, TARGET is important in case the files overwrite, most specific last
-    rust_gen_target(d, 'BUILD', wd, d.getVar('BUILD_ARCH'))
-    rust_gen_target(d, 'HOST', wd, d.getVar('HOST_ARCH'))
-    rust_gen_target(d, 'TARGET', wd, d.getVar('TARGET_ARCH'))
-}
+RUST_TARGETGENS = "BUILD HOST TARGET"
 
 INHIBIT_DEFAULT_RUST_DEPS = "1"
 
