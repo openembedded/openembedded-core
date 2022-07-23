@@ -16,7 +16,8 @@ EXTRA_OECONF_PATHS = "\
 
 EXTRA_OECONF:append:linuxstdbase = " --enable-clocale=gnu"
 EXTRA_OECONF:append = " --cache-file=${B}/config.cache"
-EXTRA_OECONF:append:libc-newlib = " --with-newlib"
+EXTRA_OECONF:append:libc-newlib = " --with-newlib --with-target-subdir"
+EXTRA_OECONF:append:libc-baremetal = " --with-target-subdir"
 
 # Disable ifuncs for libatomic on arm conflicts -march/-mcpu
 EXTRA_OECONF:append:arm = " libat_cv_have_ifunc=no "
