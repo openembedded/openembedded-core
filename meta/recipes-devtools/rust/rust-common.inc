@@ -297,6 +297,12 @@ def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
     sys = sys_for(d, thing)
     prefix = prefix_for(d, thing)
 
+    if thing == "TARGET":
+        abi = d.getVar('ABIEXTENSION')
+        # arm and armv7 have different targets in llvm
+        if arch == "arm" and target_is_armv7(d):
+            arch = 'armv7'
+
     rust_arch = oe.rust.arch_to_rust_arch(arch)
 
     if abi:
