@@ -49,7 +49,6 @@ SRC_URI_MUSL = "\
                file://0001-pass-correct-parameters-to-getdents64.patch \
                file://0002-Add-sys-stat.h-for-S_IFDIR.patch \
                file://0001-Adjust-for-musl-headers.patch \
-               file://0001-Add-sys-file.h-for-LOCK_.patch \
                "
 
 PAM_PLUGINS = " \
