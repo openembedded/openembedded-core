@@ -44,7 +44,7 @@ B:task-populate-sdk = "${SDK_DIR}"
 SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${REAL_MULTIMACH_TARGET_SYS}"
 
 SDK_TOOLCHAIN_LANGS ??= ""
-SDK_TOOLCHAIN_LANGS:remove:mingw32 = "rust"
+SDK_TOOLCHAIN_LANGS:remove:sdkmingw32 = "rust"
 
 TOOLCHAIN_HOST_TASK ?= " \
     nativesdk-packagegroup-sdk-host \
