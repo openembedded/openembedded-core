@@ -35,6 +35,20 @@ class BootimgEFIPlugin(SourcePlugin):
     name = 'bootimg-efi'
 
     @classmethod
+    def _copy_additional_files(cls, hdddir, initrd):
+        if initrd:
+            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
+            if not bootimg_dir:
+                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
+
+            initrds = initrd.split(';')
+            for rd in initrds:
+                cp_cmd = "cp %s/%s %s" % (bootimg_dir, rd, hdddir)
+                exec_cmd(cp_cmd, True)
+        else:
+            logger.debug("Ignoring missing initrd")
+
+    @classmethod
     def do_configure_grubefi(cls, hdddir, creator, cr_workdir, source_params):
         """
         Create loader-specific (grub-efi) config
@@ -54,17 +68,7 @@ class BootimgEFIPlugin(SourcePlugin):
 
         initrd = source_params.get('initrd')
 
-        if initrd:
-            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
-            if not bootimg_dir:
-                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
-
-            initrds = initrd.split(';')
-            for rd in initrds:
-                cp_cmd = "cp %s/%s %s" % (bootimg_dir, rd, hdddir)
-                exec_cmd(cp_cmd, True)
-        else:
-            logger.debug("Ignoring missing initrd")
+        cls._copy_additional_files(hdddir, initrd)
 
         if not custom_cfg:
             # Create grub configuration using parameters from wks file
@@ -119,25 +123,17 @@ class BootimgEFIPlugin(SourcePlugin):
 
         bootloader = creator.ks.bootloader
 
+        unified_image = source_params.get('create-unified-kernel-image') == "true"
+
         loader_conf = ""
-        if source_params.get('create-unified-kernel-image') != "true":
+        if not unified_image:
             loader_conf += "default boot\n"
         loader_conf += "timeout %d\n" % bootloader.timeout
 
         initrd = source_params.get('initrd')
 
-        if initrd and source_params.get('create-unified-kernel-image') != "true":
-            # obviously we need to have a common common deploy var
-            bootimg_dir = get_bitbake_var("DEPLOY_DIR_IMAGE")
-            if not bootimg_dir:
-                raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
-
-            initrds = initrd.split(';')
-            for rd in initrds:
-                cp_cmd = "cp %s/%s %s" % (bootimg_dir, rd, hdddir)
-                exec_cmd(cp_cmd, True)
-        else:
-            logger.debug("Ignoring missing initrd")
+        if not unified_image:
+            cls._copy_additional_files(hdddir, initrd)
 
         logger.debug("Writing systemd-boot config "
                      "%s/hdd/boot/loader/loader.conf", cr_workdir)
@@ -185,7 +181,7 @@ class BootimgEFIPlugin(SourcePlugin):
                 for rd in initrds:
                     boot_conf += "initrd /%s\n" % rd
 
-        if source_params.get('create-unified-kernel-image') != "true":
+        if not unified_image:
             logger.debug("Writing systemd-boot config "
                          "%s/hdd/boot/loader/entries/boot.conf", cr_workdir)
             cfg = open("%s/hdd/boot/loader/entries/boot.conf" % cr_workdir, "w")
