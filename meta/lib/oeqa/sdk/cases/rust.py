@@ -19,8 +19,8 @@ class RustCompileTest(OESDKTestCase):
     def setUpClass(self):
         targetdir = os.path.join(self.tc.sdk_dir, "hello")
         try:
-            os.removedirs(targetdir)
-        except OSError:
+            shutil.rmtree(targetdir)
+        except FileNotFoundError:
             pass
         shutil.copytree(os.path.join(self.tc.sdk_files_dir, "rust/hello"), targetdir)
 
