@@ -336,7 +336,10 @@ def _create_new_recipe(newpv, md5, sha256, srcrev, srcbranch, srcsubdir_old, src
         replacing = True
         new_src_uri = []
         for entry in src_uri:
-            scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(entry)
+            try:
+                scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(entry)
+            except bb.fetch2.MalformedUrl as e:
+                raise DevtoolError("Could not decode SRC_URI: {}".format(e))
             if replacing and scheme in ['git', 'gitsm']:
                 branch = params.get('branch', 'master')
                 if rd.expand(branch) != srcbranch:
