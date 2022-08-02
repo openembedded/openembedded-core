@@ -577,6 +577,7 @@ python do_create_spdx() {
                     pkgdest / package,
                     lambda file_counter: oe.sbom.get_packaged_file_spdxid(pkg_name, file_counter),
                     lambda filepath: ["BINARY"],
+                    ignore_top_level_dirs=['CONTROL', 'DEBIAN'],
                     archive=archive,
                 )
 
