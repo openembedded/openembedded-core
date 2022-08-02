@@ -9,9 +9,10 @@ case $(readlink -f "${getty}") in
         if [ -x "/usr/bin/setsid" ] ; then
             setsid="/usr/bin/setsid"
         fi
+        options=""
         ;;
 esac
 
 if [ -e /sys/class/tty/$2 -a -c /dev/$2 ]; then
-	${setsid:-} ${getty} -L $1 $2 $3
+	${setsid:-} ${getty} ${options:-} -L $1 $2 $3
 fi

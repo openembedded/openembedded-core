@@ -31,6 +31,7 @@
 #   - allow-empty-password
 #   - allow-root-login
 #   - post-install-logging
+# - serial-autologin-root - with 'empty-root-password': autologin 'root' on the serial console
 # - dev-pkgs            - development packages (headers, etc.) for all installed packages in the rootfs
 # - dbg-pkgs            - debug symbol packages for all installed packages in the rootfs
 # - lic-pkgs            - license packages for all installed pacakges in the rootfs, requires

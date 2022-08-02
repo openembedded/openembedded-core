@@ -13,6 +13,9 @@ ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'deb
 # Allow dropbear/openssh to accept root logins if debug-tweaks or allow-root-login is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'debug-tweaks', 'allow-root-login' ], "ssh_allow_root_login; ", "",d)}'
 
+# Autologin the root user on the serial console, if empty-root-password and serial-autologin-root are active
+ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", [ 'empty-root-password', 'serial-autologin-root' ], "serial_autologin_root; ", "",d)}'
+
 # Enable postinst logging if debug-tweaks or post-install-logging is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'debug-tweaks', 'post-install-logging' ], "postinst_enable_logging; ", "",d)}'
 
@@ -197,6 +200,23 @@ ssh_allow_root_login () {
 	if [ -e ${IMAGE_ROOTFS}${sbindir}/dropbear ] ; then
 		if grep -q DROPBEAR_EXTRA_ARGS ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear 2>/dev/null ; then
 			sed -i '/^DROPBEAR_EXTRA_ARGS=/ s/-w//' ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
+		fi
+	fi
+}
+
+#
+# Autologin the 'root' user on the serial terminal,
+# if empty-root-password' AND 'serial-autologin-root are enabled
+#
+serial_autologin_root () {
+	if ${@bb.utils.contains("DISTRO_FEATURES", "sysvinit", "true", "false", d)}; then
+		# add autologin option to util-linux getty only
+		sed -i 's/options="/&--autologin root /' \
+			"${IMAGE_ROOTFS}${base_bindir}/start_getty"
+	elif ${@bb.utils.contains("DISTRO_FEATURES", "systemd", "true", "false", d)}; then
+		if [ -e ${IMAGE_ROOTFS}${systemd_system_unitdir}/serial-getty@.service ]; then
+			sed -i '/^\s*ExecStart\b/ s/getty /&--autologin root /' \
+				"${IMAGE_ROOTFS}${systemd_system_unitdir}/serial-getty@.service"
 		fi
 	fi
 }
