@@ -88,6 +88,10 @@ CPU_PRESSURE_TOTAL_COLOR = CPU_COLOR
 IO_PRESSURE_AVG10_COLOR = (0.0, 0.0, 0.0, 1.0)
 # delta total IO pressure color
 IO_PRESSURE_TOTAL_COLOR = IO_COLOR
+# avg10 memory pressure color
+MEM_PRESSURE_AVG10_COLOR = (0.0, 0.0, 0.0, 1.0)
+# delta total memory pressure color
+MEM_PRESSURE_TOTAL_COLOR = DISK_TPUT_COLOR
 
 
 
@@ -460,12 +464,12 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
 
         curr_y = curr_y + 30 + bar_h
 
-    # render delta total io
+    # render I/O pressure chart
     if trace.io_pressure:
         draw_legend_line(ctx, "avg10 I/O Pressure", IO_PRESSURE_AVG10_COLOR, off_x, curr_y+20, leg_s)
         draw_legend_box(ctx, "delta total I/O Pressure", IO_PRESSURE_TOTAL_COLOR, off_x + 140, curr_y+20, leg_s)
 
-        # render avg10 io
+        # render delta total io
         chart_rect = (off_x, curr_y+30, w, bar_h)
         if clip_visible (clip, chart_rect):
             draw_box_ticks (ctx, chart_rect, sec_w)
@@ -474,7 +478,7 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
                     [(sample.time, sample.deltaTotal) for sample in trace.io_pressure], \
                     proc_tree, None)
 
-        # render io pressure
+        # render avg10 io
         max_sample = max (trace.io_pressure, key = lambda s: s.avg10)
         if clip_visible (clip, chart_rect):
             draw_chart (ctx, IO_PRESSURE_AVG10_COLOR, False, chart_rect, \
@@ -487,8 +491,42 @@ def render_charts(ctx, options, clip, trace, curr_y, w, h, sec_w):
         if (pos_x < off_x + 245):
             shift_x, shift_y = 5, 40
 
+
         label = "%d%%" % (max_sample.avg10)
         draw_text (ctx, label, IO_PRESSURE_AVG10_COLOR, pos_x + shift_x, curr_y + shift_y)
+
+        curr_y = curr_y + 30 + bar_h
+
+    # render MEM pressure chart
+    if trace.mem_pressure:
+        draw_legend_line(ctx, "avg10 MEM Pressure", MEM_PRESSURE_AVG10_COLOR, off_x, curr_y+20, leg_s)
+        draw_legend_box(ctx, "delta total MEM Pressure", MEM_PRESSURE_TOTAL_COLOR, off_x + 140, curr_y+20, leg_s)
+
+        # render delta total mem
+        chart_rect = (off_x, curr_y+30, w, bar_h)
+        if clip_visible (clip, chart_rect):
+            draw_box_ticks (ctx, chart_rect, sec_w)
+            draw_annotations (ctx, proc_tree, trace.times, chart_rect)
+            draw_chart (ctx, MEM_PRESSURE_TOTAL_COLOR, True, chart_rect, \
+                    [(sample.time, sample.deltaTotal) for sample in trace.mem_pressure], \
+                    proc_tree, None)
+
+        # render avg10 mem
+        max_sample = max (trace.mem_pressure, key = lambda s: s.avg10)
+        if clip_visible (clip, chart_rect):
+            draw_chart (ctx, MEM_PRESSURE_AVG10_COLOR, False, chart_rect, \
+                    [(sample.time, sample.avg10) for sample in trace.mem_pressure], \
+                    proc_tree, None)
+
+        pos_x = off_x + ((max_sample.time - proc_tree.start_time) * w / proc_tree.duration)
+
+        shift_x, shift_y = -20, 20
+        if (pos_x < off_x + 245):
+            shift_x, shift_y = 5, 40
+
+
+        label = "%d%%" % (max_sample.avg10)
+        draw_text (ctx, label, MEM_PRESSURE_AVG10_COLOR, pos_x + shift_x, curr_y + shift_y)
 
         curr_y = curr_y + 30 + bar_h
 
