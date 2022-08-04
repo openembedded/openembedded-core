@@ -180,8 +180,15 @@ do_install() {
             cp -a --parents arch/arm64/tools/gen-cpucaps.awk $kerneldir/build/ 2>/dev/null || :
             cp -a --parents arch/arm64/tools/cpucaps $kerneldir/build/ 2>/dev/null || :
 
+            # 5.19+
+            cp -a --parents arch/arm64/tools/gen-sysreg.awk $kerneldir/build/   2>/dev/null || :
+            cp -a --parents arch/arm64/tools/sysreg $kerneldir/build/   2>/dev/null || :
+
             if [ -e $kerneldir/build/arch/arm64/tools/gen-cpucaps.awk ]; then
                  sed -i -e "s,#!.*awk.*,#!${USRBINPATH}/env awk," $kerneldir/build/arch/arm64/tools/gen-cpucaps.awk
+            fi
+            if [ -e $kerneldir/build/arch/arm64/tools/gen-sysreg.awk ]; then
+                 sed -i -e "s,#!.*awk.*,#!${USRBINPATH}/env awk," $kerneldir/build/arch/arm64/tools/gen-sysreg.awk
             fi
 	fi
 
@@ -209,6 +216,9 @@ do_install() {
 	    # include a few files for 'make prepare'
 	    cp -a --parents arch/arm/tools/gen-mach-types $kerneldir/build/
 	    cp -a --parents arch/arm/tools/mach-types $kerneldir/build/
+
+	    # 5.19+
+	    cp -a --parents arch/arm/tools/gen-sysreg.awk $kerneldir/build/	2>/dev/null || :
 
 	    # ARM syscall table tools only exist for kernels v4.10 or later
             SYSCALL_TOOLS=$(find arch/arm/tools -name "syscall*")
