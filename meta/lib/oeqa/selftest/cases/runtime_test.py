@@ -187,6 +187,8 @@ class TestImage(OESelftestTestCase):
             self.skipTest('virgl isn\'t working with Fedora 34')
         if distro and distro == 'fedora-35':
             self.skipTest('virgl isn\'t working with Fedora 35')
+        if distro and distro == 'fedora-36':
+            self.skipTest('virgl isn\'t working with Fedora 36')
         if distro and distro == 'opensuseleap-15.0':
             self.skipTest('virgl isn\'t working with Opensuse 15.0')
 
