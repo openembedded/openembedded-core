@@ -63,7 +63,7 @@ def rust_base_triple(d, thing):
     '''
 
     # The llvm-target for armv7 is armv7-unknown-linux-gnueabihf
-    if thing == "TARGET" and target_is_armv7(d):
+    if d.getVar('{}_ARCH'.format(thing)) == d.getVar('TARGET_ARCH') and target_is_armv7(d):
         arch = "armv7"
     else:
         arch = oe.rust.arch_to_rust_arch(d.getVar('{}_ARCH'.format(thing)))
