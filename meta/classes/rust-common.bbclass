@@ -141,13 +141,18 @@ RUST_TARGET_AR = "${WRAPPER_DIR}/target-rust-ar"
 create_wrapper () {
 	file="$1"
 	shift
+	extras="$1"
+	shift
 
 	cat <<- EOF > "${file}"
 	#!/usr/bin/env python3
 	import os, sys
 	orig_binary = "$@"
+	extras = "${extras}"
 	binary = orig_binary.split()[0]
 	args = orig_binary.split() + sys.argv[1:]
+	if extras:
+	    args.append(extras)
 	os.execvp(binary, args)
 	EOF
 	chmod +x "${file}"
@@ -157,6 +162,7 @@ WRAPPER_TARGET_CC = "${CC}"
 WRAPPER_TARGET_CXX = "${CXX}"
 WRAPPER_TARGET_CCLD = "${CCLD}"
 WRAPPER_TARGET_LDFLAGS = "${LDFLAGS}"
+WRAPPER_TARGET_EXTRALD = ""
 WRAPPER_TARGET_AR = "${AR}"
 
 # compiler is used by gcc-rs
@@ -166,22 +172,22 @@ do_rust_create_wrappers () {
 	mkdir -p "${WRAPPER_DIR}"
 
 	# Yocto Build / Rust Host C compiler
-	create_wrapper "${RUST_BUILD_CC}" "${BUILD_CC}"
+	create_wrapper "${RUST_BUILD_CC}" "" "${BUILD_CC}"
 	# Yocto Build / Rust Host C++ compiler
-	create_wrapper "${RUST_BUILD_CXX}" "${BUILD_CXX}"
+	create_wrapper "${RUST_BUILD_CXX}" "" "${BUILD_CXX}"
 	# Yocto Build / Rust Host linker
-	create_wrapper "${RUST_BUILD_CCLD}" "${BUILD_CCLD}" "${BUILD_LDFLAGS}"
+	create_wrapper "${RUST_BUILD_CCLD}" "" "${BUILD_CCLD}" "${BUILD_LDFLAGS}"
 	# Yocto Build / Rust Host archiver
-	create_wrapper "${RUST_BUILD_AR}" "${BUILD_AR}"
+	create_wrapper "${RUST_BUILD_AR}" "" "${BUILD_AR}"
 
 	# Yocto Target / Rust Target C compiler
-	create_wrapper "${RUST_TARGET_CC}" "${WRAPPER_TARGET_CC}" "${WRAPPER_TARGET_LDFLAGS}"
+	create_wrapper "${RUST_TARGET_CC}" "${WRAPPER_TARGET_EXTRALD}" "${WRAPPER_TARGET_CC}" "${WRAPPER_TARGET_LDFLAGS}"
 	# Yocto Target / Rust Target C++ compiler
-	create_wrapper "${RUST_TARGET_CXX}" "${WRAPPER_TARGET_CXX}" "${CXXFLAGS}"
+	create_wrapper "${RUST_TARGET_CXX}" "${WRAPPER_TARGET_EXTRALD}" "${WRAPPER_TARGET_CXX}" "${CXXFLAGS}"
 	# Yocto Target / Rust Target linker
-	create_wrapper "${RUST_TARGET_CCLD}" "${WRAPPER_TARGET_CCLD}" "${WRAPPER_TARGET_LDFLAGS}"
+	create_wrapper "${RUST_TARGET_CCLD}" "${WRAPPER_TARGET_EXTRALD}" "${WRAPPER_TARGET_CCLD}" "${WRAPPER_TARGET_LDFLAGS}"
 	# Yocto Target / Rust Target archiver
-	create_wrapper "${RUST_TARGET_AR}" "${WRAPPER_TARGET_AR}"
+	create_wrapper "${RUST_TARGET_AR}" "" "${WRAPPER_TARGET_AR}"
 
 }
 
