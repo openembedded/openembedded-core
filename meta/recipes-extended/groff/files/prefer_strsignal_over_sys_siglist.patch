@@ -1,0 +1,30 @@
+diff -ur groff-1.22.4ori/configure.ac groff-1.22.4/configure.ac
+--- groff-1.22.4ori/configure.ac	2018-12-18 22:13:01.000000000 +0100
++++ groff-1.22.4/configure.ac	2021-01-06 12:39:16.000000000 +0100
+@@ -140,6 +140,7 @@
+ LIBS="$saved_libs"
+ AC_CHECK_FUNCS([gettimeofday isatty kill rename setlocale strsep])
+ GROFF_MKSTEMP
++AC_CHECK_DECLS([strsignal, getc_unlocked])
+ AC_CHECK_DECLS([sys_siglist, getc_unlocked])
+ AM_LANGINFO_CODESET
+ 
+diff -ur groff-1.22.4ori/src/roff/groff/pipeline.c groff-1.22.4/src/roff/groff/pipeline.c
+--- groff-1.22.4ori/src/roff/groff/pipeline.c	2018-10-10 23:44:56.000000000 +0200
++++ groff-1.22.4/src/roff/groff/pipeline.c	2021-01-06 12:41:58.000000000 +0100
+@@ -570,10 +570,15 @@
+   static char buf[sizeof("Signal ") + 1 + sizeof(int) * 3];
+ 
+ #ifdef NSIG
++#if HAVE_DECL_STRSIGNAL
++  if (n >= 0 && n < NSIG && strsignal(n) != 0)
++    return strsignal(n);
++#else
+ #if HAVE_DECL_SYS_SIGLIST
+   if (n >= 0 && n < NSIG && sys_siglist[n] != 0)
+     return sys_siglist[n];
+ #endif /* HAVE_DECL_SYS_SIGLIST */
++#endif /* HAVE_DECL_STRSIGNAL */
+ #endif /* NSIG */
+   sprintf(buf, "Signal %d", n);
+   return buf;

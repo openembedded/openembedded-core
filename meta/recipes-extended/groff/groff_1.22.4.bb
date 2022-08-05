@@ -13,6 +13,7 @@ SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
 	file://0001-support-musl.patch \
 	file://0001-Include-config.h.patch \
         file://0001-Make-manpages-mulitlib-identical.patch \
+	file://prefer_strsignal_over_sys_siglist.patch \
 "
 
 SRC_URI[md5sum] = "08fb04335e2f5e73f23ea4c3adbf0c5f"
