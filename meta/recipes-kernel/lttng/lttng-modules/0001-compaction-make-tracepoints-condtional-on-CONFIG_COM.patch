@@ -1,0 +1,103 @@
+From 417bb00022c813c6dc11bfa652d74f3687df7626 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Wed, 3 Aug 2022 14:55:56 -0400
+Subject: [PATCH] compaction: make tracepoints condtional on CONFIG_COMPACTION
+
+When building against a v5.19 mips kernel, the following errors
+were triggered:
+
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:105:42: note: expected 'struct compact_control *' but argument is of type 'struct compact_control *'
+  |   105 |         TP_PROTO(struct compact_control *cc,
+  |       |                  ~~~~~~~~~~~~~~~~~~~~~~~~^~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:779:68: note: in definition of macro 'LTTNG_TRACEPOINT_EVENT_CLASS_CODE'
+  |   779 | static inline size_t __event_get_align__##_name(void *__tp_locvar, _proto)    \
+  |       |                                                                    ^~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:106:50: note: in expansion of macro 'PARAMS'
+  |   106 |         LTTNG_TRACEPOINT_EVENT_CLASS_CODE(_name, PARAMS(_proto), PARAMS(_args), , , \
+  |       |                                                  ^~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:41:9: note: in expansion of macro 'LTTNG_TRACEPOINT_EVENT_CLASS'
+  |    41 |         LTTNG_TRACEPOINT_EVENT_CLASS(map,                               \
+  |       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:42:30: note: in expansion of macro 'PARAMS'
+  |    42 |                              PARAMS(proto),                             \
+  |       |                              ^~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:101:1: note: in expansion of macro 'LTTNG_TRACEPOINT_EVENT_MAP'
+  |   101 | LTTNG_TRACEPOINT_EVENT_MAP(mm_compaction_migratepages,
+  |       | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:105:9: note: in expansion of macro 'TP_PROTO'
+  |   105 |         TP_PROTO(struct compact_control *cc,
+  |       |         ^~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:112:57: error: invalid use of undefined type 'struct compact_control'
+
+...
+
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:108:25: warning: 'struct compact_control' declared inside parameter list will not be visible outside of this definition or declaration
+  |   108 |         TP_PROTO(struct compact_control *cc,
+  |       |                         ^~~~~~~~~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:159:43: note: in definition of macro 'LTTNG_TRACEPOINT_EVENT_INSTANCE_MAP'
+  |   159 | void __event_template_proto___##_template(_proto);
+  |       |                                           ^~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:45:61: note: in expansion of macro 'PARAMS'
+  |    45 |         LTTNG_TRACEPOINT_EVENT_INSTANCE_MAP(map, name, map, PARAMS(proto), PARAMS(args))
+  |       |                                                             ^~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:104:1: note: in expansion of macro 'LTTNG_TRACEPOINT_EVENT_MAP'
+  |   104 | LTTNG_TRACEPOINT_EVENT_MAP(mm_compaction_migratepages,
+  |       | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/instrumentation/events/compaction.h:108:9: note: in expansion of macro 'TP_PROTO'
+  |   108 |         TP_PROTO(struct compact_control *cc,
+  |       |         ^~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:159:6: error: conflicting types for '__event_template_proto___compaction_migratepages'; have 'void(struct compact_control *, unsigned int)'
+  |   159 | void __event_template_proto___##_template(_proto);
+  |       |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+  | lttng-modules-2.13.4/src/probes/../../include/lttng/tracepoint-event-impl.h:45:9: note: in expansion of macro 'LTTNG_TRACEPOINT_EVENT_INSTANCE_MAP'
+  |    45 |         LTTNG_TRACEPOINT_EVENT_INSTANCE_MAP(map, name, map, PARAMS(proto), PARAMS(args))
+  |       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The root cause appears to be that this particular mips kernel does not
+have CONFIG_COMPACTION avaiable, and hence we end up with the struct
+declaration within this tracepoint, and then conflicting types.
+
+While putting the conditional around only compaction_migratepages seemed
+sufficient to get the build working, it doesn't look like any of the
+tracepoints should be valid, so we extend it to all definitions.
+
+Upstream-Status: Submitted [https://lists.lttng.org/pipermail/lttng-dev/2022-August/030246.html]
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ include/instrumentation/events/compaction.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/instrumentation/events/compaction.h b/include/instrumentation/events/compaction.h
+index ecae39a..155804a 100644
+--- a/include/instrumentation/events/compaction.h
++++ b/include/instrumentation/events/compaction.h
+@@ -9,6 +9,8 @@
+ #include <linux/types.h>
+ #include <lttng/kernel-version.h>
+ 
++#ifdef CONFIG_COMPACTION
++
+ #if LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(4,0,0)
+ 
+ LTTNG_TRACEPOINT_EVENT_CLASS(compaction_isolate_template,
+@@ -97,6 +99,7 @@ LTTNG_TRACEPOINT_EVENT_INSTANCE_MAP(compaction_isolate_template,
+ 
+ #endif /* #else #if LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(4,0,0) */
+ 
++
+ #if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(5,18,0))
+ LTTNG_TRACEPOINT_EVENT_MAP(mm_compaction_migratepages,
+ 
+@@ -182,6 +185,8 @@ LTTNG_TRACEPOINT_EVENT_MAP(mm_compaction_migratepages,
+ )
+ #endif /* #else #if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(3,16,0)) */
+ 
++#endif /* CONFIG_COMPACTION */
++
+ #endif /* LTTNG_TRACE_COMPACTION_H */
+ 
+ /* This part must be outside protection */
+-- 
+2.25.1
+
