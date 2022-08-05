@@ -177,6 +177,8 @@ rust_runx () {
     unset CXXFLAGS
     unset CPPFLAGS
 
+    export RUSTFLAGS="${RUST_DEBUG_REMAP}"
+
     # Copy the natively built llvm-config into the target so we can run it. Horrible,
     # but works!
     if [ ${RUST_ALTERNATE_EXE_PATH_NATIVE} != ${RUST_ALTERNATE_EXE_PATH} ]; then
