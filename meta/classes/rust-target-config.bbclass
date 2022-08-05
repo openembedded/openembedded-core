@@ -290,6 +290,10 @@ llvm_cpu[vardepvalue] = "${@llvm_cpu(d)}"
 
 def rust_gen_target(d, thing, wd, arch):
     import json
+
+    build_sys = d.getVar('BUILD_SYS')
+    target_sys = d.getVar('TARGET_SYS')
+
     sys = d.getVar('{}_SYS'.format(thing))
     prefix = d.getVar('{}_PREFIX'.format(thing))
     rustsys = d.getVar('RUST_{}_SYS'.format(thing))
@@ -298,7 +302,9 @@ def rust_gen_target(d, thing, wd, arch):
     cpu = "generic"
     features = ""
 
-    if thing == "TARGET":
+    # Need to apply the target tuning consitently, only if the triplet applies to the target
+    # and not in the native case
+    if sys == target_sys and sys != build_sys:
         abi = d.getVar('ABIEXTENSION')
         cpu = llvm_cpu(d)
         if bb.data.inherits_class('native', d):
