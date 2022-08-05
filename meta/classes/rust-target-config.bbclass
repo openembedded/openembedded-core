@@ -292,6 +292,7 @@ def rust_gen_target(d, thing, wd, arch):
     import json
     sys = d.getVar('{}_SYS'.format(thing))
     prefix = d.getVar('{}_PREFIX'.format(thing))
+    rustsys = d.getVar('RUST_{}_SYS'.format(thing))
 
     abi = None
     cpu = "generic"
@@ -318,13 +319,9 @@ def rust_gen_target(d, thing, wd, arch):
     features = features or d.getVarFlag('FEATURES', arch_abi) or ""
     features = features.strip()
 
-    llvm_target = d.getVar('RUST_TARGET_SYS')
-    if thing == "BUILD":
-        llvm_target = d.getVar('RUST_HOST_SYS')
-
     # build tspec
     tspec = {}
-    tspec['llvm-target'] = llvm_target
+    tspec['llvm-target'] = rustsys
     tspec['data-layout'] = d.getVarFlag('DATA_LAYOUT', arch_abi)
     if tspec['data-layout'] is None:
         bb.fatal("No rust target defined for %s" % arch_abi)
@@ -358,7 +355,7 @@ def rust_gen_target(d, thing, wd, arch):
     tspec['panic-strategy'] = d.getVar("RUST_PANIC_STRATEGY")
 
     # write out the target spec json file
-    with open(wd + sys + '.json', 'w') as f:
+    with open(wd + rustsys + '.json', 'w') as f:
         json.dump(tspec, f, indent=4)
 
 # These are accounted for in tmpdir path names so don't need to be in the task sig
@@ -366,10 +363,13 @@ rust_gen_target[vardepsexclude] += "ABIEXTENSION llvm_cpu"
 
 do_rust_gen_targets[vardeps] += "DATA_LAYOUT TARGET_ENDIAN TARGET_POINTER_WIDTH TARGET_C_INT_WIDTH MAX_ATOMIC_WIDTH FEATURES"
 
-RUST_TARGETGENS = "BUILD"
+RUST_TARGETS_DIR = "${WORKDIR}/rust-targets/"
+export RUST_TARGET_PATH = "${RUST_TARGETS_DIR}"
+
+RUST_TARGETGENS = "BUILD HOST TARGET"
 
 python do_rust_gen_targets () {
-    wd = d.getVar('WORKDIR') + '/targets/'
+    wd = d.getVar('RUST_TARGETS_DIR')
     # Order of BUILD, HOST, TARGET is important in case the files overwrite, most specific last
     rust_gen_target(d, 'BUILD', wd, d.getVar('BUILD_ARCH'))
     if "HOST" in d.getVar("RUST_TARGETGENS"):
@@ -379,5 +379,5 @@ python do_rust_gen_targets () {
 }
 
 addtask rust_gen_targets after do_patch before do_compile
-do_rust_gen_targets[dirs] += "${WORKDIR}/targets"
+do_rust_gen_targets[dirs] += "${RUST_TARGETS_DIR}"
 

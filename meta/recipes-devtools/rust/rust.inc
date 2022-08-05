@@ -12,9 +12,6 @@ DEPENDS:append:class-native = " rust-llvm-native"
 
 S = "${RUSTSRC}"
 
-# We generate local targets, and need to be able to locate them
-export RUST_TARGET_PATH="${WORKDIR}/targets/"
-
 export FORCE_CRATE_HASH="${BB_TASKHASH}"
 
 RUST_ALTERNATE_EXE_PATH ?= "${STAGING_LIBDIR}/llvm-rust/bin/llvm-config"
@@ -39,6 +36,8 @@ setup_cargo_environment () {
 }
 
 inherit rust-target-config
+
+RUST_TARGETGENS = "BUILD HOST TARGET"
 
 do_rust_setup_snapshot () {
     for installer in "${WORKDIR}/rust-snapshot-components/"*"/install.sh"; do

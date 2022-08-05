@@ -93,7 +93,6 @@ do_configure () {
 }
 
 oe_runrustc () {
-	export RUST_TARGET_PATH="${RUST_TARGET_PATH}"
 	bbnote ${RUSTC} ${RUSTC_ARCHFLAGS} ${RUSTC_FLAGS} "$@"
 	"${RUSTC}" ${RUSTC_ARCHFLAGS} ${RUSTC_FLAGS} "$@"
 }

@@ -4,6 +4,7 @@
 ## Cargo.
 
 inherit cargo_common
+inherit rust-target-config
 
 # the binary we will use
 CARGO = "cargo"
@@ -40,7 +41,7 @@ BUILD_DIR = "${@['release', 'debug'][d.getVar('DEBUG_BUILD') == '1']}"
 CARGO_TARGET_SUBDIR="${RUST_HOST_SYS}/${BUILD_DIR}"
 oe_cargo_build () {
 	export RUSTFLAGS="${RUSTFLAGS}"
-	export RUST_TARGET_PATH="${RUST_TARGET_PATH}"
+	bbnote "Using rust targets from ${RUST_TARGET_PATH}"
 	bbnote "cargo = $(which ${CARGO})"
 	bbnote "rustc = $(which ${RUSTC})"
 	bbnote "${CARGO} build ${CARGO_BUILD_FLAGS} $@"

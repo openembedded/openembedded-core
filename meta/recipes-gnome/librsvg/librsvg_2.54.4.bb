@@ -14,7 +14,7 @@ SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native"
 BBCLASSEXTEND = "native nativesdk"
 
-inherit gnomebase pixbufcache upstream-version-is-even gobject-introspection rust vala gi-docgen
+inherit cargo_common gnomebase pixbufcache upstream-version-is-even gobject-introspection rust vala gi-docgen
 
 SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
            file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
@@ -29,7 +29,6 @@ BASEDEPENDS:append = " cargo-native"
 
 export RUST_BACKTRACE = "full"
 export RUSTFLAGS
-export RUST_TARGET_PATH
 
 export RUST_TARGET = "${RUST_HOST_SYS}"
 
@@ -38,16 +37,17 @@ RUSTFLAGS:append:mipsel = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:powerpc = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:riscv32 = " --cfg crossbeam_no_atomic_64"
 
+CARGO_DISABLE_BITBAKE_VENDORING = "1"
+do_configure[postfuncs] += "cargo_common_do_configure"
+
+inherit rust-target-config
+
 # rust-cross writes the target linker binary into target json definition without any flags.
 # This breaks here because the linker isn't going to work without at least knowing where
 # the sysroot is. So copy the json to workdir, and patch in the path to wrapper from rust class
 # which supplies the needed flags.
 do_compile:prepend() {
-    cp ${STAGING_LIBDIR_NATIVE}/rustlib/${HOST_SYS}.json ${WORKDIR}
-    cp ${STAGING_LIBDIR_NATIVE}/rustlib/${BUILD_SYS}.json ${WORKDIR}
-    sed -ie 's,"linker": ".*","linker": "${RUST_TARGET_CC}",g' ${WORKDIR}/${RUST_HOST_SYS}.json
-    RUST_TARGET_PATH="${WORKDIR}"
-    export RUST_TARGET_PATH
+    sed -ie 's,"linker": ".*","linker": "${RUST_TARGET_CC}",g' ${RUST_TARGETS_DIR}/${RUST_HOST_SYS}.json
 }
 
 # Issue only on windows
