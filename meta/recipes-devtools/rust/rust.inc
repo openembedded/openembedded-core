@@ -18,7 +18,8 @@ export RUST_TARGET_PATH="${WORKDIR}/targets/"
 export FORCE_CRATE_HASH="${BB_TASKHASH}"
 
 RUST_ALTERNATE_EXE_PATH ?= "${STAGING_LIBDIR}/llvm-rust/bin/llvm-config"
-export YOCTO_ALTERNATE_EXE_PATH = "${RUST_ALTERNATE_EXE_PATH}"
+RUST_ALTERNATE_EXE_PATH_NATIVE = "${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config"
+
 export YOCTO_ALTERNATE_MULTILIB_NAME = "/${BASELIB}"
 
 # We don't want to use bitbakes vendoring because the rust sources do their
@@ -82,8 +83,9 @@ python do_configure() {
     host_section = "target.{}".format(d.getVar('RUST_TARGET_SYS', True))
     config.add_section(host_section)
 
-    llvm_config = d.expand("${YOCTO_ALTERNATE_EXE_PATH}")
-    config.set(host_section, "llvm-config", e(llvm_config))
+    llvm_config_target = d.expand("${RUST_ALTERNATE_EXE_PATH}")
+    llvm_config_build = d.expand("${RUST_ALTERNATE_EXE_PATH_NATIVE}")
+    config.set(host_section, "llvm-config", e(llvm_config_target))
 
     config.set(host_section, "cxx", e(d.expand("${RUST_TARGET_CXX}")))
     config.set(host_section, "cc", e(d.expand("${RUST_TARGET_CC}")))
@@ -93,7 +95,7 @@ python do_configure() {
     build_section = "target.{}".format(d.getVar('SNAPSHOT_BUILD_SYS', True))
     config.add_section(build_section)
 
-    config.set(build_section, "llvm-config", e(llvm_config))
+    config.set(build_section, "llvm-config", e(llvm_config_build))
 
     config.set(build_section, "cxx", e(d.expand("${RUST_BUILD_CXX}")))
     config.set(build_section, "cc", e(d.expand("${RUST_BUILD_CC}")))
@@ -168,6 +170,14 @@ rust_runx () {
     unset LDFLAGS
     unset CXXFLAGS
     unset CPPFLAGS
+
+    # Copy the natively built llvm-config into the target so we can run it. Horrible,
+    # but works!
+    if [ ${RUST_ALTERNATE_EXE_PATH_NATIVE} != ${RUST_ALTERNATE_EXE_PATH} ]; then
+        mkdir -p `dirname ${RUST_ALTERNATE_EXE_PATH}`
+        cp ${RUST_ALTERNATE_EXE_PATH_NATIVE} ${RUST_ALTERNATE_EXE_PATH}
+        chrpath -d ${RUST_ALTERNATE_EXE_PATH}
+    fi
 
     oe_cargo_fix_env
 
