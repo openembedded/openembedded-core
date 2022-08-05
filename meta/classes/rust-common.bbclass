@@ -153,11 +153,11 @@ create_wrapper () {
 	chmod +x "${file}"
 }
 
-export WRAPPER_TARGET_CC = "${CC}"
-export WRAPPER_TARGET_CXX = "${CXX}"
-export WRAPPER_TARGET_CCLD = "${CCLD}"
-export WRAPPER_TARGET_LDFLAGS = "${LDFLAGS}"
-export WRAPPER_TARGET_AR = "${AR}"
+WRAPPER_TARGET_CC = "${CC}"
+WRAPPER_TARGET_CXX = "${CXX}"
+WRAPPER_TARGET_CCLD = "${CCLD}"
+WRAPPER_TARGET_LDFLAGS = "${LDFLAGS}"
+WRAPPER_TARGET_AR = "${AR}"
 
 # compiler is used by gcc-rs
 # linker is used by rustc/cargo
