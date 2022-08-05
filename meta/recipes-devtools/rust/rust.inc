@@ -20,8 +20,6 @@ export FORCE_CRATE_HASH="${BB_TASKHASH}"
 RUST_ALTERNATE_EXE_PATH ?= "${STAGING_LIBDIR}/llvm-rust/bin/llvm-config"
 RUST_ALTERNATE_EXE_PATH_NATIVE = "${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config"
 
-export YOCTO_ALTERNATE_MULTILIB_NAME = "/${BASELIB}"
-
 # We don't want to use bitbakes vendoring because the rust sources do their
 # own vendoring.
 CARGO_DISABLE_BITBAKE_VENDORING = "1"
