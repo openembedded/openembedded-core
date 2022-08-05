@@ -23,7 +23,6 @@ CARGO_DISABLE_BITBAKE_VENDORING = "1"
 
 # We can't use RUST_BUILD_SYS here because that may be "musl" if
 # TCLIBC="musl". Snapshots are always -unknown-linux-gnu
-SNAPSHOT_BUILD_SYS = "${RUST_BUILD_ARCH}-unknown-linux-gnu"
 setup_cargo_environment () {
     # The first step is to build bootstrap and some early stage tools,
     # these are build for the same target as the snapshot, e.g.
@@ -31,7 +30,7 @@ setup_cargo_environment () {
     # Later stages are build for the native target (i.e. target.x86_64-linux)
     cargo_common_do_configure
 
-    printf '[target.%s]\n' "${SNAPSHOT_BUILD_SYS}" >> ${CARGO_HOME}/config
+    printf '[target.%s]\n' "${RUST_BUILD_SYS}" >> ${CARGO_HOME}/config
     printf "linker = '%s'\n" "${RUST_BUILD_CCLD}" >> ${CARGO_HOME}/config
 }
 
@@ -89,7 +88,7 @@ python do_configure() {
 
     # If we don't do this rust-native will compile it's own llvm for BUILD.
     # [target.${BUILD_ARCH}-unknown-linux-gnu]
-    build_section = "target.{}".format(d.getVar('SNAPSHOT_BUILD_SYS', True))
+    build_section = "target.{}".format(d.getVar('RUST_BUILD_SYS', True))
     config.add_section(build_section)
 
     config.set(build_section, "llvm-config", e(llvm_config_build))
@@ -136,7 +135,7 @@ python do_configure() {
 
     # We can't use BUILD_SYS since that is something the rust snapshot knows
     # nothing about when trying to build some stage0 tools (like fabricate)
-    config.set("build", "build", e(d.getVar("SNAPSHOT_BUILD_SYS", True)))
+    config.set("build", "build", e(d.getVar("RUST_BUILD_SYS", True)))
 
     # [install]
     config.add_section("install")

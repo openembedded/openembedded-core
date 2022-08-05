@@ -68,6 +68,11 @@ def rust_base_triple(d, thing):
     else:
         arch = oe.rust.arch_to_rust_arch(d.getVar('{}_ARCH'.format(thing)))
 
+    # When bootstrapping rust-native, BUILD must be the same as upstream snapshot tarballs
+    bpn = d.getVar('BPN')
+    if thing == "BUILD" and bpn in ["rust"]:
+        return arch + "-unknown-linux-gnu"
+
     # All the Yocto targets are Linux and are 'unknown'
     vendor = "-unknown"
     os = d.getVar('{}_OS'.format(thing))
