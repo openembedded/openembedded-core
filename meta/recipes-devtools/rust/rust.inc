@@ -9,6 +9,7 @@ inherit cargo_common
 
 DEPENDS += "file-native python3-native"
 DEPENDS:append:class-native = " rust-llvm-native"
+DEPENDS:append:class-nativesdk = " nativesdk-rust-llvm"
 
 S = "${RUSTSRC}"
 
@@ -202,18 +203,6 @@ rust_do_install () {
     rm -f ${D}${libdir}/rustlib/src/rust
 }
 
-rust_install_targets() {
-    # Install our custom target.json files
-    local td="${D}${libdir}/rustlib/"
-    install -d "$td"
-    for tgt in "${WORKDIR}/targets/"* ; do
-        install -m 0644 "$tgt" "$td"
-    done
-}
-
-
 do_install () {
     rust_do_install
-    rust_install_targets
 }
-# ex: sts=4 et sw=4 ts=8

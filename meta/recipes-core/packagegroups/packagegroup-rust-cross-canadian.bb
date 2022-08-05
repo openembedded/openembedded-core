@@ -6,12 +6,12 @@ inherit cross-canadian packagegroup
 PACKAGEGROUP_DISABLE_COMPLEMENTARY = "1"
 
 RUST="rust-cross-canadian-${TRANSLATED_TARGET_ARCH}"
-RUST_TOOLS="rust-tools-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 RDEPENDS:${PN} = " \
     ${@all_multilib_tune_values(d, 'RUST')} \
+    nativesdk-rust \
     nativesdk-cargo \
-    rust-cross-canadian-src \
-    ${@all_multilib_tune_values(d, 'RUST_TOOLS')} \
+    nativesdk-rust-tools-clippy \
+    nativesdk-rust-tools-rustfmt \
 "
 
