@@ -79,24 +79,24 @@ python do_configure() {
     config = configparser.RawConfigParser()
 
     # [target.ARCH-poky-linux]
-    target_section = "target.{}".format(d.getVar('RUST_TARGET_SYS', True))
-    config.add_section(target_section)
+    host_section = "target.{}".format(d.getVar('RUST_TARGET_SYS', True))
+    config.add_section(host_section)
 
     llvm_config = d.expand("${YOCTO_ALTERNATE_EXE_PATH}")
-    config.set(target_section, "llvm-config", e(llvm_config))
+    config.set(host_section, "llvm-config", e(llvm_config))
 
-    config.set(target_section, "cxx", e(d.expand("${RUST_TARGET_CXX}")))
-    config.set(target_section, "cc", e(d.expand("${RUST_TARGET_CC}")))
+    config.set(host_section, "cxx", e(d.expand("${RUST_TARGET_CXX}")))
+    config.set(host_section, "cc", e(d.expand("${RUST_TARGET_CC}")))
 
     # If we don't do this rust-native will compile it's own llvm for BUILD.
     # [target.${BUILD_ARCH}-unknown-linux-gnu]
-    target_section = "target.{}".format(d.getVar('SNAPSHOT_BUILD_SYS', True))
-    config.add_section(target_section)
+    build_section = "target.{}".format(d.getVar('SNAPSHOT_BUILD_SYS', True))
+    config.add_section(build_section)
 
-    config.set(target_section, "llvm-config", e(llvm_config))
+    config.set(build_section, "llvm-config", e(llvm_config))
 
-    config.set(target_section, "cxx", e(d.expand("${RUST_BUILD_CXX}")))
-    config.set(target_section, "cc", e(d.expand("${RUST_BUILD_CC}")))
+    config.set(build_section, "cxx", e(d.expand("${RUST_BUILD_CXX}")))
+    config.set(build_section, "cc", e(d.expand("${RUST_BUILD_CC}")))
 
     # [llvm]
     config.add_section("llvm")
