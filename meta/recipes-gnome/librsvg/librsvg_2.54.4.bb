@@ -31,7 +31,7 @@ export RUST_BACKTRACE = "full"
 export RUSTFLAGS
 export RUST_TARGET_PATH
 
-export RUST_TARGET = "${HOST_SYS}"
+export RUST_TARGET = "${RUST_HOST_SYS}"
 
 RUSTFLAGS:append:mips = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:mipsel = " --cfg crossbeam_no_atomic_64"
@@ -45,7 +45,7 @@ RUSTFLAGS:append:riscv32 = " --cfg crossbeam_no_atomic_64"
 do_compile:prepend() {
     cp ${STAGING_LIBDIR_NATIVE}/rustlib/${HOST_SYS}.json ${WORKDIR}
     cp ${STAGING_LIBDIR_NATIVE}/rustlib/${BUILD_SYS}.json ${WORKDIR}
-    sed -ie 's,"linker": ".*","linker": "${RUST_TARGET_CC}",g' ${WORKDIR}/${HOST_SYS}.json
+    sed -ie 's,"linker": ".*","linker": "${RUST_TARGET_CC}",g' ${WORKDIR}/${RUST_HOST_SYS}.json
     RUST_TARGET_PATH="${WORKDIR}"
     export RUST_TARGET_PATH
 }
