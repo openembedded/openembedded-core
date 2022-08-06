@@ -1,4 +1,4 @@
-From bf6db5b48ec25f83939f1fdebb59028bc3c40b00 Mon Sep 17 00:00:00 2001
+From 66447f7c5c6996481ebd68ce8224d3de7525aad8 Mon Sep 17 00:00:00 2001
 From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
 Date: Wed, 6 Feb 2019 11:30:51 -0800
 Subject: [PATCH] install: don't install obsolete file com32.ld
@@ -16,7 +16,7 @@ Signed-off-by: Anuj Mittal <anuj.mittal@intel.com>
  1 file changed, 1 deletion(-)
 
 diff --git a/com32/lib/Makefile b/com32/lib/Makefile
-index 74fff149..6a931492 100644
+index 74fff14..6a93149 100644
 --- a/com32/lib/Makefile
 +++ b/com32/lib/Makefile
 @@ -113,7 +113,6 @@ spotless: clean
@@ -27,6 +27,3 @@ index 74fff149..6a931492 100644
  	-rm -rf $(INSTALLROOT)$(COM32DIR)/include
  	cp -r $(SRC)/../include $(INSTALLROOT)$(COM32DIR)
  
--- 
-2.17.1
-

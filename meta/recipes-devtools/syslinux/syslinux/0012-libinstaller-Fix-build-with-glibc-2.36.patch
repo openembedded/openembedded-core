@@ -1,4 +1,4 @@
-From 0c4f97b2dd22365d32b865dd002282e454a7edf0 Mon Sep 17 00:00:00 2001
+From 821d31148c07a8318277be32bc6a943c7fd2ba3f Mon Sep 17 00:00:00 2001
 From: Martin Jansa <Martin.Jansa@gmail.com>
 Date: Sat, 6 Aug 2022 11:53:55 +0000
 Subject: [PATCH] libinstaller: Fix build with glibc-2.36

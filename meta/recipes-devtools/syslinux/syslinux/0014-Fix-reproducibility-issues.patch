@@ -1,3 +1,8 @@
+From e49e86bd3199f51ada8a4a1d51aa8d627645279e Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Sat, 27 Feb 2021 23:42:03 +0000
+Subject: [PATCH] Fix reproducibility issues
+
 In order to build deterministic binaries, we need to sort the wildcard expansion
 so the libraries are linked in the same order each time. This fixes reproducibility
 issues within syslinux builds.
@@ -5,10 +10,15 @@ issues within syslinux builds.
 Upstream-Status: Pending
 RP 2021/3/1
 
-Index: syslinux-6.04-pre2/mk/lib.mk
-===================================================================
---- syslinux-6.04-pre2.orig/mk/lib.mk
-+++ syslinux-6.04-pre2/mk/lib.mk
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+ mk/lib.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mk/lib.mk b/mk/lib.mk
+index f3fb07c..815698c 100644
+--- a/mk/lib.mk
++++ b/mk/lib.mk
 @@ -130,8 +130,8 @@ LIBENTRY_OBJS = \
  	exit.o
  
