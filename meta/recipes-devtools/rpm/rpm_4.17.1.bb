@@ -39,13 +39,11 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.17.x;protoc
            file://0001-tools-Add-error.h-for-non-glibc-case.patch \
            file://0001-docs-do-not-build-manpages-requires-pandoc.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
-           file://0001-CVE-2021-3521.patch \
-           file://0002-CVE-2021-3521.patch \
-           file://0003-CVE-2021-3521.patch \
+           file://0001-configure.ac-add-linux-gnux32-variant-to-triplet-han.patch \
            "
 
 PE = "1"
-SRCREV = "3e74e8ba2dd5e76a5353d238dc7fc38651ce27b3"
+SRCREV = "5bef402da334595ed9302b8bca1acdf5e88bfe11"
 
 S = "${WORKDIR}/git"
 
