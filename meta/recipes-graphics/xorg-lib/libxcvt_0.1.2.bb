@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=129947a06984d6faa6f9a9788fa2a03f"
 SECTION = "x11/libs"
 
 SRC_URI = "git://gitlab.freedesktop.org/xorg/lib/libxcvt.git;protocol=https;branch=master"
-SRCREV = "6fe840b9295cfdc41bd734586c5b8756f6af6f9b"
+SRCREV = "d9ca87eea9eecddaccc3a77227bcb3acf84e89df"
 
 S = "${WORKDIR}/git"
 
