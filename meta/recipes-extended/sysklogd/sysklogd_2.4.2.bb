@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/troglobit/sysklogd.git;branch=master;protocol=https 
            file://sysklogd \
            "
 
-SRCREV = "7dc4783af8e8e0d200d38a87b6a4bc9bbec5ce92"
+SRCREV = "78505913888b71b2fa2e8616636fcc430ffa30bb"
 
 S = "${WORKDIR}/git"
 
