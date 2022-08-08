@@ -14,10 +14,8 @@ DEPENDS = "dbus"
 
 inherit autotools pkgconfig
 
-SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz \
-           file://0001-build-fix-time.h-related-breakage-on-musl.patch \
-           "
-SRC_URI[sha256sum] = "ba86cfa4aaf10151443edd63a7687914465d969f5dda00a2c1fcb11bd85e417f"
+SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz"
+SRC_URI[sha256sum] = "83099b14beda2b253a2c69460f9613c5e955b63349e3c00cf2fd506f5b3ba7d0"
 
 do_configure:prepend () {
     mkdir -p ${S}/build-aux
