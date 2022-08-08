@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=72c536e78c21c567311b193fe00cd253"
 
 PYPI_PACKAGE = "Sphinx"
 
-SRC_URI[sha256sum] = "b18e978ea7565720f26019c702cd85c84376e948370f1cd43d60265010e1c7b0"
+SRC_URI[sha256sum] = "ba3224a4e206e1fbdecf98a4fae4992ef9b24b85ebf7b584bb340156eaf08d89"
 
 inherit setuptools3 pypi
 
