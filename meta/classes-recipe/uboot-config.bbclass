@@ -112,8 +112,10 @@ python () {
 
     if len(ubootconfig) > 0:
         for config in ubootconfig:
+            found = False
             for f, v in ubootconfigflags.items():
                 if config == f: 
+                    found = True
                     items = v.split(',')
                     if items[0] and len(items) > 3:
                         raise bb.parse.SkipRecipe('Only config,images,binary can be specified!')
@@ -128,6 +130,8 @@ python () {
                     else:
                         bb.debug(1, "Appending '%s' to UBOOT_BINARIES." % ubootbinary)
                         d.appendVar('UBOOT_BINARIES', ' ' + ubootbinary)
-                    return
-        raise bb.parse.SkipRecipe("The selected UBOOT_CONFIG key %s has no match in %s." % (ubootconfig, ubootconfigflags.keys()))
+                    break
+
+            if not found:
+                raise bb.parse.SkipRecipe("The selected UBOOT_CONFIG key %s has no match in %s." % (ubootconfig, ubootconfigflags.keys()))
 }
