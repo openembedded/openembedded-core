@@ -1,11 +1,12 @@
-From 5d1384d86fc44404ca32c6fda2d46ec357337c91 Mon Sep 17 00:00:00 2001
+From 3b5b6079512af8af50d0a43d4c1c218f5ba1b302 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:27:10 +0000
-Subject: [PATCH] sysdeps/gnu/configure.ac: Set libc_cv_rootsbindir only if its empty
+Subject: [PATCH] sysdeps/gnu/configure.ac: Set libc_cv_rootsbindir only if its
+ empty
 
 This ensures that it can be set in build environment
 
-Upstream-Status: Submitted [https://patchwork.sourceware.org/project/glibc/patch/20211209203557.1318333-2-raj.khem@gmail.com/]
+Upstream-Status: Pending
 Signed-off-by: Matthieu Crapet <Matthieu.Crapet@ingenico.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---

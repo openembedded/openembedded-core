@@ -40,16 +40,17 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0012-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0013-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0014-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0016-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
-           file://0017-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
+           file://0015-locale-prevent-maybe-uninitialized-errors-with-Os-BZ.patch \
+           file://0016-readlib-Add-OECORE_KNOWN_INTERPRETER_NAMES-to-known-.patch \
+           file://0017-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
            file://0018-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
-           file://0019-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
-           file://0021-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
-           file://0022-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
-           file://0023-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
-           file://0024-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
-           \
-           file://0001-Revert-Linux-Implement-a-useful-version-of-_startup_.patch \
+           file://0019-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
+           file://0020-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
+           file://0021-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
+           file://0022-tzselect.ksh-Use-bin-sh-default-shell-interpreter.patch \
+           file://0023-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
+           file://0024-Avoid-hardcoded-build-time-paths-in-the-output-binar.patch \
+           file://0025-Revert-Linux-Implement-a-useful-version-of-_startup_.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"

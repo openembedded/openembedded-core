@@ -1,4 +1,4 @@
-From c59bc6eb421ad3310c43951a11d2561bbf34e95e Mon Sep 17 00:00:00 2001
+From bd2b87eaa2e99310f5439df95bea12a48dc978bf Mon Sep 17 00:00:00 2001
 From: Martin Jansa <martin.jansa@gmail.com>
 Date: Mon, 17 Dec 2018 21:36:18 +0000
 Subject: [PATCH] locale: prevent maybe-uninitialized errors with -Os [BZ
@@ -33,7 +33,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/locale/weight.h b/locale/weight.h
-index 076529c0ba..2ac83657f7 100644
+index 8be2d220f8..4a4d5aa6b2 100644
 --- a/locale/weight.h
 +++ b/locale/weight.h
 @@ -27,7 +27,14 @@ findidx (const int32_t *table,
@@ -46,7 +46,7 @@ index 076529c0ba..2ac83657f7 100644
 +     as described in comments in locale/weightwc.h.  */
 +  DIAG_PUSH_NEEDS_COMMENT;
 +  DIAG_IGNORE_Os_NEEDS_COMMENT (8, "-Wmaybe-uninitialized");
-   int_fast32_t i = table[*(*cpp)++];
+   int32_t i = table[*(*cpp)++];
 +  DIAG_POP_NEEDS_COMMENT;
    const unsigned char *cp;
    const unsigned char *usrc;

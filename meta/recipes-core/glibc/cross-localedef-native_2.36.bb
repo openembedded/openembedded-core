@@ -30,8 +30,8 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0012-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0013-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0014-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0021-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
-           file://0023-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
+           file://0019-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
+           file://0021-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
            "
 # Makes for a rather long rev (22 characters), but...
 #

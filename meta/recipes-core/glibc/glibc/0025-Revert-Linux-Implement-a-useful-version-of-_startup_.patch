@@ -1,13 +1,13 @@
-From 6b8959add09e425df262bf9178b39ca35bc4003c Mon Sep 17 00:00:00 2001
+From 18b04419d5984f5c6c89fab5e72fcdd1942491cb Mon Sep 17 00:00:00 2001
 From: Martin Jansa <Martin.Jansa@gmail.com>
-Date: Sun, 24 Jul 2022 19:41:41 +0200
+Date: Sun, 7 Aug 2022 12:51:48 +0200
 Subject: [PATCH] Revert "Linux: Implement a useful version of _startup_fatal"
 
-This reverts commit 2d05ba7f8ef979947e910a37ae8115a816eb4d08.
+This reverts commit a2a6bce7d7e52c1c34369a7da62c501cc350bc31.
+
 Upstream-Status: Inappropriate [temporary work around]
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
-
 ---
  sysdeps/unix/sysv/linux/i386/startup.h | 23 ++++++++++++---
  sysdeps/unix/sysv/linux/ia64/startup.h | 22 ---------------

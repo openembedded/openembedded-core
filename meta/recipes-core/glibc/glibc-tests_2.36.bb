@@ -5,7 +5,6 @@ inherit ptest features_check
 REQUIRED_DISTRO_FEATURES = "ptest"
 
 SRC_URI:append = " \
-	file://reproducible-paths.patch \
 	file://run-ptest \
 "
 

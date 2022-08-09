@@ -1,4 +1,4 @@
-From c0f251c58655e3377fe1c67a026c21ef68d2abcf Mon Sep 17 00:00:00 2001
+From 8d5ff7357354394b958321204b75e3855781aefe Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 9 Dec 2021 15:14:42 -0800
 Subject: [PATCH] timezone: Make shell interpreter overridable in tzselect.ksh
@@ -6,7 +6,7 @@ Subject: [PATCH] timezone: Make shell interpreter overridable in tzselect.ksh
 define new macro called KSHELL which can be used to define default shell
 use Bash by default
 
-Upstream-Status: Submitted [https://patchwork.sourceware.org/project/glibc/patch/20211209234015.1554552-1-raj.khem@gmail.com/]
+Upstream-Status: Pending
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  Makeconfig        | 9 +++++++++
@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 10 insertions(+)
 
 diff --git a/Makeconfig b/Makeconfig
-index 775bf12b65..7b9a8f0a94 100644
+index ba70321af1..4b643768d9 100644
 --- a/Makeconfig
 +++ b/Makeconfig
 @@ -293,6 +293,15 @@ ifndef sysincludedir
@@ -34,10 +34,10 @@ index 775bf12b65..7b9a8f0a94 100644
  # Commands to install files.
  ifndef INSTALL_DATA
 diff --git a/timezone/Makefile b/timezone/Makefile
-index c624a189b3..dc8f5277de 100644
+index a789c22d26..3e69409a94 100644
 --- a/timezone/Makefile
 +++ b/timezone/Makefile
-@@ -127,6 +127,7 @@ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
+@@ -134,6 +134,7 @@ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
  	    -e '/TZVERSION=/s|see_Makefile|"$(version)"|' \
  	    -e '/PKGVERSION=/s|=.*|="$(PKGVERSION)"|' \
  	    -e '/REPORT_BUGS_TO=/s|=.*|="$(REPORT_BUGS_TO)"|' \

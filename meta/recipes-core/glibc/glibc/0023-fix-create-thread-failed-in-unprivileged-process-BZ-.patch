@@ -1,4 +1,4 @@
-From 6609858239b8f94e12c19eac0cec425511d1211f Mon Sep 17 00:00:00 2001
+From ffbb37732807e180b14a21d1bf79ad5038252c02 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Sun, 29 Aug 2021 20:49:16 +0800
 Subject: [PATCH] fix create thread failed in unprivileged process [BZ #28287]
@@ -66,6 +66,7 @@ patch
 [2] https://sourceware.org/pipermail/libc-alpha/2021-August/130590.html
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  sysdeps/unix/sysv/linux/clone-internal.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -83,6 +84,3 @@ index a71effcbd3..a0569113aa 100644
      return ret;
  
    /* NB: Restore errno since errno may be checked against non-zero
--- 
-2.27.0
-

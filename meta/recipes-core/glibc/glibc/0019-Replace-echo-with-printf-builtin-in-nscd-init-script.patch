@@ -1,4 +1,4 @@
-From 77fbd98f551d5b2cd338aa7f524e5ed980edb65e Mon Sep 17 00:00:00 2001
+From 97a71e1dd07ba6721464150b03fd67823b6271e2 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 31 Dec 2015 14:33:02 -0800
 Subject: [PATCH] Replace echo with printf builtin in nscd init script
@@ -8,7 +8,7 @@ since it uses bash specific extentions namely (translated strings)
 and echo -n command, replace echo with printf and
 switch the shell interpreter to #!/bin/sh.
 
-Upstream-Status: Submitted [https://patchwork.sourceware.org/project/glibc/patch/20211209203557.1318333-1-raj.khem@gmail.com/]
+Upstream-Status: Pending
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
