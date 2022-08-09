@@ -8,7 +8,7 @@ strlen_pass::handle_builtin_strcpy but only for optimized
 build. To avoid needing to include strcpy.S in the rtld build to
 support the debug build, just do the optimization by hand.
 
-Upstream-Status: Submitted [https://sourceware.org/bugzilla/show_bug.cgi?id=29454 https://sourceware.org/pipermail/libc-alpha/2022-August/141290.html]
+Upstream-Status: Backport [https://sourceware.org/git/?p=glibc.git;a=commit;h=483cfe1a6a33d6335b1901581b41040d2d412511]
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
  elf/dl-cache.c | 5 +++--

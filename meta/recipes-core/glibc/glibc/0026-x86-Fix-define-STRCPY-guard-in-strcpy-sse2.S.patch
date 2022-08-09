@@ -7,7 +7,7 @@ Subject: [PATCH] x86: Fix `#define STRCPY` guard in strcpy-sse2.S
 defined.  It doesn't end up mattering as the whole check is
 guarded by `#if IS_IN (libc)` but is incorrect none the less.
 
-Upstream-Status: Submitted [https://sourceware.org/bugzilla/show_bug.cgi?id=29454 https://sourceware.org/pipermail/libc-alpha/2022-August/141289.html]
+Upstream-Status: Backport [https://sourceware.org/git/?p=glibc.git;a=commit;h=312ded0d6339e8c463d0395397b5825401b14f54]
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
  sysdeps/x86_64/multiarch/strcpy-sse2.S | 2 +-
