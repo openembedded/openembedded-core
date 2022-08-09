@@ -7,12 +7,13 @@ LICENSE = "MIT"
 
 MODIFYTOS = "0"
 
+# Need to use our SDK's sh here, see #14878
 create_sdk_wrapper () {
         file="$1"
         shift
 
         cat <<- EOF > "${file}"
-		#!/bin/sh
+		#!${base_prefix}/bin/sh
 		\$$1 \$@
 		EOF
 
