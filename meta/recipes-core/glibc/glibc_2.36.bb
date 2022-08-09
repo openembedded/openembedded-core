@@ -51,7 +51,9 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
            file://0024-Avoid-hardcoded-build-time-paths-in-the-output-binar.patch \
            file://0025-Revert-Linux-Implement-a-useful-version-of-_startup_.patch \
-           "
+           file://0026-x86-Fix-define-STRCPY-guard-in-strcpy-sse2.S.patch \
+           file://0027-elf-Replace-strcpy-call-with-memcpy-BZ-29454.patch \
+"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
