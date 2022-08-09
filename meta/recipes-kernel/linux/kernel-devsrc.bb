@@ -308,9 +308,6 @@ do_install() {
     # external modules can be built
     touch -r $kerneldir/build/Makefile $kerneldir/build/include/generated/uapi/linux/version.h
 
-    # Copy .config to include/config/auto.conf so "make prepare" is unnecessary.
-    cp $kerneldir/build/.config $kerneldir/build/include/config/auto.conf
-
     # make sure these are at least as old as the .config, or rebuilds will trigger
     touch -r $kerneldir/build/.config $kerneldir/build/include/generated/autoconf.h 2>/dev/null || :
     touch -r $kerneldir/build/.config $kerneldir/build/include/config/auto.conf* 2>/dev/null || :
