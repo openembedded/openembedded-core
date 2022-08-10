@@ -18,8 +18,6 @@ EXCLUDE_FROM_WORLD = "1"
 
 inherit cargo pkgconfig
 
-RUST_TARGETGENS = "BUILD HOST TARGET"
-
 do_cargo_setup_snapshot () {
 	${WORKDIR}/rust-snapshot-components/${CARGO_SNAPSHOT}/install.sh --prefix="${WORKDIR}/${CARGO_SNAPSHOT}" --disable-ldconfig
 	# Need to use uninative's loader if enabled/present since the library paths

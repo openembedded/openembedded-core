@@ -372,16 +372,12 @@ do_rust_gen_targets[vardeps] += "DATA_LAYOUT TARGET_ENDIAN TARGET_POINTER_WIDTH 
 RUST_TARGETS_DIR = "${WORKDIR}/rust-targets/"
 export RUST_TARGET_PATH = "${RUST_TARGETS_DIR}"
 
-RUST_TARGETGENS = "BUILD HOST TARGET"
-
 python do_rust_gen_targets () {
     wd = d.getVar('RUST_TARGETS_DIR')
     # Order of BUILD, HOST, TARGET is important in case the files overwrite, most specific last
     rust_gen_target(d, 'BUILD', wd, d.getVar('BUILD_ARCH'))
-    if "HOST" in d.getVar("RUST_TARGETGENS"):
-        rust_gen_target(d, 'HOST', wd, d.getVar('HOST_ARCH'))
-    if "TARGET" in d.getVar("RUST_TARGETGENS"):
-        rust_gen_target(d, 'TARGET', wd, d.getVar('TARGET_ARCH'))
+    rust_gen_target(d, 'HOST', wd, d.getVar('HOST_ARCH'))
+    rust_gen_target(d, 'TARGET', wd, d.getVar('TARGET_ARCH'))
 }
 
 addtask rust_gen_targets after do_patch before do_compile

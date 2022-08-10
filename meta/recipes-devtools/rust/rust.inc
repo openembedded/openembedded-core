@@ -34,8 +34,6 @@ setup_cargo_environment () {
 
 inherit rust-target-config
 
-RUST_TARGETGENS = "BUILD HOST TARGET"
-
 do_rust_setup_snapshot () {
     for installer in "${WORKDIR}/rust-snapshot-components/"*"/install.sh"; do
         "${installer}" --prefix="${WORKDIR}/rust-snapshot" --disable-ldconfig

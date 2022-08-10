@@ -12,9 +12,6 @@ DEPENDS:append:libc-musl = " libunwind"
 DEPENDS:remove:riscv32 = "libunwind"
 DEPENDS:remove:riscv64 = "libunwind"
 
-
-RUST_TARGETGENS = "BUILD HOST TARGET"
-
 # Embed bitcode in order to allow compiling both with and without LTO
 RUSTFLAGS += "-Cembed-bitcode=yes"
 # Needed so cargo can find libbacktrace
