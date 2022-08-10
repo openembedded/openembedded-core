@@ -1,3 +1,6 @@
+#
+# Copyright OpenEmbedded Contributors
+#
 # SPDX-License-Identifier: MIT
 #
 import os
