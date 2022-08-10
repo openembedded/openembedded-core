@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit package
 
 IMAGE_PKGTYPE ?= "tar"

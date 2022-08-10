@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Some of the vars for vm and live image are conflicted, this function
 # is used for fixing the problem.
 def set_live_vm_vars(d, suffix):

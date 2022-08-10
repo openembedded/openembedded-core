@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 MIRRORS += "\
 ${DEBIAN_MIRROR}	http://snapshot.debian.org/archive/debian/20180310T215105Z/pool \
 ${DEBIAN_MIRROR}	http://snapshot.debian.org/archive/debian-archive/20120328T092752Z/debian/pool \

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Temporarily provide fallback to the old name of the class
 
 python __anonymous() {

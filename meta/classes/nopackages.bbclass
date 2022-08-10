@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 deltask do_package
 deltask do_package_write_rpm
 deltask do_package_write_ipk

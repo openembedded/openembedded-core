@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 BB_DEFAULT_TASK ?= "build"
 CLASSOVERRIDE ?= "class-target"
 

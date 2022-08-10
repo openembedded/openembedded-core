@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 FILES:${PN} += "${datadir}/icons/hicolor"
 
 GTKIC_VERSION ??= '3'

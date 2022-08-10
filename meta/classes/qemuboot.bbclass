@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Help runqemu boot target board, "QB" means Qemu Boot, the following
 # vars can be set in conf files, such as <bsp.conf> to make it can be
 # boot by runqemu:

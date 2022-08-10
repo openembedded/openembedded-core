@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit linux-kernel-base kernel-module-split
 
 COMPATIBLE_HOST = ".*-linux"

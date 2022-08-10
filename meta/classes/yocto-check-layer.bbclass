@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This class is used by yocto-check-layer script for additional per-recipe tests
 # The first test ensures that the layer has no recipes skipping 'installed-vs-shipped' QA checks
 #

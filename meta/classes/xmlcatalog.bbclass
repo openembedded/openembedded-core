@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 DEPENDS = "libxml2-native"
 
 # A whitespace-separated list of XML catalogs to be registered, for example

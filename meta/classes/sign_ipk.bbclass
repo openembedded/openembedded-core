@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Class for generating signed IPK packages.
 #
 # Configuration variables used by this class:

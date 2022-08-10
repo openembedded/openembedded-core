@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Creates a root filesystem out of rpm packages
 #
 

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # These directories will be staged in the sysroot
 SYSROOT_DIRS = " \
     ${includedir} \

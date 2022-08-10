@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Creates a root filesystem out of IPKs
 #
 # This rootfs can be mounted via root-nfs or it can be put into an cramfs/jffs etc.

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit python3native
 
 DEPENDS += "python3-scons-native"

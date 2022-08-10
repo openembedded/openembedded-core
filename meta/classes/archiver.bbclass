@@ -1,5 +1,7 @@
-# ex:ts=4:sw=4:sts=4:et
-# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+#
+# Copyright OpenEmbedded Contributors
+#
+
 #
 # This bbclass is used for creating archive for:
 #  1) original (or unpacked) source: ARCHIVER_MODE[src] = "original"

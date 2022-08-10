@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # This class is for packages which use the deprecated setuptools behaviour,
 # specifically custom install tasks which don't work correctly with bdist_wheel.
 # This behaviour is deprecated in setuptools[1] and won't work in the future, so

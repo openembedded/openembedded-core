@@ -1,7 +1,7 @@
 #
-# ex:ts=4:sw=4:sts=4:et
-# -*- tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*-
+# Copyright OpenEmbedded Contributors
 #
+
 # Common variable and task for the binary package recipe.
 # Basic principle:
 # * The files have been unpacked to ${S} by base.bbclass

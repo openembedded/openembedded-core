@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # This class exists to provide information about the targets that
 # may be needed by other classes and/or recipes. If you add a new
 # target this will probably need to be updated.

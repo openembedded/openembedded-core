@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 ##
 ## Purpose:
 ## This class is to support building with cargo. It

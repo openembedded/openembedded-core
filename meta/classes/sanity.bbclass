@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Sanity check the users setup for common misconfigurations
 #
 

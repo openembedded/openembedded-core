@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Development tool - source extraction helper class
 #
 # NOTE: this class is intended for use by devtool and should not be

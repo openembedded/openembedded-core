@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This is for perl modules that use the new Build.PL build system
 #
 inherit cpan-base perlnative

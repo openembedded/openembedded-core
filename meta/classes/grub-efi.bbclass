@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit grub-efi-cfg
 require conf/image-uefi.conf
 

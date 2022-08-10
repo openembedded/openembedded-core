@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit python_pyo3 setuptools3
 
 DEPENDS += "python3-setuptools-rust-native"

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 DEPENDS:append:class-target = " ${PYTHON_PN}-native ${PYTHON_PN}"
 DEPENDS:append:class-nativesdk = " ${PYTHON_PN}-native ${PYTHON_PN}"
 RDEPENDS:${PN}:append:class-target = " ${PYTHON_PN}-core"

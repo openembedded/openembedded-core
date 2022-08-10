@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Recipe needs to set MULTILIB_SCRIPTS in the form <pkgname>:<scriptname>, e.g.
 # MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/file1 ${PN}:${base_bindir}/file2"
 # to indicate which script files to process from which packages.

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 WORKDIR_PKGDATA = "${WORKDIR}/pkgdata-sysroot"
 
 def package_populate_pkgdata_dir(pkgdatadir, d):

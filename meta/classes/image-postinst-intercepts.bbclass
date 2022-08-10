@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Gather existing and candidate postinst intercepts from BBPATH
 POSTINST_INTERCEPTS_DIR ?= "${COREBASE}/scripts/postinst-intercepts"
 POSTINST_INTERCEPTS_PATHS ?= "${@':'.join('%s/postinst-intercepts' % p for p in '${BBPATH}'.split(':'))}:${POSTINST_INTERCEPTS_DIR}"

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # This class removes libtool .la files after do_install
 
 REMOVE_LIBTOOL_LA ?= "1"

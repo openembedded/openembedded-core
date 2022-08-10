@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit toolchain-scripts-base siteinfo kernel-arch
 
 # We want to be able to change the value of MULTIMACH_TARGET_SYS, because it

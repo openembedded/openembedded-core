@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 #This function create a version information file
 toolchain_create_sdk_version () {
 	local versionfile=$1

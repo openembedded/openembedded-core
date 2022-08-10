@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 ROOTFS_BOOTSTRAP_INSTALL = ""
 IMAGE_TYPES_MASKED += "container"
 IMAGE_TYPEDEP:container = "tar.bz2"

@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This class is used for architecture independent recipes/data files (usually scripts)
 #
 

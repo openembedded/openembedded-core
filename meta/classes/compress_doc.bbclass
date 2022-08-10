@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Compress man pages in ${mandir} and info pages in ${infodir}
 #
 # 1. The doc will be compressed to gz format by default.

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # The list of packages that should have systemd packaging scripts added.  For
 # each entry, optionally have a SYSTEMD_SERVICE:[package] that lists the service
 # files in this package.  If this variable isn't set, [package].service is used.

@@ -1,3 +1,6 @@
+#
+# Copyright OpenEmbedded Contributors
+#
 
 IMAGE_CLASSES ??= ""
 

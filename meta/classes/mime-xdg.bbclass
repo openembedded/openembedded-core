@@ -1,4 +1,7 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+#
 # This class creates mime <-> application associations based on entry 
 # 'MimeType' in *.desktop files
 #

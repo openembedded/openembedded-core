@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit relocatable
 
 # Cross packages are built indirectly via dependency,

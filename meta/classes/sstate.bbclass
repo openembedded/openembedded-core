@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 SSTATE_VERSION = "10"
 
 SSTATE_ZSTD_CLEVEL ??= "8"

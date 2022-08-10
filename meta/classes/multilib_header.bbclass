@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit siteinfo
 
 # If applicable on the architecture, this routine will rename the header and

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 IMAGE_PREPROCESS_COMMAND:append = " combine_dbg_image; "
 
 combine_dbg_image () {

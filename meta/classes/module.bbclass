@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit module-base kernel-module-split pkgconfig
 
 EXTRA_OEMAKE += "KERNEL_SRC=${STAGING_KERNEL_DIR}"

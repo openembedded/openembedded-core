@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 BUILDSTATS_BASE = "${TMPDIR}/buildstats/"
 
 ################################################################################

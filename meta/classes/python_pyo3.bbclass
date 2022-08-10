@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This class helps make sure that Python extensions built with PyO3
 # and setuptools_rust properly set up the environment for cross compilation
 #

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Path to the CMake file to process.
 OECMAKE_SOURCEPATH ??= "${S}"
 

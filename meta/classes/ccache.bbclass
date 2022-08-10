@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Usage:
 # - Enable ccache
 #   Add the following line to a conffile such as conf/local.conf:

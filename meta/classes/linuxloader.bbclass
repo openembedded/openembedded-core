@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 def get_musl_loader_arch(d):
     import re
     ldso_arch = "NotSupported"

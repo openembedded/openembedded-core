@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # This bbclass implements device tree compliation for user provided device tree
 # sources. The compilation of the device tree sources is the same as the kernel
 # device tree compilation process, this includes being able to include sources

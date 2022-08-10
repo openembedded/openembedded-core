@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # set the ARCH environment variable for kernel compilation (including
 # modules). return value must match one of the architecture directories
 # in the kernel source "arch" directory

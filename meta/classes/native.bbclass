@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # We want native packages to be relocatable
 inherit relocatable
 

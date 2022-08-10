@@ -1,4 +1,6 @@
 #
+# Copyright OpenEmbedded Contributors
+#
 # NOTE - When using this class the user is responsible for ensuring that
 # TRANSLATED_TARGET_ARCH is added into PN. This ensures that if the TARGET_ARCH
 # is changed, another nativesdk xxx-canadian-cross can be installed

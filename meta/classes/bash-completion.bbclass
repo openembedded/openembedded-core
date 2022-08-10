@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 DEPENDS:append:class-target = " bash-completion"
 
 PACKAGES += "${PN}-bash-completion"

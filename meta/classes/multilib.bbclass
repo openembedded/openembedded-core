@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 python multilib_virtclass_handler () {
     cls = e.data.getVar("BBEXTENDCURR")
     variant = e.data.getVar("BBEXTENDVARIANT")

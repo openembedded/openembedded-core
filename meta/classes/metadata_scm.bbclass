@@ -1,3 +1,6 @@
+#
+# Copyright OpenEmbedded Contributors
+#
 
 METADATA_BRANCH := "${@oe.buildcfg.detect_branch(d)}"
 METADATA_BRANCH[vardepvalue] = "${METADATA_BRANCH}"

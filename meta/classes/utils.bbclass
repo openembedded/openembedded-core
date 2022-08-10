@@ -1,3 +1,6 @@
+#
+# Copyright OpenEmbedded Contributors
+#
 
 oe_soinstall() {
 	# Purpose: Install shared library file and

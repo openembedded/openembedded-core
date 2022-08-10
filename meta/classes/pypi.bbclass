@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 def pypi_package(d):
     bpn = d.getVar('BPN')
     if bpn.startswith('python-'):

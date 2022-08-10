@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # BB Class inspired by ebuild.sh
 #
 # This class will test files after installation for certain

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Class for signing package feeds
 #
 # Related configuration variables that will be used after this class is

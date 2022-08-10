@@ -1,4 +1,7 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+#
 # ${PN}-bin is defined in bitbake.conf
 #
 # We need to allow the other packages to be greedy with what they

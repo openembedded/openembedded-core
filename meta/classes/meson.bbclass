@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit python3native meson-routines qemu
 
 DEPENDS:append = " meson-native ninja-native"

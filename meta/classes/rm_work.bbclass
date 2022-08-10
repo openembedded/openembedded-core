@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Removes source after build
 #
 # To use it add that line to conf/local.conf:

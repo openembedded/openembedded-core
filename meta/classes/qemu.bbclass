@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This class contains functions for recipes that need QEMU or test for its
 # existence.
 #

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 PACKAGE_WRITE_DEPS += "qemu-native"
 inherit qemu
 

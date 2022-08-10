@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 ##
 ## Purpose:
 ## This class is used by any recipes that are built using

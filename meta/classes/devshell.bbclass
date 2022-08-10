@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit terminal
 
 DEVSHELL = "${SHELL}"

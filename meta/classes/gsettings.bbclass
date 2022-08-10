@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # A bbclass to handle installed GSettings (glib) schemas, updated the compiled
 # form on package install and remove.
 #

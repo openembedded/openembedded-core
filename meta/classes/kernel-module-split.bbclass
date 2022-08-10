@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 pkg_postinst:modules () {
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 S = "${STAGING_KERNEL_DIR}"
 deltask do_fetch
 deltask do_unpack

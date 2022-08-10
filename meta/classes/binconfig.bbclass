@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 FILES:${PN}-dev += "${bindir}/*-config"
  
 # The namespaces can clash here hence the two step replace

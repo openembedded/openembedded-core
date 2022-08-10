@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # Packaging process
 #
 # Executive summary: This class iterates over the functions listed in PACKAGEFUNCS

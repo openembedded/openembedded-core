@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Baremetal image class
 #
 # This class is meant to be inherited by recipes for baremetal/RTOS applications

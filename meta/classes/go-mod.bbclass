@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Handle Go Modules support
 #
 # When using Go Modules, the the current working directory MUST be at or below

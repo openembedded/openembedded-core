@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 def gnome_verdir(v):
     return ".".join(v.split(".")[:-1])
 

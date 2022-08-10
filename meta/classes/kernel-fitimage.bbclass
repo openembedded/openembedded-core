@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit kernel-uboot kernel-artifact-names uboot-sign
 
 def get_fit_replacement_type(d):

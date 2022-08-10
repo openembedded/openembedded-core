@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit python3native
 
 EXTRA_PYTHON_DEPENDS ?= ""

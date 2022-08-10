@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Extensible SDK
 
 inherit populate_sdk_base

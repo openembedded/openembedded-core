@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit rust
 
 RDEPENDS:${PN}:append:class-target = " ${RUSTLIB_DEP}"

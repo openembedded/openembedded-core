@@ -1,3 +1,6 @@
+#
+# Copyright OpenEmbedded Contributors
+#
 
 # Zap the root password if debug-tweaks and empty-root-password features are not enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains_any("IMAGE_FEATURES", [ 'debug-tweaks', 'empty-root-password' ], "", "zap_empty_root_password; ",d)}'

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit ptest
 
 FILESEXTRAPATHS:prepend := "${COREBASE}/meta/files:"

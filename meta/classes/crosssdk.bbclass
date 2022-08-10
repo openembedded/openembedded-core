@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit cross
 
 CLASSOVERRIDE = "class-crosssdk"

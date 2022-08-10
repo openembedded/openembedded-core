@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Class for use to convert all CRLF line terminators to LF
 # provided that some projects are being developed/maintained
 # on Windows so they have different line terminators(CRLF) vs

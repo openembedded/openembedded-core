@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 python read_subpackage_metadata () {
     import oe.packagedata
 

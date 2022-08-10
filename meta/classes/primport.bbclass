@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 python primport_handler () {
     import bb.event
     if not e.data:

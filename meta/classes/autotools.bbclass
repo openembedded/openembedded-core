@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 def get_autotools_dep(d):
     if d.getVar('INHIBIT_AUTOTOOLS_DEPS'):
         return ''

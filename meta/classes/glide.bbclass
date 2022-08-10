@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Handle Glide Vendor Package Management use
 #
 # Copyright 2018 (C) O.S. Systems Software LTDA.

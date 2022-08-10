@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 python siteconfig_do_siteconfig () {
     shared_state = sstate_state_fromvars(d)
     if shared_state['task'] != 'populate_sysroot':

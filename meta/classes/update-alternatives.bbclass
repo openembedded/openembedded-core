@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # This class is used to help the alternatives system which is useful when
 # multiple sources provide same command. You can use update-alternatives
 # command directly in your recipe, but in most cases this class simplifies

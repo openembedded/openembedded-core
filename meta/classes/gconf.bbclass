@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 DEPENDS += "gconf"
 PACKAGE_WRITE_DEPS += "gconf-native"
 

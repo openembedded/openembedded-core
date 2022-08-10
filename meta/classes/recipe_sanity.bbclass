@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 def __note(msg, d):
     bb.note("%s: recipe_sanity: %s" % (d.getVar("P"), msg))
 

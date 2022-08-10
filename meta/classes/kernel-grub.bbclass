@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # While installing a rpm to update kernel on a deployed target, it will update
 # the boot area and the boot menu with the kernel as the priority but allow
 # you to fall back to the original kernel as well.

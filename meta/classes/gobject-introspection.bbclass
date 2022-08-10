@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Inherit this class in recipes to enable building their introspection files
 
 # python3native is inherited to prevent introspection tools being run with

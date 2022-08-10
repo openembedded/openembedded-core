@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Support for device tree generation
 python () {
     if not bb.data.inherits_class('nopackages', d):

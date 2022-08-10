@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Class for generating signed RPM packages.
 #
 # Configuration variables used by this class:

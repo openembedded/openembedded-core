@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # parse kernel ABI version out of <linux/version.h>
 def get_kernelversion_headers(p):
     import re

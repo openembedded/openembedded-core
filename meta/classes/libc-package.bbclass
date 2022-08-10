@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This class knows how to package up [e]glibc. Its shared since prebuild binary toolchains
 # may need packaging and its pointless to duplicate this code.
 #

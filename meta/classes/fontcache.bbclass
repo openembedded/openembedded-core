@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # This class will generate the proper postinst/postrm scriptlets for font
 # packages.
 #

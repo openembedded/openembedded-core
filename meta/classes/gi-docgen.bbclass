@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # gi-docgen is a new gnome documentation generator, which
 # seems to be a successor to gtk-doc:
 # https://gitlab.gnome.org/GNOME/gi-docgen

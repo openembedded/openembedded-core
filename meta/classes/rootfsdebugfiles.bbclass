@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # This class installs additional files found on the build host
 # directly into the rootfs.
 #

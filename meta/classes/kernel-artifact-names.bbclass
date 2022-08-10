@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 ##################################################################
 # Specific kernel creation info
 # for recipes/bbclasses which need to reuse some of the kernel

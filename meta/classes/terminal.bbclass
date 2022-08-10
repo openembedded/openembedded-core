@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 OE_TERMINAL ?= 'auto'
 OE_TERMINAL[type] = 'choice'
 OE_TERMINAL[choices] = 'auto none \

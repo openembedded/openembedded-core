@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit python3-dir
 
 PYTHON="${STAGING_BINDIR_NATIVE}/python3-native/python3"

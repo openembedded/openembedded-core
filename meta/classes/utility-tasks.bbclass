@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 addtask listtasks
 do_listtasks[nostamp] = "1"
 python do_listtasks() {

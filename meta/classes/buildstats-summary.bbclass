@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Summarize sstate usage at the end of the build
 python buildstats_summary () {
     import collections

@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit kernel-arch
 
 # We do the dependency this way because the output is not preserved

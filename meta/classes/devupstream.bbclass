@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Class for use in BBCLASSEXTEND to make it easier to have a single recipe that
 # can build both stable tarballs and snapshots from upstream source
 # repositories.

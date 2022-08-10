@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 ##################################################################
 # Specific image creation and rootfs population info.
 ##################################################################

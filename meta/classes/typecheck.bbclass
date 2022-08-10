@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Check types of bitbake configuration variables
 #
 # See oe.types for details.

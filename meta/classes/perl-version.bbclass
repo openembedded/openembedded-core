@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 PERL_OWN_DIR = ""
 
 # Determine the staged version of perl from the perl configuration file

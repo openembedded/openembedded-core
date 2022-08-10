@@ -1,4 +1,8 @@
 #
+# Copyright OpenEmbedded Contributors
+#
+
+#
 # cpan-base providers various perl related information needed for building
 # cpan modules
 #

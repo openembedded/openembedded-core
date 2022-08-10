@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Extract UUID from ${ROOTFS}, which must have been built
 # by the time that this function gets called. Only works
 # on ext file systems and depends on tune2fs.

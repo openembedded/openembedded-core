@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 # Class for packagegroup (package group) recipes
 
 # By default, only the packagegroup package itself is in PACKAGES.

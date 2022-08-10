@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 SUMMARY:${PN}-ptest ?= "${SUMMARY} - Package test files"
 DESCRIPTION:${PN}-ptest ?= "${DESCRIPTION}  \
 This package contains a test directory ${PTEST_PATH} for package test purposes."

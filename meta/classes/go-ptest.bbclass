@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 inherit go ptest
 
 do_compile_ptest_base() {

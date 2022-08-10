@@ -1,3 +1,7 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+
 PACKAGES = ""
 
 inherit image-postinst-intercepts image-artifact-names
