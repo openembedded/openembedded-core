@@ -7,7 +7,7 @@
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
 
-inherit image-artifact-names
+IMAGE_CLASSES += "image-artifact-names"
 
 BUILDHISTORY_FEATURES ?= "image package sdk"
 BUILDHISTORY_DIR ?= "${TOPDIR}/buildhistory"
