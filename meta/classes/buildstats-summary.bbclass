@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Summarize sstate usage at the end of the build
 python buildstats_summary () {

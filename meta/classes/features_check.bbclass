@@ -11,6 +11,9 @@
 #
 # Copyright 2019 (C) Texas Instruments Inc.
 # Copyright 2013 (C) O.S. Systems Software LTDA.
+#
+# SPDX-License-Identifier: MIT
+
 
 python () {
     if d.getVar('PARSE_ALL_RECIPES', False):

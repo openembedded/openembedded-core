@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 python primport_handler () {
     import bb.event

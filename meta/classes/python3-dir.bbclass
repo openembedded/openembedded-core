@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 PYTHON_BASEVERSION = "3.10"
 PYTHON_ABI = ""

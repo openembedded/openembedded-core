@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Path to the CMake file to process.
 OECMAKE_SOURCEPATH ??= "${S}"

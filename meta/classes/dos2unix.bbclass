@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Class for use to convert all CRLF line terminators to LF
 # provided that some projects are being developed/maintained

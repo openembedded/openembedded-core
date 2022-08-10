@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 #
 # This class is used by yocto-check-layer script for additional per-recipe tests

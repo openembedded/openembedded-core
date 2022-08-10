@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # parse kernel ABI version out of <linux/version.h>
 def get_kernelversion_headers(p):

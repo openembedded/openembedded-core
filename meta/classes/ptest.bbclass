@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 SUMMARY:${PN}-ptest ?= "${SUMMARY} - Package test files"
 DESCRIPTION:${PN}-ptest ?= "${DESCRIPTION}  \

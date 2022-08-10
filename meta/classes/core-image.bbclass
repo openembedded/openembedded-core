@@ -1,6 +1,8 @@
 # Common code for generating core reference images
 #
 # Copyright (C) 2007-2011 Linux Foundation
+#
+# SPDX-License-Identifier: MIT
 
 # IMAGE_FEATURES control content of the core reference images
 # 

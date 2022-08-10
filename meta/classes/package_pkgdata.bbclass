@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 WORKDIR_PKGDATA = "${WORKDIR}/pkgdata-sysroot"
 

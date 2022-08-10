@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # These directories will be staged in the sysroot
 SYSROOT_DIRS = " \

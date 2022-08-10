@@ -1,4 +1,6 @@
 # Copyright (C) 2006  OpenedHand LTD
+#
+# SPDX-License-Identifier: MIT
 
 # Point to an empty file so any user's custom settings don't break things
 QUILTRCFILE ?= "${STAGING_ETCDIR_NATIVE}/quiltrc"

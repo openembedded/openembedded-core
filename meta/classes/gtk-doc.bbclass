@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Helper class to pull in the right gtk-doc dependencies and configure
 # gtk-doc to enable or disable documentation building (which requries the

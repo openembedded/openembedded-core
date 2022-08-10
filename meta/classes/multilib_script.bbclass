@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 #
 # Recipe needs to set MULTILIB_SCRIPTS in the form <pkgname>:<scriptname>, e.g.

@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This bbclass provides basic functionality for user/group settings.
 # This bbclass is intended to be inherited by useradd.bbclass and

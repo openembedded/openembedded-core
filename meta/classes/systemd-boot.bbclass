@@ -1,6 +1,6 @@
 # Copyright (C) 2016 Intel Corporation
 #
-# Released under the MIT license (see COPYING.MIT)
+# SPDX-License-Identifier: MIT
 
 # systemd-boot.bbclass - The "systemd-boot" is essentially the gummiboot merged into systemd.
 #                        The original standalone gummiboot project is dead without any more

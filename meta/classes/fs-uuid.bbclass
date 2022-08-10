@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Extract UUID from ${ROOTFS}, which must have been built
 # by the time that this function gets called. Only works

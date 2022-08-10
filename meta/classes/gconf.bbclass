@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 DEPENDS += "gconf"
 PACKAGE_WRITE_DEPS += "gconf-native"

@@ -1,6 +1,6 @@
 # Copyright (C) 2013 Intel Corporation
 #
-# Released under the MIT license (see COPYING.MIT)
+# SPDX-License-Identifier: MIT
 
 inherit metadata_scm
 inherit image-artifact-names

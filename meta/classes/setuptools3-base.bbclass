@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 DEPENDS:append:class-target = " ${PYTHON_PN}-native ${PYTHON_PN}"
 DEPENDS:append:class-nativesdk = " ${PYTHON_PN}-native ${PYTHON_PN}"

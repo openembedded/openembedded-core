@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 IMAGE_PREPROCESS_COMMAND:append = " combine_dbg_image; "
 

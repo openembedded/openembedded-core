@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This variable is set to True if gobject-introspection-data is in
 # DISTRO_FEATURES and qemu-usermode is in MACHINE_FEATURES, and False otherwise.

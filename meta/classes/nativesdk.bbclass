@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # SDK packages are built either explicitly by the user,
 # or indirectly via dependency.  No need to be in 'world'.

@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Some of the vars for vm and live image are conflicted, this function
 # is used for fixing the problem.

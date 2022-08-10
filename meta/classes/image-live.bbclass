@@ -1,5 +1,6 @@
-# Copyright (C) 2004, Advanced Micro Devices, Inc.  All Rights Reserved
-# Released under the MIT license (see packages/COPYING)
+# Copyright (C) 2004, Advanced Micro Devices, Inc.
+#
+# SPDX-License-Identifier: MIT
 
 # Creates a bootable image using syslinux, your kernel and an optional
 # initrd

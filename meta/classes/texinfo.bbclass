@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This class is inherited by recipes whose upstream packages invoke the
 # texinfo utilities at build-time. Native and cross recipes are made to use the

@@ -1,6 +1,6 @@
 # Copyright (C) 2013 - 2016 Intel Corporation
 #
-# Released under the MIT license (see COPYING.MIT)
+# SPDX-License-Identifier: MIT
 
 # testsdk.bbclass enables testing for SDK and Extensible SDK
 #

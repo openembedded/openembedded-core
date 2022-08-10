@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Gather existing and candidate postinst intercepts from BBPATH
 POSTINST_INTERCEPTS_DIR ?= "${COREBASE}/scripts/postinst-intercepts"

@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This class is used to help the alternatives system which is useful when
 # multiple sources provide same command. You can use update-alternatives

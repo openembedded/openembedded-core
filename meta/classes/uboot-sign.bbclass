@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This file is part of U-Boot verified boot support and is intended to be
 # inherited from u-boot recipe and from kernel-fitimage.bbclass.

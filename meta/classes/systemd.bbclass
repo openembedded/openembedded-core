@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # The list of packages that should have systemd packaging scripts added.  For
 # each entry, optionally have a SYSTEMD_SERVICE:[package] that lists the service

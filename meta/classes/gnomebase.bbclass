@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 def gnome_verdir(v):
     return ".".join(v.split(".")[:-1])

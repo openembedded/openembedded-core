@@ -6,6 +6,8 @@
 # Copyright (C) 2011-2016 Intel Corporation
 # Copyright (C) 2007-2011 Koen Kooi <koen@openembedded.org>
 #
+# SPDX-License-Identifier: MIT
+#
 
 IMAGE_CLASSES += "image-artifact-names"
 

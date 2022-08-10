@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Populates LICENSE_DIRECTORY as set in distro config with the license files as set by
 # LIC_FILES_CHKSUM.

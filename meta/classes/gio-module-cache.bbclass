@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 PACKAGE_WRITE_DEPS += "qemu-native"
 inherit qemu

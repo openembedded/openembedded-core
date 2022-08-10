@@ -1,6 +1,7 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
 #
 # This class creates mime <-> application associations based on entry 
 # 'MimeType' in *.desktop files

@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This class is for packages which use the deprecated setuptools behaviour,
 # specifically custom install tasks which don't work correctly with bdist_wheel.

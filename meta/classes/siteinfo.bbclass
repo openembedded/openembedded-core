@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This class exists to provide information about the targets that
 # may be needed by other classes and/or recipes. If you add a new

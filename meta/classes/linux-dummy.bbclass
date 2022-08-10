@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 python __anonymous () {
     if d.getVar('PREFERRED_PROVIDER_virtual/kernel') == 'linux-dummy':

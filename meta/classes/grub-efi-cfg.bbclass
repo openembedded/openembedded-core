@@ -1,8 +1,7 @@
 # grub-efi.bbclass
 # Copyright (c) 2011, Intel Corporation.
-# All rights reserved.
 #
-# Released under the MIT license (see packages/COPYING)
+# SPDX-License-Identifier: MIT
 
 # Provide grub-efi specific functions for building bootable images.
 

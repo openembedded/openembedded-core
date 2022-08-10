@@ -54,7 +54,7 @@
 #   APPEND root=/dev/mmcblk2p2 rootwait rw console=${console}
 #
 # Copyright (C) 2016, O.S. Systems Software LTDA.  All Rights Reserved
-# Released under the MIT license (see packages/COPYING)
+# SPDX-License-Identifier: MIT
 #
 # The kernel has an internal default console, which you can override with
 # a console=...some_tty...

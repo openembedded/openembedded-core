@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Common infrastructure for Python packages that use PEP-517 compliant packaging.
 # https://www.python.org/dev/peps/pep-0517/

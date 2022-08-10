@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This class ensures that the upstream version check only
 # accepts even minor versions (i.e. 3.0.x, 3.2.x, 3.4.x, etc.)

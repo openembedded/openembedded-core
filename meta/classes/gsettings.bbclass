@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # A bbclass to handle installed GSettings (glib) schemas, updated the compiled
 # form on package install and remove.

@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # gi-docgen is a new gnome documentation generator, which
 # seems to be a successor to gtk-doc:

@@ -1,6 +1,8 @@
 #
 # Copyright 2006-2007 Openedhand Ltd.
 #
+# SPDX-License-Identifier: MIT
+#
 
 ROOTFS_PKGMANAGE = "dpkg apt"
 

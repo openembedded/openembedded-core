@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Everyone needs vala-native and targets need vala, too,
 # because that is where target builds look for .vapi files.

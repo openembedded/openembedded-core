@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Filter the license, the copyleft_should_include returns True for the
 # COPYLEFT_LICENSE_INCLUDE recipe, and False for the

@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # The following logging mechanisms are to be used in bash functions of recipes.
 # They are intended to map one to one in intention and output format with the

@@ -1,6 +1,6 @@
 # syslinux.bbclass
-# Copyright (C) 2004-2006, Advanced Micro Devices, Inc.  All Rights Reserved
-# Released under the MIT license (see packages/COPYING)
+# Copyright (C) 2004-2006, Advanced Micro Devices, Inc.
+# SPDX-License-Identifier: MIT
 
 # Provide syslinux specific functions for building bootable images.
 

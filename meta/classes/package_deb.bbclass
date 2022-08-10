@@ -1,6 +1,8 @@
 #
 # Copyright 2006-2008 OpenedHand Ltd.
 #
+# SPDX-License-Identifier: MIT
+#
 
 inherit package
 

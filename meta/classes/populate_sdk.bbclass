@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # The majority of populate_sdk is located in populate_sdk_base
 # This chunk simply facilitates compatibility with SDK only recipes.

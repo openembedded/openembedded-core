@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 S = "${STAGING_KERNEL_DIR}"
 deltask do_fetch

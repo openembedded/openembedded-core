@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # fitImage kernel compression algorithm
 FIT_KERNEL_COMP_ALG ?= "gzip"

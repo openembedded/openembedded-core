@@ -1,7 +1,6 @@
 # Copyright (C) 2016 Intel Corporation
 #
-# Released under the MIT license (see COPYING.MIT)
-#
+# SPDX-License-Identifier: MIT
 #
 # testexport.bbclass allows to execute runtime test outside OE environment.
 # Most of the tests are commands run on target image over ssh.

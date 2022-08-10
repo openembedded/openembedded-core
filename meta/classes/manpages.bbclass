@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # Inherit this class to enable or disable building and installation of manpages
 # depending on whether 'api-documentation' is in DISTRO_FEATURES. Such building

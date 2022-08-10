@@ -10,6 +10,9 @@
 # UBOOT_MACHINE = "config"
 #
 # Copyright 2013, 2014 (C) O.S. Systems Software LTDA.
+#
+# SPDX-License-Identifier: MIT
+
 
 def removesuffix(s, suffix):
     if suffix and s.endswith(suffix):

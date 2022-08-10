@@ -2,7 +2,8 @@
 # Author: Richard Purdie
 # Some code and influence taken from srctree.bbclass:
 # Copyright (C) 2009 Chris Larson <clarson@kergoth.com>
-# Released under the MIT license (see COPYING.MIT for the terms)
+#
+# SPDX-License-Identifier: MIT
 #
 # externalsrc.bbclass enables use of an existing source tree, usually external to
 # the build system to build a piece of software rather than the usual fetch/unpack/patch

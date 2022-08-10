@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # This bbclass implements device tree compliation for user provided device tree
 # sources. The compilation of the device tree sources is the same as the kernel

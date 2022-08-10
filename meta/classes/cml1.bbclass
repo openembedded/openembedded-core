@@ -1,6 +1,8 @@
 #
 # Copyright OpenEmbedded Contributors
 #
+# SPDX-License-Identifier: MIT
+#
 
 # returns all the elements from the src uri that are .cfg files
 def find_cfgs(d):
