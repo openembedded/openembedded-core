@@ -25,6 +25,10 @@ class RawCopyPlugin(SourcePlugin):
 
     @staticmethod
     def do_image_label(fstype, dst, label):
+        # don't create label when fstype is none
+        if fstype == 'none':
+            return
+
         if fstype.startswith('ext'):
             cmd = 'tune2fs -L %s %s' % (label, dst)
         elif fstype in ('msdos', 'vfat'):
