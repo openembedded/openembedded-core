@@ -23,7 +23,7 @@ class TestExport(OESelftestTestCase):
         Author: Mariano Lopez <mariano.lopez@intel.com>
         """
 
-        features = 'INHERIT += "testexport"\n'
+        features = 'IMAGE_CLASSES += "testexport"\n'
         # These aren't the actual IP addresses but testexport class needs something defined
         features += 'TEST_SERVER_IP = "192.168.7.1"\n'
         features += 'TEST_TARGET_IP = "192.168.7.1"\n'
@@ -64,7 +64,7 @@ class TestExport(OESelftestTestCase):
         Author: Mariano Lopez <mariano.lopez@intel.com>
         """
 
-        features = 'INHERIT += "testexport"\n'
+        features = 'IMAGE_CLASSES += "testexport"\n'
         # These aren't the actual IP addresses but testexport class needs something defined
         features += 'TEST_SERVER_IP = "192.168.7.1"\n'
         features += 'TEST_TARGET_IP = "192.168.7.1"\n'
