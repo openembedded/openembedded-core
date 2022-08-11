@@ -31,6 +31,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/infozip/UnZip%206.x%20%28latest%29/UnZip%206.0/
         file://CVE-2021-4217.patch \
         file://CVE-2022-0529.patch \
         file://CVE-2022-0530.patch \
+        file://0001-configure-Add-correct-system-headers-and-prototypes-.patch \
 "
 UPSTREAM_VERSION_UNKNOWN = "1"
 
