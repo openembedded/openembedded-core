@@ -210,7 +210,7 @@ def add_package_files(d, doc, spdx_pkg, topdir, get_spdxid, get_types, *, archiv
             filepath = Path(subdir) / file
             filename = str(filepath.relative_to(topdir))
 
-            if filepath.is_file() and not filepath.is_symlink():
+            if not filepath.is_symlink() and filepath.is_file():
                 spdx_file = oe.spdx.SPDXFile()
                 spdx_file.SPDXID = get_spdxid(file_counter)
                 for t in get_types(filepath):
