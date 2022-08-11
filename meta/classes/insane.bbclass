@@ -1425,7 +1425,7 @@ python () {
             if bb.data.inherits_class(native_class, d):
 
                 inherited_classes = d.getVar('__inherit_cache', False) or []
-                needle = os.path.join('classes', native_class)
+                needle = "/" + native_class
 
                 bbclassextend = (d.getVar('BBCLASSEXTEND') or '').split()
                 # BBCLASSEXTEND items are always added in the end
@@ -1438,7 +1438,7 @@ python () {
                 for class_item in reversed(inherited_classes):
                     if needle not in class_item:
                         for extend_item in skip_classes:
-                            if os.path.join('classes', '%s.bbclass' % extend_item) in class_item:
+                            if '/%s.bbclass' % extend_item in class_item:
                                 break
                         else:
                             pn = d.getVar('PN')
