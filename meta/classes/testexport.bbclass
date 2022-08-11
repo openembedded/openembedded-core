@@ -178,4 +178,4 @@ def testexport_create_tarball(d, tar_name, src_dir):
     tar.close()
     os.chdir(current_dir)
 
-inherit testimage
+IMAGE_CLASSES += "testimage"
