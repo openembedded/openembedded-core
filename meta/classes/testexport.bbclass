@@ -23,10 +23,9 @@ TEST_TARGET ?= "simpleremote"
 TEST_TARGET_IP ?= ""
 TEST_SERVER_IP ?= ""
 
-TEST_EXPORT_SDK_PACKAGES ?= ""
+require conf/testexport.conf
+
 TEST_EXPORT_SDK_ENABLED ?= "0"
-TEST_EXPORT_SDK_NAME ?= "testexport-tools-nativesdk"
-TEST_EXPORT_SDK_DIR ?= "sdk"
 
 TEST_EXPORT_DEPENDS = ""
 TEST_EXPORT_DEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'cpio-native:do_populate_sysroot', '', d)}"
