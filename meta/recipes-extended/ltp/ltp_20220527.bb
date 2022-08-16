@@ -37,7 +37,8 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=ht
            file://0001-netstress-Restore-runtime-to-5m.patch \
            file://0001-net_stress-Fix-usage-of-variables-from-tst_net.sh.patch \
            file://0001-memcg-functional-Fix-usage-of-PAGESIZE-from-memcg_li.patch \
-           file://0001-Remove-duplicate-include-of-sys-mount.h.patch \
+           file://0001-lapi-pidfd-adding-pidfd-header-file.patch \
+           file://0001-lapi-fsmount-resolve-conflict-in-different-header-fi.patch \
            "
 
 S = "${WORKDIR}/git"
