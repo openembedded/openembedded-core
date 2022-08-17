@@ -56,14 +56,14 @@ PARALLEL_MAKEINST:class-nativesdk = ""
 
 # Split out libbfd-*.so and libopcodes-*.so so including perf doesn't include
 # extra stuff
-PACKAGE_BEFORE_PN += "libbfd libopcodes"
+PACKAGE_BEFORE_PN += "libbfd libopcodes gprofng"
 FILES:libbfd = "${libdir}/libbfd-*.so.* ${libdir}/libbfd-*.so"
 FILES:libopcodes = "${libdir}/libopcodes-*.so.* ${libdir}/libopcodes-*.so"
-
+FILES:gprofng = "${sysconfdir}/gprofng.rc ${libdir}/gprofng/libgp-*.so ${libdir}/gprofng/libgprofng.so.* ${bindir}/gp-* ${bindir}/gprofng"
+FILES:${PN}-dev += "${libdir}/gprofng/libgprofng.so"
 SRC_URI:append:class-nativesdk =  " file://0003-binutils-nativesdk-Search-for-alternative-ld.so.conf.patch "
 
 USE_ALTERNATIVES_FOR:class-nativesdk = ""
 FILES:${PN}:append:class-nativesdk = " ${bindir}"
 
 BBCLASSEXTEND = "native nativesdk"
-
