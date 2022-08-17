@@ -142,6 +142,7 @@ ignore_errors = {
         'Failed to initialize \'/amba/timer@101e3000\': -22',
         'jitterentropy: Initialization failed with host not compliant with requirements: 2',
         'clcd-pl11x: probe of 10120000.display failed with error -2',
+        'arm-charlcd 10008000.lcd: error -ENXIO: IRQ index 0 not found'
         ] + common_errors,
     'qemuarm64' : [
         'Fatal server error:',
