@@ -30,8 +30,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://bugfix-adjust-statd-service-name.patch \
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://clang-warnings.patch \
+           file://0005-mountd-Check-for-return-of-stat-function.patch \
+           file://0006-Fix-function-prototypes.patch \
            "
-SRC_URI[sha256sum] = "60dfcd94a9f3d72a12bc7058d811787ec87a6d593d70da2123faf9aad3d7a1df"
+SRC_URI[sha256sum] = "5200873e81c4d610e2462fc262fe18135f2dbe78b7979f95accd159ae64d5011"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
@@ -70,7 +72,7 @@ PACKAGECONFIG[nfsv41] = "--enable-nfsv41,--disable-nfsv41,libdevmapper,libdevmap
 # keyutils is available in meta-oe
 PACKAGECONFIG[nfsv4] = "--enable-nfsv4,--disable-nfsv4,keyutils,python3-core"
 
-PACKAGES =+ "${PN}-client ${PN}-mount ${PN}-stats"
+PACKAGES =+ "${PN}-client ${PN}-mount ${PN}-stats ${PN}-rpcctl"
 
 CONFFILES:${PN}-client += "${localstatedir}/lib/nfs/etab \
 			   ${localstatedir}/lib/nfs/rmtab \
@@ -93,9 +95,12 @@ FILES:${PN}-mount = "${base_sbindir}/*mount.nfs*"
 FILES:${PN}-stats = "${sbindir}/mountstats ${sbindir}/nfsiostat ${sbindir}/nfsdclnts"
 RDEPENDS:${PN}-stats = "python3-core"
 
+FILES:${PN}-rpcctl = "${sbindir}/rpcctl"
+RDEPENDS:${PN}-rpcctl = "python3-core"
+
 FILES:${PN}-staticdev += "${libdir}/libnfsidmap/*.a"
 
-FILES:${PN} += "${systemd_unitdir} ${libdir}/libnfsidmap/"
+FILES:${PN} += "${systemd_unitdir} ${libdir}/libnfsidmap/ ${nonarch_libdir}/modprobe.d"
 
 do_configure:prepend() {
 	sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
