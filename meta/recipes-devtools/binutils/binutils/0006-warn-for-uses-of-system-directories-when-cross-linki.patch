@@ -1,4 +1,4 @@
-From 9fb1bafb20371d82b674778d2a8b5c9444fed417 Mon Sep 17 00:00:00 2001
+From 2c43b1357db6b09d1645704afd3f45be6de0cf4d Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 Jan 2016 06:31:09 +0000
 Subject: [PATCH] warn for uses of system directories when cross linking
@@ -63,10 +63,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  9 files changed, 88 insertions(+), 2 deletions(-)
 
 diff --git a/ld/config.in b/ld/config.in
-index 26d55a00d47..ffad464783c 100644
+index d4c1fc420b5..1aece0b2c29 100644
 --- a/ld/config.in
 +++ b/ld/config.in
-@@ -43,6 +43,9 @@
+@@ -55,6 +55,9 @@
     language is requested. */
  #undef ENABLE_NLS
  
@@ -77,10 +77,10 @@ index 26d55a00d47..ffad464783c 100644
  #undef EXTRA_SHLIB_EXTENSION
  
 diff --git a/ld/configure b/ld/configure
-index 26150d62898..1f9ec8ec580 100755
+index e58fb7f3a35..d0a467ac101 100755
 --- a/ld/configure
 +++ b/ld/configure
-@@ -831,6 +831,7 @@ with_lib_path
+@@ -836,6 +836,7 @@ with_lib_path
  enable_targets
  enable_64_bit_bfd
  with_sysroot
@@ -88,7 +88,7 @@ index 26150d62898..1f9ec8ec580 100755
  enable_gold
  enable_got
  enable_compressed_debug_sections
-@@ -1500,6 +1501,8 @@ Optional Features:
+@@ -1514,6 +1515,8 @@ Optional Features:
    --enable-checking       enable run-time checks
    --enable-targets        alternative target configurations
    --enable-64-bit-bfd     64-bit support (on hosts with narrower word sizes)
@@ -97,7 +97,7 @@ index 26150d62898..1f9ec8ec580 100755
    --enable-gold[=ARG]     build gold [ARG={default,yes,no}]
    --enable-got=<type>     GOT handling scheme (target, single, negative,
                            multigot)
-@@ -15312,6 +15315,19 @@ fi
+@@ -15349,6 +15352,19 @@ fi
  
  
  
@@ -118,7 +118,7 @@ index 26150d62898..1f9ec8ec580 100755
  if test "${enable_gold+set}" = set; then :
    enableval=$enable_gold; case "${enableval}" in
 diff --git a/ld/configure.ac b/ld/configure.ac
-index 7f4cff079b7..57d1abff870 100644
+index 4331d6b1302..e2976bc2926 100644
 --- a/ld/configure.ac
 +++ b/ld/configure.ac
 @@ -102,6 +102,16 @@ AC_SUBST(use_sysroot)
@@ -158,13 +158,13 @@ index f3086bf30de..db5064243c7 100644
    enum endian_enum endian;
  
 diff --git a/ld/ld.texi b/ld/ld.texi
-index fc75e9b3625..dca697d626e 100644
+index eabbec8faa9..c4680e4947e 100644
 --- a/ld/ld.texi
 +++ b/ld/ld.texi
-@@ -2892,6 +2892,18 @@ string identifying the original linked file does not change.
- 
- Passing @code{none} for @var{style} disables the setting from any
- @code{--build-id} options earlier on the command line.
+@@ -2947,6 +2947,18 @@ creation of the metadata note, if one had been enabled by an earlier
+ occurrence of the --package-metdata option.
+ If the linker has been built with libjansson, then the JSON string
+ will be validated.
 +
 +@kindex --no-poison-system-directories
 +@item --no-poison-system-directories
@@ -209,13 +209,13 @@ index 731ae5f7aed..dd8f03fd960 100644
  
  /* Try to open a BFD for a lang_input_statement.  */
 diff --git a/ld/ldlex.h b/ld/ldlex.h
-index bc58fea73cc..a1595589197 100644
+index 57ade1f754b..64007ff8684 100644
 --- a/ld/ldlex.h
 +++ b/ld/ldlex.h
-@@ -164,6 +164,8 @@ enum option_values
-   OPTION_CTF_VARIABLES,
-   OPTION_NO_CTF_VARIABLES,
-   OPTION_CTF_SHARE_TYPES,
+@@ -168,6 +168,8 @@ enum option_values
+   OPTION_NO_WARN_EXECSTACK,
+   OPTION_WARN_RWX_SEGMENTS,
+   OPTION_NO_WARN_RWX_SEGMENTS,
 +  OPTION_NO_POISON_SYSTEM_DIRECTORIES,
 +  OPTION_ERROR_POISON_SYSTEM_DIRECTORIES,
  };
@@ -253,10 +253,10 @@ index 1ae90a77749..f40750fd816 100644
      {
        if (error_count < MAX_ERRORS_IN_A_ROW)
 diff --git a/ld/lexsup.c b/ld/lexsup.c
-index 5acc47ed5a0..d03c6136ccf 100644
+index 9225f71b3ce..92fb66f1fa2 100644
 --- a/ld/lexsup.c
 +++ b/ld/lexsup.c
-@@ -600,6 +600,14 @@ static const struct ld_option ld_options[] =
+@@ -608,6 +608,14 @@ static const struct ld_option ld_options[] =
  		   "                                <method> is: share-unconflicted (default),\n"
  		   "                                             share-duplicated"),
      TWO_DASHES },
@@ -271,7 +271,7 @@ index 5acc47ed5a0..d03c6136ccf 100644
  };
  
  #define OPTION_COUNT ARRAY_SIZE (ld_options)
-@@ -1702,6 +1710,14 @@ parse_args (unsigned argc, char **argv)
+@@ -1722,6 +1730,14 @@ parse_args (unsigned argc, char **argv)
  	  config.print_map_discarded = true;
  	  break;
  

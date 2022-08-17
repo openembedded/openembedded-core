@@ -12,26 +12,24 @@ LIC_FILES_CHKSUM="\
 
 # When upgrading to 2.39, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.38"
-CVE_VERSION = "2.38"
-SRCBRANCH ?= "binutils-2_38-branch"
+PV = "2.39"
+CVE_VERSION = "2.39"
+SRCBRANCH ?= "binutils-2_39-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "eed56ee299b9ef8754bb4e53f2e9cf2a7c28c04d"
+SRCREV ?= "a58f83e8b85fa3c1564de530d68a14fc620c0027"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=git"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
      file://0004-Point-scripts-location-to-libdir.patch \
-     file://0005-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
-     file://0006-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
-     file://0007-warn-for-uses-of-system-directories-when-cross-linki.patch \
-     file://0008-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
-     file://0009-Use-libtool-2.4.patch \
-     file://0010-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
-     file://0011-sync-with-OE-libtool-changes.patch \
-     file://0012-Check-for-clang-before-checking-gcc-version.patch \
-     file://0013-Avoid-as-info-race-condition.patch \
-     file://0014-CVE-2019-1010204.patch \
+     file://0005-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
+     file://0006-warn-for-uses-of-system-directories-when-cross-linki.patch \
+     file://0007-fix-the-incorrect-assembling-for-ppc-wait-mnemonic.patch \
+     file://0008-Use-libtool-2.4.patch \
+     file://0009-Fix-rpath-in-libtool-when-sysroot-is-enabled.patch \
+     file://0010-sync-with-OE-libtool-changes.patch \
+     file://0011-Check-for-clang-before-checking-gcc-version.patch \
+     file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
 "
 S  = "${WORKDIR}/git"
