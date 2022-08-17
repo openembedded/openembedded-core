@@ -1,7 +1,7 @@
 Avoid encoding build paths into sources used for floating point on powerpc.
 (MACHINE=qemuppc bitbake libgcc).
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2022-August/599882.html]
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Index: gcc-12.1.0/libgcc/config/rs6000/t-float128

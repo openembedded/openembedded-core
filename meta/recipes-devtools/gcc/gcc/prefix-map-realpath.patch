@@ -7,7 +7,8 @@ Instead, call gcc's realpath function on the incomming path name before
 comparing it with the remapping. This means other issues like symlinks
 are also accounted for and leads to a more consistent remapping experience.
 
-Upstream-Status: Pending [need to see if gcc developers would accept this]
+Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2022-August/599885.html]
+[Also https://gcc.gnu.org/pipermail/gcc-patches/2022-August/599884.html]
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 
