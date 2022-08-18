@@ -16,6 +16,9 @@ EXTRA_OEMAKE:append:libc-musl = "\
                                 "
 # libcollector/collector.c:547:15: error: no member named '__fprintf_chk' in 'struct CollectorUtilFuncs'
 EXTRA_OECONF:append:toolchain-clang = " --disable-gprofng"
+# | ../../../gprofng/libcollector/../src/collector_module.h:78:13: error: duplicate member 'pwrite'
+# | ../../../gprofng/libcollector/dispatcher.c:578:8: error: 'struct sigevent' has no member named '_sigev_un'
+EXTRA_OECONF:append:libc-musl = " --disable-gprofng"
 
 EXTRA_OECONF:class-native = "--enable-targets=all \
                              --enable-64-bit-bfd \
