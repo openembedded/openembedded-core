@@ -1,6 +1,6 @@
-From ca472d6866e545aaa70a70020e3226f236a8aafc Mon Sep 17 00:00:00 2001
-From: Shan Hai <shan.hai@windriver.com>
-Date: Tue, 13 Sep 2016 13:45:46 +0800
+From b182c52d63bea0f08e1befcec5c3797dd97cdef5 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Tue, 16 Aug 2022 13:46:22 +0200
 Subject: [PATCH] shadow: use relaxed usernames
 
 The groupadd from shadow does not allow upper case group names, the
@@ -11,21 +11,21 @@ restrictions to allow the upper case group names, and the relaxation is
 POSIX compliant because POSIX indicate that usernames are composed of
 characters from the portable filename character set [A-Za-z0-9._-].
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/shadow-maint/shadow/pull/551]
 
 Signed-off-by: Shan Hai <shan.hai@windriver.com>
-
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- libmisc/chkname.c  | 30 ++++++++++++++++++------------
+ libmisc/chkname.c  | 29 ++++++++++++++++++-----------
  man/groupadd.8.xml |  6 ------
- man/useradd.8.xml  |  8 +-------
- 3 files changed, 19 insertions(+), 25 deletions(-)
+ man/useradd.8.xml  |  6 ------
+ 3 files changed, 18 insertions(+), 23 deletions(-)
 
 diff --git a/libmisc/chkname.c b/libmisc/chkname.c
-index 90f185c..65762b4 100644
+index cb002a14..c0306c5a 100644
 --- a/libmisc/chkname.c
 +++ b/libmisc/chkname.c
-@@ -55,22 +55,28 @@ static bool is_valid_name (const char *name)
+@@ -32,21 +32,28 @@ static bool is_valid_name (const char *name)
  	}
  
  	/*
@@ -54,7 +54,6 @@ index 90f185c..65762b4 100644
 -		      ( ('0' <= *name) && ('9' >= *name) ) ||
 -		      ('_' == *name) ||
 -		      ('-' == *name) ||
--		      ('.' == *name) ||
 -		      ( ('$' == *name) && ('\0' == *(name + 1)) )
 -		     )) {
 +                if (!(  (*name >= 'a' && *name <= 'z') ||
@@ -67,13 +66,13 @@ index 90f185c..65762b4 100644
  		}
  	}
 diff --git a/man/groupadd.8.xml b/man/groupadd.8.xml
-index 1e58f09..d804b61 100644
+index 26671f92..3eacaa09 100644
 --- a/man/groupadd.8.xml
 +++ b/man/groupadd.8.xml
-@@ -272,12 +272,6 @@
- 
-    <refsect1 id='caveats'>
-      <title>CAVEATS</title>
+@@ -63,12 +63,6 @@
+       values from the system. The new group will be entered into the system
+       files as needed.
+     </para>
 -     <para>
 -       Groupnames must start with a lower case letter or an underscore,
 -       followed by lower case letters, digits, underscores, or dashes.
@@ -84,19 +83,10 @@ index 1e58f09..d804b61 100644
         Groupnames may only be up to &GROUP_NAME_MAX_LENGTH; characters long.
       </para>
 diff --git a/man/useradd.8.xml b/man/useradd.8.xml
-index a16d730..c0bd777 100644
+index c7f95b47..e056d141 100644
 --- a/man/useradd.8.xml
 +++ b/man/useradd.8.xml
-@@ -366,7 +366,7 @@
- 	</term>
- 	<listitem>
- 	  <para>
--	    Do no create the user's home directory, even if the system
-+	    Do not create the user's home directory, even if the system
- 	    wide setting from <filename>/etc/login.defs</filename>
- 	    (<option>CREATE_HOME</option>) is set to
- 	    <replaceable>yes</replaceable>.
-@@ -660,12 +660,6 @@
+@@ -691,12 +691,6 @@
        the user account creation request.
      </para>
  
@@ -109,3 +99,6 @@ index a16d730..c0bd777 100644
      <para>
        Usernames may only be up to 32 characters long.
      </para>
+-- 
+2.30.2
+
