@@ -1957,7 +1957,6 @@ class DevtoolUpgradeTests(DevtoolBase):
         self._test_recipe_contents(newrecipefile, checkvars, [])
         # Try again - change just name this time
         result = runCmd('devtool reset -n %s' % newrecipename)
-        shutil.rmtree(newsrctree)
         add_recipe()
         newrecipefile = os.path.join(self.workspacedir, 'recipes', newrecipename, '%s_%s.bb' % (newrecipename, recipever))
         result = runCmd('devtool rename %s %s' % (recipename, newrecipename))
@@ -1970,7 +1969,6 @@ class DevtoolUpgradeTests(DevtoolBase):
         self._test_recipe_contents(newrecipefile, checkvars, [])
         # Try again - change just version this time
         result = runCmd('devtool reset -n %s' % newrecipename)
-        shutil.rmtree(newsrctree)
         add_recipe()
         newrecipefile = os.path.join(self.workspacedir, 'recipes', recipename, '%s_%s.bb' % (recipename, newrecipever))
         result = runCmd('devtool rename %s -V %s' % (recipename, newrecipever))
