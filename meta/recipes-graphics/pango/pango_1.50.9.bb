@@ -24,7 +24,7 @@ SRC_URI += "file://run-ptest \
             file://0001-Skip-running-test-layout-test.patch \
 "
 
-SRC_URI[archive.sha256sum] = "cf626f59dd146c023174c4034920e9667f1d25ac2c1569516d63136c311255fa"
+SRC_URI[archive.sha256sum] = "1b636aabf905130d806372136f5e137b6a27f26d47defd9240bf444f6a4fe610"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
 
