@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5ce2a2b07fca326bc7c146d10105ccfc"
 
-SRC_URI[sha256sum] = "53e5609cac016471d40bd88dc410cd90755942c25e58a61021cfdf7abdfeacff"
+SRC_URI[sha256sum] = "ec761596aafa16e282a31de188737e5485552469ac63b60cfcccf22263fd24ff"
 
 PYPI_PACKAGE = "pyelftools"
 
