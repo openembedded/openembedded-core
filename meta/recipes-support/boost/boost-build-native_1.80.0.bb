@@ -7,9 +7,10 @@ LICENSE = "BSL-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=e4224ccaecb14d942c71d31bef20d78c"
 
 SRC_URI = "git://github.com/boostorg/build;protocol=https;branch=master"
-SRCREV = "76da80f33187a3d9e5336157cdfae12ce82e37eb"
+SRCREV = "405d34a04d29519625c5edfe1f3bac3bc3dc3534"
+PE = "1"
 
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+){2,}))"
+UPSTREAM_CHECK_GITTAGREGEX = "boost-(?P<pver>(\d+(\.\d+)+))"
 
 inherit native
 
