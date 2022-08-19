@@ -165,4 +165,4 @@ EXTRA_OECONF += "ac_cv_snprintf_returns_bogus=no \
                  "
 EXTRA_OEMAKE += "NO_GETTEXT=1"
 
-SRC_URI[tarball.sha256sum] = "7dded96a52e7996ce90dd74a187aec175737f680dc063f3f33c8932cf5c8d809"
+SRC_URI[tarball.sha256sum] = "4c428908e3a2dca4174df6ef49acc995a4fdb1b45205a2c79794487a33bc06e5"
