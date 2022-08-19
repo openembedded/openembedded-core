@@ -23,7 +23,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
            file://0001-Add-use_prebuilt_tools-option.patch \
            "
 
-SRC_URI[sha256sum] = "84acea3acb2411b29134b32015a5b1aaa62844b19c4b1ef8b8971c6b0759f4c6"
+SRC_URI[sha256sum] = "28f7958e7bf29a32d4e963556d241d0a41a6786582ff6a5ad11665e0347fc962"
 
 inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package
 
@@ -44,11 +44,13 @@ PACKAGECONFIG[jpeg] = "-Djpeg=enabled,-Djpeg=disabled,jpeg"
 PACKAGECONFIG[tiff] = "-Dtiff=enabled,-Dtiff=disabled,tiff"
 PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
 
-EXTRA_OEMESON:class-target = " \
+EXTRA_OEMESON = "-Dman=false"
+
+EXTRA_OEMESON:append:class-target = " \
     -Duse_prebuilt_tools=true \
 "
 
-EXTRA_OEMESON:class-nativesdk = " \
+EXTRA_OEMESON:append:class-nativesdk = " \
     -Duse_prebuilt_tools=true \
 "
 
@@ -95,9 +97,11 @@ do_install:append() {
 
 }
 
-# Remove a bad fuzzing attempt that sporadically fails without a way to reproduce
 do_install_ptest() {
+        # Remove a bad fuzzing attempt that sporadically fails without a way to reproduce
 	rm ${D}/${datadir}/installed-tests/gdk-pixbuf/pixbuf-randomly-modified.test
+        # https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/issues/215
+	rm ${D}/${datadir}/installed-tests/gdk-pixbuf/pixbuf-jpeg.test
 }
 
 do_install:append:class-native() {
