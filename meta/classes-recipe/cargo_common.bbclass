@@ -88,7 +88,7 @@ cargo_common_do_configure () {
 		EOF
 	fi
 
-	if [ "${RUST_TARGET_SYS}" != "${RUST_BUILD_SYS}" -a "${RUST_TARGET_SYS}" != "${RUST_HOST_SYS}"]; then
+	if [ "${RUST_TARGET_SYS}" != "${RUST_BUILD_SYS}" -a "${RUST_TARGET_SYS}" != "${RUST_HOST_SYS}" ]; then
 		cat <<- EOF >> ${CARGO_HOME}/config
 
 		# TARGET_SYS
