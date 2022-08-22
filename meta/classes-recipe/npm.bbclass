@@ -28,20 +28,18 @@ NPM_INSTALL_DEV ?= "0"
 
 NPM_NODEDIR ?= "${RECIPE_SYSROOT_NATIVE}${prefix_native}"
 
-def npm_target_arch_map(target_arch):
-    """Maps arch names to npm arch names"""
+## must match mapping in nodejs.bb (openembedded-meta)
+def map_nodejs_arch(a, d):
     import re
-    if re.match("p(pc|owerpc)(|64)", target_arch):
-        return "ppc"
-    elif re.match("i.86$", target_arch):
-        return "ia32"
-    elif re.match("x86_64$", target_arch):
-        return "x64"
-    elif re.match("arm64$", target_arch):
-        return "arm"
-    return target_arch
 
-NPM_ARCH ?= "${@npm_target_arch_map(d.getVar("TARGET_ARCH"))}"
+    if   re.match('i.86$', a): return 'ia32'
+    elif re.match('x86_64$', a): return 'x64'
+    elif re.match('aarch64$', a): return 'arm64'
+    elif re.match('(powerpc64|powerpc64le|ppc64le)$', a): return 'ppc64'
+    elif re.match('powerpc$', a): return 'ppc'
+    return a
+
+NPM_ARCH ?= "${@map_nodejs_arch(d.getVar("TARGET_ARCH"), d)}"
 
 NPM_PACKAGE = "${WORKDIR}/npm-package"
 NPM_CACHE = "${WORKDIR}/npm-cache"
