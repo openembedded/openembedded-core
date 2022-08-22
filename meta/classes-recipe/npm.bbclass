@@ -54,7 +54,7 @@ def npm_global_configs(d):
     # Ensure no network access is done
     configs.append(("offline", "true"))
     configs.append(("proxy", "http://invalid"))
-    configs.append(("funds", False))
+    configs.append(("fund", False))
     configs.append(("audit", False))
     # Configure the cache directory
     configs.append(("cache", d.getVar("NPM_CACHE")))
