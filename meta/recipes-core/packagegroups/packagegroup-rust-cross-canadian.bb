@@ -9,6 +9,10 @@ RUST="rust-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 RDEPENDS:${PN} = " \
     ${@all_multilib_tune_values(d, 'RUST')} \
+    nativesdk-binutils \
+    nativesdk-gcc \
+    nativesdk-glibc-dev \
+    nativesdk-libgcc-dev \
     nativesdk-rust \
     nativesdk-cargo \
     nativesdk-rust-tools-clippy \
