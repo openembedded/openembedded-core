@@ -66,6 +66,7 @@ common_errors = [
     "[pulseaudio] authkey.c: Failed to load authentication key",
     "was skipped because of a failed condition check",
     "was skipped because all trigger condition checks failed",
+    "xf86OpenConsole: Switching VT failed",
     ]
 
 video_related = [
