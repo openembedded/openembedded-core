@@ -14,7 +14,7 @@ Remove inline attribute to fix below build failure:
        |                  ~~~
   4371 |                  secret + n*XXH_SECRET_CONSUME_RATE);
 
-Upstream-Status: Submitted [https://github.com/ccache/ccache/pull/1089]
+Upstream-Status: Submitted [https://github.com/Cyan4973/xxHash/pull/720]
 
 Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
 ---
