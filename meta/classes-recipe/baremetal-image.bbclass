@@ -15,6 +15,15 @@
 #
 # See meta-skeleton for a working example.
 
+## Emulate image.bbclass
+# Handle inherits of any of the image classes we need
+IMAGE_CLASSES ??= ""
+IMGCLASSES = " ${IMAGE_CLASSES}"
+inherit ${IMGCLASSES}
+# Set defaults to satisfy IMAGE_FEATURES check
+IMAGE_FEATURES ?= ""
+IMAGE_FEATURES[type] = "list"
+IMAGE_FEATURES[validitems] += ""
 
 # Toolchain should be baremetal or newlib based.
 # TCLIBC="baremetal" or TCLIBC="newlib"
