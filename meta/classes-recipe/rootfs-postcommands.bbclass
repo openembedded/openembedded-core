@@ -63,7 +63,7 @@ inherit image-artifact-names
 # systemd_sysusers_create and set_user_group. Using :append is not
 # enough for that, set_user_group is added that way and would end
 # up running after us.
-SORT_PASSWD_POSTPROCESS_COMMAND ??= " sort_passwd; "
+SORT_PASSWD_POSTPROCESS_COMMAND ??= " tidy_shadowutils_files; "
 python () {
     d.appendVar('ROOTFS_POSTPROCESS_COMMAND', '${SORT_PASSWD_POSTPROCESS_COMMAND}')
     d.appendVar('ROOTFS_POSTPROCESS_COMMAND', 'rootfs_reproducible;')
@@ -221,9 +221,20 @@ serial_autologin_root () {
 	fi
 }
 
-python sort_passwd () {
+python tidy_shadowutils_files () {
     import rootfspostcommands
-    rootfspostcommands.sort_passwd(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
+    rootfspostcommands.tidy_shadowutils_files(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
+}
+
+python sort_passwd () {
+    """
+    Deprecated in the favour of tidy_shadowutils_files.
+    """
+    import rootfspostcommands
+    bb.warn('[sort_passwd] You are using a deprecated function for '
+        'SORT_PASSWD_POSTPROCESS_COMMAND. The default one is now called '
+        '"tidy_shadowutils_files".')
+    rootfspostcommands.tidy_shadowutils_files(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
 }
 
 #
