@@ -73,6 +73,8 @@ def remove_shadowutils_backup_files(sysconfdir):
             'gshadow',
             'passwd',
             'shadow',
+            'subgid',
+            'subuid',
         ):
         filepath = os.path.join(sysconfdir, filename)
         remove_shadowutils_backup_file(filepath)
