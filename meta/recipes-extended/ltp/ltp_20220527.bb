@@ -39,6 +39,7 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=ht
            file://0001-memcg-functional-Fix-usage-of-PAGESIZE-from-memcg_li.patch \
            file://0001-lapi-pidfd-adding-pidfd-header-file.patch \
            file://0001-lapi-fsmount-resolve-conflict-in-different-header-fi.patch \
+           file://0001-rt-migrate-Use-int-instead-of-pthread_t-for-thread-I.patch \
            "
 
 S = "${WORKDIR}/git"
