@@ -11,7 +11,9 @@ inherit autotools pkgconfig
 
 DEPENDS = "bison-native flex-native"
 
-SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v3.0/${BP}.tar.gz"
+SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/v3.0/${BP}.tar.gz \
+           file://0001-api-Use-GNU-strerror_r-when-available.patch \
+"
 
 SRC_URI[sha256sum] = "8d284d896fca1c981b55850e92acd3ad9648a69227c028dda7ae3402af878edd"
 UPSTREAM_CHECK_URI = "https://github.com/libcgroup/libcgroup/releases/"
