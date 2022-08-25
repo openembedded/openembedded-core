@@ -51,6 +51,7 @@ class oeGoToolchainSelfTest(OESelftestTestCase):
         cmd = cmd + ". %s; " % self.env_SDK
         cmd = cmd + "export GOPATH=%s; " % self.go_path
         cmd = cmd + "export GOFLAGS=-modcacherw; "
+        cmd = cmd + "export CGO_ENABLED=1; "
         cmd = cmd + "${CROSS_COMPILE}go %s" % gocmd
         return runCmd(cmd).status
 
