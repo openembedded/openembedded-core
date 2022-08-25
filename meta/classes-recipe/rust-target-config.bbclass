@@ -272,13 +272,12 @@ def llvm_cpu(d):
     trans['x86-64'] = "x86-64"
     trans['i686'] = "i686"
     trans['i586'] = "i586"
-    trans['powerpc'] = "powerpc"
     trans['mips64'] = "mips64"
     trans['mips64el'] = "mips64"
     trans['riscv64'] = "generic-rv64"
     trans['riscv32'] = "generic-rv32"
 
-    if target in ["mips", "mipsel"]:
+    if target in ["mips", "mipsel", "powerpc"]:
         feat = frozenset(d.getVar('TUNE_FEATURES').split())
         if "mips32r2" in feat:
             trans['mipsel'] = "mips32r2"
@@ -286,6 +285,8 @@ def llvm_cpu(d):
         elif "mips32" in feat:
             trans['mipsel'] = "mips32"
             trans['mips'] = "mips32"
+        elif "ppc7400" in feat:
+            trans['powerpc'] = "7400"
 
     try:
         return trans[cpu]
