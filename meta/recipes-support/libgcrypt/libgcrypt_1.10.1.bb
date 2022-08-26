@@ -49,12 +49,6 @@ do_configure:prepend () {
 	rm -f ${S}/m4/gpg-error.m4
 }
 
-# libgcrypt.pc is added locally and thus installed here
-do_install:append() {
-	install -d ${D}/${libdir}/pkgconfig
-	install -m 0644 ${B}/src/libgcrypt.pc ${D}/${libdir}/pkgconfig/
-}
-
 do_install_ptest() {
     cp -r --preserve=mode,links -v ${S} ${D}${PTEST_PATH}
     cp -r --preserve=mode,links -v ${B} ${D}${PTEST_PATH}
