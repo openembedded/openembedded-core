@@ -20,6 +20,7 @@ EXTRA_OECONF:append:libc-musl = " LIBS=-lfts "
 # earlier in CFLAGS, etc.
 CFLAGS:append:x86-64 = " -fomit-frame-pointer"
 TUNE_CCARGS:remove:x86 = "-mfpmath=sse"
+TUNE_CCARGS:remove:x86-64 = "-mfpmath=sse"
 
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
