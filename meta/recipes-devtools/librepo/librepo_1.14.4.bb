@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SRC_URI = "git://github.com/rpm-software-management/librepo.git;branch=master;protocol=https \
            file://0002-Do-not-try-to-obtain-PYTHON_INSTALL_DIR-by-running-p.patch \
            file://0004-Set-gpgme-variables-with-pkg-config-not-with-cmake-m.patch \
+           file://0001-metadata_downloader-Include-unistd.h-for-lseek.patch \
            "
 
 SRCREV = "2bd1041c741c85bc196ca01dcca1eae6099eb742"
