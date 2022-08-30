@@ -16,6 +16,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0003-fix-workqueue-Fix-type-of-cpu-in-trace-event-v5.19.patch \
            file://0001-fix-net-skb-introduce-kfree_skb_reason-v5.15.58.v5.1.patch \
            file://0001-fix-compaction.patch \
+           file://0001-fix-adjust-range-v5.10.137-in-block-probe.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
