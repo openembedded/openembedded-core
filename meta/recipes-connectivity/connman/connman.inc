@@ -29,9 +29,9 @@ EXTRA_OECONF += "\
     --disable-polkit \
 "
 # For smooth operation it would be best to start only one wireless daemon at a time.
-# If wpa_supplicant is running, connman will use it preferentially.
-# Select either wpa_supplicant or iwd
-WIRELESS_DAEMON ??= "wpa_supplicant"
+# If wpa-supplicant is running, connman will use it preferentially.
+# Select either wpa-supplicant or iwd
+WIRELESS_DAEMON ??= "wpa-supplicant"
 
 PACKAGECONFIG ??= "wispr iptables client\
                    ${@bb.utils.filter('DISTRO_FEATURES', '3g systemd', d)} \
@@ -47,7 +47,7 @@ PACKAGECONFIG[systemd] = "--with-systemdunitdir=${systemd_system_unitdir}/ --wit
 PACKAGECONFIG[wifi] = "--enable-wifi, --disable-wifi"
 PACKAGECONFIG[bluez] = "--enable-bluetooth, --disable-bluetooth, bluez5, bluez5"
 PACKAGECONFIG[3g] = "--enable-ofono, --disable-ofono, ofono, ofono"
-PACKAGECONFIG[wpa_supplicant] = ",,wpa-supplicant,wpa-supplicant"
+PACKAGECONFIG[wpa-supplicant] = ",,wpa-supplicant,wpa-supplicant"
 PACKAGECONFIG[iwd] = "--enable-iwd,--disable-iwd,,iwd"
 PACKAGECONFIG[tist] = "--enable-tist,--disable-tist,"
 PACKAGECONFIG[openvpn] = "--enable-openvpn --with-openvpn=${sbindir}/openvpn,--disable-openvpn,,openvpn"
