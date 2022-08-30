@@ -3,18 +3,16 @@ DESCRIPTION = "LZ4 is a very fast lossless compression algorithm, providing comp
 HOMEPAGE = "https://github.com/lz4/lz4"
 
 LICENSE = "BSD-2-Clause | GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://lib/LICENSE;md5=ebc2ea4814a64de7708f1571904b32cc \
+LIC_FILES_CHKSUM = "file://lib/LICENSE;md5=5cd5f851b52ec832b10eedb3f01f885a \
                     file://programs/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://LICENSE;md5=d57c0d21cb917fb4e0af2454aa48b956 \
+                    file://LICENSE;md5=c5cc3cd6f9274b4d32988096df9c3ec3 \
                     "
 
 PE = "1"
 
-SRCREV = "d44371841a2f1728a3f36839fd4b7e872d0927d3"
+SRCREV = "5ff839680134437dbf4678f3d0c7b371d84f4964"
 
-SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https \
-           file://CVE-2021-3520.patch \
-           "
+SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 S = "${WORKDIR}/git"
