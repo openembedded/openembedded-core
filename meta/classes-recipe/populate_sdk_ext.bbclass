@@ -438,7 +438,8 @@ python copy_buildsystem () {
     else:
         # Write a templateconf.cfg
         with open(baseoutpath + '/conf/templateconf.cfg', 'w') as f:
-            f.write('meta/conf\n')
+            f.write('meta/conf/templates/default\n')
+        os.makedirs(os.path.join(baseoutpath, core_meta_subdir, 'conf/templates/default'), exist_ok=True)
 
     # Ensure any variables set from the external environment (by way of
     # BB_ENV_PASSTHROUGH_ADDITIONS) are set in the SDK's configuration
