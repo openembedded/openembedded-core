@@ -11,12 +11,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=190c514872597083303371684954f238"
 
 SRC_URI = " \
     https://curl.se/download/${BP}.tar.xz \
-    file://0001-easy_lock.h-include-sched.h-if-available-to-fix-buil.patch \
-    file://0001-easy_lock-switch-to-using-atomic_int-instead-of-bool.patch \
     file://run-ptest \
     file://disable-tests \
 "
-SRC_URI[sha256sum] = "2d118b43f547bfe5bae806d8d47b4e596ea5b25a6c1f080aef49fbcd817c5db8"
+SRC_URI[sha256sum] = "88b54a6d4b9a48cb4d873c7056dcba997ddd5b7be5a2d537a4acb55c20b04be6"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
