@@ -12,11 +12,6 @@
                 },
                 "rev": "05b25605fb8b2399e4706d7323828676bf0da0b5"
             },
-            "layers": {
-                "meta-alex": {
-                    "subpath": ""
-                }
-            },
             "path": "meta-alex"
         },
         "meta-intel": {
@@ -29,11 +24,6 @@
                     }
                 },
                 "rev": "0a96edae609a3f48befac36af82cf1eed6786b4a"
-            },
-            "layers": {
-                "meta-intel": {
-                    "subpath": ""
-                }
             },
             "path": "meta-intel"
         },
@@ -50,20 +40,6 @@
                     }
                 },
                 "rev": "9dda719b2a4727a4d43a6ab8d9e23f8ca68790ec"
-            },
-            "layers": {
-                "meta": {
-                    "subpath": "meta"
-                },
-                "meta-poky": {
-                    "subpath": "meta-poky"
-                },
-                "meta-selftest": {
-                    "subpath": "meta-selftest"
-                },
-                "meta-yocto-bsp": {
-                    "subpath": "meta-yocto-bsp"
-                }
             },
             "path": "poky"
         }

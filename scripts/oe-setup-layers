@@ -18,19 +18,9 @@ import subprocess
 
 def _do_checkout(args, json):
     layers = json['sources']
-    buildconfs = []
-    oecorepath = ""
     for l_name in layers:
         l_data = layers[l_name]
         layerdir = os.path.abspath(os.path.join(args['destdir'], l_data['path']))
-
-        for ll_name in l_data['layers']:
-            if ll_name == 'meta':
-                oecorepath = layerdir
-            ll_data = l_data['layers'][ll_name]
-            if 'buildconfigs' in ll_data:
-                for c in ll_data['buildconfigs']:
-                    buildconfs.append(os.path.join(layerdir, ll_data['subpath'], c))
 
         if 'contains_this_file' in l_data.keys():
             force_arg = 'force_bootstraplayer_checkout'

@@ -29,21 +29,6 @@
                         "description": "Whether the directory with the layer source also contains this json description. Tools may want to skip the checkout of the source then.",
                         "type": "boolean"
                     },
-                    "layers": {
-                        "description": "The dict of layers to be used from this upstream source",
-                        "type": "object",
-                        "patternProperties": { ".*" : {
-                            "description": "A layer from the upstream source",
-                            "type": "object",
-                            "additionalProperties": false,
-                            "properties": {
-                                "subpath": {
-                                    "description": "The subpath (relative to the source root) for this layer. Omit if the source root is the layer path",
-                                    "type": "string"
-                                }
-                            }
-                        }}
-                    },
                     "git-remote": {
                                 "description": "A remote git source from which to fetch",
                                 "type": "object",
