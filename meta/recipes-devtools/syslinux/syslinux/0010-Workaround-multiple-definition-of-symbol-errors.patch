@@ -5,7 +5,7 @@ Subject: [PATCH] Workaround multiple definition of symbol errors
 
 Lifted from Fedora https://src.fedoraproject.org/rpms/syslinux/blob/master/f/0005-Workaround-multiple-definition-of-symbol-errors.patch
 
-Upstream-Status: Pending
+Upstream-Status: Inactive-Upstream
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  com32/cmenu/Makefile           | 2 +-

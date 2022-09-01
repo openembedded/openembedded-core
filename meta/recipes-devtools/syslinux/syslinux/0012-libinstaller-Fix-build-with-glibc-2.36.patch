@@ -22,7 +22,7 @@ TOPDIR/tmp-glibc/work/core2-64-oe-linux/syslinux/6.04-pre2-r1/recipe-sysroot/usr
       |         ^~~~~~~~~~~~~~~~~
 ...
 
-Upstream-Status: Pending
+Upstream-Status: Inactive-Upstream
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 ---
  libinstaller/linuxioctl.h | 15 ++++++++++++++-

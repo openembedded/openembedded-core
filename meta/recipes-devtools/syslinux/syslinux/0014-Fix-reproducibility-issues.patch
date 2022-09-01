@@ -7,7 +7,7 @@ In order to build deterministic binaries, we need to sort the wildcard expansion
 so the libraries are linked in the same order each time. This fixes reproducibility
 issues within syslinux builds.
 
-Upstream-Status: Pending
+Upstream-Status: Inactive-Upstream
 RP 2021/3/1
 
 Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
