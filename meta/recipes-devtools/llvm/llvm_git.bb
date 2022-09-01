@@ -28,7 +28,6 @@ LLVM_RELEASE = "${PV}"
 BRANCH = "release/${MAJOR_VERSION}.x"
 SRCREV = "f28c006a5895fc0e329fe15fead81e37457cb1d1"
 SRC_URI = "git://github.com/llvm/llvm-project.git;branch=${BRANCH};protocol=https \
-           file://0006-llvm-TargetLibraryInfo-Undefine-libc-functions-if-th.patch;striplevel=2 \
            file://0007-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
            file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
            file://llvm-config \
