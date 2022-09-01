@@ -6,7 +6,7 @@ Subject: [PATCH] gdk-pixbuf: add an option so that loader errors are fatal
 If an environment variable is specified set the return value from main() to
 non-zero if the loader had errors (missing libraries, generally).
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/merge_requests/144]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 ---
