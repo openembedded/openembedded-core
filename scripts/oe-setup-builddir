@@ -40,6 +40,12 @@ cd "$BUILDDIR"
 
 if [ -f "$BUILDDIR/conf/templateconf.cfg" ]; then
     TEMPLATECONF=$(cat "$BUILDDIR/conf/templateconf.cfg")
+    # The following two are no longer valid; unsetting them will automatically get them replaced
+    # with correct ones.
+    if [ $TEMPLATECONF = "meta/conf" -o $TEMPLATECONF = "meta-poky/conf" ]; then
+        unset TEMPLATECONF
+        rm $BUILDDIR/conf/templateconf.cfg
+    fi
 fi
 
 . "$OEROOT"/.templateconf
