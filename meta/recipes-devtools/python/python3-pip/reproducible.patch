@@ -12,7 +12,7 @@ may be something that could be considered by upstream.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://github.com/pypa/pip/issues/11424]
 
 Signed-off-by: Wang Mingyu <wangmy@fujitsu.com>
 ---
