@@ -33,7 +33,6 @@ LIC_FILES_CHKSUM = "\
 inherit pypi python_setuptools_build_meta
 
 SRC_URI += "file://no_shebang_mangling.patch"
-SRC_URI += "file://reproducible.patch"
 
 SRC_URI[sha256sum] = "3fd1929db052f056d7a998439176d3333fa1b3f6c1ad881de1885c0717608a4b"
 
