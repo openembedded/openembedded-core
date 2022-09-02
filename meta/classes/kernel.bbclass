@@ -637,7 +637,8 @@ addtask savedefconfig after do_configure
 
 inherit cml1
 
-KCONFIG_CONFIG_COMMAND:append = " PAHOLE=false LD='${KERNEL_LD}' HOSTLDFLAGS='${BUILD_LDFLAGS}'"
+# Need LD, HOSTLDFLAGS and more for config operations
+KCONFIG_CONFIG_COMMAND:append = " ${EXTRA_OEMAKE}"
 
 EXPORT_FUNCTIONS do_compile do_transform_kernel do_transform_bundled_initramfs do_install do_configure
 
