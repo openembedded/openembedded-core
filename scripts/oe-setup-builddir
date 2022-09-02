@@ -38,7 +38,7 @@ chmod -st "$BUILDDIR/conf" 2>/dev/null || echo "WARNING: unable to chmod $BUILDD
 
 cd "$BUILDDIR"
 
-if [ -f "$BUILDDIR/conf/templateconf.cfg" ]; then
+if [ -f "$BUILDDIR/conf/templateconf.cfg" -a -z "$TEMPLATECONF" ]; then
     TEMPLATECONF=$(cat "$BUILDDIR/conf/templateconf.cfg")
     # The following two are no longer valid; unsetting them will automatically get them replaced
     # with correct ones.
