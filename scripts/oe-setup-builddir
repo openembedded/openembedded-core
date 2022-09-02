@@ -50,10 +50,6 @@ fi
 
 . "$OEROOT"/.templateconf
 
-if [ ! -f "$BUILDDIR/conf/templateconf.cfg" ]; then
-    echo "$TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
-fi
-
 # 
 # $TEMPLATECONF can point to a directory for the template local.conf & bblayers.conf
 #
@@ -140,3 +136,7 @@ if [ -z "$OECORENOTESCONF" ]; then
 fi
 [ ! -r "$OECORENOTESCONF" ] || cat "$OECORENOTESCONF"
 unset OECORENOTESCONF
+
+if [ ! -f "$BUILDDIR/conf/templateconf.cfg" ]; then
+    echo "$TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
+fi
