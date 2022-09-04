@@ -119,6 +119,10 @@ python do_configure() {
     # Whether or not to optimize the compiler and standard library
     config.set("rust", "optimize", e(True))
 
+    # Emits extraneous output from tests to ensure that failures of the test
+    # harness are debuggable just from logfiles
+    config.set("rust", "verbose-tests", e(True))
+
     # [build]
     config.add_section("build")
     config.set("build", "submodules", e(False))
