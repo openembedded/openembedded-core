@@ -81,6 +81,7 @@ python do_configure() {
 
     config.set(host_section, "cxx", e(d.expand("${RUST_TARGET_CXX}")))
     config.set(host_section, "cc", e(d.expand("${RUST_TARGET_CC}")))
+    config.set(host_section, "linker", e(d.expand("${RUST_TARGET_CCLD}")))
     if "musl" in host_section:
         config.set(host_section, "musl-root", e(d.expand("${STAGING_DIR_HOST}${exec_prefix}")))
 
@@ -94,6 +95,7 @@ python do_configure() {
 
         config.set(build_section, "cxx", e(d.expand("${RUST_BUILD_CXX}")))
         config.set(build_section, "cc", e(d.expand("${RUST_BUILD_CC}")))
+        config.set(build_section, "linker", e(d.expand("${RUST_BUILD_CCLD}")))
 
     target_section = "target.{}".format(d.getVar('RUST_TARGET_SYS', True))
     if target_section != host_section and target_section != build_section:
@@ -103,6 +105,7 @@ python do_configure() {
 
         config.set(target_section, "cxx", e(d.expand("${RUST_TARGET_CXX}")))
         config.set(target_section, "cc", e(d.expand("${RUST_TARGET_CC}")))
+        config.set(target_section, "linker", e(d.expand("${RUST_TARGET_CCLD}")))
 
     # [llvm]
     config.add_section("llvm")
