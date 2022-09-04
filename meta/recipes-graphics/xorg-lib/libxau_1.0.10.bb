@@ -17,8 +17,8 @@ PROVIDES = "xau"
 PE = "1"
 
 XORG_PN = "libXau"
+XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "c5f16288f2da9f071b29111d68797480"
-SRC_URI[sha256sum] = "ccf8cbf0dbf676faa2ea0a6d64bcc3b6746064722b606c8c52917ed00dcb73ec"
+SRC_URI[sha256sum] = "8be6f292334d2f87e5b919c001e149a9fdc27005d6b3e053862ac6ebbf1a0c0a"
