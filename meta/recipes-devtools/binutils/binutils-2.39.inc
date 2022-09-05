@@ -31,5 +31,6 @@ SRC_URI = "\
      file://0010-sync-with-OE-libtool-changes.patch \
      file://0011-Check-for-clang-before-checking-gcc-version.patch \
      file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
+     file://0013-CVE-2022-38533.patch \
 "
 S  = "${WORKDIR}/git"
