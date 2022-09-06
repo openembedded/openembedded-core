@@ -133,6 +133,4 @@ fi
 [ ! -r "$OECORENOTESCONF" ] || cat "$OECORENOTESCONF"
 unset OECORENOTESCONF
 
-if [ ! -f "$BUILDDIR/conf/templateconf.cfg" ]; then
-    echo "$ORG_TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
-fi
+echo "$ORG_TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
