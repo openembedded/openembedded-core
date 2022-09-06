@@ -22,13 +22,12 @@ LIC_FILES_CHKSUM:append = " ${@bb.utils.contains('PACKAGECONFIG', 'arm-neon', 'f
 PROVIDES = "virtual/libsdl2"
 
 SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz \
-           file://0001-video-restore-ability-to-disable-fb-accel-via-hint.patch \
            "
 SRC_URI:append:class-native = " file://0001-Disable-libunwind-in-native-OE-builds-by-not-looking.patch"
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[sha256sum] = "fe7cbf3127882e3fc7259a75a0cb585620272c51745d3852ab9dd87960697f2e"
+SRC_URI[sha256sum] = "91e4c34b1768f92d399b078e171448c6af18cafda743987ed2064a28954d6d97"
 
 inherit cmake lib_package binconfig-disabled pkgconfig upstream-version-is-even
 
@@ -43,9 +42,7 @@ EXTRA_OECMAKE = "-DSDL_OSS=OFF -DSDL_ESD=OFF -DSDL_ARTS=OFF \
                  -DSDL_PTHREADS=ON \
                  -DSDL_RPATH=OFF \
                  -DSDL_SNDIO=OFF \
-                 -DSDL_X11_XVM=OFF \
                  -DSDL_X11_XCURSOR=OFF \
-                 -DSDL_X11_XINERAMA=OFF \
                  -DSDL_X11_XDBE=OFF \
                  -DSDL_X11_XFIXES=OFF \
                  -DSDL_X11_XINPUT=OFF \
@@ -62,7 +59,7 @@ PACKAGECONFIG:class-native = "x11 ${PACKAGECONFIG_GL}"
 PACKAGECONFIG:class-nativesdk = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} ${PACKAGECONFIG_GL}"
 PACKAGECONFIG ??= " \
     ${PACKAGECONFIG_GL} \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'alsa directfb pulseaudio x11', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'alsa directfb pulseaudio x11 vulkan', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland gles2', '', d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "neon","arm-neon","",d)} \
 "
@@ -77,9 +74,12 @@ PACKAGECONFIG[kmsdrm]     = "-DSDL_KMSDRM=ON,-DSDL_KMSDRM=OFF,libdrm virtual/lib
 PACKAGECONFIG[libusb] = ",,libusb1"
 PACKAGECONFIG[opengl]     = "-DSDL_OPENGL=ON,-DSDL_OPENGL=OFF,virtual/egl"
 PACKAGECONFIG[pulseaudio] = "-DSDL_PULSEAUDIO=ON,-DSDL_PULSEAUDIO=OFF,pulseaudio"
+PACKAGECONFIG[vulkan]    = "-DSDL_VULKAN=ON,-DSDL_VULKAN=OFF"
 PACKAGECONFIG[wayland]    = "-DSDL_WAYLAND=ON,-DSDL_WAYLAND=OFF,wayland-native wayland wayland-protocols libxkbcommon"
 PACKAGECONFIG[x11]        = "-DSDL_X11=ON,-DSDL_X11=OFF,virtual/libx11 libxext libxrandr libxrender"
 
 CFLAGS:append:class-native = " -DNO_SHARED_MEMORY"
+
+FILES:${PN} += "${datadir}/licenses/SDL2/LICENSE.txt"
 
 BBCLASSEXTEND = "native nativesdk"
