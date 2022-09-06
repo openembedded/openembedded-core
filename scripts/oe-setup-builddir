@@ -14,7 +14,7 @@ die() {
 
 [ -n "$BUILDDIR" ] || die "The build directory (BUILDDIR) must be set!"
 
-if [ "$1" = '--help' -o "$1" = '-h' ]; then
+if [ "$1" = '--help' ] || [ "$1" = '-h' ]; then
     echo 'Usage: oe-setup-builddir'
     echo ''
     echo "OpenEmbedded setup-builddir - setup build directory $BUILDDIR"
@@ -32,19 +32,19 @@ mkdir -p "$BUILDDIR/conf"
 chmod -st "$BUILDDIR" 2>/dev/null || echo "WARNING: unable to chmod $BUILDDIR"
 chmod -st "$BUILDDIR/conf" 2>/dev/null || echo "WARNING: unable to chmod $BUILDDIR/conf"
 
-cd "$BUILDDIR"
+cd "$BUILDDIR" || die "Failed to change directory to $BUILDDIR!"
 
-if [ -f "$BUILDDIR/conf/templateconf.cfg" -a -z "$TEMPLATECONF" ]; then
+if [ -z "$TEMPLATECONF" ] && [ -f "$BUILDDIR/conf/templateconf.cfg" ]; then
     TEMPLATECONF=$(cat "$BUILDDIR/conf/templateconf.cfg")
     # The following two are no longer valid; unsetting them will automatically get them replaced
     # with correct ones.
-    if [ $TEMPLATECONF = "meta/conf" -o $TEMPLATECONF = "meta-poky/conf" ]; then
+    if [ "$TEMPLATECONF" = meta/conf ] || [ "$TEMPLATECONF" = meta-poky/conf ]; then
         unset TEMPLATECONF
-        rm $BUILDDIR/conf/templateconf.cfg
+        rm "$BUILDDIR/conf/templateconf.cfg"
     fi
 fi
 
-. "$OEROOT"/.templateconf
+. "$OEROOT/.templateconf"
 
 # 
 # $TEMPLATECONF can point to a directory for the template local.conf & bblayers.conf
@@ -58,8 +58,8 @@ if [ -n "$TEMPLATECONF" ]; then
         [ -d "$TEMPLATECONF" ] ||
             die "TEMPLATECONF value points to nonexistent directory '$TEMPLATECONF'"
     fi
-    templatesdir=$(python3 -c "import sys; print(sys.argv[1].strip('/').split('/')[-2])" $TEMPLATECONF)
-    if [ ! -f "$TEMPLATECONF/../../layer.conf" -o $templatesdir != "templates" ]; then
+    templatesdir=$(python3 -c "import sys; print(sys.argv[1].strip('/').split('/')[-2])" "$TEMPLATECONF")
+    if [ "$templatesdir" != templates ] || [ ! -f "$TEMPLATECONF/../../layer.conf" ]; then
         die "TEMPLATECONF value (which is $TEMPLATECONF) must point to meta-some-layer/conf/templates/template-name"
     fi
     OECORELAYERCONF="$TEMPLATECONF/bblayers.conf.sample"
@@ -111,7 +111,7 @@ unset OECORELOCALCONF
 unset OECORELAYERCONF
 
 # Ending the first-time run message. Show the YP Documentation banner.
-if [ ! -z "$SHOWYPDOC" ]; then
+if [ -n "$SHOWYPDOC" ]; then
     cat <<EOM
 The Yocto Project has extensive documentation about OE including a reference
 manual which can be found at:
