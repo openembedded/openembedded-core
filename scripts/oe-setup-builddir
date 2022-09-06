@@ -7,10 +7,12 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 
-if [ -z "$BUILDDIR" ]; then
-    echo >&2 "Error: The build directory (BUILDDIR) must be set!"
+die() {
+    echo Error: "$@" >&2
     exit 1
-fi
+}
+
+[ -n "$BUILDDIR" ] || die "The build directory (BUILDDIR) must be set!"
 
 if [ "$1" = '--help' -o "$1" = '-h' ]; then
     echo 'Usage: oe-setup-builddir'
@@ -22,15 +24,9 @@ fi
 
 mkdir -p "$BUILDDIR/conf"
 
-if [ ! -d "$BUILDDIR" ]; then
-    echo >&2 "Error: The builddir ($BUILDDIR) does not exist!"
-    exit 1
-fi
-
-if [ ! -w "$BUILDDIR" ]; then
-    echo >&2 "Error: Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . oe-init-build-env ~/my-build"
-    exit 1
-fi
+[ -d "$BUILDDIR" ] || die "The build directory ($BUILDDIR) does not exist!"
+[ -w "$BUILDDIR" ] ||
+    die "Cannot write to $BUILDDIR, perhaps try sourcing with a writable path? i.e. . oe-init-build-env ~/my-build"
 
 # Attempting removal of sticky,setuid bits from BUILDDIR, BUILDDIR/conf
 chmod -st "$BUILDDIR" 2>/dev/null || echo "WARNING: unable to chmod $BUILDDIR"
@@ -59,15 +55,12 @@ if [ -n "$TEMPLATECONF" ]; then
         if [ -d "$OEROOT/$TEMPLATECONF" ]; then
             TEMPLATECONF="$OEROOT/$TEMPLATECONF"
         fi
-        if [ ! -d "$TEMPLATECONF" ]; then
-            echo >&2 "Error: TEMPLATECONF value points to nonexistent directory '$TEMPLATECONF'"
-            exit 1
-        fi
+        [ -d "$TEMPLATECONF" ] ||
+            die "TEMPLATECONF value points to nonexistent directory '$TEMPLATECONF'"
     fi
     templatesdir=$(python3 -c "import sys; print(sys.argv[1].strip('/').split('/')[-2])" $TEMPLATECONF)
     if [ ! -f "$TEMPLATECONF/../../layer.conf" -o $templatesdir != "templates" ]; then
-        echo >&2 "Error: TEMPLATECONF value (which is $TEMPLATECONF) must point to meta-some-layer/conf/templates/template-name"
-        exit 1
+        die "TEMPLATECONF value (which is $TEMPLATECONF) must point to meta-some-layer/conf/templates/template-name"
     fi
     OECORELAYERCONF="$TEMPLATECONF/bblayers.conf.sample"
     OECORELOCALCONF="$TEMPLATECONF/local.conf.sample"
