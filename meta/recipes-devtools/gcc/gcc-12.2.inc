@@ -49,7 +49,6 @@ SRC_URI = "${BASEURI} \
            file://0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
            file://0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
            file://0011-Avoid-using-libdir-from-.la-which-usually-points-to-.patch \
-           file://0012-export-CPP.patch \
            file://0013-Ensure-target-gcc-headers-can-be-included.patch \
            file://0014-Don-t-search-host-directory-during-relink-if-inst_pr.patch \
            file://0015-libcc1-fix-libcc1-s-install-path-and-rpath.patch \
