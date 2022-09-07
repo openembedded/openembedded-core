@@ -333,24 +333,14 @@ EXTRA_IMAGE_FEATURES += "package-management"
         self.assertTrue("overlayfs-etc" in res.output, msg=res.output)
         self.assertTrue("package-management" in res.output, msg=res.output)
 
-    def test_image_feature_is_missing_class_included(self):
-        configAppend = """
-INHERIT += "overlayfs-etc"
-"""
-        self.run_check_image_feature(configAppend)
-
     def test_image_feature_is_missing(self):
-        self.run_check_image_feature()
-
-    def run_check_image_feature(self, appendToConfig=""):
         """
         Summary:   Overlayfs-etc class is not applied when image feature is not set
-                   even if we inherit it directly,
         Expected:  Image is created successfully but /etc is not an overlay
         Author:    Vyacheslav Yurkov <uvv.mail@gmail.com>
         """
 
-        config = f"""
+        config = """
 DISTRO_FEATURES:append = " systemd"
 
 # Use systemd as init manager
@@ -366,7 +356,6 @@ EXTRA_IMAGE_FEATURES += "read-only-rootfs"
 # Image configuration for overlayfs-etc
 OVERLAYFS_ETC_MOUNT_POINT = "/data"
 OVERLAYFS_ETC_DEVICE = "/dev/sda3"
-{appendToConfig}
 """
 
         self.write_config(config)
