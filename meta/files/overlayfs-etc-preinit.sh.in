@@ -18,6 +18,7 @@ mount -t sysfs sysfs /sys
 BASE_OVERLAY_ETC_DIR={OVERLAYFS_ETC_MOUNT_POINT}/overlay-etc
 UPPER_DIR=$BASE_OVERLAY_ETC_DIR/upper
 WORK_DIR=$BASE_OVERLAY_ETC_DIR/work
+LOWER_DIR=$BASE_OVERLAY_ETC_DIR/lower
 
 mkdir -p {OVERLAYFS_ETC_MOUNT_POINT}
 if mount -n -t {OVERLAYFS_ETC_FSTYPE} \
@@ -26,6 +27,14 @@ if mount -n -t {OVERLAYFS_ETC_FSTYPE} \
 then
     mkdir -p $UPPER_DIR
     mkdir -p $WORK_DIR
+
+    if {OVERLAYFS_ETC_EXPOSE_LOWER}; then
+        mkdir -p $LOWER_DIR
+
+        # provide read-only access to original /etc content
+        mount -o bind,ro /etc $LOWER_DIR
+    fi
+
     mount -n -t overlay \
         -o upperdir=$UPPER_DIR \
         -o lowerdir=/etc \
