@@ -79,8 +79,7 @@ if [ ! -r "$BUILDDIR/conf/local.conf" ]; then
 You had no conf/local.conf file. This configuration file has therefore been
 created for you from $OECORELOCALCONF
 You may wish to edit it to, for example, select a different MACHINE (target
-hardware). See conf/local.conf for more information as common configuration
-options are commented.
+hardware).
 
 EOM
     cp -f "$OECORELOCALCONF" "$BUILDDIR/conf/local.conf"
