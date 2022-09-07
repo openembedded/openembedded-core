@@ -380,7 +380,6 @@ set_icecc_env() {
     fi
     for compiler in $compilers; do
         ln -sf $ICECC_BIN $ICE_PATH/symlinks/$compiler
-        rm -f $ICE_PATH/$compiler
         cat <<-__EOF__ > $ICE_PATH/$compiler
 		#!/bin/sh -e
 		export ICECC_VERSION=$ICECC_VERSION
