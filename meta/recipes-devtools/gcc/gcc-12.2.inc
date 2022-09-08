@@ -58,7 +58,6 @@ SRC_URI = "${BASEURI} \
            file://0019-Re-introduce-spe-commandline-options.patch \
            file://0020-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
            file://0021-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
-           file://0022-mingw32-Enable-operation_not_supported.patch \
            file://0023-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0024-Fix-install-path-of-linux64.h.patch \
            file://0026-rust-recursion-limit.patch \
