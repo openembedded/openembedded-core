@@ -28,5 +28,6 @@ do_install:append() {
     rm -rf ${D}${includedir}/qemu-plugin.h
 
     # Install qmp.py to be used with testimage
-    install -D ${S}/python/qemu/qmp/__init__.py ${D}${libdir}/qemu-python/qmp.py
+    install -d ${D}${libdir}/qemu-python/qmp/
+    install -D ${S}/python/qemu/qmp/* ${D}${libdir}/qemu-python/qmp/
 }
