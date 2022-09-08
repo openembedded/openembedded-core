@@ -61,7 +61,6 @@ SRC_URI = "${BASEURI} \
            file://0022-mingw32-Enable-operation_not_supported.patch \
            file://0023-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0024-Fix-install-path-of-linux64.h.patch \
-           file://0025-Move-sched.h-include-ahead-of-user-headers.patch \
            file://0026-rust-recursion-limit.patch \
            file://prefix-map-realpath.patch \
            file://hardcoded-paths.patch \
