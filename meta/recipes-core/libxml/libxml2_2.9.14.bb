@@ -121,7 +121,8 @@ do_install:append:class-native () {
 	# Docs are not needed in the native case
 	rm ${D}${datadir}/gtk-doc -rf
 
-	create_wrapper ${D}${bindir}/xmllint XML_CATALOG_FILES=${sysconfdir}/xml/catalog
+	create_wrapper ${D}${bindir}/xmllint 'XML_CATALOG_FILES=${XML_CATALOG_FILES:-${sysconfdir}/xml/catalog}'
 }
+do_install[vardepsexclude] += "XML_CATALOG_FILES:-${sysconfdir}/xml/catalog"
 
 BBCLASSEXTEND = "native nativesdk"
