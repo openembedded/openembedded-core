@@ -188,8 +188,8 @@ class QemuRunner:
         importlib.invalidate_caches()
         try:
             qmp = importlib.import_module("qmp")
-        except:
-            self.logger.error("qemurunner: qmp.py missing, please ensure it's installed")
+        except Exception as e:
+            self.logger.error("qemurunner: qmp.py missing, please ensure it's installed (%s)" % str(e))
             return False
         # Path relative to tmpdir used as cwd for qemu below to avoid unix socket path length issues
         qmp_file = "." + next(tempfile._get_candidate_names())
@@ -325,7 +325,8 @@ class QemuRunner:
         try:
             os.chdir(os.path.dirname(qmp_port))
             try:
-               self.qmp = qmp.QEMUMonitorProtocol(os.path.basename(qmp_port))
+               from qmp.legacy import QEMUMonitorProtocol
+               self.qmp = QEMUMonitorProtocol(os.path.basename(qmp_port))
             except OSError as msg:
                 self.logger.warning("Failed to initialize qemu monitor socket: %s File: %s" % (msg, msg.filename))
                 return False
