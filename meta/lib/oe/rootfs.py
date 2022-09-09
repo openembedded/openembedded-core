@@ -325,19 +325,29 @@ class Rootfs(object, metaclass=ABCMeta):
             bb.note("No Kernel Modules found, not running depmod")
             return
 
-        kernel_abi_ver_file = oe.path.join(self.d.getVar('PKGDATA_DIR'), "kernel-depmod",
-                                           'kernel-abiversion')
-        if not os.path.exists(kernel_abi_ver_file):
-            bb.fatal("No kernel-abiversion file found (%s), cannot run depmod, aborting" % kernel_abi_ver_file)
+        pkgdatadir = self.d.getVar('PKGDATA_DIR')
 
-        with open(kernel_abi_ver_file) as f:
-            kernel_ver = f.read().strip(' \n')
+        # PKGDATA_DIR can include multiple kernels so we run depmod for each
+        # one of them.
+        for direntry in os.listdir(pkgdatadir):
+            match = re.match('(.*)-depmod', direntry)
+            if not match:
+                continue
+            kernel_package_name = match.group(1)
 
-        versioned_modules_dir = os.path.join(self.image_rootfs, modules_dir, kernel_ver)
+            kernel_abi_ver_file = oe.path.join(pkgdatadir, direntry, kernel_package_name + '-abiversion')
+            if not os.path.exists(kernel_abi_ver_file):
+                bb.fatal("No kernel-abiversion file found (%s), cannot run depmod, aborting" % kernel_abi_ver_file)
 
-        bb.utils.mkdirhier(versioned_modules_dir)
+            with open(kernel_abi_ver_file) as f:
+                kernel_ver = f.read().strip(' \n')
 
-        self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs, kernel_ver])
+            versioned_modules_dir = os.path.join(self.image_rootfs, modules_dir, kernel_ver)
+
+            bb.utils.mkdirhier(versioned_modules_dir)
+
+            bb.note("Running depmodwrapper for %s ..." % versioned_modules_dir)
+            self._exec_shell_cmd(['depmodwrapper', '-a', '-b', self.image_rootfs, kernel_ver, kernel_package_name])
 
     """
     Create devfs:
