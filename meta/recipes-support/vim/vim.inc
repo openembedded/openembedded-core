@@ -20,8 +20,8 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://no-path-adjust.patch \
            "
 
-PV .= ".0341"
-SRCREV = "92a3d20682d46359bb50a452b4f831659e799155"
+PV .= ".0453"
+SRCREV = "83a19c5fda0556330860899bfb484addf9178cd0"
 
 # Remove when 8.3 is out
 UPSTREAM_VERSION_UNKNOWN = "1"
