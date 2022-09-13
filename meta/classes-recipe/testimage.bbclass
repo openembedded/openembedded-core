@@ -189,11 +189,7 @@ def get_testimage_boot_patterns(d):
                     search_login_succeeded,search_cmd_finished\n Make sure your TESTIMAGE_BOOT_PATTERNS=%s \
                     contains an accepted flag.' % d.getVar('TESTIMAGE_BOOT_PATTERNS'))
                     return
-                # We know boot prompt is searched through in binary format, others might be expressions
-                if flag == 'search_reached_prompt':
-                    boot_patterns[flag] = flagval.encode()
-                else:
-                    boot_patterns[flag] = flagval.encode().decode('unicode-escape')
+                boot_patterns[flag] = flagval.encode().decode('unicode-escape')
     return boot_patterns
 
 
