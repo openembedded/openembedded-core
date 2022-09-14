@@ -173,14 +173,8 @@ class Rootfs(object, metaclass=ABCMeta):
         bb.utils.rename(self.image_rootfs + '-orig', self.image_rootfs)
 
     def _exec_shell_cmd(self, cmd):
-        fakerootcmd = self.d.getVar('FAKEROOT')
-        if fakerootcmd is not None:
-            exec_cmd = [fakerootcmd, cmd]
-        else:
-            exec_cmd = cmd
-
         try:
-            subprocess.check_output(exec_cmd, stderr=subprocess.STDOUT)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             return("Command '%s' returned %d:\n%s" % (e.cmd, e.returncode, e.output))
 
