@@ -22,7 +22,7 @@
 # but nothing is sure. ;)
 #
 # If ICECC_ENV_EXEC is set in local.conf, then it should point to the icecc-create-env script provided by the user
-# or the default one provided by icecc-create-env_%.bb will be used.
+# or the default one provided by icecc-create-env_0.1.bb will be used.
 # (NOTE that this is a modified version of the needed script and *not the one that comes with icecream*).
 #
 # User can specify if specific recipes or recipes inheriting specific classes should not use icecc to distribute
