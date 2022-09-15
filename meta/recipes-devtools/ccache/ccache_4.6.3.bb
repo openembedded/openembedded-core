@@ -13,10 +13,8 @@ DEPENDS = "zstd"
 
 SRC_URI = "https://github.com/ccache/ccache/releases/download/v${PV}/${BP}.tar.gz \
            file://0001-xxhash.h-Fix-build-with-gcc-12.patch \
-           file://0001-Include-time.h-for-time_t.patch \
-           file://0002-config-Include-sys-types.h-for-mode_t-defintion.patch \
-"
-SRC_URI[sha256sum] = "6a746a9bed01585388b68e2d58af2e77741fc8d66bc360b5a0b4c41fc284dafe"
+           "
+SRC_URI[sha256sum] = "f46ba3706ad80c30d4d5874dee2bf9227a7fcd0ccaac31b51919a3053d84bd05"
 
 UPSTREAM_CHECK_URI = "https://github.com/ccache/ccache/releases/"
 
