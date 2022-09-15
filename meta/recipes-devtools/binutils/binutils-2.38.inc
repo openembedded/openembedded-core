@@ -34,5 +34,6 @@ SRC_URI = "\
      file://0013-Avoid-as-info-race-condition.patch \
      file://0014-CVE-2019-1010204.patch \
      file://0015-CVE-2022-38533.patch \
+     file://0016-CVE-2022-38126.patch \
 "
 S  = "${WORKDIR}/git"
