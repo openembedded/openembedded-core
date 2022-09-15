@@ -5,9 +5,9 @@ which ships with the Requests codebase, and is derived from Mozilla Firefox's ca
 HOMEPAGE = " http://certifi.io/"
 
 LICENSE = "ISC"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=67da0714c3f9471067b729eca6c9fbe8"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=3c2b7404369c587c3559afb604fce2f2"
 
-SRC_URI[sha256sum] = "84c85a9078b11105f04f3036a9482ae10e4621616db313fe045dd24743a0820d"
+SRC_URI[sha256sum] = "36973885b9542e6bd01dea287b2b4b3b21236307c56324fcc3f1160f2d655ed5"
 
 inherit pypi setuptools3
 
