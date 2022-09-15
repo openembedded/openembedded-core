@@ -45,9 +45,13 @@ CVE_CHECK_IGNORE += "CVE-2021-46705"
 
 DEPENDS = "flex-native bison-native gettext-native"
 
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|riscv.*)-(linux.*|freebsd.*)'
-COMPATIBLE_HOST:armv7a = 'null'
-COMPATIBLE_HOST:armv7ve = 'null'
+GRUB_COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|riscv.*)-(linux.*|freebsd.*)'
+COMPATIBLE_HOST = "${GRUB_COMPATIBLE_HOST}"
+# Grub doesn't support hard float toolchain and won't be able to forcefully
+# disable it on some of the target CPUs. See 'configure.ac' for
+# supported/unsupported CPUs in hardfp.
+COMPATIBLE_HOST:armv7a = "${@'null' if d.getVar('TUNE_CCARGS_MFLOAT') == 'hardfp' else d.getVar('GRUB_COMPATIBLE_HOST')}"
+COMPATIBLE_HOST:armv7ve = "${@'null' if d.getVar('TUNE_CCARGS_MFLOAT') == 'hardfp' else d.getVar('GRUB_COMPATIBLE_HOST')}"
 
 # configure.ac has code to set this automagically from the target tuple
 # but the OE freeform one (core2-foo-bar-linux) don't work with that.
