@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=64a87180908540620ce364b5e69b3b03 \
                     file://LICENSE.bsd;md5=66a5cedaf62c4b2637025f049f9b826f \
                     "
 SRC_URI = "git://github.com/smuellerDD/jitterentropy-library.git;branch=master;protocol=https"
-SRCREV = "2e5019cfe63038faaa405ce53715effe4ea580e4"
+SRCREV = "4544e11320138ac02797af81766f4476a71bb09f"
 S = "${WORKDIR}/git"
 
 # remove at next version upgrade or when output changes
