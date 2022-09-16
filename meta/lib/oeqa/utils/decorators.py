@@ -53,54 +53,6 @@ class getResults(object):
     def getSkipList(self):
         return self.skiplist
 
-class skipIfFailure(object):
-
-    def __init__(self,testcase):
-        self.testcase = testcase
-
-    def __call__(self,f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            res = getResults()
-            if self.testcase in (res.getFailList() or res.getErrorList()):
-                raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            return f(*args, **kwargs)
-        wrapped_f.__name__ = f.__name__
-        return wrapped_f
-
-class skipIfSkipped(object):
-
-    def __init__(self,testcase):
-        self.testcase = testcase
-
-    def __call__(self,f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            res = getResults()
-            if self.testcase in res.getSkipList():
-                raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            return f(*args, **kwargs)
-        wrapped_f.__name__ = f.__name__
-        return wrapped_f
-
-class skipUnlessPassed(object):
-
-    def __init__(self,testcase):
-        self.testcase = testcase
-
-    def __call__(self,f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            res = getResults()
-            if self.testcase in res.getSkipList() or \
-                    self.testcase in res.getFailList() or \
-                    self.testcase in res.getErrorList():
-                raise unittest.SkipTest("Testcase dependency not met: %s" % self.testcase)
-            return f(*args, **kwargs)
-        wrapped_f.__name__ = f.__name__
-        wrapped_f._depends_on = self.testcase
-        return wrapped_f
-
 class testcase(object):
     def __init__(self, test_case):
         self.test_case = test_case
