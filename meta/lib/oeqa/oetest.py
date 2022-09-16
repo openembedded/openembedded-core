@@ -57,7 +57,6 @@ def filterByTagExp(testsuite, tagexp):
 @LogResults
 class oeTest(unittest.TestCase):
 
-    pscmd = "ps"
     longMessage = True
 
     @classmethod
@@ -397,11 +396,6 @@ class RuntimeTestContext(TestContext):
 
     def _get_test_suites_required(self):
         return [t for t in self.d.getVar("TEST_SUITES").split() if t != "auto"]
-
-    def loadTests(self):
-        super(RuntimeTestContext, self).loadTests()
-        if oeTest.hasPackage("procps"):
-            oeRuntimeTest.pscmd = "ps -ef"
 
     def extract_packages(self):
         """
