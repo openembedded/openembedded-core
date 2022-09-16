@@ -16,43 +16,6 @@ import threading
 import signal
 from functools import wraps
 
-#get the "result" object from one of the upper frames provided that one of these upper frames is a unittest.case frame
-class getResults(object):
-    def __init__(self):
-        #dynamically determine the unittest.case frame and use it to get the name of the test method
-        ident = threading.current_thread().ident
-        upperf = sys._current_frames()[ident]
-        while (upperf.f_globals['__name__'] != 'unittest.case'):
-            upperf = upperf.f_back
-
-        def handleList(items):
-            ret = []
-            # items is a list of tuples, (test, failure) or (_ErrorHandler(), Exception())
-            for i in items:
-                s = i[0].id()
-                #Handle the _ErrorHolder objects from skipModule failures
-                if "setUpModule (" in s:
-                    ret.append(s.replace("setUpModule (", "").replace(")",""))
-                else:
-                    ret.append(s)
-                # Append also the test without the full path
-                testname = s.split('.')[-1]
-                if testname:
-                    ret.append(testname)
-            return ret
-        self.faillist = handleList(upperf.f_locals['result'].failures)
-        self.errorlist = handleList(upperf.f_locals['result'].errors)
-        self.skiplist = handleList(upperf.f_locals['result'].skipped)
-
-    def getFailList(self):
-        return self.faillist
-
-    def getErrorList(self):
-        return self.errorlist
-
-    def getSkipList(self):
-        return self.skiplist
-
 class testcase(object):
     def __init__(self, test_case):
         self.test_case = test_case
