@@ -24,7 +24,7 @@ HOMEPAGE = "http://www.rpm.org"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c4eec0c20c6034b9407a09945b48a43f"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.17.x;protocol=https \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.18.x;protocol=https \
            file://environment.d-rpm.sh \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
@@ -36,14 +36,17 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.17.x;protoc
            file://0001-perl-disable-auto-reqs.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
-           file://0001-tools-Add-error.h-for-non-glibc-case.patch \
            file://0001-docs-do-not-build-manpages-requires-pandoc.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
            file://0001-configure.ac-add-linux-gnux32-variant-to-triplet-han.patch \
+           file://fifofix.patch \
            "
 
 PE = "1"
-SRCREV = "5bef402da334595ed9302b8bca1acdf5e88bfe11"
+SRCREV = "07a6cca98489106b93467ecfaf5700368983a9b4"
+PV = "4.17.1+4.18-rc1"
+# can be removed in 4.18
+CVE_CHECK_IGNORE += "CVE-2021-35937 CVE-2021-35938 CVE-2021-35939"
 
 S = "${WORKDIR}/git"
 
@@ -80,6 +83,7 @@ PACKAGECONFIG[imaevm] = "--with-imaevm,,ima-evm-utils"
 PACKAGECONFIG[inhibit] = "--enable-inhibit-plugin,--disable-inhibit-plugin,dbus"
 PACKAGECONFIG[rpm2archive] = "--with-archive,--without-archive,libarchive"
 PACKAGECONFIG[sqlite] = "--enable-sqlite=yes,--enable-sqlite=no,sqlite3"
+PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
 PACKAGECONFIG[ndb] = "--enable-ndb,--disable-ndb"
 PACKAGECONFIG[bdb-ro] = "--enable-bdb-ro,--disable-bdb-ro"
 PACKAGECONFIG[zstd] = "--enable-zstd=yes,--enable-zstd=no,zstd"
