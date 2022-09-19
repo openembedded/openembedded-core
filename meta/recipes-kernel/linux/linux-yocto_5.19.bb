@@ -23,7 +23,7 @@ SRCREV_machine:qemux86 ?= "764d3890bc156851da21a5d15a70ec118d1b2fdc"
 SRCREV_machine:qemux86-64 ?= "764d3890bc156851da21a5d15a70ec118d1b2fdc"
 SRCREV_machine:qemumips64 ?= "afd431bd55805b5a980774ebf30b5d8aa4da492e"
 SRCREV_machine ?= "764d3890bc156851da21a5d15a70ec118d1b2fdc"
-SRCREV_meta ?= "ddb7fe05a2e7050ff604639a0dd53a862902b949"
+SRCREV_meta ?= "3f097510e2c93bc7d9ae84231737bd6228386475"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
@@ -56,7 +56,7 @@ COMPATIBLE_MACHINE = "^(qemuarm|qemuarmv5|qemuarm64|qemux86|qemuppc|qemuppc64|qe
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc"
 KERNEL_FEATURES:append = " ${KERNEL_EXTRA_FEATURES}"
-KERNEL_FEATURES:append:qemuall=" cfg/virtio.scc features/drm-bochs/drm-bochs.scc"
+KERNEL_FEATURES:append:qemuall=" cfg/virtio.scc features/drm-bochs/drm-bochs.scc cfg/net/mdio.scc"
 KERNEL_FEATURES:append:qemux86=" cfg/sound.scc cfg/paravirt_kvm.scc"
 KERNEL_FEATURES:append:qemux86-64=" cfg/sound.scc cfg/paravirt_kvm.scc"
 KERNEL_FEATURES:append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "", d)}"
