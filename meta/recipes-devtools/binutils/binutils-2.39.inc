@@ -32,6 +32,9 @@ SRC_URI = "\
      file://0011-Check-for-clang-before-checking-gcc-version.patch \
      file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
      file://0013-CVE-2022-38533.patch \
+     file://0014-CVE-2022-38128-1.patch \
+     file://0014-CVE-2022-38128-2.patch \
+     file://0014-CVE-2022-38128-3.patch \
 "
 S  = "${WORKDIR}/git"
 # Already in 2.39 branch
