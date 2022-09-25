@@ -13,8 +13,6 @@ DEPENDS = "flex-native bison-native iptables libcap"
 
 inherit update-alternatives bash-completion pkgconfig
 
-CLEANBROKEN = "1"
-
 PACKAGECONFIG ??= "tipc elf devlink"
 PACKAGECONFIG[tipc] = ",,libmnl,"
 PACKAGECONFIG[elf] = ",,elfutils,"
