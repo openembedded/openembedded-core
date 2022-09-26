@@ -88,3 +88,9 @@ SYSTEMD_SERVICE:${PN} = "dnf-makecache.service dnf-makecache.timer \
 SYSTEMD_AUTO_ENABLE ?= "disable"
 
 SKIP_RECIPE[dnf] ?= "${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', '', 'does not build without package_rpm in PACKAGE_CLASSES due disabled rpm support in libsolv', d)}"
+
+# Packages for testing purposes
+PACKAGES += "${PN}-test-main ${PN}-test-dep"
+ALLOW_EMPTY:${PN}-test-main = "1"
+ALLOW_EMPTY:${PN}-test-dep = "1"
+RRECOMMENDS:${PN}-test-main = "${PN}-test-dep"
