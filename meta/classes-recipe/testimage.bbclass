@@ -468,10 +468,7 @@ def create_rpm_index(d):
         package_list = glob.glob(idx_path + "*/*.rpm")
 
         for pkg in package_list:
-            if os.path.basename(pkg).startswith(("curl-ptest")):
-                bb.utils.remove(pkg)
-
-            if not os.path.basename(pkg).startswith(("rpm", "run-postinsts", "busybox", "bash", "update-alternatives", "libc6", "curl", "musl")):
+            if not os.path.basename(pkg).startswith(("dnf-test-", "busybox", "update-alternatives", "libc6", "musl")):
                 bb.utils.remove(pkg)
 
         bb.utils.unlockfile(lf)
