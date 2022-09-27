@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c81c08eeefd9418fca8f88309a76db10"
 
 DEPENDS = "libdrm libepoxy virtual/egl virtual/libgbm"
 SRCREV = "0922041ec6730122e0fec11404e6859e2efc4bc0"
-SRC_URI = "git://gitlab.freedesktop.org/virgl/virglrenderer.git;branch=master \
+SRC_URI = "git://gitlab.freedesktop.org/virgl/virglrenderer.git;branch=master;protocol=https \
            file://0001-meson.build-use-python3-directly-for-python.patch \
            "
 
