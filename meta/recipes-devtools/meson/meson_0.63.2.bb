@@ -7,7 +7,8 @@ interface for modern software development tools and practices."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${PV}.tar.gz \
+GITHUB_BASE_URI = "https://github.com/mesonbuild/meson/releases/"
+SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://meson-setup.py \
            file://meson-wrapper \
            file://0001-python-module-do-not-manipulate-the-environment-when.patch \
@@ -19,10 +20,7 @@ SRC_URI = "https://github.com/mesonbuild/meson/releases/download/${PV}/meson-${P
            "
 SRC_URI[sha256sum] = "16222f17ef76be0542c91c07994f9676ae879f46fc21c0c786a21ef2cb518bbf"
 
-UPSTREAM_CHECK_URI = "https://github.com/mesonbuild/meson/releases"
-UPSTREAM_CHECK_REGEX = "meson-(?P<pver>\d+(\.\d+)+)\.tar"
-
-inherit python_setuptools_build_meta
+inherit python_setuptools_build_meta github-releases
 
 RDEPENDS:${PN} = "ninja python3-modules python3-pkg-resources"
 

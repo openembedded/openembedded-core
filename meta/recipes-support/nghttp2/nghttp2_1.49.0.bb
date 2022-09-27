@@ -4,15 +4,13 @@ SECTION = "libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=764abdf30b2eadd37ce47dcbce0ea1ec"
 
-UPSTREAM_CHECK_URI = "https://github.com/nghttp2/nghttp2/releases"
-
 SRC_URI = "\
-    https://github.com/nghttp2/nghttp2/releases/download/v${PV}/nghttp2-${PV}.tar.xz \
+    ${GITHUB_BASE_URI}/download/v${PV}/nghttp2-${PV}.tar.xz \
     file://0001-fetch-ocsp-response-use-python3.patch \
 "
 SRC_URI[sha256sum] = "b0cfd492bbf0b131c472e8f6501c9f4ee82b51b68130f47b278c0b7c9848a66e"
 
-inherit cmake manpages python3native
+inherit cmake manpages python3native github-releases
 PACKAGECONFIG[manpages] = ""
 
 # examples are never installed, and don't need to be built in the
