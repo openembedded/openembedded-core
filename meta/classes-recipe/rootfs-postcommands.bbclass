@@ -204,6 +204,7 @@ ssh_allow_root_login () {
 	if [ -e ${IMAGE_ROOTFS}${sbindir}/dropbear ] ; then
 		if grep -q DROPBEAR_EXTRA_ARGS ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear 2>/dev/null ; then
 			sed -i '/^DROPBEAR_EXTRA_ARGS=/ s/-w//' ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
+			sed -i '/^# Disallow root/d' ${IMAGE_ROOTFS}${sysconfdir}/default/dropbear
 		fi
 	fi
 }
