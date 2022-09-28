@@ -34,16 +34,6 @@ chmod -st "$BUILDDIR/conf" 2>/dev/null || echo "WARNING: unable to chmod $BUILDD
 
 cd "$BUILDDIR" || die "Failed to change directory to $BUILDDIR!"
 
-if [ -z "$TEMPLATECONF" ] && [ -f "$BUILDDIR/conf/templateconf.cfg" ]; then
-    TEMPLATECONF=$(cat "$BUILDDIR/conf/templateconf.cfg")
-    # The following two are no longer valid; unsetting them will automatically get them replaced
-    # with correct ones.
-    if [ "$TEMPLATECONF" = meta/conf ] || [ "$TEMPLATECONF" = meta-poky/conf ]; then
-        unset TEMPLATECONF
-        rm "$BUILDDIR/conf/templateconf.cfg"
-    fi
-fi
-
 . "$OEROOT/.templateconf"
 
 # Keep the original TEMPLATECONF before possibly prefixing it with $OEROOT below.
@@ -132,4 +122,6 @@ fi
 [ ! -r "$OECORENOTESCONF" ] || cat "$OECORENOTESCONF"
 unset OECORENOTESCONF
 
-echo "$ORG_TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
+if [ ! -f "$BUILDDIR/conf/templateconf.cfg" ]; then
+    echo "$ORG_TEMPLATECONF" >"$BUILDDIR/conf/templateconf.cfg"
+fi
