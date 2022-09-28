@@ -43,10 +43,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.18.x;protoc
            "
 
 PE = "1"
-SRCREV = "07a6cca98489106b93467ecfaf5700368983a9b4"
-PV = "4.17.1+4.18-rc1"
-# can be removed in 4.18
-CVE_CHECK_IGNORE += "CVE-2021-35937 CVE-2021-35938 CVE-2021-35939"
+SRCREV = "ea0d77c52e176e2876fdb1d07ad41e9e2635a93e"
 
 S = "${WORKDIR}/git"
 
