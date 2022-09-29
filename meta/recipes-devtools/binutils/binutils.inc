@@ -44,14 +44,15 @@ GPROFNGS = " \
 	gp-display-text \
 	gprofng \
 "
+
+# it disables gprofng for clang and musl in the bb file
+GPROFNGS:toolchain-clang = ""
+GPROFNGS:libc-musl = ""
+
 GPROFNG_ALTS ?= ""
 GPROFNG_ALTS:x86 = "${GPROFNGS}"
 GPROFNG_ALTS:x86-64 = "${GPROFNGS}"
 GPROFNG_ALTS:aarch64 = "${GPROFNGS}"
-
-# it disables gprofng for clang and musl in the bb file
-GPROFNG_ALTS:toolchain-clang = ""
-GPROFNG_ALTS:libc-musl = ""
 
 LDGOLD_ALTS ?= "ld.gold dwp"
 LDGOLD_ALTS:riscv64 = ""
