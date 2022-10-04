@@ -6,16 +6,9 @@ SECTION = "devel"
 LICENSE = "Spencer-94"
 LIC_FILES_CHKSUM = "file://00README;beginline=645;endline=679;md5=964df275d26429ba3b39dbb9f205172a"
 
-# Upstream lsof releases are hosted on an ftp server which times out download
-# attempts from hosts for which it can not perform a DNS reverse-lookup (See:
-# https://people.freebsd.org/~abe/ ). http://www.mirrorservice.org seems to be
-# the most commonly used alternative.
-
 SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https \
-           file://lsof-remove-host-information.patch \
-          "
-
-SRCREV = "67d8c828e7bdc01ba93f8ff79765dd424da0c9d7"
+           file://remove-host-information.patch"
+SRCREV = "eec10fac8f57544e26ff00bf41a2dc09c56049bf"
 
 S = "${WORKDIR}/git"
 
