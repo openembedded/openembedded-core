@@ -2,7 +2,7 @@ inherit terminal
 
 DEVSHELL = "${SHELL}"
 
-PATH:prepend:task-devshell = "${COREBASE}/scripts/git-intercept:"
+PATH:prepend:task-devshell = "${COREBASE}/scripts/git:"
 
 python do_devshell () {
     if d.getVarFlag("do_devshell", "manualfakeroot"):
