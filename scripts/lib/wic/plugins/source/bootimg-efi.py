@@ -420,6 +420,11 @@ class BootimgEFIPlugin(SourcePlugin):
             cp_cmd = "cp %s %s/" % (startup, hdddir)
             exec_cmd(cp_cmd, True)
 
+        for paths in part.include_path or []:
+            for path in paths:
+                cp_cmd = "cp -r %s %s/" % (path, hdddir)
+                exec_cmd(cp_cmd, True)
+
         du_cmd = "du -bks %s" % hdddir
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
