@@ -70,6 +70,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0022_let_ld_pointer_pci_dma_function_propagate_MemTxResult.patch \
            file://CVE-2021-3611_1.patch \
            file://CVE-2021-3611_2.patch \
+           file://0001-net-tulip-Restrict-DMA-engine-to-memories.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
