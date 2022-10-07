@@ -46,6 +46,30 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2021-3750-1.patch \
            file://CVE-2021-3750-2.patch \
            file://CVE-2021-3750-3.patch \
+           file://0001-use-uint32t-for-reply-queue-head-tail-values.patch \
+           file://0002_let_dma_memory_valid_function_take_MemTxAttrs_argument.patch \
+           file://0003_let_dma_memory_set_function_take_MemTxAttrs_argument.patch \
+           file://0004_let_dma_memory_rw_relaxed_function_take_MemTxAttrs_argument.patch \
+           file://0005_let_dma_memory_rw_function_take_MemTxAttrs_argument.patch \
+           file://0006_let_dma_memory_read_write_function_take_MemTxAttrs_argument.patch \
+           file://0007_let_dma_memory_map_function_take_MemTxAttrs_argument.patch \
+           file://0008_have_dma_buf_rw_function_take_a_void_pointer.patch \
+           file://0009_have_dma_buf_read_and_dma_buf_write_functions_take_a_void.patch \
+           file://0010_let_pci_dma_rw_function_take_MemTxAttrs_argument.patch \
+           file://0011_let_dma_buf_rw_function_take_MemTxAttrs_argument.patch \
+           file://0012_let_dma_buf_write_function_take_MemTxAttrs_argument.patch \
+           file://0013_let_dma_buf_read_function_take_MemTxAttrs_argument.patch \
+           file://0014_let_dma_buf_rw_function_propagate_MemTxResult.patch \
+           file://0015_let_st_pointer_dma_function_take_MemTxAttrs_argument.patch \
+           file://0016_let_ld_pointer_dma_function_take_MemTxAttrs_argument.patch \
+           file://0017_let_st_pointer_dma_function_propagate_MemTxResult.patch \
+           file://0018_let_ld_pointer_dma_function_propagate_MemTxResult.patch \
+           file://0019_let_st_pointer_pci_dma_function_take_MemTxAttrs_argument.patch \
+           file://0020_let_ld_pointer_pci_dma_function_take_MemTxAttrs_argument.patch \
+           file://0021_let_st_pointer_pci_dma_function_propagate_MemTxResult.patch \
+           file://0022_let_ld_pointer_pci_dma_function_propagate_MemTxResult.patch \
+           file://CVE-2021-3611_1.patch \
+           file://CVE-2021-3611_2.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
