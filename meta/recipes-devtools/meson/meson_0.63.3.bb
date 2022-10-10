@@ -18,7 +18,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://0001-is_debianlike-always-return-False.patch \
            file://0001-Check-for-clang-before-guessing-gcc-or-lcc.patch \
            "
-SRC_URI[sha256sum] = "16222f17ef76be0542c91c07994f9676ae879f46fc21c0c786a21ef2cb518bbf"
+SRC_URI[sha256sum] = "519c0932e1a8b208741f0fdce90aa5c0b528dd297cf337009bf63539846ac056"
 
 inherit python_setuptools_build_meta github-releases
 
