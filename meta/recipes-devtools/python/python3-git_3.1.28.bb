@@ -12,7 +12,7 @@ PYPI_PACKAGE = "GitPython"
 
 inherit pypi python_setuptools_build_meta
 
-SRC_URI[sha256sum] = "1c885ce809e8ba2d88a29befeb385fcea06338d3640712b59ca623c220bb5704"
+SRC_URI[sha256sum] = "6bd3451b8271132f099ceeaf581392eaf6c274af74bb06144307870479d0697c"
 
 DEPENDS += " ${PYTHON_PN}-gitdb"
 
