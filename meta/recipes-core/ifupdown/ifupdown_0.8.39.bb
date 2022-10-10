@@ -16,7 +16,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=mast
            file://0001-ifupdown-skip-wrong-test-case.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://tweak-ptest-script.patch', '', d)} \
            "
-SRCREV = "2b4138f36ce3ba37186aa01b502273e0c39ab518"
+SRCREV = "be91dd267b4a8db502a6bbf5758563f7048b8078"
 
 S = "${WORKDIR}/git"
 
