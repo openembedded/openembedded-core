@@ -234,9 +234,10 @@ def srctree_hash_files(d, srcdir=None):
                 submodule_helper = subprocess.check_output(['git', 'submodule--helper', 'list'], cwd=s_dir, env=env).decode("utf-8")
             except subprocess.CalledProcessError:
                 submodule_helper = subprocess.check_output("git submodule--helper foreach --quiet 'echo $path'", cwd=s_dir, env=env, shell=True).decode("utf-8")
+            toplevel = subprocess.check_output(['git', '-C', s_dir, 'rev-parse', '--show-toplevel'], cwd=s_dir, env=env).decode("utf-8")
             for line in submodule_helper.splitlines():
-                module_dir = os.path.join(s_dir, line.split()[-1])
-                if os.path.isdir(module_dir):
+                module_dir = os.path.join(toplevel.strip(), line.split()[-1])
+                if os.path.isdir(module_dir) and os.path.commonpath([s_dir]) == os.path.commonpath([s_dir, module_dir]):
                     proc = subprocess.Popen(['git', 'add', '-A', '.'], cwd=module_dir, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     proc.communicate()
                     proc = subprocess.Popen(['git', 'write-tree'], cwd=module_dir, env=env, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
