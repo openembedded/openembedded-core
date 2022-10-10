@@ -71,6 +71,27 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2021-3611_1.patch \
            file://CVE-2021-3611_2.patch \
            file://0001-net-tulip-Restrict-DMA-engine-to-memories.patch \
+           file://0001-softfloat-Extend-float_exception_flags-to-16-bits.patch \
+           file://0002-softfloat-Add-flag-specific-to-Inf-Inf.patch \
+           file://0003-softfloat-Add-flag-specific-to-Inf-0.patch \
+           file://0004-softfloat-Add-flags-specific-to-Inf-Inf-and-0-0.patch \
+           file://0005-softfloat-Add-flag-specific-to-signaling-nans.patch \
+           file://0006-target-ppc-Update-float_invalid_op_addsub-for-new-fl.patch \
+           file://0007-target-ppc-Update-float_invalid_op_mul-for-new-flags.patch \
+           file://0008-target-ppc-Update-float_invalid_op_div-for-new-flags.patch \
+           file://0009-target-ppc-Update-fmadd-for-new-flags.patch \
+           file://0010-target-ppc-Split-out-do_fmadd.patch \
+           file://0011-target-ppc-Fix-xs-max-min-cj-dp-to-use-VSX-registers.patch \
+           file://0012-target-ppc-Move-xs-max-min-cj-dp-to-decodetree.patch \
+           file://0013-target-ppc-fix-xscvqpdp-register-access.patch \
+           file://0014-target-ppc-move-xscvqpdp-to-decodetree.patch \
+           file://0015-target-ppc-ppc_store_fpscr-doesn-t-update-bits-0-to-.patch \
+           file://0016-target-ppc-Introduce-TRANS-FLAGS-macros.patch \
+           file://0017-target-ppc-Implement-Vector-Expand-Mask.patch \
+           file://0018-target-ppc-Implement-Vector-Extract-Mask.patch \
+           file://0019-target-ppc-Implement-Vector-Mask-Move-insns.patch \
+           file://0020-target-ppc-move-xs-n-madd-am-ds-p-xs-n-msub-am-ds-p-.patch \
+           file://0021-target-ppc-implement-xs-n-maddqp-o-xs-n-msubqp-o.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
