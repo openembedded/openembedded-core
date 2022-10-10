@@ -24,7 +24,7 @@ RRECOMMENDS:${PN}:libc-glibc = "\
 	glibc-gconv-ibm866 \
 	glibc-gconv-ibm869 \
 	"
-SRC_URI[sha256sum] = "a22fca42354011dd2293a7f51f228b46ebbd802e7740b0975912afecb79d5df4"
+SRC_URI[sha256sum] = "2542152264fb3eff7ed70662abf4f4eef8133bc37d0b7a686c240df2b5f80a13"
 
 SRC_URI = "${GNU_MIRROR}/mtools/mtools-${PV}.tar.bz2 \
            file://mtools-makeinfo.patch \
