@@ -8,10 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6ee0f16281694fb6aa689cca1e0fb3da \
                     file://src/hb-ucd.cc;beginline=1;endline=15;md5=29d4dcb6410429195df67efe3382d8bc \
                     "
 
-SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz \
-           file://0001-fix-signedness-of-char-in-tests.patch \
-           "
-SRC_URI[sha256sum] = "2edb95db668781aaa8d60959d21be2ff80085f31b12053cdd660d9a50ce84f05"
+SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"
+SRC_URI[sha256sum] = "a05e19e3f52da24ed071522f0fddf872157d7d25e869cfd156cd6f1e81c42152"
 
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection github-releases
 
