@@ -27,7 +27,7 @@ SRC_URI:append:class-native = " file://0001-Disable-libunwind-in-native-OE-build
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[sha256sum] = "91e4c34b1768f92d399b078e171448c6af18cafda743987ed2064a28954d6d97"
+SRC_URI[sha256sum] = "bc121588b1105065598ce38078026a414c28ea95e66ed2adab4c44d80b309e1b"
 
 inherit cmake lib_package binconfig-disabled pkgconfig upstream-version-is-even
 
