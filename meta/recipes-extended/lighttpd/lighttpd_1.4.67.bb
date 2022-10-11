@@ -14,13 +14,12 @@ RRECOMMENDS:${PN} = "lighttpd-module-access \
                      lighttpd-module-accesslog"
 
 SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.xz \
-           file://CVE-2022-41556.patch \
            file://index.html.lighttpd \
            file://lighttpd.conf \
            file://lighttpd \
            "
 
-SRC_URI[sha256sum] = "47ac6e60271aa0196e65472d02d019556dc7c6d09df3b65df2c1ab6866348e3b"
+SRC_URI[sha256sum] = "7e04d767f51a8d824b32e2483ef2950982920d427d1272ef4667f49d6f89f358"
 
 DEPENDS = "virtual/crypt"
 
