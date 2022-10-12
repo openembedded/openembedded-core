@@ -276,6 +276,7 @@ PACKAGECONFIG[capstone] = "--enable-capstone,--disable-capstone"
 PACKAGECONFIG[libnfs] = "--enable-libnfs,--disable-libnfs,libnfs"
 PACKAGECONFIG[brlapi] = "--enable-brlapi,--disable-brlapi"
 PACKAGECONFIG[vde] = "--enable-vde,--disable-vde"
+PACKAGECONFIG[rbd] = "--enable-rbd,--disable-rbd"
 
 INSANE_SKIP_${PN} = "arch"
 
