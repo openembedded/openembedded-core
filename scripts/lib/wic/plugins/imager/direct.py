@@ -310,7 +310,10 @@ class PartitionedImage():
                           # all partitions (in bytes)
         self.ptable_format = ptable_format  # Partition table format
         # Disk system identifier
-        self.identifier = random.SystemRandom().randint(1, 0xffffffff)
+        if os.getenv('SOURCE_DATE_EPOCH'):
+            self.identifier = random.Random(int(os.getenv('SOURCE_DATE_EPOCH'))).randint(1, 0xffffffff)
+        else:
+            self.identifier = random.SystemRandom().randint(1, 0xffffffff)
 
         self.partitions = partitions
         self.partimages = []
