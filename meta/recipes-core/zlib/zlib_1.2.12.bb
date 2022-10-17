@@ -30,9 +30,12 @@ RDEPENDS:${PN}-ptest += "make"
 
 inherit ptest
 
+B = "${WORKDIR}/build"
+
 do_configure() {
-	LDCONFIG=true ./configure --prefix=${prefix} --shared --libdir=${libdir} --uname=GNU
+	LDCONFIG=true ${S}/configure --prefix=${prefix} --shared --libdir=${libdir} --uname=GNU
 }
+do_configure[cleandirs] += "${B}"
 
 do_compile() {
 	oe_runmake shared
