@@ -1,0 +1,94 @@
+From 480cce4315ce5bf59a509e8a53a52545f393de68 Mon Sep 17 00:00:00 2001
+From: He Zhe <zhe.he@windriver.com>
+Date: Tue, 27 Sep 2022 15:59:42 +0800
+Subject: [PATCH] wrapper: powerpc64: fix kernel crash caused by
+ do_get_kallsyms
+
+Kernel crashes on powerpc64 ABIv2 as follow when lttng_tracer initializes,
+since do_get_kallsyms in lttng_wrapper fails to return a proper address of
+kallsyms_lookup_name.
+
+root@qemuppc64:~# lttng create trace_session --live -U net://127.0.0.1
+Spawning a session daemon
+lttng_kretprobes: loading out-of-tree module taints kernel.
+BUG: Unable to handle kernel data access on read at 0xfffffffffffffff8
+Faulting instruction address: 0xc0000000001f6fd0
+Oops: Kernel access of bad area, sig: 11 [#1]
+<snip>
+NIP [c0000000001f6fd0] module_kallsyms_lookup_name+0xf0/0x180
+LR [c0000000001f6f28] module_kallsyms_lookup_name+0x48/0x180
+Call Trace:
+module_kallsyms_lookup_name+0x34/0x180 (unreliable)
+kallsyms_lookup_name+0x258/0x2b0
+wrapper_kallsyms_lookup_name+0x4c/0xd0 [lttng_wrapper]
+wrapper_get_pfnblock_flags_mask_init+0x28/0x60 [lttng_wrapper]
+lttng_events_init+0x40/0x344 [lttng_tracer]
+do_one_initcall+0x78/0x340
+do_init_module+0x6c/0x2f0
+__do_sys_finit_module+0xd0/0x120
+system_call_exception+0x194/0x2f0
+system_call_vectored_common+0xe8/0x278
+<snip>
+
+do_get_kallsyms makes use of kprobe_register and in turn kprobe_lookup_name
+to get the address of the kernel function kallsyms_lookup_name. In case of
+PPC64_ELF_ABI_v2, when kprobes are placed at function entry,
+kprobe_lookup_name adjusts the global entry point of the function returned
+by kallsyms_lookup_name to the local entry point(at some fixed offset of
+global one). This adjustment is all for kprobes to be able to work properly.
+Global and local entry point are defined in powerpc64 ABIv2.
+
+When the local entry point is given, some instructions at the beginning of
+the function are skipped and thus causes the above kernel crash. We just
+want to make a simple function call which needs global entry point.
+
+This patch adds 4 bytes which is the length of one instruction to
+kallsyms_lookup_name so that it will not trigger the global to local
+adjustment, and then substracts 4 bytes from the returned address. See the
+following kernel change for more details.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=290e3070762ac80e5fc4087d8c4de7e3f1d90aca
+
+Upstream-Status: Backport
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Change-Id: I34e68e886b97e3976d0b5e25be295a8bb866c1a4
+---
+ src/wrapper/kallsyms.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/src/wrapper/kallsyms.c b/src/wrapper/kallsyms.c
+index d2848764..93017adc 100644
+--- a/src/wrapper/kallsyms.c
++++ b/src/wrapper/kallsyms.c
+@@ -39,10 +39,26 @@ unsigned long do_get_kallsyms(void)
+ 	memset(&probe, 0, sizeof(probe));
+ 	probe.pre_handler = dummy_kprobe_handler;
+ 	probe.symbol_name = "kallsyms_lookup_name";
++#ifdef PPC64_ELF_ABI_v2
++	/*
++	 * With powerpc64 ABIv2, we need the global entry point of
++	 * kallsyms_lookup_name to call it later, while kprobe_register would
++	 * automatically adjust the global entry point to the local entry point,
++	 * when a kprobe was registered at a function entry. So we add 4 bytes
++	 * which is the length of one instruction to kallsyms_lookup_name to
++	 * avoid the adjustment.
++	 */
++	probe.offset = 4;
++#endif
+ 	ret = register_kprobe(&probe);
+ 	if (ret)
+ 		return 0;
++#ifdef PPC64_ELF_ABI_v2
++	/* Substract 4 bytes to get what we originally want */
++	addr = (unsigned long)(((char *)probe.addr) - 4);
++#else
+ 	addr = (unsigned long)probe.addr;
++#endif
+ #ifdef CONFIG_ARM
+ #ifdef CONFIG_THUMB2_KERNEL
+ 	if (addr)
+-- 
+2.17.1
+
