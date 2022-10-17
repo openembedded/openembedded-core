@@ -8,17 +8,12 @@ LIC_FILES_CHKSUM = "file://zlib.h;beginline=6;endline=23;md5=5377232268e952e9ef6
 
 # The source tarball needs to be .gz as only the .gz ends up in fossils/
 SRC_URI = "https://zlib.net/${BP}.tar.gz \
-           file://cc.patch \
-           file://ldflags-tests.patch \
            file://0001-configure-Pass-LDFLAGS-to-link-tests.patch \
            file://run-ptest \
-           file://0001-Correct-incorrect-inputs-provided-to-the-CRC-functio.patch \
-           file://0001-Fix-a-bug-when-getting-a-gzip-header-extra-field-wit.patch \
-           file://0001-Fix-extra-field-processing-bug-that-dereferences-NUL.patch \
            "
 UPSTREAM_CHECK_URI = "http://zlib.net/"
 
-SRC_URI[sha256sum] = "91844808532e5ce316b3c010929493c0244f3d37593afd6de04f71821d5136d9"
+SRC_URI[sha256sum] = "b3a24de97a8fdbc835b9833169501030b8977031bcb54b3b3ac13740f846ab30"
 
 # When a new release is made the previous release is moved to fossils/, so add this
 # to PREMIRRORS so it is also searched automatically.
