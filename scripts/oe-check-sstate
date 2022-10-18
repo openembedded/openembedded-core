@@ -50,7 +50,7 @@ def check(args):
             env['TMPDIR:forcevariable'] = tmpdir
 
         try:
-            cmd = ['bitbake', '--dry-run'] + args.target
+            cmd = ['bitbake', '--dry-run', '--runall=build'] + args.target
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, env=env)
 
             task_re = re.compile('NOTE: Running setscene task [0-9]+ of [0-9]+ \(([^)]+)\)')
