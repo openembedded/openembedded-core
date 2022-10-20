@@ -9,9 +9,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c7b12b6702da38ca028ace54aae3d484 \
                     file://stable/presentation-time/presentation-time.xml;endline=26;md5=4646cd7d9edc9fa55db941f2d3a7dc53"
 
-SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
-           "
-SRC_URI[sha256sum] = "c553384c1c68afd762fa537a2569cc9074fe7600da12d3472761e77a2ba56f13"
+SRC_URI = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/${PV}/downloads/wayland-protocols-${PV}.tar.xz"
+SRC_URI[sha256sum] = "9046f10a425d4e2a00965a03acfb6b3fb575a56503ac72c2b86821c69653375c"
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
