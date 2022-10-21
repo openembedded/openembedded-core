@@ -497,7 +497,7 @@ class BaseConfig(object):
                 self.gtk = True
             elif arg == 'gl':
                 self.gl = True
-            elif 'gl-es' in sys.argv[1:]:
+            elif arg == 'gl-es':
                 self.gl_es = True
             elif arg == 'egl-headless':
                 self.egl_headless = True
