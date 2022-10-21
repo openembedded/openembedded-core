@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-inherit kernel-uboot kernel-artifact-names uboot-sign
+inherit kernel-uboot kernel-artifact-names uboot-config
 
 def get_fit_replacement_type(d):
     kerneltypes = d.getVar('KERNEL_IMAGETYPES') or ""
@@ -50,15 +50,6 @@ python __anonymous () {
             d.appendVarFlag('do_assemble_fitimage', 'depends', ' virtual/dtb:do_populate_sysroot')
             d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' virtual/dtb:do_populate_sysroot')
             d.setVar('EXTERNAL_KERNEL_DEVICETREE', "${RECIPE_SYSROOT}/boot/devicetree")
-
-        # Verified boot will sign the fitImage and append the public key to
-        # U-Boot dtb. We ensure the U-Boot dtb is deployed before assembling
-        # the fitImage:
-        if d.getVar('UBOOT_SIGN_ENABLE') == "1" and d.getVar('UBOOT_DTB_BINARY'):
-            uboot_pn = d.getVar('PREFERRED_PROVIDER_u-boot') or 'u-boot'
-            d.appendVarFlag('do_assemble_fitimage', 'depends', ' %s:do_populate_sysroot' % uboot_pn)
-            if d.getVar('INITRAMFS_IMAGE_BUNDLE') == "1":
-                d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' %s:do_populate_sysroot' % uboot_pn)
 }
 
 
@@ -678,20 +669,12 @@ fitimage_assemble() {
 		${KERNEL_OUTPUT_DIR}/$2
 
 	#
-	# Step 8: Sign the image and add public key to U-Boot dtb
+	# Step 8: Sign the image
 	#
 	if [ "x${UBOOT_SIGN_ENABLE}" = "x1" ] ; then
-		add_key_to_u_boot=""
-		if [ -n "${UBOOT_DTB_BINARY}" ]; then
-			# The u-boot.dtb is a symlink to UBOOT_DTB_IMAGE, so we need copy
-			# both of them, and don't dereference the symlink.
-			cp -P ${STAGING_DATADIR}/u-boot*.dtb ${B}
-			add_key_to_u_boot="-K ${B}/${UBOOT_DTB_BINARY}"
-		fi
 		${UBOOT_MKIMAGE_SIGN} \
 			${@'-D "${UBOOT_MKIMAGE_DTCOPTS}"' if len('${UBOOT_MKIMAGE_DTCOPTS}') else ''} \
 			-F -k "${UBOOT_SIGN_KEYDIR}" \
-			$add_key_to_u_boot \
 			-r ${KERNEL_OUTPUT_DIR}/$2 \
 			${UBOOT_MKIMAGE_SIGN_ARGS}
 	fi
@@ -700,18 +683,30 @@ fitimage_assemble() {
 do_assemble_fitimage() {
 	if echo ${KERNEL_IMAGETYPES} | grep -wq "fitImage"; then
 		cd ${B}
-		fitimage_assemble fit-image.its fitImage ""
+		fitimage_assemble fit-image.its fitImage-none ""
+		if [ "${INITRAMFS_IMAGE_BUNDLE}" != "1" ]; then
+			ln -sf fitImage-none ${B}/${KERNEL_OUTPUT_DIR}/fitImage
+		fi
 	fi
 }
 
 addtask assemble_fitimage before do_install after do_compile
+
+SYSROOT_DIRS:append = " /sysroot-only"
+do_install:append() {
+	if echo ${KERNEL_IMAGETYPES} | grep -wq "fitImage" && \
+		[ "${UBOOT_SIGN_ENABLE}" = "1" ]; then
+		install -D ${B}/${KERNEL_OUTPUT_DIR}/fitImage-none ${D}/sysroot-only/fitImage
+	fi
+}
 
 do_assemble_fitimage_initramfs() {
 	if echo ${KERNEL_IMAGETYPES} | grep -wq "fitImage" && \
 		test -n "${INITRAMFS_IMAGE}" ; then
 		cd ${B}
 		if [ "${INITRAMFS_IMAGE_BUNDLE}" = "1" ]; then
-			fitimage_assemble fit-image-${INITRAMFS_IMAGE}.its fitImage ""
+			fitimage_assemble fit-image-${INITRAMFS_IMAGE}.its fitImage-bundle ""
+			ln -sf fitImage-bundle ${B}/${KERNEL_OUTPUT_DIR}/fitImage
 		else
 			fitimage_assemble fit-image-${INITRAMFS_IMAGE}.its fitImage-${INITRAMFS_IMAGE} 1
 		fi
@@ -802,35 +797,4 @@ kernel_do_deploy:append() {
 			fi
 		fi
 	fi
-	if [ "${UBOOT_SIGN_ENABLE}" = "1" -o "${UBOOT_FITIMAGE_ENABLE}" = "1" ] && \
-	   [ -n "${UBOOT_DTB_BINARY}" ] ; then
-		# UBOOT_DTB_IMAGE is a realfile, but we can't use
-		# ${UBOOT_DTB_IMAGE} since it contains ${PV} which is aimed
-		# for u-boot, but we are in kernel env now.
-		install -m 0644 ${B}/u-boot-${MACHINE}*.dtb "$deployDir/"
-	fi
-	if [ "${UBOOT_FITIMAGE_ENABLE}" = "1" -a -n "${UBOOT_BINARY}" -a -n "${SPL_DTB_BINARY}" ] ; then
-		# If we're also creating and/or signing the uboot fit, now we need to
-		# deploy it, it's its file, as well as u-boot-spl.dtb
-		install -m 0644 ${B}/u-boot-spl-${MACHINE}*.dtb "$deployDir/"
-		bbnote "Copying u-boot-fitImage file..."
-		install -m 0644 ${B}/u-boot-fitImage-* "$deployDir/"
-		bbnote "Copying u-boot-its file..."
-		install -m 0644 ${B}/u-boot-its-* "$deployDir/"
-	fi
-}
-
-# The function below performs the following in case of initramfs bundles:
-# - Removes do_assemble_fitimage. FIT generation is done through
-#   do_assemble_fitimage_initramfs. do_assemble_fitimage is not needed
-#   and should not be part of the tasks to be executed.
-# - Since do_kernel_generate_rsa_keys is inserted by default
-#   between do_compile and do_assemble_fitimage, this is
-#   not suitable in case of initramfs bundles.  do_kernel_generate_rsa_keys
-#   should be between do_bundle_initramfs and do_assemble_fitimage_initramfs.
-python () {
-    if d.getVar('INITRAMFS_IMAGE_BUNDLE') == "1":
-        bb.build.deltask('do_assemble_fitimage', d)
-        bb.build.deltask('kernel_generate_rsa_keys', d)
-        bb.build.addtask('kernel_generate_rsa_keys', 'do_assemble_fitimage_initramfs', 'do_bundle_initramfs', d)
 }

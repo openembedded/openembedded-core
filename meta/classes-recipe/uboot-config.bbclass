@@ -19,6 +19,9 @@ def removesuffix(s, suffix):
         return s[:-len(suffix)]
     return s
 
+UBOOT_ENTRYPOINT ?= "20008000"
+UBOOT_LOADADDRESS ?= "${UBOOT_ENTRYPOINT}"
+
 # Some versions of u-boot use .bin and others use .img.  By default use .bin
 # but enable individual recipes to change this value.
 UBOOT_SUFFIX ??= "bin"
