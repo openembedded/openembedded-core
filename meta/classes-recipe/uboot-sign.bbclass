@@ -311,14 +311,8 @@ addtask uboot_generate_rsa_keys before do_uboot_assemble_fitimage after do_compi
 # Create a ITS file for the U-boot FIT, for use when
 # we want to sign it so that the SPL can verify it
 uboot_fitimage_assemble() {
-	uboot_its="$1"
-	uboot_nodtb_bin="$2"
-	uboot_dtb="$3"
-	uboot_bin="$4"
-	spl_dtb="$5"
-	uboot_csum="${UBOOT_FIT_HASH_ALG}"
-	uboot_sign_algo="${UBOOT_FIT_SIGN_ALG}"
-	uboot_sign_keyname="${SPL_SIGN_KEYNAME}"
+	uboot_its="$(basename ${STAGING_DATADIR}/u-boot-its-*)"
+	uboot_bin="$(basename ${STAGING_DATADIR}/u-boot-fitImage-*)"
 
 	rm -f $uboot_its $uboot_bin
 
@@ -333,7 +327,7 @@ uboot_fitimage_assemble() {
     images {
         uboot {
             description = "U-Boot image";
-            data = /incbin/("$uboot_nodtb_bin");
+            data = /incbin/("${UBOOT_NODTB_BINARY}");
             type = "standalone";
             os = "u-boot";
             arch = "${UBOOT_ARCH}";
@@ -345,8 +339,8 @@ EOF
 	if [ "${SPL_SIGN_ENABLE}" = "1" ] ; then
 		cat << EOF >> $uboot_its
             signature {
-                algo = "$uboot_csum,$uboot_sign_algo";
-                key-name-hint = "$uboot_sign_keyname";
+                algo = "${UBOOT_FIT_HASH_ALG},${UBOOT_FIT_SIGN_ALG}";
+                key-name-hint = "${SPL_SIGN_KEYNAME}";
             };
 EOF
 	fi
@@ -355,7 +349,7 @@ EOF
         };
         fdt {
             description = "U-Boot FDT";
-            data = /incbin/("$uboot_dtb");
+            data = /incbin/("${UBOOT_DTB_BINARY}");
             type = "flat_dt";
             arch = "${UBOOT_ARCH}";
             compression = "none";
@@ -364,8 +358,8 @@ EOF
 	if [ "${SPL_SIGN_ENABLE}" = "1" ] ; then
 		cat << EOF >> $uboot_its
             signature {
-                algo = "$uboot_csum,$uboot_sign_algo";
-                key-name-hint = "$uboot_sign_keyname";
+                algo = "${UBOOT_FIT_HASH_ALG},${UBOOT_FIT_SIGN_ALG}";
+                key-name-hint = "${SPL_SIGN_KEYNAME}";
             };
 EOF
 	fi
@@ -400,7 +394,7 @@ EOF
 		${UBOOT_MKIMAGE_SIGN} \
 			${@'-D "${SPL_MKIMAGE_DTCOPTS}"' if len('${SPL_MKIMAGE_DTCOPTS}') else ''} \
 			-F -k "${SPL_SIGN_KEYDIR}" \
-			-K "$spl_dtb" \
+			-K "${SPL_DTB_BINARY}" \
 			-r $uboot_bin \
 			${SPL_MKIMAGE_SIGN_ARGS}
 	fi
@@ -430,12 +424,8 @@ do_uboot_assemble_fitimage() {
 		cp -P ${STAGING_DATADIR}/u-boot-spl*.dtb ${B}
 		cp -P ${STAGING_DATADIR}/u-boot-nodtb*.bin ${B}
 		rm -rf ${B}/u-boot-fitImage-* ${B}/u-boot-its-*
-		kernel_uboot_fitimage_name=`basename ${STAGING_DATADIR}/u-boot-fitImage-*`
-		kernel_uboot_its_name=`basename ${STAGING_DATADIR}/u-boot-its-*`
 		cd ${B}
-		uboot_fitimage_assemble $kernel_uboot_its_name ${UBOOT_NODTB_BINARY} \
-					${UBOOT_DTB_BINARY} $kernel_uboot_fitimage_name \
-					${SPL_DTB_BINARY}
+		uboot_fitimage_assemble
 	fi
 }
 
