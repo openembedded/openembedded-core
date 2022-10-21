@@ -80,6 +80,9 @@ SPL_MKIMAGE_DTCOPTS ??= ""
 UBOOT_MKIMAGE ?= "uboot-mkimage"
 UBOOT_MKIMAGE_SIGN ?= "${UBOOT_MKIMAGE}"
 
+# Signature activation - this requires KERNEL_IMAGETYPE = "fitImage"
+UBOOT_SIGN_ENABLE ?= "0"
+
 # Arguments passed to mkimage for signing
 UBOOT_MKIMAGE_SIGN_ARGS ?= ""
 SPL_MKIMAGE_SIGN_ARGS ?= ""

@@ -43,8 +43,7 @@ inherit uboot-config
 # Enable use of a U-Boot fitImage
 UBOOT_FITIMAGE_ENABLE ?= "0"
 
-# Signature activation - these require their respective fitImages
-UBOOT_SIGN_ENABLE ?= "0"
+# Signature activation - this requires UBOOT_FITIMAGE_ENABLE = "1"
 SPL_SIGN_ENABLE ?= "0"
 
 # Default value for deployment filenames.
@@ -71,36 +70,26 @@ SPL_NODTB_SYMLINK ?= "u-boot-spl-nodtb-${MACHINE}.bin"
 # U-Boot fitImage description
 UBOOT_FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 
-# Kernel / U-Boot fitImage Hash Algo
-FIT_HASH_ALG ?= "sha256"
+# U-Boot fitImage Hash Algo
 UBOOT_FIT_HASH_ALG ?= "sha256"
 
-# Kernel / U-Boot fitImage Signature Algo
-FIT_SIGN_ALG ?= "rsa2048"
+# U-Boot fitImage Signature Algo
 UBOOT_FIT_SIGN_ALG ?= "rsa2048"
 
-# Kernel / U-Boot fitImage Padding Algo
-FIT_PAD_ALG ?= "pkcs-1.5"
-
-# Generate keys for signing Kernel / U-Boot fitImage
-FIT_GENERATE_KEYS ?= "0"
+# Generate keys for signing U-Boot fitImage
 UBOOT_FIT_GENERATE_KEYS ?= "0"
 
 # Size of private keys in number of bits
-FIT_SIGN_NUMBITS ?= "2048"
 UBOOT_FIT_SIGN_NUMBITS ?= "2048"
 
 # args to openssl genrsa (Default is just the public exponent)
-FIT_KEY_GENRSA_ARGS ?= "-F4"
 UBOOT_FIT_KEY_GENRSA_ARGS ?= "-F4"
 
 # args to openssl req (Default is -batch for non interactive mode and
 # -new for new certificate)
-FIT_KEY_REQ_ARGS ?= "-batch -new"
 UBOOT_FIT_KEY_REQ_ARGS ?= "-batch -new"
 
 # Standard format for public key certificate
-FIT_KEY_SIGN_PKCS ?= "-x509"
 UBOOT_FIT_KEY_SIGN_PKCS ?= "-x509"
 
 # Functions on this bbclass can apply to either U-boot or Kernel,

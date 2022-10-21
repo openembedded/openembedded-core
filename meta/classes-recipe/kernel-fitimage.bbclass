@@ -65,6 +65,31 @@ python __anonymous () {
 # Description string
 FIT_DESC ?= "Kernel fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
 
+# Kernel fitImage Hash Algo
+FIT_HASH_ALG ?= "sha256"
+
+# Kernel fitImage Signature Algo
+FIT_SIGN_ALG ?= "rsa2048"
+
+# Kernel / U-Boot fitImage Padding Algo
+FIT_PAD_ALG ?= "pkcs-1.5"
+
+# Generate keys for signing Kernel fitImage
+FIT_GENERATE_KEYS ?= "0"
+
+# Size of private keys in number of bits
+FIT_SIGN_NUMBITS ?= "2048"
+
+# args to openssl genrsa (Default is just the public exponent)
+FIT_KEY_GENRSA_ARGS ?= "-F4"
+
+# args to openssl req (Default is -batch for non interactive mode and
+# -new for new certificate)
+FIT_KEY_REQ_ARGS ?= "-batch -new"
+
+# Standard format for public key certificate
+FIT_KEY_SIGN_PKCS ?= "-x509"
+
 # Sign individual images as well
 FIT_SIGN_INDIVIDUAL ?= "0"
 
