@@ -2,6 +2,7 @@ inherit allarch
 
 SUMMARY = "Operating system identification"
 DESCRIPTION = "The /usr/lib/os-release file contains operating system identification data."
+HOMEPAGE = "https://www.freedesktop.org/software/systemd/man/os-release.html"
 LICENSE = "MIT"
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -10,6 +11,7 @@ do_unpack[noexec] = "1"
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 
+# See: https://www.freedesktop.org/software/systemd/man/os-release.html
 # Other valid fields: BUILD_ID ID_LIKE ANSI_COLOR CPE_NAME
 #                     HOME_URL SUPPORT_URL BUG_REPORT_URL
 OS_RELEASE_FIELDS = "\
