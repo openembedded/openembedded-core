@@ -355,6 +355,27 @@ EOF
 }
 
 #
+# echoes symlink destination if it points below directory
+#
+# $1 ... file that's a potential symlink
+# $2 ... expected parent directory
+symlink_points_below() {
+	file="$2/$1"
+	dir=$2
+
+	if ! [ -L "$file" ]; then
+		return
+	fi
+
+	realpath="$(realpath --relative-to=$dir $file)"
+	if [ -z "${realpath%%../*}" ]; then
+		return
+	fi
+
+	echo "$realpath"
+}
+
+#
 # Emit the fitImage ITS configuration section
 #
 # $1 ... .its filename
@@ -392,7 +413,13 @@ fitimage_emit_section_config() {
 	setup_line=""
 	default_line=""
 
+	dtb_image_sect=$(symlink_points_below $dtb_image "${EXTERNAL_KERNEL_DEVICETREE}")
+	if [ -z "$dtb_image_sect" ]; then
+		dtb_image_sect=$dtb_image
+	fi
+
 	dtb_image=$(echo $dtb_image | tr '/' '_')
+	dtb_image_sect=$(echo "${dtb_image_sect}" | tr '/' '_')
 
 	# conf node name is selected based on dtb ID if it is present,
 	# otherwise its selected based on kernel ID
@@ -411,7 +438,7 @@ fitimage_emit_section_config() {
 	if [ -n "$dtb_image" ]; then
 		conf_desc="$conf_desc${sep}FDT blob"
 		sep=", "
-		fdt_line="fdt = \"fdt-$dtb_image\";"
+		fdt_line="fdt = \"fdt-$dtb_image_sect\";"
 	fi
 
 	if [ -n "$ramdisk_id" ]; then
@@ -568,6 +595,10 @@ fitimage_assemble() {
 			echo "$DTBS" | tr ' ' '\n' | grep -xq "$DTB" && continue
 
 			DTBS="$DTBS $DTB"
+
+			# Also skip if a symlink. We'll later have each config section point at it
+			[ $(symlink_points_below $DTB "${EXTERNAL_KERNEL_DEVICETREE}") ] && continue
+
 			DTB=$(echo $DTB | tr '/' '_')
 			fitimage_emit_section_dtb $1 $DTB "${EXTERNAL_KERNEL_DEVICETREE}/$DTB"
 		done
