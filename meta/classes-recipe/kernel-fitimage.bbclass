@@ -392,6 +392,8 @@ fitimage_emit_section_config() {
 	setup_line=""
 	default_line=""
 
+	dtb_image=$(echo $dtb_image | tr '/' '_')
+
 	# conf node name is selected based on dtb ID if it is present,
 	# otherwise its selected based on kernel ID
 	if [ -n "$dtb_image" ]; then
@@ -550,12 +552,11 @@ fitimage_assemble() {
 				DTB_PATH="${KERNEL_OUTPUT_DIR}/$DTB"
 			fi
 
-			DTB=$(echo "$DTB" | tr '/' '_')
-
 			# Skip DTB if we've picked it up previously
 			echo "$DTBS" | tr ' ' '\n' | grep -xq "$DTB" && continue
 
 			DTBS="$DTBS $DTB"
+			DTB=$(echo $DTB | tr '/' '_')
 			fitimage_emit_section_dtb $1 $DTB $DTB_PATH
 		done
 	fi
@@ -563,12 +564,11 @@ fitimage_assemble() {
 	if [ -n "${EXTERNAL_KERNEL_DEVICETREE}" ]; then
 		dtbcount=1
 		for DTB in $(find "${EXTERNAL_KERNEL_DEVICETREE}" \( -name '*.dtb' -o -name '*.dtbo' \) -printf '%P\n' | sort); do
-			DTB=$(echo "$DTB" | tr '/' '_')
-
 			# Skip DTB if we've picked it up previously
 			echo "$DTBS" | tr ' ' '\n' | grep -xq "$DTB" && continue
 
 			DTBS="$DTBS $DTB"
+			DTB=$(echo $DTB | tr '/' '_')
 			fitimage_emit_section_dtb $1 $DTB "${EXTERNAL_KERNEL_DEVICETREE}/$DTB"
 		done
 	fi
