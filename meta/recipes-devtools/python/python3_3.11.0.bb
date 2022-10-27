@@ -22,7 +22,6 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-python3-use-cc_basename-to-replace-CC-for-checking-c.patch \
            file://0001-bpo-36852-proper-detection-of-mips-architecture-for-.patch \
            file://crosspythonpath.patch \
-           file://0001-Use-FLAG_REF-always-for-interned-strings.patch \
            file://0001-test_locale.py-correct-the-test-output-format.patch \
            file://0017-setup.py-do-not-report-missing-dependencies-for-disa.patch \
            file://0001-Makefile-do-not-compile-.pyc-in-parallel.patch \
@@ -35,7 +34,6 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-setup.py-Do-not-detect-multiarch-paths-when-cross-co.patch \
            file://deterministic_imports.patch \
            file://0001-Avoid-shebang-overflow-on-python-config.py.patch \
-           file://0001-Mitigate-the-race-condition-in-testSockName.patch \
            "
 
 SRC_URI:append:class-native = " \
@@ -44,7 +42,7 @@ SRC_URI:append:class-native = " \
            file://12-distutils-prefix-is-inside-staging-area.patch \
            file://0001-Don-t-search-system-for-headers-libraries.patch \
            "
-SRC_URI[sha256sum] = "f795ff87d11d4b0c7c33bc8851b0c28648d8a4583aa2100a98c22b4326b6d3f3"
+SRC_URI[sha256sum] = "a57dc82d77358617ba65b9841cee1e3b441f386c3789ddc0676eca077f2951c3"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
@@ -62,7 +60,7 @@ CVE_CHECK_IGNORE += "CVE-2020-15523 CVE-2022-26488"
 # The module will be removed in the future and flaws documented.
 CVE_CHECK_IGNORE += "CVE-2015-20107"
 
-PYTHON_MAJMIN = "3.10"
+PYTHON_MAJMIN = "3.11"
 
 S = "${WORKDIR}/Python-${PV}"
 
@@ -81,11 +79,10 @@ DEPENDS = "bzip2-replacement-native libffi bzip2 openssl sqlite3 zlib virtual/li
 DEPENDS:append:class-target = " python3-native"
 DEPENDS:append:class-nativesdk = " python3-native"
 
-# force to use the mutex+cond implementation (https://bugs.python.org/issue41710)
-CFLAGS += "-DHAVE_BROKEN_POSIX_SEMAPHORES"
-
 EXTRA_OECONF = " --without-ensurepip --enable-shared --with-platlibdir=${baselib}"
 EXTRA_OECONF:append:class-native = " --bindir=${bindir}/${PN}"
+EXTRA_OECONF:append:class-target = " --with-build-python=nativepython3"
+EXTRA_OECONF:append:class-nativesdk = " --with-build-python=nativepython3"
 
 export CROSSPYTHONPATH="${STAGING_LIBDIR_NATIVE}/python${PYTHON_MAJMIN}/lib-dynload/"
 
