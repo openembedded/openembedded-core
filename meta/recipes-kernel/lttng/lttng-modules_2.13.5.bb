@@ -11,17 +11,12 @@ include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0009-Rename-genhd-wrapper-to-blkdev.patch \
-           file://0001-fix-mm-page_alloc-fix-tracepoint-mm_page_alloc_zone_.patch \
-           file://0002-fix-fs-Remove-flags-parameter-from-aops-write_begin-.patch \
-           file://0003-fix-workqueue-Fix-type-of-cpu-in-trace-event-v5.19.patch \
-           file://0001-fix-net-skb-introduce-kfree_skb_reason-v5.15.58.v5.1.patch \
-           file://0001-fix-compaction.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "6159d00e4e1d59546eec8d4a67e1aa39c1084ceb5e5afeb666eab4b8a5b5a9ee"
+SRC_URI[sha256sum] = "eceb3428d80e85a9f008425beb9526195c9f7f02b302f28add56df53aef3e708"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
