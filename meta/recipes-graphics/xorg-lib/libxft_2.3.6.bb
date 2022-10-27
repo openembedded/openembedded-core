@@ -20,7 +20,8 @@ PROVIDES = "xft"
 
 PE = "1"
 
-SRC_URI[sha256sum] = "57dedaab20914002146bdae0cb0c769ba3f75214c4c91bd2613d6ef79fc9abdd"
+XORG_EXT = "tar.xz"
+SRC_URI[sha256sum] = "60a6e7319fc938bbb8d098c9bcc86031cc2327b5d086d3335fc5c76323c03022"
 
 XORG_PN = "libXft"
 
