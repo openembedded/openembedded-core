@@ -16,14 +16,13 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://gpg-error_pkconf.patch \
 "
 
-SRC_URI[sha256sum] = "10072045a3e043d0581f91cd5676fcac7ffee957a16636adedaa4f583a616470"
+SRC_URI[sha256sum] = "457a185e5a85238fb945a955dc6352ab962dc8b48720b62fc9fa48c7540a4067"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "ncurses libcap"
+PACKAGECONFIG ??= "ncurses"
 
 PACKAGECONFIG[ncurses] = "--enable-ncurses  --with-ncurses-include-dir=${STAGING_INCDIR}, --disable-ncurses, ncurses"
-PACKAGECONFIG[libcap] = "--with-libcap, --without-libcap, libcap"
 PACKAGECONFIG[qt] = "--enable-pinentry-qt, --disable-pinentry-qt, qtbase-native qtbase"
 PACKAGECONFIG[gtk2] = "--enable-pinentry-gtk2, --disable-pinentry-gtk2, gtk+ glib-2.0"
 

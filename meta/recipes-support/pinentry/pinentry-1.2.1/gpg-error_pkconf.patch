@@ -1,4 +1,4 @@
-From 54a4c9d3e5f1897ed4b978d5cdee646ca7a4f637 Mon Sep 17 00:00:00 2001
+From 785777dc0bc6b69ff68c91547ec6b6634049662f Mon Sep 17 00:00:00 2001
 From: Armin Kuster <akuster@mvista.com>
 Date: Fri, 2 Sep 2005 11:50:01 +0000
 Subject: [PATCH] Add gtk+, avahi, dbus-0.34 (.36 coming soon) and
@@ -11,14 +11,14 @@ Upstream-Status: Inappropriate [OE specific]
 Signed-off-by: Armin Kuster <akuster@mvista.com>
 
 ---
- m4/gpg-error.m4 | 159 ++----------------------------------------------
- 1 file changed, 4 insertions(+), 155 deletions(-)
+ m4/gpg-error.m4 | 160 ++----------------------------------------------
+ 1 file changed, 4 insertions(+), 156 deletions(-)
 
 diff --git a/m4/gpg-error.m4 b/m4/gpg-error.m4
-index 56a5d07..c0bec1f 100644
+index 4b5cd40..7dfbb83 100644
 --- a/m4/gpg-error.m4
 +++ b/m4/gpg-error.m4
-@@ -26,159 +26,12 @@ dnl config script does not match the host specification the script
+@@ -26,160 +26,12 @@ dnl config script does not match the host specification the script
  dnl is added to the gpg_config_script_warn variable.
  dnl
  AC_DEFUN([AM_PATH_GPG_ERROR],
@@ -135,6 +135,7 @@ index 56a5d07..c0bec1f 100644
 -    fi
 -  elif test "$GPG_ERROR_CONFIG" != "no"; then
 -    gpg_error_config_version=`$GPG_ERROR_CONFIG --version`
+-    unset GPGRT_CONFIG
 -  fi
 -  if test "$GPG_ERROR_CONFIG" != "no"; then
 -    req_major=`echo $min_gpg_error_version | \
@@ -182,7 +183,7 @@ index 56a5d07..c0bec1f 100644
      if test x"$gpg_error_config_host" != xnone ; then
        if test x"$gpg_error_config_host" != x"$host" ; then
    AC_MSG_WARN([[
-@@ -193,10 +46,6 @@ AC_DEFUN([AM_PATH_GPG_ERROR],
+@@ -194,10 +46,6 @@ AC_DEFUN([AM_PATH_GPG_ERROR],
        fi
      fi
    else
