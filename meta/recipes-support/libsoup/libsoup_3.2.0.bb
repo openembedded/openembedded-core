@@ -12,14 +12,14 @@ DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 libpsl nghttp2"
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
 SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz"
-SRC_URI[sha256sum] = "ebdf90cf3599c11acbb6818a9d9e3fc9d2c68e56eb829b93962972683e1bf7c8"
+SRC_URI[sha256sum] = "2832370698ca8f9fbf174c345b73d89b60561103a626c2df70726b0707f79bd3"
 
 PROVIDES = "libsoup-3.0"
 CVE_PRODUCT = "libsoup"
 
 S = "${WORKDIR}/libsoup-${PV}"
 
-inherit meson gettext pkgconfig upstream-version-is-even gobject-introspection gtk-doc
+inherit meson gettext pkgconfig upstream-version-is-even gobject-introspection gi-docgen
 
 GIR_MESON_ENABLE_FLAG = 'enabled'
 GIR_MESON_DISABLE_FLAG = 'disabled'
@@ -30,7 +30,9 @@ PACKAGECONFIG[gssapi] = "-Dgssapi=enabled,-Dgssapi=disabled,krb5"
 
 EXTRA_OEMESON:append = " -Dvapi=disabled -Dtls_check=false"
 
-GTKDOC_MESON_OPTION = "gtk_doc"
+GIDOCGEN_MESON_OPTION = 'docs'
+GIDOCGEN_MESON_ENABLE_FLAG = 'enabled'
+GIDOCGEN_MESON_DISABLE_FLAG = 'disabled'
 
 # When built without gnome support, libsoup will contain only one shared lib
 # and will therefore become subject to renaming by debian.bbclass. Prevent
