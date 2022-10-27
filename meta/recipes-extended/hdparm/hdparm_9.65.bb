@@ -24,10 +24,9 @@ RDEPENDS:wiper = "bash gawk coreutils"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz \
            file://wiper.sh-fix-stat-path.patch \
-           file://0001-hdparm-Remove-unused-linux-fs.h-header.patch \
-          "
+           "
 
-SRC_URI[sha256sum] = "315b956951c3fea027287de204381534217c0bd0f37b4935877fe2db0cab859a"
+SRC_URI[sha256sum] = "d14929f910d060932e717e9382425d47c2e7144235a53713d55a94f7de535a4b"
 
 EXTRA_OEMAKE = 'STRIP="echo" LDFLAGS="${LDFLAGS}"'
 
