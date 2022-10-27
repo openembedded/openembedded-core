@@ -9,9 +9,10 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=548a66038a77415e1df51118625e832f \
                    "
 
-SRC_URI = "https://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz \
+SRC_URI = "https://gitlab.freedesktop.org/wayland/wayland-utils/-/releases/${PV}/downloads/${BPN}-${PV}.tar.xz \
+           file://0001-wayland-info-Fix-build-without-libdrm.patch \
            "
-SRC_URI[sha256sum] = "64fecc4c58e87ae9b302901abe10c2e8af69c7503c221a96ecd0700e0aa268c0"
+SRC_URI[sha256sum] = "9e685863025b4feade36d53bbc8e31b43e26498be743dea84c7a84912959410a"
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
