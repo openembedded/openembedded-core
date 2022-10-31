@@ -3,18 +3,16 @@
 
 SUMMARY = "Glibc hierarchical argument parsing standalone library"
 DESCRIPTION = "Standalone version of arguments parsing functions from GLIBC"
-HOMEPAGE = "http://www.lysator.liu.se/~nisse/misc/"
+HOMEPAGE = "https://github.com/ericonr/argp-standalone"
 LICENSE = "LGPL-2.1-only"
-LIC_FILES_CHKSUM = "file://argp.h;beginline=1;endline=20;md5=008b7e53dea6f9e1d9fdef0d9cf3184a"
+LIC_FILES_CHKSUM = "file://argp.h;beginline=1;endline=20;md5=464f2cfb1c35a5123f9e309d7afd79f8"
 SECTION = "libs"
 
-SRC_URI = "http://www.lysator.liu.se/~nisse/misc/argp-standalone-${PV}.tar.gz \
-           file://0001-throw-in-funcdef.patch \
-           file://0002-isprint.patch \
+SRC_URI = "git://github.com/ericonr/argp-standalone;branch=master;protocol=https \
            file://out_of_tree_build.patch \
           "
-SRC_URI[md5sum] = "720704bac078d067111b32444e24ba69"
-SRC_URI[sha256sum] = "dec79694da1319acd2238ce95df57f3680fea2482096e483323fddf3d818d8be"
+SRCREV = "e5fe9ad9e83e6765cf8fa787f903d4c6792338b5"
+S = "${WORKDIR}/git"
 
 inherit autotools
 
