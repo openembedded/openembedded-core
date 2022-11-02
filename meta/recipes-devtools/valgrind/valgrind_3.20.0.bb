@@ -39,9 +39,8 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://0001-none-tests-fdleak_cmsg.stderr.exp-adjust-tmp-paths.patch \
            file://0001-memcheck-tests-Fix-timerfd-syscall-test.patch \
            file://0001-docs-Disable-manual-validation.patch \
-           file://0001-Fix-drd-tests-shared_timed_mutex.cpp.patch \
            "
-SRC_URI[sha256sum] = "dd5e34486f1a483ff7be7300cc16b4d6b24690987877c3278d797534d6738f02"
+SRC_URI[sha256sum] = "8536c031dbe078d342f121fa881a9ecd205cb5a78e639005ad570011bdb9f3c6"
 UPSTREAM_CHECK_REGEX = "valgrind-(?P<pver>\d+(\.\d+)+)\.tar"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64).*-linux'
