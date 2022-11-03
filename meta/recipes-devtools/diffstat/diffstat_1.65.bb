@@ -5,14 +5,14 @@ reviewing large, complex patch files."
 HOMEPAGE = "http://invisible-island.net/diffstat/"
 SECTION = "devel"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=f605b1986cc3b808ec0e4fa9d0e0f2d9"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6450594049f0eed1052e634ddcbeec28"
 
 SRC_URI = "http://invisible-mirror.net/archives/${BPN}/${BP}.tgz \
            file://run-ptest \
            file://avoid-check-user-break-cc.patch \
            "
 
-SRC_URI[sha256sum] = "b8aee38d9d2e1d05926e6b55810a9d2c2dd407f24d6a267387563a4436e3f7fc"
+SRC_URI[sha256sum] = "8cf27424926debcd85921755c3915559288244bd103f62d740dc6b83b557a28a"
 
 inherit autotools gettext ptest
 
