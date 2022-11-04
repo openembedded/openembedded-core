@@ -7,7 +7,7 @@ inherit pypi python_hatchling
 
 PYPI_PACKAGE = "hatch_fancy_pypi_readme"
 
-SRC_URI[sha256sum] = "dedf2ba0b81a2975abb1deee9310b2eb85d22380fda0d52869e760b5435aa596"
+SRC_URI[sha256sum] = "da91282ca09601c18aded8e378daf8b578c70214866f0971156ee9bb9ce6c26a"
 
 BBCLASSEXTEND = "native nativesdk"
 
