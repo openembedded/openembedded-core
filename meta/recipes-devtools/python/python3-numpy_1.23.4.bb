@@ -13,7 +13,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://run-ptest \
            file://0001-generate_umath.py-do-not-write-full-path-to-output-f.patch \
            "
-SRC_URI[sha256sum] = "51bf49c0cd1d52be0a240aa66f3458afc4b95d8993d2d04f0d91fa60c10af6cd"
+SRC_URI[sha256sum] = "ed2cc92af0efad20198638c69bb0fc2870a58dabfba6eb722c933b48556c686c"
 
 GITHUB_BASE_URI = "https://github.com/numpy/numpy/releases"
 
