@@ -20,11 +20,14 @@ DEPENDS += "gstreamer1.0-plugins-base libcap zlib"
 RPROVIDES:${PN}-pulseaudio += "${PN}-pulse"
 RPROVIDES:${PN}-soup += "${PN}-souphttpsrc"
 
+PACKAGECONFIG_SOUP ?= "soup3"
+
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \
+    ${PACKAGECONFIG_SOUP} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'pulseaudio x11', d)} \
     ${@bb.utils.contains('TUNE_FEATURES', 'm64', 'asm', '', d)} \
-    bz2 cairo flac gdk-pixbuf gudev jpeg lame libpng mpg123 soup speex taglib v4l2 \
+    bz2 cairo flac gdk-pixbuf gudev jpeg lame libpng mpg123 speex taglib v4l2 \
 "
 
 X11DEPENDS = "virtual/libx11 libsm libxrender libxfixes libxdamage"
@@ -53,8 +56,9 @@ PACKAGECONFIG[qt5]        = "-Dqt5=enabled,-Dqt5=disabled,qtbase qtdeclarative q
 # instead of linking to it. And instead of using the default libsoup C headers, it
 # uses its own stub header. Consequently, objdump will not show the libsoup .so as
 # a dependency, and libsoup won't be added to an image. Fix this by setting libsoup
-# as RDEPEND instead of DEPEND.
-PACKAGECONFIG[soup]       = "-Dsoup=enabled,-Dsoup=disabled,,libsoup-2.4"
+# as RDEPEND.
+PACKAGECONFIG[soup2] = "-Dsoup=enabled,,libsoup-2.4,libsoup-2.4,,soup3"
+PACKAGECONFIG[soup3] = "-Dsoup=enabled,,libsoup,libsoup,,soup2"
 PACKAGECONFIG[speex]      = "-Dspeex=enabled,-Dspeex=disabled,speex"
 PACKAGECONFIG[rpi]        = "-Drpicamsrc=enabled,-Drpicamsrc=disabled,userland"
 PACKAGECONFIG[taglib]     = "-Dtaglib=enabled,-Dtaglib=disabled,taglib"
