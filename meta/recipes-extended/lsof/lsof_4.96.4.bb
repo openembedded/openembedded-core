@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://00README;beginline=645;endline=679;md5=964df275d26429
 
 SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https \
            file://remove-host-information.patch"
-SRCREV = "eec10fac8f57544e26ff00bf41a2dc09c56049bf"
+SRCREV = "669c33a253e414feb60fbbcf2984c25dc413cd75"
 
 S = "${WORKDIR}/git"
 
