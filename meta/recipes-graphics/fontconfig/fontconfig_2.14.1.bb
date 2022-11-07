@@ -25,7 +25,7 @@ SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
            file://revert-static-pkgconfig.patch \
            "
 
-SRC_URI[sha256sum] = "b8f607d556e8257da2f3616b4d704be30fd73bd71e367355ca78963f9a7f0434"
+SRC_URI[sha256sum] = "ae480e9ca34382790312ff062c625ec70df94d6d9a9366e2b2b3d525f7f90387"
 
 UPSTREAM_CHECK_REGEX = "fontconfig-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
