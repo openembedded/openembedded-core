@@ -7,7 +7,7 @@ inherit pypi setuptools3
 
 PYPI_PACKAGE = "dtschema"
 
-SRC_URI[sha256sum] = "128c88a393cd04154cef4d4b10a643e4473ae290b436e8e61d2e97ae8e53255d"
+SRC_URI[sha256sum] = "c9533312a2d77c4ccdbffda1504aba850d9b224fd8b43e929cee2aa68478e82a"
 
 DEPENDS += "python3-setuptools-scm-native"
 RDEPENDS:${PN} += "python3-ruamel-yaml python3-jsonschema python3-rfc3987"
