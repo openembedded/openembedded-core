@@ -21,7 +21,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
 DEPENDS = "gperf-native"
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz"
-SRC_URI[sha256sum] = "3c0184c0e492d7c208ce31d25dd1d2c58f0c3ed6cbbe032c5b248cddad318544"
+SRC_URI[sha256sum] = "a2252beeec830ac444b9f68d6b38ad883db19919db35b52222cf827c385bdb6a"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
