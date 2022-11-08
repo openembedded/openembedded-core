@@ -1121,3 +1121,6 @@ INSANE_SKIP = "arch"
 
 # Don't warn about already stripped files
 INSANE_SKIP:${PN} = "already-stripped"
+
+# No need to put firmware into the sysroot
+SYSROOT_DIRS_IGNORE += "${nonarch_base_libdir}/firmware"
