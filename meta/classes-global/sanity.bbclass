@@ -625,11 +625,9 @@ def check_sanity_version_change(status, d):
     # never again until the sanity version or host distrubution id/version changes.
 
     # Check the python install is complete. Examples that are often removed in
-    # minimal installations: glib-2.0-natives requries # xml.parsers.expat and icu
-    # requires distutils.sysconfig.
+    # minimal installations: glib-2.0-natives requries # xml.parsers.expat
     try:
         import xml.parsers.expat
-        import distutils.sysconfig
     except ImportError as e:
         status.addresult('Your Python 3 is not a full install. Please install the module %s (see the Getting Started guide for further information).\n' % e.name)
 
