@@ -16,8 +16,6 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://cgi_py.patch \
            file://0001-Do-not-add-usr-lib-termcap-to-linker-flags-to-avoid-.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'tk', '', 'file://avoid_warning_about_tkinter.patch', d)} \
-           file://0001-Do-not-use-the-shell-version-of-python-config-that-w.patch \
-           file://python-config.patch \
            file://0001-Makefile.pre-use-qemu-wrapper-when-gathering-profile.patch \
            file://0001-python3-use-cc_basename-to-replace-CC-for-checking-c.patch \
            file://0001-bpo-36852-proper-detection-of-mips-architecture-for-.patch \
@@ -175,6 +173,9 @@ do_install:append:class-native() {
         
         # disable the lookup in user's site-packages globally
         sed -i 's#ENABLE_USER_SITE = None#ENABLE_USER_SITE = False#' ${D}${libdir}/python${PYTHON_MAJMIN}/site.py
+
+        # python3-config needs to be in /usr/bin and not in a subdir of it to work properly
+        mv ${D}/${bindir}/${PN}/python*config ${D}/${bindir}/
 }
 
 do_install:append() {
@@ -222,6 +223,19 @@ do_install:append:class-nativesdk () {
     done
     create_wrapper ${D}${bindir}/python${PYTHON_MAJMIN} TERMINFO_DIRS='${sysconfdir}/terminfo:/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo' PYTHONNOUSERSITE='1'
 }
+
+SYSROOT_PREPROCESS_FUNCS:append:class-target = " provide_target_config_script"
+SYSROOT_PREPROCESS_FUNCS:append:class-nativesdk = " provide_target_config_script"
+
+# This is installed into /usr/python-target-config/ and not /usr/bin
+# because adding target sysroot's /usr/bin/ to PATH has unwanted side effects
+# in components erroneously picking up other target executables from it
+provide_target_config_script() {
+        install -d ${SYSROOT_DESTDIR}${prefix}/python-target-config/
+        install ${D}/${bindir}/python3-config ${SYSROOT_DESTDIR}/${prefix}/python-target-config/
+        install ${D}/${bindir}/python${PYTHON_MAJMIN}-config ${SYSROOT_DESTDIR}/${prefix}/python-target-config/
+}
+SYSROOT_DIRS += "${prefix}/python-target-config/"
 
 SSTATE_SCAN_FILES += "Makefile _sysconfigdata.py"
 SSTATE_HASHEQUIV_FILEMAP = " \
