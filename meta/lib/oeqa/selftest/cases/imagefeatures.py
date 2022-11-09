@@ -271,7 +271,6 @@ SKIP_RECIPE[busybox] = "Don't build this"
         image_name = 'core-image-minimal'
         features = 'IMAGE_GEN_DEBUGFS = "1"\n'
         features += 'IMAGE_FSTYPES_DEBUGFS = "tar.bz2"\n'
-        features += 'MACHINE = "genericx86-64"\n'
         self.write_config(features)
 
         bitbake(image_name)
