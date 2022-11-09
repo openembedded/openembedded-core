@@ -817,7 +817,8 @@ class Wic2(WicTestCase):
                                       self.resultdir))
         self.assertEqual(1, len(glob(os.path.join(self.resultdir, "wictestdisk-*direct"))))
 
-    @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
+    # TODO this test could also work on aarch64
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     def test_wic_image_type(self):
         """Test building wic images by bitbake"""
         config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "wic-image-minimal"\n'\
@@ -1042,7 +1043,8 @@ class Wic2(WicTestCase):
             size = int(size[:-3])
             self.assertGreaterEqual(size, 204800)
 
-    @only_for_arch(['i586', 'i686', 'x86_64', 'aarch64'])
+    # TODO this test could also work on aarch64
+    @only_for_arch(['i586', 'i686', 'x86_64'])
     @OETestTag("runqemu")
     def test_rawcopy_plugin_qemu(self):
         """Test rawcopy plugin in qemu"""
