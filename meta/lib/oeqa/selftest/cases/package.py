@@ -135,8 +135,10 @@ class PackageTests(OESelftestTestCase):
                     self.logger.error("No debugging symbols found. GDB result:\n%s" % output)
                     return False
 
-                # Check debugging symbols works correctly
-                elif re.match(r"Breakpoint 1.*hello\.c.*4", l):
+                # Check debugging symbols works correctly. Don't look for a
+                # source file as optimisation can put the breakpoint inside
+                # stdio.h.
+                elif "Breakpoint 1 at" in l:
                     return True
 
             self.logger.error("GDB result:\n%d: %s", status, output)
