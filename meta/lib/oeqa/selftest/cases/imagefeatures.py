@@ -206,9 +206,12 @@ class ImageFeatures(OESelftestTestCase):
         skip_image_types = set(('container', 'elf', 'f2fs', 'multiubi', 'tar.zst', 'wic.zst', 'squashfs-lzo'))
         img_types = all_image_types - skip_image_types
 
-        config = 'IMAGE_FSTYPES += "%s"\n'\
-                 'MKUBIFS_ARGS ?= "-m 2048 -e 129024 -c 2047"\n'\
-                 'UBINIZE_ARGS ?= "-m 2048 -p 128KiB -s 512"' % ' '.join(img_types)
+        config = """
+IMAGE_FSTYPES += "%s"
+WKS_FILE = "wictestdisk.wks"
+MKUBIFS_ARGS ?= "-m 2048 -e 129024 -c 2047"
+UBINIZE_ARGS ?= "-m 2048 -p 128KiB -s 512"
+""" % ' '.join(img_types)
         self.write_config(config)
 
         bitbake(image_name)
