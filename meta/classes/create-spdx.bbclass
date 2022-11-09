@@ -795,6 +795,7 @@ def spdx_get_src(d):
             bb.build.exec_func('do_unpack', d)
         # Copy source of kernel to spdx_workdir
         if is_work_shared_spdx(d):
+            share_src = d.getVar('WORKDIR')
             d.setVar('WORKDIR', spdx_workdir)
             d.setVar('STAGING_DIR_NATIVE', spdx_sysroot_native)
             src_dir = spdx_workdir + "/" + d.getVar('PN')+ "-" + d.getVar('PV') + "-" + d.getVar('PR')
@@ -802,8 +803,8 @@ def spdx_get_src(d):
             if bb.data.inherits_class('kernel',d):
                 share_src = d.getVar('STAGING_KERNEL_DIR')
             cmd_copy_share = "cp -rf " + share_src + "/* " + src_dir + "/"
-            cmd_copy_kernel_result = os.popen(cmd_copy_share).read()
-            bb.note("cmd_copy_kernel_result = " + cmd_copy_kernel_result)
+            cmd_copy_shared_res = os.popen(cmd_copy_share).read()
+            bb.note("cmd_copy_shared_result = " + cmd_copy_shared_res)
 
             git_path = src_dir + "/.git"
             if os.path.exists(git_path):
