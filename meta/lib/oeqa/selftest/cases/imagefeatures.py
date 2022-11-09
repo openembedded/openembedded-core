@@ -136,7 +136,7 @@ class ImageFeatures(OESelftestTestCase):
         img_types = [ 'vmdk', 'vdi', 'qcow2' ]
         features = ""
         for itype in img_types:
-            features += 'IMAGE_FSTYPES += "wic.%s"\n' % itype
+            features += 'IMAGE_FSTYPES += "ext4.%s"\n' % itype
         self.write_config(features)
 
         image_name = 'core-image-minimal'
@@ -145,7 +145,7 @@ class ImageFeatures(OESelftestTestCase):
         deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
         link_name = get_bb_var('IMAGE_LINK_NAME', image_name)
         for itype in img_types:
-            image_path = os.path.join(deploy_dir_image, "%s.wic.%s" %
+            image_path = os.path.join(deploy_dir_image, "%s.ext4.%s" %
                                       (link_name, itype))
 
             # check if result image file is in deploy directory
