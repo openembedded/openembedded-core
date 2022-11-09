@@ -7,11 +7,13 @@
 # To use it add testexport to global inherit and call your target image with -c testexport
 # You can try it out like this:
 # - First build an image. i.e. core-image-sato
-# - Add INHERIT += "testexport" in local.conf
+# - Add IMAGE_CLASSES += "testexport" in local.conf
 # - Then bitbake core-image-sato -c testexport. That will generate the directory structure
 #   to execute the runtime tests using runexported.py.
 #
 # For more information on TEST_SUITES check testimage class.
+
+inherit testimage
 
 TEST_LOG_DIR ?= "${WORKDIR}/testexport"
 TEST_EXPORT_DIR ?= "${TMPDIR}/testexport/${PN}"
@@ -176,5 +178,3 @@ def testexport_create_tarball(d, tar_name, src_dir):
     tar.add(base_name)
     tar.close()
     os.chdir(current_dir)
-
-IMAGE_CLASSES += "testimage"
