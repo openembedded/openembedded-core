@@ -9,5 +9,4 @@ LIC_FILES_CHKSUM = "file://image/xcb_image.c;endline=24;md5=eafdf965cfb89955fded
 SRC_URI += "file://clang.patch \
 "
 
-SRC_URI[md5sum] = "08fe8ffecc8d4e37c0ade7906b3f4c87"
-SRC_URI[sha256sum] = "2db96a37d78831d643538dd1b595d7d712e04bdccf8896a5e18ce0f398ea2ffc"
+SRC_URI[sha256sum] = "ccad8ee5dadb1271fd4727ad14d9bd77a64e505608766c4e98267d9aede40d3d"
