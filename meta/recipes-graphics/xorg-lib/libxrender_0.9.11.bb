@@ -18,7 +18,6 @@ PE = "1"
 XORG_PN = "libXrender"
 
 BBCLASSEXTEND = "native nativesdk"
-
-SRC_URI[md5sum] = "802179a76bded0b658f4e9ec5e1830a4"
-SRC_URI[sha256sum] = "c06d5979f86e64cabbde57c223938db0b939dff49fdb5a793a1d3d0396650949"
+XORG_EXT = "tar.xz"
+SRC_URI[sha256sum] = "bc53759a3a83d1ff702fb59641b3d2f7c56e05051fa0cfa93501166fa782dc24"
 
