@@ -15,7 +15,7 @@ EXTRA_OECONF += "--with-shared-memory-dir=/dev/shm"
 
 SRC_URI += "file://0001-xshmfence_futex.h-Define-SYS_futex-if-it-does-not-ex.patch"
 
-SRC_URI[md5sum] = "42dda8016943dc12aff2c03a036e0937"
-SRC_URI[sha256sum] = "b884300d26a14961a076fbebc762a39831cb75f92bed5ccf9836345b459220c7"
+XORG_EXT = "tar.xz"
+SRC_URI[sha256sum] = "1129f95147f7bfe6052988a087f1b7cb7122283d2c47a7dbf7135ce0df69b4f8"
 
 BBCLASSEXTEND = "native nativesdk"
