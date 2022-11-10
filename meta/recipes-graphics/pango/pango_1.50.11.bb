@@ -38,13 +38,15 @@ PACKAGECONFIG[thai] = ",,libthai"
 GIR_MESON_OPTION = 'introspection'
 
 do_configure:prepend() {
-    chmod +x ${S}/tests/*.py
+	chmod +x ${S}/tests/*.py
 }
 
 # https://gitlab.gnome.org/GNOME/pango/-/issues/713
 do_install:append() {
-    mkdir -p ${D}/${libexecdir}/installed-tests/pango/nofonts/
-    install ${S}/tests/nofonts/fonts.conf ${D}/${libexecdir}/installed-tests/pango/nofonts/
+	if [ "${@bb.utils.filter('PACKAGECONFIG', 'tests', d)}" ]; then
+		mkdir -p ${D}${libexecdir}/installed-tests/pango/nofonts
+		install ${S}/tests/nofonts/fonts.conf ${D}${libexecdir}/installed-tests/pango/nofonts
+	fi
 }
 
 LEAD_SONAME = "libpango-1.0*"
