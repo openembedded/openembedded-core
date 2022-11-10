@@ -21,8 +21,9 @@ GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 
 SRC_URI += "file://run-ptest \
-            file://0001-Skip-running-test-layout-test.patch \
-"
+           file://0001-Skip-running-test-layout-test.patch \
+           file://0001-tests-meson.build-install-nofonts-fonts.conf-as-it-i.patch \
+           "
 
 SRC_URI[archive.sha256sum] = "8800f812d89ee61388188703203f3a7878963c22f8695aaf1fa0a1a1428d17ae"
 
@@ -39,14 +40,6 @@ GIR_MESON_OPTION = 'introspection'
 
 do_configure:prepend() {
 	chmod +x ${S}/tests/*.py
-}
-
-# https://gitlab.gnome.org/GNOME/pango/-/issues/713
-do_install:append() {
-	if [ "${@bb.utils.filter('PACKAGECONFIG', 'tests', d)}" ]; then
-		mkdir -p ${D}${libexecdir}/installed-tests/pango/nofonts
-		install ${S}/tests/nofonts/fonts.conf ${D}${libexecdir}/installed-tests/pango/nofonts
-	fi
 }
 
 LEAD_SONAME = "libpango-1.0*"
