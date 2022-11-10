@@ -6,8 +6,9 @@ protocol that is provided by VMware virtual machines to give absolute \
 pointer positioning. The vmmouse driver is capable of falling back to the \
 standard 'mouse' driver if a VMware virtual machine is not detected."
 
-SRC_URI[md5sum] = "85e2e464b7219c495ad3a16465c226ed"
-SRC_URI[sha256sum] = "0af558957ac1be1b2863712c2475de8f4d7f14921fd01ded2e2fde4921b19319"
+XORG_DRIVER_COMPRESSOR = ".tar.xz"
+
+SRC_URI[sha256sum] = "56f077580ab8f02e2f40358c5c46b0ae3e1828fc77744526b24adf1ceea339b8"
 
 RDEPENDS:${PN} += "xf86-input-mouse"
 
