@@ -1005,13 +1005,6 @@ def check_sanity(sanity_data):
     if status.messages != "":
         raise_sanity_error(sanity_data.expand(status.messages), sanity_data, status.network_error)
 
-# Create a copy of the datastore and finalise it to ensure appends and 
-# overrides are set - the datastore has yet to be finalised at ConfigParsed
-def copy_data(e):
-    sanity_data = bb.data.createCopy(e.data)
-    sanity_data.finalize()
-    return sanity_data
-
 addhandler config_reparse_eventhandler
 config_reparse_eventhandler[eventmask] = "bb.event.ConfigParsed"
 python config_reparse_eventhandler() {
@@ -1022,13 +1015,13 @@ addhandler check_sanity_eventhandler
 check_sanity_eventhandler[eventmask] = "bb.event.SanityCheck bb.event.NetworkTest"
 python check_sanity_eventhandler() {
     if bb.event.getName(e) == "SanityCheck":
-        sanity_data = copy_data(e)
+        sanity_data = bb.data.createCopy(e.data)
         check_sanity(sanity_data)
         if e.generateevents:
             sanity_data.setVar("SANITY_USE_EVENTS", "1")
         bb.event.fire(bb.event.SanityCheckPassed(), e.data)
     elif bb.event.getName(e) == "NetworkTest":
-        sanity_data = copy_data(e)
+        sanity_data = bb.data.createCopy(e.data)
         if e.generateevents:
             sanity_data.setVar("SANITY_USE_EVENTS", "1")
         bb.event.fire(bb.event.NetworkTestFailed() if check_connectivity(sanity_data) else bb.event.NetworkTestPassed(), e.data)
