@@ -17,7 +17,6 @@ S = "${WORKDIR}/git"
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
 inherit cmake features_check pkgconfig
-ANY_OF_DISTRO_FEATURES = "x11 wayland"
 
 DEPENDS += "vulkan-headers"
 
@@ -29,7 +28,6 @@ EXTRA_OECMAKE = "\
                  -DVulkanRegistry_DIR=${RECIPE_SYSROOT}/${datadir} \
                  "
 
-# must choose x11 or wayland or both
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 
 PACKAGECONFIG[x11] = "-DBUILD_WSI_XLIB_SUPPORT=ON -DBUILD_WSI_XCB_SUPPORT=ON, -DBUILD_WSI_XLIB_SUPPORT=OFF -DBUILD_WSI_XCB_SUPPORT=OFF, libxcb libx11 libxrandr"
