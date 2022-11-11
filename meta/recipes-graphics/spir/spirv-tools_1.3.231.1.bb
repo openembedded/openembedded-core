@@ -25,9 +25,10 @@ EXTRA_OECMAKE += "\
 "
 
 do_install:append:class-target() {
-    # reproducibility: remove build host path
+    # Properly set _IMPORT_PREFIX in INTERFACE_LINK_LIBRARIES so that dependent
+    # tools can find the right library
     sed -i ${D}${libdir}/cmake/SPIRV-Tools/SPIRV-ToolsTarget.cmake \
-        -e 's:${STAGING_DIR_HOST}::g'
+        -e 's:INTERFACE_LINK_LIBRARIES.*$:INTERFACE_LINK_LIBRARIES "\$\{_IMPORT_PREFIX\}/lib":'
 }
 
 # all the libraries are unversioned, so don't pack it on PN-dev
