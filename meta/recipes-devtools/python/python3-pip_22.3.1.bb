@@ -33,7 +33,7 @@ inherit pypi python_setuptools_build_meta
 
 SRC_URI += "file://no_shebang_mangling.patch"
 
-SRC_URI[sha256sum] = "8182aec21dad6c0a49a2a3d121a87cd524b950e0b6092b181625f07ebdde7530"
+SRC_URI[sha256sum] = "65fd48317359f3af8e593943e6ae1506b66325085ea64b706a998c6e83eeaf38"
 
 do_install:append() {
     rm -f ${D}/${bindir}/pip
