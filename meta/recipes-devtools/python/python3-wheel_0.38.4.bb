@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://PKG-INFO;beginline=10;endline=10;md5=8227180126797a0148f94f483f3e1489"
 
-SRC_URI[sha256sum] = "d52844afee64cdd4bb28061ba6b5c06818b237fb490263e0dbea227080f7d2d7"
+SRC_URI[sha256sum] = "965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac"
 
 inherit python_flit_core pypi
 
