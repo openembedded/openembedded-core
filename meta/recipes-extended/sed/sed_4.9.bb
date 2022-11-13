@@ -2,8 +2,8 @@ SUMMARY = "Stream EDitor (text filtering utility)"
 HOMEPAGE = "http://www.gnu.org/software/sed/"
 DESCRIPTION = "sed (stream editor) is a non-interactive command-line text editor."
 LICENSE = "GPL-3.0-or-later"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e \
-                    file://sed/sed.h;beginline=1;endline=15;md5=fb3c7e6fbca6f66943859153d4be8efe \
+LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
+                    file://sed/sed.h;beginline=1;endline=15;md5=4e8e0f77bc4c1c2c02c2b90d3d24c670 \
                     "
 SECTION = "console/utils"
 
@@ -11,8 +11,7 @@ SRC_URI = "${GNU_MIRROR}/sed/sed-${PV}.tar.xz \
            file://run-ptest \
 "
 
-SRC_URI[md5sum] = "6d906edfdb3202304059233f51f9a71d"
-SRC_URI[sha256sum] = "f79b0cfea71b37a8eeec8490db6c5f7ae7719c35587f21edb0617f370eeff633"
+SRC_URI[sha256sum] = "6e226b732e1cd739464ad6862bd1a1aba42d7982922da7a53519631d24975181"
 
 inherit autotools texinfo update-alternatives gettext ptest
 
