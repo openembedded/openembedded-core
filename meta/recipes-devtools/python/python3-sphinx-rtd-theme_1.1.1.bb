@@ -10,7 +10,7 @@ DEPENDS = "python3-sphinx"
 
 PYPI_PACKAGE = "sphinx_rtd_theme"
 
-SRC_URI[sha256sum] = "6e20f00f62b2c05434a33c5116bc3348a41ca94af03d3d7d1714c63457073bb3"
+SRC_URI[sha256sum] = "6146c845f1e1947b3c3dd4432c28998a1693ccc742b4f9ad7c63129f0757c103"
 UPSTREAM_CHECK_REGEX ?= "/sphinx-rtd-theme/(?P<pver>(\d+[\.\-_]*)+)/"
 
 inherit setuptools3 pypi
