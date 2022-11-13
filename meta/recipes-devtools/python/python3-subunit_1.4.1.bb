@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://README.rst;beginline=1;endline=20;md5=909c08e291647fd
 
 PYPI_PACKAGE = "python-subunit"
 
-SRC_URI[sha256sum] = "042039928120fbf392e8c983d60f3d8ae1b88f90a9f8fd7188ddd9c26cad1e48"
+SRC_URI[sha256sum] = "5fe5686904428501376e7b11593226d37638fbd981c1fc9ed6aac180525d78c1"
 
 inherit pypi setuptools3
 
