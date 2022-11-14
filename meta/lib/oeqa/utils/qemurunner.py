@@ -401,7 +401,8 @@ class QemuRunner:
                 cmdline = re_control_char.sub(' ', cmdline)
             try:
                 if self.use_slirp:
-                    tcp_ports = cmdline.split("hostfwd=tcp::")[1]
+                    tcp_ports = cmdline.split("hostfwd=tcp:")[1]
+                    tcp_ports = tcp_ports.split(":")[1]
                     host_port = tcp_ports[:tcp_ports.find('-')]
                     self.ip = "localhost:%s" % host_port
                 else:
