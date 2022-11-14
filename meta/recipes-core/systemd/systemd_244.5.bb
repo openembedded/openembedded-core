@@ -33,6 +33,7 @@ SRC_URI += "file://touchscreen.rules \
            file://CVE-2021-3997-1.patch \
            file://CVE-2021-3997-2.patch \
            file://CVE-2021-3997-3.patch \
+           file://CVE-2022-3821.patch \
            "
 
 # patches needed by musl
