@@ -1,4 +1,4 @@
-From 15647f679834be633fb4a9aeff4671b9cb95ccb8 Mon Sep 17 00:00:00 2001
+From 38c361e6860bfaefbefeccae621e698c301879f2 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 23 Jan 2018 00:54:13 +0000
 Subject: [PATCH] gettext: beat library detection into shape
@@ -14,18 +14,18 @@ Upstream-Status: Inappropriate [upstream still refuse to consider pkg-config]
 Signed-off-by: Ross Burton <ross.burton@intel.com>
 
 ---
- gettext-tools/gnulib-m4/libxml.m4             |  99 +----------------
- .../gnulib-local/lib/term-styled-ostream.oo.c |  12 +--
- libtextstyle/gnulib-local/m4/libcroco.m4      |  99 +++--------------
- libtextstyle/gnulib-local/m4/libglib.m4       | 100 +++---------------
- libtextstyle/gnulib-m4/libcroco.m4            |  99 +++--------------
- libtextstyle/gnulib-m4/libglib.m4             | 100 +++---------------
- libtextstyle/lib/term-styled-ostream.c        |  12 +--
- libtextstyle/lib/term-styled-ostream.oo.c     |  12 +--
- 8 files changed, 83 insertions(+), 450 deletions(-)
+ gettext-tools/gnulib-m4/libxml.m4             | 105 +----------------
+ .../gnulib-local/lib/term-styled-ostream.oo.c |  12 +-
+ libtextstyle/gnulib-local/m4/libcroco.m4      |  98 +++-------------
+ libtextstyle/gnulib-local/m4/libglib.m4       | 106 +++---------------
+ libtextstyle/gnulib-m4/libcroco.m4            |  98 +++-------------
+ libtextstyle/gnulib-m4/libglib.m4             | 106 +++---------------
+ libtextstyle/lib/term-styled-ostream.c        |  12 +-
+ libtextstyle/lib/term-styled-ostream.oo.c     |  12 +-
+ 8 files changed, 79 insertions(+), 470 deletions(-)
 
 diff --git a/gettext-tools/gnulib-m4/libxml.m4 b/gettext-tools/gnulib-m4/libxml.m4
-index 2f80c37..30ce58e 100644
+index 0340490..0355388 100644
 --- a/gettext-tools/gnulib-m4/libxml.m4
 +++ b/gettext-tools/gnulib-m4/libxml.m4
 @@ -13,6 +13,7 @@ dnl gl_LIBXML(FORCE-INCLUDED)
@@ -36,7 +36,7 @@ index 2f80c37..30ce58e 100644
    AC_REQUIRE([AM_ICONV_LINK])
  
    ifelse([$1], , [
-@@ -30,100 +31,10 @@ AC_DEFUN([gl_LIBXML],
+@@ -30,106 +31,10 @@ AC_DEFUN([gl_LIBXML],
    INCXML=
    ifelse([$1], [yes], , [
      if test "$gl_cv_libxml_use_included" != yes; then
@@ -60,14 +60,16 @@ index 2f80c37..30ce58e 100644
 -        dnl -Wl,--disable-auto-import.
 -        AC_LIB_LINKFLAGS_BODY([xml2])
 -        LIBS="$gl_save_LIBS $LIBXML2 $LIBICONV"
--        AC_TRY_LINK([#include <libxml/xmlversion.h>
--                     #include <libxml/xmlmemory.h>
--                     #include <libxml/xpath.h>
--                    ],
--          [xmlCheckVersion (0);
--           xmlFree ((void *) 0);
--           xmlXPathSetContextNode ((void *)0, (void *)0);
--          ],
+-        AC_LINK_IFELSE(
+-          [AC_LANG_PROGRAM(
+-             [[#include <libxml/xmlversion.h>
+-               #include <libxml/xmlmemory.h>
+-               #include <libxml/xpath.h>
+-             ]],
+-             [[xmlCheckVersion (0);
+-               xmlFree ((void *) 0);
+-               xmlXPathSetContextNode ((void *)0, (void *)0);
+-             ]])],
 -          [gl_cv_libxml=yes
 -           gl_cv_LIBXML="$LIBXML2 $LIBICONV"
 -           gl_cv_LTLIBXML="$LTLIBXML2 $LTLIBICONV"
@@ -75,14 +77,16 @@ index 2f80c37..30ce58e 100644
 -        if test "$gl_cv_libxml" != yes; then
 -          gl_save_CPPFLAGS="$CPPFLAGS"
 -          CPPFLAGS="$CPPFLAGS $INCXML2"
--          AC_TRY_LINK([#include <libxml/xmlversion.h>
--                       #include <libxml/xmlmemory.h>
--                       #include <libxml/xpath.h>
--                      ],
--            [xmlCheckVersion (0);
--             xmlFree ((void *) 0);
--             xmlXPathSetContextNode ((void *)0, (void *)0);
--            ],
+-          AC_LINK_IFELSE(
+-            [AC_LANG_PROGRAM(
+-               [[#include <libxml/xmlversion.h>
+-                 #include <libxml/xmlmemory.h>
+-                 #include <libxml/xpath.h>
+-               ]],
+-               [[xmlCheckVersion (0);
+-                 xmlFree ((void *) 0);
+-                 xmlXPathSetContextNode ((void *)0, (void *)0);
+-               ]])],
 -            [gl_cv_libxml=yes
 -             gl_cv_LIBXML="$LIBXML2 $LIBICONV"
 -             gl_cv_LTLIBXML="$LTLIBXML2 $LTLIBICONV"
@@ -94,26 +98,28 @@ index 2f80c37..30ce58e 100644
 -            dnl In libxml2-2.6, it includes <libxml/xmlexports.h> which is
 -            dnl self-contained.
 -            libxml2_include_dir=
--            AC_TRY_CPP([#include <libxml2/libxml/xmlexports.h>],
+-            AC_PREPROC_IFELSE([AC_LANG_SOURCE([[#include <libxml2/libxml/xmlexports.h>]])],
 -              [gl_ABSOLUTE_HEADER([libxml2/libxml/xmlexports.h])
 -               libxml2_include_dir=`echo "$gl_cv_absolute_libxml2_libxml_xmlexports_h" | sed -e 's,.libxml.xmlexports\.h$,,'`
 -              ])
 -            if test -z "$libxml2_include_dir"; then
--              AC_TRY_CPP([#include <libxml2/libxml/xmlversion.h>],
+-              AC_PREPROC_IFELSE([AC_LANG_SOURCE([[#include <libxml2/libxml/xmlversion.h>]])],
 -                [gl_ABSOLUTE_HEADER([libxml2/libxml/xmlversion.h])
 -                 libxml2_include_dir=`echo "$gl_cv_absolute_libxml2_libxml_xmlversion_h" | sed -e 's,.libxml.xmlversion\.h$,,'`
 -                ])
 -            fi
 -            if test -n "$libxml2_include_dir" && test -d "$libxml2_include_dir"; then
 -              CPPFLAGS="$gl_save_CPPFLAGS -I$libxml2_include_dir"
--              AC_TRY_LINK([#include <libxml/xmlversion.h>
--                           #include <libxml/xmlmemory.h>
--                           #include <libxml/xpath.h>
--                          ],
--                [xmlCheckVersion (0);
--                 xmlFree ((void *) 0);
--                 xmlXPathSetContextNode ((void *)0, (void *)0);
--                ],
+-              AC_LINK_IFELSE(
+-                [AC_LANG_PROGRAM(
+-                   [[#include <libxml/xmlversion.h>
+-                     #include <libxml/xmlmemory.h>
+-                     #include <libxml/xpath.h>
+-                   ]],
+-                   [[xmlCheckVersion (0);
+-                     xmlFree ((void *) 0);
+-                     xmlXPathSetContextNode ((void *)0, (void *)0);
+-                   ]])],
 -                [gl_cv_libxml=yes
 -                 gl_cv_LIBXML="$LIBXML2 $LIBICONV"
 -                 gl_cv_LTLIBXML="$LTLIBXML2 $LTLIBICONV"
@@ -168,17 +174,10 @@ index 2ff978f..5ffb17a 100644
  #include "term-ostream.h"
  #include "mem-hash-map.h"
 diff --git a/libtextstyle/gnulib-local/m4/libcroco.m4 b/libtextstyle/gnulib-local/m4/libcroco.m4
-index bc53cc6..10b2455 100644
+index 39e72b1..042915a 100644
 --- a/libtextstyle/gnulib-local/m4/libcroco.m4
 +++ b/libtextstyle/gnulib-local/m4/libcroco.m4
-@@ -1,99 +1,34 @@
--# libcroco.m4 serial 3
--dnl Copyright (C) 2006-2007, 2019 Free Software Foundation, Inc.
-+# libcroco.m4 serial 2 (gettext-0.17)
-+dnl Copyright (C) 2006, 2015-2016 Free Software Foundation, Inc.
- dnl This file is free software; the Free Software Foundation
- dnl gives unlimited permission to copy and/or distribute it,
- dnl with or without modifications, as long as this notice is preserved.
+@@ -6,97 +6,29 @@ dnl with or without modifications, as long as this notice is preserved.
  
  dnl From Bruno Haible.
  
@@ -233,8 +232,9 @@ index bc53cc6..10b2455 100644
 -        dnl one that built the library.
 -        AC_LIB_LINKFLAGS_BODY([croco-0.6], [glib-2.0])
 -        LIBS="$gl_save_LIBS $LIBCROCO_0_6"
--        AC_TRY_LINK([#include <libcroco-config.h>],
--          [const char *version = LIBCROCO_VERSION; return !version;],
+-        AC_LINK_IFELSE(
+-          [AC_LANG_PROGRAM([[#include <libcroco-config.h>]],
+-            [[const char *version = LIBCROCO_VERSION; return !version;]])],
 -          [gl_cv_libcroco=yes
 -           gl_cv_LIBCROCO="$LIBCROCO_0_6"
 -           gl_cv_LTLIBCROCO="$LTLIBCROCO_0_6"
@@ -242,8 +242,9 @@ index bc53cc6..10b2455 100644
 -        if test "$gl_cv_libcroco" != yes; then
 -          gl_save_CPPFLAGS="$CPPFLAGS"
 -          CPPFLAGS="$CPPFLAGS $INCCROCO_0_6"
--          AC_TRY_LINK([#include <libcroco-config.h>],
--            [const char *version = LIBCROCO_VERSION; return !version;],
+-          AC_LINK_IFELSE(
+-            [AC_LANG_PROGRAM([[#include <libcroco-config.h>]],
+-              [[const char *version = LIBCROCO_VERSION; return !version;]])],
 -            [gl_cv_libcroco=yes
 -             gl_cv_LIBCROCO="$LIBCROCO_0_6"
 -             gl_cv_LTLIBCROCO="$LTLIBCROCO_0_6"
@@ -252,8 +253,9 @@ index bc53cc6..10b2455 100644
 -          if test "$gl_cv_libcroco" != yes; then
 -            dnl Often the include files are installed in
 -            dnl /usr/include/libcroco-0.6/libcroco.
--            AC_TRY_LINK([#include <libcroco-0.6/libcroco/libcroco-config.h>],
--              [const char *version = LIBCROCO_VERSION; return !version;],
+-            AC_LINK_IFELSE(
+-              [AC_LANG_PROGRAM([[#include <libcroco-config.h>]],
+-                [[const char *version = LIBCROCO_VERSION; return !version;]])],
 -              [gl_ABSOLUTE_HEADER([libcroco-0.6/libcroco/libcroco-config.h])
 -               libcroco_include_dir=`echo "$gl_cv_absolute_libcroco_0_6_libcroco_libcroco_config_h" | sed -e 's,.libcroco-config\.h$,,'`
 -               if test -d "$libcroco_include_dir"; then
@@ -289,10 +291,10 @@ index bc53cc6..10b2455 100644
    AC_SUBST([LTLIBCROCO])
    AC_SUBST([INCCROCO])
 diff --git a/libtextstyle/gnulib-local/m4/libglib.m4 b/libtextstyle/gnulib-local/m4/libglib.m4
-index 5853772..767fba2 100644
+index 7ee5029..bb1e5e4 100644
 --- a/libtextstyle/gnulib-local/m4/libglib.m4
 +++ b/libtextstyle/gnulib-local/m4/libglib.m4
-@@ -6,100 +6,26 @@ dnl with or without modifications, as long as this notice is preserved.
+@@ -6,106 +6,26 @@ dnl with or without modifications, as long as this notice is preserved.
  
  dnl From Bruno Haible.
  
@@ -340,12 +342,14 @@ index 5853772..767fba2 100644
 -        dnl one that built the library.
 -        AC_LIB_LINKFLAGS_BODY([glib-2.0])
 -        LIBS="$gl_save_LIBS $LIBGLIB_2_0"
--        AC_TRY_LINK([#include <glib.h>
--#ifndef G_BEGIN_DECLS
--error this glib.h includes a glibconfig.h from a glib version 1.x
--#endif
--],
--          [g_string_new ("foo");],
+-        AC_LINK_IFELSE(
+-          [AC_LANG_PROGRAM(
+-             [[#include <glib.h>
+-               #ifndef G_BEGIN_DECLS
+-               error this glib.h includes a glibconfig.h from a glib version 1.x
+-               #endif
+-             ]],
+-             [[g_string_new ("foo");]])],
 -          [gl_cv_libglib=yes
 -           gl_cv_LIBGLIB="$LIBGLIB_2_0"
 -           gl_cv_LTLIBGLIB="$LTLIBGLIB_2_0"
@@ -353,12 +357,14 @@ index 5853772..767fba2 100644
 -        if test "$gl_cv_libglib" != yes; then
 -          gl_save_CPPFLAGS="$CPPFLAGS"
 -          CPPFLAGS="$CPPFLAGS $INCGLIB_2_0"
--          AC_TRY_LINK([#include <glib.h>
--#ifndef G_BEGIN_DECLS
--error this glib.h includes a glibconfig.h from a glib version 1.x
--#endif
--],
--            [g_string_new ("foo");],
+-          AC_LINK_IFELSE(
+-            [AC_LANG_PROGRAM(
+-               [[#include <glib.h>
+-                 #ifndef G_BEGIN_DECLS
+-                 error this glib.h includes a glibconfig.h from a glib version 1.x
+-                 #endif
+-               ]],
+-               [[g_string_new ("foo");]])],
 -            [gl_cv_libglib=yes
 -             gl_cv_LIBGLIB="$LIBGLIB_2_0"
 -             gl_cv_LTLIBGLIB="$LTLIBGLIB_2_0"
@@ -369,12 +375,14 @@ index 5853772..767fba2 100644
 -            dnl and /usr/lib/glib-2.0/include.
 -            if test -n "$LIBGLIB_2_0_PREFIX"; then
 -              CPPFLAGS="$gl_save_CPPFLAGS -I$LIBGLIB_2_0_PREFIX/include/glib-2.0 -I$LIBGLIB_2_0_PREFIX/$acl_libdirstem/glib-2.0/include"
--              AC_TRY_LINK([#include <glib.h>
--#ifndef G_BEGIN_DECLS
--error this glib.h includes a glibconfig.h from a glib version 1.x
--#endif
--],
--                [g_string_new ("foo");],
+-              AC_LINK_IFELSE(
+-                [AC_LANG_PROGRAM(
+-                   [[#include <glib.h>
+-                     #ifndef G_BEGIN_DECLS
+-                     error this glib.h includes a glibconfig.h from a glib version 1.x
+-                     #endif
+-                   ]],
+-                   [[g_string_new ("foo");]])],
 -                [gl_cv_libglib=yes
 -                 gl_cv_LIBGLIB="$LIBGLIB_2_0"
 -                 gl_cv_LTLIBGLIB="$LTLIBGLIB_2_0"
@@ -407,17 +415,10 @@ index 5853772..767fba2 100644
    AC_SUBST([LTLIBGLIB])
    AC_SUBST([INCGLIB])
 diff --git a/libtextstyle/gnulib-m4/libcroco.m4 b/libtextstyle/gnulib-m4/libcroco.m4
-index bc53cc6..10b2455 100644
+index 39e72b1..042915a 100644
 --- a/libtextstyle/gnulib-m4/libcroco.m4
 +++ b/libtextstyle/gnulib-m4/libcroco.m4
-@@ -1,99 +1,34 @@
--# libcroco.m4 serial 3
--dnl Copyright (C) 2006-2007, 2019 Free Software Foundation, Inc.
-+# libcroco.m4 serial 2 (gettext-0.17)
-+dnl Copyright (C) 2006, 2015-2016 Free Software Foundation, Inc.
- dnl This file is free software; the Free Software Foundation
- dnl gives unlimited permission to copy and/or distribute it,
- dnl with or without modifications, as long as this notice is preserved.
+@@ -6,97 +6,29 @@ dnl with or without modifications, as long as this notice is preserved.
  
  dnl From Bruno Haible.
  
@@ -472,8 +473,9 @@ index bc53cc6..10b2455 100644
 -        dnl one that built the library.
 -        AC_LIB_LINKFLAGS_BODY([croco-0.6], [glib-2.0])
 -        LIBS="$gl_save_LIBS $LIBCROCO_0_6"
--        AC_TRY_LINK([#include <libcroco-config.h>],
--          [const char *version = LIBCROCO_VERSION; return !version;],
+-        AC_LINK_IFELSE(
+-          [AC_LANG_PROGRAM([[#include <libcroco-config.h>]],
+-            [[const char *version = LIBCROCO_VERSION; return !version;]])],
 -          [gl_cv_libcroco=yes
 -           gl_cv_LIBCROCO="$LIBCROCO_0_6"
 -           gl_cv_LTLIBCROCO="$LTLIBCROCO_0_6"
@@ -481,8 +483,9 @@ index bc53cc6..10b2455 100644
 -        if test "$gl_cv_libcroco" != yes; then
 -          gl_save_CPPFLAGS="$CPPFLAGS"
 -          CPPFLAGS="$CPPFLAGS $INCCROCO_0_6"
--          AC_TRY_LINK([#include <libcroco-config.h>],
--            [const char *version = LIBCROCO_VERSION; return !version;],
+-          AC_LINK_IFELSE(
+-            [AC_LANG_PROGRAM([[#include <libcroco-config.h>]],
+-              [[const char *version = LIBCROCO_VERSION; return !version;]])],
 -            [gl_cv_libcroco=yes
 -             gl_cv_LIBCROCO="$LIBCROCO_0_6"
 -             gl_cv_LTLIBCROCO="$LTLIBCROCO_0_6"
@@ -491,8 +494,9 @@ index bc53cc6..10b2455 100644
 -          if test "$gl_cv_libcroco" != yes; then
 -            dnl Often the include files are installed in
 -            dnl /usr/include/libcroco-0.6/libcroco.
--            AC_TRY_LINK([#include <libcroco-0.6/libcroco/libcroco-config.h>],
--              [const char *version = LIBCROCO_VERSION; return !version;],
+-            AC_LINK_IFELSE(
+-              [AC_LANG_PROGRAM([[#include <libcroco-config.h>]],
+-                [[const char *version = LIBCROCO_VERSION; return !version;]])],
 -              [gl_ABSOLUTE_HEADER([libcroco-0.6/libcroco/libcroco-config.h])
 -               libcroco_include_dir=`echo "$gl_cv_absolute_libcroco_0_6_libcroco_libcroco_config_h" | sed -e 's,.libcroco-config\.h$,,'`
 -               if test -d "$libcroco_include_dir"; then
@@ -528,10 +532,10 @@ index bc53cc6..10b2455 100644
    AC_SUBST([LTLIBCROCO])
    AC_SUBST([INCCROCO])
 diff --git a/libtextstyle/gnulib-m4/libglib.m4 b/libtextstyle/gnulib-m4/libglib.m4
-index 5853772..767fba2 100644
+index 7ee5029..bb1e5e4 100644
 --- a/libtextstyle/gnulib-m4/libglib.m4
 +++ b/libtextstyle/gnulib-m4/libglib.m4
-@@ -6,100 +6,26 @@ dnl with or without modifications, as long as this notice is preserved.
+@@ -6,106 +6,26 @@ dnl with or without modifications, as long as this notice is preserved.
  
  dnl From Bruno Haible.
  
@@ -579,12 +583,14 @@ index 5853772..767fba2 100644
 -        dnl one that built the library.
 -        AC_LIB_LINKFLAGS_BODY([glib-2.0])
 -        LIBS="$gl_save_LIBS $LIBGLIB_2_0"
--        AC_TRY_LINK([#include <glib.h>
--#ifndef G_BEGIN_DECLS
--error this glib.h includes a glibconfig.h from a glib version 1.x
--#endif
--],
--          [g_string_new ("foo");],
+-        AC_LINK_IFELSE(
+-          [AC_LANG_PROGRAM(
+-             [[#include <glib.h>
+-               #ifndef G_BEGIN_DECLS
+-               error this glib.h includes a glibconfig.h from a glib version 1.x
+-               #endif
+-             ]],
+-             [[g_string_new ("foo");]])],
 -          [gl_cv_libglib=yes
 -           gl_cv_LIBGLIB="$LIBGLIB_2_0"
 -           gl_cv_LTLIBGLIB="$LTLIBGLIB_2_0"
@@ -592,12 +598,14 @@ index 5853772..767fba2 100644
 -        if test "$gl_cv_libglib" != yes; then
 -          gl_save_CPPFLAGS="$CPPFLAGS"
 -          CPPFLAGS="$CPPFLAGS $INCGLIB_2_0"
--          AC_TRY_LINK([#include <glib.h>
--#ifndef G_BEGIN_DECLS
--error this glib.h includes a glibconfig.h from a glib version 1.x
--#endif
--],
--            [g_string_new ("foo");],
+-          AC_LINK_IFELSE(
+-            [AC_LANG_PROGRAM(
+-               [[#include <glib.h>
+-                 #ifndef G_BEGIN_DECLS
+-                 error this glib.h includes a glibconfig.h from a glib version 1.x
+-                 #endif
+-               ]],
+-               [[g_string_new ("foo");]])],
 -            [gl_cv_libglib=yes
 -             gl_cv_LIBGLIB="$LIBGLIB_2_0"
 -             gl_cv_LTLIBGLIB="$LTLIBGLIB_2_0"
@@ -608,12 +616,14 @@ index 5853772..767fba2 100644
 -            dnl and /usr/lib/glib-2.0/include.
 -            if test -n "$LIBGLIB_2_0_PREFIX"; then
 -              CPPFLAGS="$gl_save_CPPFLAGS -I$LIBGLIB_2_0_PREFIX/include/glib-2.0 -I$LIBGLIB_2_0_PREFIX/$acl_libdirstem/glib-2.0/include"
--              AC_TRY_LINK([#include <glib.h>
--#ifndef G_BEGIN_DECLS
--error this glib.h includes a glibconfig.h from a glib version 1.x
--#endif
--],
--                [g_string_new ("foo");],
+-              AC_LINK_IFELSE(
+-                [AC_LANG_PROGRAM(
+-                   [[#include <glib.h>
+-                     #ifndef G_BEGIN_DECLS
+-                     error this glib.h includes a glibconfig.h from a glib version 1.x
+-                     #endif
+-                   ]],
+-                   [[g_string_new ("foo");]])],
 -                [gl_cv_libglib=yes
 -                 gl_cv_LIBGLIB="$LIBGLIB_2_0"
 -                 gl_cv_LTLIBGLIB="$LTLIBGLIB_2_0"
