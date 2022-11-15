@@ -4,6 +4,7 @@ SRC_URI = "https://www.sudo.ws/dist/sudo-${PV}.tar.gz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://0001-Include-sys-types.h-for-id_t-definition.patch \
            file://0001-Fix-includes-when-building-with-musl.patch \
+           file://CVE-2022-43995.patch \
            "
 
 PAM_SRC_URI = "file://sudo.pam"
