@@ -65,6 +65,7 @@ CVE_CHECK_WHITELIST += "CVE-2022-29526"
 
 # Issue only on windows
 CVE_CHECK_WHITELIST += "CVE-2022-29804"
+CVE_CHECK_WHITELIST += "CVE-2022-30580"
 CVE_CHECK_WHITELIST += "CVE-2022-30634"
 
 # Issue is in golang.org/x/net/html/parse.go, not used in go compiler
