@@ -69,3 +69,6 @@ CVE_CHECK_WHITELIST += "CVE-2022-30634"
 
 # Issue is in golang.org/x/net/html/parse.go, not used in go compiler
 CVE_CHECK_WHITELIST += "CVE-2021-33194"
+
+# Issue introduced in go1.16, does not exist in 1.14
+CVE_CHECK_WHITELIST += "CVE-2021-41772"
