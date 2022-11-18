@@ -34,6 +34,7 @@ PTESTS_FAST = "\
     libssh2-ptest \
     libtimedate-perl-ptest \
     libtest-needs-perl-ptest \
+    libtry-tiny-perl-ptest \
     liburi-perl-ptest \
     libusb1-ptest \
     libxml-namespacesupport-perl-ptest \
