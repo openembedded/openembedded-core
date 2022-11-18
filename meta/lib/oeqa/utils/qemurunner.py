@@ -177,7 +177,11 @@ class QemuRunner:
                 launch_cmd += ' slirp'
             if self.use_ovmf:
                 launch_cmd += ' ovmf'
-            launch_cmd += ' %s %s %s' % (runqemuparams, self.machine, self.rootfs)
+            launch_cmd += ' %s %s' % (runqemuparams, self.machine)
+            if self.rootfs.endswith('.vmdk'):
+                self.logger.debug('Bypassing VMDK rootfs for runqemu')
+            else:
+                launch_cmd += ' %s' % (self.rootfs)
 
         return self.launch(launch_cmd, qemuparams=qemuparams, get_ip=get_ip, extra_bootparams=extra_bootparams, env=env)
 
