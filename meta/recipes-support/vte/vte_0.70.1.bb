@@ -15,23 +15,15 @@ DEPENDS = "glib-2.0 gtk+3 libpcre2 libxml2-native gperf-native icu"
 
 GNOMEBASEBUILDCLASS = "meson"
 GIR_MESON_OPTION = 'gir'
+GIDOCGEN_MESON_OPTION = "docs"
 
-inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-introspection
+inherit gnomebase gi-docgen features_check upstream-version-is-even gobject-introspection
 
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
-SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
-            file://0001-Makefile.docs-correctly-substitute-gtkdoc-qemu-wrapp.patch"
-SRC_URI[archive.sha256sum] = "13e7d4789ca216a33780030d246c9b13ddbfd04094c6316eea7ff92284dd1749"
+SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch"
+SRC_URI[archive.sha256sum] = "1f4601cbfea5302b96902208c8f185e5b18b259b5358bc93cf392bf59871c5b6"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
-
-# Instead of "inherit vala" we do the relevant settings here so we can
-# set DEPENDS based on PACKAGECONFIG.
-
-# Our patched version of Vala looks in STAGING_DATADIR for .vapi files
-export STAGING_DATADIR
-# Upstream Vala >= 0.11 looks in XDG_DATA_DIRS for .vapi files
-export XDG_DATA_DIRS = "${STAGING_DATADIR}"
 
 # Help g-ir-scanner find the .so for linking
 do_compile:prepend() {
