@@ -4,16 +4,14 @@ HOMEPAGE = "https://www.rpm.org/"
 SECTION = "libs"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=cb0613c30af2a8249b8dcc67d3edb06d"
+LIC_FILES_CHKSUM = "file://COPYING;md5=e0206ac9471d06667e076212db20c5f4"
 
 DEPENDS = "virtual/libiconv"
 
-SRC_URI = "\
-    http://ftp.rpm.org/popt/releases/popt-1.x/${BP}.tar.gz \
-    file://0001-popt-test-output-format-for-ptest.patch \
-    file://run-ptest \
-"
-SRC_URI[sha256sum] = "5159bc03a20b28ce363aa96765f37df99ea4d8850b1ece17d1e6ad5c24fdc5d1"
+SRC_URI = "http://ftp.rpm.org/popt/releases/popt-1.x/${BP}.tar.gz \
+           file://run-ptest \
+           "
+SRC_URI[sha256sum] = "c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9"
 
 inherit autotools gettext ptest
 
