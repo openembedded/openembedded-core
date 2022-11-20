@@ -29,14 +29,13 @@ TARGET_PATCH = "file://use_host_makedoc.patch"
 TARGET_PATCH:class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
-           file://0001-gnulib-Update.patch \
            file://disable-native-tools.patch \
            file://link-zip.patch \
            file://dont-depend-on-help2man.patch \
            ${TARGET_PATCH} \
            "
 
-SRC_URI[sha256sum] = "8e09cf753ad1833695d2bac0f57dc3bd6bcbbfbf279450e1ba3bc2d7fb297d08"
+SRC_URI[sha256sum] = "9261d4ee11cdf6b61895e213ffcd6b746a61a64fe38b9741a3aaa73125b35170"
 
 tex_texinfo = "texmf/tex/texinfo"
 
@@ -62,6 +61,7 @@ do_install:append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
 	install -p -m644 ${S}/doc/texinfo.tex ${S}/doc/txi-??.tex ${D}${datadir}/${tex_texinfo}
 	sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/texi2any ${D}${bindir}/pod2texi
+	sed -i -e 's,${HOSTTOOLS_DIR},,' ${D}${bindir}/texindex
 }
 
 do_install:append:class-native() {
@@ -77,7 +77,7 @@ FILES:info-doc = "${infodir}/info.info* ${infodir}/dir ${infodir}/info-*.info* \
 
 FILES:${PN} = "${bindir}/makeinfo ${bindir}/texi* ${bindir}/pdftexi2dvi ${bindir}/pod2texi ${datadir}/texinfo"
 RDEPENDS:${PN} = "perl"
-FILES:${PN}-doc = "${infodir}/texinfo* \
+FILES:${PN}-doc = "${infodir}/texi* \
                    ${datadir}/${tex_texinfo} \
                    ${mandir}/man1 ${mandir}/man5"
 
