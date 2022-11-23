@@ -1,4 +1,7 @@
-daemon.c: Fix race window for writing of the pid file
+From 212a947e776e7a25c1f2259615f461179bcb3663 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Wed, 23 Nov 2022 21:38:38 +0100
+Subject: [PATCH] daemon.c: Fix race window for writing of the pid file
 
 The parent process should write the pid file such that the pid file
 will can be checked immediately following exit of the fork from the
@@ -8,17 +11,18 @@ This allows external monitoring applications to watch the daemon
 without having to add sleep calls to wait for the pid file be written
 on a busy system.
 
+Upstream-Status: Submitted [https://github.com/unfs3/unfs3/pull/28]
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
-
-Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
-
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- daemon.c |   12 +++++++++---
+ daemon.c | 12 +++++++++---
  1 file changed, 9 insertions(+), 3 deletions(-)
 
+diff --git a/daemon.c b/daemon.c
+index ff53b7a..13b06a4 100644
 --- a/daemon.c
 +++ b/daemon.c
-@@ -153,7 +153,7 @@ int get_socket_type(struct svc_req *rqst
+@@ -166,7 +166,7 @@ int get_socket_type(struct svc_req *rqstp)
  /*
   * write current pid to a file
   */
@@ -27,7 +31,7 @@ Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
  {
      char buf[16];
      int fd, res, len;
-@@ -175,7 +175,7 @@ static void create_pid_file(void)
+@@ -188,7 +188,7 @@ static void create_pid_file(void)
      }
  #endif
  
@@ -36,7 +40,7 @@ Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
      len = strlen(buf);
  
      res = backend_pwrite(fd, buf, len, 0);
-@@ -970,6 +970,10 @@ int main(int argc, char **argv)
+@@ -1122,6 +1122,10 @@ int main(int argc, char **argv)
  	    fprintf(stderr, "could not fork into background\n");
  	    daemon_exit(0);
  	}
@@ -47,7 +51,7 @@ Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
      }
  #endif				       /* WIN32 */
  
-@@ -1006,8 +1010,10 @@ int main(int argc, char **argv)
+@@ -1161,8 +1165,10 @@ int main(int argc, char **argv)
  	/* no umask to not screw up create modes */
  	umask(0);
  
@@ -59,3 +63,6 @@ Upstream-Status: Submitted http://sourceforge.net/p/unfs3/bugs/5/
  
  	/* initialize internal stuff */
  	fh_cache_init();
+-- 
+2.30.2
+
