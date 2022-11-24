@@ -381,10 +381,6 @@ base_do_install() {
 	:
 }
 
-base_do_package() {
-	:
-}
-
 addtask build after do_populate_sysroot
 do_build[noexec] = "1"
 do_build[recrdeptask] += "do_deploy"
@@ -786,4 +782,4 @@ python do_cleanall() {
 do_cleanall[nostamp] = "1"
 
 
-EXPORT_FUNCTIONS do_fetch do_unpack do_configure do_compile do_install do_package
+EXPORT_FUNCTIONS do_fetch do_unpack do_configure do_compile do_install
