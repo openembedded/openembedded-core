@@ -20,12 +20,15 @@ SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "6168d8d1dc8f74bd17d9dc22fa9634c49070f232343b744901da15fb4f06bffd"
+SRC_URI[sha256sum] = "529e7c8c6acf21ff3a6183f4d763c632810908989c24675c77995d51ac37b79c"
 
 inherit autotools gettext texinfo update-alternatives
 
 FILES:${PN} += "${datadir}/awk"
 FILES:${PN}-dev += "${libdir}/${BPN}/*.la"
+
+PACKAGES =+ "${PN}-gawkbug"
+FILES:${PN}-gawkbug += "${bindir}/gawkbug"
 
 ALTERNATIVE:${PN} = "awk"
 ALTERNATIVE_TARGET[awk] = "${bindir}/gawk"
@@ -34,6 +37,8 @@ ALTERNATIVE_PRIORITY = "100"
 do_install:append() {
 	# remove the link since we don't package it
 	rm ${D}${bindir}/awk
+	# Strip non-reproducible build flags (containing build paths)
+	sed -i -e 's|^CC.*|CC=""|g' -e 's|^CFLAGS.*|CFLAGS=""|g' ${D}${bindir}/gawkbug
 }
 
 inherit ptest
@@ -46,7 +51,7 @@ do_install_ptest() {
 	for i in $TESTS Maketests inclib.awk; do
 		cp ${S}/test/$i* ${D}${PTEST_PATH}/test
 	done
-	sed -i -e 's|/usr/local/bin|${bindir}|g' \
+	sed -i \
 	    -e 's|#!${base_bindir}/awk|#!${bindir}/awk|g' ${D}${PTEST_PATH}/test/*.awk
 
 	sed -i -e "s|GAWKLOCALE|LANG|g" ${D}${PTEST_PATH}/test/Maketests
