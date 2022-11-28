@@ -999,7 +999,7 @@ class BaseConfig(object):
             if self.slirp_enabled:
                 self.nfs_server = '10.0.2.2'
             else:
-                self.nfs_server = '192.168.7.1'
+                self.nfs_server = '192.168.7.@GATEWAY@'
 
         # Figure out a new nfs_instance to allow multiple qemus running.
         ps = subprocess.check_output(("ps", "auxww")).decode('utf-8')
@@ -1187,6 +1187,7 @@ class BaseConfig(object):
         netconf = " " + self.cmdline_ip_tap
         netconf = netconf.replace('@CLIENT@', str(client))
         netconf = netconf.replace('@GATEWAY@', str(gateway))
+        self.nfs_server = self.nfs_server.replace('@GATEWAY@', str(gateway))
         logger.info("Network configuration:%s", netconf)
         self.kernel_cmdline_script += netconf
         mac = "%s%02x" % (self.mac_tap, client)
