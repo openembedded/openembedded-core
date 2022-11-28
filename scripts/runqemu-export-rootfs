@@ -34,16 +34,12 @@ if [ -z "$SYSROOT_SETUP_SCRIPT" ]; then
 	echo "Did you forget to source your build environment setup script?"
 	exit 1
 fi
-. $SYSROOT_SETUP_SCRIPT meta-ide-support
+. $SYSROOT_SETUP_SCRIPT qemu-helper-native
 
 if [ ! -e "$OECORE_NATIVE_SYSROOT/usr/bin/unfsd" ]; then
 	echo "Error: Unable to find unfsd binary in $OECORE_NATIVE_SYSROOT/usr/bin/"
 
-	if [ "x$OECORE_DISTRO_VERSION" = "x" ]; then
-		echo "Have you run 'bitbake meta-ide-support'?"
-	else
-		echo "This shouldn't happen - something is missing from your toolchain installation"
-	fi
+	echo "This shouldn't happen - something is missing from your toolchain installation"
 	exit 1
 fi
 
