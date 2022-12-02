@@ -35,6 +35,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://deterministic_imports.patch \
            file://0001-Avoid-shebang-overflow-on-python-config.py.patch \
            file://cve-2022-37460.patch \
+           file://0001-test_marshal.py-add-more-elements-in-test_determinis.patch \
            "
 
 SRC_URI:append:class-native = " \

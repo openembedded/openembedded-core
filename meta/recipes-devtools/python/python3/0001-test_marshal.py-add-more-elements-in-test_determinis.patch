@@ -1,0 +1,27 @@
+From 076a4f9ab06105b94c87386c0dfe17b823502a13 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Thu, 1 Dec 2022 19:02:51 +0100
+Subject: [PATCH] test_marshal.py: add more elements in test_deterministic_sets
+
+Existing elements do produce different output on x86_64, but they
+do not on x86. Let's make the data longer to ensure it differs.
+
+Upstream-Status: Submitted [https://github.com/python/cpython/pull/99935]
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ Lib/test/test_marshal.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Lib/test/test_marshal.py b/Lib/test/test_marshal.py
+index aae86cc..29d95ad 100644
+--- a/Lib/test/test_marshal.py
++++ b/Lib/test/test_marshal.py
+@@ -352,7 +352,7 @@ class BugsTestCase(unittest.TestCase):
+             for elements in (
+                 "float('nan'), b'a', b'b', b'c', 'x', 'y', 'z'",
+                 # Also test for bad interactions with backreferencing:
+-                "('Spam', 0), ('Spam', 1), ('Spam', 2)",
++                "('Spam', 0), ('Spam', 1), ('Spam', 2), ('Spam', 3), ('Spam', 4), ('Spam', 5)",
+             ):
+                 s = f"{kind}([{elements}])"
+                 with self.subTest(s):
