@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c7b12b6702da38ca028ace54aae3d484 \
                     file://stable/presentation-time/presentation-time.xml;endline=26;md5=4646cd7d9edc9fa55db941f2d3a7dc53"
 
 SRC_URI = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/${PV}/downloads/wayland-protocols-${PV}.tar.xz"
-SRC_URI[sha256sum] = "c7659fb6bf14905e68ef605f898de60d1c066bf66dbea92798573dddec1535b6"
+SRC_URI[sha256sum] = "a07fa722ed87676ec020d867714bc9a2f24c464da73912f39706eeef5219e238"
 
 UPSTREAM_CHECK_URI = "https://wayland.freedesktop.org/releases.html"
 
