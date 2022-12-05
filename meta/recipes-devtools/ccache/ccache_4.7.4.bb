@@ -14,7 +14,7 @@ DEPENDS = "zstd"
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://0001-xxhash.h-Fix-build-with-gcc-12.patch \
            "
-SRC_URI[sha256sum] = "6b346f441342a25a6c1d7e010957a593f416e94b5d66fdf2e2992953b3860b9d"
+SRC_URI[sha256sum] = "dc283906b73bd7c461178ca472a459e9d86b5523405035921bd8204e77620264"
 
 inherit cmake github-releases
 
