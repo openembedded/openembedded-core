@@ -16,7 +16,7 @@ SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;bra
            file://run-ptest \
            file://determinism.patch \
            "
-SRCREV = "bc363328a704b3c5e0ee2f0fcf088de67c708979"
+SRCREV = "fc59e574e050c502c9a3adefacf97babf3d09c7a"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_REGEX = "libinput-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
