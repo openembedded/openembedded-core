@@ -65,6 +65,7 @@ EXTRA_OECONF = "\
   --enable-test \
   --enable-datafiles \
   --enable-library \
+  --enable-pie  \
   --without-zsh-completion-dir \
 "
 
