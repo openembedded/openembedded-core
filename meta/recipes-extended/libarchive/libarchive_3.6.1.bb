@@ -34,6 +34,7 @@ EXTRA_OECONF += "--enable-largefile"
 
 SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://0001-libarchive-Do-not-include-sys-mount.h-when-linux-fs..patch \
+           file://cve-2022-36227.patch \
            "
 UPSTREAM_CHECK_URI = "http://libarchive.org/"
 
