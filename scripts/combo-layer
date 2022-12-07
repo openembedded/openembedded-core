@@ -191,6 +191,23 @@ def runcmd(cmd,destdir=None,printerr=True,out=None,env=None):
     logger.debug("output: %s" % output.replace(chr(0), '\\0'))
     return output
 
+def action_sync_revs(conf, args):
+    """
+    Update the last_revision config option for each repo with the latest
+    revision in the remote's branch. Useful if multiple people are using
+    combo-layer.
+    """
+    repos = get_repos(conf, args[1:])
+
+    for name in repos:
+        repo = conf.repos[name]
+        ldir = repo['local_repo_dir']
+        branch = repo.get('branch', "master")
+        runcmd("git fetch", ldir)
+        lastrev = runcmd('git rev-parse origin/%s' % branch, ldir).strip()
+        print("Updating %s to %s" % (name, lastrev))
+        conf.update(name, "last_revision", lastrev)
+
 def action_init(conf, args):
     """
         Clone component repositories
@@ -1301,6 +1318,7 @@ actions = {
     "update": action_update,
     "pull": action_pull,
     "splitpatch": action_splitpatch,
+    "sync-revs": action_sync_revs,
 }
 
 def main():
@@ -1311,10 +1329,11 @@ def main():
 Create and update a combination layer repository from multiple component repositories.
 
 Action:
-  init                 initialise the combo layer repo
-  update [components]  get patches from component repos and apply them to the combo repo
-  pull [components]    just pull component repos only
-  splitpatch [commit]  generate commit patch and split per component, default commit is HEAD""")
+  init                   initialise the combo layer repo
+  update [components]    get patches from component repos and apply them to the combo repo
+  pull [components]      just pull component repos only
+  sync-revs [components] update the config file's last_revision for each repository
+  splitpatch [commit]    generate commit patch and split per component, default commit is HEAD""")
 
     parser.add_option("-c", "--conf", help = "specify the config file (conf/combo-layer.conf is the default).",
                action = "store", dest = "conffile", default = "conf/combo-layer.conf")
