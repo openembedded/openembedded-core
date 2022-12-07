@@ -21,7 +21,6 @@ import re
 import copy
 import pipes
 import shutil
-from collections import OrderedDict
 from string import Template
 from functools import reduce
 
