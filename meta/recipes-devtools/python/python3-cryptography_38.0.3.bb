@@ -45,7 +45,6 @@ RDEPENDS:${PN}-ptest += " \
     ${PYTHON_PN}-pytest \
     ${PYTHON_PN}-pytest-subtests \
     ${PYTHON_PN}-pytz \
-    ${PYTHON_PN}-tomli \
 "
 
 inherit ptest
