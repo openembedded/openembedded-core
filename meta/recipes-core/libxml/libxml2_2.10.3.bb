@@ -16,6 +16,7 @@ inherit gnomebase
 SRC_URI += "http://www.w3.org/XML/Test/xmlts20080827.tar.gz;subdir=${BP};name=testtar \
            file://run-ptest \
            file://libxml-64bit.patch \
+           file://fix-tests.patch \
            file://install-tests.patch \
            file://libxml-m4-use-pkgconfig.patch \
            "
