@@ -101,15 +101,6 @@ def sstate_lockedsigs(d):
             sigs[pn][task] = [h, siggen_lockedsigs_var]
     return sigs
 
-class SignatureGeneratorOEBasic(bb.siggen.SignatureGeneratorBasic):
-    name = "OEBasic"
-    def init_rundepcheck(self, data):
-        self.abisaferecipes = (data.getVar("SIGGEN_EXCLUDERECIPES_ABISAFE") or "").split()
-        self.saferecipedeps = (data.getVar("SIGGEN_EXCLUDE_SAFE_RECIPE_DEPS") or "").split()
-        pass
-    def rundep_check(self, fn, recipename, task, dep, depname, dataCaches = None):
-        return sstate_rundepfilter(self, fn, recipename, task, dep, depname, dataCaches)
-
 class SignatureGeneratorOEBasicHashMixIn(object):
     supports_multiconfig_datacaches = True
 
@@ -326,7 +317,6 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHashMixIn, bb.sigge
             bb.fatal("OEEquivHash requires SSTATE_HASHEQUIV_METHOD to be set")
 
 # Insert these classes into siggen's namespace so it can see and select them
-bb.siggen.SignatureGeneratorOEBasic = SignatureGeneratorOEBasic
 bb.siggen.SignatureGeneratorOEBasicHash = SignatureGeneratorOEBasicHash
 bb.siggen.SignatureGeneratorOEEquivHash = SignatureGeneratorOEEquivHash
 
