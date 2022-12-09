@@ -20,10 +20,14 @@ GTKDOC_MESON_OPTION = "gtk_doc"
 inherit gnomebase gtk-icon-cache gtk-doc features_check upstream-version-is-even vala gobject-introspection gettext mime mime-xdg
 UPSTREAM_CHECK_REGEX = "[^\d\.](?P<pver>\d+\.(?!9\d+)(\d*[02468])+(\.\d+)+)\.tar"
 
-SRC_URI += "file://0001-gcr-meson.build-fix-one-parallel-build-failure.patch \ 
-            file://b3ca1d02bb0148ca787ac4aead164d7c8ce2c4d8.patch"
+SRC_URI = " \
+	https://download.gnome.org/sources/gcr/3.40/gcr-${PV}.tar.xz;name=archive \
+	file://0001-gcr-meson.build-fix-one-parallel-build-failure.patch \
+	file://b3ca1d02bb0148ca787ac4aead164d7c8ce2c4d8.patch"
 
 SRC_URI[archive.sha256sum] = "b9d3645a5fd953a54285cc64d4fc046736463dbd4dcc25caf5c7b59bed3027f5"
+
+S = "${WORKDIR}/gcr-${PV}"
 
 PACKAGECONFIG ??= " \
 	${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gtk', '', d)} \
