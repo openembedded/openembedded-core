@@ -13,6 +13,6 @@ PE = "1"
 
 XORG_EXT = "tar.xz"
 
-SRC_URI[sha256sum] = "ea8606ed5255dda8f570b7d1a74d59ee8d198675b2f114d07807431e6ba1d111"
+SRC_URI[sha256sum] = "c0d36991faee06551ddbaf5d99266e97becdc05edfae87a833c3ff7bf73cfec2"
 
 BBCLASSEXTEND = "native"
