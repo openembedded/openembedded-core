@@ -12,7 +12,6 @@ DEPENDS += "libxrandr libxrender"
 PE = "1"
 
 SRC_URI_EXT = "xz"
-SRC_URI[md5sum] = "fe40f7a4fd39dd3a02248d3e0b1972e4"
-SRC_URI[sha256sum] = "7bc76daf9d72f8aff885efad04ce06b90488a1a169d118dea8a2b661832e8762"
+SRC_URI[sha256sum] = "c8bee4790d9058bacc4b6246456c58021db58a87ddda1a9d0139bf5f18f1f240"
 
 BBCLASSEXTEND = "native nativesdk"
