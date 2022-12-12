@@ -38,7 +38,7 @@ python __anonymous () {
 
         image = d.getVar('INITRAMFS_IMAGE')
         if image:
-            d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_complete')
+            d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_cpio')
 
         ubootenv = d.getVar('UBOOT_ENV')
         if ubootenv:
