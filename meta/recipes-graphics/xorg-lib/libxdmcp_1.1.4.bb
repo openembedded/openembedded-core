@@ -19,11 +19,11 @@ PROVIDES = "xdmcp"
 PE = "1"
 
 XORG_PN = "libXdmcp"
+XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "115c5c12ecce0e749cd91d999a5fd160"
-SRC_URI[sha256sum] = "20523b44aaa513e17c009e873ad7bbc301507a3224c232610ce2e099011c6529"
+SRC_URI[sha256sum] = "2dce5cc317f8f0b484ec347d87d81d552cdbebb178bd13c5d8193b6b7cd6ad00"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[arc4] = "ac_cv_lib_bsd_arc4random_buf=yes,ac_cv_lib_bsd_arc4random_buf=no,libbsd"
