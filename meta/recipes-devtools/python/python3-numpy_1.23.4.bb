@@ -16,6 +16,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
 SRC_URI[sha256sum] = "ed2cc92af0efad20198638c69bb0fc2870a58dabfba6eb722c933b48556c686c"
 
 GITHUB_BASE_URI = "https://github.com/numpy/numpy/releases"
+UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
 DEPENDS += "python3-cython-native"
 
