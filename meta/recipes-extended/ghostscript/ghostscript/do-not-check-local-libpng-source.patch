@@ -1,4 +1,4 @@
-From 2adaa7366064a8f18af864eda74e52877a89620c Mon Sep 17 00:00:00 2001
+From 108a7d3f79af8c669af129bd87401402e76edfa9 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Mon, 18 Jan 2016 01:00:30 -0500
 Subject: [PATCH] configure.ac: do not check local png source
@@ -17,12 +17,12 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 698abd3..e65ac8b 100644
+index bb57825..389c473 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1241,7 +1241,7 @@ else
+@@ -1441,7 +1441,7 @@ else
    PNGDEVS=''
-   PNGDEVS_ALL='png48 png16m pnggray pngmono pngmonod png256 png16 pngalpha'
+   PNGDEVS_ALL='png48 png16m pnggray pngmono pngmonod png256 png16 pngalpha png16malpha'
    AC_MSG_CHECKING([for local png library source])
 -  if test -f $srcdir/libpng/pngread.c; then
 +  if false; then
