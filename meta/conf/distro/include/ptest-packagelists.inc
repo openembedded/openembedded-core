@@ -5,22 +5,22 @@
 #
 PTESTS_FAST = "\
     acl-ptest \
-    apr-ptest \
     apr-util-ptest \
     attr-ptest \
+    babeltrace-ptest \
+    babeltrace2-ptest \
     bc-ptest \
     bluez5-ptest \
-    bzip2-ptest \
+    busybox-ptest \
     diffstat-ptest \
     diffutils-ptest \
-    elfutils-ptest \
     ethtool-ptest \
     expat-ptest \
+    findutils-ptest \
     flex-ptest \
     gawk-ptest \
     gdbm-ptest \
     gdk-pixbuf-ptest \
-    gettext-ptest \
     glib-networking-ptest \
     gzip-ptest \
     json-c-ptest \
@@ -29,7 +29,6 @@ PTESTS_FAST = "\
     liberror-perl-ptest \
     libgpg-error-ptest\
     libnl-ptest \
-    libmodule-build-perl-ptest \
     libpcre-ptest \
     libssh2-ptest \
     libtimedate-perl-ptest \
@@ -50,10 +49,8 @@ PTESTS_FAST = "\
     lzo-ptest \
     m4-ptest \
     nettle-ptest \
-    openssl-ptest \
     opkg-ptest \
     pango-ptest \
-    parted-ptest \
     popt-ptest \
     python3-atomicwrites-ptest \
     python3-bcrypt-ptest \
@@ -82,21 +79,23 @@ PTESTS_FAST:remove:riscv32 = "qemu-ptest"
 PTESTS_PROBLEMS:append:riscv32 = " qemu-ptest"
 
 PTESTS_SLOW = "\
-    babeltrace-ptest \
-    babeltrace2-ptest \
-    busybox-ptest \
+    apr-ptest \
+    bzip2-ptest \
     coreutils-ptest \
     curl-ptest \
     dbus-ptest \
     e2fsprogs-ptest \
-    findutils-ptest \
+    elfutils-ptest \
+    gettext-ptest \
     glib-2.0-ptest \
     gstreamer1.0-ptest \
     libevent-ptest \
     libgcrypt-ptest \
+    libmodule-build-perl-ptest \
     lttng-tools-ptest \
     openssh-ptest \
     openssl-ptest \
+    parted-ptest \
     perl-ptest \
     python3-cryptography-ptest \
     python3-ptest \
