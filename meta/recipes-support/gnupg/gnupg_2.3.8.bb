@@ -18,12 +18,13 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0002-use-pkgconfig-instead-of-npth-config.patch \
            file://0004-autogen.sh-fix-find-version-for-beta-checking.patch \
            file://0001-Woverride-init-is-not-needed-with-gcc-9.patch \
+           file://fix-ldap.patch \
            "
 SRC_URI:append:class-native = " file://0001-configure.ac-use-a-custom-value-for-the-location-of-.patch \
                                 file://relocate.patch"
 SRC_URI:append:class-nativesdk = " file://relocate.patch"
 
-SRC_URI[sha256sum] = "ee163a5fb9ec99ffc1b18e65faef8d086800c5713d15a672ab57d3799da83669"
+SRC_URI[sha256sum] = "540b7a40e57da261fb10ef521a282e0021532a80fd023e75fb71757e8a4969ed"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
