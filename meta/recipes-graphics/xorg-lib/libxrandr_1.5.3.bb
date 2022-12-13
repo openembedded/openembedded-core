@@ -16,8 +16,8 @@ DEPENDS += "virtual/libx11 xorgproto libxrender libxext"
 PE = "1"
 
 XORG_PN = "libXrandr"
+XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "18f3b20d522f45e4dadd34afb5bea048"
-SRC_URI[sha256sum] = "8aea0ebe403d62330bb741ed595b53741acf45033d3bda1792f1d4cc3daee023"
+SRC_URI[sha256sum] = "897639014a78e1497704d669c5dd5682d721931a4452c89a7ba62676064eb428"
