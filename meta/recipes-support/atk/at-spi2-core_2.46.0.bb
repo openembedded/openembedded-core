@@ -28,6 +28,8 @@ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
 PACKAGECONFIG[x11] = "-Dx11=yes,-Dx11=no,virtual/libx11 libxi libxtst"
 
 GTKDOC_MESON_OPTION = "docs"
+# The documentation doesn't build if X11 is disabled. Appears to be fixed post 2.46.0.
+EXTRA_OEMESON += "${@bb.utils.contains("DISTRO_FEATURES", "x11", "", "-Ddocs=false", d)}"
 
 GIR_MESON_OPTION = 'introspection'
 GIR_MESON_ENABLE_FLAG = 'yes'
