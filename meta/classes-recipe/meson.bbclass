@@ -173,7 +173,7 @@ meson_do_compile() {
 }
 
 meson_do_install() {
-    meson install --destdir ${D}
+    meson install --destdir ${D} --no-rebuild
 }
 
 EXPORT_FUNCTIONS do_configure do_compile do_install
