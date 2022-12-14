@@ -15,7 +15,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/pcre2-${PV}/pcre2-${PV}.tar.bz2"
 GITHUB_BASE_URI = "https://github.com/PhilipHazel/pcre2/releases"
 UPSTREAM_CHECK_REGEX = "releases/tag/pcre2-(?P<pver>.+)"
 
-SRC_URI[sha256sum] = "0f78cebd3e28e346475fb92e95fe9999945b4cbaad5f3b42aca47b887fb53308"
+SRC_URI[sha256sum] = "8d36cd8cb6ea2a4c2bb358ff6411b0c788633a2a45dabbf1aeb4b701d1b5e840"
 
 CVE_PRODUCT = "pcre2"
 
