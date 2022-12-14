@@ -35,6 +35,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0020-configure.ac-setup.py-do-not-add-a-curses-include-pa.patch \
            file://makerace.patch \
            file://CVE-2022-45061.patch \
+           file://CVE-2022-37454.patch \
            "
 
 SRC_URI_append_class-native = " \
