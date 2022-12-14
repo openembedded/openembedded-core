@@ -1058,6 +1058,13 @@ class BaseConfig(object):
 
         self.nfs_running = True
 
+    def setup_cmd(self):
+        cmd = self.get('QB_SETUP_CMD')
+        if cmd != '':
+            logger.info('Running setup command %s' % str(cmd))
+            if subprocess.call(cmd, shell=True) != 0:
+                raise RunQemuError('Failed to run %s' % cmd)
+
     def setup_net_bridge(self):
         self.set('NETWORK_CMD', '-netdev bridge,br=%s,id=net0,helper=%s -device virtio-net-pci,netdev=net0 ' % (
             self.net_bridge, os.path.join(self.bindir_native, 'qemu-oe-bridge-helper')))
@@ -1526,6 +1533,13 @@ class BaseConfig(object):
             else:
                 logger.error("Failed to run qemu: %s", process.stderr.read().decode())
 
+    def cleanup_cmd(self):
+        cmd = self.get('QB_CLEANUP_CMD')
+        if cmd != '':
+            logger.info('Running cleanup command %s' % str(cmd))
+            if subprocess.call(cmd, shell=True) != 0:
+                raise RunQemuError('Failed to run %s' % cmd)
+
     def cleanup(self):
         if self.cleaned:
             return
@@ -1654,6 +1668,7 @@ def main():
         config.setup_network()
         config.setup_rootfs()
         config.setup_final()
+        config.setup_cmd()
         config.start_qemu()
     except RunQemuError as err:
         logger.error(err)
@@ -1663,6 +1678,7 @@ def main():
         traceback.print_exc()
         return 1
     finally:
+        config.cleanup_cmd()
         config.cleanup()
         # Deliberately ignore the return code of 'tput smam'.
         subprocess.call(["tput", "smam"])
