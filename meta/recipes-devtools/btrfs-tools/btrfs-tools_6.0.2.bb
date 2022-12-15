@@ -17,6 +17,7 @@ DEPENDS = "util-linux zlib"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
+           file://0001-Use-pread-pwrite-ftruncate-stat-instead-of-64bit-equ.patch \
            "
 SRCREV = "ff964ba6aef98bd1bafe8ff9b0088501b30bdd27"
 S = "${WORKDIR}/git"
