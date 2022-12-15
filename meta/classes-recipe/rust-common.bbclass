@@ -66,6 +66,12 @@ def rust_base_triple(d, thing):
     elif "musl" in os:
         libc = "-musl"
         os = "linux"
+    elif "elf" in os:
+        libc = "-elf"
+        os = "none"
+    elif "eabi" in os:
+        libc = "-eabi"
+        os = "none"
 
     return arch + vendor + '-' + os + libc
 
