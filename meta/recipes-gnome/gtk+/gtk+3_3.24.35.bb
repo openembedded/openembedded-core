@@ -3,9 +3,9 @@ require gtk+3.inc
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
-           file://0002-Do-not-try-to-initialize-GL-without-libGL.patch \
-           file://0003-Add-disable-opengl-configure-option.patch \
-           file://link_fribidi.patch \
+           file://meson.build;subdir=${S}/gdk/wayland/cursor \
+           file://buildpaths.patch \
+           file://opengl.patch \
            "
 SRC_URI[sha256sum] = "ec10fe6d712ef0b3c63b5f932639c9d1ae99fce94f500f6f06965629fef60bd1"
 
