@@ -68,6 +68,9 @@ rust_do_install:class-target() {
         chrpath -r "\$ORIGIN/../lib" ${D}${bindir}/$i
     done
 
+    install -d ${D}${libdir}/rustlib/${RUST_HOST_SYS}
+    install -m 0644 ${WORKDIR}/rust-targets/${RUST_HOST_SYS}.json ${D}${libdir}/rustlib/${RUST_HOST_SYS}/target.json
+
     chown root:root ${D}/ -R
     rm ${D}${libdir}/rustlib/uninstall.sh
     rm ${D}${libdir}/rustlib/install.log
