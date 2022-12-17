@@ -159,7 +159,9 @@ python write_specfile () {
                             pv = subd['PV']
                             pkgv = subd['PKGV']
                             reppv = pkgv.replace('-', '+')
-                            ver = ver.replace(pv, reppv).replace(pkgv, reppv)
+                            if ver.startswith(pv):
+                                ver = ver.replace(pv, reppv)
+                            ver = ver.replace(pkgv, reppv)
                         if 'PKGR' in subd:
                             # Make sure PKGR rather than PR in ver
                             pr = '-' + subd['PR']
