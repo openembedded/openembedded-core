@@ -13,6 +13,10 @@ DEPENDS:append:class-nativesdk = " nativesdk-rust-llvm"
 
 S = "${RUSTSRC}"
 
+# Use at your own risk, accepted values are stable, beta and nightly
+RUST_CHANNEL ?= "stable"
+PV .= "${@bb.utils.contains('RUST_CHANNEL', 'stable', '', '-${RUST_CHANNEL}', d)}"
+
 export FORCE_CRATE_HASH="${BB_TASKHASH}"
 
 RUST_ALTERNATE_EXE_PATH ?= "${STAGING_LIBDIR}/llvm-rust/bin/llvm-config"
@@ -116,7 +120,7 @@ python do_configure() {
     # [rust]
     config.add_section("rust")
     config.set("rust", "rpath", e(True))
-    config.set("rust", "channel", e("stable"))
+    config.set("rust", "channel", e(d.expand("${RUST_CHANNEL}")))
 
     # Whether or not to optimize the compiler and standard library
     config.set("rust", "optimize", e(True))
