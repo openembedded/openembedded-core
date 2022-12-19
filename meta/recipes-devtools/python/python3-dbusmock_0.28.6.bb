@@ -17,3 +17,5 @@ RDEPENDS:${PN} += "\
     ${PYTHON_PN}-unittest \
     ${PYTHON_PN}-xml \
     "
+
+BBCLASSEXTEND = "native"
