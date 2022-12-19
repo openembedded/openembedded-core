@@ -4,6 +4,8 @@ FILESEXTRAPATHS:prepend := "${FILE_DIRNAME}/go:"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707"
 
+PATCHTOOL = "git"
+
 SRC_URI += "\
     file://0001-cmd-go-make-content-based-hash-generation-less-pedan.patch \
     file://0003-allow-GOTOOLDIR-to-be-overridden-in-the-environment.patch \
