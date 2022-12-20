@@ -3,7 +3,7 @@ require gtk+3.inc
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
-           file://meson.build;subdir=${S}/gdk/wayland/cursor \
+           file://add-missing-meson.build.patch \
            file://buildpaths.patch \
            file://opengl.patch \
            "

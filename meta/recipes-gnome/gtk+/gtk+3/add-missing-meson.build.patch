@@ -1,0 +1,38 @@
+From 8a00d0269d547799b598adda364ad6c6ee328e6b Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@arm.com>
+Date: Tue, 20 Dec 2022 12:09:07 +0000
+Subject: [PATCH] Add missing meson.build
+
+This file was missing from the tarball, but will be in the .36 release.
+
+Upstream-Status: Inappropriate
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+
+---
+ gdk/wayland/cursor/meson.build | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 gdk/wayland/cursor/meson.build
+
+diff --git a/gdk/wayland/cursor/meson.build b/gdk/wayland/cursor/meson.build
+new file mode 100644
+index 0000000..94cf47a
+--- /dev/null
++++ b/gdk/wayland/cursor/meson.build
+@@ -0,0 +1,14 @@
++# This file is missing from the 3.24.35 tarball
++
++wayland_cursor_sources = files([
++  'wayland-cursor.c',
++  'xcursor.c',
++  'os-compatibility.c'
++])
++
++libwayland_cursor = static_library('wayland+cursor',
++  sources: wayland_cursor_sources,
++  include_directories: [ confinc, ],
++  dependencies: [ glib_dep, wlclientdep, ],
++  c_args: common_cflags,
++)
+-- 
+2.34.1
+
