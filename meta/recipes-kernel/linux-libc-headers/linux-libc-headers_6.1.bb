@@ -8,13 +8,11 @@ SRC_URI:append:libc-musl = "\
    "
 
 SRC_URI += "\
-    file://0001-scripts-Use-fixed-input-and-output-files-instead-of-.patch \
     file://0001-kbuild-install_headers.sh-Strip-_UAPI-from-if-define.patch \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
-SRC_URI[md5sum] = "f91bfe133d2cb1692f705947282e123a"
-SRC_URI[sha256sum] = "ff240c579b9ee1affc318917de07394fc1c3bb49dac25ec1287370c2e15005a8"
+SRC_URI[sha256sum] = "2ca1f17051a430f6fed1196e4952717507171acfd97d96577212502703b25deb"
 
 
