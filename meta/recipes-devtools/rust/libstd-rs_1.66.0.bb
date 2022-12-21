@@ -6,8 +6,10 @@ LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=92289ed52a60b63ab715612ad2915603"
 
 require rust-source.inc
 
-# libstd moved from src/libstd to library/std in 1.47+
-S = "${RUSTSRC}/library/std"
+# Building with library/std omits proc_macro from the sysroot. Using
+# library/test causes that to be installed which then allows cargo to
+# build (https://github.com/meta-rust/meta-rust/issues/266)
+S = "${RUSTSRC}/library/test"
 
 RUSTLIB_DEP = ""
 inherit cargo
