@@ -13,6 +13,8 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://ptest-spacesave.patch \
            file://0001-strace-fix-reproducibilty-issues.patch \
            file://skip-load.patch \
+           file://0001-configure-Use-autoconf-macro-to-detect-largefile-sup.patch \
+           file://0002-tests-Replace-off64_t-with-off_t.patch \
            "
 SRC_URI[sha256sum] = "92d720a666855e9f1c6a11512fd6e99674a82bbfe1442557815f2ce8e1293338"
 
