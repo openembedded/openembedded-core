@@ -1,3 +1,4 @@
+drd/tests/boost_thread
 gdbserver_tests/hgtls
 memcheck/tests/dw4
 memcheck/tests/leak_cpp_interior
