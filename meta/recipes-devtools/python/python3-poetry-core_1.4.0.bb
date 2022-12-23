@@ -26,6 +26,8 @@ inherit python_poetry_core pypi
 PYPI_ARCHIVE_NAME = "poetry_core-${PV}.${PYPI_PACKAGE_EXT}"
 S = "${WORKDIR}/poetry_core-${PV}"
 
+SRC_URI += "file://deterministic.patch"
+
 RDEPENDS:${PN}:append:class-target = "\
     python3-compression \
     python3-core \
