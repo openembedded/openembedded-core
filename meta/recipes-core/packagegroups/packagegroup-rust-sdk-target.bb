@@ -10,4 +10,5 @@ inherit packagegroup
 
 RDEPENDS:${PN} = " \
     rust \
+    cargo \
 "
