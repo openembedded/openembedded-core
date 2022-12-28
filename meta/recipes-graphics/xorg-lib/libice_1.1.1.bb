@@ -20,8 +20,8 @@ XORG_PN = "libICE"
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[md5sum] = "76d77499ee7120a56566891ca2c0dbcf"
-SRC_URI[sha256sum] = "6f86dce12cf4bcaf5c37dddd8b1b64ed2ddf1ef7b218f22b9942595fb747c348"
+XORG_EXT = "tar.xz"
+SRC_URI[sha256sum] = "03e77afaf72942c7ac02ccebb19034e6e20f456dcf8dddadfeb572aa5ad3e451"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[arc4] = "ac_cv_lib_bsd_arc4random_buf=yes,ac_cv_lib_bsd_arc4random_buf=no,libbsd"
