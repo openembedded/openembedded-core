@@ -15,5 +15,6 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 RRECOMMENDS:${PN} += "xserver-xorg-module-libint10"
 
-SRC_URI[sha256sum] = "1f1624f3c73906801ad1bc98335a2cb5676a7a4d18e5374d9a1d18464e54c659"
+XORG_DRIVER_COMPRESSOR = ".tar.xz"
+SRC_URI[sha256sum] = "10082771b1a8f659c60b3d9b70456a4b59948a75b3cade2dfa33b8b05e549bb1"
 
