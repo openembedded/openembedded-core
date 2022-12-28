@@ -1,4 +1,4 @@
-From 45548f40668d429adcb7532d35db1ac16fe74562 Mon Sep 17 00:00:00 2001
+From a73020a9c388b4882c384087882a77ab2c7b3729 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Fri, 10 Sep 2021 12:28:31 +0200
 Subject: [PATCH] Lib/sysconfig.py: use values from build configuration file
