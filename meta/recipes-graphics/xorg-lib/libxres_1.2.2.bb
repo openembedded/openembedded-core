@@ -16,4 +16,5 @@ PE = "1"
 
 XORG_PN = "libXres"
 
-SRC_URI[sha256sum] = "b6e6fb1ebb61610e56017edd928fb89a5f53b3f4f990078309877468663b2b11"
+XORG_EXT = "tar.xz"
+SRC_URI[sha256sum] = "9a7446f3484b9b7538ac5ee30d2c1ce9e5b7fbbaf1440e02f6cca186a1fa745f"
