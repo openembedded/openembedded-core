@@ -11,13 +11,12 @@ SECTION = "libs"
 HOMEPAGE = "https://metacpan.org/release/Module-Build"
 
 LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
-LIC_FILES_CHKSUM = "file://README;beginline=949;endline=954;md5=624c06db56a2af4d70cf9edc29fcae1b"
+LIC_FILES_CHKSUM = "file://README;beginline=881;endline=886;md5=3027f56c664545e54678c26b7f1ac19c"
 
 SRC_URI = "${CPAN_MIRROR}/authors/id/L/LE/LEONT/Module-Build-${PV}.tar.gz \
            file://run-ptest \
            "
-SRC_URI[md5sum] = "066b193e461d7dfe1eca17a139353001"
-SRC_URI[sha256sum] = "7e0f4c692c1740c1ac84ea14d7ea3d8bc798b2fb26c09877229e04f430b2b717"
+SRC_URI[sha256sum] = "67c82ee245d94ba06decfa25572ab75fdcd26a9009094289d8f45bc54041771b"
 
 S = "${WORKDIR}/Module-Build-${PV}"
 
