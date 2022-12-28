@@ -13,9 +13,9 @@ SRC_URI = "\
     https://code.jquery.com/${BP}.min.map;name=map;subdir=${BP} \
     "
 
-SRC_URI[js.sha256sum] = "df3941e6cdaec28533ad72b7053ec05f7172be88ecada345c42736bc2ffba4d2"
-SRC_URI[min.sha256sum] = "a3cf00c109d907e543bc4f6dbc85eb31068f94515251347e9e57509b52ee3d74"
-SRC_URI[map.sha256sum] = "856ee620cebac56e872d6e99b09de05f81ccd3f3dc346e9b55eb694611a6d5e1"
+SRC_URI[js.sha256sum] = "a649f609466685e49ecacb18c37bcca75fb1cae6f89be7be40ae2c42c92fba8e"
+SRC_URI[min.sha256sum] = "da4ad864a87ffcf71c851b5df87f95cb242867f7b711cae4c6133cc9cc0048f0"
+SRC_URI[map.sha256sum] = "f46902fc1b81c286e51f4eb4812382ee9eedba0e9fc855e4dc3af59e0c57f404"
 
 UPSTREAM_CHECK_REGEX = "jquery-(?P<pver>\d+(\.\d+)+)\.js"
 
