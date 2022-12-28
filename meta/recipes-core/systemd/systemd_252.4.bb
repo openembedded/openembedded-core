@@ -49,6 +49,7 @@ SRC_URI_MUSL = "\
                file://0001-pass-correct-parameters-to-getdents64.patch \
                file://0002-Add-sys-stat.h-for-S_IFDIR.patch \
                file://0001-Adjust-for-musl-headers.patch \
+               file://0001-test-bus-error-strerror-is-assumed-to-be-GNU-specifi.patch \
                "
 
 PAM_PLUGINS = " \
@@ -109,7 +110,7 @@ PACKAGECONFIG:remove:libc-musl = " \
 # https://github.com/seccomp/libseccomp/issues/347
 PACKAGECONFIG:remove:mipsarch = "seccomp"
 
-CFLAGS:append:libc-musl = " -D__UAPI_DEF_ETHHDR=0 "
+TARGET_CC_ARCH:append:libc-musl = " -D__UAPI_DEF_ETHHDR=0 -D_LARGEFILE64_SOURCE"
 
 # Some of the dependencies are weak-style recommends - if not available at runtime,
 # systemd won't fail but the library-related feature will be skipped with a warning.
