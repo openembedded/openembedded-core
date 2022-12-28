@@ -602,6 +602,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/resolv-conf.systemd \
                 ${sysconfdir}/X11/xinit/xinitrc.d/* \
                 ${rootlibexecdir}/systemd/* \
+                ${rootlibdir}/systemd/libsystemd-core* \
                 ${libdir}/pam.d \
                 ${nonarch_libdir}/pam.d \
                 ${systemd_unitdir}/* \
@@ -616,6 +617,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${bindir}/timedatectl \
                 ${bindir}/bootctl \
                 ${bindir}/oomctl \
+                ${bindir}/userdbctl \
                 ${exec_prefix}/lib/tmpfiles.d/*.conf \
                 ${exec_prefix}/lib/systemd \
                 ${exec_prefix}/lib/modules-load.d \
@@ -658,7 +660,7 @@ INSANE_SKIP:${PN}-dbg += "libdir"
 INSANE_SKIP:${PN}-doc += " libdir"
 INSANE_SKIP:libsystemd-shared += "libdir"
 
-FILES:libsystemd-shared = "${rootlibexecdir}/systemd/libsystemd-shared*.so"
+FILES:libsystemd-shared = "${rootlibdir}/systemd/libsystemd-shared*.so"
 
 RPROVIDES:udev = "hotplug"
 
