@@ -11,8 +11,13 @@ LIC_FILES_CHKSUM = " \
     file://LICENSE-THIRD-PARTY;md5=f257ad009884cb88a3a87d6920e7180a \
 "
 
-require recipes-devtools/rust/rust-source.inc
-require recipes-devtools/rust/rust-snapshot.inc
+require rust-source.inc
+require rust-snapshot.inc
+
+SRC_URI:append:class-target = " file://crossbeam_atomic.patch;patchdir=${RUSTSRC}"
+
+# Used by crossbeam_atomic.patch
+export TARGET_VENDOR
 
 S = "${RUSTSRC}/src/tools/cargo"
 CARGO_VENDORING_DIRECTORY = "${RUSTSRC}/vendor"
