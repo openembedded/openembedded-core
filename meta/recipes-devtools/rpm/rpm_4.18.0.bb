@@ -117,14 +117,6 @@ do_install:append:class-native() {
 }
 
 do_install:append:class-nativesdk() {
-        for tool in ${WRAPPER_TOOLS}; do
-                test -x ${D}$tool && create_wrapper ${D}$tool \
-                        RPM_CONFIGDIR='$'{RPM_CONFIGDIR-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('libdir'), d.getVar('bindir'))}/rpm} \
-                        RPM_ETCCONFIGDIR='$'{RPM_ETCCONFIGDIR-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('sysconfdir'), d.getVar('bindir'))}/..} \
-                        MAGIC=''{MAGIC-'`dirname $''realpath`'/${@os.path.relpath(d.getVar('datadir'), d.getVar('bindir'))}/misc/magic.mgc} \
-                        RPM_NO_CHROOT_FOR_SCRIPTS=1
-        done
-
         rm -rf ${D}/var
 
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
