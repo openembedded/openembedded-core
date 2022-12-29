@@ -8,22 +8,19 @@ python () {
 
 require xorg-lib-common.inc
 
-LICENSE = "MIT & MIT & BSD-1-Clause & HPND & HPND-sell-variant"
-LIC_FILES_CHKSUM = "file://COPYING;md5=172255dee66bb0151435b2d5d709fcf7"
+LICENSE = "MIT & BSD-1-Clause & HPND & HPND-sell-variant & ISC"
+LIC_FILES_CHKSUM = "file://COPYING;md5=1d49cdd2b386c5db11ec636d680b7116"
 
-SRC_URI[md5sum] = "c5fa5a86a20e3591bed6c046498d4b8f"
-SRC_URI[sha256sum] = "b289a845c189e251e0e884cc0f9269bbe97c238df3741e854ec4c17c21e473d5"
+XORG_PN = "libX11"
 
 SRC_URI += "file://0001-Drop-x11-dependencies.patch \
            "
 
-XORG_PN = "libX11"
+SRC_URI[sha256sum] = "e31565c84006b6b8e01dc9399c806085739710bc2db2e0930f1511ed9d6585bd"
+
+REQUIRED_DISTRO_FEATURES = ""
 
 EXTRA_OECONF += "--disable-xkb"
-
-PACKAGES = "${PN}"
-
-FILES:${PN} = "${datadir}/X11/locale ${libdir}/X11/locale"
 
 do_compile() {
     oe_runmake -C nls
@@ -33,4 +30,6 @@ do_install() {
     oe_runmake DESTDIR=${D} -C nls install
 }
 
-REQUIRED_DISTRO_FEATURES = ""
+PACKAGES = "${PN}"
+
+FILES:${PN} = "${datadir}/X11/locale ${libdir}/X11/locale"
