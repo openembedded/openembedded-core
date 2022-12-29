@@ -16,7 +16,6 @@ DEPENDS += "virtual/libx11 xorgproto libxrender libxext"
 PE = "1"
 
 XORG_PN = "libXrandr"
-XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
 

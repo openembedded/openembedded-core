@@ -19,7 +19,6 @@ PROVIDES = "xdmcp"
 PE = "1"
 
 XORG_PN = "libXdmcp"
-XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
 

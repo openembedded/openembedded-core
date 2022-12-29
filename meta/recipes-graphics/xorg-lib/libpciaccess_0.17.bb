@@ -7,7 +7,6 @@ require xorg-lib-common.inc
 
 SRC_URI += "file://0001-linux_sysfs-Use-pwrite-pread-instead-of-64bit-versio.patch"
 
-XORG_EXT = "tar.xz"
 SRC_URI[sha256sum] = "74283ba3c974913029e7a547496a29145b07ec51732bbb5b5c58d5025ad95b73"
 
 LICENSE = "MIT & MIT"

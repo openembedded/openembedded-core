@@ -17,7 +17,6 @@ PROVIDES = "xau"
 PE = "1"
 
 XORG_PN = "libXau"
-XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
 

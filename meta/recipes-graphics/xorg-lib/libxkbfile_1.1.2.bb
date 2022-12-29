@@ -13,5 +13,4 @@ DEPENDS += "virtual/libx11 xorgproto"
 PE = "1"
 
 BBCLASSEXTEND = "native"
-XORG_EXT = "tar.xz"
 SRC_URI[sha256sum] = "b8a3784fac420b201718047cfb6c2d5ee7e8b9481564c2667b4215f6616644b1"

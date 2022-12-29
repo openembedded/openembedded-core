@@ -19,5 +19,4 @@ PE = "1"
 
 XORG_PN = "libXScrnSaver"
 
-XORG_EXT = "tar.xz"
 SRC_URI[sha256sum] = "75cd2859f38e207a090cac980d76bc71e9da99d48d09703584e00585abc920fe"

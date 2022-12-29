@@ -14,6 +14,5 @@ DEPENDS += "libxext xorgproto"
 
 XORG_PN = "libXv"
 
-XORG_EXT = "tar.xz"
 SRC_URI[sha256sum] = "aaf7fa09f689f7a2000fe493c0d64d1487a1210db154053e9e2336b860c63848"
 

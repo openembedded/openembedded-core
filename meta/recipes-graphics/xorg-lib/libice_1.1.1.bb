@@ -20,7 +20,6 @@ XORG_PN = "libICE"
 
 BBCLASSEXTEND = "native nativesdk"
 
-XORG_EXT = "tar.xz"
 SRC_URI[sha256sum] = "03e77afaf72942c7ac02ccebb19034e6e20f456dcf8dddadfeb572aa5ad3e451"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"

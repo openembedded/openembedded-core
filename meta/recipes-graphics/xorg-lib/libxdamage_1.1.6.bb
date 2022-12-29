@@ -23,7 +23,6 @@ PE = "1"
 
 XORG_PN = "libXdamage"
 
-XORG_EXT = "tar.xz"
 SRC_URI[sha256sum] = "52733c1f5262fca35f64e7d5060c6fcd81a880ba8e1e65c9621cf0727afb5d11"
 
 BBCLASSEXTEND = "native nativesdk"
