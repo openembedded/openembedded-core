@@ -22,8 +22,7 @@ PE = "1"
 
 XORG_PN = "libSM"
 
-SRC_URI[md5sum] = "87c7fad1c1813517979184c8ccd76628"
-SRC_URI[sha256sum] = "2d264499dcb05f56438dee12a1b4b71d76736ce7ba7aa6efbf15ebb113769cbb"
+SRC_URI[sha256sum] = "fdcbe51e4d1276b1183da77a8a4e74a137ca203e0bcfb20972dd5f3347e97b84"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
