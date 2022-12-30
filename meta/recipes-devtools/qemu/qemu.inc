@@ -80,6 +80,8 @@ do_install_ptest() {
 	# Update SRC_PATH variable to the right place on target
 	sed -i -e "s#^SRC_PATH=.*#SRC_PATH=${PTEST_PATH}#g" $makfiles
 
+	# https://gitlab.com/qemu-project/qemu/-/issues/1403
+	rm ${D}${PTEST_PATH}/tests/unit/test-io-channel-command
 }
 
 # QEMU_TARGETS is overridable variable
