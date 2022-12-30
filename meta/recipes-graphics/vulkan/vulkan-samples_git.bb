@@ -9,6 +9,7 @@ SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=master;prot
            file://0001-CMakeLists.txt-do-not-hardcode-lib-as-installation-t.patch \
            file://debugfix.patch \
            file://0001-Qualify-move-as-std-move.patch;patchdir=third_party/spirv-cross \
+           file://0001-Do-not-use-LFS64-functions-on-linux-musl.patch;patchdir=third_party/spdlog \
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
