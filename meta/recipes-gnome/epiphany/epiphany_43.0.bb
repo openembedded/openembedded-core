@@ -15,12 +15,15 @@ DEPENDS = " \
           libarchive \
           libdazzle \
           libhandy \
+          libportal \
+          libsoup \
           glib-2.0-native \
           coreutils-native \
+          desktop-file-utils-native \
           "
 
 GNOMEBASEBUILDCLASS = "meson"
-inherit gnomebase gsettings features_check gettext mime-xdg
+inherit gnomebase gsettings features_check gettext mime-xdg gtk-icon-cache
 REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
 SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@oe.utils.trim_version("${PV}", 1)}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive \
@@ -28,16 +31,10 @@ SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@oe.utils.trim_version("${PV}", 1)}/${GN
            file://migrator.patch \
            file://distributor.patch \
            "
-SRC_URI[archive.sha256sum] = "370938ad2920eeb28bc2435944776b7ba55a0e2ede65836f79818cfb7e8f0860"
-
-PACKAGECONFIG_SOUP ?= "soup3"
-PACKAGECONFIG ??= "${PACKAGECONFIG_SOUP}"
+SRC_URI[archive.sha256sum] = "b66d499f9ee72696d83cf844125377181a954554a4bb3785b73293380ac0c227"
 
 # Developer mode enables debugging
 PACKAGECONFIG[developer-mode] = "-Ddeveloper_mode=true,-Ddeveloper_mode=false"
-PACKAGECONFIG[soup2] = "-Dsoup2=enabled,-Dsoup2=disabled,libsoup-2.4,,,soup3"
-PACKAGECONFIG[soup3] = ",,libsoup,,,soup2"
-PACKAGECONFIG[libportal] = "-Dlibportal=enabled,-Dlibportal=disabled,libportal"
 
 FILES:${PN} += "${datadir}/dbus-1 ${datadir}/gnome-shell/search-providers ${datadir}/metainfo"
 RDEPENDS:${PN} = "iso-codes adwaita-icon-theme gsettings-desktop-schemas"
