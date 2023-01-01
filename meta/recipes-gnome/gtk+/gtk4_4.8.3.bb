@@ -37,7 +37,7 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 UPSTREAM_CHECK_REGEX = "gtk-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)\.tar.xz"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk/${MAJ_VER}/gtk-${PV}.tar.xz"
-SRC_URI[sha256sum] = "85b7a160b6e02eafa4e7d38f046f8720fab537d3fe73c01c864333a983a692a9"
+SRC_URI[sha256sum] = "b362f968d085b4d3d9340d4d38c706377ded9d5374e694a2b6b7e6292e3cba74"
 
 S = "${WORKDIR}/gtk-${PV}"
 
@@ -105,7 +105,6 @@ GTKBASE_RRECOMMENDS ?= " \
     shared-mime-info \
     adwaita-icon-theme-symbolic \
 "
-
 
 GTKBASE_RRECOMMENDS:class-native ?= ""
 
