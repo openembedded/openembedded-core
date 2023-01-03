@@ -9,6 +9,7 @@ SRC_URI:append:class-target:pn-libstd-rs = "\
 SRC_URI:append:class-target:pn-rust = " \
     file://getrandom-open64.patch \
     file://0001-Do-not-use-LFS64-on-linux-with-musl.patch \
+    file://zlib-off64_t.patch \
     file://hardcodepaths.patch \
     file://crossbeam_atomic.patch"
 SRC_URI:append:class-nativesdk:pn-nativesdk-rust = " file://hardcodepaths.patch"
