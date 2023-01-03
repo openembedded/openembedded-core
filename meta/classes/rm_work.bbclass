@@ -57,55 +57,58 @@ do_rm_work () {
     # Change normal stamps into setscene stamps as they better reflect the
     # fact WORKDIR is now empty
     # Also leave noexec stamps since setscene stamps don't cover them
-    cd `dirname ${STAMP}`
-    for i in `basename ${STAMP}`*
-    do
-        case $i in
-        *sigdata*|*sigbasedata*)
-            # Save/skip anything that looks like a signature data file.
-            ;;
-        *do_image_complete_setscene*|*do_image_qa_setscene*)
-            # Ensure we don't 'stack' setscene extensions to these stamps with the sections below
-            ;;
-        *do_image_complete*)
-            # Promote do_image_complete stamps to setscene versions (ahead of *do_image* below)
-            mv $i `echo $i | sed -e "s#do_image_complete#do_image_complete_setscene#"`
-            ;;
-        *do_image_qa*)
-            # Promote do_image_qa stamps to setscene versions (ahead of *do_image* below)
-            mv $i `echo $i | sed -e "s#do_image_qa#do_image_qa_setscene#"`
-            ;;
-        *do_package_write*|*do_rootfs*|*do_image*|*do_bootimg*|*do_write_qemuboot_conf*|*do_build*)
-            ;;
-        *do_addto_recipe_sysroot*)
-            # Preserve recipe-sysroot-native if do_addto_recipe_sysroot has been used
-            excludes="$excludes recipe-sysroot-native"
-            ;;
-        *do_package|*do_package.*|*do_package_setscene.*)
-            # We remove do_package entirely, including any
-            # sstate version since otherwise we'd need to leave 'plaindirs' around
-            # such as 'packages' and 'packages-split' and these can be large. No end
-            # of chain tasks depend directly on do_package anymore.
-            "${RM_BIN}" -f -- $i;
-            ;;
-        *_setscene*)
-            # Skip stamps which are already setscene versions
-            ;;
-        *)
-            # For everything else: if suitable, promote the stamp to a setscene
-            # version, otherwise remove it
-            for j in ${SSTATETASKS} do_shared_workdir
-            do
-                case $i in
-                *$j|*$j.*)
-                    mv $i `echo $i | sed -e "s#${j}#${j}_setscene#"`
-                    break
-                    ;;
-                esac
-            done
-            "${RM_BIN}" -f -- $i
-        esac
-    done
+    STAMPDIR=`dirname ${STAMP}`
+    if test -d $STAMPDIR; then
+        cd $STAMPDIR
+        for i in `basename ${STAMP}`*
+        do
+            case $i in
+            *sigdata*|*sigbasedata*)
+                # Save/skip anything that looks like a signature data file.
+                ;;
+            *do_image_complete_setscene*|*do_image_qa_setscene*)
+                # Ensure we don't 'stack' setscene extensions to these stamps with the sections below
+                ;;
+            *do_image_complete*)
+                # Promote do_image_complete stamps to setscene versions (ahead of *do_image* below)
+                mv $i `echo $i | sed -e "s#do_image_complete#do_image_complete_setscene#"`
+                ;;
+            *do_image_qa*)
+                # Promote do_image_qa stamps to setscene versions (ahead of *do_image* below)
+                mv $i `echo $i | sed -e "s#do_image_qa#do_image_qa_setscene#"`
+                ;;
+            *do_package_write*|*do_rootfs*|*do_image*|*do_bootimg*|*do_write_qemuboot_conf*|*do_build*)
+                ;;
+            *do_addto_recipe_sysroot*)
+                # Preserve recipe-sysroot-native if do_addto_recipe_sysroot has been used
+                excludes="$excludes recipe-sysroot-native"
+                ;;
+            *do_package|*do_package.*|*do_package_setscene.*)
+                # We remove do_package entirely, including any
+                # sstate version since otherwise we'd need to leave 'plaindirs' around
+                # such as 'packages' and 'packages-split' and these can be large. No end
+                # of chain tasks depend directly on do_package anymore.
+                "${RM_BIN}" -f -- $i;
+                ;;
+            *_setscene*)
+                # Skip stamps which are already setscene versions
+                ;;
+            *)
+                # For everything else: if suitable, promote the stamp to a setscene
+                # version, otherwise remove it
+                for j in ${SSTATETASKS} do_shared_workdir
+                do
+                    case $i in
+                    *$j|*$j.*)
+                        mv $i `echo $i | sed -e "s#${j}#${j}_setscene#"`
+                        break
+                        ;;
+                    esac
+                done
+                "${RM_BIN}" -f -- $i
+            esac
+        done
+    fi
 
     cd ${WORKDIR}
     for dir in *
