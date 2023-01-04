@@ -365,7 +365,7 @@ python write_specfile () {
         translate_vers('RCONFLICTS', localdata)
 
         # Map the dependencies into their final form
-        mapping_rename_hook(localdata)
+        oe.packagedata.mapping_rename_hook(localdata)
 
         splitrdepends    = localdata.getVar('RDEPENDS') or ""
         splitrrecommends = localdata.getVar('RRECOMMENDS') or ""

@@ -340,4 +340,12 @@ fi
         and not bb.data.inherits_class('packagegroup', d):
         write_extra_runtime_pkgs(global_variants, packages, pkgdatadir)
 
-
+def mapping_rename_hook(d):
+    """
+    Rewrite variables to account for package renaming in things
+    like debian.bbclass or manual PKG variable name changes
+    """
+    pkg = d.getVar("PKG")
+    oe.packagedata.runtime_mapping_rename("RDEPENDS", pkg, d)
+    oe.packagedata.runtime_mapping_rename("RRECOMMENDS", pkg, d)
+    oe.packagedata.runtime_mapping_rename("RSUGGESTS", pkg, d)

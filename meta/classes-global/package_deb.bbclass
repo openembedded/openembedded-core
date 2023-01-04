@@ -174,7 +174,7 @@ def deb_write_pkg(pkg, d):
             ctrlfile.write(custom_fields_chunk)
             ctrlfile.write("\n")
 
-        mapping_rename_hook(localdata)
+        oe.packagedata.mapping_rename_hook(localdata)
 
         def debian_cmp_remap(var):
             # dpkg does not allow for '(', ')' or ':' in a dependency name

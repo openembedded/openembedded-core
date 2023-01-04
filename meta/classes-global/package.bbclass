@@ -607,16 +607,3 @@ python do_packagedata_setscene () {
 }
 addtask do_packagedata_setscene
 
-#
-# Helper functions for the package writing classes
-#
-
-def mapping_rename_hook(d):
-    """
-    Rewrite variables to account for package renaming in things
-    like debian.bbclass or manual PKG variable name changes
-    """
-    pkg = d.getVar("PKG")
-    oe.packagedata.runtime_mapping_rename("RDEPENDS", pkg, d)
-    oe.packagedata.runtime_mapping_rename("RRECOMMENDS", pkg, d)
-    oe.packagedata.runtime_mapping_rename("RSUGGESTS", pkg, d)
