@@ -27,6 +27,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-resolve-Use-sockaddr-pointer-type-for-bind.patch \
            file://CVE-2022-3821.patch \
            file://CVE-2022-45873.patch \
+           file://0001-shared-json-allow-json_variant_dump-to-return-an-err.patch \
            "
 
 # patches needed by musl
