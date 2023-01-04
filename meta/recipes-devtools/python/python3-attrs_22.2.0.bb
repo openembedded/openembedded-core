@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.attrs.org/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5e55731824cf9205cfabeab9a0600887"
 
-SRC_URI[sha256sum] = "29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"
+SRC_URI[sha256sum] = "c9227bfc2f01993c03f68db37d1d15c9690188323c067c641f1a35ca58185f99"
 
 inherit pypi python_setuptools_build_meta
 
