@@ -4,22 +4,13 @@ DESCRIPTION = "Library provides support for the Tag Image File Format \
 provide means to easily access and create TIFF image files."
 HOMEPAGE = "http://www.libtiff.org/"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=34da3db46fab7501992f9615d7e158cf"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=a3e32d664d6db1386b4689c8121531c3"
 
 CVE_PRODUCT = "libtiff"
 
-SRC_URI = "http://download.osgeo.org/libtiff/tiff-${PV}.tar.gz \
-           file://0001-fix-the-FPE-in-tiffcrop-415-427-and-428.patch \
-           file://CVE-2022-34526.patch \
-           file://CVE-2022-2953.patch \
-           file://CVE-2022-3970.patch \
-           file://0001-Revised-handling-of-TIFFTAG_INKNAMES-and-related-TIF.patch \
-           file://0001-tiffcrop-S-option-Make-decision-simpler.patch \
-           file://0001-tiffcrop-disable-incompatibility-of-Z-X-Y-z-options-.patch \
-           file://0001-tiffcrop-subroutines-require-a-larger-buffer-fixes-2.patch \
-           "
+SRC_URI = "http://download.osgeo.org/libtiff/tiff-${PV}.tar.gz"
 
-SRC_URI[sha256sum] = "917223b37538959aca3b790d2d73aa6e626b688e02dcda272aec24c2f498abed"
+SRC_URI[sha256sum] = "c7a1d9296649233979fa3eacffef3fa024d73d05d589cb622727b5b08c423464"
 
 # exclude betas
 UPSTREAM_CHECK_REGEX = "tiff-(?P<pver>\d+(\.\d+)+).tar"
