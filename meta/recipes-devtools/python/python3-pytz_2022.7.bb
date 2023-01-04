@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1a67fc46c1b596cce5d21209bbe75999"
 
 inherit pypi setuptools3 ptest
 
-SRC_URI[sha256sum] = "e89512406b793ca39f5971bc999cc538ce125c0e51c27941bef4568b460095e2"
+SRC_URI[sha256sum] = "7ccfae7b4b2c067464a6733c6261673fdb8fd1be905460396b97a073e9fa683a"
 
 RDEPENDS:${PN}:class-target += "\
     ${PYTHON_PN}-datetime \
