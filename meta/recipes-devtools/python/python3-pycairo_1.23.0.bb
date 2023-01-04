@@ -13,7 +13,7 @@ DEPENDS = "cairo python3"
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/pycairo-${PV}.tar.gz"
 GITHUB_BASE_URI = "https://github.com/pygobject/pycairo/releases/"
 
-SRC_URI[sha256sum] = "251907f18a552df938aa3386657ff4b5a4937dde70e11aa042bc297957f4b74b"
+SRC_URI[sha256sum] = "9b61ac818723adc04367301317eb2e814a83522f07bbd1f409af0dada463c44c"
 
 S = "${WORKDIR}/pycairo-${PV}"
 
