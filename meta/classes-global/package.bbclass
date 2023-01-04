@@ -353,14 +353,6 @@ python perform_packagecopy () {
 perform_packagecopy[cleandirs] = "${PKGD}"
 perform_packagecopy[dirs] = "${PKGD}"
 
-python fixup_perms () {
-    oe.package.fixup_perms(d)
-}
-
-python split_and_strip_files () {
-    oe.package.process_split_and_strip_files(d)
-}
-
 python populate_packages () {
     oe.package.populate_packages(d)
 }
@@ -453,15 +445,9 @@ def gen_packagevar(d, pkgvars="PACKAGEVARS"):
         ret.append('_exclude_incompatible-%s' % p)
     return " ".join(ret)
 
-PACKAGE_PREPROCESS_FUNCS ?= ""
+
 # Functions for setting up PKGD
-PACKAGEBUILDPKGD ?= " \
-                package_prepare_pkgdata \
-                perform_packagecopy \
-                ${PACKAGE_PREPROCESS_FUNCS} \
-                split_and_strip_files \
-                fixup_perms \
-                "
+PACKAGE_PREPROCESS_FUNCS ?= ""
 # Functions which split PKGD up into separate packages
 PACKAGESPLITFUNCS ?= " \
                 package_do_split_locales \
@@ -528,8 +514,12 @@ python do_package () {
     # Setup PKGD (from D)
     ###########################################################################
 
-    for f in (d.getVar('PACKAGEBUILDPKGD') or '').split():
+    bb.build.exec_func("package_prepare_pkgdata", d)
+    bb.build.exec_func("perform_packagecopy", d)
+    for f in (d.getVar('PACKAGE_PREPROCESS_FUNCS') or '').split():
         bb.build.exec_func(f, d)
+    oe.package.process_split_and_strip_files(d)
+    oe.package.fixup_perms(d)
 
     ###########################################################################
     # Split up PKGD into PKGDEST
@@ -562,7 +552,7 @@ python do_package () {
 }
 
 do_package[dirs] = "${SHLIBSWORKDIR} ${D}"
-do_package[vardeps] += "${PACKAGEBUILDPKGD} ${PACKAGESPLITFUNCS} ${PACKAGEFUNCS} ${@gen_packagevar(d)}"
+do_package[vardeps] += "${PACKAGE_PREPROCESS_FUNCS} ${PACKAGESPLITFUNCS} ${PACKAGEFUNCS} ${@gen_packagevar(d)}"
 addtask package after do_install
 
 SSTATETASKS += "do_package"
