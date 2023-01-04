@@ -32,9 +32,9 @@ PACKAGES =+ "${PN}-icu ${PN}-icu-dev ${PN}-subset"
 LEAD_SONAME = "libharfbuzz.so"
 
 do_install:append() {
-    # If no tools are installed due to PACKAGECONFIG then this directory is
-    #still installed, so remove it to stop packaging wanings.
-    rmdir --ignore-fail-on-non-empty ${D}${bindir}
+    # If no tools are installed due to PACKAGECONFIG then this directory might
+    # still be installed, so remove it to stop packaging warnings.
+    [ ! -d ${D}${bindir} ] || rmdir --ignore-fail-on-non-empty ${D}${bindir}
 }
 
 FILES:${PN}-icu = "${libdir}/libharfbuzz-icu.so.*"
