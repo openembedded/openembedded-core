@@ -226,7 +226,7 @@ def ipk_write_pkg(pkg, d):
             scriptfile.close()
             os.chmod(os.path.join(controldir, script), 0o755)
 
-        conffiles_str = ' '.join(get_conffiles(pkg, d))
+        conffiles_str = ' '.join(oe.package.get_conffiles(pkg, d))
         if conffiles_str:
             conffiles = open(os.path.join(controldir, 'conffiles'), 'w')
             for f in conffiles_str.split():

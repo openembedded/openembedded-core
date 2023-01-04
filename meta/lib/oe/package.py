@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import os
+import glob
 import stat
 import mmap
 import subprocess
@@ -532,5 +534,80 @@ def fixup_perms(d):
                     each_file = os.path.join(root, f)
                     fix_perms(each_file, fs_perms_table[dir].fmode, fs_perms_table[dir].fuid, fs_perms_table[dir].fgid, dir)
 
+# Get a list of files from file vars by searching files under current working directory
+# The list contains symlinks, directories and normal files.
+def files_from_filevars(filevars):
+    import oe.cachedpath
 
+    cpath = oe.cachedpath.CachedPath()
+    files = []
+    for f in filevars:
+        if os.path.isabs(f):
+            f = '.' + f
+        if not f.startswith("./"):
+            f = './' + f
+        globbed = glob.glob(f)
+        if globbed:
+            if [ f ] != globbed:
+                files += globbed
+                continue
+        files.append(f)
+
+    symlink_paths = []
+    for ind, f in enumerate(files):
+        # Handle directory symlinks. Truncate path to the lowest level symlink
+        parent = ''
+        for dirname in f.split('/')[:-1]:
+            parent = os.path.join(parent, dirname)
+            if dirname == '.':
+                continue
+            if cpath.islink(parent):
+                bb.warn("FILES contains file '%s' which resides under a "
+                        "directory symlink. Please fix the recipe and use the "
+                        "real path for the file." % f[1:])
+                symlink_paths.append(f)
+                files[ind] = parent
+                f = parent
+                break
+
+        if not cpath.islink(f):
+            if cpath.isdir(f):
+                newfiles = [ os.path.join(f,x) for x in os.listdir(f) ]
+                if newfiles:
+                    files += newfiles
+
+    return files, symlink_paths
+
+# Called in package_<rpm,ipk,deb>.bbclass to get the correct list of configuration files
+def get_conffiles(pkg, d):
+    pkgdest = d.getVar('PKGDEST')
+    root = os.path.join(pkgdest, pkg)
+    cwd = os.getcwd()
+    os.chdir(root)
+
+    conffiles = d.getVar('CONFFILES:%s' % pkg);
+    if conffiles == None:
+        conffiles = d.getVar('CONFFILES')
+    if conffiles == None:
+        conffiles = ""
+    conffiles = conffiles.split()
+    conf_orig_list = files_from_filevars(conffiles)[0]
+
+    # Remove links and directories from conf_orig_list to get conf_list which only contains normal files
+    conf_list = []
+    for f in conf_orig_list:
+        if os.path.isdir(f):
+            continue
+        if os.path.islink(f):
+            continue
+        if not os.path.exists(f):
+            continue
+        conf_list.append(f)
+
+    # Remove the leading './'
+    for i in range(0, len(conf_list)):
+        conf_list[i] = conf_list[i][1:]
+
+    os.chdir(cwd)
+    return conf_list
 

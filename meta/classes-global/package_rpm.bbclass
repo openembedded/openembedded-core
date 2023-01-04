@@ -341,7 +341,7 @@ python write_specfile () {
 
         localdata.setVar('OVERRIDES', d.getVar("OVERRIDES", False) + ":" + pkg)
 
-        conffiles = get_conffiles(pkg, d)
+        conffiles = oe.package.get_conffiles(pkg, d)
         dirfiles = localdata.getVar('DIRFILES')
         if dirfiles is not None:
             dirfiles = dirfiles.split()
