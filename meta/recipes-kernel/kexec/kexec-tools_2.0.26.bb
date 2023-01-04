@@ -20,7 +20,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0001-arm64-kexec-disabled-check-if-kaslr-seed-dtb-propert.patch \
            "
 
-SRC_URI[sha256sum] = "4eea6f8641ea3e349653a52c7fd33be1132322a5f3dc9f1a6ade886019767320"
+SRC_URI[sha256sum] = "89bdd941542c64fec16311858df304ed3a3908c1a60874d69df5d9bf1611e062"
 
 inherit autotools update-rc.d systemd
 
