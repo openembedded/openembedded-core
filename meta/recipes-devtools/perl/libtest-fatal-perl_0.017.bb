@@ -7,11 +7,11 @@ BUGTRACKER = "https://github.com/rjbs/Test-Fatal/issues"
 SECTION = "libs"
 LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=f7c73bf24be1bc7759bde9c15000db6c"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b5c851290cab1dda12fcfb0e9ec43639"
 
 SRC_URI = "${CPAN_MIRROR}/authors/id/R/RJ/RJBS/Test-Fatal-${PV}.tar.gz"
 
-SRC_URI[sha256sum] = "7283d430f2ba2030b8cd979ae3039d3f1b2ec3dde1a11ca6ae09f992a66f788f"
+SRC_URI[sha256sum] = "37dfffdafb84b762efe96b02fb2aa41f37026c73e6b83590db76229697f3c4a6"
 
 S = "${WORKDIR}/Test-Fatal-${PV}"
 
