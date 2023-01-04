@@ -299,7 +299,7 @@ python write_specfile () {
     srcmaintainer  = localdata.getVar('MAINTAINER')
     srchomepage    = localdata.getVar('HOMEPAGE')
     srcdescription = localdata.getVar('DESCRIPTION') or "."
-    srccustomtagschunk = get_package_additional_metadata("rpm", localdata)
+    srccustomtagschunk = oe.packagedata.get_package_additional_metadata("rpm", localdata)
 
     srcdepends     = d.getVar('DEPENDS')
     srcrdepends    = ""
@@ -355,7 +355,7 @@ python write_specfile () {
         splitlicense = (localdata.getVar('LICENSE') or "")
         splitsection = (localdata.getVar('SECTION') or "")
         splitdescription = (localdata.getVar('DESCRIPTION') or ".")
-        splitcustomtagschunk = get_package_additional_metadata("rpm", localdata)
+        splitcustomtagschunk = oe.packagedata.get_package_additional_metadata("rpm", localdata)
 
         translate_vers('RDEPENDS', localdata)
         translate_vers('RRECOMMENDS', localdata)

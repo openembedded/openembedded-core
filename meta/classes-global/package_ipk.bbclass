@@ -162,7 +162,7 @@ def ipk_write_pkg(pkg, d):
             else:
                 ctrlfile.write(c % tuple(pullData(fs, localdata)))
 
-        custom_fields_chunk = get_package_additional_metadata("ipk", localdata)
+        custom_fields_chunk = oe.packagedata.get_package_additional_metadata("ipk", localdata)
         if custom_fields_chunk is not None:
             ctrlfile.write(custom_fields_chunk)
             ctrlfile.write("\n")

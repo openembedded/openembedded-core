@@ -169,7 +169,7 @@ def deb_write_pkg(pkg, d):
 
         # more fields
 
-        custom_fields_chunk = get_package_additional_metadata("deb", localdata)
+        custom_fields_chunk = oe.packagedata.get_package_additional_metadata("deb", localdata)
         if custom_fields_chunk:
             ctrlfile.write(custom_fields_chunk)
             ctrlfile.write("\n")

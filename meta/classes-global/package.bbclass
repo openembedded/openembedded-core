@@ -567,61 +567,6 @@ def copydebugsources(debugsrcdir, sources, d):
                 os.rmdir(p)
 
 #
-# Package data handling routines
-#
-
-def get_package_mapping (pkg, basepkg, d, depversions=None):
-    import oe.packagedata
-
-    data = oe.packagedata.read_subpkgdata(pkg, d)
-    key = "PKG:%s" % pkg
-
-    if key in data:
-        if bb.data.inherits_class('allarch', d) and bb.data.inherits_class('packagegroup', d) and pkg != data[key]:
-            bb.error("An allarch packagegroup shouldn't depend on packages which are dynamically renamed (%s to %s)" % (pkg, data[key]))
-        # Have to avoid undoing the write_extra_pkgs(global_variants...)
-        if bb.data.inherits_class('allarch', d) and not d.getVar('MULTILIB_VARIANTS') \
-            and data[key] == basepkg:
-            return pkg
-        if depversions == []:
-            # Avoid returning a mapping if the renamed package rprovides its original name
-            rprovkey = "RPROVIDES:%s" % pkg
-            if rprovkey in data:
-                if pkg in bb.utils.explode_dep_versions2(data[rprovkey]):
-                    bb.note("%s rprovides %s, not replacing the latter" % (data[key], pkg))
-                    return pkg
-        # Do map to rewritten package name
-        return data[key]
-
-    return pkg
-
-def get_package_additional_metadata (pkg_type, d):
-    base_key = "PACKAGE_ADD_METADATA"
-    for key in ("%s_%s" % (base_key, pkg_type.upper()), base_key):
-        if d.getVar(key, False) is None:
-            continue
-        d.setVarFlag(key, "type", "list")
-        if d.getVarFlag(key, "separator") is None:
-            d.setVarFlag(key, "separator", "\\n")
-        metadata_fields = [field.strip() for field in oe.data.typed_value(key, d)]
-        return "\n".join(metadata_fields).strip()
-
-def runtime_mapping_rename (varname, pkg, d):
-    #bb.note("%s before: %s" % (varname, d.getVar(varname)))
-
-    new_depends = {}
-    deps = bb.utils.explode_dep_versions2(d.getVar(varname) or "")
-    for depend, depversions in deps.items():
-        new_depend = get_package_mapping(depend, pkg, d, depversions)
-        if depend != new_depend:
-            bb.note("package name mapping done: %s -> %s" % (depend, new_depend))
-        new_depends[new_depend] = deps[depend]
-
-    d.setVar(varname, bb.utils.join_deps(new_depends, commasep=False))
-
-    #bb.note("%s after: %s" % (varname, d.getVar(varname)))
-
-#
 # Used by do_packagedata (and possibly other routines post do_package)
 #
 
@@ -2244,6 +2189,6 @@ def mapping_rename_hook(d):
     like debian.bbclass or manual PKG variable name changes
     """
     pkg = d.getVar("PKG")
-    runtime_mapping_rename("RDEPENDS", pkg, d)
-    runtime_mapping_rename("RRECOMMENDS", pkg, d)
-    runtime_mapping_rename("RSUGGESTS", pkg, d)
+    oe.packagedata.runtime_mapping_rename("RDEPENDS", pkg, d)
+    oe.packagedata.runtime_mapping_rename("RRECOMMENDS", pkg, d)
+    oe.packagedata.runtime_mapping_rename("RSUGGESTS", pkg, d)
