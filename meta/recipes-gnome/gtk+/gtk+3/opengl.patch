@@ -1,4 +1,4 @@
-From a6fb8ee9cfd5e0f8c4450d48b582614e2de8201c Mon Sep 17 00:00:00 2001
+From 4a0716f04fb25b51b08e994bd5a900b2e7f7fed5 Mon Sep 17 00:00:00 2001
 From: Jussi Kukkonen <jussi.kukkonen@intel.com>
 Date: Fri, 16 Oct 2015 16:35:16 +0300
 Subject: [PATCH] Do not try to initialize GL without libGL
@@ -16,7 +16,6 @@ before calling epoxy APIs.
 Upstream-Status: Denied
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 ---
- config.h.meson                   |  2 ++
  demos/gtk-demo/meson.build       |  5 ++++-
  docs/tools/meson.build           |  7 +++++--
  docs/tools/widgets.c             |  6 +++++-
@@ -26,7 +25,6 @@ Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
  gdk/gdkglcontext.c               |  6 ++++++
  gdk/gdkwindow.c                  | 13 +++++++++++++
  gdk/meson.build                  |  8 +++++++-
- gdk/x11/Makefile.am              |  2 --
  gdk/x11/gdkdisplay-x11.c         |  6 +++++-
  gdk/x11/gdkvisual-x11.c          |  5 +++++
  gdk/x11/gdkwindow-x11.c          |  4 ++++
@@ -39,21 +37,8 @@ Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
  meson_options.txt                |  2 ++
  tests/meson.build                |  9 +++++++--
  testsuite/gtk/objects-finalize.c |  2 ++
- 23 files changed, 130 insertions(+), 15 deletions(-)
+ 21 files changed, 128 insertions(+), 13 deletions(-)
 
-diff --git a/config.h.meson b/config.h.meson
-index b502611cb7..0bf6678d5e 100644
---- a/config.h.meson
-+++ b/config.h.meson
-@@ -20,6 +20,8 @@
- /* define if we have colord */
- #mesondefine HAVE_COLORD
- 
-+#mesondefine HAVE_OPENGL
-+
- /* Define if the GNU dcgettext() function is already present or preinstalled.
-    */
- #mesondefine HAVE_DCGETTEXT
 diff --git a/demos/gtk-demo/meson.build b/demos/gtk-demo/meson.build
 index 252da16d05..4b57cff6ac 100644
 --- a/demos/gtk-demo/meson.build
@@ -367,19 +352,6 @@ index 4bb1bf2b6c..64172b8d3e 100644
  
  gdkconfig = configure_file(
    input  : 'gdkconfig.h.meson',
-diff --git a/gdk/x11/Makefile.am b/gdk/x11/Makefile.am
-index 32b1f24434..d73eee604a 100644
---- a/gdk/x11/Makefile.am
-+++ b/gdk/x11/Makefile.am
-@@ -40,8 +40,6 @@ libgdk_x11_la_SOURCES = 	\
- 	gdkeventtranslator.c	\
- 	gdkeventtranslator.h	\
- 	gdkgeometry-x11.c  	\
--	gdkglcontext-x11.c	\
--	gdkglcontext-x11.h	\
- 	gdkkeys-x11.c		\
- 	gdkmain-x11.c		\
- 	gdkmonitor-x11.c	\
 diff --git a/gdk/x11/gdkdisplay-x11.c b/gdk/x11/gdkdisplay-x11.c
 index 7e08f472cc..30fd7b6089 100644
 --- a/gdk/x11/gdkdisplay-x11.c
@@ -642,10 +614,10 @@ index 4fd0c3039c..a8e59ed077 100644
    if (GDK_IS_WAYLAND_DISPLAY (gdk_display_get_default ()))
      {
 diff --git a/meson.build b/meson.build
-index f2e63a8655..eea5347930 100644
+index aed48fc3f6..bfc33af0f6 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -136,6 +136,7 @@ wayland_enabled        = get_option('wayland_backend')
+@@ -137,6 +137,7 @@ wayland_enabled        = get_option('wayland_backend')
  broadway_enabled       = get_option('broadway_backend')
  quartz_enabled         = get_option('quartz_backend')
  win32_enabled          = get_option('win32_backend')
@@ -653,7 +625,7 @@ index f2e63a8655..eea5347930 100644
  
  os_unix   = false
  os_linux  = false
-@@ -450,7 +451,7 @@ pangocairo_dep = dependency('pangocairo', version: cairo_req,
+@@ -430,7 +431,7 @@ pangocairo_dep = dependency('pangocairo', version: cairo_req,
                              fallback : ['pango', 'libpangocairo_dep'])
  pixbuf_dep     = dependency('gdk-pixbuf-2.0', version: gdk_pixbuf_req,
                              fallback : ['gdk-pixbuf', 'gdkpixbuf_dep'])
@@ -662,7 +634,7 @@ index f2e63a8655..eea5347930 100644
                              fallback: ['libepoxy', 'libepoxy_dep'])
  atk_dep        = dependency('atk', version: atk_req,
                              fallback : ['atk', 'libatk_dep'])
-@@ -496,6 +497,10 @@ if tracker3_enabled
+@@ -476,6 +477,10 @@ if tracker3_enabled
    endif
  endif
  
@@ -671,9 +643,9 @@ index f2e63a8655..eea5347930 100644
 +endif
 +
  if iso_codes_dep.found()
-   cdata.set_quoted('ISO_CODES_PREFIX', iso_codes_dep.get_pkgconfig_variable('prefix'))
+   cdata.set_quoted('ISO_CODES_PREFIX', iso_codes_dep.get_variable(pkgconfig: 'prefix'))
  else
-@@ -926,9 +931,15 @@ else
+@@ -912,9 +917,15 @@ else
    gio_packages = ['gio-2.0', glib_req]
  endif
  
@@ -690,7 +662,7 @@ index f2e63a8655..eea5347930 100644
                       ['fribidi', fribidi_req]))
  
  gtk_packages = ' '.join([
-@@ -942,7 +953,7 @@ pkgconf.set('GTK_PACKAGES', gtk_packages)
+@@ -928,7 +939,7 @@ pkgconf.set('GTK_PACKAGES', gtk_packages)
  # Requires.private
  pc_gdk_extra_libs += cairo_libs
  
@@ -761,5 +733,5 @@ index 24540e313f..e0f863ab6a 100644
  	  /* Not allowed to finalize a GdkPixbufLoader without calling gdk_pixbuf_loader_close() */
  	  all_types[i] != GDK_TYPE_PIXBUF_LOADER &&
 -- 
-2.34.1
+2.30.2
 
