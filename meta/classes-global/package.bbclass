@@ -243,18 +243,6 @@ python () {
         d.appendVarFlag('do_package', 'deptask', " do_packagedata")
 }
 
-def checkbuildpath(file, d):
-    tmpdir = d.getVar('TMPDIR')
-    with open(file) as f:
-        file_content = f.read()
-        if tmpdir in file_content:
-            return True
-
-    return False
-
-#
-# Used by do_packagedata (and possibly other routines post do_package)
-#
 
 PRSERV_ACTIVE = "${@bool(d.getVar("PRSERV_HOST"))}"
 PRSERV_ACTIVE[vardepvalue] = "${PRSERV_ACTIVE}"
