@@ -291,7 +291,7 @@ python mesa_populate_packages() {
     do_split_packages(d, pipe_drivers_root, r'^pipe_(.*)\.so$', 'mesa-driver-pipe-%s', 'Mesa %s pipe driver', extra_depends='')
 }
 
-PACKAGESPLITFUNCS =+ "mesa_populate_packages "
+PACKAGESPLITFUNCS =+ "mesa_populate_packages"
 
 PACKAGES_DYNAMIC += "^mesa-driver-.*"
 PACKAGES_DYNAMIC:class-native = "^mesa-driver-.*-native"
