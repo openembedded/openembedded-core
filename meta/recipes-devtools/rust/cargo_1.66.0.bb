@@ -14,14 +14,6 @@ LIC_FILES_CHKSUM = " \
 require rust-source.inc
 require rust-snapshot.inc
 
-SRC_URI:append:class-target = "\
-    file://crossbeam_atomic.patch;patchdir=${RUSTSRC} \
-    file://getrandom-open64.patch;patchdir=${RUSTSRC} \                          
-"
-
-# Used by crossbeam_atomic.patch
-export TARGET_VENDOR
-
 S = "${RUSTSRC}/src/tools/cargo"
 CARGO_VENDORING_DIRECTORY = "${RUSTSRC}/vendor"
 
