@@ -4,7 +4,7 @@ DESCRIPTION = "These are introductory examples to showcase the use of QEMU to ru
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=39346640a23c701e4f459e05f56f4449"
 
-SRCREV = "31b4e5a337018b4a00a7426b0e5ed83b81df30c7"
+SRCREV = "22016ecbb9fb6c5f3a7a06698aea7ff8a701c166"
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/aehs29/baremetal-helloqemu.git;protocol=https;branch=master"
@@ -23,12 +23,15 @@ IMAGE_NAME_SUFFIX ?= ""
 inherit baremetal-image
 
 
+# startup code for x86 uses NASM syntax
+DEPENDS:qemux86:append = " nasm-native"
+
 # These parameters are app specific for this example
 # This will be translated automatically to the architecture and
 # machine that QEMU uses on OE, e.g. -machine virt -cpu cortex-a57
 # but the examples can also be run on other architectures/machines
 # such as vexpress-a15 by overriding the setting on the machine.conf
-COMPATIBLE_MACHINE = "qemuarmv5|qemuarm|qemuarm64|qemuriscv64|qemuriscv32"
+COMPATIBLE_MACHINE = "qemuarmv5|qemuarm|qemuarm64|qemuriscv64|qemuriscv32|qemux86|qemux86-64"
 
 BAREMETAL_QEMUARCH ?= ""
 BAREMETAL_QEMUARCH:qemuarmv5 = "versatile"
@@ -36,9 +39,15 @@ BAREMETAL_QEMUARCH:qemuarm = "arm"
 BAREMETAL_QEMUARCH:qemuarm64 = "aarch64"
 BAREMETAL_QEMUARCH:qemuriscv64 = "riscv64"
 BAREMETAL_QEMUARCH:qemuriscv32 = "riscv32"
+BAREMETAL_QEMUARCH:qemux86 = "x86"
+BAREMETAL_QEMUARCH:qemux86-64 = "x86-64"
 
 EXTRA_OEMAKE:append = " QEMUARCH=${BAREMETAL_QEMUARCH} V=1"
 
+# qemux86-64 uses a different Makefile
+do_compile:prepend:qemux86-64(){
+    cd x86-64
+}
 
 # Install binaries on the proper location for baremetal-image to fetch and deploy
 do_install(){
@@ -51,3 +60,12 @@ FILES:${PN} += " \
     ${base_libdir}/firmware/${BAREMETAL_BINNAME}.bin \
     ${base_libdir}/firmware/${BAREMETAL_BINNAME}.elf \
 "
+
+# qemux86-64 boots from iso rather than -kernel, create image to boot from
+do_image:append:qemux86-64(){
+    dd if=/dev/zero of=${B}/build/img.iso bs=1M count=10 status=none
+    dd if=${B}/build/stage1.bin of=${B}/build/img.iso bs=512 count=1 conv=notrunc
+    dd if=${B}/build/stage2.bin of=${B}/build/img.iso bs=512 seek=1 count=64 conv=notrunc
+    dd if=${B}/build/hello_baremetal_x86-64.bin of=${B}/build/img.iso bs=512 seek=65 conv=notrunc
+    install ${B}/build/img.iso ${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.iso
+}

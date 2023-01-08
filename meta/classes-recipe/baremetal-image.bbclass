@@ -86,6 +86,11 @@ QB_DEFAULT_FSTYPE ?= "bin"
 QB_DTB ?= ""
 QB_OPT_APPEND:append = " -nographic"
 
+# QEMU x86 requires an .elf kernel to boot rather than a .bin
+QB_DEFAULT_KERNEL:qemux86 ?= "${IMAGE_LINK_NAME}.elf"
+# QEMU x86-64 refuses to boot from -kernel, needs a multiboot compatible image
+QB_DEFAULT_FSTYPE:qemux86-64 ?= "iso"
+
 # RISC-V tunes set the BIOS, unset, and instruct QEMU to
 # ignore the BIOS and boot from -kernel
 QB_DEFAULT_BIOS:qemuriscv64 = ""
