@@ -25,7 +25,7 @@ SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz"
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[sha256sum] = "02537cc7ebd74071631038b237ec4bfbb3f4830ba019e569434da33f42373e04"
+SRC_URI[sha256sum] = "95d39bc3de037fbdfa722623737340648de4f180a601b0afad27645d150b99e0"
 
 inherit cmake lib_package binconfig-disabled pkgconfig upstream-version-is-even
 
