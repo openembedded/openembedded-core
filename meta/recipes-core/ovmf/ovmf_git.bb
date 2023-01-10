@@ -19,6 +19,7 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0004-ovmf-Update-to-latest.patch \
            file://0001-Fix-VLA-parameter-warning.patch \
            file://0001-Basetools-genffs-fix-gcc12-warning.patch \
+           file://0001-Basetools-lzmaenc-fix-gcc12-warning.patch \
            "
 
 PV = "edk2-stable202008"
