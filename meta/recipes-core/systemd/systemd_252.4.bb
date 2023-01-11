@@ -529,12 +529,15 @@ FILES:${PN}-extra-utils = "\
                         ${bindir}/systemd-stdio-bridge \
                         ${base_bindir}/systemd-ask-password \
                         ${base_bindir}/systemd-tty-ask-password-agent \
+                        ${systemd_system_unitdir}/initrd.target.wants/systemd-pcrphase-initrd.path \
                         ${systemd_system_unitdir}/systemd-ask-password-console.path \
                         ${systemd_system_unitdir}/systemd-ask-password-console.service \
                         ${systemd_system_unitdir}/systemd-ask-password-wall.path \
                         ${systemd_system_unitdir}/systemd-ask-password-wall.service \
                         ${systemd_system_unitdir}/sysinit.target.wants/systemd-ask-password-console.path \
                         ${systemd_system_unitdir}/sysinit.target.wants/systemd-ask-password-wall.path \
+                        ${systemd_system_unitdir}/sysinit.target.wants/systemd-pcrphase.path \
+                        ${systemd_system_unitdir}/sysinit.target.wants/systemd-pcrphase-sysinit.path \
                         ${systemd_system_unitdir}/multi-user.target.wants/systemd-ask-password-wall.path \
                         ${rootlibexecdir}/systemd/systemd-resolve-host \
                         ${rootlibexecdir}/systemd/systemd-ac-power \
@@ -542,12 +545,17 @@ FILES:${PN}-extra-utils = "\
                         ${rootlibexecdir}/systemd/systemd-bus-proxyd \
                         ${systemd_system_unitdir}/systemd-bus-proxyd.service \
                         ${systemd_system_unitdir}/systemd-bus-proxyd.socket \
+                        ${rootlibexecdir}/systemd/systemd-measure \
+                        ${rootlibexecdir}/systemd/systemd-pcrphase \
                         ${rootlibexecdir}/systemd/systemd-socket-proxyd \
                         ${rootlibexecdir}/systemd/systemd-reply-password \
                         ${rootlibexecdir}/systemd/systemd-sleep \
                         ${rootlibexecdir}/systemd/system-sleep \
                         ${systemd_system_unitdir}/systemd-hibernate.service \
                         ${systemd_system_unitdir}/systemd-hybrid-sleep.service \
+                        ${systemd_system_unitdir}/systemd-pcrphase-initrd.service \
+                        ${systemd_system_unitdir}/systemd-pcrphase.service \
+                        ${systemd_system_unitdir}/systemd-pcrphase-sysinit.service \
                         ${systemd_system_unitdir}/systemd-suspend.service \
                         ${systemd_system_unitdir}/sleep.target \
                         ${rootlibexecdir}/systemd/systemd-initctl \
