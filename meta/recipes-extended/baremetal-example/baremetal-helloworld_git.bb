@@ -8,6 +8,7 @@ SRCREV = "22016ecbb9fb6c5f3a7a06698aea7ff8a701c166"
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/aehs29/baremetal-helloqemu.git;protocol=https;branch=master"
+UPSTREAM_VERSION_UNKNOWN="1"
 
 S = "${WORKDIR}/git"
 
