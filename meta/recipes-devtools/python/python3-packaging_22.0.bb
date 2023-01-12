@@ -8,3 +8,10 @@ SRC_URI[sha256sum] = "2198ec20bd4c017b8f9717e00f0c8714076fc2fd93816750ab48e2c41d
 inherit pypi python_flit_core
 
 BBCLASSEXTEND = "native nativesdk"
+
+# Bootstrap the native build
+DEPENDS:remove:class-native = "python3-build-native"
+
+do_compile:class-native () {
+    python_flit_core_do_manual_build
+}
