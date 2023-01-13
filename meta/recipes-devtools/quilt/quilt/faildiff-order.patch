@@ -1,0 +1,28 @@
+This test assumes that two lines that are output on different streams (stdout
+and stderr) will be read in the same order, but thanks to buffering that may not
+be the case.
+
+Change the expected lines to be regexs that each match both expected lines, so
+the test always works no matter the actual order the lines are read in.
+
+Bug filed at https://savannah.nongnu.org/bugs/index.php?63651 to discuss a
+proper solution.
+
+Upstream-Status: Inappropriate
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+
+diff --git a/test/faildiff.test b/test/faildiff.test
+index 5afb8e3..5f32f71 100644
+--- a/test/faildiff.test
++++ b/test/faildiff.test
+@@ -28,8 +28,8 @@ What happens on binary files?
+ 
+ 	$ printf "\\003\\000\\001" > test.bin
+ 	$ quilt diff -pab --no-index
+-	>~ (Files|Binary files) a/test\.bin and b/test\.bin differ
+-	> Diff failed on file 'test.bin', aborting
++	>~ (.*[Ff]iles a/test\.bin and b/test\.bin differ|Diff failed on file 'test.bin', aborting)
++	>~ (.*[Ff]iles a/test\.bin and b/test\.bin differ|Diff failed on file 'test.bin', aborting)
+ 	$ echo %{?}
+ 	> 1
+ 
