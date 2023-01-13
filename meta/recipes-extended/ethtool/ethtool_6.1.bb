@@ -9,9 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "${KERNELORG_MIRROR}/software/network/ethtool/ethtool-${PV}.tar.gz \
            file://run-ptest \
            file://avoid_parallel_tests.patch \
+           file://0001-marvell.c-define-_GNU_SOURCE.patch \
            "
 
-SRC_URI[sha256sum] = "f2168e2b45d7e58ed5b76e5533fd607ca0720c9e631f4271bfe997bf72330796"
+SRC_URI[sha256sum] = "1d03f1ce324fbd95591191c42ac0c4c9cc721e067b929083a20a46c4b4731436"
 
 UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/software/network/ethtool/"
 
