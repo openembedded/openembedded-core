@@ -18,6 +18,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-meson.build-check-for-all-linux-host_os-combinations.patch \
            file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
            file://0001-util-format-Check-for-NEON-before-using-it.patch \
+           file://0001-gbm-backend-fix-gbm-compile-without-dri.patch \
            ${NATIVE_PATCHES} \
            "
 NATIVE_PATCHES ?= ""
