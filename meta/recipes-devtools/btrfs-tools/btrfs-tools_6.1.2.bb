@@ -19,7 +19,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;b
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            file://0001-Use-pread-pwrite-ftruncate-stat-instead-of-64bit-equ.patch \
            "
-SRCREV = "cde5faa6787e6fa720c99d2f10caa187a493c13f"
+SRCREV = "660d10d3fb2e87909d379b0ea3c52934543455c7"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
