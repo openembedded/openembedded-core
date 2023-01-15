@@ -2,9 +2,9 @@ DESCRIPTION = "Alabaster is a visually (c)lean, responsive, configurable theme f
 HOMEPAGE = "https://alabaster.readthedocs.io/en/latest/"
 SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=da053683d66d543813a727e8a30c96ca"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=21860fdb805bf4e0bfaf94b566b747fa"
 
-SRC_URI[sha256sum] = "a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02"
+SRC_URI[sha256sum] = "a27a4a084d5e690e16e01e03ad2b2e552c61a65469419b907243193de1a84ae2"
 
 inherit setuptools3 pypi
 
