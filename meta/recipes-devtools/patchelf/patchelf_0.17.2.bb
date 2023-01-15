@@ -4,10 +4,8 @@ HOMEPAGE = "https://github.com/NixOS/patchelf"
 
 LICENSE = "GPL-3.0-only"
 
-SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master \
-           file://8d2cb4f9ab8d564904c292099a022ffb3cccd52d.patch \
-           "
-SRCREV = "ad0265668f12eff59027259345fed4b0f315336a"
+SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master"
+SRCREV = "5908e16cd562bcb1909be4de0409c4912a8afc52"
 
 S = "${WORKDIR}/git"
 
