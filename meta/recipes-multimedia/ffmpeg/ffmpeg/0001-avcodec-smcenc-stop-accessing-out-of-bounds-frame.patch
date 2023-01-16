@@ -1,4 +1,4 @@
-From 13c13109759090b7f7182480d075e13b36ed8edd Mon Sep 17 00:00:00 2001
+From d2f31887df2c42948dba7446c475026fdbc69336 Mon Sep 17 00:00:00 2001
 From: Paul B Mahol <onemda@gmail.com>
 Date: Sat, 12 Nov 2022 15:19:21 +0100
 Subject: [PATCH] avcodec/smcenc: stop accessing out of bounds frame
@@ -12,7 +12,7 @@ Signed-off-by: <narpat.mali@windriver.com>
  1 file changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/libavcodec/smcenc.c b/libavcodec/smcenc.c
-index f3d26a4e8d..33549b8ab4 100644
+index 52795ef..618dc4e 100644
 --- a/libavcodec/smcenc.c
 +++ b/libavcodec/smcenc.c
 @@ -61,6 +61,7 @@ typedef struct SMCContext {
@@ -103,6 +103,3 @@ index f3d26a4e8d..33549b8ab4 100644
  
          blocks = coded_blocks;
          distinct = coded_distinct;
--- 
-2.34.1
-
