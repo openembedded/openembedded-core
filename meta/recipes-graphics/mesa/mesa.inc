@@ -19,11 +19,8 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
            file://0001-util-format-Check-for-NEON-before-using-it.patch \
            file://0001-gbm-backend-fix-gbm-compile-without-dri.patch \
-           ${NATIVE_PATCHES} \
+           file://0001-nir-nir_opt_move-fix-ALWAYS_INLINE-compiler-error.patch \
            "
-NATIVE_PATCHES ?= ""
-# required by mesa-native on Ubuntu 18.04 with gcc 7.5 when DEBUG_BUILD enabled
-NATIVE_PATCHES:class-native = "file://0001-nir-nir_opt_move-fix-ALWAYS_INLINE-compiler-error.patch"
 
 SRC_URI[sha256sum] = "bed799788bf2bd9ef079d97cd8e09348bf53cb086818578e40773b2b17812922"
 
