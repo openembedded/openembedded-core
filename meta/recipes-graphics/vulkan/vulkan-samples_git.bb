@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=48aa35cefb768436223a6e7f18dc2a2a"
 SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=master;protocol=https;lfs=0 \
            file://debugfix.patch \
            file://0001-Do-not-use-LFS64-functions-on-linux-musl.patch;patchdir=third_party/spdlog \
+           file://0001-Deprecate-u8string_view.patch;patchdir=third_party/spdlog \
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
