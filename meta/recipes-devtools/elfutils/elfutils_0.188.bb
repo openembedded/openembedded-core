@@ -21,6 +21,8 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0001-skip-the-test-when-gcc-not-deployed.patch \
            file://ptest.patch \
            file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
+           file://0001-PR29926-debuginfod-Fix-usage-of-deprecated-CURLINFO_.patch \
+           file://0002-debuginfod-client-Use-CURLOPT_PROTOCOLS_STR-for-libc.patch \
            "
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
@@ -33,8 +35,6 @@ inherit autotools gettext ptest pkgconfig
 EXTRA_OECONF = "--program-prefix=eu-"
 
 BUILD_CFLAGS += "-Wno-error=stringop-overflow"
-# compatibility with curl 7.87; can be removed when elfutils upstream fixes the deprecation fails
-CFLAGS:append = " -Wno-error=deprecated-declarations"
 
 DEPENDS_BZIP2 = "bzip2-replacement-native"
 DEPENDS_BZIP2:class-target = "bzip2"
