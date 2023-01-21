@@ -35,12 +35,12 @@ do_install:append() {
 	fi
 }
 
-do_compile_ptest() {                                                             
-    oe_runmake -C tests stress                                                   
-}                                                                                
-                                                                                 
-do_install_ptest() {                                                             
-    install -m 755 ${B}/tests/.libs/stress ${D}${PTEST_PATH}         
+do_compile_ptest() {
+    oe_runmake -C tests stress
+}
+
+do_install_ptest() {
+    install -m 755 ${B}/tests/.libs/stress ${D}${PTEST_PATH}
 }
 
 FILES:${PN} += "${base_libdir}/*.so.*"
