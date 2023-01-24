@@ -18,7 +18,7 @@ may support C11, exclude those compiler versions
 [1] https://www.open-std.org/jtc1/sc22/wg14/www/docs/n2350.htm
 [2] https://reviews.llvm.org/D133574
 
-Upstream-Status: Submitted [https://ml.ruby-lang.org/mailman3/hyperkitty/list/ruby-core@ml.ruby-lang.org/thread/DLES4EPPXSPCHQMWJPPWMWXXS42AVPFA/]
+Upstream-Status: Submitted [https://github.com/ruby/fiddle/pull/120]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  ext/fiddle/fiddle.h | 12 +++++++++++-
