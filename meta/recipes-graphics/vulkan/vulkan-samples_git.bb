@@ -9,6 +9,7 @@ SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=master;prot
            file://debugfix.patch \
            file://0001-Do-not-use-LFS64-functions-on-linux-musl.patch;patchdir=third_party/spdlog \
            file://0001-Deprecate-u8string_view.patch;patchdir=third_party/spdlog \
+           file://0001-parser.h-Including-missing-cstdint.patch \
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
