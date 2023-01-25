@@ -98,6 +98,8 @@ do_install_ptest() {
 		cp -r ${B}/debuginfod                   ${D}${PTEST_PATH}
 		sed -i '/^Makefile:/c Makefile:'        ${D}${PTEST_PATH}/tests/Makefile
 		find ${D}${PTEST_PATH} -type f -name *.[hoc] | xargs -i rm {}
+		# TODO: remove below filter after https://sourceware.org/bugzilla/show_bug.cgi?id=30047 is fixed
+		sed -i -e '/funcretval/d' ${D}${PTEST_PATH}/tests/run-native-test.sh
 	fi
 }
 
