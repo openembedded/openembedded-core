@@ -50,6 +50,7 @@ SRC_URI_MUSL = "\
                file://0002-Add-sys-stat.h-for-S_IFDIR.patch \
                file://0001-Adjust-for-musl-headers.patch \
                file://0001-test-bus-error-strerror-is-assumed-to-be-GNU-specifi.patch \
+               file://0001-errno-util-Make-STRERROR-portable-for-musl.patch \
                "
 
 PAM_PLUGINS = " \
