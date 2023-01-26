@@ -51,5 +51,6 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0002-nslookup-sanitize-all-printed-strings-with-printable.patch \
            "
 SRC_URI:append:libc-musl = " file://musl.cfg "
-
+# TODO http://lists.busybox.net/pipermail/busybox/2023-January/090078.html
+SRC_URI:append:x86 = " file://sha_accel.cfg"
 SRC_URI[tarball.sha256sum] = "542750c8af7cb2630e201780b4f99f3dcceeb06f505b479ec68241c1e6af61a5"
