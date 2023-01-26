@@ -16,7 +16,7 @@ Revert it for now.
 
 [1] https://lists.denx.de/pipermail/u-boot/2023-January/504758.html
 
-Upstream-Status: Submitted [https://lore.kernel.org/u-boot/20230119012321.1103067-1-festevam@denx.de/]
+Upstream-Status: Backport [https://source.denx.de/u-boot/u-boot/-/commit/6333acb961b6fcaa60c6e5b623d676b332481cfa]
 Signed-off-by: Fabio Estevam <festevam@denx.de>
 ---
  configs/tools-only_defconfig | 1 -
