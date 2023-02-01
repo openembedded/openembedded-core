@@ -23,7 +23,7 @@ SRCREV_machine:qemux86 ?= "f1bd1a02a3f480a0b0a234effd548068374d4299"
 SRCREV_machine:qemux86-64 ?= "f1bd1a02a3f480a0b0a234effd548068374d4299"
 SRCREV_machine:qemumips64 ?= "4bfa434ee5da72a5a8b2cb8ec799603883f5d532"
 SRCREV_machine ?= "f1bd1a02a3f480a0b0a234effd548068374d4299"
-SRCREV_meta ?= "fdad265d2bff2ddb937b3eebdabe344d1f450cf4"
+SRCREV_meta ?= "dcb315fe731825c2d2f1b443c6ee46df1afbe533"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
