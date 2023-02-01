@@ -446,7 +446,7 @@ python () {
         localdata.delVar('DATE')
         localdata.delVar('TMPDIR')
         localdata.delVar('IMAGE_VERSION_SUFFIX')
-        vardepsexclude = (d.getVarFlag('IMAGE_CMD:' + realt, 'vardepsexclude', True) or '').split()
+        vardepsexclude = (d.getVarFlag('IMAGE_CMD:' + realt, 'vardepsexclude') or '').split()
         for dep in vardepsexclude:
             localdata.delVar(dep)
 
