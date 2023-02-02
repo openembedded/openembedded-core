@@ -11,10 +11,12 @@ KBRANCH:qemuriscv64  ?= "v6.1/standard/base"
 KBRANCH:qemuriscv32  ?= "v6.1/standard/base"
 KBRANCH:qemux86  ?= "v6.1/standard/base"
 KBRANCH:qemux86-64 ?= "v6.1/standard/base"
+KBRANCH:qemuloongarch64  ?= "v6.1/standard/base"
 KBRANCH:qemumips64 ?= "v6.1/standard/mti-malta64"
 
 SRCREV_machine:qemuarm ?= "45f7cca5081d3cb4ad4fae8e158cd58ea4db6c1f"
 SRCREV_machine:qemuarm64 ?= "404168c1ce77179a34bb9959a18b594a9f7105d3"
+SRCREV_machine:qemuloongarch64 ?= "404168c1ce77179a34bb9959a18b594a9f7105d3"
 SRCREV_machine:qemumips ?= "eb204027dbb98317d002250cc594de30ecc62b90"
 SRCREV_machine:qemuppc ?= "404168c1ce77179a34bb9959a18b594a9f7105d3"
 SRCREV_machine:qemuriscv64 ?= "404168c1ce77179a34bb9959a18b594a9f7105d3"
@@ -51,7 +53,7 @@ KCONF_BSP_AUDIT_LEVEL = "1"
 
 KERNEL_DEVICETREE:qemuarmv5 = "versatile-pb.dtb"
 
-COMPATIBLE_MACHINE = "^(qemuarm|qemuarmv5|qemuarm64|qemux86|qemuppc|qemuppc64|qemumips|qemumips64|qemux86-64|qemuriscv64|qemuriscv32)$"
+COMPATIBLE_MACHINE = "^(qemuarm|qemuarmv5|qemuarm64|qemux86|qemuppc|qemuppc64|qemumips|qemumips64|qemux86-64|qemuriscv64|qemuriscv32|qemuloongarch64)$"
 
 # Functionality flags
 KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc"
