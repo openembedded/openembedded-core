@@ -276,6 +276,10 @@ do_configure:prepend () {
         sed -i -e "s,$target,$replacement1$replacement2$replacement3,g" \
                        "${S}/tools/perf/pmu-events/Build"
     fi
+    if [ -e "${S}/tools/perf/pmu-events/jevents.py" ]; then
+        sed -i -e "s#os.scandir(path)#sorted(os.scandir(path), key=lambda e: e.name)#g" \
+                       "${S}/tools/perf/pmu-events/jevents.py"
+    fi
     # end reproducibility substitutions
 
     # We need to ensure the --sysroot option in CC is preserved
