@@ -1,4 +1,4 @@
-From 3b5b6079512af8af50d0a43d4c1c218f5ba1b302 Mon Sep 17 00:00:00 2001
+From 5b408839318b81cc2713956c87f19eddb009f677 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:27:10 +0000
 Subject: [PATCH] sysdeps/gnu/configure.ac: Set libc_cv_rootsbindir only if its

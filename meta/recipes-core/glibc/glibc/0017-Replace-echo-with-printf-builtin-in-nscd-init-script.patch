@@ -1,4 +1,4 @@
-From 97a71e1dd07ba6721464150b03fd67823b6271e2 Mon Sep 17 00:00:00 2001
+From 561f67dda72ba806120e3ffadd8b85dcf02a90a6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 31 Dec 2015 14:33:02 -0800
 Subject: [PATCH] Replace echo with printf builtin in nscd init script

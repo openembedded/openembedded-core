@@ -1,4 +1,4 @@
-From 8d5ff7357354394b958321204b75e3855781aefe Mon Sep 17 00:00:00 2001
+From 27d3ec9df3157966819e4369e571769ed9e8604c Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 9 Dec 2021 15:14:42 -0800
 Subject: [PATCH] timezone: Make shell interpreter overridable in tzselect.ksh
@@ -14,10 +14,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 10 insertions(+)
 
 diff --git a/Makeconfig b/Makeconfig
-index ba70321af1..4b643768d9 100644
+index 2fda4af5f7..87777942f3 100644
 --- a/Makeconfig
 +++ b/Makeconfig
-@@ -293,6 +293,15 @@ ifndef sysincludedir
+@@ -309,6 +309,15 @@ ifndef sysincludedir
  sysincludedir = /usr/include
  endif
  
@@ -34,10 +34,10 @@ index ba70321af1..4b643768d9 100644
  # Commands to install files.
  ifndef INSTALL_DATA
 diff --git a/timezone/Makefile b/timezone/Makefile
-index a789c22d26..3e69409a94 100644
+index 0306c0bca9..4dfdcebdb7 100644
 --- a/timezone/Makefile
 +++ b/timezone/Makefile
-@@ -134,6 +134,7 @@ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
+@@ -136,6 +136,7 @@ $(objpfx)tzselect: tzselect.ksh $(common-objpfx)config.make
  	    -e '/TZVERSION=/s|see_Makefile|"$(version)"|' \
  	    -e '/PKGVERSION=/s|=.*|="$(PKGVERSION)"|' \
  	    -e '/REPORT_BUGS_TO=/s|=.*|="$(REPORT_BUGS_TO)"|' \
