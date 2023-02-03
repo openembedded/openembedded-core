@@ -17,8 +17,8 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0019-fix-random-tracepoints-removed-in-stable-kernels.patch \
            "
 
-SRC_URI[md5sum] = "0aba7e5ca53e756875605221f7e0dec9"
-SRC_URI[sha256sum] = "77d03546bbb7668b146f2261c646d503b7b601dc7072a5359d729d40f13598a1"
+SRC_URI[md5sum] = "cfb23ea6bdaf1ad40c7f9ac098b4016d"
+SRC_URI[sha256sum] = "0c5fe9f8d8dbd1411a3c1c643dcbd0a55577bd15845758b73948e00bc7c387a6"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
