@@ -9,23 +9,17 @@ from oeqa.utils.commands import bitbake, runqemu
 class LocalesTest(OESelftestTestCase):
 
     @OETestTag("runqemu")
-    def test_locales_on(self):
-        """
-        Summary: Test the locales are generated
-        Expected: 1. Check the locale exist in the locale-archive
-                  2. Check the locale exist for the glibc
-                  3. Check the locale can be generated
-        Product: oe-core
-        Author: Louis Rannou <lrannou@baylibre.com>
-        AutomatedBy: Louis Rannou <lrannou@baylibre.com>
-        """
 
+    def run_locales_test(self, binary_enabled):
         features = []
         features.append('EXTRA_IMAGE_FEATURES = "empty-root-password allow-empty-password allow-root-login"')
         features.append('IMAGE_INSTALL:append = " glibc-utils localedef"')
         features.append('GLIBC_GENERATE_LOCALES = "en_US.UTF-8 fr_FR.UTF-8"')
         features.append('IMAGE_LINGUAS:append = " en-us fr-fr"')
-        features.append('ENABLE_BINARY_LOCALE_GENERATION = "1"')
+        if binary_enabled:
+            features.append('ENABLE_BINARY_LOCALE_GENERATION = "1"')
+        else:
+            features.append('ENABLE_BINARY_LOCALE_GENERATION = "0"')
         self.write_config("\n".join(features))
 
         # Build a core-image-minimal
@@ -43,3 +37,18 @@ class LocalesTest(OESelftestTestCase):
             # output must includes fr_FR.utf8
             self.assertEqual(status, 1, msg='localedef test command failed: output: %s' % output)
             self.assertIn("fr_FR.utf8", output, msg='localedef test failed: output: %s' % output)
+
+    def test_locales_on(self):
+        """
+        Summary: Test the locales are generated
+        Expected: 1. Check the locale exist in the locale-archive
+                  2. Check the locale exist for the glibc
+                  3. Check the locale can be generated
+        Product: oe-core
+        Author: Louis Rannou <lrannou@baylibre.com>
+        AutomatedBy: Louis Rannou <lrannou@baylibre.com>
+        """
+        self.run_locales_test(True)
+
+    def test_locales_off(self):
+        self.run_locales_test(False)
