@@ -15,6 +15,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0017-fix-random-remove-unused-tracepoints-v5.18.patch \
            file://0018-fix-random-remove-unused-tracepoints-v5.10-v5.15.patch \
            file://0019-fix-random-tracepoints-removed-in-stable-kernels.patch \
+           file://fix-jbd2-use-the-correct-print-format.patch \
            "
 
 SRC_URI[md5sum] = "cfb23ea6bdaf1ad40c7f9ac098b4016d"
