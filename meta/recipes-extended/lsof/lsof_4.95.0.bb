@@ -22,7 +22,7 @@ S = "${WORKDIR}/git"
 
 inherit update-alternatives
 
-ALTERNATIVE_${PN} = "lsof"
+ALTERNATIVE:${PN} = "lsof"
 ALTERNATIVE_LINK_NAME[lsof] = "${sbindir}/lsof"
 # Make our priority higher than busybox
 ALTERNATIVE_PRIORITY = "100"
