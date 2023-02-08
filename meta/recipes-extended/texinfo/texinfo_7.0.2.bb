@@ -35,7 +35,7 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            ${TARGET_PATCH} \
            "
 
-SRC_URI[sha256sum] = "53c01dd34c9bf116866d03aabd38c5cd9ee95ac10043d61aa33dec0d27825d8d"
+SRC_URI[sha256sum] = "a9c646bc4f6bb31843f129f8408a3a627334575faf7b22ebc416be5cb1570553"
 
 tex_texinfo = "texmf/tex/texinfo"
 
