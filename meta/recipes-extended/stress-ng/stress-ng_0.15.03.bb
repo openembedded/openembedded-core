@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master \
            file://0001-test-float-Make-variables-global.patch \
            file://0001-Pass-LD_GOLD-1-via-makefile-to-enable-gold-linker.patch"
-SRCREV = "4164f6842c712c2d9a13619c3c70fd35d8d02cdb"
+SRCREV = "f3be0447c10fd5652b4c3753d56bcaac13fd8917"
 S = "${WORKDIR}/git"
 
 DEPENDS = "coreutils-native libbsd"
