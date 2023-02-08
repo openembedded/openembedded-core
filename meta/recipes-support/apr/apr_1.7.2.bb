@@ -16,21 +16,15 @@ BBCLASSEXTEND = "native nativesdk"
 SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://run-ptest \
            file://0002-apr-Remove-workdir-path-references-from-installed-ap.patch \
-           file://0003-Makefile.in-configure.in-support-cross-compiling.patch \
            file://0004-Fix-packet-discards-HTTP-redirect.patch \
            file://0005-configure.in-fix-LTFLAGS-to-make-it-work-with-ccache.patch \
-           file://0006-apr-fix-off_t-size-doesn-t-match-in-glibc-when-cross.patch \
            file://0007-explicitly-link-libapr-against-phtread-to-make-gold-.patch \
            file://libtoolize_check.patch \
            file://0001-Add-option-to-disable-timed-dependant-tests.patch \
-           file://autoconf270.patch \
-           file://0001-add-AC_CACHE_CHECK-for-strerror_r-return-type.patch \
            file://0001-configure-Remove-runtime-test-for-mmap-that-can-map-.patch \
-           file://CVE-2021-35940.patch \
            "
 
-SRC_URI[md5sum] = "7a14a83d664e87599ea25ff4432e48a7"
-SRC_URI[sha256sum] = "e2e148f0b2e99b8e5c6caa09f6d4fb4dd3e83f744aa72a952f94f5a14436f7ea"
+SRC_URI[sha256sum] = "75e77cc86776c030c0a5c408dfbd0bf2a0b75eed5351e52d5439fa1e5509a43e"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest multilib_script
 
