@@ -7,13 +7,8 @@ DESCRIPTION = "vmware is an Xorg driver for VMware virtual video cards."
 LIC_FILES_CHKSUM = "file://COPYING;md5=5fcd7d437a959a15fbee8707747c6b53"
 
 DEPENDS += "virtual/libx11 xorgproto libpciaccess"
+XORG_DRIVER_COMPRESSOR = ".tar.xz"
 
-SRC_URI += "file://0002-add-option-for-vmwgfx.patch"
-
-SRC_URI[md5sum] = "08d66d062055080ff699ab4869726ea2"
-SRC_URI[sha256sum] = "47971924659e51666a757269ad941a059ef5afe7a47b5101c174a6022ac4066c"
+SRC_URI[sha256sum] = "aed31ee5ed5ecc6e2226705383e7ad06f7602c1376a295305f376b17af3eb81a"
 
 COMPATIBLE_HOST = '(i.86.*-linux|x86_64.*-linux)'
-
-PACKAGECONFIG ?= ""
-PACKAGECONFIG[vmwgfx] = "--enable-vmwgfx, --disable-vmwgfx, libdrm virtual/mesa"
