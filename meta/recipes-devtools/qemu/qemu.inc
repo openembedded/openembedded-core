@@ -279,6 +279,8 @@ PACKAGECONFIG[capstone] = "--enable-capstone,--disable-capstone"
 PACKAGECONFIG[libnfs] = "--enable-libnfs,--disable-libnfs,libnfs"
 PACKAGECONFIG[brlapi] = "--enable-brlapi,--disable-brlapi"
 PACKAGECONFIG[vde] = "--enable-vde,--disable-vde"
+# version 4.2.0 doesn't have an "internal" option for enable-slirp, so use "git" which uses the same configure code path
+PACKAGECONFIG[slirp] = "--enable-slirp=git,--disable-slirp"
 PACKAGECONFIG[rbd] = "--enable-rbd,--disable-rbd"
 PACKAGECONFIG[rdma] = "--enable-rdma,--disable-rdma"
 
