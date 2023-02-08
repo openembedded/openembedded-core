@@ -4,11 +4,11 @@ Its name stands for LiSt Open Files, and it does just that."
 HOMEPAGE = "http://people.freebsd.org/~abe/"
 SECTION = "devel"
 LICENSE = "Spencer-94"
-LIC_FILES_CHKSUM = "file://00README;beginline=645;endline=679;md5=964df275d26429ba3b39dbb9f205172a"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a48ac97a8550eff12395a2c0d6151510"
 
 SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https \
            file://remove-host-information.patch"
-SRCREV = "898916d4c7c390ea4610aebaf1d32b8a3c49f26b"
+SRCREV = "546eb1c9910e7c137fdff551683c35a736021e05"
 
 S = "${WORKDIR}/git"
 
@@ -38,7 +38,7 @@ export I = "${STAGING_INCDIR}"
 export L = "${STAGING_INCDIR}"
 
 do_compile () {
-	oe_runmake 'CC=${CC}' 'CFGL=${LDFLAGS} -L./lib -llsof' 'DEBUG=' 'INCL=${CFLAGS}'
+	oe_runmake 'CC=${CC}' 'CFGL=${LDFLAGS} -L./lib -llsof' 'DEBUG=' 'INCL=${CFLAGS} -I..'
 }
 
 do_install () {
