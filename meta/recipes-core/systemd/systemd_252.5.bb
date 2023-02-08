@@ -185,6 +185,7 @@ PACKAGECONFIG[polkit] = "-Dpolkit=true,-Dpolkit=false"
 # hostname without acquiring additional privileges
 PACKAGECONFIG[polkit_hostnamed_fallback] = ",,,,dbus-broker,polkit"
 PACKAGECONFIG[portabled] = "-Dportabled=true,-Dportabled=false"
+PACKAGECONFIG[pstore] = "-Dpstore=true,-Dpstore=false"
 PACKAGECONFIG[qrencode] = "-Dqrencode=true,-Dqrencode=false,qrencode,,qrencode"
 PACKAGECONFIG[quotacheck] = "-Dquotacheck=true,-Dquotacheck=false"
 PACKAGECONFIG[randomseed] = "-Drandomseed=true,-Drandomseed=false"
