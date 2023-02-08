@@ -141,6 +141,8 @@ LDFLAGS:append:x86 = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -f
 EXTRA_OEMAKE = "V=1"
 
 do_configure() {
+    export TMPDIR="${B}/tmp"
+    mkdir -p ${B}/tmp
     ${S}/configure ${EXTRA_OECONF}
 }
 
