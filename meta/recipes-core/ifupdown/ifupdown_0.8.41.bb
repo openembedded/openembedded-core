@@ -8,15 +8,15 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=master \
-           file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
            file://99_network \
+           file://run-ptest \
            file://0001-Define-FNM_EXTMATCH-for-musl.patch \
            file://0001-Makefile-do-not-use-dpkg-for-determining-OS-type.patch \
-           file://run-ptest \
            file://0001-ifupdown-skip-wrong-test-case.patch \
-           ${@bb.utils.contains('DISTRO_FEATURES', 'ptest', 'file://tweak-ptest-script.patch', '', d)} \
+           file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
+           file://tweak-ptest-script.patch \
            "
-SRCREV = "be91dd267b4a8db502a6bbf5758563f7048b8078"
+SRCREV = "369d9d3c13a0c56ad09fd4f13b4a80eb9a94e270"
 
 S = "${WORKDIR}/git"
 
