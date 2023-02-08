@@ -12,11 +12,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bab4ac7dc1c10bc0fb037dc76c46ef8a"
 
 DEPENDS = "libevdev udev mtdev libcheck"
 
-SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=main \
+SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=1.22-branch \
            file://run-ptest \
            file://determinism.patch \
            "
-SRCREV = "fc59e574e050c502c9a3adefacf97babf3d09c7a"
+SRCREV = "d9f45fd1261da85b4eb44f8aa82e1500b99f303b"
 S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_REGEX = "libinput-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
