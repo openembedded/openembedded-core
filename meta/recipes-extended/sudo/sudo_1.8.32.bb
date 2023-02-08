@@ -5,6 +5,7 @@ SRC_URI = "https://www.sudo.ws/dist/sudo-${PV}.tar.gz \
            file://0001-Include-sys-types.h-for-id_t-definition.patch \
            file://0001-Fix-includes-when-building-with-musl.patch \
            file://CVE-2022-43995.patch \
+           file://CVE-2023-22809.patch \
            "
 
 PAM_SRC_URI = "file://sudo.pam"
