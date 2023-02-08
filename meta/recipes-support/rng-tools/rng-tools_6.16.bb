@@ -6,14 +6,14 @@ HOMEPAGE = "https://github.com/nhorman/rng-tools"
 BUGTRACKER = "https://github.com/nhorman/rng-tools/issues"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-DEPENDS = "sysfsutils openssl"
+DEPENDS = "sysfsutils openssl libcap"
 
 SRC_URI = "git://github.com/nhorman/rng-tools.git;branch=master;protocol=https \
            file://init \
            file://default \
            file://rng-tools.service \
            "
-SRCREV = "381f69828b782afda574f259c1b7549f48f9bb77"
+SRCREV = "e061c313b95890eb5fa0ada0cd6eec619dafdfe2"
 
 S = "${WORKDIR}/git"
 
@@ -27,7 +27,8 @@ PACKAGECONFIG:libc-musl = "libargp libjitterentropy"
 PACKAGECONFIG[libargp] = "--with-libargp,--without-libargp,argp-standalone,"
 PACKAGECONFIG[libjitterentropy] = "--enable-jitterentropy,--disable-jitterentropy,libjitterentropy"
 PACKAGECONFIG[libp11] = "--with-pkcs11,--without-pkcs11,libp11 openssl"
-PACKAGECONFIG[nistbeacon] = "--with-nistbeacon,--without-nistbeacon,curl libxml2 openssl"
+PACKAGECONFIG[nistbeacon] = "--with-nistbeacon,--without-nistbeacon,curl libxml2"
+PACKAGECONFIG[qrypt] = "--with-qrypt,--without-qrypt,curl"
 
 INITSCRIPT_NAME = "rng-tools"
 INITSCRIPT_PARAMS = "start 03 2 3 4 5 . stop 30 0 6 1 ."
