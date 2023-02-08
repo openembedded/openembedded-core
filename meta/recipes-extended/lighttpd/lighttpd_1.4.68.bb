@@ -17,9 +17,10 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
            file://index.html.lighttpd \
            file://lighttpd.conf \
            file://lighttpd \
+           file://fix-missing-test.patch \
            "
 
-SRC_URI[sha256sum] = "7e04d767f51a8d824b32e2483ef2950982920d427d1272ef4667f49d6f89f358"
+SRC_URI[sha256sum] = "e56f37ae52b63e1ada4d76ce78005affb6e56eea2f6bdb0ce17d6d36e9583384"
 
 DEPENDS = "virtual/crypt"
 
@@ -27,19 +28,19 @@ PACKAGECONFIG ??= "openssl pcre zlib \
     ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
 "
 
-PACKAGECONFIG[libev] = "-Dwith_libev=true,-Dwith_libev=false,libev"
-PACKAGECONFIG[mysql] = "-Dwith_mysql=true,-Dwith_mysql=false,mariadb"
-PACKAGECONFIG[ldap] = "-Dwith_ldap=true,-Dwith_ldap=false,openldap"
+PACKAGECONFIG[libev] = "-Dwith_libev=enabled,-Dwith_libev=disabled,libev"
+PACKAGECONFIG[mysql] = "-Dwith_mysql=enabled,-Dwith_mysql=disabled,mariadb"
+PACKAGECONFIG[ldap] = "-Dwith_ldap=enabled,-Dwith_ldap=disabled,openldap"
 PACKAGECONFIG[attr] = "-Dwith_xattr=true,-Dwith_xattr=false,attr"
 PACKAGECONFIG[openssl] = "-Dwith_openssl=true,-Dwith_openssl=false,openssl"
-PACKAGECONFIG[krb5] = "-Dwith_krb5=true,-Dwith_krb5=false,krb5"
-PACKAGECONFIG[pcre] = "-Dwith_pcre=true,-Dwith_pcre=false,libpcre"
-PACKAGECONFIG[zlib] = "-Dwith_zlib=true,-Dwith_zlib=false,zlib"
-PACKAGECONFIG[bzip2] = "-Dwith_bzip=true,-Dwith_bzip=false,bzip2"
-PACKAGECONFIG[webdav-props] = "-Dwith_webdav_props=true,-Dwith_webdav_props=false,libxml2 sqlite3"
-PACKAGECONFIG[webdav-locks] = "-Dwith_webdav_locks=true,-Dwith_webdav_locks=false,util-linux"
+PACKAGECONFIG[krb5] = "-Dwith_krb5=enabled,-Dwith_krb5=disabled,krb5"
+PACKAGECONFIG[pcre] = "-Dwith_pcre=pcre2,-Dwith_pcre=disabled,libpcre2"
+PACKAGECONFIG[zlib] = "-Dwith_zlib=enabled,-Dwith_zlib=disabled,zlib"
+PACKAGECONFIG[bzip2] = "-Dwith_bzip=enabled,-Dwith_bzip=disabled,bzip2"
+PACKAGECONFIG[webdav-props] = "-Dwith_webdav_props=enabled,-Dwith_webdav_props=disabled,libxml2 sqlite3"
+PACKAGECONFIG[webdav-locks] = "-Dwith_webdav_locks=enabled,-Dwith_webdav_locks=disabled,util-linux"
 PACKAGECONFIG[lua] = "-Dwith_lua=true,-Dwith_lua=false,lua"
-PACKAGECONFIG[zstd] = "-Dwith_zstd=true,-Dwith_zstd=false,zstd"
+PACKAGECONFIG[zstd] = "-Dwith_zstd=enabled,-Dwith_zstd=disabled,zstd"
 
 inherit meson pkgconfig update-rc.d gettext systemd
 
