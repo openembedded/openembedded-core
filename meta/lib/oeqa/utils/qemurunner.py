@@ -647,6 +647,8 @@ class QemuRunner:
             except InterruptedError:
                 continue
             if sread:
+                # try to avoid reading single character at a time
+                time.sleep(0.1)
                 answer = self.server_socket.recv(1024)
                 if answer:
                     data += answer.decode('utf-8')
