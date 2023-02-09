@@ -14,6 +14,8 @@ CVE_VERSION ??= "${PV}"
 SPDXDIR ??= "${WORKDIR}/spdx"
 SPDXDEPLOY = "${SPDXDIR}/deploy"
 SPDXWORK = "${SPDXDIR}/work"
+SPDXIMAGEWORK = "${SPDXDIR}/image-work"
+SPDXSDKWORK = "${SPDXDIR}/sdk-work"
 
 SPDX_TOOL_NAME ??= "oe-spdx-creator"
 SPDX_TOOL_VERSION ??= "1.0"
@@ -821,10 +823,12 @@ def spdx_get_src(d):
         d.setVar("WORKDIR", workdir)
 
 do_rootfs[recrdeptask] += "do_create_spdx do_create_runtime_spdx"
+do_rootfs[cleandirs] += "${SPDXIMAGEWORK}"
 
 ROOTFS_POSTUNINSTALL_COMMAND =+ "image_combine_spdx ; "
 
 do_populate_sdk[recrdeptask] += "do_create_spdx do_create_runtime_spdx"
+do_populate_sdk[cleandirs] += "${SPDXSDKWORK}"
 POPULATE_SDK_POST_HOST_COMMAND:append:task-populate-sdk = " sdk_host_combine_spdx; "
 POPULATE_SDK_POST_TARGET_COMMAND:append:task-populate-sdk = " sdk_target_combine_spdx; "
 
@@ -840,7 +844,7 @@ python image_combine_spdx() {
     img_spdxid = oe.sbom.get_image_spdxid(image_name)
     packages = image_list_installed_packages(d)
 
-    combine_spdx(d, image_name, imgdeploydir, img_spdxid, packages)
+    combine_spdx(d, image_name, imgdeploydir, img_spdxid, packages, Path(d.getVar("SPDXIMAGEWORK")))
 
     def make_image_link(target_path, suffix):
         if image_link_name:
@@ -848,12 +852,8 @@ python image_combine_spdx() {
             if link != target_path:
                 link.symlink_to(os.path.relpath(target_path, link.parent))
 
-    image_spdx_path = imgdeploydir / (image_name + ".spdx.json")
-    make_image_link(image_spdx_path, ".spdx.json")
     spdx_tar_path = imgdeploydir / (image_name + ".spdx.tar.zst")
     make_image_link(spdx_tar_path, ".spdx.tar.zst")
-    spdx_index_path = imgdeploydir / (image_name + ".spdx.index.json")
-    make_image_link(spdx_index_path, ".spdx.index.json")
 }
 
 python sdk_host_combine_spdx() {
@@ -873,9 +873,9 @@ def sdk_combine_spdx(d, sdk_type):
     sdk_deploydir = Path(d.getVar("SDKDEPLOYDIR"))
     sdk_spdxid = oe.sbom.get_sdk_spdxid(sdk_name)
     sdk_packages = sdk_list_installed_packages(d, sdk_type == "target")
-    combine_spdx(d, sdk_name, sdk_deploydir, sdk_spdxid, sdk_packages)
+    combine_spdx(d, sdk_name, sdk_deploydir, sdk_spdxid, sdk_packages, Path(d.getVar('SPDXSDKWORK')))
 
-def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages):
+def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx_workdir):
     import os
     import oe.spdx
     import oe.sbom
@@ -944,7 +944,7 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages):
             comment="Runtime dependencies for %s" % name
         )
 
-    image_spdx_path = rootfs_deploydir / (rootfs_name + ".spdx.json")
+    image_spdx_path = spdx_workdir / (rootfs_name + ".spdx.json")
 
     with image_spdx_path.open("wb") as f:
         doc.to_json(f, sort_keys=True, indent=get_json_indent(d))
@@ -1020,7 +1020,3 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages):
             info.gname = "root"
 
             tar.addfile(info, fileobj=index_str)
-
-    spdx_index_path = rootfs_deploydir / (rootfs_name + ".spdx.index.json")
-    with spdx_index_path.open("w") as f:
-        json.dump(index, f, sort_keys=True, indent=get_json_indent(d))
