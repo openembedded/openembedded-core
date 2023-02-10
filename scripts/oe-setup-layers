@@ -46,6 +46,9 @@ def _is_layer_at_remote_uri(layerdir, remote, uri):
         pass
     return False
 
+def _contains_submodules(layerdir):
+    return os.path.exists(os.path.join(layerdir,".gitmodules"))
+
 def _do_checkout(args, json):
     layers = json['sources']
     for l_name in layers:
@@ -89,6 +92,9 @@ def _do_checkout(args, json):
             cmd = 'git checkout -q {}'.format(rev)
             print("Running '{}' in {}".format(cmd, layerdir))
             subprocess.check_output(cmd, shell=True, cwd=layerdir)
+
+            if _contains_submodules(layerdir):
+                print("Repo {} contains submodules, use 'git submodule update' to ensure they are up to date".format(layerdir))
 
 parser = argparse.ArgumentParser(description="A self contained python script that fetches all the needed layers and sets them to correct revisions using data in a json format from a separate file. The json data can be created from an active build directory with 'bitbake-layers create-layers-setup destdir' and there's a sample file and a schema in meta/files/")
 
