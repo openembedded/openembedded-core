@@ -1,8 +1,8 @@
-From 2055a46b396e272616c0b2273903e02c3b49a2ff Mon Sep 17 00:00:00 2001
+From 1cbb416538a9c7c3fbedcb23f4d90d5c48becca8 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Tue, 10 Nov 2020 16:33:27 +0000
-Subject: [PATCH] src/cmd/dist/buildgo.go: do not hardcode host compilers into
- target binaries
+Subject: [PATCH 8/9] src/cmd/dist/buildgo.go: do not hardcode host compilers
+ into target binaries
 
 These come from $CC/$CXX on the build host and are not useful on targets;
 additionally as they contain host specific paths, this helps reproducibility.
@@ -13,9 +13,11 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  src/cmd/dist/buildgo.go | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/src/cmd/dist/buildgo.go b/src/cmd/dist/buildgo.go
+index 29b0167..63a49f0 100644
 --- a/src/cmd/dist/buildgo.go
 +++ b/src/cmd/dist/buildgo.go
-@@ -34,8 +34,8 @@ func mkzdefaultcc(dir, file string) {
+@@ -33,8 +33,8 @@ func mkzdefaultcc(dir, file string) {
  		fmt.Fprintf(&buf, "package cfg\n")
  		fmt.Fprintln(&buf)
  		fmt.Fprintf(&buf, "const DefaultPkgConfig = `%s`\n", defaultpkgconfig)
@@ -26,7 +28,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  		writefile(buf.String(), file, writeSkipSame)
  		return
  	}
-@@ -46,8 +46,8 @@ func mkzdefaultcc(dir, file string) {
+@@ -45,8 +45,8 @@ func mkzdefaultcc(dir, file string) {
  	fmt.Fprintf(&buf, "package main\n")
  	fmt.Fprintln(&buf)
  	fmt.Fprintf(&buf, "const defaultPkgConfig = `%s`\n", defaultpkgconfig)
@@ -37,3 +39,6 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  	writefile(buf.String(), file, writeSkipSame)
  }
  
+-- 
+2.30.2
+

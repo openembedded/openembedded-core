@@ -1,7 +1,7 @@
-From 68867eae5d3a51f32b2a2e16374323338408781e Mon Sep 17 00:00:00 2001
+From c7536a820f713013ab1d4acef74a4c8bd970bf8f Mon Sep 17 00:00:00 2001
 From: Alex Kube <alexander.j.kube@gmail.com>
 Date: Wed, 23 Oct 2019 21:16:32 +0430
-Subject: [PATCH] ld: add soname to shareable objects
+Subject: [PATCH 3/9] ld: add soname to shareable objects
 
 so that OE's shared library dependency handling
 can find them.
@@ -13,16 +13,15 @@ Matt Madison <matt@madison.systems>.
 Upstream-Status: Inappropriate [OE specific]
 
 Signed-off-by: Alexander J Kube <alexander.j.kube@gmail.com>
-
 ---
  src/cmd/link/internal/ld/lib.go | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
-index 18910dd..b2e1d36 100644
+index c073017..e60d39a 100644
 --- a/src/cmd/link/internal/ld/lib.go
 +++ b/src/cmd/link/internal/ld/lib.go
-@@ -1459,6 +1459,7 @@ func (ctxt *Link) hostlink() {
+@@ -1491,6 +1491,7 @@ func (ctxt *Link) hostlink() {
  				argv = append(argv, "-Wl,-z,relro")
  			}
  			argv = append(argv, "-shared")
@@ -30,7 +29,7 @@ index 18910dd..b2e1d36 100644
  			if ctxt.HeadType == objabi.Hwindows {
  				argv = addASLRargs(argv, *flagAslr)
  			} else {
-@@ -1474,6 +1475,7 @@ func (ctxt *Link) hostlink() {
+@@ -1506,6 +1507,7 @@ func (ctxt *Link) hostlink() {
  			argv = append(argv, "-Wl,-z,relro")
  		}
  		argv = append(argv, "-shared")
@@ -38,7 +37,7 @@ index 18910dd..b2e1d36 100644
  	case BuildModePlugin:
  		if ctxt.HeadType == objabi.Hdarwin {
  			argv = append(argv, "-dynamiclib")
-@@ -1482,6 +1484,7 @@ func (ctxt *Link) hostlink() {
+@@ -1514,6 +1516,7 @@ func (ctxt *Link) hostlink() {
  				argv = append(argv, "-Wl,-z,relro")
  			}
  			argv = append(argv, "-shared")
@@ -46,3 +45,6 @@ index 18910dd..b2e1d36 100644
  		}
  	}
  
+-- 
+2.30.2
+

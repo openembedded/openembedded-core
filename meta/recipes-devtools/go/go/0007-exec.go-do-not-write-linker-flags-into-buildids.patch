@@ -1,7 +1,7 @@
-From bdd69b55387f80c8df18d0af5008bf5e1a66be6a Mon Sep 17 00:00:00 2001
+From 0ba747e6a4b251a0d9eed0cfd8f8c491bb508040 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 23 Nov 2020 19:22:04 +0000
-Subject: [PATCH] exec.go: do not write linker flags into buildids
+Subject: [PATCH 7/9] exec.go: do not write linker flags into buildids
 
 The flags can contain build-specific paths, breaking reproducibility.
 
@@ -14,9 +14,11 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  src/cmd/go/internal/work/exec.go | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
+index d83b31b..a646fbb 100644
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -1274,7 +1274,7 @@ func (b *Builder) linkActionID(a *Action
+@@ -1312,7 +1312,7 @@ func (b *Builder) linkActionID(a *Action) cache.ActionID {
  	}
  
  	// Toolchain-dependent configuration, shared with b.linkSharedActionID.
@@ -25,7 +27,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  
  	// Input files.
  	for _, a1 := range a.Deps {
-@@ -1568,7 +1568,7 @@ func (b *Builder) linkSharedActionID(a *
+@@ -1607,7 +1607,7 @@ func (b *Builder) linkSharedActionID(a *Action) cache.ActionID {
  	fmt.Fprintf(h, "goos %s goarch %s\n", cfg.Goos, cfg.Goarch)
  
  	// Toolchain-dependent configuration, shared with b.linkActionID.
@@ -34,3 +36,6 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  
  	// Input files.
  	for _, a1 := range a.Deps {
+-- 
+2.30.2
+
