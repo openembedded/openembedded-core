@@ -32,6 +32,8 @@ SPDX_PRETTY ??= "0"
 
 SPDX_LICENSES ??= "${COREBASE}/meta/files/spdx-licenses.json"
 
+SPDX_CUSTOM_ANNOTATION_VARS ??= ""
+
 SPDX_ORG ??= "OpenEmbedded ()"
 SPDX_SUPPLIER ??= "Organization: ${SPDX_ORG}"
 SPDX_SUPPLIER[doc] = "The SPDX PackageSupplier field for SPDX packages created from \
@@ -404,7 +406,6 @@ def collect_dep_sources(d, dep_recipes):
 
     return sources
 
-
 python do_create_spdx() {
     from datetime import datetime, timezone
     import oe.sbom
@@ -480,6 +481,10 @@ python do_create_spdx() {
     description = d.getVar("DESCRIPTION")
     if description:
         recipe.description = description
+
+    if d.getVar("SPDX_CUSTOM_ANNOTATION_VARS"):
+        for var in d.getVar('SPDX_CUSTOM_ANNOTATION_VARS').split():
+            recipe.annotations.append(create_annotation(d, var + "=" + d.getVar(var)))
 
     # Some CVEs may be patched during the build process without incrementing the version number,
     # so querying for CVEs based on the CPE id can lead to false positives. To account for this,
