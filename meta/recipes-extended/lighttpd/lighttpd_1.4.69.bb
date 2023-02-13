@@ -17,10 +17,9 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
            file://index.html.lighttpd \
            file://lighttpd.conf \
            file://lighttpd \
-           file://fix-missing-test.patch \
            "
 
-SRC_URI[sha256sum] = "e56f37ae52b63e1ada4d76ce78005affb6e56eea2f6bdb0ce17d6d36e9583384"
+SRC_URI[sha256sum] = "16ac8db95e719629ba61949b99f8a26feba946a81d185215b28379bb4116b0b4"
 
 DEPENDS = "virtual/crypt"
 
