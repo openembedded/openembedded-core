@@ -9,7 +9,7 @@ SECTION = "libs"
 
 LICENSE = "Zlib & BSD-2-Clause"
 LIC_FILES_CHKSUM = "\
-    file://LICENSE.txt;md5=68a088513da90254b2fbe664f42af315 \
+    file://LICENSE.txt;md5=31f575634fd56b27fc6b6cbe8dc9bd38 \
     file://src/hidapi/LICENSE.txt;md5=7c3949a631240cb6c31c50f3eb696077 \
     file://src/hidapi/LICENSE-bsd.txt;md5=b5fa085ce0926bb50d0621620a82361f \
     file://src/video/yuv2rgb/LICENSE;md5=79f8f3418d91531e05f0fc94ca67e071 \
@@ -25,7 +25,7 @@ SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz"
 
 S = "${WORKDIR}/SDL2-${PV}"
 
-SRC_URI[sha256sum] = "95d39bc3de037fbdfa722623737340648de4f180a601b0afad27645d150b99e0"
+SRC_URI[sha256sum] = "c661205a553b7d252425f4b751ff13209e5e020b876bbfa1598494af61790057"
 
 inherit cmake lib_package binconfig-disabled pkgconfig upstream-version-is-even
 
