@@ -10,8 +10,12 @@ inherit gnomebase gobject-introspection gtk-doc
 SRC_URI[archive.sha256sum] = "a37bb0e78a419dcbeaa9c7027bcff52f5ec2367c25ec859da31dfde2928f279a"
 
 # gtk4 & mutter 41.0 requires graphene build with introspection
-PACKAGECONFIG ?= "introspection"
+# Disable neon support by default on ARM-32 platforms because of the
+# following upstream bug: https://github.com/ebassi/graphene/issues/215
+PACKAGECONFIG ?= "introspection ${@bb.utils.contains('TUNE_FEATURES', 'aarch64', 'neon', '', d)}"
+
 PACKAGECONFIG[introspection] = "-Dintrospection=enabled,-Dintrospection=disabled,"
+PACKAGECONFIG[neon] = "-Darm_neon=true,-Darm_neon=false,"
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 
