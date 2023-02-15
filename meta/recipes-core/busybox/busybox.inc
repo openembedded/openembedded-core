@@ -157,6 +157,9 @@ do_compile() {
 	cp include/autoconf.h.orig include/autoconf.h
 
 	if [ "${BUSYBOX_SPLIT_SUID}" = "1" -a x`grep "CONFIG_FEATURE_INDIVIDUAL=y" .config` = x ]; then
+		# Guard againt interrupted do_compile: clean temporary files.
+		rm -f .config.app.suid .config.app.nosuid .config.disable.apps .config.nonapps
+
 		# split the .config into two parts, and make two busybox binaries
 		oe_runmake busybox.cfg.suid
 		oe_runmake busybox.cfg.nosuid
