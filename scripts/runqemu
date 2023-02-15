@@ -211,7 +211,7 @@ class BaseConfig(object):
         self.mac_slirp = "52:54:00:12:35:"
         # pid of the actual qemu process
         self.qemu_environ = os.environ.copy()
-        self.qemupid = None
+        self.qemuprocess = None
         # avoid cleanup twice
         self.cleaned = False
         # Files to cleanup after run
@@ -1512,7 +1512,7 @@ class BaseConfig(object):
             for descriptor in self.portlocks.values():
                 pass_fds.append(descriptor.fileno())
         process = subprocess.Popen(cmds, stderr=subprocess.PIPE, pass_fds=pass_fds, env=self.qemu_environ)
-        self.qemupid = process.pid
+        self.qemuprocess = process
         retcode = process.wait()
         if retcode:
             if retcode == -signal.SIGTERM:
@@ -1528,6 +1528,15 @@ class BaseConfig(object):
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
         logger.info("Cleaning up")
+
+        if self.qemuprocess:
+            try:
+                # give it some time to shut down, ignore return values and output
+                self.qemuprocess.send_signal(signal.SIGTERM)
+                self.qemuprocess.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.qemuprocess.kill()
+
         with open('/proc/uptime', 'r') as f:
             uptime_seconds = f.readline().split()[0]
         logger.info('Host uptime: %s\n' % uptime_seconds)
@@ -1554,6 +1563,9 @@ class BaseConfig(object):
                     os.remove(ent)
                 else:
                     shutil.rmtree(ent)
+
+        # Deliberately ignore the return code of 'tput smam'.
+        subprocess.call(["tput", "smam"])
 
         self.cleaned = True
 
@@ -1631,12 +1643,8 @@ def main():
             subprocess.check_call([renice, str(os.getpid())])
 
         def sigterm_handler(signum, frame):
-            logger.info("SIGTERM received")
-            if config.qemupid:
-                os.kill(config.qemupid, signal.SIGTERM)
+            logger.info("Received signal: %s" % (signum))
             config.cleanup()
-            # Deliberately ignore the return code of 'tput smam'.
-            subprocess.call(["tput", "smam"])
         signal.signal(signal.SIGTERM, sigterm_handler)
 
         config.check_args()
@@ -1658,8 +1666,6 @@ def main():
         return 1
     finally:
         config.cleanup()
-        # Deliberately ignore the return code of 'tput smam'.
-        subprocess.call(["tput", "smam"])
 
 if __name__ == "__main__":
     sys.exit(main())
