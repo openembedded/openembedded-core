@@ -406,6 +406,54 @@ def collect_dep_sources(d, dep_recipes):
 
     return sources
 
+def add_download_packages(d, doc, recipe):
+    import os.path
+    from bb.fetch2 import decodeurl, CHECKSUM_LIST
+    import bb.process
+    import oe.spdx
+    import oe.sbom
+
+    for download_idx, src_uri in enumerate(d.getVar('SRC_URI').split()):
+        f = bb.fetch2.FetchData(src_uri, d)
+
+        for name in f.names:
+            package = oe.spdx.SPDXPackage()
+            package.name = "%s-source-%d" % (d.getVar("PN"), download_idx + 1)
+            package.SPDXID = oe.sbom.get_download_spdxid(d, download_idx + 1)
+
+            if f.type == "file":
+                continue
+
+            uri = f.type
+            proto = getattr(f, "proto", None)
+            if proto is not None:
+                uri = uri + "+" + proto
+            uri = uri + "://" + f.host + f.path
+
+            if f.method.supports_srcrev():
+                uri = uri + "@" + f.revisions[name]
+
+            if f.method.supports_checksum(f):
+                for checksum_id in CHECKSUM_LIST:
+                    if checksum_id.upper() not in oe.spdx.SPDXPackage.ALLOWED_CHECKSUMS:
+                        continue
+
+                    expected_checksum = getattr(f, "%s_expected" % checksum_id)
+                    if expected_checksum is None:
+                        continue
+
+                    c = oe.spdx.SPDXChecksum()
+                    c.algorithm = checksum_id.upper()
+                    c.checksumValue = expected_checksum
+                    package.checksums.append(c)
+
+            package.downloadLocation = uri
+            doc.packages.append(package)
+            doc.add_relationship(doc, "DESCRIBES", package)
+            # In the future, we might be able to do more fancy dependencies,
+            # but this should be sufficient for now
+            doc.add_relationship(package, "BUILD_DEPENDENCY_OF", recipe)
+
 python do_create_spdx() {
     from datetime import datetime, timezone
     import oe.sbom
@@ -458,14 +506,6 @@ python do_create_spdx() {
     if bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d):
         recipe.annotations.append(create_annotation(d, "isNative"))
 
-    for s in d.getVar('SRC_URI').split():
-        if not s.startswith("file://"):
-            s = s.split(';')[0]
-            recipe.downloadLocation = s
-            break
-    else:
-        recipe.downloadLocation = "NOASSERTION"
-
     homepage = d.getVar("HOMEPAGE")
     if homepage:
         recipe.homepage = homepage
@@ -506,6 +546,8 @@ python do_create_spdx() {
 
     doc.packages.append(recipe)
     doc.add_relationship(doc, "DESCRIBES", recipe)
+
+    add_download_packages(d, doc, recipe)
 
     if process_sources(d) and include_sources:
         recipe_archive = deploy_dir_spdx / "recipes" / (doc.name + ".tar.zst")
