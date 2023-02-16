@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=bf405a8056a6647e7d077b0e7bc36aba \
                    "
 LDSHARED += "-pthread"
 
-SRC_URI[sha256sum] = "f964c7dcf7802d133e8dbd1565914fa0194f9d683d82411989889ecd701e8adf"
+SRC_URI[sha256sum] = "d1f6198ee6d9148405e49887803907fe8962a23e6c6f83ea7d98f1c0de375695"
 
 SRC_URI += "\
     file://0002-Cargo.toml-edition-2018-2021.patch \
