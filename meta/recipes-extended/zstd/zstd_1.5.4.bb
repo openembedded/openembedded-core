@@ -6,12 +6,13 @@ HOMEPAGE = "http://www.zstd.net/"
 SECTION = "console/utils"
 
 LICENSE = "BSD-3-Clause & GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=c7f0b161edbe52f5f345a3d1311d0b32 \
-                    file://COPYING;md5=39bba7d2cf0ba1036f2a6e2be52fe3f0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=0822a32f7acdbe013606746641746ee8 \
+                    file://COPYING;md5=39bba7d2cf0ba1036f2a6e2be52fe3f0 \
+                    "
 
 SRC_URI = "git://github.com/facebook/zstd.git;branch=release;protocol=https"
 
-SRCREV = "e47e674cd09583ff0503f0f6defd6d23d8b718d3"
+SRCREV = "945f27758c0fd67b636103a38dbf050266c6b90a"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 CVE_PRODUCT = "zstandard"
