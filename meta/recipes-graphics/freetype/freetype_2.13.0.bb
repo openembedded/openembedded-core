@@ -7,13 +7,14 @@ HOMEPAGE = "http://www.freetype.org/"
 BUGTRACKER = "https://savannah.nongnu.org/bugs/?group=freetype"
 SECTION = "libs"
 
-LICENSE = "FTL | GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=a5927784d823d443c6cae55701d01553 \
+LICENSE = "(FTL | GPL-2.0-or-later) & MIT"
+LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=843b6efc16f6b1652ec97f89d5a516c0 \
                     file://docs/FTL.TXT;md5=9f37b4e6afa3fef9dba8932b16bd3f97 \
-                    file://docs/GPLv2.TXT;md5=8ef380476f642c20ebf40fecb0add2ec"
+                    file://docs/GPLv2.TXT;md5=8ef380476f642c20ebf40fecb0add2ec \
+                    "
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BP}.tar.xz"
-SRC_URI[sha256sum] = "4766f20157cc4cf0cd292f80bf917f92d1c439b243ac3018debf6b9140c41a7f"
+SRC_URI[sha256sum] = "5ee23abd047636c24b2d43c6625dcafc66661d1aca64dec9e0d05df29592624c"
 
 UPSTREAM_CHECK_REGEX = "freetype-(?P<pver>\d+(\.\d+)+)"
 
