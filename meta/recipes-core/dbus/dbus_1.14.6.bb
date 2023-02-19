@@ -13,11 +13,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6423dcd74d7be9715b0db247fd889da3 \
 SRC_URI = "https://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.xz \
            file://run-ptest \
            file://tmpdir.patch \
-           file://0001-Define-_DBUS_ALIGNOF-using-_Alignof-when-using-C11-o.patch \
            file://dbus-1.init \
-"
+           "
 
-SRC_URI[sha256sum] = "7c0f9b8e5ec0ff2479383e62c0084a3a29af99edf1514e9f659b81b30d4e353e"
+SRC_URI[sha256sum] = "fd2bdf1bb89dc365a46531bff631536f22b0d1c6d5ce2c5c5e59b55265b3d66b"
 
 EXTRA_OECONF = "--disable-xml-docs \
                 --disable-doxygen-docs \
