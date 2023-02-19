@@ -11,8 +11,8 @@ LICENSE:${PN}-bin = "GPL-3.0-or-later"
 LICENSE:${PN}-openssl = "GPL-3.0-or-later"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=71391c8e0c1cfe68077e7fce3b586283 \
-                    file://doc/COPYING;md5=c678957b0c8e964aa6c70fd77641a71e \
-                    file://doc/COPYING.LESSER;md5=a6f89e2100d9b6cdffcea4f398e37343"
+                    file://doc/COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
+                    file://doc/COPYING.LESSER;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "nettle gmp virtual/libiconv libunistring"
 DEPENDS:append:libc-musl = " argp-standalone"
@@ -26,7 +26,7 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://Add-ptest-support.patch \
            "
 
-SRC_URI[sha256sum] = "c58ad39af0670efe6a8aee5e3a8b2331a1200418b64b7c51977fb396d4617114"
+SRC_URI[sha256sum] = "0ea0d11a1660a1e63f960f157b197abe6d0c8cb3255be24e1fb3815930b9bdc5"
 
 inherit autotools texinfo pkgconfig gettext lib_package gtk-doc ptest
 
@@ -44,7 +44,6 @@ PACKAGECONFIG[fips] = "--enable-fips140-mode --with-libdl-prefix=${STAGING_BASEL
 EXTRA_OECONF = " \
     --enable-doc \
     --disable-libdane \
-    --disable-guile \
     --disable-rpath \
     --enable-openssl-compatibility \
     --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
