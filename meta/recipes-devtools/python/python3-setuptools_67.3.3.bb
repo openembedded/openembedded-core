@@ -11,7 +11,7 @@ SRC_URI:append:class-native = " file://0001-conditionally-do-not-fetch-code-by-e
 SRC_URI += " \
             file://0001-_distutils-sysconfig.py-make-it-possible-to-substite.patch"
 
-SRC_URI[sha256sum] = "daec07fd848d80676694d6bf69c009d28910aeece68a38dbe88b7e1bb6dba12e"
+SRC_URI[sha256sum] = "ed4e75fafe103c79b692f217158ba87edf38d31004b9dbc1913debb48793c828"
 
 DEPENDS += "${PYTHON_PN}"
 
