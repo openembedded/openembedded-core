@@ -63,6 +63,7 @@ fakeroot do_populate_poky_src () {
 
 	echo "INHERIT += \"rm_work\"" >> ${IMAGE_ROOTFS}/home/builder/poky/build/conf/auto.conf
 	echo "export LC_ALL=en_US.utf8" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
+	echo "export TERM=xterm-color" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
 
 	# Also save (for reference only) the actual SRCREV used to create this image
 	echo "export BA_SRCREV=${SRCREV}" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
