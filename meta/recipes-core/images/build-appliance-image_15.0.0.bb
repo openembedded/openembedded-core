@@ -109,7 +109,13 @@ fakeroot do_populate_poky_src () {
 	chown -R builder:builder ${IMAGE_ROOTFS}/home/builder/.cache
 }
 
-IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; "
+fakeroot do_tweak_image () {
+	# add a /lib64 symlink
+	# this is needed for building rust-native on a 64-bit build appliance
+	ln -rs ${IMAGE_ROOTFS}/lib ${IMAGE_ROOTFS}/lib64
+}
+
+IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; do_tweak_image; "
 # For pip usage above
 do_image[network] = "1"
 
