@@ -22,7 +22,9 @@ APPEND += "rootfstype=ext4 quiet"
 DEPENDS = "zip-native python3-pip-native"
 IMAGE_FSTYPES = "wic.vmdk wic.vhd wic.vhdx"
 
-inherit core-image setuptools3
+inherit core-image setuptools3 features_check
+
+REQUIRED_DISTRO_FEATURES += "xattr"
 
 SRCREV ?= "a5507f383cdab99806df131bf4aef191799c5153"
 SRC_URI = "git://git.yoctoproject.org/poky;branch=master \
