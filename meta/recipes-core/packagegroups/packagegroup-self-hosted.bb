@@ -176,6 +176,7 @@ RDEPENDS:packagegroup-self-hosted-extended = "\
     xz \
     zip \
     zlib \
+    zstd \
     "
 
 
