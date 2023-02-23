@@ -1,6 +1,6 @@
 SUMMARY = "Device Tree Compiler"
 HOMEPAGE = "https://devicetree.org/"
-DESCRIPTION = "The Device Tree Compiler is a tool used to manipulate the Open-Firmware-like device tree used by PowerPC kernels."
+DESCRIPTION = "The Device Tree Compiler is a toolchain for working with device tree source and binary files."
 SECTION = "bootloader"
 LICENSE = "GPL-2.0-only | BSD-2-Clause"
 
