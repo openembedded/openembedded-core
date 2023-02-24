@@ -7,7 +7,6 @@
 #
 
 import resulttool.resultutils as resultutils
-import json
 
 from oeqa.utils.git import GitRepo
 import oeqa.utils.gitarchive as gitarchive
