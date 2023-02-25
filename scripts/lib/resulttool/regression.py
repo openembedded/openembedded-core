@@ -248,6 +248,24 @@ def regression_common(args, logger, base_results, target_results):
 
     return 0
 
+# Some test case naming is poor and contains random strings, particularly lttng/babeltrace.
+# Truncating the test names works since they contain file and line number identifiers
+# which allows us to match them without the random components.
+def fixup_ptest_names(results, logger):
+    for r in results:
+        for i in results[r]:
+            tests = list(results[r][i]['result'].keys())
+            for test in tests:
+                new = None
+                if test.startswith(("ptestresult.lttng-tools.", "ptestresult.babeltrace.", "ptestresult.babeltrace2")) and "_-_" in test:
+                    new = test.split("_-_")[0]
+                elif test.startswith(("ptestresult.curl.")) and "__" in test:
+                    new = test.split("__")[0]
+                if new:
+                    results[r][i]['result'][new] = results[r][i]['result'][test]
+                    del results[r][i]['result'][test]
+
+
 def regression_git(args, logger):
     base_results = {}
     target_results = {}
@@ -308,6 +326,9 @@ def regression_git(args, logger):
 
     base_results = resultutils.git_get_result(repo, revs[index1][2])
     target_results = resultutils.git_get_result(repo, revs[index2][2])
+
+    fixup_ptest_names(base_results, logger)
+    fixup_ptest_names(target_results, logger)
 
     regression_common(args, logger, base_results, target_results)
 
