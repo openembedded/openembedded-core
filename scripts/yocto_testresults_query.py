@@ -30,9 +30,13 @@ def create_workdir():
     return workdir
 
 def get_sha1(pokydir, revision):
-    rev = subprocess.check_output(["git", "rev-list", "-n", "1", revision], cwd=pokydir).decode('utf-8').strip()
-    logger.info(f"SHA-1 revision for {revision} in {pokydir} is {rev}")
-    return rev
+    try:
+        rev = subprocess.check_output(["git", "rev-list", "-n", "1", revision], cwd=pokydir).decode('utf-8').strip()
+        logger.info(f"SHA-1 revision for {revision} in {pokydir} is {rev}")
+        return rev
+    except subprocess.CalledProcessError:
+        logger.error(f"Can not find SHA-1 for {revision} in {pokydir}")
+        return None
 
 def fetch_testresults(workdir, sha1):
     logger.info(f"Fetching test results for {sha1} in {workdir}")
@@ -65,6 +69,11 @@ def regression(args):
     try:
         baserevision = get_sha1(poky_path, args.base)
         targetrevision = get_sha1(poky_path, args.target)
+        if not baserevision or not targetrevision:
+            logger.error("One or more revision(s) missing. You might be targeting nonexistant tags/branches, or are in wrong repository (you must use Poky and not oe-core)")
+            if not args.testresultsdir:
+                subprocess.check_call(["rm", "-rf",  workdir])
+            sys.exit(1)
         fetch_testresults(workdir, baserevision)
         fetch_testresults(workdir, targetrevision)
         report = compute_regression_report(workdir, baserevision, targetrevision)
