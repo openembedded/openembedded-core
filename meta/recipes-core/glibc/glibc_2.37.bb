@@ -19,6 +19,9 @@ CVE_CHECK_IGNORE += "CVE-2019-1010025"
 # This has been integrated into the 2.36 branch as of c399271 so is now fixed
 CVE_CHECK_IGNORE += "CVE-2022-39046"
 
+# This is integrated into the 2.37 branch as of 07b9521fc6
+CVE_CHECK_IGNORE += "CVE-2023-25139"
+
 DEPENDS += "gperf-native bison-native"
 
 NATIVESDKFIXES ?= ""
