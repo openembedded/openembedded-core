@@ -305,39 +305,47 @@ class ResultToolTests(OESelftestTestCase):
                         msg="incorrect ltpresult filtering, matching ltpresult content should be compared")
 
     def test_can_match_non_static_ptest_names(self):
-        base_configuration = {"configuration": {
-            "TEST_TYPE": "runtime",
-            "MACHINE": "qemux86"
-        }, "result": {
-            "ptestresult.lttng-tools.foo_-_bar_-_moo": {
-                "STATUS": "PASSED"
-            },
-            "ptestresult.babeltrace.bar_-_moo_-_foo": {
-                "STATUS": "PASSED"
-            },
-            "ptestresult.babletrace2.moo_-_foo_-_bar": {
-                "STATUS": "PASSED"
-            },
-            "ptestresult.curl.test_0000__foo_out_of_bar": {
-                "STATUS": "PASSED"
-            }
-        }}
-        target_configuration = {"configuration": {
-            "TEST_TYPE": "runtime",
-            "MACHINE": "qemux86"
-        }, "result": {
-            "ptestresult.lttng-tools.xxx_-_yyy_-_zzz": {
-                "STATUS": "PASSED"
-            },
-            "ptestresult.babeltrace.yyy_-_zzz_-_xxx": {
-                "STATUS": "PASSED"
-            },
-            "ptestresult.babletrace2.zzz_-_xxx_-_yyy": {
-                "STATUS": "PASSED"
-            },
-            "ptestresult.curl.test_0000__xxx_out_of_yyy": {
-                "STATUS": "PASSED"
-            }
-            }}
-        self.assertTrue(regression.can_be_compared(self.logger, base_configuration, target_configuration),
-                        msg="incorrect ptests filtering, tests shoould be compared if prefixes match")
+        base_configuration = {"a": {
+            "conf_X": {
+                "configuration": {
+                    "TEST_TYPE": "runtime",
+                    "MACHINE": "qemux86"
+                }, "result": {
+                    "ptestresult.lttng-tools.foo_-_bar_-_moo": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.babeltrace.bar_-_moo_-_foo": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.babeltrace2.moo_-_foo_-_bar": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.curl.test_0000__foo_out_of_bar": {
+                        "status": "PASSED"
+                    }
+                }}}}
+        target_configuration = {"a": {
+            "conf_Y": {
+                "configuration": {
+                    "TEST_TYPE": "runtime",
+                    "MACHINE": "qemux86"
+                }, "result": {
+                    "ptestresult.lttng-tools.foo_-_yyy_-_zzz": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.babeltrace.bar_-_zzz_-_xxx": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.babeltrace2.moo_-_xxx_-_yyy": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.curl.test_0000__xxx_out_of_yyy": {
+                        "status": "PASSED"
+                    }
+                }}}}
+        regression.fixup_ptest_names(base_configuration, self.logger)
+        regression.fixup_ptest_names(target_configuration, self.logger)
+        result, resultstring = regression.compare_result(
+            self.logger, "A", "B", base_configuration["a"]["conf_X"], target_configuration["a"]["conf_Y"])
+        self.assertDictEqual(
+            result, {}, msg=f"ptests should be compared: {resultstring}")
