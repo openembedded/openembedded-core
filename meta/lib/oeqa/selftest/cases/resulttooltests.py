@@ -274,14 +274,14 @@ class ResultToolTests(OESelftestTestCase):
             "MACHINE": "qemux86"
         }, "result": {
             "ltpresult_foo": {
-                "STATUS": "PASSED"
+                "status": "PASSED"
             }}}
         target_configuration = {"configuration": {
             "TEST_TYPE": "runtime",
             "MACHINE": "qemux86_64"
         }, "result": {
             "bar": {
-                "STATUS": "PASSED"
+                "status": "PASSED"
             }}}
         self.assertFalse(regression.can_be_compared(self.logger, base_configuration, target_configuration),
                          msg="incorrect ltpresult filtering, mismatching ltpresult content should not be compared")
@@ -292,14 +292,14 @@ class ResultToolTests(OESelftestTestCase):
             "MACHINE": "qemux86"
         }, "result": {
             "ltpresult_foo": {
-                "STATUS": "PASSED"
+                "status": "PASSED"
             }}}
         target_configuration = {"configuration": {
             "TEST_TYPE": "runtime",
             "MACHINE": "qemux86"
         }, "result": {
             "ltpresult_foo": {
-                "STATUS": "PASSED"
+                "status": "PASSED"
             }}}
         self.assertTrue(regression.can_be_compared(self.logger, base_configuration, target_configuration),
                         msg="incorrect ltpresult filtering, matching ltpresult content should be compared")
