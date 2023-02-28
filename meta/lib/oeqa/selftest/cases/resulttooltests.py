@@ -322,6 +322,18 @@ class ResultToolTests(OESelftestTestCase):
                     },
                     "ptestresult.curl.test_0000__foo_out_of_bar": {
                         "status": "PASSED"
+                    },
+                    "ptestresult.dbus.test_0000__foo_out_of_bar,_remaining:_00:02,_took_0.032s,_duration:_03:32_": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.binutils-ld.in testcase /foo/build-st-bar/moo/ctf.exp": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.gcc-libstdc++-v3.Couldn't create remote directory /tmp/runtest.30975 on target": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.gcc-libgomp.Couldn't create remote directory /tmp/runtest.3657621 on": {
+                        "status": "PASSED"
                     }
                 }}}}
         target_configuration = {"a": {
@@ -340,6 +352,18 @@ class ResultToolTests(OESelftestTestCase):
                         "status": "PASSED"
                     },
                     "ptestresult.curl.test_0000__xxx_out_of_yyy": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.dbus.test_0000__yyy_out_of_zzz,_remaining:_00:03,_took_0.034s,_duration:_03:30_": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.binutils-ld.in testcase /xxx/build-st-yyy/zzz/ctf.exp": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.gcc-libstdc++-v3.Couldn't create remote directory /tmp/runtest.45678 on target": {
+                        "status": "PASSED"
+                    },
+                    "ptestresult.gcc-libgomp.Couldn't create remote directory /tmp/runtest.3657621 on": {
                         "status": "PASSED"
                     }
                 }}}}
