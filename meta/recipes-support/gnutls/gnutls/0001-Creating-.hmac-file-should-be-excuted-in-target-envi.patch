@@ -21,7 +21,7 @@ index 6d4e8d2..24ef108 100644
  
 -$(hmac_file): libgnutls.la fipshmac
 -	$(AM_V_GEN) $(builddir)/fipshmac > $@-t && mv $@-t $@
-+.libs/.gnutls.hmac:
++.libs/.$(gnutls_so).hmac:
  
  CLEANFILES = $(hmac_file)
  endif
