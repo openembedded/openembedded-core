@@ -219,6 +219,12 @@ def fixup_ptest_names(results, logger):
                     new = test.split("_-_")[0]
                 elif test.startswith(("ptestresult.curl.")) and "__" in test:
                     new = test.split("__")[0]
+                elif test.startswith(("ptestresult.dbus.")) and "__" in test:
+                    new = test.split("__")[0]
+                elif test.startswith("ptestresult.binutils") and "build-st-" in test:
+                    new = test.split(" ")[0]
+                elif test.startswith("ptestresult.gcc") and "/tmp/runtest." in test:
+                    new = ".".join(test.split(".")[:2])
                 if new:
                     results[r][i]['result'][new] = results[r][i]['result'][test]
                     del results[r][i]['result'][test]
