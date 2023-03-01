@@ -13,7 +13,7 @@ SRC_URI += " \
     file://test_rle.py \
     "
 
-SRC_URI[sha256sum] = "b37bd77b4b7f404a59ff965e24be8aec4209323866e34ececdf416522c6d0854"
+SRC_URI[sha256sum] = "a7eb2b0c9a18560d8197fe35047ceb58e7e8ab7623a3e5a82613f6a2cd71cffa"
 
 RDEPENDS:${PN} += " \
     python3-attrs \
