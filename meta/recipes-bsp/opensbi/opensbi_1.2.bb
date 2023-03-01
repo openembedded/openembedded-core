@@ -8,7 +8,7 @@ require opensbi-payloads.inc
 
 inherit autotools-brokensep deploy
 
-SRCREV = "4489876e933d8ba0d8bc6c64bae71e295d45faac"
+SRCREV = "6b5188ca14e59ce7bf71afe4e7d3d557c3d31bf8"
 SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
