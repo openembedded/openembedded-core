@@ -37,7 +37,7 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 UPSTREAM_CHECK_REGEX = "gtk-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)\.tar.xz"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk/${MAJ_VER}/gtk-${PV}.tar.xz"
-SRC_URI[sha256sum] = "b362f968d085b4d3d9340d4d38c706377ded9d5374e694a2b6b7e6292e3cba74"
+SRC_URI[sha256sum] = "8dc1e7c3b3a46772f0fa416a8ca3fd21d0d0b3b03fb307d2e7327ebee69626e4"
 
 S = "${WORKDIR}/gtk-${PV}"
 
@@ -57,7 +57,7 @@ GTKDOC_MESON_OPTION = "gtk_doc"
 GIR_MESON_ENABLE_FLAG = 'enabled'
 GIR_MESON_DISABLE_FLAG = 'disabled'
 
-EXTRA_OEMESON = " -Dbuild-tests=false -Ddemos=false"
+EXTRA_OEMESON = " -Dbuild-tests=false -Dbuild-testsuite=false -Ddemos=false"
 
 PACKAGECONFIG ??= "gstreamer ${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11 vulkan', d)}"
 PACKAGECONFIG:class-native = "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
