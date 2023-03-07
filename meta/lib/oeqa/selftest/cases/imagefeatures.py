@@ -299,3 +299,25 @@ SKIP_RECIPE[busybox] = "Don't build this"
         result = glob.glob(images)
         with open(result[1],"r") as f:
                 self.assertEqual(len(f.read().strip()),0)
+
+    def test_mandb(self):
+        """
+        Test that an image containing manpages has working man and apropos commands.
+        """
+        config = """
+DISTRO_FEATURES:append = " api-documentation"
+CORE_IMAGE_EXTRA_INSTALL = "man-pages kmod-doc"
+"""
+        self.write_config(config)
+        bitbake("core-image-minimal")
+
+        with runqemu('core-image-minimal', ssh=False, runqemuparams='nographic') as qemu:
+            # This manpage is provided by man-pages
+            status, output = qemu.run_serial("apropos 8859")
+            self.assertEqual(status, 1, 'Failed to run apropos: %s' % (output))
+            self.assertIn("iso_8859_15", output)
+
+            # This manpage is provided by kmod
+            status, output = qemu.run_serial("man --pager=cat modprobe")
+            self.assertEqual(status, 1, 'Failed to run man: %s' % (output))
+            self.assertIn("force-modversion", output)
