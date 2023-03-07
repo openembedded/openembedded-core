@@ -16,7 +16,7 @@ and probably needs to be put back upstream.
 The bug is rare to reproduce as it depends on the host libzstd was built
 against.
 
-Upstream-Status: Pending
+Upstream-Status: Backport [https://sourceware.org/git/?p=binutils-gdb.git;a=commitdiff;h=5fc6b6d44cd63651c2902cbfc5b9734a55aaa617]
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Index: gdb-13.1/gdb/acinclude.m4
