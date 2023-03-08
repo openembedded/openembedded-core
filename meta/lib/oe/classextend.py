@@ -32,6 +32,8 @@ class ClassExtender(object):
         if name.endswith("-" + self.extname):
             name = name.replace("-" + self.extname, "")
         if name.startswith("virtual/"):
+            if "binutils" in name:
+                return name
             subs = name.split("/", 1)[1]
             if not subs.startswith(self.extname):
                 return "virtual/" + self.extname + "-" + subs
