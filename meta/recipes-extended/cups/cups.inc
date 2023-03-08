@@ -75,7 +75,7 @@ do_install () {
 	rmdir ${D}/${libexecdir}/${BPN}/driver
 
 	# Fix the pam configuration file permissions
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'true', 'false', d)}; then
+	if ${@bb.utils.contains('PACKAGECONFIG', 'pam', 'true', 'false', d)}; then
 	    chmod 0644 ${D}${sysconfdir}/pam.d/cups
 	fi
 
