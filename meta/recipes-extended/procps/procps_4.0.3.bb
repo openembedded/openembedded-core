@@ -14,14 +14,9 @@ inherit autotools gettext pkgconfig update-alternatives
 
 SRC_URI = "git://gitlab.com/procps-ng/procps.git;protocol=https;branch=master \
            file://sysctl.conf \
-           file://0001-w.c-correct-musl-builds.patch \
-           file://0002-proc-escape.c-add-missing-include.patch \
+           file://0001-src-w.c-use-utmp.h-only.patch \
            "
-SRCREV = "19a508ea121c0c4ac6d0224575a036de745eaaf8"
-# 4.x version is an API incompatible rewrite
-# until procps consumers are transitioned to it we need to stick with 3.x
-# https://gitlab.com/procps-ng/procps/-/issues/239
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>3(\.\d+)+)"
+SRCREV = "806eb270f217ff7e1e745c7bda2b002b5be74be4"
 
 S = "${WORKDIR}/git"
 
