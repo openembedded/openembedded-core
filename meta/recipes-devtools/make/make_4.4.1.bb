@@ -4,11 +4,10 @@ require make.inc
 
 SRC_URI += " \
            file://0001-m4-getloadavg.m4-restrict-AIX-specific-test-on-AIX.patch \
-           file://sigpipe.patch \
            "
 
 EXTRA_OECONF += "--without-guile"
 
-SRC_URI[sha256sum] = "581f4d4e872da74b3941c874215898a7d35802f03732bdccee1d4a7979105d18"
+SRC_URI[sha256sum] = "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
 
 BBCLASSEXTEND = "native nativesdk"
