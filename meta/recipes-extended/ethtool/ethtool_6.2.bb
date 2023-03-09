@@ -17,7 +17,7 @@ UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/software/network/ethtool/"
 
 inherit autotools ptest bash-completion pkgconfig
 
-RDEPENDS:${PN}-ptest += "make"
+RDEPENDS:${PN}-ptest += "make bash"
 
 PACKAGECONFIG ?= "netlink"
 PACKAGECONFIG[netlink] = "--enable-netlink,--disable-netlink,libmnl,"
