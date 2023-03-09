@@ -57,6 +57,7 @@ PAM_PLUGINS = " \
     pam-plugin-unix \
     pam-plugin-loginuid \
     pam-plugin-keyinit \
+    pam-plugin-namespace \
 "
 
 PACKAGECONFIG ??= " \
@@ -715,6 +716,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/rules.d/60-drm.rules \
                ${rootlibexecdir}/udev/rules.d/60-evdev.rules \
                ${rootlibexecdir}/udev/rules.d/60-fido-id.rules \
+               ${rootlibexecdir}/udev/rules.d/60-infiniband.rules \
                ${rootlibexecdir}/udev/rules.d/60-input-id.rules \
                ${rootlibexecdir}/udev/rules.d/60-persistent-alsa.rules \
                ${rootlibexecdir}/udev/rules.d/60-persistent-input.rules \
