@@ -22,7 +22,7 @@ inherit gnomebase gi-docgen features_check upstream-version-is-even gobject-intr
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
             file://0001-vtepty.cc-Do-not-typecast-to-GSpawnFlags.patch"
-SRC_URI[archive.sha256sum] = "4d15b4380de3f564d57eabd006389c407c705df5b0c70030fdcc24971a334d80"
+SRC_URI[archive.sha256sum] = "9457134a02f3157fca04f7e0d39bdb0f3099be0a3ce82b7139d0c98a80748f23"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
