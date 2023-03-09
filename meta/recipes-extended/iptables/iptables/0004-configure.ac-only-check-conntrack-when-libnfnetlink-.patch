@@ -1,7 +1,7 @@
-From 26090b3dbcdf6a11e60535da949b726a6e86426d Mon Sep 17 00:00:00 2001
+From e7aa1dd2831f9bb5d0603c5e5027387ad7721b00 Mon Sep 17 00:00:00 2001
 From: "Maxin B. John" <maxin.john@intel.com>
 Date: Tue, 21 Feb 2017 11:49:07 +0200
-Subject: [PATCH] configure.ac:
+Subject: [PATCH 4/4] configure.ac:
  only-check-conntrack-when-libnfnetlink-enabled.patch
 
 Package libnetfilter-conntrack depends on package libnfnetlink. iptables
@@ -28,10 +28,10 @@ Signed-off-by: Maxin B. John <maxin.john@intel.com>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 03ddc50..523caea 100644
+index e27745e5..528f1bb5 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -172,10 +172,12 @@ if test "$nftables" != 1; then
+@@ -158,10 +158,12 @@ if test "$nftables" != 1; then
  fi
  
  if test "x$enable_connlabel" = "xyes"; then
@@ -47,5 +47,5 @@ index 03ddc50..523caea 100644
  		blacklist_modules="$blacklist_modules connlabel";
  		echo "WARNING: libnetfilter_conntrack not found, connlabel match will not be built";
 -- 
-2.4.0
+2.30.2
 

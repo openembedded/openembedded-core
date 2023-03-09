@@ -8,18 +8,18 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://iptables/iptables.c;beginline=13;endline=25;md5=c5cffd09974558cf27d0f763df2a12dc \
 "
 
-SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.bz2 \
-           file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
-           file://0001-Makefile.am-do-not-install-etc-ethertypes.patch \
-           file://0002-configure.ac-only-check-conntrack-when-libnfnetlink-enabled.patch \
-           file://format-security.patch \
+SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.xz \
            file://iptables.service \
            file://iptables.rules \
            file://ip6tables.service \
            file://ip6tables.rules \
-           file://0001-iptables-xshared.h-add-missing-sys.types.h-include.patch \
+           file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
+           file://0002-iptables-xshared.h-add-missing-sys.types.h-include.patch \
+           file://0003-Makefile.am-do-not-install-etc-ethertypes.patch \
+           file://0004-configure.ac-only-check-conntrack-when-libnfnetlink-.patch \
+           file://format-security.patch \
            "
-SRC_URI[sha256sum] = "71c75889dc710676631553eb1511da0177bbaaf1b551265b912d236c3f51859f"
+SRC_URI[sha256sum] = "ef6639a43be8325a4f8ea68123ffac236cb696e8c78501b64e8106afb008c87f"
 
 SYSTEMD_SERVICE:${PN} = "\
     iptables.service \
@@ -116,8 +116,10 @@ RDEPENDS:${PN}-apply = "${PN} bash"
 # Include the symlinks as well in respective packages
 FILES:${PN}-module-xt-conntrack += "${libdir}/xtables/libxt_state.so"
 FILES:${PN}-module-xt-ct += "${libdir}/xtables/libxt_NOTRACK.so ${libdir}/xtables/libxt_REDIRECT.so"
+FILES:${PN}-module-xt-nat += "${libdir}/xtables/libxt_SNAT.so ${libdir}/xtables/libxt_DNAT.so ${libdir}/xtables/libxt_MASQUERADE.so"
 
 ALLOW_EMPTY:${PN}-modules = "1"
 
 INSANE_SKIP:${PN}-module-xt-conntrack = "dev-so"
 INSANE_SKIP:${PN}-module-xt-ct = "dev-so"
+INSANE_SKIP:${PN}-module-xt-nat = "dev-so"
