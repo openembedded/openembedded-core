@@ -11,7 +11,7 @@ PTESTS = "${PTESTS_SLOW} ${PTESTS_FAST}"
 
 IMAGE_INSTALL:append = " ${MCNAME}-ptest openssh"
 
-BBCLASSEXTEND = "${@' '.join(['mcextend:'+x.replace('-ptest', '') for x in d.getVar('PTESTS').split()])}"
+BBCLASSEXTEND = "${@' '.join(['mcextend:'+x for x in d.getVar('PTESTS').split()])}"
 
 # The image can sufficiently large (~1.8GB) that we need to be careful that it fits in a live
 # image (which has a 4GB limit), so nullify the overhead factor (1.3x out of the

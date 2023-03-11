@@ -12,9 +12,9 @@ require conf/distro/include/ptest-packagelists.inc
 PTESTS = "${PTESTS_FAST} ${PTESTS_SLOW}"
 
 do_testimage[noexec] = "1"
-do_testimage[depends] = "${@' '.join(['core-image-ptest-'+x.replace('-ptest', '')+':do_testimage' for x in d.getVar('PTESTS').split()])}"
+do_testimage[depends] = "${@' '.join(['core-image-ptest-'+x+':do_testimage' for x in d.getVar('PTESTS').split()])}"
 
-do_build[depends] = "${@' '.join(['core-image-ptest-'+x.replace('-ptest', '')+':do_build' for x in d.getVar('PTESTS').split()])}"
+do_build[depends] = "${@' '.join(['core-image-ptest-'+x+':do_build' for x in d.getVar('PTESTS').split()])}"
 
 # normally image.bbclass would do this
 EXCLUDE_FROM_WORLD = "1"
