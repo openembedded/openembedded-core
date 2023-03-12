@@ -21,17 +21,16 @@ Signed-off-by: Alexander Kanavin <alex@linutronix.de>
  src/boot/efi/efi-string.c | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/src/boot/efi/efi-string.c b/src/boot/efi/efi-string.c
-index 22923d60f6..22a8d1ef71 100644
 --- a/src/boot/efi/efi-string.c
 +++ b/src/boot/efi/efi-string.c
-@@ -2,7 +2,12 @@
+@@ -2,7 +2,13 @@
  
  #include <stdbool.h>
  #include <stdint.h>
 +
 +#if SD_BOOT
 +typedef __WCHAR_TYPE__ wchar_t;
++#define __DEFINED_wchar_t
 +#else
  #include <wchar.h>
 +#endif
