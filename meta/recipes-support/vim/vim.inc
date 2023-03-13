@@ -10,8 +10,7 @@ DEPENDS = "ncurses gettext-native"
 RSUGGESTS_${PN} = "diffutils"
 
 LICENSE = "vim"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=6b30ea4fa660c483b619924bc709ef99 \
-                    file://runtime/doc/uganda.txt;md5=001ef779f422a0e9106d428c84495b4d"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=6b30ea4fa660c483b619924bc709ef99"
 
 SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://disable_acl_header_check.patch \
@@ -20,8 +19,8 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://no-path-adjust.patch \
            "
 
-PV .= ".1293"
-SRCREV = "0caaf1e46511f7a92e036f05e6aa9d5992540117"
+PV .= ".1403"
+SRCREV = "e764d1b4219e6615a04df1c3a6a5c0210a0a7dac"
 
 # Remove when 8.3 is out
 UPSTREAM_VERSION_UNKNOWN = "1"
