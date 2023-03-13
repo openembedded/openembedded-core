@@ -1034,9 +1034,13 @@ class Wic2(WicTestCase):
         config = 'IMAGE_FSTYPES = "ext4"\n'
         self.append_config(config)
         bitbake('core-image-minimal')
+        image_link_name = get_bb_var('IMAGE_LINK_NAME', 'core-image-minimal')
         self.remove_config(config)
 
-        config = 'IMAGE_FSTYPES = "wic"\nWKS_FILE = "test_rawcopy_plugin.wks.in"\n'
+        config = 'IMAGE_FSTYPES = "wic"\n' \
+                 'IMAGE_LINK_NAME_CORE_IMAGE_MINIMAL = "%s"\n'\
+                 'WKS_FILE = "test_rawcopy_plugin.wks.in"\n'\
+                 % image_link_name
         self.append_config(config)
         bitbake('core-image-minimal-mtdutils')
         self.remove_config(config)
