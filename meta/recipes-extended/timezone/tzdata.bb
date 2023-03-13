@@ -4,8 +4,6 @@ DEPENDS = "tzcode-native"
 
 inherit allarch
 
-S = "${WORKDIR}"
-
 DEFAULT_TIMEZONE ?= "Universal"
 INSTALL_TIMEZONE_FILE ?= "1"
 
