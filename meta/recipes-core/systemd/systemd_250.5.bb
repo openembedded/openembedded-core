@@ -223,7 +223,7 @@ rootlibdir ?= "${base_libdir}"
 rootlibexecdir = "${rootprefix}/lib"
 
 EXTRA_OEMESON += "-Dnobody-user=nobody \
-                  -Dnobody-group=nobody \
+                  -Dnobody-group=nogroup \
                   -Drootlibdir=${rootlibdir} \
                   -Drootprefix=${rootprefix} \
                   -Ddefault-locale=C \
