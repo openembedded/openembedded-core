@@ -39,6 +39,7 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://CVE-2021-23177.patch \
            file://CVE-2021-31566-01.patch \
            file://CVE-2021-31566-02.patch \
+           file://CVE-2022-26280.patch \
            file://CVE-2022-36227.patch \
 "
 
