@@ -3,17 +3,15 @@ HOMEPAGE = "http://matchbox-project.org"
 BUGTRACKER = "http://bugzilla.yoctoproject.org/"
 
 LICENSE = "GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://src/wm.h;endline=21;md5=a7e844465edbcf79c282369f93caa835 \
-                    file://src/main.c;endline=21;md5=3e5d9f832b527b0d72dbe8e3c4c60b95 \
-                    file://src/wm.c;endline=21;md5=8dc9d24477d87ef5dfbc2e4927146aab"
+LIC_FILES_CHKSUM = "file://src/wm.h;endline=21;md5=ce20617ac10f26045cc57b8d977ab552 \
+                    file://src/main.c;endline=21;md5=508f280276140250ce483e0a44f7a9ec \
+                    file://src/wm.c;endline=21;md5=f54584fb0d48cfc2e6876e0f0e272e6c"
 
 SECTION = "x11/wm"
 DEPENDS = "libmatchbox virtual/libx11 libxext libxrender startup-notification expat gconf libxcursor libxfixes"
 
-# SRCREV tagged 1.2.2
-SRCREV = "27da947e7fbdf9659f7e5bd1e92af92af6c03970"
+SRCREV = "ce8c1053270d960a7235ab5c3435f707541810a4"
 SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager;branch=master \
-           file://0001-Fix-build-with-gcc-10.patch \
            file://kbdconfig"
 
 S = "${WORKDIR}/git"
