@@ -89,6 +89,8 @@ PACKAGECONFIG = " \
 	${@bb.utils.contains('LICENSE_FLAGS_ACCEPTED', 'commercial', 'video-codecs', '', d)} \
 "
 
+PACKAGECONFIG:append:class-native = "gallium-llvm r600"
+
 # "gbm" requires "opengl"
 PACKAGECONFIG[gbm] = "-Dgbm=enabled,-Dgbm=disabled"
 
@@ -102,8 +104,10 @@ PACKAGECONFIG[dri3] = "-Ddri3=enabled, -Ddri3=disabled, xorgproto libxshmfence"
 # Vulkan drivers need dri3 enabled
 # amd could be enabled as well but requires gallium-llvm with llvm >= 3.9
 VULKAN_DRIVERS = ""
-VULKAN_DRIVERS:append:x86:class-target = ",intel"
-VULKAN_DRIVERS:append:x86-64:class-target = ",intel"
+VULKAN_DRIVERS:append:x86 = ",intel"
+VULKAN_DRIVERS:append:x86-64 = ",intel"
+# i686 is a 32 bit override for mesa-native
+VULKAN_DRIVERS:append:i686 = ",intel"
 VULKAN_DRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'freedreno', ',freedreno', '', d)}"
 VULKAN_DRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'broadcom', ',broadcom', '', d)}"
 PACKAGECONFIG[vulkan] = "-Dvulkan-drivers=${@strip_comma('${VULKAN_DRIVERS}')}, -Dvulkan-drivers='',glslang-native vulkan-loader vulkan-headers"
@@ -149,8 +153,10 @@ PACKAGECONFIG[zink] = ""
 GALLIUMDRIVERS = "swrast"
 # gallium swrast was found to crash Xorg on startup in x32 qemu
 GALLIUMDRIVERS:x86-x32 = ""
-GALLIUMDRIVERS:append:x86:class-target = ",i915,iris,crocus"
-GALLIUMDRIVERS:append:x86-64:class-target = ",i915,iris,crocus"
+GALLIUMDRIVERS:append:x86 = ",i915,iris,crocus"
+GALLIUMDRIVERS:append:x86-64 = ",i915,iris,crocus"
+# i686 is a 32 bit override for mesa-native
+GALLIUMDRIVERS:append:i686 = ",i915,iris,crocus"
 
 GALLIUMDRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'etnaviv', ',etnaviv', '', d)}"
 GALLIUMDRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'freedreno', ',freedreno', '', d)}"
@@ -162,8 +168,10 @@ GALLIUMDRIVERS:append ="${@bb.utils.contains('PACKAGECONFIG', 'zink', ',zink', '
 # radeonsi requires LLVM
 GALLIUMDRIVERS_RADEONSI = "${@bb.utils.contains('PACKAGECONFIG', 'r600', ',radeonsi', '', d)}"
 GALLIUMDRIVERS_LLVM = "r300,nouveau${GALLIUMDRIVERS_RADEONSI}"
-GALLIUMDRIVERS_LLVM:append:x86:class-target = ",svga"
-GALLIUMDRIVERS_LLVM:append:x86-64:class-target = ",svga"
+GALLIUMDRIVERS_LLVM:append:x86 = ",svga"
+GALLIUMDRIVERS_LLVM:append:x86-64 = ",svga"
+# i686 is a 32 bit override for mesa-native
+GALLIUMDRIVERS_LLVM:append:i686 = ",svga"
 
 PACKAGECONFIG[r600] = ""
 PACKAGECONFIG[virgl] = ""
