@@ -12,7 +12,7 @@ SECTION = "x11/utils"
 SRCREV = "99e6eb7db1b5fef110973d96194eec992a2515a2"
 SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
-PV = "0.2git${SRCPV}"
+PV = "0.2+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
