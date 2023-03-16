@@ -28,11 +28,6 @@ def show_reproducible(result, reproducible, logger):
 def log(args, logger):
     results = resultutils.load_resultsdata(args.source)
 
-    ptest_count = sum(1 for _, _, _, r in resultutils.test_run_results(results) if 'ptestresult.sections' in r)
-    if ptest_count > 1 and not args.prepend_run:
-        print("%i ptest sections found. '--prepend-run' is required" % ptest_count)
-        return 1
-
     for _, run_name, _, r in resultutils.test_run_results(results):
         if args.list_ptest:
             print('\n'.join(sorted(r['ptestresult.sections'].keys())))
@@ -51,6 +46,9 @@ def log(args, logger):
 
                     os.makedirs(dest_dir, exist_ok=True)
                     dest = os.path.join(dest_dir, '%s.log' % name)
+                    if os.path.exists(dest):
+                        print("Overlapping ptest logs found, skipping %s. The '--prepend-run' option would avoid this" % name)
+                        continue
                     print(dest)
                     with open(dest, 'w') as f:
                         f.write(logdata)
