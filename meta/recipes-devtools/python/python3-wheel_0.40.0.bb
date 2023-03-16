@@ -2,13 +2,11 @@ SUMMARY = "The official binary distribution format for Python "
 HOMEPAGE = "https://github.com/pypa/wheel"
 SECTION = "devel/python"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://PKG-INFO;beginline=10;endline=10;md5=8227180126797a0148f94f483f3e1489"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=7ffb0db04527cfe380e4f2726bd05ebf"
 
-SRC_URI[sha256sum] = "965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac"
+SRC_URI[sha256sum] = "cd1196f3faee2b31968d626e1731c94f99cbdb67cf5a46e4f5656cbee7738873"
 
 inherit python_flit_core pypi
-
-SRC_URI += " file://0001-Backport-pyproject.toml-from-flit-backend-branch.patch"
 
 BBCLASSEXTEND = "native nativesdk"
 
