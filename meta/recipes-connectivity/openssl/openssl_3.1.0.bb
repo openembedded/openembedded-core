@@ -11,6 +11,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://0001-buildinfo-strip-sysroot-and-debug-prefix-map-from-co.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
+           file://fix_random_labels.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
