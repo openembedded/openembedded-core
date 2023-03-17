@@ -28,6 +28,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://0001-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
            file://0001-mdadm-Fix-optional-write-behind-parameter.patch \
            file://0001-tests-02lineargrow-clear-the-superblock-at-every-ite.patch \
+           file://0001-tests-00raid0-add-a-test-that-validates-raid0-with-l.patch \
            file://0001-tests-fix-raid0-tests-for-0.90-metadata.patch \
            file://0001-tests-00readonly-Run-udevadm-settle-before-setting-r.patch \
            file://0001-tests-04update-metadata-avoid-passing-chunk-size-to.patch \
