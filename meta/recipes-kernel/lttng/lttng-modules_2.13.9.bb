@@ -11,6 +11,10 @@ include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0009-Rename-genhd-wrapper-to-blkdev.patch \
+           file://0001-fix-mm-introduce-vma-vm_flags-wrapper-functions-v6.3.patch \
+           file://0002-fix-uuid-Decouple-guid_t-and-uuid_le-types-and-respe.patch \
+           file://0003-fix-btrfs-pass-find_free_extent_ctl-to-allocator-tra.patch \
+           file://0004-fix-net-add-location-to-trace_consume_skb-v6.3.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
