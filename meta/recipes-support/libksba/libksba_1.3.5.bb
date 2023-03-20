@@ -24,6 +24,7 @@ UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://ksba-add-pkgconfig-support.patch \
            file://CVE-2022-47629.patch \
+           file://CVE-2022-3515.patch \
 "
 
 SRC_URI[md5sum] = "8302a3e263a7c630aa7dea7d341f07a2"
