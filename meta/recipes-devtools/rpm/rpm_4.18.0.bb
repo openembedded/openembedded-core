@@ -122,8 +122,8 @@ do_install:append:class-nativesdk() {
 
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
 	cat <<- EOF > ${D}${SDKPATHNATIVE}/environment-setup.d/rpm.sh
-		export RPM_CONFIGDIR="$OECORE_NATIVE_SYSROOT${libdir}/rpm"
-		export RPM_ETCCONFIGDIR="$OECORE_NATIVE_SYSROOT${sysconfdir}"
+		export RPM_CONFIGDIR="${libdir}/rpm"
+		export RPM_ETCCONFIGDIR="${SDKPATHNATIVE}"
 		export RPM_NO_CHROOT_FOR_SCRIPTS=1
 	EOF
 }
