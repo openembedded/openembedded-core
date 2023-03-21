@@ -1,4 +1,4 @@
-From 5513b918d02900a3a78fd0e0300a118b163edfef Mon Sep 17 00:00:00 2001
+From 542f999a846dfd49d9373d30fffb2a44168d7b5e Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 13:55:12 +0800
 Subject: [PATCH] missing_type.h: add comparison_fn_t
@@ -33,7 +33,7 @@ index f6233090a9..6c0456349d 100644
 +typedef int (*comparison_fn_t)(const void *, const void *);
 +#endif
 diff --git a/src/basic/sort-util.h b/src/basic/sort-util.h
-index 02a6784d99..0b33c83d59 100644
+index f0bf246aa3..33669c7a75 100644
 --- a/src/basic/sort-util.h
 +++ b/src/basic/sort-util.h
 @@ -4,6 +4,7 @@
@@ -45,7 +45,7 @@ index 02a6784d99..0b33c83d59 100644
  /* This is the same as glibc's internal __compar_d_fn_t type. glibc exports a public comparison_fn_t, for the
   * external type __compar_fn_t, but doesn't do anything similar for __compar_d_fn_t. Let's hence do that
 diff --git a/src/libsystemd/sd-journal/catalog.c b/src/libsystemd/sd-journal/catalog.c
-index 8fc87b131a..36a6efdbd8 100644
+index 7527abf636..f33383e57f 100644
 --- a/src/libsystemd/sd-journal/catalog.c
 +++ b/src/libsystemd/sd-journal/catalog.c
 @@ -28,6 +28,7 @@
@@ -57,5 +57,5 @@ index 8fc87b131a..36a6efdbd8 100644
  const char * const catalog_file_dirs[] = {
          "/usr/local/lib/systemd/catalog/",
 -- 
-2.34.1
+2.39.2
 

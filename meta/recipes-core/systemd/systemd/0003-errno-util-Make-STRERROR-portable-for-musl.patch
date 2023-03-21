@@ -1,4 +1,4 @@
-From f66b5c802ce0a3310f5580cfc1b02446f8087568 Mon Sep 17 00:00:00 2001
+From f629a76e0fba300a9d511614160fee38dd4a5e57 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 23 Jan 2023 23:39:46 -0800
 Subject: [PATCH] errno-util: Make STRERROR portable for musl
@@ -38,5 +38,5 @@ index 091f99c590..eb5c1f9961 100644
   * Note that we can't use ({ … }) to define a temporary variable, so errnum is
   * evaluated twice. */
 -- 
-2.39.1
+2.39.2
 

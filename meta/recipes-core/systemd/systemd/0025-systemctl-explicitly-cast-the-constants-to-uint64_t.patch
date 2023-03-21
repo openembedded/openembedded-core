@@ -1,4 +1,4 @@
-From c63bfd0884cf20e48befbee49d41f667660a8802 Mon Sep 17 00:00:00 2001
+From fad29ce1f5cc7b12bc13671d9ad80775771a67eb Mon Sep 17 00:00:00 2001
 From: Frantisek Sumsal <frantisek@sumsal.cz>
 Date: Fri, 3 Mar 2023 12:17:27 +0100
 Subject: [PATCH] systemctl: explicitly cast the constants to uint64_t
@@ -27,7 +27,7 @@ Signed-off-by: Alexander Kanavin <alex@linutronix.de>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/systemctl/systemctl-enable.c b/src/systemctl/systemctl-enable.c
-index 4ebe5888ac69..a9c6f3a742c9 100644
+index 86d9f602fa..f94a286122 100644
 --- a/src/systemctl/systemctl-enable.c
 +++ b/src/systemctl/systemctl-enable.c
 @@ -211,7 +211,7 @@ int verb_enable(int argc, char *argv[], void *userdata) {
@@ -39,3 +39,6 @@ index 4ebe5888ac69..a9c6f3a742c9 100644
                          else
                                  r = sd_bus_message_append(m, "b", arg_runtime);
                          if (r < 0)
+-- 
+2.39.2
+

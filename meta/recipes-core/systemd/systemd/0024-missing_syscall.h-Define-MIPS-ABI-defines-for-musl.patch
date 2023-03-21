@@ -1,4 +1,4 @@
-From 754a16eeb255c06dbdd4655632276573f0f075ec Mon Sep 17 00:00:00 2001
+From a2f56a2a6cdd5137bb1e680aa9f6c40540107166 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 12 Apr 2021 23:44:53 -0700
 Subject: [PATCH] missing_syscall.h: Define MIPS ABI defines for musl
@@ -10,14 +10,13 @@ them here in case they are undefined
 Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
 ---
  src/basic/missing_syscall.h  | 6 ++++++
  src/shared/base-filesystem.c | 1 +
  2 files changed, 7 insertions(+)
 
 diff --git a/src/basic/missing_syscall.h b/src/basic/missing_syscall.h
-index 793d111c55..9665848b88 100644
+index 98cd037962..ea6a76c2e2 100644
 --- a/src/basic/missing_syscall.h
 +++ b/src/basic/missing_syscall.h
 @@ -20,6 +20,12 @@
@@ -34,7 +33,7 @@ index 793d111c55..9665848b88 100644
  #include "missing_keyctl.h"
  #include "missing_stat.h"
 diff --git a/src/shared/base-filesystem.c b/src/shared/base-filesystem.c
-index d396bc99fe..7e9c0c3412 100644
+index 2726dc946a..484f63e0b4 100644
 --- a/src/shared/base-filesystem.c
 +++ b/src/shared/base-filesystem.c
 @@ -19,6 +19,7 @@
@@ -45,3 +44,6 @@ index d396bc99fe..7e9c0c3412 100644
  
  typedef struct BaseFilesystem {
          const char *dir;      /* directory or symlink to create */
+-- 
+2.39.2
+

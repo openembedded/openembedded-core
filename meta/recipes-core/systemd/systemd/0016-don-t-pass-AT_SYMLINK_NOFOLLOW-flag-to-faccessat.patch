@@ -1,4 +1,4 @@
-From 46fdc959257d60d9b32953cae0152ae118f8564b Mon Sep 17 00:00:00 2001
+From 26b02348e39fe72b73dd61bba8a0cefb0352717d Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Tue, 10 Oct 2017 14:33:30 -0700
 Subject: [PATCH] don't pass AT_SYMLINK_NOFOLLOW flag to faccessat()
@@ -25,15 +25,16 @@ just historical and not actually necessary or desired behaviour?
 Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
-
 ---
  src/basic/fs-util.h          | 21 ++++++++++++++++++++-
  src/shared/base-filesystem.c |  6 +++---
  2 files changed, 23 insertions(+), 4 deletions(-)
 
+diff --git a/src/basic/fs-util.h b/src/basic/fs-util.h
+index 932d003f19..33215dbf5f 100644
 --- a/src/basic/fs-util.h
 +++ b/src/basic/fs-util.h
-@@ -47,8 +47,27 @@ int futimens_opath(int fd, const struct
+@@ -50,8 +50,27 @@ int futimens_opath(int fd, const struct timespec ts[2]);
  int fd_warn_permissions(const char *path, int fd);
  int stat_warn_permissions(const char *path, const struct stat *st);
  
@@ -62,9 +63,11 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
  
  int touch_file(const char *path, bool parents, usec_t stamp, uid_t uid, gid_t gid, mode_t mode);
  
+diff --git a/src/shared/base-filesystem.c b/src/shared/base-filesystem.c
+index be6dd1654a..2726dc946a 100644
 --- a/src/shared/base-filesystem.c
 +++ b/src/shared/base-filesystem.c
-@@ -131,7 +131,7 @@ int base_filesystem_create(const char *r
+@@ -131,7 +131,7 @@ int base_filesystem_create(const char *root, uid_t uid, gid_t gid) {
                  return log_error_errno(errno, "Failed to open root file system: %m");
  
          for (size_t i = 0; i < ELEMENTSOF(table); i++) {
@@ -73,7 +76,7 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
                          continue;
  
                  if (table[i].target) {
-@@ -139,7 +139,7 @@ int base_filesystem_create(const char *r
+@@ -139,7 +139,7 @@ int base_filesystem_create(const char *root, uid_t uid, gid_t gid) {
  
                          /* check if one of the targets exists */
                          NULSTR_FOREACH(s, table[i].target) {
@@ -82,7 +85,7 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
                                          continue;
  
                                  /* check if a specific file exists at the target path */
-@@ -150,7 +150,7 @@ int base_filesystem_create(const char *r
+@@ -150,7 +150,7 @@ int base_filesystem_create(const char *root, uid_t uid, gid_t gid) {
                                          if (!p)
                                                  return log_oom();
  
@@ -91,3 +94,6 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
                                                  continue;
                                  }
  
+-- 
+2.39.2
+
