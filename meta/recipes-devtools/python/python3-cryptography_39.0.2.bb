@@ -43,6 +43,7 @@ RDEPENDS:${PN}-ptest += " \
     ${PYTHON_PN}-pretend \
     ${PYTHON_PN}-psutil \
     ${PYTHON_PN}-pytest \
+    ${PYTHON_PN}-unittest-automake-output \
     ${PYTHON_PN}-pytest-subtests \
     ${PYTHON_PN}-pytz \
 "
