@@ -1042,7 +1042,7 @@ to your build configuration.
                 cmd = ('runqemu-extract-sdk', src, dest)
                 logger.info('Running %s...' % str(cmd))
                 if subprocess.call(cmd) != 0:
-                    raise RunQemuError('Failed to run %s' % cmd)
+                    raise RunQemuError('Failed to run %s' % str(cmd))
                 self.rootfs = dest
                 self.cleanup_files.append(self.rootfs)
                 self.cleanup_files.append('%s.pseudo_state' % self.rootfs)
@@ -1051,7 +1051,7 @@ to your build configuration.
         cmd = ('runqemu-export-rootfs', 'start', self.rootfs)
         logger.info('Running %s...' % str(cmd))
         if subprocess.call(cmd) != 0:
-            raise RunQemuError('Failed to run %s' % cmd)
+            raise RunQemuError('Failed to run %s' % str(cmd))
 
         self.nfs_running = True
 
@@ -1060,7 +1060,7 @@ to your build configuration.
         if cmd != '':
             logger.info('Running setup command %s' % str(cmd))
             if subprocess.call(cmd, shell=True) != 0:
-                raise RunQemuError('Failed to run %s' % cmd)
+                raise RunQemuError('Failed to run %s' % str(cmd))
 
     def setup_net_bridge(self):
         self.set('NETWORK_CMD', '-netdev bridge,br=%s,id=net0,helper=%s -device virtio-net-pci,netdev=net0 ' % (
@@ -1554,7 +1554,7 @@ to your build configuration.
         if cmd != '':
             logger.info('Running cleanup command %s' % str(cmd))
             if subprocess.call(cmd, shell=True) != 0:
-                raise RunQemuError('Failed to run %s' % cmd)
+                raise RunQemuError('Failed to run %s' % str(cmd))
 
     def cleanup(self):
         if self.cleaned:
@@ -1663,7 +1663,7 @@ to your build configuration.
                 return result
             raise RunQemuError("Native sysroot directory %s doesn't exist" % result)
         else:
-            raise RunQemuError("Can't find STAGING_BINDIR_NATIVE in '%s' output" % cmd)
+            raise RunQemuError("Can't find STAGING_BINDIR_NATIVE in '%s' output" % str(cmd))
 
 
 def main():
