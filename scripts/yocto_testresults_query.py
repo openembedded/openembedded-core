@@ -41,7 +41,7 @@ def get_sha1(pokydir, revision):
 def get_branch(tag):
     # The tags in test results repository, as returned by git rev-list, have the following form:
     # refs/tags/<branch>/<count>-g<sha1>/<num>
-    return tag.split("/")[2]
+    return '/'.join(tag.split("/")[2:-2])
 
 def fetch_testresults(workdir, sha1):
     logger.info(f"Fetching test results for {sha1} in {workdir}")
