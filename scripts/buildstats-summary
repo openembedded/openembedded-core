@@ -75,7 +75,7 @@ def dump_buildstats(args, bs: buildstats.BuildStats):
     for t in tasks:
         if t.duration >= minimum:
             line = f"{t.duration}    {t.recipe}:{t.task}"
-            if t.duration >= highlight:
+            if args.highlight and t.duration >= highlight:
                 print(f"\033[1m{line}\033[0m")
             else:
                 print(line)
@@ -111,7 +111,7 @@ def main(argv=None) -> int:
         type=int,
         default=60,
         metavar="SECS",
-        help="Highlight tasks longer than SECS seconds",
+        help="Highlight tasks longer than SECS seconds (0 disabled)",
     )
 
     args = parser.parse_args(argv)
