@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d903b0b8027f461402bac9b5169b36f7"
 
 SRC_URI += " file://0001-Fix-man-page-installation.patch"
-SRC_URI[sha256sum] = "9daeabe4d87ba2bd4ea15410765fc1ed2d931b723e4dc730a487a3911b9a1738"
+SRC_URI[sha256sum] = "813360b2bce476bc9cc12a0f3a22d46ce520796b352557202cb07d3e402f5458"
 
 PYPI_PACKAGE = "SCons"
 
