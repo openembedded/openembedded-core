@@ -382,6 +382,8 @@ RDEPENDS:${PN} = "bc python3 flex bison ${TCLIBC}-utils"
 RDEPENDS:${PN} += "openssl-dev util-linux"
 # and x86 needs a bit more for 4.15+
 RDEPENDS:${PN} += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-dev', '', d)}"
+# powerpc needs elfutils on 6.3+
+RDEPENDS:${PN} += "${@bb.utils.contains('ARCH', 'powerpc', 'elfutils-dev', '', d)}"
 # 5.8+ needs gcc-plugins libmpc-dev
 RDEPENDS:${PN} += "gcc-plugins libmpc-dev"
 # 5.13+ needs awk for arm64
