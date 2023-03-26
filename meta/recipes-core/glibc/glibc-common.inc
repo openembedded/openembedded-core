@@ -23,6 +23,4 @@ ARM_INSTRUCTION_SET:armv6 = "arm"
 COMPATIBLE_HOST:libc-musl:class-target = "null"
 
 PV = "2.37"
-# remove at next version upgrade or when output changes
 PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".1"
