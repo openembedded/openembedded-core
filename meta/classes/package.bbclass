@@ -1470,7 +1470,7 @@ PKGDATA_VARS = "PN PE PV PR PKGE PKGV PKGR LICENSE DESCRIPTION SUMMARY RDEPENDS 
 python emit_pkgdata() {
     from glob import glob
     import json
-    import bb.compress.zstd
+    import gzip
 
     def process_postinst_on_target(pkg, mlprefix):
         pkgval = d.getVar('PKG_%s' % pkg)
@@ -1610,9 +1610,8 @@ fi
 
             sf.write('%s_%s: %d\n' % ('PKGSIZE', pkg, total_size))
 
-        subdata_extended_file = pkgdatadir + "/extended/%s.json.zstd" % pkg
-        num_threads = int(d.getVar("BB_NUMBER_THREADS"))
-        with bb.compress.zstd.open(subdata_extended_file, "wt", encoding="utf-8", num_threads=num_threads) as f:
+        subdata_extended_file = pkgdatadir + "/extended/%s.json.gz" % pkg
+        with gzip.open(subdata_extended_file, "wt", encoding="utf-8") as f:
             json.dump(extended_data, f, sort_keys=True, separators=(",", ":"))
 
         # Symlinks needed for rprovides lookup
