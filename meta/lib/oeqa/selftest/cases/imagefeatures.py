@@ -199,7 +199,7 @@ class ImageFeatures(OESelftestTestCase):
         image = 'core-image-minimal'
 
         all_image_types = set(get_bb_var("IMAGE_TYPES", image).split())
-        skip_image_types = set(('container', 'elf', 'f2fs', 'multiubi', 'tar.zst', 'wic.zst', 'squashfs-lzo'))
+        skip_image_types = set(('container', 'elf', 'f2fs', 'tar.zst', 'wic.zst', 'squashfs-lzo'))
         img_types = all_image_types - skip_image_types
 
         config = """
@@ -207,16 +207,31 @@ IMAGE_FSTYPES += "%s"
 WKS_FILE = "wictestdisk.wks"
 MKUBIFS_ARGS ?= "-m 2048 -e 129024 -c 2047"
 UBINIZE_ARGS ?= "-m 2048 -p 128KiB -s 512"
+MULTIUBI_BUILD += "mtd_2_128"
+MKUBIFS_ARGS_mtd_2_128 ?= "-m 2048 -e 129024 -c 2047"
+UBINIZE_ARGS_mtd_2_128 ?= "-m 2048 -p 128KiB -s 512"
+MULTIUBI_BUILD += "mtd_4_256"
+MKUBIFS_ARGS_mtd_4_256 ?= "-m 4096 -e 253952 -c 4096"
+UBINIZE_ARGS_mtd_4_256 ?= "-m 4096 -p 256KiB"
 """ % ' '.join(img_types)
         self.write_config(config)
 
         bitbake(image)
-        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_LINK_NAME'], image)
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_LINK_NAME', 'MULTIUBI_BUILD'], image)
 
         for itype in img_types:
-            image_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], "%s.%s" % (bb_vars['IMAGE_LINK_NAME'], itype))
-            # check if result image is in deploy directory
-            self.assertTrue(os.path.exists(image_path),
+            if itype == 'multiubi':
+                # For multiubi build we need to manage MULTIUBI_BUILD entry to append
+                # specific name to IMAGE_LINK_NAME
+                for vname in bb_vars['MULTIUBI_BUILD'].split():
+                    image_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], "%s_%s.ubifs" % (bb_vars['IMAGE_LINK_NAME'], vname))
+                    # check if result image is in deploy directory
+                    self.assertTrue(os.path.exists(image_path),
+                                    "%s image %s doesn't exist" % (itype, image_path))
+            else:
+            	image_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], "%s.%s" % (bb_vars['IMAGE_LINK_NAME'], itype))
+            	# check if result image is in deploy directory
+            	self.assertTrue(os.path.exists(image_path),
                             "%s image %s doesn't exist" % (itype, image_path))
 
     def test_useradd_static(self):
