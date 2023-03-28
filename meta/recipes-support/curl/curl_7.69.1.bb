@@ -42,6 +42,7 @@ SRC_URI = "https://curl.haxx.se/download/curl-${PV}.tar.bz2 \
            file://CVE-2022-32221.patch \
            file://CVE-2022-35260.patch \
            file://CVE-2022-43552.patch \
+           file://CVE-2023-23916.patch \
 "
 
 SRC_URI[md5sum] = "ec5fc263f898a3dfef08e805f1ecca42"
