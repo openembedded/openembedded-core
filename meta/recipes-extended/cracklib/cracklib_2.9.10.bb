@@ -11,10 +11,9 @@ EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
 SRC_URI = "git://github.com/cracklib/cracklib;protocol=https;branch=main \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
-           file://0002-craklib-fix-testnum-and-teststr-failed.patch \
            "
 
-SRCREV = "d9e8f9f47718539aeba80f90f4e072549926dc9c"
+SRCREV = "e74c539344d024709ee76e2920b0af7f9a5c5556"
 S = "${WORKDIR}/git/src"
 
 inherit autotools gettext
