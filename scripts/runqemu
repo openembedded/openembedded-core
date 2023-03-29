@@ -584,11 +584,6 @@ to your build configuration.
 
         if os.access(dev_kvm, os.W_OK|os.R_OK):
             self.qemu_opt_script += ' -enable-kvm'
-            if self.get('MACHINE') == "qemux86":
-                # Workaround for broken APIC window on pre 4.15 host kernels which causes boot hangs
-                # See YOCTO #12301
-                # On 64 bit we use x2apic
-                self.kernel_cmdline_script += " clocksource=kvm-clock hpet=disable noapic nolapic"
         else:
             logger.error("You have no read or write permission on /dev/kvm.")
             logger.error("Please change the ownership of this file as described at:")
