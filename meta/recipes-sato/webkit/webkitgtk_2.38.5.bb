@@ -70,20 +70,11 @@ PACKAGECONFIG[soup2] = "-DUSE_SOUP2=ON,-DUSE_SOUP2=OFF,libsoup-2.4,,,soup3"
 PACKAGECONFIG[soup3] = ",,libsoup,,,soup2"
 PACKAGECONFIG[journald] = "-DENABLE_JOURNALD_LOG=ON,-DENABLE_JOURNALD_LOG=OFF,systemd"
 
-# webkitgtk is full of /usr/bin/env python, particular for generating docs
-do_configure[postfuncs] += "setup_python_link"
-setup_python_link() {
-	if [ ! -e ${STAGING_BINDIR_NATIVE}/python ]; then
-		ln -s `which python3` ${STAGING_BINDIR_NATIVE}/python
-	fi
-}
-
 EXTRA_OECMAKE = " \
 		-DPORT=GTK \
 		${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DENABLE_INTROSPECTION=ON', '-DENABLE_INTROSPECTION=OFF', d)} \
 		${@bb.utils.contains('GIDOCGEN_ENABLED', 'True', '-DENABLE_DOCUMENTATION=ON', '-DENABLE_DOCUMENTATION=OFF', d)} \
 		-DENABLE_MINIBROWSER=ON \
-                -DPYTHON_EXECUTABLE=`which python3` \
                 -DENABLE_BUBBLEWRAP_SANDBOX=OFF \
                 -DENABLE_GAMEPAD=OFF \
 		"
