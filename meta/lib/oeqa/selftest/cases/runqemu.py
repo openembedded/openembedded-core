@@ -57,7 +57,8 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s ext4" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertIn('rootfs.ext4', f.read(), "Failed: %s" % cmd)
+                regexp = r'\nROOTFS: .*\.ext4]\n'
+                self.assertRegex(f.read(), regexp, "Failed to find '%s' in '%s' after running '%s'" % (regexp, qemu.qemurunnerlog, cmd))
 
     def test_boot_machine_iso(self):
         """Test runqemu machine iso"""
