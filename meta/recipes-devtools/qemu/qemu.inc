@@ -115,6 +115,8 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2021-3638.patch \
            file://CVE-2021-20196.patch \
            file://CVE-2021-3507.patch \
+           file://hw-block-nvme-refactor-nvme_addr_read.patch \
+           file://hw-block-nvme-handle-dma-errors.patch \
            file://CVE-2021-3929.patch \
            file://CVE-2022-4144.patch \
            file://CVE-2020-15859.patch \
