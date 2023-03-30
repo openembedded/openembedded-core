@@ -71,7 +71,8 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s iso" % (self.cmd_common, self.machine)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertIn('media=cdrom', f.read(), "Failed: %s" % cmd)
+                text_in = 'media=cdrom'
+                self.assertIn(text_in, f.read(), "Failed to find '%s' in '%s' after running '%s'" % (text_in, qemu.qemurunnerlog, cmd))
 
     def test_boot_recipe_image(self):
         """Test runqemu recipe-image"""
@@ -87,7 +88,8 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s wic.vmdk" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertIn('format=vmdk', f.read(), "Failed: %s" % cmd)
+                text_in = 'format=vmdk'
+                self.assertIn(text_in, f.read(), "Failed to find '%s' in '%s' after running '%s'" % (text_in, qemu.qemurunnerlog, cmd))
 
     @skipIfNotMachine("qemux86-64", "tests are qemux86-64 specific currently")
     def test_boot_recipe_image_vdi(self):
@@ -95,7 +97,8 @@ SYSLINUX_TIMEOUT = "10"
         cmd = "%s %s wic.vdi" % (self.cmd_common, self.recipe)
         with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
             with open(qemu.qemurunnerlog) as f:
-                self.assertIn('format=vdi', f.read(), "Failed: %s" % cmd)
+                text_in = 'format=vdi'
+                self.assertIn(text_in, f.read(), "Failed to find '%s' in '%s' after running '%s'" % (text_in, qemu.qemurunnerlog, cmd))
 
     def test_boot_deploy(self):
         """Test runqemu deploy_dir_image"""
