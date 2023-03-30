@@ -1,6 +1,6 @@
-From 704a240443ca5d8024cc3b01ae6c1440fa41f54a Mon Sep 17 00:00:00 2001
+From 785c0072c80c2f6e0839478453cf65fdeac15da0 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
-Date: Tue, 16 Aug 2022 23:42:24 -0700
+Date: Mon, 29 Aug 2022 19:53:28 -0700
 Subject: [PATCH] Add missing prototypes to function declarations
 
 With Clang 15+ compiler -Wstrict-prototypes is triggering warnings which
@@ -18,8 +18,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  checksum.c       | 2 +-
  exclude.c        | 2 +-
- hlink.c          | 2 +-
- lib/compat.c     | 1 +
+ hlink.c          | 3 +--
  lib/pool_alloc.c | 2 +-
  log.c            | 2 +-
  main.c           | 2 +-
@@ -27,7 +26,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  zlib/crc32.c     | 2 +-
  zlib/trees.c     | 2 +-
  zlib/zutil.c     | 4 ++--
- 11 files changed, 13 insertions(+), 12 deletions(-)
+ 10 files changed, 12 insertions(+), 13 deletions(-)
 
 diff --git a/checksum.c b/checksum.c
 index fb8c0a0..174c28c 100644
@@ -56,30 +55,19 @@ index adc82e2..79f5a82 100644
  	if (partial_string_buf) {
  		free(partial_string_buf);
 diff --git a/hlink.c b/hlink.c
-index 66810a3..aea142b 100644
+index 66810a3..6511dfb 100644
 --- a/hlink.c
 +++ b/hlink.c
-@@ -117,7 +117,7 @@ static void match_gnums(int32 *ndx_list, int ndx_count)
+@@ -117,8 +117,7 @@ static void match_gnums(int32 *ndx_list, int ndx_count)
  	struct ht_int32_node *node = NULL;
  	int32 gnum, gnum_next;
  
 -	qsort(ndx_list, ndx_count, sizeof ndx_list[0], (int (*)()) hlink_compare_gnum);
+-
 +	qsort(ndx_list, ndx_count, sizeof ndx_list[0], (int (*)(const void *, const void *)) hlink_compare_gnum);
- 
  	for (from = 0; from < ndx_count; from++) {
  		file = hlink_flist->sorted[ndx_list[from]];
-diff --git a/lib/compat.c b/lib/compat.c
-index 513d79b..89b337e 100644
---- a/lib/compat.c
-+++ b/lib/compat.c
-@@ -19,6 +19,7 @@
-  * with this program; if not, visit the http://fsf.org website.
-  */
- 
-+#include <sys/time.h>
- #include "rsync.h"
- #include "itypes.h"
- 
+ 		gnum = F_HL_GNUM(file);
 diff --git a/lib/pool_alloc.c b/lib/pool_alloc.c
 index a1a7245..4eae062 100644
 --- a/lib/pool_alloc.c
@@ -180,3 +168,6 @@ index bbba7b2..61f8dc9 100644
  {
      uLong flags;
  
+-- 
+2.37.2
+
