@@ -23,5 +23,8 @@ addtask clean_lic_file_symlink after do_unpack before do_patch
 
 inherit cargo cargo-update-recipe-crates
 
+# Remove this when the recipe is reproducible
+EXCLUDE_FROM_WORLD = "1"
+
 require ${BPN}-crates.inc
 require ${BPN}-git-crates.inc
