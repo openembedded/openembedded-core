@@ -13,6 +13,7 @@ from oeqa.core.decorator.data import skipIfNotArch, skipIfNotMachine
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, runqemu, get_bb_var
 
+
 @OETestTag("runqemu")
 class RunqemuTests(OESelftestTestCase):
     """Runqemu test class"""
@@ -23,8 +24,8 @@ class RunqemuTests(OESelftestTestCase):
     def setUpLocal(self):
         super(RunqemuTests, self).setUpLocal()
         self.recipe = 'core-image-minimal'
-        self.machine =  self.td['MACHINE']
-        self.image_link_name =  get_bb_var('IMAGE_LINK_NAME', self.recipe)
+        self.machine = self.td['MACHINE']
+        self.image_link_name = get_bb_var('IMAGE_LINK_NAME', self.recipe)
 
         self.fstypes = "ext4"
         if self.td["HOST_ARCH"] in ('i586', 'i686', 'x86_64'):
@@ -102,7 +103,6 @@ SYSLINUX_TIMEOUT = "10"
             with open(qemu.qemurunnerlog) as f:
                 self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
 
-
     @skipIfNotArch(['i586', 'i686', 'x86_64'])
     def test_boot_deploy_hddimg(self):
         """Test runqemu deploy_dir_image hddimg"""
@@ -166,9 +166,9 @@ class QemuTest(OESelftestTestCase):
     def setUpClass(cls):
         super(QemuTest, cls).setUpClass()
         cls.recipe = 'core-image-minimal'
-        cls.machine =  get_bb_var('MACHINE')
-        cls.deploy_dir_image =  get_bb_var('DEPLOY_DIR_IMAGE')
-        cls.image_link_name =  get_bb_var('IMAGE_LINK_NAME', cls.recipe)
+        cls.machine = get_bb_var('MACHINE')
+        cls.deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        cls.image_link_name = get_bb_var('IMAGE_LINK_NAME', cls.recipe)
         cls.cmd_common = "runqemu nographic"
         cls.qemuboot_conf = "%s.qemuboot.conf" % (cls.image_link_name)
         cls.qemuboot_conf = os.path.join(cls.deploy_dir_image, cls.qemuboot_conf)

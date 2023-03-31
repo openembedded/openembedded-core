@@ -38,7 +38,7 @@ class BaseTarget(object, metaclass=ABCMeta):
         if os.path.islink(sshloglink):
             os.unlink(sshloglink)
         os.symlink(self.sshlog, sshloglink)
-        self.logger.info("SSH log file: %s" %  self.sshlog)
+        self.logger.info("SSH log file: %s" % self.sshlog)
 
     @abstractmethod
     def start(self, params=None, ssh=True, extra_bootparams=None):
@@ -159,7 +159,7 @@ class QemuTarget(BaseTarget):
             os.unlink(qemuloglink)
         os.symlink(self.qemulog, qemuloglink)
 
-        self.logger.info("rootfs file: %s" %  self.rootfs)
+        self.logger.info("rootfs file: %s" % self.rootfs)
         self.logger.info("Qemu log file: %s" % self.qemulog)
         super(QemuTarget, self).deploy()
 

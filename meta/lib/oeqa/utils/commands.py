@@ -115,7 +115,7 @@ class Command(object):
             else:
                 deadline = time.time() + self.timeout
                 for thread in self.threads:
-                    timeout = deadline - time.time() 
+                    timeout = deadline - time.time()
                     if timeout < 0:
                         timeout = 0
                     thread.join(timeout)

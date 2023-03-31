@@ -238,7 +238,7 @@ class QemuRunner:
         self.origchldhandler = signal.getsignal(signal.SIGCHLD)
         signal.signal(signal.SIGCHLD, self.handleSIGCHLD)
 
-        self.logger.debug('launchcmd=%s'%(launch_cmd))
+        self.logger.debug('launchcmd=%s' % (launch_cmd))
 
         # FIXME: We pass in stdin=subprocess.PIPE here to work around stty
         # blocking at the end of the runqemu script when using this within
@@ -332,8 +332,8 @@ class QemuRunner:
         try:
             os.chdir(os.path.dirname(qmp_port))
             try:
-               from qmp.legacy import QEMUMonitorProtocol
-               self.qmp = QEMUMonitorProtocol(os.path.basename(qmp_port))
+                from qmp.legacy import QEMUMonitorProtocol
+                self.qmp = QEMUMonitorProtocol(os.path.basename(qmp_port))
             except OSError as msg:
                 self.logger.warning("Failed to initialize qemu monitor socket: %s File: %s" % (msg, msg.filename))
                 return False
@@ -343,8 +343,8 @@ class QemuRunner:
                 self.logger.debug("QMP Port does not exist waiting for it to be created")
                 endtime = time.time() + self.runqemutime
                 while not os.path.exists(qmp_port) and self.is_alive() and time.time() < endtime:
-                   self.logger.info("QMP port does not exist yet!")
-                   time.sleep(0.5)
+                    self.logger.info("QMP port does not exist yet!")
+                    time.sleep(0.5)
                 if not os.path.exists(qmp_port) and self.is_alive():
                     self.logger.warning("QMP Port still does not exist but QEMU is alive")
                     return False
@@ -419,7 +419,7 @@ class QemuRunner:
             except (IndexError, ValueError):
                 # Try to get network configuration from runqemu output
                 match = re.match(r'.*Network configuration: (?:ip=)*([0-9.]+)::([0-9.]+):([0-9.]+).*',
-                                 out, re.MULTILINE|re.DOTALL)
+                                 out, re.MULTILINE | re.DOTALL)
                 if match:
                     self.ip, self.server_ip, self.netmask = match.groups()
                     # network configuration is required as we couldn't get it
@@ -548,7 +548,7 @@ class QemuRunner:
                     if e.errno != errno.ESRCH:
                         raise
             try:
-                outs, errs = self.runqemu.communicate(timeout = self.runqemutime)
+                outs, errs = self.runqemu.communicate(timeout=self.runqemutime)
                 if outs:
                     self.logger.info("Output from runqemu:\n%s", outs.decode("utf-8"))
                 if errs:
