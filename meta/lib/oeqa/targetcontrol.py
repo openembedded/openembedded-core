@@ -7,18 +7,14 @@
 # This module is used by testimage.bbclass for setting up and controlling a target machine.
 
 import os
-import shutil
 import subprocess
 import bb
-import traceback
-import sys
 import logging
 from oeqa.utils.sshcontrol import SSHControl
 from oeqa.utils.qemurunner import QemuRunner
 from oeqa.utils.qemutinyrunner import QemuTinyRunner
 from oeqa.utils.dump import TargetDumper
 from oeqa.utils.dump import MonitorDumper
-from oeqa.controllers.testtargetloader import TestTargetLoader
 from abc import ABCMeta, abstractmethod
 
 class BaseTarget(object, metaclass=ABCMeta):
