@@ -275,7 +275,7 @@ class QemuRunner:
             os._exit(0)
 
         self.logger.debug("runqemu started, pid is %s" % self.runqemu.pid)
-        self.logger.debug("waiting at most %s seconds for qemu pid (%s)" %
+        self.logger.debug("waiting at most %d seconds for qemu pid (%s)" %
                           (self.runqemutime, time.strftime("%D %H:%M:%S")))
         endtime = time.time() + self.runqemutime
         while not self.is_alive() and time.time() < endtime:
@@ -299,7 +299,7 @@ class QemuRunner:
             self.logger.warning('runqemu exited with code %d' % self.runqemu.returncode)
 
         if not self.is_alive():
-            self.logger.error("Qemu pid didn't appear in %s seconds (%s)" %
+            self.logger.error("Qemu pid didn't appear in %d seconds (%s)" %
                               (self.runqemutime, time.strftime("%D %H:%M:%S")))
 
             qemu_pid = None
@@ -354,7 +354,7 @@ class QemuRunner:
                 self.qmp.settimeout(self.runqemutime)
                 self.qmp.connect()
                 connect_time = time.time()
-                self.logger.info("QMP connected to QEMU at %s and took %s seconds" %
+                self.logger.info("QMP connected to QEMU at %s and took %.2f seconds" %
                                   (time.strftime("%D %H:%M:%S"),
                                    time.time() - launch_time))
             except OSError as msg:
@@ -388,14 +388,14 @@ class QemuRunner:
 
         # Release the qemu process to continue running
         self.run_monitor('cont')
-        self.logger.info("QMP released QEMU at %s and took %s seconds from connect" %
+        self.logger.info("QMP released QEMU at %s and took %.2f seconds from connect" %
                           (time.strftime("%D %H:%M:%S"),
                            time.time() - connect_time))
 
         # We are alive: qemu is running
         out = self.getOutput(output)
         netconf = False # network configuration is not required by default
-        self.logger.debug("qemu started in %s seconds - qemu procces pid is %s (%s)" %
+        self.logger.debug("qemu started in %.2f seconds - qemu procces pid is %s (%s)" %
                           (time.time() - (endtime - self.runqemutime),
                            self.qemupid, time.strftime("%D %H:%M:%S")))
         cmdline = ''
@@ -486,9 +486,9 @@ class QemuRunner:
                             self.server_socket = qemusock
                             stopread = True
                             reachedlogin = True
-                            self.logger.debug("Reached login banner in %s seconds (%s, %s)" %
+                            self.logger.debug("Reached login banner in %.2f seconds (%s)" %
                                               (time.time() - (endtime - self.boottime),
-                                              time.strftime("%D %H:%M:%S"), time.time()))
+                                              time.strftime("%D %H:%M:%S")))
                     else:
                         # no need to check if reachedlogin unless we support multiple connections
                         self.logger.debug("QEMU socket disconnected before login banner reached. (%s)" %
