@@ -21,6 +21,7 @@ from oeqa.utils import CommandError
 from oeqa.utils import ftools
 import re
 import contextlib
+import errno
 # Export test doesn't require bb
 try:
     import bb
@@ -85,7 +86,7 @@ class Command(object):
             except OSError as ex:
                 # It's not an error when the command does not consume all
                 # of our data. subprocess.communicate() also ignores that.
-                if ex.errno != EPIPE:
+                if ex.errno != errno.EPIPE:
                     raise
 
         # We write in a separate thread because then we can read
