@@ -221,17 +221,6 @@ FILES:${PN} += "${libdir}/*.so"
 FILES:${PN}-dev = ""
 
 do_compile () {
-    rust_runx build --stage 2
-}
-
-do_compile:append:class-target () {
-    rust_runx build --stage 2 src/tools/clippy
-    rust_runx build --stage 2 src/tools/rustfmt
-}
-
-do_compile:append:class-nativesdk () {
-    rust_runx build --stage 2 src/tools/clippy
-    rust_runx build --stage 2 src/tools/rustfmt
 }
 
 ALLOW_EMPTY:${PN} = "1"
@@ -256,6 +245,8 @@ rust_do_install() {
 rust_do_install:class-nativesdk() {
     export PSEUDO_UNLOAD=1
     rust_runx install
+    rust_runx install clippy
+    rust_runx install rustfmt
     unset PSEUDO_UNLOAD
 
     install -d ${D}${bindir}
@@ -274,6 +265,8 @@ EXTRA_TOOLS ?= "cargo-clippy clippy-driver rustfmt"
 rust_do_install:class-target() {
     export PSEUDO_UNLOAD=1
     rust_runx install
+    rust_runx install clippy
+    rust_runx install rustfmt
     unset PSEUDO_UNLOAD
 
     install -d ${D}${bindir}
