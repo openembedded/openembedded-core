@@ -553,7 +553,7 @@ class QemuRunner:
                     self.logger.info("Output from runqemu:\n%s", outs.decode("utf-8"))
                 if errs:
                     self.logger.info("Stderr from runqemu:\n%s", errs.decode("utf-8"))
-            except TimeoutExpired:
+            except subprocess.TimeoutExpired:
                 self.logger.debug("Sending SIGKILL to runqemu")
                 os.killpg(os.getpgid(self.runqemu.pid), signal.SIGKILL)
             if not self.runqemu.stdout.closed:
