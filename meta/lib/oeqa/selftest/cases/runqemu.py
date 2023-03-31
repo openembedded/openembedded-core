@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
 import re
-import tempfile
 import time
 import oe.types
 from oeqa.core.decorator import OETestTag
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, runqemu, get_bb_var, runCmd
+from oeqa.utils.commands import bitbake, runqemu, get_bb_var
 
 @OETestTag("runqemu")
 class RunqemuTests(OESelftestTestCase):
