@@ -205,7 +205,7 @@ class QemuTarget(BaseTarget):
             self.server_ip = self.runner.server_ip
             self.connection = SSHControl(ip=self.ip, logfile=self.sshlog)
         else:
-            raise RuntimError("%s - FAILED to re-start qemu - check the task log and the boot log" % self.pn)
+            raise RuntimeError("%s - FAILED to re-start qemu - check the task log and the boot log" % self.pn)
 
     def run_serial(self, command, timeout=60):
         return self.runner.run_serial(command, timeout=timeout)
