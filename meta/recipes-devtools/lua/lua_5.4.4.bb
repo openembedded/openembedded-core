@@ -1,4 +1,4 @@
-DESCRIPTION = "Lua is a powerful light-weight programming language designed \
+SUMMARY = "Lua is a powerful light-weight programming language designed \
 for extending applications."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://doc/readme.html;beginline=307;endline=330;md5=79c3f6b19ad05efe24c1681f025026bb"

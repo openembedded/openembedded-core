@@ -1,4 +1,4 @@
-DESCRIPTION = "Tooling for devicetree validation using YAML and jsonschema"
+SUMMARY = "Tooling for devicetree validation using YAML and jsonschema"
 HOMEPAGE = "https://github.com/devicetree-org/dt-schema"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=457495c8fa03540db4a576bf7869e811"

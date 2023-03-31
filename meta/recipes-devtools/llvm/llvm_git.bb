@@ -1,7 +1,7 @@
 # Copyright (C) 2017 Khem Raj <raj.khem@gmail.com>
 # Released under the MIT license (see COPYING.MIT for the terms)
 
-DESCRIPTION = "The LLVM Compiler Infrastructure"
+SUMMARY = "The LLVM Compiler Infrastructure"
 HOMEPAGE = "http://llvm.org"
 LICENSE = "Apache-2.0-with-LLVM-exception"
 SECTION = "devel"

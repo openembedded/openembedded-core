@@ -1,4 +1,4 @@
-SUMMARY ?= "Cargo, a package manager for Rust."
+SUMMARY = "Cargo, a package manager for Rust."
 HOMEPAGE = "https://crates.io"
 LICENSE = "MIT | Apache-2.0"
 SECTION = "devel"
