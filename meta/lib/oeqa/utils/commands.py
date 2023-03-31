@@ -8,11 +8,8 @@
 # This module is mainly used by scripts/oe-selftest and modules under meta/oeqa/selftest
 # It provides a class and methods for running commands on the host in a convienent way for tests.
 
-
-
 import os
 import sys
-import signal
 import subprocess
 import threading
 import time
