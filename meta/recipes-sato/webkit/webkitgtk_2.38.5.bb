@@ -38,6 +38,8 @@ DEPENDS += " \
           libnotify \
           gstreamer1.0 \
           gstreamer1.0-plugins-base \
+          glib-2.0-native \
+          gettext-native \
           "
 
 PACKAGECONFIG_SOUP ?= "soup3"
