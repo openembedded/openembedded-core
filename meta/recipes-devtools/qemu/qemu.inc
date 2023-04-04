@@ -32,6 +32,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0001-configure-Fix-check-tcg-not-executing-any-tests.patch \
            file://0001-Revert-linux-user-add-more-compat-ioctl-definitions.patch \
            file://0002-Revert-linux-user-fix-compat-with-glibc-2.36-sys-mou.patch \
+           file://0001-tracetool-use-relative-paths-for-line-preprocessor-d.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
