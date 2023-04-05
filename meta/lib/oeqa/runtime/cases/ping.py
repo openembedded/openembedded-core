@@ -17,6 +17,7 @@ class PingTest(OERuntimeTestCase):
     def test_ping(self):
         output = ''
         count = 0
+        self.assertNotEqual(len(self.target.ip), 0, msg="No target IP address set")
         try:
             while count < 5:
                 cmd = 'ping -c 1 %s' % self.target.ip
