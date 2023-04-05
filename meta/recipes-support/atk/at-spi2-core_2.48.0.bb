@@ -11,29 +11,32 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 
 SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "aa0c86c79f7a8d67bae49a5b7a5ab08430c608cffe6e33bf47a72f41ab03c3d0"
+SRC_URI[sha256sum] = "905a5b6f1790b68ee803bffa9f5fab4ceb591fb4fae0b2f8c612c54f1d4e8a30"
 
-DEPENDS = "dbus glib-2.0 glib-2.0-native libxml2"
+DEPENDS = " \
+	dbus \
+	glib-2.0 \
+	glib-2.0-native \
+	libxml2 \
+	${@'python3-sphinx-native' if d.getVar('GIDOCGEN_ENABLED') == 'True' else ''} \
+"
 
 # For backwards compatibility
 PROVIDES += "atk at-spi2-atk"
 RPROVIDES:${PN} += "atk at-spi2-atk"
 
-inherit meson gtk-doc gettext systemd pkgconfig upstream-version-is-even gobject-introspection
+inherit meson gi-docgen gettext systemd pkgconfig upstream-version-is-even gobject-introspection
 
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
                   -Ddbus_daemon=${bindir}/dbus-daemon"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
-PACKAGECONFIG[x11] = "-Dx11=yes,-Dx11=no,virtual/libx11 libxi libxtst"
+PACKAGECONFIG[x11] = "-Dx11=enabled,-Dx11=disabled,virtual/libx11 libxi libxtst"
 
-GTKDOC_MESON_OPTION = "docs"
-# The documentation doesn't build if X11 is disabled. Appears to be fixed post 2.46.0.
-EXTRA_OEMESON += "${@bb.utils.contains("DISTRO_FEATURES", "x11", "", "-Ddocs=false", d)}"
-
+GIDOCGEN_MESON_OPTION = "docs"
 GIR_MESON_OPTION = 'introspection'
-GIR_MESON_ENABLE_FLAG = 'yes'
-GIR_MESON_DISABLE_FLAG = 'no'
+GIR_MESON_ENABLE_FLAG = 'enabled'
+GIR_MESON_DISABLE_FLAG = 'disabled'
 
 FILES:${PN} += "${libdir}/gnome-settings-daemon-3.0/gtk-modules/at-spi2-atk.desktop \
                 ${libdir}/gtk-2.0/modules/libatk-bridge.so \
