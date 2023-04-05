@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 SRC_URI = "${GNU_MIRROR}/grep/grep-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "abcd11409ee23d4caf35feb422e53bbac867014cfeed313bb5f488aca170b599"
+SRC_URI[sha256sum] = "24efa5b595fb5a7100879b51b8868a0bb87a71c183d02c4c602633b88af6855b"
 
 inherit autotools gettext texinfo pkgconfig
 
