@@ -5,6 +5,7 @@
 #
 
 from subprocess import Popen, PIPE
+from time import sleep
 
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.oetimeout import OETimeout
@@ -25,6 +26,7 @@ class PingTest(OERuntimeTestCase):
                     count += 1
                 else:
                     count = 0
+                    sleep(1)
         except OEQATimeoutError:
             self.fail("Ping timeout error for address %s, count %s, output: %s" % (self.target.ip, count, output))
         msg = ('Expected 5 consecutive, got %d.\n'
