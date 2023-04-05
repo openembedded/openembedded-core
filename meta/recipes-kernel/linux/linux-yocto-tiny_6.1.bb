@@ -5,6 +5,9 @@ KCONFIG_MODE = "--allnoconfig"
 
 require recipes-kernel/linux/linux-yocto.inc
 
+# CVE exclusions
+include recipes-kernel/linux/cve-exclusion_6.1.inc
+
 LINUX_VERSION ?= "6.1.20"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 

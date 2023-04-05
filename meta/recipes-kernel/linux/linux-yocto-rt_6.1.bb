@@ -2,6 +2,9 @@ KBRANCH ?= "v6.1/standard/preempt-rt/base"
 
 require recipes-kernel/linux/linux-yocto.inc
 
+# CVE exclusions
+include recipes-kernel/linux/cve-exclusion_6.1.inc
+
 # Skip processing of this recipe if it is not explicitly specified as the
 # PREFERRED_PROVIDER for virtual/kernel. This avoids errors when trying
 # to build multiple virtual/kernel providers, e.g. as dependency of
