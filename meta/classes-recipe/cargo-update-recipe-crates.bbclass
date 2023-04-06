@@ -43,7 +43,7 @@ def get_crates(f):
     cksum_list = ''
     for c in crates_candidates:
         rename = "%s-%s" % (c['name'], c['version'])
-        c_list += '\n    crate://crates.io/%s/%s;name=%s \\\' % (c['name'], c['version'], rename)
+        c_list += '\n    crate://crates.io/%s/%s \\\' % (c['name'], c['version'])
         if 'checksum' in c:
             cksum_list += '\nSRC_URI[%s.sha256sum] = "%s"' % (rename, c['checksum'])
 
