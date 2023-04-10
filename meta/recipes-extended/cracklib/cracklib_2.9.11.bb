@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/cracklib/cracklib;protocol=https;branch=main \
            file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
            "
 
-SRCREV = "e74c539344d024709ee76e2920b0af7f9a5c5556"
+SRCREV = "4cf5125250c6325ef0a2dc085eabff875227edc3"
 S = "${WORKDIR}/git/src"
 
 inherit autotools gettext
