@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5038641aec7a77451e31da828ebfae00"
 
 SRC_URI += "file://interpreter.patch"
 
-SRC_URI[sha256sum] = "f3bd36cd261b440a88a1190b1becca0578fee90b4b62decc796932fdd5ae8839"
+SRC_URI[sha256sum] = "a26d3e3116289bb08216e0d0f7d925fcef0b0194eedfa0c944bcaaa106c4b631"
 
 inherit pypi python_flit_core
 
