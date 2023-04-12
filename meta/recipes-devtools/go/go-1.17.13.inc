@@ -1,6 +1,6 @@
 require go-common.inc
 
-FILESEXTRAPATHS:prepend := "${FILE_DIRNAME}/go-1.18:"
+FILESEXTRAPATHS:prepend := "${FILE_DIRNAME}/go-1.19:${FILE_DIRNAME}/go-1.18:"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5d4950ecb7b26d2c5e4e7b4e0dd74707"
 
@@ -23,6 +23,9 @@ SRC_URI += "\
     file://CVE-2022-2879.patch \
     file://CVE-2022-41720.patch \
     file://CVE-2022-41723.patch \
+    file://cve-2022-41724.patch \
+    file://add_godebug.patch \
+    file://cve-2022-41725.patch \
 "
 SRC_URI[main.sha256sum] = "a1a48b23afb206f95e7bbaa9b898d965f90826f6f1d1fc0c1d784ada0cd300fd"
 
