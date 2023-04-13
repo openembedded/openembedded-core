@@ -11,6 +11,7 @@ BBCLASSEXTEND = "native nativesdk"
 
 # Bootstrap the native build
 DEPENDS:remove:class-native = "python3-build-native"
+RDEPENDS:${PN} += "python3-profile"
 
 do_compile:class-native () {
     python_flit_core_do_manual_build
