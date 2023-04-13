@@ -610,6 +610,28 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/imaplib.*.pyc"
         ]
     },
+    "ensurepip": {
+        "summary": "Support for bootstrapping the pip installer",
+        "rdepends": [
+            "asyncio",
+            "compile",
+            "core",
+            "ctypes",
+            "image",
+            "io",
+            "mmap",
+            "plistlib",
+            "pprint",
+            "unixadmin",
+            "xmlrpc"
+        ],
+        "files": [
+            "${libdir}/python${PYTHON_MAJMIN}/ensurepip/"
+        ],
+        "cached": [
+            "${libdir}/python${PYTHON_MAJMIN}/ensurepip/_uninstall.*.pyc"
+        ]
+    },
     "fcntl": {
         "summary": "Python's fcntl interface",
         "rdepends": [
@@ -800,6 +822,7 @@
             "distutils",
             "doctest",
             "email",
+            "ensurepip",
             "fcntl",
             "html",
             "idle",
