@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import os
+import shlex
+import subprocess
 import oe.path
 import oe.types
-import subprocess
 
 class NotFoundError(bb.BBHandledException):
     def __init__(self, path):
@@ -25,8 +27,6 @@ class CmdError(bb.BBHandledException):
 
 
 def runcmd(args, dir = None):
-    import pipes
-
     if dir:
         olddir = os.path.abspath(os.curdir)
         if not os.path.exists(dir):
@@ -35,7 +35,7 @@ def runcmd(args, dir = None):
         # print("cwd: %s -> %s" % (olddir, dir))
 
     try:
-        args = [ pipes.quote(str(arg)) for arg in args ]
+        args = [ shlex.quote(str(arg)) for arg in args ]
         cmd = " ".join(args)
         # print("cmd: %s" % cmd)
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
@@ -215,7 +215,7 @@ class PatchTree(PatchSet):
         with open(self.seriespath, 'w') as f:
             for p in patches:
                 f.write(p)
-         
+
     def Import(self, patch, force = None):
         """"""
         PatchSet.Import(self, patch, force)
@@ -919,4 +919,3 @@ def should_apply(parm, d):
             return False, "applies to later version"
 
     return True, None
-
