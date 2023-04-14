@@ -638,7 +638,7 @@ def copydebugsources(debugsrcdir, sources, d):
             if os.path.exists(dvar + debugsrcdir + sdir):
                 # Special case for /build since we need to move into
                 # /usr/src/debug/build so rename sdir to build.build
-                if sdir.find("/build") == 0:
+                if sdir == "/build" or sdir.find("/build/") == 0:
                     cmd = "mv %s%s%s %s%s%s" % (dvar, debugsrcdir, "/build", dvar, debugsrcdir, "/build.build")
                     subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
                     sdir = sdir.replace("/build", "/build.build", 1)
