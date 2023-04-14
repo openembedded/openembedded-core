@@ -59,6 +59,9 @@ do_install_ptest() {
 	# https://bugzilla.yoctoproject.org/show_bug.cgi?id=14371
 	rm -f ${D}${PTEST_PATH}/test/time.*
 	rm -f ${D}${PTEST_PATH}/test/timeout.*
+	for t in time timeout; do
+		echo $t >> ${D}${PTEST_PATH}/test/skipped.txt
+	done
 }
 
 do_install_ptest:append:libc-musl() {
@@ -71,6 +74,9 @@ do_install_ptest:append:libc-musl() {
 	# The below two need LANG=C inside the make rule for musl
 	rm -f ${D}${PTEST_PATH}/test/rebt8b1.*
 	rm -f ${D}${PTEST_PATH}/test/regx8bit.*
+	for t in clos1way6 backsmalls1 commas rebt8b1 regx8bit; do
+		echo $t >> ${D}${PTEST_PATH}/test/skipped.txt
+	done
 }
 
 RDEPENDS:${PN}-ptest += "make locale-base-en-us"
