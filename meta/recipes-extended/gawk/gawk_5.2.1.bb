@@ -62,8 +62,21 @@ do_install_ptest() {
 	rm -f ${D}${PTEST_PATH}/test/timeout.*
 }
 
-RDEPENDS:${PN}-ptest += "make"
+do_install_ptest:append:libc-musl() {
+	# Reported  https://lists.gnu.org/archive/html/bug-gawk/2021-02/msg00005.html
+	rm -f ${D}${PTEST_PATH}/test/clos1way6.*
+	# Needs en_US.UTF-8 but then does not work with musl
+	rm -f ${D}${PTEST_PATH}/test/backsmalls1.*
+	# Needs en_US.UTF-8 but then does not work with musl
+	rm -f ${D}${PTEST_PATH}/test/commas.*
+	# The below two need LANG=C inside the make rule for musl
+	rm -f ${D}${PTEST_PATH}/test/rebt8b1.*
+	rm -f ${D}${PTEST_PATH}/test/regx8bit.*
+}
 
-RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us locale-base-en-us.iso-8859-1"
+RDEPENDS:${PN}-ptest += "make locale-base-en-us"
+
+RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us.iso-8859-1"
+RDEPENDS:${PN}-ptest:append:libc-musl = " musl-locales"
 
 BBCLASSEXTEND = "native nativesdk"
