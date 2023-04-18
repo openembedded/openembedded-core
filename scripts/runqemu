@@ -66,6 +66,7 @@ of the following environment variables (in any order):
   MACHINE - the machine name (optional, autodetected from KERNEL filename if unspecified)
   Simplified QEMU command-line options can be passed with:
     nographic - disable video console
+    nonetwork - disable network connectivity
     novga - Disable VGA emulation completely
     sdl - choose the SDL UI frontend
     gtk - choose the Gtk UI frontend
@@ -178,6 +179,7 @@ class BaseConfig(object):
         self.serialconsole = False
         self.serialstdio = False
         self.nographic = False
+        self.nonetwork = False
         self.sdl = False
         self.gtk = False
         self.gl = False
@@ -495,6 +497,8 @@ to your build configuration.
                 self.check_arg_fstype(arg)
             elif arg == 'nographic':
                 self.nographic = True
+            elif arg == "nonetwork":
+                self.nonetwork = True
             elif arg == 'sdl':
                 self.sdl = True
             elif arg == 'gtk':
@@ -1224,7 +1228,8 @@ to your build configuration.
         self.set('NETWORK_CMD', '%s %s' % (self.network_device.replace('@MAC@', mac), qemu_tap_opt))
 
     def setup_network(self):
-        if self.get('QB_NET') == 'none':
+        if self.nonetwork or self.get('QB_NET') == 'none':
+            self.set('NETWORK_CMD', '-nic none')
             return
         if sys.stdin.isatty():
             self.saved_stty = subprocess.check_output(("stty", "-g")).decode('utf-8').strip()
