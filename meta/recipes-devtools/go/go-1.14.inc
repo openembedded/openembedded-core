@@ -82,3 +82,6 @@ CVE_CHECK_WHITELIST += "CVE-2021-41772"
 
 # Fixes code that was added in go1.16, does not exist in 1.14
 CVE_CHECK_WHITELIST += "CVE-2022-30630"
+
+# This is specific to Microsoft Windows
+CVE_CHECK_WHITELIST += "CVE-2022-41716"
