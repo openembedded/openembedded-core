@@ -56,6 +56,12 @@ do_install_ptest () {
         cp -R --no-dereference --preserve=mode,links -v ${WORKDIR}/lua-${PV_testsuites}-tests ${D}${PTEST_PATH}/test
 }
 
+do_install_ptest:append:libc-musl () {
+        # locale tests does not work on musl, due to limited locale implementation
+        # https://wiki.musl-libc.org/open-issues.html#Locale-limitations
+        sed -i -e 's|os.setlocale("pt_BR") or os.setlocale("ptb")|false|g' ${D}${PTEST_PATH}/test/literals.lua
+}
+
 BBCLASSEXTEND = "native nativesdk"
 
 inherit multilib_script
