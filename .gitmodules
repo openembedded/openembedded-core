@@ -1,0 +1,3 @@
+[submodule "bitbake"]
+	path = bitbake
+	url = https://github.com/openembedded/bitbake.git
