@@ -87,3 +87,6 @@ CVE_CHECK_WHITELIST += "CVE-2022-30630"
 
 # This is specific to Microsoft Windows
 CVE_CHECK_WHITELIST += "CVE-2022-41716"
+
+# Issue introduced in go1.15beta1, does not exist in 1.14
+CVE_CHECK_WHITELIST += "CVE-2022-1705"
