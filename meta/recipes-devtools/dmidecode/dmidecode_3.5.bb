@@ -4,21 +4,18 @@ DESCRIPTION = "Dmidecode reports information about your system's hardware as des
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/dmidecode/${BP}.tar.xz \
-           file://0001-Committing-changes-from-do_unpack_extra.patch \
-           "
+SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/dmidecode/${BP}.tar.xz"
 
 COMPATIBLE_HOST = "(i.86|x86_64|aarch64|arm|powerpc|powerpc64).*-linux"
 
-EXTRA_OEMAKE = "-e MAKEFLAGS="
-
-# The upstream buildsystem uses 'docdir' as the path where it puts AUTHORS,
-# README, etc, but we don't want those in the root of our docdir.
-docdir .= "/${BPN}"
-
 do_install() {
-	oe_runmake DESTDIR="${D}" install
+    oe_runmake \
+        DESTDIR="${D}" \
+        prefix="${prefix}" \
+        sbindir="${sbindir}" \
+        docdir="${docdir}/${BPN}" \
+        mandir="${mandir}" \
+        install
 }
 
-SRC_URI[sha256sum] = "43cba851d8467c9979ccdbeab192eb6638c7d3a697eba5ddb779da8837542212"
-
+SRC_URI[sha256sum] = "79d76735ee8e25196e2a722964cf9683f5a09581503537884b256b01389cc073"
