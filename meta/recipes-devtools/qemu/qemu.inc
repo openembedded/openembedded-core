@@ -157,6 +157,11 @@ CVE_CHECK_WHITELIST += "CVE-2018-18438"
 # the issue introduced in v5.1.0-rc0
 CVE_CHECK_WHITELIST += "CVE-2020-27661"
 
+# As per https://nvd.nist.gov/vuln/detail/CVE-2023-0664
+# https://bugzilla.redhat.com/show_bug.cgi?id=2167423
+# this bug related to windows specific.
+CVE_CHECK_WHITELIST += "CVE-2023-0664"
+
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
 
