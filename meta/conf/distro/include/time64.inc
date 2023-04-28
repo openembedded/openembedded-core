@@ -1,3 +1,13 @@
+# To simulate Y2038 occurring in qemu, add to your build configuration:
+# QB_OPT_APPEND:append = " -rtc base=2040-02-02"
+#
+# Note that this does result in ptest failures on qemux86:
+# perl python3 dbus openssl glibc-tests openssh curl glib-2.0 tcl libmodule-build-perl
+# and a subset of those occurs in qemux86-64 as well:
+# curl python3 openssl openssl tcl python3-cryptography
+#
+# Working to address those (before Y2038 rolls in) will be appreciated.
+
 GLIBC_64BIT_TIME_FLAGS = " -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
 
 # Only needed for some 32-bit architectures, some relatively newer
