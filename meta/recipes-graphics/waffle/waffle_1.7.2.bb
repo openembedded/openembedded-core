@@ -9,16 +9,16 @@ LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4c5154407c2490750dd461c50ad94797 \
                     file://include/waffle-1/waffle.h;endline=24;md5=61dbf8697f61c78645e75a93c585b1bf"
 
-SRC_URI = "git://gitlab.freedesktop.org/mesa/waffle.git;protocol=https;branch=master \
+SRC_URI = "git://gitlab.freedesktop.org/mesa/waffle.git;protocol=https;branch=maint-1.7 \
            file://0001-waffle-do-not-make-core-protocol-into-the-library.patch \
            file://0001-meson.build-request-native-wayland-scanner.patch \
            "
-SRCREV = "905c6c10f2483adf0cbfa024e2d3c2ed541fb300"
+SRCREV = "f3b42a7216105498842bc6ba77d8481b90d6f5f9"
 S = "${WORKDIR}/git"
 
 inherit meson features_check lib_package bash-completion pkgconfig
 
-DEPENDS:append = " python3 cmake-native"
+DEPENDS:append = " python3"
 
 # This should be overridden per-machine to reflect the capabilities of the GL
 # stack.
@@ -47,5 +47,5 @@ PACKAGECONFIG[surfaceless-egl] = "-Dsurfaceless_egl=enabled,-Dsurfaceless_egl=di
 # TODO: optionally build manpages and examples
 
 do_install:append() {
-    sed -i -e "s,${WORKDIR},,g" ${D}/${libdir}/cmake/Waffle/WaffleConfig.cmake
+    rm -rf ${D}${datadir}/zsh
 }
