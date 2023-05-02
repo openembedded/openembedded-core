@@ -1,6 +1,6 @@
 SUMMARY = "Advanced front-end for dpkg"
 DESCRIPTION = "APT is the Advanced Package Tool, an advanced interface to the Debian packaging system which provides the apt-get program."
-HOMEPAGE = "https://packages.debian.org/jessie/apt"
+HOMEPAGE = "https://packages.debian.org/sid/apt"
 LICENSE = "GPL-2.0-or-later"
 SECTION = "base"
 
@@ -14,9 +14,6 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/${BPN}_${PV}.tar.xz \
            file://0001-Hide-fstatat64-and-prlimit64-defines-on-musl.patch \
            file://0001-aptwebserver.cc-Include-array.patch \
            file://0001-Remove-using-std-binary_function.patch \
-           file://0001-typecast-time_t-and-suseconds_t-from-std-chrono.patch \
-           file://0002-interactive-helper-Undefine-_FORTIFY_SOURCE.patch \
-           file://0001-add-missing-cstdint-for-uint16_t.patch \
            "
 
 SRC_URI:append:class-native = " \
@@ -29,7 +26,7 @@ SRC_URI:append:class-nativesdk = " \
            file://0001-Revert-always-run-dpkg-configure-a-at-the-end-of-our.patch \
            "
 
-SRC_URI[sha256sum] = "5552f175c3a3924f5cda0c079b821b30f68a2521959f2c30ab164d2ec7993ecf"
+SRC_URI[sha256sum] = "43467d1ca7de6c0955fd991925433e22fa66230870e5f66c4498675d01776c2a"
 LIC_FILES_CHKSUM = "file://COPYING.GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 # the package is taken from snapshots.debian.org; that source is static and goes stale
