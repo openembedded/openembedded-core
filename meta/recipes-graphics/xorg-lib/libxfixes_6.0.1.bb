@@ -6,16 +6,16 @@ provide the minimal server-side support necessary to eliminate problems \
 caused by these workarounds."
 
 require xorg-lib-common.inc
-SRC_URI[sha256sum] = "a7c1a24da53e0b46cac5aea79094b4b2257321c621b258729bc3139149245b4c"
+SRC_URI[sha256sum] = "b695f93cd2499421ab02d22744458e650ccc88c1d4c8130d60200213abc02d58"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3c1ce42c334a6f5cccb0277556a053e0"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a5a9755c8921cc7dc08a5cfe4267d0ff"
 
 DEPENDS += "virtual/libx11 xorgproto"
 
 PE = "1"
 
 XORG_PN = "libXfixes"
-XORG_EXT = "tar.bz2"
+XORG_EXT = "tar.xz"
 
 BBCLASSEXTEND = "native nativesdk"
