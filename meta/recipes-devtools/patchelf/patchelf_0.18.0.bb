@@ -5,12 +5,15 @@ HOMEPAGE = "https://github.com/NixOS/patchelf"
 LICENSE = "GPL-3.0-only"
 
 SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master"
-SRCREV = "5908e16cd562bcb1909be4de0409c4912a8afc52"
+SRCREV = "99c24238981b7b1084313aca8f5c493bb46f302c"
 
 S = "${WORKDIR}/git"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 inherit autotools
+
+PACKAGES += "${PN}-zsh-completion"
+FILES:${PN}-zsh-completion = "${datadir}/zsh"
 
 BBCLASSEXTEND = "native nativesdk"
