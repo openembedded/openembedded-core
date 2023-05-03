@@ -1,7 +1,4 @@
 SUMMARY = "Machine-readable files for the SPIR-V Registry"
-DESCRIPTION = "Headers are provided in the include directory, with up-to-date \
-headers in the unified1 subdirectory. Older headers are provided according to \
-their version."
 SECTION = "graphics"
 HOMEPAGE = "https://www.khronos.org/registry/spir-v"
 LICENSE = "MIT"
