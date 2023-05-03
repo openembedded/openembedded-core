@@ -8,7 +8,7 @@ HOMEPAGE = "https://www.khronos.org/opengles/sdk/tools/Reference-Compiler"
 LICENSE = "BSD-3-Clause & BSD-2-Clause & MIT & Apache-2.0 & GPL-3-with-bison-exception"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=2a2b5acd7bc4844964cfda45fe807dc3"
 
-SRCREV = "ca8d07d0bc1c6390b83915700439fa7719de6a2a"
+SRCREV = "14e5a04e70057972eef8a40df422e30a3b70e4b5"
 SRC_URI = "git://github.com/KhronosGroup/glslang.git;protocol=https;branch=main \
            file://0001-generate-glslang-pkg-config.patch \
            "
@@ -29,9 +29,5 @@ EXTRA_OECMAKE = " \
     -DENABLE_CTEST=OFF \
     -DBUILD_EXTERNAL=OFF \
 "
-
-SOLIBSDEV = "glslang.so"
-# all the other libraries are unversioned, so pack it on PN
-FILES:${PN} += "${libdir}/*.so"
 
 BBCLASSEXTEND = "native nativesdk"
