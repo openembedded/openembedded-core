@@ -6,10 +6,11 @@ DESCRIPTION = "Xwininfo is a utility for displaying information about \
 windows.  Information may include window position, size, color depth, \
 and a number of other items."
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=78976cd3115f6faf615accc4e094d90e"
+LIC_FILES_CHKSUM = "file://COPYING;md5=a1b9559d7b7997a6e9588012ebf8769a"
 DEPENDS += "libxext libxmu gettext-native"
 
 PE = "0"
 
-SRC_URI[md5sum] = "26d46f7ef0588d3392da3ad5802be420"
-SRC_URI[sha256sum] = "7a405441dfc476666c744f5fcd1bc8a75abf8b5b1d85db7b88b370982365080e"
+SRC_URI_EXT = "xz"
+SRC_URI[md5sum] = "c91201bc1eb5e7b38933be8d0f7f16a8"
+SRC_URI[sha256sum] = "3518897c17448df9ba99ad6d9bb1ca0f17bc0ed7c0fd61281b34ceed29a9253f"
