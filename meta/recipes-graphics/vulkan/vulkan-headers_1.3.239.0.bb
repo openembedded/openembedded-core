@@ -20,4 +20,8 @@ inherit cmake
 FILES:${PN} += "${datadir}/vulkan"
 RDEPENDS:${PN} += "python3-core"
 
+# These recipes need to be updated in lockstep with each other:
+# glslang, vulkan-headers, vulkan-loader, vulkan-tools, spirv-headers, spirv-tools
+# The tags versions should always be sdk-x.y.z, as this is what
+# upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"

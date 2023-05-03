@@ -13,6 +13,10 @@ SRC_URI = "git://github.com/KhronosGroup/glslang.git;protocol=https;branch=main 
            file://0001-generate-glslang-pkg-config.patch \
            "
 PE = "1"
+# These recipes need to be updated in lockstep with each other:
+# glslang, vulkan-headers, vulkan-loader, vulkan-tools, spirv-headers, spirv-tools
+# The tags versions should always be sdk-x.y.z, as this is what
+# upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
 S = "${WORKDIR}/git"
 
