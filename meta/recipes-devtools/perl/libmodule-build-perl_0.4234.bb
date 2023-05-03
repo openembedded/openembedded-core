@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=881;endline=886;md5=3027f56c664545e5
 SRC_URI = "${CPAN_MIRROR}/authors/id/L/LE/LEONT/Module-Build-${PV}.tar.gz \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "67c82ee245d94ba06decfa25572ab75fdcd26a9009094289d8f45bc54041771b"
+SRC_URI[sha256sum] = "66aeac6127418be5e471ead3744648c766bd01482825c5b66652675f2bc86a8f"
 
 S = "${WORKDIR}/Module-Build-${PV}"
 
@@ -33,6 +33,12 @@ do_patch_module_build () {
 do_patch[postfuncs] += "do_patch_module_build"
 
 EXTRA_CPAN_BUILD_FLAGS = "--create_packlist=0"
+
+do_install:prepend () {
+	# We do not have a recipe for libpod-parser-perl which is for
+	# documentation (and is deprecated in favor of Pod::Simple)
+	rm -rf ${B}/t/pod_parser.t
+}
 
 do_install:append () {
         rm -rf ${D}${docdir}/perl/html
