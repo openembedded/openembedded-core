@@ -3,9 +3,14 @@ HOMEPAGE = "http://www.attrs.org/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5e55731824cf9205cfabeab9a0600887"
 
-SRC_URI[sha256sum] = "c9227bfc2f01993c03f68db37d1d15c9690188323c067c641f1a35ca58185f99"
+SRC_URI[sha256sum] = "6279836d581513a26f1bf235f9acd333bc9115683f14f7e8fae46c98fc50e015"
 
-inherit pypi python_setuptools_build_meta
+inherit pypi python_hatchling
+
+DEPENDS += " \
+    ${PYTHON_PN}-hatch-vcs-native \
+    ${PYTHON_PN}-hatch-fancy-pypi-readme-native \
+"
 
 RDEPENDS:${PN}:class-target += " \
     ${PYTHON_PN}-crypt \
