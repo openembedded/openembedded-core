@@ -21,7 +21,7 @@ inherit gnomebase gi-docgen features_check upstream-version-is-even gobject-intr
 
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch"
-SRC_URI[archive.sha256sum] = "40fe914d6c70db34176c922725b6c6ea15d5f3cb2a9b44c57e200a5f950a6736"
+SRC_URI[archive.sha256sum] = "0554f9f88d56ce2d78398fcc7f69bc00e53bbbc5f694e0ae1dcaf5286f89d7e4"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
