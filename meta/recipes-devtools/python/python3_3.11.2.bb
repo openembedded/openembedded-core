@@ -95,9 +95,7 @@ CACHED_CONFIGUREVARS = " \
 "
 
 # PGO currently causes builds to not be reproducible so disable by default, see YOCTO #13407
-PACKAGECONFIG:class-target ??= "editline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
-PACKAGECONFIG:class-native ??= "editline gdbm"
-PACKAGECONFIG:class-nativesdk ??= "readline gdbm"
+PACKAGECONFIG ??= "editline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 PACKAGECONFIG[readline] = "--with-readline=readline,,readline,,,editline"
 PACKAGECONFIG[editline] = "--with-readline=editline,,libedit,,,readline"
 # Use profile guided optimisation by running PyBench inside qemu-user
@@ -105,7 +103,7 @@ PACKAGECONFIG[pgo] = "--enable-optimizations,,qemu-native"
 PACKAGECONFIG[tk] = ",,tk"
 PACKAGECONFIG[tcl] = ",,tcl"
 PACKAGECONFIG[gdbm] = ",,gdbm"
-PACKAGECONFIG[lto] = "--with-lto,,"
+PACKAGECONFIG[lto] = "--with-lto,--without-lto"
 
 do_configure:prepend () {
     mkdir -p ${B}/Modules
