@@ -64,6 +64,7 @@ PTESTS_FAST = "\
     python3-pluggy \
     python3-pyasn1 \
     python3-pytz \
+    python3-trove-classifiers \
     python3-wcwidth \
     python3-webcolors \
     qemu \
