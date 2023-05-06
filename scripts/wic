@@ -231,6 +231,12 @@ def wic_list_subcommand(args, usage_str):
     if not engine.wic_list(args, scripts_path):
         raise WicError("Bad list arguments, exiting")
 
+def wic_ln_subcommand(args, usage_str):
+    """
+    Command-line handling for creating a symbilic link to a file/dir in images.
+    The real work is done by engine.wic_ln()
+    """
+    engine.wic_ln(args, args.native_sysroot)
 
 def wic_ls_subcommand(args, usage_str):
     """
@@ -292,6 +298,9 @@ helptopics = {
     "create":    [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_create_help],
+    "ln":        [wic_help_topic_subcommand,
+                  wic_help_topic_usage,
+                  hlp.wic_ln_help],
     "ls":        [wic_help_topic_subcommand,
                   wic_help_topic_usage,
                   hlp.wic_ls_help],
@@ -391,6 +400,14 @@ def wic_init_parser_ls(subparser):
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
 
+def wic_init_parser_ln(subparser):
+    subparser.add_argument("src",
+                        help="<file>")
+    subparser.add_argument("dest",
+                        help="image spec: <image>:<ext* partition>[<path>]")
+    subparser.add_argument("-n", "--native-sysroot",
+                        help="path to the native sysroot containing the tools")
+
 def imgpathtype(arg):
     img = imgtype(arg)
     if img.part is None:
@@ -471,6 +488,10 @@ subcommands = {
                   hlp.wic_list_usage,
                   hlp.wic_list_help,
                   wic_init_parser_list],
+    "ln":        [wic_ln_subcommand,
+                  hlp.wic_ln_usage,
+                  hlp.wic_ln_help,
+                  wic_init_parser_ln],
     "ls":        [wic_ls_subcommand,
                   hlp.wic_ls_usage,
                   hlp.wic_ls_help,
@@ -536,6 +557,11 @@ def main(argv):
             args.dest = imgtype(args.dest)
         elif ":" in args.src:
             args.src = imgtype(args.src)
+        else:
+            raise argparse.ArgumentTypeError("no image or partition number specified.")
+    elif args.command == "ln":
+        if ":" in args.dest:
+            args.dest = imgtype(args.dest)
         else:
             raise argparse.ArgumentTypeError("no image or partition number specified.")
 

@@ -274,6 +274,49 @@ DESCRIPTION
     details.
 """
 
+wic_ln_usage = """
+
+ Create a symboilic link to a file or dir in partitioned image
+
+ usage: wic ln <path> <image>:<ext* partition><path>
+
+ This command  a symbolic link to a file or dir in ext* partitions.
+
+ See 'wic help ls' for more detailed instructions.
+
+"""
+
+wic_ln_help = """
+
+NAME
+    wic ln - Create a symboilic link to a file or dir in partitioned image
+
+SYNOPSIS
+    wic ln <file> <image>:<ext* partition><path>
+    wic ln <file> <image>:<ext* partition><path> --native-sysroot <path>
+
+DESCRIPTION
+    This command  a symbolic link to a file or dir in ext* partitions.
+
+    For example:
+        $ wic ls test.rootfs.wic:2/bin/ | grep sdbus
+
+        $ wic ls test.rootfs.wic:2/usr/bin/ | grep sdbus
+            6224  100775 (1)      0      0   61536 30-Mar-2023 14:45 sdbus-service
+            6255  100775 (1)      0      0   42352 29-Mar-2023 13:42 sdbus-client
+            6269  100775 (1)      0      0   19848 29-Mar-2023 10:52 sdbus-demo
+
+        To create a symbolic link
+        $ wic ln /usr/bin/sdbus-service test.rootfs.wic:2/bin/
+
+        $ wic ls test.rootfs.wic:2/bin/ | grep sdbus
+           6254  120777 (7)      0      0      22  6-May-2023 10:44 sdbus-service
+
+    The -n option is used to specify the path to the native sysroot
+    containing the tools(parted and mtools) to use.
+
+"""
+
 wic_ls_usage = """
 
  List content of a partitioned image
@@ -1108,6 +1151,7 @@ COMMAND:
 
     list   -   List available canned images and source plugins
     ls     -   List contents of partitioned image or partition
+    ln     -   Create a symbolic link to a file in ext* partitions
     rm     -   Remove files or directories from the vfat or ext* partitions
     help   -   Show help for a wic COMMAND or TOPIC
     write  -   Write an image to a device
