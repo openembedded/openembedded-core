@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://pppd/ccp.c;beginline=1;endline=29;md5=e2c43fe6e81ff77
                     file://chat/chat.c;beginline=1;endline=15;md5=0d374b8545ee5c62d7aff1acbd38add2"
 
 SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
-           file://makefix.patch \
            file://pon \
            file://poff \
            file://init \
@@ -24,31 +23,15 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
            file://ppp_on_boot \
            file://provider \
            file://ppp@.service \
-           file://0001-ppp-fix-build-against-5.15-headers.patch \
-           file://CVE-2022-4603.patch \
            "
 
-SRC_URI[sha256sum] = "f938b35eccde533ea800b15a7445b2f1137da7f88e32a16898d02dee8adc058d"
+SRC_URI[sha256sum] = "5cae0e8075f8a1755f16ca290eb44e6b3545d3f292af4da65ecffe897de636ff"
 
-inherit autotools-brokensep systemd
+inherit autotools systemd
 
-TARGET_CC_ARCH += " ${LDFLAGS}"
-EXTRA_OEMAKE = "CC='${CC}' STRIPPROG=${STRIP} MANDIR=${D}${datadir}/man/man8 INCDIR=${D}${includedir} LIBDIR=${D}${libdir}/pppd/${PV} BINDIR=${D}${sbindir}"
-EXTRA_OECONF = "--disable-strip"
-
-# Package Makefile computes CFLAGS, referencing COPTS.
-# Typically hard-coded to '-O2 -g' in the Makefile's.
-#
-EXTRA_OEMAKE += ' COPTS="${CFLAGS} -I${STAGING_INCDIR}/openssl -I${S}/include"'
-
-EXTRA_OECONF:append:libc-musl = " --disable-ipxcp"
-
-do_configure () {
-	oe_runconf
-}
+EXTRA_OECONF += "--with-openssl=${STAGING_EXECPREFIXDIR}"
 
 do_install:append () {
-	make install-etcppp ETCDIR=${D}/${sysconfdir}/ppp
 	mkdir -p ${D}${bindir}/ ${D}${sysconfdir}/init.d
 	mkdir -p ${D}${sysconfdir}/ppp/ip-up.d/
 	mkdir -p ${D}${sysconfdir}/ppp/ip-down.d/
@@ -68,12 +51,6 @@ do_install:append () {
 	install -m 0644 ${WORKDIR}/ppp@.service ${D}${systemd_system_unitdir}
 	sed -i -e 's,@SBINDIR@,${sbindir},g' \
 	       ${D}${systemd_system_unitdir}/ppp@.service
-	rm -rf ${D}/${mandir}/man8/man8
-	chmod u+s ${D}${sbindir}/pppd
-}
-
-do_install:append:libc-musl () {
-	install -Dm 0644 ${S}/include/net/ppp_defs.h ${D}${includedir}/net/ppp_defs.h
 }
 
 CONFFILES:${PN} = "${sysconfdir}/ppp/pap-secrets ${sysconfdir}/ppp/chap-secrets ${sysconfdir}/ppp/options"
@@ -96,5 +73,3 @@ SUMMARY:${PN}-password = "Plugin for PPP to get passwords via a pipe"
 SUMMARY:${PN}-l2tp     = "Plugin for PPP for l2tp support"
 SUMMARY:${PN}-tools    = "Additional tools for the PPP package"
 
-# Ignore compatibility symlink rp-pppoe.so->pppoe.so
-INSANE_SKIP:${PN}-oe += "dev-so"
