@@ -19,18 +19,17 @@ inherit cmake pkgconfig
 
 PROVIDES += "llvm${PV}"
 
-PV = "15.0.7"
+PV = "16.0.3"
 
 MAJOR_VERSION = "${@oe.utils.trim_version("${PV}", 1)}"
 
 LLVM_RELEASE = "${PV}"
 
 BRANCH = "release/${MAJOR_VERSION}.x"
-SRCREV = "8dfdcc7b7bf66834a761bd8de445840ef68e4d1a"
+SRCREV = "da3cd333bea572fb10470f610a27f22bcb84b08c"
 SRC_URI = "git://github.com/llvm/llvm-project.git;branch=${BRANCH};protocol=https \
            file://0007-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
            file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
-           file://0035-cmake-Enable-64bit-off_t-on-32bit-glibc-systems.patch;striplevel=2 \
            file://llvm-config \
            "
 
