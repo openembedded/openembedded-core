@@ -35,15 +35,14 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.18.x;protoc
            file://0001-perl-disable-auto-reqs.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
-           file://0001-docs-do-not-build-manpages-requires-pandoc.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
            file://0001-configure.ac-add-linux-gnux32-variant-to-triplet-han.patch \
-           file://fifofix.patch \
            file://0001-python-Use-Py_hash_t-instead-of-long-in-hdr_hash.patch \
+           file://fix-declaration.patch \
            "
 
 PE = "1"
-SRCREV = "ea0d77c52e176e2876fdb1d07ad41e9e2635a93e"
+SRCREV = "4588bc3f994338502d2770ad24cbfcdaa6c335ec"
 
 S = "${WORKDIR}/git"
 
@@ -187,7 +186,7 @@ FILES:${PN}-archive = "\
 
 PACKAGES += "python3-rpm"
 PROVIDES += "python3-rpm"
-FILES:python3-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm/*"
+FILES:python3-rpm = "${PYTHON_SITEPACKAGES_DIR}/rpm/* ${PYTHON_SITEPACKAGES_DIR}/rpm-*.egg-info"
 
 RDEPENDS:${PN}-build = "bash perl python3-core debugedit"
 
