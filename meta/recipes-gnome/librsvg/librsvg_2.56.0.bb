@@ -14,13 +14,15 @@ SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native"
 BBCLASSEXTEND = "native nativesdk"
 
-inherit cargo_common gnomebase pixbufcache upstream-version-is-even gobject-introspection rust vala gi-docgen
+inherit cargo_common gnomebase pixbufcache upstream-version-is-even gobject-introspection rust vala gi-docgen cargo-update-recipe-crates
+
+require ${BPN}-crates.inc
 
 SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
-           file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch \
+            file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch;patchdir=${CARGO_VENDORING_DIRECTORY} \
            "
 
-SRC_URI[archive.sha256sum] = "4f03190f45324d1fa1f52a79dfcded1f64eaf49b3ae2f88eedab0c07617cae6e"
+SRC_URI[archive.sha256sum] = "194b5097d9cd107495f49c291cf0da65ec2b4bb55e5628369751a3f44ba222b3"
 
 # librsvg is still autotools-based, but is calling cargo from its automake-driven makefiles
 # so we cannot use cargo class directly, but still need bits and pieces from it 
@@ -37,7 +39,6 @@ RUSTFLAGS:append:mipsel = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:powerpc = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:riscv32 = " --cfg crossbeam_no_atomic_64"
 
-CARGO_DISABLE_BITBAKE_VENDORING = "1"
 do_configure[postfuncs] += "cargo_common_do_configure"
 
 inherit rust-target-config
