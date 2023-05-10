@@ -480,6 +480,7 @@ class QemuRunner:
                         self.logger.error('Invalid file type: %s\n%s' % (file))
                         read = b''
 
+                    self.logger.debug2('Partial boot log:\n%s' % (read.decode('utf-8', errors='ignore')))
                     data = data + read
                     if data:
                         bootlog += data
