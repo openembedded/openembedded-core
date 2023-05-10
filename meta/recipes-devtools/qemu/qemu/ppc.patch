@@ -1,11 +1,12 @@
-From d92b63b7d15d4fd202c5802dfe444a96f5d8109c Mon Sep 17 00:00:00 2001
+From 31f02021ac17442c514593f7b9ed750ea87c21b1 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Sat, 6 May 2023 07:42:35 +0100
 Cc: Víctor Colombo <victor.colombo@eldorado.org.br>
 Cc: Matheus Ferst <matheus.ferst@eldorado.org.br>
 Cc: Daniel Henrique Barboza <danielhb413@gmail.com>
 Cc: Richard Henderson <richard.henderson@linaro.org>
-Subject: [PATCH v2] target/ppc: Fix fallback to MFSS for MFFS* instructions on
+Cc: Philippe Mathieu-Daudé <philmd@linaro.org>
+Subject: [PATCH v3] target/ppc: Fix fallback to MFSS for MFFS* instructions on
  pre 3.0 ISAs
 
 The following commits changed the code such that the fallback to MFSS for MFFSCRN,
@@ -22,25 +23,25 @@ instructions which is used in glibc libm functions for example.
 The fallback for MFFSCDRN and MFFSCDRNI added in a later patch was also missing.
 
 This patch restores the fallback to MFSS for these instructions on pre 3.0s ISAs
-as the hardware decoder would, fixing the segfaulting libm code. It and also ensures
-the MFSS instruction is used for currently reserved bits to handle other potential
-ISA additions more correctly.
-
-Upstream-Status: Submitted [https://lore.kernel.org/qemu-devel/20230506065240.3177798-1-richard.purdie@linuxfoundation.org/]
+as the hardware decoder would, fixing the segfaulting libm code. It doesn't have
+the fallback for 3.0 onwards to match hardware behaviour.
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 ---
- target/ppc/insn32.decode           | 19 ++++++++++++-------
- target/ppc/translate/fp-impl.c.inc | 30 ++++++++++++++++++++++++------
- 2 files changed, 36 insertions(+), 13 deletions(-)
+ target/ppc/insn32.decode           | 20 +++++++++++++-------
+ target/ppc/translate/fp-impl.c.inc | 22 ++++++++++++++++------
+ 2 files changed, 29 insertions(+), 13 deletions(-)
 
+v3 - drop fallback to MFFS for 3.0 ISA to match hardware
 v2 - switch to use decodetree pattern groups per feedback
 
+Upstream-Status: Submitted [https://lore.kernel.org/qemu-devel/20230506065240.3177798-1-richard.purdie@linuxfoundation.org/]
+
 diff --git a/target/ppc/insn32.decode b/target/ppc/insn32.decode
-index f8f589e9fd..3c4e2c2fc2 100644
+index f8f589e9fd..4fcf3af8d0 100644
 --- a/target/ppc/insn32.decode
 +++ b/target/ppc/insn32.decode
-@@ -390,13 +390,18 @@ SETNBCR         011111 ..... ..... ----- 0111100000 -   @X_bi
+@@ -390,13 +390,19 @@ SETNBCR         011111 ..... ..... ----- 0111100000 -   @X_bi
  
  ### Move To/From FPSCR
  
@@ -51,9 +52,11 @@ index f8f589e9fd..3c4e2c2fc2 100644
 -MFFSCRNI        111111 ..... 10111 ---.. 1001000111 -   @X_imm2
 -MFFSCDRNI       111111 ..... 10101 --... 1001000111 -   @X_imm3
 -MFFSL           111111 ..... 11000 ----- 1001000111 -   @X_t
-+{ 
++{
 +  # Before Power ISA v3.0, MFFS bits 11~15 were reserved and should be ignored
++  MFFS_ISA207     111111 ..... ----- ----- 1001000111 .   @X_t_rc
 +  [
++    MFFS            111111 ..... 00000 ----- 1001000111 .   @X_t_rc
 +    MFFSCE          111111 ..... 00001 ----- 1001000111 -   @X_t
 +    MFFSCRN         111111 ..... 10110 ..... 1001000111 -   @X_tb
 +    MFFSCDRN        111111 ..... 10100 ..... 1001000111 -   @X_tb
@@ -61,84 +64,82 @@ index f8f589e9fd..3c4e2c2fc2 100644
 +    MFFSCDRNI       111111 ..... 10101 --... 1001000111 -   @X_imm3
 +    MFFSL           111111 ..... 11000 ----- 1001000111 -   @X_t
 +  ]
-+  MFFS            111111 ..... ----- ----- 1001000111 .   @X_t_rc
 +}
  
  ### Decimal Floating-Point Arithmetic Instructions
  
 diff --git a/target/ppc/translate/fp-impl.c.inc b/target/ppc/translate/fp-impl.c.inc
-index 57d8437851..10dfd91aa4 100644
+index 57d8437851..874774eade 100644
 --- a/target/ppc/translate/fp-impl.c.inc
 +++ b/target/ppc/translate/fp-impl.c.inc
-@@ -584,7 +584,10 @@ static bool trans_MFFSCE(DisasContext *ctx, arg_X_t *a)
+@@ -568,6 +568,22 @@ static void store_fpscr_masked(TCGv_i64 fpscr, uint64_t clear_mask,
+     gen_helper_store_fpscr(cpu_env, fpscr_masked, st_mask);
+ }
+ 
++static bool trans_MFFS_ISA207(DisasContext *ctx, arg_X_t_rc *a)
++{
++    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
++        /*
++         * Before Power ISA v3.0, MFFS bits 11~15 were reserved, any instruction
++         * with OPCD=63 and XO=583 should be decoded as MFFS.
++         */
++        return trans_MFFS(ctx, a);
++    }
++    /*
++     * For Power ISA v3.0+, return false and let the pattern group
++     * select the correct instruction.
++     */
++    return false;
++}
++
+ static bool trans_MFFS(DisasContext *ctx, arg_X_t_rc *a)
+ {
+     REQUIRE_FPU(ctx);
+@@ -584,7 +600,6 @@ static bool trans_MFFSCE(DisasContext *ctx, arg_X_t *a)
  {
      TCGv_i64 fpscr;
  
 -    REQUIRE_INSNS_FLAGS2(ctx, ISA300);
-+    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
-+        return false;
-+    }
-+
      REQUIRE_FPU(ctx);
  
      gen_reset_fpstatus();
-@@ -597,7 +600,10 @@ static bool trans_MFFSCRN(DisasContext *ctx, arg_X_tb *a)
+@@ -597,7 +612,6 @@ static bool trans_MFFSCRN(DisasContext *ctx, arg_X_tb *a)
  {
      TCGv_i64 t1, fpscr;
  
 -    REQUIRE_INSNS_FLAGS2(ctx, ISA300);
-+    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
-+        return false;
-+    }
-+
      REQUIRE_FPU(ctx);
  
      t1 = tcg_temp_new_i64();
-@@ -614,7 +620,10 @@ static bool trans_MFFSCDRN(DisasContext *ctx, arg_X_tb *a)
+@@ -614,7 +628,6 @@ static bool trans_MFFSCDRN(DisasContext *ctx, arg_X_tb *a)
  {
      TCGv_i64 t1, fpscr;
  
 -    REQUIRE_INSNS_FLAGS2(ctx, ISA300);
-+    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
-+        return false;
-+    }
-+
      REQUIRE_FPU(ctx);
  
      t1 = tcg_temp_new_i64();
-@@ -631,7 +640,10 @@ static bool trans_MFFSCRNI(DisasContext *ctx, arg_X_imm2 *a)
+@@ -631,7 +644,6 @@ static bool trans_MFFSCRNI(DisasContext *ctx, arg_X_imm2 *a)
  {
      TCGv_i64 t1, fpscr;
  
 -    REQUIRE_INSNS_FLAGS2(ctx, ISA300);
-+    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
-+        return false;
-+    }
-+
      REQUIRE_FPU(ctx);
  
      t1 = tcg_temp_new_i64();
-@@ -647,7 +659,10 @@ static bool trans_MFFSCDRNI(DisasContext *ctx, arg_X_imm3 *a)
+@@ -647,7 +659,6 @@ static bool trans_MFFSCDRNI(DisasContext *ctx, arg_X_imm3 *a)
  {
      TCGv_i64 t1, fpscr;
  
 -    REQUIRE_INSNS_FLAGS2(ctx, ISA300);
-+    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
-+        return false;
-+    }
-+
      REQUIRE_FPU(ctx);
  
      t1 = tcg_temp_new_i64();
-@@ -661,7 +676,10 @@ static bool trans_MFFSCDRNI(DisasContext *ctx, arg_X_imm3 *a)
+@@ -661,7 +672,6 @@ static bool trans_MFFSCDRNI(DisasContext *ctx, arg_X_imm3 *a)
  
  static bool trans_MFFSL(DisasContext *ctx, arg_X_t *a)
  {
 -    REQUIRE_INSNS_FLAGS2(ctx, ISA300);
-+    if (!(ctx->insns_flags2 & PPC2_ISA300)) {
-+        return false;
-+    }
-+
      REQUIRE_FPU(ctx);
  
      gen_reset_fpstatus();
