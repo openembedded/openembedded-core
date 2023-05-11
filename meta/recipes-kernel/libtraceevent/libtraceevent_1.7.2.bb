@@ -14,6 +14,8 @@ SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git;branch=$
 
 S = "${WORKDIR}/git"
 
+export EXTRA_CFLAGS = "${CFLAGS}"
+
 inherit pkgconfig
 
 do_install() {
