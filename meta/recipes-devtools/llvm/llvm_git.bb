@@ -10,9 +10,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=8a15a0759ef07f2682d2ba4b893c9afe"
 
 DEPENDS = "libffi libxml2 zlib zstd libedit ninja-native llvm-native"
 
-COMPATIBLE_HOST:riscv64 = "null"
-COMPATIBLE_HOST:riscv32 = "null"
-
 RDEPENDS:${PN}:append:class-target = " ncurses-terminfo"
 
 inherit cmake pkgconfig
