@@ -968,9 +968,9 @@ def modify(args, config, basepath, workspace):
                         '}\n')
             if rd.getVarFlag('do_menuconfig','task'):
                 f.write('\ndo_configure:append() {\n'
-                '    if [ ! ${DEVTOOL_DISABLE_MENUCONFIG} ]; then\n'
-                '        cp ${B}/.config ${S}/.config.baseline\n'
-                '        ln -sfT ${B}/.config ${S}/.config.new\n'
+                '    if [ ${@ oe.types.boolean(\'${KCONFIG_CONFIG_ENABLE_MENUCONFIG}\') } = True ]; then\n'
+                '        cp ${KCONFIG_CONFIG_ROOTDIR}/.config ${S}/.config.baseline\n'
+                '        ln -sfT ${KCONFIG_CONFIG_ROOTDIR}/.config ${S}/.config.new\n'
                 '    fi\n'
                 '}\n')
             if initial_rev:
