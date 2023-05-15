@@ -40,10 +40,10 @@ PACKAGECONFIG[libtasn1] = "--with-included-libtasn1=no,--with-included-libtasn1,
 PACKAGECONFIG[p11-kit] = "--with-p11-kit,--without-p11-kit,p11-kit"
 PACKAGECONFIG[tpm] = "--with-tpm,--without-tpm,trousers"
 PACKAGECONFIG[fips] = "--enable-fips140-mode --with-libdl-prefix=${STAGING_BASELIBDIR}"
+PACKAGECONFIG[dane] = "--enable-libdane,--disable-libdane,unbound"
 
 EXTRA_OECONF = " \
     --enable-doc \
-    --disable-libdane \
     --disable-rpath \
     --enable-openssl-compatibility \
     --with-libpthread-prefix=${STAGING_DIR_HOST}${prefix} \
@@ -73,9 +73,11 @@ do_compile:append() {
         oe_runmake ${PARALLEL_MAKE} -C tests buildtest-TESTS
 }
 
-PACKAGES =+ "${PN}-openssl ${PN}-xx ${PN}-fips"
+PACKAGES =+ "${PN}-dane ${PN}-openssl ${PN}-xx ${PN}-fips"
 
 FILES:${PN}-dev += "${bindir}/gnutls-cli-debug"
+
+FILES:${PN}-dane = "${libdir}/libgnutls-dane.so.*"
 FILES:${PN}-openssl = "${libdir}/libgnutls-openssl.so.*"
 FILES:${PN}-xx = "${libdir}/libgnutlsxx.so.*"
 FILES:${PN}-fips = "${bindir}/fipshmac"
