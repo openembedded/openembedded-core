@@ -15,7 +15,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=71391c8e0c1cfe68077e7fce3b586283 \
                     file://doc/COPYING.LESSER;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "nettle gmp virtual/libiconv libunistring"
-DEPENDS:append:libc-musl = " argp-standalone"
 
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
@@ -57,8 +56,6 @@ EXTRA_OECONF = " \
 
 # Otherwise the tools try and use HOSTTOOLS_DIR/bash as a shell.
 export POSIX_SHELL="${base_bindir}/sh"
-
-LDFLAGS:append:libc-musl = " -largp"
 
 do_configure:prepend() {
 	for dir in . lib; do
