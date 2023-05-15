@@ -66,15 +66,15 @@ do_configure:prepend() {
 	done
 }
 
+do_compile_ptest() {
+    oe_runmake -C tests buildtest-TESTS
+}
+
 do_install:append:class-target() {
         if ${@bb.utils.contains('PACKAGECONFIG', 'fips', 'true', 'false', d)}; then
           install -d ${D}${bindir}/bin
           install -m 0755 ${B}/lib/.libs/fipshmac ${D}/${bindir}/
         fi
-}
-
-do_compile:append() {
-        oe_runmake ${PARALLEL_MAKE} -C tests buildtest-TESTS
 }
 
 PACKAGES =+ "${PN}-dane ${PN}-openssl ${PN}-xx ${PN}-fips"
