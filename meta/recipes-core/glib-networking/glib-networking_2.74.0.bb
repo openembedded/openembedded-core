@@ -3,8 +3,13 @@ DESCRIPTION = "glib-networking contains the implementations of certain GLib netw
 HOMEPAGE = "https://gitlab.gnome.org/GNOME/glib-networking/"
 BUGTRACKER = "http://bugzilla.gnome.org"
 
-LICENSE = "LGPL-2.1-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
+LICENSE = "LGPL-2.1-or-later"
+LICENSE:append = "${@bb.utils.contains('PACKAGECONFIG', 'openssl', ' & Glib-Networking-OpenSSL-Exception', '', d)}"
+NO_GENERIC_LICENSE[Glib-Networking-OpenSSL-Exception] = "LICENSE_EXCEPTION"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
+                    file://LICENSE_EXCEPTION;md5=0f5be697951b5e71aff00f4a4ce66be8 \
+                    file://tls/base/gtlsconnection-base.c;beginline=7;endline=22;md5=ab641ac307f3337811008ea9afe7059f"
 
 SECTION = "libs"
 DEPENDS = "glib-2.0-native glib-2.0"
