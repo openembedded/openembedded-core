@@ -26,7 +26,10 @@ S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 PACKAGECONFIG ??= "${@bb.utils.contains_any('DISTRO_FEATURES', [ 'directfb', 'wayland', 'x11' ], 'cairo', '', d)}"
 
-RDEPENDS:${PN} += "python3-pkgutil"
+RDEPENDS:${PN} += " \
+    python3-io \
+    python3-pkgutil \
+"
 
 # python3-pycairo is checked on configuration -> DEPENDS
 # we don't link against python3-pycairo -> RDEPENDS
