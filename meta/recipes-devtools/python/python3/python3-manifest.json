@@ -1321,6 +1321,19 @@
         ],
         "cached": []
     },
+    "zipapp": {
+        "summary": "Tools to manage the creation of zip files containing Python code",
+        "rdepends": [
+            "compression",
+            "core"
+        ],
+        "files": [
+            "${libdir}/python${PYTHON_MAJMIN}/zipapp.py"
+        ],
+        "cached": [
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/zipapp.*.pyc"
+        ]
+    },
     "zoneinfo": {
         "summary": "IANA time zone support",
         "rdepends": [
