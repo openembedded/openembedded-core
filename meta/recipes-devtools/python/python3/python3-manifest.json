@@ -152,6 +152,23 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/wave.*.pyc"
         ]
     },
+    "cgitb": {
+        "summary": "Special exception handler for Python scripts",
+        "rdepends": [
+            "core",
+            "crypt",
+            "html",
+            "io",
+            "math",
+            "pydoc"
+        ],
+        "files": [
+            "${libdir}/python${PYTHON_MAJMIN}/cgitb.py"
+        ],
+        "cached": [
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/cgitb.*.pyc"
+        ]
+    },
     "codecs": {
         "summary": "Python codec",
         "rdepends": [
