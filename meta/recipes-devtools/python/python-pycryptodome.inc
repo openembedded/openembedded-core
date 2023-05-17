@@ -10,6 +10,8 @@ inherit pypi
 PYPI_PACKAGE_EXT = "tar.gz"
 
 RDEPENDS:${PN} += " \
+    python3-cffi \
+    python3-ctypes \
     python3-io \
     python3-math \
 "
