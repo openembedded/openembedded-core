@@ -1236,6 +1236,18 @@
             "${libdir}/python${PYTHON_MAJMIN}/tomllib/_parser.*.pyc"
         ]
     },
+    "turtle": {
+        "summary": "Turtle graphics is a popular way for introducing programming to kids.",
+        "rdepends": [
+            "tkinter"
+        ],
+        "files": [
+            "${libdir}/python${PYTHON_MAJMIN}/turtle.py"
+        ],
+        "cached": [
+            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/turtle.*.pyc"
+        ]
+     },
     "unittest": {
         "summary": "Python unit testing framework",
         "rdepends": [
