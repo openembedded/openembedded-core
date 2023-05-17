@@ -12,13 +12,9 @@ DEPENDS += " \
     ${PYTHON_PN}-hatch-fancy-pypi-readme-native \
 "
 
-RDEPENDS:${PN}:class-target += " \
-    ${PYTHON_PN}-crypt \
+RDEPENDS:${PN}+= " \
     ${PYTHON_PN}-ctypes \
-"
-RDEPENDS:${PN}:class-nativesdk += " \
     ${PYTHON_PN}-crypt \
-    ${PYTHON_PN}-ctypes \
 "
 
 BBCLASSEXTEND = "native nativesdk"
