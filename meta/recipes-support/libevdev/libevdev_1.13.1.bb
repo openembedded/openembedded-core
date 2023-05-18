@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=80c550b3197bcb8da7d7557ebcc3fc46 \
                     "
 
 SRC_URI = "http://www.freedesktop.org/software/libevdev/${BP}.tar.xz"
-SRC_URI[sha256sum] = "9edf2006cc86a5055279647c38ec923d11a821ee4dc2c3033e8d20e8ee237cd9"
+SRC_URI[sha256sum] = "06a77bf2ac5c993305882bc1641017f5bec1592d6d1b64787bad492ab34f2f36"
 
 inherit autotools pkgconfig
 
