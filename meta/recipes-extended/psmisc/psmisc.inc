@@ -54,3 +54,5 @@ ALTERNATIVE_PRIORITY = "90"
 ALTERNATIVE:killall = "killall"
 
 ALTERNATIVE:fuser = "fuser"
+
+ALTERNATIVE:pstree = "pstree"
