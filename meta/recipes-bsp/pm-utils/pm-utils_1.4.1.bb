@@ -19,9 +19,12 @@ PACKAGECONFIG[manpages] = "--enable-doc, --disable-doc, libxslt-native xmlto-nat
 
 RDEPENDS_${PN} = "grep bash"
 
+EXTRA_OECONF = "--libdir=${nonarch_libdir}"
+
 do_configure_prepend () {
 	( cd ${S}; autoreconf -f -i -s )
 }
 
-FILES_${PN} += "${libdir}/${BPN}/*"
+FILES_${PN} += "${nonarch_libdir}/${BPN}/*"
 FILES_${PN}-dbg += "${datadir}/doc/pm-utils/README.debugging"
+FILES_${PN}-dev += "${nonarch_libdir}/pkgconfig/pm-utils.pc"
