@@ -14,7 +14,7 @@ DEPENDS = "zlib kmod make-native"
 SRC_URI = "${KERNELORG_MIRROR}/software/utils/pciutils/pciutils-${PV}.tar.xz \
            file://configure.patch"
 
-SRC_URI[sha256sum] = "cdea7ae97239dee23249a09c68a19a287a3f109fbeb2c232ebb616cb38599012"
+SRC_URI[sha256sum] = "238a2e27166730e53a17fe07bfad229e07fa39b618117e5944b6d7eda9fbb0e9"
 
 inherit multilib_header pkgconfig update-alternatives
 
