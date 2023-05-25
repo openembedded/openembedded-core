@@ -167,7 +167,7 @@ def convert_license_to_spdx(lic, document, d, existing={}):
 
         return spdx_license
 
-    lic_split = lic.replace("(", " ( ").replace(")", " ) ").split()
+    lic_split = lic.replace("(", " ( ").replace(")", " ) ").replace("|", " | ").replace("&", " & ").split()
 
     return ' '.join(convert(l) for l in lic_split)
 
