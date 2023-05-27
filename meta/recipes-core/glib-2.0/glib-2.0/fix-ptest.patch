@@ -1,0 +1,166 @@
+gio/tests/portal: Fix test ordering race
+
+When the gnome test runner executes the tests, the test appear to execute in disk 
+order. This means it sometimes works and we sometimes see breakage in portal-support-snap
+and portal-support-snap-classic.
+
+The issue is that some tests create config files but some don't. If they run
+in the wrong order, tests see config files they shouldn't and break.
+
+Fix this by deleting the files after each test run, properly cleaning up after 
+themselves. There are probably better ways to handle this but this patch should
+at least let us check this is the issue.
+
+I've tried to report upstream but their issue tracker account creation is struggling
+and I can't get my account to work.
+
+Upstream-Status: Pending
+
+Index: glib-2.76.2/gio/tests/portal-support-snap-classic.c
+===================================================================
+--- glib-2.76.2.orig/gio/tests/portal-support-snap-classic.c
++++ glib-2.76.2/gio/tests/portal-support-snap-classic.c
+@@ -89,6 +89,9 @@ test_portal_support_snap_none (SetupData
+   g_assert_false (glib_should_use_portal ());
+   g_assert_true (glib_network_available_in_sandbox ());
+   g_assert_true (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ static void
+@@ -101,6 +104,9 @@ test_portal_support_snap_all (SetupData
+   g_assert_false (glib_should_use_portal ());
+   g_assert_true (glib_network_available_in_sandbox ());
+   g_assert_true (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ int
+Index: glib-2.76.2/gio/tests/portal-support-snap.c
+===================================================================
+--- glib-2.76.2.orig/gio/tests/portal-support-snap.c
++++ glib-2.76.2/gio/tests/portal-support-snap.c
+@@ -80,6 +80,8 @@ test_portal_support_snap_no_snapctl (Set
+   g_assert_false (glib_should_use_portal ());
+   g_assert_false (glib_network_available_in_sandbox ());
+   g_assert_false (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
+ }
+ 
+ static void
+@@ -92,6 +94,9 @@ test_portal_support_snap_none (SetupData
+   g_assert_false (glib_should_use_portal ());
+   g_assert_false (glib_network_available_in_sandbox ());
+   g_assert_false (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ static void
+@@ -104,6 +109,9 @@ test_portal_support_snap_all (SetupData
+   g_assert_true (glib_should_use_portal ());
+   g_assert_true (glib_network_available_in_sandbox ());
+   g_assert_true (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ static void
+@@ -116,6 +124,9 @@ test_portal_support_snap_desktop_only (S
+   g_assert_true (glib_should_use_portal ());
+   g_assert_true (glib_network_available_in_sandbox ());
+   g_assert_false (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ static void
+@@ -128,6 +139,9 @@ test_portal_support_snap_network_only (S
+   g_assert_false (glib_should_use_portal ());
+   g_assert_true (glib_network_available_in_sandbox ());
+   g_assert_false (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ static void
+@@ -140,6 +154,9 @@ test_portal_support_snap_gsettings_only
+   g_assert_false (glib_should_use_portal ());
+   g_assert_false (glib_network_available_in_sandbox ());
+   g_assert_true (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ static void
+@@ -182,6 +199,9 @@ test_portal_support_snap_updates_dynamic
+   g_assert_false (glib_should_use_portal ());
+   g_assert_false (glib_network_available_in_sandbox ());
+   g_assert_false (glib_has_dconf_access_in_sandbox ());
++
++  cleanup_snapfiles (setup->snap_path);
++  cleanup_snapfiles (setup->bin_path);
+ }
+ 
+ int
+Index: glib-2.76.2/gio/tests/portal-support-utils.c
+===================================================================
+--- glib-2.76.2.orig/gio/tests/portal-support-utils.c
++++ glib-2.76.2/gio/tests/portal-support-utils.c
+@@ -26,6 +26,33 @@
+ #include <glib.h>
+ #include <glib/gstdio.h>
+ 
++
++void
++cleanup_snapfiles (const gchar *path)
++{
++  GDir *dir = NULL;
++  const gchar *entry;
++
++  dir = g_dir_open (path, 0, NULL);
++  if (dir == NULL)
++    {
++      /* Assume it’s a file. Ignore failure. */
++      (void) g_remove (path);
++      return;
++    }
++
++  while ((entry = g_dir_read_name (dir)) != NULL)
++    {
++      gchar *sub_path = g_build_filename (path, entry, NULL);
++      cleanup_snapfiles (sub_path);
++      g_free (sub_path);
++    }
++
++  g_dir_close (dir);
++
++  g_rmdir (path);
++}
++
+ void
+ create_fake_snapctl (const char *path,
+                      const char *supported_op)
+Index: glib-2.76.2/gio/tests/portal-support-utils.h
+===================================================================
+--- glib-2.76.2.orig/gio/tests/portal-support-utils.h
++++ glib-2.76.2/gio/tests/portal-support-utils.h
+@@ -23,6 +23,8 @@
+ 
+ #include <glib.h>
+ 
++void cleanup_snapfiles (const gchar *path);
++
+ void create_fake_snap_yaml (const char *snap_path,
+                             gboolean is_classic);
+ 
