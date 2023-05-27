@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5b8c87559868796979806100db3f3805 \
                     file://LEGAL;md5=bcd74b47bbaf2051c5e49811a5faa97a \
                     "
 
-DEPENDS = "zlib openssl libyaml gdbm readline libffi"
+DEPENDS = "zlib openssl libyaml gdbm readline libffi libxcrypt-native"
 DEPENDS:append:class-target = " ruby-native"
 DEPENDS:append:class-nativesdk = " ruby-native"
 
