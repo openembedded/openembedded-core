@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c9a450b7be84eac23e6353efecb60b5b \
                     file://src/passwd.c;beginline=2;endline=30;md5=758c26751513b6795395275969dd3be1 \
                     "
 
-DEPENDS = "virtual/crypt"
+DEPENDS = "virtual/crypt libxcrypt-native"
 
 GITHUB_BASE_URI = "https://github.com/shadow-maint/shadow/releases"
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz \
