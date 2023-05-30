@@ -130,22 +130,6 @@ python npm_do_configure() {
         sha512 = bb.utils.sha512_file(tarball)
         return "sha512-" + base64.b64encode(bytes.fromhex(sha512)).decode()
 
-    def _npmsw_dependency_dict(orig, deptree):
-        """
-        Return the sub dictionary in the 'orig' dictionary corresponding to the
-        'deptree' dependency tree. This function follows the shrinkwrap file
-        format.
-        """
-        ptr = orig
-        for dep in deptree:
-            if "dependencies" not in ptr:
-                ptr["dependencies"] = {}
-            ptr = ptr["dependencies"]
-            if dep not in ptr:
-                ptr[dep] = {}
-            ptr = ptr[dep]
-        return ptr
-
     # Manage the manifest file and shrinkwrap files
     orig_manifest_file = d.expand("${S}/package.json")
     orig_shrinkwrap_file = d.expand("${S}/npm-shrinkwrap.json")
@@ -177,24 +161,25 @@ python npm_do_configure() {
     progress_total = 1 # also count the main package
     progress_done = 0
 
-    def _count_dependency(name, params, deptree):
+    def _count_dependency(name, params, destsuffix):
         nonlocal progress_total
         progress_total += 1
 
-    def _cache_dependency(name, params, deptree):
-        destsubdirs = [os.path.join("node_modules", dep) for dep in deptree]
-        destsuffix = os.path.join(*destsubdirs)
+    def _cache_dependency(name, params, destsuffix):
         with tempfile.TemporaryDirectory() as tmpdir:
             # Add the dependency to the npm cache
             destdir = os.path.join(d.getVar("S"), destsuffix)
             (tarball, pkg) = npm_pack(env, destdir, tmpdir)
             _npm_cache_add(tarball, pkg)
             # Add its signature to the cached shrinkwrap
-            dep = _npmsw_dependency_dict(cached_shrinkwrap, deptree)
+            dep = params
             dep["version"] = pkg['version']
             dep["integrity"] = _npm_integrity(tarball)
             if params.get("dev", False):
                 dep["dev"] = True
+            if "dependencies" not in cached_shrinkwrap:
+                cached_shrinkwrap["dependencies"] = {}
+            cached_shrinkwrap["dependencies"][name] = dep
             # Display progress
             nonlocal progress_done
             progress_done += 1
