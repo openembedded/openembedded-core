@@ -146,6 +146,23 @@ class NpmRecipeHandler(RecipeHandler):
         foreach_dependencies(shrinkwrap, _handle_dependency, dev)
 
         return licfiles, packages
+    
+    # Handle the peer dependencies   
+    def _handle_peer_dependency(self, shrinkwrap_file):
+        """Check if package has peer dependencies and show warning if it is the case"""
+        with open(shrinkwrap_file, "r") as f:
+            shrinkwrap = json.load(f)
+        
+        packages = shrinkwrap.get("packages", {})
+        peer_deps = packages.get("", {}).get("peerDependencies", {})
+        
+        for peer_dep in peer_deps:
+            peer_dep_yocto_name = npm_package(peer_dep)
+            bb.warn(peer_dep + " is a peer dependencie of the actual package. " + 
+            "Please add this peer dependencie to the RDEPENDS variable as %s and generate its recipe with devtool"
+            % peer_dep_yocto_name)
+
+
 
     def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         """Handle the npm recipe creation"""
@@ -282,6 +299,9 @@ class NpmRecipeHandler(RecipeHandler):
 
         classes.append("npm")
         handled.append("buildsystem")
+
+        # Check if package has peer dependencies and inform the user
+        self._handle_peer_dependency(shrinkwrap_file)
 
         return True
 
