@@ -27,6 +27,7 @@ EXTRA_OECONF += "\
     --enable-ethernet \
     --enable-tools \
     --disable-polkit \
+    --runstatedir=/run \
 "
 
 PACKAGECONFIG ??= "wispr iptables client\
