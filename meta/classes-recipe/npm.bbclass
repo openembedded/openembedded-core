@@ -109,6 +109,7 @@ python npm_do_configure() {
     import tempfile
     from bb.fetch2.npm import NpmEnvironment
     from bb.fetch2.npm import npm_unpack
+    from bb.fetch2.npm import npm_package
     from bb.fetch2.npmsw import foreach_dependencies
     from bb.progress import OutOfProgressHandler
     from oe.npm_registry import NpmRegistry
@@ -169,6 +170,7 @@ python npm_do_configure() {
     if has_shrinkwrap_file:
        cached_shrinkwrap = copy.deepcopy(orig_shrinkwrap)
        cached_shrinkwrap.pop("dependencies", None)
+       cached_shrinkwrap["packages"][""].pop("peerDependencies", None)
 
     # Manage the dependencies
     progress = OutOfProgressHandler(d, r"^(\d+)/(\d+)$")
@@ -203,6 +205,19 @@ python npm_do_configure() {
     if has_shrinkwrap_file:
         foreach_dependencies(orig_shrinkwrap, _count_dependency, dev)
         foreach_dependencies(orig_shrinkwrap, _cache_dependency, dev)
+    
+    # Manage Peer Dependencies
+    if has_shrinkwrap_file:
+        packages = orig_shrinkwrap.get("packages", {})
+        peer_deps = packages.get("", {}).get("peerDependencies", {})
+        package_runtime_dependencies = d.getVar("RDEPENDS:%s" % d.getVar("PN"))
+        
+        for peer_dep in peer_deps:
+            peer_dep_yocto_name = npm_package(peer_dep)
+            if peer_dep_yocto_name not in package_runtime_dependencies:
+                bb.warn(peer_dep + " is a peer dependencie that is not in RDEPENDS variable. " + 
+                "Please add this peer dependencie to the RDEPENDS variable as %s and generate its recipe with devtool"
+                % peer_dep_yocto_name)
 
     # Configure the main package
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -278,6 +293,9 @@ python npm_do_compile() {
         # Add node-pre-gyp configuration
         args.append(("target_arch", d.getVar("NPM_ARCH")))
         args.append(("build-from-source", "true"))
+
+        # Don't install peer dependencies as they should be in RDEPENDS variable
+        args.append(("legacy-peer-deps", "true"))
 
         # Pack and install the main package
         (tarball, _) = npm_pack(env, d.getVar("NPM_PACKAGE"), tmpdir)
