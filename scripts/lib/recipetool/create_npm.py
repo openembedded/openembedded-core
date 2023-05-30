@@ -134,11 +134,10 @@ class NpmRecipeHandler(RecipeHandler):
                     licfiles.append(os.path.relpath(readme, srctree))
 
         # Handle the dependencies
-        def _handle_dependency(name, params, deptree):
+        def _handle_dependency(name, params, destdir):
+            deptree = destdir.split('node_modules/')
             suffix = "-".join([npm_package(dep) for dep in deptree])
-            destdirs = [os.path.join("node_modules", dep) for dep in deptree]
-            destdir = os.path.join(*destdirs)
-            packages["${PN}-" + suffix] = destdir
+            packages["${PN}" + suffix] = destdir
             _licfiles_append_fallback_readme_files(destdir)
 
         with open(shrinkwrap_file, "r") as f:
@@ -234,7 +233,7 @@ class NpmRecipeHandler(RecipeHandler):
             value = origvalue.replace("version=" + data["version"], "version=${PV}")
             value = value.replace("version=latest", "version=${PV}")
             values = [line.strip() for line in value.strip('\n').splitlines()]
-            if "dependencies" in shrinkwrap:
+            if "dependencies" in shrinkwrap.get("packages", {}).get("", {}):
                 values.append(url_recipe)
             return values, None, 4, False
 
