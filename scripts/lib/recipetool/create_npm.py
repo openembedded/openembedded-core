@@ -13,6 +13,7 @@ import sys
 import tempfile
 import bb
 from bb.fetch2.npm import NpmEnvironment
+from bb.fetch2.npm import npm_package
 from bb.fetch2.npmsw import foreach_dependencies
 from recipetool.create import RecipeHandler
 from recipetool.create import get_license_md5sums
@@ -29,15 +30,6 @@ def tinfoil_init(instance):
 
 class NpmRecipeHandler(RecipeHandler):
     """Class to handle the npm recipe creation"""
-
-    @staticmethod
-    def _npm_name(name):
-        """Generate a Yocto friendly npm name"""
-        name = re.sub("/", "-", name)
-        name = name.lower()
-        name = re.sub(r"[^\-a-z0-9]", "", name)
-        name = name.strip("-")
-        return name
 
     @staticmethod
     def _get_registry(lines):
@@ -143,7 +135,7 @@ class NpmRecipeHandler(RecipeHandler):
 
         # Handle the dependencies
         def _handle_dependency(name, params, deptree):
-            suffix = "-".join([self._npm_name(dep) for dep in deptree])
+            suffix = "-".join([npm_package(dep) for dep in deptree])
             destdirs = [os.path.join("node_modules", dep) for dep in deptree]
             destdir = os.path.join(*destdirs)
             packages["${PN}-" + suffix] = destdir
@@ -173,7 +165,7 @@ class NpmRecipeHandler(RecipeHandler):
         if "name" not in data or "version" not in data:
             return False
 
-        extravalues["PN"] = self._npm_name(data["name"])
+        extravalues["PN"] = npm_package(data["name"])
         extravalues["PV"] = data["version"]
 
         if "description" in data:
