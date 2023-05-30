@@ -688,6 +688,10 @@ def collect_package_providers(d):
             rprovides = set(n for n, _ in bb.utils.explode_dep_versions2(pkg_data.get("RPROVIDES", "")).items())
             rprovides.add(pkg)
 
+            if "PKG" in pkg_data:
+                pkg = pkg_data["PKG"]
+                rprovides.add(pkg)
+
             for r in rprovides:
                 providers[r] = (pkg, dep_hashfn)
 
