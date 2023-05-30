@@ -153,7 +153,11 @@ python npm_do_configure() {
 
     if has_shrinkwrap_file:
        cached_shrinkwrap = copy.deepcopy(orig_shrinkwrap)
-       cached_shrinkwrap.pop("dependencies", None)
+       for package in orig_shrinkwrap["packages"]:
+            if package != "":
+                cached_shrinkwrap["packages"].pop(package, None)
+       cached_shrinkwrap["packages"][""].pop("dependencies", None)
+       cached_shrinkwrap["packages"][""].pop("devDependencies", None)
        cached_shrinkwrap["packages"][""].pop("peerDependencies", None)
 
     # Manage the dependencies
@@ -177,9 +181,16 @@ python npm_do_configure() {
             dep["integrity"] = _npm_integrity(tarball)
             if params.get("dev", False):
                 dep["dev"] = True
-            if "dependencies" not in cached_shrinkwrap:
-                cached_shrinkwrap["dependencies"] = {}
-            cached_shrinkwrap["dependencies"][name] = dep
+                if "devDependencies" not in cached_shrinkwrap["packages"][""]:
+                    cached_shrinkwrap["packages"][""]["devDependencies"] = {}
+                cached_shrinkwrap["packages"][""]["devDependencies"][name] = pkg['version']
+
+            else:
+                if "dependencies" not in cached_shrinkwrap["packages"][""]:
+                    cached_shrinkwrap["packages"][""]["dependencies"] = {}
+                cached_shrinkwrap["packages"][""]["dependencies"][name] = pkg['version']
+
+            cached_shrinkwrap["packages"][destsuffix] = dep
             # Display progress
             nonlocal progress_done
             progress_done += 1
@@ -212,7 +223,7 @@ python npm_do_configure() {
     # Configure the cached manifest file and cached shrinkwrap file
     def _update_manifest(depkey):
         for name in orig_manifest.get(depkey, {}):
-            version = cached_shrinkwrap["dependencies"][name]["version"]
+            version = cached_shrinkwrap["packages"][""][depkey][name]
             if depkey not in cached_manifest:
                 cached_manifest[depkey] = {}
             cached_manifest[depkey][name] = version
