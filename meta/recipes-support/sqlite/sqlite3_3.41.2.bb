@@ -12,6 +12,3 @@ CVE_CHECK_IGNORE += "CVE-2019-19242"
 CVE_CHECK_IGNORE += "CVE-2015-3717"
 # Issue in an experimental extension we don't have/use. Fixed by https://sqlite.org/src/info/b1e0c22ec981cf5f
 CVE_CHECK_IGNORE += "CVE-2021-36690"
-# As per https://nvd.nist.gov/vuln/detail/CVE-2022-21227
-# this bug is applicable to SQLite3 Node.js
-CVE_CHECK_IGNORE += "CVE-2022-21227"
