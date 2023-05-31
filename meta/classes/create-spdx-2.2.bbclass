@@ -16,6 +16,7 @@ SPDXDEPLOY = "${SPDXDIR}/deploy"
 SPDXWORK = "${SPDXDIR}/work"
 SPDXIMAGEWORK = "${SPDXDIR}/image-work"
 SPDXSDKWORK = "${SPDXDIR}/sdk-work"
+SPDXDEPS = "${SPDXDIR}/deps.json"
 
 SPDX_TOOL_NAME ??= "oe-spdx-creator"
 SPDX_TOOL_VERSION ??= "1.0"
@@ -337,30 +338,21 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
 
             package_doc.add_relationship(pkg_file, "GENERATED_FROM", ref_id, comment=debugsrc)
 
-def collect_deps(d):
-    current_task = "do_" + d.getVar("BB_CURRENTTASK")
-
-    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
-    deps = sorted(set(
-        (dep[0], dep[7]) for dep in taskdepdata.values() if
-            dep[1] == current_task and dep[0] != d.getVar("PN")
-    ))
-
-    return deps
-
-collect_deps[vardepsexclude] += "BB_TASKDEPDATA"
-collect_deps[vardeps] += "DEPENDS"
-
 def collect_dep_recipes(d, doc, spdx_recipe):
+    import json
     from pathlib import Path
     import oe.sbom
     import oe.spdx
 
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
+    spdx_deps_file = Path(d.getVar("SPDXDEPS"))
 
     dep_recipes = []
 
-    for dep_pn, dep_hashfn in collect_deps(d):
+    with spdx_deps_file.open("r") as f:
+        deps = json.load(f)
+
+    for dep_pn, dep_hashfn in deps:
         dep_recipe_path = oe.sbom.doc_path_by_hashfn(deploy_dir_spdx, "recipe-" + dep_pn, dep_hashfn)
 
         spdx_dep_doc, spdx_dep_sha1 = oe.sbom.read_doc(dep_recipe_path)
@@ -461,6 +453,52 @@ def add_download_packages(d, doc, recipe):
             # In the future, we might be able to do more fancy dependencies,
             # but this should be sufficient for now
             doc.add_relationship(package, "BUILD_DEPENDENCY_OF", recipe)
+
+def collect_deps(d, dep_task):
+    current_task = "do_" + d.getVar("BB_CURRENTTASK")
+    pn = d.getVar("PN")
+
+    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
+
+    for this_dep in taskdepdata.values():
+        if this_dep[0] == pn and this_dep[1] == current_task:
+            break
+    else:
+        bb.fatal(f"Unable to find this {pn}:{current_task} in taskdepdata")
+
+    deps = set()
+    for dep_name in this_dep[3]:
+        dep_data = taskdepdata[dep_name]
+        if dep_data[1] == dep_task and dep_data[0] != pn:
+            deps.add((dep_data[0], dep_data[7]))
+
+    return sorted(deps)
+
+collect_deps[vardepsexclude] += "BB_TASKDEPDATA"
+collect_deps[vardeps] += "DEPENDS"
+
+python do_collect_spdx_deps() {
+    # This task calculates the build time dependencies of the recipe, and is
+    # required because while a task can deptask on itself, those dependencies
+    # do not show up in BB_TASKDEPDATA. To work around that, this task does the
+    # deptask on do_create_spdx and writes out the dependencies it finds, then
+    # do_create_spdx reads in the found dependencies when writing the actual
+    # SPDX document
+    import json
+    from pathlib import Path
+
+    spdx_deps_file = Path(d.getVar("SPDXDEPS"))
+
+    deps = collect_deps(d, "do_create_spdx")
+
+    with spdx_deps_file.open("w") as f:
+        json.dump(deps, f)
+}
+# NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
+addtask do_collect_spdx_deps after do_unpack
+do_collect_spdx_deps[depends] += "${PATCHDEPENDENCY}"
+do_collect_spdx_deps[deptask] = "do_create_spdx"
+do_collect_spdx_deps[dirs] = "${SPDXDIR}"
 
 python do_create_spdx() {
     from datetime import datetime, timezone
@@ -647,7 +685,7 @@ python do_create_spdx() {
             oe.sbom.write_doc(d, package_doc, d.getVar("SSTATE_PKGARCH"), "packages", indent=get_json_indent(d))
 }
 # NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
-addtask do_create_spdx after do_package do_packagedata do_unpack before do_populate_sdk do_build do_rm_work
+addtask do_create_spdx after do_package do_packagedata do_unpack do_collect_spdx_deps before do_populate_sdk do_build do_rm_work
 
 SSTATETASKS += "do_create_spdx"
 do_create_spdx[sstate-inputdirs] = "${SPDXDEPLOY}"
@@ -661,7 +699,6 @@ addtask do_create_spdx_setscene
 do_create_spdx[dirs] = "${SPDXWORK}"
 do_create_spdx[cleandirs] = "${SPDXDEPLOY} ${SPDXWORK}"
 do_create_spdx[depends] += "${PATCHDEPENDENCY}"
-do_create_spdx[deptask] = "do_create_spdx"
 
 def collect_package_providers(d):
     from pathlib import Path
