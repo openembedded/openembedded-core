@@ -17,25 +17,25 @@ KBRANCH:qemux86-64 ?= "v6.1/standard/base"
 KBRANCH:qemuloongarch64  ?= "v6.1/standard/base"
 KBRANCH:qemumips64 ?= "v6.1/standard/mti-malta64"
 
-SRCREV_machine:qemuarm ?= "171d448bfb9e531c7395deae260edf96305eab9c"
-SRCREV_machine:qemuarm64 ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemuloongarch64 ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemumips ?= "d637594e7e9c9037d7c609f9dfeef13a57a5aec4"
-SRCREV_machine:qemuppc ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemuriscv64 ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemuriscv32 ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemux86 ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemux86-64 ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_machine:qemumips64 ?= "52e3ff0902681ac3d9128bcf037033e14ae20d68"
-SRCREV_machine ?= "c35e45ea5f134aad3ef0ccd3f1b7b672c801e402"
-SRCREV_meta ?= "1bb0236be7c49344bd411c71f21769153ecd9695"
+SRCREV_machine:qemuarm ?= "df2cfcb92e63bdbdd34667d5915a71b1441ec723"
+SRCREV_machine:qemuarm64 ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemuloongarch64 ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemumips ?= "9cf687bf5869c57781cb399038d455351e4517e9"
+SRCREV_machine:qemuppc ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemuriscv64 ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemuriscv32 ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemux86 ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemux86-64 ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_machine:qemumips64 ?= "6e551dbbbc3d447255314706f089a45670063901"
+SRCREV_machine ?= "5595b9b98df96b1ef27dc5879d19b9b512cc5c14"
+SRCREV_meta ?= "b82e23405925b724cecf3deacc13739db6720ca2"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
 # meta SRCREV as the linux-yocto-standard builds. Select your version using the
 # normal PREFERRED_VERSION settings.
 BBCLASSEXTEND = "devupstream:target"
-SRCREV_machine:class-devupstream ?= "ca1c9012c941ab1520851938d5f695f5a4d23634"
+SRCREV_machine:class-devupstream ?= "ca48fc16c49388400eddd6c6614593ebf7c7726a"
 PN:class-devupstream = "linux-yocto-upstream"
 KBRANCH:class-devupstream = "v6.1/base"
 
@@ -43,7 +43,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRA
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-6.1;destsuffix=${KMETA};protocol=https"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-LINUX_VERSION ?= "6.1.26"
+LINUX_VERSION ?= "6.1.27"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
