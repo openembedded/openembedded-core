@@ -714,11 +714,16 @@ def collect_package_providers(d):
     deps.append((d.getVar("PN"), d.getVar("BB_HASHFILENAME")))
 
     for dep_pn, dep_hashfn in deps:
-        recipe_data = oe.packagedata.read_pkgdata(dep_pn, d)
+        localdata = d
+        recipe_data = oe.packagedata.read_pkgdata(dep_pn, localdata)
+        if not recipe_data:
+            localdata = bb.data.createCopy(d)
+            localdata.setVar("PKGDATA_DIR", "${PKGDATA_DIR_SDK}")
+            recipe_data = oe.packagedata.read_pkgdata(dep_pn, localdata)
 
         for pkg in recipe_data.get("PACKAGES", "").split():
 
-            pkg_data = oe.packagedata.read_subpkgdata_dict(pkg, d)
+            pkg_data = oe.packagedata.read_subpkgdata_dict(pkg, localdata)
             rprovides = set(n for n, _ in bb.utils.explode_dep_versions2(pkg_data.get("RPROVIDES", "")).items())
             rprovides.add(pkg)
 
