@@ -7,14 +7,14 @@ HOMEPAGE = "http://ccache.samba.org"
 SECTION = "devel"
 
 LICENSE = "GPL-3.0-or-later"
-LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=43a02b74c9eb73a0b978ae5082f5f1b6"
+LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=1601d62d6828fbe19b6f6c2d01fdff4c"
 
 DEPENDS = "zstd"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://0001-xxhash.h-Fix-build-with-gcc-12.patch \
            "
-SRC_URI[sha256sum] = "ac4b01748fd59cfe07e070c34432b91bdd0fd8640e1e653a80b01d6a523186b0"
+SRC_URI[sha256sum] = "869903c1891beb8bee87f1ec94d8a0dad18c2add4072c456acbc85cdfc23ca63"
 
 inherit cmake github-releases
 
