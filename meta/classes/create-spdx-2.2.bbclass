@@ -138,7 +138,7 @@ def convert_license_to_spdx(lic, document, d, existing={}):
                     with open(filename, errors="replace") as f:
                         extracted_info.extractedText = f.read()
                 else:
-                    bb.error("Cannot find any text for license %s" % name)
+                    bb.fatal("Cannot find any text for license %s" % name)
 
         extracted[name] = extracted_info
         document.hasExtractedLicensingInfos.append(extracted_info)
