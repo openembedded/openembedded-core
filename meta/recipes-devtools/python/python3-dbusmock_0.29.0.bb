@@ -4,7 +4,7 @@ HOMEPAGE = "https://pypi.org/project/python-dbusmock/"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
-SRC_URI[sha256sum] = "0786977750dbcbde6e2553339a2e66d9a8d4453d5c848b945e8fd1badb736ffd"
+SRC_URI[sha256sum] = "3efdb3d800386b65e8854d8ee4538764241382b4e664423ad7d959c9008dd408"
 
 PYPI_PACKAGE = "python-dbusmock"
 
