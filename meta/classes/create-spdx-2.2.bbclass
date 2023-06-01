@@ -338,6 +338,8 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
 
             package_doc.add_relationship(pkg_file, "GENERATED_FROM", ref_id, comment=debugsrc)
 
+add_package_sources_from_debug[vardepsexclude] += "STAGING_KERNEL_DIR"
+
 def collect_dep_recipes(d, doc, spdx_recipe):
     import json
     from pathlib import Path
@@ -684,6 +686,7 @@ python do_create_spdx() {
 
             oe.sbom.write_doc(d, package_doc, d.getVar("SSTATE_PKGARCH"), "packages", indent=get_json_indent(d))
 }
+do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
 # NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
 addtask do_create_spdx after do_package do_packagedata do_unpack do_collect_spdx_deps before do_populate_sdk do_build do_rm_work
 
@@ -854,6 +857,8 @@ python do_create_runtime_spdx() {
             oe.sbom.write_doc(d, runtime_doc, d.getVar("SSTATE_PKGARCH"), "runtime", spdx_deploy, indent=get_json_indent(d))
 }
 
+do_create_runtime_spdx[vardepsexclude] += "OVERRIDES"
+
 addtask do_create_runtime_spdx after do_create_spdx before do_build do_rm_work
 SSTATETASKS += "do_create_runtime_spdx"
 do_create_runtime_spdx[sstate-inputdirs] = "${SPDXRUNTIMEDEPLOY}"
@@ -919,6 +924,8 @@ def spdx_get_src(d):
             bb.utils.mkdirhier(spdx_workdir)
     finally:
         d.setVar("WORKDIR", workdir)
+
+spdx_get_src[vardepsexclude] += "STAGING_KERNEL_DIR"
 
 do_rootfs[recrdeptask] += "do_create_spdx do_create_runtime_spdx"
 do_rootfs[cleandirs] += "${SPDXIMAGEWORK}"
@@ -1125,3 +1132,5 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
             info.gname = "root"
 
             tar.addfile(info, fileobj=index_str)
+
+combine_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
