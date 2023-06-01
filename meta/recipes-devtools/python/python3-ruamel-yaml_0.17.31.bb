@@ -3,13 +3,13 @@ HOMEPAGE = "https://pypi.org/project/ruamel.yaml/"
 AUTHOR = "Anthon van der Neut"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=034154b7344d15438bc5ed5ee9cc075f"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=0e5f41db57c3a8d3584b450d35985ad1"
 
 PYPI_PACKAGE = "ruamel.yaml"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "8b7ce697a2f212752a35c1ac414471dc16c424c9573be4926b56ff3f5d23b7af"
+SRC_URI[sha256sum] = "098ed1eb6d338a684891a72380277c1e6fc4d4ae0e120de9a447275056dda335"
 
 RDEPENDS:${PN} += "\
     ${PYTHON_PN}-shell \
