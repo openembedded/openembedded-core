@@ -47,7 +47,6 @@ EXTRA_OECMAKE = "-DSDL_OSS=OFF -DSDL_ESD=OFF -DSDL_ARTS=OFF \
                  -DSDL_X11_XRANDR=OFF \
                  -DSDL_X11_XSCRNSAVER=OFF \
                  -DSDL_X11_XSHAPE=OFF \
-                 -DSDL_CCACHE=OFF \
 "
 
 # opengl packageconfig factored out to make it easy for distros
