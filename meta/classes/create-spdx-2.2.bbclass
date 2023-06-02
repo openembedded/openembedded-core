@@ -454,7 +454,7 @@ def add_download_packages(d, doc, recipe):
             # but this should be sufficient for now
             doc.add_relationship(package, "BUILD_DEPENDENCY_OF", recipe)
 
-def collect_deps(d, dep_task):
+def collect_direct_deps(d, dep_task):
     current_task = "do_" + d.getVar("BB_CURRENTTASK")
     pn = d.getVar("PN")
 
@@ -474,8 +474,8 @@ def collect_deps(d, dep_task):
 
     return sorted(deps)
 
-collect_deps[vardepsexclude] += "BB_TASKDEPDATA"
-collect_deps[vardeps] += "DEPENDS"
+collect_direct_deps[vardepsexclude] += "BB_TASKDEPDATA"
+collect_direct_deps[vardeps] += "DEPENDS"
 
 python do_collect_spdx_deps() {
     # This task calculates the build time dependencies of the recipe, and is
@@ -489,7 +489,7 @@ python do_collect_spdx_deps() {
 
     spdx_deps_file = Path(d.getVar("SPDXDEPS"))
 
-    deps = collect_deps(d, "do_create_spdx")
+    deps = collect_direct_deps(d, "do_create_spdx")
 
     with spdx_deps_file.open("w") as f:
         json.dump(deps, f)
@@ -710,10 +710,7 @@ def collect_package_providers(d):
 
     providers = {}
 
-    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
-    deps = sorted(set(
-        (dep[0], dep[7]) for dep in taskdepdata.values() if dep[0] != d.getVar("PN")
-    ))
+    deps = collect_direct_deps(d, "do_create_spdx")
     deps.append((d.getVar("PN"), d.getVar("BB_HASHFILENAME")))
 
     for dep_pn, dep_hashfn in deps:
