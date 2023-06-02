@@ -4,14 +4,13 @@ HOMEPAGE = "http://www.rust-lang.org"
 
 # check src/llvm-project/llvm/CMakeLists.txt for llvm version in use
 #
-LLVM_RELEASE = "15.0.6"
+LLVM_RELEASE = "16.0.2"
 
 require rust-source.inc
 
 SRC_URI += "file://0002-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
             file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
-	    file://0003-llvm-fix-include-benchmarks.patch;striplevel=2 \
-	    file://0035-cmake-Enable-64bit-off_t-on-32bit-glibc-systems.patch;striplevel=2"
+	    file://0003-llvm-fix-include-benchmarks.patch;striplevel=2"
 
 S = "${RUSTSRC}/src/llvm-project/llvm"
 
