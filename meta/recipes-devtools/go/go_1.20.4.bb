@@ -3,7 +3,7 @@ require go-target.inc
 
 inherit linuxloader
 
-CGO_LDFLAGS:append:mips = " -no-pie"
+CGO_LDFLAGS:append = " -no-pie"
 
 export GO_LDSO = "${@get_linuxloader(d)}"
 export CC_FOR_TARGET = "gcc"
