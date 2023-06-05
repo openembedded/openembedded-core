@@ -118,7 +118,7 @@ do_configure () {
 		target=linux-ppc64le
 		;;
 	linux-riscv32)
-		target=linux-generic32
+		target=linux-latomic
 		;;
 	linux-riscv64)
 		target=linux-generic64
