@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/LGPL-2.1-or-later.txt;md5=4fbd65380cdd255951
 SECTION = "libs"
 
 SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https;branch=master"
-SRCREV = "108100622160bb0c7ef4b6186230fe1f26402791"
+SRCREV = "4dfb5254fc0540a36e87914bc14644c047ea7678"
 
 S = "${WORKDIR}/git"
 
@@ -19,7 +19,7 @@ inherit cmake lib_package
 
 EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release"
 
-DEPENDS = "zlib"
+DEPENDS = "zlib libyaml"
 PROVIDES += "u-boot-fw-utils"
 RPROVIDES:${PN}-bin += "u-boot-fw-utils"
 
