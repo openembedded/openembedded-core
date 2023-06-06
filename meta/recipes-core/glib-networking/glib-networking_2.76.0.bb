@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 SECTION = "libs"
 DEPENDS = "glib-2.0-native glib-2.0"
 
-SRC_URI[archive.sha256sum] = "1f185aaef094123f8e25d8fa55661b3fd71020163a0174adb35a37685cda613b"
+SRC_URI[archive.sha256sum] = "149a05a179e629a538be25662aa324b499d7c4549c5151db5373e780a1bf1b9a"
 
 PACKAGECONFIG ??= "openssl environment ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 
