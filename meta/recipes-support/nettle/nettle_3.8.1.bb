@@ -24,7 +24,7 @@ SRC_URI[sha256sum] = "364f3e2b77cd7dcde83fd7c45219c834e54b0c75e428b6f894a23d12dd
 
 UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
-inherit autotools ptest multilib_header
+inherit autotools ptest multilib_header lib_package
 
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
@@ -52,5 +52,7 @@ do_install_ptest() {
         sed -i -e 's|../tools/|${bindir}/|g' ${D}${PTEST_PATH}/testsuite/*-test
         sed -i -e 's|../examples/|./|g' ${D}${PTEST_PATH}/testsuite/*-test
 }
+
+RDEPENDS:${PN}-ptest += "${PN}-bin"
 
 BBCLASSEXTEND = "native nativesdk"
