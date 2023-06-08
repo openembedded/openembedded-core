@@ -7,11 +7,8 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e4dac5c6ab169aa212feb5028853a579"
 
 SECTION = "net"
-RDEPENDS:${PN} = "lighttpd-module-dirlisting \
-                  lighttpd-module-indexfile \
-                  lighttpd-module-staticfile"
-RRECOMMENDS:${PN} = "lighttpd-module-access \
-                     lighttpd-module-accesslog"
+RDEPENDS:${PN} = "lighttpd-module-dirlisting"
+RRECOMMENDS:${PN} = "lighttpd-module-accesslog"
 
 SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.xz \
            file://index.html.lighttpd \
@@ -19,7 +16,7 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
            file://lighttpd \
            "
 
-SRC_URI[sha256sum] = "16ac8db95e719629ba61949b99f8a26feba946a81d185215b28379bb4116b0b4"
+SRC_URI[sha256sum] = "b8b6915da20396fdc354df3324d5e440169b2e5ea7859e3a775213841325afac"
 
 DEPENDS = "virtual/crypt"
 
