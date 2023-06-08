@@ -20,10 +20,6 @@ SRC_URI = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz \
            file://check-header-files-of-openssl-only-if-enable_.patch \
            "
 
-SRC_URI:append:class-target = "\
-            file://dlopen-test.patch \
-            "
-
 SRC_URI[sha256sum] = "364f3e2b77cd7dcde83fd7c45219c834e54b0c75e428b6f894a23d12dd41cbfe"
 
 UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
@@ -44,14 +40,17 @@ do_install:append() {
 
 do_install_ptest() {
         install -d ${D}${PTEST_PATH}/testsuite/
-        install ${S}/testsuite/gold-bug.txt ${D}${PTEST_PATH}/testsuite/
-        install ${S}/testsuite/*-test ${D}${PTEST_PATH}/testsuite/
-        # tools can be found in PATH, not in ../tools/
-        sed -i -e 's|../tools/||' ${D}${PTEST_PATH}/testsuite/*-test
         install ${B}/testsuite/*-test ${D}${PTEST_PATH}/testsuite/
-}
+        install ${S}/testsuite/*-test ${D}${PTEST_PATH}/testsuite/
+        install ${S}/testsuite/gold-bug.txt ${D}${PTEST_PATH}/testsuite/
 
-RDEPENDS:${PN}-ptest += "${PN}-dev"
-INSANE_SKIP:${PN}-ptest += "dev-deps"
+        # Install a symlink for dlopen-test
+        ln -sr ${D}${libdir}/libnettle.so.*.* ${D}${PTEST_PATH}/libnettle.so
+        # These examples are needed for pkcs1-conv-test
+        install ${B}/examples/rsa-sign ${B}/examples/rsa-verify ${D}${PTEST_PATH}/testsuite/
+        # Fix build-time relative paths
+        sed -i -e 's|../tools/|${bindir}/|g' ${D}${PTEST_PATH}/testsuite/*-test
+        sed -i -e 's|../examples/|./|g' ${D}${PTEST_PATH}/testsuite/*-test
+}
 
 BBCLASSEXTEND = "native nativesdk"
