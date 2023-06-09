@@ -18,6 +18,7 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BP}.tar.xz \
            file://CVE-2022-32888.patch \
            file://CVE-2022-32923.patch \
            file://CVE-2022-46691.patch \
+           file://CVE-2022-46699.patch \
            "
 SRC_URI[sha256sum] = "0ad9fb6bf28308fe3889faf184bd179d13ac1b46835d2136edbab2c133d00437"
 
