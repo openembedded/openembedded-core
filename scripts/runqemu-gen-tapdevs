@@ -50,12 +50,6 @@ if ! [ $COUNT -ge 0 ]; then
 	exit 1
 fi
 
-TUNCTL=$STAGING_BINDIR_NATIVE/tunctl
-if [[ ! -x "$TUNCTL" || -d "$TUNCTL" ]]; then
-	echo "Error: $TUNCTL is not an executable"
-	usage
-fi
-
 if [ $EUID -ne 0 ]; then
 	echo "Error: This script must be run with root privileges"
 	exit
@@ -68,15 +62,29 @@ if [ ! -x "$RUNQEMU_IFUP" ]; then
 	exit 1
 fi
 
-if ! interfaces=`ip link` 2>/dev/null; then
+TUNCTL=$STAGING_BINDIR_NATIVE/tunctl
+ip_supports_tuntap=false
+if interfaces=`ip tuntap list` 2>/dev/null; then
+	ip_supports_tuntap=true
+	interfaces=`echo "$interfaces |cut -f1 -d:`
+elif [[ ! -x "$TUNCTL" || -d "$TUNCTL" ]]; then
+	echo "Error: $TUNCTL is not an executable"
+	usage
+elif interfaces=`ip link` 2>/dev/null; then
+	interfaces=`echo "$interfaces" | sed '/^[0-9]\+: \(docker[0-9]\+\):.*/!d; s//\1/'`
+else
 	echo "Failed to call 'ip link'" >&2
 	exit 1
 fi
 
 # Ensure we start with a clean slate
-for tap in `echo "$interfaces" | sed '/^[0-9]\+: \(docker[0-9]\+\):.*/!d; s//\1/'`; do
+for tap in $interfaces; do
 	echo "Note: Destroying pre-existing tap interface $tap..."
-	$TUNCTL -d $tap
+	if $ip_supports_tuntap; then
+		ip tuntap del $tap mode tap
+	else
+		$TUNCTL -d $tap
+	fi
 done
 rm -f /etc/runqemu-nosudo
 
