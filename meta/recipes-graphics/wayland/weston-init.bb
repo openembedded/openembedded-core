@@ -93,5 +93,5 @@ CONFFILES:${PN} += "${sysconfdir}/xdg/weston/weston.ini ${sysconfdir}/default/we
 
 SYSTEMD_SERVICE:${PN} = "weston.service weston.socket"
 USERADD_PARAM:${PN} = "--home /home/weston --shell /bin/sh --user-group -G video,input weston"
-GROUPADD_PARAM:${PN} = "-r wayland"
+GROUPADD_PARAM:${PN} = "-r wayland; -r render"
 
