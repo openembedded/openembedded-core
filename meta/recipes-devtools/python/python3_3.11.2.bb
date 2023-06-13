@@ -124,7 +124,7 @@ EXTRA_OEMAKE = '\
 
 do_compile:prepend:class-target() {
        if ${@bb.utils.contains('PACKAGECONFIG', 'pgo', 'true', 'false', d)}; then
-                qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}/${base_libdir}'])}"
+                qemu_binary="${@qemu_wrapper_cmdline(d, '${STAGING_DIR_TARGET}', ['${B}', '${STAGING_DIR_TARGET}${base_libdir}'])}"
                 cat >pgo-wrapper <<EOF
 #!/bin/sh
 cd ${B}
@@ -164,17 +164,17 @@ do_install:append:class-native() {
 
         # Nothing should be looking into ${B} for python3-native
         sed -i -e 's:${B}:/build/path/unavailable/:g' \
-                ${D}/${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile
+                ${D}${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile
         
         # disable the lookup in user's site-packages globally
         sed -i 's#ENABLE_USER_SITE = None#ENABLE_USER_SITE = False#' ${D}${libdir}/python${PYTHON_MAJMIN}/site.py
 
         # python3-config needs to be in /usr/bin and not in a subdir of it to work properly
-        mv ${D}/${bindir}/${PN}/python*config ${D}/${bindir}/
+        mv ${D}${bindir}/${PN}/python*config ${D}${bindir}/
 }
 
 do_install:append() {
-        for c in ${D}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
+        for c in ${D}${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
             python3 ${WORKDIR}/reformat_sysconfig.py $c
         done
         rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata*.cpython*
@@ -227,8 +227,8 @@ SYSROOT_PREPROCESS_FUNCS:append:class-nativesdk = " provide_target_config_script
 # in components erroneously picking up other target executables from it
 provide_target_config_script() {
         install -d ${SYSROOT_DESTDIR}${prefix}/python-target-config/
-        install ${D}/${bindir}/python3-config ${SYSROOT_DESTDIR}/${prefix}/python-target-config/
-        install ${D}/${bindir}/python${PYTHON_MAJMIN}-config ${SYSROOT_DESTDIR}/${prefix}/python-target-config/
+        install ${D}${bindir}/python3-config ${SYSROOT_DESTDIR}${prefix}/python-target-config/
+        install ${D}${bindir}/python${PYTHON_MAJMIN}-config ${SYSROOT_DESTDIR}${prefix}/python-target-config/
 }
 SYSROOT_DIRS += "${prefix}/python-target-config/"
 
@@ -251,13 +251,13 @@ py_package_preprocess () {
                 -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
                 -e 's:${RECIPE_SYSROOT}::g' \
                 -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
-                ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile \
-                ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py \
-                ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config
+                ${PKGD}${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile \
+                ${PKGD}${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py \
+                ${PKGD}${bindir}/python${PYTHON_MAJMIN}-config
 
         # Reformat _sysconfigdata after modifying it so that it remains
         # reproducible
-        for c in ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
+        for c in ${PKGD}${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
             python3 ${WORKDIR}/reformat_sysconfig.py $c
         done
 
@@ -272,10 +272,10 @@ py_package_preprocess () {
              -c "from py_compile import compile; compile('$sysconfigfile', optimize=2)"
         cd -
 
-        mv ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config-${MULTILIB_SUFFIX}
+        mv ${PKGD}${bindir}/python${PYTHON_MAJMIN}-config ${PKGD}${bindir}/python${PYTHON_MAJMIN}-config-${MULTILIB_SUFFIX}
         
         #Remove the unneeded copy of target sysconfig data
-        rm -rf ${PKGD}/${libdir}/python-sysconfigdata
+        rm -rf ${PKGD}${libdir}/python-sysconfigdata
 }
 
 # We want bytecode precompiled .py files (.pyc's) by default
