@@ -17,7 +17,7 @@ SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-$
            file://0001-g-ir-tool-template.in-fix-girdir-path.patch \
            "
 
-SRC_URI[sha256sum] = "347b3a719e68ba4c69ff2d57ee2689233ea8c07fc492205e573386779e42d653"
+SRC_URI[sha256sum] = "196178bf64345501dcdc4d8469b36aa6fe80489354efe71cb7cb8ab82a3738bf"
 
 SRC_URI:append:class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
