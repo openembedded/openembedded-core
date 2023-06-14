@@ -6,7 +6,7 @@ HOMEPAGE = "http://www.gnu.org/software/coreutils/"
 BUGTRACKER = "http://debbugs.gnu.org/coreutils"
 LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://src/ls.c;beginline=1;endline=15;md5=1fe89f62614b5e1f5475ec04d5899bc1 \
+                    file://src/ls.c;beginline=1;endline=15;md5=b720a8b317035d66c555fc6d89e3674c \
                     "
 DEPENDS = "gmp libcap"
 DEPENDS:class-native = ""
@@ -19,7 +19,7 @@ SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "61a1f410d78ba7e7f37a5a4f50e6d1320aca33375484a3255eddf17a38580423"
+SRC_URI[sha256sum] = "adbcfcfe899235b71e8768dcf07cd532520b7f54f9a8064843f8d199a904bbaa"
 
 # http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=v8.27-101-gf5d7c0842
 # runcon is not really a sandbox command, use `runcon ... setsid ...` to avoid this particular issue.
