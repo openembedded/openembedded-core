@@ -23,7 +23,7 @@ DEPENDS = "vulkan-headers vulkan-loader spirv-headers spirv-tools glslang"
 EXTRA_OECMAKE = "\
     -DBUILD_TESTS=OFF \
     -DUSE_ROBIN_HOOD_HASHING=OFF \
-    -DGLSLANG_INSTALL_DIR=${STAGING_DATADIR} \
+    -DGLSLANG_INSTALL_DIR=${STAGING_LIBDIR} \
     -DVULKAN_HEADERS_INSTALL_DIR=${STAGING_EXECPREFIXDIR} \
     -DSPIRV_HEADERS_INSTALL_DIR=${STAGING_EXECPREFIXDIR} \
     "
@@ -31,14 +31,11 @@ EXTRA_OECMAKE = "\
 PACKAGECONFIG[x11] = "-DBUILD_WSI_XLIB_SUPPORT=ON -DBUILD_WSI_XCB_SUPPORT=ON, -DBUILD_WSI_XLIB_SUPPORT=OFF -DBUILD_WSI_XCB_SUPPORT=OFF, libxcb libx11 libxrandr"
 PACKAGECONFIG[wayland] = "-DBUILD_WSI_WAYLAND_SUPPORT=ON, -DBUILD_WSI_WAYLAND_SUPPORT=OFF, wayland"
 
-PACKAGECONFIG ?= "\
-    ${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'wayland', d)} \
-    "
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'x11 wayland', d)}"
 
 inherit cmake features_check pkgconfig
 
-FILES:${PN} += "${datadir}/vulkan ${libdir}"
+FILES:${PN} += "${datadir}/vulkan"
 
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
