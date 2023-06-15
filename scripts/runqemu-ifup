@@ -47,13 +47,13 @@ if [ -z $TAP ]; then
 	exit 1
 fi
 
-IFCONFIG=`which ip 2> /dev/null`
-if [ "x$IFCONFIG" = "x" ]; then
+IPTOOL=`which ip 2> /dev/null`
+if [ "x$IPTOOL" = "x" ]; then
 	# better than nothing...
-	IFCONFIG=/sbin/ip
+	IPTOOL=/sbin/ip
 fi
-if [ ! -x "$IFCONFIG" ]; then
-	echo "$IFCONFIG cannot be executed"
+if [ ! -x "$IPTOOL" ]; then
+	echo "$IPTOOL cannot be executed"
 	exit 1
 fi
 
@@ -67,13 +67,13 @@ if [ ! -x "$IPTABLES" ]; then
 fi
 
 n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
-$IFCONFIG addr add 192.168.7.$n/32 broadcast 192.168.7.255 dev $TAP
+$IPTOOL addr add 192.168.7.$n/32 broadcast 192.168.7.255 dev $TAP
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
     echo "Failed to set up IP addressing on $TAP"
     exit 1
 fi
-$IFCONFIG link set dev $TAP up
+$IPTOOL link set dev $TAP up
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
     echo "Failed to bring up $TAP"
@@ -81,7 +81,7 @@ if [ $STATUS -ne 0 ]; then
 fi
 
 dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
-$IFCONFIG route add to 192.168.7.$dest dev $TAP
+$IPTOOL route add to 192.168.7.$dest dev $TAP
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
     echo "Failed to add route to 192.168.7.$dest using $TAP"

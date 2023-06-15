@@ -37,14 +37,14 @@ if !ip tuntap del $TAP mode tap 2>/dev/null; then
 	exit 1
 fi
 
-IFCONFIG=`which ip 2> /dev/null`
-if [ "x$IFCONFIG" = "x" ]; then
+IPTOOL=`which ip 2> /dev/null`
+if [ "x$IPTOOL" = "x" ]; then
 	# better than nothing...
-	IFCONFIG=/sbin/ip
+	IPTOOL=/sbin/ip
 fi
-if [ -x "$IFCONFIG" ]; then
-	if `$IFCONFIG link show $TAP > /dev/null 2>&1`; then
-		$IFCONFIG link del $TAP
+if [ -x "$IPTOOL" ]; then
+	if `$IPTOOL link show $TAP > /dev/null 2>&1`; then
+		$IPTOOL link del $TAP
 	fi
 fi
 # cleanup the remaining iptables rules
