@@ -1,10 +1,7 @@
 #!/bin/bash
 #
 # QEMU network interface configuration script. This utility needs to
-# be run as root, and will use the tunctl binary from a native sysroot.
-# Note: many Linux distros these days still use an older version of
-# tunctl which does not support the group permissions option, hence
-# the need to use build system's version.
+# be run as root, and will use the ip utility
 #
 # If you find yourself calling this script a lot, you can add the
 # the following to your /etc/sudoers file to be able to run this
@@ -39,7 +36,6 @@ fi
 
 USERID="-u $1"
 GROUP="-g $2"
-STAGING_BINDIR_NATIVE=$3
 
 if taps=$(ip tuntap list 2>/dev/null); then
 	tap_no=$(( $(echo "$taps" |sort -r |sed 's/^tap//; s/:.*//; q') + 1 ))
@@ -47,24 +43,8 @@ if taps=$(ip tuntap list 2>/dev/null); then
 fi
 
 if [ -z $TAP ]; then
-	TUNCTL=$STAGING_BINDIR_NATIVE/tunctl
-	if [ ! -x "$TUNCTL" ]; then
-		echo "Error: Unable to find tunctl binary in '$STAGING_BINDIR_NATIVE', please bitbake qemu-helper-native"
-		exit 1
-	fi
-
-	TAP=`$TUNCTL -b $GROUP 2>&1`
-	STATUS=$?
-	if [ $STATUS -ne 0 ]; then
-	# If tunctl -g fails, try using tunctl -u, for older host kernels
-	# which do not support the TUNSETGROUP ioctl
-		TAP=`$TUNCTL -b $USERID 2>&1`
-		STATUS=$?
-		if [ $STATUS -ne 0 ]; then
-			echo "tunctl failed:"
-			exit 1
-		fi
-	fi
+	echo "Error: Unable to find a tap device to use"
+	exit 1
 fi
 
 IFCONFIG=`which ip 2> /dev/null`
