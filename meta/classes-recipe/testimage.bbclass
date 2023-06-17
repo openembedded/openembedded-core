@@ -212,7 +212,7 @@ def get_artifacts_list(target, raw_list):
                 raise Exception()
             result += output.split()
         except:
-            bb.warn(f"No file/directory matching path {raw_path}")
+            bb.note(f"No file/directory matching path {raw_path}")
 
     return result
 
