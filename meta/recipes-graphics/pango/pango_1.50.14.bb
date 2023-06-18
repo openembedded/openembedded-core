@@ -22,6 +22,7 @@ GIR_MESON_DISABLE_FLAG = "disabled"
 
 SRC_URI += "file://run-ptest \
            file://0001-Skip-running-test-layout-test.patch \
+           file://0001-Drop-Werror-array-bounds.patch \
            "
 
 SRC_URI[archive.sha256sum] = "1d67f205bfc318c27a29cfdfb6828568df566795df0cb51d2189cde7f2d581e8"
