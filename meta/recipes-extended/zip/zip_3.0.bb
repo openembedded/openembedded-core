@@ -32,9 +32,6 @@ CVE_CHECK_IGNORE += "CVE-2018-13410"
 # Not for zip but for smart contract implementation for it
 CVE_CHECK_IGNORE += "CVE-2018-13684"
 
-# Enable largefile support
-CFLAGS += "-DLARGE_FILE_SUPPORT"
-
 # zip.inc sets CFLAGS, but what Makefile actually uses is
 # CFLAGS_NOOPT.  It will also force -O3 optimization, overriding
 # whatever we set.
