@@ -59,7 +59,7 @@ if [ ! -x "$RUNQEMU_IFUP" ]; then
 fi
 
 if interfaces=`ip tuntap list` 2>/dev/null; then
-	interfaces=`echo "$interfaces |cut -f1 -d:`
+	interfaces=`echo "$interfaces" |cut -f1 -d:`
 else
 	echo "Failed to call 'ip tuntap list'" >&2
 	exit 1
