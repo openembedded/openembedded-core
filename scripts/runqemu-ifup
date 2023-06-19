@@ -21,7 +21,7 @@
 #
 
 usage() {
-	echo "sudo $(basename $0) <uid> <gid> <native-sysroot-basedir>"
+	echo "sudo $(basename $0) <uid> <gid>"
 }
 
 if [ $EUID -ne 0 ]; then
@@ -29,7 +29,7 @@ if [ $EUID -ne 0 ]; then
 	exit 1
 fi
 
-if [ $# -ne 3 ]; then
+if [ $# -ne 2 ]; then
 	usage
 	exit 1
 fi
