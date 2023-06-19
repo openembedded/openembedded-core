@@ -38,7 +38,7 @@ USERID="-u $1"
 GROUP="-g $2"
 
 if taps=$(ip tuntap list 2>/dev/null); then
-	tap_no=$(( $(echo "$taps" |sort -r |sed 's/^tap//; s/:.*//; q') + 1 ))
+	tap_no=$(( $(echo "$taps" |cut -f 1 -d ":" | sed 's/tap//g' | sort -rn | head -n 1) + 1 ))
 	ip tuntap add tap$tap_no mode tap group $2 && TAP=tap$tap_no
 fi
 
