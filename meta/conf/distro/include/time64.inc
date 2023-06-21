@@ -29,6 +29,8 @@ GLIBC_64BIT_TIME_FLAGS:pn-pipewire = ""
 # undefines _FILE_OFFSET_BITS, which wont work when _TIME_BITS=64 is set
 GLIBC_64BIT_TIME_FLAGS:pn-pulseaudio = ""
 GLIBC_64BIT_TIME_FLAGS:pn-gcc-sanitizers = ""
+# https://github.com/strace/strace/issues/250
+GLIBC_64BIT_TIME_FLAGS:pn-strace = ""
 
 INSANE_SKIP:append:pn-cargo = " 32bit-time"
 INSANE_SKIP:append:pn-gcc-sanitizers = " 32bit-time"
