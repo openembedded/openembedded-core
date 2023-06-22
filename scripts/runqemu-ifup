@@ -21,7 +21,7 @@
 #
 
 usage() {
-	echo "sudo $(basename $0) <uid> <gid>"
+	echo "sudo $(basename $0) <gid>"
 }
 
 if [ $EUID -ne 0 ]; then
@@ -29,17 +29,20 @@ if [ $EUID -ne 0 ]; then
 	exit 1
 fi
 
-if [ $# -ne 2 ]; then
+if [ $# -eq 2 ]; then
+	echo "Warning: uid parameter is ignored. It is no longer needed."
+	GROUP="$2"
+elif [ $# -eq 1 ]; then
+	GROUP="$1"
+else
 	usage
 	exit 1
 fi
 
-USERID="-u $1"
-GROUP="-g $2"
 
 if taps=$(ip tuntap list 2>/dev/null); then
 	tap_no=$(( $(echo "$taps" |cut -f 1 -d ":" | sed 's/tap//g' | sort -rn | head -n 1) + 1 ))
-	ip tuntap add tap$tap_no mode tap group $2 && TAP=tap$tap_no
+	ip tuntap add tap$tap_no mode tap group "$GROUP" && TAP=tap$tap_no
 fi
 
 if [ -z $TAP ]; then
