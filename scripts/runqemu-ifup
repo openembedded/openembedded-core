@@ -40,12 +40,16 @@ else
 fi
 
 
-if taps=$(ip tuntap list 2>/dev/null); then
-	tap_no=$(( $(echo "$taps" |cut -f 1 -d ":" | sed 's/tap//g' | sort -rn | head -n 1) + 1 ))
-	ip tuntap add tap$tap_no mode tap group "$GROUP" && TAP=tap$tap_no
+if [ -z "$OE_TAP_NAME" ]; then
+	OE_TAP_NAME=tap
 fi
 
-if [ -z $TAP ]; then
+if taps=$(ip tuntap list 2>/dev/null); then
+	tap_no=$(( $(echo "$taps" |cut -f 1 -d ":" | sed "s/$OE_TAP_NAME//g" | sort -rn | head -n 1) + 1 ))
+	ip tuntap add "$OE_TAP_NAME$tap_no" mode tap group "$GROUP" && TAP="$OE_TAP_NAME$tap_no"
+fi
+
+if [ -z "$TAP" ]; then
 	echo "Error: Unable to find a tap device to use"
 	exit 1
 fi
@@ -69,7 +73,7 @@ if [ ! -x "$IPTABLES" ]; then
 	exit 1
 fi
 
-n=$[ (`echo $TAP | sed 's/tap//'` * 2) + 1 ]
+n=$[ (`echo $TAP | sed "s/$OE_TAP_NAME//"` * 2) + 1 ]
 $IPTOOL addr add 192.168.7.$n/32 broadcast 192.168.7.255 dev $TAP
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
@@ -83,7 +87,7 @@ if [ $STATUS -ne 0 ]; then
     exit 1
 fi
 
-dest=$[ (`echo $TAP | sed 's/tap//'` * 2) + 2 ]
+dest=$[ (`echo $TAP | sed "s/$OE_TAP_NAME//"` * 2) + 2 ]
 $IPTOOL route add to 192.168.7.$dest dev $TAP
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
