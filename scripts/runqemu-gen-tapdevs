@@ -45,6 +45,10 @@ else
 fi
 
 
+if [ -z "$OE_TAP_NAME" ]; then
+	OE_TAP_NAME=tap
+fi
+
 # check if COUNT is a number and >= 0
 if ! [ $COUNT -ge 0 ]; then
 	echo "Error: Incorrect count: $COUNT"
@@ -64,7 +68,7 @@ if [ ! -x "$RUNQEMU_IFUP" ]; then
 fi
 
 if interfaces=`ip tuntap list` 2>/dev/null; then
-	interfaces=`echo "$interfaces" |cut -f1 -d:`
+	interfaces=`echo "$interfaces" |cut -f1 -d: `
 else
 	echo "Failed to call 'ip tuntap list'" >&2
 	exit 1
@@ -83,7 +87,7 @@ fi
 
 echo "Creating $COUNT tap devices for GID: $GID..."
 for ((index=0; index < $COUNT; index++)); do
-	echo "Creating tap$index"
+	echo "Creating $OE_TAP_NAME$index"
 	if ! ifup=`$RUNQEMU_IFUP $GID 2>&1`; then
 		echo "Error bringing up interface: $ifup"
 		exit 1
@@ -95,7 +99,7 @@ echo "Note: that the tap devices be set as unmanaged in the"
 echo "Note: NetworkManager.conf file. Add the following lines to"
 echo "Note: /etc/NetworkManager/NetworkManager.conf"
 echo "[keyfile]"
-echo "unmanaged-devices=interface-name:tap*"
+echo "unmanaged-devices=interface-name:$OE_TAP_NAME*"
 
 # The runqemu script will check for this file, and if it exists,
 # will use the existing bank of tap devices without creating
