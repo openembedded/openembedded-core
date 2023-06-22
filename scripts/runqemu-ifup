@@ -45,8 +45,13 @@ if [ -z "$OE_TAP_NAME" ]; then
 fi
 
 if taps=$(ip tuntap list 2>/dev/null); then
-	tap_no=$(( $(echo "$taps" |cut -f 1 -d ":" | sed "s/$OE_TAP_NAME//g" | sort -rn | head -n 1) + 1 ))
-	ip tuntap add "$OE_TAP_NAME$tap_no" mode tap group "$GROUP" && TAP="$OE_TAP_NAME$tap_no"
+	tap_no_last=$(echo "$taps" |cut -f 1 -d ":" |sed "s/$OE_TAP_NAME//g" | sort -rn | head -n 1)
+	if [ -z "$tap_no_last" ]; then
+		tap_no=0
+	else
+		tap_no=$(("$tap_no_last" + 1))
+	fi
+	ip tuntap add "$OE_TAP_NAME$tap_no" mode tap group "$GROUP" && TAP=$OE_TAP_NAME$tap_no
 fi
 
 if [ -z "$TAP" ]; then
