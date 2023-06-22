@@ -1159,7 +1159,11 @@ to your build configuration.
         logger.debug('Running %s...' % str(cmd))
         ip_link = subprocess.check_output(cmd).decode('utf-8')
         # Matches line like: 6: tap0: <foo>
-        possibles = re.findall('^[0-9]+: +(tap[0-9]+): <.*', ip_link, re.M)
+        oe_tap_name = 'tap'
+        if 'OE_TAP_NAME' in os.environ:
+            oe_tap_name = os.environ['OE_TAP_NAME']
+        tap_re = '^[0-9]+: +(' + oe_tap_name + '[0-9]+): <.*'
+        possibles = re.findall(tap_re, ip_link, re.M)
         tap = ""
         for p in possibles:
             lockfile = os.path.join(lockdir, p)
@@ -1198,7 +1202,7 @@ to your build configuration.
             logger.error("Failed to setup tap device. Run runqemu-gen-tapdevs to manually create.")
             sys.exit(1)
         self.tap = tap
-        tapnum = int(tap[3:])
+        tapnum = int(tap[len(oe_tap_name):])
         gateway = tapnum * 2 + 1
         client = gateway + 1
         if self.fstype == 'nfs':
