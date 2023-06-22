@@ -18,19 +18,22 @@ if [ -n "$SUDO_GID" ]; then
 fi
 
 usage() {
-	echo "Usage: sudo $0 <uid> <gid> <num> <staging_bindir_native>"
+	echo "Usage: sudo $0 <uid> <gid> <num>"
 	echo "Where <uid> is the numeric user id the tap devices will be owned by"
 	echo "Where <gid> is the numeric group id the tap devices will be owned by"
 	echo "<num> is the number of tap devices to create (0 to remove all)"
-	echo "<native-sysroot-basedir> is the path to the build system's native sysroot"
 	echo "For example:"
 	echo "$ bitbake qemu-helper-native"
-	echo "$ sudo $0 $uid $gid 4 tmp/sysroots-components/x86_64/qemu-helper-native/usr/bin"
+	echo "$ sudo $0 $uid $gid 4"
 	echo ""
 	exit 1
 }
 
-if [ $# -ne 4 ]; then
+# Allow passing 4 arguments for backward compatibility with warning
+if [ $# -eq 4 ]; then
+	echo "Warning: The <native-sysroot-basedir> parameter is no longer needed. Ignoring."
+fi
+if [ $# -lt 3 ] || [ $# -gt 4 ]; then
 	echo "Error: Incorrect number of arguments"
 	usage
 fi
@@ -38,7 +41,6 @@ fi
 TUID=$1
 GID=$2
 COUNT=$3
-STAGING_BINDIR_NATIVE=$4
 
 # check if COUNT is a number and >= 0
 if ! [ $COUNT -ge 0 ]; then
