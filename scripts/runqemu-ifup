@@ -45,7 +45,7 @@ if [ -z "$OE_TAP_NAME" ]; then
 fi
 
 if taps=$(ip tuntap list 2>/dev/null); then
-	tap_no_last=$(echo "$taps" |cut -f 1 -d ":" |sed "s/$OE_TAP_NAME//g" | sort -rn | head -n 1)
+	tap_no_last=$(echo "$taps" |cut -f 1 -d ":" |grep -E "^$OE_TAP_NAME.*" |sed "s/$OE_TAP_NAME//g" | sort -rn | head -n 1)
 	if [ -z "$tap_no_last" ]; then
 		tap_no=0
 	else
