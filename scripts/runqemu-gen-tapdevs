@@ -8,39 +8,42 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-uid=`id -u`
 gid=`id -g`
-if [ -n "$SUDO_UID" ]; then
-    uid=$SUDO_UID
-fi
 if [ -n "$SUDO_GID" ]; then
     gid=$SUDO_GID
 fi
 
 usage() {
-	echo "Usage: sudo $0 <uid> <gid> <num>"
-	echo "Where <uid> is the numeric user id the tap devices will be owned by"
+	echo "Usage: sudo $0 <gid> <num>"
 	echo "Where <gid> is the numeric group id the tap devices will be owned by"
 	echo "<num> is the number of tap devices to create (0 to remove all)"
 	echo "For example:"
 	echo "$ bitbake qemu-helper-native"
-	echo "$ sudo $0 $uid $gid 4"
+	echo "$ sudo $0 $gid 4"
 	echo ""
 	exit 1
 }
 
 # Allow passing 4 arguments for backward compatibility with warning
-if [ $# -eq 4 ]; then
-	echo "Warning: The <native-sysroot-basedir> parameter is no longer needed. Ignoring."
+if [ $# -gt 4 ]; then
+	echo "Error: Incorrect number of arguments"
+	usage
 fi
-if [ $# -lt 3 ] || [ $# -gt 4 ]; then
+if [ $# -gt 3 ]; then
+	echo "Warning: Ignoring the <native-sysroot-basedir> parameter. It is no longer needed."
+fi
+if [ $# -gt 2 ]; then
+	echo "Warning: Ignoring the <uid> parameter. It is no longer needed."
+	GID=$2
+	COUNT=$3
+elif [ $# -eq 2 ]; then
+	GID=$1
+	COUNT=$2
+else
 	echo "Error: Incorrect number of arguments"
 	usage
 fi
 
-TUID=$1
-GID=$2
-COUNT=$3
 
 # check if COUNT is a number and >= 0
 if ! [ $COUNT -ge 0 ]; then
@@ -78,10 +81,10 @@ if [ $COUNT -eq 0 ]; then
 	exit 0
 fi
 
-echo "Creating $COUNT tap devices for UID: $TUID GID: $GID..."
+echo "Creating $COUNT tap devices for GID: $GID..."
 for ((index=0; index < $COUNT; index++)); do
 	echo "Creating tap$index"
-	if ! ifup=`$RUNQEMU_IFUP $TUID $GID 2>&1`; then
+	if ! ifup=`$RUNQEMU_IFUP $GID 2>&1`; then
 		echo "Error bringing up interface: $ifup"
 		exit 1
 	fi
