@@ -18,9 +18,6 @@ DEPENDS = "tiff jpeg fontconfig cups libpng freetype zlib"
 UPSTREAM_CHECK_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 
-# We use a system libjpeg-turbo which has this fix
-CVE_CHECK_IGNORE += "CVE-2013-6629"
-
 def gs_verdir(v):
     return "".join(v.split("."))
 
