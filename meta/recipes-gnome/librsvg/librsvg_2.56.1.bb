@@ -19,10 +19,9 @@ inherit cargo_common gnomebase pixbufcache upstream-version-is-even gobject-intr
 require ${BPN}-crates.inc
 
 SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
-            file://0001-system-deps-src-lib.rs-do-not-probe-into-harcoded-li.patch;patchdir=${CARGO_VENDORING_DIRECTORY} \
            "
 
-SRC_URI[archive.sha256sum] = "194b5097d9cd107495f49c291cf0da65ec2b4bb55e5628369751a3f44ba222b3"
+SRC_URI[archive.sha256sum] = "1685aeacae9a441dcb12c0c3ec63706172a2f52705dafbefb8e7311d4d5e430b"
 
 # librsvg is still autotools-based, but is calling cargo from its automake-driven makefiles
 # so we cannot use cargo class directly, but still need bits and pieces from it 
