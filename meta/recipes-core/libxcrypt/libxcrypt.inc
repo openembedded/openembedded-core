@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSING;md5=c0a30e2b1502c55a7f37e412cd6c6a4b \
 inherit autotools pkgconfig
 
 SRC_URI = "git://github.com/besser82/libxcrypt.git;branch=${SRCBRANCH};protocol=https"
-SRCREV = "e80cfde51bb4fe4bcf27585810e0b4ea3d1e4d7d"
+SRCREV = "321222c91c4060362b1085b3ca7c29867812ac0a"
 SRCBRANCH ?= "master"
 
 SRC_URI += "file://fix_cflags_handling.patch"
