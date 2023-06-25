@@ -5,14 +5,13 @@ SECTION = "libs"
 DEPENDS = "zlib"
 
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3e089ad0cf27edf1e7f261dfcd06acc7"
+LIC_FILES_CHKSUM = "file://COPYING;md5=24a33237426720395ebb1dd1349ca225"
 
 SRC_URI = "http://www.libssh2.org/download/${BP}.tar.gz \
-           file://fix-ssh2-test.patch \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "2d64e90f3ded394b91d3a2e774ca203a4179f69aebee03003e5a6fa621e41d51"
+SRC_URI[sha256sum] = "3736161e41e2693324deb38c26cfdc3efe6209d634ba4258db1cecff6a5ad461"
 
 inherit autotools pkgconfig ptest
 
@@ -20,6 +19,7 @@ EXTRA_OECONF += "\
                  --with-libz \
                  --with-libz-prefix=${STAGING_LIBDIR} \
                 "
+DISABLE_STATIC = ""
 
 # only one of openssl and gcrypt could be set
 PACKAGECONFIG ??= "openssl"
@@ -29,7 +29,7 @@ PACKAGECONFIG[gcrypt] = "--with-crypto=libgcrypt --with-libgcrypt-prefix=${STAGI
 BBCLASSEXTEND = "native nativesdk"
 
 # required for ptest on documentation
-RDEPENDS:${PN}-ptest = "man-db openssh util-linux-col"
+RDEPENDS:${PN}-ptest = "bash man-db openssh util-linux-col"
 RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us"
 
 do_compile_ptest() {
@@ -41,9 +41,11 @@ do_install_ptest() {
 	install -d ${D}${PTEST_PATH}/tests
 	install -m 0755 ${S}/test-driver ${D}${PTEST_PATH}/
 	cp -rf ${B}/tests/.libs/* ${D}${PTEST_PATH}/tests/
+	cp -rf ${B}/tests/test_simple ${D}${PTEST_PATH}/tests/
 	cp -rf ${S}/tests/mansyntax.sh  ${D}${PTEST_PATH}/tests/
-	cp -rf ${S}/tests/ssh2.sh  ${D}${PTEST_PATH}/tests/
-	cp -rf ${S}/tests/etc ${D}${PTEST_PATH}/tests/
+	cp -rf ${S}/tests/key*  ${D}${PTEST_PATH}/tests/
+	cp -rf ${S}/tests/openssh_server/  ${D}${PTEST_PATH}/tests/
+	cp -rf ${S}/tests/*.test  ${D}${PTEST_PATH}/tests/
 	mkdir -p ${D}${PTEST_PATH}/docs
 	cp -r ${S}/docs/* ${D}${PTEST_PATH}/docs/
 }
