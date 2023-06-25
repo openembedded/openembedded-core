@@ -101,6 +101,10 @@ cargo_common_do_configure () {
 	EOF
 }
 
+do_compile:prepend () {
+        oe_cargo_fix_env
+}
+
 oe_cargo_fix_env () {
 	export CC="${RUST_TARGET_CC}"
 	export CXX="${RUST_TARGET_CXX}"
