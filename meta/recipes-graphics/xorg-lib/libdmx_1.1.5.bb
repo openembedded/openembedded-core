@@ -15,7 +15,4 @@ DEPENDS += "libxext xorgproto"
 
 PE = "1"
 
-XORG_EXT = "tar.bz2"
-
-SRC_URI[md5sum] = "d2f1f0ec68ac3932dd7f1d9aa0a7a11c"
-SRC_URI[sha256sum] = "253f90005d134fa7a209fbcbc5a3024335367c930adf0f3203e754cf32747243"
+SRC_URI[sha256sum] = "35a4e26a8b0b2b4fe36441dca463645c3fa52d282ac3520501a38ea942cbf74f"
