@@ -1,26 +1,24 @@
 SUMMARY = "Provides cryptographic recipes and primitives to python developers"
 HOMEPAGE = "https://cryptography.io/"
 SECTION = "devel/python"
-LICENSE = "( Apache-2.0 | BSD-3-Clause ) & PSF-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=bf405a8056a6647e7d077b0e7bc36aba \
+LICENSE = "Apache-2.0 | BSD-3-Clause"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=8c3617db4fb6fae01f1d253ab91511e4 \
                     file://LICENSE.APACHE;md5=4e168cce331e5c827d4c2b68a6200e1b \
                     file://LICENSE.BSD;md5=5ae30ba4123bc4f2fa49aa0b0dce887b \
-                    file://LICENSE.PSF;md5=43c37d21e1dbad10cddcd150ba2c0595 \
                    "
 LDSHARED += "-pthread"
 
-SRC_URI[sha256sum] = "bc5b871e977c8ee5a1bbc42fa8d19bcc08baf0c51cbf1586b0e87a2694dde42f"
+SRC_URI[sha256sum] = "d34579085401d3f49762d2f7d6634d6b6c2ae1242202e860f4d26b046e3a1006"
 
-SRC_URI += "\
-    file://0002-Cargo.toml-edition-2018-2021.patch \
-    file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
-    file://check-memfree.py \
-    file://run-ptest \
-"
+SRC_URI += "file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
+            file://0001-cryptography-cffi-substitute-include-path-from-targe.patch \
+            file://check-memfree.py \
+            file://run-ptest \
+           "
 
 require ${BPN}-crates.inc
 
-inherit pypi python_setuptools3_rust cargo-update-recipe-crates
+inherit pypi python_setuptools3_rust cargo-update-recipe-crates pkgconfig
 
 DEPENDS += " \
     ${PYTHON_PN}-cffi-native \
