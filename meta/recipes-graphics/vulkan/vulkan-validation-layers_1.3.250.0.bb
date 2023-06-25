@@ -8,8 +8,10 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=8df9e8826734226d08cb412babfa599c"
 
-SRC_URI = "git://git@github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=sdk-1.3.243;protocol=https"
-SRCREV = "4ac0fd8e6cb3d49105d707d9ec07f0f3aa0943d6"
+SRC_URI = "git://git@github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=sdk-1.3.250;protocol=https \
+           file://0001-scripts-CMakeLists.txt-append-to-CMAKE_FIND_ROOT_PAT.patch \
+           "
+SRCREV = "1541e00a63cd125f15d231d5a8059ebe66503b25"
 
 S = "${WORKDIR}/git"
 
