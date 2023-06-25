@@ -1,7 +1,7 @@
-From 27ed9962f5cb3afcc44d6c96c53277132a999712 Mon Sep 17 00:00:00 2001
+From c59850367a190d70dec43e0a66f399a4d8a5ffed Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 14 Jun 2021 19:57:30 +0200
-Subject: [PATCH 6/6] reproducible
+Subject: [PATCH 4/4] reproducible
 
 This patch fixes various things which make the build more reproducible. Some changes
 here only change intermediate artefacts but that means when you have two build trees
@@ -35,10 +35,10 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  4 files changed, 24 insertions(+), 16 deletions(-)
 
 diff --git a/BaseTools/Source/C/GenFw/Elf64Convert.c b/BaseTools/Source/C/GenFw/Elf64Convert.c
-index d097db8632..a87ae6f3d0 100644
+index 9c17c90b16..fcc7864141 100644
 --- a/BaseTools/Source/C/GenFw/Elf64Convert.c
 +++ b/BaseTools/Source/C/GenFw/Elf64Convert.c
-@@ -14,6 +14,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
+@@ -15,6 +15,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
  #ifndef __GNUC__
  #include <windows.h>
  #include <io.h>
@@ -47,35 +47,35 @@ index d097db8632..a87ae6f3d0 100644
  #endif
  #include <assert.h>
  #include <stdio.h>
-@@ -769,7 +771,7 @@ ScanSections64 (
+@@ -990,7 +992,7 @@ ScanSections64 (
    }
    mCoffOffset = mDebugOffset + sizeof(EFI_IMAGE_DEBUG_DIRECTORY_ENTRY) +
                  sizeof(EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY) +
 -                strlen(mInImageName) + 1;
 +                strlen(basename(mInImageName)) + 1;
  
-   mCoffOffset = CoffAlign(mCoffOffset);
-   if (SectionCount == 0) {
-@@ -1608,7 +1610,7 @@ WriteDebug64 (
-   EFI_IMAGE_DEBUG_DIRECTORY_ENTRY     *Dir;
-   EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY *Nb10;
+   //
+   // Add more space in the .debug data region for the DllCharacteristicsEx
+@@ -2261,7 +2263,7 @@ WriteDebug64 (
+   EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY         *Nb10;
+   EFI_IMAGE_DEBUG_EX_DLLCHARACTERISTICS_ENTRY *DllEntry;
  
 -  Len = strlen(mInImageName) + 1;
 +  Len = strlen(basename(mInImageName)) + 1;
  
-   Dir = (EFI_IMAGE_DEBUG_DIRECTORY_ENTRY*)(mCoffFile + mDebugOffset);
-   Dir->Type = EFI_IMAGE_DEBUG_TYPE_CODEVIEW;
-@@ -1618,7 +1620,7 @@ WriteDebug64 (
+   NtHdr = (EFI_IMAGE_OPTIONAL_HEADER_UNION *)(mCoffFile + mNtHdrOffset);
+   DataDir = &NtHdr->Pe32Plus.OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_DEBUG];
+@@ -2294,7 +2296,7 @@ WriteDebug64 (
  
    Nb10 = (EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY*)(Dir + 1);
    Nb10->Signature = CODEVIEW_SIGNATURE_NB10;
 -  strcpy ((char *)(Nb10 + 1), mInImageName);
 +  strcpy ((char *)(Nb10 + 1), basename(mInImageName));
+ }
  
- 
-   NtHdr = (EFI_IMAGE_OPTIONAL_HEADER_UNION *)(mCoffFile + mNtHdrOffset);
+ STATIC
 diff --git a/BaseTools/Source/Python/AutoGen/BuildEngine.py b/BaseTools/Source/Python/AutoGen/BuildEngine.py
-index 722fead75a..8f1c236970 100644
+index 752a1a1f6a..02054cccf8 100644
 --- a/BaseTools/Source/Python/AutoGen/BuildEngine.py
 +++ b/BaseTools/Source/Python/AutoGen/BuildEngine.py
 @@ -70,6 +70,9 @@ class TargetDescBlock(object):
@@ -89,7 +89,7 @@ index 722fead75a..8f1c236970 100644
          if Input not in self.Inputs:
              self.Inputs.append(Input)
 diff --git a/BaseTools/Source/Python/AutoGen/GenMake.py b/BaseTools/Source/Python/AutoGen/GenMake.py
-index 961b2ab1c3..23c1592025 100755
+index daec9c6d54..0e8cc20efe 100755
 --- a/BaseTools/Source/Python/AutoGen/GenMake.py
 +++ b/BaseTools/Source/Python/AutoGen/GenMake.py
 @@ -575,7 +575,7 @@ cleanlib:
@@ -153,10 +153,10 @@ index 961b2ab1c3..23c1592025 100755
                  if T.GenFileListMacro and T.FileListMacro not in self.FileListMacros:
                      self.FileListMacros[T.FileListMacro] = []
 diff --git a/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py b/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py
-index d70b0d7ae8..25dca9a6df 100755
+index d05410b329..99b3f64aba 100755
 --- a/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py
 +++ b/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py
-@@ -1484,6 +1484,9 @@ class ModuleAutoGen(AutoGen):
+@@ -1474,6 +1474,9 @@ class ModuleAutoGen(AutoGen):
              for File in Files:
                  if File.lower().endswith('.pdb'):
                      AsBuiltInfDict['binary_item'].append('DISPOSABLE|' + File)
@@ -166,7 +166,7 @@ index d70b0d7ae8..25dca9a6df 100755
          HeaderComments = self.Module.HeaderComments
          StartPos = 0
          for Index in range(len(HeaderComments)):
-@@ -1759,7 +1762,7 @@ class ModuleAutoGen(AutoGen):
+@@ -1749,7 +1752,7 @@ class ModuleAutoGen(AutoGen):
              if os.path.exists (self.TimeStampPath):
                  os.remove (self.TimeStampPath)
  
@@ -176,5 +176,5 @@ index d70b0d7ae8..25dca9a6df 100755
          # Ignore generating makefile when it is a binary module
          if self.IsBinaryModule:
 -- 
-2.32.0
+2.30.2
 
