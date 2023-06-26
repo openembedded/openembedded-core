@@ -236,6 +236,8 @@ PACKAGES =+ "${PN}-system-all ${PN}-user-all"
 ALLOW_EMPTY:${PN}-system-all = "1"
 ALLOW_EMPTY:${PN}-user-all = "1"
 
+PACKAGES_DYNAMIC += "^${PN}-user-.*  ^${PN}-system-.*"
+
 PACKAGESPLITFUNCS =+ "split_qemu_packages"
 
 python split_qemu_packages () {
