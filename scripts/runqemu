@@ -648,10 +648,10 @@ to your build configuration.
                         elif fsflag == 'kernel-in-fs':
                             wic_fs = False
                         else:
-                            logger.warn('Unknown flag "%s:%s" in QB_FSINFO', fstype, fsflag)
+                            logger.warning('Unknown flag "%s:%s" in QB_FSINFO', fstype, fsflag)
                             continue
                     else:
-                        logger.warn('QB_FSINFO is not supported for image type "%s"', fstype)
+                        logger.warning('QB_FSINFO is not supported for image type "%s"', fstype)
                         continue
 
                     if fstype in self.fsinfo:
