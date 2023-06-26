@@ -1186,7 +1186,7 @@ to your build configuration.
             gid = os.getgid()
             uid = os.getuid()
             logger.info("Setting up tap interface under sudo")
-            cmd = ('sudo', self.qemuifup, str(uid), str(gid))
+            cmd = ('sudo', self.qemuifup, str(gid))
             try:
                 tap = subprocess.check_output(cmd).decode('utf-8').strip()
             except subprocess.CalledProcessError as e:
