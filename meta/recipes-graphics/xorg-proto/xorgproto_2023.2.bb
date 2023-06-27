@@ -6,10 +6,10 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xorg"
 
 SECTION = "x11/libs"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING-x11proto;md5=dfc4bd2b0568b31725b85b0604e69b56"
+LIC_FILES_CHKSUM = "file://COPYING-x11proto;md5=0b9fe3db4015bcbe920e7c67a39ee3f1"
 
 SRC_URI = "${XORG_MIRROR}/individual/proto/${BP}.tar.xz"
-SRC_URI[sha256sum] = "5d13dbf2be08f95323985de53352c4f352713860457b95ccaf894a647ac06b9e"
+SRC_URI[sha256sum] = "b61fbc7db82b14ce2dc705ab590efc32b9ad800037113d1973811781d5118c2c"
 
 inherit meson
 
