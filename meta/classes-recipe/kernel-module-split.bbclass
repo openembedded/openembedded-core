@@ -69,9 +69,8 @@ python split_kernel_module_packages () {
             cmd = "%sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("HOST_PREFIX") or "", file, tmpfile)
         subprocess.check_call(cmd, shell=True)
         # errors='replace': Some old kernel versions contain invalid utf-8 characters in mod descriptions (like 0xf6, 'ö')
-        f = open(tmpfile, errors='replace')
-        l = f.read().split("\000")
-        f.close()
+        with open(tmpfile, errors='replace') as f:
+            l = f.read().split("\000")
         os.close(tf[0])
         os.unlink(tmpfile)
         if compressed:
@@ -101,13 +100,12 @@ python split_kernel_module_packages () {
             conf = '/etc/modules-load.d/%s.conf' % basename
             name = '%s%s' % (dvar, conf)
             os.makedirs(os.path.dirname(name), exist_ok=True)
-            f = open(name, 'w')
-            if autoload:
-                for m in autoload.split():
-                    f.write('%s\n' % m)
-            else:
-                f.write('%s\n' % basename)
-            f.close()
+            with open(name, 'w') as f:
+                if autoload:
+                    for m in autoload.split():
+                        f.write('%s\n' % m)
+                else:
+                    f.write('%s\n' % basename)
             conf2append = ' %s' % conf
             d.appendVar('FILES:%s' % pkg, conf2append)
             d.appendVar('CONFFILES:%s' % pkg, conf2append)
@@ -124,9 +122,8 @@ python split_kernel_module_packages () {
             conf = '/etc/modprobe.d/%s.conf' % basename
             name = '%s%s' % (dvar, conf)
             os.makedirs(os.path.dirname(name), exist_ok=True)
-            f = open(name, 'w')
-            f.write("%s\n" % modconf)
-            f.close()
+            with open(name, 'w') as f:
+                f.write("%s\n" % modconf)
             conf2append = ' %s' % conf
             d.appendVar('FILES:%s' % pkg, conf2append)
             d.appendVar('CONFFILES:%s' % pkg, conf2append)
