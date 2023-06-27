@@ -9,7 +9,7 @@ PYPI_PACKAGE = "ruamel.yaml"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "098ed1eb6d338a684891a72380277c1e6fc4d4ae0e120de9a447275056dda335"
+SRC_URI[sha256sum] = "ec939063761914e14542972a5cba6d33c23b0859ab6342f61cf070cfc600efc2"
 
 RDEPENDS:${PN} += "\
     ${PYTHON_PN}-shell \
