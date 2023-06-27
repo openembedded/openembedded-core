@@ -10,12 +10,12 @@ HOMEPAGE = "https://github.com/python/typing_extensions"
 BUGTRACKER = "https://github.com/python/typing_extensions/issues"
 SECTIONS = "libs"
 LICENSE = "PSF-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=f16b323917992e0f8a6f0071bc9913e2"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=fcf6b249c2641540219a727f35d8d2c2"
 
 # The name on PyPi is slightly different.
 PYPI_PACKAGE = "typing_extensions"
 
-SRC_URI[sha256sum] = "06006244c70ac8ee83fa8282cb188f697b8db25bc8b4df07be1873c43897060c"
+SRC_URI[sha256sum] = "d91d5919357fe7f681a9f2b5b4cb2a5f1ef0a1e9f59c4d8ff0d3491e05c0ffd5"
 
 inherit pypi python_flit_core
 
