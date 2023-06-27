@@ -13,7 +13,8 @@ SRC_URI = "https://strace.io/files/${PV}/strace-${PV}.tar.xz \
            file://0001-strace-fix-reproducibilty-issues.patch \
            file://skip-load.patch \
            file://0001-landlock-update-expected-string.patch \
-           file://skip-sockopt-test.patch \
+           file://f31c2f4494779e5c5f170ad10539bfc2dfafe967.patch \
+           file://3bbfb541b258baec9eba674b5d8dc30007a61542.patch \
            "
 SRC_URI[sha256sum] = "dc7db230ff3e57c249830ba94acab2b862da1fcaac55417e9b85041a833ca285"
 
