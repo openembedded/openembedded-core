@@ -13,10 +13,10 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-FindGObjectIntrospection.cmake-prefix-variables-obta.patch \
            file://reproducibility.patch \
            file://0d3344e17d258106617b0e6d783d073b188a2548.patch \
-           file://d318bb461f040b90453bc4e100dcf967243ecd98.patch \
-           file://93920b55f52ff8b883296f4845269e2ed746acb3.patch \
+           file://4977290ab4ab35258a6da9b13795c9b0f7894bf4.patch \
+           file://0001-Source-JavaScriptCore-CMakeLists.txt-ensure-reproduc.patch \
            "
-SRC_URI[sha256sum] = "40c20c43022274df5893f22b1054fa894c3eea057389bb08aee08c5b0bb0c1a7"
+SRC_URI[sha256sum] = "96898870d994da406ee7a632816dcde9a3bb395ee5f344fcb3f3b8cc8a77e000"
 
 inherit cmake pkgconfig gobject-introspection perlnative features_check upstream-version-is-even gi-docgen
 
@@ -28,6 +28,7 @@ CVE_PRODUCT = "webkitgtk webkitgtk\+"
 DEPENDS += " \
           ruby-native \
           gperf-native \
+          unifdef-native \
           cairo \
           harfbuzz \
           jpeg \
@@ -72,6 +73,8 @@ PACKAGECONFIG[lcms] = "-DUSE_LCMS=ON,-DUSE_LCMS=OFF,lcms"
 PACKAGECONFIG[soup2] = "-DUSE_SOUP2=ON,-DUSE_SOUP2=OFF,libsoup-2.4,,,soup3"
 PACKAGECONFIG[soup3] = ",,libsoup,,,soup2"
 PACKAGECONFIG[journald] = "-DENABLE_JOURNALD_LOG=ON,-DENABLE_JOURNALD_LOG=OFF,systemd"
+PACKAGECONFIG[avif] = "-DUSE_AVIF_LOG=ON,-DUSE_AVIF=OFF,libavif"
+PACKAGECONFIG[media-recorder] = "-DENABLE_MEDIA_RECORDER=ON,-DENABLE_MEDIA_RECORDER=OFF,gstreamer1.0-plugins-bad"
 
 EXTRA_OECMAKE = " \
 		-DPORT=GTK \
@@ -137,6 +140,9 @@ ARM_INSTRUCTION_SET:armv7a = "thumb"
 ARM_INSTRUCTION_SET:armv7r = "thumb"
 ARM_INSTRUCTION_SET:armv7ve = "thumb"
 
+# ANGLE requires SSE support as of webkit 2.40.x on 32 bit x86
+COMPATIBLE_HOST:x86 = "${@bb.utils.contains_any('TUNE_FEATURES', 'core2 corei7', '.*', 'null', d)}"
+
 # introspection inside qemu-arm hangs forever on musl/arm builds
 # therefore disable GI_DATA
 GI_DATA_ENABLED:libc-musl:armv7a = "False"
@@ -152,8 +158,8 @@ src_package_preprocess () {
             ${B}/JavaScriptCore/DerivedSources/*.h \
             ${B}/JavaScriptCore/DerivedSources/yarr/*.h \
             ${B}/JavaScriptCore/PrivateHeaders/JavaScriptCore/*.h \
-            ${B}/WebKit2Gtk/DerivedSources/webkit2/*.cpp \
-            ${B}/WebKit2Gtk/DerivedSources/webkit2/*.h
+            ${B}/WebCore/DerivedSources/*.cpp \
+            ${B}/WebKitGTK/DerivedSources/webkit/*.cpp
 
 }
 
