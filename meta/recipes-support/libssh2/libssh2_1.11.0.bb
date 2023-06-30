@@ -18,6 +18,7 @@ inherit autotools pkgconfig ptest
 EXTRA_OECONF += "\
                  --with-libz \
                  --with-libz-prefix=${STAGING_LIBDIR} \
+                 --disable-rpath \
                 "
 DISABLE_STATIC = ""
 
