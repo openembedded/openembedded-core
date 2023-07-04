@@ -99,10 +99,9 @@ do_install_ptest() {
 }
 
 RDEPENDS:${PN} += "bash"
-RDEPENDS:${PN}-ptest += "bash e2fsprogs-mke2fs"
+RDEPENDS:${PN}-ptest += "bash e2fsprogs-mke2fs util-linux-lsblk util-linux-losetup"
 RRECOMMENDS:${PN}-ptest += " \
     coreutils \
-    util-linux \
     kernel-module-loop \
     kernel-module-linear \
     kernel-module-raid0 \
