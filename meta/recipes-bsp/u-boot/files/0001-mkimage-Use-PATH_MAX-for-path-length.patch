@@ -7,7 +7,7 @@ Fixed when build xilinx_zynqmp in long directory ( >256):
   |  /buildarea1/testtest/wr_build/wr1023test_secureboot/test1-what/test2-what/test3-what/test4-what/test5-what/test6-what/test7-what/test8-what/test9-what/test10-what/test11-what/test12-what/build/tmp-glibc/work/xilinx_zynqmp-wrs-linux/u-boot-xlnx/1_v2023.01-xilinx-v2023.1+gitAUTOINC+40a08d69e7-r0/build/fitImage-linux: Image file name (uboot-mkimage) too long, can't create tmpfile.
   | Error: Bad parameters for FIT image type
 
-Upstream-Status: Submitted [https://patchwork.ozlabs.org/project/uboot/patch/20230619062250.3244894-1-mingli.yu@eng.windriver.com/]
+Upstream-Status: Backport [https://source.denx.de/u-boot/u-boot/-/commit/99d430f344bfdb0641022fd3efa26c29c957df02]
 
 Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
 ---
