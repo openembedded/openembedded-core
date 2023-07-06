@@ -11,7 +11,7 @@ DEPENDS = "libtasn1 libtasn1-native libffi"
 DEPENDS:append = "${@' glib-2.0' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
 
 SRC_URI = "git://github.com/p11-glue/p11-kit;branch=master;protocol=https"
-SRCREV = "dd0590d4e583f107e3e9fafe9ed754149da335d0"
+SRCREV = "a8cce8bd8065bbf80bd47219f85f0cd9cf27dd0c"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= ""
