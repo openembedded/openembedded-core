@@ -106,6 +106,9 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://font-Fix-size-overflow-in-grub_font_get_glyph_intern.patch \
            file://CVE-2022-2601.patch \
            file://CVE-2022-3775.patch \
+           file://CVE-2020-27749.patch \
+           file://CVE-2021-20225.patch \
+           file://CVE-2021-20233.patch \
            "
 SRC_URI[md5sum] = "5ce674ca6b2612d8939b9e6abed32934"
 SRC_URI[sha256sum] = "f10c85ae3e204dbaec39ae22fa3c5e99f0665417e91c2cb49b7e5031658ba6ea"
