@@ -26,6 +26,7 @@ PTESTS_FAST = "\
     liberror-perl-ptest \
     libmodule-build-perl-ptest \
     libpcre-ptest \
+    libpng-ptest \
     libtimedate-perl-ptest \
     libtest-needs-perl-ptest \
     liburi-perl-ptest \
