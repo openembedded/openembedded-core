@@ -14,7 +14,20 @@ inherit pypi setuptools3
 
 SRC_URI[sha256sum] = "3ce7ff00d72ffd9c904d1d93a4a147208878f56e8f0286073533615689d840b1"
 
-RDEPENDS:${PN} += "binutils vim squashfs-tools python3-libarchive-c python3-magic python3-rpm"
+RDEPENDS:${PN} += "\
+        binutils \
+        python3-curses \
+        python3-difflib \
+        python3-fcntl \
+        python3-json \
+        python3-libarchive-c \
+        python3-magic \
+        python3-multiprocessing \
+        python3-pprint \
+        python3-rpm \
+        squashfs-tools \
+        vim \
+        "
 
 # Dependencies don't build for musl
 COMPATIBLE_HOST:libc-musl = 'null'
