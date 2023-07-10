@@ -646,8 +646,9 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
     offset = trace.min or min(trace.start.keys())
     for start in sorted(trace.start.keys()):
         for process in sorted(trace.start[start]):
+            elapsed_time = trace.processes[process][1] - start
             if not options.app_options.show_all and \
-                    trace.processes[process][1] - start < options.app_options.mintime:
+                    elapsed_time < options.app_options.mintime:
                 continue
             task = process.split(":")[1]
 
@@ -656,7 +657,7 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
             #print(s)
 
             x = chart_rect[0] + (start - offset) * sec_w
-            w = ((trace.processes[process][1] - start) * sec_w)
+            w = elapsed_time * sec_w
 
             #print("proc at %s %s %s %s" % (x, y, w, proc_h))
             col = None
@@ -684,7 +685,6 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
             draw_label_in_box(ctx, PROC_TEXT_COLOR, process, x, y + proc_h - 4, w, proc_h)
 
             # Show elapsed time for each task
-            elapsed_time = f"{trace.processes[process][1] - start}s"
             draw_text(ctx, elapsed_time, PROC_TEXT_COLOR, x + w + 4, y + proc_h - 4)
 
             y = y + proc_h
