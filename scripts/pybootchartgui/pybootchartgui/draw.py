@@ -682,10 +682,9 @@ def render_processes_chart(ctx, options, trace, curr_y, w, h, sec_w):
                 draw_fill_rect(ctx, col, (x, y, w, proc_h))
             draw_rect(ctx, PROC_BORDER_COLOR, (x, y, w, proc_h))
 
-            draw_label_in_box(ctx, PROC_TEXT_COLOR, process, x, y + proc_h - 4, w, proc_h)
-
             # Show elapsed time for each task
-            draw_text(ctx, elapsed_time, PROC_TEXT_COLOR, x + w + 4, y + proc_h - 4)
+            process = "%ds %s" % (elapsed_time, process)
+            draw_label_in_box(ctx, PROC_TEXT_COLOR, process, x, y + proc_h - 4, w, proc_h)
 
             y = y + proc_h
 
