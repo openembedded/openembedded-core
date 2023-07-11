@@ -67,6 +67,7 @@ SRC_URI += "\
     file://CVE-2023-29405-2.patch \
     file://CVE-2023-29402.patch \
     file://CVE-2023-29404.patch \
+    file://CVE-2023-29400.patch \
 "
 
 SRC_URI_append_libc-musl = " file://0009-ld-replace-glibc-dynamic-linker-with-musl.patch"
