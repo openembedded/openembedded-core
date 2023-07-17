@@ -10,7 +10,7 @@ PROVIDES += "${@bb.utils.contains('PACKAGECONFIG', 'update-alternatives', 'virtu
 SRC_URI = "git://git.yoctoproject.org/opkg-utils;protocol=https;branch=master \
            file://0001-update-alternatives-correctly-match-priority.patch \
            "
-SRCREV = "9239541f14a2529b9d01c0a253ab11afa2822dab"
+SRCREV = "67994e62dc598282830385da75ba9b1abbbda941"
 
 S = "${WORKDIR}/git"
 
