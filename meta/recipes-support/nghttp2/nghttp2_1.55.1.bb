@@ -8,7 +8,7 @@ SRC_URI = "\
     ${GITHUB_BASE_URI}/download/v${PV}/nghttp2-${PV}.tar.xz \
     file://0001-fetch-ocsp-response-use-python3.patch \
 "
-SRC_URI[sha256sum] = "20533c9354fbb6aa689b6aa0ddb77f91da1d242587444502832e1864308152df"
+SRC_URI[sha256sum] = "19490b7c8c2ded1cf7c3e3a54ef4304e3a7876ae2d950d60a81d0dc6053be419"
 
 inherit cmake manpages python3native github-releases
 PACKAGECONFIG[manpages] = ""
