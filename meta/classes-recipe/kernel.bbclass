@@ -355,6 +355,9 @@ kernel_do_compile() {
 	export PKG_CONFIG_LIBDIR="$PKG_CONFIG_DIR"
 	export PKG_CONFIG_SYSROOT_DIR=""
 
+	# for newer kernels (5.19+) there's a dedicated variable
+	export HOSTPKG_CONFIG="pkg-config-native"
+
 	if [ "${KERNEL_DEBUG_TIMESTAMPS}" != "1" ]; then
 		# kernel sources do not use do_unpack, so SOURCE_DATE_EPOCH may not
 		# be set....
