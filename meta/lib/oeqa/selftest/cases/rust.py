@@ -8,23 +8,34 @@ from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqem
 from oeqa.utils.sshcontrol import SSHControl
 
 def parse_results(filename):
-    tests = []
+    tests = {}
     with open(filename, "r") as f:
         lines = f.readlines()
         for line in lines:
             if "..." in line and "test [" in line:
                 test = line.split("test ")[1].split(" ... ")[0]
+                if "] " in test:
+                    test = test.split("] ", 1)[1]
                 result = line.split(" ... ")[1].strip()
                 if result == "ok":
                     result = "PASS"
                 elif result == "failed":
                     result = "FAIL"
                 elif "ignored" in result:
-                    result = "SKIP"
-                tests.append((test, result))
+                    result = "SKIPPED"
+                if test in tests:
+                    if tests[test] != result:
+                        print("Duplicate and mismatching result %s for %s" % (result, test))
+                    else:
+                        print("Duplicate result %s for %s" % (result, test))
+                else:
+                    tests[test] = result
     return tests
 
 # Total time taken for testing is of about 2hr 20min, with PARALLEL_MAKE set to 40 number of jobs.
+@OETestTag("toolchain-system")
+@OETestTag("toolchain-user")
+@OETestTag("runqemu")
 class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
     def test_rust(self, *args, **kwargs):
         # build remote-test-server before image build
@@ -75,11 +86,5 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
             self.ptest_section(ptestsuite, logfile = builddir + "/summary.txt")
             filename = builddir + "/summary.txt"
             test_results = parse_results(filename)
-            for test, result in test_results:
-                self.ptest_result(ptestsuite, test, result)
-
-@OETestTag("toolchain-system")
-@OETestTag("runqemu")
-class RustSelfTestBase(RustSelfTestSystemEmulated):
-    def test_check(self):
-        self.test_rust()
+            for test in test_results:
+                self.ptest_result(ptestsuite, test, test_results[test])
