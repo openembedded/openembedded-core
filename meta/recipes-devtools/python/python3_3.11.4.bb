@@ -47,17 +47,13 @@ UPSTREAM_CHECK_URI = "https://www.python.org/downloads/source/"
 
 CVE_PRODUCT = "python"
 
-# Upstream consider this expected behaviour
-CVE_CHECK_IGNORE += "CVE-2007-4559"
-# This is not exploitable when glibc has CVE-2016-10739 fixed.
-CVE_CHECK_IGNORE += "CVE-2019-18348"
-# These are specific to Microsoft Windows
-CVE_CHECK_IGNORE += "CVE-2020-15523 CVE-2022-26488"
-# The mailcap module is insecure by design, so this can't be fixed in a meaningful way.
+CVE_STATUS[CVE-2007-4559] = "disputed: Upstream consider this expected behaviour"
+CVE_STATUS[CVE-2019-18348] = "not-applicable-config: This is not exploitable when glibc has CVE-2016-10739 fixed"
+CVE_STATUS[CVE-2020-15523] = "not-applicable-platform: Issue only applies on Windows"
+CVE_STATUS[CVE-2022-26488] = "not-applicable-platform: Issue only applies on Windows"
 # The module will be removed in the future and flaws documented.
-CVE_CHECK_IGNORE += "CVE-2015-20107"
-# Not an issue, in fact expected behaviour
-CVE_CHECK_IGNORE += "CVE-2023-36632"
+CVE_STATUS[CVE-2015-20107] = "upstream-wontfix: The mailcap module is insecure by design, so this can't be fixed in a meaningful way"
+# CVE_STATUS[CVE-2023-36632] = "disputed: Not an issue, in fact expected behaviour"
 
 PYTHON_MAJMIN = "3.11"
 

@@ -38,21 +38,16 @@ SRC_URI[sha256sum] = "ecf4d32cbef9d397bfc8cc50e4d1e92a1b30253bf32e8ee73c7a8dcf9a
 SRC_URI:append:class-target = " file://cross.patch"
 SRC_URI:append:class-nativesdk = " file://cross.patch"
 
-# Applies against virglrender < 0.6.0 and not qemu itself
-CVE_CHECK_IGNORE += "CVE-2017-5957"
+CVE_STATUS[CVE-2017-5957] = "cpe-incorrect: Applies against virglrender < 0.6.0 and not qemu itself"
 
-# The VNC server can expose host files uder some circumstances. We don't
-# enable it by default.
-CVE_CHECK_IGNORE += "CVE-2007-0998"
+CVE_STATUS[CVE-2007-0998] = "not-applicable-config: The VNC server can expose host files uder some circumstances. We don't enable it by default."
 
-# 'The issues identified by this CVE were determined to not constitute a vulnerability.'
 # https://bugzilla.redhat.com/show_bug.cgi?id=1609015#c11
-CVE_CHECK_IGNORE += "CVE-2018-18438"
+CVE_STATUS[CVE-2018-18438] = "disputed: The issues identified by this CVE were determined to not constitute a vulnerability."
 
 # As per https://nvd.nist.gov/vuln/detail/CVE-2023-0664
 # https://bugzilla.redhat.com/show_bug.cgi?id=2167423
-# this bug related to windows specific.
-CVE_CHECK_IGNORE += "CVE-2023-0664"
+CVE_STATUS[CVE-2023-0664] = "not-applicable-platform: Issue only applies on Windows"
 
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"

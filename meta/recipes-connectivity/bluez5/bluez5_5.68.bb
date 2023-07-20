@@ -2,8 +2,8 @@ require bluez5.inc
 
 SRC_URI[sha256sum] = "fc505e6445cb579a55cacee6821fe70d633921522043d322b696de0a175ff933"
 
-# These issues have kernel fixes rather than bluez fixes so exclude here
-CVE_CHECK_IGNORE += "CVE-2020-12352 CVE-2020-24490"
+CVE_STATUS[CVE-2022-3563] = "cpe-incorrect: This issues have kernel fixes rather than bluez fixes"
+CVE_STATUS[CVE-2022-3637] = "cpe-incorrect: This issues have kernel fixes rather than bluez fixes"
 
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support

@@ -15,9 +15,7 @@ SRC_URI[sha256sum] = "d7f38b6788e4a8f5da7940c5ac9424f494d8a79eba53d555f4a507167d
 # exclude betas
 UPSTREAM_CHECK_REGEX = "tiff-(?P<pver>\d+(\.\d+)+).tar"
 
-# Tested with check from https://security-tracker.debian.org/tracker/CVE-2015-7313
-# and 4.3.0 doesn't have the issue
-CVE_CHECK_IGNORE += "CVE-2015-7313"
+CVE_STATUS[CVE-2015-7313] = "fixed-version: Tested with check from https://security-tracker.debian.org/tracker/CVE-2015-7313 and already 4.3.0 doesn't have the issue"
 
 inherit autotools multilib_header
 

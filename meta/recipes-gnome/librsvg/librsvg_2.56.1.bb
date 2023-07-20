@@ -50,8 +50,7 @@ do_compile:prepend() {
     sed -ie 's,"linker": ".*","linker": "${RUST_TARGET_CC}",g' ${RUST_TARGETS_DIR}/${RUST_HOST_SYS}.json
 }
 
-# Issue only on windows
-CVE_CHECK_IGNORE += "CVE-2018-1000041"
+CVE_STATUS[CVE-2018-1000041] = "not-applicable-platform: Issue only applies on Windows"
 
 CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 
