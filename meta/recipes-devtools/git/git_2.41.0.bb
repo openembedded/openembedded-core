@@ -117,7 +117,6 @@ FILES:${PN} += "${datadir}/git-core ${libexecdir}/git-core/"
 
 PERLTOOLS = " \
     ${bindir}/git-cvsserver \
-    ${libexecdir}/git-core/git-add--interactive \
     ${libexecdir}/git-core/git-archimport \
     ${libexecdir}/git-core/git-cvsexportcommit \
     ${libexecdir}/git-core/git-cvsimport \
@@ -161,4 +160,4 @@ EXTRA_OECONF += "ac_cv_snprintf_returns_bogus=no \
                  "
 EXTRA_OEMAKE += "NO_GETTEXT=1"
 
-SRC_URI[tarball.sha256sum] = "2f9aa93c548941cc5aff641cedc24add15b912ad8c9b36ff5a41b1a9dcad783e"
+SRC_URI[tarball.sha256sum] = "c4a6a3dd1827895a80cbd824e14d94811796ae54037549e0da93f7b84cb45b9f"
