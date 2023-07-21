@@ -1,0 +1,38 @@
+From 679ae2f72ef8cf37609cb0eff5de3b98aa85e395 Mon Sep 17 00:00:00 2001
+From: Steve Sakoman <steve@sakoman.com>
+Date: Thu, 20 Jul 2023 04:14:42 -1000
+Subject: [PATCH] Configure: add 2 missing key sorts in generation of unified_info
+
+Otherwise generation of this section in configdata.pm is not reproducible
+
+Signed-off-by: Steve Sakoman <steve@sakoman.com>
+Upstream-Status: Backport [adapted from 3.x commit https://github.com/openssl/openssl/commit/764cf5b26306a8712e8b3d41599c44dc5ed07a25]
+---
+ Configure | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Configure b/Configure
+index 2a01746..8fc5a2c 100755
+--- a/Configure
++++ b/Configure
+@@ -2326,7 +2326,7 @@ EOF
+                      "dso" => [ @{$unified_info{engines}} ],
+                      "bin" => [ @{$unified_info{programs}} ],
+                      "script" => [ @{$unified_info{scripts}} ] );
+-    foreach my $type (keys %loopinfo) {
++    foreach my $type (sort keys %loopinfo) {
+         foreach my $product (@{$loopinfo{$type}}) {
+             my %dirs = ();
+             my $pd = dirname($product);
+@@ -2347,7 +2347,7 @@ EOF
+                 push @{$unified_info{dirinfo}->{$d}->{deps}}, $_
+                     if $d ne $pd;
+             }
+-            foreach (keys %dirs) {
++            foreach (sort keys %dirs) {
+                 push @{$unified_info{dirinfo}->{$_}->{products}->{$type}},
+                     $product;
+             }
+-- 
+2.34.1
+
