@@ -100,8 +100,23 @@ do_install_ptest() {
 	cp -rf ${D}${bindir}/curl-config ${D}${PTEST_PATH}
 }
 
-RDEPENDS:${PN}-ptest += "bash perl-modules perl-module-time-hires perl-module-digest-md5 \
-                         perl-module-digest perl-module-ipc-open2"
+RDEPENDS:${PN}-ptest += " \
+	bash \
+	perl-module-b \
+	perl-module-base \
+	perl-module-cwd \
+	perl-module-digest \
+	perl-module-digest-md5 \
+	perl-module-file-basename \
+	perl-module-file-spec \
+	perl-module-file-temp \
+	perl-module-io-socket \
+	perl-module-ipc-open2 \
+	perl-module-list-util \
+	perl-module-memoize \
+	perl-module-storable \
+	perl-module-time-hires \
+"
 
 PACKAGES =+ "lib${BPN}"
 
