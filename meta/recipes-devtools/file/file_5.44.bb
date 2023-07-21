@@ -45,6 +45,7 @@ do_install:append:class-native() {
 }
 
 do_install:append:class-nativesdk() {
+	create_wrapper ${D}/${bindir}/file MAGIC=${datadir}/misc/magic.mgc
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
 	cat <<- EOF > ${D}${SDKPATHNATIVE}/environment-setup.d/file.sh
 		export MAGIC="$OECORE_NATIVE_SYSROOT${datadir}/misc/magic.mgc"
