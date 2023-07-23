@@ -61,6 +61,8 @@ CVE_CHECK_IGNORE += "CVE-2020-15523 CVE-2022-26488"
 # The mailcap module is insecure by design, so this can't be fixed in a meaningful way.
 # The module will be removed in the future and flaws documented.
 CVE_CHECK_IGNORE += "CVE-2015-20107"
+# Not an issue, in fact expected behaviour
+CVE_CHECK_IGNORE += "CVE-2023-36632"
 
 PYTHON_MAJMIN = "3.10"
 
