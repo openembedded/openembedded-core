@@ -31,6 +31,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://clang-warnings.patch \
            file://0001-configure.ac-libevent-and-libsqlite3-checked-when-nf.patch \
+	   file://0001-locktest-Makefile.am-Do-not-use-build-flags.patch \
+	   file://0001-tools-locktest-Use-intmax_t-to-print-off_t.patch \
            "
 SRC_URI[sha256sum] = "38d89e853a71d3c560ff026af3d969d75e24f782ff68324e76261fe0344459e1"
 
