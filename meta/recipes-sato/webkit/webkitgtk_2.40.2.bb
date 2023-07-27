@@ -35,7 +35,7 @@ DEPENDS += " \
           jpeg \
           atk \
           libwebp \
-          gtk+3 \
+          gtk4 \
           libxslt \
           libtasn1 \
           libnotify \
@@ -84,6 +84,7 @@ EXTRA_OECMAKE = " \
 		-DENABLE_MINIBROWSER=ON \
                 -DENABLE_BUBBLEWRAP_SANDBOX=OFF \
                 -DENABLE_GAMEPAD=OFF \
+                -DUSE_GTK4=ON \
 		"
 
 # Javascript JIT is not supported on ARC
@@ -124,7 +125,7 @@ EXTRA_OECMAKE:append:x86-x32 = " -DENABLE_JIT=OFF "
 SECURITY_CFLAGS:remove:aarch64 = "-fpie"
 SECURITY_CFLAGS:append:aarch64 = " -fPIE"
 
-FILES:${PN} += "${libdir}/webkit2gtk-4.*/injected-bundle/libwebkit2gtkinjectedbundle.so"
+FILES:${PN} += "${libdir}/webkitgtk-*/injected-bundle/*.so"
 
 RRECOMMENDS:${PN} += "ca-certificates shared-mime-info"
 

@@ -8,10 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS = " \
           webkitgtk \
-          gcr3 \
+          gcr \
           gsettings-desktop-schemas \
           nettle \
           json-glib \
+          libadwaita \
           libarchive \
           libdazzle \
           libhandy \
@@ -31,7 +32,7 @@ SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@oe.utils.trim_version("${PV}", 1)}/${GN
            file://migrator.patch \
            file://distributor.patch \
            "
-SRC_URI[archive.sha256sum] = "e86ead27cb9982815150664de3bf20faf375f77b8065b02b31180c65b6bbebb4"
+SRC_URI[archive.sha256sum] = "3c475e04ed2a0f410cb44b96937563697079193ac9b7a50c91485fb9b08315ab"
 
 # Developer mode enables debugging
 PACKAGECONFIG[developer-mode] = "-Ddeveloper_mode=true,-Ddeveloper_mode=false"
