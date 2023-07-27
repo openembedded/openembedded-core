@@ -1469,6 +1469,20 @@ python do_qa_unpack() {
     unpack_check_src_uri(d.getVar('PN'), d)
 }
 
+python do_recipe_qa() {
+    oe.qa.exit_if_errors(d)
+}
+
+addtask do_recipe_qa before do_fetch do_package_qa do_build
+
+SSTATETASKS += "do_recipe_qa"
+do_recipe_qa[sstate-inputdirs] = ""
+do_recipe_qa[sstate-outputdirs] = ""
+python do_recipe_qa_setscene () {
+    sstate_setscene(d)
+}
+addtask do_recipe_qa_setscene
+
 # Check for patch fuzz
 do_patch[postfuncs] += "do_qa_patch "
 
