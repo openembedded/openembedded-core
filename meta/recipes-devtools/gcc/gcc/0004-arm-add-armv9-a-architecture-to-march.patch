@@ -43,10 +43,10 @@ Signed-off-by: Ruiqiang Hao <Ruiqiang.Hao@windriver.com>
  gcc/testsuite/lib/target-supports.exp     |  3 ++-
  9 files changed, 79 insertions(+), 8 deletions(-)
 
-Index: gcc-11.3.0/gcc/config/arm/arm-cpus.in
+Index: gcc/gcc/config/arm/arm-cpus.in
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/arm-cpus.in
-+++ gcc-11.3.0/gcc/config/arm/arm-cpus.in
+--- a/gcc/config/arm/arm-cpus.in
++++ b/gcc/config/arm/arm-cpus.in
 @@ -132,6 +132,9 @@ define feature cmse
  # Architecture rel 8.1-M.
  define feature armv8_1m_main
@@ -87,10 +87,10 @@ Index: gcc-11.3.0/gcc/config/arm/arm-cpus.in
  begin arch iwmmxt
   tune for iwmmxt
   tune flags LDSCHED STRONG XSCALE
-Index: gcc-11.3.0/gcc/config/arm/arm-tables.opt
+Index: gcc/gcc/config/arm/arm-tables.opt
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/arm-tables.opt
-+++ gcc-11.3.0/gcc/config/arm/arm-tables.opt
+--- a/gcc/config/arm/arm-tables.opt
++++ b/gcc/config/arm/arm-tables.opt
 @@ -380,10 +380,13 @@ EnumValue
  Enum(arm_arch) String(armv8.1-m.main) Value(30)
  
@@ -107,10 +107,10 @@ Index: gcc-11.3.0/gcc/config/arm/arm-tables.opt
  
  Enum
  Name(arm_fpu) Type(enum fpu_type)
-Index: gcc-11.3.0/gcc/config/arm/arm.h
+Index: gcc/gcc/config/arm/arm.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/arm.h
-+++ gcc-11.3.0/gcc/config/arm/arm.h
+--- a/gcc/config/arm/arm.h
++++ b/gcc/config/arm/arm.h
 @@ -456,7 +456,8 @@ enum base_architecture
    BASE_ARCH_8A = 8,
    BASE_ARCH_8M_BASE = 8,
@@ -121,10 +121,10 @@ Index: gcc-11.3.0/gcc/config/arm/arm.h
  };
  
  /* The major revision number of the ARM Architecture implemented by the target.  */
-Index: gcc-11.3.0/gcc/config/arm/t-aprofile
+Index: gcc/gcc/config/arm/t-aprofile
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/t-aprofile
-+++ gcc-11.3.0/gcc/config/arm/t-aprofile
+--- a/gcc/config/arm/t-aprofile
++++ b/gcc/config/arm/t-aprofile
 @@ -26,8 +26,8 @@
  
  # Arch and FPU variants to build libraries with
@@ -180,10 +180,10 @@ Index: gcc-11.3.0/gcc/config/arm/t-aprofile
 -			     $(foreach ARCH, armv7-a armv8-a, \
 +			     $(foreach ARCH, armv7-a armv8-a armv9-a, \
  			       mthumb/march.$(ARCH)/mfloat-abi.soft=m$(MODE)/march.$(ARCH)/mfloat-abi.softfp))
-Index: gcc-11.3.0/gcc/config/arm/t-arm-elf
+Index: gcc/gcc/config/arm/t-arm-elf
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/t-arm-elf
-+++ gcc-11.3.0/gcc/config/arm/t-arm-elf
+--- a/gcc/config/arm/t-arm-elf
++++ b/gcc/config/arm/t-arm-elf
 @@ -38,6 +38,8 @@ v7ve_fps	:= vfpv3-d16 vfpv3 vfpv3-d16-fp
  # it seems to work ok.
  v8_fps		:= simd fp16 crypto fp16+crypto dotprod fp16fml
@@ -214,10 +214,10 @@ Index: gcc-11.3.0/gcc/config/arm/t-arm-elf
  MULTILIB_MATCHES     += $(foreach ARCH, armv7e-m armv8-m.mainline, \
  			  march?armv7+fp=march?$(ARCH)+fp.dp)
  
-Index: gcc-11.3.0/gcc/config/arm/t-multilib
+Index: gcc/gcc/config/arm/t-multilib
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/t-multilib
-+++ gcc-11.3.0/gcc/config/arm/t-multilib
+--- a/gcc/config/arm/t-multilib
++++ b/gcc/config/arm/t-multilib
 @@ -78,6 +78,8 @@ v8_4_a_simd_variants	:= $(call all_feat_
  v8_5_a_simd_variants	:= $(call all_feat_combs, simd fp16 crypto i8mm bf16)
  v8_6_a_simd_variants	:= $(call all_feat_combs, simd fp16 crypto i8mm bf16)
@@ -244,10 +244,10 @@ Index: gcc-11.3.0/gcc/config/arm/t-multilib
  endif		# Not APROFILE.
  
  # Use Thumb libraries for everything.
-Index: gcc-11.3.0/gcc/doc/invoke.texi
+Index: gcc/gcc/doc/invoke.texi
 ===================================================================
---- gcc-11.3.0.orig/gcc/doc/invoke.texi
-+++ gcc-11.3.0/gcc/doc/invoke.texi
+--- a/gcc/doc/invoke.texi
++++ b/gcc/doc/invoke.texi
 @@ -19701,6 +19701,7 @@ Permissible names are:
  @samp{armv7-m}, @samp{armv7e-m},
  @samp{armv8-m.base}, @samp{armv8-m.main},
@@ -256,10 +256,10 @@ Index: gcc-11.3.0/gcc/doc/invoke.texi
  @samp{iwmmxt} and @samp{iwmmxt2}.
  
  Additionally, the following architectures, which lack support for the
-Index: gcc-11.3.0/gcc/testsuite/gcc.target/arm/multilib.exp
+Index: gcc/gcc/testsuite/gcc.target/arm/multilib.exp
 ===================================================================
---- gcc-11.3.0.orig/gcc/testsuite/gcc.target/arm/multilib.exp
-+++ gcc-11.3.0/gcc/testsuite/gcc.target/arm/multilib.exp
+--- a/gcc/testsuite/gcc.target/arm/multilib.exp
++++ b/gcc/testsuite/gcc.target/arm/multilib.exp
 @@ -135,6 +135,14 @@ if {[multilib_config "aprofile"] } {
  	{-march=armv8.6-a+simd+fp16 -mfloat-abi=softfp} "thumb/v8-a+simd/softfp"
  	{-march=armv8.6-a+simd+fp16+nofp -mfloat-abi=softfp} "thumb/v8-a/nofp"
@@ -275,10 +275,10 @@ Index: gcc-11.3.0/gcc/testsuite/gcc.target/arm/multilib.exp
  	{-mcpu=cortex-a53+crypto -mfloat-abi=hard} "thumb/v8-a+simd/hard"
  	{-mcpu=cortex-a53+nofp -mfloat-abi=softfp} "thumb/v8-a/nofp"
  	{-march=armv8-a+crc -mfloat-abi=hard -mfpu=vfp} "thumb/v8-a+simd/hard"
-Index: gcc-11.3.0/gcc/testsuite/lib/target-supports.exp
+Index: gcc/gcc/testsuite/lib/target-supports.exp
 ===================================================================
---- gcc-11.3.0.orig/gcc/testsuite/lib/target-supports.exp
-+++ gcc-11.3.0/gcc/testsuite/lib/target-supports.exp
+--- a/gcc/testsuite/lib/target-supports.exp
++++ b/gcc/testsuite/lib/target-supports.exp
 @@ -4820,7 +4820,8 @@ foreach { armfunc armflag armdefs } {
  	v8m_base "-march=armv8-m.base -mthumb -mfloat-abi=soft"
  		__ARM_ARCH_8M_BASE__

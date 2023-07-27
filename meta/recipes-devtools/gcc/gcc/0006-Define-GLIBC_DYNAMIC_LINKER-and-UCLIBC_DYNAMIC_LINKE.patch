@@ -39,10 +39,10 @@ Signed-off-by: Pavel Zhukov <pavel@zhukoff.net>
  gcc/config/sparc/linux64.h         |  4 ++--
  17 files changed, 53 insertions(+), 58 deletions(-)
 
-Index: gcc-11.3.0/gcc/config/aarch64/aarch64-linux.h
+Index: gcc/gcc/config/aarch64/aarch64-linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/aarch64/aarch64-linux.h
-+++ gcc-11.3.0/gcc/config/aarch64/aarch64-linux.h
+--- a/gcc/config/aarch64/aarch64-linux.h
++++ b/gcc/config/aarch64/aarch64-linux.h
 @@ -21,10 +21,10 @@
  #ifndef GCC_AARCH64_LINUX_H
  #define GCC_AARCH64_LINUX_H
@@ -56,10 +56,10 @@ Index: gcc-11.3.0/gcc/config/aarch64/aarch64-linux.h
  
  #undef  ASAN_CC1_SPEC
  #define ASAN_CC1_SPEC "%{%:sanitize(address):-funwind-tables}"
-Index: gcc-11.3.0/gcc/config/alpha/linux-elf.h
+Index: gcc/gcc/config/alpha/linux-elf.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/alpha/linux-elf.h
-+++ gcc-11.3.0/gcc/config/alpha/linux-elf.h
+--- a/gcc/config/alpha/linux-elf.h
++++ b/gcc/config/alpha/linux-elf.h
 @@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.
  #define EXTRA_SPECS \
  { "elf_dynamic_linker", ELF_DYNAMIC_LINKER },
@@ -71,10 +71,10 @@ Index: gcc-11.3.0/gcc/config/alpha/linux-elf.h
  #if DEFAULT_LIBC == LIBC_UCLIBC
  #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
  #elif DEFAULT_LIBC == LIBC_GLIBC
-Index: gcc-11.3.0/gcc/config/arm/linux-eabi.h
+Index: gcc/gcc/config/arm/linux-eabi.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/linux-eabi.h
-+++ gcc-11.3.0/gcc/config/arm/linux-eabi.h
+--- a/gcc/config/arm/linux-eabi.h
++++ b/gcc/config/arm/linux-eabi.h
 @@ -65,8 +65,8 @@
     GLIBC_DYNAMIC_LINKER_DEFAULT and TARGET_DEFAULT_FLOAT_ABI.  */
  
@@ -95,10 +95,10 @@ Index: gcc-11.3.0/gcc/config/arm/linux-eabi.h
  
  /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
     use the GNU/Linux version, not the generic BPABI version.  */
-Index: gcc-11.3.0/gcc/config/arm/linux-elf.h
+Index: gcc/gcc/config/arm/linux-elf.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/arm/linux-elf.h
-+++ gcc-11.3.0/gcc/config/arm/linux-elf.h
+--- a/gcc/config/arm/linux-elf.h
++++ b/gcc/config/arm/linux-elf.h
 @@ -60,7 +60,7 @@
  
  #define LIBGCC_SPEC "%{mfloat-abi=soft*:-lfloat} -lgcc"
@@ -108,10 +108,10 @@ Index: gcc-11.3.0/gcc/config/arm/linux-elf.h
  
  #define LINUX_TARGET_LINK_SPEC  "%{h*} \
     %{static:-Bstatic} \
-Index: gcc-11.3.0/gcc/config/i386/linux.h
+Index: gcc/gcc/config/i386/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/i386/linux.h
-+++ gcc-11.3.0/gcc/config/i386/linux.h
+--- a/gcc/config/i386/linux.h
++++ b/gcc/config/i386/linux.h
 @@ -20,7 +20,7 @@ along with GCC; see the file COPYING3.
  <http://www.gnu.org/licenses/>.  */
  
@@ -122,10 +122,10 @@ Index: gcc-11.3.0/gcc/config/i386/linux.h
  #undef MUSL_DYNAMIC_LINKER
 -#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-i386.so.1"
 +#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-i386.so.1"
-Index: gcc-11.3.0/gcc/config/i386/linux64.h
+Index: gcc/gcc/config/i386/linux64.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/i386/linux64.h
-+++ gcc-11.3.0/gcc/config/i386/linux64.h
+--- a/gcc/config/i386/linux64.h
++++ b/gcc/config/i386/linux64.h
 @@ -27,13 +27,13 @@ see the files COPYING3 and COPYING.RUNTI
  #define GNU_USER_LINK_EMULATION64 "elf_x86_64"
  #define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
@@ -146,10 +146,10 @@ Index: gcc-11.3.0/gcc/config/i386/linux64.h
  #undef MUSL_DYNAMIC_LINKERX32
 -#define MUSL_DYNAMIC_LINKERX32 "/lib/ld-musl-x32.so.1"
 +#define MUSL_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-musl-x32.so.1"
-Index: gcc-11.3.0/gcc/config/linux.h
+Index: gcc/gcc/config/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/linux.h
-+++ gcc-11.3.0/gcc/config/linux.h
+--- a/gcc/config/linux.h
++++ b/gcc/config/linux.h
 @@ -94,10 +94,10 @@ see the files COPYING3 and COPYING.RUNTI
     GLIBC_DYNAMIC_LINKER must be defined for each target using them, or
     GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
@@ -165,10 +165,10 @@ Index: gcc-11.3.0/gcc/config/linux.h
  #define BIONIC_DYNAMIC_LINKER "/system/bin/linker"
  #define BIONIC_DYNAMIC_LINKER32 "/system/bin/linker"
  #define BIONIC_DYNAMIC_LINKER64 "/system/bin/linker64"
-Index: gcc-11.3.0/gcc/config/microblaze/linux.h
+Index: gcc/gcc/config/microblaze/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/microblaze/linux.h
-+++ gcc-11.3.0/gcc/config/microblaze/linux.h
+--- a/gcc/config/microblaze/linux.h
++++ b/gcc/config/microblaze/linux.h
 @@ -28,7 +28,7 @@
  #undef TLS_NEEDS_GOT
  #define TLS_NEEDS_GOT 1
@@ -187,10 +187,10 @@ Index: gcc-11.3.0/gcc/config/microblaze/linux.h
  
  #undef  SUBTARGET_EXTRA_SPECS
  #define SUBTARGET_EXTRA_SPECS \
-Index: gcc-11.3.0/gcc/config/mips/linux.h
+Index: gcc/gcc/config/mips/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/mips/linux.h
-+++ gcc-11.3.0/gcc/config/mips/linux.h
+--- a/gcc/config/mips/linux.h
++++ b/gcc/config/mips/linux.h
 @@ -22,29 +22,29 @@ along with GCC; see the file COPYING3.
  #define GNU_USER_LINK_EMULATIONN32 "elf32%{EB:b}%{EL:l}tsmipn32"
  
@@ -230,10 +230,10 @@ Index: gcc-11.3.0/gcc/config/mips/linux.h
  
  #define BIONIC_DYNAMIC_LINKERN32 "/system/bin/linker32"
  #define GNU_USER_DYNAMIC_LINKERN32 \
-Index: gcc-11.3.0/gcc/config/nios2/linux.h
+Index: gcc/gcc/config/nios2/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/nios2/linux.h
-+++ gcc-11.3.0/gcc/config/nios2/linux.h
+--- a/gcc/config/nios2/linux.h
++++ b/gcc/config/nios2/linux.h
 @@ -29,7 +29,7 @@
  #undef CPP_SPEC
  #define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
@@ -243,10 +243,10 @@ Index: gcc-11.3.0/gcc/config/nios2/linux.h
  
  #undef LINK_SPEC
  #define LINK_SPEC LINK_SPEC_ENDIAN \
-Index: gcc-11.3.0/gcc/config/riscv/linux.h
+Index: gcc/gcc/config/riscv/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/riscv/linux.h
-+++ gcc-11.3.0/gcc/config/riscv/linux.h
+--- a/gcc/config/riscv/linux.h
++++ b/gcc/config/riscv/linux.h
 @@ -22,7 +22,7 @@ along with GCC; see the file COPYING3.
      GNU_USER_TARGET_OS_CPP_BUILTINS();				\
    } while (0)
@@ -265,10 +265,10 @@ Index: gcc-11.3.0/gcc/config/riscv/linux.h
  
  /* Because RISC-V only has word-sized atomics, it requries libatomic where
     others do not.  So link libatomic by default, as needed.  */
-Index: gcc-11.3.0/gcc/config/rs6000/linux64.h
+Index: gcc/gcc/config/rs6000/linux64.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/rs6000/linux64.h
-+++ gcc-11.3.0/gcc/config/rs6000/linux64.h
+--- a/gcc/config/rs6000/linux64.h
++++ b/gcc/config/rs6000/linux64.h
 @@ -336,24 +336,19 @@ extern int dot_symbols;
  #undef	LINK_OS_DEFAULT_SPEC
  #define LINK_OS_DEFAULT_SPEC "%(link_os_linux)"
@@ -299,10 +299,10 @@ Index: gcc-11.3.0/gcc/config/rs6000/linux64.h
  
  #undef  DEFAULT_ASM_ENDIAN
  #if (TARGET_DEFAULT & MASK_LITTLE_ENDIAN)
-Index: gcc-11.3.0/gcc/config/rs6000/sysv4.h
+Index: gcc/gcc/config/rs6000/sysv4.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/rs6000/sysv4.h
-+++ gcc-11.3.0/gcc/config/rs6000/sysv4.h
+--- a/gcc/config/rs6000/sysv4.h
++++ b/gcc/config/rs6000/sysv4.h
 @@ -780,10 +780,10 @@ GNU_USER_TARGET_CC1_SPEC
  
  #define MUSL_DYNAMIC_LINKER_E ENDIAN_SELECT("","le","")
@@ -316,10 +316,10 @@ Index: gcc-11.3.0/gcc/config/rs6000/sysv4.h
  
  #ifndef GNU_USER_DYNAMIC_LINKER
  #define GNU_USER_DYNAMIC_LINKER GLIBC_DYNAMIC_LINKER
-Index: gcc-11.3.0/gcc/config/s390/linux.h
+Index: gcc/gcc/config/s390/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/s390/linux.h
-+++ gcc-11.3.0/gcc/config/s390/linux.h
+--- a/gcc/config/s390/linux.h
++++ b/gcc/config/s390/linux.h
 @@ -72,13 +72,13 @@ along with GCC; see the file COPYING3.
  #define MULTILIB_DEFAULTS { "m31" }
  #endif
@@ -338,10 +338,10 @@ Index: gcc-11.3.0/gcc/config/s390/linux.h
  
  #undef  LINK_SPEC
  #define LINK_SPEC \
-Index: gcc-11.3.0/gcc/config/sh/linux.h
+Index: gcc/gcc/config/sh/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/sh/linux.h
-+++ gcc-11.3.0/gcc/config/sh/linux.h
+--- a/gcc/config/sh/linux.h
++++ b/gcc/config/sh/linux.h
 @@ -61,10 +61,10 @@ along with GCC; see the file COPYING3.
  
  #undef MUSL_DYNAMIC_LINKER
@@ -355,10 +355,10 @@ Index: gcc-11.3.0/gcc/config/sh/linux.h
  
  #undef SUBTARGET_LINK_EMUL_SUFFIX
  #define SUBTARGET_LINK_EMUL_SUFFIX "%{mfdpic:_fd;:_linux}"
-Index: gcc-11.3.0/gcc/config/sparc/linux.h
+Index: gcc/gcc/config/sparc/linux.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/sparc/linux.h
-+++ gcc-11.3.0/gcc/config/sparc/linux.h
+--- a/gcc/config/sparc/linux.h
++++ b/gcc/config/sparc/linux.h
 @@ -78,7 +78,7 @@ extern const char *host_detect_local_cpu
     When the -shared link option is used a final link is not being
     done.  */
@@ -368,10 +368,10 @@ Index: gcc-11.3.0/gcc/config/sparc/linux.h
  
  #undef  LINK_SPEC
  #define LINK_SPEC "-m elf32_sparc %{shared:-shared} \
-Index: gcc-11.3.0/gcc/config/sparc/linux64.h
+Index: gcc/gcc/config/sparc/linux64.h
 ===================================================================
---- gcc-11.3.0.orig/gcc/config/sparc/linux64.h
-+++ gcc-11.3.0/gcc/config/sparc/linux64.h
+--- a/gcc/config/sparc/linux64.h
++++ b/gcc/config/sparc/linux64.h
 @@ -78,8 +78,8 @@ along with GCC; see the file COPYING3.
     When the -shared link option is used a final link is not being
     done.  */

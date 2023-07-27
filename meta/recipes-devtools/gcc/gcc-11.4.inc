@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "11.3.0"
+PV = "11.4.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "11.3.0"
+BINV = "11.4.0"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
@@ -70,7 +70,7 @@ SRC_URI = "\
 	   file://0004-arm-add-armv9-a-architecture-to-march.patch \
 "
 
-SRC_URI[sha256sum] = "b47cf2818691f5b1e21df2bb38c795fac2cfbd640ede2d0a5e1c89e338a3ac39"
+SRC_URI[sha256sum] = "3f2db222b007e8a4a23cd5ba56726ef08e8b1f1eb2055ee72c1402cea73a8dd9"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 
