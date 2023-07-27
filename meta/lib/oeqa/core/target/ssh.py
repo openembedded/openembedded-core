@@ -250,6 +250,9 @@ def SSHCall(command, logger, timeout=None, **opts):
                 except InterruptedError:
                     logger.debug('InterruptedError')
                     continue
+                except BlockingIOError:
+                    logger.debug('BlockingIOError')
+                    continue
 
             process.stdout.close()
 
