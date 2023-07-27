@@ -133,6 +133,7 @@ EXTRA_OECONF:append:powerpc = " --extra-libs=-latomic"
 # ld.gold: internal error in relocate_section, at ../../gold/i386.cc:3684
 
 LDFLAGS:append:x86 = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
+LDFLAGS:append:x86 = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' -fuse-ld=bfd ', '', d)}"
 
 EXTRA_OEMAKE = "V=1"
 
