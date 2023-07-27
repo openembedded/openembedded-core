@@ -226,6 +226,9 @@ def SSHCall(command, logger, timeout=None, **opts):
                             endtime = time.time() + timeout
                 except InterruptedError:
                     continue
+                except BlockingIOError:
+                    logger.debug('BlockingIOError')
+                    continue
 
             # process hasn't returned yet
             if not eof:
