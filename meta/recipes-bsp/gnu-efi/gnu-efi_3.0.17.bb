@@ -17,7 +17,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/files/${BP}.tar.bz2 \
            file://gnu-efi-3.0.9-fix-clang-build.patch \
            "
 
-SRC_URI[sha256sum] = "931a257b9c5c1ba65ff519f18373c438a26825f2db7866b163e96d1b168f20ea"
+SRC_URI[sha256sum] = "7807e903349343a7a142ebb934703a2872235e89688cf586c032b0a1087bcaf4"
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*|riscv64.*)-linux"
 COMPATIBLE_HOST:armv4 = 'null'
@@ -34,6 +34,10 @@ def gnu_efi_arch(d):
         return "ia32"
     return tarch
 
+do_compile:prepend() {
+    unset LDFLAGS
+}
+
 EXTRA_OEMAKE = "'ARCH=${@gnu_efi_arch(d)}' 'CC=${CC}' 'AS=${AS}' 'LD=${LD}' 'AR=${AR}' \
                 'RANLIB=${RANLIB}' 'OBJCOPY=${OBJCOPY}' 'PREFIX=${prefix}' 'LIBDIR=${libdir}' \
                 "
@@ -46,7 +50,7 @@ do_install() {
         oe_runmake install INSTALLROOT="${D}"
 }
 
-FILES:${PN} += "${libdir}/*.lds"
+FILES:${PN} += "${libdir}/*.lds ${libdir}/gnuefi/apps"
 
 # 64-bit binaries are expected for EFI when targeting X32
 INSANE_SKIP:${PN}-dev:append:linux-gnux32 = " arch"
