@@ -11,18 +11,18 @@ DEPENDS:remove:class-native = "autoconf-native automake-native help2man-native"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cc3f3a7596cb558bbd9eb7fbaa3ef16c \
 		    file://COPYINGv3;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-SRC_URI = "${GNU_MIRROR}/autoconf/${BP}.tar.gz \
+SRC_URI = " \
+           https://alpha.gnu.org/gnu/autoconf/autoconf-2.72c.tar.gz \
            file://program_prefix.patch \
            file://autoreconf-exclude.patch \
            file://remove-usr-local-lib-from-m4.patch \
            file://preferbash.patch \
            file://autotest-automake-result-format.patch \
            file://man-host-perl.patch \
-           file://0001-Port-to-compilers-that-moan-about-K-R-func-decls.patch \
            "
 SRC_URI:append:class-native = " file://no-man.patch"
 
-SRC_URI[sha256sum] = "431075ad0bf529ef13cb41e9042c542381103e80015686222b8a9d4abef42a1c"
+SRC_URI[sha256sum] = "21b64169c820c6cdf27fc981ca9c2fb615546e5dead92bccf8d92d0784cdd364"
 
 RDEPENDS:${PN} = "m4 gnu-config \
 		  perl \
