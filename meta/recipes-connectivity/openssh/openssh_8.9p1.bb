@@ -28,6 +28,10 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://0001-Default-to-not-using-sandbox-when-cross-compiling.patch \
            file://7280401bdd77ca54be6867a154cc01e0d72612e0.patch \
            file://0001-upstream-include-destination-constraints-for-smartca.patch \
+           file://CVE-2023-38408-0001.patch \
+           file://CVE-2023-38408-0002.patch \
+           file://CVE-2023-38408-0003.patch \
+           file://CVE-2023-38408-0004.patch \
            "
 SRC_URI[sha256sum] = "fd497654b7ab1686dac672fb83dfb4ba4096e8b5ffcdaccd262380ae58bec5e7"
 
