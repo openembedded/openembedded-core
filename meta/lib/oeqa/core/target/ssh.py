@@ -265,6 +265,7 @@ def SSHCall(command, logger, timeout=None, **opts):
                 time.sleep(5)
                 try:
                     process.kill()
+                    process.wait()
                 except OSError:
                     logger.debug('OSError when killing process')
                     pass
@@ -287,6 +288,7 @@ def SSHCall(command, logger, timeout=None, **opts):
             except TimeoutExpired:
                 try:
                     process.kill()
+                    process.wait()
                 except OSError:
                     logger.debug('OSError')
                     pass
@@ -316,6 +318,7 @@ def SSHCall(command, logger, timeout=None, **opts):
         # whilst running and ensure we don't leave a process behind.
         if process.poll() is None:
             process.kill()
+            process.wait()
         logger.debug('Something went wrong, killing SSH process')
         raise
 
