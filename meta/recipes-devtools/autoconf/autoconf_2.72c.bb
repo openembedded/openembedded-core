@@ -19,8 +19,40 @@ SRC_URI = " \
            file://preferbash.patch \
            file://autotest-automake-result-format.patch \
            file://man-host-perl.patch \
-           "
+	   ${BACKPORTS} \
+"
 SRC_URI:append:class-native = " file://no-man.patch"
+
+BACKPORTS = "\
+           file://backports/0001-mention-prototypes-more-prominently-in-NEWS.patch \
+           file://backports/0002-build-run-make-fetch-which-updated-these.patch \
+           file://backports/0003-NEWS-Tighten-up-wording.patch \
+           file://backports/0004-Cater-to-programs-misusing-AC_EGREP_HEADER.patch \
+           file://backports/0006-Fix-timing-bug-on-high-speed-builds.patch \
+           file://backports/0007-Support-underquoted-callers-better.patch \
+           file://backports/0008-New-script-for-building-inside-Guix-containers.patch \
+           file://backports/0009-AC_XENIX_DIR-Rewrite-using-AC_CANONICAL_HOST.patch \
+           file://backports/0010-AC_TYPE_UID_T-Rewrite-using-AC_CHECK_TYPE.patch \
+           file://backports/0011-Make-AC_PROG_GCC_TRADITIONAL-a-compatibility-alias-f.patch \
+           file://backports/0012-Overhaul-AC_TYPE_GETGROUPS-and-AC_FUNC_GETGROUPS.patch \
+           file://backports/0013-Fold-AC_C_STRINGIZE-into-AC_PROG_CC.patch \
+           file://backports/0014-Remove-the-last-few-internal-uses-of-AC_EGREP_CPP.patch \
+           file://backports/0015-Support-circa-early-2022-Gnulib.patch \
+           file://backports/0016-Improve-year2038-largefile-option-processing.patch \
+           file://backports/0017-AC_SYS_YEAR2038-Fix-configure-failure-on-32-bit-ming.patch \
+           file://backports/0018-Document-limitation-of-BusyBox-tr.patch \
+           file://backports/0019-AC_SYS_YEAR2038_REQUIRED-Fix-configure-failure-with-.patch \
+           file://backports/0020-Tone-down-year-2038-changes.patch \
+           file://backports/0021-Port-AC_FUNC_MMAP-to-more-modern-systems.patch \
+           file://backports/0022-Fix-port-of-AC_FUNC_MMAP.patch \
+           file://backports/0023-Improve-AC_SYS_YEAR2038_RECOMMENDED-diagnostic.patch \
+           file://backports/0024-Improve-AC_FUNC_MMAP-comments.patch \
+           file://backports/0025-Fix-AC_SYS_LARGEFILE-on-GNU-Linux-alpha-s390x.patch \
+           file://backports/0026-Modernize-INSTALL.patch \
+           file://backports/0027-doc-fix-broken-cross-refs.patch \
+           file://backports/0028-INSTALL-Clarify-build-host-target-and-the-system-typ.patch \
+           file://backports/0029-Shorten-and-improve-INSTALL.patch \
+"
 
 SRC_URI[sha256sum] = "21b64169c820c6cdf27fc981ca9c2fb615546e5dead92bccf8d92d0784cdd364"
 
