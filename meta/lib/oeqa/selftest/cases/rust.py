@@ -294,7 +294,7 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
             end_time = time.time()
 
             ptestsuite = "rust"
-            self.ptest_section(ptestsuite, duration = end_time - start_time, logfile = builddir + "/summary.txt")
+            self.ptest_section(ptestsuite, duration = int(end_time - start_time), logfile = builddir + "/summary.txt")
             filename = builddir + "/summary.txt"
             test_results = parse_results(filename)
             for test in test_results:
