@@ -1,0 +1,45 @@
+From 09b9ddc51cb83ce547872a82271d1af4d11325da Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tomasz=20Pawe=C5=82=20Gajc?= <tpgxyz@gmail.com>
+Date: Wed, 29 Jun 2022 21:44:29 +0200
+Subject: [PATCH] LLD: fix detection and remove not needed workarounds
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Tomasz Paweł Gajc <tpgxyz@gmail.com>
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+---
+Upstream-Status: Backport [https://github.com/rhboot/efivar/commit/1f247260c9b4bd6fcda30f3e4cc358852aeb9e4d]
+
+ src/include/workarounds.mk | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/include/workarounds.mk b/src/include/workarounds.mk
+index b72fbaf..57394ed 100644
+--- a/src/include/workarounds.mk
++++ b/src/include/workarounds.mk
+@@ -2,12 +2,12 @@
+ #
+ # workarounds.mk - workarounds for weird stuff behavior
+ 
+-LD_FLAVOR := $(shell LC_ALL=C $(LD) --version | grep -E '^(LLD|GNU ld)'|sed 's/ .*//g')
+-LD_VERSION := $(shell LC_ALL=C $(LD) --version | grep -E '^(LLD|GNU ld)'|sed 's/.* //')
++LD_FLAVOR := $(shell LC_ALL=C $(LD) --version | grep -E '^((.* )?LLD|GNU ld)'|sed 's/.* LLD/LLD/;s/ .*//g')
++LD_VERSION := $(shell LC_ALL=C $(LD) --version | grep -E '^((.* )?LLD|GNU ld)'|sed 's/.* LLD/LLD/;s/.* //')
+ # 2.35 is definitely broken and 2.36 seems to work
+ LD_DASH_T := $(shell \
+ 	if [ "x${LD_FLAVOR}" = xLLD ] ; then \
+-		echo '-T' ; \
++		echo "" ; \
+ 	elif [ "x${LD_FLAVOR}" = xGNU ] ; then \
+ 		if echo "${LD_VERSION}" | grep -q -E '^2\.3[6789]|^2\.[456789]|^[3456789]|^[[:digit:]][[:digit:]]' ; then \
+ 			echo '-T' ; \
+@@ -15,7 +15,7 @@ LD_DASH_T := $(shell \
+ 			echo "" ; \
+ 		fi ; \
+ 	else \
+-		echo "Your linker is not supported" ; \
++		echo "Your linker ${LD_FLAVOR} version ${LD_VERSION} is not supported" ; \
+ 		exit 1 ; \
+ 	fi)
+ 

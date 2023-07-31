@@ -12,6 +12,11 @@ SRC_URI = "git://github.com/rhinstaller/efivar.git;branch=main;protocol=https \
            file://0001-src-Makefile-build-util.c-separately-for-makeguids.patch \
            file://efisecdb-fix-build-with-musl-libc.patch \
            file://0001-Fix-invalid-free-in-main.patch \
+           file://0001-Remove-deprecated-add-needed-linker-flag.patch \
+           file://0002-Add-T-workaround-for-GNU-ld-2.36.patch \
+           file://0003-Set-LC_ALL-C-to-force-English-output-from-ld.patch \
+           file://0004-LLD-fix-detection-and-remove-not-needed-workarounds.patch \
+           file://0005-Revamp-efi_well_known_-variable-handling.patch \
            "
 SRCREV = "1753149d4176ebfb2b135ac0aaf79340bf0e7a93"
 
@@ -20,10 +25,6 @@ S = "${WORKDIR}/git"
 inherit pkgconfig
 
 export CCLD_FOR_BUILD = "${BUILD_CCLD}"
-
-# Upstream uses --add-needed in gcc.specs which gold doesn't support, so
-# enforce BFD.
-LDFLAGS += "-fuse-ld=bfd"
 
 do_compile() {
     oe_runmake ERRORS= HOST_CFLAGS="${BUILD_CFLAGS}" HOST_LDFLAGS="${BUILD_LDFLAGS}"
