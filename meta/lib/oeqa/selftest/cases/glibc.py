@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 import os
+import time
 import contextlib
 from oeqa.core.decorator import OETestTag
 from oeqa.core.case import OEPTestResultTestCase
@@ -31,12 +32,16 @@ class GlibcSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
             features.append('EGLIBCPARALLELISM:task-check:pn-glibc-testsuite = "PARALLELMFLAGS="-j1""')
         self.write_config("\n".join(features))
 
+        start_time = time.time()
+
         bitbake("glibc-testsuite -c check")
+
+        end_time = time.time()
 
         builddir = get_bb_var("B", "glibc-testsuite")
 
         ptestsuite = "glibc-user" if ssh is None else "glibc"
-        self.ptest_section(ptestsuite)
+        self.ptest_section(ptestsuite, duration = int(end_time - start_time))
         with open(os.path.join(builddir, "tests.sum"), "r",  errors='replace') as f:
             for test, result in parse_values(f):
                 self.ptest_result(ptestsuite, test, result)
