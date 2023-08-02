@@ -75,6 +75,7 @@ OESELFTEST_METADATA_GUESS_TABLE={
 }
 
 STATUS_STRINGS = {
+    "None": "No matching test result"
 }
 
 def test_has_at_least_one_matching_tag(test, tag_list):
