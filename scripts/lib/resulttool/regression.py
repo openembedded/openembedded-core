@@ -74,6 +74,9 @@ OESELFTEST_METADATA_GUESS_TABLE={
     }
 }
 
+STATUS_STRINGS = {
+}
+
 def test_has_at_least_one_matching_tag(test, tag_list):
     return "oetags" in test and any(oetag in tag_list for oetag in test["oetags"])
 
@@ -173,6 +176,9 @@ def can_be_compared(logger, base, target):
     return ret and metadata_matches(base_configuration, target_configuration) \
         and machine_matches(base_configuration, target_configuration)
 
+def get_status_str(raw_status):
+    raw_status_lower = raw_status.lower() if raw_status else "None"
+    return STATUS_STRINGS.get(raw_status_lower, raw_status)
 
 def compare_result(logger, base_name, target_name, base_result, target_result):
     base_result = base_result.get('result')
@@ -205,7 +211,7 @@ def compare_result(logger, base_name, target_name, base_result, target_result):
             resultstring = "Regression:  %s\n             %s\n" % (base_name, target_name)
             for k in sorted(result):
                 if not result[k]['target'] or not result[k]['target'].startswith("PASS"):
-                    resultstring += '    %s: %s -> %s\n' % (k, result[k]['base'], result[k]['target'])
+                    resultstring += '    %s: %s -> %s\n' % (k, get_status_str(result[k]['base']), get_status_str(result[k]['target']))
             if new_pass_count > 0:
                 resultstring += f'    Additionally, {new_pass_count} previously failing test(s) is/are now passing\n'
         else:
