@@ -239,7 +239,9 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dsystem-gid-max=999 \
                   "
 
-# Hardcode target binary paths to avoid using paths from sysroot
+# Hardcode target binary paths to avoid using paths from sysroot or worse
+# it pokes for these binaries on build host and encodes that distro assumption
+# into target
 EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
                   -Dkmod-path=${base_bindir}/kmod \
                   -Dmount-path=${base_bindir}/mount \
@@ -247,7 +249,9 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
                   -Dquotaon-path=${sbindir}/quotaon \
                   -Dsulogin-path=${base_sbindir}/sulogin \
                   -Dnologin-path=${base_sbindir}/nologin \
-                  -Dumount-path=${base_bindir}/umount"
+                  -Dumount-path=${base_bindir}/umount \
+                  -Dloadkeys-path=${base_bindir}/loadkeys \
+                  -Dsetfont-path=${base_bindir}/setfont"
 
 # The 60 seconds is watchdog's default vaule.
 WATCHDOG_TIMEOUT ??= "60"
