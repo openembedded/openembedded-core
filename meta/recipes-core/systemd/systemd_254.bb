@@ -252,8 +252,8 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
                   -Dsulogin-path=${base_sbindir}/sulogin \
                   -Dnologin-path=${base_sbindir}/nologin \
                   -Dumount-path=${base_bindir}/umount \
-                  -Dloadkeys-path=${base_bindir}/loadkeys \
-                  -Dsetfont-path=${base_bindir}/setfont"
+                  -Dloadkeys-path=${bindir}/loadkeys \
+                  -Dsetfont-path=${bindir}/setfont"
 
 # The 60 seconds is watchdog's default vaule.
 WATCHDOG_TIMEOUT ??= "60"
