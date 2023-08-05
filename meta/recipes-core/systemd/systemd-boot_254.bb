@@ -11,6 +11,7 @@ inherit deploy
 LDFLAGS:prepend = "${@ " ".join(d.getVar('LD').split()[1:])} "
 
 EFI_LD = "bfd"
+LDFLAGS:append = " -fuse-ld=${EFI_LD}"
 
 do_write_config[vardeps] += "CC OBJCOPY EFI_LD"
 do_write_config:append() {
