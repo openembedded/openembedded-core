@@ -10,9 +10,13 @@ SECTION = "base/shell"
 
 inherit useradd pkgconfig meson perlnative update-rc.d update-alternatives qemu systemd gettext bash-completion manpages features_check
 
+# unmerged-usr support is deprecated upstream, taints the system and will be
+# removed in the near future. Fail the build if it is not enabled.
+REQUIRED_DISTRO_FEATURES += "usrmerge"
+
 # As this recipe builds udev, respect systemd being in DISTRO_FEATURES so
 # that we don't build both udev and systemd in world builds.
-REQUIRED_DISTRO_FEATURES = "systemd"
+REQUIRED_DISTRO_FEATURES += "systemd"
 
 SRC_URI += " \
            file://touchscreen.rules \
