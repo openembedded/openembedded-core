@@ -159,6 +159,7 @@ PACKAGECONFIG[ima] = "-Dima=true,-Dima=false"
 PACKAGECONFIG[importd] = "-Dimportd=true,-Dimportd=false,glib-2.0"
 # Update NAT firewall rules
 PACKAGECONFIG[iptc] = "-Dlibiptc=true,-Dlibiptc=false,iptables"
+PACKAGECONFIG[journal-color] = ",,,less"
 PACKAGECONFIG[journal-upload] = "-Dlibcurl=true,-Dlibcurl=false,curl"
 PACKAGECONFIG[kmod] = "-Dkmod=true,-Dkmod=false,kmod"
 PACKAGECONFIG[ldconfig] = "-Dldconfig=true,-Dldconfig=false,,ldconfig"
