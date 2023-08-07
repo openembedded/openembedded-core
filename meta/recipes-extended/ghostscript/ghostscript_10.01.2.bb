@@ -67,3 +67,5 @@ COMPATIBLE_HOST = "^(?!arc).*"
 
 # some entries in NVD uses gpl_ghostscript
 CVE_PRODUCT = "ghostscript gpl_ghostscript"
+
+CVE_STATUS[CVE-2023-38560] = "not-applicable-config: PCL isn't part of the Ghostscript release"
