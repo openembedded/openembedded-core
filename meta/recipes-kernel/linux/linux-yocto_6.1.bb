@@ -3,6 +3,7 @@ KBRANCH ?= "v6.1/standard/base"
 require recipes-kernel/linux/linux-yocto.inc
 
 # CVE exclusions
+include recipes-kernel/linux/cve-exclusion.inc
 include recipes-kernel/linux/cve-exclusion_6.1.inc
 
 # board specific branches
