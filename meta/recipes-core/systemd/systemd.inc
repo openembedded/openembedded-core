@@ -17,6 +17,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe \
 SRCREV = "994c7978608a0bd9b317f4f74ff266dd50a3e74e"
 SRCBRANCH = "v254-stable"
 SRC_URI = "git://github.com/systemd/systemd-stable.git;protocol=https;branch=${SRCBRANCH} \
+           file://0001-elf2efi-Fix-header-size-calculation.patch \
            "
 
 S = "${WORKDIR}/git"
