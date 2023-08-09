@@ -21,16 +21,18 @@ def llvm_features_from_tune(d):
 
     if 'vfpv4' in feat:
         f.append("+vfp4")
-    if 'vfpv3' in feat:
+    elif 'vfpv3' in feat:
         f.append("+vfp3")
-    if 'vfpv3d16' in feat:
-        f.append("+d16")
-
-    if 'vfpv2' in feat or 'vfp' in feat:
+    elif 'vfpv3d16' in feat:
+        f.append("+vfp3")
+        f.append("-d32")
+    elif 'vfpv2' in feat or 'vfp' in feat:
         f.append("+vfp2")
 
     if 'neon' in feat:
         f.append("+neon")
+    elif target_is_armv7(d):
+        f.append("-neon")
 
     if 'mips32' in feat:
         f.append("+mips32")
