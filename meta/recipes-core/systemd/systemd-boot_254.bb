@@ -13,22 +13,21 @@ LDFLAGS:prepend = "${@ " ".join(d.getVar('LD').split()[1:])} "
 EFI_LD = "bfd"
 LDFLAGS:append = " -fuse-ld=${EFI_LD}"
 
-do_write_config[vardeps] += "CC OBJCOPY EFI_LD"
+do_write_config[vardeps] += "EFI_LD"
 do_write_config:append() {
     cat >${WORKDIR}/meson-${PN}.cross <<EOF
 [binaries]
-c = ${@meson_array('CC', d)}
-objcopy = ${@meson_array('OBJCOPY', d)}
 c_ld = ${@meson_array('EFI_LD', d)}
 EOF
 }
+
+MESON_CROSS_FILE:append = " --cross-file ${WORKDIR}/meson-${PN}.cross"
 
 MESON_TARGET = "systemd-boot"
 
 EXTRA_OEMESON += "-Defi=true \
                   -Dbootloader=true \
                   -Dman=false \
-                  --cross-file ${WORKDIR}/meson-${PN}.cross \
                   "
 
 # install to the image as boot*.efi if its the EFI_PROVIDER,
