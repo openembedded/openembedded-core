@@ -20,6 +20,9 @@ do_configure[cleandirs] = "${B}"
 # Where the meson.build build configuration is
 MESON_SOURCEPATH = "${S}"
 
+# The target to build in do_compile. If unset the default targets are built.
+MESON_TARGET ?= ""
+
 def noprefix(var, d):
     return d.getVar(var).replace(d.getVar('prefix') + '/', '', 1)
 
@@ -170,7 +173,7 @@ do_configure[postfuncs] += "meson_do_qa_configure"
 
 do_compile[progress] = "outof:^\[(\d+)/(\d+)\]\s+"
 meson_do_compile() {
-    meson compile -v ${PARALLEL_MAKE}
+    meson compile -v ${PARALLEL_MAKE} ${MESON_TARGET}
 }
 
 meson_do_install() {
