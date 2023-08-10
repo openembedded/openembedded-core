@@ -23,6 +23,8 @@ c_ld = ${@meson_array('EFI_LD', d)}
 EOF
 }
 
+MESON_TARGET = "systemd-boot"
+
 EXTRA_OEMESON += "-Defi=true \
                   -Dbootloader=true \
                   -Dman=false \
@@ -53,10 +55,6 @@ CFLAGS:append:libc-musl = " -D__DEFINED_wchar_t"
 
 COMPATIBLE_HOST = "(aarch64.*|arm.*|x86_64.*|i.86.*)-linux"
 COMPATIBLE_HOST:x86-x32 = "null"
-
-do_compile() {
-	ninja systemd-boot
-}
 
 do_install() {
 	install -d ${D}${EFI_FILES_PATH}
