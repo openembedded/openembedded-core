@@ -143,7 +143,7 @@ python do_write_qemuboot_conf() {
         # contains all tools required by runqemu
         if k == 'STAGING_BINDIR_NATIVE':
             val = os.path.join(d.getVar('BASE_WORKDIR'), d.getVar('BUILD_SYS'),
-                               'qemu-helper-native/1.0-r1/recipe-sysroot-native/usr/bin/')
+                               'qemu-helper-native/1.0/recipe-sysroot-native/usr/bin/')
         else:
             val = d.getVar(k)
         if val is None:
