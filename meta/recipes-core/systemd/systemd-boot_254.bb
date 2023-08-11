@@ -49,6 +49,8 @@ RDEPENDS:${PN} += "virtual-systemd-bootconf"
 # Imported from the old gummiboot recipe
 TUNE_CCARGS:remove = "-mfpmath=sse"
 
+CFLAGS:append:libc-musl = " -D__DEFINED_wchar_t"
+
 COMPATIBLE_HOST = "(aarch64.*|arm.*|x86_64.*|i.86.*)-linux"
 COMPATIBLE_HOST:x86-x32 = "null"
 
