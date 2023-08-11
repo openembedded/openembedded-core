@@ -63,6 +63,7 @@ python () {
         else:
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}')
 
+        bb.fetch.get_hashvalue(d)
         local_srcuri = []
         fetch = bb.fetch2.Fetch((d.getVar('SRC_URI') or '').split(), d)
         for url in fetch.urls:
@@ -125,6 +126,9 @@ python () {
 
         d.setVarFlag('do_compile', 'file-checksums', '${@srctree_hash_files(d)}')
         d.setVarFlag('do_configure', 'file-checksums', '${@srctree_configure_hash_files(d)}')
+
+        d.appendVarFlag('do_compile', 'prefuncs', ' fetcher_hashes_dummyfunc')
+        d.appendVarFlag('do_configure', 'prefuncs', ' fetcher_hashes_dummyfunc')
 
         # We don't want the workdir to go away
         d.appendVar('RM_WORK_EXCLUDE', ' ' + d.getVar('PN'))

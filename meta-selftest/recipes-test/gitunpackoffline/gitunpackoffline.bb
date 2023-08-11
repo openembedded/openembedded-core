@@ -1,4 +1,4 @@
-require gitunpackoffline-fail.bb
+require gitunpackoffline.inc
 
 TAGVALUE = "2.11"
 
