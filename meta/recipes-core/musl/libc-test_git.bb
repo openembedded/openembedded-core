@@ -15,7 +15,7 @@ SRC_URI = " \
     file://run-ptest \
 "
 
-PV = "0+git${SRCPV}"
+PV = "0+git"
 
 S = "${WORKDIR}/git"
 

@@ -16,7 +16,7 @@ SRC_URI[prebuilt.sha256sum] = "ed9f456856e9d86359f169f46a70ad7be4190d6040282b84c
 
 SRCREV = "ec6151a2b057109b3f798f151a36690af582e166"
 S = "${WORKDIR}/git"
-PV = "1.9.0+git${SRCPV}"
+PV = "1.9.0+git"
 
 # largefile and 64bit time_t support adds these macros via compiler flags globally
 # remove them for pseudo since pseudo intercepts some of the functions which will be

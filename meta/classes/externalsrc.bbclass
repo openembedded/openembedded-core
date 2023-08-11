@@ -74,8 +74,6 @@ python () {
 
         d.setVar('SRC_URI', ' '.join(local_srcuri))
 
-        # Dummy value because the default function can't be called with blank SRC_URI
-        d.setVar('SRCPV', '999')
         # sstate is never going to work for external source trees, disable it
         d.setVar('SSTATE_SKIP_CREATION', '1')
 

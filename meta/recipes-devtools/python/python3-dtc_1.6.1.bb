@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://pylibfdt/libfdt.i;beginline=1;endline=6;md5=afda088c9
 
 SRCREV = "c001fc01a43e7a06447c06ea3d50bd60641322b8"
 
-PV = "1.6.1+git${SRCPV}"
+PV = "1.6.1+git"
 S = "${WORKDIR}/git"
 
 PYPA_WHEEL = "${S}/dist/libfdt-1.6.2*.whl"

@@ -47,7 +47,7 @@ SRC_URI += "file://0001-perf-cpumap-Make-counter-as-unsigned-ints.patch"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 LINUX_VERSION ?= "6.1.46"
 
-PV = "${LINUX_VERSION}+git${SRCPV}"
+PV = "${LINUX_VERSION}+git"
 
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "1"
