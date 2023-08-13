@@ -99,6 +99,7 @@ qemux86_common = [
     "blk_update_request: I/O error, dev fd0, sector 0 op 0x0:(READ)",
     "floppy: error",
     'failed to IDENTIFY (I/O error, err_mask=0x4)',
+    'NOHZ tick-stop error: local softirq work is pending, handler #80!!!'
 ] + common_errors
 
 ignore_errors = {
