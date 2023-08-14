@@ -70,7 +70,6 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --enable-clocale=gnu \
                 --with-headers=${STAGING_INCDIR} \
                 --without-selinux \
-                --enable-tunables \
                 --enable-bind-now \
                 --enable-stack-protector=strong \
                 --disable-crypt \
