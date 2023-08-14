@@ -760,7 +760,7 @@ addtask kernel_link_images after do_compile before do_strip
 python do_strip() {
     import shutil
 
-    strip = d.getVar('STRIP')
+    strip = d.getVar('KERNEL_STRIP')
     extra_sections = d.getVar('KERNEL_IMAGE_STRIP_EXTRA_SECTIONS')
     kernel_image = d.getVar('B') + "/" + d.getVar('KERNEL_OUTPUT_DIR') + "/vmlinux"
 
