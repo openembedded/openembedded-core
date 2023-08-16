@@ -10,17 +10,12 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0009-Rename-genhd-wrapper-to-blkdev.patch \
-           file://0001-fix-mm-introduce-vma-vm_flags-wrapper-functions-v6.3.patch \
-           file://0002-fix-uuid-Decouple-guid_t-and-uuid_le-types-and-respe.patch \
-           file://0003-fix-btrfs-pass-find_free_extent_ctl-to-allocator-tra.patch \
-           file://0004-fix-net-add-location-to-trace_consume_skb-v6.3.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "bf808b113544287cfe837a6382887fa66354ef5cc8216460cebbef3d27dc3581"
+SRC_URI[sha256sum] = "13abfb1ac870711f0d0adfa88e53b17deb2e3052173715a260a6ef14aa45b0a7"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
