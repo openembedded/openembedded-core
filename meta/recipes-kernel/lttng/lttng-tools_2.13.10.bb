@@ -37,11 +37,9 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://lttng-sessiond.service \
            file://disable-tests.patch \
            file://0001-compat-Define-off64_t-as-off_t-on-linux.patch \
-           file://40b2a4a793c81221a28f822d07135069456ea021.patch \
-           file://gcc13-ptest-fix.patch \
            "
 
-SRC_URI[sha256sum] = "8d94dc95b608cf70216b01203a3f8242b97a232db2e23421a2f43708da08f337"
+SRC_URI[sha256sum] = "e5d1095ec1322565f38f149346f71967496c281eacc51ec5c77994b850e7d335"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
