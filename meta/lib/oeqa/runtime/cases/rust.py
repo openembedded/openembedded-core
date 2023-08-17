@@ -48,3 +48,15 @@ class RustCompileTest(OERuntimeTestCase):
         status, output = self.target.run('cargo run --manifest-path=/tmp/hello/Cargo.toml')
         msg = 'running compiled file failed, output: %s' % output
         self.assertEqual(status, 0, msg=msg)
+
+class RustCLibExampleTest(OERuntimeTestCase):
+    @OETestDepends(['ssh.SSHTest.test_ssh'])
+    @OEHasPackage('rust-c-lib-example-bin')
+    def test_rust_c_lib_example(self):
+        cmd = "rust-c-lib-example-bin test"
+        status, output = self.target.run(cmd)
+        msg = 'Exit status was not 0. Output: %s' % output
+        self.assertEqual(status, 0, msg=msg)
+
+        msg = 'Incorrect output: %s' % output
+        self.assertEqual(output, "Hello world in rust from C!", msg=msg)
