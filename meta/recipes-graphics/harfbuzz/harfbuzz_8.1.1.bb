@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b98429b8e8e3c2a67cfef01e99e4893d \
                     "
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "c1ce780acd385569f25b9a29603d1d5bc71e6940e55bfdd4f7266fad50e42620"
+SRC_URI[sha256sum] = "0305ad702e11906a5fc0c1ba11c270b7f64a8f5390d676aacfd71db129d6565f"
 
 DEPENDS += "glib-2.0-native"
 
