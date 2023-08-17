@@ -14,9 +14,8 @@ UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 LIC_FILES_CHKSUM = "file://pylibfdt/libfdt.i;beginline=1;endline=6;md5=afda088c974174a29108c8d80b5dce90"
 
-SRCREV = "c001fc01a43e7a06447c06ea3d50bd60641322b8"
+SRCREV = "039a99414e778332d8f9c04cbd3072e1dcc62798"
 
-PV = "1.6.1+git"
 S = "${WORKDIR}/git"
 
 PYPA_WHEEL = "${S}/dist/libfdt-1.6.2*.whl"
