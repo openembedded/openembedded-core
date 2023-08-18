@@ -50,6 +50,7 @@ do_install_ptest() {
 
 RDEPENDS:${PN}-ptest = "attr \
                         coreutils \
+                        perl-module-constant \
                         perl-module-filehandle \
                         perl-module-getopt-std \
                         perl-module-posix \
