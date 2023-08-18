@@ -127,3 +127,10 @@ RRECOMMENDS:${PN}-ptest += " \
 "
 
 FILES:${PN} += "${systemd_unitdir}/*"
+
+# strace is not yet ported to rv32
+RDEPENDS:${PN}-ptest:remove:riscv32 = "strace"
+do_install_ptest:append:riscv32 () {
+    echo "disabled, no strace" > ${D}${PTEST_PATH}/tests/07revert-grow.broken
+    echo "disabled, no strace" > ${D}${PTEST_PATH}/tests/07revert-inplace.broken
+}
