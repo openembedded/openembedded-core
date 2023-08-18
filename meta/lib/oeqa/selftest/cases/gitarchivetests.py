@@ -10,6 +10,7 @@ basepath = os.path.abspath(os.path.dirname(__file__) + '/../../../../../')
 lib_path = basepath + '/scripts/lib'
 sys.path = sys.path + [lib_path]
 import oeqa.utils.gitarchive as ga
+from oeqa.utils.git import GitError
 import tempfile
 import shutil
 import scriptutils
@@ -17,7 +18,7 @@ from oeqa.selftest.case import OESelftestTestCase
 
 logger = scriptutils.logger_create('resulttool')
 
-def create_fake_repository(commit, tag_list=[]):
+def create_fake_repository(commit, tag_list=[], add_remote=True):
     """ Create a testing git directory
 
     Initialize a simple git repository with one initial commit, and as many
@@ -31,7 +32,8 @@ def create_fake_repository(commit, tag_list=[]):
     fake_data_file = "fake_data.txt"
     tempdir = tempfile.mkdtemp(prefix='fake_results.')
     repo = ga.init_git_repo(tempdir, False, False, logger)
-    repo.run_cmd(["remote", "add", "origin", "."])
+    if add_remote:
+        repo.run_cmd(["remote", "add", "origin", "."])
     with open(os.path.join(tempdir, fake_data_file), "w") as fake_data:
         fake_data.write("Fake data")
     if commit:
@@ -93,4 +95,33 @@ class GitArchiveTests(OESelftestTestCase):
         self.assertEqual(revs[0].commit, "0f7d5df")
         self.assertEqual(len(revs[0].tags), 2)
         self.assertEqual(revs[0].tags, ['main/10-g0f7d5df/0', 'main/10-g0f7d5df/1'])
+        delete_fake_repository(path)
+
+    def test_get_tags_without_valid_remote(self):
+        url = 'git://git.yoctoproject.org/poky'
+        path, git_obj = create_fake_repository(False, None, False)
+
+        tags = ga.get_tags(git_obj, pattern="yocto-*", url=url)
+        """Test for some well established tags (released tags)"""
+        self.assertIn("yocto-4.0", tags)
+        self.assertIn("yocto-4.1", tags)
+        self.assertIn("yocto-4.2", tags)
+        delete_fake_repository(path)
+
+    def test_get_tags_without_valid_remote_neither_url(self):
+        url = 'git://git.yoctoproject.org/poky'
+        path, git_obj = create_fake_repository(False, None, False)
+
+        """Test for some well established tags (released tags)"""
+        with self.assertRaises(GitError):
+            tags = ga.get_tags(git_obj, pattern="yocto-*")
+        delete_fake_repository(path)
+
+    def test_get_tags_without_valid_remote_and_wrong_url(self):
+        url = 'git://git.foo.org/bar'
+        path, git_obj = create_fake_repository(False, None, False)
+
+        """Test for some well established tags (released tags)"""
+        with self.assertRaises(GitError):
+            tags = ga.get_tags(git_obj, pattern="yocto-*", url=url)
         delete_fake_repository(path)
