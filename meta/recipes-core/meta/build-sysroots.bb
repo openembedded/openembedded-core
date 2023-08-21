@@ -17,6 +17,10 @@ deltask configure
 deltask compile
 deltask install
 deltask populate_sysroot
+deltask create_spdx
+deltask collect_spdx_deps
+deltask create_runtime_spdx
+deltask recipe_qa
 
 python do_build_native_sysroot () {
     targetsysroot = d.getVar("STANDALONE_SYSROOT")
