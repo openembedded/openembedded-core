@@ -323,6 +323,9 @@ do_configure:prepend () {
     if [ -e "${S}/tools/build/Makefile.feature" ]; then
         sed -i 's,CFLAGS=,CC="\$(CC)" CFLAGS=,' ${S}/tools/build/Makefile.feature
     fi
+    # The libperl feature check produces fatal warnings due to -Werror being
+    # used, silence enough errors that the check passes.
+    sed -i 's/\(FLAGS_PERL_EMBED=.*\)/\1 -Wno-error=unused-function -Wno-error=attributes/' ${S}/tools/build/feature/Makefile
 
     # 3.17-rc1+ has a include issue for arm/powerpc. Temporarily sed in the appropriate include
     if [ -e "${S}/tools/perf/arch/$ARCH/util/skip-callchain-idx.c" ]; then
