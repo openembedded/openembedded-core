@@ -30,6 +30,8 @@ PACKAGECONFIG[cap] = ",,libcap"
 PACKAGECONFIG[libtraceevent] = ",NO_LIBTRACEEVENT=1,libtraceevent"
 # Arm CoreSight
 PACKAGECONFIG[coresight] = "CORESIGHT=1,,opencsd"
+PACKAGECONFIG[pfm4] = ",NO_LIBPFM4=1,libpfm4"
+PACKAGECONFIG[babeltrace] = ",NO_LIBBABELTRACE=1,babeltrace"
 
 # libunwind is not yet ported for some architectures
 PACKAGECONFIG:remove:arc = "libunwind"
