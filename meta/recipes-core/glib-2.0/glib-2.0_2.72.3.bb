@@ -17,6 +17,15 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-meson-Run-atomics-test-on-clang-as-well.patch \
            file://0001-gio-tests-resources.c-comment-out-a-build-host-only-.patch \
            file://0001-gio-tests-g-file-info-don-t-assume-million-in-one-ev.patch \
+           file://CVE-2023-32665-0001.patch \
+           file://CVE-2023-32665-0002.patch \
+           file://CVE-2023-32665-0003.patch \
+           file://CVE-2023-32665-0004.patch \
+           file://CVE-2023-32665-0005.patch \
+           file://CVE-2023-32665-0006.patch \
+           file://CVE-2023-32665-0007.patch \
+           file://CVE-2023-32665-0008.patch \
+           file://CVE-2023-32665-0009.patch \
            "
 SRC_URI:append:class-native = " file://relocate-modules.patch"
 
