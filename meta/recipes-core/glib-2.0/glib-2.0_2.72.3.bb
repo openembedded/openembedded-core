@@ -26,6 +26,9 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://CVE-2023-32665-0007.patch \
            file://CVE-2023-32665-0008.patch \
            file://CVE-2023-32665-0009.patch \
+           file://CVE-2023-29499.patch \
+           file://CVE-2023-32611-0001.patch \
+           file://CVE-2023-32611-0002.patch \
            "
 SRC_URI:append:class-native = " file://relocate-modules.patch"
 
