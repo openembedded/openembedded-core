@@ -51,10 +51,10 @@ OECMAKE_CXX_COMPILER ?= "${@oecmake_map_compiler('CXX', d)[0]}"
 OECMAKE_CXX_COMPILER_LAUNCHER ?= "${@oecmake_map_compiler('CXX', d)[1]}"
 
 # clear compiler vars for allarch to avoid sig hash difference
-OECMAKE_C_COMPILER_allarch = ""
-OECMAKE_C_COMPILER_LAUNCHER_allarch = ""
-OECMAKE_CXX_COMPILER_allarch = ""
-OECMAKE_CXX_COMPILER_LAUNCHER_allarch = ""
+OECMAKE_C_COMPILER:allarch = ""
+OECMAKE_C_COMPILER_LAUNCHER:allarch = ""
+OECMAKE_CXX_COMPILER:allarch = ""
+OECMAKE_CXX_COMPILER_LAUNCHER:allarch = ""
 
 OECMAKE_RPATH ?= ""
 OECMAKE_PERLNATIVE_DIR ??= ""
