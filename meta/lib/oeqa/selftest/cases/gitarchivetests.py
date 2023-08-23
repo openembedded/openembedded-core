@@ -14,6 +14,7 @@ from oeqa.utils.git import GitError
 import tempfile
 import shutil
 import scriptutils
+import logging
 from oeqa.selftest.case import OESelftestTestCase
 
 logger = scriptutils.logger_create('resulttool')
@@ -58,6 +59,12 @@ class GitArchiveTests(OESelftestTestCase):
     TEST_COMMIT="0f7d5df"
     TEST_COMMIT_COUNT="42"
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.log = logging.getLogger('gitarchivetests')
+        cls.log.setLevel(logging.DEBUG)
+
     def test_create_first_test_tag(self):
         path, git_obj = create_fake_repository(False)
         keywords = {'commit': self.TEST_COMMIT, 'branch': self.TEST_BRANCH, "commit_count": self.TEST_COMMIT_COUNT}
@@ -101,7 +108,7 @@ class GitArchiveTests(OESelftestTestCase):
         url = 'git://git.yoctoproject.org/poky'
         path, git_obj = create_fake_repository(False, None, False)
 
-        tags = ga.get_tags(git_obj, pattern="yocto-*", url=url)
+        tags = ga.get_tags(git_obj, self.log, pattern="yocto-*", url=url)
         """Test for some well established tags (released tags)"""
         self.assertIn("yocto-4.0", tags)
         self.assertIn("yocto-4.1", tags)
@@ -114,7 +121,7 @@ class GitArchiveTests(OESelftestTestCase):
 
         """Test for some well established tags (released tags)"""
         with self.assertRaises(GitError):
-            tags = ga.get_tags(git_obj, pattern="yocto-*")
+            tags = ga.get_tags(git_obj, self.log, pattern="yocto-*")
         delete_fake_repository(path)
 
     def test_get_tags_without_valid_remote_and_wrong_url(self):
@@ -123,5 +130,5 @@ class GitArchiveTests(OESelftestTestCase):
 
         """Test for some well established tags (released tags)"""
         with self.assertRaises(GitError):
-            tags = ga.get_tags(git_obj, pattern="yocto-*", url=url)
+            tags = ga.get_tags(git_obj, self.log, pattern="yocto-*", url=url)
         delete_fake_repository(path)
