@@ -129,6 +129,22 @@ class TestImage(OESelftestTestCase):
         bitbake('core-image-full-cmdline socat')
         bitbake('-c testimage core-image-full-cmdline')
 
+    def test_testimage_slirp(self):
+        """
+        Summary: Check basic testimage functionality with qemu and slirp networking.
+        """
+
+        features = '''
+IMAGE_CLASSES:append = " testimage"
+IMAGE_FEATURES:append = " ssh-server-dropbear"
+IMAGE_ROOTFS_EXTRA_SPACE:append = "${@bb.utils.contains("IMAGE_CLASSES", "testimage", " + 5120", "", d)}"
+TEST_RUNQEMUPARAMS:append = " slirp"
+'''
+        self.write_config(features)
+
+        bitbake('core-image-minimal')
+        bitbake('-c testimage core-image-minimal')
+
     def test_testimage_dnf(self):
         """
         Summary: Check package feeds functionality for dnf
