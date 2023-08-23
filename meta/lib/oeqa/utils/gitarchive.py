@@ -116,18 +116,25 @@ def get_tags(repo, log, pattern=None, url=None):
         cmd.append(pattern)
     try:
         tags_refs = repo.run_cmd(cmd)
+        tags = ["".join(d.split()[1].split('/', 2)[2:]) for d in tags_refs.splitlines()]
     except GitError as e:
         # If it fails, retry with repository url if one is provided
-        if not url:
-            raise(e)
-        log.info("No remote repository configured, use provided url")
-        cmd = base_cmd.copy()
-        cmd.append(url)
-        if pattern:
-            cmd.append(pattern)
-        tags_refs = repo.run_cmd(cmd)
+        if url:
+            log.info("No remote repository configured, use provided url")
+            cmd = base_cmd.copy()
+            cmd.append(url)
+            if pattern:
+                cmd.append(pattern)
+            tags_refs = repo.run_cmd(cmd)
+            tags = ["".join(d.split()[1].split('/', 2)[2:]) for d in tags_refs.splitlines()]
+        else:
+            log.warning("Read local tags only, some remote tags may be missed")
+            cmd = ["tag"]
+            if pattern:
+                cmd += ["-l", pattern]
+            tags = repo.run_cmd(cmd).splitlines()
 
-    return ["".join(d.split()[1].split('/', 2)[2:]) for d in tags_refs.splitlines()]
+    return tags
 
 def expand_tag_strings(repo, name_pattern, msg_subj_pattern, msg_body_pattern,
                        url, log, keywords):

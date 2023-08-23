@@ -115,13 +115,15 @@ class GitArchiveTests(OESelftestTestCase):
         self.assertIn("yocto-4.2", tags)
         delete_fake_repository(path)
 
-    def test_get_tags_without_valid_remote_neither_url(self):
-        url = 'git://git.yoctoproject.org/poky'
-        path, git_obj = create_fake_repository(False, None, False)
+    def test_get_tags_with_only_local_tag(self):
+        fake_tags_list=["main/10-g0f7d5df/0", "main/10-g0f7d5df/1", "foo/20-g2468f5d/0"]
+        path, git_obj = create_fake_repository(True, fake_tags_list, False)
 
-        """Test for some well established tags (released tags)"""
-        with self.assertRaises(GitError):
-            tags = ga.get_tags(git_obj, self.log, pattern="yocto-*")
+        """No remote is configured and no url is passed: get_tags must fall
+        back to local tags
+        """
+        tags = ga.get_tags(git_obj, self.log)
+        self.assertCountEqual(tags, fake_tags_list)
         delete_fake_repository(path)
 
     def test_get_tags_without_valid_remote_and_wrong_url(self):
