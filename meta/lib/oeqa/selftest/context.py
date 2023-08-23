@@ -296,7 +296,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                 os.chdir(builddir)
 
             if not "meta-selftest" in self.tc.td["BBLAYERS"]:
-                self.tc.logger.warning("meta-selftest layer not found in BBLAYERS, adding it")
+                self.tc.logger.info("meta-selftest layer not found in BBLAYERS, adding it")
                 meta_selftestdir = os.path.join(
                     self.tc.td["BBLAYERS_FETCH_DIR"], 'meta-selftest')
                 if os.path.isdir(meta_selftestdir):
