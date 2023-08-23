@@ -226,14 +226,14 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         machines = []
 
         bbpath = self.tc_kwargs['init']['td']['BBPATH'].split(':')
-    
+
         for path in bbpath:
             found_machines = glob.glob(os.path.join(path, 'conf', 'machine', '*.conf'))
             if found_machines:
                 for i in found_machines:
                     # eg: '/home/<user>/poky/meta-intel/conf/machine/intel-core2-32.conf'
                     machines.append(os.path.splitext(os.path.basename(i))[0])
-    
+
         return machines
 
     def _get_cases_paths(self, bbpath):
