@@ -9,7 +9,9 @@ LICENSE = "GPL-2.0-only & LGPL-2.1-only"
 RDEPENDS:${PN}-ptest = "bash"
 
 require qemu-targets.inc
-inherit pkgconfig ptest update-rc.d systemd
+# https://gitlab.com/qemu-project/qemu/-/commit/81e2b198a8cb4ee5fdf108bd438f44b193ee3a36 means
+# we need a full python3-native setup
+inherit pkgconfig ptest update-rc.d systemd python3native
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=441c28d2cf86e15a37fa47e15a72fbac \
                     file://COPYING.LIB;endline=24;md5=8c5efda6cf1e1b03dcfd0e6c0d271c7f"
@@ -27,14 +29,13 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0009-Define-MAP_SYNC-and-MAP_SHARED_VALIDATE-on-needed-li.patch \
            file://0010-hw-pvrdma-Protect-against-buggy-or-malicious-guest-d.patch \
            file://0002-linux-user-Replace-use-of-lfs64-related-functions-an.patch \
-           file://0001-tracetool-use-relative-paths-for-line-preprocessor-d.patch \
-	   file://0001-CVE-2023-40360-hw-nvme-fix-null-pointer-access-in-di.patch \
+           file://fixedmeson.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[sha256sum] = "81c817dda38af958be5bef1a6cf55b658bb2d3fb87c1e6a571de6b7b2c44516c"
+SRC_URI[sha256sum] = "710c101198e334d4762eef65f649bc43fa8a5dd75303554b8acfec3eb25f0e55"
 
 SRC_URI:append:class-target = " file://cross.patch"
 SRC_URI:append:class-nativesdk = " file://cross.patch"
@@ -105,9 +106,8 @@ EXTRA_OECONF = " \
     --disable-werror \
     --extra-cflags='${CFLAGS}' \
     --extra-ldflags='${LDFLAGS}' \
-    --with-git=/bin/false \
-    --with-git-submodules=ignore \
-    --meson=meson \
+    --disable-download \
+    --disable-docs \
     ${PACKAGECONFIG_CONFARGS} \
     "
 
@@ -145,6 +145,10 @@ do_install () {
 		install -m 0644 ${S}/contrib/systemd/qemu-guest-agent.service ${D}${systemd_unitdir}/system
 		sed -i -e 's,-/usr/bin/,-${bindir}/,g' ${D}${systemd_unitdir}/system/qemu-guest-agent.service
 	fi
+	# ELF binary /usr/share/qemu/s390-netboot.img has relocations in .text
+	rm ${D}${datadir}/qemu/s390-netboot.img -f
+	# ELF binary /usr/share/qemu/s390-ccw.img has relocations in .text [textrel]
+	rm ${D}${datadir}/qemu/s390-ccw.img -f
 }
 
 # The following fragment will create a wrapper for qemu-mips user emulation
