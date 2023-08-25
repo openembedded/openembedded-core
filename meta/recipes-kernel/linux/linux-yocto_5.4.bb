@@ -1,6 +1,7 @@
 KBRANCH ?= "v5.4/standard/base"
 
 require recipes-kernel/linux/linux-yocto.inc
+include recipes-kernel/linux/cve-exclusion_5.4.inc
 
 # board specific branches
 KBRANCH_qemuarm  ?= "v5.4/standard/arm-versatile-926ejs"
