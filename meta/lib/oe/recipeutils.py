@@ -945,10 +945,9 @@ def replace_dir_vars(path, d):
         path = path.replace(dirpath, '${%s}' % dirvars[dirpath])
     return path
 
-def get_recipe_pv_without_srcpv(pv, uri_type):
+def get_recipe_pv_with_pfx_sfx(pv, uri_type):
     """
-    Get PV without SRCPV common in SCM's for now only
-    support git.
+    Get PV separating prefix and suffix components.
 
     Returns tuple with pv, prefix and suffix.
     """
@@ -956,7 +955,7 @@ def get_recipe_pv_without_srcpv(pv, uri_type):
     sfx = ''
 
     if uri_type == 'git':
-        git_regex = re.compile(r"(?P<pfx>v?)(?P<ver>.*?)(?P<sfx>\+[^\+]*(git)?r?(AUTOINC\+))(?P<rev>.*)")
+        git_regex = re.compile(r"(?P<pfx>v?)(?P<ver>.*?)(?P<sfx>\+[^\+]*(git)?r?(AUTOINC\+)?)(?P<rev>.*)")
         m = git_regex.match(pv)
 
         if m:
@@ -1008,7 +1007,7 @@ def get_recipe_upstream_version(rd):
     src_uri = src_uris.split()[0]
     uri_type, _, _, _, _, _ =  decodeurl(src_uri)
 
-    (pv, pfx, sfx) = get_recipe_pv_without_srcpv(rd.getVar('PV'), uri_type)
+    (pv, pfx, sfx) = get_recipe_pv_with_pfx_sfx(rd.getVar('PV'), uri_type)
     ru['current_version'] = pv
 
     manual_upstream_version = rd.getVar("RECIPE_UPSTREAM_VERSION")
