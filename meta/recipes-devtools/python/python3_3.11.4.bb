@@ -91,6 +91,13 @@ CACHED_CONFIGUREVARS = " \
                 ac_cv_file__dev_ptc=no \
                 ac_cv_working_tzset=yes \
 "
+# set thread stack size to 2MB on musl for interpreter and stdlib C extensions
+# so it does not run into stack limits due to musl's small thread stack
+# This is only needed to build interpreter and not the subsequent modules
+# Thats why CFLAGS_NODIST is modified instead of CFLAGS
+CACHED_CONFIGUREVARS:append:libc-musl = "\
+    CFLAGS_NODIST='${CFLAGS} -DTHREAD_STACK_SIZE=0x200000' \
+"
 
 # PGO currently causes builds to not be reproducible so disable by default, see YOCTO #13407
 PACKAGECONFIG ??= "editline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
