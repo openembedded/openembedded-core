@@ -15,7 +15,7 @@ SRC_URI[sha256sum] = "1789d6b1b1a57dfe2a7ab7b533ee9f5dfd9cbf5b59bb1bb3c2612ed08d
 SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.xz \
            file://inetutils-1.8-0001-printf-parse-pull-in-features.h-for-__GLIBC__.patch \
            file://inetutils-1.8-0003-wchar.patch \
-           file://rexec.xinetd.inetutils  \
+           file://rexec.xinetd.inetutils \
            file://rlogin.xinetd.inetutils \
            file://rsh.xinetd.inetutils \
            file://telnet.xinetd.inetutils \
@@ -24,13 +24,12 @@ SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.xz \
            file://inetutils-only-check-pam_appl.h-when-pam-enabled.patch \
            file://0001-CVE-2023-40303-ftpd-rcp-rlogin-rsh-rshd-uucpd-fix-ch.patch \
            file://0002-CVE-2023-40303-Indent-changes-in-previous-commit.patch \
-"
+           ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', '', 'file://fix-disable-ipv6.patch', d)} \
+           "
 
 inherit autotools gettext update-alternatives texinfo
 
 acpaths = "-I ./m4"
-
-SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', '', 'file://fix-disable-ipv6.patch', d)}"
 
 PACKAGECONFIG ??= "ftp uucpd \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)} \
