@@ -1,0 +1,36 @@
+From 24b5d7f154cac9e322dd3459f6d0a5016abbbb57 Mon Sep 17 00:00:00 2001
+From: Sergei Trofimovich <slyich@gmail.com>
+Date: Fri, 27 May 2022 22:12:07 +0100
+Subject: [PATCH] libdnf/utils/sqlite3/Sqlite3.hpp: add missing <cstdint>
+ include
+
+Without the change libdnf build fails on this week's gcc-13 snapshot as:
+
+    In file included from /build/libdnf/libdnf/sack/../transaction/Swdb.hpp:38,
+                     from /build/libdnf/libdnf/sack/query.hpp:32,
+                     from /build/libdnf/libdnf/dnf-sack-private.hpp:31,
+                     from /build/libdnf/libdnf/hy-iutil.cpp:60:
+    /build/libdnf/libdnf/sack/../transaction/../utils/sqlite3/Sqlite3.hpp:100:33: error: 'std::int64_t' has not been declared
+      100 |         void bind(int pos, std::int64_t val)
+          |                                 ^~~~~~~
+
+Upstream-Status: Backport [https://github.com/rpm-software-management/libdnf/commit/24b5d7f154cac9e322dd3459f6d0a5016abbbb57]
+---
+ libdnf/utils/sqlite3/Sqlite3.hpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libdnf/utils/sqlite3/Sqlite3.hpp b/libdnf/utils/sqlite3/Sqlite3.hpp
+index 3a7da23c..0403bb33 100644
+--- a/libdnf/utils/sqlite3/Sqlite3.hpp
++++ b/libdnf/utils/sqlite3/Sqlite3.hpp
+@@ -27,6 +27,7 @@
+ 
+ #include <sqlite3.h>
+ 
++#include <cstdint>
+ #include <map>
+ #include <memory>
+ #include <stdexcept>
+-- 
+2.42.0
+

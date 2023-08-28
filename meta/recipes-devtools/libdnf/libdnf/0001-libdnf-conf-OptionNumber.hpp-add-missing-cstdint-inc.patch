@@ -1,0 +1,33 @@
+From f8af6399c4f6a65a35d33ecc191bb14094dc9e18 Mon Sep 17 00:00:00 2001
+From: Sergei Trofimovich <slyich@gmail.com>
+Date: Fri, 27 May 2022 22:13:48 +0100
+Subject: [PATCH] libdnf/conf/OptionNumber.hpp: add missing <cstdint> include
+
+Without the change libdnf build fails on this week's gcc-13 snapshot as:
+
+    In file included from /build/libdnf/libdnf/conf/ConfigMain.hpp:29,
+                     from /build/libdnf/libdnf/conf/ConfigMain.cpp:21:
+    /build/libdnf/libdnf/conf/OptionNumber.hpp:94:41: error: 'int32_t' is not a member of 'std'; did you mean 'int32_t'?
+       94 | extern template class OptionNumber<std::int32_t>;
+          |                                         ^~~~~~~
+
+Upstream-Status: Backport [https://github.com/rpm-software-management/libdnf/commit/f8af6399c4f6a65a35d33ecc191bb14094dc9e18]
+---
+ libdnf/conf/OptionNumber.hpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libdnf/conf/OptionNumber.hpp b/libdnf/conf/OptionNumber.hpp
+index f7a7b3d6..a3a4dea6 100644
+--- a/libdnf/conf/OptionNumber.hpp
++++ b/libdnf/conf/OptionNumber.hpp
+@@ -25,6 +25,7 @@
+ 
+ #include "Option.hpp"
+ 
++#include <cstdint>
+ #include <functional>
+ 
+ namespace libdnf {
+-- 
+2.42.0
+
