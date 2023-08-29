@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            file://0001-dhcpcd.8-Fix-conflict-error-when-enable-multilib.patch \
            "
 
-SRCREV = "5d9bf80c26b4b7dc9d8aa175d96d5a24e75b4d48"
+SRCREV = "d2fbde99cf2d0072016af9dfe6a77032a5a9fc30"
 S = "${WORKDIR}/git"
 
 inherit pkgconfig autotools-brokensep systemd useradd
