@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            file://dhcpcd.service \
            file://dhcpcd@.service \
            file://0001-dhcpcd.8-Fix-conflict-error-when-enable-multilib.patch \
+           file://0001-privsep-fix-strlcpy-overflow-in-psp_ifname-239.patch \
            "
 
 SRCREV = "d2fbde99cf2d0072016af9dfe6a77032a5a9fc30"
