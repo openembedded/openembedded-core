@@ -31,3 +31,6 @@ do_install() {
     oe_runmake DESTDIR=${D} BINDIR=${bindir} install
     ln -s stress-ng ${D}${bindir}/stress
 }
+
+# upstream issue: https://github.com/ColinIanKing/stress-ng/issues/315
+DEBUG_BUILD = "0"
