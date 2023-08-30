@@ -60,6 +60,7 @@ class Partition():
         self.has_fstab = False
         self.update_fstab_in_rootfs = False
         self.hidden = args.hidden
+        self.mbr = args.mbr
 
         self.lineno = lineno
         self.source_file = ""
