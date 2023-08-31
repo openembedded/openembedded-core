@@ -64,10 +64,6 @@ ERROR_QA:remove = "unknown-configure-option"
 
 do_configure:prepend () {
     export HELP2MAN='true'
-    cp ${STAGING_DATADIR_NATIVE}/gettext/config.rpath ${S}/build-aux/config.rpath
-    install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}
-    install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}
-    rm -f ${S}/glob/configure*
 }
 
 do_install:append () {
