@@ -30,6 +30,7 @@ inherit gnomebase gettext upstream-version-is-even gio-module-cache ptest-gnome
 
 SRC_URI += "file://run-ptest"
 SRC_URI += "file://eagain.patch"
+SRC_URI += "file://0001-tls-tests-disable-PKCS-11-tests-if-not-available.patch"
 
 FILES:${PN} += "\
                 ${libdir}/gio/modules/libgio*.so \
