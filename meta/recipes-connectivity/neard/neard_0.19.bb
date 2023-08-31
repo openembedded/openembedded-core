@@ -15,7 +15,7 @@ SRC_URI = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=https;bra
            file://0001-Add-header-dependency-to-nciattach.o.patch \
           "
 
-SRCREV = "c781008d3786e03173f0a0f5dfcc0545c787d7fc"
+SRCREV = "a1dc8a75cba999728e154a0f811ab9dd50c809f7"
 
 S = "${WORKDIR}/git"
 
