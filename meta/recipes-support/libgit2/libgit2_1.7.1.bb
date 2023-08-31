@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5bdf47bbc9a39dc6ce076d59e322dc17"
 DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 
 SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.7;protocol=https"
-SRCREV = "3e2baa6d0bfb42f9016e24cba1733a6ae26a8ae6"
+SRCREV = "a2bde63741977ca0f4ef7db2f609df320be67a08"
 
 S = "${WORKDIR}/git"
 
