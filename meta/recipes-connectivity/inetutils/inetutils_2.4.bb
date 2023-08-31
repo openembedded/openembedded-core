@@ -19,7 +19,6 @@ SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.xz \
            file://rsh.xinetd.inetutils \
            file://telnet.xinetd.inetutils \
            file://tftpd.xinetd.inetutils \
-           file://inetutils-1.9-PATH_PROCNET_DEV.patch \
            file://inetutils-only-check-pam_appl.h-when-pam-enabled.patch \
            file://0001-CVE-2023-40303-ftpd-rcp-rlogin-rsh-rshd-uucpd-fix-ch.patch \
            file://0002-CVE-2023-40303-Indent-changes-in-previous-commit.patch \
@@ -42,14 +41,30 @@ PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6 gl_cv_socket_ipv6=no,"
 PACKAGECONFIG[ping6] = "--enable-ping6,--disable-ping6,"
 
 EXTRA_OECONF = "--with-ncurses-include-dir=${STAGING_INCDIR} \
-        inetutils_cv_path_login=${base_bindir}/login \
         --with-libreadline-prefix=${STAGING_LIBDIR} \
         --enable-rpath=no \
-"
+        --with-path-login=${base_bindir}/login \
+        --with-path-cp=${base_bindir}/cp \
+        --with-path-uucico=${libexecdir}/uuico \
+        --with-path-procnet-dev=/proc/net/dev \
+        "
+
+EXTRA_OECONF:append:libc-musl = " --with-path-utmpx=/dev/null/utmpx --with-path-wtmpx=/dev/null/wtmpx"
 
 # These are horrible for security, disable them
 EXTRA_OECONF:append = " --disable-rsh --disable-rshd --disable-rcp \
         --disable-rlogin --disable-rlogind --disable-rexec --disable-rexecd"
+
+# The configure script guesses many paths in cross builds, check for this happening
+do_configure_cross_check() {
+    if grep "may be incorrect because of cross-compilation" ${B}/config.log; then
+        bberror Default path values used, these must be set explicitly
+    fi
+}
+do_configure[postfuncs] += "do_configure_cross_check"
+
+# The --with-path options are not actually options, so this check needs to be silenced
+ERROR_QA:remove = "unknown-configure-option"
 
 do_configure:prepend () {
     export HELP2MAN='true'
