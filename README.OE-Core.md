@@ -22,7 +22,7 @@ for full details on how to submit changes.
 As a quick guide, patches should be sent to openembedded-core@lists.openembedded.org
 The git command to do that would be:
 
-     git send-email -M -1 --to openembedded-corel@lists.openembedded.org
+     git send-email -M -1 --to openembedded-core@lists.openembedded.org
 
 Mailing list:
 
