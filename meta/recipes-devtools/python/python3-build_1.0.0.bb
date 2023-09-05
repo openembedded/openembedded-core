@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/pypa/build"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=310439af287b0fb4780b2ad6907c256c"
 
-SRC_URI[sha256sum] = "d5b71264afdb5951d6704482aac78de887c80691c52b88a9ad195983ca2c9269"
+SRC_URI[sha256sum] = "49a60f212df4d9925727c2118e1cbe3abf30b393eff7d0e7287d2170eb36844d"
 
 inherit pypi python_flit_core
 
