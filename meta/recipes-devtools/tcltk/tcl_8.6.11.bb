@@ -89,6 +89,11 @@ do_install_ptest() {
 	cp -r ${S}/tests ${D}${PTEST_PATH}
 }
 
+do_install_ptest:append:libc-musl () {
+	# Assumes locales other than provided by musl-locales
+	sed -i -e 's|SKIPPED_TESTS=|SKIPPED_TESTS="unixInit-3*"|' ${D}${PTEST_PATH}/run-ptest
+}
+
 # Fix some paths that might be used by Tcl extensions
 BINCONFIG_GLOB = "*Config.sh"
 
