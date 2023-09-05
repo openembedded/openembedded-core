@@ -1,0 +1,75 @@
+From ba8156eab79784ef816958327e701923890e98f7 Mon Sep 17 00:00:00 2001
+From: Joachim Wiberg <troglobit@gmail.com>
+Date: Sat, 22 Apr 2023 08:27:57 +0200
+Subject: [PATCH 2/2] Fix #62: early log messages lost when running in systemd
+
+This is a follow-up to d7576c7 which initially added support for running
+in systemd based systems.  Since the unit file sources the syslog.socket
+we have /run/systemd/journal/syslog open already on descriptor 3.  All
+we need to do is verify that's the mode syslogd runs in.
+
+Signed-off-by: Joachim Wiberg <troglobit@gmail.com>
+
+Upstream-Status: Backport [https://github.com/troglobit/sysklogd/commit/7ec64e5f9c1bc284792d028647fb36ef3e64dff7]
+
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ src/syslogd.c      | 21 +++++++++++++++------
+ syslogd.service.in |  2 +-
+ 2 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/src/syslogd.c b/src/syslogd.c
+index fa4303f..e96ca9a 100644
+--- a/src/syslogd.c
++++ b/src/syslogd.c
+@@ -162,6 +162,7 @@ void        untty(void);
+ static void parsemsg(const char *from, char *msg);
+ static int  opensys(const char *file);
+ static void printsys(char *msg);
++static void unix_cb(int sd, void *arg);
+ static void logmsg(struct buf_msg *buffer);
+ static void fprintlog_first(struct filed *f, struct buf_msg *buffer);
+ static void fprintlog_successive(struct filed *f, int flags);
+@@ -436,12 +437,20 @@ int main(int argc, char *argv[])
+ 				.pe_serv = "syslog",
+ 			});
+ 
+-	/* Default to _PATH_LOG for the UNIX domain socket */
+-	if (!pflag)
+-		addpeer(&(struct peer) {
+-				.pe_name = _PATH_LOG,
+-				.pe_mode = 0666,
+-			});
++	/* Figure out where to read system log messages from */
++	if (!pflag) {
++		/* Do we run under systemd-journald (Requires=syslog.socket)? */
++		if (fcntl(3, F_GETFD) != -1) {
++			if (socket_register(3, NULL, unix_cb, NULL) == -1)
++				err(1, "failed registering syslog.socket (3)");
++		} else {
++			/* Default to _PATH_LOG for the UNIX domain socket */
++			addpeer(&(struct peer) {
++					.pe_name = _PATH_LOG,
++					.pe_mode = 0666,
++				});
++		}
++	}
+ 
+ 	if (!Foreground && !Debug) {
+ 		ppid = waitdaemon(30);
+diff --git a/syslogd.service.in b/syslogd.service.in
+index d614c5f..bc82af9 100644
+--- a/syslogd.service.in
++++ b/syslogd.service.in
+@@ -6,7 +6,7 @@ Requires=syslog.socket
+ 
+ [Service]
+ EnvironmentFile=-@SYSCONFDIR@/default/syslogd
+-ExecStart=@SBINDIR@/syslogd -F -p /run/systemd/journal/syslog $SYSLOGD_OPTS
++ExecStart=@SBINDIR@/syslogd -F $SYSLOGD_OPTS
+ StandardOutput=null
+ Restart=on-failure
+ 
+-- 
+2.25.1
+

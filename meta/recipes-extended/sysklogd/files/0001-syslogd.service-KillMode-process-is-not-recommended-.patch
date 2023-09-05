@@ -1,0 +1,33 @@
+From b732dd0001c66f3ff1e0aef919c84ca9f0f81252 Mon Sep 17 00:00:00 2001
+From: Joachim Wiberg <troglobit@gmail.com>
+Date: Sat, 22 Apr 2023 07:40:24 +0200
+Subject: [PATCH 1/2] syslogd.service: KillMode=process is not recommended,
+ drop
+
+The default 'control-group' ensures all processes started by sysklogd
+are stopped when the service is stopped, this is what we want.
+
+Signed-off-by: Joachim Wiberg <troglobit@gmail.com>
+
+Upstream-Status: Backport [https://github.com/troglobit/sysklogd/commit/c82c004de7e25e770039cba5d6a34c30dd548533]
+
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ syslogd.service.in | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/syslogd.service.in b/syslogd.service.in
+index 91e080a..d614c5f 100644
+--- a/syslogd.service.in
++++ b/syslogd.service.in
+@@ -9,7 +9,6 @@ EnvironmentFile=-@SYSCONFDIR@/default/syslogd
+ ExecStart=@SBINDIR@/syslogd -F -p /run/systemd/journal/syslog $SYSLOGD_OPTS
+ StandardOutput=null
+ Restart=on-failure
+-KillMode=process
+ 
+ [Install]
+ WantedBy=multi-user.target
+-- 
+2.25.1
+
