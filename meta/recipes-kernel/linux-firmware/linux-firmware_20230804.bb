@@ -41,6 +41,7 @@ LICENSE = "\
     & Firmware-myri10ge_firmware \
     & Firmware-netronome \
     & Firmware-nvidia \
+    & Firmware-nxp \
     & Firmware-OLPC \
     & Firmware-ath9k-htc \
     & Firmware-phanfw \
@@ -107,6 +108,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.Netronome;md5=4add08f2577086d44447996503cddf5f \
                     file://LICENCE.nvidia;md5=4428a922ed3ba2ceec95f076a488ce07 \
                     file://LICENCE.NXP;md5=58bb8ba632cd729b9ba6183bc6aed36f \
+                    file://LICENSE.nxp;md5=cca321ca1524d6a1e4fed87486cd82dc \
                     file://LICENCE.OLPC;md5=5b917f9d8c061991be4f6f5f108719cd \
                     file://LICENCE.open-ath9k-htc-firmware;md5=1b33c9f4d17bc4d457bdb23727046837 \
                     file://LICENCE.phanfw;md5=954dcec0e051f9409812b561ea743bfa \
@@ -177,6 +179,7 @@ NO_GENERIC_LICENSE[Firmware-moxa] = "LICENCE.moxa"
 NO_GENERIC_LICENSE[Firmware-myri10ge_firmware] = "LICENCE.myri10ge_firmware"
 NO_GENERIC_LICENSE[Firmware-netronome] = "LICENCE.Netronome"
 NO_GENERIC_LICENSE[Firmware-nvidia] = "LICENCE.nvidia"
+NO_GENERIC_LICENSE[Firmware-nxp] = "LICENSE.nxp"
 NO_GENERIC_LICENSE[Firmware-OLPC] = "LICENCE.OLPC"
 NO_GENERIC_LICENSE[Firmware-ath9k-htc] = "LICENCE.open-ath9k-htc-firmware"
 NO_GENERIC_LICENSE[Firmware-phanfw] = "LICENCE.phanfw"
@@ -312,6 +315,16 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-nvidia-license \
              ${PN}-nvidia-tegra-k1 ${PN}-nvidia-tegra \
              ${PN}-nvidia-gpu \
+             ${PN}-nxp-license \
+             ${PN}-nxp8987-sdio \
+             ${PN}-nxp8997-common \
+             ${PN}-nxp8997-pcie \
+             ${PN}-nxp8997-sdio \
+             ${PN}-nxp9098-common \
+             ${PN}-nxp9098-pcie \
+             ${PN}-nxp9098-sdio \
+             ${PN}-nxpiw416-sdio \
+             ${PN}-nxpiw612-sdio \
              ${PN}-netronome-license ${PN}-netronome \
              ${PN}-qat ${PN}-qat-license \
              ${PN}-qcom-license ${PN}-qcom-yamato-license \
@@ -546,6 +559,42 @@ FILES:${PN}-netronome = " \
 "
 
 RDEPENDS:${PN}-netronome += "${PN}-netronome-license"
+
+# For NXP
+LICENSE:${PN}-nxp8987-sdio = "Firmware-nxp"
+LICENSE:${PN}-nxp8997-common = "Firmware-nxp"
+LICENSE:${PN}-nxp8997-pcie = "Firmware-nxp"
+LICENSE:${PN}-nxp8997-sdio = "Firmware-nxp"
+LICENSE:${PN}-nxp9098-common = "Firmware-nxp"
+LICENSE:${PN}-nxp9098-pcie = "Firmware-nxp"
+LICENSE:${PN}-nxp9098-sdio = "Firmware-nxp"
+LICENSE:${PN}-nxpiw416-sdio = "Firmware-nxp"
+LICENSE:${PN}-nxpiw612-sdio = "Firmware-nxp"
+LICENSE:${PN}-nxp-license = "Firmware-nxp"
+
+FILES:${PN}-nxp8987-sdio = "${nonarch_base_libdir}/firmware/nxp/*8987*"
+FILES:${PN}-nxp8997-common = " \
+    ${nonarch_base_libdir}/firmware/nxp/uartuart8997_bt_v4.bin \
+    ${nonarch_base_libdir}/firmware/nxp/helper_uart_3000000.bin \
+"
+ALLOW_EMPTY:${PN}-nxp8997-pcie = "1"
+ALLOW_EMPTY:${PN}-nxp8997-sdio = "1"
+FILES:${PN}-nxp9098-common = "${nonarch_base_libdir}/firmware/nxp/uartuart9098_bt_v1.bin"
+ALLOW_EMPTY:${PN}-nxp9098-pcie = "1"
+ALLOW_EMPTY:${PN}-nxp9098-sdio = "1"
+FILES:${PN}-nxpiw416-sdio = "${nonarch_base_libdir}/firmware/nxp/*iw416*"
+FILES:${PN}-nxpiw612-sdio = "${nonarch_base_libdir}/firmware/nxp/uartspi_n61x_v1.bin.se"
+FILES:${PN}-nxp-license = "${nonarch_base_libdir}/firmware/LICENSE.nxp"
+
+RDEPENDS:${PN}-nxp8987-sdio += "${PN}-nxp-license"
+RDEPENDS:${PN}-nxp8997-common += "${PN}-nxp-license"
+RDEPENDS:${PN}-nxp8997-pcie += "${PN}-nxp8997-common"
+RDEPENDS:${PN}-nxp8997-sdio += "${PN}-nxp8997-common"
+RDEPENDS:${PN}-nxp9098-common += "${PN}-nxp-license"
+RDEPENDS:${PN}-nxp9098-pcie += "${PN}-nxp9098-common"
+RDEPENDS:${PN}-nxp9098-sdio += "${PN}-nxp9098-common"
+RDEPENDS:${PN}-nxpiw416-sdio += "${PN}-nxp-license"
+RDEPENDS:${PN}-nxpiw612-sdio += "${PN}-nxp-license"
 
 # For Nvidia
 LICENSE:${PN}-nvidia-gpu = "Firmware-nvidia"
@@ -1132,6 +1181,7 @@ LICENSE:${PN} = "\
     & Firmware-moxa \
     & Firmware-myri10ge_firmware \
     & Firmware-nvidia \
+    & Firmware-nxp \
     & Firmware-OLPC \
     & Firmware-ath9k-htc \
     & Firmware-phanfw \
