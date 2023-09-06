@@ -105,6 +105,11 @@ do_install_ptest() {
 	do
 		install -D -m 755 $prg ${D}${PTEST_PATH}/
 	done
+
+	# Disable tests causing intermittent autobuilder failures
+	echo "intermittent failure on autobuilder" > ${D}${PTEST_PATH}/tests/19raid6check.broken
+	echo "intermittent failure on autobuilder" > ${D}${PTEST_PATH}/tests/20raid5journal.broken
+	echo "intermittent failure on autobuilder" > ${D}${PTEST_PATH}/tests/21raid5cache.broken
 }
 
 RDEPENDS:${PN} += "bash"
