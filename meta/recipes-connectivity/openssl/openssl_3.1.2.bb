@@ -20,7 +20,7 @@ SRC_URI:append:class-nativesdk = " \
 
 SRC_URI[sha256sum] = "a0ce69b8b97ea6a35b96875235aa453b966ba3cba8af2de23657d8b6767d6539"
 
-inherit lib_package multilib_header multilib_script ptest perlnative
+inherit lib_package multilib_header multilib_script ptest perlnative manpages
 MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
 
 PACKAGECONFIG ?= ""
@@ -30,6 +30,7 @@ PACKAGECONFIG:class-nativesdk = ""
 PACKAGECONFIG[cryptodev-linux] = "enable-devcryptoeng,disable-devcryptoeng,cryptodev-linux,,cryptodev-module"
 PACKAGECONFIG[no-tls1] = "no-tls1"
 PACKAGECONFIG[no-tls1_1] = "no-tls1_1"
+PACKAGECONFIG[manpages] = ""
 
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
@@ -145,7 +146,7 @@ do_configure () {
 }
 
 do_install () {
-	oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install
+	oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install_sw install_ssldirs ${@bb.utils.contains('PACKAGECONFIG', 'manpages', 'install_docs', '', d)}
 
 	oe_multilib_header openssl/opensslconf.h
 	oe_multilib_header openssl/configuration.h
