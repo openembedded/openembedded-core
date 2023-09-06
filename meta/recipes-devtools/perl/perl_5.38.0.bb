@@ -17,9 +17,6 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://0002-Constant-Fix-up-shebang.patch \
            file://determinism.patch \
            file://0001-cpan-Sys-Syslog-Makefile.PL-Fix-_PATH_LOG-for-determ.patch \
-           file://CVE-2023-31484.patch \
-           file://CVE-2023-31486-0001.patch \
-           file://CVE-2023-31486-0002.patch \
            "
 SRC_URI:append:class-native = " \
            file://perl-configpm-switch.patch \
@@ -28,7 +25,7 @@ SRC_URI:append:class-target = " \
            file://encodefix.patch \
 "
 
-SRC_URI[perl.sha256sum] = "68203665d8ece02988fc77dc92fccbb297a83a4bb4b8d07558442f978da54cc1"
+SRC_URI[perl.sha256sum] = "213ef58089d2f2c972ea353517dc60ec3656f050dcc027666e118b508423e517"
 
 B = "${WORKDIR}/perl-${PV}-build"
 
@@ -158,9 +155,10 @@ do_install:append:class-target() {
     # This is used to substitute target configuration when running native perl via perl-configpm-switch.patch
     ln -s Config_heavy.pl ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/Config_heavy-target.pl
 
-    # This contains host-specific information used for building miniperl (a helper executable built with host compiler)
-    # and therefore isn't reproducible. I believe the file isn't actually needed on target.
-    rm ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/xconfig.h
+    # xconfig.h contains references to build host architecture, and yet is included from various other places.
+    # To make it reproducible let's make it a copy of config.h patch that is specific to the target architecture.
+    # It is believed that the original header is the product of building miniperl (a helper executable built with host compiler).
+    cp ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/config.h ${D}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/xconfig.h
 }
 
 do_install:append:class-nativesdk() {
@@ -205,6 +203,7 @@ perl_package_preprocess () {
             ${PKGD}${bindir}/pod2usage.perl \
             ${PKGD}${bindir}/podchecker.perl \
             ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/config.h \
+            ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/xconfig.h \
             ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/perl.h \
             ${PKGD}${libdir}/perl5/${PV}/${TARGET_ARCH}-linux/CORE/pp.h \
             ${PKGD}${libdir}/perl5/${PV}/Config.pm \
