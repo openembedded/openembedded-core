@@ -12,15 +12,15 @@ inherit autotools pkgconfig github-releases
 DEPENDS = "bison-native flex-native"
 DEPENDS:append:libc-musl = " fts"
 
-SRC_URI = "${GITHUB_BASE_URI}/download/v3.0/${BP}.tar.gz \
-           file://0001-api-Use-GNU-strerror_r-when-available.patch \
+SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
 "
 UPSTREAM_CHECK_URI = "https://github.com/libcgroup/libcgroup/tags"
 
-SRC_URI[sha256sum] = "8d284d896fca1c981b55850e92acd3ad9648a69227c028dda7ae3402af878edd"
+SRC_URI[sha256sum] = "976ec4b1e03c0498308cfd28f1b256b40858f636abc8d1f9db24f0a7ea9e1258"
 
-PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
+PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'pam systemd', d)}"
 PACKAGECONFIG[pam] = "--enable-pam-module-dir=${base_libdir}/security --enable-pam=yes,--enable-pam=no,libpam"
+PACKAGECONFIG[systemd] = "--enable-systemd,--disable-systemd,systemd"
 
 PACKAGES =+ "cgroups-pam-plugin"
 FILES:cgroups-pam-plugin = "${base_libdir}/security/pam_cgroup.so*"
