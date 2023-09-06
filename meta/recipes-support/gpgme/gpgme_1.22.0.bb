@@ -18,14 +18,13 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0004-python-import.patch \
            file://0005-gpgme-config-skip-all-lib-or-usr-lib-directories-in-.patch \
            file://0006-fix-build-path-issue.patch \
-           file://0007-python-Add-variables-to-tests.patch \
            file://0008-do-not-auto-check-var-PYTHON.patch \
            file://0001-use-closefrom-on-linux-and-glibc-2.34.patch \
            file://0001-posix-io.c-Use-off_t-instead-of-off64_t.patch \
            file://0001-autogen.sh-remove-unknown-in-version.patch \
            "
 
-SRC_URI[sha256sum] = "25a5785a5da356689001440926b94e967d02e13c49eb7743e35ef0cf22e42750"
+SRC_URI[sha256sum] = "9551e37081ad3bde81018a0d24f245c3f8206990549598fb31a97a68380a7b71"
 
 PYTHON_DEPS = "${@bb.utils.contains('LANGUAGES', 'python', 'swig-native', '', d)}"
 
@@ -53,7 +52,6 @@ EXTRA_OECONF += '--enable-languages="${LANGUAGES}" \
                  --disable-gpg-test \
                  --disable-gpgsm-test \
                  --disable-g13-test \
-                 --disable-lang-python-test \
 '
 
 inherit autotools texinfo binconfig-disabled pkgconfig ${PYTHON_INHERIT} python3native multilib_header
