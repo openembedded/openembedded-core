@@ -8,29 +8,21 @@ LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
-	file://0001-replace-perl-w-with-use-warnings.patch \
-	file://groff-not-search-fonts-on-build-host.patch \
-	file://0001-support-musl.patch \
-	file://0001-Include-config.h.patch \
-	file://0001-Make-manpages-mulitlib-identical.patch \
-	file://0001-Fix-code-style-issues.patch \
-"
+           file://groff-not-search-fonts-on-build-host.patch \
+           file://0001-Make-manpages-mulitlib-identical.patch \
+           "
 
-SRC_URI[md5sum] = "08fb04335e2f5e73f23ea4c3adbf0c5f"
-SRC_URI[sha256sum] = "e78e7b4cb7dec310849004fa88847c44701e8d133b5d4c13057d876c1bad0293"
+SRC_URI[sha256sum] = "6b9757f592b7518b4902eb6af7e54570bdccba37a871fddb2d30ae3863511c13"
 
-# Remove at the next upgrade
-PR = "r1"
-
-DEPENDS = "bison-native"
+DEPENDS = "bison-native groff-native"
 RDEPENDS:${PN} += "perl sed"
 
 inherit autotools-brokensep texinfo multilib_script pkgconfig
 
-MULTILIB_SCRIPTS = "${PN}:${bindir}/gpinyin ${PN}:${bindir}/groffer ${PN}:${bindir}/grog"
+MULTILIB_SCRIPTS = "${PN}:${bindir}/gpinyin ${PN}:${bindir}/grog"
 
-EXTRA_OECONF = "--without-x --without-doc"
-PARALLEL_MAKE = ""
+EXTRA_OECONF = "--without-x --with-urw-fonts-dir=/completely/bogus/dir/"
+EXTRA_OEMAKE:class-target = "GROFFBIN=groff GROFF_BIN_PATH=${STAGING_BINDIR_NATIVE}"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl' ac_cv_path_BASH_PROG='no' PAGE=A4"
 
@@ -67,6 +59,9 @@ do_install:append() {
 	# not ship /usr/bin/grap2graph and its releated man files
 	rm -rf ${D}${bindir}/grap2graph
 	rm -rf ${D}${mandir}/man1/grap2graph*
+
+        # strip hosttool path out of generated files
+        sed -i -e 's:${HOSTTOOLS_DIR}/::g' ${D}${docdir}/${BP}/examples/hdtbl/*.roff
 }
 
 do_install:append:class-native() {
