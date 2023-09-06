@@ -49,6 +49,7 @@ CFLAGS:append:powerpc64 = " ${LCL_STOP_SERVICES}"
 CFLAGS:append:powerpc64le = " ${LCL_STOP_SERVICES}"
 CFLAGS:append:riscv64 = " ${LCL_STOP_SERVICES}"
 CFLAGS:append:riscv32 = " ${LCL_STOP_SERVICES}"
+CFLAGS:append:loongarch64 = " ${LCL_STOP_SERVICES}"
 
 do_install() {
 	oe_runmake install INSTALLROOT=${D}
