@@ -11,11 +11,11 @@ SRC_URI = "http://www.nasm.us/pub/nasm/releasebuilds/${PV}/nasm-${PV}.tar.bz2 \
            file://CVE-2022-44370.patch \
            "
 
-SRC_URI[sha256sum] = "04e7343d9bf112bffa9fda86f6c7c8b120c2ccd700b882e2db9f57484b1bd778"
+SRC_URI[sha256sum] = "3c4b8339e5ab54b1bcb2316101f8985a5da50a3f9e504d43fa6f35668bee2fd0"
 
 EXTRA_AUTORECONF_append = " -I autoconf/m4"
 
-inherit autotools
+inherit autotools-brokensep
 
 BBCLASSEXTEND = "native"
 
