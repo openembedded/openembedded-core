@@ -33,7 +33,7 @@ PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} \
 
 PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
 PACKAGECONFIG[tests] = "-Dinstall-tests=true, -Dinstall-tests=false"
-PACKAGECONFIG[thai] = ",,libthai"
+PACKAGECONFIG[thai] = "-Dlibthai=enabled,-Dlibthai=disabled,libthai"
 
 GIR_MESON_OPTION = 'introspection'
 
