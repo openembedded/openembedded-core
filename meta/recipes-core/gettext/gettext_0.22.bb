@@ -30,7 +30,6 @@ SRC_URI += " \
            file://serial-tests-config.patch \
            file://0001-tests-autopoint-3-unset-MAKEFLAGS.patch \
            file://0001-init-env.in-do-not-add-C-CXX-parameters.patch \
-           file://autoconf-2.73.patch \
            "
 
 inherit autotools texinfo pkgconfig ptest
@@ -201,6 +200,8 @@ RDEPENDS:${PN}-ptest:append:libc-glibc = "\
     glibc-charmap-euc-kr \
     glibc-gconv-euc-jp \
     glibc-charmap-euc-jp \
+    glibc-gconv-gb18030 \
+    glibc-charmap-gb18030 \
     locale-base-de-de \
     locale-base-fr-fr \
 "
