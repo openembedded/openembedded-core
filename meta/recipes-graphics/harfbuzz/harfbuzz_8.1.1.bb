@@ -22,9 +22,10 @@ GTKDOC_MESON_DISABLE_FLAG = 'disabled'
 
 PACKAGECONFIG ??= "cairo freetype glib icu"
 PACKAGECONFIG[cairo] = "-Dcairo=enabled,-Dcairo=disabled,cairo"
+PACKAGECONFIG[chafa] = "-Dchafa=enabled,-Dchafa=disabled,chafa"
 PACKAGECONFIG[freetype] = "-Dfreetype=enabled,-Dfreetype=disabled,freetype"
 PACKAGECONFIG[glib] = "-Dglib=enabled,-Dglib=disabled,glib-2.0"
-PACKAGECONFIG[graphite] = "-Dgraphite=enabled,-Dgraphite=disabled,graphite2"
+PACKAGECONFIG[graphite] = "-Dgraphite2=enabled,-Dgraphite2=disabled,graphite2"
 PACKAGECONFIG[icu] = "-Dicu=enabled,-Dicu=disabled,icu"
 
 PACKAGES =+ "${PN}-icu ${PN}-icu-dev ${PN}-subset"
