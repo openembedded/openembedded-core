@@ -21,6 +21,8 @@ PACKAGES =+ "sxpm cxpm"
 FILES_cxpm = "${bindir}/cxpm"
 FILES_sxpm = "${bindir}/sxpm"
 
+SRC_URI += " file://CVE-2022-46285.patch"
+
 SRC_URI[md5sum] = "6f0ecf8d103d528cfc803aa475137afa"
 SRC_URI[sha256sum] = "9cd1da57588b6cb71450eff2273ef6b657537a9ac4d02d0014228845b935ac25"
 
