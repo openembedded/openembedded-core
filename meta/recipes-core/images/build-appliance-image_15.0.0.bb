@@ -117,7 +117,7 @@ fakeroot do_tweak_image () {
 	ln -rs ${IMAGE_ROOTFS}/lib ${IMAGE_ROOTFS}/lib64
 }
 
-IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src; do_tweak_image; "
+IMAGE_PREPROCESS_COMMAND += "do_populate_poky_src do_tweak_image"
 # For pip usage above
 do_image[network] = "1"
 
