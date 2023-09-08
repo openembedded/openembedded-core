@@ -34,6 +34,7 @@ RDEPENDS:${PN} = " \
 
 RDEPENDS:${PN}-ptest = " \
      ${PN} \
+     musl-staticdev \
      sed \
 "
 
