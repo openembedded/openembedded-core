@@ -11,7 +11,10 @@ inherit packagegroup features_check
 # rdepends on XSERVER
 REQUIRED_DISTRO_FEATURES = "x11"
 
-XSERVER ?= "xserver-xorg xf86-video-fbdev"
+XSERVER ?= "xserver-xorg \
+            xf86-video-fbdev \
+            xf86-video-modesetting \
+            "
 XSERVERCODECS ?= ""
 
 RDEPENDS:${PN} = "\
