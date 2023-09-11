@@ -11,6 +11,7 @@ SRC_URI = " \
 	git://github.com/lu-zero/cargo-c.git;branch=master;protocol=https \
 	file://0001-Add-Cargo.lock-file.patch \
 "
+UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 SRCREV = "4eaf39ebbbc9ab8f092adf487d5b53435511d619"
 S = "${WORKDIR}/git"
