@@ -137,7 +137,8 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2021-3409-4.patch \
            file://CVE-2021-3409-5.patch \
            file://hw-display-qxl-Pass-requested-buffer-size-to-qxl_phy.patch \
-           file://CVE-2023-0330.patch \
+           file://CVE-2023-0330_1.patch \
+           file://CVE-2023-0330_2.patch \
            file://CVE-2023-3354.patch \
 	   file://CVE-2023-3180.patch \
            "
