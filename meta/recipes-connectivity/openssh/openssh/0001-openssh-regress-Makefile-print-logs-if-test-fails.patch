@@ -14,7 +14,7 @@ Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
  regress/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Upstream-Status: Submitted [https://github.com/openssh/openssh-portable/pull/437]
+Upstream-Status: Denied [https://github.com/openssh/openssh-portable/pull/437]
 
 diff --git a/regress/Makefile b/regress/Makefile
 index d80bf59..a972dff 100644
