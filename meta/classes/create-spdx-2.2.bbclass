@@ -302,7 +302,8 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
             if file_path.lstrip("/") == pkg_file.fileName.lstrip("/"):
                 break
         else:
-            bb.fatal("No package file found for %s" % str(file_path))
+            bb.fatal("No package file found for %s in %s; SPDX found: %s" % (str(file_path), package,
+                " ".join(p.fileName for p in package_files)))
             continue
 
         for debugsrc in file_data["debugsrc"]:
