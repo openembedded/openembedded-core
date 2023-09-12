@@ -21,7 +21,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-intel-Allow-using-intel_clc-from-the-system.patch \
            "
 
-SRC_URI[sha256sum] = "2f6d7381bc10fbd2d6263ad1022785b8b511046c1a904162f8f7da18eea8aed9"
+SRC_URI[sha256sum] = "409641eadf0ed1c7794797a6f5a0b0195b5580b282166e5ec5629c6bcda6acd3"
 
 UPSTREAM_CHECK_GITTAGREGEX = "mesa-(?P<pver>\d+(\.\d+)+)"
 
