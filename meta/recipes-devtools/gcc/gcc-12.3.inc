@@ -63,6 +63,7 @@ SRC_URI = "${BASEURI} \
            file://0026-rust-recursion-limit.patch \
            file://prefix-map-realpath.patch \
            file://hardcoded-paths.patch \
+           file://CVE-2023-4039.patch \
 "
 SRC_URI[sha256sum] = "949a5d4f99e786421a93b532b22ffab5578de7321369975b91aec97adfda8c3b"
 
