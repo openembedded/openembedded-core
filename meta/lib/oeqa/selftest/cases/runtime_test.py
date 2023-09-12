@@ -138,7 +138,7 @@ class TestImage(OESelftestTestCase):
 IMAGE_CLASSES:append = " testimage"
 IMAGE_FEATURES:append = " ssh-server-dropbear"
 IMAGE_ROOTFS_EXTRA_SPACE:append = "${@bb.utils.contains("IMAGE_CLASSES", "testimage", " + 5120", "", d)}"
-TEST_RUNQEMUPARAMS:append = " slirp"
+TEST_RUNQEMUPARAMS += " slirp"
 '''
         self.write_config(features)
 
@@ -252,11 +252,11 @@ TEST_RUNQEMUPARAMS:append = " slirp"
         features += 'TEST_SUITES = "ping ssh virgl"\n'
         features += 'IMAGE_FEATURES:append = " ssh-server-dropbear"\n'
         features += 'IMAGE_INSTALL:append = " kmscube"\n'
-        features_gtk = features + 'TEST_RUNQEMUPARAMS:append = " gtk gl"\n'
+        features_gtk = features + 'TEST_RUNQEMUPARAMS += " gtk gl"\n'
         self.write_config(features_gtk)
         bitbake('core-image-minimal')
         bitbake('-c testimage core-image-minimal')
-        features_sdl = features + 'TEST_RUNQEMUPARAMS:append = " sdl gl"\n'
+        features_sdl = features + 'TEST_RUNQEMUPARAMS += " sdl gl"\n'
         self.write_config(features_sdl)
         bitbake('core-image-minimal')
         bitbake('-c testimage core-image-minimal')
@@ -284,7 +284,7 @@ TEST_RUNQEMUPARAMS:append = " slirp"
         features += 'TEST_SUITES = "ping ssh virgl"\n'
         features += 'IMAGE_FEATURES:append = " ssh-server-dropbear"\n'
         features += 'IMAGE_INSTALL:append = " kmscube"\n'
-        features += 'TEST_RUNQEMUPARAMS:append = " egl-headless"\n'
+        features += 'TEST_RUNQEMUPARAMS += " egl-headless"\n'
         self.write_config(features)
         bitbake('core-image-minimal')
         bitbake('-c testimage core-image-minimal')
