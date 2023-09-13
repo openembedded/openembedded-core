@@ -15,6 +15,9 @@ patchesdir = os.path.join(currentdir, 'files')
 topdir     = os.path.dirname(currentdir)
 parentdir  = os.path.dirname(topdir)
 
+# path to the repo root
+repodir = os.path.dirname(os.path.dirname(parentdir))
+
 def print_results(passcount, skipcount, failcount, xpasscount, xfailcount, errorcount):
     total = passcount + skipcount + failcount + xpasscount + xfailcount + errorcount
     print("============================================================================")
@@ -30,21 +33,16 @@ def print_results(passcount, skipcount, failcount, xpasscount, xfailcount, error
     print("============================================================================")
 
 # Once the tests are in oe-core, we can remove the testdir param and use os.path.dirname to get relative paths
-def test(root, patch, testdir):
+def test(root, patch):
     res = True
     patchpath = os.path.abspath(os.path.join(root, patch))
-
     
-    cmd     = 'patchtest %s %s/tests --patch %s' % (testdir, topdir, patchpath)
+    cmd     = 'patchtest %s %s/tests --patch %s' % (repodir, topdir, patchpath)
     results = subprocess.check_output(cmd, stderr=subprocess.STDOUT, universal_newlines=True, shell=True)
 
     return results
 
 if __name__ == '__main__':
-    # sys.argv[1] should be the repo to target for selftest, i.e. oe-core
-    if len(sys.argv) == 1:
-        sys.exit("Error: Must provide the path to openembedded-core, e.g. \"selftest /workspace/yocto/openembedded-core\"")
-
     passcount = 0
     failcount = 0
     skipcount = 0
@@ -56,7 +54,7 @@ if __name__ == '__main__':
         
     for root, dirs, patches in os.walk(patchesdir):
         for patch in patches:
-            results = test(root, patch, sys.argv[1])
+            results = test(root, patch)
 
             a = patch.split('.')
             klass, testname = a[0], a[1]
