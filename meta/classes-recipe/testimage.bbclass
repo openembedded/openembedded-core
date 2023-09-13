@@ -370,9 +370,12 @@ def testimage_main(d):
     export_proxies(d)
 
     if slirp:
-        target_ip = "127.0.0.1"
-        # from qemu target to host with default DHCP server
-        server_ip = "10.0.2.2"
+        # Default to 127.0.0.1 and let the runner identify the port forwarding
+        # (as OEQemuTarget does), but allow overriding.
+        target_ip = d.getVar("TEST_TARGET_IP") or "127.0.0.1"
+        # Default to 10.0.2.2 as this is the IP that the guest has with the
+        # default qemu slirp networking configuration, but allow overriding.
+        server_ip = d.getVar("TEST_SERVER_IP") or "10.0.2.2"
     else:
         target_ip = d.getVar("TEST_TARGET_IP")
         server_ip = d.getVar("TEST_SERVER_IP")
