@@ -181,6 +181,7 @@ do_install_ptest () {
     sed -i 's/ginstall/install/g'  `grep -R ginstall ${D}${PTEST_PATH}/tests | awk -F: '{print $1}' | uniq`
     install -d ${D}${PTEST_PATH}/build-aux
     install ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
+    install -Dm 0644 ${B}/lib/config.h ${D}${PTEST_PATH}/lib/config.h
     cp ${B}/Makefile ${D}${PTEST_PATH}/
     cp ${S}/init.cfg ${D}${PTEST_PATH}/
     cp -r ${B}/src ${D}${PTEST_PATH}/
