@@ -322,7 +322,7 @@ def testimage_main(d):
     ovmf = d.getVar("QEMU_USE_OVMF")
 
     slirp = False
-    if d.getVar("QEMU_USE_SLIRP") or bb.utils.contains('TEST_RUNQEMUPARAMS', 'slirp', True, False, d):
+    if bb.utils.contains('TEST_RUNQEMUPARAMS', 'slirp', True, False, d):
         slirp = True
 
     # TODO: We use the current implementation of qemu runner because of
