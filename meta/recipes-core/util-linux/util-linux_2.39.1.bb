@@ -62,7 +62,6 @@ PACKAGESPLITFUNCS =+ "util_linux_libpackages"
 
 PACKAGES_DYNAMIC = "^${PN}-.*"
 
-CACHED_CONFIGUREVARS += "scanf_cv_alloc_modifier=ms"
 UTIL_LINUX_LIBDIR = "${libdir}"
 UTIL_LINUX_LIBDIR:class-target = "${base_libdir}"
 EXTRA_OECONF = "\
