@@ -322,3 +322,12 @@ do_install_ptest() {
         rm -rf ${D}${PTEST_PATH}/tests/ts/chfn
     fi
 }
+
+# Delete tests not working on musl
+do_install_ptest:append:libc-musl() {
+    for t in tests/ts/col/multibyte \
+            tests/ts/lib/timeutils \
+            tests/ts/dmesg/limit; do
+        rm -rf ${D}${PTEST_PATH}/$t
+    done
+}
