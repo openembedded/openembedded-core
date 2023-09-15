@@ -7,7 +7,7 @@ LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3000208d539ec061b899bce1d9ce9404"
 
 SRC_URI = "git://github.com/flatpak/${BPN}.git;protocol=https;branch=main"
-SRCREV = "13df0b887a7eb7b0f9b14069561a41f62e813155"
+SRCREV = "e9ed3a50cdde321eaf42361212480a66eb94a57a"
 S = "${WORKDIR}/git"
 
 inherit meson gi-docgen gobject-introspection vala features_check pkgconfig
@@ -17,4 +17,4 @@ ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
 DEPENDS += "glib-2.0 glib-2.0-native gtk+3 ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gtk4', '', d)}"
 
-EXTRA_OEMESON = "-Dbackends=gtk3${@bb.utils.contains('DISTRO_FEATURES', 'opengl', ',gtk4', '', d)}"
+EXTRA_OEMESON = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dvapi=true', '-Dvapi=false', d)} -Dbackend-qt5=disabled"
