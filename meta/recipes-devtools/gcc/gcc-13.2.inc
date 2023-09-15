@@ -64,8 +64,9 @@ SRC_URI = "${BASEURI} \
            file://0022-libatomic-Do-not-enforce-march-on-aarch64.patch \
            file://0023-Fix-install-path-of-linux64.h.patch \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
-           file://0025-gcc-testsuite-mips.patch \
+           file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
            file://CVE-2023-4039.patch \
+           file://0026-aarch64-Fix-loose-ldpstp-check-PR111411.patch \
 "
 SRC_URI[sha256sum] = "e275e76442a6067341a27f04c5c6b83d8613144004c0413528863dc6b5c743da"
 
