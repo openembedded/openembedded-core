@@ -54,6 +54,7 @@ FILES:${PN} = "${libdir}/lib*${SOLIBS} \
                ${libdir}/gio \
                ${libexecdir}/*gio-querymodules \
                ${libexecdir}/*gio-launch-desktop \
+               ${datadir}/glib-2.0/dtds \
                ${datadir}/glib-2.0/schemas"
 
 FILES:${PN}-utils += "${bindir}/glib-genmarshal \

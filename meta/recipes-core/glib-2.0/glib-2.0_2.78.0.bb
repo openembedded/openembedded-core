@@ -14,12 +14,12 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://0001-Do-not-write-bindir-into-pkg-config-files.patch \
            file://0001-meson-Run-atomics-test-on-clang-as-well.patch \
            file://0001-gio-tests-resources.c-comment-out-a-build-host-only-.patch \
-           file://0001-gio-tests-portal-support-Fix-snap-test-ordering-race.patch \
-           file://0001-glocalfile-Sum-apparent-size-only-for-files-and-syml.patch \
            "
-SRC_URI:append:class-native = " file://relocate-modules.patch"
+SRC_URI:append:class-native = " file://relocate-modules.patch \ 
+                                file://0001-meson.build-do-not-enable-pidfd-features-on-native-g.patch \
+                              "
 
-SRC_URI[sha256sum] = "5a5a191c96836e166a7771f7ea6ca2b0069c603c7da3cba1cd38d1694a395dda"
+SRC_URI[sha256sum] = "44eaab8b720877ce303c5540b657b126f12dc94972d9880b52959f43fb537b30"
 
 # Find any meson cross files in FILESPATH that are relevant for the current
 # build (using siteinfo) and add them to EXTRA_OEMESON.
