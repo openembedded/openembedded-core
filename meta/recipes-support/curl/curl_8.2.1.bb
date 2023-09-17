@@ -85,14 +85,18 @@ do_install:append:class-target() {
 }
 
 do_compile_ptest() {
-	oe_runmake test
-	oe_runmake -C ${B}/tests/server
+	oe_runmake -C ${B}/tests
 }
 
 do_install_ptest() {
 	cat  ${WORKDIR}/disable-tests >> ${S}/tests/data/DISABLED
 	rm -f ${B}/tests/configurehelp.pm
 	cp -rf ${B}/tests ${D}${PTEST_PATH}
+        rm -f ${D}${PTEST_PATH}/tests/libtest/.libs/libhostname.la
+        rm -f ${D}${PTEST_PATH}/tests/libtest/libhostname.la
+        mv ${D}${PTEST_PATH}/tests/libtest/.libs/* ${D}${PTEST_PATH}/tests/libtest/
+        mv ${D}${PTEST_PATH}/tests/libtest/libhostname.so ${D}${PTEST_PATH}/tests/libtest/.libs/
+        mv ${D}${PTEST_PATH}/tests/http/clients/.libs/* ${D}${PTEST_PATH}/tests/http/clients/
 	cp -rf ${S}/tests ${D}${PTEST_PATH}
 	find ${D}${PTEST_PATH}/ -type f -name Makefile.am -o -name Makefile.in -o -name Makefile -delete
 	install -d ${D}${PTEST_PATH}/src
