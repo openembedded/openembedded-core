@@ -32,8 +32,6 @@ GLIBC_64BIT_TIME_FLAGS:pn-pulseaudio = ""
 # Undefines _FILE_OFFSET_BITS on purpose in
 # libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cpp
 GLIBC_64BIT_TIME_FLAGS:pn-gcc-sanitizers = ""
-# https://github.com/strace/strace/issues/250
-GLIBC_64BIT_TIME_FLAGS:pn-strace = ""
 
 # Caused by the flags exceptions above
 INSANE_SKIP:append:pn-gcc-sanitizers = " 32bit-time"
