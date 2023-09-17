@@ -93,7 +93,7 @@ class PtestRunnerTest(OERuntimeTestCase):
         failed_tests = {}
 
         for section in sections:
-            if 'exitcode' in sections[section].keys():
+            if 'exitcode' in sections[section].keys() or 'timeout' in sections[section].keys():
                 failed_tests[section] = sections[section]["log"]
 
         for section in results:
