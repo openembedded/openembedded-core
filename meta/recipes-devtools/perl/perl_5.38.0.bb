@@ -58,6 +58,7 @@ do_configure:prepend() {
 do_configure:class-target() {
     ./configure --prefix=${prefix} --libdir=${libdir} \
     --target=${TARGET_SYS} \
+    -Duse64bitint \
     -Duseshrplib \
     -Dusethreads \
     -Dsoname=libperl.so.5 \
