@@ -19,11 +19,8 @@ DEPENDS += "python3 glib-2.0"
 
 SRCNAME="pygobject"
 
-SRC_URI = " \
-    http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz \
-    file://0001-Do-not-build-tests.patch \
-"
-SRC_URI[sha256sum] = "3c6805d1321be90cc32e648215a562430e0d3d6edcda8f4c5e7a9daffcad5710"
+SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz"
+SRC_URI[sha256sum] = "426008b2dad548c9af1c7b03b59df0440fde5c33f38fb5406b103a43d653cafc"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
@@ -37,6 +34,7 @@ RDEPENDS:${PN} += " \
 # python3-pycairo is checked on configuration -> DEPENDS
 # we don't link against python3-pycairo -> RDEPENDS
 PACKAGECONFIG[cairo] = "-Dpycairo=enabled,-Dpycairo=disabled, cairo python3-pycairo, python3-pycairo"
+PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false,"
 
 BBCLASSEXTEND = "native"
 PACKAGECONFIG:class-native = ""
