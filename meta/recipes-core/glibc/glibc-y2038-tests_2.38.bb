@@ -8,7 +8,7 @@ SRC_URI += "\
 	file://run-ptest \
 "
 
-SUMMARY = "glibc tests to be run with ptest"
+SUMMARY = "glibc tests using time32/time64 interfaces to be run with ptest for the purpose of checking y2038 compatiblity"
 
 # Erase some variables already set by glibc_${PV}
 python __anonymous() {
