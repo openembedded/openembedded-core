@@ -47,6 +47,7 @@ PTESTS_FAST = "\
     libxml-sax-base-perl \
     libxml-simple-perl \
     libxml2 \
+    libxmlb \
     logrotate \
     lua \
     lzo \
