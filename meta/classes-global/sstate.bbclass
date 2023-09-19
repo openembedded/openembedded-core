@@ -90,7 +90,7 @@ SSTATE_ARCHS = " \
     ${BUILD_ARCH}_${ORIGNATIVELSBSTRING} \
     ${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS} \
     ${SDK_ARCH}_${SDK_OS} \
-    ${SDK_ARCH}_${PACKAGE_ARCH} \
+    ${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX} \
     allarch \
     ${PACKAGE_ARCH} \
     ${PACKAGE_EXTRA_ARCHS} \
