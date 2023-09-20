@@ -3,7 +3,6 @@
 #
 
 SUMMARY = "X11 display server"
-PR = "r40"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

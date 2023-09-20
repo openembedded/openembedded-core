@@ -5,7 +5,6 @@ LIC_FILES_CHKSUM = " \
     file://LICENSE;md5=384ed0e2e0b2dac094e51fbf93fdcbe0 \
 "
 
-PR = "r1"
 
 SRC_URI = " \
 	git://github.com/lu-zero/cargo-c.git;branch=master;protocol=https \

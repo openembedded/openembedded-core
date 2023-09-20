@@ -1,5 +1,4 @@
 SUMMARY = "Merge machine and distro options to create a basic machine task/package"
-PR = "r83"
 
 #
 # packages which content depend on MACHINE_FEATURES need to be MACHINE_ARCH
