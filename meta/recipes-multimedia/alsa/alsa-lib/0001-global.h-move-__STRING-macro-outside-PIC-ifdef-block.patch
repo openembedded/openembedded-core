@@ -13,7 +13,7 @@ control.c: In function 'snd_ctl_open_conf':
       |                                    ^~~~~~~~
 
 Fixes: https://github.com/alsa-project/alsa-lib/issues/350
-Upstream-Status: Accepted
+Upstream-Status: Backport [https://github.com/alsa-project/alsa-lib/commit/10bd599970acc71c92f85eb08943eb8d3d702a9c]
 Signed-off-by: Jaroslav Kysela <perex@perex.cz>
 ---
  include/global.h | 10 +++++-----
