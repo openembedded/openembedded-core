@@ -8,7 +8,7 @@ topology.c: error: 'LC_ALL' undeclared
 
 https://github.com/alsa-project/alsa-utils/issues/239
 
-Upstream-Status: Submitted [alsa-devel@alsa-project.org]
+Upstream-Status: Backport [https://github.com/alsa-project/alsa-utils/commit/8c229270f6bae83b705a03714c46067a7aa57b02]
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 ---
  topology/topology.c | 1 +

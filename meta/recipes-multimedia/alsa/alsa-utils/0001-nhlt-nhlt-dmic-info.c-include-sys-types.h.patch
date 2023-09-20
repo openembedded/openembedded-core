@@ -8,7 +8,7 @@ nhlt-dmic-info.c: error: unknown type name 'u_int8_t'
 
 https://github.com/alsa-project/alsa-utils/issues/238
 
-Upstream-Status: Submitted [alsa-devel@alsa-project.org]
+Upstream-Status: Backport [https://github.com/alsa-project/alsa-utils/commit/0925ad7f09b2dc77015784f9ac2f5e34dd0dd5c3]
 Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
 ---
  nhlt/nhlt-dmic-info.c | 1 +
