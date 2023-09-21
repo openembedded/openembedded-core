@@ -427,7 +427,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             output_link = os.path.join(os.path.dirname(args.output_log),
                     "%s-results.log" % self.name)
             if os.path.lexists(output_link):
-                os.remove(output_link)
+                os.unlink(output_link)
             os.symlink(args.output_log, output_link)
 
         return rc
