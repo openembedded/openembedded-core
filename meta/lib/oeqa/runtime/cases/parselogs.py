@@ -10,8 +10,6 @@ from subprocess import check_output
 from shutil import rmtree
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
-from oeqa.core.decorator.data import skipIfDataVar
-from oeqa.runtime.decorator.package import OEHasPackage
 
 #in the future these lists could be moved outside of module
 errors = ["error", "cannot", "can\'t", "failed"]
