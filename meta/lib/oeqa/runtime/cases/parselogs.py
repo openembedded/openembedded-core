@@ -237,34 +237,6 @@ class ParseLogsTest(OERuntimeTestCase):
     def getWorkdir(self):
         return self.td.get('WORKDIR', '')
 
-    # Get some information on the CPU of the machine to display at the
-    # beginning of the output. This info might be useful in some cases.
-    def getHardwareInfo(self):
-        hwi = ""
-        cmd = ('cat /proc/cpuinfo | grep "model name" | head -n1 | '
-               " awk 'BEGIN{FS=\":\"}{print $2}'")
-        _, cpu_name = self.target.run(cmd)
-
-        cmd = ('cat /proc/cpuinfo | grep "cpu cores" | head -n1 | '
-               "awk {'print $4'}")
-        _, cpu_physical_cores = self.target.run(cmd)
-
-        cmd = 'cat /proc/cpuinfo | grep "processor" | wc -l'
-        _, cpu_logical_cores = self.target.run(cmd)
-
-        _, cpu_arch = self.target.run('uname -m')
-
-        hwi += 'Machine information: \n'
-        hwi += '*******************************\n'
-        hwi += 'Machine name: ' + self.getMachine() + '\n'
-        hwi += 'CPU: ' + str(cpu_name) + '\n'
-        hwi += 'Arch: ' + str(cpu_arch)+ '\n'
-        hwi += 'Physical cores: ' + str(cpu_physical_cores) + '\n'
-        hwi += 'Logical cores: ' + str(cpu_logical_cores) + '\n'
-        hwi += '*******************************\n'
-
-        return hwi
-
     # Go through the log locations provided and if it's a folder
     # create a list with all the .log files in it, if it's a file
     # just add it to that list.
@@ -376,7 +348,6 @@ class ParseLogsTest(OERuntimeTestCase):
         self.write_dmesg()
         log_list = self.get_local_log_list(self.log_locations)
         result = self.parse_logs(self.errors, self.ignore_errors, log_list)
-        print(self.getHardwareInfo())
         errcount = 0
         for log in result:
             self.msg += 'Log: ' + log + '\n'
