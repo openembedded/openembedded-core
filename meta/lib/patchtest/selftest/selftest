@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
             for resultline in results.splitlines():
                 if testid in resultline:
-                    result, _ = resultline.split()
+                    result, _ = resultline.split(' ', 1)
 
                     if expected_result.upper() == "FAIL" and result.upper() == "FAIL":
                         xfailcount = xfailcount + 1
