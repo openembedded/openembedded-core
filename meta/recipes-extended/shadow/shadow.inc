@@ -18,6 +18,8 @@ SRC_URI = "https://github.com/shadow-maint/shadow/releases/download/v${PV}/${BP}
            file://useradd \
            file://CVE-2023-29383.patch \
            file://0001-Overhaul-valid_field.patch \
+	   file://CVE-2023-4641-0001.patch \
+	   file://CVE-2023-4641-0002.patch \
            "
 
 SRC_URI:append:class-target = " \
