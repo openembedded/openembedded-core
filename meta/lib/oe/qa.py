@@ -217,7 +217,7 @@ def check_upstream_status(fullpath):
     import re
     kinda_status_re = re.compile(r"^.*upstream.*status.*$", re.IGNORECASE | re.MULTILINE)
     strict_status_re = re.compile(r"^Upstream-Status: (Pending|Submitted|Denied|Inappropriate|Backport|Inactive-Upstream)( .+)?$", re.MULTILINE)
-    guidelines = "https://www.openembedded.org/wiki/Commit_Patch_Message_Guidelines#Patch_Header_Recommendations:_Upstream-Status"
+    guidelines = "https://docs.yoctoproject.org/contributor-guide/recipe-style-guide.html#patch-upstream-status"
 
     with open(fullpath, encoding='utf-8', errors='ignore') as f:
         file_content = f.read()
