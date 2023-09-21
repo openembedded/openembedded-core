@@ -8,8 +8,8 @@
 import common
 import pyparsing
 
-upstream_status_literal_valid_status = ["Pending", "Accepted", "Backport", "Denied", "Inappropriate", "Submitted"]
-upstream_status_nonliteral_valid_status = ["Pending", "Accepted", "Backport", "Denied", "Inappropriate [reason]", "Submitted [where]"]
+upstream_status_literal_valid_status = ["Pending", "Backport", "Denied", "Inappropriate", "Submitted"]
+upstream_status_nonliteral_valid_status = ["Pending", "Backport", "Denied", "Inappropriate [reason]", "Submitted [where]"]
 
 upstream_status_valid_status = pyparsing.Or(
     [pyparsing.Literal(status) for status in upstream_status_literal_valid_status]
