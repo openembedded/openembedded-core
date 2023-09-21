@@ -69,9 +69,6 @@ common_errors = [
     "Failed to read LoaderEntryOneShot variable, ignoring: Operation not supported",
     ]
 
-video_related = [
-]
-
 x86_common = [
     '[drm:psb_do_init] *ERROR* Debug is',
     'wrong ELF class',
@@ -225,11 +222,6 @@ class ParseLogsTest(OERuntimeTestCase):
         cls.ignore_errors = ignore_errors
         cls.log_locations = log_locations
         cls.msg = ''
-        is_lsb, _ = cls.tc.target.run("which LSB_Test.sh")
-        if is_lsb == 0:
-            for machine in cls.ignore_errors:
-                cls.ignore_errors[machine] = cls.ignore_errors[machine] \
-                                             + video_related
 
     def getMachine(self):
         return self.td.get('MACHINE', '')
