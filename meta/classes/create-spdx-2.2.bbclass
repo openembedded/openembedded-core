@@ -349,6 +349,8 @@ def collect_dep_recipes(d, doc, spdx_recipe):
 
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     spdx_deps_file = Path(d.getVar("SPDXDEPS"))
+    package_archs = d.getVar("SSTATE_ARCHS").split()
+    package_archs.reverse()
 
     dep_recipes = []
 
@@ -356,7 +358,9 @@ def collect_dep_recipes(d, doc, spdx_recipe):
         deps = json.load(f)
 
     for dep_pn, dep_hashfn in deps:
-        dep_recipe_path = oe.sbom.doc_path_by_hashfn(deploy_dir_spdx, "recipe-" + dep_pn, dep_hashfn)
+        dep_recipe_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, "recipe-" + dep_pn, dep_hashfn)
+        if not dep_recipe_path:
+            bb.fatal("Cannot find any SPDX file for recipe %s, %s" % (dep_pn, dep_hashfn))
 
         spdx_dep_doc, spdx_dep_sha1 = oe.sbom.read_doc(dep_recipe_path)
 
@@ -385,6 +389,7 @@ def collect_dep_recipes(d, doc, spdx_recipe):
 
     return dep_recipes
 
+collect_dep_recipes[vardepsexclude] = "SSTATE_ARCHS"
 
 def collect_dep_sources(d, dep_recipes):
     import oe.sbom
@@ -533,6 +538,7 @@ python do_create_spdx() {
     include_sources = d.getVar("SPDX_INCLUDE_SOURCES") == "1"
     archive_sources = d.getVar("SPDX_ARCHIVE_SOURCES") == "1"
     archive_packaged = d.getVar("SPDX_ARCHIVE_PACKAGED") == "1"
+    pkg_arch = d.getVar("SSTATE_PKGARCH")
 
     creation_time = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -620,7 +626,7 @@ python do_create_spdx() {
 
     dep_recipes = collect_dep_recipes(d, doc, recipe)
 
-    doc_sha1 = oe.sbom.write_doc(d, doc, d.getVar("SSTATE_PKGARCH"), "recipes", indent=get_json_indent(d))
+    doc_sha1 = oe.sbom.write_doc(d, doc, pkg_arch, "recipes", indent=get_json_indent(d))
     dep_recipes.append(oe.sbom.DepRecipe(doc, doc_sha1, recipe))
 
     recipe_ref = oe.spdx.SPDXExternalDocumentRef()
@@ -685,7 +691,7 @@ python do_create_spdx() {
 
             add_package_sources_from_debug(d, package_doc, spdx_package, package, package_files, sources)
 
-            oe.sbom.write_doc(d, package_doc, d.getVar("SSTATE_PKGARCH"), "packages", indent=get_json_indent(d))
+            oe.sbom.write_doc(d, package_doc, pkg_arch, "packages", indent=get_json_indent(d))
 }
 do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
 # NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
@@ -756,6 +762,9 @@ python do_create_runtime_spdx() {
     creation_time = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     providers = collect_package_providers(d)
+    pkg_arch = d.getVar("SSTATE_PKGARCH")
+    package_archs = d.getVar("SSTATE_ARCHS").split()
+    package_archs.reverse()
 
     if not is_native:
         bb.build.exec_func("read_subpackage_metadata", d)
@@ -772,7 +781,7 @@ python do_create_runtime_spdx() {
             if not oe.packagedata.packaged(package, localdata):
                 continue
 
-            pkg_spdx_path = oe.sbom.doc_path(deploy_dir_spdx, pkg_name, d.getVar("SSTATE_PKGARCH"), "packages")
+            pkg_spdx_path = oe.sbom.doc_path(deploy_dir_spdx, pkg_name, pkg_arch, "packages")
 
             package_doc, package_doc_sha1 = oe.sbom.read_doc(pkg_spdx_path)
 
@@ -827,7 +836,9 @@ python do_create_runtime_spdx() {
                 if dep in dep_package_cache:
                     (dep_spdx_package, dep_package_ref) = dep_package_cache[dep]
                 else:
-                    dep_path = oe.sbom.doc_path_by_hashfn(deploy_dir_spdx, dep_pkg, dep_hashfn)
+                    dep_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, dep_pkg, dep_hashfn)
+                    if not dep_path:
+                        bb.fatal("No SPDX file found for package %s, %s" % (dep_pkg, dep_hashfn))
 
                     spdx_dep_doc, spdx_dep_sha1 = oe.sbom.read_doc(dep_path)
 
@@ -855,10 +866,10 @@ python do_create_runtime_spdx() {
                 )
                 seen_deps.add(dep)
 
-            oe.sbom.write_doc(d, runtime_doc, d.getVar("SSTATE_PKGARCH"), "runtime", spdx_deploy, indent=get_json_indent(d))
+            oe.sbom.write_doc(d, runtime_doc, pkg_arch, "runtime", spdx_deploy, indent=get_json_indent(d))
 }
 
-do_create_runtime_spdx[vardepsexclude] += "OVERRIDES"
+do_create_runtime_spdx[vardepsexclude] += "OVERRIDES SSTATE_ARCHS"
 
 addtask do_create_runtime_spdx after do_create_spdx before do_build do_rm_work
 SSTATETASKS += "do_create_runtime_spdx"
@@ -993,6 +1004,8 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
     import bb.compress.zstd
 
     providers = collect_package_providers(d)
+    package_archs = d.getVar("SSTATE_ARCHS").split()
+    package_archs.reverse()
 
     creation_time = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
@@ -1022,7 +1035,10 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
 
         pkg_name, pkg_hashfn = providers[name]
 
-        pkg_spdx_path = oe.sbom.doc_path_by_hashfn(deploy_dir_spdx, pkg_name, pkg_hashfn)
+        pkg_spdx_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, pkg_name, pkg_hashfn)
+        if not pkg_spdx_path:
+            bb.fatal("No SPDX file found for package %s, %s" % (pkg_name, pkg_hashfn))
+
         pkg_doc, pkg_doc_sha1 = oe.sbom.read_doc(pkg_spdx_path)
 
         for p in pkg_doc.packages:
@@ -1039,7 +1055,10 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
         else:
             bb.fatal("Unable to find package with name '%s' in SPDX file %s" % (name, pkg_spdx_path))
 
-        runtime_spdx_path = oe.sbom.doc_path_by_hashfn(deploy_dir_spdx, "runtime-" + name, pkg_hashfn)
+        runtime_spdx_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, "runtime-" + name, pkg_hashfn)
+        if not runtime_spdx_path:
+            bb.fatal("No runtime SPDX document found for %s, %s" % (name, pkg_hashfn))
+
         runtime_doc, runtime_doc_sha1 = oe.sbom.read_doc(runtime_spdx_path)
 
         runtime_ref = oe.spdx.SPDXExternalDocumentRef()
@@ -1111,7 +1130,7 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
                     })
 
                 for ref in doc.externalDocumentRefs:
-                    ref_path = oe.sbom.doc_path_by_namespace(deploy_dir_spdx, ref.spdxDocument)
+                    ref_path = oe.sbom.doc_find_by_namespace(deploy_dir_spdx, package_archs, ref.spdxDocument)
                     collect_spdx_document(ref_path)
 
             collect_spdx_document(image_spdx_path)
@@ -1134,4 +1153,4 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
 
             tar.addfile(info, fileobj=index_str)
 
-combine_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
+combine_spdx[vardepsexclude] += "BB_NUMBER_THREADS SSTATE_ARCHS"
