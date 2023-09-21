@@ -223,12 +223,6 @@ class ParseLogsTest(OERuntimeTestCase):
         cls.log_locations = log_locations
         cls.msg = ''
 
-    def getMachine(self):
-        return self.td.get('MACHINE', '')
-
-    def getWorkdir(self):
-        return self.td.get('WORKDIR', '')
-
     # Go through the log locations provided and if it's a folder
     # create a list with all the .log files in it, if it's a file
     # just add it to that list.
@@ -251,7 +245,7 @@ class ParseLogsTest(OERuntimeTestCase):
 
     # Copy the log files to be parsed locally
     def transfer_logs(self, log_list):
-        workdir = self.getWorkdir()
+        workdir = self.td.get('WORKDIR')
         self.target_logs = workdir + '/' + 'target_logs'
         target_logs = self.target_logs
         if os.path.exists(target_logs):
@@ -278,7 +272,7 @@ class ParseLogsTest(OERuntimeTestCase):
         grepcmd += '" ' + str(log) + " | grep -Eiv \'"
 
         try:
-            errorlist = ignore_errors[self.getMachine()]
+            errorlist = ignore_errors[self.td.get('MACHINE')]
         except KeyError:
             self.msg += 'No ignore list found for this machine, using default\n'
             errorlist = ignore_errors['default']
