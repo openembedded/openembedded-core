@@ -110,6 +110,7 @@ PTESTS_SLOW = "\
     python3-cryptography \
     python3 \
     python3-click \
+    python3-xmltodict \
     strace \
     tcl \
     util-linux \
