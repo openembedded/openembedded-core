@@ -986,7 +986,7 @@ def sdk_combine_spdx(d, sdk_type):
     from pathlib import Path
     from oe.sdk import sdk_list_installed_packages
 
-    sdk_name = d.getVar("SDK_NAME") + "-" + sdk_type
+    sdk_name = d.getVar("TOOLCHAIN_OUTPUTNAME") + "-" + sdk_type
     sdk_deploydir = Path(d.getVar("SDKDEPLOYDIR"))
     sdk_spdxid = oe.sbom.get_sdk_spdxid(sdk_name)
     sdk_packages = sdk_list_installed_packages(d, sdk_type == "target")
