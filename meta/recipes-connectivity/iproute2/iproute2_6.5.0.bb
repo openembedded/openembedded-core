@@ -13,10 +13,9 @@ DEPENDS = "flex-native bison-native iptables libcap"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-libc-compat.h-add-musl-workaround.patch \
-           file://0001-bridge-mdb.c-include-limits.h.patch \
            "
 
-SRC_URI[sha256sum] = "4c51b8decbc7e4da159ffb066f590cfb93dbf9af7ff86b1647ce42b7c179a272"
+SRC_URI[sha256sum] = "a70179085fa1b96d3c33b040c809b75e2b57563adc505a4ad05e2609df373463"
 
 inherit update-alternatives bash-completion pkgconfig
 
@@ -37,6 +36,7 @@ EXTRA_OEMAKE = "\
     DOCDIR=${docdir}/iproute2 \
     SUBDIRS='${IPROUTE2_MAKE_SUBDIRS}' \
     SBINDIR='${base_sbindir}' \
+    CONF_USR_DIR='${libdir}/iproute2' \
     LIBDIR='${libdir}' \
     CCOPTS='${CFLAGS}' \
 "
@@ -82,7 +82,7 @@ FILES:${PN}-lnstat = "${base_sbindir}/lnstat \
                       ${base_sbindir}/ctstat \
                       ${base_sbindir}/rtstat"
 FILES:${PN}-ifstat = "${base_sbindir}/ifstat"
-FILES:${PN}-ip = "${base_sbindir}/ip.${PN} ${sysconfdir}/iproute2"
+FILES:${PN}-ip = "${base_sbindir}/ip.* ${libdir}/iproute2"
 FILES:${PN}-genl = "${base_sbindir}/genl"
 FILES:${PN}-rtacct = "${base_sbindir}/rtacct"
 FILES:${PN}-nstat = "${base_sbindir}/nstat"
