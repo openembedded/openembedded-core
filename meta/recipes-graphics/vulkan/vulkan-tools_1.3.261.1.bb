@@ -1,39 +1,33 @@
-SUMMARY = "3D graphics and compute API common loader"
-DESCRIPTION = "Vulkan is a new generation graphics and compute API \
-that provides efficient access to modern GPUs. These packages \
-provide only the common vendor-agnostic library loader, headers and \
-the vulkaninfo utility."
+SUMMARY = "Vulkan Utilities and Tools"
+DESCRIPTION = "Assist development by enabling developers to verify their applications correct use of the Vulkan API."
 HOMEPAGE = "https://www.khronos.org/vulkan/"
-BUGTRACKER = "https://github.com/KhronosGroup/Vulkan-Loader"
+BUGTRACKER = "https://github.com/KhronosGroup/Vulkan-Tools"
 SECTION = "libs"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=7dbefed23242760aa3475ee42801c5ac"
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-Loader.git;branch=sdk-1.3.250;protocol=https"
-SRCREV = "f372068d09fc13bcf54b8c81274f37aa5f46aea3"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-Tools.git;branch=main;protocol=https"
+SRCREV = "a7da7027ca9fd0901639f02619c226da9c6036f1"
 
 S = "${WORKDIR}/git"
 
+inherit cmake features_check pkgconfig
+ANY_OF_DISTRO_FEATURES = "x11 wayland"
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
-inherit cmake features_check pkgconfig
-
-DEPENDS += "vulkan-headers"
+DEPENDS += "vulkan-headers vulkan-loader"
 
 EXTRA_OECMAKE = "\
                  -DBUILD_TESTS=OFF \
+                 -DBUILD_CUBE=OFF \
                  -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
-                 -DASSEMBLER_WORKS=FALSE \
-                 -DVulkanHeaders_INCLUDE_DIR=${STAGING_INCDIR} \
-                 -DVulkanRegistry_DIR=${RECIPE_SYSROOT}/${datadir} \
                  "
 
+# must choose x11 or wayland or both
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'wayland x11', d)}"
 
 PACKAGECONFIG[x11] = "-DBUILD_WSI_XLIB_SUPPORT=ON -DBUILD_WSI_XCB_SUPPORT=ON, -DBUILD_WSI_XLIB_SUPPORT=OFF -DBUILD_WSI_XCB_SUPPORT=OFF, libxcb libx11 libxrandr"
 PACKAGECONFIG[wayland] = "-DBUILD_WSI_WAYLAND_SUPPORT=ON, -DBUILD_WSI_WAYLAND_SUPPORT=OFF, wayland"
-
-RRECOMMENDS:${PN} = "mesa-vulkan-drivers"
 
 # These recipes need to be updated in lockstep with each other:
 # glslang, vulkan-headers, vulkan-loader, vulkan-tools, spirv-headers, spirv-tools
