@@ -109,6 +109,7 @@ PTESTS_SLOW = "\
     perl \
     python3-cryptography \
     python3 \
+    python3-click \
     strace \
     tcl \
     util-linux \
