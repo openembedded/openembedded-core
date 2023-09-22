@@ -142,5 +142,6 @@ PTESTS_PROBLEMS = "\
     libpam \
     libseccomp \
     numactl \
+    python3-license-expression \
     python3-numpy \
 "
