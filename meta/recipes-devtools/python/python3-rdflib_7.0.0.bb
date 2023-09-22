@@ -1,4 +1,6 @@
 SUMMARY = "RDFLib is a pure Python package for working with RDF"
+HOMEPAGE = "https://github.com/RDFLib/rdflib"
+SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=37d489c0cefe52a17e1d5007e196464a"
 
