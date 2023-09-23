@@ -263,19 +263,19 @@ class ParseLogsTest(OERuntimeTestCase):
         return logs
 
     # Build the grep command to be used with filters and exclusions
-    def build_grepcmd(self, errors, ignore_errors, log):
+    def build_grepcmd(self, log):
         grepcmd = 'grep '
         grepcmd += '-Ei "'
-        for error in errors:
+        for error in self.errors:
             grepcmd += r'\<' + error + r'\>' + '|'
         grepcmd = grepcmd[:-1]
         grepcmd += '" ' + str(log) + " | grep -Eiv \'"
 
         try:
-            errorlist = ignore_errors[self.td.get('MACHINE')]
+            errorlist = self.ignore_errors[self.td.get('MACHINE')]
         except KeyError:
             self.msg += 'No ignore list found for this machine, using default\n'
-            errorlist = ignore_errors['default']
+            errorlist = self.ignore_errors['default']
 
         for ignore_error in errorlist:
             ignore_error = ignore_error.replace('(', r'\(')
@@ -292,17 +292,21 @@ class ParseLogsTest(OERuntimeTestCase):
 
         return grepcmd
 
-    # Grep only the errors so that their context could be collected.
-    # Default context is 10 lines before and after the error itself
-    def parse_logs(self, errors, ignore_errors, logs,
-                   lines_before = 10, lines_after = 10):
+    def parse_logs(self, logs, lines_before=10, lines_after=10):
+        """
+        Search the log files @logs looking for error lines (marked by
+        @self.errors), ignoring anything listed in @self.ignore_errors.
+
+        Returns a dictionary of log filenames to a dictionary of error lines to
+        the error context (controlled by @lines_before and @lines_after).
+        """
         results = {}
         rez = []
         grep_output = ''
 
         for log in logs:
             result = None
-            thegrep = self.build_grepcmd(errors, ignore_errors, log)
+            thegrep = self.build_grepcmd(log)
 
             try:
                 result = check_output(thegrep, shell=True).decode('utf-8')
@@ -333,7 +337,7 @@ class ParseLogsTest(OERuntimeTestCase):
     def test_parselogs(self):
         self.write_dmesg()
         log_list = self.get_local_log_list(self.log_locations)
-        result = self.parse_logs(self.errors, self.ignore_errors, log_list)
+        result = self.parse_logs(log_list)
         errcount = 0
         for log in result:
             self.msg += 'Log: ' + log + '\n'
