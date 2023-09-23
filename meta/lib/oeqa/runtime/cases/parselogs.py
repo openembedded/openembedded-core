@@ -11,9 +11,6 @@ from shutil import rmtree
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
 
-#in the future these lists could be moved outside of module
-errors = ["error", "cannot", "can\'t", "failed"]
-
 common_errors = [
     "(WW) warning, (EE) error, (NI) not implemented, (??) unknown.",
     "dma timeout",
@@ -201,17 +198,19 @@ ignore_errors = {
         ] + common_errors,
 }
 
-log_locations = ["/var/log/","/var/log/dmesg", "/tmp/dmesg_output.log"]
-
 class ParseLogsTest(OERuntimeTestCase):
+
+    # Which log files should be collected
+    log_locations = ["/var/log/", "/var/log/dmesg", "/tmp/dmesg_output.log"]
+
+    # The keywords that identify error messages in the log files
+    errors = ["error", "cannot", "can't", "failed"]
 
     @classmethod
     def setUpClass(cls):
-        cls.errors = errors
-
         # When systemd is enabled we need to notice errors on
         # circular dependencies in units.
-        if 'systemd' in cls.td.get('DISTRO_FEATURES', ''):
+        if 'systemd' in cls.td.get('DISTRO_FEATURES'):
             cls.errors.extend([
                 'Found ordering cycle on',
                 'Breaking ordering cycle by deleting job',
@@ -220,8 +219,6 @@ class ParseLogsTest(OERuntimeTestCase):
                 ])
 
         cls.ignore_errors = ignore_errors
-        cls.log_locations = log_locations
-        cls.msg = ''
 
     # Go through the log locations provided and if it's a folder
     # create a list with all the .log files in it, if it's a file
@@ -338,7 +335,9 @@ class ParseLogsTest(OERuntimeTestCase):
         self.write_dmesg()
         log_list = self.get_local_log_list(self.log_locations)
         result = self.parse_logs(log_list)
+
         errcount = 0
+        self.msg = ""
         for log in result:
             self.msg += 'Log: ' + log + '\n'
             self.msg += '-----------------------\n'
