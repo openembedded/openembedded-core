@@ -229,18 +229,18 @@ class ParseLogsTest(OERuntimeTestCase):
     def getLogList(self, log_locations):
         logs = []
         for location in log_locations:
-            status, _ = self.target.run('test -f ' + str(location))
+            status, _ = self.target.run('test -f %s' % location)
             if status == 0:
-                logs.append(str(location))
+                logs.append(location)
             else:
-                status, _ = self.target.run('test -d ' + str(location))
+                status, _ = self.target.run('test -d %s' % location)
                 if status == 0:
-                    cmd = 'find ' + str(location) + '/*.log -maxdepth 1 -type f'
+                    cmd = 'find %s -name \\*.log -maxdepth 1 -type f' % location
                     status, output = self.target.run(cmd)
                     if status == 0:
                         output = output.splitlines()
                         for logfile in output:
-                            logs.append(os.path.join(location, str(logfile)))
+                            logs.append(os.path.join(location, logfile))
         return logs
 
     # Copy the log files to be parsed locally
