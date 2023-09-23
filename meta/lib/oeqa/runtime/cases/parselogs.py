@@ -4,9 +4,9 @@
 # SPDX-License-Identifier: MIT
 #
 
+import collections
 import os
 
-from subprocess import check_output
 from shutil import rmtree
 from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.core.decorator.depends import OETestDepends
@@ -64,6 +64,7 @@ common_errors = [
     "xf86OpenConsole: Switching VT failed",
     "Failed to read LoaderConfigTimeoutOneShot variable, ignoring: Operation not supported",
     "Failed to read LoaderEntryOneShot variable, ignoring: Operation not supported",
+    "invalid BAR (can't size)",
     ]
 
 x86_common = [
@@ -97,16 +98,13 @@ ignore_errors = {
     'default' : common_errors,
     'qemux86' : [
         'Failed to access perfctr msr (MSR',
-        'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
         ] + qemux86_common,
     'qemux86-64' : qemux86_common,
     'qemumips' : [
         'Failed to load module "glx"',
-        'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
         'cacheinfo: Failed to find cpu0 device node',
         ] + common_errors,
     'qemumips64' : [
-        'pci 0000:00:00.0: [Firmware Bug]: reg 0x..: invalid BAR (can\'t size)',
         'cacheinfo: Failed to find cpu0 device node',
          ] + common_errors,
     'qemuppc' : [
@@ -218,11 +216,13 @@ class ParseLogsTest(OERuntimeTestCase):
                 'Ordering cycle found, skipping',
                 ])
 
+        cls.errors = [s.casefold() for s in cls.errors]
+
         try:
-            cls.ignore_errors = ignore_errors[cls.td.get('MACHINE')]
+            cls.ignore_errors = [s.casefold() for s in ignore_errors[cls.td.get('MACHINE')]]
         except KeyError:
             cls.logger.info('No ignore list found for this machine, using default')
-            cls.ignore_errors = ignore_errors['default']
+            cls.ignore_errors = [s.casefold() for s in ignore_errors['default']]
 
     # Go through the log locations provided and if it's a folder
     # create a list with all the .log files in it, if it's a file
@@ -263,30 +263,33 @@ class ParseLogsTest(OERuntimeTestCase):
         logs = [f for f in dir_files if os.path.isfile(f)]
         return logs
 
-    # Build the grep command to be used with filters and exclusions
-    def build_grepcmd(self, log):
-        grepcmd = 'grep '
-        grepcmd += '-Ei "'
-        for error in self.errors:
-            grepcmd += r'\<' + error + r'\>' + '|'
-        grepcmd = grepcmd[:-1]
-        grepcmd += '" ' + str(log) + " | grep -Eiv \'"
+    def get_context(self, lines, index, before=6, after=3):
+        """
+        Given a set of lines and the index of the line that is important, return
+        a number of lines surrounding that line.
+        """
+        last = len(lines)
 
+        start = index - before
+        end = index + after + 1
 
-        for ignore_error in self.ignore_errors:
-            ignore_error = ignore_error.replace('(', r'\(')
-            ignore_error = ignore_error.replace(')', r'\)')
-            ignore_error = ignore_error.replace("'", '.')
-            ignore_error = ignore_error.replace('?', r'\?')
-            ignore_error = ignore_error.replace('[', r'\[')
-            ignore_error = ignore_error.replace(']', r'\]')
-            ignore_error = ignore_error.replace('*', r'\*')
-            ignore_error = ignore_error.replace('0-9', '[0-9]')
-            grepcmd += ignore_error + '|'
-        grepcmd = grepcmd[:-1]
-        grepcmd += "\'"
+        if start < 0:
+            end -= start
+            start = 0
+        if end > last:
+            start -= end - last
+            end = last
 
-        return grepcmd
+        return lines[start:end]
+
+    def test_get_context(self):
+        """
+        A test case for the test case.
+        """
+        lines = list(range(0,10))
+        self.assertEqual(self.get_context(lines, 0, 2, 1), [0, 1, 2, 3])
+        self.assertEqual(self.get_context(lines, 5, 2, 1), [3, 4, 5, 6])
+        self.assertEqual(self.get_context(lines, 9, 2, 1), [6, 7, 8, 9])
 
     def parse_logs(self, logs, lines_before=10, lines_after=10):
         """
@@ -296,31 +299,19 @@ class ParseLogsTest(OERuntimeTestCase):
         Returns a dictionary of log filenames to a dictionary of error lines to
         the error context (controlled by @lines_before and @lines_after).
         """
-        results = {}
-        rez = []
-        grep_output = ''
+        results = collections.defaultdict(dict)
 
         for log in logs:
-            result = None
-            thegrep = self.build_grepcmd(log)
+            with open(log) as f:
+                lines = f.readlines()
 
-            try:
-                result = check_output(thegrep, shell=True).decode('utf-8')
-            except:
-                pass
+            for i, line in enumerate(lines):
+                line = line.strip()
+                line_lower = line.casefold()
 
-            if result is not None:
-                results[log] = {}
-                rez = result.splitlines()
-
-                for xrez in rez:
-                    try:
-                        cmd = ['grep', '-F', xrez, '-B', str(lines_before)]
-                        cmd += ['-A', str(lines_after), log]
-                        grep_output = check_output(cmd).decode('utf-8')
-                    except:
-                        pass
-                    results[log][xrez]=grep_output
+                if any(keyword in line_lower for keyword in self.errors):
+                    if not any(ignore in line_lower for ignore in self.ignore_errors):
+                        results[log][line] = "".join(self.get_context(lines, i, lines_before, lines_after))
 
         return results
 
@@ -342,9 +333,9 @@ class ParseLogsTest(OERuntimeTestCase):
             self.msg += '-----------------------\n'
             for error in result[log]:
                 errcount += 1
-                self.msg += 'Central error: ' + str(error) + '\n'
+                self.msg += 'Central error: ' + error + '\n'
                 self.msg +=  '***********************\n'
-                self.msg +=  result[str(log)][str(error)] + '\n'
+                self.msg +=  result[log][error] + '\n'
                 self.msg +=  '***********************\n'
         self.msg += '%s errors found in logs.' % errcount
         self.assertEqual(errcount, 0, msg=self.msg)
