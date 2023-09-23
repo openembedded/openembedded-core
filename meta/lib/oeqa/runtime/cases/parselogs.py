@@ -218,7 +218,11 @@ class ParseLogsTest(OERuntimeTestCase):
                 'Ordering cycle found, skipping',
                 ])
 
-        cls.ignore_errors = ignore_errors
+        try:
+            cls.ignore_errors = ignore_errors[cls.td.get('MACHINE')]
+        except KeyError:
+            cls.logger.info('No ignore list found for this machine, using default')
+            cls.ignore_errors = ignore_errors['default']
 
     # Go through the log locations provided and if it's a folder
     # create a list with all the .log files in it, if it's a file
@@ -268,13 +272,8 @@ class ParseLogsTest(OERuntimeTestCase):
         grepcmd = grepcmd[:-1]
         grepcmd += '" ' + str(log) + " | grep -Eiv \'"
 
-        try:
-            errorlist = self.ignore_errors[self.td.get('MACHINE')]
-        except KeyError:
-            self.msg += 'No ignore list found for this machine, using default\n'
-            errorlist = self.ignore_errors['default']
 
-        for ignore_error in errorlist:
+        for ignore_error in self.ignore_errors:
             ignore_error = ignore_error.replace('(', r'\(')
             ignore_error = ignore_error.replace(')', r'\)')
             ignore_error = ignore_error.replace("'", '.')
