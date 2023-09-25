@@ -54,9 +54,6 @@ SRC_URI_MUSL = "\
                file://0001-Adjust-for-musl-headers.patch \
                file://0006-test-bus-error-strerror-is-assumed-to-be-GNU-specifi.patch \
                file://0003-errno-util-Make-STRERROR-portable-for-musl.patch \
-               file://0025-include-sys-file.h-for-LOCK_EX.patch \
-               file://0026-test-test-sizeof-Include-sys-timex.h-for-struct-time.patch \
-               file://0027-include-missing-sys-file.h-for-LOCK_EX.patch \
                file://0028-sd-event-Make-malloc_trim-conditional-on-glibc.patch \
                file://0029-shared-Do-not-use-malloc_info-on-musl.patch \
                "
