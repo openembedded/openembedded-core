@@ -8,6 +8,7 @@ SRC_URI = "git://github.com/rpm-software-management/createrepo_c;branch=master;p
            file://0001-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            file://0001-include-rpm-rpmstring.h.patch \
            file://time64fix.patch \
+           file://0001-Move-cr_compress_groupfile-outside-WITH_LIBMODULEMD.patch \
            "
 
 SRCREV = "0cc13920991b2fb8f87fb9d352bd3394c2983289"
