@@ -112,6 +112,7 @@ PTESTS_SLOW = "\
     python3-click \
     python3-xmltodict \
     strace \
+    tar \
     tcl \
     util-linux \
     valgrind \
