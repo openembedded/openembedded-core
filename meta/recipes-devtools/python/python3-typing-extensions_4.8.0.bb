@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=fcf6b249c2641540219a727f35d8d2c2"
 # The name on PyPi is slightly different.
 PYPI_PACKAGE = "typing_extensions"
 
-SRC_URI[sha256sum] = "b75ddc264f0ba5615db7ba217daeb99701ad295353c45f9e95963337ceeeffb2"
+SRC_URI[sha256sum] = "df8e4339e9cb77357558cbdbceca33c303714cf861d1eef15e1070055ae8b7ef"
 
 inherit pypi python_flit_core
 
