@@ -28,6 +28,8 @@ CVE_CHECK_IGNORE += "CVE-2011-4613"
 # impossible or difficult to exploit. There is currently no upstream patch
 # available for this flaw.
 CVE_CHECK_IGNORE += "CVE-2020-25697"
+# This is specific to XQuartz, which is the macOS X server port
+CVE_CHECK_IGNORE += "CVE-2022-3553"
 
 S = "${WORKDIR}/${XORG_PN}-${PV}"
 
