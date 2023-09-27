@@ -1,0 +1,92 @@
+From 1523eaeff4669e421b3f60618b43c878e4860fe6 Mon Sep 17 00:00:00 2001
+From: Joel Rosdahl <joel@rosdahl.net>
+Date: Tue, 5 Jul 2022 21:42:58 +0200
+Subject: [PATCH] build: Fix FTBFS with not yet released GCC 13
+
+Reference: https://gcc.gnu.org/gcc-13/porting_to.html#header-dep-changes
+
+Fixes #1105.
+
+Upstream-Status: Backport [v4.7 https://github.com/ccache/ccache/commit/19ef6e267d38d4d8b3e11c915213472d5662d593]
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+---
+ src/Stat.hpp                  | 1 +
+ src/core/CacheEntryHeader.hpp | 2 ++
+ src/core/Sloppiness.hpp       | 1 +
+ src/core/Statistics.hpp       | 3 ++-
+ src/util/TextTable.hpp        | 3 ++-
+ 5 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/Stat.hpp b/src/Stat.hpp
+index 2f56214a..074cdeeb 100644
+--- a/src/Stat.hpp
++++ b/src/Stat.hpp
+@@ -23,6 +23,7 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ 
++#include <cstdint>
+ #include <ctime>
+ #include <string>
+ 
+diff --git a/src/core/CacheEntryHeader.hpp b/src/core/CacheEntryHeader.hpp
+index 4c3e04c7..dcc32e1c 100644
+--- a/src/core/CacheEntryHeader.hpp
++++ b/src/core/CacheEntryHeader.hpp
+@@ -21,6 +21,8 @@
+ #include <compression/types.hpp>
+ #include <core/types.hpp>
+ 
++#include <cstdint>
++
+ // Cache entry format
+ // ==================
+ //
+diff --git a/src/core/Sloppiness.hpp b/src/core/Sloppiness.hpp
+index 917526bf..1ab31d71 100644
+--- a/src/core/Sloppiness.hpp
++++ b/src/core/Sloppiness.hpp
+@@ -18,6 +18,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <string>
+ 
+ namespace core {
+diff --git a/src/core/Statistics.hpp b/src/core/Statistics.hpp
+index 3e9ed816..54f32e9c 100644
+--- a/src/core/Statistics.hpp
++++ b/src/core/Statistics.hpp
+@@ -1,4 +1,4 @@
+-// Copyright (C) 2020-2021 Joel Rosdahl and other contributors
++// Copyright (C) 2020-2022 Joel Rosdahl and other contributors
+ //
+ // See doc/AUTHORS.adoc for a complete list of contributors.
+ //
+@@ -20,6 +20,7 @@
+ 
+ #include <core/StatisticsCounters.hpp>
+ 
++#include <cstdint>
+ #include <string>
+ #include <unordered_map>
+ #include <vector>
+diff --git a/src/util/TextTable.hpp b/src/util/TextTable.hpp
+index 05c0e0e5..60edee75 100644
+--- a/src/util/TextTable.hpp
++++ b/src/util/TextTable.hpp
+@@ -1,4 +1,4 @@
+-// Copyright (C) 2021 Joel Rosdahl and other contributors
++// Copyright (C) 2021-2022 Joel Rosdahl and other contributors
+ //
+ // See doc/AUTHORS.adoc for a complete list of contributors.
+ //
+@@ -18,6 +18,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <string>
+ #include <vector>
+ 
