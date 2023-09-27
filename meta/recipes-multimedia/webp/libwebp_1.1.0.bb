@@ -21,6 +21,7 @@ UPSTREAM_CHECK_URI = "http://downloads.webmproject.org/releases/webp/index.html"
 
 SRC_URI += " \
     file://CVE-2023-1999.patch \
+    file://CVE-2023-5129.patch \
 "
 
 EXTRA_OECONF = " \
