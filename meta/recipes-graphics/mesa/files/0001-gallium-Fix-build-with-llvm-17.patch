@@ -15,7 +15,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
 --- a/src/gallium/auxiliary/gallivm/lp_bld_init.c
 +++ b/src/gallium/auxiliary/gallivm/lp_bld_init.c
-@@ -42,19 +42,23 @@
+@@ -42,8 +42,10 @@
  
  #include <llvm/Config/llvm-config.h>
  #include <llvm-c/Analysis.h>
@@ -27,10 +27,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  #include <llvm-c/Transforms/Utils.h>
  #endif
  #include <llvm-c/BitWriter.h>
- #if GALLIVM_USE_NEW_PASS == 1
- #include <llvm-c/Transforms/PassBuilder.h>
--#elif GALLIVM_HAVE_CORO == 1
-+#elif GALLIVM_HAVE_CORO == 1 && LLVM_VERSION_MAJOR < 17
+@@ -53,8 +55,10 @@
  #if LLVM_VERSION_MAJOR <= 8 && (DETECT_ARCH_AARCH64 || DETECT_ARCH_ARM || DETECT_ARCH_S390 || DETECT_ARCH_MIPS64)
  #include <llvm-c/Transforms/IPO.h>
  #endif
