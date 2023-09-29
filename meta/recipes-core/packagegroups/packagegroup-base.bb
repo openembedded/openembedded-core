@@ -129,7 +129,6 @@ RRECOMMENDS:packagegroup-distro-base = "${DISTRO_EXTRA_RRECOMMENDS}"
 #
 # packages added by machine config
 #
-SUMMARY:packagegroup-machine-base = "${MACHINE} extras"
 SUMMARY:packagegroup-machine-base = "Extra packages required to fully support ${MACHINE} hardware"
 RDEPENDS:packagegroup-machine-base = "${MACHINE_EXTRA_RDEPENDS}"
 RRECOMMENDS:packagegroup-machine-base = "${MACHINE_EXTRA_RRECOMMENDS}"
