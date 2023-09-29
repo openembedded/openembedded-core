@@ -21,8 +21,8 @@ SRCREV_machine_qemuriscv64 ?= "2adacd3242d46ddaff62e5a4695b98edf01cccc5"
 SRCREV_machine_qemux86 ?= "2adacd3242d46ddaff62e5a4695b98edf01cccc5"
 SRCREV_machine_qemux86-64 ?= "2adacd3242d46ddaff62e5a4695b98edf01cccc5"
 SRCREV_machine_qemumips64 ?= "854f6bee15babf95445644cba59691cd45173180"
-SRCREV_machine ?= "2adacd3242d46ddaff62e5a4695b98edf01cccc5"
-SRCREV_meta ?= "25f38de25d47570a132a18a1dc147b10e05b378b"
+SRCREV_machine ?= "2176ac775b5360b26e8cab0f8c1607853af76633"
+SRCREV_meta ?= "c068a3afc1a9d73b177643195e6b5546e6141efe"
 
 # remap qemuarm to qemuarma15 for the 5.4 kernel
 # KMACHINE_qemuarm ?= "qemuarma15"
@@ -31,7 +31,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRA
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.4;destsuffix=${KMETA}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
-LINUX_VERSION ?= "5.4.251"
+LINUX_VERSION ?= "5.4.252"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
