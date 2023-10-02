@@ -98,7 +98,7 @@ python do_create_extlinux_config() {
             if len(labels.split()) > 1:
                 cfgfile.write('menu title Select the boot mode\n')
 
-            timeout =  localdata.getVar('UBOOT_EXTLINUX_TIMEOUT')
+            timeout = localdata.getVar('UBOOT_EXTLINUX_TIMEOUT')
             if timeout:
                 cfgfile.write('TIMEOUT %s\n' % (timeout))
 
