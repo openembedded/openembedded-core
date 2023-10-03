@@ -60,7 +60,10 @@ SRC_URI += "\
     file://CVE-2023-24534.patch \
     file://CVE-2023-24538-1.patch \
     file://CVE-2023-24538-2.patch \
-    file://CVE-2023-24538-3.patch \
+    file://CVE-2023-24538_3.patch \
+    file://CVE-2023-24538_4.patch \
+    file://CVE-2023-24538_5.patch \
+    file://CVE-2023-24538_6.patch \
     file://CVE-2023-24539.patch \
     file://CVE-2023-24540.patch \
     file://CVE-2023-29405-1.patch \
