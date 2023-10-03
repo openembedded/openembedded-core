@@ -18,6 +18,7 @@ PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
            file://remove-sensitive-tests.patch \
            file://run-ptest \
+           file://CVE-2023-4156.patch \
 "
 
 SRC_URI[md5sum] = "c5441c73cc451764055ee65e9a4292bb"
