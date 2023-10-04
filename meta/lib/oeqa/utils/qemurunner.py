@@ -109,7 +109,7 @@ class QemuRunner:
 
     def decode_qemulog(self, todecode):
         # Sanitize the data received from qemu as it may contain control characters
-        msg = todecode.decode("utf-8", errors='ignore')
+        msg = todecode.decode("utf-8", errors='backslashreplace')
         msg = re_control_char.sub('', msg)
         return msg
 
@@ -473,7 +473,7 @@ class QemuRunner:
                         self.logger.error('Invalid file type: %s\n%s' % (file))
                         read = b''
 
-                    self.logger.debug2('Partial boot log:\n%s' % (read.decode('utf-8', errors='ignore')))
+                    self.logger.debug2('Partial boot log:\n%s' % (read.decode('utf-8', errors='backslashreplace')))
                     data = data + read
                     if data:
                         bootlog += data
