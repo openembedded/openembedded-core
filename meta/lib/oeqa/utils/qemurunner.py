@@ -503,9 +503,8 @@ class QemuRunner:
                                   (self.boottime, time.strftime("%D %H:%M:%S")))
             tail = lambda l: "\n".join(l.splitlines()[-25:])
             bootlog = self.decode_qemulog(bootlog)
-            # in case bootlog is empty, use tail qemu log store at self.msg
-            lines = tail(bootlog if bootlog else self.msg)
-            self.logger.warning("Last 25 lines of text (%d):\n%s" % (len(bootlog), lines))
+            self.logger.warning("Last 25 lines of login console (%d):\n%s" % (len(bootlog), tail(bootlog)))
+            self.logger.warning("Last 25 lines of all logging (%d):\n%s" % (len(self.msg), tail(self.msg)))
             self.logger.warning("Check full boot log: %s" % self.logfile)
             self.stop()
             return False
