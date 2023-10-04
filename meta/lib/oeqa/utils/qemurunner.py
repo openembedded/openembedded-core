@@ -115,10 +115,9 @@ class QemuRunner:
 
     def log(self, msg):
         if self.logfile:
-            msg = self.decode_qemulog(msg)
-            self.msg += msg
-            with codecs.open(self.logfile, "a", encoding="utf-8") as f:
-                f.write("%s" % msg)
+            with codecs.open(self.logfile, "ab") as f:
+                f.write(msg)
+        self.msg += self.decode_qemulog(msg)
 
     def getOutput(self, o):
         import fcntl
