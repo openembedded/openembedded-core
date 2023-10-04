@@ -113,9 +113,9 @@ class QemuRunner:
         msg = re_control_char.sub('', msg)
         return msg
 
-    def log(self, msg):
+    def log(self, msg, extension=""):
         if self.logfile:
-            with codecs.open(self.logfile, "ab") as f:
+            with codecs.open(self.logfile + extension, "ab") as f:
                 f.write(msg)
         self.msg += self.decode_qemulog(msg)
 
@@ -477,10 +477,7 @@ class QemuRunner:
                     data = data + read
                     if data:
                         bootlog += data
-                        if self.serial_ports < 2:
-                            # this file has mixed console/kernel data, log it to logfile
-                            self.log(data)
-
+                        self.log(data, extension = ".2")
                         data = b''
 
                         decodedlog = self.decode_qemulog(bootlog)
