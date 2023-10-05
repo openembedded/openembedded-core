@@ -80,6 +80,7 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0036-i386-Avoid-lazy-relocation-of-tlsdesc-BZ-27137.patch \
            file://0037-Avoid-deadlock-between-pthread_create-and-ctors.patch \
            file://CVE-2023-0687.patch \
+           file://CVE-2023-4911.patch \
            "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
