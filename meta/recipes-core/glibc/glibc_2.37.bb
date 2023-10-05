@@ -17,6 +17,9 @@ CVE_CHECK_IGNORE += "CVE-2019-1010025"
 # This is integrated into the 2.37 branch as of 07b9521fc6
 CVE_CHECK_IGNORE += "CVE-2023-25139"
 
+# This is integrated into the 2.37 branch as of b4e23c75ae
++CVE_CHECK_IGNORE += "CVE-2023-4806 CVE-2023-4527 CVE-2023-4911"
+
 DEPENDS += "gperf-native bison-native"
 
 NATIVESDKFIXES ?= ""
@@ -49,8 +52,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0020-tzselect.ksh-Use-bin-sh-default-shell-interpreter.patch \
            file://0021-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
            file://0022-Avoid-hardcoded-build-time-paths-in-the-output-binar.patch \
-           file://0023-CVE-2023-4527.patch \
-           file://0024-CVE-2023-4806.patch \
 "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
