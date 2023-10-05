@@ -480,8 +480,7 @@ class QemuRunner:
                         self.log(data, extension = ".2")
                         data = b''
 
-                        decodedlog = self.decode_qemulog(bootlog)
-                        if self.boot_patterns['search_reached_prompt'] in decodedlog:
+                        if bytes(self.boot_patterns['search_reached_prompt'], 'utf-8') in bootlog:
                             self.server_socket.close()
                             self.server_socket = qemusock
                             stopread = True
