@@ -21,14 +21,14 @@ do_install() {
     install -m 0755 ${WORKDIR}/start_getty ${D}${base_bindir}/start_getty
     sed -e 's,/usr/bin,${bindir},g' -i ${D}${base_bindir}/start_getty
 
-    set -x
-    tmp="${SERIAL_CONSOLES}"
-    for i in $tmp
+    CONSOLES="${SERIAL_CONSOLES}"
+    for s in $CONSOLES
     do
-	j=`echo ${i} | sed s/\;/\ /g`
-	l=`echo ${i} | sed -e 's/tty//' -e 's/^.*;//' -e 's/;.*//'`
-	label=`echo $l | sed 's/.*\(....\)/\1/'`
-	echo "$label:12345:respawn:${base_bindir}/start_getty ${j} vt102" >> ${D}${sysconfdir}/inittab
+        speed=$(echo $s | cut -d\; -f 1)
+        device=$(echo $s | cut -d\; -f 2)
+        label=$(echo $device | sed -e 's/tty//' | tail --bytes=5)
+
+        echo "$label:12345:respawn:${base_bindir}/start_getty $speed $device vt102" >> ${D}${sysconfdir}/inittab
     done
 
     if [ "${USE_VT}" = "1" ]; then
