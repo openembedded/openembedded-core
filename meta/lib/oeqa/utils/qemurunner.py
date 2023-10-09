@@ -519,6 +519,16 @@ class QemuRunner:
             self.logger.warning("Last 25 lines of all logging (%d):\n%s" % (len(self.msg), tail(self.msg)))
             self.logger.warning("Check full boot log: %s" % self.logfile)
             self.stop()
+            data = True
+            while data:
+                try:
+                    time.sleep(1)
+                    data = qemusock.recv(1024)
+                    self.log(data, extension = ".2")
+                    self.logger.warning('Extra log data read: %s\n' % (data.decode('utf-8', errors='backslashreplace')))
+                except Exception as e:
+                    self.logger.warning('Extra log data exception %s' % repr(e))
+                    data = None
             return False
 
         # If we are not able to login the tests can continue
