@@ -15,4 +15,4 @@ SRC_URI += "\
     file://0008-src-cmd-dist-buildgo.go-do-not-hardcode-host-compile.patch \
     file://0009-go-Filter-build-paths-on-staticly-linked-arches.patch \
 "
-SRC_URI[main.sha256sum] = "38d71714fa5279f97240451956d8e47e3c1b6a5de7cb84137949d62b5dd3182e"
+SRC_URI[main.sha256sum] = "4923920381cd71d68b527761afefa523ea18c5831b4795034c827e18b685cdcf"
