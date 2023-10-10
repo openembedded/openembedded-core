@@ -31,6 +31,7 @@ SRC_URI += "file://touchscreen.rules \
            file://network-fix-Link-reference-counter-issue.patch \
            file://rm-rf-refactor-rm-rf-children-split-out-body-of-directory.patch \
            file://rm-rf-optionally-fsync-after-removing-directory-tree.patch \
+           file://CVE-2018-21029.patch \
            file://CVE-2021-3997-1.patch \
            file://CVE-2021-3997-2.patch \
            file://CVE-2021-3997-3.patch \
