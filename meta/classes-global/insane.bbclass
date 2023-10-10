@@ -1348,6 +1348,15 @@ python do_qa_patch() {
         if msg:
             oe.qa.handle_error("patch-status", msg, d)
 
+    ###########################################################################
+    # Check for missing ptests
+    ###########################################################################
+    srcdir = d.getVar('S')
+    if not bb.utils.contains('DISTRO_FEATURES', 'ptest', True, False, d):
+        pass
+    elif bb.data.inherits_class('ptest', d):
+        bb.note("Package %s QA: skipping unimplemented-ptest: ptest implementation detected" % d.getVar('PN'))
+
     oe.qa.exit_if_errors(d)
 }
 
