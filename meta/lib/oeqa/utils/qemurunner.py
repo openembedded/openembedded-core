@@ -465,9 +465,9 @@ class QemuRunner:
                 self.logger.warning('Probing the serial port to wake it up!')
                 try:
                     self.server_socket.sendall(bytes("\n\n", "utf-8"))
+                    sentnewlines = True
                 except BrokenPipeError as e:
                     self.logger.debug('Probe failed %s' % repr(e))
-                sentnewlines = True
             for file in sread:
                 if file is self.server_socket:
                     qemusock, addr = self.server_socket.accept()
