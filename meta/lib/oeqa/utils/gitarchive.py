@@ -113,7 +113,7 @@ def get_tags(repo, log, pattern=None, url=None):
     # First try to fetch tags from repository configured remote
     cmd.append('origin')
     if pattern:
-        cmd.append(pattern)
+        cmd.append("refs/tags/"+pattern)
     try:
         tags_refs = repo.run_cmd(cmd)
         tags = ["".join(d.split()[1].split('/', 2)[2:]) for d in tags_refs.splitlines()]
