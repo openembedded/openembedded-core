@@ -235,6 +235,8 @@ def get_test_runs(log, repo, tag_name, **kwargs):
     revs = []
     for tag in tags:
         m = tag_re.match(tag)
+        if not m:
+            continue
         groups = m.groupdict()
         revs.append([groups[f] for f in undef_fields] + [tag])
 
