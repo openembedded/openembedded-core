@@ -1351,11 +1351,33 @@ python do_qa_patch() {
     ###########################################################################
     # Check for missing ptests
     ###########################################################################
+    def match_line_in_files(toplevel, filename_glob, line_regex):
+        import pathlib
+        toppath = pathlib.Path(toplevel)
+        for entry in toppath.glob(filename_glob):
+            try:
+                with open(entry, 'r', encoding='utf-8', errors='ignore') as f:
+                    for line in f.readlines():
+                        if re.match(line_regex, line):
+                            return True
+            except FileNotFoundError:
+                # Broken symlink in source
+                pass
+        return False
+
     srcdir = d.getVar('S')
     if not bb.utils.contains('DISTRO_FEATURES', 'ptest', True, False, d):
         pass
     elif bb.data.inherits_class('ptest', d):
         bb.note("Package %s QA: skipping unimplemented-ptest: ptest implementation detected" % d.getVar('PN'))
+
+    # Detect perl Test:: based tests
+    elif os.path.exists(os.path.join(srcdir, "t")) and any(filename.endswith('.t') for filename in os.listdir(os.path.join(srcdir, 't'))):
+        oe.qa.handle_error("unimplemented-ptest", "%s: perl Test:: based tests detected" % d.getVar('PN'), d)
+
+    # Detect pytest-based tests
+    elif match_line_in_files(srcdir, "**/*.py", r'\s*(?:import\s*pytest|from\s*pytest)'):
+        oe.qa.handle_error("unimplemented-ptest", "%s: pytest-based tests detected" % d.getVar('PN'), d)
 
     oe.qa.exit_if_errors(d)
 }
