@@ -16,6 +16,7 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://ssh_config \
            file://init \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
+           file://sshd.service \
            file://sshd.socket \
            file://sshd@.service \
            file://sshdgenkeys.service \
@@ -48,7 +49,7 @@ INITSCRIPT_NAME:${PN}-sshd = "sshd"
 INITSCRIPT_PARAMS:${PN}-sshd = "defaults 9"
 
 SYSTEMD_PACKAGES = "${PN}-sshd"
-SYSTEMD_SERVICE:${PN}-sshd = "sshd.socket"
+SYSTEMD_SERVICE:${PN}-sshd = "sshd.socket sshd.service"
 
 inherit autotools-brokensep ptest
 
@@ -122,6 +123,7 @@ do_install:append () {
 
 	install -d ${D}${systemd_system_unitdir}
 	install -c -m 0644 ${WORKDIR}/sshd.socket ${D}${systemd_system_unitdir}
+	install -c -m 0644 ${WORKDIR}/sshd.service ${D}${systemd_system_unitdir}
 	install -c -m 0644 ${WORKDIR}/sshd@.service ${D}${systemd_system_unitdir}
 	install -c -m 0644 ${WORKDIR}/sshdgenkeys.service ${D}${systemd_system_unitdir}
 	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
