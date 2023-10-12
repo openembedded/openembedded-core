@@ -20,6 +20,5 @@ class Merge(base.Base):
     def test_series_merge_on_head(self):
         if not PatchTestInput.repo.ismerged:
             commithash, author, date, shortlog = headlog()
-            self.fail('Series does not apply on top of target branch',
-                      'Rebase your series on top of targeted branch',
+            self.fail('Series does not apply on top of target branch. Rebase your series and ensure the target is correct',
                       data=[('Targeted branch', '%s (currently at %s)' % (PatchTestInput.repo.branch, commithash))])

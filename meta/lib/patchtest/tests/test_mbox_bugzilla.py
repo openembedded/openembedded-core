@@ -16,7 +16,5 @@ class Bugzilla(base.Base):
             for line in commit.commit_message.splitlines():
                 if self.rexp_detect.match(line):
                     if not self.rexp_validation.match(line):
-                        self.fail('Yocto Project bugzilla tag is not correctly formatted',
-                                  'Specify bugzilla ID in commit description with format: "[YOCTO #<bugzilla ID>]"',
-                                  commit)
+                        self.fail('Bugzilla issue ID is not correctly formatted - specify it with format: "[YOCTO #<bugzilla ID>]"', commit=commit)
 

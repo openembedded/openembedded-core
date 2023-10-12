@@ -28,5 +28,4 @@ class Summary(base.Metadata):
 
             # "${PN} version ${PN}-${PR}" is the default, so fail if default
             if summary.startswith('%s version' % pn):
-                self.fail('%s is missing in newly added recipe' % self.metadata,
-                          'Specify the variable %s in %s' % (self.metadata, pn))
+                self.fail('%s is missing in newly added recipe' % self.metadata)

@@ -51,5 +51,5 @@ class License(base.Metadata):
                 fd.write(''.join(lines[:-1]))
 
         if no_license:
-            self.fail('Recipe does not have the LICENSE field set', 'Include a LICENSE into the new recipe')
+            self.fail('Recipe does not have the LICENSE field set.')
 

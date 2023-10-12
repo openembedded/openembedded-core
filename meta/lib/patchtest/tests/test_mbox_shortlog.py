@@ -24,9 +24,8 @@ class Shortlog(base.Base):
                 try:
                     parse_shortlog.shortlog.parseString(shortlog)
                 except pyparsing.ParseException as pe:
-                    self.fail('Shortlog does not follow expected format',
-                              'Commit shortlog (first line of commit message) should follow the format "<target>: <summary>"',
-                              commit)
+                    self.fail('Commit shortlog (first line of commit message) should follow the format "<target>: <summary>"',
+                              commit=commit)
 
     def test_shortlog_length(self):
         for commit in Shortlog.commits:
@@ -36,6 +35,5 @@ class Shortlog(base.Base):
                 continue
             l = len(shortlog)
             if l > maxlength:
-                self.fail('Commit shortlog is too long',
-                          'Edit shortlog so that it is %d characters or less (currently %d characters)' % (maxlength, l),
-                          commit)
+                self.fail('Edit shortlog so that it is %d characters or less (currently %d characters)' % (maxlength, l),
+                          commit=commit)

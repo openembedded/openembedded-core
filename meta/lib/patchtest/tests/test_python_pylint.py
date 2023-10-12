@@ -56,6 +56,5 @@ class PyLint(base.Base):
 
         for issue in self.pylint_test:
              if self.pylint_test[issue] not in self.pylint_pretest.values():
-                 self.fail('Errors in your Python code were encountered',
-                           'Correct the lines introduced by your patch',
+                 self.fail('Errors in your Python code were encountered. Please check your code with a linter and resubmit',
                            data=[('Output', 'Please, fix the listed issues:'), ('', issue + ' ' + self.pylint_test[issue])])

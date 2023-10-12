@@ -43,16 +43,15 @@ class MailingList(base.Base):
         for commit in MailingList.commits:
             match = project_regex.match(commit.subject)
             if match:
-                self.fail('Series sent to the wrong mailing list',
-                          'Check the project\'s README (%s) and send the patch to the indicated list' % match.group('project'),
-                          commit)
+                self.fail('Series sent to the wrong mailing list. Check the project\'s README (%s) and send the patch to the indicated list' % match.group('project'),
+                          commit=commit)
 
         for patch in self.patchset:
             folders = patch.path.split('/')
             base_path = folders[0]
             for project in [self.bitbake, self.doc, self.oe, self.poky]:
                 if base_path in  project.paths:
-                    self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists', 'Send the series again to the correct mailing list (ML)',
+                    self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists. Send the series again to the correct mailing list (ML)',
                               data=[('Suggested ML', '%s [%s]' % (project.listemail, project.gitrepo)),
                                     ('Patch\'s path:', patch.path)])
 
@@ -60,5 +59,5 @@ class MailingList(base.Base):
             if base_path.startswith('scripts'):
                 for poky_file in self.poky_scripts:
                     if patch.path.startswith(poky_file):
-                        self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists', 'Send the series again to the correct mailing list (ML)',
+                        self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists. Send the series again to the correct mailing list (ML)',
                                   data=[('Suggested ML', '%s [%s]' % (self.poky.listemail, self.poky.gitrepo)),('Patch\'s path:', patch.path)])

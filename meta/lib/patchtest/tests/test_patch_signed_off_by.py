@@ -39,5 +39,4 @@ class PatchSignedOffBy(base.Base):
                 if PatchSignedOffBy.prog.search_string(payload):
                     break
             else:
-                self.fail('A patch file has been added, but does not have a Signed-off-by tag',
-                          'Sign off the added patch file (%s)' % newpatch.path)
+                self.fail('A patch file has been added, but does not have a Signed-off-by tag. Sign off the added patch file (%s)' % newpatch.path)

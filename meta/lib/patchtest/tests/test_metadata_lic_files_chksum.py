@@ -34,8 +34,7 @@ class LicFilesChkSum(base.Metadata):
             if rd.getVar(self.license) == self.closed:
                 continue
             if not lic_files_chksum:
-                self.fail('%s is missing in newly added recipe' % self.metadata,
-                          'Specify the variable %s in %s' % (self.metadata, pn))
+                self.fail('%s is missing in newly added recipe' % self.metadata)
 
     def pretest_lic_files_chksum_modified_not_mentioned(self):
         if not self.modified:
@@ -77,6 +76,5 @@ class LicFilesChkSum(base.Metadata):
                     if self.lictag_re.search(commit.commit_message):
                        break
                 else:
-                    self.fail('LIC_FILES_CHKSUM changed on target %s but there is no "%s" tag in commit message' % (pn, self.lictag),
-                              'Include "%s: <description>" into the commit message with a brief description' % self.lictag,
+                    self.fail('LIC_FILES_CHKSUM changed on target %s but there is no "%s" tag in commit message. Include it with a brief description' % (pn, self.lictag),
                               data=[('Current checksum', pretest), ('New checksum', test)])

@@ -21,6 +21,5 @@ class MaxLength(base.Base):
                 if self.add_mark.match(line):
                     current_line_length = len(line[1:])
                     if current_line_length > self.max_length:
-                        self.fail('Patch line too long (current length %s)' % current_line_length,
-                                  'Shorten the corresponding patch line (max length supported %s)' % self.max_length,
+                        self.fail('Patch line too long (current length %s, maximum is %s)' % (current_line_length, self.max_length),
                                   data=[('Patch', patch.path), ('Line', '%s ...' % line[0:80])])

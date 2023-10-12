@@ -46,6 +46,5 @@ class CVE(base.Base):
                         tag_found = True
                         break
                 if not tag_found:
-                    self.fail('Missing or incorrectly formatted CVE tag in included patch file',
-                              'Correct or include the CVE tag on cve patch with format: "CVE: CVE-YYYY-XXXX"',
-                              commit)
+                    self.fail('Missing or incorrectly formatted CVE tag in patch file. Correct or include the CVE tag in the patch with format: "CVE: CVE-YYYY-XXXX"',
+                              commit=commit)

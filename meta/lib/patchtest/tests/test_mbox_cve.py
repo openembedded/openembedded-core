@@ -44,6 +44,5 @@ class CVE(base.Base):
             if self.revert_shortlog_regex.match(commit.shortlog):
                 continue
             if not self.prog.search_string(commit.payload):
-                self.fail('Missing or incorrectly formatted CVE tag in mbox',
-                          'Correct or include the CVE tag in the mbox with format: "CVE: CVE-YYYY-XXXX"',
-                          commit)
+                self.fail('Missing or incorrectly formatted CVE tag in mbox. Correct or include the CVE tag in the mbox with format: "CVE: CVE-YYYY-XXXX"',
+                          commit=commit)

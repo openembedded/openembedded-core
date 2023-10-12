@@ -23,6 +23,5 @@ class SignedOffBy(base.Base):
             if self.revert_shortlog_regex.match(commit.shortlog):
                 continue
             if not SignedOffBy.prog.search_string(commit.payload):
-                self.fail('Patch is missing Signed-off-by',
-                          'Sign off the patch (either manually or with "git commit --amend -s")',
-                          commit)
+                self.fail('Mbox is missing Signed-off-by. Add it manually or with "git commit --amend -s"',
+                          commit=commit)

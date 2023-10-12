@@ -69,7 +69,6 @@ class SrcUri(base.Metadata):
                 # TODO: we are not taking into account  renames, so test may raise false positives
                 not_removed = filesremoved_from_usr_uri - filesremoved_from_patchset
                 if not_removed:
-                    self.fail('Patches not removed from tree',
-                              'Amend the patch containing the software patch file removal',
+                    self.fail('Patches not removed from tree. Remove them and amend the submitted mbox',
                               data=[('Patch', f) for f in not_removed])
 
