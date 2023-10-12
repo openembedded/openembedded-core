@@ -19,12 +19,12 @@
 
 import base
 import os
-import re
+import pyparsing
 
 class CVE(base.Base):
 
-    re_cve_pattern = re.compile("CVE\-\d{4}\-\d+", re.IGNORECASE)
-    re_cve_payload_tag     = re.compile("\+CVE:(\s+CVE\-\d{4}\-\d+)+")
+    re_cve_pattern = pyparsing.Regex("CVE\-\d{4}\-\d+")
+    re_cve_payload_tag = pyparsing.Regex("\+CVE:(\s+CVE\-\d{4}\-\d+)+")
 
     def setUp(self):
         if self.unidiff_parse_error:
@@ -39,10 +39,10 @@ class CVE(base.Base):
 
     def test_cve_tag_format(self):
         for commit in CVE.commits:
-            if self.re_cve_pattern.search(commit.shortlog) or self.re_cve_pattern.search(commit.commit_message):
+            if self.re_cve_pattern.search_string(commit.shortlog) or self.re_cve_pattern.search_string(commit.commit_message):
                 tag_found = False
                 for line in commit.payload.splitlines():
-                    if self.re_cve_payload_tag.match(line):
+                    if self.re_cve_payload_tag.search_string(line):
                         tag_found = True
                         break
                 if not tag_found:

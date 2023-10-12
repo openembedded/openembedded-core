@@ -7,7 +7,7 @@
 import subprocess
 import collections
 import base
-import re
+import pyparsing
 from data import PatchTestInput
 
 class MailingList(base.Base):
@@ -39,9 +39,9 @@ class MailingList(base.Base):
 
         # a meta project may be indicted in the message subject, if this is the case, just fail
         # TODO: there may be other project with no-meta prefix, we also need to detect these
-        project_regex = re.compile("\[(?P<project>meta-.+)\]")
+        project_regex = pyparsing.Regex("\[(?P<project>meta-.+)\]")
         for commit in MailingList.commits:
-            match = project_regex.match(commit.subject)
+            match = project_regex.search_string(commit.subject)
             if match:
                 self.fail('Series sent to the wrong mailing list. Check the project\'s README (%s) and send the patch to the indicated list' % match.group('project'),
                           commit=commit)

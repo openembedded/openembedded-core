@@ -5,22 +5,22 @@
 # SPDX-License-Identifier: GPL-2.0
 
 import base
-import re
+import pyparsing
 
 class Author(base.Base):
 
-    auh_email = '<auh@auh.yoctoproject.org>'
+    auh_email = 'auh@auh.yoctoproject.org'
 
-    invalids = [re.compile("^Upgrade Helper.+"),
-                re.compile(re.escape(auh_email)),
-                re.compile("uh@not\.set"),
-                re.compile("\S+@example\.com")]
+    invalids = [pyparsing.Regex("^Upgrade Helper.+"),
+                pyparsing.Regex(auh_email),
+                pyparsing.Regex("uh@not\.set"),
+                pyparsing.Regex("\S+@example\.com")]
 
 
     def test_author_valid(self):
         for commit in self.commits:
             for invalid in self.invalids:
-                if invalid.search(commit.author):
+                if invalid.search_string(commit.author):
                     self.fail('Invalid author %s. Resend the series with a valid patch author' % commit.author, commit=commit)
 
     def test_non_auh_upgrade(self):

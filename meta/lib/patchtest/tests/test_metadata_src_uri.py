@@ -6,8 +6,8 @@
 
 import subprocess
 import base
-import re
 import os
+import pyparsing
 from data import PatchTestInput, PatchTestDataStore
 
 class SrcUri(base.Metadata):
@@ -15,7 +15,7 @@ class SrcUri(base.Metadata):
     metadata  = 'SRC_URI'
     md5sum    = 'md5sum'
     sha256sum = 'sha256sum'
-    git_regex = re.compile('^git\:\/\/.*')
+    git_regex = pyparsing.Regex('^git\:\/\/.*')
 
     def setUp(self):
         # these tests just make sense on patches that can be merged

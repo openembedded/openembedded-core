@@ -6,7 +6,6 @@
 
 import base
 import parse_signed_off_by
-import re
 
 class PatchSignedOffBy(base.Base):
 
