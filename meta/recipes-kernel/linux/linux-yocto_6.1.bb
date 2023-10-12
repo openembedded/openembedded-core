@@ -19,16 +19,16 @@ KBRANCH:qemumips64 ?= "v6.1/standard/mti-malta64"
 
 SRCREV_machine:qemuarm ?= "cf771f6d6bc0344e048bdbf7d23d3aacbe3556d0"
 SRCREV_machine:qemuarm64 ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
-SRCREV_machine:qemuloongarch64 ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
+SRCREV_machine:qemuloongarch64 ?= "f21f9d92e463bcfa7e64887f14676225144ed8d1"
 SRCREV_machine:qemumips ?= "4be1dcc270e6ddeea513af01d91ea3b48ec82470"
 SRCREV_machine:qemuppc ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
-SRCREV_machine:qemuriscv64 ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
-SRCREV_machine:qemuriscv32 ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
-SRCREV_machine:qemux86 ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
-SRCREV_machine:qemux86-64 ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
+SRCREV_machine:qemuriscv64 ?= "f21f9d92e463bcfa7e64887f14676225144ed8d1"
+SRCREV_machine:qemuriscv32 ?= "f21f9d92e463bcfa7e64887f14676225144ed8d1"
+SRCREV_machine:qemux86 ?= "f21f9d92e463bcfa7e64887f14676225144ed8d1"
+SRCREV_machine:qemux86-64 ?= "f21f9d92e463bcfa7e64887f14676225144ed8d1"
 SRCREV_machine:qemumips64 ?= "aa0e978c979b84d620ad21132cfdbbf857be3878"
-SRCREV_machine ?= "644e73fa089ade30c0db7bd54be960be92546ba2"
-SRCREV_meta ?= "943c6fe5dac329c7e1c30d602788f409e692b3a8"
+SRCREV_machine ?= "f21f9d92e463bcfa7e64887f14676225144ed8d1"
+SRCREV_meta ?= "3b4113ce39d722191d1eb0e159976d653de4d2b2"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
@@ -43,7 +43,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRA
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-6.1;destsuffix=${KMETA};protocol=https"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-LINUX_VERSION ?= "6.1.55"
+LINUX_VERSION ?= "6.1.56"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
