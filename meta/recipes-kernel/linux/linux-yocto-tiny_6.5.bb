@@ -30,4 +30,4 @@ COMPATIBLE_MACHINE = "^(qemux86|qemux86-64|qemuarm64|qemuarm|qemuarmv5)$"
 # Functionality flags
 KERNEL_FEATURES = ""
 
-KERNEL_DEVICETREE:qemuarmv5 = "versatile-pb.dtb"
+KERNEL_DEVICETREE:qemuarmv5 = "arm/versatile-pb.dtb"
