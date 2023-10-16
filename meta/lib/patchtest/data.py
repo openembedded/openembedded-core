@@ -35,6 +35,9 @@ import logging
 logger=logging.getLogger('patchtest')
 info=logger.info
 
+default_testdir = os.path.abspath(os.path.dirname(__file__) + "/tests")
+default_repodir = os.path.abspath(os.path.dirname(__file__) + "/../../..")
+
 # Data store commonly used to share values between pre and post-merge tests
 PatchTestDataStore = collections.defaultdict(str)
 
@@ -58,10 +61,12 @@ class PatchTestInput(object):
         target_patch_group.add_argument('--directory', metavar='DIRECTORY', dest='patch_path',
                             help='The directory containing patches to be tested')
 
-        parser.add_argument('repodir', metavar='REPO',
+        parser.add_argument('--repodir', metavar='REPO',
+                            default=default_repodir,
                             help="Name of the repository where patch is merged")
 
-        parser.add_argument('startdir', metavar='TESTDIR',
+        parser.add_argument('--testdir', metavar='TESTDIR',
+                            default=default_testdir,
                             help="Directory where test cases are located")
 
         parser.add_argument('--top-level-directory', '-t',

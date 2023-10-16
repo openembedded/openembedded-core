@@ -79,15 +79,19 @@ To run patchtest on the host, do the following:
    or patchtest-get-series
 3. Run patchtest on a patch file by doing the following:
 
-        patchtest --patch /path/to/patch/file /path/to/target/repo /path/to/tests/directory 
+        patchtest --patch /path/to/patch/file
 
     or, if you have stored the patch files in a directory, do:
 
-        patchtest --directory /path/to/patch/directory /path/to/target/repo /path/to/tests/directory 
+        patchtest --directory /path/to/patch/directory
 
     For example, to test `master-gcc-Fix--fstack-protector-issue-on-aarch64.patch` against the oe-core test suite:
         
-        patchtest --patch master-gcc-Fix--fstack-protector-issue-on-aarch64.patch /path/to/openembedded-core /path/to/openembedded-core/meta/lib/patchtest/tests 
+        patchtest --patch master-gcc-Fix--fstack-protector-issue-on-aarch64.patch
+
+    If you want to use a different test suite or target repository, you can use the --testdir and --repodir flags:
+    
+        patchtest --patch /path/to/patch/file --repodir /path/to/repo --testdir /path/to/test/dir
 
 ### Guest Mode
 
