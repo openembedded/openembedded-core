@@ -52,7 +52,9 @@ FILES:${PN}-dev += "${libdir}/man-db/libman.so ${libdir}/${BPN}/libmandb.so"
 
 RDEPENDS:${PN} += "groff"
 RRECOMMENDS:${PN} += "less"
-RPROVIDES:${PN} += " man"
+# iconv from glibc-utils can be used to transform encoding
+RRECOMMENDS:${PN}:append:libc-glibc = " glibc-utils"
+RPROVIDES:${PN} += "man"
 
 def compress_pkg(d):
     if bb.utils.contains("INHERIT", "compress_doc", True, False, d):
