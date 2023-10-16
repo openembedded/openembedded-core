@@ -1353,16 +1353,22 @@ python do_qa_patch() {
     ###########################################################################
     def match_line_in_files(toplevel, filename_glob, line_regex):
         import pathlib
-        toppath = pathlib.Path(toplevel)
-        for entry in toppath.glob(filename_glob):
-            try:
-                with open(entry, 'r', encoding='utf-8', errors='ignore') as f:
-                    for line in f.readlines():
-                        if re.match(line_regex, line):
-                            return True
-            except FileNotFoundError:
-                # Broken symlink in source
-                pass
+        try:
+            toppath = pathlib.Path(toplevel)
+            for entry in toppath.glob(filename_glob):
+                try:
+                    with open(entry, 'r', encoding='utf-8', errors='ignore') as f:
+                        for line in f.readlines():
+                            if re.match(line_regex, line):
+                                return True
+                except FileNotFoundError:
+                    # Broken symlink in source
+                    pass
+        except FileNotFoundError:
+            # pathlib.Path.glob() might throw this when file/directory
+            # disappear while scanning.
+            bb.note("unimplemented-ptest: FileNotFoundError exception while scanning (disappearing file while scanning?). Check was ignored." % d.getVar('PN'))
+            pass
         return False
 
     srcdir = d.getVar('S')
