@@ -136,6 +136,10 @@ do_install () {
 		echo ${hostname} > ${D}${sysconfdir}/hostname
 		echo "127.0.1.1 ${hostname}" >> ${D}${sysconfdir}/hosts
 	fi
+
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'false', 'true', d)}; then
+		sed -i '/^::1/s/ localhost//' ${D}${sysconfdir}/hosts
+	fi
 }
 
 do_install:append:libc-glibc () {
