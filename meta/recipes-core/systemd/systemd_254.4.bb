@@ -384,20 +384,20 @@ python populate_packages:prepend (){
 PACKAGES_DYNAMIC += "^lib(udev|systemd|nss).*"
 
 PACKAGE_BEFORE_PN = "\
-    ${PN}-gui \
-    ${PN}-vconsole-setup \
-    ${PN}-initramfs \
     ${PN}-analyze \
-    ${PN}-kernel-install \
-    ${PN}-rpm-macros \
     ${PN}-binfmt \
-    ${PN}-zsh-completion \
     ${PN}-container \
+    ${PN}-extra-utils \
+    ${PN}-gui \
+    ${PN}-initramfs \
     ${PN}-journal-gatewayd \
     ${PN}-journal-upload \
     ${PN}-journal-remote \
-    ${PN}-extra-utils \
+    ${PN}-kernel-install \
+    ${PN}-rpm-macros \
     ${PN}-udev-rules \
+    ${PN}-vconsole-setup \
+    ${PN}-zsh-completion \
     libsystemd-shared \
     udev \
     udev-hwdb \
