@@ -387,6 +387,7 @@ PACKAGE_BEFORE_PN = "\
     ${PN}-analyze \
     ${PN}-binfmt \
     ${PN}-container \
+    ${PN}-crypt \
     ${PN}-extra-utils \
     ${PN}-gui \
     ${PN}-initramfs \
@@ -445,6 +446,11 @@ USERADD_PARAM:${PN}-journal-remote = "--system -d / -M --shell /sbin/nologin sys
 USERADD_PARAM:${PN}-journal-upload = "--system -d / -M --shell /sbin/nologin systemd-journal-upload"
 
 FILES:${PN}-analyze = "${bindir}/systemd-analyze"
+
+FILES:${PN}-crypt = "${bindir}/systemd-cryptenroll \
+                     ${libdir}/cryptsetup \
+                    "
+RRECOMMENDS:${PN} += "${PN}-crypt"
 
 FILES:${PN}-initramfs = "/init"
 RDEPENDS:${PN}-initramfs = "${PN}"
@@ -552,7 +558,6 @@ FILES:${PN}-extra-utils = "\
                         ${bindir}/systemd-run \
                         ${bindir}/systemd-cat \
                         ${bindir}/systemd-creds \
-                        ${bindir}/systemd-cryptenroll \
                         ${bindir}/systemd-delta \
                         ${bindir}/systemd-cgls \
                         ${bindir}/systemd-cgtop \
