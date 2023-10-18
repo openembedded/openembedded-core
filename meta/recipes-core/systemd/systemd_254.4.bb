@@ -135,6 +135,7 @@ PACKAGECONFIG[bzip2] = "-Dbzip2=true,-Dbzip2=false,bzip2"
 PACKAGECONFIG[cgroupv2] = "-Ddefault-hierarchy=unified,-Ddefault-hierarchy=hybrid"
 PACKAGECONFIG[coredump] = "-Dcoredump=true,-Dcoredump=false"
 PACKAGECONFIG[cryptsetup] = "-Dlibcryptsetup=true,-Dlibcryptsetup=false,cryptsetup,,cryptsetup"
+PACKAGECONFIG[cryptsetup-plugins] = "-Dlibcryptsetup-plugins=true,-Dlibcryptsetup-plugins=false,cryptsetup,,cryptsetup"
 PACKAGECONFIG[tpm2] = "-Dtpm2=true,-Dtpm2=false,tpm2-tss,tpm2-tss libtss2 libtss2-tcti-device"
 # If multiple compression libraries are enabled, the format to use for compression is chosen implicitly,
 # so if you want to compress with e.g. lz4 you cannot enable zstd, so you cannot read zstd-compressed journal files.
