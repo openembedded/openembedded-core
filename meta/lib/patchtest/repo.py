@@ -11,7 +11,6 @@
 import os
 import utils
 import logging
-import json
 from patch import PatchTestPatch
 
 logger = logging.getLogger('patchtest')

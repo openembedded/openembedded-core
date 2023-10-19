@@ -6,7 +6,6 @@
 #
 
 import base
-import os
 import pyparsing
 
 class CVE(base.Base):

@@ -7,7 +7,6 @@
 import base
 import parse_upstream_status
 import pyparsing
-import os
 
 class PatchUpstreamStatus(base.Base):
 

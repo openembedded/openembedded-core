@@ -6,7 +6,6 @@
 #
 
 import base
-import os
 import parse_cve_tags
 import pyparsing
 

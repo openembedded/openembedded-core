@@ -16,7 +16,6 @@
 import os
 import argparse
 import collections
-import tempfile
 import logging
 
 logger=logging.getLogger('patchtest')

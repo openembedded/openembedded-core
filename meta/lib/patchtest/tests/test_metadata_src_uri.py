@@ -4,7 +4,6 @@
 #
 # SPDX-License-Identifier: GPL-2.0-only
 
-import subprocess
 import base
 import os
 import pyparsing

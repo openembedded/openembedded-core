@@ -11,7 +11,6 @@
 import os
 import subprocess
 import logging
-import sys
 import re
 import mailbox
 

@@ -15,7 +15,6 @@ import mailbox
 import argparse
 import re
 import git
-import sys
 
 re_prefix = re.compile("(\[.*\])", re.DOTALL)
 
