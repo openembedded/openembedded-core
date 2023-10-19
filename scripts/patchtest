@@ -178,7 +178,7 @@ def main():
         return 1
 
     if os.path.isdir(patch_path):
-        patch_list = [os.path.join(patch_path, filename) for filename in os.listdir(patch_path)]
+        patch_list = [os.path.join(patch_path, filename) for filename in sorted(os.listdir(patch_path))]
     else:
         patch_list = [patch_path]
 
