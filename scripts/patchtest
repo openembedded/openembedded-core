@@ -171,6 +171,12 @@ def main():
     log_path = None
     patch_list = None
 
+    git_status = os.popen("(cd %s && git status)" % PatchTestInput.repodir).read()
+    status_matches = ["Changes not staged for commit", "Changes to be committed"]
+    if any([match in git_status for match in status_matches]):
+        logger.error("patchtest: there are uncommitted changes in the target repo that would be overwritten. Please commit or restore them before running patchtest")
+        return 1
+
     if os.path.isdir(patch_path):
         patch_list = [os.path.join(patch_path, filename) for filename in os.listdir(patch_path)]
     else:
