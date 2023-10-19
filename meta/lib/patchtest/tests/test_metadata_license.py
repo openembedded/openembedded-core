@@ -12,11 +12,6 @@ class License(base.Metadata):
     metadata = 'LICENSE'
     invalid_license = 'PATCHTESTINVALID'
 
-    def setUp(self):
-        # these tests just make sense on patches that can be merged
-        if not PatchTestInput.repo.canbemerged:
-            self.skip('Patch cannot be merged')
-
     def test_license_presence(self):
         if not self.added:
             self.skip('No added recipes, skipping test')
