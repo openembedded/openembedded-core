@@ -793,6 +793,9 @@ python __anonymous() {
     if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
         d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
 
+    if bb.utils.contains('DISTRO_FEATURES', 'systemd-resolved', True, False, d) and not bb.utils.contains('PACKAGECONFIG', 'nss-resolve resolved', True, False, d):
+        bb.error("DISTRO_FEATURES[systemd-resolved] requires PACKAGECONFIG[nss-resolve, resolved]")
+
     if bb.utils.contains('PACKAGECONFIG', 'repart', True, False, d) and not bb.utils.contains('PACKAGECONFIG', 'openssl', True, False, d):
         bb.error("PACKAGECONFIG[repart] requires PACKAGECONFIG[openssl]")
 
