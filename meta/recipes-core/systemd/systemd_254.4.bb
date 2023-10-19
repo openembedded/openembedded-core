@@ -227,6 +227,8 @@ PACKAGECONFIG[xz] = "-Dxz=true,-Dxz=false,xz"
 PACKAGECONFIG[zlib] = "-Dzlib=true,-Dzlib=false,zlib"
 PACKAGECONFIG[zstd] = "-Dzstd=true,-Dzstd=false,zstd"
 
+RESOLV_CONF ??= ""
+
 # Helper variables to clarify locations.  This mirrors the logic in systemd's
 # build system.
 rootprefix ?= "${root_prefix}"
@@ -338,8 +340,9 @@ do_install() {
 		echo 'f /run/systemd/resolve/resolv.conf 0644 root root' >>${D}${exec_prefix}/lib/tmpfiles.d/systemd.conf
 		ln -s ../run/systemd/resolve/resolv.conf ${D}${sysconfdir}/resolv-conf.systemd
 	else
-		sed -i -e "s%^L! /etc/resolv.conf.*$%L! /etc/resolv.conf - - - - ../run/systemd/resolve/resolv.conf%g" ${D}${exec_prefix}/lib/tmpfiles.d/etc.conf
-		ln -s ../run/systemd/resolve/resolv.conf ${D}${sysconfdir}/resolv-conf.systemd
+		resolv_conf="${@bb.utils.contains('RESOLV_CONF', 'stub-resolv', 'run/systemd/resolve/stub-resolv.conf', 'run/systemd/resolve/resolv.conf', d)}"
+		sed -i -e "s%^L! /etc/resolv.conf.*$%L! /etc/resolv.conf - - - - ../${resolv_conf}%g" ${D}${exec_prefix}/lib/tmpfiles.d/etc.conf
+		ln -s ../${resolv_conf} ${D}${sysconfdir}/resolv-conf.systemd
 	fi
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'false', 'true', d)}; then
 		rm ${D}${exec_prefix}/lib/tmpfiles.d/x11.conf
