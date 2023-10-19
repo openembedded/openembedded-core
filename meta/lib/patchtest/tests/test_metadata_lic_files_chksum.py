@@ -15,11 +15,6 @@ class LicFilesChkSum(base.Metadata):
     lictag   = 'License-Update'
     lictag_re  = pyparsing.Regex("^%s:" % lictag)
 
-    def setUp(self):
-        # these tests just make sense on patches that can be merged
-        if not PatchTestInput.repo.canbemerged:
-            self.skip('Patch cannot be merged')
-
     def test_lic_files_chksum_presence(self):
         if not self.added:
             self.skip('No added recipes, skipping test')

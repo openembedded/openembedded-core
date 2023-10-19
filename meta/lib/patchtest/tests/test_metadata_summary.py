@@ -10,11 +10,6 @@ from data import PatchTestInput
 class Summary(base.Metadata):
     metadata = 'SUMMARY'
 
-    def setUp(self):
-        # these tests just make sense on patches that can be merged
-        if not PatchTestInput.repo.canbemerged:
-            self.skip('Patch cannot be merged')
-
     def test_summary_presence(self):
         if not self.added:
             self.skip('No added recipes, skipping test')
