@@ -67,6 +67,10 @@ CVE_CHECK_IGNORE += "CVE-2018-18438"
 # this bug related to windows specific.
 CVE_CHECK_IGNORE += "CVE-2023-0664"
 
+# As per https://bugzilla.redhat.com/show_bug.cgi?id=2203387
+# RHEL specific issue
+CVE_CHECK_IGNORE += "CVE-2023-2680"
+
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"
 COMPATIBLE_HOST:riscv32 = "null"
