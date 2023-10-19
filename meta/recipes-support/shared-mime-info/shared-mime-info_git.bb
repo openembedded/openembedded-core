@@ -8,7 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "libxml2 itstool-native glib-2.0 shared-mime-info-native xmlto-native"
 
-SRC_URI = "git://gitlab.freedesktop.org/xdg/shared-mime-info.git;protocol=https;branch=master"
+SRC_URI = "git://gitlab.freedesktop.org/xdg/shared-mime-info.git;protocol=https;branch=master \
+           file://0001-Fix-string-literal-concatenation.patch \
+           file://0001-Fix-literal-as-per-c-11.patch \
+           "
 SRCREV = "8e80a317f5c61a7f410330abea441e0b0b9280b5"
 PV = "2.3"
 S = "${WORKDIR}/git"
