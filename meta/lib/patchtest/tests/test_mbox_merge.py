@@ -18,6 +18,8 @@ def headlog():
 
 class Merge(base.Base):
     def test_series_merge_on_head(self):
+        if PatchTestInput.repo.branch != "master":
+            self.skip("Skipping merge test since patch is not intended for master branch. Target detected is %s" % PatchTestInput.repo.branch)
         if not PatchTestInput.repo.ismerged:
             commithash, author, date, shortlog = headlog()
             self.fail('Series does not apply on top of target branch. Rebase your series and ensure the target is correct',
