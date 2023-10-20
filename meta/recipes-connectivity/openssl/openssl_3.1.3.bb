@@ -119,10 +119,10 @@ do_configure () {
 		target=linux-ppc64le
 		;;
 	linux-riscv32)
-		target=linux-latomic
+		target=linux32-riscv32
 		;;
 	linux-riscv64)
-		target=linux-generic64
+		target=linux64-riscv64
 		;;
 	linux-sparc | linux-supersparc)
 		target=linux-sparcv9
