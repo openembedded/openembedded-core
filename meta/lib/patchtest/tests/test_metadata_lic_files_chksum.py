@@ -12,8 +12,7 @@ class LicFilesChkSum(base.Metadata):
     metadata = 'LIC_FILES_CHKSUM'
     license  = 'LICENSE'
     closed   = 'CLOSED'
-    lictag   = 'License-Update'
-    lictag_re  = pyparsing.Regex("^%s:" % lictag)
+    lictag_re  = pyparsing.AtLineStart("License-Update:")
 
     def test_lic_files_chksum_presence(self):
         if not self.added:
@@ -71,5 +70,5 @@ class LicFilesChkSum(base.Metadata):
                     if self.lictag_re.search_string(commit.commit_message):
                        break
                 else:
-                    self.fail('LIC_FILES_CHKSUM changed on target %s but there is no "%s" tag in commit message. Include it with a brief description' % (pn, self.lictag),
+                    self.fail('LIC_FILES_CHKSUM changed on target %s but there is no "License-Update:" tag in commit message. Include it with a brief description' % pn,
                               data=[('Current checksum', pretest), ('New checksum', test)])
