@@ -8,12 +8,12 @@ inherit package
 
 IMAGE_PKGTYPE ?= "rpm"
 
-RPM="rpm"
-RPMBUILD="rpmbuild"
+RPM = "rpm"
+RPMBUILD = "rpmbuild"
 
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 
-# Maintaining the perfile dependencies has singificant overhead when writing the
+# Maintaining the perfile dependencies has significant overhead when writing the
 # packages. When set, this value merges them for efficiency.
 MERGEPERFILEDEPS = "1"
 
