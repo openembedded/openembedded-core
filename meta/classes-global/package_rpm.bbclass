@@ -633,7 +633,6 @@ python do_package_rpm () {
     workdir = d.getVar('WORKDIR')
     tmpdir = d.getVar('TMPDIR')
     pkgd = d.getVar('PKGD')
-    pkgdest = d.getVar('PKGDEST')
     if not workdir or not pkgd or not tmpdir:
         bb.error("Variables incorrectly set, unable to package")
         return
@@ -660,8 +659,6 @@ python do_package_rpm () {
 
     # Setup the rpmbuild arguments...
     rpmbuild = d.getVar('RPMBUILD')
-    targetsys = d.getVar('TARGET_SYS')
-    targetvendor = d.getVar('HOST_VENDOR')
 
     # Too many places in dnf stack assume that arch-independent packages are "noarch".
     # Let's not fight against this.
@@ -669,7 +666,6 @@ python do_package_rpm () {
     if package_arch == "all":
         package_arch = "noarch"
 
-    sdkpkgsuffix = (d.getVar('SDKPKGSUFFIX') or "nativesdk").replace("-", "_")
     d.setVar('PACKAGE_ARCH_EXTEND', package_arch)
     pkgwritedir = d.expand('${PKGWRITEDIRRPM}/${PACKAGE_ARCH_EXTEND}')
     d.setVar('RPM_PKGWRITEDIR', pkgwritedir)
