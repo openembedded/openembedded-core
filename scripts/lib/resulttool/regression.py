@@ -186,6 +186,18 @@ def get_status_str(raw_status):
     raw_status_lower = raw_status.lower() if raw_status else "None"
     return STATUS_STRINGS.get(raw_status_lower, raw_status)
 
+def get_additional_info_line(new_pass_count, new_tests):
+    result=[]
+    if new_tests:
+        result.append(f'+{new_tests} test(s) present')
+    if new_pass_count:
+        result.append(f'+{new_pass_count} test(s) now passing')
+
+    if not result:
+        return ""
+
+    return '    -> ' + ', '.join(result) + '\n'
+
 def compare_result(logger, base_name, target_name, base_result, target_result, display_limit=None):
     base_result = base_result.get('result')
     target_result = target_result.get('result')
@@ -193,6 +205,8 @@ def compare_result(logger, base_name, target_name, base_result, target_result, d
     new_tests = 0
     regressions = {}
     resultstring = ""
+    new_tests = 0
+    new_pass_count = 0
 
     display_limit = int(display_limit) if display_limit else REGRESSIONS_DISPLAY_LIMIT
 
@@ -234,14 +248,19 @@ def compare_result(logger, base_name, target_name, base_result, target_result, d
                     resultstring+='        [...]\n'
             if new_pass_count > 0:
                 resultstring += f'    Additionally, {new_pass_count} previously failing test(s) is/are now passing\n'
+            if new_tests > 0:
+                resultstring += f'    Additionally, {new_tests} new test(s) is/are present\n'
         else:
-            resultstring = "Improvement: %s\n             %s\n             (+%d test(s) passing)\n" % (base_name, target_name, new_pass_count)
+            resultstring = "%s\n%s\n" % (base_name, target_name)
             result = None
     else:
-        resultstring = "Match:       %s\n             %s\n" % (base_name, target_name)
+        resultstring = "%s\n%s\n" % (base_name, target_name)
 
-    if new_tests > 0:
-        resultstring += f'    Additionally, {new_tests} new test(s) is/are present\n'
+    if not result:
+        additional_info = get_additional_info_line(new_pass_count, new_tests)
+        if additional_info:
+            resultstring += additional_info
+
     return result, resultstring
 
 def get_results(logger, source):
