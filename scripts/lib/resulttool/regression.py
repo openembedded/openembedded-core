@@ -78,6 +78,8 @@ STATUS_STRINGS = {
     "None": "No matching test result"
 }
 
+REGRESSIONS_DISPLAY_LIMIT=50
+
 def test_has_at_least_one_matching_tag(test, tag_list):
     return "oetags" in test and any(oetag in tag_list for oetag in test["oetags"])
 
@@ -181,11 +183,15 @@ def get_status_str(raw_status):
     raw_status_lower = raw_status.lower() if raw_status else "None"
     return STATUS_STRINGS.get(raw_status_lower, raw_status)
 
-def compare_result(logger, base_name, target_name, base_result, target_result):
+def compare_result(logger, base_name, target_name, base_result, target_result, display_limit=None):
     base_result = base_result.get('result')
     target_result = target_result.get('result')
     result = {}
     new_tests = 0
+    regressions = {}
+    resultstring = ""
+
+    display_limit = int(display_limit) if display_limit else REGRESSIONS_DISPLAY_LIMIT
 
     if base_result and target_result:
         for k in base_result:
@@ -212,7 +218,17 @@ def compare_result(logger, base_name, target_name, base_result, target_result):
             resultstring = "Regression:  %s\n             %s\n" % (base_name, target_name)
             for k in sorted(result):
                 if not result[k]['target'] or not result[k]['target'].startswith("PASS"):
-                    resultstring += '    %s: %s -> %s\n' % (k, get_status_str(result[k]['base']), get_status_str(result[k]['target']))
+                    # Differentiate each ptest kind when listing regressions
+                    key = '.'.join(k.split('.')[:2]) if k.startswith('ptest') else k
+                    # Append new regression to corresponding test family
+                    regressions[key] = regressions.setdefault(key, []) + ['        %s: %s -> %s\n' % (k, get_status_str(result[k]['base']), get_status_str(result[k]['target']))]
+            resultstring += f"    Total: {sum([len(regressions[r]) for r in regressions])} new regression(s):\n"
+            for k in regressions:
+                resultstring += f"    {len(regressions[k])} regression(s) for {k}\n"
+                count_to_print=min([display_limit, len(regressions[k])]) if display_limit > 0 else len(regressions[k])
+                resultstring += ''.join(regressions[k][:count_to_print])
+                if count_to_print < len(regressions[k]):
+                    resultstring+='        [...]\n'
             if new_pass_count > 0:
                 resultstring += f'    Additionally, {new_pass_count} previously failing test(s) is/are now passing\n'
         else:
@@ -280,7 +296,7 @@ def regression_common(args, logger, base_results, target_results):
                 for b in target.copy():
                     if not can_be_compared(logger, base_results[a][c], target_results[a][b]):
                         continue
-                    res, resstr = compare_result(logger, c, b, base_results[a][c], target_results[a][b])
+                    res, resstr = compare_result(logger, c, b, base_results[a][c], target_results[a][b], args.limit)
                     if not res:
                         matches.append(resstr)
                         base.remove(c)
@@ -291,7 +307,7 @@ def regression_common(args, logger, base_results, target_results):
                 for b in target:
                     if not can_be_compared(logger, base_results[a][c], target_results[a][b]):
                         continue
-                    res, resstr = compare_result(logger, c, b, base_results[a][c], target_results[a][b])
+                    res, resstr = compare_result(logger, c, b, base_results[a][c], target_results[a][b], args.limit)
                     if res:
                         regressions.append(resstr)
         else:
@@ -403,4 +419,5 @@ def register_commands(subparsers):
     parser_build.add_argument('--commit-number', help="Revision number to search for, redundant if --commit is specified")
     parser_build.add_argument('--commit2', help="Revision to compare with")
     parser_build.add_argument('--commit-number2', help="Revision number to compare with, redundant if --commit2 is specified")
+    parser_build.add_argument('-l', '--limit', default=REGRESSIONS_DISPLAY_LIMIT, help="Maximum number of changes to display per test. Can be set to 0 to print all changes")
 
