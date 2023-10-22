@@ -80,6 +80,9 @@ STATUS_STRINGS = {
 
 REGRESSIONS_DISPLAY_LIMIT=50
 
+MISSING_TESTS_BANNER =   "-------------------------- Missing tests --------------------------"
+ADDITIONAL_DATA_BANNER = "--------------------- Matches and improvements --------------------"
+
 def test_has_at_least_one_matching_tag(test, tag_list):
     return "oetags" in test and any(oetag in tag_list for oetag in test["oetags"])
 
@@ -312,10 +315,11 @@ def regression_common(args, logger, base_results, target_results):
                         regressions.append(resstr)
         else:
             notfound.append("%s not found in target" % a)
-    print("\n".join(sorted(matches)))
-    print("\n")
     print("\n".join(sorted(regressions)))
+    print("\n" + MISSING_TESTS_BANNER + "\n")
     print("\n".join(sorted(notfound)))
+    print("\n" + ADDITIONAL_DATA_BANNER + "\n")
+    print("\n".join(sorted(matches)))
     return 0
 
 def regression_git(args, logger):
