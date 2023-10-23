@@ -773,3 +773,116 @@ addtask tmptask2 before do_tmptask1
                 latestfiles = sorted(filedates.keys(), key=lambda f: filedates[f])[-2:]
                 bb.siggen.compare_sigfiles(latestfiles[-2], latestfiles[-1], recursecb)
                 self.assertEqual(recursecb_count,1)
+
+class SStatePrintdiff(SStateBase):
+    # FIXME: OEBasicHash setting is necessary for now as otherwise the following error can occur:
+    # ERROR: Can't find a task we're supposed to have written out? (hash: e79d70b9c2cc72030c1ce822525510699a1eeb1ddf5986271d3217422244366a)?
+    # The underlying issue should be investigated and addressed.
+    def run_test_printdiff_changerecipe(self, target, change_recipe, change_bbtask, change_content, expected_sametmp_output, expected_difftmp_output):
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
+BB_SIGNATURE_HANDLER = "OEBasicHash"
+""")
+        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff")
+        bitbake(target)
+        bitbake("-S none {}".format(target))
+        bitbake(change_bbtask)
+        self.write_recipeinc(change_recipe, change_content)
+        result_sametmp = bitbake("-S printdiff {}".format(target))
+
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
+BB_SIGNATURE_HANDLER = "OEBasicHash"
+""")
+        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff-2")
+        result_difftmp = bitbake("-S printdiff {}".format(target))
+
+        self.delete_recipeinc(change_recipe)
+        for item in expected_sametmp_output:
+            self.assertIn(item, result_sametmp.output)
+        for item in expected_difftmp_output:
+            self.assertIn(item, result_difftmp.output)
+
+    def run_test_printdiff_changeconfig(self, target, change_content, expected_sametmp_output, expected_difftmp_output):
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
+BB_SIGNATURE_HANDLER = "OEBasicHash"
+""")
+        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff")
+        bitbake(target)
+        bitbake("-S none {}".format(target))
+        self.append_config(change_content)
+        result_sametmp = bitbake("-S printdiff {}".format(target))
+
+        self.write_config("""
+TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
+BB_SIGNATURE_HANDLER = "OEBasicHash"
+""")
+        self.append_config(change_content)
+        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff-2")
+        result_difftmp = bitbake("-S printdiff {}".format(target))
+
+        for item in expected_sametmp_output:
+            self.assertIn(item, result_sametmp.output)
+        for item in expected_difftmp_output:
+            self.assertIn(item, result_difftmp.output)
+
+
+    # Check if printdiff walks the full dependency chain from the image target to where the change is in a specific recipe
+    def test_image_minimal_vs_quilt(self):
+        expected_output = ("Task quilt-native:do_install couldn't be used from the cache because:",
+"We need hash",
+"most recent matching task was")
+        expected_sametmp_output = expected_output + ("Variable do_install value changed",'+    echo "this changes the task signature"')
+        expected_difftmp_output = expected_output
+
+        self.run_test_printdiff_changerecipe("core-image-minimal", "quilt-native", "-c do_install quilt-native",
+"""
+do_install:append() {
+    echo "this changes the task signature"
+}
+""",
+expected_sametmp_output, expected_difftmp_output)
+
+    # Check if changes to gcc-source (which uses tmp/work-shared) are correctly discovered
+    def test_gcc_runtime_vs_gcc_source(self):
+        gcc_source_pn = 'gcc-source-%s' % get_bb_vars(['PV'], 'gcc')['PV']
+
+        expected_output = ("Task {}:do_preconfigure couldn't be used from the cache because:".format(gcc_source_pn),
+"We need hash",
+"most recent matching task was")
+        expected_sametmp_output = expected_output + ("Variable do_preconfigure value changed",'+    print("this changes the task signature")')
+        #FIXME: printdiff is supposed to find at least one preconfigure task signature in the sstate cache, but isn't able to
+        #expected_difftmp_output = expected_output
+        expected_difftmp_output = ()
+
+        self.run_test_printdiff_changerecipe("gcc-runtime", "gcc-source", "-c do_preconfigure {}".format(gcc_source_pn),
+"""
+python do_preconfigure:append() {
+    print("this changes the task signature")
+}
+""",
+expected_sametmp_output, expected_difftmp_output)
+
+    # Check if changing a really base task definiton is reported against multiple core recipes using it
+    def test_image_minimal_vs_base_do_configure(self):
+        expected_output = ("Task zstd-native:do_configure couldn't be used from the cache because:",
+"Task texinfo-dummy-native:do_configure couldn't be used from the cache because:",
+"Task ldconfig-native:do_configure couldn't be used from the cache because:",
+"Task gettext-minimal-native:do_configure couldn't be used from the cache because:",
+"Task tzcode-native:do_configure couldn't be used from the cache because:",
+"Task makedevs-native:do_configure couldn't be used from the cache because:",
+"Task pigz-native:do_configure couldn't be used from the cache because:",
+"Task update-rc.d-native:do_configure couldn't be used from the cache because:",
+"Task unzip-native:do_configure couldn't be used from the cache because:",
+"Task gnu-config-native:do_configure couldn't be used from the cache because:",
+"We need hash",
+"most recent matching task was")
+        expected_sametmp_output = expected_output + ("Variable base_do_configure value changed",'+	echo "this changes base_do_configure() definiton"')
+        expected_difftmp_output = expected_output
+
+        self.run_test_printdiff_changeconfig("core-image-minimal",
+"""
+INHERIT += "base-do-configure-modified"
+""",
+expected_sametmp_output, expected_difftmp_output)
