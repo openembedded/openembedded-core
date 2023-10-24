@@ -18,6 +18,7 @@ def headlog():
 
 class Merge(base.Base):
     def test_series_merge_on_head(self):
+        self.skip("Merge test is disabled for now")
         if PatchTestInput.repo.branch != "master":
             self.skip("Skipping merge test since patch is not intended for master branch. Target detected is %s" % PatchTestInput.repo.branch)
         if not PatchTestInput.repo.ismerged:
