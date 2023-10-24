@@ -53,7 +53,12 @@ with open(result_file, "r") as f:
     testresult = f.read()
 
 reply_contents = greeting + testresult + suggestions
-subject_line = f"Patchtest results for {result_basename}"
+
+# we know these patch files will only contain a single patch, so only
+# worry about the first element for getting the subject
+mbox = mailbox.mbox(args.patch)
+mbox_subject = mbox[0]['subject']
+subject_line = f"Patchtest results for {mbox_subject}"
 
 if "FAIL" in testresult:
     ses_client = boto3.client('ses', region_name='us-west-2')
