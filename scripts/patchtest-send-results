@@ -25,12 +25,8 @@ more information:\n\n---\n"""
 
 suggestions = """\n---\n\nPlease address the issues identified and
 submit a new revision of the patch, or alternatively, reply to this
-email with an explanation of why the patch format should be accepted.
-Note that patchtest may report failures in the merge-on-head test for
-patches that are part of a series if they rely on changes from
-preceeding entries.
-
-If you believe these results are due to an error in patchtest, please
+email with an explanation of why the patch format should be accepted. If
+you believe these results are due to an error in patchtest, please
 submit a bug at https://bugzilla.yoctoproject.org/ (use the 'Patchtest'
 category under 'Yocto Project Subprojects'). Thank you!"""
 
@@ -52,8 +48,6 @@ testresult = None
 with open(result_file, "r") as f:
     testresult = f.read()
 
-reply_contents = greeting + testresult + suggestions
-
 # we know these patch files will only contain a single patch, so only
 # worry about the first element for getting the subject
 mbox = mailbox.mbox(args.patch)
@@ -61,6 +55,13 @@ mbox_subject = mbox[0]['subject']
 subject_line = f"Patchtest results for {mbox_subject}"
 
 if "FAIL" in testresult:
+    reply_contents = None
+    if len(max(open(result_file, 'r'), key=len)) > 220:
+        warning = "Tests failed for the patch, but the results log could not be processed due to excessive result line length."
+        reply_contents = greeting + warning + suggestions
+    else:
+        reply_contents = greeting + testresult + suggestions
+
     ses_client = boto3.client('ses', region_name='us-west-2')
     response = ses_client.send_email(
         Source='patchtest@automation.yoctoproject.org',
