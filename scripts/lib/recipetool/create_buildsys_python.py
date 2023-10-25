@@ -254,7 +254,7 @@ class PythonRecipeHandler(RecipeHandler):
 
         if license_str:
             for i, line in enumerate(lines_before):
-                if line.startswith('LICENSE = '):
+                if line.startswith('##LICENSE_PLACEHOLDER##'):
                     lines_before.insert(i, '# NOTE: License in setup.py/PKGINFO is: %s' % license_str)
                     break
 
