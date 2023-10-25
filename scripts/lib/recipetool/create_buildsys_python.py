@@ -656,6 +656,270 @@ class PythonSetupPyRecipeHandler(PythonRecipeHandler):
 
         handled.append('buildsystem')
 
+class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
+    """Base class to support PEP517 and PEP518
+
+    PEP517 https://peps.python.org/pep-0517/#source-trees
+    PEP518 https://peps.python.org/pep-0518/#build-system-table
+    """
+    # bitbake currently support the 3 following backends
+    build_backend_map = {
+        "setuptools.build_meta": "python_setuptools_build_meta",
+        "poetry.core.masonry.api": "python_poetry_core",
+        "flit_core.buildapi": "python_flit_core",
+    }
+
+    # setuptools.build_meta and flit declare project metadata into the "project" section of pyproject.toml
+    # according to PEP-621: https://packaging.python.org/en/latest/specifications/declaring-project-metadata/#declaring-project-metadata
+    # while poetry uses the "tool.poetry" section according to its official documentation: https://python-poetry.org/docs/pyproject/
+    # keys from "project" and "tool.poetry" sections are almost the same except for the  HOMEPAGE which is "homepage" for tool.poetry
+    # and "Homepage" for "project" section. So keep both
+    bbvar_map = {
+        "name": "PN",
+        "version": "PV",
+        "Homepage": "HOMEPAGE",
+        "homepage": "HOMEPAGE",
+        "description": "SUMMARY",
+        "license": "LICENSE",
+        "dependencies": "RDEPENDS:${PN}",
+        "requires": "DEPENDS",
+    }
+
+    replacements = [
+        ("license", r" +$", ""),
+        ("license", r"^ +", ""),
+        ("license", r" ", "-"),
+        ("license", r"^GNU-", ""),
+        ("license", r"-[Ll]icen[cs]e(,?-[Vv]ersion)?", ""),
+        ("license", r"^UNKNOWN$", ""),
+        # Remove currently unhandled version numbers from these variables
+        ("requires", r"\[[^\]]+\]$", ""),
+        ("requires", r"^([^><= ]+).*", r"\1"),
+        ("dependencies", r"\[[^\]]+\]$", ""),
+        ("dependencies", r"^([^><= ]+).*", r"\1"),
+    ]
+
+    excluded_native_pkgdeps = [
+        # already provided by python_setuptools_build_meta.bbclass
+        "python3-setuptools-native",
+        "python3-wheel-native",
+        # already provided by python_poetry_core.bbclass
+        "python3-poetry-core-native",
+        # already provided by python_flit_core.bbclass
+        "python3-flit-core-native",
+    ]
+
+    # add here a list of known and often used packages and the corresponding bitbake package
+    known_deps_map = {
+        "setuptools": "python3-setuptools",
+        "wheel": "python3-wheel",
+        "poetry-core": "python3-poetry-core",
+        "flit_core": "python3-flit-core",
+        "setuptools-scm": "python3-setuptools-scm",
+    }
+
+    def __init__(self):
+        pass
+
+    def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
+        info = {}
+
+        if 'buildsystem' in handled:
+            return False
+
+        # Check for non-zero size setup.py files
+        setupfiles = RecipeHandler.checkfiles(srctree, ["pyproject.toml"])
+        for fn in setupfiles:
+            if os.path.getsize(fn):
+                break
+        else:
+            return False
+
+        setupscript = os.path.join(srctree, "pyproject.toml")
+
+        try:
+            try:
+                import tomllib
+            except ImportError:
+                try:
+                    import tomli as tomllib
+                except ImportError:
+                    logger.exception("Neither 'tomllib' nor 'tomli' could be imported. Please use python3.11 or above or install tomli module")
+                    return False
+                except Exception:
+                    logger.exception("Failed to parse pyproject.toml")
+                    return False
+
+            with open(setupscript, "rb") as f:
+                config = tomllib.load(f)
+            build_backend = config["build-system"]["build-backend"]
+            if build_backend in self.build_backend_map:
+                classes.append(self.build_backend_map[build_backend])
+            else:
+                logger.error(
+                    "Unsupported build-backend: %s, cannot use pyproject.toml. Will try to use legacy setup.py"
+                    % build_backend
+                )
+                return False
+
+            licfile = ""
+
+            if build_backend == "poetry.core.masonry.api":
+                if "tool" in config and "poetry" in config["tool"]:
+                    metadata = config["tool"]["poetry"]
+            else:
+                if "project" in config:
+                    metadata = config["project"]
+
+            if metadata:
+                for field, values in metadata.items():
+                    if field == "license":
+                        # For setuptools.build_meta and flit, licence is a table
+                        # but for poetry licence is a string
+                        if build_backend == "poetry.core.masonry.api":
+                            value = values
+                        else:
+                            value = values.get("text", "")
+                            if not value:
+                                licfile = values.get("file", "")
+                                continue
+                    elif field == "dependencies" and build_backend == "poetry.core.masonry.api":
+                        # For poetry backend, "dependencies" section looks like:
+                        # [tool.poetry.dependencies]
+                        # requests = "^2.13.0"
+                        # requests = { version = "^2.13.0", source = "private" }
+                        # See https://python-poetry.org/docs/master/pyproject/#dependencies-and-dependency-groups for more details
+                        # This class doesn't handle versions anyway, so we just get the dependencies name here and construct a list
+                        value = []
+                        for k in values.keys():
+                            value.append(k)
+                    elif isinstance(values, dict):
+                        for k, v in values.items():
+                            info[k] = v
+                        continue
+                    else:
+                        value = values
+
+                    info[field] = value
+
+            # Grab the license value before applying replacements
+            license_str = info.get("license", "").strip()
+
+            if license_str:
+                for i, line in enumerate(lines_before):
+                    if line.startswith("##LICENSE_PLACEHOLDER##"):
+                        lines_before.insert(
+                            i, "# NOTE: License in pyproject.toml is: %s" % license_str
+                        )
+                        break
+
+            info["requires"] = config["build-system"]["requires"]
+
+            self.apply_info_replacements(info)
+
+            if "classifiers" in info:
+                license = self.handle_classifier_license(
+                    info["classifiers"], info.get("license", "")
+                )
+                if license:
+                    if licfile:
+                        lines = []
+                        md5value = bb.utils.md5_file(os.path.join(srctree, licfile))
+                        lines.append('LICENSE = "%s"' % license)
+                        lines.append(
+                            'LIC_FILES_CHKSUM = "file://%s;md5=%s"'
+                            % (licfile, md5value)
+                        )
+                        lines.append("")
+
+                        # Replace the placeholder so we get the values in the right place in the recipe file
+                        try:
+                            pos = lines_before.index("##LICENSE_PLACEHOLDER##")
+                        except ValueError:
+                            pos = -1
+                        if pos == -1:
+                            lines_before.extend(lines)
+                        else:
+                            lines_before[pos : pos + 1] = lines
+
+                        handled.append(("license", [license, licfile, md5value]))
+                    else:
+                        info["license"] = license
+
+            provided_packages = self.parse_pkgdata_for_python_packages()
+            provided_packages.update(self.known_deps_map)
+            native_mapped_deps, native_unmapped_deps = set(), set()
+            mapped_deps, unmapped_deps = set(), set()
+
+            if "requires" in info:
+                for require in info["requires"]:
+                    mapped = provided_packages.get(require)
+
+                    if mapped:
+                        logger.debug("Mapped %s to %s" % (require, mapped))
+                        native_mapped_deps.add(mapped)
+                    else:
+                        logger.debug("Could not map %s" % require)
+                        native_unmapped_deps.add(require)
+
+                info.pop("requires")
+
+                if native_mapped_deps != set():
+                    native_mapped_deps = {
+                        item + "-native" for item in native_mapped_deps
+                    }
+                    native_mapped_deps -= set(self.excluded_native_pkgdeps)
+                    if native_mapped_deps != set():
+                        info["requires"] = " ".join(sorted(native_mapped_deps))
+
+                if native_unmapped_deps:
+                    lines_after.append("")
+                    lines_after.append(
+                        "# WARNING: We were unable to map the following python package/module"
+                    )
+                    lines_after.append(
+                        "# dependencies to the bitbake packages which include them:"
+                    )
+                    lines_after.extend(
+                        "#    {}".format(d) for d in sorted(native_unmapped_deps)
+                    )
+
+            if "dependencies" in info:
+                for dependency in info["dependencies"]:
+                    mapped = provided_packages.get(dependency)
+                    if mapped:
+                        logger.debug("Mapped %s to %s" % (dependency, mapped))
+                        mapped_deps.add(mapped)
+                    else:
+                        logger.debug("Could not map %s" % dependency)
+                        unmapped_deps.add(dependency)
+
+                info.pop("dependencies")
+
+                if mapped_deps != set():
+                    if mapped_deps != set():
+                        info["dependencies"] = " ".join(sorted(mapped_deps))
+
+                if unmapped_deps:
+                    lines_after.append("")
+                    lines_after.append(
+                        "# WARNING: We were unable to map the following python package/module"
+                    )
+                    lines_after.append(
+                        "# runtime dependencies to the bitbake packages which include them:"
+                    )
+                    lines_after.extend(
+                        "#    {}".format(d) for d in sorted(unmapped_deps)
+                    )
+
+            self.map_info_to_bbvar(info, extravalues)
+
+            handled.append("buildsystem")
+        except Exception:
+            logger.exception("Failed to correctly handle pyproject.toml, falling back to another method")
+            return False
+
+
 def gather_setup_info(fileobj):
     parsed = ast.parse(fileobj.read(), fileobj.name)
     visitor = SetupScriptVisitor()
@@ -769,5 +1033,7 @@ def has_non_literals(value):
 
 
 def register_recipe_handlers(handlers):
-    # We need to make sure this is ahead of the makefile fallback handler
+    # We need to make sure these are ahead of the makefile fallback handler
+    # and the pyproject.toml handler ahead of the setup.py handler
+    handlers.append((PythonPyprojectTomlRecipeHandler(), 75))
     handlers.append((PythonSetupPyRecipeHandler(), 70))
