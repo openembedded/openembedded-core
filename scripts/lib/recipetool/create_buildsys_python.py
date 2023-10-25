@@ -297,6 +297,11 @@ class PythonRecipeHandler(RecipeHandler):
                 value = ' '.join(str(v) for v in values if v)
 
             bbvar = self.bbvar_map[field]
+            if bbvar == "PN":
+                # by convention python recipes start with "python3-"
+                if not value.startswith('python'):
+                    value = 'python3-' + value
+
             if bbvar not in extravalues and value:
                 extravalues[bbvar] = value
 
