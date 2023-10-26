@@ -6,7 +6,7 @@ After=sshdgenkeys.service
 [Service]
 Environment="SSHD_OPTS="
 EnvironmentFile=-/etc/default/ssh
-ExecStartPre=/usr/bin/mkdir -p /var/run/sshd
+ExecStartPre=@BASE_BINDIR@/mkdir -p /var/run/sshd
 ExecStart=-@SBINDIR@/sshd -D $SSHD_OPTS
 ExecReload=@BASE_BINDIR@/kill -HUP $MAINPID
 KillMode=process
