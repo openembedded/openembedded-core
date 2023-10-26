@@ -4,6 +4,7 @@ IMAGE_PKGTYPE ?= "rpm"
 
 RPM="rpm"
 RPMBUILD="rpmbuild"
+RPMBUILD_COMPMODE ?= "${@'w19T%d.zstdio' % int(d.getVar('ZSTD_THREADS'))}"
 
 PKGWRITEDIRRPM = "${WORKDIR}/deploy-rpms"
 
@@ -652,6 +653,7 @@ python do_package_rpm () {
 
     # Setup the rpmbuild arguments...
     rpmbuild = d.getVar('RPMBUILD')
+    rpmbuild_compmode = d.getVar('RPMBUILD_COMPMODE')
     targetsys = d.getVar('TARGET_SYS')
     targetvendor = d.getVar('HOST_VENDOR')
 
@@ -678,8 +680,8 @@ python do_package_rpm () {
     cmd = cmd + " --define '_use_internal_dependency_generator 0'"
     cmd = cmd + " --define '_binaries_in_noarch_packages_terminate_build 0'"
     cmd = cmd + " --define '_build_id_links none'"
-    cmd = cmd + " --define '_binary_payload w19T%d.zstdio'" % int(d.getVar("ZSTD_THREADS"))
-    cmd = cmd + " --define '_source_payload w19T%d.zstdio'" % int(d.getVar("ZSTD_THREADS"))
+    cmd = cmd + " --define '_source_payload %s'" % rpmbuild_compmode
+    cmd = cmd + " --define '_binary_payload %s'" % rpmbuild_compmode
     cmd = cmd + " --define 'clamp_mtime_to_source_date_epoch 1'"
     cmd = cmd + " --define 'use_source_date_epoch_as_buildtime 1'"
     cmd = cmd + " --define '_buildhost reproducible'"
