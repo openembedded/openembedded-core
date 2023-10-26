@@ -56,7 +56,7 @@ index 547587bef4..76975a6729 100644
  
 -SRC_URI = "file://helloworld.c"
 +SRC_URI = "file://helloworld.c \
-+           file://CVE-1234-56789.patch \
++           file://0001-Fix-CVE-1234-56789.patch \
 +           "
  
  S = "${WORKDIR}"
