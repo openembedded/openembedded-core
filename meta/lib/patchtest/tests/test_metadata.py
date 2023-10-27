@@ -116,7 +116,7 @@ class TestMetadata(base.Metadata):
                     if self.lictag_re.search_string(commit.commit_message):
                        break
                 else:
-                    self.fail('LIC_FILES_CHKSUM changed on target %s but there is no "License-Update:" tag in commit message. Include it with a brief description' % pn,
+                    self.fail('LIC_FILES_CHKSUM changed without "License-Update:" tag and description in commit message',
                               data=[('Current checksum', pretest), ('New checksum', test)])
 
     def test_max_line_length(self):
