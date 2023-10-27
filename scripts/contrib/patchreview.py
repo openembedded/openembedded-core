@@ -197,7 +197,7 @@ def histogram(results):
     for k in bars:
         print("%-20s %s (%d)" % (k.capitalize() if k else "No status", bars[k], counts[k]))
 
-def gather_patches(candidate):
+def find_layers(candidate):
     # candidate can either be the path to a layer directly (eg meta-intel), or a
     # repository that contains other layers (meta-arm). We can determine what by
     # looking for a conf/layer.conf file. If that file exists then it's a layer,
@@ -205,18 +205,25 @@ def gather_patches(candidate):
     # meta-*.
 
     if (candidate / "conf" / "layer.conf").exists():
-        print(f"{candidate} is a layer")
-        scan = [candidate]
+        return [candidate.absolute()]
     else:
-        print(f"{candidate} is not a layer, checking for sub-layers")
-        scan = [d for d in candidate.iterdir() if d.is_dir() and (d.name == "meta" or d.name.startswith("meta-"))]
-        print(f"Found layers {' '.join((d.name for d in scan))}")
+        return [d.absolute() for d in candidate.iterdir() if d.is_dir() and (d.name == "meta" or d.name.startswith("meta-"))]
 
+# TODO these don't actually handle dynamic-layers/
+
+def gather_patches(layers):
     patches = []
-    for directory in scan:
+    for directory in layers:
         filenames = subprocess.check_output(("git", "-C", directory, "ls-files", "recipes-*/**/*.patch", "recipes-*/**/*.diff"), universal_newlines=True).split()
         patches += [os.path.join(directory, f) for f in filenames]
     return patches
+
+def count_recipes(layers):
+    count = 0
+    for directory in layers:
+        output = subprocess.check_output(["git", "-C", directory, "ls-files", "recipes-*/**/*.bb"], universal_newlines=True)
+        count += len(output.splitlines())
+    return count
 
 if __name__ == "__main__":
     import argparse, subprocess, os, pathlib
@@ -229,7 +236,9 @@ if __name__ == "__main__":
     args.add_argument("directory", type=pathlib.Path, metavar="DIRECTORY", help="directory to scan (layer, or repository of layers)")
     args = args.parse_args()
 
-    patches = gather_patches(args.directory)
+    layers = find_layers(args.directory)
+    print(f"Found layers {' '.join((d.name for d in layers))}")
+    patches = gather_patches(layers)
     results = patchreview(patches)
     analyse(results, want_blame=args.blame, verbose=args.verbose)
 
@@ -242,8 +251,11 @@ if __name__ == "__main__":
 
         row = collections.Counter()
         row["total"] = len(results)
-        row["date"] = subprocess.check_output(["git", "-C", args.directory, "show", "-s", "--pretty=format:%cd", "--date=format:%s"]).decode("utf-8").strip()
-        row["commit"] = subprocess.check_output(["git", "-C", args.directory, "show", "-s", "--pretty=format:%H"]).decode("utf-8").strip()
+        row["date"] = subprocess.check_output(["git", "-C", args.directory, "show", "-s", "--pretty=format:%cd", "--date=format:%s"], universal_newlines=True).strip()
+        row["commit"] = subprocess.check_output(["git", "-C", args.directory, "show-ref", "--hash", "HEAD"], universal_newlines=True).strip()
+        row['commit_count'] = subprocess.check_output(["git", "-C", args.directory, "rev-list", "--count", "HEAD"], universal_newlines=True).strip()
+        row['recipe_count'] = count_recipes(layers)
+
         for r in results.values():
             if r.upstream_status in status_values:
                 row[r.upstream_status] += 1
