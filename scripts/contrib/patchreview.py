@@ -5,6 +5,15 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import argparse
+import collections
+import json
+import os
+import os.path
+import pathlib
+import re
+import subprocess
+
 # TODO
 # - option to just list all broken files
 # - test suite
@@ -35,14 +44,12 @@ def blame_patch(patch):
     From a patch filename, return a list of "commit summary (author name <author
     email>)" strings representing the history.
     """
-    import subprocess
     return subprocess.check_output(("git", "log",
                                     "--follow", "--find-renames", "--diff-filter=A",
                                     "--format=%s (%aN <%aE>)",
                                     "--", patch)).decode("utf-8").splitlines()
 
 def patchreview(patches):
-    import re, os.path
 
     # General pattern: start of line, optional whitespace, tag with optional
     # hyphen or spaces, maybe a colon, some whitespace, then the value, all case
@@ -192,6 +199,7 @@ Patches in Pending state: %s""" % (total_patches,
 def histogram(results):
     from toolz import recipes, dicttoolz
     import math
+
     counts = recipes.countby(lambda r: r.upstream_status, results.values())
     bars = dicttoolz.valmap(lambda v: "#" * int(math.ceil(float(v) / len(results) * 100)), counts)
     for k in bars:
@@ -226,8 +234,6 @@ def count_recipes(layers):
     return count
 
 if __name__ == "__main__":
-    import argparse, subprocess, os, pathlib
-
     args = argparse.ArgumentParser(description="Patch Review Tool")
     args.add_argument("-b", "--blame", action="store_true", help="show blame for malformed patches")
     args.add_argument("-v", "--verbose", action="store_true", help="show per-patch results")
@@ -243,7 +249,6 @@ if __name__ == "__main__":
     analyse(results, want_blame=args.blame, verbose=args.verbose)
 
     if args.json:
-        import json, os.path, collections
         if os.path.isfile(args.json):
             data = json.load(open(args.json))
         else:
