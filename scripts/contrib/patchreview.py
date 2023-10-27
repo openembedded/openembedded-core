@@ -41,7 +41,7 @@ def blame_patch(patch):
                                     "--format=%s (%aN <%aE>)",
                                     "--", patch)).decode("utf-8").splitlines()
 
-def patchreview(path, patches):
+def patchreview(patches):
     import re, os.path
 
     # General pattern: start of line, optional whitespace, tag with optional
@@ -56,11 +56,10 @@ def patchreview(path, patches):
 
     for patch in patches:
 
-        fullpath = os.path.join(path, patch)
         result = Result()
-        results[fullpath] = result
+        results[patch] = result
 
-        content = open(fullpath, encoding='ascii', errors='ignore').read()
+        content = open(patch, encoding='ascii', errors='ignore').read()
 
         # Find the Signed-off-by tag
         match = sob_re.search(content)
@@ -198,21 +197,40 @@ def histogram(results):
     for k in bars:
         print("%-20s %s (%d)" % (k.capitalize() if k else "No status", bars[k], counts[k]))
 
+def gather_patches(candidate):
+    # candidate can either be the path to a layer directly (eg meta-intel), or a
+    # repository that contains other layers (meta-arm). We can determine what by
+    # looking for a conf/layer.conf file. If that file exists then it's a layer,
+    # otherwise its a repository of layers and we can assume they're called
+    # meta-*.
+
+    if (candidate / "conf" / "layer.conf").exists():
+        print(f"{candidate} is a layer")
+        scan = [candidate]
+    else:
+        print(f"{candidate} is not a layer, checking for sub-layers")
+        scan = [d for d in candidate.iterdir() if d.is_dir() and (d.name == "meta" or d.name.startswith("meta-"))]
+        print(f"Found layers {' '.join((d.name for d in scan))}")
+
+    patches = []
+    for directory in scan:
+        filenames = subprocess.check_output(("git", "-C", directory, "ls-files", "recipes-*/**/*.patch", "recipes-*/**/*.diff"), universal_newlines=True).split()
+        patches += [os.path.join(directory, f) for f in filenames]
+    return patches
 
 if __name__ == "__main__":
-    import argparse, subprocess, os
+    import argparse, subprocess, os, pathlib
 
     args = argparse.ArgumentParser(description="Patch Review Tool")
     args.add_argument("-b", "--blame", action="store_true", help="show blame for malformed patches")
     args.add_argument("-v", "--verbose", action="store_true", help="show per-patch results")
     args.add_argument("-g", "--histogram", action="store_true", help="show patch histogram")
     args.add_argument("-j", "--json", help="update JSON")
-    args.add_argument("-p", "--pattern", nargs=1, action="extend", default=["recipes-*/**/*.patch", "recipes-*/**/*.diff"], help="pattern to search recipes patch")
-    args.add_argument("directory", help="directory to scan")
+    args.add_argument("directory", type=pathlib.Path, metavar="DIRECTORY", help="directory to scan (layer, or repository of layers)")
     args = args.parse_args()
 
-    patches = subprocess.check_output(("git", "-C", args.directory, "ls-files") + tuple(args.pattern)).decode("utf-8").split()
-    results = patchreview(args.directory, patches)
+    patches = gather_patches(args.directory)
+    results = patchreview(patches)
     analyse(results, want_blame=args.blame, verbose=args.verbose)
 
     if args.json:
