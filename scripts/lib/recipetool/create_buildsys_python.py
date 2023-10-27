@@ -662,11 +662,12 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
     PEP517 https://peps.python.org/pep-0517/#source-trees
     PEP518 https://peps.python.org/pep-0518/#build-system-table
     """
-    # bitbake currently support the 3 following backends
+    # bitbake currently supports the 4 following backends
     build_backend_map = {
         "setuptools.build_meta": "python_setuptools_build_meta",
         "poetry.core.masonry.api": "python_poetry_core",
         "flit_core.buildapi": "python_flit_core",
+        "hatchling.build": "python_hatchling",
     }
 
     # setuptools.build_meta and flit declare project metadata into the "project" section of pyproject.toml
@@ -716,6 +717,8 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
         "poetry-core": "python3-poetry-core",
         "flit_core": "python3-flit-core",
         "setuptools-scm": "python3-setuptools-scm",
+        "hatchling": "python3-hatchling",
+        "hatch-vcs": "python3-hatch-vcs",
     }
 
     def __init__(self):
@@ -776,6 +779,7 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
                     if field == "license":
                         # For setuptools.build_meta and flit, licence is a table
                         # but for poetry licence is a string
+                        # for hatchling, both table (jsonschema) and string (iniconfig) have been used
                         if build_backend == "poetry.core.masonry.api":
                             value = values
                         else:
