@@ -100,7 +100,7 @@ class TestMbox(base.Base):
             self.skip("Skipping merge test since patch is not intended for master branch. Target detected is %s" % PatchTestInput.repo.branch)
         if not PatchTestInput.repo.ismerged:
             commithash, author, date, shortlog = headlog()
-            self.fail('Series does not apply on top of target branch. Rebase your series and ensure the target is correct',
+            self.fail('Series does not apply on top of target branch %s' % PatchTestInput.repo.branch,
                       data=[('Targeted branch', '%s (currently at %s)' % (PatchTestInput.repo.branch, commithash))])
 
     def test_target_mailing_list(self):
@@ -114,7 +114,7 @@ class TestMbox(base.Base):
         for commit in TestMbox.commits:
             match = project_regex.search_string(commit.subject)
             if match:
-                self.fail('Series sent to the wrong mailing list. Check the project\'s README (%s) and send the patch to the indicated list' % match.group('project'),
+                self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists',
                           commit=commit)
 
         for patch in self.patchset:
@@ -122,7 +122,7 @@ class TestMbox(base.Base):
             base_path = folders[0]
             for project in [self.bitbake, self.doc, self.oe, self.poky]:
                 if base_path in  project.paths:
-                    self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists. Send the series again to the correct mailing list (ML)',
+                    self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists',
                               data=[('Suggested ML', '%s [%s]' % (project.listemail, project.gitrepo)),
                                     ('Patch\'s path:', patch.path)])
 
@@ -130,18 +130,18 @@ class TestMbox(base.Base):
             if base_path.startswith('scripts'):
                 for poky_file in self.poky_scripts:
                     if patch.path.startswith(poky_file):
-                        self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists. Send the series again to the correct mailing list (ML)',
+                        self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists',
                                   data=[('Suggested ML', '%s [%s]' % (self.poky.listemail, self.poky.gitrepo)),('Patch\'s path:', patch.path)])
 
     def test_mbox_format(self):
         if self.unidiff_parse_error:
-            self.fail('Series cannot be parsed correctly due to malformed diff lines. Create the series again using git-format-patch and ensure it can be applied using git am',
+            self.fail('Series has malformed diff lines. Create the series again using git-format-patch and ensure it applies using git am',
                       data=[('Diff line',self.unidiff_parse_error)])
 
     def test_commit_message_presence(self):
         for commit in TestMbox.commits:
             if not commit.commit_message.strip():
-                self.fail('Mbox is missing a descriptive commit message. Please include a commit message on your patch explaining the change', commit=commit)
+                self.fail('Please include a commit message on your patch explaining the change', commit=commit)
 
     def test_cve_presence_in_commit_message(self):
         if self.unidiff_parse_error:
@@ -161,7 +161,7 @@ class TestMbox(base.Base):
             if not self.patch_prog.search_string(commit.payload):
                 self.skip("No CVE tag in added patch, so not needed in mbox")
             elif not self.prog.search_string(commit.payload):
-                self.fail('Missing or incorrectly formatted CVE tag in mbox. Correct or include the CVE tag in the mbox with format: "CVE: CVE-YYYY-XXXX"',
+                self.fail('A CVE tag should be provided in the commit message with format: "CVE: CVE-YYYY-XXXX"',
                           commit=commit)
 
     def test_bugzilla_entry_format(self):
