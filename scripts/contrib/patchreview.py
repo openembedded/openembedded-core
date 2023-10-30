@@ -257,7 +257,7 @@ if __name__ == "__main__":
         row = collections.Counter()
         row["total"] = len(results)
         row["date"] = subprocess.check_output(["git", "-C", args.directory, "show", "-s", "--pretty=format:%cd", "--date=format:%s"], universal_newlines=True).strip()
-        row["commit"] = subprocess.check_output(["git", "-C", args.directory, "show-ref", "--hash", "HEAD"], universal_newlines=True).strip()
+        row["commit"] = subprocess.check_output(["git", "-C", args.directory, "rev-parse", "HEAD"], universal_newlines=True).strip()
         row['commit_count'] = subprocess.check_output(["git", "-C", args.directory, "rev-list", "--count", "HEAD"], universal_newlines=True).strip()
         row['recipe_count'] = count_recipes(layers)
 
