@@ -17,6 +17,7 @@ import boto3
 import configparser
 import mailbox
 import os
+import re
 import sys
 
 greeting = """Thank you for your submission. Patchtest identified one
@@ -25,10 +26,12 @@ more information:\n\n---\n"""
 
 suggestions = """\n---\n\nPlease address the issues identified and
 submit a new revision of the patch, or alternatively, reply to this
-email with an explanation of why the patch format should be accepted. If
-you believe these results are due to an error in patchtest, please
-submit a bug at https://bugzilla.yoctoproject.org/ (use the 'Patchtest'
-category under 'Yocto Project Subprojects'). Thank you!"""
+email with an explanation of why the patch should be accepted. If you
+believe these results are due to an error in patchtest, please submit a
+bug at https://bugzilla.yoctoproject.org/ (use the 'Patchtest' category
+under 'Yocto Project Subprojects'). For more information on specific
+failures, see: https://wiki.yoctoproject.org/wiki/Patchtest. Thank
+you!"""
 
 parser = argparse.ArgumentParser(description="Send patchtest results to a submitter for a given patch")
 parser.add_argument("-p", "--patch", dest="patch", required=True, help="The patch file to summarize")
@@ -54,6 +57,10 @@ mbox = mailbox.mbox(args.patch)
 mbox_subject = mbox[0]['subject']
 subject_line = f"Patchtest results for {mbox_subject}"
 
+# extract the submitter email address and use it as the reply address
+# for the results
+reply_address = re.findall("<(.*)>", mbox[0]['from'])
+
 if "FAIL" in testresult:
     reply_contents = None
     if len(max(open(result_file, 'r'), key=len)) > 220:
@@ -66,9 +73,9 @@ if "FAIL" in testresult:
     response = ses_client.send_email(
         Source='patchtest@automation.yoctoproject.org',
         Destination={
-            'ToAddresses': ['test-list@lists.yoctoproject.org'],
+            'CcAddresses': ['openembedded-core@lists.openembedded.org'],
         },
-        ReplyToAddresses=['test-list@lists.yoctoproject.org'],
+        ReplyToAddresses=reply_address,
         Message={
             'Subject': {
                 'Data': subject_line,
