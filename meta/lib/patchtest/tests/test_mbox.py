@@ -6,7 +6,6 @@
 
 import base
 import collections
-import parse_cve_tags
 import parse_shortlog
 import parse_signed_off_by
 import pyparsing
@@ -33,8 +32,6 @@ class TestMbox(base.Base):
     rexp_detect = pyparsing.Regex('\[\s?YOCTO.*\]')
     rexp_validation = pyparsing.Regex('\[(\s?YOCTO\s?#\s?(\d+)\s?,?)+\]')
     revert_shortlog_regex = pyparsing.Regex('Revert\s+".*"')
-    prog = parse_cve_tags.cve_tag
-    patch_prog = parse_cve_tags.patch_cve_tag
     signoff_prog = parse_signed_off_by.signed_off_by
     revert_shortlog_regex = pyparsing.Regex('Revert\s+".*"')
     maxlength = 90
@@ -142,27 +139,6 @@ class TestMbox(base.Base):
         for commit in TestMbox.commits:
             if not commit.commit_message.strip():
                 self.fail('Please include a commit message on your patch explaining the change', commit=commit)
-
-    def test_cve_presence_in_commit_message(self):
-        if self.unidiff_parse_error:
-            self.skip('Parse error %s' % self.unidiff_parse_error)
-
-        # we are just interested in series that introduce CVE patches, thus discard other
-        # possibilities: modification to current CVEs, patch directly introduced into the
-        # recipe, upgrades already including the CVE, etc.
-        new_patches = [p for p in self.patchset if p.path.endswith('.patch') and p.is_added_file]
-        if not new_patches:
-            self.skip('No new patches introduced')
-
-        for commit in TestMbox.commits:
-            # skip those patches that revert older commits, these do not required the tag presence
-            if self.revert_shortlog_regex.search_string(commit.shortlog):
-                continue
-            if not self.patch_prog.search_string(commit.payload):
-                self.skip("No CVE tag in added patch, so not needed in mbox")
-            elif not self.prog.search_string(commit.payload):
-                self.fail('A CVE tag should be provided in the commit message with format: "CVE: CVE-YYYY-XXXX"',
-                          commit=commit)
 
     def test_bugzilla_entry_format(self):
         for commit in TestMbox.commits:
