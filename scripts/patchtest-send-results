@@ -59,7 +59,16 @@ subject_line = f"Patchtest results for {mbox_subject}"
 
 # extract the submitter email address and use it as the reply address
 # for the results
-reply_address = re.findall("<(.*)>", mbox[0]['from'])
+reply_address = re.findall("<(.*)>", mbox[0]['from'])[0]
+
+# extract the message ID and use that as the in-reply-to address
+in_reply_to = re.findall("<(.*)>", mbox[0]['Message-ID'])[0]
+
+# the address the results email is sent from
+from_address = "patchtest@automation.yoctoproject.org"
+
+# mailing list to CC
+cc_address = "openembedded-core@lists.openembedded.org"
 
 if "FAIL" in testresult:
     reply_contents = None
@@ -70,24 +79,18 @@ if "FAIL" in testresult:
         reply_contents = greeting + testresult + suggestions
 
     ses_client = boto3.client('ses', region_name='us-west-2')
-    response = ses_client.send_email(
-        Source='patchtest@automation.yoctoproject.org',
-        Destination={
-            'CcAddresses': ['openembedded-core@lists.openembedded.org'],
+    raw_data = 'From: ' + from_address + '\nTo: ' + reply_address + \
+        '\nCC: ' + cc_address + '\nSubject:' + subject_line + \
+        '\nIn-Reply-To:' + in_reply_to + \
+        '\nMIME-Version: 1.0" + \
+        "\nContent-type: Multipart/Mixed;boundary="NextPart"\n\n--NextPart\nContent-Type: text/plain\n\n' + \
+        reply_contents + '\n\n--NextPart'
+    response = ses_client.send_raw_email(
+        Source="patchtest@automation.yoctoproject.org",
+        RawMessage={
+            "Data": raw_data,
         },
-        ReplyToAddresses=reply_address,
-        Message={
-            'Subject': {
-                'Data': subject_line,
-                'Charset': 'utf-8'
-            },
-            'Body': {
-                'Text': {
-                    'Data': reply_contents,
-                    'Charset': 'utf-8'
-                }
-            }
-        }
     )
+
 else:
     print(f"No failures identified for {args.patch}.")
