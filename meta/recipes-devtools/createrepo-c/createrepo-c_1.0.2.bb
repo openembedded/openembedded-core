@@ -7,10 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 SRC_URI = "git://github.com/rpm-software-management/createrepo_c;branch=master;protocol=https \
            file://0001-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            file://0001-include-rpm-rpmstring.h.patch \
-           file://time64fix.patch \
            "
 
-SRCREV = "e7af838e04009cd2f848a00e1ea31cc42c8f3ae7"
+SRCREV = "e87636334a3bc5d6ddfdb6c0b34042e96987efb1"
 
 S = "${WORKDIR}/git"
 
