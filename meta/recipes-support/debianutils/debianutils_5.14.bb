@@ -6,12 +6,12 @@ HOMEPAGE = "https://packages.debian.org/sid/debianutils"
 BUGTRACKER = "https://bugs.debian.org/cgi-bin/pkgreport.cgi?pkg=debianutils;dist=unstable"
 SECTION = "base"
 LICENSE = "GPL-2.0-only & SMAIL_GPL"
-LIC_FILES_CHKSUM = "file://debian/copyright;md5=74765f57ae5dd2b10ffbc39528d98753"
+LIC_FILES_CHKSUM = "file://debian/copyright;md5=4b667f30411d21bc8fd7db85d502a8e9"
 
 SRC_URI = "git://salsa.debian.org/debian/debianutils.git;protocol=https;branch=master \
            "
 
-SRCREV = "d49a78eb264c1b2ad3d0d6de8e1fb776bda9c943"
+SRCREV = "7e63b32ea4126c70a5da958f0106add267810a94"
 
 inherit autotools update-alternatives
 
