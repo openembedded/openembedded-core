@@ -220,16 +220,16 @@ python copy_buildsystem () {
         if os.path.exists(os.path.join(baseoutpath, relpath)):
             conf_initpath = relpath
 
-        relpath = os.path.join('layers', path, 'scripts', 'devtool')
+        relpath = os.path.join('layers', path, 'scripts', 'esdk-tools', 'devtool')
         if os.path.exists(os.path.join(baseoutpath, relpath)):
-            scriptrelpath = os.path.dirname(relpath)
+            esdk_tools_path = os.path.dirname(relpath)
 
         relpath = os.path.join('layers', path, 'meta')
         if os.path.exists(os.path.join(baseoutpath, relpath, 'lib', 'oe')):
             core_meta_subdir = relpath
 
     d.setVar('oe_init_build_env_path', conf_initpath)
-    d.setVar('scriptrelpath', scriptrelpath)
+    d.setVar('esdk_tools_path', esdk_tools_path)
 
     # Write out config file for devtool
     import configparser
@@ -627,14 +627,6 @@ def get_sdk_required_utilities(buildtools_fn, d):
     return ' '.join(sanity_required_utilities)
 
 install_tools() {
-	install -d ${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}
-	scripts="devtool recipetool oe-find-native-sysroot runqemu* wic"
-	for script in $scripts; do
-		for scriptfn in `find ${SDK_OUTPUT}/${SDKPATH}/${scriptrelpath} -maxdepth 1 -executable -name "$script"`; do
-			targetscriptfn="${SDK_OUTPUT}/${SDKPATHNATIVE}${bindir_nativesdk}/$(basename $scriptfn)"
-			test -e ${targetscriptfn} || ln -rs ${scriptfn} ${targetscriptfn}
-		done
-	done
 	touch ${SDK_OUTPUT}/${SDKPATH}/.devtoolbase
 
 	# find latest buildtools-tarball and install it
@@ -713,7 +705,7 @@ sdk_ext_postinst() {
 
 	# A bit of another hack, but we need this in the path only for devtool
 	# so put it at the end of $PATH.
-	echo "export PATH=\"$target_sdk_dir/sysroots/${SDK_SYS}${bindir_nativesdk}:\$PATH\"" >> $env_setup_script
+	echo "export PATH=\"$target_sdk_dir/${esdk_tools_path}:\$PATH\"" >> $env_setup_script
 
 	echo "printf 'SDK environment now set up; additionally you may now run devtool to perform development tasks.\nRun devtool --help for further details.\n'" >> $env_setup_script
 
