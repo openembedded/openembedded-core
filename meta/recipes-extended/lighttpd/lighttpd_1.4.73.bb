@@ -16,7 +16,7 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
            file://lighttpd \
            "
 
-SRC_URI[sha256sum] = "f7cade4d69b754a0748c01463c33cd8b456ca9cc03bb09e85a71bcbcd54e55ec"
+SRC_URI[sha256sum] = "818816d0b314b0aa8728a7076513435f6d5eb227f3b61323468e1f10dbe84ca8"
 
 DEPENDS = "virtual/crypt"
 
