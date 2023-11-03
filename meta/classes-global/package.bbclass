@@ -60,7 +60,6 @@ ALL_MULTILIB_PACKAGE_ARCHS = "${@all_multilib_tune_values(d, 'PACKAGE_ARCHS')}"
 # dwarfsrcfiles is used to determine the list of debug source files
 PACKAGE_DEPENDS += "rpm-native dwarfsrcfiles-native"
 
-
 # If your postinstall can execute at rootfs creation time rather than on
 # target but depends on a native/cross tool in order to execute, you need to
 # list that tool in PACKAGE_WRITE_DEPS. Target package dependencies belong
@@ -614,3 +613,22 @@ python do_packagedata_setscene () {
 }
 addtask do_packagedata_setscene
 
+# This part ensures all the runtime packages built by the time
+# dynamic renaming occures, if any.
+# This part moved here from debian.bbclass (see for reference) in
+# order to allow disabling default inheritance on debian package renaming.
+
+PKGRDEP = "do_packagedata"
+do_package_write_ipk[deptask] = "${PKGRDEP}"
+do_package_write_deb[deptask] = "${PKGRDEP}"
+do_package_write_tar[deptask] = "${PKGRDEP}"
+do_package_write_rpm[deptask] = "${PKGRDEP}"
+do_package_write_ipk[rdeptask] = "${PKGRDEP}"
+do_package_write_deb[rdeptask] = "${PKGRDEP}"
+do_package_write_tar[rdeptask] = "${PKGRDEP}"
+do_package_write_rpm[rdeptask] = "${PKGRDEP}"
+
+python () {
+    if not d.getVar("PACKAGES"):
+        d.setVar("PKGRDEP", "")
+}
