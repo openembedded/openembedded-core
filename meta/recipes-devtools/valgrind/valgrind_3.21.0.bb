@@ -92,6 +92,18 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl'"
 # which fixes build path issue in DWARF.
 SELECTED_OPTIMIZATION = "${DEBUG_FLAGS}"
 
+# Split out various helper scripts to separate packages to avoid the
+# main package depending on perl and python.
+PACKAGES =+ "${PN}-cachegrind ${PN}-massif ${PN}-callgrind"
+
+FILES:${PN}-cachegrind = "${bindir}/cg_*"
+FILES:${PN}-massif = "${bindir}/ms_*"
+FILES:${PN}-callgrind = "${bindir}/callgrind_*"
+
+RDEPENDS:${PN}-cachegrind = "${PN} python3-core"
+RDEPENDS:${PN}-massif = "${PN} perl"
+RDEPENDS:${PN}-callgrind = "${PN} perl"
+
 do_configure:prepend () {
     rm -rf ${S}/config.h
     sed -i -e 's:$(abs_top_builddir):$(pkglibdir)/ptest:g' ${S}/none/tests/Makefile.am
@@ -115,8 +127,6 @@ VALGRINDARCH:powerpc64 = "ppc64"
 VALGRINDARCH:powerpc64le = "ppc64le"
 
 INHIBIT_PACKAGE_STRIP_FILES = "${PKGD}${libexecdir}/valgrind/vgpreload_memcheck-${VALGRINDARCH}-linux.so"
-
-RDEPENDS:${PN} += "perl"
 
 # valgrind needs debug information for ld.so at runtime in order to
 # redirect functions like strlen.
