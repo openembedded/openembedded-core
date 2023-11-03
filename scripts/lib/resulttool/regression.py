@@ -236,7 +236,8 @@ def compare_result(logger, base_name, target_name, base_result, target_result, d
             for k in sorted(result):
                 if not result[k]['target'] or not result[k]['target'].startswith("PASS"):
                     # Differentiate each ptest kind when listing regressions
-                    key = '.'.join(k.split('.')[:2]) if k.startswith('ptest') else k
+                    key_parts = k.split('.')
+                    key = '.'.join(key_parts[:2]) if k.startswith('ptest') else key_parts[0]
                     # Append new regression to corresponding test family
                     regressions[key] = regressions.setdefault(key, []) + ['        %s: %s -> %s\n' % (k, get_status_str(result[k]['base']), get_status_str(result[k]['target']))]
             resultstring += f"    Total: {sum([len(regressions[r]) for r in regressions])} new regression(s):\n"
