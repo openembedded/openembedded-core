@@ -49,4 +49,4 @@ RPROVIDES:${PN} += "iasl"
 RREPLACES:${PN} += "iasl"
 RCONFLICTS:${PN} += "iasl"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
