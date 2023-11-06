@@ -726,6 +726,10 @@ python () {
         deps = ' rpm-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_rpm', 'depends', deps)
         d.setVarFlag('do_package_write_rpm', 'fakeroot', '1')
+
+        # Needed to ensure PKG_xxx renaming of dependency packages works
+        d.setVarFlag('do_package_write_rpm', 'deptask', "do_packagedata")
+        d.setVarFlag('do_package_write_rpm', 'rdeptask', "do_packagedata")
 }
 
 SSTATETASKS += "do_package_write_rpm"

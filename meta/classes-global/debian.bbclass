@@ -14,9 +14,6 @@
 #
 # Better expressed as ensure all RDEPENDS package before we package
 # This means we can't have circular RDEPENDS/RRECOMMENDS
-#
-# Logic of processing dependencies moved to a package.bbclass to
-# allow removing inheritance on debian.bbclass
 
 AUTO_LIBNAME_PKGS = "${PACKAGES}"
 

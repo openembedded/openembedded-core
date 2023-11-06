@@ -276,6 +276,10 @@ python () {
         deps = ' opkg-utils-native:do_populate_sysroot virtual/fakeroot-native:do_populate_sysroot xz-native:do_populate_sysroot'
         d.appendVarFlag('do_package_write_ipk', 'depends', deps)
         d.setVarFlag('do_package_write_ipk', 'fakeroot', "1")
+
+        # Needed to ensure PKG_xxx renaming of dependency packages works
+        d.setVarFlag('do_package_write_ipk', 'deptask', "do_packagedata")
+        d.setVarFlag('do_package_write_ipk', 'rdeptask', "do_packagedata")
 }
 
 python do_package_write_ipk () {

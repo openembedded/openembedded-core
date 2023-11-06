@@ -613,22 +613,3 @@ python do_packagedata_setscene () {
 }
 addtask do_packagedata_setscene
 
-# This part ensures all the runtime packages built by the time
-# dynamic renaming occures, if any.
-# This part moved here from debian.bbclass (see for reference) in
-# order to allow disabling default inheritance on debian package renaming.
-
-PKGRDEP = "do_packagedata"
-do_package_write_ipk[deptask] = "${PKGRDEP}"
-do_package_write_deb[deptask] = "${PKGRDEP}"
-do_package_write_tar[deptask] = "${PKGRDEP}"
-do_package_write_rpm[deptask] = "${PKGRDEP}"
-do_package_write_ipk[rdeptask] = "${PKGRDEP}"
-do_package_write_deb[rdeptask] = "${PKGRDEP}"
-do_package_write_tar[rdeptask] = "${PKGRDEP}"
-do_package_write_rpm[rdeptask] = "${PKGRDEP}"
-
-python () {
-    if not d.getVar("PACKAGES"):
-        d.setVar("PKGRDEP", "")
-}
