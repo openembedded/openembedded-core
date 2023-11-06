@@ -41,9 +41,6 @@ def go_src_uri(repo, version, path=None, subdir=None, \
     return src_uri
 
 python do_vendor_unlink() {
-
-    # We unlink
-
     go_import = d.getVar('GO_IMPORT')
     source_dir = d.getVar('S')
     linkname = os.path.join(source_dir, *['src', go_import, 'vendor'])
@@ -58,9 +55,8 @@ python do_go_vendor() {
 
     src_uri = (d.getVar('SRC_URI') or "").split()
 
-    if len(src_uri) == 0:
-        bb.error("SRC_URI is empty")
-        return
+    if not src_uri:
+        bb.fatal("SRC_URI is empty")
 
     default_destsuffix = "git/src/import/vendor.fetch"
     fetcher = bb.fetch2.Fetch(src_uri, d)
