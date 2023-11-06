@@ -1502,35 +1502,18 @@ Rerun configure task after fixing this."""
     oe.qa.exit_if_errors(d)
 }
 
-def unpack_check_src_uri(pn, d):
-    import re
-
-    skip = (d.getVar('INSANE_SKIP') or "").split()
-    if 'src-uri-bad' in skip:
-        bb.note("Recipe %s skipping qa checking: src-uri-bad" % d.getVar('PN'))
-        return
-
-    if "${PN}" in d.getVar("SRC_URI", False):
-        oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
-
-    for url in d.getVar("SRC_URI").split():
-        # Search for github and gitlab URLs that pull unstable archives (comment for future greppers)
-        if re.search(r"git(hu|la)b\.com/.+/.+/archive/.+", url) or "//codeload.github.com/" in url:
-            oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub/GitLab archives, convert recipe to use git protocol" % pn, d)
-
 python do_qa_unpack() {
     src_uri = d.getVar('SRC_URI')
     s_dir = d.getVar('S')
     if src_uri and not os.path.exists(s_dir):
         bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN'), d.getVar('S', False), s_dir))
-
-    unpack_check_src_uri(d.getVar('PN'), d)
 }
 
 python do_recipe_qa() {
-    def test_missing_metadata(d):
+    import re
+
+    def test_missing_metadata(pn, d):
         fn = d.getVar("FILE")
-        pn = d.getVar('BPN')
         srcfile = d.getVar('SRC_URI').split()
         # Check that SUMMARY is not the same as the default from bitbake.conf
         if d.getVar('SUMMARY') == d.expand("${PN} version ${PV}-${PR}"):
@@ -1542,16 +1525,31 @@ python do_recipe_qa() {
             else:
                 oe.qa.handle_error("missing-metadata", "Recipe {} in {} does not contain a HOMEPAGE. Please add an entry.".format(pn, fn), d)
 
-    def test_missing_maintainer(d):
+    def test_missing_maintainer(pn, d):
         fn = d.getVar("FILE")
-        pn = d.getVar("PN")
         if pn.endswith("-native") or pn.startswith("nativesdk-") or "packagegroup-" in pn or "core-image-ptest-" in pn:
             return
         if not d.getVar('RECIPE_MAINTAINER'):
             oe.qa.handle_error("missing-maintainer", "Recipe {} in {} does not have an assigned maintainer. Please add an entry into meta/conf/distro/include/maintainers.inc.".format(pn, fn), d)
 
-    test_missing_metadata(d)
-    test_missing_maintainer(d)
+    def test_srcuri(pn, d):
+        skip = (d.getVar('INSANE_SKIP') or "").split()
+        if 'src-uri-bad' in skip:
+            bb.note("Recipe %s skipping qa checking: src-uri-bad" % pn)
+            return
+
+        if "${PN}" in d.getVar("SRC_URI", False):
+            oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses PN not BPN" % pn, d)
+
+        for url in d.getVar("SRC_URI").split():
+            # Search for github and gitlab URLs that pull unstable archives (comment for future greppers)
+            if re.search(r"git(hu|la)b\.com/.+/.+/archive/.+", url) or "//codeload.github.com/" in url:
+                oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub/GitLab archives, convert recipe to use git protocol" % pn, d)
+
+    pn = d.getVar('PN')
+    test_missing_metadata(pn, d)
+    test_missing_maintainer(pn, d)
+    test_srcuri(pn, d)
     oe.qa.exit_if_errors(d)
 }
 
