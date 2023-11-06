@@ -16,6 +16,8 @@ class TestMetadata(base.Metadata):
     license_var  = 'LICENSE'
     closed   = 'CLOSED'
     lictag_re  = pyparsing.AtLineStart("License-Update:")
+    lic_chksum_added = pyparsing.AtLineStart("+" + metadata_chksum)
+    lic_chksum_removed = pyparsing.AtLineStart("-" + metadata_chksum)
     add_mark = pyparsing.Regex('\+ ')
     max_length = 200
     metadata_src_uri  = 'SRC_URI'
@@ -76,48 +78,22 @@ class TestMetadata(base.Metadata):
             if not lic_files_chksum:
                 self.fail('%s is missing in newly added recipe' % self.metadata_chksum)
 
-    def pretest_lic_files_chksum_modified_not_mentioned(self):
-        if not self.modified:
-            self.skip('No modified recipes, skipping pretest')
-        # get the proper metadata values
-        for pn in self.modified:
-            rd = self.tinfoil.parse_recipe(pn)
-            pathname = rd.getVar('FILE')
-            # we are not interested in images
-            if '/images/' in pathname:
-                continue
-            PatchTestDataStore['%s-%s-%s' % (self.shortid(),self.metadata_chksum,pn)] = rd.getVar(self.metadata_chksum)
-
     def test_lic_files_chksum_modified_not_mentioned(self):
         if not self.modified:
             self.skip('No modified recipes, skipping test')
 
-        # get the proper metadata values
-        for pn in self.modified:
-            rd = self.tinfoil.parse_recipe(pn)
-            pathname = rd.getVar('FILE')
-            # we are not interested in images
-            if '/images/' in pathname:
+        for patch in self.patchset:
+            # for the moment, we are just interested in metadata
+            if patch.path.endswith('.patch'):
                 continue
-            PatchTestDataStore['%s-%s-%s' % (self.shortid(),self.metadata_chksum,pn)] = rd.getVar(self.metadata_chksum)
-        # compare if there were changes between pre-merge and merge
-        for pn in self.modified:
-            pretest = PatchTestDataStore['pre%s-%s-%s' % (self.shortid(),self.metadata_chksum, pn)]
-            test    = PatchTestDataStore['%s-%s-%s' % (self.shortid(),self.metadata_chksum, pn)]
-
-            # TODO: this is workaround to avoid false-positives when pretest metadata is empty (not reason found yet)
-            # For more info, check bug 12284
-            if not pretest:
-                return
-
-            if pretest != test:
+            payload = str(patch)
+            if (self.lic_chksum_added.search_string(payload) or self.lic_chksum_removed.search_string(payload)):
                 # if any patch on the series contain reference on the metadata, fail
                 for commit in self.commits:
                     if self.lictag_re.search_string(commit.commit_message):
                        break
                 else:
-                    self.fail('LIC_FILES_CHKSUM changed without "License-Update:" tag and description in commit message',
-                              data=[('Current checksum', pretest), ('New checksum', test)])
+                    self.fail('LIC_FILES_CHKSUM changed without "License-Update:" tag and description in commit message')
 
     def test_max_line_length(self):
         for patch in self.patchset:
