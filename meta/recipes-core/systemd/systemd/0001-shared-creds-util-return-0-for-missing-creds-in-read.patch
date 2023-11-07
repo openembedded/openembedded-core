@@ -1,0 +1,139 @@
+From 78fc42be73d81ff625f6479784ce1950bd4741b3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Zbigniew=20J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
+Date: Tue, 25 Apr 2023 17:58:34 +0200
+Subject: [PATCH] shared/creds-util: return 0 for missing creds in
+ read_credential_strings_many
+
+Realistically, the only thing that the caller can do is ignore failures related
+to missing credentials. If the caller requires some credentials to be present,
+they should just check which output variables are not NULL. One of the callers
+was already doing that, and the other wanted to, but missed -ENOENT. By
+suppressing -ENOENT and -ENXIO, both callers are simplified.
+
+Fixes a warning at boot:
+systemd-vconsole-setup[221]: Failed to import credentials, ignoring: No such file or directory
+
+(cherry picked from commit 55ace8e5c58441d1a2c64b297a38b232ef0c0e28)
+
+Upstream-Status: Backport [1575f1d9e78ab44beedd4eae4af3a14d45312d76]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/resolve/resolved-conf.c   |  7 +++----
+ src/shared/creds-util.c       | 18 +++++++++++-------
+ src/test/test-creds.c         |  8 ++++----
+ src/vconsole/vconsole-setup.c |  2 +-
+ 4 files changed, 19 insertions(+), 16 deletions(-)
+
+diff --git a/src/resolve/resolved-conf.c b/src/resolve/resolved-conf.c
+index d6929984e9..52e65caffa 100644
+--- a/src/resolve/resolved-conf.c
++++ b/src/resolve/resolved-conf.c
+@@ -476,10 +476,9 @@ static void read_credentials(Manager *m) {
+         if (!m->read_resolv_conf)
+                 return;
+ 
+-        r = read_credential_strings_many(
+-                        "network.dns", &dns,
+-                        "network.search_domains", &domains);
+-        if (r < 0 && !IN_SET(r, -ENXIO, -ENOENT))
++        r = read_credential_strings_many("network.dns", &dns,
++                                         "network.search_domains", &domains);
++        if (r < 0)
+                 log_warning_errno(r, "Failed to read credentials, ignoring: %m");
+ 
+         if (dns) {
+diff --git a/src/shared/creds-util.c b/src/shared/creds-util.c
+index 750ee2571e..617bae4205 100644
+--- a/src/shared/creds-util.c
++++ b/src/shared/creds-util.c
+@@ -96,17 +96,21 @@ int read_credential_strings_many_internal(
+ 
+         /* Reads a bunch of credentials into the specified buffers. If the specified buffers are already
+          * non-NULL frees them if a credential is found. Only supports string-based credentials
+-         * (i.e. refuses embedded NUL bytes) */
++         * (i.e. refuses embedded NUL bytes).
++         *
++         * 0 is returned when some or all credentials are missing.
++         */
+ 
+         if (!first_name)
+                 return 0;
+ 
+         r = read_credential(first_name, &b, NULL);
+-        if (r == -ENXIO) /* no creds passed at all? propagate this */
+-                return r;
+-        if (r < 0)
+-                ret = r;
+-        else
++        if (r == -ENXIO) /* No creds passed at all? Bail immediately. */
++                return 0;
++        if (r < 0) {
++                if (r != -ENOENT)
++                        ret = r;
++        } else
+                 free_and_replace(*first_value, b);
+ 
+         va_list ap;
+@@ -127,7 +131,7 @@ int read_credential_strings_many_internal(
+ 
+                 r = read_credential(name, &bb, NULL);
+                 if (r < 0) {
+-                        if (ret >= 0)
++                        if (ret >= 0 && r != -ENOENT)
+                                 ret = r;
+                 } else
+                         free_and_replace(*value, bb);
+diff --git a/src/test/test-creds.c b/src/test/test-creds.c
+index 44022e7324..25b0c34a59 100644
+--- a/src/test/test-creds.c
++++ b/src/test/test-creds.c
+@@ -16,7 +16,7 @@ TEST(read_credential_strings) {
+         if (e)
+                 assert_se(saved = strdup(e));
+ 
+-        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == -ENXIO);
++        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == 0);
+         assert_se(x == NULL);
+         assert_se(y == NULL);
+ 
+@@ -24,20 +24,20 @@ TEST(read_credential_strings) {
+ 
+         assert_se(setenv("CREDENTIALS_DIRECTORY", tmp, /* override= */ true) >= 0);
+ 
+-        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == -ENOENT);
++        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == 0);
+         assert_se(x == NULL);
+         assert_se(y == NULL);
+ 
+         assert_se(p = path_join(tmp, "bar"));
+         assert_se(write_string_file(p, "piff", WRITE_STRING_FILE_CREATE|WRITE_STRING_FILE_AVOID_NEWLINE) >= 0);
+ 
+-        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == -ENOENT);
++        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == 0);
+         assert_se(x == NULL);
+         assert_se(streq(y, "piff"));
+ 
+         assert_se(write_string_file(p, "paff", WRITE_STRING_FILE_TRUNCATE|WRITE_STRING_FILE_AVOID_NEWLINE) >= 0);
+ 
+-        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == -ENOENT);
++        assert_se(read_credential_strings_many("foo", &x, "bar", &y) == 0);
+         assert_se(x == NULL);
+         assert_se(streq(y, "piff"));
+ 
+diff --git a/src/vconsole/vconsole-setup.c b/src/vconsole/vconsole-setup.c
+index 7d3e9db73f..b2676eb487 100644
+--- a/src/vconsole/vconsole-setup.c
++++ b/src/vconsole/vconsole-setup.c
+@@ -442,7 +442,7 @@ int main(int argc, char **argv) {
+                         "vconsole.font", &vc_font,
+                         "vconsole.font_map", &vc_font_map,
+                         "vconsole.font_unimap", &vc_font_unimap);
+-        if (r < 0 && r != -ENXIO)
++        if (r < 0)
+                 log_warning_errno(r, "Failed to import credentials, ignoring: %m");
+ 
+         /* Load data from configuration file (middle priority) */
+-- 
+2.42.0
+
