@@ -31,6 +31,7 @@ do_install:append() {
             mv ${D}${bindir}/$app ${D}${base_bindir}/$app
         done
     fi
+    mv ${D}${bindir}/which.debianutils ${D}${bindir}/which
 }
 
 # Note that we package the update-alternatives name.
@@ -46,9 +47,6 @@ ALTERNATIVE:${PN} = "add-shell installkernel remove-shell savelog which"
 
 ALTERNATIVE_PRIORITY_${PN}-run-parts = "60"
 ALTERNATIVE:${PN}-run-parts = "run-parts"
-
-ALTERNATIVE:${PN}-doc = "which.1"
-ALTERNATIVE_LINK_NAME[which.1] = "${mandir}/man1/which.1"
 
 ALTERNATIVE_LINK_NAME[add-shell] = "${sbindir}/add-shell"
 ALTERNATIVE_LINK_NAME[installkernel] = "${sbindir}/installkernel"
