@@ -776,16 +776,15 @@ addtask tmptask2 before do_tmptask1
                 self.assertEqual(recursecb_count,1)
 
 class SStatePrintdiff(SStateBase):
-    # FIXME: OEBasicHash setting is necessary for now as otherwise the following error can occur:
-    # ERROR: Can't find a task we're supposed to have written out? (hash: e79d70b9c2cc72030c1ce822525510699a1eeb1ddf5986271d3217422244366a)?
-    # The underlying issue should be investigated and addressed.
     def run_test_printdiff_changerecipe(self, target, change_recipe, change_bbtask, change_content, expected_sametmp_output, expected_difftmp_output):
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
-BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
         self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff")
-        bitbake(target)
+        # Use runall do_build to ensure any indirect sstate is created, e.g. tzcode-native on both x86 and
+        # aarch64 hosts since only allarch target recipes depend upon it and it may not be built otherwise.
+        # A bitbake -c cleansstate tzcode-native would cause some of these tests to error for example.
+        bitbake("--runall build --runall deploy_source_date_epoch {}".format(target))
         bitbake("-S none {}".format(target))
         bitbake(change_bbtask)
         self.write_recipeinc(change_recipe, change_content)
@@ -793,7 +792,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
 
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
-BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
         self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff-2")
         result_difftmp = bitbake("-S printdiff {}".format(target))
@@ -807,17 +805,15 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
     def run_test_printdiff_changeconfig(self, target, change_content, expected_sametmp_output, expected_difftmp_output):
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
-BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
         self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff")
-        bitbake(target)
+        bitbake("--runall build --runall deploy_source_date_epoch {}".format(target))
         bitbake("-S none {}".format(target))
         self.append_config(change_content)
         result_sametmp = bitbake("-S printdiff {}".format(target))
 
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
-BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
         self.append_config(change_content)
         self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff-2")
@@ -879,7 +875,7 @@ expected_sametmp_output, expected_difftmp_output)
 "Task gnu-config-native:do_configure couldn't be used from the cache because:",
 "We need hash",
 "most recent matching task was")
-        expected_sametmp_output = expected_output + ("Variable base_do_configure value changed",'+	echo "this changes base_do_configure() definiton"')
+        expected_sametmp_output = expected_output + ("Variable base_do_configure value changed",'+	echo "this changes base_do_configure() definiton "')
         expected_difftmp_output = expected_output
 
         self.run_test_printdiff_changeconfig("core-image-minimal",

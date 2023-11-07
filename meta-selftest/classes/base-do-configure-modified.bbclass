@@ -1,3 +1,3 @@
 base_do_configure:append () {
-	echo "this changes base_do_configure() definiton"
+	echo "this changes base_do_configure() definiton "
 }
