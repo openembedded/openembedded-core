@@ -43,6 +43,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
 	   file://CVE-2023-3354.patch \
 	   file://CVE-2023-3180.patch \
 	   file://CVE-2023-42467.patch \
+	   file://0001-target-i386-fix-avx2-instructions-vzeroall-and-vperm.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 

@@ -1,0 +1,58 @@
+From 06690248bdb917f71b673183de9334c92f4a1eaa Mon Sep 17 00:00:00 2001
+From: Xinyu Li <lixinyu20s@ict.ac.cn>
+Date: Wed, 10 May 2023 22:52:22 +0800
+Subject: [PATCH] target/i386: fix avx2 instructions vzeroall and vpermdq
+
+vzeroall: xmm_regs should be used instead of xmm_t0
+vpermdq: bit 3 and 7 of imm should be considered
+
+Upstream-Status: Backport from
+[https://gitlab.com/qemu-project/qemu/-/commit/48b60eb6c917646df9efa7ddb4c25929f358d647]
+
+Signed-off-by: Xinyu Li <lixinyu20s@ict.ac.cn>
+Message-Id: <20230510145222.586487-1-lixinyu20s@ict.ac.cn>
+Cc: qemu-stable@nongnu.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+(cherry picked from commit 056d649007bc9fdae9f1d576e77c1316e9a34468)
+Signed-off-by: Michael Tokarev <mjt@tls.msk.ru>
+Signed-off-by: Xiangyu Chen <xiangyu.chen@windriver.com>
+---
+ target/i386/ops_sse.h      | 8 ++++++++
+ target/i386/tcg/emit.c.inc | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/target/i386/ops_sse.h b/target/i386/ops_sse.h
+index 3cbc36a59d..44c1e70093 100644
+--- a/target/i386/ops_sse.h
++++ b/target/i386/ops_sse.h
+@@ -2493,6 +2493,14 @@ void helper_vpermdq_ymm(Reg *d, Reg *v, Reg *s, uint32_t order)
+     d->Q(1) = r1;
+     d->Q(2) = r2;
+     d->Q(3) = r3;
++    if (order & 0x8) {
++        d->Q(0) = 0;
++        d->Q(1) = 0;
++    }
++    if (order & 0x80) {
++        d->Q(2) = 0;
++        d->Q(3) = 0;
++    }
+ }
+ 
+ void helper_vpermq_ymm(Reg *d, Reg *s, uint32_t order)
+diff --git a/target/i386/tcg/emit.c.inc b/target/i386/tcg/emit.c.inc
+index 7037ff91c6..34028a7475 100644
+--- a/target/i386/tcg/emit.c.inc
++++ b/target/i386/tcg/emit.c.inc
+@@ -2283,7 +2283,7 @@ static void gen_VZEROALL(DisasContext *s, CPUX86State *env, X86DecodedInsn *deco
+ {
+     TCGv_ptr ptr = tcg_temp_new_ptr();
+ 
+-    tcg_gen_addi_ptr(ptr, cpu_env, offsetof(CPUX86State, xmm_t0));
++    tcg_gen_addi_ptr(ptr, cpu_env, offsetof(CPUX86State, xmm_regs));
+     gen_helper_memset(ptr, ptr, tcg_constant_i32(0),
+                       tcg_constant_ptr(CPU_NB_REGS * sizeof(ZMMReg)));
+     tcg_temp_free_ptr(ptr);
+-- 
+2.25.1
+
