@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "\
 
 DEPENDS = "git-native"
 
-SRCREV = "0ae81fdbb1ae1546371206aeb3f5fb530dff8ddc"
+SRCREV = "7160ebe8b865dd6028aef278efa219433db93f7e"
 PV = "0.3+git"
 
 inherit native
