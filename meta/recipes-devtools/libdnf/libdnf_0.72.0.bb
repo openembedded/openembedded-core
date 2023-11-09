@@ -10,6 +10,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;p
            file://0001-Get-parameters-for-both-libsolv-and-libsolvext-libdn.patch \
            file://enable_test_data_dir_set.patch \
            file://0001-drop-FindPythonInstDir.cmake.patch \
+           file://armarch.patch \
            "
 
 SRCREV = "908dba63c9e18c86a2d81166ce7523559e65338c"
