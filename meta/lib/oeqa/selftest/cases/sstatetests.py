@@ -921,12 +921,12 @@ SSTATE_MIRRORS ?= "file://.* http://cdn.jsdelivr.net/yocto/sstate/all/PATH;downl
         result = bitbake("-D -S printdiff {}".format(targets))
         self.check_bb_output(result.output, exceptions)
 
-    def _test_cdn_mirror_qemux86_64(self):
+    def test_cdn_mirror_qemux86_64(self):
         # Example:
         # exceptions = [ ["packagegroup-core-sdk","do_package"] ]
         exceptions = []
         self.run_test_cdn_mirror("qemux86-64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions)
 
-    def _test_cdn_mirror_qemuarm64(self):
+    def test_cdn_mirror_qemuarm64(self):
         exceptions = []
         self.run_test_cdn_mirror("qemuarm64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions)
