@@ -39,7 +39,6 @@ export RUST_TARGET = "${RUST_HOST_SYS}"
 RUSTFLAGS:append:mips = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:mipsel = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:powerpc = " --cfg crossbeam_no_atomic_64"
-RUSTFLAGS:append:riscv32 = " --cfg crossbeam_no_atomic_64"
 
 do_configure[postfuncs] += "cargo_common_do_configure"
 
