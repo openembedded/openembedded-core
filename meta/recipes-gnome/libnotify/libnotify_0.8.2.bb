@@ -14,7 +14,6 @@ DEPENDS = "glib-2.0 glib-2.0-native gdk-pixbuf"
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false,gtk+3"
 
-GNOMEBASEBUILDCLASS = "meson"
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 inherit gnomebase gi-docgen features_check gobject-introspection
