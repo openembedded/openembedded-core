@@ -60,7 +60,8 @@ prune_sources() {
 do_unpack[postfuncs] += "prune_sources"
 
 do_install:append () {
-    mkdir -p ${D}${datadir}/ghostscript/${PV}/
+    oe_runmake DESTDIR=${D} install-so
+    oe_runmake DESTDIR=${D} install-data
     cp -r ${S}/Resource ${D}${datadir}/ghostscript/${PV}/
     cp -r ${S}/iccprofiles ${D}${datadir}/ghostscript/${PV}/
 }
