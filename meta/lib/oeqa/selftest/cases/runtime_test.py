@@ -185,14 +185,8 @@ class TestImage(OESelftestTestCase):
             self.skipTest('virgl isn\'t working with Centos 7')
         if distro and distro == 'centos-8':
             self.skipTest('virgl isn\'t working with Centos 8')
-        if distro and distro == 'fedora-34':
-            self.skipTest('virgl isn\'t working with Fedora 34')
-        if distro and distro == 'fedora-35':
-            self.skipTest('virgl isn\'t working with Fedora 35')
-        if distro and distro == 'fedora-36':
-            self.skipTest('virgl isn\'t working with Fedora 36')
-        if distro and distro == 'fedora-37':
-            self.skipTest('virgl isn\'t working with Fedora 37')
+        if distro and distro.startswith('fedora'):
+            self.skipTest('virgl isn\'t working with Fedora')
         if distro and distro == 'opensuseleap-15.0':
             self.skipTest('virgl isn\'t working with Opensuse 15.0')
         if distro and distro == 'ubuntu-22.04':
