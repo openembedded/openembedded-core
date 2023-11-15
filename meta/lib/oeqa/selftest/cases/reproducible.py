@@ -45,13 +45,14 @@ class CompareResult(object):
         return (self.status, self.test) < (other.status, other.test)
 
 class PackageCompareResults(object):
-    def __init__(self):
+    def __init__(self, exclusions):
         self.total = []
         self.missing = []
         self.different = []
         self.different_excluded = []
         self.same = []
         self.active_exclusions = set()
+        exclude_packages.extend((exclusions or "").split())
 
     def add_result(self, r):
         self.total.append(r)
@@ -161,6 +162,7 @@ class ReproducibleTests(OESelftestTestCase):
             'OEQA_REPRODUCIBLE_TEST_PACKAGE',
             'OEQA_REPRODUCIBLE_TEST_TARGET',
             'OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS',
+            'OEQA_REPRODUCIBLE_EXCLUDED_PACKAGES',
         ]
         bb_vars = get_bb_vars(needed_vars)
         for v in needed_vars:
@@ -183,7 +185,7 @@ class ReproducibleTests(OESelftestTestCase):
         self.extraresults['reproducible.rawlogs']['log'] += msg
 
     def compare_packages(self, reference_dir, test_dir, diffutils_sysroot):
-        result = PackageCompareResults()
+        result = PackageCompareResults(self.oeqa_reproducible_excluded_packages)
 
         old_cwd = os.getcwd()
         try:
