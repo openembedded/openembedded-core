@@ -153,7 +153,15 @@ class ReproducibleTests(OESelftestTestCase):
 
     def setUpLocal(self):
         super().setUpLocal()
-        needed_vars = ['TOPDIR', 'TARGET_PREFIX', 'BB_NUMBER_THREADS', 'BB_HASHSERVE', 'OEQA_REPRODUCIBLE_TEST_PACKAGE', 'OEQA_REPRODUCIBLE_TEST_TARGET', 'OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS']
+        needed_vars = [
+            'TOPDIR',
+            'TARGET_PREFIX',
+            'BB_NUMBER_THREADS',
+            'BB_HASHSERVE',
+            'OEQA_REPRODUCIBLE_TEST_PACKAGE',
+            'OEQA_REPRODUCIBLE_TEST_TARGET',
+            'OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS',
+        ]
         bb_vars = get_bb_vars(needed_vars)
         for v in needed_vars:
             setattr(self, v.lower(), bb_vars[v])
