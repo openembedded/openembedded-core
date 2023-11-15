@@ -19,6 +19,11 @@ SRC_URI += "file://Fix-hanging-issue-in-_XReply.patch \
             file://CVE-2022-3554.patch \
             file://CVE-2022-3555.patch \
             file://CVE-2023-3138.patch \
+            file://CVE-2023-43785.patch \
+            file://CVE-2023-43786-1.patch \
+            file://CVE-2023-43786-2.patch \
+            file://CVE-2023-43787-1.patch \
+            file://CVE-2023-43787-2.patch \
 "
 
 SRC_URI[md5sum] = "55adbfb6d4370ecac5e70598c4e7eed2"
