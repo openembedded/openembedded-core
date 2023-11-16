@@ -98,7 +98,7 @@ EXTRA_OEMAKE = '\
     AR="${AR}" \
     LD="${LD}" \
     EXTRA_CFLAGS="-ldw -I${S}" \
-    YFLAGS='-y --file-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}' \
+    YFLAGS='-y --file-prefix-map=${WORKDIR}=${TARGET_DBGSRC_DIR}' \
     EXTRA_LDFLAGS="${PERF_EXTRA_LDFLAGS}" \
     perfexecdir=${libexecdir} \
     NO_GTK2=1 \
@@ -405,7 +405,7 @@ PACKAGESPLITFUNCS =+ "perf_fix_sources"
 perf_fix_sources () {
 	for f in util/parse-events-flex.h util/parse-events-flex.c util/pmu-flex.c \
 			util/pmu-flex.h util/expr-flex.h util/expr-flex.c; do
-		f=${PKGD}/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}/$f
+		f=${PKGD}${TARGET_DBGSRC_DIR}/$f
 		if [ -e $f ]; then
 			sed -i -e 's#${S}/##g' $f
 		fi
