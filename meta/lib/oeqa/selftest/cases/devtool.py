@@ -1075,7 +1075,12 @@ class DevtoolModifyTests(DevtoolBase):
             with open(source, "rt") as f:
                 content = f.read()
             self.assertEquals(content, expected)
-        check('devtool', 'This is a test for something\n')
+        if self.td["MACHINE"] == "qemux86":
+            check('devtool', 'This is a test for qemux86\n')
+        elif self.td["MACHINE"] == "qemuarm":
+            check('devtool', 'This is a test for qemuarm\n')
+        else:
+            check('devtool', 'This is a test for something\n')
         check('devtool-no-overrides', 'This is a test for something\n')
         check('devtool-override-qemuarm', 'This is a test for qemuarm\n')
         check('devtool-override-qemux86', 'This is a test for qemux86\n')
