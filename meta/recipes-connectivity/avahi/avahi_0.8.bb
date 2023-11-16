@@ -27,6 +27,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/avahi-${PV}.tar.gz \
            file://local-ping.patch \
            file://invalid-service.patch \
            file://CVE-2023-38469.patch \
+           file://CVE-2023-38470.patch \
            "
 
 GITHUB_BASE_URI = "https://github.com/lathiat/avahi/releases/"
