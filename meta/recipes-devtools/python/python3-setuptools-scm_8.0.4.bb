@@ -1,12 +1,13 @@
 SUMMARY = "the blessed package to manage your versions by scm tags"
 HOMEPAGE = "https://pypi.org/project/setuptools-scm/"
-DESCRIPTION = "setuptools_scm handles managing your Python package versions in SCM metadata instead of declaring them as the version argument or in a SCM managed file."
+DESCRIPTION = "setuptools_scm handles managing your Python package \
+versions in SCM metadata instead of declaring them as the version \
+argument or in a SCM managed file."
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://PKG-INFO;beginline=8;endline=8;md5=8227180126797a0148f94f483f3e1489"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
 
-SRC_URI[sha256sum] = "6c508345a771aad7d56ebff0e70628bf2b0ec7573762be9960214730de278f27"
+SRC_URI[sha256sum] = "b5f43ff6800669595193fd09891564ee9d1d7dcb196cab4b2506d53a2e1c95c7"
 
-PYPI_PACKAGE = "setuptools_scm"
 inherit pypi python_setuptools_build_meta
 
 UPSTREAM_CHECK_REGEX = "scm-(?P<pver>.*)\.tar"
