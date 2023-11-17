@@ -40,8 +40,10 @@ do_configure () {
     cd src
     rm -f auto/*
     touch auto/config.mk
-    # git timestamps aren't reliable and we want to consistently regenerate these generated files
-    rm -f po/cs.cp1250.po po/ja.euc-jp.po po/ja.sjis.po po/ko.po po/pl.UTF-8.po po/pl.cp1250.po po/ru.cp1251.po po/sk.cp1250.po po/uk.cp1251.po po/zh_CN.po po/zh_CN.cp936.po po/zh_TW.po
+    # git timestamps aren't reliable, so touch the shipped .po files so they aren't regenerated
+    touch -c po/cs.cp1250.po po/ja.euc-jp.po po/ja.sjis.po po/ko.po po/pl.UTF-8.po po/pl.cp1250.po po/ru.cp1251.po po/sk.cp1250.po po/uk.cp1251.po po/zh_CN.po po/zh_CN.cp936.po po/zh_TW.po
+    # ru.cp1251.po uses CP1251 rather than cp1251, fix that
+    sed -i -e s/CP1251/cp1251/ po/ru.cp1251.po
     aclocal
     autoconf
     cd ..
