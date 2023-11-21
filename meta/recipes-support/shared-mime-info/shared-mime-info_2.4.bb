@@ -10,7 +10,7 @@ DEPENDS = "libxml2 itstool-native glib-2.0 shared-mime-info-native xmlto-native"
 
 SRC_URI = "git://gitlab.freedesktop.org/xdg/shared-mime-info.git;protocol=https;branch=master"
 SRCREV = "9a6d6b8e963935f145f3a1ef446552de6996dada"
-PV = "2.4"
+
 S = "${WORKDIR}/git"
 
 inherit meson pkgconfig gettext python3native mime
