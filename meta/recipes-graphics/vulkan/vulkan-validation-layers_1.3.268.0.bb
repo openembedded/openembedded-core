@@ -8,14 +8,14 @@ SECTION = "libs"
 LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=cd3c0bc366cd9b6a906e22f0bcb5910f"
 
-SRC_URI = "git://git@github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=sdk-1.3.261;protocol=https"
-SRCREV = "628cd310bef6d54b4e6b25b5ac2ed013473409d6"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.3.268;protocol=https"
+SRCREV = "3c64adb4e052062fc60b6580c365429fddfbcfbf"
 
 S = "${WORKDIR}/git"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
-DEPENDS = "vulkan-headers vulkan-loader spirv-headers spirv-tools glslang"
+DEPENDS = "vulkan-headers vulkan-loader spirv-headers spirv-tools glslang vulkan-utility-libraries"
 
 # BUILD_TESTS            - Not required for OE builds
 # USE_ROBIN_HOOD_HASHING - Provides substantial performance improvements on all platforms.
@@ -42,7 +42,8 @@ FILES_SOLIBSDEV = ""
 
 # These recipes need to be updated in lockstep with each other:
 # glslang, vulkan-headers, vulkan-loader, vulkan-tools,
-# vulkan-validation-layers, spirv-headers, spirv-tools
+# vulkan-validation-layers, spirv-headers, spirv-tools,
+# vulkan-utility-libraries.
 # The tags versions should always be sdk-x.y.z, as this is what
 # upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"

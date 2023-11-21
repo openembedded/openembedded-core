@@ -11,7 +11,7 @@ LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=1bc355d8c4196f774c8b87ed1a8dd625"
 SRC_URI = "git://github.com/KhronosGroup/Vulkan-Headers.git;branch=main;protocol=https"
 
-SRCREV = "85c2334e92e215cce34e8e0ed8b2dce4700f4a50"
+SRCREV = "7b3466a1f47a9251ac1113efbe022ff016e2f95b"
 
 S = "${WORKDIR}/git"
 
@@ -21,7 +21,8 @@ FILES:${PN} += "${datadir}/vulkan"
 RDEPENDS:${PN} += "python3-core"
 
 # These recipes need to be updated in lockstep with each other:
-# glslang, vulkan-headers, vulkan-loader, vulkan-tools, spirv-headers, spirv-tools
+# glslang, vulkan-headers, vulkan-loader, vulkan-tools, spirv-headers, spirv-tools,
+# vulkan-validation-layers, vulkan-utility-libraries.
 # The tags versions should always be sdk-x.y.z, as this is what
 # upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
