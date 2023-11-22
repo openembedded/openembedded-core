@@ -1576,11 +1576,10 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
                 patchfields['SRC_URI'] = '\\\n    '.join(srcuri)
             if dry_run_outdir:
                 logger.info('Creating bbappend (dry-run)')
-            else:
-                appendfile, destpath = oe.recipeutils.bbappend_recipe(
-                        rd, appendlayerdir, files, wildcardver=wildcard_version,
-                        extralines=patchfields, removevalues=removevalues,
-                        redirect_output=dry_run_outdir)
+            appendfile, destpath = oe.recipeutils.bbappend_recipe(
+                    rd, appendlayerdir, files, wildcardver=wildcard_version,
+                    extralines=patchfields, removevalues=removevalues,
+                    redirect_output=dry_run_outdir)
         else:
             files_dir = _determine_files_dir(rd)
             for basepath, path in upd_f.items():
