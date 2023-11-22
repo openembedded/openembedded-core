@@ -233,6 +233,9 @@ def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
     bb.process.run('git checkout -b %s' % devbranch, cwd=repodir)
     bb.process.run('git tag -f %s' % basetag, cwd=repodir)
 
+    if os.path.exists(os.path.join(repodir, '.gitmodules')):
+        bb.process.run('git submodule foreach --recursive  "git tag -f %s"' % basetag, cwd=repodir)
+
 def recipe_to_append(recipefile, config, wildcard=False):
     """
     Convert a recipe file to a bbappend file path within the workspace.
