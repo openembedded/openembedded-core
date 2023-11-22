@@ -3,10 +3,13 @@ HOMEPAGE = "https://www.sphinx-doc.org"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=24dce5ef6a13563241c24bc366f48886"
 
-SRC_URI[sha256sum] = "0cbdd302815330058422b98a113195c9249825d681e18f11e8b1f78a2f11efff"
+SRC_URI[sha256sum] = "6c26a118a05b76000738429b724a0568dbde5b72391a688577da08f11891092a"
 
 PYPI_PACKAGE = "sphinxcontrib-htmlhelp"
 
-inherit pypi python_setuptools_build_meta
+inherit pypi python_flit_core
+
+PYPI_ARCHIVE_NAME = "sphinxcontrib_htmlhelp-${PV}.${PYPI_PACKAGE_EXT}"
+S = "${WORKDIR}/sphinxcontrib_htmlhelp-${PV}"
 
 BBCLASSEXTEND = "native nativesdk"
