@@ -1035,7 +1035,7 @@ def get_recipe_upstream_version(rd):
             revision = ud.method.latest_revision(ud, rd, 'default')
             upversion = pv
             if revision != rd.getVar("SRCREV"):
-                upversion = upversion + "-new-commits-available" 
+                upversion = upversion + "-new-commits-available"
         else:
             pupver = ud.method.latest_versionstring(ud, rd)
             (upversion, revision) = pupver
