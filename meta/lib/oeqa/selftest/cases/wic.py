@@ -748,6 +748,30 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
 
         os.remove(wks_file)
 
+    def test_partition_hidden_attributes(self):
+        """Test --hidden wks option."""
+        wks_file = 'temp.wks'
+        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+        try:
+            with open(wks_file, 'w') as wks:
+                wks.write("""
+part / --source rootfs --fstype=ext4
+part / --source rootfs --fstype=ext4 --hidden
+bootloader --ptable gpt""")
+
+            runCmd("wic create %s -e core-image-minimal -o %s" \
+                                       % (wks_file, self.resultdir))
+            wicout = os.path.join(self.resultdir, "*.direct")
+
+            result = runCmd("%s/usr/sbin/sfdisk --part-attrs %s 1" % (sysroot, wicout))
+            self.assertEqual('', result.output)
+            result = runCmd("%s/usr/sbin/sfdisk --part-attrs %s 2" % (sysroot, wicout))
+            self.assertEqual('RequiredPartition', result.output)
+
+        finally:
+            os.remove(wks_file)
+
+
 class Wic2(WicTestCase):
 
     def test_bmap_short(self):
