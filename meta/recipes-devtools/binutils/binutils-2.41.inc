@@ -34,6 +34,5 @@ SRC_URI = "\
      file://0013-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
      file://0015-gprofng-Fix-build-with-64bit-file-offset-on-32bit-ma.patch \
-     file://0016-CVE-2022-47007.patch \
 "
 S  = "${WORKDIR}/git"
