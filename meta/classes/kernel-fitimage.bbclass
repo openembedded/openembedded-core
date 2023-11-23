@@ -542,6 +542,11 @@ fitimage_assemble() {
 				DTB_PATH="arch/${ARCH}/boot/$DTB"
 			fi
 
+			# Strip off the path component from the filename
+			if "${@'false' if oe.types.boolean(d.getVar('KERNEL_DTBVENDORED')) else 'true'}"; then
+				DTB=`basename $DTB`
+			fi
+
 			DTB=$(echo "$DTB" | tr '/' '_')
 
 			# Skip DTB if we've picked it up previously
