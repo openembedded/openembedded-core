@@ -72,10 +72,7 @@ do_rust_setup_snapshot[vardepsexclude] += "UNINATIVE_LOADER"
 
 python do_configure() {
     import json
-    try:
-        import configparser
-    except ImportError:
-        import ConfigParser as configparser
+    import configparser
 
     # toml is rather similar to standard ini like format except it likes values
     # that look more JSON like. So for our purposes simply escaping all values
