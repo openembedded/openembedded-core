@@ -9,6 +9,7 @@ require systemtap_git.inc
 SRC_URI += "file://0001-improve-reproducibility-for-c-compiling.patch \
             file://0001-staprun-address-ncurses-6.3-failures.patch \
             file://0001-gcc12-c-compatibility-re-tweak-for-rhel6-use-functio.patch \
+            file://0001-bpf-translate.cxx-Prevent-Werror-maybe-uninitialized.patch \
            "
 
 DEPENDS = "elfutils"

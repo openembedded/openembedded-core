@@ -1,0 +1,53 @@
+From df3425f51a512f65522522daf1f78c7fab0a63fd Mon Sep 17 00:00:00 2001
+From: Aaron Merey <amerey@redhat.com>
+Date: Fri, 25 Feb 2022 19:18:29 -0500
+Subject: [PATCH] bpf-translate.cxx: Prevent -Werror=maybe-uninitialized
+
+Two variables in bpf-translate.cxx can trigger -Werror=maybe-uninitialized.
+The code is designed so that uninitialized uses are not actually possible,
+but to convince gcc of this we move a throw statement and initialize one
+of the variables with a value.
+
+Upstream-Status: Backport [https://sourceware.org/git/?p=systemtap.git;a=commit;h=df3425f51a512f65522522daf1f78c7fab0a63fd]
+
+Signed-off-by: Li Wang <li.wang@windriver.com>
+---
+ bpf-translate.cxx | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/bpf-translate.cxx b/bpf-translate.cxx
+index 3f45c721f..1b63d6078 100644
+--- a/bpf-translate.cxx
++++ b/bpf-translate.cxx
+@@ -1203,7 +1203,7 @@ bpf_unparser::emit_asm_arg (const asm_stmt &stmt, const std::string &arg,
+     {
+       /* arg is a register number */
+       std::string reg = arg[0] == 'r' ? arg.substr(1) : arg;
+-      unsigned long num;
++      unsigned long num = ULONG_MAX;
+       bool parsed = false;
+       try {
+         num = stoul(reg, 0, 0);
+@@ -1941,8 +1941,6 @@ bpf_unparser::visit_foreach_loop(foreach_loop* s)
+   for (unsigned k = 0; k < arraydecl->index_types.size(); k++)
+     {
+       auto type = arraydecl->index_types[k];
+-      if (type != pe_long && type != pe_string)
+-        throw SEMANTIC_ERROR(_("unhandled foreach index type"), s->tok);
+       int this_column_size;
+       // PR23875: foreach should handle string keys
+       if (type == pe_long)
+@@ -1953,6 +1951,10 @@ bpf_unparser::visit_foreach_loop(foreach_loop* s)
+         {
+           this_column_size = BPF_MAXSTRINGLEN;
+         }
++      else
++        {
++          throw SEMANTIC_ERROR(_("unhandled foreach index type"), s->tok);
++        }
+       if (info.sort_column == k + 1) // record sort column
+         {
+           info.sort_column_size = this_column_size;
+-- 
+2.25.1
+
