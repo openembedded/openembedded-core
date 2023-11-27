@@ -15,7 +15,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://0001-Make-CPU-family-warnings-fatal.patch \
            file://0002-Support-building-allarch-recipes-again.patch \
            "
-SRC_URI[sha256sum] = "4a0f04de331fbc7af3b802a844fc8838f4ccd1ded1e792ba4f8f2faf8c5fe4d6"
+SRC_URI[sha256sum] = "4ba253ef60e454e23234696119cbafa082a0aead0bd3bbf6991295054795f5dc"
 
 inherit python_setuptools_build_meta github-releases
 
