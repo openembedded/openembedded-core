@@ -23,6 +23,7 @@ SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
            file://CVE-2022-38177.patch \
            file://CVE-2022-38178.patch \
            file://CVE-2023-2828.patch \
+           file://CVE-2023-3341.patch \
            "
 
 SRC_URI[sha256sum] = "0d8efbe7ec166ada90e46add4267b7e7c934790cba9bd5af6b8380a4fbfb5aff"
