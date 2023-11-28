@@ -15,7 +15,7 @@ SRC_URI = "git://salsa.debian.org/debian/resolvconf.git;protocol=https;branch=un
            file://0001-avoid-using-m-option-for-readlink.patch \
            "
 
-SRCREV = "859209d573e7aec0e95d812c6b52444591a628d1"
+SRCREV = "86047276c80705c51859a19f0c472102e0822f34"
 
 S = "${WORKDIR}/git"
 
