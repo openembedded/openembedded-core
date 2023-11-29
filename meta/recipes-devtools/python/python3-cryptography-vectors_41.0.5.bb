@@ -27,3 +27,5 @@ do_install:append () {
 BBCLASSEXTEND = "native nativesdk"
 
 UPSTREAM_CHECK_REGEX = ""
+
+RECIPE_NO_UPDATE_REASON = "Must be updated in sync with python3-cryptography."
