@@ -22,7 +22,8 @@ SRC_URI = "http://www.mega-nerd.com/libsndfile/files/libsndfile-${PV}.tar.gz \
            file://CVE-2019-3832.patch \
            file://CVE-2021-3246_1.patch \
            file://CVE-2021-3246_2.patch \
-          "
+           file://CVE-2022-33065.patch \
+           "
 
 SRC_URI[md5sum] = "646b5f98ce89ac60cdb060fcd398247c"
 SRC_URI[sha256sum] = "1ff33929f042fa333aed1e8923aa628c3ee9e1eb85512686c55092d1e5a9dfa9"
