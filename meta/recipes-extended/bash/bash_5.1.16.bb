@@ -16,6 +16,7 @@ SRC_URI = "${GNU_MIRROR}/bash/${BP}.tar.gz;name=tarball \
            file://makerace.patch \
            file://makerace2.patch \
            file://CVE-2022-3715.patch \
+           file://0001-changes-to-SIGINT-handler-while-waiting-for-a-child-.patch \
            "
 
 SRC_URI[tarball.sha256sum] = "5bac17218d3911834520dad13cd1f85ab944e1c09ae1aba55906be1f8192f558"
