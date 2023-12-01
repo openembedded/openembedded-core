@@ -154,13 +154,9 @@ python do_configure() {
 
     config.set("build", "vendor", e(True))
 
-    if not "targets" in locals():
-        targets = [d.getVar("RUST_TARGET_SYS")]
-    config.set("build", "target", e(targets))
+    config.set("build", "target", e([d.getVar("RUST_TARGET_SYS")]))
 
-    if not "hosts" in locals():
-        hosts = [d.getVar("RUST_HOST_SYS")]
-    config.set("build", "host", e(hosts))
+    config.set("build", "host", e([d.getVar("RUST_HOST_SYS")]))
 
     # We can't use BUILD_SYS since that is something the rust snapshot knows
     # nothing about when trying to build some stage0 tools (like fabricate)
