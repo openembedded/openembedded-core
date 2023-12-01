@@ -12,6 +12,7 @@ DEPENDS = "libdrm libepoxy virtual/egl virtual/libgbm"
 SRCREV = "9c9d55ecbe502e0d71ee99529709efcca69aac42"
 SRC_URI = "git://gitlab.freedesktop.org/virgl/virglrenderer.git;branch=main;protocol=https \
            file://0001-meson.build-use-python3-directly-for-python.patch \
+           file://0001-vtest-Fix-undefined-behavior-with-clang.patch \
            "
 
 S = "${WORKDIR}/git"
