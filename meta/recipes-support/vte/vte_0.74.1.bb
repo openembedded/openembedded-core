@@ -36,7 +36,16 @@ PACKAGECONFIG[gtk4] = "-Dgtk4=true,-Dgtk4=false,gtk4"
 PACKAGECONFIG[gnutls] = "-Dgnutls=true,-Dgnutls=false,gnutls"
 PACKAGECONFIG[systemd] = "-D_systemd=true,-D_systemd=false,systemd"
 
-PACKAGES =+ "libvte ${PN}-prompt"
+PACKAGES =+ "libvte-gtk4 ${PN}-gtk4 ${PN}-gtk4-dev libvte ${PN}-prompt"
+FILES:libvte-gtk4 = "${libdir}/lib*gtk4.so.* ${libdir}/girepository-1.0/Vte-3.91.typelib"
+FILES:${PN}-gtk4 ="${bindir}/vte-2.91-gtk4"
+FILES:${PN}-gtk4-dev = "${libdir}/lib*gtk4.so \
+                        ${libdir}/pkgconfig/vte-2.91-gtk4.pc \
+                        ${datadir}/gir-1.0/Vte-3.91.gir \
+                        ${datadir}/vala/vapi/vte-2.91-gtk4.deps \
+                        ${datadir}/vala/vapi/vte-2.91-gtk4.vapi \
+                        ${includedir}/vte-2.91-gtk4 \
+                        "
 FILES:${PN} +="${systemd_user_unitdir}"
 FILES:libvte = "${libdir}/*.so.* ${libdir}/girepository-1.0/*"
 FILES:${PN}-prompt = " \
