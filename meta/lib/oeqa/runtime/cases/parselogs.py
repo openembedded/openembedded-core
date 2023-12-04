@@ -6,6 +6,7 @@
 
 import collections
 import os
+import sys
 
 from shutil import rmtree
 from oeqa.runtime.case import OERuntimeTestCase
@@ -190,6 +191,23 @@ ignore_errors = {
         ] + common_errors,
 }
 
+
+# importlib.resources.open_text in Python <3.10 doesn't search all directories
+# when a package is split across multiple directories. Until we can rely on
+# 3.10+, reimplement the searching logic.
+if sys.version_info < (3, 10):
+    def _open_text(package, resource):
+        import importlib, pathlib
+        module = importlib.import_module(package)
+        for path in module.__path__:
+            candidate = pathlib.Path(path) / resource
+            if candidate.exists():
+                return candidate.open(encoding='utf-8')
+        raise FileNotFoundError
+else:
+    from importlib.resources import open_text as _open_text
+
+
 class ParseLogsTest(OERuntimeTestCase):
 
     # Which log files should be collected
@@ -197,6 +215,9 @@ class ParseLogsTest(OERuntimeTestCase):
 
     # The keywords that identify error messages in the log files
     errors = ["error", "cannot", "can't", "failed"]
+
+    # A list of error messages that should be ignored
+    ignore_errors = []
 
     @classmethod
     def setUpClass(cls):
@@ -212,11 +233,20 @@ class ParseLogsTest(OERuntimeTestCase):
 
         cls.errors = [s.casefold() for s in cls.errors]
 
-        try:
-            cls.ignore_errors = [s.casefold() for s in ignore_errors[cls.td.get('MACHINE')]]
-        except KeyError:
-            cls.logger.info('No ignore list found for this machine, using default')
-            cls.ignore_errors = [s.casefold() for s in ignore_errors['default']]
+        cls.load_machine_ignores()
+
+    @classmethod
+    def load_machine_ignores(cls):
+        # Add TARGET_ARCH explicitly as not every machine has that in MACHINEOVERRDES (eg qemux86-64)
+        for candidate in ["common", cls.td.get("TARGET_ARCH")] + cls.td.get("MACHINEOVERRIDES").split(":"):
+            try:
+                name = f"parselogs-ignores-{candidate}.txt"
+                for line in _open_text("oeqa.runtime.cases", name):
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        cls.ignore_errors.append(line.casefold())
+            except FileNotFoundError:
+                pass
 
     # Go through the log locations provided and if it's a folder
     # create a list with all the .log files in it, if it's a file
