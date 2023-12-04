@@ -423,6 +423,36 @@ def create_recipe(args):
     storeTagName = ''
     pv_srcpv = False
 
+    handled = []
+    classes = []
+
+    # Find all plugins that want to register handlers
+    logger.debug('Loading recipe handlers')
+    raw_handlers = []
+    for plugin in plugins:
+        if hasattr(plugin, 'register_recipe_handlers'):
+            plugin.register_recipe_handlers(raw_handlers)
+    # Sort handlers by priority
+    handlers = []
+    for i, handler in enumerate(raw_handlers):
+        if isinstance(handler, tuple):
+            handlers.append((handler[0], handler[1], i))
+        else:
+            handlers.append((handler, 0, i))
+    handlers.sort(key=lambda item: (item[1], -item[2]), reverse=True)
+    for handler, priority, _ in handlers:
+        logger.debug('Handler: %s (priority %d)' % (handler.__class__.__name__, priority))
+        setattr(handler, '_devtool', args.devtool)
+    handlers = [item[0] for item in handlers]
+
+    fetchuri = None
+    for handler in handlers:
+        if hasattr(handler, 'process_url'):
+            ret = handler.process_url(args, classes, handled, extravalues)
+            if 'url' in handled and ret:
+                fetchuri = ret
+                break
+
     if os.path.isfile(source):
         source = 'file://%s' % os.path.abspath(source)
 
@@ -431,7 +461,8 @@ def create_recipe(args):
         if re.match(r'https?://github.com/[^/]+/[^/]+/archive/.+(\.tar\..*|\.zip)$', source):
             logger.warning('github archive files are not guaranteed to be stable and may be re-generated over time. If the latter occurs, the checksums will likely change and the recipe will fail at do_fetch. It is recommended that you point to an actual commit or tag in the repository instead (using the repository URL in conjunction with the -S/--srcrev option).')
         # Fetch a URL
-        fetchuri = reformat_git_uri(urldefrag(source)[0])
+        if not fetchuri:
+            fetchuri = reformat_git_uri(urldefrag(source)[0])
         if args.binary:
             # Assume the archive contains the directory structure verbatim
             # so we need to extract to a subdirectory
@@ -638,8 +669,6 @@ def create_recipe(args):
     # We'll come back and replace this later in handle_license_vars()
     lines_before.append('##LICENSE_PLACEHOLDER##')
 
-    handled = []
-    classes = []
 
     # FIXME This is kind of a hack, we probably ought to be using bitbake to do this
     pn = None
@@ -717,25 +746,6 @@ def create_recipe(args):
 
     if args.npm_dev:
         extravalues['NPM_INSTALL_DEV'] = 1
-
-    # Find all plugins that want to register handlers
-    logger.debug('Loading recipe handlers')
-    raw_handlers = []
-    for plugin in plugins:
-        if hasattr(plugin, 'register_recipe_handlers'):
-            plugin.register_recipe_handlers(raw_handlers)
-    # Sort handlers by priority
-    handlers = []
-    for i, handler in enumerate(raw_handlers):
-        if isinstance(handler, tuple):
-            handlers.append((handler[0], handler[1], i))
-        else:
-            handlers.append((handler, 0, i))
-    handlers.sort(key=lambda item: (item[1], -item[2]), reverse=True)
-    for handler, priority, _ in handlers:
-        logger.debug('Handler: %s (priority %d)' % (handler.__class__.__name__, priority))
-        setattr(handler, '_devtool', args.devtool)
-    handlers = [item[0] for item in handlers]
 
     # Apply the handlers
     if args.binary:
