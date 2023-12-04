@@ -726,6 +726,7 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
 
     def process(self, srctree, classes, lines_before, lines_after, handled, extravalues):
         info = {}
+        metadata = {}
 
         if 'buildsystem' in handled:
             return False
