@@ -1413,6 +1413,7 @@ def register_commands(subparsers):
     parser_create.add_argument('-B', '--srcbranch', help='Branch in source repository if fetching from an SCM such as git (default master)')
     parser_create.add_argument('--keep-temp', action="store_true", help='Keep temporary directory (for debugging)')
     parser_create.add_argument('--npm-dev', action="store_true", help='For npm, also fetch devDependencies')
+    parser_create.add_argument('--no-pypi', action="store_true", help='Do not inherit pypi class')
     parser_create.add_argument('--devtool', action="store_true", help=argparse.SUPPRESS)
     parser_create.add_argument('--mirrors', action="store_true", help='Enable PREMIRRORS and MIRRORS for source tree fetching (disabled by default).')
     parser_create.set_defaults(func=create_recipe)

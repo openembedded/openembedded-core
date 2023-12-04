@@ -147,6 +147,8 @@ def add(args, config, basepath, workspace):
         extracmdopts += ' -a'
     if args.npm_dev:
         extracmdopts += ' --npm-dev'
+    if args.no_pypi:
+        extracmdopts += ' --no-pypi'
     if args.mirrors:
         extracmdopts += ' --mirrors'
     if args.srcrev:
@@ -2328,6 +2330,7 @@ def register_commands(subparsers, context):
     group.add_argument('--no-same-dir', help='Force build in a separate build directory', action="store_true")
     parser_add.add_argument('--fetch', '-f', help='Fetch the specified URI and extract it to create the source tree (deprecated - pass as positional argument instead)', metavar='URI')
     parser_add.add_argument('--npm-dev', help='For npm, also fetch devDependencies', action="store_true")
+    parser_add.add_argument('--no-pypi', help='Do not inherit pypi class', action="store_true")
     parser_add.add_argument('--version', '-V', help='Version to use within recipe (PV)')
     parser_add.add_argument('--no-git', '-g', help='If fetching source, do not set up source tree as a git repository', action="store_true")
     group = parser_add.add_mutually_exclusive_group()
