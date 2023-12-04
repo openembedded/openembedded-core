@@ -543,7 +543,7 @@ class DevtoolAddTests(DevtoolBase):
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake -c cleansstate %s' % testrecipe)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        result = runCmd('devtool add %s %s -f %s' % (testrecipe, srcdir, url))
+        result = runCmd('devtool add --no-pypi %s %s -f %s' % (testrecipe, srcdir, url))
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created. %s' % result.output)
         self.assertTrue(os.path.isfile(os.path.join(srcdir, 'setup.py')), 'Unable to find setup.py in source directory')
         self.assertTrue(os.path.isdir(os.path.join(srcdir, '.git')), 'git repository for external source tree was not created')
@@ -562,7 +562,7 @@ class DevtoolAddTests(DevtoolBase):
         result = runCmd('devtool reset -n %s' % testrecipe)
         shutil.rmtree(srcdir)
         fakever = '1.9'
-        result = runCmd('devtool add %s %s -f %s -V %s' % (testrecipe, srcdir, url, fakever))
+        result = runCmd('devtool add --no-pypi %s %s -f %s -V %s' % (testrecipe, srcdir, url, fakever))
         self.assertTrue(os.path.isfile(os.path.join(srcdir, 'setup.py')), 'Unable to find setup.py in source directory')
         # Test devtool status
         result = runCmd('devtool status')

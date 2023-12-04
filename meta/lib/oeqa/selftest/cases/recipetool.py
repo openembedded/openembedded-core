@@ -457,6 +457,27 @@ class RecipetoolCreateTests(RecipetoolBase):
 
     def test_recipetool_create_python3_setuptools(self):
         # Test creating python3 package from tarball (using setuptools3 class)
+        # Use the --no-pypi switch to avoid creating a pypi enabled recipe and
+        # and check the created recipe as if it was a more general tarball
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        pn = 'python-magic'
+        pv = '0.4.15'
+        recipefile = os.path.join(temprecipe, '%s_%s.bb' % (pn, pv))
+        srcuri = 'https://files.pythonhosted.org/packages/84/30/80932401906eaf787f2e9bd86dc458f1d2e75b064b4c187341f29516945c/python-magic-%s.tar.gz' % pv
+        result = runCmd('recipetool create --no-pypi -o %s %s' % (temprecipe, srcuri))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['LICENSE'] = set(['MIT'])
+        checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
+        checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/84/30/80932401906eaf787f2e9bd86dc458f1d2e75b064b4c187341f29516945c/python-magic-${PV}.tar.gz'
+        checkvars['SRC_URI[md5sum]'] = 'e384c95a47218f66c6501cd6dd45ff59'
+        checkvars['SRC_URI[sha256sum]'] = 'f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5'
+        inherits = ['setuptools3']
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+    def test_recipetool_create_python3_setuptools_pypi_tarball(self):
+        # Test creating python3 package from tarball (using setuptools3 and pypi classes)
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
         pn = 'python-magic'
@@ -468,10 +489,67 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars = {}
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
-        checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/84/30/80932401906eaf787f2e9bd86dc458f1d2e75b064b4c187341f29516945c/python-magic-${PV}.tar.gz'
-        checkvars['SRC_URI[md5sum]'] = 'e384c95a47218f66c6501cd6dd45ff59'
-        checkvars['SRC_URI[sha256sum]'] = 'f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5'
-        inherits = ['setuptools3']
+        checkvars['PYPI_PACKAGE'] = pn
+        inherits = ['setuptools3', 'pypi']
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+    def test_recipetool_create_python3_setuptools_pypi(self):
+        # Test creating python3 package from pypi url (using setuptools3 and pypi classes)
+        # Intentionnaly using setuptools3 class here instead of any of the pep517 class
+        # to avoid the toml dependency and allows this test to run on host autobuilders
+        # with older version of python
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        pn = 'python-magic'
+        pv = '0.4.15'
+        recipefile = os.path.join(temprecipe, '%s_%s.bb' % (pn, pv))
+        # First specify the required version in the url
+        srcuri = 'https://pypi.org/project/%s/%s' % (pn, pv)
+        runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['LICENSE'] = set(['MIT'])
+        checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
+        checkvars['PYPI_PACKAGE'] = pn
+        inherits = ['setuptools3', "pypi"]
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+        # Now specify the version as a recipetool parameter
+        runCmd('rm -rf %s' % recipefile)
+        self.assertFalse(os.path.isfile(recipefile))
+        srcuri = 'https://pypi.org/project/%s' % pn
+        runCmd('recipetool create -o %s %s --version %s' % (temprecipe, srcuri, pv))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['LICENSE'] = set(['MIT'])
+        checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
+        checkvars['PYPI_PACKAGE'] = pn
+        inherits = ['setuptools3', "pypi"]
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+        # Now, try to grab latest version of the package, so we cannot guess the name of the recipe,
+        # unless hardcoding the latest version but it means we will need to update the test for each release,
+        # so use a regexp
+        runCmd('rm -rf %s' % recipefile)
+        self.assertFalse(os.path.isfile(recipefile))
+        recipefile_re = r'%s_(.*)\.bb' % pn
+        result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        dirlist = os.listdir(temprecipe)
+        if len(dirlist) > 1:
+            self.fail('recipetool created more than just one file; output:\n%s\ndirlist:\n%s' % (result.output, str(dirlist)))
+        if len(dirlist) < 1 or not os.path.isfile(os.path.join(temprecipe, dirlist[0])):
+            self.fail('recipetool did not create recipe file; output:\n%s\ndirlist:\n%s' % (result.output, str(dirlist)))
+        import re
+        match = re.match(recipefile_re, dirlist[0])
+        self.assertTrue(match)
+        latest_pv = match.group(1)
+        self.assertTrue(latest_pv != pv)
+        recipefile = os.path.join(temprecipe, '%s_%s.bb' % (pn, latest_pv))
+        # Do not check LIC_FILES_CHKSUM here to avoid having updating the test on each release
+        checkvars = {}
+        checkvars['LICENSE'] = set(['MIT'])
+        checkvars['PYPI_PACKAGE'] = pn
+        inherits = ['setuptools3', "pypi"]
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_python3_pep517_setuptools_build_meta(self):
@@ -498,13 +576,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SUMMARY'] = 'A library for working with the color formats defined by HTML and CSS.'
         checkvars['LICENSE'] = set(['BSD-3-Clause'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=702b1ef12cf66832a88f24c8f2ee9c19'
-        checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/a1/fb/f95560c6a5d4469d9c49e24cf1b5d4d21ffab5608251c6020a965fb7791c/webcolors-${PV}.tar.gz'
-        checkvars['SRC_URI[md5sum]'] = 'c9be30c5b0cf1cad32e4cbacbb2229e9'
-        checkvars['SRC_URI[sha1sum]'] = 'c90b84fb65eed9b4c9dea7f08c657bfac0e820a5'
-        checkvars['SRC_URI[sha256sum]'] = 'c225b674c83fa923be93d235330ce0300373d02885cef23238813b0d5668304a'
-        checkvars['SRC_URI[sha384sum]'] = '45652af349660f19f68d01361dd5bda287789e5ea63608f52a8cea526ac04465614db2ea236103fb8456b1fcaea96ed7'
-        checkvars['SRC_URI[sha512sum]'] = '074aaf135ac6b0025b88b731d1d6dfa4c539b4fff7195658cc58a4326bb9f0449a231685d312b4a1ec48ca535a838bfa5c680787fe0e61473a2a092c448937d0'
-        inherits = ['python_setuptools_build_meta']
+        inherits = ['python_setuptools_build_meta', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
@@ -532,13 +604,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SUMMARY'] = 'Simple module to parse ISO 8601 dates'
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=aab31f2ef7ba214a5a341eaa47a7f367'
-        checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/b9/f3/ef59cee614d5e0accf6fd0cbba025b93b272e626ca89fb70a3e9187c5d15/iso8601-${PV}.tar.gz'
-        checkvars['SRC_URI[md5sum]'] = '6e33910eba87066b3be7fcf3d59d16b5'
-        checkvars['SRC_URI[sha1sum]'] = 'efd225b2c9fa7d9e4a1ec6ad94f3295cee982e61'
-        checkvars['SRC_URI[sha256sum]'] = '6b1d3829ee8921c4301998c909f7829fa9ed3cbdac0d3b16af2d743aed1ba8df'
-        checkvars['SRC_URI[sha384sum]'] = '255002433fe65c19adfd6b91494271b613cb25ef6a35ac77436de1e03d60cc07bf89fd716451b917f1435e4384860ef6'
-        checkvars['SRC_URI[sha512sum]'] = 'db57ab2a25ef91e3bc479c8539d27e853cf1fbf60986820b8999ae15d7e566425a1e0cfba47d0f3b23aa703db0576db368e6c110ba2a2f46c9a34e8ee3611fb7'
-        inherits = ['python_poetry_core']
+        inherits = ['python_poetry_core', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
@@ -566,13 +632,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SUMMARY'] = 'Backported and Experimental Type Hints for Python 3.8+'
         checkvars['LICENSE'] = set(['PSF-2.0'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=fcf6b249c2641540219a727f35d8d2c2'
-        checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/1f/7a/8b94bb016069caa12fc9f587b28080ac33b4fbb8ca369b98bc0a4828543e/typing_extensions-${PV}.tar.gz'
-        checkvars['SRC_URI[md5sum]'] = '74bafe841fbd1c27324afdeb099babdf'
-        checkvars['SRC_URI[sha1sum]'] = 'f8bed69cbad4a57a1a67bf8a31b62b657b47f7a3'
-        checkvars['SRC_URI[sha256sum]'] = 'df8e4339e9cb77357558cbdbceca33c303714cf861d1eef15e1070055ae8b7ef'
-        checkvars['SRC_URI[sha384sum]'] = '0bd0112234134d965c6884f3c1f95d27b6ae49cfb08108101158e31dff33c2dce729331628b69818850f1acb68f6c8d0'
-        checkvars['SRC_URI[sha512sum]'] = '5fbff10e085fbf3ac2e35d08d913608d8c8bca66903435ede91cdc7776d775689a53d64f5f0615fe687c6c228ac854c8651d99eb1cb96ec61c56b7ca01fdd440'
-        inherits = ['python_flit_core']
+        inherits = ['python_flit_core', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
@@ -601,13 +661,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['HOMEPAGE'] = 'https://github.com/python-jsonschema/jsonschema'
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=7a60a81c146ec25599a3e1dabb8610a8 file://json/LICENSE;md5=9d4de43111d33570c8fe49b4cb0e01af'
-        checkvars['SRC_URI'] = 'https://files.pythonhosted.org/packages/e4/43/087b24516db11722c8687e0caf0f66c7785c0b1c51b0ab951dfde924e3f5/jsonschema-${PV}.tar.gz'
-        checkvars['SRC_URI[md5sum]'] = '4d6667ce76f820c35082c2d60a4896ab'
-        checkvars['SRC_URI[sha1sum]'] = '9173714cb88964d07f3a3f4fcaaef638b8ceac0c'
-        checkvars['SRC_URI[sha256sum]'] = 'ec84cc37cfa703ef7cd4928db24f9cb31428a5d0fa77747b8b51a847458e0bbf'
-        checkvars['SRC_URI[sha384sum]'] = '7a53181f0e679aa3dc3eb4d05a420877b7b9bff2d02e81f5c289a37ed1127d6c0cca1f5a5f9e4e166f089ab36bcc2be9'
-        checkvars['SRC_URI[sha512sum]'] = '60fa769faf6e3fc2c14eb9acd189c86e9d366b157230a5681d36552af0c159cb1ad33fd920668a36afdab98bc97253f91501704c5c07b5009fdaf9d29b52060d'
-        inherits = ['python_hatchling']
+        inherits = ['python_hatchling', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
