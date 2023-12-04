@@ -873,8 +873,10 @@ def create_recipe(args):
         outlines.append('')
     outlines.extend(lines_after)
 
+    outlines = [ line.rstrip('\n') +"\n" for line in outlines]
+
     if extravalues:
-        _, outlines = oe.recipeutils.patch_recipe_lines(outlines, extravalues, trailing_newline=False)
+        _, outlines = oe.recipeutils.patch_recipe_lines(outlines, extravalues, trailing_newline=True)
 
     if args.extract_to:
         scriptutils.git_convert_standalone_clone(srctree)
@@ -890,7 +892,7 @@ def create_recipe(args):
         log_info_cond('Source extracted to %s' % args.extract_to, args.devtool)
 
     if outfile == '-':
-        sys.stdout.write('\n'.join(outlines) + '\n')
+        sys.stdout.write(''.join(outlines) + '\n')
     else:
         with open(outfile, 'w') as f:
             lastline = None
@@ -898,7 +900,7 @@ def create_recipe(args):
                 if not lastline and not line:
                     # Skip extra blank lines
                     continue
-                f.write('%s\n' % line)
+                f.write('%s' % line)
                 lastline = line
         log_info_cond('Recipe %s has been created; further editing may be required to make it fully functional' % outfile, args.devtool)
         tinfoil.modified_files()
