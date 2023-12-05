@@ -340,7 +340,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ice-license ${PN}-ice \
              ${PN}-ice-enhanced-license ${PN}-ice-enhanced \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
-             ${PN}-bnx2-mips \
+             ${PN}-bnx2 \
              ${PN}-liquidio \
              ${PN}-nvidia-license \
              ${PN}-nvidia-tegra-k1 ${PN}-nvidia-tegra \
@@ -1087,18 +1087,22 @@ RDEPENDS:${PN}-bcm4356-pcie += "${PN}-cypress-license"
 LICENSE:${PN}-bcm4373 = "Firmware-cypress"
 RDEPENDS:${PN}-bcm4373 += "${PN}-cypress-license"
 
-# For Broadcom bnx2-mips
+# For Broadcom bnx2
 #
 # which is a separate case to the other Broadcom firmwares since its
 # license is contained in the shared WHENCE file.
 
-LICENSE:${PN}-bnx2-mips = "WHENCE"
+LICENSE:${PN}-bnx2 = "WHENCE"
 LICENSE:${PN}-whence-license = "WHENCE"
 
-FILES:${PN}-bnx2-mips = "${nonarch_base_libdir}/firmware/bnx2/bnx2-mips-09-6.2.1b.fw"
+FILES:${PN}-bnx2 = " \
+    ${nonarch_base_libdir}/firmware/bnx2/bnx2-mips*.fw \
+    ${nonarch_base_libdir}/firmware/bnx2/bnx2-rv2p*.fw \
+"
 FILES:${PN}-whence-license = "${nonarch_base_libdir}/firmware/WHENCE"
 
-RDEPENDS:${PN}-bnx2-mips += "${PN}-whence-license"
+RDEPENDS:${PN}-bnx2 += "${PN}-whence-license"
+RPROVIDES:${PN}-bnx2 = "${PN}-bnx2-mips"
 
 # For cirrus
 LICENSE:${PN}-cirrus = "Firmware-cirrus"
