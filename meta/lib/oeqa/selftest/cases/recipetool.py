@@ -1108,9 +1108,9 @@ class RecipetoolAppendsrcBase(RecipetoolBase):
         for uri in src_uri:
             p = urllib.parse.urlparse(uri)
             if p.scheme == 'file':
-                return p.netloc + p.path
+                return p.netloc + p.path, uri
 
-    def _test_appendsrcfile(self, testrecipe, filename=None, destdir=None, has_src_uri=True, srcdir=None, newfile=None, options=''):
+    def _test_appendsrcfile(self, testrecipe, filename=None, destdir=None, has_src_uri=True, srcdir=None, newfile=None, remove=None, options=''):
         if newfile is None:
             newfile = self.testfile
 
@@ -1137,12 +1137,18 @@ class RecipetoolAppendsrcBase(RecipetoolBase):
 
         expectedlines = ['FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n',
                          '\n']
+
+        if remove:
+            for entry in remove:
+                expectedlines.extend(['SRC_URI:remove = "%s"\n' % entry,
+                                       '\n'])
+
         if has_src_uri:
             uri = 'file://%s' % filename
             if expected_subdir:
                 uri += ';subdir=%s' % expected_subdir
-            expectedlines[0:0] = ['SRC_URI += "%s"\n' % uri,
-                                  '\n']
+            expectedlines.extend(['SRC_URI += "%s"\n' % uri,
+                                  '\n'])
 
         return self._try_recipetool_appendsrcfile(testrecipe, newfile, destpath, options, expectedlines, [filename])
 
@@ -1197,18 +1203,17 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
 
     def test_recipetool_appendsrcfile_existing_in_src_uri(self):
         testrecipe = 'base-files'
-        filepath = self._get_first_file_uri(testrecipe)
+        filepath,_  = self._get_first_file_uri(testrecipe)
         self.assertTrue(filepath, 'Unable to test, no file:// uri found in SRC_URI for %s' % testrecipe)
         self._test_appendsrcfile(testrecipe, filepath, has_src_uri=False)
 
     def test_recipetool_appendsrcfile_existing_in_src_uri_diff_params(self):
         testrecipe = 'base-files'
         subdir = 'tmp'
-        filepath = self._get_first_file_uri(testrecipe)
+        filepath, srcuri_entry = self._get_first_file_uri(testrecipe)
         self.assertTrue(filepath, 'Unable to test, no file:// uri found in SRC_URI for %s' % testrecipe)
 
-        output = self._test_appendsrcfile(testrecipe, filepath, subdir, has_src_uri=False)
-        self.assertTrue(any('with different parameters' in l for l in output))
+        self._test_appendsrcfile(testrecipe, filepath, subdir, remove=[srcuri_entry])
 
     def test_recipetool_appendsrcfile_replace_file_srcdir(self):
         testrecipe = 'bash'

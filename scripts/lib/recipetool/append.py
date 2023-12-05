@@ -300,7 +300,9 @@ def appendfile(args):
                 if st.st_mode & stat.S_IXUSR:
                     perms = '0755'
             install = {args.newfile: (args.targetpath, perms)}
-        oe.recipeutils.bbappend_recipe(rd, args.destlayer, {args.newfile: {'path' : sourcepath}}, install, wildcardver=args.wildcard_version, machine=args.machine)
+        if sourcepath:
+            sourcepath = os.path.basename(sourcepath)
+        oe.recipeutils.bbappend_recipe(rd, args.destlayer, {args.newfile: {'newname' : sourcepath}}, install, wildcardver=args.wildcard_version, machine=args.machine)
         tinfoil.modified_files()
         return 0
     else:
@@ -329,6 +331,7 @@ def appendsrc(args, files, rd, extralines=None):
 
     copyfiles = {}
     extralines = extralines or []
+    params = []
     for newfile, srcfile in files.items():
         src_destdir = os.path.dirname(srcfile)
         if not args.use_workdir:
@@ -339,22 +342,12 @@ def appendsrc(args, files, rd, extralines=None):
             src_destdir = os.path.join(os.path.relpath(srcdir, workdir), src_destdir)
         src_destdir = os.path.normpath(src_destdir)
 
-        source_uri = 'file://{0}'.format(os.path.basename(srcfile))
         if src_destdir and src_destdir != '.':
-            source_uri += ';subdir={0}'.format(src_destdir)
-
-        simple = bb.fetch.URI(source_uri)
-        simple.params = {}
-        simple_str = str(simple)
-        if simple_str in simplified:
-            existing = simplified[simple_str]
-            if source_uri != existing:
-                logger.warning('{0!r} is already in SRC_URI, with different parameters: {1!r}, not adding'.format(source_uri, existing))
-            else:
-                logger.warning('{0!r} is already in SRC_URI, not adding'.format(source_uri))
+            params.append({'subdir': src_destdir})
         else:
-            extralines.append('SRC_URI += {0}'.format(source_uri))
-        copyfiles[newfile] = {'path' : srcfile}
+            params.append({})
+
+        copyfiles[newfile] = {'newname' : os.path.basename(srcfile)}
 
     dry_run_output = None
     dry_run_outdir = None
@@ -363,7 +356,8 @@ def appendsrc(args, files, rd, extralines=None):
         dry_run_output = tempfile.TemporaryDirectory(prefix='devtool')
         dry_run_outdir = dry_run_output.name
 
-    appendfile, _ = oe.recipeutils.bbappend_recipe(rd, args.destlayer, copyfiles, None, wildcardver=args.wildcard_version, machine=args.machine, extralines=extralines, redirect_output=dry_run_outdir)
+    appendfile, _ = oe.recipeutils.bbappend_recipe(rd, args.destlayer, copyfiles, None, wildcardver=args.wildcard_version, machine=args.machine, extralines=extralines, params=params,
+                                                   redirect_output=dry_run_outdir)
     if args.dry_run:
         output = ''
         appendfilename = os.path.basename(appendfile)
