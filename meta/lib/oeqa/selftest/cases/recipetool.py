@@ -1110,7 +1110,7 @@ class RecipetoolAppendsrcBase(RecipetoolBase):
             if p.scheme == 'file':
                 return p.netloc + p.path, uri
 
-    def _test_appendsrcfile(self, testrecipe, filename=None, destdir=None, has_src_uri=True, srcdir=None, newfile=None, remove=None, options=''):
+    def _test_appendsrcfile(self, testrecipe, filename=None, destdir=None, has_src_uri=True, srcdir=None, newfile=None, remove=None, machine=None , options=''):
         if newfile is None:
             newfile = self.testfile
 
@@ -1138,17 +1138,39 @@ class RecipetoolAppendsrcBase(RecipetoolBase):
         expectedlines = ['FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n',
                          '\n']
 
+        override = ""
+        if machine:
+            options += ' -m %s' % machine
+            override = ':append:%s' % machine
+            expectedlines.extend(['PACKAGE_ARCH = "${MACHINE_ARCH}"\n',
+                                  '\n'])
+
         if remove:
             for entry in remove:
-                expectedlines.extend(['SRC_URI:remove = "%s"\n' % entry,
+                if machine:
+                    entry_remove_line = 'SRC_URI:remove:%s = " %s"\n' % (machine, entry)
+                else:
+                    entry_remove_line = 'SRC_URI:remove = "%s"\n' % entry
+
+                expectedlines.extend([entry_remove_line,
                                        '\n'])
 
         if has_src_uri:
             uri = 'file://%s' % filename
             if expected_subdir:
                 uri += ';subdir=%s' % expected_subdir
-            expectedlines.extend(['SRC_URI += "%s"\n' % uri,
-                                  '\n'])
+            if machine:
+                src_uri_line = 'SRC_URI%s = " %s"\n' % (override, uri)
+            else:
+                src_uri_line = 'SRC_URI += "%s"\n' % uri
+
+            expectedlines.extend([src_uri_line, '\n'])
+
+        with open("/tmp/tmp.txt", "w") as file:
+            print(expectedlines, file=file)
+
+        if machine:
+            filename = '%s/%s' % (machine, filename)
 
         return self._try_recipetool_appendsrcfile(testrecipe, newfile, destpath, options, expectedlines, [filename])
 
@@ -1207,13 +1229,23 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
         self.assertTrue(filepath, 'Unable to test, no file:// uri found in SRC_URI for %s' % testrecipe)
         self._test_appendsrcfile(testrecipe, filepath, has_src_uri=False)
 
-    def test_recipetool_appendsrcfile_existing_in_src_uri_diff_params(self):
+    def test_recipetool_appendsrcfile_existing_in_src_uri_diff_params(self, machine=None):
         testrecipe = 'base-files'
         subdir = 'tmp'
         filepath, srcuri_entry = self._get_first_file_uri(testrecipe)
         self.assertTrue(filepath, 'Unable to test, no file:// uri found in SRC_URI for %s' % testrecipe)
 
-        self._test_appendsrcfile(testrecipe, filepath, subdir, remove=[srcuri_entry])
+        self._test_appendsrcfile(testrecipe, filepath, subdir, machine=machine, remove=[srcuri_entry])
+
+    def test_recipetool_appendsrcfile_machine(self):
+        # A very basic test
+        self._test_appendsrcfile('base-files', 'a-file', machine='mymachine')
+
+        # Force cleaning the output of previous test
+        self.tearDownLocal()
+
+        # A more complex test: existing entry in src_uri with different param
+        self.test_recipetool_appendsrcfile_existing_in_src_uri_diff_params(machine='mymachine')
 
     def test_recipetool_appendsrcfile_replace_file_srcdir(self):
         testrecipe = 'bash'
