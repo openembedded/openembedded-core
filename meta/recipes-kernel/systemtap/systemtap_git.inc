@@ -7,6 +7,7 @@ SRC_URI = "git://sourceware.org/git/systemtap.git;branch=master;protocol=https \
            file://0001-Do-not-let-configure-write-a-python-location-into-th.patch \
            file://0001-Install-python-modules-to-correct-library-dir.patch \
            file://0001-staprun-stapbpf-don-t-support-installing-a-non-root.patch \
+           file://0001-Makefile.am-remove-runtime-linux-uprobes-and-runtime.patch \
            file://0001-prerelease-datestamp-fixes.patch \
            "
 
