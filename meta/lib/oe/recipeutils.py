@@ -776,14 +776,22 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                 else:
                     srcfile = os.path.basename(newfile)
                 srcurientry = 'file://%s' % srcfile
+                oldentry = None
+                for uri in rd.getVar('SRC_URI').split():
+                    if srcurientry in uri:
+                        oldentry = uri
                 if params and params[i]:
                     srcurientry = '%s;%s' % (srcurientry, ';'.join('%s=%s' % (k,v) for k,v in params[i].items()))
                 # Double-check it's not there already
                 # FIXME do we care if the entry is added by another bbappend that might go away?
                 if not srcurientry in rd.getVar('SRC_URI').split():
                     if machine:
+                        if oldentry:
+                            appendline('SRC_URI:remove%s' % appendoverride, '=', ' ' + oldentry)
                         appendline('SRC_URI:append%s' % appendoverride, '=', ' ' + srcurientry)
                     else:
+                        if oldentry:
+                            appendline('SRC_URI:remove', '=', oldentry)
                         appendline('SRC_URI', '+=', srcurientry)
                 param['path'] = srcfile
             else:
