@@ -702,6 +702,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
     if not removevalues:
         removevalues = {}
 
+    recipefile = rd.getVar('FILE')
     # Determine how the bbappend should be named
     appendpath, pathok = get_bbappend_path(rd, destlayerdir, wildcardver)
     if not appendpath:
