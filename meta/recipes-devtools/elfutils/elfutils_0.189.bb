@@ -39,7 +39,9 @@ BUILD_CFLAGS += "-Wno-error=stringop-overflow"
 DEPENDS_BZIP2 = "bzip2-replacement-native"
 DEPENDS_BZIP2:class-target = "bzip2"
 
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'debuginfod', 'debuginfod libdebuginfod', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'debuginfod', 'debuginfod libdebuginfod', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'minidebuginfo', 'xz', '', d)} \
+                  "
 PACKAGECONFIG[bzip2] = "--with-bzlib,--without-bzlib,${DEPENDS_BZIP2}"
 PACKAGECONFIG[xz] = "--with-lzma,--without-lzma,xz"
 PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
