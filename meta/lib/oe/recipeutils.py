@@ -677,6 +677,8 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                 path: the original filename as it would appear in SRC_URI
                     or None if it isn't already present.
                 patchdir: the patchdir parameter
+                newname: the name to give to the new added file. None to use
+                    the default value: basename(path)
             You may pass None for this parameter if you simply want to specify
             your own content via the extralines parameter.
         install: dict mapping entries in srcfiles to a tuple of two elements:
@@ -769,7 +771,10 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         for i, (newfile, param) in enumerate(srcfiles.items()):
             srcurientry = None
             if not 'path' in param or not param['path']:
-                srcfile = os.path.basename(newfile)
+                if 'newname' in param and param['newname']:
+                    srcfile = param['newname']
+                else:
+                    srcfile = os.path.basename(newfile)
                 srcurientry = 'file://%s' % srcfile
                 if params and params[i]:
                     srcurientry = '%s;%s' % (srcurientry, ';'.join('%s=%s' % (k,v) for k,v in params[i].items()))
