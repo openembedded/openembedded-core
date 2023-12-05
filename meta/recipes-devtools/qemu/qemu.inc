@@ -166,6 +166,13 @@ CVE_CHECK_WHITELIST += "CVE-2020-27661"
 # this bug related to windows specific.
 CVE_CHECK_WHITELIST += "CVE-2023-0664"
 
+# As per https://bugzilla.redhat.com/show_bug.cgi?id=2203387
+# RHEL specific issue
+CVE_CHECK_WHITELIST += "CVE-2023-2680"
+
+# Affected only `qemu-kvm` shipped with Red Hat Enterprise Linux 8.3 release.
+CVE_CHECK_WHITELIST += "CVE-2021-20295"
+
 COMPATIBLE_HOST_mipsarchn32 = "null"
 COMPATIBLE_HOST_mipsarchn64 = "null"
 
