@@ -341,6 +341,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ice-enhanced-license ${PN}-ice-enhanced \
              ${PN}-adsp-sst-license ${PN}-adsp-sst \
              ${PN}-bnx2 \
+             ${PN}-bnx2x \
              ${PN}-liquidio \
              ${PN}-nvidia-license \
              ${PN}-nvidia-tegra-k1 ${PN}-nvidia-tegra \
@@ -1103,6 +1104,12 @@ FILES:${PN}-whence-license = "${nonarch_base_libdir}/firmware/WHENCE"
 
 RDEPENDS:${PN}-bnx2 += "${PN}-whence-license"
 RPROVIDES:${PN}-bnx2 = "${PN}-bnx2-mips"
+
+LICENSE:${PN}-bnx2x = "WHENCE"
+
+FILES:${PN}-bnx2x = "${nonarch_base_libdir}/firmware/bnx2x/bnx2x*.fw"
+
+RDEPENDS:${PN}-bnx2x += "${PN}-whence-license"
 
 # For cirrus
 LICENSE:${PN}-cirrus = "Firmware-cirrus"
