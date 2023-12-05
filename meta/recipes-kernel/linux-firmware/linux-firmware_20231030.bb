@@ -1187,7 +1187,10 @@ FILES:${PN}-iwlwifi-7265d   = "${nonarch_base_libdir}/firmware/iwlwifi-7265D-*.u
 FILES:${PN}-iwlwifi-8000c   = "${nonarch_base_libdir}/firmware/iwlwifi-8000C-*.ucode"
 FILES:${PN}-iwlwifi-8265   = "${nonarch_base_libdir}/firmware/iwlwifi-8265-*.ucode"
 FILES:${PN}-iwlwifi-9000   = "${nonarch_base_libdir}/firmware/iwlwifi-9000-*.ucode"
-FILES:${PN}-iwlwifi-misc   = "${nonarch_base_libdir}/firmware/iwlwifi-*.ucode"
+FILES:${PN}-iwlwifi-misc   = " \
+    ${nonarch_base_libdir}/firmware/iwlwifi-*.ucode \
+    ${nonarch_base_libdir}/firmware/iwlwifi-*.pnvm \
+"
 
 RDEPENDS:${PN}-iwlwifi-135-6     = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-3160-7    = "${PN}-iwlwifi-license"
