@@ -664,7 +664,7 @@ def get_bbappend_path(d, destlayerdir, wildcardver=False):
     return (appendpath, pathok)
 
 
-def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False, machine=None, extralines=None, removevalues=None, redirect_output=None, params=None):
+def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False, machine=None, extralines=None, removevalues=None, redirect_output=None, params=None, update_original_recipe=False):
     """
     Writes a bbappend file for a recipe
     Parameters:
@@ -701,19 +701,29 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         params:
             Parameters to use when adding entries to SRC_URI. If specified,
             should be a list of dicts with the same length as srcfiles.
+        update_original_recipe:
+            Force to update the original recipe instead of creating/updating
+            a bbapend. destlayerdir must contain the original recipe
     """
 
     if not removevalues:
         removevalues = {}
 
     recipefile = rd.getVar('FILE')
-    # Determine how the bbappend should be named
-    appendpath, pathok = get_bbappend_path(rd, destlayerdir, wildcardver)
-    if not appendpath:
-        bb.error('Unable to determine layer directory containing %s' % recipefile)
-        return (None, None)
-    if not pathok:
-        bb.warn('Unable to determine correct subdirectory path for bbappend file - check that what %s adds to BBFILES also matches .bbappend files. Using %s for now, but until you fix this the bbappend will not be applied.' % (os.path.join(destlayerdir, 'conf', 'layer.conf'), os.path.dirname(appendpath)))
+    if update_original_recipe:
+        if destlayerdir not in recipefile:
+            bb.error("destlayerdir %s doesn't contain the original recipe (%s), cannot update it" % (destlayerdir, recipefile))
+            return (None, None)
+
+        appendpath = recipefile
+    else:
+        # Determine how the bbappend should be named
+        appendpath, pathok = get_bbappend_path(rd, destlayerdir, wildcardver)
+        if not appendpath:
+            bb.error('Unable to determine layer directory containing %s' % recipefile)
+            return (None, None)
+        if not pathok:
+            bb.warn('Unable to determine correct subdirectory path for bbappend file - check that what %s adds to BBFILES also matches .bbappend files. Using %s for now, but until you fix this the bbappend will not be applied.' % (os.path.join(destlayerdir, 'conf', 'layer.conf'), os.path.dirname(appendpath)))
 
     appenddir = os.path.dirname(appendpath)
     if not redirect_output:
@@ -758,7 +768,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
             bbappendlines.append((varname, op, value))
 
     destsubdir = rd.getVar('PN')
-    if srcfiles:
+    if not update_original_recipe and srcfiles:
         bbappendlines.append(('FILESEXTRAPATHS:prepend', ':=', '${THISDIR}/${PN}:'))
 
     appendoverride = ''
@@ -791,7 +801,10 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
                         appendline('SRC_URI:append%s' % appendoverride, '=', ' ' + srcurientry)
                     else:
                         if oldentry:
-                            appendline('SRC_URI:remove', '=', oldentry)
+                            if update_original_recipe:
+                                removevalues['SRC_URI'] = oldentry
+                            else:
+                                appendline('SRC_URI:remove', '=', oldentry)
                         appendline('SRC_URI', '+=', srcurientry)
                 param['path'] = srcfile
             else:
@@ -816,6 +829,8 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         # multiple times per operation when we're handling overrides)
         if os.path.exists(appendpath) and not os.path.exists(outfile):
             shutil.copy2(appendpath, outfile)
+    elif update_original_recipe:
+        outfile = recipefile
     else:
         bb.note('Writing append file %s' % appendpath)
         outfile = appendpath
