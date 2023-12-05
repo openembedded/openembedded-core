@@ -671,10 +671,12 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
         rd: data dictionary for the recipe
         destlayerdir: base directory of the layer to place the bbappend in
             (subdirectory path from there will be determined automatically)
-        srcfiles: dict of source files to add to SRC_URI, where the value
+        srcfiles: dict of source files to add to SRC_URI, where the key
             is the full path to the file to be added, and the value is a
-            dict with 'path' key containing the original filename as it
-            would appear in SRC_URI or None if it isn't already present.
+            dict with following optional keys:
+                path: the original filename as it would appear in SRC_URI
+                    or None if it isn't already present.
+                patchdir: the patchdir parameter
             You may pass None for this parameter if you simply want to specify
             your own content via the extralines parameter.
         install: dict mapping entries in srcfiles to a tuple of two elements:
