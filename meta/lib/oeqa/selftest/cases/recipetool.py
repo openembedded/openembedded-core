@@ -1247,6 +1247,34 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
         # A more complex test: existing entry in src_uri with different param
         self.test_recipetool_appendsrcfile_existing_in_src_uri_diff_params(machine='mymachine')
 
+    def test_recipetool_appendsrcfile_update_recipe_basic(self):
+        testrecipe = "base-files"
+        recipefile = get_bb_var('FILE', testrecipe)
+        result = runCmd('bitbake-layers show-layers')
+        layerrecipe = None
+        for line in result.output.splitlines()[3:]:
+            with open("/tmp/juju.txt", "a") as file:
+                layer = line.split()[1]
+                print(layer, file=file)
+                if layer in recipefile:
+                    layerrecipe = layer
+                    break
+        self.assertTrue(layerrecipe, 'Unable to find the layer containing %s' % testrecipe)
+        cmd = 'recipetool appendsrcfile -u %s %s %s' % (layerrecipe, testrecipe, self.testfile)
+        result = runCmd(cmd)
+        self.assertNotIn('Traceback', result.output)
+        self.add_command_to_tearDown('cd %s; rm -f %s/%s; git checkout .' % (os.path.dirname(recipefile), testrecipe, os.path.basename(self.testfile)))
+
+        expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile)),
+                           ('??', '.*/%s/%s/%s$' % (testrecipe, testrecipe, os.path.basename(self.testfile)))]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+        result = runCmd('git diff %s' % os.path.basename(recipefile), cwd=os.path.dirname(recipefile))
+        removelines = []
+        addlines = [
+            'file://%s \\\\' % os.path.basename(self.testfile),
+        ]
+        self._check_diff(result.output, addlines, removelines)
+
     def test_recipetool_appendsrcfile_replace_file_srcdir(self):
         testrecipe = 'bash'
         filepath = 'Makefile.in'
