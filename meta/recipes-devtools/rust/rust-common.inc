@@ -307,9 +307,13 @@ def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
     features = features or d.getVarFlag('FEATURES', arch_abi) or ""
     features = features.strip()
 
+    llvm_target = d.getVar('RUST_TARGET_SYS')
+    if thing == "BUILD":
+        llvm_target = d.getVar('RUST_HOST_SYS')
+
     # build tspec
     tspec = {}
-    tspec['llvm-target'] = d.getVar('RUST_TARGET_SYS', arch_abi)
+    tspec['llvm-target'] = llvm_target
     tspec['data-layout'] = d.getVarFlag('DATA_LAYOUT', arch_abi)
     tspec['max-atomic-width'] = int(d.getVarFlag('MAX_ATOMIC_WIDTH', arch_abi))
     tspec['target-pointer-width'] = d.getVarFlag('TARGET_POINTER_WIDTH', arch_abi)
