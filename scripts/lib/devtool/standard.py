@@ -993,7 +993,8 @@ def modify(args, config, basepath, workspace):
                 '}\n')
             if initial_revs:
                 for name, rev in initial_revs.items():
-                        f.write('\n# initial_rev %s: %s\n' % (name, rev))
+                    f.write('\n# initial_rev %s: %s\n' % (name, rev))
+                    if name in commits:
                         for commit in commits[name]:
                             f.write('# commit %s: %s\n' % (name, commit))
             if branch_patches:
