@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import errno
 import os
 import re
 import shutil
@@ -1900,7 +1901,15 @@ class DevtoolUpgradeTests(DevtoolBase):
         for p in paths:
             dstdir = os.path.join(dstdir, p)
             if not os.path.exists(dstdir):
-                os.makedirs(dstdir)
+                try:
+                    os.makedirs(dstdir)
+                except PermissionError:
+                    return False
+                except OSError as e:
+                    if e.errno == errno.EROFS:
+                        return False
+                    else:
+                        raise e
                 if p == "lib":
                     # Can race with other tests
                     self.add_command_to_tearDown('rmdir --ignore-fail-on-non-empty %s' % dstdir)
@@ -1908,8 +1917,12 @@ class DevtoolUpgradeTests(DevtoolBase):
                     self.track_for_cleanup(dstdir)
         dstfile = os.path.join(dstdir, os.path.basename(srcfile))
         if srcfile != dstfile:
-            shutil.copy(srcfile, dstfile)
+            try:
+                shutil.copy(srcfile, dstfile)
+            except PermissionError:
+                return False
             self.track_for_cleanup(dstfile)
+        return True
 
     def test_devtool_load_plugin(self):
         """Test that devtool loads only the first found plugin in BBPATH."""
@@ -1927,15 +1940,17 @@ class DevtoolUpgradeTests(DevtoolBase):
             plugincontent = fh.readlines()
         try:
             self.assertIn('meta-selftest', srcfile, 'wrong bbpath plugin found')
-            for path in searchpath:
-                self._copy_file_with_cleanup(srcfile, path, 'lib', 'devtool')
+            searchpath = [
+                path for path in searchpath
+                if self._copy_file_with_cleanup(srcfile, path, 'lib', 'devtool')
+            ]
             result = runCmd("devtool --quiet count")
             self.assertEqual(result.output, '1')
             result = runCmd("devtool --quiet multiloaded")
             self.assertEqual(result.output, "no")
             for path in searchpath:
                 result = runCmd("devtool --quiet bbdir")
-                self.assertEqual(result.output, path)
+                self.assertEqual(os.path.realpath(result.output), os.path.realpath(path))
                 os.unlink(os.path.join(result.output, 'lib', 'devtool', 'bbpath.py'))
         finally:
             with open(srcfile, 'w') as fh:
