@@ -639,11 +639,6 @@ def split_locales(d):
 
     packages = (d.getVar('PACKAGES') or "").split()
 
-    datadir = d.getVar('datadir')
-    if not datadir:
-        bb.note("datadir not defined")
-        return
-
     dvar = d.getVar('PKGD')
     pn = d.getVar('LOCALEBASEPN')
 
@@ -653,13 +648,19 @@ def split_locales(d):
     except ValueError:
         locale_index = len(packages)
 
-    localedir = os.path.join(dvar + datadir, 'locale')
+    localepaths = []
+    locales = set()
+    for localepath in (d.getVar('LOCALE_PATHS') or "").split():
+        localedir = dvar + localepath
+        if cpath.isdir(localedir):
+            locales.update(os.listdir(localedir))
+            localepaths.append(localepath)
+        else:
+            bb.debug(1, "No locale files in %s" % localepath)
 
-    if not cpath.isdir(localedir):
+    if len(locales) == 0:
         bb.debug(1, "No locale files in this package")
         return
-
-    locales = os.listdir(localedir)
 
     summary = d.getVar('SUMMARY') or pn
     description = d.getVar('DESCRIPTION') or ""
@@ -670,7 +671,10 @@ def split_locales(d):
         pkg = pn + '-locale-' + ln
         packages.insert(locale_index, pkg)
         locale_index += 1
-        d.setVar('FILES:' + pkg, os.path.join(datadir, 'locale', l))
+        files = []
+        for localepath in localepaths:
+            files.append(os.path.join(localepath, l))
+        d.setVar('FILES:' + pkg, " ".join(files))
         d.setVar('RRECOMMENDS:' + pkg, '%svirtual-locale-%s' % (mlprefix, ln))
         d.setVar('RPROVIDES:' + pkg, '%s-locale %s%s-translation' % (pn, mlprefix, ln))
         d.setVar('SUMMARY:' + pkg, '%s - %s translations' % (summary, l))
