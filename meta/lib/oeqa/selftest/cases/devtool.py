@@ -54,7 +54,7 @@ def setUpModule():
             result = runCmd('git rev-parse --show-toplevel', cwd=canonical_layerpath)
             oldreporoot = result.output.rstrip()
             newmetapath = os.path.join(corecopydir, os.path.relpath(oldmetapath, oldreporoot))
-            runCmd('git clone %s %s' % (oldreporoot, corecopydir), cwd=templayerdir)
+            runCmd('git clone file://%s %s' % (oldreporoot, corecopydir), cwd=templayerdir)
             # Now we need to copy any modified files
             # You might ask "why not just copy the entire tree instead of
             # cloning and doing this?" - well, the problem with that is
