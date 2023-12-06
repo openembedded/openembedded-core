@@ -1071,54 +1071,18 @@ def get_license_md5sums(d, static_only=False, linenumbers=False):
 
     return md5sums
 
-def crunch_license(licfile):
+def crunch_known_licenses(d):
     '''
-    Remove non-material text from a license file and then check
-    its md5sum against a known list. This works well for licenses
-    which contain a copyright statement, but is also a useful way
-    to handle people's insistence upon reformatting the license text
-    slightly (with no material difference to the text of the
-    license).
+    Calculate the MD5 checksums for the crunched versions of all common
+    licenses. Also add additional known checksums.
     '''
-
-    import oe.utils
-
-    # Note: these are carefully constructed!
-    license_title_re = re.compile(r'^#*\(? *(This is )?([Tt]he )?.{0,15} ?[Ll]icen[sc]e( \(.{1,10}\))?\)?[:\.]? ?#*$')
-    license_statement_re = re.compile(r'^((This (project|software)|.{1,10}) is( free software)? (released|licen[sc]ed)|(Released|Licen[cs]ed)) under the .{1,10} [Ll]icen[sc]e:?$')
-    copyright_re = re.compile('^ *[#\*]* *(Modified work |MIT LICENSED )?Copyright ?(\([cC]\))? .*$')
-    disclaimer_re = re.compile('^ *\*? ?All [Rr]ights [Rr]eserved\.$')
-    email_re = re.compile('^.*<[\w\.-]*@[\w\.\-]*>$')
-    header_re = re.compile('^(\/\**!?)? ?[\-=\*]* ?(\*\/)?$')
-    tag_re = re.compile('^ *@?\(?([Ll]icense|MIT)\)?$')
-    url_re = re.compile('^ *[#\*]* *https?:\/\/[\w\.\/\-]+$')
-
+    
     crunched_md5sums = {}
 
     # common licenses
-    crunched_md5sums['89f3bf322f30a1dcfe952e09945842f0'] = 'Apache-2.0'
-    crunched_md5sums['13b6fe3075f8f42f2270a748965bf3a1'] = '0BSD'
-    crunched_md5sums['ba87a7d7c20719c8df4b8beed9b78c43'] = 'BSD-2-Clause'
-    crunched_md5sums['7f8892c03b72de419c27be4ebfa253f8'] = 'BSD-3-Clause'
-    crunched_md5sums['21128c0790b23a8a9f9e260d5f6b3619'] = 'BSL-1.0'
-    crunched_md5sums['975742a59ae1b8abdea63a97121f49f4'] = 'EDL-1.0'
-    crunched_md5sums['5322cee4433d84fb3aafc9e253116447'] = 'EPL-1.0'
-    crunched_md5sums['6922352e87de080f42419bed93063754'] = 'EPL-2.0'
-    crunched_md5sums['793475baa22295cae1d3d4046a3a0ceb'] = 'GPL-2.0-only'
-    crunched_md5sums['ff9047f969b02c20f0559470df5cb433'] = 'GPL-2.0-or-later'
-    crunched_md5sums['ea6de5453fcadf534df246e6cdafadcd'] = 'GPL-3.0-only'
-    crunched_md5sums['b419257d4d153a6fde92ddf96acf5b67'] = 'GPL-3.0-or-later'
-    crunched_md5sums['228737f4c49d3ee75b8fb3706b090b84'] = 'ISC'
-    crunched_md5sums['c6a782e826ca4e85bf7f8b89435a677d'] = 'LGPL-2.0-only'
-    crunched_md5sums['32d8f758a066752f0db09bd7624b8090'] = 'LGPL-2.0-or-later'
-    crunched_md5sums['4820937eb198b4f84c52217ed230be33'] = 'LGPL-2.1-only'
-    crunched_md5sums['db13fe9f3a13af7adab2dc7a76f9e44a'] = 'LGPL-2.1-or-later'
-    crunched_md5sums['d7a0f2e4e0950e837ac3eabf5bd1d246'] = 'LGPL-3.0-only'
-    crunched_md5sums['abbf328e2b434f9153351f06b9f79d02'] = 'LGPL-3.0-or-later'
-    crunched_md5sums['eecf6429523cbc9693547cf2db790b5c'] = 'MIT'
-    crunched_md5sums['b218b0e94290b9b818c4be67c8e1cc82'] = 'MIT-0'
-    crunched_md5sums['ddc18131d6748374f0f35a621c245b49'] = 'Unlicense'
-    crunched_md5sums['51f9570ff32571fc0a443102285c5e33'] = 'WTFPL'
+    crunched_md5sums['ad4e9d34a2e966dfe9837f18de03266d'] = 'GFDL-1.1-only'
+    crunched_md5sums['d014fb11a34eb67dc717fdcfc97e60ed'] = 'GFDL-1.2-only'
+    crunched_md5sums['e020ca655b06c112def28e597ab844f1'] = 'GFDL-1.3-only'
 
     # The following two were gleaned from the "forever" npm package
     crunched_md5sums['0a97f8e4cbaf889d6fa51f84b89a79f6'] = 'ISC'
@@ -1174,6 +1138,39 @@ def crunch_license(licfile):
     # https://raw.githubusercontent.com/stackgl/gl-mat3/v2.0.0/LICENSE.md
     crunched_md5sums['75512892d6f59dddb6d1c7e191957e9c'] = 'Zlib'
 
+    commonlicdir = d.getVar('COMMON_LICENSE_DIR')
+    for fn in sorted(os.listdir(commonlicdir)):
+        md5value, lictext = crunch_license(os.path.join(commonlicdir, fn))
+        if md5value not in crunched_md5sums:
+            crunched_md5sums[md5value] = fn
+        elif fn != crunched_md5sums[md5value]:
+            bb.debug(2, "crunched_md5sums['%s'] is already set to '%s' rather than '%s'" % (md5value, crunched_md5sums[md5value], fn))
+        else:
+            bb.debug(2, "crunched_md5sums['%s'] is already set to '%s'" % (md5value, crunched_md5sums[md5value]))
+
+    return crunched_md5sums
+
+def crunch_license(licfile):
+    '''
+    Remove non-material text from a license file and then calculate its
+    md5sum. This works well for licenses that contain a copyright statement,
+    but is also a useful way to handle people's insistence upon reformatting
+    the license text slightly (with no material difference to the text of the
+    license).
+    '''
+
+    import oe.utils
+
+    # Note: these are carefully constructed!
+    license_title_re = re.compile(r'^#*\(? *(This is )?([Tt]he )?.{0,15} ?[Ll]icen[sc]e( \(.{1,10}\))?\)?[:\.]? ?#*$')
+    license_statement_re = re.compile(r'^((This (project|software)|.{1,10}) is( free software)? (released|licen[sc]ed)|(Released|Licen[cs]ed)) under the .{1,10} [Ll]icen[sc]e:?$')
+    copyright_re = re.compile('^ *[#\*]* *(Modified work |MIT LICENSED )?Copyright ?(\([cC]\))? .*$')
+    disclaimer_re = re.compile('^ *\*? ?All [Rr]ights [Rr]eserved\.$')
+    email_re = re.compile('^.*<[\w\.-]*@[\w\.\-]*>$')
+    header_re = re.compile('^(\/\**!?)? ?[\-=\*]* ?(\*\/)?$')
+    tag_re = re.compile('^ *@?\(?([Ll]icense|MIT)\)?$')
+    url_re = re.compile('^ *[#\*]* *https?:\/\/[\w\.\/\-]+$')
+
     lictext = []
     with open(licfile, 'r', errors='surrogateescape') as f:
         for line in f:
@@ -1215,12 +1212,13 @@ def crunch_license(licfile):
     except UnicodeEncodeError:
         md5val = None
         lictext = ''
-    license = crunched_md5sums.get(md5val, None)
-    return license, md5val, lictext
+    return md5val, lictext
 
 def guess_license(srctree, d):
     import bb
     md5sums = get_license_md5sums(d)
+
+    crunched_md5sums = crunch_known_licenses(d)
 
     licenses = []
     licspecs = ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp]l-v10']
@@ -1239,7 +1237,8 @@ def guess_license(srctree, d):
         md5value = bb.utils.md5_file(licfile)
         license = md5sums.get(md5value, None)
         if not license:
-            license, crunched_md5, lictext = crunch_license(licfile)
+            crunched_md5, lictext = crunch_license(licfile)
+            license = crunched_md5sums.get(crunched_md5, None)
             if lictext and not license:
                 license = 'Unknown'
                 logger.info("Please add the following line for '%s' to a 'lib/recipetool/licenses.csv' " \
