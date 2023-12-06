@@ -1495,7 +1495,7 @@ class DevtoolUpdateTests(DevtoolBase):
         # Modify one file
         srctree = os.path.join(self.workspacedir, 'sources', testrecipe)
         runCmd('echo "Another line" >> README', cwd=srctree)
-        runCmd('git commit -a --amend --no-edit', cwd=srctree)
+        runCmd('git commit -a --amend --no-edit --no-verify', cwd=srctree)
         self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
         result = runCmd('devtool update-recipe %s' % testrecipe)
         expected_status = [(' M', '.*/%s/readme.patch.gz$' % testrecipe)]
