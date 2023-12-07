@@ -161,7 +161,7 @@ python cargo_common_do_patch_paths() {
     # here is better than letting cargo tell (in case the file is missing)
     # "Cargo.lock should be modified but --frozen was given"
 
-    manifest_path = d.getVar("MANIFEST_PATH", True)
+    manifest_path = d.getVar("CARGO_MANIFEST_PATH", True)
     lockfile = os.path.join(os.path.dirname(manifest_path), "Cargo.lock")
     if not os.path.exists(lockfile):
         bb.fatal(f"{lockfile} file doesn't exist")
