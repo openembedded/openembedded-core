@@ -15,3 +15,8 @@ class UserGroupTests(OESelftestTestCase):
         self.logger.info("Packaging creategroup2")
         self.assertTrue(bitbake(' creategroup2 -c package'))
 
+    def _test_add_task_between_p_sysroot_and_package(self):
+        self.logger.info("Cleaning sstate for useraddbadtask")
+        self.logger.info("Building useraddbadtask")
+        # fails due to bug #14961
+        self.assertTrue(bitbake(' useraddbadtask -C fetch'))
