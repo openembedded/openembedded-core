@@ -706,8 +706,10 @@ def create_recipe(args):
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
     lines_before.append('SRC_URI = "%s"' % srcuri)
+    shown_checksums = ["%ssum" % s for s in bb.fetch2.SHOWN_CHECKSUM_LIST]
     for key, value in sorted(checksums.items()):
-        lines_before.append('SRC_URI[%s] = "%s"' % (key, value))
+        if key in shown_checksums:
+            lines_before.append('SRC_URI[%s] = "%s"' % (key, value))
     if srcuri and supports_srcrev(srcuri):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
