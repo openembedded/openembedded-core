@@ -19,7 +19,6 @@ import errno
 import string
 import threading
 import codecs
-import logging
 import tempfile
 from collections import defaultdict
 import importlib
