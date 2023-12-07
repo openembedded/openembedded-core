@@ -33,4 +33,4 @@ RDEPENDS:${PN} += " \
     python3-wheel \
 "
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
