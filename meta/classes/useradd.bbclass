@@ -177,9 +177,11 @@ SYSROOT_PREPROCESS_FUNCS += "${SYSROOTFUNC}"
 
 SSTATEPREINSTFUNCS:append:class-target = " useradd_sysroot_sstate"
 
+USERADD_DEPENDS ??= ""
+DEPENDS += "${USERADD_DEPENDS}"
 do_package_setscene[depends] += "${USERADDSETSCENEDEPS}"
 do_populate_sysroot_setscene[depends] += "${USERADDSETSCENEDEPS}"
-USERADDSETSCENEDEPS:class-target = "${MLPREFIX}base-passwd:do_populate_sysroot_setscene pseudo-native:do_populate_sysroot_setscene shadow-native:do_populate_sysroot_setscene ${MLPREFIX}shadow-sysroot:do_populate_sysroot_setscene"
+USERADDSETSCENEDEPS:class-target = "${MLPREFIX}base-passwd:do_populate_sysroot_setscene pseudo-native:do_populate_sysroot_setscene shadow-native:do_populate_sysroot_setscene ${MLPREFIX}shadow-sysroot:do_populate_sysroot_setscene ${@' '.join(['%s:do_populate_sysroot_setscene' % pkg for pkg in d.getVar("USERADD_DEPENDS").split()])}"
 USERADDSETSCENEDEPS = ""
 
 # Recipe parse-time sanity checks
