@@ -137,6 +137,7 @@ class SystemdServiceTests(SystemdTest):
             status = self.target.run('mount -oro,remount /')[0]
             self.assertTrue(status == 0, msg='Remounting / as r/o failed')
 
+    @OETestDepends(['systemd.SystemdBasicTests.test_systemd_basic'])
     @skipIfNotFeature('minidebuginfo', 'Test requires minidebuginfo to be in DISTRO_FEATURES')
     @OEHasPackage(['busybox'])
     def test_systemd_coredump_minidebuginfo(self):
