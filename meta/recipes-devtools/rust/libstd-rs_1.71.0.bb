@@ -6,10 +6,11 @@ LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=c2cccf560306876da3913d79062a54b9"
 
 require rust-source.inc
 
-# Building with library/std omits proc_macro from the sysroot. Using
-# library/test causes that to be installed which then allows cargo to
-# build (https://github.com/meta-rust/meta-rust/issues/266)
-S = "${RUSTSRC}/library/test"
+# The dummy crate named `sysroot` represents the standard library target.
+#
+# See fd4c81f4c19e ("Add a `sysroot` crate to represent the standard library crates")
+# https://github.com/rust-lang/rust/pull/108865/
+S = "${RUSTSRC}/library/sysroot"
 
 RUSTLIB_DEP = ""
 inherit cargo
