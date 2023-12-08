@@ -33,6 +33,13 @@ CARGO_DISABLE_BITBAKE_VENDORING ?= "0"
 # Used by libstd-rs to point to the vendor dir included in rustc src
 CARGO_VENDORING_DIRECTORY ?= "${CARGO_HOME}/bitbake"
 
+# The directory of the Cargo.toml relative to the root directory, per default
+# assume there's a Cargo.toml directly in the root directory
+CARGO_SRC_DIR ??= ""
+
+# The actual path to the Cargo.toml
+CARGO_MANIFEST_PATH ??= "${S}/${CARGO_SRC_DIR}/Cargo.toml"
+
 CARGO_RUST_TARGET_CCLD ?= "${RUST_TARGET_CCLD}"
 cargo_common_do_configure () {
 	mkdir -p ${CARGO_HOME}/bitbake

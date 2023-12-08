@@ -30,13 +30,6 @@ B = "${WORKDIR}/build"
 # where the issue occured
 export RUST_BACKTRACE = "1"
 
-# The directory of the Cargo.toml relative to the root directory, per default
-# assume there's a Cargo.toml directly in the root directory
-CARGO_SRC_DIR ??= ""
-
-# The actual path to the Cargo.toml
-CARGO_MANIFEST_PATH ??= "${S}/${CARGO_SRC_DIR}/Cargo.toml"
-
 RUSTFLAGS ??= ""
 BUILD_MODE = "${@['--release', ''][d.getVar('DEBUG_BUILD') == '1']}"
 # --frozen flag will prevent network access (which is required since only
