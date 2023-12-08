@@ -777,10 +777,10 @@ addtask tmptask2 before do_tmptask1
 
 class SStatePrintdiff(SStateBase):
     def run_test_printdiff_changerecipe(self, target, change_recipe, change_bbtask, change_content, expected_sametmp_output, expected_difftmp_output):
+        import time
         self.write_config("""
-TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
-""")
-        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff")
+TMPDIR = "${{TOPDIR}}/tmp-sstateprintdiff-sametmp-{}"
+""".format(time.time()))
         # Use runall do_build to ensure any indirect sstate is created, e.g. tzcode-native on both x86 and
         # aarch64 hosts since only allarch target recipes depend upon it and it may not be built otherwise.
         # A bitbake -c cleansstate tzcode-native would cause some of these tests to error for example.
@@ -791,9 +791,8 @@ TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
         result_sametmp = bitbake("-S printdiff {}".format(target))
 
         self.write_config("""
-TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
-""")
-        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff-2")
+TMPDIR = "${{TOPDIR}}/tmp-sstateprintdiff-difftmp-{}"
+""".format(time.time()))
         result_difftmp = bitbake("-S printdiff {}".format(target))
 
         self.delete_recipeinc(change_recipe)
@@ -803,20 +802,19 @@ TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
             self.assertIn(item, result_difftmp.output, msg = "Item {} not found in output:\n{}".format(item, result_difftmp.output))
 
     def run_test_printdiff_changeconfig(self, target, change_content, expected_sametmp_output, expected_difftmp_output):
+        import time
         self.write_config("""
-TMPDIR = "${TOPDIR}/tmp-sstateprintdiff"
-""")
-        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff")
+TMPDIR = "${{TOPDIR}}/tmp-sstateprintdiff-sametmp-{}"
+""".format(time.time()))
         bitbake("--runall build --runall deploy_source_date_epoch {}".format(target))
         bitbake("-S none {}".format(target))
         self.append_config(change_content)
         result_sametmp = bitbake("-S printdiff {}".format(target))
 
         self.write_config("""
-TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
-""")
+TMPDIR = "${{TOPDIR}}/tmp-sstateprintdiff-difftmp-{}"
+""".format(time.time()))
         self.append_config(change_content)
-        self.track_for_cleanup(self.topdir + "/tmp-sstateprintdiff-2")
         result_difftmp = bitbake("-S printdiff {}".format(target))
 
         for item in expected_sametmp_output:
