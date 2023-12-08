@@ -398,6 +398,9 @@ def find_siginfo(pn, taskname, taskhashlist, d):
             localdata.setVar('TARGET_VENDOR', '*')
             localdata.setVar('TARGET_OS', '*')
             localdata.setVar('PN', pn)
+            # gcc-source is a special case, same as with local stamps above
+            if pn.startswith("gcc-source"):
+                localdata.setVar('PN', "gcc")
             localdata.setVar('PV', '*')
             localdata.setVar('PR', '*')
             localdata.setVar('BB_TASKHASH', hashval)
