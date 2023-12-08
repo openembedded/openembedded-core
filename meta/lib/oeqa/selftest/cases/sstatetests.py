@@ -798,9 +798,9 @@ TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
 
         self.delete_recipeinc(change_recipe)
         for item in expected_sametmp_output:
-            self.assertIn(item, result_sametmp.output)
+            self.assertIn(item, result_sametmp.output, msg = "Item {} not found in output:\n{}".format(item, result_sametmp.output))
         for item in expected_difftmp_output:
-            self.assertIn(item, result_difftmp.output)
+            self.assertIn(item, result_difftmp.output, msg = "Item {} not found in output:\n{}".format(item, result_difftmp.output))
 
     def run_test_printdiff_changeconfig(self, target, change_content, expected_sametmp_output, expected_difftmp_output):
         self.write_config("""
@@ -820,9 +820,9 @@ TMPDIR = "${TOPDIR}/tmp-sstateprintdiff-2"
         result_difftmp = bitbake("-S printdiff {}".format(target))
 
         for item in expected_sametmp_output:
-            self.assertIn(item, result_sametmp.output)
+            self.assertIn(item, result_sametmp.output, msg = "Item {} not found in output:\n{}".format(item, result_sametmp.output))
         for item in expected_difftmp_output:
-            self.assertIn(item, result_difftmp.output)
+            self.assertIn(item, result_difftmp.output, msg = "Item {} not found in output:\n{}".format(item, result_difftmp.output))
 
 
     # Check if printdiff walks the full dependency chain from the image target to where the change is in a specific recipe
