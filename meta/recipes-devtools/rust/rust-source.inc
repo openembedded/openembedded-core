@@ -7,7 +7,7 @@ SRC_URI += "https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.xz;n
             file://zlib-off64_t.patch;patchdir=${RUSTSRC} \
             file://0001-musl-Define-SOCK_SEQPACKET-in-common-place.patch;patchdir=${RUSTSRC} \
 "
-SRC_URI[rust.sha256sum] = "5814699031aafdcc2e2f71fc9b389678cd7042350d1583da061463d8e88681c7"
+SRC_URI[rust.sha256sum] = "371af0fbe04051e20a74dbea6d4e4e548f10f15309c49cae2688afb882b6c7f1"
 
 RUSTSRC = "${WORKDIR}/rustc-${RUST_VERSION}-src"
 
