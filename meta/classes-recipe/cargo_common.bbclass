@@ -40,6 +40,9 @@ CARGO_SRC_DIR ??= ""
 # The actual path to the Cargo.toml
 CARGO_MANIFEST_PATH ??= "${S}/${CARGO_SRC_DIR}/Cargo.toml"
 
+# Path to Cargo.lock
+CARGO_LOCK_PATH ??= "${@ os.path.join(os.path.dirname(d.getVar('CARGO_MANIFEST_PATH', True)), 'Cargo.lock')}"
+
 CARGO_RUST_TARGET_CCLD ??= "${RUST_TARGET_CCLD}"
 cargo_common_do_configure () {
 	mkdir -p ${CARGO_HOME}/bitbake
@@ -168,8 +171,7 @@ python cargo_common_do_patch_paths() {
     # here is better than letting cargo tell (in case the file is missing)
     # "Cargo.lock should be modified but --frozen was given"
 
-    manifest_path = d.getVar("CARGO_MANIFEST_PATH", True)
-    lockfile = os.path.join(os.path.dirname(manifest_path), "Cargo.lock")
+    lockfile = d.getVar("CARGO_LOCK_PATH", True)
     if not os.path.exists(lockfile):
         bb.fatal(f"{lockfile} file doesn't exist")
 
