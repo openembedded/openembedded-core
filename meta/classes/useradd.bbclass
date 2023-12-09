@@ -154,7 +154,11 @@ python useradd_sysroot_sstate () {
         bb.build.exec_func("useradd_sysroot", d)
     elif task == "prepare_recipe_sysroot":
         # Used to update this recipe's own sysroot so the user/groups are available to do_install
-        scriptfile = d.expand("${RECIPE_SYSROOT}${bindir}/postinst-useradd-${PN}")
+
+        # If do_populate_sysroot is triggered and we write the file here, there would be an overlapping
+        # files. See usergrouptests.UserGroupTests.test_add_task_between_p_sysroot_and_package
+        scriptfile = d.expand("${RECIPE_SYSROOT}${bindir}/postinst-useradd-${PN}-recipedebug")
+
         bb.build.exec_func("useradd_sysroot", d)
     elif task == "populate_sysroot":
         # Used when installed in dependent task sysroots
