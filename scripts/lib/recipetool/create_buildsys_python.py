@@ -167,16 +167,11 @@ class PythonRecipeHandler(RecipeHandler):
                 if pypi_package_ext != "tar.gz":
                     extravalues["PYPI_PACKAGE_EXT"] = pypi_package_ext
 
-            # Pypi class will handle S and SRC_URIxxx variables, so remove them
+            # Pypi class will handle S and SRC_URI variables, so remove them
             # TODO: allow oe.recipeutils.patch_recipe_lines() to accept regexp so we can simplify the following to:
             # extravalues['SRC_URI(?:\[.*?\])?'] = None
             extravalues['S'] = None
             extravalues['SRC_URI'] = None
-            extravalues['SRC_URI[md5sum]'] = None
-            extravalues['SRC_URI[sha1sum]'] = None
-            extravalues['SRC_URI[sha256sum]'] = None
-            extravalues['SRC_URI[sha384sum]'] = None
-            extravalues['SRC_URI[sha512sum]'] = None
 
             classes.append('pypi')
 
