@@ -16,7 +16,7 @@ SRC_URI[go_linux_ppc64le.sha256sum] = "2ae0ec3736216dfbd7b01ff679842dc1bed365e53
 UPSTREAM_CHECK_URI = "https://golang.org/dl/"
 UPSTREAM_CHECK_REGEX = "go(?P<pver>\d+(\.\d+)+)\.linux"
 
-CVE_PRODUCT = "go"
+CVE_PRODUCT = "golang:go"
 
 S = "${WORKDIR}/go"
 
