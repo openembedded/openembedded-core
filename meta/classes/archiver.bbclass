@@ -468,10 +468,8 @@ def create_diff_gz(d, src_orig, src, ar_outdir):
         os.chdir(cwd)
 
 def is_work_shared(d):
-    pn = d.getVar('PN')
-    return pn.startswith('gcc-source') or \
-        bb.data.inherits_class('kernel', d) or \
-        (bb.data.inherits_class('kernelsrc', d) and d.expand("${TMPDIR}/work-shared") in d.getVar('S'))
+    sharedworkdir = os.path.join(d.getVar('TMPDIR'), 'work-shared')
+    return d.getVar('S').startswith(sharedworkdir)
 
 # Run do_unpack and do_patch
 python do_unpack_and_patch() {
