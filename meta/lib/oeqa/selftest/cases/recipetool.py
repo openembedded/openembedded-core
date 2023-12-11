@@ -487,6 +487,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars = {}
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
+        checkvars['SRC_URI[sha256sum]'] = 'f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5'
         checkvars['PYPI_PACKAGE'] = pn
         inherits = ['setuptools3', 'pypi']
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -508,6 +509,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars = {}
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
+        checkvars['SRC_URI[sha256sum]'] = 'f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5'
         checkvars['PYPI_PACKAGE'] = pn
         inherits = ['setuptools3', "pypi"]
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -521,6 +523,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars = {}
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=16a934f165e8c3245f241e77d401bb88'
+        checkvars['SRC_URI[sha256sum]'] = 'f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5'
         checkvars['PYPI_PACKAGE'] = pn
         inherits = ['setuptools3', "pypi"]
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -543,7 +546,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         latest_pv = match.group(1)
         self.assertTrue(latest_pv != pv)
         recipefile = os.path.join(temprecipe, '%s_%s.bb' % (pn, latest_pv))
-        # Do not check LIC_FILES_CHKSUM here to avoid having updating the test on each release
+        # Do not check LIC_FILES_CHKSUM and SRC_URI checksum here to avoid having updating the test on each release
         checkvars = {}
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['PYPI_PACKAGE'] = pn
@@ -574,6 +577,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SUMMARY'] = 'A library for working with the color formats defined by HTML and CSS.'
         checkvars['LICENSE'] = set(['BSD-3-Clause'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=702b1ef12cf66832a88f24c8f2ee9c19'
+        checkvars['SRC_URI[sha256sum]'] = 'c225b674c83fa923be93d235330ce0300373d02885cef23238813b0d5668304a'
         inherits = ['python_setuptools_build_meta', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -602,6 +606,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SUMMARY'] = 'Simple module to parse ISO 8601 dates'
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=aab31f2ef7ba214a5a341eaa47a7f367'
+        checkvars['SRC_URI[sha256sum]'] = '6b1d3829ee8921c4301998c909f7829fa9ed3cbdac0d3b16af2d743aed1ba8df'
         inherits = ['python_poetry_core', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -630,6 +635,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['SUMMARY'] = 'Backported and Experimental Type Hints for Python 3.8+'
         checkvars['LICENSE'] = set(['PSF-2.0'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=fcf6b249c2641540219a727f35d8d2c2'
+        checkvars['SRC_URI[sha256sum]'] = 'df8e4339e9cb77357558cbdbceca33c303714cf861d1eef15e1070055ae8b7ef'
         inherits = ['python_flit_core', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
@@ -659,6 +665,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['HOMEPAGE'] = 'https://github.com/python-jsonschema/jsonschema'
         checkvars['LICENSE'] = set(['MIT'])
         checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=7a60a81c146ec25599a3e1dabb8610a8 file://json/LICENSE;md5=9d4de43111d33570c8fe49b4cb0e01af'
+        checkvars['SRC_URI[sha256sum]'] = 'ec84cc37cfa703ef7cd4928db24f9cb31428a5d0fa77747b8b51a847458e0bbf'
         inherits = ['python_hatchling', 'pypi']
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
