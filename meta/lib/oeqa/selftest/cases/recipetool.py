@@ -1272,12 +1272,10 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
         result = runCmd('bitbake-layers show-layers')
         layerrecipe = None
         for line in result.output.splitlines()[3:]:
-            with open("/tmp/juju.txt", "a") as file:
-                layer = line.split()[1]
-                print(layer, file=file)
-                if layer in recipefile:
-                    layerrecipe = layer
-                    break
+            layer = line.split()[1]
+            if layer in recipefile:
+                layerrecipe = layer
+                break
         self.assertTrue(layerrecipe, 'Unable to find the layer containing %s' % testrecipe)
         cmd = 'recipetool appendsrcfile -u %s %s %s' % (layerrecipe, testrecipe, self.testfile)
         result = runCmd(cmd)
