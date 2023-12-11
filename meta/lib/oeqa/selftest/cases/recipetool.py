@@ -1267,23 +1267,16 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
         self.test_recipetool_appendsrcfile_existing_in_src_uri_diff_params(machine='mymachine')
 
     def test_recipetool_appendsrcfile_update_recipe_basic(self):
-        testrecipe = "base-files"
+        testrecipe = "mtd-utils-selftest"
         recipefile = get_bb_var('FILE', testrecipe)
-        result = runCmd('bitbake-layers show-layers')
-        layerrecipe = None
-        for line in result.output.splitlines()[3:]:
-            layer = line.split()[1]
-            if layer in recipefile:
-                layerrecipe = layer
-                break
-        self.assertTrue(layerrecipe, 'Unable to find the layer containing %s' % testrecipe)
-        cmd = 'recipetool appendsrcfile -u %s %s %s' % (layerrecipe, testrecipe, self.testfile)
+        self.assertIn('meta-selftest', recipefile, 'This test expect %s recipe to be in meta-selftest')
+        cmd = 'recipetool appendsrcfile -W -u meta-selftest %s %s' % (testrecipe, self.testfile)
         result = runCmd(cmd)
         self.assertNotIn('Traceback', result.output)
         self.add_command_to_tearDown('cd %s; rm -f %s/%s; git checkout .' % (os.path.dirname(recipefile), testrecipe, os.path.basename(self.testfile)))
 
         expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile)),
-                           ('??', '.*/%s/%s/%s$' % (testrecipe, testrecipe, os.path.basename(self.testfile)))]
+                           ('??', '.*/%s/%s$' % (testrecipe, os.path.basename(self.testfile)))]
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
         result = runCmd('git diff %s' % os.path.basename(recipefile), cwd=os.path.dirname(recipefile))
         removelines = []
