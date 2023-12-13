@@ -31,6 +31,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0002-linux-user-Replace-use-of-lfs64-related-functions-an.patch \
            file://fixedmeson.patch \
            file://fixmips.patch \
+           file://0001-vfio-Include-libgen.h-for-basename-API.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
