@@ -233,6 +233,7 @@ PACKAGECONFIG[slirp] = "--enable-slirp,--disable-slirp,libslirp"
 PACKAGECONFIG[brlapi] = "--enable-brlapi,--disable-brlapi"
 PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack,"
 PACKAGECONFIG[debuginfo] = "--enable-libdw,--disable-libdw,elfutils"
+PACKAGECONFIG[pipewire] = "--enable-pipewire,--disable-pipewire,pipewire"
 
 INSANE_SKIP:${PN}-common = "arch"
 
