@@ -884,47 +884,82 @@ expected_sametmp_output, expected_difftmp_output)
 
 @OETestTag("yocto-mirrors")
 class SStateMirrors(SStateBase):
-    def check_bb_output(self, output, exceptions):
-        in_tasks = False
-        missing_objects = []
-        checked_urls = []
-        for l in output.splitlines():
-            if "Testing URL" in l:
-                checked_urls.append(l.split()[3])
-            if "The differences between the current build and any cached tasks start at the following tasks" in l:
-                in_tasks = True
-                continue
-            if "Writing task signature files" in l:
-                in_tasks = False
-                continue
-            if in_tasks:
-                recipe_task = l.split("/")[-1]
-                recipe, task = recipe_task.split(":")
-                for e in exceptions:
-                    if e[0] in recipe and task == e[1]:
+    def check_bb_output(self, output, exceptions, check_cdn):
+        def is_exception(object, exceptions):
+            for e in exceptions:
+                if re.search(e, object):
+                    return True
+            return False
+
+        output_l = output.splitlines()
+        for l in output_l:
+            if l.startswith("Sstate summary"):
+                for idx, item in enumerate(l.split()):
+                    if item == 'Missed':
+                        missing_objects = int(l.split()[idx+1])
                         break
                 else:
-                    missing_objects.append(recipe_task)
-        self.assertTrue(len(missing_objects) == 0, "URLs checked:\n{}\nMissing objects in the cache:\n{}".format("\n".join(checked_urls), "\n".join(missing_objects)))
+                    self.fail("Did not find missing objects amount in sstate summary: {}".format(l))
+                break
+        else:
+            self.fail("Did not find 'Sstate summary' line in bitbake output")
 
-    def run_test_cdn_mirror(self, machine, targets, exceptions):
-        exceptions = exceptions + [[t, "do_deploy_source_date_epoch"] for t in targets.split()]
-        exceptions = exceptions + [[t, "do_image_qa"] for t in targets.split()]
-        self.config_sstate(True)
-        self.append_config("""
+        failed_urls = []
+        for l in output_l:
+            if "SState: Unsuccessful fetch test for" in l and check_cdn:
+                missing_object = l.split()[6]
+            elif "SState: Looked for but didn't find file" in l and not check_cdn:
+                missing_object = l.split()[8]
+            else:
+                missing_object = None
+            if missing_object:
+                if not is_exception(missing_object, exceptions):
+                    failed_urls.append(missing_object)
+                else:
+                    missing_objects -= 1
+
+        self.assertEqual(len(failed_urls), missing_objects, "Amount of reported missing objects does not match failed URLs: {}\nFailed URLs:\n{}".format(missing_objects, "\n".join(failed_urls)))
+        self.assertEqual(len(failed_urls), 0, "Missing objects in the cache:\n{}".format("\n".join(failed_urls)))
+
+    def run_test(self, machine, targets, exceptions, check_cdn = True):
+        # sstate is checked for existence of these, but they never get written out to begin with
+        exceptions += ["{}.*image_qa".format(t) for t in targets.split()]
+        exceptions += ["{}.*deploy_source_date_epoch".format(t) for t in targets.split()]
+        exceptions += ["{}.*image_complete".format(t) for t in targets.split()]
+        exceptions += ["linux-yocto.*shared_workdir"]
+        # these get influnced by IMAGE_FSTYPES tweaks in yocto-autobuilder-helper's config.json (on x86-64)
+        # additionally, they depend on noexec (thus, absent stamps) package, install, etc. image tasks,
+        # which makes tracing other changes difficult
+        exceptions += ["{}.*create_spdx".format(t) for t in targets.split()]
+        exceptions += ["{}.*create_runtime_spdx".format(t) for t in targets.split()]
+
+        if check_cdn:
+            self.config_sstate(True)
+            self.append_config("""
 MACHINE = "{}"
 BB_HASHSERVE_UPSTREAM = "hashserv.yocto.io:8687"
 SSTATE_MIRRORS ?= "file://.* http://cdn.jsdelivr.net/yocto/sstate/all/PATH;downloadfilename=PATH"
 """.format(machine))
-        result = bitbake("-D -S printdiff {}".format(targets))
-        self.check_bb_output(result.output, exceptions)
+        else:
+            self.append_config("""
+MACHINE = "{}"
+""".format(machine))
+        result = bitbake("-DD -n {}".format(targets))
+        bitbake("-S none {}".format(targets))
+        self.check_bb_output(result.output, exceptions, check_cdn)
 
     def test_cdn_mirror_qemux86_64(self):
-        # Example:
-        # exceptions = [ ["packagegroup-core-sdk","do_package"] ]
         exceptions = []
-        self.run_test_cdn_mirror("qemux86-64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions)
+        self.run_test("qemux86-64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions)
 
     def test_cdn_mirror_qemuarm64(self):
         exceptions = []
-        self.run_test_cdn_mirror("qemuarm64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions)
+        self.run_test("qemuarm64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions)
+
+    def test_local_cache_qemux86_64(self):
+        exceptions = []
+        self.run_test("qemux86-64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions, check_cdn = False)
+
+    def test_local_cache_qemuarm64(self):
+        exceptions = []
+        self.run_test("qemuarm64", "core-image-minimal core-image-full-cmdline core-image-sato-sdk", exceptions, check_cdn = False)
