@@ -29,6 +29,8 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://CVE-2020-10878_1.patch \
            file://CVE-2020-10878_2.patch \
            file://CVE-2020-12723.patch \
+           file://CVE-2023-31484.patch \
+           file://CVE-2023-47038.patch \
            "
 SRC_URI_append_class-native = " \
            file://perl-configpm-switch.patch \
