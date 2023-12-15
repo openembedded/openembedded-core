@@ -14,11 +14,11 @@ CLEANBROKEN = "1"
 RDEPENDS:${PN} += " \
     ${PYTHON_PN}-codecs \
     ${PYTHON_PN}-difflib \
-    ${PYTHON_PN}-distutils \
     ${PYTHON_PN}-netserver \
     ${PYTHON_PN}-numbers \
     ${PYTHON_PN}-pickle \
     ${PYTHON_PN}-pytz \
+    ${PYTHON_PN}-setuptools \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-threading \
 "
