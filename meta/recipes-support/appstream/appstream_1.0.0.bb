@@ -19,17 +19,16 @@ DEPENDS = " \
     python3-pygments-native \
 "
 
-inherit meson gobject-introspection gettext gtk-doc pkgconfig vala
+inherit meson gobject-introspection gettext gi-docgen pkgconfig vala
 
 GIR_MESON_OPTION = "gir"
-GTKDOC_MESON_OPTION = "apidocs"
+GIDOCGEN_MESON_OPTION = "apidocs"
 
 SRC_URI = " \
 	https://www.freedesktop.org/software/appstream/releases/AppStream-${PV}.tar.xz \
 	file://0001-remove-hardcoded-path.patch \
-	file://0001-meson-do-not-rely-on-an-exe-wrapper.patch \
 "
-SRC_URI[sha256sum] = "081c917646e94d7221c9e4aae54dacda95a27c607fa93cd8e6344a2b318b98b1"
+SRC_URI[sha256sum] = "ef23477a380e8b525e92cfa87687f1146b9cef74c641349a1ae11250be5401d0"
 
 S = "${WORKDIR}/AppStream-${PV}"
 
