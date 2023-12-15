@@ -52,7 +52,6 @@ RDEPENDS:${PN} += " \
   python3-json \
   python3-curses \
   python3-misc \
-  python3-gpg \
   "
 
 RDEPENDS:${PN}:class-native = ""
