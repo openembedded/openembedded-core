@@ -43,7 +43,7 @@ BINCONFIG = "${bindir}/gpgme-config"
 # support. Since these bindings are currently not needed, we can disable them.
 DEFAULT_LANGUAGES = ""
 DEFAULT_LANGUAGES:class-target = "cpp"
-LANGUAGES ?= "${DEFAULT_LANGUAGES} python"
+LANGUAGES ?= "${DEFAULT_LANGUAGES}"
 
 PYTHON_INHERIT = "${@bb.utils.contains('LANGUAGES', 'python', 'setuptools3-base', '', d)}"
 
