@@ -62,6 +62,10 @@ python () {
         else:
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}')
 
+        if d.getVar('SRCREV', "INVALID") != "INVALID":
+            # Ensure SRCREV has been processed before accessing SRC_URI
+            bb.fetch.get_srcrev(d)
+
         local_srcuri = []
         fetch = bb.fetch2.Fetch((d.getVar('SRC_URI') or '').split(), d)
         for url in fetch.urls:
