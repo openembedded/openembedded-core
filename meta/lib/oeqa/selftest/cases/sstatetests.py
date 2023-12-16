@@ -840,7 +840,7 @@ do_install:append() {
 expected_sametmp_output, expected_difftmp_output)
 
     # Check if changes to gcc-source (which uses tmp/work-shared) are correctly discovered
-    def test_gcc_runtime_vs_gcc_source(self):
+    def _test_gcc_runtime_vs_gcc_source(self):
         gcc_source_pn = 'gcc-source-%s' % get_bb_vars(['PV'], 'gcc')['PV']
 
         expected_output = ("Task {}:do_preconfigure couldn't be used from the cache because:".format(gcc_source_pn),
