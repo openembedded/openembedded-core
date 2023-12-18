@@ -29,6 +29,15 @@ control_chars = [chr(x) for x in control_range
                 if chr(x) not in string.printable]
 re_control_char = re.compile('[%s]' % re.escape("".join(control_chars)))
 
+def getOutput(o):
+    import fcntl
+    fl = fcntl.fcntl(o, fcntl.F_GETFL)
+    fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
+    try:
+        return os.read(o.fileno(), 1000000).decode("utf-8")
+    except BlockingIOError:
+        return ""
+
 class QemuRunner:
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, use_kvm, logger, use_slirp=False,
@@ -55,6 +64,7 @@ class QemuRunner:
         self.boottime = boottime
         self.logged = False
         self.thread = None
+        self.threadsock = None
         self.use_kvm = use_kvm
         self.use_ovmf = use_ovmf
         self.use_slirp = use_slirp
@@ -119,21 +129,11 @@ class QemuRunner:
                 f.write(msg)
         self.msg += self.decode_qemulog(msg)
 
-    def getOutput(self, o):
-        import fcntl
-        fl = fcntl.fcntl(o, fcntl.F_GETFL)
-        fcntl.fcntl(o, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-        try:
-            return os.read(o.fileno(), 1000000).decode("utf-8")
-        except BlockingIOError:
-            return ""
-
-
     def handleSIGCHLD(self, signum, frame):
         if self.runqemu and self.runqemu.poll():
             if self.runqemu.returncode:
                 self.logger.error('runqemu exited with code %d' % self.runqemu.returncode)
-                self.logger.error('Output from runqemu:\n%s' % self.getOutput(self.runqemu.stdout))
+                self.logger.error('Output from runqemu:\n%s' % getOutput(self.runqemu.stdout))
                 self.stop()
 
     def start(self, qemuparams = None, get_ip = True, extra_bootparams = None, runqemuparams='', launch_cmd=None, discard_writes=True):
@@ -282,7 +282,7 @@ class QemuRunner:
                 if self.runqemu.returncode:
                     # No point waiting any longer
                     self.logger.warning('runqemu exited with code %d' % self.runqemu.returncode)
-                    self.logger.warning("Output from runqemu:\n%s" % self.getOutput(output))
+                    self.logger.warning("Output from runqemu:\n%s" % getOutput(output))
                     self.stop()
                     return False
             time.sleep(0.5)
@@ -309,7 +309,7 @@ class QemuRunner:
             ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command '], stdout=subprocess.PIPE).communicate()[0]
             processes = ps.decode("utf-8")
             self.logger.debug("Running processes:\n%s" % processes)
-            op = self.getOutput(output)
+            op = getOutput(output)
             self.stop()
             if op:
                 self.logger.error("Output from runqemu:\n%s" % op)
@@ -387,7 +387,7 @@ class QemuRunner:
                            time.time() - connect_time))
 
         # We are alive: qemu is running
-        out = self.getOutput(output)
+        out = getOutput(output)
         netconf = False # network configuration is not required by default
         self.logger.debug("qemu started in %.2f seconds - qemu procces pid is %s (%s)" %
                           (time.time() - (endtime - self.runqemutime),
@@ -430,9 +430,10 @@ class QemuRunner:
         self.logger.debug("Target IP: %s" % self.ip)
         self.logger.debug("Server IP: %s" % self.server_ip)
 
+        self.thread = LoggingThread(self.log, self.threadsock, self.logger, self.runqemu.stdout)
+        self.thread.start()
+
         if self.serial_ports >= 2:
-            self.thread = LoggingThread(self.log, self.threadsock, self.logger)
-            self.thread.start()
             if not self.thread.connection_established.wait(self.boottime):
                 self.logger.error("Didn't receive a console connection from qemu. "
                              "Here is the qemu command line used:\n%s\nand "
@@ -444,7 +445,7 @@ class QemuRunner:
         self.logger.debug("Waiting at most %d seconds for login banner (%s)" %
                           (self.boottime, time.strftime("%D %H:%M:%S")))
         endtime = time.time() + self.boottime
-        filelist = [self.server_socket, self.runqemu.stdout]
+        filelist = [self.server_socket]
         reachedlogin = False
         stopread = False
         qemusock = None
@@ -564,7 +565,7 @@ class QemuRunner:
                 self.logger.debug("Sending SIGKILL to runqemu")
                 os.killpg(os.getpgid(self.runqemu.pid), signal.SIGKILL)
             if not self.runqemu.stdout.closed:
-                self.logger.info("Output from runqemu:\n%s" % self.getOutput(self.runqemu.stdout))
+                self.logger.info("Output from runqemu:\n%s" % getOutput(self.runqemu.stdout))
             self.runqemu.stdin.close()
             self.runqemu.stdout.close()
             self.runqemu_exited = True
@@ -700,9 +701,11 @@ class QemuRunner:
 # event loop. The mechanism for stopping the thread is a simple pipe which
 # will wake up the poll and allow for tearing everything down.
 class LoggingThread(threading.Thread):
-    def __init__(self, logfunc, sock, logger):
+    def __init__(self, logfunc, sock, logger, qemuoutput):
         self.connection_established = threading.Event()
+
         self.serversock = sock
+        self.qemuoutput = qemuoutput
         self.logfunc = logfunc
         self.logger = logger
         self.readsock = None
@@ -732,7 +735,8 @@ class LoggingThread(threading.Thread):
 
     def teardown(self):
         self.logger.debug("Tearing down logging thread")
-        self.close_socket(self.serversock)
+        if self.serversock:
+            self.close_socket(self.serversock)
 
         if self.readsock is not None:
             self.close_socket(self.readsock)
@@ -747,7 +751,9 @@ class LoggingThread(threading.Thread):
     def eventloop(self):
         poll = select.poll()
         event_read_mask = self.errorevents | self.readevents
-        poll.register(self.serversock.fileno())
+        if self.serversock:
+            poll.register(self.serversock.fileno())
+        poll.register(self.qemuoutput.fileno())
         poll.register(self.readpipe, event_read_mask)
 
         breakout = False
@@ -767,7 +773,7 @@ class LoggingThread(threading.Thread):
                     break
 
                 # A connection request was received
-                elif self.serversock.fileno() == event[0]:
+                elif self.serversock and self.serversock.fileno() == event[0]:
                     self.logger.debug("Connection request received")
                     self.readsock, _ = self.serversock.accept()
                     self.readsock.setblocking(0)
@@ -781,6 +787,10 @@ class LoggingThread(threading.Thread):
                 elif self.readsock.fileno() == event[0]:
                     data = self.recv(1024)
                     self.logfunc(data)
+                elif self.qemuoutput.fileno() == event[0]:
+                    data = self.qemuoutput.read()
+                    self.logger.debug("Data received on qemu stdout %s" % data)
+                    self.logfunc(data, ".stdout")
 
     # Since the socket is non-blocking make sure to honor EAGAIN
     # and EWOULDBLOCK.
