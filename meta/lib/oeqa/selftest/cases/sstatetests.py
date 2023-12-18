@@ -761,14 +761,14 @@ addtask tmptask2 before do_tmptask1
                 hashes = [hash1, hash2]
                 hashfiles = find_siginfo(key, None, hashes)
                 self.assertCountEqual(hashes, hashfiles)
-                bb.siggen.compare_sigfiles(hashfiles[hash1], hashfiles[hash2], recursecb)
+                bb.siggen.compare_sigfiles(hashfiles[hash1]['path'], hashfiles[hash2]['path'], recursecb)
 
             for pn in pns:
                 recursecb_count = 0
-                filedates = find_siginfo(pn, "do_tmptask1")
-                self.assertGreaterEqual(len(filedates), 2)
-                latestfiles = sorted(filedates.keys(), key=lambda f: filedates[f])[-2:]
-                bb.siggen.compare_sigfiles(latestfiles[-2], latestfiles[-1], recursecb)
+                matches = find_siginfo(pn, "do_tmptask1")
+                self.assertGreaterEqual(len(matches), 2)
+                latesthashes = sorted(matches.keys(), key=lambda h: matches[h]['time'])[-2:]
+                bb.siggen.compare_sigfiles(matches[latesthashes[-2]]['path'], matches[latesthashes[-1]]['path'], recursecb)
                 self.assertEqual(recursecb_count,1)
 
 class SStatePrintdiff(SStateBase):
