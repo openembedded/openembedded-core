@@ -5,6 +5,7 @@ Subject: [PATCH] avcodec/smcenc: stop accessing out of bounds frame
 
 Upstream-Status: Backport [https://github.com/FFmpeg/FFmpeg/commit/13c13109759090b7f7182480d075e13b36ed8edd]
 
+CVE: CVE-2022-3965
 Signed-off-by: <narpat.mali@windriver.com>
 
 ---
