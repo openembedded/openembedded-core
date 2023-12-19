@@ -7,7 +7,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f5118f167b055bfd7c3450803f1847af"
 
 SRC_URI = "git://github.com/ibm-s390-linux/s390-tools;protocol=https;branch=master"
-SRCREV = "d9ce54dee3ac3827e76624352293a83eb05c727e"
+SRCREV = "c217f6be6addd4d008f110efa53fbec79681dbfd"
 
 S = "${WORKDIR}/git"
 
