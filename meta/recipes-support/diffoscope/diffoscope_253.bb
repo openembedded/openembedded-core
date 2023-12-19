@@ -12,7 +12,7 @@ PYPI_PACKAGE = "diffoscope"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "e268384fa484f3dd8a936da626e6ef1b231dcb286d09a360f37548637f8dd46d"
+SRC_URI[sha256sum] = "ca3d826b691f4998d6de28a016b3555d56a7283b97ad92944ce643ea6e7eb614"
 
 RDEPENDS:${PN} += "\
         binutils \
