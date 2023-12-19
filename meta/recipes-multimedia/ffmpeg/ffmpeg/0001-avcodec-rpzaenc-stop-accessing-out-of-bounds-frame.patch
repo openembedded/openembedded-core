@@ -4,7 +4,7 @@ Date: Sat, 12 Nov 2022 16:12:00 +0100
 Subject: [PATCH] avcodec/rpzaenc: stop accessing out of bounds frame
 
 Upstream-Status: Backport [https://github.com/FFmpeg/FFmpeg/commit/92f9b28ed84a77138105475beba16c146bdaf984]
-
+CVE: CVE-2022-3964
 Signed-off-by: <narpat.mali@windriver.com>
 
 ---
