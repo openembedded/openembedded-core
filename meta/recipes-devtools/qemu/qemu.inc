@@ -34,6 +34,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://fixedmeson.patch \
            file://fixmips.patch \
            file://0001-vfio-Include-libgen.h-for-basename-API.patch \
+           file://no-pip.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
