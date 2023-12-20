@@ -785,19 +785,20 @@ class LoggingThread(threading.Thread):
         self.logger.debug("Starting thread event loop")
         while not breakout:
             events = poll.poll(2)
-            for event in events:
+            for fd, event in events:
+
                 # An error occurred, bail out
-                if event[1] & self.errorevents:
-                    raise Exception(self.stringify_event(event[1]))
+                if event & self.errorevents:
+                    raise Exception(self.stringify_event(event))
 
                 # Event to stop the thread
-                if self.readpipe == event[0]:
+                if self.readpipe == fd:
                     self.logger.debug("Stop event received")
                     breakout = True
                     break
 
                 # A connection request was received
-                elif self.serversock and self.serversock.fileno() == event[0]:
+                elif self.serversock and self.serversock.fileno() == fd:
                     self.logger.debug("Connection request received")
                     self.readsock, _ = self.serversock.accept()
                     self.readsock.setblocking(0)
@@ -808,14 +809,14 @@ class LoggingThread(threading.Thread):
                     self.connection_established.set()
 
                 # Actual data to be logged
-                elif self.readsock.fileno() == event[0]:
+                elif self.readsock and self.readsock.fileno() == fd:
                     data = self.recv(1024, self.readsock)
                     self.logfunc(data)
-                elif self.qemuoutput.fileno() == event[0]:
+                elif self.qemuoutput.fileno() == fd:
                     data = self.qemuoutput.read()
                     self.logger.debug("Data received on qemu stdout %s" % data)
                     self.logfunc(data, ".stdout")
-                elif self.serialsock and self.serialsock.fileno() == event[0]:
+                elif self.serialsock and self.serialsock.fileno() == fd:
                     if self.serial_lock.acquire(blocking=False):
                         data = self.recv(1024, self.serialsock)
                         self.logger.debug("Data received serial thread %s" % data.decode('utf-8', 'replace'))
@@ -864,6 +865,9 @@ class LoggingThread(threading.Thread):
             val = 'POLLHUP'
         elif select.POLLNVAL == event:
             val = 'POLLNVAL'
+        else:
+            val = "0x%x" % (event)
+
         return val
 
     def close_socket(self, sock):
