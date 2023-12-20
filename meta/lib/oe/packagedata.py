@@ -317,7 +317,7 @@ fi
             for p in bb.utils.explode_deps(rprov):
                 subdata_sym = pkgdatadir + "/runtime-rprovides/%s/%s" % (p, pkg)
                 bb.utils.mkdirhier(os.path.dirname(subdata_sym))
-                oe.path.symlink("../../runtime/%s" % pkg, subdata_sym, True)
+                oe.path.relsymlink(subdata_file, subdata_sym, True)
 
         allow_empty = d.getVar('ALLOW_EMPTY:%s' % pkg)
         if not allow_empty:
@@ -328,7 +328,7 @@ fi
         if g or allow_empty == "1":
             # Symlinks needed for reverse lookups (from the final package name)
             subdata_sym = pkgdatadir + "/runtime-reverse/%s" % pkgval
-            oe.path.symlink("../runtime/%s" % pkg, subdata_sym, True)
+            oe.path.relsymlink(subdata_file, subdata_sym, True)
 
             packagedfile = pkgdatadir + '/runtime/%s.packaged' % pkg
             open(packagedfile, 'w').close()
