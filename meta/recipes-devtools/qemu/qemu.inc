@@ -6,6 +6,8 @@ a variety of guest operating systems"
 HOMEPAGE = "http://qemu.org"
 LICENSE = "GPL-2.0-only & LGPL-2.1-only"
 
+DEPENDS += "bison-native meson-native ninja-native"
+
 RDEPENDS:${PN}-ptest = "bash"
 
 require qemu-targets.inc
