@@ -141,13 +141,14 @@ python do_configure() {
     config.add_section("build")
     config.set("build", "submodules", e(False))
     config.set("build", "docs", e(False))
+    config.set("build", "tools", ["rust-demangler",])
 
     rustc = d.expand("${WORKDIR}/rust-snapshot/bin/rustc")
     config.set("build", "rustc", e(rustc))
 
     # Support for the profiler runtime to generate e.g. coverage report,
     # PGO etc.
-    config.set("build", "profiler", e(True))
+    config.set("build", "profiler", e(False))
 
     cargo = d.expand("${WORKDIR}/rust-snapshot/bin/cargo")
     config.set("build", "cargo", e(cargo))
