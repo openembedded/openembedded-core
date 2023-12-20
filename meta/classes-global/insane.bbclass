@@ -904,13 +904,7 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
                         continue
                     if not rdep_data or not 'PN' in rdep_data:
-                        pkgdata_dir = d.getVar("PKGDATA_DIR")
-                        try:
-                            possibles = os.listdir("%s/runtime-rprovides/%s/" % (pkgdata_dir, rdepend))
-                        except OSError:
-                            possibles = []
-                        for p in possibles:
-                            rdep_data = oe.packagedata.read_subpkgdata(p, d)
+                        for _, rdep_data in oe.packagedata.foreach_runtime_provider_pkgdata(d, rdepend):
                             if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
                                 break
                     if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
@@ -958,17 +952,17 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     # perl
                     filerdepends.pop(rdep,None)
 
-                    # For Saving the FILERPROVIDES, RPROVIDES and FILES_INFO
-                    rdep_data = oe.packagedata.read_subpkgdata(rdep, d)
-                    for key in rdep_data:
-                        if key.startswith("FILERPROVIDES:") or key.startswith("RPROVIDES:"):
-                            for subkey in bb.utils.explode_deps(rdep_data[key]):
-                                filerdepends.pop(subkey,None)
-                        # Add the files list to the rprovides
-                        if key.startswith("FILES_INFO:"):
-                            # Use eval() to make it as a dict
-                            for subkey in eval(rdep_data[key]):
-                                filerdepends.pop(subkey,None)
+                    for _, rdep_data in oe.packagedata.foreach_runtime_provider_pkgdata(d, rdep, True):
+                        for key in rdep_data:
+                            if key.startswith("FILERPROVIDES:") or key.startswith("RPROVIDES:"):
+                                for subkey in bb.utils.explode_deps(rdep_data[key]):
+                                    filerdepends.pop(subkey,None)
+                            # Add the files list to the rprovides
+                            if key.startswith("FILES_INFO:"):
+                                # Use eval() to make it as a dict
+                                for subkey in eval(rdep_data[key]):
+                                    filerdepends.pop(subkey,None)
+
                     if not filerdepends:
                         # Break if all the file rdepends are met
                         break
