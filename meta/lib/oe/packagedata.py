@@ -116,6 +116,21 @@ def recipename(pkg, d):
 
     return pkgmap(d).get(pkg)
 
+def foreach_runtime_provider_pkgdata(d, rdep, include_rdep=False):
+    pkgdata_dir = d.getVar("PKGDATA_DIR")
+    possibles = set()
+    try:
+        possibles |= set(os.listdir("%s/runtime-rprovides/%s/" % (pkgdata_dir, rdep)))
+    except OSError:
+        pass
+
+    if include_rdep:
+        possibles.add(rdep)
+
+    for p in sorted(list(possibles)):
+        rdep_data = read_subpkgdata(p, d)
+        yield p, rdep_data
+
 def get_package_mapping(pkg, basepkg, d, depversions=None):
     import oe.packagedata
 
