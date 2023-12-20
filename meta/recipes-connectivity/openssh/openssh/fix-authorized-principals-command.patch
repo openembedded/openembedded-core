@@ -1,0 +1,30 @@
+From fcd78e31cdd45a7e69ccfe6d8a3b1037dc1de290 Mon Sep 17 00:00:00 2001
+From: "djm@openbsd.org" <djm@openbsd.org>
+Date: Wed, 24 May 2023 23:01:06 +0000
+Subject: [PATCH] upstream: fix AuthorizedPrincipalsCommand when
+ AuthorizedKeysCommand
+Description: Fix the wrong code as the Subject suggests
+ I added that description to mention, that the file header change was
+ incompatible with the proposed code below and failed to apply,
+ therefore I dropped that chunk of the code.
+Origin: backport, https://github.com/openssh/openssh-portable/commit/fcd78e31cdd45a7e69ccfe6d8a3b1037dc1de290
+Bug: https://bugzilla.mindrot.org/show_bug.cgi?id=3574
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/openssh/+bug/2031942
+Last-Update: 2023-09-01
+
+Upstream-Status: Backport [import from ubuntu https://git.launchpad.net/ubuntu/+source/openssh/tree/debian/patches/fix-authorized-principals-command.patch?h=ubuntu/jammy-security
+Upstream commit https://github.com/openssh/openssh-portable/commit/fcd78e31cdd45a7e69ccfe6d8a3b1037dc1de290]
+Signed-off-by: Vijay Anusuri <vanusuri@mvista.com>
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/servconf.c
++++ b/servconf.c
+@@ -2372,7 +2372,7 @@ process_server_config_line_depth(ServerO
+ 			fatal("%.200s line %d: %s must be an absolute path",
+ 			    filename, linenum, keyword);
+ 		}
+-		if (*activep && options->authorized_keys_command == NULL)
++		if (*activep && *charptr == NULL)
+ 			*charptr = xstrdup(str + len);
+ 		argv_consume(&ac);
+ 		break;
