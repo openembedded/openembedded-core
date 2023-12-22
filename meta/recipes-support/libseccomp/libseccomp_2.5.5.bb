@@ -54,5 +54,3 @@ FILES:${PN} = "${bindir} ${libdir}/${BPN}.so*"
 FILES:${PN}-dbg += "${libdir}/${PN}/tests/.debug/* ${libdir}/${PN}/tools/.debug"
 
 RDEPENDS:${PN}-ptest = "coreutils bash"
-
-PV = "2.5.5"
