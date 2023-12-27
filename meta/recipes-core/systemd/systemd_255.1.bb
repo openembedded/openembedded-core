@@ -21,7 +21,6 @@ REQUIRED_DISTRO_FEATURES += "systemd"
 SRC_URI += " \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
-           file://basic.conf.in \
            ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://org.freedesktop.hostname1_no_polkit.conf', '', d)} \
            ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://00-hostnamed-network-user.conf', '', d)} \
            file://init \
@@ -29,7 +28,6 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0002-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0008-implment-systemd-sysv-install-for-OE.patch \
-           file://0004-Move-sysusers.d-sysctl.d-binfmt.d-modules-load.d-to-.patch \
            "
 
 # patches needed by musl
@@ -74,6 +72,7 @@ PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', '', 'link-udev-shared', d)} \
     backlight \
     binfmt \
+    cgroupv2 \
     gshadow \
     hibernate \
     hostnamed \
@@ -267,12 +266,16 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
 # The 60 seconds is watchdog's default vaule.
 WATCHDOG_TIMEOUT ??= "60"
 
-do_configure:prepend() {
-  sed s@:ROOT_HOME:@${ROOT_HOME}@g ${WORKDIR}/basic.conf.in > ${S}/sysusers.d/basic.conf.in
-}
-
 do_install() {
 	meson_do_install
+	# Change the root user's home directory in /lib/sysusers.d/basic.conf.
+	# This is done merely for backward compatibility with previous systemd recipes.
+	# systemd hardcodes root user's HOME to be "/root". Changing to use other values
+	# may have unexpected runtime behaviors.
+	if [ "${ROOT_HOME}" != "/root" ]; then
+		bbwarn "Using ${ROOT_HOME} as root user's home directory is not fully supported by systemd"
+		sed -i -e 's#/root#${ROOT_HOME}#g' ${D}${exec_prefix}/lib/sysusers.d/basic.conf
+	fi
 	install -d ${D}/${base_sbindir}
 	if ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'false', 'true', d)}; then
 		# Provided by a separate recipe
@@ -757,6 +760,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${rootlibexecdir}/udev/rules.d/60-persistent-alsa.rules \
                ${rootlibexecdir}/udev/rules.d/60-persistent-input.rules \
                ${rootlibexecdir}/udev/rules.d/60-persistent-storage.rules \
+               ${rootlibexecdir}/udev/rules.d/60-persistent-storage-mtd.rules \
                ${rootlibexecdir}/udev/rules.d/60-persistent-storage-tape.rules \
                ${rootlibexecdir}/udev/rules.d/60-persistent-v4l.rules \
                ${rootlibexecdir}/udev/rules.d/60-sensor.rules \
