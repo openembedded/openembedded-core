@@ -928,7 +928,7 @@ class DevtoolModifyTests(DevtoolBase):
         #    some crate:// in SRC_URI
         #    others git:// in SRC_URI
         #    cointains a patch
-        testrecipe = 'zvariant'
+        testrecipe = 'hello-rs'
         bb_vars = get_bb_vars(['SRC_URI', 'FILE', 'WORKDIR', 'CARGO_HOME'], testrecipe)
         recipefile = bb_vars['FILE']
         workdir = bb_vars['WORKDIR']
