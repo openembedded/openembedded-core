@@ -172,6 +172,7 @@ python do_configure() {
     config.set("install", "libdir",  e(d.getVar("D") + d.getVar("libdir")))
     config.set("install", "datadir", e(d.getVar("D") + d.getVar("datadir")))
     config.set("install", "mandir",  e(d.getVar("D") + d.getVar("mandir")))
+    config.set("install", "sysconfdir",  e(d.getVar("D") + d.getVar("sysconfdir")))
 
     with open("config.toml", "w") as f:
         f.write('changelog-seen = 2\n\n')
