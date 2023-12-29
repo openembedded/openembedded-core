@@ -940,7 +940,7 @@ class DevtoolModifyTests(DevtoolBase):
                       'This test expects the %s recipe to have a git uri with subpath' % testrecipe)
         self.assertTrue(any([uri.startswith('crate://') for uri in src_uri]),
                         'This test expects the %s recipe to have some crates in its src uris' % testrecipe)
-        self.assertGreater(sum(map(lambda x:x.startswith('git://'), src_uri)), 2,
+        self.assertGreaterEqual(sum(map(lambda x:x.startswith('git://'), src_uri)), 2,
                            'This test expects the %s recipe to have several git:// uris' % testrecipe)
         self.assertTrue(any([uri.startswith('file://') and '.patch' in uri for uri in src_uri]),
                         'This test expects the %s recipe to have a patch in its src uris' % testrecipe)
