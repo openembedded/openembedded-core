@@ -11,6 +11,9 @@ NX (Execute Disable) protection cannot be enabled: non-PAE kernel!
 Failed to find URL:http://ipv4.connman.net/online/status.html
 Failed to find URL:http://ipv6.connman.net/online/status.html
 
+# x86 on 6.6+ outputs this message, it is informational, not an error
+ACPI: _OSC evaluation for CPUs failed, trying _PDC
+
 # These should be reviewed to see if they are still needed
 dma timeout
 can\'t add hid device:
