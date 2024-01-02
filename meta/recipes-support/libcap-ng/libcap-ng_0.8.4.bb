@@ -2,7 +2,7 @@ require libcap-ng.inc
 
 inherit lib_package autotools
 
-EXTRA_OECONF += "--without-python --without-python3"
+EXTRA_OECONF += "--without-python3"
 
 BBCLASSEXTEND = "native nativesdk"
 
