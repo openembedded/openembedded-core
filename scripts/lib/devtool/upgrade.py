@@ -631,7 +631,7 @@ def check_upgrade_status(args, config, basepath, workspace):
     for result in results:
         # pn, update_status, current, latest, maintainer, latest_commit, no_update_reason
         if args.all or result[1] != 'MATCH':
-            logger.info("{:25} {:15} {:15} {} {} {}".format(   result[0],
+            print("{:25} {:15} {:15} {} {} {}".format(   result[0],
                                                                result[2],
                                                                result[1] if result[1] != 'UPDATE' else (result[3] if not result[3].endswith("new-commits-available") else "new commits"),
                                                                result[4],
