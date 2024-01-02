@@ -1,7 +1,8 @@
-From fdc7fb940bb41020271b9db41d5608004efdbde5 Mon Sep 17 00:00:00 2001
+From bab07e779ff23d5593bb118efaaa31b60a6dce87 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 27 May 2018 08:36:44 -0700
-Subject: [PATCH] Define glibc compatible basename() for non-glibc systems
+Subject: [PATCH 08/22] Define glibc compatible basename() for non-glibc
+ systems
 
 Fixes builds with musl, even though systemd is adamant about
 using non-posix basename implementation, we have a way out
@@ -10,9 +11,11 @@ Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- src/machine/machine-dbus.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ src/basic/string-util.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/src/basic/string-util.h b/src/basic/string-util.h
+index b6d8be3083..0a29036c4c 100644
 --- a/src/basic/string-util.h
 +++ b/src/basic/string-util.h
 @@ -26,6 +26,10 @@
@@ -26,3 +29,6 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  static inline char* strstr_ptr(const char *haystack, const char *needle) {
          if (!haystack || !needle)
                  return NULL;
+-- 
+2.34.1
+
