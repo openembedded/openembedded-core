@@ -11,7 +11,7 @@ DEPENDS += "libcap-ng python3 swig-native python3-setuptools-native"
 
 S = "${WORKDIR}/libcap-ng-${PV}"
 
-EXTRA_OECONF += "--with-python --with-python3"
+EXTRA_OECONF += "--with-python3"
 
 do_install:append() {
     rm -rf ${D}${bindir}
