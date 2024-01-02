@@ -357,10 +357,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
             return siginfo.rpartition('.')[2]
 
     def get_time(fullpath):
-        try:
-            return os.stat(fullpath).st_mtime
-        except OSError:
-            return None
+        return os.stat(fullpath).st_mtime
 
     # First search in stamps dir
     localdata = d.createCopy()
