@@ -8,8 +8,7 @@ LICENSE = "LGPL-2.1-only & GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL2.1;md5=4fbd65380cdd255951079008b364516c \
                     file://LICENSE.GPL2;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "git://github.com/systemd/systemd-bootchart.git;protocol=https;branch=master \
-           file://0001-architecture-Recognise-RISCV-32-RISCV-64.patch \
+SRC_URI = "git://github.com/systemd/systemd-bootchart.git;protocol=https;branch=main \
            file://mips64.patch \
            file://no_lto.patch \
 "
@@ -21,7 +20,7 @@ SRC_URI:append:libc-musl = " \
     "
 
 
-SRCREV = "8183cfd9dad8beca5434d625cf6b2df87775e956"
+SRCREV = "8ab9680a1bd5eb8fe7a7dcc44897af7ee41e56e7"
 
 S = "${WORKDIR}/git"
 
