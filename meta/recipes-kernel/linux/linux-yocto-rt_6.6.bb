@@ -18,7 +18,7 @@ SRCREV_machine ?= "19bf0c91c0377d50583db84dd27387ee7daccebd"
 SRCREV_meta ?= "cb87ac0a436d23cd349e42273a222f9f267e8e98"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;branch=${KBRANCH};name=machine;protocol=https \
-           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-6.5;destsuffix=${KMETA};protocol=https"
+           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-6.6;destsuffix=${KMETA};protocol=https"
 
 LINUX_VERSION ?= "6.6.8"
 
