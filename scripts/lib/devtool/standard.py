@@ -921,7 +921,7 @@ def modify(args, config, basepath, workspace):
                     if line.startswith('*'):
                         (stdout, _) = bb.process.run('git rev-parse devtool-base', cwd=srctree)
                         initial_revs["."] = stdout.rstrip()
-                if not initial_revs["."]:
+                if "." not in initial_revs:
                     # Otherwise, just grab the head revision
                     (stdout, _) = bb.process.run('git rev-parse HEAD', cwd=srctree)
                     initial_revs["."] = stdout.rstrip()
