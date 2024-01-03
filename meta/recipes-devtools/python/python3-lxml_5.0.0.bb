@@ -18,10 +18,11 @@ LIC_FILES_CHKSUM = "file://LICENSES.txt;md5=e4c045ebad958ead4b48008f70838403 \
 
 DEPENDS += "libxml2 libxslt"
 
-SRC_URI[sha256sum] = "b1541e50b78e15fa06a2670157a1962ef06591d4c998b998047fff5e3236880e"
+SRC_URI[sha256sum] = "2219cbf790e701acf9a21a31ead75f983e73daf0eceb9da6990212e4d20ebefe"
 
 SRC_URI += "${PYPI_SRC_URI}"
 inherit pkgconfig pypi setuptools3
+PYPI_PACKAGE_EXT = "zip"
 
 # {standard input}: Assembler messages:
 # {standard input}:1488805: Error: branch out of range
