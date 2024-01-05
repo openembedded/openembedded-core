@@ -772,7 +772,7 @@ def get_staging_kver(srcdir):
 def get_staging_kbranch(srcdir):
     staging_kbranch = ""
     if os.path.exists(srcdir) and os.listdir(srcdir):
-        (branch, _) = bb.process.run('git branch | grep \* | cut -d \' \' -f2', cwd=srcdir)
+        (branch, _) = bb.process.run('git branch | grep \\* | cut -d \' \' -f2', cwd=srcdir)
         staging_kbranch = "".join(branch.split('\n')[0])
     return staging_kbranch
 
