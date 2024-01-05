@@ -425,6 +425,7 @@ def find_siginfo(pn, taskname, taskhashlist, d):
     return hashfiles
 
 bb.siggen.find_siginfo = find_siginfo
+bb.siggen.find_siginfo_version = 2
 
 
 def sstate_get_manifest_filename(task, d):
