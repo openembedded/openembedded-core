@@ -79,7 +79,7 @@ do_install_ptest:append:libc-musl() {
 	done
 }
 
-RDEPENDS:${PN}-ptest += "make locale-base-en-us"
+RDEPENDS:${PN}-ptest += "make locale-base-en-us coreutils"
 
 RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us.iso-8859-1"
 RDEPENDS:${PN}-ptest:append:libc-musl = " musl-locales"
