@@ -6,7 +6,7 @@ HOMEPAGE = "https://pypi.org/project/bcrypt/"
 DEPENDS += "${PYTHON_PN}-cffi-native"
 LDFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ptest', ' -fuse-ld=bfd', '', d)}"
 
-SRC_URI[sha256sum] = "df37f5418d4f1cdcff845f60e747a015389fa4e63703c918330865e06ad80007"
+SRC_URI[sha256sum] = "33313a1200a3ae90b75587ceac502b048b840fc69e7f7a0905b5f87fac7a1258"
 
 inherit pypi python_setuptools3_rust ptest-cargo cargo-update-recipe-crates
 
