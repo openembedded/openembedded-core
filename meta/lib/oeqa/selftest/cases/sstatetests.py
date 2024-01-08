@@ -905,6 +905,7 @@ class SStateMirrors(SStateBase):
             self.fail("Did not find 'Sstate summary' line in bitbake output")
 
         failed_urls = []
+        failed_urls_extrainfo = []
         for l in output_l:
             if "SState: Unsuccessful fetch test for" in l and check_cdn:
                 missing_object = l.split()[6]
@@ -918,8 +919,11 @@ class SStateMirrors(SStateBase):
                 else:
                     missing_objects -= 1
 
-        self.assertEqual(len(failed_urls), missing_objects, "Amount of reported missing objects does not match failed URLs: {}\nFailed URLs:\n{}".format(missing_objects, "\n".join(failed_urls)))
-        self.assertEqual(len(failed_urls), 0, "Missing objects in the cache:\n{}".format("\n".join(failed_urls)))
+            if "urlopen failed for" in l:
+                failed_urls_extrainfo.append(l)
+
+        self.assertEqual(len(failed_urls), missing_objects, "Amount of reported missing objects does not match failed URLs: {}\nFailed URLs:\n{}\nFetcher diagnostics:\n{}".format(missing_objects, "\n".join(failed_urls), "\n".join(failed_urls_extrainfo)))
+        self.assertEqual(len(failed_urls), 0, "Missing objects in the cache:\n{}\nFetcher diagnostics:\n{}".format("\n".join(failed_urls), "\n".join(failed_urls_extrainfo)))
 
     def run_test(self, machine, targets, exceptions, check_cdn = True):
         # sstate is checked for existence of these, but they never get written out to begin with
