@@ -19,6 +19,9 @@ UPSTREAM_CHECK_COMMITS = "1"
 
 S = "${WORKDIR}/git"
 
+BASEPV = "0.0.1"
+PV = "${BASEPV}+git"
+
 inherit meson pkgconfig features_check
 
 REQUIRED_DISTRO_FEATURES = "opengl"
