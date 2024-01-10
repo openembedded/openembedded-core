@@ -797,13 +797,14 @@ TMPDIR = "${{TOPDIR}}/tmp-sstateprintdiff-difftmp-{}"
         for item in expected_difftmp_output:
             self.assertIn(item, result_difftmp.output, msg = "Item {} not found in output:\n{}".format(item, result_difftmp.output))
 
-    def run_test_printdiff_changeconfig(self, target, change_content, expected_sametmp_output, expected_difftmp_output):
+    def run_test_printdiff_changeconfig(self, target, change_bbtasks, change_content, expected_sametmp_output, expected_difftmp_output):
         import time
         self.write_config("""
 TMPDIR = "${{TOPDIR}}/tmp-sstateprintdiff-sametmp-{}"
 """.format(time.time()))
         bitbake("--runall build --runall deploy_source_date_epoch {}".format(target))
         bitbake("-S none {}".format(target))
+        bitbake(" ".join(change_bbtasks))
         self.append_config(change_content)
         result_sametmp = bitbake("-S printdiff {}".format(target))
 
@@ -859,24 +860,27 @@ expected_sametmp_output, expected_difftmp_output)
 
     # Check if changing a really base task definiton is reported against multiple core recipes using it
     def test_image_minimal_vs_base_do_configure(self):
-        expected_output = ("Task zstd-native:do_configure couldn't be used from the cache because:",
-"Task texinfo-dummy-native:do_configure couldn't be used from the cache because:",
-"Task ldconfig-native:do_configure couldn't be used from the cache because:",
-"Task gettext-minimal-native:do_configure couldn't be used from the cache because:",
-"Task tzcode-native:do_configure couldn't be used from the cache because:",
-"Task makedevs-native:do_configure couldn't be used from the cache because:",
-"Task pigz-native:do_configure couldn't be used from the cache because:",
-"Task update-rc.d-native:do_configure couldn't be used from the cache because:",
-"Task unzip-native:do_configure couldn't be used from the cache because:",
-"Task gnu-config-native:do_configure couldn't be used from the cache because:",
+        change_bbtasks = ('zstd-native:do_configure',
+'texinfo-dummy-native:do_configure',
+'ldconfig-native:do_configure',
+'gettext-minimal-native:do_configure',
+'tzcode-native:do_configure',
+'makedevs-native:do_configure',
+'pigz-native:do_configure',
+'update-rc.d-native:do_configure',
+'unzip-native:do_configure',
+'gnu-config-native:do_configure')
+
+        expected_output = ["Task {} couldn't be used from the cache because:".format(t) for t in change_bbtasks] + [
 "We need hash",
-"most recent matching task was")
-        expected_sametmp_output = expected_output + (
+"most recent matching task was"]
+
+        expected_sametmp_output = expected_output + [
 "Variable base_do_configure value changed",
-'+	echo "this changes base_do_configure() definiton "')
+'+	echo "this changes base_do_configure() definiton "']
         expected_difftmp_output = expected_output
 
-        self.run_test_printdiff_changeconfig("core-image-minimal",
+        self.run_test_printdiff_changeconfig("core-image-minimal",change_bbtasks,
 """
 INHERIT += "base-do-configure-modified"
 """,
