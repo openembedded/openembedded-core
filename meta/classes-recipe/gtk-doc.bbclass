@@ -33,20 +33,10 @@ EXTRA_OEMESON:prepend = "-D${GTKDOC_MESON_OPTION}=${@bb.utils.contains('GTKDOC_E
 # needed for m4 macros.
 DEPENDS:append = " gtk-doc-native"
 
-# The documentation directory, where the infrastructure will be copied.
-# gtkdocize has a default of "." so to handle out-of-tree builds set this to $S.
-GTKDOC_DOCDIR ?= "${S}"
-
 export STAGING_DIR_HOST
 
 inherit python3native pkgconfig qemu
 DEPENDS:append = "${@' qemu-native' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
-
-do_configure:prepend () {
-	# Need to use ||true as this is only needed if configure.ac both exists
-	# and uses GTK_DOC_CHECK.
-	gtkdocize --srcdir ${S} --docdir ${GTKDOC_DOCDIR} || true
-}
 
 do_compile:prepend:class-target () {
     if [ ${GTKDOC_ENABLED} = True ]; then
