@@ -25,16 +25,9 @@ GTKDOC_MESON_ENABLE_FLAG ?= 'true'
 GTKDOC_MESON_DISABLE_FLAG ?= 'false'
 
 # Auto enable/disable based on GTKDOC_ENABLED
-EXTRA_OECONF:prepend:class-target = "${@bb.utils.contains('GTKDOC_ENABLED', 'True', '--enable-gtk-doc --enable-gtk-doc-html --disable-gtk-doc-pdf', \
+EXTRA_OECONF:prepend = "${@bb.utils.contains('GTKDOC_ENABLED', 'True', '--enable-gtk-doc --enable-gtk-doc-html --disable-gtk-doc-pdf', \
                                                                                     '--disable-gtk-doc', d)} "
-EXTRA_OEMESON:prepend:class-target = "-D${GTKDOC_MESON_OPTION}=${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_MESON_ENABLE_FLAG}', '${GTKDOC_MESON_DISABLE_FLAG}', d)} "
-
-# When building native recipes, disable gtkdoc, as it is not necessary,
-# pulls in additional dependencies, and makes build times longer
-EXTRA_OECONF:prepend:class-native = "--disable-gtk-doc "
-EXTRA_OECONF:prepend:class-nativesdk = "--disable-gtk-doc "
-EXTRA_OEMESON:prepend:class-native = "-D${GTKDOC_MESON_OPTION}=${GTKDOC_MESON_DISABLE_FLAG} "
-EXTRA_OEMESON:prepend:class-nativesdk = "-D${GTKDOC_MESON_OPTION}=${GTKDOC_MESON_DISABLE_FLAG} "
+EXTRA_OEMESON:prepend = "-D${GTKDOC_MESON_OPTION}=${@bb.utils.contains('GTKDOC_ENABLED', 'True', '${GTKDOC_MESON_ENABLE_FLAG}', '${GTKDOC_MESON_DISABLE_FLAG}', d)} "
 
 # Even though gtkdoc is disabled on -native, gtk-doc package is still
 # needed for m4 macros.
