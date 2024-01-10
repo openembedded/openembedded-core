@@ -52,6 +52,7 @@ LICENSE = "\
     & Firmware-OLPC \
     & Firmware-ath9k-htc \
     & Firmware-phanfw \
+    & Firmware-powervr \
     & Firmware-qat \
     & Firmware-qcom \
     & Firmware-qcom-yamato \
@@ -125,6 +126,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.OLPC;md5=5b917f9d8c061991be4f6f5f108719cd \
                     file://LICENCE.open-ath9k-htc-firmware;md5=1b33c9f4d17bc4d457bdb23727046837 \
                     file://LICENCE.phanfw;md5=954dcec0e051f9409812b561ea743bfa \
+                    file://LICENSE.powervr;md5=83045ed2a2cda15b4eaff682c98c9533 \
                     file://LICENCE.qat_firmware;md5=72de83dfd9b87be7685ed099a39fbea4 \
                     file://LICENSE.qcom;md5=164e3362a538eb11d3ac51e8e134294b \
                     file://LICENSE.qcom_yamato;md5=d0de0eeccaf1843a850bf7a6777eec5c \
@@ -202,6 +204,7 @@ NO_GENERIC_LICENSE[Firmware-nxp_mc_firmware] = "LICENSE.nxp_mc_firmware"
 NO_GENERIC_LICENSE[Firmware-OLPC] = "LICENCE.OLPC"
 NO_GENERIC_LICENSE[Firmware-ath9k-htc] = "LICENCE.open-ath9k-htc-firmware"
 NO_GENERIC_LICENSE[Firmware-phanfw] = "LICENCE.phanfw"
+NO_GENERIC_LICENSE[Firmware-powervr] = "LICENSE.powervr"
 NO_GENERIC_LICENSE[Firmware-qat] = "LICENCE.qat_firmware"
 NO_GENERIC_LICENSE[Firmware-qcom] = "LICENSE.qcom"
 NO_GENERIC_LICENSE[Firmware-qcom-yamato] = "LICENSE.qcom_yamato"
@@ -361,6 +364,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-netronome-license ${PN}-netronome \
              ${PN}-olpc-license ${PN}-olpc \
              ${PN}-phanfw-license ${PN}-phanfw \
+             ${PN}-powervr-license ${PN}-powervr \
              ${PN}-qat ${PN}-qat-license \
              ${PN}-qcom-license ${PN}-qcom-yamato-license \
              ${PN}-qcom-venus-1.8 ${PN}-qcom-venus-4.2 ${PN}-qcom-venus-5.2 ${PN}-qcom-venus-5.4 ${PN}-qcom-venus-6.0 \
@@ -779,6 +783,15 @@ FILES:${PN}-phanfw = "${nonarch_base_libdir}/firmware/phanfw.bin"
 FILES:${PN}-phanfw-license = "${nonarch_base_libdir}/firmware/LICENCE.phanfw"
 
 RDEPENDS:${PN}-phanfw += "${PN}-phanfw-license"
+
+# For PowerVR
+LICENSE:${PN}-powervr = "Firmware-powervr"
+LICENSE:${PN}-powervr-license = "Firmware-powervr"
+
+FILES:${PN}-powervr = "${nonarch_base_libdir}/firmware/powervr"
+FILES:${PN}-powervr-license = "${nonarch_base_libdir}/firmware/LICENSE.powervr"
+
+RDEPENDS:${PN}-powervr += "${PN}-powervr-license"
 
 # For qla2xxx
 LICENSE:${PN}-qla2xxx = "Firmware-qla2xxx"
