@@ -6,7 +6,10 @@ require util-linux.inc
 inherit autotools gettext pkgconfig
 
 S = "${WORKDIR}/util-linux-${PV}"
+
+EXTRA_AUTORECONF += "--exclude=gtkdocize"
 EXTRA_OECONF += "--disable-all-programs --enable-libuuid"
+
 LICENSE = "BSD-3-Clause"
 
 do_install:append() {

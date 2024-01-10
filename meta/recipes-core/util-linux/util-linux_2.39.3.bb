@@ -1,7 +1,6 @@
 require util-linux.inc
 
-#gtk-doc is not enabled as it requires xmlto which requires util-linux
-inherit autotools gettext manpages pkgconfig systemd update-alternatives python3-dir bash-completion ptest
+inherit autotools gettext manpages pkgconfig systemd update-alternatives python3-dir bash-completion ptest gtk-doc
 DEPENDS = "libcap-ng ncurses virtual/crypt zlib util-linux-libuuid"
 
 PACKAGES =+ "${PN}-swaponoff"
