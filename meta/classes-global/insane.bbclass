@@ -514,9 +514,9 @@ def check_32bit_symbols(path, packagename, d, elf, messages):
     """
     Check that ELF files do not use any 32 bit time APIs from glibc.
     """
-    thirtytwo_bit_time_archs = set(('arm','armeb','mipsarcho32','powerpc','x86'))
+    thirtytwo_bit_time_archs = {'arm','armeb','mipsarcho32','powerpc','x86'}
     overrides = set(d.getVar('OVERRIDES').split(':'))
-    if not(thirtytwo_bit_time_archs & overrides):
+    if not (thirtytwo_bit_time_archs & overrides):
         return
 
     import re
@@ -1571,7 +1571,7 @@ do_unpack[postfuncs] += "do_qa_unpack"
 
 python () {
     import re
-    
+
     tests = d.getVar('ALL_QA').split()
     if "desktop" in tests:
         d.appendVar("PACKAGE_DEPENDS", " desktop-file-utils-native")
