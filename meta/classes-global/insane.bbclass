@@ -534,6 +534,7 @@ def check_32bit_symbols(path, packagename, d, elf, messages):
         # /usr/include/signal.h
         "sigtimedwait",
         # /usr/include/sys/time.h
+        "adjtime",
         "futimes", "futimesat", "getitimer", "gettimeofday", "lutimes",
         "setitimer", "settimeofday", "utimes",
         # /usr/include/sys/timex.h
