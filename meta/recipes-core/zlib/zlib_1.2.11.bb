@@ -54,3 +54,6 @@ do_install:append:class-target() {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+# this CVE is for cloudflare zlib
+CVE_CHECK_IGNORE += "CVE-2023-6992"
