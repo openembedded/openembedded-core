@@ -1607,6 +1607,12 @@ python () {
     if (d.getVar(d.expand('DEPENDS:${PN}'))):
         oe.qa.handle_error("pkgvarcheck", "recipe uses DEPENDS:${PN}, should use DEPENDS", d)
 
+    # virtual/ is meaningless for those variables
+    for k in ['RDEPENDS', 'RPROVIDES']:
+        for var in bb.utils.explode_deps(d.getVar(k + ':' + pn) or ""):
+            if var.startswith("virtual/"):
+                bb.warn("%s is set to %s, the substring 'virtual/' holds no meaning in this context. It is suggested to use the 'virtual-' instead." % (k, var))
+
     issues = []
     if (d.getVar('PACKAGES') or "").split():
         for dep in (d.getVar('QADEPENDS') or "").split():
