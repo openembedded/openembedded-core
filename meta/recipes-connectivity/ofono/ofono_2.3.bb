@@ -13,7 +13,7 @@ SRC_URI = "\
     file://0001-mbim-add-an-optional-TEMP_FAILURE_RETRY-macro-copy.patch \
     file://0002-mbim-Fix-build-with-ell-0.39-by-restoring-unlikely-m.patch \
 "
-SRC_URI[sha256sum] = "5e13121c0f885a81ad882db065549ea13477abbcc219f150b38a8d2ac92521de"
+SRC_URI[sha256sum] = "658f9c16aec09c56bd36424982afc6ef292c0942b3a9e8ffefdda5974f01dac3"
 
 inherit autotools pkgconfig update-rc.d systemd gobject-introspection-data
 
