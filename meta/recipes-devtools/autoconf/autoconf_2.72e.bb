@@ -22,7 +22,7 @@ SRC_URI = " \
 "
 SRC_URI:append:class-native = " file://no-man.patch"
 
-SRC_URI[sha256sum] = "c09dcba3d051507459df2fcd58d6f19e5b342568fa910e3bb3a74b4402cde3a6"
+SRC_URI[sha256sum] = "f3478d3b597d51f5d61596fb2f6f6aba49cdd974b4b05ff0bac57f56b5cfdb39"
 
 RDEPENDS:${PN} = "m4 gnu-config \
 		  perl \
