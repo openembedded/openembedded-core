@@ -14,21 +14,16 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://check_build_completeness.py \
            file://reformat_sysconfig.py \
            file://cgi_py.patch \
-           file://0001-Do-not-add-usr-lib-termcap-to-linker-flags-to-avoid-.patch \
-           ${@bb.utils.contains('PACKAGECONFIG', 'tk', '', 'file://avoid_warning_about_tkinter.patch', d)} \
            file://0001-Makefile.pre-use-qemu-wrapper-when-gathering-profile.patch \
            file://0001-python3-use-cc_basename-to-replace-CC-for-checking-c.patch \
            file://crosspythonpath.patch \
            file://0001-test_locale.py-correct-the-test-output-format.patch \
-           file://0017-setup.py-do-not-report-missing-dependencies-for-disa.patch \
-           file://0001-Makefile-do-not-compile-.pyc-in-parallel.patch \
            file://0020-configure.ac-setup.py-do-not-add-a-curses-include-pa.patch \
            file://0001-Skip-failing-tests-due-to-load-variability-on-YP-AB.patch \
            file://0001-test_ctypes.test_find-skip-without-tools-sdk.patch \
            file://makerace.patch \
            file://0001-sysconfig.py-use-platlibdir-also-for-purelib.patch \
            file://0001-Lib-pty.py-handle-stdin-I-O-errors-same-way-as-maste.patch \
-           file://0001-setup.py-Do-not-detect-multiarch-paths-when-cross-co.patch \
            file://deterministic_imports.patch \
            file://0001-Avoid-shebang-overflow-on-python-config.py.patch \
            file://0001-Update-test_sysconfig-for-posix_user-purelib.patch \
@@ -38,10 +33,9 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
 
 SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
-           file://12-distutils-prefix-is-inside-staging-area.patch \
-           file://0001-Don-t-search-system-for-headers-libraries.patch \
            "
-SRC_URI[sha256sum] = "85cd12e9cf1d6d5a45f17f7afe1cebe7ee628d3282281c492e86adf636defa3f"
+
+SRC_URI[sha256sum] = "8dfb8f426fcd226657f9e2bd5f1e96e53264965176fa17d32658e873591aeb21"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
@@ -57,7 +51,7 @@ CVE_STATUS[CVE-2022-26488] = "not-applicable-platform: Issue only applies on Win
 CVE_STATUS[CVE-2015-20107] = "upstream-wontfix: The mailcap module is insecure by design, so this can't be fixed in a meaningful way"
 CVE_STATUS[CVE-2023-36632] = "disputed: Not an issue, in fact expected behaviour"
 
-PYTHON_MAJMIN = "3.11"
+PYTHON_MAJMIN = "3.12"
 
 S = "${WORKDIR}/Python-${PV}"
 
@@ -118,15 +112,30 @@ do_configure:prepend () {
 *disabled*
 ${@bb.utils.contains('PACKAGECONFIG', 'gdbm', '', '_gdbm _dbm', d)}
 ${@bb.utils.contains('PACKAGECONFIG', 'readline', '', 'readline', d)}
+${@bb.utils.contains('PACKAGECONFIG', 'tk', '', '_tkinter', d)}
 EOF
 }
 
 CPPFLAGS:append = " -I${STAGING_INCDIR}/ncursesw -I${STAGING_INCDIR}/uuid"
 
+# COMPILEALL_OPTS= ensures that .pyc are not compiled in parallel
+# This was found to lock up builds, break reproducibility, and produce strange file ownership
+# races.
+#
+# The upstream commit introducing the change was:
+# https://github.com/python/cpython/commit/1a2dd82f56bd813aacc570e172cefe55a8a41504
+#
+# The build lock up issue is reported here:
+# https://bugs.python.org/issue45945
+#
+# The repro failures are documented here:
+# https://autobuilder.yocto.io/pub/repro-fail/oe-reproducible-20211130-yr_o1a8d/packages/diff-html/
+
 EXTRA_OEMAKE = '\
   STAGING_LIBDIR=${STAGING_LIBDIR} \
   STAGING_INCDIR=${STAGING_INCDIR} \
   LIB=${baselib} \
+  COMPILEALL_OPTS= \
 '
 
 # Generate a Profile Guided Optimisation wrapper script that uses qemu-user for
