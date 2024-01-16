@@ -103,18 +103,17 @@ python do_go_vendor() {
         pathMajor = fetcher.ud[url].parm.get('go_pathmajor')
         pathMajor = None if not pathMajor else pathMajor.strip('/')
 
-        if not repo in modules:
-            modules[repo] =   { "version": version,
+        if not (repo, version) in modules:
+            modules[(repo, version)] =   {
                                 "repo_path": os.path.join(import_dir, p),
                                 "module_path": module_path,
                                 "subdir": subdir,
                                 "pathMajor": pathMajor }
 
-    for module_key in sorted(modules):
+    for module_key, module in modules.items():
 
         # only take the version which is explicitly listed
         # as a dependency in the go.mod
-        module = modules[module_key]
         module_path = module['module_path']
         rootdir = module['repo_path']
         subdir = module['subdir']
@@ -139,7 +138,7 @@ python do_go_vendor() {
         dst = os.path.join(vendor_dir, module_path)
 
         bb.debug(1, "cp %s --> %s" % (src, dst))
-        shutil.copytree(src, dst, symlinks=True, \
+        shutil.copytree(src, dst, symlinks=True, dirs_exist_ok=True, \
             ignore=shutil.ignore_patterns(".git", \
                                             "vendor", \
                                             "*._test.go"))
