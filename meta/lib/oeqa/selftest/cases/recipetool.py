@@ -744,14 +744,14 @@ class RecipetoolCreateTests(RecipetoolBase):
     def test_recipetool_create_git_srcbranch(self):
         self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;protocol=https', 'matchbox-keyboard-0-1')
 
+    def _go_urifiy(self, url, version, modulepath = None, pathmajor = None, subdir = None):
+        modulepath = ",path='%s'" % modulepath if len(modulepath) else ''
+        pathmajor = ",pathmajor='%s'" % pathmajor if len(pathmajor) else ''
+        subdir = ",subdir='%s'" % subdir if len(subdir) else ''
+        return "${@go_src_uri('%s','%s'%s%s%s)}" % (url, version, modulepath, pathmajor, subdir)
+
     def test_recipetool_create_go(self):
         # Basic test to check go recipe generation
-        def urifiy(url, version, modulepath = None, pathmajor = None, subdir = None):
-            modulepath = ",path='%s'" % modulepath if len(modulepath) else ''
-            pathmajor = ",pathmajor='%s'" % pathmajor if len(pathmajor) else ''
-            subdir = ",subdir='%s'" % subdir if len(subdir) else ''
-            return "${@go_src_uri('%s','%s'%s%s%s)}" % (url, version, modulepath, pathmajor, subdir)
-
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
 
@@ -919,7 +919,7 @@ class RecipetoolCreateTests(RecipetoolBase):
 
         src_uri = set()
         for d in dependencies:
-            src_uri.add(urifiy(*d))
+            src_uri.add(self._go_urifiy(*d))
 
         checkvars = {}
         checkvars['GO_DEPENDENCIES_SRC_URI'] = src_uri
