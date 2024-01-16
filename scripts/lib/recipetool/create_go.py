@@ -506,6 +506,7 @@ class GoRecipeHandler(RecipeHandler):
 
     def __go_handle_dependencies(self, go_mod, srctree, localfilesdir, extravalues, d):
 
+        import re
         src_uris = []
         src_revs = []
 
@@ -555,7 +556,9 @@ class GoRecipeHandler(RecipeHandler):
             src_uris.append(inline_fcn)
             src_revs.append(generate_src_rev(path, version, commithash))
 
-        pn, _ = determine_from_url(go_mod['Module']['Path'])
+        # strip version part from module URL /vXX
+        baseurl = re.sub(r'/v(\d+)$', '', go_mod['Module']['Path'])
+        pn, _ = determine_from_url(baseurl)
         go_mods_basename = "%s-modules.inc" % pn
 
         go_mods_filename = os.path.join(localfilesdir, go_mods_basename)
@@ -636,7 +639,9 @@ class GoRecipeHandler(RecipeHandler):
                 lic_files_chksum.append(
                     'file://src/${GO_IMPORT}/vendor/%s;md5=%s' % (licvalue[1], licvalue[2]))
 
-        pn, _ = determine_from_url(go_mod['Module']['Path'])
+        # strip version part from module URL /vXX
+        baseurl = re.sub(r'/v(\d+)$', '', go_mod['Module']['Path'])
+        pn, _ = determine_from_url(baseurl)
         licenses_basename = "%s-licenses.inc" % pn
 
         licenses_filename = os.path.join(localfilesdir, licenses_basename)
@@ -682,6 +687,13 @@ class GoRecipeHandler(RecipeHandler):
 
         localfilesdir = tempfile.mkdtemp(prefix='recipetool-go-')
         extravalues.setdefault('extrafiles', {})
+
+        # Use an explicit name determined from the module name because it
+        # might differ from the actual URL for replaced modules
+        # strip version part from module URL /vXX
+        baseurl = re.sub(r'/v(\d+)$', '', go_mod['Module']['Path'])
+        pn, _ = determine_from_url(baseurl)
+
         # go.mod files with version < 1.17 may not include all indirect
         # dependencies. Thus, we have to upgrade the go version.
         if go_version_major == 1 and go_version_minor < 17:
@@ -699,18 +711,18 @@ class GoRecipeHandler(RecipeHandler):
             # Write additional $BPN-modules.inc file
             self.__go_mod_vendor(go_mod, srctree, localfilesdir, extravalues, d)
             lines_before.append("LICENSE += \" & ${GO_MOD_LICENSES}\"")
-            lines_before.append("require ${BPN}-licenses.inc")
+            lines_before.append("require %s-licenses.inc" % (pn))
 
             self.__rewrite_src_uri(lines_before, ["file://modules.txt"])
 
             self.__go_handle_dependencies(go_mod, srctree, localfilesdir, extravalues, d)
-            lines_before.append("require ${BPN}-modules.inc")
+            lines_before.append("require %s-modules.inc" % (pn))
 
         # Do generic license handling
         handle_license_vars(srctree, lines_before, handled, extravalues, d)
         self.__rewrite_lic_uri(lines_before)
 
-        lines_before.append("GO_IMPORT = \"{}\"".format(go_import))
+        lines_before.append("GO_IMPORT = \"{}\"".format(baseurl))
         lines_before.append("SRCREV_FORMAT = \"${BPN}\"")
 
     def __update_lines_before(self, updated, newlines, lines_before):
