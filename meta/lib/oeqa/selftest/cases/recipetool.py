@@ -744,19 +744,6 @@ class RecipetoolCreateTests(RecipetoolBase):
     def test_recipetool_create_git_srcbranch(self):
         self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;protocol=https', 'matchbox-keyboard-0-1')
 
-
-class RecipetoolTests(RecipetoolBase):
-
-    @classmethod
-    def setUpClass(cls):
-        import sys
-
-        super(RecipetoolTests, cls).setUpClass()
-        bb_vars = get_bb_vars(['BBPATH'])
-        cls.bbpath = bb_vars['BBPATH']
-        libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'recipetool')
-        sys.path.insert(0, libpath)
-
     def test_recipetool_create_go(self):
         # Basic test to check go recipe generation
         def urifiy(url, version, modulepath = None, pathmajor = None, subdir = None):
@@ -941,6 +928,17 @@ class RecipetoolTests(RecipetoolBase):
         self._test_recipe_contents(deps_require_file, checkvars, [])
 
 
+class RecipetoolTests(RecipetoolBase):
+
+    @classmethod
+    def setUpClass(cls):
+        import sys
+
+        super(RecipetoolTests, cls).setUpClass()
+        bb_vars = get_bb_vars(['BBPATH'])
+        cls.bbpath = bb_vars['BBPATH']
+        libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'recipetool')
+        sys.path.insert(0, libpath)
 
     def _copy_file_with_cleanup(self, srcfile, basedstdir, *paths):
         dstdir = basedstdir
