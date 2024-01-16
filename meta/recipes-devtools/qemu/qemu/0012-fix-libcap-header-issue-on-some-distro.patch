@@ -60,7 +60,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/fsdev/virtfs-proxy-helper.c b/fsdev/virtfs-proxy-helper.c
-index 6f132c5f..8329950c 100644
+index 300c9765..2823db7d 100644
 --- a/fsdev/virtfs-proxy-helper.c
 +++ b/fsdev/virtfs-proxy-helper.c
 @@ -13,7 +13,6 @@
@@ -71,9 +71,9 @@ index 6f132c5f..8329950c 100644
  #include <sys/fsuid.h>
  #include <sys/vfs.h>
  #include <sys/ioctl.h>
-@@ -27,7 +26,11 @@
- #include "9p-iov-marshal.h"
+@@ -28,7 +27,11 @@
  #include "hw/9pfs/9p-proxy.h"
+ #include "hw/9pfs/9p-util.h"
  #include "fsdev/9p-iov-marshal.h"
 -
 +/*
@@ -84,3 +84,6 @@ index 6f132c5f..8329950c 100644
  #define PROGNAME "virtfs-proxy-helper"
  
  #ifndef XFS_SUPER_MAGIC
+-- 
+2.25.1
+

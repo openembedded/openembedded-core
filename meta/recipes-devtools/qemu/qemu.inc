@@ -142,6 +142,8 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
 	   file://CVE-2023-3180.patch \
            file://CVE-2020-24165.patch \
            file://CVE-2023-5088.patch \
+           file://9pfs-local-ignore-O_NOATIME-if-we-don-t-have-permiss.patch \
+           file://CVE-2023-2861.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 

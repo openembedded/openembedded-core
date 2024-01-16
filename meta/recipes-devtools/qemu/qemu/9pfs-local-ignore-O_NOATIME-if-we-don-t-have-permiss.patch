@@ -1,0 +1,63 @@
+From a5804fcf7b22fc7d1f9ec794dd284c7d504bd16b Mon Sep 17 00:00:00 2001
+From: Omar Sandoval <osandov@fb.com>
+Date: Thu, 14 May 2020 08:06:43 +0200
+Subject: [PATCH] 9pfs: local: ignore O_NOATIME if we don't have permissions
+
+QEMU's local 9pfs server passes through O_NOATIME from the client. If
+the QEMU process doesn't have permissions to use O_NOATIME (namely, it
+does not own the file nor have the CAP_FOWNER capability), the open will
+fail. This causes issues when from the client's point of view, it
+believes it has permissions to use O_NOATIME (e.g., a process running as
+root in the virtual machine). Additionally, overlayfs on Linux opens
+files on the lower layer using O_NOATIME, so in this case a 9pfs mount
+can't be used as a lower layer for overlayfs (cf.
+https://github.com/osandov/drgn/blob/dabfe1971951701da13863dbe6d8a1d172ad9650/vmtest/onoatimehack.c
+and https://github.com/NixOS/nixpkgs/issues/54509).
+
+Luckily, O_NOATIME is effectively a hint, and is often ignored by, e.g.,
+network filesystems. open(2) notes that O_NOATIME "may not be effective
+on all filesystems. One example is NFS, where the server maintains the
+access time." This means that we can honor it when possible but fall
+back to ignoring it.
+
+Acked-by: Christian Schoenebeck <qemu_oss@crudebyte.com>
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Message-Id: <e9bee604e8df528584693a4ec474ded6295ce8ad.1587149256.git.osandov@fb.com>
+Signed-off-by: Greg Kurz <groug@kaod.org>
+
+Upstream-Status: Backport [https://gitlab.com/qemu-project/qemu/-/commit/a5804fcf7b22fc7d1f9ec794dd284c7d504bd16b]
+Signed-off-by: Vijay Anusuri <vanusuri@mvista.com>
+---
+ hw/9pfs/9p-util.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/hw/9pfs/9p-util.h b/hw/9pfs/9p-util.h
+index 79ed6b233e5..546f46dc7dc 100644
+--- a/hw/9pfs/9p-util.h
++++ b/hw/9pfs/9p-util.h
+@@ -37,9 +37,22 @@ static inline int openat_file(int dirfd, const char *name, int flags,
+ {
+     int fd, serrno, ret;
+ 
++again:
+     fd = openat(dirfd, name, flags | O_NOFOLLOW | O_NOCTTY | O_NONBLOCK,
+                 mode);
+     if (fd == -1) {
++        if (errno == EPERM && (flags & O_NOATIME)) {
++            /*
++             * The client passed O_NOATIME but we lack permissions to honor it.
++             * Rather than failing the open, fall back without O_NOATIME. This
++             * doesn't break the semantics on the client side, as the Linux
++             * open(2) man page notes that O_NOATIME "may not be effective on
++             * all filesystems". In particular, NFS and other network
++             * filesystems ignore it entirely.
++             */
++            flags &= ~O_NOATIME;
++            goto again;
++        }
+         return -1;
+     }
+ 
+-- 
+GitLab
+
