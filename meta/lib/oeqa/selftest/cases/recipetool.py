@@ -927,6 +927,61 @@ class RecipetoolCreateTests(RecipetoolBase):
         self.assertTrue(os.path.isfile(deps_require_file))
         self._test_recipe_contents(deps_require_file, checkvars, [])
 
+    def test_recipetool_create_go_replace_modules(self):
+        # Check handling of replaced modules
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+
+        recipefile = os.path.join(temprecipe, 'openapi-generator_git.bb')
+        deps_require_file = os.path.join(temprecipe, 'openapi-generator', 'go-modules.inc')
+        lics_require_file = os.path.join(temprecipe, 'openapi-generator', 'go-licenses.inc')
+        modules_txt_file = os.path.join(temprecipe, 'openapi-generator', 'modules.txt')
+
+        srcuri = 'https://github.com/OpenAPITools/openapi-generator.git'
+        srcrev = "v7.2.0"
+        srcbranch = "master"
+        srcsubdir = "samples/openapi3/client/petstore/go"
+
+        result = runCmd('recipetool create -o %s %s -S %s -B %s --src-subdir %s' % (temprecipe, srcuri, srcrev, srcbranch, srcsubdir))
+
+        self.maxDiff = None
+        inherits = ['go-vendor']
+
+        checkvars = {}
+        checkvars['GO_IMPORT'] = "github.com/OpenAPITools/openapi-generator/samples/openapi3/client/petstore/go"
+        checkvars['SRC_URI'] = {'git://${GO_IMPORT};destsuffix=git/src/${GO_IMPORT};nobranch=1;name=${BPN};protocol=https',
+                                'file://modules.txt'}
+
+        self.assertNotIn('Traceback', result.output)
+        self.assertIn('No license file was detected for the main module', result.output)
+        self.assertTrue(os.path.isfile(recipefile))
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
+        # make sure that dependencies don't mention local directory ./go-petstore
+        dependencies = \
+            [   ('github.com/stretchr/testify','v1.8.4', '', '', ''),
+                ('go.googlesource.com/oauth2','v0.10.0','golang.org/x/oauth2', '', ''),
+                ('github.com/davecgh/go-spew','v1.1.1', '', '', ''),
+                ('github.com/golang/protobuf','v1.5.3', '', '', ''),
+                ('github.com/kr/pretty','v0.3.0', '', '', ''),
+                ('github.com/pmezard/go-difflib','v1.0.0', '', '', ''),
+                ('github.com/rogpeppe/go-internal','v1.9.0', '', '', ''),
+                ('go.googlesource.com/net','v0.12.0','golang.org/x/net', '', ''),
+                ('github.com/golang/appengine','v1.6.7','google.golang.org/appengine', '', ''),
+                ('go.googlesource.com/protobuf','v1.31.0','google.golang.org/protobuf', '', ''),
+                ('gopkg.in/check.v1','v1.0.0-20201130134442-10cb98267c6c', '', '', ''),
+                ('gopkg.in/yaml.v3','v3.0.1', '', '', ''),
+            ]
+
+        src_uri = set()
+        for d in dependencies:
+            src_uri.add(self._go_urifiy(*d))
+
+        checkvars = {}
+        checkvars['GO_DEPENDENCIES_SRC_URI'] = src_uri
+
+        self.assertTrue(os.path.isfile(deps_require_file))
+        self._test_recipe_contents(deps_require_file, checkvars, [])
 
 class RecipetoolTests(RecipetoolBase):
 
