@@ -730,6 +730,12 @@ class GoRecipeHandler(RecipeHandler):
                 new_licenses = []
                 licenses = origvalue.split('\\')
                 for license in licenses:
+                    if not license:
+                        logger.warning("No license file was detected for the main module!")
+                        # the license list of the main recipe must be empty
+                        # this can happen for example in case of CLOSED license
+                        # Fall through to complete recipe generation
+                        continue
                     license = license.strip()
                     uri, chksum = license.split(';', 1)
                     url = urllib.parse.urlparse(uri)
