@@ -504,7 +504,7 @@ class GoRecipeHandler(RecipeHandler):
 
         return inline_fcn, commit
 
-    def __go_handle_dependencies(self, go_mod, localfilesdir, extravalues, d):
+    def __go_handle_dependencies(self, go_mod, srctree, localfilesdir, extravalues, d):
 
         src_uris = []
         src_revs = []
@@ -525,6 +525,27 @@ class GoRecipeHandler(RecipeHandler):
 
             return src_rev
 
+        # we first go over replacement list, because we are essentialy
+        # interested only in the replaced path
+        if go_mod['Replace']:
+            for replacement in go_mod['Replace']:
+                oldpath = replacement['Old']['Path']
+                path = replacement['New']['Path']
+                version = ''
+                if 'Version' in replacement['New']:
+                    version = replacement['New']['Version']
+
+                if os.path.exists(os.path.join(srctree, path)):
+                    # the module refers to the local path, remove it from requirement list
+                    # because it's a local module
+                    go_mod['Require'][:] = [v for v in go_mod['Require'] if v.get('Path') != oldpath]
+                else:
+                    # Replace the path and the version, so we don't iterate replacement list anymore
+                    for require in go_mod['Require']:
+                        if require['Path'] == oldpath:
+                            require.update({'Path': path, 'Version': version})
+                            break
+
         for require in go_mod['Require']:
             path = require['Path']
             version = require['Version']
@@ -533,17 +554,6 @@ class GoRecipeHandler(RecipeHandler):
                 path, version)
             src_uris.append(inline_fcn)
             src_revs.append(generate_src_rev(path, version, commithash))
-
-        if go_mod['Replace']:
-            for replacement in go_mod['Replace']:
-                oldpath = replacement['Old']['Path']
-                path = replacement['New']['Path']
-                version = replacement['New']['Version']
-
-                inline_fcn, commithash = self.__generate_srcuri_inline_fcn(
-                    path, version, oldpath)
-                src_uris.append(inline_fcn)
-                src_revs.append(generate_src_rev(path, version, commithash))
 
         pn, _ = determine_from_url(go_mod['Module']['Path'])
         go_mods_basename = "%s-modules.inc" % pn
@@ -693,7 +703,7 @@ class GoRecipeHandler(RecipeHandler):
 
             self.__rewrite_src_uri(lines_before, ["file://modules.txt"])
 
-            self.__go_handle_dependencies(go_mod, localfilesdir, extravalues, d)
+            self.__go_handle_dependencies(go_mod, srctree, localfilesdir, extravalues, d)
             lines_before.append("require ${BPN}-modules.inc")
 
         # Do generic license handling
