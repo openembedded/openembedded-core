@@ -21,13 +21,10 @@ COMPATIBLE_HOST:riscv32 = "null"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[lzma] = "--enable-minidebuginfo,--disable-minidebuginfo,xz"
+PACKAGECONFIG[zlib] = "--enable-zlibdebuginfo,--disable-zlibdebuginfo,zlib"
 PACKAGECONFIG[latexdocs] = "--enable-documentation, --disable-documentation, latex2man-native"
 
-EXTRA_OECONF:arm = "--enable-debug-frame"
-EXTRA_OECONF:armeb = "--enable-debug-frame"
-EXTRA_OECONF:aarch64 = "--enable-debug-frame"
-
-EXTRA_OECONF:append:libc-musl = " --disable-documentation --disable-tests --enable-static"
+EXTRA_OECONF = "--enable-static"
 
 # http://errors.yoctoproject.org/Errors/Details/20487/
 ARM_INSTRUCTION_SET:armv4 = "arm"
