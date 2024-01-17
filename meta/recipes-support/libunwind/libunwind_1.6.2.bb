@@ -7,13 +7,11 @@ DEPENDS += "libatomic-ops"
 DEPENDS:append:libc-musl = " libucontext"
 
 SRC_URI = "http://download.savannah.nongnu.org/releases/libunwind/libunwind-${PV}.tar.gz \
-           file://0003-x86-Stub-out-x86_local_resume.patch \
-           file://0004-Fix-build-on-mips-musl.patch \
+           file://mips-byte-order.patch \
+           file://mips-coredump-register.patch \
            file://0005-ppc32-Consider-ucontext-mismatches-between-glibc-and.patch \
-           file://0006-Fix-for-X32.patch \
            file://0001-src-Gtrace-remove-unguarded-print-calls.patch \
            "
-SRC_URI:append:libc-musl = " file://musl-header-conflict.patch"
 
 SRC_URI[sha256sum] = "4a6aec666991fb45d0889c44aede8ad6eb108071c3554fcdff671f9c94794976"
 
