@@ -16,7 +16,7 @@ Upstream-Status: Backport [https://git.savannah.gnu.org/cgit/libtool.git/commit/
 Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
 
 diff --git a/Makefile.am b/Makefile.am
-index 84795d87..8c9949ed 100644
+index 9c34bfd..231ef3f 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -333,7 +333,7 @@ EXTRA_DIST     += $(lt_aclocal_m4) \
