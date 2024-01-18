@@ -13,7 +13,7 @@ and result in cleaner/consistent output.
 
 * m4/libtool.m4: Cleanup sysroot trailing '/' handling
 
-Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00111.html]
+Upstream-Status: Backport [https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=365805327c7b9bbdb0e622b954b6b0d8eaeb3f99]
 Signed-off-by:  Richard Purdie <richard.purdie@linuxfoundation.org>
 
 ---

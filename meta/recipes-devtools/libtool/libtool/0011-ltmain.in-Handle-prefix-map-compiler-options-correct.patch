@@ -11,7 +11,7 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00019.html
 https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00066.html
-Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00109.html]
+Upstream-Status: Backport [https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=cdf4bf702f11d17e06569936e8a433a77f791228]
 
 ---
  build-aux/ltmain.in | 3 ++-

@@ -7,7 +7,7 @@ ldflags
 * build-aux/ltmain.in: Handle clang linker options
 
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00110.html]
+Upstream-Status: Backport [https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=725646bf095bf5c07c49ae38dd060f95bd95ae3c]
 
 ---
  build-aux/ltmain.in | 4 +++-
