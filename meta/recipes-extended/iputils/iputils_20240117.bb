@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=627cc07ec86a45951d43e30658bbd819"
 DEPENDS = "gnutls"
 
 SRC_URI = "git://github.com/iputils/iputils;branch=master;protocol=https"
-SRCREV = "84cdf26908b4a03b917a5429a6339b7374fcc38b"
+SRCREV = "8372f355bdf7a9b0c79338dd8ef8464c00a5c4e2"
 
 S = "${WORKDIR}/git"
 
