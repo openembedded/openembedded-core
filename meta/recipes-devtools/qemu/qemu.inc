@@ -237,6 +237,7 @@ PACKAGECONFIG[brlapi] = "--enable-brlapi,--disable-brlapi"
 PACKAGECONFIG[jack] = "--enable-jack,--disable-jack,jack,"
 PACKAGECONFIG[debuginfo] = "--enable-libdw,--disable-libdw,elfutils"
 PACKAGECONFIG[pipewire] = "--enable-pipewire,--disable-pipewire,pipewire"
+PACKAGECONFIG[sndio] = "--enable-sndio,--disable-sndio,sndio"
 
 INSANE_SKIP:${PN}-common = "arch"
 
