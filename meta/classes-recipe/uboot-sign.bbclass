@@ -112,6 +112,10 @@ concat_dtb() {
 			-K "${UBOOT_DTB_BINARY}" \
 			-r ${B}/fitImage-linux \
 			${UBOOT_MKIMAGE_SIGN_ARGS}
+		# Verify the kernel image and u-boot dtb
+		${UBOOT_FIT_CHECK_SIGN} \
+			-k "${UBOOT_DTB_BINARY}" \
+			-f ${B}/fitImage-linux
 		cp ${UBOOT_DTB_BINARY} ${UBOOT_DTB_SIGNED}
 	fi
 
@@ -316,6 +320,12 @@ EOF
 			-K "${SPL_DIR}/${SPL_DTB_BINARY}" \
 			-r ${UBOOT_FITIMAGE_BINARY} \
 			${SPL_MKIMAGE_SIGN_ARGS}
+		#
+		# Verify the U-boot FIT image and SPL dtb
+		#
+		${UBOOT_FIT_CHECK_SIGN} \
+			-k "${SPL_DIR}/${SPL_DTB_BINARY}" \
+			-f ${UBOOT_FITIMAGE_BINARY}
 	fi
 
 	if [ -e "${SPL_DIR}/${SPL_DTB_BINARY}" ]; then
