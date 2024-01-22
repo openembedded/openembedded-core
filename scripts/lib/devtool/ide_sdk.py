@@ -13,6 +13,7 @@ import re
 import shutil
 import stat
 import subprocess
+import sys
 from argparse import RawTextHelpFormatter
 from enum import Enum
 
@@ -20,7 +21,7 @@ import scriptutils
 import bb
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe
 from devtool.standard import get_real_srctree
-from devtool.ide_plugins import BuildTool, get_devtool_deploy_opts
+from devtool.ide_plugins import BuildTool
 
 
 logger = logging.getLogger('devtool')
@@ -742,6 +743,39 @@ class RecipeModified:
 
         return self.write_script(cmd_lines, 'delete_package_dirs')
 
+    def gen_deploy_target_script(self, args):
+        """Generate a script which does what devtool deploy-target does
+
+        This script is much quicker than devtool target-deploy. Because it
+        does not need to start a bitbake server. All information from tinfoil
+        is hard-coded in the generated script.
+        """
+        cmd_lines = ['#!/usr/bin/env python3']
+        cmd_lines.append('import sys')
+        cmd_lines.append('devtool_sys_path = %s' % str(sys.path))
+        cmd_lines.append('devtool_sys_path.reverse()')
+        cmd_lines.append('for p in devtool_sys_path:')
+        cmd_lines.append('    if p not in sys.path:')
+        cmd_lines.append('        sys.path.insert(0, p)')
+        cmd_lines.append('from devtool.deploy import deploy_no_d')
+        args_filter = ['debug', 'dry_run', 'key', 'no_check_space', 'no_host_check',
+                       'no_preserve', 'port', 'show_status', 'ssh_exec', 'strip', 'target']
+        filtered_args_dict = {key: value for key, value in vars(
+            args).items() if key in args_filter}
+        cmd_lines.append('filtered_args_dict = %s' % str(filtered_args_dict))
+        cmd_lines.append('class Dict2Class(object):')
+        cmd_lines.append('    def __init__(self, my_dict):')
+        cmd_lines.append('        for key in my_dict:')
+        cmd_lines.append('            setattr(self, key, my_dict[key])')
+        cmd_lines.append('filtered_args = Dict2Class(filtered_args_dict)')
+        cmd_lines.append(
+            'setattr(filtered_args, "recipename", "%s")' % self.bpn)
+        cmd_lines.append('deploy_no_d("%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", filtered_args)' %
+                         (self.d, self.workdir, self.path, self.strip_cmd,
+                          self.libdir, self.base_libdir, self.max_process,
+                          self.fakerootcmd, self.fakerootenv))
+        return self.write_script(cmd_lines, 'deploy_target')
+
     def gen_install_deploy_script(self, args):
         """Generate a script which does install and deploy"""
         cmd_lines = ['#!/bin/bash']
@@ -759,10 +793,9 @@ class RecipeModified:
         cmd_lines.append(
             'bitbake %s -c install --force || { echo "bitbake %s -c install --force failed"; exit 1; }' % (self.bpn, self.bpn))
 
-        # devtool deploy-target
-        deploy_opts = ' '.join(get_devtool_deploy_opts(args))
-        cmd_lines.append("devtool deploy-target %s %s" %
-                         (self.bpn, deploy_opts))
+        # Self contained devtool deploy-target
+        cmd_lines.append(self.gen_deploy_target_script(args))
+
         return self.write_script(cmd_lines, 'install_and_deploy')
 
     def write_script(self, cmd_lines, script_name):
