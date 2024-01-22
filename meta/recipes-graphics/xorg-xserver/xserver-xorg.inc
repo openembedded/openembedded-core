@@ -122,7 +122,7 @@ EXTRA_OEMESON += " \
 "
 
 OPENGL_PKGCONFIGS = "dri glx glamor dri3"
-PACKAGECONFIG ??= "dga dri2 udev xvfb ${XORG_CRYPTO} \
+PACKAGECONFIG ??= "dga dri2 udev ${XORG_CRYPTO} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', '${OPENGL_PKGCONFIGS}', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-logind', '', d)} \
 "
