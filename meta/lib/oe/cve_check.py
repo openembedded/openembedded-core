@@ -231,7 +231,7 @@ def decode_cve_status(d, cve):
     Convert CVE_STATUS into status, detail and description.
     """
     status = d.getVarFlag("CVE_STATUS", cve)
-    if status is None:
+    if not status:
         return ("", "", "")
 
     status_split = status.split(':', 1)
@@ -240,7 +240,7 @@ def decode_cve_status(d, cve):
 
     status_mapping = d.getVarFlag("CVE_CHECK_STATUSMAP", detail)
     if status_mapping is None:
-        bb.warn('Invalid detail %s for CVE_STATUS[%s] = "%s", fallback to Unpatched' % (detail, cve, status))
+        bb.warn('Invalid detail "%s" for CVE_STATUS[%s] = "%s", fallback to Unpatched' % (detail, cve, status))
         status_mapping = "Unpatched"
 
     return (status_mapping, detail, description)
