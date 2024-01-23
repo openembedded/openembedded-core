@@ -1086,6 +1086,32 @@ class DevtoolModifyTests(DevtoolBase):
         check('devtool-override-qemuarm', 'This is a test for qemuarm\n')
         check('devtool-override-qemux86', 'This is a test for qemux86\n')
 
+    def test_devtool_modify_multiple_sources(self):
+        # This test check that recipes fetching several sources can be used with devtool modify/build
+        # Check preconditions
+        testrecipe = 'bzip2'
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        src1 = 'https://' in src_uri
+        src2 = 'git://' in src_uri
+        self.assertTrue(src1 and src2, 'This test expects the %s recipe to fetch both a git source and a tarball and it seems that it no longer does' % testrecipe)
+        # Clean up anything in the workdir/sysroot/sstate cache
+        bitbake('%s -c cleansstate' % testrecipe)
+        # Try modifying a recipe
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake -c clean %s' % testrecipe)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        self.assertEqual(result.status, 0, "Could not modify recipe %s. Output: %s" % (testrecipe, result.output))
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(tempdir, result.output)
+        # Try building
+        result = bitbake(testrecipe)
+        self.assertEqual(result.status, 0, "Bitbake failed, exit code %s, output %s" % (result.status, result.output))
+
 class DevtoolUpdateTests(DevtoolBase):
 
     def test_devtool_update_recipe(self):
