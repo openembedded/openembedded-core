@@ -1,0 +1,50 @@
+From 8b45a3c4cab95382beea1ecdddeb2e4a9ed14aba Mon Sep 17 00:00:00 2001
+From: Jo-Philipp Wich <jo@mein.io>
+Date: Wed, 1 Apr 2020 21:47:40 +0200
+Subject: [PATCH 001/104] file_util.c: fix possible bad memory access in
+ file_read_line_alloc()
+
+In the case of a zero length string being returned by fgets(), the condition
+checking for a trailing new line would perform a bad memory access outside
+of `buf`. This might happen when line with a leading null byte is read.
+
+Avoid this case by checking that the string has a length of at least one
+byte. Also change the unsigned int types to size_t to store length values
+while we're at it.
+
+Upstream-Status: Backport [https://github.com/ndmsystems/opkg/commit/8b45a3c4cab95382beea1ecdddeb2e4a9ed14aba]
+
+Signed-off-by: Jo-Philipp Wich <jo@mein.io>
+Signed-off-by: Alejandro del Castillo <alejandro.delcastillo@ni.com>
+Signed-off-by: virendra thakur <virendrak@kpit.com>
+---
+ libopkg/file_util.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/libopkg/file_util.c b/libopkg/file_util.c
+index fbed7b4..ee9f59d 100644
+--- a/libopkg/file_util.c
++++ b/libopkg/file_util.c
+@@ -127,17 +127,14 @@ char *file_readlink_alloc(const char *file_name)
+ */
+ char *file_read_line_alloc(FILE * fp)
+ {
++    size_t buf_len, line_size;
+     char buf[BUFSIZ];
+-    unsigned int buf_len;
+     char *line = NULL;
+-    unsigned int line_size = 0;
+     int got_nl = 0;
+ 
+-    buf[0] = '\0';
+-
+     while (fgets(buf, BUFSIZ, fp)) {
+         buf_len = strlen(buf);
+-        if (buf[buf_len - 1] == '\n') {
++        if (buf_len > 0 && buf[buf_len - 1] == '\n') {
+             buf_len--;
+             buf[buf_len] = '\0';
+             got_nl = 1;
+-- 
+2.25.1
+
