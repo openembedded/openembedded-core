@@ -24,6 +24,7 @@ SRC_URI = "https://github.com/linux-pam/linux-pam/releases/download/v${PV}/Linux
            file://pam-security-abstract-securetty-handling.patch \
            file://pam-unix-nullok-secure.patch \
            file://crypt_configure.patch \
+           file://CVE-2024-22365.patch \
           "
 
 SRC_URI[md5sum] = "558ff53b0fc0563ca97f79e911822165"
