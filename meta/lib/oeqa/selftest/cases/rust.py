@@ -40,7 +40,12 @@ def parse_results(filename):
 class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
     def test_rust(self, *args, **kwargs):
         # Disable Rust Oe-selftest
-        self.skipTest("The Rust Oe-selftest is disabled.")
+        #self.skipTest("The Rust Oe-selftest is disabled.")
+
+        # Skip mips32 target since it is unstable with rust tests
+        machine = get_bb_var('MACHINE')
+        if machine == "qemumips":
+            self.skipTest("The mips32 target is skipped for Rust Oe-selftest.")
 
         # build remote-test-server before image build
         recipe = "rust"
