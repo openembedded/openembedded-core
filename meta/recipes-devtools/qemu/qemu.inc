@@ -40,6 +40,18 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
+# SDK_OLDEST_KERNEL is set below 4.17, which is the minimum version required by QEMU >= 8.1
+# This is due to two MMAP flags being used at certain points
+SRC_URI:append:class-nativesdk = " \
+	file://0011-linux-user-workaround-for-missing-MAP_FIXED_NOREPLAC.patch \
+	file://0012-linux-user-workaround-for-missing-MAP_SHARED_VALIDAT.patch \
+        "
+
+# Support building and using native version on pre 4.17 kernels
+SRC_URI:append:class-native = " \
+	file://0011-linux-user-workaround-for-missing-MAP_FIXED_NOREPLAC.patch \
+	file://0012-linux-user-workaround-for-missing-MAP_SHARED_VALIDAT.patch \
+        "
 
 SRC_URI[sha256sum] = "bf00d2fa12010df8b0ade93371def58e632cb32a6bfdc5f5a0ff8e6a1fb1bf32"
 
