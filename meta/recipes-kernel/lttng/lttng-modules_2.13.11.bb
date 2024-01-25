@@ -10,7 +10,12 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           "
+           file://0001-Fix-sched_stat_runtime-changed-in-linux-6.8.0-rc1.patch \
+           file://0002-Fix-timer_start-changed-in-linux-6.8.0-rc1.patch \
+           file://0003-Fix-strlcopy-removed-in-linux-6.8.0-rc1.patch \
+           file://0004-Fix-btrfs_chunk-tracepoints-changed-in-linux-6.8.0-r.patch \
+           file://0005-Fix-btrfs_get_extent-flags-and-compress_type-changed.patch \
+        "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
