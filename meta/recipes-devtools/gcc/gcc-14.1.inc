@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "13.2.0"
+PV = "14.1.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "13.2.0"
+BINV = "14.1.0"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
@@ -28,16 +28,19 @@ LIC_FILES_CHKSUM = "\
 #SOURCEDIR = "gcc-${RELEASE}"
 #BASEURI ?= "https://repo.or.cz/official-gcc.git/snapshot/${RELEASE}.tar.gz;downloadfilename=gcc-${PV}-${RELEASE}.tar.gz"
 #SOURCEDIR ?= "official-gcc-${@'${RELEASE}'[0:7]}"
+#SRC_URI[sha256sum] = "41bf7be5dc029112a9df625266e7de030ffc36ff3638f270b180ae8c91fe6449"
 
 # from snapshot
-#RELEASE ?= "13-20230520"
-#SOURCEDIR ?= "gcc-${RELEASE}"
+#RELEASE ?= "14-20240504"
 #BASEURI ?= "https://gcc.gnu.org/pub/gcc/snapshots/${RELEASE}/gcc-${RELEASE}.tar.xz"
+#SOURCEDIR ?= "gcc-${RELEASE}"
+#SRC_URI[sha256sum] = "34ac232bbf31e0cd5752fd344c2cf55719aaaad2ca0096593e01c97a3d5e274e"
 
 # official release
 RELEASE ?= "${PV}"
 BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.xz"
 SOURCEDIR ?= "gcc-${PV}"
+SRC_URI[sha256sum] = "e283c654987afe3de9d8080bc0bd79534b5ca0d681a73a11ff2b5d3767426840"
 
 SRC_URI = "${BASEURI} \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
@@ -65,11 +68,7 @@ SRC_URI = "${BASEURI} \
            file://0023-Fix-install-path-of-linux64.h.patch \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
-           file://CVE-2023-4039.patch \
-           file://0026-aarch64-Fix-loose-ldpstp-check-PR111411.patch \
-           file://0027-Fix-gcc-vect-module-testcases.patch \
 "
-SRC_URI[sha256sum] = "e275e76442a6067341a27f04c5c6b83d8613144004c0413528863dc6b5c743da"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${SOURCEDIR}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
@@ -116,4 +115,3 @@ EXTRA_OECONF_PATHS = "\
 "
 
 CVE_STATUS[CVE-2021-37322] = "cpe-incorrect: Is a binutils 2.26 issue, not gcc"
-CVE_STATUS[CVE-2023-4039] = "fixed-version: Fixed via CVE-2023-4039.patch included here. Set the status explictly to deal with all recipes that share the gcc-source"
