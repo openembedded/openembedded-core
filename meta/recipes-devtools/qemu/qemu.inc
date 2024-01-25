@@ -32,7 +32,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0010-hw-pvrdma-Protect-against-buggy-or-malicious-guest-d.patch \
            file://0002-linux-user-Replace-use-of-lfs64-related-functions-an.patch \
            file://fixedmeson.patch \
-           file://0001-vfio-Include-libgen.h-for-basename-API.patch \
+           file://0001-vfio-container-Replace-basename-with-g_path_get_base.patch \
            file://no-pip.patch \
            file://fix_segv.patch \
            file://qemu-guest-agent.init \
