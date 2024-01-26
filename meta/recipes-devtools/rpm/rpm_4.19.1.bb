@@ -24,7 +24,7 @@ HOMEPAGE = "http://www.rpm.org"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c4eec0c20c6034b9407a09945b48a43f"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.18.x;protocol=https \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.19.x;protocol=https \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
            file://0001-When-cross-installing-execute-package-scriptlets-wit.patch \
@@ -36,58 +36,51 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.18.x;protoc
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
-           file://0001-configure.ac-add-linux-gnux32-variant-to-triplet-han.patch \
-           file://0001-python-Use-Py_hash_t-instead-of-long-in-hdr_hash.patch \
-           file://fix-declaration.patch \
-           file://ea3187cfcf9cac87e5bc5e7db79b0338da9e355e.patch \
-           file://0001-Duplicate-filename-before-passing-it-to-basename.patch \
-           file://0001-Fix-missing-basename-include-on-macOS.patch \
+           file://0001-CMakeLists.txt-look-for-lua-with-pkg-config-rather-t.patch \
+           file://0002-docs-CMakeLists.txt-do-not-install-non-existent-docs.patch \
+           file://0002-rpmio-rpmglob.c-avoid-using-GLOB_BRACE-if-undefined-.patch \
+           file://0001-Fix-unconditional-dependency-on-non-POSIX-GLOB_ONLYD.patch \
+           file://0001-CMakeLists.txt-restore-readline-support-as-an-explic.patch \
            "
 
 PE = "1"
-SRCREV = "4588bc3f994338502d2770ad24cbfcdaa6c335ec"
+SRCREV = "98b301ebb44fb5cabb56fc24bc3aaa437c47c038"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "lua libgcrypt file popt xz bzip2 elfutils python3"
+DEPENDS = "lua libgcrypt file popt xz bzip2 elfutils python3 sqlite3 zstd"
 DEPENDS:append:class-native = " file-replacement-native bzip2-replacement-native"
 
-inherit autotools gettext pkgconfig python3native
-export PYTHON_ABI
-
-AUTOTOOLS_AUXDIR = "${S}/build-aux"
-
-# OE-core patches autoreconf to additionally run gnu-configize, which fails with this recipe
-EXTRA_AUTORECONF:append = " --exclude=gnu-configize"
-
-# Vendor is detected differently on x86 and aarch64 hosts and can feed into target packages
-EXTRA_OECONF:append = " --enable-python --with-crypto=libgcrypt --with-vendor=pc"
-EXTRA_OECONF:append:libc-musl = " --disable-nls --disable-openmp"
+EXTRA_OECMAKE:append:libc-musl = " -DENABLE_NLS=OFF -DENABLE_OPENMP=OFF"
 
 # --sysconfdir prevents rpm from attempting to access machine-specific configuration in sysroot/etc; we need to have it in rootfs
 # --localstatedir prevents rpm from writing its database to native sysroot when building images
-# Forcibly disable plugins for native/nativesdk, as the inhibit and prioreset
-# plugins both behave badly inside builds.
-EXTRA_OECONF:append:class-native = " --sysconfdir=/etc --localstatedir=/var --disable-plugins"
-EXTRA_OECONF:append:class-nativesdk = " --sysconfdir=/etc --disable-plugins"
+EXTRA_OECMAKE:append:class-native = " -DCMAKE_INSTALL_SYSCONFDIR:PATH=/etc -DCMAKE_INSTALL_LOCALSTATEDIR:PATH=/var"
+EXTRA_OECMAKE:append:class-nativesdk = " -DCMAKE_INSTALL_FULL_SYSCONFDIR=/etc"
+
+inherit cmake gettext pkgconfig python3targetconfig
+OECMAKE_GENERATOR = "Unix Makefiles"
 
 BBCLASSEXTEND = "native nativesdk"
 
-PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'inhibit', '', d)} sqlite zstd"
-# The inhibit plugin serves no purpose outside of the target
-PACKAGECONFIG:remove:class-native = "inhibit"
-PACKAGECONFIG:remove:class-nativesdk = "inhibit"
+PACKAGECONFIG ??= "internal-openpgp"
 
-PACKAGECONFIG[imaevm] = "--with-imaevm,,ima-evm-utils"
-PACKAGECONFIG[inhibit] = "--enable-inhibit-plugin,--disable-inhibit-plugin,dbus"
-PACKAGECONFIG[rpm2archive] = "--with-archive,--without-archive,libarchive"
-PACKAGECONFIG[sqlite] = "--enable-sqlite=yes,--enable-sqlite=no,sqlite3"
-PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
-PACKAGECONFIG[ndb] = "--enable-ndb,--disable-ndb"
-PACKAGECONFIG[bdb-ro] = "--enable-bdb-ro,--disable-bdb-ro"
-PACKAGECONFIG[zstd] = "--enable-zstd=yes,--enable-zstd=no,zstd"
+PACKAGECONFIG[plugins] = "-DENABLE_PLUGINS=ON,-DENABLE_PLUGINS=OFF"
+PACKAGECONFIG[testsuite] = "-DENABLE_TESTSUITE=ON,-DENABLE_TESTSUITE=OFF"
 
-ASNEEDED = ""
+# Deprecated! https://fedoraproject.org/wiki/Changes/RpmSequoia
+PACKAGECONFIG[internal-openpgp] = "-DWITH_INTERNAL_OPENPGP=ON,-DWITH_INTERNAL_OPENPGP=OFF"
+
+PACKAGECONFIG[cap] = "-DWITH_CAP=ON,-DWITH_CAP=OFF"
+PACKAGECONFIG[acl] = "-DWITH_ACL=ON,-DWITH_ACL=OFF"
+PACKAGECONFIG[archive] = "-DWITH_ARCHIVE=ON,-DWITH_ARCHIVE=OFF,libarchive"
+PACKAGECONFIG[selinux] = "-DWITH_SELINUX=ON,-DWITH_SELINUX=OFF"
+PACKAGECONFIG[dbus] = "-DWITH_DBUS=ON,-DWITH_DBUS=OFF"
+PACKAGECONFIG[audit] = "-DWITH_AUDIT=ON,-DWITH_AUDIT=OFF"
+PACKAGECONFIG[fsverity] = "-DWITH_FSVERITY=ON,-DWITH_FSVERITY=OFF"
+PACKAGECONFIG[imaevm] = "-DWITH_IMAEVM=ON,-DWITH_IMAEVM=OFF"
+PACKAGECONFIG[fapolicyd] = "-DWITH_FAPOLICYD=ON,-DWITH_FAPOLICYD=OFF"
+PACKAGECONFIG[readline] = "-DWITH_READLINE=ON,-DWITH_READLINE=OFF,readline"
 
 # Direct rpm-native to read configuration from our sysroot, not the one it was compiled in
 # libmagic also has sysroot path contamination, so override it
@@ -104,10 +97,6 @@ WRAPPER_TOOLS = " \
    ${bindir}/rpmspec \
    ${libdir}/rpm/rpmdeps \
 "
-
-do_configure:prepend() {
-        mkdir -p ${S}/build-aux
-}
 
 do_install:append:class-native() {
         for tool in ${WRAPPER_TOOLS}; do
@@ -143,6 +132,7 @@ do_install:append:class-nativesdk() {
 
 do_install:append () {
 	sed -i -e 's:${HOSTTOOLS_DIR}/::g' \
+            -e 's:${STAGING_DIR_NATIVE}/::g' \
 	    ${D}/${libdir}/rpm/macros
 
 }
@@ -166,6 +156,7 @@ FILES:${PN}-build = "\
     ${libdir}/rpm/check-* \
     ${libdir}/rpm/sepdebugcrcfix \
     ${libdir}/rpm/find-lang.sh \
+    ${libdir}/rpm/sysusers.sh \
     ${libdir}/rpm/*provides* \
     ${libdir}/rpm/*requires* \
     ${libdir}/rpm/*deps* \
