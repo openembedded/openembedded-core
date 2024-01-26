@@ -103,6 +103,7 @@ def write_rpm_perfiledata(srcname, d):
 
 python write_specfile () {
     import oe.packagedata
+    import os,pwd,grp,stat
 
     # append information for logs and patches to %prep
     def add_prep(d, spec_files_bottom):
@@ -198,6 +199,23 @@ python write_specfile () {
         # of the walk, the isdir() test would then fail and the walk code would assume its a file
         # hence we check for the names in files too.
         for rootpath, dirs, files in os.walk(walkpath):
+            def get_attr(path):
+                stat_f = os.stat(rootpath + "/" + path, follow_symlinks=False)
+                mode = stat.S_IMODE(stat_f.st_mode)
+                try:
+                    owner = pwd.getpwuid(stat_f.st_uid).pw_name
+                except Exception as e:
+                    bb.error("Content of /etc/passwd in sysroot:\n{}".format(
+                        open(d.getVar("RECIPE_SYSROOT") +"/etc/passwd").read()))
+                    raise e
+                try:
+                    group = grp.getgrgid(stat_f.st_gid).gr_name
+                except Exception as e:
+                    bb.error("Content of /etc/group in sysroot:\n{}".format(
+                        open(d.getVar("RECIPE_SYSROOT") +"/etc/group").read()))
+                    raise e
+                return "%attr({:o},{},{}) ".format(mode, owner, group)
+
             path = rootpath.replace(walkpath, "")
             if path.endswith("DEBIAN") or path.endswith("CONTROL"):
                 continue
@@ -221,24 +239,28 @@ python write_specfile () {
                     if dir == "CONTROL" or dir == "DEBIAN":
                         continue
                     dir = dir.replace("%", "%%%%%%%%")
+                    p = path + '/' + dir
                     # All packages own the directories their files are in...
-                    target.append('%dir "' + path + '/' + dir + '"')
+                    target.append(get_attr(dir) + '%dir "' + p + '"')
             else:
                 # packages own only empty directories or explict directory.
                 # This will prevent the overlapping of security permission.
+                attr = get_attr(path)
                 if path and not files and not dirs:
-                    target.append('%dir "' + path + '"')
+                    target.append(attr + '%dir "' + path + '"')
                 elif path and path in dirfiles:
-                    target.append('%dir "' + path + '"')
+                    target.append(attr + '%dir "' + path + '"')
 
             for file in files:
                 if file == "CONTROL" or file == "DEBIAN":
                     continue
                 file = file.replace("%", "%%%%%%%%")
-                if conffiles.count(path + '/' + file):
-                    target.append('%config "' + path + '/' + file + '"')
+                attr = get_attr(file)
+                p = path + '/' + file
+                if conffiles.count(p):
+                    target.append(attr + '%config "' + p + '"')
                 else:
-                    target.append('"' + path + '/' + file + '"')
+                    target.append(attr + '"' + p + '"')
 
     # Prevent the prerm/postrm scripts from being run during an upgrade
     def wrap_uninstall(scriptvar):
