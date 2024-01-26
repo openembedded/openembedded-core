@@ -167,7 +167,7 @@ python useradd_sysroot_sstate () {
     if scriptfile:
         bb.utils.mkdirhier(os.path.dirname(scriptfile))
         with open(scriptfile, 'w') as script:
-            script.write("#!/bin/sh\n")
+            script.write("#!/bin/sh -e\n")
             bb.data.emit_func("useradd_sysroot", script, d)
             script.write("useradd_sysroot\n")
         os.chmod(scriptfile, 0o755)
