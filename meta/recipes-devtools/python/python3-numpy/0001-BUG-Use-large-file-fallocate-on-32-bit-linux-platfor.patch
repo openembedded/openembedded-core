@@ -1,0 +1,51 @@
+From 43b9b2626a59e8764f3bfb1d6b0d73b2d665584e Mon Sep 17 00:00:00 2001
+From: Ola x Nilsson <olani@axis.com>
+Date: Fri, 19 Jan 2024 10:26:41 +0100
+Subject: [PATCH] BUG: Use large file fallocate on 32 bit linux platforms
+
+Using a local prototype for fallocate instead of the fcntl.h header
+meant that the redirect triggered by -D_FILE_OFFSET_BITS=64 was not
+triggered.
+
+The prototypes in feature_detection_stdio.h should only be used by
+functions in setup_common.py. If they are used by the feature
+discovery code they might trigger false positives.
+
+Upstream-Status: Backport [https://github.com/numpy/numpy/commit/f49c6f9ea735cd7f718e74f8d637ffbbd3a7a03b]
+Signed-off-by: Ola x Nilsson <olani@axis.com>
+
+---
+ numpy/core/feature_detection_stdio.h | 3 +++
+ numpy/core/src/multiarray/convert.c  | 5 +++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/numpy/core/feature_detection_stdio.h b/numpy/core/feature_detection_stdio.h
+index bc14d16..d8bbfbd 100644
+--- a/numpy/core/feature_detection_stdio.h
++++ b/numpy/core/feature_detection_stdio.h
+@@ -1,6 +1,9 @@
++#define _GNU_SOURCE
+ #include <stdio.h>
+ #include <fcntl.h>
+ 
++#if 0 /* Only for setup_common.py, not the C compiler */
+ off_t ftello(FILE *stream);
+ int fseeko(FILE *stream, off_t offset, int whence);
+ int fallocate(int, int, off_t, off_t);
++#endif
+diff --git a/numpy/core/src/multiarray/convert.c b/numpy/core/src/multiarray/convert.c
+index 60c1a1b..8ec0aee 100644
+--- a/numpy/core/src/multiarray/convert.c
++++ b/numpy/core/src/multiarray/convert.c
+@@ -23,8 +23,9 @@
+ #include "array_coercion.h"
+ #include "refcount.h"
+ 
+-int
+-fallocate(int fd, int mode, off_t offset, off_t len);
++#if defined(HAVE_FALLOCATE) && defined(__linux__)
++#include <fcntl.h>
++#endif
+ 
+ /*
+  * allocate nbytes of diskspace for file fp
