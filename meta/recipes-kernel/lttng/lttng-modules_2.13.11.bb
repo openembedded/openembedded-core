@@ -10,15 +10,12 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-fix-phys_proc_id-and-cpu_core_id-moved-in-linux-6.7..patch \
-           file://0002-fix-mm-vmscan-signatures-changed-in-linux-6.7.0-rc1.patch \
-           file://0001-wrapper-fdtable-adjust-fd-lookup-to-v6.7.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "13abfb1ac870711f0d0adfa88e53b17deb2e3052173715a260a6ef14aa45b0a7"
+SRC_URI[sha256sum] = "297211d6fda459c85793c1f498c90fad2939cda7939d503f3ec5eaaf5fbec3c7"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
