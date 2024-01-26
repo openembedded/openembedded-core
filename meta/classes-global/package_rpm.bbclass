@@ -722,6 +722,8 @@ python do_package_rpm () {
     cmd = cmd + " --define 'debug_package %{nil}'"
     cmd = cmd + " --define '_tmppath " + workdir + "'"
     cmd = cmd + " --define '_use_weak_usergroup_deps 1'"
+    cmd = cmd + " --define '_passwd_path " + "/completely/bogus/path" + "'"
+    cmd = cmd + " --define '_group_path " + "/completely/bogus/path" + "'"
     if d.getVarFlag('ARCHIVER_MODE', 'srpm') == '1' and bb.data.inherits_class('archiver', d):
         cmd = cmd + " --define '_sourcedir " + d.getVar('ARCHIVER_OUTDIR') + "'"
         cmdsrpm = cmd + " --define '_srcrpmdir " + d.getVar('ARCHIVER_RPMOUTDIR') + "'"
