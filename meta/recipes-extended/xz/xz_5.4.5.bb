@@ -24,13 +24,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c8ea84ebe7b93cce676b54355dc6b2c0 \
                     file://lib/getopt.c;endline=23;md5=2069b0ee710572c03bb3114e4532cd84 \
                     "
 
-SRC_URI = "https://tukaani.org/xz/xz-${PV}.tar.gz"
+SRC_URI = "https://tukaani.org/xz/xz-${PV}.tar.gz \
+           ${@bb.utils.contains('PTEST_ENABLED', '1', 'file://run-ptest', '', d)} \
+          "
 SRC_URI[sha256sum] = "135c90b934aee8fbc0d467de87a05cb70d627da36abe518c357a873709e5b7d6"
 UPSTREAM_CHECK_REGEX = "xz-(?P<pver>\d+(\.\d+)+)\.tar"
 
 CACHED_CONFIGUREVARS += "gl_cv_posix_shell=/bin/sh"
 
-inherit autotools gettext
+inherit autotools gettext ptest
 
 PACKAGES =+ "liblzma"
 
@@ -42,3 +44,25 @@ ALTERNATIVE:${PN} = "xz xzcat unxz \
                      lzma lzcat unlzma"
 
 BBCLASSEXTEND = "native nativesdk"
+
+RDEPENDS:${PN}-ptest += "bash file"
+
+do_compile_ptest() {
+        oe_runmake check TESTS=
+}
+
+do_install_ptest () {
+    install -d ${D}${PTEST_PATH}/tests
+    find ${B}/tests/.libs -type f -executable -exec cp {} ${D}${PTEST_PATH}/tests \;
+    cp ${B}/config.h ${D}${PTEST_PATH}
+    for i in files xzgrep_expected_output test_files.sh test_scripts.sh test_compress.sh; do
+        cp -r ${S}/tests/$i ${D}${PTEST_PATH}/tests
+    done
+    mkdir -p ${D}${PTEST_PATH}/src/xz
+    ln -s ${bindir}/xz ${D}${PTEST_PATH}/src/xz/xz
+    mkdir -p ${D}${PTEST_PATH}/src/xzdec
+    ln -s ${bindir}/xzdec ${D}${PTEST_PATH}/src/xzdec/xzdec
+    mkdir -p ${D}${PTEST_PATH}/src/scripts
+    ln -s ${bindir}/xzdiff ${D}${PTEST_PATH}/src/scripts/xzdiff
+    ln -s ${bindir}/xzgrep ${D}${PTEST_PATH}/src/scripts/xzgrep
+}
