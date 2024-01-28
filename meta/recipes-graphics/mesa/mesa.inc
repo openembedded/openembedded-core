@@ -20,7 +20,7 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0001-gallium-Fix-build-with-llvm-17.patch \
 "
 
-SRC_URI[sha256sum] = "518307c0057fa3cee8b58df78be431d4df5aafa7edc60d09278b2d7a0a80f3b4"
+SRC_URI[sha256sum] = "df12d765be4650fe532860b18aa18e6da1d0b07d1a21dfdfe04660e6b7bac39a"
 
 UPSTREAM_CHECK_GITTAGREGEX = "mesa-(?P<pver>\d+(\.\d+)+)"
 
