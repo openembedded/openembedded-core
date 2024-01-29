@@ -14,6 +14,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://0001-Added-handshake-history-reporting-when-test-fails.patch \
            file://aarch64-bti.patch \
            file://0001-riscv-Fix-mispelling-of-extension-test-macro.patch \
+           file://CVE-2023-6129.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
