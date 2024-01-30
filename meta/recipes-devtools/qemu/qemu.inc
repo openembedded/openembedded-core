@@ -114,7 +114,7 @@ EXTRA_OECONF = " \
     --extra-ldflags='${LDFLAGS}' \
     --disable-download \
     --disable-docs \
-    --host-cc=${BUILD_CC} \
+    --host-cc='${BUILD_CC}' \
     ${PACKAGECONFIG_CONFARGS} \
     "
 
