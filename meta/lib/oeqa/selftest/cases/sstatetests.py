@@ -923,7 +923,7 @@ class SStateMirrors(SStateBase):
                 else:
                     missing_objects -= 1
 
-            if "urlopen failed for" in l:
+            if "urlopen failed for" in l and not is_exception(l, exceptions):
                 failed_urls_extrainfo.append(l)
 
         self.assertEqual(len(failed_urls), missing_objects, "Amount of reported missing objects does not match failed URLs: {}\nFailed URLs:\n{}\nFetcher diagnostics:\n{}".format(missing_objects, "\n".join(failed_urls), "\n".join(failed_urls_extrainfo)))
