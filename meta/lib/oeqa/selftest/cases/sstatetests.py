@@ -270,10 +270,6 @@ class SStateCacheManagement(SStateBase):
         self.assertTrue(len(global_config) == len(target_config), msg='Lists global_config and target_config should have the same number of elements')
         self.config_sstate(temp_sstate_location=True, add_local_mirrors=[self.sstate_path])
 
-        # If buildhistory is enabled, we need to disable version-going-backwards
-        # QA checks for this test. It may report errors otherwise.
-        self.append_config('ERROR_QA:remove = "version-going-backwards"')
-
         # For now this only checks if random sstate tasks are handled correctly as a group.
         # In the future we should add control over what tasks we check for.
 
