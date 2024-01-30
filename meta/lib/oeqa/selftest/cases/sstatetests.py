@@ -268,6 +268,14 @@ class SStateCacheManagement(SStateBase):
         self.assertTrue(global_config)
         self.assertTrue(target_config)
         self.assertTrue(len(global_config) == len(target_config), msg='Lists global_config and target_config should have the same number of elements')
+
+        for idx in range(len(target_config)):
+            self.append_config(global_config[idx])
+            self.append_recipeinc(target, target_config[idx])
+            bitbake(target)
+            self.remove_config(global_config[idx])
+            self.remove_recipeinc(target, target_config[idx])
+
         self.config_sstate(temp_sstate_location=True, add_local_mirrors=[self.sstate_path])
 
         # For now this only checks if random sstate tasks are handled correctly as a group.
