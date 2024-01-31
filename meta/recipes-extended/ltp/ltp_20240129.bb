@@ -24,12 +24,11 @@ TUNE_CCARGS:remove:x86-64 = "-mfpmath=sse"
 
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "110d3be6a9c58674de3e366b96a70f0129a5d299"
+SRCREV = "68737d20556d37364c95776044b1119c0912a36a"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://disable_hanging_tests.patch \
-           file://0001-testcases-kernel-syscalls-fcntl-define-_LARGEFILE64_.patch \
            "
 
 S = "${WORKDIR}/git"
