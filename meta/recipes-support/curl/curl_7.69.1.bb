@@ -72,6 +72,9 @@ CVE_CHECK_WHITELIST = "CVE-2021-22922 CVE-2021-22923 CVE-2021-22926 CVE-2021-229
 # This CVE issue affects Windows only Hence whitelisting this CVE
 CVE_CHECK_WHITELIST += "CVE-2021-22897"
 
+# This CVE reports that apple had to upgrade curl because of other already reported CVEs
+CVE_CHECK_WHITELIST += "CVE-2023-42915"
+
 inherit autotools pkgconfig binconfig multilib_header
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} gnutls libidn proxy threaded-resolver verbose zlib"
