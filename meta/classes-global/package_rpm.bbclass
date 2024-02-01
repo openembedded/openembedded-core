@@ -217,7 +217,7 @@ python write_specfile () {
                 return "%attr({:o},{},{}) ".format(mode, owner, group)
 
             def escape_chars(p):
-                return p.replace("%", "%%")
+                return p.replace("%", "%%").replace("\\", "\\\\").replace('"', '\\"')
 
             path = rootpath.replace(walkpath, "")
             if path.endswith("DEBIAN") or path.endswith("CONTROL"):
