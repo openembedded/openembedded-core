@@ -4,8 +4,8 @@ DESCRIPTION = "GNU ed is a line-oriented text editor. It is used to create, disp
 
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=76d6e300ffd8fb9d18bd9b136a9bba13 \
-                    file://ed.h;endline=20;md5=504a90a78b045972e2fd2f3fc418c195 \
-                    file://main.c;endline=17;md5=cf9d322b0ac4445ca2299c61ee175365 \
+                    file://ed.h;endline=20;md5=c3212b6c53b09668107420af9368c0ef \
+                    file://main.c;endline=17;md5=e5d2ae5ddd1ecb87dc71702c06dd06dc \
                     "
 
 SECTION = "base"
@@ -19,7 +19,7 @@ bindir = "${base_bindir}"
 SRC_URI = "${GNU_MIRROR}/ed/${BP}.tar.lz"
 UPSTREAM_CHECK_URI = "${GNU_MIRROR}/ed/"
 
-SRC_URI[sha256sum] = "ce2f2e5c424790aa96d09dacb93d9bbfdc0b7eb6249c9cb7538452e8ec77cd48"
+SRC_URI[sha256sum] = "c6030defe6ae172f1687906d7354054c75a6a9130af319d4e73c50a91959c5a6"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 
