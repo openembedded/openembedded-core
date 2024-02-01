@@ -243,13 +243,11 @@ python write_specfile () {
                     p = path + '/' + dir
                     # All packages own the directories their files are in...
                     target.append(get_attr(dir) + '%dir "' + escape_chars(p) + '"')
-            else:
+            elif path:
                 # packages own only empty directories or explict directory.
                 # This will prevent the overlapping of security permission.
                 attr = get_attr(path)
-                if path and not files and not dirs:
-                    target.append(attr + '%dir "' + escape_chars(path) + '"')
-                elif path and path in dirfiles:
+                if (not files and not dirs) or path in dirfiles:
                     target.append(attr + '%dir "' + escape_chars(path) + '"')
 
             for file in files:
