@@ -16,8 +16,6 @@ CVE_STATUS[CVE-2019-1010025] = "disputed: \
 Allows for ASLR bypass so can bypass some hardening, not an exploit in itself, may allow \
 easier access for another. 'ASLR bypass itself is not a vulnerability.'"
 
-CVE_STATUS[CVE-2023-25139] = "cpe-stable-backport: This is integrated into the 2.37 branch as of 07b9521fc6"
-
 DEPENDS += "gperf-native bison-native"
 
 NATIVESDKFIXES ?= ""
