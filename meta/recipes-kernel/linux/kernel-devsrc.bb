@@ -148,6 +148,10 @@ do_install() {
 	# for v6.1+ (otherwise we are missing multiple default targets)
 	cp -a --parents Kbuild $kerneldir/build 2>/dev/null || :
 
+	# For v6.6+ the debian packing is moved out to seperate rules file
+	# Remove as we else would ned to RDEPEND on make
+	rm $kerneldir/build/scripts/package/debian/rules 2>/dev/null || :
+
 	# if our build dir had objtool, it will also be rebuilt on target, so
 	# we copy what is required for that build
 	if [ -f ${B}/tools/objtool/objtool ]; then
