@@ -8,10 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8c3617db4fb6fae01f1d253ab91511e4 \
                    "
 LDSHARED += "-pthread"
 
-SRC_URI[sha256sum] = "13f93ce9bea8016c253b34afc6bd6a75993e5c40672ed5405a9c832f0d4a00bc"
+SRC_URI[sha256sum] = "e0ec52ba3c7f1b7d813cd52649a5b3ef1fc0d433219dc8c93827c57eab6cf888"
 
 SRC_URI += "file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
-            file://0001-Fix-include-directory-when-cross-compiling-9129.patch \
             file://check-memfree.py \
             file://run-ptest \
            "
@@ -38,6 +37,7 @@ RDEPENDS:${PN}-ptest += " \
     ${PYTHON_PN}-cryptography-vectors (= ${PV}) \
     ${PYTHON_PN}-hypothesis \
     ${PYTHON_PN}-iso8601 \
+    ${PYTHON_PN}-mmap \
     ${PYTHON_PN}-pretend \
     ${PYTHON_PN}-psutil \
     ${PYTHON_PN}-pytest \

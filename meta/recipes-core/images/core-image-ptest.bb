@@ -31,7 +31,7 @@ IMAGE_ROOTFS_EXTRA_SPACE:virtclass-mcextend-tar = "1524288"
 QB_MEM = "-m 1024"
 QB_MEM:virtclass-mcextend-lttng-tools = "-m 4096"
 QB_MEM:virtclass-mcextend-python3 = "-m 2048"
-QB_MEM:virtclass-mcextend-python3-cryptography = "-m 4096"
+QB_MEM:virtclass-mcextend-python3-cryptography = "-m 5100"
 
 TEST_SUITES = "ping ssh parselogs ptest"
 
