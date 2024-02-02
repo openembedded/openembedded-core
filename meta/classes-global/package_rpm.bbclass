@@ -681,6 +681,7 @@ python do_package_rpm () {
     # Setup the rpmbuild arguments...
     rpmbuild = d.getVar('RPMBUILD')
     rpmbuild_compmode = d.getVar('RPMBUILD_COMPMODE')
+    rpmbuild_extra_params = d.getVar('RPMBUILD_EXTRA_PARAMS') or ""
 
     # Too many places in dnf stack assume that arch-independent packages are "noarch".
     # Let's not fight against this.
@@ -722,6 +723,7 @@ python do_package_rpm () {
     cmd = cmd + " --define '_use_weak_usergroup_deps 1'"
     cmd = cmd + " --define '_passwd_path " + "/completely/bogus/path" + "'"
     cmd = cmd + " --define '_group_path " + "/completely/bogus/path" + "'"
+    cmd = cmd + rpmbuild_extra_params
     if d.getVarFlag('ARCHIVER_MODE', 'srpm') == '1' and bb.data.inherits_class('archiver', d):
         cmd = cmd + " --define '_sourcedir " + d.getVar('ARCHIVER_OUTDIR') + "'"
         cmdsrpm = cmd + " --define '_srcrpmdir " + d.getVar('ARCHIVER_RPMOUTDIR') + "'"
