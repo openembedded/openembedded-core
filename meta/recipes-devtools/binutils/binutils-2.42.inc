@@ -12,13 +12,13 @@ LIC_FILES_CHKSUM="\
 
 # When upgrading to 2.42, please make sure there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.41"
-CVE_VERSION = "2.41"
-SRCBRANCH ?= "binutils-2_41-branch"
+PV = "2.42"
+CVE_VERSION = "2.42"
+SRCBRANCH ?= "binutils-2_42-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-SRCREV ?= "c1321df4eb0a136304205085cd4913dd4eb01054"
+SRCREV ?= "42cde237366398f6e318232f4ce080bef42f0371"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -33,6 +33,5 @@ SRC_URI = "\
      file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
      file://0013-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
-     file://0015-gprofng-Fix-build-with-64bit-file-offset-on-32bit-ma.patch \
 "
 S  = "${WORKDIR}/git"
