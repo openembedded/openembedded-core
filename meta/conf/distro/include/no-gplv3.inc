@@ -22,3 +22,7 @@ CORE_IMAGE_EXTRA_INSTALL:pn-core-image-weston += "rpm"
 
 # matchbox-terminal depends on vte, which is gpl3
 CORE_IMAGE_BASE_INSTALL:remove:pn-core-image-weston = "matchbox-terminal"
+
+# Some python-tests use bash outside of ptest
+RDEPENDS:${PN}-tests:remove:class-target:pn-python3 = "${MLPREFIX}bash"
+INSANE_SKIP:${PN}-tests:pn-python3 = "file-rdeps"
