@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=ffeffa59c90c9c4a033c7574f8f3fb75"
 SRC_URI[sha256sum] = "d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709c6544b"
 
 PYPI_PACKAGE = "MarkupSafe"
-inherit pypi setuptools3 ptest
+inherit pypi python_setuptools_build_meta ptest
 
 RDEPENDS:${PN} += "${PYTHON_PN}-stringold"
 
