@@ -1,0 +1,31 @@
+From fabef23bea6e9963c06e218586fda1a823e3c6bf Mon Sep 17 00:00:00 2001
+From: Wayne Davison <wayne@opencoder.net>
+Date: Mon, 8 Aug 2022 21:30:21 -0700
+Subject: [PATCH] Fix --relative when copying an absolute path.
+
+CVE: CVE-2022-29154
+Upstream-Status: Backport [https://github.com/WayneD/rsync/commit/fabef23bea6e9963c06e218586fda1a823e3c6bf]
+Signed-off-by: Matthias Schmitz <matthias.schmitz@port4949.net>
+---
+ exclude.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/exclude.c b/exclude.c
+index 2394023f..ba5ca5a3 100644
+--- a/exclude.c
++++ b/exclude.c
+@@ -434,8 +434,10 @@ void add_implied_include(const char *arg)
+ 				*p++ = *cp++;
+ 				break;
+ 			  case '/':
+-				if (p[-1] == '/') /* This is safe because of the initial slash. */
++				if (p[-1] == '/') { /* This is safe because of the initial slash. */
++					cp++;
+ 					break;
++				}
+ 				if (relative_paths) {
+ 					filter_rule const *ent;
+ 					int found = 0;
+-- 
+2.39.2
+
