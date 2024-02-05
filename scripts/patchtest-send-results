@@ -33,6 +33,9 @@ under 'Yocto Project Subprojects'). For more information on specific
 failures, see: https://wiki.yoctoproject.org/wiki/Patchtest. Thank
 you!"""
 
+def has_a_failed_test(raw_results):
+    return any(raw_result.split(':')[0] == "FAIL" for raw_result in raw_results.splitlines())
+
 parser = argparse.ArgumentParser(description="Send patchtest results to a submitter for a given patch")
 parser.add_argument("-p", "--patch", dest="patch", required=True, help="The patch file to summarize")
 args = parser.parse_args()
@@ -69,7 +72,7 @@ from_address = "patchtest@automation.yoctoproject.org"
 # mailing list to CC
 cc_address = "openembedded-core@lists.openembedded.org"
 
-if "FAIL" in testresult:
+if has_a_failed_test(testresult):
     reply_contents = None
     if len(max(open(result_file, 'r'), key=len)) > 220:
         warning = "Tests failed for the patch, but the results log could not be processed due to excessive result line length."
