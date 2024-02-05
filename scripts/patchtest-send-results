@@ -45,7 +45,6 @@ elif not os.path.exists(args.patch + ".testresult"):
     sys.exit(1)
 
 result_file = args.patch + ".testresult"
-result_basename = os.path.basename(args.patch)
 testresult = None
 
 with open(result_file, "r") as f:
