@@ -42,4 +42,3 @@ python () {
     if not d.getVar("MCNAME"):
         raise bb.parse.SkipRecipe("No class extension set")
 }
-
