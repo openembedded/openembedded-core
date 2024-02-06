@@ -224,10 +224,16 @@ do_install() {
 	if [ "${ARCH}" = "riscv" ]; then
             cp -a --parents arch/riscv/kernel/vdso/*gettimeofday.* $kerneldir/build/
             cp -a --parents arch/riscv/kernel/vdso/note.S $kerneldir/build/
+            # v6.1+
+            cp -a --parents arch/riscv/kernel/asm-offsets.c $kerneldir/build/
             if [ -e arch/riscv/kernel/vdso/gen_vdso_offsets.sh ]; then
                     cp -a --parents arch/riscv/kernel/vdso/gen_vdso_offsets.sh $kerneldir/build/
             fi
 	    cp -a --parents arch/riscv/kernel/vdso/* $kerneldir/build/ 2>/dev/null || :
+	    if [ -e arch/riscv/kernel/compat_vdso/gen_compat_vdso_offsets.sh ]; then
+	        cp -a --parents arch/riscv/kernel/compat_vdso/gen_compat_vdso_offsets.sh $kerneldir/build/
+	    fi
+	    cp -a --parents arch/riscv/kernel/compat_vdso/* $kerneldir/build/ 2>/dev/null || :
 	fi
 
 	# include the machine specific headers for ARM variants, if available.
