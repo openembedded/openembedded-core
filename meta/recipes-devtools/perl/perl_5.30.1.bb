@@ -46,6 +46,10 @@ SRC_URI[perl-cross.sha256sum] = "edce0b0c2f725e2db3f203d6d8e9f3f7161256f5d159055
 
 S = "${WORKDIR}/perl-${PV}"
 
+# This is windows only issue.
+# https://ubuntu.com/security/CVE-2023-47039
+CVE_CHECK_WHITELIST += "CVE-2023-47039"
+
 inherit upstream-version-is-even update-alternatives
 
 DEPENDS += "zlib virtual/crypt"
