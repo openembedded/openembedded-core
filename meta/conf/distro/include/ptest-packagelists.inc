@@ -121,8 +121,9 @@ PTESTS_SLOW = "\
     lz4 \
 "
 
-PTESTS_SLOW:remove:riscv64 = "valgrind"
-PTESTS_PROBLEMS:append:riscv64 = " valgrind"
+# python3 ptests hang on qemuriscv64
+PTESTS_SLOW:remove:riscv64 = "valgrind python3"
+PTESTS_PROBLEMS:append:riscv64 = " valgrind python3"
 PTESTS_SLOW:remove:riscv32 = "lttng-tools strace valgrind"
 PTESTS_PROBLEMS:append:riscv32 = " lttng-tools strace valgrind"
 PTESTS_SLOW:append:libc-musl = " libc-test"
