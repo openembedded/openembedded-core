@@ -187,3 +187,56 @@ class BitbakeLayers(OESelftestTestCase):
 
         cmd = '{} --layerlist {} setup -c {} --no-shell'.format(oe_setup_build_l, layers_json, conf)
         result = runCmd(cmd)
+
+    def test_bitbakelayers_updatelayer(self):
+        result = runCmd('bitbake-layers create-layers-setup {}'.format(self.testlayer_path))
+        jsonfile = os.path.join(self.testlayer_path, "setup-layers.json")
+        self.validate_layersjson(jsonfile)
+
+        import json
+        with open(jsonfile) as f:
+            data = json.load(f)
+        repos = []
+        for s in data['sources']:
+            repos.append(s)
+
+        self.assertTrue(len(repos) > 1, "Not enough repositories available")
+        self.validate_layersjson(jsonfile)
+
+        test_ref_1 = 'ref_1'
+        test_ref_2 = 'ref_2'
+
+        # Create a new layers setup using custom references
+        result = runCmd('bitbake-layers create-layers-setup --use-custom-reference {first_repo}:{test_ref} --use-custom-reference {second_repo}:{test_ref} {path}'
+                        .format(first_repo=repos[0], second_repo=repos[1], test_ref=test_ref_1, path=self.testlayer_path))
+        self.validate_layersjson(jsonfile)
+
+        with open(jsonfile) as f:
+            data = json.load(f)
+        first_rev_1 = data['sources'][repos[0]]['git-remote']['rev']
+        first_desc_1 = data['sources'][repos[0]]['git-remote']['describe']
+        second_rev_1 = data['sources'][repos[1]]['git-remote']['rev']
+        second_desc_1 = data['sources'][repos[1]]['git-remote']['describe']
+
+        self.assertEqual(first_rev_1, test_ref_1, "Revision not set correctly: '{}'".format(first_rev_1))
+        self.assertEqual(first_desc_1, '', "Describe not cleared: '{}'".format(first_desc_1))
+        self.assertEqual(second_rev_1, test_ref_1, "Revision not set correctly: '{}'".format(second_rev_1))
+        self.assertEqual(second_desc_1, '', "Describe not cleared: '{}'".format(second_desc_1))
+
+        # Update one of the repositories in the layers setup using a different custom reference
+        # This should only update the selected repository, everything else should remain as is
+        result = runCmd('bitbake-layers create-layers-setup --update --use-custom-reference {first_repo}:{test_ref} {path}'
+                        .format(first_repo=repos[0], test_ref=test_ref_2, path=self.testlayer_path))
+        self.validate_layersjson(jsonfile)
+
+        with open(jsonfile) as f:
+            data = json.load(f)
+        first_rev_2 = data['sources'][repos[0]]['git-remote']['rev']
+        first_desc_2 = data['sources'][repos[0]]['git-remote']['describe']
+        second_rev_2 = data['sources'][repos[1]]['git-remote']['rev']
+        second_desc_2 = data['sources'][repos[1]]['git-remote']['describe']
+
+        self.assertEqual(first_rev_2, test_ref_2, "Revision not set correctly: '{}'".format(first_rev_2))
+        self.assertEqual(first_desc_2, '', "Describe not cleared: '{}'".format(first_desc_2))
+        self.assertEqual(second_rev_2, second_rev_1, "Revision should not be updated: '{}'".format(second_rev_2))
+        self.assertEqual(second_desc_2, second_desc_1, "Describe should not be updated: '{}'".format(second_desc_2))
