@@ -45,6 +45,7 @@ SRC_URI_BASE = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/d
                 file://CVE-2023-36664-1.patch \
                 file://CVE-2023-36664-2.patch \
                 file://CVE-2023-43115.patch \
+                file://CVE-2020-36773.patch \
 "
 
 SRC_URI = "${SRC_URI_BASE} \
