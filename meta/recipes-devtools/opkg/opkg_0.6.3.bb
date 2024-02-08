@@ -1,9 +1,9 @@
 SUMMARY = "Open Package Manager"
 SUMMARY:libopkg = "Open Package Manager library"
 SECTION = "base"
-HOMEPAGE = "http://code.google.com/p/opkg/"
+HOMEPAGE = "https://git.yoctoproject.org/opkg/"
 DESCRIPTION = "Opkg is a lightweight package management system based on Ipkg."
-BUGTRACKER = "http://code.google.com/p/opkg/issues/list"
+BUGTRACKER = "https://bugzilla.yoctoproject.org/buglist.cgi?quicksearch=Product%3Aopkg"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
                     file://src/opkg.c;beginline=4;endline=18;md5=d6200b0f2b41dee278aa5fad333eecae"
@@ -19,7 +19,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "ac73a90a2549cd04948e563d915912c78e1b8ba0f43af75c5a53fcca474adbd5"
+SRC_URI[sha256sum] = "f3938e359646b406c40d5d442a1467c7e72357f91ab822e442697529641e06de"
 
 # This needs to be before ptest inherit, otherwise all ptest files end packaged
 # in libopkg package if OPKGLIBDIR == libdir, because default
