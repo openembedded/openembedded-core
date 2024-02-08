@@ -5,9 +5,9 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import os
 import re
 import logging
-import glob
 from recipetool.create import RecipeHandler, validate_pv
 
 logger = logging.getLogger('recipetool')
