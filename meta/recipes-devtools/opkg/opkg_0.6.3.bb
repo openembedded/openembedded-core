@@ -61,6 +61,15 @@ do_install_ptest () {
 	sed -i -e '/@PYTHONPATH=. $(PYTHON) $^/a\\t@if [ "$$?" != "0" ];then echo "FAIL:"$^;else echo "PASS:"$^;fi' ${D}${PTEST_PATH}/tests/Makefile
 }
 
+WARN_QA:append = " internal-solver-deprecation"
+QARECIPETEST[internal-solver-deprecation] = "qa_check_solver_deprecation"
+def qa_check_solver_deprecation (pn, d, messages):
+    pkgconfig = (d.getVar("PACKAGECONFIG") or "").split()
+
+    if "libsolv" not in pkgconfig:
+        oe.qa.handle_error("internal-solver-deprecation", "The opkg internal solver will be deprecated in future opkg releases. Consider enabling \"libsolv\" in PACKAGECONFIG.", d)
+
+
 RDEPENDS:${PN} = "${VIRTUAL-RUNTIME_update-alternatives} opkg-arch-config libarchive"
 RDEPENDS:${PN}:class-native = ""
 RDEPENDS:${PN}:class-nativesdk = ""
