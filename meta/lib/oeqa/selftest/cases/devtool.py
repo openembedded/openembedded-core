@@ -1097,7 +1097,7 @@ class DevtoolModifyTests(DevtoolBase):
             runCmd('git -C %s checkout %s' % (tempdir, branch))
             with open(source, "rt") as f:
                 content = f.read()
-            self.assertEquals(content, expected)
+            self.assertEqual(content, expected)
         if self.td["MACHINE"] == "qemux86":
             check('devtool', 'This is a test for qemux86\n')
         elif self.td["MACHINE"] == "qemuarm":
