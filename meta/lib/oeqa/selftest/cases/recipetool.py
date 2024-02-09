@@ -28,6 +28,16 @@ def tearDownModule():
     runCmd('rm -rf %s' % templayerdir)
 
 
+def needTomllib(test):
+    # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+    try:
+        import tomllib
+    except ImportError:
+        try:
+            import tomli
+        except ImportError:
+            test.skipTest('Test requires python 3.11 or above for tomllib module or tomli module')
+
 class RecipetoolBase(devtool.DevtoolTestCase):
 
     def setUpLocal(self):
@@ -554,15 +564,8 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_python3_pep517_setuptools_build_meta(self):
-        # This test require python 3.11 or above for the tomllib module
-        # or tomli module to be installed
-        try:
-            import tomllib
-        except ImportError:
-            try:
-                import tomli
-            except ImportError:
-                self.skipTest('Test requires python 3.11 or above for tomllib module or tomli module')
+        # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+        needTomllib(self)
 
         # Test creating python3 package from tarball (using setuptools.build_meta class)
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -583,15 +586,8 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_python3_pep517_poetry_core_masonry_api(self):
-        # This test require python 3.11 or above for the tomllib module
-        # or tomli module to be installed
-        try:
-            import tomllib
-        except ImportError:
-            try:
-                import tomli
-            except ImportError:
-                self.skipTest('Test requires python 3.11 or above for tomllib module or tomli module')
+        # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+        needTomllib(self)
 
         # Test creating python3 package from tarball (using poetry.core.masonry.api class)
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -612,15 +608,8 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_python3_pep517_flit_core_buildapi(self):
-        # This test require python 3.11 or above for the tomllib module
-        # or tomli module to be installed
-        try:
-            import tomllib
-        except ImportError:
-            try:
-                import tomli
-            except ImportError:
-                self.skipTest('Test requires python 3.11 or above for tomllib module or tomli module')
+        # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+        needTomllib(self)
 
         # Test creating python3 package from tarball (using flit_core.buildapi class)
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -641,15 +630,8 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_python3_pep517_hatchling(self):
-        # This test require python 3.11 or above for the tomllib module
-        # or tomli module to be installed
-        try:
-            import tomllib
-        except ImportError:
-            try:
-                import tomli
-            except ImportError:
-                self.skipTest('Test requires python 3.11 or above for tomllib module or tomli module')
+        # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+        needTomllib(self)
 
         # Test creating python3 package from tarball (using hatchling class)
         temprecipe = os.path.join(self.tempdir, 'recipe')
@@ -671,15 +653,8 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_python3_pep517_maturin(self):
-        # This test require python 3.11 or above for the tomllib module
-        # or tomli module to be installed
-        try:
-            import tomllib
-        except ImportError:
-            try:
-                import tomli
-            except ImportError:
-                self.skipTest('Test requires python 3.11 or above for tomllib module or tomli module')
+        # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+        needTomllib(self)
 
         # Test creating python3 package from tarball (using maturin class)
         temprecipe = os.path.join(self.tempdir, 'recipe')
