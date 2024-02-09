@@ -20,4 +20,21 @@ RDEPENDS:${PN} += "\
     ${PYTHON_PN}-netclient \
 "
 
+inherit ptest
+SRC_URI += "\
+    https://raw.githubusercontent.com/yaml/pyyaml/a98fd6088e81d7aca571220c966bbfe2ac43c335/tests/test_dump_load.py;name=test \
+    file://run-ptest \
+"
+SRC_URI[test.sha256sum] = "b6a8a2825d89fdc8aee226560f66b8196e872012a0ea7118cbef1a832359434a"
+
+RDEPENDS:${PN}-ptest += " \
+	${PYTHON_PN}-pytest \
+	${PYTHON_PN}-unittest-automake-output \
+"
+
+do_install_ptest() {
+	install -d ${D}${PTEST_PATH}/tests
+	cp -rf ${WORKDIR}/test_dump_load.py ${D}${PTEST_PATH}/tests/
+}
+
 BBCLASSEXTEND = "native nativesdk"
