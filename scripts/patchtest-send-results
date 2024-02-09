@@ -81,9 +81,14 @@ if has_a_failed_test(testresult):
         reply_contents = greeting + testresult + suggestions
 
     ses_client = boto3.client('ses', region_name='us-west-2')
+
+    # Construct the headers for the email. We only want to reply
+    # directly to the tested patch, so make In-Reply-To and References
+    # the same value.
     raw_data = 'From: ' + from_address + '\nTo: ' + reply_address + \
         '\nCC: ' + cc_address + '\nSubject:' + subject_line + \
         '\nIn-Reply-To:' + in_reply_to + \
+        '\nReferences:' + in_reply_to + \
         '\nMIME-Version: 1.0" + \
         "\nContent-type: Multipart/Mixed;boundary="NextPart"\n\n--NextPart\nContent-Type: text/plain\n\n' + \
         reply_contents + '\n\n--NextPart'
