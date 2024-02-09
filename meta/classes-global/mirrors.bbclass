@@ -78,6 +78,7 @@ https?://downloads.yoctoproject.org/mirror/sources/ https://mirrors.kernel.org/y
 MIRRORS += "\
 git://salsa.debian.org/.*     git://salsa.debian.org/PATH;protocol=https \
 git://git.gnome.org/.*        git://gitlab.gnome.org/GNOME/PATH;protocol=https \
+git://git.infradead.org/.*    git://git.infraroot.at/PATH;protocol=https \
 git://.*/.*                   git://HOST/PATH;protocol=https \
 git://.*/.*                   git://HOST/git/PATH;protocol=https \
 "
