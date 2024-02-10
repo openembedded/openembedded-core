@@ -1611,7 +1611,7 @@ python () {
     for k in ['RDEPENDS', 'RPROVIDES']:
         for var in bb.utils.explode_deps(d.getVar(k + ':' + pn) or ""):
             if var.startswith("virtual/"):
-                bb.warn("%s is set to %s, the substring 'virtual/' holds no meaning in this context. It is suggested to use the 'virtual-' instead." % (k, var))
+                bb.warn("%s is set to %s but the substring 'virtual/' holds no meaning in this context. It only works for build time dependencies, not runtime ones. It is suggested to use 'VIRTUAL-RUNTIME_' variables instead." % (k, var))
 
     issues = []
     if (d.getVar('PACKAGES') or "").split():
