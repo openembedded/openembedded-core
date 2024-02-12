@@ -129,13 +129,18 @@ INHIBIT_PACKAGE_STRIP_FILES = "${PKGD}${libexecdir}/valgrind/vgpreload_memcheck-
 RRECOMMENDS:${PN} += "${TCLIBC}-dbg"
 
 RDEPENDS:${PN}-ptest += " bash coreutils curl file \
-   gdb libgomp \
+   gdb \
+   ${TCLIBC}-src gcc-runtime-dbg \
+   libgomp \
    perl \
    perl-module-file-basename perl-module-file-glob perl-module-getopt-long \
    perl-module-overloading perl-module-cwd perl-module-ipc-open3 \
    perl-module-carp perl-module-symbol \
-   procps sed ${PN}-dbg ${PN}-src ${TCLIBC}-src gcc-runtime-dbg \
+   procps \
+   python3-compile \
+   sed \
    util-linux-taskset \
+   ${PN}-dbg ${PN}-src \
    ${PN}-cachegrind ${PN}-massif ${PN}-callgrind \
 "
 RDEPENDS:${PN}-ptest:append:libc-glibc = " glibc-utils glibc-gconv-utf-32"
@@ -224,6 +229,11 @@ do_install_ptest() {
     sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
     sed -i s:@libexecdir@:${libexecdir}:g ${D}${PTEST_PATH}/run-ptest
     sed -i s:@bindir@:${bindir}:g ${D}${PTEST_PATH}/run-ptest
+
+    # enable cachegrind ptests
+    ln -s ${bindir}/cg_annotate ${D}/${PTEST_PATH}/cachegrind/cg_annotate
+    ln -s ${bindir}/cg_diff ${D}/${PTEST_PATH}/cachegrind/cg_diff
+    ln -s ${bindir}/cg_merge ${D}/${PTEST_PATH}/cachegrind/cg_merge
 
     # This test fails on the host as well, using both 3.15 and git master (as of Jan 24 2020)
     # https://bugs.kde.org/show_bug.cgi?id=402833
