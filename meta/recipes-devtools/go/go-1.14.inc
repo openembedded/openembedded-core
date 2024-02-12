@@ -71,7 +71,8 @@ SRC_URI += "\
     file://CVE-2023-29402.patch \
     file://CVE-2023-29404.patch \
     file://CVE-2023-29400.patch \
-    file://CVE-2023-29406.patch \
+    file://CVE-2023-29406-1.patch \
+    file://CVE-2023-29406-2.patch \
     file://CVE-2023-29409.patch \
     file://CVE-2022-41725-pre1.patch \
     file://CVE-2022-41725-pre2.patch \
