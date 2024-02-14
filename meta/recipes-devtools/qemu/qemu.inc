@@ -126,6 +126,7 @@ EXTRA_OECONF = " \
     --disable-download \
     --disable-docs \
     --host-cc='${BUILD_CC}' \
+    --disable-af-xdp \
     ${PACKAGECONFIG_CONFARGS} \
     "
 
