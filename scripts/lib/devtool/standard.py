@@ -966,7 +966,7 @@ def modify(args, config, basepath, workspace):
             # Assume first entry is main source extracted in ${S} so skip it
             src_uri = src_uri[1::]
 
-            #Add "type=git-dependency" to all non local sources
+            # Add "type=git-dependency" to all non local sources
             for url in src_uri:
                 if not url.startswith('file://') and not 'type=' in url:
                     src_uri_remove.append(url)
@@ -974,7 +974,7 @@ def modify(args, config, basepath, workspace):
 
             if src_uri_remove:
                 f.write('SRC_URI:remove = "%s"\n' % ' '.join(src_uri_remove))
-                f.write('SRC_URI:append = "%s"\n\n' % ' '.join(src_uri_append))
+                f.write('SRC_URI:append = " %s"\n\n' % ' '.join(src_uri_append))
 
             f.write('FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"\n')
             # Local files can be modified/tracked in separate subdir under srctree
