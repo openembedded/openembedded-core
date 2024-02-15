@@ -64,7 +64,9 @@ subject_line = f"Patchtest results for {mbox_subject}"
 reply_address = mbox[0]['from']
 
 # extract the message ID and use that as the in-reply-to address
-in_reply_to = re.findall("<(.*)>", mbox[0]['Message-ID'])[0]
+# TODO: This will need to change again when patchtest can handle a whole
+# series at once
+in_reply_to = mbox[0]['Message-ID']
 
 # the address the results email is sent from
 from_address = "patchtest@automation.yoctoproject.org"
