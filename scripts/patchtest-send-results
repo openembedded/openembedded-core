@@ -38,6 +38,7 @@ def has_a_failed_test(raw_results):
 
 parser = argparse.ArgumentParser(description="Send patchtest results to a submitter for a given patch")
 parser.add_argument("-p", "--patch", dest="patch", required=True, help="The patch file to summarize")
+parser.add_argument("-d", "--debug", dest="debug", required=False, action='store_true', help="Print raw email headers and content, but don't actually send it")
 args = parser.parse_args()
 
 if not os.path.exists(args.patch):
@@ -94,12 +95,16 @@ if has_a_failed_test(testresult):
         '\nMIME-Version: 1.0" + \
         "\nContent-type: Multipart/Mixed;boundary="NextPart"\n\n--NextPart\nContent-Type: text/plain\n\n' + \
         reply_contents + '\n\n--NextPart'
-    response = ses_client.send_raw_email(
-        Source="patchtest@automation.yoctoproject.org",
-        RawMessage={
-            "Data": raw_data,
-        },
-    )
+
+    if args.debug:
+        print(f"RawMessage: \n\n{raw_data}")
+    else:
+        response = ses_client.send_raw_email(
+            Source="patchtest@automation.yoctoproject.org",
+            RawMessage={
+                "Data": raw_data,
+            },
+        )
 
 else:
     print(f"No failures identified for {args.patch}.")
