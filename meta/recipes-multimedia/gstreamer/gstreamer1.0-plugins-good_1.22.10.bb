@@ -8,7 +8,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-go
            file://0001-qt-include-ext-qt-gstqtgl.h-instead-of-gst-gl-gstglf.patch \
            file://0001-v4l2-Define-ioctl_req_t-for-posix-linux-case.patch"
 
-SRC_URI[sha256sum] = "26959fcfebfff637d4ea08ef40316baf31b61bb7729820b0684e800c3a1478b6"
+SRC_URI[sha256sum] = "f748feae922cad62f20102a84ade8f42b78e1e44a34866aa3ea766f9172e1c7f"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"
 
