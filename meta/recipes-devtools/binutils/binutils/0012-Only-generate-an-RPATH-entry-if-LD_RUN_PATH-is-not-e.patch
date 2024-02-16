@@ -1,4 +1,4 @@
-From 65c8ea481cda572b60d0949648df912e616d3884 Mon Sep 17 00:00:00 2001
+From 47e53916e3112391d8bff2b2257dcec0a2426d66 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 10 Mar 2022 21:21:33 -0800
 Subject: [PATCH] Only generate an RPATH entry if LD_RUN_PATH is not empty

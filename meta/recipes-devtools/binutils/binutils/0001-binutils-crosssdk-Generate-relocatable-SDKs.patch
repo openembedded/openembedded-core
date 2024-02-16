@@ -1,4 +1,4 @@
-From 07237f83e4bfefab6473ed7c7b601d9d23b11edd Mon Sep 17 00:00:00 2001
+From 089ee95b342e79af09258b45c888a13b35fadf26 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 2 Mar 2015 01:58:54 +0000
 Subject: [PATCH] binutils-crosssdk: Generate relocatable SDKs

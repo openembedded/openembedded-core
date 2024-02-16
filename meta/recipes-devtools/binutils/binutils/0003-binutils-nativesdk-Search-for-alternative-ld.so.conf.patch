@@ -1,4 +1,4 @@
-From a0047134327e312a22f798bd328becf4053a6973 Mon Sep 17 00:00:00 2001
+From 1fe9aa3f25e09281cb018b29081db4cc44bdc01f Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Wed, 19 Feb 2020 09:51:16 -0800
 Subject: [PATCH] binutils-nativesdk: Search for alternative ld.so.conf in SDK

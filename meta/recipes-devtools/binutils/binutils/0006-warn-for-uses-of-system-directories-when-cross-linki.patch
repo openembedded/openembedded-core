@@ -1,4 +1,4 @@
-From 7a6074edd927273ae6924dc676ca2fdf127ce542 Mon Sep 17 00:00:00 2001
+From a92c46e3703d038d7d810bdc91e8540ad9d9150a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 Jan 2016 06:31:09 +0000
 Subject: [PATCH] warn for uses of system directories when cross linking
@@ -77,7 +77,7 @@ index 52d62f06ff0..b5944e7ba55 100644
  #undef EXTRA_SHLIB_EXTENSION
  
 diff --git a/ld/configure b/ld/configure
-index add770f883c..867f3f62c88 100755
+index 6f8a05c3b6c..98a76d6da7f 100755
 --- a/ld/configure
 +++ b/ld/configure
 @@ -844,6 +844,7 @@ with_lib_path

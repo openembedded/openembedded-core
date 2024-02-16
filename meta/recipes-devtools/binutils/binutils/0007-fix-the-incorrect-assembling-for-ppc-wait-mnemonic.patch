@@ -1,4 +1,4 @@
-From 9784134b2670b284fb4d31360964a14d1e9a070d Mon Sep 17 00:00:00 2001
+From d35fd95eee9930ab41d9ad637eacb35aa9fe6f44 Mon Sep 17 00:00:00 2001
 From: Zhenhua Luo <zhenhua.luo@nxp.com>
 Date: Sat, 11 Jun 2016 22:08:29 -0500
 Subject: [PATCH] fix the incorrect assembling for ppc wait mnemonic

@@ -1,4 +1,4 @@
-From 4988a5a42289e43ab0fbd87793f293e263dc3dc1 Mon Sep 17 00:00:00 2001
+From 6fae7afeb713a60755e17443964e46190bb97ede Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 6 Mar 2017 23:37:05 -0800
 Subject: [PATCH] binutils-cross: Do not generate linker script directories
