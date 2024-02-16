@@ -8,6 +8,7 @@ SRC_URI[sha256sum] = "935dc3b529c262f6cf76e50877d35a4bd3c1de194fd41f47a2b7ae8f19
 inherit pypi ptest python_hatchling
 
 SRC_URI += " \
+	file://0001-test_funcs-skip-test_unknown-for-pytest-8.patch \
 	file://run-ptest \
 "
 
