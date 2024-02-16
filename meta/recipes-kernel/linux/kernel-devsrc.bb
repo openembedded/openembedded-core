@@ -130,13 +130,10 @@ do_install() {
         # breaks workflows.
         cp -a --parents include/generated/autoconf.h $kerneldir/build 2>/dev/null || :
 
-        if [ -e $kerneldir/include/generated/.vdso-offsets.h.cmd ] ||
-             [ -e $kerneldir/build/include/generated/.vdso-offsets.h.cmd ] ||
-             [ -e $kerneldir/build/include/generated/.vdso32-offsets.h.cmd ] ; then
-            rm -f $kerneldir/include/generated/.vdso-offsets.h.cmd
-            rm -f $kerneldir/build/include/generated/.vdso-offsets.h.cmd
-            rm -f $kerneldir/build/include/generated/.vdso32-offsets.h.cmd
-        fi
+        rm -f $kerneldir/include/generated/.vdso-offsets.h.cmd
+        rm -f $kerneldir/build/include/generated/.vdso-offsets.h.cmd
+        rm -f $kerneldir/build/include/generated/.compat_vdso-offsets.h.cmd
+        rm -f $kerneldir/build/include/generated/.vdso32-offsets.h.cmd
     )
 
     # now grab the chunks from the source tree that we need
