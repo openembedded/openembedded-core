@@ -667,13 +667,13 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
         if sync:
             bb.process.run('git fetch file://' + srcsubdir + ' ' + devbranch + ':' + devbranch, cwd=srctree)
 
-            # Move oe-local-files directory to srctree
-            # As the oe-local-files is not part of the constructed git tree,
-            # remove them directly during the synchrounizating might surprise
-            # the users.  Instead, we move it to oe-local-files.bak and remind
-            # user in the log message.
+            # Move the oe-local-files directory to srctree.
+            # As oe-local-files is not part of the constructed git tree,
+            # removing it directly during the synchronization might surprise
+            # the user.  Instead, we move it to oe-local-files.bak and remind
+            # the user in the log message.
             if os.path.exists(srctree_localdir + '.bak'):
-                shutil.rmtree(srctree_localdir, srctree_localdir + '.bak')
+                shutil.rmtree(srctree_localdir + '.bak')
 
             if os.path.exists(srctree_localdir):
                 logger.info('Backing up current local file directory %s' % srctree_localdir)
