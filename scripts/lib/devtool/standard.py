@@ -460,7 +460,7 @@ def sync(args, config, basepath, workspace):
     finally:
         tinfoil.shutdown()
 
-def symlink_oelocal_files_srctree(rd,srctree):
+def symlink_oelocal_files_srctree(rd, srctree):
     import oe.patch
     if os.path.abspath(rd.getVar('S')) == os.path.abspath(rd.getVar('WORKDIR')):
         # If recipe extracts to ${WORKDIR}, symlink the files into the srctree
@@ -657,9 +657,9 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
 
             if os.path.exists(workshareddir) and (not os.listdir(workshareddir) or kernelVersion != staging_kerVer):
                 shutil.rmtree(workshareddir)
-                oe.path.copyhardlinktree(srcsubdir,workshareddir)
+                oe.path.copyhardlinktree(srcsubdir, workshareddir)
             elif not os.path.exists(workshareddir):
-                oe.path.copyhardlinktree(srcsubdir,workshareddir)
+                oe.path.copyhardlinktree(srcsubdir, workshareddir)
 
         tempdir_localdir = os.path.join(tempdir, 'oe-local-files')
         srctree_localdir = os.path.join(srctree, 'oe-local-files')
@@ -689,7 +689,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
                 shutil.move(tempdir_localdir, srcsubdir)
 
             shutil.move(srcsubdir, srctree)
-            symlink_oelocal_files_srctree(d,srctree)
+            symlink_oelocal_files_srctree(d, srctree)
 
         if is_kernel_yocto:
             logger.info('Copying kernel config to srctree')
@@ -762,7 +762,7 @@ def get_staging_kver(srcdir):
     kerver = []
     staging_kerVer=""
     if os.path.exists(srcdir) and os.listdir(srcdir):
-        with open(os.path.join(srcdir,"Makefile")) as f:
+        with open(os.path.join(srcdir, "Makefile")) as f:
             version = [next(f) for x in range(5)][1:4]
             for word in version:
                 kerver.append(word.split('= ')[1].split('\n')[0])
@@ -843,10 +843,10 @@ def modify(args, config, basepath, workspace):
             staging_kerVer = get_staging_kver(srcdir)
             staging_kbranch = get_staging_kbranch(srcdir)
             if (os.path.exists(srcdir) and os.listdir(srcdir)) and (kernelVersion in staging_kerVer and staging_kbranch == kbranch):
-                oe.path.copyhardlinktree(srcdir,srctree)
+                oe.path.copyhardlinktree(srcdir, srctree)
                 workdir = rd.getVar('WORKDIR')
                 srcsubdir = rd.getVar('S')
-                localfilesdir = os.path.join(srctree,'oe-local-files')
+                localfilesdir = os.path.join(srctree, 'oe-local-files')
                 # Move local source files into separate subdir
                 recipe_patches = [os.path.basename(patch) for patch in oe.recipeutils.get_recipe_patches(rd)]
                 local_files = oe.recipeutils.get_recipe_local_files(rd)
@@ -870,9 +870,9 @@ def modify(args, config, basepath, workspace):
                     for fname in local_files:
                         _move_file(os.path.join(workdir, fname), os.path.join(srctree, 'oe-local-files', fname))
                     with open(os.path.join(srctree, 'oe-local-files', '.gitignore'), 'w') as f:
-                        f.write('# Ignore local files, by default. Remove this file ''if you want to commit the directory to Git\n*\n')
+                        f.write('# Ignore local files, by default. Remove this file if you want to commit the directory to Git\n*\n')
 
-                symlink_oelocal_files_srctree(rd,srctree)
+                symlink_oelocal_files_srctree(rd, srctree)
 
                 task = 'do_configure'
                 res = tinfoil.build_targets(pn, task, handle_events=True)
@@ -880,7 +880,7 @@ def modify(args, config, basepath, workspace):
                 # Copy .config to workspace
                 kconfpath = rd.getVar('B')
                 logger.info('Copying kernel config to workspace')
-                shutil.copy2(os.path.join(kconfpath, '.config'),srctree)
+                shutil.copy2(os.path.join(kconfpath, '.config'), srctree)
 
                 # Set this to true, we still need to get initial_rev
                 # by parsing the git repo
@@ -1004,7 +1004,7 @@ def modify(args, config, basepath, workspace):
                         '        mv ${S}/.config ${S}/.config.old\n'
                         '    fi\n'
                         '}\n')
-            if rd.getVarFlag('do_menuconfig','task'):
+            if rd.getVarFlag('do_menuconfig', 'task'):
                 f.write('\ndo_configure:append() {\n'
                 '    if [ ${@oe.types.boolean(d.getVar("KCONFIG_CONFIG_ENABLE_MENUCONFIG"))} = True ]; then\n'
                 '        cp ${KCONFIG_CONFIG_ROOTDIR}/.config ${S}/.config.baseline\n'
@@ -2081,7 +2081,7 @@ def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
                         # We don't want to risk wiping out any work in progress
                         if srctreebase.startswith(os.path.join(config.workspace_path, 'sources')):
                             from datetime import datetime
-                            preservesrc = os.path.join(config.workspace_path, 'attic', 'sources', "{}.{}".format(pn,datetime.now().strftime("%Y%m%d%H%M%S")))
+                            preservesrc = os.path.join(config.workspace_path, 'attic', 'sources', "{}.{}".format(pn, datetime.now().strftime("%Y%m%d%H%M%S")))
                             logger.info('Preserving source tree in %s\nIf you no '
                                         'longer need it then please delete it manually.\n'
                                         'It is also possible to reuse it via devtool source tree argument.'
