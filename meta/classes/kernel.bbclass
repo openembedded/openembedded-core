@@ -418,7 +418,7 @@ do_compile_kernelmodules() {
 	if (grep -q -i -e '^CONFIG_MODULES=y$' ${B}/.config); then
 		oe_runmake -C ${B} ${PARALLEL_MAKE} modules ${KERNEL_EXTRA_ARGS}
 
-		# Module.symvers gets updated during the
+		# Module.symvers gets updated during the 
 		# building of the kernel modules. We need to
 		# update this in the shared workdir since some
 		# external kernel modules has a dependency on
@@ -635,13 +635,7 @@ kernel_do_configure() {
 	# $ scripts/setlocalversion . => +
 	# $ make kernelversion => 2.6.37
 	# $ make kernelrelease => 2.6.37+
-	# See kernel-arch.bbclass for post v6.3 removal of the extra
-	# + in localversion. .scmversion is no longer used, and the
-	# variable LOCALVERSION must be used
-	if [ ! -e ${B}/.scmversion -a ! -e ${S}/.scmversion ]; then
-		echo ${KERNEL_LOCALVERSION} > ${B}/.scmversion
-		echo ${KERNEL_LOCALVERSION} > ${S}/.scmversion
-	fi
+	touch ${B}/.scmversion ${S}/.scmversion
 
 	if [ "${S}" != "${B}" ] && [ -f "${S}/.config" ] && [ ! -f "${B}/.config" ]; then
 		mv "${S}/.config" "${B}/.config"
