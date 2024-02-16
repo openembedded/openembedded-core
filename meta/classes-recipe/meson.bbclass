@@ -90,6 +90,7 @@ cpp_link_args = ${@meson_array('LDFLAGS', d)}
 
 [properties]
 needs_exe_wrapper = true
+sys_root = '${STAGING_DIR_HOST}'
 
 [host_machine]
 system = '${@meson_operating_system('HOST_OS', d)}'
