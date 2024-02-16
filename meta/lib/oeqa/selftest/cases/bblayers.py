@@ -163,7 +163,5 @@ class BitbakeLayers(OESelftestTestCase):
 
         testcheckoutdir = os.path.join(self.builddir, 'test-layer-checkout')
         result = runCmd('{}/setup-layers --destdir {}'.format(self.testlayer_path, testcheckoutdir))
-        # May not necessarily be named 'poky' or 'openembedded-core'
-        oecoredir = os.listdir(testcheckoutdir)[0]
-        testcheckoutfile = os.path.join(testcheckoutdir, oecoredir, "oe-init-build-env")
-        self.assertTrue(os.path.exists(testcheckoutfile), "File {} not found in test layer checkout".format(testcheckoutfile))
+        layers_json = os.path.join(testcheckoutdir, ".oe-layers.json")
+        self.assertTrue(os.path.exists(layers_json), "File {} not found in test layer checkout".format(layers_json))
