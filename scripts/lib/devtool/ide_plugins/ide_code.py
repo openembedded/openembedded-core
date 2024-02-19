@@ -125,7 +125,7 @@ class IdeVSCode(IdeBase):
         settings_dict["cmake.configureOnOpen"] = True
         settings_dict["cmake.sourceDirectory"] = modified_recipe.real_srctree
 
-    def vscode_settings(self, modified_recipe):
+    def vscode_settings(self, modified_recipe, image_recipe):
         files_excludes = {
             "**/.git/**": True,
             "**/oe-logs/**": True,
@@ -138,9 +138,16 @@ class IdeVSCode(IdeBase):
             "**/oe-workdir/**",
             "**/source-date-epoch/**"
         ]
+        files_readonly = {
+            modified_recipe.recipe_sysroot + '/**': True,
+            modified_recipe.recipe_sysroot_native + '/**': True,
+        }
+        if image_recipe.rootfs_dbg is not None:
+            files_readonly[image_recipe.rootfs_dbg + '/**'] = True
         settings_dict = {
             "files.watcherExclude": files_excludes,
             "files.exclude": files_excludes,
+            "files.readonlyInclude": files_readonly,
             "python.analysis.exclude": python_exclude
         }
         self.__vscode_settings_cmake(settings_dict, modified_recipe)
@@ -424,7 +431,7 @@ class IdeVSCode(IdeBase):
             self.vscode_tasks_fallback(args, modified_recipe)
 
     def setup_modified_recipe(self, args, image_recipe, modified_recipe):
-        self.vscode_settings(modified_recipe)
+        self.vscode_settings(modified_recipe, image_recipe)
         self.vscode_extensions(modified_recipe)
         self.vscode_c_cpp_properties(modified_recipe)
         if args.target:
