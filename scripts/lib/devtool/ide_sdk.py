@@ -750,7 +750,7 @@ class RecipeModified:
         does not need to start a bitbake server. All information from tinfoil
         is hard-coded in the generated script.
         """
-        cmd_lines = ['#!/usr/bin/env python3']
+        cmd_lines = ['#!%s' % str(sys.executable)]
         cmd_lines.append('import sys')
         cmd_lines.append('devtool_sys_path = %s' % str(sys.path))
         cmd_lines.append('devtool_sys_path.reverse()')
