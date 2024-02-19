@@ -6,7 +6,11 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=ad93ca1fffe931537fcf64f6fcce084d"
 
 SRCREV = "0c1fa696aa502eb749c2c4735005f41ba00a27b8"
-SRC_URI = "git://github.com/libuv/libuv.git;branch=v1.x;protocol=https"
+SRC_URI = "git://github.com/libuv/libuv.git;branch=v1.x;protocol=https \
+           file://CVE-2024-24806-1.patch \
+           file://CVE-2024-24806-2.patch \
+           file://CVE-2024-24806-3.patch \
+          "
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
