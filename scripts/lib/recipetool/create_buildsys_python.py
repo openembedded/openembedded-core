@@ -739,6 +739,7 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
         "flit_core.buildapi": "python_flit_core",
         "hatchling.build": "python_hatchling",
         "maturin": "python_maturin",
+        "mesonpy": "python_mesonpy",
     }
 
     # setuptools.build_meta and flit declare project metadata into the "project" section of pyproject.toml
@@ -779,6 +780,8 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
         "python3-poetry-core-native",
         # already provided by python_flit_core.bbclass
         "python3-flit-core-native",
+        # already provided by python_mesonpy
+        "python3-meson-python-native",
     ]
 
     # add here a list of known and often used packages and the corresponding bitbake package
@@ -790,6 +793,7 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
         "setuptools-scm": "python3-setuptools-scm",
         "hatchling": "python3-hatchling",
         "hatch-vcs": "python3-hatch-vcs",
+        "meson-python" : "python3-meson-python",
     }
 
     def __init__(self):

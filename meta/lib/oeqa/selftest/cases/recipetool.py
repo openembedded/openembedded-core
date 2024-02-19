@@ -676,6 +676,25 @@ class RecipetoolCreateTests(RecipetoolBase):
 
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
+    def test_recipetool_create_python3_pep517_mesonpy(self):
+        # This test require python 3.11 or above for the tomllib module or tomli module to be installed
+        needTomllib(self)
+
+        # Test creating python3 package from tarball (using mesonpy class)
+        temprecipe = os.path.join(self.tempdir, 'recipe')
+        os.makedirs(temprecipe)
+        pn = 'siphash24'
+        pv = '1.4'
+        recipefile = os.path.join(temprecipe, 'python3-%s_%s.bb' % (pn, pv))
+        srcuri = 'https://files.pythonhosted.org/packages/c2/32/b934a70592f314afcfa86c7f7e388804a8061be65b822e2aa07e573b6477/%s-%s.tar.gz' % (pn, pv)
+        result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
+        self.assertTrue(os.path.isfile(recipefile))
+        checkvars = {}
+        checkvars['SRC_URI[sha256sum]'] = '7fd65e39b2a7c8c4ddc3a168a687f4610751b0ac2ebb518783c0cdfc30bec4a0'
+        inherits = ['python_mesonpy', 'pypi']
+
+        self._test_recipe_contents(recipefile, checkvars, inherits)
+
     def test_recipetool_create_github_tarball(self):
         # Basic test to ensure github URL mangling doesn't apply to release tarballs.
         # Deliberately use an older release of Meson at present so we don't need a toml parser.
