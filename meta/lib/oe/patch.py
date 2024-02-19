@@ -461,6 +461,16 @@ class GitApplyTree(PatchTree):
         return (tmpfile, cmd)
 
     @staticmethod
+    def commitIgnored(subject, dir=None, files=None, d=None):
+        if files:
+            runcmd(['git', 'add'] + files, dir)
+        message = "%s\n\n%s" % (subject, GitApplyTree.ignore_commit_prefix)
+        cmd = ["git"]
+        GitApplyTree.gitCommandUserOptions(cmd, d=d)
+        cmd += ["commit", "-m", message, "--no-verify"]
+        runcmd(cmd, dir)
+
+    @staticmethod
     def extractPatches(tree, startcommits, outdir, paths=None):
         import tempfile
         import shutil
