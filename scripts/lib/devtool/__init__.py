@@ -253,9 +253,7 @@ def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
                     bb.process.run('git submodule add %s %s' % (remote_url, os.path.relpath(root, os.path.join(root, ".."))), cwd=os.path.join(root, ".."))
                     found = True
                 if found:
-                    useroptions = []
-                    oe.patch.GitApplyTree.gitCommandUserOptions(useroptions, d=d)
-                    bb.process.run('git %s commit -m "Adding additionnal submodule from SRC_URI\n\n%s"' % (' '.join(useroptions), oe.patch.GitApplyTree.ignore_commit_prefix), cwd=os.path.join(root, ".."))
+                    oe.patch.GitApplyTree.commitIgnored("Add additional submodule from SRC_URI", dir=os.path.join(root, ".."), d=d)
                     found = False
     if os.path.exists(os.path.join(repodir, '.gitmodules')):
         bb.process.run('git submodule foreach --recursive  "git tag -f %s"' % basetag, cwd=repodir)
