@@ -937,14 +937,13 @@ def modify(args, config, basepath, workspace):
             seen_patches = []
             for branch in branches:
                 branch_patches[branch] = []
-                (stdout, _) = bb.process.run('git log devtool-base..%s' % branch, cwd=srctree)
-                for line in stdout.splitlines():
-                    line = line.strip()
-                    if line.startswith(oe.patch.GitApplyTree.patch_line_prefix):
-                        origpatch = line[len(oe.patch.GitApplyTree.patch_line_prefix):].split(':', 1)[-1].strip()
-                        if not origpatch in seen_patches:
-                            seen_patches.append(origpatch)
-                            branch_patches[branch].append(origpatch)
+                (stdout, _) = bb.process.run('git rev-list devtool-base..%s' % branch, cwd=srctree)
+                for sha1 in stdout.splitlines():
+                    notes = oe.patch.GitApplyTree.getNotes(srctree, sha1.strip())
+                    origpatch = notes.get(oe.patch.GitApplyTree.original_patch)
+                    if origpatch and origpatch not in seen_patches:
+                        seen_patches.append(origpatch)
+                        branch_patches[branch].append(origpatch)
 
         # Need to grab this here in case the source is within a subdirectory
         srctreebase = srctree

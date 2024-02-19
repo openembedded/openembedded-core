@@ -989,9 +989,10 @@ class DevtoolModifyTests(DevtoolBase):
         self.assertIn(tempdir, result.output)
         # Check git repo
         self._check_src_repo(tempdir)
-        # Check that the patch is correctly applied
-        # last commit message in the tree must contain
-        # %% original patch: <patchname>
+        # Check that the patch is correctly applied.
+        # The last commit message in the tree must contain the following note:
+        # Notes (devtool):
+        #     original patch: <patchname>
         # ..
         patchname = None
         for uri in src_uri:
@@ -999,7 +1000,7 @@ class DevtoolModifyTests(DevtoolBase):
                 patchname = uri.replace("file://", "").partition('.patch')[0] + '.patch'
         self.assertIsNotNone(patchname)
         result = runCmd('git -C %s log -1' % tempdir)
-        self.assertIn("%%%% original patch: %s" % patchname, result.output)
+        self.assertIn("Notes (devtool):\n    original patch: %s" % patchname, result.output)
 
         # Configure the recipe to check that the git dependencies are correctly patched in cargo config
         bitbake('-c configure %s' % testrecipe)
