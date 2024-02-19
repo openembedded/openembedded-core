@@ -2228,6 +2228,52 @@ class DevtoolUpgradeTests(DevtoolBase):
         if files:
             self.fail('Unexpected file(s) copied next to bbappend: %s' % ', '.join(files))
 
+    def test_devtool_finish_update_patch(self):
+        # This test uses a modified version of the sysdig recipe from meta-oe.
+        # - The patches have been renamed.
+        # - The dependencies are commented out since the recipe is not being
+        #   built.
+        #
+        # The sysdig recipe is interesting in that it fetches two different Git
+        # repositories, and there are patches for both. This leads to that
+        # devtool will create ignore commits as it uses Git submodules to keep
+        # track of the second repository.
+        #
+        # This test will verify that the ignored commits actually are ignored
+        # when a commit in between is modified. It will also verify that the
+        # updated patch keeps its original name.
+
+        # Check preconditions
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        # Try modifying a recipe
+        self.track_for_cleanup(self.workspacedir)
+        recipe = 'sysdig-selftest'
+        recipefile = get_bb_var('FILE', recipe)
+        recipedir = os.path.dirname(recipefile)
+        result = runCmd('git status --porcelain .', cwd=recipedir)
+        if result.output.strip():
+            self.fail('Recipe directory for %s contains uncommitted changes' % recipe)
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool modify %s %s' % (recipe, tempdir))
+        self.add_command_to_tearDown('cd %s; rm %s/*; git checkout %s %s' % (recipedir, recipe, recipe, os.path.basename(recipefile)))
+        self.assertExists(os.path.join(tempdir, 'CMakeLists.txt'), 'Extracted source could not be found')
+        # Make a change to one of the existing commits
+        result = runCmd('echo "# A comment " >> CMakeLists.txt', cwd=tempdir)
+        result = runCmd('git status --porcelain', cwd=tempdir)
+        self.assertIn('M CMakeLists.txt', result.output)
+        result = runCmd('git commit --fixup HEAD^ CMakeLists.txt', cwd=tempdir)
+        result = runCmd('git show -s --format=%s', cwd=tempdir)
+        self.assertIn('fixup! cmake: Pass PROBE_NAME via CFLAGS', result.output)
+        result = runCmd('GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash devtool-base', cwd=tempdir)
+        result = runCmd('devtool finish %s meta-selftest' % recipe)
+        result = runCmd('devtool status')
+        self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
+        self.assertNotExists(os.path.join(self.workspacedir, 'recipes', recipe), 'Recipe directory should not exist after finish')
+        expected_status = [(' M', '.*/0099-cmake-Pass-PROBE_NAME-via-CFLAGS.patch$')]
+        self._check_repo_status(recipedir, expected_status)
+
     def test_devtool_rename(self):
         # Check preconditions
         self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')

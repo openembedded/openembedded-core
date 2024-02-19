@@ -474,9 +474,9 @@ class GitApplyTree(PatchTree):
                 out = runcmd(["sh", "-c", " ".join(shellcmd)], os.path.join(tree, name))
                 if out:
                     for srcfile in out.split():
+                        outfile = os.path.basename(srcfile)
                         for encoding in ['utf-8', 'latin-1']:
                             patchlines = []
-                            outfile = None
                             try:
                                 with open(srcfile, 'r', encoding=encoding, newline='') as f:
                                     for line in f:
@@ -484,7 +484,8 @@ class GitApplyTree(PatchTree):
                                             outfile = line.split()[-1].strip()
                                             continue
                                         if line.startswith(GitApplyTree.ignore_commit_prefix):
-                                            continue
+                                            outfile = None
+                                            break
                                         patchlines.append(line)
                             except UnicodeDecodeError:
                                 continue
@@ -492,12 +493,11 @@ class GitApplyTree(PatchTree):
                         else:
                             raise PatchError('Unable to find a character encoding to decode %s' % srcfile)
 
-                        if not outfile:
-                            outfile = os.path.basename(srcfile)
-                        bb.utils.mkdirhier(os.path.join(outdir, name))
-                        with open(os.path.join(outdir, name, outfile), 'w') as of:
-                            for line in patchlines:
-                                of.write(line)
+                        if outfile:
+                            bb.utils.mkdirhier(os.path.join(outdir, name))
+                            with open(os.path.join(outdir, name, outfile), 'w') as of:
+                                for line in patchlines:
+                                    of.write(line)
         finally:
             shutil.rmtree(tempdir)
 
