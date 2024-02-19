@@ -1,5 +1,5 @@
 SUMMARY = "Python support for YAML"
-DEPENDS += "libyaml ${PYTHON_PN}-cython-native"
+DEPENDS += "libyaml python3-cython-native"
 HOMEPAGE = "https://pyyaml.org/"
 
 LICENSE = "MIT"
@@ -16,8 +16,8 @@ PACKAGECONFIG ?= "libyaml"
 PACKAGECONFIG[libyaml] = "--with-libyaml,--without-libyaml,libyaml"
 
 RDEPENDS:${PN} += "\
-    ${PYTHON_PN}-datetime \
-    ${PYTHON_PN}-netclient \
+    python3-datetime \
+    python3-netclient \
 "
 
 inherit ptest
@@ -28,8 +28,8 @@ SRC_URI += "\
 SRC_URI[test.sha256sum] = "b6a8a2825d89fdc8aee226560f66b8196e872012a0ea7118cbef1a832359434a"
 
 RDEPENDS:${PN}-ptest += " \
-	${PYTHON_PN}-pytest \
-	${PYTHON_PN}-unittest-automake-output \
+	python3-pytest \
+	python3-unittest-automake-output \
 "
 
 do_install_ptest() {

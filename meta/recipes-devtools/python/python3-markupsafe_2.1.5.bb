@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709
 PYPI_PACKAGE = "MarkupSafe"
 inherit pypi python_setuptools_build_meta ptest
 
-RDEPENDS:${PN} += "${PYTHON_PN}-stringold"
+RDEPENDS:${PN} += "python3-stringold"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -17,8 +17,8 @@ SRC_URI += " \
 "
 
 RDEPENDS:${PN}-ptest += " \
-	${PYTHON_PN}-pytest \
-	${PYTHON_PN}-unittest-automake-output \
+	python3-pytest \
+	python3-unittest-automake-output \
 "
 
 do_install_ptest() {

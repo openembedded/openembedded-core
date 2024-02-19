@@ -8,12 +8,12 @@ inherit pypi setuptools3 ptest
 SRC_URI[sha256sum] = "31d4583c4ed539cd037956140d695e42c033a19e984bfce9964a3f7d59bc2b40"
 
 RDEPENDS:${PN}:class-target += "\
-    ${PYTHON_PN}-datetime \
-    ${PYTHON_PN}-doctest \
-    ${PYTHON_PN}-io \
-    ${PYTHON_PN}-pickle \
-    ${PYTHON_PN}-pprint \
-    ${PYTHON_PN}-threading \
+    python3-datetime \
+    python3-doctest \
+    python3-io \
+    python3-pickle \
+    python3-pprint \
+    python3-threading \
 "
 
 BBCLASSEXTEND = "native nativesdk"
@@ -23,8 +23,8 @@ SRC_URI += " \
 "
 
 RDEPENDS:${PN}-ptest += " \
-	${PYTHON_PN}-pytest \
-	${PYTHON_PN}-unittest-automake-output \
+	python3-pytest \
+	python3-unittest-automake-output \
 "
 
 do_install_ptest() {

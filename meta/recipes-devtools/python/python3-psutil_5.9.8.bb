@@ -16,17 +16,17 @@ FILES:${PN}-tests += " \
 
 
 RDEPENDS:${PN} += " \
-    ${PYTHON_PN}-shell \
-    ${PYTHON_PN}-threading \
-    ${PYTHON_PN}-xml \
-    ${PYTHON_PN}-netclient \
-    ${PYTHON_PN}-ctypes \
-    ${PYTHON_PN}-resource \
+    python3-shell \
+    python3-threading \
+    python3-xml \
+    python3-netclient \
+    python3-ctypes \
+    python3-resource \
 "
 
 RDEPENDS:${PN}-tests += " \
      ${PN} \
-     ${PYTHON_PN} \
+     python3 \
      coreutils \
      procps \
      binutils \

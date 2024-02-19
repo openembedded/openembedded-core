@@ -20,30 +20,30 @@ require ${BPN}-crates.inc
 inherit pypi python_setuptools3_rust cargo-update-recipe-crates pkgconfig
 
 DEPENDS += " \
-    ${PYTHON_PN}-cffi-native \
+    python3-cffi-native \
 "
 
 RDEPENDS:${PN} += " \
-    ${PYTHON_PN}-cffi \
+    python3-cffi \
 "
 
 RDEPENDS:${PN}:append:class-target = " \
-    ${PYTHON_PN}-numbers \
-    ${PYTHON_PN}-threading \
+    python3-numbers \
+    python3-threading \
 "
 
 RDEPENDS:${PN}-ptest += " \
-    ${PYTHON_PN}-bcrypt \
-    ${PYTHON_PN}-cryptography-vectors (= ${PV}) \
-    ${PYTHON_PN}-hypothesis \
-    ${PYTHON_PN}-iso8601 \
-    ${PYTHON_PN}-mmap \
-    ${PYTHON_PN}-pretend \
-    ${PYTHON_PN}-psutil \
-    ${PYTHON_PN}-pytest \
-    ${PYTHON_PN}-unittest-automake-output \
-    ${PYTHON_PN}-pytest-subtests \
-    ${PYTHON_PN}-pytz \
+    python3-bcrypt \
+    python3-cryptography-vectors (= ${PV}) \
+    python3-hypothesis \
+    python3-iso8601 \
+    python3-mmap \
+    python3-pretend \
+    python3-psutil \
+    python3-pytest \
+    python3-unittest-automake-output \
+    python3-pytest-subtests \
+    python3-pytz \
 "
 
 inherit ptest

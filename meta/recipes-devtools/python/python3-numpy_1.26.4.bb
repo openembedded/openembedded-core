@@ -33,31 +33,31 @@ do_compile:prepend() {
 FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a"
 
 # install what is needed for numpy.test()
-RDEPENDS:${PN} = "${PYTHON_PN}-unittest \
-                  ${PYTHON_PN}-difflib \
-                  ${PYTHON_PN}-pprint \
-                  ${PYTHON_PN}-pickle \
-                  ${PYTHON_PN}-shell \
-                  ${PYTHON_PN}-doctest \
-                  ${PYTHON_PN}-datetime \
-                  ${PYTHON_PN}-misc \
-                  ${PYTHON_PN}-mmap \
-                  ${PYTHON_PN}-netclient \
-                  ${PYTHON_PN}-numbers \
-                  ${PYTHON_PN}-pydoc \
-                  ${PYTHON_PN}-pkgutil \
-                  ${PYTHON_PN}-email \
-                  ${PYTHON_PN}-compression \
-                  ${PYTHON_PN}-ctypes \
-                  ${PYTHON_PN}-threading \
-                  ${PYTHON_PN}-multiprocessing \
-                  ${PYTHON_PN}-json \
+RDEPENDS:${PN} = "python3-unittest \
+                  python3-difflib \
+                  python3-pprint \
+                  python3-pickle \
+                  python3-shell \
+                  python3-doctest \
+                  python3-datetime \
+                  python3-misc \
+                  python3-mmap \
+                  python3-netclient \
+                  python3-numbers \
+                  python3-pydoc \
+                  python3-pkgutil \
+                  python3-email \
+                  python3-compression \
+                  python3-ctypes \
+                  python3-threading \
+                  python3-multiprocessing \
+                  python3-json \
 "
-RDEPENDS:${PN}-ptest += "${PYTHON_PN}-pytest \
-                         ${PYTHON_PN}-hypothesis \
-                         ${PYTHON_PN}-sortedcontainers \
-                         ${PYTHON_PN}-resource \
-                         ${PYTHON_PN}-typing-extensions \
+RDEPENDS:${PN}-ptest += "python3-pytest \
+                         python3-hypothesis \
+                         python3-sortedcontainers \
+                         python3-resource \
+                         python3-typing-extensions \
                          ldd \
 "
 

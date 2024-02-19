@@ -10,11 +10,11 @@ inherit pypi python_setuptools_build_meta
 
 SRC_URI[sha256sum] = "2a0c8ad7f6274271b3bb7467dd37cf9cc6dab4bc19cb69a4ef10669402de698e"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-html \
-                  ${PYTHON_PN}-markupsafe \
-                  ${PYTHON_PN}-netclient \
-                  ${PYTHON_PN}-pygments \
-                  ${PYTHON_PN}-threading \
+RDEPENDS:${PN} = "python3-html \
+                  python3-markupsafe \
+                  python3-netclient \
+                  python3-pygments \
+                  python3-threading \
 "
 
 BBCLASSEXTEND = "native nativesdk"

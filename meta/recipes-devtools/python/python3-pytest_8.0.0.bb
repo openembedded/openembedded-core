@@ -12,22 +12,22 @@ DEPENDS += "python3-setuptools-scm-native"
 inherit update-alternatives pypi python_setuptools_build_meta
 
 RDEPENDS:${PN} += " \
-    ${PYTHON_PN}-atomicwrites \
-    ${PYTHON_PN}-attrs \
-    ${PYTHON_PN}-debugger \
-    ${PYTHON_PN}-doctest \
-    ${PYTHON_PN}-importlib-metadata \
-    ${PYTHON_PN}-iniconfig \
-    ${PYTHON_PN}-json \
-    ${PYTHON_PN}-more-itertools \
-    ${PYTHON_PN}-packaging \
-    ${PYTHON_PN}-pathlib2 \
-    ${PYTHON_PN}-pluggy \
-    ${PYTHON_PN}-py \
-    ${PYTHON_PN}-setuptools \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-tomllib \
-    ${PYTHON_PN}-wcwidth \
+    python3-atomicwrites \
+    python3-attrs \
+    python3-debugger \
+    python3-doctest \
+    python3-importlib-metadata \
+    python3-iniconfig \
+    python3-json \
+    python3-more-itertools \
+    python3-packaging \
+    python3-pathlib2 \
+    python3-pluggy \
+    python3-py \
+    python3-setuptools \
+    python3-six \
+    python3-tomllib \
+    python3-wcwidth \
 "
 
 ALTERNATIVE:${PN} += "py.test pytest"

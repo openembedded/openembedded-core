@@ -16,7 +16,7 @@ PYPI_PACKAGE = "cryptography_vectors"
 inherit pypi python_setuptools_build_meta
 
 DEPENDS += " \
-    ${PYTHON_PN}-cryptography \
+    python3-cryptography \
 "
 
 do_install:append () {
