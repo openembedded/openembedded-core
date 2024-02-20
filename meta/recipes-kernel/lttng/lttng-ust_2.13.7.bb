@@ -34,7 +34,7 @@ SRC_URI = "https://lttng.org/files/lttng-ust/lttng-ust-${PV}.tar.bz2 \
            file://0001-Makefile.am-update-rpath-link.patch \
            "
 
-SRC_URI[sha256sum] = "e7e04596dd73ac7aa99e27cd000f949dbb0fed51bd29099f9b08a25c1df0ced5"
+SRC_URI[sha256sum] = "5fb4f17c307c8c1b79c68561e89be9562d07e7425bf40e728c4d66755342a5eb"
 
 CVE_PRODUCT = "ust"
 
