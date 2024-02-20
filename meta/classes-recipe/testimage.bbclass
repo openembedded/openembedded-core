@@ -208,8 +208,8 @@ def retrieve_test_artifacts(target, artifacts_list, target_dir):
             dest_dir = os.path.join(local_artifacts_dir, os.path.dirname(artifact_path[1:]))
             os.makedirs(dest_dir, exist_ok=True)
             target.copyFrom(artifact_path, dest_dir)
-        except:
-            bb.warn(f"Can not retrieve {artifact_path} from test target")
+        except Exception as e:
+            bb.warn(f"Can not retrieve {artifact_path} from test target: {e}")
 
 def testimage_main(d):
     import os
