@@ -444,7 +444,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         # older release of Meson at present so we don't need a toml parser.
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
-        recipefile = os.path.join(temprecipe, 'python3-meson_git.bb')
+        recipefile = os.path.join(temprecipe, 'meson_git.bb')
         srcuri = 'https://github.com/mesonbuild/meson;rev=0.52.1'
         cmd = ['recipetool', 'create', '-o', temprecipe, srcuri]
         result = runCmd(cmd)
@@ -480,7 +480,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
         pv = '0.52.1'
-        recipefile = os.path.join(temprecipe, 'python3-meson_%s.bb' % pv)
+        recipefile = os.path.join(temprecipe, 'meson_%s.bb' % pv)
         srcuri = 'https://github.com/mesonbuild/meson/releases/download/%s/meson-%s.tar.gz' % (pv, pv)
         result = runCmd('recipetool create -o %s %s' % (temprecipe, srcuri))
         self.assertTrue(os.path.isfile(recipefile))
