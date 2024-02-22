@@ -81,15 +81,15 @@ class GdbCrossConfig:
         if self.gdbserver_multi:
             temp_dir = "TEMP_DIR=/tmp/gdbserver_%s; " % self.id_pretty
             gdbserver_cmd_start = temp_dir
-            gdbserver_cmd_start += "test -f \$TEMP_DIR/pid && exit 0; "
-            gdbserver_cmd_start += "mkdir -p \$TEMP_DIR; "
-            gdbserver_cmd_start += "%s --multi :%s > \$TEMP_DIR/log 2>&1 & " % (
+            gdbserver_cmd_start += "test -f \\$TEMP_DIR/pid && exit 0; "
+            gdbserver_cmd_start += "mkdir -p \\$TEMP_DIR; "
+            gdbserver_cmd_start += "%s --multi :%s > \\$TEMP_DIR/log 2>&1 & " % (
                 self.gdb_cross.gdbserver_path, self.gdbserver_port)
-            gdbserver_cmd_start += "echo \$! > \$TEMP_DIR/pid;"
+            gdbserver_cmd_start += "echo \\$! > \\$TEMP_DIR/pid;"
 
             gdbserver_cmd_stop = temp_dir
-            gdbserver_cmd_stop += "test -f \$TEMP_DIR/pid && kill \$(cat \$TEMP_DIR/pid); "
-            gdbserver_cmd_stop += "rm -rf \$TEMP_DIR; "
+            gdbserver_cmd_stop += "test -f \\$TEMP_DIR/pid && kill \\$(cat \\$TEMP_DIR/pid); "
+            gdbserver_cmd_stop += "rm -rf \\$TEMP_DIR; "
 
             gdbserver_cmd_l = []
             gdbserver_cmd_l.append('if [ "$1" = "stop" ]; then')

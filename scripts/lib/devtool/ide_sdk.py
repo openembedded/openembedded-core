@@ -698,7 +698,7 @@ class RecipeModified:
         """find all executable elf files in the image directory"""
         binaries = []
         d_len = len(self.d)
-        re_so = re.compile('.*\.so[.0-9]*$')
+        re_so = re.compile(r'.*\.so[.0-9]*$')
         for root, _, files in os.walk(self.d, followlinks=False):
             for file in files:
                 if os.path.islink(file):
