@@ -345,6 +345,7 @@ class RecipeModified:
         self.base_libdir = recipe_d.getVar('base_libdir')
         self.bblayers = recipe_d.getVar('BBLAYERS').split()
         self.bpn = recipe_d.getVar('BPN')
+        self.cxx = recipe_d.getVar('CXX')
         self.d = recipe_d.getVar('D')
         self.fakerootcmd = recipe_d.getVar('FAKEROOTCMD')
         self.fakerootenv = recipe_d.getVar('FAKEROOTENV')
@@ -360,6 +361,8 @@ class RecipeModified:
             recipe_d.getVar('RECIPE_SYSROOT'))
         self.recipe_sysroot_native = os.path.realpath(
             recipe_d.getVar('RECIPE_SYSROOT_NATIVE'))
+        self.staging_bindir_toolchain = os.path.realpath(
+            recipe_d.getVar('STAGING_BINDIR_TOOLCHAIN'))
         self.staging_incdir = os.path.realpath(
             recipe_d.getVar('STAGING_INCDIR'))
         self.strip_cmd = recipe_d.getVar('STRIP')

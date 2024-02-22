@@ -194,6 +194,7 @@ class IdeVSCode(IdeBase):
             properties_dict["configurationProvider"] = "ms-vscode.cmake-tools"
         elif modified_recipe.build_tool is BuildTool.MESON:
             properties_dict["configurationProvider"] = "mesonbuild.mesonbuild"
+            properties_dict["compilerPath"] = os.path.join(modified_recipe.staging_bindir_toolchain, modified_recipe.cxx.split()[0])
         else:  # no C/C++ build
             return
 
