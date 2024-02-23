@@ -31,5 +31,3 @@ PACKAGES =+ "${PN}-tools"
 FILES:${PN}-tools = "${bindir}/png-fix-itxt ${bindir}/pngfix ${bindir}/pngcp"
 
 BBCLASSEXTEND = "native nativesdk"
-
-CVE_STATUS[CVE-2019-17371] = "cpe-incorrect: A memory leak in gif2png 2.x"
