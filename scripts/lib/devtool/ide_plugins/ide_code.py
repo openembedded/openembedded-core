@@ -255,8 +255,10 @@ class IdeVSCode(IdeBase):
     def vscode_launch(self, modified_recipe):
         """GDB Launch configuration for binaries (elf files)"""
 
-        configurations = [self.vscode_launch_bin_dbg(
-            gdb_cross_config) for gdb_cross_config in self.gdb_cross_configs]
+        configurations = []
+        for gdb_cross_config in self.gdb_cross_configs:
+            if gdb_cross_config.modified_recipe is modified_recipe:
+                configurations.append(self.vscode_launch_bin_dbg(gdb_cross_config))
         launch_dict = {
             "version": "0.2.0",
             "configurations": configurations
@@ -280,6 +282,8 @@ class IdeVSCode(IdeBase):
             ]
         }
         for gdb_cross_config in self.gdb_cross_configs:
+            if gdb_cross_config.modified_recipe is not modified_recipe:
+                continue
             tasks_dict['tasks'].append(
                 {
                     "label": gdb_cross_config.id_pretty,
@@ -394,6 +398,8 @@ class IdeVSCode(IdeBase):
         }
         if modified_recipe.gdb_cross:
             for gdb_cross_config in self.gdb_cross_configs:
+                if gdb_cross_config.modified_recipe is not modified_recipe:
+                    continue
                 tasks_dict['tasks'].append(
                     {
                         "label": gdb_cross_config.id_pretty,
