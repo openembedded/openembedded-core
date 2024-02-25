@@ -301,6 +301,7 @@ class RecipeModified:
         self.staging_incdir = None
         self.strip_cmd = None
         self.target_arch = None
+        self.target_dbgsrc_dir = None
         self.topdir = None
         self.workdir = None
         self.recipe_id = None
@@ -357,7 +358,6 @@ class RecipeModified:
             'PACKAGE_DEBUG_SPLIT_STYLE')
         self.path = recipe_d.getVar('PATH')
         self.pn = recipe_d.getVar('PN')
-        self.pv = recipe_d.getVar('PV')
         self.recipe_sysroot = os.path.realpath(
             recipe_d.getVar('RECIPE_SYSROOT'))
         self.recipe_sysroot_native = os.path.realpath(
@@ -368,6 +368,7 @@ class RecipeModified:
             recipe_d.getVar('STAGING_INCDIR'))
         self.strip_cmd = recipe_d.getVar('STRIP')
         self.target_arch = recipe_d.getVar('TARGET_ARCH')
+        self.target_dbgsrc_dir = recipe_d.getVar('TARGET_DBGSRC_DIR')
         self.topdir = recipe_d.getVar('TOPDIR')
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))
 

@@ -134,8 +134,23 @@ class GdbCrossConfig:
         if self.image_recipe.rootfs_dbg:
             gdbinit_lines.append(
                 'set solib-search-path "' + self.modified_recipe.solib_search_path_str(self.image_recipe) + '"')
-            gdbinit_lines.append('set substitute-path "/usr/src/debug" "' + os.path.join(
-                self.image_recipe.rootfs_dbg, 'usr', 'src', 'debug') + '"')
+            # First: Search for sources of this recipe in the workspace folder
+            if self.modified_recipe.pn in self.modified_recipe.target_dbgsrc_dir:
+                gdbinit_lines.append('set substitute-path "%s" "%s"' %
+                                     (self.modified_recipe.target_dbgsrc_dir, self.modified_recipe.real_srctree))
+            else:
+                logger.error(
+                    "TARGET_DBGSRC_DIR must contain the recipe name PN.")
+            # Second: Search for sources of other recipes in the rootfs-dbg
+            if self.modified_recipe.target_dbgsrc_dir.startswith("/usr/src/debug"):
+                gdbinit_lines.append('set substitute-path "/usr/src/debug" "%s"' % os.path.join(
+                    self.image_recipe.rootfs_dbg, "usr", "src", "debug"))
+            else:
+                logger.error(
+                    "TARGET_DBGSRC_DIR must start with /usr/src/debug.")
+        else:
+            logger.warning(
+                "Cannot setup debug symbols configuration for GDB. IMAGE_GEN_DEBUGFS is not enabled.")
         gdbinit_lines.append(
             '%s %s:%d' % (remote_cmd, self.gdb_cross.host, self.gdbserver_port))
         gdbinit_lines.append('set remote exec-file ' + self.binary)

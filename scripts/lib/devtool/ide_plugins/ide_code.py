@@ -242,9 +242,19 @@ class IdeVSCode(IdeBase):
         if gdb_cross_config.image_recipe.rootfs_dbg:
             launch_config['additionalSOLibSearchPath'] = modified_recipe.solib_search_path_str(
                 gdb_cross_config.image_recipe)
-            src_file_map[os.path.join("/usr/src/debug", modified_recipe.pn, modified_recipe.pv)] = "${workspaceFolder}"
-            src_file_map["/usr/src/debug"] = os.path.join(
-                gdb_cross_config.image_recipe.rootfs_dbg, "usr", "src", "debug")
+            # First: Search for sources of this recipe in the workspace folder
+            if modified_recipe.pn in modified_recipe.target_dbgsrc_dir:
+                src_file_map[modified_recipe.target_dbgsrc_dir] = "${workspaceFolder}"
+            else:
+                logger.error(
+                    "TARGET_DBGSRC_DIR must contain the recipe name PN.")
+            # Second: Search for sources of other recipes in the rootfs-dbg
+            if modified_recipe.target_dbgsrc_dir.startswith("/usr/src/debug"):
+                src_file_map["/usr/src/debug"] = os.path.join(
+                    gdb_cross_config.image_recipe.rootfs_dbg, "usr", "src", "debug")
+            else:
+                logger.error(
+                    "TARGET_DBGSRC_DIR must start with /usr/src/debug.")
         else:
             logger.warning(
                 "Cannot setup debug symbols configuration for GDB. IMAGE_GEN_DEBUGFS is not enabled.")
