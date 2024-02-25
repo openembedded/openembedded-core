@@ -242,6 +242,7 @@ class IdeVSCode(IdeBase):
         if gdb_cross_config.image_recipe.rootfs_dbg:
             launch_config['additionalSOLibSearchPath'] = modified_recipe.solib_search_path_str(
                 gdb_cross_config.image_recipe)
+            src_file_map[os.path.join("/usr/src/debug", modified_recipe.pn, modified_recipe.pv)] = "${workspaceFolder}"
             src_file_map["/usr/src/debug"] = os.path.join(
                 gdb_cross_config.image_recipe.rootfs_dbg, "usr", "src", "debug")
         else:

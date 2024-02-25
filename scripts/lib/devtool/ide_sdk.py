@@ -357,6 +357,7 @@ class RecipeModified:
             'PACKAGE_DEBUG_SPLIT_STYLE')
         self.path = recipe_d.getVar('PATH')
         self.pn = recipe_d.getVar('PN')
+        self.pv = recipe_d.getVar('PV')
         self.recipe_sysroot = os.path.realpath(
             recipe_d.getVar('RECIPE_SYSROOT'))
         self.recipe_sysroot_native = os.path.realpath(
