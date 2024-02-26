@@ -32,6 +32,16 @@ def get_target_disk_usage(d, tc):
     except Exception as e:
         bb.warn(f"Can not get target disk usage: {e}")
 
+def get_host_disk_usage(d, tc):
+    import subprocess
+
+    output_file = os.path.join(get_json_result_dir(d), "artifacts", "host_disk_usage.txt")
+    try:
+        with open(output_file, 'w') as f:
+            output = subprocess.run(['/usr/bin/df', '-hl'], check=True, text=True, stdout=f)
+    except Exception as e:
+        bb.warn(f"Can not get host disk usage: {e}")
+
 ##################################################################
 # Artifacts retrieval
 ##################################################################
@@ -80,7 +90,8 @@ def run_failed_tests_post_actions(d, tc):
     post_actions=[
         create_artifacts_directory,
         list_and_fetch_failed_tests_artifacts,
-        get_target_disk_usage
+        get_target_disk_usage,
+        get_host_disk_usage
     ]
 
     for action in post_actions:
