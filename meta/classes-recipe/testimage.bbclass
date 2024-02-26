@@ -170,40 +170,6 @@ def get_testimage_boot_patterns(d):
                 boot_patterns[flag] = flagval.encode().decode('unicode-escape')
     return boot_patterns
 
-def get_artifacts_list(target, raw_list):
-    result = []
-    # Passed list may contains patterns in paths, expand them directly on target
-    for raw_path in raw_list.split():
-        cmd = f"for p in {raw_path}; do if [ -e $p ]; then echo $p; fi; done"
-        try:
-            status, output = target.run(cmd)
-            if status != 0 or not output:
-                raise Exception()
-            result += output.split()
-        except:
-            bb.note(f"No file/directory matching path {raw_path}")
-
-    return result
-
-def retrieve_test_artifacts(target, artifacts_list, target_dir):
-    import shutil
-
-    local_artifacts_dir = os.path.join(target_dir, "artifacts")
-    if os.path.isdir(local_artifacts_dir):
-        shutil.rmtree(local_artifacts_dir)
-
-    os.makedirs(local_artifacts_dir)
-    for artifact_path in artifacts_list:
-        if not os.path.isabs(artifact_path):
-            bb.warn(f"{artifact_path} is not an absolute path")
-            continue
-        try:
-            dest_dir = os.path.join(local_artifacts_dir, os.path.dirname(artifact_path[1:]))
-            os.makedirs(dest_dir, exist_ok=True)
-            target.copyFrom(artifact_path, dest_dir)
-        except Exception as e:
-            bb.warn(f"Can not retrieve {artifact_path} from test target: {e}")
-
 def testimage_main(d):
     import os
     import json
@@ -218,6 +184,7 @@ def testimage_main(d):
     from oeqa.core.utils.test import getSuiteCases
     from oeqa.utils import make_logger_bitbake_compatible
     from oeqa.utils import get_json_result_dir
+    from oeqa.utils.postactions import run_failed_tests_post_actions
 
     def sigterm_exception(signum, stackframe):
         """
@@ -400,11 +367,7 @@ def testimage_main(d):
         results = tc.runTests()
         complete = True
         if results.hasAnyFailingTest():
-            artifacts_list = get_artifacts_list(tc.target, d.getVar("TESTIMAGE_FAILED_QA_ARTIFACTS"))
-            if not artifacts_list:
-                bb.warn("Could not load artifacts list, skip artifacts retrieval")
-            else:
-                retrieve_test_artifacts(tc.target, artifacts_list, get_testimage_json_result_dir(d))
+            run_failed_tests_post_actions(d, tc)
     except (KeyboardInterrupt, BlockingIOError) as err:
         if isinstance(err, KeyboardInterrupt):
             bb.error('testimage interrupted, shutting down...')
