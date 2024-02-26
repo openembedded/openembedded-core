@@ -9,6 +9,15 @@
 
 from oeqa.utils import get_json_result_dir
 
+def create_artifacts_directory(d, tc):
+    import shutil
+
+    local_artifacts_dir = os.path.join(get_json_result_dir(d), "artifacts")
+    if os.path.isdir(local_artifacts_dir):
+        shutil.rmtree(local_artifacts_dir)
+
+    os.makedirs(local_artifacts_dir)
+
 ##################################################################
 # Artifacts retrieval
 ##################################################################
@@ -29,13 +38,7 @@ def get_artifacts_list(target, raw_list):
     return result
 
 def retrieve_test_artifacts(target, artifacts_list, target_dir):
-    import shutil
-
     local_artifacts_dir = os.path.join(target_dir, "artifacts")
-    if os.path.isdir(local_artifacts_dir):
-        shutil.rmtree(local_artifacts_dir)
-
-    os.makedirs(local_artifacts_dir)
     for artifact_path in artifacts_list:
         if not os.path.isabs(artifact_path):
             bb.warn(f"{artifact_path} is not an absolute path")
@@ -61,6 +64,7 @@ def list_and_fetch_failed_tests_artifacts(d, tc):
 
 def run_failed_tests_post_actions(d, tc):
     post_actions=[
+        create_artifacts_directory,
         list_and_fetch_failed_tests_artifacts
     ]
 
