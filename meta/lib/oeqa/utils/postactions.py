@@ -19,6 +19,20 @@ def create_artifacts_directory(d, tc):
     os.makedirs(local_artifacts_dir)
 
 ##################################################################
+# Host/target statistics
+##################################################################
+
+def get_target_disk_usage(d, tc):
+    output_file = os.path.join(get_json_result_dir(d), "artifacts", "target_disk_usage.txt")
+    try:
+        (status, output) = tc.target.run('df -hl')
+        with open(output_file, 'w') as f:
+            f.write(output)
+            f.write("\n")
+    except Exception as e:
+        bb.warn(f"Can not get target disk usage: {e}")
+
+##################################################################
 # Artifacts retrieval
 ##################################################################
 
@@ -65,7 +79,8 @@ def list_and_fetch_failed_tests_artifacts(d, tc):
 def run_failed_tests_post_actions(d, tc):
     post_actions=[
         create_artifacts_directory,
-        list_and_fetch_failed_tests_artifacts
+        list_and_fetch_failed_tests_artifacts,
+        get_target_disk_usage
     ]
 
     for action in post_actions:
