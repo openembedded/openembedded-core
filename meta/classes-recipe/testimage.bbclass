@@ -149,13 +149,6 @@ def get_testimage_configuration(d, test_type, machine):
     return configuration
 get_testimage_configuration[vardepsexclude] = "DATETIME"
 
-def get_testimage_json_result_dir(d):
-    json_result_dir = os.path.join(d.getVar("LOG_DIR"), 'oeqa')
-    custom_json_result_dir = d.getVar("OEQA_JSON_RESULT_DIR")
-    if custom_json_result_dir:
-        json_result_dir = custom_json_result_dir
-    return json_result_dir
-
 def get_testimage_result_id(configuration):
     return '%s_%s_%s_%s' % (configuration['TEST_TYPE'], configuration['IMAGE_BASENAME'], configuration['MACHINE'], configuration['STARTTIME'])
 
@@ -224,6 +217,7 @@ def testimage_main(d):
     from oeqa.core.target.qemu import supported_fstypes
     from oeqa.core.utils.test import getSuiteCases
     from oeqa.utils import make_logger_bitbake_compatible
+    from oeqa.utils import get_json_result_dir
 
     def sigterm_exception(signum, stackframe):
         """
@@ -426,14 +420,14 @@ def testimage_main(d):
     # Show results (if we have them)
     if results:
         configuration = get_testimage_configuration(d, 'runtime', machine)
-        results.logDetails(get_testimage_json_result_dir(d),
+        results.logDetails(get_json_result_dir(d),
                         configuration,
                         get_testimage_result_id(configuration),
                         dump_streams=d.getVar('TESTREPORT_FULLLOGS'))
         results.logSummary(pn)
 
     # Copy additional logs to tmp/log/oeqa so it's easier to find them
-    targetdir = os.path.join(get_testimage_json_result_dir(d), d.getVar("PN"))
+    targetdir = os.path.join(get_json_result_dir(d), d.getVar("PN"))
     os.makedirs(targetdir, exist_ok=True)
     os.symlink(bootlog, os.path.join(targetdir, os.path.basename(bootlog)))
     os.symlink(d.getVar("BB_LOGFILE"), os.path.join(targetdir, os.path.basename(d.getVar("BB_LOGFILE") + "." + d.getVar('DATETIME'))))
