@@ -26,6 +26,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
 DEPENDS = "ncurses"
 
 SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
+           file://CVE-2022-48624.patch \
 	  "
 
 SRC_URI[md5sum] = "4ad4408b06d7a6626a055cb453f36819"
