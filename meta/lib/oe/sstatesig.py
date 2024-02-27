@@ -399,7 +399,13 @@ def find_siginfo(pn, taskname, taskhashlist, d):
             return siginfo.rpartition('.')[2]
 
     def get_time(fullpath):
-        return os.stat(fullpath).st_mtime
+        # NFS can end up in a weird state where the file exists but has no stat info.
+        # If that happens, we assume it doesn't acutally exist and show a warning
+        try:
+            return os.stat(fullpath).st_mtime
+        except FileNotFoundError:
+            bb.warn("Could not obtain mtime for {}".format(fullpath))
+            return None
 
     # First search in stamps dir
     localdata = d.createCopy()
@@ -422,13 +428,17 @@ def find_siginfo(pn, taskname, taskhashlist, d):
         if taskhashlist:
             for taskhash in taskhashlist:
                 if fullpath.endswith('.%s' % taskhash):
-                    hashfiles[taskhash] = {'path':fullpath, 'sstate':False, 'time':get_time(fullpath)}
+                    mtime = get_time(fullpath)
+                    if mtime:
+                        hashfiles[taskhash] = {'path':fullpath, 'sstate':False, 'time':mtime}
                     if len(hashfiles) == len(taskhashlist):
                         foundall = True
                         break
         else:
             hashval = get_hashval(fullpath)
-            hashfiles[hashval] = {'path':fullpath, 'sstate':False, 'time':get_time(fullpath)}
+            mtime = get_time(fullpath)
+            if mtime:
+                hashfiles[hashval] = {'path':fullpath, 'sstate':False, 'time':mtime}
 
     if not taskhashlist or (len(hashfiles) < 2 and not foundall):
         # That didn't work, look in sstate-cache
@@ -459,7 +469,9 @@ def find_siginfo(pn, taskname, taskhashlist, d):
                 actual_hashval = get_hashval(fullpath)
                 if actual_hashval in hashfiles:
                     continue
-                hashfiles[actual_hashval] = {'path':fullpath, 'sstate':True, 'time':get_time(fullpath)}
+                mtime = get_time(fullpath)
+                if mtime:
+                    hashfiles[actual_hashval] = {'path':fullpath, 'sstate':True, 'time':mtime}
 
     return hashfiles
 
