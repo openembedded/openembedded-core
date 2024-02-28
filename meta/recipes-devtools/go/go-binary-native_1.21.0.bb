@@ -9,9 +9,9 @@ PROVIDES = "go-native"
 
 # Checksums available at https://go.dev/dl/
 SRC_URI = "https://dl.google.com/go/go${PV}.${BUILD_GOOS}-${BUILD_GOARCH}.tar.gz;name=go_${BUILD_GOTUPLE}"
-SRC_URI[go_linux_amd64.sha256sum] = "ff445e48af27f93f66bd949ae060d97991c83e11289009d311f25426258f9c44"
-SRC_URI[go_linux_arm64.sha256sum] = "2096507509a98782850d1f0669786c09727053e9fe3c92b03c0d96f48700282b"
-SRC_URI[go_linux_ppc64le.sha256sum] = "237b1da9b65629a9b0fcf1f3ca75b4c84ef55fca1fc3eadf1681da7bbcb2e9cd"
+SRC_URI[go_linux_amd64.sha256sum] = "d0398903a16ba2232b389fb31032ddf57cac34efda306a0eebac34f0965a0742"
+SRC_URI[go_linux_arm64.sha256sum] = "f3d4548edf9b22f26bbd49720350bbfe59d75b7090a1a2bff1afad8214febaf3"
+SRC_URI[go_linux_ppc64le.sha256sum] = "e938ffc81d8ebe5efc179240960ba22da6a841ff05d5cab7ce2547112b14a47f"
 
 UPSTREAM_CHECK_URI = "https://golang.org/dl/"
 UPSTREAM_CHECK_REGEX = "go(?P<pver>\d+(\.\d+)+)\.linux"

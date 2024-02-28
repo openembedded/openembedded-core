@@ -1,4 +1,4 @@
-From 7a191e5191c8b813e929caedb3f3918bb08692a1 Mon Sep 17 00:00:00 2001
+From 6dda78d528e60993a4688cd9d49440a726378ac8 Mon Sep 17 00:00:00 2001
 From: Alex Kube <alexander.j.kube@gmail.com>
 Date: Wed, 23 Oct 2019 21:18:12 +0430
 Subject: [PATCH 5/9] cmd/dist: separate host and target builds
@@ -31,8 +31,8 @@ Adapted to Go 1.13 from patches originally submitted to
 the meta/recipes-devtools/go tree by
 Matt Madison <matt@madison.systems>.
 
-Rework the patch to avoid identation, it's more hard to read
-but easy to rebase.
+Rework the patch to avoid identation, it's more hard to read but
+easy to rebase.
 Jose Quaresma <jose.quaresma@foundries.io>
 
 Upstream-Status: Inappropriate [OE specific]
@@ -44,35 +44,35 @@ Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
  1 file changed, 75 insertions(+), 1 deletion(-)
 
 diff --git a/src/cmd/dist/build.go b/src/cmd/dist/build.go
-index 5d3171856a..d0ba54c072 100644
+index adc9fd2..5fff592 100644
 --- a/src/cmd/dist/build.go
 +++ b/src/cmd/dist/build.go
-@@ -44,6 +44,7 @@ var (
+@@ -46,6 +46,7 @@ var (
  	goexperiment     string
  	workdir          string
  	tooldir          string
 +	build_tooldir    string
  	oldgoos          string
  	oldgoarch        string
- 	exe              string
-@@ -55,6 +56,7 @@ var (
- 	rebuildall   bool
- 	defaultclang bool
- 	noOpt        bool
-+	crossBuild   bool
+ 	oldgocache       string
+@@ -58,6 +59,7 @@ var (
+ 	rebuildall bool
+ 	noOpt      bool
+ 	isRelease  bool
++	crossBuild bool
  
  	vflag int // verbosity
  )
-@@ -267,6 +269,8 @@ func xinit() {
- 	if tooldir = os.Getenv("GOTOOLDIR"); tooldir == "" {
- 		tooldir = pathf("%s/pkg/tool/%s_%s", goroot, gohostos, gohostarch)
- 	}
+@@ -265,6 +267,8 @@ func xinit() {
+ 
+ 	goversion := findgoversion()
+ 	isRelease = strings.HasPrefix(goversion, "release.") || strings.HasPrefix(goversion, "go")
 +
 +	build_tooldir = pathf("%s/pkg/tool/native_native", goroot)
  }
  
  // compilerEnv returns a map from "goos/goarch" to the
-@@ -468,8 +472,10 @@ func setup() {
+@@ -499,8 +503,10 @@ func setup() {
  	goosGoarch := pathf("%s/pkg/%s_%s", goroot, gohostos, gohostarch)
  	if rebuildall {
  		xremoveall(goosGoarch)
@@ -83,16 +83,18 @@ index 5d3171856a..d0ba54c072 100644
  	xatexit(func() {
  		if files := xreaddir(goosGoarch); len(files) == 0 {
  			xremove(goosGoarch)
-@@ -1276,17 +1282,35 @@ func cmdbootstrap() {
+@@ -1344,14 +1350,20 @@ func cmdbootstrap() {
+ 	defer timelog("end", "dist bootstrap")
  
- 	var noBanner, noClean bool
- 	var debug bool
+ 	var debug, distpack, force, noBanner, noClean bool
 +	var hostOnly bool
 +	var targetOnly bool
 +	var toBuild = []string{"std", "cmd"}
 +
  	flag.BoolVar(&rebuildall, "a", rebuildall, "rebuild all")
  	flag.BoolVar(&debug, "d", debug, "enable debugging of bootstrap process")
+ 	flag.BoolVar(&distpack, "distpack", distpack, "write distribution files to pkg/distpack")
+ 	flag.BoolVar(&force, "force", force, "build even if the port is marked as broken")
  	flag.BoolVar(&noBanner, "no-banner", noBanner, "do not print banner")
  	flag.BoolVar(&noClean, "no-clean", noClean, "print deprecation warning")
 +	flag.BoolVar(&hostOnly, "host-only", hostOnly, "build only host binaries, not target")
@@ -103,6 +105,8 @@ index 5d3171856a..d0ba54c072 100644
  
  	if noClean {
  		xprintf("warning: --no-clean is deprecated and has no effect; use 'go install std cmd' instead\n")
+@@ -1363,6 +1375,18 @@ func cmdbootstrap() {
+ 			"Use the -force flag to build anyway.\n", goos, goarch)
  	}
  
 +	if hostOnly && targetOnly {
@@ -120,7 +124,7 @@ index 5d3171856a..d0ba54c072 100644
  	// Set GOPATH to an internal directory. We shouldn't actually
  	// need to store files here, since the toolchain won't
  	// depend on modules outside of vendor directories, but if
-@@ -1354,9 +1378,14 @@ func cmdbootstrap() {
+@@ -1440,9 +1464,14 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  
@@ -133,30 +137,30 @@ index 5d3171856a..d0ba54c072 100644
  	goldflags = os.Getenv("GO_LDFLAGS") // we were using $BOOT_GO_LDFLAGS until now
 +}
  	goBootstrap := pathf("%s/go_bootstrap", tooldir)
- 	cmdGo := pathf("%s/go", gorootBin)
  	if debug {
-@@ -1385,7 +1414,11 @@ func cmdbootstrap() {
+ 		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
+@@ -1470,7 +1499,11 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
 +	if !crossBuild {
- 	os.Setenv("CC", compilerEnvLookup(defaultcc, goos, goarch))
+ 	os.Setenv("CC", compilerEnvLookup("CC", defaultcc, goos, goarch))
 +} else {
 +		os.Setenv("CC", defaultcc[""])
 +	}
  	// Now that cmd/go is in charge of the build process, enable GOEXPERIMENT.
  	os.Setenv("GOEXPERIMENT", goexperiment)
- 	goInstall(goBootstrap, toolchain...)
-@@ -1421,6 +1454,7 @@ func cmdbootstrap() {
- 		copyfile(pathf("%s/compile3", tooldir), pathf("%s/compile", tooldir), writeExec)
+ 	// No need to enable PGO for toolchain2.
+@@ -1523,6 +1556,7 @@ func cmdbootstrap() {
+ 		os.Setenv("GOCACHE", oldgocache)
  	}
  
 +	if !crossBuild {
  	if goos == oldgoos && goarch == oldgoarch {
  		// Common case - not setting up for cross-compilation.
  		timelog("build", "toolchain")
-@@ -1462,6 +1496,42 @@ func cmdbootstrap() {
- 		checkNotStale(goBootstrap, append(toolchain, "runtime/internal/sys")...)
+@@ -1566,6 +1600,42 @@ func cmdbootstrap() {
+ 		checkNotStale(toolenv(), goBootstrap, toolchain...)
  		copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
  	}
 +} else {
@@ -175,8 +179,8 @@ index 5d3171856a..d0ba54c072 100644
 +				xprintf("\n")
 +			}
 +			xprintf("Building %s for host, %s/%s.\n", strings.Join(toBuild, ","), goos, goarch)
-+			goInstall(goBootstrap, toBuild...)
-+			checkNotStale(goBootstrap, toBuild...)
++			goInstall(toolenv(), goBootstrap, toBuild...)
++			checkNotStale(toolenv(), goBootstrap, toBuild...)
 +			// Skip cmdGo staleness checks here, since we can't necessarily run the cmdGo binary
 +
 +			timelog("build", "target toolchain")
@@ -188,17 +192,17 @@ index 5d3171856a..d0ba54c072 100644
 +			goarch = oldgoarch
 +			os.Setenv("GOOS", goos)
 +			os.Setenv("GOARCH", goarch)
-+			os.Setenv("CC", compilerEnvLookup(defaultcc, goos, goarch))
++			os.Setenv("CC", compilerEnvLookup("CC", defaultcc, goos, goarch))
 +			xprintf("Building %s for target, %s/%s.\n", strings.Join(toBuild, ","), goos, goarch)
-+			goInstall(goBootstrap, toBuild...)
-+			checkNotStale(goBootstrap, toBuild...)
++			goInstall(toolenv(), goBootstrap, toBuild...)
++			checkNotStale(toolenv(), goBootstrap, toBuild...)
 +			// Skip cmdGo staleness checks here, since we can't run the target's cmdGo binary
 +		}
 +	}
  
  	// Check that there are no new files in $GOROOT/bin other than
  	// go and gofmt and $GOOS_$GOARCH (target bin when cross-compiling).
-@@ -1477,8 +1547,12 @@ func cmdbootstrap() {
+@@ -1585,8 +1655,12 @@ func cmdbootstrap() {
  		}
  	}
  
@@ -206,7 +210,7 @@ index 5d3171856a..d0ba54c072 100644
 +	// keep it.
 +	if !crossBuild {
  	// Remove go_bootstrap now that we're done.
- 	xremove(pathf("%s/go_bootstrap", tooldir))
+ 	xremove(pathf("%s/go_bootstrap"+exe, tooldir))
 +}
  
  	if goos == "android" {
