@@ -10,7 +10,7 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 SRC_URI = "git://github.com/rhinstaller/efivar.git;branch=main;protocol=https \
            file://0001-docs-do-not-build-efisecdb-manpage.patch \
            "
-SRCREV = "90e88b221e8bc60dc50f3246051369b8f580c0d0"
+SRCREV = "c47820c37ac26286559ec004de07d48d05f3308c"
 PV .= "+39+git"
 
 S = "${WORKDIR}/git"
