@@ -35,7 +35,7 @@ index 8973a87..adc9fd2 100644
  	goversion := findgoversion()
  	isRelease = strings.HasPrefix(goversion, "release.") || strings.HasPrefix(goversion, "go")
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 8a82e55..1141fc2 100644
+index 8caa22a..0c322fb 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
 @@ -231,7 +231,11 @@ func SetGOROOT(goroot string, isTestGo bool) {
