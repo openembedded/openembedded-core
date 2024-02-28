@@ -382,7 +382,7 @@ RDEPENDS:${PN} += "elfutils bash"
 RDEPENDS:${PN}-archive =+ "bash"
 RDEPENDS:${PN}-python =+ "bash python3 python3-modules ${@bb.utils.contains('PACKAGECONFIG', 'audit', 'audit-python', '', d)}"
 RDEPENDS:${PN}-perl =+ "bash perl perl-modules"
-RDEPENDS:${PN}-tests =+ "python3 bash"
+RDEPENDS:${PN}-tests =+ "python3 bash perl"
 
 RSUGGESTS:${PN} += "${PN}-archive ${PN}-tests \
                     ${@bb.utils.contains('PACKAGECONFIG', 'perl', '${PN}-perl', '', d)} \
