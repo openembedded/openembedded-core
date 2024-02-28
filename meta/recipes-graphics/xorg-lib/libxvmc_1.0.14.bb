@@ -16,4 +16,4 @@ PE = "1"
 
 XORG_PN = "libXvMC"
 
-SRC_URI[sha256sum] = "0a9ebe6dea7888a747e5aca1b891d53cd7d3a5f141a9645f77d9b6a12cee657c"
+SRC_URI[sha256sum] = "e4be9eb6b6bafdbbf81f47f7163047215376e45e2dc786d0ea6181c930725ed9"
