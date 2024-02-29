@@ -19,6 +19,8 @@ PACKAGECONFIG:remove:pn-bluez5 = "readline"
 # so install rpm but not dnf
 IMAGE_FEATURES:remove:pn-core-image-weston = "package-management"
 CORE_IMAGE_EXTRA_INSTALL:pn-core-image-weston += "rpm"
+IMAGE_FEATURES:remove:pn-core-image-full-cmdline = "package-management"
+CORE_IMAGE_EXTRA_INSTALL:pn-core-image-full-cmdline += "rpm"
 
 # matchbox-terminal depends on vte, which is gpl3
 CORE_IMAGE_BASE_INSTALL:remove:pn-core-image-weston = "matchbox-terminal"
