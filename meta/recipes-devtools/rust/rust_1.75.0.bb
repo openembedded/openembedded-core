@@ -175,7 +175,7 @@ python do_configure() {
     config.set("install", "sysconfdir",  e(d.getVar("D") + d.getVar("sysconfdir")))
 
     with open("config.toml", "w") as f:
-        f.write('changelog-seen = 2\n\n')
+        f.write('change-id = 116881\n\n')
         config.write(f)
 
     # set up ${WORKDIR}/cargo_home
