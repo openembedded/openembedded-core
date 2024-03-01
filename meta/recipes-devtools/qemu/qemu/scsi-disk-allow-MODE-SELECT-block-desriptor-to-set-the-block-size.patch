@@ -1,0 +1,54 @@
+From 356c4c441ec01910314c5867c680bef80d1dd373 Mon Sep 17 00:00:00 2001
+From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Date: Wed, 22 Jun 2022 11:53:12 +0100
+Subject: [PATCH] scsi-disk: allow MODE SELECT block descriptor to set the
+ block size
+
+The MODE SELECT command can contain an optional block descriptor that can be used
+to set the device block size. If the block descriptor is present then update the
+block size on the SCSI device accordingly.
+
+This allows CDROMs to be used with A/UX which requires a CDROM drive which is
+capable of switching from a 2048 byte sector size to a 512 byte sector size.
+
+Signed-off-by: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Message-Id: <20220622105314.802852-13-mark.cave-ayland@ilande.co.uk>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+
+Comment: Patch is refreshed
+Upstream-Status: Backport [https://github.com/qemu/qemu/commit/356c4c441ec01910314c5867c680bef80d1dd373]
+Signed-off-by: Poonam Jadhav <poonam.jadhav@kpit.com>
+---
+ hw/scsi/scsi-disk.c  | 6 ++++++
+ hw/scsi/trace-events | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/hw/scsi/scsi-disk.c b/hw/scsi/scsi-disk.c
+index db27e834dae3..f5cdb9ad4b54 100644
+--- a/hw/scsi/scsi-disk.c
++++ b/hw/scsi/scsi-disk.c
+@@ -1616,6 +1616,12 @@ static void scsi_disk_emulate_mode_select(SCSIDiskReq *r, uint8_t *inbuf)
+         goto invalid_param;
+     }
+ 
++    /* Allow changing the block size */
++    if (bd_len && p[6] != (s->qdev.blocksize >> 8)) {
++        s->qdev.blocksize = p[6] << 8;
++        trace_scsi_disk_mode_select_set_blocksize(s->qdev.blocksize);
++    }
++
+     len -= bd_len;
+     p += bd_len;
+ 
+diff --git a/hw/scsi/trace-events b/hw/scsi/trace-events
+index 8e927ff62de1..ab238293f0da 100644
+--- a/hw/scsi/trace-events
++++ b/hw/scsi/trace-events
+@@ -338,6 +338,7 @@scsi_disk_dma_command_READ(uint64_t lba, uint32_t len) "Read (sector %" PRId64 ", count %u)"
+ scsi_disk_dma_command_WRITE(const char *cmd, uint64_t lba, int len) "Write %s(sector %" PRId64 ", count %u)"
+ scsi_disk_new_request(uint32_t lun, uint32_t tag, const char *line) "Command: lun=%d tag=0x%x data=%s"
+ scsi_disk_aio_sgio_command(uint32_t tag, uint8_t cmd, uint64_t lba, int len, uint32_t timeout) "disk aio sgio: tag=0x%x cmd=0x%x (sector %" PRId64 ", count %d) timeout=%u"
++scsi_disk_mode_select_set_blocksize(int blocksize) "set block size to %d"
+ 
+ # scsi-generic.c
+ scsi_generic_command_complete_noio(void *req, uint32_t tag, int statuc) "Command complete %p tag=0x%x status=%d"

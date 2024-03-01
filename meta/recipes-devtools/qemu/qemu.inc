@@ -105,6 +105,9 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
 	   file://CVE-2023-5088.patch \
 	   file://CVE-2024-24474.patch \
 	   file://CVE-2023-6693.patch \
+           file://scsi-disk-allow-MODE-SELECT-block-desriptor-to-set-the-block-size.patch \
+           file://scsi-disk-ensure-block-size-is-non-zero-and-changes-limited-to-bits-8-15.patch \
+           file://CVE-2023-42467.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
