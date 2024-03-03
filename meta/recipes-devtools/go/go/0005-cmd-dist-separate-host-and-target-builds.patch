@@ -31,9 +31,10 @@ Adapted to Go 1.13 from patches originally submitted to
 the meta/recipes-devtools/go tree by
 Matt Madison <matt@madison.systems>.
 
-Rework the patch to avoid identation, it's more hard to read but
-easy to rebase.
+Rework the patch to avoid identation, it breaks formatting rules but
+makes the changes more obvious and maintainable.
 Jose Quaresma <jose.quaresma@foundries.io>
+Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Upstream-Status: Inappropriate [OE specific]
 
@@ -131,7 +132,7 @@ index 06ee4de8a9..74b7c7098f 100644
 +	// For split host/target cross/cross-canadian builds, we don't
 +	// want to be setting these flags until after we have compiled
 +	// the toolchain that runs on the build host.
-+	if !crossBuild {
++if !crossBuild {
  	gogcflags = os.Getenv("GO_GCFLAGS") // we were using $BOOT_GO_GCFLAGS until now
  	setNoOpt()
  	goldflags = os.Getenv("GO_LDFLAGS") // we were using $BOOT_GO_LDFLAGS until now
@@ -143,11 +144,11 @@ index 06ee4de8a9..74b7c7098f 100644
  		xprintf("\n")
  	}
  	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
-+	if !crossBuild {
++if !crossBuild {
  	os.Setenv("CC", compilerEnvLookup("CC", defaultcc, goos, goarch))
 +} else {
 +		os.Setenv("CC", defaultcc[""])
-+	}
++}
  	// Now that cmd/go is in charge of the build process, enable GOEXPERIMENT.
  	os.Setenv("GOEXPERIMENT", goexperiment)
  	// No need to enable PGO for toolchain2.
@@ -155,7 +156,7 @@ index 06ee4de8a9..74b7c7098f 100644
  		os.Setenv("GOCACHE", oldgocache)
  	}
  
-+	if !crossBuild {
++if !crossBuild {
  	if goos == oldgoos && goarch == oldgoarch {
  		// Common case - not setting up for cross-compilation.
  		timelog("build", "toolchain")
@@ -198,7 +199,7 @@ index 06ee4de8a9..74b7c7098f 100644
 +			checkNotStale(toolenv(), goBootstrap, toBuild...)
 +			// Skip cmdGo staleness checks here, since we can't run the target's cmdGo binary
 +		}
-+	}
++}
  
  	// Check that there are no new files in $GOROOT/bin other than
  	// go and gofmt and $GOOS_$GOARCH (target bin when cross-compiling).
@@ -208,7 +209,7 @@ index 06ee4de8a9..74b7c7098f 100644
  
 +	// Except that for split host/target cross-builds, we need to
 +	// keep it.
-+	if !crossBuild {
++if !crossBuild {
  	// Remove go_bootstrap now that we're done.
  	xremove(pathf("%s/go_bootstrap"+exe, tooldir))
 +}
