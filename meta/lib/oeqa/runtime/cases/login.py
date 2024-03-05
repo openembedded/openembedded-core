@@ -4,9 +4,13 @@
 # SPDX-License-Identifier: MIT
 #
 
+import shutil
 import subprocess
-from oeqa.runtime.case import OERuntimeTestCase
 import tempfile
+import time
+import os
+from datetime import datetime
+from oeqa.runtime.case import OERuntimeTestCase
 from oeqa.runtime.decorator.package import OEHasPackage
 
 ### Status of qemu images.
@@ -22,14 +26,27 @@ from oeqa.runtime.decorator.package import OEHasPackage
 ###
 
 class LoginTest(OERuntimeTestCase):
+    @OEHasPackage(['matchbox-desktop'])
     def test_screenshot(self):
         if self.td.get('MACHINE') in ("qemuppc64", "qemuarmv5", "qemuriscv32", "qemuloongarch64"):
             self.skipTest("{0} is not currently supported.".format(self.td.get('MACHINE')))
 
-        # Set DEBUG_CREATE_IMAGES to 1 in order to populate the image-test images directory.
-        DEBUG_CREATE_IMAGES="0"
-        # Store failed images so we can debug them.
-        failed_image_dir=self.td.get('TOPDIR') + "/failed-images/"
+        pn = self.td.get('PN')
+
+        ourenv = os.environ.copy()
+        origpath = self.td.get("ORIGPATH")
+        if origpath:
+            ourenv['PATH'] = ourenv['PATH'] + ":" + origpath
+
+        for cmd in ["identify.im7", "convert.im7", "compare.im7"]:
+            try:
+                subprocess.check_output(["which", cmd], env=ourenv)
+            except subprocess.CalledProcessError:
+                self.skipTest("%s (from imagemagick) not available" % cmd)
+
+
+        # Store images so we can debug them if needed
+        saved_screenshots_dir = self.td.get('T') + "/saved-screenshots/"
 
         ###
         # This is a really horrible way of doing this but I've not found the
@@ -50,8 +67,6 @@ class LoginTest(OERuntimeTestCase):
         # 'works'.
         ###
 
-        import time
-        
         # qemumips takes forever to render. We could probably get away with 20
         # here were it not for that.
         time.sleep(40)
@@ -62,46 +77,36 @@ class LoginTest(OERuntimeTestCase):
             # Find out size of image so we can determine where to blank out clock.
             # qemuarm and qemuppc are odd as it doesn't resize the window and returns
             # incorrect widths
-            if self.td.get('MACHINE')=="qemuarm" or self.td.get('MACHINE')=="qemuppc":
-                width="640"
+            if self.td.get('MACHINE') == "qemuarm" or self.td.get('MACHINE') == "qemuppc":
+                width = "640"
             else:
                 cmd = "identify.im7 -ping -format '%w' {0}".format(t.name)
-                width = subprocess.check_output(cmd, shell=True).decode()
+                width = subprocess.check_output(cmd, shell=True, env=ourenv).decode()
 
-            rblank=int(float(width))
-            lblank=rblank-40
+            rblank = int(float(width))
+            lblank = rblank-40
 
             # Use the meta-oe version of convert, along with it's suffix. This blanks out the clock.
             cmd = "convert.im7 {0} -fill white -draw 'rectangle {1},10 {2},22' {3}".format(t.name, str(rblank), str(lblank), t.name)
-            convert_out=subprocess.check_output(cmd, shell=True).decode()
+            convert_out=subprocess.check_output(cmd, shell=True, env=ourenv).decode()
 
-            if DEBUG_CREATE_IMAGES=="1":
-                # You probably aren't interested in this as it's just to create the images we compare against.
-                import shutil
-                shutil.copy2(t.name, "{0}/meta/files/image-tests/core-image-sato-{1}.png".format(self.td.get('COREBASE'), \
-                                                                                                 self.td.get('MACHINE')))
-                self.skipTest("Created a reference image for {0} and placed it in {1}/meta/files/image-tests/.".format(self.td.get('MACHINE'), self.td.get('COREBASE')))
+
+            bb.utils.mkdirhier(saved_screenshots_dir)
+            savedfile = "{0}/saved-{1}-{2}-{3}.png".format(saved_screenshots_dir, \
+                                                                        datetime.timestamp(datetime.now()), \
+                                                                        pn, \
+                                                                        self.td.get('MACHINE'))
+            shutil.copy2(t.name, savedfile)
+
+            refimage = self.td.get('COREBASE') + "/meta/files/screenshot-tests/" + pn + "-" + self.td.get('MACHINE') +".png"
+            if not os.path.exists(refimage):
+                self.skipTest("No reference image for comparision (%s)" % refimage)
+
+            cmd = "compare.im7 -metric MSE {0} {1} /dev/null".format(t.name, refimage)
+            compare_out = subprocess.run(cmd, shell=True, capture_output=True, text=True, env=ourenv)
+            diff=float(compare_out.stderr.replace("(", "").replace(")","").split()[1])
+            if diff > 0:
+                # Keep a copy of the failed screenshot so we can see what happened.
+                self.fail("Screenshot diff is {0}. Failed image stored in {1}".format(str(diff), savedfile))
             else:
-                # Use the meta-oe version of compare, along with it's suffix.
-                cmd = "compare.im7 -metric MSE {0} {1}/meta/files/image-tests/core-image-sato-{2}.png /dev/null".format(t.name, \
-                                                                                                                        self.td.get('COREBASE'), \
-                                                                                                                        self.td.get('MACHINE'))
-                compare_out = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-                diff=float(compare_out.stderr.replace("(", "").replace(")","").split()[1])
-                if diff > 0:
-                    from datetime import datetime
-                    import shutil
-                    import os
-                    try:
-                        os.mkdir(failed_image_dir)
-                    except FileExistsError:
-                        # directory exists
-                        pass
-                    # Keep a copy of the failed screenshot so we can see what happened.
-                    failedfile="{0}/failed-{1}-core-image-sato-{2}.png".format(failed_image_dir, \
-                                                                               datetime.timestamp(datetime.now()), \
-                                                                               self.td.get('MACHINE'))
-                    shutil.copy2(t.name, failedfile)
-                    self.fail("Screenshot diff is {0}. Failed image stored in {1}".format(str(diff), failedfile))
-                else:
-                    self.assertEqual(0, diff, "Screenshot diff is {0}.".format(str(diff)))
+                self.assertEqual(0, diff, "Screenshot diff is {0}.".format(str(diff)))
