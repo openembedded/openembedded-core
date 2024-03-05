@@ -67,7 +67,7 @@ python do_menuconfig() {
         newmtime = 0
 
     if newmtime > mtime:
-        bb.note("Configuration changed, recompile will be forced")
+        bb.plain("Changed configuration saved at:\n %s\nRecompile will be forced" % config)
         bb.build.write_taint('do_compile', d)
 }
 do_menuconfig[depends] += "ncurses-native:do_populate_sysroot"
