@@ -84,10 +84,10 @@ class LoginTest(OERuntimeTestCase):
                 width = subprocess.check_output(cmd, shell=True, env=ourenv).decode()
 
             rblank = int(float(width))
-            lblank = rblank-40
+            lblank = rblank-80
 
             # Use the meta-oe version of convert, along with it's suffix. This blanks out the clock.
-            cmd = "convert.im7 {0} -fill white -draw 'rectangle {1},10 {2},22' {3}".format(t.name, str(rblank), str(lblank), t.name)
+            cmd = "convert.im7 {0} -fill white -draw 'rectangle {1},4 {2},28' {3}".format(t.name, str(rblank), str(lblank), t.name)
             convert_out=subprocess.check_output(cmd, shell=True, env=ourenv).decode()
 
 
