@@ -8,8 +8,8 @@ SECTION = "libs"
 LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=cd3c0bc366cd9b6a906e22f0bcb5910f"
 
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.3.268;protocol=https"
-SRCREV = "3c64adb4e052062fc60b6580c365429fddfbcfbf"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.3.275;protocol=https"
+SRCREV = "780c65337e111c7385109c7b720d757a778e4fe2"
 
 S = "${WORKDIR}/git"
 
