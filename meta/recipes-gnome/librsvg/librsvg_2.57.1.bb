@@ -19,11 +19,11 @@ inherit cargo_common gnomebase pixbufcache gobject-introspection rust vala gi-do
 
 require ${BPN}-crates.inc
 
-SRC_URI += "file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
-            file://0001-Add-riscv32-support.patch;patchdir=../cargo_home/bitbake/linux-raw-sys-0.4.3 \
+SRC_URI += " \
+           file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
            "
 
-SRC_URI[archive.sha256sum] = "5a328048a02d014645cd27f61140f4e0b11280fb2c7f2a21864fe0c59ac1ce88"
+SRC_URI[archive.sha256sum] = "074671a3ed6fbcd67cae2a40e539107f4f097ca8a4ab1a894c05e2524ff340ef"
 
 UPSTREAM_CHECK_REGEX = "librsvg-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
