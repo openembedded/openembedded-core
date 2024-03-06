@@ -28,7 +28,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 class LoginTest(OERuntimeTestCase):
     @OEHasPackage(['matchbox-desktop'])
     def test_screenshot(self):
-        if self.td.get('MACHINE') in ("qemuppc64", "qemuarmv5", "qemuriscv32", "qemuloongarch64"):
+        if self.td.get('MACHINE') in ("qemuppc64", "qemuarmv5", "qemuriscv32", "qemuriscv64", "qemuloongarch64"):
             self.skipTest("{0} is not currently supported.".format(self.td.get('MACHINE')))
 
         pn = self.td.get('PN')
