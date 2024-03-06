@@ -8,9 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SRC_URI = "git://github.com/rpm-software-management/librepo.git;branch=master;protocol=https \
            file://0002-Do-not-try-to-obtain-PYTHON_INSTALL_DIR-by-running-p.patch \
            file://0004-Set-gpgme-variables-with-pkg-config-not-with-cmake-m.patch \
+           file://0001-gpg_gpgme.c-fix-build-errors-with-older-gcc.patch \
            "
 
-SRCREV = "7c9af219abd49f8961542b7622fc82cfdaa572e3"
+SRCREV = "ae727d99086f70f39fba5695af5460e1da908c1b"
 
 S = "${WORKDIR}/git"
 
@@ -24,6 +25,7 @@ EXTRA_OECMAKE = " \
     -DENABLE_TESTS=OFF \
     -DENABLE_DOCS=OFF \
     -DWITH_ZCHUNK=OFF \
+    -DENABLE_SELINUX=OFF \
 "
 
 BBCLASSEXTEND = "native nativesdk"
