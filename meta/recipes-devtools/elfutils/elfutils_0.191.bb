@@ -21,13 +21,11 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0001-skip-the-test-when-gcc-not-deployed.patch \
            file://ptest.patch \
            file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
-           file://0001-Add-helper-function-for-basename.patch \
-           file://0001-tests-fix-build-against-upcoming-gcc-14-Werror-callo.patch \
            "
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
            "
-SRC_URI[sha256sum] = "39bd8f1a338e2b7cd4abc3ff11a0eddc6e690f69578a57478d8179b4148708c8"
+SRC_URI[sha256sum] = "df76db71366d1d708365fc7a6c60ca48398f14367eb2b8954efc8897147ad871"
 
 inherit autotools gettext ptest pkgconfig
 
@@ -69,7 +67,7 @@ PTEST_PARALLEL_MAKE = ""
 do_install_ptest() {
 	if [ ${PTEST_ENABLED} = "1" ]; then
 		# copy the files which needed by the cases
-		TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip"
+		TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip srcfiles"
 		install -d -m 755                       ${D}${PTEST_PATH}/src
 		install -d -m 755                       ${D}${PTEST_PATH}/lib
 		install -d -m 755                       ${D}${PTEST_PATH}/libelf
@@ -166,6 +164,7 @@ INHIBIT_PACKAGE_STRIP_FILES = "\
     ${PKGD}${PTEST_PATH}/src/elfclassify \
     ${PKGD}${PTEST_PATH}/src/stack \
     ${PKGD}${PTEST_PATH}/src/unstrip \
+    ${PKGD}${PTEST_PATH}/src/srcfiles \
     ${PKGD}${PTEST_PATH}/libelf/libelf.so \
     ${PKGD}${PTEST_PATH}/libdw/libdw.so \
     ${PKGD}${PTEST_PATH}/libasm/libasm.so \
