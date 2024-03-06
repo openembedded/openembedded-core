@@ -33,12 +33,12 @@ LICENSE:${PN}-locale = "BSD-3-Clause & ISC & PD"
 LICENSE:${PN}-src = "BSD-3-Clause & ISC & PD"
 LICENSE:${PN}-staticdev = "BSD-3-Clause & ISC & PD"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=befe09fada57bdcf7f7c12f51081b08f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=9b087a0981a1fcad42efbba6d4925a0f"
 SECTION = "libs"
 
 SRC_URI = "https://libbsd.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "55fdfa2696fb4d55a592fa9ad14a9df897c7b0008ddb3b30c419914841f85f33"
+SRC_URI[sha256sum] = "d7747f8ec1baa6ff5c096a9dd587c061233dec90da0f1aedd66d830f6db6996a"
 
 inherit autotools pkgconfig
 
