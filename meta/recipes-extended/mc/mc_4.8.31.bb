@@ -11,7 +11,7 @@ RRECOMMENDS:${PN} = "ncurses-terminfo"
 SRC_URI = "http://www.midnight-commander.org/downloads/${BPN}-${PV}.tar.bz2 \
            file://nomandate.patch \
            "
-SRC_URI[sha256sum] = "38171f22f889e3030ec9055463d3ecd7843984ab24e6497d8294d1c441a7ddb4"
+SRC_URI[sha256sum] = "f42f4114ed42f6cf9995f1d896fa6c797ccb36dac57760dda8dd9f78ac462841"
 
 inherit autotools gettext pkgconfig
 
@@ -39,7 +39,7 @@ do_install:append () {
         rm ${D}${libexecdir}/mc/extfs.d/s3+ ${D}${libexecdir}/mc/extfs.d/uc1541
 }
 
-PACKAGES =+ "${BPN}-helpers-perl ${BPN}-helpers ${BPN}-fish"
+PACKAGES =+ "${BPN}-helpers-perl ${BPN}-helpers ${BPN}-shell"
 
 SUMMARY:${BPN}-helpers-perl = "Midnight Commander Perl-based helper scripts"
 FILES:${BPN}-helpers-perl = "${libexecdir}/mc/extfs.d/a+ ${libexecdir}/mc/extfs.d/apt+ \
@@ -53,5 +53,5 @@ RDEPENDS:${BPN}-helpers-perl = "perl"
 SUMMARY:${BPN}-helpers = "Midnight Commander shell helper scripts"
 FILES:${BPN}-helpers = "${libexecdir}/mc/extfs.d/* ${libexecdir}/mc/ext.d/*"
 
-SUMMARY:${BPN}-fish = "Midnight Commander Fish scripts"
-FILES:${BPN}-fish = "${libexecdir}/mc/fish"
+SUMMARY:${BPN}-shell = "Midnight Commander Shell scripts"
+FILES:${BPN}-shell = "${libexecdir}/mc/shell"
