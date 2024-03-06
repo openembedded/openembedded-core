@@ -26,7 +26,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 ###
 
 class LoginTest(OERuntimeTestCase):
-    @OEHasPackage(['matchbox-desktop'])
+    @OEHasPackage(['matchbox-desktop', 'dbus-wait'])
     def test_screenshot(self):
         if self.td.get('MACHINE') in ("qemuppc64", "qemuarmv5", "qemuriscv32", "qemuriscv64", "qemuloongarch64"):
             self.skipTest("{0} is not currently supported.".format(self.td.get('MACHINE')))
@@ -66,45 +66,48 @@ class LoginTest(OERuntimeTestCase):
         # Which is ugly and I hate it but it 'works' for various definitions of
         # 'works'.
         ###
+        status, output = self.target.run('dbus-wait org.matchbox_project.desktop Loaded')
+        if status != 0:
+            self.fail('dbus-wait failed. This could mean that the image never loaded the matchbox desktop.')
 
-        # qemumips takes forever to render. We could probably get away with 20
-        # here were it not for that.
-        time.sleep(40)
-
+        # Start taking screenshots every 2 seconds until diff=0 or timeout is 60 seconds
+        timeout = time.time() + 60
+        diff = True
         with tempfile.NamedTemporaryFile(prefix="oeqa-screenshot-login", suffix=".png") as t:
-            ret = self.target.runner.run_monitor("screendump", args={"filename": t.name, "format":"png"})
+            while diff != 0 or time.time() > timeout:
+                time.sleep(2)
+                ret = self.target.runner.run_monitor("screendump", args={"filename": t.name, "format":"png"})
 
-            # Find out size of image so we can determine where to blank out clock.
-            # qemuarm and qemuppc are odd as it doesn't resize the window and returns
-            # incorrect widths
-            if self.td.get('MACHINE') == "qemuarm" or self.td.get('MACHINE') == "qemuppc":
-                width = "640"
-            else:
-                cmd = "identify.im7 -ping -format '%w' {0}".format(t.name)
-                width = subprocess.check_output(cmd, shell=True, env=ourenv).decode()
+                # Find out size of image so we can determine where to blank out clock.
+                # qemuarm and qemuppc are odd as it doesn't resize the window and returns
+                # incorrect widths
+                if self.td.get('MACHINE') == "qemuarm" or self.td.get('MACHINE') == "qemuppc":
+                    width = "640"
+                else:
+                    cmd = "identify.im7 -ping -format '%w' {0}".format(t.name)
+                    width = subprocess.check_output(cmd, shell=True, env=ourenv).decode()
 
-            rblank = int(float(width))
-            lblank = rblank-80
+                rblank = int(float(width))
+                lblank = rblank-80
 
-            # Use the meta-oe version of convert, along with it's suffix. This blanks out the clock.
-            cmd = "convert.im7 {0} -fill white -draw 'rectangle {1},4 {2},28' {3}".format(t.name, str(rblank), str(lblank), t.name)
-            convert_out=subprocess.check_output(cmd, shell=True, env=ourenv).decode()
+                # Use the meta-oe version of convert, along with it's suffix. This blanks out the clock.
+                cmd = "convert.im7 {0} -fill white -draw 'rectangle {1},4 {2},28' {3}".format(t.name, str(rblank), str(lblank), t.name)
+                convert_out=subprocess.check_output(cmd, shell=True, env=ourenv).decode()
 
+                bb.utils.mkdirhier(saved_screenshots_dir)
+                savedfile = "{0}/saved-{1}-{2}-{3}.png".format(saved_screenshots_dir, \
+                                                                            datetime.timestamp(datetime.now()), \
+                                                                            pn, \
+                                                                            self.td.get('MACHINE'))
+                shutil.copy2(t.name, savedfile)
 
-            bb.utils.mkdirhier(saved_screenshots_dir)
-            savedfile = "{0}/saved-{1}-{2}-{3}.png".format(saved_screenshots_dir, \
-                                                                        datetime.timestamp(datetime.now()), \
-                                                                        pn, \
-                                                                        self.td.get('MACHINE'))
-            shutil.copy2(t.name, savedfile)
+                refimage = self.td.get('COREBASE') + "/meta/files/screenshot-tests/" + pn + "-" + self.td.get('MACHINE') +".png"
+                if not os.path.exists(refimage):
+                    self.skipTest("No reference image for comparision (%s)" % refimage)
 
-            refimage = self.td.get('COREBASE') + "/meta/files/screenshot-tests/" + pn + "-" + self.td.get('MACHINE') +".png"
-            if not os.path.exists(refimage):
-                self.skipTest("No reference image for comparision (%s)" % refimage)
-
-            cmd = "compare.im7 -metric MSE {0} {1} /dev/null".format(t.name, refimage)
-            compare_out = subprocess.run(cmd, shell=True, capture_output=True, text=True, env=ourenv)
-            diff=float(compare_out.stderr.replace("(", "").replace(")","").split()[1])
+                cmd = "compare.im7 -metric MSE {0} {1} /dev/null".format(t.name, refimage)
+                compare_out = subprocess.run(cmd, shell=True, capture_output=True, text=True, env=ourenv)
+                diff=float(compare_out.stderr.replace("(", "").replace(")","").split()[1])
             if diff > 0:
                 # Keep a copy of the failed screenshot so we can see what happened.
                 self.fail("Screenshot diff is {0}. Failed image stored in {1}".format(str(diff), savedfile))
