@@ -11,14 +11,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24"
 BBCLASSEXTEND = "native nativesdk"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/libusb-${PV}.tar.bz2 \
-           file://0001-configure.ac-Link-with-latomic-only-if-no-atomic-bui.patch \
            file://run-ptest \
-          "
+           "
 
 GITHUB_BASE_URI = "https://github.com/libusb/libusb/releases"
 UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
-SRC_URI[sha256sum] = "12ce7a61fc9854d1d2a1ffe095f7b5fac19ddba095c259e6067a46500381b5a5"
+SRC_URI[sha256sum] = "ffaa41d741a8a3bee244ac8e54a72ea05bf2879663c098c82fc5757853441575"
 
 S = "${WORKDIR}/libusb-${PV}"
 
@@ -41,7 +40,7 @@ do_compile_ptest() {
 }
 
 do_install_ptest() {
-    install -m 755 ${B}/tests/.libs/stress ${D}${PTEST_PATH}
+    install -m 755 ${B}/tests/stress ${D}${PTEST_PATH}
 }
 
 FILES:${PN} += "${base_libdir}/*.so.*"
