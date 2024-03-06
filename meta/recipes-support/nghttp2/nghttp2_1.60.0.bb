@@ -4,11 +4,8 @@ SECTION = "libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=764abdf30b2eadd37ce47dcbce0ea1ec"
 
-SRC_URI = "\
-    ${GITHUB_BASE_URI}/download/v${PV}/nghttp2-${PV}.tar.xz \
-    file://0001-fetch-ocsp-response-use-python3.patch \
-"
-SRC_URI[sha256sum] = "fdc9bd71f5cf8d3fdfb63066b89364c10eb2fdeab55f3c6755cd7917b2ec4ffb"
+SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/nghttp2-${PV}.tar.xz"
+SRC_URI[sha256sum] = "625d6c3da1d9ca4fd643a638256431ae68fd1901653b2a61a245eea7b261bf4e"
 
 inherit cmake manpages python3native github-releases
 PACKAGECONFIG[manpages] = ""
