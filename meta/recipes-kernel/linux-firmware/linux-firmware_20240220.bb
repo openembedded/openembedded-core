@@ -28,7 +28,6 @@ LICENSE = "\
     & Firmware-ene_firmware \
     & Firmware-fw_sst_0f28 \
     & Firmware-go7007 \
-    & Firmware-GPLv2 \
     & Firmware-hfi1_firmware \
     & Firmware-i915 \
     & Firmware-ibt_firmware \
@@ -77,6 +76,7 @@ LICENSE = "\
     & Firmware-xc5000 \
     & Firmware-xc5000c \
     & WHENCE \
+    & GPL-2.0-or-later \
 "
 
 LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
@@ -102,7 +102,6 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.ene_firmware;md5=ed67f0f62f8f798130c296720b7d3921 \
                     file://LICENCE.fw_sst_0f28;md5=6353931c988ad52818ae733ac61cd293 \
                     file://LICENCE.go7007;md5=c0bb9f6aaaba55b0529ee9b30aa66beb \
-                    file://GPL-2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://LICENSE.hfi1_firmware;md5=5e7b6e586ce7339d12689e49931ad444 \
                     file://LICENSE.i915;md5=2b0b2e0d20984affd4490ba2cba02570 \
                     file://LICENCE.ibt_firmware;md5=fdbee1ddfe0fb7ab0b2fcd6b454a366b \
@@ -182,7 +181,6 @@ NO_GENERIC_LICENSE[Firmware-e100] = "LICENCE.e100"
 NO_GENERIC_LICENSE[Firmware-ene_firmware] = "LICENCE.ene_firmware"
 NO_GENERIC_LICENSE[Firmware-fw_sst_0f28] = "LICENCE.fw_sst_0f28"
 NO_GENERIC_LICENSE[Firmware-go7007] = "LICENCE.go7007"
-NO_GENERIC_LICENSE[Firmware-GPLv2] = "GPL-2"
 NO_GENERIC_LICENSE[Firmware-hfi1_firmware] = "LICENSE.hfi1_firmware"
 NO_GENERIC_LICENSE[Firmware-i915] = "LICENSE.i915"
 NO_GENERIC_LICENSE[Firmware-ibt_firmware] = "LICENCE.ibt_firmware"
@@ -260,7 +258,7 @@ do_compile() {
 
 do_install() {
         oe_runmake 'DESTDIR=${D}' 'FIRMWAREDIR=${nonarch_base_libdir}/firmware' ${PACKAGECONFIG_CONFARGS}
-        cp GPL-2 LICEN[CS]E.* WHENCE ${D}${nonarch_base_libdir}/firmware/
+        cp LICEN[CS]E.* WHENCE ${D}${nonarch_base_libdir}/firmware/
 }
 
 
@@ -323,7 +321,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-cirrus-license ${PN}-cirrus \
              ${PN}-cnm-license ${PN}-cnm \
              ${PN}-atheros-license ${PN}-ar5523 ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k ${PN}-ath3k \
-             ${PN}-gplv2-license ${PN}-carl9170 \
+             ${PN}-carl9170 \
              ${PN}-ar3k-license ${PN}-ar3k ${PN}-ath10k-license ${PN}-ath10k ${PN}-ath11k ${PN}-qca \
              \
              ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
@@ -461,15 +459,11 @@ RDEPENDS:${PN}-ath6k += "${PN}-atheros-license"
 RDEPENDS:${PN}-ath9k += "${PN}-atheros-license"
 
 # For carl9170
-LICENSE:${PN}-carl9170 = "Firmware-GPLv2"
-LICENSE:${PN}-gplv2-license = "Firmware-GPLv2"
 
-FILES:${PN}-gplv2-license = "${nonarch_base_libdir}/firmware/GPL-2"
 FILES:${PN}-carl9170 = " \
   ${nonarch_base_libdir}/firmware/carl9170*.fw \
 "
-
-RDEPENDS:${PN}-carl9170 += "${PN}-gplv2-license"
+LICENSE:${PN}-carl9170 = "GPL-2.0-or-later"
 
 # For QualCommAthos
 LICENSE:${PN}-ar3k = "Firmware-qualcommAthos_ar3k & Firmware-atheros_firmware"
