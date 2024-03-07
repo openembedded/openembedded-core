@@ -66,15 +66,16 @@ class LoginTest(OERuntimeTestCase):
         # Which is ugly and I hate it but it 'works' for various definitions of
         # 'works'.
         ###
-        status, output = self.target.run('dbus-wait org.matchbox_project.desktop Loaded')
-        if status != 0:
-            self.fail('dbus-wait failed. This could mean that the image never loaded the matchbox desktop.')
+        # RP: if the signal is sent before we run this, it will never be seen and we'd timeout
+        #status, output = self.target.run('dbus-wait org.matchbox_project.desktop Loaded')
+        #if status != 0 or "Timeout" in output:
+        #    self.fail('dbus-wait failed (%s, %s). This could mean that the image never loaded the matchbox desktop.' % (status, output))
 
         # Start taking screenshots every 2 seconds until diff=0 or timeout is 60 seconds
         timeout = time.time() + 60
         diff = True
         with tempfile.NamedTemporaryFile(prefix="oeqa-screenshot-login", suffix=".png") as t:
-            while diff != 0 or time.time() > timeout:
+            while diff != 0 and time.time() < timeout:
                 time.sleep(2)
                 ret = self.target.runner.run_monitor("screendump", args={"filename": t.name, "format":"png"})
 
