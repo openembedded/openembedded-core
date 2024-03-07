@@ -249,13 +249,17 @@ inherit allarch
 
 CLEANBROKEN = "1"
 
+# Use PACKAGECONFIG_CONFARGS to set the Makefile target
+PACKAGECONFIG ??= ""
+# Enabling dedup will turn duplicate firmware files into links
+PACKAGECONFIG[deduplicate] = "install,install-nodedup,rdfind-native"
+
 do_compile() {
 	:
 }
 
 do_install() {
-        # install-nodedup avoids rdfind dependency
-        oe_runmake 'DESTDIR=${D}' 'FIRMWAREDIR=${nonarch_base_libdir}/firmware' install-nodedup
+        oe_runmake 'DESTDIR=${D}' 'FIRMWAREDIR=${nonarch_base_libdir}/firmware' ${PACKAGECONFIG_CONFARGS}
         cp GPL-2 LICEN[CS]E.* WHENCE ${D}${nonarch_base_libdir}/firmware/
 }
 
