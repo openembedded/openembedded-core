@@ -247,6 +247,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dsystem-uid-max=999 \
                   -Dsystem-alloc-gid-min=101 \
                   -Dsystem-gid-max=999 \
+                  -Dcreate-log-dirs=false \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
