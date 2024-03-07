@@ -28,4 +28,8 @@ RDEPENDS:${PN} = "python3-core python3-compression python3-misc python3-mmap pyt
 
 inherit setuptools3
 
+# For compatibility with layers before scarthgap
+RREPLACES:${PN} = "bmap-tools"
+RCONFLICTS:${PN} = "bmap-tools"
+
 BBCLASSEXTEND = "native nativesdk"
