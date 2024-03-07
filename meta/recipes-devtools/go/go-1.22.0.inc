@@ -11,8 +11,8 @@ SRC_URI += "\
     file://0004-make.bash-override-CC-when-building-dist-and-go_boot.patch \
     file://0005-cmd-dist-separate-host-and-target-builds.patch \
     file://0006-cmd-go-make-GOROOT-precious-by-default.patch \
-    file://0007-exec.go-do-not-write-linker-flags-into-buildids.patch \
     file://0008-src-cmd-dist-buildgo.go-do-not-hardcode-host-compile.patch \
     file://0009-go-Filter-build-paths-on-staticly-linked-arches.patch \
+    file://0001-exec.go-filter-out-build-specific-paths-from-linker-.patch \
 "
 SRC_URI[main.sha256sum] = "4d196c3d41a0d6c1dfc64d04e3cc1f608b0c436bd87b7060ce3e23234e1f4d5c"
