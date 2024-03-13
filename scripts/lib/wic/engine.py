@@ -354,6 +354,23 @@ class Disk:
         exec_cmd(cmd, as_shell=True)
         self._put_part_image(pnum)
 
+    def link(self, src, dest):
+        """Create a symbolic link to a file in wic image."""
+        pnum =  dest.part
+
+        if pnum not in self.partitions:
+            raise WicError("Partition %s is not in the image" % pnum)
+
+        if self.partitions[pnum].fstype.startswith('ext'):
+            cmd = "printf 'cd {}\nsymlink {} {}\n' | {} -w {}".\
+                format(os.path.dirname(dest.path), os.path.basename(src),
+                    src, self.debugfs, self._get_part_image(pnum))
+        else: # fat
+            print("Not support the fat file system!")
+
+        exec_cmd(cmd, as_shell=True)
+        self._put_part_image(pnum)
+
     def remove_ext(self, pnum, path, recursive):
         """
         Remove files/dirs and their contents from the partition.
@@ -579,6 +596,13 @@ def wic_cp(args, native_sysroot):
         disk = Disk(args.dest.image, native_sysroot)
     disk.copy(args.src, args.dest)
 
+def wic_ln(args, native_sysroot):
+    """
+    Create file's Symbolic link in ext partition of
+    partitioned image.
+    """
+    disk = Disk(args.dest.image, native_sysroot)
+    disk.link(args.src, args.dest)
 
 def wic_rm(args, native_sysroot):
     """
