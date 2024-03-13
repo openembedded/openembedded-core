@@ -25,17 +25,16 @@ RDEPENDS:info += "${@compress_pkg(d)}"
 DEPENDS = "zlib ncurses texinfo-replacement-native"
 DEPENDS:class-native = "zlib-native ncurses-native"
 
-TARGET_PATCH = "file://use_host_makedoc.patch"
+TARGET_PATCH = "file://0003-texinfo-Update-to-5.1.patch"
 TARGET_PATCH:class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
-           file://disable-native-tools.patch \
-           file://link-zip.patch \
-           file://dont-depend-on-help2man.patch \
+           file://0001-texinfo-several-changes-to-build-without-zlib-and-nc.patch \
+           file://0002-dont-depend-on-help2man.patch \
            ${TARGET_PATCH} \
            "
 
-SRC_URI[sha256sum] = "3cc5706fb086b895e1dc2b407aade9f95a3a233ff856273e2b659b089f117683"
+SRC_URI[sha256sum] = "dd5710b3a53ac002644677a06145748e260592a35be182dc830ebebb79c5d5a0"
 
 tex_texinfo = "texmf/tex/texinfo"
 
@@ -44,6 +43,7 @@ inherit gettext autotools multilib_script
 MULTILIB_SCRIPTS = "${PN}:${bindir}/texi2any"
 
 EXTRA_AUTORECONF += "-I ${S}/gnulib/m4"
+CACHED_CONFIGUREVARS += "texinfo_cv_sys_iconv_converts_euc_cn=yes"
 
 do_configure:prepend () {
 	# autotools_do_configure updates po/Makefile.in.in, we also need
