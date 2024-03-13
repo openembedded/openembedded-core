@@ -37,14 +37,11 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.19.x;protoc
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
            file://0001-CMakeLists.txt-look-for-lua-with-pkg-config-rather-t.patch \
-           file://0002-docs-CMakeLists.txt-do-not-install-non-existent-docs.patch \
            file://0002-rpmio-rpmglob.c-avoid-using-GLOB_BRACE-if-undefined-.patch \
-           file://0001-Fix-unconditional-dependency-on-non-POSIX-GLOB_ONLYD.patch \
-           file://0001-CMakeLists.txt-restore-readline-support-as-an-explic.patch \
            "
 
 PE = "1"
-SRCREV = "98b301ebb44fb5cabb56fc24bc3aaa437c47c038"
+SRCREV = "13b4521341781293c41ac898aa9c2d2f6bc1f21d"
 
 S = "${WORKDIR}/git"
 
@@ -135,6 +132,8 @@ do_install:append () {
 	sed -i -e 's:${HOSTTOOLS_DIR}/::g' \
             -e 's:${STAGING_DIR_NATIVE}/::g' \
 	    ${D}/${libdir}/rpm/macros
+	sed -i -e 's:${RECIPE_SYSROOT}/::g' \
+	    ${D}/${libdir}/cmake/rpm/rpm-targets.cmake
 
 }
 
