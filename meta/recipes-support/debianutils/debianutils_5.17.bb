@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://debian/copyright;md5=4b667f30411d21bc8fd7db85d502a8e9
 SRC_URI = "git://salsa.debian.org/debian/debianutils.git;protocol=https;branch=master \
            "
 
-SRCREV = "9e0facf19b17b6d090a5dcc8cacb0c16e5ad9f72"
+SRCREV = "baf12e98a02883d1b76081e32f2185ee3497570b"
 
 inherit autotools update-alternatives
 
