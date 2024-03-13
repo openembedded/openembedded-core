@@ -12,12 +12,11 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=main 
            file://0006-add-musleabi-to-known-target-tripets.patch \
            file://0007-dpkg-deb-build.c-Remove-usage-of-clamp-mtime-in-tar.patch \
            file://0001-dpkg-Support-muslx32-build.patch \
-           file://pager.patch \
            file://0001-Add-support-for-riscv32-CPU.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
 
-SRCREV = "744487c98a622b9b38c22c6ca330315af4a30a11"
+SRCREV = "1c92a4a8bfbeea30ceb0109b096c4ec845e3c6ce"
 
 S = "${WORKDIR}/git"
