@@ -21,13 +21,12 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/Linux-PAM-${PV}.tar.xz \
            file://pam.d/common-session-noninteractive \
            file://pam.d/other \
            file://libpam-xtests.patch \
-           file://0001-examples-Replace-use-of-termio.h-with-termios.h.patch \
            file://run-ptest \
            file://pam-volatiles.conf \
            file://0001-pam_namespace-include-stdint-h.patch \
            "
 
-SRC_URI[sha256sum] = "7ac4b50feee004a9fa88f1dfd2d2fa738a82896763050cd773b3c54b0a818283"
+SRC_URI[sha256sum] = "fff4a34e5bbee77e2e8f1992f27631e2329bcbf8a0563ddeb5c3389b4e3169ad"
 
 DEPENDS = "bison-native flex-native cracklib libxml2-native virtual/crypt"
 
