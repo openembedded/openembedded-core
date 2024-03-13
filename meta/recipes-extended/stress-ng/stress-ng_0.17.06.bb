@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master \
            "
-SRCREV = "4e68895f4fe68863b360ab4a6a57e2dfcff85d60"
+SRCREV = "e6bda983cb48a201b6af173204372c7b37d6411f"
 S = "${WORKDIR}/git"
 
 DEPENDS = "coreutils-native libbsd"
