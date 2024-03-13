@@ -9,12 +9,8 @@ DEPENDS = "util-linux"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${PV}/${BP}.tar.gz \
            file://0001-gptcurses-correctly-include-curses.h.patch \
-           file://0001-Updated-guid.cc-to-deal-with-minor-change-in-libuuid.patch \
-           file://0001-Fix-failure-crash-of-sgdisk-when-compiled-with-lates.patch \
-           file://0001-Use-64bit-time_t-on-linux-as-well.patch \
-           file://popt-1.19-follow-up.patch \
            "
-SRC_URI[sha256sum] = "dafead2693faeb8e8b97832b23407f6ed5b3219bc1784f482dd855774e2d50c2"
+SRC_URI[sha256sum] = "2abed61bc6d2b9ec498973c0440b8b804b7a72d7144069b5a9209b2ad693a282"
 
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/gptfdisk/files/gptfdisk/"
 UPSTREAM_CHECK_REGEX = "/gptfdisk/(?P<pver>(\d+[\.\-_]*)+)/"
