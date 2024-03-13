@@ -17,31 +17,15 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://0001-Use-CC-to-check-for-implicit-fallthrough-warning-sup.patch \
            file://0001-fix-gcc-8-format-truncation-warning.patch \
            file://debian-no-Werror.patch \
-           file://0001-Revert-tests-wait-for-complete-rebuild-in-integrity-.patch \
            file://mdadm.init \
            file://0001-mdadm-add-option-y-for-use-syslog-to-recive-event-re.patch \
-           file://include_sysmacros.patch \
-           file://0001-mdadm-skip-test-11spare-migration.patch \
-           file://0001-Fix-parsing-of-r-in-monitor-manager-mode.patch \
            file://0001-Makefile-install-mdcheck.patch \
            file://0001-restripe.c-Use-_FILE_OFFSET_BITS-to-enable-largefile.patch \
-           file://0001-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
-           file://0001-mdadm-Fix-optional-write-behind-parameter.patch \
-           file://0001-tests-02lineargrow-clear-the-superblock-at-every-ite.patch \
-           file://0001-tests-00raid0-add-a-test-that-validates-raid0-with-l.patch \
-           file://0001-tests-fix-raid0-tests-for-0.90-metadata.patch \
-           file://0001-tests-00readonly-Run-udevadm-settle-before-setting-r.patch \
-           file://0001-tests-04update-metadata-avoid-passing-chunk-size-to.patch \
-           file://0001-DDF-Cleanup-validate_geometry_ddf_container.patch \
-           file://0002-DDF-Fix-NULL-pointer-dereference-in-validate_geometr.patch \
-           file://0003-mdadm-Grow-Fix-use-after-close-bug-by-closing-after-.patch \
-           file://0004-monitor-Avoid-segfault-when-calling-NULL-get_bad_blo.patch \
-           file://0005-mdadm-test-Mark-and-ignore-broken-test-failures.patch \
-           file://0006-tests-Add-broken-files-for-all-broken-tests.patch \
-           file://0001-tests-add-.broken-files-for-04update-uuid-and-07reve.patch \
+           file://0002-Create.c-include-linux-falloc.h-for-FALLOC_FL_ZERO_R.patch \
+           file://0001-util.c-add-limits.h-include-for-NAME_MAX-definition.patch \
            "
 
-SRC_URI[sha256sum] = "461c215670864bb74a4d1a3620684aa2b2f8296dffa06743f26dda5557acf01d"
+SRC_URI[sha256sum] = "416727ae1f1080ea6e3090cea36dd076826fc369151e36ab736557ba92196f9f"
 
 inherit autotools-brokensep ptest systemd
 
@@ -59,7 +43,7 @@ CFLAGS:append:mipsarchn64 = ' -D__SANE_USERSPACE_TYPES__'
 CFLAGS:append:mipsarchn32 = ' -D__SANE_USERSPACE_TYPES__'
 
 EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}" SYSTEMD_DIR=${systemd_system_unitdir} \
-                BINDIR="${base_sbindir}" UDEVDIR="${nonarch_base_libdir}/udev"'
+                BINDIR="${base_sbindir}" UDEVDIR="${nonarch_base_libdir}/udev" LDFLAGS="${LDFLAGS}"'
 
 DEBUG_OPTIMIZATION:append = " -Wno-error"
 
@@ -91,7 +75,6 @@ do_install_ptest() {
 	cp -R --no-dereference --preserve=mode,links -v ${S}/tests ${D}${PTEST_PATH}/tests
 	cp ${S}/test ${D}${PTEST_PATH}
 	sed -e 's!sleep 0.*!sleep 1!g; s!/var/tmp!/mdadm-testing-dir!g' -i ${D}${PTEST_PATH}/test
-	sed -e 's!/var/tmp!/mdadm-testing-dir!g' -i ${D}${PTEST_PATH}/tests/*
         sed -i -e '/echo -ne "$_script... "/d' \
                -e 's/echo "succeeded"/echo -e "PASS: $_script"/g' \
                -e '/save_log fail/N; /_fail=1/i\\t\t\techo -ne "FAIL: $_script"' \
