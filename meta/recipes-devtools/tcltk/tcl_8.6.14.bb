@@ -19,13 +19,12 @@ BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
                 file://tcl-add-soname.patch"
 SRC_URI = "${BASE_SRC_URI} \
            file://fix_non_native_build_issue.patch \
-           file://fix_issue_with_old_distro_glibc.patch \
            file://tcl-remove-hardcoded-install-path.patch \
            file://alter-includedir.patch \
            file://interp.patch \
            file://run-ptest \
-"
-SRC_URI[sha256sum] = "c61f0d6699e2bc7691f119b41963aaa8dc980f23532c4e937739832a5f4a6642"
+           "
+SRC_URI[sha256sum] = "ff604f43862a778827d7ecd1ad7686950ac2ef48d9cf69d3424cea9de08d9a72"
 
 SRC_URI:class-native = "${BASE_SRC_URI}"
 
