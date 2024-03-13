@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/GPL-2.0;md5=e6a75371ba4d16749254a51215d13f97
                     file://LICENSES/LGPL-2.1;md5=b370887980db5dd40659b50909238dbd"
 SECTION = "libs"
 
-SRCREV = "dd148189b74da3e2f45c7e536319fec97cb71213"
+SRCREV = "6f6d5802f31992e7527a4c32b43a32fda6bf6bdf"
 SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git;branch=${BPN};protocol=https \
            file://meson.patch"
 
@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
 
 inherit meson pkgconfig
 
-EXTRA_OEMESON = "-Ddocs=false"
+EXTRA_OEMESON = "-Ddoc=false"
 
 PACKAGES += "${PN}-plugins"
 
