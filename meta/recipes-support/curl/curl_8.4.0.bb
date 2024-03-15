@@ -127,6 +127,7 @@ RDEPENDS:${PN}-ptest += " \
 	perl-module-storable \
 	perl-module-time-hires \
 "
+RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us"
 
 PACKAGES =+ "lib${BPN}"
 
