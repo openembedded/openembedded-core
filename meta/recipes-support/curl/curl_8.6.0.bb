@@ -13,6 +13,7 @@ SRC_URI = " \
     https://curl.se/download/${BP}.tar.xz \
     file://run-ptest \
     file://disable-tests \
+    file://no-test-timeout.patch \
 "
 SRC_URI[sha256sum] = "3ccd55d91af9516539df80625f818c734dc6f2ecf9bada33c76765e99121db15"
 
