@@ -102,6 +102,7 @@ do_install_ptest () {
 	install -D ${WORKDIR}/run-bash-ptests ${D}${PTEST_PATH}/run-bash-ptests
         sed -i -e 's/^Makefile/_Makefile/' -e "s,--sysroot=${STAGING_DIR_TARGET},,g" \
 	    -e 's|${DEBUG_PREFIX_MAP}||g' \
+	    -e 's|${BUILD_LDFLAGS}||g' \
 	    -e "s,${S},,g" -e "s,${B},,g" -e "s,${STAGING_DIR_NATIVE},,g" \
 	    -e 's:${HOSTTOOLS_DIR}/::g' \
 	    -e 's:${UNINATIVE_LOADER}:${base_bindir}/false:g' \
