@@ -1,0 +1,35 @@
+From 1d1801902a4944c6f5fa521c19b32fbac7342a0c Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.i.king@gmail.com>
+Date: Sat, 6 Aug 2022 13:05:59 +0000
+Subject: [PATCH] Makefile: avoid calling sync
+
+Original commit message:
+Makefile: use ld-gold if it is available
+
+Speed up linking by using ld-gold if is available. Add build
+time detection to see if compiler allows it
+
+MJ: backported only the "sync" removal from Makefile as calling
+    it from do_compile in the middle of big OE world build harms
+    the build time.
+
+Upstream-Status: Backport [V0.14.04 c10e5c3f9f5560a085279f4c4b399c2f34cb897d]
+
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+---
+ Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index f8f71c54b..23db4c612 100644
+--- a/Makefile
++++ b/Makefile
+@@ -425,7 +425,6 @@ OBJS += $(CONFIG_OBJS)
+ stress-ng: $(OBJS)
+ 	$(Q)echo "LD $@"
+ 	$(V)$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) -lm $(LDFLAGS) -o $@
+-	$(V)sync
+ 
+ config.h:
+ 	+$(MAKE) -f Makefile.config STATIC=$(STATIC) -j
