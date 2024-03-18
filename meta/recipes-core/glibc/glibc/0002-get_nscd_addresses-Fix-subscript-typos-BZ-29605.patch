@@ -1,0 +1,40 @@
+From 707a878b655395f41b954bbed78008d1d9252f1a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=B6rg=20Sonnenberger?= <joerg@bec.de>
+Date: Mon, 26 Sep 2022 13:59:16 -0400
+Subject: [PATCH] get_nscd_addresses: Fix subscript typos [BZ #29605]
+
+Fix the subscript on air->family, which was accidentally set to COUNT
+when it should have remained as I.
+
+Resolves: BZ #29605
+
+Upstream-Status: Backport [https://sourceware.org/git/?p=glibc.git;a=commit;h=c9226c03da0276593a0918eaa9a14835183343e8]
+
+Reviewed-by: Siddhesh Poyarekar <siddhesh@sourceware.org>
+Signed-off-by: Haitao Liu <haitao.liu@windriver.com>
+---
+ sysdeps/posix/getaddrinfo.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sysdeps/posix/getaddrinfo.c b/sysdeps/posix/getaddrinfo.c
+index f4c08d6e3b..fa333ad6ec 100644
+--- a/sysdeps/posix/getaddrinfo.c
++++ b/sysdeps/posix/getaddrinfo.c
+@@ -549,11 +549,11 @@ get_nscd_addresses (const char *name, const struct addrinfo *req,
+ 	  at[count].addr[2] = htonl (0xffff);
+ 	}
+       else if (req->ai_family == AF_UNSPEC
+-	       || air->family[count] == req->ai_family)
++	       || air->family[i] == req->ai_family)
+ 	{
+-	  at[count].family = air->family[count];
++	  at[count].family = air->family[i];
+ 	  memcpy (at[count].addr, addrs, size);
+-	  if (air->family[count] == AF_INET6)
++	  if (air->family[i] == AF_INET6)
+ 	    res->got_ipv6 = true;
+ 	}
+       at[count].next = at + count + 1;
+-- 
+2.35.5
+
