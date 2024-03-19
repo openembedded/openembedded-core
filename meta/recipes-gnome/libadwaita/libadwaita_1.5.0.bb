@@ -11,7 +11,7 @@ DEPENDS = " \
 
 inherit gnomebase gobject-introspection gi-docgen vala features_check
 
-SRC_URI[archive.sha256sum] = "f802b7d8d5ae33be4650ef571a580f144a806202a26f527dacd57d1560938828"
+SRC_URI[archive.sha256sum] = "fd92287df9bb95c963654fb6e70d3e082e2bcb37b147e0e3c905567167993783"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 REQUIRED_DISTRO_FEATURES = "opengl"
