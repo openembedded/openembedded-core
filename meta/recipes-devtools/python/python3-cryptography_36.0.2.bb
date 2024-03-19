@@ -19,6 +19,7 @@ SRC_URI += " \
     file://fix-leak-metric.patch \
     file://CVE-2023-23931.patch \
     file://CVE-2023-49083.patch \
+    file://CVE-2024-26130.patch \
 "
 
 inherit pypi python_setuptools3_rust
