@@ -1,0 +1,52 @@
+From c1e074414f087b6ecc229a9385a44eb3b3dfeaea Mon Sep 17 00:00:00 2001
+From: Kienan Stewart <kstewart@efficios.com>
+Date: Mon, 5 Feb 2024 08:52:29 -0500
+Subject: [PATCH] Fix: ext4_discard_preallocations changed in linux 6.8.0-rc3
+
+See upstream commit:
+
+    commit f0e54b6087de9571ec61c189d6c378b81edbe3b2
+    Author: Kemeng Shi <shikemeng@huaweicloud.com>
+    Date:   Fri Jan 5 17:21:02 2024 +0800
+
+        ext4: remove 'needed' in trace_ext4_discard_preallocations
+
+        As 'needed' to trace_ext4_discard_preallocations is always 0 which
+        is meaningless. Just remove it.
+
+Change-Id: Ib6b698ca553c4beebd4ca791c83bbbb927901758
+Signed-off-by: Kienan Stewart <kstewart@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+Upstream-Status: Backport [https://github.com/lttng/lttng-modules/commit/2da4de37de6382b4440737fdf4320e08a089afcd]
+
+Signed-off-by: Yogesh Tyagi <yogesh.tyagi@intel.com>
+---
+ include/instrumentation/events/ext4.h | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/include/instrumentation/events/ext4.h b/include/instrumentation/events/ext4.h
+index 222416e..05a6453 100644
+--- a/include/instrumentation/events/ext4.h
++++ b/include/instrumentation/events/ext4.h
+@@ -490,7 +490,19 @@ LTTNG_TRACEPOINT_EVENT(ext4_mb_release_group_pa,
+ )
+ #endif
+ 
+-#if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(5,9,0) || \
++#if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(6,8,0))
++LTTNG_TRACEPOINT_EVENT(ext4_discard_preallocations,
++	TP_PROTO(struct inode *inode, unsigned int len),
++
++	TP_ARGS(inode, len),
++
++	TP_FIELDS(
++		ctf_integer(dev_t, dev, inode->i_sb->s_dev)
++		ctf_integer(ino_t, ino, inode->i_ino)
++		ctf_integer(unsigned int, len, len)
++	)
++)
++#elif (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(5,9,0) || \
+ 	LTTNG_KERNEL_RANGE(5,8,6, 5,9,0))
+ LTTNG_TRACEPOINT_EVENT(ext4_discard_preallocations,
+ 	TP_PROTO(struct inode *inode, unsigned int len, unsigned int needed),

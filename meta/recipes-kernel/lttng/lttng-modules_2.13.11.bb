@@ -15,6 +15,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0003-Fix-strlcopy-removed-in-linux-6.8.0-rc1.patch \
            file://0004-Fix-btrfs_chunk-tracepoints-changed-in-linux-6.8.0-r.patch \
            file://0005-Fix-btrfs_get_extent-flags-and-compress_type-changed.patch \
+           file://0006-Fix-ext4_discard_preallocations-changed-in-linux-6.8.patch \
         "
 
 # Use :append here so that the patch is applied also when using devupstream
