@@ -20,6 +20,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://reproducibility.patch \
            file://0001-Configure-add-2-missing-key-sorts.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
+           file://CVE-2024-0727.patch \
            "
 
 SRC_URI_append_class-nativesdk = " \
