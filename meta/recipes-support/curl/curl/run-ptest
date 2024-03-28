@@ -8,4 +8,4 @@ cd tests
 # Run four tests in parallel
 # Print log output on failure
 # Don't run the flaky or timing dependent tests
-./runtests.pl -a -n -am -j4 -p '!flaky !timing-dependent'
+./runtests.pl -a -n -am -j4 -p !flaky !timing-dependent
