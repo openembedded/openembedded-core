@@ -28,7 +28,6 @@ PTESTS_FAST = "\
     json-c \
     json-glib \
     libconvert-asn1-perl \
-    liberror-perl \
     libgpg-error\
     libnl \
     libpcre \
