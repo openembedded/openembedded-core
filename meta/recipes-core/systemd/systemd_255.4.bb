@@ -249,6 +249,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dsystem-alloc-gid-min=101 \
                   -Dsystem-gid-max=999 \
                   -Dcreate-log-dirs=false \
+                  ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', '-Ddefault-mdns=no -Ddefault-llmnr=no', '', d)} \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
