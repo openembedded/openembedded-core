@@ -772,15 +772,16 @@ addtask tmptask2 before do_tmptask1
 
             def find_siginfo(pn, taskname, sigs=None):
                 result = None
+                command_complete = False
                 tinfoil.set_event_mask(["bb.event.FindSigInfoResult",
                                 "bb.command.CommandCompleted"])
                 ret = tinfoil.run_command("findSigInfo", pn, taskname, sigs)
                 if ret:
-                    while True:
+                    while result is None or not command_complete:
                         event = tinfoil.wait_event(1)
                         if event:
                             if isinstance(event, bb.command.CommandCompleted):
-                                break
+                                command_complete = True
                             elif isinstance(event, bb.event.FindSigInfoResult):
                                 result = event.result
                 return result
