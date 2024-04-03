@@ -48,6 +48,9 @@ PACKAGECONFIG[gdbm] = ",-Ui_gdbm,gdbm"
 # Don't generate comments in enc2xs output files. They are not reproducible
 export ENC2XS_NO_COMMENTS = "1"
 
+# Duplicate of CVE-2023-47038, which has already been patched as of perl_5.34.3
+CVE_CHECK_IGNORE:append = " CVE-2023-47100"
+
 do_configure:prepend() {
     cp -rfp ${STAGING_DATADIR_NATIVE}/perl-cross/* ${S}
 }
