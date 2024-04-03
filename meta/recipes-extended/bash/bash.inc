@@ -74,7 +74,8 @@ do_install:append () {
 		mv ${D}${bindir}/bash ${D}${base_bindir}
 	fi
 }
-do_install:append:class-target () {
+
+fix_absolute_paths () {
 	# Clean buildhost references in bashbug
 	sed -i -e "s,--sysroot=${STAGING_DIR_TARGET},,g" \
 		-e "s,-I${WORKDIR}/\S* ,,g" \
@@ -91,6 +92,14 @@ do_install:append:class-target () {
 		-e 's:${HOSTTOOLS_DIR}/::g' \
 		-e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
 		${D}${libdir}/bash/Makefile.inc
+}
+
+do_install:append:class-target () {
+	fix_absolute_paths
+}
+
+do_install:append:class-nativesdk () {
+	fix_absolute_paths
 }
 
 do_install_ptest () {
