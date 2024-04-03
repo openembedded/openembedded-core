@@ -10,18 +10,16 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-Fix-sched_stat_runtime-changed-in-linux-6.8.0-rc1.patch \
-           file://0002-Fix-timer_start-changed-in-linux-6.8.0-rc1.patch \
-           file://0003-Fix-strlcopy-removed-in-linux-6.8.0-rc1.patch \
-           file://0004-Fix-btrfs_chunk-tracepoints-changed-in-linux-6.8.0-r.patch \
-           file://0005-Fix-btrfs_get_extent-flags-and-compress_type-changed.patch \
-           file://0006-Fix-ext4_discard_preallocations-changed-in-linux-6.8.patch \
+           file://0001-Fix-ASoC-snd_doc_dapm-on-linux-6.9-rc1.patch \
+           file://0002-Fix-ASoC-add-component-to-set_bias_level-events-in-l.patch \
+           file://0003-Fix-mm_compaction_migratepages-changed-in-linux-6.9-.patch \
+           file://0004-Fix-dev_base_lock-removed-in-linux-6.9-rc1.patch \
         "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "297211d6fda459c85793c1f498c90fad2939cda7939d503f3ec5eaaf5fbec3c7"
+SRC_URI[sha256sum] = "d85fcb66c7bd31003ab8735e8c77700e5e4f417b4c22fe1f20112cf435abad79"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
