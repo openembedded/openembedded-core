@@ -129,6 +129,7 @@ EXTRA_OEMAKE += "\
 # honour a JOBS variable.
 EXTRA_OEMAKE:append:task-configure = " JOBS=1"
 
+# include/uapi/asm is for: include/uapi/asm/bpf_perf_event.h
 PERF_SRC ?= "Makefile \
              tools/arch \
              tools/build \
@@ -139,6 +140,7 @@ PERF_SRC ?= "Makefile \
              tools/scripts \
              scripts/ \
              arch/arm64/tools \
+             arch/${ARCH}/include/uapi/asm/ \
              arch/${ARCH}/Makefile \
 "
 
