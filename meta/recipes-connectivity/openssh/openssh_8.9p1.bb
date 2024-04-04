@@ -49,6 +49,11 @@ CVE_CHECK_IGNORE += "CVE-2014-9278"
 # CVE only applies to some distributed RHEL binaries
 CVE_CHECK_IGNORE += "CVE-2008-3844"
 
+# Upstream does not consider CVE-2023-51767 a bug underlying in OpenSSH and
+# does not intent to address it in OpenSSH
+# https://security-tracker.debian.org/tracker/CVE-2023-51767
+CVE_CHECK_IGNORE += "CVE-2023-51767"
+
 PAM_SRC_URI = "file://sshd"
 
 inherit manpages useradd update-rc.d update-alternatives systemd
