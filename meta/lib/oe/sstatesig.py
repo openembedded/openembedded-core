@@ -339,7 +339,7 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHashMixIn, bb.sigge
             except FileNotFoundError:
                 pass
             except netrc.NetrcParseError as e:
-                bb.warn("Error parsing %s:%d: %s" % (e.filename, e.lineno, e.msg))
+                bb.warn("Error parsing %s:%s: %s" % (e.filename, str(e.lineno), e.msg))
 
 # Insert these classes into siggen's namespace so it can see and select them
 bb.siggen.SignatureGeneratorOEBasicHash = SignatureGeneratorOEBasicHash
