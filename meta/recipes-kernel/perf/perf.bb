@@ -129,7 +129,10 @@ EXTRA_OEMAKE += "\
 # honour a JOBS variable.
 EXTRA_OEMAKE:append:task-configure = " JOBS=1"
 
-# include/uapi/asm is for: include/uapi/asm/bpf_perf_event.h
+# the architectures that need this file can be found in
+#    tools/include/uapi/asm/bpf_perf_event.h
+# We are only listing supported arches at the moment
+PERF_BPF_EVENT_SRC ?= '${@bb.utils.contains_any("ARCH", [ "riscv", "arm64" ], "arch/${ARCH}/include/uapi/asm/bpf_perf_event.h", "", d)}'
 PERF_SRC ?= "Makefile \
              tools/arch \
              tools/build \
@@ -140,7 +143,7 @@ PERF_SRC ?= "Makefile \
              tools/scripts \
              scripts/ \
              arch/arm64/tools \
-             arch/${ARCH}/include/uapi/asm/ \
+             ${PERF_BPF_EVENT_SRC} \
              arch/${ARCH}/Makefile \
 "
 
