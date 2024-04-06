@@ -33,6 +33,8 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>edk2-stable.*)"
 CVE_PRODUCT = "edk2"
 CVE_VERSION = "${@d.getVar('PV').split('stable')[1]}"
 
+CVE_STATUS[CVE-2014-8271] = "fixed-version: Fixed in svn_16280, which is an unusual versioning breaking version comparison."
+
 inherit deploy
 
 PARALLEL_MAKE = ""
