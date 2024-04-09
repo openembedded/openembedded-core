@@ -11,7 +11,7 @@ SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
            file://99_mandb \
            file://0001-man-Move-local-variable-declaration-to-function-scop.patch \
           "
-SRC_URI[sha256sum] = "415a6284a22764ad22ff0f66710d853be7790dd451cd71436e3d25c74d996a95"
+SRC_URI[sha256sum] = "ddee249daeb78cf92bab794ccd069cc8b575992265ea20e239e887156e880265"
 
 DEPENDS = "libpipeline gdbm groff-native base-passwd"
 RDEPENDS:${PN} += "base-passwd"
