@@ -12,7 +12,7 @@ DEPENDS = "glib-2.0 groff-native"
 inherit autotools pkgconfig github-releases
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/enchant-${PV}.tar.gz"
-SRC_URI[sha256sum] = "f565923062c77f3d58846f0558d21e6d07ca4a488c58812dfdefb35202fac7ae"
+SRC_URI[sha256sum] = "d9a5a10dc9b38a43b3a0fa22c76ed6ebb7e09eb535aff62954afcdbd40efff6b"
 
 GITHUB_BASE_URI = "https://github.com/AbiWord/enchant/releases"
 
