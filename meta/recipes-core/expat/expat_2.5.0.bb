@@ -22,18 +22,6 @@ SRC_URI = "https://github.com/libexpat/libexpat/releases/download/R_${VERSION_TA
 	   file://CVE-2023-52426-009.patch \
 	   file://CVE-2023-52426-010.patch \
 	   file://CVE-2023-52426-011.patch \
-	   file://CVE-2023-52425-0001.patch \
-           file://CVE-2023-52425-0002.patch \
-           file://CVE-2023-52425-0003.patch \
-           file://CVE-2023-52425-0004.patch \
-           file://CVE-2023-52425-0005.patch \
-           file://CVE-2023-52425-0006.patch \
-           file://CVE-2023-52425-0007.patch \
-           file://CVE-2023-52425-0008.patch \
-           file://CVE-2023-52425-0009.patch \
-           file://CVE-2023-52425-0010.patch \
-           file://CVE-2023-52425-0011.patch \
-	   file://CVE-2023-52425-0012.patch \
            "
 
 UPSTREAM_CHECK_URI = "https://github.com/libexpat/libexpat/releases/"
