@@ -12,13 +12,13 @@ Signed-off-by: Maxin B. John <maxin.john@enea.com>
 Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 Signed-off-by: Mingli Yu <Mingli.Yu@windriver.com>
 ---
- svr-authpam.c | 2 +-
+ src/svr-authpam.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/svr-authpam.c b/svr-authpam.c
+diff --git a/srec/svr-authpam.c b/src/svr-authpam.c
 index d201bc9..165ec5c 100644
---- a/svr-authpam.c
-+++ b/svr-authpam.c
+--- a/src/svr-authpam.c
++++ b/src/svr-authpam.c
 @@ -223,7 +223,7 @@ void svr_auth_pam(int valid_user) {
  	}
  

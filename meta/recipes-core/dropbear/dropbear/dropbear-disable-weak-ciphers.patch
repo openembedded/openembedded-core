@@ -10,13 +10,13 @@ and we want to support the stong algorithms.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Joseph Reynolds <joseph.reynolds1@ibm.com>
 ---
- default_options.h | 2 +-
+ src/default_options.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/default_options.h b/default_options.h
+diff --git a/src/default_options.h b/src/default_options.h
 index d417588..bc5200f 100644
---- a/default_options.h
-+++ b/default_options.h
+--- a/src/default_options.h
++++ b/src/default_options.h
 @@ -180,7 +180,7 @@ IMPORTANT: Some options will require "make clean" after changes */
   * Small systems should generally include either curve25519 or ecdh for performance.
   * curve25519 is less widely supported but is faster

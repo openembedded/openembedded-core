@@ -2,14 +2,14 @@ Subject: [PATCH 1/6] urandom-xauth-changes-to-options.h
 
 Upstream-Status: Inappropriate [configuration]
 ---
- default_options.h | 2 +-
+ src/default_options.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/default_options.h b/default_options.h
-index 349338c..5ffac25 100644
---- a/default_options.h
-+++ b/default_options.h
-@@ -289,7 +289,7 @@ group1 in Dropbear server too */
+diff --git a/src/default_options.h b/src/default_options.h
+index 6e970bb..ccc8b47 100644
+--- a/src/default_options.h
++++ b/src/default_options.h
+@@ -311,7 +311,7 @@ group1 in Dropbear server too */
  
  /* The command to invoke for xauth when using X11 forwarding.
   * "-q" for quiet */
@@ -19,5 +19,5 @@ index 349338c..5ffac25 100644
  
  /* If you want to enable running an sftp server (such as the one included with
 -- 
-2.25.1
+2.34.1
 

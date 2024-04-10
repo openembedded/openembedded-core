@@ -11,13 +11,13 @@ Upstream-Status: Pending
 Signed-off-by: Xiaofeng Yan <xiaofeng.yan@windriver.com>
 Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 ---
- default_options.h | 4 ++--
+ src/default_options.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/default_options.h b/default_options.h
+diff --git a/src/default_options.h b/src/default_options.h
 index 0e3d027..349338c 100644
---- a/default_options.h
-+++ b/default_options.h
+--- a/src/default_options.h
++++ b/src/default_options.h
 @@ -210,7 +210,7 @@ group1 in Dropbear server too */
  
  /* Authentication Types - at least one required.
