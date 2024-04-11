@@ -7,7 +7,7 @@ SRC_URI[sha256sum] = "c775fedf74bc0f9189c2a3be1c12fd03e8c23f4d371dce795df44e06c5
 
 inherit pypi python_hatchling
 
-DEPENDS += "${PYTHON_PN}-hatch-vcs-native"
+DEPENDS += "python3-hatch-vcs-native"
 
 RDEPENDS:${PN} += "python3-rpds-py"
 
