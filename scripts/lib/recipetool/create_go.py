@@ -16,7 +16,7 @@ from html.parser import HTMLParser
 from recipetool.create import RecipeHandler, handle_license_vars
 from recipetool.create import guess_license, tidy_licenses, fixup_license
 from recipetool.create import determine_from_url
-from urllib.error import URLError
+from urllib.error import URLError, HTTPError
 
 import bb.utils
 import json
@@ -251,15 +251,18 @@ class GoRecipeHandler(RecipeHandler):
         req = urllib.request.Request(url)
 
         try:
-            resp = urllib.request.urlopen(req)
-
+            body = urllib.request.urlopen(req).read()
+        except HTTPError as http_err:
+            logger.warning(
+                "Unclean status when fetching page from [%s]: %s", url, str(http_err))
+            body = http_err.fp.read()
         except URLError as url_err:
             logger.warning(
                 "Failed to fetch page from [%s]: %s", url, str(url_err))
             return None
 
         parser = GoImportHTMLParser()
-        parser.feed(resp.read().decode('utf-8'))
+        parser.feed(body.decode('utf-8'))
         parser.close()
 
         return GoImport(parser.import_prefix, parser.vcs, parser.repourl, None)
