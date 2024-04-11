@@ -225,7 +225,7 @@ class GoRecipeHandler(RecipeHandler):
 
             def __init__(self):
                 super().__init__()
-                self.__srv = []
+                self.__srv = {}
 
             def handle_starttag(self, tag, attrs):
                 if tag == 'meta' and list(
@@ -233,19 +233,14 @@ class GoRecipeHandler(RecipeHandler):
                     content = list(
                         filter(lambda a: (a[0] == 'content'), attrs))
                     if content:
-                        self.__srv = content[0][1].split()
+                        srv = content[0][1].split()
+                        self.__srv[srv[0]] = srv
 
-            @property
-            def import_prefix(self):
-                return self.__srv[0] if len(self.__srv) else None
-
-            @property
-            def vcs(self):
-                return self.__srv[1] if len(self.__srv) else None
-
-            @property
-            def repourl(self):
-                return self.__srv[2] if len(self.__srv) else None
+            def go_import(self, modulepath):
+                if modulepath in self.__srv:
+                    srv = self.__srv[modulepath]
+                    return GoImport(srv[0], srv[1], srv[2], None)
+                return None
 
         url = url.geturl() + "?go-get=1"
         req = urllib.request.Request(url)
@@ -265,7 +260,7 @@ class GoRecipeHandler(RecipeHandler):
         parser.feed(body.decode('utf-8'))
         parser.close()
 
-        return GoImport(parser.import_prefix, parser.vcs, parser.repourl, None)
+        return parser.go_import(modulepath)
 
     def __resolve_from_golang_proxy(self, modulepath, version):
         """
