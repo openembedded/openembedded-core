@@ -14,6 +14,7 @@ RPROVIDES:${PN} = "console-tools"
 RCONFLICTS:${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
+           file://0001-Remove-non-free-Agafari-fonts.patch \
            "
 
 SRC_URI[sha256sum] = "519f8d087aecca7e0a33cd084bef92c066eb19731666653dcc70c9d71aa40926"
@@ -33,6 +34,12 @@ FILES:${PN}-keymaps = "${datadir}/keymaps"
 FILES:${PN}-unimaps = "${datadir}/unimaps"
 
 RRECOMMENDS:${PN}-keymaps = "${PN}-keymaps-pine"
+
+# remove this when upgrading to newer version which has integrated
+# https://github.com/legionus/kbd/commit/b757e6842f9631757f0d1a6b3833aabffa9ffeee
+do_configure:prepend() {
+    rm -rf ${S}/data/consolefonts/Agafari-1*
+}
 
 do_install:append () {
     if [ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)}" = "yes" ] \
