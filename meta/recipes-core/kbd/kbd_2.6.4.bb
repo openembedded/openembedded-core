@@ -24,12 +24,15 @@ PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)} \
 
 PACKAGECONFIG[pam] = "--enable-vlock, --disable-vlock, libpam,"
 
-PACKAGES += "${PN}-consolefonts ${PN}-keymaps ${PN}-unimaps ${PN}-consoletrans"
+PACKAGES += "${PN}-consolefonts ${PN}-keymaps-pine ${PN}-keymaps ${PN}-unimaps ${PN}-consoletrans"
 
 FILES:${PN}-consolefonts = "${datadir}/consolefonts"
 FILES:${PN}-consoletrans = "${datadir}/consoletrans"
+FILES:${PN}-keymaps-pine = "${datadir}/keymaps/pine"
 FILES:${PN}-keymaps = "${datadir}/keymaps"
 FILES:${PN}-unimaps = "${datadir}/unimaps"
+
+RRECOMMENDS:${PN}-keymaps = "${PN}-keymaps-pine"
 
 do_install:append () {
     if [ "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'yes', 'no', d)}" = "yes" ] \
