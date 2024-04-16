@@ -5,3 +5,6 @@ RUSTSRC = "${WORKDIR}/rustc-${PV}-src"
 
 UPSTREAM_CHECK_URI = "https://forge.rust-lang.org/infra/other-installation-methods.html"
 UPSTREAM_CHECK_REGEX = "rustc-(?P<pver>\d+(\.\d+)+)-src"
+
+#CVE-2024-24576 is specific to Microsoft Windows
+CVE_CHECK_IGNORE += "CVE-2024-24576"
