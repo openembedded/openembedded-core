@@ -21,7 +21,7 @@ The portion of the patch that implements a fallback is ported from
 Alpine Linux:
 http://git.alpinelinux.org/cgit/aports/plain/testing/connman/libresolv.patch
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [to connman@lists.linux.dev,marcel@holtmann.org]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
