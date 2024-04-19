@@ -4,7 +4,7 @@ Fixes for the Meson build of libtraceevent:
 - Install the plugins as modules not static and versioned shared libraries
 - Add an option to disable building the documentation (needs asciidoc and xmlto)
 
-Upstream-Status: Pending
+Upstream-Status: Submitted [https://lore.kernel.org/linux-trace-devel/20240311111140.1789879-1-alex@linutronix.de/T/#u]
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 
 diff --git a/meson.build b/meson.build
