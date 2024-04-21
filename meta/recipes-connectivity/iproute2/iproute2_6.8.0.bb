@@ -13,7 +13,7 @@ DEPENDS = "flex-native bison-native iptables libcap"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz"
 
-SRC_URI[sha256sum] = "ff942dd9828d7d1f867f61fe72ce433078c31e5d8e4a78e20f02cb5892e8841d"
+SRC_URI[sha256sum] = "03a6cca3d71a908d1f15f7b495be2b8fe851f941458dc4664900d7f45fcf68ce"
 
 inherit update-alternatives bash-completion pkgconfig
 
@@ -51,6 +51,9 @@ do_install () {
     install -d ${D}${datadir}
     mv ${D}/share/* ${D}${datadir}/ || true
     rm ${D}/share -rf || true
+
+    # Remove support fot ipt and xt in tc. So tc library directory is not needed.
+    rm ${D}${libdir}/tc -rf
 }
 
 # The .so files in iproute2-tc are modules, not traditional libraries
