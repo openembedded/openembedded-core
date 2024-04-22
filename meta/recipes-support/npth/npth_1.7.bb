@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2caced0b25dfefd4c601d92bd15116de"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 
 SRC_URI = "${GNUPG_MIRROR}/npth/npth-${PV}.tar.bz2 \
-           file://pkgconfig.patch \
            file://musl-fix.patch \
            "
 
