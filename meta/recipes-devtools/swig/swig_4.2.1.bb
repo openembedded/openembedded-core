@@ -13,50 +13,15 @@ SECTION = "devel"
 DEPENDS = "libpcre2 bison-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz \
-            file://0001-Use-proc-self-exe-for-swig-swiglib-on-non-Win32-plat.patch \
-            file://0001-configure-use-pkg-config-for-pcre-detection.patch \
             file://determinism.patch \
            "
 SRC_URI[sha256sum] = "fa045354e2d048b2cddc69579e4256245d4676894858fcf0bab2290ecf59b7d8"
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/swig/files/swig/"
 UPSTREAM_CHECK_REGEX = "swig-(?P<pver>\d+(\.\d+)+)"
 
-inherit autotools python3native pkgconfig
-
-EXTRA_OECONF = " \
-    --with-python3=${PYTHON} \
-    --without-allegrocl \
-    --without-android \
-    --without-boost \
-    --without-chicken \
-    --without-clisp \
-    --without-csharp \
-    --without-d \
-    --without-gcj \
-    --without-go \
-    --without-guile \
-    --without-java \
-    --without-lua \
-    --without-mzscheme \
-    --without-ocaml \
-    --without-octave \
-    --without-perl5 \
-    --without-pike \
-    --without-php \
-    --without-r \
-    --without-ruby \
-    --without-tcl \
-"
-
-EXTRA_AUTORECONF += "-I Tools/config"
+inherit cmake pkgconfig
 
 BBCLASSEXTEND = "native nativesdk"
-
-# necessary together with bison dependency until a new upstream version after
-# 3.0.12 includes 0001-Fix-generated-code-for-constant-expressions-containi.patch
-do_configure:append() {
-    mkdir -p ${B}/Source/CParse
-}
 
 do_install:append:class-nativesdk() {
     cd ${D}${bindir}
@@ -69,4 +34,12 @@ def swiglib_relpath(d):
 
 do_install:append:class-native() {
     create_wrapper ${D}${bindir}/swig SWIG_LIB='`dirname $''realpath`'/${@swiglib_relpath(d)}
+}
+
+PACKAGE_PREPROCESS_FUNCS += "src_package_preprocess"
+src_package_preprocess () {
+        # Trim build paths from comments and defines in generated sources to ensure reproducibility
+        sed -i -e "s,${WORKDIR},,g" \
+            -e "s,YY_YY_.*_CPARSE_PARSER_H_INCLUDED,YY_YY_CPARSE_PARSER_H_INCLUDED,g" \
+            ${B}/Source/CParse/parser.*
 }
