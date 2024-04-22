@@ -12,7 +12,7 @@ SRC_URI = "${GNUPG_MIRROR}/npth/npth-${PV}.tar.bz2 \
 
 SRC_URI[sha256sum] = "8589f56937b75ce33b28d312fccbf302b3b71ec3f3945fde6aaa74027914ad05"
 
-inherit autotools binconfig-disabled multilib_header
+inherit autotools multilib_header
 
 FILES:${PN} = "${libdir}/libnpth.so.*"
 
