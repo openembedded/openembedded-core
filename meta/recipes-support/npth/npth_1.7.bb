@@ -14,8 +14,6 @@ SRC_URI[sha256sum] = "8589f56937b75ce33b28d312fccbf302b3b71ec3f3945fde6aaa740279
 
 inherit autotools multilib_header
 
-FILES:${PN} = "${libdir}/libnpth.so.*"
-
 do_install:append() {
     oe_multilib_header npth.h
 }
