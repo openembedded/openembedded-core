@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/pypa/trove-classifiers"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
-SRC_URI[sha256sum] = "df7edff9c67ff86b733628998330b180e81d125b1e096536d83ac0fd79673fdc"
+SRC_URI[sha256sum] = "49f40bb6a746b72a1cba4f8d55ee8252169cda0f70802e3fd24f04b7fb25a492"
 
 inherit pypi python_setuptools_build_meta ptest
 
