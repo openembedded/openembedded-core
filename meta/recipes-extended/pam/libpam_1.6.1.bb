@@ -23,10 +23,9 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/Linux-PAM-${PV}.tar.xz \
            file://libpam-xtests.patch \
            file://run-ptest \
            file://pam-volatiles.conf \
-           file://0001-pam_namespace-include-stdint-h.patch \
            "
 
-SRC_URI[sha256sum] = "fff4a34e5bbee77e2e8f1992f27631e2329bcbf8a0563ddeb5c3389b4e3169ad"
+SRC_URI[sha256sum] = "f8923c740159052d719dbfc2a2f81942d68dd34fcaf61c706a02c9b80feeef8e"
 
 DEPENDS = "bison-native flex-native cracklib libxml2-native virtual/crypt"
 
