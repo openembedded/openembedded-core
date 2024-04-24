@@ -15,7 +15,7 @@ SRC_URI = "https://xorg.freedesktop.org/archive/individual/proto/${BP}.tar.xz \
            file://0001-xcb-proto.pc.in-reinstate-libdir.patch \
            file://0001-Fix-install-conflict-when-enable-multilib.patch \
            "
-SRC_URI[sha256sum] = "a75a1848ad2a89a82d841a51be56ce988ff3c63a8d6bf4383ae3219d8d915119"
+SRC_URI[sha256sum] = "2c1bacd2110f4799f74de6ebb714b94cf6f80fb112316b1219480fd22562148c"
 
 inherit autotools pkgconfig python3native
 
