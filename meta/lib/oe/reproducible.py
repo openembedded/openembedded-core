@@ -120,7 +120,7 @@ def get_source_date_epoch_from_git(d, sourcedir):
     return int(p.stdout.decode('utf-8'))
 
 def get_source_date_epoch_from_youngest_file(d, sourcedir):
-    if sourcedir == d.getVar('WORKDIR'):
+    if sourcedir == d.getVar('UNPACKDIR'):
        # These sources are almost certainly not from a tarball
        return None
 
