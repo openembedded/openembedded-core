@@ -286,10 +286,13 @@ class DevtoolTestCase(OESelftestTestCase):
         else:
             self.skipTest('No tap devices found - you must set up tap devices with scripts/runqemu-gen-tapdevs before running this test')
 
-    def _test_devtool_add_git_url(self, git_url, version, pn, resulting_src_uri):
+    def _test_devtool_add_git_url(self, git_url, version, pn, resulting_src_uri, srcrev=None):
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        result = runCmd('devtool add --version %s %s %s' % (version, pn, git_url))
+        command = 'devtool add --version %s %s %s' % (version, pn, git_url)
+        if srcrev :
+            command += ' --srcrev %s' %srcrev
+        result = runCmd(command)
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created')
         # Check the recipe name is correct
         recipefile = get_bb_var('FILE', pn)
@@ -479,11 +482,12 @@ class DevtoolAddTests(DevtoolBase):
 
     def test_devtool_add_git_style2(self):
         version = 'v3.1.0'
+        srcrev = 'v3.1.0'
         pn = 'mbedtls'
         # this will trigger reformat_git_uri with branch parameter in url
         git_url = "'git://git@github.com/ARMmbed/mbedtls.git;protocol=https'"
         resulting_src_uri = "gitsm://git@github.com/ARMmbed/mbedtls.git;protocol=https;branch=master"
-        self._test_devtool_add_git_url(git_url, version, pn, resulting_src_uri)
+        self._test_devtool_add_git_url(git_url, version, pn, resulting_src_uri, srcrev)
 
     def test_devtool_add_library(self):
         # Fetch source
