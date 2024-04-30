@@ -10,10 +10,10 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 do_install () {
 	install -d ${D}${sysconfdir}/dropbear
-	install ${WORKDIR}/dropbear_rsa_host_key -m 0600 ${D}${sysconfdir}/dropbear/
+	install ${UNPACKDIR}/dropbear_rsa_host_key -m 0600 ${D}${sysconfdir}/dropbear/
 
 	install -d ${D}${sysconfdir}/ssh
-	install ${WORKDIR}/openssh/* ${D}${sysconfdir}/ssh/
+	install ${UNPACKDIR}/openssh/* ${D}${sysconfdir}/ssh/
 	chmod 0600 ${D}${sysconfdir}/ssh/*
 	chmod 0644 ${D}${sysconfdir}/ssh/*.pub
 }

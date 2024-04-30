@@ -58,8 +58,8 @@ do_install:append() {
     install -d ${D}${sysconfdir}/init.d
     install -d ${D}${systemd_system_unitdir}
 
-    install -m 0644 ${WORKDIR}/kea-dhcp*service ${D}${systemd_system_unitdir}
-    install -m 0755 ${WORKDIR}/kea-*-server ${D}${sysconfdir}/init.d
+    install -m 0644 ${UNPACKDIR}/kea-dhcp*service ${D}${systemd_system_unitdir}
+    install -m 0755 ${UNPACKDIR}/kea-*-server ${D}${sysconfdir}/init.d
     sed -i -e 's,@SBINDIR@,${sbindir},g' -e 's,@BASE_BINDIR@,${base_bindir},g' \
            -e 's,@LOCALSTATEDIR@,${localstatedir},g' -e 's,@SYSCONFDIR@,${sysconfdir},g' \
            ${D}${systemd_system_unitdir}/kea-dhcp*service ${D}${sbindir}/keactrl

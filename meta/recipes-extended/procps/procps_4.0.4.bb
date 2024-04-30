@@ -41,7 +41,7 @@ do_install:append () {
         fi
 
         install -d ${D}${sysconfdir}
-        install -m 0644 ${WORKDIR}/sysctl.conf ${D}${sysconfdir}/sysctl.conf
+        install -m 0644 ${UNPACKDIR}/sysctl.conf ${D}${sysconfdir}/sysctl.conf
         if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
                 install -d ${D}${sysconfdir}/sysctl.d
                 ln -sf ../sysctl.conf ${D}${sysconfdir}/sysctl.d/99-sysctl.conf

@@ -76,7 +76,7 @@ do_install() {
 		${D}${sbindir} \
 		${D}${localstatedir}
 
-	install -m 0644 ${WORKDIR}/dropbear.default ${D}${sysconfdir}/default/dropbear
+	install -m 0644 ${UNPACKDIR}/dropbear.default ${D}${sysconfdir}/default/dropbear
 
 	install -m 0755 dropbearmulti ${D}${sbindir}/
 
@@ -94,18 +94,18 @@ do_install() {
 		-e 's,/usr/sbin,${sbindir},g' \
 		-e 's,/var,${localstatedir},g' \
 		-e 's,/usr/bin,${bindir},g' \
-		-e 's,/usr,${prefix},g' ${WORKDIR}/init > ${D}${sysconfdir}/init.d/dropbear
+		-e 's,/usr,${prefix},g' ${UNPACKDIR}/init > ${D}${sysconfdir}/init.d/dropbear
 	chmod 755 ${D}${sysconfdir}/init.d/dropbear
 	if [ "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}" ]; then
 		install -d ${D}${sysconfdir}/pam.d
-		install -m 0644 ${WORKDIR}/dropbear  ${D}${sysconfdir}/pam.d/
+		install -m 0644 ${UNPACKDIR}/dropbear  ${D}${sysconfdir}/pam.d/
 	fi
 
 	# deal with systemd unit files
 	install -d ${D}${systemd_system_unitdir}
-	install -m 0644 ${WORKDIR}/dropbearkey.service ${D}${systemd_system_unitdir}
-	install -m 0644 ${WORKDIR}/dropbear@.service ${D}${systemd_system_unitdir}
-	install -m 0644 ${WORKDIR}/dropbear.socket ${D}${systemd_system_unitdir}
+	install -m 0644 ${UNPACKDIR}/dropbearkey.service ${D}${systemd_system_unitdir}
+	install -m 0644 ${UNPACKDIR}/dropbear@.service ${D}${systemd_system_unitdir}
+	install -m 0644 ${UNPACKDIR}/dropbear.socket ${D}${systemd_system_unitdir}
 	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 		-e 's,@BINDIR@,${bindir},g' \
 		-e 's,@SBINDIR@,${sbindir},g' \

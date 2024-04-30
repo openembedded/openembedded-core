@@ -52,10 +52,10 @@ IPTABLES_RULES_DIR ?= "${sysconfdir}/${BPN}"
 
 do_install:append() {
     install -d ${D}${IPTABLES_RULES_DIR}
-    install -m 0644 ${WORKDIR}/iptables.rules ${D}${IPTABLES_RULES_DIR}
+    install -m 0644 ${UNPACKDIR}/iptables.rules ${D}${IPTABLES_RULES_DIR}
 
     install -d ${D}${systemd_system_unitdir}
-    install -m 0644 ${WORKDIR}/iptables.service ${D}${systemd_system_unitdir}
+    install -m 0644 ${UNPACKDIR}/iptables.service ${D}${systemd_system_unitdir}
 
     sed -i \
         -e 's,@SBINDIR@,${sbindir},g' \
@@ -63,8 +63,8 @@ do_install:append() {
         ${D}${systemd_system_unitdir}/iptables.service
 
     if ${@bb.utils.contains('PACKAGECONFIG', 'ipv6', 'true', 'false', d)} ; then
-        install -m 0644 ${WORKDIR}/ip6tables.rules ${D}${IPTABLES_RULES_DIR}
-        install -m 0644 ${WORKDIR}/ip6tables.service ${D}${systemd_system_unitdir}
+        install -m 0644 ${UNPACKDIR}/ip6tables.rules ${D}${IPTABLES_RULES_DIR}
+        install -m 0644 ${UNPACKDIR}/ip6tables.service ${D}${systemd_system_unitdir}
 
         sed -i \
             -e 's,@SBINDIR@,${sbindir},g' \

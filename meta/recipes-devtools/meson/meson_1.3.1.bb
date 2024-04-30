@@ -132,11 +132,11 @@ do_install:append:class-nativesdk() {
     install_templates
 
     install -d ${D}${SDKPATHNATIVE}/post-relocate-setup.d
-    install -m 0755 ${WORKDIR}/meson-setup.py ${D}${SDKPATHNATIVE}/post-relocate-setup.d/
+    install -m 0755 ${UNPACKDIR}/meson-setup.py ${D}${SDKPATHNATIVE}/post-relocate-setup.d/
 
     # We need to wrap the real meson with a thin env setup wrapper.
     mv ${D}${bindir}/meson ${D}${bindir}/meson.real
-    install -m 0755 ${WORKDIR}/meson-wrapper ${D}${bindir}/meson
+    install -m 0755 ${UNPACKDIR}/meson-wrapper ${D}${bindir}/meson
 }
 
 FILES:${PN}:append:class-nativesdk = "${datadir}/meson ${SDKPATHNATIVE}"
@@ -149,10 +149,10 @@ do_install:append:class-native() {
     install_templates
 
     install -d ${D}${datadir}/post-relocate-setup.d
-    install -m 0755 ${WORKDIR}/meson-setup.py ${D}${datadir}/post-relocate-setup.d/
+    install -m 0755 ${UNPACKDIR}/meson-setup.py ${D}${datadir}/post-relocate-setup.d/
 
     # We need to wrap the real meson with a thin wrapper that substitues native/cross files
     # when running in a direct SDK environment.
     mv ${D}${bindir}/meson ${D}${bindir}/meson.real
-    install -m 0755 ${WORKDIR}/meson-wrapper ${D}${bindir}/meson
+    install -m 0755 ${UNPACKDIR}/meson-wrapper ${D}${bindir}/meson
 }

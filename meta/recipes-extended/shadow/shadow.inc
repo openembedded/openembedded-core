@@ -111,7 +111,7 @@ do_install() {
 	sed -i 's/^#ENCRYPT_METHOD.*$/ENCRYPT_METHOD SHA512/' ${D}${sysconfdir}/login.defs
 
 	install -d ${D}${sysconfdir}/default
-	install -m 0644 ${WORKDIR}/useradd ${D}${sysconfdir}/default
+	install -m 0644 ${UNPACKDIR}/useradd ${D}${sysconfdir}/default
 }
 
 do_install:append() {
@@ -121,11 +121,11 @@ do_install:append() {
 	install -m 0775 -d ${D}${localstatedir}/spool/mail
 	chown root:mail ${D}${localstatedir}/spool/mail
 
-	if [ -e ${WORKDIR}/pam.d ]; then
+	if [ -e ${UNPACKDIR}/pam.d ]; then
 		install -d ${D}${sysconfdir}/pam.d/
-		install -m 0644 ${WORKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
+		install -m 0644 ${UNPACKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
 		# Remove defaults that are not used when supporting PAM.
-		sed -i -f ${WORKDIR}/login_defs_pam.sed ${D}${sysconfdir}/login.defs
+		sed -i -f ${UNPACKDIR}/login_defs_pam.sed ${D}${sysconfdir}/login.defs
 	fi
 
 	install -d ${D}${sbindir} ${D}${base_sbindir} ${D}${base_bindir}

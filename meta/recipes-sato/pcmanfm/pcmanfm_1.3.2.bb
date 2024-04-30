@@ -32,7 +32,7 @@ do_install:append () {
 	install -d ${D}/${datadir}
 	install -d ${D}/${datadir}/pixmaps/
 
-	install -m 0644 ${WORKDIR}/*.png ${D}/${datadir}/pixmaps
+	install -m 0644 ${UNPACKDIR}/*.png ${D}/${datadir}/pixmaps
 }
 
 FILES:${PN} += "${libdir}/pcmanfm"

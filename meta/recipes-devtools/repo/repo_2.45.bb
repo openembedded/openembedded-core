@@ -22,7 +22,7 @@ do_configure:prepend() {
 }
 
 do_install() {
-	install -D ${WORKDIR}/git/repo ${D}${bindir}/repo
+	install -D ${S}/repo ${D}${bindir}/repo
 }
 
 RDEPENDS:${PN} = "python3 git"

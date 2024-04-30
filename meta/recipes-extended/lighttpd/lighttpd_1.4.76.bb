@@ -47,9 +47,9 @@ SYSTEMD_SERVICE:${PN} = "lighttpd.service"
 
 do_install:append() {
 	install -d ${D}${sysconfdir}/init.d ${D}${sysconfdir}/lighttpd ${D}${sysconfdir}/lighttpd.d ${D}/www/pages/dav
-	install -m 0755 ${WORKDIR}/lighttpd ${D}${sysconfdir}/init.d
-	install -m 0644 ${WORKDIR}/lighttpd.conf ${D}${sysconfdir}/lighttpd
-	install -m 0644 ${WORKDIR}/index.html.lighttpd ${D}/www/pages/index.html
+	install -m 0755 ${UNPACKDIR}/lighttpd ${D}${sysconfdir}/init.d
+	install -m 0644 ${UNPACKDIR}/lighttpd.conf ${D}${sysconfdir}/lighttpd
+	install -m 0644 ${UNPACKDIR}/index.html.lighttpd ${D}/www/pages/index.html
 
 	install -d ${D}${systemd_system_unitdir}
 	install -m 0644 ${S}/doc/systemd/lighttpd.service ${D}${systemd_system_unitdir}

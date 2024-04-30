@@ -80,7 +80,7 @@ python do_compile () {
     import subprocess
 
     # Build a separate executable for each splash image
-    workdir = d.getVar('WORKDIR')
+    workdir = d.getVar('UNPACKDIR')
     convertscript = "%s/make-image-header.sh" % d.getVar('S')
     destfile = "%s/psplash-poky-img.h" % d.getVar('B')
     localfiles = d.getVar('SPLASH_LOCALPATHS').split()

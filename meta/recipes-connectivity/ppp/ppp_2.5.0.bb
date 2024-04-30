@@ -35,20 +35,20 @@ do_install:append () {
 	mkdir -p ${D}${bindir}/ ${D}${sysconfdir}/init.d
 	mkdir -p ${D}${sysconfdir}/ppp/ip-up.d/
 	mkdir -p ${D}${sysconfdir}/ppp/ip-down.d/
-	install -m 0755 ${WORKDIR}/pon ${D}${bindir}/pon
-	install -m 0755 ${WORKDIR}/poff ${D}${bindir}/poff
-	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/ppp
-	install -m 0755 ${WORKDIR}/ip-up ${D}${sysconfdir}/ppp/
-	install -m 0755 ${WORKDIR}/ip-down ${D}${sysconfdir}/ppp/
-	install -m 0755 ${WORKDIR}/08setupdns ${D}${sysconfdir}/ppp/ip-up.d/
-	install -m 0755 ${WORKDIR}/92removedns ${D}${sysconfdir}/ppp/ip-down.d/
+	install -m 0755 ${UNPACKDIR}/pon ${D}${bindir}/pon
+	install -m 0755 ${UNPACKDIR}/poff ${D}${bindir}/poff
+	install -m 0755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/ppp
+	install -m 0755 ${UNPACKDIR}/ip-up ${D}${sysconfdir}/ppp/
+	install -m 0755 ${UNPACKDIR}/ip-down ${D}${sysconfdir}/ppp/
+	install -m 0755 ${UNPACKDIR}/08setupdns ${D}${sysconfdir}/ppp/ip-up.d/
+	install -m 0755 ${UNPACKDIR}/92removedns ${D}${sysconfdir}/ppp/ip-down.d/
 	mkdir -p ${D}${sysconfdir}/chatscripts
 	mkdir -p ${D}${sysconfdir}/ppp/peers
-	install -m 0755 ${WORKDIR}/pap ${D}${sysconfdir}/chatscripts
-	install -m 0755 ${WORKDIR}/ppp_on_boot ${D}${sysconfdir}/ppp/ppp_on_boot
-	install -m 0755 ${WORKDIR}/provider ${D}${sysconfdir}/ppp/peers/provider
+	install -m 0755 ${UNPACKDIR}/pap ${D}${sysconfdir}/chatscripts
+	install -m 0755 ${UNPACKDIR}/ppp_on_boot ${D}${sysconfdir}/ppp/ppp_on_boot
+	install -m 0755 ${UNPACKDIR}/provider ${D}${sysconfdir}/ppp/peers/provider
 	install -d ${D}${systemd_system_unitdir}
-	install -m 0644 ${WORKDIR}/ppp@.service ${D}${systemd_system_unitdir}
+	install -m 0644 ${UNPACKDIR}/ppp@.service ${D}${systemd_system_unitdir}
 	sed -i -e 's,@SBINDIR@,${sbindir},g' \
 	       ${D}${systemd_system_unitdir}/ppp@.service
 }

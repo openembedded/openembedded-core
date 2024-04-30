@@ -15,7 +15,7 @@ do_compile() {
 }
 
 do_install() {
-    install -D -m 0644 ${WORKDIR}/system-xuser.conf ${D}${sysconfdir}/dbus-1/system.d/system-xuser.conf
+    install -D -m 0644 ${UNPACKDIR}/system-xuser.conf ${D}${sysconfdir}/dbus-1/system.d/system-xuser.conf
 }
 
 FILES:${PN} = "${sysconfdir}/dbus-1/system.d/system-xuser.conf"

@@ -102,8 +102,8 @@ CACHED_CONFIGUREVARS += "ac_cv_header_maillock_h=no"
 
 do_configure:prepend () {
 	export LD="${CC}"
-	install -m 0644 ${WORKDIR}/sshd_config ${B}/
-	install -m 0644 ${WORKDIR}/ssh_config ${B}/
+	install -m 0644 ${UNPACKDIR}/sshd_config ${B}/
+	install -m 0644 ${UNPACKDIR}/ssh_config ${B}/
 }
 
 do_compile_ptest() {

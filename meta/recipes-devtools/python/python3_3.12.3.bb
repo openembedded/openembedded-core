@@ -157,7 +157,7 @@ do_compile:prepend() {
 }
 
 do_install:prepend() {
-        ${WORKDIR}/check_build_completeness.py ${T}/log.do_compile
+        ${UNPACKDIR}/check_build_completeness.py ${T}/log.do_compile
 }
 
 do_install:append:class-target() {
@@ -197,7 +197,7 @@ do_install:append:class-native() {
 
 do_install:append() {
         for c in ${D}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
-            python3 ${WORKDIR}/reformat_sysconfig.py $c
+            python3 ${UNPACKDIR}/reformat_sysconfig.py $c
         done
         rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata*.cpython*
 
@@ -284,7 +284,7 @@ py_package_preprocess () {
         # Reformat _sysconfigdata after modifying it so that it remains
         # reproducible
         for c in ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
-            python3 ${WORKDIR}/reformat_sysconfig.py $c
+            python3 ${UNPACKDIR}/reformat_sysconfig.py $c
         done
 
         # Recompile _sysconfigdata after modifying it
@@ -397,6 +397,7 @@ do_create_manifest() {
     # e.g. BerkeleyDB is an optional build dependency so it may or may not
     # be present, we must ensure it is.
 
+    cp ${UNPACKDIR}/create_manifest3.py ${WORKDIR}
     cd ${WORKDIR}
     # This needs to be executed by python-native and NOT by HOST's python
     nativepython3 create_manifest3.py ${PYTHON_MAJMIN}

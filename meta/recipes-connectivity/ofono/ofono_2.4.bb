@@ -37,7 +37,7 @@ do_configure:prepend() {
 
 do_install:append() {
     install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${WORKDIR}/ofono ${D}${sysconfdir}/init.d/ofono
+    install -m 0755 ${UNPACKDIR}/ofono ${D}${sysconfdir}/init.d/ofono
 }
 
 PACKAGES =+ "${PN}-tests"

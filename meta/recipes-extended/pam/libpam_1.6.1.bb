@@ -138,16 +138,16 @@ do_install() {
             rm -rf ${D}${sysconfdir}/init.d/
             rm -rf ${D}${sysconfdir}/rc*
             install -d ${D}${nonarch_libdir}/tmpfiles.d
-            install -m 0644 ${WORKDIR}/pam-volatiles.conf \
+            install -m 0644 ${UNPACKDIR}/pam-volatiles.conf \
                     ${D}${nonarch_libdir}/tmpfiles.d/pam.conf
         else
             install -d ${D}${sysconfdir}/default/volatiles
-            install -m 0644 ${WORKDIR}/99_pam \
+            install -m 0644 ${UNPACKDIR}/99_pam \
                     ${D}${sysconfdir}/default/volatiles/
         fi
 
 	install -d ${D}${sysconfdir}/pam.d/
-	install -m 0644 ${WORKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
+	install -m 0644 ${UNPACKDIR}/pam.d/* ${D}${sysconfdir}/pam.d/
 
 	# The lsb requires unix_chkpwd has setuid permission
 	chmod 4755 ${D}${sbindir}/unix_chkpwd

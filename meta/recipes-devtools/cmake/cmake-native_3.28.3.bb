@@ -54,9 +54,9 @@ do_install() {
 	# The following codes are here because eSDK needs to provide compatibilty
 	# for SDK. That is, eSDK could also be used like traditional SDK.
 	mkdir -p ${D}${datadir}/cmake
-	install -m 644 ${WORKDIR}/OEToolchainConfig.cmake ${D}${datadir}/cmake/
+	install -m 644 ${UNPACKDIR}/OEToolchainConfig.cmake ${D}${datadir}/cmake/
 	mkdir -p ${D}${base_prefix}/environment-setup.d
-	install -m 644 ${WORKDIR}/environment.d-cmake.sh ${D}${base_prefix}/environment-setup.d/cmake.sh
+	install -m 644 ${UNPACKDIR}/environment.d-cmake.sh ${D}${base_prefix}/environment-setup.d/cmake.sh
 
 	# Help docs create tons of files in the native sysroot and aren't needed there
 	rm -rf ${D}${datadir}/cmake-*/Help

@@ -44,15 +44,15 @@ do_compile:prepend() {
 
 do_install:append () {
         install -d ${D}${sysconfdir}/sysconfig
-        install -m 0644 ${WORKDIR}/kdump.conf ${D}${sysconfdir}/sysconfig
+        install -m 0644 ${UNPACKDIR}/kdump.conf ${D}${sysconfdir}/sysconfig
 
         if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
-                install -D -m 0755 ${WORKDIR}/kdump ${D}${sysconfdir}/init.d/kdump
+                install -D -m 0755 ${UNPACKDIR}/kdump ${D}${sysconfdir}/init.d/kdump
         fi
 
         if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
-                install -D -m 0755 ${WORKDIR}/kdump ${D}${libexecdir}/kdump-helper
-                install -D -m 0644 ${WORKDIR}/kdump.service ${D}${systemd_system_unitdir}/kdump.service
+                install -D -m 0755 ${UNPACKDIR}/kdump ${D}${libexecdir}/kdump-helper
+                install -D -m 0644 ${UNPACKDIR}/kdump.service ${D}${systemd_system_unitdir}/kdump.service
                 sed -i -e 's,@LIBEXECDIR@,${libexecdir},g' ${D}${systemd_system_unitdir}/kdump.service
         fi
 }

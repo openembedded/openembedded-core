@@ -63,7 +63,7 @@ do_install:append () {
         install -dm755 ${D}${sysconfdir}/modprobe.d
 
         # install depmod.d file for search/ dir
-        install -Dm644 "${WORKDIR}/depmod-search.conf" "${D}${nonarch_base_libdir}/depmod.d/search.conf"
+        install -Dm644 "${UNPACKDIR}/depmod-search.conf" "${D}${nonarch_base_libdir}/depmod.d/search.conf"
 
         # Add .debug to the exclude path for depmod
         echo "exclude .debug" > ${D}${nonarch_base_libdir}/depmod.d/exclude.conf
