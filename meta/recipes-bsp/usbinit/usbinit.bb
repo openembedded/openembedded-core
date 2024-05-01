@@ -10,7 +10,9 @@ LIC_FILES_CHKSUM = "file://${S}/COPYING.GPL;md5=751419260aa954499f7abaabaa882bbe
 
 SRC_URI = "file://usb-gether \
            file://COPYING.GPL"
-S = "${WORKDIR}"
+
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${sysconfdir}

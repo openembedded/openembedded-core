@@ -8,7 +8,8 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 SRC_URI = "file://securetty"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 # Since SERIAL_CONSOLES is likely to be set from the machine configuration
 PACKAGE_ARCH = "${MACHINE_ARCH}"

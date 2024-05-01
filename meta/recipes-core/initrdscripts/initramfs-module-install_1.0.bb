@@ -12,7 +12,8 @@ COMPATIBLE_HOST:armv7ve = 'null'
 
 SRC_URI = "file://init-install.sh"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/init.d

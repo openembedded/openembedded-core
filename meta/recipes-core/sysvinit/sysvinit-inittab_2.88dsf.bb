@@ -6,7 +6,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;m
 SRC_URI = "file://inittab \
            file://start_getty"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 

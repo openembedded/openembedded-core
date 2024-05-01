@@ -13,7 +13,8 @@ SRC_URI = " \
        file://localextra.rules \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 MOUNT_BASE = "/run/media"
 

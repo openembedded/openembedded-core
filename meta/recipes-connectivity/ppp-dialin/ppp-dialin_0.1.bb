@@ -11,7 +11,8 @@ SRC_URI = "file://host-peer \
 
 inherit allarch useradd
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/ppp/peers

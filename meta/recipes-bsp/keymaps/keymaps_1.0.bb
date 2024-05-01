@@ -24,7 +24,8 @@ SRC_URI = "file://keymap.sh"
 INITSCRIPT_NAME = "keymap.sh"
 INITSCRIPT_PARAMS = "start 01 S ."
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install () {
     # Only install the script if 'sysvinit' is in DISTRO_FEATURES
