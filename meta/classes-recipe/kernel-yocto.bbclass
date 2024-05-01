@@ -234,8 +234,6 @@ do_kernel_metadata() {
 	for f in ${feat_dirs}; do
 		if [ -d "${UNPACKDIR}/$f/kernel-meta" ]; then
 			includes="$includes -I${UNPACKDIR}/$f/kernel-meta"
-		elif [ -d "${UNPACKDIR}/../oe-local-files/$f" ]; then
-			includes="$includes -I${UNPACKDIR}/../oe-local-files/$f"
 	        elif [ -d "${UNPACKDIR}/$f" ]; then
 			includes="$includes -I${UNPACKDIR}/$f"
 		fi
