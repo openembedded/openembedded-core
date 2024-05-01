@@ -10,7 +10,7 @@ RDEPENDS:${PN} = "grub parted e2fsprogs-mke2fs util-linux-blkid ${VIRTUAL-RUNTIM
 RRECOMMENDS:${PN} = "${VIRTUAL-RUNTIME_base-utils-syslog}"
 
 do_install() {
-        install -m 0755 ${WORKDIR}/init-install.sh ${D}/install.sh
+        install -m 0755 ${S}/init-install.sh ${D}/install.sh
 }
 
 # While this package maybe an allarch due to it being a 

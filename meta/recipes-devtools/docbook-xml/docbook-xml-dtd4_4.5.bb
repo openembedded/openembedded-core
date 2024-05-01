@@ -8,7 +8,7 @@ HOMEPAGE = "https://docbook.org"
 # upgrading this recipe, please verify whether this is still needed.
 
 LICENSE = "OASIS"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE-OASIS;md5=c608985dd5f7f215e669e7639a0b1d2e"
+LIC_FILES_CHKSUM = "file://${S}/LICENSE-OASIS;md5=c608985dd5f7f215e669e7639a0b1d2e"
 
 # To support apps with xml schema backward compatibility, we must
 # install a set of schemas. Install the latest based on PV and then

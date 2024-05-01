@@ -13,7 +13,7 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/setup-live ${D}/init.d/80-setup-live
+    install -m 0755 ${S}/setup-live ${D}/init.d/80-setup-live
 }
 
 FILES:${PN} = "/init.d/80-setup-live"

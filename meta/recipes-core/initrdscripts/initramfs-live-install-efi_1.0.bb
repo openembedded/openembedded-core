@@ -10,7 +10,7 @@ RRECOMMENDS:${PN} = "${VIRTUAL-RUNTIME_base-utils-syslog}"
 S = "${WORKDIR}"
 
 do_install() {
-        install -m 0755 ${WORKDIR}/init-install-efi.sh ${D}/install-efi.sh
+        install -m 0755 ${S}/init-install-efi.sh ${D}/install-efi.sh
 }
 
 # While this package maybe an allarch due to it being a

@@ -11,7 +11,7 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/init-install-efi.sh ${D}/init.d/install-efi.sh
+    install -m 0755 ${S}/init-install-efi.sh ${D}/init.d/install-efi.sh
 }
 
 FILES:${PN} = "/init.d/install-efi.sh"

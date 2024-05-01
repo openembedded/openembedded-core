@@ -29,13 +29,13 @@ do_compile () {
 
 do_install() {
 	install -d ${D}${sbindir}
-	install -m 0755 ${WORKDIR}/run-postinsts ${D}${sbindir}/
+	install -m 0755 ${S}/run-postinsts ${D}${sbindir}/
 
 	install -d ${D}${sysconfdir}/init.d/
-	install -m 0755 ${WORKDIR}/run-postinsts.init ${D}${sysconfdir}/init.d/run-postinsts
+	install -m 0755 ${S}/run-postinsts.init ${D}${sysconfdir}/init.d/run-postinsts
 
 	install -d ${D}${systemd_system_unitdir}/
-	install -m 0644 ${WORKDIR}/run-postinsts.service ${D}${systemd_system_unitdir}/
+	install -m 0644 ${S}/run-postinsts.service ${D}${systemd_system_unitdir}/
 
 	sed -i -e 's:#SYSCONFDIR#:${sysconfdir}:g' \
                -e 's:#SBINDIR#:${sbindir}:g' \

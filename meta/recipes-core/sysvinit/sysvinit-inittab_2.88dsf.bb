@@ -16,9 +16,9 @@ do_compile() {
 
 do_install() {
     install -d ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
+    install -m 0644 ${S}/inittab ${D}${sysconfdir}/inittab
     install -d ${D}${base_bindir}
-    install -m 0755 ${WORKDIR}/start_getty ${D}${base_bindir}/start_getty
+    install -m 0755 ${S}/start_getty ${D}${base_bindir}/start_getty
     sed -e 's,/usr/bin,${bindir},g' -i ${D}${base_bindir}/start_getty
 
     CONSOLES="${SERIAL_CONSOLES}"

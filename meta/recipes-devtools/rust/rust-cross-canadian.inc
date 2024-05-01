@@ -46,7 +46,7 @@ do_install () {
     # where the context is easier to do the env maniupations needed
     install -d ${SYS_BINDIR}
     outfile="${SYS_BINDIR}/target-rust-ccld"
-    ${CC} ${WORKDIR}/target-rust-ccld.c -o $outfile
+    ${CC} ${S}/target-rust-ccld.c -o $outfile
     chmod +x "$outfile"
     create_sdk_wrapper "${SYS_BINDIR}/target-rust-ccld-wrapper" "CC"
 

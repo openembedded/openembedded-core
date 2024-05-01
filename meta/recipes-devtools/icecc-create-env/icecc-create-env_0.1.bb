@@ -30,7 +30,7 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/icecc-create-env ${D}/${bindir}
+    install -m 0755 ${S}/icecc-create-env ${D}/${bindir}
 }
 
 BBCLASSEXTEND = "native nativesdk"

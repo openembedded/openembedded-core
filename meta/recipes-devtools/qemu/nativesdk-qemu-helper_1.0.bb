@@ -28,6 +28,6 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}${COREBASE}/scripts/oe-* ${D}${bindir}/
-	install -m 0755 ${WORKDIR}${COREBASE}/scripts/runqemu* ${D}${bindir}/
+	install -m 0755 ${S}${COREBASE}/scripts/oe-* ${D}${bindir}/
+	install -m 0755 ${S}${COREBASE}/scripts/runqemu* ${D}${bindir}/
 }

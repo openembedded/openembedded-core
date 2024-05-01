@@ -14,8 +14,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY:${PN} = "1"
 
 do_install () {
-	if test -s ${WORKDIR}/xorg.conf; then
+	if test -s ${S}/xorg.conf; then
 		install -d ${D}/${sysconfdir}/X11
-		install -m 0644 ${WORKDIR}/xorg.conf ${D}/${sysconfdir}/X11/
+		install -m 0644 ${S}/xorg.conf ${D}/${sysconfdir}/X11/
 	fi
 }

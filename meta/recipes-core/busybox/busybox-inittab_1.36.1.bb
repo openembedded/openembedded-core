@@ -14,7 +14,7 @@ do_compile() {
 
 do_install() {
 	install -d ${D}${sysconfdir}
-	install -D -m 0644 ${WORKDIR}/inittab ${D}${sysconfdir}/inittab
+	install -D -m 0644 ${S}/inittab ${D}${sysconfdir}/inittab
 
     CONSOLES="${SERIAL_CONSOLES}"
     for s in $CONSOLES

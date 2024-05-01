@@ -31,7 +31,7 @@ do_install () {
     # THe ulitity this script provides could be achieved by systemd-vconsole-setup.service
     if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
 	install -d ${D}${sysconfdir}/init.d/
-	install -m 0755 ${WORKDIR}/keymap.sh ${D}${sysconfdir}/init.d/
+	install -m 0755 ${S}/keymap.sh ${D}${sysconfdir}/init.d/
     fi
 }
 

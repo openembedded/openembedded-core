@@ -16,7 +16,7 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/init-install.sh ${D}/init.d/install.sh
+    install -m 0755 ${S}/init-install.sh ${D}/init.d/install.sh
 }
 
 FILES:${PN} = "/init.d/install.sh"
