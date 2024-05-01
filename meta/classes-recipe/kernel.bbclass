@@ -679,8 +679,8 @@ kernel_do_configure() {
 
 	# Copy defconfig to .config if .config does not exist. This allows
 	# recipes to manage the .config themselves in do_configure:prepend().
-	if [ -f "${WORKDIR}/defconfig" ] && [ ! -f "${B}/.config" ]; then
-		cp "${WORKDIR}/defconfig" "${B}/.config"
+	if [ -f "${UNPACKDIR}/defconfig" ] && [ ! -f "${B}/.config" ]; then
+		cp "${UNPACKDIR}/defconfig" "${B}/.config"
 	fi
 
 	${KERNEL_CONFIG_COMMAND}
