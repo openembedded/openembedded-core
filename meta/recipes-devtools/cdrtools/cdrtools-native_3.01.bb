@@ -13,7 +13,8 @@ DEPENDS += "gnu-config-native"
 SRC_URI = " \
 	${SOURCEFORGE_MIRROR}/project/cdrtools/cdrtools-${PV}.tar.bz2 \
 	file://0001-Don-t-set-uid-gid-during-install.patch \
-        file://riscv64-linux-gcc.rul \
+	file://riscv64-linux-gcc.rul \
+	file://gcc14-fix.patch \
 	"
 
 SRC_URI[md5sum] = "7d45c5b7e1f78d85d1583b361aee6e8b"
@@ -27,6 +28,9 @@ export ac_cv_prog_CC = "${CC}"
 inherit native
 
 do_configure() {
+        # cdda2wav does not build with GCC 14
+        rm -f ${S}/TARGETS/55cdda2wav
+
         install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.sub ${S}/autoconf
         install -m 0755 ${STAGING_DATADIR_NATIVE}/gnu-config/config.guess ${S}/autoconf
         install -m 0644 ${WORKDIR}/riscv64-linux-gcc.rul ${S}/RULES/
