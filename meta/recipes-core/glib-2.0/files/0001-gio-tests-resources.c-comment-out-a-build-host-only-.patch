@@ -1,4 +1,4 @@
-From 878e51f82100c698236fda0e069e14ea9249350c Mon Sep 17 00:00:00 2001
+From e8b4f53b567339aad90b585673d55a5c6176535a Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 8 Jan 2020 18:22:46 +0100
 Subject: [PATCH] gio/tests/resources.c: comment out a build host-only test
@@ -13,7 +13,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gio/tests/resources.c b/gio/tests/resources.c
-index f567914..b21b616 100644
+index f7dc039..f708876 100644
 --- a/gio/tests/resources.c
 +++ b/gio/tests/resources.c
 @@ -1068,7 +1068,7 @@ main (int   argc,

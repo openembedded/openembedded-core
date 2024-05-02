@@ -1,26 +1,30 @@
-From e7077aa23bfcd31a8e72e39dc93ce4f854678376 Mon Sep 17 00:00:00 2001
+From 0561dcbf0918631d8106c3f6c2d8e92a5ec4b887 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 15 Feb 2019 11:17:27 +0100
-Subject: [PATCH] Do not write $bindir into pkg-config files
+Subject: [PATCH] Do not prefix executables with $bindir in pkg-config files
 
-This would otherwise break when using the files to build other target
+This would otherwise break when using the executables to build other target
 components (we need to rely on PATH containing the paths to utilities,
 rather than use target paths).
 
 Upstream-Status: Inappropriate [upstream wants the paths in .pc files]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- gio/meson.build  | 16 ++++++++--------
- glib/meson.build |  6 +++---
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ gio/meson.build  | 17 +++++++++--------
+ glib/meson.build |  7 ++++---
+ 2 files changed, 13 insertions(+), 11 deletions(-)
 
 diff --git a/gio/meson.build b/gio/meson.build
-index 5f91586..1a95f4f 100644
+index 77cba7b..25d709e 100644
 --- a/gio/meson.build
 +++ b/gio/meson.build
-@@ -884,14 +884,14 @@ pkg.generate(libgio,
+@@ -883,17 +883,18 @@ libgio_dep = declare_dependency(link_with : libgio,
+ pkg.generate(libgio,
+   requires : ['glib-2.0', 'gobject-2.0'],
+   variables : [
++    'bindir=' + '${prefix}' / get_option('bindir'),
+     'schemasdir=' + '${datadir}' / schemas_subdir,
      'dtdsdir=' + '${datadir}' / dtds_subdir,
-     'bindir=' + '${prefix}' / get_option('bindir'),
      'giomoduledir=' + pkgconfig_giomodulesdir,
 -    'gio=' + '${bindir}' / 'gio',
 -    'gio_querymodules=' + pkgconfig_multiarch_bindir / 'gio-querymodules',
@@ -42,16 +46,17 @@ index 5f91586..1a95f4f 100644
    version : glib_version,
    install_dir : glib_pkgconfigreldir,
 diff --git a/glib/meson.build b/glib/meson.build
-index c26a35e..1d8ca6b 100644
+index d2efeba..5f5841d 100644
 --- a/glib/meson.build
 +++ b/glib/meson.build
-@@ -447,9 +447,9 @@ pkg.generate(libglib,
+@@ -447,9 +447,10 @@ pkg.generate(libglib,
+   subdirs : ['glib-2.0'],
+   extra_cflags : ['-I${libdir}/glib-2.0/include'] + win32_cflags,
    variables : [
-     'bindir=' + '${prefix}' / get_option('bindir'),
-     'datadir=' + '${prefix}' / get_option('datadir'),
 -    'glib_genmarshal=' + '${bindir}' / 'glib-genmarshal',
 -    'gobject_query=' + '${bindir}' / 'gobject-query',
 -    'glib_mkenums=' + '${bindir}' / 'glib-mkenums',
++    'bindir=' + '${prefix}' / get_option('bindir'),
 +    'glib_genmarshal=glib-genmarshal',
 +    'gobject_query=gobject-query',
 +    'glib_mkenums=glib-mkenums',
