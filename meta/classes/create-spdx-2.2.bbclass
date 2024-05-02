@@ -357,7 +357,13 @@ def collect_dep_recipes(d, doc, spdx_recipe):
     with spdx_deps_file.open("r") as f:
         deps = json.load(f)
 
-    for dep_pn, dep_hashfn in deps:
+    for dep_pn, dep_hashfn, in_taskhash in deps:
+        # If this dependency is not calculated in the taskhash skip it.
+        # Otherwise, it can result in broken links since this task won't
+        # rebuild and see the new SPDX ID if the dependency changes
+        if not in_taskhash:
+            continue
+
         dep_recipe_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, "recipe-" + dep_pn, dep_hashfn)
         if not dep_recipe_path:
             bb.fatal("Cannot find any SPDX file for recipe %s, %s" % (dep_pn, dep_hashfn))
@@ -478,7 +484,7 @@ def collect_direct_deps(d, dep_task):
     for dep_name in this_dep[3]:
         dep_data = taskdepdata[dep_name]
         if dep_data[1] == dep_task and dep_data[0] != pn:
-            deps.add((dep_data[0], dep_data[7]))
+            deps.add((dep_data[0], dep_data[7], dep_name in this_dep[8]))
 
     return sorted(deps)
 
@@ -721,9 +727,9 @@ def collect_package_providers(d):
     providers = {}
 
     deps = collect_direct_deps(d, "do_create_spdx")
-    deps.append((d.getVar("PN"), d.getVar("BB_HASHFILENAME")))
+    deps.append((d.getVar("PN"), d.getVar("BB_HASHFILENAME"), True))
 
-    for dep_pn, dep_hashfn in deps:
+    for dep_pn, dep_hashfn, _ in deps:
         localdata = d
         recipe_data = oe.packagedata.read_pkgdata(dep_pn, localdata)
         if not recipe_data:
