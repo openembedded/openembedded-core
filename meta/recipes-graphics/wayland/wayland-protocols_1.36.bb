@@ -13,6 +13,7 @@ SRC_URI = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/$
 SRC_URI[sha256sum] = "71fd4de05e79f9a1ca559fac30c1f8365fa10346422f9fe795f74d77b9ef7e92"
 
 UPSTREAM_CHECK_URI = "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/tags"
+UPSTREAM_CHECK_REGEX = "releases/(?P<pver>.+)"
 
 inherit meson pkgconfig allarch
 
