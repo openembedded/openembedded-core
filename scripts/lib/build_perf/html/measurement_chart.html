@@ -81,13 +81,20 @@
 
   // Draw chart
   const chart_div = document.getElementById('{{ chart_elem_id }}');
-  const measurement_chart= echarts.init(chart_div, null, {
-    height: 320
-  });
+  // Set dark mode
+  let measurement_chart
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      measurement_chart= echarts.init(chart_div, 'dark', {
+      height: 320
+    });
+  } else {
+      measurement_chart= echarts.init(chart_div, null, {
+      height: 320
+    });
+  }
   // Change chart size with browser resize
   window.addEventListener('resize', function() {
     measurement_chart.resize();
   });
   measurement_chart.setOption(option);
 </script>
-

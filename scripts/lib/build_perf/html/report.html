@@ -19,6 +19,15 @@
 
 {# Styles #}
 <style>
+:root {
+  --text: #000;
+  --bg: #fff;
+  --h2heading: #707070;
+  --link: #0000EE;
+  --trtopborder: #9ca3af;
+  --trborder: #e5e7eb;
+  --chartborder: #f0f0f0;
+  }
 .meta-table {
   font-size: 14px;
   text-align: left;
@@ -31,7 +40,7 @@
 }
 .measurement {
   padding: 8px 0px 8px 8px;
-  border: 2px solid #f0f0f0;
+  border: 2px solid var(--chartborder);
   margin: 1.5rem 0;
 }
 .details {
@@ -61,6 +70,8 @@
 body {
   font-family: 'Helvetica', sans-serif;
   margin: 3rem 8rem;
+  background-color: var(--bg);
+  color: var(--text);
 }
 h1 {
   text-align: center;
@@ -68,13 +79,13 @@ h1 {
 h2 {
   font-size: 1.5rem;
   margin-bottom: 0px;
-  color: #707070;
+  color: var(--h2heading);
   padding-top: 1.5rem;
 }
 h3 {
   font-size: 1.3rem;
   margin: 0px;
-  color: #707070;
+  color: var(--h2heading);
   padding: 1.5rem 0;
 }
 h4 {
@@ -89,10 +100,10 @@ table {
   line-height: 2rem;
 }
 tr {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--trborder);
 }
 tr:first-child {
-  border-bottom: 1px solid #9ca3af;
+  border-bottom: 1px solid var(--trtopborder);
 }
 tr:last-child {
   border-bottom: none;
@@ -100,10 +111,21 @@ tr:last-child {
 a {
   text-decoration: none;
   font-weight: bold;
-  color: #0000EE;
+  color: var(--link);
 }
 a:hover {
   color: #8080ff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e9e8fa;
+    --bg: #0F0C28;
+    --h2heading: #B8B7CB;
+    --link: #87cefa;
+    --trtopborder: #394150;
+    --trborder: #212936;
+    --chartborder: #b1b0bf;
+  }
 }
 </style>
 
