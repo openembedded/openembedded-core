@@ -10,13 +10,19 @@
     return time[0]*60 + time[1] + time[2]/60 + time[3]/3600;
   }
 
+  // Update value format to either minutes or leave as size value
+  const updateValue = (value) => {
+    // Assuming the array values are duration in the format [hours, minutes, seconds, milliseconds]
+    return Array.isArray(value) ? convertToMinute(value) : value
+  }
+
   // Convert raw data to the format: [time, value]
   const data = rawData.map(([commit, value, time]) => {
     return [
       // The Date object takes values in milliseconds rather than seconds. So to use a Unix timestamp we have to multiply it by 1000.
       new Date(time * 1000).getTime(),
       // Assuming the array values are duration in the format [hours, minutes, seconds, milliseconds]
-      Array.isArray(value) ? convertToMinute(value) : value
+      updateValue(value)
     ]
   });
 
@@ -25,11 +31,22 @@
     tooltip: {
       trigger: 'axis',
       valueFormatter: (value) => {
-        const hours = Math.floor(value/60)
-        const minutes = Math.floor(value % 60)
-        const seconds = Math.floor((value * 60) % 60)
-        return hours + ':' + minutes + ':' + seconds
-      }
+        const commitNumber  = rawData.filter(([commit, dataValue, time]) => updateValue(dataValue) === value)
+        if ('{{ measurement.value_type.quantity }}' == 'time') {
+          const hours = Math.floor(value/60)
+          const minutes = Math.floor(value % 60)
+          const seconds = Math.floor((value * 60) % 60)
+          return [
+                hours + ':' + minutes + ':' + seconds + ', ' +
+                'commit number: ' + commitNumber[0][0]
+              ]
+        }
+        return [
+          value.toFixed(2) + ' MB' + ', ' +
+          'commit number: ' + commitNumber[0][0]
+        ]
+      },
+
     },
     xAxis: {
       type: 'time',
@@ -55,7 +72,7 @@
       {
         name: '{{ measurement.value_type.quantity }}',
         type: 'line',
-        smooth: true,
+        step: 'start',
         symbol: 'none',
         data: data
       }
