@@ -14,24 +14,24 @@ KBRANCH:qemux86  ?= "v5.15/standard/base"
 KBRANCH:qemux86-64 ?= "v5.15/standard/base"
 KBRANCH:qemumips64 ?= "v5.15/standard/mti-malta64"
 
-SRCREV_machine:qemuarm ?= "699ce07e7326d5a4143655ab8416bf7b8d641260"
-SRCREV_machine:qemuarm64 ?= "1f8f9d20707574ce56ab3ada6554c2a9cbce55fb"
-SRCREV_machine:qemumips ?= "5eeedd87a05a973e797357c61564c2e82cff7755"
-SRCREV_machine:qemuppc ?= "5f854a0765bf57db2289780152651d2b463fb41e"
-SRCREV_machine:qemuriscv64 ?= "97a728f8e22ebd7ed35066e01060e97b4a89da05"
-SRCREV_machine:qemuriscv32 ?= "97a728f8e22ebd7ed35066e01060e97b4a89da05"
-SRCREV_machine:qemux86 ?= "97a728f8e22ebd7ed35066e01060e97b4a89da05"
-SRCREV_machine:qemux86-64 ?= "97a728f8e22ebd7ed35066e01060e97b4a89da05"
-SRCREV_machine:qemumips64 ?= "9aa2c6f70ea08ee03c53ed3a96b91907db782dd8"
-SRCREV_machine ?= "97a728f8e22ebd7ed35066e01060e97b4a89da05"
-SRCREV_meta ?= "9f60e205e8e28fdf90fbceb54c6ed2aec0b42ed3"
+SRCREV_machine:qemuarm ?= "7125a4b2f341b906fa6ad96d7b5caab2fe031b40"
+SRCREV_machine:qemuarm64 ?= "a71076982c5b7d5f38a7c00ab4fd6f4f907e267d"
+SRCREV_machine:qemumips ?= "0d5ad939681fe4971f4895b909554d755ba72d66"
+SRCREV_machine:qemuppc ?= "46ff907d522c13b8f6fab5a0da95f7a9807e2595"
+SRCREV_machine:qemuriscv64 ?= "70388803a5a55f986721232d0160381bb8097ba3"
+SRCREV_machine:qemuriscv32 ?= "70388803a5a55f986721232d0160381bb8097ba3"
+SRCREV_machine:qemux86 ?= "70388803a5a55f986721232d0160381bb8097ba3"
+SRCREV_machine:qemux86-64 ?= "70388803a5a55f986721232d0160381bb8097ba3"
+SRCREV_machine:qemumips64 ?= "a1357daf3592cb612b67058e401d5b05aebde45e"
+SRCREV_machine ?= "70388803a5a55f986721232d0160381bb8097ba3"
+SRCREV_meta ?= "1427f4d13f99b5b3811ef5f4207b6ff43cf1771a"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
 # meta SRCREV as the linux-yocto-standard builds. Select your version using the
 # normal PREFERRED_VERSION settings.
 BBCLASSEXTEND = "devupstream:target"
-SRCREV_machine:class-devupstream ?= "fa3df276cd36c5dbbd9deb64129d0d0f14c35dc8"
+SRCREV_machine:class-devupstream ?= "c52b9710c83d3b8ab63bb217cc7c8b61e13f12cd"
 PN:class-devupstream = "linux-yocto-upstream"
 KBRANCH:class-devupstream = "v5.15/base"
 
@@ -39,7 +39,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRA
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.15;destsuffix=${KMETA}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-LINUX_VERSION ?= "5.15.155"
+LINUX_VERSION ?= "5.15.156"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
 DEPENDS += "openssl-native util-linux-native"
