@@ -1,25 +1,26 @@
-From fdfd605e565d874502522c4b70b786c8c5aa0bad Mon Sep 17 00:00:00 2001
+From f06e14633723c1e78bc7a4b0fd0d3b79d09f0c68 Mon Sep 17 00:00:00 2001
 From: name@somedomain.com <email@address.com>
-Date: Fri, 17 Feb 2017 16:29:21 -0600
-Subject: [PATCH] README: adds 'foo' to the header
+Date: Thu, 2 May 2024 10:21:45 -0400
+Subject: [PATCH] README.OE-Core.md: Add foo to header
 
-This test patch adds 'foo' to the header
+This test patch adds 'foo' to the header of README.OE-Core.md
 
 [YOCTO 1234]
 
-Signed-off-by: Daniela Plascencia <daniela.plascencia@linux.intel.com>
+Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
 ---
- README | 1 +
+ README.OE-Core.md | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/README b/README
-index 521916cd4f..cdf29dcea3 100644
---- a/README
-+++ b/README
+diff --git a/README.OE-Core.md b/README.OE-Core.md
+index 687c58e410c..9d863891134 100644
+--- a/README.OE-Core.md
++++ b/README.OE-Core.md
 @@ -1,3 +1,4 @@
 +**** FOO ****
  OpenEmbedded-Core
  =================
+ 
+-- 
+2.44.0
 
---
-2.11.0
