@@ -319,7 +319,8 @@ def measurement_stats(meas, prefix='', time=0):
     stats['quantity'] = val_cls.quantity
     stats[prefix + 'sample_cnt'] = len(values)
 
-    start_time = time # Add start time for both type sysres and disk usage
+    # Add start time for both type sysres and disk usage
+    start_time = time 
     mean_val = val_cls(mean(values))
     min_val = val_cls(min(values))
     max_val = val_cls(max(values))

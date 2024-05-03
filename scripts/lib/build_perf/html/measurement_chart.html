@@ -13,8 +13,10 @@
   // Convert raw data to the format: [time, value]
   const data = rawData.map(([commit, value, time]) => {
     return [
-      new Date(time * 1000).getTime(), // The Date object takes values in milliseconds rather than seconds. So to use a Unix timestamp we have to multiply it by 1000.
-      Array.isArray(value) ? convertToMinute(value) : value // Assuming the array values are duration in the format [hours, minutes, seconds, milliseconds]
+      // The Date object takes values in milliseconds rather than seconds. So to use a Unix timestamp we have to multiply it by 1000.
+      new Date(time * 1000).getTime(),
+      // Assuming the array values are duration in the format [hours, minutes, seconds, milliseconds]
+      Array.isArray(value) ? convertToMinute(value) : value
     ]
   });
 
@@ -22,16 +24,18 @@
   const option = {
     tooltip: {
       trigger: 'axis',
-      position: function (pt) {
-        return [pt[0], '10%'];
-      },
-      valueFormatter: (value) => value.toFixed(2)
+      valueFormatter: (value) => {
+        const hours = Math.floor(value/60)
+        const minutes = Math.floor(value % 60)
+        const seconds = Math.floor((value * 60) % 60)
+        return hours + ':' + minutes + ':' + seconds
+      }
     },
     xAxis: {
       type: 'time',
     },
     yAxis: {
-      name: '{{ measurement.value_type.quantity }}' == 'time' ? 'Duration (minutes)' : 'Disk size (MB)',
+      name: '{{ measurement.value_type.quantity }}' == 'time' ? 'Duration in minutes' : 'Disk size in MB',
       type: 'value',
       min: function(value) {
         return Math.round(value.min - 0.5);
@@ -42,14 +46,10 @@
     },
     dataZoom: [
       {
-        type: 'inside',
-        start: 0,
-        end: 100
+        type: 'slider',
+        xAxisIndex: 0,
+        filterMode: 'none'
       },
-      {
-        start: 0,
-        end: 100
-      }
     ],
     series: [
       {
