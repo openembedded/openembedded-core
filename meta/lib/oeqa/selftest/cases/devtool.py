@@ -1792,6 +1792,8 @@ class DevtoolExtractTests(DevtoolBase):
         # Definitions
         testrecipe = 'mdadm'
         testfile = '/sbin/mdadm'
+        if "usrmerge" in get_bb_var('DISTRO_FEATURES'):
+            testfile = '/usr/sbin/mdadm'
         testimage = 'oe-selftest-image'
         testcommand = '/sbin/mdadm --help'
         # Build an image to run
