@@ -917,8 +917,7 @@ INHERIT += "base-do-configure-modified"
 """,
 expected_sametmp_output, expected_difftmp_output)
 
-@OETestTag("yocto-mirrors")
-class SStateMirrors(SStateBase):
+class SStateCheckObjectPresence(SStateBase):
     def check_bb_output(self, output, exceptions, check_cdn):
         def is_exception(object, exceptions):
             for e in exceptions:
@@ -960,6 +959,8 @@ class SStateMirrors(SStateBase):
         self.assertEqual(len(failed_urls), missing_objects, "Amount of reported missing objects does not match failed URLs: {}\nFailed URLs:\n{}\nFetcher diagnostics:\n{}".format(missing_objects, "\n".join(failed_urls), "\n".join(failed_urls_extrainfo)))
         self.assertEqual(len(failed_urls), 0, "Missing objects in the cache:\n{}\nFetcher diagnostics:\n{}".format("\n".join(failed_urls), "\n".join(failed_urls_extrainfo)))
 
+@OETestTag("yocto-mirrors")
+class SStateMirrors(SStateCheckObjectPresence):
     def run_test(self, machine, targets, exceptions, check_cdn = True, ignore_errors = False):
         # sstate is checked for existence of these, but they never get written out to begin with
         exceptions += ["{}.*image_qa".format(t) for t in targets.split()]
