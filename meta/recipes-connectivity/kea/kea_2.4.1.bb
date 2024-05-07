@@ -38,6 +38,7 @@ DEBUG_OPTIMIZATION:append:mipsel = " -O"
 BUILD_OPTIMIZATION:remove:mipsel = " -Og"
 BUILD_OPTIMIZATION:append:mipsel = " -O"
 
+CXXFLAGS:remove = "-fvisibility-inlines-hidden"
 EXTRA_OECONF = "--with-boost-libs=-lboost_system \
                 --with-log4cplus=${STAGING_DIR_TARGET}${prefix} \
                 --with-openssl=${STAGING_DIR_TARGET}${prefix}"
