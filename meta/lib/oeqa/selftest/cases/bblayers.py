@@ -240,3 +240,16 @@ class BitbakeLayers(OESelftestTestCase):
         self.assertEqual(first_desc_2, '', "Describe not cleared: '{}'".format(first_desc_2))
         self.assertEqual(second_rev_2, second_rev_1, "Revision should not be updated: '{}'".format(second_rev_2))
         self.assertEqual(second_desc_2, second_desc_1, "Describe should not be updated: '{}'".format(second_desc_2))
+
+    def test_bitbakelayers_setup_localcopy(self):
+        testcopydir = os.path.join(self.builddir, 'test-layer-copy')
+        result = runCmd('bitbake-layers create-layers-setup --writer oe-local-copy {}'.format(testcopydir))
+        oe_core_found = False
+        meta_selftest_found = False
+        for topdir, subdirs, files in os.walk(testcopydir):
+            if topdir.endswith('meta/conf') and 'layer.conf' in files:
+                oe_core_found = True
+            if topdir.endswith('meta-selftest/conf') and 'layer.conf' in files:
+                meta_selftest_found = True
+        self.assertTrue(oe_core_found, "meta/conf/layer.conf not found in {}".format(testcopydir))
+        self.assertTrue(meta_selftest_found, "meta-selftest/conf/layer.conf not found in {}".format(testcopydir))
