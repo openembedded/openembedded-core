@@ -85,6 +85,8 @@ class OeSetupLayersWriter():
             if not os.path.exists(args.destdir):
                 os.makedirs(args.destdir)
             repos = parent.make_repo_config(args.destdir)
+            for r in repos.values():
+                del r['originpath']
             json = {"version":"1.0","sources":repos}
             if not repos:
                 err = "Could not determine layer sources"

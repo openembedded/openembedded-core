@@ -76,6 +76,7 @@ class MakeSetupPlugin(LayerPlugin):
             repos_nopaths[r_nopath] = repos[r]
             r_relpath = os.path.relpath(r, top_path)
             repos_nopaths[r_nopath]['path'] = r_relpath
+            repos_nopaths[r_nopath]['originpath'] = r
         return repos_nopaths
 
     def do_make_setup(self, args):
