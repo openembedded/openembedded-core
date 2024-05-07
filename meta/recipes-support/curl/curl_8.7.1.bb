@@ -120,6 +120,7 @@ do_install_ptest() {
 
 RDEPENDS:${PN}-ptest += " \
 	bash \
+	locale-base-en-us \
 	perl-module-b \
 	perl-module-base \
 	perl-module-cwd \
@@ -135,7 +136,6 @@ RDEPENDS:${PN}-ptest += " \
 	perl-module-storable \
 	perl-module-time-hires \
 "
-RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us"
 
 PACKAGES =+ "lib${BPN}"
 
