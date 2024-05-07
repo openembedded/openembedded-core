@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/openSUSE/libsolv.git;branch=master;protocol=https \
            file://0001-utils-Conside-musl-when-wrapping-qsort_r.patch \
 "
 
-SRCREV = "c8dbb3a77c86600ce09d4f80a504cf4e78a3c359"
+SRCREV = "9c2b1a84b5a7ce0dc6e74226bdeb9527d6706791"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
