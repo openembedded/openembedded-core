@@ -63,10 +63,6 @@ class MakeSetupPlugin(LayerPlugin):
                         'describe':oe.buildcfg.get_metadata_git_describe(repo_path)}}
                 if repo_path == destdir_repo:
                     repos[repo_path]['contains_this_file'] = True
-                if not repos[repo_path]['git-remote']['remotes'] and not repos[repo_path]['contains_this_file']:
-                    e = "Layer repository in {path} does not have any remotes configured. Please add at least one with 'git remote add'.".format(path=repo_path)
-                    logger.error(e)
-                    raise Exception(e)
 
         top_path = os.path.commonpath([os.path.dirname(r) for r in repos.keys()])
 

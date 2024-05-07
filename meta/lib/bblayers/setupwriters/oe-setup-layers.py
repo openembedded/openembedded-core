@@ -86,6 +86,9 @@ class OeSetupLayersWriter():
                 os.makedirs(args.destdir)
             repos = parent.make_repo_config(args.destdir)
             for r in repos.values():
+                if not r['git-remote']['remotes'] and not r.get('contains_this_file', False):
+                    e = "Layer repository in {path} does not have any remotes configured. Please add at least one with 'git remote add'.".format(path=r['originpath'])
+                    raise Exception(e)
                 del r['originpath']
             json = {"version":"1.0","sources":repos}
             if not repos:
