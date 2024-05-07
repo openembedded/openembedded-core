@@ -48,8 +48,9 @@ class MakeSetupPlugin(LayerPlugin):
             if l_name == 'workspace':
                 continue
             if l_ismodified:
-                logger.error("Layer {name} in {path} has uncommitted modifications or is not in a git repository.".format(name=l_name,path=l_path))
-                return
+                e = "Layer {name} in {path} has uncommitted modifications or is not in a git repository.".format(name=l_name,path=l_path)
+                logger.error(e)
+                raise Exception(e)
             repo_path = oe.buildcfg.get_metadata_git_toplevel(l_path)
 
             if self._is_submodule(repo_path):
@@ -63,8 +64,9 @@ class MakeSetupPlugin(LayerPlugin):
                 if repo_path == destdir_repo:
                     repos[repo_path]['contains_this_file'] = True
                 if not repos[repo_path]['git-remote']['remotes'] and not repos[repo_path]['contains_this_file']:
-                    logger.error("Layer repository in {path} does not have any remotes configured. Please add at least one with 'git remote add'.".format(path=repo_path))
-                    return
+                    e = "Layer repository in {path} does not have any remotes configured. Please add at least one with 'git remote add'.".format(path=repo_path)
+                    logger.error(e)
+                    raise Exception(e)
 
         top_path = os.path.commonpath([os.path.dirname(r) for r in repos.keys()])
 
