@@ -13,27 +13,26 @@ DEPENDS = "libffi libxml2 zlib zstd libedit ninja-native llvm-native"
 RDEPENDS:${PN}:append:class-target = " ncurses-terminfo"
 
 inherit cmake pkgconfig
-
 # could be 'rcX' or 'git' or empty ( for release )
 VER_SUFFIX = ""
 
-PV = "18.1.5${VER_SUFFIX}"
+PV .= "${VER_SUFFIX}"
 
 MAJOR_VERSION = "${@oe.utils.trim_version("${PV}", 1)}"
 
 LLVM_RELEASE = "${PV}"
 
-BRANCH = "release/${MAJOR_VERSION}.x"
-SRCREV = "617a15a9eac96088ae5e9134248d8236e34b91b1"
-SRC_URI = "git://github.com/llvm/llvm-project.git;branch=${BRANCH};protocol=https \
+SRC_URI = "https://github.com/llvm/llvm-project/releases/download/llvmorg-${PV}/llvm-project-${PV}.src.tar.xz \
            file://0007-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
            file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
            file://llvm-config \
            "
+SRC_URI[sha256sum] = "3591a52761a7d390ede51af01ea73abfecc4b1d16445f9d019b67a57edd7de56"
 
-UPSTREAM_CHECK_GITTAGREGEX = "llvmorg-(?P<pver>\d+(\.\d+)+)"
+UPSTREAM_CHECK_URI = "https://github.com/llvm/llvm-project"
+UPSTREAM_CHECK_REGEX = "llvmorg-(?P<pver>\d+(\.\d+)+)"
 
-S = "${WORKDIR}/git/llvm"
+S = "${WORKDIR}/llvm-project-${PV}.src/llvm"
 
 LLVM_INSTALL_DIR = "${WORKDIR}/llvm-install"
 
