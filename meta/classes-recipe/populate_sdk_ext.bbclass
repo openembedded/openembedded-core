@@ -276,6 +276,8 @@ def write_bblayers_conf(d, baseoutpath, sdkbblayers):
 def copy_uninative(d, baseoutpath):
     import shutil
 
+    uninative_checksum = None
+
     # Copy uninative tarball
     # For now this is where uninative.bbclass expects the tarball
     if bb.data.inherits_class('uninative', d):
