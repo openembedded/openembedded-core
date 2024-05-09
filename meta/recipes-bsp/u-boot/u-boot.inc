@@ -259,8 +259,8 @@ do_deploy () {
         fi
     fi
 
-    if [ -e ${WORKDIR}/fw_env.config ] ; then
-        install -D -m 644 ${WORKDIR}/fw_env.config ${DEPLOYDIR}/fw_env.config-${MACHINE}-${PV}-${PR}
+    if [ -e ${UNPACKDIR}/fw_env.config ] ; then
+        install -D -m 644 ${UNPACKDIR}/fw_env.config ${DEPLOYDIR}/fw_env.config-${MACHINE}-${PV}-${PR}
         cd ${DEPLOYDIR}
         ln -sf fw_env.config-${MACHINE}-${PV}-${PR} fw_env.config-${MACHINE}
         ln -sf fw_env.config-${MACHINE}-${PV}-${PR} fw_env.config

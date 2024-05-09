@@ -49,7 +49,7 @@ RDEPENDS:${PN}-ptest += " \
 inherit ptest
 
 do_install_ptest() {
-    install -D ${WORKDIR}/check-memfree.py ${D}${PTEST_PATH}/
+    install -D ${UNPACKDIR}/check-memfree.py ${D}${PTEST_PATH}/
     install -d ${D}${PTEST_PATH}/tests
     cp -rf ${S}/tests/* ${D}${PTEST_PATH}/tests/
     # remove test_x509.py as it needs benchmark and we don't

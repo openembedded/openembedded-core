@@ -194,9 +194,9 @@ do_install_ptest() {
 
     # The scripts reference config.h so add it to the top ptest dir.
     cp ${B}/config.h ${D}${PTEST_PATH}
-    install -D ${WORKDIR}/remove-for-aarch64 ${D}${PTEST_PATH}
-    install -D ${WORKDIR}/remove-for-all ${D}${PTEST_PATH}
-    install -D ${WORKDIR}/taskset_nondeterministic_tests ${D}${PTEST_PATH}
+    install -D ${UNPACKDIR}/remove-for-aarch64 ${D}${PTEST_PATH}
+    install -D ${UNPACKDIR}/remove-for-all ${D}${PTEST_PATH}
+    install -D ${UNPACKDIR}/taskset_nondeterministic_tests ${D}${PTEST_PATH}
 
     # Add an executable need by none/tests/bigcode
     mkdir ${D}${PTEST_PATH}/perf

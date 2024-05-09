@@ -956,9 +956,9 @@ class DevtoolModifyTests(DevtoolBase):
         #    others git:// in SRC_URI
         #    cointains a patch
         testrecipe = 'hello-rs'
-        bb_vars = get_bb_vars(['SRC_URI', 'FILE', 'WORKDIR', 'CARGO_HOME'], testrecipe)
+        bb_vars = get_bb_vars(['SRC_URI', 'FILE', 'UNPACKDIR', 'CARGO_HOME'], testrecipe)
         recipefile = bb_vars['FILE']
-        workdir = bb_vars['WORKDIR']
+        unpackdir = bb_vars['UNPACKDIR']
         cargo_home = bb_vars['CARGO_HOME']
         src_uri = bb_vars['SRC_URI'].split()
         self.assertTrue(src_uri[0].startswith('git://'),
@@ -1029,7 +1029,7 @@ class DevtoolModifyTests(DevtoolBase):
             self.assertEqual(parms['type'], 'git-dependency', 'git dependencies uri should have "type=git-dependency"')
             raw_url = raw_url.replace("git://", '%s://' % parms['protocol'])
             patch_line = '[patch."%s"]' % raw_url
-            path_patched = os.path.join(workdir, parms['destsuffix'])
+            path_patched = os.path.join(unpackdir, parms['destsuffix'])
             path_override_line = '%s = { path = "%s" }' % (parms['name'], path_patched)
             # Would have been better to use tomllib to read this file :/
             self.assertIn(patch_line, cargo_config_contents)

@@ -67,7 +67,7 @@ DEPENDS:append:class-target = "${@bb.utils.contains('PTEST_ENABLED', '1', ' ptes
 PACKAGE_WRITE_DEPS += "ptest-runner"
 
 do_install_ptest() {
-	install ${WORKDIR}/test.sh ${D}${PTEST_PATH}
+	install ${UNPACKDIR}/test.sh ${D}${PTEST_PATH}
     mkdir ${D}${PTEST_PATH}/test
     install ${S}/test/* ${D}${PTEST_PATH}/test
     # mail needs a MTA, and the patch-wrapper is disabled

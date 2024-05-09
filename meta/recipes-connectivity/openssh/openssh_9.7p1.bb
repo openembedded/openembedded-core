@@ -112,7 +112,7 @@ do_compile_ptest() {
 
 do_install:append () {
 	if [ "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}" ]; then
-		install -D -m 0644 ${WORKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
+		install -D -m 0644 ${UNPACKDIR}/sshd ${D}${sysconfdir}/pam.d/sshd
 		sed -i -e 's:#UsePAM no:UsePAM yes:' ${D}${sysconfdir}/ssh/sshd_config
 	fi
 
@@ -121,11 +121,11 @@ do_install:append () {
 	fi
 
 	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/sshd
+	install -m 0755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/sshd
 	rm -f ${D}${bindir}/slogin ${D}${datadir}/Ssh.bin
 	rmdir ${D}${localstatedir}/run/sshd ${D}${localstatedir}/run ${D}${localstatedir}
 	install -d ${D}/${sysconfdir}/default/volatiles
-	install -m 644 ${WORKDIR}/volatiles.99_sshd ${D}/${sysconfdir}/default/volatiles/99_sshd
+	install -m 644 ${UNPACKDIR}/volatiles.99_sshd ${D}/${sysconfdir}/default/volatiles/99_sshd
 	install -m 0755 ${S}/contrib/ssh-copy-id ${D}${bindir}
 
 	# Create config files for read-only rootfs
@@ -138,8 +138,8 @@ do_install:append () {
 
 	install -d ${D}${systemd_system_unitdir}
 	if ${@bb.utils.contains('PACKAGECONFIG','systemd-sshd-socket-mode','true','false',d)}; then
-	    install -c -m 0644 ${WORKDIR}/sshd.socket ${D}${systemd_system_unitdir}
-	    install -c -m 0644 ${WORKDIR}/sshd@.service ${D}${systemd_system_unitdir}
+	    install -c -m 0644 ${UNPACKDIR}/sshd.socket ${D}${systemd_system_unitdir}
+	    install -c -m 0644 ${UNPACKDIR}/sshd@.service ${D}${systemd_system_unitdir}
 	    sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 		    -e 's,@SBINDIR@,${sbindir},g' \
 		    -e 's,@BINDIR@,${bindir},g' \
@@ -147,9 +147,9 @@ do_install:append () {
             ${D}${systemd_system_unitdir}/sshd.socket
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG','systemd-sshd-service-mode','true','false',d)}; then
-	    install -c -m 0644 ${WORKDIR}/sshd.service ${D}${systemd_system_unitdir}
+	    install -c -m 0644 ${UNPACKDIR}/sshd.service ${D}${systemd_system_unitdir}
 	fi
-	install -c -m 0644 ${WORKDIR}/sshdgenkeys.service ${D}${systemd_system_unitdir}
+	install -c -m 0644 ${UNPACKDIR}/sshdgenkeys.service ${D}${systemd_system_unitdir}
 	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 		-e 's,@SBINDIR@,${sbindir},g' \
 		-e 's,@BINDIR@,${bindir},g' \
@@ -159,7 +159,7 @@ do_install:append () {
 	sed -i -e 's,@LIBEXECDIR@,${libexecdir}/${BPN},g' \
 		${D}${sysconfdir}/init.d/sshd
 
-	install -D -m 0755 ${WORKDIR}/sshd_check_keys ${D}${libexecdir}/${BPN}/sshd_check_keys
+	install -D -m 0755 ${UNPACKDIR}/sshd_check_keys ${D}${libexecdir}/${BPN}/sshd_check_keys
 }
 
 do_install_ptest () {

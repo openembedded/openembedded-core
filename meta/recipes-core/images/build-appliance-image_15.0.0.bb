@@ -44,10 +44,10 @@ IMAGE_CMD:ext4:append () {
 fakeroot do_populate_poky_src () {
 	# Because fetch2's git's unpack uses -s cloneflag, the unpacked git repo
 	# will become invalid in the target.
-	rm -rf ${WORKDIR}/git/.git
-	rm -f ${WORKDIR}/git/.gitignore
+	rm -rf ${UNPACKDIR}/git/.git
+	rm -f ${UNPACKDIR}/git/.gitignore
 
-	cp -R ${WORKDIR}/git ${IMAGE_ROOTFS}/home/builder/poky
+	cp -R ${UNPACKDIR}/git ${IMAGE_ROOTFS}/home/builder/poky
 
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/poky/build/conf
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/poky/build/downloads
@@ -58,10 +58,10 @@ fakeroot do_populate_poky_src () {
 	fi
 
 	# Place the README_VirtualBox_Guest_Additions file in builders home folder.
-	cp ${WORKDIR}/README_VirtualBox_Guest_Additions.txt ${IMAGE_ROOTFS}/home/builder/
+	cp ${UNPACKDIR}/README_VirtualBox_Guest_Additions.txt ${IMAGE_ROOTFS}/home/builder/
 
 	# Place the README_VirtualBox_Toaster file in builders home folder.
-	cp ${WORKDIR}/README_VirtualBox_Toaster.txt ${IMAGE_ROOTFS}/home/builder/
+	cp ${UNPACKDIR}/README_VirtualBox_Toaster.txt ${IMAGE_ROOTFS}/home/builder/
 
 	echo "INHERIT += \"rm_work\"" >> ${IMAGE_ROOTFS}/home/builder/poky/build/conf/auto.conf
 	echo "export LC_ALL=en_US.utf8" >> ${IMAGE_ROOTFS}/home/builder/.bashrc
@@ -132,7 +132,7 @@ python () {
 create_bundle_files () {
 	cd ${WORKDIR}
 	mkdir -p Yocto_Build_Appliance
-	cp *.vmx* Yocto_Build_Appliance
+	cp ${UNPACKDIR}/*.vmx* Yocto_Build_Appliance
 	ln -sf ${IMGDEPLOYDIR}/${IMAGE_NAME}.wic.vmdk Yocto_Build_Appliance/Yocto_Build_Appliance.vmdk
 	ln -sf ${IMGDEPLOYDIR}/${IMAGE_NAME}.wic.vhdx Yocto_Build_Appliance/Yocto_Build_Appliance.vhdx
 	ln -sf ${IMGDEPLOYDIR}/${IMAGE_NAME}.wic.vhd Yocto_Build_Appliance/Yocto_Build_Appliance.vhd

@@ -32,8 +32,8 @@ RDEPENDS:${PN}-ptest += " \
 
 do_install_ptest() {
     install -d ${D}${PTEST_PATH}/examples
-    install -m 0755 ${WORKDIR}/test_binary_search.py ${D}${PTEST_PATH}/examples/
-    install -m 0755 ${WORKDIR}/test_rle.py ${D}${PTEST_PATH}/examples/
+    install -m 0755 ${UNPACKDIR}/test_binary_search.py ${D}${PTEST_PATH}/examples/
+    install -m 0755 ${UNPACKDIR}/test_rle.py ${D}${PTEST_PATH}/examples/
 }
 
 BBCLASSEXTEND = "native nativesdk"

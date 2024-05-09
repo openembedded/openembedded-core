@@ -51,7 +51,7 @@ do_install () {
 }
 
 do_install_ptest () {
-        cp -R --no-dereference --preserve=mode,links -v ${WORKDIR}/lua-${PV_testsuites}-tests ${D}${PTEST_PATH}/test
+        cp -R --no-dereference --preserve=mode,links -v ${UNPACKDIR}/lua-${PV_testsuites}-tests ${D}${PTEST_PATH}/test
 }
 
 do_install_ptest:append:libc-musl () {
