@@ -47,10 +47,6 @@ do_install_ptest() {
         sed -i -e '/^src/s/strace.*[0-9]/ptest/' ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
-RDEPENDS:${PN}-ptest += "make coreutils grep gawk sed"
-
-RDEPENDS:${PN}-ptest:append:libc-glibc = "\
-     locale-base-en-us.iso-8859-1 \
-"
+RDEPENDS:${PN}-ptest += "make coreutils grep gawk sed locale-base-en-us"
 
 BBCLASSEXTEND = "native"
