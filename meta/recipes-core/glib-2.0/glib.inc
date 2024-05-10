@@ -32,13 +32,15 @@ inherit meson gettext gi-docgen pkgconfig ptest-gnome upstream-version-is-even b
 
 S = "${WORKDIR}/glib-${PV}"
 
+GIDOCGEN_MESON_OPTION = "documentation"
+
 PACKAGECONFIG ??= "libmount \
                    ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'introspection', '', d)} \
                    ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 PACKAGECONFIG:class-native = ""
 
 PACKAGECONFIG[libmount] = "-Dlibmount=enabled,-Dlibmount=disabled,util-linux"
-PACKAGECONFIG[manpages] = "-Dman=true, -Dman=false, python3-docutils-native"
+PACKAGECONFIG[manpages] = "-Dman-pages=enabled, -Dman-pages=disabled, python3-docutils-native"
 PACKAGECONFIG[libelf] = "-Dlibelf=enabled,-Dlibelf=disabled,elfutils"
 PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false,"
 PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux"
