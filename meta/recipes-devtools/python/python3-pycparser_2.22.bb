@@ -11,9 +11,7 @@ BBCLASSEXTEND = "native nativesdk"
 
 RDEPENDS:${PN}:class-target += "\
     python3-netclient \
-    python3-ply \
-    python3-pprint \
-    "
+"
 
 RSUGGESTS:${PN}:class-target += "\
     cpp \
