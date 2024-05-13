@@ -70,7 +70,7 @@ do_install () {
 	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_system_unitdir}/atd.service
 
 	if [ "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}" ]; then
-		install -D -m 0644 ${UNPACKDIR}/${BP}/pam.conf ${D}${sysconfdir}/pam.d/atd
+		install -D -m 0644 ${S}/pam.conf ${D}${sysconfdir}/pam.d/atd
 	fi
         rm -f ${D}${datadir}/at/batch-job
 }
