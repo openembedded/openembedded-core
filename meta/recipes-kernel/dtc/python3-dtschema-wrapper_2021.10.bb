@@ -7,6 +7,9 @@ SRC_URI = "file://dt-doc-validate \
            file://dt-mk-schema \
            file://dt-validate"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install() {
     install -d ${D}${bindir}/
     install -m 755 ${UNPACKDIR}/dt-doc-validate ${D}${bindir}/

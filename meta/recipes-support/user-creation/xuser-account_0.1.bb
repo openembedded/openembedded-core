@@ -6,6 +6,9 @@ SRC_URI = "file://system-xuser.conf"
 
 inherit allarch useradd
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_configure() {
     :
 }
