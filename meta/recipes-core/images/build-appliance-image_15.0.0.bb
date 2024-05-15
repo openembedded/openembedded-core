@@ -129,6 +129,11 @@ python () {
     d.delVarFlag("do_unpack", "noexec")
 }
 
+# ${S} doesn't exist for us
+do_qa_unpack() {
+    return
+}
+
 create_bundle_files () {
 	cd ${WORKDIR}
 	mkdir -p Yocto_Build_Appliance
