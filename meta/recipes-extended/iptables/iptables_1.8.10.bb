@@ -14,7 +14,6 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.xz \
            file://ip6tables.service \
            file://ip6tables.rules \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
-           file://0004-configure.ac-only-check-conntrack-when-libnfnetlink-.patch \
            "
 SRC_URI[sha256sum] = "5cc255c189356e317d070755ce9371eb63a1b783c34498fb8c30264f3cc59c9c"
 
@@ -33,7 +32,7 @@ PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 
 # libnfnetlink recipe is in meta-networking layer
-PACKAGECONFIG[libnfnetlink] = "--enable-libnfnetlink,--disable-libnfnetlink,libnfnetlink libnetfilter-conntrack"
+PACKAGECONFIG[libnfnetlink] = "--enable-libnfnetlink --enable-connlabel,--disable-libnfnetlink --disable-connlabel,libnfnetlink libnetfilter-conntrack"
 
 # libnftnl recipe is in meta-networking layer(previously known as libnftables)
 PACKAGECONFIG[libnftnl] = "--enable-nftables,--disable-nftables,libnftnl"
