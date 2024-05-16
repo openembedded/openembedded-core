@@ -159,6 +159,7 @@ class OpkgDpkgPM(PackageManager):
         bb.note("Extracted %s to %s" % (pkg_path, tmp_dir))
         bb.utils.remove(os.path.join(tmp_dir, "debian-binary"))
         bb.utils.remove(os.path.join(tmp_dir, "control.tar.gz"))
+        bb.utils.remove(os.path.join(tmp_dir, data_tar))
         os.chdir(current_dir)
 
         return tmp_dir
@@ -511,7 +512,4 @@ class OpkgPM(OpkgDpkgPM):
             bb.fatal("Unable to get information for package '%s' while "
                      "trying to extract the package."  % pkg)
 
-        tmp_dir = super(OpkgPM, self).extract(pkg, pkg_info)
-        bb.utils.remove(os.path.join(tmp_dir, "data.tar.zst"))
-
-        return tmp_dir
+        return super(OpkgPM, self).extract(pkg, pkg_info)
