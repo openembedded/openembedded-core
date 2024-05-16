@@ -1,4 +1,4 @@
-From 4e6be5d15e5d2f8e494d22a3d49b623064f9c1a5 Mon Sep 17 00:00:00 2001
+From f1beef5c2d09fae3a5e5a314f984cb3f20abe732 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Tue, 23 Apr 2024 11:24:34 +0200
 Subject: [PATCH] girepository/introspection: correctly install .gir files into
