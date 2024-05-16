@@ -80,19 +80,7 @@ export GOPROXY ??= "https://proxy.golang.org,direct"
 export GOTMPDIR ?= "${WORKDIR}/build-tmp"
 GOTMPDIR[vardepvalue] = ""
 
-python go_do_unpack() {
-    src_uri = (d.getVar('SRC_URI') or "").split()
-    if len(src_uri) == 0:
-        return
-
-    fetcher = bb.fetch2.Fetch(src_uri, d)
-    for url in fetcher.urls:
-        if fetcher.ud[url].type == 'git':
-            if fetcher.ud[url].parm.get('destsuffix') is None:
-                s_dirname = os.path.basename(d.getVar('S'))
-                fetcher.ud[url].parm['destsuffix'] = os.path.join(s_dirname, 'src', d.getVar('GO_IMPORT')) + '/'
-    fetcher.unpack(d.getVar('WORKDIR'))
-}
+GO_SRCURI_DESTSUFFIX = "${@os.path.join(os.path.basename(d.getVar('S')), 'src', d.getVar('GO_IMPORT')) + '/'}"
 
 go_list_packages() {
 	${GO} list -f '{{.ImportPath}}' ${GOBUILDFLAGS} ${GO_INSTALL} | \
@@ -151,7 +139,7 @@ go_stage_testdata() {
 	cd "$oldwd"
 }
 
-EXPORT_FUNCTIONS do_unpack do_configure do_compile do_install
+EXPORT_FUNCTIONS do_configure do_compile do_install
 
 FILES:${PN}-dev = "${libdir}/go/src"
 FILES:${PN}-staticdev = "${libdir}/go/pkg"
