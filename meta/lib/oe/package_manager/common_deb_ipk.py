@@ -20,9 +20,15 @@ class OpkgDpkgPM(PackageManager):
         """
         super(OpkgDpkgPM, self).__init__(d, target_rootfs)
 
-    def package_info(self, pkg, cmd):
+    def package_info(self, pkg):
         """
         Returns a dictionary with the package info.
+        """
+        raise NotImplementedError
+
+    def _common_package_info(self, cmd):
+        """
+       "Returns a dictionary with the package info.
 
         This method extracts the common parts for Opkg and Dpkg
         """
@@ -36,14 +42,16 @@ class OpkgDpkgPM(PackageManager):
 
         return opkg_query(proc.stdout)
 
-    def extract(self, pkg, pkg_info):
+    def extract(self, pkg):
         """
         Returns the path to a tmpdir where resides the contents of a package.
 
         Deleting the tmpdir is responsability of the caller.
-
-        This method extracts the common parts for Opkg and Dpkg
         """
+        pkg_info = self.package_info(pkg)
+        if not pkg_info:
+            bb.fatal("Unable to get information for package '%s' while "
+                     "trying to extract the package."  % pkg)
 
         ar_cmd = bb.utils.which(os.getenv("PATH"), "ar")
         tar_cmd = bb.utils.which(os.getenv("PATH"), "tar")

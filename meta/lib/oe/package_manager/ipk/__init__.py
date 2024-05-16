@@ -416,7 +416,7 @@ class OpkgPM(OpkgDpkgPM):
         Returns a dictionary with the package info.
         """
         cmd = "%s %s info %s" % (self.opkg_cmd, self.opkg_args, pkg)
-        pkg_info = super(OpkgPM, self).package_info(pkg, cmd)
+        pkg_info = self._common_package_info(cmd)
 
         pkg_arch = pkg_info[pkg]["arch"]
         pkg_filename = pkg_info[pkg]["filename"]
@@ -424,16 +424,3 @@ class OpkgPM(OpkgDpkgPM):
                 os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
 
         return pkg_info
-
-    def extract(self, pkg):
-        """
-        Returns the path to a tmpdir where resides the contents of a package.
-
-        Deleting the tmpdir is responsability of the caller.
-        """
-        pkg_info = self.package_info(pkg)
-        if not pkg_info:
-            bb.fatal("Unable to get information for package '%s' while "
-                     "trying to extract the package."  % pkg)
-
-        return super(OpkgPM, self).extract(pkg, pkg_info)

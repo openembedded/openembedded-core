@@ -7,7 +7,7 @@
 import re
 import subprocess
 from oe.package_manager import *
-from oe.package_manager import OpkgDpkgPM
+from oe.package_manager.common_deb_ipk import OpkgDpkgPM
 
 class DpkgIndexer(Indexer):
     def _create_configs(self):
@@ -431,7 +431,7 @@ class DpkgPM(OpkgDpkgPM):
         Returns a dictionary with the package info.
         """
         cmd = "%s show %s" % (self.apt_cache_cmd, pkg)
-        pkg_info = super(DpkgPM, self).package_info(pkg, cmd)
+        pkg_info = self._common_package_info(cmd)
 
         pkg_arch = pkg_info[pkg]["pkgarch"]
         pkg_filename = pkg_info[pkg]["filename"]
@@ -439,18 +439,3 @@ class DpkgPM(OpkgDpkgPM):
                 os.path.join(self.deploy_dir, pkg_arch, pkg_filename)
 
         return pkg_info
-
-    def extract(self, pkg):
-        """
-        Returns the path to a tmpdir where resides the contents of a package.
-
-        Deleting the tmpdir is responsability of the caller.
-        """
-        pkg_info = self.package_info(pkg)
-        if not pkg_info:
-            bb.fatal("Unable to get information for package '%s' while "
-                     "trying to extract the package."  % pkg)
-
-        tmp_dir = super(DpkgPM, self).extract(pkg, pkg_info)
-
-        return tmp_dir
