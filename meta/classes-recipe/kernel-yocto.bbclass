@@ -440,6 +440,11 @@ do_kernel_metadata[depends] = "kern-tools-native:do_populate_sysroot"
 do_kernel_metadata[file-checksums] = " ${@get_dirs_with_fragments(d)}"
 do_validate_branches[depends] = "kern-tools-native:do_populate_sysroot"
 
+# ${S} doesn't exist for us at unpack
+do_qa_unpack() {
+    return
+}
+
 do_kernel_configme[depends] += "virtual/${TARGET_PREFIX}binutils:do_populate_sysroot"
 do_kernel_configme[depends] += "virtual/${TARGET_PREFIX}gcc:do_populate_sysroot"
 do_kernel_configme[depends] += "bc-native:do_populate_sysroot bison-native:do_populate_sysroot"
