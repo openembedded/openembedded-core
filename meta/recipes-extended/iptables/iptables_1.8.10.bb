@@ -14,7 +14,6 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.xz \
            file://ip6tables.service \
            file://ip6tables.rules \
            file://0001-configure-Add-option-to-enable-disable-libnfnetlink.patch \
-           file://0002-iptables-xshared.h-add-missing-sys.types.h-include.patch \
            file://0004-configure.ac-only-check-conntrack-when-libnfnetlink-.patch \
            "
 SRC_URI[sha256sum] = "5cc255c189356e317d070755ce9371eb63a1b783c34498fb8c30264f3cc59c9c"
