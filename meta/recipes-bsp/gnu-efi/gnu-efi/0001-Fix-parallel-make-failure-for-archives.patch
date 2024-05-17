@@ -1,4 +1,4 @@
-From f56ddb00a656af2e84f839738fad19909ac65047 Mon Sep 17 00:00:00 2001
+From 70e30774debb9ab5d53a29c183f86fc569661b7c Mon Sep 17 00:00:00 2001
 From: Saul Wold <sgw@linux.intel.com>
 Date: Sun, 9 Mar 2014 15:22:15 +0200
 Subject: [PATCH] Fix parallel make failure for archives
@@ -19,16 +19,15 @@ Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 Signed-off-by: California Sullivan <california.l.sullivan@intel.com>
 [Rebased for 3.0.8]
 Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
-
 ---
  lib/Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lib/Makefile b/lib/Makefile
-index 1fc6a47..54b0ca7 100644
+index ec1f9e3..79a794d 100644
 --- a/lib/Makefile
 +++ b/lib/Makefile
-@@ -77,7 +77,7 @@ libsubdirs:
+@@ -75,7 +75,7 @@ libsubdirs:
  $(OBJS): libsubdirs
  
  libefi.a: $(OBJS)
@@ -36,4 +35,7 @@ index 1fc6a47..54b0ca7 100644
 +	$(AR) $(ARFLAGS) $@ $(OBJS)
  
  clean:
- 	rm -f libefi.a *~ $(OBJS) */*.o
+ 	@rm -vf libefi.a *~ $(OBJS) */*.o
+-- 
+2.25.1
+

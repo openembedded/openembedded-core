@@ -13,13 +13,10 @@ LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=16;md5=e582
                    "
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/files/${BP}.tar.bz2 \
-           file://parallel-make-archives.patch \
-           file://gnu-efi-3.0.9-fix-clang-build.patch \
-           file://0001-riscv64-adjust-type-definitions.patch \
-           file://0001-riscv64-ignore-unknown-relocs.patch \
-           file://no-werror.patch \
+           file://0001-Fix-parallel-make-failure-for-archives.patch \
+           file://0002-Do-not-treat-warnings-as-errors.patch \
            "
-SRC_URI[sha256sum] = "7807e903349343a7a142ebb934703a2872235e89688cf586c032b0a1087bcaf4"
+SRC_URI[sha256sum] = "7f212c96ee66547eeefb531267b641e5473d7d8529f0bd8ccdefd33cf7413f5c"
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*|riscv64.*)-linux"
 COMPATIBLE_HOST:armv4 = 'null'
