@@ -13,6 +13,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
            file://0001-Added-handshake-history-reporting-when-test-fails.patch \
            file://bti.patch \
+           file://CVE-2024-4603.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
