@@ -4,13 +4,9 @@ SRC_URI += "file://0001-tic-hang.patch \
            file://0002-configure-reproducible.patch \
            file://0003-gen-pkgconfig.in-Do-not-include-LDFLAGS-in-generated.patch \
            file://exit_prototype.patch \
-           file://0001-Fix-CVE-2023-29491.patch \
-           file://0001-Updating-reset-code-ncurses-6.4-patch-20231104.patch \
-           file://CVE-2023-50495.patch \
-           file://CVE-2023-45918.patch \
            "
 # commit id corresponds to the revision in package version
-SRCREV = "1003914e200fd622a27237abca155ce6bf2e6030"
+SRCREV = "1c55d64d9d3e00399a21f04e9cac1e472ab5f70a"
 S = "${WORKDIR}/git"
 EXTRA_OECONF += "--with-abi-version=5"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+_\d+)$"
