@@ -16,6 +16,13 @@ DEBUG_PREFIX_MAP = ""
 
 EXPORT_SDK_PS1 = "${@ 'export PS1=\\"%s\\"' % d.getVar('SDK_PS1') if d.getVar('SDK_PS1') else ''}"
 
+def siteinfo_with_prefix(d, prefix):
+    # Return a prefixed value from siteinfo
+    for item in siteinfo_data_for_machine(d.getVar("TARGET_ARCH"), d.getVar("TARGET_OS"), d):
+        if item.startswith(prefix):
+            return item.replace(prefix, "")
+    raise KeyError
+
 # This function creates an environment-setup-script for use in a deployable SDK
 toolchain_create_sdk_env_script () {
 	# Create environment setup script.  Remember that $SDKTARGETSYSROOT should
@@ -63,6 +70,8 @@ toolchain_create_sdk_env_script () {
 	echo 'export OECORE_BASELIB="${baselib}"' >> $script
 	echo 'export OECORE_TARGET_ARCH="${TARGET_ARCH}"' >>$script
 	echo 'export OECORE_TARGET_OS="${TARGET_OS}"' >>$script
+	echo 'export OECORE_TARGET_BITS="${@siteinfo_with_prefix(d, 'bit-')}"' >>$script
+	echo 'export OECORE_TARGET_ENDIAN="${@siteinfo_with_prefix(d, 'endian-')}"' >>$script
 
 	echo 'unset command_not_found_handle' >> $script
 
