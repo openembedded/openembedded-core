@@ -13,7 +13,7 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
-class BuildCpioTest(OESDKTestCase):
+class AutotoolsTest(OESDKTestCase):
     """
     Check that autotools will cross-compile correctly.
     """

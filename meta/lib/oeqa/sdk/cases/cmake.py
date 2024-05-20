@@ -13,7 +13,7 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
-class BuildAssimp(OESDKTestCase):
+class CMakeTest(OESDKTestCase):
     """
     Test case to build a project using cmake.
     """
@@ -21,7 +21,7 @@ class BuildAssimp(OESDKTestCase):
     def setUp(self):
         if not (self.tc.hasHostPackage("nativesdk-cmake") or
                 self.tc.hasHostPackage("cmake-native")):
-            raise unittest.SkipTest("Needs cmake")
+            raise unittest.SkipTest("CMakeTest: needs cmake")
 
     def test_assimp(self):
         with tempfile.TemporaryDirectory(prefix="assimp", dir=self.tc.sdk_dir) as testdir:

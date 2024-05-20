@@ -13,7 +13,7 @@ from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
-class GalculatorTest(OESDKTestCase):
+class GTK3Test(OESDKTestCase):
     """
     Test that autotools and GTK+ 3 compiles correctly.
     """
