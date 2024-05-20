@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-import os, tempfile, subprocess, unittest
+import os, tempfile, subprocess
 from oeqa.sdk.case import OESDKTestCase
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
