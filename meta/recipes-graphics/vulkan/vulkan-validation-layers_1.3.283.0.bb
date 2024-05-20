@@ -8,8 +8,8 @@ SECTION = "libs"
 LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=cd3c0bc366cd9b6a906e22f0bcb5910f"
 
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.3.280;protocol=https"
-SRCREV = "8506077b9a25a00684e8be24b779733ae1405a54"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.3.283;protocol=https"
+SRCREV = "d5bed3e26b3d487e8d21f0cc39039351eac921a7"
 
 S = "${WORKDIR}/git"
 
@@ -43,7 +43,7 @@ FILES_SOLIBSDEV = ""
 # These recipes need to be updated in lockstep with each other:
 # glslang, vulkan-headers, vulkan-loader, vulkan-tools,
 # vulkan-validation-layers, spirv-headers, spirv-tools,
-# vulkan-utility-libraries.
+# vulkan-utility-libraries, vulkan-volk.
 # The tags versions should always be sdk-x.y.z, as this is what
 # upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
