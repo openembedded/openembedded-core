@@ -34,7 +34,7 @@ SRC_URI = "\
      file://0013-Avoid-as-info-race-condition.patch \
      file://0014-CVE-2019-1010204.patch \
      file://0015-CVE-2022-38533.patch \
-     file://0016-CVE-2022-38126.patch \
+     file://0016-CVE-2022-35205.patch \
      file://0017-CVE-2022-38127-1.patch \
      file://0017-CVE-2022-38127-2.patch \
      file://0017-CVE-2022-38127-3.patch \
