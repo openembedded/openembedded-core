@@ -336,10 +336,12 @@ def print_html_report(data, id_comp, buildstats):
                 test_i = test_data['tests'][test]
                 meas_i = test_i['measurements'][meas]
                 commit_num = get_data_item(meta, 'layers.meta.commit_count')
+                commit = get_data_item(meta, 'layers.meta.commit')
                 # Add start_time for both test measurement types of sysres and disk usage
                 start_time = test_i['start_time'][0]
                 samples.append(measurement_stats(meas_i, '', start_time))
                 samples[-1]['commit_num'] = commit_num
+                samples[-1]['commit'] = commit
 
             absdiff = samples[-1]['val_cls'](samples[-1]['mean'] - samples[id_comp]['mean'])
             reldiff = absdiff * 100 / samples[id_comp]['mean']

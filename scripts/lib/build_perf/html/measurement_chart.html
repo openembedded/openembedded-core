@@ -2,7 +2,7 @@
   // Get raw data
   const rawData = [
     {% for sample in measurement.samples %}
-      [{{ sample.commit_num }}, {{ sample.mean.gv_value() }}, {{ sample.start_time }}],
+      [{{ sample.commit_num }}, {{ sample.mean.gv_value() }}, {{ sample.start_time }}, '{{sample.commit}}'],
     {% endfor %}
   ];
 
@@ -30,23 +30,23 @@
   const option = {
     tooltip: {
       trigger: 'axis',
-      valueFormatter: (value) => {
-        const commitNumber  = rawData.filter(([commit, dataValue, time]) => updateValue(dataValue) === value)
+      enterable: true,
+      position: function (point, params, dom, rect, size) {
+        return [point[0]-150, '10%'];
+      },
+      formatter: function (param) {
+        const value = param[0].value[1]
+        const sample  = rawData.filter(([commit, dataValue]) => updateValue(dataValue) === value)
+        // Add commit hash to the tooltip as a link
+        const commitLink = `https://git.yoctoproject.org/poky/commit/?id=${sample[0][3]}`
         if ('{{ measurement.value_type.quantity }}' == 'time') {
           const hours = Math.floor(value/60)
           const minutes = Math.floor(value % 60)
           const seconds = Math.floor((value * 60) % 60)
-          return [
-                hours + ':' + minutes + ':' + seconds + ', ' +
-                'commit number: ' + commitNumber[0][0]
-              ]
+          return `<strong>Duration:</strong> ${hours}:${minutes}:${seconds}, <br/> <strong>Commit number:</strong> <a href="${commitLink}" target="_blank" rel="noreferrer noopener">${sample[0][0]}</a>`
         }
-        return [
-          value.toFixed(2) + ' MB' + ', ' +
-          'commit number: ' + commitNumber[0][0]
-        ]
-      },
-
+        return `<strong>Size:</strong> ${value.toFixed(2)} MB, <br/> <strong>Commit number:</strong> <a href="${commitLink}" target="_blank" rel="noreferrer noopener">${sample[0][0]}</a>`
+      ;}
     },
     xAxis: {
       type: 'time',
