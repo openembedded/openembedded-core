@@ -1,7 +1,7 @@
-From dc2a8ccd440ee3741b61606eafed3f7e092f4312 Mon Sep 17 00:00:00 2001
+From 23bf534e463bf4c1ba2e1356eaf17be0b23b192e Mon Sep 17 00:00:00 2001
 From: Mark Asselstine <mark.asselstine@windriver.com>
 Date: Tue, 26 Feb 2013 11:43:28 -0500
-Subject: [PATCH 03/12] apic: fixup fallthrough to PIC
+Subject: [PATCH 02/11] apic: fixup fallthrough to PIC
 
 Commit 0e21e12bb311c4c1095d0269dc2ef81196ccb60a [Don't route PIC
 interrupts through the local APIC if the local APIC config says so.]
@@ -24,16 +24,15 @@ serviced, is -1.
 Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
 Upstream-Status: Submitted [https://lists.gnu.org/archive/html/qemu-devel/2013-04/msg00878.html]
 Signed-off-by: He Zhe <zhe.he@windriver.com>
-
 ---
  hw/intc/apic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: qemu-8.0.0/hw/intc/apic.c
-===================================================================
---- qemu-8.0.0.orig/hw/intc/apic.c
-+++ qemu-8.0.0/hw/intc/apic.c
-@@ -607,7 +607,7 @@ int apic_accept_pic_intr(DeviceState *de
+diff --git a/hw/intc/apic.c b/hw/intc/apic.c
+index 4186c57b34..43cd805a96 100644
+--- a/hw/intc/apic.c
++++ b/hw/intc/apic.c
+@@ -759,7 +759,7 @@ int apic_accept_pic_intr(DeviceState *dev)
      APICCommonState *s = APIC(dev);
      uint32_t lvt0;
  
@@ -42,3 +41,6 @@ Index: qemu-8.0.0/hw/intc/apic.c
          return -1;
  
      lvt0 = s->lvt[APIC_LVT_LINT0];
+-- 
+2.44.0
+

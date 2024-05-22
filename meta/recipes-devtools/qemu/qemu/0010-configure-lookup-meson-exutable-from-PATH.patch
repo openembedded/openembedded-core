@@ -1,10 +1,18 @@
-Upstream-Status: Inappropriate [workaround, would need a real fix for upstream]
+From e12a93174f9b652604dda8d8464b9559b62b29d5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
+Date: Wed, 22 May 2024 14:02:55 +0200
+Subject: [PATCH 10/11] configure: lookup meson exutable from PATH
 
-Index: qemu-8.2.0/configure
-===================================================================
---- qemu-8.2.0.orig/configure
-+++ qemu-8.2.0/configure
-@@ -955,12 +955,7 @@ fi
+Upstream-Status: Inappropriate [workaround, would need a real fix for upstream]
+---
+ configure | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/configure b/configure
+index 3cd736b139..482a1f8ef3 100755
+--- a/configure
++++ b/configure
+@@ -956,12 +956,7 @@ fi
  $mkvenv ensuregroup --dir "${source_path}/python/wheels" \
       ${source_path}/pythondeps.toml meson || exit 1
  
@@ -18,3 +26,6 @@ Index: qemu-8.2.0/configure
  
  # Conditionally ensure Sphinx is installed.
  
+-- 
+2.44.0
+
