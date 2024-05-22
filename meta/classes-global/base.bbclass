@@ -428,11 +428,6 @@ python () {
     oe.utils.features_backfill("DISTRO_FEATURES", d)
     oe.utils.features_backfill("MACHINE_FEATURES", d)
 
-    if d.getVar("S")[-1] == '/':
-        bb.warn("Recipe %s sets S variable with trailing slash '%s', remove it" % (d.getVar("PN"), d.getVar("S")))
-    if d.getVar("B")[-1] == '/':
-        bb.warn("Recipe %s sets B variable with trailing slash '%s', remove it" % (d.getVar("PN"), d.getVar("B")))
-
     # To add a recipe to the skip list , set:
     #   SKIP_RECIPE[pn] = "message"
     pn = d.getVar('PN')
