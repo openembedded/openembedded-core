@@ -1603,9 +1603,12 @@ python () {
         oe.qa.handle_error("uppercase-pn", 'PN: %s is upper case, this can result in unexpected behavior.' % pn, d)
 
     sourcedir = d.getVar("S")
+    builddir = d.getVar("B")
     workdir = d.getVar("WORKDIR")
     if sourcedir == workdir:
         bb.fatal("Using S = ${WORKDIR} is no longer supported")
+    if builddir == workdir:
+        bb.fatal("Using B = ${WORKDIR} is no longer supported")
 
     # Some people mistakenly use DEPENDS:${PN} instead of DEPENDS and wonder
     # why it doesn't work.
