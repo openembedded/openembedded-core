@@ -10,10 +10,8 @@ DEPENDS = "dbus glib-2.0 udev mobile-broadband-provider-info ell"
 SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
     file://ofono \
-    file://0001-mbim-add-an-optional-TEMP_FAILURE_RETRY-macro-copy.patch \
-    file://0002-mbim-Fix-build-with-ell-0.39-by-restoring-unlikely-m.patch \
 "
-SRC_URI[sha256sum] = "93580adc1afd1890dc516efb069de0c5cdfef014415256ddfb28ab172df2d11d"
+SRC_URI[sha256sum] = "dabf6ef06b94beaad65253200abe3887046a4e722f4fe373c4264f357ae47ad3"
 
 inherit autotools pkgconfig update-rc.d systemd gobject-introspection-data
 
@@ -29,11 +27,6 @@ PACKAGECONFIG[systemd] = "--with-systemdunitdir=${systemd_system_unitdir}/,--wit
 PACKAGECONFIG[bluez] = "--enable-bluetooth, --disable-bluetooth, bluez5"
 
 EXTRA_OECONF += "--enable-test --enable-external-ell"
-
-do_configure:prepend() {
-    bbnote "Removing bundled ell from ${S}/ell to prevent including it"
-    rm -rf ${S}/ell
-}
 
 do_install:append() {
     install -d ${D}${sysconfdir}/init.d/
