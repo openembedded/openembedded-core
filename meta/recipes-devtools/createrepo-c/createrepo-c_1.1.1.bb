@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/rpm-software-management/createrepo_c;branch=master;p
            file://0001-include-rpm-rpmstring.h.patch \
            "
 
-SRCREV = "10a8a7af4f1de3f98a21a7d08fe3a46ef306d197"
+SRCREV = "78b0c3ff48bd58eb9c0a72879cf1025e9f225684"
 
 S = "${WORKDIR}/git"
 
