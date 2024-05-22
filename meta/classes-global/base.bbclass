@@ -433,11 +433,6 @@ python () {
     if d.getVar("B")[-1] == '/':
         bb.warn("Recipe %s sets B variable with trailing slash '%s', remove it" % (d.getVar("PN"), d.getVar("B")))
 
-    if os.path.normpath(d.getVar("WORKDIR")) != os.path.normpath(d.getVar("S")):
-        d.appendVar("PSEUDO_IGNORE_PATHS", ",${S}")
-    if os.path.normpath(d.getVar("WORKDIR")) != os.path.normpath(d.getVar("B")):
-        d.appendVar("PSEUDO_IGNORE_PATHS", ",${B}")
-
     # To add a recipe to the skip list , set:
     #   SKIP_RECIPE[pn] = "message"
     pn = d.getVar('PN')
