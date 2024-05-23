@@ -202,6 +202,7 @@ TRANSLATE = (
     ("[", "@openbrace@"),
     ("]", "@closebrace@"),
     ("_", "@underscore@"),
+    (":", "@colon@"),
 )
 
 def file_translate(file):
