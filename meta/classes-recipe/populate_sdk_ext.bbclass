@@ -413,10 +413,6 @@ def write_local_conf(d, baseoutpath, derivative, core_meta_subdir, uninative_che
             if os.path.exists(builddir + dest_stub):
                 shutil.copyfile(builddir + dest_stub, baseoutpath + dest_stub)
 
-    cachedir = os.path.join(baseoutpath, 'cache')
-    bb.utils.mkdirhier(cachedir)
-    bb.parse.siggen.copy_unitaskhashes(cachedir)
-
     # If PR Service is in use, we need to export this as well
     bb.note('Do we have a pr database?')
     if d.getVar("PRSERV_HOST"):
@@ -506,10 +502,6 @@ def prepare_locked_cache(d, baseoutpath, derivative, conf_initpath):
         create_filtered_tasklist(d, baseoutpath, tasklistfn, conf_initpath)
     else:
         tasklistfn = None
-
-    cachedir = os.path.join(baseoutpath, 'cache')
-    bb.utils.mkdirhier(cachedir)
-    bb.parse.siggen.copy_unitaskhashes(cachedir)
 
     # Add packagedata if enabled
     if d.getVar('SDK_INCLUDE_PKGDATA') == '1':
