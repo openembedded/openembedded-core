@@ -276,7 +276,8 @@ fi
             d.setVar('PKG:%s' % pkg, pkg)
 
         extended_data = {
-            "files_info": {}
+            "name": pkgval,
+            "files_info": {},
         }
 
         pkgdestpkg = os.path.join(pkgdest, pkg)
