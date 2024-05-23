@@ -38,6 +38,7 @@ def filter_nativesdk_deps(srcname, var):
 
 # Construct per file dependencies file
 def write_rpm_perfiledata(srcname, d):
+    import oe.package
     workdir = d.getVar('WORKDIR')
     packages = d.getVar('PACKAGES')
     pkgd = d.getVar('PKGD')
@@ -53,12 +54,7 @@ def write_rpm_perfiledata(srcname, d):
                 key = "FILE" + varname + ":" + dfile + ":" + pkg
                 deps = filter_nativesdk_deps(srcname, d.getVar(key) or "")
                 depends_dict = bb.utils.explode_dep_versions(deps)
-                file = dfile.replace("@underscore@", "_")
-                file = file.replace("@closebrace@", "]")
-                file = file.replace("@openbrace@", "[")
-                file = file.replace("@tab@", "\t")
-                file = file.replace("@space@", " ")
-                file = file.replace("@at@", "@")
+                file = oe.package.file_reverse_translate(dfile)
                 outfile.write('"' + pkgd + file + '" : "')
                 for dep in depends_dict:
                     ver = depends_dict[dep]
