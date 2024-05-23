@@ -344,11 +344,6 @@ def package_qa_check_arch(path,name,d, elf, messages):
         oe.qa.add_message(messages, "arch", pn + ": Recipe inherits the allarch class, but has packaged architecture-specific binaries")
         return
 
-    # FIXME: Cross package confuse this check, so just skip them
-    for s in ['cross', 'nativesdk', 'cross-canadian']:
-        if bb.data.inherits_class(s, d):
-            return
-
     # avoid following links to /usr/bin (e.g. on udev builds)
     # we will check the files pointed to anyway...
     if os.path.islink(path):
