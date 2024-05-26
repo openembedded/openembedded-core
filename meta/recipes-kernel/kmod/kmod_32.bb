@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                    "
 inherit autotools bash-completion gtk-doc pkgconfig manpages update-alternatives
 
-SRCREV = "aff617ea871d0568cc491bd116c0be1e857463bb"
+SRCREV = "41faa59711742c1476d59985011ee0f27ed91d30"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git;branch=master;protocol=https \
            file://depmod-search.conf \
@@ -52,8 +52,9 @@ do_install:append () {
         install -dm755 ${D}${base_bindir}
         install -dm755 ${D}${base_sbindir}
         # add symlinks to kmod
-        ln -rs ${D}${base_bindir}/kmod ${D}${base_bindir}/lsmod
+        [ -e ${D}${base_bindir}/lsmod ] || ln -rs ${D}${base_bindir}/kmod ${D}${base_bindir}/lsmod
         for tool in insmod rmmod depmod modinfo modprobe; do
+                rm -f ${D}${base_bindir}/${tool}
                 ln -rs ${D}${base_bindir}/kmod ${D}${base_sbindir}/${tool}
         done
         # configuration directories
