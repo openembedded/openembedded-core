@@ -10,7 +10,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad
            file://0002-avoid-including-sys-poll.h-directly.patch \
            file://0004-opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
            "
-SRC_URI[sha256sum] = "808d3b33fc4c71aeb2561c364a87c2e8a3e2343319a83244c8391be4b09499c8"
+SRC_URI[sha256sum] = "e90f26c7dc9c76f4aa599b758cfd6d8c10d6a0b9cb265ba2c3c9bdf3888558f8"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
@@ -124,7 +124,6 @@ EXTRA_OEMESON += " \
     -Dgs=disabled \
     -Dgsm=disabled \
     -Diqa=disabled \
-    -Dkate=disabled \
     -Dladspa=disabled \
     -Dldac=disabled \
     -Dlv2=disabled \
