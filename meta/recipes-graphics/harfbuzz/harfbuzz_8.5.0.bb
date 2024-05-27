@@ -32,6 +32,9 @@ PACKAGES =+ "${PN}-icu ${PN}-icu-dev ${PN}-subset"
 
 LEAD_SONAME = "libharfbuzz.so"
 
+# Remove when https://github.com/harfbuzz/harfbuzz/issues/4671 is resolved
+EXTRA_OEMESON += "-Dcpp_std=c++17"
+
 do_install:append() {
     # If no tools are installed due to PACKAGECONFIG then this directory might
     # still be installed, so remove it to stop packaging warnings.
