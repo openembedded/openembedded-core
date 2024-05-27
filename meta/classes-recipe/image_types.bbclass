@@ -113,7 +113,7 @@ IMAGE_CMD:btrfs () {
 
 oe_mksquashfs () {
     local comp=$1; shift
-    local extra_imagecmd=$@
+    local extra_imagecmd="$@"
 
     if [ "$comp" = "zstd" ]; then
         suffix="zst"
