@@ -3,7 +3,6 @@ HOMEPAGE = "https://gitlab.gnome.org/GNOME/libadwaita"
 LICENSE="LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-
 DEPENDS = " \
     gtk4 \
     appstream \
@@ -11,7 +10,7 @@ DEPENDS = " \
 
 inherit gnomebase gobject-introspection gi-docgen vala features_check
 
-SRC_URI[archive.sha256sum] = "fd92287df9bb95c963654fb6e70d3e082e2bcb37b147e0e3c905567167993783"
+SRC_URI[archive.sha256sum] = "7f144c5887d6dd2d99517c00fd42395ee20abc13ce55958a4fda64e6d7e473f8"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 REQUIRED_DISTRO_FEATURES = "opengl"
