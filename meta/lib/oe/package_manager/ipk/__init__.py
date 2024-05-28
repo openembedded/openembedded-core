@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import glob
 import re
 import shutil
 import subprocess
@@ -134,11 +135,16 @@ class OpkgDpkgPM(PackageManager):
         tmp_dir = tempfile.mkdtemp()
         current_dir = os.getcwd()
         os.chdir(tmp_dir)
-        data_tar = 'data.tar.zst'
 
         try:
             cmd = [ar_cmd, 'x', pkg_path]
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+            data_tar = glob.glob("data.tar.*")
+            if len(data_tar) != 1:
+                bb.fatal("Unable to extract %s package. Failed to identify "
+                         "data tarball (found tarballs '%s').",
+                         pkg_path, data_tar)
+            data_tar = data_tar[0]
             cmd = [tar_cmd, 'xf', data_tar]
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
