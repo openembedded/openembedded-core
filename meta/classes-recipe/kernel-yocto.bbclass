@@ -158,7 +158,7 @@ do_kernel_metadata() {
 				# one already placed in UNPACKDIR
 				cmp "${UNPACKDIR}/defconfig" "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}"
 				if [ $? -ne 0 ]; then
-					bbdebug 1 "detected SRC_URI or unpatched defconfig in UNPACKDIR. ${KBUILD_DEFCONFIG} copied over it"
+					bbdebug 1 "detected SRC_URI or patched defconfig in UNPACKDIR. ${KBUILD_DEFCONFIG} copied over it"
 				fi
 				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${UNPACKDIR}/defconfig
 			else
