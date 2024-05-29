@@ -30,6 +30,7 @@ SRC_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/downlo
            file://CVE-2024-33869-0001.patch \
            file://CVE-2024-33869-0002.patch \
            file://CVE-2024-33871.patch \
+           file://CVE-2024-29510.patch \
            "
 
 SRC_URI[sha256sum] = "e429e4f5b01615a4f0f93a4128e8a1a4d932dff983b1774174c79c0630717ad9"
