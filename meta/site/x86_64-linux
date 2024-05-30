@@ -83,3 +83,6 @@ ac_cv_func__restgpr_14_x=no
 
 # cvs
 cvs_cv_func_printf_ptr=${cvs_cv_func_printf_ptr=yes}
+
+# cabextract
+ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
