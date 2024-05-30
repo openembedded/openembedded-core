@@ -189,7 +189,6 @@ def sstate_state_fromvars(d, task = None):
     plaindirs = (d.getVarFlag("do_" + task, 'sstate-plaindirs') or "").split()
     lockfiles = (d.getVarFlag("do_" + task, 'sstate-lockfile') or "").split()
     lockfilesshared = (d.getVarFlag("do_" + task, 'sstate-lockfile-shared') or "").split()
-    interceptfuncs = (d.getVarFlag("do_" + task, 'sstate-interceptfuncs') or "").split()
     fixmedir = d.getVarFlag("do_" + task, 'sstate-fixmedir') or ""
     if not task or len(inputs) != len(outputs):
         bb.fatal("sstate variables not setup correctly?!")
@@ -205,7 +204,6 @@ def sstate_state_fromvars(d, task = None):
     ss['lockfiles'] = lockfiles
     ss['lockfiles-shared'] = lockfilesshared
     ss['plaindirs'] = plaindirs
-    ss['interceptfuncs'] = interceptfuncs
     ss['fixmedir'] = fixmedir
     return ss
 
@@ -789,9 +787,6 @@ sstate_task_prefunc[dirs] = "${WORKDIR}"
 
 python sstate_task_postfunc () {
     shared_state = sstate_state_fromvars(d)
-
-    for intercept in shared_state['interceptfuncs']:
-        bb.build.exec_func(intercept, d, (d.getVar("WORKDIR"),))
 
     omask = os.umask(0o002)
     if omask != 0o002:
