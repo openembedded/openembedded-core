@@ -20,8 +20,6 @@ EXTRA_AUTORECONF = "-I m4"
 CACHED_CONFIGUREVARS = "cf_cv_func_nanosleep=yes"
 CACHED_CONFIGUREVARS:append:linux = " cf_cv_working_poll=yes"
 
-EXTRASITECONFIG = "CFLAGS='${CFLAGS} -I${SYSROOT_DESTDIR}${includedir}'"
-
 # Whether to enable separate widec libraries; must be 'true' or 'false'
 #
 # TODO: remove this variable when widec is supported in every setup?

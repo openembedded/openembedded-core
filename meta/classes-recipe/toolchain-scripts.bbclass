@@ -201,7 +201,6 @@ EOF
 
 #we get the cached site config in the runtime
 TOOLCHAIN_CONFIGSITE_NOCACHE = "${@' '.join(siteinfo_get_files(d)[0])}"
-TOOLCHAIN_CONFIGSITE_SYSROOTCACHE = "${STAGING_DIR}/${MLPREFIX}${MACHINE}/${target_datadir}/${TARGET_SYS}_config_site.d"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE ??= "virtual/${MLPREFIX}libc ncurses"
 DEPENDS += "${TOOLCHAIN_NEED_CONFIGSITE_CACHE}"
 
@@ -223,14 +222,8 @@ toolchain_create_sdk_siteconfig () {
 			sitefile=`echo $sitefile | tr / _`
 			sitefile=`cat ${STAGING_DIR_TARGET}/sysroot-providers/$sitefile`
 		esac
-
-		if [ -r ${TOOLCHAIN_CONFIGSITE_SYSROOTCACHE}/${sitefile}_config ]; then
-			cat ${TOOLCHAIN_CONFIGSITE_SYSROOTCACHE}/${sitefile}_config >> $siteconfig
-		fi
 	done
 }
-# The immediate expansion above can result in unwanted path dependencies here
-toolchain_create_sdk_siteconfig[vardepsexclude] = "TOOLCHAIN_CONFIGSITE_SYSROOTCACHE"
 
 python __anonymous () {
     import oe.classextend
