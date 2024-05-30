@@ -12,6 +12,17 @@ SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
            file://0001-config.mak.uname-do-not-force-RHEL-7-specific-build-.patch \
            file://CVE-2023-29007.patch \
            file://CVE-2023-25652.patch \
+           file://CVE-2024-32002-0001.patch \
+           file://CVE-2024-32002-0002.patch \
+           file://CVE-2024-32002-0003.patch \
+           file://CVE-2024-32002-0004.patch \
+           file://CVE-2024-32004-0001.patch \
+           file://CVE-2024-32004-0002.patch \
+           file://CVE-2024-32004-0003.patch \
+           file://CVE-2024-32020.patch \
+           file://CVE-2024-32021-0001.patch \
+           file://CVE-2024-32021-0002.patch \
+           file://CVE-2024-32465.patch \
            "
 
 S = "${WORKDIR}/git-${PV}"
