@@ -327,7 +327,6 @@ class SignatureGeneratorOEEquivHash(SignatureGeneratorOEBasicHashMixIn, bb.sigge
         self.method = data.getVar('SSTATE_HASHEQUIV_METHOD')
         if not self.method:
             bb.fatal("OEEquivHash requires SSTATE_HASHEQUIV_METHOD to be set")
-        self.max_parallel = int(data.getVar('BB_HASHSERVE_MAX_PARALLEL') or 1)
         self.username = data.getVar("BB_HASHSERVE_USERNAME")
         self.password = data.getVar("BB_HASHSERVE_PASSWORD")
         if not self.username or not self.password:
