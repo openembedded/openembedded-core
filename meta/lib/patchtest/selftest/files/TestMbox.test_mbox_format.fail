@@ -3,7 +3,7 @@ From: Trevor Gamblin <tgamblin@baylibre.com>
 Date: Fri, 31 May 2024 09:54:50 -0400
 Subject: [PATCH] selftest-hello: fix CVE-1234-56789
 
-This should pass the test_signed_off_by_presence test.
+This should fail the test_mbox_format test.
 
 CVE: CVE-1234-56789
 
@@ -56,7 +56,7 @@ index 2dc352d479e..d937759f157 100644
  
 -SRC_URI = "file://helloworld.c"
 +SRC_URI = "file://helloworld.c \
-+           file://0001-Fix-CVE-1234-56789.patch \
+%+           file://0001-Fix-CVE-1234-56789.patch \
 +	   "
  
  S = "${WORKDIR}/sources"
