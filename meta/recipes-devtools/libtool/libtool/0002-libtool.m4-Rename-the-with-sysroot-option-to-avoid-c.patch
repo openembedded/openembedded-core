@@ -13,11 +13,11 @@ http://lists.gnu.org/archive/html/libtool/2010-10/msg00048.html
 
 Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00014.html]
 
-Index: libtool-2.4.7/m4/libtool.m4
+Index: libtool-2.5.0/m4/libtool.m4
 ===================================================================
---- libtool-2.4.7.orig/m4/libtool.m4
-+++ libtool-2.4.7/m4/libtool.m4
-@@ -1244,28 +1244,28 @@ _LT_DECL([], [ECHO], [1], [An echo progr
+--- libtool-2.5.0.orig/m4/libtool.m4
++++ libtool-2.5.0/m4/libtool.m4
+@@ -1243,16 +1243,16 @@ _LT_DECL([], [ECHO], [1], [An echo progr
  AC_DEFUN([_LT_WITH_SYSROOT],
  [m4_require([_LT_DECL_SED])dnl
  AC_MSG_CHECKING([for sysroot])
@@ -37,7 +37,8 @@ Index: libtool-2.4.7/m4/libtool.m4
 +case $with_libtool_sysroot in #(
   yes)
     if test yes = "$GCC"; then
-      lt_sysroot=`$CC --print-sysroot 2>/dev/null`
+      # Trim trailing / since we'll always append absolute paths and we want
+@@ -1261,12 +1261,12 @@ case $with_sysroot in #(
     fi
     ;; #(
   /*)
@@ -52,10 +53,10 @@ Index: libtool-2.4.7/m4/libtool.m4
     AC_MSG_ERROR([The sysroot must be an absolute path.])
     ;;
  esac
-Index: libtool-2.4.7/tests/sysroot.at
+Index: libtool-2.5.0/tests/sysroot.at
 ===================================================================
---- libtool-2.4.7.orig/tests/sysroot.at
-+++ libtool-2.4.7/tests/sysroot.at
+--- libtool-2.5.0.orig/tests/sysroot.at
++++ libtool-2.5.0/tests/sysroot.at
 @@ -65,7 +65,7 @@ while read file; do
  done])
  
@@ -83,11 +84,11 @@ Index: libtool-2.4.7/tests/sysroot.at
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  ]])
-diff --git a/tests/testsuite b/tests/testsuite
-index 24265e4..d388e3e 100755
---- a/tests/testsuite
-+++ b/tests/testsuite
-@@ -48997,7 +48997,7 @@ $at_traceon; }
+Index: libtool-2.5.0/tests/testsuite
+===================================================================
+--- libtool-2.5.0.orig/tests/testsuite
++++ libtool-2.5.0/tests/testsuite
+@@ -49054,7 +49054,7 @@ $at_traceon; }
  
  
  LDFLAGS="$LDFLAGS --sysroot=$sysroot -no-undefined"
@@ -96,7 +97,7 @@ index 24265e4..d388e3e 100755
  
  #???
  if test PATH = "$shlibpath_var"; then
-@@ -49211,7 +49211,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -49269,7 +49269,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
  LT_INIT
@@ -105,7 +106,7 @@ index 24265e4..d388e3e 100755
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -49404,7 +49404,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -49463,7 +49463,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([prog.c])
  LT_INIT
@@ -114,7 +115,7 @@ index 24265e4..d388e3e 100755
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -49761,7 +49761,7 @@ $at_traceon; }
+@@ -49821,7 +49821,7 @@ $at_traceon; }
  
  
  LDFLAGS="$LDFLAGS --sysroot=$sysroot -no-undefined"
@@ -123,7 +124,7 @@ index 24265e4..d388e3e 100755
  
  #???
  if test PATH = "$shlibpath_var"; then
-@@ -49975,7 +49975,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -50036,7 +50036,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
  LT_INIT
@@ -132,7 +133,7 @@ index 24265e4..d388e3e 100755
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -50168,7 +50168,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -50230,7 +50230,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([prog.c])
  LT_INIT
@@ -141,7 +142,7 @@ index 24265e4..d388e3e 100755
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -50525,7 +50525,7 @@ $at_traceon; }
+@@ -50588,7 +50588,7 @@ $at_traceon; }
  
  
  LDFLAGS="$LDFLAGS --sysroot=$sysroot -no-undefined"
@@ -150,7 +151,7 @@ index 24265e4..d388e3e 100755
  
  #???
  if test PATH = "$shlibpath_var"; then
-@@ -50739,7 +50739,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -50803,7 +50803,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([lib2.c])
  LT_INIT
@@ -159,7 +160,7 @@ index 24265e4..d388e3e 100755
  AC_SUBST([sysroot])
  AC_OUTPUT(Makefile)
  _ATEOF
-@@ -50932,7 +50932,7 @@ AM_INIT_AUTOMAKE([foreign])
+@@ -50997,7 +50997,7 @@ AM_INIT_AUTOMAKE([foreign])
  AC_PROG_CC
  AC_CONFIG_SRCDIR([prog.c])
  LT_INIT
