@@ -52,6 +52,10 @@ GRUBPLATFORM ??= "pc"
 inherit autotools gettext texinfo pkgconfig
 
 CFLAGS:remove = "-O2"
+# It doesn't support sse, its make.defaults sets:
+# CFLAGS += -mno-mmx -mno-sse
+# So also remove -mfpmath=sse from TUNE_CCARGS
+TUNE_CCARGS:remove = "-mfpmath=sse"
 
 EXTRA_OECONF = "--with-platform=${GRUBPLATFORM} \
                 --disable-grub-mkfont \
