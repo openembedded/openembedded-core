@@ -1596,10 +1596,13 @@ python () {
     sourcedir = d.getVar("S")
     builddir = d.getVar("B")
     workdir = d.getVar("WORKDIR")
+    unpackdir = d.getVar("UNPACKDIR")
     if sourcedir == workdir:
         bb.fatal("Using S = ${WORKDIR} is no longer supported")
     if builddir == workdir:
         bb.fatal("Using B = ${WORKDIR} is no longer supported")
+    if unpackdir == workdir:
+        bb.fatal("Using UNPACKDIR = ${WORKDIR} is not supported")
     if sourcedir[-1] == '/':
         bb.warn("Recipe %s sets S variable with trailing slash '%s', remove it" % (d.getVar("PN"), d.getVar("S")))
     if builddir[-1] == '/':
