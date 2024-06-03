@@ -24,13 +24,6 @@ SRC_URI = "https://alpha.gnu.org/gnu/libtool/libtool-${PV}.tar.gz \
 
 SRC_URI[sha256sum] = "d438c317455d85554ce2f998be48866fd40cfcbf834d60b3026f4fc0ed583d23"
 
-do_compile:prepend () {
-	# Sometimes this file doesn't get rebuilt, force the issue
-	rm -f ${S}/build-aux/ltmain.sh
-	make build-aux/ltmain.sh
-	./config.status
-}
-
 inherit autotools texinfo
 EXTRA_AUTORECONF = "--exclude=libtoolize"
 

@@ -7,13 +7,6 @@ datadir = "${STAGING_DIR_TARGET}${target_datadir}"
 
 inherit nopackages
 
-do_configure:prepend () {
-	# Remove any existing libtool m4 since old stale versions would break
-	# any upgrade
-	rm -f ${STAGING_DATADIR}/aclocal/libtool.m4
-	rm -f ${STAGING_DATADIR}/aclocal/lt*.m4
-}
-
 #
 # ccache may or may not be INHERITED, we remove references to it so the sstate
 # artefact works on a machine where its not present. libtool-cross isn't used
