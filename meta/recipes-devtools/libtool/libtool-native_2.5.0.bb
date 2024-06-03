@@ -4,8 +4,6 @@ DEPENDS = ""
 
 inherit native
 
-EXTRA_OECONF = " --with-sysroot=${STAGING_DIR_NATIVE}"
-
 do_configure:prepend () {
 	# Remove any existing libtool m4 since old stale versions would break
 	# any upgrade
