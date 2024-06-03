@@ -17,7 +17,7 @@ Index: libtool-2.5.0/m4/libtool.m4
 @@ -1253,18 +1253,18 @@ dnl lt_sysroot will always be passed unq
  dnl in case the user passed a directory name.
  lt_sysroot=
- case $with_libtool_sysroot in #(
+ case $with_sysroot in #(
 - yes)
 + no)
     if test yes = "$GCC"; then
@@ -29,10 +29,10 @@ Index: libtool-2.5.0/m4/libtool.m4
 + yes|''|/)
 +   ;; #(
   /*)
-    lt_sysroot=`echo "$with_libtool_sysroot" | $SED -e "$sed_quote_subst"`
+    lt_sysroot=`echo "$with_sysroot" | $SED -e "$sed_quote_subst"`
     ;; #(
 - no|'')
 -   ;; #(
   *)
-    AC_MSG_RESULT([$with_libtool_sysroot])
+    AC_MSG_RESULT([$with_sysroot])
     AC_MSG_ERROR([The sysroot must be an absolute path.])

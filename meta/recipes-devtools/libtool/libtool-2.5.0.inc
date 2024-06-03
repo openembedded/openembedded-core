@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "https://alpha.gnu.org/gnu/libtool/libtool-${PV}.tar.gz \
            file://0001-ltmain.in-Handle-trailing-slashes-on-install-command.patch \
-           file://0002-libtool.m4-Rename-the-with-sysroot-option-to-avoid-c.patch \
            file://0003-ltmain.in-Add-missing-sysroot-to-library-path.patch \
            file://0004-ltmain.sh-Fix-sysroot-paths-being-encoded-into-RPATH.patch \
            file://0005-ltmain.in-Don-t-encode-RATHS-which-match-default-lin.patch \
