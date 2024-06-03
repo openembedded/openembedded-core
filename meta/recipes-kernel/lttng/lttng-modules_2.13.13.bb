@@ -10,16 +10,16 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-Fix-ASoC-snd_doc_dapm-on-linux-6.9-rc1.patch \
-           file://0002-Fix-ASoC-add-component-to-set_bias_level-events-in-l.patch \
-           file://0003-Fix-mm_compaction_migratepages-changed-in-linux-6.9-.patch \
-           file://0004-Fix-dev_base_lock-removed-in-linux-6.9-rc1.patch \
+           file://0001-fix-btrfs-simplify-delayed-ref-tracepoints-v6.10.patch \
+           file://0002-fix-btrfs-move-parent-and-ref_root-into-btrfs_delaye.patch \
+           file://0003-fix-net-udp-add-IP-port-data-to-the-tracepoint-udp-u.patch \
+           file://0001-fix-close_on_exec-pass-files_struct-instead-of-fdtab.patch \
         "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "d85fcb66c7bd31003ab8735e8c77700e5e4f417b4c22fe1f20112cf435abad79"
+SRC_URI[sha256sum] = "7d26c07a5e80b66aa7bdcfdaaf4857f00fc9a5cdde79226b2528676700d50228"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
