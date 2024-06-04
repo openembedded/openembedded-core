@@ -157,7 +157,8 @@ class SystemdServiceTests(SystemdTest):
 
         (status, output) = self.target.run('coredumpctl info')
         self.assertEqual(status, 0, msg='MiniDebugInfo Test failed: %s' % output)
-        self.assertEqual('sleep_for_duration (busybox.nosuid' in output, True, msg='Call stack is missing minidebuginfo symbols (functions shown as "n/a"): %s' % output)
+        self.assertEqual('sleep_for_duration (busybox.nosuid' in output or 'xnanosleep (sleep.coreutils' in output,
+                         True, msg='Call stack is missing minidebuginfo symbols (functions shown as "n/a"): %s' % output)
 
 class SystemdJournalTests(SystemdTest):
 
