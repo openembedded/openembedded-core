@@ -18,16 +18,11 @@ LIC_FILES_CHKSUM = "file://README;md5=72cff06b7954222c24d38bc2c41b234e \
                     file://LICENSES/MIT.txt;md5=7dda4e90ded66ab88b86f76169f28663 \
                     "
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/${BP}.tar.gz \
-           file://0001-man.ml-do-not-use-dev-stdin.patch \
-           file://0001-GNUmakefile-use-env-from-PATH.patch \
            "
 
-SRC_URI[sha256sum] = "006906e7be81a71c2d347809597bcb91485fa7fa488acdaa79e681ddfa894568"
+SRC_URI[sha256sum] = "f4d5b9756b4ee52e34ca9d895095c92312ced6292395b811e11069ab007e6f06"
 
 inherit manpages
-
-# can be dropped when ubuntu 18.04 is not in use anymore
-DEPENDS += "coreutils-native"
 
 MAN_PKG = "${PN}"
 
