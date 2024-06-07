@@ -36,9 +36,6 @@ gl_cv_func_working_mkstemp=${gl_cv_func_working_mkstemp=yes}
 gl_cv_func_working_mktime=${gl_cv_func_working_mktime=yes}
 gl_cv_func_working_utimes=${gl_cv_func_working_utimes=yes}
 
-#dbus-glib
-ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
-
 # gnucash
 am_cv_scanf_lld=${am_cv_scanf_lld=yes}
 

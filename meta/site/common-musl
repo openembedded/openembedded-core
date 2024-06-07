@@ -19,9 +19,6 @@ ac_cv_func_strtod=${ac_cv_func_strtod=yes}
 ac_cv_sys_file_offset_bits=${ac_cv_sys_file_offset_bits=64}
 ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
 
-#dbus-glib
-ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
-
 # bash
 bash_cv_getcwd_malloc=${bash_cv_getcwd_malloc=yes}
 
