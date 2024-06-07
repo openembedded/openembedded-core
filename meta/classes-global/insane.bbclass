@@ -459,8 +459,8 @@ def package_qa_check_buildpaths(path, name, d, elf, messages):
     with open(path, 'rb') as f:
         file_content = f.read()
         if tmpdir in file_content:
-            trimmed = path.replace(os.path.join (d.getVar("PKGDEST"), name), "")
-            oe.qa.add_message(messages, "buildpaths", "File %s in package %s contains reference to TMPDIR" % (trimmed, name))
+            path = package_qa_clean_path(path, d, name)
+            oe.qa.add_message(messages, "buildpaths", "File %s in package %s contains reference to TMPDIR" % (path, name))
 
 
 QAPATHTEST[xorg-driver-abi] = "package_qa_check_xorg_driver_abi"
@@ -489,7 +489,7 @@ def package_qa_check_infodir(path, name, d, elf, messages):
     infodir = d.expand("${infodir}/dir")
 
     if infodir in path:
-        oe.qa.add_message(messages, "infodir", "The /usr/share/info/dir file is not meant to be shipped in a particular package.")
+        oe.qa.add_message(messages, "infodir", "The %s file is not meant to be shipped in a particular package." % infodir)
 
 QAPATHTEST[symlink-to-sysroot] = "package_qa_check_symlink_to_sysroot"
 def package_qa_check_symlink_to_sysroot(path, name, d, elf, messages):
@@ -501,8 +501,8 @@ def package_qa_check_symlink_to_sysroot(path, name, d, elf, messages):
         if os.path.isabs(target):
             tmpdir = d.getVar('TMPDIR')
             if target.startswith(tmpdir):
-                trimmed = path.replace(os.path.join (d.getVar("PKGDEST"), name), "")
-                oe.qa.add_message(messages, "symlink-to-sysroot", "Symlink %s in %s points to TMPDIR" % (trimmed, name))
+                path = package_qa_clean_path(path, d, name)
+                oe.qa.add_message(messages, "symlink-to-sysroot", "Symlink %s in %s points to TMPDIR" % (path, name))
 
 QAPATHTEST[32bit-time] = "check_32bit_symbols"
 def check_32bit_symbols(path, packagename, d, elf, messages):
