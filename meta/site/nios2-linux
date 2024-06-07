@@ -33,9 +33,6 @@ db_cv_alignp_t=${db_cv_alignp_t='unsigned long'}
 db_cv_posixmutexes=${db_cv_posixmutexes=no}
 db_cv_uimutexes=${db_cv_uimutexes=no}
 
-# D-BUS
-ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
-
 # edb
 db_cv_spinlocks=${db_cv_spinlocks=no}
 

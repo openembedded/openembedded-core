@@ -47,6 +47,3 @@ ac_cv_sizeof_int=${ac_cv_sizeof_int=4}
 
 #lmbench
 ac_cv_uint=${ac_cv_uint=yes}
-
-# D-BUS
-ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}

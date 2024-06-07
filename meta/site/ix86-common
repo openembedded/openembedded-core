@@ -60,9 +60,6 @@ db_cv_align_t=${db_cv_align_t='unsigned long long'}
 db_cv_fcntl_f_setfd=${db_cv_fcntl_f_setfd=yes}
 db_cv_sprintf_count=${db_cv_sprintf_count=yes}
 
-# D-BUS
-ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
-
 # ettercap
 ettercap_cv_type_socklen_t=${ettercap_cv_type_socklen_t=yes}
 
