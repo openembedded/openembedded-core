@@ -75,9 +75,6 @@ ac_cv_uint=${ac_cv_uint=yes}
 ac_cv_ulong=${ac_cv_ulong=yes}
 ac_cv_ushort=${ac_cv_ushort=yes}
 
-# intercom
-ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
-
 # jikes-native
 ac_cv_sizeof_wchar_t=4
 

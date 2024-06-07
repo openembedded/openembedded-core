@@ -150,9 +150,6 @@ mysql_cv_func_atomic_add=${mysql_cv_func_atomic_add=no}
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 
-# fnmatch
-ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
-
 # rsync
 rsync_cv_HAVE_BROKEN_LARGEFILE=${rsync_cv_HAVE_BROKEN_LARGEFILE=no}
 rsync_cv_HAVE_SOCKETPAIR=${rsync_cv_HAVE_SOCKETPAIR=yes}

@@ -45,9 +45,6 @@ samba_cv_HAVE_GETTIMEOFDAY_TZ=${samba_cv_HAVE_GETTIMEOFDAY_TZ=yes}
 # vim
 ac_cv_sizeof_int=${ac_cv_sizeof_int=4}
 
-# intercom
-ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
-
 #lmbench
 ac_cv_uint=${ac_cv_unit=yes}
 

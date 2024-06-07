@@ -47,9 +47,6 @@ compat_cv_func_snprintf_works=${compat_cv_func_snprintf_works=yes}
 compat_cv_func_basename_works=${compat_cv_func_basename_works=no}
 compat_cv_func_dirname_works=${compat_cv_func_dirname_works=no}
 
-# fnmatch
-ac_cv_func_fnmatch_works=${ac_cv_func_fnmatch_works=yes}
-
 # gettext
 am_cv_func_working_getline=${am_cv_func_working_getline=yes}
 
