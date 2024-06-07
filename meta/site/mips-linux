@@ -49,7 +49,3 @@ ac_cv_uint=${ac_cv_unit=yes}
 
 # D-BUS
 ac_cv_func_posix_getpwnam_r=${ac_cv_func_posix_getpwnam_r=yes}
-
-# evolution-data-server
-ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}
-

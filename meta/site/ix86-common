@@ -146,9 +146,6 @@ jm_cv_func_working_readdir=yes
 ac_cv_sys_linker_h=${ac_cv_sys_linker_h=no}
 ac_cv_file__usr_share_X11_sgml_defs_ent=${ac_cv_file__usr_share_X11_sgml_defs_ent=no}
 
-# evolution-data-server
-ac_cv_libiconv_utf8=${ac_cv_libiconv_utf8=yes}
-
 #dbus
 ac_cv_have_abstract_sockets=${ac_cv_have_abstract_sockets=yes}
 
