@@ -58,7 +58,7 @@ def extract_licenses(filename):
                 return ascii_licenses
     except Exception as e:
         bb.warn(f"Exception reading {filename}: {e}")
-    return None
+    return []
 
 def is_work_shared_spdx(d):
     return bb.data.inherits_class('kernel', d) or ('work-shared' in d.getVar('WORKDIR'))
