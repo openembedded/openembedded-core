@@ -6,6 +6,8 @@
 
 inherit spdx-common
 
+SPDX_VERSION = "2.2"
+
 def get_namespace(d, name):
     import uuid
     namespace_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, d.getVar("SPDX_UUID_NAMESPACE"))

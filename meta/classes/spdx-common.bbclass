@@ -4,14 +4,15 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-DEPLOY_DIR_SPDX ??= "${DEPLOY_DIR}/spdx"
+SPDX_VERSION ??= ""
+DEPLOY_DIR_SPDX ??= "${DEPLOY_DIR}/spdx/${SPDX_VERSION}"
 
 # The product name that the CVE database uses.  Defaults to BPN, but may need to
 # be overriden per recipe (for example tiff.bb sets CVE_PRODUCT=libtiff).
 CVE_PRODUCT ??= "${BPN}"
 CVE_VERSION ??= "${PV}"
 
-SPDXDIR ??= "${WORKDIR}/spdx"
+SPDXDIR ??= "${WORKDIR}/spdx/${SPDX_VERSION}"
 SPDXDEPLOY = "${SPDXDIR}/deploy"
 SPDXWORK = "${SPDXDIR}/work"
 SPDXIMAGEWORK = "${SPDXDIR}/image-work"
