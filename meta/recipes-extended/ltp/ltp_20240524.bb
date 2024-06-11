@@ -28,6 +28,7 @@ SRCREV = "8f21ebba42216dbb7e8d44c23b4a977d6823f7a1"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
+           file://0001-Add-__clear_cache-declaration-for-clang.patch \
            "
 
 S = "${WORKDIR}/git"
