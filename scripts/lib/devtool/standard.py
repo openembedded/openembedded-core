@@ -893,7 +893,10 @@ def modify(args, config, basepath, workspace):
                 (stdout, _) = bb.process.run('git rev-list --reverse %s..HEAD' % initial_revs["."], cwd=srctree)
                 commits["."] = stdout.split()
                 check_commits = True
-                (stdout, _) = bb.process.run('git submodule --quiet foreach --recursive  \'echo `git rev-parse devtool-base` $PWD\'', cwd=srctree)
+                try:
+                    (stdout, _) = bb.process.run('git submodule --quiet foreach --recursive  \'echo `git rev-parse devtool-base` $PWD\'', cwd=srctree)
+                except bb.process.ExecutionError:
+                    stdout = ""
                 for line in stdout.splitlines():
                     (rev, submodule_path) = line.split()
                     submodule = os.path.relpath(submodule_path, srctree)
