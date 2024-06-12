@@ -1,0 +1,26 @@
+From a787caca40fb3421e8c7cfee6992db63cbacd27f Mon Sep 17 00:00:00 2001
+From: Tim Lee <chli30@nuvoton.com>
+Date: Fri, 29 Dec 2023 10:24:02 +0800
+Subject: [PATCH] base-passwd: Add the render group
+
+There is build warning said that group render has never been defined
+
+Upstream-Status: Inappropriate [oe-specific]
+
+Signed-off-by: Tim Lee <chli30@nuvoton.com>
+---
+ group.master | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/group.master b/group.master
+index e31d6cd..a851ee7 100644
+--- a/group.master
++++ b/group.master
+@@ -36,6 +36,7 @@ sasl:*:45:
+ plugdev:*:46:
+ kvm:*:47:
+ sgx:*:48:
++render:*:49:
+ staff:*:50:
+ games:*:60:
+ shutdown:*:70:
