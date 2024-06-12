@@ -8,6 +8,12 @@ BASE_INIT="`readlink -f "@base_sbindir@/init"`"
 INIT_SYSTEMD="@systemd_unitdir@/systemd"
 MOUNT_BASE="@MOUNT_BASE@"
 
+# check if init.orig exists. This file is created by overlayfs-etc
+# See more here: https://git.yoctoproject.org/poky/plain/meta/classes-recipe/overlayfs-etc.bbclass
+if [ -f "@base_sbindir@/init.orig" ];then
+    BASE_INIT="`readlink -f "@base_sbindir@/init.orig"`"
+fi
+
 if [ "x$BASE_INIT" = "x$INIT_SYSTEMD" ];then
     # systemd as init uses systemd-mount to mount block devices
     MOUNT="/usr/bin/systemd-mount"
