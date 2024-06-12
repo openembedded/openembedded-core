@@ -101,23 +101,28 @@ do_compile_ptest() {
 }
 
 do_install_ptest() {
-	cat  ${UNPACKDIR}/disable-tests >> ${S}/tests/data/DISABLED
-	rm -f ${B}/tests/configurehelp.pm
-	cp -rf ${B}/tests ${D}${PTEST_PATH}
-        rm -f ${D}${PTEST_PATH}/tests/libtest/.libs/libhostname.la
-        rm -f ${D}${PTEST_PATH}/tests/libtest/libhostname.la
-        mv ${D}${PTEST_PATH}/tests/libtest/.libs/* ${D}${PTEST_PATH}/tests/libtest/
-        mv ${D}${PTEST_PATH}/tests/libtest/libhostname.so ${D}${PTEST_PATH}/tests/libtest/.libs/
-        mv ${D}${PTEST_PATH}/tests/http/clients/.libs/* ${D}${PTEST_PATH}/tests/http/clients/
-	cp -rf ${S}/tests ${D}${PTEST_PATH}
-	find ${D}${PTEST_PATH}/ -type f -name Makefile.am -o -name Makefile.in -o -name Makefile -delete
-	install -d ${D}${PTEST_PATH}/src
-	ln -sf ${bindir}/curl   ${D}${PTEST_PATH}/src/curl
-	cp -rf ${D}${bindir}/curl-config ${D}${PTEST_PATH}
+	install -d ${D}${PTEST_PATH}/tests
+	cp ${S}/tests/*.p[lmy] ${D}${PTEST_PATH}/tests/
+
+	install -d ${D}${PTEST_PATH}/tests/libtest
+	for name in $(makefile-getvar ${B}/tests/libtest/Makefile noinst_PROGRAMS noinst_LTLIBRARIES); do
+		${B}/libtool --mode=install install ${B}/tests/libtest/$name ${D}${PTEST_PATH}/tests/libtest
+	done
+	cp ${S}/tests/libtest/notexists.pl ${D}${PTEST_PATH}/tests/libtest
+	rm -f ${D}${PTEST_PATH}/tests/libtest/libhostname.la
+
+	install -d ${D}${PTEST_PATH}/tests/server
+	for name in $(makefile-getvar ${B}/tests/server/Makefile noinst_PROGRAMS); do
+		${B}/libtool --mode=install install ${B}/tests/server/$name ${D}${PTEST_PATH}/tests/server
+	done
+
+	cp -r ${S}/tests/data ${D}${PTEST_PATH}/tests/
+
+	# More tests that we disable for automated QA as they're not reliable
+	cat ${UNPACKDIR}/disable-tests >>${D}${PTEST_PATH}/tests/data/DISABLED
 }
 
 RDEPENDS:${PN}-ptest += " \
-	bash \
 	locale-base-en-us \
 	perl-module-b \
 	perl-module-base \
