@@ -43,7 +43,7 @@ RUNTIMELIBSSP ?= ""
 RUNTIMELIBSSP:mingw32 ?= "libssp"
 
 RUNTIMETARGET = "${RUNTIMELIBSSP} libstdc++-v3 libgomp libatomic ${RUNTIMELIBITM} \
-    ${@bb.utils.contains_any('FORTRAN', [',fortran',',f77'], 'libquadmath', '', d)} \
+    ${@bb.utils.contains('FORTRAN', ',fortran', 'libquadmath', '', d)} \
 "
 # Only build libstdc++ for newlib
 RUNTIMETARGET:libc-newlib = "libstdc++-v3"
@@ -164,8 +164,6 @@ PACKAGES = "\
     libstdc++-precompile-dev \
     libstdc++-dev \
     libstdc++-staticdev \
-    libg2c \
-    libg2c-dev \
     libssp \
     libssp-dev \
     libssp-staticdev \
@@ -195,15 +193,6 @@ FILES:${PN}-dbg += "\
 # bash is not availbale and builds fails
 # So it needs to be added manually to images sadly.
 # RDEPENDS:${PN}-dbg += "python3-datetime"
-
-FILES:libg2c = "${target_libdir}/libg2c.so.*"
-SUMMARY:libg2c = "Companion runtime library for g77"
-FILES:libg2c-dev = "\
-    ${libdir}/libg2c.so \
-    ${libdir}/libg2c.a \
-    ${libdir}/libfrtbegin.a \
-"
-SUMMARY:libg2c-dev = "Companion runtime library for g77 - development files"
 
 FILES:libstdc++ = "${libdir}/libstdc++.so.*"
 SUMMARY:libstdc++ = "GNU standard C++ library"
