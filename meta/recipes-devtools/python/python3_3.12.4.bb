@@ -118,7 +118,7 @@ ${@bb.utils.contains('PACKAGECONFIG', 'tk', '', '_tkinter', d)}
 EOF
 }
 
-CPPFLAGS:append = " -I${STAGING_INCDIR}/ncursesw -I${STAGING_INCDIR}/uuid"
+CPPFLAGS += "-I${STAGING_INCDIR}/ncursesw -I${STAGING_INCDIR}/uuid"
 
 # COMPILEALL_OPTS= ensures that .pyc are not compiled in parallel
 # This was found to lock up builds, break reproducibility, and produce strange file ownership

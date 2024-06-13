@@ -8,10 +8,10 @@ DEPENDS = "intltool-native libcap util-linux gperf-native python3-jinja2-native 
 inherit meson pkgconfig gettext
 inherit deploy
 
-LDFLAGS:prepend = "${@ " ".join(d.getVar('LD').split()[1:])} "
+LDFLAGS =+ "${@ " ".join(d.getVar('LD').split()[1:])} "
 
 EFI_LD = "bfd"
-LDFLAGS:append = " -fuse-ld=${EFI_LD}"
+LDFLAGS += "-fuse-ld=${EFI_LD}"
 
 do_write_config[vardeps] += "EFI_LD"
 do_write_config:append() {

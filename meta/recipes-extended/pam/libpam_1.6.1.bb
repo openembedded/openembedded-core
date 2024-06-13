@@ -37,7 +37,7 @@ EXTRA_OECONF = "--includedir=${includedir}/security \
                 --disable-doc \
 		--disable-prelude"
 
-CFLAGS:append = " -fPIC "
+CFLAGS += "-fPIC "
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 

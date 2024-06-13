@@ -19,7 +19,7 @@ PROVIDES = "virtual/x-terminal-emulator"
 ALTERNATIVE:${PN} = "x-terminal-emulator"
 ALTERNATIVE_TARGET[x-terminal-emulator] = "${bindir}/rxvt"
 
-CFLAGS:append = " -fpermissive"
+CFLAGS += "-fpermissive"
 
 EXTRA_OECONF = "--enable-xim \
 		--with-term=rxvt --enable-keepscrolling \

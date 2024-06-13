@@ -9,7 +9,7 @@ SRC_URI[sha256sum] = "b955025c24c8babc808db49e0ff90db8b4b1320dcc16b14eb261328417
 
 S = "${WORKDIR}/maturin-${PV}"
 
-CFLAGS:append = " -fdebug-prefix-map=${CARGO_HOME}=${TARGET_DBGSRC_DIR}/cargo_home"
+CFLAGS += "-fdebug-prefix-map=${CARGO_HOME}=${TARGET_DBGSRC_DIR}/cargo_home"
 
 DEPENDS += "\
     python3-setuptools-rust-native \

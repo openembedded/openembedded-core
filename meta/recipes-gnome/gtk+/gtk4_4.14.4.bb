@@ -79,7 +79,7 @@ PACKAGECONFIG[vulkan] = "-Dvulkan=enabled,-Dvulkan=disabled, vulkan-loader vulka
 
 # Disable int-conversion warning as error until [1] is fixed
 # [1] https://gitlab.gnome.org/GNOME/gtk/-/issues/6033
-CFLAGS:append = " -Wno-error=int-conversion"
+CFLAGS += "-Wno-error=int-conversion"
 
 LIBV = "4.0.0"
 

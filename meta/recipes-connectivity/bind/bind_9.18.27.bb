@@ -44,7 +44,7 @@ EXTRA_OECONF = " --disable-auto-validation \
                  --sysconfdir=${sysconfdir}/bind \
                  --with-openssl=${STAGING_DIR_HOST}${prefix} \
                "
-LDFLAGS:append = " -lz"
+LDFLAGS += "-lz"
 
 # dhcp needs .la so keep them
 REMOVE_LIBTOOL_LA = "0"
