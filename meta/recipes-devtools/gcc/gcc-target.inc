@@ -33,7 +33,7 @@ PACKAGES = "\
     ${PN} ${PN}-plugins ${PN}-symlinks \
     g++ g++-symlinks \
     cpp cpp-symlinks \
-    gfortran gfortran-symlinks \
+    ${@bb.utils.contains('FORTRAN', ',fortran', 'gfortran gfortran-symlinks', '', d)} \
     gcov gcov-symlinks \
     ${PN}-doc \
     ${PN}-dev \
@@ -60,7 +60,7 @@ RRECOMMENDS:${PN} += "\
     libssp \
     libssp-dev \
 "
-RDEPENDS:${PN} += "cpp"
+RDEPENDS:${PN} += "binutils cpp"
 
 FILES:${PN}-dev = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
@@ -80,9 +80,14 @@ FILES:${PN}-plugins = "\
 "
 ALLOW_EMPTY:${PN}-plugins = "1"
 
+INSANE_SKIP:${MLPREFIX}gfortran += "dev-deps"
 FILES:gfortran = "\
     ${bindir}/${TARGET_PREFIX}gfortran \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/f951 \
+"
+RDEPENDS:gfortran = "\
+    gcc \
+    libgfortran-dev \
 "
 RRECOMMENDS:gfortran = "\
     libquadmath \
