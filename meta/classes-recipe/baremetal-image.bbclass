@@ -16,8 +16,8 @@
 # See meta-skeleton for a working example.
 
 
-# Toolchain should be baremetal or newlib based.
-# TCLIBC="baremetal" or TCLIBC="newlib"
+# Toolchain should be baremetal or newlib/picolibc based.
+# TCLIBC="baremetal" or TCLIBC="newlib" or TCLIBC="picolibc"
 COMPATIBLE_HOST:libc-musl:class-target = "null"
 COMPATIBLE_HOST:libc-glibc:class-target = "null"
 
