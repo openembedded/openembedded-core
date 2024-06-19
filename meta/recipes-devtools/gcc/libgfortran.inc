@@ -47,8 +47,9 @@ do_install () {
 	chown -R root:root ${D}
 }
 
+# avoid virtual/libc
 INHIBIT_DEFAULT_DEPS = "1"
-DEPENDS = "gcc-runtime gcc-cross-${TARGET_ARCH}"
+DEPENDS = "virtual/${HOST_PREFIX}gcc virtual/${HOST_PREFIX}compilerlibs"
 
 BBCLASSEXTEND = "nativesdk"
 
