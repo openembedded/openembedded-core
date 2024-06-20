@@ -8,11 +8,13 @@ DEPENDS += "python3-hatch-vcs-native"
 
 inherit pypi python_hatchling
 
-SRC_URI[sha256sum] = "df6de96010e29ee21f637a147eabf30d50b25e3841dd1d68f93ee89ce77e366c"
+SRC_URI[sha256sum] = "5be5bbc1f0fa0f8b60aca6ceec07845d41d0c475cf445bfadb4d2c45ec397ea3"
 
 RDEPENDS:${PN} += "\
+    python3-compression \
     python3-doctest \
     python3-extras \
+    python3-json \
     python3-six \
     "
 
