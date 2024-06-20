@@ -234,6 +234,10 @@ PACKAGECONFIG[zstd] = "-Dzstd=true,-Dzstd=false,zstd"
 
 RESOLV_CONF ??= ""
 
+# bpf-framework: pass the recipe-sysroot to the compiler used to build
+# the eBPFs, so that it can find needed system includes in there.
+CFLAGS:append = " --sysroot=${STAGING_DIR_TARGET}"
+
 # Helper variables to clarify locations.  This mirrors the logic in systemd's
 # build system.
 rootprefix ?= "${root_prefix}"
