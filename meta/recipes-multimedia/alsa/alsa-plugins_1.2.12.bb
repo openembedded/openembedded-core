@@ -19,13 +19,11 @@ LICENSE = "LGPL-2.1-only & GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
                     file://COPYING.GPL;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://m4/attributes.m4;endline=33;md5=bb8c6b2a67ac15156961e242fec33e50 \
-                    file://rate/rate_samplerate.c;endline=35;md5=fd77bce85f4a338c0e8ab18430b69fae \
+                    file://rate/rate_samplerate.c;endline=35;md5=07fcfc9e83a7159ad14a7196ecdc7d48 \
                     "
 
-SRC_URI = "https://www.alsa-project.org/files/pub/plugins/${BP}.tar.bz2 \
-           file://0001-arcam_av.c-Include-missing-string.h.patch \
-           "
-SRC_URI[sha256sum] = "8c337814954bb7c167456733a6046142a2931f12eccba3ec2a4ae618a3432511"
+SRC_URI = "https://www.alsa-project.org/files/pub/plugins/${BP}.tar.bz2"
+SRC_URI[sha256sum] = "7bd8a83d304e8e2d86a25895d8dcb0ef0245a8df32e271959cdbdc6af39b66f2"
 
 DEPENDS += "alsa-lib"
 
