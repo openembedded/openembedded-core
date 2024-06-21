@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/nhorman/rng-tools.git;branch=master;protocol=https \
            file://default \
            file://rng-tools.service \
            "
-SRCREV = "e061c313b95890eb5fa0ada0cd6eec619dafdfe2"
+SRCREV = "bd00c08b0c3c6a880b0988befe97fd35b315468c"
 
 S = "${WORKDIR}/git"
 
