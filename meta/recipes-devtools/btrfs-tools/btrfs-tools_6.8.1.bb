@@ -17,6 +17,7 @@ DEPENDS = "util-linux zlib"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master;protocol=https \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
+           file://0001-convert-handle-rename-of-inode_includes-from-e2fspro.patch \
            "
 SRCREV = "5d97c32d6f94cf6f473a5f82964e3edaeb1b146e"
 S = "${WORKDIR}/git"
