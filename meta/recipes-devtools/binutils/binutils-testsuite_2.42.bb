@@ -1,3 +1,6 @@
+# NOTE: This recipe cannot have -cross- in the file name because it triggers
+# the cross build detection in sstate which causes it to use the wrong
+# architecture
 require binutils.inc
 require binutils-${PV}.inc
 
