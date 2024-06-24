@@ -36,13 +36,6 @@ SPDX_LICENSES ??= "${COREBASE}/meta/files/spdx-licenses.json"
 
 SPDX_CUSTOM_ANNOTATION_VARS ??= ""
 
-SPDX_ORG ??= "OpenEmbedded ()"
-SPDX_SUPPLIER ??= "Organization: ${SPDX_ORG}"
-SPDX_SUPPLIER[doc] = "The SPDX PackageSupplier field for SPDX packages created from \
-    this recipe. For SPDX documents create using this class during the build, this \
-    is the contact information for the person or organization who is doing the \
-    build."
-
 def extract_licenses(filename):
     import re
 
