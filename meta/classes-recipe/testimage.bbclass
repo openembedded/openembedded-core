@@ -18,9 +18,11 @@ inherit image-artifact-names
 
 TESTIMAGE_AUTO ??= "0"
 
-# When any test fails, TESTIMAGE_FAILED_QA ARTIFACTS will be parsed and for
-# each entry in it, if artifact pointed by path description exists on target,
-# it will be retrieved onto host
+# When any test fails, if TESTIMAGE_RUN_FAILURE_POST_ACTIONS equals "1",
+# TESTIMAGE_FAILED_QA ARTIFACTS will be parsed and for each entry in it, if artifact
+# pointed by path description exists on target, it will be retrieved onto host
+
+TESTIMAGE_RUN_FAILURE_POST_ACTIONS ??= "1"
 
 TESTIMAGE_FAILED_QA_ARTIFACTS = "\
     ${localstatedir}/log \
@@ -367,7 +369,7 @@ def testimage_main(d):
             pass
         results = tc.runTests()
         complete = True
-        if results.hasAnyFailingTest():
+        if oe.types.boolean(d.getVar('TESTIMAGE_RUN_FAILURE_POST_ACTIONS')) and results.hasAnyFailingTest():
             run_failed_tests_post_actions(d, tc)
     except (KeyboardInterrupt, BlockingIOError) as err:
         if isinstance(err, KeyboardInterrupt):
