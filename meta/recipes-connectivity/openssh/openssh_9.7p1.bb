@@ -56,7 +56,7 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)
 
 # systemd-sshd-socket-mode means installing sshd.socket
 # and systemd-sshd-service-mode corresponding to sshd.service
-PACKAGECONFIG ??= "systemd-sshd-socket-mode"
+PACKAGECONFIG ??= "systemd-sshd-socket-mode hostkey-ecdsa"
 PACKAGECONFIG[fido2] = "--with-security-key-builtin,--disable-security-key,libfido2"
 PACKAGECONFIG[kerberos] = "--with-kerberos5,--without-kerberos5,krb5"
 PACKAGECONFIG[ldns] = "--with-ldns,--without-ldns,ldns"
@@ -64,6 +64,9 @@ PACKAGECONFIG[libedit] = "--with-libedit,--without-libedit,libedit"
 PACKAGECONFIG[manpages] = "--with-mantype=man,--with-mantype=cat"
 PACKAGECONFIG[systemd-sshd-socket-mode] = ""
 PACKAGECONFIG[systemd-sshd-service-mode] = ""
+PACKAGECONFIG[hostkey-rsa] = ""
+PACKAGECONFIG[hostkey-ecdsa] = ""
+PACKAGECONFIG[hostkey-ed25519] = ""
 
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
@@ -127,13 +130,31 @@ do_install:append () {
 	install -m 644 ${UNPACKDIR}/volatiles.99_sshd ${D}/${sysconfdir}/default/volatiles/99_sshd
 	install -m 0755 ${S}/contrib/ssh-copy-id ${D}${bindir}
 
+        # Enable specific ssh host keys
+	sed -i '/HostKey/d' ${D}${sysconfdir}/ssh/sshd_config
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-rsa','true','false',d)}; then
+	    echo "HostKey /etc/ssh/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config
+        fi
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ecdsa','true','false',d)}; then
+	    echo "HostKey /etc/ssh/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config
+        fi
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ed25519','true','false',d)}; then
+	    echo "HostKey /etc/ssh/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config
+        fi
+
 	# Create config files for read-only rootfs
 	install -d ${D}${sysconfdir}/ssh
 	install -m 644 ${D}${sysconfdir}/ssh/sshd_config ${D}${sysconfdir}/ssh/sshd_config_readonly
 	sed -i '/HostKey/d' ${D}${sysconfdir}/ssh/sshd_config_readonly
-	echo "HostKey /var/run/ssh/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
-	echo "HostKey /var/run/ssh/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
-	echo "HostKey /var/run/ssh/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-rsa','true','false',d)}; then
+	    echo "HostKey /var/run/ssh/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+        fi
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ecdsa','true','false',d)}; then
+	    echo "HostKey /var/run/ssh/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+        fi
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ed25519','true','false',d)}; then
+	    echo "HostKey /var/run/ssh/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+        fi
 
 	install -d ${D}${systemd_system_unitdir}
 	if ${@bb.utils.contains('PACKAGECONFIG','systemd-sshd-socket-mode','true','false',d)}; then
