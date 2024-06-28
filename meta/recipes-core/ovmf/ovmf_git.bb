@@ -27,6 +27,9 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0006-reproducible.patch \
            file://0001-BaseTools-fix-gcc12-warning.patch \
            file://0001-BaseTools-fix-gcc12-warning-1.patch \
+           file://CVE-2022-36763-0001.patch \
+           file://CVE-2022-36763-0002.patch \
+           file://CVE-2022-36763-0003.patch \
            "
 
 PV = "edk2-stable202202"
