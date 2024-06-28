@@ -30,6 +30,9 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://CVE-2022-36763-0001.patch \
            file://CVE-2022-36763-0002.patch \
            file://CVE-2022-36763-0003.patch \
+           file://CVE-2022-36764-0001.patch \
+           file://CVE-2022-36764-0002.patch \
+           file://CVE-2022-36764-0003.patch \
            "
 
 PV = "edk2-stable202202"
