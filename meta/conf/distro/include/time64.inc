@@ -25,10 +25,6 @@ GLIBC_64BIT_TIME_FLAGS:pn-glibc-testsuite = ""
 # both 32 and 64 bit file APIs.  But it does not handle the time side?
 # Needs further investigation
 GLIBC_64BIT_TIME_FLAGS:pn-pipewire = ""
-# Pulseaudio override certain LFS64 functions e.g. open64 and intentionally
-# undefines _FILE_OFFSET_BITS, which wont work when _TIME_BITS=64 is set
-# See https://gitlab.freedesktop.org/pulseaudio/pulseaudio/-/issues/3770
-GLIBC_64BIT_TIME_FLAGS:pn-pulseaudio = ""
 # Undefines _FILE_OFFSET_BITS on purpose in
 # libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cpp
 GLIBC_64BIT_TIME_FLAGS:pn-gcc-sanitizers = ""
@@ -37,7 +33,6 @@ GLIBC_64BIT_TIME_FLAGS:pn-gcc-sanitizers = ""
 INSANE_SKIP:append:pn-gcc-sanitizers = " 32bit-time"
 INSANE_SKIP:append:pn-glibc = " 32bit-time"
 INSANE_SKIP:append:pn-glibc-y2038-tests = " 32bit-time"
-INSANE_SKIP:append:pn-pulseaudio = " 32bit-time"
 
 # Strace has tests that call 32 bit API directly, which is fair enough, e.g.
 # /usr/lib/strace/ptest/tests/ioctl_termios uses 32-bit api 'ioctl'
