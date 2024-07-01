@@ -376,6 +376,11 @@ def add_download_packages(d, doc, recipe):
             # but this should be sufficient for now
             doc.add_relationship(package, "BUILD_DEPENDENCY_OF", recipe)
 
+def get_license_list_version(d):
+    # Newer versions of the SPDX license list are SemVer ("MAJOR.MINOR.MICRO"),
+    # but SPDX 2 only uses "MAJOR.MINOR".
+    return ".".join(d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"].split(".")[:2])
+
 
 python do_create_spdx() {
     from datetime import datetime, timezone
@@ -417,7 +422,7 @@ python do_create_spdx() {
     doc.documentNamespace = get_namespace(d, doc.name)
     doc.creationInfo.created = creation_time
     doc.creationInfo.comment = "This document was created by analyzing recipe files during the build."
-    doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+    doc.creationInfo.licenseListVersion = get_license_list_version(d)
     doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
     doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
     doc.creationInfo.creators.append("Person: N/A ()")
@@ -521,7 +526,7 @@ python do_create_spdx() {
             package_doc.documentNamespace = get_namespace(d, package_doc.name)
             package_doc.creationInfo.created = creation_time
             package_doc.creationInfo.comment = "This document was created by analyzing packages created during the build."
-            package_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+            package_doc.creationInfo.licenseListVersion = get_license_list_version(d)
             package_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
             package_doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
             package_doc.creationInfo.creators.append("Person: N/A ()")
@@ -628,7 +633,7 @@ python do_create_runtime_spdx() {
             runtime_doc.documentNamespace = get_namespace(localdata, runtime_doc.name)
             runtime_doc.creationInfo.created = creation_time
             runtime_doc.creationInfo.comment = "This document was created by analyzing package runtime dependencies."
-            runtime_doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+            runtime_doc.creationInfo.licenseListVersion = get_license_list_version(d)
             runtime_doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
             runtime_doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
             runtime_doc.creationInfo.creators.append("Person: N/A ()")
@@ -793,7 +798,7 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
     doc.documentNamespace = get_namespace(d, doc.name)
     doc.creationInfo.created = creation_time
     doc.creationInfo.comment = "This document was created by analyzing the source of the Yocto recipe during the build."
-    doc.creationInfo.licenseListVersion = d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+    doc.creationInfo.licenseListVersion = get_license_list_version(d)
     doc.creationInfo.creators.append("Tool: OpenEmbedded Core create-spdx.bbclass")
     doc.creationInfo.creators.append("Organization: %s" % d.getVar("SPDX_ORG"))
     doc.creationInfo.creators.append("Person: N/A ()")
