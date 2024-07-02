@@ -16,7 +16,6 @@ SRC_URI[sha256sum] = "5c0806c7d9af348e6dd3777b4f4dbb42c7ad85b190104837488eab9a7c
 DEPENDS += "python3"
 
 RDEPENDS:${PN} = "\
-    python3-2to3 \
     python3-compile \
     python3-compression \
     python3-ctypes \
