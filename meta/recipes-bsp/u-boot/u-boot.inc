@@ -217,6 +217,7 @@ RDEPENDS:${PN} += "${PN}-env"
 do_deploy () {
     if [ -n "${UBOOT_CONFIG}" ]
     then
+        unset i j
         for config in ${UBOOT_MACHINE}; do
             i=$(expr $i + 1);
             for type in ${UBOOT_CONFIG}; do
