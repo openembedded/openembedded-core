@@ -12,6 +12,16 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://0001-buildinfo-strip-sysroot-and-debug-prefix-map-from-co.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
            file://0001-Added-handshake-history-reporting-when-test-fails.patch \
+           file://CVE-2024-5535_1.patch \
+           file://CVE-2024-5535_2.patch \
+           file://CVE-2024-5535_3.patch \
+           file://CVE-2024-5535_4.patch \
+           file://CVE-2024-5535_5.patch \
+           file://CVE-2024-5535_6.patch \
+           file://CVE-2024-5535_7.patch \
+           file://CVE-2024-5535_8.patch \
+           file://CVE-2024-5535_9.patch \
+           file://CVE-2024-5535_10.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
