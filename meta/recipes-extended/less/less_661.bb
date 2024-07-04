@@ -21,7 +21,7 @@ SECTION = "console/utils"
 
 LICENSE = "GPL-3.0-or-later | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://LICENSE;md5=1b2446f5c8632bf63a97d7a49750e1c6 \
+                    file://LICENSE;md5=ea7ea443692720f3015859945c0fb65d \
                     "
 DEPENDS = "ncurses"
 
@@ -29,7 +29,7 @@ SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "2911b5432c836fa084c8a2e68f6cd6312372c026a58faaa98862731c8b6052e8"
+SRC_URI[sha256sum] = "2b5f0167216e3ef0ffcb0c31c374e287eb035e4e223d5dae315c2783b6e738ed"
 
 UPSTREAM_CHECK_URI = "http://www.greenwoodsoftware.com/less/download.html"
 
@@ -55,7 +55,7 @@ do_install_ptest () {
         cp -r ${S}/lesstest/lt ${D}${PTEST_PATH}
 }
 
-RDEPENDS:${PN}-ptest:append = " perl-module-getopt-std perl-module-cwd locale-base-en-us"
+RDEPENDS:${PN}-ptest:append = " perl-module-getopt-std perl-module-cwd perl-module-file-basename locale-base-en-us"
 
 ALTERNATIVE:${PN} = "less"
 ALTERNATIVE_PRIORITY = "100"
