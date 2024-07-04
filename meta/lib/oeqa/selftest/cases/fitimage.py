@@ -774,22 +774,24 @@ FIT_HASH_ALG = "sha256"
         # fitImage is created as part of linux recipe
         bitbake("virtual/kernel")
 
-        image_type = get_bb_var('INITRAMFS_IMAGE')
-        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
-        machine = get_bb_var('MACHINE')
-        fitimage_its_path = os.path.join(deploy_dir_image,
-                    "fitImage-its-%s-%s-%s" % (image_type, machine, machine))
-        fitimage_path = os.path.join(deploy_dir_image,"fitImage")
+        bb_vars = get_bb_vars([
+            'DEPLOY_DIR_IMAGE',
+            'FIT_HASH_ALG',
+            'FIT_KERNEL_COMP_ALG',
+            'INITRAMFS_IMAGE',
+            'MACHINE',
+            'UBOOT_ARCH',
+            'UBOOT_ENTRYPOINT',
+            'UBOOT_LOADADDRESS',
+            'UBOOT_MKIMAGE_KERNEL_TYPE'
+            ],
+            'virtual/kernel')
+        fitimage_its_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],
+                    "fitImage-its-%s-%s-%s" % (bb_vars['INITRAMFS_IMAGE'], bb_vars['MACHINE'], bb_vars['MACHINE']))
+        fitimage_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],"fitImage")
 
         self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
         self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
-
-        kernel_load = str(get_bb_var('UBOOT_LOADADDRESS'))
-        kernel_entry = str(get_bb_var('UBOOT_ENTRYPOINT'))
-        kernel_type = str(get_bb_var('UBOOT_MKIMAGE_KERNEL_TYPE'))
-        kernel_compression = str(get_bb_var('FIT_KERNEL_COMP_ALG'))
-        uboot_arch = str(get_bb_var('UBOOT_ARCH'))
-        fit_hash_alg = str(get_bb_var('FIT_HASH_ALG'))
 
         its_file = open(fitimage_its_path)
 
@@ -799,14 +801,14 @@ FIT_HASH_ALG = "sha256"
             'kernel-1 {',
             'description = "Linux kernel";',
             'data = /incbin/("linux.bin");',
-            'type = "' + kernel_type + '";',
-            'arch = "' + uboot_arch + '";',
+            'type = "' + str(bb_vars['UBOOT_MKIMAGE_KERNEL_TYPE']) + '";',
+            'arch = "' + str(bb_vars['UBOOT_ARCH']) + '";',
             'os = "linux";',
-            'compression = "' + kernel_compression + '";',
-            'load = <' + kernel_load + '>;',
-            'entry = <' + kernel_entry + '>;',
+            'compression = "' + str(bb_vars['FIT_KERNEL_COMP_ALG']) + '";',
+            'load = <' + str(bb_vars['UBOOT_LOADADDRESS']) + '>;',
+            'entry = <' + str(bb_vars['UBOOT_ENTRYPOINT']) + '>;',
             'hash-1 {',
-            'algo = "' + fit_hash_alg +'";',
+            'algo = "' + str(bb_vars['FIT_HASH_ALG']) +'";',
             '};',
             '};'
         ]
@@ -818,6 +820,11 @@ FIT_HASH_ALG = "sha256"
 
         node_start_idx = its_lines.index(node_str)
         node = its_lines[node_start_idx:(node_start_idx + len(exp_node_lines))]
+
+        # Remove the absolute path. This refers to WORKDIR which is not always predictable.
+        re_data = re.compile(r'^data = /incbin/\(.*/linux\.bin"\);$')
+        node = [re.sub(re_data, 'data = /incbin/("linux.bin");', cfg_str) for cfg_str in node]
+
         self.assertEqual(node, exp_node_lines, "kernel node does not match expectation")
 
         rx_configs = re.compile("^conf-.*")
@@ -834,14 +841,14 @@ FIT_HASH_ALG = "sha256"
 
             node = its_lines[cfg_start_idx:line_idx]
             print("checking configuration " + cfg_str.rstrip(" {"))
-            rx_desc_line = re.compile("^description.*1 Linux kernel.*")
-            self.assertNotEqual(len(list(filter(rx_desc_line.match, node))), 1, "kernel keyword not found in the description line")
+            rx_desc_line = re.compile(r'^description = ".*Linux kernel.*')
+            self.assertEqual(len(list(filter(rx_desc_line.match, node))), 1, "kernel keyword not found in the description line")
 
-            self.assertNotIn('kernel = "kernel-1";', node)
+            self.assertIn('kernel = "kernel-1";', node)
 
-            rx_sign_line = re.compile("^sign-images.*kernel.*")
-            self.assertNotEqual(len(list(filter(rx_sign_line.match, node))), 1, "kernel hash not signed")
+            rx_sign_line = re.compile(r'^sign-images = .*kernel.*')
+            self.assertEqual(len(list(filter(rx_sign_line.match, node))), 1, "kernel hash not signed")
 
         # Verify the signature
         uboot_tools_sysroot_native = self._setup_uboot_tools_native()
-        self._verify_fit_image_signature(uboot_tools_sysroot_native, fitimage_path, os.path.join(deploy_dir_image, 'am335x-bone.dtb'))
+        self._verify_fit_image_signature(uboot_tools_sysroot_native, fitimage_path, os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], 'am335x-bone.dtb'))
