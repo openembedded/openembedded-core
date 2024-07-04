@@ -11,6 +11,11 @@ import re
 
 class FitImageTests(OESelftestTestCase):
 
+    def _setup_uboot_tools_native(self):
+        """build u-boot-tools-native and return RECIPE_SYSROOT_NATIVE"""
+        bitbake("u-boot-tools-native -c addto_recipe_sysroot")
+        return get_bb_var('RECIPE_SYSROOT_NATIVE', 'u-boot-tools-native')
+
     def test_fit_image(self):
         """
         Summary:     Check if FIT image and Image Tree Source (its) are built
@@ -195,10 +200,8 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart comment'"
                 self.assertEqual(value, reqvalue)
 
         # Dump the image to see if it really got signed
-        bitbake("u-boot-tools-native -c addto_recipe_sysroot")
-        result = runCmd('bitbake -e u-boot-tools-native | grep ^RECIPE_SYSROOT_NATIVE=')
-        recipe_sysroot_native = result.output.split('=')[1].strip('"')
-        dumpimage_path = os.path.join(recipe_sysroot_native, 'usr', 'bin', 'dumpimage')
+        uboot_tools_sysroot_native = self._setup_uboot_tools_native()
+        dumpimage_path = os.path.join(uboot_tools_sysroot_native, 'usr', 'bin', 'dumpimage')
         result = runCmd('%s -l %s' % (dumpimage_path, fitimage_path))
         in_signed = None
         signed_sections = {}
@@ -516,10 +519,8 @@ UBOOT_FIT_HASH_ALG = "sha256"
                 self.assertEqual(value, reqvalue)
 
         # Dump the image to see if it really got signed
-        bitbake("u-boot-tools-native -c addto_recipe_sysroot")
-        result = runCmd('bitbake -e u-boot-tools-native | grep ^RECIPE_SYSROOT_NATIVE=')
-        recipe_sysroot_native = result.output.split('=')[1].strip('"')
-        dumpimage_path = os.path.join(recipe_sysroot_native, 'usr', 'bin', 'dumpimage')
+        uboot_tools_sysroot_native = self._setup_uboot_tools_native()
+        dumpimage_path = os.path.join(uboot_tools_sysroot_native, 'usr', 'bin', 'dumpimage')
         result = runCmd('%s -l %s' % (dumpimage_path, fitimage_path))
         in_signed = None
         signed_sections = {}
@@ -671,10 +672,8 @@ FIT_SIGN_INDIVIDUAL = "1"
                 self.assertEqual(value, reqvalue)
 
         # Dump the image to see if it really got signed
-        bitbake("u-boot-tools-native -c addto_recipe_sysroot")
-        result = runCmd('bitbake -e u-boot-tools-native | grep ^RECIPE_SYSROOT_NATIVE=')
-        recipe_sysroot_native = result.output.split('=')[1].strip('"')
-        dumpimage_path = os.path.join(recipe_sysroot_native, 'usr', 'bin', 'dumpimage')
+        uboot_tools_sysroot_native = self._setup_uboot_tools_native()
+        dumpimage_path = os.path.join(uboot_tools_sysroot_native, 'usr', 'bin', 'dumpimage')
         result = runCmd('%s -l %s' % (dumpimage_path, fitimage_path))
         in_signed = None
         signed_sections = {}
