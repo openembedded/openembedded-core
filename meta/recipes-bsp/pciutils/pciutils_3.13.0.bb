@@ -47,8 +47,6 @@ DESCRIPTION:${PN}-ids = "Package providing the PCI device ID database for pciuti
 RDEPENDS:${PN} += "${PN}-ids"
 
 FILES:libpci = "${libdir}/libpci.so.*"
-# The versioned symbols in libpci appear to be causing relocations
-INSANE_SKIP:libpci += "textrel"
 
 ALTERNATIVE:${PN} = "lspci"
 ALTERNATIVE_PRIORITY = "100"
