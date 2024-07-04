@@ -98,10 +98,8 @@ FIT_DESC = "A model description"
         fitimage_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],
             "fitImage-%s-%s" % (bb_vars['INITRAMFS_IMAGE_NAME'], bb_vars['KERNEL_FIT_LINK_NAME']))
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         # Check that the type, load address, entrypoint address and default
         # values for kernel and ramdisk in Image Tree Source are as expected.
@@ -180,10 +178,8 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c '%s'"
         fitimage_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],
             "fitImage-%s.bin" % (bb_vars['KERNEL_FIT_LINK_NAME']))
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         req_itspaths = [
             ['/', 'images', 'kernel-1'],
@@ -330,10 +326,8 @@ FIT_SIGN_INDIVIDUAL = "1"
         fitimage_path = os.path.join(deploy_dir_image,
             "u-boot-fitImage-%s" % (machine,))
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         # Check that the type, load address, entrypoint address and default
         # values for kernel and ramdisk in Image Tree Source are as expected.
@@ -414,10 +408,8 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot comment'"
         fitimage_path = os.path.join(deploy_dir_image,
             "u-boot-fitImage-%s" % (machine,))
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         # Check that the type, load address, entrypoint address and default
         # values for kernel and ramdisk in Image Tree Source are as expected.
@@ -506,10 +498,8 @@ UBOOT_FIT_HASH_ALG = "sha256"
         fitimage_path = os.path.join(deploy_dir_image,
             "u-boot-fitImage-%s" % (machine,))
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         req_itspaths = [
             ['/', 'images', 'uboot'],
@@ -656,10 +646,8 @@ FIT_SIGN_INDIVIDUAL = "1"
         fitimage_path = os.path.join(deploy_dir_image,
             "u-boot-fitImage-%s" % (machine,))
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         req_itspaths = [
             ['/', 'images', 'uboot'],
@@ -793,10 +781,8 @@ FIT_HASH_ALG = "sha256"
                     "fitImage-its-%s-%s-%s" % (image_type, machine, machine))
         fitimage_path = os.path.join(deploy_dir_image,"fitImage")
 
-        self.assertTrue(os.path.exists(fitimage_its_path),
-            "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertTrue(os.path.exists(fitimage_path),
-            "%s FIT image doesn't exist" % (fitimage_path))
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
 
         kernel_load = str(get_bb_var('UBOOT_LOADADDRESS'))
         kernel_entry = str(get_bb_var('UBOOT_ENTRYPOINT'))
@@ -827,17 +813,12 @@ FIT_HASH_ALG = "sha256"
 
         node_str = exp_node_lines[0]
 
-        test_passed = False
-
         print ("checking kernel node\n")
+        self.assertIn(node_str, its_lines)
 
-        if node_str in its_lines:
-            node_start_idx = its_lines.index(node_str)
-            node = its_lines[node_start_idx:(node_start_idx + len(exp_node_lines))]
-            if node == exp_node_lines:
-                print("kernel node verified")
-            else:
-                self.assertTrue(test_passed == True,"kernel node does not match expectation")
+        node_start_idx = its_lines.index(node_str)
+        node = its_lines[node_start_idx:(node_start_idx + len(exp_node_lines))]
+        self.assertEqual(node, exp_node_lines, "kernel node does not match expectation")
 
         rx_configs = re.compile("^conf-.*")
         its_configs = list(filter(rx_configs.match, its_lines))
@@ -854,27 +835,12 @@ FIT_HASH_ALG = "sha256"
             node = its_lines[cfg_start_idx:line_idx]
             print("checking configuration " + cfg_str.rstrip(" {"))
             rx_desc_line = re.compile("^description.*1 Linux kernel.*")
-            if len(list(filter(rx_desc_line.match, node))) != 1:
-                self.assertTrue(test_passed == True,"kernel keyword not found in the description line")
-                break
-            else:
-                print("kernel keyword found in the description line")
+            self.assertNotEqual(len(list(filter(rx_desc_line.match, node))), 1, "kernel keyword not found in the description line")
 
-            if 'kernel = "kernel-1";' not in node:
-                self.assertTrue(test_passed == True,"kernel line not found")
-                break
-            else:
-                print("kernel line found")
+            self.assertNotIn('kernel = "kernel-1";', node)
 
             rx_sign_line = re.compile("^sign-images.*kernel.*")
-            if len(list(filter(rx_sign_line.match, node))) != 1:
-                self.assertTrue(test_passed == True,"kernel hash not signed")
-                break
-            else:
-                print("kernel hash signed")
-
-            test_passed = True
-            self.assertTrue(test_passed == True,"Initramfs bundle test success")
+            self.assertNotEqual(len(list(filter(rx_sign_line.match, node))), 1, "kernel hash not signed")
 
         # Verify the signature
         uboot_tools_sysroot_native = self._setup_uboot_tools_native()
