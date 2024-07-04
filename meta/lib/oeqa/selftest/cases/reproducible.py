@@ -133,7 +133,8 @@ class ReproducibleTests(OESelftestTestCase):
     max_report_size = 250 * 1024 * 1024
 
     # targets are the things we want to test the reproducibility of
-    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'core-image-weston', 'world']
+    # Have to add the virtual targets manually for now as builds may or may not include them as they're exclude from world
+    targets = ['core-image-minimal', 'core-image-sato', 'core-image-full-cmdline', 'core-image-weston', 'world', 'virtual/librpc', 'virtual/libsdl2', 'virtual/crypt']
 
     # sstate targets are things to pull from sstate to potentially cut build/debugging time
     sstate_targets = []
