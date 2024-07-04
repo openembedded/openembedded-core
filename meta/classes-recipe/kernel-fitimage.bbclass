@@ -611,7 +611,7 @@ fitimage_assemble() {
 			fi
 
 			# Set the default dtb image if it exists in the devicetree.
-			if [ ${FIT_CONF_DEFAULT_DTB} = $DTB ];then
+			if [ "${FIT_CONF_DEFAULT_DTB}" = "$DTB" ];then
 				default_dtb_image=$(echo "$DTB" | tr '/' '_')
 			fi
 
