@@ -1,0 +1,36 @@
+From 49a1644015d073829c17dcd977aab6fdda1ebdee Mon Sep 17 00:00:00 2001
+From: Changqing Li <changqing.li@windriver.com>
+Date: Fri, 5 Jul 2024 07:33:44 +0000
+Subject: [PATCH] pixman-combine-float.c: replace force_inline with __inline__
+    
+Refer [1], always-inline is not suggested to be used if you have indirect
+calls. so replace force_inline with __inline__ to fix error:
+In function ‘combine_inner’,
+    inlined from ‘combine_soft_light_ca_float’ at ../pixman/pixman-combine-float.c:655:511:
+../pixman/pixman-combine-float.c:655:211: error: inlining failed in call to ‘always_inline’ ‘combine_soft_light_c’: function not considered for inlining
+
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115679
+
+Upstream-Status: Submitted [https://www.mail-archive.com/pixman@lists.freedesktop.org/msg04812.html]
+
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ pixman/pixman-combine-float.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pixman/pixman-combine-float.c b/pixman/pixman-combine-float.c
+index f5145bc..52400f4 100644
+--- a/pixman/pixman-combine-float.c
++++ b/pixman/pixman-combine-float.c
+@@ -44,7 +44,7 @@
+ 
+ typedef float (* combine_channel_t) (float sa, float s, float da, float d);
+ 
+-static force_inline void
++static __inline__ void
+ combine_inner (pixman_bool_t component,
+ 	       float *dest, const float *src, const float *mask, int n_pixels,
+ 	       combine_channel_t combine_a, combine_channel_t combine_c)
+-- 
+2.44.0
+
