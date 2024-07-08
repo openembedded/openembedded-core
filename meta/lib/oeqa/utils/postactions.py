@@ -86,6 +86,11 @@ def list_and_fetch_failed_tests_artifacts(d, tc):
 ##################################################################
 
 def run_failed_tests_post_actions(d, tc):
+    artifacts = d.getVar("TESTIMAGE_FAILED_QA_ARTIFACTS")
+    # Allow all the code to be disabled by having no artifacts set, e.g. for systems with no ssh support
+    if not artifacts:
+        return
+
     post_actions=[
         create_artifacts_directory,
         list_and_fetch_failed_tests_artifacts,
