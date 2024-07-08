@@ -25,15 +25,9 @@ def gs_verdir(v):
 SRC_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${@gs_verdir("${PV}")}/${BPN}-${PV}.tar.gz \
            file://ghostscript-9.16-Werror-return-type.patch \
            file://avoid-host-contamination.patch \
-           file://configure.ac-add-option-to-explicitly-disable-neon.patch \
-           file://CVE-2024-33870.patch \
-           file://CVE-2024-33869-0001.patch \
-           file://CVE-2024-33869-0002.patch \
-           file://CVE-2024-33871.patch \
-           file://CVE-2024-29510.patch \
            "
 
-SRC_URI[sha256sum] = "e429e4f5b01615a4f0f93a4128e8a1a4d932dff983b1774174c79c0630717ad9"
+SRC_URI[sha256sum] = "31cd01682ad23a801cc3bbc222a55f07c4ea3e068bdfb447792d54db21a2e8ad"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+3"
