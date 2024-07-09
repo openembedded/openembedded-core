@@ -126,7 +126,7 @@ do_make_icudata:class-target () {
     ${@bb.utils.contains('PACKAGECONFIG', 'make-icudata', '', 'exit 0', d)}
     cd ${S}
     rm -rf data
-    cp -a ${WORKDIR}/data .
+    cp -a ${UNPACKDIR}/data .
     AR='${BUILD_AR}' \
     CC='${BUILD_CC}' \
     CPP='${BUILD_CPP}' \
@@ -136,7 +136,7 @@ do_make_icudata:class-target () {
     CPPFLAGS='${BUILD_CPPFLAGS}' \
     CXXFLAGS='${BUILD_CXXFLAGS}' \
     LDFLAGS='${BUILD_LDFLAGS}' \
-    ICU_DATA_FILTER_FILE=${WORKDIR}/filter.json \
+    ICU_DATA_FILTER_FILE=${UNPACKDIR}/filter.json \
     ./runConfigureICU Linux --with-data-packaging=archive
     oe_runmake
     install -Dm644 ${S}/data/out/icudt${ICU_MAJOR_VER}l.dat ${S}/data/in/icudt${ICU_MAJOR_VER}l.dat
