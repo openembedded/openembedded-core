@@ -128,4 +128,15 @@ do_compile () {
 
 require glibc-package.inc
 
+# When upgrading glibc it's important to know if there are any new symbols
+# that pseudo needs to wrap. In the future a generalised ABI comparison tool
+# would be good, but to solve the immediate need we can simply list the
+# exported symbols to files in WORKDIR.
+do_symlist() {
+    for LIB in ${D}${base_libdir}/lib*.so.*; do
+        ${NM} --dynamic $LIB | awk --source '$2 == "T" { print $3 }' | sort > ${WORKDIR}/$(basename $LIB)-${PV}.symbols
+    done
+}
+addtask symlist after do_install
+
 BBCLASSEXTEND = "nativesdk"
