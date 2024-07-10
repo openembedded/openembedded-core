@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git;branch=master;protoc
            file://0001-lock.py-fix-Exception-handling.patch \
            "
 
-SRC_URI:append:class-native = "file://0001-dnf-write-the-log-lock-to-root.patch"
+SRC_URI:append:class-native = " file://0001-dnf-write-the-log-lock-to-root.patch"
 
 SRCREV = "566a61f9d8a2830ac6dcc3a94c59224cef1c3d03"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
