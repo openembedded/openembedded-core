@@ -13,7 +13,7 @@ DEPENDS = "libpthread-stubs"
 SRC_URI = "http://dri.freedesktop.org/libdrm/${BP}.tar.xz \
           "
 
-SRC_URI[sha256sum] = "3bf55363f76c7250946441ab51d3a6cc0ae518055c0ff017324ab76cdefb327a"
+SRC_URI[sha256sum] = "d9f5079b777dffca9300ccc56b10a93588cdfbc9dde2fae111940dfb6292f251"
 
 inherit meson pkgconfig manpages
 
