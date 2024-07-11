@@ -11,7 +11,6 @@ DEPENDS = "icu-native autoconf-archive-native"
 CVE_PRODUCT = "international_components_for_unicode"
 
 S = "${WORKDIR}/icu/source"
-SPDX_S = "${WORKDIR}/icu"
 STAGING_ICU_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/${BPN}/${PV}"
 
 ICU_MAJOR_VER = "${@d.getVar('PV').split('-')[0]}"
