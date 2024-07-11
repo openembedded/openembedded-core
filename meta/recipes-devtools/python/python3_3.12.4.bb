@@ -107,6 +107,7 @@ PACKAGECONFIG[tk] = ",,tk"
 PACKAGECONFIG[tcl] = ",,tcl"
 PACKAGECONFIG[gdbm] = ",,gdbm"
 PACKAGECONFIG[lto] = "--with-lto,--without-lto"
+PACKAGECONFIG[staticlibpython] = "--with-static-libpython,--without-static-libpython"
 
 do_configure:prepend () {
     mkdir -p ${B}/Modules
