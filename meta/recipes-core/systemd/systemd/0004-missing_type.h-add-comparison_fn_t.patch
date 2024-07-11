@@ -1,7 +1,7 @@
-From d4b0bb9c7651017985fdd75469f37c34ce2f2c50 Mon Sep 17 00:00:00 2001
+From 34b7e1ed3b9a896db6fad435fd141c385c7337d1 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 13:55:12 +0800
-Subject: [PATCH] missing_type.h: add comparison_fn_t
+Subject: [PATCH 04/27] missing_type.h: add comparison_fn_t
 
 Make it work with musl where comparison_fn_t and is not provided.
 
@@ -21,12 +21,12 @@ Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
  3 files changed, 6 insertions(+)
 
 diff --git a/src/basic/missing_type.h b/src/basic/missing_type.h
-index f6233090a9..6c0456349d 100644
+index 1d17705c35..fc33b76ec1 100644
 --- a/src/basic/missing_type.h
 +++ b/src/basic/missing_type.h
 @@ -10,3 +10,7 @@
  #if !HAVE_CHAR16_T
- #define char16_t uint16_t
+ #  define char16_t uint16_t
  #endif
 +
 +#ifndef __GLIBC__
@@ -45,10 +45,10 @@ index 9c818bd747..ef10c8be2c 100644
  /* This is the same as glibc's internal __compar_d_fn_t type. glibc exports a public comparison_fn_t, for the
   * external type __compar_fn_t, but doesn't do anything similar for __compar_d_fn_t. Let's hence do that
 diff --git a/src/libsystemd/sd-journal/catalog.c b/src/libsystemd/sd-journal/catalog.c
-index ae91534198..7f67eea38b 100644
+index a0b673f65f..29dd2fee16 100644
 --- a/src/libsystemd/sd-journal/catalog.c
 +++ b/src/libsystemd/sd-journal/catalog.c
-@@ -28,6 +28,7 @@
+@@ -29,6 +29,7 @@
  #include "string-util.h"
  #include "strv.h"
  #include "tmpfile-util.h"
@@ -56,3 +56,6 @@ index ae91534198..7f67eea38b 100644
  
  const char * const catalog_file_dirs[] = {
          "/usr/local/lib/systemd/catalog/",
+-- 
+2.45.1
+

@@ -1,7 +1,7 @@
-From f3943f58f3c8a9d20dcada56eb5ca5f673a49b3d Mon Sep 17 00:00:00 2001
+From 7c8634c441401b034cd4bcf4b916a7042076fca8 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Wed, 4 Jul 2018 15:00:44 +0800
-Subject: [PATCH] Do not disable buffering when writing to oom_score_adj
+Subject: [PATCH 11/27] Do not disable buffering when writing to oom_score_adj
 
 On musl, disabling buffering when writing to oom_score_adj will
 cause the following error.
@@ -24,10 +24,10 @@ Signed-off-by: Scott Murray <scott.murray@konsulko.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/basic/process-util.c b/src/basic/process-util.c
-index 4492e7ded2..b61a2aba74 100644
+index c9d968dee0..7d6d3ce7db 100644
 --- a/src/basic/process-util.c
 +++ b/src/basic/process-util.c
-@@ -1716,7 +1716,7 @@ int set_oom_score_adjust(int value) {
+@@ -1816,7 +1816,7 @@ int set_oom_score_adjust(int value) {
          xsprintf(t, "%i", value);
  
          return write_string_file("/proc/self/oom_score_adj", t,
@@ -36,3 +36,6 @@ index 4492e7ded2..b61a2aba74 100644
  }
  
  int get_oom_score_adjust(int *ret) {
+-- 
+2.45.1
+

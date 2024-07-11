@@ -1,7 +1,7 @@
-From 97d3ed7834bd86615ba4acdbef984c677b7e7791 Mon Sep 17 00:00:00 2001
+From ca2a736627f8ee8dd9dbbf5b3149d4c8493833ff Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Tue, 2 Jan 2024 11:03:27 +0800
-Subject: [PATCH] avoid missing LOCK_EX declaration
+Subject: [PATCH 24/27] avoid missing LOCK_EX declaration
 
 This only happens on MUSL. Include sys/file.h to avoid compilation
 error about missing LOCK_EX declaration.
@@ -10,12 +10,25 @@ Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
+ src/basic/fd-util.h    | 1 +
  src/core/exec-invoke.c | 1 +
  src/shared/dev-setup.h | 1 +
- 2 files changed, 2 insertions(+)
+ 3 files changed, 3 insertions(+)
 
+diff --git a/src/basic/fd-util.h b/src/basic/fd-util.h
+index af17481dd8..fa20bfa30f 100644
+--- a/src/basic/fd-util.h
++++ b/src/basic/fd-util.h
+@@ -6,6 +6,7 @@
+ #include <stdbool.h>
+ #include <stdio.h>
+ #include <sys/socket.h>
++#include <sys/file.h>
+ 
+ #include "macro.h"
+ #include "missing_fcntl.h"
 diff --git a/src/core/exec-invoke.c b/src/core/exec-invoke.c
-index fe14ceeb31..521e7b87ff 100644
+index ee8db04e76..2aff654f0f 100644
 --- a/src/core/exec-invoke.c
 +++ b/src/core/exec-invoke.c
 @@ -4,6 +4,7 @@
@@ -38,3 +51,6 @@ index 5339bc4e5e..0697495f23 100644
  
  int lock_dev_console(void);
  
+-- 
+2.45.1
+

@@ -1,8 +1,8 @@
-From 661a34c3de30d4ff4a2a62c9a0573c6ce55424e4 Mon Sep 17 00:00:00 2001
+From ca94c86736ca7917e6c50d09d6c6ba56ba139709 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Thu, 21 Feb 2019 16:23:24 +0800
-Subject: [PATCH] binfmt: Don't install dependency links at install time for
- the binfmt services
+Subject: [PATCH 01/27] binfmt: Don't install dependency links at install time
+ for the binfmt services
 
 use [Install] blocks so that they get created when the service is enabled
 like a traditional service.
@@ -25,10 +25,10 @@ Signed-off-by: Scott Murray <scott.murray@konsulko.com>
  3 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/units/meson.build b/units/meson.build
-index e7bfb7f838..1d5ec4b178 100644
+index b231341a1f..b613a188a4 100644
 --- a/units/meson.build
 +++ b/units/meson.build
-@@ -154,7 +154,6 @@ units = [
+@@ -156,7 +156,6 @@ units = [
          {
            'file' : 'proc-sys-fs-binfmt_misc.automount',
            'conditions' : ['ENABLE_BINFMT'],
@@ -36,7 +36,7 @@ index e7bfb7f838..1d5ec4b178 100644
          },
          {
            'file' : 'proc-sys-fs-binfmt_misc.mount',
-@@ -251,7 +250,6 @@ units = [
+@@ -258,7 +257,6 @@ units = [
          {
            'file' : 'systemd-binfmt.service.in',
            'conditions' : ['ENABLE_BINFMT'],
@@ -45,7 +45,7 @@ index e7bfb7f838..1d5ec4b178 100644
          {
            'file' : 'systemd-bless-boot.service.in',
 diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
-index 5d212015a5..6c2900ca77 100644
+index 7ec21e76c9..fee4d1345f 100644
 --- a/units/proc-sys-fs-binfmt_misc.automount
 +++ b/units/proc-sys-fs-binfmt_misc.automount
 @@ -22,3 +22,6 @@ Before=shutdown.target
@@ -56,11 +56,11 @@ index 5d212015a5..6c2900ca77 100644
 +[Install]
 +WantedBy=sysinit.target
 diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
-index 6861c76674..531e9fbd90 100644
+index 318bf8efc2..6ef684861d 100644
 --- a/units/systemd-binfmt.service.in
 +++ b/units/systemd-binfmt.service.in
 @@ -14,6 +14,7 @@ Documentation=https://docs.kernel.org/admin-guide/binfmt-misc.html
- Documentation=https://www.freedesktop.org/wiki/Software/systemd/APIFileSystems
+ Documentation=https://systemd.io/API_FILE_SYSTEMS
  DefaultDependencies=no
  Conflicts=shutdown.target
 +Wants=proc-sys-fs-binfmt_misc.automount
@@ -74,3 +74,6 @@ index 6861c76674..531e9fbd90 100644
 +
 +[Install]
 +WantedBy=sysinit.target
+-- 
+2.45.1
+

@@ -1,7 +1,7 @@
-From 5bf8235bc5c802908aa5d95740350927d87e953a Mon Sep 17 00:00:00 2001
+From 8af5d1e3c0dc7e71f7a4aee0f539a5d772d47354 Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Tue, 10 Oct 2017 14:33:30 -0700
-Subject: [PATCH] don't pass AT_SYMLINK_NOFOLLOW flag to faccessat()
+Subject: [PATCH 09/27] don't pass AT_SYMLINK_NOFOLLOW flag to faccessat()
 
 Avoid using AT_SYMLINK_NOFOLLOW flag. It doesn't seem like the right
 thing to do and it's not portable (not supported by musl). See:
@@ -31,7 +31,7 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
  2 files changed, 23 insertions(+), 4 deletions(-)
 
 diff --git a/src/basic/fs-util.h b/src/basic/fs-util.h
-index 6a1e2e76d1..c3f7235e09 100644
+index 3e2db95304..d5747416b0 100644
 --- a/src/basic/fs-util.h
 +++ b/src/basic/fs-util.h
 @@ -49,8 +49,27 @@ int futimens_opath(int fd, const struct timespec ts[2]);
@@ -94,3 +94,6 @@ index a4e2dae245..67aa8ea1f2 100644
                                                  continue;
                                  }
  
+-- 
+2.45.1
+

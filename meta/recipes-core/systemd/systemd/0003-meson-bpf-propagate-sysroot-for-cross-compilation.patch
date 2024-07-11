@@ -1,7 +1,7 @@
-From 7463b382bcaf26aacc60b73f98f0262aa41db3ee Mon Sep 17 00:00:00 2001
+From bbceb4b339231124a0b004531b4b6838539432e6 Mon Sep 17 00:00:00 2001
 From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
 Date: Thu, 20 Jun 2024 12:32:18 +0200
-Subject: [PATCH] meson: bpf: propagate 'sysroot' for cross compilation
+Subject: [PATCH 03/27] meson: bpf: propagate 'sysroot' for cross compilation
 
 During cross-compilation of systemd, the compiler used to build the bpf's needs
 to be pointed at the correct include searchpath. Which can be done by passing
@@ -15,10 +15,10 @@ Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/meson.build b/meson.build
-index 187e7b216d..15df058ab6 100644
+index ea4e12aa1c..52723bef09 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -1691,6 +1691,7 @@ if conf.get('BPF_FRAMEWORK') == 1
+@@ -1739,6 +1739,7 @@ if conf.get('BPF_FRAMEWORK') == 1
                  '-ffile-prefix-map=',
                  '-fdebug-prefix-map=',
                  '-fmacro-prefix-map=',
@@ -27,5 +27,5 @@ index 187e7b216d..15df058ab6 100644
  
          foreach opt : c_args
 -- 
-2.34.1
+2.45.1
 

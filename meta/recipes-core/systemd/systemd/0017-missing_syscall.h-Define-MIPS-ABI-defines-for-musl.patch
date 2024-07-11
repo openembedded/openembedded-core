@@ -1,7 +1,7 @@
-From 863dd6f502d53a4a2644e031eee2e8dfa3fd05aa Mon Sep 17 00:00:00 2001
+From 45bb63a1727097683acad23f270968026671ec6a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 12 Apr 2021 23:44:53 -0700
-Subject: [PATCH] missing_syscall.h: Define MIPS ABI defines for musl
+Subject: [PATCH 17/27] missing_syscall.h: Define MIPS ABI defines for musl
 
 musl does not define _MIPS_SIM_ABI32, _MIPS_SIM_NABI32, _MIPS_SIM_ABI64
 unlike glibc where these are provided by libc headers, therefore define
@@ -44,3 +44,6 @@ index 67aa8ea1f2..8d9824495e 100644
  
  typedef struct BaseFilesystem {
          const char *dir;      /* directory or symlink to create */
+-- 
+2.45.1
+

@@ -1,7 +1,7 @@
-From 751fb8c9a05115f5329cfa25e69afe7657124c20 Mon Sep 17 00:00:00 2001
+From 4a3ed5aaaf108d3a07f24997698906e801ba2412 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 2 Aug 2023 12:06:27 -0700
-Subject: [PATCH] sd-event: Make malloc_trim() conditional on glibc
+Subject: [PATCH 22/27] sd-event: Make malloc_trim() conditional on glibc
 
 musl does not have this API
 
@@ -12,10 +12,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/libsystemd/sd-event/sd-event.c b/src/libsystemd/sd-event/sd-event.c
-index b6899df192..0c03287004 100644
+index a1305ef014..b8a73da2a3 100644
 --- a/src/libsystemd/sd-event/sd-event.c
 +++ b/src/libsystemd/sd-event/sd-event.c
-@@ -1874,7 +1874,7 @@ _public_ int sd_event_add_exit(
+@@ -1877,7 +1877,7 @@ _public_ int sd_event_add_exit(
  }
  
  _public_ int sd_event_trim_memory(void) {
@@ -24,7 +24,7 @@ index b6899df192..0c03287004 100644
  
          /* A default implementation of a memory pressure callback. Simply releases our own allocation caches
           * and glibc's. This is automatically used when people call sd_event_add_memory_pressure() with a
-@@ -1888,7 +1888,9 @@ _public_ int sd_event_trim_memory(void) {
+@@ -1891,7 +1891,9 @@ _public_ int sd_event_trim_memory(void) {
  
          usec_t before_timestamp = now(CLOCK_MONOTONIC);
          hashmap_trim_pools();
@@ -34,3 +34,6 @@ index b6899df192..0c03287004 100644
          usec_t after_timestamp = now(CLOCK_MONOTONIC);
  
          if (r > 0)
+-- 
+2.45.1
+

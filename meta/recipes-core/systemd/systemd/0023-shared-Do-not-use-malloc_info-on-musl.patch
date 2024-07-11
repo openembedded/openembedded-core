@@ -1,7 +1,7 @@
-From 4fe2a8b1aab7297beac50f6ce46f3df4169de218 Mon Sep 17 00:00:00 2001
+From d3880d167d8dfafbb8ee62f7737a869f9525f303 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 2 Aug 2023 12:20:40 -0700
-Subject: [PATCH] shared: Do not use malloc_info on musl
+Subject: [PATCH 23/27] shared: Do not use malloc_info on musl
 
 Upstream-Status: Inappropriate [musl-specific]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
@@ -11,10 +11,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/src/shared/bus-util.c b/src/shared/bus-util.c
-index 74f148c8b4..2d862a123d 100644
+index 30f9602b1e..5308f168db 100644
 --- a/src/shared/bus-util.c
 +++ b/src/shared/bus-util.c
-@@ -611,15 +611,16 @@ static int method_dump_memory_state_by_fd(sd_bus_message *message, void *userdat
+@@ -755,15 +755,16 @@ static int method_dump_memory_state_by_fd(sd_bus_message *message, void *userdat
          _cleanup_close_ int fd = -EBADF;
          size_t dump_size;
          FILE *f;
@@ -52,3 +52,6 @@ index 8e70e365dd..9e782caec9 100644
                  (void) memstream_dump(LOG_INFO, &m);
                  break;
          }
+-- 
+2.45.1
+
