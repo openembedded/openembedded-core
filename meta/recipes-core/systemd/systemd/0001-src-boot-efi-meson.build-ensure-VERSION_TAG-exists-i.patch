@@ -1,0 +1,32 @@
+From 9df06062cebd0390d33de9694e9cb1c9fa7b8697 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Wed, 3 Jul 2024 23:18:41 -0700
+Subject: [PATCH] src/boot/efi/meson.build: ensure VERSION_TAG exists in case
+ of cross build
+
+The GIT_VERSION is changed to use VERSION_TAG, but in case of cross build
+for src/boot/efi, it's not set, causing build error because the compiler cannot
+know it's a macro thus treating it as some variable and error out.
+
+Upstream-Status: Submitted [https://github.com/systemd/systemd/pull/33612]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/boot/efi/meson.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/boot/efi/meson.build b/src/boot/efi/meson.build
+index 7a60b0ec7e..99d108d6e8 100644
+--- a/src/boot/efi/meson.build
++++ b/src/boot/efi/meson.build
+@@ -65,6 +65,7 @@ endforeach
+ 
+ if meson.is_cross_build() and get_option('sbat-distro') == 'auto'
+         warning('Auto detection of SBAT information not supported when cross-building, disabling SBAT.')
++        efi_conf.set_quoted('VERSION_TAG', version_tag)
+ elif get_option('sbat-distro') != ''
+         efi_conf.set_quoted('SBAT_PROJECT', meson.project_name())
+         efi_conf.set_quoted('PROJECT_VERSION', meson.project_version().split('~')[0])
+-- 
+2.45.1
+
