@@ -12,6 +12,7 @@ import re
 import hashlib
 import uuid
 import os
+import oe.spdx_common
 from datetime import datetime, timezone
 
 OE_SPDX_BASE = "https://rdf.openembedded.org/spdx/3.0/"
@@ -203,24 +204,6 @@ def get_alias(obj):
         return ext
 
     return None
-
-
-def extract_licenses(filename):
-    lic_regex = re.compile(
-        rb"^\W*SPDX-License-Identifier:\s*([ \w\d.()+-]+?)(?:\s+\W*)?$", re.MULTILINE
-    )
-
-    try:
-        with open(filename, "rb") as f:
-            size = min(15000, os.stat(filename).st_size)
-            txt = f.read(size)
-            licenses = re.findall(lic_regex, txt)
-            if licenses:
-                ascii_licenses = [lic.decode("ascii") for lic in licenses]
-                return ascii_licenses
-    except Exception as e:
-        bb.warn(f"Exception reading {filename}: {e}")
-    return []
 
 
 def to_list(l):
@@ -630,7 +613,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
                 return
 
         file_licenses = set()
-        for extracted_lic in extract_licenses(filepath):
+        for extracted_lic in oe.spdx_common.extract_licenses(filepath):
             file_licenses.add(self.new_license_expression(extracted_lic))
 
         self.new_relationship(

@@ -38,6 +38,12 @@ def recipe_spdx_is_native(d, recipe):
       a.annotator == "Tool: %s - %s" % (d.getVar("SPDX_TOOL_NAME"), d.getVar("SPDX_TOOL_VERSION")) and
       a.comment == "isNative" for a in recipe.annotations)
 
+def get_json_indent(d):
+    if d.getVar("SPDX_PRETTY") == "1":
+        return 2
+    return None
+
+
 def convert_license_to_spdx(lic, document, d, existing={}):
     from pathlib import Path
     import oe.spdx
@@ -113,6 +119,7 @@ def convert_license_to_spdx(lic, document, d, existing={}):
 def add_package_files(d, doc, spdx_pkg, topdir, get_spdxid, get_types, *, archive=None, ignore_dirs=[], ignore_top_level_dirs=[]):
     from pathlib import Path
     import oe.spdx
+    import oe.spdx_common
     import hashlib
 
     source_date_epoch = d.getVar("SOURCE_DATE_EPOCH")
@@ -165,7 +172,7 @@ def add_package_files(d, doc, spdx_pkg, topdir, get_spdxid, get_types, *, archiv
                     ))
 
                 if "SOURCE" in spdx_file.fileTypes:
-                    extracted_lics = extract_licenses(filepath)
+                    extracted_lics = oe.spdx_common.extract_licenses(filepath)
                     if extracted_lics:
                         spdx_file.licenseInfoInFiles = extracted_lics
 
@@ -256,6 +263,7 @@ def collect_dep_recipes(d, doc, spdx_recipe):
     from pathlib import Path
     import oe.sbom
     import oe.spdx
+    import oe.spdx_common
 
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     package_archs = d.getVar("SSTATE_ARCHS").split()
@@ -263,7 +271,7 @@ def collect_dep_recipes(d, doc, spdx_recipe):
 
     dep_recipes = []
 
-    deps = get_spdx_deps(d)
+    deps = oe.spdx_common.get_spdx_deps(d)
 
     for dep_pn, dep_hashfn, in_taskhash in deps:
         # If this dependency is not calculated in the taskhash skip it.
@@ -386,6 +394,7 @@ python do_create_spdx() {
     from datetime import datetime, timezone
     import oe.sbom
     import oe.spdx
+    import oe.spdx_common
     import uuid
     from pathlib import Path
     from contextlib import contextmanager
@@ -478,10 +487,10 @@ python do_create_spdx() {
 
     add_download_packages(d, doc, recipe)
 
-    if process_sources(d) and include_sources:
+    if oe.spdx_common.process_sources(d) and include_sources:
         recipe_archive = deploy_dir_spdx / "recipes" / (doc.name + ".tar.zst")
         with optional_tarfile(recipe_archive, archive_sources) as archive:
-            spdx_get_src(d)
+            oe.spdx_common.get_patched_src(d)
 
             add_package_files(
                 d,
@@ -588,6 +597,7 @@ python do_create_runtime_spdx() {
     from datetime import datetime, timezone
     import oe.sbom
     import oe.spdx
+    import oe.spdx_common
     import oe.packagedata
     from pathlib import Path
 
@@ -597,7 +607,7 @@ python do_create_runtime_spdx() {
 
     creation_time = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    providers = collect_package_providers(d)
+    providers = oe.spdx_common.collect_package_providers(d)
     pkg_arch = d.getVar("SSTATE_PKGARCH")
     package_archs = d.getVar("SSTATE_ARCHS").split()
     package_archs.reverse()
@@ -778,6 +788,7 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
     import os
     import oe.spdx
     import oe.sbom
+    import oe.spdx_common
     import io
     import json
     from datetime import timezone, datetime
@@ -785,7 +796,7 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
     import tarfile
     import bb.compress.zstd
 
-    providers = collect_package_providers(d)
+    providers = oe.spdx_common.collect_package_providers(d)
     package_archs = d.getVar("SSTATE_ARCHS").split()
     package_archs.reverse()
 

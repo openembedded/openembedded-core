@@ -350,20 +350,21 @@ def collect_dep_objsets(d, build):
     from pathlib import Path
     import oe.sbom30
     import oe.spdx30
+    import oe.spdx_common
 
-    deps = get_spdx_deps(d)
+    deps = oe.spdx_common.get_spdx_deps(d)
 
     dep_objsets = []
     dep_builds = set()
 
     dep_build_spdxids = set()
-    for dep_pn, _, in_taskhash  in deps:
-        bb.debug(1, "Fetching SPDX for dependency %s" % (dep_pn))
-        dep_build, dep_objset = oe.sbom30.find_root_obj_in_jsonld(d, "recipes", dep_pn, oe.spdx30.build_Build)
+    for dep in deps:
+        bb.debug(1, "Fetching SPDX for dependency %s" % (dep.pn))
+        dep_build, dep_objset = oe.sbom30.find_root_obj_in_jsonld(d, "recipes", dep.pn, oe.spdx30.build_Build)
         # If the dependency is part of the taskhash, return it to be linked
         # against. Otherwise, it cannot be linked against because this recipe
         # will not rebuilt if dependency changes
-        if in_taskhash:
+        if dep.in_taskhash:
             dep_objsets.append(dep_objset)
 
         # The build _can_ be linked against (by alias)
@@ -519,6 +520,7 @@ def set_purposes(d, element, *var_names, force_purposes=[]):
 python do_create_spdx() {
     import oe.sbom30
     import oe.spdx30
+    import oe.spdx_common
     from pathlib import Path
     from contextlib import contextmanager
     import oe.cve_check
@@ -593,9 +595,9 @@ python do_create_spdx() {
         [recipe_spdx_license],
     )
 
-    if process_sources(d) and include_sources:
+    if oe.spdx_common.process_sources(d) and include_sources:
         bb.debug(1, "Adding source files to SPDX")
-        spdx_get_src(d)
+        oe.spdx_common.get_patched_src(d)
 
         build_inputs |= add_package_files(
             d,
@@ -844,6 +846,7 @@ do_create_spdx[depends] += "${PATCHDEPENDENCY}"
 python do_create_package_spdx() {
     import oe.sbom30
     import oe.spdx30
+    import oe.spdx_common
     import oe.packagedata
     from pathlib import Path
 
@@ -851,7 +854,7 @@ python do_create_package_spdx() {
     deploydir = Path(d.getVar("SPDXRUNTIMEDEPLOY"))
     is_native = bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d)
 
-    providers = collect_package_providers(d)
+    providers = oe.spdx_common.collect_package_providers(d)
     pkg_arch = d.getVar("SSTATE_PKGARCH")
 
     if not is_native:
@@ -957,6 +960,7 @@ do_create_package_spdx[rdeptask] = "do_create_spdx"
 python spdx30_build_started_handler () {
     import oe.spdx30
     import oe.sbom30
+    import oe.spdx_common
     import os
     from pathlib import Path
     from datetime import datetime, timezone
@@ -966,7 +970,7 @@ python spdx30_build_started_handler () {
     d = e.data.createCopy()
     d.setVar("PN", "bitbake")
     d.setVar("BB_TASKHASH", "bitbake")
-    load_spdx_license_data(d)
+    oe.spdx_common.load_spdx_license_data(d)
 
     deploy_dir_spdx = Path(e.data.getVar("DEPLOY_DIR_SPDX"))
 

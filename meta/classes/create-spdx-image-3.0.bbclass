@@ -10,7 +10,8 @@ SPDXIMAGEDEPLOYDIR = "${SPDXDIR}/image-deploy"
 SPDXROOTFSDEPLOY = "${SPDXDIR}/rootfs-deploy"
 
 def collect_build_package_inputs(d, objset, build, packages):
-    providers = collect_package_providers(d)
+    import oe.spdx_common
+    providers = oe.spdx_common.collect_package_providers(d)
 
     build_deps = set()
 
