@@ -16,6 +16,8 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://no-musttail-arm.patch \
            file://t6-not-declared.patch \
            file://30e1d5e22213fdaca2a29ec3400c927d710a37a8.patch \
+           file://0001-Remove-ARM-specific-declarations-in-FELighting.h-unn.patch \
+           file://0002-More-dynamicDowncast-adoption-in-platform-code.patch \
            "
 SRC_URI[sha256sum] = "425b1459b0f04d0600c78d1abb5e7edfa3c060a420f8b231e9a6a2d5d29c5561"
 
