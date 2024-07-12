@@ -933,8 +933,7 @@ class SStateCheckObjectPresence(SStateBase):
         # these get influnced by IMAGE_FSTYPES tweaks in yocto-autobuilder-helper's config.json (on x86-64)
         # additionally, they depend on noexec (thus, absent stamps) package, install, etc. image tasks,
         # which makes tracing other changes difficult
-        exceptions += ["{}.*create_spdx".format(t) for t in targets.split()]
-        exceptions += ["{}.*create_runtime_spdx".format(t) for t in targets.split()]
+        exceptions += ["{}.*create_.*spdx".format(t) for t in targets.split()]
 
         output_l = output.splitlines()
         for l in output_l:
