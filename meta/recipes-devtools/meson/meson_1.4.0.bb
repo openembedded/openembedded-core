@@ -47,7 +47,7 @@ inherit meson-routines
 #   them.
 def var_list2str(var, d):
     items = d.getVar(var).split()
-    return items[0] if len(items) == 1 else ', '.join(repr(s) for s in items)
+    return repr(items[0]) if len(items) == 1 else ', '.join(repr(s) for s in items)
 
 def generate_native_link_template(d):
     val = ['-L@{OECORE_NATIVE_SYSROOT}${libdir_native}',
