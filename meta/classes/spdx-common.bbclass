@@ -17,6 +17,7 @@ SPDXDEPLOY = "${SPDXDIR}/deploy"
 SPDXWORK = "${SPDXDIR}/work"
 SPDXIMAGEWORK = "${SPDXDIR}/image-work"
 SPDXSDKWORK = "${SPDXDIR}/sdk-work"
+SPDXSDKEXTWORK = "${SPDXDIR}/sdk-ext-work"
 SPDXDEPS = "${SPDXDIR}/deps.json"
 
 SPDX_TOOL_NAME ??= "oe-spdx-creator"
@@ -61,7 +62,7 @@ def get_json_indent(d):
         return 2
     return None
 
-python() {
+def load_spdx_license_data(d):
     import json
     if d.getVar("SPDX_LICENSE_DATA"):
         return
@@ -71,6 +72,9 @@ python() {
         # Transform the license array to a dictionary
         data["licenses"] = {l["licenseId"]: l for l in data["licenses"]}
         d.setVar("SPDX_LICENSE_DATA", data)
+
+python() {
+    load_spdx_license_data(d)
 }
 
 def process_sources(d):
