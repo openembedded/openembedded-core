@@ -53,6 +53,8 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0001-awk-fix-segfault-when-compiled-by-clang.patch \
            file://CVE-2023-42363.patch \
            file://busybox-1.36.1-no-cbq.patch \
+           file://0001-awk-fix-precedence-of-relative-to.patch \
+           file://0002-awk-fix-ternary-operator-and-precedence-of.patch \
            "
 SRC_URI:append:libc-musl = " file://musl.cfg "
 # TODO http://lists.busybox.net/pipermail/busybox/2023-January/090078.html
