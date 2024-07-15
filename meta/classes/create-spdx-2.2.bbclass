@@ -230,7 +230,8 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
                     debugsrc_path = search / debugsrc.replace('/usr/src/kernel/', '')
                 else:
                     debugsrc_path = search / debugsrc.lstrip("/")
-                if not debugsrc_path.exists():
+                # We can only hash files below, skip directories, links, etc.
+                if not os.path.isfile(debugsrc_path):
                     continue
 
                 file_sha256 = bb.utils.sha256_file(debugsrc_path)
