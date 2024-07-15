@@ -429,7 +429,7 @@ fitimage_emit_section_config() {
 	fi
 
 	dtb_path="${EXTERNAL_KERNEL_DEVICETREE}/${dtb_image_sect}"
-	if [ -e "$dtb_path" ]; then
+	if [ -f "$dtb_path" ] || [ -L "$dtb_path" ]; then
 		compat=$(fdtget -t s "$dtb_path" / compatible | sed 's/ /", "/g')
 		if [ -n "$compat" ]; then
 			compatible_line="compatible = \"$compat\";"
