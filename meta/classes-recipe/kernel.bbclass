@@ -21,7 +21,10 @@ PACKAGE_WRITE_DEPS += "depmodwrapper-cross"
 do_deploy[depends] += "depmodwrapper-cross:do_populate_sysroot gzip-native:do_populate_sysroot"
 do_clean[depends] += "make-mod-scripts:do_clean"
 
-CVE_PRODUCT ?= "linux_kernel"
+# CPE entries from NVD use linux_kernel, but the raw CVE entries from the kernel CNA have
+# vendor: linux and product: linux. Note that multiple distributions use "linux" as a product
+# name, so we need to fill vendor to avoid false positives
+CVE_PRODUCT ?= "linux_kernel linux:linux"
 
 S = "${STAGING_KERNEL_DIR}"
 B = "${WORKDIR}/build"
