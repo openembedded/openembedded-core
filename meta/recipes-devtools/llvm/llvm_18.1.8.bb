@@ -99,6 +99,10 @@ do_compile:prepend:class-target() {
         sed -i -e "s,${WORKDIR},,g" ${B}/tools/llvm-config/BuildVariables.inc
 }
 
+do_compile:prepend:class-nativesdk() {
+        sed -i -e "s,${WORKDIR},,g" ${B}/tools/llvm-config/BuildVariables.inc
+}
+
 do_compile() {
     if ${@bb.utils.contains('PACKAGECONFIG', 'libllvm', 'true', 'false', d)}; then
 	ninja -v ${PARALLEL_MAKE}
