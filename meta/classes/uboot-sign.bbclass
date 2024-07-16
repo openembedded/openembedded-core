@@ -137,8 +137,7 @@ concat_dtb_helper() {
 
 			if [ -n "${UBOOT_CONFIG}" ]
 			then
-				i=0
-				j=0
+				unset i j
 				for config in ${UBOOT_MACHINE}; do
 					i=$(expr $i + 1);
 					for type in ${UBOOT_CONFIG}; do
@@ -146,9 +145,12 @@ concat_dtb_helper() {
 						if [ $j -eq $i ]
 						then
 							cp ${UBOOT_IMAGE} ${B}/${CONFIG_B_PATH}/u-boot-$type.${UBOOT_SUFFIX}
+							break
 						fi
 					done
+					unset j
 				done
+				unset i
 			fi
 		else
 			bbwarn "Failure while adding public key to u-boot binary. Verified boot won't be available."
