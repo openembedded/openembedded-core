@@ -111,10 +111,6 @@ do_install:append() {
 		install -m 755 ${B}/$f ${D}/${bindir}
 	done
 
-	# Patch python tools to use Python 3; they should be source compatible, but
-	# still refer to Python 2 in the shebang
-	sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${libdir}/bluez/test/*
-
 	# Fix the /etc/bluetooth directory permissions when systemd is disabled
 	if ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'false', 'true', d)}; then
 		chmod 0755 ${D}${sysconfdir}/bluetooth
