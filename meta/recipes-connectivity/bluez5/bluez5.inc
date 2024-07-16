@@ -102,13 +102,13 @@ do_install:append() {
 	install -d ${D}${INIT_D_DIR}
 	install -m 0755 ${UNPACKDIR}/init ${D}${INIT_D_DIR}/bluetooth
 
-	if [ -f ${D}/${sysconfdir}/init.d/bluetooth ]; then
-		sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}/${sysconfdir}/init.d/bluetooth
+	if [ -f ${D}${sysconfdir}/init.d/bluetooth ]; then
+		sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}${sysconfdir}/init.d/bluetooth
 	fi
 
 	# Install desired tools that upstream leaves in build area
 	for f in ${NOINST_TOOLS} ; do
-		install -m 755 ${B}/$f ${D}/${bindir}
+		install -m 755 ${B}/$f ${D}${bindir}
 	done
 
 	# Fix the /etc/bluetooth directory permissions when systemd is disabled
