@@ -35,6 +35,8 @@ PACKAGECONFIG[manpages] = ""
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
 
+EXTRA_OECONF = "${@bb.utils.contains('PTEST_ENABLED', '1', '', 'no-tests', d)}"
+
 #| ./libcrypto.so: undefined reference to `getcontext'
 #| ./libcrypto.so: undefined reference to `setcontext'
 #| ./libcrypto.so: undefined reference to `makecontext'
@@ -43,8 +45,8 @@ EXTRA_OECONF:append:libc-musl:powerpc64 = " no-asm"
 
 # adding devrandom prevents openssl from using getrandom() which is not available on older glibc versions
 # (native versions can be built with newer glibc, but then relocated onto a system with older glibc)
-EXTRA_OECONF:class-native = "--with-rand-seed=os,devrandom"
-EXTRA_OECONF:class-nativesdk = "--with-rand-seed=os,devrandom"
+EXTRA_OECONF:append:class-native = " --with-rand-seed=os,devrandom"
+EXTRA_OECONF:append:class-nativesdk = " --with-rand-seed=os,devrandom"
 
 # Relying on hardcoded built-in paths causes openssl-native to not be relocateable from sstate.
 CFLAGS:append:class-native = " -DOPENSSLDIR=/not/builtin -DENGINESDIR=/not/builtin"
