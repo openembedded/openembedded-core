@@ -430,6 +430,7 @@ PACKAGE_BEFORE_PN = "\
     ${PN}-journal-upload \
     ${PN}-journal-remote \
     ${PN}-kernel-install \
+    ${PN}-mime \
     ${PN}-rpm-macros \
     ${PN}-udev-rules \
     ${PN}-vconsole-setup \
@@ -635,6 +636,9 @@ FILES:${PN}-extra-utils = "\
                         ${rootlibexecdir}/systemd/systemd-cgroups-agent \
 "
 
+FILES:${PN}-mime = "${MIMEDIR}"
+RRECOMMENDS:${PN} += "${PN}-mime"
+
 FILES:${PN}-udev-rules = "\
                         ${rootlibexecdir}/udev/rules.d/70-uaccess.rules \
                         ${rootlibexecdir}/udev/rules.d/71-seat.rules \
@@ -732,7 +736,7 @@ RDEPENDS:${PN} += "kmod dbus util-linux-mount util-linux-umount udev (= ${EXTEND
 RDEPENDS:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', '', 'systemd-serialgetty', d)}"
 RDEPENDS:${PN} += "volatile-binds"
 
-RRECOMMENDS:${PN} += "systemd-extra-utils \
+RRECOMMENDS:${PN} += "${PN}-extra-utils \
                       udev-hwdb \
                       e2fsprogs-e2fsck \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 kernel-module-sch-fq-codel \
