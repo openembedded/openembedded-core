@@ -20,10 +20,10 @@ class Distrodata(OESelftestTestCase):
         feature = 'LICENSE_FLAGS_ACCEPTED += " commercial"\n'
         self.write_config(feature)
 
-        pkgs = oe.recipeutils.get_recipe_upgrade_status()
+        pkggroups = oe.recipeutils.get_recipe_upgrade_status()
 
-        regressed_failures = [pkg['pn'] for pkg in pkgs if pkg['status'] == 'UNKNOWN_BROKEN']
-        regressed_successes = [pkg['pn'] for pkg in pkgs if pkg['status'] == 'KNOWN_BROKEN']
+        regressed_failures = [pkg['pn'] for pkgs in pkggroups for pkg in pkgs if pkg['status'] == 'UNKNOWN_BROKEN']
+        regressed_successes = [pkg['pn'] for pkgs in pkggroups for pkg in pkgs if pkg['status'] == 'KNOWN_BROKEN']
         msg = ""
         if len(regressed_failures) > 0:
             msg = msg + """

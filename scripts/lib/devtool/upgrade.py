@@ -654,18 +654,28 @@ def latest_version(args, config, basepath, workspace):
     return 0
 
 def check_upgrade_status(args, config, basepath, workspace):
+    def _print_status(recipe):
+        print("{:25} {:15} {:15} {} {} {}".format(   recipe['pn'],
+                                                               recipe['cur_ver'],
+                                                               recipe['status'] if recipe['status'] != 'UPDATE' else (recipe['next_ver'] if not recipe['next_ver'].endswith("new-commits-available") else "new commits"),
+                                                               recipe['maintainer'],
+                                                               recipe['revision'] if recipe['revision'] != 'N/A' else "",
+                                                               "cannot be updated due to: %s" %(recipe['no_upgrade_reason']) if recipe['no_upgrade_reason'] else ""))
     if not args.recipe:
         logger.info("Checking the upstream status for all recipes may take a few minutes")
     results = oe.recipeutils.get_recipe_upgrade_status(args.recipe)
-    for result in results:
-        # pn, update_status, current, latest, maintainer, latest_commit, no_update_reason
-        if args.all or result['status'] != 'MATCH':
-            print("{:25} {:15} {:15} {} {} {}".format(   result['pn'],
-                                                               result['cur_ver'],
-                                                               result['status'] if result['status'] != 'UPDATE' else (result['next_ver'] if not result['next_ver'].endswith("new-commits-available") else "new commits"),
-                                                               result['maintainer'],
-                                                               result['revision'] if result['revision'] != 'N/A' else "",
-                                                               "cannot be updated due to: %s" %(result['no_upgrade_reason']) if result['no_upgrade_reason'] else ""))
+    for recipegroup in results:
+        upgrades = [r for r in recipegroup if r['status'] != 'MATCH']
+        currents = [r for r in recipegroup if r['status'] == 'MATCH']
+        if len(upgrades) > 1:
+            print("These recipes need to be upgraded together {")
+        for r in upgrades:
+            _print_status(r)
+        if len(upgrades) > 1:
+            print("}")
+        for r in currents:
+            if args.all:
+                _print_status(r)
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

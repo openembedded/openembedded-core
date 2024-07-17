@@ -1154,6 +1154,7 @@ def get_recipe_upgrade_status(recipes=None):
         if not recipes:
             recipes = tinfoil.all_recipe_files(variants=False)
 
+        recipeincludes = {}
         for fn in recipes:
             try:
                 if fn.startswith("/"):
@@ -1178,11 +1179,13 @@ def get_recipe_upgrade_status(recipes=None):
 
             data_copy_list.append(data_copy)
 
+            recipeincludes[data.getVar('FILE')] = {'bbincluded':data.getVar('BBINCLUDED').split(),'pn':data.getVar('PN')}
+
     from concurrent.futures import ProcessPoolExecutor
     with ProcessPoolExecutor(max_workers=utils.cpu_count()) as executor:
         pkgs_list = executor.map(_get_recipe_upgrade_status, data_copy_list)
 
-    return pkgs_list
+    return _group_recipes(pkgs_list, _get_common_include_recipes(recipeincludes))
 
 def get_common_include_recipes():
     with bb.tinfoil.Tinfoil() as tinfoil:
@@ -1220,3 +1223,21 @@ def _get_common_include_recipes(recipeincludes_all):
                 recipes_with_shared_includes.append(recipeset)
 
         return recipes_with_shared_includes
+
+def _group_recipes(recipes, groups):
+    recipedict = {}
+    for r in recipes:
+        recipedict[r['pn']] = r
+
+    recipegroups = []
+    for g in groups:
+        recipeset = []
+        for r in g:
+            if r in recipedict.keys():
+                recipeset.append(recipedict[r])
+                del recipedict[r]
+        recipegroups.append(recipeset)
+
+    for r in recipedict.values():
+        recipegroups.append([r])
+    return recipegroups
