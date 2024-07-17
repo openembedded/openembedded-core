@@ -1112,7 +1112,7 @@ def _get_recipe_upgrade_status(data):
     maintainer = data.getVar('RECIPE_MAINTAINER')
     no_upgrade_reason = data.getVar('RECIPE_NO_UPDATE_REASON')
 
-    return (pn, status, cur_ver, next_ver, maintainer, revision, no_upgrade_reason)
+    return {'pn':pn, 'status':status, 'cur_ver':cur_ver, 'next_ver':next_ver, 'maintainer':maintainer, 'revision':revision, 'no_upgrade_reason':no_upgrade_reason}
 
 def get_recipe_upgrade_status(recipes=None):
     pkgs_list = []

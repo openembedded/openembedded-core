@@ -659,13 +659,13 @@ def check_upgrade_status(args, config, basepath, workspace):
     results = oe.recipeutils.get_recipe_upgrade_status(args.recipe)
     for result in results:
         # pn, update_status, current, latest, maintainer, latest_commit, no_update_reason
-        if args.all or result[1] != 'MATCH':
-            print("{:25} {:15} {:15} {} {} {}".format(   result[0],
-                                                               result[2],
-                                                               result[1] if result[1] != 'UPDATE' else (result[3] if not result[3].endswith("new-commits-available") else "new commits"),
-                                                               result[4],
-                                                               result[5] if result[5] != 'N/A' else "",
-                                                               "cannot be updated due to: %s" %(result[6]) if result[6] else ""))
+        if args.all or result['status'] != 'MATCH':
+            print("{:25} {:15} {:15} {} {} {}".format(   result['pn'],
+                                                               result['cur_ver'],
+                                                               result['status'] if result['status'] != 'UPDATE' else (result['next_ver'] if not result['next_ver'].endswith("new-commits-available") else "new commits"),
+                                                               result['maintainer'],
+                                                               result['revision'] if result['revision'] != 'N/A' else "",
+                                                               "cannot be updated due to: %s" %(result['no_upgrade_reason']) if result['no_upgrade_reason'] else ""))
 
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""

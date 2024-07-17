@@ -22,8 +22,8 @@ class Distrodata(OESelftestTestCase):
 
         pkgs = oe.recipeutils.get_recipe_upgrade_status()
 
-        regressed_failures = [pkg[0] for pkg in pkgs if pkg[1] == 'UNKNOWN_BROKEN']
-        regressed_successes = [pkg[0] for pkg in pkgs if pkg[1] == 'KNOWN_BROKEN']
+        regressed_failures = [pkg['pn'] for pkg in pkgs if pkg['status'] == 'UNKNOWN_BROKEN']
+        regressed_successes = [pkg['pn'] for pkg in pkgs if pkg['status'] == 'KNOWN_BROKEN']
         msg = ""
         if len(regressed_failures) > 0:
             msg = msg + """
