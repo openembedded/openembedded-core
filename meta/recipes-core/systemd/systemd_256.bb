@@ -279,16 +279,17 @@ WATCHDOG_TIMEOUT ??= "60"
 
 do_install() {
 	meson_do_install
+
 	if ${@bb.utils.contains('PACKAGECONFIG', 'sysusers', 'true', 'false', d)}; then
-            # Change the root user's home directory in /lib/sysusers.d/basic.conf.
-            # This is done merely for backward compatibility with previous systemd recipes.
-            # systemd hardcodes root user's HOME to be "/root". Changing to use other values
-            # may have unexpected runtime behaviors.
-            if [ "${ROOT_HOME}" != "/root" ]; then
-                    bbwarn "Using ${ROOT_HOME} as root user's home directory is not fully supported by systemd"
-                    sed -i -e 's#/root#${ROOT_HOME}#g' ${D}${exec_prefix}/lib/sysusers.d/basic.conf
-            fi
-        fi
+		# Change the root user's home directory in /lib/sysusers.d/basic.conf.
+		# This is done merely for backward compatibility with previous systemd recipes.
+		# systemd hardcodes root user's HOME to be "/root". Changing to use other values
+		# may have unexpected runtime behaviors.
+		if [ "${ROOT_HOME}" != "/root" ]; then
+			bbwarn "Using ${ROOT_HOME} as root user's home directory is not fully supported by systemd"
+			sed -i -e 's#/root#${ROOT_HOME}#g' ${D}${exec_prefix}/lib/sysusers.d/basic.conf
+		fi
+	fi
 	install -d ${D}/${base_sbindir}
 	if ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'false', 'true', d)}; then
 		# Provided by a separate recipe
@@ -396,10 +397,10 @@ do_install() {
 	# add a profile fragment to disable systemd pager with busybox less
 	install -Dm 0644 ${UNPACKDIR}/systemd-pager.sh ${D}${sysconfdir}/profile.d/systemd-pager.sh
 
-    if [ -n "${WATCHDOG_TIMEOUT}" ]; then
-        sed -i -e 's/#RebootWatchdogSec=10min/RebootWatchdogSec=${WATCHDOG_TIMEOUT}/' \
-            ${D}/${sysconfdir}/systemd/system.conf
-    fi
+	if [ -n "${WATCHDOG_TIMEOUT}" ]; then
+		sed -i -e 's/#RebootWatchdogSec=10min/RebootWatchdogSec=${WATCHDOG_TIMEOUT}/' \
+			${D}/${sysconfdir}/systemd/system.conf
+	fi
 
 	if ${@bb.utils.contains('PACKAGECONFIG', 'pni-names', 'true', 'false', d)}; then
 		if ! grep -q '^NamePolicy=.*mac' ${D}${rootlibexecdir}/systemd/network/99-default.link; then
