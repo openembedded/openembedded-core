@@ -115,3 +115,15 @@ The list of oe-core recipes with maintainers is empty. This may indicate that th
                 self.fail("""
 Unable to find recipes for the following entries in maintainers.inc:
 """ + "\n".join(['%s' % i for i in missing_recipes]))
+
+    def test_common_include_recipes(self):
+        """
+        Summary:     Test that obtaining recipes that share includes between them returns a sane result
+        Expected:    At least cmake and qemu entries are present in the output
+        Product:     oe-core
+        Author:      Alexander Kanavin <alex.kanavin@gmail.com>
+        """
+        recipes = oe.recipeutils.get_common_include_recipes()
+
+        self.assertIn({'qemu-system-native', 'qemu', 'qemu-native'}, recipes)
+        self.assertIn({'cmake-native', 'cmake'}, recipes)
