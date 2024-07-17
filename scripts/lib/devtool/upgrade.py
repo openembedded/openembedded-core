@@ -76,19 +76,19 @@ def _rename_recipe_dirs(oldpv, newpv, path):
                         bb.utils.rename(os.path.join(path, oldfile),
                               os.path.join(path, newfile))
 
-def _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path):
+def _rename_recipe_file(oldrecipe, pn, oldpv, newpv, path):
     oldrecipe = os.path.basename(oldrecipe)
     if oldrecipe.endswith('_%s.bb' % oldpv):
-        newrecipe = '%s_%s.bb' % (bpn, newpv)
+        newrecipe = '%s_%s.bb' % (pn, newpv)
         if oldrecipe != newrecipe:
             shutil.move(os.path.join(path, oldrecipe), os.path.join(path, newrecipe))
     else:
         newrecipe = oldrecipe
     return os.path.join(path, newrecipe)
 
-def _rename_recipe_files(oldrecipe, bpn, oldpv, newpv, path):
+def _rename_recipe_files(oldrecipe, pn, oldpv, newpv, path):
     _rename_recipe_dirs(oldpv, newpv, path)
-    return _rename_recipe_file(oldrecipe, bpn, oldpv, newpv, path)
+    return _rename_recipe_file(oldrecipe, pn, oldpv, newpv, path)
 
 def _write_append(rc, srctreebase, srctree, same_dir, no_same_dir, revs, copied, workspace, d):
     """Writes an append file"""
@@ -335,19 +335,19 @@ def _add_license_diff_to_recipe(path, diff):
 def _create_new_recipe(newpv, checksums, srcrev, srcbranch, srcsubdir_old, srcsubdir_new, workspace, tinfoil, rd, license_diff, new_licenses, srctree, keep_failure):
     """Creates the new recipe under workspace"""
 
-    bpn = rd.getVar('BPN')
-    path = os.path.join(workspace, 'recipes', bpn)
+    pn = rd.getVar('PN')
+    path = os.path.join(workspace, 'recipes', pn)
     bb.utils.mkdirhier(path)
     copied, _ = oe.recipeutils.copy_recipe_files(rd, path, all_variants=True)
     if not copied:
-        raise DevtoolError('Internal error - no files were copied for recipe %s' % bpn)
+        raise DevtoolError('Internal error - no files were copied for recipe %s' % pn)
     logger.debug('Copied %s to %s' % (copied, path))
 
     oldpv = rd.getVar('PV')
     if not newpv:
         newpv = oldpv
     origpath = rd.getVar('FILE')
-    fullpath = _rename_recipe_files(origpath, bpn, oldpv, newpv, path)
+    fullpath = _rename_recipe_files(origpath, pn, oldpv, newpv, path)
     logger.debug('Upgraded %s => %s' % (origpath, fullpath))
 
     newvalues = {}
@@ -610,7 +610,7 @@ def upgrade(args, config, basepath, workspace):
             license_diff = _generate_license_diff(old_licenses, new_licenses)
             rf, copied = _create_new_recipe(args.version, checksums, args.srcrev, srcbranch, srcsubdir1, srcsubdir2, config.workspace_path, tinfoil, rd, license_diff, new_licenses, srctree, args.keep_failure)
         except (bb.process.CmdError, DevtoolError) as e:
-            recipedir = os.path.join(config.workspace_path, 'recipes', rd.getVar('BPN'))
+            recipedir = os.path.join(config.workspace_path, 'recipes', rd.getVar('PN'))
             _upgrade_error(e, recipedir, srctree, args.keep_failure)
         standard._add_md5(config, pn, os.path.dirname(rf))
 
