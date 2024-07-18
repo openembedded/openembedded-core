@@ -146,6 +146,13 @@ do_configure () {
 	perl ${B}/configdata.pm --dump
 }
 
+do_compile:append () {
+	# The test suite binaries are large and we don't need the debugging in them
+	if test -d ${B}/test; then
+		find ${B}/test -type f -executable -exec ${STRIP} {} \;
+	fi
+}
+
 do_install () {
 	oe_runmake DESTDIR="${D}" MANDIR="${mandir}" MANSUFFIX=ssl install_sw install_ssldirs ${@bb.utils.contains('PACKAGECONFIG', 'manpages', 'install_docs', '', d)}
 
@@ -251,6 +258,9 @@ RDEPENDS:${PN}-misc = "perl"
 RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed"
 
 RDEPENDS:${PN}-bin += "openssl-conf"
+
+# The test suite is installed stripped
+INSANE_SKIP:${PN} = "already-stripped"
 
 BBCLASSEXTEND = "native nativesdk"
 
