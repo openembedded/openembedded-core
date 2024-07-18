@@ -57,6 +57,7 @@ if [ -d "$mountpoint" ]; then
         fi
     fi
     if [ "$MOUNT_COPYBIND_AVOID_OVERLAYFS" = 1 ] || ! mount -t overlay overlay -olowerdir="$mountpoint",upperdir="$spec",workdir="$overlay_workdir""$mountcontext" "$mountpoint" > /dev/null 2>&1; then
+        rm -rf "$overlay_workdir"
 
         if [ "$specdir_existed" != "yes" ]; then
             cp -aPR "$mountpoint"/. "$spec/"
