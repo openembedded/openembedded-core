@@ -38,6 +38,8 @@ SRC_URI[sha256sum] = "ba6d02f15ba04aba9c23fd5f236bb234eab9d5209e95d1c4df85c44d5f
 
 # upstream-wontfix: upstream has documented that reported function is not thread-safe
 CVE_CHECK_IGNORE += "CVE-2023-30571"
+# cpe-incorrect: this vulnerability was not in any release; introduced in v3.7.3-14-g91f27004; fixed in b6a97948
+CVE_CHECK_IGNORE += "CVE-2024-37407"
 
 inherit autotools update-alternatives pkgconfig
 
