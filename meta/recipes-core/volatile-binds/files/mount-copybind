@@ -45,7 +45,9 @@ if [ -d "$mountpoint" ]; then
 
     # Fast version of calculating `dirname ${spec}`/.`basename ${spec}`-work
     overlay_workdir="${spec%/*}/.${spec##*/}-work"
-    mkdir "${overlay_workdir}"
+    if [ "$MOUNT_COPYBIND_AVOID_OVERLAYFS" != 1 ]; then
+        mkdir "${overlay_workdir}"
+    fi
 
     # Try to mount using overlay, which is must faster than copying files.
     # If that fails, fall back to slower copy.
