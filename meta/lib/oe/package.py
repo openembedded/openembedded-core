@@ -14,6 +14,7 @@ import glob
 import stat
 import mmap
 import subprocess
+import shutil
 
 import oe.cachedpath
 
