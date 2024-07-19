@@ -53,7 +53,6 @@ PTESTS_FAST = "\
     m4 \
     nettle \
     opkg \
-    pango \
     popt \
     python3-atomicwrites \
     python3-attrs \

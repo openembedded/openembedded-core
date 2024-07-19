@@ -11,41 +11,27 @@ LICENSE = "LGPL-2.0-or-later"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=3bf50002aefd002f49e7bb854063f7e7"
 
-
-inherit gnomebase gi-docgen ptest-gnome upstream-version-is-even gobject-introspection
+inherit gnomebase gi-docgen upstream-version-is-even gobject-introspection
 
 UPSTREAM_CHECK_REGEX = "pango-(?P<pver>\d+\.(?!9\d+)\d+\.\d+)"
 
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 
-SRC_URI += "file://run-ptest \
-           file://0001-Skip-running-test-layout-test.patch \
-           "
-
-SRC_URI[archive.sha256sum] = "d0076afe01082814b853deec99f9349ece5f2ce83908b8e58ff736b41f78a96b"
+SRC_URI[archive.sha256sum] = "8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
 
-PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)} \
-                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'x11', d)}"
 
 PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
-PACKAGECONFIG[tests] = "-Dinstall-tests=true, -Dinstall-tests=false"
 PACKAGECONFIG[thai] = "-Dlibthai=enabled,-Dlibthai=disabled,libthai"
 
 GIR_MESON_OPTION = 'introspection'
 
-do_configure:prepend() {
-	chmod +x ${S}/tests/*.py
-}
-
 LEAD_SONAME = "libpango-1.0*"
 
 FILES:${PN} = "${bindir}/* ${libdir}/libpango*${SOLIBS}"
-
-RDEPENDS:${PN}-ptest += "cantarell-fonts"
-RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-en-us"
 
 RPROVIDES:${PN} += "pango-modules pango-module-indic-lang \
                     pango-module-basic-fc pango-module-arabic-lang"
