@@ -688,7 +688,7 @@ def create_spdx(d):
                         else:
                             bb.fatal(f"Unknown detail '{detail}' for ignored {cve}")
                     else:
-                        bb.fatal(f"Unknown CVE status {status}")
+                        bb.fatal(f"Unknown {cve} status '{status}'")
 
             if all_cves:
                 pkg_objset.new_relationship(
