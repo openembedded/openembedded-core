@@ -118,7 +118,8 @@ FILES:${PN}-mount = "${sysconfdir}/default/mountall"
 FILES:${PN}-runuser = "${sysconfdir}/pam.d/runuser*"
 FILES:${PN}-su = "${sysconfdir}/pam.d/su-l"
 CONFFILES:${PN}-su = "${sysconfdir}/pam.d/su-l"
-FILES:${PN}-lastlog2 += "${base_libdir}/security/pam_lastlog2.so"
+FILES:${PN}-lastlog2 += "${base_libdir}/security/pam_lastlog2.so \
+                         ${nonarch_libdir}/tmpfiles.d/lastlog2.conf"
 FILES:${PN}-pylibmount = "${PYTHON_SITEPACKAGES_DIR}/libmount/pylibmount.so \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__init__.* \
                           ${PYTHON_SITEPACKAGES_DIR}/libmount/__pycache__/*"
@@ -205,6 +206,12 @@ do_install:append:class-target () {
 		# otherwise it uses "other", which has "auth pam_deny.so"
 		# and thus prevents the operation.
 		ln -s su ${D}${sysconfdir}/pam.d/su-l
+
+		if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+			install -d ${D}${nonarch_libdir}/tmpfiles.d
+			install -m 0644 ${S}/misc-utils/lastlog2-tmpfiles.conf.in \
+				${D}${nonarch_libdir}/tmpfiles.d/lastlog2.conf
+		fi
 	fi
 }
 # nologin causes a conflict with shadow-native
