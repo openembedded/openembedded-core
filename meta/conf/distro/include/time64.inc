@@ -42,3 +42,11 @@ INSANE_SKIP:append:pn-strace = " 32bit-time"
 # has the same INSANE_SKIP setting.
 # Please check the comment in meta/classes-recipe/cargo_common.bbclass
 # for information about why, and the overall Y2038 situation in rust.
+
+# binutils/gcc/gdb still need fixing for qemuarm/qemuarmv5/qemumips/qemuppc/qemux86
+#binutils-cross-canadian-arm-2.42-r0 do_package_qa: QA Issue: xxx/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-ranlib uses 32-bit api 'lstat'
+INSANE_SKIP:append:pn-binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = " 32bit-time"
+#gcc-cross-canadian-arm-14.1.0-r0 do_package_qa: QA Issue: xxx/x86_64-oesdk-linux/usr/libexec/arm-oe-linux-gnueabi/gcc/arm-oe-linux-gnueabi/14.1.0/plugin/gengtype uses 32-bit api 'ctime'
+INSANE_SKIP:append:pn-gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = " 32bit-time"
+#gdb-cross-canadian-arm-15.1-r0 do_package_qa: QA Issue: xxx/x86_64-oesdk-linux/usr/bin/arm-oe-linux-gnueabi/arm-oe-linux-gnueabi-gdb uses 32-bit api 'lstat'
+INSANE_SKIP:append:pn-gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = " 32bit-time"
