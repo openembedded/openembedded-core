@@ -33,7 +33,6 @@ RDEPENDS:${PN} += " \
     python3-attrs \
     python3-core \
     python3-datetime \
-    python3-importlib-metadata \
     python3-io \
     python3-json \
     python3-jsonschema-specifications \
