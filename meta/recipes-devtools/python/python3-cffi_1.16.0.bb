@@ -6,7 +6,7 @@ DEPENDS += "libffi python3-pycparser"
 
 SRC_URI[sha256sum] = "bcb3ef43e58665bbda2fb198698fcae6776483e0c4a631aa5647806c25e02cc0"
 
-inherit pypi setuptools3
+inherit pypi python_setuptools_build_meta
 
 RDEPENDS:${PN}:class-target = " \
     python3-ctypes \
