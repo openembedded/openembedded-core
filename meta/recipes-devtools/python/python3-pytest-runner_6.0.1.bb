@@ -10,7 +10,6 @@ inherit pypi python_setuptools_build_meta
 DEPENDS += " \
     python3-setuptools-scm-native"
 
-RDEPENDS:${PN} = "python3-py python3-setuptools python3-debugger python3-json \
-                  python3-io"
+RDEPENDS:${PN} = "python3-setuptools python3-debugger python3-json python3-io"
 
 BBCLASSEXTEND = "native nativesdk"
