@@ -21,7 +21,6 @@ RDEPENDS:${PN} = "\
     python3-pip \
     python3-pyparsing \
     python3-setuptools \
-    python3-tomli \
     python3-typing-extensions \
 "
 
