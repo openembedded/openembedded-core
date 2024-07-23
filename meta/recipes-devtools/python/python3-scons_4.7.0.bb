@@ -15,7 +15,6 @@ RDEPENDS:${PN}:class-target = "\
   python3-core \
   python3-compression \
   python3-fcntl \
-  python3-importlib-metadata \
   python3-io \
   python3-json \
   python3-shell \
