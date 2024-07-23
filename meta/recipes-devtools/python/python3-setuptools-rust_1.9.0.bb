@@ -27,7 +27,6 @@ RDEPENDS:${PN} += " \
     python3-setuptools \
     python3-setuptools-scm \
     python3-shell \
-    python3-toml \
     python3-typing-extensions \
     python3-wheel \
 "
