@@ -21,7 +21,7 @@ PACKAGECONFIG[format] = ",,,\
     python3-rfc3987 \
     python3-rfc3339-validator \
 "
-PACKAGECONFIG[nongpl] = ",,,\
+PACKAGECONFIG[format-nongpl] = ",,,\
     python3-idna \
     python3-jsonpointer \
     python3-webcolors \
