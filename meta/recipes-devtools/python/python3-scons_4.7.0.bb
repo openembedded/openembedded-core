@@ -9,7 +9,7 @@ SRC_URI[sha256sum] = "d8b617f6610a73e46509de70dcf82f76861b79762ff602d546f4e80918
 
 PYPI_PACKAGE = "SCons"
 
-inherit pypi setuptools3
+inherit pypi python_setuptools_build_meta
 
 RDEPENDS:${PN}:class-target = "\
   python3-core \
