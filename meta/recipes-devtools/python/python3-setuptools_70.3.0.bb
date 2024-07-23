@@ -32,6 +32,7 @@ RDEPENDS:${PN} = "\
     python3-stringold \
     python3-threading \
     python3-unittest \
+    python3-unixadmin \
     python3-xml \
 "
 
