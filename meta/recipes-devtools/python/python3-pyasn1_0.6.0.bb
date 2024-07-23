@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=190f79253908c986e6cacf380c3a5f6d"
 
 SRC_URI[sha256sum] = "3a35ab2c4b5ef98e17dfdec8ab074046fbda76e281c5a706ccd82328cfc8f64c"
 
-inherit pypi setuptools3 pytest
+inherit pypi python_setuptools_build_meta ptest
 
 RDEPENDS:${PN}:class-target += " \
     python3-codecs \
