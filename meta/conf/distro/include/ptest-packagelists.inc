@@ -66,6 +66,7 @@ PTESTS_FAST = "\
     python3-mako \
     python3-markupsafe \
     python3-more-itertools \
+    python3-packaging \
     python3-pluggy \
     python3-pyasn1 \
     python3-pytz \
