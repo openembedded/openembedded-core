@@ -37,6 +37,8 @@ SPDX_LICENSES ??= "${COREBASE}/meta/files/spdx-licenses.json"
 
 SPDX_CUSTOM_ANNOTATION_VARS ??= ""
 
+SPDX_MULTILIB_SSTATE_ARCHS ??= "${SSTATE_ARCHS}"
+
 python() {
     import oe.spdx_common
     oe.spdx_common.load_spdx_license_data(d)

@@ -921,7 +921,7 @@ def load_jsonld_by_arch(d, arch, subdir, name, *, required=False):
 
 
 def find_jsonld(d, subdir, name, *, required=False):
-    package_archs = d.getVar("SSTATE_ARCHS").split()
+    package_archs = d.getVar("SPDX_MULTILIB_SSTATE_ARCHS").split()
     package_archs.reverse()
 
     for arch in package_archs:

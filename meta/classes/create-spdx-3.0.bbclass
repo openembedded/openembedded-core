@@ -118,7 +118,7 @@ IMAGE_CLASSES:append = " create-spdx-image-3.0"
 
 oe.spdx30_tasks.set_timestamp_now[vardepsexclude] = "SPDX_INCLUDE_TIMESTAMPS"
 oe.spdx30_tasks.get_package_sources_from_debug[vardepsexclude] += "STAGING_KERNEL_DIR"
-oe.spdx30_tasks.collect_dep_objsets[vardepsexclude] = "SSTATE_ARCHS"
+oe.spdx30_tasks.collect_dep_objsets[vardepsexclude] = "SPDX_MULTILIB_SSTATE_ARCHS"
 
 
 
@@ -164,7 +164,7 @@ python do_create_package_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_package_spdx(d)
 }
-do_create_package_spdx[vardepsexclude] += "OVERRIDES SSTATE_ARCHS"
+do_create_package_spdx[vardepsexclude] += "OVERRIDES SPDX_MULTILIB_SSTATE_ARCHS"
 
 addtask do_create_package_spdx after do_create_spdx before do_build do_rm_work
 SSTATETASKS += "do_create_package_spdx"
