@@ -28,22 +28,23 @@ PTESTS_FAST = "\
     json-c \
     json-glib \
     libconvert-asn1-perl \
+    libexif \
     libgpg-error\
     libnl \
     libpcre \
     libssh2 \
-    libtimedate-perl \
     libtest-fatal-perl \
     libtest-needs-perl \
     libtest-warnings-perl \
+    libtimedate-perl \
     libtry-tiny-perl \
     liburi-perl \
     libusb1 \
     libxml-namespacesupport-perl \
-    libxml-perl \
     libxml-parser-perl \
-    libxml-sax-perl \
+    libxml-perl \
     libxml-sax-base-perl \
+    libxml-sax-perl \
     libxml-simple-perl \
     libxml2 \
     libxmlb \
@@ -81,7 +82,6 @@ PTESTS_FAST = "\
     wayland \
     xz \
     zlib \
-    libexif \
 "
 PTESTS_FAST:append:libc-glibc = " glibc-y2038-tests"
 PTESTS_PROBLEMS:remove:libc-glibc = "glibc-y2038-tests"
@@ -106,22 +106,22 @@ PTESTS_SLOW = "\
     libevent \
     libgcrypt \
     libmodule-build-perl \
+    libseccomp \
     lttng-tools \
+    lz4 \
     openssh \
     openssl \
     parted \
     perl \
-    python3-cryptography \
     python3 \
     python3-click \
+    python3-cryptography \
     python3-xmltodict \
     strace \
     tar \
     tcl \
     util-linux \
     valgrind \
-    lz4 \
-    libseccomp \
 "
 
 # python3 ptests hang on qemuriscv64
