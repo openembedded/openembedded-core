@@ -238,7 +238,8 @@ def get_package_sources_from_debug(
                     if file_sha256 is None:
                         continue
                 else:
-                    if not debugsrc_path.exists():
+                    # We can only hash files below, skip directories, links, etc.
+                    if not debugsrc_path.isfile():
                         source_hash_cache[debugsrc_path] = None
                         continue
 
