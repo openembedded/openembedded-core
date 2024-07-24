@@ -119,7 +119,7 @@ Reduce the .dot file packages only, no tasks:
                 if key == dep:
                     continue
                 if key in depends:
-                    if not key in depends[key]:
+                    if not dep in depends[key]:
                         depends[key].add(dep)
                     else:
                         print('WARNING: Fonud duplicated line: %s' % line)
