@@ -6,14 +6,13 @@ HOMEPAGE = "http://directory.fsf.org/project/libgcrypt/"
 BUGTRACKER = "https://bugs.g10code.com/gnupg/index"
 SECTION = "libs"
 
-# helper program gcryptrnd and getrandom are under GPL, rest LGPL
-LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
-LICENSE:${PN} = "LGPL-2.1-or-later"
+LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later & BSD-3-Clause"
+LICENSE:${PN} = "LGPL-2.1-or-later & BSD-3-Clause"
 LICENSE:${PN}-dev = "GPL-2.0-or-later & LGPL-2.1-or-later"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f \
-                    file://COPYING.LIB;md5=bbb461211a33b134d42ed5ee802b37ff \
-                    file://LICENSES;md5=ef545b6cc717747072616519a1256d69 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
+                    file://LICENSES;md5=034b4e369944ad4b52a68368f1cf98b8 \
                     "
 
 DEPENDS = "libgpg-error"
@@ -27,7 +26,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://no-bench-slope.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "8b0870897ac5ac67ded568dcfadf45969cfa8a6beb0fd60af2a9eadc2a3272aa"
+SRC_URI[sha256sum] = "09120c9867ce7f2081d6aaa1775386b98c2f2f246135761aae47d81f58685b9c"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
