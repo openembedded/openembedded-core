@@ -6,13 +6,33 @@ DEPENDS += "libffi python3-pycparser"
 
 SRC_URI[sha256sum] = "bcb3ef43e58665bbda2fb198698fcae6776483e0c4a631aa5647806c25e02cc0"
 
-inherit pypi python_setuptools_build_meta
+SRC_URI += "file://run-ptest"
+
+inherit pypi python_setuptools_build_meta ptest
+
+do_install_ptest() {
+    cp -r ${S}/testing ${D}${PTEST_PATH}
+    # These two files from the source tree are needed by the tests
+    install -D -m644 ${S}/src/c/parse_c_type.c ${D}${PTEST_PATH}/src/c/parse_c_type.c
+    install -D -m644 ${S}/src/cffi/parse_c_type.h ${D}${PTEST_PATH}/src/cffi/parse_c_type.h
+}
 
 RDEPENDS:${PN} = " \
     python3-ctypes \
     python3-io \
     python3-pycparser \
+    python3-setuptools \
     python3-shell \
 "
+
+RDEPENDS:${PN}-ptest += " \
+    python3-pytest \
+    python3-unittest-automake-output \
+    python3-dev \
+    gcc-symlinks \
+    g++-symlinks \
+"
+
+INSANE_SKIP:${PN}-ptest = "dev-deps"
 
 BBCLASSEXTEND = "native nativesdk"

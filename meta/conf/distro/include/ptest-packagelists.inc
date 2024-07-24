@@ -114,6 +114,7 @@ PTESTS_SLOW = "\
     parted \
     perl \
     python3 \
+    python3-cffi \
     python3-click \
     python3-cryptography \
     python3-xmltodict \
