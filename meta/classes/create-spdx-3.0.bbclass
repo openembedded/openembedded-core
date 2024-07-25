@@ -115,6 +115,7 @@ SPDX_PACKAGE_SUPPLIER[doc] = "The base variable name to describe the Agent who \
 
 
 IMAGE_CLASSES:append = " create-spdx-image-3.0"
+SDK_CLASSES += "create-spdx-sdk-3.0"
 
 oe.spdx30_tasks.set_timestamp_now[vardepsexclude] = "SPDX_INCLUDE_TIMESTAMPS"
 oe.spdx30_tasks.get_package_sources_from_debug[vardepsexclude] += "STAGING_KERNEL_DIR"
