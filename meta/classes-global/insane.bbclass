@@ -26,7 +26,7 @@
 
 # Elect whether a given type of error is a warning or error, they may
 # have been set by other files.
-WARN_QA ?= "32bit-time native-last"
+WARN_QA ?= "32bit-time native-last pep517-backend"
 ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             textrel incompatible-license files-invalid \
             infodir build-deps src-uri-bad symlink-to-sysroot multilib \
