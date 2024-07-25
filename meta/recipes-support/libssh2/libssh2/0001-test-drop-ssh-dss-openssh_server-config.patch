@@ -1,0 +1,30 @@
+From 3ba10a5fe090ef76e4dcb710d3f431a0caecc28d Mon Sep 17 00:00:00 2001
+From: Jose Quaresma <jose.quaresma@foundries.io>
+Date: Thu, 25 Jul 2024 14:02:00 +0100
+Subject: [PATCH] test: drop ssh-dss openssh_server config
+
+The ssh-dss was deprecated [1] in the OpenSSH 9.8p1
+
+Support for ssh-dss, ssh-dss-cert-* host and user keys is disabled
+by default at run-time. These may be re-enabled using the
+instructions at http://www.openssh.com/legacy.html
+
+[1] https://www.openssh.com/releasenotes.html
+
+Upstream-Status: Submitted [https://github.com/libssh2/libssh2/pull/1433]
+
+Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+---
+ tests/openssh_server/sshd_config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/openssh_server/sshd_config b/tests/openssh_server/sshd_config
+index 1069566f..5cd2b898 100644
+--- a/tests/openssh_server/sshd_config
++++ b/tests/openssh_server/sshd_config
+@@ -1,4 +1,4 @@
+ HostKeyAlgorithms +ssh-rsa
+-PubkeyAcceptedKeyTypes +ssh-rsa,ssh-dss,ssh-rsa-cert-v01@openssh.com
++PubkeyAcceptedKeyTypes +ssh-rsa,ssh-rsa-cert-v01@openssh.com
+ MACs +hmac-sha1,hmac-sha1-96,hmac-sha2-256,hmac-sha2-512,hmac-md5,hmac-md5-96,umac-64@openssh.com,umac-128@openssh.com,hmac-sha1-etm@openssh.com,hmac-sha1-96-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com
+ Ciphers +3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
