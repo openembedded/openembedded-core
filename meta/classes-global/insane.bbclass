@@ -36,13 +36,13 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             license-exists license-no-generic license-syntax license-format \
             license-incompatible license-file-missing obsolete-license \
             libdir xorg-driver-abi buildpaths \
-            perms dep-cmp pkgvarcheck perm-config perm-line perm-link \
-            split-strip packages-list pkgv-undefined var-undefined \
+            dep-cmp pkgvarcheck perm-config perm-line perm-link \
+            packages-list pkgv-undefined var-undefined \
             version-going-backwards expanded-d invalid-chars \
             license-checksum dev-elf file-rdeps configure-unsafe \
             configure-gettext perllocalpod shebang-size \
-            already-stripped installed-vs-shipped ldflags compile-host-path \
-            install-host-path pn-overrides unknown-configure-option \
+            already-stripped installed-vs-shipped ldflags \
+            pn-overrides unknown-configure-option \
             useless-rpaths rpaths staticdev empty-dirs \
             patch-fuzz patch-status virtual-slash \
             "
