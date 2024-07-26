@@ -483,5 +483,3 @@ python () {
     if oe.types.boolean(d.getVar("TESTIMAGE_AUTO") or "False"):
         bb.build.addtask("testimage", "do_build", "do_image_complete", d)
 }
-
-inherit testsdk
