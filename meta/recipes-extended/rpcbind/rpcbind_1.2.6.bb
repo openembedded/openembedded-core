@@ -13,6 +13,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b46486e4c4a416602693a711bb5bfa39 \
 SRC_URI = "${SOURCEFORGE_MIRROR}/rpcbind/rpcbind-${PV}.tar.bz2 \
            file://init.d \
            file://rpcbind.conf \
+           file://rpcbind.tmpfiles \
+           file://rpcbind.systemd \
            file://rpcbind_add_option_to_fix_port_number.patch \
            file://0001-systemd-use-EnvironmentFile.patch \
           "
@@ -49,7 +51,15 @@ do_install:append () {
 		${UNPACKDIR}/init.d > ${D}${sysconfdir}/init.d/rpcbind
 	chmod 0755 ${D}${sysconfdir}/init.d/rpcbind
 	install -m 0644 ${UNPACKDIR}/rpcbind.conf ${D}${sysconfdir}/rpcbind.conf
+
+	install -d ${D}${sysconfdir}/tmpfiles.d
+	install -m 0644 ${UNPACKDIR}/rpcbind.tmpfiles ${D}${sysconfdir}/tmpfiles.d/rpcbind.conf
+
+	install -d ${D}${systemd_system_unitdir}/rpcbind.service.d
+	install -m 0644 ${UNPACKDIR}/rpcbind.systemd ${D}${systemd_system_unitdir}/rpcbind.service.d/rpcbind.conf
 }
+
+FILES:${PN} += "${systemd_system_unitdir}/rpcbind.service.d/rpcbind.conf"
 
 ALTERNATIVE:${PN} = "rpcinfo"
 ALTERNATIVE_LINK_NAME[rpcinfo] = "${bindir}/rpcinfo"
