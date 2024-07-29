@@ -26,7 +26,6 @@ do_install_ptest() {
 RDEPENDS:${PN}-ptest += " \
     python3-pytest \
     python3-unittest-automake-output \
-    python3-toml \
     python3-unixadmin \
 "
 

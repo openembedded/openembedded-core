@@ -9,10 +9,7 @@ DEPENDS += "python3-setuptools-scm-native"
 
 inherit pypi python_setuptools_build_meta
 
-DEPENDS += "python3-toml-native"
-
 RDEPENDS:${PN} += "python3-compression \
-                   python3-math \
-                   python3-more-itertools"
+                   python3-math"
 
 BBCLASSEXTEND = "native nativesdk"

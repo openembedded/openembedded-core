@@ -8,10 +8,11 @@
 #
 # Working to address those (before Y2038 rolls in) will be appreciated.
 
-GLIBC_64BIT_TIME_FLAGS = " -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
+GLIBC_64BIT_TIME_FLAGS = "${GLIBC_64BIT_TIME_FLAGS_WHEN_NEEDED}"
 
 # Only needed for some 32-bit architectures, some relatively newer
 # architectures do not need it ( e.g. riscv32 )
+GLIBC_64BIT_TIME_FLAGS_WHEN_NEEDED = " -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
 TARGET_CC_ARCH:append:arm = "${GLIBC_64BIT_TIME_FLAGS}"
 TARGET_CC_ARCH:append:armeb = "${GLIBC_64BIT_TIME_FLAGS}"
 TARGET_CC_ARCH:append:mipsarcho32 = "${GLIBC_64BIT_TIME_FLAGS}"

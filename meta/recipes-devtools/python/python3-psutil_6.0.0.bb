@@ -5,7 +5,7 @@ HOMEPAGE = "https://pypi.org/project/psutil/"
 
 SRC_URI[sha256sum] = "8faae4f310b6d969fa26ca0545338b21f73c6b15db7c4a8d934a5482faa818f2"
 
-inherit pypi setuptools3
+inherit pypi python_setuptools_build_meta
 
 PACKAGES =+ "${PN}-tests"
 
