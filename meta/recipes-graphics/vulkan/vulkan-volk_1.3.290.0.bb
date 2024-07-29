@@ -10,7 +10,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=12e6af3a0e2a5e5dbf7796aa82b64626"
 
 SRC_URI = "git://github.com/zeux/volk.git;branch=master;protocol=https"
-SRCREV = "3a8068a57417940cf2bf9d837a7bb60d015ca2f1"
+SRCREV = "466085407d5d2f50583fd663c1d65f93a7709d3e"
 
 S = "${WORKDIR}/git"
 
