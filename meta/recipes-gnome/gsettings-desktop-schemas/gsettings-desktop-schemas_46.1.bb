@@ -12,4 +12,4 @@ DEPENDS = "glib-2.0"
 
 inherit gnomebase gsettings gobject-introspection gettext
 
-SRC_URI[archive.sha256sum] = "493a46a1161b6388d57aa72f632a79ce96c42d5ffbd1d0b00f496ec5876f8575"
+SRC_URI[archive.sha256sum] = "9b88101437a6958ebe6bbd812e49bbf1d09cc667011e415559d847e870468a61"
