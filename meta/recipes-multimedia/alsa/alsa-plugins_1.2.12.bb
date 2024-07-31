@@ -5,6 +5,7 @@ They are used while configuring ALSA in the .asoundrc file."
 HOMEPAGE = "http://alsa-project.org"
 BUGTRACKER = "http://alsa-project.org/main/index.php/Bug_Tracking"
 SECTION = "multimedia"
+CVE_PRODUCT = "alsa"
 
 # The primary license of alsa-plugins is LGPL-2.1-only.
 #
