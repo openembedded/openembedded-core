@@ -7,7 +7,7 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=main 
            file://arch_pm.patch \
            file://add_armeb_triplet_entry.patch \
            file://0002-Adapt-to-linux-wrs-kernel-version-which-has-characte.patch \
-           file://0003-Our-pre-postinsts-expect-D-to-be-set-when-running-in.patch \
+           file://0001-script.c-avoid-use-of-chroot.patch \
            file://0004-The-lutimes-function-doesn-t-work-properly-for-all-s.patch \
            file://0006-add-musleabi-to-known-target-tripets.patch \
            file://0007-dpkg-deb-build.c-Remove-usage-of-clamp-mtime-in-tar.patch \
@@ -17,6 +17,6 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=main 
 
 SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
 
-SRCREV = "b2f9600ead232a2dd3c27f8b52807a9ca5854d17"
+SRCREV = "ef5536cfe24e4c41c6fdc56e4530161fade3887c"
 
 S = "${WORKDIR}/git"
