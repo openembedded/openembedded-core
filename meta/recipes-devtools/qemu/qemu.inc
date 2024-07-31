@@ -34,18 +34,12 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://fixedmeson.patch \
            file://no-pip.patch \
            file://4a8579ad8629b57a43daa62e46cc7af6e1078116.patch \
-           file://0001-linux-user-x86_64-Handle-the-vsyscall-page-in-open_s.patch \
            file://0002-linux-user-loongarch64-Remove-TARGET_FORCE_SHMLBA.patch \
            file://0003-linux-user-Add-strace-for-shmat.patch \
            file://0004-linux-user-Rewrite-target_shmat.patch \
            file://0005-tests-tcg-Check-that-shmat-does-not-break-proc-self-.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
-           file://CVE-2024-3446-01.patch \
-           file://CVE-2024-3446-02.patch \
-           file://CVE-2024-3446-03.patch \
-           file://CVE-2024-3446-04.patch \
-           file://CVE-2024-3567.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
@@ -62,7 +56,7 @@ SRC_URI:append:class-native = " \
 	file://0012-linux-user-workaround-for-missing-MAP_SHARED_VALIDAT.patch \
         "
 
-SRC_URI[sha256sum] = "847346c1b82c1a54b2c38f6edbd85549edeb17430b7d4d3da12620e2962bc4f3"
+SRC_URI[sha256sum] = "dc747fb366809455317601c4876bd1f6829a32a23e83fb76e45ab12c2a569964"
 
 CVE_STATUS[CVE-2007-0998] = "not-applicable-config: The VNC server can expose host files uder some circumstances. We don't enable it by default."
 
