@@ -38,4 +38,6 @@ RDEPENDS:${PN}-tests += " \
 
 INSANE_SKIP:${PN}-tests += "dev-deps"
 
+CVE_PRODUCT = "psutil"
+
 BBCLASSEXTEND = "native"
