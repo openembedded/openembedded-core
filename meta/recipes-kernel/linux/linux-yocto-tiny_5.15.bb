@@ -5,7 +5,7 @@ KCONFIG_MODE = "--allnoconfig"
 
 require recipes-kernel/linux/linux-yocto.inc
 
-LINUX_VERSION ?= "5.15.160"
+LINUX_VERSION ?= "5.15.161"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
@@ -14,8 +14,8 @@ DEPENDS += "openssl-native util-linux-native"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-SRCREV_machine ?= "d83ae507c0959001f23c4cc0f04db10e9afdbe6d"
-SRCREV_meta ?= "e12e10e0b562f46c1d2f7b71c917d40dd1de339c"
+SRCREV_machine ?= "ddd4e95180eff3396e4cf9e154b43cfc1400064c"
+SRCREV_meta ?= "e18b1bbce72e4371c787e998793a11d14fc2312a"
 
 PV = "${LINUX_VERSION}+git${SRCPV}"
 
