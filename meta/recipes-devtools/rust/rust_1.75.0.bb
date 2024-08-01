@@ -70,6 +70,10 @@ addtask do_test_compile after do_configure do_rust_gen_targets
 do_rust_setup_snapshot[dirs] += "${WORKDIR}/rust-snapshot"
 do_rust_setup_snapshot[vardepsexclude] += "UNINATIVE_LOADER"
 
+# there is a need to enable some more rust tools for the project
+# We can extend a list of more tools via this variable
+RUST_ENABLE_EXTRA_TOOLS ?= "rust-demangler"
+
 python do_configure() {
     import json
     import configparser
@@ -141,7 +145,7 @@ python do_configure() {
     config.add_section("build")
     config.set("build", "submodules", e(False))
     config.set("build", "docs", e(False))
-    config.set("build", "tools", ["rust-demangler",])
+    config.set("build", "tools", e(d.getVar("RUST_ENABLE_EXTRA_TOOLS").split()))
 
     rustc = d.expand("${WORKDIR}/rust-snapshot/bin/rustc")
     config.set("build", "rustc", e(rustc))
