@@ -63,6 +63,7 @@ PTESTS_FAST = "\
     python3-idna \
     python3-jinja2 \
     python3-jsonpointer \
+    python3-libarchive-c \
     python3-license-expression \
     python3-mako \
     python3-markupsafe \
