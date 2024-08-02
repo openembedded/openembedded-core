@@ -558,8 +558,8 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             scope=scope,
         )
 
-    def new_license_expression(self, license_expression, license_text_map={}):
-        license_list_version = self.d.getVar("SPDX_LICENSE_DATA")["licenseListVersion"]
+    def new_license_expression(self, license_expression, license_data, license_text_map={}):
+        license_list_version = license_data["licenseListVersion"]
         # SPDX 3 requires that the license list version be a semver
         # MAJOR.MINOR.MICRO, but the actual license version might be
         # MAJOR.MINOR on some older versions. As such, manually append a .0
@@ -607,14 +607,14 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
         return lic
 
-    def scan_declared_licenses(self, spdx_file, filepath):
+    def scan_declared_licenses(self, spdx_file, filepath, license_data):
         for e in spdx_file.extension:
             if isinstance(e, OELicenseScannedExtension):
                 return
 
         file_licenses = set()
         for extracted_lic in oe.spdx_common.extract_licenses(filepath):
-            file_licenses.add(self.new_license_expression(extracted_lic))
+            file_licenses.add(self.new_license_expression(extracted_lic, license_data))
 
         self.new_relationship(
             [spdx_file],

@@ -28,8 +28,7 @@ def set_timestamp_now(d, o, prop):
         delattr(o, prop)
 
 
-def add_license_expression(d, objset, license_expression):
-    license_data = d.getVar("SPDX_LICENSE_DATA")
+def add_license_expression(d, objset, license_expression, license_data):
     simple_license_text = {}
     license_text_map = {}
     license_ref_idx = 0
@@ -120,7 +119,7 @@ def add_license_expression(d, objset, license_expression):
     )
     spdx_license_expression = " ".join(convert(l) for l in lic_split)
 
-    return objset.new_license_expression(spdx_license_expression, license_text_map)
+    return objset.new_license_expression(spdx_license_expression, license_data, license_text_map)
 
 
 def add_package_files(
@@ -129,6 +128,7 @@ def add_package_files(
     topdir,
     get_spdxid,
     get_purposes,
+    license_data,
     *,
     archive=None,
     ignore_dirs=[],
@@ -165,7 +165,7 @@ def add_package_files(
             spdx_files.add(spdx_file)
 
             if oe.spdx30.software_SoftwarePurpose.source in file_purposes:
-                objset.scan_declared_licenses(spdx_file, filepath)
+                objset.scan_declared_licenses(spdx_file, filepath, license_data)
 
             if archive is not None:
                 with filepath.open("rb") as f:
@@ -452,6 +452,8 @@ def create_spdx(d):
         if val:
             setattr(obj, name, val)
 
+    license_data = oe.spdx_common.load_spdx_license_data(d)
+
     deploydir = Path(d.getVar("SPDXDEPLOY"))
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     spdx_workdir = Path(d.getVar("SPDXWORK"))
@@ -508,7 +510,7 @@ def create_spdx(d):
     source_files = add_download_files(d, build_objset)
     build_inputs |= source_files
 
-    recipe_spdx_license = add_license_expression(d, build_objset, d.getVar("LICENSE"))
+    recipe_spdx_license = add_license_expression(d, build_objset, d.getVar("LICENSE"), license_data)
     build_objset.new_relationship(
         source_files,
         oe.spdx30.RelationshipType.hasConcludedLicense,
@@ -527,6 +529,7 @@ def create_spdx(d):
                 "sourcefile", str(file_counter)
             ),
             lambda filepath: [oe.spdx30.software_SoftwarePurpose.source],
+            license_data,
             ignore_dirs=[".git"],
             ignore_top_level_dirs=["temp"],
             archive=None,
@@ -636,7 +639,7 @@ def create_spdx(d):
             package_license = d.getVar("LICENSE:%s" % package)
             if package_license and package_license != d.getVar("LICENSE"):
                 package_spdx_license = add_license_expression(
-                    d, build_objset, package_license
+                    d, build_objset, package_license, license_data
                 )
             else:
                 package_spdx_license = recipe_spdx_license
@@ -708,6 +711,7 @@ def create_spdx(d):
                 ),
                 # TODO: Can we know the purpose here?
                 lambda filepath: [],
+                license_data,
                 ignore_top_level_dirs=["CONTROL", "DEBIAN"],
                 archive=None,
             )
@@ -739,6 +743,7 @@ def create_spdx(d):
             d.expand("${COMPONENTS_DIR}/${PACKAGE_ARCH}/${PN}"),
             lambda file_counter: build_objset.new_spdxid("sysroot", str(file_counter)),
             lambda filepath: [],
+            license_data,
             archive=None,
         )
 

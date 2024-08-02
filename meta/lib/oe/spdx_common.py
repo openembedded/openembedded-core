@@ -42,14 +42,13 @@ def is_work_shared_spdx(d):
 
 
 def load_spdx_license_data(d):
-    if d.getVar("SPDX_LICENSE_DATA"):
-        return
 
     with open(d.getVar("SPDX_LICENSES"), "r") as f:
         data = json.load(f)
         # Transform the license array to a dictionary
         data["licenses"] = {l["licenseId"]: l for l in data["licenses"]}
-        d.setVar("SPDX_LICENSE_DATA", data)
+
+    return data
 
 
 def process_sources(d):
