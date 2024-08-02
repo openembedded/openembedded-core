@@ -2017,7 +2017,7 @@ class DevtoolUpgradeTests(DevtoolBase):
             newlines = f.readlines()
         self.assertEqual(desiredlines, newlines)
 
-    def test_devtool_upgrade_recipe_update_extra_tasks(self):
+    def test_devtool_upgrade_recipe_upgrade_extra_tasks(self):
         # Check preconditions
         self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
         self.track_for_cleanup(self.workspacedir)
