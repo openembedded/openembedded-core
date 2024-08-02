@@ -8,7 +8,9 @@ LICENSE  = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRCREV = "0cfe9e7219148716dfd30b37f4d21753f098707a"
-SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git;branch=main;protocol=https \
+           file://0001-update_build_version.py-support-an-envvar-to-force-t.patch \
+           "
 PE = "1"
 # These recipes need to be updated in lockstep with each other:
 # glslang, vulkan-headers, vulkan-loader, vulkan-tools, spirv-headers, spirv-tools
@@ -28,6 +30,11 @@ EXTRA_OECMAKE += "\
     -DBUILD_SHARED_LIBS=ON \
     -DSPIRV_SKIP_TESTS=ON \
 "
+
+# Force the version description "git describe" related non-reproducibility
+do_compile:prepend() {
+    export FORCED_BUILD_VERSION_DESCRIPTION="${PV}"
+}
 
 do_install:append:class-target() {
     # Properly set _IMPORT_PREFIX in INTERFACE_LINK_LIBRARIES so that dependent
