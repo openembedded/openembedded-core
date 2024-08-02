@@ -10,19 +10,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "https://alpha.gnu.org/gnu/libtool/libtool-${PV}.tar.gz \
            file://0001-ltmain.in-Handle-trailing-slashes-on-install-command.patch \
-           file://0003-ltmain.in-Add-missing-sysroot-to-library-path.patch \
            file://0004-ltmain.sh-Fix-sysroot-paths-being-encoded-into-RPATH.patch \
            file://0005-ltmain.in-Don-t-encode-RATHS-which-match-default-lin.patch \
            file://dont-depend-on-help2man.patch \
            file://0006-libtool.m4-Handle-as-a-sysroot-correctly.patch \
            file://0008-libtool-Check-for-static-libs-for-internal-compiler-.patch \
            file://nohardcodepaths.patch \
-           file://filefix.patch \
           "
 
-
-
-SRC_URI[sha256sum] = "d438c317455d85554ce2f998be48866fd40cfcbf834d60b3026f4fc0ed583d23"
+SRC_URI[sha256sum] = "6a83edafd42d4e2ebdc09579f99ce828d5f932f1738de02495cc8c2884e430ce"
 
 inherit autotools texinfo
 EXTRA_AUTORECONF = "--exclude=libtoolize"
