@@ -14,26 +14,15 @@ DEPENDS:class-nativesdk = "openssl-native"
 # Need rehash from openssl and run-parts from debianutils
 PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
-# Since there is no TAG in the git repository, the SRCREV was determined
-# through comparison of the git repository and the data on the following
-# package informatin pages:
-#
-# * https://packages.debian.org/trixie/ca-certificates
-# * https://packages.ubuntu.com/noble/ca-certificates
-#
-SRCREV = "ee6e0484031314090a11c04ee82689acb73d7ad8"
-
-SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https;branch=master \
+SRC_URI[sha256sum] = "3286d3fc42c4d11b7086711a85f865b44065ce05cf1fb5376b2abed07622a9c6"
+SRC_URI = "${DEBIAN_MIRROR}/main/c/ca-certificates/${BPN}_${PV}.tar.xz \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
            file://default-sysroot.patch \
            file://0003-update-ca-certificates-use-relative-symlinks-from-ET.patch \
            file://0001-Revert-mozilla-certdata2pem.py-print-a-warning-for-e.patch \
            "
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+)"
-
-S = "${WORKDIR}/git"
-
+S = "${WORKDIR}/ca-certificates"
 inherit allarch
 
 EXTRA_OEMAKE = "\
