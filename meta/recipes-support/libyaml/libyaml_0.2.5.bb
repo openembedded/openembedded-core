@@ -18,4 +18,7 @@ inherit autotools
 DISABLE_STATIC:class-nativesdk = ""
 DISABLE_STATIC:class-native = ""
 
+# upstream-wontfix: Upstream thinks there is no working code that is exploitable - https://github.com/yaml/libyaml/issues/302
+CVE_CHECK_IGNORE += "CVE-2024-35328"
+
 BBCLASSEXTEND = "native nativesdk"
