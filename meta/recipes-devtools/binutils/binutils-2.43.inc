@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM="\
     file://bfd/COPYING;md5=d32239bcb673463ab874e80d47fae504\
     "
 
-# When upgrading to 2.42, please make sure there is no trailing .0, so
+# When upgrading to next major release, ensure that there is no trailing .0, so
 # that upstream version check can work correctly.
 PV = "2.43"
 CVE_VERSION = "2.43"
