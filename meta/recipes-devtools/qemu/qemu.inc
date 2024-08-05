@@ -74,6 +74,8 @@ CVE_STATUS[CVE-2023-3019] = "cpe-incorrect: Applies only against versions before
 
 CVE_STATUS[CVE-2023-5088] = "cpe-incorrect: Applies only against version 8.2.0 and earlier"
 
+CVE_STATUS[CVE-2023-6683] = "cpe-incorrect: Applies only against version 8.2.1 and earlier"
+
 CVE_STATUS[CVE-2023-6693] = "cpe-incorrect: Applies only against version 8.2.0 and earlier"
 
 COMPATIBLE_HOST:mipsarchn32 = "null"
