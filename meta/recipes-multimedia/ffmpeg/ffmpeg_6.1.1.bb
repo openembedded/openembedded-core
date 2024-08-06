@@ -29,6 +29,7 @@ SRC_URI = " \
     file://vulkan_fix_gcc14.patch \
     file://CVE-2023-49502.patch \
     file://CVE-2024-31578.patch \
+    file://CVE-2024-31582.patch \
 "
 
 SRC_URI[sha256sum] = "8684f4b00f94b85461884c3719382f1261f0d9eb3d59640a1f4ac0873616f968"
