@@ -14,6 +14,12 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0002-fix-btrfs-move-parent-and-ref_root-into-btrfs_delaye.patch \
            file://0003-fix-net-udp-add-IP-port-data-to-the-tracepoint-udp-u.patch \
            file://0001-fix-close_on_exec-pass-files_struct-instead-of-fdtab.patch \
+           file://0001-Fix-kfree_skb-changed-in-6.11-rc1.patch \
+           file://0002-Fix-ext4_da_reserve_space-changed-in-6.11-rc1.patch \
+           file://0003-Fix-orig_start-removed-from-btrfs_get_extent-in-6.11.patch \
+           file://0004-Fix-block_len-removed-frmo-btrfs_get_extent-in-6.11-.patch \
+           file://0005-Fix-block_start-removed-from-btrfs_get_extent-in-6.1.patch \
+           file://0006-Fix-scsi-sd-Atomic-write-support-added-in-6.11-rc1.patch \
         "
 
 # Use :append here so that the patch is applied also when using devupstream
