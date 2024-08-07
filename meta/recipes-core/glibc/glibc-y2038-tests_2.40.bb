@@ -13,7 +13,7 @@ SUMMARY = "glibc tests using time32/time64 interfaces to be run with ptest for t
 # Erase some variables already set by glibc_${PV}
 python __anonymous() {
        # Remove packages provided by glibc build, we only need a subset of them
-       d.setVar("PACKAGES", "${PN} ${PN}-ptest")
+       d.setVar("PACKAGES", "${PN} ${PN}-dbg ${PN}-ptest")
 
        d.setVar("PROVIDES", "${PN} ${PN}-ptest")
 
@@ -107,12 +107,6 @@ EXCLUDE_FROM_SHLIBS = "1"
 # place (package) as this recipe will be used for validation and
 # debugging.
 PACKAGE_DEBUG_SPLIT_STYLE = ".debug"
-
-# glibc test cases violate by default some Yocto/OE checks (staticdev,
-# textrel)
-# 'debug-files' - add everything (including debug) into one package
-#                 (no need to install/build *-src package)
-INSANE_SKIP:${PN} += "staticdev textrel debug-files rpaths"
 
 deltask do_stash_locale
 do_install[noexec] = "1"
