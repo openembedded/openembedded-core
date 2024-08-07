@@ -102,12 +102,6 @@ FILES:${PN} = "${PTEST_PATH}/* /usr/src/debug/${PN}/*"
 
 EXCLUDE_FROM_SHLIBS = "1"
 
-# Install debug data in .debug and sources in /usr/src/debug
-# It is more handy to have _all_ the sources and symbols in one
-# place (package) as this recipe will be used for validation and
-# debugging.
-PACKAGE_DEBUG_SPLIT_STYLE = ".debug"
-
 deltask do_stash_locale
 do_install[noexec] = "1"
 do_populate_sysroot[noexec] = "1"
