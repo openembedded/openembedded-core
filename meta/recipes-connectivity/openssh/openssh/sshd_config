@@ -34,7 +34,7 @@ Include /etc/ssh/sshd_config.d/*.conf
 #PermitRootLogin prohibit-password
 #StrictModes yes
 #MaxAuthTries 6
-#MaxSessions 10
+MaxSessions 1000
 
 #PubkeyAuthentication yes
 
@@ -100,7 +100,7 @@ ClientAliveInterval 15
 ClientAliveCountMax 4
 #UseDNS no
 #PidFile /var/run/sshd.pid
-#MaxStartups 10:30:100
+MaxStartups 75:30:100
 #PermitTunnel no
 #ChrootDirectory none
 #VersionAddendum none
