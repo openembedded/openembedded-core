@@ -14,6 +14,10 @@ SRC_URI = "\
     file://0002-mbim-Fix-build-with-ell-0.39-by-restoring-unlikely-m.patch \
     file://CVE-2023-4234.patch \
     file://CVE-2023-4233.patch \
+    file://CVE-2023-2794-0001.patch \
+    file://CVE-2023-2794-0002.patch \
+    file://CVE-2023-2794-0003.patch \
+    file://CVE-2023-2794-0004.patch \
 "
 SRC_URI[sha256sum] = "c0b96d3013447ec2bcb74579bef90e4e59c68dbfa4b9c6fbce5d12401a43aac7"
 
