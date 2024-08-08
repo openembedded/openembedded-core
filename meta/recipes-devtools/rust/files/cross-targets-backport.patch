@@ -1,0 +1,31 @@
+Backport the patch for "ensure std for cross-targets".
+
+Previously, doing `x test compiler/*` would fail the build due to missing std.
+This change ensures that it is prepared.
+
+Also, add "[ignore]" tags to the failing unit tests to
+ignore them during rust oe-selftest.
+
+Upstream-Status: Backport [https://github.com/rust-lang/rust/pull/122205/commits/5aece7fad06baaa745784d118db862b3e3ccf7f8]
+
+Signed-off-by: Yash Shinde <Yash.Shinde@windriver.com>
+---
+diff --git a/src/bootstrap/src/core/build_steps/test.rs b/src/bootstrap/src/core/build_steps/test.rs
+index 4a4497e57db..da8c88dcd41 100644
+--- a/src/bootstrap/src/core/build_steps/test.rs
++++ b/src/bootstrap/src/core/build_steps/test.rs
+@@ -2505,8 +2505,12 @@
+         let mode = self.mode;
+
+         // See [field@compile::Std::force_recompile].
+-        builder.ensure(compile::Std::force_recompile(compiler, target));
+-        builder.ensure(RemoteCopyLibs { compiler, target });
++        builder.ensure(compile::Std::force_recompile(compiler, compiler.host));
++
++        if builder.config.build != target {
++            builder.ensure(compile::Std::force_recompile(compiler, target));
++            builder.ensure(RemoteCopyLibs { compiler, target });
++        }
+
+         // If we're not doing a full bootstrap but we're testing a stage2
+         // version of libstd, then what we're actually testing is the libstd
