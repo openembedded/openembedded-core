@@ -5,6 +5,7 @@
 #
 import os
 import time
+import subprocess
 from oeqa.core.decorator import OETestTag
 from oeqa.core.case import OEPTestResultTestCase
 from oeqa.selftest.case import OESelftestTestCase
@@ -69,6 +70,19 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
                 for test, result in parse_values(f):
                     self.ptest_result(ptestsuite, test, result)
 
+        if ssh is not None:
+            # Define the control path used for the SSH connection
+            control_path = os.path.expanduser("~/.ssh/control-{}@{}:22".format("root", ssh))
+
+            # Check if the control socket exists
+            if os.path.exists(control_path):
+                # Close the master SSH connection
+                close_command = [
+                    "ssh", "-o", "ControlPath={}".format(control_path),
+                    "-O", "exit", "root@{}".format(ssh)
+                ]
+                subprocess.run(close_command, check=True)
+
     def run_check_emulated(self, *args, **kwargs):
         # build core-image-minimal with required packages
         default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp"]
@@ -83,6 +97,15 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
             # validate that SSH is working
             status, _ = qemu.run("uname")
             self.assertEqual(status, 0)
+            qemu_ip = qemu.ip
+            ssh_command = [
+            "ssh", "-o", "StrictHostKeyChecking=no",
+            "-o", "UserKnownHostsFile=/dev/null",
+            "-o", "ControlMaster=auto",
+            "-o", "ControlPath=~/.ssh/control-%r@%h:%p",
+            "-o", "Controlpersist=yes", "root@{}".format(qemu_ip),
+            "exit" ]
+            subprocess.run(ssh_command, check=True)
 
             return self.run_check(*args, ssh=qemu.ip, **kwargs)
 
