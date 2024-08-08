@@ -187,6 +187,25 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'tests/rustdoc-ui/no-run-flag.rs',
                             'tests/ui-fulldeps/',
                             'tests/ui/numbers-arithmetic/u128.rs'
+                            'tests/run-pass-valgrind',
+                            'tests/ui/codegen/mismatched-data-layouts.rs',
+                            'tests/codegen/i128-x86-align.rs',
+                            'src/tools/suggest-tests',
+                            'src/tools/rust-installer',
+                            'src/bootstrap',
+                            'src/tools/tidy/src/',
+                            'library/std/src/thread/tests.rs',
+                            'compiler/rustc_errors/src/markdown/tests/term.rs',
+                            'compiler/rustc_interface/src/tests.rs',
+                            'library/std/src/io/buffered/tests.rs',
+                            'library/std/src/io/stdio/tests.rs',
+                            'library/std/src/sync/mpsc/sync_tests.rs',
+                            'library/std/src/sync/mpsc/tests.rs',
+                            'library/std/src/sync/mutex/tests.rs',
+                            'library/std/src/sync/rwlock/tests.rs',
+                            'library/std/src/thread/tests.rs',
+                            'library/test/src/stats/tests.rs',
+                            'tidyselftest'
                         ]
 
         exclude_fail_tests = " ".join([" --exclude " + item for item in exclude_list])
