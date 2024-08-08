@@ -255,10 +255,10 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_get_mut_poison() {
      let m = Arc::new(RwLock::new(NonCopy(10)));
      let m2 = m.clone();
-diff --git a/library/std/src/sys/unix/process/process_unix/tests.rs b/library/std/src/sys/unix/process/process_unix/tests.rs
+diff --git a/library/std/src/sys/pal/unix/process/process_unix/tests.rs b/library/std/src/sys/pal/unix/process/process_unix/tests.rs
 index 0a6c6ec19fc..bec257bc630 100644
---- a/library/std/src/sys/unix/process/process_unix/tests.rs
-+++ b/library/std/src/sys/unix/process/process_unix/tests.rs
+--- a/library/std/src/sys/pal/unix/process/process_unix/tests.rs
++++ b/library/std/src/sys/pal/unix/process/process_unix/tests.rs
 @@ -6,6 +6,7 @@
  // safety etc., are tested in tests/ui/process/process-panic-after-fork.rs
 
@@ -319,3 +319,14 @@ index 5d6b9e94ee9..a5aacb2eb87 100644
  fn test_try_panic_any_message_unit_struct() {
      struct Juju;
 
+diff --git a/library/alloc/src/slice/tests.rs b/library/alloc/src/slice/tests.rs
+--- a/library/alloc/src/slice/tests.rs
++++ b/library/alloc/src/slice/tests.rs
+@@ -186,6 +186,7 @@
+ std::thread_local!(static SILENCE_PANIC: Cell<bool> = Cell::new(false));
+
+ #[test]
++#[ignore]
+ #[cfg_attr(target_os = "emscripten", ignore)] // no threads
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
+ fn panic_safe() {

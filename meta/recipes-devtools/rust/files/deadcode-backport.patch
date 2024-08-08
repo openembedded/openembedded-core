@@ -1,0 +1,39 @@
+Fix the dead code error as follows:
+
+    Compiling coverage-dump v0.1.0 (/home/poky/build-st/tmp/work/core2-64-poky-linux/rust/1.77.0/rustc-1.77.0-src/src/tools/coverage-dump)
+    error: field `0` is never read
+       --> src/tools/coverage-dump/src/covfun.rs:222:15
+        |
+    222 |     Expansion(u32),
+        |     --------- ^^^
+        |     |
+        |     field in this variant
+        |
+        = note: `-D dead-code` implied by `-D warnings`
+        = help: to override `-D warnings` add `#[allow(dead_code)]`
+    help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+        |
+    222 |     Expansion(()),
+        |               ~~
+
+    error: could not compile `coverage-dump` (bin "coverage-dump") due to 1 previous error
+
+Only the required change is backported here to run the build without any errors.
+Other changes are merged with the commit in v1.78.
+
+Upstream-Status: Backport [https://github.com/rust-lang/rust/commit/9a5034a20ed8b055dc615271f9d9cf27f9e494f0#diff-d4ecc6273352a2a8ebd02c45233d9bff7c6694f20b67ddad0614af7a89c06748]
+
+Signed-off-by: Yash Shinde <Yash.Shinde@windriver.com>
+---
+diff --git a/src/tools/coverage-dump/src/covfun.rs b/src/tools/coverage-dump/src/covfun.rs
+--- a/src/tools/coverage-dump/src/covfun.rs
++++ b/src/tools/coverage-dump/src/covfun.rs
+@@ -219,7 +219,7 @@
+ enum MappingKind {
+     Code(CovTerm),
+     Gap(CovTerm),
+-    Expansion(u32),
++    Expansion(#[allow(dead_code)] u32),
+     Skip,
+     // Using raw identifiers here makes the dump output a little bit nicer
+     // (via the derived Debug), at the expense of making this tool's source
