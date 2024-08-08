@@ -292,6 +292,7 @@ do_check[prefuncs] += "extend_recipe_sysroot"
 do_check[prefuncs] += "check_prepare"
 do_check[dirs] = "${WORKDIR}/dejagnu ${B}"
 do_check[nostamp] = "1"
+do_check[network] = "1"
 do_check() {
     export DEJAGNU="${WORKDIR}/dejagnu/site.exp"
 
