@@ -9,7 +9,8 @@ crosses a number boundary, the heading spacing can change:
 The test is to make sure the 1024 blocks element remains the same and
 the spacing doesn't matter. Therefore strip any duplicate spaces using tr.
 
-Upstream-Status: Submitted [https://github.com/coreutils/coreutils/pull/88]
+Submitted: https://github.com/coreutils/coreutils/pull/88
+Upstream-Status: Backport [https://github.com/coreutils/coreutils/commit/c5725c8c4bb21903490a48035286d0f94463642e]
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Index: coreutils-9.5/tests/df/df-P.sh
