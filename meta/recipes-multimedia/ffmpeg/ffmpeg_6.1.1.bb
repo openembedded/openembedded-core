@@ -27,6 +27,7 @@ SRC_URI = " \
     file://av1_ordering_info.patch \
     file://vulkan_av1_stable_API.patch \
     file://vulkan_fix_gcc14.patch \
+    file://0001-libavcodec-arm-mlpdsp_armv5te-fix-label-format-to-wo.patch \
 "
 
 SRC_URI[sha256sum] = "8684f4b00f94b85461884c3719382f1261f0d9eb3d59640a1f4ac0873616f968"
