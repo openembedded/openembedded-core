@@ -47,4 +47,6 @@ do_install_ptest() {
 BBCLASSEXTEND = "native nativesdk"
 
 CVE_STATUS[CVE-2023-45853] = "not-applicable-config: we don't build minizip"
-CVE_STATUS[CVE-2023-6992] = "cpe-incorrect: this CVE is for cloudflare zlib"
+
+# Adding 'CVE_PRODUCT' to avoid false detection of CVEs
+CVE_PRODUCT = "zlib:zlib gnu:zlib"
