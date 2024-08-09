@@ -8,8 +8,6 @@ inherit python3targetconfig
 
 DEPENDS += "libcap-ng python3 swig-native"
 
-S = "${WORKDIR}/libcap-ng-${PV}"
-
 EXTRA_OECONF += "--with-python3"
 
 do_install() {
