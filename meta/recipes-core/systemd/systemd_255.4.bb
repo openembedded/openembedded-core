@@ -307,9 +307,10 @@ do_install() {
 	fi
 
 	if "${@'true' if oe.types.boolean(d.getVar('VOLATILE_LOG_DIR')) else 'false'}"; then
-		# /var/log is typically a symbolic link to inside /var/volatile,
-		# which is expected to be empty.
+		# base-files recipe provides /var/log which is a symlink to /var/volatile/log
 		rm -rf ${D}${localstatedir}/log
+		printf 'L\t\t%s/log\t\t-\t-\t-\t-\t%s/volatile/log\n' "${localstatedir}" \
+			"${localstatedir}" >>${D}${nonarch_libdir}/tmpfiles.d/00-create-volatile.conf
 	elif [ -e ${D}${localstatedir}/log/journal ]; then
 		chown root:systemd-journal ${D}${localstatedir}/log/journal
 
