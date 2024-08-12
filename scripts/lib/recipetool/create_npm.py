@@ -112,40 +112,52 @@ class NpmRecipeHandler(RecipeHandler):
         """Return the extra license files and the list of packages"""
         licfiles = []
         packages = {}
+        # Licenses from package.json point to COMMON_LICENSE_DIR so we need
+        # to associate them explicitely for split_pkg_licenses()
+        fallback_licenses = dict()
 
         # Handle the parent package
         packages["${PN}"] = ""
 
-        def _licfiles_append_fallback_readme_files(destdir):
-            """Append README files as fallback to license files if a license files is missing"""
+        def _licfiles_append_fallback_package_files(destdir):
+            """Append package.json files as fallback to license files if a license files is missing"""
+            def _get_licenses_from_package_json(package_json):
+                with open(os.path.join(srctree, package_json), "r") as f:
+                    data = json.load(f)
+                    if "license" in data:
+                        licenses = data["license"].split(" ")
+                        licenses = [license.strip("()") for license in licenses if license != "OR" and license != "AND"]
+                        return ["${COMMON_LICENSE_DIR}/" + license for license in licenses], licenses
+                    else:
+                        return [package_json], None
 
             fallback = True
-            readmes = []
             basedir = os.path.join(srctree, destdir)
             for fn in os.listdir(basedir):
                 upper = fn.upper()
-                if upper.startswith("README"):
-                    fullpath = os.path.join(basedir, fn)
-                    readmes.append(fullpath)
                 if upper.startswith("COPYING") or "LICENCE" in upper or "LICENSE" in upper:
                     fallback = False
             if fallback:
-                for readme in readmes:
-                    licfiles.append(os.path.relpath(readme, srctree))
+                pkg_json = os.path.join(basedir, "package.json")
+                return _get_licenses_from_package_json(pkg_json)
+            return [], None
 
         # Handle the dependencies
         def _handle_dependency(name, params, destdir):
             deptree = destdir.split('node_modules/')
             suffix = "-".join([npm_package(dep) for dep in deptree])
             packages["${PN}" + suffix] = destdir
-            _licfiles_append_fallback_readme_files(destdir)
+            (fallback_licfiles, common_lics) = _licfiles_append_fallback_package_files(destdir)
+            licfiles.extend(fallback_licfiles)
+            if common_lics:
+                fallback_licenses["${PN}" + suffix] = common_lics
 
         with open(shrinkwrap_file, "r") as f:
             shrinkwrap = json.load(f)
 
         foreach_dependencies(shrinkwrap, _handle_dependency, dev)
 
-        return licfiles, packages
+        return licfiles, packages, fallback_licenses
     
     # Handle the peer dependencies   
     def _handle_peer_dependency(self, shrinkwrap_file):
@@ -266,18 +278,31 @@ class NpmRecipeHandler(RecipeHandler):
         fetcher.unpack(srctree)
 
         bb.note("Handling licences ...")
-        (licfiles, packages) = self._handle_licenses(srctree, shrinkwrap_file, dev)
+        (licfiles, packages, fallback_licenses) = self._handle_licenses(srctree, shrinkwrap_file, dev)
 
         def _guess_odd_license(licfiles):
             import bb
 
             md5sums = get_license_md5sums(d, linenumbers=True)
 
+            def _resolve_licfile(srctree, licfile):
+                match = re.search(r'\$\{COMMON_LICENSE_DIR\}/(.+)$', licfile)
+                if match:
+                    license = match.group(1)
+                    commonlicdir = d.getVar('COMMON_LICENSE_DIR')
+                    return os.path.join(commonlicdir, license)
+                
+                return os.path.join(srctree, licfile)
+
             chksums = []
             licenses = []
+            md5value = None
             for licfile in licfiles:
-                f = os.path.join(srctree, licfile)
-                md5value = bb.utils.md5_file(f)
+                f = _resolve_licfile(srctree, licfile)
+                try:
+                    md5value = bb.utils.md5_file(f)
+                except FileNotFoundError:
+                    logger.info("Could not determine license for '%s'" % licfile)
                 (license, beginline, endline, md5) = md5sums.get(md5value,
                     (None, "", "", ""))
                 if not license:
@@ -292,10 +317,10 @@ class NpmRecipeHandler(RecipeHandler):
                     ";endline=%s" % (endline) if endline else "",
                     md5 if md5 else md5value))
                 licenses.append((license, licfile, md5value))
-            return (licenses, chksums)
+            return (licenses, chksums, fallback_licenses)
 
-        (licenses, extravalues["LIC_FILES_CHKSUM"]) = _guess_odd_license(licfiles)
-        split_pkg_licenses([*licenses, *guess_license(srctree, d)], packages, lines_after)
+        (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) = _guess_odd_license(licfiles)
+        split_pkg_licenses([*licenses, *guess_license(srctree, d)], packages, lines_after, fallback_licenses)
 
         classes.append("npm")
         handled.append("buildsystem")
