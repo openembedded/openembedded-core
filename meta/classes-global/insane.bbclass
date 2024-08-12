@@ -34,7 +34,7 @@ ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
             mime mime-xdg unlisted-pkg-lics unhandled-features-check \
             missing-update-alternatives missing-ptest \
             license-exists license-no-generic license-syntax license-format \
-            license-incompatible license-file-missing obsolete-license \
+            license-exception license-file-missing obsolete-license \
             libdir xorg-driver-abi buildpaths \
             dep-cmp pkgvarcheck perm-config perm-line perm-link \
             packages-list pkgv-undefined var-undefined \
