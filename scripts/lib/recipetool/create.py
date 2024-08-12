@@ -1295,6 +1295,14 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn
         outlicenses[pkgname] = licenses
     return outlicenses
 
+def generate_common_licenses_chksums(common_licenses, d):
+    lic_files_chksums = []
+    for license in tidy_licenses(common_licenses):
+        licfile = '${COMMON_LICENSE_DIR}/' + license
+        md5value = bb.utils.md5_file(d.expand(licfile))
+        lic_files_chksums.append('file://%s;md5=%s' % (licfile, md5value))
+    return lic_files_chksums
+
 def read_pkgconfig_provides(d):
     pkgdatadir = d.getVar('PKGDATA_DIR')
     pkgmap = {}
