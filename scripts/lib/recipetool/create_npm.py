@@ -17,7 +17,7 @@ from bb.fetch2.npm import npm_package
 from bb.fetch2.npmsw import foreach_dependencies
 from recipetool.create import RecipeHandler
 from recipetool.create import get_license_md5sums
-from recipetool.create import guess_license
+from recipetool.create import find_licenses
 from recipetool.create import split_pkg_licenses
 logger = logging.getLogger('recipetool')
 
@@ -320,7 +320,7 @@ class NpmRecipeHandler(RecipeHandler):
             return (licenses, chksums, fallback_licenses)
 
         (licenses, extravalues["LIC_FILES_CHKSUM"], fallback_licenses) = _guess_odd_license(licfiles)
-        split_pkg_licenses([*licenses, *guess_license(srctree, d)], packages, lines_after, fallback_licenses)
+        split_pkg_licenses([*licenses, *find_licenses(srctree, d)], packages, lines_after, fallback_licenses)
 
         classes.append("npm")
         handled.append("buildsystem")
