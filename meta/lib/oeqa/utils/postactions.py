@@ -71,7 +71,7 @@ def retrieve_test_artifacts(target, artifacts_list, target_dir):
             raise Exception("Error while fetching compressed artifacts")
         p = subprocess.run(["tar", "zxf", "-", "-C", local_artifacts_dir], input=output)
     except Exception as e:
-        bb.warn(f"Can not retrieve {artifact_path} from test target: {e}")
+        bb.warn(f"Can not retrieve artifacts from test target: {e}")
 
 def list_and_fetch_failed_tests_artifacts(d, tc):
     artifacts_list = get_artifacts_list(tc.target, d.getVar("TESTIMAGE_FAILED_QA_ARTIFACTS"))
