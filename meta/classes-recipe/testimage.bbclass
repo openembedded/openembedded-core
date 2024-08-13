@@ -239,6 +239,8 @@ def testimage_main(d):
             bb.fatal('Unsupported image type built. Add a compatible image to '
                      'IMAGE_FSTYPES. Supported types: %s' %
                      ', '.join(supported_fstypes))
+    elif d.getVar("TEST_TARGET") == "serial":
+        bb.fatal('Serial target is currently only supported in testexport.')
     qfstype = fstypes[0]
     qdeffstype = d.getVar("QB_DEFAULT_FSTYPE")
     if qdeffstype:
