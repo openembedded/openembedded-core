@@ -3,13 +3,11 @@ HOMEPAGE = "http://www.attrs.org/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5e55731824cf9205cfabeab9a0600887"
 
-SRC_URI[sha256sum] = "935dc3b529c262f6cf76e50877d35a4bd3c1de194fd41f47a2b7ae8f19971f30"
+SRC_URI[sha256sum] = "5cfb1b9148b5b086569baec03f20d7b6bf3bcacc9a42bebf87ffaaca362f6346"
 
 inherit pypi ptest python_hatchling
 
 SRC_URI += " \
-	file://0001-test_funcs-skip-test_unknown-for-pytest-8.patch \
-	file://0001-conftest.py-disable-deadline.patch \
 	file://run-ptest \
 "
 
