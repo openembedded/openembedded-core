@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=61c3ee8961575861fa86c7e62bc9f69c"
 SRC_URI[sha256sum] = "7146dd2af8682b4ca61331851e6aebce9fe5158e75300343f80c07ca80b1faff"
 
 inherit pypi setuptools3
+UPSTREAM_CHECK_PYPI_PACKAGE = "Cython"
 
 # running build_ext a second time during install fails, because Python
 # would then attempt to import cythonized modules built for the target
