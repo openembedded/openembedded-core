@@ -28,8 +28,6 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0002-implment-systemd-sysv-install-for-OE.patch \
-           file://0003-meson-bpf-propagate-sysroot-for-cross-compilation.patch \
-           file://0001-src-boot-efi-meson.build-ensure-VERSION_TAG-exists-i.patch \
            "
 
 # patches needed by musl
