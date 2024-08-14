@@ -88,7 +88,7 @@ def get_patched_cves(d):
     # (cve_match regular expression)
     cve_file_name_match = re.compile(r".*(CVE-\d{4}-\d+)", re.IGNORECASE)
 
-    patched_cves = set()
+    patched_cves = {}
     patches = oe.patch.src_patches(d)
     bb.debug(2, "Scanning %d patches for CVEs" % len(patches))
     for url in patches:
@@ -98,7 +98,7 @@ def get_patched_cves(d):
         fname_match = cve_file_name_match.search(patch_file)
         if fname_match:
             cve = fname_match.group(1).upper()
-            patched_cves.add(cve)
+            patched_cves[cve] = {"abbrev-status": "Patched", "status": "fix-file-included", "resource": patch_file}
             bb.debug(2, "Found %s from patch file name %s" % (cve, patch_file))
 
         # Remote patches won't be present and compressed patches won't be
@@ -124,7 +124,7 @@ def get_patched_cves(d):
             cves = patch_text[match.start()+5:match.end()]
             for cve in cves.split():
                 bb.debug(2, "Patch %s solves %s" % (patch_file, cve))
-                patched_cves.add(cve)
+                patched_cves[cve] = {"abbrev-status": "Patched", "status": "fix-file-included", "resource": patch_file}
                 text_match = True
 
         if not fname_match and not text_match:
@@ -133,9 +133,15 @@ def get_patched_cves(d):
     # Search for additional patched CVEs
     for cve in (d.getVarFlags("CVE_STATUS") or {}):
         decoded_status = decode_cve_status(d, cve)
-        if 'mapping' in decoded_status and decoded_status['mapping'] == "Patched":
-            bb.debug(2, "CVE %s is additionally patched" % cve)
-            patched_cves.add(cve)
+        products = d.getVar("CVE_PRODUCT")
+        if has_cve_product_match(decoded_status, products) == True:
+            patched_cves[cve] = {
+                "abbrev-status": decoded_status["mapping"],
+                "status": decoded_status["detail"],
+                "justification": decoded_status["description"],
+                "affected-vendor": decoded_status["vendor"],
+                "affected-product": decoded_status["product"]
+            }
 
     return patched_cves
 
@@ -264,3 +270,20 @@ def decode_cve_status(d, cve):
     status_out["mapping"] = status_mapping
 
     return status_out
+
+def has_cve_product_match(detailed_status, products):
+    """
+    Check product/vendor match between detailed_status from decode_cve_status and a string of
+    products (like from CVE_PRODUCT)
+    """
+    for product in products.split():
+        vendor = "*"
+        if ":" in product:
+            vendor, product = product.split(":", 1)
+
+        if (vendor == detailed_status["vendor"] or detailed_status["vendor"] == "*") and \
+            (product == detailed_status["product"] or detailed_status["product"] == "*"):
+            return True
+
+    #if no match, return False
+    return False
