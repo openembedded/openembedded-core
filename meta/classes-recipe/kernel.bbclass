@@ -227,8 +227,6 @@ KERNEL_DTBVENDORED ?= "0"
 #
 # configuration
 #
-export CMDLINE_CONSOLE = "console=${@d.getVar("KERNEL_CONSOLE") or "ttyS0"}"
-
 KERNEL_VERSION = "${@get_kernelversion_headers('${B}')}"
 
 # kernels are generally machine specific
