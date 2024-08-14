@@ -72,6 +72,54 @@ class CVECheck(OESelftestTestCase):
         self.assertEqual(convert_cve_version("6.2_rc8"), "6.2-rc8")
         self.assertEqual(convert_cve_version("6.2_rc31"), "6.2-rc31")
 
+    def test_product_match(self):
+        from oe.cve_check import has_cve_product_match
+
+        status = {}
+        status["detail"] = "ignored"
+        status["vendor"] = "*"
+        status["product"] = "*"
+        status["description"] = ""
+        status["mapping"] = ""
+
+        self.assertEqual(has_cve_product_match(status, "some_vendor:some_product"), True)
+        self.assertEqual(has_cve_product_match(status, "*:*"), True)
+        self.assertEqual(has_cve_product_match(status, "some_product"), True)
+        self.assertEqual(has_cve_product_match(status, "glibc"), True)
+        self.assertEqual(has_cve_product_match(status, "glibca"), True)
+        self.assertEqual(has_cve_product_match(status, "aglibc"), True)
+        self.assertEqual(has_cve_product_match(status, "*"), True)
+        self.assertEqual(has_cve_product_match(status, "aglibc glibc test:test"), True)
+
+        status["product"] = "glibc"
+        self.assertEqual(has_cve_product_match(status, "some_vendor:some_product"), False)
+        # The CPE in the recipe must be defined, no * accepted
+        self.assertEqual(has_cve_product_match(status, "*:*"), False)
+        self.assertEqual(has_cve_product_match(status, "*"), False)
+        self.assertEqual(has_cve_product_match(status, "some_product"), False)
+        self.assertEqual(has_cve_product_match(status, "glibc"), True)
+        self.assertEqual(has_cve_product_match(status, "glibca"), False)
+        self.assertEqual(has_cve_product_match(status, "aglibc"), False)
+        self.assertEqual(has_cve_product_match(status, "some_vendor:glibc"), True)
+        self.assertEqual(has_cve_product_match(status, "some_vendor:glibc test"), True)
+        self.assertEqual(has_cve_product_match(status, "test some_vendor:glibc"), True)
+
+        status["vendor"] = "glibca"
+        status["product"] = "glibc"
+        self.assertEqual(has_cve_product_match(status, "some_vendor:some_product"), False)
+        # The CPE in the recipe must be defined, no * accepted
+        self.assertEqual(has_cve_product_match(status, "*:*"), False)
+        self.assertEqual(has_cve_product_match(status, "*"), False)
+        self.assertEqual(has_cve_product_match(status, "some_product"), False)
+        self.assertEqual(has_cve_product_match(status, "glibc"), False)
+        self.assertEqual(has_cve_product_match(status, "glibca"), False)
+        self.assertEqual(has_cve_product_match(status, "aglibc"), False)
+        self.assertEqual(has_cve_product_match(status, "some_vendor:glibc"), False)
+        self.assertEqual(has_cve_product_match(status, "glibca:glibc"), True)
+        self.assertEqual(has_cve_product_match(status, "test:test glibca:glibc"), True)
+        self.assertEqual(has_cve_product_match(status, "test glibca:glibc"), True)
+        self.assertEqual(has_cve_product_match(status, "glibca:glibc test"), True)
+
 
     def test_recipe_report_json(self):
         config = """
