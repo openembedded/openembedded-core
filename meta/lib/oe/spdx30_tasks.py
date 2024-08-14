@@ -488,21 +488,22 @@ def create_spdx(d):
     cve_by_status = {}
     if include_vex != "none":
         for cve in d.getVarFlags("CVE_STATUS") or {}:
-            status, detail, description = oe.cve_check.decode_cve_status(d, cve)
+            decoded_status = oe.cve_check.decode_cve_status(d, cve)
 
             # If this CVE is fixed upstream, skip it unless all CVEs are
             # specified.
-            if include_vex != "all" and detail in (
+            if include_vex != "all" and 'detail' in decoded_status and \
+                decoded_status['detail'] in (
                 "fixed-version",
                 "cpe-stable-backport",
             ):
                 bb.debug(1, "Skipping %s since it is already fixed upstream" % cve)
                 continue
 
-            cve_by_status.setdefault(status, {})[cve] = (
+            cve_by_status.setdefault(decoded_status['mapping'], {})[cve] = (
                 build_objset.new_cve_vuln(cve),
-                detail,
-                description,
+                decoded_status['detail'],
+                decoded_status['description'],
             )
 
     cpe_ids = oe.cve_check.get_cpe_ids(d.getVar("CVE_PRODUCT"), d.getVar("CVE_VERSION"))
