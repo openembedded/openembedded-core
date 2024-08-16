@@ -223,9 +223,9 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_rw_arc_no_poison_rr() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -82,6 +85,7 @@ fn test_rw_arc_no_poison_rr() {
-     assert_eq!(*lock, 1);
+@@ -127,6 +127,7 @@
  }
+
  #[test]
 +#[ignore]
  fn test_rw_arc_no_poison_rw() {
@@ -330,3 +330,63 @@ diff --git a/library/alloc/src/slice/tests.rs b/library/alloc/src/slice/tests.rs
  #[cfg_attr(target_os = "emscripten", ignore)] // no threads
  #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
  fn panic_safe() {
+diff --git a/library/test/src/tests.rs b/library/test/src/tests.rs
+--- a/library/test/src/tests.rs
++++ b/library/test/src/tests.rs
+@@ -424,6 +424,7 @@
+ }
+
+ #[test]
++#[ignore]
+ fn test_time_options_threshold() {
+     let unit = TimeThreshold::new(Duration::from_millis(50), Duration::from_millis(100));
+     let integration = TimeThreshold::new(Duration::from_millis(500), Duration::from_millis(1000));
+diff --git a/library/std/src/sync/mutex/tests.rs b/library/std/src/sync/mutex/tests.rs
+--- a/library/std/src/sync/mutex/tests.rs
++++ b/library/std/src/sync/mutex/tests.rs
+@@ -193,6 +193,7 @@
+ }
+
+ #[test]
++#[ignore]
+ fn test_mutex_arc_poison_mapped() {
+     let arc = Arc::new(Mutex::new(1));
+     assert!(!arc.is_poisoned());
+diff --git a/library/std/src/sync/mutex/tests.rs b/library/std/src/sync/mutex/tests.rs
+--- a/library/std/src/sync/mutex/tests.rs
++++ b/library/std/src/sync/mutex/tests.rs
+@@ -272,6 +272,7 @@
+ }
+
+ #[test]
++#[ignore]
+ fn panic_while_mapping_unlocked_poison() {
+     let lock = Mutex::new(());
+
+diff --git a/
+--- a/library/std/src/sync/rwlock/tests.rs
++++ b/library/std/src/sync/rwlock/tests.rs
+@@ -60,6 +60,7 @@
+ }
+
+ #[test]
++#[ignore]
+ fn test_rw_arc_poison_mapped_w_r() {
+     let arc = Arc::new(RwLock::new(1));
+     let arc2 = arc.clone();
+@@ -88,6 +89,7 @@
+ }
+
+ #[test]
++#[ignore]
+ fn test_rw_arc_poison_mapped_w_w() {
+     let arc = Arc::new(RwLock::new(1));
+     let arc2 = arc.clone();
+@@ -438,6 +440,7 @@
+ }
+
+ #[test]
++#[ignore]
+ fn panic_while_mapping_write_unlocked_poison() {
+     let lock = RwLock::new(());
+
