@@ -1,4 +1,4 @@
-From 4e0f83e931e059ba93604617c462adcc90e5baab Mon Sep 17 00:00:00 2001
+From a8bf39b4ecdbdfd6e6934ca046239f683a9e08e1 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 11 Jan 2017 15:10:13 +0200
 Subject: [PATCH] Do not prepend installroot to logdir.
@@ -14,10 +14,10 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dnf/cli/cli.py b/dnf/cli/cli.py
-index c14f8363..bfc07ab9 100644
+index 0eda2c8c..488a0662 100644
 --- a/dnf/cli/cli.py
 +++ b/dnf/cli/cli.py
-@@ -953,7 +953,7 @@ class Cli(object):
+@@ -952,7 +952,7 @@ class Cli(object):
              logger.warning(_("Unable to detect release version (use '--releasever' to specify "
                               "release version)"))
  
