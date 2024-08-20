@@ -24,7 +24,7 @@ XORG_PN = "libX11"
 
 SRC_URI += "file://disable_tests.patch"
 
-SRC_URI[sha256sum] = "779d8f111d144ef93e2daa5f23a762ce9555affc99592844e71c4243d3bd3262"
+SRC_URI[sha256sum] = "2b3b3dad9347db41dca56beb7db5878f283bde1142f04d9f8e478af435dfdc53"
 
 inherit gettext
 
