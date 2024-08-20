@@ -12,15 +12,15 @@ LIC_FILES_CHKSUM="\
 
 # When upgrading to next major release, ensure that there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.43"
-CVE_VERSION = "2.43"
+PV = "2.43.1"
+CVE_VERSION = "2.43.1"
 SRCBRANCH ?= "binutils-2_43-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
 CVE_STATUS[CVE-2023-25584] = "cpe-incorrect: Applies only for version 2.40 and earlier"
 
-SRCREV ?= "2fbb863136724cfef2fc2f4c2b7f51be36f132c7"
+SRCREV ?= "beb2cdbcda911764b2bed5e57921fe90493260bd"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
