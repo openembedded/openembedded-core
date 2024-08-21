@@ -149,7 +149,7 @@ OPENCL_NATIVE = "${@bb.utils.contains('PACKAGECONFIG', 'freedreno', '-Dopencl-na
 PACKAGECONFIG[opencl] = "-Dgallium-opencl=icd -Dopencl-spirv=true ${OPENCL_NATIVE},-Dgallium-opencl=disabled -Dopencl-spirv=false,libclc spirv-tools python3-ply-native"
 
 PACKAGECONFIG[broadcom] = ""
-PACKAGECONFIG[etnaviv] = ""
+PACKAGECONFIG[etnaviv] = ",,python3-pycparser-native"
 PACKAGECONFIG[freedreno] = ""
 PACKAGECONFIG[kmsro] = ""
 PACKAGECONFIG[vc4] = ""
