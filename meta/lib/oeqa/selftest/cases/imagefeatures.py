@@ -319,7 +319,7 @@ SKIP_RECIPE[busybox] = "Don't build this"
         """
         config = """
 DISTRO_FEATURES:append = " api-documentation"
-CORE_IMAGE_EXTRA_INSTALL = "man-pages kmod-doc"
+CORE_IMAGE_EXTRA_INSTALL = "man-pages"
 """
         self.write_config(config)
         bitbake("core-image-minimal")
@@ -330,7 +330,7 @@ CORE_IMAGE_EXTRA_INSTALL = "man-pages kmod-doc"
             self.assertEqual(status, 1, 'Failed to run apropos: %s' % (output))
             self.assertIn("iso_8859_15", output)
 
-            # This manpage is provided by kmod
-            status, output = qemu.run_serial("man --pager=cat modprobe")
+            # This manpage is provided by man-pages
+            status, output = qemu.run_serial("man --pager=cat intro")
             self.assertEqual(status, 1, 'Failed to run man: %s' % (output))
-            self.assertIn("force-modversion", output)
+            self.assertIn("introduction to user commands", output)
