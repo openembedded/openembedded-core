@@ -1,4 +1,4 @@
-From a2cd906c36a04c8ce5a0095ae53892902b30d728 Mon Sep 17 00:00:00 2001
+From 5e624d82c2838fec2f41ebec124f74aacff9e61f Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Wed, 28 Dec 2022 17:51:27 +0800
 Subject: [PATCH] CMakeLists.txt: disable USE_NGHTTP2
@@ -22,7 +22,7 @@ Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Utilities/cmcurl/CMakeLists.txt b/Utilities/cmcurl/CMakeLists.txt
-index b766aee425..34ae7d2a39 100644
+index b766aee4..34ae7d2a 100644
 --- a/Utilities/cmcurl/CMakeLists.txt
 +++ b/Utilities/cmcurl/CMakeLists.txt
 @@ -94,7 +94,7 @@ set(USE_ECH OFF)
@@ -34,6 +34,3 @@ index b766aee425..34ae7d2a39 100644
  set(USE_NGTCP2 OFF)
  set(USE_OPENSSL_QUIC OFF)
  set(USE_QUICHE OFF)
--- 
-2.39.2
-
