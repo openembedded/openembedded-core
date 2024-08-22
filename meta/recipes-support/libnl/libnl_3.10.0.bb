@@ -16,9 +16,10 @@ DEPENDS = "flex-native bison-native"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
            file://run-ptest \
+           file://0001-tests-cksuite-all-netns.c-disable-route_1.patch \
            "
 
-SRC_URI[sha256sum] = "aed507004d728a5cf11eab48ca4bf9e6e1874444e33939b9d3dfed25018ee9bb"
+SRC_URI[sha256sum] = "49b3e2235fdb58f5910bbb3ed0de8143b71ffc220571540502eb6c2471f204f5"
 
 GITHUB_BASE_URI = "https://github.com/thom311/${BPN}/releases"
 UPSTREAM_CHECK_REGEX = "releases/tag/libnl(?P<pver>.+)"
@@ -52,6 +53,7 @@ RCONFLICTS:${PN}-genl = "libnl-genl2"
 
 DEPENDS += "${@bb.utils.contains('PTEST_ENABLED', '1', 'libcheck', '', d)}"
 RRECOMMENDS:${PN}-ptest += "kernel-module-dummy kernel-module-bonding"
+RDEPENDS:${PN}-ptest += "iproute2-ip"
 
 do_compile_ptest() {
     oe_runmake ./tests/check-all
