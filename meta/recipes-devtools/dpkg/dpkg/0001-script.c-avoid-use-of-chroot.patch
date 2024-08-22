@@ -1,4 +1,4 @@
-From cf135f2b3395e54dc1adfe51c1a25922e01c167e Mon Sep 17 00:00:00 2001
+From 5e5f06d396fe631990474ba6df83428987855365 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 26 Aug 2015 16:25:45 +0300
 Subject: [PATCH] script.c: avoid use of chroot
@@ -86,6 +86,3 @@ index e9aee0bf9..181e7c710 100644
  }
  
  /**
--- 
-2.39.2
-

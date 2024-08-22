@@ -17,6 +17,6 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=main 
 
 SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
 
-SRCREV = "ef5536cfe24e4c41c6fdc56e4530161fade3887c"
+SRCREV = "ee7e9118d0a9581cb00c5ce02dccd561b3096387"
 
 S = "${WORKDIR}/git"
