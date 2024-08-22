@@ -10,7 +10,7 @@ SRC_URI:append:class-native = " \
            file://quiet-debugfs.patch \
            "
 
-SRCREV = "f4c9cc4bedacde8408edda3520a32d3842290112"
+SRCREV = "b571b9b4240739a982e8bca62cfc914a3b50190a"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
