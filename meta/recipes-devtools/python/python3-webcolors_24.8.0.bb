@@ -1,9 +1,9 @@
 SUMMARY = "Simple Python module for working with HTML/CSS color definitions."
 HOMEPAGE = "https://pypi.org/project/webcolors/"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=702b1ef12cf66832a88f24c8f2ee9c19"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=cbaebec43b7d199c7fd8f5411b3b0448"
 
-SRC_URI[sha256sum] = "c225b674c83fa923be93d235330ce0300373d02885cef23238813b0d5668304a"
+SRC_URI[sha256sum] = "08b07af286a01bcd30d583a7acadf629583d1f79bfef27dd2c2c5c263817277d"
 
 inherit pypi python_setuptools_build_meta ptest
 
