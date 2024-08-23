@@ -6,12 +6,10 @@ LICENSE = "GPL-2.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
-SRCREV = "6fa6a0e07644f20abf2596f78a60112713e11cbe"
+SRCREV = "74862a684907ada3d4ed2ce0f8111adf626e1456"
 UPSTREAM_CHECK_COMMITS = "1"
 SRC_URI = "git://pagure.io/xmlto.git;protocol=https;branch=master"
 S = "${WORKDIR}/git"
-
-PV .= "+0.0.29+git"
 
 inherit autotools
 
@@ -35,7 +33,7 @@ CACHED_CONFIGUREVARS += "ac_cv_path_TAIL=tail ac_cv_path_GREP=grep ac_cv_path_XM
 
 BBCLASSEXTEND = "native"
 
-EXTRA_OECONF:append = " BASH=/bin/bash GCP=/bin/cp"
+EXTRA_OECONF:append = " XMLTO_BASH_PATH=/bin/bash GCP=/bin/cp"
 
 do_configure:prepend() {
     (cd ${S} && flex -o xmlif/xmlif.c xmlif/xmlif.l)
