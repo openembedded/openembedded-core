@@ -20,5 +20,7 @@ DISABLE_STATIC:class-native = ""
 
 # upstream-wontfix: Upstream thinks there is no working code that is exploitable - https://github.com/yaml/libyaml/issues/302
 CVE_CHECK_IGNORE += "CVE-2024-35326 CVE-2024-35328"
+# upstream-wontfix: Upstream thinks this is a misuse (or wrong use) of the libyaml API - https://github.com/yaml/libyaml/issues/303
+CVE_CHECK_IGNORE += "CVE-2024-35325"
 
 BBCLASSEXTEND = "native nativesdk"
