@@ -68,6 +68,8 @@ CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl dan
 
 # This CVE reports that apple had to upgrade curl because of other already reported CVEs
 CVE_CHECK_IGNORE += "CVE-2023-42915"
+# ignored: CURLOPT_SSL_VERIFYPEER was disabled on google cloud services causing a potential man in the middle attack
+CVE_CHECK_IGNORE += "CVE-2024-32928"
 
 inherit autotools pkgconfig binconfig multilib_header
 
