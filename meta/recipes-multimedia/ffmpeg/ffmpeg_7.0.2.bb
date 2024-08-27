@@ -167,7 +167,8 @@ PACKAGES =+ "libavcodec \
              libavutil \
              libpostproc \
              libswresample \
-             libswscale"
+             libswscale \
+             ${PN}-examples"
 
 FILES:libavcodec = "${libdir}/libavcodec${SOLIBS}"
 FILES:libavdevice = "${libdir}/libavdevice${SOLIBS}"
@@ -177,6 +178,7 @@ FILES:libavutil = "${libdir}/libavutil${SOLIBS}"
 FILES:libpostproc = "${libdir}/libpostproc${SOLIBS}"
 FILES:libswresample = "${libdir}/libswresample${SOLIBS}"
 FILES:libswscale = "${libdir}/libswscale${SOLIBS}"
+FILES:${PN}-examples = "${datadir}/${PN}/examples"
 
 # ffmpeg disables PIC on some platforms (e.g. x86-32)
 INSANE_SKIP:${MLPREFIX}libavcodec = "textrel"
