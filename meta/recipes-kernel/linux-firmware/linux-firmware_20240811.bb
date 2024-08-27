@@ -357,6 +357,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-bnx2 \
              ${PN}-bnx2x \
              ${PN}-liquidio \
+             ${PN}-linaro-license \
              ${PN}-mali-csffw-arch108 ${PN}-mali-csffw-license \
              ${PN}-mellanox \
              ${PN}-nvidia-license \
@@ -1360,6 +1361,9 @@ RDEPENDS:${PN}-qat        = "${PN}-qat-license"
 LICENSE:${PN}-qed         = "WHENCE"
 FILES:${PN}-qed           = "${nonarch_base_libdir}/firmware/qed/*"
 
+LICENSE:${PN}-linaro-license = "Firmware-linaro"
+FILES:${PN}-linaro-license   = "${nonarch_base_libdir}/firmware/LICENCE.linaro"
+
 # For QCOM VPU/GPU and SDM845
 LICENSE:${PN}-qcom-license = "Firmware-qcom"
 LICENSE:${PN}-qcom-yamato-license = "Firmware-qcom-yamato"
@@ -1484,7 +1488,7 @@ RDEPENDS:${PN}-qcom-qrb4210-modem = "${PN}-qcom-license"
 # Only symlinks in qcom-qrb4210-wifi, firmware is in qcom-qcm2290-wifi
 # c.f. https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=650e88378e76d5fad3997a5398f1ade47a74d924
 RDEPENDS:${PN}-qcom-qrb4210-wifi = "${PN}-qcom-license ${PN}-qcom-qcm2290-wifi"
-RDEPENDS:${PN}-qcom-sc8280xp-lenovo-x13s-audio = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-sc8280xp-lenovo-x13s-audio = "${PN}-qcom-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-sc8280xp-lenovo-x13s-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sc8280xp-lenovo-x13s-compute = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sc8280xp-lenovo-x13s-sensors = "${PN}-qcom-license"
