@@ -16,7 +16,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=mast
            file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
            file://tweak-ptest-script.patch \
            "
-SRCREV = "369d9d3c13a0c56ad09fd4f13b4a80eb9a94e270"
+SRCREV = "cf86ad5819aba8f9b020a95257c9a8c4911b1c85"
 
 S = "${WORKDIR}/git"
 
@@ -25,7 +25,7 @@ inherit ptest update-alternatives
 
 do_compile () {
 	chmod a+rx *.pl *.sh
-	oe_runmake 'CC=${CC}' "CFLAGS=${CFLAGS} -Wall -W -D'IFUPDOWN_VERSION=\"${PV}\"'"
+	oe_runmake 'CC=${CC}' "-Wall -W -D'IFUPDOWN_VERSION=\"${PV}\"'"
 }
 
 do_install () {
