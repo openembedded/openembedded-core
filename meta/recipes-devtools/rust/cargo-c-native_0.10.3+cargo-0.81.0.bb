@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = " \
 "
 
 SRC_URI = "crate://crates.io/cargo-c/${PV};name=cargo-c"
-SRC_URI[cargo-c.sha256sum] = "ec77e3635cdb0d211f88f22d0460eef0ba031eb616ded57f2ffb98a90365c445"
+SRC_URI[cargo-c.sha256sum] = "99f10fab01de791f95e81134202792e4a6975c3a3921fec2d4cbf3e9c269b709"
 S = "${CARGO_VENDORING_DIRECTORY}/cargo-c-${PV}"
 
 inherit cargo cargo-update-recipe-crates pkgconfig native
