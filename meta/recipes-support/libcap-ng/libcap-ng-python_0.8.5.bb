@@ -9,8 +9,6 @@ inherit lib_package autotools python3targetconfig
 # drop setuptools when version > 0.8.3 is released; it's needed only for distutils
 DEPENDS += "libcap-ng python3 swig-native python3-setuptools-native"
 
-S = "${WORKDIR}/libcap-ng-${PV}"
-
 EXTRA_OECONF += "--with-python3"
 
 do_install:append() {
