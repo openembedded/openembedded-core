@@ -5,12 +5,10 @@ HOMEPAGE = "https://pyyaml.org/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6d8242660a8371add5fe547adf083079"
 
-PYPI_PACKAGE = "PyYAML"
-
 inherit pypi python_setuptools_build_meta
 
-SRC_URI += "file://0001-Fix-builds-with-Cython-3.patch"
-SRC_URI[sha256sum] = "bfdf460b1736c775f2ba9f6a92bca30bc2095067b8a9d77876d1fad6cc3b4a43"
+SRC_URI[sha256sum] = "d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e"
+UPSTREAM_CHECK_PYPI_PACKAGE = "PyYAML"
 
 PACKAGECONFIG ?= "libyaml"
 PACKAGECONFIG[libyaml] = "--with-libyaml,--without-libyaml,libyaml"
