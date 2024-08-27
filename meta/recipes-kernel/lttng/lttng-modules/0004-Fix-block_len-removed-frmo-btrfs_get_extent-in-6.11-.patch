@@ -1,7 +1,7 @@
-From d44bc12d138513eb3d1dae4e66a4d76d7c567212 Mon Sep 17 00:00:00 2001
+From 974125ab11a7f0b4df5658cdac26dc5cf9fdbc87 Mon Sep 17 00:00:00 2001
 From: Kienan Stewart <kstewart@efficios.com>
 Date: Mon, 29 Jul 2024 14:12:47 +0000
-Subject: [PATCH 4/6] Fix: block_len removed frmo btrfs_get_extent in 6.11-rc1
+Subject: [PATCH] Fix: block_len removed frmo btrfs_get_extent in 6.11-rc1
 
 See upstream commit:
 
@@ -31,10 +31,10 @@ Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
  1 file changed, 1 deletion(-)
 
 diff --git a/include/instrumentation/events/btrfs.h b/include/instrumentation/events/btrfs.h
-index 40139dee..a764fb3b 100644
+index dfad19c..28320d8 100644
 --- a/include/instrumentation/events/btrfs.h
 +++ b/include/instrumentation/events/btrfs.h
-@@ -191,7 +191,6 @@ LTTNG_TRACEPOINT_EVENT(btrfs_get_extent,
+@@ -192,7 +192,6 @@ LTTNG_TRACEPOINT_EVENT(btrfs_get_extent,
  		ctf_integer(u64, start, map->start)
  		ctf_integer(u64, len, map->len)
  		ctf_integer(u64, block_start, map->block_start)
@@ -42,6 +42,3 @@ index 40139dee..a764fb3b 100644
  		ctf_integer(unsigned int, flags, map->flags)
  		ctf_integer(int, refs, refcount_read(&map->refs))
  		ctf_integer(unsigned int, compress_type, extent_map_compression(map))
--- 
-2.39.2
-

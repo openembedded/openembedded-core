@@ -1,8 +1,7 @@
-From f2762247871d9340f3cbe7e40f25ceb6dbdb81f1 Mon Sep 17 00:00:00 2001
+From b845e79532c9c28c0108bf556171093236460251 Mon Sep 17 00:00:00 2001
 From: Kienan Stewart <kstewart@efficios.com>
 Date: Mon, 29 Jul 2024 14:14:24 +0000
-Subject: [PATCH 5/6] Fix: block_start removed from btrfs_get_extent in
- 6.11-rc1
+Subject: [PATCH] Fix: block_start removed from btrfs_get_extent in 6.11-rc1
 
 See upstream commit:
 
@@ -38,10 +37,10 @@ Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
  1 file changed, 1 deletion(-)
 
 diff --git a/include/instrumentation/events/btrfs.h b/include/instrumentation/events/btrfs.h
-index a764fb3b..4ceb8e02 100644
+index 28320d8..8fb6866 100644
 --- a/include/instrumentation/events/btrfs.h
 +++ b/include/instrumentation/events/btrfs.h
-@@ -190,7 +190,6 @@ LTTNG_TRACEPOINT_EVENT(btrfs_get_extent,
+@@ -191,7 +191,6 @@ LTTNG_TRACEPOINT_EVENT(btrfs_get_extent,
  		ctf_integer(u64, ino, btrfs_ino(inode))
  		ctf_integer(u64, start, map->start)
  		ctf_integer(u64, len, map->len)
@@ -49,6 +48,3 @@ index a764fb3b..4ceb8e02 100644
  		ctf_integer(unsigned int, flags, map->flags)
  		ctf_integer(int, refs, refcount_read(&map->refs))
  		ctf_integer(unsigned int, compress_type, extent_map_compression(map))
--- 
-2.39.2
-

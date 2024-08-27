@@ -1,7 +1,7 @@
-From aef97cb8d8ce45a9ea02eaedd20c28e4b69f4acf Mon Sep 17 00:00:00 2001
+From 1e4cc8d271117af9262e28a5dd19790a0917818c Mon Sep 17 00:00:00 2001
 From: Kienan Stewart <kstewart@efficios.com>
 Date: Mon, 29 Jul 2024 14:11:36 +0000
-Subject: [PATCH 3/6] Fix: orig_start removed from btrfs_get_extent in 6.11-rc1
+Subject: [PATCH] Fix: orig_start removed from btrfs_get_extent in 6.11-rc1
 
 See upstream commit:
 
@@ -28,10 +28,10 @@ Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
  1 file changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/include/instrumentation/events/btrfs.h b/include/instrumentation/events/btrfs.h
-index f1b82db4..40139dee 100644
+index c0c746e..dfad19c 100644
 --- a/include/instrumentation/events/btrfs.h
 +++ b/include/instrumentation/events/btrfs.h
-@@ -176,7 +176,29 @@ LTTNG_TRACEPOINT_EVENT_INSTANCE(btrfs__inode, btrfs_inode_evict,
+@@ -177,7 +177,29 @@ LTTNG_TRACEPOINT_EVENT_INSTANCE(btrfs__inode, btrfs_inode_evict,
  )
  #endif
  
@@ -62,6 +62,3 @@ index f1b82db4..40139dee 100644
  
  LTTNG_TRACEPOINT_EVENT(btrfs_get_extent,
  
--- 
-2.39.2
-

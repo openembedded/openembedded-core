@@ -1,7 +1,7 @@
-From 9706d0431c9cc4178db4cf630fee6f5f85f2543e Mon Sep 17 00:00:00 2001
+From a06c63b0360cbe1a7c8073461b9cf088234875f7 Mon Sep 17 00:00:00 2001
 From: Kienan Stewart <kstewart@efficios.com>
 Date: Mon, 29 Jul 2024 14:01:18 +0000
-Subject: [PATCH 1/6] Fix: kfree_skb changed in 6.11-rc1
+Subject: [PATCH] Fix: kfree_skb changed in 6.11-rc1
 
 See upstream commit:
 
@@ -30,10 +30,10 @@ Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
  1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/include/instrumentation/events/skb.h b/include/instrumentation/events/skb.h
-index edfda7ff..0b5a95dc 100644
+index 9f1047c..5556ab6 100644
 --- a/include/instrumentation/events/skb.h
 +++ b/include/instrumentation/events/skb.h
-@@ -43,7 +43,25 @@ LTTNG_TRACEPOINT_ENUM(skb_drop_reason,
+@@ -40,7 +40,25 @@ LTTNG_TRACEPOINT_ENUM(skb_drop_reason,
  )
  #endif
  
@@ -60,6 +60,3 @@ index edfda7ff..0b5a95dc 100644
  	|| LTTNG_KERNEL_RANGE(5,15,58, 5,16,0) \
  	|| LTTNG_RHEL_KERNEL_RANGE(5,14,0,70,0,0, 5,15,0,0,0,0) \
  	|| LTTNG_RHEL_KERNEL_RANGE(4,18,0,477,10,1, 4,19,0,0,0,0))
--- 
-2.39.2
-

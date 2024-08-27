@@ -1,7 +1,7 @@
-From 166a05ce64a05218f51563d201644ab3bfddaacc Mon Sep 17 00:00:00 2001
+From d0797fe4bce357d419d2f1f8a3cfe2f8e71ebfdb Mon Sep 17 00:00:00 2001
 From: Kienan Stewart <kstewart@efficios.com>
 Date: Mon, 29 Jul 2024 14:23:02 +0000
-Subject: [PATCH 6/6] Fix: scsi: sd: Atomic write support added in 6.11-rc1
+Subject: [PATCH] Fix: scsi: sd: Atomic write support added in 6.11-rc1
 
 See upstream commit:
 
@@ -90,10 +90,10 @@ Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
  1 file changed, 97 insertions(+), 1 deletion(-)
 
 diff --git a/include/instrumentation/events/scsi.h b/include/instrumentation/events/scsi.h
-index de2a1998..175ab003 100644
+index 52c0ebd..54ba3ee 100644
 --- a/include/instrumentation/events/scsi.h
 +++ b/include/instrumentation/events/scsi.h
-@@ -19,7 +19,103 @@
+@@ -16,7 +16,103 @@
  
  #define scsi_opcode_name(opcode)	{ opcode, #opcode }
  
@@ -198,6 +198,3 @@ index de2a1998..175ab003 100644
  	|| LTTNG_SLE_KERNEL_RANGE(4,4,9,36,0,0, 4,5,0,0,0,0))
  
  #define show_opcode_name(val)					\
--- 
-2.39.2
-

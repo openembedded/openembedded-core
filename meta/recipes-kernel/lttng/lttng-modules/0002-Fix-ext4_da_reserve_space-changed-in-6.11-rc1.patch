@@ -1,7 +1,7 @@
-From 7f0f61083a9e88abb289c7575586178739e94955 Mon Sep 17 00:00:00 2001
+From bfb177d2745d19cb56a27c438f4925d6397fbf0b Mon Sep 17 00:00:00 2001
 From: Kienan Stewart <kstewart@efficios.com>
 Date: Mon, 29 Jul 2024 14:08:32 +0000
-Subject: [PATCH 2/6] Fix: ext4_da_reserve_space changed in 6.11-rc1
+Subject: [PATCH] Fix: ext4_da_reserve_space changed in 6.11-rc1
 
 See upstream commit:
 
@@ -25,10 +25,10 @@ Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
  1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/include/instrumentation/events/ext4.h b/include/instrumentation/events/ext4.h
-index 462b11bf..addf2246 100644
+index 4131803..9f1d4b1 100644
 --- a/include/instrumentation/events/ext4.h
 +++ b/include/instrumentation/events/ext4.h
-@@ -730,7 +730,23 @@ LTTNG_TRACEPOINT_EVENT(ext4_da_update_reserve_space,
+@@ -821,7 +821,23 @@ LTTNG_TRACEPOINT_EVENT(ext4_da_update_reserve_space,
  )
  #endif
  
@@ -53,6 +53,3 @@ index 462b11bf..addf2246 100644
  LTTNG_TRACEPOINT_EVENT(ext4_da_reserve_space,
  	TP_PROTO(struct inode *inode),
  
--- 
-2.39.2
-
