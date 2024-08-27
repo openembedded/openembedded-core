@@ -10,10 +10,9 @@ DEPENDS = "cracklib-native zlib"
 EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 
 SRC_URI = "git://github.com/cracklib/cracklib;protocol=https;branch=main \
-           file://0001-packlib.c-support-dictionary-byte-order-dependent.patch \
            "
 
-SRCREV = "4cf5125250c6325ef0a2dc085eabff875227edc3"
+SRCREV = "e5211fc1d2b435884a2bb77001e107489285296d"
 S = "${WORKDIR}/git/src"
 
 inherit autotools gettext
