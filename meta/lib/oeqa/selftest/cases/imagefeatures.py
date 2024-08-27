@@ -250,12 +250,7 @@ USERADD_GID_TABLES += "files/static-group"
 DISTRO_FEATURES:append = " pam opengl wayland"
 
 # Switch to systemd
-DISTRO_FEATURES:append = " systemd usrmerge"
-VIRTUAL-RUNTIME_init_manager = "systemd"
-VIRTUAL-RUNTIME_initscripts = ""
-VIRTUAL-RUNTIME_syslog = ""
-VIRTUAL-RUNTIME_login_manager = "shadow-base"
-DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
+INIT_MANAGER = "systemd"
 
 # Replace busybox
 PREFERRED_PROVIDER_virtual/base-utils = "packagegroup-core-base-utils"
