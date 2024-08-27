@@ -1,4 +1,4 @@
-From 0b541aa54b9573d8eef7401a0cc58c422fe60a9a Mon Sep 17 00:00:00 2001
+From e52fc2c11c3935085ccf1a5707ce50223ad62b58 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Thu, 8 Aug 2024 18:04:17 +0100
 Subject: [PATCH] libavcodec/arm/mlpdsp_armv5te: fix label format to work with

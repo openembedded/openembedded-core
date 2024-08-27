@@ -24,13 +24,10 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = " \
     https://www.ffmpeg.org/releases/${BP}.tar.xz \
-    file://av1_ordering_info.patch \
-    file://vulkan_av1_stable_API.patch \
-    file://vulkan_fix_gcc14.patch \
     file://0001-libavcodec-arm-mlpdsp_armv5te-fix-label-format-to-wo.patch \
 "
 
-SRC_URI[sha256sum] = "8684f4b00f94b85461884c3719382f1261f0d9eb3d59640a1f4ac0873616f968"
+SRC_URI[sha256sum] = "8646515b638a3ad303e23af6a3587734447cb8fc0a0c064ecdb8e95c4fd8b389"
 
 # https://nvd.nist.gov/vuln/detail/CVE-2023-39018
 # https://github.com/bramp/ffmpeg-cli-wrapper/issues/291
