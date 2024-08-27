@@ -327,7 +327,7 @@ do_install() {
 
 	# if the user requests /tmp be on persistent storage (i.e. not volatile)
 	# then don't use a tmpfs for /tmp
-	if [ "${VOLATILE_TMP_DIR}" != "yes" ]; then
+	if ! ${@bb.utils.contains('FILESYSTEM_PERMS_TABLES', 'files/fs-perms-volatile-tmp.txt', 'true', 'false', d)}; then
 		rm -f ${D}${rootlibexecdir}/systemd/system/tmp.mount
 		rm -f ${D}${rootlibexecdir}/systemd/system/local-fs.target.wants/tmp.mount
 	fi
