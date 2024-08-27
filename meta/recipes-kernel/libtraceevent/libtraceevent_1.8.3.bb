@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSES/GPL-2.0;md5=e6a75371ba4d16749254a51215d13f97
                     file://LICENSES/LGPL-2.1;md5=b370887980db5dd40659b50909238dbd"
 SECTION = "libs"
 
-SRCREV = "6f6d5802f31992e7527a4c32b43a32fda6bf6bdf"
+SRCREV = "645a883516e343ee970ebb80398cfd7b7dbd227e"
 SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git;branch=${BPN};protocol=https \
-           file://meson.patch"
+          "
 
 S = "${WORKDIR}/git"
 
