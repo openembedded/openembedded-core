@@ -2,15 +2,15 @@ SUMMARY = "Extremely Fast Compression algorithm"
 DESCRIPTION = "LZ4 is a very fast lossless compression algorithm, providing compression speed at 400 MB/s per core, scalable with multi-cores CPU. It also features an extremely fast decoder, with speed in multiple GB/s per core, typically reaching RAM speed limits on multi-core systems."
 HOMEPAGE = "https://github.com/lz4/lz4"
 
-LICENSE = "BSD-2-Clause | GPL-2.0-only"
+LICENSE = "BSD-2-Clause | GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://lib/LICENSE;md5=5cd5f851b52ec832b10eedb3f01f885a \
-                    file://programs/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://LICENSE;md5=c5cc3cd6f9274b4d32988096df9c3ec3 \
+                    file://programs/COPYING;md5=492daf447d6db0e5eb344a7922e7ec25 \
+                    file://LICENSE;md5=c111c47e301c2ffe8776729b40b44477 \
                     "
 
 PE = "1"
 
-SRCREV = "5ff839680134437dbf4678f3d0c7b371d84f4964"
+SRCREV = "ebb370ca83af193212df4dcbadcc5d87bc0de2f0"
 
 SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https \
 	   file://run-ptest \
@@ -23,7 +23,7 @@ inherit ptest
 
 CVE_STATUS[CVE-2014-4715] = "fixed-version: Fixed in r118, which is larger than the current version."
 
-EXTRA_OEMAKE = "PREFIX=${prefix} CC='${CC}' CFLAGS='${CFLAGS}' DESTDIR=${D} LIBDIR=${libdir} INCLUDEDIR=${includedir} BUILD_STATIC=no"
+EXTRA_OEMAKE = "DESTDIR=${D}"
 
 do_install() {
 	oe_runmake install
