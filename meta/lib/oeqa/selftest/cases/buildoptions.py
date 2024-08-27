@@ -84,7 +84,7 @@ class SanityOptionsTest(OESelftestTestCase):
 
         self.write_config("INHERIT:remove = \"report-error\"")
         if "packages-list" not in get_bb_var("ERROR_QA"):
-            self.append_config("ERROR_QA:append = \" packages-list\"")
+            self.append_config("ERROR_QA:append:pn-xcursor-transparent-theme = \" packages-list\"")
 
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
         self.add_command_to_tearDown('bitbake -c clean xcursor-transparent-theme')
@@ -94,8 +94,8 @@ class SanityOptionsTest(OESelftestTestCase):
         self.assertTrue(line and line.startswith("ERROR:"), msg=res.output)
         self.assertEqual(res.status, 1, msg = "bitbake reported exit code %s. It should have been 1. Bitbake output: %s" % (str(res.status), res.output))
         self.write_recipeinc('xcursor-transparent-theme', 'PACKAGES += \"${PN}-dbg\"')
-        self.append_config('ERROR_QA:remove = "packages-list"')
-        self.append_config('WARN_QA:append = " packages-list"')
+        self.append_config('ERROR_QA:remove:pn-xcursor-transparent-theme = "packages-list"')
+        self.append_config('WARN_QA:append:pn-xcursor-transparent-theme = " packages-list"')
         res = bitbake("xcursor-transparent-theme -f -c package")
         self.delete_recipeinc('xcursor-transparent-theme')
         line = self.getline(res, "QA Issue: xcursor-transparent-theme-dbg is listed in PACKAGES multiple times, this leads to packaging errors.")
