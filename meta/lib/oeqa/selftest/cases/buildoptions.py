@@ -173,8 +173,8 @@ class BuildhistoryTests(BuildhistoryBase):
 
         data = load_bh(os.path.join(history_dir, 'hicolor-icon-theme-dev', 'latest'))
         if 'FILELIST' in data:
-            self.assertEqual(data['FILELIST'], '')
-        self.assertEqual(int(data['PKGSIZE']), 0)
+            self.assertEqual(data['FILELIST'], '/usr/share/pkgconfig/default-icon-theme.pc')
+        self.assertGreater(int(data['PKGSIZE']), 0)
 
 class ArchiverTest(OESelftestTestCase):
     def test_arch_work_dir_and_export_source(self):
