@@ -19,25 +19,19 @@ RDEPENDS:${PN} += "\
 RDEPENDS:${PN}:class-native = "autoconf-native hostperl-runtime-native"
 
 SRC_URI += "\
-           file://0001-automake-Update-for-python.m4-to-respect-libdir.patch \
-           file://buildtest.patch \
-           file://performance.patch \
-           file://new_rt_path_for_test-driver.patch \
            file://0001-automake-Add-default-libtool_tag-to-cppasm.patch \
-           file://0001-build-fix-race-in-parallel-builds.patch \
-           file://0001-Drop-ar-u-argument.patch \
+           file://0002-automake-Update-for-python.m4-to-respect-libdir.patch \
+           file://0003-build-fix-race-in-parallel-builds.patch \
+           file://0004-Add-a-new-distro-feature-ptest.patch \
+           file://0005-Set-relative-to-top_builddir-path-in-Makefile-to-acc.patch \
+           file://0006-automake-Remove-delays-in-configure-scripts-using-au.patch \
            "
 
-SRC_URI[sha256sum] = "07bd24ad08a64bc17250ce09ec56e921d6343903943e99ccf63bbf0705e34605"
-
-PERL = "${USRBINPATH}/perl"
-PERL:class-native = "${USRBINPATH}/env perl"
-PERL:class-nativesdk = "${USRBINPATH}/env perl"
-
-CACHED_CONFIGUREVARS += "ac_cv_path_PERL='${PERL}'"
+SRC_URI[sha256sum] = "397767d4db3018dd4440825b60c64258b636eaf6bf99ac8b0897f06c89310acd"
 
 do_install:append () {
     install -d ${D}${datadir}
+    sed -i -e 's@^#!.*perl$@#!/usr/bin/env perl@' ${D}/${bindir}/*
 }
 
 BBCLASSEXTEND = "native nativesdk"

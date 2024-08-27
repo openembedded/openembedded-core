@@ -1,7 +1,7 @@
-From a860b28069785aa5bf2fa9b671287de9af5004ff Mon Sep 17 00:00:00 2001
+From 839dca38cf24e70c7f0e20015d55aa8e543dd403 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Bj=C3=B6rn=20Stenberg?= <bjst@enea.com>
 Date: Wed, 19 Dec 2012 17:18:27 +0100
-Subject: [PATCH] Add a new distro feature "ptest".
+Subject: [PATCH 4/6] Add a new distro feature "ptest".
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -11,13 +11,12 @@ be run separately.
 
 Signed-off-by: Björn Stenberg <bjst@enea.com>
 Upstream-Status: Pending
-
 ---
  lib/am/check.am | 11 +++++++++--
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/lib/am/check.am b/lib/am/check.am
-index e0db651..de137fa 100644
+index e51a771..070e2da 100644
 --- a/lib/am/check.am
 +++ b/lib/am/check.am
 @@ -41,7 +41,7 @@ am__tty_colors = { \
@@ -29,7 +28,7 @@ index e0db651..de137fa 100644
  
  if !%?SERIAL_TESTS%
  
-@@ -466,7 +466,14 @@ else %?SERIAL_TESTS%
+@@ -520,7 +520,14 @@ else %?SERIAL_TESTS%
  
  ## Obsolescent serial testsuite driver.
  
@@ -45,3 +44,6 @@ index e0db651..de137fa 100644
  	@failed=0; all=0; xfail=0; xpass=0; skip=0; \
  	srcdir=$(srcdir); export srcdir; \
  ## Make sure Solaris VPATH-expands all members of this list, even
+-- 
+2.39.2
+
