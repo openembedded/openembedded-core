@@ -54,8 +54,6 @@ FAKEROOT_QA = "host-user-contaminated"
 FAKEROOT_QA[doc] = "QA tests which need to run under fakeroot. If any \
 enabled tests are listed here, the do_package_qa task will run under fakeroot."
 
-ALL_QA = "${WARN_QA} ${ERROR_QA}"
-
 UNKNOWN_CONFIGURE_OPT_IGNORE ?= "--enable-nls --disable-nls --disable-silent-rules --disable-dependency-tracking --disable-static"
 
 # This is a list of directories that are expected to be empty.
@@ -1083,6 +1081,25 @@ def package_qa_check_missing_update_alternatives(pn, d):
         if d.getVar('ALTERNATIVE:%s' % pkg) and not bb.data.inherits_class('update-alternatives', d):
             oe.qa.handle_error("missing-update-alternatives", "%s: recipe defines ALTERNATIVE:%s but doesn't inherit update-alternatives. This might fail during do_rootfs later!" % (pn, pkg), d)
 
+def parse_test_matrix(matrix_name, skip, d):
+        testmatrix = d.getVarFlags(matrix_name) or {}
+        g = globals()
+        checks = []
+        for w in (d.getVar("WARN_QA") or "").split():
+            if w in skip:
+               continue
+            if w in testmatrix and testmatrix[w] in g:
+                checks.append(g[testmatrix[w]])
+
+        for e in (d.getVar("ERROR_QA") or "").split():
+            if e in skip:
+               continue
+            if e in testmatrix and testmatrix[e] in g:
+                checks.append(g[testmatrix[e]])
+        return checks
+parse_test_matrix[vardepsexclude] = "ERROR_QA WARN_QA"
+
+
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
     import subprocess
@@ -1138,23 +1155,6 @@ python do_package_qa () {
     for dep in taskdepdata:
         taskdeps.add(taskdepdata[dep][0])
 
-    def parse_test_matrix(matrix_name):
-        testmatrix = d.getVarFlags(matrix_name) or {}
-        g = globals()
-        checks = []
-        for w in (d.getVar("WARN_QA") or "").split():
-            if w in skip:
-               continue
-            if w in testmatrix and testmatrix[w] in g:
-                checks.append(g[testmatrix[w]])
-
-        for e in (d.getVar("ERROR_QA") or "").split():
-            if e in skip:
-               continue
-            if e in testmatrix and testmatrix[e] in g:
-                checks.append(g[testmatrix[e]])
-        return checks
-
     for package in packages:
         skip = set((d.getVar('INSANE_SKIP') or "").split() +
                    (d.getVar('INSANE_SKIP:' + package) or "").split())
@@ -1167,22 +1167,21 @@ python do_package_qa () {
             oe.qa.handle_error("pkgname",
                     "%s doesn't match the [a-z0-9.+-]+ regex" % package, d)
 
-        checks = parse_test_matrix("QAPATHTEST")
+        checks = parse_test_matrix("QAPATHTEST", skip, d)
         package_qa_walk(checks, package, d)
 
-        checks = parse_test_matrix("QAPKGTEST")
+        checks = parse_test_matrix("QAPKGTEST", skip, d)
         for func in checks:
             func(package, d)
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
         package_qa_check_deps(package, pkgdest, d)
 
-    checks = parse_test_matrix("QARECIPETEST")
+    checks = parse_test_matrix("QARECIPETEST", skip, d)
     for func in checks:
         func(pn, d)
 
-    if 'libdir' in d.getVar("ALL_QA").split():
-        package_qa_check_libdir(d)
+    package_qa_check_libdir(d)
 
     oe.qa.exit_if_errors(d)
 }
@@ -1200,6 +1199,10 @@ python() {
     pkgs = (d.getVar('PACKAGES') or '').split()
     for pkg in pkgs:
         d.appendVarFlag("do_package_qa", "vardeps", " INSANE_SKIP:{}".format(pkg))
+    funcs = d.getVarFlags("QAPATHTEST")
+    funcs.update(d.getVarFlags("QAPKGTEST"))
+    funcs.update(d.getVarFlags("QARECIPETEST"))
+    d.appendVarFlag("do_package_qa", "vardeps", " ".join(funcs.values()))
 }
 
 SSTATETASKS += "do_package_qa"
@@ -1297,7 +1300,9 @@ python do_qa_patch() {
         return False
 
     srcdir = d.getVar('S')
-    if not bb.utils.contains('DISTRO_FEATURES', 'ptest', True, False, d) or not bb.utils.contains('ALL_QA', 'unimplemented-ptest', True, False, d):
+    if not bb.utils.contains('DISTRO_FEATURES', 'ptest', True, False, d):
+        pass
+    elif not (bb.utils.contains('ERROR_QA', 'unimplemented-ptest', True, False, d) or bb.utils.contains('WARN_QA', 'unimplemented-ptest', True, False, d)):
         pass
     elif bb.data.inherits_class('ptest', d):
         bb.note("Package %s QA: skipping unimplemented-ptest: ptest implementation detected" % d.getVar('PN'))
@@ -1496,8 +1501,7 @@ do_unpack[postfuncs] += "do_qa_unpack"
 python () {
     import re
 
-    tests = d.getVar('ALL_QA').split()
-    if "desktop" in tests:
+    if bb.utils.contains('ERROR_QA', 'desktop', True, False, d) or bb.utils.contains('WARN_QA', 'desktop', True, False, d):
         d.appendVar("PACKAGE_DEPENDS", " desktop-file-utils-native")
 
     ###########################################################################
@@ -1547,11 +1551,10 @@ python () {
         oe.qa.handle_error("pkgvarcheck", "recipe uses DEPENDS:${PN}, should use DEPENDS", d)
 
     # virtual/ is meaningless for these variables
-    if "virtual-slash" in (d.getVar("ALL_QA") or "").split():
-        for k in ['RDEPENDS', 'RPROVIDES']:
-            for var in bb.utils.explode_deps(d.getVar(k + ':' + pn) or ""):
-                if var.startswith("virtual/"):
-                    oe.qa.handle_error("virtual-slash", "%s is set to %s but the substring 'virtual/' holds no meaning in this context. It only works for build time dependencies, not runtime ones. It is suggested to use 'VIRTUAL-RUNTIME_' variables instead." % (k, var), d)
+    for k in ['RDEPENDS', 'RPROVIDES']:
+        for var in bb.utils.explode_deps(d.getVar(k + ':' + pn) or ""):
+            if var.startswith("virtual/"):
+                oe.qa.handle_error("virtual-slash", "%s is set to %s but the substring 'virtual/' holds no meaning in this context. It only works for build time dependencies, not runtime ones. It is suggested to use 'VIRTUAL-RUNTIME_' variables instead." % (k, var), d)
 
     issues = []
     if (d.getVar('PACKAGES') or "").split():
@@ -1561,8 +1564,7 @@ python () {
             if d.getVar(var, False):
                 issues.append(var)
 
-        fakeroot_tests = d.getVar('FAKEROOT_QA').split()
-        if set(tests) & set(fakeroot_tests):
+        if bb.utils.contains('ERROR_QA', 'host-user-contaminated', True, False, d) or bb.utils.contains('WARN_QA', 'host-user-contaminated', True, False, d):
             d.setVarFlag('do_package_qa', 'fakeroot', '1')
             d.appendVarFlag('do_package_qa', 'depends', ' virtual/fakeroot-native:do_populate_sysroot')
     else:
