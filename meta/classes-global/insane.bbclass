@@ -782,21 +782,12 @@ def qa_check_staged(path,d):
             if not skip_shebang_size:
                 package_qa_check_shebang_size(path, "", d, None)
 
-
-
-# Run all recipe-wide warnfuncs and errorfuncs
-def package_qa_recipe(warnfuncs, errorfuncs, pn, d):
-    for func in warnfuncs:
-        func(pn, d)
-    for func in errorfuncs:
-        func(pn, d)
-
 def prepopulate_objdump_p(elf, d):
     output = elf.run_objdump("-p", d)
     return (elf.name, output)
 
 # Walk over all files in a directory and call func
-def package_qa_walk(warnfuncs, errorfuncs, package, d):
+def package_qa_walk(checkfuncs, package, d):
     elves = {}
     for path in pkgfiles[package]:
             elf = None
@@ -817,9 +808,7 @@ def package_qa_walk(warnfuncs, errorfuncs, package, d):
     for path in pkgfiles[package]:
             if path in elves:
                 elves[path].open()
-            for func in warnfuncs:
-                func(path, package, d, elves.get(path))
-            for func in errorfuncs:
+            for func in checkfuncs:
                 func(path, package, d, elves.get(path))
             if path in elves:
                 elves[path].close()
@@ -1007,7 +996,7 @@ def package_qa_check_unlisted_pkg_lics(package, d):
                                "listed in LICENSE" % (package, ' '.join(unlisted)), d)
     obsolete = set(oe.license.obsolete_license_list()) & package_lics - recipe_lics_set
     if obsolete:
-        oe.qa.handle_error(messages, "obsolete-license",
+        oe.qa.handle_error("obsolete-license",
                                "LICENSE:%s includes obsolete licenses %s" % (package, ' '.join(obsolete)), d)
 
 QAPKGTEST[empty-dirs] = "package_qa_check_empty_dirs"
@@ -1152,20 +1141,19 @@ python do_package_qa () {
     def parse_test_matrix(matrix_name):
         testmatrix = d.getVarFlags(matrix_name) or {}
         g = globals()
-        warnchecks = []
+        checks = []
         for w in (d.getVar("WARN_QA") or "").split():
             if w in skip:
                continue
             if w in testmatrix and testmatrix[w] in g:
-                warnchecks.append(g[testmatrix[w]])
+                checks.append(g[testmatrix[w]])
 
-        errorchecks = []
         for e in (d.getVar("ERROR_QA") or "").split():
             if e in skip:
                continue
             if e in testmatrix and testmatrix[e] in g:
-                errorchecks.append(g[testmatrix[e]])
-        return warnchecks, errorchecks
+                checks.append(g[testmatrix[e]])
+        return checks
 
     for package in packages:
         skip = set((d.getVar('INSANE_SKIP') or "").split() +
@@ -1179,20 +1167,19 @@ python do_package_qa () {
             oe.qa.handle_error("pkgname",
                     "%s doesn't match the [a-z0-9.+-]+ regex" % package, d)
 
-        warn_checks, error_checks = parse_test_matrix("QAPATHTEST")
-        package_qa_walk(warn_checks, error_checks, package, d)
+        checks = parse_test_matrix("QAPATHTEST")
+        package_qa_walk(checks, package, d)
 
-        warn_checks, error_checks = parse_test_matrix("QAPKGTEST")
-        for func in warn_checks:
-            func(package, d)
-        for func in error_checks:
+        checks = parse_test_matrix("QAPKGTEST")
+        for func in checks:
             func(package, d)
 
         package_qa_check_rdepends(package, pkgdest, skip, taskdeps, packages, d)
         package_qa_check_deps(package, pkgdest, d)
 
-    warn_checks, error_checks = parse_test_matrix("QARECIPETEST")
-    package_qa_recipe(warn_checks, error_checks, pn, d)
+    checks = parse_test_matrix("QARECIPETEST")
+    for func in checks:
+        func(pn, d)
 
     if 'libdir' in d.getVar("ALL_QA").split():
         package_qa_check_libdir(d)
