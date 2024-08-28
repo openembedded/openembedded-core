@@ -789,9 +789,8 @@ def qa_check_staged(path,d):
             if not skip_shebang_size:
                 errors = {}
                 package_qa_check_shebang_size(path, "", d, None, errors)
-                for e in errors:
-                    oe.qa.handle_error(e, errors[e], d)
-
+                if "shebang-size" in errors:
+                    oe.qa.handle_error("shebang-size", errors["shebang-size"], d)
 
 # Run all package-wide warnfuncs and errorfuncs
 def package_qa_package(warnfuncs, errorfuncs, package, d):
