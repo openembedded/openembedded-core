@@ -156,7 +156,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "60b5abcc986d1660637e913a87e1413c"
+WHENCE_CHKSUM  = "5d402bd7c43dd2c2835b81bf872aa127"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -237,6 +237,7 @@ PE = "1"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz \
+  file://0001-qcom-vpu-restore-compatibility-with-kernels-before-6.patch \
 "
 
 BBCLASSEXTEND = "devupstream:target"

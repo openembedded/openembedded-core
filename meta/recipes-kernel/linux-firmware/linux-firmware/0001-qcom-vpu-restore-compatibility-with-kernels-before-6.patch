@@ -1,0 +1,35 @@
+From 4728fcc52fdf311048f41766aa27cdf5a4a9e7ad Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 28 Aug 2024 09:01:14 +0300
+Subject: [PATCH] qcom: vpu: restore compatibility with kernels before 6.6
+
+Linux kernels before 6.6 used qcom/vpu-1.0/venus.mdt as a firmware
+filename for Qualcomm SM8250 devices. Commit 36db650dae03 ("qcom: update
+path for video firmware for vpu-1/2/3.0") moved the VPU firmware, added
+the venus.mbn compatibility symlink, but at the same time it dropped
+the venus.mdt symlink. Bring the historical name back to restore
+compatibility with kernels older than 6.6.
+
+Fixes: 36db650dae03 ("qcom: update path for video firmware for vpu-1/2/3.0")
+Cc: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Upstream-Status: Submitted [https://lore.kernel.org/linux-firmware/20240828060831.34519-1-dmitry.baryshkov@linaro.org]
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ WHENCE | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/WHENCE b/WHENCE
+index 06c3c6fff673..4d9cd340a9dd 100644
+--- a/WHENCE
++++ b/WHENCE
+@@ -5974,6 +5974,7 @@ Version: VIDEO.VE.6.0-00049-PROD-1
+ 
+ File: qcom/vpu/vpu20_p4.mbn
+ Link: qcom/vpu-1.0/venus.mbn -> ../vpu/vpu20_p4.mbn
++Link: qcom/vpu-1.0/venus.mdt -> ../vpu/vpu20_p4.mbn
+ 
+ Version: VIDEO.VPU.1.0-00087-PROD-1
+ 
+-- 
+2.45.2
+
