@@ -62,7 +62,7 @@ do_install_ptest () {
 
 WARN_QA:append = " internal-solver-deprecation"
 QARECIPETEST[internal-solver-deprecation] = "qa_check_solver_deprecation"
-def qa_check_solver_deprecation (pn, d, messages):
+def qa_check_solver_deprecation (pn, d):
     pkgconfig = (d.getVar("PACKAGECONFIG") or "").split()
 
     if "libsolv" not in pkgconfig:

@@ -215,12 +215,6 @@ def handle_error(error_class, error_msg, d):
     return True
 handle_error.visitorcode = handle_error_visitorcode
 
-def add_message(messages, section, new_msg):
-    if section not in messages:
-        messages[section] = new_msg
-    else:
-        messages[section] = messages[section] + "\n" + new_msg
-
 def exit_with_message_if_errors(message, d):
     qa_fatal_errors = bb.utils.to_boolean(d.getVar("QA_ERRORS_FOUND"), False)
     if qa_fatal_errors:
