@@ -363,6 +363,7 @@ def package_qa_check_arch(path,name,d, elf):
     elif not ((littleendian == elf.isLittleEndian()) or is_bpf):
         oe.qa.handle_error("arch", "Endiannes did not match (%d, expected %d) in %s" % \
                  (elf.isLittleEndian(), littleendian, package_qa_clean_path(path, d, name)), d)
+package_qa_check_arch[vardepsexclude] = "DEFAULTTUNE"
 
 QAPATHTEST[desktop] = "package_qa_check_desktop"
 def package_qa_check_desktop(path, name, d, elf):
@@ -618,6 +619,7 @@ def check_32bit_symbols(path, packagename, d, elf):
                 for sym in usedapis:
                     oe.qa.handle_error('32bit-time', msgformat % sym, d)
                 oe.qa.handle_error('32bit-time', 'Suppress with INSANE_SKIP = "32bit-time"', d)
+check_32bit_symbols[vardepsexclude] = "OVERRIDES"
 
 # Check license variables
 do_populate_lic[postfuncs] += "populate_lic_qa_checksum"
