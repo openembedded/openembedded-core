@@ -1,0 +1,32 @@
+From 47f9d88ca5107d1814ecfc7faf6d02d1140978a8 Mon Sep 17 00:00:00 2001
+From: Alexandre Bard <alexandre.bard@netmodule.com>
+Date: Wed, 3 Jul 2024 15:01:22 +0200
+Subject: [PATCH] Fix build for linux 5.10.220
+
+The commit previously integrated is 5.11 has now been backported to
+5.10.y branch.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.10.y&id=1aecdaa7e2c6619a7d2c0a81c8f5c06e52f870f3
+
+Upstream-Status: Backport [https://github.com/cryptodev-linux/cryptodev-linux/commit/157a624d7a892ea5fb2df4bbd4e71c008adbecb7]
+Signed-off-by: Hugo SIMELIERE <hsimeliere.opensource@witekio.com>
+---
+ ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ioctl.c b/ioctl.c
+index 95481d4..11fa27a 100644
+--- a/ioctl.c
++++ b/ioctl.c
+@@ -871,7 +871,7 @@ cryptodev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg_)
+ 		if (unlikely(ret)) {
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 17, 0))
+ 			sys_close(fd);
+-#elif (LINUX_VERSION_CODE < KERNEL_VERSION(5, 11, 0))
++#elif (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 220))
+ 			ksys_close(fd);
+ #else
+ 			close_fd(fd);
+-- 
+2.46.0
+
