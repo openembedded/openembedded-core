@@ -474,6 +474,8 @@ TCLIBCAPPEND = \"\"
 MACHINE = \"qemuarm\"
 OLDEST_KERNEL = \"3.3.0\"
 BB_SIGNATURE_HANDLER = "OEBasicHash"
+ERROR_QA:append = " somenewoption"
+WARN_QA:append = " someotheroption"
 """
         self.sstate_common_samesigs(configA, configB, allarch=True)
 
