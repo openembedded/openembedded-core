@@ -1295,6 +1295,10 @@ to your build configuration.
                     elif drive_type.startswith("/dev/hd"):
                         logger.info('Using ide drive')
                         vm_drive = "-drive file=%s,format=%s" % (self.rootfs, rootfs_format)
+                    elif drive_type.startswith("/dev/mmcblk"):
+                        logger.info('Using sdcard drive')
+                        vm_drive = '-drive id=sdcard0,if=none,file=%s,format=%s -device sdhci-pci -device sd-card,drive=sdcard0' \
+                                    % (self.rootfs, rootfs_format)
                     elif drive_type.startswith("/dev/vdb"):
                         logger.info('Using block virtio drive');
                         vm_drive = '-drive id=disk0,file=%s,if=none,format=%s -device virtio-blk-device,drive=disk0%s' \
