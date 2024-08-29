@@ -8,7 +8,7 @@ Signed-off-by: Yash Shinde <Yash.Shinde@windriver.com>
 diff --git a/compiler/rustc_errors/src/markdown/tests/term.rs b/compiler/rustc_errors/src/markdown/tests/term.rs
 --- a/compiler/rustc_errors/src/markdown/tests/term.rs
 +++ b/compiler/rustc_errors/src/markdown/tests/term.rs
-@@ -60,6 +60,7 @@
+@@ -61,6 +61,7 @@ fn test_wrapping_write() {
  }
 
  #[test]
@@ -19,31 +19,30 @@ diff --git a/compiler/rustc_errors/src/markdown/tests/term.rs b/compiler/rustc_e
 diff --git a/compiler/rustc_interface/src/tests.rs b/compiler/rustc_interface/src/tests.rs
 --- a/compiler/rustc_interface/src/tests.rs
 +++ b/compiler/rustc_interface/src/tests.rs
-@@ -116,6 +116,7 @@
+@@ -137,6 +137,7 @@ fn assert_non_crate_hash_different(x: &Options, y: &Options) {
 
  // When the user supplies --test we should implicitly supply --cfg test
  #[test]
 +#[ignore]
  fn test_switch_implies_cfg_test() {
-     rustc_span::create_default_session_globals_then(|| {
-         let matches = optgroups().parse(&["--test".to_string()]).unwrap();
-@@ -127,6 +128,7 @@
+     sess_and_cfg(&["--test"], |_sess, cfg| {
+         assert!(cfg.contains(&(sym::test, None)));
+@@ -145,6 +146,7 @@ fn test_switch_implies_cfg_test() {
 
  // When the user supplies --test and --cfg test, don't implicitly add another --cfg test
  #[test]
 +#[ignore]
  fn test_switch_implies_cfg_test_unless_cfg_test() {
-     rustc_span::create_default_session_globals_then(|| {
-         let matches = optgroups().parse(&["--test".to_string(), "--cfg=test".to_string()]).unwrap();
-@@ -139,6 +141,7 @@
+     sess_and_cfg(&["--test", "--cfg=test"], |_sess, cfg| {
+         let mut test_items = cfg.iter().filter(|&&(name, _)| name == sym::test);
+@@ -154,6 +156,7 @@ fn test_switch_implies_cfg_test_unless_cfg_test() {
  }
 
  #[test]
 +#[ignore]
  fn test_can_print_warnings() {
-     rustc_span::create_default_session_globals_then(|| {
-         let matches = optgroups().parse(&["-Awarnings".to_string()]).unwrap();
-
+     sess_and_cfg(&["-Awarnings"], |sess, _cfg| {
+         assert!(!sess.dcx().can_emit_warnings());
 diff --git a/library/test/src/stats/tests.rs b/library/test/src/stats/tests.rs
 --- a/library/test/src/stats/tests.rs
 +++ b/library/test/src/stats/tests.rs
@@ -59,7 +58,7 @@ diff --git a/library/std/src/io/buffered/tests.rs b/library/std/src/io/buffered/
 index 35a5291a347..5f2858d2505 100644
 --- a/library/std/src/io/buffered/tests.rs
 +++ b/library/std/src/io/buffered/tests.rs
-@@ -485,6 +485,7 @@ fn flush(&mut self) -> io::Result<()> {
+@@ -488,6 +488,7 @@ fn flush(&mut self) -> io::Result<()> {
  }
 
  #[test]
@@ -187,7 +186,7 @@ index 1786a3c09ff..9dcead7092b 100644
  fn test_mutex_arc_poison() {
      let arc = Arc::new(Mutex::new(1));
      assert!(!arc.is_poisoned());
-@@ -205,6 +209,7 @@ fn test_mutex_arc_nested() {
+@@ -220,6 +220,7 @@ fn test_mutex_arc_nested() {
  }
 
  #[test]
@@ -199,7 +198,7 @@ diff --git a/library/std/src/sync/rwlock/tests.rs b/library/std/src/sync/rwlock/
 index 1a9d3d3f12f..0a9cfc48806 100644
 --- a/library/std/src/sync/rwlock/tests.rs
 +++ b/library/std/src/sync/rwlock/tests.rs
-@@ -44,6 +44,7 @@ fn frob() {
+@@ -47,6 +47,7 @@ fn frob() {
  }
 
  #[test]
@@ -207,7 +206,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_rw_arc_poison_wr() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -56,6 +57,7 @@ fn test_rw_arc_poison_wr() {
+@@ -72,6 +73,7 @@ fn test_rw_arc_poison_mapped_w_r() {
  }
 
  #[test]
@@ -215,7 +214,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_rw_arc_poison_ww() {
      let arc = Arc::new(RwLock::new(1));
      assert!(!arc.is_poisoned());
-@@ -70,6 +72,7 @@ fn test_rw_arc_poison_ww() {
+@@ -100,6 +102,7 @@ fn test_rw_arc_poison_mapped_w_w() {
  }
 
  #[test]
@@ -223,7 +222,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_rw_arc_no_poison_rr() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -127,6 +127,7 @@
+@@ -127,6 +130,7 @@ fn test_rw_arc_no_poison_mapped_r_r() {
  }
 
  #[test]
@@ -231,7 +230,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_rw_arc_no_poison_rw() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -133,6 +137,7 @@ fn test_rw_arc() {
+@@ -192,6 +196,7 @@ fn test_rw_arc() {
  }
 
  #[test]
@@ -239,7 +238,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_rw_arc_access_in_unwind() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -206,6 +211,7 @@ fn drop(&mut self) {
+@@ -275,6 +280,7 @@ fn drop(&mut self) {
  }
 
  #[test]
@@ -247,7 +246,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_into_inner_poison() {
      let m = Arc::new(RwLock::new(NonCopy(10)));
      let m2 = m.clone();
-@@ -230,6 +236,7 @@ fn test_get_mut() {
+@@ -299,6 +305,7 @@ fn test_get_mut() {
  }
 
  #[test]
@@ -279,7 +278,7 @@ diff --git a/library/std/src/thread/tests.rs b/library/std/src/thread/tests.rs
 index 5d6b9e94ee9..a5aacb2eb87 100644
 --- a/library/std/src/thread/tests.rs
 +++ b/library/std/src/thread/tests.rs
-@@ -115,6 +115,7 @@ fn test_is_finished() {
+@@ -116,6 +116,7 @@ fn test_is_finished() {
  }
 
  #[test]
@@ -287,7 +286,7 @@ index 5d6b9e94ee9..a5aacb2eb87 100644
  fn test_join_panic() {
      match thread::spawn(move || panic!()).join() {
          result::Result::Err(_) => (),
-@@ -217,6 +218,7 @@ fn test_simple_newsched_spawn() {
+@@ -218,6 +219,7 @@ fn test_simple_newsched_spawn() {
  }
 
  #[test]
@@ -295,7 +294,7 @@ index 5d6b9e94ee9..a5aacb2eb87 100644
  fn test_try_panic_message_string_literal() {
      match thread::spawn(move || {
          panic!("static string");
-@@ -233,6 +235,7 @@ fn test_try_panic_message_string_literal() {
+@@ -234,6 +236,7 @@ fn test_try_panic_message_string_literal() {
  }
 
  #[test]
@@ -303,7 +302,7 @@ index 5d6b9e94ee9..a5aacb2eb87 100644
  fn test_try_panic_any_message_owned_str() {
      match thread::spawn(move || {
          panic_any("owned string".to_string());
-@@ -249,6 +252,7 @@ fn test_try_panic_any_message_owned_str() {
+@@ -250,6 +253,7 @@ fn test_try_panic_any_message_owned_str() {
  }
 
  #[test]
@@ -311,7 +310,7 @@ index 5d6b9e94ee9..a5aacb2eb87 100644
  fn test_try_panic_any_message_any() {
      match thread::spawn(move || {
          panic_any(Box::new(413u16) as Box<dyn Any + Send>);
-@@ -267,6 +271,7 @@ fn test_try_panic_any_message_any() {
+@@ -268,6 +272,7 @@ fn test_try_panic_any_message_any() {
  }
 
  #[test]
@@ -363,10 +362,10 @@ diff --git a/library/std/src/sync/mutex/tests.rs b/library/std/src/sync/mutex/te
  fn panic_while_mapping_unlocked_poison() {
      let lock = Mutex::new(());
 
-diff --git a/
+diff --git a/library/std/src/sync/rwlock/tests.rs b/library/std/src/sync/rwlock/tests.rs
 --- a/library/std/src/sync/rwlock/tests.rs
 +++ b/library/std/src/sync/rwlock/tests.rs
-@@ -60,6 +60,7 @@
+@@ -59,6 +59,7 @@ fn test_rw_arc_poison_wr() {
  }
 
  #[test]
@@ -374,7 +373,7 @@ diff --git a/
  fn test_rw_arc_poison_mapped_w_r() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -88,6 +89,7 @@
+@@ -86,6 +87,7 @@ fn test_rw_arc_poison_ww() {
  }
 
  #[test]
@@ -382,7 +381,7 @@ diff --git a/
  fn test_rw_arc_poison_mapped_w_w() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -438,6 +440,7 @@
+@@ -431,6 +433,7 @@ fn panic_while_mapping_read_unlocked_no_poison() {
  }
 
  #[test]
@@ -390,3 +389,15 @@ diff --git a/
  fn panic_while_mapping_write_unlocked_poison() {
      let lock = RwLock::new(());
 
+diff --git a/library/core/benches/num/int_log/mod.rs b/library/core/benches/num/int_log/mod.rs
+index 3807cd5d76c..018c5c04456 100644
+--- a/library/core/benches/num/int_log/mod.rs
++++ b/library/core/benches/num/int_log/mod.rs
+@@ -98,6 +98,7 @@ fn $random_small(bench: &mut Bencher) {
+         }
+
+         #[bench]
++        #[ignore]
+         fn $geometric(bench: &mut Bencher) {
+             let bases: [$t; 16] = [2, 3, 4, 5, 7, 8, 9, 15, 16, 17, 31, 32, 33, 63, 64, 65];
+             let base_and_numbers: Vec<($t, Vec<$t>)> = bases
