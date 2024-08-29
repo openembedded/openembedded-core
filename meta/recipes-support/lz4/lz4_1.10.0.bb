@@ -23,7 +23,7 @@ inherit ptest
 
 CVE_STATUS[CVE-2014-4715] = "fixed-version: Fixed in r118, which is larger than the current version."
 
-EXTRA_OEMAKE = "DESTDIR=${D}"
+EXTRA_OEMAKE = "DESTDIR=${D} BUILD_STATIC=no"
 
 do_install() {
 	oe_runmake install
