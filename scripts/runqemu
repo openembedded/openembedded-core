@@ -1487,7 +1487,7 @@ to your build configuration.
         # If no serial or serialtcp options were specified, only ttyS0 is created
         # and sysvinit shows an error trying to enable ttyS1:
         #     INIT: Id "S1" respawning too fast: disabled for 5 minutes
-        serial_num = len(re.findall("-serial", self.qemu_opt))
+        serial_num = len(re.findall("(^| )-serial ", self.qemu_opt))
 
         # Assume if the user passed serial options, they know what they want
         # and pad to two devices
@@ -1507,7 +1507,7 @@ to your build configuration.
 
                 self.qemu_opt += " %s" % self.get("QB_SERIAL_OPT")
 
-        serial_num = len(re.findall("-serial", self.qemu_opt))
+        serial_num = len(re.findall("(^| )-serial ", self.qemu_opt))
         if serial_num < 2:
             self.qemu_opt += " -serial null"
 
