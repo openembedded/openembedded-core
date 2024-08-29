@@ -72,6 +72,7 @@ LICENSE = "\
     & Firmware-ti-keystone \
     & Firmware-ueagle-atm4-firmware \
     & Firmware-via_vt6656 \
+    & Firmware-wfx \
     & Firmware-wl1251 \
     & Firmware-xc4000 \
     & Firmware-xc5000 \
@@ -152,6 +153,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.xc4000;md5=0ff51d2dc49fce04814c9155081092f0 \
                     file://LICENCE.xc5000;md5=1e170c13175323c32c7f4d0998d53f66 \
                     file://LICENCE.xc5000c;md5=12b02efa3049db65d524aeb418dd87ca \
+                    file://wfx/LICENCE.wf200;md5=4d1beff00d902c05c9c7e95a5d8eb52d \
                     file://WHENCE;md5=${WHENCE_CHKSUM} \
                     "
 # WHENCE checksum is defined separately to ease overriding it if
@@ -227,6 +229,7 @@ NO_GENERIC_LICENSE[Firmware-ti-connectivity] = "LICENCE.ti-connectivity"
 NO_GENERIC_LICENSE[Firmware-ti-keystone] = "LICENCE.ti-keystone"
 NO_GENERIC_LICENSE[Firmware-ueagle-atm4-firmware] = "LICENCE.ueagle-atm4-firmware"
 NO_GENERIC_LICENSE[Firmware-via_vt6656] = "LICENCE.via_vt6656"
+NO_GENERIC_LICENSE[Firmware-wfx] = "wfx/LICENCE.wf200"
 NO_GENERIC_LICENSE[Firmware-wl1251] = "LICENCE.wl1251"
 NO_GENERIC_LICENSE[Firmware-xc4000] = "LICENCE.xc4000"
 NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
@@ -263,6 +266,7 @@ do_compile() {
 do_install() {
         oe_runmake 'DESTDIR=${D}' 'FIRMWAREDIR=${nonarch_base_libdir}/firmware' ${PACKAGECONFIG_CONFARGS}
         cp LICEN[CS]E.* WHENCE ${D}${nonarch_base_libdir}/firmware/
+        cp wfx/LICEN[CS]E.* ${D}${nonarch_base_libdir}/firmware/wfx/
 }
 
 
@@ -407,6 +411,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-rockchip-license ${PN}-rockchip-dptx \
              ${PN}-amlogic-vdec-license ${PN}-amlogic-vdec \
              ${PN}-lt9611uxc ${PN}-lontium-license \
+             ${PN}-wfx-license ${PN}-wfx \
              ${PN}-whence-license \
              ${PN}-wl1251-license ${PN}-wl1251 \
              ${PN}-xc4000-license ${PN}-xc4000 \
@@ -892,6 +897,18 @@ RDEPENDS:${PN}-rtl8761 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8822 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8168 += "${PN}-whence-license"
 RDEPENDS:${PN}-rtl-nic += "${PN}-whence-license"
+
+# For Silabs
+LICENSE:${PN}-wfx = "Firmware-wfx"
+LICENSE:${PN}-wfx-license = "Firmware-wfx"
+
+FILES:${PN}-wfx = " \
+  ${nonarch_base_libdir}/firmware/wfx/*.pds         \
+  ${nonarch_base_libdir}/firmware/wfx/*.sec         \
+"
+FILES:${PN}-wfx-license = "${nonarch_base_libdir}/firmware/wfx/LICENCE.wf200"
+
+RDEPENDS:${PN}-wfx += "${PN}-wfx-license"
 
 # For TI wl1251
 LICENSE:${PN}-wl1251 = "Firmware-wl1251"
