@@ -356,8 +356,9 @@ do_uboot_assemble_fitimage() {
 	fi
 
 	if [ -n "${UBOOT_CONFIG}" ]; then
-		unset i j k
+		unset i
 		for config in ${UBOOT_MACHINE}; do
+			unset j k
 			i=$(expr $i + 1);
 			for type in ${UBOOT_CONFIG}; do
 				j=$(expr $j + 1);
