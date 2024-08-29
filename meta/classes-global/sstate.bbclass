@@ -103,7 +103,6 @@ SSTATECREATEFUNCS[vardeps] = "SSTATE_SCAN_FILES"
 SSTATEPOSTCREATEFUNCS = ""
 SSTATEPREINSTFUNCS = ""
 SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
-SSTATEPOSTINSTFUNCS = ""
 EXTRA_STAGING_FIXMES ?= "HOSTTOOLS_DIR"
 
 # Check whether sstate exists for tasks that support sstate and are in the
@@ -352,15 +351,10 @@ def sstate_install(ss, d):
         prepdir(dest)
         bb.utils.rename(src, dest)
 
-    for postinst in (d.getVar('SSTATEPOSTINSTFUNCS') or '').split():
-        # All hooks should run in the SSTATE_INSTDIR
-        bb.build.exec_func(postinst, d, (sstateinst,))
-
     for lock in locks:
         bb.utils.unlockfile(lock)
 
 sstate_install[vardepsexclude] += "SSTATE_ALLOW_OVERLAP_FILES SSTATE_MANMACH SSTATE_MANFILEPREFIX"
-sstate_install[vardeps] += "${SSTATEPOSTINSTFUNCS}"
 
 def sstate_installpkg(ss, d):
     from oe.gpg_sign import get_signer
