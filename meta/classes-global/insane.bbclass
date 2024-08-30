@@ -113,7 +113,6 @@ def package_qa_check_libexec(path,name, d, elf):
 
     if 'libexec' in path.split(os.path.sep):
         oe.qa.handle_error("libexec", "%s: %s is using libexec please relocate to %s" % (name, package_qa_clean_path(path, d, name), libexec), d)
-        return
 
 QAPATHTEST[rpaths] = "package_qa_check_rpath"
 def package_qa_check_rpath(file,name, d, elf):
@@ -932,7 +931,6 @@ def package_qa_check_deps(pkg, pkgdest, d):
 
 QAPKGTEST[usrmerge] = "package_qa_check_usrmerge"
 def package_qa_check_usrmerge(pkg, d):
-
     pkgdest = d.getVar('PKGDEST')
     pkg_dir = pkgdest + os.sep + pkg + os.sep
     merged_dirs = ['bin', 'sbin', 'lib'] + d.getVar('MULTILIB_VARIANTS').split()
@@ -941,7 +939,6 @@ def package_qa_check_usrmerge(pkg, d):
             msg = "%s package is not obeying usrmerge distro feature. /%s should be relocated to /usr." % (pkg, f)
             oe.qa.handle_error("usrmerge", msg, d)
             return
-    return
 
 QAPKGTEST[perllocalpod] = "package_qa_check_perllocalpod"
 def package_qa_check_perllocalpod(pkg, d):
