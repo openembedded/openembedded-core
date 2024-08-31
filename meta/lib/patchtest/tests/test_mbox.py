@@ -9,6 +9,7 @@ import collections
 import parse_shortlog
 import parse_signed_off_by
 import pyparsing
+import re
 import subprocess
 from data import PatchTestInput
 
@@ -82,7 +83,7 @@ class TestMbox(base.Base):
     def test_shortlog_length(self):
         for commit in TestMbox.commits:
             # no reason to re-check on revert shortlogs
-            shortlog = commit.shortlog
+            shortlog = re.sub('^(\[.*?\])+ ', '', commit.shortlog)
             if shortlog.startswith('Revert "'):
                 continue
             l = len(shortlog)
