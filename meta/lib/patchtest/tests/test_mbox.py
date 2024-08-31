@@ -31,7 +31,6 @@ class TestMbox(base.Base):
 
     rexp_detect = pyparsing.Regex('\[\s?YOCTO.*\]')
     rexp_validation = pyparsing.Regex('\[(\s?YOCTO\s?#\s?(\d+)\s?,?)+\]')
-    revert_shortlog_regex = pyparsing.Regex('Revert\s+".*"')
     signoff_prog = parse_signed_off_by.signed_off_by
     revert_shortlog_regex = pyparsing.Regex('Revert\s+".*"')
     maxlength = 90
