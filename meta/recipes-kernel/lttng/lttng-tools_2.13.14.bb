@@ -41,7 +41,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0001-Fix-rotation-destroy-flush-fix-session-daemon-abort-.patch \
            "
 
-SRC_URI[sha256sum] = "ff5f4f00b081dac66092afe8e72b7c790670931cf1c1ee0deaa7f80fbc53883e"
+SRC_URI[sha256sum] = "53bdf7c4ad07dbfe660ee4d9affc63fe44ae59e9a73c6f7a96e0fca140e5adcb"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
