@@ -18,7 +18,7 @@ SRC_URI = "https://alpha.gnu.org/gnu/libtool/libtool-${PV}.tar.gz \
            file://nohardcodepaths.patch \
           "
 
-SRC_URI[sha256sum] = "6a83edafd42d4e2ebdc09579f99ce828d5f932f1738de02495cc8c2884e430ce"
+SRC_URI[sha256sum] = "29275fb45b236d6ff720a433f9cd5f61ea2f52cc3aa2e5f89ba57726bda54793"
 
 inherit autotools texinfo
 EXTRA_AUTORECONF = "--exclude=libtoolize"
