@@ -23,7 +23,7 @@ def headlog():
 
 class TestMbox(base.Base):
 
-    auh_email = 'auh@auh.yoctoproject.org'
+    auh_email = 'auh@yoctoproject.org'
 
     invalids = [pyparsing.Regex("^Upgrade Helper.+"),
                 pyparsing.Regex(auh_email),
@@ -155,5 +155,5 @@ class TestMbox(base.Base):
 
     def test_non_auh_upgrade(self):
         for commit in self.commits:
-            if self.auh_email in commit.payload:
+            if self.auh_email in commit.commit_message:
                 self.fail('Invalid author %s. Resend the series with a valid patch author' % self.auh_email, commit=commit)
