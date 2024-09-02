@@ -25,6 +25,7 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = " \
     https://www.ffmpeg.org/releases/${BP}.tar.xz \
     file://0001-libavcodec-arm-mlpdsp_armv5te-fix-label-format-to-wo.patch \
+    file://0001-configure-improve-check-for-POSIX-ioctl.patch \
 "
 
 SRC_URI[sha256sum] = "8646515b638a3ad303e23af6a3587734447cb8fc0a0c064ecdb8e95c4fd8b389"
