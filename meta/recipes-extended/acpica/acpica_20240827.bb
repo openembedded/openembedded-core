@@ -17,7 +17,7 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 DEPENDS = "m4-native flex-native bison-native"
 
 SRC_URI = "git://github.com/acpica/acpica;protocol=https;branch=master"
-SRCREV = "170fc3076a86777077637f10b05c32ac21ac13aa"
+SRCREV = "e80cbd7b52de20aa8c75bfba9845e9cb61f2e681"
 
 S = "${WORKDIR}/git"
 
