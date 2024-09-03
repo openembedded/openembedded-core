@@ -48,7 +48,7 @@ python do_create_image_spdx() {
 }
 addtask do_create_image_spdx after do_image_complete do_create_rootfs_spdx before do_build
 SSTATETASKS += "do_create_image_spdx"
-SSTATE_SKIP_CREATION:task-combine-image-type-spdx = "1"
+SSTATE_SKIP_CREATION:task-create-image-spdx = "1"
 do_create_image_spdx[sstate-inputdirs] = "${SPDXIMAGEWORK}"
 do_create_image_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_image_spdx[cleandirs] = "${SPDXIMAGEWORK}"
