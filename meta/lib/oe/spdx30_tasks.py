@@ -953,10 +953,12 @@ def collect_build_package_inputs(d, objset, build, packages):
     providers = oe.spdx_common.collect_package_providers(d)
 
     build_deps = set()
+    missing_providers = set()
 
     for name in sorted(packages.keys()):
         if name not in providers:
-            bb.fatal("Unable to find SPDX provider for '%s'" % name)
+            missing_providers.add(name)
+            continue
 
         pkg_name, pkg_hashfn = providers[name]
 
@@ -969,6 +971,11 @@ def collect_build_package_inputs(d, objset, build, packages):
             software_primaryPurpose=oe.spdx30.software_SoftwarePurpose.install,
         )
         build_deps.add(pkg_spdx._id)
+
+    if missing_providers:
+        bb.fatal(
+            f"Unable to find SPDX provider(s) for: {', '.join(sorted(missing_providers))}"
+        )
 
     if build_deps:
         objset.new_scoped_relationship(
