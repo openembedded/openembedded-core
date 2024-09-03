@@ -955,10 +955,6 @@ def modify(args, config, basepath, workspace):
                 f.write('SRCTREECOVEREDTASKS = "do_validate_branches do_kernel_checkout '
                         'do_fetch do_unpack do_kernel_configcheck"\n')
                 f.write('\ndo_patch[noexec] = "1"\n')
-                f.write('\ndo_configure:append() {\n'
-                        '    cp ${B}/.config ${S}/.config.baseline\n'
-                        '    ln -sfT ${B}/.config ${S}/.config.new\n'
-                        '}\n')
                 f.write('\ndo_kernel_configme:prepend() {\n'
                         '    if [ -e ${S}/.config ]; then\n'
                         '        mv ${S}/.config ${S}/.config.old\n'
