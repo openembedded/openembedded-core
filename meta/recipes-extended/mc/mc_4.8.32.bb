@@ -11,7 +11,7 @@ RRECOMMENDS:${PN} = "ncurses-terminfo"
 SRC_URI = "http://ftp.midnight-commander.org/${BPN}-${PV}.tar.bz2 \
            file://nomandate.patch \
            "
-SRC_URI[sha256sum] = "f42f4114ed42f6cf9995f1d896fa6c797ccb36dac57760dda8dd9f78ac462841"
+SRC_URI[sha256sum] = "51a039ebd15d5e442312a7053a4ca28276b7f241050b7714d5bae5362ecd3319"
 
 inherit autotools gettext pkgconfig
 
