@@ -430,6 +430,7 @@ def package_qa_hash_style(path, name, d, elf):
     if has_syms and not sane:
         path = package_qa_clean_path(path, d, name)
         oe.qa.handle_error("ldflags", "File %s in package %s doesn't have GNU_HASH (didn't pass LDFLAGS?)" % (path, name), d)
+package_qa_hash_style[vardepsexclude] = "TCLIBC"
 
 
 QAPATHTEST[buildpaths] = "package_qa_check_buildpaths"
