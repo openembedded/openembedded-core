@@ -717,7 +717,6 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${datadir}/dbus-1/system.d/org.freedesktop.portable1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.oom1.conf \
                 ${datadir}/dbus-1/system.d/org.freedesktop.home1.conf \
-                ${datadir}/mime/packages/io.systemd.xml \
                "
 
 FILES:${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
