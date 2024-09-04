@@ -378,7 +378,6 @@ class SStateHashSameSigs(SStateBase):
         self.write_config("""
 MACHINE = "qemux86"
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
-TCLIBCAPPEND = ""
 BUILD_ARCH = "x86_64"
 BUILD_OS = "linux"
 SDKMACHINE = "x86_64"
@@ -390,7 +389,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         self.write_config("""
 MACHINE = "qemux86"
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
-TCLIBCAPPEND = ""
 BUILD_ARCH = "i686"
 BUILD_OS = "linux"
 SDKMACHINE = "i686"
@@ -426,7 +424,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
 
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-TCLIBCAPPEND = \"\"
 NATIVELSBSTRING = \"DistroA\"
 BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
@@ -434,7 +431,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         bitbake("core-image-weston -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-TCLIBCAPPEND = \"\"
 NATIVELSBSTRING = \"DistroB\"
 BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
@@ -463,14 +459,12 @@ class SStateHashSameSigs2(SStateBase):
 
         configA = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86-64\"
 BB_SIGNATURE_HANDLER = "OEBasicHash"
 """
         #OLDEST_KERNEL is arch specific so set to a different value here for testing
         configB = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemuarm\"
 OLDEST_KERNEL = \"3.3.0\"
 BB_SIGNATURE_HANDLER = "OEBasicHash"
@@ -486,7 +480,6 @@ WARN_QA:append = " someotheroption"
 
         configA = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86-64\"
 require conf/multilib.conf
 MULTILIBS = \"multilib:lib32\"
@@ -495,7 +488,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
 """
         configB = """
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemuarm\"
 require conf/multilib.conf
 MULTILIBS = \"\"
@@ -513,7 +505,6 @@ class SStateHashSameSigs3(SStateBase):
 
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86\"
 require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
@@ -524,7 +515,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86copy\"
 require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
@@ -561,7 +551,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
 
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86\"
 require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
@@ -572,7 +561,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         bitbake("binutils-native  -S none")
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstatesamehash2\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86copy\"
 BB_SIGNATURE_HANDLER = "OEBasicHash"
 """)
@@ -600,7 +588,6 @@ class SStateHashSameSigs4(SStateBase):
 
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash"
-TCLIBCAPPEND = ""
 BB_NUMBER_THREADS = "${@oe.utils.cpu_count()}"
 PARALLEL_MAKE = "-j 1"
 DL_DIR = "${TOPDIR}/download1"
@@ -615,7 +602,6 @@ BB_SIGNATURE_HANDLER = "OEBasicHash"
         bitbake("world meta-toolchain -S none")
         self.write_config("""
 TMPDIR = "${TOPDIR}/tmp-sstatesamehash2"
-TCLIBCAPPEND = ""
 BB_NUMBER_THREADS = "${@oe.utils.cpu_count()+1}"
 PARALLEL_MAKE = "-j 2"
 DL_DIR = "${TOPDIR}/download2"
@@ -726,7 +712,6 @@ class SStateFindSiginfo(SStateBase):
         """
         self.write_config("""
 TMPDIR = \"${TOPDIR}/tmp-sstates-findsiginfo\"
-TCLIBCAPPEND = \"\"
 MACHINE = \"qemux86-64\"
 require conf/multilib.conf
 MULTILIBS = "multilib:lib32"
