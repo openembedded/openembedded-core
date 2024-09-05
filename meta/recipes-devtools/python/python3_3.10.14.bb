@@ -37,6 +37,8 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-Avoid-shebang-overflow-on-python-config.py.patch \
            file://0001-test_storlines-skip-due-to-load-variability.patch \
 	   file://CVE-2024-8088.patch \
+           file://CVE-2024-7592.patch \
+           file://CVE-2024-6232.patch \
            "
 
 SRC_URI:append:class-native = " \
