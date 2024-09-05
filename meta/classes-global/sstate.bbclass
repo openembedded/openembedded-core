@@ -354,7 +354,7 @@ def sstate_install(ss, d):
     for lock in locks:
         bb.utils.unlockfile(lock)
 
-sstate_install[vardepsexclude] += "SSTATE_ALLOW_OVERLAP_FILES SSTATE_MANMACH SSTATE_MANFILEPREFIX"
+sstate_install[vardepsexclude] += "SSTATE_ALLOW_OVERLAP_FILES SSTATE_MANMACH SSTATE_MANFILEPREFIX STAMP"
 
 def sstate_installpkg(ss, d):
     from oe.gpg_sign import get_signer
@@ -724,7 +724,7 @@ def sstate_package(ss, d):
 
     return
 
-sstate_package[vardepsexclude] += "SSTATE_SIG_KEY"
+sstate_package[vardepsexclude] += "SSTATE_SIG_KEY SSTATE_PKG"
 
 def pstaging_fetch(sstatefetch, d):
     import bb.fetch2
