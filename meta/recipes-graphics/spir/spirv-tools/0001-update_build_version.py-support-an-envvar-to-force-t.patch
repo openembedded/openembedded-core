@@ -9,7 +9,7 @@ description instead of resorting to git describe which can change for a
 given commit if multiple lightweight commits point ot it.
 
 Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
-Upstream-Status: Submitted [https://github.com/KhronosGroup/SPIRV-Tools/pull/5758]
+Upstream-Status: Backport [https://github.com/KhronosGroup/SPIRV-Tools/commit/bc4060ed274ad9749c20daced96d6f0518d6418e]
 ---
  utils/update_build_version.py | 9 +++++----
  1 file changed, 5 insertions(+), 4 deletions(-)
