@@ -7,27 +7,18 @@ SECTION = "libs/network"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=c75985e733726beaba57bc5253e96d04"
 
-SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
+SRC_URI = "https://github.com/openssl/openssl/releases/download/openssl-${PV}/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://0001-buildinfo-strip-sysroot-and-debug-prefix-map-from-co.patch \
            file://afalg.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
-           file://CVE-2024-5535_1.patch \
-           file://CVE-2024-5535_2.patch \
-           file://CVE-2024-5535_3.patch \
-           file://CVE-2024-5535_4.patch \
-           file://CVE-2024-5535_5.patch \
-           file://CVE-2024-5535_6.patch \
-           file://CVE-2024-5535_7.patch \
-           file://CVE-2024-5535_8.patch \
-           file://CVE-2024-5535_9.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI[sha256sum] = "eeca035d4dd4e84fc25846d952da6297484afa0650a6f84c682e39df3a4123ca"
+SRC_URI[sha256sum] = "23c666d0edf20f14249b3d8f0368acaee9ab585b09e1de82107c66e1f3ec9533"
 
 inherit lib_package multilib_header multilib_script ptest perlnative
 MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
