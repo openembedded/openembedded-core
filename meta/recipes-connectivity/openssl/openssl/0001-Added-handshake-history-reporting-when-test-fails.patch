@@ -6,6 +6,7 @@ Subject: [PATCH] Added handshake history reporting when test fails
 Upstream-Status: Submitted [https://github.com/openssl/openssl/pull/22481]
 
 Signed-off-by: William Lyu <William.Lyu@windriver.com>
+Signed-off-by: Siddharth Doshi <sdoshi@mvista.com>
 ---
  test/helpers/handshake.c | 139 +++++++++++++++++++++++++++++----------
  test/helpers/handshake.h |  70 +++++++++++++++++++-
@@ -16,13 +17,6 @@ diff --git a/test/helpers/handshake.c b/test/helpers/handshake.c
 index e0422469e4..ae2ad59dd4 100644
 --- a/test/helpers/handshake.c
 +++ b/test/helpers/handshake.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2016-2022 The OpenSSL Project Authors. All Rights Reserved.
-+ * Copyright 2016-2023 The OpenSSL Project Authors. All Rights Reserved.
-  *
-  * Licensed under the Apache License 2.0 (the "License").  You may not use
-  * this file except in compliance with the License.  You can obtain a copy
 @@ -24,6 +24,102 @@
  #include <netinet/sctp.h>
  #endif
