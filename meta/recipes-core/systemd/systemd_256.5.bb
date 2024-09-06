@@ -28,6 +28,7 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0002-implment-systemd-sysv-install-for-OE.patch \
+           file://0003-coredump-set-ProtectHome-to-read-only.patch \
            "
 
 # patches needed by musl
