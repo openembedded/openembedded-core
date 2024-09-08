@@ -330,7 +330,9 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-atheros-license ${PN}-ar5523 ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k ${PN}-ath3k \
              ${PN}-carl9170 \
              ${PN}-qcom-qcm2290-wifi ${PN}-qcom-qrb4210-wifi ${PN}-qcom-sdm845-modem \
-             ${PN}-ar3k-license ${PN}-ar3k ${PN}-ath10k-license ${PN}-ath10k ${PN}-ath11k ${PN}-ath12k ${PN}-qca \
+             ${PN}-ar3k-license ${PN}-ar3k \
+             ${PN}-ath10k-license ${PN}-ath10k-wcn3990 ${PN}-ath10k \
+             ${PN}-ath11k ${PN}-ath12k ${PN}-qca \
              \
              ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
              \
@@ -486,6 +488,7 @@ LICENSE:${PN}-carl9170 = "GPL-2.0-or-later"
 LICENSE:${PN}-ar3k = "Firmware-qualcommAthos_ar3k & Firmware-atheros_firmware"
 LICENSE:${PN}-ar3k-license = "Firmware-qualcommAthos_ar3k"
 LICENSE:${PN}-ath10k = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-wcn3990 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-license = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca = "Firmware-qualcommAthos_ath10k"
 
@@ -497,6 +500,9 @@ FILES:${PN}-ar3k = " \
 FILES:${PN}-ath10k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ath10k"
 FILES:${PN}-ath10k = " \
   ${nonarch_base_libdir}/firmware/ath10k \
+"
+FILES:${PN}-ath10k-wcn3990 = " \
+  ${nonarch_base_libdir}/firmware/ath10k/WCN3990 \
 "
 
 FILES:${PN}-ath11k = " \
@@ -513,6 +519,8 @@ FILES:${PN}-qca = " \
 
 RDEPENDS:${PN}-ar3k += "${PN}-ar3k-license ${PN}-atheros-license"
 RDEPENDS:${PN}-ath10k += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k += "${PN}-ath10k-wcn3990"
+RDEPENDS:${PN}-ath10k-wcn3990 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license"
