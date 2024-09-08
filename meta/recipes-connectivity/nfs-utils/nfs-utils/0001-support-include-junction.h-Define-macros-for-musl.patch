@@ -1,0 +1,46 @@
+From 6f82ffa0e01e88e4e73972cb0125fcb6e78e27cf Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Sun, 8 Sep 2024 09:45:41 +0000
+Subject: [PATCH] support/include/junction.h: Define macros for musl
+
+Fixed 1:
+In file included from cache.c:1217:
+../../support/include/junction.h:128:21: error: expected ';' before 'char'
+  128 | __attribute_malloc__
+      |                     ^
+      |                     ;
+  129 | char            **nfs_dup_string_array(char **array);
+
+Fixed 2:
+junction.c: In function 'junction_set_sticky_bit':
+junction.c:164:39: error: 'ALLPERMS' undeclared (first use in this function)
+  164 |         stb.st_mode &= (unsigned int)~ALLPERMS;
+
+Upstream-Status: Submitted [https://marc.info/?l=linux-nfs&m=172579572428765&w=2]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ support/include/junction.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/support/include/junction.h b/support/include/junction.h
+index 7257d80..d127dd5 100644
+--- a/support/include/junction.h
++++ b/support/include/junction.h
+@@ -26,6 +26,16 @@
+ #ifndef _NFS_JUNCTION_H_
+ #define _NFS_JUNCTION_H_
+ 
++/* For musl, refered to glibc's sys/cdefs.h */
++#ifndef __attribute_malloc__
++#define __attribute_malloc__ __attribute__((__malloc__))
++#endif
++
++/* For musl, refered to glibc's sys/stat.h */
++#ifndef ALLPERMS
++#define ALLPERMS (S_ISUID|S_ISGID|S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO)/* 07777 */
++#endif
++
+ #include <stdint.h>
+ 
+ /*

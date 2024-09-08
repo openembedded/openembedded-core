@@ -1,0 +1,35 @@
+From ad4ec0c40aaea37b8e7ec3e73d7b35cbda2d3841 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Sun, 8 Sep 2024 08:34:28 +0000
+Subject: [PATCH] support/junction/path.c: Fix build for musl
+
+Fixed:
+path.c:164:24: error: implicit declaration of function 'strchrnul'; did you mean 'strchr'? [-Wimplicit-function-declaration]
+[snip]
+
+path.c:239:27: error: 'NAME_MAX' undeclared (first use in this function); did you mean 'AF_MAX'?
+
+Upstream-Status: Submitted [https://marc.info/?l=linux-nfs&m=172579572228762&w=2]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ support/junction/path.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/support/junction/path.c b/support/junction/path.c
+index c25cc52..6e28df3 100644
+--- a/support/junction/path.c
++++ b/support/junction/path.c
+@@ -23,6 +23,12 @@
+  *	http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+  */
+ 
++/* For musl */
++#ifndef _GNU_SOURCE
++#define _GNU_SOURCE
++#endif
++#include <limits.h>
++
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ 

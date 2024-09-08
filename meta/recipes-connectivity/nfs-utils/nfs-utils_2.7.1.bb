@@ -8,7 +8,7 @@ LICENSE = "MIT & GPL-2.0-or-later & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=95f3a93a5c3c7888de623b46ea085a84"
 
 # util-linux for libblkid
-DEPENDS = "libcap libevent util-linux sqlite3 libtirpc"
+DEPENDS = "libcap libevent util-linux sqlite3 libtirpc libxml2"
 RDEPENDS:${PN} = "${PN}-client"
 RRECOMMENDS:${PN} = "kernel-module-nfsd"
 
@@ -31,10 +31,10 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://clang-warnings.patch \
            file://0001-locktest-Makefile.am-Do-not-use-build-flags.patch \
-           file://0001-tools-locktest-Use-intmax_t-to-print-off_t.patch \
-           file://0001-reexport.h-Include-unistd.h-to-compile-with-musl.patch \
+           file://0001-support-include-junction.h-Define-macros-for-musl.patch \
+           file://0001-support-junction-path.c-Fix-build-for-musl.patch \
            "
-SRC_URI[sha256sum] = "01b3b0fb9c7d0bbabf5114c736542030748c788ec2fd9734744201e9b0a1119d"
+SRC_URI[sha256sum] = "885c948a84a58bca4148f459588f9a7369dbb40dcc466f04e455c6b10fd0aa48"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
