@@ -76,6 +76,7 @@ EXTRA_OECONF = "\
     --enable-load-relative \
     --with-pkg-config=pkg-config \
     --with-static-linked-ext \
+    --with-mantype=man \
 "
 
 EXTRA_OECONF:append:libc-musl = "\
