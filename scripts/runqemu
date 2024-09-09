@@ -1192,7 +1192,6 @@ to your build configuration.
                 raise RunQemuError("a new one with sudo.")
 
             gid = os.getgid()
-            uid = os.getuid()
             logger.info("Setting up tap interface under sudo")
             cmd = ('sudo', self.qemuifup, str(gid))
             for _ in range(5):
