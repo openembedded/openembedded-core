@@ -1195,16 +1195,20 @@ to your build configuration.
             uid = os.getuid()
             logger.info("Setting up tap interface under sudo")
             cmd = ('sudo', self.qemuifup, str(gid))
-            try:
-                tap = subprocess.check_output(cmd).decode('utf-8').strip()
-            except subprocess.CalledProcessError as e:
-                logger.error('Setting up tap device failed:\n%s\nRun runqemu-gen-tapdevs to manually create one.' % str(e))
-                sys.exit(1)
-            lockfile = os.path.join(lockdir, tap)
-            self.taplock = lockfile + '.lock'
-            self.acquire_taplock()
-            self.cleantap = True
-            logger.debug('Created tap: %s' % tap)
+            for _ in range(5):
+                try:
+                    tap = subprocess.check_output(cmd).decode('utf-8').strip()
+                except subprocess.CalledProcessError as e:
+                    logger.error('Setting up tap device failed:\n%s\nRun runqemu-gen-tapdevs to manually create one.' % str(e))
+                    sys.exit(1)
+                lockfile = os.path.join(lockdir, tap)
+                self.taplock = lockfile + '.lock'
+                if self.acquire_taplock():
+                    self.cleantap = True
+                    logger.debug('Created tap: %s' % tap)
+                    break
+                else:
+                    tap = None
 
         if not tap:
             logger.error("Failed to setup tap device. Run runqemu-gen-tapdevs to manually create.")
