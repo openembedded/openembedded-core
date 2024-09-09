@@ -1,7 +1,7 @@
-From 9000923c07a68857e8ea32a49bfca660b1d1001a Mon Sep 17 00:00:00 2001
+From 44e24350aae771daa93e5a85378856f91358688f Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 26 Aug 2024 09:55:03 -0700
-Subject: [PATCH BlueZ] Provide GNU basename compatible implementation
+Subject: [PATCH] Provide GNU basename compatible implementation
 
 Call to basename() relies on a GNU extension
 to take a const char * vs a char *. Let's define
@@ -13,65 +13,21 @@ Fixes Issue: https://github.com/bluez/bluez/issues/843
 Upstream-Status: Submitted [https://lore.kernel.org/linux-bluetooth/20240826173844.2918630-1-raj.khem@gmail.com/T/#u]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- Makefile.mesh           | 2 ++
- Makefile.tools          | 3 ++-
- mesh/mesh-config-json.c | 6 ++++--
- mesh/rpl.c              | 3 ++-
- src/shared/util.h       | 7 +++++++
- tools/hex2hcd.c         | 3 ++-
- 6 files changed, 19 insertions(+), 5 deletions(-)
+ configure.ac            | 11 ++++++++++-
+ mesh/mesh-config-json.c |  4 +++-
+ mesh/missing.h          | 21 +++++++++++++++++++++
+ mesh/rpl.c              |  1 +
+ tools/hex2hcd.c         |  1 +
+ tools/missing.h         | 21 +++++++++++++++++++++
+ 6 files changed, 57 insertions(+), 2 deletions(-)
+ create mode 100644 mesh/missing.h
+ create mode 100644 tools/missing.h
 
-Index: bluez-5.77/mesh/mesh-config-json.c
-===================================================================
---- bluez-5.77.orig/mesh/mesh-config-json.c
-+++ bluez-5.77/mesh/mesh-config-json.c
-@@ -28,6 +28,7 @@
- #include <ell/ell.h>
- #include <json-c/json.h>
- 
-+#include "mesh/missing.h"
- #include "mesh/mesh-defs.h"
- #include "mesh/util.h"
- #include "mesh/mesh-config.h"
-@@ -2694,7 +2695,8 @@ bool mesh_config_load_nodes(const char *
- 
- void mesh_config_destroy_nvm(struct mesh_config *cfg)
- {
--	char *node_dir, *node_name;
-+	char *node_dir;
-+	const char* node_name;
- 	char uuid[33];
- 
- 	if (!cfg)
-Index: bluez-5.77/mesh/rpl.c
-===================================================================
---- bluez-5.77.orig/mesh/rpl.c
-+++ bluez-5.77/mesh/rpl.c
-@@ -24,6 +24,7 @@
- 
- #include <ell/ell.h>
- 
-+#include "mesh/missing.h"
- #include "mesh/mesh-defs.h"
- 
- #include "mesh/node.h"
-Index: bluez-5.77/tools/hex2hcd.c
-===================================================================
---- bluez-5.77.orig/tools/hex2hcd.c
-+++ bluez-5.77/tools/hex2hcd.c
-@@ -24,6 +24,7 @@
- #include <stdlib.h>
- #include <stdbool.h>
- #include <sys/stat.h>
-+#include "tools/missing.h"
- 
- static ssize_t process_record(int fd, const char *line, uint16_t *upper_addr)
- {
-Index: bluez-5.77/configure.ac
-===================================================================
---- bluez-5.77.orig/configure.ac
-+++ bluez-5.77/configure.ac
-@@ -70,7 +70,16 @@ AC_CHECK_LIB(pthread, pthread_create, du
+diff --git a/configure.ac b/configure.ac
+index a7fb51f..254f1a7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -70,7 +70,16 @@ AC_CHECK_LIB(pthread, pthread_create, dummy=yes,
  AC_CHECK_LIB(dl, dlopen, dummy=yes,
  			AC_MSG_ERROR(dynamic linking loader is required))
  
@@ -89,10 +45,33 @@ Index: bluez-5.77/configure.ac
  
  PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.28)
  
-Index: bluez-5.77/tools/missing.h
-===================================================================
+diff --git a/mesh/mesh-config-json.c b/mesh/mesh-config-json.c
+index c198627..e3b0a18 100644
+--- a/mesh/mesh-config-json.c
++++ b/mesh/mesh-config-json.c
+@@ -28,6 +28,7 @@
+ #include <ell/ell.h>
+ #include <json-c/json.h>
+ 
++#include "mesh/missing.h"
+ #include "mesh/mesh-defs.h"
+ #include "mesh/util.h"
+ #include "mesh/mesh-config.h"
+@@ -2694,7 +2695,8 @@ bool mesh_config_load_nodes(const char *cfgdir_name, mesh_config_node_func_t cb,
+ 
+ void mesh_config_destroy_nvm(struct mesh_config *cfg)
+ {
+-	char *node_dir, *node_name;
++	char *node_dir;
++	const char* node_name;
+ 	char uuid[33];
+ 
+ 	if (!cfg)
+diff --git a/mesh/missing.h b/mesh/missing.h
+new file mode 100644
+index 0000000..eaf3281
 --- /dev/null
-+++ bluez-5.77/tools/missing.h
++++ b/mesh/missing.h
 @@ -0,0 +1,21 @@
 +// SPDX-License-Identifier: LGPL-2.1-or-later
 +/*
@@ -115,10 +94,35 @@ Index: bluez-5.77/tools/missing.h
 +  return base ? base + 1 : path;
 +}
 +#endif
-Index: bluez-5.77/mesh/missing.h
-===================================================================
+diff --git a/mesh/rpl.c b/mesh/rpl.c
+index fb225dd..2fa17d7 100644
+--- a/mesh/rpl.c
++++ b/mesh/rpl.c
+@@ -24,6 +24,7 @@
+ 
+ #include <ell/ell.h>
+ 
++#include "mesh/missing.h"
+ #include "mesh/mesh-defs.h"
+ 
+ #include "mesh/node.h"
+diff --git a/tools/hex2hcd.c b/tools/hex2hcd.c
+index e6dca5a..452ab2b 100644
+--- a/tools/hex2hcd.c
++++ b/tools/hex2hcd.c
+@@ -24,6 +24,7 @@
+ #include <stdlib.h>
+ #include <stdbool.h>
+ #include <sys/stat.h>
++#include "tools/missing.h"
+ 
+ static ssize_t process_record(int fd, const char *line, uint16_t *upper_addr)
+ {
+diff --git a/tools/missing.h b/tools/missing.h
+new file mode 100644
+index 0000000..eaf3281
 --- /dev/null
-+++ bluez-5.77/mesh/missing.h
++++ b/tools/missing.h
 @@ -0,0 +1,21 @@
 +// SPDX-License-Identifier: LGPL-2.1-or-later
 +/*

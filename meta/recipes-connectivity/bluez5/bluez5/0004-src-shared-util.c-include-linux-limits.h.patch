@@ -1,4 +1,4 @@
-From 705235d674f574bee08ea3138208938a086e1b53 Mon Sep 17 00:00:00 2001
+From 409b2247f0003bc474a73aed78fa4c5a86bc30ec Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Mon, 12 Dec 2022 13:10:19 +0100
 Subject: [PATCH] src/shared/util.c: include linux/limits.h
