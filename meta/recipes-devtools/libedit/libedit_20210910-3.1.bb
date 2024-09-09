@@ -15,6 +15,13 @@ SRC_URI = "http://www.thrysoee.dk/editline/${BP}.tar.gz \
           "
 SRC_URI[sha256sum] = "6792a6a992050762edcca28ff3318cdb7de37dccf7bc30db59fcd7017eed13c5"
 
+# configure hardcodes /usr/bin search path bypassing HOSTTOOLS
+CACHED_CONFIGUREVARS += "ac_cv_path_NROFF=/bin/false"
+
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"
+
 BBCLASSEXTEND = "native nativesdk"
 
 inherit update-alternatives
