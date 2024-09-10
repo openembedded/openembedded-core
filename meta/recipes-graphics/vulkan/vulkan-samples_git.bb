@@ -36,4 +36,4 @@ EXTRA_OECMAKE += "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON"
 # This needs to be specified explicitly to avoid xcb/xlib dependencies
 EXTRA_OECMAKE += "-DVKB_WSI_SELECTION=D2D"
 
-COMPATIBLE_HOST:x86 = "null"
+COMPATIBLE_HOST = "(aarch64|x86_64).*-linux"
