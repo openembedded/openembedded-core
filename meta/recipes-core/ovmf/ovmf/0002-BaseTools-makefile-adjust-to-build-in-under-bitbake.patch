@@ -1,4 +1,4 @@
-From ac9df4fb92965f1f95a5bdbde5f2f86d0c569711 Mon Sep 17 00:00:00 2001
+From 7cf91acf8a19a8052d05e272fad9f7e2f5b9597e Mon Sep 17 00:00:00 2001
 From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 Date: Fri, 26 Jul 2019 17:34:26 -0400
 Subject: [PATCH] BaseTools: makefile: adjust to build in under bitbake
@@ -64,6 +64,3 @@ index d369908a09..22c670f316 100644
  ifeq ($(HOST_ARCH), IA32)
  #
  # Snow Leopard  is a 32-bit and 64-bit environment. uname -m returns i386, but gcc defaults
--- 
-2.30.2
-
