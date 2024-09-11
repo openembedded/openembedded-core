@@ -11,7 +11,6 @@ DEPENDS = " \
     fribidi \
     gdk-pixbuf \
     gdk-pixbuf-native \
-    gi-docgen \
     glib-2.0 \
     graphene \
     harfbuzz \
@@ -22,6 +21,7 @@ DEPENDS = " \
     librsvg \
     libxkbcommon \
     pango \
+    python3-docutils-native \
     tiff \
 "
 
@@ -38,7 +38,7 @@ MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
 UPSTREAM_CHECK_REGEX = "gtk-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)\.tar.xz"
 
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk/${MAJ_VER}/gtk-${PV}.tar.xz"
-SRC_URI[sha256sum] = "5547f2b9f006b133993e070b87c17804e051efda3913feaca1108fa2be41e24d"
+SRC_URI[sha256sum] = "8ef538778c82c09870a6cc325195049caec5593c1ca37df915a7b6b10f5524ea"
 
 S = "${WORKDIR}/gtk-${PV}"
 
@@ -56,7 +56,7 @@ GSETTINGS_PACKAGE:class-native = ""
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 REQUIRED_DISTRO_FEATURES = "opengl"
-GTKDOC_MESON_OPTION = "documentation"
+GIDOCGEN_MESON_OPTION = "documentation"
 GIR_MESON_ENABLE_FLAG = 'enabled'
 GIR_MESON_DISABLE_FLAG = 'disabled'
 
