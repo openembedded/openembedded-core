@@ -742,6 +742,8 @@ INSANE_SKIP:libsystemd-shared += "libdir"
 FILES:libsystemd-shared = "${rootlibdir}/systemd/libsystemd-shared*.so"
 
 RPROVIDES:udev = "hotplug"
+# This can be removed when we parse .note.dlopen in the ELF
+RDEPENDS:udev += "libkmod"
 
 RDEPENDS:udev-bash-completion += "bash-completion"
 RDEPENDS:udev-hwdb += "udev"
