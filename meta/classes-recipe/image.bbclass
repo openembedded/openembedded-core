@@ -308,23 +308,24 @@ addtask do_image_complete_setscene
 #
 # The functions should use ${IMAGE_ROOTFS} to find the unpacked rootfs
 # directory, which if QA passes will be the basis for the images.
+#
+# The functions should use oe.utils.ImageQAFailed(description, name) to raise
+# errors. The name must be listed in ERROR_QA or WARN_QA to prompt.
 fakeroot python do_image_qa () {
     from oe.utils import ImageQAFailed
 
     qa_cmds = (d.getVar('IMAGE_QA_COMMANDS') or '').split()
-    qamsg = ""
 
     for cmd in qa_cmds:
         try:
             bb.build.exec_func(cmd, d)
         except oe.utils.ImageQAFailed as e:
-            qamsg = qamsg + '\tImage QA function %s failed: %s\n' % (e.name, e.description)
+            qamsg = 'Image QA function %s failed: %s\n' % (e.name, e.description)
+            oe.qa.handle_error(e.name, qamsg, d)
         except Exception as e:
             qamsg = qamsg + '\tImage QA function %s failed: %s\n' % (cmd, e)
 
-    if qamsg:
-        imgname = d.getVar('IMAGE_NAME')
-        bb.fatal("QA errors found whilst validating image: %s\n%s" % (imgname, qamsg))
+    oe.qa.exit_if_errors(d)
 }
 addtask do_image_qa after do_rootfs before do_image
 
