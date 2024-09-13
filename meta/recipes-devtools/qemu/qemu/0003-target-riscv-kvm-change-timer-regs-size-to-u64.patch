@@ -1,0 +1,107 @@
+From cbae1080988e0f1af0fb4c816205f7647f6de16f Mon Sep 17 00:00:00 2001
+From: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
+Date: Fri, 8 Dec 2023 15:38:33 -0300
+Subject: [PATCH 3/3] target/riscv/kvm: change timer regs size to u64
+
+KVM_REG_RISCV_TIMER regs are always u64 according to the KVM API, but at
+this moment we'll return u32 regs if we're running a RISCV32 target.
+
+Use the kvm_riscv_reg_id_u64() helper in RISCV_TIMER_REG() to fix it.
+
+Reported-by: Andrew Jones <ajones@ventanamicro.com>
+Signed-off-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Message-ID: <20231208183835.2411523-4-dbarboza@ventanamicro.com>
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+(cherry picked from commit 10f86d1b845087d14b58d65dd2a6e3411d1b6529)
+Signed-off-by: Michael Tokarev <mjt@tls.msk.ru>
+
+Upstream-Status: Backport [cbae1080988e0f1af0fb4c816205f7647f6de16f]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ target/riscv/kvm/kvm-cpu.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/target/riscv/kvm/kvm-cpu.c b/target/riscv/kvm/kvm-cpu.c
+index 82ed4455a5..ddbe820e10 100644
+--- a/target/riscv/kvm/kvm-cpu.c
++++ b/target/riscv/kvm/kvm-cpu.c
+@@ -88,7 +88,7 @@ static uint64_t kvm_riscv_reg_id_u64(uint64_t type, uint64_t idx)
+ #define RISCV_CSR_REG(env, name)  kvm_riscv_reg_id(env, KVM_REG_RISCV_CSR, \
+                  KVM_REG_RISCV_CSR_REG(name))
+ 
+-#define RISCV_TIMER_REG(env, name)  kvm_riscv_reg_id(env, KVM_REG_RISCV_TIMER, \
++#define RISCV_TIMER_REG(name)  kvm_riscv_reg_id_u64(KVM_REG_RISCV_TIMER, \
+                  KVM_REG_RISCV_TIMER_REG(name))
+ 
+ #define RISCV_FP_F_REG(idx)  kvm_riscv_reg_id_u32(KVM_REG_RISCV_FP_F, idx)
+@@ -111,17 +111,17 @@ static uint64_t kvm_riscv_reg_id_u64(uint64_t type, uint64_t idx)
+         } \
+     } while (0)
+ 
+-#define KVM_RISCV_GET_TIMER(cs, env, name, reg) \
++#define KVM_RISCV_GET_TIMER(cs, name, reg) \
+     do { \
+-        int ret = kvm_get_one_reg(cs, RISCV_TIMER_REG(env, name), &reg); \
++        int ret = kvm_get_one_reg(cs, RISCV_TIMER_REG(name), &reg); \
+         if (ret) { \
+             abort(); \
+         } \
+     } while (0)
+ 
+-#define KVM_RISCV_SET_TIMER(cs, env, name, reg) \
++#define KVM_RISCV_SET_TIMER(cs, name, reg) \
+     do { \
+-        int ret = kvm_set_one_reg(cs, RISCV_TIMER_REG(env, name), &reg); \
++        int ret = kvm_set_one_reg(cs, RISCV_TIMER_REG(name), &reg); \
+         if (ret) { \
+             abort(); \
+         } \
+@@ -649,10 +649,10 @@ static void kvm_riscv_get_regs_timer(CPUState *cs)
+         return;
+     }
+ 
+-    KVM_RISCV_GET_TIMER(cs, env, time, env->kvm_timer_time);
+-    KVM_RISCV_GET_TIMER(cs, env, compare, env->kvm_timer_compare);
+-    KVM_RISCV_GET_TIMER(cs, env, state, env->kvm_timer_state);
+-    KVM_RISCV_GET_TIMER(cs, env, frequency, env->kvm_timer_frequency);
++    KVM_RISCV_GET_TIMER(cs, time, env->kvm_timer_time);
++    KVM_RISCV_GET_TIMER(cs, compare, env->kvm_timer_compare);
++    KVM_RISCV_GET_TIMER(cs, state, env->kvm_timer_state);
++    KVM_RISCV_GET_TIMER(cs, frequency, env->kvm_timer_frequency);
+ 
+     env->kvm_timer_dirty = true;
+ }
+@@ -666,8 +666,8 @@ static void kvm_riscv_put_regs_timer(CPUState *cs)
+         return;
+     }
+ 
+-    KVM_RISCV_SET_TIMER(cs, env, time, env->kvm_timer_time);
+-    KVM_RISCV_SET_TIMER(cs, env, compare, env->kvm_timer_compare);
++    KVM_RISCV_SET_TIMER(cs, time, env->kvm_timer_time);
++    KVM_RISCV_SET_TIMER(cs, compare, env->kvm_timer_compare);
+ 
+     /*
+      * To set register of RISCV_TIMER_REG(state) will occur a error from KVM
+@@ -676,7 +676,7 @@ static void kvm_riscv_put_regs_timer(CPUState *cs)
+      * TODO If KVM changes, adapt here.
+      */
+     if (env->kvm_timer_state) {
+-        KVM_RISCV_SET_TIMER(cs, env, state, env->kvm_timer_state);
++        KVM_RISCV_SET_TIMER(cs, state, env->kvm_timer_state);
+     }
+ 
+     /*
+@@ -685,7 +685,7 @@ static void kvm_riscv_put_regs_timer(CPUState *cs)
+      * during the migration.
+      */
+     if (migration_is_running(migrate_get_current()->state)) {
+-        KVM_RISCV_GET_TIMER(cs, env, frequency, reg);
++        KVM_RISCV_GET_TIMER(cs, frequency, reg);
+         if (reg != env->kvm_timer_frequency) {
+             error_report("Dst Hosts timer frequency != Src Hosts");
+         }
+-- 
+2.25.1
+

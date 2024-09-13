@@ -49,6 +49,9 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2024-7409-0002.patch \
            file://CVE-2024-7409-0003.patch \
            file://CVE-2024-7409-0004.patch \
+           file://0001-target-riscv-kvm-change-KVM_REG_RISCV_FP_F-to-u32.patch \
+           file://0002-target-riscv-kvm-change-KVM_REG_RISCV_FP_D-to-u64.patch \
+           file://0003-target-riscv-kvm-change-timer-regs-size-to-u64.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 

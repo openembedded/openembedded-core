@@ -1,0 +1,73 @@
+From 125b95d79e746cbab6b72683b3382dd372e38c61 Mon Sep 17 00:00:00 2001
+From: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
+Date: Fri, 8 Dec 2023 15:38:32 -0300
+Subject: [PATCH 2/3] target/riscv/kvm: change KVM_REG_RISCV_FP_D to u64
+
+KVM_REG_RISCV_FP_D regs are always u64 size. Using kvm_riscv_reg_id() in
+RISCV_FP_D_REG() ends up encoding the wrong size if we're running with
+TARGET_RISCV32.
+
+Create a new helper that returns a KVM ID with u64 size and use it with
+RISCV_FP_D_REG().
+
+Reported-by: Andrew Jones <ajones@ventanamicro.com>
+Signed-off-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Message-ID: <20231208183835.2411523-3-dbarboza@ventanamicro.com>
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+(cherry picked from commit 450bd6618fda3d2e2ab02b2fce1c79efd5b66084)
+Signed-off-by: Michael Tokarev <mjt@tls.msk.ru>
+
+Upstream-Status: Backport [125b95d79e746cbab6b72683b3382dd372e38c61]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ target/riscv/kvm/kvm-cpu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/target/riscv/kvm/kvm-cpu.c b/target/riscv/kvm/kvm-cpu.c
+index 2eef2be86a..82ed4455a5 100644
+--- a/target/riscv/kvm/kvm-cpu.c
++++ b/target/riscv/kvm/kvm-cpu.c
+@@ -77,6 +77,11 @@ static uint64_t kvm_riscv_reg_id_u32(uint64_t type, uint64_t idx)
+     return KVM_REG_RISCV | KVM_REG_SIZE_U32 | type | idx;
+ }
+ 
++static uint64_t kvm_riscv_reg_id_u64(uint64_t type, uint64_t idx)
++{
++    return KVM_REG_RISCV | KVM_REG_SIZE_U64 | type | idx;
++}
++
+ #define RISCV_CORE_REG(env, name)  kvm_riscv_reg_id(env, KVM_REG_RISCV_CORE, \
+                  KVM_REG_RISCV_CORE_REG(name))
+ 
+@@ -88,7 +93,7 @@ static uint64_t kvm_riscv_reg_id_u32(uint64_t type, uint64_t idx)
+ 
+ #define RISCV_FP_F_REG(idx)  kvm_riscv_reg_id_u32(KVM_REG_RISCV_FP_F, idx)
+ 
+-#define RISCV_FP_D_REG(env, idx)  kvm_riscv_reg_id(env, KVM_REG_RISCV_FP_D, idx)
++#define RISCV_FP_D_REG(idx)  kvm_riscv_reg_id_u64(KVM_REG_RISCV_FP_D, idx)
+ 
+ #define KVM_RISCV_GET_CSR(cs, env, csr, reg) \
+     do { \
+@@ -579,7 +584,7 @@ static int kvm_riscv_get_regs_fp(CPUState *cs)
+     if (riscv_has_ext(env, RVD)) {
+         uint64_t reg;
+         for (i = 0; i < 32; i++) {
+-            ret = kvm_get_one_reg(cs, RISCV_FP_D_REG(env, i), &reg);
++            ret = kvm_get_one_reg(cs, RISCV_FP_D_REG(i), &reg);
+             if (ret) {
+                 return ret;
+             }
+@@ -613,7 +618,7 @@ static int kvm_riscv_put_regs_fp(CPUState *cs)
+         uint64_t reg;
+         for (i = 0; i < 32; i++) {
+             reg = env->fpr[i];
+-            ret = kvm_set_one_reg(cs, RISCV_FP_D_REG(env, i), &reg);
++            ret = kvm_set_one_reg(cs, RISCV_FP_D_REG(i), &reg);
+             if (ret) {
+                 return ret;
+             }
+-- 
+2.25.1
+

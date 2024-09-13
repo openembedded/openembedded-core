@@ -1,0 +1,75 @@
+From bbdcc89678daa5cb131ef22a6cd41a5f7f9dcea9 Mon Sep 17 00:00:00 2001
+From: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
+Date: Fri, 8 Dec 2023 15:38:31 -0300
+Subject: [PATCH 1/3] target/riscv/kvm: change KVM_REG_RISCV_FP_F to u32
+
+KVM_REG_RISCV_FP_F regs have u32 size according to the API, but by using
+kvm_riscv_reg_id() in RISCV_FP_F_REG() we're returning u64 sizes when
+running with TARGET_RISCV64. The most likely reason why no one noticed
+this is because we're not implementing kvm_cpu_synchronize_state() in
+RISC-V yet.
+
+Create a new helper that returns a KVM ID with u32 size and use it in
+RISCV_FP_F_REG().
+
+Reported-by: Andrew Jones <ajones@ventanamicro.com>
+Signed-off-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Message-ID: <20231208183835.2411523-2-dbarboza@ventanamicro.com>
+Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
+(cherry picked from commit 49c211ffca00fdf7c0c29072c224e88527a14838)
+Signed-off-by: Michael Tokarev <mjt@tls.msk.ru>
+
+Upstream-Status: Backport [bbdcc89678daa5cb131ef22a6cd41a5f7f9dcea9]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ target/riscv/kvm/kvm-cpu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/target/riscv/kvm/kvm-cpu.c b/target/riscv/kvm/kvm-cpu.c
+index c1675158fe..2eef2be86a 100644
+--- a/target/riscv/kvm/kvm-cpu.c
++++ b/target/riscv/kvm/kvm-cpu.c
+@@ -72,6 +72,11 @@ static uint64_t kvm_riscv_reg_id(CPURISCVState *env, uint64_t type,
+     return id;
+ }
+ 
++static uint64_t kvm_riscv_reg_id_u32(uint64_t type, uint64_t idx)
++{
++    return KVM_REG_RISCV | KVM_REG_SIZE_U32 | type | idx;
++}
++
+ #define RISCV_CORE_REG(env, name)  kvm_riscv_reg_id(env, KVM_REG_RISCV_CORE, \
+                  KVM_REG_RISCV_CORE_REG(name))
+ 
+@@ -81,7 +86,7 @@ static uint64_t kvm_riscv_reg_id(CPURISCVState *env, uint64_t type,
+ #define RISCV_TIMER_REG(env, name)  kvm_riscv_reg_id(env, KVM_REG_RISCV_TIMER, \
+                  KVM_REG_RISCV_TIMER_REG(name))
+ 
+-#define RISCV_FP_F_REG(env, idx)  kvm_riscv_reg_id(env, KVM_REG_RISCV_FP_F, idx)
++#define RISCV_FP_F_REG(idx)  kvm_riscv_reg_id_u32(KVM_REG_RISCV_FP_F, idx)
+ 
+ #define RISCV_FP_D_REG(env, idx)  kvm_riscv_reg_id(env, KVM_REG_RISCV_FP_D, idx)
+ 
+@@ -586,7 +591,7 @@ static int kvm_riscv_get_regs_fp(CPUState *cs)
+     if (riscv_has_ext(env, RVF)) {
+         uint32_t reg;
+         for (i = 0; i < 32; i++) {
+-            ret = kvm_get_one_reg(cs, RISCV_FP_F_REG(env, i), &reg);
++            ret = kvm_get_one_reg(cs, RISCV_FP_F_REG(i), &reg);
+             if (ret) {
+                 return ret;
+             }
+@@ -620,7 +625,7 @@ static int kvm_riscv_put_regs_fp(CPUState *cs)
+         uint32_t reg;
+         for (i = 0; i < 32; i++) {
+             reg = env->fpr[i];
+-            ret = kvm_set_one_reg(cs, RISCV_FP_F_REG(env, i), &reg);
++            ret = kvm_set_one_reg(cs, RISCV_FP_F_REG(i), &reg);
+             if (ret) {
+                 return ret;
+             }
+-- 
+2.25.1
+
