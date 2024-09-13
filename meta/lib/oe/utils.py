@@ -482,7 +482,7 @@ def get_multilib_datastore(variant, d):
         localdata.setVar("MLPREFIX", "")
     return localdata
 
-class ImageQAFailed(Exception):
+class ImageQAFailed(bb.BBHandledException):
     def __init__(self, description, name=None, logfile=None):
         self.description = description
         self.name = name
