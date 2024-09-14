@@ -281,7 +281,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-moxa-license ${PN}-moxa \
              ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 ${PN}-sd8801 \
              ${PN}-sd8887 ${PN}-sd8897 ${PN}-sd8997 ${PN}-usb8997 \
-             ${PN}-ti-connectivity-license ${PN}-wlcommon ${PN}-wl12xx ${PN}-wl18xx \
+             ${PN}-ti-connectivity-license ${PN}-wlcommon ${PN}-wl12xx ${PN}-wl18xx ${PN}-cc33xx \
              ${PN}-ti-keystone-license ${PN}-ti-keystone \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rs9113 ${PN}-rs9116 \
@@ -935,6 +935,7 @@ RDEPENDS:${PN}-wl1251 += "${PN}-wl1251-license"
 LICENSE:${PN}-wlcommon = "Firmware-ti-connectivity"
 LICENSE:${PN}-wl12xx = "Firmware-ti-connectivity"
 LICENSE:${PN}-wl18xx = "Firmware-ti-connectivity"
+LICENSE:${PN}-cc33xx = "Firmware-ti-connectivity"
 LICENSE:${PN}-ti-connectivity-license = "Firmware-ti-connectivity"
 
 FILES:${PN}-ti-connectivity-license = "${nonarch_base_libdir}/firmware/LICENCE.ti-connectivity"
@@ -957,8 +958,13 @@ FILES:${PN}-wl18xx = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl18* \
 "
 
+FILES:${PN}-cc33xx = " \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/cc33* \
+"
+
 RDEPENDS:${PN}-wl12xx = "${PN}-ti-connectivity-license ${PN}-wlcommon"
 RDEPENDS:${PN}-wl18xx = "${PN}-ti-connectivity-license ${PN}-wlcommon"
+RDEPENDS:${PN}-cc33xx = "${PN}-ti-connectivity-license"
 
 # For ti-keystone
 LICENSE:${PN}-ti-keystone = "Firmware-ti-keystone"
