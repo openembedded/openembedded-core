@@ -28,3 +28,7 @@ do_unpack[cleandirs] += "${GOMODCACHE}"
 
 GO_WORKDIR ?= "${GO_IMPORT}"
 do_compile[dirs] += "${B}/src/${GO_WORKDIR}"
+
+# Make go install unpack the module zip files in the module cache directory
+# before the license directory is polulated with license files.
+addtask do_compile before do_populate_lic
