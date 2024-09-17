@@ -16,11 +16,11 @@ Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
  Lib/test/test_readline.py | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Lib/test/test_readline.py b/Lib/test/test_readline.py
-index 91fd7dd13f9..d81f9bf8eed 100644
---- a/Lib/test/test_readline.py
-+++ b/Lib/test/test_readline.py
-@@ -132,6 +132,7 @@ def test_nonascii_history(self):
+Index: Python-3.12.6/Lib/test/test_readline.py
+===================================================================
+--- Python-3.12.6.orig/Lib/test/test_readline.py
++++ Python-3.12.6/Lib/test/test_readline.py
+@@ -133,6 +133,7 @@ class TestHistoryManipulation (unittest.
          self.assertEqual(readline.get_history_item(1), "entrée 1")
          self.assertEqual(readline.get_history_item(2), "entrée 22")
  
@@ -28,14 +28,11 @@ index 91fd7dd13f9..d81f9bf8eed 100644
      def test_write_read_limited_history(self):
          previous_length = readline.get_history_length()
          self.addCleanup(readline.set_history_length, previous_length)
-@@ -349,6 +350,7 @@ def test_history_size(self):
-             self.assertEqual(len(lines), history_size)
-             self.assertEqual(lines[-1].strip(), b"last input")
+@@ -371,6 +372,7 @@ readline.write_history_file(history_file
+         self.assertIn(b"done", output)
+ 
  
 +    @unittest.skip("Skipping problematic test")
      def test_write_read_limited_history(self):
          previous_length = readline.get_history_length()
          self.addCleanup(readline.set_history_length, previous_length)
--- 
-2.39.2
-
