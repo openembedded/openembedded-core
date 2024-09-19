@@ -29,10 +29,6 @@ SRC_URI += "file://no_shebang_mangling.patch"
 
 SRC_URI[sha256sum] = "5b5e490b5e9cb275c879595064adce9ebd31b854e3e803740b72f9ccf34a45b8"
 
-do_install:append() {
-    rm -f ${D}/${bindir}/pip
-}
-
 RDEPENDS:${PN} = "\
   python3-compile \
   python3-io \
