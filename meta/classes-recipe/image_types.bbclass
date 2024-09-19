@@ -145,7 +145,7 @@ IMAGE_CMD:vfat = "oe_mkvfatfs ${EXTRA_IMAGECMD}"
 
 IMAGE_CMD_TAR ?= "tar"
 # ignore return code 1 "file changed as we read it" as other tasks(e.g. do_image_wic) may be hardlinking rootfs
-IMAGE_CMD:tar = "${IMAGE_CMD_TAR} --sort=name --format=posix --numeric-owner -cf ${IMGDEPLOYDIR}/${IMAGE_NAME}.tar -C ${IMAGE_ROOTFS} . || [ $? -eq 1 ]"
+IMAGE_CMD:tar = "${IMAGE_CMD_TAR} --sort=name --format=posix --pax-option=delete=atime,delete=ctime --numeric-owner -cf ${IMGDEPLOYDIR}/${IMAGE_NAME}.tar -C ${IMAGE_ROOTFS} . || [ $? -eq 1 ]"
 SPDX_IMAGE_PURPOSE:tar = "archive"
 
 do_image_cpio[cleandirs] += "${WORKDIR}/cpio_append"
@@ -283,6 +283,7 @@ EXTRA_IMAGECMD:f2fs ?= ""
 # otherwise mkfs.vfat will automatically pick one.
 EXTRA_IMAGECMD:vfat ?= ""
 
+do_image_tar[depends] += "tar-replacement-native:do_populate_sysroot"
 do_image_cpio[depends] += "cpio-native:do_populate_sysroot"
 do_image_jffs2[depends] += "mtd-utils-native:do_populate_sysroot"
 do_image_cramfs[depends] += "util-linux-native:do_populate_sysroot"
@@ -391,3 +392,5 @@ IMAGE_TYPES_MASKED ?= ""
 
 # bmap requires python3 to be in the PATH
 EXTRANATIVEPATH += "${@'python3-native' if d.getVar('IMAGE_FSTYPES').find('.bmap') else ''}"
+# reproducible tar requires our tar, not the host's
+EXTRANATIVEPATH += "${@'tar-native' if 'tar' in d.getVar('IMAGE_FSTYPES') else ''}"
