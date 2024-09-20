@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "glib-2.0"
 
-
 inherit gnomebase gsettings gobject-introspection gettext
 
-SRC_URI[archive.sha256sum] = "9b88101437a6958ebe6bbd812e49bbf1d09cc667011e415559d847e870468a61"
+SRC_URI[archive.sha256sum] = "a60204d9c9c0a1b264d6d0d134a38340ba5fc6076a34b84da945d8bfcc7a2815"
