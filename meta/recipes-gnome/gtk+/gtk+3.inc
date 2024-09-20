@@ -47,7 +47,7 @@ PACKAGECONFIG[wayland] = "-Dwayland_backend=true,-Dwayland_backend=false,wayland
 PACKAGECONFIG[cups] = ",,cups,cups gtk3-printbackend-cups"
 PACKAGECONFIG[colord] = "-Dcolord=yes,-Dcolord=no,colord"
 PACKAGECONFIG[cloudproviders] = "-Dcloudproviders=true,-Dcloudproviders=false,libcloudproviders"
-PACKAGECONFIG[tracker3] = "-Dtracker3=true,-Dtracker3=false,tracker,tracker-miners"
+PACKAGECONFIG[tracker3] = "-Dtracker3=true,-Dtracker3=false,tinysparql,localsearch"
 
 prepare_gtk_scripts() {
     mv ${D}${bindir}/gtk-update-icon-cache ${D}${bindir}/gtk-update-icon-cache-3.0
