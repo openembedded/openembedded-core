@@ -68,6 +68,7 @@ def list_and_fetch_failed_tests_artifacts(d, tc, artifacts_list, outputdir):
         (status, output) = tc.target.run(cmd, raw = True)
         if status != 0 or not output:
             raise Exception("Error while fetching compressed artifacts")
+        archive_name = os.path.join(outputdir, "tests_artifacts.tar.gz")
         with open(archive_name, "wb") as f:
             f.write(output)
     except Exception as e:
