@@ -16,7 +16,7 @@ index 67d3675..4e92a7a 100755
 --- a/gio/gdbus-2.0/codegen/gdbus-codegen.in
 +++ b/gio/gdbus-2.0/codegen/gdbus-codegen.in
 @@ -1,4 +1,4 @@
--#!/usr/bin/env @PYTHON@
+-#!@PYTHON@
 +#!/usr/bin/env python3
  
  # GDBus - GLib D-Bus Library
@@ -26,7 +26,7 @@ index aa5af43..56e8e2e 100755
 --- a/gobject/glib-genmarshal.in
 +++ b/gobject/glib-genmarshal.in
 @@ -1,4 +1,4 @@
--#!/usr/bin/env @PYTHON@
+-#!@PYTHON@
 +#!/usr/bin/env python3
  
  # pylint: disable=too-many-lines, missing-docstring, invalid-name
@@ -36,7 +36,7 @@ index e10b910..4b619f8 100755
 --- a/gobject/glib-mkenums.in
 +++ b/gobject/glib-mkenums.in
 @@ -1,4 +1,4 @@
--#!/usr/bin/env @PYTHON@
+-#!@PYTHON@
 +#!/usr/bin/env python3
  
  # If the code below looks horrible and unpythonic, do not panic.
