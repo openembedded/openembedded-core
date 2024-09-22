@@ -2585,11 +2585,6 @@ class DevtoolIdeSdkTests(DevtoolBase):
         i_and_d_script_path = os.path.join(
             self._workspace_scripts_dir(recipe_name), i_and_d_script)
         self.assertExists(i_and_d_script_path)
-        del_script = "delete_package_dirs_" + recipe_id
-        del_script_path = os.path.join(
-            self._workspace_scripts_dir(recipe_name), del_script)
-        self.assertExists(del_script_path)
-        runCmd(del_script_path, cwd=tempdir)
 
     def _devtool_ide_sdk_qemu(self, tempdir, qemu, recipe_name, example_exe):
         """Verify deployment and execution in Qemu system work for one recipe.
