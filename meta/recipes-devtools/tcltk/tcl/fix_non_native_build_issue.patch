@@ -1,4 +1,4 @@
-From 371aa300369e9ea3234cba22d5c0babc7d40dfdf Mon Sep 17 00:00:00 2001
+From bd512547fc002fdb20808bf5b8b9feeb848b6512 Mon Sep 17 00:00:00 2001
 From: Nitin A Kamble <nitin.a.kamble@intel.com>
 Date: Fri, 13 Aug 2010 12:24:00 -0700
 Subject: [PATCH] tcl: fix a build issue
@@ -9,10 +9,10 @@ Upstream-Status: Inappropriate [upstream does not support installed tests]
  1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/unix/Makefile.in b/unix/Makefile.in
-index 9dd053d..a3b7d69 100644
+index 965f6da..a0bd63f 100644
 --- a/unix/Makefile.in
 +++ b/unix/Makefile.in
-@@ -815,7 +815,7 @@ tcltest-real:
+@@ -723,7 +723,7 @@ tcltest-real:
  test: test-tcl test-packages
  
  test-tcl: ${TCLTEST_EXE}
@@ -21,7 +21,7 @@ index 9dd053d..a3b7d69 100644
  
  gdb-test: ${TCLTEST_EXE}
  	@printf '%s ' set env @LD_LIBRARY_PATH_VAR@=\"`pwd`$${@LD_LIBRARY_PATH_VAR@:+:$${@LD_LIBRARY_PATH_VAR}}\" > gdb.run
-@@ -824,17 +824,17 @@ gdb-test: ${TCLTEST_EXE}
+@@ -732,17 +732,17 @@ gdb-test: ${TCLTEST_EXE}
  	@printf '\n' >>gdb.run
  	@printf '%s ' set args $(call shquotequote,$(TOP_DIR))/tests/all.tcl\
  		$(call shquotequote,$(TESTFLAGS)) -singleproc 1 >> gdb.run
@@ -37,12 +37,12 @@ index 9dd053d..a3b7d69 100644
  # Useful target for running the test suite with an unwritable current
  # directory...
  ro-test: ${TCLTEST_EXE}
--	echo 'exec chmod -w .;package require tcltest;tcltest::temporaryDirectory /tmp;source ../tests/all.tcl;exec chmod +w .' | $(SHELL_ENV) ./${TCLTEST_EXE}
-+	echo 'exec chmod -w .;package require tcltest;tcltest::temporaryDirectory /tmp;source ../tests/all.tcl;exec chmod +w .' | $(SHELL_ENV) ${TCLTEST_EXE}
+-	echo 'exec chmod -w .;package require tcltest;tcltest::temporaryDirectory /tmp;source -encoding utf-8 ../tests/all.tcl;exec chmod +w .' | $(SHELL_ENV) ./${TCLTEST_EXE}
++	echo 'exec chmod -w .;package require tcltest;tcltest::temporaryDirectory /tmp;source -encoding utf-8 ../tests/all.tcl;exec chmod +w .' | $(SHELL_ENV) ${TCLTEST_EXE}
  
  # The following target generates the shared libraries in dltest/ that are used
  # for testing; they are included as part of the "tcltest" target (via the
-@@ -852,28 +852,28 @@ dltest.marker: ${STUB_LIB_FILE}
+@@ -760,28 +760,28 @@ dltest.marker: ${STUB_LIB_FILE}
  # This target can be used to run tclsh from the build directory
  # via `make shell SCRIPT=/tmp/foo.tcl`
  shell: ${TCL_EXE}
