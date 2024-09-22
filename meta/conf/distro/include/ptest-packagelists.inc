@@ -70,6 +70,7 @@ PTESTS_FAST = "\
     python3-more-itertools \
     python3-packaging \
     python3-pluggy \
+    python3-pefile \
     python3-pyasn1 \
     python3-pytz \
     python3-pyyaml \
