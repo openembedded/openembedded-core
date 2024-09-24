@@ -37,7 +37,6 @@ class Base(unittest.TestCase):
     endcommit_messages_regex = re.compile(r'\(From \w+-\w+ rev:|(?<!\S)Signed-off-by|(?<!\S)---\n')
     patchmetadata_regex   = re.compile(r'-{3} \S+|\+{3} \S+|@{2} -\d+,\d+ \+\d+,\d+ @{2} \S+')
 
-
     @staticmethod
     def msg_to_commit(msg):
         payload = msg.get_payload()
@@ -66,13 +65,13 @@ class Base(unittest.TestCase):
     def setUpClass(cls):
 
         # General objects: mailbox.mbox and patchset
-        cls.mbox = mailbox.mbox(PatchTestInput.repo.patch)
+        cls.mbox = mailbox.mbox(PatchTestInput.repo.patch.path)
 
         # Patch may be malformed, so try parsing it
         cls.unidiff_parse_error = ''
         cls.patchset = None
         try:
-            cls.patchset = unidiff.PatchSet.from_filename(PatchTestInput.repo.patch, encoding=u'UTF-8')
+            cls.patchset = unidiff.PatchSet.from_filename(PatchTestInput.repo.patch.path, encoding=u'UTF-8')
         except unidiff.UnidiffParseError as upe:
             cls.patchset = []
             cls.unidiff_parse_error = str(upe)

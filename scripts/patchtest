@@ -9,12 +9,12 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
-import sys
-import os
-import unittest
-import logging
-import traceback
 import json
+import logging
+import os
+import sys
+import traceback
+import unittest
 
 # Include current path so test cases can see it
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
@@ -25,12 +25,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '..
 from data import PatchTestInput
 from repo import PatchTestRepo
 
-import utils
-logger = utils.logger_create('patchtest')
+logger = logging.getLogger("patchtest")
+loggerhandler = logging.StreamHandler()
+loggerhandler.setFormatter(logging.Formatter("%(message)s"))
+logger.addHandler(loggerhandler)
+logger.setLevel(logging.INFO)
 info = logger.info
 error = logger.error
-
-import repo
 
 def getResult(patch, mergepatch, logfile=None):
 

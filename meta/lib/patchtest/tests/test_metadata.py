@@ -168,7 +168,7 @@ class TestMetadata(base.Metadata):
     def test_cve_check_ignore(self):
         # Skip if we neither modified a recipe or target branches are not
         # Nanbield and newer. CVE_CHECK_IGNORE was first deprecated in Nanbield.
-        if not self.modified or PatchTestInput.repo.branch == "kirkstone" or PatchTestInput.repo.branch == "dunfell":
+        if not self.modified or PatchTestInput.repo.patch.branch == "kirkstone" or PatchTestInput.repo.patch.branch == "dunfell":
             self.skip('No modified recipes or older target branch, skipping test')
         for pn in self.modified:
             # we are not interested in images

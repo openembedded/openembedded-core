@@ -10,11 +10,8 @@ import pyparsing
 colon = pyparsing.Literal(":")
 line_start = pyparsing.LineStart()
 line_end = pyparsing.LineEnd()
-at = pyparsing.Literal("@")
 lessthan = pyparsing.Literal("<")
 greaterthan = pyparsing.Literal(">")
-opensquare = pyparsing.Literal("[")
-closesquare = pyparsing.Literal("]")
 inappropriate = pyparsing.CaselessLiteral("Inappropriate")
 submitted = pyparsing.CaselessLiteral("Submitted")
 
