@@ -165,15 +165,22 @@ def run(patch, logfile=None):
     postmerge_resultklass = getResult(patch, True, logfile)
     postmerge_result = _runner(postmerge_resultklass, 'test')
 
-    print('----------------------------------------------------------------------\n')
-    if premerge_result == 2 and postmerge_result == 2:
-        logger.error('patchtest: No test cases found - did you specify the correct suite directory?')
-    if premerge_result == 1 or postmerge_result == 1:
-        logger.error('WARNING: patchtest: At least one patchtest caused a failure or an error - please check https://wiki.yoctoproject.org/wiki/Patchtest for further guidance')
-    else:
-        logger.info('OK: patchtest: All patchtests passed')
-    print('----------------------------------------------------------------------\n')
+    print_result_message(premerge_result, postmerge_result)
     return premerge_result or postmerge_result
+
+def print_result_message(preresult, postresult):
+    print("----------------------------------------------------------------------\n")
+    if preresult == 2 and postresult == 2:
+        logger.error(
+            "patchtest: No test cases found - did you specify the correct suite directory?"
+        )
+    if preresult == 1 or postresult == 1:
+        logger.error(
+            "WARNING: patchtest: At least one patchtest caused a failure or an error - please check https://wiki.yoctoproject.org/wiki/Patchtest for further guidance"
+        )
+    else:
+        logger.info("OK: patchtest: All patchtests passed")
+    print("----------------------------------------------------------------------\n")
 
 def main():
     tmp_patch = False
