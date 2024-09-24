@@ -43,7 +43,7 @@ class TestMbox(base.Base):
 
 
     def test_signed_off_by_presence(self):
-        for commit in TestMbox.commits:
+        for commit in self.commits:
             # skip those patches that revert older commits, these do not required the tag presence
             if patterns.mbox_revert_shortlog_regex.search_string(commit.shortlog):
                 continue
@@ -52,7 +52,7 @@ class TestMbox(base.Base):
                           commit=commit)
 
     def test_shortlog_format(self):
-        for commit in TestMbox.commits:
+        for commit in self.commits:
             shortlog = commit.shortlog
             if not shortlog.strip():
                 self.skip('Empty shortlog, no reason to execute shortlog format test')
@@ -67,7 +67,7 @@ class TestMbox(base.Base):
                               commit=commit)
 
     def test_shortlog_length(self):
-        for commit in TestMbox.commits:
+        for commit in self.commits:
             # no reason to re-check on revert shortlogs
             shortlog = re.sub('^(\[.*?\])+ ', '', commit.shortlog)
             if shortlog.startswith('Revert "'):
@@ -79,22 +79,24 @@ class TestMbox(base.Base):
 
     def test_series_merge_on_head(self):
         self.skip("Merge test is disabled for now")
-        if PatchTestInput.repo.branch != "master":
-            self.skip("Skipping merge test since patch is not intended for master branch. Target detected is %s" % PatchTestInput.repo.branch)
-        if not PatchTestInput.repo.ismerged:
+        if PatchTestInput.repo.patch.branch != "master":
+            self.skip(
+                "Skipping merge test since patch is not intended"
+                " for master branch. Target detected is %s"
+                % PatchTestInput.repo.patch.branch
+            )
+        if not PatchTestInput.repo.canbemerged:
             commithash, author, date, shortlog = headlog()
             self.fail('Series does not apply on top of target branch %s' % PatchTestInput.repo.branch,
                       data=[('Targeted branch', '%s (currently at %s)' % (PatchTestInput.repo.branch, commithash))])
 
     def test_target_mailing_list(self):
-        """In case of merge failure, check for other targeted projects"""
-        if PatchTestInput.repo.ismerged:
-            self.skip('Series merged, no reason to check other mailing lists')
+        """Check for other targeted projects"""
 
         # a meta project may be indicted in the message subject, if this is the case, just fail
         # TODO: there may be other project with no-meta prefix, we also need to detect these
         project_regex = pyparsing.Regex("\[(?P<project>meta-.+)\]")
-        for commit in TestMbox.commits:
+        for commit in self.commits:
             match = project_regex.search_string(commit.subject)
             if match:
                 self.fail('Series sent to the wrong mailing list or some patches from the series correspond to different mailing lists',
@@ -122,7 +124,7 @@ class TestMbox(base.Base):
                       data=[('Diff line',self.unidiff_parse_error)])
 
     def test_commit_message_presence(self):
-        for commit in TestMbox.commits:
+        for commit in self.commits:
             if not commit.commit_message.strip():
                 self.fail('Please include a commit message on your patch explaining the change', commit=commit)
 
