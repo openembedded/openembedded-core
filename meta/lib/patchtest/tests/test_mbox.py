@@ -6,8 +6,7 @@
 
 import base
 import collections
-import parse_shortlog
-import parse_signed_off_by
+import patterns
 import pyparsing
 import re
 import subprocess
@@ -22,19 +21,6 @@ def headlog():
     return output.split('#')
 
 class TestMbox(base.Base):
-
-    auh_email = 'auh@yoctoproject.org'
-
-    invalids = [pyparsing.Regex("^Upgrade Helper.+"),
-                pyparsing.Regex(auh_email),
-                pyparsing.Regex("uh@not\.set"),
-                pyparsing.Regex("\S+@example\.com")]
-
-    rexp_detect = pyparsing.Regex('\[\s?YOCTO.*\]')
-    rexp_validation = pyparsing.Regex('\[(\s?YOCTO\s?#\s?(\d+)\s?,?)+\]')
-    signoff_prog = parse_signed_off_by.signed_off_by
-    revert_shortlog_regex = pyparsing.Regex('Revert\s+".*"')
-    maxlength = 90
 
     # base paths of main yocto project sub-projects
     paths = {
@@ -59,9 +45,9 @@ class TestMbox(base.Base):
     def test_signed_off_by_presence(self):
         for commit in TestMbox.commits:
             # skip those patches that revert older commits, these do not required the tag presence
-            if self.revert_shortlog_regex.search_string(commit.shortlog):
+            if patterns.mbox_revert_shortlog_regex.search_string(commit.shortlog):
                 continue
-            if not self.signoff_prog.search_string(commit.payload):
+            if not patterns.signed_off_by.search_string(commit.payload):
                 self.fail('Mbox is missing Signed-off-by. Add it manually or with "git commit --amend -s"',
                           commit=commit)
 
@@ -75,7 +61,7 @@ class TestMbox(base.Base):
                 if shortlog.startswith('Revert "'):
                     continue
                 try:
-                    parse_shortlog.shortlog.parseString(shortlog)
+                    patterns.shortlog.parseString(shortlog)
                 except pyparsing.ParseException as pe:
                     self.fail('Commit shortlog (first line of commit message) should follow the format "<target>: <summary>"',
                               commit=commit)
@@ -87,8 +73,8 @@ class TestMbox(base.Base):
             if shortlog.startswith('Revert "'):
                 continue
             l = len(shortlog)
-            if l > self.maxlength:
-                self.fail('Edit shortlog so that it is %d characters or less (currently %d characters)' % (self.maxlength, l),
+            if l > patterns.mbox_shortlog_maxlength:
+                self.fail('Edit shortlog so that it is %d characters or less (currently %d characters)' % (patterns.mbox_shortlog_maxlength, l),
                           commit=commit)
 
     def test_series_merge_on_head(self):
@@ -142,18 +128,18 @@ class TestMbox(base.Base):
 
     def test_bugzilla_entry_format(self):
         for commit in TestMbox.commits:
-            if not self.rexp_detect.search_string(commit.commit_message):
+            if not patterns.mbox_bugzilla.search_string(commit.commit_message):
                 self.skip("No bug ID found")
-            elif not self.rexp_validation.search_string(commit.commit_message):
+            elif not patterns.mbox_bugzilla_validation.search_string(commit.commit_message):
                 self.fail('Bugzilla issue ID is not correctly formatted - specify it with format: "[YOCTO #<bugzilla ID>]"', commit=commit)
 
     def test_author_valid(self):
         for commit in self.commits:
-            for invalid in self.invalids:
+            for invalid in patterns.invalid_submitters:
                 if invalid.search_string(commit.author):
                     self.fail('Invalid author %s. Resend the series with a valid patch author' % commit.author, commit=commit)
 
     def test_non_auh_upgrade(self):
         for commit in self.commits:
-            if self.auh_email in commit.commit_message:
-                self.fail('Invalid author %s. Resend the series with a valid patch author' % self.auh_email, commit=commit)
+            if patterns.auh_email in commit.commit_message:
+                self.fail('Invalid author %s. Resend the series with a valid patch author' % patterns.auh_email, commit=commit)

@@ -6,27 +6,11 @@
 
 import base
 import os
+import patterns
 import pyparsing
 from data import PatchTestInput, PatchTestDataStore
 
 class TestMetadata(base.Metadata):
-    metadata_lic = 'LICENSE'
-    invalid_license = 'PATCHTESTINVALID'
-    metadata_chksum = 'LIC_FILES_CHKSUM'
-    license_var  = 'LICENSE'
-    closed   = 'CLOSED'
-    lictag_re  = pyparsing.AtLineStart("License-Update:")
-    lic_chksum_added = pyparsing.AtLineStart("+" + metadata_chksum)
-    lic_chksum_removed = pyparsing.AtLineStart("-" + metadata_chksum)
-    add_mark = pyparsing.Regex('\\+ ')
-    max_length = 200
-    metadata_src_uri  = 'SRC_URI'
-    md5sum    = 'md5sum'
-    sha256sum = 'sha256sum'
-    git_regex = pyparsing.Regex('^git\\:\\/\\/.*')
-    metadata_summary = 'SUMMARY'
-    cve_check_ignore_var = 'CVE_CHECK_IGNORE'
-    cve_status_var = 'CVE_STATUS'
 
     def test_license_presence(self):
         if not self.added:
@@ -41,13 +25,13 @@ class TestMetadata(base.Metadata):
             open_flag = 'a'
         with open(auto_conf, open_flag) as fd:
             for pn in self.added:
-                fd.write('LICENSE ??= "%s"\n' % self.invalid_license)
+                fd.write('LICENSE ??= "%s"\n' % patterns.invalid_license)
 
         no_license = False
         for pn in self.added:
             rd = self.tinfoil.parse_recipe(pn)
-            license = rd.getVar(self.metadata_lic)
-            if license == self.invalid_license:
+            license = rd.getVar(patterns.metadata_lic)
+            if license == patterns.invalid_license:
                 no_license = True
                 break
 
@@ -74,11 +58,11 @@ class TestMetadata(base.Metadata):
             # we are not interested in images
             if '/images/' in pathname:
                 continue
-            lic_files_chksum = rd.getVar(self.metadata_chksum)
-            if rd.getVar(self.license_var) == self.closed:
+            lic_files_chksum = rd.getVar(patterns.metadata_chksum)
+            if rd.getVar(patterns.license_var) == patterns.closed:
                 continue
             if not lic_files_chksum:
-                self.fail('%s is missing in newly added recipe' % self.metadata_chksum)
+                self.fail('%s is missing in newly added recipe' % patterns.metadata_chksum)
 
     def test_lic_files_chksum_modified_not_mentioned(self):
         if not self.modified:
@@ -89,10 +73,10 @@ class TestMetadata(base.Metadata):
             if patch.path.endswith('.patch'):
                 continue
             payload = str(patch)
-            if (self.lic_chksum_added.search_string(payload) or self.lic_chksum_removed.search_string(payload)):
+            if (patterns.lic_chksum_added.search_string(payload) or patterns.lic_chksum_removed.search_string(payload)):
                 # if any patch on the series contain reference on the metadata, fail
                 for commit in self.commits:
-                    if self.lictag_re.search_string(commit.commit_message):
+                    if patterns.lictag_re.search_string(commit.commit_message):
                        break
                 else:
                     self.fail('LIC_FILES_CHKSUM changed without "License-Update:" tag and description in commit message')
@@ -104,10 +88,10 @@ class TestMetadata(base.Metadata):
                 continue
             payload = str(patch)
             for line in payload.splitlines():
-                if self.add_mark.search_string(line):
+                if patterns.add_mark.search_string(line):
                     current_line_length = len(line[1:])
-                    if current_line_length > self.max_length:
-                        self.fail('Patch line too long (current length %s, maximum is %s)' % (current_line_length, self.max_length),
+                    if current_line_length > patterns.patch_max_line_length:
+                        self.fail('Patch line too long (current length %s, maximum is %s)' % (current_line_length, patterns.patch_max_line_length),
                                   data=[('Patch', patch.path), ('Line', '%s ...' % line[0:80])])
 
     def pretest_src_uri_left_files(self):
@@ -123,7 +107,7 @@ class TestMetadata(base.Metadata):
             if 'core-image' in pn:
                 continue
             rd = self.tinfoil.parse_recipe(pn)
-            PatchTestDataStore['%s-%s-%s' % (self.shortid(), self.metadata_src_uri, pn)] = rd.getVar(self.metadata_src_uri)
+            PatchTestDataStore['%s-%s-%s' % (self.shortid(), patterns.metadata_src_uri, pn)] = rd.getVar(patterns.metadata_src_uri)
 
     def test_src_uri_left_files(self):
         # these tests just make sense on patches that can be merged
@@ -138,11 +122,11 @@ class TestMetadata(base.Metadata):
             if 'core-image' in pn:
                 continue
             rd = self.tinfoil.parse_recipe(pn)
-            PatchTestDataStore['%s-%s-%s' % (self.shortid(), self.metadata_src_uri, pn)] = rd.getVar(self.metadata_src_uri)
+            PatchTestDataStore['%s-%s-%s' % (self.shortid(), patterns.metadata_src_uri, pn)] = rd.getVar(patterns.metadata_src_uri)
 
         for pn in self.modified:
-            pretest_src_uri = PatchTestDataStore['pre%s-%s-%s' % (self.shortid(), self.metadata_src_uri, pn)].split()
-            test_src_uri    = PatchTestDataStore['%s-%s-%s' % (self.shortid(), self.metadata_src_uri, pn)].split()
+            pretest_src_uri = PatchTestDataStore['pre%s-%s-%s' % (self.shortid(), patterns.metadata_src_uri, pn)].split()
+            test_src_uri    = PatchTestDataStore['%s-%s-%s' % (self.shortid(), patterns.metadata_src_uri, pn)].split()
 
             pretest_files = set([os.path.basename(patch) for patch in pretest_src_uri if patch.startswith('file://')])
             test_files    = set([os.path.basename(patch) for patch in test_src_uri    if patch.startswith('file://')])
@@ -175,11 +159,11 @@ class TestMetadata(base.Metadata):
             if 'core-image' in pn:
                 continue
             rd = self.tinfoil.parse_recipe(pn)
-            summary = rd.getVar(self.metadata_summary)
+            summary = rd.getVar(patterns.metadata_summary)
 
             # "${PN} version ${PN}-${PR}" is the default, so fail if default
             if summary.startswith('%s version' % pn):
-                self.fail('%s is missing in newly added recipe' % self.metadata_summary)
+                self.fail('%s is missing in newly added recipe' % patterns.metadata_summary)
 
     def test_cve_check_ignore(self):
         # Skip if we neither modified a recipe or target branches are not
@@ -191,7 +175,7 @@ class TestMetadata(base.Metadata):
             if 'core-image' in pn:
                 continue
             rd = self.tinfoil.parse_recipe(pn)
-            cve_check_ignore = rd.getVar(self.cve_check_ignore_var)
+            cve_check_ignore = rd.getVar(patterns.cve_check_ignore_var)
 
             if cve_check_ignore is not None:
-                self.fail('%s is deprecated and should be replaced by %s' % (self.cve_check_ignore_var, self.cve_status_var))
+                self.fail('%s is deprecated and should be replaced by %s' % (patterns.cve_check_ignore_var, patterns.cve_status_var))
