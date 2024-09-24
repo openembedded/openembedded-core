@@ -15,19 +15,11 @@
 
 import os
 import argparse
-import collections
-import logging
-
-logger=logging.getLogger('patchtest')
-info=logger.info
 
 default_testdir = os.path.abspath(os.path.dirname(__file__) + "/tests")
 default_repodir = os.path.abspath(os.path.dirname(__file__) + "/../../..")
 
-# Data store commonly used to share values between pre and post-merge tests
-PatchTestDataStore = collections.defaultdict(str)
-
-class PatchTestInput(object):
+class PatchtestParser(object):
     """Abstract the patchtest argument parser"""
 
     @classmethod

@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 import pyparsing
+import re
 
 # general
 colon = pyparsing.Literal(":")
@@ -34,10 +35,16 @@ lic_chksum_added = pyparsing.AtLineStart("+" + metadata_chksum)
 lic_chksum_removed = pyparsing.AtLineStart("-" + metadata_chksum)
 add_mark = pyparsing.Regex('\\+ ')
 patch_max_line_length = 200
-metadata_src_uri  = 'SRC_URI'
-metadata_summary = 'SUMMARY'
-cve_check_ignore_var = 'CVE_CHECK_IGNORE'
-cve_status_var = 'CVE_STATUS'
+metadata_src_uri = "SRC_URI"
+metadata_summary = "SUMMARY"
+cve_check_ignore_var = "CVE_CHECK_IGNORE"
+cve_status_var = "CVE_STATUS"
+endcommit_messages_regex = re.compile(
+    r"\(From \w+-\w+ rev:|(?<!\S)Signed-off-by|(?<!\S)---\n"
+)
+patchmetadata_regex = re.compile(
+    r"-{3} \S+|\+{3} \S+|@{2} -\d+,\d+ \+\d+,\d+ @{2} \S+"
+)
 
 # mbox
 auh_email = 'auh@yoctoproject.org'

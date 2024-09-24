@@ -5,9 +5,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
 import base
-import patterns
 from io import StringIO
-from data import PatchTestInput
+from patchtest_parser import PatchtestParser
 from pylint.reporters.text import TextReporter
 import pylint.lint as lint
 
