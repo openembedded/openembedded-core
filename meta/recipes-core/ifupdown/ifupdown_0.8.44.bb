@@ -16,7 +16,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=mast
            file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
            file://tweak-ptest-script.patch \
            "
-SRCREV = "cf86ad5819aba8f9b020a95257c9a8c4911b1c85"
+SRCREV = "7d44f9ce6717a4a496fd46f28c52e12dbf5bafdd"
 
 S = "${WORKDIR}/git"
 
