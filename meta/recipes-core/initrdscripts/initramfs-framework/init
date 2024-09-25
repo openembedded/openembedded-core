@@ -70,7 +70,7 @@ fatal() {
 	fi
 }
 
-# Variables shared amoung modules
+# Variables shared among modules
 ROOTFS_DIR="/rootfs" # where to do the switch root
 MODULE_PRE_HOOKS=""  # functions to call before running each module
 MODULE_POST_HOOKS="" # functions to call after running each module
