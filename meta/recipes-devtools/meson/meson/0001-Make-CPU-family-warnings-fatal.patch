@@ -1,4 +1,4 @@
-From 33bc81d5a262e0fa1a346ac1667a3679a17c0997 Mon Sep 17 00:00:00 2001
+From 13e05ca933a572c1caf93372df808a30976f99cd Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 3 Jul 2018 13:59:09 +0100
 Subject: [PATCH] Make CPU family warnings fatal
@@ -26,10 +26,10 @@ index 86bad9b..9703315 100644
          endian = literal['endian']
          if endian not in ('little', 'big'):
 diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index 5bccb90..6aa4b15 100644
+index 484ef45..cf4a3ba 100644
 --- a/mesonbuild/environment.py
 +++ b/mesonbuild/environment.py
-@@ -387,10 +387,8 @@ def detect_cpu_family(compilers: CompilersDict) -> str:
+@@ -389,10 +389,8 @@ def detect_cpu_family(compilers: CompilersDict) -> str:
          if compilers and not any_compiler_has_define(compilers, '__mips64'):
              trial = 'mips'
  
