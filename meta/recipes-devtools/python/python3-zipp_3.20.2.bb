@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/jaraco/zipp"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=141643e11c48898150daa83802dbc65f"
 
-SRC_URI[sha256sum] = "c22b14cc4763c5a5b04134207736c107db42e9d3ef2d9779d465f5f1bcba572b"
+SRC_URI[sha256sum] = "bc9eb26f4506fda01b81bcde0ca78103b6e62f991b381fec825435c836edbc29"
 
 DEPENDS += "python3-setuptools-scm-native"
 
