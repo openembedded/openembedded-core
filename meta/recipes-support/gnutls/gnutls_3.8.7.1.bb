@@ -21,11 +21,15 @@ SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar.xz \
            file://arm_eabi.patch \
            file://0001-Creating-.hmac-file-should-be-excuted-in-target-envi.patch \
+           file://conditional.patch \
            file://run-ptest \
            file://Add-ptest-support.patch \
            "
 
-SRC_URI[sha256sum] = "2e1588aae53cb32d43937f1f4eca28febd9c0c7aa1734fc5dd61a7e81e0ebcdd"
+SRC_URI[sha256sum] = "9ca0ddaccce28a74fa18d738744190afb3b0daebef74e6ad686bf7bef99abd60"
+
+# This is only needed for 3.8.7.1, remove when upgrading to 3.8.8 onwards
+S = "${WORKDIR}/gnutls-3.8.7"
 
 inherit autotools texinfo pkgconfig gettext lib_package gtk-doc ptest
 

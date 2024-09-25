@@ -1,0 +1,42 @@
+From 292f96f26d7ce80e4a165c903c4fd569b85c1c1f Mon Sep 17 00:00:00 2001
+From: Daiki Ueno <ueno@gnu.org>
+Date: Fri, 16 Aug 2024 09:42:15 +0900
+Subject: [PATCH] build: fix setting AM_CONDITIONAL for brotli and zstd
+
+As the with_{libbrotli,libzsttd} variables are unset if configured
+with --without-{brotli,zstd}, check the unequality to "no" doesn't
+work; use explicit matching with "yes" instead.
+
+Signed-off-by: Daiki Ueno <ueno@gnu.org>
+
+Upstream-Status: Backport
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 95ec4c1515..a476176800 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1158,7 +1158,7 @@ if test x$ac_brotli != xno; then
+ else
+     AC_MSG_RESULT(no)
+ fi
+-AM_CONDITIONAL(HAVE_LIBBROTLI, test "$with_libbrotlienc" != "no" && test "$with_libbrotlidec" != "no")
++AM_CONDITIONAL(HAVE_LIBBROTLI, test "$with_libbrotlienc" = yes && test "$with_libbrotlidec" = yes)
+ 
+ AS_IF([test "$ac_cv_dlopen_soname_works" = yes], [
+     save_CFLAGS=$CFLAGS
+@@ -1203,7 +1203,7 @@ if test x$ac_zstd != xno; then
+ else
+     AC_MSG_RESULT(no)
+ fi
+-AM_CONDITIONAL(HAVE_LIBZSTD, test "$with_libzstd" != "no")
++AM_CONDITIONAL(HAVE_LIBZSTD, test "$with_libzstd" = yes)
+ 
+ AS_IF([test "$ac_cv_dlopen_soname_works" = yes], [
+     save_CFLAGS=$CFLAGS
+-- 
+GitLab
+
