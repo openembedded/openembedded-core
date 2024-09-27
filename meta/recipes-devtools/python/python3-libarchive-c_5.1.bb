@@ -6,6 +6,7 @@ LICENSE = "CC0-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=bcab380227a83bc147350b40a81e6ffc"
 
 SRC_URI += " \
+        file://new-libarchive.patch \
         file://run-ptest \
 "
 
