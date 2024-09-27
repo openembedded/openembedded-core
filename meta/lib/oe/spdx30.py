@@ -220,13 +220,34 @@ class FloatProp(Property):
         return decoder.read_float()
 
 
-class ObjectProp(Property):
+class IRIProp(Property):
+    def __init__(self, context=[], *, pattern=None):
+        super().__init__(pattern=pattern)
+        self.context = context
+
+    def compact(self, value):
+        for iri, compact in self.context:
+            if value == iri:
+                return compact
+        return None
+
+    def expand(self, value):
+        for iri, compact in self.context:
+            if value == compact:
+                return iri
+        return None
+
+    def iri_values(self):
+        return (iri for iri, _ in self.context)
+
+
+class ObjectProp(IRIProp):
     """
     A scalar SHACL object property of a SHACL object
     """
 
-    def __init__(self, cls, required):
-        super().__init__()
+    def __init__(self, cls, required, context=[]):
+        super().__init__(context)
         self.cls = cls
         self.required = required
 
@@ -264,8 +285,7 @@ class ObjectProp(Property):
             raise ValueError("Object cannot be None")
 
         if isinstance(value, str):
-            value = _NI_ENCODE_CONTEXT.get(value, value)
-            encoder.write_iri(value)
+            encoder.write_iri(value, self.compact(value))
             return
 
         return value.encode(encoder, state)
@@ -275,7 +295,7 @@ class ObjectProp(Property):
         if iri is None:
             return self.cls.decode(decoder, objectset=objectset)
 
-        iri = _NI_DECODE_CONTEXT.get(iri, iri)
+        iri = self.expand(iri) or iri
 
         if objectset is None:
             return iri
@@ -445,36 +465,27 @@ class ListProp(Property):
         return ListProxy(self.prop, data=data)
 
 
-class EnumProp(Property):
+class EnumProp(IRIProp):
     VALID_TYPES = str
 
     def __init__(self, values, *, pattern=None):
-        super().__init__(pattern=pattern)
-        self.values = values
+        super().__init__(values, pattern=pattern)
 
     def validate(self, value):
         super().validate(value)
 
-        valid_values = (iri for iri, _ in self.values)
+        valid_values = self.iri_values()
         if value not in valid_values:
             raise ValueError(
                 f"'{value}' is not a valid value. Choose one of {' '.join(valid_values)}"
             )
 
     def encode(self, encoder, value, state):
-        for iri, compact in self.values:
-            if iri == value:
-                encoder.write_enum(value, self, compact)
-                return
-
-        encoder.write_enum(value, self)
+        encoder.write_enum(value, self, self.compact(value))
 
     def decode(self, decoder, *, objectset=None):
         v = decoder.read_enum(self)
-        for iri, compact in self.values:
-            if v == compact:
-                return iri
-        return v
+        return self.expand(v) or v
 
 
 class NodeKind(Enum):
@@ -1946,536 +1957,23 @@ def print_tree(objects, all_fields=False):
 
 
 CONTEXT_URLS = [
-    "https://spdx.org/rdf/3.0.0/spdx-context.jsonld",
+    "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
 ]
-
-_NI_ENCODE_CONTEXT = {
-    "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/kilowattHour": "ai_EnergyUnitType:kilowattHour",
-    "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/megajoule": "ai_EnergyUnitType:megajoule",
-    "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/other": "ai_EnergyUnitType:other",
-    "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/high": "ai_SafetyRiskAssessmentType:high",
-    "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/low": "ai_SafetyRiskAssessmentType:low",
-    "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/medium": "ai_SafetyRiskAssessmentType:medium",
-    "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/serious": "ai_SafetyRiskAssessmentType:serious",
-    "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/other": "AnnotationType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/review": "AnnotationType:review",
-    "https://spdx.org/rdf/3.0.0/terms/Core/NoAssertionElement": "spdx:Core/NoAssertionElement",
-    "https://spdx.org/rdf/3.0.0/terms/Core/NoneElement": "spdx:Core/NoneElement",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe22": "ExternalIdentifierType:cpe22",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe23": "ExternalIdentifierType:cpe23",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cve": "ExternalIdentifierType:cve",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/email": "ExternalIdentifierType:email",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/gitoid": "ExternalIdentifierType:gitoid",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/other": "ExternalIdentifierType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/packageUrl": "ExternalIdentifierType:packageUrl",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/securityOther": "ExternalIdentifierType:securityOther",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swhid": "ExternalIdentifierType:swhid",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swid": "ExternalIdentifierType:swid",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/urlScheme": "ExternalIdentifierType:urlScheme",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altDownloadLocation": "ExternalRefType:altDownloadLocation",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altWebPage": "ExternalRefType:altWebPage",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/binaryArtifact": "ExternalRefType:binaryArtifact",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/bower": "ExternalRefType:bower",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildMeta": "ExternalRefType:buildMeta",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildSystem": "ExternalRefType:buildSystem",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/certificationReport": "ExternalRefType:certificationReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/chat": "ExternalRefType:chat",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/componentAnalysisReport": "ExternalRefType:componentAnalysisReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/cwe": "ExternalRefType:cwe",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/documentation": "ExternalRefType:documentation",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/dynamicAnalysisReport": "ExternalRefType:dynamicAnalysisReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/eolNotice": "ExternalRefType:eolNotice",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/exportControlAssessment": "ExternalRefType:exportControlAssessment",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/funding": "ExternalRefType:funding",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/issueTracker": "ExternalRefType:issueTracker",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/license": "ExternalRefType:license",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mailingList": "ExternalRefType:mailingList",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mavenCentral": "ExternalRefType:mavenCentral",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/metrics": "ExternalRefType:metrics",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/npm": "ExternalRefType:npm",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/nuget": "ExternalRefType:nuget",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/other": "ExternalRefType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/privacyAssessment": "ExternalRefType:privacyAssessment",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/productMetadata": "ExternalRefType:productMetadata",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/purchaseOrder": "ExternalRefType:purchaseOrder",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/qualityAssessmentReport": "ExternalRefType:qualityAssessmentReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseHistory": "ExternalRefType:releaseHistory",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseNotes": "ExternalRefType:releaseNotes",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/riskAssessment": "ExternalRefType:riskAssessment",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/runtimeAnalysisReport": "ExternalRefType:runtimeAnalysisReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/secureSoftwareAttestation": "ExternalRefType:secureSoftwareAttestation",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdversaryModel": "ExternalRefType:securityAdversaryModel",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdvisory": "ExternalRefType:securityAdvisory",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityFix": "ExternalRefType:securityFix",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityOther": "ExternalRefType:securityOther",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPenTestReport": "ExternalRefType:securityPenTestReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPolicy": "ExternalRefType:securityPolicy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityThreatModel": "ExternalRefType:securityThreatModel",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/socialMedia": "ExternalRefType:socialMedia",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/sourceArtifact": "ExternalRefType:sourceArtifact",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/staticAnalysisReport": "ExternalRefType:staticAnalysisReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/support": "ExternalRefType:support",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vcs": "ExternalRefType:vcs",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityDisclosureReport": "ExternalRefType:vulnerabilityDisclosureReport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment": "ExternalRefType:vulnerabilityExploitabilityAssessment",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b256": "HashAlgorithm:blake2b256",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b384": "HashAlgorithm:blake2b384",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b512": "HashAlgorithm:blake2b512",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake3": "HashAlgorithm:blake3",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsDilithium": "HashAlgorithm:crystalsDilithium",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsKyber": "HashAlgorithm:crystalsKyber",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/falcon": "HashAlgorithm:falcon",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md2": "HashAlgorithm:md2",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md4": "HashAlgorithm:md4",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md5": "HashAlgorithm:md5",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md6": "HashAlgorithm:md6",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/other": "HashAlgorithm:other",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha1": "HashAlgorithm:sha1",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha224": "HashAlgorithm:sha224",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha256": "HashAlgorithm:sha256",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha384": "HashAlgorithm:sha384",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_224": "HashAlgorithm:sha3_224",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_256": "HashAlgorithm:sha3_256",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_384": "HashAlgorithm:sha3_384",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_512": "HashAlgorithm:sha3_512",
-    "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha512": "HashAlgorithm:sha512",
-    "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/build": "LifecycleScopeType:build",
-    "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/design": "LifecycleScopeType:design",
-    "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/development": "LifecycleScopeType:development",
-    "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/other": "LifecycleScopeType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/runtime": "LifecycleScopeType:runtime",
-    "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/test": "LifecycleScopeType:test",
-    "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no": "PresenceType:no",
-    "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion": "PresenceType:noAssertion",
-    "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes": "PresenceType:yes",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/ai": "ProfileIdentifierType:ai",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/build": "ProfileIdentifierType:build",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/core": "ProfileIdentifierType:core",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/dataset": "ProfileIdentifierType:dataset",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/expandedLicensing": "ProfileIdentifierType:expandedLicensing",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/extension": "ProfileIdentifierType:extension",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/lite": "ProfileIdentifierType:lite",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/security": "ProfileIdentifierType:security",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/simpleLicensing": "ProfileIdentifierType:simpleLicensing",
-    "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/software": "ProfileIdentifierType:software",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/complete": "RelationshipCompleteness:complete",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/incomplete": "RelationshipCompleteness:incomplete",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/noAssertion": "RelationshipCompleteness:noAssertion",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/affects": "RelationshipType:affects",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/amendedBy": "RelationshipType:amendedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/ancestorOf": "RelationshipType:ancestorOf",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/availableFrom": "RelationshipType:availableFrom",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/configures": "RelationshipType:configures",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/contains": "RelationshipType:contains",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/coordinatedBy": "RelationshipType:coordinatedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/copiedTo": "RelationshipType:copiedTo",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/delegatedTo": "RelationshipType:delegatedTo",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/dependsOn": "RelationshipType:dependsOn",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/descendantOf": "RelationshipType:descendantOf",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/describes": "RelationshipType:describes",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/doesNotAffect": "RelationshipType:doesNotAffect",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/expandsTo": "RelationshipType:expandsTo",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/exploitCreatedBy": "RelationshipType:exploitCreatedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedBy": "RelationshipType:fixedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedIn": "RelationshipType:fixedIn",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/foundBy": "RelationshipType:foundBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/generates": "RelationshipType:generates",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAddedFile": "RelationshipType:hasAddedFile",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssessmentFor": "RelationshipType:hasAssessmentFor",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssociatedVulnerability": "RelationshipType:hasAssociatedVulnerability",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasConcludedLicense": "RelationshipType:hasConcludedLicense",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDataFile": "RelationshipType:hasDataFile",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeclaredLicense": "RelationshipType:hasDeclaredLicense",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeletedFile": "RelationshipType:hasDeletedFile",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDependencyManifest": "RelationshipType:hasDependencyManifest",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDistributionArtifact": "RelationshipType:hasDistributionArtifact",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDocumentation": "RelationshipType:hasDocumentation",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDynamicLink": "RelationshipType:hasDynamicLink",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasEvidence": "RelationshipType:hasEvidence",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasExample": "RelationshipType:hasExample",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasHost": "RelationshipType:hasHost",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasInputs": "RelationshipType:hasInputs",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasMetadata": "RelationshipType:hasMetadata",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalComponent": "RelationshipType:hasOptionalComponent",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalDependency": "RelationshipType:hasOptionalDependency",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOutputs": "RelationshipType:hasOutputs",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasPrerequsite": "RelationshipType:hasPrerequsite",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasProvidedDependency": "RelationshipType:hasProvidedDependency",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasRequirement": "RelationshipType:hasRequirement",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasSpecification": "RelationshipType:hasSpecification",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasStaticLink": "RelationshipType:hasStaticLink",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTest": "RelationshipType:hasTest",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTestCase": "RelationshipType:hasTestCase",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasVariant": "RelationshipType:hasVariant",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/invokedBy": "RelationshipType:invokedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/modifiedBy": "RelationshipType:modifiedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/other": "RelationshipType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/packagedBy": "RelationshipType:packagedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/patchedBy": "RelationshipType:patchedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/publishedBy": "RelationshipType:publishedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/reportedBy": "RelationshipType:reportedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/republishedBy": "RelationshipType:republishedBy",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/serializedInArtifact": "RelationshipType:serializedInArtifact",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/testedOn": "RelationshipType:testedOn",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/trainedOn": "RelationshipType:trainedOn",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/underInvestigationFor": "RelationshipType:underInvestigationFor",
-    "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/usesTool": "RelationshipType:usesTool",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/deployed": "SupportType:deployed",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/development": "SupportType:development",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/endOfSupport": "SupportType:endOfSupport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/limitedSupport": "SupportType:limitedSupport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noAssertion": "SupportType:noAssertion",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noSupport": "SupportType:noSupport",
-    "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/support": "SupportType:support",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/amber": "dataset_ConfidentialityLevelType:amber",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/clear": "dataset_ConfidentialityLevelType:clear",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/green": "dataset_ConfidentialityLevelType:green",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/red": "dataset_ConfidentialityLevelType:red",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/clickthrough": "dataset_DatasetAvailabilityType:clickthrough",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/directDownload": "dataset_DatasetAvailabilityType:directDownload",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/query": "dataset_DatasetAvailabilityType:query",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/registration": "dataset_DatasetAvailabilityType:registration",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/scrapingScript": "dataset_DatasetAvailabilityType:scrapingScript",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/audio": "dataset_DatasetType:audio",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/categorical": "dataset_DatasetType:categorical",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/graph": "dataset_DatasetType:graph",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/image": "dataset_DatasetType:image",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/noAssertion": "dataset_DatasetType:noAssertion",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/numeric": "dataset_DatasetType:numeric",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/other": "dataset_DatasetType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/sensor": "dataset_DatasetType:sensor",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/structured": "dataset_DatasetType:structured",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/syntactic": "dataset_DatasetType:syntactic",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/text": "dataset_DatasetType:text",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timeseries": "dataset_DatasetType:timeseries",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timestamp": "dataset_DatasetType:timestamp",
-    "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/video": "dataset_DatasetType:video",
-    "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/critical": "security_CvssSeverityType:critical",
-    "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/high": "security_CvssSeverityType:high",
-    "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/low": "security_CvssSeverityType:low",
-    "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/medium": "security_CvssSeverityType:medium",
-    "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/none": "security_CvssSeverityType:none",
-    "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/kev": "security_ExploitCatalogType:kev",
-    "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/other": "security_ExploitCatalogType:other",
-    "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/act": "security_SsvcDecisionType:act",
-    "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/attend": "security_SsvcDecisionType:attend",
-    "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/track": "security_SsvcDecisionType:track",
-    "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/trackStar": "security_SsvcDecisionType:trackStar",
-    "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/componentNotPresent": "security_VexJustificationType:componentNotPresent",
-    "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist": "security_VexJustificationType:inlineMitigationsAlreadyExist",
-    "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary": "security_VexJustificationType:vulnerableCodeCannotBeControlledByAdversary",
-    "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath": "security_VexJustificationType:vulnerableCodeNotInExecutePath",
-    "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotPresent": "security_VexJustificationType:vulnerableCodeNotPresent",
-    "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/gitoid": "software_ContentIdentifierType:gitoid",
-    "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/swhid": "software_ContentIdentifierType:swhid",
-    "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/directory": "software_FileKindType:directory",
-    "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/file": "software_FileKindType:file",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/analyzed": "software_SbomType:analyzed",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/build": "software_SbomType:build",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/deployed": "software_SbomType:deployed",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/design": "software_SbomType:design",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/runtime": "software_SbomType:runtime",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/source": "software_SbomType:source",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/application": "software_SoftwarePurpose:application",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/archive": "software_SoftwarePurpose:archive",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/bom": "software_SoftwarePurpose:bom",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/configuration": "software_SoftwarePurpose:configuration",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/container": "software_SoftwarePurpose:container",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/data": "software_SoftwarePurpose:data",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/device": "software_SoftwarePurpose:device",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/deviceDriver": "software_SoftwarePurpose:deviceDriver",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/diskImage": "software_SoftwarePurpose:diskImage",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/documentation": "software_SoftwarePurpose:documentation",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/evidence": "software_SoftwarePurpose:evidence",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/executable": "software_SoftwarePurpose:executable",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/file": "software_SoftwarePurpose:file",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/filesystemImage": "software_SoftwarePurpose:filesystemImage",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/firmware": "software_SoftwarePurpose:firmware",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/framework": "software_SoftwarePurpose:framework",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/install": "software_SoftwarePurpose:install",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/library": "software_SoftwarePurpose:library",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/manifest": "software_SoftwarePurpose:manifest",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/model": "software_SoftwarePurpose:model",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/module": "software_SoftwarePurpose:module",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/operatingSystem": "software_SoftwarePurpose:operatingSystem",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/other": "software_SoftwarePurpose:other",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/patch": "software_SoftwarePurpose:patch",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/platform": "software_SoftwarePurpose:platform",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/requirement": "software_SoftwarePurpose:requirement",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/source": "software_SoftwarePurpose:source",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/specification": "software_SoftwarePurpose:specification",
-    "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/test": "software_SoftwarePurpose:test",
-    "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoAssertionLicense": "spdx:ExpandedLicensing/NoAssertionLicense",
-    "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoneLicense": "spdx:ExpandedLicensing/NoneLicense",
-}
-
-_NI_DECODE_CONTEXT = {
-    "ai_EnergyUnitType:kilowattHour": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/kilowattHour",
-    "ai_EnergyUnitType:megajoule": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/megajoule",
-    "ai_EnergyUnitType:other": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/other",
-    "ai_SafetyRiskAssessmentType:high": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/high",
-    "ai_SafetyRiskAssessmentType:low": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/low",
-    "ai_SafetyRiskAssessmentType:medium": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/medium",
-    "ai_SafetyRiskAssessmentType:serious": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/serious",
-    "AnnotationType:other": "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/other",
-    "AnnotationType:review": "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/review",
-    "spdx:Core/NoAssertionElement": "https://spdx.org/rdf/3.0.0/terms/Core/NoAssertionElement",
-    "spdx:Core/NoneElement": "https://spdx.org/rdf/3.0.0/terms/Core/NoneElement",
-    "ExternalIdentifierType:cpe22": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe22",
-    "ExternalIdentifierType:cpe23": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe23",
-    "ExternalIdentifierType:cve": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cve",
-    "ExternalIdentifierType:email": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/email",
-    "ExternalIdentifierType:gitoid": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/gitoid",
-    "ExternalIdentifierType:other": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/other",
-    "ExternalIdentifierType:packageUrl": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/packageUrl",
-    "ExternalIdentifierType:securityOther": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/securityOther",
-    "ExternalIdentifierType:swhid": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swhid",
-    "ExternalIdentifierType:swid": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swid",
-    "ExternalIdentifierType:urlScheme": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/urlScheme",
-    "ExternalRefType:altDownloadLocation": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altDownloadLocation",
-    "ExternalRefType:altWebPage": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altWebPage",
-    "ExternalRefType:binaryArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/binaryArtifact",
-    "ExternalRefType:bower": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/bower",
-    "ExternalRefType:buildMeta": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildMeta",
-    "ExternalRefType:buildSystem": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildSystem",
-    "ExternalRefType:certificationReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/certificationReport",
-    "ExternalRefType:chat": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/chat",
-    "ExternalRefType:componentAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/componentAnalysisReport",
-    "ExternalRefType:cwe": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/cwe",
-    "ExternalRefType:documentation": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/documentation",
-    "ExternalRefType:dynamicAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/dynamicAnalysisReport",
-    "ExternalRefType:eolNotice": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/eolNotice",
-    "ExternalRefType:exportControlAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/exportControlAssessment",
-    "ExternalRefType:funding": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/funding",
-    "ExternalRefType:issueTracker": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/issueTracker",
-    "ExternalRefType:license": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/license",
-    "ExternalRefType:mailingList": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mailingList",
-    "ExternalRefType:mavenCentral": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mavenCentral",
-    "ExternalRefType:metrics": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/metrics",
-    "ExternalRefType:npm": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/npm",
-    "ExternalRefType:nuget": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/nuget",
-    "ExternalRefType:other": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/other",
-    "ExternalRefType:privacyAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/privacyAssessment",
-    "ExternalRefType:productMetadata": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/productMetadata",
-    "ExternalRefType:purchaseOrder": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/purchaseOrder",
-    "ExternalRefType:qualityAssessmentReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/qualityAssessmentReport",
-    "ExternalRefType:releaseHistory": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseHistory",
-    "ExternalRefType:releaseNotes": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseNotes",
-    "ExternalRefType:riskAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/riskAssessment",
-    "ExternalRefType:runtimeAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/runtimeAnalysisReport",
-    "ExternalRefType:secureSoftwareAttestation": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/secureSoftwareAttestation",
-    "ExternalRefType:securityAdversaryModel": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdversaryModel",
-    "ExternalRefType:securityAdvisory": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdvisory",
-    "ExternalRefType:securityFix": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityFix",
-    "ExternalRefType:securityOther": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityOther",
-    "ExternalRefType:securityPenTestReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPenTestReport",
-    "ExternalRefType:securityPolicy": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPolicy",
-    "ExternalRefType:securityThreatModel": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityThreatModel",
-    "ExternalRefType:socialMedia": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/socialMedia",
-    "ExternalRefType:sourceArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/sourceArtifact",
-    "ExternalRefType:staticAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/staticAnalysisReport",
-    "ExternalRefType:support": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/support",
-    "ExternalRefType:vcs": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vcs",
-    "ExternalRefType:vulnerabilityDisclosureReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityDisclosureReport",
-    "ExternalRefType:vulnerabilityExploitabilityAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment",
-    "HashAlgorithm:blake2b256": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b256",
-    "HashAlgorithm:blake2b384": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b384",
-    "HashAlgorithm:blake2b512": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b512",
-    "HashAlgorithm:blake3": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake3",
-    "HashAlgorithm:crystalsDilithium": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsDilithium",
-    "HashAlgorithm:crystalsKyber": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsKyber",
-    "HashAlgorithm:falcon": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/falcon",
-    "HashAlgorithm:md2": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md2",
-    "HashAlgorithm:md4": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md4",
-    "HashAlgorithm:md5": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md5",
-    "HashAlgorithm:md6": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md6",
-    "HashAlgorithm:other": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/other",
-    "HashAlgorithm:sha1": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha1",
-    "HashAlgorithm:sha224": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha224",
-    "HashAlgorithm:sha256": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha256",
-    "HashAlgorithm:sha384": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha384",
-    "HashAlgorithm:sha3_224": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_224",
-    "HashAlgorithm:sha3_256": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_256",
-    "HashAlgorithm:sha3_384": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_384",
-    "HashAlgorithm:sha3_512": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_512",
-    "HashAlgorithm:sha512": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha512",
-    "LifecycleScopeType:build": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/build",
-    "LifecycleScopeType:design": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/design",
-    "LifecycleScopeType:development": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/development",
-    "LifecycleScopeType:other": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/other",
-    "LifecycleScopeType:runtime": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/runtime",
-    "LifecycleScopeType:test": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/test",
-    "PresenceType:no": "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no",
-    "PresenceType:noAssertion": "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion",
-    "PresenceType:yes": "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes",
-    "ProfileIdentifierType:ai": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/ai",
-    "ProfileIdentifierType:build": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/build",
-    "ProfileIdentifierType:core": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/core",
-    "ProfileIdentifierType:dataset": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/dataset",
-    "ProfileIdentifierType:expandedLicensing": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/expandedLicensing",
-    "ProfileIdentifierType:extension": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/extension",
-    "ProfileIdentifierType:lite": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/lite",
-    "ProfileIdentifierType:security": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/security",
-    "ProfileIdentifierType:simpleLicensing": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/simpleLicensing",
-    "ProfileIdentifierType:software": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/software",
-    "RelationshipCompleteness:complete": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/complete",
-    "RelationshipCompleteness:incomplete": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/incomplete",
-    "RelationshipCompleteness:noAssertion": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/noAssertion",
-    "RelationshipType:affects": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/affects",
-    "RelationshipType:amendedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/amendedBy",
-    "RelationshipType:ancestorOf": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/ancestorOf",
-    "RelationshipType:availableFrom": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/availableFrom",
-    "RelationshipType:configures": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/configures",
-    "RelationshipType:contains": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/contains",
-    "RelationshipType:coordinatedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/coordinatedBy",
-    "RelationshipType:copiedTo": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/copiedTo",
-    "RelationshipType:delegatedTo": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/delegatedTo",
-    "RelationshipType:dependsOn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/dependsOn",
-    "RelationshipType:descendantOf": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/descendantOf",
-    "RelationshipType:describes": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/describes",
-    "RelationshipType:doesNotAffect": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/doesNotAffect",
-    "RelationshipType:expandsTo": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/expandsTo",
-    "RelationshipType:exploitCreatedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/exploitCreatedBy",
-    "RelationshipType:fixedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedBy",
-    "RelationshipType:fixedIn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedIn",
-    "RelationshipType:foundBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/foundBy",
-    "RelationshipType:generates": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/generates",
-    "RelationshipType:hasAddedFile": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAddedFile",
-    "RelationshipType:hasAssessmentFor": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssessmentFor",
-    "RelationshipType:hasAssociatedVulnerability": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssociatedVulnerability",
-    "RelationshipType:hasConcludedLicense": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasConcludedLicense",
-    "RelationshipType:hasDataFile": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDataFile",
-    "RelationshipType:hasDeclaredLicense": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeclaredLicense",
-    "RelationshipType:hasDeletedFile": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeletedFile",
-    "RelationshipType:hasDependencyManifest": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDependencyManifest",
-    "RelationshipType:hasDistributionArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDistributionArtifact",
-    "RelationshipType:hasDocumentation": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDocumentation",
-    "RelationshipType:hasDynamicLink": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDynamicLink",
-    "RelationshipType:hasEvidence": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasEvidence",
-    "RelationshipType:hasExample": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasExample",
-    "RelationshipType:hasHost": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasHost",
-    "RelationshipType:hasInputs": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasInputs",
-    "RelationshipType:hasMetadata": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasMetadata",
-    "RelationshipType:hasOptionalComponent": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalComponent",
-    "RelationshipType:hasOptionalDependency": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalDependency",
-    "RelationshipType:hasOutputs": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOutputs",
-    "RelationshipType:hasPrerequsite": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasPrerequsite",
-    "RelationshipType:hasProvidedDependency": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasProvidedDependency",
-    "RelationshipType:hasRequirement": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasRequirement",
-    "RelationshipType:hasSpecification": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasSpecification",
-    "RelationshipType:hasStaticLink": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasStaticLink",
-    "RelationshipType:hasTest": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTest",
-    "RelationshipType:hasTestCase": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTestCase",
-    "RelationshipType:hasVariant": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasVariant",
-    "RelationshipType:invokedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/invokedBy",
-    "RelationshipType:modifiedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/modifiedBy",
-    "RelationshipType:other": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/other",
-    "RelationshipType:packagedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/packagedBy",
-    "RelationshipType:patchedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/patchedBy",
-    "RelationshipType:publishedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/publishedBy",
-    "RelationshipType:reportedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/reportedBy",
-    "RelationshipType:republishedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/republishedBy",
-    "RelationshipType:serializedInArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/serializedInArtifact",
-    "RelationshipType:testedOn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/testedOn",
-    "RelationshipType:trainedOn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/trainedOn",
-    "RelationshipType:underInvestigationFor": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/underInvestigationFor",
-    "RelationshipType:usesTool": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/usesTool",
-    "SupportType:deployed": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/deployed",
-    "SupportType:development": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/development",
-    "SupportType:endOfSupport": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/endOfSupport",
-    "SupportType:limitedSupport": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/limitedSupport",
-    "SupportType:noAssertion": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noAssertion",
-    "SupportType:noSupport": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noSupport",
-    "SupportType:support": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/support",
-    "dataset_ConfidentialityLevelType:amber": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/amber",
-    "dataset_ConfidentialityLevelType:clear": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/clear",
-    "dataset_ConfidentialityLevelType:green": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/green",
-    "dataset_ConfidentialityLevelType:red": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/red",
-    "dataset_DatasetAvailabilityType:clickthrough": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/clickthrough",
-    "dataset_DatasetAvailabilityType:directDownload": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/directDownload",
-    "dataset_DatasetAvailabilityType:query": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/query",
-    "dataset_DatasetAvailabilityType:registration": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/registration",
-    "dataset_DatasetAvailabilityType:scrapingScript": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/scrapingScript",
-    "dataset_DatasetType:audio": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/audio",
-    "dataset_DatasetType:categorical": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/categorical",
-    "dataset_DatasetType:graph": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/graph",
-    "dataset_DatasetType:image": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/image",
-    "dataset_DatasetType:noAssertion": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/noAssertion",
-    "dataset_DatasetType:numeric": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/numeric",
-    "dataset_DatasetType:other": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/other",
-    "dataset_DatasetType:sensor": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/sensor",
-    "dataset_DatasetType:structured": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/structured",
-    "dataset_DatasetType:syntactic": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/syntactic",
-    "dataset_DatasetType:text": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/text",
-    "dataset_DatasetType:timeseries": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timeseries",
-    "dataset_DatasetType:timestamp": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timestamp",
-    "dataset_DatasetType:video": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/video",
-    "security_CvssSeverityType:critical": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/critical",
-    "security_CvssSeverityType:high": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/high",
-    "security_CvssSeverityType:low": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/low",
-    "security_CvssSeverityType:medium": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/medium",
-    "security_CvssSeverityType:none": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/none",
-    "security_ExploitCatalogType:kev": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/kev",
-    "security_ExploitCatalogType:other": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/other",
-    "security_SsvcDecisionType:act": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/act",
-    "security_SsvcDecisionType:attend": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/attend",
-    "security_SsvcDecisionType:track": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/track",
-    "security_SsvcDecisionType:trackStar": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/trackStar",
-    "security_VexJustificationType:componentNotPresent": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/componentNotPresent",
-    "security_VexJustificationType:inlineMitigationsAlreadyExist": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist",
-    "security_VexJustificationType:vulnerableCodeCannotBeControlledByAdversary": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary",
-    "security_VexJustificationType:vulnerableCodeNotInExecutePath": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath",
-    "security_VexJustificationType:vulnerableCodeNotPresent": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotPresent",
-    "software_ContentIdentifierType:gitoid": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/gitoid",
-    "software_ContentIdentifierType:swhid": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/swhid",
-    "software_FileKindType:directory": "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/directory",
-    "software_FileKindType:file": "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/file",
-    "software_SbomType:analyzed": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/analyzed",
-    "software_SbomType:build": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/build",
-    "software_SbomType:deployed": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/deployed",
-    "software_SbomType:design": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/design",
-    "software_SbomType:runtime": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/runtime",
-    "software_SbomType:source": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/source",
-    "software_SoftwarePurpose:application": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/application",
-    "software_SoftwarePurpose:archive": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/archive",
-    "software_SoftwarePurpose:bom": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/bom",
-    "software_SoftwarePurpose:configuration": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/configuration",
-    "software_SoftwarePurpose:container": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/container",
-    "software_SoftwarePurpose:data": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/data",
-    "software_SoftwarePurpose:device": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/device",
-    "software_SoftwarePurpose:deviceDriver": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/deviceDriver",
-    "software_SoftwarePurpose:diskImage": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/diskImage",
-    "software_SoftwarePurpose:documentation": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/documentation",
-    "software_SoftwarePurpose:evidence": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/evidence",
-    "software_SoftwarePurpose:executable": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/executable",
-    "software_SoftwarePurpose:file": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/file",
-    "software_SoftwarePurpose:filesystemImage": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/filesystemImage",
-    "software_SoftwarePurpose:firmware": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/firmware",
-    "software_SoftwarePurpose:framework": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/framework",
-    "software_SoftwarePurpose:install": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/install",
-    "software_SoftwarePurpose:library": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/library",
-    "software_SoftwarePurpose:manifest": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/manifest",
-    "software_SoftwarePurpose:model": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/model",
-    "software_SoftwarePurpose:module": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/module",
-    "software_SoftwarePurpose:operatingSystem": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/operatingSystem",
-    "software_SoftwarePurpose:other": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/other",
-    "software_SoftwarePurpose:patch": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/patch",
-    "software_SoftwarePurpose:platform": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/platform",
-    "software_SoftwarePurpose:requirement": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/requirement",
-    "software_SoftwarePurpose:source": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/source",
-    "software_SoftwarePurpose:specification": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/specification",
-    "software_SoftwarePurpose:test": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/test",
-    "spdx:ExpandedLicensing/NoAssertionLicense": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoAssertionLicense",
-    "spdx:ExpandedLicensing/NoneLicense": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoneLicense",
-}
 
 
 # CLASSES
-# The class that contains properties to describe energy consumption incurred
-# by an AI model in different stages of its lifecycle.
-@register("https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumption", compact_type="ai_EnergyConsumption", abstract=False)
-class ai_EnergyConsumption(SHACLObject):
+@register("http://spdx.invalid./AbstractClass", abstract=False)
+class http_spdx_invalid_AbstractClass(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
+    NAMED_INDIVIDUALS = {
+    }
+
+
+# A class for describing the energy consumption incurred by an AI model in
+# different stages of its lifecycle.
+@register("https://spdx.org/rdf/3.0.1/terms/AI/EnergyConsumption", compact_type="ai_EnergyConsumption", abstract=False)
+class ai_EnergyConsumption(SHACLObject):
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2487,7 +1985,7 @@ class ai_EnergyConsumption(SHACLObject):
         cls._add_property(
             "ai_finetuningEnergyConsumption",
             ListProp(ObjectProp(ai_EnergyConsumptionDescription, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/finetuningEnergyConsumption",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/finetuningEnergyConsumption",
             compact="ai_finetuningEnergyConsumption",
         )
         # Specifies the amount of energy consumed during inference time by an AI model
@@ -2495,7 +1993,7 @@ class ai_EnergyConsumption(SHACLObject):
         cls._add_property(
             "ai_inferenceEnergyConsumption",
             ListProp(ObjectProp(ai_EnergyConsumptionDescription, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/inferenceEnergyConsumption",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/inferenceEnergyConsumption",
             compact="ai_inferenceEnergyConsumption",
         )
         # Specifies the amount of energy consumed when training the AI model that is
@@ -2503,16 +2001,16 @@ class ai_EnergyConsumption(SHACLObject):
         cls._add_property(
             "ai_trainingEnergyConsumption",
             ListProp(ObjectProp(ai_EnergyConsumptionDescription, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/trainingEnergyConsumption",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/trainingEnergyConsumption",
             compact="ai_trainingEnergyConsumption",
         )
 
 
 # The class that helps note down the quantity of energy consumption and the unit
 # used for measurement.
-@register("https://spdx.org/rdf/3.0.0/terms/AI/EnergyConsumptionDescription", compact_type="ai_EnergyConsumptionDescription", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/AI/EnergyConsumptionDescription", compact_type="ai_EnergyConsumptionDescription", abstract=False)
 class ai_EnergyConsumptionDescription(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2523,7 +2021,7 @@ class ai_EnergyConsumptionDescription(SHACLObject):
         cls._add_property(
             "ai_energyQuantity",
             FloatProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/energyQuantity",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/energyQuantity",
             min_count=1,
             compact="ai_energyQuantity",
         )
@@ -2531,71 +2029,71 @@ class ai_EnergyConsumptionDescription(SHACLObject):
         cls._add_property(
             "ai_energyUnit",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/kilowattHour", "kilowattHour"),
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/megajoule", "megajoule"),
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/kilowattHour", "kilowattHour"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/megajoule", "megajoule"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/other", "other"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/energyUnit",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/energyUnit",
             min_count=1,
             compact="ai_energyUnit",
         )
 
 
 # Specifies the unit of energy consumption.
-@register("https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType", compact_type="ai_EnergyUnitType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType", compact_type="ai_EnergyUnitType", abstract=False)
 class ai_EnergyUnitType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "kilowattHour": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/kilowattHour",
-        "megajoule": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/megajoule",
-        "other": "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/other",
+        "kilowattHour": "https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/kilowattHour",
+        "megajoule": "https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/megajoule",
+        "other": "https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/other",
     }
     # Kilowatt-hour.
-    kilowattHour = "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/kilowattHour"
+    kilowattHour = "https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/kilowattHour"
     # Megajoule.
-    megajoule = "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/megajoule"
+    megajoule = "https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/megajoule"
     # Any other units of energy measurement.
-    other = "https://spdx.org/rdf/3.0.0/terms/AI/EnergyUnitType/other"
+    other = "https://spdx.org/rdf/3.0.1/terms/AI/EnergyUnitType/other"
 
 
 # Specifies the safety risk level.
-@register("https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType", compact_type="ai_SafetyRiskAssessmentType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType", compact_type="ai_SafetyRiskAssessmentType", abstract=False)
 class ai_SafetyRiskAssessmentType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "high": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/high",
-        "low": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/low",
-        "medium": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/medium",
-        "serious": "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/serious",
+        "high": "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/high",
+        "low": "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/low",
+        "medium": "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/medium",
+        "serious": "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/serious",
     }
     # The second-highest level of risk posed by an AI system.
-    high = "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/high"
+    high = "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/high"
     # Low/no risk is posed by an AI system.
-    low = "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/low"
+    low = "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/low"
     # The third-highest level of risk posed by an AI system.
-    medium = "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/medium"
+    medium = "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/medium"
     # The highest level of risk posed by an AI system.
-    serious = "https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/serious"
+    serious = "https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/serious"
 
 
 # Specifies the type of an annotation.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType", compact_type="AnnotationType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType", compact_type="AnnotationType", abstract=False)
 class AnnotationType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "other": "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/other",
-        "review": "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/review",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType/other",
+        "review": "https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType/review",
     }
-    # Used to store extra information about an Element which is not part of a Review (e.g. extra information provided during the creation of the Element).
-    other = "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/other"
+    # Used to store extra information about an Element which is not part of a review (e.g. extra information provided during the creation of the Element).
+    other = "https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType/other"
     # Used when someone reviews the Element.
-    review = "https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/review"
+    review = "https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType/review"
 
 
 # Provides information about the creation of the Element.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/CreationInfo", compact_type="CreationInfo", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/CreationInfo", compact_type="CreationInfo", abstract=False)
 class CreationInfo(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2607,22 +2105,24 @@ class CreationInfo(SHACLObject):
         cls._add_property(
             "comment",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/comment",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/comment",
             compact="comment",
         )
         # Identifies when the Element was originally created.
         cls._add_property(
             "created",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/created",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/created",
             min_count=1,
             compact="created",
         )
         # Identifies who or what created the Element.
         cls._add_property(
             "createdBy",
-            ListProp(ObjectProp(Agent, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/createdBy",
+            ListProp(ObjectProp(Agent, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/createdBy",
             min_count=1,
             compact="createdBy",
         )
@@ -2630,23 +2130,24 @@ class CreationInfo(SHACLObject):
         cls._add_property(
             "createdUsing",
             ListProp(ObjectProp(Tool, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/createdUsing",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/createdUsing",
             compact="createdUsing",
         )
-        # Provides a reference number that can be used to understand how to parse and interpret an Element.
+        # Provides a reference number that can be used to understand how to parse and
+        # interpret an Element.
         cls._add_property(
             "specVersion",
             StringProp(pattern=r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/specVersion",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/specVersion",
             min_count=1,
             compact="specVersion",
         )
 
 
 # A key with an associated value.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/DictionaryEntry", compact_type="DictionaryEntry", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/DictionaryEntry", compact_type="DictionaryEntry", abstract=False)
 class DictionaryEntry(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2657,7 +2158,7 @@ class DictionaryEntry(SHACLObject):
         cls._add_property(
             "key",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/key",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/key",
             min_count=1,
             compact="key",
         )
@@ -2665,26 +2166,26 @@ class DictionaryEntry(SHACLObject):
         cls._add_property(
             "value",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/value",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/value",
             compact="value",
         )
 
 
 # Base domain class from which all other SPDX-3.0 domain classes derive.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Element", compact_type="Element", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Element", compact_type="Element", abstract=True)
 class Element(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
-        "NoAssertionElement": "https://spdx.org/rdf/3.0.0/terms/Core/NoAssertionElement",
-        "NoneElement": "https://spdx.org/rdf/3.0.0/terms/Core/NoneElement",
+        "NoAssertionElement": "https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement",
+        "NoneElement": "https://spdx.org/rdf/3.0.1/terms/Core/NoneElement",
     }
     # An Individual Value for Element representing a set of Elements of unknown
     # identify or cardinality (number).
-    NoAssertionElement = "https://spdx.org/rdf/3.0.0/terms/Core/NoAssertionElement"
+    NoAssertionElement = "https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement"
     # An Individual Value for Element representing a set of Elements with
     # cardinality (number/count) of zero.
-    NoneElement = "https://spdx.org/rdf/3.0.0/terms/Core/NoneElement"
+    NoneElement = "https://spdx.org/rdf/3.0.1/terms/Core/NoneElement"
 
     @classmethod
     def _register_props(cls):
@@ -2694,14 +2195,14 @@ class Element(SHACLObject):
         cls._add_property(
             "comment",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/comment",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/comment",
             compact="comment",
         )
         # Provides information about the creation of the Element.
         cls._add_property(
             "creationInfo",
             ObjectProp(CreationInfo, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/creationInfo",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/creationInfo",
             min_count=1,
             compact="creationInfo",
         )
@@ -2709,14 +2210,14 @@ class Element(SHACLObject):
         cls._add_property(
             "description",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/description",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/description",
             compact="description",
         )
         # Specifies an Extension characterization of some aspect of an Element.
         cls._add_property(
             "extension",
             ListProp(ObjectProp(extension_Extension, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/extension",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/extension",
             compact="extension",
         )
         # Provides a reference to a resource outside the scope of SPDX-3.0 content
@@ -2724,7 +2225,7 @@ class Element(SHACLObject):
         cls._add_property(
             "externalIdentifier",
             ListProp(ObjectProp(ExternalIdentifier, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/externalIdentifier",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/externalIdentifier",
             compact="externalIdentifier",
         )
         # Points to a resource outside the scope of the SPDX-3.0 content
@@ -2732,21 +2233,21 @@ class Element(SHACLObject):
         cls._add_property(
             "externalRef",
             ListProp(ObjectProp(ExternalRef, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/externalRef",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/externalRef",
             compact="externalRef",
         )
         # Identifies the name of an Element as designated by the creator.
         cls._add_property(
             "name",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/name",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/name",
             compact="name",
         )
         # A short description of an Element.
         cls._add_property(
             "summary",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/summary",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/summary",
             compact="summary",
         )
         # Provides an IntegrityMethod with which the integrity of an Element can be
@@ -2754,15 +2255,15 @@ class Element(SHACLObject):
         cls._add_property(
             "verifiedUsing",
             ListProp(ObjectProp(IntegrityMethod, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/verifiedUsing",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/verifiedUsing",
             compact="verifiedUsing",
         )
 
 
 # A collection of Elements, not necessarily with unifying context.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ElementCollection", compact_type="ElementCollection", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ElementCollection", compact_type="ElementCollection", abstract=True)
 class ElementCollection(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -2773,8 +2274,14 @@ class ElementCollection(Element):
         # Refers to one or more Elements that are part of an ElementCollection.
         cls._add_property(
             "element",
-            ListProp(ObjectProp(Element, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/element",
+            ListProp(ObjectProp(Element, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoneElement", "NoneElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement", "NoAssertionElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/element",
             compact="element",
         )
         # Describes one a profile which the creator of this ElementCollection intends to
@@ -2782,33 +2289,39 @@ class ElementCollection(Element):
         cls._add_property(
             "profileConformance",
             ListProp(EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/ai", "ai"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/build", "build"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/core", "core"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/dataset", "dataset"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/expandedLicensing", "expandedLicensing"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/extension", "extension"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/lite", "lite"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/security", "security"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/simpleLicensing", "simpleLicensing"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/software", "software"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/ai", "ai"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/build", "build"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/core", "core"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/dataset", "dataset"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/expandedLicensing", "expandedLicensing"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/extension", "extension"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/lite", "lite"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/security", "security"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/simpleLicensing", "simpleLicensing"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/software", "software"),
                 ])),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/profileConformance",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/profileConformance",
             compact="profileConformance",
         )
         # This property is used to denote the root Element(s) of a tree of elements contained in a BOM.
         cls._add_property(
             "rootElement",
-            ListProp(ObjectProp(Element, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/rootElement",
+            ListProp(ObjectProp(Element, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoneElement", "NoneElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement", "NoAssertionElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/rootElement",
             compact="rootElement",
         )
 
 
 # A reference to a resource identifier defined outside the scope of SPDX-3.0 content that uniquely identifies an Element.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifier", compact_type="ExternalIdentifier", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifier", compact_type="ExternalIdentifier", abstract=False)
 class ExternalIdentifier(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2820,26 +2333,26 @@ class ExternalIdentifier(SHACLObject):
         cls._add_property(
             "comment",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/comment",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/comment",
             compact="comment",
         )
         # Specifies the type of the external identifier.
         cls._add_property(
             "externalIdentifierType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe22", "cpe22"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe23", "cpe23"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cve", "cve"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/email", "email"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/gitoid", "gitoid"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/packageUrl", "packageUrl"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/securityOther", "securityOther"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swhid", "swhid"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swid", "swid"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/urlScheme", "urlScheme"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe22", "cpe22"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe23", "cpe23"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cve", "cve"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/email", "email"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/gitoid", "gitoid"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/packageUrl", "packageUrl"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/securityOther", "securityOther"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/swhid", "swhid"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/swid", "swid"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/urlScheme", "urlScheme"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/externalIdentifierType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/externalIdentifierType",
             min_count=1,
             compact="externalIdentifierType",
         )
@@ -2847,7 +2360,7 @@ class ExternalIdentifier(SHACLObject):
         cls._add_property(
             "identifier",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/identifier",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/identifier",
             min_count=1,
             compact="identifier",
         )
@@ -2855,63 +2368,64 @@ class ExternalIdentifier(SHACLObject):
         cls._add_property(
             "identifierLocator",
             ListProp(AnyURIProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/identifierLocator",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/identifierLocator",
             compact="identifierLocator",
         )
         # An entity that is authorized to issue identification credentials.
         cls._add_property(
             "issuingAuthority",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/issuingAuthority",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/issuingAuthority",
             compact="issuingAuthority",
         )
 
 
 # Specifies the type of an external identifier.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType", compact_type="ExternalIdentifierType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType", compact_type="ExternalIdentifierType", abstract=False)
 class ExternalIdentifierType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "cpe22": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe22",
-        "cpe23": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe23",
-        "cve": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cve",
-        "email": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/email",
-        "gitoid": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/gitoid",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/other",
-        "packageUrl": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/packageUrl",
-        "securityOther": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/securityOther",
-        "swhid": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swhid",
-        "swid": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swid",
-        "urlScheme": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/urlScheme",
+        "cpe22": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe22",
+        "cpe23": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe23",
+        "cve": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cve",
+        "email": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/email",
+        "gitoid": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/gitoid",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/other",
+        "packageUrl": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/packageUrl",
+        "securityOther": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/securityOther",
+        "swhid": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/swhid",
+        "swid": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/swid",
+        "urlScheme": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/urlScheme",
     }
-    # https://cpe.mitre.org/files/cpe-specification_2.2.pdf
-    cpe22 = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe22"
-    # https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir7695.pdf
-    cpe23 = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cpe23"
-    # An identifier for a specific software flaw defined within the official CVE Dictionary and that conforms to the CVE specification as defined by https://csrc.nist.gov/glossary/term/cve_id.
-    cve = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/cve"
-    # https://datatracker.ietf.org/doc/html/rfc3696#section-3
-    email = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/email"
-    # https://www.iana.org/assignments/uri-schemes/prov/gitoid Gitoid stands for [Git Object ID](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects) and a gitoid of type blob is a unique hash of a binary artifact. A gitoid may represent the software [Artifact ID](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#artifact-id) or the [OmniBOR Identifier](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#omnibor-identifier) for the software artifact's associated [OmniBOR Document](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#omnibor-document); this ambiguity exists because the OmniBOR Document is itself an artifact, and the gitoid of that artifact is its valid identifier. Omnibor is a minimalistic schema to describe software [Artifact Dependency Graphs](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#artifact-dependency-graph-adg). Gitoids calculated on software artifacts (Snippet, File, or Package Elements) should be recorded in the SPDX 3.0 SoftwareArtifact's ContentIdentifier property. Gitoids calculated on the OmniBOR Document (OmniBOR Identifiers) should be recorded in the SPDX 3.0 Element's ExternalIdentifier property.
-    gitoid = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/gitoid"
-    # Used when the type doesn't match any of the other options.
-    other = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/other"
-    # https://github.com/package-url/purl-spec
-    packageUrl = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/packageUrl"
+    # [Common Platform Enumeration Specification 2.2](https://cpe.mitre.org/files/cpe-specification_2.2.pdf)
+    cpe22 = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe22"
+    # [Common Platform Enumeration: Naming Specification Version 2.3](https://csrc.nist.gov/publications/detail/nistir/7695/final)
+    cpe23 = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cpe23"
+    # Common Vulnerabilities and Exposures identifiers, an identifier for a specific software flaw defined within the official CVE Dictionary and that conforms to the [CVE specification](https://csrc.nist.gov/glossary/term/cve_id).
+    cve = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/cve"
+    # Email address, as defined in [RFC 3696](https://datatracker.ietf.org/doc/rfc3986/) Section 3.
+    email = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/email"
+    # [Gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid), stands for [Git Object ID](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects). A gitoid of type blob is a unique hash of a binary artifact. A gitoid may represent either an [Artifact Identifier](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#artifact-identifier-types) for the software artifact or an [Input Manifest Identifier](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#input-manifest-identifier) for the software artifact's associated [Artifact Input Manifest](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#artifact-input-manifest); this ambiguity exists because the Artifact Input Manifest is itself an artifact, and the gitoid of that artifact is its valid identifier. Gitoids calculated on software artifacts (Snippet, File, or Package Elements) should be recorded in the SPDX 3.0 SoftwareArtifact's contentIdentifier property. Gitoids calculated on the Artifact Input Manifest (Input Manifest Identifier) should be recorded in the SPDX 3.0 Element's externalIdentifier property. See [OmniBOR Specification](https://github.com/omnibor/spec/), a minimalistic specification for describing software [Artifact Dependency Graphs](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#artifact-dependency-graph-adg).
+    gitoid = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/gitoid"
+    # Used when the type does not match any of the other options.
+    other = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/other"
+    # Package URL, as defined in the corresponding [Annex](../../../annexes/pkg-url-specification.md) of this specification.
+    packageUrl = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/packageUrl"
     # Used when there is a security related identifier of unspecified type.
-    securityOther = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/securityOther"
-    # SoftWare Hash IDentifier, persistent intrinsic identifiers for digital artifacts, such as files, trees (also known as directories or folders), commits, and other objects typically found in version control systems. The syntax of the identifiers is defined in the [SWHID specification](https://www.swhid.org/specification/v1.1/4.Syntax) and they typically look like `swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2`.
-    swhid = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swhid"
-    # https://www.ietf.org/archive/id/draft-ietf-sacm-coswid-21.html#section-2.3
-    swid = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/swid"
-    # the scheme used in order to locate a resource https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
-    urlScheme = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalIdentifierType/urlScheme"
+    securityOther = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/securityOther"
+    # SoftWare Hash IDentifier, a persistent intrinsic identifier for digital artifacts, such as files, trees (also known as directories or folders), commits, and other objects typically found in version control systems. The format of the identifiers is defined in the [SWHID specification](https://www.swhid.org/specification/v1.1/4.Syntax) (ISO/IEC DIS 18670). They typically look like `swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2`.
+    swhid = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/swhid"
+    # Concise Software Identification (CoSWID) tag, as defined in [RFC 9393](https://datatracker.ietf.org/doc/rfc9393/) Section 2.3.
+    swid = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/swid"
+    # [Uniform Resource Identifier (URI) Schemes](https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml). The scheme used in order to locate a resource.
+    urlScheme = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalIdentifierType/urlScheme"
 
 
-# A map of Element identifiers that are used within a Document but defined external to that Document.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ExternalMap", compact_type="ExternalMap", abstract=False)
+# A map of Element identifiers that are used within an SpdxDocument but defined
+# external to that SpdxDocument.
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ExternalMap", compact_type="ExternalMap", abstract=False)
 class ExternalMap(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2923,15 +2437,15 @@ class ExternalMap(SHACLObject):
         cls._add_property(
             "definingArtifact",
             ObjectProp(Artifact, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/definingArtifact",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/definingArtifact",
             compact="definingArtifact",
         )
-        # Identifies an external Element used within a Document but defined external to
-        # that Document.
+        # Identifies an external Element used within an SpdxDocument but defined
+        # external to that SpdxDocument.
         cls._add_property(
             "externalSpdxId",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/externalSpdxId",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/externalSpdxId",
             min_count=1,
             compact="externalSpdxId",
         )
@@ -2939,7 +2453,7 @@ class ExternalMap(SHACLObject):
         cls._add_property(
             "locationHint",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/locationHint",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/locationHint",
             compact="locationHint",
         )
         # Provides an IntegrityMethod with which the integrity of an Element can be
@@ -2947,15 +2461,15 @@ class ExternalMap(SHACLObject):
         cls._add_property(
             "verifiedUsing",
             ListProp(ObjectProp(IntegrityMethod, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/verifiedUsing",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/verifiedUsing",
             compact="verifiedUsing",
         )
 
 
 # A reference to a resource outside the scope of SPDX-3.0 content related to an Element.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRef", compact_type="ExternalRef", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRef", compact_type="ExternalRef", abstract=False)
 class ExternalRef(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -2967,300 +2481,303 @@ class ExternalRef(SHACLObject):
         cls._add_property(
             "comment",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/comment",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/comment",
             compact="comment",
         )
-        # Specifies the media type of an Element or Property.
+        # Provides information about the content type of an Element or a Property.
         cls._add_property(
             "contentType",
             StringProp(pattern=r"^[^\/]+\/[^\/]+$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/contentType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/contentType",
             compact="contentType",
         )
         # Specifies the type of the external reference.
         cls._add_property(
             "externalRefType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altDownloadLocation", "altDownloadLocation"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altWebPage", "altWebPage"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/binaryArtifact", "binaryArtifact"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/bower", "bower"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildMeta", "buildMeta"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildSystem", "buildSystem"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/certificationReport", "certificationReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/chat", "chat"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/componentAnalysisReport", "componentAnalysisReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/cwe", "cwe"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/documentation", "documentation"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/dynamicAnalysisReport", "dynamicAnalysisReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/eolNotice", "eolNotice"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/exportControlAssessment", "exportControlAssessment"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/funding", "funding"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/issueTracker", "issueTracker"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/license", "license"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mailingList", "mailingList"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mavenCentral", "mavenCentral"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/metrics", "metrics"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/npm", "npm"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/nuget", "nuget"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/privacyAssessment", "privacyAssessment"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/productMetadata", "productMetadata"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/purchaseOrder", "purchaseOrder"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/qualityAssessmentReport", "qualityAssessmentReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseHistory", "releaseHistory"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseNotes", "releaseNotes"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/riskAssessment", "riskAssessment"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/runtimeAnalysisReport", "runtimeAnalysisReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/secureSoftwareAttestation", "secureSoftwareAttestation"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdversaryModel", "securityAdversaryModel"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdvisory", "securityAdvisory"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityFix", "securityFix"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityOther", "securityOther"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPenTestReport", "securityPenTestReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPolicy", "securityPolicy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityThreatModel", "securityThreatModel"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/socialMedia", "socialMedia"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/sourceArtifact", "sourceArtifact"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/staticAnalysisReport", "staticAnalysisReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/support", "support"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vcs", "vcs"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityDisclosureReport", "vulnerabilityDisclosureReport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment", "vulnerabilityExploitabilityAssessment"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/altDownloadLocation", "altDownloadLocation"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/altWebPage", "altWebPage"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/binaryArtifact", "binaryArtifact"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/bower", "bower"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/buildMeta", "buildMeta"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/buildSystem", "buildSystem"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/certificationReport", "certificationReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/chat", "chat"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/componentAnalysisReport", "componentAnalysisReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/cwe", "cwe"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/documentation", "documentation"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/dynamicAnalysisReport", "dynamicAnalysisReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/eolNotice", "eolNotice"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/exportControlAssessment", "exportControlAssessment"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/funding", "funding"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/issueTracker", "issueTracker"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/license", "license"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/mailingList", "mailingList"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/mavenCentral", "mavenCentral"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/metrics", "metrics"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/npm", "npm"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/nuget", "nuget"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/privacyAssessment", "privacyAssessment"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/productMetadata", "productMetadata"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/purchaseOrder", "purchaseOrder"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/qualityAssessmentReport", "qualityAssessmentReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/releaseHistory", "releaseHistory"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/releaseNotes", "releaseNotes"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/riskAssessment", "riskAssessment"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/runtimeAnalysisReport", "runtimeAnalysisReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/secureSoftwareAttestation", "secureSoftwareAttestation"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityAdversaryModel", "securityAdversaryModel"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityAdvisory", "securityAdvisory"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityFix", "securityFix"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityOther", "securityOther"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityPenTestReport", "securityPenTestReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityPolicy", "securityPolicy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityThreatModel", "securityThreatModel"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/socialMedia", "socialMedia"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/sourceArtifact", "sourceArtifact"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/staticAnalysisReport", "staticAnalysisReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/support", "support"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vcs", "vcs"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vulnerabilityDisclosureReport", "vulnerabilityDisclosureReport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment", "vulnerabilityExploitabilityAssessment"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/externalRefType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/externalRefType",
             compact="externalRefType",
         )
         # Provides the location of an external reference.
         cls._add_property(
             "locator",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/locator",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/locator",
             compact="locator",
         )
 
 
 # Specifies the type of an external reference.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType", compact_type="ExternalRefType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType", compact_type="ExternalRefType", abstract=False)
 class ExternalRefType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "altDownloadLocation": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altDownloadLocation",
-        "altWebPage": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altWebPage",
-        "binaryArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/binaryArtifact",
-        "bower": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/bower",
-        "buildMeta": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildMeta",
-        "buildSystem": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildSystem",
-        "certificationReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/certificationReport",
-        "chat": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/chat",
-        "componentAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/componentAnalysisReport",
-        "cwe": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/cwe",
-        "documentation": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/documentation",
-        "dynamicAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/dynamicAnalysisReport",
-        "eolNotice": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/eolNotice",
-        "exportControlAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/exportControlAssessment",
-        "funding": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/funding",
-        "issueTracker": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/issueTracker",
-        "license": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/license",
-        "mailingList": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mailingList",
-        "mavenCentral": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mavenCentral",
-        "metrics": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/metrics",
-        "npm": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/npm",
-        "nuget": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/nuget",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/other",
-        "privacyAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/privacyAssessment",
-        "productMetadata": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/productMetadata",
-        "purchaseOrder": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/purchaseOrder",
-        "qualityAssessmentReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/qualityAssessmentReport",
-        "releaseHistory": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseHistory",
-        "releaseNotes": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseNotes",
-        "riskAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/riskAssessment",
-        "runtimeAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/runtimeAnalysisReport",
-        "secureSoftwareAttestation": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/secureSoftwareAttestation",
-        "securityAdversaryModel": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdversaryModel",
-        "securityAdvisory": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdvisory",
-        "securityFix": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityFix",
-        "securityOther": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityOther",
-        "securityPenTestReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPenTestReport",
-        "securityPolicy": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPolicy",
-        "securityThreatModel": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityThreatModel",
-        "socialMedia": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/socialMedia",
-        "sourceArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/sourceArtifact",
-        "staticAnalysisReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/staticAnalysisReport",
-        "support": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/support",
-        "vcs": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vcs",
-        "vulnerabilityDisclosureReport": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityDisclosureReport",
-        "vulnerabilityExploitabilityAssessment": "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment",
+        "altDownloadLocation": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/altDownloadLocation",
+        "altWebPage": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/altWebPage",
+        "binaryArtifact": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/binaryArtifact",
+        "bower": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/bower",
+        "buildMeta": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/buildMeta",
+        "buildSystem": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/buildSystem",
+        "certificationReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/certificationReport",
+        "chat": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/chat",
+        "componentAnalysisReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/componentAnalysisReport",
+        "cwe": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/cwe",
+        "documentation": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/documentation",
+        "dynamicAnalysisReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/dynamicAnalysisReport",
+        "eolNotice": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/eolNotice",
+        "exportControlAssessment": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/exportControlAssessment",
+        "funding": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/funding",
+        "issueTracker": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/issueTracker",
+        "license": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/license",
+        "mailingList": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/mailingList",
+        "mavenCentral": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/mavenCentral",
+        "metrics": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/metrics",
+        "npm": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/npm",
+        "nuget": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/nuget",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/other",
+        "privacyAssessment": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/privacyAssessment",
+        "productMetadata": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/productMetadata",
+        "purchaseOrder": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/purchaseOrder",
+        "qualityAssessmentReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/qualityAssessmentReport",
+        "releaseHistory": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/releaseHistory",
+        "releaseNotes": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/releaseNotes",
+        "riskAssessment": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/riskAssessment",
+        "runtimeAnalysisReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/runtimeAnalysisReport",
+        "secureSoftwareAttestation": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/secureSoftwareAttestation",
+        "securityAdversaryModel": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityAdversaryModel",
+        "securityAdvisory": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityAdvisory",
+        "securityFix": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityFix",
+        "securityOther": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityOther",
+        "securityPenTestReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityPenTestReport",
+        "securityPolicy": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityPolicy",
+        "securityThreatModel": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityThreatModel",
+        "socialMedia": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/socialMedia",
+        "sourceArtifact": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/sourceArtifact",
+        "staticAnalysisReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/staticAnalysisReport",
+        "support": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/support",
+        "vcs": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vcs",
+        "vulnerabilityDisclosureReport": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vulnerabilityDisclosureReport",
+        "vulnerabilityExploitabilityAssessment": "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment",
     }
     # A reference to an alternative download location.
-    altDownloadLocation = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altDownloadLocation"
+    altDownloadLocation = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/altDownloadLocation"
     # A reference to an alternative web page.
-    altWebPage = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/altWebPage"
+    altWebPage = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/altWebPage"
     # A reference to binary artifacts related to a package.
-    binaryArtifact = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/binaryArtifact"
-    # A reference to a bower package.
-    bower = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/bower"
+    binaryArtifact = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/binaryArtifact"
+    # A reference to a Bower package. The package locator format, looks like `package#version`, is defined in the "install" section of [Bower API documentation](https://bower.io/docs/api/#install).
+    bower = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/bower"
     # A reference build metadata related to a published package.
-    buildMeta = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildMeta"
+    buildMeta = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/buildMeta"
     # A reference build system used to create or publish the package.
-    buildSystem = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/buildSystem"
+    buildSystem = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/buildSystem"
     # A reference to a certification report for a package from an accredited/independent body.
-    certificationReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/certificationReport"
+    certificationReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/certificationReport"
     # A reference to the instant messaging system used by the maintainer for a package.
-    chat = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/chat"
+    chat = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/chat"
     # A reference to a Software Composition Analysis (SCA) report.
-    componentAnalysisReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/componentAnalysisReport"
-    # A reference to a source of software flaw defined within the official CWE Dictionary that conforms to the CWE specification as defined by https://csrc.nist.gov/glossary/term/common_weakness_enumeration.
-    cwe = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/cwe"
+    componentAnalysisReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/componentAnalysisReport"
+    # [Common Weakness Enumeration](https://csrc.nist.gov/glossary/term/common_weakness_enumeration). A reference to a source of software flaw defined within the official [CWE List](https://cwe.mitre.org/data/) that conforms to the [CWE specification](https://cwe.mitre.org/).
+    cwe = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/cwe"
     # A reference to the documentation for a package.
-    documentation = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/documentation"
+    documentation = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/documentation"
     # A reference to a dynamic analysis report for a package.
-    dynamicAnalysisReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/dynamicAnalysisReport"
+    dynamicAnalysisReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/dynamicAnalysisReport"
     # A reference to the End Of Sale (EOS) and/or End Of Life (EOL) information related to a package.
-    eolNotice = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/eolNotice"
+    eolNotice = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/eolNotice"
     # A reference to a export control assessment for a package.
-    exportControlAssessment = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/exportControlAssessment"
+    exportControlAssessment = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/exportControlAssessment"
     # A reference to funding information related to a package.
-    funding = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/funding"
+    funding = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/funding"
     # A reference to the issue tracker for a package.
-    issueTracker = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/issueTracker"
+    issueTracker = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/issueTracker"
     # A reference to additional license information related to an artifact.
-    license = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/license"
+    license = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/license"
     # A reference to the mailing list used by the maintainer for a package.
-    mailingList = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mailingList"
-    # A reference to a maven repository artifact.
-    mavenCentral = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/mavenCentral"
+    mailingList = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/mailingList"
+    # A reference to a Maven repository artifact. The artifact locator format is defined in the [Maven documentation](https://maven.apache.org/guides/mini/guide-naming-conventions.html) and looks like `groupId:artifactId[:version]`.
+    mavenCentral = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/mavenCentral"
     # A reference to metrics related to package such as OpenSSF scorecards.
-    metrics = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/metrics"
-    # A reference to an npm package.
-    npm = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/npm"
-    # A reference to a nuget package.
-    nuget = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/nuget"
-    # Used when the type doesn't match any of the other options.
-    other = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/other"
+    metrics = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/metrics"
+    # A reference to an npm package. The package locator format is defined in the [npm documentation](https://docs.npmjs.com/cli/v10/configuring-npm/package-json) and looks like `package@version`.
+    npm = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/npm"
+    # A reference to a NuGet package. The package locator format is defined in the [NuGet documentation](https://docs.nuget.org) and looks like `package/version`.
+    nuget = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/nuget"
+    # Used when the type does not match any of the other options.
+    other = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/other"
     # A reference to a privacy assessment for a package.
-    privacyAssessment = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/privacyAssessment"
+    privacyAssessment = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/privacyAssessment"
     # A reference to additional product metadata such as reference within organization's product catalog.
-    productMetadata = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/productMetadata"
+    productMetadata = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/productMetadata"
     # A reference to a purchase order for a package.
-    purchaseOrder = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/purchaseOrder"
+    purchaseOrder = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/purchaseOrder"
     # A reference to a quality assessment for a package.
-    qualityAssessmentReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/qualityAssessmentReport"
+    qualityAssessmentReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/qualityAssessmentReport"
     # A reference to a published list of releases for a package.
-    releaseHistory = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseHistory"
+    releaseHistory = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/releaseHistory"
     # A reference to the release notes for a package.
-    releaseNotes = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/releaseNotes"
+    releaseNotes = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/releaseNotes"
     # A reference to a risk assessment for a package.
-    riskAssessment = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/riskAssessment"
+    riskAssessment = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/riskAssessment"
     # A reference to a runtime analysis report for a package.
-    runtimeAnalysisReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/runtimeAnalysisReport"
+    runtimeAnalysisReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/runtimeAnalysisReport"
     # A reference to information assuring that the software is developed using security practices as defined by [NIST SP 800-218 Secure Software Development Framework (SSDF) Version 1.1](https://csrc.nist.gov/pubs/sp/800/218/final) or [CISA Secure Software Development Attestation Form](https://www.cisa.gov/resources-tools/resources/secure-software-development-attestation-form).
-    secureSoftwareAttestation = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/secureSoftwareAttestation"
+    secureSoftwareAttestation = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/secureSoftwareAttestation"
     # A reference to the security adversary model for a package.
-    securityAdversaryModel = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdversaryModel"
-    # A reference to a published security advisory (where advisory as defined per ISO 29147:2018) that may affect one or more elements, e.g., vendor advisories or specific NVD entries.
-    securityAdvisory = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityAdvisory"
+    securityAdversaryModel = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityAdversaryModel"
+    # A reference to a published security advisory (where advisory as defined per [ISO 29147:2018](https://www.iso.org/standard/72311.html)) that may affect one or more elements, e.g., vendor advisories or specific NVD entries.
+    securityAdvisory = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityAdvisory"
     # A reference to the patch or source code that fixes a vulnerability.
-    securityFix = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityFix"
+    securityFix = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityFix"
     # A reference to related security information of unspecified type.
-    securityOther = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityOther"
+    securityOther = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityOther"
     # A reference to a [penetration test](https://en.wikipedia.org/wiki/Penetration_test) report for a package.
-    securityPenTestReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPenTestReport"
+    securityPenTestReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityPenTestReport"
     # A reference to instructions for reporting newly discovered security vulnerabilities for a package.
-    securityPolicy = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityPolicy"
+    securityPolicy = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityPolicy"
     # A reference the [security threat model](https://en.wikipedia.org/wiki/Threat_model) for a package.
-    securityThreatModel = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/securityThreatModel"
+    securityThreatModel = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/securityThreatModel"
     # A reference to a social media channel for a package.
-    socialMedia = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/socialMedia"
+    socialMedia = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/socialMedia"
     # A reference to an artifact containing the sources for a package.
-    sourceArtifact = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/sourceArtifact"
+    sourceArtifact = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/sourceArtifact"
     # A reference to a static analysis report for a package.
-    staticAnalysisReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/staticAnalysisReport"
+    staticAnalysisReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/staticAnalysisReport"
     # A reference to the software support channel or other support information for a package.
-    support = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/support"
+    support = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/support"
     # A reference to a version control system related to a software artifact.
-    vcs = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vcs"
-    # A reference to a Vulnerability Disclosure Report (VDR) which provides the software supplier's analysis and findings describing the impact (or lack of impact) that reported vulnerabilities have on packages or products in the supplier's SBOM as defined in [NIST SP 800-161](https://csrc.nist.gov/pubs/sp/800/161/r1/final).
-    vulnerabilityDisclosureReport = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityDisclosureReport"
+    vcs = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vcs"
+    # A reference to a Vulnerability Disclosure Report (VDR) which provides the software supplier's analysis and findings describing the impact (or lack of impact) that reported vulnerabilities have on packages or products in the supplier's SBOM as defined in [NIST SP 800-161 Cybersecurity Supply Chain Risk Management Practices for Systems and Organizations](https://csrc.nist.gov/pubs/sp/800/161/r1/final).
+    vulnerabilityDisclosureReport = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vulnerabilityDisclosureReport"
     # A reference to a Vulnerability Exploitability eXchange (VEX) statement which provides information on whether a product is impacted by a specific vulnerability in an included package and, if affected, whether there are actions recommended to remediate. See also [NTIA VEX one-page summary](https://ntia.gov/files/ntia/publications/vex_one-page_summary.pdf).
-    vulnerabilityExploitabilityAssessment = "https://spdx.org/rdf/3.0.0/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment"
+    vulnerabilityExploitabilityAssessment = "https://spdx.org/rdf/3.0.1/terms/Core/ExternalRefType/vulnerabilityExploitabilityAssessment"
 
 
 # A mathematical algorithm that maps data of arbitrary size to a bit string.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm", compact_type="HashAlgorithm", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm", compact_type="HashAlgorithm", abstract=False)
 class HashAlgorithm(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "blake2b256": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b256",
-        "blake2b384": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b384",
-        "blake2b512": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b512",
-        "blake3": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake3",
-        "crystalsDilithium": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsDilithium",
-        "crystalsKyber": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsKyber",
-        "falcon": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/falcon",
-        "md2": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md2",
-        "md4": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md4",
-        "md5": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md5",
-        "md6": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md6",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/other",
-        "sha1": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha1",
-        "sha224": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha224",
-        "sha256": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha256",
-        "sha384": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha384",
-        "sha3_224": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_224",
-        "sha3_256": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_256",
-        "sha3_384": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_384",
-        "sha3_512": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_512",
-        "sha512": "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha512",
+        "adler32": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/adler32",
+        "blake2b256": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b256",
+        "blake2b384": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b384",
+        "blake2b512": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b512",
+        "blake3": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake3",
+        "crystalsDilithium": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsDilithium",
+        "crystalsKyber": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsKyber",
+        "falcon": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/falcon",
+        "md2": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md2",
+        "md4": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md4",
+        "md5": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md5",
+        "md6": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md6",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/other",
+        "sha1": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha1",
+        "sha224": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha224",
+        "sha256": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha256",
+        "sha384": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha384",
+        "sha3_224": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_224",
+        "sha3_256": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_256",
+        "sha3_384": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_384",
+        "sha3_512": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_512",
+        "sha512": "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha512",
     }
-    # blake2b algorithm with a digest size of 256 https://datatracker.ietf.org/doc/html/rfc7693#section-4
-    blake2b256 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b256"
-    # blake2b algorithm with a digest size of 384 https://datatracker.ietf.org/doc/html/rfc7693#section-4
-    blake2b384 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b384"
-    # blake2b algorithm with a digest size of 512 https://datatracker.ietf.org/doc/html/rfc7693#section-4
-    blake2b512 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b512"
-    # https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf
-    blake3 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake3"
-    # https://pq-crystals.org/dilithium/index.shtml
-    crystalsDilithium = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsDilithium"
-    # https://pq-crystals.org/kyber/index.shtml
-    crystalsKyber = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsKyber"
-    # https://falcon-sign.info/falcon.pdf
-    falcon = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/falcon"
-    # https://datatracker.ietf.org/doc/rfc1319/
-    md2 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md2"
-    # https://datatracker.ietf.org/doc/html/rfc1186
-    md4 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md4"
-    # https://datatracker.ietf.org/doc/html/rfc1321
-    md5 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md5"
-    # https://people.csail.mit.edu/rivest/pubs/RABCx08.pdf
-    md6 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md6"
+    # Adler-32 checksum is part of the widely used zlib compression library as defined in [RFC 1950](https://datatracker.ietf.org/doc/rfc1950/) Section 2.3.
+    adler32 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/adler32"
+    # BLAKE2b algorithm with a digest size of 256, as defined in [RFC 7693](https://datatracker.ietf.org/doc/rfc7693/) Section 4.
+    blake2b256 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b256"
+    # BLAKE2b algorithm with a digest size of 384, as defined in [RFC 7693](https://datatracker.ietf.org/doc/rfc7693/) Section 4.
+    blake2b384 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b384"
+    # BLAKE2b algorithm with a digest size of 512, as defined in [RFC 7693](https://datatracker.ietf.org/doc/rfc7693/) Section 4.
+    blake2b512 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b512"
+    # [BLAKE3](https://github.com/BLAKE3-team/BLAKE3-specs/blob/master/blake3.pdf)
+    blake3 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake3"
+    # [Dilithium](https://pq-crystals.org/dilithium/)
+    crystalsDilithium = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsDilithium"
+    # [Kyber](https://pq-crystals.org/kyber/)
+    crystalsKyber = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsKyber"
+    # [FALCON](https://falcon-sign.info/falcon.pdf)
+    falcon = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/falcon"
+    # MD2 message-digest algorithm, as defined in [RFC 1319](https://datatracker.ietf.org/doc/rfc1319/).
+    md2 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md2"
+    # MD4 message-digest algorithm, as defined in [RFC 1186](https://datatracker.ietf.org/doc/rfc1186/).
+    md4 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md4"
+    # MD5 message-digest algorithm, as defined in [RFC 1321](https://datatracker.ietf.org/doc/rfc1321/).
+    md5 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md5"
+    # [MD6 hash function](https://people.csail.mit.edu/rivest/pubs/RABCx08.pdf)
+    md6 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md6"
     # any hashing algorithm that does not exist in this list of entries
-    other = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/other"
-    # https://datatracker.ietf.org/doc/html/rfc3174
-    sha1 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha1"
-    # secure hashing algorithm with a digest length of 224 https://datatracker.ietf.org/doc/html/draft-ietf-pkix-sha224-01
-    sha224 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha224"
-    # secure hashing algorithm with a digest length of 256 https://www.rfc-editor.org/rfc/rfc4634
-    sha256 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha256"
-    # secure hashing algorithm with a digest length of 384 https://www.rfc-editor.org/rfc/rfc4634
-    sha384 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha384"
-    # sha3 with a digest length of 224 https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-    sha3_224 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_224"
-    # sha3 with a digest length of 256 https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-    sha3_256 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_256"
-    # sha3 with a digest length of 384 https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-    sha3_384 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_384"
-    # sha3 with a digest length of 512 https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
-    sha3_512 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_512"
-    # secure hashing algorithm with a digest length of 512 https://www.rfc-editor.org/rfc/rfc4634
-    sha512 = "https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha512"
+    other = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/other"
+    # SHA-1, a secure hashing algorithm, as defined in [RFC 3174](https://datatracker.ietf.org/doc/rfc3174/).
+    sha1 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha1"
+    # SHA-2 with a digest length of 224, as defined in [RFC 3874](https://datatracker.ietf.org/doc/rfc3874/).
+    sha224 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha224"
+    # SHA-2 with a digest length of 256, as defined in [RFC 6234](https://datatracker.ietf.org/doc/rfc6234/).
+    sha256 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha256"
+    # SHA-2 with a digest length of 384, as defined in [RFC 6234](https://datatracker.ietf.org/doc/rfc6234/).
+    sha384 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha384"
+    # SHA-3 with a digest length of 224, as defined in [FIPS 202](https://csrc.nist.gov/pubs/fips/202/final).
+    sha3_224 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_224"
+    # SHA-3 with a digest length of 256, as defined in [FIPS 202](https://csrc.nist.gov/pubs/fips/202/final).
+    sha3_256 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_256"
+    # SHA-3 with a digest length of 384, as defined in [FIPS 202](https://csrc.nist.gov/pubs/fips/202/final).
+    sha3_384 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_384"
+    # SHA-3 with a digest length of 512, as defined in [FIPS 202](https://csrc.nist.gov/pubs/fips/202/final).
+    sha3_512 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_512"
+    # SHA-2 with a digest length of 512, as defined in [RFC 6234](https://datatracker.ietf.org/doc/rfc6234/).
+    sha512 = "https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha512"
 
 
 # Provides an independently reproducible mechanism that permits verification of a specific Element.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/IntegrityMethod", compact_type="IntegrityMethod", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/IntegrityMethod", compact_type="IntegrityMethod", abstract=True)
 class IntegrityMethod(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -3272,41 +2789,41 @@ class IntegrityMethod(SHACLObject):
         cls._add_property(
             "comment",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/comment",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/comment",
             compact="comment",
         )
 
 
 # Provide an enumerated set of lifecycle phases that can provide context to relationships.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType", compact_type="LifecycleScopeType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType", compact_type="LifecycleScopeType", abstract=False)
 class LifecycleScopeType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "build": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/build",
-        "design": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/design",
-        "development": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/development",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/other",
-        "runtime": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/runtime",
-        "test": "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/test",
+        "build": "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/build",
+        "design": "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/design",
+        "development": "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/development",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/other",
+        "runtime": "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/runtime",
+        "test": "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/test",
     }
     # A relationship has specific context implications during an element's build phase, during development.
-    build = "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/build"
+    build = "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/build"
     # A relationship has specific context implications during an element's design.
-    design = "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/design"
+    design = "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/design"
     # A relationship has specific context implications during development phase of an element.
-    development = "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/development"
+    development = "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/development"
     # A relationship has other specific context information necessary to capture that the above set of enumerations does not handle.
-    other = "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/other"
+    other = "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/other"
     # A relationship has specific context implications during the execution phase of an element.
-    runtime = "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/runtime"
+    runtime = "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/runtime"
     # A relationship has specific context implications during an element's testing phase, during development.
-    test = "https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/test"
+    test = "https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/test"
 
 
 # A mapping between prefixes and namespace partial URIs.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/NamespaceMap", compact_type="NamespaceMap", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/NamespaceMap", compact_type="NamespaceMap", abstract=False)
 class NamespaceMap(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -3314,11 +2831,11 @@ class NamespaceMap(SHACLObject):
     def _register_props(cls):
         super()._register_props()
         # Provides an unambiguous mechanism for conveying a URI fragment portion of an
-        # ElementID.
+        # Element ID.
         cls._add_property(
             "namespace",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/namespace",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/namespace",
             min_count=1,
             compact="namespace",
         )
@@ -3326,16 +2843,16 @@ class NamespaceMap(SHACLObject):
         cls._add_property(
             "prefix",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/prefix",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/prefix",
             min_count=1,
             compact="prefix",
         )
 
 
 # An SPDX version 2.X compatible verification method for software packages.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/PackageVerificationCode", compact_type="PackageVerificationCode", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/PackageVerificationCode", compact_type="PackageVerificationCode", abstract=False)
 class PackageVerificationCode(IntegrityMethod):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -3346,29 +2863,30 @@ class PackageVerificationCode(IntegrityMethod):
         cls._add_property(
             "algorithm",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b256", "blake2b256"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b384", "blake2b384"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b512", "blake2b512"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake3", "blake3"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsDilithium", "crystalsDilithium"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsKyber", "crystalsKyber"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/falcon", "falcon"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md2", "md2"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md4", "md4"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md5", "md5"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md6", "md6"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha1", "sha1"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha224", "sha224"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha256", "sha256"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha384", "sha384"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_224", "sha3_224"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_256", "sha3_256"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_384", "sha3_384"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_512", "sha3_512"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha512", "sha512"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/adler32", "adler32"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b256", "blake2b256"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b384", "blake2b384"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b512", "blake2b512"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake3", "blake3"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsDilithium", "crystalsDilithium"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsKyber", "crystalsKyber"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/falcon", "falcon"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md2", "md2"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md4", "md4"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md5", "md5"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md6", "md6"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha1", "sha1"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha224", "sha224"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha256", "sha256"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha384", "sha384"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_224", "sha3_224"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_256", "sha3_256"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_384", "sha3_384"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_512", "sha3_512"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha512", "sha512"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/algorithm",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/algorithm",
             min_count=1,
             compact="algorithm",
         )
@@ -3376,7 +2894,7 @@ class PackageVerificationCode(IntegrityMethod):
         cls._add_property(
             "hashValue",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/hashValue",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/hashValue",
             min_count=1,
             compact="hashValue",
         )
@@ -3385,15 +2903,15 @@ class PackageVerificationCode(IntegrityMethod):
         cls._add_property(
             "packageVerificationCodeExcludedFile",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/packageVerificationCodeExcludedFile",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/packageVerificationCodeExcludedFile",
             compact="packageVerificationCodeExcludedFile",
         )
 
 
 # A tuple of two positive integers that define a range.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/PositiveIntegerRange", compact_type="PositiveIntegerRange", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/PositiveIntegerRange", compact_type="PositiveIntegerRange", abstract=False)
 class PositiveIntegerRange(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -3404,7 +2922,7 @@ class PositiveIntegerRange(SHACLObject):
         cls._add_property(
             "beginIntegerRange",
             PositiveIntegerProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/beginIntegerRange",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/beginIntegerRange",
             min_count=1,
             compact="beginIntegerRange",
         )
@@ -3412,71 +2930,71 @@ class PositiveIntegerRange(SHACLObject):
         cls._add_property(
             "endIntegerRange",
             PositiveIntegerProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/endIntegerRange",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/endIntegerRange",
             min_count=1,
             compact="endIntegerRange",
         )
 
 
 # Categories of presence or absence.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType", compact_type="PresenceType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType", compact_type="PresenceType", abstract=False)
 class PresenceType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "no": "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no",
-        "noAssertion": "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion",
-        "yes": "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes",
+        "no": "https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/no",
+        "noAssertion": "https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/noAssertion",
+        "yes": "https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/yes",
     }
     # Indicates absence of the field.
-    no = "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no"
+    no = "https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/no"
     # Makes no assertion about the field.
-    noAssertion = "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion"
+    noAssertion = "https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/noAssertion"
     # Indicates presence of the field.
-    yes = "https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes"
+    yes = "https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/yes"
 
 
 # Enumeration of the valid profiles.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType", compact_type="ProfileIdentifierType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType", compact_type="ProfileIdentifierType", abstract=False)
 class ProfileIdentifierType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "ai": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/ai",
-        "build": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/build",
-        "core": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/core",
-        "dataset": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/dataset",
-        "expandedLicensing": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/expandedLicensing",
-        "extension": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/extension",
-        "lite": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/lite",
-        "security": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/security",
-        "simpleLicensing": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/simpleLicensing",
-        "software": "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/software",
+        "ai": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/ai",
+        "build": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/build",
+        "core": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/core",
+        "dataset": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/dataset",
+        "expandedLicensing": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/expandedLicensing",
+        "extension": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/extension",
+        "lite": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/lite",
+        "security": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/security",
+        "simpleLicensing": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/simpleLicensing",
+        "software": "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/software",
     }
     # the element follows the AI profile specification
-    ai = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/ai"
+    ai = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/ai"
     # the element follows the Build profile specification
-    build = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/build"
+    build = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/build"
     # the element follows the Core profile specification
-    core = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/core"
+    core = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/core"
     # the element follows the Dataset profile specification
-    dataset = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/dataset"
-    # the element follows the expanded Licensing profile
-    expandedLicensing = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/expandedLicensing"
+    dataset = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/dataset"
+    # the element follows the expanded Licensing profile specification
+    expandedLicensing = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/expandedLicensing"
     # the element follows the Extension profile specification
-    extension = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/extension"
+    extension = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/extension"
     # the element follows the Lite profile specification
-    lite = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/lite"
+    lite = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/lite"
     # the element follows the Security profile specification
-    security = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/security"
-    # the element follows the simple Licensing profile
-    simpleLicensing = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/simpleLicensing"
+    security = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/security"
+    # the element follows the simple Licensing profile specification
+    simpleLicensing = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/simpleLicensing"
     # the element follows the Software profile specification
-    software = "https://spdx.org/rdf/3.0.0/terms/Core/ProfileIdentifierType/software"
+    software = "https://spdx.org/rdf/3.0.1/terms/Core/ProfileIdentifierType/software"
 
 
 # Describes a relationship between one or more elements.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Relationship", compact_type="Relationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Relationship", compact_type="Relationship", abstract=False)
 class Relationship(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -3488,25 +3006,31 @@ class Relationship(Element):
         cls._add_property(
             "completeness",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/complete", "complete"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/incomplete", "incomplete"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/noAssertion", "noAssertion"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/complete", "complete"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/incomplete", "incomplete"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/noAssertion", "noAssertion"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/completeness",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/completeness",
             compact="completeness",
         )
         # Specifies the time from which an element is no longer applicable / valid.
         cls._add_property(
             "endTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/endTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/endTime",
             compact="endTime",
         )
         # References the Element on the left-hand side of a relationship.
         cls._add_property(
             "from_",
-            ObjectProp(Element, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/from",
+            ObjectProp(Element, True, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoneElement", "NoneElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement", "NoAssertionElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/from",
             min_count=1,
             compact="from",
         )
@@ -3514,67 +3038,67 @@ class Relationship(Element):
         cls._add_property(
             "relationshipType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/affects", "affects"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/amendedBy", "amendedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/ancestorOf", "ancestorOf"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/availableFrom", "availableFrom"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/configures", "configures"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/contains", "contains"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/coordinatedBy", "coordinatedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/copiedTo", "copiedTo"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/delegatedTo", "delegatedTo"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/dependsOn", "dependsOn"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/descendantOf", "descendantOf"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/describes", "describes"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/doesNotAffect", "doesNotAffect"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/expandsTo", "expandsTo"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/exploitCreatedBy", "exploitCreatedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedBy", "fixedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedIn", "fixedIn"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/foundBy", "foundBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/generates", "generates"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAddedFile", "hasAddedFile"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssessmentFor", "hasAssessmentFor"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssociatedVulnerability", "hasAssociatedVulnerability"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasConcludedLicense", "hasConcludedLicense"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDataFile", "hasDataFile"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeclaredLicense", "hasDeclaredLicense"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeletedFile", "hasDeletedFile"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDependencyManifest", "hasDependencyManifest"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDistributionArtifact", "hasDistributionArtifact"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDocumentation", "hasDocumentation"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDynamicLink", "hasDynamicLink"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasEvidence", "hasEvidence"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasExample", "hasExample"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasHost", "hasHost"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasInputs", "hasInputs"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasMetadata", "hasMetadata"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalComponent", "hasOptionalComponent"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalDependency", "hasOptionalDependency"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOutputs", "hasOutputs"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasPrerequsite", "hasPrerequsite"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasProvidedDependency", "hasProvidedDependency"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasRequirement", "hasRequirement"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasSpecification", "hasSpecification"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasStaticLink", "hasStaticLink"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTest", "hasTest"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTestCase", "hasTestCase"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasVariant", "hasVariant"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/invokedBy", "invokedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/modifiedBy", "modifiedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/packagedBy", "packagedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/patchedBy", "patchedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/publishedBy", "publishedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/reportedBy", "reportedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/republishedBy", "republishedBy"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/serializedInArtifact", "serializedInArtifact"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/testedOn", "testedOn"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/trainedOn", "trainedOn"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/underInvestigationFor", "underInvestigationFor"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/usesTool", "usesTool"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/affects", "affects"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/amendedBy", "amendedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/ancestorOf", "ancestorOf"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/availableFrom", "availableFrom"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/configures", "configures"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/contains", "contains"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/coordinatedBy", "coordinatedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/copiedTo", "copiedTo"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/delegatedTo", "delegatedTo"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/dependsOn", "dependsOn"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/descendantOf", "descendantOf"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/describes", "describes"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/doesNotAffect", "doesNotAffect"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/expandsTo", "expandsTo"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/exploitCreatedBy", "exploitCreatedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/fixedBy", "fixedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/fixedIn", "fixedIn"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/foundBy", "foundBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/generates", "generates"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAddedFile", "hasAddedFile"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAssessmentFor", "hasAssessmentFor"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAssociatedVulnerability", "hasAssociatedVulnerability"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasConcludedLicense", "hasConcludedLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDataFile", "hasDataFile"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDeclaredLicense", "hasDeclaredLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDeletedFile", "hasDeletedFile"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDependencyManifest", "hasDependencyManifest"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDistributionArtifact", "hasDistributionArtifact"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDocumentation", "hasDocumentation"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDynamicLink", "hasDynamicLink"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasEvidence", "hasEvidence"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasExample", "hasExample"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasHost", "hasHost"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasInput", "hasInput"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasMetadata", "hasMetadata"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOptionalComponent", "hasOptionalComponent"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOptionalDependency", "hasOptionalDependency"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOutput", "hasOutput"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasPrerequisite", "hasPrerequisite"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasProvidedDependency", "hasProvidedDependency"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasRequirement", "hasRequirement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasSpecification", "hasSpecification"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasStaticLink", "hasStaticLink"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasTest", "hasTest"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasTestCase", "hasTestCase"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasVariant", "hasVariant"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/invokedBy", "invokedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/modifiedBy", "modifiedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/packagedBy", "packagedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/patchedBy", "patchedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/publishedBy", "publishedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/reportedBy", "reportedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/republishedBy", "republishedBy"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/serializedInArtifact", "serializedInArtifact"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/testedOn", "testedOn"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/trainedOn", "trainedOn"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/underInvestigationFor", "underInvestigationFor"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/usesTool", "usesTool"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/relationshipType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/relationshipType",
             min_count=1,
             compact="relationshipType",
         )
@@ -3582,225 +3106,231 @@ class Relationship(Element):
         cls._add_property(
             "startTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/startTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/startTime",
             compact="startTime",
         )
         # References an Element on the right-hand side of a relationship.
         cls._add_property(
             "to",
-            ListProp(ObjectProp(Element, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/to",
+            ListProp(ObjectProp(Element, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoneElement", "NoneElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement", "NoAssertionElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/to",
             min_count=1,
             compact="to",
         )
 
 
 # Indicates whether a relationship is known to be complete, incomplete, or if no assertion is made with respect to relationship completeness.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness", compact_type="RelationshipCompleteness", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness", compact_type="RelationshipCompleteness", abstract=False)
 class RelationshipCompleteness(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "complete": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/complete",
-        "incomplete": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/incomplete",
-        "noAssertion": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/noAssertion",
+        "complete": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/complete",
+        "incomplete": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/incomplete",
+        "noAssertion": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/noAssertion",
     }
     # The relationship is known to be exhaustive.
-    complete = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/complete"
+    complete = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/complete"
     # The relationship is known not to be exhaustive.
-    incomplete = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/incomplete"
+    incomplete = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/incomplete"
     # No assertion can be made about the completeness of the relationship.
-    noAssertion = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipCompleteness/noAssertion"
+    noAssertion = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipCompleteness/noAssertion"
 
 
 # Information about the relationship between two Elements.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType", compact_type="RelationshipType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType", compact_type="RelationshipType", abstract=False)
 class RelationshipType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "affects": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/affects",
-        "amendedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/amendedBy",
-        "ancestorOf": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/ancestorOf",
-        "availableFrom": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/availableFrom",
-        "configures": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/configures",
-        "contains": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/contains",
-        "coordinatedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/coordinatedBy",
-        "copiedTo": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/copiedTo",
-        "delegatedTo": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/delegatedTo",
-        "dependsOn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/dependsOn",
-        "descendantOf": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/descendantOf",
-        "describes": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/describes",
-        "doesNotAffect": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/doesNotAffect",
-        "expandsTo": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/expandsTo",
-        "exploitCreatedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/exploitCreatedBy",
-        "fixedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedBy",
-        "fixedIn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedIn",
-        "foundBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/foundBy",
-        "generates": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/generates",
-        "hasAddedFile": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAddedFile",
-        "hasAssessmentFor": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssessmentFor",
-        "hasAssociatedVulnerability": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssociatedVulnerability",
-        "hasConcludedLicense": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasConcludedLicense",
-        "hasDataFile": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDataFile",
-        "hasDeclaredLicense": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeclaredLicense",
-        "hasDeletedFile": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeletedFile",
-        "hasDependencyManifest": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDependencyManifest",
-        "hasDistributionArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDistributionArtifact",
-        "hasDocumentation": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDocumentation",
-        "hasDynamicLink": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDynamicLink",
-        "hasEvidence": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasEvidence",
-        "hasExample": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasExample",
-        "hasHost": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasHost",
-        "hasInputs": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasInputs",
-        "hasMetadata": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasMetadata",
-        "hasOptionalComponent": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalComponent",
-        "hasOptionalDependency": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalDependency",
-        "hasOutputs": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOutputs",
-        "hasPrerequsite": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasPrerequsite",
-        "hasProvidedDependency": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasProvidedDependency",
-        "hasRequirement": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasRequirement",
-        "hasSpecification": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasSpecification",
-        "hasStaticLink": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasStaticLink",
-        "hasTest": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTest",
-        "hasTestCase": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTestCase",
-        "hasVariant": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasVariant",
-        "invokedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/invokedBy",
-        "modifiedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/modifiedBy",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/other",
-        "packagedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/packagedBy",
-        "patchedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/patchedBy",
-        "publishedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/publishedBy",
-        "reportedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/reportedBy",
-        "republishedBy": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/republishedBy",
-        "serializedInArtifact": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/serializedInArtifact",
-        "testedOn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/testedOn",
-        "trainedOn": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/trainedOn",
-        "underInvestigationFor": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/underInvestigationFor",
-        "usesTool": "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/usesTool",
+        "affects": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/affects",
+        "amendedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/amendedBy",
+        "ancestorOf": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/ancestorOf",
+        "availableFrom": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/availableFrom",
+        "configures": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/configures",
+        "contains": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/contains",
+        "coordinatedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/coordinatedBy",
+        "copiedTo": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/copiedTo",
+        "delegatedTo": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/delegatedTo",
+        "dependsOn": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/dependsOn",
+        "descendantOf": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/descendantOf",
+        "describes": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/describes",
+        "doesNotAffect": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/doesNotAffect",
+        "expandsTo": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/expandsTo",
+        "exploitCreatedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/exploitCreatedBy",
+        "fixedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/fixedBy",
+        "fixedIn": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/fixedIn",
+        "foundBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/foundBy",
+        "generates": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/generates",
+        "hasAddedFile": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAddedFile",
+        "hasAssessmentFor": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAssessmentFor",
+        "hasAssociatedVulnerability": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAssociatedVulnerability",
+        "hasConcludedLicense": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasConcludedLicense",
+        "hasDataFile": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDataFile",
+        "hasDeclaredLicense": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDeclaredLicense",
+        "hasDeletedFile": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDeletedFile",
+        "hasDependencyManifest": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDependencyManifest",
+        "hasDistributionArtifact": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDistributionArtifact",
+        "hasDocumentation": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDocumentation",
+        "hasDynamicLink": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDynamicLink",
+        "hasEvidence": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasEvidence",
+        "hasExample": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasExample",
+        "hasHost": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasHost",
+        "hasInput": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasInput",
+        "hasMetadata": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasMetadata",
+        "hasOptionalComponent": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOptionalComponent",
+        "hasOptionalDependency": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOptionalDependency",
+        "hasOutput": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOutput",
+        "hasPrerequisite": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasPrerequisite",
+        "hasProvidedDependency": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasProvidedDependency",
+        "hasRequirement": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasRequirement",
+        "hasSpecification": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasSpecification",
+        "hasStaticLink": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasStaticLink",
+        "hasTest": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasTest",
+        "hasTestCase": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasTestCase",
+        "hasVariant": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasVariant",
+        "invokedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/invokedBy",
+        "modifiedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/modifiedBy",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/other",
+        "packagedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/packagedBy",
+        "patchedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/patchedBy",
+        "publishedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/publishedBy",
+        "reportedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/reportedBy",
+        "republishedBy": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/republishedBy",
+        "serializedInArtifact": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/serializedInArtifact",
+        "testedOn": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/testedOn",
+        "trainedOn": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/trainedOn",
+        "underInvestigationFor": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/underInvestigationFor",
+        "usesTool": "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/usesTool",
     }
-    # (Security/VEX) The `from` vulnerability affect each `to` Element
-    affects = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/affects"
-    # The `from` Element is amended by each `to` Element
-    amendedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/amendedBy"
-    # The `from` Element is an ancestor of each `to` Element
-    ancestorOf = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/ancestorOf"
-    # The `from` Element is available from the additional supplier described by each `to` Element
-    availableFrom = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/availableFrom"
-    # The `from` Element is a configuration applied to each `to` Element during a LifecycleScopeType period
-    configures = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/configures"
-    # The `from` Element contains each `to` Element
-    contains = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/contains"
-    # (Security) The `from` Vulnerability is coordinatedBy the `to` Agent(s) (vendor, researcher, or consumer agent)
-    coordinatedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/coordinatedBy"
-    # The `from` Element has been copied to each `to` Element
-    copiedTo = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/copiedTo"
-    # The `from` Agent is delegating an action to the Agent of the `to` Relationship (which must be of type invokedBy) during a LifecycleScopeType. (e.g. the `to` invokedBy Relationship is being done on behalf of `from`)
-    delegatedTo = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/delegatedTo"
-    # The `from` Element depends on each `to` Element during a LifecycleScopeType period.
-    dependsOn = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/dependsOn"
-    # The `from` Element is a descendant of each `to` Element
-    descendantOf = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/descendantOf"
+    # The `from` Vulnerability affects each `to` Element. The use of the `affects` type is constrained to `VexAffectedVulnAssessmentRelationship` classed relationships.
+    affects = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/affects"
+    # The `from` Element is amended by each `to` Element.
+    amendedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/amendedBy"
+    # The `from` Element is an ancestor of each `to` Element.
+    ancestorOf = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/ancestorOf"
+    # The `from` Element is available from the additional supplier described by each `to` Element.
+    availableFrom = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/availableFrom"
+    # The `from` Element is a configuration applied to each `to` Element, during a LifecycleScopeType period.
+    configures = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/configures"
+    # The `from` Element contains each `to` Element.
+    contains = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/contains"
+    # The `from` Vulnerability is coordinatedBy the `to` Agent(s) (vendor, researcher, or consumer agent).
+    coordinatedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/coordinatedBy"
+    # The `from` Element has been copied to each `to` Element.
+    copiedTo = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/copiedTo"
+    # The `from` Agent is delegating an action to the Agent of the `to` Relationship (which must be of type invokedBy), during a LifecycleScopeType (e.g. the `to` invokedBy Relationship is being done on behalf of `from`).
+    delegatedTo = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/delegatedTo"
+    # The `from` Element depends on each `to` Element, during a LifecycleScopeType period.
+    dependsOn = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/dependsOn"
+    # The `from` Element is a descendant of each `to` Element.
+    descendantOf = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/descendantOf"
     # The `from` Element describes each `to` Element. To denote the root(s) of a tree of elements in a collection, the rootElement property should be used.
-    describes = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/describes"
-    # (Security/VEX) The `from` Vulnerability has no impact on each `to` Element
-    doesNotAffect = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/doesNotAffect"
-    # The `from` archive expands out as an artifact described by each `to` Element
-    expandsTo = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/expandsTo"
-    # (Security) The `from` Vulnerability has had an exploit created against it by each `to` Agent
-    exploitCreatedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/exploitCreatedBy"
-    # (Security) Designates a `from` Vulnerability has been fixed by the `to` Agent(s)
-    fixedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedBy"
-    # (Security/VEX) A `from` Vulnerability has been fixed in each of the `to` Element(s)
-    fixedIn = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/fixedIn"
-    # (Security) Designates a `from` Vulnerability was originally discovered by the `to` Agent(s)
-    foundBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/foundBy"
-    # The `from` Element generates each `to` Element
-    generates = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/generates"
-    # Every `to` Element is is a file added to the `from` Element (`from` hasAddedFile `to`)
-    hasAddedFile = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAddedFile"
-    # (Security) Relates a `from` Vulnerability and each `to` Element(s) with a security assessment. To be used with `VulnAssessmentRelationship` types
-    hasAssessmentFor = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssessmentFor"
-    # (Security) Used to associate a `from` Artifact with each `to` Vulnerability
-    hasAssociatedVulnerability = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasAssociatedVulnerability"
-    # The `from` Software Artifact is concluded by the SPDX data creator to be governed by each `to` license
-    hasConcludedLicense = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasConcludedLicense"
-    # The `from` Element treats each `to` Element as a data file
-    hasDataFile = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDataFile"
-    # The `from` Software Artifact was discovered to actually contain each `to` license, for example as detected by use of automated tooling.
-    hasDeclaredLicense = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeclaredLicense"
-    # Every `to` Element is a file deleted from the `from` Element (`from` hasDeletedFile `to`)
-    hasDeletedFile = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDeletedFile"
-    # The `from` Element has manifest files that contain dependency information in each `to` Element
-    hasDependencyManifest = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDependencyManifest"
-    # The `from` Element is distributed as an artifact in each Element `to`, (e.g. an RPM or archive file)
-    hasDistributionArtifact = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDistributionArtifact"
-    # The `from` Element is documented by each `to` Element
-    hasDocumentation = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDocumentation"
+    describes = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/describes"
+    # The `from` Vulnerability has no impact on each `to` Element. The use of the `doesNotAffect` is constrained to `VexNotAffectedVulnAssessmentRelationship` classed relationships.
+    doesNotAffect = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/doesNotAffect"
+    # The `from` archive expands out as an artifact described by each `to` Element.
+    expandsTo = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/expandsTo"
+    # The `from` Vulnerability has had an exploit created against it by each `to` Agent.
+    exploitCreatedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/exploitCreatedBy"
+    # Designates a `from` Vulnerability has been fixed by the `to` Agent(s).
+    fixedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/fixedBy"
+    # A `from` Vulnerability has been fixed in each `to` Element. The use of the `fixedIn` type is constrained to `VexFixedVulnAssessmentRelationship` classed relationships.
+    fixedIn = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/fixedIn"
+    # Designates a `from` Vulnerability was originally discovered by the `to` Agent(s).
+    foundBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/foundBy"
+    # The `from` Element generates each `to` Element.
+    generates = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/generates"
+    # Every `to` Element is a file added to the `from` Element (`from` hasAddedFile `to`).
+    hasAddedFile = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAddedFile"
+    # Relates a `from` Vulnerability and each `to` Element with a security assessment. To be used with `VulnAssessmentRelationship` types.
+    hasAssessmentFor = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAssessmentFor"
+    # Used to associate a `from` Artifact with each `to` Vulnerability.
+    hasAssociatedVulnerability = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasAssociatedVulnerability"
+    # The `from` SoftwareArtifact is concluded by the SPDX data creator to be governed by each `to` license.
+    hasConcludedLicense = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasConcludedLicense"
+    # The `from` Element treats each `to` Element as a data file. A data file is an artifact that stores data required or optional for the `from` Element's functionality. A data file can be a database file, an index file, a log file, an AI model file, a calibration data file, a temporary file, a backup file, and more. For AI training dataset, test dataset, test artifact, configuration data, build input data, and build output data, please consider using the more specific relationship types: `trainedOn`, `testedOn`, `hasTest`, `configures`, `hasInput`, and `hasOutput`, respectively. This relationship does not imply dependency.
+    hasDataFile = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDataFile"
+    # The `from` SoftwareArtifact was discovered to actually contain each `to` license, for example as detected by use of automated tooling.
+    hasDeclaredLicense = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDeclaredLicense"
+    # Every `to` Element is a file deleted from the `from` Element (`from` hasDeletedFile `to`).
+    hasDeletedFile = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDeletedFile"
+    # The `from` Element has manifest files that contain dependency information in each `to` Element.
+    hasDependencyManifest = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDependencyManifest"
+    # The `from` Element is distributed as an artifact in each `to` Element (e.g. an RPM or archive file).
+    hasDistributionArtifact = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDistributionArtifact"
+    # The `from` Element is documented by each `to` Element.
+    hasDocumentation = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDocumentation"
     # The `from` Element dynamically links in each `to` Element, during a LifecycleScopeType period.
-    hasDynamicLink = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasDynamicLink"
-    # (Dataset) Every `to` Element is considered as evidence for the `from` Element (`from` hasEvidence `to`)
-    hasEvidence = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasEvidence"
-    # Every `to` Element is an example for the `from` Element (`from` hasExample `to`)
-    hasExample = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasExample"
-    # The `from` Build was run on the `to` Element during a LifecycleScopeType period (e.g. The host that the build runs on)
-    hasHost = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasHost"
-    # The `from` Build has each `to` Elements as an input during a LifecycleScopeType period.
-    hasInputs = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasInputs"
-    # Every `to` Element is metadata about the `from` Element (`from` hasMetadata `to`)
-    hasMetadata = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasMetadata"
-    # Every `to` Element is an optional component of the `from` Element (`from` hasOptionalComponent `to`)
-    hasOptionalComponent = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalComponent"
-    # The `from` Element optionally depends on each `to` Element during a LifecycleScopeType period
-    hasOptionalDependency = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOptionalDependency"
-    # The `from` Build element generates each `to` Element as an output during a LifecycleScopeType period.
-    hasOutputs = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasOutputs"
-    # The `from` Element has a prerequsite on each `to` Element, during a LifecycleScopeType period
-    hasPrerequsite = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasPrerequsite"
-    # The `from` Element has a dependency on each `to` Element, but dependency is not in the distributed artifact, but assumed to be provided, during a LifecycleScopeType period
-    hasProvidedDependency = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasProvidedDependency"
-    # The `from` Element has a requirement on each `to` Element, during a LifecycleScopeType period
-    hasRequirement = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasRequirement"
-    # Every `to` Element is a specification for the `from` Element (`from` hasSpecification `to`), during a LifecycleScopeType period
-    hasSpecification = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasSpecification"
-    # The `from` Element statically links in each `to` Element, during a LifecycleScopeType period
-    hasStaticLink = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasStaticLink"
-    # Every `to` Element is a test artifact for the `from` Element (`from` hasTest `to`), during a LifecycleScopeType period
-    hasTest = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTest"
-    # Every `to` Element is a test case for the `from` Element (`from` hasTestCase `to`)
-    hasTestCase = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasTestCase"
-    # Every `to` Element is a variant the `from` Element (`from` hasVariant `to`)
-    hasVariant = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/hasVariant"
-    # The `from` Element was invoked by the `to` Agent during a LifecycleScopeType period (for example, a Build element that describes a build step)
-    invokedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/invokedBy"
-    # The `from` Element is modified by each `to` Element
-    modifiedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/modifiedBy"
-    # Every `to` Element is related to the `from` Element where the relationship type is not described by any of the SPDX relationhip types (this relationship is directionless)
-    other = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/other"
-    # Every `to` Element is a packaged instance of the `from` Element (`from` packagedBy `to`)
-    packagedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/packagedBy"
-    # Every `to` Element is a patch for the `from` Element (`from` patchedBy `to`)
-    patchedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/patchedBy"
-    # (Security) Designates a `from` Vulnerability was made available for public use or reference by each `to` Agent
-    publishedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/publishedBy"
-    # (Security) Designates a `from` Vulnerability was first reported to a project, vendor, or tracking database for formal identification by each `to` Agent
-    reportedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/reportedBy"
-    # (Security) Designates a `from` Vulnerability's details were tracked, aggregated, and/or enriched to improve context (i.e. NVD) by a `to` Agent(s)
-    republishedBy = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/republishedBy"
-    # The `from` SPDXDocument can be found in a serialized form in each `to` Artifact
-    serializedInArtifact = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/serializedInArtifact"
-    # (AI, Dataset) The `from` Element has been tested on the `to` Element
-    testedOn = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/testedOn"
-    # (AI, Dataset) The `from` Element has been trained by the `to` Element(s)
-    trainedOn = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/trainedOn"
-    # (Security/VEX) The `from` Vulnerability impact is being investigated for each `to` Element
-    underInvestigationFor = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/underInvestigationFor"
-    # The `from` Element uses each `to` Element as a tool during a LifecycleScopeType period.
-    usesTool = "https://spdx.org/rdf/3.0.0/terms/Core/RelationshipType/usesTool"
+    hasDynamicLink = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasDynamicLink"
+    # Every `to` Element is considered as evidence for the `from` Element (`from` hasEvidence `to`).
+    hasEvidence = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasEvidence"
+    # Every `to` Element is an example for the `from` Element (`from` hasExample `to`).
+    hasExample = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasExample"
+    # The `from` Build was run on the `to` Element during a LifecycleScopeType period (e.g. the host that the build runs on).
+    hasHost = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasHost"
+    # The `from` Build has each `to` Element as an input, during a LifecycleScopeType period.
+    hasInput = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasInput"
+    # Every `to` Element is metadata about the `from` Element (`from` hasMetadata `to`).
+    hasMetadata = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasMetadata"
+    # Every `to` Element is an optional component of the `from` Element (`from` hasOptionalComponent `to`).
+    hasOptionalComponent = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOptionalComponent"
+    # The `from` Element optionally depends on each `to` Element, during a LifecycleScopeType period.
+    hasOptionalDependency = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOptionalDependency"
+    # The `from` Build element generates each `to` Element as an output, during a LifecycleScopeType period.
+    hasOutput = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasOutput"
+    # The `from` Element has a prerequisite on each `to` Element, during a LifecycleScopeType period.
+    hasPrerequisite = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasPrerequisite"
+    # The `from` Element has a dependency on each `to` Element, dependency is not in the distributed artifact, but assumed to be provided, during a LifecycleScopeType period.
+    hasProvidedDependency = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasProvidedDependency"
+    # The `from` Element has a requirement on each `to` Element, during a LifecycleScopeType period.
+    hasRequirement = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasRequirement"
+    # Every `to` Element is a specification for the `from` Element (`from` hasSpecification `to`), during a LifecycleScopeType period.
+    hasSpecification = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasSpecification"
+    # The `from` Element statically links in each `to` Element, during a LifecycleScopeType period.
+    hasStaticLink = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasStaticLink"
+    # Every `to` Element is a test artifact for the `from` Element (`from` hasTest `to`), during a LifecycleScopeType period.
+    hasTest = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasTest"
+    # Every `to` Element is a test case for the `from` Element (`from` hasTestCase `to`).
+    hasTestCase = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasTestCase"
+    # Every `to` Element is a variant the `from` Element (`from` hasVariant `to`).
+    hasVariant = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/hasVariant"
+    # The `from` Element was invoked by the `to` Agent, during a LifecycleScopeType period (for example, a Build element that describes a build step).
+    invokedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/invokedBy"
+    # The `from` Element is modified by each `to` Element.
+    modifiedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/modifiedBy"
+    # Every `to` Element is related to the `from` Element where the relationship type is not described by any of the SPDX relationship types (this relationship is directionless).
+    other = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/other"
+    # Every `to` Element is a packaged instance of the `from` Element (`from` packagedBy `to`).
+    packagedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/packagedBy"
+    # Every `to` Element is a patch for the `from` Element (`from` patchedBy `to`).
+    patchedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/patchedBy"
+    # Designates a `from` Vulnerability was made available for public use or reference by each `to` Agent.
+    publishedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/publishedBy"
+    # Designates a `from` Vulnerability was first reported to a project, vendor, or tracking database for formal identification by each `to` Agent.
+    reportedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/reportedBy"
+    # Designates a `from` Vulnerability's details were tracked, aggregated, and/or enriched to improve context (i.e. NVD) by each `to` Agent.
+    republishedBy = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/republishedBy"
+    # The `from` SpdxDocument can be found in a serialized form in each `to` Artifact.
+    serializedInArtifact = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/serializedInArtifact"
+    # The `from` Element has been tested on the `to` Element(s).
+    testedOn = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/testedOn"
+    # The `from` Element has been trained on the `to` Element(s).
+    trainedOn = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/trainedOn"
+    # The `from` Vulnerability impact is being investigated for each `to` Element. The use of the `underInvestigationFor` type is constrained to `VexUnderInvestigationVulnAssessmentRelationship` classed relationships.
+    underInvestigationFor = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/underInvestigationFor"
+    # The `from` Element uses each `to` Element as a tool, during a LifecycleScopeType period.
+    usesTool = "https://spdx.org/rdf/3.0.1/terms/Core/RelationshipType/usesTool"
 
 
 # A collection of SPDX Elements that could potentially be serialized.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/SpdxDocument", compact_type="SpdxDocument", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/SpdxDocument", compact_type="SpdxDocument", abstract=False)
 class SpdxDocument(ElementCollection):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -3812,162 +3342,165 @@ class SpdxDocument(ElementCollection):
         # used.
         cls._add_property(
             "dataLicense",
-            ObjectProp(simplelicensing_AnyLicenseInfo, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/dataLicense",
+            ObjectProp(simplelicensing_AnyLicenseInfo, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/dataLicense",
             compact="dataLicense",
         )
         # Provides an ExternalMap of Element identifiers.
         cls._add_property(
-            "imports",
+            "import_",
             ListProp(ObjectProp(ExternalMap, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/imports",
-            compact="imports",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/import",
+            compact="import",
         )
         # Provides a NamespaceMap of prefixes and associated namespace partial URIs applicable to an SpdxDocument and independent of any specific serialization format or instance.
         cls._add_property(
             "namespaceMap",
             ListProp(ObjectProp(NamespaceMap, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/namespaceMap",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/namespaceMap",
             compact="namespaceMap",
         )
 
 
 # Indicates the type of support that is associated with an artifact.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/SupportType", compact_type="SupportType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/SupportType", compact_type="SupportType", abstract=False)
 class SupportType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "deployed": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/deployed",
-        "development": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/development",
-        "endOfSupport": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/endOfSupport",
-        "limitedSupport": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/limitedSupport",
-        "noAssertion": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noAssertion",
-        "noSupport": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noSupport",
-        "support": "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/support",
+        "deployed": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/deployed",
+        "development": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/development",
+        "endOfSupport": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/endOfSupport",
+        "limitedSupport": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/limitedSupport",
+        "noAssertion": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/noAssertion",
+        "noSupport": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/noSupport",
+        "support": "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/support",
     }
     # in addition to being supported by the supplier, the software is known to have been deployed and is in use.  For a software as a service provider, this implies the software is now available as a service.
-    deployed = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/deployed"
+    deployed = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/deployed"
     # the artifact is in active development and is not considered ready for formal support from the supplier.
-    development = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/development"
+    development = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/development"
     # there is a defined end of support for the artifact from the supplier.  This may also be referred to as end of life. There is a validUntilDate that can be used to signal when support ends for the artifact.
-    endOfSupport = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/endOfSupport"
+    endOfSupport = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/endOfSupport"
     # the artifact has been released, and there is limited support available from the supplier. There is a validUntilDate that can provide additional information about the duration of support.
-    limitedSupport = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/limitedSupport"
+    limitedSupport = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/limitedSupport"
     # no assertion about the type of support is made.   This is considered the default if no other support type is used.
-    noAssertion = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noAssertion"
+    noAssertion = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/noAssertion"
     # there is no support for the artifact from the supplier, consumer assumes any support obligations.
-    noSupport = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noSupport"
+    noSupport = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/noSupport"
     # the artifact has been released, and is supported from the supplier.   There is a validUntilDate that can provide additional information about the duration of support.
-    support = "https://spdx.org/rdf/3.0.0/terms/Core/SupportType/support"
+    support = "https://spdx.org/rdf/3.0.1/terms/Core/SupportType/support"
 
 
 # An element of hardware and/or software utilized to carry out a particular function.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Tool", compact_type="Tool", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Tool", compact_type="Tool", abstract=False)
 class Tool(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
 
 
 # Categories of confidentiality level.
-@register("https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType", compact_type="dataset_ConfidentialityLevelType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType", compact_type="dataset_ConfidentialityLevelType", abstract=False)
 class dataset_ConfidentialityLevelType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "amber": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/amber",
-        "clear": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/clear",
-        "green": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/green",
-        "red": "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/red",
+        "amber": "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/amber",
+        "clear": "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/clear",
+        "green": "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/green",
+        "red": "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/red",
     }
-    # Data points in the dataset can be shared only with specific
-    amber = "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/amber"
+    # Data points in the dataset can be shared only with specific organizations and their clients on a need to know basis.
+    amber = "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/amber"
     # Dataset may be distributed freely, without restriction.
-    clear = "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/clear"
+    clear = "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/clear"
     # Dataset can be shared within a community of peers and partners.
-    green = "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/green"
-    # Data points in the dataset are highly confidential and can only be shared
-    red = "https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/red"
+    green = "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/green"
+    # Data points in the dataset are highly confidential and can only be shared with named recipients.
+    red = "https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/red"
 
 
 # Availability of dataset.
-@register("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType", compact_type="dataset_DatasetAvailabilityType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType", compact_type="dataset_DatasetAvailabilityType", abstract=False)
 class dataset_DatasetAvailabilityType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "clickthrough": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/clickthrough",
-        "directDownload": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/directDownload",
-        "query": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/query",
-        "registration": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/registration",
-        "scrapingScript": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/scrapingScript",
+        "clickthrough": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/clickthrough",
+        "directDownload": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/directDownload",
+        "query": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/query",
+        "registration": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/registration",
+        "scrapingScript": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/scrapingScript",
     }
-    # the dataset is not publicly available and can only be accessed
-    clickthrough = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/clickthrough"
-    # the dataset is publicly available and can be downloaded
-    directDownload = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/directDownload"
-    # the dataset is publicly available, but not all at once, and can only
-    query = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/query"
-    # the dataset is not publicly available and an email registration
-    registration = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/registration"
-    # the dataset provider is not making available the underlying
-    scrapingScript = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/scrapingScript"
+    # the dataset is not publicly available and can only be accessed after affirmatively accepting terms on a clickthrough webpage.
+    clickthrough = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/clickthrough"
+    # the dataset is publicly available and can be downloaded directly.
+    directDownload = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/directDownload"
+    # the dataset is publicly available, but not all at once, and can only be accessed through queries which return parts of the dataset.
+    query = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/query"
+    # the dataset is not publicly available and an email registration is required before accessing the dataset, although without an affirmative acceptance of terms.
+    registration = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/registration"
+    # the dataset provider is not making available the underlying data and the dataset must be reassembled, typically using the provided script for scraping the data.
+    scrapingScript = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/scrapingScript"
 
 
 # Enumeration of dataset types.
-@register("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType", compact_type="dataset_DatasetType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType", compact_type="dataset_DatasetType", abstract=False)
 class dataset_DatasetType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "audio": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/audio",
-        "categorical": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/categorical",
-        "graph": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/graph",
-        "image": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/image",
-        "noAssertion": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/noAssertion",
-        "numeric": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/numeric",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/other",
-        "sensor": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/sensor",
-        "structured": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/structured",
-        "syntactic": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/syntactic",
-        "text": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/text",
-        "timeseries": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timeseries",
-        "timestamp": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timestamp",
-        "video": "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/video",
+        "audio": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/audio",
+        "categorical": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/categorical",
+        "graph": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/graph",
+        "image": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/image",
+        "noAssertion": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/noAssertion",
+        "numeric": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/numeric",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/other",
+        "sensor": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/sensor",
+        "structured": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/structured",
+        "syntactic": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/syntactic",
+        "text": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/text",
+        "timeseries": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/timeseries",
+        "timestamp": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/timestamp",
+        "video": "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/video",
     }
     # data is audio based, such as a collection of music from the 80s.
-    audio = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/audio"
-    # data that is classified into a discrete number of categories,
-    categorical = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/categorical"
-    # data is in the form of a graph where entries are somehow related to
-    graph = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/graph"
+    audio = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/audio"
+    # data that is classified into a discrete number of categories, such as the eye color of a population of people.
+    categorical = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/categorical"
+    # data is in the form of a graph where entries are somehow related to each other through edges, such a social network of friends.
+    graph = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/graph"
     # data is a collection of images such as pictures of animals.
-    image = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/image"
+    image = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/image"
     # data type is not known.
-    noAssertion = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/noAssertion"
+    noAssertion = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/noAssertion"
     # data consists only of numeric entries.
-    numeric = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/numeric"
+    numeric = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/numeric"
     # data is of a type not included in this list.
-    other = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/other"
-    # data is recorded from a physical sensor, such as a thermometer
-    sensor = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/sensor"
-    # data is stored in tabular format or retrieved from a relational
-    structured = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/structured"
-    # data describes the syntax or semantics of a language or text, such
-    syntactic = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/syntactic"
-    # data consists of unstructured text, such as a book, Wikipedia article
-    text = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/text"
-    # data is recorded in an ordered sequence of timestamped entries,
-    timeseries = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timeseries"
-    # data is recorded with a timestamp for each entry, but not
-    timestamp = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timestamp"
-    # data is video based, such as a collection of movie clips featuring Tom
-    video = "https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/video"
+    other = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/other"
+    # data is recorded from a physical sensor, such as a thermometer reading or biometric device.
+    sensor = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/sensor"
+    # data is stored in tabular format or retrieved from a relational database.
+    structured = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/structured"
+    # data describes the syntax or semantics of a language or text, such as a parse tree used for natural language processing.
+    syntactic = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/syntactic"
+    # data consists of unstructured text, such as a book, Wikipedia article (without images), or transcript.
+    text = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/text"
+    # data is recorded in an ordered sequence of timestamped entries, such as the price of a stock over the course of a day.
+    timeseries = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/timeseries"
+    # data is recorded with a timestamp for each entry, but not necessarily ordered or at specific intervals, such as when a taxi ride starts and ends.
+    timestamp = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/timestamp"
+    # data is video based, such as a collection of movie clips featuring Tom Hanks.
+    video = "https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/video"
 
 
 # Abstract class for additional text intended to be added to a License, but
 # which is not itself a standalone License.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/LicenseAddition", compact_type="expandedlicensing_LicenseAddition", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/LicenseAddition", compact_type="expandedlicensing_LicenseAddition", abstract=True)
 class expandedlicensing_LicenseAddition(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -3979,7 +3512,7 @@ class expandedlicensing_LicenseAddition(Element):
         cls._add_property(
             "expandedlicensing_additionText",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/additionText",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/additionText",
             min_count=1,
             compact="expandedlicensing_additionText",
         )
@@ -3987,7 +3520,7 @@ class expandedlicensing_LicenseAddition(Element):
         cls._add_property(
             "expandedlicensing_isDeprecatedAdditionId",
             BooleanProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedAdditionId",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/isDeprecatedAdditionId",
             compact="expandedlicensing_isDeprecatedAdditionId",
         )
         # Identifies all the text and metadata associated with a license in the license
@@ -3995,7 +3528,7 @@ class expandedlicensing_LicenseAddition(Element):
         cls._add_property(
             "expandedlicensing_licenseXml",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/licenseXml",
             compact="expandedlicensing_licenseXml",
         )
         # Specifies the licenseId that is preferred to be used in place of a deprecated
@@ -4003,29 +3536,29 @@ class expandedlicensing_LicenseAddition(Element):
         cls._add_property(
             "expandedlicensing_obsoletedBy",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/obsoletedBy",
             compact="expandedlicensing_obsoletedBy",
         )
         # Contains a URL where the License or LicenseAddition can be found in use.
         cls._add_property(
             "expandedlicensing_seeAlso",
             ListProp(AnyURIProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/seeAlso",
             compact="expandedlicensing_seeAlso",
         )
         # Identifies the full text of a LicenseAddition, in SPDX templating format.
         cls._add_property(
             "expandedlicensing_standardAdditionTemplate",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardAdditionTemplate",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/standardAdditionTemplate",
             compact="expandedlicensing_standardAdditionTemplate",
         )
 
 
 # A license exception that is listed on the SPDX Exceptions list.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ListedLicenseException", compact_type="expandedlicensing_ListedLicenseException", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ListedLicenseException", compact_type="expandedlicensing_ListedLicenseException", abstract=False)
 class expandedlicensing_ListedLicenseException(expandedlicensing_LicenseAddition):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4038,7 +3571,7 @@ class expandedlicensing_ListedLicenseException(expandedlicensing_LicenseAddition
         cls._add_property(
             "expandedlicensing_deprecatedVersion",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/deprecatedVersion",
             compact="expandedlicensing_deprecatedVersion",
         )
         # Specifies the SPDX License List version in which this ListedLicense or
@@ -4046,130 +3579,130 @@ class expandedlicensing_ListedLicenseException(expandedlicensing_LicenseAddition
         cls._add_property(
             "expandedlicensing_listVersionAdded",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/listVersionAdded",
             compact="expandedlicensing_listVersionAdded",
         )
 
 
 # A property name with an associated value.
-@register("https://spdx.org/rdf/3.0.0/terms/Extension/CdxPropertyEntry", compact_type="extension_CdxPropertyEntry", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Extension/CdxPropertyEntry", compact_type="extension_CdxPropertyEntry", abstract=False)
 class extension_CdxPropertyEntry(SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
     @classmethod
     def _register_props(cls):
         super()._register_props()
-        # A name used in a CdxExtension name-value pair.
+        # A name used in a CdxPropertyEntry name-value pair.
         cls._add_property(
             "extension_cdxPropName",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropName",
+            iri="https://spdx.org/rdf/3.0.1/terms/Extension/cdxPropName",
             min_count=1,
             compact="extension_cdxPropName",
         )
-        # A value used in a CdxExtension name-value pair.
+        # A value used in a CdxPropertyEntry name-value pair.
         cls._add_property(
             "extension_cdxPropValue",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Extension/cdxPropValue",
+            iri="https://spdx.org/rdf/3.0.1/terms/Extension/cdxPropValue",
             compact="extension_cdxPropValue",
         )
 
 
 # A characterization of some aspect of an Element that is associated with the Element in a generalized fashion.
-@register("https://spdx.org/rdf/3.0.0/terms/Extension/Extension", compact_type="extension_Extension", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Extension/Extension", compact_type="extension_Extension", abstract=True)
 class extension_Extension(SHACLExtensibleObject, SHACLObject):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
 
 # Specifies the CVSS base, temporal, threat, or environmental severity type.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType", compact_type="security_CvssSeverityType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType", compact_type="security_CvssSeverityType", abstract=False)
 class security_CvssSeverityType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "critical": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/critical",
-        "high": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/high",
-        "low": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/low",
-        "medium": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/medium",
-        "none": "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/none",
+        "critical": "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/critical",
+        "high": "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/high",
+        "low": "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/low",
+        "medium": "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/medium",
+        "none": "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/none",
     }
     # When a CVSS score is between 9.0 - 10.0
-    critical = "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/critical"
+    critical = "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/critical"
     # When a CVSS score is between 7.0 - 8.9
-    high = "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/high"
-    # When a CVSS score is between 0 - 3.9
-    low = "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/low"
-    # When a CVSS score is between 4 - 6.9
-    medium = "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/medium"
-    # When a CVSS score is 0
-    none = "https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/none"
+    high = "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/high"
+    # When a CVSS score is between 0.1 - 3.9
+    low = "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/low"
+    # When a CVSS score is between 4.0 - 6.9
+    medium = "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/medium"
+    # When a CVSS score is 0.0
+    none = "https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/none"
 
 
 # Specifies the exploit catalog type.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType", compact_type="security_ExploitCatalogType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType", compact_type="security_ExploitCatalogType", abstract=False)
 class security_ExploitCatalogType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "kev": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/kev",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/other",
+        "kev": "https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType/kev",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType/other",
     }
     # CISA's Known Exploited Vulnerability (KEV) Catalog
-    kev = "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/kev"
+    kev = "https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType/kev"
     # Other exploit catalogs
-    other = "https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/other"
+    other = "https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType/other"
 
 
 # Specifies the SSVC decision type.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType", compact_type="security_SsvcDecisionType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType", compact_type="security_SsvcDecisionType", abstract=False)
 class security_SsvcDecisionType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "act": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/act",
-        "attend": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/attend",
-        "track": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/track",
-        "trackStar": "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/trackStar",
+        "act": "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/act",
+        "attend": "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/attend",
+        "track": "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/track",
+        "trackStar": "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/trackStar",
     }
     # The vulnerability requires attention from the organization's internal, supervisory-level and leadership-level individuals. Necessary actions include requesting assistance or information about the vulnerability, as well as publishing a notification either internally and/or externally. Typically, internal groups would meet to determine the overall response and then execute agreed upon actions. CISA recommends remediating Act vulnerabilities as soon as possible.
-    act = "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/act"
+    act = "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/act"
     # The vulnerability requires attention from the organization's internal, supervisory-level individuals. Necessary actions include requesting assistance or information about the vulnerability, and may involve publishing a notification either internally and/or externally. CISA recommends remediating Attend vulnerabilities sooner than standard update timelines.
-    attend = "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/attend"
+    attend = "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/attend"
     # The vulnerability does not require action at this time. The organization would continue to track the vulnerability and reassess it if new information becomes available. CISA recommends remediating Track vulnerabilities within standard update timelines.
-    track = "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/track"
-    # ("Track*" in the SSVC spec) The vulnerability contains specific characteristics that may require closer monitoring for changes. CISA recommends remediating Track* vulnerabilities within standard update timelines.
-    trackStar = "https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/trackStar"
+    track = "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/track"
+    # ("Track\*" in the SSVC spec) The vulnerability contains specific characteristics that may require closer monitoring for changes. CISA recommends remediating Track\* vulnerabilities within standard update timelines.
+    trackStar = "https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/trackStar"
 
 
 # Specifies the VEX justification type.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType", compact_type="security_VexJustificationType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType", compact_type="security_VexJustificationType", abstract=False)
 class security_VexJustificationType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "componentNotPresent": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/componentNotPresent",
-        "inlineMitigationsAlreadyExist": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist",
-        "vulnerableCodeCannotBeControlledByAdversary": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary",
-        "vulnerableCodeNotInExecutePath": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath",
-        "vulnerableCodeNotPresent": "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotPresent",
+        "componentNotPresent": "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/componentNotPresent",
+        "inlineMitigationsAlreadyExist": "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist",
+        "vulnerableCodeCannotBeControlledByAdversary": "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary",
+        "vulnerableCodeNotInExecutePath": "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath",
+        "vulnerableCodeNotPresent": "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeNotPresent",
     }
     # The software is not affected because the vulnerable component is not in the product.
-    componentNotPresent = "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/componentNotPresent"
+    componentNotPresent = "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/componentNotPresent"
     # Built-in inline controls or mitigations prevent an adversary from leveraging the vulnerability.
-    inlineMitigationsAlreadyExist = "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist"
+    inlineMitigationsAlreadyExist = "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist"
     # The vulnerable component is present, and the component contains the vulnerable code. However, vulnerable code is used in such a way that an attacker cannot mount any anticipated attack.
-    vulnerableCodeCannotBeControlledByAdversary = "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary"
+    vulnerableCodeCannotBeControlledByAdversary = "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary"
     # The affected code is not reachable through the execution of the code, including non-anticipated states of the product.
-    vulnerableCodeNotInExecutePath = "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath"
+    vulnerableCodeNotInExecutePath = "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath"
     # The product is not affected because the code underlying the vulnerability is not present in the product.
-    vulnerableCodeNotPresent = "https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotPresent"
+    vulnerableCodeNotPresent = "https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeNotPresent"
 
 
 # Abstract ancestor class for all vulnerability assessments
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VulnAssessmentRelationship", compact_type="security_VulnAssessmentRelationship", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VulnAssessmentRelationship", compact_type="security_VulnAssessmentRelationship", abstract=True)
 class security_VulnAssessmentRelationship(Relationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4181,56 +3714,62 @@ class security_VulnAssessmentRelationship(Relationship):
         # referenced by the Element.
         cls._add_property(
             "suppliedBy",
-            ObjectProp(Agent, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/suppliedBy",
+            ObjectProp(Agent, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                ],),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/suppliedBy",
             compact="suppliedBy",
         )
         # Specifies an Element contained in a piece of software where a vulnerability was
         # found.
         cls._add_property(
             "security_assessedElement",
-            ObjectProp(Element, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/assessedElement",
+            ObjectProp(Element, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoneElement", "NoneElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement", "NoAssertionElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],),
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/assessedElement",
             compact="security_assessedElement",
         )
         # Specifies a time when a vulnerability assessment was modified
         cls._add_property(
             "security_modifiedTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/modifiedTime",
             compact="security_modifiedTime",
         )
         # Specifies the time when a vulnerability was published.
         cls._add_property(
             "security_publishedTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/publishedTime",
             compact="security_publishedTime",
         )
         # Specified the time and date when a vulnerability was withdrawn.
         cls._add_property(
             "security_withdrawnTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/withdrawnTime",
             compact="security_withdrawnTime",
         )
 
 
-# Abstract class representing a license combination consisting of one or more
-# licenses (optionally including additional text), which may be combined
-# according to the SPDX license expression syntax.
-@register("https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/AnyLicenseInfo", compact_type="simplelicensing_AnyLicenseInfo", abstract=True)
+# Abstract class representing a license combination consisting of one or more licenses.
+@register("https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/AnyLicenseInfo", compact_type="simplelicensing_AnyLicenseInfo", abstract=True)
 class simplelicensing_AnyLicenseInfo(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
 
 
 # An SPDX Element containing an SPDX license expression string.
-@register("https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/LicenseExpression", compact_type="simplelicensing_LicenseExpression", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/LicenseExpression", compact_type="simplelicensing_LicenseExpression", abstract=False)
 class simplelicensing_LicenseExpression(simplelicensing_AnyLicenseInfo):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4243,14 +3782,14 @@ class simplelicensing_LicenseExpression(simplelicensing_AnyLicenseInfo):
         cls._add_property(
             "simplelicensing_customIdToUri",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/customIdToUri",
+            iri="https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/customIdToUri",
             compact="simplelicensing_customIdToUri",
         )
         # A string in the license expression format.
         cls._add_property(
             "simplelicensing_licenseExpression",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseExpression",
+            iri="https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/licenseExpression",
             min_count=1,
             compact="simplelicensing_licenseExpression",
         )
@@ -4258,15 +3797,15 @@ class simplelicensing_LicenseExpression(simplelicensing_AnyLicenseInfo):
         cls._add_property(
             "simplelicensing_licenseListVersion",
             StringProp(pattern=r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseListVersion",
+            iri="https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/licenseListVersion",
             compact="simplelicensing_licenseListVersion",
         )
 
 
 # A license or addition that is not listed on the SPDX License List.
-@register("https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/SimpleLicensingText", compact_type="simplelicensing_SimpleLicensingText", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/SimpleLicensingText", compact_type="simplelicensing_SimpleLicensingText", abstract=False)
 class simplelicensing_SimpleLicensingText(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4278,16 +3817,16 @@ class simplelicensing_SimpleLicensingText(Element):
         cls._add_property(
             "simplelicensing_licenseText",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText",
+            iri="https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/licenseText",
             min_count=1,
             compact="simplelicensing_licenseText",
         )
 
 
 # A canonical, unique, immutable identifier
-@register("https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifier", compact_type="software_ContentIdentifier", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifier", compact_type="software_ContentIdentifier", abstract=False)
 class software_ContentIdentifier(IntegrityMethod):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -4298,10 +3837,10 @@ class software_ContentIdentifier(IntegrityMethod):
         cls._add_property(
             "software_contentIdentifierType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/gitoid", "gitoid"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/swhid", "swhid"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType/gitoid", "gitoid"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType/swhid", "swhid"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/contentIdentifierType",
             min_count=1,
             compact="software_contentIdentifierType",
         )
@@ -4309,166 +3848,166 @@ class software_ContentIdentifier(IntegrityMethod):
         cls._add_property(
             "software_contentIdentifierValue",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifierValue",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/contentIdentifierValue",
             min_count=1,
             compact="software_contentIdentifierValue",
         )
 
 
 # Specifies the type of a content identifier.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType", compact_type="software_ContentIdentifierType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType", compact_type="software_ContentIdentifierType", abstract=False)
 class software_ContentIdentifierType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "gitoid": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/gitoid",
-        "swhid": "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/swhid",
+        "gitoid": "https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType/gitoid",
+        "swhid": "https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType/swhid",
     }
-    # Gitoid stands for [Git Object ID](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects) and a gitoid of type blob is a unique hash of a binary artifact. A gitoid may represent the software [Artifact ID](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#artifact-id) or the [OmniBOR Identifier](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#omnibor-identifier) for the software artifact's associated [OmniBOR Document](https://github.com/omnibor/spec/blob/main/spec/SPEC.md#omnibor-document).
-    gitoid = "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/gitoid"
-    # SoftWare Hash IDentifier, persistent intrinsic identifiers for digital artifacts. The syntax of the identifiers is defined in the [SWHID specification](https://www.swhid.org/specification/v1.1/4.Syntax) and in the case of filess they typically look like `swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2`.
-    swhid = "https://spdx.org/rdf/3.0.0/terms/Software/ContentIdentifierType/swhid"
+    # [Gitoid](https://www.iana.org/assignments/uri-schemes/prov/gitoid), stands for [Git Object ID](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects). A gitoid of type blob is a unique hash of a binary artifact. A gitoid may represent either an [Artifact Identifier](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#artifact-identifier-types) for the software artifact or an [Input Manifest Identifier](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#input-manifest-identifier) for the software artifact's associated [Artifact Input Manifest](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#artifact-input-manifest); this ambiguity exists because the Artifact Input Manifest is itself an artifact, and the gitoid of that artifact is its valid identifier. Gitoids calculated on software artifacts (Snippet, File, or Package Elements) should be recorded in the SPDX 3.0 SoftwareArtifact's contentIdentifier property. Gitoids calculated on the Artifact Input Manifest (Input Manifest Identifier) should be recorded in the SPDX 3.0 Element's externalIdentifier property. See [OmniBOR Specification](https://github.com/omnibor/spec/), a minimalistic specification for describing software [Artifact Dependency Graphs](https://github.com/omnibor/spec/blob/eb1ee5c961c16215eb8709b2975d193a2007a35d/spec/SPEC.md#artifact-dependency-graph-adg).
+    gitoid = "https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType/gitoid"
+    # SoftWare Hash IDentifier, a persistent intrinsic identifier for digital artifacts, such as files, trees (also known as directories or folders), commits, and other objects typically found in version control systems. The format of the identifiers is defined in the [SWHID specification](https://www.swhid.org/specification/v1.1/4.Syntax) (ISO/IEC DIS 18670). They typically look like `swh:1:cnt:94a9ed024d3859793618152ea559a168bbcbb5e2`.
+    swhid = "https://spdx.org/rdf/3.0.1/terms/Software/ContentIdentifierType/swhid"
 
 
 # Enumeration of the different kinds of SPDX file.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/FileKindType", compact_type="software_FileKindType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/FileKindType", compact_type="software_FileKindType", abstract=False)
 class software_FileKindType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "directory": "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/directory",
-        "file": "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/file",
+        "directory": "https://spdx.org/rdf/3.0.1/terms/Software/FileKindType/directory",
+        "file": "https://spdx.org/rdf/3.0.1/terms/Software/FileKindType/file",
     }
-    # The file represents a directory and all content stored in that
-    directory = "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/directory"
+    # The file represents a directory and all content stored in that directory.
+    directory = "https://spdx.org/rdf/3.0.1/terms/Software/FileKindType/directory"
     # The file represents a single file (default).
-    file = "https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/file"
+    file = "https://spdx.org/rdf/3.0.1/terms/Software/FileKindType/file"
 
 
 # Provides a set of values to be used to describe the common types of SBOMs that
 # tools may create.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/SbomType", compact_type="software_SbomType", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/SbomType", compact_type="software_SbomType", abstract=False)
 class software_SbomType(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "analyzed": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/analyzed",
-        "build": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/build",
-        "deployed": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/deployed",
-        "design": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/design",
-        "runtime": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/runtime",
-        "source": "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/source",
+        "analyzed": "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/analyzed",
+        "build": "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/build",
+        "deployed": "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/deployed",
+        "design": "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/design",
+        "runtime": "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/runtime",
+        "source": "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/source",
     }
     # SBOM generated through analysis of artifacts (e.g., executables, packages, containers, and virtual machine images) after its build. Such analysis generally requires a variety of heuristics. In some contexts, this may also be referred to as a "3rd party" SBOM.
-    analyzed = "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/analyzed"
+    analyzed = "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/analyzed"
     # SBOM generated as part of the process of building the software to create a releasable artifact (e.g., executable or package) from data such as source files, dependencies, built components, build process ephemeral data, and other SBOMs.
-    build = "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/build"
+    build = "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/build"
     # SBOM provides an inventory of software that is present on a system. This may be an assembly of other SBOMs that combines analysis of configuration options, and examination of execution behavior in a (potentially simulated) deployment environment.
-    deployed = "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/deployed"
+    deployed = "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/deployed"
     # SBOM of intended, planned software project or product with included components (some of which may not yet exist) for a new software artifact.
-    design = "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/design"
+    design = "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/design"
     # SBOM generated through instrumenting the system running the software, to capture only components present in the system, as well as external call-outs or dynamically loaded components. In some contexts, this may also be referred to as an "Instrumented" or "Dynamic" SBOM.
-    runtime = "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/runtime"
+    runtime = "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/runtime"
     # SBOM created directly from the development environment, source files, and included dependencies used to build an product artifact.
-    source = "https://spdx.org/rdf/3.0.0/terms/Software/SbomType/source"
+    source = "https://spdx.org/rdf/3.0.1/terms/Software/SbomType/source"
 
 
 # Provides information about the primary purpose of an Element.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose", compact_type="software_SoftwarePurpose", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose", compact_type="software_SoftwarePurpose", abstract=False)
 class software_SoftwarePurpose(SHACLObject):
     NODE_KIND = NodeKind.BlankNodeOrIRI
     NAMED_INDIVIDUALS = {
-        "application": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/application",
-        "archive": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/archive",
-        "bom": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/bom",
-        "configuration": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/configuration",
-        "container": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/container",
-        "data": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/data",
-        "device": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/device",
-        "deviceDriver": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/deviceDriver",
-        "diskImage": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/diskImage",
-        "documentation": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/documentation",
-        "evidence": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/evidence",
-        "executable": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/executable",
-        "file": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/file",
-        "filesystemImage": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/filesystemImage",
-        "firmware": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/firmware",
-        "framework": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/framework",
-        "install": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/install",
-        "library": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/library",
-        "manifest": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/manifest",
-        "model": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/model",
-        "module": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/module",
-        "operatingSystem": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/operatingSystem",
-        "other": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/other",
-        "patch": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/patch",
-        "platform": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/platform",
-        "requirement": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/requirement",
-        "source": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/source",
-        "specification": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/specification",
-        "test": "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/test",
+        "application": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/application",
+        "archive": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/archive",
+        "bom": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/bom",
+        "configuration": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/configuration",
+        "container": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/container",
+        "data": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/data",
+        "device": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/device",
+        "deviceDriver": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/deviceDriver",
+        "diskImage": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/diskImage",
+        "documentation": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/documentation",
+        "evidence": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/evidence",
+        "executable": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/executable",
+        "file": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/file",
+        "filesystemImage": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/filesystemImage",
+        "firmware": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/firmware",
+        "framework": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/framework",
+        "install": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/install",
+        "library": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/library",
+        "manifest": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/manifest",
+        "model": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/model",
+        "module": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/module",
+        "operatingSystem": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/operatingSystem",
+        "other": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/other",
+        "patch": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/patch",
+        "platform": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/platform",
+        "requirement": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/requirement",
+        "source": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/source",
+        "specification": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/specification",
+        "test": "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/test",
     }
-    # the Element is a software application
-    application = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/application"
-    # the Element is an archived collection of one or more files (.tar, .zip, etc)
-    archive = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/archive"
-    # Element is a bill of materials
-    bom = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/bom"
-    # Element is configuration data
-    configuration = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/configuration"
-    # the Element is a container image which can be used by a container runtime application
-    container = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/container"
-    # Element is data
-    data = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/data"
-    # the Element refers to a chipset, processor, or electronic board
-    device = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/device"
-    # Element represents software that controls hardware devices
-    deviceDriver = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/deviceDriver"
-    # the Element refers to a disk image that can be written to a disk, booted in a VM, etc. A disk image typically contains most or all of the components necessary to boot, such as bootloaders, kernels, firmware, userspace, etc.
-    diskImage = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/diskImage"
-    # Element is documentation
-    documentation = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/documentation"
-    # the Element is the evidence that a specification or requirement has been fulfilled
-    evidence = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/evidence"
-    # Element is an Artifact that can be run on a computer
-    executable = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/executable"
-    # the Element is a single file which can be independently distributed (configuration file, statically linked binary, Kubernetes deployment, etc)
-    file = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/file"
-    # the Element is a file system image that can be written to a disk (or virtual) partition
-    filesystemImage = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/filesystemImage"
-    # the Element provides low level control over a device's hardware
-    firmware = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/firmware"
-    # the Element is a software framework
-    framework = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/framework"
-    # the Element is used to install software on disk
-    install = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/install"
-    # the Element is a software library
-    library = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/library"
-    # the Element is a software manifest
-    manifest = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/manifest"
-    # the Element is a machine learning or artificial intelligence model
-    model = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/model"
-    # the Element is a module of a piece of software
-    module = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/module"
-    # the Element is an operating system
-    operatingSystem = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/operatingSystem"
-    # the Element doesn't fit into any of the other categories
-    other = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/other"
-    # Element contains a set of changes to update, fix, or improve another Element
-    patch = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/patch"
-    # Element represents a runtime environment
-    platform = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/platform"
-    # the Element provides a requirement needed as input for another Element
-    requirement = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/requirement"
-    # the Element is a single or a collection of source files
-    source = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/source"
-    # the Element is a plan, guideline or strategy how to create, perform or analyse an application
-    specification = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/specification"
-    # The Element is a test used to verify functionality on an software element
-    test = "https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/test"
+    # The Element is a software application.
+    application = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/application"
+    # The Element is an archived collection of one or more files (.tar, .zip, etc.).
+    archive = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/archive"
+    # The Element is a bill of materials.
+    bom = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/bom"
+    # The Element is configuration data.
+    configuration = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/configuration"
+    # The Element is a container image which can be used by a container runtime application.
+    container = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/container"
+    # The Element is data.
+    data = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/data"
+    # The Element refers to a chipset, processor, or electronic board.
+    device = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/device"
+    # The Element represents software that controls hardware devices.
+    deviceDriver = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/deviceDriver"
+    # The Element refers to a disk image that can be written to a disk, booted in a VM, etc. A disk image typically contains most or all of the components necessary to boot, such as bootloaders, kernels, firmware, userspace, etc.
+    diskImage = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/diskImage"
+    # The Element is documentation.
+    documentation = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/documentation"
+    # The Element is the evidence that a specification or requirement has been fulfilled.
+    evidence = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/evidence"
+    # The Element is an Artifact that can be run on a computer.
+    executable = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/executable"
+    # The Element is a single file which can be independently distributed (configuration file, statically linked binary, Kubernetes deployment, etc.).
+    file = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/file"
+    # The Element is a file system image that can be written to a disk (or virtual) partition.
+    filesystemImage = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/filesystemImage"
+    # The Element provides low level control over a device's hardware.
+    firmware = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/firmware"
+    # The Element is a software framework.
+    framework = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/framework"
+    # The Element is used to install software on disk.
+    install = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/install"
+    # The Element is a software library.
+    library = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/library"
+    # The Element is a software manifest.
+    manifest = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/manifest"
+    # The Element is a machine learning or artificial intelligence model.
+    model = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/model"
+    # The Element is a module of a piece of software.
+    module = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/module"
+    # The Element is an operating system.
+    operatingSystem = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/operatingSystem"
+    # The Element doesn't fit into any of the other categories.
+    other = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/other"
+    # The Element contains a set of changes to update, fix, or improve another Element.
+    patch = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/patch"
+    # The Element represents a runtime environment.
+    platform = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/platform"
+    # The Element provides a requirement needed as input for another Element.
+    requirement = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/requirement"
+    # The Element is a single or a collection of source files.
+    source = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/source"
+    # The Element is a plan, guideline or strategy how to create, perform or analyze an application.
+    specification = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/specification"
+    # The Element is a test used to verify functionality on an software element.
+    test = "https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/test"
 
 
 # Class that describes a build instance of software/artifacts.
-@register("https://spdx.org/rdf/3.0.0/terms/Build/Build", compact_type="build_Build", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Build/Build", compact_type="build_Build", abstract=False)
 class build_Build(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4480,7 +4019,7 @@ class build_Build(Element):
         cls._add_property(
             "build_buildEndTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/buildEndTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/buildEndTime",
             compact="build_buildEndTime",
         )
         # A buildId is a locally unique identifier used by a builder to identify a unique
@@ -4488,14 +4027,14 @@ class build_Build(Element):
         cls._add_property(
             "build_buildId",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/buildId",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/buildId",
             compact="build_buildId",
         )
         # Property describing the start time of a build.
         cls._add_property(
             "build_buildStartTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/buildStartTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/buildStartTime",
             compact="build_buildStartTime",
         )
         # A buildType is a hint that is used to indicate the toolchain, platform, or
@@ -4503,7 +4042,7 @@ class build_Build(Element):
         cls._add_property(
             "build_buildType",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/buildType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/buildType",
             min_count=1,
             compact="build_buildType",
         )
@@ -4512,52 +4051,52 @@ class build_Build(Element):
         cls._add_property(
             "build_configSourceDigest",
             ListProp(ObjectProp(Hash, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/configSourceDigest",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/configSourceDigest",
             compact="build_configSourceDigest",
         )
         # Property describes the invocation entrypoint of a build.
         cls._add_property(
             "build_configSourceEntrypoint",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/configSourceEntrypoint",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/configSourceEntrypoint",
             compact="build_configSourceEntrypoint",
         )
         # Property that describes the URI of the build configuration source file.
         cls._add_property(
             "build_configSourceUri",
             ListProp(AnyURIProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/configSourceUri",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/configSourceUri",
             compact="build_configSourceUri",
         )
         # Property describing the session in which a build is invoked.
         cls._add_property(
             "build_environment",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/environment",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/environment",
             compact="build_environment",
         )
-        # Property describing the parameters used in an instance of a build.
+        # Property describing a parameter used in an instance of a build.
         cls._add_property(
-            "build_parameters",
+            "build_parameter",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Build/parameters",
-            compact="build_parameters",
+            iri="https://spdx.org/rdf/3.0.1/terms/Build/parameter",
+            compact="build_parameter",
         )
 
 
 # Agent represents anything with the potential to act on a system.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Agent", compact_type="Agent", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Agent", compact_type="Agent", abstract=False)
 class Agent(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
 
 
 # An assertion made in relation to one or more elements.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Annotation", compact_type="Annotation", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Annotation", compact_type="Annotation", abstract=False)
 class Annotation(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4569,41 +4108,47 @@ class Annotation(Element):
         cls._add_property(
             "annotationType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/AnnotationType/review", "review"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/AnnotationType/review", "review"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/annotationType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/annotationType",
             min_count=1,
             compact="annotationType",
         )
-        # Specifies the media type of an Element or Property.
+        # Provides information about the content type of an Element or a Property.
         cls._add_property(
             "contentType",
             StringProp(pattern=r"^[^\/]+\/[^\/]+$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/contentType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/contentType",
             compact="contentType",
         )
         # Commentary on an assertion that an annotator has made.
         cls._add_property(
             "statement",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/statement",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/statement",
             compact="statement",
         )
         # An Element an annotator has made an assertion about.
         cls._add_property(
             "subject",
-            ObjectProp(Element, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/subject",
+            ObjectProp(Element, True, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoneElement", "NoneElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/NoAssertionElement", "NoAssertionElement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/subject",
             min_count=1,
             compact="subject",
         )
 
 
 # A distinct article or unit within the digital domain.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Artifact", compact_type="Artifact", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Artifact", compact_type="Artifact", abstract=True)
 class Artifact(Element):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4615,51 +4160,55 @@ class Artifact(Element):
         cls._add_property(
             "builtTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/builtTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/builtTime",
             compact="builtTime",
         )
         # Identifies from where or whom the Element originally came.
         cls._add_property(
             "originatedBy",
-            ListProp(ObjectProp(Agent, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/originatedBy",
+            ListProp(ObjectProp(Agent, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/originatedBy",
             compact="originatedBy",
         )
         # Specifies the time an artifact was released.
         cls._add_property(
             "releaseTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/releaseTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/releaseTime",
             compact="releaseTime",
         )
         # The name of a relevant standard that may apply to an artifact.
         cls._add_property(
             "standardName",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/standardName",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/standardName",
             compact="standardName",
         )
         # Identifies who or what supplied the artifact or VulnAssessmentRelationship
         # referenced by the Element.
         cls._add_property(
             "suppliedBy",
-            ObjectProp(Agent, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/suppliedBy",
+            ObjectProp(Agent, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization", "SpdxOrganization"),
+                ],),
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/suppliedBy",
             compact="suppliedBy",
         )
         # Specifies the level of support associated with an artifact.
         cls._add_property(
             "supportLevel",
             ListProp(EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/deployed", "deployed"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/development", "development"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/endOfSupport", "endOfSupport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/limitedSupport", "limitedSupport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noAssertion", "noAssertion"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/noSupport", "noSupport"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/SupportType/support", "support"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/deployed", "deployed"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/development", "development"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/endOfSupport", "endOfSupport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/limitedSupport", "limitedSupport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/noAssertion", "noAssertion"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/noSupport", "noSupport"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/SupportType/support", "support"),
                 ])),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/supportLevel",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/supportLevel",
             compact="supportLevel",
         )
         # Specifies until when the artifact can be used before its usage needs to be
@@ -4667,15 +4216,15 @@ class Artifact(Element):
         cls._add_property(
             "validUntilTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/validUntilTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/validUntilTime",
             compact="validUntilTime",
         )
 
 
 # A collection of Elements that have a shared context.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Bundle", compact_type="Bundle", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Bundle", compact_type="Bundle", abstract=False)
 class Bundle(ElementCollection):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4688,15 +4237,15 @@ class Bundle(ElementCollection):
         cls._add_property(
             "context",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/context",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/context",
             compact="context",
         )
 
 
 # A mathematically calculated representation of a grouping of data.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Hash", compact_type="Hash", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Hash", compact_type="Hash", abstract=False)
 class Hash(IntegrityMethod):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -4707,29 +4256,30 @@ class Hash(IntegrityMethod):
         cls._add_property(
             "algorithm",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b256", "blake2b256"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b384", "blake2b384"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake2b512", "blake2b512"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/blake3", "blake3"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsDilithium", "crystalsDilithium"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/crystalsKyber", "crystalsKyber"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/falcon", "falcon"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md2", "md2"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md4", "md4"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md5", "md5"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/md6", "md6"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha1", "sha1"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha224", "sha224"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha256", "sha256"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha384", "sha384"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_224", "sha3_224"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_256", "sha3_256"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_384", "sha3_384"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha3_512", "sha3_512"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/HashAlgorithm/sha512", "sha512"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/adler32", "adler32"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b256", "blake2b256"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b384", "blake2b384"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake2b512", "blake2b512"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/blake3", "blake3"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsDilithium", "crystalsDilithium"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/crystalsKyber", "crystalsKyber"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/falcon", "falcon"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md2", "md2"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md4", "md4"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md5", "md5"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/md6", "md6"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha1", "sha1"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha224", "sha224"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha256", "sha256"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha384", "sha384"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_224", "sha3_224"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_256", "sha3_256"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_384", "sha3_384"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha3_512", "sha3_512"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/HashAlgorithm/sha512", "sha512"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/algorithm",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/algorithm",
             min_count=1,
             compact="algorithm",
         )
@@ -4737,16 +4287,16 @@ class Hash(IntegrityMethod):
         cls._add_property(
             "hashValue",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/hashValue",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/hashValue",
             min_count=1,
             compact="hashValue",
         )
 
 
 # Provide context for a relationship that occurs in the lifecycle.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopedRelationship", compact_type="LifecycleScopedRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopedRelationship", compact_type="LifecycleScopedRelationship", abstract=False)
 class LifecycleScopedRelationship(Relationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4758,40 +4308,43 @@ class LifecycleScopedRelationship(Relationship):
         cls._add_property(
             "scope",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/build", "build"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/design", "design"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/development", "development"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/runtime", "runtime"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/LifecycleScopeType/test", "test"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/build", "build"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/design", "design"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/development", "development"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/runtime", "runtime"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/LifecycleScopeType/test", "test"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Core/scope",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/scope",
             compact="scope",
         )
 
 
 # A group of people who work together in an organized way for a shared purpose.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Organization", compact_type="Organization", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Organization", compact_type="Organization", abstract=False)
 class Organization(Agent):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
+        "SpdxOrganization": "https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization",
     }
+    # An Organization representing the SPDX Project.
+    SpdxOrganization = "https://spdx.org/rdf/3.0.1/terms/Core/SpdxOrganization"
 
 
 # An individual human being.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Person", compact_type="Person", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Person", compact_type="Person", abstract=False)
 class Person(Agent):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
 
 
 # A software agent.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/SoftwareAgent", compact_type="SoftwareAgent", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/SoftwareAgent", compact_type="SoftwareAgent", abstract=False)
 class SoftwareAgent(Agent):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4799,9 +4352,9 @@ class SoftwareAgent(Agent):
 
 # Portion of an AnyLicenseInfo representing a set of licensing information
 # where all elements apply.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ConjunctiveLicenseSet", compact_type="expandedlicensing_ConjunctiveLicenseSet", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ConjunctiveLicenseSet", compact_type="expandedlicensing_ConjunctiveLicenseSet", abstract=False)
 class expandedlicensing_ConjunctiveLicenseSet(simplelicensing_AnyLicenseInfo):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4812,17 +4365,20 @@ class expandedlicensing_ConjunctiveLicenseSet(simplelicensing_AnyLicenseInfo):
         # A license expression participating in a license set.
         cls._add_property(
             "expandedlicensing_member",
-            ListProp(ObjectProp(simplelicensing_AnyLicenseInfo, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/member",
+            ListProp(ObjectProp(simplelicensing_AnyLicenseInfo, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/member",
             min_count=2,
             compact="expandedlicensing_member",
         )
 
 
 # A license addition that is not listed on the SPDX Exceptions List.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/CustomLicenseAddition", compact_type="expandedlicensing_CustomLicenseAddition", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/CustomLicenseAddition", compact_type="expandedlicensing_CustomLicenseAddition", abstract=False)
 class expandedlicensing_CustomLicenseAddition(expandedlicensing_LicenseAddition):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4830,9 +4386,9 @@ class expandedlicensing_CustomLicenseAddition(expandedlicensing_LicenseAddition)
 
 # Portion of an AnyLicenseInfo representing a set of licensing information where
 # only one of the elements applies.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/DisjunctiveLicenseSet", compact_type="expandedlicensing_DisjunctiveLicenseSet", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/DisjunctiveLicenseSet", compact_type="expandedlicensing_DisjunctiveLicenseSet", abstract=False)
 class expandedlicensing_DisjunctiveLicenseSet(simplelicensing_AnyLicenseInfo):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4843,17 +4399,20 @@ class expandedlicensing_DisjunctiveLicenseSet(simplelicensing_AnyLicenseInfo):
         # A license expression participating in a license set.
         cls._add_property(
             "expandedlicensing_member",
-            ListProp(ObjectProp(simplelicensing_AnyLicenseInfo, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/member",
+            ListProp(ObjectProp(simplelicensing_AnyLicenseInfo, False, context=[
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense", "expandedlicensing_NoneLicense"),
+                    ("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense", "expandedlicensing_NoAssertionLicense"),
+                ],)),
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/member",
             min_count=2,
             compact="expandedlicensing_member",
         )
 
 
 # Abstract class representing a License or an OrLaterOperator.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ExtendableLicense", compact_type="expandedlicensing_ExtendableLicense", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ExtendableLicense", compact_type="expandedlicensing_ExtendableLicense", abstract=True)
 class expandedlicensing_ExtendableLicense(simplelicensing_AnyLicenseInfo):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4861,26 +4420,26 @@ class expandedlicensing_ExtendableLicense(simplelicensing_AnyLicenseInfo):
 
 # A concrete subclass of AnyLicenseInfo used by Individuals in the
 # ExpandedLicensing profile.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/IndividualLicensingInfo", compact_type="expandedlicensing_IndividualLicensingInfo", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/IndividualLicensingInfo", compact_type="expandedlicensing_IndividualLicensingInfo", abstract=False)
 class expandedlicensing_IndividualLicensingInfo(simplelicensing_AnyLicenseInfo):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
-        "NoAssertionLicense": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoAssertionLicense",
-        "NoneLicense": "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoneLicense",
+        "NoAssertionLicense": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense",
+        "NoneLicense": "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense",
     }
     # An Individual Value for License when no assertion can be made about its actual
     # value.
-    NoAssertionLicense = "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoAssertionLicense"
+    NoAssertionLicense = "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoAssertionLicense"
     # An Individual Value for License where the SPDX data creator determines that no
     # license is present.
-    NoneLicense = "https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/NoneLicense"
+    NoneLicense = "https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/NoneLicense"
 
 
 # Abstract class for the portion of an AnyLicenseInfo representing a license.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/License", compact_type="expandedlicensing_License", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/License", compact_type="expandedlicensing_License", abstract=True)
 class expandedlicensing_License(expandedlicensing_ExtendableLicense):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4893,23 +4452,23 @@ class expandedlicensing_License(expandedlicensing_ExtendableLicense):
         cls._add_property(
             "expandedlicensing_isDeprecatedLicenseId",
             BooleanProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isDeprecatedLicenseId",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/isDeprecatedLicenseId",
             compact="expandedlicensing_isDeprecatedLicenseId",
         )
         # Specifies whether the License is listed as free by the
-        # [Free Software Foundation (FSF)](https://fsf.org).
+        # Free Software Foundation (FSF).
         cls._add_property(
             "expandedlicensing_isFsfLibre",
             BooleanProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isFsfLibre",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/isFsfLibre",
             compact="expandedlicensing_isFsfLibre",
         )
         # Specifies whether the License is listed as approved by the
-        # [Open Source Initiative (OSI)](https://opensource.org).
+        # Open Source Initiative (OSI).
         cls._add_property(
             "expandedlicensing_isOsiApproved",
             BooleanProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/isOsiApproved",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/isOsiApproved",
             compact="expandedlicensing_isOsiApproved",
         )
         # Identifies all the text and metadata associated with a license in the license
@@ -4917,7 +4476,7 @@ class expandedlicensing_License(expandedlicensing_ExtendableLicense):
         cls._add_property(
             "expandedlicensing_licenseXml",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/licenseXml",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/licenseXml",
             compact="expandedlicensing_licenseXml",
         )
         # Specifies the licenseId that is preferred to be used in place of a deprecated
@@ -4925,14 +4484,14 @@ class expandedlicensing_License(expandedlicensing_ExtendableLicense):
         cls._add_property(
             "expandedlicensing_obsoletedBy",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/obsoletedBy",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/obsoletedBy",
             compact="expandedlicensing_obsoletedBy",
         )
         # Contains a URL where the License or LicenseAddition can be found in use.
         cls._add_property(
             "expandedlicensing_seeAlso",
             ListProp(AnyURIProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/seeAlso",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/seeAlso",
             compact="expandedlicensing_seeAlso",
         )
         # Provides a License author's preferred text to indicate that a file is covered
@@ -4940,30 +4499,30 @@ class expandedlicensing_License(expandedlicensing_ExtendableLicense):
         cls._add_property(
             "expandedlicensing_standardLicenseHeader",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseHeader",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/standardLicenseHeader",
             compact="expandedlicensing_standardLicenseHeader",
         )
         # Identifies the full text of a License, in SPDX templating format.
         cls._add_property(
             "expandedlicensing_standardLicenseTemplate",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/standardLicenseTemplate",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/standardLicenseTemplate",
             compact="expandedlicensing_standardLicenseTemplate",
         )
         # Identifies the full text of a License or Addition.
         cls._add_property(
             "simplelicensing_licenseText",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/SimpleLicensing/licenseText",
+            iri="https://spdx.org/rdf/3.0.1/terms/SimpleLicensing/licenseText",
             min_count=1,
             compact="simplelicensing_licenseText",
         )
 
 
 # A license that is listed on the SPDX License List.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/ListedLicense", compact_type="expandedlicensing_ListedLicense", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/ListedLicense", compact_type="expandedlicensing_ListedLicense", abstract=False)
 class expandedlicensing_ListedLicense(expandedlicensing_License):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -4976,7 +4535,7 @@ class expandedlicensing_ListedLicense(expandedlicensing_License):
         cls._add_property(
             "expandedlicensing_deprecatedVersion",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/deprecatedVersion",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/deprecatedVersion",
             compact="expandedlicensing_deprecatedVersion",
         )
         # Specifies the SPDX License List version in which this ListedLicense or
@@ -4984,16 +4543,16 @@ class expandedlicensing_ListedLicense(expandedlicensing_License):
         cls._add_property(
             "expandedlicensing_listVersionAdded",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/listVersionAdded",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/listVersionAdded",
             compact="expandedlicensing_listVersionAdded",
         )
 
 
 # Portion of an AnyLicenseInfo representing this version, or any later version,
 # of the indicated License.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/OrLaterOperator", compact_type="expandedlicensing_OrLaterOperator", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/OrLaterOperator", compact_type="expandedlicensing_OrLaterOperator", abstract=False)
 class expandedlicensing_OrLaterOperator(expandedlicensing_ExtendableLicense):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5005,7 +4564,7 @@ class expandedlicensing_OrLaterOperator(expandedlicensing_ExtendableLicense):
         cls._add_property(
             "expandedlicensing_subjectLicense",
             ObjectProp(expandedlicensing_License, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/subjectLicense",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectLicense",
             min_count=1,
             compact="expandedlicensing_subjectLicense",
         )
@@ -5013,9 +4572,9 @@ class expandedlicensing_OrLaterOperator(expandedlicensing_ExtendableLicense):
 
 # Portion of an AnyLicenseInfo representing a License which has additional
 # text applied to it.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/WithAdditionOperator", compact_type="expandedlicensing_WithAdditionOperator", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/WithAdditionOperator", compact_type="expandedlicensing_WithAdditionOperator", abstract=False)
 class expandedlicensing_WithAdditionOperator(simplelicensing_AnyLicenseInfo):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5027,7 +4586,7 @@ class expandedlicensing_WithAdditionOperator(simplelicensing_AnyLicenseInfo):
         cls._add_property(
             "expandedlicensing_subjectAddition",
             ObjectProp(expandedlicensing_LicenseAddition, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/subjectAddition",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectAddition",
             min_count=1,
             compact="expandedlicensing_subjectAddition",
         )
@@ -5035,16 +4594,16 @@ class expandedlicensing_WithAdditionOperator(simplelicensing_AnyLicenseInfo):
         cls._add_property(
             "expandedlicensing_subjectExtendableLicense",
             ObjectProp(expandedlicensing_ExtendableLicense, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/subjectExtendableLicense",
+            iri="https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/subjectExtendableLicense",
             min_count=1,
             compact="expandedlicensing_subjectExtendableLicense",
         )
 
 
 # A type of extension consisting of a list of name value pairs.
-@register("https://spdx.org/rdf/3.0.0/terms/Extension/CdxPropertiesExtension", compact_type="extension_CdxPropertiesExtension", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Extension/CdxPropertiesExtension", compact_type="extension_CdxPropertiesExtension", abstract=False)
 class extension_CdxPropertiesExtension(extension_Extension):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.BlankNode
     NAMED_INDIVIDUALS = {
     }
 
@@ -5055,16 +4614,16 @@ class extension_CdxPropertiesExtension(extension_Extension):
         cls._add_property(
             "extension_cdxProperty",
             ListProp(ObjectProp(extension_CdxPropertyEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Extension/cdxProperty",
+            iri="https://spdx.org/rdf/3.0.1/terms/Extension/cdxProperty",
             min_count=1,
             compact="extension_cdxProperty",
         )
 
 
 # Provides a CVSS version 2.0 assessment for a vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/CvssV2VulnAssessmentRelationship", compact_type="security_CvssV2VulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/CvssV2VulnAssessmentRelationship", compact_type="security_CvssV2VulnAssessmentRelationship", abstract=False)
 class security_CvssV2VulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5076,7 +4635,7 @@ class security_CvssV2VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_score",
             FloatProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/score",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/score",
             min_count=1,
             compact="security_score",
         )
@@ -5084,16 +4643,16 @@ class security_CvssV2VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_vectorString",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/vectorString",
             min_count=1,
             compact="security_vectorString",
         )
 
 
 # Provides a CVSS version 3 assessment for a vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/CvssV3VulnAssessmentRelationship", compact_type="security_CvssV3VulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/CvssV3VulnAssessmentRelationship", compact_type="security_CvssV3VulnAssessmentRelationship", abstract=False)
 class security_CvssV3VulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5105,7 +4664,7 @@ class security_CvssV3VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_score",
             FloatProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/score",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/score",
             min_count=1,
             compact="security_score",
         )
@@ -5113,13 +4672,13 @@ class security_CvssV3VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_severity",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/critical", "critical"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/high", "high"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/low", "low"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/medium", "medium"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/none", "none"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/critical", "critical"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/high", "high"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/low", "low"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/medium", "medium"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/none", "none"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/severity",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/severity",
             min_count=1,
             compact="security_severity",
         )
@@ -5127,16 +4686,16 @@ class security_CvssV3VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_vectorString",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/vectorString",
             min_count=1,
             compact="security_vectorString",
         )
 
 
 # Provides a CVSS version 4 assessment for a vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/CvssV4VulnAssessmentRelationship", compact_type="security_CvssV4VulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/CvssV4VulnAssessmentRelationship", compact_type="security_CvssV4VulnAssessmentRelationship", abstract=False)
 class security_CvssV4VulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5148,7 +4707,7 @@ class security_CvssV4VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_score",
             FloatProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/score",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/score",
             min_count=1,
             compact="security_score",
         )
@@ -5156,13 +4715,13 @@ class security_CvssV4VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_severity",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/critical", "critical"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/high", "high"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/low", "low"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/medium", "medium"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/CvssSeverityType/none", "none"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/critical", "critical"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/high", "high"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/low", "low"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/medium", "medium"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/CvssSeverityType/none", "none"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/severity",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/severity",
             min_count=1,
             compact="security_severity",
         )
@@ -5170,16 +4729,16 @@ class security_CvssV4VulnAssessmentRelationship(security_VulnAssessmentRelations
         cls._add_property(
             "security_vectorString",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/vectorString",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/vectorString",
             min_count=1,
             compact="security_vectorString",
         )
 
 
 # Provides an EPSS assessment for a vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/EpssVulnAssessmentRelationship", compact_type="security_EpssVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/EpssVulnAssessmentRelationship", compact_type="security_EpssVulnAssessmentRelationship", abstract=False)
 class security_EpssVulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5191,7 +4750,7 @@ class security_EpssVulnAssessmentRelationship(security_VulnAssessmentRelationshi
         cls._add_property(
             "security_percentile",
             FloatProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/percentile",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/percentile",
             min_count=1,
             compact="security_percentile",
         )
@@ -5199,24 +4758,16 @@ class security_EpssVulnAssessmentRelationship(security_VulnAssessmentRelationshi
         cls._add_property(
             "security_probability",
             FloatProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/probability",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/probability",
             min_count=1,
             compact="security_probability",
-        )
-        # Specifies the time when a vulnerability was published.
-        cls._add_property(
-            "security_publishedTime",
-            DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
-            min_count=1,
-            compact="security_publishedTime",
         )
 
 
 # Provides an exploit assessment of a vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogVulnAssessmentRelationship", compact_type="security_ExploitCatalogVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogVulnAssessmentRelationship", compact_type="security_ExploitCatalogVulnAssessmentRelationship", abstract=False)
 class security_ExploitCatalogVulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5228,10 +4779,10 @@ class security_ExploitCatalogVulnAssessmentRelationship(security_VulnAssessmentR
         cls._add_property(
             "security_catalogType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/kev", "kev"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/ExploitCatalogType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType/kev", "kev"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/ExploitCatalogType/other", "other"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/catalogType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/catalogType",
             min_count=1,
             compact="security_catalogType",
         )
@@ -5239,7 +4790,7 @@ class security_ExploitCatalogVulnAssessmentRelationship(security_VulnAssessmentR
         cls._add_property(
             "security_exploited",
             BooleanProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/exploited",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/exploited",
             min_count=1,
             compact="security_exploited",
         )
@@ -5247,16 +4798,16 @@ class security_ExploitCatalogVulnAssessmentRelationship(security_VulnAssessmentR
         cls._add_property(
             "security_locator",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/locator",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/locator",
             min_count=1,
             compact="security_locator",
         )
 
 
 # Provides an SSVC assessment for a vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/SsvcVulnAssessmentRelationship", compact_type="security_SsvcVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/SsvcVulnAssessmentRelationship", compact_type="security_SsvcVulnAssessmentRelationship", abstract=False)
 class security_SsvcVulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5264,25 +4815,26 @@ class security_SsvcVulnAssessmentRelationship(security_VulnAssessmentRelationshi
     @classmethod
     def _register_props(cls):
         super()._register_props()
-        # Provide the enumeration of possible decisions in the Stakeholder-Specific Vulnerability Categorization (SSVC) decision tree [https://www.cisa.gov/sites/default/files/publications/cisa-ssvc-guide%20508c.pdf](https://www.cisa.gov/sites/default/files/publications/cisa-ssvc-guide%20508c.pdf)
+        # Provide the enumeration of possible decisions in the
+        # [Stakeholder-Specific Vulnerability Categorization (SSVC) decision tree](https://www.cisa.gov/stakeholder-specific-vulnerability-categorization-ssvc).
         cls._add_property(
             "security_decisionType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/act", "act"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/attend", "attend"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/track", "track"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/SsvcDecisionType/trackStar", "trackStar"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/act", "act"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/attend", "attend"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/track", "track"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/SsvcDecisionType/trackStar", "trackStar"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/decisionType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/decisionType",
             min_count=1,
             compact="security_decisionType",
         )
 
 
 # Asbtract ancestor class for all VEX relationships
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VexVulnAssessmentRelationship", compact_type="security_VexVulnAssessmentRelationship", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VexVulnAssessmentRelationship", compact_type="security_VexVulnAssessmentRelationship", abstract=True)
 class security_VexVulnAssessmentRelationship(security_VulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5294,22 +4846,22 @@ class security_VexVulnAssessmentRelationship(security_VulnAssessmentRelationship
         cls._add_property(
             "security_statusNotes",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/statusNotes",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/statusNotes",
             compact="security_statusNotes",
         )
         # Specifies the version of a VEX statement.
         cls._add_property(
             "security_vexVersion",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/vexVersion",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/vexVersion",
             compact="security_vexVersion",
         )
 
 
 # Specifies a vulnerability and its associated information.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/Vulnerability", compact_type="security_Vulnerability", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/Vulnerability", compact_type="security_Vulnerability", abstract=False)
 class security_Vulnerability(Artifact):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5321,29 +4873,29 @@ class security_Vulnerability(Artifact):
         cls._add_property(
             "security_modifiedTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/modifiedTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/modifiedTime",
             compact="security_modifiedTime",
         )
         # Specifies the time when a vulnerability was published.
         cls._add_property(
             "security_publishedTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/publishedTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/publishedTime",
             compact="security_publishedTime",
         )
         # Specified the time and date when a vulnerability was withdrawn.
         cls._add_property(
             "security_withdrawnTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/withdrawnTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/withdrawnTime",
             compact="security_withdrawnTime",
         )
 
 
 # A distinct article or unit related to Software.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/SoftwareArtifact", compact_type="software_SoftwareArtifact", abstract=True)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/SoftwareArtifact", compact_type="software_SoftwareArtifact", abstract=True)
 class software_SoftwareArtifact(Artifact):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5355,37 +4907,37 @@ class software_SoftwareArtifact(Artifact):
         cls._add_property(
             "software_additionalPurpose",
             ListProp(EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/application", "application"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/archive", "archive"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/bom", "bom"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/configuration", "configuration"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/container", "container"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/data", "data"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/device", "device"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/deviceDriver", "deviceDriver"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/diskImage", "diskImage"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/documentation", "documentation"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/evidence", "evidence"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/executable", "executable"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/file", "file"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/filesystemImage", "filesystemImage"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/firmware", "firmware"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/framework", "framework"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/install", "install"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/library", "library"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/manifest", "manifest"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/model", "model"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/module", "module"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/operatingSystem", "operatingSystem"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/patch", "patch"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/platform", "platform"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/requirement", "requirement"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/source", "source"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/specification", "specification"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/test", "test"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/application", "application"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/archive", "archive"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/bom", "bom"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/configuration", "configuration"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/container", "container"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/data", "data"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/device", "device"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/deviceDriver", "deviceDriver"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/diskImage", "diskImage"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/documentation", "documentation"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/evidence", "evidence"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/executable", "executable"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/file", "file"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/filesystemImage", "filesystemImage"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/firmware", "firmware"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/framework", "framework"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/install", "install"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/library", "library"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/manifest", "manifest"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/model", "model"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/module", "module"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/operatingSystem", "operatingSystem"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/patch", "patch"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/platform", "platform"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/requirement", "requirement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/source", "source"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/specification", "specification"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/test", "test"),
                 ])),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/additionalPurpose",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/additionalPurpose",
             compact="software_additionalPurpose",
         )
         # Provides a place for the SPDX data creator to record acknowledgement text for
@@ -5393,7 +4945,7 @@ class software_SoftwareArtifact(Artifact):
         cls._add_property(
             "software_attributionText",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/attributionText",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/attributionText",
             compact="software_attributionText",
         )
         # A canonical, unique, immutable identifier of the artifact content, that may be
@@ -5401,7 +4953,7 @@ class software_SoftwareArtifact(Artifact):
         cls._add_property(
             "software_contentIdentifier",
             ListProp(ObjectProp(software_ContentIdentifier, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/contentIdentifier",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/contentIdentifier",
             compact="software_contentIdentifier",
         )
         # Identifies the text of one or more copyright notices for a software Package,
@@ -5409,62 +4961,62 @@ class software_SoftwareArtifact(Artifact):
         cls._add_property(
             "software_copyrightText",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/copyrightText",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/copyrightText",
             compact="software_copyrightText",
         )
         # Provides information about the primary purpose of the software artifact.
         cls._add_property(
             "software_primaryPurpose",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/application", "application"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/archive", "archive"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/bom", "bom"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/configuration", "configuration"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/container", "container"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/data", "data"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/device", "device"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/deviceDriver", "deviceDriver"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/diskImage", "diskImage"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/documentation", "documentation"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/evidence", "evidence"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/executable", "executable"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/file", "file"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/filesystemImage", "filesystemImage"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/firmware", "firmware"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/framework", "framework"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/install", "install"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/library", "library"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/manifest", "manifest"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/model", "model"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/module", "module"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/operatingSystem", "operatingSystem"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/patch", "patch"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/platform", "platform"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/requirement", "requirement"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/source", "source"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/specification", "specification"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SoftwarePurpose/test", "test"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/application", "application"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/archive", "archive"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/bom", "bom"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/configuration", "configuration"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/container", "container"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/data", "data"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/device", "device"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/deviceDriver", "deviceDriver"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/diskImage", "diskImage"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/documentation", "documentation"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/evidence", "evidence"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/executable", "executable"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/file", "file"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/filesystemImage", "filesystemImage"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/firmware", "firmware"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/framework", "framework"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/install", "install"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/library", "library"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/manifest", "manifest"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/model", "model"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/module", "module"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/operatingSystem", "operatingSystem"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/patch", "patch"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/platform", "platform"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/requirement", "requirement"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/source", "source"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/specification", "specification"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SoftwarePurpose/test", "test"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/primaryPurpose",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/primaryPurpose",
             compact="software_primaryPurpose",
         )
 
 
 # A container for a grouping of SPDX-3.0 content characterizing details
 # (provenence, composition, licensing, etc.) about a product.
-@register("https://spdx.org/rdf/3.0.0/terms/Core/Bom", compact_type="Bom", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Core/Bom", compact_type="Bom", abstract=False)
 class Bom(Bundle):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
 
 
 # A license that is not listed on the SPDX License List.
-@register("https://spdx.org/rdf/3.0.0/terms/ExpandedLicensing/CustomLicense", compact_type="expandedlicensing_CustomLicense", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/ExpandedLicensing/CustomLicense", compact_type="expandedlicensing_CustomLicense", abstract=False)
 class expandedlicensing_CustomLicense(expandedlicensing_License):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5472,9 +5024,9 @@ class expandedlicensing_CustomLicense(expandedlicensing_License):
 
 # Connects a vulnerability and an element designating the element as a product
 # affected by the vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VexAffectedVulnAssessmentRelationship", compact_type="security_VexAffectedVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VexAffectedVulnAssessmentRelationship", compact_type="security_VexAffectedVulnAssessmentRelationship", abstract=False)
 class security_VexAffectedVulnAssessmentRelationship(security_VexVulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5487,7 +5039,7 @@ class security_VexAffectedVulnAssessmentRelationship(security_VexVulnAssessmentR
         cls._add_property(
             "security_actionStatement",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/actionStatement",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/actionStatement",
             compact="security_actionStatement",
         )
         # Records the time when a recommended action was communicated in a VEX statement
@@ -5495,16 +5047,16 @@ class security_VexAffectedVulnAssessmentRelationship(security_VexVulnAssessmentR
         cls._add_property(
             "security_actionStatementTime",
             ListProp(DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/actionStatementTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/actionStatementTime",
             compact="security_actionStatementTime",
         )
 
 
 # Links a vulnerability and elements representing products (in the VEX sense) where
 # a fix has been applied and are no longer affected.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VexFixedVulnAssessmentRelationship", compact_type="security_VexFixedVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VexFixedVulnAssessmentRelationship", compact_type="security_VexFixedVulnAssessmentRelationship", abstract=False)
 class security_VexFixedVulnAssessmentRelationship(security_VexVulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5512,9 +5064,9 @@ class security_VexFixedVulnAssessmentRelationship(security_VexVulnAssessmentRela
 
 # Links a vulnerability and one or more elements designating the latter as products
 # not affected by the vulnerability.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VexNotAffectedVulnAssessmentRelationship", compact_type="security_VexNotAffectedVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VexNotAffectedVulnAssessmentRelationship", compact_type="security_VexNotAffectedVulnAssessmentRelationship", abstract=False)
 class security_VexNotAffectedVulnAssessmentRelationship(security_VexVulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5528,14 +5080,14 @@ class security_VexNotAffectedVulnAssessmentRelationship(security_VexVulnAssessme
         cls._add_property(
             "security_impactStatement",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/impactStatement",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/impactStatement",
             compact="security_impactStatement",
         )
         # Timestamp of impact statement.
         cls._add_property(
             "security_impactStatementTime",
             DateTimeStampProp(pattern=r"^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/impactStatementTime",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/impactStatementTime",
             compact="security_impactStatementTime",
         )
         # Impact justification label to be used when linking a vulnerability to an element
@@ -5544,31 +5096,31 @@ class security_VexNotAffectedVulnAssessmentRelationship(security_VexVulnAssessme
         cls._add_property(
             "security_justificationType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/componentNotPresent", "componentNotPresent"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist", "inlineMitigationsAlreadyExist"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary", "vulnerableCodeCannotBeControlledByAdversary"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath", "vulnerableCodeNotInExecutePath"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Security/VexJustificationType/vulnerableCodeNotPresent", "vulnerableCodeNotPresent"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/componentNotPresent", "componentNotPresent"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/inlineMitigationsAlreadyExist", "inlineMitigationsAlreadyExist"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeCannotBeControlledByAdversary", "vulnerableCodeCannotBeControlledByAdversary"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeNotInExecutePath", "vulnerableCodeNotInExecutePath"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Security/VexJustificationType/vulnerableCodeNotPresent", "vulnerableCodeNotPresent"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Security/justificationType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Security/justificationType",
             compact="security_justificationType",
         )
 
 
 # Designates elements as products where the impact of a vulnerability is being
 # investigated.
-@register("https://spdx.org/rdf/3.0.0/terms/Security/VexUnderInvestigationVulnAssessmentRelationship", compact_type="security_VexUnderInvestigationVulnAssessmentRelationship", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Security/VexUnderInvestigationVulnAssessmentRelationship", compact_type="security_VexUnderInvestigationVulnAssessmentRelationship", abstract=False)
 class security_VexUnderInvestigationVulnAssessmentRelationship(security_VexVulnAssessmentRelationship):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
 
 
 # Refers to any object that stores content on a computer.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/File", compact_type="software_File", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/File", compact_type="software_File", abstract=False)
 class software_File(software_SoftwareArtifact):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5576,30 +5128,30 @@ class software_File(software_SoftwareArtifact):
     @classmethod
     def _register_props(cls):
         super()._register_props()
-        # Provides information about the content type of an Element.
+        # Provides information about the content type of an Element or a Property.
         cls._add_property(
-            "software_contentType",
+            "contentType",
             StringProp(pattern=r"^[^\/]+\/[^\/]+$",),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/contentType",
-            compact="software_contentType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Core/contentType",
+            compact="contentType",
         )
         # Describes if a given file is a directory or non-directory kind of file.
         cls._add_property(
             "software_fileKind",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/directory", "directory"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/FileKindType/file", "file"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/FileKindType/directory", "directory"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/FileKindType/file", "file"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/fileKind",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/fileKind",
             compact="software_fileKind",
         )
 
 
 # Refers to any unit of content that can be associated with a distribution of
 # software.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/Package", compact_type="software_Package", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/Package", compact_type="software_Package", abstract=False)
 class software_Package(software_SoftwareArtifact):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5612,7 +5164,7 @@ class software_Package(software_SoftwareArtifact):
         cls._add_property(
             "software_downloadLocation",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/downloadLocation",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/downloadLocation",
             compact="software_downloadLocation",
         )
         # A place for the SPDX document creator to record a website that serves as the
@@ -5620,24 +5172,22 @@ class software_Package(software_SoftwareArtifact):
         cls._add_property(
             "software_homePage",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/homePage",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/homePage",
             compact="software_homePage",
         )
         # Provides a place for the SPDX data creator to record the package URL string
-        # (in accordance with the
-        # [package URL spec](https://github.com/package-url/purl-spec/blob/master/PURL-SPECIFICATION.rst))
-        # for a software Package.
+        # (in accordance with the Package URL specification) for a software Package.
         cls._add_property(
             "software_packageUrl",
             AnyURIProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/packageUrl",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/packageUrl",
             compact="software_packageUrl",
         )
         # Identify the version of a package.
         cls._add_property(
             "software_packageVersion",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/packageVersion",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/packageVersion",
             compact="software_packageVersion",
         )
         # Records any relevant background information or additional comments
@@ -5645,15 +5195,15 @@ class software_Package(software_SoftwareArtifact):
         cls._add_property(
             "software_sourceInfo",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/sourceInfo",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/sourceInfo",
             compact="software_sourceInfo",
         )
 
 
 # A collection of SPDX Elements describing a single package.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/Sbom", compact_type="software_Sbom", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/Sbom", compact_type="software_Sbom", abstract=False)
 class software_Sbom(Bom):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5665,22 +5215,22 @@ class software_Sbom(Bom):
         cls._add_property(
             "software_sbomType",
             ListProp(EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SbomType/analyzed", "analyzed"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SbomType/build", "build"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SbomType/deployed", "deployed"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SbomType/design", "design"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SbomType/runtime", "runtime"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Software/SbomType/source", "source"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SbomType/analyzed", "analyzed"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SbomType/build", "build"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SbomType/deployed", "deployed"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SbomType/design", "design"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SbomType/runtime", "runtime"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Software/SbomType/source", "source"),
                 ])),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/sbomType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/sbomType",
             compact="software_sbomType",
         )
 
 
 # Describes a certain part of a file.
-@register("https://spdx.org/rdf/3.0.0/terms/Software/Snippet", compact_type="software_Snippet", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Software/Snippet", compact_type="software_Snippet", abstract=False)
 class software_Snippet(software_SoftwareArtifact):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5693,7 +5243,7 @@ class software_Snippet(software_SoftwareArtifact):
         cls._add_property(
             "software_byteRange",
             ObjectProp(PositiveIntegerRange, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/byteRange",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/byteRange",
             compact="software_byteRange",
         )
         # Defines the line range in the original host file that the snippet information
@@ -5701,23 +5251,23 @@ class software_Snippet(software_SoftwareArtifact):
         cls._add_property(
             "software_lineRange",
             ObjectProp(PositiveIntegerRange, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/lineRange",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/lineRange",
             compact="software_lineRange",
         )
         # Defines the original host file that the snippet information applies to.
         cls._add_property(
             "software_snippetFromFile",
             ObjectProp(software_File, True),
-            iri="https://spdx.org/rdf/3.0.0/terms/Software/snippetFromFile",
+            iri="https://spdx.org/rdf/3.0.1/terms/Software/snippetFromFile",
             min_count=1,
             compact="software_snippetFromFile",
         )
 
 
 # Specifies an AI package and its associated information.
-@register("https://spdx.org/rdf/3.0.0/terms/AI/AIPackage", compact_type="ai_AIPackage", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/AI/AIPackage", compact_type="ai_AIPackage", abstract=False)
 class ai_AIPackage(software_Package):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5725,29 +5275,30 @@ class ai_AIPackage(software_Package):
     @classmethod
     def _register_props(cls):
         super()._register_props()
-        # States if a human is involved in the decisions of the AI software.
+        # Indicates whether the system can perform a decision or action without human
+        # involvement or guidance.
         cls._add_property(
             "ai_autonomyType",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no", "no"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion", "noAssertion"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes", "yes"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/no", "no"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/noAssertion", "noAssertion"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/yes", "yes"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/autonomyType",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/autonomyType",
             compact="ai_autonomyType",
         )
         # Captures the domain in which the AI package can be used.
         cls._add_property(
             "ai_domain",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/domain",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/domain",
             compact="ai_domain",
         )
-        # Indicates the amount of energy consumed to train the AI model.
+        # Indicates the amount of energy consumption incurred by an AI model.
         cls._add_property(
             "ai_energyConsumption",
             ObjectProp(ai_EnergyConsumption, False),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/energyConsumption",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/energyConsumption",
             compact="ai_energyConsumption",
         )
         # Records a hyperparameter used to build the AI model contained in the AI
@@ -5755,7 +5306,7 @@ class ai_AIPackage(software_Package):
         cls._add_property(
             "ai_hyperparameter",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/hyperparameter",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/hyperparameter",
             compact="ai_hyperparameter",
         )
         # Provides relevant information about the AI software, not including the model
@@ -5763,28 +5314,28 @@ class ai_AIPackage(software_Package):
         cls._add_property(
             "ai_informationAboutApplication",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/informationAboutApplication",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/informationAboutApplication",
             compact="ai_informationAboutApplication",
         )
         # Describes relevant information about different steps of the training process.
         cls._add_property(
             "ai_informationAboutTraining",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/informationAboutTraining",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/informationAboutTraining",
             compact="ai_informationAboutTraining",
         )
         # Captures a limitation of the AI software.
         cls._add_property(
             "ai_limitation",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/limitation",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/limitation",
             compact="ai_limitation",
         )
         # Records the measurement of prediction quality of the AI model.
         cls._add_property(
             "ai_metric",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/metric",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/metric",
             compact="ai_metric",
         )
         # Captures the threshold that was used for computation of a metric described in
@@ -5792,7 +5343,7 @@ class ai_AIPackage(software_Package):
         cls._add_property(
             "ai_metricDecisionThreshold",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/metricDecisionThreshold",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/metricDecisionThreshold",
             compact="ai_metricDecisionThreshold",
         )
         # Describes all the preprocessing steps applied to the training data before the
@@ -5800,40 +5351,40 @@ class ai_AIPackage(software_Package):
         cls._add_property(
             "ai_modelDataPreprocessing",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/modelDataPreprocessing",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/modelDataPreprocessing",
             compact="ai_modelDataPreprocessing",
         )
-        # Describes methods that can be used to explain the model.
+        # Describes methods that can be used to explain the results from the AI model.
         cls._add_property(
             "ai_modelExplainability",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/modelExplainability",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/modelExplainability",
             compact="ai_modelExplainability",
         )
         # Records the results of general safety risk assessment of the AI system.
         cls._add_property(
             "ai_safetyRiskAssessment",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/high", "high"),
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/low", "low"),
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/medium", "medium"),
-                    ("https://spdx.org/rdf/3.0.0/terms/AI/SafetyRiskAssessmentType/serious", "serious"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/high", "high"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/low", "low"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/medium", "medium"),
+                    ("https://spdx.org/rdf/3.0.1/terms/AI/SafetyRiskAssessmentType/serious", "serious"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/safetyRiskAssessment",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/safetyRiskAssessment",
             compact="ai_safetyRiskAssessment",
         )
         # Captures a standard that is being complied with.
         cls._add_property(
             "ai_standardCompliance",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/standardCompliance",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/standardCompliance",
             compact="ai_standardCompliance",
         )
         # Records the type of the model used in the AI software.
         cls._add_property(
             "ai_typeOfModel",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/typeOfModel",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/typeOfModel",
             compact="ai_typeOfModel",
         )
         # Records if sensitive personal information is used during model training or
@@ -5841,19 +5392,19 @@ class ai_AIPackage(software_Package):
         cls._add_property(
             "ai_useSensitivePersonalInformation",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no", "no"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion", "noAssertion"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes", "yes"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/no", "no"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/noAssertion", "noAssertion"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/yes", "yes"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/AI/useSensitivePersonalInformation",
+            iri="https://spdx.org/rdf/3.0.1/terms/AI/useSensitivePersonalInformation",
             compact="ai_useSensitivePersonalInformation",
         )
 
 
 # Specifies a data package and its associated information.
-@register("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetPackage", compact_type="dataset_DatasetPackage", abstract=False)
+@register("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetPackage", compact_type="dataset_DatasetPackage", abstract=False)
 class dataset_DatasetPackage(software_Package):
-    NODE_KIND = NodeKind.BlankNodeOrIRI
+    NODE_KIND = NodeKind.IRI
     ID_ALIAS = "spdxId"
     NAMED_INDIVIDUALS = {
     }
@@ -5865,82 +5416,82 @@ class dataset_DatasetPackage(software_Package):
         cls._add_property(
             "dataset_anonymizationMethodUsed",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/anonymizationMethodUsed",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/anonymizationMethodUsed",
             compact="dataset_anonymizationMethodUsed",
         )
         # Describes the confidentiality level of the data points contained in the dataset.
         cls._add_property(
             "dataset_confidentialityLevel",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/amber", "amber"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/clear", "clear"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/green", "green"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/ConfidentialityLevelType/red", "red"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/amber", "amber"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/clear", "clear"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/green", "green"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/ConfidentialityLevelType/red", "red"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/confidentialityLevel",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/confidentialityLevel",
             compact="dataset_confidentialityLevel",
         )
         # Describes how the dataset was collected.
         cls._add_property(
             "dataset_dataCollectionProcess",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/dataCollectionProcess",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/dataCollectionProcess",
             compact="dataset_dataCollectionProcess",
         )
         # Describes the preprocessing steps that were applied to the raw data to create the given dataset.
         cls._add_property(
             "dataset_dataPreprocessing",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/dataPreprocessing",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/dataPreprocessing",
             compact="dataset_dataPreprocessing",
         )
         # The field describes the availability of a dataset.
         cls._add_property(
             "dataset_datasetAvailability",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/clickthrough", "clickthrough"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/directDownload", "directDownload"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/query", "query"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/registration", "registration"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetAvailabilityType/scrapingScript", "scrapingScript"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/clickthrough", "clickthrough"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/directDownload", "directDownload"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/query", "query"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/registration", "registration"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetAvailabilityType/scrapingScript", "scrapingScript"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/datasetAvailability",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/datasetAvailability",
             compact="dataset_datasetAvailability",
         )
         # Describes potentially noisy elements of the dataset.
         cls._add_property(
             "dataset_datasetNoise",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/datasetNoise",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/datasetNoise",
             compact="dataset_datasetNoise",
         )
         # Captures the size of the dataset.
         cls._add_property(
             "dataset_datasetSize",
             NonNegativeIntegerProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/datasetSize",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/datasetSize",
             compact="dataset_datasetSize",
         )
         # Describes the type of the given dataset.
         cls._add_property(
             "dataset_datasetType",
             ListProp(EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/audio", "audio"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/categorical", "categorical"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/graph", "graph"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/image", "image"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/noAssertion", "noAssertion"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/numeric", "numeric"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/other", "other"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/sensor", "sensor"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/structured", "structured"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/syntactic", "syntactic"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/text", "text"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timeseries", "timeseries"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/timestamp", "timestamp"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Dataset/DatasetType/video", "video"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/audio", "audio"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/categorical", "categorical"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/graph", "graph"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/image", "image"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/noAssertion", "noAssertion"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/numeric", "numeric"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/other", "other"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/sensor", "sensor"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/structured", "structured"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/syntactic", "syntactic"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/text", "text"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/timeseries", "timeseries"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/timestamp", "timestamp"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Dataset/DatasetType/video", "video"),
                 ])),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/datasetType",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/datasetType",
             min_count=1,
             compact="dataset_datasetType",
         )
@@ -5948,39 +5499,39 @@ class dataset_DatasetPackage(software_Package):
         cls._add_property(
             "dataset_datasetUpdateMechanism",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/datasetUpdateMechanism",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/datasetUpdateMechanism",
             compact="dataset_datasetUpdateMechanism",
         )
         # Describes if any sensitive personal information is present in the dataset.
         cls._add_property(
             "dataset_hasSensitivePersonalInformation",
             EnumProp([
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/no", "no"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/noAssertion", "noAssertion"),
-                    ("https://spdx.org/rdf/3.0.0/terms/Core/PresenceType/yes", "yes"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/no", "no"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/noAssertion", "noAssertion"),
+                    ("https://spdx.org/rdf/3.0.1/terms/Core/PresenceType/yes", "yes"),
                 ]),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/hasSensitivePersonalInformation",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/hasSensitivePersonalInformation",
             compact="dataset_hasSensitivePersonalInformation",
         )
         # Describes what the given dataset should be used for.
         cls._add_property(
             "dataset_intendedUse",
             StringProp(),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/intendedUse",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/intendedUse",
             compact="dataset_intendedUse",
         )
         # Records the biases that the dataset is known to encompass.
         cls._add_property(
             "dataset_knownBias",
             ListProp(StringProp()),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/knownBias",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/knownBias",
             compact="dataset_knownBias",
         )
         # Describes a sensor used for collecting the data.
         cls._add_property(
             "dataset_sensor",
             ListProp(ObjectProp(DictionaryEntry, False)),
-            iri="https://spdx.org/rdf/3.0.0/terms/Dataset/sensor",
+            iri="https://spdx.org/rdf/3.0.1/terms/Dataset/sensor",
             compact="dataset_sensor",
         )
 

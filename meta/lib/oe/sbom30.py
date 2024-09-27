@@ -359,7 +359,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         if not spdxid:
             bb.fatal(f"{key} is not a valid SPDX_IMPORTS key")
 
-        for i in self.docs.imports:
+        for i in self.docs.import_:
             if i.externalSpdxId == spdxid:
                 # Already imported
                 return spdxid
@@ -380,7 +380,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
                     )
                 )
 
-        self.doc.imports.append(m)
+        self.doc.import_.append(m)
         return spdxid
 
     def new_agent(self, varname, *, creation_info=None, add=True):
@@ -521,8 +521,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             return []
 
         if not to:
-            # TODO: Switch to the code constant once SPDX 3.0.1 is released
-            to = ["https://spdx.org/rdf/3.0.0/terms/Core/NoneElement"]
+            to = [oe.spdx30.Element.NoneElement]
 
         ret = []
 
@@ -726,7 +725,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         bb_objset = load_jsonld(
             self.d, deploy_dir_spdx / "bitbake.spdx.json", required=True
         )
-        self.doc.imports.extend(bb_objset.doc.imports)
+        self.doc.import_.extend(bb_objset.doc.import_)
         self.update(bb_objset.objects)
 
         return bb_objset
@@ -827,12 +826,12 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         Returns the set of ids that could not be found to link into the document
         """
         missing_spdxids = set()
-        imports = {e.externalSpdxId: e for e in self.doc.imports}
+        imports = {e.externalSpdxId: e for e in self.doc.import_}
 
         def merge_doc(other):
             nonlocal imports
 
-            for e in other.doc.imports:
+            for e in other.doc.import_:
                 if not e.externalSpdxId in imports:
                     imports[e.externalSpdxId] = e
 
@@ -876,7 +875,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
                 f"Linked document doesn't match missing SPDX ID list. Got: {missing}\nExpected: {missing_spdxids}"
             )
 
-        self.doc.imports = sorted(imports.values(), key=lambda e: e.externalSpdxId)
+        self.doc.import_ = sorted(imports.values(), key=lambda e: e.externalSpdxId)
 
         return missing_spdxids
 

@@ -323,7 +323,7 @@ def collect_dep_sources(dep_objsets, dest):
             if dep_build is not e.from_:
                 continue
 
-            if e.relationshipType != oe.spdx30.RelationshipType.hasInputs:
+            if e.relationshipType != oe.spdx30.RelationshipType.hasInput:
                 continue
 
             index_sources_by_hash(e.to, dest)
@@ -485,18 +485,22 @@ def create_spdx(d):
 
             # If this CVE is fixed upstream, skip it unless all CVEs are
             # specified.
-            if include_vex != "all" and 'detail' in decoded_status and \
-                decoded_status['detail'] in (
-                "fixed-version",
-                "cpe-stable-backport",
+            if (
+                include_vex != "all"
+                and "detail" in decoded_status
+                and decoded_status["detail"]
+                in (
+                    "fixed-version",
+                    "cpe-stable-backport",
+                )
             ):
                 bb.debug(1, "Skipping %s since it is already fixed upstream" % cve)
                 continue
 
-            cve_by_status.setdefault(decoded_status['mapping'], {})[cve] = (
+            cve_by_status.setdefault(decoded_status["mapping"], {})[cve] = (
                 build_objset.new_cve_vuln(cve),
-                decoded_status['detail'],
-                decoded_status['description'],
+                decoded_status["detail"],
+                decoded_status["description"],
             )
 
     cpe_ids = oe.cve_check.get_cpe_ids(d.getVar("CVE_PRODUCT"), d.getVar("CVE_VERSION"))
@@ -600,7 +604,7 @@ def create_spdx(d):
 
             pkg_objset.new_scoped_relationship(
                 [build._id],
-                oe.spdx30.RelationshipType.hasOutputs,
+                oe.spdx30.RelationshipType.hasOutput,
                 oe.spdx30.LifecycleScopeType.build,
                 [spdx_package],
             )
@@ -749,7 +753,7 @@ def create_spdx(d):
         if sysroot_files:
             build_objset.new_scoped_relationship(
                 [build],
-                oe.spdx30.RelationshipType.hasOutputs,
+                oe.spdx30.RelationshipType.hasOutput,
                 oe.spdx30.LifecycleScopeType.build,
                 sorted(list(sysroot_files)),
             )
@@ -757,7 +761,7 @@ def create_spdx(d):
     if build_inputs or debug_source_ids:
         build_objset.new_scoped_relationship(
             [build],
-            oe.spdx30.RelationshipType.hasInputs,
+            oe.spdx30.RelationshipType.hasInput,
             oe.spdx30.LifecycleScopeType.build,
             sorted(list(build_inputs)) + sorted(list(debug_source_ids)),
         )
@@ -978,7 +982,7 @@ def collect_build_package_inputs(d, objset, build, packages):
     if build_deps:
         objset.new_scoped_relationship(
             [build],
-            oe.spdx30.RelationshipType.hasInputs,
+            oe.spdx30.RelationshipType.hasInput,
             oe.spdx30.LifecycleScopeType.build,
             sorted(list(build_deps)),
         )
@@ -1011,7 +1015,7 @@ def create_rootfs_spdx(d):
 
     objset.new_scoped_relationship(
         [rootfs_build],
-        oe.spdx30.RelationshipType.hasOutputs,
+        oe.spdx30.RelationshipType.hasOutput,
         oe.spdx30.LifecycleScopeType.build,
         [rootfs],
     )
@@ -1073,7 +1077,7 @@ def create_image_spdx(d):
         if artifacts:
             objset.new_scoped_relationship(
                 [image_build],
-                oe.spdx30.RelationshipType.hasOutputs,
+                oe.spdx30.RelationshipType.hasOutput,
                 oe.spdx30.LifecycleScopeType.build,
                 artifacts,
             )
@@ -1088,7 +1092,7 @@ def create_image_spdx(d):
         )
         objset.new_scoped_relationship(
             builds,
-            oe.spdx30.RelationshipType.hasInputs,
+            oe.spdx30.RelationshipType.hasInput,
             oe.spdx30.LifecycleScopeType.build,
             [rootfs_image._id],
         )
@@ -1159,7 +1163,7 @@ def sdk_create_spdx(d, sdk_type, spdx_work_dir, toolchain_outputname):
 
     objset.new_scoped_relationship(
         [sdk_build],
-        oe.spdx30.RelationshipType.hasOutputs,
+        oe.spdx30.RelationshipType.hasOutput,
         oe.spdx30.LifecycleScopeType.build,
         [sdk_rootfs],
     )
@@ -1186,7 +1190,7 @@ def create_sdk_sbom(d, sdk_deploydir, spdx_work_dir, toolchain_outputname):
 
     rootfs_objset.new_scoped_relationship(
         [sdk_build],
-        oe.spdx30.RelationshipType.hasInputs,
+        oe.spdx30.RelationshipType.hasInput,
         oe.spdx30.LifecycleScopeType.build,
         [rootfs],
     )
@@ -1225,7 +1229,7 @@ def create_sdk_sbom(d, sdk_deploydir, spdx_work_dir, toolchain_outputname):
     if files:
         rootfs_objset.new_scoped_relationship(
             [sdk_build],
-            oe.spdx30.RelationshipType.hasOutputs,
+            oe.spdx30.RelationshipType.hasOutput,
             oe.spdx30.LifecycleScopeType.build,
             files,
         )

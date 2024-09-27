@@ -6,7 +6,7 @@
 
 inherit spdx-common
 
-SPDX_VERSION = "3.0.0"
+SPDX_VERSION = "3.0.1"
 
 # The list of SPDX profiles generated documents will conform to
 SPDX_PROFILES ?= "core build software simpleLicensing security"
