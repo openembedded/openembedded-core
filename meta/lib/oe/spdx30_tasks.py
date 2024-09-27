@@ -119,7 +119,9 @@ def add_license_expression(d, objset, license_expression, license_data):
     )
     spdx_license_expression = " ".join(convert(l) for l in lic_split)
 
-    return objset.new_license_expression(spdx_license_expression, license_data, license_text_map)
+    return objset.new_license_expression(
+        spdx_license_expression, license_data, license_text_map
+    )
 
 
 def add_package_files(
@@ -202,6 +204,7 @@ def get_package_sources_from_debug(
         return False
 
     debug_search_paths = [
+        Path(d.getVar("SPDXWORK")),
         Path(d.getVar("PKGD")),
         Path(d.getVar("STAGING_DIR_TARGET")),
         Path(d.getVar("STAGING_DIR_NATIVE")),
@@ -286,8 +289,24 @@ def collect_dep_objsets(d, build):
     return dep_objsets, dep_builds
 
 
-def collect_dep_sources(dep_objsets):
-    sources = {}
+def index_sources_by_hash(sources, dest):
+    for s in sources:
+        if not isinstance(s, oe.spdx30.software_File):
+            continue
+
+        if s.software_primaryPurpose != oe.spdx30.software_SoftwarePurpose.source:
+            continue
+
+        for v in s.verifiedUsing:
+            if v.algorithm == oe.spdx30.HashAlgorithm.sha256:
+                if not v.hashValue in dest:
+                    dest[v.hashValue] = s
+                break
+        else:
+            bb.fatal(f"No SHA256 found for {s.name}")
+
+
+def collect_dep_sources(dep_objsets, dest):
     for objset in dep_objsets:
         # Don't collect sources from native recipes as they
         # match non-native sources also.
@@ -307,26 +326,7 @@ def collect_dep_sources(dep_objsets):
             if e.relationshipType != oe.spdx30.RelationshipType.hasInputs:
                 continue
 
-            for to in e.to:
-                if not isinstance(to, oe.spdx30.software_File):
-                    continue
-
-                if (
-                    to.software_primaryPurpose
-                    != oe.spdx30.software_SoftwarePurpose.source
-                ):
-                    continue
-
-                for v in to.verifiedUsing:
-                    if v.algorithm == oe.spdx30.HashAlgorithm.sha256:
-                        sources[v.hashValue] = to
-                        break
-                else:
-                    bb.fatal(
-                        "No SHA256 found for %s in %s" % (to.name, objset.doc.name)
-                    )
-
-    return sources
+            index_sources_by_hash(e.to, dest)
 
 
 def add_download_files(d, objset):
@@ -511,18 +511,21 @@ def create_spdx(d):
     source_files = add_download_files(d, build_objset)
     build_inputs |= source_files
 
-    recipe_spdx_license = add_license_expression(d, build_objset, d.getVar("LICENSE"), license_data)
+    recipe_spdx_license = add_license_expression(
+        d, build_objset, d.getVar("LICENSE"), license_data
+    )
     build_objset.new_relationship(
         source_files,
         oe.spdx30.RelationshipType.hasConcludedLicense,
         [recipe_spdx_license],
     )
 
+    dep_sources = {}
     if oe.spdx_common.process_sources(d) and include_sources:
         bb.debug(1, "Adding source files to SPDX")
         oe.spdx_common.get_patched_src(d)
 
-        build_inputs |= add_package_files(
+        files = add_package_files(
             d,
             build_objset,
             spdx_workdir,
@@ -535,6 +538,8 @@ def create_spdx(d):
             ignore_top_level_dirs=["temp"],
             archive=None,
         )
+        build_inputs |= files
+        index_sources_by_hash(files, dep_sources)
 
     dep_objsets, dep_builds = collect_dep_objsets(d, build)
     if dep_builds:
@@ -555,7 +560,7 @@ def create_spdx(d):
     # TODO: Handle native recipe output
     if not is_native:
         bb.debug(1, "Collecting Dependency sources files")
-        sources = collect_dep_sources(dep_objsets)
+        collect_dep_sources(dep_objsets, dep_sources)
 
         bb.build.exec_func("read_subpackage_metadata", d)
 
@@ -726,7 +731,7 @@ def create_spdx(d):
 
             if include_sources:
                 debug_sources = get_package_sources_from_debug(
-                    d, package, package_files, sources, source_hash_cache
+                    d, package, package_files, dep_sources, source_hash_cache
                 )
                 debug_source_ids |= set(
                     oe.sbom30.get_element_link_id(d) for d in debug_sources
