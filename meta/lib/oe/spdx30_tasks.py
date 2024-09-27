@@ -379,22 +379,15 @@ def add_download_files(d, objset):
                     inputs.add(file)
 
             else:
-                uri = fd.type
-                proto = getattr(fd, "proto", None)
-                if proto is not None:
-                    uri = uri + "+" + proto
-                uri = uri + "://" + fd.host + fd.path
-
-                if fd.method.supports_srcrev():
-                    uri = uri + "@" + fd.revisions[name]
-
                 dl = objset.add(
                     oe.spdx30.software_Package(
                         _id=objset.new_spdxid("source", str(download_idx + 1)),
                         creationInfo=objset.doc.creationInfo,
                         name=file_name,
                         software_primaryPurpose=primary_purpose,
-                        software_downloadLocation=uri,
+                        software_downloadLocation=oe.spdx_common.fetch_data_to_uri(
+                            fd, name
+                        ),
                     )
                 )
 

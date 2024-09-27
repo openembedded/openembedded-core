@@ -42,7 +42,6 @@ def is_work_shared_spdx(d):
 
 
 def load_spdx_license_data(d):
-
     with open(d.getVar("SPDX_LICENSES"), "r") as f:
         data = json.load(f)
         # Transform the license array to a dictionary
@@ -225,3 +224,22 @@ def get_patched_src(d):
             bb.utils.mkdirhier(spdx_workdir)
     finally:
         d.setVar("WORKDIR", workdir)
+
+
+def fetch_data_to_uri(fd, name):
+    """
+    Translates a bitbake FetchData to a string URI
+    """
+    uri = fd.type
+    # Map gitsm to git, since gitsm:// is not a valid URI protocol
+    if uri == "gitsm":
+        uri = "git"
+    proto = getattr(fd, "proto", None)
+    if proto is not None:
+        uri = uri + "+" + proto
+    uri = uri + "://" + fd.host + fd.path
+
+    if fd.method.supports_srcrev():
+        uri = uri + "@" + fd.revisions[name]
+
+    return uri

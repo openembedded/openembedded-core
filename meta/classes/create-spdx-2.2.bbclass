@@ -354,15 +354,6 @@ def add_download_packages(d, doc, recipe):
             if f.type == "file":
                 continue
 
-            uri = f.type
-            proto = getattr(f, "proto", None)
-            if proto is not None:
-                uri = uri + "+" + proto
-            uri = uri + "://" + f.host + f.path
-
-            if f.method.supports_srcrev():
-                uri = uri + "@" + f.revisions[name]
-
             if f.method.supports_checksum(f):
                 for checksum_id in CHECKSUM_LIST:
                     if checksum_id.upper() not in oe.spdx.SPDXPackage.ALLOWED_CHECKSUMS:
@@ -377,7 +368,7 @@ def add_download_packages(d, doc, recipe):
                     c.checksumValue = expected_checksum
                     package.checksums.append(c)
 
-            package.downloadLocation = uri
+            package.downloadLocation = oe.spdx_common.fetch_data_to_uri(f, name)
             doc.packages.append(package)
             doc.add_relationship(doc, "DESCRIBES", package)
             # In the future, we might be able to do more fancy dependencies,
