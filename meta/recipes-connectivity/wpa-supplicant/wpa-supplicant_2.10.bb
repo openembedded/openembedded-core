@@ -19,6 +19,15 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://0002-Fix-removal-of-wpa_passphrase-on-make-clean.patch \
            file://0001-Install-wpa_passphrase-when-not-disabled.patch \
            file://0001-PEAP-client-Update-Phase-2-authentication-requiremen.patch \
+           file://CVE-2024-3596_00.patch \
+           file://CVE-2024-3596_01.patch \
+           file://CVE-2024-3596_02.patch \
+           file://CVE-2024-3596_03.patch \
+           file://CVE-2024-3596_04.patch \
+           file://CVE-2024-3596_05.patch \
+           file://CVE-2024-3596_06.patch \
+           file://CVE-2024-3596_07.patch \
+           file://CVE-2024-3596_08.patch \
            "
 SRC_URI[sha256sum] = "20df7ae5154b3830355f8ab4269123a87affdea59fe74fe9292a91d0d7e17b2f"
 
