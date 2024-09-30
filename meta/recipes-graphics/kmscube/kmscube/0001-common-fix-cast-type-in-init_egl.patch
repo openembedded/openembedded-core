@@ -1,0 +1,34 @@
+From b2f97f53e01e07a920761e5d3e3ba22898b794a4 Mon Sep 17 00:00:00 2001
+From: Eric Engestrom <eric@igalia.com>
+Date: Tue, 24 Sep 2024 17:57:45 +0200
+Subject: [PATCH] common: fix cast type in init_egl()
+
+On some platforms, `EGLNativeDisplayType` is an int instead of
+a pointer, in which case the void pointer will raise
+a `-Wint-conversion`.
+
+Let's cast it to the correct type directly.
+
+Closes: https://gitlab.freedesktop.org/mesa/kmscube/-/issues/16
+        https://gitlab.freedesktop.org/mesa/kmscube/-/merge_requests/57
+
+Upstream-Status: Backport [https://gitlab.freedesktop.org/mesa/kmscube/-/commit/b2f97f53e01e07a920761e5d3e3ba22898b794a4]
+
+Signed-off-by: Purushottam Choudhary <Purushottam27.kumar@lge.com>
+---
+ common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/common.c b/common.c
+index e52d480..e1e2dcf 100644
+--- a/common.c
++++ b/common.c
+@@ -341,7 +341,7 @@ int init_egl(struct egl *egl, const struct gbm *gbm, int samples)
+ 		egl->display = egl->eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR,
+ 				gbm->dev, NULL);
+ 	} else {
+-		egl->display = eglGetDisplay((void *)gbm->dev);
++		egl->display = eglGetDisplay((EGLNativeDisplayType)gbm->dev);
+ 	}
+ 
+ 	if (!eglInitialize(egl->display, &major, &minor)) {
