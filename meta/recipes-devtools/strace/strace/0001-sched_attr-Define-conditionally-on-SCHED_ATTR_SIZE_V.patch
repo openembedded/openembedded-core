@@ -1,0 +1,49 @@
+From d162a1d6b18348955f9989f150c86a68af096362 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 30 Sep 2024 15:17:16 -0700
+Subject: [PATCH] sched_attr: Define conditionally on SCHED_ATTR_SIZE_VER0
+
+glibc 2.41+ has added [1] definitions for sched_setattr and sched_getattr functions
+and struct sched_attr. Therefore, it needs to be checked for here as well before
+defining sched_attr
+
+Fixes builds with glibc/trunk
+
+In file included from ../../strace-6.11/src/sched.c:14:
+../../strace-6.11/src/sched_attr.h:16:8: error: redefinition of 'sched_attr'
+   16 | struct sched_attr {
+      |        ^
+/mnt/b/yoe/master/build/tmp/work/core2-64-yoe-linux/strace/6.11/recipe-sysroot/usr/include/linux/sched/types.h:98:8: note: previous definition is here
+   98 | struct sched_attr {
+      |        ^
+
+[1] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=21571ca0d70302909cf72707b2a7736cf12190a0;hp=298bc488fdc047da37482f4003023cb9adef78f8
+
+Upstream-Status: Submitted [https://github.com/strace/strace/pull/318]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/sched_attr.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/sched_attr.h b/src/sched_attr.h
+index 26c53172f..a5b5d94ce 100644
+--- a/src/sched_attr.h
++++ b/src/sched_attr.h
+@@ -11,6 +11,8 @@
+ 
+ # include <stdint.h>
+ 
++# ifndef SCHED_ATTR_SIZE_VER0
++
+ struct sched_attr {
+ 	uint32_t size;
+ 	uint32_t sched_policy;
+@@ -25,6 +27,8 @@ struct sched_attr {
+ 	uint32_t sched_util_max;
+ };
+ 
++# endif /* SCHED_ATTR_SIZE_VER0 */
++
+ # define SCHED_ATTR_MIN_SIZE	48
+ # ifndef SCHED_ATTR_SIZE_VER1
+ #  define SCHED_ATTR_SIZE_VER1  56
