@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "11.4.0"
+PV = "11.5.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "11.4.0"
+BINV = "11.5.0"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
@@ -65,14 +65,12 @@ SRC_URI = "\
            file://0003-CVE-2021-42574.patch \
            file://0004-CVE-2021-42574.patch \
            file://0001-CVE-2021-46195.patch \
-	   file://0001-aarch64-Update-Neoverse-N2-core-defini.patch \
 	   file://0002-aarch64-add-armv9-a-to-march.patch \
 	   file://0003-aarch64-Enable-FP16-feature-by-default-for-Armv9.patch \
 	   file://0004-arm-add-armv9-a-architecture-to-march.patch \
-	   file://CVE-2023-4039.patch \
 "
 
-SRC_URI[sha256sum] = "3f2db222b007e8a4a23cd5ba56726ef08e8b1f1eb2055ee72c1402cea73a8dd9"
+SRC_URI[sha256sum] = "a6e21868ead545cf87f0c01f84276e4b5281d672098591c1c896241f09363478"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${PV}"
 
