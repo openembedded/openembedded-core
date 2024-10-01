@@ -14,4 +14,4 @@ SRC_URI = "${GNU_MIRROR}/gdb/gdb-${PV}.tar.xz \
            file://0007-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
            file://0001-Fix-Wenum-constexpr-conversion-in-enum-flags.h.patch \
            "
-SRC_URI[sha256sum] = "38254eacd4572134bca9c5a5aa4d4ca564cbbd30c369d881f733fb6b903354f2"
+SRC_URI[sha256sum] = "83350ccd35b5b5a0cba6b334c41294ea968158c573940904f00b92f76345314d"
