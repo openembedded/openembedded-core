@@ -142,6 +142,15 @@ class TestMbox(base.Base):
             if not commit.commit_message.strip():
                 self.fail('Please include a commit message on your patch explaining the change', commit=commit)
 
+    # This may incorrectly report a failure if something such as a
+    # Python decorator is included in the commit message, but this
+    # scenario is much less common than the username case it is written
+    # to protect against
+    def test_commit_message_user_tags(self):
+        for commit in self.commits:
+            if patchtest_patterns.mbox_github_username.search_string(commit.commit_message):
+                self.fail('Mbox includes one or more GitHub-style username tags. Ensure that any "@" symbols are stripped out of usernames', commit=commit)
+
     def test_bugzilla_entry_format(self):
         for commit in self.commits:
             if not patchtest_patterns.mbox_bugzilla.search_string(commit.commit_message):
