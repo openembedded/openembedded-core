@@ -1,0 +1,42 @@
+From add3dd52d2e2c19dfa9319de8d8335dca802ba5a Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 30 Sep 2024 22:36:09 -0700
+Subject: [PATCH 3/3] Add missing system headers
+
+These are found out when using clang libc++
+
+algorithm is needed for std::max and std::min
+string_view for string_view
+
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/vte/-/issues/2824]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+---
+ src/icu-glue.hh | 1 +
+ src/minifont.cc | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/icu-glue.hh b/src/icu-glue.hh
+index f2c3331..f72999b 100644
+--- a/src/icu-glue.hh
++++ b/src/icu-glue.hh
+@@ -20,6 +20,7 @@
+ #include <glib.h>
+ #include <memory>
+ #include <optional>
++#include <string_view>
+ 
+ namespace vte::base {
+ 
+diff --git a/src/minifont.cc b/src/minifont.cc
+index 9be96d6..f4fe0bf 100644
+--- a/src/minifont.cc
++++ b/src/minifont.cc
+@@ -18,6 +18,7 @@
+ 
+ #include "config.h"
+ 
++#include <algorithm>
+ #include <cmath>
+ 
+ #include "cairo-glue.hh"
