@@ -119,9 +119,11 @@ def add_license_expression(d, objset, license_expression, license_data):
     )
     spdx_license_expression = " ".join(convert(l) for l in lic_split)
 
-    return objset.new_license_expression(
+    o = objset.new_license_expression(
         spdx_license_expression, license_data, license_text_map
     )
+    objset.set_element_alias(o)
+    return o
 
 
 def add_package_files(
@@ -462,6 +464,8 @@ def create_spdx(d):
     build_objset = oe.sbom30.ObjectSet.new_objset(d, d.getVar("PN"))
 
     build = build_objset.new_task_build("recipe", "recipe")
+    build_objset.set_element_alias(build)
+
     build_objset.doc.rootElement.append(build)
 
     build_objset.set_is_native(is_native)
@@ -603,7 +607,7 @@ def create_spdx(d):
             set_var_field("DESCRIPTION", spdx_package, "description", package=package)
 
             pkg_objset.new_scoped_relationship(
-                [build._id],
+                [oe.sbom30.get_element_link_id(build)],
                 oe.spdx30.RelationshipType.hasOutput,
                 oe.spdx30.LifecycleScopeType.build,
                 [spdx_package],
@@ -650,7 +654,7 @@ def create_spdx(d):
             pkg_objset.new_relationship(
                 [spdx_package],
                 oe.spdx30.RelationshipType.hasConcludedLicense,
-                [package_spdx_license._id],
+                [oe.sbom30.get_element_link_id(package_spdx_license)],
             )
 
             # NOTE: CVE Elements live in the recipe collection

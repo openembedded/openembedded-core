@@ -305,24 +305,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
     def add_aliases(self):
         for o in self.foreach_type(oe.spdx30.Element):
-            if not o._id or o._id.startswith("_:"):
-                continue
-
-            alias_ext = get_alias(o)
-            if alias_ext is None:
-                unihash = self.d.getVar("BB_UNIHASH")
-                namespace = self.get_namespace()
-                if unihash not in o._id:
-                    bb.warn(f"Unihash {unihash} not found in {o._id}")
-                elif namespace not in o._id:
-                    bb.warn(f"Namespace {namespace} not found in {o._id}")
-                else:
-                    alias_ext = set_alias(
-                        o,
-                        o._id.replace(unihash, "UNIHASH").replace(
-                            namespace, self.d.getVar("PN")
-                        ),
-                    )
+            self.set_element_alias(o)
 
     def remove_internal_extensions(self):
         def remove(o):
@@ -344,6 +327,26 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             pn,
             str(uuid.uuid5(namespace_uuid, pn)),
         )
+
+    def set_element_alias(self, e):
+        if not e._id or e._id.startswith("_:"):
+            return
+
+        alias_ext = get_alias(e)
+        if alias_ext is None:
+            unihash = self.d.getVar("BB_UNIHASH")
+            namespace = self.get_namespace()
+            if unihash not in e._id:
+                bb.warn(f"Unihash {unihash} not found in {e._id}")
+            elif namespace not in e._id:
+                bb.warn(f"Namespace {namespace} not found in {e._id}")
+            else:
+                alias_ext = set_alias(
+                    e,
+                    e._id.replace(unihash, "UNIHASH").replace(
+                        namespace, self.d.getVar("PN")
+                    ),
+                )
 
     def new_spdxid(self, *suffix, include_unihash=True):
         items = [self.get_namespace()]
@@ -557,7 +560,9 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             scope=scope,
         )
 
-    def new_license_expression(self, license_expression, license_data, license_text_map={}):
+    def new_license_expression(
+        self, license_expression, license_data, license_text_map={}
+    ):
         license_list_version = license_data["licenseListVersion"]
         # SPDX 3 requires that the license list version be a semver
         # MAJOR.MINOR.MICRO, but the actual license version might be
