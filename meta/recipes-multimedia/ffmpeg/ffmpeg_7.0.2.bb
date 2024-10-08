@@ -181,13 +181,3 @@ FILES:libpostproc = "${libdir}/libpostproc${SOLIBS}"
 FILES:libswresample = "${libdir}/libswresample${SOLIBS}"
 FILES:libswscale = "${libdir}/libswscale${SOLIBS}"
 FILES:${PN}-examples = "${datadir}/${PN}/examples"
-
-# ffmpeg disables PIC on some platforms (e.g. x86-32)
-INSANE_SKIP:${MLPREFIX}libavcodec = "textrel"
-INSANE_SKIP:${MLPREFIX}libavdevice = "textrel"
-INSANE_SKIP:${MLPREFIX}libavfilter = "textrel"
-INSANE_SKIP:${MLPREFIX}libavformat = "textrel"
-INSANE_SKIP:${MLPREFIX}libavutil = "textrel"
-INSANE_SKIP:${MLPREFIX}libswscale = "textrel"
-INSANE_SKIP:${MLPREFIX}libswresample = "textrel"
-INSANE_SKIP:${MLPREFIX}libpostproc = "textrel"
