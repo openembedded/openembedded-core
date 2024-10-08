@@ -85,8 +85,8 @@ patch_signed_off_by = pyparsing.AtLineStart("+" + signed_off_by_prefix + signed_
 
 # upstream-status
 
-upstream_status_literal_valid_status = ["Pending", "Backport", "Denied", "Inappropriate", "Submitted"]
-upstream_status_nonliteral_valid_status = ["Pending", "Backport", "Denied", "Inappropriate [reason]", "Submitted [where]"]
+upstream_status_literal_valid_status = ["Pending", "Backport", "Denied", "Inappropriate", "Submitted", "Inactive-Upstream"]
+upstream_status_nonliteral_valid_status = ["Pending", "Backport", "Denied", "Inappropriate [reason]", "Submitted [where]", "Inactive-Upstream [lastcommit: when (and/or) lastrelease: when]"]
 
 upstream_status_valid_status = pyparsing.Or(
     [pyparsing.Literal(status) for status in upstream_status_literal_valid_status]
