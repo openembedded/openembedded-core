@@ -46,7 +46,8 @@ ARM_INSTRUCTION_SET:armv6 = "arm"
 # libpostproc was previously packaged from a separate recipe
 PROVIDES = "libav libpostproc"
 
-DEPENDS = "nasm-native"
+DEPENDS:append:x86 = " nasm-native"
+DEPENDS:append:x86-64 = " nasm-native"
 
 inherit autotools pkgconfig
 
