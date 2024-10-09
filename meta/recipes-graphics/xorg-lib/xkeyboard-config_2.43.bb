@@ -13,7 +13,7 @@ LICENSE = "MIT & MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8fc8ae699974c360e2e2e883a63ce264"
 
 SRC_URI = "${XORG_MIRROR}/individual/data/xkeyboard-config/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "a6b06ebfc1f01fc505f2f05f265f95f67cc8873a54dd247e3c2d754b8f7e0807"
+SRC_URI[sha256sum] = "c810f362c82a834ee89da81e34cd1452c99789339f46f6037f4b9e227dd06c01"
 
 SECTION = "x11/libs"
 DEPENDS = "util-macros libxslt-native"
