@@ -115,7 +115,7 @@ def package_qa_check_libexec(path,name, d, elf):
         oe.qa.handle_error("libexec", "%s: %s is using libexec please relocate to %s" % (name, package_qa_clean_path(path, d, name), libexec), d)
 
 QAPATHTEST[rpaths] = "package_qa_check_rpath"
-def package_qa_check_rpath(file,name, d, elf):
+def package_qa_check_rpath(file, name, d, elf):
     """
     Check for dangerous RPATHs
     """
@@ -127,14 +127,14 @@ def package_qa_check_rpath(file,name, d, elf):
     phdrs = elf.run_objdump("-p", d)
 
     import re
-    rpath_re = re.compile(r"\s+RPATH\s+(.*)")
+    rpath_re = re.compile(r"\s+(?:RPATH|RUNPATH)\s+(.*)")
     for line in phdrs.split("\n"):
         m = rpath_re.match(line)
         if m:
             rpath = m.group(1)
             for dir in bad_dirs:
                 if dir in rpath:
-                    oe.qa.handle_error("rpaths", "package %s contains bad RPATH %s in file %s" % (name, rpath, file), d)
+                    oe.qa.handle_error("rpaths", "%s: %s contains bad RPATH %s" % (name, package_qa_clean_path(file, d, name), rpath), d)
 
 QAPATHTEST[useless-rpaths] = "package_qa_check_useless_rpaths"
 def package_qa_check_useless_rpaths(file, name, d, elf):
@@ -153,7 +153,7 @@ def package_qa_check_useless_rpaths(file, name, d, elf):
     phdrs = elf.run_objdump("-p", d)
 
     import re
-    rpath_re = re.compile(r"\s+RPATH\s+(.*)")
+    rpath_re = re.compile(r"\s+(?:RPATH|RUNPATH)\s+(.*)")
     for line in phdrs.split("\n"):
         m = rpath_re.match(line)
         if m:
