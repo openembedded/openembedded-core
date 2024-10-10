@@ -763,10 +763,6 @@ def qa_check_staged(path,d):
             if not skip_shebang_size:
                 package_qa_check_shebang_size(path, "", d, None)
 
-def prepopulate_objdump_p(elf, d):
-    output = elf.run_objdump("-p", d)
-    return (elf.name, output)
-
 # Walk over all files in a directory and call func
 def package_qa_walk(checkfuncs, package, d):
     elves = {}
@@ -782,17 +778,22 @@ def package_qa_walk(checkfuncs, package, d):
             if elf:
                 elves[path] = elf
 
+    def prepopulate_objdump_p(elf, d):
+        output = elf.run_objdump("-p", d)
+        return (elf.name, output)
+
     results = oe.utils.multiprocess_launch(prepopulate_objdump_p, elves.values(), d, extraargs=(d,))
     for item in results:
         elves[item[0]].set_objdump("-p", item[1])
 
     for path in pkgfiles[package]:
-            if path in elves:
-                elves[path].open()
-            for func in checkfuncs:
-                func(path, package, d, elves.get(path))
-            if path in elves:
-                elves[path].close()
+        elf = elves.get(path)
+        if elf:
+            elf.open()
+        for func in checkfuncs:
+            func(path, package, d, elf)
+        if elf:
+            elf.close()
 
 def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
     # Don't do this check for kernel/module recipes, there aren't too many debug/development
