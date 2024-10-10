@@ -122,9 +122,6 @@ def package_qa_check_rpath(file,name, d, elf):
     if not elf:
         return
 
-    if os.path.islink(file):
-        return
-
     bad_dirs = [d.getVar('BASE_WORKDIR'), d.getVar('STAGING_DIR_TARGET')]
 
     phdrs = elf.run_objdump("-p", d)
@@ -148,9 +145,6 @@ def package_qa_check_useless_rpaths(file, name, d, elf):
         return os.path.normpath(a) == os.path.normpath(b)
 
     if not elf:
-        return
-
-    if os.path.islink(file):
         return
 
     libdir = d.getVar("libdir")
@@ -337,11 +331,6 @@ def package_qa_check_arch(path,name,d, elf):
         oe.qa.handle_error("arch", pn + ": Recipe inherits the allarch class, but has packaged architecture-specific binaries", d)
         return
 
-    # avoid following links to /usr/bin (e.g. on udev builds)
-    # we will check the files pointed to anyway...
-    if os.path.islink(path):
-        return
-
     #if this will throw an exception, then fix the dict above
     (machine, osabi, abiversion, littleendian, bits) \
         = oe.elf.machine_dict(d)[host_os][host_arch]
@@ -383,9 +372,6 @@ def package_qa_textrel(path, name, d, elf):
     if not elf:
         return
 
-    if os.path.islink(path):
-        return
-
     phdrs = elf.run_objdump("-p", d)
 
     import re
@@ -403,9 +389,6 @@ def package_qa_hash_style(path, name, d, elf):
     """
 
     if not elf:
-        return
-
-    if os.path.islink(path):
         return
 
     gnu_hash = "--hash-style=gnu" in d.getVar('LDFLAGS')
@@ -601,7 +584,7 @@ def check_32bit_symbols(path, packagename, d, elf):
     )
 
     # elf is a oe.qa.ELFFile object
-    if elf is not None:
+    if elf:
         phdrs = elf.run_objdump("-tw", d)
         syms = re.finditer(ptrn, phdrs)
         usedapis = {sym.group('notag') for sym in syms}
@@ -789,7 +772,7 @@ def package_qa_walk(checkfuncs, package, d):
     elves = {}
     for path in pkgfiles[package]:
             elf = None
-            if os.path.isfile(path):
+            if os.path.isfile(path) and not os.path.islink(path):
                 elf = oe.qa.ELFFile(path)
                 try:
                     elf.open()
