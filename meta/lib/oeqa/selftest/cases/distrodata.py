@@ -56,7 +56,7 @@ but their recipes claim otherwise by setting UPSTREAM_VERSION_UNKNOWN. Please re
 
         def is_maintainer_exception(entry):
             exceptions = ["musl", "newlib", "picolibc", "linux-yocto", "linux-dummy", "mesa-gl", "libgfortran", "libx11-compose-data",
-                          "cve-update-nvd2-native",]
+                          "cve-update-nvd2-native", "barebox"]
             for i in exceptions:
                  if i in entry:
                      return True
