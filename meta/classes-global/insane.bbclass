@@ -325,32 +325,41 @@ def package_qa_check_arch(path,name,d, elf):
 
     host_os   = d.getVar('HOST_OS')
     host_arch = d.getVar('HOST_ARCH')
-    provides = d.getVar('PROVIDES')
-    bpn = d.getVar('BPN')
+    provides  = d.getVar('PROVIDES')
 
     if host_arch == "allarch":
-        pn = d.getVar('PN')
-        oe.qa.handle_error("arch", pn + ": Recipe inherits the allarch class, but has packaged architecture-specific binaries", d)
+        oe.qa.handle_error("arch", "%s: inherits the allarch class, but has architecture-specific binaries %s" % \
+            (name, package_qa_clean_path(path, d, name)), d)
         return
 
-    #if this will throw an exception, then fix the dict above
-    (machine, osabi, abiversion, littleendian, bits) \
+    # If this throws an exception, the machine_dict needs expanding
+    (expected_machine, expected_osabi, expected_abiversion, expected_littleendian, expected_bits) \
         = oe.elf.machine_dict(d)[host_os][host_arch]
 
+    actual_machine = elf.machine()
+    actual_bits = elf.abiSize()
+    actual_littleendian = elf.isLittleEndian()
+
+    # BPF don't match the target
+    if oe.qa.elf_machine_to_string(actual_machine) == "BPF":
+        return
+
+    # These targets have 32-bit userspace but 64-bit kernel, so fudge the expected values
+    if (("virtual/kernel" in provides) or bb.data.inherits_class("module", d)) and (host_os in ("linux-gnux32", "linux-muslx32", "linux-gnu_ilp32") or re.match(r'mips64.*32', d.getVar('DEFAULTTUNE'))):
+        expected_bits = 64
+
     # Check the architecture and endiannes of the binary
-    is_32 = (("virtual/kernel" in provides) or bb.data.inherits_class("module", d)) and \
-            (host_os == "linux-gnux32" or host_os == "linux-muslx32" or \
-            host_os == "linux-gnu_ilp32" or re.match(r'mips64.*32', d.getVar('DEFAULTTUNE')))
-    is_bpf = (oe.qa.elf_machine_to_string(elf.machine()) == "BPF")
-    if not ((machine == elf.machine()) or is_32 or is_bpf):
+    if expected_machine != actual_machine:
         oe.qa.handle_error("arch", "Architecture did not match (%s, expected %s) in %s" % \
-                 (oe.qa.elf_machine_to_string(elf.machine()), oe.qa.elf_machine_to_string(machine), package_qa_clean_path(path, d, name)), d)
-    elif not ((bits == elf.abiSize()) or is_32 or is_bpf):
+                 (oe.qa.elf_machine_to_string(actual_machine), oe.qa.elf_machine_to_string(expected_machine), package_qa_clean_path(path, d, name)), d)
+
+    if expected_bits != actual_bits:
         oe.qa.handle_error("arch", "Bit size did not match (%d, expected %d) in %s" % \
-                 (elf.abiSize(), bits, package_qa_clean_path(path, d, name)), d)
-    elif not ((littleendian == elf.isLittleEndian()) or is_bpf):
+                 (actual_bits, expected_bits, package_qa_clean_path(path, d, name)), d)
+
+    if expected_littleendian != actual_littleendian:
         oe.qa.handle_error("arch", "Endiannes did not match (%d, expected %d) in %s" % \
-                 (elf.isLittleEndian(), littleendian, package_qa_clean_path(path, d, name)), d)
+                 (actual_littleendian, expected_littleendian, package_qa_clean_path(path, d, name)), d)
 package_qa_check_arch[vardepsexclude] = "DEFAULTTUNE"
 
 QAPATHTEST[desktop] = "package_qa_check_desktop"
