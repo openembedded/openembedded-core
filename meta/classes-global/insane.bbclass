@@ -82,7 +82,9 @@ def package_qa_clean_path(path, d, pkg=None):
 
 QAPATHTEST[shebang-size] = "package_qa_check_shebang_size"
 def package_qa_check_shebang_size(path, name, d, elf):
-    if elf or os.path.islink(path) or not os.path.isfile(path):
+    global cpath
+
+    if elf or cpath.islink(path) or not cpath.isfile(path):
         return
 
     try:
@@ -167,8 +169,8 @@ def package_qa_check_dev(path, name, d, elf):
     """
     Check for ".so" library symlinks in non-dev packages
     """
-
-    if not name.endswith("-dev") and not name.endswith("-dbg") and not name.endswith("-ptest") and not name.startswith("nativesdk-") and path.endswith(".so") and os.path.islink(path):
+    global cpath
+    if not name.endswith("-dev") and not name.endswith("-dbg") and not name.endswith("-ptest") and not name.startswith("nativesdk-") and path.endswith(".so") and cpath.islink(path):
         oe.qa.handle_error("dev-so", "non -dev/-dbg/nativesdk- package %s contains symlink .so '%s'" % \
                  (name, package_qa_clean_path(path, d, name)), d)
 
@@ -179,7 +181,8 @@ def package_qa_check_dev_elf(path, name, d, elf):
     check that the file is not a link and is an ELF object as some recipes
     install link-time .so files that are linker scripts.
     """
-    if name.endswith("-dev") and path.endswith(".so") and not os.path.islink(path) and elf:
+    global cpath
+    if name.endswith("-dev") and path.endswith(".so") and not cpath.islink(path) and elf:
         oe.qa.handle_error("dev-elf", "-dev package %s contains non-symlink .so '%s'" % \
                  (name, package_qa_clean_path(path, d, name)), d)
 
@@ -422,9 +425,9 @@ def package_qa_check_buildpaths(path, name, d, elf):
     explicitly ignored.
     """
     import stat
-
+    global cpath
     # Ignore symlinks/devs/fifos
-    mode = os.lstat(path).st_mode
+    mode = cpath.lstat(path).st_mode
     if stat.S_ISLNK(mode) or stat.S_ISBLK(mode) or stat.S_ISFIFO(mode) or stat.S_ISCHR(mode) or stat.S_ISSOCK(mode):
         return
 
@@ -469,7 +472,8 @@ def package_qa_check_symlink_to_sysroot(path, name, d, elf):
     """
     Check that the package doesn't contain any absolute symlinks to the sysroot.
     """
-    if os.path.islink(path):
+    global cpath
+    if cpath.islink(path):
         target = os.readlink(path)
         if os.path.isabs(target):
             tmpdir = d.getVar('TMPDIR')
@@ -760,14 +764,19 @@ def qa_check_staged(path,d):
                         oe.qa.handle_error("pkgconfig", error_msg, d)
 
             if not skip_shebang_size:
+                global cpath
+                cpath = oe.cachedpath.CachedPath()
                 package_qa_check_shebang_size(path, "", d, None)
+                cpath = None
 
 # Walk over all files in a directory and call func
 def package_qa_walk(checkfuncs, package, d):
+    global cpath
+
     elves = {}
     for path in pkgfiles[package]:
             elf = None
-            if os.path.isfile(path) and not os.path.islink(path):
+            if cpath.isfile(path) and not cpath.islink(path):
                 elf = oe.qa.ELFFile(path)
                 try:
                     elf.open()
@@ -915,11 +924,12 @@ def package_qa_check_deps(pkg, pkgdest, d):
 
 QAPKGTEST[usrmerge] = "package_qa_check_usrmerge"
 def package_qa_check_usrmerge(pkg, d):
+    global cpath
     pkgdest = d.getVar('PKGDEST')
     pkg_dir = pkgdest + os.sep + pkg + os.sep
     merged_dirs = ['bin', 'sbin', 'lib'] + d.getVar('MULTILIB_VARIANTS').split()
     for f in merged_dirs:
-        if os.path.exists(pkg_dir + f) and not os.path.islink(pkg_dir + f):
+        if cpath.exists(pkg_dir + f) and not cpath.islink(pkg_dir + f):
             msg = "%s package is not obeying usrmerge distro feature. /%s should be relocated to /usr." % (pkg, f)
             oe.qa.handle_error("usrmerge", msg, d)
             return
@@ -985,10 +995,11 @@ def package_qa_check_empty_dirs(pkg, d):
     empty.
     """
 
+    global cpath
     pkgd = oe.path.join(d.getVar('PKGDEST'), pkg)
     for dir in (d.getVar('QA_EMPTY_DIRS') or "").split():
         empty_dir = oe.path.join(pkgd, dir)
-        if os.path.exists(empty_dir) and os.listdir(empty_dir):
+        if cpath.exists(empty_dir) and os.listdir(empty_dir):
             recommendation = (d.getVar('QA_EMPTY_DIRS_RECOMMENDATION:' + dir) or
                               "but it is expected to be empty")
             msg = "%s installs files in %s, %s" % (pkg, dir, recommendation)
@@ -1018,8 +1029,9 @@ HOST_USER_GID := "${@os.getgid()}"
 QAPATHTEST[host-user-contaminated] = "package_qa_check_host_user"
 def package_qa_check_host_user(path, name, d, elf):
     """Check for paths outside of /home which are owned by the user running bitbake."""
+    global cpath
 
-    if not os.path.lexists(path):
+    if not cpath.lexists(path):
         return
 
     dest = d.getVar('PKGDEST')
@@ -1029,7 +1041,7 @@ def package_qa_check_host_user(path, name, d, elf):
         return
 
     try:
-        stat = os.lstat(path)
+        stat = cpath.lstat(path)
     except OSError as exc:
         import errno
         if exc.errno != errno.ENOENT:
@@ -1105,13 +1117,14 @@ python do_package_qa () {
     if not packages:
         return
 
-    global pkgfiles
+    global pkgfiles, cpath
     pkgfiles = {}
+    cpath = oe.cachedpath.CachedPath()
     pkgdest = d.getVar('PKGDEST')
     for pkg in packages:
         pkgdir = os.path.join(pkgdest, pkg)
         pkgfiles[pkg] = []
-        for walkroot, dirs, files in os.walk(pkgdir):
+        for walkroot, dirs, files in cpath.walk(pkgdir):
             # Don't walk into top-level CONTROL or DEBIAN directories as these
             # are temporary directories created by do_package.
             if walkroot == pkgdir:
@@ -1159,6 +1172,7 @@ python do_package_qa () {
 
     package_qa_check_libdir(d)
 
+    cpath = None
     oe.qa.exit_if_errors(d)
 }
 
