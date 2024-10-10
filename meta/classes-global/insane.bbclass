@@ -1084,12 +1084,7 @@ parse_test_matrix[vardepsexclude] = "ERROR_QA WARN_QA"
 
 # The PACKAGE FUNC to scan each package
 python do_package_qa () {
-    import subprocess
     import oe.packagedata
-
-    bb.note("DO PACKAGE QA")
-
-    main_lic = d.getVar('LICENSE')
 
     # Check for obsolete license references in main LICENSE (packages are checked below for any changes)
     main_licenses = oe.license.list_licenses(d.getVar('LICENSE'))
@@ -1106,27 +1101,27 @@ python do_package_qa () {
     pn = d.getVar('PN')
 
     # Scan the packages...
-    pkgdest = d.getVar('PKGDEST')
     packages = set((d.getVar('PACKAGES') or '').split())
+    # no packages should be scanned
+    if not packages:
+        return
 
     global pkgfiles
     pkgfiles = {}
+    pkgdest = d.getVar('PKGDEST')
     for pkg in packages:
-        pkgfiles[pkg] = []
         pkgdir = os.path.join(pkgdest, pkg)
+        pkgfiles[pkg] = []
         for walkroot, dirs, files in os.walk(pkgdir):
             # Don't walk into top-level CONTROL or DEBIAN directories as these
             # are temporary directories created by do_package.
             if walkroot == pkgdir:
-                for control in ("CONTROL", "DEBIAN"):
-                    if control in dirs:
-                        dirs.remove(control)
-            for file in files:
-                pkgfiles[pkg].append(os.path.join(walkroot, file))
-
-    # no packages should be scanned
-    if not packages:
-        return
+                for removedir in ("CONTROL", "DEBIAN"):
+                    try:
+                        dirs.remove(removedir)
+                    except ValueError:
+                        pass
+            pkgfiles[pkg].extend((os.path.join(walkroot, f) for f in files))
 
     import re
     # The package name matches the [a-z0-9.+-]+ regular expression
