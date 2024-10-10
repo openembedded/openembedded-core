@@ -49,7 +49,7 @@ if [ -d "$mountpoint" ]; then
         mkdir "${overlay_workdir}"
     fi
 
-    # Try to mount using overlay, which is must faster than copying files.
+    # Try to mount using overlay, which is much faster than copying files.
     # If that fails, fall back to slower copy.
     if command -v selinuxenabled > /dev/null 2>&1; then
         if selinuxenabled; then
