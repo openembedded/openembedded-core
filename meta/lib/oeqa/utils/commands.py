@@ -312,7 +312,7 @@ def create_temp_layer(templayerdir, templayername, priority=999, recipepathspec=
         f.write('LAYERSERIES_COMPAT_%s = "%s"\n' % (templayername, corenames))
 
 @contextlib.contextmanager
-def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, qemuparams=None, overrides={}, discard_writes=True):
+def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, qemuparams=None, overrides={}, boot_patterns = {}, discard_writes=True):
     """
     Starts a context manager for a 'oeqa.targetcontrol.QemuTarget' resource.
     The underlying Qemu will be booted into a shell when the generator yields
@@ -330,6 +330,7 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
         image_fstype (str): IMAGE_FSTYPE to use
         launch_cmd (str): directly run this command and bypass automatic runqemu parameter generation
         overrides (dict): dict of "'<bitbake-variable>': value" pairs that allows overriding bitbake variables
+        boot_patterns (dict): dict of "'<pattern-name>': value" pairs to override default boot patterns, e.g. when not booting Linux
         discard_writes (boolean): enables qemu -snapshot feature to prevent modifying original image
     """
 
@@ -361,7 +362,7 @@ def runqemu(pn, ssh=True, runqemuparams='', image_fstype=None, launch_cmd=None, 
 
         logdir = recipedata.getVar("TEST_LOG_DIR")
 
-        qemu = oeqa.targetcontrol.QemuTarget(recipedata, targetlogger, image_fstype)
+        qemu = oeqa.targetcontrol.QemuTarget(recipedata, targetlogger, image_fstype, boot_patterns=boot_patterns)
     finally:
         # We need to shut down tinfoil early here in case we actually want
         # to run tinfoil-using utilities with the running QEMU instance.

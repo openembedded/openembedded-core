@@ -103,7 +103,7 @@ class QemuRunner:
 
         # Only override patterns that were set e.g. login user TESTIMAGE_BOOT_PATTERNS[send_login_user] = "webserver\n"
         for pattern in accepted_patterns:
-            if not self.boot_patterns[pattern]:
+            if pattern not in self.boot_patterns or not self.boot_patterns[pattern]:
                 self.boot_patterns[pattern] = default_boot_patterns[pattern]
 
     def create_socket(self):
