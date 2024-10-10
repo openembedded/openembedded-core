@@ -82,8 +82,7 @@ def package_qa_clean_path(path, d, pkg=None):
 
 QAPATHTEST[shebang-size] = "package_qa_check_shebang_size"
 def package_qa_check_shebang_size(path, name, d, elf):
-    import stat
-    if os.path.islink(path) or stat.S_ISFIFO(os.stat(path).st_mode) or elf:
+    if elf or os.path.islink(path) or not os.path.isfile(path):
         return
 
     try:
