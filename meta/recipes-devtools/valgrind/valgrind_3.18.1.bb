@@ -237,6 +237,14 @@ do_install_ptest() {
     # This is known failure see https://bugs.kde.org/show_bug.cgi?id=435732
     rm ${D}${PTEST_PATH}/memcheck/tests/leak_cpp_interior.vgtest
 
+    # This test fails consistently on the new valkyrie autobuilder cluster
+    # It tests the avx estimate instructions
+    # The estimate instructions (rcpss, rcpps, rsqrtps, rsqrtss) are, as the
+    # name suggests, not expected to give a fully accurate result. They may
+    # produce slighly different results on different CPU families because
+    # their results are not defined by the IEEE standard
+    rm ${D}${PTEST_PATH}/none/tests/amd64/avx_estimate_insn.vgtest
+
     # As the binary isn't stripped or debug-splitted, the source file isn't fetched
     # via dwarfsrcfiles either, so it needs to be installed manually.
     mkdir -p ${D}/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}/${BP}/none/tests/
