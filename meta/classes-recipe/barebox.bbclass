@@ -57,6 +57,11 @@ EXTRA_OEMAKE = " \
 BAREBOX_CONFIG[doc] = "The barebox kconfig defconfig file. Not used if a file called defconfig is added to the SRC_URI."
 BAREBOX_CONFIG ?= ""
 
+# set sensible default configs for some of oe-core's QEMU MACHINEs
+BAREBOX_CONFIG:qemuarm = "multi_v7_defconfig"
+BAREBOX_CONFIG:qemuarm64 = "multi_v8_defconfig"
+BAREBOX_CONFIG:qemux86-64 = "efi_defconfig"
+
 # prevent from acting as non-buildable provider
 python () {
     bareboxconfig = d.getVar('BAREBOX_CONFIG')
