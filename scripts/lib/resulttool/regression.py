@@ -212,6 +212,8 @@ def compare_result(logger, base_name, target_name, base_result, target_result, d
 
     if base_result and target_result:
         for k in base_result:
+            if k in ['ptestresult.rawlogs', 'ptestresult.sections']:
+                continue
             base_testcase = base_result[k]
             base_status = base_testcase.get('status')
             if base_status:
