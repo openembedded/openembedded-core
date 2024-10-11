@@ -14,6 +14,7 @@ SRCREV = "9f63f359fab1b5d8e862508e4e51c9dfe339ccb0"
 SRC_URI = "git://gitlab.freedesktop.org/mesa/kmscube;branch=master;protocol=https \
            file://0001-texturator-Use-correct-GL-extension-header.patch \
            file://0001-common-fix-cast-type-in-init_egl.patch \
+           file://0001-drm-common.c-do-not-use-invalid-modifier.patch \
 "
 UPSTREAM_CHECK_COMMITS = "1"
 
