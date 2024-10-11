@@ -31,16 +31,17 @@ SRC_URI[sha256sum] = "5b5e490b5e9cb275c879595064adce9ebd31b854e3e803740b72f9ccf3
 
 RDEPENDS:${PN} = "\
   python3-compile \
-  python3-io \
   python3-html \
+  python3-image \
+  python3-io \
   python3-json \
   python3-multiprocessing \
   python3-netserver \
+  python3-pickle \
   python3-setuptools \
+  python3-tomllib \
   python3-unixadmin \
   python3-xmlrpc \
-  python3-pickle \
-  python3-image \
 "
 
 BBCLASSEXTEND = "native nativesdk"
