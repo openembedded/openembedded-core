@@ -422,6 +422,7 @@ def register_commands(subparsers):
                               help='(optional) filter the base results to this result ID')
     parser_build.add_argument('-t', '--target-result-id', default='',
                               help='(optional) filter the target results to this result ID')
+    parser_build.add_argument('-l', '--limit', default=REGRESSIONS_DISPLAY_LIMIT, help="Maximum number of changes to display per test. Can be set to 0 to print all changes")
 
     parser_build = subparsers.add_parser('regression-git', help='regression git analysis',
                                          description='regression analysis comparing base result set to target '
