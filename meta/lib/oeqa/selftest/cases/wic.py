@@ -1361,6 +1361,8 @@ IMAGE_CLASSES += "qemuboot"
 QB_DEFAULT_BIOS = "u-boot.bin"
 # need to use virtio, scsi not supported by u-boot by default
 QB_DRIVE_TYPE = "/dev/vd"
+# u-boot emulation under KVM is problematic on aarch64
+QEMU_USE_KVM = "False"
 """
         self.append_config(config)
         bitbake('core-image-base u-boot')
