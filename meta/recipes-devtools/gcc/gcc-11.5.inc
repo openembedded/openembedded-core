@@ -121,3 +121,6 @@ EXTRA_OECONF_PATHS = "\
 
 # Is a binutils 2.26 issue, not gcc
 CVE_CHECK_IGNORE += "CVE-2021-37322"
+
+# This is fixed by commit 75c37e0314, nvd uses arm versioning (2023-09-12) which will alway be higher than 11.x
+CVE_CHECK_IGNORE += "CVE-2023-4039"
