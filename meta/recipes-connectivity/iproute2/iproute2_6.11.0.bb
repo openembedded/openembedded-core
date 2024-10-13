@@ -15,7 +15,12 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-include-libnetlink.h-add-missing-include-for-htobe64.patch \
            "
 
-SRC_URI[sha256sum] = "91a62f82737b44905a00fa803369c447d549e914e9a2a4018fdd75b1d54e8dce"
+SRC_URI:append:libc-musl = "\
+           file://0002-bridge-mst-fix-a-musl-build-issue.patch \
+           file://0003-bridge-mst-fix-a-further-musl-build-issue.patch \ 
+           "
+
+SRC_URI[sha256sum] = "1f795398a04aeaacd06a8f6ace2cfd913c33fa5953ca99daae83bb5c534611c3"
 
 inherit update-alternatives bash-completion pkgconfig
 
