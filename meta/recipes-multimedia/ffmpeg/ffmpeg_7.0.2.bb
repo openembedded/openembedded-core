@@ -129,6 +129,8 @@ EXTRA_OECONF = " \
 "
 
 EXTRA_OECONF:append:linux-gnux32 = " --disable-asm"
+# --enable-pic is used and x86 assembly is not PIC on x86
+EXTRA_OECONF:append:x86 = " --disable-asm"
 
 EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'mipsisa64r6', '--disable-mips64r2 --disable-mips32r2', '', d)}"
 EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'mipsisa64r2', '--disable-mips64r6 --disable-mips32r6', '', d)}"
