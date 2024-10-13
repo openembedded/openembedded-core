@@ -17,7 +17,7 @@ class SSHTest(OERuntimeTestCase):
     @OEHasPackage(['dropbear', 'openssh-sshd'])
     def test_ssh(self):
         for i in range(5):
-          status, output = self.target.run("uname -a", timeout=5)
+          status, output = self.target.run("uname -a", timeout=30)
           if status == 0:
               break
           elif status == 255 or status == -signal.SIGTERM:
@@ -29,7 +29,7 @@ class SSHTest(OERuntimeTestCase):
               # give it time for the port to open.
               # We sometimes see -15 (SIGTERM) on slow emulation machines too, likely
               # from boot/init not being 100% complete, retry for these too.
-              time.sleep(30)
+              time.sleep(5)
               continue
           else:
               self.fail("uname failed with \"%s\" (exit code %s)" % (output, status))
