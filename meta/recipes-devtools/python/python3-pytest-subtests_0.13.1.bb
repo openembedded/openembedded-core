@@ -16,6 +16,7 @@ inherit pypi python_setuptools_build_meta
 DEPENDS += "python3-setuptools-scm-native"
 
 RDEPENDS:${PN} += " \
+    python3-attrs \
     python3-pytest \
 "
 
