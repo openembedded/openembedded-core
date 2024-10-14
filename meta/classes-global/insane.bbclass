@@ -1132,7 +1132,7 @@ python do_package_qa () {
     for pkg in packages:
         pkgdir = os.path.join(pkgdest, pkg)
         pkgfiles[pkg] = []
-        for walkroot, dirs, files in cpath.walk(pkgdir):
+        for walkroot, dirs, files in os.walk(pkgdir):
             # Don't walk into top-level CONTROL or DEBIAN directories as these
             # are temporary directories created by do_package.
             if walkroot == pkgdir:
