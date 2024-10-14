@@ -223,6 +223,7 @@ do_compile:class-target() {
 
 do_install:class-native() {
     install -d ${D}/${bindir}/edk2_basetools
+    find ${S}/BaseTools -name \*.pyc -exec rm -rf \{\} \;
     cp -r ${S}/BaseTools ${D}/${bindir}/${EDK_TOOLS_DIR}
 }
 
