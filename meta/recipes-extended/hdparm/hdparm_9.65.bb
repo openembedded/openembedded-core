@@ -26,6 +26,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/hdparm/${BP}.tar.gz \
            "
 
 SRC_URI[sha256sum] = "d14929f910d060932e717e9382425d47c2e7144235a53713d55a94f7de535a4b"
+UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/hdparm/files/hdparm/"
 
 EXTRA_OEMAKE = 'STRIP="echo" LDFLAGS="${LDFLAGS}"'
 
