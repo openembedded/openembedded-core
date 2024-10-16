@@ -228,6 +228,7 @@ class BaseConfig(object):
 
     def acquire_taplock(self, error=True):
         logger.debug("Acquiring lockfile %s..." % self.taplock)
+        self.taplog("    Acquiring lockfile %s..." % self.taplock)
         try:
             self.taplock_descriptor = open(self.taplock, 'w')
             fcntl.flock(self.taplock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
@@ -241,6 +242,7 @@ class BaseConfig(object):
                 self.taplock_descriptor.close()
                 self.taplock_descriptor = None
             return False
+        self.taplog("Acquired lockfile %s..." % self.taplock)
         return True
 
     def release_taplock(self):
@@ -253,6 +255,7 @@ class BaseConfig(object):
             # Removing the file is a potential race, don't do that either
             # os.remove(self.taplock)
             self.taplock_descriptor = None
+            self.taplog("Releasing lockfile for tap device '%s'" % self.tap)
 
     def check_free_port(self, host, port, lockdir):
         """ Check whether the port is free or not """
@@ -1143,6 +1146,11 @@ to your build configuration.
         if hostfwd:
             logger.info('Port forward: %s' % ' '.join(hostfwd))
 
+    def taplog(self, msg):
+        with open("/tmp/qemutaplog", "a+") as logf:
+            logf.write("%s - %s: %s\n" % (str(os.getpid()), time.time(), msg))
+
+
     def setup_tap(self):
         """Setup tap"""
 
@@ -1177,11 +1185,13 @@ to your build configuration.
             lockfile = os.path.join(lockdir, p)
             if os.path.exists('%s.skip' % lockfile):
                 logger.info('Found %s.skip, skipping %s' % (lockfile, p))
+                self.taplog('Found %s.skip, skipping %s' % (lockfile, p))
                 continue
             self.taplock = lockfile + '.lock'
             if self.acquire_taplock(error=False):
                 tap = p
                 logger.info("Using preconfigured tap device %s" % tap)
+                self.taplog("Using preconfigured tap device %s" % tap)
                 logger.info("If this is not intended, touch %s.skip to make runqemu skip %s." %(lockfile, tap))
                 break
 
@@ -1213,6 +1223,7 @@ to your build configuration.
             logger.error("Failed to setup tap device. Run runqemu-gen-tapdevs to manually create.")
             sys.exit(1)
         self.tap = tap
+        self.taplog("Using tap device %s to start qemu" % tap)
         tapnum = int(tap[len(oe_tap_name):])
         gateway = tapnum * 2 + 1
         client = gateway + 1
@@ -1239,18 +1250,22 @@ to your build configuration.
     def setup_network(self):
         if self.nonetwork or self.get('QB_NET') == 'none':
             self.set('NETWORK_CMD', '-nic none')
+            self.taplog('Using -nic none')
             return
         if sys.stdin.isatty():
             self.saved_stty = subprocess.check_output(("stty", "-g")).decode('utf-8').strip()
         self.network_device = self.get('QB_NETWORK_DEVICE') or self.network_device
         if self.net_bridge:
             self.setup_net_bridge()
+            self.taplog('Setup net_bridge %s' % (self.network_device))
         elif self.slirp_enabled:
             self.cmdline_ip_slirp = self.get('QB_CMDLINE_IP_SLIRP') or self.cmdline_ip_slirp
             self.setup_slirp()
+            self.taplog('Setup slirp for %s' % (self.network_device))
         else:
             self.cmdline_ip_tap = self.get('QB_CMDLINE_IP_TAP') or self.cmdline_ip_tap
             self.setup_tap()
+            self.taplog('Setup tap for %s' % (self.network_device))
 
     def setup_rootfs(self):
         if self.get('QB_ROOTFS') == 'none':
@@ -1640,6 +1655,7 @@ to your build configuration.
             logger.debug('Running %s' % str(cmd))
             subprocess.check_call(cmd)
         self.release_taplock()
+        self.taplog("Qemu exiting")
 
         if self.nfs_running:
             logger.info("Shutting down the userspace NFS server...")
@@ -1752,6 +1768,8 @@ def main():
             logger.info("Received signal: %s" % (signum))
             config.cleanup()
         signal.signal(signal.SIGTERM, sigterm_handler)
+
+        config.taplog("Qemu starting")
 
         config.check_args()
         config.read_qemuboot()
