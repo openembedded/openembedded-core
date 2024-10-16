@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "3e683ee4f5d0fa2dde4db77ed8dd8a876686e3fc417655c2ece9a90576
 PYPI_PACKAGE = "markupsafe"
 inherit pypi python_setuptools_build_meta ptest
 
-RDEPENDS:${PN} += "python3-stringold"
+RDEPENDS:${PN} += "python3-html python3-stringold"
 
 BBCLASSEXTEND = "native nativesdk"
 
