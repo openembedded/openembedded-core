@@ -10,18 +10,12 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-Fix-kfree_skb-changed-in-6.11-rc1.patch \
-           file://0002-Fix-ext4_da_reserve_space-changed-in-6.11-rc1.patch \
-           file://0003-Fix-orig_start-removed-from-btrfs_get_extent-in-6.11.patch \
-           file://0004-Fix-block_len-removed-frmo-btrfs_get_extent-in-6.11-.patch \
-           file://0005-Fix-block_start-removed-from-btrfs_get_extent-in-6.1.patch \
-           file://0006-Fix-scsi-sd-Atomic-write-support-added-in-6.11-rc1.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "c6449f7ff12ab644a630692a556304e51525ca37d98aebf826796918be0f5da6"
+SRC_URI[sha256sum] = "6692554eca50e9d22e71b7c2ee6c7db89d393268d404261212af37c5247c0729"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
