@@ -16,20 +16,23 @@ Signed-off-by: Changqing Li <changqing.li@windriver.com>
  tests/unit/meson.build | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tests/unit/meson.build b/tests/unit/meson.build
-index 228a21d03c..272fb4c6ca 100644
---- a/tests/unit/meson.build
-+++ b/tests/unit/meson.build
-@@ -47,7 +47,7 @@ tests = {
-   'test-keyval': [testqapi],
-   'test-logging': [],
-   'test-uuid': [],
--  'ptimer-test': ['ptimer-test-stubs.c', meson.project_source_root() / 'hw/core/ptimer.c'],
-+  'ptimer-test': ['ptimer-test-stubs.c', '../../hw/core/ptimer.c'],
-   'test-qapi-util': [],
-   'test-interval-tree': [],
-   'test-xs-node': [qom],
-@@ -138,7 +138,7 @@ if have_system
+Index: qemu-9.1.0/tests/unit/meson.build
+===================================================================
+--- qemu-9.1.0.orig/tests/unit/meson.build
++++ qemu-9.1.0/tests/unit/meson.build
+@@ -128,17 +128,17 @@ endif
+ 
+ if have_system
+   tests += {
+-    'ptimer-test': ['ptimer-test-stubs.c', meson.project_source_root() / 'hw/core/ptimer.c'],
++    'ptimer-test': ['ptimer-test-stubs.c', '../../hw/core/ptimer.c'],
+     'test-iov': [],
+     'test-opts-visitor': [testqapi],
+     'test-xs-node': [qom],
+-    'test-virtio-dmabuf': [meson.project_source_root() / 'hw/display/virtio-dmabuf.c'],
++    'test-virtio-dmabuf': ['../../hw/display/virtio-dmabuf.c'],
+     'test-qmp-cmds': [testqapi],
+     'test-xbzrle': [migration],
      'test-util-sockets': ['socket-helpers.c'],
      'test-base64': [],
      'test-bufferiszero': [],
@@ -38,6 +41,3 @@ index 228a21d03c..272fb4c6ca 100644
      'test-vmstate': [migration, io],
      'test-yank': ['socket-helpers.c', qom, io, chardev]
    }
--- 
-2.44.0
-
