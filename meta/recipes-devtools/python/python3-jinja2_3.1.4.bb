@@ -17,6 +17,7 @@ UPSTREAM_CHECK_PYPI_PACKAGE = "Jinja2"
 
 SRC_URI += " \
 	file://run-ptest \
+	file://fix-3.13.patch \
 "
 
 do_install_ptest() {
