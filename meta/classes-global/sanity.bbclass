@@ -484,6 +484,8 @@ def check_userns():
     # succeeds (at which point the uid is nobody) but writing to the uid_map
     # fails (so the uid isn't reset back to the user's uid). We can detect this.
     parentuid = os.getuid()
+    if not bb.utils.is_local_uid(parentuid):
+        return None
     pid = os.fork()
     if not pid:
         try:
