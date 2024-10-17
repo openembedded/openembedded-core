@@ -183,3 +183,5 @@ FILES:libpostproc = "${libdir}/libpostproc${SOLIBS}"
 FILES:libswresample = "${libdir}/libswresample${SOLIBS}"
 FILES:libswscale = "${libdir}/libswscale${SOLIBS}"
 FILES:${PN}-examples = "${datadir}/${PN}/examples"
+
+CVE_PRODUCT = "ffmpeg libswresample libavcodec"
