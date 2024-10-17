@@ -83,7 +83,6 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'src/tools/tidy/src/',
                             'tests/assembly/asm/aarch64-outline-atomics.rs',
                             'tests/codegen/abi-main-signature-32bit-c-int.rs',
-                            'tests/codegen/i128-x86-align.rs',
                             'tests/codegen/issues/issue-122805.rs',
                             'tests/codegen/thread-local.rs',
                             'tests/mir-opt/',
