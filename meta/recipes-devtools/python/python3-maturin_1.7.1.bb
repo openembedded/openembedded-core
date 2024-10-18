@@ -12,6 +12,7 @@ SRC_URI:append = "\
     file://0003-Extract-extension-ABI-name-resolvation-code-as-helpe.patch \
     file://0004-Fix-cross-compilation-issue-with-linux-ppc-architect.patch \
     file://0005-Fix-cross-compilation-issue-with-linux-mips64-archit.patch \
+    file://0001-build_context-improve-wheel-reproducibility-by-sorti.patch \
 "
 
 S = "${WORKDIR}/maturin-${PV}"
