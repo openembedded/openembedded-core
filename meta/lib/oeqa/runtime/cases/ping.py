@@ -5,6 +5,8 @@
 #
 
 from subprocess import Popen, PIPE
+import time
+import os
 from time import sleep
 
 from oeqa.runtime.case import OERuntimeTestCase
@@ -36,6 +38,17 @@ class PingTest(OERuntimeTestCase):
                     count = 0
                     sleep(1)
         except OEQATimeoutError:
+            status, output = self.target.runner.run_serial("ifconfig")
+            print("ifconfig on target: %s %s" % (output, status))
+            status, output = self.target.runner.run_serial("ping -c 1 %s" % self.target.server_ip)
+            print("ping on target: %s %s %s" % (self.target.server_ip, output, status))
+            status, output = self.target.runner.run_serial("ping -c 1 %s" % self.target.ip)
+            print("ping on target: %s %s %s" % (self.target.ip, output, status))
+            os.system("/usr/bin/netstat -tunape")
+            os.system("/usr/bin/netstat -ei")
+            os.system("ps -awx")
+            print("PID: %s %s" % (str(os.getpid()), time.time()))
+
             self.fail("Ping timeout error for address %s, count %s, output: %s" % (self.target.ip, count, output))
         msg = ('Expected 5 consecutive, got %d.\n'
                'ping output is:\n%s' % (count,output))
