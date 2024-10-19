@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
 import time
 import signal
 
@@ -32,6 +33,16 @@ class SSHTest(OERuntimeTestCase):
               time.sleep(5)
               continue
           else:
+              status, output = self.target.runner.run_serial("ifconfig")
+              print("ifconfig on target: %s %s" % (output, status))
+              status, output = self.target.runner.run_serial("ping -c 1 %s" % self.target.server_ip)
+              print("ping on target: %s %s %s" % (self.target.server_ip, output, status))
+              status, output = self.target.runner.run_serial("ping -c 1 %s" % self.target.ip)
+              print("ping on target: %s %s %s" % (self.target.ip, output, status))
+              os.system("/usr/bin/netstat -tunape")
+              os.system("/usr/bin/netstat -ei")
+              os.system("ps -awx")
+              print("PID: %s %s" % (str(os.getpid()), time.time()))
               self.fail("uname failed with \"%s\" (exit code %s)" % (output, status))
         if status != 0:
             self.fail("ssh failed with \"%s\" (exit code %s)" % (output, status))
