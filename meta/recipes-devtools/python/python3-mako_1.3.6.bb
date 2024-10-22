@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d0995d6f7ba3f186a03118f244e88f57"
 
-PYPI_PACKAGE = "Mako"
+PYPI_PACKAGE = "mako"
 
 inherit pypi python_setuptools_build_meta ptest
 
@@ -12,7 +12,7 @@ SRC_URI:append = " \
     file://run-ptest \
 "
 
-SRC_URI[sha256sum] = "48dbc20568c1d276a2698b36d968fa76161bf127194907ea6fc594fa81f943bc"
+SRC_URI[sha256sum] = "9ec3a1583713479fae654f83ed9fa8c9a4c16b7bb0daba0e6bbebff50c0d983d"
 
 RDEPENDS:${PN} = "python3-html \
                   python3-markupsafe \
