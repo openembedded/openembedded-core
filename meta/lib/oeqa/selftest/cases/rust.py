@@ -1,12 +1,11 @@
 # SPDX-License-Identifier: MIT
-import os
 import subprocess
 import time
 from oeqa.core.decorator import OETestTag
 from oeqa.core.decorator.data import skipIfArch
 from oeqa.core.case import OEPTestResultTestCase
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import runCmd, bitbake, get_bb_var, get_bb_vars, runqemu, Command
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, runqemu
 from oeqa.utils.sshcontrol import SSHControl
 
 def parse_results(filename):
@@ -42,9 +41,6 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
 
     @skipIfArch(['mips', 'mips64'])
     def test_rust(self, *args, **kwargs):
-        # Disable Rust Oe-selftest
-        #self.skipTest("The Rust Oe-selftest is disabled.")
-
         # build remote-test-server before image build
         recipe = "rust"
         start_time = time.time()
