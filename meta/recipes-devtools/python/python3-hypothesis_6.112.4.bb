@@ -24,6 +24,7 @@ RDEPENDS:${PN} += " \
     python3-sortedcontainers \
     python3-statistics \
     python3-unittest \
+    python3-zoneinfo \
     "
 
 RDEPENDS:${PN}-ptest += " \
