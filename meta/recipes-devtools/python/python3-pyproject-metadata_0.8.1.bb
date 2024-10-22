@@ -16,7 +16,7 @@ PYPI_PACKAGE = "pyproject_metadata"
 
 inherit pypi python_setuptools_build_meta
 
-SRC_URI[sha256sum] = "376d5a00764ac29440a54579f88e66b7d9cb7e629d35c35a1c7248bfebc9b455"
+SRC_URI[sha256sum] = "e6b494d4fbac8007ed0efd3a08df067bb28a299fb113b885ce77e492ad1f0600"
 
 RDEPENDS:${PN} += " \
     python3-logging \
