@@ -1192,6 +1192,8 @@ do_package_qa[vardepsexclude] = "BB_TASKDEPDATA"
 do_package_qa[rdeptask] = "do_packagedata"
 addtask do_package_qa after do_packagedata do_package before do_build
 
+do_build[rdeptask] += "do_package_qa"
+
 # Add the package specific INSANE_SKIPs to the sstate dependencies
 python() {
     pkgs = (d.getVar('PACKAGES') or '').split()
