@@ -1180,6 +1180,10 @@ class Wic2(WicTestCase):
             self.assertEqual(1, len(out))
 
     def test_rawcopy_plugin(self):
+        config = 'IMAGE_FSTYPES = "ext4"\n'
+        self.append_config(config)
+        self.assertEqual(0, bitbake('core-image-minimal').status)
+        self.remove_config(config)
         self._rawcopy_plugin('ext4')
 
     def test_rawcopy_plugin_unpack(self):
