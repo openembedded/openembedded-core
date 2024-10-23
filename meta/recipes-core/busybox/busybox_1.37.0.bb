@@ -48,17 +48,12 @@ SRC_URI = "https://busybox.net/downloads/busybox-${PV}.tar.bz2;name=tarball \
            file://0001-sysctl-ignore-EIO-of-stable_secret-below-proc-sys-ne.patch \
            file://0001-libbb-sockaddr2str-ensure-only-printable-characters-.patch \
            file://0002-nslookup-sanitize-all-printed-strings-with-printable.patch \
-           file://start-stop-false.patch \
-           file://CVE-2021-42380.patch \
-           file://0001-awk-fix-segfault-when-compiled-by-clang.patch \
-           file://CVE-2023-42363.patch \
            file://busybox-1.36.1-no-cbq.patch \
-           file://0001-awk-fix-precedence-of-relative-to.patch \
-           file://0002-awk-fix-ternary-operator-and-precedence-of.patch \
-           file://0001-awk.c-fix-CVE-2023-42366-bug-15874.patch \
            file://0001-cut-Fix-s-flag-to-omit-blank-lines.patch \
+           file://0001-syslogd-fix-wrong-OPT_locallog-flag-detection.patch \
+           file://0002-start-stop-daemon-fix-tests.patch \
+           file://0003-start-stop-false.patch \
            "
-SRC_URI:append:libc-musl = " file://musl.cfg "
-# TODO http://lists.busybox.net/pipermail/busybox/2023-January/090078.html
-SRC_URI:append:x86 = " file://sha_accel.cfg"
-SRC_URI[tarball.sha256sum] = "b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314"
+SRC_URI:append:libc-musl = " file://musl.cfg"
+SRC_URI:append:x86-64 = " file://sha_accel.cfg"
+SRC_URI[tarball.sha256sum] = "3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4"

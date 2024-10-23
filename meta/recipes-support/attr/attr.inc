@@ -26,8 +26,9 @@ PACKAGES =+ "lib${BPN}"
 FILES:lib${BPN} = "${libdir}/lib*${SOLIBS} ${sysconfdir}"
 
 ALTERNATIVE_PRIORITY = "100"
-ALTERNATIVE:${PN} = "setfattr"
+ALTERNATIVE:${PN} = "setfattr getfattr"
 ALTERNATIVE_TARGET[setfattr] = "${bindir}/setfattr"
+ALTERNATIVE_TARGET[getfattr] = "${bindir}/getfattr"
 
 PTEST_BUILD_HOST_FILES = "builddefs"
 PTEST_BUILD_HOST_PATTERN = "^RPM"
