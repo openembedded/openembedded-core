@@ -1292,24 +1292,46 @@ class Wic2(WicTestCase):
     @skipIfNotArch(['i586', 'i686', 'x86_64'])
     @OETestTag("runqemu")
     def test_efi_plugin_unified_kernel_image_qemu(self):
-        """Test efi plugin's Unified Kernel Image feature in qemu"""
-        config = 'IMAGE_FSTYPES = "wic"\n'\
-                 'INITRAMFS_IMAGE = "core-image-minimal-initramfs"\n'\
-                 'WKS_FILE = "test_efi_plugin.wks"\n'\
-                 'MACHINE_FEATURES:append = " efi"\n'
+        """Test Unified Kernel Image feature in qemu without systemd in initramfs or rootfs"""
+        config = """
+# efi firmware must load systemd-boot, not grub
+EFI_PROVIDER = "systemd-boot"
+
+# image format must be wic, needs esp partition for firmware etc
+IMAGE_FSTYPES:pn-core-image-base:append = " wic"
+WKS_FILE = "test_efi_plugin.wks"
+
+# efi, uki and systemd features must be enabled
+MACHINE_FEATURES:append = " efi"
+DISTRO_FEATURES_NATIVE:append = " systemd"
+IMAGE_CLASSES:append:pn-core-image-base = " uki"
+
+# uki embeds also an initrd, no systemd or udev
+INITRAMFS_IMAGE = "core-image-initramfs-boot"
+
+# runqemu must not load kernel separately, it's in the uki
+QB_KERNEL_ROOT = ""
+QB_DEFAULT_KERNEL = "none"
+
+# boot command line provided via uki, not via bootloader
+UKI_CMDLINE = "rootwait root=LABEL=root console=${KERNEL_CONSOLE}"
+
+"""
         self.append_config(config)
-        bitbake('core-image-minimal core-image-minimal-initramfs ovmf')
+        bitbake('core-image-base ovmf')
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', 'core-image-base') or ""
+        uki_filename = get_bb_var('UKI_FILENAME', 'core-image-base')
         self.remove_config(config)
 
-        with runqemu('core-image-minimal', ssh=False,
-                     runqemuparams='nographic ovmf', image_fstype='wic') as qemu:
-            # Check that /boot has EFI bootx64.efi (required for EFI)
-            cmd = "ls /boot/EFI/BOOT/bootx64.efi | wc -l"
+        with runqemu('core-image-base', ssh=False,
+                     runqemuparams='%s nographic ovmf' % (runqemu_params), image_fstype='wic') as qemu:
+            # Check that /boot has EFI boot*.efi (required for EFI)
+            cmd = "ls /boot/EFI/BOOT/boot*.efi | wc -l"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '1')
-            # Check that /boot has EFI/Linux/linux.efi (required for Unified Kernel Images auto detection)
-            cmd = "ls /boot/EFI/Linux/linux.efi | wc -l"
+            # Check that /boot has EFI/Linux/${UKI_FILENAME} (required for Unified Kernel Images auto detection)
+            cmd = "ls /boot/EFI/Linux/%s | wc -l" % (uki_filename)
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '1')
@@ -1318,6 +1340,80 @@ class Wic2(WicTestCase):
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
             self.assertEqual(output, '0')
+
+    @skipIfNotArch(['aarch64'])
+    @OETestTag("runqemu")
+    def test_efi_plugin_plain_systemd_boot_qemu_aarch64(self):
+        """Test plain systemd-boot in qemu with systemd"""
+        config = """
+INIT_MANAGER = "systemd"
+EFI_PROVIDER = "systemd-boot"
+
+# image format must be wic, needs esp partition for firmware etc
+IMAGE_FSTYPES:pn-core-image-base:append = " wic"
+WKS_FILE = "test_efi_plugin_plain_systemd-boot.wks"
+
+INITRAMFS_IMAGE = "core-image-initramfs-boot"
+
+# to configure runqemu
+IMAGE_CLASSES += "qemuboot"
+# u-boot efi firmware
+QB_DEFAULT_BIOS = "u-boot.bin"
+# need to use virtio, scsi not supported by u-boot by default
+QB_DRIVE_TYPE = "/dev/vd"
+
+# disable kvm, breaks boot
+QEMU_USE_KVM = ""
+
+IMAGE_CLASSES:remove = 'testimage'
+"""
+        self.append_config(config)
+        bitbake('core-image-base u-boot')
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', 'core-image-base') or ""
+        self.remove_config(config)
+
+        with runqemu('core-image-base', ssh=False,
+                     runqemuparams='%s nographic' % (runqemu_params), image_fstype='wic') as qemu:
+            # Check that /boot has EFI boot*.efi (required for EFI)
+            cmd = "ls /boot/EFI/BOOT/boot*.efi | wc -l"
+            status, output = qemu.run_serial(cmd)
+            self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+            self.assertEqual(output, '1')
+            # Check that boot.conf exists
+            cmd = "cat /boot/loader/entries/boot.conf"
+            status, output = qemu.run_serial(cmd)
+            self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+
+    @skipIfNotArch(['i586', 'i686', 'x86_64'])
+    @OETestTag("runqemu")
+    def test_efi_plugin_plain_systemd_boot_qemu_x86(self):
+        """Test plain systemd-boot to systemd in qemu"""
+        config = """
+INIT_MANAGER = "systemd"
+EFI_PROVIDER = "systemd-boot"
+
+# image format must be wic, needs esp partition for firmware etc
+IMAGE_FSTYPES:pn-core-image-base:append = " wic"
+WKS_FILE = "test_efi_plugin_plain_systemd-boot.wks"
+
+INITRAMFS_IMAGE = "core-image-initramfs-boot"
+"""
+        self.append_config(config)
+        bitbake('core-image-base ovmf')
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', 'core-image-base') or ""
+        self.remove_config(config)
+
+        with runqemu('core-image-base', ssh=False,
+                     runqemuparams='%s nographic ovmf' % (runqemu_params), image_fstype='wic') as qemu:
+            # Check that /boot has EFI boot*.efi (required for EFI)
+            cmd = "ls /boot/EFI/BOOT/boot*.efi | wc -l"
+            status, output = qemu.run_serial(cmd)
+            self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+            self.assertEqual(output, '1')
+            # Check that boot.conf exists
+            cmd = "cat /boot/loader/entries/boot.conf"
+            status, output = qemu.run_serial(cmd)
+            self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
 
     def test_fs_types(self):
         """Test filesystem types for empty and not empty partitions"""
