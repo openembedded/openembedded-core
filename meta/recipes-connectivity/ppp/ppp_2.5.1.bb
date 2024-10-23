@@ -27,7 +27,10 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
 
 SRC_URI[sha256sum] = "733b7f5840b613da4eab0429a5081293275f06ba8b528e1b8eea6964faf0243a"
 
-inherit autotools systemd
+inherit autotools systemd pkgconfig
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[pam] = "--with-pam=yes,--with-pam=no,libpam"
 
 EXTRA_OECONF += "--with-openssl=${STAGING_EXECPREFIXDIR}"
 
