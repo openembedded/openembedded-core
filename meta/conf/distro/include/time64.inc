@@ -39,6 +39,10 @@ INSANE_SKIP:append:pn-glibc-y2038-tests = " 32bit-time"
 # /usr/lib/strace/ptest/tests/ioctl_termios uses 32-bit api 'ioctl'
 INSANE_SKIP:append:pn-strace = " 32bit-time"
 
+# Pseudo has to wrap all glibc calls including the 32 bit ones even
+# if it doesn't use them itself
+INSANE_SKIP:append:pseudo = " 32bit-time"
+
 # Additionally cargo_common class (i.e. everything written in rust)
 # has the same INSANE_SKIP setting.
 # Please check the comment in meta/classes-recipe/cargo_common.bbclass
