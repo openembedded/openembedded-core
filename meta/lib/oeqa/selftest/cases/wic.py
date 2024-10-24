@@ -1374,7 +1374,6 @@ IMAGE_CLASSES:remove = 'testimage'
         self.append_config(config)
         bitbake('core-image-base u-boot')
         runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', 'core-image-base') or ""
-        self.remove_config(config)
 
         with runqemu('core-image-base', ssh=False,
                      runqemuparams='%s nographic' % (runqemu_params), image_fstype='wic') as qemu:
@@ -1387,6 +1386,7 @@ IMAGE_CLASSES:remove = 'testimage'
             cmd = "cat /boot/loader/entries/boot.conf"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+        self.remove_config(config)
 
     @skipIfNotArch(['i586', 'i686', 'x86_64'])
     @OETestTag("runqemu")
