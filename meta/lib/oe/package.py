@@ -1447,10 +1447,10 @@ def populate_packages(d):
 
     # Handle excluding packages with incompatible licenses
     package_list = []
+    skipped_pkgs = oe.license.skip_incompatible_package_licenses(d, packages)
     for pkg in packages:
-        licenses = d.getVar('_exclude_incompatible-' + pkg)
-        if licenses:
-            msg = "Excluding %s from packaging as it has incompatible license(s): %s" % (pkg, licenses)
+        if pkg in skipped_pkgs:
+            msg = "Excluding %s from packaging as it has incompatible license(s): %s" % (pkg, skipped_pkgs[pkg])
             oe.qa.handle_error("incompatible-license", msg, d)
         else:
             package_list.append(pkg)

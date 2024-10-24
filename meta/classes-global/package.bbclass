@@ -447,10 +447,6 @@ def gen_packagevar(d, pkgvars="PACKAGEVARS"):
     for p in pkgs:
         for v in vars:
             ret.append(v + ":" + p)
-
-        # Ensure that changes to INCOMPATIBLE_LICENSE re-run do_package for
-        # affected recipes.
-        ret.append('_exclude_incompatible-%s' % p)
     return " ".join(ret)
 
 
