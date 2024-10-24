@@ -528,8 +528,8 @@ python () {
         bb.fatal('This recipe does not have the LICENSE field set (%s)' % pn)
 
     if bb.data.inherits_class('license', d):
-        check_license_format(d)
-        unmatched_license_flags = check_license_flags(d)
+        oe.license.check_license_format(d)
+        unmatched_license_flags = oe.license.check_license_flags(d)
         if unmatched_license_flags:
             for unmatched in unmatched_license_flags:
                 message = "Has a restricted license '%s' which is not listed in your LICENSE_FLAGS_ACCEPTED." % unmatched
@@ -583,7 +583,7 @@ python () {
             check_license = False
 
         if check_license and bad_licenses:
-            bad_licenses = expand_wildcard_licenses(d, bad_licenses)
+            bad_licenses = oe.license.expand_wildcard_licenses(d, bad_licenses)
 
             exceptions = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
 
@@ -599,7 +599,7 @@ python () {
             for pkg in pkgs:
                 remaining_bad_licenses = oe.license.apply_pkg_license_exception(pkg, bad_licenses, exceptions)
 
-                incompatible_lic = incompatible_license(d, remaining_bad_licenses, pkg)
+                incompatible_lic = oe.license.incompatible_license(d, remaining_bad_licenses, pkg)
                 if incompatible_lic:
                     skipped_pkgs[pkg] = incompatible_lic
                 else:
@@ -612,7 +612,7 @@ python () {
                 for pkg in unskipped_pkgs:
                     bb.debug(1, "Including the package %s" % pkg)
             else:
-                incompatible_lic = incompatible_license(d, bad_licenses)
+                incompatible_lic = oe.license.incompatible_license(d, bad_licenses)
                 for pkg in skipped_pkgs:
                     incompatible_lic += skipped_pkgs[pkg]
                 incompatible_lic = sorted(list(set(incompatible_lic)))
