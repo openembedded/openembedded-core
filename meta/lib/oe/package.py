@@ -663,6 +663,8 @@ def split_locales(d):
     except ValueError:
         locale_index = len(packages)
 
+    lic = d.getVar("LICENSE:" + pn + "-locale")
+
     localepaths = []
     locales = set()
     for localepath in (d.getVar('LOCALE_PATHS') or "").split():
@@ -698,6 +700,8 @@ def split_locales(d):
         d.setVar('RPROVIDES:' + pkg, '%s-locale %s%s-translation' % (pn, mlprefix, ln))
         d.setVar('SUMMARY:' + pkg, '%s - %s translations' % (summary, l))
         d.setVar('DESCRIPTION:' + pkg, '%s  This package contains language translation files for the %s locale.' % (description, l))
+        if lic:
+            d.setVar('LICENSE:' + pkg, lic)
         if locale_section:
             d.setVar('SECTION:' + pkg, locale_section)
 
