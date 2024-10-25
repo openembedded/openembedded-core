@@ -41,7 +41,7 @@ INSANE_SKIP:append:pn-strace = " 32bit-time"
 
 # Pseudo has to wrap all glibc calls including the 32 bit ones even
 # if it doesn't use them itself
-INSANE_SKIP:append:pseudo = " 32bit-time"
+INSANE_SKIP:append:pn-pseudo = " 32bit-time"
 
 # Additionally cargo_common class (i.e. everything written in rust)
 # has the same INSANE_SKIP setting.
