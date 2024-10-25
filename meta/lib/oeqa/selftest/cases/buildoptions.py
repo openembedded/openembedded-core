@@ -229,7 +229,7 @@ PREMIRRORS = "\\
     https://.*/.*    http://downloads.yoctoproject.org/mirror/sources/ \\n"
 """)
 
-        bitbake("world --runall fetch")
+        bitbake("world --runall fetch --continue")
 
 
 class Poisoning(OESelftestTestCase):
