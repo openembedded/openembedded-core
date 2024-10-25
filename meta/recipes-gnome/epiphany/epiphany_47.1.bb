@@ -31,7 +31,7 @@ SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@oe.utils.trim_version("${PV}", 1)}/${GN
            file://migrator.patch \
            file://distributor.patch \
            "
-SRC_URI[archive.sha256sum] = "8e38ee7f90fd6054f8aef0e7f505d53c4520742f5acd1f008282a47b2764affa"
+SRC_URI[archive.sha256sum] = "642fd72045f6e9b18f09c3ef16df762d9b7816119abb22edd5d82ef687c6a004"
 
 # Developer mode enables debugging
 PACKAGECONFIG[developer-mode] = "-Ddeveloper_mode=true,-Ddeveloper_mode=false"
