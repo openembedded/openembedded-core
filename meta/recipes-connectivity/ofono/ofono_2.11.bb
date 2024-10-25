@@ -11,7 +11,7 @@ SRC_URI = "\
     ${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
     file://ofono \
 "
-SRC_URI[sha256sum] = "ce65c12e446f7b15d2ed98a220f9cc6f1571b269d83c4f14b0a2d67c33919fef"
+SRC_URI[sha256sum] = "fa908ac79e2ffaa52391b6c6737cd451275ef788284e46d3f05a7a409bc52cfc"
 
 inherit autotools pkgconfig update-rc.d systemd gobject-introspection-data
 
