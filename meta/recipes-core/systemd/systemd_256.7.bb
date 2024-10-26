@@ -339,7 +339,7 @@ do_install() {
 	install -d ${D}${systemd_system_unitdir}/rescue.target.wants
 
 	# Create symlinks for systemd-update-utmp-runlevel.service
-	if ${@bb.utils.contains('PACKAGECONFIG', 'utmp', 'true', 'false', d)}; then
+	if ${@bb.utils.contains('PACKAGECONFIG', 'utmp', 'true', 'false', d)} && ${@bb.utils.contains('PACKAGECONFIG', 'sysvinit', 'true', 'false', d)}; then
 		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/graphical.target.wants/systemd-update-utmp-runlevel.service
 		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/multi-user.target.wants/systemd-update-utmp-runlevel.service
 		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/poweroff.target.wants/systemd-update-utmp-runlevel.service
@@ -841,7 +841,9 @@ python do_warn_musl() {
 }
 addtask warn_musl before do_configure
 
-ALTERNATIVE:${PN} = "halt reboot shutdown poweroff runlevel ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolv-conf', '', d)}"
+ALTERNATIVE:${PN} = "halt reboot shutdown poweroff \
+                     ${@bb.utils.contains('PACKAGECONFIG', 'sysvinit', 'runlevel', '', d)} \
+                     ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolv-conf', '', d)}"
 
 ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.systemd"
 ALTERNATIVE_LINK_NAME[resolv-conf] = "${sysconfdir}/resolv.conf"
