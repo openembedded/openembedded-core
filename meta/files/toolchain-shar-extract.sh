@@ -2,8 +2,8 @@
 
 export LC_ALL=en_US.UTF-8
 #Make sure at least one python is installed
-INIT_PYTHON=$(which python3 2>/dev/null )
-[ -z "$INIT_PYTHON" ] && INIT_PYTHON=$(which python2 2>/dev/null)
+INIT_PYTHON=$(command -v python3 2>/dev/null )
+[ -z "$INIT_PYTHON" ] && INIT_PYTHON=$(command -v python2 2>/dev/null)
 [ -z "$INIT_PYTHON" ] && echo "Error: The SDK needs a python installed" && exit 1
 
 # Remove invalid PATH elements first (maybe from a previously setup toolchain now deleted
@@ -229,7 +229,7 @@ if [ ! -x $target_sdk_dir -o ! -w $target_sdk_dir -o ! -r $target_sdk_dir ]; the
 		exit 1
 	fi
 
-	SUDO_EXEC=$(which "sudo")
+	SUDO_EXEC=$(command -v "sudo")
 	if [ -z $SUDO_EXEC ]; then
 		echo "No command 'sudo' found, please install sudo first. Abort!"
 		exit 1
