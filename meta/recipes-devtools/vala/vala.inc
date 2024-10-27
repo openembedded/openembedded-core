@@ -39,6 +39,10 @@ EOF
 
 EXTRA_OECONF += " --disable-valadoc"
 
+# work around for vala-native build with gcc-14 instead of backporting
+# https://gitlab.gnome.org/GNOME/vala/-/commit/23ec71b1a5c4cead3d1bdac82e184d0a63fa7b79
+BUILD_CFLAGS += "-Wno-error=incompatible-pointer-types"
+
 # Vapigen wrapper needs to be available system-wide, because it will be used
 # to build vapi files from all other packages with vala support
 do_install:append:class-target() {
