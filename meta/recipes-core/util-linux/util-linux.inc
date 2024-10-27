@@ -35,6 +35,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://run-ptest \
            file://display_testname_for_subtest.patch \
            file://avoid_parallel_tests.patch \
+           file://0001-check-for-sys-pidfd.h.patch \
            file://CVE-2024-28085-0001.patch \
            file://CVE-2024-28085-0002.patch \
            file://CVE-2024-28085-0003.patch \
