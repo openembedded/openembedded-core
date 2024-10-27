@@ -245,6 +245,10 @@ fi
 
 printf "Extracting SDK..."
 if [ @SDK_ARCHIVE_TYPE@ = "zip" ]; then
+    if [ -z "$(command -v unzip)" ]; then
+        echo "Aborted, unzip is required to extract the SDK archive, please make sure it's installed on your system!"
+        exit 1
+    fi
     tail -n +$payload_offset "$0" > sdk.zip
     if $SUDO_EXEC unzip $EXTRA_TAR_OPTIONS sdk.zip -d $target_sdk_dir;then
         rm sdk.zip
@@ -252,6 +256,10 @@ if [ @SDK_ARCHIVE_TYPE@ = "zip" ]; then
         rm sdk.zip && exit 1
     fi
 else
+    if [ -z "$(command -v xz)" ]; then
+        echo "Aborted, xz is required to extract the SDK archive, please make sure it's installed on your system!"
+        exit 1
+    fi
     tail -n +$payload_offset "$0"| $SUDO_EXEC tar mxJ -C $target_sdk_dir --checkpoint=.2500 $EXTRA_TAR_OPTIONS || exit 1
 fi
 echo "done"
