@@ -84,6 +84,7 @@ SDK_XZ_OPTIONS ?= "${XZ_DEFAULTS} ${SDK_XZ_COMPRESSION_LEVEL}"
 SDK_ZIP_OPTIONS ?= "-y"
 SDK_7ZIP_OPTIONS ?= "-mx=9 -mm=BZip2"
 SDK_7ZIP_TYPE ?= "7z"
+SDK_ZSTD_COMPRESSION_LEVEL = "-17"
 
 # To support different sdk type according to SDK_ARCHIVE_TYPE, now support zip and tar.xz
 python () {
@@ -95,9 +96,16 @@ python () {
     elif d.getVar('SDK_ARCHIVE_TYPE') == '7zip':
        d.setVar('SDK_ARCHIVE_DEPENDS', 'p7zip-native')
        d.setVar('SDK_ARCHIVE_CMD', 'cd ${SDK_OUTPUT}/${SDKPATH}; 7za a -r ${SDK_7ZIP_OPTIONS} ${SDKDEPLOYDIR}/${TOOLCHAIN_OUTPUTNAME}.${SDK_7ZIP_TYPE} .')
-    else:
+    elif d.getVar('SDK_ARCHIVE_TYPE') == 'tar.zst':
+       d.setVar('SDK_ARCHIVE_DEPENDS', 'zstd-native')
+       d.setVar('SDK_ARCHIVE_CMD',
+         'cd ${SDK_OUTPUT}/${SDKPATH}; tar ${SDKTAROPTS} -cf - . | zstd -f -k -T0 -c ${SDK_ZSTD_COMPRESSION_LEVEL} > ${SDKDEPLOYDIR}/${TOOLCHAIN_OUTPUTNAME}.${SDK_ARCHIVE_TYPE}')
+    elif d.getVar('SDK_ARCHIVE_TYPE') == 'tar.xz':
        d.setVar('SDK_ARCHIVE_DEPENDS', 'xz-native')
-       d.setVar('SDK_ARCHIVE_CMD', 'cd ${SDK_OUTPUT}/${SDKPATH}; tar ${SDKTAROPTS} -cf - . | xz ${SDK_XZ_OPTIONS} > ${SDKDEPLOYDIR}/${TOOLCHAIN_OUTPUTNAME}.${SDK_ARCHIVE_TYPE}')
+       d.setVar('SDK_ARCHIVE_CMD',
+         'cd ${SDK_OUTPUT}/${SDKPATH}; tar ${SDKTAROPTS} -cf - . | xz ${SDK_XZ_OPTIONS} > ${SDKDEPLOYDIR}/${TOOLCHAIN_OUTPUTNAME}.${SDK_ARCHIVE_TYPE}')
+    else:
+        bb.fatal("Invalid SDK_ARCHIVE_TYPE: %s, the supported SDK archive types are: zip, 7z, tar.xz, tar.zst" % d.getVar('SDK_ARCHIVE_TYPE'))
 }
 
 SDK_RDEPENDS = "${TOOLCHAIN_TARGET_TASK} ${TOOLCHAIN_HOST_TASK}"

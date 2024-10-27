@@ -255,6 +255,12 @@ if [ @SDK_ARCHIVE_TYPE@ = "zip" ]; then
     else
         rm sdk.zip && exit 1
     fi
+elif [ @SDK_ARCHIVE_TYPE@ = "tar.zst" ]; then
+    if [ -z "$(command -v zstd)" ]; then
+        echo "Aborted, zstd is required to extract the SDK archive, please make sure it's installed on your system!"
+        exit 1
+    fi
+    tail -n +$payload_offset "$0"| zstd -T0 -dc | $SUDO_EXEC tar mx -C $target_sdk_dir --checkpoint=.2500 $EXTRA_TAR_OPTIONS || exit 1
 else
     if [ -z "$(command -v xz)" ]; then
         echo "Aborted, xz is required to extract the SDK archive, please make sure it's installed on your system!"
