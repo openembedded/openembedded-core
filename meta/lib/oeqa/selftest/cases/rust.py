@@ -74,9 +74,7 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'src/tools/rustdoc-themes',
                             'src/tools/rust-installer',
                             'src/tools/suggest-tests',
-                            'src/tools/tidy/src/',
                             'tests/assembly/asm/aarch64-outline-atomics.rs',
-                            'tests/codegen/abi-main-signature-32bit-c-int.rs',
                             'tests/codegen/issues/issue-122805.rs',
                             'tests/codegen/thread-local.rs',
                             'tests/mir-opt/',
@@ -91,7 +89,6 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'tests/ui/debuginfo/debuginfo-emit-llvm-ir-and-split-debuginfo.rs',
                             'tests/ui-fulldeps/',
                             'tests/ui/process/nofile-limit.rs',
-                            'tests/ui/structs-enums/multiple-reprs.rs',
                             'tidyselftest'
                         ]
 
