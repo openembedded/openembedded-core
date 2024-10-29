@@ -221,7 +221,6 @@ class ReproducibleTests(OESelftestTestCase):
         tmpdir = os.path.join(self.topdir, name, 'tmp')
         if os.path.exists(tmpdir):
             bb.utils.remove(tmpdir, recurse=True)
-
         config = textwrap.dedent('''\
             PACKAGE_CLASSES = "{package_classes}"
             TMPDIR = "{tmpdir}"
@@ -234,11 +233,24 @@ class ReproducibleTests(OESelftestTestCase):
             ''').format(package_classes=' '.join('package_%s' % c for c in self.package_classes),
                         tmpdir=tmpdir)
 
+        # Export BB_CONSOLELOG to the calling function and make it constant to
+        # avoid a case where bitbake would get a timestamp-based filename but
+        # oe-selftest would, later, get another.
+        capture_vars.append("BB_CONSOLELOG")
+        config += 'BB_CONSOLELOG = "${LOG_DIR}/cooker/${MACHINE}/console.log"\n'
+
+        bitbake_failure_count = 0
         if not use_sstate:
             if self.sstate_targets:
                self.logger.info("Building prebuild for %s (sstate allowed)..." % (name))
                self.write_config(config)
-               bitbake(' '.join(self.sstate_targets))
+               try:
+                   bitbake("--continue "+' '.join(self.sstate_targets), limit_exc_output=20)
+               except AssertionError as e:
+                   bitbake_failure_count += 1
+                   self.logger.error("Bitbake failed! but keep going... Log:")
+                   for line in str(e).split("\n"):
+                       self.logger.info("    "+line)
 
             # This config fragment will disable using shared and the sstate
             # mirror, forcing a complete build from scratch
@@ -251,8 +263,25 @@ class ReproducibleTests(OESelftestTestCase):
         self.write_config(config)
         d = get_bb_vars(capture_vars)
         # targets used to be called images
-        bitbake(' '.join(getattr(self, 'images', self.targets)))
-        return d
+        try:
+            bitbake("--continue "+' '.join(getattr(self, 'images', self.targets)), limit_exc_output=20)
+        except AssertionError as e:
+            bitbake_failure_count += 1
+
+            self.logger.error("Bitbake failed! but keep going... Log:")
+            for line in str(e).split("\n"):
+                self.logger.info("    "+line)
+
+            # The calling function expects the existence of the deploy
+            # directories containing the packages.
+            # If bitbake failed to create them, do it manually
+            for c in self.package_classes:
+                deploy = d['DEPLOY_DIR_' + c.upper()]
+                if not os.path.exists(deploy):
+                    self.logger.info("Manually creating %s" % deploy)
+                    bb.utils.mkdirhier(deploy)
+
+        return (d, bitbake_failure_count)
 
     def test_reproducible_builds(self):
         def strip_topdir(s):
@@ -278,14 +307,23 @@ class ReproducibleTests(OESelftestTestCase):
         # https://bugzilla.yoctoproject.org/show_bug.cgi?id=15554
         # So, the reproducibleA & reproducibleB directories are changed to reproducibleA & reproducibleB-extended to have different size.
 
-        vars_A = self.do_test_build('reproducibleA', self.build_from_sstate)
+        fails = []
+        vars_list = [None, None]
 
-        vars_B = self.do_test_build('reproducibleB-extended', False)
+        for i, (name, use_sstate) in enumerate(
+                                 (('reproducibleA', self.build_from_sstate),
+                                 ('reproducibleB-extended', False))):
+            (variables, bitbake_failure_count) = self.do_test_build(name, use_sstate)
+            if bitbake_failure_count > 0:
+                self.logger.error('%s build failed. Trying to compute built packages differences but the test will fail.' % name)
+                fails.append("Bitbake %s failure" % name)
+                if self.save_results:
+                    self.copy_file(variables["BB_CONSOLELOG"], os.path.join(save_dir, "bitbake-%s.log" % name))
+            vars_list[i] = variables
 
+        vars_A, vars_B = vars_list
         # NOTE: The temp directories from the reproducible build are purposely
         # kept after the build so it can be diffed for debugging.
-
-        fails = []
 
         for c in self.package_classes:
             with self.subTest(package_class=c):
