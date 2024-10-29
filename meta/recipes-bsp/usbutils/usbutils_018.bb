@@ -3,21 +3,21 @@ DESCRIPTION = "Contains the lsusb utility for inspecting the devices connected t
 HOMEPAGE = "http://www.linux-usb.org"
 SECTION = "base"
 
-LICENSE = "GPL-2.0-or-later & (GPL-2.0-only | GPL-3.0-only)"
-# License files went missing in 010, when 011 is released add LICENSES/* back
-LIC_FILES_CHKSUM = "file://lsusb.c;endline=1;md5=7226e442a172bcf25807246d7ef1eba1 \
-                    file://lsusb.py.in;beginline=2;endline=2;md5=c443ada211d701156e42ea36d41625b3 \
-                    "
-
+LICENSE = "GPL-2.0-or-later & (GPL-2.0-only | GPL-3.0-only) & CC0-1.0 & LGPL-2.1-or-later & MIT"
+LIC_FILES_CHKSUM = "file://LICENSES/CC0-1.0.txt;md5=cf1af55fc6f5b9a23e12086005298dcd \
+		    file://LICENSES/GPL-2.0-only.txt;md5=c89d4ad08368966d8df5a90ea96bebe4 \
+		    file://LICENSES/GPL-2.0-or-later.txt;md5=c89d4ad08368966d8df5a90ea96bebe4 \
+		    file://LICENSES/GPL-3.0-only.txt;md5=050f496cfea7876fc13cdea643e041e0 \
+		    file://LICENSES/LGPL-2.1-or-later.txt;md5=8c6e7513c570546f65ae570dae278c17 \
+		    file://LICENSES/MIT.txt;md5=e8f57dd048e186199433be2c41bd3d6d \
+                   "
 DEPENDS = "libusb1 virtual/libiconv udev"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
-           file://0001-usbutils.pc.in-Fix-Cflags-entry.patch \
-           file://0001-usb-devices-Fix-usb-devices-with-busybox.patch \
           "
-SRC_URI[sha256sum] = "f704c4cb78a060db88b43aac6ebfd3d93c2c5cf1d6dd0e42936faaf00814ab00"
+SRC_URI[sha256sum] = "0048d2d8518fb0cc7c0516e16e52af023e52b55ddb3b2068a77041b5ef285768"
 
-inherit autotools pkgconfig update-alternatives
+inherit meson pkgconfig update-alternatives
 
 ALTERNATIVE:${PN} = "lsusb"
 ALTERNATIVE_PRIORITY = "100"
