@@ -257,7 +257,7 @@ def decode_cve_status(d, cve):
     else:
         # Other case: no CPE, the syntax is then:
         # detail: description
-        description = status_split[len(status_split)-1].strip() if (len(status_split) > 1) else ""
+        description = status.split(':', 1)[1].strip() if (len(status_split) > 1) else ""
 
     status_out["vendor"] = vendor
     status_out["product"] = product
