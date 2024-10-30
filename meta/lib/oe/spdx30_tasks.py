@@ -155,8 +155,6 @@ def add_package_files(
             if filepath.is_symlink() or not filepath.is_file():
                 continue
 
-            bb.debug(1, "Adding file %s to %s" % (filepath, objset.doc._id))
-
             filename = str(filepath.relative_to(topdir))
             file_purposes = get_purposes(filepath)
 
@@ -186,6 +184,8 @@ def add_package_files(
                     archive.addfile(info, f)
 
             file_counter += 1
+
+    bb.debug(1, "Added %d files to %s" % (len(spdx_files), objset.doc._id))
 
     return spdx_files
 
