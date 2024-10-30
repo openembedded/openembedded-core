@@ -631,7 +631,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         sha256_hash = bb.utils.sha256_file(path)
 
         for f in self.by_sha256_hash.get(sha256_hash, []):
-            if not isinstance(oe.spdx30.software_File):
+            if not isinstance(f, oe.spdx30.software_File):
                 continue
 
             if purposes:
