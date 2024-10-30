@@ -57,6 +57,15 @@ def create_spdx_source_deps(d):
             if oe.spdx_common.has_task(d, "do_shared_workdir"):
                 deps.append("%s:do_shared_workdir" % pn)
 
+            # For gcc-source-${PV} source code
+            if oe.spdx_common.has_task(d, "do_preconfigure"):
+                deps.append("%s:do_preconfigure" % pn)
+            elif oe.spdx_common.has_task(d, "do_patch"):
+                deps.append("%s:do_patch" % pn)
+            # For gcc-cross-x86_64 source code
+            elif oe.spdx_common.has_task(d, "do_configure"):
+                deps.append("%s:do_configure" % pn)
+
     return " ".join(deps)
 
 

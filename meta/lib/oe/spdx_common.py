@@ -38,7 +38,7 @@ def extract_licenses(filename):
 
 
 def is_work_shared_spdx(d):
-    return bb.data.inherits_class("kernel", d) or ("work-shared" in d.getVar("WORKDIR"))
+    return '/work-shared/' in d.getVar('S')
 
 
 def load_spdx_license_data(d):
@@ -72,11 +72,6 @@ def process_sources(d):
     if d.getVar("PN") == "libgcc-initial":
         return False
     if d.getVar("PN") == "shadow-sysroot":
-        return False
-
-    # We just archive gcc-source for all the gcc related recipes
-    if d.getVar("BPN") in ["gcc", "libgcc"]:
-        bb.debug(1, "spdx: There is bug in scan of %s is, do nothing" % pn)
         return False
 
     return True
@@ -190,34 +185,28 @@ def get_patched_src(d):
             bb.utils.mkdirhier(d.getVar("B"))
 
             bb.build.exec_func("do_unpack", d)
-        # Copy source of kernel to spdx_workdir
+
+            if d.getVar("SRC_URI") != "":
+                bb.build.exec_func("do_patch", d)
+
+        # Copy source from work-share to spdx_workdir
         if is_work_shared_spdx(d):
-            share_src = d.getVar("WORKDIR")
+            share_src = d.getVar('S')
             d.setVar("WORKDIR", spdx_workdir)
             d.setVar("STAGING_DIR_NATIVE", spdx_sysroot_native)
+            # Copy source to ${SPDXWORK}, same basename dir of ${S};
             src_dir = (
                 spdx_workdir
                 + "/"
-                + d.getVar("PN")
-                + "-"
-                + d.getVar("PV")
-                + "-"
-                + d.getVar("PR")
+                + os.path.basename(share_src)
             )
-            bb.utils.mkdirhier(src_dir)
+            # For kernel souce, rename suffix dir 'kernel-source'
+            # to ${BP} (${BPN}-${PV})
             if bb.data.inherits_class("kernel", d):
-                share_src = d.getVar("STAGING_KERNEL_DIR")
-            cmd_copy_share = "cp -rf " + share_src + "/* " + src_dir + "/"
-            cmd_copy_shared_res = os.popen(cmd_copy_share).read()
-            bb.note("cmd_copy_shared_result = " + cmd_copy_shared_res)
+                src_dir = spdx_workdir + "/" + d.getVar('BP')
 
-            git_path = src_dir + "/.git"
-            if os.path.exists(git_path):
-                shutils.rmtree(git_path)
-
-        # Make sure gcc and kernel sources are patched only once
-        if not (d.getVar("SRC_URI") == "" or is_work_shared_spdx(d)):
-            bb.build.exec_func("do_patch", d)
+            bb.note(f"copyhardlinktree {share_src} to {src_dir}")
+            oe.path.copyhardlinktree(share_src, src_dir)
 
         # Some userland has no source.
         if not os.path.exists(spdx_workdir):
