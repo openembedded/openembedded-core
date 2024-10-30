@@ -239,7 +239,7 @@ def decode_cve_status(d, cve):
     if not status:
         return {}
 
-    status_split = status.split(':', 5)
+    status_split = status.split(':', 4)
     status_out = {}
     status_out["detail"] = status_split[0]
     product = "*"
