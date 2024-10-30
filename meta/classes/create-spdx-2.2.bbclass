@@ -584,7 +584,10 @@ addtask do_create_spdx_setscene
 
 do_create_spdx[dirs] = "${SPDXWORK}"
 do_create_spdx[cleandirs] = "${SPDXDEPLOY} ${SPDXWORK}"
-do_create_spdx[depends] += "${PATCHDEPENDENCY}"
+do_create_spdx[depends] += " \
+    ${PATCHDEPENDENCY} \
+    ${@create_spdx_source_deps(d)} \
+"
 
 python do_create_runtime_spdx() {
     from datetime import datetime, timezone

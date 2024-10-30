@@ -39,6 +39,27 @@ SPDX_CUSTOM_ANNOTATION_VARS ??= ""
 
 SPDX_MULTILIB_SSTATE_ARCHS ??= "${SSTATE_ARCHS}"
 
+def create_spdx_source_deps(d):
+    import oe.spdx_common
+
+    deps = []
+    if d.getVar("SPDX_INCLUDE_SOURCES") == "1":
+        pn = d.getVar('PN')
+        # do_unpack is a hack for now; we only need it to get the
+        # dependencies do_unpack already has so we can extract the source
+        # ourselves
+        if oe.spdx_common.has_task(d, "do_unpack"):
+            deps.append("%s:do_unpack" % pn)
+
+        if oe.spdx_common.is_work_shared_spdx(d) and \
+           oe.spdx_common.process_sources(d):
+            # For kernel source code
+            if oe.spdx_common.has_task(d, "do_shared_workdir"):
+                deps.append("%s:do_shared_workdir" % pn)
+
+    return " ".join(deps)
+
+
 python do_collect_spdx_deps() {
     # This task calculates the build time dependencies of the recipe, and is
     # required because while a task can deptask on itself, those dependencies

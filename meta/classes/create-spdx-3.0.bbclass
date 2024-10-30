@@ -132,21 +132,7 @@ addtask do_create_spdx after \
     do_collect_spdx_deps \
     do_deploy_source_date_epoch \
     do_populate_sysroot do_package do_packagedata \
-    ${create_spdx_source_deps(d)} \
     before do_populate_sdk do_populate_sdk_ext do_build do_rm_work
-
-def create_spdx_source_deps(d):
-    deps = []
-    if d.getVar("SPDX_INCLUDE_SOURCES") == "1":
-        deps.extend([
-            # do_unpack is a hack for now; we only need it to get the
-            # dependencies do_unpack already has so we can extract the source
-            # ourselves
-            "do_unpack",
-            # For kernel source code
-            "do_shared_workdir",
-        ])
-    return " ".join(deps)
 
 SSTATETASKS += "do_create_spdx"
 do_create_spdx[sstate-inputdirs] = "${SPDXDEPLOY}"
@@ -159,7 +145,10 @@ addtask do_create_spdx_setscene
 
 do_create_spdx[dirs] = "${SPDXWORK}"
 do_create_spdx[cleandirs] = "${SPDXDEPLOY} ${SPDXWORK}"
-do_create_spdx[depends] += "${PATCHDEPENDENCY}"
+do_create_spdx[depends] += " \
+    ${PATCHDEPENDENCY} \
+    ${@create_spdx_source_deps(d)} \
+"
 
 python do_create_package_spdx() {
     import oe.spdx30_tasks

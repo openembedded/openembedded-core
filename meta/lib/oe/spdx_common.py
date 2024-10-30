@@ -226,6 +226,10 @@ def get_patched_src(d):
         d.setVar("WORKDIR", workdir)
 
 
+def has_task(d, task):
+    return bool(d.getVarFlag(task, "task", False)) and not bool(d.getVarFlag(task, "noexec", False))
+
+
 def fetch_data_to_uri(fd, name):
     """
     Translates a bitbake FetchData to a string URI
