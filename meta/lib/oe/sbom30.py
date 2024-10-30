@@ -577,9 +577,9 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             re.sub(r"[^a-zA-Z0-9_-]", "_", license_expression),
         ]
 
-        license_text = (
+        license_text = [
             (k, license_text_map[k]) for k in sorted(license_text_map.keys())
-        )
+        ]
 
         if not license_text:
             lic = self.find_filter(
