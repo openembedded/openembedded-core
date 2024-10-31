@@ -1623,7 +1623,6 @@ def process_shlibs(pkgfiles, d):
         needs_ldconfig = False
         needed = set()
         sonames = set()
-        renames = []
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
         cmd = d.getVar('OBJDUMP') + " -p " + shlex.quote(file) + " 2>/dev/null"
         fd = os.popen(cmd)
@@ -1651,11 +1650,9 @@ def process_shlibs(pkgfiles, d):
                         sonames.add(prov)
                 if libdir_re.match(os.path.dirname(file)):
                     needs_ldconfig = True
-                if needs_ldconfig and snap_symlinks and (os.path.basename(file) != this_soname):
-                    renames.append((file, os.path.join(os.path.dirname(file), this_soname)))
-        return (needs_ldconfig, needed, sonames, renames)
+        return (needs_ldconfig, needed, sonames)
 
-    def darwin_so(file, needed, sonames, renames, pkgver):
+    def darwin_so(file, needed, sonames, pkgver):
         if not os.path.exists(file):
             return
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
@@ -1707,7 +1704,7 @@ def process_shlibs(pkgfiles, d):
                 if name and name not in needed[pkg]:
                      needed[pkg].add((name, file, tuple()))
 
-    def mingw_dll(file, needed, sonames, renames, pkgver):
+    def mingw_dll(file, needed, sonames, pkgver):
         if not os.path.exists(file):
             return
 
@@ -1725,11 +1722,6 @@ def process_shlibs(pkgfiles, d):
                     dllname = m.group(1)
                     if dllname:
                         needed[pkg].add((dllname, file, tuple()))
-
-    if d.getVar('PACKAGE_SNAP_LIB_SYMLINKS') == "1":
-        snap_symlinks = True
-    else:
-        snap_symlinks = False
 
     needed = {}
 
@@ -1749,16 +1741,15 @@ def process_shlibs(pkgfiles, d):
 
         needed[pkg] = set()
         sonames = set()
-        renames = []
         linuxlist = []
         for file in pkgfiles[pkg]:
                 soname = None
                 if cpath.islink(file):
                     continue
                 if hostos.startswith("darwin"):
-                    darwin_so(file, needed, sonames, renames, pkgver)
+                    darwin_so(file, needed, sonames, pkgver)
                 elif hostos.startswith("mingw"):
-                    mingw_dll(file, needed, sonames, renames, pkgver)
+                    mingw_dll(file, needed, sonames, pkgver)
                 elif os.access(file, os.X_OK) or lib_re.match(file):
                     linuxlist.append(file)
 
@@ -1768,13 +1759,7 @@ def process_shlibs(pkgfiles, d):
                 ldconfig = r[0]
                 needed[pkg] |= r[1]
                 sonames |= r[2]
-                renames.extend(r[3])
                 needs_ldconfig = needs_ldconfig or ldconfig
-
-        for (old, new) in renames:
-            bb.note("Renaming %s to %s" % (old, new))
-            bb.utils.rename(old, new)
-            pkgfiles[pkg].remove(old)
 
         shlibs_file = os.path.join(shlibswork_dir, pkg + ".list")
         if len(sonames):
