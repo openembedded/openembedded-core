@@ -125,6 +125,7 @@ PTESTS_SLOW = "\
     strace \
     tar \
     tcl \
+    tcl8 \
     util-linux \
     valgrind \
 "
