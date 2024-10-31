@@ -32,6 +32,7 @@ PACKAGECONFIG[jevents] = ",NO_JEVENTS=1,python3-native"
 PACKAGECONFIG[coresight] = "CORESIGHT=1,,opencsd"
 PACKAGECONFIG[pfm4] = ",NO_LIBPFM4=1,libpfm4"
 PACKAGECONFIG[babeltrace] = ",NO_LIBBABELTRACE=1,babeltrace"
+PACKAGECONFIG[zstd] = ",NO_LIBZSTD=1,zstd"
 
 # libunwind is not yet ported for some architectures
 PACKAGECONFIG:remove:arc = "libunwind"
