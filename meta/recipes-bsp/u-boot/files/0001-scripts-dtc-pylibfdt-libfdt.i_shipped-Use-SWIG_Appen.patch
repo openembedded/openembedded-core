@@ -17,7 +17,7 @@ since swig 4.3.0.
 |  5581 |     resultobj = SWIG_Python_AppendOutput(resultobj, val);
 |       |                 ^~~~~~~~~~~~~~~~~~~~~~~~
 
-Upstream-Status: Submitted
+Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/a63456b9191fae2fe49f4b121e025792022e3950]
 
 Signed-off-by: Markus Volk <f_l_k@t-online.de>
 ---
