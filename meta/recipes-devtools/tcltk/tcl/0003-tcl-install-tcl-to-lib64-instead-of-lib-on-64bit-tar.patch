@@ -1,7 +1,7 @@
-From 050fc597fbfa4da2c31bd0df58c871892a490470 Mon Sep 17 00:00:00 2001
+From 8af08b6f1e566af239e36864823a96c2c283e4ea Mon Sep 17 00:00:00 2001
 From: "Song.Li" <Song.Li@windriver.com>
 Date: Wed, 1 Aug 2012 19:05:51 +0800
-Subject: [PATCH] tcl:install tcl to lib64 instead of lib on 64bit target
+Subject: [PATCH 3/5] tcl:install tcl to lib64 instead of lib on 64bit target
 
 Remove hardcoded library install path. Change $(prefix)/lib/ to ${libdir}.
 
@@ -13,14 +13,14 @@ Signed-off-by: Song.Li <Song.Li@windriver.com>
 Signed-off-by: Kai Kang <kai.kang@windriver.com>
 Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
 ---
- unix/configure.in | 2 +-
+ unix/configure.ac | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/unix/configure.in b/unix/configure.in
-index 4f62510..4974fb6 100644
---- a/unix/configure.in
-+++ b/unix/configure.in
-@@ -775,7 +775,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
+diff --git a/unix/configure.ac b/unix/configure.ac
+index 461b394..b6d2506 100644
+--- a/unix/configure.ac
++++ b/unix/configure.ac
+@@ -753,7 +753,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
  
  eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
  
@@ -29,3 +29,6 @@ index 4f62510..4974fb6 100644
  PRIVATE_INCLUDE_DIR='$(includedir)'
  HTML_DIR='$(DISTDIR)/html'
  
+-- 
+2.39.5
+

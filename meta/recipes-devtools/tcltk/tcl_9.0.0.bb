@@ -15,18 +15,15 @@ LIC_FILES_CHKSUM = "file://license.terms;md5=058f6229798281bbcac4239c788cfa38 \
 
 DEPENDS = "tcl-native zlib"
 
-BASE_SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
-                file://tcl-add-soname.patch"
-SRC_URI = "${BASE_SRC_URI} \
-           file://fix_non_native_build_issue.patch \
-           file://tcl-remove-hardcoded-install-path.patch \
-           file://alter-includedir.patch \
-           file://interp.patch \
+SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
            file://run-ptest \
+           file://0001-tcl-Add-tcltk-from-OE.dev-but-with-legacy-staging-fu.patch \
+           file://0002-tcl-fix-a-build-issue.patch \
+           file://0003-tcl-install-tcl-to-lib64-instead-of-lib-on-64bit-tar.patch \
+           file://0004-tcl-update-the-header-location.patch \
+           file://0005-tcl-fix-race-in-interp.test.patch \
            "
-SRC_URI[sha256sum] = "844775491e435e34d83d6ccfbadd1342f1855f1705253233a86152df0765e78d"
-
-SRC_URI:class-native = "${BASE_SRC_URI}"
+SRC_URI[sha256sum] = "3186e23c7417359d90e3c46f531d442c76d3c05a2dba1081c02b75e32908b2b7"
 
 UPSTREAM_CHECK_URI = "https://www.tcl.tk/software/tcltk/download.html"
 UPSTREAM_CHECK_REGEX = "tcl(?P<pver>\d+(\.\d+)+)-src"
@@ -38,7 +35,7 @@ VER = "${PV}"
 inherit autotools ptest binconfig
 
 AUTOTOOLS_SCRIPT_PATH = "${S}/unix"
-EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix"
+EXTRA_OECONF = "--disable-rpath --enable-man-suffix"
 
 # Prevent installing copy of tzdata based on tzdata installation on the build host
 # It doesn't install tzdata if one of the following files exist on the host:
@@ -65,13 +62,13 @@ do_install() {
 SYSROOT_DIRS += "${bindir_crossscripts}"
 
 PACKAGES =+ "tcl-lib"
-FILES:tcl-lib = "${libdir}/libtcl8.6.so.*"
-FILES:${PN} += "${libdir}/tcl${VER} ${libdir}/tcl8.6 ${libdir}/tcl8"
+FILES:tcl-lib = "${libdir}/libtcl9.0.so.*"
+FILES:${PN} += "${libdir}/tcl${VER} ${libdir}/tcl9.0 ${libdir}/tcl9"
 FILES:${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
 
 # isn't getting picked up by shlibs code
 RDEPENDS:${PN} += "tcl-lib"
-RDEPENDS:${PN}-ptest += "libgcc"
+RDEPENDS:${PN}-ptest += "libgcc locale-base-en-us tzdata"
 
 BBCLASSEXTEND = "native nativesdk"
 
