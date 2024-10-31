@@ -4,7 +4,7 @@ the Point-to-Point Protocol (PPP) on Linux and Solaris systems."
 SECTION = "console/network"
 HOMEPAGE = "http://samba.org/ppp/"
 BUGTRACKER = "http://ppp.samba.org/cgi-bin/ppp-bugs"
-DEPENDS = "libpcap openssl virtual/crypt"
+DEPENDS = "libpcap virtual/crypt"
 LICENSE = "BSD-3-Clause & BSD-3-Clause-Attribution & GPL-2.0-or-later & LGPL-2.0-or-later & PD & RSA-MD & MIT"
 LIC_FILES_CHKSUM = "file://pppd/ccp.c;beginline=1;endline=29;md5=1bea10e81fc6f2df105b1f8b733cb149 \
                     file://pppd/plugins/passprompt.c;beginline=1;endline=10;md5=3bcbcdbf0e369c9a3e0b8c8275b065d8 \
@@ -27,9 +27,11 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
 
 SRC_URI[sha256sum] = "733b7f5840b613da4eab0429a5081293275f06ba8b528e1b8eea6964faf0243a"
 
-inherit autotools systemd
+inherit autotools pkgconfig systemd
 
-EXTRA_OECONF += "--with-openssl=${STAGING_EXECPREFIXDIR}"
+PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)} openssl"
+PACKAGECONFIG[pam] = "--with-pam=yes,--with-pam=no,libpam"
+PACKAGECONFIG[openssl] = "--with-openssl=yes,--with-openssl=no,openssl"
 
 do_install:append () {
 	mkdir -p ${D}${bindir}/ ${D}${sysconfdir}/init.d
