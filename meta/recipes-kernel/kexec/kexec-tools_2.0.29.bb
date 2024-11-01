@@ -82,5 +82,8 @@ SYSTEMD_SERVICE:kdump = "kdump.service"
 SECURITY_PIE_CFLAGS:remove = "-fPIE -pie"
 
 COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|powerpc.*|mips.*)-(linux|freebsd.*)'
+# makedumpfile would not compile on mips/rv32
+COMPATIBLE_HOST:mipsarcho32 = "null"
+COMPATIBLE_HOST:riscv32 = "null"
 
 INSANE_SKIP:${PN} = "arch"
