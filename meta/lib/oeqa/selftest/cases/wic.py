@@ -842,55 +842,59 @@ bootloader --ptable gpt""")
 
     def test_wic_sector_size(self):
         """Test generation image sector size"""
-        # Add WIC_SECTOR_SIZE into config
-        config = 'WIC_SECTOR_SIZE = "4096"\n'\
-                 'WIC_BLOCK_SIZE = "4096"\n'\
-                 'WICVARS:append = " WIC_SECTOR_SIZE WIC_BLOCK_SIZE"\n'
-        self.append_config(config)
-        bitbake('core-image-minimal')
+ 
+        oldpath = os.environ['PATH']
+        os.environ['PATH'] = get_bb_var("PATH", "wic-tools")
 
-        # Check WIC_SECTOR_SIZE apply to bitbake variable
-        wic_sector_size_str = get_bb_var('WIC_SECTOR_SIZE', 'core-image-minimal')
-        wic_sector_size = int(wic_sector_size_str)
-        self.assertEqual(4096, wic_sector_size)
+        try:
+            # Add WIC_SECTOR_SIZE into config
+            config = 'WIC_SECTOR_SIZE = "4096"\n'\
+                     'WICVARS:append = " WIC_SECTOR_SIZE"\n'
+            self.append_config(config)
+            bitbake('core-image-minimal')
 
-        self.logger.info("Test wic_sector_size: %d \n" % wic_sector_size)
+            # Check WIC_SECTOR_SIZE apply to bitbake variable
+            wic_sector_size_str = get_bb_var('WIC_SECTOR_SIZE', 'core-image-minimal')
+            wic_sector_size = int(wic_sector_size_str)
+            self.assertEqual(4096, wic_sector_size)
 
-        with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.writelines(
-                ['bootloader --ptable gpt\n',
-                 'part --fstype ext4 --source rootfs --label rofs-a --mkfs-extraopts "-b 4096"\n',
-                 'part --fstype ext4 --source rootfs --use-uuid --mkfs-extraopts "-b 4096"\n'])
-            wks.flush()
-            cmd = "wic create %s -e core-image-minimal -o %s" % (wks.name, self.resultdir)
-            runCmd(cmd)
-            wksname = os.path.splitext(os.path.basename(wks.name))[0]
-            images = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
-            self.assertEqual(1, len(images))
+            self.logger.info("Test wic_sector_size: %d \n" % wic_sector_size)
 
-        sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
-        # list partitions
-        result = runCmd("wic ls %s -n %s" % (images[0], sysroot))
-        self.assertEqual(3, len(result.output.split('\n')))
-        self.logger.info("result: %s \n" % result.output)
+            with NamedTemporaryFile("w", suffix=".wks") as wks:
+                wks.writelines(
+                    ['bootloader --ptable gpt\n',
+                     'part --fstype ext4 --source rootfs --label rofs-a --mkfs-extraopts "-b 4096"\n',
+                     'part --fstype ext4 --source rootfs --use-uuid --mkfs-extraopts "-b 4096"\n'])
+                wks.flush()
+                cmd = "wic create %s -e core-image-minimal -o %s" % (wks.name, self.resultdir)
+                runCmd(cmd)
+                wksname = os.path.splitext(os.path.basename(wks.name))[0]
+                images = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
+                self.assertEqual(1, len(images))
 
-        # verify partition size with wic
-        res = runCmd("export PARTED_SECTOR_SIZE=%d; parted -m %s unit b p" % (wic_sector_size, images[0]),
-                     stderr=subprocess.PIPE)
+            sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+            # list partitions
+            result = runCmd("wic ls %s -n %s" % (images[0], sysroot))
+            self.assertEqual(3, len(result.output.split('\n')))
 
-        self.logger.info("res: %s \n" % res.output)
-        # parse parted output which looks like this:
-        # BYT;\n
-        # /var/tmp/wic/build/tmpgjzzefdd-202410281021-sda.direct:78569472B:file:4096:4096:gpt::;\n
-        # 1:139264B:39284735B:39145472B:ext4:rofs-a:;\n
-        # 2:39284736B:78430207B:39145472B:ext4:primary:;\n
-        disk_info = res.output.splitlines()[1]
-        # Check sector sizes
-        sector_size_logical = int(disk_info.split(":")[3])
-        sector_size_physical = int(disk_info.split(":")[4])
-        self.assertEqual(wic_sector_size, sector_size_logical, "Logical sector size is not %d." % wic_sector_size)
-        self.assertEqual(wic_sector_size, sector_size_physical, "Physical sector size is not %d." % wic_sector_size)
+            # verify partition size with wic
+            res = runCmd("export PARTED_SECTOR_SIZE=%d; parted -m %s unit b p" % (wic_sector_size, images[0]),
+                         stderr=subprocess.PIPE)
 
+            # parse parted output which looks like this:
+            # BYT;\n
+            # /var/tmp/wic/build/tmpgjzzefdd-202410281021-sda.direct:78569472B:file:4096:4096:gpt::;\n
+            # 1:139264B:39284735B:39145472B:ext4:rofs-a:;\n
+            # 2:39284736B:78430207B:39145472B:ext4:primary:;\n
+            disk_info = res.output.splitlines()[1]
+            # Check sector sizes
+            sector_size_logical = int(disk_info.split(":")[3])
+            sector_size_physical = int(disk_info.split(":")[4])
+            self.assertEqual(wic_sector_size, sector_size_logical, "Logical sector size is not %d." % wic_sector_size)
+            self.assertEqual(wic_sector_size, sector_size_physical, "Physical sector size is not %d." % wic_sector_size)
+
+        finally:
+            os.environ['PATH'] = oldpath
 
 class Wic2(WicTestCase):
 
