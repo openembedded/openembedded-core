@@ -12,6 +12,7 @@ import os
 import sys
 import unittest
 import hashlib
+import subprocess
 
 from glob import glob
 from shutil import rmtree, copy
@@ -457,7 +458,7 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             wicimg = wicout[0]
 
             # verify partition size with wic
-            res = runCmd("parted -m %s unit b p 2>/dev/null" % wicimg)
+            res = runCmd("parted -m %s unit b p" % wicimg, stderr=subprocess.PIPE)
 
             # parse parted output which looks like this:
             # BYT;\n
@@ -478,16 +479,16 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
             # Test partition 1, should contain the normal root directories, except
             # /usr.
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % \
-                             os.path.join(self.resultdir, "selftest_img.part1"))
+            res = runCmd("debugfs -R 'ls -p' %s" % \
+                             os.path.join(self.resultdir, "selftest_img.part1"), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertIn("etc", files)
             self.assertNotIn("usr", files)
 
             # Partition 2, should contain common directories for /usr, not root
             # directories.
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % \
-                             os.path.join(self.resultdir, "selftest_img.part2"))
+            res = runCmd("debugfs -R 'ls -p' %s" % \
+                             os.path.join(self.resultdir, "selftest_img.part2"), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertNotIn("etc", files)
             self.assertNotIn("usr", files)
@@ -495,15 +496,15 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
 
             # Partition 3, should contain the same as partition 2, including the bin
             # directory, but not the files inside it.
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % \
-                             os.path.join(self.resultdir, "selftest_img.part3"))
+            res = runCmd("debugfs -R 'ls -p' %s" % \
+                             os.path.join(self.resultdir, "selftest_img.part3"), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertNotIn("etc", files)
             self.assertNotIn("usr", files)
             self.assertIn("share", files)
             self.assertIn("bin", files)
-            res = runCmd("debugfs -R 'ls -p bin' %s 2>/dev/null" % \
-                             os.path.join(self.resultdir, "selftest_img.part3"))
+            res = runCmd("debugfs -R 'ls -p bin' %s" % \
+                             os.path.join(self.resultdir, "selftest_img.part3"), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertIn(".", files)
             self.assertIn("..", files)
@@ -541,13 +542,13 @@ part /part2 --source rootfs --ondisk mmcblk0 --fstype=ext4 --include-path %s"""
             part2 = glob(os.path.join(self.resultdir, 'temp-*.direct.p2'))[0]
 
             # Test partition 1, should not contain 'test-file'
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part1))
+            res = runCmd("debugfs -R 'ls -p' %s" % (part1), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertNotIn('test-file', files)
             self.assertEqual(True, files_own_by_root(res.output))
 
             # Test partition 2, should contain 'test-file'
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part2))
+            res = runCmd("debugfs -R 'ls -p' %s" % (part2), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertIn('test-file', files)
             self.assertEqual(True, files_own_by_root(res.output))
@@ -576,12 +577,12 @@ part / --source rootfs  --fstype=ext4 --include-path %s --include-path core-imag
 
             part1 = glob(os.path.join(self.resultdir, 'temp-*.direct.p1'))[0]
 
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part1))
+            res = runCmd("debugfs -R 'ls -p' %s" % (part1), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertIn('test-file', files)
             self.assertEqual(True, files_own_by_root(res.output))
 
-            res = runCmd("debugfs -R 'ls -p /export/etc/' %s 2>/dev/null" % (part1))
+            res = runCmd("debugfs -R 'ls -p /export/etc/' %s" % (part1), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertIn('passwd', files)
             self.assertEqual(True, files_own_by_root(res.output))
@@ -668,7 +669,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
                                        % (wks_file, self.resultdir))
 
                 for part in glob(os.path.join(self.resultdir, 'temp-*.direct.p*')):
-                    res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part))
+                    res = runCmd("debugfs -R 'ls -p' %s" % (part), stderr=subprocess.PIPE)
                     self.assertEqual(True, files_own_by_root(res.output))
 
                 config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "%s"\n' % wks_file
@@ -678,7 +679,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
 
                 # check each partition for permission
                 for part in glob(os.path.join(tmpdir, 'temp-*.direct.p*')):
-                    res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part))
+                    res = runCmd("debugfs -R 'ls -p' %s" % (part), stderr=subprocess.PIPE)
                     self.assertTrue(files_own_by_root(res.output)
                         ,msg='Files permission incorrect using wks set "%s"' % test)
 
@@ -706,7 +707,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
 
             part1 = glob(os.path.join(self.resultdir, 'temp-*.direct.p1'))[0]
 
-            res = runCmd("debugfs -R 'ls -p' %s 2>/dev/null" % (part1))
+            res = runCmd("debugfs -R 'ls -p' %s" % (part1), stderr=subprocess.PIPE)
             files = extract_files(res.output)
             self.assertIn('passwd', files)
 
@@ -741,7 +742,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
         bitbake('base-files -c do_install')
         bf_fstab = os.path.join(get_bb_var('D', 'base-files'), 'etc', 'fstab')
         self.assertEqual(True, os.path.exists(bf_fstab))
-        bf_fstab_md5sum = runCmd('md5sum %s 2>/dev/null' % bf_fstab).output.split(" ")[0]
+        bf_fstab_md5sum = runCmd('md5sum %s ' % bf_fstab).output.split(" ")[0]
 
         try:
             no_fstab_update_path = os.path.join(self.resultdir, 'test-no-fstab-update')
@@ -757,7 +758,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
             part_fstab_md5sum = []
             for i in range(1, 3):
                 part = glob(os.path.join(self.resultdir, 'temp-*.direct.p') + str(i))[0]
-                part_fstab = runCmd("debugfs -R 'cat etc/fstab' %s 2>/dev/null" % (part))
+                part_fstab = runCmd("debugfs -R 'cat etc/fstab' %s" % (part), stderr=subprocess.PIPE)
                 part_fstab_md5sum.append(hashlib.md5((part_fstab.output + "\n\n").encode('utf-8')).hexdigest())
 
             # '/etc/fstab' in partition 2 should contain the same stock fstab file
@@ -874,7 +875,8 @@ bootloader --ptable gpt""")
         self.logger.info("result: %s \n" % result.output)
 
         # verify partition size with wic
-        res = runCmd("export PARTED_SECTOR_SIZE=%d; parted -m %s unit b p 2>/dev/null" % (wic_sector_size, images[0]))
+        res = runCmd("export PARTED_SECTOR_SIZE=%d; parted -m %s unit b p" % (wic_sector_size, images[0]),
+                     stderr=subprocess.PIPE)
 
         self.logger.info("res: %s \n" % res.output)
         # parse parted output which looks like this:
@@ -1052,8 +1054,8 @@ class Wic2(WicTestCase):
             native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
 
         # verify partition size with wic
-        res = runCmd("parted -m %s unit kib p 2>/dev/null" % wicimg,
-                     native_sysroot=native_sysroot)
+        res = runCmd("parted -m %s unit kib p" % wicimg,
+                     native_sysroot=native_sysroot, stderr=subprocess.PIPE)
 
         # parse parted output which looks like this:
         # BYT;\n
