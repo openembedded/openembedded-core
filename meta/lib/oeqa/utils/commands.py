@@ -203,6 +203,8 @@ def runCmd(command, ignore_status=False, timeout=None, assert_error=True, sync=T
 
     if result.status and not ignore_status:
         exc_output = result.output
+        if result.error:
+            exc_output = exc_output + result.error
         if limit_exc_output > 0:
             split = result.output.splitlines()
             if len(split) > limit_exc_output:
