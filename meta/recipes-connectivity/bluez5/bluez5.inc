@@ -69,8 +69,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://run-ptest \
            file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
            file://0001-test-gatt-Fix-hung-issue.patch \
-           file://0001-Provide-GNU-basename-compatible-implementation.patch \
-           file://0001-mesh-Move-local-basename-into-utility-file.patch \
+           file://0001-gdbus-define-MAX_INPUT-for-musl.patch \
            "
 S = "${WORKDIR}/bluez-${PV}"
 
