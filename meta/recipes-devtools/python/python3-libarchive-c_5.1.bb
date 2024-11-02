@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=bcab380227a83bc147350b40a81e6ffc"
 
 SRC_URI += " \
         file://new-libarchive.patch \
+        file://0001-ffi-Insert-a-replacable-anchor-for-find_library.patch \
         file://run-ptest \
 "
 
@@ -15,6 +16,14 @@ PYPI_PACKAGE = "libarchive-c"
 inherit pypi setuptools3 ptest
 
 SRC_URI[sha256sum] = "7bcce24ea6c0fa3bc62468476c6d2f6264156db2f04878a372027c10615a2721"
+
+DEPENDS += "patchelf-native libarchive"
+# Avoid using find_library API which needs ldconfig and ld/objdump
+# https://docs.python.org/3/library/ctypes.html#ctypes-reference
+#
+do_configure:append() {
+    sed -i -e "s|@@REPLACE_FIND_LIBRARY_API@@|'${libdir}/$(patchelf --print-soname ${STAGING_LIBDIR}/libarchive.so)'|" ${S}/libarchive/ffi.py
+}
 
 RDEPENDS:${PN} += "\
   libarchive \
