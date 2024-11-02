@@ -1,0 +1,31 @@
+From 62fa39d0b4384be8f14d837ea79183ad93d0996c Mon Sep 17 00:00:00 2001
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Date: Fri, 1 Nov 2024 21:52:24 +0530
+Subject: [PATCH] qcom: Add link for QCS6490 GPU firmware
+
+Create a symlink between qcom/qcm6490/a660_zap.mbn and
+qcom/qcs6490/a660_zap.mbn.
+
+Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Upstream-Status: Submitted [https://lore.kernel.org/linux-firmware/ctvtlkh4t54wdtwcw3jnbyi7xwks534k5ksvjtv6pt2zrr72wn@h5k6vfk7bzqe]
+---
+ WHENCE | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/WHENCE b/WHENCE
+index bdee94fe33fc..b7ef9bdd5b59 100644
+--- a/WHENCE
++++ b/WHENCE
+@@ -6145,6 +6145,7 @@ File: qcom/sm8250/a650_zap.mbn
+ File: qcom/a660_gmu.bin
+ File: qcom/a660_sqe.fw
+ File: qcom/qcm6490/a660_zap.mbn
++Link: qcom/qcs6490/a660_zap.mbn -> ../qcm6490/a660_zap.mbn
+ File: qcom/a702_sqe.fw
+ File: qcom/leia_pfp_470.fw
+ File: qcom/leia_pm4_470.fw
+-- 
+2.39.5
+
