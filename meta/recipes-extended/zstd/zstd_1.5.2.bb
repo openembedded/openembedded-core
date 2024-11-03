@@ -9,7 +9,10 @@ LICENSE = "BSD-3-Clause | GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c7f0b161edbe52f5f345a3d1311d0b32 \
                     file://COPYING;md5=39bba7d2cf0ba1036f2a6e2be52fe3f0"
 
-SRC_URI = "git://github.com/facebook/zstd.git;branch=release;protocol=https"
+SRC_URI = "git://github.com/facebook/zstd.git;branch=release;protocol=https \
+    file://CVE-2022-4899-1.patch \
+    file://CVE-2022-4899-2.patch \
+"
 
 SRCREV = "e47e674cd09583ff0503f0f6defd6d23d8b718d3"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
