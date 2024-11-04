@@ -8,6 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
 SRC_URI = "https://releases.pagure.org/xmlto/xmlto-${PV}.tar.gz \
            file://configure.in-drop-the-test-of-xmllint-and-xsltproc.patch \
+           file://0001-Fix-return-type-of-main-function.patch \
+           file://0001-fix-Wimplicit-int-for-ifsense.patch \
+           file://0001-Regenerate-the-xmlif.c-and-update-xmlif.l-to-comply-.patch \
 "
 SRC_URI[md5sum] = "a1fefad9d83499a15576768f60f847c6"
 SRC_URI[sha256sum] = "2f986b7c9a0e9ac6728147668e776d405465284e13c74d4146c9cbc51fd8aad3"
@@ -35,6 +38,13 @@ CACHED_CONFIGUREVARS += "ac_cv_path_TAIL=tail ac_cv_path_GREP=grep"
 BBCLASSEXTEND = "native"
 
 EXTRA_OECONF:append = " BASH=/bin/bash GCP=/bin/cp XMLLINT=xmllint XSLTPROC=xsltproc"
+
+do_configure:prepend() {
+    # make sure xmlif.c is newer than xmlif.l after do_patch (order of
+    # .patch files in SRC_URI isn't enough) to prevent regenerating it
+    # with flex-native which isn't in DEPENDS
+    touch ${S}/xmlif/xmlif.c
+}
 
 do_install:append:class-native() {
     create_wrapper ${D}${bindir}/xmlto XML_CATALOG_FILES=${sysconfdir}/xml/catalog

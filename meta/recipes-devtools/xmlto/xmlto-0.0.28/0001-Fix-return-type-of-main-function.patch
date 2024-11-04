@@ -1,0 +1,42 @@
+From 6347e1b9da2140acdd55e3e7ac1199456793e17c Mon Sep 17 00:00:00 2001
+From: Thomas Kuehne <thomas@kuehne.cn>
+Date: Sat, 11 Dec 2021 20:56:00 +0000
+Subject: [PATCH] Fix return type of main function
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixes:
+xmlif/xmlif.l:242:1: warning: return type defaults to ‘int’ [-Wimplicit-int]
+  242 | main(int argc, char *argv[])
+      | ^~~~
+
+Signed-off-by: Thomas Kuehne <thomas@kuehne.cn>
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+Upstream-Status: Backport [v0.0.29 https://pagure.io/xmlto/c/8e34f087bf410bcc5fe445933d6ad9bae54f24b5?branch=master]
+---
+ xmlif/xmlif.l | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xmlif/xmlif.l b/xmlif/xmlif.l
+index ac42136..78a62bc 100644
+--- a/xmlif/xmlif.l
++++ b/xmlif/xmlif.l
+@@ -239,7 +239,7 @@ WS		[ \t\n]*
+ 
+ int yywrap() {exit(0);};
+ 
+-main(int argc, char *argv[])
++int main(int argc, char *argv[])
+ {
+     int i;
+ 
+@@ -265,7 +265,7 @@ main(int argc, char *argv[])
+ 	    exit(1);
+ 	}
+ 
+-    yylex();
++    return yylex();
+ }
+ 
+ /*

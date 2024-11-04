@@ -1,0 +1,33 @@
+From 1375e2df75530cd198bd16ac3de38e2b0d126276 Mon Sep 17 00:00:00 2001
+From: Thomas Kuehne <thomas@kuehne.cn>
+Date: Sat, 11 Dec 2021 21:10:41 +0100
+Subject: [PATCH] fix -Wimplicit-int for ifsense
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+fixes:
+xmlif/xmlif.l:46:8: warning: type defaults to ‘int’ in declaration of ‘ifsense’ [-Wimplicit-int]
+   46 | static ifsense;                 /* sense of last `if' or unless seen */
+      |        ^~~~~~~
+
+Signed-off-by: Thomas Kuehne <thomas@kuehne.cn>
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+Upstream-Status: Backport [v0.0.29 https://pagure.io/xmlto/c/1375e2df75530cd198bd16ac3de38e2b0d126276?branch=master
+---
+ xmlif/xmlif.l | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xmlif/xmlif.l b/xmlif/xmlif.l
+index ac42136..6e5970e 100644
+--- a/xmlif/xmlif.l
++++ b/xmlif/xmlif.l
+@@ -43,7 +43,7 @@
+ 
+ static char **selections;	/* selection tokens */
+ static int nselections;		/* number of selections */
+-static ifsense;			/* sense of last `if' or unless seen */
++static int ifsense;		/* sense of last `if' or unless seen */
+ static char *attribute;		/* last attribute scanned */
+ 
+ struct stack_t {
