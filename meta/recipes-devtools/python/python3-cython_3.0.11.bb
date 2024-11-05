@@ -12,11 +12,6 @@ SRC_URI[sha256sum] = "7146dd2af8682b4ca61331851e6aebce9fe5158e75300343f80c07ca80
 inherit pypi setuptools3
 UPSTREAM_CHECK_PYPI_PACKAGE = "Cython"
 
-# running build_ext a second time during install fails, because Python
-# would then attempt to import cythonized modules built for the target
-# architecture.
-SETUPTOOLS_INSTALL_ARGS += "--skip-build"
-
 do_install:append() {
 	# Make sure we use /usr/bin/env python3
 	for PYTHSCRIPT in `grep -rIl '^#!.*python' ${D}`; do
