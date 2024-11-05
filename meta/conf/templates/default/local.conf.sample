@@ -123,8 +123,8 @@ PACKAGE_CLASSES ?= "package_ipk"
 # There are other application targets that can be used here too, see
 # meta/classes-recipe/image.bbclass and
 # meta/classes-recipe/core-image.bbclass for more details.
-# We default to enabling the debugging tweaks.
-EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+# We default to allowing root login without a password for convenience.
+EXTRA_IMAGE_FEATURES ?= "allow-empty-password empty-root-password allow-root-login"
 
 #
 # Additional image features
