@@ -239,6 +239,10 @@ class ReproducibleTests(OESelftestTestCase):
         capture_vars.append("BB_CONSOLELOG")
         config += 'BB_CONSOLELOG = "${LOG_DIR}/cooker/${MACHINE}/console.log"\n'
 
+        # We want different log files for each build, but a persistent bitbake
+        # may reuse the previous log file so restart the bitbake server.
+        bitbake("--kill-server")
+
         bitbake_failure_count = 0
         if not use_sstate:
             if self.sstate_targets:
