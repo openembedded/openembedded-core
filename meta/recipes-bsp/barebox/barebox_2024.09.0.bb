@@ -11,5 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=f5125d13e000b9ca1f0d3364286c4192"
 
 inherit barebox
 
-SRC_URI = "https://barebox.org/download/barebox-${PV}.tar.bz2"
+SRC_URI = "https://barebox.org/download/barebox-${PV}.tar.bz2 \
+           file://0001-lib-lz4-use-lz4-instead-of-lz4c.patch \
+           "
 SRC_URI[sha256sum] = "4d4ea7e232aeba2b3cb9ccf0dbf8cd8e01c65b6c615f64c3bd0c4f24f23a47da"
