@@ -10,6 +10,8 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://0001-fix-writeback-Refine-the-show_inode_state-macro-defi.patch \
+           file://0001-Fix-uprobes-make-uprobe_register-return-struct-uprob.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
