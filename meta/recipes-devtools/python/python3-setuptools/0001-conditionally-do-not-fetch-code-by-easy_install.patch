@@ -3,11 +3,13 @@ From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Tue, 17 Jul 2018 10:13:38 +0800
 Subject: [PATCH] conditionally do not fetch code by easy_install
 
-If var-NO_FETCH_BUILD is set, do not allow to fetch code from
-internet by easy_install.
+If NO_FETCH_BUILD is set, do not fetch code in easy_install. This avoids setup.py
+trying to fetch missing dependencies at build time.
 
-Upstream-Status: Inappropriate [oe specific]
+This is only used by the deprecated codepath as implemented by setuptools3.bbclass, so
+when that ever gets removed this patch can also be deleted.
 
+Upstream-Status: Denied [https://github.com/pypa/setuptools/issues/4735]
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
 ---
  setuptools/command/easy_install.py | 5 +++++
