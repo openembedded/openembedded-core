@@ -271,6 +271,9 @@ do_kernel_metadata() {
 	KERNEL_FEATURES_FINAL=""
 	if [ -n "${KERNEL_FEATURES}" ]; then
 		for feature in ${KERNEL_FEATURES}; do
+			feature_as_specified="$feature"
+			feature="$(echo $feature_as_specified | cut -d: -f1)"
+			feature_specifier="$(echo $feature_as_specified | cut -d: -f2)"
 			feature_found=f
 			for d in $includes; do
 				path_to_check=$(echo $d | sed 's/^-I//')
@@ -288,7 +291,7 @@ do_kernel_metadata() {
 				    bbfatal_log "Set KERNEL_DANGLING_FEATURES_WARN_ONLY to ignore this issue"
 				fi
 			else
-				KERNEL_FEATURES_FINAL="$KERNEL_FEATURES_FINAL $feature"
+				KERNEL_FEATURES_FINAL="$KERNEL_FEATURES_FINAL $feature_as_specified"
 			fi
 		done
         fi
