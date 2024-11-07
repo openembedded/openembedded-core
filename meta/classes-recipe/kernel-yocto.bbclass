@@ -248,6 +248,9 @@ do_kernel_metadata() {
                 fi
 	done
 
+	# allow in-tree config fragments to be used in KERNEL_FEATURES
+	includes="$includes -I${S}/arch/${ARCH}/configs -I${S}/kernel/configs"
+
 	# expand kernel features into their full path equivalents
 	bsp_definition=$(spp ${includes} --find -DKMACHINE=${KMACHINE} -DKTYPE=${LINUX_KERNEL_TYPE})
 	if [ -z "$bsp_definition" ]; then
