@@ -56,6 +56,8 @@ def create_spdx_source_deps(d):
             # For kernel source code
             if oe.spdx_common.has_task(d, "do_shared_workdir"):
                 deps.append("%s:do_shared_workdir" % pn)
+            elif d.getVar('S') == d.getVar('STAGING_KERNEL_DIR'):
+                deps.append("virtual/kernel:do_shared_workdir")
 
             # For gcc-source-${PV} source code
             if oe.spdx_common.has_task(d, "do_preconfigure"):
