@@ -568,6 +568,11 @@ python do_config_analysis() {
 python do_kernel_configcheck() {
     import re, string, sys, subprocess
 
+    audit_flag = d.getVar( "KMETA_AUDIT" )
+    if not audit_flag:
+       bb.note( "kernel config audit disabled, skipping .." )
+       return
+
     s = d.getVar('S')
 
     # if KMETA isn't set globally by a recipe using this routine, use kgit to
