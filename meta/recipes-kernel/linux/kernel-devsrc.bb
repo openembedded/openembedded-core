@@ -156,7 +156,7 @@ do_install() {
             # these are a few files associated with objtool, since we'll need to
             # rebuild it
             cp -a --parents tools/build/Build.include $kerneldir/build/
-            cp -a --parents tools/build/Build $kerneldir/build/
+            cp -a --parents tools/build/Build $kerneldir/build/ 2>/dev/null || :
             cp -a --parents tools/build/fixdep.c $kerneldir/build/
             cp -a --parents tools/scripts/utilities.mak $kerneldir/build/
 
