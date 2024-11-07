@@ -338,7 +338,7 @@ uboot_assemble_fitimage_helper() {
 	binary="$2"
 
 	if [ "${UBOOT_SIGN_ENABLE}" = "1" -a -n "${UBOOT_DTB_BINARY}" ] ; then
-		concat_dtb $type $binary
+		concat_dtb "$type" "$binary"
 	fi
 
 	if [ "${UBOOT_FITIMAGE_ENABLE}" = "1" -a -n "${SPL_DTB_BINARY}" ]; then
