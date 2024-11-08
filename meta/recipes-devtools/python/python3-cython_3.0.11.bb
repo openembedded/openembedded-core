@@ -10,40 +10,18 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=61c3ee8961575861fa86c7e62bc9f69c"
 SRC_URI += "file://0001-WIP-prefix-map.patch"
 SRC_URI[sha256sum] = "7146dd2af8682b4ca61331851e6aebce9fe5158e75300343f80c07ca80b1faff"
 
-inherit pypi setuptools3
+inherit pypi setuptools3 cython
+
+# No need to depend on self
+DEPENDS:remove = "python3-cython-native"
+
 UPSTREAM_CHECK_PYPI_PACKAGE = "Cython"
 
 do_install:append() {
-	# Make sure we use /usr/bin/env python3
-	for PYTHSCRIPT in `grep -rIl '^#!.*python' ${D}`; do
-		sed -i -e '1s|^#!.*|#!/usr/bin/env python3|' $PYTHSCRIPT
-	done
-
-    # remove build paths from generated sources
-    sed -i -e 's|${WORKDIR}||' ${S}/Cython/*.c ${S}/Cython/Compiler/*.c ${S}/Cython/Plex/*.c
-
     # rename scripts that would conflict with the Python 2 build of Cython
     mv ${D}${bindir}/cython ${D}${bindir}/cython3
     mv ${D}${bindir}/cythonize ${D}${bindir}/cythonize3
     mv ${D}${bindir}/cygdb ${D}${bindir}/cygdb3
-}
-
-PACKAGESPLITFUNCS =+ "cython_fix_sources"
-
-cython_fix_sources () {
-	for f in ${PKGD}${TARGET_DBGSRC_DIR}/Cython/Compiler/FlowControl.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Compiler/FusedNode.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Compiler/Scanning.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Compiler/Visitor.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Plex/Actions.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Plex/Scanners.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Runtime/refnanny.c \
-		${PKGD}${TARGET_DBGSRC_DIR}/Cython/Tempita/_tempita.c \
-		${PKGD}${libdir}/${PYTHON_DIR}/site-packages/Cython*/SOURCES.txt; do
-		if [ -e $f ]; then
-			sed -i -e 's#${WORKDIR}/cython-${PV}#${TARGET_DBGSRC_DIR}#g' $f
-		fi
-	done
 }
 
 RDEPENDS:${PN}:class-target += "\

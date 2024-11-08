@@ -18,9 +18,7 @@ SRC_URI[sha256sum] = "2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4
 GITHUB_BASE_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
-DEPENDS += "python3-cython-native"
-
-inherit ptest setuptools3 github-releases
+inherit ptest setuptools3 github-releases cython
 
 S = "${WORKDIR}/numpy-${PV}"
 
