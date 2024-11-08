@@ -1,0 +1,148 @@
+From 4d1b7911372561b22e03c7f2b4ec807502b5b9c1 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@arm.com>
+Date: Mon, 4 Nov 2024 15:36:39 +0000
+Subject: [PATCH] WIP prefix map
+
+Upstream-Status: Inappropriate
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ Cython/Compiler/CmdLine.py  | 9 ++++++++-
+ Cython/Compiler/Main.py     | 9 +++++----
+ Cython/Compiler/Options.py  | 1 +
+ Cython/Compiler/Parsing.py  | 1 +
+ Cython/Compiler/Scanning.py | 9 +++++++--
+ 5 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/Cython/Compiler/CmdLine.py b/Cython/Compiler/CmdLine.py
+index 776636c..f5a7c79 100644
+--- a/Cython/Compiler/CmdLine.py
++++ b/Cython/Compiler/CmdLine.py
+@@ -74,6 +74,12 @@ class SetAnnotateCoverageAction(Action):
+         namespace.annotate = True
+         namespace.annotate_coverage_xml = values
+ 
++class SetPrefixMapAction(Action):
++    def __call__(self, parser, namespace, values, option_string=None):
++        mappings = getattr(namespace, self.dest, {})
++        k, v = values.split("=", 1)
++        mappings[k] = v
++        setattr(namespace, self.dest, mappings)
+ 
+ def create_cython_argparser():
+     description = "Cython (https://cython.org/) is a compiler for code written in the "\
+@@ -157,9 +163,10 @@ def create_cython_argparser():
+                            'deduced from the import path if source file is in '
+                            'a package, or equals the filename otherwise.')
+     parser.add_argument('-M', '--depfile', action='store_true', help='produce depfiles for the sources')
++    # TODO: add help
++    parser.add_argument("--prefix-map", action=SetPrefixMapAction)
+     parser.add_argument('sources', nargs='*', default=[])
+ 
+-    # TODO: add help
+     parser.add_argument("-z", "--pre-import", dest='pre_import', action='store', type=str, help=SUPPRESS)
+     parser.add_argument("--convert-range", dest='convert_range', action='store_true', help=SUPPRESS)
+     parser.add_argument("--no-c-in-traceback", dest='c_line_in_traceback', action='store_false', help=SUPPRESS)
+diff --git a/Cython/Compiler/Main.py b/Cython/Compiler/Main.py
+index 80946c0..28cfe68 100644
+--- a/Cython/Compiler/Main.py
++++ b/Cython/Compiler/Main.py
+@@ -70,7 +70,7 @@ class Context(object):
+     language_level = None  # warn when not set but default to Py2
+ 
+     def __init__(self, include_directories, compiler_directives, cpp=False,
+-                 language_level=None, options=None):
++                 language_level=None, prefix_map=None, options=None):
+         # cython_scope is a hack, set to False by subclasses, in order to break
+         # an infinite loop.
+         # Better code organization would fix it.
+@@ -83,6 +83,7 @@ class Context(object):
+         self.future_directives = set()
+         self.compiler_directives = compiler_directives
+         self.cpp = cpp
++        self.prefix_map = prefix_map or {}
+         self.options = options
+ 
+         self.pxds = {}  # full name -> node tree
+@@ -98,7 +99,7 @@ class Context(object):
+     @classmethod
+     def from_options(cls, options):
+         return cls(options.include_path, options.compiler_directives,
+-                   options.cplus, options.language_level, options=options)
++                   options.cplus, options.language_level, prefix_map=options.prefix_map, options=options)
+ 
+     def set_language_level(self, level):
+         from .Future import print_function, unicode_literals, absolute_import, division, generator_stop
+@@ -259,7 +260,7 @@ class Context(object):
+                     rel_path = module_name.replace('.', os.sep) + os.path.splitext(pxd_pathname)[1]
+                     if not pxd_pathname.endswith(rel_path):
+                         rel_path = pxd_pathname  # safety measure to prevent printing incorrect paths
+-                    source_desc = FileSourceDescriptor(pxd_pathname, rel_path)
++                    source_desc = FileSourceDescriptor(pxd_pathname, rel_path, prefix_map=self.prefix_map)
+                     err, result = self.process_pxd(source_desc, scope, qualified_name)
+                     if err:
+                         raise err
+@@ -509,7 +510,7 @@ def run_pipeline(source, options, full_module_name=None, context=None):
+             rel_path = source  # safety measure to prevent printing incorrect paths
+     else:
+         rel_path = abs_path
+-    source_desc = FileSourceDescriptor(abs_path, rel_path)
++    source_desc = FileSourceDescriptor(abs_path, rel_path, prefix_map=context.prefix_map)
+     source = CompilationSource(source_desc, full_module_name, cwd)
+ 
+     # Set up result object
+diff --git a/Cython/Compiler/Options.py b/Cython/Compiler/Options.py
+index 61950a7..cc52732 100644
+--- a/Cython/Compiler/Options.py
++++ b/Cython/Compiler/Options.py
+@@ -796,4 +796,5 @@ default_options = dict(
+     create_extension=None,
+     np_pythran=False,
+     legacy_implicit_noexcept=None,
++    prefix_map=dict(pair.split("=", 1) for pair in os.environ.get("CYTHON_PREFIX_MAP", "").split()),
+ )
+diff --git a/Cython/Compiler/Parsing.py b/Cython/Compiler/Parsing.py
+index 25c0de9..6c0eccf 100644
+--- a/Cython/Compiler/Parsing.py
++++ b/Cython/Compiler/Parsing.py
+@@ -2106,6 +2106,7 @@ def p_include_statement(s, ctx):
+             s.included_files.append(include_file_name)
+             with Utils.open_source_file(include_file_path) as f:
+                 source_desc = FileSourceDescriptor(include_file_path)
++                print(f"TODO Cannot use prefix map on {include_file_path}")
+                 s2 = PyrexScanner(f, source_desc, s, source_encoding=f.encoding, parse_comments=s.parse_comments)
+                 tree = p_statement_list(s2, ctx)
+             return tree
+diff --git a/Cython/Compiler/Scanning.py b/Cython/Compiler/Scanning.py
+index 372392b..0fa3b30 100644
+--- a/Cython/Compiler/Scanning.py
++++ b/Cython/Compiler/Scanning.py
+@@ -195,7 +195,7 @@ class FileSourceDescriptor(SourceDescriptor):
+     optional name argument and will be passed back when asking for
+     the position()-tuple.
+     """
+-    def __init__(self, filename, path_description=None):
++    def __init__(self, filename, path_description=None, prefix_map={}):
+         filename = Utils.decode_filename(filename)
+         self.path_description = path_description or filename
+         self.filename = filename
+@@ -205,6 +205,7 @@ class FileSourceDescriptor(SourceDescriptor):
+         self.set_file_type_from_name(filename)
+         self._cmp_name = filename
+         self._lines = {}
++        self.prefix_map = prefix_map
+ 
+     def get_lines(self, encoding=None, error_handling=None):
+         # we cache the lines only the second time this is called, in
+@@ -243,7 +244,11 @@ class FileSourceDescriptor(SourceDescriptor):
+         return path
+ 
+     def get_filenametable_entry(self):
+-        return self.file_path
++        entry = self.file_path
++        for k, v in self.prefix_map.items():
++            # TODO: should just replace the prefix
++            entry = entry.replace(k, v)
++        return entry
+ 
+     def __eq__(self, other):
+         return isinstance(other, FileSourceDescriptor) and self.filename == other.filename
