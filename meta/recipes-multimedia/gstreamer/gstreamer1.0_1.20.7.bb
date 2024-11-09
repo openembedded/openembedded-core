@@ -69,4 +69,7 @@ FILES:${PN}-dbg += "${datadir}/gdb ${datadir}/gstreamer-1.0/gdb"
 
 CVE_PRODUCT = "gstreamer"
 
+# this CVE is patched in gstreamer1.0-plugins-bad
+CVE_CHECK_IGNORE += "CVE-2024-0444"
+
 PTEST_BUILD_HOST_FILES = ""
