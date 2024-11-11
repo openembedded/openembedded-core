@@ -189,7 +189,7 @@ python do_uki() {
     ukify_cmd += " %s" % (output)
 
     # Run the ukify command
-    bb.debug("uki: running command: %s" % (ukify_cmd))
+    bb.debug(2, "uki: running command: %s" % (ukify_cmd))
     bb.process.run(ukify_cmd, shell=True)
 }
 addtask uki after do_rootfs before do_deploy do_image_complete do_image_wic
