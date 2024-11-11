@@ -46,7 +46,7 @@ PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false,"
 PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux"
 PACKAGECONFIG[introspection] = "-Dintrospection=enabled,-Dintrospection=disabled,gobject-introspection-native gobject-introspection glib-2.0-initial"
 
-EXTRA_OEMESON = "-Ddtrace=disabled -Dsystemtap=disabled"
+EXTRA_OEMESON = "-Ddtrace=disabled -Dsystemtap=disabled -Dsysprof=disabled"
 
 EXTRA_OEMESON:append:class-target = " ${@'-Dgir_dir_prefix=${libdir}' if d.getVar('MULTILIBS') else ''}"
 
