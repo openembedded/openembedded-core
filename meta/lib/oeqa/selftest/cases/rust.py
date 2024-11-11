@@ -66,7 +66,6 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'src/doc/unstable-book',
                             'src/librustdoc',
                             'src/rustdoc-json-types',
-                            'src/tools/compiletest/src/common.rs',
                             'src/tools/jsondoclint',
                             'src/tools/lint-docs',
                             'src/tools/replace-version-placeholder',
