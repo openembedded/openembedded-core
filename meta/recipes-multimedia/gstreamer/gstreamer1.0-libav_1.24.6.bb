@@ -22,6 +22,7 @@ inherit meson pkgconfig upstream-version-is-even
 
 EXTRA_OEMESON += " \
     -Dtests=disabled \
+    -Ddoc=disabled \
 "
 
 FILES:${PN} += "${libdir}/gstreamer-1.0/*.so"
