@@ -57,6 +57,8 @@ PACKAGECONFIG[xcb] = "-Dxcb=enabled,-Dxcb=disabled,libxcb"
 # cairo-trace is GPLv3 so add an option to remove it
 PACKAGECONFIG[trace] = ""
 
+EXTRA_OEMESON = "-Dsymbol-lookup=disabled -Dspectre=disabled -Dtests=disabled"
+
 do_install:append () {
     if ! ${@bb.utils.contains('PACKAGECONFIG', 'trace', 'true', 'false', d)}; then
         rm ${D}${bindir}/cairo-trace ${D}${libdir}/cairo/libcairo-trace.so
