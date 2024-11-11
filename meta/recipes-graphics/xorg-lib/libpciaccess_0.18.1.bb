@@ -16,4 +16,7 @@ SRC_URI[sha256sum] = "4af43444b38adb5545d0ed1c2ce46d9608cc47b31c2387fc5181656765
 
 inherit pkgconfig meson
 
+PACKAGECONFIG ?= "zlib"
+PACKAGECONFIG[zlib] = "-Dzlib=enabled,-Dzlib=disabled,zlib"
+
 BBCLASSEXTEND = "native nativesdk"
