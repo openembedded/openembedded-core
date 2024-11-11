@@ -28,6 +28,7 @@ PACKAGECONFIG[x11] = ",,virtual/libx11 libxft"
 PACKAGECONFIG[thai] = "-Dlibthai=enabled,-Dlibthai=disabled,libthai"
 
 GIR_MESON_OPTION = 'introspection'
+GIDOCGEN_MESON_OPTION = 'documentation'
 
 LEAD_SONAME = "libpango-1.0*"
 
