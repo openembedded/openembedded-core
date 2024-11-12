@@ -10,8 +10,7 @@ inherit autotools-brokensep ptest
 
 LIC_FILES_CHKSUM = "file://README.md;beginline=19;endline=32;md5=9f34c3af4ed6f3f5df0da5f3c0835a43"
 
-SRCREV = "3871b1c42fc71bceadafd745d2eff5dddfc2d67e"
-PV = "2.0.18"
+SRCREV = "3bc85e37d5a30da6790cb7e8bb488bb8f679170f"
 
 SRC_URI = "git://github.com/numactl/numactl;branch=master;protocol=https \
            file://Fix-the-test-output-format.patch \
