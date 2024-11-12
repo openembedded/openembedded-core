@@ -184,11 +184,11 @@ diff --git a/ld/ldfile.c b/ld/ldfile.c
 index 87be885d31a..86c8a5b267d 100644
 --- a/ld/ldfile.c
 +++ b/ld/ldfile.c
-@@ -344,6 +344,22 @@ ldfile_add_library_path (const char *name, enum search_dir_source source)
-       search_tail_ptr = &new_dirs->next;
-     }
- 
-+#ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
+@@ -319,6 +319,22 @@
+   *search_tail_ptr = new_dirs;
+   search_tail_ptr = &new_dirs->next;
+
++ #ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
 +  if (command_line.poison_system_directories
 +  && ((!strncmp (name, "/lib", 4))
 +      || (!strncmp (name, "/usr/lib", 8))
@@ -204,9 +204,9 @@ index 87be885d31a..86c8a5b267d 100644
 +   }
 +#endif
 +
-   return new_dirs;
- }
- 
+   /* If a directory is marked as honoring sysroot, prepend the sysroot path
+      now.  */
+   if (name[0] == '=')
 diff --git a/ld/ldlex.h b/ld/ldlex.h
 index defe3fcbbb9..aea75a25dc8 100644
 --- a/ld/ldlex.h
