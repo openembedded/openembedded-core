@@ -1,0 +1,68 @@
+From dc16dffed0480d0c8cdd6a05ede68263fc8723a9 Mon Sep 17 00:00:00 2001
+From: Simon McVittie <smcv@collabora.com>
+Date: Thu, 15 Dec 2022 12:51:37 +0000
+Subject: [PATCH] gvariant-serialiser: Convert endianness of offsets
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The array of offsets is little-endian, even on big-endian architectures
+like s390x.
+
+Fixes: ade71fb5 "gvariant: Don’t allow child elements to overlap with each other"
+Resolves: https://gitlab.gnome.org/GNOME/glib/-/issues/2839
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+
+Upstream-Status: Backport [https://gitlab.gnome.org/GNOME/glib/-/commit/dc16dffed0480d0c8cdd6a05ede68263fc8723a9]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ glib/gvariant-serialiser.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/glib/gvariant-serialiser.c b/glib/gvariant-serialiser.c
+index 25c85b30b..e9b0eab2b 100644
+--- a/glib/gvariant-serialiser.c
++++ b/glib/gvariant-serialiser.c
+@@ -712,17 +712,19 @@ gvs_variable_sized_array_n_children (GVariantSerialised value)
+ /* Find the index of the first out-of-order element in @data, assuming that
+  * @data is an array of elements of given @type, starting at index @start and
+  * containing a further @len-@start elements. */
+-#define DEFINE_FIND_UNORDERED(type) \
++#define DEFINE_FIND_UNORDERED(type, le_to_native) \
+   static gsize \
+   find_unordered_##type (const guint8 *data, gsize start, gsize len) \
+   { \
+     gsize off; \
+-    type current, previous; \
++    type current_le, previous_le, current, previous; \
+     \
+-    memcpy (&previous, data + start * sizeof (current), sizeof (current)); \
++    memcpy (&previous_le, data + start * sizeof (current), sizeof (current)); \
++    previous = le_to_native (previous_le); \
+     for (off = (start + 1) * sizeof (current); off < len * sizeof (current); off += sizeof (current)) \
+       { \
+-        memcpy (&current, data + off, sizeof (current)); \
++        memcpy (&current_le, data + off, sizeof (current)); \
++        current = le_to_native (current_le); \
+         if (current < previous) \
+           break; \
+         previous = current; \
+@@ -730,10 +732,11 @@ gvs_variable_sized_array_n_children (GVariantSerialised value)
+     return off / sizeof (current) - 1; \
+   }
+ 
+-DEFINE_FIND_UNORDERED (guint8);
+-DEFINE_FIND_UNORDERED (guint16);
+-DEFINE_FIND_UNORDERED (guint32);
+-DEFINE_FIND_UNORDERED (guint64);
++#define NO_CONVERSION(x) (x)
++DEFINE_FIND_UNORDERED (guint8, NO_CONVERSION);
++DEFINE_FIND_UNORDERED (guint16, GUINT16_FROM_LE);
++DEFINE_FIND_UNORDERED (guint32, GUINT32_FROM_LE);
++DEFINE_FIND_UNORDERED (guint64, GUINT64_FROM_LE);
+ 
+ static GVariantSerialised
+ gvs_variable_sized_array_get_child (GVariantSerialised value,
+-- 
+2.30.2
+
