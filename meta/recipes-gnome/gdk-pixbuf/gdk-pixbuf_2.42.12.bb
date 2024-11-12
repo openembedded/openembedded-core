@@ -32,7 +32,7 @@ GIR_MESON_DISABLE_FLAG = "disabled"
 
 LIBV = "2.10.0"
 
-GDK_PIXBUF_LOADERS ?= "png jpeg"
+GDK_PIXBUF_LOADERS ?= "png jpeg gif others"
 
 PACKAGECONFIG = "${GDK_PIXBUF_LOADERS} \
                  ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
@@ -41,6 +41,8 @@ PACKAGECONFIG:class-native = "${GDK_PIXBUF_LOADERS}"
 PACKAGECONFIG[png] = "-Dpng=enabled,-Dpng=disabled,libpng"
 PACKAGECONFIG[jpeg] = "-Djpeg=enabled,-Djpeg=disabled,jpeg"
 PACKAGECONFIG[tiff] = "-Dtiff=enabled,-Dtiff=disabled,tiff"
+PACKAGECONFIG[gif] = "-Dgif=enabled,-Dgif=disabled"
+PACKAGECONFIG[others] = "-Dothers=enabled,-Dothers=disabled"
 PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
 
 EXTRA_OEMESON = "-Dman=false"
