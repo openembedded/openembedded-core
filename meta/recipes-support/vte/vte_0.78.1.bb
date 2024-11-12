@@ -18,13 +18,11 @@ GIDOCGEN_MESON_OPTION = "docs"
 inherit gnomebase gi-docgen features_check upstream-version-is-even gobject-introspection systemd vala
 
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
-            file://0001-tests-Remove-excessive-constrexpr.patch \
-            file://0002-lib-Typo-fix.patch \
-            file://0003-Add-missing-system-headers.patch \
-            file://0004-fast_float-Add-single-header-library-for-from_char-i.patch \
-			file://0005-color-parser-Use-fast_float-implementation-for-from_.patch \
-"
-SRC_URI[archive.sha256sum] = "07f09c6228a8bb3c1599dd0f5a6ec797b30d3010c3ac91cf21b69d9635dfaf7c"
+           file://0002-lib-Typo-fix.patch \
+           file://0004-fast_float-Add-single-header-library-for-from_char-i.patch \
+           file://0005-color-parser-Use-fast_float-implementation-for-from_.patch \
+           "
+SRC_URI[archive.sha256sum] = "6499d25179315255f9bcfce03c66fb84c03ad325dea23d0e372178521eca42b5"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
