@@ -869,6 +869,10 @@ ALTERNATIVE_TARGET[runlevel] = "${base_bindir}/systemctl"
 ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
 ALTERNATIVE_PRIORITY[runlevel] ?= "300"
 
+pkg_postinst:${PN}:append () {
+	touch $D${libdir}/clock-epoch
+}
+
 pkg_postinst:${PN}:libc-glibc () {
 	if ${@bb.utils.contains('PACKAGECONFIG', 'myhostname', 'true', 'false', d)}; then
 		sed -e '/^hosts:/s/\s*\<myhostname\>//' \
