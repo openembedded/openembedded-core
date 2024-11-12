@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=764abdf30b2eadd37ce47dcbce0ea1ec"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/nghttp2-${PV}.tar.xz"
-SRC_URI[sha256sum] = "4879c75dd32a74421b9857924449460b8341796c0613ba114ab2188e4622354b"
+SRC_URI[sha256sum] = "88bb94c9e4fd1c499967f83dece36a78122af7d5fb40da2019c56b9ccc6eb9dd"
 
 inherit cmake manpages python3native github-releases
 PACKAGECONFIG[manpages] = ""
