@@ -65,6 +65,9 @@ def store(args, logger):
 
         for r in revisions:
             results = revisions[r]
+            if args.revision and r[0] != args.revision:
+                logger.info('skipping %s as non-matching' % r[0])
+                continue
             keywords = {'commit': r[0], 'branch': r[1], "commit_count": r[2]}
             subprocess.check_call(["find", tempdir, "!", "-path", "./.git/*", "-delete"])
             resultutils.save_resultsdata(results, tempdir, ptestlogs=True)
@@ -102,3 +105,5 @@ def register_commands(subparsers):
                               help='add executed-by configuration to each result file')
     parser_build.add_argument('-t', '--extra-test-env', default='',
                               help='add extra test environment data to each result file configuration')
+    parser_build.add_argument('-r', '--revision', default='',
+                              help='only store data for the specified revision')
