@@ -24,28 +24,27 @@
 #   files under exec_prefix
 #  -Check if the package name is upper case
 
+# These tests are required to be enabled and pass for Yocto Project Compatible Status
+# for a layer. To change this list, please contact the Yocto Project TSC.
+CHECKLAYER_REQUIRED_TESTS = "\
+    configure-gettext configure-unsafe debug-files dep-cmp expanded-d files-invalid \
+    host-user-contaminated incompatible-license infodir installed-vs-shipped invalid-chars \
+    invalid-packageconfig la \
+    license-checksum license-exception license-exists license-file-missing license-format license-no-generic license-syntax \
+    mime mime-xdg missing-update-alternatives multilib obsolete-license \
+    packages-list patch-fuzz patch-status perllocalpod perm-config perm-line perm-link \
+    pkgconfig pkgvarcheck pkgv-undefined pn-overrides shebang-size src-uri-bad symlink-to-sysroot \
+    unhandled-features-check unknown-configure-option unlisted-pkg-lics uppercase-pn useless-rpaths \
+    var-undefined virtual-slash xorg-driver-abi"
+
 # Elect whether a given type of error is a warning or error, they may
 # have been set by other files.
 WARN_QA ?= "32bit-time native-last pep517-backend"
-ERROR_QA ?= "dev-so debug-deps dev-deps debug-files arch pkgconfig la \
-            textrel incompatible-license files-invalid \
-            infodir build-deps src-uri-bad symlink-to-sysroot multilib \
-            invalid-packageconfig host-user-contaminated uppercase-pn \
-            mime mime-xdg unlisted-pkg-lics unhandled-features-check \
-            missing-update-alternatives missing-ptest \
-            license-exists license-no-generic license-syntax license-format \
-            license-exception license-file-missing obsolete-license \
-            libdir xorg-driver-abi buildpaths \
-            dep-cmp pkgvarcheck perm-config perm-line perm-link \
-            packages-list pkgv-undefined var-undefined \
-            version-going-backwards expanded-d invalid-chars \
-            license-checksum dev-elf file-rdeps configure-unsafe \
-            configure-gettext perllocalpod shebang-size \
-            already-stripped installed-vs-shipped ldflags \
-            pn-overrides unknown-configure-option \
-            useless-rpaths rpaths staticdev empty-dirs \
-            patch-fuzz patch-status virtual-slash \
-            "
+ERROR_QA ?= "\
+    already-stripped arch buildpaths build-deps debug-deps dev-deps dev-elf dev-so empty-dirs file-rdeps \
+    ldflags libdir missing-ptest rpaths staticdev textrel version-going-backwards \
+    ${CHECKLAYER_REQUIRED_TESTS}"
+
 # Add usrmerge QA check based on distro feature
 ERROR_QA:append = "${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', ' usrmerge', '', d)}"
 WARN_QA:append:layer-core = " missing-metadata missing-maintainer"
