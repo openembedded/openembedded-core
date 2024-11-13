@@ -23,7 +23,6 @@ SRC_URI += "\
            file://0002-automake-Update-for-python.m4-to-respect-libdir.patch \
            file://0003-build-fix-race-in-parallel-builds.patch \
            file://0004-Add-a-new-distro-feature-ptest.patch \
-           file://0005-Set-relative-to-top_builddir-path-in-Makefile-to-acc.patch \
            file://0006-automake-Remove-delays-in-configure-scripts-using-au.patch \
            "
 
