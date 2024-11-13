@@ -45,7 +45,9 @@ do_install_ptest() {
 	mkdir -p ${D}${PTEST_PATH}/src
 	install -m 755 ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
 	install -m 644 ${B}/src/config.h ${D}${PTEST_PATH}/src/
-        sed -i -e '/^src/s/strace.*[0-9]/ptest/' ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
+	sed -e '/^src/s/strace.*[0-9]/ptest/' \
+	    -e "/^TEST_LOG_DRIVER =/s|(top_srcdir)|(top_builddir)|" \
+	    -i ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
 RDEPENDS:${PN}-ptest += "make coreutils grep gawk sed locale-base-en-us"
