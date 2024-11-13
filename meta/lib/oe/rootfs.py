@@ -199,12 +199,12 @@ class Rootfs(object, metaclass=ABCMeta):
             if command in commands:
                 commands.remove(command)
                 commands.append(command)
-            return "".join(commands)
+            return " ".join(commands)
 
         # We want this to run as late as possible, in particular after
         # systemd_sysusers_create and set_user_group. Using :append is not enough
-        make_last("tidy_shadowutils_files", post_process_cmds)
-        make_last("rootfs_reproducible", post_process_cmds)
+        post_process_cmds = make_last("tidy_shadowutils_files", post_process_cmds)
+        post_process_cmds = make_last("rootfs_reproducible", post_process_cmds)
 
         execute_pre_post_process(self.d, pre_process_cmds)
 
