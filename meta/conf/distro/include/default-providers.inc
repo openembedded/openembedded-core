@@ -59,3 +59,5 @@ PREFERRED_PROVIDER_pkgconfig-native ?= "pkgconfig-native"
 PREFERRED_RPROVIDER_initd-functions ?= "initscripts"
 
 PREFERRED_PROVIDER_nativesdk-mesa ?= "nativesdk-mesa"
+
+PREFERRED_RPROVIDER_virtual-x-terminal-emulator ?= "rxvt-unicode"
