@@ -13,7 +13,9 @@ SRC_URI = "http://dist.schmorp.de/rxvt-unicode/Attic/rxvt-unicode-${PV}.tar.bz2 
 	   file://rxvt.desktop \
 	   file://rxvt.png"
 
-inherit autotools pkgconfig update-alternatives
+inherit autotools features_check pkgconfig update-alternatives
+
+REQUIRED_DISTRO_FEATURES = "x11"
 
 RPROVIDES:${PN} = "virtual-x-terminal-emulator"
 ALTERNATIVE:${PN} = "x-terminal-emulator"
