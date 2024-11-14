@@ -1,0 +1,61 @@
+From 6479c4ae43e7a2096b97c800ece57defd0ba62b7 Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Tue, 12 Nov 2024 11:19:23 -0500
+Subject: [PATCH] fix: mm/page_alloc: fix tracepoint
+ mm_page_alloc_zone_locked() (v5.15.171)
+
+See upstream backported commit:
+
+  commit 28e7a507196fefd119e7ca2286840f1a9aad5e8a
+  Author: Wonhyuk Yang <vvghjk1234@gmail.com>
+  Date:   Thu May 19 14:08:54 2022 -0700
+
+    mm/page_alloc: fix tracepoint mm_page_alloc_zone_locked()
+
+    [ Upstream commit 10e0f7530205799e7e971aba699a7cb3a47456de ]
+
+    Currently, trace point mm_page_alloc_zone_locked() doesn't show correct
+    information.
+
+    First, when alloc_flag has ALLOC_HARDER/ALLOC_CMA, page can be allocated
+    from MIGRATE_HIGHATOMIC/MIGRATE_CMA.  Nevertheless, tracepoint use
+    requested migration type not MIGRATE_HIGHATOMIC and MIGRATE_CMA.
+
+    Second, after commit 44042b4498728 ("mm/page_alloc: allow high-order pages
+    to be stored on the per-cpu lists") percpu-list can store high order
+    pages.  But trace point determine whether it is a refiil of percpu-list by
+    comparing requested order and 0.
+
+    To handle these problems, make mm_page_alloc_zone_locked() only be called
+    by __rmqueue_smallest with correct migration type.  With a new argument
+    called percpu_refill, it can show roughly whether it is a refill of
+    percpu-list.
+
+    Link: https://lkml.kernel.org/r/20220512025307.57924-1-vvghjk1234@gmail.com
+
+Change-Id: Ib76feb79d95e9f93c84c3aa1b946e57ac2e2666a
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+Upstream-Status: Backport [https://git.lttng.org/?p=lttng-modules.git;a=commit;h=6479c4ae43e7a2096b97c800ece57defd0ba62b7]
+
+Signed-off-by: Liyin Zhang <liyin.zhang.cn@windriver.com>
+---
+ include/instrumentation/events/kmem.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/instrumentation/events/kmem.h b/include/instrumentation/events/kmem.h
+index 9a0f0bbf..96a5d9c2 100644
+--- a/include/instrumentation/events/kmem.h
++++ b/include/instrumentation/events/kmem.h
+@@ -381,6 +381,7 @@ LTTNG_TRACEPOINT_EVENT_MAP(mm_page_alloc, kmem_mm_page_alloc,
+ )
+ 
+ #if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(5,19,0) || \
++	LTTNG_KERNEL_RANGE(5,15,171, 5,16,0) || \
+ 	LTTNG_RHEL_KERNEL_RANGE(5,14,0,163,0,0, 5,15,0,0,0,0))
+ 
+ LTTNG_TRACEPOINT_EVENT_CLASS(kmem_mm_page,
+-- 
+2.25.1
+
