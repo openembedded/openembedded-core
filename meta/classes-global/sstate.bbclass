@@ -844,8 +844,7 @@ python sstate_create_and_sign_package () {
         from tempfile import TemporaryDirectory
         with TemporaryDirectory(dir=sstate_pkg.parent) as tmp_dir:
             tmp_pkg = Path(tmp_dir) / sstate_pkg.name
-            d.setVar("TMP_SSTATE_PKG", str(tmp_pkg))
-            bb.build.exec_func('sstate_archive_package', d)
+            sstate_archive_package(tmp_pkg, d)
 
             from oe.gpg_sign import get_signer
             signer = get_signer(d, 'local')
@@ -865,8 +864,7 @@ python sstate_create_and_sign_package () {
         from tempfile import NamedTemporaryFile
         with NamedTemporaryFile(prefix=sstate_pkg.name, dir=sstate_pkg.parent) as tmp_pkg_fd:
             tmp_pkg = tmp_pkg_fd.name
-            d.setVar("TMP_SSTATE_PKG", str(tmp_pkg))
-            bb.build.exec_func('sstate_archive_package',d)
+            sstate_archive_package(tmp_pkg, d)
             update_file(tmp_pkg, sstate_pkg)
             # update_file() may have renamed tmp_pkg, which must exist when the
             # NamedTemporaryFile() context handler ends.
@@ -874,32 +872,33 @@ python sstate_create_and_sign_package () {
 
 }
 
-# Shell function to generate a sstate package from a directory
-# set as SSTATE_BUILDDIR. Will be run from within SSTATE_BUILDDIR.
+# Function to generate a sstate package from the current directory.
 # The calling function handles moving the sstate package into the final
 # destination.
-sstate_archive_package () {
-	OPT="-cS"
-	ZSTD="zstd -${SSTATE_ZSTD_CLEVEL} -T${ZSTD_THREADS}"
-	# Use pzstd if available
-	if [ -x "$(command -v pzstd)" ]; then
-		ZSTD="pzstd -${SSTATE_ZSTD_CLEVEL} -p ${ZSTD_THREADS}"
-	fi
+def sstate_archive_package(sstate_pkg, d):
+    import subprocess
 
-	# Need to handle empty directories
-	if [ "$(ls -A)" ]; then
-		set +e
-		tar -I "$ZSTD" $OPT -f ${TMP_SSTATE_PKG} *
-		ret=$?
-		if [ $ret -ne 0 ] && [ $ret -ne 1 ]; then
-			exit 1
-		fi
-		set -e
-	else
-		tar -I "$ZSTD" $OPT --file=${TMP_SSTATE_PKG} --files-from=/dev/null
-	fi
-	chmod 0664 ${TMP_SSTATE_PKG}
-}
+    cmd = [
+        "tar",
+        "-I", d.expand("pzstd -${SSTATE_ZSTD_CLEVEL} -p${ZSTD_THREADS}"),
+        "-cS",
+        "-f", sstate_pkg,
+    ]
+
+    # tar refuses to create an empty archive unless told explicitly
+    files = sorted(os.listdir("."))
+    if not files:
+        files = ["--files-from=/dev/null"]
+
+    try:
+        subprocess.run(cmd + files, check=True)
+    except subprocess.CalledProcessError as e:
+        # Ignore error 1 as this is caused by files changing
+        # (link count increasing from hardlinks being created).
+        if e.returncode != 1:
+            raise
+
+    os.chmod(sstate_pkg, 0o664)
 
 
 python sstate_report_unihash() {
