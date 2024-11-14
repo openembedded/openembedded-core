@@ -50,6 +50,7 @@ SRC_URI = "${GNOME_MIRROR}/glib/${SHRT_VER}/glib-${PV}.tar.xz \
            file://CVE-2024-34397_17.patch \
            file://CVE-2024-34397_18.patch \
            file://0001-gvariant-serialiser-Convert-endianness-of-offsets.patch \
+           file://CVE-2024-52533.patch \
            "
 SRC_URI:append:class-native = " file://relocate-modules.patch"
 
