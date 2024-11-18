@@ -852,3 +852,291 @@ FIT_HASH_ALG = "sha256"
         # Verify the signature
         uboot_tools_sysroot_native = self._setup_uboot_tools_native()
         self._verify_fit_image_signature(uboot_tools_sysroot_native, fitimage_path, os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], 'am335x-bone.dtb'))
+
+
+    def test_uboot_atf_tee_fit_image(self):
+        """
+        Summary:     Check if U-boot FIT image and Image Tree Source
+                     (its) are built and the Image Tree Source has the
+                     correct fields.
+        Expected:    1. Create atf and tee dummy images
+                     2. Both u-boot-fitImage and u-boot-its can be built
+                     3. The os, load address, entrypoint address and
+                        default values of U-boot, ATF and TEE images are
+                        correct in the Image Tree Source. Not all the
+                        fields are tested, only the key fields that wont
+                        vary between different architectures.
+                Product:     oe-core
+                Author:      Jamin Lin <jamin_lin@aspeedtech.com>
+        """
+        config = """
+# We need at least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
+MACHINE = "qemuarm"
+UBOOT_MACHINE = "am57xx_evm_defconfig"
+SPL_BINARY = "MLO"
+
+# Enable creation of the U-Boot fitImage
+UBOOT_FITIMAGE_ENABLE = "1"
+
+# (U-boot) fitImage properties
+UBOOT_LOADADDRESS = "0x80080000"
+UBOOT_ENTRYPOINT = "0x80080000"
+UBOOT_FIT_DESC = "A model description"
+
+# Enable creation of the TEE fitImage
+UBOOT_FIT_TEE = "1"
+
+# TEE fitImage properties
+UBOOT_FIT_TEE_IMAGE = "${TOPDIR}/tee-dummy.bin"
+UBOOT_FIT_TEE_LOADADDRESS = "0x80180000"
+UBOOT_FIT_TEE_ENTRYPOINT = "0x80180000"
+
+# Enable creation of the ATF fitImage
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE = "1"
+
+# ATF fitImage properties
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE = "${TOPDIR}/atf-dummy.bin"
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS = "0x80280000"
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
+"""
+        self.write_config(config)
+
+        # Create an ATF dummy image
+        atf_dummy_image = os.path.join(self.builddir, "atf-dummy.bin")
+        cmd = 'dd if=/dev/random of=%s bs=1k count=64' % (atf_dummy_image)
+        result = runCmd(cmd)
+        self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
+
+        # Create a TEE dummy image
+        tee_dummy_image = os.path.join(self.builddir, "tee-dummy.bin")
+        cmd = 'dd if=/dev/random of=%s bs=1k count=64' % (tee_dummy_image)
+        result = runCmd(cmd)
+        self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
+
+        # The U-Boot fitImage is created as part of the U-Boot recipe
+        bitbake("virtual/bootloader")
+
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        machine = get_bb_var('MACHINE')
+        fitimage_its_path = os.path.join(deploy_dir_image,
+            "u-boot-its-%s" % (machine,))
+        fitimage_path = os.path.join(deploy_dir_image,
+            "u-boot-fitImage-%s" % (machine,))
+
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
+
+        # Check that the os, load address, entrypoint address and default
+        # values for u-boot, ATF and TEE in Image Tree Source are as expected.
+        # The order of fields in the below array is important. Not all the
+        # fields are tested, only the key fields that wont vary between
+        # different architectures.
+        its_field_check = [
+            'description = "A model description";',
+            'os = "u-boot";',
+            'load = <0x80080000>;',
+            'entry = <0x80080000>;',
+            'description = "Trusted Execution Environment";',
+            'os = "tee";',
+            'load = <0x80180000>;',
+            'entry = <0x80180000>;',
+            'description = "ARM Trusted Firmware";',
+            'os = "arm-trusted-firmware";',
+            'load = <0x80280000>;',
+            'entry = <0x80280000>;',
+            'default = "conf";',
+            'loadables = "atf", "tee", "uboot";',
+            'fdt = "fdt";'
+        ]
+
+        with open(fitimage_its_path) as its_file:
+            field_index = 0
+            for line in its_file:
+                if field_index == len(its_field_check):
+                    break
+                if its_field_check[field_index] in line:
+                    field_index +=1
+
+        if field_index != len(its_field_check): # if its equal, the test passed
+            self.assertTrue(field_index == len(its_field_check),
+                "Fields in Image Tree Source File %s did not match, error in finding %s"
+                % (fitimage_its_path, its_field_check[field_index]))
+
+
+    def test_sign_standalone_uboot_atf_tee_fit_image(self):
+        """
+        Summary:     Check if U-Boot FIT image and Image Tree Source (its) are
+                     created and signed correctly for the scenario where only
+                     the U-Boot proper fitImage is being created and signed.
+        Expected:    1. Create atf and tee dummy images
+                     2. U-Boot its and FIT image are built successfully
+                     3. Scanning the its file indicates signing is enabled
+                        as requested by SPL_SIGN_ENABLE (using keys generated
+                        via UBOOT_FIT_GENERATE_KEYS)
+                     4. Dumping the FIT image indicates signature values
+                        are present
+                     5. Examination of the do_uboot_assemble_fitimage
+                     runfile/logfile indicate that UBOOT_MKIMAGE, UBOOT_MKIMAGE_SIGN
+                     and SPL_MKIMAGE_SIGN_ARGS are working as expected.
+                Product:     oe-core
+                Author:      Jamin Lin <jamin_lin@aspeedtech.com>
+        """
+        a_comment = "a smart cascaded U-Boot ATF TEE comment"
+        config = """
+# There's no U-boot deconfig with CONFIG_FIT_SIGNATURE yet, so we need at
+# least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
+MACHINE = "qemuarm"
+UBOOT_MACHINE = "am57xx_evm_defconfig"
+SPL_BINARY = "MLO"
+
+# The kernel-fitimage class is a dependency even if we're only
+# creating/signing the U-Boot fitImage
+KERNEL_CLASSES = " kernel-fitimage"
+
+# Enable creation and signing of the U-Boot fitImage
+UBOOT_FITIMAGE_ENABLE = "1"
+SPL_SIGN_ENABLE = "1"
+SPL_SIGN_KEYNAME = "spl-oe-selftest"
+SPL_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
+UBOOT_DTB_BINARY = "u-boot.dtb"
+UBOOT_ARCH = "arm"
+SPL_MKIMAGE_DTCOPTS = "-I dts -O dtb -p 2000"
+SPL_MKIMAGE_SIGN_ARGS = "-c '%s'"
+UBOOT_EXTLINUX = "0"
+UBOOT_FIT_GENERATE_KEYS = "1"
+UBOOT_FIT_HASH_ALG = "sha256"
+
+# (U-boot) fitImage properties
+UBOOT_LOADADDRESS = "0x80080000"
+UBOOT_ENTRYPOINT = "0x80080000"
+UBOOT_FIT_DESC = "A model description"
+
+# Enable creation of the TEE fitImage
+UBOOT_FIT_TEE = "1"
+
+# TEE fitImage properties
+UBOOT_FIT_TEE_IMAGE = "${TOPDIR}/tee-dummy.bin"
+UBOOT_FIT_TEE_LOADADDRESS = "0x80180000"
+UBOOT_FIT_TEE_ENTRYPOINT = "0x80180000"
+
+# Enable creation of the ATF fitImage
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE = "1"
+
+# ATF fitImage properties
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE = "${TOPDIR}/atf-dummy.bin"
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS = "0x80280000"
+UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
+""" % a_comment
+
+        self.write_config(config)
+
+        # Create an ATF dummy image
+        atf_dummy_image = os.path.join(self.builddir, "atf-dummy.bin")
+        cmd = 'dd if=/dev/random of=%s bs=1k count=64' % (atf_dummy_image)
+        result = runCmd(cmd)
+        self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
+
+        # Create a TEE dummy image
+        tee_dummy_image = os.path.join(self.builddir, "tee-dummy.bin")
+        cmd = 'dd if=/dev/random of=%s bs=1k count=64' % (tee_dummy_image)
+        result = runCmd(cmd)
+        self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
+
+        # The U-Boot fitImage is created as part of the U-Boot recipe
+        bitbake("virtual/bootloader")
+
+        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
+        machine = get_bb_var('MACHINE')
+        fitimage_its_path = os.path.join(deploy_dir_image,
+            "u-boot-its-%s" % (machine,))
+        fitimage_path = os.path.join(deploy_dir_image,
+            "u-boot-fitImage-%s" % (machine,))
+
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
+
+        req_itspaths = [
+            ['/', 'images', 'uboot'],
+            ['/', 'images', 'uboot', 'signature'],
+            ['/', 'images', 'fdt'],
+            ['/', 'images', 'fdt', 'signature'],
+            ['/', 'images', 'tee'],
+            ['/', 'images', 'tee', 'signature'],
+            ['/', 'images', 'atf'],
+            ['/', 'images', 'atf', 'signature'],
+        ]
+
+        itspath = []
+        itspaths = []
+        linect = 0
+        sigs = {}
+        with open(fitimage_its_path) as its_file:
+            linect += 1
+            for line in its_file:
+                line = line.strip()
+                if line.endswith('};'):
+                    itspath.pop()
+                elif line.endswith('{'):
+                    itspath.append(line[:-1].strip())
+                    itspaths.append(itspath[:])
+                elif itspath and itspath[-1] == 'signature':
+                    itsdotpath = '.'.join(itspath)
+                    if not itsdotpath in sigs:
+                        sigs[itsdotpath] = {}
+                    if not '=' in line or not line.endswith(';'):
+                        self.fail('Unexpected formatting in %s sigs section line %d:%s' % (fitimage_its_path, linect, line))
+                    key, value = line.split('=', 1)
+                    sigs[itsdotpath][key.rstrip()] = value.lstrip().rstrip(';')
+
+        for reqpath in req_itspaths:
+            if not reqpath in itspaths:
+                self.fail('Missing section in its file: %s' % reqpath)
+
+        reqsigvalues_image = {
+            'algo': '"sha256,rsa2048"',
+            'key-name-hint': '"spl-oe-selftest"',
+        }
+
+        for itspath, values in sigs.items():
+            reqsigvalues = reqsigvalues_image
+            for reqkey, reqvalue in reqsigvalues.items():
+                value = values.get(reqkey, None)
+                if value is None:
+                    self.fail('Missing key "%s" in its file signature section %s' % (reqkey, itspath))
+                self.assertEqual(value, reqvalue)
+
+        # Dump the image to see if it really got signed
+        uboot_tools_sysroot_native = self._setup_uboot_tools_native()
+        dumpimage_path = os.path.join(uboot_tools_sysroot_native, 'usr', 'bin', 'dumpimage')
+        result = runCmd('%s -l %s' % (dumpimage_path, fitimage_path))
+        in_signed = None
+        signed_sections = {}
+        for line in result.output.splitlines():
+            if line.startswith((' Image')):
+                in_signed = re.search(r'\((.*)\)', line).groups()[0]
+            elif re.match(' \w', line):
+                in_signed = None
+            elif in_signed:
+                if not in_signed in signed_sections:
+                    signed_sections[in_signed] = {}
+                key, value = line.split(':', 1)
+                signed_sections[in_signed][key.strip()] = value.strip()
+        self.assertIn('uboot', signed_sections)
+        self.assertIn('fdt', signed_sections)
+        self.assertIn('tee', signed_sections)
+        self.assertIn('atf', signed_sections)
+        for signed_section, values in signed_sections.items():
+            value = values.get('Sign algo', None)
+            self.assertEqual(value, 'sha256,rsa2048:spl-oe-selftest', 'Signature algorithm for %s not expected value' % signed_section)
+            value = values.get('Sign value', None)
+            self.assertEqual(len(value), 512, 'Signature value for section %s not expected length' % signed_section)
+
+        # Check for SPL_MKIMAGE_SIGN_ARGS
+        # Looks like mkimage supports to add a comment but does not support to read it back.
+        found_comments = FitImageTests._find_string_in_bin_file(fitimage_path, a_comment)
+        self.assertEqual(found_comments, 4, "Expected 4 signed and commented section in the fitImage.")
+
+        # Verify the signature
+        self._verify_fit_image_signature(uboot_tools_sysroot_native, fitimage_path,
+                                         os.path.join(deploy_dir_image, 'u-boot-spl.dtb'))
+
