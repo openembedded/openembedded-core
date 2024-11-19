@@ -870,7 +870,9 @@ ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
 ALTERNATIVE_PRIORITY[runlevel] ?= "300"
 
 pkg_postinst:${PN}:append () {
-	touch $D${libdir}/clock-epoch
+	if ${@bb.utils.contains('PACKAGECONFIG', 'set-time-epoch', 'true', 'false', d)}; then
+		touch $D${nonarch_libdir}/clock-epoch
+	fi
 }
 
 pkg_postinst:${PN}:libc-glibc () {
