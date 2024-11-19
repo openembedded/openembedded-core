@@ -51,7 +51,7 @@ def blame_patch(patch):
     return subprocess.check_output(("git", "log",
                                     "--follow", "--find-renames", "--diff-filter=A",
                                     "--format=%s (%aN <%aE>)",
-                                    "--", patch)).decode("utf-8").splitlines()
+                                    "--", patch), cwd=os.path.dirname(patch)).decode("utf-8").splitlines()
 
 def patchreview(patches):
 
