@@ -371,7 +371,7 @@ def testimage_main(d):
         complete = True
         if results.hasAnyFailingTest():
             run_failed_tests_post_actions(d, tc)
-    except (KeyboardInterrupt, BlockingIOError) as err:
+    except (KeyboardInterrupt, BlockingIOError, RuntimeError) as err:
         if isinstance(err, KeyboardInterrupt):
             bb.error('testimage interrupted, shutting down...')
         else:
