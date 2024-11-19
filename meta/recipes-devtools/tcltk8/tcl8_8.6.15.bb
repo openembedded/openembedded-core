@@ -57,8 +57,8 @@ do_install() {
 	install -m 0755 tclConfig.sh ${D}${bindir_crossscripts}
 	install -m 0755 tclConfig.sh ${D}${libdir}
 	for dir in compat generic unix; do
-		install -d ${D}${includedir}/${BPN}${VER}/$dir
-		install -m 0644 ${S}/$dir/*.h ${D}${includedir}/${BPN}${VER}/$dir/
+		install -d ${D}${includedir}/tcl${VER}/$dir
+		install -m 0644 ${S}/$dir/*.h ${D}${includedir}/tcl${VER}/$dir/
 	done
 }
 
