@@ -92,7 +92,7 @@ FILES:libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=9cf7c317c3f2a0962437465a9022dbe9"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=7c364a0debecf16d5a13de2b7f1aaabd"
 
 def icu_download_version(d):
     pvsplit = d.getVar('PV').split('-')
@@ -118,16 +118,14 @@ DATA_SRC_URI = "${GITHUB_BASE_URI}/download/release-${ICU_FOLDER}/icu4c-${ICU_PV
 SRC_URI = "${BASE_SRC_URI};name=code \
            ${DATA_SRC_URI};name=data \
            file://filter.json \
-           file://fix-install-manx.patch \
            file://0001-icu-Added-armeb-support.patch \
-           file://ICU-22813_rise_buffer_sizes_pkgdata_PR3058.patch \
            "
 
 SRC_URI:append:class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[code.sha256sum] = "cb968df3e4d2e87e8b11c49a5d01c787bd13b9545280fc6642f826527618caef"
-SRC_URI[data.sha256sum] = "a5104212dc317a64f9b035723ea706f2f4fd5a0f37b7923fae7aeb9d1d0061b1"
+SRC_URI[code.sha256sum] = "dfacb46bfe4747410472ce3e1144bf28a102feeaa4e3875bac9b4c6cf30f4f3e"
+SRC_URI[data.sha256sum] = "133ae58a67d68b46f7296822904cd3c30126a0b4b2f65f0f905e7f47c0ef9e47"
 
 UPSTREAM_CHECK_REGEX = "releases/tag/release-(?P<pver>(?!.+rc).+)"
 GITHUB_BASE_URI = "https://github.com/unicode-org/icu/releases"
