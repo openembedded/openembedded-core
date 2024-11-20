@@ -23,6 +23,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.xz \
            file://bootlogd.init \
            file://01_bootlogd \
            file://0001-hddown-include-libgen.h-for-basename-API.patch \
+           file://0001-Accepted-patch-from-Mark-Hindley-which-avoids-cleari.patch \
            "
 SRC_URI[sha256sum] = "2a621fe6e4528bc91308b74867ddaaebbdf7753f02395c0c5bae817bd2b7e3a5"
 
