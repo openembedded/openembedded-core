@@ -92,7 +92,10 @@ class OESSHTarget(OETarget):
             processTimeout = self.timeout
 
         status, output = self._run(sshCmd, processTimeout, ignore_status, raw)
-        self.logger.debug('Command: %s\nStatus: %d Output:  %s\n' % (command, status, output))
+        if len(output) > (64 * 1024):
+            self.logger.debug('Command: %s\nStatus: %d Output length:  %s\n' % (command, status, len(output)))
+        else:
+            self.logger.debug('Command: %s\nStatus: %d Output:  %s\n' % (command, status, output))
 
         return (status, output)
 
@@ -211,17 +214,18 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
     def run():
         nonlocal output
         nonlocal process
-        output_raw = b''
+        output_raw = bytearray()
         starttime = time.time()
+        progress = time.time()
         process = subprocess.Popen(command, **options)
         has_timeout = False
+        appendline = None
         if timeout:
             endtime = starttime + timeout
             eof = False
             os.set_blocking(process.stdout.fileno(), False)
             while not has_timeout and not eof:
                 try:
-                    logger.debug('Waiting for process output: time: %s, endtime: %s' % (time.time(), endtime))
                     if select.select([process.stdout], [], [], 5)[0] != []:
                         # wait a bit for more data, tries to avoid reading single characters
                         time.sleep(0.2)
@@ -229,9 +233,9 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
                         if not data:
                             eof = True
                         else:
-                            output_raw += data
+                            output_raw.extend(data)
                             # ignore errors to capture as much as possible
-                            logger.debug('Partial data from SSH call:\n%s' % data.decode('utf-8', errors='ignore'))
+                            #logger.debug('Partial data from SSH call:\n%s' % data.decode('utf-8', errors='ignore'))
                             endtime = time.time() + timeout
                 except InterruptedError:
                     logger.debug('InterruptedError')
@@ -243,6 +247,10 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
                 if time.time() >= endtime:
                     logger.debug('SSHCall has timeout! Time: %s, endtime: %s' % (time.time(), endtime))
                     has_timeout = True
+
+                if time.time() >= (progress + 60):
+                    logger.debug('Waiting for process output at time: %s with datasize: %s' % (time.time(), len(output_raw)))
+                    progress = time.time()
 
             process.stdout.close()
 
@@ -256,17 +264,29 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
                     logger.debug('OSError when killing process')
                     pass
                 endtime = time.time() - starttime
-                lastline = ("\nProcess killed - no output for %d seconds. Total"
+                appendline = ("\nProcess killed - no output for %d seconds. Total"
                             " running time: %d seconds." % (timeout, endtime))
-                logger.debug('Received data from SSH call:\n%s ' % lastline)
-                output += lastline
+                logger.debug('Received data from SSH call:\n%s ' % appendline)
                 process.wait()
 
+            if raw:
+                output = bytes(output_raw)
+                if appendline:
+                    output += bytes(appendline, "utf-8")
+            else:
+                output = output_raw.decode('utf-8', errors='ignore')
+                if appendline:
+                    output += appendline
         else:
-            output_raw = process.communicate()[0]
+            output = output_raw = process.communicate()[0]
+            if not raw:
+                output = output_raw.decode('utf-8', errors='ignore')
 
-        output = output_raw if raw else output_raw.decode('utf-8', errors='ignore')
-        logger.debug('Data from SSH call:\n%s' % output.rstrip())
+        if len(output) < (64 * 1024):
+            if output.rstrip():
+                logger.debug('Data from SSH call:\n%s' % output.rstrip())
+            else:
+                logger.debug('No output from SSH call')
 
         # timout or not, make sure process exits and is not hanging
         if process.returncode == None:
