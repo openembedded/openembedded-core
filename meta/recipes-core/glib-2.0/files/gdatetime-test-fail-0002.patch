@@ -1,7 +1,7 @@
-From 2702d7ff73649c05297105bab8977e2a9d28fa0b Mon Sep 17 00:00:00 2001
+From 1110f463fe084ba2675e044be2e045f7c0224a7f Mon Sep 17 00:00:00 2001
 From: Simon McVittie <smcv@debian.org>
 Date: Fri, 18 Oct 2024 11:03:19 +0100
-Subject: [PATCH 2/3] gdatetime test: Try to make PST8PDT test more obviously
+Subject: [PATCH] gdatetime test: Try to make PST8PDT test more obviously
  correct
 
 Instead of using timestamp 0 as a magic number (in this case interpreted
@@ -23,7 +23,7 @@ Signed-off-by: Jinfeng Wang <jinfeng.wang.cn@windriver.com>
  1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/glib/tests/gdatetime.c b/glib/tests/gdatetime.c
-index 2eefc4106..728b87343 100644
+index 2eefc41..728b873 100644
 --- a/glib/tests/gdatetime.c
 +++ b/glib/tests/gdatetime.c
 @@ -2954,19 +2954,16 @@ test_posix_parse (void)
@@ -60,6 +60,3 @@ index 2eefc4106..728b87343 100644
  
    tz = g_time_zone_new_identifier ("PST8PDT6:32:15");
  #ifdef G_OS_WIN32
--- 
-2.34.1
-
