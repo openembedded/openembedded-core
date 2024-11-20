@@ -64,7 +64,8 @@ def list_and_fetch_failed_tests_artifacts(d, tc, artifacts_list, outputdir):
         bb.warn("Could not load artifacts list, skip artifacts retrieval")
         return
     try:
-        cmd = "tar zcf - " + " ".join(artifacts_list)
+        # We need gnu tar for sparse files, not busybox
+        cmd = "tar --sparse -zcf - " + " ".join(artifacts_list)
         (status, output) = tc.target.run(cmd, raw = True)
         if status != 0 or not output:
             raise Exception("Error while fetching compressed artifacts")
