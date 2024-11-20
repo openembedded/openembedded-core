@@ -24,6 +24,7 @@ TESTIMAGE_AUTO ??= "0"
 
 TESTIMAGE_FAILED_QA_ARTIFACTS = "\
     ${localstatedir}/log \
+    ${localstatedir}/volatile/log \
     ${sysconfdir}/version \
     ${sysconfdir}/os-release"
 
