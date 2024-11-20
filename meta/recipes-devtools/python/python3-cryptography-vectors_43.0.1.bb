@@ -19,11 +19,6 @@ DEPENDS += " \
     python3-cryptography \
 "
 
-do_install:append () {
-	# Remove the sha256 checksum lines for pycache files
-	sed ${D}${PYTHON_SITEPACKAGES_DIR}/cryptography_vectors-${PV}.dist-info/RECORD -e '/__pycache__/d' -i
-}
-
 BBCLASSEXTEND = "native nativesdk"
 
 UPSTREAM_CHECK_REGEX = ""
