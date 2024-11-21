@@ -20,12 +20,6 @@ inherit_defer ${XORGBUILDCLASS}
 # depends on virtual/xserver
 REQUIRED_DISTRO_FEATURES = "x11"
 
-# FIXME: We don't want to include the libtool archives (*.la) from modules
-# directory, as they serve no useful purpose. Upstream should fix Makefile.am
-do_install:append() {
-	find ${D}${libdir}/xorg/modules -regex ".*\.la$" | xargs rm -f --
-}
-
 # Function to add the relevant ABI dependency to drivers, which should be called
 # from a PACKAGEFUNC.
 def _add_xorg_abi_depends(d, name):
