@@ -3,7 +3,7 @@ HOMEPAGE = "https://numpy.org/"
 DESCRIPTION = "NumPy is the fundamental package needed for scientific computing with Python."
 SECTION = "devel/python"
 LICENSE = "BSD-3-Clause & BSD-2-Clause & PSF-2.0 & Apache-2.0 & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=a752eb20459cf74a9d84ee4825e8317c"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1de863c37a83e71b1e97b64d036ea78b"
 
 SRCNAME = "numpy"
 
@@ -13,22 +13,31 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${SRCNAME}-${PV}.tar.gz \
            file://fix_reproducibility.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "2a02aba9ed12e4ac4eb3ea9421c420301a0c6460d9830d74a9df87efa4912010"
+SRC_URI[sha256sum] = "aa08e04e08aaf974d4458def539dece0d28146d866a39da5639596f4921fd761"
 
 GITHUB_BASE_URI = "https://github.com/numpy/numpy/releases"
 UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
-inherit ptest setuptools3 github-releases cython
+inherit ptest python_mesonpy github-releases cython
 
 S = "${WORKDIR}/numpy-${PV}"
 
-CLEANBROKEN = "1"
+# Remove references to buildpaths from numpy's __config__.py
+do_install:append() {
+    sed -i \
+        -e 's|${S}=||g' \
+        -e 's|${B}=||g' \
+        -e 's|${RECIPE_SYSROOT_NATIVE}=||g' \
+        -e 's|${RECIPE_SYSROOT_NATIVE}||g' \
+        -e 's|${RECIPE_SYSROOT}=||g' \
+        -e 's|${RECIPE_SYSROOT}||g' ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
 
-do_compile:prepend() {
-    export NPY_DISABLE_SVML=1
+    nativepython3 -mcompileall -s ${D} ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
 }
 
-FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/core/lib/*.a ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a"
+FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/_core/lib/*.a \
+                          ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a \
+"
 
 # install what is needed for numpy.test()
 RDEPENDS:${PN} = "python3-unittest \
@@ -58,8 +67,5 @@ RDEPENDS:${PN}-ptest += "python3-pytest \
                          python3-typing-extensions \
                          ldd \
 "
-
-# Upstream has a pyproject.toml but as of 1.26.4 it's marked as experimental
-INSANE_SKIP = "pep517-backend"
 
 BBCLASSEXTEND = "native nativesdk"
