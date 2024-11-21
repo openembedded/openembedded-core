@@ -64,7 +64,6 @@ FILES:${PN}-dev += " \
 	${bindir}/gdk-pixbuf-pixdata \
         ${bindir}/gdk-pixbuf-print-mime-types \
 	${includedir}/* \
-	${libdir}/gdk-pixbuf-2.0/${LIBV}/loaders/*.la \
 "
 
 PACKAGES_DYNAMIC += "^gdk-pixbuf-loader-.*"
@@ -98,8 +97,6 @@ do_install_ptest() {
 }
 
 do_install:append:class-native() {
-	find ${D}${libdir} -name "libpixbufloader-*.la" -exec rm \{\} \;
-
 	create_wrapper ${D}/${bindir}/gdk-pixbuf-csource \
 		XDG_DATA_DIRS=${STAGING_DATADIR} \
 		GDK_PIXBUF_MODULE_FILE=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/${LIBV}/loaders.cache
