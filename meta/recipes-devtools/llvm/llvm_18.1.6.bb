@@ -93,6 +93,8 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                   -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen${PV} \
                   -DLLVM_CONFIG_PATH=${STAGING_BINDIR_NATIVE}/llvm-config${PV} \
                  "
+# Unless DEBUG_BUILD is enabled, pass -g1 to massively reduce the size of the debug symbols
+DEBUG_FLAGS:append = "${@oe.utils.vartrue('DEBUG_BUILD', '', ' -g1', d)}"
 
 # patch out build host paths for reproducibility
 do_compile:prepend:class-target() {
