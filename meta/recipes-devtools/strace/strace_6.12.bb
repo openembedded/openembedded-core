@@ -14,9 +14,9 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/strace-${PV}.tar.xz \
            file://skip-load.patch \
            file://0001-configure-Use-autoconf-macro-to-detect-largefile-sup.patch \
            file://0002-tests-Replace-off64_t-with-off_t.patch \
-           file://0001-sched_attr-Define-conditionally-on-SCHED_ATTR_SIZE_V.patch \
            "
-SRC_URI[sha256sum] = "83262583a3529f02c3501aa8b8ac772b4cbc03dc934e98bab6e4883626e283a5"
+SRC_URI[sha256sum] = "c47da93be45b6055f4dc741d7f20efaf50ca10160a5b100c109b294fd9c0bdfe"
+
 
 inherit autotools github-releases ptest
 
