@@ -54,6 +54,7 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://CVE-2022-36765-0002.patch \
            file://CVE-2022-36765-0003.patch \
            file://0001-MdePkg-Fix-overflow-issue-in-BasePeCoffLib.patch \
+           file://0001-MdeModulePkg-Potential-UINT32-overflow-in-S3-ResumeC.patch \
            "
 
 PV = "edk2-stable202202"
