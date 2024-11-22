@@ -461,7 +461,9 @@ FILES:${PN}-man = "${datadir}/man"
 
 # See https://bugs.python.org/issue18748 and https://bugs.python.org/issue37395
 RDEPENDS:libpython3:append:libc-glibc = " libgcc"
-RDEPENDS:${PN}-ctypes:append:libc-glibc = " ${MLPREFIX}ldconfig"
+RDEPENDS:${PN}-ctypes:append:libc-glibc = "\
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ldconfig', '${MLPREFIX}ldconfig', '', d)} \
+"
 RDEPENDS:${PN}-ptest = "${PN}-modules ${PN}-tests ${PN}-dev ${PN}-zipapp unzip bzip2 libgcc tzdata coreutils sed gcc g++ binutils \
                         locale-base-fr-fr locale-base-en-us locale-base-de-de"
 RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-tr-tr"
