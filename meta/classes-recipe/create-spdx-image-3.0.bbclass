@@ -36,6 +36,7 @@ do_create_rootfs_spdx[sstate-inputdirs] = "${SPDXROOTFSDEPLOY}"
 do_create_rootfs_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_rootfs_spdx[recrdeptask] += "do_create_spdx do_create_package_spdx"
 do_create_rootfs_spdx[cleandirs] += "${SPDXROOTFSDEPLOY}"
+do_create_rootfs_spdx[file-checksums] += "${SPDX3_LIB_DEP_FILES}"
 
 python do_create_rootfs_spdx_setscene() {
     sstate_setscene(d)
@@ -53,6 +54,7 @@ do_create_image_spdx[sstate-inputdirs] = "${SPDXIMAGEWORK}"
 do_create_image_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_image_spdx[cleandirs] = "${SPDXIMAGEWORK}"
 do_create_image_spdx[dirs] = "${SPDXIMAGEWORK}"
+do_create_image_spdx[file-checksums] += "${SPDX3_LIB_DEP_FILES}"
 
 python do_create_image_spdx_setscene() {
     sstate_setscene(d)
@@ -72,6 +74,7 @@ do_create_image_sbom_spdx[sstate-outputdirs] = "${DEPLOY_DIR_IMAGE}"
 do_create_image_sbom_spdx[stamp-extra-info] = "${MACHINE_ARCH}"
 do_create_image_sbom_spdx[cleandirs] = "${SPDXIMAGEDEPLOYDIR}"
 do_create_image_sbom_spdx[recrdeptask] += "do_create_spdx do_create_package_spdx"
+do_create_image_sbom_spdx[file-checksums] += "${SPDX3_LIB_DEP_FILES}"
 
 python do_create_image_sbom_spdx_setscene() {
     sstate_setscene(d)
