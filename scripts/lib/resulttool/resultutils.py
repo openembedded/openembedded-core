@@ -14,7 +14,10 @@ import scriptpath
 import copy
 import urllib.request
 import posixpath
+import logging
 scriptpath.add_oe_lib_path()
+
+logger = logging.getLogger('resulttool')
 
 flatten_map = {
     "oeselftest": [],
@@ -36,6 +39,12 @@ store_map = {
     "sdk": ['TEST_TYPE', 'MACHINE', 'SDKMACHINE', 'IMAGE_BASENAME'],
     "sdkext": ['TEST_TYPE', 'MACHINE', 'SDKMACHINE', 'IMAGE_BASENAME'],
     "manual": ['TEST_TYPE', 'TEST_MODULE', 'MACHINE', 'IMAGE_BASENAME']
+}
+
+rawlog_sections = {
+    "ptestresult.rawlogs": "ptest",
+    "ltpresult.rawlogs": "ltp",
+    "ltpposixresult.rawlogs": "ltpposix"
 }
 
 def is_url(p):
@@ -108,15 +117,14 @@ def filter_resultsdata(results, resultid):
                  newresults[r][i] = results[r][i]
     return newresults
 
-def strip_ptestresults(results):
+def strip_logs(results):
     newresults = copy.deepcopy(results)
-    #for a in newresults2:
-    #  newresults = newresults2[a]
     for res in newresults:
         if 'result' not in newresults[res]:
             continue
-        if 'ptestresult.rawlogs' in newresults[res]['result']:
-            del newresults[res]['result']['ptestresult.rawlogs']
+        for logtype in rawlog_sections:
+            if logtype in newresults[res]['result']:
+                del newresults[res]['result'][logtype]
         if 'ptestresult.sections' in newresults[res]['result']:
             for i in newresults[res]['result']['ptestresult.sections']:
                 if 'log' in newresults[res]['result']['ptestresult.sections'][i]:
@@ -155,9 +163,6 @@ def generic_get_rawlogs(sectname, results):
         return None
     return decode_log(results[sectname]['log'])
 
-def ptestresult_get_rawlogs(results):
-    return generic_get_rawlogs('ptestresult.rawlogs', results)
-
 def save_resultsdata(results, destdir, fn="testresults.json", ptestjson=False, ptestlogs=False):
     for res in results:
         if res:
@@ -167,16 +172,18 @@ def save_resultsdata(results, destdir, fn="testresults.json", ptestjson=False, p
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         resultsout = results[res]
         if not ptestjson:
-            resultsout = strip_ptestresults(results[res])
+            resultsout = strip_logs(results[res])
         with open(dst, 'w') as f:
             f.write(json.dumps(resultsout, sort_keys=True, indent=1))
         for res2 in results[res]:
             if ptestlogs and 'result' in results[res][res2]:
                 seriesresults = results[res][res2]['result']
-                rawlogs = ptestresult_get_rawlogs(seriesresults)
-                if rawlogs is not None:
-                    with open(dst.replace(fn, "ptest-raw.log"), "w+") as f:
-                        f.write(rawlogs)
+                for logtype in rawlog_sections:
+                    logdata = generic_get_rawlogs(logtype, seriesresults)
+                    if logdata is not None:
+                        logger.info("Extracting " + rawlog_sections[logtype] + "-raw.log")
+                        with open(dst.replace(fn, rawlog_sections[logtype] + "-raw.log"), "w+") as f:
+                            f.write(logdata)
                 if 'ptestresult.sections' in seriesresults:
                     for i in seriesresults['ptestresult.sections']:
                         sectionlog = ptestresult_get_log(seriesresults, i)
