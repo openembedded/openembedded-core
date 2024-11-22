@@ -786,7 +786,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
                 if not isinstance(value, str):
                     continue
 
-                build.build_parameters.append(
+                build.build_parameter.append(
                     oe.spdx30.DictionaryEntry(key=varname, value=value)
                 )
 
