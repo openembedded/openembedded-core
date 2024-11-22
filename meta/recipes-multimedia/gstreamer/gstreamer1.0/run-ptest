@@ -23,4 +23,4 @@ GST_CHECKS_IGNORE="$GST_CHECKS_IGNORE,parser_pull_short_read"
 # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/3524
 GST_CHECKS_IGNORE="$GST_CHECKS_IGNORE,parser_convert_duration,parser_pull_frame_growth,parser_reverse_playback"
 
-gnome-desktop-testing-runner gstreamer
+gnome-desktop-testing-runner --parallel=4 gstreamer "$@"
