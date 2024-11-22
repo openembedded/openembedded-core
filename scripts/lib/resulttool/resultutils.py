@@ -131,6 +131,27 @@ def strip_logs(results):
                     del newresults[res]['result']['ptestresult.sections'][i]['log']
     return newresults
 
+def handle_cleanups(results):
+    # Remove pointless path duplication from old format reproducibility results
+    for res2 in results:
+        try:
+            section = results[res2]['result']['reproducible']['files']
+            for pkgtype in section:
+                for filelist in section[pkgtype].copy():
+                    if section[pkgtype][filelist] and type(section[pkgtype][filelist][0]) == dict:
+                        newlist = []
+                        for entry in section[pkgtype][filelist]:
+                            newlist.append(entry["reference"].split("/./")[1])
+                        section[pkgtype][filelist] = newlist
+
+        except KeyError:
+            pass
+    # Remove pointless duplicate rawlogs data
+    try:
+        del results[res2]['result']['reproducible.rawlogs']
+    except KeyError:
+        pass
+
 def decode_log(logdata):
     if isinstance(logdata, str):
         return logdata
@@ -173,6 +194,7 @@ def save_resultsdata(results, destdir, fn="testresults.json", ptestjson=False, p
         resultsout = results[res]
         if not ptestjson:
             resultsout = strip_logs(results[res])
+        handle_cleanups(resultsout)
         with open(dst, 'w') as f:
             f.write(json.dumps(resultsout, sort_keys=True, indent=1))
         for res2 in results[res]:
