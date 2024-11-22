@@ -344,7 +344,9 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
                 alias_ext = set_alias(
                     e,
                     e._id.replace(unihash, "UNIHASH").replace(
-                        namespace, self.d.getVar("PN")
+                        namespace,
+                        "http://spdx.org/spdxdocs/openembedded-alias/"
+                        + self.d.getVar("PN"),
                     ),
                 )
 
