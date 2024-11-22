@@ -131,6 +131,22 @@ def strip_logs(results):
                     del newresults[res]['result']['ptestresult.sections'][i]['log']
     return newresults
 
+# For timing numbers, crazy amounts of precision don't make sense and just confuse
+# the logs. For numbers over 1, trim to 3 decimal places, for numbers less than 1,
+# trim to 4 significant digits
+def trim_durations(results):
+    for res in results:
+        if 'result' not in results[res]:
+            continue
+        for entry in results[res]['result']:
+            if 'duration' in results[res]['result'][entry]:
+                duration = results[res]['result'][entry]['duration']
+                if duration > 1:
+                    results[res]['result'][entry]['duration'] = float("%.3f" % duration)
+                elif duration < 1:
+                    results[res]['result'][entry]['duration'] = float("%.4g" % duration)
+    return results
+
 def handle_cleanups(results):
     # Remove pointless path duplication from old format reproducibility results
     for res2 in results:
@@ -194,6 +210,7 @@ def save_resultsdata(results, destdir, fn="testresults.json", ptestjson=False, p
         resultsout = results[res]
         if not ptestjson:
             resultsout = strip_logs(results[res])
+        trim_durations(resultsout)
         handle_cleanups(resultsout)
         with open(dst, 'w') as f:
             f.write(json.dumps(resultsout, sort_keys=True, indent=1))
