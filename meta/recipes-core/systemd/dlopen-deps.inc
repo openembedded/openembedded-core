@@ -12,9 +12,17 @@ python package_generate_dlopen_deps() {
         import tempfile, subprocess
 
         with tempfile.NamedTemporaryFile() as f:
-            cmd = [d.getVar("OBJCOPY"), "--dump-section", f"{segment}={f.name}", filename]
-            subprocess.run(cmd, check=True)
-            return f.read()
+            try:
+                cmd = [d.getVar("OBJCOPY"), "--dump-section", f"{segment}={f.name}", filename]
+                subprocess.run(cmd, check=True)
+                with open(f.name, "rb") as f2:
+                    return f2.read()
+            except subprocess.CalledProcessError as e:
+                # binutils-objcopy has 0 exit code if the segment can't be found, but llvm-objcopy
+                # does not. Assume the failure isn't critical and ignore errors.
+                if e.returncode == 1:
+                    return b""
+                raise e
 
     def parse(buffer, is_little):
         deps = []
