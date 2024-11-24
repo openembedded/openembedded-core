@@ -33,6 +33,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0010-configure-lookup-meson-exutable-from-PATH.patch \
            file://0011-qemu-Ensure-pip-and-the-python-venv-aren-t-used-for-.patch \
            file://0001-sched_attr-Do-not-define-for-glibc-2.41.patch \
+           file://0001-util-util-cpuinfo-riscv.c-fix-riscv64-build-on-musl-.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
