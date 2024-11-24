@@ -50,3 +50,6 @@ do_install_ptest() {
 	mkdir -p ${D}${PTEST_PATH}/docs
 	cp -r ${S}/docs/* ${D}${PTEST_PATH}/docs/
 }
+
+# should be removed when upgrading to 1.11.10 or higher
+CVE_STATUS[CVE-2023-48795] = "fixed-version: fixed since version 1.11.1"
