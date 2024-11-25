@@ -16,11 +16,11 @@ PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
 PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 
 SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
-           file://0001-m4-readline-add-missing-includes.patch \
            file://run-ptest \
+           file://0001-configure.ac-re-enable-disabled-printf-features.patch \
            "
 
-SRC_URI[sha256sum] = "378f8864ec21cfceaa048f7e1869ac9b4597b449087caf1eb55e440d30273336"
+SRC_URI[sha256sum] = "fa41b3a85413af87fb5e3a7d9c8fa8d4a20728c67651185bb49c38a7f9382b1e"
 
 inherit autotools gettext texinfo update-alternatives
 
