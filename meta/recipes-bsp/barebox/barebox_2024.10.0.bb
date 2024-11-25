@@ -14,4 +14,5 @@ inherit barebox
 SRC_URI = "https://barebox.org/download/barebox-${PV}.tar.bz2 \
            file://0001-lib-lz4-use-lz4-instead-of-lz4c.patch \
            "
-SRC_URI[sha256sum] = "955b20bfa7358732d2c0c09ccfd4c1a69087b7e2c610b16dee7442d71a5af88d"
+
+require barebox-version.inc
