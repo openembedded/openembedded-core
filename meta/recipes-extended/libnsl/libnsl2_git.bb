@@ -10,6 +10,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SECTION = "libs"
 DEPENDS = "libtirpc"
 
+CVE_PRODUCT = "libnsl_project:libnsl"
+
 PV = "2.0.1"
 
 SRCREV = "d4b22e54b5e6637a69b26eab5faad2a326c9b182"
