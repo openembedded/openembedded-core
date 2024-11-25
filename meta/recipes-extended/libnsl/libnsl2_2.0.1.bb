@@ -12,12 +12,8 @@ DEPENDS = "libtirpc"
 
 CVE_PRODUCT = "libnsl_project:libnsl"
 
-PV = "2.0.1"
-
+SRC_URI = "git://github.com/thkukuk/libnsl;branch=master;protocol=https"
 SRCREV = "d4b22e54b5e6637a69b26eab5faad2a326c9b182"
-
-SRC_URI = "git://github.com/thkukuk/libnsl;branch=master;protocol=https \
-          "
 
 S = "${WORKDIR}/git"
 
