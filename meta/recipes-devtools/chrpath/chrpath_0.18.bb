@@ -9,10 +9,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 SRC_URI = "${DEBIAN_MIRROR}/main/c/${BPN}/${BPN}_${PV}.orig.tar.gz \
            file://standarddoc.patch"
 
-SRC_URI[md5sum] = "2bf8d1d1ee345fc8a7915576f5649982"
-SRC_URI[sha256sum] = "bb0d4c54bac2990e1bdf8132f2c9477ae752859d523e141e72b3b11a12c26e7b"
+SRC_URI[sha256sum] = "f09c49f0618660ca11fc6d9580ddde904c7224d4c6d0f6f2d1f9bcdc9102c9aa"
 
 inherit autotools
+S = "${WORKDIR}/chrpath"
 
 # We don't have a staged chrpath-native for ensuring our binary is
 # relocatable, so use the one we've just built
