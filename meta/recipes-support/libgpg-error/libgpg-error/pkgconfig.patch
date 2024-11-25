@@ -1,7 +1,7 @@
-From ba5ec5615d76dfa4afb429a4e11f3e7e3bc9de76 Mon Sep 17 00:00:00 2001
+From 3529df77cd20253ce2a9c1962d7a72058a04fd98 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Wed, 21 Aug 2024 20:03:29 -0700
-Subject: [PATCH 1/2] support pkgconfig
+Subject: [PATCH] support pkgconfig
 
 Upstream-Status: Inappropriate [gnupg upstream will not take this, it has been tried with other components]
 
@@ -241,6 +241,3 @@ index 2d24071..c561725 100644
 -  AC_SUBST(GPG_ERROR_MT_LIBS)
  ])
 +
--- 
-2.25.1
-
