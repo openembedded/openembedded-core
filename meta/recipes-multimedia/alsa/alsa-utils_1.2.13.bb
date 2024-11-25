@@ -26,7 +26,7 @@ PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2 \
            "
-SRC_URI[sha256sum] = "98bc6677d0c0074006679051822324a0ab0879aea558a8f68b511780d30cd924"
+SRC_URI[sha256sum] = "1702a6b1cdf9ba3e996ecbc1ddcf9171e6808f5961d503d0f27e80ee162f1daa"
 
 # On build machines with python-docutils (not python3-docutils !!) installed
 # rst2man (not rst2man.py) is detected and compile fails with
@@ -70,7 +70,7 @@ FILES:alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord ${bindir}/axfe
 FILES:alsa-utils-amixer      = "${bindir}/amixer"
 FILES:alsa-utils-alsamixer   = "${bindir}/alsamixer"
 FILES:alsa-utils-speakertest = "${bindir}/speaker-test ${datadir}/sounds/alsa/ ${datadir}/alsa/speaker-test/"
-FILES:alsa-utils-midi        = "${bindir}/aplaymidi ${bindir}/arecordmidi ${bindir}/amidi"
+FILES:alsa-utils-midi        = "${bindir}/aplaymidi* ${bindir}/arecordmidi* ${bindir}/amidi"
 FILES:alsa-utils-aconnect    = "${bindir}/aconnect"
 FILES:alsa-utils-aseqnet     = "${bindir}/aseqnet"
 FILES:alsa-utils-aseqsend    = "${bindir}/aseqsend"
