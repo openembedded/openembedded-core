@@ -11,10 +11,11 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/piglit.git;protocol=https;branch=ma
            file://0003-tests-util-piglit-shader.c-do-not-hardcode-build-pat.patch \
            file://0001-tests-Fix-narrowing-errors-seen-with-clang.patch \
            file://0001-CMakeLists.txt-do-not-obtain-wayland-scanner-path-fr.patch \
+           file://0001-tests-egl-spec-make-egl_ext_surface_compression-cond.patch \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-SRCREV = "c11c9374c1448d01b31e7f724921cc1f4ee2c84c"
+SRCREV = "d04d6fff00849a2a8e29ef3251c6ca04a2f68dc7"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr"
 

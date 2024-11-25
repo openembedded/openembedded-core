@@ -1,0 +1,33 @@
+From 0c97d5eacae4f584313c9251e585bb0246cceffc Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Fri, 22 Nov 2024 22:52:31 +0100
+Subject: [PATCH] tests/egl/spec: make egl_ext_surface_compression conditional
+ to X11
+
+Otherwise, this error occurs:
+| In file included from /srv/storage/alex/yocto/build-64/workspace/sources/piglit/tests/egl/spec/egl_ext_surface_compression/create_surface.c:28:
+| /srv/storage/alex/yocto/build-64/workspace/sources/piglit/tests/egl/spec/egl_ext_surface_compression/../../egl-util.h:12:10: fatal error: X11/Xlib.h: No such file or directory
+|    12 | #include <X11/Xlib.h>
+|       |          ^~~~~~~~~~~~
+
+Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/piglit/-/merge_requests/974]
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ tests/egl/spec/CMakeLists.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tests/egl/spec/CMakeLists.txt b/tests/egl/spec/CMakeLists.txt
+index 33c504978..1dea6d8fc 100644
+--- a/tests/egl/spec/CMakeLists.txt
++++ b/tests/egl/spec/CMakeLists.txt
+@@ -7,7 +7,9 @@ add_subdirectory (egl_ext_device_drm)
+ add_subdirectory (egl_ext_platform_device)
+ add_subdirectory (egl_ext_image_dma_buf_import_modifiers)
+ add_subdirectory (egl_ext_protected_content)
+-add_subdirectory (egl_ext_surface_compression)
++if (PIGLIT_HAS_X11)
++	add_subdirectory (egl_ext_surface_compression)
++endif (PIGLIT_HAS_X11)
+ add_subdirectory (egl_khr_create_context)
+ add_subdirectory (egl_khr_display_reference)
+ add_subdirectory (egl_khr_get_all_proc_addresses)
