@@ -1,7 +1,7 @@
-From 77ebf67d0c96f51da91c8499200ebd13f4dcdd68 Mon Sep 17 00:00:00 2001
+From 1a574aa22c9b3700af7e5c0901abef59c72bb874 Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Thu, 14 Jan 2021 06:33:04 +0000
-Subject: [PATCH 07/11] tests/meson.build: use relative path to refer to files
+Subject: [PATCH] tests/meson.build: use relative path to refer to files
 
 Fix error like:
 Fatal error: can't create tests/ptimer-test.p/..._qemu-5.2.0_hw_core_ptimer.c.o: File name too long
@@ -13,13 +13,13 @@ Upstream-Status: Submitted [send to qemu-devel]
 
 Signed-off-by: Changqing Li <changqing.li@windriver.com>
 ---
- tests/unit/meson.build | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tests/unit/meson.build | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Index: qemu-9.1.0/tests/unit/meson.build
-===================================================================
---- qemu-9.1.0.orig/tests/unit/meson.build
-+++ qemu-9.1.0/tests/unit/meson.build
+diff --git a/tests/unit/meson.build b/tests/unit/meson.build
+index 490ab8182..d19ee5606 100644
+--- a/tests/unit/meson.build
++++ b/tests/unit/meson.build
 @@ -128,17 +128,17 @@ endif
  
  if have_system
