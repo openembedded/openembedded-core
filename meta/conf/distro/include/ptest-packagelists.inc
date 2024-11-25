@@ -38,7 +38,6 @@ PTESTS_FAST = "\
     libtest-warnings-perl \
     libtimedate-perl \
     libtry-tiny-perl \
-    liburi-perl \
     libusb1 \
     libxml-namespacesupport-perl \
     libxml-parser-perl \
