@@ -1,4 +1,4 @@
-From 3d77c2ff41b1a65d0f4852ed21d7a8ec41b368a8 Mon Sep 17 00:00:00 2001
+From 05fff53c13fc5969e17f1e887b0b59bf0a088a6e Mon Sep 17 00:00:00 2001
 From: Joe Slater <joe.slater@windriver.com>
 Date: Wed, 22 Jul 2020 13:31:11 -0700
 Subject: [PATCH] libdnf: allow reproducible binary builds

@@ -1,4 +1,4 @@
-From 9fb0e6130ef5d9fa68240c279d235eee8658c0fa Mon Sep 17 00:00:00 2001
+From a921a92f334a2a30741b906c206e041cef2d904d Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 30 Dec 2016 18:24:50 +0200
 Subject: [PATCH] Set libsolv variables with pkg-config (cmake's own module
