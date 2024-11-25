@@ -6,11 +6,9 @@ LICENSE = "LGPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=2caced0b25dfefd4c601d92bd15116de"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 
-SRC_URI = "${GNUPG_MIRROR}/npth/npth-${PV}.tar.bz2 \
-           file://musl-fix.patch \
-           "
+SRC_URI = "${GNUPG_MIRROR}/npth/npth-${PV}.tar.bz2"
 
-SRC_URI[sha256sum] = "8589f56937b75ce33b28d312fccbf302b3b71ec3f3945fde6aaa74027914ad05"
+SRC_URI[sha256sum] = "8bd24b4f23a3065d6e5b26e98aba9ce783ea4fd781069c1b35d149694e90ca3e"
 
 inherit autotools multilib_header
 
