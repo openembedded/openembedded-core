@@ -1,4 +1,4 @@
-From 7fa115171a658d5358e15dcb40b233d049acae2f Mon Sep 17 00:00:00 2001
+From 29046e1308bec72cc21b0b00e979906f5a1fb63f Mon Sep 17 00:00:00 2001
 From: Philip Lorenz <philip.lorenz@bmw.de>
 Date: Mon, 3 Jun 2024 13:19:24 +0200
 Subject: [PATCH] CMakeDetermineCompilerABI: Strip -pipe from compile flags
@@ -35,7 +35,7 @@ Signed-off-by: Philip Lorenz <philip.lorenz@bmw.de>
  1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/Modules/CMakeDetermineCompilerABI.cmake b/Modules/CMakeDetermineCompilerABI.cmake
-index 4a75e25a92..806f0b715d 100644
+index 4a75e25a..806f0b71 100644
 --- a/Modules/CMakeDetermineCompilerABI.cmake
 +++ b/Modules/CMakeDetermineCompilerABI.cmake
 @@ -52,14 +52,21 @@ function(CMAKE_DETERMINE_COMPILER_ABI lang src)
