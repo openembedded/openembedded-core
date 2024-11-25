@@ -1,4 +1,4 @@
-From fca19b2f5db1be4daef4ea00c60a64120fa08178 Mon Sep 17 00:00:00 2001
+From 21b89d16e2ca79db212587bfea4aa18470984c90 Mon Sep 17 00:00:00 2001
 From: Jose Quaresma <quaresma.jose@gmail.com>
 Date: Sat, 24 Apr 2021 10:34:47 +0100
 Subject: [PATCH] tests: use a dictionaries for environment
