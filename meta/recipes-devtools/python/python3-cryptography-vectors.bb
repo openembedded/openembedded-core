@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8c3617db4fb6fae01f1d253ab91511e4 \
 
 # NOTE: Make sure to keep this recipe at the same version as python3-cryptography
 #       Upgrade both recipes at the same time
-
-SRC_URI[sha256sum] = "68a0fc18fe27b309e933a293a54f3356b78a14c15207e96c9ff85681af0509de"
+require python3-cryptography-common.inc
+SRC_URI[sha256sum] = "ff6a885265f484e8907277614b73e9c774b01658623ad763dde2858188e486b4"
 
 PYPI_PACKAGE = "cryptography_vectors"
 
@@ -20,7 +20,3 @@ DEPENDS += " \
 "
 
 BBCLASSEXTEND = "native nativesdk"
-
-UPSTREAM_CHECK_REGEX = ""
-
-RECIPE_NO_UPDATE_REASON = "Must be updated in sync with python3-cryptography."
