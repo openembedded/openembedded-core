@@ -1,4 +1,4 @@
-From 184b76e9742ff89f90a066edb0f46b4a150351cf Mon Sep 17 00:00:00 2001
+From fd1e84c66852c2c906ee292aad942b4bfbd9e306 Mon Sep 17 00:00:00 2001
 From: Marcin Juszkiewicz <hrw@openedhand.com>
 Date: Fri, 8 Jun 2007 08:35:12 +0000
 Subject: [PATCH] mtools: imported from OE
@@ -6,11 +6,11 @@ Subject: [PATCH] mtools: imported from OE
 Upstream-Status: Inappropriate [licensing]
 ---
  Makefile.in  | 11 ++++++-----
- configure.in | 27 +++++++++++++++++++++++++++
+ configure.ac | 27 +++++++++++++++++++++++++++
  2 files changed, 33 insertions(+), 5 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 5db50d7..92ad461 100644
+index 7b305b0..70c8c74 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -26,10 +26,11 @@ USERCFLAGS =
@@ -38,11 +38,11 @@ index 5db50d7..92ad461 100644
  
  pdf: mtools.pdf
  %.pdf: %.texi sysconfdir.texi
-diff --git a/configure.in b/configure.in
-index 1de916e..fd6cb08 100644
---- a/configure.in
-+++ b/configure.in
-@@ -32,6 +32,33 @@ AC_CANONICAL_TARGET
+diff --git a/configure.ac b/configure.ac
+index de108a8..0fd9ef0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -33,6 +33,33 @@ AC_CANONICAL_TARGET
  AC_C_CONST
  AC_C_INLINE
  
