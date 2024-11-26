@@ -38,7 +38,7 @@ VER = "${PV}"
 inherit autotools ptest binconfig
 
 AUTOTOOLS_SCRIPT_PATH = "${S}/unix"
-EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix"
+EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix=tcl8"
 
 # Prevent installing copy of tzdata based on tzdata installation on the build host
 # It doesn't install tzdata if one of the following files exist on the host:
