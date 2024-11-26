@@ -14,6 +14,7 @@ RCONFLICTS:${PN} = "openssh-sshd openssh"
 
 SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
            file://0001-urandom-xauth-changes-to-options.h.patch \
+           file://0007-Don-t-close-channels-when-a-PID-hasn-t-started.patch \
            file://init \
            file://dropbearkey.service \
            file://dropbear@.service \
