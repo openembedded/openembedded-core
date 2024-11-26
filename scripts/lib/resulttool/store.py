@@ -87,6 +87,7 @@ def store(args, logger):
             if args.logfile_archive:
                 logdir = args.logfile_archive + "/" + tagname
                 shutil.copytree(tempdir, logdir)
+                os.chmod(logdir, 0o755)
                 for root, dirs,  files in os.walk(logdir):
                     for name in files:
                         if not name.endswith(".log"):
