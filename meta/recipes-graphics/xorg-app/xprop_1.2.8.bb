@@ -15,4 +15,4 @@ DEPENDS += "libxmu"
 PE = "1"
 
 SRC_URI_EXT = "xz"
-SRC_URI[sha256sum] = "4436e3148bb91a162406230d9f736a49ca8b50b74790015dc15d78d6ce8e825f"
+SRC_URI[sha256sum] = "d689e2adb7ef7b439f6469b51cda8a7daefc83243854c2a3b8f84d0f029d67ee"
