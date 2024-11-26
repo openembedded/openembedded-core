@@ -26,8 +26,8 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0004-reproducible.patch \
            "
 
-PV = "edk2-stable202408"
-SRCREV = "b158dad150bf02879668f72ce306445250838201"
+PV = "edk2-stable202411"
+SRCREV = "0f3867fa6ef0553e26c42f7d71ff6bdb98429742"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>edk2-stable.*)"
 
 CVE_PRODUCT = "edk2"
