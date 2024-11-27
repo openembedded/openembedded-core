@@ -11,20 +11,21 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
                    "
 
 SECTION = "x11/utils"
-DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native"
+DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native cargo-c-native"
 BBCLASSEXTEND = "native nativesdk"
 
-GNOMEBASEBUILDCLASS = "autotools"
 inherit cargo_common gnomebase pixbufcache gobject-introspection rust vala gi-docgen cargo-update-recipe-crates
+GIR_MESON_ENABLE_FLAG = 'enabled'
+GIR_MESON_DISABLE_FLAG = 'disabled'
+GIDOCGEN_MESON_OPTION = 'docs'
+GIDOCGEN_MESON_ENABLE_FLAG = 'enabled'
+GIDOCGEN_MESON_DISABLE_FLAG = 'disabled'
 
 require ${BPN}-crates.inc
 
-SRC_URI += " \
-           file://0001-Makefile.am-pass-rust-target-to-cargo-also-when-not-.patch \
-           file://disable-rsvg-loader-test.patch \
-           "
-
-SRC_URI[archive.sha256sum] = "18e9d70c08cf25f50d610d6d5af571561d67cf4179f962e04266475df6e2e224"
+SRC_URI += "file://0001-meson.build-do-not-force-disable-introspection-and-v.patch \
+            file://0001-gdk-pixbuf-loader-meson.build-do-not-look-for-gdk-pi.patch"
+SRC_URI[archive.sha256sum] = "ecd293fb0cc338c170171bbc7bcfbea6725d041c95f31385dc935409933e4597"
 
 UPSTREAM_CHECK_REGEX = "librsvg-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
@@ -33,10 +34,9 @@ UPSTREAM_CHECK_REGEX = "librsvg-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 # for cargo to be happy
 BASEDEPENDS:append = " cargo-native"
 
+export EXTRA_NATIVE_PKGCONFIG_PATH = "${B}/meson-uninstalled:"
 export RUST_BACKTRACE = "full"
 export RUSTFLAGS
-
-export RUST_TARGET = "${RUST_HOST_SYS}"
 
 RUSTFLAGS:append:mips = " --cfg crossbeam_no_atomic_64"
 RUSTFLAGS:append:mipsel = " --cfg crossbeam_no_atomic_64"
@@ -56,13 +56,16 @@ do_compile:prepend() {
 
 CVE_STATUS[CVE-2018-1000041] = "not-applicable-platform: Issue only applies on Windows"
 
-CACHED_CONFIGUREVARS = "ac_cv_path_GDK_PIXBUF_QUERYLOADERS=${STAGING_LIBDIR_NATIVE}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
+EXTRA_OEMESON = "-Dtriplet=${RUST_HOST_SYS}"
+LDFLAGS += " -L${B}/rsvg"
+# needed on ubuntu 20.04/debian 11 to avoid 'undefined reference to `dlsym'' errors
+BUILD_LDFLAGS += " -ldl"
 
 PACKAGECONFIG ??= "gdkpixbuf"
 PACKAGECONFIG:append:class-target = " ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'vala', '', d)}"
 # The gdk-pixbuf loader
-PACKAGECONFIG[gdkpixbuf] = "--enable-pixbuf-loader,--disable-pixbuf-loader,gdk-pixbuf-native"
-PACKAGECONFIG[vala] = "--enable-vala,--disable-vala"
+PACKAGECONFIG[gdkpixbuf] = "-Dpixbuf-loader=enabled,-Dpixbuf-loader=disabled,gdk-pixbuf-native"
+PACKAGECONFIG[vala] = "-Dvala=enabled,-Dvala=disabled"
 
 do_install:append() {
 	# Loadable modules don't need .a or .la on Linux
@@ -78,3 +81,12 @@ FILES:librsvg-gtk = "${libdir}/gdk-pixbuf-2.0/*/*/*.so \
 RRECOMMENDS:librsvg-gtk = "gdk-pixbuf-bin"
 
 PIXBUF_PACKAGES = "librsvg-gtk"
+
+SYSROOT_PREPROCESS_FUNCS:append:class-target = " pkgconfig_sysroot_preprocess"
+
+# installed .pc file contains
+# prefix=${pcfiledir}/../..
+# which is expanded to an absolute path, and thus doesn't work when additionally prefixed with a sysroot directory
+pkgconfig_sysroot_preprocess() {
+        sed -i -e "s:^prefix=.*:prefix=${prefix}:g" ${SYSROOT_DESTDIR}${libdir}/pkgconfig/librsvg-2.0.pc
+}
