@@ -10,7 +10,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 # Distro can override the following VIRTUAL-RUNTIME providers:
-VIRTUAL-RUNTIME_dev_manager ?= "udev"
 VIRTUAL-RUNTIME_keymaps ?= "keymaps"
 
 EFI_PROVIDER ??= "grub-efi"
