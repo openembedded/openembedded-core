@@ -8,7 +8,7 @@ BUGTRACKER = "https://github.com/pypa/flit/issues"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=41eb78fa8a872983a882c694a8305f08"
 
-SRC_URI[sha256sum] = "d75edf5eb324da20d53570a6a6f87f51e606eee8384925cd66a90611140844c7"
+SRC_URI[sha256sum] = "9c6258ae76d218ce60f9e39a43ca42006a3abcc5c44ea6bb2a1daa13857a8f1a"
 
 inherit pypi python_flit_core
 
@@ -27,11 +27,5 @@ do_compile:class-native () {
 do_install:class-native () {
     python_pep517_do_bootstrap_install
 }
-
-PACKAGES =+ "${PN}-tests"
-
-FILES:${PN}-tests += "\
-    ${PYTHON_SITEPACKAGES_DIR}/flit_core/tests/* \
-"
 
 BBCLASSEXTEND = "native nativesdk"
