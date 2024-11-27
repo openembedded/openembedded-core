@@ -11,7 +11,7 @@ SRC_URI = "git://git.sr.ht/~kennylevinsen/seatd;protocol=https;branch=master \
 SRCREV = "566ffeb032af42865dc1210e48cec08368059bb9"
 S = "${WORKDIR}/git"
 
-inherit meson pkgconfig update-rc.d
+inherit meson pkgconfig systemd update-rc.d useradd
 
 # https://www.openwall.com/lists/musl/2020/01/20/3
 CFLAGS:append:libc-musl:powerpc64le = " -Wno-error=overflow"
@@ -22,14 +22,21 @@ PACKAGECONFIG ?= " \
 "
 
 PACKAGECONFIG[libseat-builtin] = "-Dlibseat-builtin=enabled,-Dlibseat-builtin=disabled"
-PACKAGECONFIG[systemd] = ",,systemd"
+PACKAGECONFIG[systemd] = "-Dlibseat-logind=systemd,,systemd"
 
 do_install:append() {
         if [ "${VIRTUAL-RUNTIME_init_manager}" != "systemd" ]; then
                 install -Dm755 ${UNPACKDIR}/init ${D}/${sysconfdir}/init.d/seatd
+        else
+                install -Dm644 ${S}/contrib/systemd/seatd.service ${D}${systemd_unitdir}/system/seatd.service
         fi
 }
+
+USERADD_PACKAGES = "${PN}"
+GROUPADD_PARAM:${PN} = "-r seat"
 
 INITSCRIPT_NAME = "seatd"
 INITSCRIPT_PARAMS = "start 9 5 2 . stop 20 0 1 6 ."
 INHIBIT_UPDATERCD_BBCLASS = "${@oe.utils.conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', '1', '', d)}"
+
+SYSTEMD_SERVICE:${PN} = "seatd.service"
