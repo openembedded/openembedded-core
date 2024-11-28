@@ -1,0 +1,30 @@
+From 8b09dbf95b3ba78a63f220941e31ac92f4ad192c Mon Sep 17 00:00:00 2001
+From: "Jason R. Coombs" <jaraco@jaraco.com>
+Date: Wed, 27 Nov 2024 23:31:57 -0800
+Subject: [PATCH 2/5] Employ SanitizedNames in CompleteDirs. Fixes broken test.
+
+Upstream-Status: Backport [https://github.com/jaraco/zipp/commit/58115d2be968644ce71ce6bcc9b79826c82a1806]
+Remove test code
+Rebase to v3.7.0
+CVE: CVE-2024-5569
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ zipp.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/zipp.py b/zipp.py
+index 8f0950f..29d2572 100644
+--- a/zipp.py
++++ b/zipp.py
+@@ -130,7 +130,7 @@ class SanitizedNames:
+         return joined + '/' * name.endswith('/')
+ 
+ 
+-class CompleteDirs(zipfile.ZipFile):
++class CompleteDirs(SanitizedNames, zipfile.ZipFile):
+     """
+     A ZipFile subclass that ensures that implied directories
+     are always included in the namelist.
+-- 
+2.25.1
+

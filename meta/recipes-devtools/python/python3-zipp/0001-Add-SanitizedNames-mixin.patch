@@ -1,0 +1,89 @@
+From ef2227e35d1ae833b7bfa1674a45f58c732ae1a6 Mon Sep 17 00:00:00 2001
+From: "Jason R. Coombs" <jaraco@jaraco.com>
+Date: Wed, 27 Nov 2024 23:27:57 -0800
+Subject: [PATCH 1/5] Add SanitizedNames mixin.
+
+Upstream-Status: Backport [https://github.com/jaraco/zipp/commit/564fcc10cdbfdaecdb33688e149827465931c9e0]
+CVE: CVE-2024-5569
+Rebase to v3.7.0
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ zipp.py | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+
+diff --git a/zipp.py b/zipp.py
+index 26b723c..8f0950f 100644
+--- a/zipp.py
++++ b/zipp.py
+@@ -68,6 +68,68 @@ def _difference(minuend, subtrahend):
+     return itertools.filterfalse(set(subtrahend).__contains__, minuend)
+ 
+ 
++class SanitizedNames:
++    """
++    ZipFile mix-in to ensure names are sanitized.
++    """
++
++    def namelist(self):
++        return list(map(self._sanitize, super().namelist()))
++
++    @staticmethod
++    def _sanitize(name):
++        r"""
++        Ensure a relative path with posix separators and no dot names.
++
++        Modeled after
++        https://github.com/python/cpython/blob/bcc1be39cb1d04ad9fc0bd1b9193d3972835a57c/Lib/zipfile/__init__.py#L1799-L1813
++        but provides consistent cross-platform behavior.
++
++        >>> san = SanitizedNames._sanitize
++        >>> san('/foo/bar')
++        'foo/bar'
++        >>> san('//foo.txt')
++        'foo.txt'
++        >>> san('foo/.././bar.txt')
++        'foo/bar.txt'
++        >>> san('foo../.bar.txt')
++        'foo../.bar.txt'
++        >>> san('\\foo\\bar.txt')
++        'foo/bar.txt'
++        >>> san('D:\\foo.txt')
++        'D/foo.txt'
++        >>> san('\\\\server\\share\\file.txt')
++        'server/share/file.txt'
++        >>> san('\\\\?\\GLOBALROOT\\Volume3')
++        '?/GLOBALROOT/Volume3'
++        >>> san('\\\\.\\PhysicalDrive1\\root')
++        'PhysicalDrive1/root'
++
++        Retain any trailing slash.
++        >>> san('abc/')
++        'abc/'
++
++        Raises a ValueError if the result is empty.
++        >>> san('../..')
++        Traceback (most recent call last):
++        ...
++        ValueError: Empty filename
++        """
++
++        def allowed(part):
++            return part and part not in {'..', '.'}
++
++        # Remove the drive letter.
++        # Don't use ntpath.splitdrive, because that also strips UNC paths
++        bare = re.sub('^([A-Z]):', r'\1', name, flags=re.IGNORECASE)
++        clean = bare.replace('\\', '/')
++        parts = clean.split('/')
++        joined = '/'.join(filter(allowed, parts))
++        if not joined:
++            raise ValueError("Empty filename")
++        return joined + '/' * name.endswith('/')
++
++
+ class CompleteDirs(zipfile.ZipFile):
+     """
+     A ZipFile subclass that ensures that implied directories
+-- 
+2.25.1
+

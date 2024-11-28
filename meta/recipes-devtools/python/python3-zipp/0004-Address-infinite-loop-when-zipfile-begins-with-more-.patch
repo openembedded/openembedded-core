@@ -1,0 +1,48 @@
+From ef4ee19919bd49a9c1207ff8d87f83dd48aed436 Mon Sep 17 00:00:00 2001
+From: "Jason R. Coombs" <jaraco@jaraco.com>
+Date: Wed, 27 Nov 2024 23:35:28 -0800
+Subject: [PATCH 4/5] Address infinite loop when zipfile begins with more than
+ one leading slash.
+
+Alternate and more surgical fix for jaraco/zipp#119. Ref python/cpython#123270
+
+Upstream-Status: Backport [https://github.com/jaraco/zipp/commit/f89b93f0370dd85d23d243e25dfc1f99f4d8de48]
+Remove test codes
+Rebase to v3.7.0
+CVE: CVE-2024-5569
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ zipp.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/zipp.py b/zipp.py
+index 26b723c..236af49 100644
+--- a/zipp.py
++++ b/zipp.py
+@@ -37,7 +37,7 @@ def _parents(path):
+ def _ancestry(path):
+     """
+     Given a path with elements separated by
+-    posixpath.sep, generate all elements of that path
++    posixpath.sep, generate all elements of that path.
+ 
+     >>> list(_ancestry('b/d'))
+     ['b/d', 'b']
+@@ -49,9 +49,13 @@ def _ancestry(path):
+     ['b']
+     >>> list(_ancestry(''))
+     []
++    Multiple separators are treated like a single.
++
++    >>> list(_ancestry('//b//d///f//'))
++    ['//b//d///f', '//b//d', '//b']
+     """
+     path = path.rstrip(posixpath.sep)
+-    while path and path != posixpath.sep:
++    while path and not path.endswith(posixpath.sep):
+         yield path
+         path, tail = posixpath.split(path)
+ 
+-- 
+2.25.1
+

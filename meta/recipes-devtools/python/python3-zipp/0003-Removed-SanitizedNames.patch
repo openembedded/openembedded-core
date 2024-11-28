@@ -1,0 +1,95 @@
+From b52b8af403e64607ae8d5e4cd18d4099d63e7264 Mon Sep 17 00:00:00 2001
+From: "Jason R. Coombs" <jaraco@jaraco.com>
+Date: Wed, 27 Nov 2024 23:33:11 -0800
+Subject: [PATCH 3/5] Removed SanitizedNames.
+
+Restores expectations around special characters in zipfiles, but also restores the infinite loop.
+
+Upstream-Status: Backport [https://github.com/jaraco/zipp/commit/3cb5609002263eb19f7b5efda82d96f1f57fe876]
+Remove test codes
+Rebase to v3.7.0
+CVE: CVE-2024-5569
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ zipp.py | 64 +--------------------------------------------------------
+ 1 file changed, 1 insertion(+), 63 deletions(-)
+
+diff --git a/zipp.py b/zipp.py
+index 29d2572..26b723c 100644
+--- a/zipp.py
++++ b/zipp.py
+@@ -68,69 +68,7 @@ def _difference(minuend, subtrahend):
+     return itertools.filterfalse(set(subtrahend).__contains__, minuend)
+ 
+ 
+-class SanitizedNames:
+-    """
+-    ZipFile mix-in to ensure names are sanitized.
+-    """
+-
+-    def namelist(self):
+-        return list(map(self._sanitize, super().namelist()))
+-
+-    @staticmethod
+-    def _sanitize(name):
+-        r"""
+-        Ensure a relative path with posix separators and no dot names.
+-
+-        Modeled after
+-        https://github.com/python/cpython/blob/bcc1be39cb1d04ad9fc0bd1b9193d3972835a57c/Lib/zipfile/__init__.py#L1799-L1813
+-        but provides consistent cross-platform behavior.
+-
+-        >>> san = SanitizedNames._sanitize
+-        >>> san('/foo/bar')
+-        'foo/bar'
+-        >>> san('//foo.txt')
+-        'foo.txt'
+-        >>> san('foo/.././bar.txt')
+-        'foo/bar.txt'
+-        >>> san('foo../.bar.txt')
+-        'foo../.bar.txt'
+-        >>> san('\\foo\\bar.txt')
+-        'foo/bar.txt'
+-        >>> san('D:\\foo.txt')
+-        'D/foo.txt'
+-        >>> san('\\\\server\\share\\file.txt')
+-        'server/share/file.txt'
+-        >>> san('\\\\?\\GLOBALROOT\\Volume3')
+-        '?/GLOBALROOT/Volume3'
+-        >>> san('\\\\.\\PhysicalDrive1\\root')
+-        'PhysicalDrive1/root'
+-
+-        Retain any trailing slash.
+-        >>> san('abc/')
+-        'abc/'
+-
+-        Raises a ValueError if the result is empty.
+-        >>> san('../..')
+-        Traceback (most recent call last):
+-        ...
+-        ValueError: Empty filename
+-        """
+-
+-        def allowed(part):
+-            return part and part not in {'..', '.'}
+-
+-        # Remove the drive letter.
+-        # Don't use ntpath.splitdrive, because that also strips UNC paths
+-        bare = re.sub('^([A-Z]):', r'\1', name, flags=re.IGNORECASE)
+-        clean = bare.replace('\\', '/')
+-        parts = clean.split('/')
+-        joined = '/'.join(filter(allowed, parts))
+-        if not joined:
+-            raise ValueError("Empty filename")
+-        return joined + '/' * name.endswith('/')
+-
+-
+-class CompleteDirs(SanitizedNames, zipfile.ZipFile):
++class CompleteDirs(zipfile.ZipFile):
+     """
+     A ZipFile subclass that ensures that implied directories
+     are always included in the namelist.
+-- 
+2.25.1
+
