@@ -31,6 +31,8 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_active_children-skip-problematic-test.patch \
            file://0001-test_readline-skip-limited-history-test.patch \
            file://fix-armv5.patch \
+           file://0001-Generate-data-for-OpenSSL-3.4-and-add-it-to-multissl.patch \
+           file://0001-ssl-Raise-OSError-for-ERR_LIB_SYS.patch \
            "
 
 SRC_URI:append:class-native = " \
