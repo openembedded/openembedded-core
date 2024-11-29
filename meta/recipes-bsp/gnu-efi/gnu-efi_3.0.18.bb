@@ -39,8 +39,11 @@ do_compile:prepend() {
     unset LDFLAGS
 }
 
-EXTRA_OEMAKE = "'ARCH=${@gnu_efi_arch(d)}' 'CC=${CC}' 'AS=${AS}' 'LD=${LD}' 'AR=${AR}' \
-                'RANLIB=${RANLIB}' 'OBJCOPY=${OBJCOPY}' 'PREFIX=${prefix}' 'LIBDIR=${libdir}' \
+EXTRA_OEMAKE = "'V=1' 'ARCH=${@gnu_efi_arch(d)}' \
+                'HOSTCC=${BUILD_CC}' 'CC=${CC}' \
+                'AS=${AS}' 'LD=${LD}' 'AR=${AR}' \
+                'RANLIB=${RANLIB}' 'OBJCOPY=${OBJCOPY}' \
+                'PREFIX=${prefix}' 'LIBDIR=${libdir}' 'INCLUDEDIR=${includedir}' \
                 "
 
 # gnu-efi's Makefile treats prefix as toolchain prefix, so don't
