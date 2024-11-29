@@ -13,7 +13,6 @@ LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=16;md5=e582
                    "
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/files/${BP}.tar.bz2 \
-           file://0001-Fix-parallel-make-failure-for-archives.patch \
            file://0002-Do-not-treat-warnings-as-errors.patch \
            "
 SRC_URI[sha256sum] = "7f212c96ee66547eeefb531267b641e5473d7d8529f0bd8ccdefd33cf7413f5c"
