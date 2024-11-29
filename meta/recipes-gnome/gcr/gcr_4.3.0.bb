@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605"
 DEPENDS = "p11-kit glib-2.0 libgcrypt gnupg-native \
            ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'libxslt-native', '', d)}"
 
-CACHED_CONFIGUREVARS += "ac_cv_path_GPG='gpg2'"
+CACHED_CONFIGUREVARS += "ac_cv_path_GPG='gpg'"
 
 CFLAGS += "-D_GNU_SOURCE"
 
@@ -51,7 +51,7 @@ EXTRA_OEMESON += "--cross-file=${WORKDIR}/meson-${PN}.cross"
 do_write_config:append() {
     cat >${WORKDIR}/meson-${PN}.cross <<EOF
 [binaries]
-gpg2 = '${bindir}/gpg2'
+gpg = '${bindir}/gpg'
 ssh-add = '${bindir}/ssh-add'
 ssh-agent = '${bindir}/ssh-agent'
 EOF
