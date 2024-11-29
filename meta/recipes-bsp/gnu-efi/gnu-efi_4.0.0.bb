@@ -3,24 +3,26 @@ HOMEPAGE = "http://sourceforge.net/projects/gnu-efi/"
 DESCRIPTION = "GNU-EFI aims to Develop EFI applications for ARM-64, ARM-32, x86_64, IA-64 (IPF), IA-32 (x86), and MIPS platforms using the GNU toolchain and the EFI development environment."
 SECTION = "devel"
 LICENSE = "GPL-2.0-or-later & BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=16;md5=e582764a4776e60c95bf9ab617343d36 \
-                    file://gnuefi/crt0-efi-aarch64.S;beginline=4;endline=16;md5=e582764a4776e60c95bf9ab617343d36 \
-                    file://inc/efishellintf.h;beginline=13;endline=20;md5=202766b79d708eff3cc70fce15fb80c7 \
-                    file://lib/arm/math.c;beginline=2;endline=15;md5=8ed772501da77b2b3345aa6df8744c9e \
-                    file://lib/arm/initplat.c;beginline=2;endline=15;md5=8ed772501da77b2b3345aa6df8744c9e \
-                    file://lib/aarch64/math.c;beginline=2;endline=15;md5=8ed772501da77b2b3345aa6df8744c9e \
-                    file://lib/aarch64/initplat.c;beginline=2;endline=15;md5=8ed772501da77b2b3345aa6df8744c9e \
+LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=16;md5=8b0a86085b86eda7a3c7e8a1eb7ec753 \
+                    file://gnuefi/crt0-efi-aarch64.S;beginline=4;endline=16;md5=8b0a86085b86eda7a3c7e8a1eb7ec753 \
+                    file://inc/efishellintf.h;beginline=13;endline=20;md5=ee14c1530c341a7050837adead6bc9a5 \
+                    file://lib/arm/math.c;beginline=2;endline=15;md5=ccb5c6b51053d1ee7277539ec38513d7 \
+                    file://lib/arm/initplat.c;beginline=2;endline=15;md5=ccb5c6b51053d1ee7277539ec38513d7 \
+                    file://lib/aarch64/math.c;beginline=2;endline=15;md5=ccb5c6b51053d1ee7277539ec38513d7 \
+                    file://lib/aarch64/initplat.c;beginline=2;endline=15;md5=ccb5c6b51053d1ee7277539ec38513d7 \
                    "
-
-SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/files/${BP}.tar.bz2 \
-           file://0002-Do-not-treat-warnings-as-errors.patch \
-           "
-SRC_URI[sha256sum] = "7f212c96ee66547eeefb531267b641e5473d7d8529f0bd8ccdefd33cf7413f5c"
-
-inherit sourceforge-releases
 
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*|riscv64.*)-linux"
 COMPATIBLE_HOST:armv4 = 'null'
+
+SRC_URI = "git://github.com/ncroxon/gnu-efi;protocol=https;branch=master \
+           file://0002-Do-not-treat-warnings-as-errors.patch \
+           "
+SRCREV = "5ea320f0f01c8de8f9dd4e4e38a245608f0287dd"
+
+S = "${WORKDIR}/git"
+
+inherit github-releases
 
 do_configure:linux-gnux32:prepend() {
 	cp ${STAGING_INCDIR}/gnu/stubs-x32.h ${STAGING_INCDIR}/gnu/stubs-64.h
