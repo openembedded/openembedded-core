@@ -11,23 +11,45 @@ Otherwise, this error occurs:
 |       |          ^~~~~~~~~~~~
 
 Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/piglit/-/merge_requests/974]
+Co-developed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 ---
- tests/egl/spec/CMakeLists.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../spec/egl_ext_surface_compression/CMakeLists.gles3.txt   | 6 ++++--
+ tests/egl/spec/egl_ext_surface_compression/create_surface.c | 1 -
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tests/egl/spec/CMakeLists.txt b/tests/egl/spec/CMakeLists.txt
-index 33c504978..1dea6d8fc 100644
---- a/tests/egl/spec/CMakeLists.txt
-+++ b/tests/egl/spec/CMakeLists.txt
-@@ -7,7 +7,9 @@ add_subdirectory (egl_ext_device_drm)
- add_subdirectory (egl_ext_platform_device)
- add_subdirectory (egl_ext_image_dma_buf_import_modifiers)
- add_subdirectory (egl_ext_protected_content)
--add_subdirectory (egl_ext_surface_compression)
-+if (PIGLIT_HAS_X11)
-+	add_subdirectory (egl_ext_surface_compression)
-+endif (PIGLIT_HAS_X11)
- add_subdirectory (egl_khr_create_context)
- add_subdirectory (egl_khr_display_reference)
- add_subdirectory (egl_khr_get_all_proc_addresses)
+diff --git a/tests/egl/spec/egl_ext_surface_compression/CMakeLists.gles3.txt b/tests/egl/spec/egl_ext_surface_compression/CMakeLists.gles3.txt
+index d9540bcfde27..01a70164f444 100644
+--- a/tests/egl/spec/egl_ext_surface_compression/CMakeLists.gles3.txt
++++ b/tests/egl/spec/egl_ext_surface_compression/CMakeLists.gles3.txt
+@@ -2,10 +2,12 @@ link_libraries(
+ 	piglitutil_${piglit_target_api}
+ )
+ 
+-piglit_add_executable(egl_ext_surface_compression-create ../../egl-util.c
++if (PIGLIT_HAS_WAYLAND)
++piglit_add_executable(egl_ext_surface_compression-create
+ 	../../egl-wayland.c create_surface.c)
++endif (PIGLIT_HAS_WAYLAND)
+ 
+-piglit_add_executable(egl_ext_surface_compression-image ../../egl-util.c
++piglit_add_executable(egl_ext_surface_compression-image
+ 	image_storage.c)
+ 
+ # vim: ft=cmake:
+diff --git a/tests/egl/spec/egl_ext_surface_compression/create_surface.c b/tests/egl/spec/egl_ext_surface_compression/create_surface.c
+index e3d55d4331fb..35f13fd007b4 100644
+--- a/tests/egl/spec/egl_ext_surface_compression/create_surface.c
++++ b/tests/egl/spec/egl_ext_surface_compression/create_surface.c
+@@ -25,7 +25,6 @@
+ #include "piglit-util.h"
+ #include "piglit-util-egl.h"
+ #include "piglit-util-gl.h"
+-#include "../../egl-util.h"
+ #include "../../egl-wayland.h"
+ 
+ static enum piglit_result
+-- 
+2.39.5
+
