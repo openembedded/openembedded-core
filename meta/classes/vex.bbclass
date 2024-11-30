@@ -280,11 +280,13 @@ def cve_write_data_json(d, cve_data, cve_status):
         }
         if 'NVD-summary' in cve_data[cve]:
             cve_item["summary"] = cve_data[cve]["NVD-summary"]
+            cve_item["vectorStringV2"] = cve_data[cve]["NVD-vectorStringV2"]
             cve_item["scorev2"] = cve_data[cve]["NVD-scorev2"]
+            cve_item["vectorStringV3"] = cve_data[cve]["NVD-vectorStringV3"]
             cve_item["scorev3"] = cve_data[cve]["NVD-scorev3"]
+            cve_item["vectorStringV4"] = cve_data[cve]["NVD-vectorStringV4"]
             cve_item["scorev4"] = cve_data[cve]["NVD-scorev4"]
             cve_item["vector"] = cve_data[cve]["NVD-vector"]
-            cve_item["vectorString"] = cve_data[cve]["NVD-vectorString"]
         if 'status' in cve_data[cve]:
             cve_item["detail"] = cve_data[cve]["status"]
         if 'justification' in cve_data[cve]:
