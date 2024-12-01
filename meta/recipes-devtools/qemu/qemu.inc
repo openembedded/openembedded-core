@@ -148,6 +148,11 @@ CVE_CHECK_IGNORE += "CVE-2023-0664"
 # RHEL specific issue
 CVE_CHECK_IGNORE += "CVE-2023-2680"
 
+# The CVE has disputed flag in NVD DB and also descrition contains:
+# Note: This has been disputed by multiple third parties as not a valid vulnerability
+#       due to the rocker device not falling within the virtualization use case.
+CVE_CHECK_IGNORE += "CVE-2022-36648"
+
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"
 COMPATIBLE_HOST:riscv32 = "null"
