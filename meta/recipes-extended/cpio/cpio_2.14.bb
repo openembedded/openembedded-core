@@ -16,6 +16,8 @@ inherit autotools gettext texinfo
 
 # Issue applies to use of cpio in SUSE/OBS, doesn't apply to us
 CVE_CHECK_IGNORE += "CVE-2010-4226"
+# disputed: intended behaviour, see https://lists.gnu.org/archive/html/bug-cpio/2024-03/msg00000.html
+CVE_CHECK_IGNORE += "CVE-2023-7216"
 
 EXTRA_OECONF += "DEFAULT_RMT_DIR=${sbindir}"
 
