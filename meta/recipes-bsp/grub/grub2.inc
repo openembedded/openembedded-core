@@ -49,6 +49,8 @@ SRC_URI[sha256sum] = "23b64b4c741569f9426ed2e3d0e6780796fca081bee4c99f62aa3f53ae
 CVE_CHECK_IGNORE += "CVE-2019-14865"
 # Applies only to SUSE
 CVE_CHECK_IGNORE += "CVE-2021-46705"
+# not-applicable-platform: Applies only to RHEL/Fedora
+CVE_CHECK_IGNORE += "CVE-2024-1048 CVE-2023-4001"
 
 DEPENDS = "flex-native bison-native gettext-native"
 
