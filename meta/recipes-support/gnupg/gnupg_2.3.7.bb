@@ -87,3 +87,5 @@ lcl_maybe_fortify:mipsarch = ""
 
 # upstream-wontfix: Upstream doesn't seem to be keen on merging the proposed commit - https://dev.gnupg.org/T5993
 CVE_CHECK_IGNORE += "CVE-2022-3219"
+# cpe-incorrect: this is vulnerability of libksba and we use fixed libksba version
+CVE_CHECK_IGNORE += "CVE-2022-3515"
