@@ -40,3 +40,6 @@ EXTRA_OEMESON:append:class-target:powerpc64 = " ${@bb.utils.contains("TUNE_FEATU
 EXTRA_OEMESON:append:class-target:powerpc64le = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "-Dvmx=enabled", "-Dvmx=disabled", d)}"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# not-applicable-config: stress-test is an uninstalled test
+CVE_CHECK_IGNORE += "CVE-2023-37769"
