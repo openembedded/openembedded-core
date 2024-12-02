@@ -596,7 +596,7 @@ def create_spdx(d):
 
             supplier = build_objset.new_agent("SPDX_PACKAGE_SUPPLIER")
             if supplier is not None:
-                spdx_package.supplier = (
+                spdx_package.suppliedBy = (
                     supplier if isinstance(supplier, str) else supplier._id
                 )
 
