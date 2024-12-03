@@ -69,7 +69,7 @@ PAM_PLUGINS = " \
 "
 
 PACKAGECONFIG ??= " \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'acl audit efi ldconfig pam pni-names selinux smack usrmerge polkit seccomp', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'acl audit efi ldconfig pam pni-names selinux smack polkit seccomp', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'minidebuginfo', 'coredump elfutils', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
@@ -218,7 +218,6 @@ def build_epoch(d):
 PACKAGECONFIG[set-time-epoch] = "${@build_epoch(d)},-Dtime-epoch=0"
 PACKAGECONFIG[timedated] = "-Dtimedated=true,-Dtimedated=false"
 PACKAGECONFIG[timesyncd] = "-Dtimesyncd=true,-Dtimesyncd=false"
-PACKAGECONFIG[usrmerge] = "-Dsplit-usr=false,-Dsplit-usr=true"
 PACKAGECONFIG[sbinmerge] = "-Dsplit-bin=false,-Dsplit-bin=true"
 PACKAGECONFIG[userdb] = "-Duserdb=true,-Duserdb=false"
 PACKAGECONFIG[utmp] = "-Dutmp=true,-Dutmp=false"
@@ -240,14 +239,10 @@ CFLAGS:append = " --sysroot=${STAGING_DIR_TARGET}"
 
 # Helper variables to clarify locations.  This mirrors the logic in systemd's
 # build system.
-rootprefix ?= "${root_prefix}"
-rootlibdir ?= "${base_libdir}"
-rootlibexecdir = "${rootprefix}/lib"
+rootlibexecdir = "${nonarch_libdir}"
 
 EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dnobody-group=nogroup \
-                  -Drootlibdir=${rootlibdir} \
-                  -Drootprefix=${rootprefix} \
                   -Ddefault-locale=C \
                   -Dmode=release \
                   -Dsystem-alloc-uid-min=101 \
@@ -403,7 +398,7 @@ do_install() {
 }
 
 python populate_packages:prepend (){
-    systemdlibdir = d.getVar("rootlibdir")
+    systemdlibdir = d.getVar("libdir")
     do_split_packages(d, systemdlibdir, r'^lib(.*)\.so\.*', 'lib%s', 'Systemd %s library', extra_depends='', allow_links=True)
 }
 PACKAGES_DYNAMIC += "^lib(udev|systemd|nss).*"
@@ -678,7 +673,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/ssh/ssh_config.d/20-systemd-ssh-proxy.conf \
                 ${sysconfdir}/ssh/sshd_config.d/20-systemd-userdb.conf \
                 ${rootlibexecdir}/systemd/* \
-                ${rootlibdir}/systemd/libsystemd-core* \
+                ${libdir}/systemd/libsystemd-core* \
                 ${libdir}/pam.d \
                 ${nonarch_libdir}/pam.d \
                 ${systemd_unitdir}/* \
@@ -739,7 +734,7 @@ INSANE_SKIP:${PN}-dbg += "libdir"
 INSANE_SKIP:${PN}-doc += " libdir"
 INSANE_SKIP:libsystemd-shared += "libdir"
 
-FILES:libsystemd-shared = "${rootlibdir}/systemd/libsystemd-shared*.so"
+FILES:libsystemd-shared = "${libdir}/systemd/libsystemd-shared*.so"
 
 RPROVIDES:udev = "hotplug"
 
