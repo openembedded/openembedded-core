@@ -908,7 +908,7 @@ def write_bitbake_spdx(d):
                 [build],
                 oe.spdx30.RelationshipType.hasHost,
                 oe.spdx30.LifecycleScopeType.build,
-                [objset.new_import("SPDX_BUILD_HOST")],
+                [objset.new_import(host_import_key)],
             )
 
         if invoked_by:
