@@ -55,6 +55,9 @@ do_create_image_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_image_spdx[cleandirs] = "${SPDXIMAGEWORK}"
 do_create_image_spdx[dirs] = "${SPDXIMAGEWORK}"
 do_create_image_spdx[file-checksums] += "${SPDX3_LIB_DEP_FILES}"
+do_create_image_spdx[vardeps] += "\
+    SPDX_IMAGE_PURPOSE \
+    "
 
 python do_create_image_spdx_setscene() {
     sstate_setscene(d)

@@ -134,7 +134,15 @@ python do_create_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_spdx(d)
 }
-do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
+do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS SPDX_BUILD_HOST"
+do_create_spdx[vardeps] += "\
+    SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
+    SPDX_PACKAGE_ADDITIONAL_PURPOSE \
+    SPDX_PROFILES \
+    SPDX_NAMESPACE_PREFIX \
+    SPDX_UUID_NAMESPACE \
+    "
+
 addtask do_create_spdx after \
     do_collect_spdx_deps \
     do_deploy_source_date_epoch \
