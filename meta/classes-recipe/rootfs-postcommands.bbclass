@@ -308,19 +308,19 @@ serial_autologin_root () {
 }
 
 python tidy_shadowutils_files () {
-    import rootfspostcommands
-    rootfspostcommands.tidy_shadowutils_files(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
+    import oe.rootfspostcommands
+    oe.rootfspostcommands.tidy_shadowutils_files(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
 }
 
 python sort_passwd () {
     """
     Deprecated in the favour of tidy_shadowutils_files.
     """
-    import rootfspostcommands
+    import oe.rootfspostcommands
     bb.warn('[sort_passwd] You are using a deprecated function for '
         'SORT_PASSWD_POSTPROCESS_COMMAND. The default one is now called '
         '"tidy_shadowutils_files".')
-    rootfspostcommands.tidy_shadowutils_files(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
+    oe.rootfspostcommands.tidy_shadowutils_files(d.expand('${IMAGE_ROOTFS}${sysconfdir}'))
 }
 
 #
