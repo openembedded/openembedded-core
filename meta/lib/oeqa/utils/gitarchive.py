@@ -146,7 +146,7 @@ def expand_tag_strings(repo, name_pattern, msg_subj_pattern, msg_body_pattern,
         keyws['tag_number'] = '{tag_number}'
         tag_re = format_str(name_pattern, keyws)
         # Replace parentheses for proper regex matching
-        tag_re = tag_re.replace('(', '\(').replace(')', '\)') + '$'
+        tag_re = tag_re.replace('(', r'\(').replace(')', r'\)') + '$'
         # Inject regex group pattern for 'tag_number'
         tag_re = tag_re.format(tag_number='(?P<tag_number>[0-9]{1,5})')
 
