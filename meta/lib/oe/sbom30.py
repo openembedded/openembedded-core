@@ -875,16 +875,11 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             else:
                 missing_spdxids.add(spdxid)
 
-        bb.debug(1, "Linking...")
-        missing = self.link()
-        if missing != missing_spdxids:
-            bb.fatal(
-                f"Linked document doesn't match missing SPDX ID list. Got: {missing}\nExpected: {missing_spdxids}"
-            )
-
         self.doc.import_ = sorted(imports.values(), key=lambda e: e.externalSpdxId)
-
-        return missing_spdxids
+        bb.debug(1, "Linking...")
+        self.link()
+        self.missing_ids -= set(imports.keys())
+        return self.missing_ids
 
 
 def load_jsonld(d, path, required=False):

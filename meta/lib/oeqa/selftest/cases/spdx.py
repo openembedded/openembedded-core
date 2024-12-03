@@ -7,9 +7,11 @@
 import json
 import os
 import textwrap
+import hashlib
 from pathlib import Path
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runCmd
+import oe.spdx30
 
 
 class SPDX22Check(OESelftestTestCase):
@@ -73,8 +75,6 @@ class SPDX3CheckBase(object):
     """
 
     def check_spdx_file(self, filename):
-        import oe.spdx30
-
         self.assertExists(filename)
 
         # Read the file
@@ -86,13 +86,16 @@ class SPDX3CheckBase(object):
         return objset
 
     def check_recipe_spdx(self, target_name, spdx_path, *, task=None, extraconf=""):
-        config = textwrap.dedent(
-            f"""\
-            INHERIT:remove = "create-spdx"
-            INHERIT += "{self.SPDX_CLASS}"
-            {extraconf}
-            """
+        config = (
+            textwrap.dedent(
+                f"""\
+                INHERIT:remove = "create-spdx"
+                INHERIT += "{self.SPDX_CLASS}"
+                """
+            )
+            + textwrap.dedent(extraconf)
         )
+
         self.write_config(config)
 
         if task:
@@ -120,11 +123,17 @@ class SPDX3CheckBase(object):
         return self.check_spdx_file(filename)
 
     def check_objset_missing_ids(self, objset):
-        if objset.missing_ids:
+        for o in objset.foreach_type(oe.spdx30.SpdxDocument):
+            doc = o
+            break
+        else:
+            self.assertTrue(False, "Unable to find SpdxDocument")
+
+        missing_ids = objset.missing_ids - set(i.externalSpdxId for i in doc.import_)
+        if missing_ids:
             self.assertTrue(
                 False,
-                "The following SPDXIDs are unresolved:\n  "
-                + "\n  ".join(objset.missing_ids),
+                "The following SPDXIDs are unresolved:\n  " + "\n  ".join(missing_ids),
             )
 
 
@@ -188,12 +197,93 @@ class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
         objset = self.check_recipe_spdx(
             "baremetal-helloworld",
             "{DEPLOY_DIR_IMAGE}/baremetal-helloworld-image-{MACHINE}.spdx.json",
-            extraconf=textwrap.dedent(
-                """\
+            extraconf="""\
                 TCLIBC = "baremetal"
-                """
-            ),
+                """,
         )
 
         # Document should be fully linked
         self.check_objset_missing_ids(objset)
+
+    def test_extra_opts(self):
+        HOST_SPDXID = "http://foo.bar/spdx/bar2"
+
+        EXTRACONF = textwrap.dedent(
+            f"""\
+            SPDX_INVOKED_BY_name = "CI Tool"
+            SPDX_INVOKED_BY_type = "software"
+
+            SPDX_ON_BEHALF_OF_name = "John Doe"
+            SPDX_ON_BEHALF_OF_type = "person"
+            SPDX_ON_BEHALF_OF_id_email = "John.Doe@noreply.com"
+
+            SPDX_PACKAGE_SUPPLIER_name = "ACME Embedded Widgets"
+            SPDX_PACKAGE_SUPPLIER_type = "organization"
+
+            SPDX_AUTHORS += "authorA"
+            SPDX_AUTHORS_authorA_ref = "SPDX_ON_BEHALF_OF"
+
+            SPDX_BUILD_HOST = "host"
+
+            SPDX_IMPORTS += "host"
+            SPDX_IMPORTS_host_spdxid = "{HOST_SPDXID}"
+
+            SPDX_INCLUDE_BUILD_VARIABLES = "1"
+            SPDX_INCLUDE_BITBAKE_PARENT_BUILD = "1"
+            SPDX_INCLUDE_TIMESTAMPS = "1"
+
+            SPDX_PRETTY = "1"
+            """
+        )
+        extraconf_hash = hashlib.sha1(EXTRACONF.encode("utf-8")).hexdigest()
+
+        objset = self.check_recipe_spdx(
+            "core-image-minimal",
+            "{DEPLOY_DIR_IMAGE}/core-image-minimal-{MACHINE}.rootfs.spdx.json",
+            # Many SPDX variables do not trigger a rebuild, since they are
+            # intended to record information at the time of the build. As such,
+            # the extra configuration alone may not trigger a rebuild, and even
+            # if it does, the task hash won't necessarily be unique. In order
+            # to make sure rebuilds happen, but still allow these test objects
+            # to be pulled from sstate (e.g. remain reproducible), change the
+            # namespace prefix to include the hash of the extra configuration
+            extraconf=textwrap.dedent(
+                f"""\
+                SPDX_NAMESPACE_PREFIX = "http://spdx.org/spdxdocs/{extraconf_hash}"
+                """
+            )
+            + EXTRACONF,
+        )
+
+        # Document should be fully linked
+        self.check_objset_missing_ids(objset)
+
+        for o in objset.foreach_type(oe.spdx30.SoftwareAgent):
+            if o.name == "CI Tool":
+                break
+        else:
+            self.assertTrue(False, "Unable to find software tool")
+
+        for o in objset.foreach_type(oe.spdx30.Person):
+            if o.name == "John Doe":
+                break
+        else:
+            self.assertTrue(False, "Unable to find person")
+
+        for o in objset.foreach_type(oe.spdx30.Organization):
+            if o.name == "ACME Embedded Widgets":
+                break
+        else:
+            self.assertTrue(False, "Unable to find organization")
+
+        for o in objset.foreach_type(oe.spdx30.SpdxDocument):
+            doc = o
+            break
+        else:
+            self.assertTrue(False, "Unable to find SpdxDocument")
+
+        for i in doc.import_:
+            if i.externalSpdxId == HOST_SPDXID:
+                break
+        else:
+            self.assertTrue(False, "Unable to find imported Host SpdxID")
