@@ -393,7 +393,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         if ref_varname:
             if ref_varname == varname:
                 bb.fatal(f"{varname} cannot reference itself")
-            return new_agent(varname, creation_info=creation_info)
+            return self.new_agent(ref_varname, creation_info=creation_info)
 
         import_key = self.d.getVar(f"{varname}_import")
         if import_key:
