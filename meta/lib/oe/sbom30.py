@@ -364,7 +364,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         if not spdxid:
             bb.fatal(f"{key} is not a valid SPDX_IMPORTS key")
 
-        for i in self.docs.import_:
+        for i in self.doc.import_:
             if i.externalSpdxId == spdxid:
                 # Already imported
                 return spdxid
