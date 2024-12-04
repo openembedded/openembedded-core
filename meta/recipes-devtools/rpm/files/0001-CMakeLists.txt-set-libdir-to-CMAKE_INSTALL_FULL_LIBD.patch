@@ -1,4 +1,4 @@
-From fea9cea49aa0844de14126e54d05b91ba619427f Mon Sep 17 00:00:00 2001
+From cb5355da9b47166253dbe5ab3215e433b55068d1 Mon Sep 17 00:00:00 2001
 From: Yi Zhao <yi.zhao@windriver.com>
 Date: Fri, 26 Jul 2024 17:18:30 +0800
 Subject: [PATCH] CMakeLists.txt: set libdir to ${CMAKE_INSTALL_FULL_LIBDIR} in
@@ -36,10 +36,10 @@ Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ed847c09a1..385b5040c6 100644
+index 08dabffd3..1b7661139 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -84,7 +84,7 @@ function(makemacros)
+@@ -96,7 +96,7 @@ function(makemacros)
  	set(sysconfdir "${CMAKE_INSTALL_FULL_SYSCONFDIR}")
  	set(sharedstatedir "${CMAKE_INSTALL_FULL_SHAREDSTATEDIR}")
  	set(localstatedir "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}")
@@ -48,6 +48,3 @@ index ed847c09a1..385b5040c6 100644
  	set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
  	set(oldincludedir "${CMAKE_INSTALL_FULL_OLDINCLUDEDIR}")
  	set(infodir "\${prefix}/${CMAKE_INSTALL_INFODIR}")
--- 
-2.25.1
-
