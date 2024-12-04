@@ -20,40 +20,32 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/Linux-PAM-${PV}.tar.xz \
            file://pam.d/common-session \
            file://pam.d/common-session-noninteractive \
            file://pam.d/other \
-           file://libpam-xtests.patch \
            file://run-ptest \
            file://pam-volatiles.conf \
+           file://0001-meson.build-correct-check-for-existence-of-two-prepr.patch \
            "
 
-SRC_URI[sha256sum] = "f8923c740159052d719dbfc2a2f81942d68dd34fcaf61c706a02c9b80feeef8e"
+SRC_URI[sha256sum] = "57dcd7a6b966ecd5bbd95e1d11173734691e16b68692fa59661cdae9b13b1697"
 
 DEPENDS = "bison-native flex-native libxml2-native virtual/crypt"
 
-EXTRA_OECONF = "--includedir=${includedir}/security \
-                --libdir=${base_libdir} \
-                --with-systemdunitdir=${systemd_system_unitdir} \
-                --disable-nis \
-                --disable-regenerate-docu \
-                --disable-doc \
-		--disable-prelude"
-
-CFLAGS += "-fPIC "
+EXTRA_OEMESON = "-Ddocs=disabled"
 
 S = "${WORKDIR}/Linux-PAM-${PV}"
 
-inherit autotools gettext pkgconfig systemd ptest github-releases
+inherit meson gettext pkgconfig systemd ptest github-releases
 
 PACKAGECONFIG ??= ""
-PACKAGECONFIG[audit] = "--enable-audit,--disable-audit,audit,"
-PACKAGECONFIG[userdb] = "--enable-db=db,--enable-db=no,db,"
+PACKAGECONFIG[audit] = "-Daudit=enabled,-Daudit=disabled,audit,"
+PACKAGECONFIG[userdb] = "-Dpam_userdb=enabled -Ddb=gdbm,-Dpam_userdb=disabled,gdbm,"
 
 PACKAGES += "${PN}-runtime ${PN}-xtests"
 FILES:${PN} = " \
-    ${base_libdir}/lib*${SOLIBS} \
+    ${libdir}/lib*${SOLIBS} \
     ${nonarch_libdir}/tmpfiles.d/*.conf \
 "
-FILES:${PN}-dev += "${base_libdir}/security/*.la ${base_libdir}/*.la ${base_libdir}/lib*${SOLIBSDEV}"
-FILES:${PN}-runtime = "${sysconfdir} ${sbindir} ${systemd_system_unitdir}"
+FILES:${PN}-dev += "${libdir}/security/*.la ${libdir}/*.la ${libdir}/lib*${SOLIBSDEV}"
+FILES:${PN}-runtime = "${sysconfdir} ${sbindir} ${nonarch_libdir}/systemd/system"
 FILES:${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
 # libpam installs /etc/environment for use with the pam_env plugin. Make sure it is
@@ -111,9 +103,9 @@ python populate_packages:prepend () {
 
     mlprefix = d.getVar('MLPREFIX') or ''
     dvar = d.expand('${WORKDIR}/package')
-    pam_libdir = d.expand('${base_libdir}/security')
+    pam_libdir = d.expand('${libdir}/security')
     pam_sbindir = d.expand('${sbindir}')
-    pam_filterdir = d.expand('${base_libdir}/security/pam_filter')
+    pam_filterdir = d.expand('${libdir}/security/pam_filter')
     pam_pkgname = mlprefix + 'pam-plugin%s'
 
     do_split_packages(d, pam_libdir, r'^pam(.*)\.so$', pam_pkgname,
@@ -121,16 +113,7 @@ python populate_packages:prepend () {
     do_split_packages(d, pam_filterdir, r'^(.*)$', 'pam-filter-%s', 'PAM filter for %s', extra_depends='')
 }
 
-do_compile_ptest() {
-        cd tests
-        sed -i -e 's/$(MAKE) $(AM_MAKEFLAGS) check-TESTS//' Makefile
-        oe_runmake check-am
-        cd -
-}
-
-do_install() {
-	autotools_do_install
-
+do_install:append() {
 	# don't install /var/run when populating rootfs. Do it through volatile
 	rm -rf ${D}${localstatedir}
 
@@ -155,16 +138,6 @@ do_install() {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		echo "session optional pam_systemd.so" >> ${D}${sysconfdir}/pam.d/common-session
 	fi
-	if [ "${base_libdir}" != "${libdir}" ]; then
-		install -d ${D}/${libdir}/
-		mv ${D}/${base_libdir}/pkgconfig ${D}/${libdir}/
-	fi
-}
-
-do_install_ptest() {
-    mkdir -p ${D}${PTEST_PATH}/tests
-    install -m 0755 ${B}/tests/.libs/* ${D}${PTEST_PATH}/tests
-    install -m 0644 ${S}/tests/confdir ${D}${PTEST_PATH}/tests
 }
 
 pkg_postinst:${PN}() {
