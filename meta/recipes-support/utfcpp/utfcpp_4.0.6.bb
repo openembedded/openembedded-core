@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e4224ccaecb14d942c71d31bef20d78c \
 
 SRC_URI = "gitsm://github.com/nemtrif/utfcpp;protocol=https;branch=master"
 
-SRCREV = "6be08bbea14ffa0a5c594257fb6285a054395cd7"
+SRCREV = "b26a5f718f4f370af1852a0d5c6ae8fa031ba7d0"
 
 S = "${WORKDIR}/git"
 
