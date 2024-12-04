@@ -5,15 +5,10 @@ LICENSE = "MIT | Apache-2.0"
 LIC_FILES_CHKSUM = "file://license-apache;md5=1836efb2eb779966696f473ee8540542 \
                     file://license-mit;md5=85fd3b67069cff784d98ebfc7d5c0797"
 
-SRC_URI[sha256sum] = "147754cb3d81177ee12d9baf575d93549e76121dacd3544ad6a50ab718de2b9c"
-SRC_URI:append = "\
-    file://0001-Extract-extension-architecture-name-resolvation-code.patch \
-    file://0002-Fix-cross-compilation-issue-with-linux-armv7l-archit.patch \
-    file://0003-Extract-extension-ABI-name-resolvation-code-as-helpe.patch \
-    file://0004-Fix-cross-compilation-issue-with-linux-ppc-architect.patch \
-    file://0005-Fix-cross-compilation-issue-with-linux-mips64-archit.patch \
-    file://0001-build_context-improve-wheel-reproducibility-by-sorti.patch \
-"
+SRC_URI += " \
+           file://0001-build_context-improve-wheel-reproducibility-by-sorti.patch \
+           "
+SRC_URI[sha256sum] = "2b349d742a07527d236f0b4b6cab26f53ebecad0ceabfc09ec4c6a396e3176f9"
 
 S = "${WORKDIR}/maturin-${PV}"
 
