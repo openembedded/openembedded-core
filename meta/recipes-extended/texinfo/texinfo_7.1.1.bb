@@ -30,11 +30,11 @@ TARGET_PATCH:class-native = ""
 
 SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            file://0001-texinfo-several-changes-to-build-without-zlib-and-nc.patch \
-           file://0002-dont-depend-on-help2man.patch \
+           file://0001-Makefile.am-do-not-build-manpages.patch \
            ${TARGET_PATCH} \
            "
 
-SRC_URI[sha256sum] = "dd5710b3a53ac002644677a06145748e260592a35be182dc830ebebb79c5d5a0"
+SRC_URI[sha256sum] = "a46b46b54fd79641a8af5be4ad525788956ccf9798d3113396abeafa9020ef63"
 
 tex_texinfo = "texmf/tex/texinfo"
 
