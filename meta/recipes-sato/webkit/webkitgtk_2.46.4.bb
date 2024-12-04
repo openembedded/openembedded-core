@@ -15,11 +15,10 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-CMake-Add-a-variable-to-control-macro-__PAS_ALWAYS_I.patch \
            file://no-musttail-arm.patch \
            file://t6-not-declared.patch \
-           file://30e1d5e22213fdaca2a29ec3400c927d710a37a8.patch \
-           file://0001-Fix-build-issues-with-latest-Clang.patch \
            file://0001-Support-ICU-76.1-build.patch \
+           file://bmalloc-fix.patch \
            "
-SRC_URI[sha256sum] = "dc82d042ecaca981a4852357c06e5235743319cf10a94cd36ad41b97883a0b54"
+SRC_URI[sha256sum] = "0eff5f0ab0a2872ec87df62bc32e3289c8af625716ac71e94b298d74e0374176"
 
 inherit cmake pkgconfig gobject-introspection perlnative features_check upstream-version-is-even gi-docgen
 
@@ -81,6 +80,7 @@ PACKAGECONFIG[media-recorder] = "-DENABLE_MEDIA_RECORDER=ON,-DENABLE_MEDIA_RECOR
 PACKAGECONFIG[jpegxl] = "-DUSE_JPEGXL=ON,-DUSE_JPEGXL=OFF,libjxl"
 PACKAGECONFIG[backtrace] = "-DUSE_LIBBACKTRACE=ON,-DUSE_LIBBACKTRACE=OFF,libbacktrace"
 PACKAGECONFIG[gamepad] = "-DENABLE_GAMEPAD=ON,-DENABLE_GAMEPAD=OFF,libmanette"
+PACKAGECONFIG[sysprof-capture] = "-DUSE_SYSTEM_SYSPROF_CAPTURE=YES,-DUSE_SYSTEM_SYSPROF_CAPTURE=NO,sysprof"
 
 EXTRA_OECMAKE = " \
                  -DPORT=GTK \
@@ -91,6 +91,7 @@ EXTRA_OECMAKE = " \
                  -DENABLE_BUBBLEWRAP_SANDBOX=OFF \
                  -DUSE_GTK4=ON \
                  -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
+                 -DENABLE_RELEASE_LOG=ON \
                  "
 
 # Unless DEBUG_BUILD is enabled, pass -g1 to massively reduce the size of the

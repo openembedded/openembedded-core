@@ -1,7 +1,7 @@
-From 57b80aa00be614218552fda67b2bf8d535b4f4cf Mon Sep 17 00:00:00 2001
+From 8b0ff0f2e2882f200f1c21ec76fa679444cb1c43 Mon Sep 17 00:00:00 2001
 From: Jason Schonberg <schonm@gmail.com>
 Date: Wed, 20 Nov 2024 11:05:52 -0500
-Subject: [PATCH]  Support ICU 76.1 build
+Subject: [PATCH] Support ICU 76.1 build
 
 https://bugs.webkit.org/show_bug.cgi?id=282120
 
