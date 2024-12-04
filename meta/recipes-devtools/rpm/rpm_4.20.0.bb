@@ -24,7 +24,7 @@ HOMEPAGE = "http://www.rpm.org"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c4eec0c20c6034b9407a09945b48a43f"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.19.x;protocol=https \
+SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.20.x;protocol=https \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
            file://0001-When-cross-installing-execute-package-scriptlets-wit.patch \
@@ -32,7 +32,6 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.19.x;protoc
            file://0002-Add-support-for-prefixing-etc-from-RPM_ETCCONFIGDIR-.patch \
            file://0001-Do-not-hardcode-lib-rpm-as-the-installation-path-for.patch \
            file://0001-Add-a-color-setting-for-mips64_n32-binaries.patch \
-           file://0001-perl-disable-auto-reqs.patch \
            file://0016-rpmscript.c-change-logging-level-around-scriptlets-t.patch \
            file://0001-lib-transaction.c-fix-file-conflicts-for-MIPS64-N32.patch \
            file://0001-build-pack.c-do-not-insert-payloadflags-into-.rpm-me.patch \
@@ -42,7 +41,7 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.19.x;protoc
            "
 
 PE = "1"
-SRCREV = "13b4521341781293c41ac898aa9c2d2f6bc1f21d"
+SRCREV = "b3323786668cf99bc9aed7e60ccdab0bc25e19da"
 
 S = "${WORKDIR}/git"
 
@@ -62,13 +61,13 @@ OECMAKE_GENERATOR = "Unix Makefiles"
 
 BBCLASSEXTEND = "native nativesdk"
 
-PACKAGECONFIG ??= "internal-openpgp"
+PACKAGECONFIG ??= ""
 
 PACKAGECONFIG[plugins] = "-DENABLE_PLUGINS=ON,-DENABLE_PLUGINS=OFF"
 PACKAGECONFIG[testsuite] = "-DENABLE_TESTSUITE=ON,-DENABLE_TESTSUITE=OFF"
 
-# Deprecated! https://fedoraproject.org/wiki/Changes/RpmSequoia
-PACKAGECONFIG[internal-openpgp] = "-DWITH_INTERNAL_OPENPGP=ON,-DWITH_INTERNAL_OPENPGP=OFF"
+# has replaced openpgp support and is written in rust: https://fedoraproject.org/wiki/Changes/RpmSequoia
+PACKAGECONFIG[sequoia] = "-DWITH_SEQUOIA=ON,-DWITH_SEQUOIA=OFF,rpm-sequoia"
 
 PACKAGECONFIG[cap] = "-DWITH_CAP=ON,-DWITH_CAP=OFF"
 PACKAGECONFIG[acl] = "-DWITH_ACL=ON,-DWITH_ACL=OFF"
