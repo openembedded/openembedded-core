@@ -1,8 +1,7 @@
-From a0f53e1dbb3851bb0f0efcfdbd565b05e4be9cac Mon Sep 17 00:00:00 2001
+From 0beed8c190b27a07e7f1145a46a7ca8a75864263 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Andreas=20M=C3=BCller?= <schnitzeltony@googlemail.com>
 Date: Thu, 23 Aug 2012 18:10:57 +0200
-Subject: [PATCH 1/2] ARM: qemu related workarounds in cpu features detection
- code
+Subject: [PATCH] ARM: qemu related workarounds in cpu features detection code
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -17,14 +16,14 @@ Upstream-Status: Inappropriate [other] qemu fix
 
 Signed-off-by: Andreas Müller <schnitzeltony@googlemail.com>
 ---
- pixman/pixman-arm.c |   82 ++++++++++++++++++++++++++++++++++++++++----------
- 1 files changed, 65 insertions(+), 17 deletions(-)
+ pixman/pixman-arm.c | 77 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 62 insertions(+), 15 deletions(-)
 
 diff --git a/pixman/pixman-arm.c b/pixman/pixman-arm.c
-index 23374e4..d98bda6 100644
+index d271e96..8f6e241 100644
 --- a/pixman/pixman-arm.c
 +++ b/pixman/pixman-arm.c
-@@ -129,16 +129,35 @@ detect_cpu_features (void)
+@@ -128,16 +128,34 @@ detect_cpu_features (void)
  #include <sys/types.h>
  #include <sys/stat.h>
  #include <sys/mman.h>
@@ -45,7 +44,6 @@ index 23374e4..d98bda6 100644
 + * endian 64-bit host system running qemu and may theoretically fail).
 + */
 +#define ARM_HWCAP_VFP 64
-+#define ARM_HWCAP_IWMMXT 512
 +#define ARM_HWCAP_NEON 4096
 +
  static arm_cpu_features_t
@@ -60,7 +58,7 @@ index 23374e4..d98bda6 100644
  
      fd = open ("/proc/self/auxv", O_RDONLY);
      if (fd >= 0)
-@@ -147,32 +166,61 @@ detect_cpu_features (void)
+@@ -146,30 +164,59 @@ detect_cpu_features (void)
  	{
  	    if (aux.a_type == AT_HWCAP)
  	    {
@@ -71,8 +69,6 @@ index 23374e4..d98bda6 100644
 -		 */
 -		if ((hwcap & 64) != 0)
 -		    features |= ARM_VFP;
--		if ((hwcap & 512) != 0)
--		    features |= ARM_IWMMXT;
 -		/* this flag is only present on kernel 2.6.29 */
 -		if ((hwcap & 4096) != 0)
 -		    features |= ARM_NEON;
@@ -130,8 +126,6 @@ index 23374e4..d98bda6 100644
 +     */
 +    if ((hwcap & ARM_HWCAP_VFP) != 0)
 +        features |= ARM_VFP;
-+    if ((hwcap & ARM_HWCAP_IWMMXT) != 0)
-+        features |= ARM_IWMMXT;
 +    /* this flag is only present on kernel 2.6.29 */
 +    if ((hwcap & ARM_HWCAP_NEON) != 0)
 +        features |= ARM_NEON;
@@ -139,6 +133,3 @@ index 23374e4..d98bda6 100644
      return features;
  }
  
--- 
-1.7.6.5
-

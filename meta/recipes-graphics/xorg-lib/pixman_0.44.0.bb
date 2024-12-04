@@ -9,10 +9,8 @@ DEPENDS = "zlib"
 
 SRC_URI = "https://www.cairographics.org/releases/${BP}.tar.gz \
            file://0001-ARM-qemu-related-workarounds-in-cpu-features-detecti.patch \
-           file://0001-pixman-combine-float.c-fix-inlining-failed-in-call-t.patch \
-           file://865e6ce00bb79a6b925ed4c2c436e1533e4472aa.patch \
            "
-SRC_URI[sha256sum] = "ea1480efada2fd948bc75366f7c349e1c96d3297d09a3fe62626e38e234a625e"
+SRC_URI[sha256sum] = "89a4c1e1e45e0b23dffe708202cb2eaffde0fe3727d7692b2e1739fec78a7dac"
 
 # see http://cairographics.org/releases/ - only even minor versions are stable
 UPSTREAM_CHECK_REGEX = "pixman-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
@@ -32,8 +30,6 @@ EXTRA_OEMESON = "-Dgtk=disabled -Dlibpng=disabled"
 # ld: pixman/libpixman-mmx.a(pixman-mmx.c.o):
 # linking mips:loongson_2f module with previous mips:isa64 modules 
 EXTRA_OEMESON += "-Dloongson-mmi=disabled"
-# disable iwmmxt due to compile fails on most arm platforms.
-EXTRA_OEMESON += "-Diwmmxt=disabled"
 
 EXTRA_OEMESON:append:class-target:powerpc = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "-Dvmx=enabled", "-Dvmx=disabled", d)}"
 EXTRA_OEMESON:append:class-target:powerpc64 = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "-Dvmx=enabled", "-Dvmx=disabled", d)}"
