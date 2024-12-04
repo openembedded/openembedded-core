@@ -29,7 +29,6 @@ require conf/testexport.conf
 TEST_EXPORT_SDK_ENABLED ?= "0"
 
 TEST_EXPORT_DEPENDS = ""
-TEST_EXPORT_DEPENDS += "${@bb.utils.contains('IMAGE_PKGTYPE', 'rpm', 'cpio-native:do_populate_sysroot', '', d)}"
 TEST_EXPORT_DEPENDS += "${@bb.utils.contains('TEST_EXPORT_SDK_ENABLED', '1', 'testexport-tarball:do_populate_sdk', '', d)}"
 TEST_EXPORT_LOCK = "${TMPDIR}/testimage.lock"
 
