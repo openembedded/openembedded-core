@@ -10,10 +10,8 @@ LIC_FILES_CHKSUM = "file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = " \
     git://git.kernel.org/pub/scm/utils/dtc/dtc.git;branch=main;protocol=https \
-    file://0001-meson.build-bump-version-to-1.7.0.patch \
-    file://0002-meson-allow-building-from-shallow-clones.patch \
 "
-SRCREV = "039a99414e778332d8f9c04cbd3072e1dcc62798"
+SRCREV = "2d10aa2afe35527728db30b35ec491ecb6959e5c"
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
@@ -24,6 +22,7 @@ inherit meson pkgconfig
 EXTRA_OEMESON = "-Dpython=disabled -Dvalgrind=disabled"
 
 PACKAGECONFIG ??= "tools"
+PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false,"
 PACKAGECONFIG[tools] = "-Dtools=true,-Dtools=false,flex-native bison-native"
 PACKAGECONFIG[yaml] = "-Dyaml=enabled,-Dyaml=disabled,libyaml"
 
