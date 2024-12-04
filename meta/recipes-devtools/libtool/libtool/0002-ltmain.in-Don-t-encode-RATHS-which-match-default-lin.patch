@@ -1,5 +1,8 @@
+From 59b6032698d10306ffb3be3cbf76690409d7f9a6 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: [PATCH 05/12] ltmain.in: Don't encode RATHS which match default linker paths
+Date: Tue, 26 Nov 2024 09:57:36 +0000
+Subject: [PATCH 2/7] ltmain.in: Don't encode RATHS which match default linker
+ paths
 
 We don't want to add RPATHS which match default linker search paths, they're
 a waste of space. This patch filters libtools list of paths to encoode and
@@ -11,12 +14,15 @@ the paths before comparision.
 Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 
 Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00013.html]
+---
+ build-aux/ltmain.in | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
 
-Index: libtool-2.5.0/build-aux/ltmain.in
-===================================================================
---- libtool-2.5.0.orig/build-aux/ltmain.in
-+++ libtool-2.5.0/build-aux/ltmain.in
-@@ -7602,8 +7602,16 @@ func_mode_link ()
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index c31faebd..44c7d81e 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -7782,8 +7782,16 @@ func_mode_link ()
  		  esac
  		fi
  	      else
@@ -35,7 +41,7 @@ Index: libtool-2.5.0/build-aux/ltmain.in
  	      fi
  	    elif test -n "$runpath_var"; then
  	      case "$perm_rpath " in
-@@ -8336,8 +8344,16 @@ func_mode_link ()
+@@ -8516,8 +8524,16 @@ func_mode_link ()
  	      esac
  	    fi
  	  else
@@ -54,7 +60,7 @@ Index: libtool-2.5.0/build-aux/ltmain.in
  	  fi
  	elif test -n "$runpath_var"; then
  	  case "$perm_rpath " in
-@@ -8391,8 +8407,14 @@ func_mode_link ()
+@@ -8571,8 +8587,14 @@ func_mode_link ()
  	      esac
  	    fi
  	  else
@@ -71,3 +77,6 @@ Index: libtool-2.5.0/build-aux/ltmain.in
  	  fi
  	elif test -n "$runpath_var"; then
  	  case "$finalize_perm_rpath " in
+-- 
+2.39.5
+

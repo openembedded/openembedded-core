@@ -1,7 +1,7 @@
 require libtool-${PV}.inc
 
 PACKAGES = ""
-SRC_URI += "file://fixinstall.patch"
+SRC_URI += "file://0008-libtool-Avoid-relinking-when-cross-compiling-its-poi.patch"
 
 datadir = "${STAGING_DIR_TARGET}${target_datadir}"
 

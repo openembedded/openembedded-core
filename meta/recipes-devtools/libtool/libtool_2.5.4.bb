@@ -1,8 +1,6 @@
 require libtool-${PV}.inc
 require remove-buildpaths.inc
 
-SRC_URI += "file://multilib.patch"
-
 RDEPENDS:${PN} += "bash"
 
 #
