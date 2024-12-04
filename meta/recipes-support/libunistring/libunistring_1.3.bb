@@ -24,4 +24,7 @@ SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz"
 SRC_URI[sha256sum] = "8ea8ccf86c09dd801c8cac19878e804e54f707cf69884371130d20bde68386b7"
 
 inherit autotools texinfo
+
+acpaths = "-I ./m4 -I ./gnulib-m4"
+
 BBCLASSEXTEND = "native nativesdk"
