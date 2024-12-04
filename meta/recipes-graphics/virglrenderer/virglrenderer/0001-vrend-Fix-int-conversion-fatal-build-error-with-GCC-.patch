@@ -1,4 +1,4 @@
-From 464deabe4d1bfce6b8f414ab0945d9a62b66ddd4 Mon Sep 17 00:00:00 2001
+From bb129aac12c5aa6e2dd371244b042baa82aff014 Mon Sep 17 00:00:00 2001
 From: Purushottam Choudhary <purushottam27.kumar@lge.com>
 Date: Tue, 8 Oct 2024 11:47:21 +0530
 Subject: [PATCH] vrend: Fix int-conversion fatal build error with GCC-14
@@ -19,7 +19,6 @@ Upstream-Status: Backport [https://gitlab.freedesktop.org/virgl/virglrenderer/-/
 Signed-off-by: Purushottam Choudhary <purushottam27.kumar@lge.com>
 Part-of: <https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/1440>
 ---
-
  src/vrend_winsys_egl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
@@ -36,6 +35,3 @@ index 9d9f410c..8750f6b2 100644
  #endif
     } else {
  #ifdef ENABLE_GBM
--- 
-2.34.1
-
