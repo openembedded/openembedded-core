@@ -13,6 +13,7 @@ import logging
 import os
 import re
 import sys
+import subprocess
 from collections import namedtuple, OrderedDict
 from operator import attrgetter
 from xml.etree import ElementTree as ET
@@ -338,8 +339,13 @@ def print_html_report(data, id_comp, buildstats):
                 commit_num = get_data_item(meta, 'layers.meta.commit_count')
                 commit = get_data_item(meta, 'layers.meta.commit')
                 # Add start_time for both test measurement types of sysres and disk usage
-                start_time = test_i['start_time'][0]
-                samples.append(measurement_stats(meas_i, '', start_time))
+                try:
+                    commit_time = get_data_item(meta, 'layers.meta.commit_time')
+                except KeyError:
+                    output = subprocess.check_output(["git", "show", "--no-patch", "--format=%ct", commit], cwd="/home/richard/Repos/poky", text=True).strip()
+                    print("%s -> %s vs %s" % (commit_num, output + "." + str(commit_num).zfill(6), test_i['start_time'][0]))
+                    commit_time = output + "." + str(commit_num).zfill(6) #test_i['start_time'][0]
+                samples.append(measurement_stats(meas_i, '', commit_time))
                 samples[-1]['commit_num'] = commit_num
                 samples[-1]['commit'] = commit
 
