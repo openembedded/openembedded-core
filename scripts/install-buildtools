@@ -127,7 +127,8 @@ def main():
 
     parser = argparse.ArgumentParser(
         description="Buildtools installation helper",
-        add_help=False)
+        add_help=False,
+        formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-u', '--url',
                         help='URL from where to fetch buildtools SDK installer, not '
                              'including filename (optional)\n'
