@@ -17,10 +17,10 @@
   }
 
   // Convert raw data to the format: [time, value]
-  const data = rawData.map(([commit, value, time]) => {
+  const data = rawData.map(([commit, value, time, commitnum]) => {
     return [
       // The Date object takes values in milliseconds rather than seconds. So to use a Unix timestamp we have to multiply it by 1000.
-      new Date(time * 1000).getTime(),
+      commit,
       // Assuming the array values are duration in the format [hours, minutes, seconds, milliseconds]
       updateValue(value)
     ]
@@ -49,7 +49,13 @@
       ;}
     },
     xAxis: {
-      type: 'time',
+      type: 'value',
+      min: function(value) {
+        return Math.round(value.min - 0.5);
+      },
+      max: function(value) {
+        return Math.round(value.max + 0.5);
+      }
     },
     yAxis: {
       name: '{{ measurement.value_type.quantity }}' == 'time' ? 'Duration in minutes' : 'Disk size in MB',
