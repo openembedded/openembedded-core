@@ -15,6 +15,7 @@ SRC_URI = " \
     file://disable-tests \
     file://no-test-timeout.patch \
     file://0001-sigpipe-init-the-struct-so-that-first-apply-ignores.patch \
+    file://CVE-2024-9681.patch \
 "
 SRC_URI[sha256sum] = "f292f6cc051d5bbabf725ef85d432dfeacc8711dd717ea97612ae590643801e5"
 
