@@ -82,3 +82,6 @@ PACKAGECONFIG[x11]        = "-DSDL_X11=ON,-DSDL_X11=OFF,virtual/libx11 libxext l
 CFLAGS:append:class-native = " -DNO_SHARED_MEMORY"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# These are fixed since 2.0.14, NVD DB incorrectly lists > 20.0.20
+CVE_CHECK_IGNORE += "CVE-2020-14409 CVE-2020-14410"
