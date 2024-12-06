@@ -746,8 +746,10 @@ class LoggingThread(threading.Thread):
     def threadtarget(self):
         try:
             self.eventloop()
-        except Exception as e:
-            self.logger.warning("Exception %s in logging thread" % traceback.format_exception(e))
+        except Exception:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            self.logger.warning("Exception %s in logging thread" %
+                                traceback.format_exception(exc_type, exc_value, exc_traceback))
         finally:
             self.teardown()
 
