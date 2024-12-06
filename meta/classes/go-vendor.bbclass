@@ -14,7 +14,7 @@
 # folder. Additionally a manifest file is generated for the 'vendor' folder
 # 
 
-inherit go-mod
+inherit go-mod relative_symlinks
 
 def go_src_uri(repo, version, path=None, subdir=None, \
                 vcs='git', replaces=None, pathmajor=None):
