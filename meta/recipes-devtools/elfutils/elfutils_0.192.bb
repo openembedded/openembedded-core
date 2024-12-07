@@ -21,6 +21,7 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://ptest.patch \
            file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
            file://0001-config-eu.am-do-not-force-Werror.patch \
+           file://0001-libelf-Add-libeu-objects-to-libelf.a-static-archive.patch \
            "
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
