@@ -38,6 +38,7 @@ inherit meson gettext pkgconfig systemd ptest github-releases
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[audit] = "-Daudit=enabled,-Daudit=disabled,audit,"
 PACKAGECONFIG[userdb] = "-Dpam_userdb=enabled -Ddb=gdbm,-Dpam_userdb=disabled,gdbm,"
+PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux,"
 
 PACKAGES += "${PN}-runtime ${PN}-xtests"
 FILES:${PN} = " \
@@ -69,6 +70,7 @@ RDEPENDS:${PN}-runtime = "${PN}-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-permit-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-warn-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-unix-${libpam_suffix} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'selinux', '${MLPREFIX}pam-plugin-selinux-${libpam_suffix}', '', d)} \
     "
 RDEPENDS:${PN}-xtests = "${PN}-${libpam_suffix} \
     ${MLPREFIX}pam-plugin-access-${libpam_suffix} \
