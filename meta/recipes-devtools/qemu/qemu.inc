@@ -78,6 +78,9 @@ CVE_STATUS[CVE-2023-6683] = "cpe-incorrect: Applies only against version 8.2.1 a
 
 CVE_STATUS[CVE-2023-6693] = "cpe-incorrect: Applies only against version 8.2.0 and earlier"
 
+# NVD DB has this CVE as version-less (with "-")
+CVE_STATUS[CVE-2024-6505] = "fixed-version: this CVE is fixed since 9.1.0"
+
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"
 COMPATIBLE_HOST:riscv32 = "null"
