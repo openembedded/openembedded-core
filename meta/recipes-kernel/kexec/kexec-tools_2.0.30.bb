@@ -20,7 +20,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0001-kexec.c-add-MFD_NOEXEC_SEAL-flag-explicitly.patch \
            "
 
-SRC_URI[sha256sum] = "0756dd54dab2f2a437e5d4df64b9760c3e6cf6a7d29fb296bdeeeb749f6ea28e"
+SRC_URI[sha256sum] = "bb6b39bbe00099219e95ab34b25ea4348e1a95964eefc45c1e6fe32362ac9021"
 
 inherit autotools update-rc.d systemd
 

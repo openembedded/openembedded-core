@@ -1,4 +1,4 @@
-From a6a9e17dfeb5627f3e6f569b66f243f50f8a3645 Mon Sep 17 00:00:00 2001
+From 1a09bf71c2f541c2cfb44a00661051597bbd0b76 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Tue, 6 Aug 2024 21:42:43 -0700
 Subject: [PATCH] kexec.c: add MFD_NOEXEC_SEAL flag explicitly
@@ -18,7 +18,7 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 7c614b0..41d285d 100644
+index 4f51987..8f02595 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
 @@ -60,6 +60,10 @@
@@ -32,7 +32,7 @@ index 7c614b0..41d285d 100644
  unsigned long long mem_min = 0;
  unsigned long long mem_max = ULONG_MAX;
  unsigned long elfcorehdrsz = 0;
-@@ -655,7 +659,7 @@ static int copybuf_memfd(const char *kernel_buf, size_t size)
+@@ -657,7 +661,7 @@ static int copybuf_memfd(const char *kernel_buf, size_t size)
  {
  	int fd, count;
  
@@ -41,6 +41,3 @@ index 7c614b0..41d285d 100644
  	if (fd == -1)
  		return fd;
  
--- 
-2.25.1
-
