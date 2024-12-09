@@ -22,7 +22,7 @@ SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
            file://0004-fast_float-Add-single-header-library-for-from_char-i.patch \
            file://0005-color-parser-Use-fast_float-implementation-for-from_.patch \
            "
-SRC_URI[archive.sha256sum] = "6499d25179315255f9bcfce03c66fb84c03ad325dea23d0e372178521eca42b5"
+SRC_URI[archive.sha256sum] = "35d7bcde07356846b4a12881c8e016705b70a9004a9082285eee5834ccc49890"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
