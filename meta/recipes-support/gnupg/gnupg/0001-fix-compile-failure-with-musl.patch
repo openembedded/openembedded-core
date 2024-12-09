@@ -1,4 +1,4 @@
-From 2e7534f3f7694ba426615b2061c235908097bb9b Mon Sep 17 00:00:00 2001
+From 81c222ea179ef73fcae4b50c56342bdad4787a28 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Thu, 22 Aug 2024 15:31:16 +0800
 Subject: [PATCH] fix compile failure with musl
@@ -20,7 +20,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/scd/app.c b/scd/app.c
-index 525950e..7180178 100644
+index ba7bb23..7d41e53 100644
 --- a/scd/app.c
 +++ b/scd/app.c
 @@ -24,6 +24,7 @@
@@ -29,5 +29,5 @@ index 525950e..7180178 100644
  #include <npth.h>
 +#include <unistd.h>
  
- #include "scdaemon.h"
- #include "../common/exechelp.h"
+ #ifndef HAVE_W32_SYSTEM
+ #include <fcntl.h>		/* F_SETFD F_GETFL F_SETFL O_NONBLOCK fcntl(2) */
