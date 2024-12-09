@@ -8,7 +8,7 @@ LICENSE = "GPL-2.0-or-later | XFree86-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1556547711e8246992b999edd9445a57"
 
 SRC_URI = "git://github.com/vcrhonek/${BPN}.git;branch=master;protocol=https"
-SRCREV = "5313a12eb992a354c17fc895c1d69c8c42b09a06"
+SRCREV = "8b9819d19b1554d41dcc9c76a784e1732484cb15"
 
 S = "${WORKDIR}/git"
 
