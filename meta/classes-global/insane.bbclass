@@ -825,6 +825,12 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
 
         # Now do the sanity check!!!
         if "build-deps" not in skip:
+            def check_rdep(rdep_data, possible_pn):
+                if rdep_data and "PN" in rdep_data:
+                    possible_pn.add(rdep_data["PN"])
+                    return rdep_data["PN"] in taskdeps
+                return False
+
             for rdepend in rdepends:
                 if "-dbg" in rdepend and "debug-deps" not in skip:
                     error_msg = "%s rdepends on %s" % (pkg,rdepend)
@@ -833,17 +839,16 @@ def package_qa_check_rdepends(pkg, pkgdest, skip, taskdeps, packages, d):
                     error_msg = "%s rdepends on %s" % (pkg, rdepend)
                     oe.qa.handle_error("dev-deps", error_msg, d)
                 if rdepend not in packages:
+                    possible_pn = set()
                     rdep_data = oe.packagedata.read_subpkgdata(rdepend, d)
-                    if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
+                    if check_rdep(rdep_data, possible_pn):
                         continue
-                    if not rdep_data or not 'PN' in rdep_data:
-                        for _, rdep_data in oe.packagedata.foreach_runtime_provider_pkgdata(d, rdepend):
-                            if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
-                                break
-                    if rdep_data and 'PN' in rdep_data and rdep_data['PN'] in taskdeps:
+
+                    if any(check_rdep(rdep_data, possible_pn) for _, rdep_data in  oe.packagedata.foreach_runtime_provider_pkgdata(d, rdepend)):
                         continue
-                    if rdep_data and 'PN' in rdep_data:
-                        error_msg = "%s rdepends on %s, but it isn't a build dependency, missing %s in DEPENDS or PACKAGECONFIG?" % (pkg, rdepend, rdep_data['PN'])
+
+                    if possible_pn:
+                        error_msg = "%s rdepends on %s, but it isn't a build dependency, missing one of %s in DEPENDS or PACKAGECONFIG?" % (pkg, rdepend, ", ".join(possible_pn))
                     else:
                         error_msg = "%s rdepends on %s, but it isn't a build dependency?" % (pkg, rdepend)
                     oe.qa.handle_error("build-deps", error_msg, d)
