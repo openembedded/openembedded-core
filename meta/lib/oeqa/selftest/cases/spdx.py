@@ -143,35 +143,31 @@ class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
     def test_base_files(self):
         self.check_recipe_spdx(
             "base-files",
-            "{DEPLOY_DIR_SPDX}/{MACHINE_ARCH}/packages/base-files.spdx.json",
+            "{DEPLOY_DIR_SPDX}/{MACHINE_ARCH}/packages/package-base-files.spdx.json",
         )
 
-
     def test_gcc_include_source(self):
-        import oe.spdx30
-
         objset = self.check_recipe_spdx(
             "gcc",
-            "{DEPLOY_DIR_SPDX}/{SSTATE_PKGARCH}/recipes/gcc.spdx.json",
-            extraconf=textwrap.dedent(
-                """\
+            "{DEPLOY_DIR_SPDX}/{SSTATE_PKGARCH}/recipes/recipe-gcc.spdx.json",
+            extraconf="""\
                 SPDX_INCLUDE_SOURCES = "1"
-                """
-            ),
+                """,
         )
 
         gcc_pv = get_bb_var("PV", "gcc")
-        filename = f'gcc-{gcc_pv}/README'
+        filename = f"gcc-{gcc_pv}/README"
         found = False
         for software_file in objset.foreach_type(oe.spdx30.software_File):
             if software_file.name == filename:
                 found = True
-                self.logger.info(f"The spdxId of {filename} in gcc.spdx.json is {software_file.spdxId}")
+                self.logger.info(
+                    f"The spdxId of {filename} in recipe-gcc.spdx.json is {software_file.spdxId}"
+                )
                 break
 
         self.assertTrue(
-            found,
-            f"Not found source file {filename} in gcc.spdx.json\n"
+            found, f"Not found source file {filename} in recipe-gcc.spdx.json\n"
         )
 
     def test_core_image_minimal(self):
