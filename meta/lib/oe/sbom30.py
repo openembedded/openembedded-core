@@ -21,45 +21,8 @@ VEX_VERSION = "1.0.0"
 
 SPDX_BUILD_TYPE = "http://openembedded.org/bitbake"
 
-
-@oe.spdx30.register(OE_SPDX_BASE + "link-extension")
-class OELinkExtension(oe.spdx30.extension_Extension):
-    """
-    This custom extension controls if an Element creates a symlink based on
-    its SPDX ID in the deploy directory. Some elements may not be able to be
-    linked because they are duplicated in multiple documents (e.g. the bitbake
-    Build Element). Those elements can add this extension and set link_spdx_id
-    to False
-
-    It is in internal extension that should be removed when writing out a final
-    SBoM
-    """
-
-    CLOSED = True
-    INTERNAL = True
-
-    @classmethod
-    def _register_props(cls):
-        super()._register_props()
-        cls._add_property(
-            "link_spdx_id",
-            oe.spdx30.BooleanProp(),
-            OE_SPDX_BASE + "link-spdx-id",
-            min_count=1,
-            max_count=1,
-        )
-
-        # The symlinks written to the deploy directory are based on the hash of
-        # the SPDX ID. While this makes it easy to look them up, it can be
-        # difficult to trace a Element to the hashed symlink name. As a
-        # debugging aid, this property is set to the basename of the symlink
-        # when the symlink is created to make it easier to trace
-        cls._add_property(
-            "link_name",
-            oe.spdx30.StringProp(),
-            OE_SPDX_BASE + "link-name",
-            max_count=1,
-        )
+OE_ALIAS_PREFIX = "http://spdxdocs.org/openembedded-alias/by-doc-hash/"
+OE_DOC_ALIAS_PREFIX = "http://spdxdocs.org/openembedded-alias/doc/"
 
 
 @oe.spdx30.register(OE_SPDX_BASE + "id-alias")
@@ -185,18 +148,6 @@ def get_element_link_id(e):
     return e._id
 
 
-def set_alias(obj, alias):
-    for ext in obj.extension:
-        if not isinstance(ext, OEIdAliasExtension):
-            continue
-        ext.alias = alias
-        return ext
-
-    ext = OEIdAliasExtension(alias=alias)
-    obj.extension.append(ext)
-    return ext
-
-
 def get_alias(obj):
     for ext in obj.extension:
         if not isinstance(ext, OEIdAliasExtension):
@@ -204,6 +155,10 @@ def get_alias(obj):
         return ext
 
     return None
+
+
+def hash_id(_id):
+    return hashlib.sha256(_id.encode("utf-8")).hexdigest()
 
 
 def to_list(l):
@@ -220,6 +175,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
     def __init__(self, d):
         super().__init__()
         self.d = d
+        self.alias_prefix = None
 
     def create_index(self):
         self.by_sha256_hash = {}
@@ -230,11 +186,10 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         if isinstance(obj, oe.spdx30.Element):
             if not obj._id:
                 raise ValueError("Element missing ID")
-            for ext in obj.extension:
-                if not isinstance(ext, OEIdAliasExtension):
-                    continue
-                if ext.alias:
-                    self.obj_by_id[ext.alias] = obj
+
+            alias_ext = get_alias(obj)
+            if alias_ext is not None and alias_ext.alias:
+                self.obj_by_id[alias_ext.alias] = obj
 
             for v in obj.verifiedUsing:
                 if not isinstance(v, oe.spdx30.Hash):
@@ -248,6 +203,9 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         super().add_index(obj)
         if isinstance(obj, oe.spdx30.SpdxDocument):
             self.doc = obj
+            alias_ext = get_alias(obj)
+            if alias_ext is not None and alias_ext.alias:
+                self.alias_prefix = OE_ALIAS_PREFIX + hash_id(alias_ext.alias) + "/"
 
     def __filter_obj(self, obj, attr_filter):
         return all(getattr(obj, k) == v for k, v in attr_filter.items())
@@ -307,6 +265,21 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         for o in self.foreach_type(oe.spdx30.Element):
             self.set_element_alias(o)
 
+    def new_alias_id(self, obj, replace):
+        unihash = self.d.getVar("BB_UNIHASH")
+        namespace = self.get_namespace() + "/"
+        if unihash not in obj._id:
+            bb.warn(f"Unihash {unihash} not found in {obj._id}")
+            return None
+
+        if namespace not in obj._id:
+            bb.warn(f"Namespace {namespace} not found in {obj._id}")
+            return None
+
+        return obj._id.replace(unihash, "UNIHASH").replace(
+            namespace, replace + self.d.getVar("PN")
+        )
+
     def remove_internal_extensions(self):
         def remove(o):
             o.extension = [e for e in o.extension if not getattr(e, "INTERNAL", False)]
@@ -334,21 +307,17 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
         alias_ext = get_alias(e)
         if alias_ext is None:
-            unihash = self.d.getVar("BB_UNIHASH")
-            namespace = self.get_namespace()
-            if unihash not in e._id:
-                bb.warn(f"Unihash {unihash} not found in {e._id}")
-            elif namespace not in e._id:
-                bb.warn(f"Namespace {namespace} not found in {e._id}")
-            else:
-                alias_ext = set_alias(
-                    e,
-                    e._id.replace(unihash, "UNIHASH").replace(
-                        namespace,
-                        "http://spdx.org/spdxdocs/openembedded-alias/"
-                        + self.d.getVar("PN"),
-                    ),
-                )
+            alias_id = self.new_alias_id(e, self.alias_prefix)
+            if alias_id is not None:
+                e.extension.append(OEIdAliasExtension(alias=alias_id))
+        elif (
+            alias_ext.alias
+            and not isinstance(e, oe.spdx30.SpdxDocument)
+            and not alias_ext.alias.startswith(self.alias_prefix)
+        ):
+            bb.warn(
+                f"Element {e._id} has alias {alias_ext.alias}, but it should have prefix {self.alias_prefix}"
+            )
 
     def new_spdxid(self, *suffix, include_unihash=True):
         items = [self.get_namespace()]
@@ -812,9 +781,17 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             _id=objset.new_spdxid("document", name),
             name=name,
         )
-        document.extension.append(OEIdAliasExtension())
-        document.extension.append(OELinkExtension(link_spdx_id=False))
+
+        document.extension.append(
+            OEIdAliasExtension(
+                alias=objset.new_alias_id(
+                    document,
+                    OE_DOC_ALIAS_PREFIX + d.getVar("PN") + "/" + name + "/",
+                ),
+            )
+        )
         objset.doc = document
+        objset.add_index(document)
 
         if copy_from_bitbake_doc:
             bb_objset = objset.import_bitbake_build_objset()
@@ -907,9 +884,7 @@ def jsonld_arch_path(d, arch, subdir, name, deploydir=None):
     return deploydir / arch / subdir / (name + ".spdx.json")
 
 
-def jsonld_hash_path(_id):
-    h = hashlib.sha256(_id.encode("utf-8")).hexdigest()
-
+def jsonld_hash_path(h):
     return Path("by-spdxid-hash") / h[:2], h
 
 
@@ -981,7 +956,7 @@ def write_recipe_jsonld_doc(
     dest = jsonld_arch_path(d, pkg_arch, subdir, objset.doc.name, deploydir=deploydir)
 
     def link_id(_id):
-        hash_path = jsonld_hash_path(_id)
+        hash_path = jsonld_hash_path(hash_id(_id))
 
         link_name = jsonld_arch_path(
             d,
@@ -1005,28 +980,9 @@ def write_recipe_jsonld_doc(
 
     try:
         if create_spdx_id_links:
-            for o in objset.foreach_type(oe.spdx30.Element):
-                if not o._id or o._id.startswith("_:"):
-                    continue
-
-                ext = None
-                for e in o.extension:
-                    if not isinstance(e, OELinkExtension):
-                        continue
-
-                    ext = e
-                    break
-
-                if ext is None:
-                    ext = OELinkExtension(link_spdx_id=True)
-                    o.extension.append(ext)
-
-                if ext.link_spdx_id:
-                    ext.link_name = link_id(o._id)
-
-                    alias_ext = get_alias(o)
-                    if alias_ext is not None and alias_ext.alias:
-                        alias_ext.link_name = link_id(alias_ext.alias)
+            alias_ext = get_alias(objset.doc)
+            if alias_ext is not None and alias_ext.alias:
+                alias_ext.link_name = link_id(alias_ext.alias)
 
     finally:
         # It is really helpful for debugging if the JSON document is written
@@ -1055,7 +1011,10 @@ def load_obj_in_jsonld(d, arch, subdir, fn_name, obj_type, **attr_filter):
 
 
 def find_by_spdxid(d, spdxid, *, required=False):
-    return find_jsonld(d, *jsonld_hash_path(spdxid), required=required)
+    if spdxid.startswith(OE_ALIAS_PREFIX):
+        h = spdxid[len(OE_ALIAS_PREFIX) :].split("/", 1)[0]
+        return find_jsonld(d, *jsonld_hash_path(h), required=required)
+    return find_jsonld(d, *jsonld_hash_path(hash_id(spdxid)), required=required)
 
 
 def create_sbom(d, name, root_elements, add_objectsets=[]):
