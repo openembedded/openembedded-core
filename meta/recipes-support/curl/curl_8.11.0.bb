@@ -14,8 +14,9 @@ SRC_URI = " \
     file://run-ptest \
     file://disable-tests \
     file://no-test-timeout.patch \
+    file://0001-libcurl.pc.in-drop-LDFLAGS-from-Libs.private.patch \
 "
-SRC_URI[sha256sum] = "73a4b0e99596a09fa5924a4fb7e4b995a85fda0d18a2c02ab9cf134bebce04ee"
+SRC_URI[sha256sum] = "db59cf0d671ca6e7f5c2c5ec177084a33a79e04c97e71cf183a5cdea235054eb"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
@@ -23,7 +24,7 @@ CVE_STATUS[CVE-2024-32928] = "ignored: CURLOPT_SSL_VERIFYPEER was disabled on go
 
 inherit autotools pkgconfig binconfig multilib_header ptest
 
-COMMON_PACKAGECONFIG = "basic-auth bearer-auth digest-auth negotiate-auth openssl proxy threaded-resolver verbose zlib"
+COMMON_PACKAGECONFIG = "basic-auth bearer-auth digest-auth ipfs negotiate-auth openssl proxy threaded-resolver verbose zlib"
 PACKAGECONFIG ??= "${COMMON_PACKAGECONFIG} ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} aws libidn"
 PACKAGECONFIG:class-native = "${COMMON_PACKAGECONFIG} ipv6"
 PACKAGECONFIG:class-nativesdk = "${COMMON_PACKAGECONFIG} ipv6"
@@ -43,6 +44,7 @@ PACKAGECONFIG[gnutls] = "--with-gnutls,--without-gnutls,gnutls"
 PACKAGECONFIG[gopher] = "--enable-gopher,--disable-gopher,"
 PACKAGECONFIG[imap] = "--enable-imap,--disable-imap,"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
+PACKAGECONFIG[ipfs] = "--enable-ipfs,--disable-ipfs,"
 PACKAGECONFIG[kerberos-auth] = "--enable-kerberos-auth,--disable-kerberos-auth"
 PACKAGECONFIG[krb5] = "--with-gssapi,--without-gssapi,krb5"
 PACKAGECONFIG[ldap] = "--enable-ldap,--disable-ldap,openldap"
@@ -65,6 +67,7 @@ PACKAGECONFIG[telnet] = "--enable-telnet,--disable-telnet,"
 PACKAGECONFIG[tftp] = "--enable-tftp,--disable-tftp,"
 PACKAGECONFIG[threaded-resolver] = "--enable-threaded-resolver,--disable-threaded-resolver,,,,ares"
 PACKAGECONFIG[verbose] = "--enable-verbose,--disable-verbose"
+PACKAGECONFIG[websockets] = "--enable-websockets,--disable-websockets"
 PACKAGECONFIG[zlib] = "--with-zlib=${STAGING_LIBDIR}/../,--without-zlib,zlib"
 PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
 
@@ -106,7 +109,6 @@ do_install_ptest() {
 	for name in $(makefile-getvar ${B}/tests/libtest/Makefile noinst_PROGRAMS noinst_LTLIBRARIES); do
 		${B}/libtool --mode=install install ${B}/tests/libtest/$name ${D}${PTEST_PATH}/tests/libtest
 	done
-	cp ${S}/tests/libtest/notexists.pl ${D}${PTEST_PATH}/tests/libtest
 	rm -f ${D}${PTEST_PATH}/tests/libtest/libhostname.la
 
 	install -d ${D}${PTEST_PATH}/tests/server
@@ -131,6 +133,7 @@ RDEPENDS:${PN}-ptest += " \
 	perl-module-file-basename \
 	perl-module-file-spec \
 	perl-module-file-temp \
+	perl-module-i18n-langinfo \
 	perl-module-io-socket \
 	perl-module-ipc-open2 \
 	perl-module-list-util \

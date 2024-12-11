@@ -1,0 +1,39 @@
+From cfd5d794fdfcc12e386fdbb14161babf54d2a5ee Mon Sep 17 00:00:00 2001
+From: Peter Marko <peter.marko@siemens.com>
+Date: Sat, 9 Nov 2024 22:26:58 +0100
+Subject: [PATCH] libcurl.pc.in: drop LDFLAGS from Libs.private
+
+Stop passing linker flags to pkg-config.
+
+This was added in v8.11.0 with commit [1].
+There are several problems with this, especially:
+* user may want to link curl and application with different flags
+* user usually adds the same or similar flags in all components, so this
+  will double the flags when linking application
+* when building components in temporary directories, these directories
+  are preserved in pkg-config linker flags and are invalid when building
+  application
+
+[1] https://github.com/curl/curl/commit/9f56bb608ecfbb8978c6cb72a04d9e8b23162d82
+
+Upstream-Status: Submitted [https://github.com/curl/curl/pull/15533]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ libcurl.pc.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libcurl.pc.in b/libcurl.pc.in
+index 4c60a7ec7..7898dae35 100644
+--- a/libcurl.pc.in
++++ b/libcurl.pc.in
+@@ -36,6 +36,6 @@ Version: @CURLVERSION@
+ Requires: @LIBCURL_PC_REQUIRES@
+ Requires.private: @LIBCURL_PC_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -lcurl @LIBCURL_PC_LIBS@
+-Libs.private: @LDFLAGS@ @LIBCURL_PC_LIBS_PRIVATE@
++Libs.private: @LIBCURL_PC_LIBS_PRIVATE@
+ Cflags: -I${includedir} @LIBCURL_PC_CFLAGS@
+ Cflags.private: @LIBCURL_PC_CFLAGS_PRIVATE@
+-- 
+2.30.2
+
