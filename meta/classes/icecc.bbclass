@@ -358,7 +358,7 @@ python set_icecc_env() {
     symlink_path = os.path.join(ICE_PATH, "symlinks")
     bb.utils.mkdirhier(symlink_path)
     compilers = []
-    if d.getVar('KERNEL_CC'):
+    if icecc_is_kernel(bb, d):
         compilers.append(get_cross_kernel_cc(bb,d))
     else:
         host_prefix = d.getVar('HOST_PREFIX')
