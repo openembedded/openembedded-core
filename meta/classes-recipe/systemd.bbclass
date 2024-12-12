@@ -124,29 +124,26 @@ python systemd_populate_packages() {
         return appended
 
     # Add systemd files to FILES:*-systemd, parse for Also= and follow recursive
-    def systemd_add_files_and_parse(pkg_systemd, path, service, keys):
+    def systemd_add_files_and_parse(pkg_systemd, path, service):
         # avoid infinite recursion
         if systemd_append_file(pkg_systemd, oe.path.join(path, service)):
             fullpath = oe.path.join(d.getVar("D"), path, service)
             if service.find('.service') != -1:
                 # for *.service add *@.service
                 service_base = service.replace('.service', '')
-                systemd_add_files_and_parse(pkg_systemd, path, service_base + '@.service', keys)
+                systemd_add_files_and_parse(pkg_systemd, path, service_base + '@.service')
             if service.find('.socket') != -1:
                 # for *.socket add *.service and *@.service
                 service_base = service.replace('.socket', '')
-                systemd_add_files_and_parse(pkg_systemd, path, service_base + '.service', keys)
-                systemd_add_files_and_parse(pkg_systemd, path, service_base + '@.service', keys)
-            for key in keys.split():
-                # recurse all dependencies found in keys ('Also';'Conflicts';..) and add to files
-                cmd = "grep %s %s | sed 's,%s=,,g' | tr ',' '\\n'" % (key, shlex.quote(fullpath), key)
-                pipe = os.popen(cmd, 'r')
-                line = pipe.readline()
-                while line:
-                    line = line.replace('\n', '')
-                    systemd_add_files_and_parse(pkg_systemd, path, line, keys)
-                    line = pipe.readline()
-                pipe.close()
+                systemd_add_files_and_parse(pkg_systemd, path, service_base + '.service')
+                systemd_add_files_and_parse(pkg_systemd, path, service_base + '@.service')
+            # Add all units which have an Also= referring a unit in this package to this package as well.
+            with open(fullpath, 'r') as unit_f:
+                for line in unit_f:
+                    if line.startswith('Also'):
+                        also_unit = line.split('=', 1)[1].strip()
+                        bb.warn("also: %s" % also_unit)
+                        systemd_add_files_and_parse(pkg_systemd, path, also_unit)
 
     # Check service-files and call systemd_add_files_and_parse for each entry
     def systemd_check_services():
@@ -155,7 +152,6 @@ python systemd_populate_packages() {
         searchpaths.append(d.getVar("systemd_user_unitdir"))
         systemd_packages = d.getVar('SYSTEMD_PACKAGES')
 
-        keys = 'Also'
         # scan for all in SYSTEMD_SERVICE[]
         for pkg_systemd in systemd_packages.split():
             for service in get_package_var(d, 'SYSTEMD_SERVICE', pkg_systemd).split():
@@ -179,7 +175,7 @@ python systemd_populate_packages() {
                             break
 
                 if path_found != '':
-                    systemd_add_files_and_parse(pkg_systemd, path_found, service, keys)
+                    systemd_add_files_and_parse(pkg_systemd, path_found, service)
                 else:
                     bb.fatal("Didn't find service unit '{0}', specified in SYSTEMD_SERVICE:{1}. {2}".format(
                         service, pkg_systemd, "Also looked for service unit '{0}'.".format(base) if base is not None else ""))
