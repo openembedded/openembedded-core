@@ -8,5 +8,3 @@ and a subset of the POSIX C library for writing more command-line utilities."
 require barebox-common.inc
 inherit barebox
 
-SRC_URI += "file://0001-lib-lz4-use-lz4-instead-of-lz4c.patch \
-           "
