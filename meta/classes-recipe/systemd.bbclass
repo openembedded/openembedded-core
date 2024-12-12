@@ -132,18 +132,18 @@ python systemd_populate_packages() {
                 # for *.service add *@.service
                 service_base = service.replace('.service', '')
                 systemd_add_files_and_parse(pkg_systemd, path, service_base + '@.service')
+                # Add the socket unit which is referred by the Also= in this service file to the same package.
+                with open(fullpath, 'r') as unit_f:
+                    for line in unit_f:
+                        if line.startswith('Also'):
+                            also_unit = line.split('=', 1)[1].strip()
+                            if also_unit.find('.socket') != -1:
+                                systemd_add_files_and_parse(pkg_systemd, path, also_unit)
             if service.find('.socket') != -1:
                 # for *.socket add *.service and *@.service
                 service_base = service.replace('.socket', '')
                 systemd_add_files_and_parse(pkg_systemd, path, service_base + '.service')
                 systemd_add_files_and_parse(pkg_systemd, path, service_base + '@.service')
-            # Add all units which have an Also= referring a unit in this package to this package as well.
-            with open(fullpath, 'r') as unit_f:
-                for line in unit_f:
-                    if line.startswith('Also'):
-                        also_unit = line.split('=', 1)[1].strip()
-                        bb.warn("also: %s" % also_unit)
-                        systemd_add_files_and_parse(pkg_systemd, path, also_unit)
 
     # Check service-files and call systemd_add_files_and_parse for each entry
     def systemd_check_services():
