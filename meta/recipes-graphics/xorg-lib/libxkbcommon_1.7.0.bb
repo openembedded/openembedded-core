@@ -31,10 +31,6 @@ python populate_packages:prepend () {
     do_split_packages(d, d.expand('${libdir}'), r'^(lib.*)\.so\.*', '%s', '%s library', extra_depends='', allow_links=True)
 }
 
-# Fix a following runtime error:
-# xkbcommon: ERROR: couldn't find a Compose file for locale "C"
-RDEPENDS:${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11-locale', 'libx11-compose-data', d)}"
-
 BBCLASSEXTEND += "native"
 
 CVE_PRODUCT += "xkbcommon:libxkbcommon"
