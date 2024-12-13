@@ -13,6 +13,7 @@ require ${BPN}-crates.inc
 inherit pypi cargo-update-recipe-crates python_maturin ptest
 
 PYPI_PACKAGE = "rpds_py"
+UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
 RDEPENDS:${PN}-ptest += " \
     python3-iniconfig \

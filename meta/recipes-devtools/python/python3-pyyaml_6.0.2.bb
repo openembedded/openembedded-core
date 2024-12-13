@@ -12,8 +12,6 @@ SRC_URI += "\
 "
 SRC_URI[test.sha256sum] = "b6a8a2825d89fdc8aee226560f66b8196e872012a0ea7118cbef1a832359434a"
 
-UPSTREAM_CHECK_PYPI_PACKAGE = "PyYAML"
-
 inherit pypi python_setuptools_build_meta ptest cython
 
 PACKAGECONFIG ?= "libyaml"

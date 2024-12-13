@@ -27,8 +27,6 @@ do_install_ptest() {
     cp -rf ${S}/docs ${D}${PTEST_PATH}/
 }
 
-UPSTREAM_CHECK_REGEX = "click/(?P<pver>\d+(\.\d+)+)/"
-
 CLEANBROKEN = "1"
 
 RDEPENDS:${PN} += "\
