@@ -10,14 +10,12 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-fix-writeback-Refine-the-show_inode_state-macro-defi.patch \
-           file://0001-Fix-uprobes-make-uprobe_register-return-struct-uprob.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
 
-SRC_URI[sha256sum] = "6692554eca50e9d22e71b7c2ee6c7db89d393268d404261212af37c5247c0729"
+SRC_URI[sha256sum] = "6694414a3701fcd6e05b3cb20cfecae3b46b3dfb9e5361b344851c1f8052e854"
 
 export INSTALL_MOD_DIR="kernel/lttng-modules"
 
