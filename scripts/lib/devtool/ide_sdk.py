@@ -288,6 +288,7 @@ class RecipeModified:
         self.bblayers = None
         self.bpn = None
         self.d = None
+        self.debug_build = None
         self.fakerootcmd = None
         self.fakerootenv = None
         self.libdir = None
@@ -348,6 +349,7 @@ class RecipeModified:
         self.bpn = recipe_d.getVar('BPN')
         self.cxx = recipe_d.getVar('CXX')
         self.d = recipe_d.getVar('D')
+        self.debug_build = recipe_d.getVar('DEBUG_BUILD')
         self.fakerootcmd = recipe_d.getVar('FAKEROOTCMD')
         self.fakerootenv = recipe_d.getVar('FAKEROOTENV')
         self.libdir = recipe_d.getVar('libdir')
@@ -389,17 +391,6 @@ class RecipeModified:
         self.recipe_id = self.bpn + "-" + self.package_arch
         self.recipe_id_pretty = self.bpn + ": " + self.package_arch
 
-    def append_to_bbappend(self, append_text):
-        with open(self.bbappend, 'a') as bbap:
-            bbap.write(append_text)
-
-    def remove_from_bbappend(self, append_text):
-        with open(self.bbappend, 'r') as bbap:
-            text = bbap.read()
-        new_text = text.replace(append_text, '')
-        with open(self.bbappend, 'w') as bbap:
-            bbap.write(new_text)
-
     @staticmethod
     def is_valid_shell_variable(var):
         """Skip strange shell variables like systemd
@@ -411,34 +402,6 @@ class RecipeModified:
             bb.debug(1, "ignoring variable: %s" % var)
             return True
         return False
-
-    def debug_build_config(self, args):
-        """Explicitely set for example CMAKE_BUILD_TYPE to Debug if not defined otherwise"""
-        if self.build_tool is BuildTool.CMAKE:
-            append_text = os.linesep + \
-                'OECMAKE_ARGS:append = " -DCMAKE_BUILD_TYPE:STRING=Debug"' + os.linesep
-            if args.debug_build_config and not 'CMAKE_BUILD_TYPE' in self.cmake_cache_vars:
-                self.cmake_cache_vars['CMAKE_BUILD_TYPE'] = {
-                    "type": "STRING",
-                    "value": "Debug",
-                }
-                self.append_to_bbappend(append_text)
-            elif 'CMAKE_BUILD_TYPE' in self.cmake_cache_vars:
-                del self.cmake_cache_vars['CMAKE_BUILD_TYPE']
-                self.remove_from_bbappend(append_text)
-        elif self.build_tool is BuildTool.MESON:
-            append_text = os.linesep + 'MESON_BUILDTYPE = "debug"' + os.linesep
-            if args.debug_build_config and self.meson_buildtype != "debug":
-                self.mesonopts.replace(
-                    '--buildtype ' + self.meson_buildtype, '--buildtype debug')
-                self.append_to_bbappend(append_text)
-            elif self.meson_buildtype == "debug":
-                self.mesonopts.replace(
-                    '--buildtype debug', '--buildtype plain')
-                self.remove_from_bbappend(append_text)
-        elif args.debug_build_config:
-            logger.warn(
-                "--debug-build-config is not implemented for this build tool yet.")
 
     def solib_search_path(self, image):
         """Search for debug symbols in the rootfs and rootfs-dbg
@@ -950,6 +913,13 @@ def ide_setup(args, config, basepath, workspace):
                 recipe_modified.gen_meson_wrapper()
             ide.setup_modified_recipe(
                 args, recipe_image, recipe_modified)
+
+            if recipe_modified.debug_build != '1':
+                logger.warn(
+                    'Recipe %s is compiled with release build configuration. '
+                    'You might want to add DEBUG_BUILD = "1" to %s. '
+                    'Note that devtool modify --debug-build can do this automatically.',
+                    recipe_modified.name, recipe_modified.bbappend)
     else:
         raise DevtoolError("Must not end up here.")
 
@@ -1027,6 +997,4 @@ def register_commands(subparsers, context):
         '-p', '--no-preserve', help='Do not preserve existing files', action='store_true')
     parser_ide_sdk.add_argument(
         '--no-check-space', help='Do not check for available space before deploying', action='store_true')
-    parser_ide_sdk.add_argument(
-        '--debug-build-config', help='Use debug build flags, for example set CMAKE_BUILD_TYPE=Debug', action='store_true')
     parser_ide_sdk.set_defaults(func=ide_setup)
