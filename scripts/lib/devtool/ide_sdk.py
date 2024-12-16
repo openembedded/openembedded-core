@@ -493,7 +493,7 @@ class RecipeModified:
 
         vars = (key for key in d.keys() if not key.startswith(
             "__") and not d.getVarFlag(key, "func", False))
-        for var in vars:
+        for var in sorted(vars):
             func = d.getVarFlag(var, "func", False)
             if d.getVarFlag(var, 'python', False) and func:
                 continue
@@ -545,7 +545,7 @@ class RecipeModified:
         cache_vars = {}
         oecmake_args = d.getVar('OECMAKE_ARGS').split()
         extra_oecmake = d.getVar('EXTRA_OECMAKE').split()
-        for param in oecmake_args + extra_oecmake:
+        for param in sorted(oecmake_args + extra_oecmake):
             d_pref = "-D"
             if param.startswith(d_pref):
                 param = param[len(d_pref):]
