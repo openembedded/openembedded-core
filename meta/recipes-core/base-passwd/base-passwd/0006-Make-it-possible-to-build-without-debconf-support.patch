@@ -5,7 +5,7 @@ Subject: [PATCH] Make it possible to build without debconf support
 
 Not all systems have the debconfclient library available.
 
-Upstream-Status: Submitted [https://salsa.debian.org/debian/base-passwd/-/merge_requests/11]
+Upstream-Status: Backport [https://salsa.debian.org/debian/base-passwd/-/commit/c72aa5dd25a952da25e307761f4526db2c8c39ec]
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
  Makefile.am     |  1 -

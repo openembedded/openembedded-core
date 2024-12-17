@@ -6,7 +6,7 @@ Subject: [PATCH] Make it possible to disable the generation of the
 
 Not all systems have docbook and po4a available.
 
-Upstream-Status: Submitted [https://salsa.debian.org/debian/base-passwd/-/merge_requests/11]
+Upstream-Status: Backport [https://salsa.debian.org/debian/base-passwd/-/commit/2a6d16e595c93084e279d0dcbef37d960b44fd1a]
 Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 ---
  Makefile.am  | 2 ++
