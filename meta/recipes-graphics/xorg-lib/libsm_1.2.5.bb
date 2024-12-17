@@ -9,7 +9,7 @@ has a particular state."
 require xorg-lib-common.inc
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c0fb37f44e02bdbde80546024400728d"
+LIC_FILES_CHKSUM = "file://COPYING;md5=e04a412a93c7cb2b5e07ebd8fd922917"
 
 DEPENDS += "libice xorgproto xtrans"
 
@@ -22,7 +22,7 @@ PE = "1"
 
 XORG_PN = "libSM"
 
-SRC_URI[sha256sum] = "fdcbe51e4d1276b1183da77a8a4e74a137ca203e0bcfb20972dd5f3347e97b84"
+SRC_URI[sha256sum] = "2af9e12da5ef670dc3a7bce1895c9c0f1bfb0cb9e64e8db40fcc33f883bd20bc"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
