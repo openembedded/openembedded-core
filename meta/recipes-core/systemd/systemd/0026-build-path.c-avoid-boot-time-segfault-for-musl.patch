@@ -1,7 +1,7 @@
-From 0e4379088b1cf607b605b785f6f23943ebeb6584 Mon Sep 17 00:00:00 2001
+From f2a7cf1d2a2bc2516a180809efd85c828cd9c7f4 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Wed, 3 Jul 2024 07:18:42 -0700
-Subject: [PATCH 28/28] build-path.c: avoid boot time segfault for musl
+Subject: [PATCH 26/26] build-path.c: avoid boot time segfault for musl
 
 This function, at runtime, should return -ENOEXEC. For musl, it
 somehow segfaults. I think it's related to getauxval, but it's
@@ -27,5 +27,5 @@ index b5972658df..4ef551034e 100644
                  const char *runpath = NULL;
  
 -- 
-2.45.1
+2.34.1
 
