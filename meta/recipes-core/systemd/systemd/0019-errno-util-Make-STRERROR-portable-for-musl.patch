@@ -1,7 +1,7 @@
-From d2f632dd6a8cca0fbdd6568ce84004335c004f58 Mon Sep 17 00:00:00 2001
+From 28fa1d5f56c6ddee9e336e6f2051c55e9f2f98b4 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 23 Jan 2023 23:39:46 -0800
-Subject: [PATCH 21/27] errno-util: Make STRERROR portable for musl
+Subject: [PATCH 19/26] errno-util: Make STRERROR portable for musl
 
 Sadly, systemd has decided to use yet another GNU extention in a macro
 lets make this such that we can use XSI compliant strerror_r() for
@@ -38,5 +38,5 @@ index 48b76e4bf7..6e7653e2d9 100644
   * Note that we can't use ({ … }) to define a temporary variable, so errnum is
   * evaluated twice. */
 -- 
-2.45.1
+2.34.1
 

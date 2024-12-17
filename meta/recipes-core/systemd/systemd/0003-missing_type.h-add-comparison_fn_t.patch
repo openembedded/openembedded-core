@@ -1,7 +1,7 @@
-From 34b7e1ed3b9a896db6fad435fd141c385c7337d1 Mon Sep 17 00:00:00 2001
+From f99ef6c4407b56e8d15455fe27eb732ada87215b Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 13:55:12 +0800
-Subject: [PATCH 04/27] missing_type.h: add comparison_fn_t
+Subject: [PATCH 03/26] missing_type.h: add comparison_fn_t
 
 Make it work with musl where comparison_fn_t and is not provided.
 
@@ -45,7 +45,7 @@ index 9c818bd747..ef10c8be2c 100644
  /* This is the same as glibc's internal __compar_d_fn_t type. glibc exports a public comparison_fn_t, for the
   * external type __compar_fn_t, but doesn't do anything similar for __compar_d_fn_t. Let's hence do that
 diff --git a/src/libsystemd/sd-journal/catalog.c b/src/libsystemd/sd-journal/catalog.c
-index a0b673f65f..29dd2fee16 100644
+index 7dcc35d8d5..87b8d6aad6 100644
 --- a/src/libsystemd/sd-journal/catalog.c
 +++ b/src/libsystemd/sd-journal/catalog.c
 @@ -29,6 +29,7 @@
@@ -57,5 +57,5 @@ index a0b673f65f..29dd2fee16 100644
  const char * const catalog_file_dirs[] = {
          "/usr/local/lib/systemd/catalog/",
 -- 
-2.45.1
+2.34.1
 
