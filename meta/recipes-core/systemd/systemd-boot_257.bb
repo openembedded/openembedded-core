@@ -54,13 +54,13 @@ COMPATIBLE_HOST:x86-x32 = "null"
 
 do_install() {
 	install -d ${D}${EFI_FILES_PATH}
-	install ${B}/src/boot/efi/systemd-boot*.efi ${D}${EFI_FILES_PATH}/${SYSTEMD_BOOT_IMAGE}
+	install ${B}/src/boot/systemd-boot*.efi ${D}${EFI_FILES_PATH}/${SYSTEMD_BOOT_IMAGE}
 }
 
 do_deploy () {
-	install ${B}/src/boot/efi/systemd-boot*.efi ${DEPLOYDIR}
-	install ${B}/src/boot/efi/linux*.efi.stub ${DEPLOYDIR}
-	install ${B}/src/boot/efi/addon*.efi.stub ${DEPLOYDIR}
+	install ${B}/src/boot/systemd-boot*.efi ${DEPLOYDIR}
+	install ${B}/src/boot/linux*.efi.stub ${DEPLOYDIR}
+	install ${B}/src/boot/addon*.efi.stub ${DEPLOYDIR}
 }
 
 addtask deploy before do_build after do_compile
