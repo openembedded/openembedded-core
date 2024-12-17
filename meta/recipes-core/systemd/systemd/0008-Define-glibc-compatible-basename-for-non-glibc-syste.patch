@@ -1,7 +1,7 @@
-From ea8e85d92f67a7af8577a4ce7c67c7aaee65d10c Mon Sep 17 00:00:00 2001
+From f4cd939c7cc1ce0a59bab2693768f2c95d9ced00 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 27 May 2018 08:36:44 -0700
-Subject: [PATCH 10/27] Define glibc compatible basename() for non-glibc
+Subject: [PATCH 08/26] Define glibc compatible basename() for non-glibc
  systems
 
 Fixes builds with musl, even though systemd is adamant about
@@ -15,10 +15,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/src/basic/string-util.h b/src/basic/string-util.h
-index ff5efbcf55..d1a6bb0e76 100644
+index cc6aa183c0..0b035125cd 100644
 --- a/src/basic/string-util.h
 +++ b/src/basic/string-util.h
-@@ -26,6 +26,10 @@
+@@ -27,6 +27,10 @@
  #define URI_UNRESERVED      ALPHANUMERICAL "-._~"       /* [RFC3986] */
  #define URI_VALID           URI_RESERVED URI_UNRESERVED /* [RFC3986] */
  
@@ -30,5 +30,5 @@ index ff5efbcf55..d1a6bb0e76 100644
          if (!haystack || !needle)
                  return NULL;
 -- 
-2.45.1
+2.34.1
 

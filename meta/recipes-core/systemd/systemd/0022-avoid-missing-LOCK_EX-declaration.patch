@@ -1,7 +1,7 @@
-From ca2a736627f8ee8dd9dbbf5b3149d4c8493833ff Mon Sep 17 00:00:00 2001
+From 5b8df64993b68a5a4af0f214d8cae77f4e716593 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Tue, 2 Jan 2024 11:03:27 +0800
-Subject: [PATCH 24/27] avoid missing LOCK_EX declaration
+Subject: [PATCH 22/26] avoid missing LOCK_EX declaration
 
 This only happens on MUSL. Include sys/file.h to avoid compilation
 error about missing LOCK_EX declaration.
@@ -16,7 +16,7 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
  3 files changed, 3 insertions(+)
 
 diff --git a/src/basic/fd-util.h b/src/basic/fd-util.h
-index af17481dd8..fa20bfa30f 100644
+index 93b254c680..5f0b1a816d 100644
 --- a/src/basic/fd-util.h
 +++ b/src/basic/fd-util.h
 @@ -6,6 +6,7 @@
@@ -28,10 +28,10 @@ index af17481dd8..fa20bfa30f 100644
  #include "macro.h"
  #include "missing_fcntl.h"
 diff --git a/src/core/exec-invoke.c b/src/core/exec-invoke.c
-index ee8db04e76..2aff654f0f 100644
+index 9d636f5529..6be43caa57 100644
 --- a/src/core/exec-invoke.c
 +++ b/src/core/exec-invoke.c
-@@ -4,6 +4,7 @@
+@@ -5,6 +5,7 @@
  #include <sys/ioctl.h>
  #include <sys/mount.h>
  #include <sys/prctl.h>
@@ -40,7 +40,7 @@ index ee8db04e76..2aff654f0f 100644
  #if HAVE_PAM
  #include <security/pam_appl.h>
 diff --git a/src/shared/dev-setup.h b/src/shared/dev-setup.h
-index 5339bc4e5e..0697495f23 100644
+index 92ba6cf764..ba01a0ae55 100644
 --- a/src/shared/dev-setup.h
 +++ b/src/shared/dev-setup.h
 @@ -2,6 +2,7 @@
@@ -49,8 +49,8 @@ index 5339bc4e5e..0697495f23 100644
  #include <sys/types.h>
 +#include <sys/file.h>
  
- int lock_dev_console(void);
+ int dev_setup(const char *prefix, uid_t uid, gid_t gid);
  
 -- 
-2.45.1
+2.34.1
 
