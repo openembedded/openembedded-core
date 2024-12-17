@@ -9,7 +9,7 @@ LICENSE = "MIT"
 
 inherit meson pkgconfig
 
-SRCREV = "fc3113c8c1e99797b2d4769aaf02265be64a7589"
+SRCREV = "edf352a96646c8d793f0c1eb11795112f9bde725"
 
 SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;branch=master"
 
