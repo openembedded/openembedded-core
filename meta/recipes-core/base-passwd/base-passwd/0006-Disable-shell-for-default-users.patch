@@ -1,4 +1,4 @@
-From 91e0db96741359173ddf2be083aafcc1a3c32472 Mon Sep 17 00:00:00 2001
+From f35eb24213475d3024ad45297fd855c6abfbbac0 Mon Sep 17 00:00:00 2001
 From: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
 Date: Mon, 18 Apr 2022 11:22:43 +0800
 Subject: [PATCH] Disable shell for default users
@@ -52,6 +52,3 @@ index e1c32ff..0cd5ffd 100644
 +irc:*:39:39:ircd:/var/run/ircd:/sbin/nologin
 +gnats:*:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/sbin/nologin
 +nobody:*:65534:65534:nobody:/nonexistent:/sbin/nologin
---
-2.32.0
-

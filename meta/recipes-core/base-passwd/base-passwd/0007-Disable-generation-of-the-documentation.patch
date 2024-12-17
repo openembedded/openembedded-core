@@ -1,0 +1,32 @@
+From 7ccf8227cb10d78f1958a7a7feed75a390a6b133 Mon Sep 17 00:00:00 2001
+From: Saul Wold <sgw@linux.intel.com>
+Date: Fri, 29 Apr 2022 13:32:28 +0000
+Subject: [PATCH] Disable generation of the documentation
+
+It uses tools currently not supported by OE-Core. It uses sgmltools
+and po4a.
+
+Upstream-Status: Inappropriate [OE-Core specific]
+Signed-off-by: Saul Wold <sgw@linux.intel.com>
+---
+ Makefile.in | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 9ba097c..d3ea47c 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -25,13 +25,10 @@ gen_configure	= config.cache config.status config.log \
+ 		  confdefhs.h config.h Makefile
+ 
+ all: update-passwd
+-	$(MAKE) -C doc all
+-	$(MAKE) -C man all
+ 
+ install: all
+ 	mkdir -p $(DESTDIR)$(sbindir)
+ 	$(INSTALL) update-passwd $(DESTDIR)$(sbindir)/
+-	$(MAKE) -C man install
+ 
+ update-passwd.o: version.h
+ 

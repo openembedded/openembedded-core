@@ -8,13 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 RECIPE_NO_UPDATE_REASON = "Version 3.5.38 requires cdebconf for update-passwd utility"
 
 SRC_URI = "https://launchpad.net/debian/+archive/primary/+files/${BPN}_${PV}.tar.gz \
-           file://add_shutdown.patch \
-           file://nobash.patch \
-           file://noshadow.patch \
-           file://input.patch \
-           file://disable-docs.patch \
-           file://kvm.patch \
-           file://disable-shell.patch \
+           file://0001-Add-a-shutdown-group.patch \
+           file://0002-Use-bin-sh-instead-of-bin-bash-for-the-root-user.patch \
+           file://0003-Remove-for-root-since-we-do-not-have-an-etc-shadow.patch \
+           file://0004-Add-an-input-group-for-the-dev-input-devices.patch \
+           file://0005-Add-kvm-group.patch \
+           file://0006-Disable-shell-for-default-users.patch \
+           file://0007-Disable-generation-of-the-documentation.patch \
            "
 
 SRC_URI[md5sum] = "6beccac48083fe8ae5048acd062e5421"
