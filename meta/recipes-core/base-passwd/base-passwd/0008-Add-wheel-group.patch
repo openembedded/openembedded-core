@@ -2,7 +2,7 @@
 We need to have a wheel group which has some system privileges to consult the
 systemd journal or manage printers with cups.
 
-Upstream status says the group does not exist by default.
+Upstream says the group does not exist by default.
 
 Upstream-Status: Inappropriate [enable feature]
 
