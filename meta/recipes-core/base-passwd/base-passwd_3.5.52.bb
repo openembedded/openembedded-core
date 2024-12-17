@@ -13,6 +13,7 @@ SRC_URI = "https://launchpad.net/debian/+archive/primary/+files/${BPN}_${PV}.tar
            file://0005-Add-kvm-group.patch \
            file://0006-Make-it-possible-to-build-without-debconf-support.patch \
            file://0007-Make-it-possible-to-disable-the-generation-of-the-do.patch \
+           file://0008-Add-wheel-group.patch \
            "
 
 SRC_URI[sha256sum] = "5dfec6556b5a16ecf14dd3f7c95b591d929270289268123f31a3d6317f95ccea"
