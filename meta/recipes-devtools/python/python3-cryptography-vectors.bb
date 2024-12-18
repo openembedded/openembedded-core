@@ -12,6 +12,7 @@ require python3-cryptography-common.inc
 SRC_URI[sha256sum] = "ff6a885265f484e8907277614b73e9c774b01658623ad763dde2858188e486b4"
 
 PYPI_PACKAGE = "cryptography_vectors"
+UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
 inherit pypi python_setuptools_build_meta
 
