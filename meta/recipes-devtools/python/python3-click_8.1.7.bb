@@ -10,9 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=1fa98232fd645608937a0fdc82e999b8"
 
 SRC_URI[sha256sum] = "ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de"
 
-inherit pypi setuptools3 ptest
-
-SRC_URI += "file://run-ptest"
+inherit pypi setuptools3 ptest-python-pytest
 
 RDEPENDS:${PN}-ptest += " \
 	python3-pytest \
@@ -20,9 +18,7 @@ RDEPENDS:${PN}-ptest += " \
 	python3-unixadmin \
 "
 
-do_install_ptest() {
-    install -d ${D}${PTEST_PATH}/tests
-    cp -rf ${S}/tests/* ${D}${PTEST_PATH}/tests/
+do_install_ptest:append() {
     cp -rf ${S}/setup.cfg ${D}${PTEST_PATH}/
     cp -rf ${S}/docs ${D}${PTEST_PATH}/
 }
