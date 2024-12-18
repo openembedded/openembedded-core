@@ -8,22 +8,8 @@ SRC_URI[sha256sum] = "17cbd055d67d5e9d9de63293a8732943fabc21574e4c7b74edf112b492
 PYPI_PACKAGE = "trove_classifiers"
 UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
-inherit pypi python_setuptools_build_meta ptest
+inherit pypi python_setuptools_build_meta ptest-python-pytest
 
 DEPENDS += " python3-calver-native"
-
-SRC_URI += " \
-        file://run-ptest \
-"
-
-RDEPENDS:${PN}-ptest += " \
-       python3-pytest \
-       python3-unittest-automake-output \
-"
-
-do_install_ptest() {
-      install -d ${D}${PTEST_PATH}/tests
-      cp -rf ${S}/tests/* ${D}${PTEST_PATH}/tests/
-}
 
 BBCLASSEXTEND = "native nativesdk"
