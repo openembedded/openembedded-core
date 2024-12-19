@@ -265,6 +265,11 @@ EXTRA_OEMESON += "-Dkexec-path=${sbindir}/kexec \
 # The 60 seconds is watchdog's default vaule.
 WATCHDOG_TIMEOUT ??= "60"
 
+# To make use of the hardware watchdog it is sufficient to set WATCHDOG_RUNTIME_SEC
+# (RuntimeWatchdogSec= option in /etc/systemd/system.conf) to a value like 20s
+# and the watchdog is enabled. (defaults is no hardware watchdog use)
+WATCHDOG_RUNTIME_SEC ??= ""
+
 do_install() {
 	meson_do_install
 
@@ -379,6 +384,11 @@ do_install() {
 
 	if [ -n "${WATCHDOG_TIMEOUT}" ]; then
 		sed -i -e 's/#RebootWatchdogSec=10min/RebootWatchdogSec=${WATCHDOG_TIMEOUT}/' \
+			${D}/${sysconfdir}/systemd/system.conf
+	fi
+
+	if [ -n "${WATCHDOG_RUNTIME_SEC}" ]; then
+		sed -i -e 's/#RuntimeWatchdogSec=off/RuntimeWatchdogSec=${WATCHDOG_RUNTIME_SEC}/' \
 			${D}/${sysconfdir}/systemd/system.conf
 	fi
 
