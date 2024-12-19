@@ -11,7 +11,19 @@ LICENSE = "LGPL-2.1-only"
 SRC_URI = "https://github.com/libsndfile/libsndfile/releases/download/${PV}/libsndfile-${PV}.tar.bz2 \
            file://noopus.patch \
            file://0001-flac-Fix-improper-buffer-reusing-732.patch \
-           file://CVE-2022-33065.patch \
+           file://CVE-2022-33065-1.patch \
+           file://CVE-2022-33065-2.patch \
+           file://CVE-2022-33065-3.patch \
+           file://CVE-2022-33065-4.patch \
+           file://CVE-2022-33065-5.patch \
+           file://CVE-2022-33065-6.patch \
+           file://CVE-2022-33065-7.patch \
+           file://CVE-2022-33065-8.patch \
+           file://CVE-2022-33065-9.patch \
+           file://CVE-2022-33065-10.patch \
+           file://CVE-2022-33065-11.patch \
+           file://CVE-2022-33065-12.patch \
+           file://CVE-2022-33065-13.patch \
            file://CVE-2024-50612.patch \
           "
 UPSTREAM_CHECK_URI = "https://github.com/libsndfile/libsndfile/releases/"
