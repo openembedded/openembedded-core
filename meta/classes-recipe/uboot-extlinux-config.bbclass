@@ -137,14 +137,12 @@ python do_create_extlinux_config() {
 
                 fdt = localdata.getVar('UBOOT_EXTLINUX_FDT')
 
+                cfgfile.write('LABEL %s\n\tKERNEL %s\n' % (menu_description, kernel_image))
+
                 if fdt:
-                    cfgfile.write('LABEL %s\n\tKERNEL %s\n\tFDT %s\n' %
-                                 (menu_description, kernel_image, fdt))
+                    cfgfile.write('\tFDT %s\n' % (fdt))
                 elif fdtdir:
-                    cfgfile.write('LABEL %s\n\tKERNEL %s\n\tFDTDIR %s\n' %
-                                 (menu_description, kernel_image, fdtdir))
-                else:
-                    cfgfile.write('LABEL %s\n\tKERNEL %s\n' % (menu_description, kernel_image))
+                    cfgfile.write('\tFDTDIR %s\n' % (fdtdir))
 
                 kernel_args = localdata.getVar('UBOOT_EXTLINUX_KERNEL_ARGS')
 
