@@ -136,6 +136,10 @@ def glob(args):
                         logger.debug("%s is not a valid package!" % (pkg))
                         break
 
+                # we don't want glibc-locale to be mapped out by any glibc package, filter it out
+                if "glibc-locale" in mappedpkg:
+                    mappedpkg = ""
+
                 if mappedpkg:
                     logger.debug("%s (%s) -> %s" % (pkg, g, mappedpkg))
                     mappedpkgs.add(mappedpkg)
