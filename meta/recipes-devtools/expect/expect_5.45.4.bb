@@ -42,11 +42,9 @@ S = "${WORKDIR}/${BPN}${PV}"
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
 do_install:append() {
-	install -d ${D}${libdir}
-        install -m 0755 ${D}${libdir}/expect${PV}/libexpect*.so   ${D}${libdir}/
-        install -m 0755 ${S}/fixline1           ${D}${libdir}/expect${PV}/
-        rm ${D}${libdir}/expect${PV}/libexpect*.so
-        sed -e 's|$dir|${libdir}|' -i ${D}${libdir}/expect${PV}/pkgIndex.tcl
+    mv ${D}${libdir}/expect${PV}/libexpect*.so ${D}${libdir}/
+    install -m 0755 ${S}/fixline1 ${D}${libdir}/expect${PV}/
+    sed -e 's|$dir|${libdir}|' -i ${D}${libdir}/expect${PV}/pkgIndex.tcl
 }
 
 do_install_ptest() {
@@ -65,7 +63,6 @@ EXTRA_OECONF += "--with-tcl=${STAGING_LIBDIR} \
                  --disable-rpath \
                  ${TCL_INCLUDE_PATH} \
                 "
-EXTRA_OEMAKE_install = " 'SCRIPTS=' "
 
 ALTERNATIVE:${PN}  = "mkpasswd"
 ALTERNATIVE_LINK_NAME[mkpasswd] = "${bindir}/mkpasswd"
