@@ -15,6 +15,7 @@
 # UBOOT_EXTLINUX_KERNEL_IMAGE      - Kernel image name.
 # UBOOT_EXTLINUX_FDTDIR            - Device tree directory.
 # UBOOT_EXTLINUX_FDT               - Device tree file.
+# UBOOT_EXTLINUX_FDTOVERLAYS       - Device tree overlay files. Space-separated list.
 # UBOOT_EXTLINUX_INITRD            - Indicates a list of filesystem images to
 #                                    concatenate and use as an initrd (optional).
 # UBOOT_EXTLINUX_MENU_DESCRIPTION  - Name to use as description.
@@ -66,6 +67,7 @@
 UBOOT_EXTLINUX_CONSOLE ??= "console=${console},${baudrate}"
 UBOOT_EXTLINUX_LABELS ??= "linux"
 UBOOT_EXTLINUX_FDT ??= ""
+UBOOT_EXTLINUX_FDTOVERLAYS ??= ""
 UBOOT_EXTLINUX_FDTDIR ??= "../"
 UBOOT_EXTLINUX_KERNEL_IMAGE ??= "../${KERNEL_IMAGETYPE}"
 UBOOT_EXTLINUX_KERNEL_ARGS ??= "rootwait rw"
@@ -136,6 +138,7 @@ python do_create_extlinux_config() {
                 fdtdir = localdata.getVar('UBOOT_EXTLINUX_FDTDIR')
 
                 fdt = localdata.getVar('UBOOT_EXTLINUX_FDT')
+                fdtoverlays = localdata.getVar('UBOOT_EXTLINUX_FDTOVERLAYS')
 
                 cfgfile.write('LABEL %s\n\tKERNEL %s\n' % (menu_description, kernel_image))
 
@@ -143,6 +146,9 @@ python do_create_extlinux_config() {
                     cfgfile.write('\tFDT %s\n' % (fdt))
                 elif fdtdir:
                     cfgfile.write('\tFDTDIR %s\n' % (fdtdir))
+
+                if fdtoverlays:
+                    cfgfile.write('\tFDTOVERLAYS %s\n' % (' '.join(fdtoverlays.split())))
 
                 kernel_args = localdata.getVar('UBOOT_EXTLINUX_KERNEL_ARGS')
 
