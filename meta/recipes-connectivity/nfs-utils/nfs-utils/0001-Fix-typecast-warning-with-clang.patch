@@ -1,0 +1,29 @@
+From bbed752dfad73738baefe518e5959b5c0f038c75 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 18 Dec 2024 19:20:39 -0800
+Subject: [PATCH] Fix typecast warning with clang
+
+Fixes
+file.c:200:8: error: assigning to 'char *' from 'const char *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+
+Upstream-Status: Submitted [https://marc.info/?l=linux-nfs&m=173457863307678&w=2]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: Benjamin Coddington <bcodding@redhat.com>
+Cc: Steve Dickson <steved@redhat.com>
+---
+ support/nsm/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/support/nsm/file.c b/support/nsm/file.c
+index de122b0..0fa6164 100644
+--- a/support/nsm/file.c
++++ b/support/nsm/file.c
+@@ -197,7 +197,7 @@ nsm_make_temp_pathname(const char *pathname)
+ 
+ 	base = strrchr(pathname, '/');
+ 	if (base == NULL)
+-		base = pathname;
++		base = (char*)pathname;
+ 	else
+ 		base++;
+ 
