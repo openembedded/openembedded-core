@@ -181,7 +181,7 @@ def icecc_is_allarch(bb, d):
 
 def icecc_is_kernel(bb, d):
     return \
-        bb.data.inherits_class("kernel", d);
+        bb.data.inherits_class("kernel-arch", d);
 
 def icecc_is_native(bb, d):
     return \
