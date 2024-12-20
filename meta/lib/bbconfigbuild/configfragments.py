@@ -43,6 +43,8 @@ class ConfigFragmentsPlugin(LayerPlugin):
              for topdir, dirs, files in os.walk(os.path.join(layerdir, fragments_path_prefix)):
                  fragmentdir = os.path.relpath(topdir, os.path.join(layerdir, fragments_path_prefix))
                  for fragmentfile in sorted(files):
+                     if fragmentfile.startswith(".") or not fragmentfile.endswith(".conf"):
+                         continue
                      fragmentname = os.path.normpath("/".join((layername, fragmentdir, fragmentfile.split('.')[0])))
                      fragmentpath = os.path.join(topdir, fragmentfile)
                      fragmentsummary, fragmentdesc = self.get_fragment_info(fragmentpath, fragmentname)
