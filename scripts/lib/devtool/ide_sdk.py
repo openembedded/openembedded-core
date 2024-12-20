@@ -167,7 +167,7 @@ class RecipeImage:
             self.__rootfs_dbg = os.path.join(workdir, 'rootfs-dbg')
 
         self.gdbserver_missing = 'gdbserver' not in image_d.getVar(
-            'IMAGE_INSTALL')
+            'IMAGE_INSTALL') and 'tools-debug' not in image_d.getVar('IMAGE_FEATURES')
 
     @property
     def debug_support(self):
