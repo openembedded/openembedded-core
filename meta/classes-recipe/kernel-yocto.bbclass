@@ -62,8 +62,8 @@ def find_sccs(d):
 
     return sources_list
 
-# check the SRC_URI for "kmeta" type'd git repositories. Return the name of
-# the repository as it will be found in UNPACKDIR
+# check the SRC_URI for "kmeta" type'd git repositories and directories. Return
+# the name of the repository or directory as it will be found in UNPACKDIR
 def find_kernel_feature_dirs(d):
     feature_dirs=[]
     fetch = bb.fetch2.Fetch([], d)
@@ -71,13 +71,16 @@ def find_kernel_feature_dirs(d):
         urldata = fetch.ud[url]
         parm = urldata.parm
         type=""
+        destdir = ""
         if "type" in parm:
             type = parm["type"]
         if "destsuffix" in parm:
             destdir = parm["destsuffix"]
-            if type == "kmeta":
-                feature_dirs.append(destdir)
-	    
+        elif urldata.type == "file":
+            destdir = urldata.basepath
+        if type == "kmeta" and destdir:
+            feature_dirs.append(destdir)
+
     return feature_dirs
 
 # find the master/machine source branch. In the same way that the fetcher proceses
