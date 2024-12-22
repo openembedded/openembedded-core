@@ -21,7 +21,5 @@ inherit meson pkgconfig allarch
 
 EXTRA_OEMESON += "-Dtests=false"
 
-FILES:${PN} += "${datadir}/pkgconfig/wayland-protocols.pc"
-
 BBCLASSEXTEND = "native nativesdk"
 
