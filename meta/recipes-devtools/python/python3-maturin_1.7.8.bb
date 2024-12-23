@@ -5,10 +5,7 @@ LICENSE = "MIT | Apache-2.0"
 LIC_FILES_CHKSUM = "file://license-apache;md5=1836efb2eb779966696f473ee8540542 \
                     file://license-mit;md5=85fd3b67069cff784d98ebfc7d5c0797"
 
-SRC_URI += " \
-           file://0001-build_context-improve-wheel-reproducibility-by-sorti.patch \
-           "
-SRC_URI[sha256sum] = "2b349d742a07527d236f0b4b6cab26f53ebecad0ceabfc09ec4c6a396e3176f9"
+SRC_URI[sha256sum] = "649c6ef3f0fa4c5f596140d761dc5a4d577c485cc32fb5b9b344a8280352880d"
 
 S = "${WORKDIR}/maturin-${PV}"
 
