@@ -3,7 +3,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a9c72113a843d0d732a0ac1c200d81b1"
 HOMEPAGE = "https://pypi.org/project/psutil/"
 
-SRC_URI[sha256sum] = "353815f59a7f64cdaca1c0307ee13558a0512f6db064e92fe833784f08539c7a"
+SRC_URI[sha256sum] = "cf8496728c18f2d0b45198f06895be52f36611711746b7f30c464b422b50e2f5"
 
 inherit pypi python_setuptools_build_meta
 
