@@ -14,7 +14,6 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://check_build_completeness.py \
            file://reformat_sysconfig.py \
            file://0001-Makefile.pre-use-qemu-wrapper-when-gathering-profile.patch \
-           file://crosspythonpath.patch \
            file://0001-test_locale.py-correct-the-test-output-format.patch \
            file://0001-Skip-failing-tests-due-to-load-variability-on-YP-AB.patch \
            file://0001-test_ctypes.test_find-skip-without-tools-sdk.patch \
@@ -30,7 +29,6 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_deadlock-skip-problematic-test.patch \
            file://0001-test_active_children-skip-problematic-test.patch \
            file://0001-test_readline-skip-limited-history-test.patch \
-           file://fix-armv5.patch \
            file://0001-Generate-data-for-OpenSSL-3.4-and-add-it-to-multissl.patch \
            file://0001-ssl-Raise-OSError-for-ERR_LIB_SYS.patch \
            "
@@ -39,7 +37,7 @@ SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
            "
 
-SRC_URI[sha256sum] = "086de5882e3cb310d4dca48457522e2e48018ecd43da9cdf827f6a0759efb07d"
+SRC_URI[sha256sum] = "9cf9427bee9e2242e3877dd0f6b641c1853ca461f39d6503ce260a59c80bf0d9"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
@@ -69,7 +67,24 @@ ALTERNATIVE_LINK_NAME[python3-config] = "${bindir}/python${PYTHON_MAJMIN}-config
 ALTERNATIVE_TARGET[python3-config] = "${bindir}/python${PYTHON_MAJMIN}-config-${MULTILIB_SUFFIX}"
 
 
-DEPENDS = "bzip2-replacement-native expat libffi bzip2 openssl sqlite3 zlib virtual/libintl xz virtual/crypt util-linux-libuuid libtirpc libnsl2 autoconf-archive-native ncurses"
+DEPENDS = "\
+    autoconf-archive-native \
+    bzip2 \
+    bzip2-replacement-native \
+    expat \
+    libffi \
+    libnsl2 \
+    libtirpc \
+    ncurses \
+    openssl \
+    sqlite3 \
+    util-linux-libuuid \
+    virtual/crypt \
+    virtual/libintl \
+    xz \
+    zlib \
+"
+
 DEPENDS:append:class-target = " python3-native"
 DEPENDS:append:class-nativesdk = " python3-native"
 
@@ -444,13 +459,13 @@ INSANE_SKIP:${PN}-ptest = "dev-deps"
 # catch all the rest (unsorted)
 PACKAGES += "${PN}-misc"
 RDEPENDS:${PN}-misc += "\
-  ${PN}-audio \
-  ${PN}-codecs \
-  ${PN}-core \
-  ${PN}-email \
-  ${PN}-numbers \
-  ${PN}-pickle \
-  ${PN}-pydoc \
+    ${PN}-audio \
+    ${PN}-codecs \
+    ${PN}-core \
+    ${PN}-email \
+    ${PN}-numbers \
+    ${PN}-pickle \
+    ${PN}-pydoc \
 "
 RDEPENDS:${PN}-modules:append:class-target = " ${MLPREFIX}python3-misc"
 RDEPENDS:${PN}-modules:append:class-nativesdk = " ${MLPREFIX}python3-misc"
@@ -466,8 +481,25 @@ RDEPENDS:libpython3:append:libc-glibc = " libgcc"
 RDEPENDS:${PN}-ctypes:append:libc-glibc = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'ldconfig', '${MLPREFIX}ldconfig', '', d)} \
 "
-RDEPENDS:${PN}-ptest = "${PN}-modules ${PN}-tests ${PN}-dev ${PN}-zipapp unzip bzip2 libgcc tzdata coreutils sed gcc g++ binutils \
-                        locale-base-fr-fr locale-base-en-us locale-base-de-de"
+RDEPENDS:${PN}-ptest = "\
+    ${PN}-dev \
+    ${PN}-modules \
+    ${PN}-tests \
+    ${PN}-zipapp \
+    binutils \
+    bzip2 \
+    coreutils \
+    gcc \
+    gcc-symlinks \
+    g++ \
+    libgcc \
+    locale-base-fr-fr \
+    locale-base-en-us \
+    locale-base-de-de \
+    sed \
+    tzdata \
+    unzip \
+"
 RDEPENDS:${PN}-ptest:append:libc-glibc = " locale-base-tr-tr"
 RDEPENDS:${PN}-tkinter += "${@bb.utils.contains('PACKAGECONFIG', 'tk', '${MLPREFIX}tk ${MLPREFIX}tk-lib', '', d)}"
 RDEPENDS:${PN}-idle += "${@bb.utils.contains('PACKAGECONFIG', 'tk', '${PN}-tkinter ${MLPREFIX}tcl', '', d)}"
