@@ -267,7 +267,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
     def new_alias_id(self, obj, replace):
         unihash = self.d.getVar("BB_UNIHASH")
-        namespace = self.get_namespace() + "/"
+        namespace = self.get_namespace()
         if unihash not in obj._id:
             bb.warn(f"Unihash {unihash} not found in {obj._id}")
             return None
