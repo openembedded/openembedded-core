@@ -855,6 +855,18 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
         self.doc.import_ = sorted(imports.values(), key=lambda e: e.externalSpdxId)
         bb.debug(1, "Linking...")
         self.link()
+
+        # Manually go through all of the simplelicensing_customIdToUri DictionaryEntry
+        # items and resolve any aliases to actual objects.
+        for lic in self.foreach_type(oe.spdx30.simplelicensing_LicenseExpression):
+            for d in lic.simplelicensing_customIdToUri:
+                if d.value.startswith(OE_ALIAS_PREFIX):
+                    obj = self.find_by_id(d.value)
+                    if obj is not None:
+                        d.value = obj._id
+                    else:
+                        self.missing_ids.add(d.value)
+
         self.missing_ids -= set(imports.keys())
         return self.missing_ids
 
