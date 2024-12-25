@@ -1,4 +1,4 @@
-From 3471e3478e0760c42e04f8046cee2367ab5706d2 Mon Sep 17 00:00:00 2001
+From 6b0088a3d222b7fe5304f6bc0d6b15d3c41e68f3 Mon Sep 17 00:00:00 2001
 From: Yi Fan Yu <yifan.yu@windriver.com>
 Date: Thu, 1 Apr 2021 13:08:37 -0700
 Subject: [PATCH] Skip failing tests due to load variability on YP AB
@@ -23,7 +23,7 @@ Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
  2 files changed, 5 insertions(+)
 
 diff --git a/Lib/test/_test_multiprocessing.py b/Lib/test/_test_multiprocessing.py
-index e42c7ab..dff5227 100644
+index aac74ea..3470bc5 100644
 --- a/Lib/test/_test_multiprocessing.py
 +++ b/Lib/test/_test_multiprocessing.py
 @@ -682,6 +682,7 @@ class _TestProcess(BaseTestCase):
@@ -34,7 +34,7 @@ index e42c7ab..dff5227 100644
      def test_many_processes(self):
          if self.TYPE == 'threads':
              self.skipTest('test not appropriate for {}'.format(self.TYPE))
-@@ -2066,6 +2067,7 @@ class _TestBarrier(BaseTestCase):
+@@ -2083,6 +2084,7 @@ class _TestBarrier(BaseTestCase):
          except threading.BrokenBarrierError:
              results.append(True)
  
@@ -42,7 +42,7 @@ index e42c7ab..dff5227 100644
      def test_timeout(self):
          """
          Test wait(timeout)
-@@ -5024,6 +5026,7 @@ class TestWait(unittest.TestCase):
+@@ -5080,6 +5082,7 @@ class TestWait(unittest.TestCase):
          time.sleep(period)
  
      @support.requires_resource('walltime')
