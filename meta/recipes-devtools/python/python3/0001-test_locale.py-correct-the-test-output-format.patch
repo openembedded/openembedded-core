@@ -1,4 +1,4 @@
-From d74e5f24b574fa4d571a64e647c916a7ebe26b3e Mon Sep 17 00:00:00 2001
+From fcd5b7d30d3245ce92ea45dfbab3c7b7da690c20 Mon Sep 17 00:00:00 2001
 From: Mingli Yu <mingli.yu@windriver.com>
 Date: Mon, 5 Aug 2019 15:57:39 +0800
 Subject: [PATCH] test_locale.py: correct the test output format

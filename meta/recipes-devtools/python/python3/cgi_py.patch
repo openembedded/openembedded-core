@@ -1,4 +1,4 @@
-From 8e6dc9fe684b27988b5aca3f760f02343aa95951 Mon Sep 17 00:00:00 2001
+From 6ebd9de3505be0965cfc37e2e4d0d882d75f0ec2 Mon Sep 17 00:00:00 2001
 From: Mark Hatle <mark.hatle@windriver.com>
 Date: Wed, 21 Sep 2011 20:55:33 -0500
 Subject: [PATCH] Lib/cgi.py: Update the script as mentioned in the comment

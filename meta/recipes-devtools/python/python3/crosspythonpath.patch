@@ -1,4 +1,4 @@
-From 1bc93167c48876d77ce424415e87573a062b8f2a Mon Sep 17 00:00:00 2001
+From 0bcdb84db7801507b155a40db2228ba516edeb73 Mon Sep 17 00:00:00 2001
 From: Ricardo Ribalda <ricardo@ribalda.com>
 Date: Tue, 18 Nov 2014 03:35:33 -0500
 Subject: [PATCH] configure.ac: add CROSSPYTHONPATH into PYTHONPATH for
@@ -19,7 +19,7 @@ Signed-off-by: Ricardo Ribalda <ricardo@ribalda.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 093f8b5..cdc54e5 100644
+index 955daad..6e465a4 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -165,7 +165,7 @@ AC_ARG_WITH([build-python],
