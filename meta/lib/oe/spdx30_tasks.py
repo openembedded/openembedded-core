@@ -524,7 +524,7 @@ def create_spdx(d):
     build_objset.new_relationship(
         source_files,
         oe.spdx30.RelationshipType.hasConcludedLicense,
-        [recipe_spdx_license],
+        [oe.sbom30.get_element_link_id(recipe_spdx_license)],
     )
 
     dep_sources = {}
