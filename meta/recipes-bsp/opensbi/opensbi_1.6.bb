@@ -8,10 +8,12 @@ require opensbi-payloads.inc
 
 inherit autotools-brokensep deploy
 
-SRCREV = "43cace6c3671e5172d0df0a8963e552bb04b7b20"
-SRC_URI = "git://github.com/riscv/opensbi.git;branch=release-1.5.x;protocol=https"
+SRCREV = "bd613dd92113f683052acfb23d9dc8ba60029e0a"
+SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
+
+TARGET_DBGSRC_DIR = "/share/opensbi/*/generic/firmware/"
 
 TARGET_CC_ARCH += "${LDFLAGS}"
 
@@ -45,4 +47,3 @@ FILES:${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_payload.*"
 FILES:${PN} += "/share/opensbi/*/${RISCV_SBI_PLAT}/firmware/fw_dynamic.*"
 
 COMPATIBLE_HOST = "(riscv64|riscv32).*"
-INHIBIT_PACKAGE_STRIP = "1"
