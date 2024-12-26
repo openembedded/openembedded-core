@@ -589,12 +589,14 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
 
         file_licenses = set()
         for extracted_lic in oe.spdx_common.extract_licenses(filepath):
-            file_licenses.add(self.new_license_expression(extracted_lic, license_data))
+            lic = self.new_license_expression(extracted_lic, license_data)
+            self.set_element_alias(lic)
+            file_licenses.add(lic)
 
         self.new_relationship(
             [spdx_file],
             oe.spdx30.RelationshipType.hasDeclaredLicense,
-            file_licenses,
+            [oe.sbom30.get_element_link_id(lic_alias) for lic_alias in file_licenses],
         )
         spdx_file.extension.append(OELicenseScannedExtension())
 
