@@ -5,4 +5,5 @@
 #
 # Include this class when you don't care what version of SPDX you get; it will
 # be updated to the latest stable version that is supported
-inherit create-spdx-3.0
+SPDX_CLASS ??= "create-spdx-3.0"
+inherit ${SPDX_CLASS}

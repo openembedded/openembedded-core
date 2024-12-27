@@ -24,8 +24,7 @@ class SPDX22Check(OESelftestTestCase):
     def check_recipe_spdx(self, high_level_dir, spdx_file, target_name):
         config = textwrap.dedent(
             """\
-            INHERIT:remove = "create-spdx"
-            INHERIT += "create-spdx-2.2"
+            SPDX_CLASS = "create-spdx-2.2"
             """
         )
         self.write_config(config)
@@ -89,8 +88,7 @@ class SPDX3CheckBase(object):
         config = (
             textwrap.dedent(
                 f"""\
-                INHERIT:remove = "create-spdx"
-                INHERIT += "{self.SPDX_CLASS}"
+                SPDX_CLASS = "create-spdx-3.0"
                 """
             )
             + textwrap.dedent(extraconf)
@@ -138,8 +136,6 @@ class SPDX3CheckBase(object):
 
 
 class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
-    SPDX_CLASS = "create-spdx-3.0"
-
     def test_base_files(self):
         self.check_recipe_spdx(
             "base-files",
