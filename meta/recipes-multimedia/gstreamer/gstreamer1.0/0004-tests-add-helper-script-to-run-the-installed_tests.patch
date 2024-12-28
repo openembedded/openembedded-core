@@ -59,7 +59,7 @@ index 0000000..cf7d31b
 +GST_PLUGIN_LOADING_WHITELIST="@GST_PLUGIN_LOADING_WHITELIST@"
 +GST_REGISTRY=@GST_REGISTRY@
 +GST_STATE_IGNORE_ELEMENTS="@GST_STATE_IGNORE_ELEMENTS@"
-+exec @TEST@
++exec @TEST@ "$@"
 diff --git a/tests/check/template.test.in b/tests/check/template.test.in
 index f701627..b74ef6a 100644
 --- a/tests/check/template.test.in
