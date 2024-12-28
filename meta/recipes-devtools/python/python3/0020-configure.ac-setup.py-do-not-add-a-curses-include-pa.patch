@@ -1,4 +1,4 @@
-From d0205c60d08f51d84bd8ddc07a57e8c71710fdad Mon Sep 17 00:00:00 2001
+From 8543ad744a2839acf1f4eec967acd645fd89d1a7 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Fri, 17 Nov 2023 14:16:40 +0100
 Subject: [PATCH] configure.ac: do not add a curses include path from the host
@@ -15,10 +15,10 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  1 file changed, 6 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index c49cd4f..affdedf 100644
+index cdc54e5..d163c73 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -6508,12 +6508,6 @@ AS_VAR_IF([have_panel], [no], [
+@@ -6536,12 +6536,6 @@ AS_VAR_IF([have_panel], [no], [
    AC_MSG_RESULT([$have_panel (CFLAGS: $PANEL_CFLAGS, LIBS: $PANEL_LIBS)])
  ])
  

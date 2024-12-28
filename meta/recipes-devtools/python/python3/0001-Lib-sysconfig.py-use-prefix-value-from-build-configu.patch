@@ -1,4 +1,4 @@
-From 71c194077bb907bfe423d3f3275f33a6c8ca0e74 Mon Sep 17 00:00:00 2001
+From d325a4e1fde5bd817c88f37d5e7b6e93a3bad077 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Fri, 17 Nov 2023 14:26:32 +0100
 Subject: [PATCH] Lib/sysconfig.py: use prefix value from build configuration
@@ -9,7 +9,6 @@ native python.
 
 Upstream-Status: Inappropriate [oe-core cross builds]
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-
 ---
  Lib/sysconfig.py | 5 +++++
  1 file changed, 5 insertions(+)

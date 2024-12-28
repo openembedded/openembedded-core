@@ -1,4 +1,4 @@
-From a5d429a0e1a4809c1ded7be7e45dcabeb82c53d8 Mon Sep 17 00:00:00 2001
+From fac0f14fd34386e47bab71c0043ea55b507ae39c Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Sun, 12 Sep 2021 21:44:36 +0200
 Subject: [PATCH] sysconfig.py: use platlibdir also for purelib
@@ -8,7 +8,6 @@ is not correct.
 
 Upstream-Status: Inappropriate [oe-core specific]
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
-
 ---
  Lib/sysconfig.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

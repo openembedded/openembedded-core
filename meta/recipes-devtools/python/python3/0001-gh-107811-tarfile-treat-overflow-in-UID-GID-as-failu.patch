@@ -1,4 +1,4 @@
-From 999d4e74d34afa233ad8ad0c70b989d77a21957f Mon Sep 17 00:00:00 2001
+From 73960393a559d0de5edf07b022d182cac54df9dc Mon Sep 17 00:00:00 2001
 From: Petr Viktorin <encukou@gmail.com>
 Date: Wed, 23 Aug 2023 20:00:07 +0200
 Subject: [PATCH] gh-107811: tarfile: treat overflow in UID/GID as failure to
@@ -13,10 +13,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  create mode 100644 Misc/NEWS.d/next/Library/2023-08-23-17-34-39.gh-issue-107811.3Fng72.rst
 
 diff --git a/Lib/tarfile.py b/Lib/tarfile.py
-index 3bbbcaa..473167d 100755
+index 0a0f31e..4dfb67d 100755
 --- a/Lib/tarfile.py
 +++ b/Lib/tarfile.py
-@@ -2557,7 +2557,8 @@ class TarFile(object):
+@@ -2590,7 +2590,8 @@ class TarFile(object):
                      os.lchown(targetpath, u, g)
                  else:
                      os.chown(targetpath, u, g)
@@ -35,6 +35,3 @@ index 0000000..ffca413
 +:mod:`tarfile`: extraction of members with overly large UID or GID (e.g. on
 +an OS with 32-bit :c:type:`!id_t`) now fails in the same way as failing to
 +set the ID.
--- 
-2.45.0
-
