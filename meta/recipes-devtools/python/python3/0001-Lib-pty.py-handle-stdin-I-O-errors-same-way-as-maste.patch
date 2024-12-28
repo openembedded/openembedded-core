@@ -1,4 +1,4 @@
-From c6ba19a4cfdb0a5b137b91ef761f654b70776a47 Mon Sep 17 00:00:00 2001
+From bbfb7fdf01f0502c7bf3d418f3a912ea76c93f24 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Thu, 16 Sep 2021 16:35:37 +0200
 Subject: [PATCH] Lib/pty.py: handle stdin I/O errors same way as master I/O

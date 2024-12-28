@@ -1,4 +1,4 @@
-From a727a950023b9384955c912f4975d36a8d7913b4 Mon Sep 17 00:00:00 2001
+From b9081b2e21983f2a828bc40a47ab278ef69f4dfe Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Wed, 30 Jan 2019 12:41:04 +0100
 Subject: [PATCH] Makefile.pre: use qemu wrapper when gathering profile data
@@ -10,7 +10,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index 0e64ccc..23e20e9 100644
+index 083f4c7..dce36a5 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -660,8 +660,7 @@ profile-run-stamp:

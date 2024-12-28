@@ -1,4 +1,4 @@
-From d325a4e1fde5bd817c88f37d5e7b6e93a3bad077 Mon Sep 17 00:00:00 2001
+From c739bf214b9dd6060db216b79077806fccb582ae Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Fri, 17 Nov 2023 14:26:32 +0100
 Subject: [PATCH] Lib/sysconfig.py: use prefix value from build configuration
@@ -14,7 +14,7 @@ Signed-off-by: Alexander Kanavin <alex@linutronix.de>
  1 file changed, 5 insertions(+)
 
 diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
-index 79c0510..91ebcb6 100644
+index 6258b68..d59ec6e 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
 @@ -668,6 +668,11 @@ def _init_config_vars():

@@ -1,4 +1,4 @@
-From 174ef9a40c9f4373fd90b00425fd94a89f96dbf9 Mon Sep 17 00:00:00 2001
+From fbbf04dbeae217b985073263499174960e5fd142 Mon Sep 17 00:00:00 2001
 From: Tim Orling <timothy.t.orling@intel.com>
 Date: Fri, 18 Jun 2021 11:56:50 -0700
 Subject: [PATCH] test_ctypes.test_find: skip without tools-sdk

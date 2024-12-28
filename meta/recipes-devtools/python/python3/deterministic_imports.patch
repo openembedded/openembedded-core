@@ -1,4 +1,4 @@
-From 38e732371ac234c3f0e6310d6dbc7ddc7f458535 Mon Sep 17 00:00:00 2001
+From 1d6f0f5f8a1279fc9bc06266caa3f3b6f234c4cb Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Fri, 27 May 2022 17:05:44 +0100
 Subject: [PATCH] python3: Ensure stale empty python module directories don't
