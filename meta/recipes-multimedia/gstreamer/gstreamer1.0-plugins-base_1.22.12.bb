@@ -17,6 +17,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-ba
            file://0008-ssaparse-Search-for-closing-brace-after-opening-brac.patch \
            file://0009-ssaparse-Don-t-use-strstr-on-strings-that-are-potent.patch \
            file://0010-id3v2-Don-t-try-parsing-extended-header-if-not-enoug.patch \
+           file://0011-discoverer-Don-t-print-channel-layout-for-more-than-.patch \
            "
 SRC_URI[sha256sum] = "73cfadc3a6ffe77ed974cfd6fb391c605e4531f48db21dd6b9f42b8cb69bd8c1"
 
