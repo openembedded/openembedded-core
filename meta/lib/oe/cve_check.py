@@ -253,7 +253,10 @@ def decode_cve_status(d, cve):
         description = status_split[4].strip()
     elif len(status_split) >= 2 and status_split[1].strip() == "cpe":
         # Malformed CPE
-        bb.warn('Invalid CPE information for CVE_STATUS[%s] = "%s", not setting CPE' % (detail, cve, status))
+        bb.warn(
+            'Invalid CPE information for CVE_STATUS[%s] = "%s", not setting CPE'
+            % (cve, status)
+        )
     else:
         # Other case: no CPE, the syntax is then:
         # detail: description
@@ -263,9 +266,13 @@ def decode_cve_status(d, cve):
     status_out["product"] = product
     status_out["description"] = description
 
-    status_mapping = d.getVarFlag("CVE_CHECK_STATUSMAP", status_out['detail'])
+    detail = status_out["detail"]
+    status_mapping = d.getVarFlag("CVE_CHECK_STATUSMAP", detail)
     if status_mapping is None:
-        bb.warn('Invalid detail "%s" for CVE_STATUS[%s] = "%s", fallback to Unpatched' % (detail, cve, status))
+        bb.warn(
+            'Invalid detail "%s" for CVE_STATUS[%s] = "%s", fallback to Unpatched'
+            % (detail, cve, status)
+        )
         status_mapping = "Unpatched"
     status_out["mapping"] = status_mapping
 
