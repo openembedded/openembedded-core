@@ -245,7 +245,6 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dsystem-uid-max=999 \
                   -Dsystem-alloc-gid-min=101 \
                   -Dsystem-gid-max=999 \
-                  -Dcreate-log-dirs=false \
                   ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', '-Ddefault-mdns=no -Ddefault-llmnr=no', '', d)} \
                   "
 
@@ -393,6 +392,10 @@ do_install() {
 	else
 		# Actively disable Predictable Network Interface Names
 		sed -i 's/^NamePolicy=.*/NamePolicy=/;s/^AlternativeNamesPolicy=.*/AlternativeNamesPolicy=/' ${D}${nonarch_libdir}/systemd/network/99-default.link
+	fi
+
+	if [ -e ${D}${nonarch_libdir}/tmpfiles.d/legacy.conf ];then
+		sed -i -e '/^L \/var\/log\/README/d' ${D}${nonarch_libdir}/tmpfiles.d/legacy.conf
 	fi
 }
 
