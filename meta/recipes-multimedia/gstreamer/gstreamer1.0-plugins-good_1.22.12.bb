@@ -21,6 +21,13 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-go
            file://0012-qtdemux-Check-for-invalid-atom-length-when-extractin.patch \
            file://0013-qtdemux-Add-size-check-for-parsing-SMI-SEQH-atom.patch \
            file://0014-gdkpixbufdec-Check-if-initializing-the-video-info-ac.patch \
+           file://0015-matroskademux-Only-unmap-GstMapInfo-in-WavPack-heade.patch \
+           file://0016-matroskademux-Fix-off-by-one-when-parsing-multi-chan.patch \
+           file://0017-matroskademux-Check-for-big-enough-WavPack-codec-pri.patch \
+           file://0018-matroskademux-Don-t-take-data-out-of-an-empty-adapte.patch \
+           file://0019-matroskademux-Skip-over-laces-directly-when-postproc.patch \
+           file://0020-matroskademux-Skip-over-zero-sized-Xiph-stream-heade.patch \
+           file://0021-matroskademux-Put-a-copy-of-the-codec-data-into-the-.patch \
           "
 
 SRC_URI[sha256sum] = "9c1913f981900bd8867182639b20907b28ed78ef7a222cfbf2d8ba9dab992fa7"
