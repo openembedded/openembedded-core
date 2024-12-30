@@ -132,6 +132,8 @@ GITHUB_BASE_URI = "https://github.com/unicode-org/icu/releases"
 
 EXTRA_OECONF:append:libc-musl = " ac_cv_func_strtod_l=no"
 
+EXTRA_OECONF:append = " ac_cv_path_install='${HOSTTOOLS_DIR}/install -c'"
+
 PACKAGECONFIG ?= ""
 PACKAGECONFIG[make-icudata] = ",,,"
 
