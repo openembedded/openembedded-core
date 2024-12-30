@@ -515,6 +515,21 @@ def create_spdx(d):
 
     cpe_ids = oe.cve_check.get_cpe_ids(d.getVar("CVE_PRODUCT"), d.getVar("CVE_VERSION"))
 
+    # Some CVEs may be patched during the build process without incrementing the version number,
+    # so querying for CVEs based on the CPE id can lead to false positives. To account for this,
+    # save the CVEs fixed by patches to cve_by_status.
+    patched_cves = oe.cve_check.get_patched_cves(d)
+    for cve, patched_cve in patched_cves.items():
+        if patched_cve["abbrev-status"] != "Patched":
+            continue
+        spdx_cve = build_objset.new_cve_vuln(cve)
+        build_objset.set_element_alias(spdx_cve)
+        cve_by_status.setdefault("Patched", {})[cve] = (
+            spdx_cve,
+            None,
+            None,
+        )
+
     source_files = add_download_files(d, build_objset)
     build_inputs |= source_files
 
