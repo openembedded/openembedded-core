@@ -24,7 +24,7 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
 CVE_CHECK_IGNORE += "CVE-2013-6629"
 
 # Issue in the GhostPCL. GhostPCL not part of this GhostScript recipe.
-CVE_CHECK_IGNORE += "CVE-2023-38560"
+CVE_CHECK_IGNORE += "CVE-2023-38560 CVE-2024-46954"
 
 def gs_verdir(v):
     return "".join(v.split("."))
