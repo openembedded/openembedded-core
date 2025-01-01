@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=13be6b481ff5616f77dda971191bb29b \
 SRC_URI = "git://github.com/Cyan4973/xxHash.git;branch=release;protocol=https"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
-SRCREV = "bbb27a5efb85b92a0486cf361a8635715a53f6ba"
+SRCREV = "e626a72bc2321cd320e953a0ccf1584cad60f363"
 
 S = "${WORKDIR}/git"
 
