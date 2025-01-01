@@ -1,4 +1,4 @@
-From 3d621cf028acb3b464759abb72a38102844079b2 Mon Sep 17 00:00:00 2001
+From ddd12c056bf05f80ddd728750a519bc502d55f3e Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Tue, 10 Nov 2020 17:13:50 +0000
 Subject: [PATCH] tests/util/piglit-shader.c: do not hardcode build path into

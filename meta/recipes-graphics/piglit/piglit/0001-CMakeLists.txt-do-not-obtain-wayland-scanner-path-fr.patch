@@ -1,4 +1,4 @@
-From 2af98d67e16e083c36e3193aefbda942399a455a Mon Sep 17 00:00:00 2001
+From db3a33a91ce0a28f297fe270167cf2d0a44354e2 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Fri, 23 Aug 2024 15:29:45 +0200
 Subject: [PATCH] CMakeLists.txt: do not obtain wayland-scanner path from
