@@ -25,7 +25,7 @@ XORG_EXT = "tar.xz"
 
 SRC_URI += "file://libxt_fix_for_x32.patch"
 
-SRC_URI[sha256sum] = "52820b3cdb827d08dc90bdfd1b0022a3ad8919b57a39808b12591973b331bf91"
+SRC_URI[sha256sum] = "e0a774b33324f4d4c05b199ea45050f87206586d81655f8bef4dba434d931288"
 
 BBCLASSEXTEND = "native nativesdk"
 
