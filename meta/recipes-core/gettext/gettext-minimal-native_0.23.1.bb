@@ -42,5 +42,5 @@ do_install () {
 	install -d ${D}${datadir}/gettext/po/
 	cp ${S}/build-aux/config.rpath ${D}${datadir}/gettext/
 	cp ${S}/gettext-runtime/po/Makefile.in.in ${D}${datadir}/gettext/po/
-	cp ${S}/gettext-runtime/po/remove-potcdate.sin ${D}${datadir}/gettext/po/
+	cp ${S}/gettext-runtime/po/remove-potcdate.sed ${D}${datadir}/gettext/po/
 }
