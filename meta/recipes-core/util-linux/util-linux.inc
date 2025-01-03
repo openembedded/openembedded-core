@@ -38,7 +38,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://display_testname_for_subtest.patch \
            file://avoid_parallel_tests.patch \
            file://fcntl-lock.c \
-           file://0001-Revert-autotools-make-pam-install-path-configurable.patch \
+           file://0001-autotools-fix-securedir-and-pam_lastlog2-install.patch \
            file://libfdisk-cfdisk-and-sfdisk-sector-size-improvements.patch \
            "
 
