@@ -22,13 +22,11 @@ RCONFLICTS:${PN} = "proxy-libintl"
 
 require gettext-sources.inc
 SRC_URI += " \
-           file://parallel.patch \
            file://use-pkgconfig.patch \
            file://run-ptest \
            file://serial-tests-config.patch \
            file://0001-tests-autopoint-3-unset-MAKEFLAGS.patch \
            file://0001-init-env.in-do-not-add-C-CXX-parameters.patch \
-           file://0001-intl-Fix-build-failure-with-make-j.patch \
            "
 
 inherit autotools texinfo pkgconfig ptest
@@ -90,7 +88,7 @@ FILES:libgettextsrc = "${libdir}/libgettextsrc-*.so*"
 
 PACKAGES =+ "gettext-runtime gettext-runtime-dev gettext-runtime-doc"
 
-FILES:${PN} += "${libdir}/${BPN}/*"
+FILES:${PN} += "${libdir}/${BPN}/"
 
 # The its/Makefile.am has defined:
 # itsdir = $(pkgdatadir)$(PACKAGE_SUFFIX)/its
@@ -130,7 +128,7 @@ do_install:append:class-native () {
 	rm ${D}${datadir}/aclocal/*
 	rm ${D}${datadir}/gettext/config.rpath
 	rm ${D}${datadir}/gettext/po/Makefile.in.in
-	rm ${D}${datadir}/gettext/po/remove-potcdate.sin
+	rm ${D}${datadir}/gettext/po/remove-potcdate.sed
 
         create_wrapper ${D}${bindir}/msgfmt \
                 GETTEXTDATADIR="${STAGING_DATADIR_NATIVE}/gettext-${PV}/"
@@ -175,7 +173,8 @@ do_install_ptest() {
         install ${B}/gettext-tools/misc/*       ${D}${PTEST_PATH}/misc
         find ${D}${PTEST_PATH}/ -name "*.o" -exec rm {} \;
         chmod 0755 ${D}${PTEST_PATH}/tests/lang-vala ${D}${PTEST_PATH}/tests/plural-1 ${D}${PTEST_PATH}/tests/xgettext-tcl-4 \
-                   ${D}${PTEST_PATH}/tests/xgettext-vala-1  ${D}${PTEST_PATH}/tests/xgettext-po-2 ${D}${PTEST_PATH}/tests/xgettext-vala-6
+                   ${D}${PTEST_PATH}/tests/xgettext-vala-1  ${D}${PTEST_PATH}/tests/xgettext-po-2 ${D}${PTEST_PATH}/tests/xgettext-vala-6 \
+                   ${D}${PTEST_PATH}/tests/plural-3 ${D}${PTEST_PATH}/tests/plural-4 ${D}${PTEST_PATH}/tests/xgettext-java-8 ${D}${PTEST_PATH}/tests/xgettext-java-9
         sed -i -e 's|${DEBUG_PREFIX_MAP}||g' ${D}${PTEST_PATH}/tests/init-env
 }
 
