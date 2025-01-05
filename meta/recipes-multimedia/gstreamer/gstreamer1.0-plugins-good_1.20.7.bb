@@ -27,6 +27,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-go
            file://CVE-2024-47540_47601_47602_47603_47834-5.patch \
            file://CVE-2024-47540_47601_47602_47603_47834-6.patch \
            file://CVE-2024-47540_47601_47602_47603_47834-7.patch \
+           file://CVE-2024-47606.patch \
            "
 
 SRC_URI[sha256sum] = "599f093cc833a1e346939ab6e78a3f8046855b6da13520aae80dd385434f4ab2"
