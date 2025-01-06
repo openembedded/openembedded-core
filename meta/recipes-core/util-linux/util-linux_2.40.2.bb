@@ -59,7 +59,8 @@ python util_linux_libpackages() {
 
 PACKAGESPLITFUNCS =+ "util_linux_libpackages"
 
-PACKAGES_DYNAMIC = "^${PN}-.*"
+PACKAGES_DYNAMIC = "^${PN}(?!.*-native)-.*"
+PACKAGES_DYNAMIC:class-native = "^${BPN}-.*-native"
 
 UTIL_LINUX_LIBDIR = "${libdir}"
 UTIL_LINUX_LIBDIR:class-target = "${base_libdir}"
