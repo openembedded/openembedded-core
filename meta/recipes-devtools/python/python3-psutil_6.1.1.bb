@@ -35,6 +35,7 @@ RDEPENDS:${PN}-tests += " \
      libstdc++ \
      libstdc++-dev \
 "
+RDEPENDS:${PN}-tests:class-native = ""
 
 INSANE_SKIP:${PN}-tests += "dev-deps"
 
