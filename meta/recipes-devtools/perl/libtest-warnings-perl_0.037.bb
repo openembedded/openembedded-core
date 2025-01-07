@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=f98106ac3cc05d9cbebcdb8fbf7b7815"
 
 SRC_URI = "${CPAN_MIRROR}/authors/id/E/ET/ETHER/Test-Warnings-${PV}.tar.gz"
 
-SRC_URI[sha256sum] = "b9c375719f2c61c5f97aa5ee6cf4c901a972347c415969379b0b51f67c48bbcb"
+SRC_URI[sha256sum] = "682de3e7a3e8ac9265c53d0e314b8b903294c5199c005bd37e808f4484c25df2"
 
 S = "${WORKDIR}/Test-Warnings-${PV}"
 
