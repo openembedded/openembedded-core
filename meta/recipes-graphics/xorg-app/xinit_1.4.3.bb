@@ -16,7 +16,7 @@ SRC_URI += "file://0001-Make-manpage-multilib-identical.patch"
 
 SRC_URI_EXT = "xz"
 
-SRC_URI[sha256sum] = "b7d8dc8d22ef9f15985a10b606ee4f2aad6828befa437359934647e88d331f23"
+SRC_URI[sha256sum] = "86409f21a6a31148d2c1c17bf5f2d904eb5ef455f9dc67c49fbd0c10ab18fd5a"
 
 EXTRA_OECONF = "ac_cv_path_MCOOKIE=${bindir}/mcookie \
                 --with-xterm=x-terminal-emulator"
