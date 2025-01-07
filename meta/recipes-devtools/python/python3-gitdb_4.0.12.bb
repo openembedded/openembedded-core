@@ -10,7 +10,7 @@ inherit pypi setuptools3
 
 PYPI_PACKAGE = "gitdb"
 
-SRC_URI[sha256sum] = "bf5421126136d6d0af55bc1e7c1af1c397a34f5b7bd79e776cd3e89785c2b04b"
+SRC_URI[sha256sum] = "5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571"
 
 RDEPENDS:${PN} += "python3-compression \
                    python3-crypt \
