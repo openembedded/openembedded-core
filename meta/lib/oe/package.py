@@ -18,7 +18,7 @@ import shutil
 
 import oe.cachedpath
 
-def runstrip(arg):
+def runstrip(arg, keep_debug_frame=False, extra_strip_sections=''):
     # Function to strip a single file, called from split_and_strip_files below
     # A working 'file' (one which works on the target architecture)
     #
@@ -27,12 +27,7 @@ def runstrip(arg):
     # 4 - executable
     # 8 - shared library
     # 16 - kernel module
-
-    if len(arg) == 3:
-        (file, elftype, strip) = arg
-        extra_strip_sections = ''
-    else:
-        (file, elftype, strip, extra_strip_sections) = arg
+    (file, elftype, strip) = arg
 
     newmode = None
     if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
@@ -44,6 +39,7 @@ def runstrip(arg):
     skip_strip = False
     # kernel module
     if elftype & 16:
+        keep_debug_frame = False
         if is_kernel_module_signed(file):
             bb.debug(1, "Skip strip on signed module %s" % file)
             skip_strip = True
@@ -59,6 +55,9 @@ def runstrip(arg):
         if extra_strip_sections != '':
             for section in extra_strip_sections.split():
                 stripcmd.extend(["--remove-section=" + section])
+
+    if keep_debug_frame:
+        stripcmd.extend(["--keep-section=.debug_frame"])
 
     stripcmd.append(file)
     bb.debug(1, "runstrip: %s" % stripcmd)
@@ -115,7 +114,7 @@ def is_static_lib(path):
             return start == magic
     return False
 
-def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process, qa_already_stripped=False):
+def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process, qa_already_stripped=False, keep_debug_frame=False):
     """
     Strip executable code (like executables, shared libraries) _in_place_
     - Based on sysroot_strip in staging.bbclass
@@ -194,7 +193,8 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process, qa_alre
         elf_file = int(elffiles[file])
         sfiles.append((file, elf_file, strip_cmd))
 
-    oe.utils.multiprocess_launch_mp(runstrip, sfiles, max_process)
+    oe.utils.multiprocess_launch_mp(runstrip, sfiles, max_process,
+                                    extraargs=(keep_debug_frame, ''))
 
 TRANSLATE = (
     ("@", "@at@"),
@@ -1305,7 +1305,9 @@ def process_split_and_strip_files(d):
             for f in staticlibs:
                 sfiles.append((f, 16, strip))
 
-        oe.utils.multiprocess_launch(oe.package.runstrip, sfiles, d)
+        keep_debug_frame = (d.getVar('PACKAGE_KEEP_DEBUG_FRAME') == '1')
+        oe.utils.multiprocess_launch(oe.package.runstrip, sfiles, d,
+                                     extraargs=(keep_debug_frame, ''))
 
     # Build "minidebuginfo" and reinject it back into the stripped binaries
     if bb.utils.contains('DISTRO_FEATURES', 'minidebuginfo', True, False, d):
