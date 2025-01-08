@@ -3,43 +3,44 @@ DESCRIPTION = "D-Bus is a message bus system, a simple way for applications to t
 HOMEPAGE = "https://dbus.freedesktop.org"
 SECTION = "base"
 
-inherit autotools pkgconfig gettext upstream-version-is-even ptest-gnome
+inherit meson pkgconfig gettext upstream-version-is-even ptest-gnome
 
 LICENSE = "AFL-2.1 | GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://COPYING;md5=6423dcd74d7be9715b0db247fd889da3 \
-                    file://dbus/dbus.h;beginline=6;endline=20;md5=866739837ccd835350af94dccd6457d8 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=eb0ffc69a965797a3d6686baa153ef05 \
+                    file://dbus/dbus.h;beginline=6;endline=22;md5=df4251a6c6e15e6a9e3c77b2ac30065d \
                     "
 
 SRC_URI = "https://dbus.freedesktop.org/releases/dbus/dbus-${PV}.tar.xz \
            file://run-ptest \
-           file://tmpdir.patch \
            file://dbus-1.init \
            "
 
-SRC_URI[sha256sum] = "ba1f21d2bd9d339da2d4aa8780c09df32fea87998b73da24f49ab9df1e36a50f"
+SRC_URI[sha256sum] = "9f8ca5eb51cbe09951aec8624b86c292990ae2428b41b856e2bed17ec65c8849"
 
-EXTRA_OECONF = "--disable-xml-docs \
-                --disable-doxygen-docs \
-                --enable-largefile \
-                --with-system-socket=/run/dbus/system_bus_socket \
-                --enable-modular-tests \
-                --enable-checks \
-                --runstatedir=/run \
+EXTRA_OEMESON = "-Dxml_docs=disabled \
+                 -Ddoxygen_docs=disabled \
+                 -Dsystem_socket=/run/dbus/system_bus_socket \
+                 -Dmodular_tests=enabled \
+                 -Dchecks=true \
+                 -Druntime_dir=${runtimedir} \
+                 -Dtest_socket_dir=/tmp \
+                 -Dsession_socket_dir=/tmp \
                 "
-EXTRA_OECONF:append:class-target = " SYSTEMCTL=${base_bindir}/systemctl"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)} \
                    user-session \
+                  ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                   "
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
 
-PACKAGECONFIG[systemd] = "--enable-systemd --with-systemdsystemunitdir=${systemd_system_unitdir},--disable-systemd --without-systemdsystemunitdir,systemd"
-PACKAGECONFIG[x11] = "--enable-x11-autolaunch,--without-x --disable-x11-autolaunch, virtual/libx11 libsm"
-PACKAGECONFIG[user-session] = "--enable-user-session --with-systemduserunitdir=${systemd_user_unitdir},--disable-user-session"
-PACKAGECONFIG[verbose-mode] = "--enable-verbose-mode,,,"
-PACKAGECONFIG[audit] = "--enable-libaudit,--disable-libaudit,audit"
-PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux"
+PACKAGECONFIG[systemd] = "-Dsystemd=enabled -Dsystemd_system_unitdir=${systemd_system_unitdir},-Dsystemd=disabled,systemd"
+PACKAGECONFIG[x11] = "-Dx11_autolaunch=enabled,-Dx11_autolaunch=disabled, virtual/libx11 libsm"
+PACKAGECONFIG[user-session] = "-Duser_session=true -Dsystemd_user_unitdir=${systemd_user_unitdir},-Duser_session=false"
+PACKAGECONFIG[verbose-mode] = "-Dverbose_mode=true,-Dverbose_mode=false,,"
+PACKAGECONFIG[audit] = "-Dlibaudit=enabled,-Dlibaudit=disabled,audit"
+PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux"
+PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
 
 DEPENDS = "expat virtual/libintl autoconf-archive-native glib-2.0"
 RDEPENDS:${PN} += "${PN}-common ${PN}-tools"
@@ -124,9 +125,7 @@ pkg_postinst:dbus() {
 }
 
 
-do_install() {
-	autotools_do_install
-
+do_install:append:class-target() {
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/init.d
 		sed 's:@bindir@:${bindir}:' < ${UNPACKDIR}/dbus-1.init > ${S}/dbus-1.init.sh
@@ -159,27 +158,23 @@ do_install() {
 	# Remove empty testexec directory as we don't build tests
 	rm -rf ${D}${libdir}/dbus-1.0/test
 
-	# Remove /var/run as it is created on startup
-	rm -rf ${D}${localstatedir}/run
+	# Remove /run as it is created on startup
+	rm -rf ${D}${runtimedir}
 }
 
-do_install:class-native() {
-	autotools_do_install
-
+do_install:append:class-native() {
 	# dbus-launch has no X support so lets not install it in case the host
 	# has a more featured and useful version
 	rm -f ${D}${bindir}/dbus-launch
 }
 
-do_install:class-nativesdk() {
-	autotools_do_install
-
+do_install:append:class-nativesdk() {
 	# dbus-launch has no X support so lets not install it in case the host
 	# has a more featured and useful version
 	rm -f ${D}${bindir}/dbus-launch
 
-	# Remove /var/run to avoid QA error
-	rm -rf ${D}${localstatedir}/run
+	# Remove /run to avoid QA error
+	rm -rf ${D}${runtimedir}
 }
 BBCLASSEXTEND = "native nativesdk"
 
