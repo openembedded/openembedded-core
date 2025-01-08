@@ -46,7 +46,6 @@ X11TOOLS = "\
     "
 
 RDEPENDS:${PN} = "\
-    blktool \
     ${KEXECTOOLS} \
     alsa-utils-amixer \
     alsa-utils-aplay \
