@@ -193,6 +193,7 @@ autotools_do_configure() {
 		# like it was auto-generated.  Work around this by blowing it away
 		# by hand, unless the package specifically asked not to run aclocal.
 		if ! echo ${EXTRA_AUTORECONF} | grep -q "aclocal"; then
+			bbnote Removing existing aclocal.m4
 			rm -f aclocal.m4
 		fi
 		if [ -e configure.in ]; then
