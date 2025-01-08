@@ -10,7 +10,7 @@ LICENSE = "Ruby | BSD-2-Clause | BSD-3-Clause | GPL-2.0-only | ISC | MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5b8c87559868796979806100db3f3805 \
                     file://BSDL;md5=8b50bc6de8f586dc66790ba11d064d75 \
                     file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://LEGAL;md5=81e6a4d81533b9263da4c3485a0ad883 \
+                    file://LEGAL;md5=eff3bb1382b590cc5814f1f3de6eb4e5 \
                     "
 
 DEPENDS = "zlib openssl libyaml libffi"
@@ -32,6 +32,7 @@ UPSTREAM_CHECK_URI = "https://www.ruby-lang.org/en/downloads/"
 
 inherit autotools ptest pkgconfig
 
+EXTRA_AUTORECONF += "--exclude=aclocal"
 
 # This snippet lets compiled extensions which rely on external libraries,
 # such as zlib, compile properly.  If we don't do this, then when extmk.rb
@@ -47,7 +48,7 @@ do_configure:prepend() {
 
 DEPENDS:append:libc-musl = " libucontext"
 
-SRC_URI[sha256sum] = "8dc48fffaf270f86f1019053f28e51e4da4cce32a36760a0603a9aee67d7fd8d"
+SRC_URI[sha256sum] = "3d385e5d22d368b064c817a13ed8e3cc3f71a7705d7ed1bae78013c33aa7c87f"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG += "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
@@ -78,8 +79,7 @@ EXTRA_OECONF:append:libc-musl = "\
 PARALLEL_MAKEINST = ""
 
 do_install:append:class-target () {
-    # Find out rbconfig.rb from .installed.list
-    rbconfig_rb=`grep rbconfig.rb ${B}/.installed.list`
+    rbconfig_rb=`find ${D} -name rbconfig.rb`
     # Remove build host directories
     sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
            -e s:'--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
@@ -88,7 +88,7 @@ do_install:append:class-target () {
            -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
            -e 's:${RECIPE_SYSROOT}::g' \
            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
-        ${D}$rbconfig_rb
+        $rbconfig_rb
 
     sed -i -e 's|${DEBUG_PREFIX_MAP}||g' \
         ${D}${libdir}/pkgconfig/*.pc
