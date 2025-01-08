@@ -5,8 +5,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8eacfdc17c8f4d219e131a073973b97d"
 
 DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 
-SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.8;protocol=https"
-SRCREV = "3f4182d15eab74a302718f2de454ffadb1995626"
+SRC_URI = "git://github.com/libgit2/libgit2.git;branch=main;protocol=https \
+           file://0001-src-libgit2-CMakeLists.txt-install-cmake-files-into-.patch \
+           "
+SRCREV = "338e6fb681369ff0537719095e22ce9dc602dbf0"
 
 S = "${WORKDIR}/git"
 
@@ -19,3 +21,7 @@ EXTRA_OECMAKE = "\
 "
 
 BBCLASSEXTEND = "native"
+
+do_install:append() {
+    sed -i -e 's,${RECIPE_SYSROOT},,g' ${D}${libdir}/cmake/libgit2/libgit2Targets.cmake
+}
