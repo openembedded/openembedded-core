@@ -183,12 +183,6 @@ autotools_do_configure() {
 			acpaths="${acpaths}"
 		fi
 		acpaths="$acpaths ${ACLOCALEXTRAPATH}"
-		AUTOV=`automake --version | sed -e '1{s/.* //;s/\.[0-9]\+$//};q'`
-		automake --version
-		echo "AUTOV is $AUTOV"
-		if [ -d ${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV ]; then
-			ACLOCAL="$ACLOCAL --automake-acdir=${STAGING_DATADIR_NATIVE}/aclocal-$AUTOV"
-		fi
 		# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look
 		# like it was auto-generated.  Work around this by blowing it away
 		# by hand, unless the package specifically asked not to run aclocal.
