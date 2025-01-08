@@ -11,18 +11,14 @@ RDEPENDS:${PN} = "${PN}-inittab"
 
 GITHUB_BASE_URI = "https://github.com/slicer69/${BPN}/releases/"
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.xz \
-           file://install.patch \
            file://crypt-lib.patch \
-           file://pidof-add-m-option.patch \
-           file://realpath.patch \
-           file://0001-include-sys-sysmacros.h-for-major-minor-defines-in-g.patch \
            file://rcS-default \
            file://rc \
            file://rcS \
            file://bootlogd.init \
            file://01_bootlogd \
            "
-SRC_URI[sha256sum] = "04f1b7d67413af1c09c41acc1e3ce946f2d0f7a1e47c9978744bc542864e13d4"
+SRC_URI[sha256sum] = "cbaeabddc35a6511b87c87452ee5e87c678a26329c7d7d17fb69a2b42a314d86"
 
 S = "${WORKDIR}/sysvinit-${PV}"
 
