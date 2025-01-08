@@ -6,11 +6,11 @@ Line Interface Creation Kit". It's highly configurable but comes with \
 sensible defaults out of the box."
 HOMEPAGE = "http://click.pocoo.org/"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=1fa98232fd645608937a0fdc82e999b8"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1fa98232fd645608937a0fdc82e999b8"
 
-SRC_URI[sha256sum] = "ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de"
+SRC_URI[sha256sum] = "ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a"
 
-inherit pypi setuptools3 ptest-python-pytest
+inherit pypi python_flit_core ptest-python-pytest
 
 RDEPENDS:${PN}-ptest += " \
 	python3-pytest \
@@ -19,7 +19,7 @@ RDEPENDS:${PN}-ptest += " \
 "
 
 do_install_ptest:append() {
-    cp -rf ${S}/setup.cfg ${D}${PTEST_PATH}/
+    cp -rf ${S}/pyproject.toml ${D}${PTEST_PATH}/
     cp -rf ${S}/docs ${D}${PTEST_PATH}/
 }
 
