@@ -91,10 +91,12 @@ python sysroot_strip () {
     base_libdir = d.getVar("base_libdir")
     qa_already_stripped = 'already-stripped' in (d.getVar('INSANE_SKIP:' + pn) or "").split()
     strip_cmd = d.getVar("STRIP")
+    keep_debug_frame = (d.getVar('PACKAGE_KEEP_DEBUG_FRAME') == '1')
 
     max_process = oe.utils.get_bb_number_threads(d)
     oe.package.strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process,
-                           qa_already_stripped=qa_already_stripped)
+                           qa_already_stripped=qa_already_stripped,
+                           keep_debug_frame=keep_debug_frame)
 }
 
 do_populate_sysroot[dirs] = "${SYSROOT_DESTDIR}"
