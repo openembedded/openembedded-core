@@ -23,6 +23,7 @@ def plugin_init(plugins):
 class ConfigFragmentsPlugin(LayerPlugin):
     def get_fragment_info(self, path, name):
         d = bb.data.init()
+        d.setVar('BBPATH', self.tinfoil.config_data.getVar('BBPATH'))
         bb.parse.handle(path, d, True)
         summary = d.getVar('BB_CONF_FRAGMENT_SUMMARY')
         description = d.getVar('BB_CONF_FRAGMENT_DESCRIPTION')
