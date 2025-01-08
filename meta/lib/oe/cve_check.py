@@ -170,7 +170,7 @@ def get_patched_cves(d):
         patch_file = bb.fetch.decodeurl(url)[2]
         for cve_id in parse_cves_from_patch_file(patch_file):
             if cve_id not in patched_cves:
-                {
+                patched_cves[cve_id] = {
                     "abbrev-status": "Patched",
                     "status": "fix-file-included",
                     "resource": [patch_file],
