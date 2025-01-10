@@ -36,6 +36,15 @@ SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
            file://CVE-2024-27281.patch \
            file://CVE-2024-27280.patch \
            file://CVE-2024-27282.patch \
+           file://CVE-2024-49761-0001.patch \
+           file://CVE-2024-49761-0002.patch \
+           file://CVE-2024-49761-0003.patch \
+           file://CVE-2024-49761-0004.patch \
+           file://CVE-2024-49761-0005.patch \
+           file://CVE-2024-49761-0006.patch \
+           file://CVE-2024-49761-0007.patch \
+           file://CVE-2024-49761-0008.patch \
+           file://CVE-2024-49761-0009.patch \
            "
 UPSTREAM_CHECK_URI = "https://www.ruby-lang.org/en/downloads/"
 
