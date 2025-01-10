@@ -54,7 +54,7 @@ python check_prepare() {
         if qemu_binary.endswith(("x86_64", "i386", "arm", "aarch64")):
             args += ["-cpu", "max"]
         else:
-            extra = d.getVar("QEMU_EXTRAOPTIONS_%s" % d.getVar('TUNE_PKGARCH'))
+            extra = d.getVar("QEMU_EXTRAOPTIONS:tune-%s" % d.getVar('TUNE_PKGARCH'))
             if extra:
                 args += extra.split()
         # For mips64 we could set a maximal CPU (e.g. Loongson-3A4000) however they either have MSA
