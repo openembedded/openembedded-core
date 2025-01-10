@@ -6,19 +6,25 @@
 
 inherit ptest
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta/files:"
-
-SRC_URI:append = "\
-    file://ptest-python-pytest/run-ptest \
-"
-
 # Overridable configuration for the directory within the source tree
 # containing the pytest files
 PTEST_PYTEST_DIR ?= "tests"
 
 do_install_ptest() {
-	if [ ! -f ${D}${PTEST_PATH}/run-ptest ]; then
-		install -m 0755 ${UNPACKDIR}/ptest-python-pytest/run-ptest ${D}${PTEST_PATH}
+	# Check if the recipe provides its own version of run-ptest
+	# If nothing exists in the SRC_URI, dynamically create a 
+	# run-test script of "last resort" that has the default
+	# pytest behavior.
+	# 
+	# Users can override this behavior by simply including a
+	# custom script (run-ptest) in the source file list
+	if [ ! -f "${UNPACKDIR}/run-ptest" ]; then
+		cat > ${D}${PTEST_PATH}/run-ptest << EOF
+#!/bin/sh
+pytest --automake
+EOF
+		# Ensure the newly created script has the execute bit set
+		chmod 755 ${D}${PTEST_PATH}/run-ptest
 	fi
 	if [ -d "${S}/${PTEST_PYTEST_DIR}" ]; then
 		install -d ${D}${PTEST_PATH}/${PTEST_PYTEST_DIR}
