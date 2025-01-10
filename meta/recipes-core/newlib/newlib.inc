@@ -20,7 +20,7 @@ SRC_URI = "git://sourceware.org/git/newlib-cygwin.git;protocol=https;branch=main
 SRCREV="ad11e2587f83d61357a32c61c36d72ea4f39315e"
 
 INHIBIT_DEFAULT_DEPS = "1"
-DEPENDS = "virtual/${TARGET_PREFIX}gcc"
+DEPENDS = "virtual/cross-cc"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"

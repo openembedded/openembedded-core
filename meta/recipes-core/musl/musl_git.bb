@@ -20,8 +20,8 @@ S = "${WORKDIR}/git"
 
 PROVIDES += "virtual/libc virtual/libiconv virtual/libintl virtual/crypt"
 
-DEPENDS = "virtual/${TARGET_PREFIX}binutils \
-           virtual/${TARGET_PREFIX}gcc \
+DEPENDS = "virtual/cross-binutils \
+           virtual/cross-cc \
            libgcc-initial \
            linux-libc-headers \
            bsd-headers \

@@ -48,7 +48,7 @@ def get_base_dep(d):
         return ""
     return "${BASE_DEFAULT_DEPS}"
 
-BASE_DEFAULT_DEPS = "virtual/${HOST_PREFIX}gcc virtual/${HOST_PREFIX}compilerlibs virtual/libc"
+BASE_DEFAULT_DEPS = "virtual/cross-cc virtual/compilerlibs virtual/libc"
 
 BASEDEPENDS = ""
 BASEDEPENDS:class-target = "${@get_base_dep(d)}"
@@ -311,16 +311,6 @@ python base_eventhandler() {
         statusheader = d.getVar('BUILDCFG_HEADER')
         if statusheader:
             bb.plain('\n%s\n%s\n' % (statusheader, '\n'.join(statuslines)))
-
-    # This code is to silence warnings where the SDK variables overwrite the 
-    # target ones and we'd see duplicate key names overwriting each other
-    # for various PREFERRED_PROVIDERS
-    if isinstance(e, bb.event.RecipePreFinalise):
-        if d.getVar("TARGET_PREFIX") == d.getVar("SDK_PREFIX"):
-            d.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils")
-            d.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc")
-            d.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++")
-            d.delVar("PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs")
 
     if isinstance(e, bb.event.RecipeParsed):
         #

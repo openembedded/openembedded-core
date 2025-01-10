@@ -1,5 +1,5 @@
 inherit cross
-PROVIDES = "virtual/${TARGET_PREFIX}binutils"
+PROVIDES = "virtual/cross-binutils"
 
 PN = "binutils-cross-${TARGET_ARCH}"
 BPN = "binutils"
