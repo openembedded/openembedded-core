@@ -62,12 +62,3 @@ def qemu_run_binary(data, rootfs_path, binary):
 
 QEMU_OPTIONS = "-r ${OLDEST_KERNEL} ${@d.getVar("QEMU_EXTRAOPTIONS_%s" % d.getVar('TUNE_PKGARCH')) or ""}"
 QEMU_OPTIONS[vardeps] += "QEMU_EXTRAOPTIONS_${TUNE_PKGARCH}"
-
-QEMU_EXTRAOPTIONS_ppce500v2 = " -cpu e500v2"
-QEMU_EXTRAOPTIONS_ppce500mc = " -cpu e500mc"
-QEMU_EXTRAOPTIONS_ppce5500 = " -cpu e500mc"
-QEMU_EXTRAOPTIONS_ppc64e5500 = " -cpu e500mc"
-QEMU_EXTRAOPTIONS_ppce6500 = " -cpu e500mc"
-QEMU_EXTRAOPTIONS_ppc64e6500 = " -cpu e500mc"
-QEMU_EXTRAOPTIONS_ppc7400 = " -cpu 7400"
-QEMU_EXTRAOPTIONS_powerpc64le = " -cpu POWER9"
