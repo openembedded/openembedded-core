@@ -7,6 +7,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import dataclasses
 import sys
 import os
 import argparse
@@ -15,8 +16,10 @@ import re
 import configparser
 import logging
 
+# This can be removed once our minimum is Python 3.9: https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections
+from typing import List
+
 config = None
-context = None
 
 
 scripts_path = os.path.dirname(os.path.realpath(__file__))
@@ -80,12 +83,15 @@ class ConfigHandler:
             self.config_obj.add_section(section)
         self.config_obj.set(section, option, value)
 
+
+@dataclasses.dataclass
 class Context:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
+    fixed_setup: bool
+    config: ConfigHandler
+    pluginpaths: List[str]
 
 
-def read_workspace(basepath):
+def read_workspace(basepath, context):
     workspace = {}
     if not os.path.exists(os.path.join(config.workspace_path, 'conf', 'layer.conf')):
         if context.fixed_setup:
@@ -210,12 +216,9 @@ def _enable_workspace_layer(workspacedir, config, basepath):
 
 def main():
     global config
-    global context
 
     if sys.getfilesystemencoding() != "utf-8":
         sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
-
-    context = Context(fixed_setup=False)
 
     # Default basepath
     basepath = os.path.dirname(os.path.abspath(__file__))
@@ -241,21 +244,23 @@ def main():
     elif global_args.quiet:
         logger.setLevel(logging.ERROR)
 
+    is_fixed_setup = False
+
     if global_args.basepath:
         # Override
         basepath = global_args.basepath
         if os.path.exists(os.path.join(basepath, '.devtoolbase')):
-            context.fixed_setup = True
+            is_fixed_setup = True
     else:
         pth = basepath
         while pth != '' and pth != os.sep:
             if os.path.exists(os.path.join(pth, '.devtoolbase')):
-                context.fixed_setup = True
+                is_fixed_setup = True
                 basepath = pth
                 break
             pth = os.path.dirname(pth)
 
-        if not context.fixed_setup:
+        if not is_fixed_setup:
             basepath = os.environ.get('BUILDDIR')
             if not basepath:
                 logger.error("This script can only be run after initialising the build environment (e.g. by using oe-init-build-env)")
@@ -266,7 +271,6 @@ def main():
     config = ConfigHandler(basepath, os.path.join(basepath, 'conf', 'devtool.conf'))
     if not config.read():
         return -1
-    context.config = config
 
     bitbake_subdir = config.get('General', 'bitbake_subdir', '')
     if bitbake_subdir:
@@ -299,7 +303,9 @@ def main():
 
     # Search BBPATH first to allow layers to override plugins in scripts_path
     pluginpaths = [os.path.join(path, 'lib', 'devtool') for path in global_args.bbpath.split(':') + [scripts_path]]
-    context.pluginpaths = pluginpaths
+
+    context = Context(fixed_setup=is_fixed_setup, config=config, pluginpaths=pluginpaths)
+
     for pluginpath in pluginpaths:
         scriptutils.load_plugins(logger, plugins, pluginpath)
 
@@ -332,7 +338,7 @@ def main():
     try:
         workspace = {}
         if not getattr(args, 'no_workspace', False):
-            workspace = read_workspace(basepath)
+            workspace = read_workspace(basepath, context)
         ret = args.func(args, config, basepath, workspace)
     except DevtoolError as err:
         if str(err):
