@@ -19,8 +19,6 @@ import logging
 # This can be removed once our minimum is Python 3.9: https://docs.python.org/3/whatsnew/3.9.html#type-hinting-generics-in-standard-collections
 from typing import List
 
-config = None
-
 
 scripts_path = os.path.dirname(os.path.realpath(__file__))
 lib_path = scripts_path + '/lib'
@@ -93,19 +91,19 @@ class Context:
 
 def read_workspace(basepath, context):
     workspace = {}
-    if not os.path.exists(os.path.join(config.workspace_path, 'conf', 'layer.conf')):
+    if not os.path.exists(os.path.join(context.config.workspace_path, 'conf', 'layer.conf')):
         if context.fixed_setup:
             logger.error("workspace layer not set up")
             sys.exit(1)
         else:
-            logger.info('Creating workspace layer in %s' % config.workspace_path)
-            _create_workspace(config.workspace_path, config, basepath)
+            logger.info('Creating workspace layer in %s' % context.config.workspace_path)
+            _create_workspace(context.config.workspace_path, context.config, basepath)
     if not context.fixed_setup:
-        _enable_workspace_layer(config.workspace_path, config, basepath)
+        _enable_workspace_layer(context.config.workspace_path, context.config, basepath)
 
-    logger.debug('Reading workspace in %s' % config.workspace_path)
+    logger.debug('Reading workspace in %s' % context.config.workspace_path)
     externalsrc_re = re.compile(r'^EXTERNALSRC(:pn-([^ =]+))? *= *"([^"]*)"$')
-    for fn in glob.glob(os.path.join(config.workspace_path, 'appends', '*.bbappend')):
+    for fn in glob.glob(os.path.join(context.config.workspace_path, 'appends', '*.bbappend')):
         with open(fn, 'r') as f:
             pnvalues = {}
             pn = None
@@ -116,7 +114,7 @@ def read_workspace(basepath, context):
                     pn = res.group(2) or recipepn
                     # Find the recipe file within the workspace, if any
                     bbfile = os.path.basename(fn).replace('.bbappend', '.bb').replace('%', '*')
-                    recipefile = glob.glob(os.path.join(config.workspace_path,
+                    recipefile = glob.glob(os.path.join(context.config.workspace_path,
                                                         'recipes',
                                                         recipepn,
                                                         bbfile))
@@ -130,7 +128,7 @@ def read_workspace(basepath, context):
             if pnvalues:
                 if not pn:
                     raise DevtoolError("Found *.bbappend in %s, but could not determine EXTERNALSRC:pn-*. "
-                            "Maybe still using old syntax?" % config.workspace_path)
+                            "Maybe still using old syntax?" % context.config.workspace_path)
                 if not pnvalues.get('srctreebase', None):
                     pnvalues['srctreebase'] = pnvalues['srctree']
                 logger.debug('Found recipe %s' % pnvalues)
@@ -215,8 +213,6 @@ def _enable_workspace_layer(workspacedir, config, basepath):
 
 
 def main():
-    global config
-
     if sys.getfilesystemencoding() != "utf-8":
         sys.exit("Please use a locale setting which supports utf-8.\nPython can't change the filesystem locale after loading so we need a utf-8 when python starts or things won't work.")
 
