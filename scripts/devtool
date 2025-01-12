@@ -28,8 +28,6 @@ import scriptutils
 import argparse_oe
 logger = scriptutils.logger_create('devtool')
 
-plugins = []
-
 
 class ConfigHandler:
     basepath = None
@@ -302,6 +300,7 @@ def main():
 
     context = Context(fixed_setup=is_fixed_setup, config=config, pluginpaths=pluginpaths)
 
+    plugins = []
     for pluginpath in pluginpaths:
         scriptutils.load_plugins(logger, plugins, pluginpath)
 
