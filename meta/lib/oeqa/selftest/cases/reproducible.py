@@ -318,7 +318,9 @@ class ReproducibleTests(OESelftestTestCase):
                 self.logger.error('%s build failed. Trying to compute built packages differences but the test will fail.' % name)
                 fails.append("Bitbake %s failure" % name)
                 if self.save_results:
-                    self.copy_file(variables["BB_CONSOLELOG"], os.path.join(save_dir, "bitbake-%s.log" % name))
+                    failure_log_path = os.path.join(save_dir, "bitbake-%s.log" % name)
+                    self.logger.info('Failure log for %s will be copied to %s'% (name, failure_log_path))
+                    self.copy_file(variables["BB_CONSOLELOG"], failure_log_path)
             vars_list[i] = variables
 
         vars_A, vars_B = vars_list
