@@ -95,7 +95,7 @@ def read_workspace(basepath, context):
             sys.exit(1)
         else:
             logger.info('Creating workspace layer in %s' % context.config.workspace_path)
-            _create_workspace(context.config.workspace_path, context.config, basepath)
+            _create_workspace(context.config.workspace_path, basepath)
     if not context.fixed_setup:
         _enable_workspace_layer(context.config.workspace_path, context.config, basepath)
 
@@ -134,7 +134,7 @@ def read_workspace(basepath, context):
 
     return workspace
 
-def create_workspace(args, config, basepath, workspace):
+def create_workspace(args, config, basepath, _workspace):
     if args.layerpath:
         workspacedir = os.path.abspath(args.layerpath)
     else:
@@ -142,11 +142,11 @@ def create_workspace(args, config, basepath, workspace):
     layerseries = None
     if args.layerseries:
         layerseries = args.layerseries
-    _create_workspace(workspacedir, config, basepath, layerseries)
+    _create_workspace(workspacedir, basepath, layerseries)
     if not args.create_only:
         _enable_workspace_layer(workspacedir, config, basepath)
 
-def _create_workspace(workspacedir, config, basepath, layerseries=None):
+def _create_workspace(workspacedir, basepath, layerseries=None):
     import bb.utils
 
     confdir = os.path.join(workspacedir, 'conf')
