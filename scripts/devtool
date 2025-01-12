@@ -13,10 +13,8 @@ import argparse
 import glob
 import re
 import configparser
-import subprocess
 import logging
 
-basepath = ''
 workspace = {}
 config = None
 context = None
@@ -33,13 +31,15 @@ logger = scriptutils.logger_create('devtool')
 plugins = []
 
 
-class ConfigHandler(object):
+class ConfigHandler:
+    basepath = None
     config_file = ''
     config_obj = None
     init_path = ''
     workspace_path = ''
 
-    def __init__(self, filename):
+    def __init__(self, basepath, filename):
+        self.basepath = basepath
         self.config_file = filename
         self.config_obj = configparser.ConfigParser()
 
@@ -59,14 +59,14 @@ class ConfigHandler(object):
 
             if self.config_obj.has_option('General', 'init_path'):
                 pth = self.get('General', 'init_path')
-                self.init_path = os.path.join(basepath, pth)
+                self.init_path = os.path.join(self.basepath, pth)
                 if not os.path.exists(self.init_path):
                     logger.error('init_path %s specified in config file cannot be found' % pth)
                     return False
         else:
             self.config_obj.add_section('General')
 
-        self.workspace_path = self.get('General', 'workspace_path', os.path.join(basepath, 'workspace'))
+        self.workspace_path = self.get('General', 'workspace_path', os.path.join(self.basepath, 'workspace'))
         return True
 
 
@@ -86,7 +86,7 @@ class Context:
         self.__dict__.update(kwargs)
 
 
-def read_workspace():
+def read_workspace(basepath):
     global workspace
     workspace = {}
     if not os.path.exists(os.path.join(config.workspace_path, 'conf', 'layer.conf')):
@@ -209,7 +209,6 @@ def _enable_workspace_layer(workspacedir, config, basepath):
 
 
 def main():
-    global basepath
     global config
     global context
 
@@ -264,7 +263,7 @@ def main():
 
     logger.debug('Using basepath %s' % basepath)
 
-    config = ConfigHandler(os.path.join(basepath, 'conf', 'devtool.conf'))
+    config = ConfigHandler(basepath, os.path.join(basepath, 'conf', 'devtool.conf'))
     if not config.read():
         return -1
     context.config = config
@@ -332,7 +331,7 @@ def main():
 
     try:
         if not getattr(args, 'no_workspace', False):
-            read_workspace()
+            read_workspace(basepath)
 
         ret = args.func(args, config, basepath, workspace)
     except DevtoolError as err:
