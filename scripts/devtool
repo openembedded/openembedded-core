@@ -15,7 +15,6 @@ import re
 import configparser
 import logging
 
-workspace = {}
 config = None
 context = None
 
@@ -87,7 +86,6 @@ class Context:
 
 
 def read_workspace(basepath):
-    global workspace
     workspace = {}
     if not os.path.exists(os.path.join(config.workspace_path, 'conf', 'layer.conf')):
         if context.fixed_setup:
@@ -131,6 +129,8 @@ def read_workspace(basepath):
                     pnvalues['srctreebase'] = pnvalues['srctree']
                 logger.debug('Found recipe %s' % pnvalues)
                 workspace[pn] = pnvalues
+
+    return workspace
 
 def create_workspace(args, config, basepath, workspace):
     if args.layerpath:
@@ -330,9 +330,9 @@ def main():
     args = parser.parse_args(unparsed_args, namespace=global_args)
 
     try:
+        workspace = {}
         if not getattr(args, 'no_workspace', False):
-            read_workspace(basepath)
-
+            workspace = read_workspace(basepath)
         ret = args.func(args, config, basepath, workspace)
     except DevtoolError as err:
         if str(err):
