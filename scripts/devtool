@@ -45,7 +45,7 @@ class ConfigHandler:
         try:
             ret = self.config_obj.get(section, option)
         except (configparser.NoOptionError, configparser.NoSectionError):
-            if default != None:
+            if default is not None:
                 ret = default
             else:
                 raise
@@ -147,7 +147,7 @@ def create_workspace(args, config, basepath, workspace):
         _enable_workspace_layer(workspacedir, config, basepath)
 
 def _create_workspace(workspacedir, config, basepath, layerseries=None):
-    import bb
+    import bb.utils
 
     confdir = os.path.join(workspacedir, 'conf')
     if os.path.exists(os.path.join(confdir, 'layer.conf')):
@@ -192,7 +192,7 @@ def _create_workspace(workspacedir, config, basepath, layerseries=None):
 
 def _enable_workspace_layer(workspacedir, config, basepath):
     """Ensure the workspace layer is in bblayers.conf"""
-    import bb
+    import bb.utils
     bblayers_conf = os.path.join(basepath, 'conf', 'bblayers.conf')
     if not os.path.exists(bblayers_conf):
         logger.error('Unable to find bblayers.conf')
@@ -286,6 +286,7 @@ def main():
     scriptutils.logger_setup_color(logger, global_args.color)
 
     if global_args.bbpath is None:
+        import bb
         try:
             tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
             try:
@@ -341,6 +342,7 @@ def main():
         ret = err.exitcode
     except argparse_oe.ArgumentUsageError as ae:
         parser.error_subcommand(ae.message, ae.subcommand)
+        ret = 2
 
     return ret
 
