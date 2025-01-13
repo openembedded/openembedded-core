@@ -1,7 +1,5 @@
 require binutils-cross_${PV}.bb
 
-PROVIDES = "virtual/nativesdk-cross-binutils"
-
 inherit crosssdk
 
 PN = "binutils-crosssdk-${SDK_SYS}"
