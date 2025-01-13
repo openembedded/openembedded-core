@@ -927,6 +927,15 @@ def ide_setup(args, config, basepath, workspace):
 def register_commands(subparsers, context):
     """Register devtool subcommands from this plugin"""
 
+    # The ide-sdk command bootstraps the SDK from the bitbake environment before the IDE
+    # configuration is generated. In the case of the eSDK, the bootstrapping is performed
+    # during the installation of the eSDK installer. Running the ide-sdk plugin from an
+    # eSDK installer-based setup would require skipping the bootstrapping and probably
+    # taking some other differences into account when generating the IDE configurations.
+    # This would be possible. But it is not implemented.
+    if context.fixed_setup:
+        return
+
     global ide_plugins
 
     # Search for IDE plugins in all sub-folders named ide_plugins where devtool seraches for plugins.
