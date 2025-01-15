@@ -134,12 +134,11 @@ EXTRACONFFUNCS ??= ""
 
 EXTRA_OECONF:append = " ${PACKAGECONFIG_CONFARGS}"
 
-do_configure[prefuncs] += "autotools_preconfigure autotools_aclocals ${EXTRACONFFUNCS}"
-do_compile[prefuncs] += "autotools_aclocals"
-do_install[prefuncs] += "autotools_aclocals"
+do_configure[prefuncs] += "autotools_preconfigure autotools_sitefiles ${EXTRACONFFUNCS}"
 do_configure[postfuncs] += "autotools_postconfigure"
 
-python autotools_aclocals () {
+# Tell autoconf to load the site defaults from siteinfo
+python autotools_sitefiles () {
     sitefiles, searched = siteinfo_get_files(d, sysrootcache=True)
     d.setVar("CONFIG_SITE", " ".join(sitefiles))
 }
