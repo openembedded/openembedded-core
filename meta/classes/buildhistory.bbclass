@@ -260,14 +260,6 @@ python buildhistory_emit_pkghistory() {
     if not os.path.exists(pkghistdir):
         bb.utils.mkdirhier(pkghistdir)
     else:
-        # We need to make sure that all files kept in
-        # buildhistory/old are restored successfully
-        # otherwise next block of code wont have files to
-        # check and purge
-        if d.getVar("BUILDHISTORY_RESET"):
-            for pkg in packagelist:
-                preservebuildhistoryfiles(pkg, preserve)
-
         # Remove files for packages that no longer exist
         for item in os.listdir(pkghistdir):
             if item not in preserve:
@@ -279,6 +271,13 @@ python buildhistory_emit_pkghistory() {
                         os.rmdir(itempath)
                     else:
                         os.unlink(itempath)
+
+    if os.path.exists(oldpkghistdir):
+        # We need to make sure that all files in preserve
+        # are restored from buildhistory/old successfully
+        if d.getVar("BUILDHISTORY_RESET"):
+            for pkg in packagelist:
+                preservebuildhistoryfiles(pkg, preserve)
 
     rcpinfo = RecipeInfo(pn)
     rcpinfo.pe = pe
