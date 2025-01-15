@@ -139,11 +139,6 @@ do_compile[prefuncs] += "autotools_aclocals"
 do_install[prefuncs] += "autotools_aclocals"
 do_configure[postfuncs] += "autotools_postconfigure"
 
-ACLOCALDIR = "${STAGING_DATADIR}/aclocal"
-ACLOCALEXTRAPATH = ""
-ACLOCALEXTRAPATH:class-target = " -I ${STAGING_DATADIR_NATIVE}/aclocal/"
-ACLOCALEXTRAPATH:class-nativesdk = " -I ${STAGING_DATADIR_NATIVE}/aclocal/"
-
 python autotools_aclocals () {
     sitefiles, searched = siteinfo_get_files(d, sysrootcache=True)
     d.setVar("CONFIG_SITE", " ".join(sitefiles))
@@ -171,8 +166,8 @@ autotools_do_configure() {
 	if [ -e ${AUTOTOOLS_SCRIPT_PATH}/configure.in -o -e ${AUTOTOOLS_SCRIPT_PATH}/configure.ac ]; then
 		olddir=`pwd`
 		cd ${AUTOTOOLS_SCRIPT_PATH}
-		mkdir -p ${ACLOCALDIR}
-		ACLOCAL="aclocal --system-acdir=${ACLOCALDIR}/"
+		# aclocal looks in the native sysroot by default, so tell it to also look in the target sysroot.
+		ACLOCAL="aclocal --aclocal-path=${STAGING_DATADIR}/aclocal/"
 		if [ x"${acpaths}" = xdefault ]; then
 			acpaths=
 			for i in `find ${AUTOTOOLS_SCRIPT_PATH} -ignore_readdir_race -maxdepth 2 -name \*.m4|grep -v 'aclocal.m4'| \
@@ -182,7 +177,6 @@ autotools_do_configure() {
 		else
 			acpaths="${acpaths}"
 		fi
-		acpaths="$acpaths ${ACLOCALEXTRAPATH}"
 		# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look
 		# like it was auto-generated.  Work around this by blowing it away
 		# by hand, unless the package specifically asked not to run aclocal.
