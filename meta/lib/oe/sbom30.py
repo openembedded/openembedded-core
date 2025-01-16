@@ -495,7 +495,7 @@ class ObjectSet(oe.spdx30.SHACLObjectSet):
             return []
 
         if not to:
-            to = [oe.spdx30.Element.NoneElement]
+            to = [oe.spdx30.IndividualElement.NoneElement]
 
         ret = []
 
