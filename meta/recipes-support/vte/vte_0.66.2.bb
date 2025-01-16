@@ -19,8 +19,13 @@ GIR_MESON_OPTION = 'gir'
 inherit gnomebase gtk-doc features_check upstream-version-is-even gobject-introspection
 
 # vapigen.m4 is required when vala is not present (but the one from vala should be used normally)
-SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
-            file://0001-Makefile.docs-correctly-substitute-gtkdoc-qemu-wrapp.patch"
+SRC_URI += " \
+            file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
+            file://0001-Makefile.docs-correctly-substitute-gtkdoc-qemu-wrapp.patch \
+            file://CVE-2024-37535-0001.patch \
+            file://CVE-2024-37535-0002.patch \
+            "
+
 SRC_URI[archive.sha256sum] = "e89974673a72a0a06edac6d17830b82bb124decf0cb3b52cebc92ec3ff04d976"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
