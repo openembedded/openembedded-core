@@ -14,6 +14,7 @@ wants this to be a failure, they can add "-Werror=poison-system-directories".
 Upstream-Status: Inappropriate [OE configuration]
 Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: sunil dora <sunilkumar.dora@windriver.com>
 ---
  gcc/common.opt      |  4 ++++
  gcc/config.in       | 10 ++++++++++
@@ -21,8 +22,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gcc/configure.ac    | 16 ++++++++++++++++
  gcc/doc/invoke.texi |  9 +++++++++
  gcc/gcc.cc          |  9 +++++++--
- gcc/incpath.cc      | 21 +++++++++++++++++++++
- 7 files changed, 86 insertions(+), 2 deletions(-)
+ gcc/incpath.cc      | 25 +++++++++++++++++++++++++
+ 7 files changed, 90 insertions(+), 2 deletions(-)
 
 diff --git a/gcc/common.opt b/gcc/common.opt
 index ad348844775..df3992b420d 100644
@@ -186,7 +187,7 @@ index 728332b8153..343e4915097 100644
  /* Pass -d* flags, possibly modifying -dumpdir, -dumpbase et al.
  
 diff --git a/gcc/incpath.cc b/gcc/incpath.cc
-index 64cdd2f4a1b..e572d98ab17 100644
+index 64cdd2f4a..89f42900d 100644
 --- a/gcc/incpath.cc
 +++ b/gcc/incpath.cc
 @@ -26,6 +26,7 @@
@@ -197,7 +198,18 @@ index 64cdd2f4a1b..e572d98ab17 100644
  
  /* Microsoft Windows does not natively support inodes.
     VMS has non-numeric inodes.  */
-@@ -399,6 +400,26 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
+@@ -273,6 +274,10 @@ remove_duplicates (cpp_reader *pfile, struct cpp_dir *head,
+			     cur->name, xstrerror (errno));
+	      reason = REASON_NOENT;
+	    }
++#ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
++	  pcur = &cur->next;
++	  continue;
++#endif
+	}
+       else if (!S_ISDIR (st.st_mode))
+	cpp_error_with_line (pfile, CPP_DL_WARNING, 0, 0,
+@@ -399,6 +404,26 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
  	}
        fprintf (stderr, _("End of search list.\n"));
      }
@@ -224,3 +236,5 @@ index 64cdd2f4a1b..e572d98ab17 100644
  }
  
  /* Use given -I paths for #include "..." but not #include <...>, and
+--
+2.34.1
