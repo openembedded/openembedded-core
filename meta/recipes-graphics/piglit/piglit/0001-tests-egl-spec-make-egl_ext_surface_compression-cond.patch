@@ -1,4 +1,4 @@
-From 8320c2ff5793a612aa7d7223ae317657744169f1 Mon Sep 17 00:00:00 2001
+From e23bacb04ff77f86e56d6684451e5e93b59f1b0a Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Fri, 22 Nov 2024 22:52:31 +0100
 Subject: [PATCH] tests/egl/spec: make egl_ext_surface_compression conditional
