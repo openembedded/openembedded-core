@@ -12,6 +12,7 @@ SRC_URI = "\
     file://rmnet.patch \
     file://ofono \
     file://CVE-2024-7539.patch \
+    file://CVE-2024-7540_CVE-2024-7541_CVE-2024-7542.patch \
 "
 SRC_URI[sha256sum] = "983cbfd5e1e1a410ba7ad2db7f50fadc91e50b29f1ede40cdc73f941da7ba95f"
 
