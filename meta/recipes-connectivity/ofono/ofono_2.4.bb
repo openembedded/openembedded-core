@@ -22,6 +22,7 @@ SRC_URI = "\
     file://CVE-2024-7545.patch \
     file://CVE-2024-7546.patch \
     file://CVE-2024-7547.patch \
+    file://CVE-2024-7540_CVE-2024-7541_CVE-2024-7542.patch \
 "
 SRC_URI[sha256sum] = "93580adc1afd1890dc516efb069de0c5cdfef014415256ddfb28ab172df2d11d"
 
