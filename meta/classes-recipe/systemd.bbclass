@@ -102,6 +102,12 @@ def systemd_service_searchpaths(user, d):
             d.getVar("systemd_system_unitdir"),
         ]
 
+def systemd_service_exists(service, user, d):
+    searchpaths = systemd_service_searchpaths(user, d)
+    path, _ = systemd_service_path(service, searchpaths, d)
+
+    return path != ''
+
 python systemd_populate_packages() {
     import re
     import shlex
@@ -197,13 +203,27 @@ python systemd_populate_packages() {
                     bb.fatal("Didn't find service unit '{0}', specified in SYSTEMD_SERVICE:{1}. {2}".format(
                         service, pkg_systemd, "Also looked for service unit '{0}'.".format(base) if base is not None else ""))
 
-    def systemd_create_presets(pkg, action):
-        presetf = oe.path.join(d.getVar("PKGD"), d.getVar("systemd_unitdir"), "system-preset/98-%s.preset" % pkg)
+    def systemd_create_presets(pkg, action, user):
+        # Check there is at least one service of given type (system/user), don't
+        # create empty files.
+        needs_preset = False
+        for service in d.getVar('SYSTEMD_SERVICE:%s' % pkg).split():
+            if systemd_service_exists(service, user, d):
+                needs_preset = True
+                break
+
+        if not needs_preset:
+            return
+
+        prefix = "user" if user else "system"
+        presetf = oe.path.join(d.getVar("PKGD"), d.getVar("systemd_unitdir"), "%s-preset/98-%s.preset" % (prefix, pkg))
         bb.utils.mkdirhier(os.path.dirname(presetf))
         with open(presetf, 'a') as fd:
             for service in d.getVar('SYSTEMD_SERVICE:%s' % pkg).split():
+                if not systemd_service_exists(service, user, d):
+                    continue
                 fd.write("%s %s\n" % (action,service))
-        d.appendVar("FILES:%s" % pkg, ' ' + oe.path.join(d.getVar("systemd_unitdir"), "system-preset/98-%s.preset" % pkg))
+        d.appendVar("FILES:%s" % pkg, ' ' + oe.path.join(d.getVar("systemd_unitdir"), "%s-preset/98-%s.preset" % (prefix, pkg)))
 
     # Run all modifications once when creating package
     if os.path.exists(d.getVar("D")):
@@ -213,7 +233,8 @@ python systemd_populate_packages() {
                 systemd_generate_package_scripts(pkg)
                 action = get_package_var(d, 'SYSTEMD_AUTO_ENABLE', pkg)
                 if action in ("enable", "disable"):
-                    systemd_create_presets(pkg, action)
+                    systemd_create_presets(pkg, action, False)
+                    systemd_create_presets(pkg, action, True)
                 elif action not in ("mask", "preset"):
                     bb.fatal("SYSTEMD_AUTO_ENABLE:%s '%s' is not 'enable', 'disable', 'mask' or 'preset'" % (pkg, action))
         systemd_check_services()
