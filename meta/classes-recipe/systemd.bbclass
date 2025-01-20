@@ -90,6 +90,18 @@ def systemd_service_path(service, searchpaths, d):
 
     return path_found, base
 
+def systemd_service_searchpaths(user, d):
+    if user:
+        return [
+            oe.path.join(d.getVar("sysconfdir"), "systemd", "user"),
+            d.getVar("systemd_user_unitdir"),
+        ]
+    else:
+        return [
+            oe.path.join(d.getVar("sysconfdir"), "systemd", "system"),
+            d.getVar("systemd_system_unitdir"),
+        ]
+
 python systemd_populate_packages() {
     import re
     import shlex
@@ -169,12 +181,9 @@ python systemd_populate_packages() {
 
     # Check service-files and call systemd_add_files_and_parse for each entry
     def systemd_check_services():
-        searchpaths = [
-            oe.path.join(d.getVar("sysconfdir"), "systemd", "system"),
-            oe.path.join(d.getVar("sysconfdir"), "systemd", "user"),
-        ]
-        searchpaths.append(d.getVar("systemd_system_unitdir"))
-        searchpaths.append(d.getVar("systemd_user_unitdir"))
+        searchpaths = systemd_service_searchpaths(False, d)
+        searchpaths.extend(systemd_service_searchpaths(True, d))
+
         systemd_packages = d.getVar('SYSTEMD_PACKAGES')
 
         # scan for all in SYSTEMD_SERVICE[]
