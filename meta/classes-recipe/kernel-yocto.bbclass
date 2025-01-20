@@ -352,6 +352,9 @@ do_patch() {
 	cd ${S}
 
 	check_git_config
+	if [ "${KERNEL_DEBUG_TIMESTAMPS}" != "1" ]; then
+		reproducible_git_committer_author
+	fi
 	meta_dir=$(kgit --meta)
 	(cd ${meta_dir}; ln -sf patch.queue series)
 	if [ -f "${meta_dir}/series" ]; then
@@ -434,6 +437,9 @@ do_kernel_checkout() {
 		rm -f .gitignore
 		git init
 		check_git_config
+		if [ "${KERNEL_DEBUG_TIMESTAMPS}" != "1" ]; then
+			reproducible_git_committer_author
+		fi
 		git add .
 		git commit -q -n -m "baseline commit: creating repo for ${PN}-${PV}"
 		git clean -d -f
