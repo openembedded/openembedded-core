@@ -346,7 +346,17 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-carl9170 \
              ${PN}-qcom-qcm2290-wifi ${PN}-qcom-qrb4210-wifi ${PN}-qcom-sdm845-modem \
              ${PN}-ar3k-license ${PN}-ar3k \
-             ${PN}-ath10k-license ${PN}-ath10k-wcn3990 ${PN}-ath10k \
+             ${PN}-ath10k-license ${PN}-ath10k \
+             ${PN}-ath10k-qca4019 \
+             ${PN}-ath10k-qca6174 \
+             ${PN}-ath10k-qca9377 \
+             ${PN}-ath10k-qca9887 \
+             ${PN}-ath10k-qca9888 \
+             ${PN}-ath10k-qca988x \
+             ${PN}-ath10k-qca9984 \
+             ${PN}-ath10k-qca99x0 \
+             ${PN}-ath10k-wcn3990 \
+             ${PN}-ath10k-misc \
              ${PN}-ath11k ${PN}-ath12k ${PN}-qca \
              \
              ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
@@ -508,7 +518,16 @@ LICENSE:${PN}-carl9170 = "GPL-2.0-or-later"
 LICENSE:${PN}-ar3k = "Firmware-qualcommAthos_ar3k & Firmware-atheros_firmware"
 LICENSE:${PN}-ar3k-license = "Firmware-qualcommAthos_ar3k"
 LICENSE:${PN}-ath10k = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca4019 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca6174 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca9377 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca9887 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca9888 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca988x = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca9984 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-qca99x0 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-wcn3990 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath10k-misc    = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-license = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca = "Firmware-qualcommAthos_ath10k"
 
@@ -518,12 +537,21 @@ FILES:${PN}-ar3k = " \
 "
 
 FILES:${PN}-ath10k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ath10k"
-FILES:${PN}-ath10k = " \
-  ${nonarch_base_libdir}/firmware/ath10k \
-"
-FILES:${PN}-ath10k-wcn3990 = " \
-  ${nonarch_base_libdir}/firmware/ath10k/WCN3990 \
-"
+FILES:${PN}-ath10k-qca4019 = "${nonarch_base_libdir}/firmware/ath10k/QCA4019"
+FILES:${PN}-ath10k-qca6174 = "${nonarch_base_libdir}/firmware/ath10k/QCA6174"
+FILES:${PN}-ath10k-qca9377 = "${nonarch_base_libdir}/firmware/ath10k/QCA9377"
+FILES:${PN}-ath10k-qca9887 = "${nonarch_base_libdir}/firmware/ath10k/QCA9887"
+FILES:${PN}-ath10k-qca9888 = "${nonarch_base_libdir}/firmware/ath10k/QCA9888"
+FILES:${PN}-ath10k-qca988x = "${nonarch_base_libdir}/firmware/ath10k/QCA988X"
+FILES:${PN}-ath10k-qca9984 = "${nonarch_base_libdir}/firmware/ath10k/QCA9984"
+FILES:${PN}-ath10k-qca99x0 = "${nonarch_base_libdir}/firmware/ath10k/QCA99X0"
+FILES:${PN}-ath10k-wcn3990 = "${nonarch_base_libdir}/firmware/ath10k/WCN3990"
+FILES:${PN}-ath10k-misc = "${nonarch_base_libdir}/firmware/ath10k/*"
+# -ath10k is a virtual package that depends upon all ath10k packages.
+ALLOW_EMPTY:${PN}-ath10k = "1"
+# -ath10k-misc is a catch all package that includes all the ath10k
+# firmwares that are not already included in other -ath10k- packages.
+ALLOW_EMPTY:${PN}-ath10k-misc = "1"
 
 FILES:${PN}-ath11k = " \
   ${nonarch_base_libdir}/firmware/ath11k \
@@ -539,8 +567,16 @@ FILES:${PN}-qca = " \
 
 RDEPENDS:${PN}-ar3k += "${PN}-ar3k-license ${PN}-atheros-license"
 RDEPENDS:${PN}-ath10k += "${PN}-ath10k-license"
-RDEPENDS:${PN}-ath10k += "${PN}-ath10k-wcn3990"
+RDEPENDS:${PN}-ath10k-qca4019 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca6174 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca9377 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca9887 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca9888 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca988x += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca9984 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-qca99x0 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath10k-wcn3990 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath10k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license"
@@ -1697,6 +1733,7 @@ RDEPENDS:${PN} += "${PN}-whence-license"
 # Make linux-firmware depend on all of the split-out packages.
 # Make linux-firmware-iwlwifi depend on all of the split-out iwlwifi packages.
 # Make linux-firmware-ibt depend on all of the split-out ibt packages.
+# Make linux-firmware-ath10k depend on all of the split-out ath10k packages.
 python populate_packages:prepend () {
     firmware_pkgs = oe.utils.packages_filter_out_system(d)
     d.appendVar('RRECOMMENDS:linux-firmware', ' ' + ' '.join(firmware_pkgs))
@@ -1706,6 +1743,9 @@ python populate_packages:prepend () {
 
     ibt_pkgs = filter(lambda x: x.find('-ibt-') != -1, firmware_pkgs)
     d.appendVar('RRECOMMENDS:linux-firmware-ibt', ' ' + ' '.join(ibt_pkgs))
+
+    ath10k_pkgs = filter(lambda x: x.find('-ath10k-') != -1, firmware_pkgs)
+    d.appendVar('RRECOMMENDS:linux-firmware-ath10k', ' ' + ' '.join(ath10k_pkgs))
 }
 
 # Firmware files are generally not ran on the CPU, so they can be
