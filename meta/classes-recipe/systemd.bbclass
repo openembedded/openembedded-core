@@ -68,6 +68,28 @@ systemd_populate_packages[vardeps] += "systemd_prerm systemd_postinst"
 systemd_populate_packages[vardepsexclude] += "OVERRIDES"
 
 
+def systemd_service_path(service, searchpaths, d):
+    path_found = ''
+
+    # Deal with adding, for example, 'ifplugd@eth0.service' from
+    # 'ifplugd@.service'
+    base = None
+    at = service.find('@')
+    if at != -1:
+        ext = service.rfind('.')
+        base = service[:at] + '@' + service[ext:]
+
+    for path in searchpaths:
+        if os.path.lexists(oe.path.join(d.getVar("D"), path, service)):
+            path_found = path
+            break
+        elif base is not None:
+            if os.path.exists(oe.path.join(d.getVar("D"), path, base)):
+                path_found = path
+                break
+
+    return path_found, base
+
 python systemd_populate_packages() {
     import re
     import shlex
@@ -158,24 +180,7 @@ python systemd_populate_packages() {
         # scan for all in SYSTEMD_SERVICE[]
         for pkg_systemd in systemd_packages.split():
             for service in get_package_var(d, 'SYSTEMD_SERVICE', pkg_systemd).split():
-                path_found = ''
-
-                # Deal with adding, for example, 'ifplugd@eth0.service' from
-                # 'ifplugd@.service'
-                base = None
-                at = service.find('@')
-                if at != -1:
-                    ext = service.rfind('.')
-                    base = service[:at] + '@' + service[ext:]
-
-                for path in searchpaths:
-                    if os.path.lexists(oe.path.join(d.getVar("D"), path, service)):
-                        path_found = path
-                        break
-                    elif base is not None:
-                        if os.path.exists(oe.path.join(d.getVar("D"), path, base)):
-                            path_found = path
-                            break
+                path_found, base = systemd_service_path(service, searchpaths, d)
 
                 if path_found != '':
                     systemd_add_files_and_parse(pkg_systemd, path_found, service)
