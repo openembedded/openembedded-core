@@ -4,7 +4,8 @@ HOMEPAGE = "https://fmt.dev"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b9257785fc4f3803a4b71b76c1412729"
 
-SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https"
+SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https \
+           file://fix-gcc9.patch"
 SRCREV = "e3ddede6c4ee818825c4e5a6dfa1d384860c27d9"
 
 S = "${WORKDIR}/git"
