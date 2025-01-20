@@ -290,6 +290,32 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-mt76x-license ${PN}-mt7601u ${PN}-mt7650 ${PN}-mt76x2 \
              ${PN}-radeon-license ${PN}-radeon \
              ${PN}-amdgpu-license ${PN}-amdgpu \
+             ${PN}-amdgpu-aldebaran \
+             ${PN}-amdgpu-carrizo \
+             ${PN}-amdgpu-cezanne \
+             ${PN}-amdgpu-fiji \
+             ${PN}-amdgpu-hawaii \
+             ${PN}-amdgpu-navi10 \
+             ${PN}-amdgpu-navi14 \
+             ${PN}-amdgpu-navi21 \
+             ${PN}-amdgpu-navi22 \
+             ${PN}-amdgpu-navi23 \
+             ${PN}-amdgpu-navi24 \
+             ${PN}-amdgpu-navi31 \
+             ${PN}-amdgpu-navi32 \
+             ${PN}-amdgpu-oland \
+             ${PN}-amdgpu-polaris10 \
+             ${PN}-amdgpu-polaris11 \
+             ${PN}-amdgpu-polaris12 \
+             ${PN}-amdgpu-raven \
+             ${PN}-amdgpu-rembrandt \
+             ${PN}-amdgpu-renoir \
+             ${PN}-amdgpu-stoney \
+             ${PN}-amdgpu-tonga \
+             ${PN}-amdgpu-topaz \
+             ${PN}-amdgpu-vega10 \
+             ${PN}-amdgpu-vega12 \
+             ${PN}-amdgpu-misc \
              ${PN}-marvell-license ${PN}-pcie8897 ${PN}-pcie8997 \
              ${PN}-mediatek-license ${PN}-mediatek \
              ${PN}-microchip-license ${PN}-microchip \
@@ -712,13 +738,107 @@ RDEPENDS:${PN}-radeon += "${PN}-radeon-license"
 # For amdgpu
 LICENSE:${PN}-amdgpu = "Firmware-amdgpu"
 LICENSE:${PN}-amdgpu-license = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-aldebaran = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-carrizo = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-cezanne = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-fiji = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-hawaii = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi10 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi14 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi21 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi22 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi23 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi24 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi31 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-navi32 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-oland = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-polaris10 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-polaris11 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-polaris12 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-raven = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-rembrandt = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-renoir = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-stoney = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-tonga = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-topaz = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-vega10 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-vega12 = "Firmware-amdgpu"
+LICENSE:${PN}-amdgpu-misc = "Firmware-amdgpu"
 
 FILES:${PN}-amdgpu-license = "${nonarch_base_libdir}/firmware/LICENSE.amdgpu"
-FILES:${PN}-amdgpu = " \
-  ${nonarch_base_libdir}/firmware/amdgpu \
+FILES:${PN}-amdgpu-aldebaran = "${nonarch_base_libdir}/firmware/amdgpu/aldebaran_*.bin"
+FILES:${PN}-amdgpu-carrizo = "${nonarch_base_libdir}/firmware/amdgpu/carrizo_*.bin"
+FILES:${PN}-amdgpu-cezanne = "${nonarch_base_libdir}/firmware/amdgpu/green_sardine_*.bin"
+FILES:${PN}-amdgpu-fiji = "${nonarch_base_libdir}/firmware/amdgpu/fiji_*.bin"
+FILES:${PN}-amdgpu-hawaii = "${nonarch_base_libdir}/firmware/amdgpu/hawaii_*.bin"
+FILES:${PN}-amdgpu-navi10 = "${nonarch_base_libdir}/firmware/amdgpu/navi10_*.bin"
+FILES:${PN}-amdgpu-navi14 = "${nonarch_base_libdir}/firmware/amdgpu/navi14_*.bin"
+FILES:${PN}-amdgpu-navi21 = "${nonarch_base_libdir}/firmware/amdgpu/sienna_cichlid_*.bin"
+FILES:${PN}-amdgpu-navi22 = "${nonarch_base_libdir}/firmware/amdgpu/navy_flounder_*.bin"
+FILES:${PN}-amdgpu-navi23 = "${nonarch_base_libdir}/firmware/amdgpu/dimgrey_cavefish_*.bin"
+FILES:${PN}-amdgpu-navi24 = "${nonarch_base_libdir}/firmware/amdgpu/beige_goby_*.bin"
+FILES:${PN}-amdgpu-navi31 = "${nonarch_base_libdir}/firmware/amdgpu/gc_11_0_0_*.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_0_sos.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_0_ta.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/smu_13_0_0.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/dcn_3_2_0_dmcub.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/sdma_6_0_0.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/vcn_4_0_0.bin \
 "
+FILES:${PN}-amdgpu-navi32 = "${nonarch_base_libdir}/firmware/amdgpu/dcn_3_2_0_dmcub.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/gc_11_0_3_*.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_10_sos.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_10_ta.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/sdma_6_0_3.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/smu_13_0_10.bin \
+    ${nonarch_base_libdir}/firmware/amdgpu/vcn_4_0_0.bin \
+"
+FILES:${PN}-amdgpu-oland = "${nonarch_base_libdir}/firmware/amdgpu/oland_*.bin"
+FILES:${PN}-amdgpu-polaris10 = "${nonarch_base_libdir}/firmware/amdgpu/polaris10_*.bin"
+FILES:${PN}-amdgpu-polaris11 = "${nonarch_base_libdir}/firmware/amdgpu/polaris11_*.bin"
+FILES:${PN}-amdgpu-polaris12 = "${nonarch_base_libdir}/firmware/amdgpu/polaris12_*.bin"
+FILES:${PN}-amdgpu-raven = "${nonarch_base_libdir}/firmware/amdgpu/raven_*.bin"
+FILES:${PN}-amdgpu-rembrandt = "${nonarch_base_libdir}/firmware/amdgpu/yellow_carp_*.bin"
+FILES:${PN}-amdgpu-renoir = "${nonarch_base_libdir}/firmware/amdgpu/renoir_*.bin"
+FILES:${PN}-amdgpu-stoney = "${nonarch_base_libdir}/firmware/amdgpu/stoney_*.bin"
+FILES:${PN}-amdgpu-tonga = "${nonarch_base_libdir}/firmware/amdgpu/tonga_*.bin"
+FILES:${PN}-amdgpu-topaz = "${nonarch_base_libdir}/firmware/amdgpu/topaz_*.bin"
+FILES:${PN}-amdgpu-vega10 = "${nonarch_base_libdir}/firmware/amdgpu/vega10_*.bin"
+FILES:${PN}-amdgpu-vega12 = "${nonarch_base_libdir}/firmware/amdgpu/vega12_*.bin"
+FILES:${PN}-amdgpu-misc = "${nonarch_base_libdir}/firmware/amdgpu/*"
+# -amdgpu is a virtual package that depends upon all amdgpu packages.
+ALLOW_EMPTY:${PN}-amdgpu = "1"
+# -amdgpu-misc is a catch all package that includes all the amdgpu
+# firmwares that are not already included in other -amdgpu- packages.
+ALLOW_EMPTY:${PN}-amdgpu-misc = "1"
 
 RDEPENDS:${PN}-amdgpu += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-aldebaran += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-carrizo += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-cezanne += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-fiji += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-hawaii += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi10 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi14 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi21 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi22 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi23 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi24 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi31 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-navi32 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-oland += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-polaris10 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-polaris11 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-polaris12 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-raven += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-rembrandt += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-renoir += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-stoney += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-tonga += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-topaz += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-vega10 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-vega12 += "${PN}-amdgpu-license"
+RDEPENDS:${PN}-amdgpu-misc += "${PN}-amdgpu-license"
 
 # For lontium
 LICENSE:${PN}-lt9611uxc = "Firmware-Lontium"
@@ -1775,6 +1895,7 @@ RDEPENDS:${PN} += "${PN}-whence-license"
 # Make linux-firmware-ibt depend on all of the split-out ibt packages.
 # Make linux-firmware-ath10k depend on all of the split-out ath10k packages.
 # Make linux-firmware-ath11k depend on all of the split-out ath11k packages.
+# Make linux-firmware-amdgpu depend on all of the split-out amdgpu packages.
 python populate_packages:prepend () {
     firmware_pkgs = oe.utils.packages_filter_out_system(d)
     d.appendVar('RRECOMMENDS:linux-firmware', ' ' + ' '.join(firmware_pkgs))
@@ -1790,6 +1911,9 @@ python populate_packages:prepend () {
 
     ath11k_pkgs = filter(lambda x: x.find('-ath11k-') != -1, firmware_pkgs)
     d.appendVar('RRECOMMENDS:linux-firmware-ath11k', ' ' + ' '.join(ath11k_pkgs))
+
+    amdgpu_pkgs = filter(lambda x: x.find('-amdgpu-') != -1, firmware_pkgs)
+    d.appendVar('RRECOMMENDS:linux-firmware-amdgpu', ' ' + ' '.join(amdgpu_pkgs))
 }
 
 # Firmware files are generally not ran on the CPU, so they can be
