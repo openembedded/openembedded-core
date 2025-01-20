@@ -37,17 +37,19 @@ if systemctl >/dev/null 2>/dev/null; then
 	fi
 
 	if [ "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
-		for service in ${SYSTEMD_SERVICE_ESCAPED}; do
+		for service in ${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}; do
 			systemctl ${OPTS} enable "$service"
 		done
 	fi
 
 	if [ -z "$D" ]; then
 		systemctl daemon-reload
-		systemctl preset ${SYSTEMD_SERVICE_ESCAPED}
+		[ -n "${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}" ] && \
+			systemctl preset ${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}
 
 		if [ "${SYSTEMD_AUTO_ENABLE}" = "enable" ]; then
-			systemctl --no-block restart ${SYSTEMD_SERVICE_ESCAPED}
+			[ -n "${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}" ] && \
+				systemctl --no-block restart ${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}
 		fi
 	fi
 fi
@@ -56,9 +58,10 @@ fi
 systemd_prerm() {
 if systemctl >/dev/null 2>/dev/null; then
 	if [ -z "$D" ]; then
-		systemctl stop ${SYSTEMD_SERVICE_ESCAPED}
-
-		systemctl disable ${SYSTEMD_SERVICE_ESCAPED}
+		if [ -n "${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}" ]; then
+			systemctl stop ${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}
+			systemctl disable ${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", False, d)}
+		fi
 	fi
 fi
 }
@@ -107,6 +110,9 @@ def systemd_service_exists(service, user, d):
     path, _ = systemd_service_path(service, searchpaths, d)
 
     return path != ''
+
+def systemd_filter_services(services, user, d):
+    return ' '.join(service for service in services.split() if systemd_service_exists(service, user, d))
 
 python systemd_populate_packages() {
     import re
