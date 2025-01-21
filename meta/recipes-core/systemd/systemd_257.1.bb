@@ -28,6 +28,7 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0002-implment-systemd-sysv-install-for-OE.patch \
+           file://0001-Do-not-create-var-log-README.patch \
            "
 
 # patches needed by musl
@@ -404,10 +405,6 @@ do_install() {
 	else
 		# Actively disable Predictable Network Interface Names
 		sed -i 's/^NamePolicy=.*/NamePolicy=/;s/^AlternativeNamesPolicy=.*/AlternativeNamesPolicy=/' ${D}${nonarch_libdir}/systemd/network/99-default.link
-	fi
-
-	if [ -e ${D}${nonarch_libdir}/tmpfiles.d/legacy.conf ];then
-		sed -i -e '/^L \/var\/log\/README/d' ${D}${nonarch_libdir}/tmpfiles.d/legacy.conf
 	fi
 }
 
