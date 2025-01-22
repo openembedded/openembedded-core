@@ -37,7 +37,7 @@ inherit autotools ptest binconfig
 AUTOTOOLS_SCRIPT_PATH = "${S}/unix"
 EXTRA_AUTORECONF = "--exclude=aclocal"
 
-EXTRA_OECONF = "--disable-rpath --enable-man-suffix=tcl9"
+EXTRA_OECONF = "--disable-rpath --enable-man-suffix=tcl9 --disable-zipfs"
 
 # Prevent installing copy of tzdata based on tzdata installation on the build host
 # It doesn't install tzdata if one of the following files exist on the host:
