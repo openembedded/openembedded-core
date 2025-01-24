@@ -768,7 +768,7 @@ fakeroot python do_populate_sdk_ext() {
 
     # FIXME hopefully we can remove this restriction at some point, but the eSDK
     # can only be built for the primary (default) multiconfig
-    if d.getVar('BB_CURRENT_MC') != 'default':
+    if d.getVar('BB_CURRENT_MC') != '':
         bb.fatal('The extensible SDK can currently only be built for the default multiconfig.  Currently trying to build for %s.' % d.getVar('BB_CURRENT_MC'))
 
     # eSDK dependencies don't use the traditional variables and things don't work properly if they are set
