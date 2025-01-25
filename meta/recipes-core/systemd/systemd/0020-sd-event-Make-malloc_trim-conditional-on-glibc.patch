@@ -1,4 +1,4 @@
-From 9ae5377acfa895bfc1ea61aef4fbe754bc2f7f33 Mon Sep 17 00:00:00 2001
+From 70abcbd93b8854c4dd0ae88b82f394d325b2a365 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 2 Aug 2023 12:06:27 -0700
 Subject: [PATCH] sd-event: Make malloc_trim() conditional on glibc
@@ -12,7 +12,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/libsystemd/sd-event/sd-event.c b/src/libsystemd/sd-event/sd-event.c
-index 25f3b1fc4f..9ea3c964b2 100644
+index b3541a1429..ba87265d9f 100644
 --- a/src/libsystemd/sd-event/sd-event.c
 +++ b/src/libsystemd/sd-event/sd-event.c
 @@ -1874,7 +1874,7 @@ _public_ int sd_event_add_exit(

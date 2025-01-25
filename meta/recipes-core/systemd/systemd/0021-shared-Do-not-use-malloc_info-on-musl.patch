@@ -1,4 +1,4 @@
-From d814a5cae2ecbee079816e3fc7b34a59da356a3b Mon Sep 17 00:00:00 2001
+From c85009340b3a58686390ee70671334593e348a10 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 2 Aug 2023 12:20:40 -0700
 Subject: [PATCH] shared: Do not use malloc_info on musl

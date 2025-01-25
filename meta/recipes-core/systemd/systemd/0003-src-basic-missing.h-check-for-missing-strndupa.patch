@@ -1,7 +1,10 @@
-From eca6019bbd793c8d8a99142677a548766a775153 Mon Sep 17 00:00:00 2001
+From 76f4749e3a583ad3c924bdff4a6bde967c674ed7 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 14:18:21 +0800
 Subject: [PATCH] src/basic/missing.h: check for missing strndupa
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 include missing.h  for definition of strndupa
 
@@ -20,6 +23,8 @@ Signed-off-by: Luca Boccassi <luca.boccassi@microsoft.com>
 [Rebased for v254]
 Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 [Rebased for v255.1]
+Signed-off-by: Guðni Már Gilbert <gudni.m.g@gmail.com>
+[Rebased for v255.14]
 ---
  meson.build                                |  1 +
  src/backlight/backlight.c                  |  1 +
@@ -75,7 +80,7 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
  51 files changed, 62 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index b544a69aaa..90b07aeb14 100644
+index 216a8cbc91..d5109b0d00 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -572,6 +572,7 @@ foreach ident : ['secure_getenv', '__secure_getenv']
@@ -99,7 +104,7 @@ index b2032adaa5..ee9201826d 100644
  #define PCI_CLASS_GRAPHICS_CARD 0x30000
  
 diff --git a/src/basic/cgroup-util.c b/src/basic/cgroup-util.c
-index 50224648d3..2eaa6e3307 100644
+index e978bd3eff..d08c903c3b 100644
 --- a/src/basic/cgroup-util.c
 +++ b/src/basic/cgroup-util.c
 @@ -38,6 +38,7 @@
@@ -239,7 +244,7 @@ index d7cfcd9105..6cb0ddf575 100644
  int procfs_get_pid_max(uint64_t *ret) {
          _cleanup_free_ char *value = NULL;
 diff --git a/src/basic/time-util.c b/src/basic/time-util.c
-index f9014dc560..1d7840a5b5 100644
+index 0c2d739977..5c150806a0 100644
 --- a/src/basic/time-util.c
 +++ b/src/basic/time-util.c
 @@ -27,6 +27,7 @@
@@ -263,7 +268,7 @@ index 12dfdf76fa..e66332519a 100644
  static char **arg_path = NULL;
  
 diff --git a/src/core/dbus-cgroup.c b/src/core/dbus-cgroup.c
-index 88198010ee..74d61bfaaf 100644
+index b3baf03afc..7404784a01 100644
 --- a/src/core/dbus-cgroup.c
 +++ b/src/core/dbus-cgroup.c
 @@ -25,6 +25,7 @@
@@ -299,7 +304,7 @@ index 7bb026af48..a86128e40c 100644
  int bus_property_get_triggered_unit(
                  sd_bus *bus,
 diff --git a/src/core/execute.c b/src/core/execute.c
-index 4d597bf8a6..7d27f80834 100644
+index aa179fd57e..1ee9f4526b 100644
 --- a/src/core/execute.c
 +++ b/src/core/execute.c
 @@ -72,6 +72,7 @@
@@ -323,7 +328,7 @@ index b8e3f7aadd..8ce8ca68d8 100644
  #if HAVE_KMOD
  #include "module-util.h"
 diff --git a/src/core/service.c b/src/core/service.c
-index 5f4859e0d3..a920154f55 100644
+index d3ea8a9c3c..c3441f785c 100644
 --- a/src/core/service.c
 +++ b/src/core/service.c
 @@ -45,6 +45,7 @@
@@ -371,7 +376,7 @@ index 2d380bc7a7..d3f5612728 100644
  #define PRIV_KEY_FILE CERTIFICATE_ROOT "/private/journal-remote.pem"
  #define CERT_FILE     CERTIFICATE_ROOT "/certs/journal-remote.pem"
 diff --git a/src/journal/journalctl.c b/src/journal/journalctl.c
-index 87e2f28841..58275f41f1 100644
+index f52ed03dd0..3fa708a906 100644
 --- a/src/journal/journalctl.c
 +++ b/src/journal/journalctl.c
 @@ -77,6 +77,7 @@
@@ -443,7 +448,7 @@ index d988588de0..458df8df9a 100644
  #define MAX_SIZE (2*1024*1024)
  
 diff --git a/src/libsystemd/sd-journal/sd-journal.c b/src/libsystemd/sd-journal/sd-journal.c
-index 7a1dd2569f..d187baad47 100644
+index acabec699f..8115d3784a 100644
 --- a/src/libsystemd/sd-journal/sd-journal.c
 +++ b/src/libsystemd/sd-journal/sd-journal.c
 @@ -44,6 +44,7 @@
@@ -467,19 +472,19 @@ index bf45974ca5..2cb7e930c0 100644
  #include "parse-util.h"
  #include "path-util.h"
 diff --git a/src/network/generator/network-generator.c b/src/network/generator/network-generator.c
-index 48527a2c73..9777fe0561 100644
+index e5f78a3b99..4833de2009 100644
 --- a/src/network/generator/network-generator.c
 +++ b/src/network/generator/network-generator.c
-@@ -14,6 +14,7 @@
- #include "string-table.h"
+@@ -15,6 +15,7 @@
  #include "string-util.h"
  #include "strv.h"
+ #include "vlan-util.h"
 +#include "missing_stdlib.h"
  
  /*
    # .network
 diff --git a/src/nspawn/nspawn-settings.c b/src/nspawn/nspawn-settings.c
-index 161b1c1c70..ba1c459f78 100644
+index 2bb034eb22..c9837b8d79 100644
 --- a/src/nspawn/nspawn-settings.c
 +++ b/src/nspawn/nspawn-settings.c
 @@ -16,6 +16,7 @@
@@ -503,7 +508,7 @@ index c64e79bdff..eda26b0b9a 100644
  static void setup_logging_once(void) {
          static pthread_once_t once = PTHREAD_ONCE_INIT;
 diff --git a/src/portable/portable.c b/src/portable/portable.c
-index faeb97bd06..30768f728e 100644
+index 4aced8c391..6f426e0e51 100644
 --- a/src/portable/portable.c
 +++ b/src/portable/portable.c
 @@ -42,6 +42,7 @@

@@ -1,4 +1,4 @@
-From db390dc6bfa0a7b27010e0dcd25f45f17a6e3954 Mon Sep 17 00:00:00 2001
+From 4b46cf08f269b69d5336bf3d8f617a288bd65ea8 Mon Sep 17 00:00:00 2001
 From: Scott Murray <scott.murray@konsulko.com>
 Date: Fri, 13 Sep 2019 19:26:27 -0400
 Subject: [PATCH] Handle __cpu_mask usage
