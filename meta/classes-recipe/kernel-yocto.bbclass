@@ -150,10 +150,6 @@ do_kernel_metadata() {
 	# from the source tree, into a common location and normalized "defconfig" name,
 	# where the rest of the process will include and incoroporate it into the build
 	#
-	# If the fetcher has already placed a defconfig in UNPACKDIR (from the SRC_URI),
-	# we don't overwrite it, but instead warn the user that SRC_URI defconfigs take
-	# precendence.
-	#
 	if [ -n "${KBUILD_DEFCONFIG}" ]; then
 		if [ -f "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}" ]; then
 			if [ -f "${UNPACKDIR}/defconfig" ]; then
@@ -163,10 +159,8 @@ do_kernel_metadata() {
 				if [ $? -ne 0 ]; then
 					bbdebug 1 "detected SRC_URI or patched defconfig in UNPACKDIR. ${KBUILD_DEFCONFIG} copied over it"
 				fi
-				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${UNPACKDIR}/defconfig
-			else
-				cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${UNPACKDIR}/defconfig
 			fi
+			cp -f ${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG} ${UNPACKDIR}/defconfig
 			in_tree_defconfig="${UNPACKDIR}/defconfig"
 		else
 			bbfatal "A KBUILD_DEFCONFIG '${KBUILD_DEFCONFIG}' was specified, but not present in the source tree (${S}/arch/${ARCH}/configs/)"
