@@ -393,7 +393,11 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ath11k-wcn6750 \
              ${PN}-ath11k-wcn6855 \
              ${PN}-ath11k-misc \
-             ${PN}-ath12k ${PN}-qca \
+             ${PN}-ath12k \
+             ${PN}-ath12k-qcn9274 \
+             ${PN}-ath12k-wcn7850 \
+             ${PN}-ath12k-misc \
+             ${PN}-qca \
              \
              ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
              \
@@ -575,6 +579,10 @@ LICENSE:${PN}-ath11k-qcn9074 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-wcn6750 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-wcn6855 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-misc    = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath12k = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath12k-qcn9274 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath12k-wcn7850 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-ath12k-misc = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca = "Firmware-qualcommAthos_ath10k"
 
 FILES:${PN}-ar3k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ar3k"
@@ -614,9 +622,14 @@ ALLOW_EMPTY:${PN}-ath11k = "1"
 # firmwares that are not already included in other -ath11k- packages.
 ALLOW_EMPTY:${PN}-ath11k-misc = "1"
 
-FILES:${PN}-ath12k = " \
-  ${nonarch_base_libdir}/firmware/ath12k \
-"
+FILES:${PN}-ath12k-qcn9274 = "${nonarch_base_libdir}/firmware/ath12k/QCN9274"
+FILES:${PN}-ath12k-wcn7850 = "${nonarch_base_libdir}/firmware/ath12k/WCN7850"
+FILES:${PN}-ath12k-misc = "${nonarch_base_libdir}/firmware/ath12k/*"
+# -ath12k is a virtual package that depends upon all ath12k packages.
+ALLOW_EMPTY:${PN}-ath12k = "1"
+# -ath12k-misc is a catch all package that includes all the ath12k
+# firmwares that are not already included in other -ath12k- packages.
+ALLOW_EMPTY:${PN}-ath12k-misc = "1"
 
 FILES:${PN}-qca = " \
   ${nonarch_base_libdir}/firmware/qca \
@@ -645,6 +658,9 @@ RDEPENDS:${PN}-ath11k-wcn6750 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-wcn6855 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath12k-qcn9274 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath12k-wcn7850 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-ath12k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license"
 
 # For ralink
@@ -1895,6 +1911,7 @@ RDEPENDS:${PN} += "${PN}-whence-license"
 # Make linux-firmware-ibt depend on all of the split-out ibt packages.
 # Make linux-firmware-ath10k depend on all of the split-out ath10k packages.
 # Make linux-firmware-ath11k depend on all of the split-out ath11k packages.
+# Make linux-firmware-ath12k depend on all of the split-out ath12k packages.
 # Make linux-firmware-amdgpu depend on all of the split-out amdgpu packages.
 python populate_packages:prepend () {
     firmware_pkgs = oe.utils.packages_filter_out_system(d)
@@ -1911,6 +1928,9 @@ python populate_packages:prepend () {
 
     ath11k_pkgs = filter(lambda x: x.find('-ath11k-') != -1, firmware_pkgs)
     d.appendVar('RRECOMMENDS:linux-firmware-ath11k', ' ' + ' '.join(ath11k_pkgs))
+
+    ath12k_pkgs = filter(lambda x: x.find('-ath12k-') != -1, firmware_pkgs)
+    d.appendVar('RRECOMMENDS:linux-firmware-ath12k', ' ' + ' '.join(ath12k_pkgs))
 
     amdgpu_pkgs = filter(lambda x: x.find('-amdgpu-') != -1, firmware_pkgs)
     d.appendVar('RRECOMMENDS:linux-firmware-amdgpu', ' ' + ' '.join(amdgpu_pkgs))
