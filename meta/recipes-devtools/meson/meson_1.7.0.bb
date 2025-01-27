@@ -16,7 +16,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://0002-Support-building-allarch-recipes-again.patch \
            file://0001-dependencies-dev-prepend-sysroot-when-searching-for-.patch \
            "
-SRC_URI[sha256sum] = "1eca49eb6c26d58bbee67fd3337d8ef557c0804e30a6d16bfdf269db997464de"
+SRC_URI[sha256sum] = "08efbe84803eed07f863b05092d653a9d348f7038761d900412fddf56deb0284"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)$"
 
 inherit python_setuptools_build_meta github-releases
