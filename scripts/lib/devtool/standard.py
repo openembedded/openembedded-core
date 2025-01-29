@@ -1477,7 +1477,7 @@ def _export_local_files(srctree, rd, destdir, srctreebase):
                     added[fragment_fn] = {}
             else:
                 if fragment_fn in updated:
-                    revoved[fragment_fn] = updated[fragment_fn]
+                    removed[fragment_fn] = updated[fragment_fn]
                     del updated[fragment_fn]
 
     # Special handling for cml1, ccmake, etc bbclasses that generated
