@@ -209,7 +209,7 @@ def add(args, config, basepath, workspace):
             for fn in os.listdir(tempdir):
                 shutil.move(os.path.join(tempdir, fn), recipedir)
         else:
-            raise DevtoolError('Command \'%s\' did not create any recipe file:\n%s' % (e.command, e.stdout))
+            raise DevtoolError(f'Failed to create a recipe file for source {source}')
         attic_recipe = os.path.join(config.workspace_path, 'attic', recipename, os.path.basename(recipefile))
         if os.path.exists(attic_recipe):
             logger.warning('A modified recipe from a previous invocation exists in %s - you may wish to move this over the top of the new recipe if you had changes in it that you want to continue with' % attic_recipe)
@@ -542,6 +542,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
     tempbasedir = d.getVar('WORKDIR')
     bb.utils.mkdirhier(tempbasedir)
     tempdir = tempfile.mkdtemp(prefix='devtooltmp-', dir=tempbasedir)
+    appendbackup = None
     try:
         tinfoil.logger.setLevel(logging.WARNING)
 
@@ -552,7 +553,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
             appendbackup = os.path.join(tempdir, os.path.basename(appendfile) + '.bak')
             shutil.copyfile(appendfile, appendbackup)
         else:
-            appendbackup = None
             bb.utils.mkdirhier(os.path.dirname(appendfile))
         logger.debug('writing append file %s' % appendfile)
         with open(appendfile, 'a') as f:
@@ -1018,6 +1018,7 @@ def rename(args, config, basepath, workspace):
         origfnver = ''
 
     recipefilemd5 = None
+    newrecipefilemd5 = None
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     try:
         rd = parse_recipe(config, tinfoil, args.recipename, True)
@@ -1095,6 +1096,7 @@ def rename(args, config, basepath, workspace):
 
     # Rename source tree if it's the default path
     appendmd5 = None
+    newappendmd5 = None
     if not args.no_srctree:
         srctree = workspace[args.recipename]['srctree']
         if os.path.abspath(srctree) == os.path.join(config.workspace_path, 'sources', args.recipename):
@@ -1331,6 +1333,7 @@ def _export_patches(srctree, rd, start_revs, destdir, changed_revs=None):
             # values, but they ought to be anyway...
             new_basename = seqpatch_re.match(new_patch).group(2)
             match_name = None
+            old_patch = None
             for old_patch in existing_patches:
                 old_basename = seqpatch_re.match(old_patch).group(2)
                 old_basename_splitext = os.path.splitext(old_basename)
@@ -1548,6 +1551,7 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
         local_files_dir = tempfile.mkdtemp(dir=tempdir)
         srctreebase = workspace[recipename]['srctreebase']
         upd_f, new_f, del_f = _export_local_files(srctree, rd, local_files_dir, srctreebase)
+        removedentries = {}
         if not no_remove:
             # Find list of existing patches in recipe file
             patches_dir = tempfile.mkdtemp(dir=tempdir)
@@ -1724,6 +1728,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
             for basepath, param in upd_p.items():
                 path = param['path']
                 patchdir = param.get('patchdir', ".")
+                patchdir_param = {}
                 if patchdir != "." :
                     patchdir_param = dict(patchdir_params)
                     if patchdir_param:
