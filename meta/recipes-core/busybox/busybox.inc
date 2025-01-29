@@ -222,9 +222,13 @@ do_install () {
 	sed -i "s:^/usr/bin/:BINDIR/:" busybox.links*
 	sed -i "s:^/usr/sbin/:SBINDIR/:" busybox.links*
 
-	# Move arch/link to BINDIR to match coreutils
+	# Move arch/base32/link to BINDIR to match coreutils
 	sed -i "s:^BASE_BINDIR/arch:BINDIR/arch:" busybox.links*
+	sed -i "s:^BASE_BINDIR/base32:BINDIR/base32:" busybox.links*
 	sed -i "s:^BASE_BINDIR/link:BINDIR/link:" busybox.links*
+
+	# Move start-stop-daemon to SBINDIR to match dpkg
+	sed -i "s:^BASE_SBINDIR/start-stop-daemon:SBINDIR/start-stop-daemon:" busybox.links*
 
 	sed -i "s:^BASE_BINDIR/:${base_bindir}/:" busybox.links*
 	sed -i "s:^BASE_SBINDIR/:${base_sbindir}/:" busybox.links*
