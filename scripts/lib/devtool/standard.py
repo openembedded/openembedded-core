@@ -19,8 +19,11 @@ import scriptutils
 import errno
 import glob
 from collections import OrderedDict
+
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, check_prerelease_version, check_git_repo_dirty, check_git_repo_op, DevtoolError
 from devtool import parse_recipe
+
+import bb.utils
 
 logger = logging.getLogger('devtool')
 
@@ -29,7 +32,8 @@ override_branch_prefix = 'devtool-override-'
 
 def add(args, config, basepath, workspace):
     """Entry point for the devtool 'add' subcommand"""
-    import bb
+    import bb.data
+    import bb.process
     import oe.recipeutils
 
     if not args.recipename and not args.srctree and not args.fetch and not args.fetchuri:
@@ -304,6 +308,7 @@ def add(args, config, basepath, workspace):
 
 def _check_compatible_recipe(pn, d):
     """Check if the recipe is supported by devtool"""
+    import bb.data
     if pn == 'perf':
         raise DevtoolError("The perf recipe does not actually check out "
                            "source and thus cannot be supported by this tool",
@@ -373,7 +378,7 @@ def _copy_file(src, dst, dry_run_outdir=None, base_outdir=None):
 
 def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
     """List contents of a git treeish"""
-    import bb
+    import bb.process
     cmd = ['git', 'ls-tree', '-z', treeish]
     if recursive:
         cmd.append('-r')
@@ -388,7 +393,7 @@ def _git_ls_tree(repodir, treeish='HEAD', recursive=False):
 
 def _git_modified(repodir):
     """List the difference between HEAD and the index"""
-    import bb
+    import bb.process
     cmd = ['git', 'status', '--porcelain']
     out, _ = bb.process.run(cmd, cwd=repodir)
     ret = []
@@ -426,8 +431,6 @@ def _ls_tree(directory):
 
 def extract(args, config, basepath, workspace):
     """Entry point for the devtool 'extract' subcommand"""
-    import bb
-
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     if not tinfoil:
         # Error already shown
@@ -450,8 +453,6 @@ def extract(args, config, basepath, workspace):
 
 def sync(args, config, basepath, workspace):
     """Entry point for the devtool 'sync' subcommand"""
-    import bb
-
     tinfoil = setup_tinfoil(basepath=basepath, tracking=True)
     if not tinfoil:
         # Error already shown
@@ -474,9 +475,9 @@ def sync(args, config, basepath, workspace):
 
 def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, workspace, fixed_setup, d, tinfoil, no_overrides=False):
     """Extract sources of a recipe"""
-    import oe.recipeutils
-    import oe.patch
     import oe.path
+    import bb.data
+    import bb.process
 
     pn = d.getVar('PN')
 
@@ -677,8 +678,6 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
 
 def _add_md5(config, recipename, filename):
     """Record checksum of a file (or recursively for a directory) to the md5-file of the workspace"""
-    import bb.utils
-
     def addfile(fn):
         md5 = bb.utils.md5_file(fn)
         with open(os.path.join(config.workspace_path, '.devtool_md5'), 'a+') as f:
@@ -697,7 +696,6 @@ def _add_md5(config, recipename, filename):
 def _check_preserve(config, recipename):
     """Check if a file was manually changed and needs to be saved in 'attic'
        directory"""
-    import bb.utils
     origfile = os.path.join(config.workspace_path, '.devtool_md5')
     newfile = os.path.join(config.workspace_path, '.devtool_md5_new')
     preservepath = os.path.join(config.workspace_path, 'attic', recipename)
@@ -739,6 +737,7 @@ def get_staging_kver(srcdir):
     return staging_kerVer
 
 def get_staging_kbranch(srcdir):
+    import bb.process
     staging_kbranch = ""
     if os.path.exists(srcdir) and os.listdir(srcdir):
         (branch, _) = bb.process.run('git branch | grep \\* | cut -d \' \' -f2', cwd=srcdir)
@@ -757,7 +756,8 @@ def get_real_srctree(srctree, s, workdir):
 
 def modify(args, config, basepath, workspace):
     """Entry point for the devtool 'modify' subcommand"""
-    import bb
+    import bb.data
+    import bb.process
     import oe.recipeutils
     import oe.patch
     import oe.path
@@ -1183,7 +1183,7 @@ def _get_patchset_revs(srctree, recipe_path, initial_rev=None, force_patch_refre
     """Get initial and update rev of a recipe. These are the start point of the
     whole patchset and start point for the patches to be re-generated/updated.
     """
-    import bb
+    import bb.process
 
     # Get current branch
     stdout, _ = bb.process.run('git rev-parse --abbrev-ref HEAD',
@@ -1309,6 +1309,7 @@ def _export_patches(srctree, rd, start_revs, destdir, changed_revs=None):
     """
     import oe.recipeutils
     from oe.patch import GitApplyTree
+    import bb.process
     updated = OrderedDict()
     added = OrderedDict()
     seqpatch_re = re.compile('^([0-9]{4}-)?(.+)')
@@ -1378,6 +1379,7 @@ def _export_patches(srctree, rd, start_revs, destdir, changed_revs=None):
 
 def _create_kconfig_diff(srctree, rd, outfile):
     """Create a kconfig fragment"""
+    import bb.process
     # Only update config fragment if both config files exist
     orig_config = os.path.join(srctree, '.config.baseline')
     new_config = os.path.join(srctree, '.config.new')
@@ -1415,6 +1417,8 @@ def _export_local_files(srctree, rd, destdir, srctreebase):
          - for removed dict, the absolute path to the existing file in recipe space
     """
     import oe.recipeutils
+    import bb.data
+    import bb.process
 
     # Find out local files (SRC_URI files that exist in the "recipe space").
     # Local files that reside in srctree are not included in patch generation.
@@ -1506,7 +1510,7 @@ def _determine_files_dir(rd):
 
 def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove, dry_run_outdir=None):
     """Implement the 'srcrev' mode of update-recipe"""
-    import bb
+    import bb.process
     import oe.recipeutils
 
     dry_run_suffix = ' (dry-run)' if dry_run_outdir else ''
@@ -1607,7 +1611,6 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
 
 def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wildcard_version, no_remove, no_report_remove, initial_rev, dry_run_outdir=None, force_patch_refresh=False):
     """Implement the 'patch' mode of update-recipe"""
-    import bb
     import oe.recipeutils
 
     recipefile = rd.getVar('FILE')
@@ -1786,6 +1789,7 @@ def _update_recipe_patch(recipename, workspace, srctree, rd, appendlayerdir, wil
 
 def _guess_recipe_update_mode(srctree, rdata):
     """Guess the recipe update mode to use"""
+    import bb.process
     src_uri = (rdata.getVar('SRC_URI') or '').split()
     git_uris = [uri for uri in src_uri if uri.startswith('git://')]
     if not git_uris:
@@ -1807,6 +1811,8 @@ def _guess_recipe_update_mode(srctree, rdata):
     return 'patch'
 
 def _update_recipe(recipename, workspace, rd, mode, appendlayerdir, wildcard_version, no_remove, initial_rev, no_report_remove=False, dry_run_outdir=None, no_overrides=False, force_patch_refresh=False):
+    import bb.data
+    import bb.process
     srctree = workspace[recipename]['srctree']
     if mode == 'auto':
         mode = _guess_recipe_update_mode(srctree, rd)
@@ -1929,6 +1935,7 @@ def status(args, config, basepath, workspace):
 
 def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
     """Reset one or more recipes"""
+    import bb.process
     import oe.path
 
     def clean_preferred_provider(pn, layerconf_path):
@@ -2032,8 +2039,6 @@ def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
 
 def reset(args, config, basepath, workspace):
     """Entry point for the devtool 'reset' subcommand"""
-    import bb
-    import shutil
 
     recipes = ""
 
