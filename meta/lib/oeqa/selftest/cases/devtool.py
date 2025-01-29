@@ -64,11 +64,15 @@ def setUpModule():
             # under COREBASE and we don't want to copy that, so we have
             # to be selective.
             result = runCmd('git status --porcelain', cwd=oldreporoot)
+
+            # Also copy modifications to the 'scripts/' directory
+            canonical_layerpath_scripts = os.path.normpath(canonical_layerpath + "../scripts")
+
             for line in result.output.splitlines():
                 if line.startswith(' M ') or line.startswith('?? '):
                     relpth = line.split()[1]
                     pth = os.path.join(oldreporoot, relpth)
-                    if pth.startswith(canonical_layerpath):
+                    if pth.startswith(canonical_layerpath) or pth.startswith(canonical_layerpath_scripts):
                         if relpth.endswith('/'):
                             destdir = os.path.join(corecopydir, relpth)
                             # avoid race condition by not copying .pyc files YPBZ#13421,13803
