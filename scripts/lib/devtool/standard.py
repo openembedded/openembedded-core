@@ -726,15 +726,13 @@ def _check_preserve(config, recipename):
 
 def get_staging_kver(srcdir):
     # Kernel version from work-shared
-    kerver = []
-    staging_kerVer=""
-    if os.path.exists(srcdir) and os.listdir(srcdir):
+    import itertools
+    try:
         with open(os.path.join(srcdir, "Makefile")) as f:
-            version = [next(f) for x in range(5)][1:4]
-            for word in version:
-                kerver.append(word.split('= ')[1].split('\n')[0])
-            staging_kerVer = ".".join(kerver)
-    return staging_kerVer
+            # Take VERSION, PATCHLEVEL, SUBLEVEL from lines 1, 2, 3
+            return ".".join(line.rstrip().split('= ')[1] for line in itertools.islice(f, 1, 4))
+    except FileNotFoundError:
+        return ""
 
 def get_staging_kbranch(srcdir):
     import bb.process
