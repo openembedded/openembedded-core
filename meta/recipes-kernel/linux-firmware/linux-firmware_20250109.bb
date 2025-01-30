@@ -1243,6 +1243,8 @@ FILES:${PN}-rtl8192su = " \
 "
 FILES:${PN}-rtl8723 = " \
   ${nonarch_base_libdir}/firmware/rtlwifi/rtl8723*.bin* \
+  ${nonarch_base_libdir}/firmware/rtw88/rtw8723*.bin* \
+  ${nonarch_base_libdir}/firmware/rtl_bt/rtl8723*.bin* \
 "
 FILES:${PN}-rtl8821 = " \
   ${nonarch_base_libdir}/firmware/rtlwifi/rtl8821*.bin* \
