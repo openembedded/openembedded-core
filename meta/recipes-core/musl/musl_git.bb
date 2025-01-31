@@ -30,7 +30,7 @@ DEPENDS = "virtual/cross-binutils \
 GLIBC_LDSO = "${@get_glibc_loader(d)}"
 MUSL_LDSO_ARCH = "${@get_musl_loader_arch(d)}"
 
-export CROSS_COMPILE="${TARGET_PREFIX}"
+export CROSS_COMPILE = "${TARGET_PREFIX}"
 
 LDFLAGS += "-Wl,-soname,libc.so"
 

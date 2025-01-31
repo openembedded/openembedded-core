@@ -12,7 +12,7 @@ DEPENDS += " \
     python3-hatch-fancy-pypi-readme-native \
 "
 
-RDEPENDS:${PN}+= " \
+RDEPENDS:${PN} += " \
     python3-compression \
     python3-crypt \
 "

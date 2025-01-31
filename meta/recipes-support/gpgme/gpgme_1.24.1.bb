@@ -64,7 +64,7 @@ EXTRA_OECONF += '--enable-languages="${LANGUAGES}" \
 inherit autotools texinfo binconfig-disabled pkgconfig multilib_header
 inherit_defer ${PYTHON_INHERIT} python3native
 
-export PKG_CONFIG='pkg-config'
+export PKG_CONFIG = 'pkg-config'
 
 BBCLASSEXTEND = "native nativesdk"
 

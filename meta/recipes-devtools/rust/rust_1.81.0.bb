@@ -31,7 +31,7 @@ S = "${RUSTSRC}"
 RUST_CHANNEL ?= "stable"
 PV .= "${@bb.utils.contains('RUST_CHANNEL', 'stable', '', '-${RUST_CHANNEL}', d)}"
 
-export FORCE_CRATE_HASH="${BB_TASKHASH}"
+export FORCE_CRATE_HASH = "${BB_TASKHASH}"
 
 RUST_ALTERNATE_EXE_PATH ?= "${STAGING_LIBDIR}/llvm-rust/bin/llvm-config"
 RUST_ALTERNATE_EXE_PATH_NATIVE = "${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config"

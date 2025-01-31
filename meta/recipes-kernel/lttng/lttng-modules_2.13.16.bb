@@ -19,7 +19,7 @@ SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-w
 
 SRC_URI[sha256sum] = "6694414a3701fcd6e05b3cb20cfecae3b46b3dfb9e5361b344851c1f8052e854"
 
-export INSTALL_MOD_DIR="kernel/lttng-modules"
+export INSTALL_MOD_DIR = "kernel/lttng-modules"
 
 EXTRA_OEMAKE += "KERNELDIR='${STAGING_KERNEL_DIR}'"
 

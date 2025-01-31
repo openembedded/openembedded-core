@@ -28,6 +28,6 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;branch=${KBRANCH};name=mac
 COMPATIBLE_MACHINE = "^(qemux86|qemux86-64|qemuarm64|qemuarm|qemuarmv5)$"
 
 # Functionality flags
-KERNEL_FEATURES:append:qemuall=" cfg/virtio.scc cfg/fs/ext4.scc"
+KERNEL_FEATURES:append:qemuall = " cfg/virtio.scc cfg/fs/ext4.scc"
 
 KERNEL_DEVICETREE:qemuarmv5 = "arm/versatile-pb.dtb"

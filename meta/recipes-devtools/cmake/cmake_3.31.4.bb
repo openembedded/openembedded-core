@@ -33,7 +33,7 @@ python () {
     d.setVar("docdir_stripped", docdir_stripped)
 }
 
-EXTRA_OECMAKE=" \
+EXTRA_OECMAKE = " \
     -DCMAKE_DOC_DIR=${docdir_stripped}/cmake-${CMAKE_MAJOR_VERSION} \
     -DCMAKE_USE_SYSTEM_LIBRARIES=1 \
     -DCMAKE_USE_SYSTEM_LIBRARY_JSONCPP=0 \

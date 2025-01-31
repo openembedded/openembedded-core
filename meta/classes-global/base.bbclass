@@ -54,7 +54,7 @@ BASEDEPENDS = ""
 BASEDEPENDS:class-target = "${@get_base_dep(d)}"
 BASEDEPENDS:class-nativesdk = "${@get_base_dep(d)}"
 
-DEPENDS:prepend="${BASEDEPENDS} "
+DEPENDS:prepend = "${BASEDEPENDS} "
 
 FILESPATH = "${@base_set_filespath(["${FILE_DIRNAME}/${BP}", "${FILE_DIRNAME}/${BPN}", "${FILE_DIRNAME}/files"], d)}"
 # THISDIR only works properly with imediate expansion as it has to run

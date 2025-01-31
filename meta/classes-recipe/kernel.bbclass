@@ -661,7 +661,7 @@ KERNEL_LOCALVERSION ??= ""
 # Note: This class saves the value of localversion to a file
 # so other recipes like make-mod-scripts can restore it via the
 # helper function get_kernellocalversion_file
-export LOCALVERSION="${KERNEL_LOCALVERSION}"
+export LOCALVERSION = "${KERNEL_LOCALVERSION}"
 
 kernel_do_configure() {
 	# fixes extra + in /lib/modules/2.6.37+

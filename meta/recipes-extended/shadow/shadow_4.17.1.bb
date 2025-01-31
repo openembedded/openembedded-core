@@ -39,7 +39,7 @@ PAM_SRC_URI = "file://pam.d/chfn \
 
 inherit autotools gettext github-releases pkgconfig
 
-export CONFIG_SHELL="/bin/sh"
+export CONFIG_SHELL = "/bin/sh"
 
 EXTRA_OECONF += " \
                  --with-group-name-max-length=24 \
