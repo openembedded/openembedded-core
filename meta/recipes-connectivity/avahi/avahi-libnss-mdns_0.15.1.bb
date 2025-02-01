@@ -22,6 +22,7 @@ COMPATIBLE_HOST:libc-musl = 'null'
 EXTRA_OECONF = "--libdir=${base_libdir}"
 
 RDEPENDS:${PN} = "avahi-daemon"
+RPROVIDES:${PN} = "libnss-mdns"
 
 pkg_postinst:${PN} () {
 	sed '
