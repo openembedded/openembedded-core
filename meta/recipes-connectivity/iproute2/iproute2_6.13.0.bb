@@ -13,10 +13,9 @@ DEPENDS = "flex-native bison-native iptables libcap"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-include-libnetlink.h-add-missing-include-for-htobe64.patch \
-           file://0001-ip-rearrange-and-prune-header-files.patch \
            "
 
-SRC_URI[sha256sum] = "bbd141ef7b5d0127cc2152843ba61f274dc32814fa3e0f13e7d07a080bef53d9"
+SRC_URI[sha256sum] = "a43aa43338d882b44d01e549f3f105a92ae9feea32a82fae45a88e7a49302819"
 
 inherit update-alternatives bash-completion pkgconfig
 
