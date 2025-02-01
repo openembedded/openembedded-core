@@ -399,6 +399,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ath12k-misc \
              ${PN}-qca \
              ${PN}-qca-qca61x4 \
+             ${PN}-qca-qca6390 \
              ${PN}-qca-wcn3988 \
              ${PN}-qca-wcn399x \
              ${PN}-qca-wcn6750 \
@@ -591,6 +592,7 @@ LICENSE:${PN}-ath12k-qcn9274 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k-wcn7850 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k-misc = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca61x4 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-qca-qca6390 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn3988 = "Firmware-qcom"
 LICENSE:${PN}-qca-wcn399x = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn6750 = "Firmware-qualcommAthos_ath10k"
@@ -664,8 +666,6 @@ FILES:${PN}-qca-qca61x4 = " \
   ${nonarch_base_libdir}/firmware/qca/nvm_00440302_eu.bin \
   ${nonarch_base_libdir}/firmware/qca/nvm_00440302_i2s_eu.bin \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_00000302_eu.bin \
-  ${nonarch_base_libdir}/firmware/qca/htbtfw20.tlv \
-  ${nonarch_base_libdir}/firmware/qca/htnv20.bin \
   ${nonarch_base_libdir}/firmware/qca/rampatch_usb_00130200.bin \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_00130200.bin \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_00130200_0104.bin \
@@ -687,6 +687,10 @@ FILES:${PN}-qca-qca61x4 = " \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_00190200.bin \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_00190200_010e.bin \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_00190200_0112.bin \
+"
+FILES:${PN}-qca-qca6390 = " \
+  ${nonarch_base_libdir}/firmware/qca/htbtfw20.tlv \
+  ${nonarch_base_libdir}/firmware/qca/htnv20.bin \
 "
 FILES:${PN}-qca-wcn3988 = " \
   ${nonarch_base_libdir}/firmware/qca/apbtfw10.tlv \
@@ -783,6 +787,7 @@ RDEPENDS:${PN}-ath12k-wcn7850 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license ${PN}-qcom-license"
 RDEPENDS:${PN}-qca-qca61x4 += "${PN}-ath10k-license"
+RDEPENDS:${PN}-qca-qca6390 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn3988 += "${PN}-qcom-license"
 RDEPENDS:${PN}-qca-wcn399x += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn6750 += "${PN}-ath10k-license"
