@@ -12,15 +12,15 @@ LIC_FILES_CHKSUM = "\
 
 # When upgrading to next major release, ensure that there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.43.1"
-CVE_VERSION = "2.43.1"
-SRCBRANCH ?= "binutils-2_43-branch"
+PV = "2.44"
+CVE_VERSION = "2.44"
+SRCBRANCH ?= "binutils-2_44-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
 CVE_STATUS[CVE-2023-25584] = "cpe-incorrect: Applies only for version 2.40 and earlier"
 
-SRCREV ?= "b82e2250574ef00faf7fcb1e95e14f22b1fa85af"
+SRCREV ?= "815d9a14cbbb3b81843f7566222c87fb22e7255d"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -35,6 +35,5 @@ SRC_URI = "\
      file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
      file://0013-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
-     file://0015-CVE-2024-53589.patch \
 "
 S  = "${WORKDIR}/git"

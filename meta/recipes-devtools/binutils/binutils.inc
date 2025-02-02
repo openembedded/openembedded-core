@@ -39,11 +39,11 @@ FILES:${PN}-staticdev += "${libdir}/gprofng/*.a"
 # list and reuse it.
 
 GPROFNGS = " \
-	gp-archive \
-	gp-collect-app \
-	gp-display-html \
-	gp-display-src \
-	gp-display-text \
+	gprofng-archive \
+	gprofng-collect-app \
+	gprofng-display-html \
+	gprofng-display-src \
+	gprofng-display-text \
 	gprofng \
 "
 
@@ -190,6 +190,10 @@ do_install () {
 
 	for alt in ${USE_ALTERNATIVES_FOR}; do
 		rm -f ${D}${bindir}/$alt
+	done
+	# remove old pre 2.44 release gprofng binary names
+	for f in gp-archive gp-collect-app gp-display-html gp-display-src gp-display-text; do
+		rm -f ${D}${bindir}/$f
 	done
 
 	oe_multilib_header bfd.h
