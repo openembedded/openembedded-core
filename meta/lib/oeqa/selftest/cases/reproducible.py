@@ -275,8 +275,8 @@ class ReproducibleTests(OESelftestTestCase):
         self.logger.info("Building %s (sstate%s allowed)..." % (name, '' if use_sstate else ' NOT'))
         self.write_config(config)
         d = get_bb_vars(capture_vars)
-        # targets used to be called images
         try:
+            # targets used to be called images
             bitbake("--continue "+' '.join(getattr(self, 'images', self.targets)))
         except AssertionError as e:
             bitbake_failure_count += 1
