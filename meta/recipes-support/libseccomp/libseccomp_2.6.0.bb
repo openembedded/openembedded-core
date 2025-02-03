@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7c13b3376cea0ce68d2d2da0a1b3a72c"
 
 DEPENDS += "gperf-native"
 
-SRCREV = "f0b04ab0b4fc0bc2cde6da1f407b4a487fe6d78f"
+SRCREV = "c7c0caed1d04292500ed4b9bb386566053eb9775"
 
-SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.5;protocol=https \
+SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.6;protocol=https \
            file://run-ptest \
            "
 
