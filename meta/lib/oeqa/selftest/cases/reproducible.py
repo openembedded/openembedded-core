@@ -162,6 +162,7 @@ class ReproducibleTests(OESelftestTestCase):
             'OEQA_REPRODUCIBLE_TEST_TARGET',
             'OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS',
             'OEQA_REPRODUCIBLE_EXCLUDED_PACKAGES',
+            'OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS',
         ]
         bb_vars = get_bb_vars(needed_vars)
         for v in needed_vars:
@@ -170,11 +171,16 @@ class ReproducibleTests(OESelftestTestCase):
         if bb_vars['OEQA_REPRODUCIBLE_TEST_PACKAGE']:
             self.package_classes = bb_vars['OEQA_REPRODUCIBLE_TEST_PACKAGE'].split()
 
-        if bb_vars['OEQA_REPRODUCIBLE_TEST_TARGET']:
-            self.targets = bb_vars['OEQA_REPRODUCIBLE_TEST_TARGET'].split()
+        if bb_vars['OEQA_REPRODUCIBLE_TEST_TARGET'] or bb_vars['OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS']:
+            self.targets = (bb_vars['OEQA_REPRODUCIBLE_TEST_TARGET'] or "").split() + (bb_vars['OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS'] or "").split()
 
         if bb_vars['OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS']:
             self.sstate_targets = bb_vars['OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS'].split()
+
+        if bb_vars['OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS']:
+            # Setup to build every DEPENDS of leaf recipes using sstate
+            for leaf_recipe in bb_vars['OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS'].split():
+                self.sstate_targets.extend(get_bb_var('DEPENDS', leaf_recipe).split())
 
         self.extraresults = {}
         self.extraresults.setdefault('reproducible', {}).setdefault('files', {})
