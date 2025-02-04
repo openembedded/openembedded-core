@@ -19,7 +19,6 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://remove-for-aarch64 \
            file://remove-for-all \
            file://taskset_nondeterministic_tests \
-           file://0005-Modify-vg_test-wrapper-to-support-PTEST-formats.patch \
            file://use-appropriate-march-mcpu-mfpu-for-ARM-test-apps.patch \
            file://avoid-neon-for-targets-which-don-t-support-it.patch \
            file://0001-configure-Drop-setting-mcpu-cortex-a8-on-arm.patch \
@@ -27,7 +26,6 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://0001-makefiles-Drop-setting-mcpu-to-cortex-a8-on-arm-arch.patch \
            file://0001-sigqueue-Rename-_sifields-to-__si_fields-on-musl.patch \
            file://0003-correct-include-directive-path-for-config.h.patch \
-           file://0001-Return-a-valid-exit_code-from-vg_regtest.patch \
            file://0001-valgrind-filter_xml_frames-do-not-filter-usr.patch \
            file://0001-memcheck-vgtests-remove-fullpath-after-flags.patch \
            file://s390x_vec_op_t.patch \
@@ -36,7 +34,7 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://0001-docs-Disable-manual-validation.patch \
            file://0001-tests-arm-Use-O-instead-of-O0.patch \
            "
-SRC_URI[sha256sum] = "c5c34a3380457b9b75606df890102e7df2c702b9420c2ebef9540f8b5d56264d"
+SRC_URI[sha256sum] = "71aee202bdef1ae73898ccf7e9c315134fa7db6c246063afc503aef702ec03bd"
 UPSTREAM_CHECK_REGEX = "valgrind-(?P<pver>\d+(\.\d+)+)\.tar"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64).*-linux'
