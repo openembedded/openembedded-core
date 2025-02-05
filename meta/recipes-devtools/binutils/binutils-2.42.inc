@@ -37,5 +37,6 @@ SRC_URI = "\
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
      file://0015-gprofng-change-use-of-bignum-to-bigint.patch \
      file://0016-CVE-2024-53589.patch \
+     file://0017-dlltool-file-name-too-long.patch \
 "
 S  = "${WORKDIR}/git"
