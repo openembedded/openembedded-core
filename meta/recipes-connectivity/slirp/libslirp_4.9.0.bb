@@ -6,12 +6,10 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=bca0186b14e6b05e338e729f106db727"
 
 SRC_URI = "git://gitlab.freedesktop.org/slirp/libslirp.git;protocol=https;branch=master"
 SRCREV = "c32a8a1ccaae8490142e67e078336a95c5ffc956"
-PV = "4.9.0"
+
 S = "${WORKDIR}/git"
 
-DEPENDS = " \
-    glib-2.0 \
-"
+DEPENDS = "glib-2.0"
 
 inherit meson pkgconfig
 
