@@ -130,8 +130,6 @@ python do_uki() {
     initramfs_image = "%s" % (d.getVar('INITRD_ARCHIVE'))
     ukify_cmd += " --initrd=%s" % (os.path.join(deploy_dir_image, initramfs_image))
 
-    deploy_dir_image = d.getVar('DEPLOY_DIR_IMAGE')
-
     # kernel
     kernel_filename = d.getVar('UKI_KERNEL_FILENAME') or None
     if kernel_filename:
