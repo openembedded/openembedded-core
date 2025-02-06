@@ -616,6 +616,11 @@ fitimage_assemble() {
 			bbwarn "${STAGING_DIR_HOST}/boot/${UBOOT_ENV_BINARY} not found."
 		fi
 	fi
+	if [ -n "${FIT_UBOOT_ENV}" ]; then
+		cp ${UNPACKDIR}/${FIT_UBOOT_ENV} ${B}
+		bootscr_id="${FIT_UBOOT_ENV}"
+		fitimage_emit_section_boot_script $1 "$bootscr_id" ${FIT_UBOOT_ENV}
+	fi
 
 	#
 	# Step 4: Prepare a setup section. (For x86)
