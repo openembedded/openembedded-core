@@ -41,10 +41,6 @@ python __anonymous () {
     if image:
         d.appendVarFlag('do_assemble_fitimage_initramfs', 'depends', ' ${INITRAMFS_IMAGE}:do_image_complete')
 
-    ubootenv = d.getVar('UBOOT_ENV')
-    if ubootenv:
-        d.appendVarFlag('do_assemble_fitimage', 'depends', ' virtual/bootloader:do_populate_sysroot')
-
     #check if there are any dtb providers
     providerdtb = d.getVar("PREFERRED_PROVIDER_virtual/dtb")
     if providerdtb:
@@ -607,15 +603,6 @@ fitimage_assemble() {
 	# Step 3: Prepare a u-boot script section
 	#
 
-	if [ -n "${UBOOT_ENV}" ] && [ -d "${STAGING_DIR_HOST}/boot" ]; then
-		if [ -e "${STAGING_DIR_HOST}/boot/${UBOOT_ENV_BINARY}" ]; then
-			cp ${STAGING_DIR_HOST}/boot/${UBOOT_ENV_BINARY} ${B}
-			bootscr_id="${UBOOT_ENV_BINARY}"
-			fitimage_emit_section_boot_script $1 "$bootscr_id" ${UBOOT_ENV_BINARY}
-		else
-			bbwarn "${STAGING_DIR_HOST}/boot/${UBOOT_ENV_BINARY} not found."
-		fi
-	fi
 	if [ -n "${FIT_UBOOT_ENV}" ]; then
 		cp ${UNPACKDIR}/${FIT_UBOOT_ENV} ${B}
 		bootscr_id="${FIT_UBOOT_ENV}"
