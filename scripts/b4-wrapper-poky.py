@@ -102,6 +102,11 @@ try:
                     "meta-yocto-bsp/*",
                     "README.hardware.md",
                     "README.poky.md",
+                    # scripts/b4-wrapper-poky.py is only run by b4 when in poky
+                    # git repo. With that limitation, changes made to .b4-config
+                    # can only be for poky's and not OE-Core's as only poky's is
+                    # stored in poky git repo.
+                    ".b4-config",
                     ],
         }
 
