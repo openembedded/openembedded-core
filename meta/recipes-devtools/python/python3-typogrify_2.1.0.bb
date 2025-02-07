@@ -1,12 +1,12 @@
 SUMMARY = "Filters to enhance web typography, including support for Django & Jinja templates"
 HOMEPAGE = "https://github.com/mintchaos/typogrify"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=12bc792d6f5415dbf421f3fd183c6dd2"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=b8558ebcc682078c1a44d0227573006d"
 
-inherit pypi setuptools3
+inherit pypi python_hatchling
 
 PYPI_PACKAGE = "typogrify"
-SRC_URI[sha256sum] = "8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38"
+SRC_URI[sha256sum] = "f0aa004e98032a6e6be4c9da65e7eb7150e36ca3bf508adbcda82b4d003e61ee"
 
 BBCLASSEXTEND = "native nativesdk"
 
