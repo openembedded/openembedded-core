@@ -54,7 +54,7 @@ diff --git a/Lib/test/test_time.py b/Lib/test/test_time.py
 index 9463add..4e0f39d 100644
 --- a/Lib/test/test_time.py
 +++ b/Lib/test/test_time.py
-@@ -527,6 +527,7 @@ class TimeTestCase(unittest.TestCase):
+@@ -536,6 +536,7 @@ class TimeTestCase(unittest.TestCase):
      @unittest.skipIf(
          support.is_wasi, "process_time not available on WASI"
      )
@@ -62,7 +62,7 @@ index 9463add..4e0f39d 100644
      def test_process_time(self):
          # process_time() should not include time spend during a sleep
          start = time.process_time()
-@@ -540,6 +541,7 @@ class TimeTestCase(unittest.TestCase):
+@@ -549,6 +550,7 @@ class TimeTestCase(unittest.TestCase):
          self.assertTrue(info.monotonic)
          self.assertFalse(info.adjustable)
  

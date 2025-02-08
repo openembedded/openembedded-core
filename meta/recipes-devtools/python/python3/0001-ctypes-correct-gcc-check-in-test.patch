@@ -1,0 +1,53 @@
+From 2e2a0c8593a38f2020cc2baeeaa7972eb86773f9 Mon Sep 17 00:00:00 2001
+From: Peter Marko <peter.marko@siemens.com>
+Date: Sat, 8 Feb 2025 23:57:17 +0100
+Subject: [PATCH] ctypes: correct gcc check in test
+
+In case gcc is not available, it will throw exception and test fails.
+So chatch the exception to skip the test correctly.
+
+======================================================================
+ERROR: test_null_dlsym (test.test_ctypes.test_dlerror.TestNullDlsym.test_null_dlsym)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/test/test_ctypes/test_dlerror.py", line 61, in test_null_dlsym
+    retcode = subprocess.call(["gcc", "--version"],
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 391, in call
+    with Popen(*popenargs, **kwargs) as p:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1028, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1963, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'gcc'
+
+Upstream-Status: Submitted [https://github.com/python/cpython/pull/129872]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ Lib/test/test_ctypes/test_dlerror.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/Lib/test/test_ctypes/test_dlerror.py b/Lib/test/test_ctypes/test_dlerror.py
+index 6bf492399cb..56eb7622b4d 100644
+--- a/Lib/test/test_ctypes/test_dlerror.py
++++ b/Lib/test/test_ctypes/test_dlerror.py
+@@ -58,11 +58,14 @@ def test_null_dlsym(self):
+         import subprocess
+         import tempfile
+ 
+-        retcode = subprocess.call(["gcc", "--version"],
+-                                  stdout=subprocess.DEVNULL,
+-                                  stderr=subprocess.DEVNULL)
+-        if retcode != 0:
++        try:
++            retcode = subprocess.call(["gcc", "--version"],
++                                      stdout=subprocess.DEVNULL,
++                                      stderr=subprocess.DEVNULL)
++        except:
+             self.skipTest("gcc is missing")
++        if retcode != 0:
++            self.skipTest("gcc is not working")
+ 
+         pipe_r, pipe_w = os.pipe()
+         self.addCleanup(os.close, pipe_r)

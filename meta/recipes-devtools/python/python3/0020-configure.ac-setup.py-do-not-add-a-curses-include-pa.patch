@@ -18,7 +18,7 @@ diff --git a/configure.ac b/configure.ac
 index 6e465a4..13c4835 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -6537,12 +6537,6 @@ AS_VAR_IF([have_panel], [no], [
+@@ -6558,12 +6558,6 @@ AS_VAR_IF([have_panel], [no], [
    AC_MSG_RESULT([$have_panel (CFLAGS: $PANEL_CFLAGS, LIBS: $PANEL_LIBS)])
  ])
  
