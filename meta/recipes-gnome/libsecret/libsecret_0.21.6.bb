@@ -24,8 +24,7 @@ PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
 PACKAGECONFIG[manpages] = "-Dmanpage=true,-Dmanpage=false,libxslt-native xmlto-native"
 PACKAGECONFIG[pam] = "-Dpam=true,-Dpam=false,libpam"
 
-PACKAGES += " ${PN}-bash-completion"
-FILES:${PN}-bash-completion += " ${datadir}/bash-completion/completions/secret-tool"
+inherit bash-completion
 
 # http://errors.yoctoproject.org/Errors/Details/20228/
 ARM_INSTRUCTION_SET:armv4 = "arm"
