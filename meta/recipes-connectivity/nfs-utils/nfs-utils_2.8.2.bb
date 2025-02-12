@@ -21,13 +21,6 @@ USERADD_PARAM:${PN}-client = "--system  --home-dir /var/lib/nfs \
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.xz \
            file://nfsserver \
            file://nfscommon \
-           file://nfs-utils.conf \
-           file://nfs-server.service \
-           file://nfs-mountd.service \
-           file://nfs-statd.service \
-           file://proc-fs-nfsd.mount \
-           file://nfs-utils-debianize-start-statd.patch \
-           file://bugfix-adjust-statd-service-name.patch \
            file://0001-Makefile.am-fix-undefined-function-for-libnsm.a.patch \
            file://clang-warnings.patch \
            file://0001-locktest-Makefile.am-Do-not-use-build-flags.patch \
@@ -48,8 +41,8 @@ INITSCRIPT_PARAMS:${PN}-client = "defaults 19 21"
 inherit autotools-brokensep update-rc.d systemd pkgconfig
 
 SYSTEMD_PACKAGES = "${PN} ${PN}-client"
-SYSTEMD_SERVICE:${PN} = "nfs-server.service nfs-mountd.service"
-SYSTEMD_SERVICE:${PN}-client = "nfs-statd.service"
+SYSTEMD_SERVICE:${PN} = "nfs-server.service"
+SYSTEMD_SERVICE:${PN}-client = "nfs-client.target"
 
 # --enable-uuid is need for cross-compiling
 EXTRA_OECONF = "--with-statduser=rpcuser \
@@ -65,7 +58,7 @@ EXTRA_OECONF = "--with-statduser=rpcuser \
 LDFLAGS += "-lsqlite3 -levent"
 
 PACKAGECONFIG ??= "tcp-wrappers \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6 systemd', d)} \
 "
 PACKAGECONFIG:remove:libc-musl = "tcp-wrappers"
 PACKAGECONFIG[tcp-wrappers] = "--with-tcp-wrappers,--without-tcp-wrappers,tcp-wrappers"
@@ -75,6 +68,7 @@ PACKAGECONFIG[nfsv41] = "--enable-nfsv41,--disable-nfsv41,libdevmapper,libdevmap
 # keyutils is available in meta-oe
 PACKAGECONFIG[nfsv4] = "--enable-nfsv4,--disable-nfsv4,keyutils,python3-core"
 PACKAGECONFIG[nfsdctl] = "--enable-nfsdctl,--disable-nfsdctl,libnl readline,"
+PACKAGECONFIG[systemd] = "--with-systemd=${systemd_unitdir}/system,--without-systemd"
 
 PACKAGES =+ "${PN}-client ${PN}-mount ${PN}-stats ${PN}-rpcctl"
 
@@ -82,14 +76,16 @@ CONFFILES:${PN}-client += "${localstatedir}/lib/nfs/etab \
 			   ${localstatedir}/lib/nfs/rmtab \
 			   ${localstatedir}/lib/nfs/xtab \
 			   ${localstatedir}/lib/nfs/statd/state \
+			   ${sysconfdir}/nfs.conf \
 			   ${sysconfdir}/nfsmount.conf"
 
 FILES:${PN}-client = "${sbindir}/*statd \
 		      ${libdir}/libnfsidmap.so.* \
 		      ${sbindir}/rpc.idmapd ${sbindir}/sm-notify \
 		      ${sbindir}/showmount ${sbindir}/nfsstat \
+		      ${sbindir}/nfsconf \
 		      ${localstatedir}/lib/nfs \
-		      ${sysconfdir}/nfs-utils.conf \
+		      ${sysconfdir}/nfs.conf \
 		      ${sysconfdir}/nfsmount.conf \
 		      ${sysconfdir}/init.d/nfscommon \
 		      ${systemd_system_unitdir}/nfs-statd.service"
@@ -109,7 +105,7 @@ FILES:${PN} += "${systemd_unitdir} ${libdir}/libnfsidmap/ ${nonarch_libdir}/modp
 
 do_configure:prepend() {
 	sed -i -e 's,sbindir = /sbin,sbindir = ${base_sbindir},g' \
-		${S}/utils/mount/Makefile.am
+		${S}/utils/mount/Makefile.am ${S}/utils/nfsdcltrack/Makefile.am
 }
 
 # Make clean needed because the package comes with
@@ -126,18 +122,11 @@ do_install:append () {
 	install -m 0755 ${UNPACKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
 	install -m 0755 ${UNPACKDIR}/nfscommon ${D}${sysconfdir}/init.d/nfscommon
 
-	install -m 0755 ${UNPACKDIR}/nfs-utils.conf ${D}${sysconfdir}
-	install -m 0755 ${S}/utils/mount/nfsmount.conf ${D}${sysconfdir}
+	install -m 0644 ${S}/nfs.conf ${D}${sysconfdir}
 
 	install -d ${D}${systemd_system_unitdir}
-	install -m 0644 ${UNPACKDIR}/nfs-server.service ${D}${systemd_system_unitdir}/
-	install -m 0644 ${UNPACKDIR}/nfs-mountd.service ${D}${systemd_system_unitdir}/
-	install -m 0644 ${UNPACKDIR}/nfs-statd.service ${D}${systemd_system_unitdir}/
-	install -m 0644 ${UNPACKDIR}/proc-fs-nfsd.mount ${D}${systemd_system_unitdir}/
-	sed -i -e 's,@SBINDIR@,${sbindir},g' \
-		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
-		-e 's,@HIGH_RLIMIT_NOFILE@,${HIGH_RLIMIT_NOFILE},g' \
-		${D}${systemd_system_unitdir}/*.service
+	# Retain historical service name so old scripts keep working
+	ln -s rpc-statd.service ${D}${systemd_system_unitdir}/nfs-statd.service
 	# Add compatibility symlinks for the sysvinit scripts
 	ln -s nfs-server.service ${D}${systemd_system_unitdir}/nfsserver.service
 	ln -s /dev/null ${D}${systemd_system_unitdir}/nfscommon.service
