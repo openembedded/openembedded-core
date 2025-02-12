@@ -19,6 +19,10 @@ SRC_URI[sha256sum] = "14e4b83c4783933dc17e964318e6324f7cae1bc75d8f3c79bc6969f00c
 
 CVE_PRODUCT = "pcre2"
 
+# This CVE is fixed in 10.40
+# NVD wrongly changed <10.40 to =10.40 when adding debian_linux=10.0
+CVE_CHECK_IGNORE += "CVE-2022-1586"
+
 S = "${WORKDIR}/pcre2-${PV}"
 
 PROVIDES += "pcre2"
