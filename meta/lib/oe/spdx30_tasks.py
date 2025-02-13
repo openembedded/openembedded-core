@@ -19,6 +19,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
+def walk_error(err):
+    bb.error(f"ERROR walking {err.filename}: {err}")
+
+
 def set_timestamp_now(d, o, prop):
     if d.getVar("SPDX_INCLUDE_TIMESTAMPS") == "1":
         setattr(o, prop, datetime.now(timezone.utc))
@@ -148,11 +152,13 @@ def add_package_files(
     spdx_files = set()
 
     file_counter = 1
-    for subdir, dirs, files in os.walk(topdir):
+    for subdir, dirs, files in os.walk(topdir, onerror=walk_error):
         dirs[:] = [d for d in dirs if d not in ignore_dirs]
         if subdir == str(topdir):
             dirs[:] = [d for d in dirs if d not in ignore_top_level_dirs]
 
+        dirs.sort()
+        files.sort()
         for file in files:
             filepath = Path(subdir) / file
             if filepath.is_symlink() or not filepath.is_file():
@@ -356,7 +362,9 @@ def add_download_files(d, objset):
             if fd.type == "file":
                 if os.path.isdir(fd.localpath):
                     walk_idx = 1
-                    for root, dirs, files in os.walk(fd.localpath):
+                    for root, dirs, files in os.walk(fd.localpath, onerror=walk_error):
+                        dirs.sort()
+                        files.sort()
                         for f in files:
                             f_path = os.path.join(root, f)
                             if os.path.islink(f_path):
@@ -1046,7 +1054,9 @@ def create_rootfs_spdx(d):
     collect_build_package_inputs(d, objset, rootfs_build, packages, files_by_hash)
 
     files = set()
-    for dirpath, dirnames, filenames in os.walk(image_rootfs):
+    for dirpath, dirnames, filenames in os.walk(image_rootfs, onerror=walk_error):
+        dirnames.sort()
+        filenames.sort()
         for fn in filenames:
             fpath = Path(dirpath) / fn
             if not fpath.is_file() or fpath.is_symlink():
@@ -1282,7 +1292,9 @@ def create_sdk_sbom(d, sdk_deploydir, spdx_work_dir, toolchain_outputname):
     root_files = []
 
     # NOTE: os.walk() doesn't return symlinks
-    for dirpath, dirnames, filenames in os.walk(sdk_deploydir):
+    for dirpath, dirnames, filenames in os.walk(sdk_deploydir, onerror=walk_error):
+        dirnames.sort()
+        filenames.sort()
         for fn in filenames:
             fpath = Path(dirpath) / fn
             if not fpath.is_file() or fpath.is_symlink():
