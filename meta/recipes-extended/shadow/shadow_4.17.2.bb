@@ -14,7 +14,6 @@ GITHUB_BASE_URI = "https://github.com/shadow-maint/shadow/releases"
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://useradd \
-           file://0001-lib-attr.h-use-C23-attributes-only-with-gcc-10.patch \
            "
 
 SRC_URI:append:class-target = " \
@@ -25,7 +24,7 @@ SRC_URI:append:class-target = " \
 SRC_URI:append:class-native = " \
            file://commonio.c-fix-unexpected-open-failure-in-chroot-env.patch \
            "
-SRC_URI[sha256sum] = "51a946bbce141c5de14b6d47cab167206cd685d2307e917611dbc1be46c84a18"
+SRC_URI[sha256sum] = "064a7c048e613ef5b5f3613e137d79d35d062ab434e89020f743e90844ec5c4f"
 UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
 # Additional Policy files for PAM
