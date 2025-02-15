@@ -312,11 +312,14 @@ RDEPENDS:packagegroup-base-nfs = "\
 RRECOMMENDS:packagegroup-base-nfs = "\
     kernel-module-nfs "
 
+# Choose 'avahi-daemon', 'mdns' or 'systemd-resolved' as zeroconf-daemon
+ZEROCONF_DAEMON ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd-resolved', 'systemd-resolved', 'avahi-daemon', d)}"
 SUMMARY:packagegroup-base-zeroconf = "Zeroconf support"
 RDEPENDS:packagegroup-base-zeroconf = "\
-    avahi-daemon"
+    ${@ '' if d.getVar('ZEROCONF_DAEMON') == 'systemd-resolved' else d.getVar('ZEROCONF_DAEMON')} \
+    "
 RDEPENDS:packagegroup-base-zeroconf:append:libc-glibc = "\
-    libnss-mdns \
+    ${@ {'mdns':'mdns-libnss-mdns','avahi-daemon':'avahi-libnss-mdns','systemd-resolved':''}[d.getVar('ZEROCONF_DAEMON')]} \
     "
 
 SUMMARY:packagegroup-base-ipv6 = "IPv6 support"
