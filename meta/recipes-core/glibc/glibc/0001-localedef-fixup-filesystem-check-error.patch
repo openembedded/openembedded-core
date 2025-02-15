@@ -1,0 +1,65 @@
+From 94ccd49f5c2f5bf0f0dba2e3019eacca133db04e Mon Sep 17 00:00:00 2001
+From: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+Date: Thu, 13 Feb 2025 11:46:59 +0800
+Subject: [PATCH] cross-localedef-native : fixup filesystem check error
+
+Since ordinary files and directories within the same
+directory but on the same filesystem may have different dev_t,
+using dev_t to determine whether files (including directories)
+belong to the same file system is unreliable and may lead to
+incorrect results. To address this issue, statfs is used to
+retrieve the filesystem information, allowing the determination
+of whether files belong to the same file system.
+
+Upstream-Status: Pending
+
+Signed-off-by: Xiaofeng Yuan <yuanxiaofeng@eswincomputing.com>
+---
+ locale/programs/cross-localedef-hardlink.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/locale/programs/cross-localedef-hardlink.c b/locale/programs/cross-localedef-hardlink.c
+index 726e6dd948..9c0370bf5d 100644
+--- a/locale/programs/cross-localedef-hardlink.c
++++ b/locale/programs/cross-localedef-hardlink.c
+@@ -42,6 +42,7 @@
+ #include "xalloc.h"
+ //#include "nls.h"
+ //#include "closestream.h"
++#include <sys/statfs.h>
+ 
+ #define NHASH   (1<<17)  /* Must be a power of 2! */
+ #define NBUF    64
+@@ -93,6 +94,7 @@ struct hardlink_ctl {
+ 		no_link:1,
+ 		content_only:1,
+ 		force:1;
++	long f_type;
+ };
+ /* ctl is in global scope due use in atexit() */
+ struct hardlink_ctl global_ctl;
+@@ -186,18 +188,21 @@ static void growstr(struct hardlink_dynstr *str, size_t newlen)
+ static void process_path(struct hardlink_ctl *ctl, const char *name)
+ {
+ 	struct stat st, st2, st3;
++	struct statfs stfs;
+ 	const size_t namelen = strlen(name);
+ 
+ 	ctl->nobjects++;
+ 	if (lstat(name, &st))
+ 		return;
++	if (statfs(name, &stfs))
++		return;
+ 
+-	if (st.st_dev != ctl->dev && !ctl->force) {
+-		if (ctl->dev)
++	if (stfs.f_type != ctl->f_type && !ctl->force) {
++		if (ctl->f_type)
+ 			errx(EXIT_FAILURE,
+ 			     ("%s is on different filesystem than the rest "
+ 			       "(use -f option to override)."), name);
+-		ctl->dev = st.st_dev;
++		ctl->f_type = stfs.f_type;
+ 	}
+ 	if (S_ISDIR(st.st_mode)) {
+ 		struct hardlink_dir *dp = xmalloc(add3(sizeof(*dp), namelen, 1));
