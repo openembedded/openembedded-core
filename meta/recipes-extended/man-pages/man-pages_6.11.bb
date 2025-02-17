@@ -20,9 +20,9 @@ LIC_FILES_CHKSUM = "file://README;md5=72cff06b7954222c24d38bc2c41b234e \
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/${BP}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "3ae3f8ad97487d2c1b14258231d97d03b4e569b915377f6dd4f6be7141c57ee0"
+SRC_URI[sha256sum] = "44c09f43ae7a0b327efef5285a30d56ecc5fd4a07056f77e806f6c65196ba7f3"
 
-inherit manpages
+inherit manpages lib_package
 
 MAN_PKG = "${PN}"
 
@@ -32,6 +32,7 @@ PACKAGECONFIG[manpages] = ""
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
+EXTRA_OEMAKE += "-R"
 do_install() {
         oe_runmake install prefix=${prefix} DESTDIR=${D}
         rm -rf ${D}${mandir}/man3/crypt.3
@@ -39,6 +40,10 @@ do_install() {
         rm -rf ${D}${mandir}/man3/getspnam.3
         rm -rf ${D}${mandir}/man5/passwd.5
 }
+
+RDEPENDS:${PN}-bin += " \
+    bash \
+"
 
 # Only deliveres man-pages so FILES:${PN} gets everything
 FILES:${PN}-doc = ""
