@@ -10,9 +10,9 @@ LICENSE:${PN}-xx = "LGPL-2.1-or-later"
 LICENSE:${PN}-bin = "GPL-3.0-or-later"
 LICENSE:${PN}-openssl = "GPL-3.0-or-later"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=71391c8e0c1cfe68077e7fce3b586283 \
-                    file://doc/COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://doc/COPYING.LESSER;md5=4fbd65380cdd255951079008b364516c"
+LIC_FILES_CHKSUM = "file://README.md;beginline=181;endline=205;md5=e159ff2a6e9cc95141fb0eaff733bba3 \
+                    file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
+                    file://COPYING.LESSERv2;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
 DEPENDS = "nettle gmp virtual/libiconv libunistring"
 
@@ -25,7 +25,7 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://Add-ptest-support.patch \
            "
 
-SRC_URI[sha256sum] = "ac4f020e583880b51380ed226e59033244bc536cad2623f2e26f5afa2939d8fb"
+SRC_URI[sha256sum] = "69e113d802d1670c4d5ac1b99040b1f2d5c7c05daec5003813c049b5184820ed"
 
 inherit autotools texinfo pkgconfig gettext lib_package gtk-doc ptest
 
