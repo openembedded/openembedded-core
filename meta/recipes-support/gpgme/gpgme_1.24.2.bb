@@ -29,7 +29,7 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0001-autogen.sh-remove-unknown-in-version.patch \
            "
 
-SRC_URI[sha256sum] = "ea05d0258e71061d61716584ec34cef59330a91340571edc46b78374973ba85f"
+SRC_URI[sha256sum] = "e11b1a0e361777e9e55f48a03d89096e2abf08c63d84b7017cfe1dce06639581"
 
 PYTHON_DEPS = "${@bb.utils.contains('LANGUAGES', 'python', 'swig-native', '', d)}"
 
