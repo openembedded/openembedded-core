@@ -98,6 +98,13 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE ?= "bl31.bin"
 UBOOT_FIT_TEE ?= "0"
 UBOOT_FIT_TEE_IMAGE ?= "tee-raw.bin"
 
+# User specific settings
+UBOOT_FIT_USER_SETTINGS ?= ""
+
+# Unit name containing a list of users additional binaries to be loaded.
+# It is a comma-separated list of strings.
+UBOOT_FIT_CONF_USER_LOADABLES ?= ''
+
 UBOOT_FIT_UBOOT_LOADADDRESS ?= "${UBOOT_LOADADDRESS}"
 UBOOT_FIT_UBOOT_ENTRYPOINT ?= "${UBOOT_ENTRYPOINT}"
 
@@ -414,6 +421,15 @@ EOF
 		conf_loadables="\"atf\", ${conf_loadables}"
 		uboot_fitimage_atf
 	fi
+
+	if [ -n "${UBOOT_FIT_USER_SETTINGS}" ] ; then
+		echo -e "${UBOOT_FIT_USER_SETTINGS}" >> ${UBOOT_ITS}
+	fi
+
+	if [ -n "${UBOOT_FIT_CONF_USER_LOADABLES}" ] ; then
+		conf_loadables="${conf_loadables}${UBOOT_FIT_CONF_USER_LOADABLES}"
+	fi
+
 	cat << EOF >> ${UBOOT_ITS}
     };
 
