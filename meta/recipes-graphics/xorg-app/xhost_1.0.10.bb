@@ -15,7 +15,7 @@ PE = "1"
 
 SRC_URI_EXT = "xz"
 
-SRC_URI[sha256sum] = "ea86b531462035b19a2e5e01ef3d9a35cca7d984086645e2fc844d8f0e346645"
+SRC_URI[sha256sum] = "a8afd70059479c712948b895e41c35a4a8bfcede3ba2d5a4b855c88bbb725be1"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
