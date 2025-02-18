@@ -27,7 +27,7 @@ inherit pypi python_setuptools_build_meta
 
 SRC_URI += "file://no_shebang_mangling.patch"
 
-SRC_URI[sha256sum] = "8e0a97f7b4c47ae4a494560da84775e9e2f671d415d8d828e052efefb206b30b"
+SRC_URI[sha256sum] = "88f96547ea48b940a3a385494e181e29fb8637898f88d88737c5049780f196ea"
 
 RDEPENDS:${PN} = "\
   python3-compile \
