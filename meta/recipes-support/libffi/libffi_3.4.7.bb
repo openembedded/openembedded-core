@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1db54c9fd307a12218766c3c7f650ca7"
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BPN}-${PV}.tar.gz \
            file://not-win32.patch \
            "
-SRC_URI[sha256sum] = "b0dea9df23c863a7a50e825440f3ebffabd65df1497108e5d437747843895a4e"
+SRC_URI[sha256sum] = "138607dee268bdecf374adf9144c00e839e38541f75f24a1fcf18b78fda48b2d"
 
 EXTRA_OECONF += "--disable-builddir --disable-exec-static-tramp"
 EXTRA_OECONF:class-native += "--with-gcc-arch=generic"
