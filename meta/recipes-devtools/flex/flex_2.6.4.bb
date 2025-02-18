@@ -82,4 +82,4 @@ do_install_ptest() {
 do_install_ptest[vardepsexclude] += "UNINATIVE_LOADER"
 
 # Not Apache Flex, or Adobe Flex, or IBM Flex.
-CVE_PRODUCT = "flex_project:flex"
+CVE_PRODUCT = "flex_project:flex westes:flex"
