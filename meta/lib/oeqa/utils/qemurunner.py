@@ -534,7 +534,7 @@ class QemuRunner:
                 self.logger.debug("Logged in as %s in serial console" % self.boot_patterns['send_login_user'].replace("\n", ""))
                 if netconf:
                     # configure guest networking
-                    cmd = "ifconfig eth0 %s netmask %s up\n" % (self.ip, self.netmask)
+                    cmd = "ip addr add %s/%s dev eth0\nip link set dev eth0 up\n" % (self.ip, self.netmask)
                     output = self.run_serial(cmd, raw=True)[1]
                     if re.search(r"root@[a-zA-Z0-9\-]+:~#", output):
                         self.logger.debug("configured ip address %s", self.ip)
