@@ -666,7 +666,7 @@ FILES:${PN}-qca-qca61x4-serial = " \
   ${nonarch_base_libdir}/firmware/qca/rampatch_0*.bin \
 "
 FILES:${PN}-qca-qca61x4-usb = " \
-  ${nonarch_base_libdir}/firmware/qca/rampatch_usb_*.bin \
+  ${nonarch_base_libdir}/firmware/qca/nvm_usb_*.bin \
   ${nonarch_base_libdir}/firmware/qca/rampatch_usb_*.bin \
 "
 FILES:${PN}-qca-qca6390 = " \
