@@ -1,0 +1,58 @@
+From 37f106029975e3045b0cd779525d14c55d24b74e Mon Sep 17 00:00:00 2001
+From: Jim Warner <james.warner@comcast.net>
+Date: Mon, 21 Jun 2021 00:00:00 -0500
+Subject: [PATCH] top: fix a fix for the 'bye_bye' function (merge #127)
+
+In the merge request shown below, 1 too many bytes are
+written to stdout thus including the terminating null.
+As the cure, this commit just reduces the length by 1.
+
+[ along the way, we will remove some unneeded braces ]
+[ plus add some additional comments with attribution ]
+
+Reference(s):
+https://gitlab.com/procps-ng/procps/-/merge_requests/127
+. original merged change
+commit 0bf15c004db6a3342703a3c420a5692e376c457d
+
+Signed-off-by: Jim Warner <james.warner@comcast.net>
+
+Upstream-Status: Backport [https://gitlab.com/procps-ng/procps/-/commit/37f106029975e3045b0cd779525d14c55d24b74e]
+
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ top/top.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/top/top.c b/top/top.c
+index 4d9860d5..0d21a1a5 100644
+--- a/top/top.c
++++ b/top/top.c
+@@ -569,13 +569,21 @@ static void bye_bye (const char *str) {
+ #endif // end: OFF_HST_HASH
+ 
+    numa_uninit();
++
++   /* we'll only have a 'str' if called by error_exit() |
++      or that xalloc_our_handler() function. if we were |
++      called from a sig_endpgm(), that parm is NULL ... | */
+    if (str) {
+       fputs(str, stderr);
+       exit(EXIT_FAILURE);
+    }
+-   if (Batch) {
+-      write(fileno(stdout), "\n", sizeof("\n"));
+-   }
++   /* this could happen when called from several places |
++      including that sig_endpgm().  thus we must use an |
++      async-signal-safe write function just in case ... |
++      (thanks: Shaohua Zhan shaohua.zhan@windriver.com) | */
++   if (Batch)
++      write(fileno(stdout), "\n", sizeof("\n") - 1);
++
+    exit(EXIT_SUCCESS);
+ } // end: bye_bye
+ 
+-- 
+2.34.1
+

@@ -1,0 +1,50 @@
+From 6b8980a3b6279058d727377e914cfb6439d6f178 Mon Sep 17 00:00:00 2001
+From: Shaohua Zhan <shaohua.zhan@windriver.com>
+Date: Mon, 22 Mar 2021 00:00:00 +0800
+Subject: [PATCH] top: replaced one use of fputs(3) with a write(2) call
+
+This patch is ported from a merge request shown below,
+and the following represents the original commit text.
+
+------------------------------------------------------
+top: In the bye_bye function, replace fputs with the write interface.
+
+When top calls malloc, if a signal is received, it will
+call sig_endpgm to process the signal. In the bye_bye function, if the
+-b option is enable, the Batch variable is set, the fputs function
+will calls malloc at the same time. The malloc function is not reentrant, so
+it will cause the program to crash.
+
+Signed-off-by: Shaohua Zhan <shaohua.zhan@windriver.com>
+------------------------------------------------------
+
+Reference(s):
+https://gitlab.com/procps-ng/procps/-/merge_requests/127
+
+Signed-off-by: Jim Warner <james.warner@comcast.net>
+
+Upstream-Status: Backport [https://gitlab.com/procps-ng/procps/-/commit/6b8980a3b6279058d727377e914cfb6439d6f178]
+
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ top/top.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/top/top.c b/top/top.c
+index f4f82be4..951c240c 100644
+--- a/top/top.c
++++ b/top/top.c
+@@ -417,7 +417,9 @@ static void bye_bye (const char *str) {
+       fputs(str, stderr);
+       exit(EXIT_FAILURE);
+    }
+-   if (Batch) fputs("\n", stdout);
++   if (Batch) {
++      write(fileno(stdout), "\n", sizeof("\n"));
++   }
+    exit(EXIT_SUCCESS);
+ } // end: bye_bye
+ 
+-- 
+2.34.1
+
