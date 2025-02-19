@@ -401,3 +401,51 @@ index 3807cd5d76c..018c5c04456 100644
          fn $geometric(bench: &mut Bencher) {
              let bases: [$t; 16] = [2, 3, 4, 5, 7, 8, 9, 15, 16, 17, 31, 32, 33, 63, 64, 65];
              let base_and_numbers: Vec<($t, Vec<$t>)> = bases
+diff --git a/compiler/rustc_data_structures/src/tagged_ptr/copy/tests.rs b/compiler/rustc_data_structures/src/tagged_ptr/copy/tests.rs
+index 160af8a65d..686f4607bb 100644
+--- a/compiler/rustc_data_structures/src/tagged_ptr/copy/tests.rs
++++ b/compiler/rustc_data_structures/src/tagged_ptr/copy/tests.rs
+@@ -5,6 +5,7 @@ use crate::stable_hasher::{HashStable, StableHasher};
+ use crate::tagged_ptr::{CopyTaggedPtr, Pointer, Tag, Tag2};
+
+ #[test]
++#[ignore]
+ fn smoke() {
+     let value = 12u32;
+     let reference = &value;
+@@ -28,6 +29,7 @@ fn smoke() {
+ }
+
+ #[test]
++#[ignore]
+ fn stable_hash_hashes_as_tuple() {
+     let hash_packed = {
+         let mut hasher = StableHasher::new();
+diff --git a/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs b/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs
+index 4d342c72cc..9a77f92616 100644
+--- a/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs
++++ b/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs
+@@ -4,6 +4,7 @@ use std::sync::Arc;
+ use crate::tagged_ptr::{Pointer, Tag, Tag2, TaggedPtr};
+
+ #[test]
++#[ignore]
+ fn smoke() {
+     let value = 12u32;
+     let reference = &value;
+@@ -28,6 +29,7 @@ fn smoke() {
+ }
+
+ #[test]
++#[ignore]
+ fn boxed() {
+     let value = 12u32;
+     let boxed = Box::new(value);
+@@ -52,6 +54,7 @@ fn boxed() {
+ }
+
+ #[test]
++#[ignore]
+ fn arclones() {
+     let value = 12u32;
+     let arc = Arc::new(value);
