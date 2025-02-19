@@ -11,8 +11,15 @@ inherit autotools pkgconfig update-alternatives
 DEPENDS = "zlib e2fsprogs util-linux"
 RDEPENDS:mtd-utils-tests += "bash"
 
-SRCREV = "13ec33609213c1dbd75852a09560a707a7f19a5c"
+DEPENDS:append:libc-musl = " libexecinfo"
+LDFLAGS:append:libc-musl = " -lexecinfo"
+
+SRCREV = "4594fc1f4496a0ed55cabd31fbeba4e3fbf05602"
 SRC_URI = "git://git.infradead.org/mtd-utils.git;branch=master"
+SRC_URI += "file://0001-ubifs-utils-ubifs.h-Include-fcntl.h.patch"
+SRC_URI += "file://0002-ubifs-utils-journal-Include-sys-stat.h.patch"
+SRC_URI += "file://0003-configure.ac-Add-a-check-for-execinfo-and-backtrace.patch"
+SRC_URI += "file://0004-ubifs-utils-extract_files-Include-linux-limits.h.patch"
 
 S = "${WORKDIR}/git"
 
@@ -30,6 +37,8 @@ PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
 CPPFLAGS:append:riscv64  = " -pthread -D_REENTRANT"
 
 EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} ${@bb.utils.contains('PACKAGECONFIG', 'xattr', '', '-DWITHOUT_XATTR', d)} -I${S}/include' 'BUILDDIR=${S}'"
+
+CFLAGS += "-D_GNU_SOURCE"
 
 # Use higher priority than corresponding BusyBox-provided applets
 ALTERNATIVE_PRIORITY = "100"
