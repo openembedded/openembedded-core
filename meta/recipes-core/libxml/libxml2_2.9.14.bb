@@ -34,6 +34,7 @@ SRC_URI += "http://www.w3.org/XML/Test/xmlts20080827.tar;subdir=${BP};name=testt
            file://CVE-2024-25062.patch \
            file://CVE-2024-34459.patch \
            file://CVE-2022-49043.patch \
+           file://0001-pattern-Fix-compilation-of-explicit-child-axis.patch \
            "
 
 SRC_URI[archive.sha256sum] = "60d74a257d1ccec0475e749cba2f21559e48139efba6ff28224357c7c798dfee"
