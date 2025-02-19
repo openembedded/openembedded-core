@@ -1,0 +1,54 @@
+From 8503bc3de0d3ff016caa715716578a3be3698548 Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <festevam@gmail.com>
+Date: Tue, 18 Feb 2025 18:25:56 -0300
+Subject: [PATCH v4 mtd-utils 3/4] configure.ac: Add a check for execinfo and backtrace
+
+musl relies on an external execinfo library to provide backtrace
+functionality. If musl cannot link to libexecinfo, the following link
+error happens:
+
+| /work/festevam/oe/poky/build/tmp/work/core2-64-poky-linux-musl/mtd-utils/2.3.0/recipe-sysroot-native/usr/bin/x86_64-poky-linux-musl/../../libexec/x86_64-poky-linux-musl/gcc/x86_64-poky-linux-musl/14.2.0/ld: ubifs-utils/libubifs/mkfs_ubifs-io.o: in function `dump_stack':
+| /usr/src/debug/mtd-utils/2.3.0/ubifs-utils/common/defs.h:71:(.text+0x25): undefined reference to `backtrace'
+....
+| collect2: error: ld returned 1 exit status
+| make: *** [Makefile:2959: mkfs.ubifs] Error 1
+
+Fix the problem by checking for backtrace support in libc first and if not
+found, then check for backtrace support in the external libexecinfo.
+
+Upstream-Status: Submitted [https://lore.kernel.org/linux-mtd/20250219130244.2119582-3-festevam@gmail.com/T/#t]
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Suggested-by: Khem Raj <raj.khem@gmail.com>
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+Change since v3:
+- None.
+
+ configure.ac | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 2a79ba820fc0..296901e61760 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -238,6 +238,17 @@ if test "x$need_cmocka" = "xyes"; then
+ 	PKG_CHECK_MODULES(CMOCKA, [cmocka], [], [cmocka_missing="yes"])
+ fi
+ 
++AC_CHECK_FUNC([backtrace], [have_backtrace=yes], [have_backtrace=no])
++
++if test "x$have_backtrace" = "xno"; then
++    AC_CHECK_LIB([execinfo], [backtrace],
++        [LIBS="$LIBS -lexecinfo"
++         AC_DEFINE([HAVE_BACKTRACE], [1], [backtrace is available via libexecinfo])],
++        [AC_MSG_WARN([backtrace support not found])])
++else
++    AC_DEFINE([HAVE_BACKTRACE], [1], [backtrace is available via libc])
++fi
++
+ AC_CHECK_HEADERS([execinfo.h])
+ 
+ ##### produce summary on dependencies #####
+-- 
+2.34.1
+
