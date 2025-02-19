@@ -18,6 +18,7 @@ SRC_URI +=       " file://0001-riscv32-Use-double-float-ABI-for-rv32.patch \
                    file://CVE-2024-57258-1.patch \
                    file://CVE-2024-57258-2.patch \
                    file://CVE-2024-57258-3.patch \
+                   file://CVE-2024-57259.patch \
                  "
 
 DEPENDS += "bc-native dtc-native python3-setuptools-native"
