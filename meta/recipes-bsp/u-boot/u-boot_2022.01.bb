@@ -8,6 +8,9 @@ SRC_URI +=       " file://0001-riscv32-Use-double-float-ABI-for-rv32.patch \
                    file://0001-net-Check-for-the-minimum-IP-fragmented-datagram-siz.patch \
                    file://0001-fs-squashfs-Use-kcalloc-when-relevant.patch \
                    file://0001-CVE-2022-30767.patch \
+                   file://CVE-2022-30790.patch \
+                   file://CVE-2022-2347_1.patch \
+                   file://CVE-2022-2347_2.patch \
                  "
 
 DEPENDS += "bc-native dtc-native python3-setuptools-native"
