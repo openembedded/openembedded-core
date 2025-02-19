@@ -17,6 +17,7 @@ SRCREV = "866ca972d6c3cabeaf6dbac431e8e08bb30b3c8e"
 SRC_URI = "git://source.denx.de/u-boot/u-boot.git;protocol=https;branch=master \
            file://CVE-2024-57254.patch \
            file://CVE-2024-57255.patch \
+           file://CVE-2024-57256.patch \
 "
 
 S = "${WORKDIR}/git"
