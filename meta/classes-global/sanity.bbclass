@@ -299,6 +299,11 @@ def check_path_length(filepath, pathname, limit):
         return "The length of %s is longer than %s, this would cause unexpected errors, please use a shorter path.\n" % (pathname, limit)
     return ""
 
+def check_non_ascii(filepath, pathname):
+    if(not filepath.isascii()):
+        return "Non-ASCII character(s) in %s path (\"%s\") detected. This would cause build failures as we build software that doesn't support this.\n" % (pathname, filepath)
+    return ""
+
 def get_filesystem_id(path):
     import subprocess
     try:
@@ -719,6 +724,7 @@ def check_sanity_version_change(status, d):
     # Check that TMPDIR isn't on a filesystem with limited filename length (eg. eCryptFS)
     import stat
     tmpdir = d.getVar('TMPDIR')
+    topdir = d.getVar('TOPDIR')
     status.addresult(check_create_long_filename(tmpdir, "TMPDIR"))
     tmpdirmode = os.stat(tmpdir).st_mode
     if (tmpdirmode & stat.S_ISGID):
@@ -784,6 +790,9 @@ def check_sanity_version_change(status, d):
 
     # The length of TMPDIR can't be longer than 400
     status.addresult(check_path_length(tmpdir, "TMPDIR", 400))
+
+    # Check that TOPDIR does not contain non ascii chars (perl_5.40.0, Perl-native and shadow-native build failures)
+    status.addresult(check_non_ascii(topdir, "TOPDIR"))
 
     # Check that TMPDIR isn't located on nfs
     status.addresult(check_not_nfs(tmpdir, "TMPDIR"))
