@@ -1027,7 +1027,7 @@ class DevtoolModifyTests(DevtoolBase):
         # Configure the recipe to check that the git dependencies are correctly patched in cargo config
         bitbake('-c configure %s' % testrecipe)
 
-        cargo_config_path = os.path.join(cargo_home, 'config')
+        cargo_config_path = os.path.join(cargo_home, 'config.toml')
         with open(cargo_config_path, "r") as f:
             cargo_config_contents = [line.strip('\n') for line in f.readlines()]
 
