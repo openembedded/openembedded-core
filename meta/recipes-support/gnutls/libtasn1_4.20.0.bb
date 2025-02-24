@@ -6,9 +6,8 @@ HOMEPAGE = "http://www.gnu.org/software/libtasn1/"
 LICENSE = "GPL-3.0-or-later & LGPL-2.1-or-later"
 LICENSE:${PN}-bin = "GPL-3.0-or-later"
 LICENSE:${PN} = "LGPL-2.1-or-later"
-LIC_FILES_CHKSUM = "file://doc/COPYING;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://doc/COPYING.LESSER;md5=4fbd65380cdd255951079008b364516c \
-                    file://COPYING;md5=75ac100ec923f959898182307970c360"
+LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
+                    file://COPYING.LESSERv2;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
 SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
            file://dont-depend-on-help2man.patch \
@@ -16,7 +15,7 @@ SRC_URI = "${GNU_MIRROR}/libtasn1/libtasn1-${PV}.tar.gz \
 
 DEPENDS = "bison-native"
 
-SRC_URI[sha256sum] = "1613f0ac1cf484d6ec0ce3b8c06d56263cc7242f1c23b30d82d23de345a63f7a"
+SRC_URI[sha256sum] = "92e0e3bd4c02d4aeee76036b2ddd83f0c732ba4cda5cb71d583272b23587a76c"
 
 inherit autotools texinfo lib_package gtk-doc
 
