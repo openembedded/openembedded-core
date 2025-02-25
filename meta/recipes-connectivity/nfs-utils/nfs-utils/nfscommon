@@ -137,7 +137,7 @@ case "$1" in
 	    fi
 	    start-stop-daemon --start --oknodo --quiet \
 		--pidfile /run/rpc.statd.pid \
-	        --exec /sbin/rpc.statd
+	        --exec /usr/sbin/rpc.statd
 	    RET=$?
 	    if [ $RET != 0 ]; then
 	        echo " failed" $RET
