@@ -25,15 +25,10 @@ SRC_URI += "file://touchscreen.rules \
            file://0003-implment-systemd-sysv-install-for-OE.patch \
            file://0001-Move-sysusers.d-sysctl.d-binfmt.d-modules-load.d-to-.patch \
            file://0001-resolve-Use-sockaddr-pointer-type-for-bind.patch \
-           file://CVE-2022-3821.patch \
-           file://CVE-2022-45873.patch \
-           file://0001-shared-json-allow-json_variant_dump-to-return-an-err.patch \
-           file://CVE-2022-4415-1.patch \
-           file://CVE-2022-4415-2.patch \
            file://0001-network-remove-only-managed-configs-on-reconfigure-o.patch \
            file://0001-nspawn-make-sure-host-root-can-write-to-the-uidmappe.patch \
-           file://CVE-2023-7008.patch \
            file://fix-vlan-qos-mapping.patch \
+           file://0001-core-fix-build-when-seccomp-is-off.patch \
            "
 
 # patches needed by musl

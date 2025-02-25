@@ -1,4 +1,4 @@
-From 5513b918d02900a3a78fd0e0300a118b163edfef Mon Sep 17 00:00:00 2001
+From a134b05d2cbc0d05a5ad7d9ebbb4ba57d424752c Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 13:55:12 +0800
 Subject: [PATCH] missing_type.h: add comparison_fn_t
@@ -14,6 +14,7 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 Signed-off-by: Andrej Valek <andrej.valek@siemens.com>
 [Rebased for v250, Drop __compare_fn_t]
 Signed-off-by: Jiaqing Zhao <jiaqing.zhao@linux.intel.com>
+
 ---
  src/basic/missing_type.h            | 4 ++++
  src/basic/sort-util.h               | 1 +
@@ -56,6 +57,3 @@ index 8fc87b131a..36a6efdbd8 100644
  
  const char * const catalog_file_dirs[] = {
          "/usr/local/lib/systemd/catalog/",
--- 
-2.34.1
-

@@ -1,4 +1,4 @@
-From a0450f7909348e7ff1d58adc0aee4119a0519c1f Mon Sep 17 00:00:00 2001
+From 427534fec8c205a9a97b20a4075dd84e1faca611 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 15:00:06 +0800
 Subject: [PATCH] add missing FTW_ macros for musl
@@ -49,7 +49,7 @@ index 6c0456349d..5140892e22 100644
 +#define FTW_SKIP_SIBLINGS 3
 +#endif
 diff --git a/src/shared/mount-setup.c b/src/shared/mount-setup.c
-index 7917968497..cc3d5baaab 100644
+index 7ba579ef63..2d62b1978f 100644
 --- a/src/shared/mount-setup.c
 +++ b/src/shared/mount-setup.c
 @@ -32,6 +32,7 @@

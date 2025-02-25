@@ -1,4 +1,4 @@
-From 9a1841402ce3ef21a10a7314a07a615f8196d406 Mon Sep 17 00:00:00 2001
+From 10ec14bf4a75891a99defa37f5e9452ac6fe12b3 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 21 Jan 2022 22:19:37 -0800
 Subject: [PATCH] Adjust for musl headers
@@ -174,7 +174,7 @@ index d15766cd7b..60728b4f94 100644
  #include "conf-parser.h"
  #include "ipvlan.h"
 diff --git a/src/network/netdev/macsec.c b/src/network/netdev/macsec.c
-index f1a566a9ca..1f37927a83 100644
+index df0d924443..6400032f96 100644
 --- a/src/network/netdev/macsec.c
 +++ b/src/network/netdev/macsec.c
 @@ -1,7 +1,7 @@
@@ -200,7 +200,7 @@ index c41be6e78f..ee2660c5bf 100644
  #include "conf-parser.h"
  #include "macvlan.h"
 diff --git a/src/network/netdev/netdev.c b/src/network/netdev/netdev.c
-index 8e7fe11c18..701ab2bd69 100644
+index b46b9ecc90..e6e58c5f0f 100644
 --- a/src/network/netdev/netdev.c
 +++ b/src/network/netdev/netdev.c
 @@ -2,7 +2,7 @@
@@ -275,7 +275,7 @@ index c946e81fc0..d1a6be73f9 100644
  
  #include "netlink-util.h"
 diff --git a/src/network/netdev/vlan.c b/src/network/netdev/vlan.c
-index af3e77963e..efa4b0a164 100644
+index 58c2da32dd..f4a5fd7343 100644
 --- a/src/network/netdev/vlan.c
 +++ b/src/network/netdev/vlan.c
 @@ -2,7 +2,7 @@
@@ -327,7 +327,7 @@ index 30b0855598..a065158801 100644
  #include "conf-parser.h"
  #include "alloc-util.h"
 diff --git a/src/network/netdev/wireguard.c b/src/network/netdev/wireguard.c
-index 88f668753a..5fc753384b 100644
+index 6c251b3a2e..000e3d01a9 100644
 --- a/src/network/netdev/wireguard.c
 +++ b/src/network/netdev/wireguard.c
 @@ -6,7 +6,7 @@
@@ -373,7 +373,7 @@ index 10025a97ae..a0239ea83a 100644
  #define STATIC_BRIDGE_MDB_ENTRIES_PER_NETWORK_MAX 1024U
  
 diff --git a/src/network/networkd-dhcp-common.c b/src/network/networkd-dhcp-common.c
-index 7996960bd1..e870b9ba26 100644
+index 4f13eada05..7e3ea2108b 100644
 --- a/src/network/networkd-dhcp-common.c
 +++ b/src/network/networkd-dhcp-common.c
 @@ -1,7 +1,8 @@
@@ -421,7 +421,7 @@ index 9acfd17d49..3108289602 100644
  
  #include "sd-dhcp-server.h"
 diff --git a/src/network/networkd-dhcp4.c b/src/network/networkd-dhcp4.c
-index cb9c428ae9..a35d58f3f1 100644
+index f97e8033b8..21026ac0bf 100644
 --- a/src/network/networkd-dhcp4.c
 +++ b/src/network/networkd-dhcp4.c
 @@ -3,7 +3,7 @@
@@ -434,7 +434,7 @@ index cb9c428ae9..a35d58f3f1 100644
  #include "alloc-util.h"
  #include "dhcp-client-internal.h"
 diff --git a/src/network/networkd-link.c b/src/network/networkd-link.c
-index b62a154828..75949e6094 100644
+index 090da53a1e..8b402a5b04 100644
 --- a/src/network/networkd-link.c
 +++ b/src/network/networkd-link.c
 @@ -3,7 +3,7 @@
@@ -447,7 +447,7 @@ index b62a154828..75949e6094 100644
  #include <linux/netdevice.h>
  #include <sys/socket.h>
 diff --git a/src/network/networkd-route.c b/src/network/networkd-route.c
-index ee7a535075..ce6ed64133 100644
+index f3b6f38967..5793fd93f8 100644
 --- a/src/network/networkd-route.c
 +++ b/src/network/networkd-route.c
 @@ -1,9 +1,5 @@
@@ -472,7 +472,7 @@ index ee7a535075..ce6ed64133 100644
          _cleanup_(route_freep) Route *route = NULL;
  
 diff --git a/src/network/networkd-setlink.c b/src/network/networkd-setlink.c
-index e00cc1e589..e392c7e1a2 100644
+index 1ab58a5bd2..72860cc542 100644
 --- a/src/network/networkd-setlink.c
 +++ b/src/network/networkd-setlink.c
 @@ -2,7 +2,7 @@

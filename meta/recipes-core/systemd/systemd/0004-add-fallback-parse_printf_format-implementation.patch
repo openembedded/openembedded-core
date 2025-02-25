@@ -1,4 +1,4 @@
-From 3d9910dcda697b1e361bba49c99050ee0d116742 Mon Sep 17 00:00:00 2001
+From e53661c4dc9b15397a87077169fe729934ce5e13 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Sat, 22 May 2021 20:26:24 +0200
 Subject: [PATCH] add fallback parse_printf_format implementation
@@ -23,10 +23,10 @@ Signed-off-by: Scott Murray <scott.murray@konsulko.com>
  create mode 100644 src/basic/parse-printf-format.h
 
 diff --git a/meson.build b/meson.build
-index cb9936ee8b..ae53345260 100644
+index 01c4b4dc70..29129a83e2 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -686,6 +686,7 @@ endif
+@@ -705,6 +705,7 @@ endif
  foreach header : ['crypt.h',
                    'linux/memfd.h',
                    'linux/vm_sockets.h',

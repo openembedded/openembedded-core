@@ -1,4 +1,4 @@
-From 3ca0920429f7eaf8c59f9ac8afd30a43b83d95ed Mon Sep 17 00:00:00 2001
+From fefd1b6ae9dd75133f86c373ce17d4f15ef05e2d Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 15:03:47 +0800
 Subject: [PATCH] fix missing of __register_atfork for non-glibc builds
@@ -15,7 +15,7 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
  1 file changed, 7 insertions(+)
 
 diff --git a/src/basic/process-util.c b/src/basic/process-util.c
-index c971852158..df6e85b1fc 100644
+index 5e27097cbb..db252b8dfe 100644
 --- a/src/basic/process-util.c
 +++ b/src/basic/process-util.c
 @@ -18,6 +18,9 @@
@@ -28,7 +28,7 @@ index c971852158..df6e85b1fc 100644
  
  #include "alloc-util.h"
  #include "architecture.h"
-@@ -1161,11 +1164,15 @@ void reset_cached_pid(void) {
+@@ -1165,11 +1168,15 @@ void reset_cached_pid(void) {
          cached_pid = CACHED_PID_UNSET;
  }
  

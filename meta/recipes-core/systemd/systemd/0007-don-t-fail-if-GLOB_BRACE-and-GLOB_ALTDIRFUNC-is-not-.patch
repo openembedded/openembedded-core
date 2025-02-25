@@ -1,4 +1,4 @@
-From 74c664bcd6b9a5fcf3466310c07f608d12456f7f Mon Sep 17 00:00:00 2001
+From 5de6ab5196cfd629f4a15f8d0d34f69b1e425715 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 14:56:21 +0800
 Subject: [PATCH] don't fail if GLOB_BRACE and GLOB_ALTDIRFUNC is not defined
@@ -115,7 +115,7 @@ index ec8b74f48f..d99a6095df 100644
  
          (void) rm_rf(template, REMOVE_ROOT|REMOVE_PHYSICAL);
 diff --git a/src/tmpfiles/tmpfiles.c b/src/tmpfiles/tmpfiles.c
-index fcab51c208..fdef1807ae 100644
+index 07ef3af0a0..8293661aa7 100644
 --- a/src/tmpfiles/tmpfiles.c
 +++ b/src/tmpfiles/tmpfiles.c
 @@ -67,6 +67,12 @@
@@ -131,7 +131,7 @@ index fcab51c208..fdef1807ae 100644
  /* This reads all files listed in /etc/tmpfiles.d/?*.conf and creates
   * them in the file system. This is intended to be used to create
   * properly owned directories beneath /tmp, /var/tmp, /run, which are
-@@ -1961,7 +1967,9 @@ finish:
+@@ -1958,7 +1964,9 @@ finish:
  
  static int glob_item(Item *i, action_t action) {
          _cleanup_globfree_ glob_t g = {
@@ -141,7 +141,7 @@ index fcab51c208..fdef1807ae 100644
          };
          int r = 0, k;
          char **fn;
-@@ -1981,7 +1989,9 @@ static int glob_item(Item *i, action_t action) {
+@@ -1978,7 +1986,9 @@ static int glob_item(Item *i, action_t action) {
  
  static int glob_item_recursively(Item *i, fdaction_t action) {
          _cleanup_globfree_ glob_t g = {

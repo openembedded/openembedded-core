@@ -1,0 +1,41 @@
+From 10c567204edcd2926ce4f762d7015d5894756d52 Mon Sep 17 00:00:00 2001
+From: Jonas Gorski <jonas.gorski@bisdn.de>
+Date: Thu, 12 Sep 2024 15:46:29 +0200
+Subject: [PATCH] core: fix build when seccomp is off
+
+Something went wrong when 6aa2c55522d7cac62ecfd5d5687a86a84f158d18 was
+cherry-picked for v250-stable, causing it to fail to build when seccomp
+is disabled.
+
+Fix this by changing the code to how it looks like in other versions of
+the backported commit, slightly adapted to the file's style in v250.
+
+Fixes the following build error:
+
+| ../git/src/core/main.c: In function 'parse_config_file':
+| ../git/src/core/main.c:721:101: error: lvalue required as unary '&' operand
+|   721 |                 { "Manager", "SystemCallArchitectures",      config_parse_syscall_archs,         0, &DISABLED_CONFIGURATION                },
+|       |                                                                                                     ^
+
+Fixes: 8e8c7d51140b ("pid1: generate compat warning for SystemCallArchitectures= if seccomp is off")
+
+Upstream-Status: Backport [https://github.com/systemd/systemd-stable/commit/b19b7c67e9cb74c44c43a0daf6172f9d32f134ec]
+Signed-off-by: Jonas Gorski <jonas.gorski@bisdn.de>
+Signed-off-by: Narpat Mali <narpat.falna@gmail.com>
+---
+ src/core/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/main.c b/src/core/main.c
+index 19686fa475..5914be6a83 100644
+--- a/src/core/main.c
++++ b/src/core/main.c
+@@ -718,7 +718,7 @@ static int parse_config_file(void) {
+ #if HAVE_SECCOMP
+                 { "Manager", "SystemCallArchitectures",      config_parse_syscall_archs,         0, &arg_syscall_archs                     },
+ #else
+-                { "Manager", "SystemCallArchitectures",      config_parse_syscall_archs,         0, &DISABLED_CONFIGURATION                },
++                { "Manager", "SystemCallArchitectures",      config_parse_warn_compat,           DISABLED_CONFIGURATION, NULL              },
+ #endif
+                 { "Manager", "TimerSlackNSec",               config_parse_nsec,                  0, &arg_timer_slack_nsec                  },
+                 { "Manager", "DefaultTimerAccuracySec",      config_parse_sec,                   0, &arg_default_timer_accuracy_usec       },

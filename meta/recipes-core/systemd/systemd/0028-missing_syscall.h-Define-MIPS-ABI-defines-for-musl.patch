@@ -1,4 +1,4 @@
-From 754a16eeb255c06dbdd4655632276573f0f075ec Mon Sep 17 00:00:00 2001
+From bf6d00a780db808de6a5dfc28e24906f699fd60e Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 12 Apr 2021 23:44:53 -0700
 Subject: [PATCH] missing_syscall.h: Define MIPS ABI defines for musl
@@ -34,7 +34,7 @@ index 793d111c55..9665848b88 100644
  #include "missing_keyctl.h"
  #include "missing_stat.h"
 diff --git a/src/shared/base-filesystem.c b/src/shared/base-filesystem.c
-index d396bc99fe..7e9c0c3412 100644
+index fc534435d3..5929ca1fce 100644
 --- a/src/shared/base-filesystem.c
 +++ b/src/shared/base-filesystem.c
 @@ -19,6 +19,7 @@

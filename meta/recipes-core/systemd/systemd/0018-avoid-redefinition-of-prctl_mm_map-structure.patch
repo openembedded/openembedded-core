@@ -1,4 +1,4 @@
-From e1d0210b47906dd121f936f3181092835df6a95c Mon Sep 17 00:00:00 2001
+From b90e69cab3da08fa890e8d276be4d02e39cd83aa Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 15:44:54 +0800
 Subject: [PATCH] avoid redefinition of prctl_mm_map structure
