@@ -1066,6 +1066,7 @@ def package_qa_check_host_user(path, name, d, elf):
         check_gid = int(d.getVar('HOST_USER_GID'))
         if stat.st_gid == check_gid:
             oe.qa.handle_error("host-user-contaminated", "%s: %s is owned by gid %d, which is the same as the user running bitbake. This may be due to host contamination" % (pn, package_qa_clean_path(path, d, name), check_gid), d)
+package_qa_check_host_user[vardepsexclude] = "HOST_USER_UID HOST_USER_GID"
 
 QARECIPETEST[unhandled-features-check] = "package_qa_check_unhandled_features_check"
 def package_qa_check_unhandled_features_check(pn, d):
