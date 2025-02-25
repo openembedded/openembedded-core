@@ -15,9 +15,6 @@ EXTRA_OECONF += "ac_cv_path_PR_PROGRAM=${bindir}/pr --without-libsigsegv-prefix"
 # latest gnulib is no longer able to handle this - I dare not try to fix that maze of abstractions and generators
 CFLAGS:mingw32 = " -DSA_RESTART=0"
 
-# Fix "Argument list too long" error when len(TMPDIR) = 410
-acpaths = "-I ./m4"
-
 EXTRA_OEMAKE:append:mingw32 = " LIBS='-lbcrypt'"
 inherit ptest
 

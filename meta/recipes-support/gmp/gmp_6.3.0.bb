@@ -17,8 +17,6 @@ SRC_URI = "https://gmplib.org/download/${BPN}/${BP}${REVISION}.tar.bz2 \
            "
 SRC_URI[sha256sum] = "ac28211a7cfb609bae2e2c8d6058d66c8fe96434f740cf6fe2e47b000d1c20cb"
 
-acpaths = ""
-
 EXTRA_OECONF += " --enable-cxx=detect"
 EXTRA_OECONF:append:mipsarchr6 = " --disable-assembly"
 

@@ -22,8 +22,6 @@ SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.xz \
 
 inherit autotools gettext update-alternatives texinfo
 
-acpaths = "-I ./m4"
-
 PACKAGECONFIG ??= "ftp uucpd \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6 ping6', '', d)} \
