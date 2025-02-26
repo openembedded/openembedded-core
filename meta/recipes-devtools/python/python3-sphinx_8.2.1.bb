@@ -2,9 +2,9 @@ SUMMARY = "Python documentation generator"
 HOMEPAGE = "http://sphinx-doc.org/"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=4ab44940eeb9c0ec044da326d904a683"
+LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=e30c37a2b7fb0afa3adc0d72b85e8b04"
 
-SRC_URI[sha256sum] = "43c1911eecb0d3e161ad78611bc905d1ad0e523e4ddc202a58a821773dc4c927"
+SRC_URI[sha256sum] = "e4b932951b9c18b039f73b72e4e63afe967d90408700ec222b981ac24647c01e"
 
 inherit python_flit_core pypi
 
@@ -22,6 +22,7 @@ RDEPENDS:${PN} = "\
     python3-packaging \
     python3-pygments \
     python3-requests \
+    python3-roman-numerals-py \
     python3-snowballstemmer \
     python3-sphinxcontrib-applehelp \
     python3-sphinxcontrib-devhelp \
