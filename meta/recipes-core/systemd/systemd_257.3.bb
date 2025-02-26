@@ -531,6 +531,7 @@ FILES:${PN}-journal-upload = "${nonarch_libdir}/systemd/systemd-journal-upload \
 SYSTEMD_SERVICE:${PN}-journal-upload = "systemd-journal-upload.service"
 
 FILES:${PN}-journal-remote = "${nonarch_libdir}/systemd/systemd-journal-remote \
+                              ${nonarch_libdir}/sysusers.d/systemd-remote.conf \
                               ${sysconfdir}/systemd/journal-remote.conf \
                               ${systemd_system_unitdir}/systemd-journal-remote.service \
                               ${systemd_system_unitdir}/systemd-journal-remote.socket \
