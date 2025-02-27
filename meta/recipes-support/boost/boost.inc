@@ -16,6 +16,7 @@ do_configure[cleandirs] = "${B}"
 
 BOOST_LIBS = "\
 	atomic \
+	charconv \
 	chrono \
 	container \
 	context \
