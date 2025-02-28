@@ -34,7 +34,7 @@ SRC_URI += "http://www.w3.org/XML/Test/xmlts20080827.tar;subdir=${BP};name=testt
            file://CVE-2024-25062.patch \
            file://CVE-2024-34459.patch \
            file://CVE-2022-49043.patch \
-           file://0001-pattern-Fix-compilation-of-explicit-child-axis.patch \
+           file://CVE-2025-27113.patch \
            file://CVE-2024-56171.patch \
            file://CVE-2025-24928.patch \
            "
