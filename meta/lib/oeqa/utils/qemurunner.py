@@ -555,7 +555,7 @@ class QemuRunner:
         self.stop_qemu_system()
         if self.runqemu:
             if hasattr(self, "monitorpid"):
-                os.kill(self.monitorpid, signal.SIGKILL)
+                os.kill(self.monitorpid, signal.SIGTERM)
                 self.logger.debug("Sending SIGTERM to runqemu")
                 try:
                     os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
