@@ -31,7 +31,7 @@ CROSS_CURSES_LIB = "-lncurses -ltinfo"
 CROSS_CURSES_INC = '-DCURSES_LOC="<curses.h>"'
 TERMINFO = "${STAGING_DATADIR_NATIVE}/terminfo"
 
-KCONFIG_CONFIG_COMMAND ??= "menuconfig"
+KCONFIG_CONFIG_COMMAND ??= "menuconfig ${EXTRA_OEMAKE}"
 KCONFIG_CONFIG_ENABLE_MENUCONFIG ??= "true"
 KCONFIG_CONFIG_ROOTDIR ??= "${B}"
 python do_menuconfig() {
