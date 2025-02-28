@@ -691,9 +691,6 @@ kernel_do_configure() {
 
 inherit cml1 pkgconfig
 
-# Need LD, HOSTLDFLAGS and more for config operations
-KCONFIG_CONFIG_COMMAND:append = " ${EXTRA_OEMAKE}"
-
 EXPORT_FUNCTIONS do_compile do_transform_kernel do_transform_bundled_initramfs do_install do_configure
 
 # kernel-base becomes kernel-${KERNEL_VERSION}
