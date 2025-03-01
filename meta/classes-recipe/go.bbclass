@@ -15,7 +15,6 @@ GOROOT:class-native = "${STAGING_LIBDIR_NATIVE}/go"
 GOROOT:class-nativesdk = "${STAGING_DIR_TARGET}${libdir}/go"
 GOROOT = "${STAGING_LIBDIR}/go"
 export GOROOT
-export GOROOT_FINAL = "${libdir}/go"
 export GOCACHE = "${B}/.cache"
 
 export GOARCH = "${TARGET_GOARCH}"
