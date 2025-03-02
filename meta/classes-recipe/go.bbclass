@@ -7,6 +7,9 @@
 inherit goarch
 inherit linuxloader
 
+# if the GO_IMPORT is not set in recipe generate an error
+GO_IMPORT ??= "${@bb.fatal("The recipe needs to set GO_IMPORT for go.bbclass to work")}"
+
 GO_PARALLEL_BUILD ?= "${@oe.utils.parallel_make_argument(d, '-p %d')}"
 
 export GODEBUG = "gocachehash=1"
