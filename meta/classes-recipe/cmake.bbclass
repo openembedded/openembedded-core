@@ -64,6 +64,8 @@ OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "ONLY"
 
 EXTRA_OECMAKE:append = " ${PACKAGECONFIG_CONFARGS}"
 
+export OECMAKE_FORCE_CROSSCOMPILING ??= "0"
+
 export CMAKE_BUILD_PARALLEL_LEVEL
 CMAKE_BUILD_PARALLEL_LEVEL:task-compile = "${@oe.utils.parallel_make(d, False)}"
 CMAKE_BUILD_PARALLEL_LEVEL:task-install = "${@oe.utils.parallel_make(d, True)}"

@@ -1,0 +1,52 @@
+From 7b3c3674df6ad8f90475d51f9c104e825656ebcc Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Fri, 21 Feb 2025 20:28:39 +0800
+Subject: [PATCH] support RUNTIME_DEPENDENCIES for oe cross compiling
+
+According to upstream cmake doc[1]:
+...
+``RUNTIME_DEPENDENCIES``
+  .. versionadded:: 3.21
+
+  This option causes all runtime dependencies of installed executable, shared
+  library, and module targets to be installed along with the targets
+  themselves. The ``RUNTIME``, ``LIBRARY``, ``FRAMEWORK``, and generic
+  arguments are used to determine the properties (``DESTINATION``,
+  ``COMPONENT``, etc.) of the installation of these dependencies.
+...
+
+But it does not support cross compiling, this commit adds environment
+OECMAKE_FORCE_CROSSCOMPILING to force support RUNTIME_DEPENDENCIES for
+OE cross compiling
+
+[1] https://gitlab.kitware.com/cmake/cmake/-/commit/72f2448e82d8b3e90fa733cb6c631298083ae06b
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ Source/cmInstallCommand.cxx | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Source/cmInstallCommand.cxx b/Source/cmInstallCommand.cxx
+index 89cf028d38..cd4336b2a3 100644
+--- a/Source/cmInstallCommand.cxx
++++ b/Source/cmInstallCommand.cxx
+@@ -648,9 +648,12 @@ bool HandleTargetsMode(std::vector<std::string> const& args,
+                  system, '"'));
+       return false;
+     }
+-    if (helper.Makefile->IsOn("CMAKE_CROSSCOMPILING")) {
++    std::string oe_force = cmSystemTools::GetEnvVar("OECMAKE_FORCE_CROSSCOMPILING").
++      value_or(std::string());
++    if (helper.Makefile->IsOn("CMAKE_CROSSCOMPILING") && (oe_force != "1")) {
+       status.SetError("TARGETS RUNTIME_DEPENDENCIES is not supported "
+-                      "when cross-compiling.");
++                      "when cross-compiling. "
++                      "Please export OECMAKE_FORCE_CROSSCOMPILING='1' to force run");
+       return false;
+     }
+     if (helper.Makefile->GetSafeDefinition("CMAKE_HOST_SYSTEM_NAME") ==
+-- 
+2.25.1
+
