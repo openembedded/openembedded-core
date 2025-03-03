@@ -267,12 +267,15 @@ class QemuRunner:
             self.monitorpipe = os.fdopen(w, "w")
         else:
             # child process
-            os.setpgrp()
-            os.close(w)
-            r = os.fdopen(r)
-            x = r.read()
-            os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
-            os._exit(0)
+            try:
+                os.setpgrp()
+                os.close(w)
+                r = os.fdopen(r)
+                x = r.read()
+                os.killpg(os.getpgid(self.runqemu.pid), signal.SIGTERM)
+            finally:
+                # We must exit under all circumstances
+                os._exit(0)
 
         self.logger.debug("runqemu started, pid is %s" % self.runqemu.pid)
         self.logger.debug("waiting at most %d seconds for qemu pid (%s)" %
