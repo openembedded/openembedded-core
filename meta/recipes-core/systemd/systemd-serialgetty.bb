@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;m
 # required.  This recipe (enabled via disabling serial-getty-generator in systemd)
 # should only be used if the generator is not appropriate.
 
-SERIAL_CONSOLES ?= "115200;ttyS0"
 SERIAL_TERM ?= "linux"
 
 SRC_URI = "file://serial-getty@.service"
