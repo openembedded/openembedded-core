@@ -477,7 +477,7 @@ FILES:${PN}-man = "${datadir}/man"
 
 # See https://bugs.python.org/issue18748 and https://bugs.python.org/issue37395
 RDEPENDS:libpython3:append:libc-glibc = " libgcc"
-RDEPENDS:${PN}-ctypes:append:libc-glibc = " ${MLPREFIX}ldconfig"
+RRECOMMENDS:${PN}-ctypes:append:libc-glibc = " ${MLPREFIX}ldconfig"
 RDEPENDS:${PN}-ptest = "\
     ${PN}-dev \
     ${PN}-modules \
