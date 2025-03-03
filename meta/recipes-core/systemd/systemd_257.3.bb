@@ -287,9 +287,11 @@ do_install() {
 		fi
 	fi
 	install -d ${D}/${base_sbindir}
-	if ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'false', 'true', d)}; then
-		# Provided by a separate recipe
-		rm ${D}${systemd_system_unitdir}/serial-getty* -f
+
+	if ! ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'true', 'false', d)}; then
+		# Remove the serial-getty generator and instead use explicit services
+		# created by the systemd-serialgetty recipe
+		find ${D} -name \*getty-generator\* -delete
 	fi
 
 	# Provide support for initramfs
