@@ -12,11 +12,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=c2a92498b6e88e276f986877995425b8 \
                     "
 
 
-SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2 \
-           file://0001-uatomic-generic.h-add-missing-stdlib.h-header-file-f.patch \
-          "
+SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2"
 
-SRC_URI[sha256sum] = "4f2d839af67905ad396d6d53ba5649b66113d90840dcbc89941e0da64bccd38c"
+SRC_URI[sha256sum] = "98d66cc12f2c5881879b976f0c55d10d311401513be254e3bd28cf3811fb50c8"
 
 S = "${WORKDIR}/userspace-rcu-${PV}"
 inherit autotools multilib_header
