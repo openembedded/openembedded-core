@@ -20,7 +20,7 @@ SRC_URI = "${GNUPG_MIRROR}/libassuan/libassuan-${PV}.tar.bz2 \
            file://libassuan-add-pkgconfig-support.patch \
           "
 
-SRC_URI[sha256sum] = "c8f0f42e6103dea4b1a6a483cb556654e97302c7465308f58363778f95f194b1"
+SRC_URI[sha256sum] = "d2931cdad266e633510f9970e1a2f346055e351bb19f9b78912475b8074c36f6"
 
 BINCONFIG = "${bindir}/libassuan-config"
 
