@@ -11,7 +11,7 @@ DEPENDS = "zlib"
 LIBV = "16"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}${LIBV}/${BP}.tar.xz"
-SRC_URI[sha256sum] = "926485350139ffb51ef69760db35f78846c805fef3d59bfdcb2fba704663f370"
+SRC_URI[sha256sum] = "b213cb381fbb1175327bd708a77aab708a05adde7b471bc267bd15ac99893631"
 
 MIRRORS += "${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/ ${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/older-releases/"
 
