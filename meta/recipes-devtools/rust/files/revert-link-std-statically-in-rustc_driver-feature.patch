@@ -104,7 +104,7 @@ diff --git a/src/bootstrap/src/bin/rustc.rs b/src/bootstrap/src/bin/rustc.rs
 index d04e2fbeb7..011c289d93 100644
 --- a/src/bootstrap/src/bin/rustc.rs
 +++ b/src/bootstrap/src/bin/rustc.rs
-@@ -89,25 +89,6 @@ fn main() {
+@@ -89,24 +89,6 @@ fn main() {
          rustc_real
      };
 
@@ -114,7 +114,6 @@ index d04e2fbeb7..011c289d93 100644
 -    // When statically linking `std` into `rustc_driver`, remove `-C prefer-dynamic`
 -    if env::var("RUSTC_LINK_STD_INTO_RUSTC_DRIVER").unwrap() == "1"
 -        && crate_name == Some("rustc_driver")
--        && stage != "0"
 -    {
 -        if let Some(pos) = args.iter().enumerate().position(|(i, a)| {
 -            a == "-C" && args.get(i + 1).map(|a| a == "prefer-dynamic").unwrap_or(false)
@@ -130,7 +129,7 @@ index d04e2fbeb7..011c289d93 100644
      let mut cmd = match env::var_os("RUSTC_WRAPPER_REAL") {
          Some(wrapper) if !wrapper.is_empty() => {
              let mut cmd = Command::new(wrapper);
-@@ -118,6 +99,9 @@ fn main() {
+@@ -117,6 +99,9 @@ fn main() {
      };
      cmd.args(&args).env(dylib_path_var(), env::join_paths(&dylib_path).unwrap());
 
@@ -144,7 +143,7 @@ diff --git a/src/bootstrap/src/core/builder.rs b/src/bootstrap/src/core/builder.
 index ff0d1f3a72..b2c9602e57 100644
 --- a/src/bootstrap/src/core/builder.rs
 +++ b/src/bootstrap/src/core/builder.rs
-@@ -2153,7 +2153,7 @@ impl<'a> Builder<'a> {
+@@ -2201,7 +2201,7 @@ impl<'a> Builder<'a> {
          // When we build Rust dylibs they're all intended for intermediate
          // usage, so make sure we pass the -Cprefer-dynamic flag instead of
          // linking all deps statically into the dylib.
@@ -197,3 +196,33 @@ index b8b0432aa9..b5bd71e015 100644
  use std::env;
  use std::io::stdout;
  use std::path::{Path, PathBuf};
+diff --git a/src/bootstrap/src/core/build_steps/compile.rs b/src/bootstrap/src/core/build_steps/compile.rs
+index 27bbc8bd8f..a6fc4df2eb 100644
+--- a/src/bootstrap/src/core/build_steps/compile.rs
++++ b/src/bootstrap/src/core/build_steps/compile.rs
+@@ -1934,24 +1934,8 @@ impl Step for Assemble {
+         let src_libdir = builder.sysroot_libdir(build_compiler, host);
+         for f in builder.read_dir(&src_libdir) {
+             let filename = f.file_name().into_string().unwrap();
+-
+-            let is_proc_macro = proc_macros.contains(&filename);
+-            let is_dylib_or_debug = is_dylib(&filename) || is_debug_info(&filename);
+-
+-            // If we link statically to stdlib, do not copy the libstd dynamic library file
+-            // FIXME: Also do this for Windows once incremental post-optimization stage0 tests
+-            // work without std.dll (see https://github.com/rust-lang/rust/pull/131188).
+-            let can_be_rustc_dynamic_dep = if builder
+-                .link_std_into_rustc_driver(target_compiler.host)
+-                && !target_compiler.host.is_windows()
++            if (is_dylib(&filename) || is_debug_info(&filename)) && !proc_macros.contains(&filename)
+             {
+-                let is_std = filename.starts_with("std-") || filename.starts_with("libstd-");
+-                !is_std
+-            } else {
+-                true
+-            };
+-
+-            if is_dylib_or_debug && can_be_rustc_dynamic_dep && !is_proc_macro {
+                 builder.copy_link(&f.path(), &rustc_libdir.join(&filename));
+             }
+         }

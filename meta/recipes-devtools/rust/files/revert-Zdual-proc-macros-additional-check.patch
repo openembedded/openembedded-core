@@ -1,0 +1,43 @@
+rust: Fix build failure for v1.83 when lib32 enabled
+
+Because of the following commit ,
+https://github.com/rust-lang/rust/commit/68034f837a39387e49fc7d7c5b088f5372a1127e
+when we enable lib32, getting build failure because there is a check for target
+support for "-Zdual-proc-macros" flag not functioning properly when lib32 is
+enabled in the build environment. So for now reverting this commit and bring
+back the previous behavior, where the "-Zdual-proc-macros" flag is always
+added for building proc macros, regardless of the target architecture's support.
+This would bypass the check introduced in the patch, allowing the build to
+proceed without error, even when building for a 64-bit architecture with lib32 enabled.
+
+Upstream-Status: Pending
+
+Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
+diff --git a/src/bootstrap/src/core/builder.rs b/src/bootstrap/src/core/builder.rs
+index 9ac0b0a01f..b1374042fb 100644
+--- a/src/bootstrap/src/core/builder.rs
++++ b/src/bootstrap/src/core/builder.rs
+@@ -1701,21 +1701,8 @@ impl<'a> Builder<'a> {
+                 // Build proc macros both for the host and the target unless proc-macros are not
+                 // supported by the target.
+                 if target != compiler.host && cmd_kind != Kind::Check {
+-                    let error = command(self.rustc(compiler))
+-                        .arg("--target")
+-                        .arg(target.rustc_target_arg())
+-                        .arg("--print=file-names")
+-                        .arg("--crate-type=proc-macro")
+-                        .arg("-")
+-                        .run_capture(self)
+-                        .stderr();
+-                    let not_supported = error
+-                        .lines()
+-                        .any(|line| line.contains("unsupported crate type `proc-macro`"));
+-                    if !not_supported {
+-                        cargo.arg("-Zdual-proc-macros");
+-                        rustflags.arg("-Zdual-proc-macros");
+-                    }
++                    cargo.arg("-Zdual-proc-macros");
++                    rustflags.arg("-Zdual-proc-macros");
+                 }
+             }
+         }

@@ -63,7 +63,7 @@ index 35a5291a347..5f2858d2505 100644
 
  #[test]
 +#[ignore]
- #[cfg_attr(target_os = "emscripten", ignore)]
+ #[cfg_attr(any(target_os = "emscripten", target_os = "wasi"), ignore)] // no threads
  fn panic_in_write_doesnt_flush_in_drop() {
      static WRITES: AtomicUsize = AtomicUsize::new(0);
 diff --git a/library/std/src/io/stdio/tests.rs b/library/std/src/io/stdio/tests.rs
@@ -75,7 +75,7 @@ index f89fd27ce6c..79737f5b127 100644
 
  #[test]
 +#[ignore]
- #[cfg_attr(target_os = "emscripten", ignore)]
+ #[cfg_attr(any(target_os = "emscripten", target_os = "wasi"), ignore)] // no threads
  fn panic_doesnt_poison() {
      thread::spawn(|| {
 diff --git a/library/std/src/sync/mpsc/sync_tests.rs b/library/std/src/sync/mpsc/sync_tests.rs
@@ -318,17 +318,6 @@ index 5d6b9e94ee9..a5aacb2eb87 100644
  fn test_try_panic_any_message_unit_struct() {
      struct Juju;
 
-diff --git a/library/alloc/src/slice/tests.rs b/library/alloc/src/slice/tests.rs
---- a/library/alloc/src/slice/tests.rs
-+++ b/library/alloc/src/slice/tests.rs
-@@ -186,6 +186,7 @@
- std::thread_local!(static SILENCE_PANIC: Cell<bool> = Cell::new(false));
-
- #[test]
-+#[ignore]
- #[cfg_attr(target_os = "emscripten", ignore)] // no threads
- #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
- fn panic_safe() {
 diff --git a/library/test/src/tests.rs b/library/test/src/tests.rs
 --- a/library/test/src/tests.rs
 +++ b/library/test/src/tests.rs
