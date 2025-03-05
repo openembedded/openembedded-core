@@ -10,11 +10,11 @@ LIC_FILES_CHKSUM = "file://gi-docgen.py;beginline=1;endline=5;md5=2dc0f1f0120247
 
 SRC_URI = "git://gitlab.gnome.org/GNOME/gi-docgen.git;protocol=https;branch=main"
 
-SRCREV = "eff4ec3d21df38c9d857bcf58aa98437c6610489"
+SRCREV = "9ab2ab8fa3f4a04f5d2cc24b0c8e91e73bc57b51"
 
 S = "${WORKDIR}/git"
 
-inherit setuptools3
+inherit python_setuptools_build_meta
 
 RDEPENDS:${PN} += "python3-asyncio python3-core python3-jinja2 python3-json python3-markdown python3-markupsafe python3-pygments python3-typogrify python3-xml"
 
