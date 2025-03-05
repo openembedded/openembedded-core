@@ -15,6 +15,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            file://dhcpcd.service \
            file://dhcpcd@.service \
            file://0001-dhcpcd.8-Fix-conflict-error-when-enable-multilib.patch \
+           file://0001-linux-Allow-the-__NR_rt_sigprocmask-syscall.patch \
            "
 
 SRCREV = "57c3506a5622e199cf0e3fc1ef26a71cdedc9521"
