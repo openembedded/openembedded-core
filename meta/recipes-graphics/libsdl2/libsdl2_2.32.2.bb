@@ -70,7 +70,7 @@ PACKAGECONFIG[kmsdrm]     = "-DSDL_KMSDRM=ON,-DSDL_KMSDRM=OFF,libdrm virtual/lib
 PACKAGECONFIG[libsamplerate] = "-DSDL_LIBSAMPLERATE=ON,-DSDL_LIBSAMPLERATE=OFF,libsamplerate0"
 # The hidraw support doesn't catch Xbox, PS4 and Nintendo controllers,
 #  so we'll just use libusb when it's available.
-PACKAGECONFIG[libusb] = ",,libusb1"
+PACKAGECONFIG[libusb] = "-DSDL_HIDAPI_LIBUSB=ON,-DSDL_HIDAPI_LIBUSB=OFF,libusb1"
 PACKAGECONFIG[libdecor] = "-DSDL_WAYLAND_LIBDECOR=ON,-DSDL_WAYLAND_LIBDECOR=OFF,libdecor,libdecor"
 PACKAGECONFIG[opengl]     = "-DSDL_OPENGL=ON,-DSDL_OPENGL=OFF,virtual/egl"
 PACKAGECONFIG[pipewire] = "-DSDL_PIPEWIRE_SHARED=ON,-DSDL_PIPEWIRE_SHARED=OFF,pipewire"
