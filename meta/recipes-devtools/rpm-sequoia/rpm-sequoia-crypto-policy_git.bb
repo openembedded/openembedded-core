@@ -20,9 +20,10 @@ do_compile () {
 	# It speeds up the build and we only need DEFAULT/rpm-sequoia.
 	rm -f $(ls -1 policies/*.pol | grep -v DEFAULT.pol) || echo nothing to delete
 
-	# Don't validate openssh policy variants.
+	# Don't validate openssh and gnutls policy variants.
 	# Validation may fail and these variants are not needed.
 	export OLD_OPENSSH=1
+	export OLD_GNUTLS=1
 
 	make ASCIIDOC=echo XSLTPROC=echo
 }
