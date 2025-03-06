@@ -38,5 +38,6 @@ SRC_URI = "\
      file://0015-gprofng-change-use-of-bignum-to-bigint.patch \
      file://0016-CVE-2024-53589.patch \
      file://0017-dlltool-file-name-too-long.patch \
+     file://0018-CVE-2025-0840.patch \
 "
 S  = "${WORKDIR}/git"
