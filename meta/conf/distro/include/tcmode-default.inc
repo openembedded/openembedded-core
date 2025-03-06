@@ -14,7 +14,6 @@ SDKGCCVERSION ?= "${GCCVERSION}"
 BINUVERSION ?= "2.44%"
 GLIBCVERSION ?= "2.41%"
 LINUXLIBCVERSION ?= "6.12%"
-GOVERSION ?= "1.24%"
 RUSTVERSION ?= "1.83%"
 
 PREFERRED_VERSION_gcc ?= "${GCCVERSION}"
@@ -45,20 +44,6 @@ PREFERRED_VERSION_glibc-mtrace             ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_glibc-scripts            ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_nativesdk-glibc          ?= "${GLIBCVERSION}"
 PREFERRED_VERSION_cross-localedef-native   ?= "${GLIBCVERSION}"
-
-# Bootstrap Go using a binary release from golang.org.  If you want to bootstrap
-# from source using the C-implemented Go 1.4 (only supports x86-64 hosts) then use
-# go-native.
-PREFERRED_PROVIDER_go-native ?= "go-binary-native"
-PREFERRED_VERSION_virtual/${TARGET_PREFIX}go ?= "${GOVERSION}"
-PREFERRED_VERSION_go-cross-${TUNE_PKGARCH} ?= "${GOVERSION}"
-PREFERRED_VERSION_go-crosssdk-${SDK_ARCH} ?= "${GOVERSION}"
-PREFERRED_VERSION_go-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "${GOVERSION}"
-PREFERRED_VERSION_go ?= "${GOVERSION}"
-PREFERRED_VERSION_go-native ?= "${GOVERSION}"
-PREFERRED_VERSION_go-runtime ?= "${GOVERSION}"
-PREFERRED_VERSION_nativesdk-go ?= "${GOVERSION}"
-PREFERRED_VERSION_nativesdk-go-runtime ?= "${GOVERSION}"
 
 # Rust toolchain preferred versions:
 
