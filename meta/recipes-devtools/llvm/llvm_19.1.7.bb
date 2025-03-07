@@ -43,6 +43,7 @@ def get_llvm_arch(bb, d, arch_var):
     elif re.match(r'armeb$', a):                        return 'ARM'
     elif re.match(r'aarch64$', a):                      return 'AArch64'
     elif re.match(r'aarch64_be$', a):                   return 'AArch64'
+    elif re.match(r'loongarch(32|64|)$', a):            return 'LoongArch'
     elif re.match(r'mips(isa|)(32|64|)(r6|)(el|)$', a): return 'Mips'
     elif re.match(r'riscv(32|64)(eb|)$', a):            return 'RISCV'
     elif re.match(r'p(pc|owerpc)(|64)', a):             return 'PowerPC'
