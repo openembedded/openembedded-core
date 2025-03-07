@@ -47,3 +47,5 @@ STOP
     done
 }
 
+# cpe-incorrect: issue in ThemeREX's Wordpress theme Puzzles
+CVE_CHECK_IGNORE += "CVE-2024-13769 CVE-2024-13770 CVE-2025-0837"
