@@ -32,6 +32,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0014-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
            file://0017-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
            file://0019-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
+           file://0001-localedef-fixup-filesystem-check-error.patch \
            "
 # Makes for a rather long rev (22 characters), but...
 #
