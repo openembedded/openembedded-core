@@ -342,16 +342,6 @@ UBOOT_FITIMAGE_ENABLE = "1"
 UBOOT_LOADADDRESS = "0x80080000"
 UBOOT_ENTRYPOINT = "0x80080000"
 UBOOT_FIT_DESC = "A model description"
-
-# Enable creation of Kernel fitImage
-KERNEL_IMAGETYPES += " fitImage "
-KERNEL_CLASSES = " kernel-fitimage"
-UBOOT_SIGN_ENABLE = "1"
-FIT_GENERATE_KEYS = "1"
-UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
-UBOOT_SIGN_IMG_KEYNAME = "img-oe-selftest"
-UBOOT_SIGN_KEYNAME = "cfg-oe-selftest"
-FIT_SIGN_INDIVIDUAL = "1"
 """
         self.write_config(config)
 
@@ -395,89 +385,6 @@ FIT_SIGN_INDIVIDUAL = "1"
             self.assertTrue(field_index == len(its_field_check),
                 "Fields in Image Tree Source File %s did not match, error in finding %s"
                 % (fitimage_its_path, its_field_check[field_index]))
-
-    def test_uboot_sign_fit_image(self):
-        """
-        Summary:     Check if Uboot FIT image and Image Tree Source
-                     (its) are built and the Image Tree Source has the
-                     correct fields, in the scenario where the Kernel
-                     is also creating/signing it's fitImage.
-        Expected:    1. u-boot-fitImage and u-boot-its can be built
-                     2. The type, load address, entrypoint address and
-                     default values of U-boot image are correct in the
-                     Image Tree Source. Not all the fields are tested,
-                     only the key fields that wont vary between
-                     different architectures.
-        Product:     oe-core
-        Author:      Klaus Heinrich Kiwi <klaus@linux.vnet.ibm.com>
-                     based on work by Usama Arif <usama.arif@arm.com>
-        """
-        config = """
-# We need at least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
-UBOOT_MACHINE = "am57xx_evm_defconfig"
-SPL_BINARY = "MLO"
-
-# Enable creation of the U-Boot fitImage
-UBOOT_FITIMAGE_ENABLE = "1"
-
-# (U-boot) fitImage properties
-UBOOT_LOADADDRESS = "0x80080000"
-UBOOT_ENTRYPOINT = "0x80080000"
-UBOOT_FIT_DESC = "A model description"
-KERNEL_IMAGETYPES += " fitImage "
-KERNEL_CLASSES = " kernel-fitimage "
-UBOOT_SIGN_ENABLE = "1"
-FIT_GENERATE_KEYS = "1"
-UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
-UBOOT_SIGN_IMG_KEYNAME = "img-oe-selftest"
-UBOOT_SIGN_KEYNAME = "cfg-oe-selftest"
-FIT_SIGN_INDIVIDUAL = "1"
-UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot comment'"
-"""
-        self.write_config(config)
-
-        # The U-Boot fitImage is created as part of the U-Boot recipe
-        bitbake("virtual/bootloader")
-
-        deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
-        machine = get_bb_var('MACHINE')
-        fitimage_its_path = os.path.join(deploy_dir_image,
-            "u-boot-its-%s" % (machine,))
-        fitimage_path = os.path.join(deploy_dir_image,
-            "u-boot-fitImage-%s" % (machine,))
-
-        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
-
-        # Check that the type, load address, entrypoint address and default
-        # values for kernel and ramdisk in Image Tree Source are as expected.
-        # The order of fields in the below array is important. Not all the
-        # fields are tested, only the key fields that wont vary between
-        # different architectures.
-        its_field_check = [
-            'description = "A model description";',
-            'type = "standalone";',
-            'load = <0x80080000>;',
-            'entry = <0x80080000>;',
-            'default = "conf";',
-            'loadables = "uboot";',
-            'fdt = "fdt";'
-            ]
-
-        with open(fitimage_its_path) as its_file:
-            field_index = 0
-            for line in its_file:
-                if field_index == len(its_field_check):
-                    break
-                if its_field_check[field_index] in line:
-                    field_index +=1
-
-        if field_index != len(its_field_check): # if its equal, the test passed
-            self.assertTrue(field_index == len(its_field_check),
-                "Fields in Image Tree Source File %s did not match, error in finding %s"
-                % (fitimage_its_path, its_field_check[field_index]))
-
 
     def test_sign_standalone_uboot_fit_image(self):
         """
@@ -505,9 +412,6 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot comment'"
 MACHINE = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
-# The kernel-fitimage class is a dependency even if we're only
-# creating/signing the U-Boot fitImage
-KERNEL_CLASSES = " kernel-fitimage"
 # Enable creation and signing of the U-Boot fitImage
 UBOOT_FITIMAGE_ENABLE = "1"
 SPL_SIGN_ENABLE = "1"
@@ -663,8 +567,6 @@ SPL_MKIMAGE_SIGN_ARGS = "-c 'a smart cascaded U-Boot comment'"
 UBOOT_EXTLINUX = "0"
 UBOOT_FIT_GENERATE_KEYS = "1"
 UBOOT_FIT_HASH_ALG = "sha256"
-KERNEL_IMAGETYPES += " fitImage "
-KERNEL_CLASSES = " kernel-fitimage "
 UBOOT_SIGN_ENABLE = "1"
 FIT_GENERATE_KEYS = "1"
 UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
@@ -1030,9 +932,6 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
 MACHINE = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
-# The kernel-fitimage class is a dependency even if we're only
-# creating/signing the U-Boot fitImage
-KERNEL_CLASSES = " kernel-fitimage"
 # Enable creation and signing of the U-Boot fitImage
 UBOOT_FITIMAGE_ENABLE = "1"
 SPL_SIGN_ENABLE = "1"
