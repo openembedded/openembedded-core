@@ -3,12 +3,14 @@ DESCRIPTION = "Document type definitions for verification of XML data \
 files against the DocBook rule set."
 HOMEPAGE = "https://docbook.org"
 
-# The upstream sources are not distributed with a license file.
-# LICENSE-OASIS is included as a "patch" to workaround this. When
-# upgrading this recipe, please verify whether this is still needed.
-
-LICENSE = "OASIS"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE-OASIS;md5=c608985dd5f7f215e669e7639a0b1d2e"
+LICENSE = "DocBook"
+LIC_FILES_CHKSUM = "\
+    file://docbook-4.1.2/docbookx.dtd;beginline=12;endline=27;md5=21a24edab68530fae39dd512ba69840e \
+    file://docbook-4.2/docbookx.dtd;beginline=13;endline=28;md5=ab12da76ad94a41d04e1587693ebd9b6 \
+    file://docbook-4.3/docbookx.dtd;beginline=13;endline=28;md5=ab12da76ad94a41d04e1587693ebd9b6 \
+    file://docbook-4.4/docbookx.dtd;beginline=15;endline=30;md5=ab12da76ad94a41d04e1587693ebd9b6 \
+    file://docbook-4.5/docbookx.dtd;beginline=15;endline=30;md5=ab12da76ad94a41d04e1587693ebd9b6 \
+"
 
 # To support apps with xml schema backward compatibility, we must
 # install a set of schemas. Install the latest based on PV and then
@@ -31,7 +33,7 @@ SRC_URI = "https://docbook.org/xml/4.1.2/docbkx412.zip;name=payload412;subdir=do
            https://docbook.org/xml/4.4/docbook-xml-4.4.zip;name=payload44;subdir=docbook-4.4 \
            https://docbook.org/xml/${PV}/docbook-xml-${PV}.zip;name=payloadPV;subdir=docbook-${PV} \
            file://docbook-xml-update-catalog.xml.patch \
-           file://LICENSE-OASIS"
+           "
 
 SRC_URI[payload412.sha256sum] = "30f0644064e0ea71751438251940b1431f46acada814a062870f486c772e7772"
 SRC_URI[payload42.sha256sum] = "acc4601e4f97a196076b7e64b368d9248b07c7abf26b34a02cca40eeebe60fa2"
