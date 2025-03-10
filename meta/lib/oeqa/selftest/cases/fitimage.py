@@ -168,7 +168,6 @@ FIT_DESC = "A model description"
         dumpimage_result = self._run_dumpimage(fitimage_path, uboot_tools_bindir)
         self._verify_fitimage_uboot_env(dumpimage_result)
 
-
     def test_sign_fit_image(self):
         """
         Summary:     Check if FIT image and Image Tree Source (its) are created
@@ -313,6 +312,135 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c '%s'"
         for dtb in ['am335x-bone.dtb', 'am335x-boneblack.dtb', 'am335x-bonegreen.dtb']:
             self._verify_fit_image_signature(uboot_tools_bindir, fitimage_path,
                                              os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], dtb), 'conf-' + dtb)
+
+    def test_initramfs_bundle(self):
+        """
+        Summary:     Verifies the content of the initramfs bundle node in the FIT Image Tree Source (its)
+                     The FIT settings are set by the test case.
+                     The machine used is beaglebone-yocto.
+        Expected:    1. The ITS is generated with initramfs bundle support
+                     2. All the fields in the kernel node are as expected (matching the
+                        conf settings)
+                     3. The kernel is included in all the available configurations and
+                        its hash is included in the configuration signature
+
+        Product:     oe-core
+        Author:      Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+        """
+
+        config = """
+DISTRO="poky"
+MACHINE = "beaglebone-yocto"
+INITRAMFS_IMAGE_BUNDLE = "1"
+INITRAMFS_IMAGE = "core-image-minimal-initramfs"
+INITRAMFS_SCRIPTS = ""
+UBOOT_MACHINE = "am335x_evm_defconfig"
+KERNEL_CLASSES = " kernel-fitimage "
+KERNEL_IMAGETYPES = "fitImage"
+UBOOT_SIGN_ENABLE = "1"
+UBOOT_SIGN_KEYNAME = "beaglebonekey"
+UBOOT_SIGN_KEYDIR ?= "${DEPLOY_DIR_IMAGE}"
+UBOOT_DTB_BINARY = "u-boot.dtb"
+UBOOT_ENTRYPOINT  = "0x80000000"
+UBOOT_LOADADDRESS = "0x80000000"
+UBOOT_DTB_LOADADDRESS = "0x82000000"
+UBOOT_ARCH = "arm"
+UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb -p 2000"
+UBOOT_MKIMAGE_KERNEL_TYPE = "kernel"
+UBOOT_EXTLINUX = "0"
+FIT_GENERATE_KEYS = "1"
+KERNEL_IMAGETYPE_REPLACEMENT = "zImage"
+FIT_KERNEL_COMP_ALG = "none"
+FIT_HASH_ALG = "sha256"
+"""
+        config = self._config_add_uboot_env(config)
+        self.write_config(config)
+
+        # fitImage is created as part of linux recipe
+        bitbake("virtual/kernel")
+
+        bb_vars = get_bb_vars([
+            'DEPLOY_DIR_IMAGE',
+            'FIT_HASH_ALG',
+            'FIT_KERNEL_COMP_ALG',
+            'INITRAMFS_IMAGE',
+            'MACHINE',
+            'UBOOT_ARCH',
+            'UBOOT_ENTRYPOINT',
+            'UBOOT_LOADADDRESS',
+            'UBOOT_MKIMAGE_KERNEL_TYPE'
+            ],
+            'virtual/kernel')
+        fitimage_its_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],
+                    "fitImage-its-%s-%s-%s" % (bb_vars['INITRAMFS_IMAGE'], bb_vars['MACHINE'], bb_vars['MACHINE']))
+        fitimage_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],"fitImage")
+
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
+
+        its_file = open(fitimage_its_path)
+
+        its_lines = [line.strip() for line in its_file.readlines()]
+
+        exp_node_lines = [
+            'kernel-1 {',
+            'description = "Linux kernel";',
+            'data = /incbin/("linux.bin");',
+            'type = "' + str(bb_vars['UBOOT_MKIMAGE_KERNEL_TYPE']) + '";',
+            'arch = "' + str(bb_vars['UBOOT_ARCH']) + '";',
+            'os = "linux";',
+            'compression = "' + str(bb_vars['FIT_KERNEL_COMP_ALG']) + '";',
+            'load = <' + str(bb_vars['UBOOT_LOADADDRESS']) + '>;',
+            'entry = <' + str(bb_vars['UBOOT_ENTRYPOINT']) + '>;',
+            'hash-1 {',
+            'algo = "' + str(bb_vars['FIT_HASH_ALG']) +'";',
+            '};',
+            '};'
+        ]
+
+        node_str = exp_node_lines[0]
+
+        print ("checking kernel node\n")
+        self.assertIn(node_str, its_lines)
+
+        node_start_idx = its_lines.index(node_str)
+        node = its_lines[node_start_idx:(node_start_idx + len(exp_node_lines))]
+
+        # Remove the absolute path. This refers to WORKDIR which is not always predictable.
+        re_data = re.compile(r'^data = /incbin/\(.*/linux\.bin"\);$')
+        node = [re.sub(re_data, 'data = /incbin/("linux.bin");', cfg_str) for cfg_str in node]
+
+        self.assertEqual(node, exp_node_lines, "kernel node does not match expectation")
+
+        rx_configs = re.compile("^conf-.*")
+        its_configs = list(filter(rx_configs.match, its_lines))
+
+        for cfg_str in its_configs:
+            cfg_start_idx = its_lines.index(cfg_str)
+            line_idx = cfg_start_idx + 2
+            node_end = False
+            while node_end == False:
+                if its_lines[line_idx] == "};" and its_lines[line_idx-1] == "};" :
+                    node_end = True
+                line_idx = line_idx + 1
+
+            node = its_lines[cfg_start_idx:line_idx]
+            print("checking configuration " + cfg_str.rstrip(" {"))
+            rx_desc_line = re.compile(r'^description = ".*Linux kernel.*')
+            self.assertEqual(len(list(filter(rx_desc_line.match, node))), 1, "kernel keyword not found in the description line")
+
+            self.assertIn('kernel = "kernel-1";', node)
+
+            rx_sign_line = re.compile(r'^sign-images = .*kernel.*')
+            self.assertEqual(len(list(filter(rx_sign_line.match, node))), 1, "kernel hash not signed")
+
+        # Verify the signature
+        uboot_tools_bindir = self._setup_uboot_tools_native()
+        self._verify_fit_image_signature(uboot_tools_bindir, fitimage_path, os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], 'am335x-bone.dtb'))
+
+        # Check if the u-boot boot.scr script is in the fitImage
+        dumpimage_result = self._run_dumpimage(fitimage_path, uboot_tools_bindir)
+        self._verify_fitimage_uboot_env(dumpimage_result)
 
     def test_uboot_fit_image(self):
         """
@@ -522,7 +650,6 @@ UBOOT_FIT_HASH_ALG = "sha256"
         self._verify_fit_image_signature(uboot_tools_bindir, fitimage_path,
                                          os.path.join(deploy_dir_image, 'u-boot-spl.dtb'))
 
-
     def test_sign_cascaded_uboot_fit_image(self):
         """
         Summary:     Check if U-Boot FIT image and Image Tree Source (its) are
@@ -666,137 +793,6 @@ FIT_SIGN_INDIVIDUAL = "1"
         # Verify the signature
         self._verify_fit_image_signature(uboot_tools_bindir, fitimage_path,
                                          os.path.join(deploy_dir_image, 'u-boot-spl.dtb'))
-
-
-    def test_initramfs_bundle(self):
-        """
-        Summary:     Verifies the content of the initramfs bundle node in the FIT Image Tree Source (its)
-                     The FIT settings are set by the test case.
-                     The machine used is beaglebone-yocto.
-        Expected:    1. The ITS is generated with initramfs bundle support
-                     2. All the fields in the kernel node are as expected (matching the
-                        conf settings)
-                     3. The kernel is included in all the available configurations and
-                        its hash is included in the configuration signature
-
-        Product:     oe-core
-        Author:      Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-        """
-
-        config = """
-DISTRO="poky"
-MACHINE = "beaglebone-yocto"
-INITRAMFS_IMAGE_BUNDLE = "1"
-INITRAMFS_IMAGE = "core-image-minimal-initramfs"
-INITRAMFS_SCRIPTS = ""
-UBOOT_MACHINE = "am335x_evm_defconfig"
-KERNEL_CLASSES = " kernel-fitimage "
-KERNEL_IMAGETYPES = "fitImage"
-UBOOT_SIGN_ENABLE = "1"
-UBOOT_SIGN_KEYNAME = "beaglebonekey"
-UBOOT_SIGN_KEYDIR ?= "${DEPLOY_DIR_IMAGE}"
-UBOOT_DTB_BINARY = "u-boot.dtb"
-UBOOT_ENTRYPOINT  = "0x80000000"
-UBOOT_LOADADDRESS = "0x80000000"
-UBOOT_DTB_LOADADDRESS = "0x82000000"
-UBOOT_ARCH = "arm"
-UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb -p 2000"
-UBOOT_MKIMAGE_KERNEL_TYPE = "kernel"
-UBOOT_EXTLINUX = "0"
-FIT_GENERATE_KEYS = "1"
-KERNEL_IMAGETYPE_REPLACEMENT = "zImage"
-FIT_KERNEL_COMP_ALG = "none"
-FIT_HASH_ALG = "sha256"
-"""
-        config = self._config_add_uboot_env(config)
-        self.write_config(config)
-
-        # fitImage is created as part of linux recipe
-        bitbake("virtual/kernel")
-
-        bb_vars = get_bb_vars([
-            'DEPLOY_DIR_IMAGE',
-            'FIT_HASH_ALG',
-            'FIT_KERNEL_COMP_ALG',
-            'INITRAMFS_IMAGE',
-            'MACHINE',
-            'UBOOT_ARCH',
-            'UBOOT_ENTRYPOINT',
-            'UBOOT_LOADADDRESS',
-            'UBOOT_MKIMAGE_KERNEL_TYPE'
-            ],
-            'virtual/kernel')
-        fitimage_its_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],
-                    "fitImage-its-%s-%s-%s" % (bb_vars['INITRAMFS_IMAGE'], bb_vars['MACHINE'], bb_vars['MACHINE']))
-        fitimage_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'],"fitImage")
-
-        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
-        self.assertExists(fitimage_path, "%s FIT image doesn't exist" % (fitimage_path))
-
-        its_file = open(fitimage_its_path)
-
-        its_lines = [line.strip() for line in its_file.readlines()]
-
-        exp_node_lines = [
-            'kernel-1 {',
-            'description = "Linux kernel";',
-            'data = /incbin/("linux.bin");',
-            'type = "' + str(bb_vars['UBOOT_MKIMAGE_KERNEL_TYPE']) + '";',
-            'arch = "' + str(bb_vars['UBOOT_ARCH']) + '";',
-            'os = "linux";',
-            'compression = "' + str(bb_vars['FIT_KERNEL_COMP_ALG']) + '";',
-            'load = <' + str(bb_vars['UBOOT_LOADADDRESS']) + '>;',
-            'entry = <' + str(bb_vars['UBOOT_ENTRYPOINT']) + '>;',
-            'hash-1 {',
-            'algo = "' + str(bb_vars['FIT_HASH_ALG']) +'";',
-            '};',
-            '};'
-        ]
-
-        node_str = exp_node_lines[0]
-
-        print ("checking kernel node\n")
-        self.assertIn(node_str, its_lines)
-
-        node_start_idx = its_lines.index(node_str)
-        node = its_lines[node_start_idx:(node_start_idx + len(exp_node_lines))]
-
-        # Remove the absolute path. This refers to WORKDIR which is not always predictable.
-        re_data = re.compile(r'^data = /incbin/\(.*/linux\.bin"\);$')
-        node = [re.sub(re_data, 'data = /incbin/("linux.bin");', cfg_str) for cfg_str in node]
-
-        self.assertEqual(node, exp_node_lines, "kernel node does not match expectation")
-
-        rx_configs = re.compile("^conf-.*")
-        its_configs = list(filter(rx_configs.match, its_lines))
-
-        for cfg_str in its_configs:
-            cfg_start_idx = its_lines.index(cfg_str)
-            line_idx = cfg_start_idx + 2
-            node_end = False
-            while node_end == False:
-                if its_lines[line_idx] == "};" and its_lines[line_idx-1] == "};" :
-                    node_end = True
-                line_idx = line_idx + 1
-
-            node = its_lines[cfg_start_idx:line_idx]
-            print("checking configuration " + cfg_str.rstrip(" {"))
-            rx_desc_line = re.compile(r'^description = ".*Linux kernel.*')
-            self.assertEqual(len(list(filter(rx_desc_line.match, node))), 1, "kernel keyword not found in the description line")
-
-            self.assertIn('kernel = "kernel-1";', node)
-
-            rx_sign_line = re.compile(r'^sign-images = .*kernel.*')
-            self.assertEqual(len(list(filter(rx_sign_line.match, node))), 1, "kernel hash not signed")
-
-        # Verify the signature
-        uboot_tools_bindir = self._setup_uboot_tools_native()
-        self._verify_fit_image_signature(uboot_tools_bindir, fitimage_path, os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], 'am335x-bone.dtb'))
-
-        # Check if the u-boot boot.scr script is in the fitImage
-        dumpimage_result = self._run_dumpimage(fitimage_path, uboot_tools_bindir)
-        self._verify_fitimage_uboot_env(dumpimage_result)
-
 
     def test_uboot_atf_tee_fit_image(self):
         """
