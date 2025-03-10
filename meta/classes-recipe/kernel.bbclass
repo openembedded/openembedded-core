@@ -233,7 +233,7 @@ KERNEL_VERSION = "${@get_kernelversion_headers('${B}')}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # U-Boot support
-UBOOT_ENTRYPOINT ?= "20008000"
+UBOOT_ENTRYPOINT ?= "0x20008000"
 UBOOT_LOADADDRESS ?= "${UBOOT_ENTRYPOINT}"
 
 # Some Linux kernel configurations need additional parameters on the command line
