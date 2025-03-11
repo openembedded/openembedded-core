@@ -26,6 +26,9 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://CVE-2025-0624.patch \
            file://CVE-2024-45774.patch \
            file://CVE-2024-45775.patch \
+           file://CVE-2025-0622-01.patch \
+           file://CVE-2025-0622-02.patch \
+           file://CVE-2025-0622-03.patch \
 "
 
 SRC_URI[sha256sum] = "b30919fa5be280417c17ac561bb1650f60cfb80cc6237fa1e2b6f56154cb9c91"
