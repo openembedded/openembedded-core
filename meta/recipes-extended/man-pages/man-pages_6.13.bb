@@ -20,7 +20,7 @@ LIC_FILES_CHKSUM = "file://README;md5=72cff06b7954222c24d38bc2c41b234e \
 SRC_URI = "${KERNELORG_MIRROR}/linux/docs/${BPN}/${BP}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "23c6817f89b481c8ae2232a523ce66c06e5cc5b41873bb6675318777155d6a89"
+SRC_URI[sha256sum] = "869a682be64ee634149f62b4bcbd8334fd1e400883181618d7164a43de6a3aa1"
 
 inherit manpages lib_package
 
