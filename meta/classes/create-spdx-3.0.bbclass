@@ -134,7 +134,6 @@ python do_create_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_spdx(d)
 }
-do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS SPDX_BUILD_HOST"
 do_create_spdx[vardeps] += "\
     SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
     SPDX_PACKAGE_ADDITIONAL_PURPOSE \
@@ -170,7 +169,7 @@ python do_create_package_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_package_spdx(d)
 }
-do_create_package_spdx[vardepsexclude] += "OVERRIDES SPDX_MULTILIB_SSTATE_ARCHS"
+oe.spdx30_tasks.create_package_spdx[vardepsexclude] = "OVERRIDES"
 
 addtask do_create_package_spdx after do_create_spdx before do_build do_rm_work
 SSTATETASKS += "do_create_package_spdx"
