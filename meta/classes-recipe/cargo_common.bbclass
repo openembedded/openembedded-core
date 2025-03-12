@@ -142,7 +142,7 @@ python cargo_common_do_patch_paths() {
     fetcher = bb.fetch2.Fetch(src_uri, d)
     for url in fetcher.urls:
         ud = fetcher.ud[url]
-        if ud.type == 'git':
+        if ud.type == 'git' or ud.type == 'gitsm':
             name = ud.parm.get('name')
             destsuffix = ud.parm.get('destsuffix')
             if name is not None and destsuffix is not None:
