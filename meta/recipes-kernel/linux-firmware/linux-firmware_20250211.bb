@@ -662,89 +662,89 @@ ALLOW_EMPTY:${PN}-ath12k = "1"
 ALLOW_EMPTY:${PN}-ath12k-misc = "1"
 
 FILES:${PN}-qca-qca61x4-serial = " \
-  ${nonarch_base_libdir}/firmware/qca/nvm_0*.bin \
-  ${nonarch_base_libdir}/firmware/qca/rampatch_0*.bin \
+  ${nonarch_base_libdir}/firmware/qca/nvm_0*.bin* \
+  ${nonarch_base_libdir}/firmware/qca/rampatch_0*.bin* \
 "
 FILES:${PN}-qca-qca61x4-usb = " \
-  ${nonarch_base_libdir}/firmware/qca/nvm_usb_*.bin \
-  ${nonarch_base_libdir}/firmware/qca/rampatch_usb_*.bin \
+  ${nonarch_base_libdir}/firmware/qca/nvm_usb_*.bin* \
+  ${nonarch_base_libdir}/firmware/qca/rampatch_usb_*.bin* \
 "
 FILES:${PN}-qca-qca6390 = " \
-  ${nonarch_base_libdir}/firmware/qca/htbtfw20.tlv \
-  ${nonarch_base_libdir}/firmware/qca/htnv20.bin \
+  ${nonarch_base_libdir}/firmware/qca/htbtfw20.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/htnv20.bin* \
 "
 FILES:${PN}-qca-qca6698 = " \
-  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpbtfw21.tlv \
-  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpnv21.b206 \
-  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpnv21.b207 \
-  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpnv21.bin \
+  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpbtfw21.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpnv21.b206* \
+  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpnv21.b207* \
+  ${nonarch_base_libdir}/firmware/qca/QCA6698/hpnv21.bin* \
 "
 FILES:${PN}-qca-wcn3950 = " \
-  ${nonarch_base_libdir}/firmware/qca/cmbtfw12.tlv \
-  ${nonarch_base_libdir}/firmware/qca/cmbtfw13.tlv \
-  ${nonarch_base_libdir}/firmware/qca/cmnv12.bin \
-  ${nonarch_base_libdir}/firmware/qca/cmnv13.bin \
-  ${nonarch_base_libdir}/firmware/qca/cmnv13s.bin \
-  ${nonarch_base_libdir}/firmware/qca/cmnv13t.bin \
+  ${nonarch_base_libdir}/firmware/qca/cmbtfw12.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/cmbtfw13.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/cmnv12.bin* \
+  ${nonarch_base_libdir}/firmware/qca/cmnv13.bin* \
+  ${nonarch_base_libdir}/firmware/qca/cmnv13s.bin* \
+  ${nonarch_base_libdir}/firmware/qca/cmnv13t.bin* \
 "
 FILES:${PN}-qca-wcn3988 = " \
-  ${nonarch_base_libdir}/firmware/qca/apbtfw10.tlv \
-  ${nonarch_base_libdir}/firmware/qca/apbtfw11.tlv \
-  ${nonarch_base_libdir}/firmware/qca/apnv10.bin \
-  ${nonarch_base_libdir}/firmware/qca/apnv11.bin \
+  ${nonarch_base_libdir}/firmware/qca/apbtfw10.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/apbtfw11.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/apnv10.bin* \
+  ${nonarch_base_libdir}/firmware/qca/apnv11.bin* \
 "
 FILES:${PN}-qca-wcn399x = " \
-  ${nonarch_base_libdir}/firmware/qca/crbtfw21.tlv \
-  ${nonarch_base_libdir}/firmware/qca/crnv21.bin \
-  ${nonarch_base_libdir}/firmware/qca/crbtfw32.tlv \
-  ${nonarch_base_libdir}/firmware/qca/crnv32.bin \
-  ${nonarch_base_libdir}/firmware/qca/crnv32u.bin \
+  ${nonarch_base_libdir}/firmware/qca/crbtfw21.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/crnv21.bin* \
+  ${nonarch_base_libdir}/firmware/qca/crbtfw32.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/crnv32.bin* \
+  ${nonarch_base_libdir}/firmware/qca/crnv32u.bin* \
 "
 FILES:${PN}-qca-wcn6750 = " \
-  ${nonarch_base_libdir}/firmware/qca/msbtfw11.mbn \
-  ${nonarch_base_libdir}/firmware/qca/msbtfw11.tlv \
-  ${nonarch_base_libdir}/firmware/qca/msnv11.bin \
-  ${nonarch_base_libdir}/firmware/qca/msnv11.b0a \
-  ${nonarch_base_libdir}/firmware/qca/msnv11.b09 \
+  ${nonarch_base_libdir}/firmware/qca/msbtfw11.mbn* \
+  ${nonarch_base_libdir}/firmware/qca/msbtfw11.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/msnv11.bin* \
+  ${nonarch_base_libdir}/firmware/qca/msnv11.b0a* \
+  ${nonarch_base_libdir}/firmware/qca/msnv11.b09* \
 "
 FILES:${PN}-qca-qca2066 = " \
-  ${nonarch_base_libdir}/firmware/qca/hpbtfw21.tlv \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.bin \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bin \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.301 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.302 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.301 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.302 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.309 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.309 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b8c \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b9f \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba0 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba1 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba2 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba3 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba4 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.baa \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.bb8 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b10c \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b111 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b8c \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b9f \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba0 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba1 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba2 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba3 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba4 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.baa \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bb8 \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b10c \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b111 \
+  ${nonarch_base_libdir}/firmware/qca/hpbtfw21.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.bin* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bin* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.301* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.302* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.301* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.302* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.309* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.309* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b8c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b9f* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba0* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba1* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba2* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba3* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba4* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.baa* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.bb8* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b10c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b111* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b8c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b9f* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba0* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba1* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba2* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba3* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba4* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.baa* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bb8* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b10c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b111* \
 "
 FILES:${PN}-qca-wcn7850 = " \
-  ${nonarch_base_libdir}/firmware/qca/hmtbtfw20.tlv \
-  ${nonarch_base_libdir}/firmware/qca/hmtnv20.b10f \
-  ${nonarch_base_libdir}/firmware/qca/hmtnv20.b112 \
-  ${nonarch_base_libdir}/firmware/qca/hmtnv20.bin \
+  ${nonarch_base_libdir}/firmware/qca/hmtbtfw20.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/hmtnv20.b10f* \
+  ${nonarch_base_libdir}/firmware/qca/hmtnv20.b112* \
+  ${nonarch_base_libdir}/firmware/qca/hmtnv20.bin* \
 "
 FILES:${PN}-qca-misc = "${nonarch_base_libdir}/firmware/qca/*"
 # -qca is a virtual package that depends upon all qca packages.
@@ -912,45 +912,45 @@ LICENSE:${PN}-amdgpu-vega12 = "Firmware-amdgpu"
 LICENSE:${PN}-amdgpu-misc = "Firmware-amdgpu"
 
 FILES:${PN}-amdgpu-license = "${nonarch_base_libdir}/firmware/LICENSE.amdgpu"
-FILES:${PN}-amdgpu-aldebaran = "${nonarch_base_libdir}/firmware/amdgpu/aldebaran_*.bin"
-FILES:${PN}-amdgpu-carrizo = "${nonarch_base_libdir}/firmware/amdgpu/carrizo_*.bin"
-FILES:${PN}-amdgpu-cezanne = "${nonarch_base_libdir}/firmware/amdgpu/green_sardine_*.bin"
-FILES:${PN}-amdgpu-fiji = "${nonarch_base_libdir}/firmware/amdgpu/fiji_*.bin"
-FILES:${PN}-amdgpu-hawaii = "${nonarch_base_libdir}/firmware/amdgpu/hawaii_*.bin"
-FILES:${PN}-amdgpu-navi10 = "${nonarch_base_libdir}/firmware/amdgpu/navi10_*.bin"
-FILES:${PN}-amdgpu-navi14 = "${nonarch_base_libdir}/firmware/amdgpu/navi14_*.bin"
-FILES:${PN}-amdgpu-navi21 = "${nonarch_base_libdir}/firmware/amdgpu/sienna_cichlid_*.bin"
-FILES:${PN}-amdgpu-navi22 = "${nonarch_base_libdir}/firmware/amdgpu/navy_flounder_*.bin"
-FILES:${PN}-amdgpu-navi23 = "${nonarch_base_libdir}/firmware/amdgpu/dimgrey_cavefish_*.bin"
-FILES:${PN}-amdgpu-navi24 = "${nonarch_base_libdir}/firmware/amdgpu/beige_goby_*.bin"
-FILES:${PN}-amdgpu-navi31 = "${nonarch_base_libdir}/firmware/amdgpu/gc_11_0_0_*.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_0_sos.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_0_ta.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/smu_13_0_0.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/dcn_3_2_0_dmcub.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/sdma_6_0_0.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/vcn_4_0_0.bin \
+FILES:${PN}-amdgpu-aldebaran = "${nonarch_base_libdir}/firmware/amdgpu/aldebaran_*.bin*"
+FILES:${PN}-amdgpu-carrizo = "${nonarch_base_libdir}/firmware/amdgpu/carrizo_*.bin*"
+FILES:${PN}-amdgpu-cezanne = "${nonarch_base_libdir}/firmware/amdgpu/green_sardine_*.bin*"
+FILES:${PN}-amdgpu-fiji = "${nonarch_base_libdir}/firmware/amdgpu/fiji_*.bin*"
+FILES:${PN}-amdgpu-hawaii = "${nonarch_base_libdir}/firmware/amdgpu/hawaii_*.bin*"
+FILES:${PN}-amdgpu-navi10 = "${nonarch_base_libdir}/firmware/amdgpu/navi10_*.bin*"
+FILES:${PN}-amdgpu-navi14 = "${nonarch_base_libdir}/firmware/amdgpu/navi14_*.bin*"
+FILES:${PN}-amdgpu-navi21 = "${nonarch_base_libdir}/firmware/amdgpu/sienna_cichlid_*.bin*"
+FILES:${PN}-amdgpu-navi22 = "${nonarch_base_libdir}/firmware/amdgpu/navy_flounder_*.bin*"
+FILES:${PN}-amdgpu-navi23 = "${nonarch_base_libdir}/firmware/amdgpu/dimgrey_cavefish_*.bin*"
+FILES:${PN}-amdgpu-navi24 = "${nonarch_base_libdir}/firmware/amdgpu/beige_goby_*.bin*"
+FILES:${PN}-amdgpu-navi31 = "${nonarch_base_libdir}/firmware/amdgpu/gc_11_0_0_*.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_0_sos.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_0_ta.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/smu_13_0_0.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/dcn_3_2_0_dmcub.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/sdma_6_0_0.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/vcn_4_0_0.bin* \
 "
-FILES:${PN}-amdgpu-navi32 = "${nonarch_base_libdir}/firmware/amdgpu/dcn_3_2_0_dmcub.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/gc_11_0_3_*.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_10_sos.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_10_ta.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/sdma_6_0_3.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/smu_13_0_10.bin \
-    ${nonarch_base_libdir}/firmware/amdgpu/vcn_4_0_0.bin \
+FILES:${PN}-amdgpu-navi32 = "${nonarch_base_libdir}/firmware/amdgpu/dcn_3_2_0_dmcub.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/gc_11_0_3_*.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_10_sos.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/psp_13_0_10_ta.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/sdma_6_0_3.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/smu_13_0_10.bin* \
+    ${nonarch_base_libdir}/firmware/amdgpu/vcn_4_0_0.bin* \
 "
-FILES:${PN}-amdgpu-oland = "${nonarch_base_libdir}/firmware/amdgpu/oland_*.bin"
-FILES:${PN}-amdgpu-polaris10 = "${nonarch_base_libdir}/firmware/amdgpu/polaris10_*.bin"
-FILES:${PN}-amdgpu-polaris11 = "${nonarch_base_libdir}/firmware/amdgpu/polaris11_*.bin"
-FILES:${PN}-amdgpu-polaris12 = "${nonarch_base_libdir}/firmware/amdgpu/polaris12_*.bin"
-FILES:${PN}-amdgpu-raven = "${nonarch_base_libdir}/firmware/amdgpu/raven_*.bin"
-FILES:${PN}-amdgpu-rembrandt = "${nonarch_base_libdir}/firmware/amdgpu/yellow_carp_*.bin"
-FILES:${PN}-amdgpu-renoir = "${nonarch_base_libdir}/firmware/amdgpu/renoir_*.bin"
-FILES:${PN}-amdgpu-stoney = "${nonarch_base_libdir}/firmware/amdgpu/stoney_*.bin"
-FILES:${PN}-amdgpu-tonga = "${nonarch_base_libdir}/firmware/amdgpu/tonga_*.bin"
-FILES:${PN}-amdgpu-topaz = "${nonarch_base_libdir}/firmware/amdgpu/topaz_*.bin"
-FILES:${PN}-amdgpu-vega10 = "${nonarch_base_libdir}/firmware/amdgpu/vega10_*.bin"
-FILES:${PN}-amdgpu-vega12 = "${nonarch_base_libdir}/firmware/amdgpu/vega12_*.bin"
+FILES:${PN}-amdgpu-oland = "${nonarch_base_libdir}/firmware/amdgpu/oland_*.bin*"
+FILES:${PN}-amdgpu-polaris10 = "${nonarch_base_libdir}/firmware/amdgpu/polaris10_*.bin*"
+FILES:${PN}-amdgpu-polaris11 = "${nonarch_base_libdir}/firmware/amdgpu/polaris11_*.bin*"
+FILES:${PN}-amdgpu-polaris12 = "${nonarch_base_libdir}/firmware/amdgpu/polaris12_*.bin*"
+FILES:${PN}-amdgpu-raven = "${nonarch_base_libdir}/firmware/amdgpu/raven_*.bin*"
+FILES:${PN}-amdgpu-rembrandt = "${nonarch_base_libdir}/firmware/amdgpu/yellow_carp_*.bin*"
+FILES:${PN}-amdgpu-renoir = "${nonarch_base_libdir}/firmware/amdgpu/renoir_*.bin*"
+FILES:${PN}-amdgpu-stoney = "${nonarch_base_libdir}/firmware/amdgpu/stoney_*.bin*"
+FILES:${PN}-amdgpu-tonga = "${nonarch_base_libdir}/firmware/amdgpu/tonga_*.bin*"
+FILES:${PN}-amdgpu-topaz = "${nonarch_base_libdir}/firmware/amdgpu/topaz_*.bin*"
+FILES:${PN}-amdgpu-vega10 = "${nonarch_base_libdir}/firmware/amdgpu/vega10_*.bin*"
+FILES:${PN}-amdgpu-vega12 = "${nonarch_base_libdir}/firmware/amdgpu/vega12_*.bin*"
 FILES:${PN}-amdgpu-misc = "${nonarch_base_libdir}/firmware/amdgpu/*"
 # -amdgpu is a virtual package that depends upon all amdgpu packages.
 ALLOW_EMPTY:${PN}-amdgpu = "1"
@@ -1500,8 +1500,8 @@ FILES:${PN}-bcm43362 = "${nonarch_base_libdir}/firmware/brcm/brcmfmac43362-sdio.
   ${nonarch_base_libdir}/firmware/cypress/cyfmac43362-sdio.*"
 FILES:${PN}-bcm43430 = "${nonarch_base_libdir}/firmware/brcm/brcmfmac43430-sdio.* \
   ${nonarch_base_libdir}/firmware/cypress/cyfmac43430-sdio.*"
-FILES:${PN}-bcm4354 = "${nonarch_base_libdir}/firmware/brcm/brcmfmac4354-sdio.bin \
-  ${nonarch_base_libdir}/firmware/cypress/cyfmac4354-sdio.bin \
+FILES:${PN}-bcm4354 = "${nonarch_base_libdir}/firmware/brcm/brcmfmac4354-sdio.bin* \
+  ${nonarch_base_libdir}/firmware/cypress/cyfmac4354-sdio.bin* \
 "
 FILES:${PN}-bcm4356-pcie = "${nonarch_base_libdir}/firmware/brcm/brcmfmac4356-pcie.* \
   ${nonarch_base_libdir}/firmware/cypress/cyfmac4356-pcie.* \
