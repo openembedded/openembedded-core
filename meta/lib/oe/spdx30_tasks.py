@@ -498,18 +498,13 @@ def create_spdx(d):
     # Add CVEs
     cve_by_status = {}
     if include_vex != "none":
-        for cve in oe.cve_check.get_patched_cves(d):
-            spdx_cve = build_objset.new_cve_vuln(cve)
-            build_objset.set_element_alias(spdx_cve)
-
-            cve_by_status.setdefault("Patched", {})[cve] = (
-                spdx_cve,
-                "patched",
-                "",
-            )
-
-        for cve in d.getVarFlags("CVE_STATUS") or {}:
-            decoded_status = oe.cve_check.decode_cve_status(d, cve)
+        patched_cves = oe.cve_check.get_patched_cves(d)
+        for cve, patched_cve in patched_cves.items():
+            decoded_status = {
+                "mapping": patched_cve["abbrev-status"],
+                "detail": patched_cve["status"],
+                "description": patched_cve.get("justification", None)
+            }
 
             # If this CVE is fixed upstream, skip it unless all CVEs are
             # specified.
