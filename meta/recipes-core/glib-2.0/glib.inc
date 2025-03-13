@@ -157,8 +157,6 @@ CODEGEN_PYTHON_RDEPENDS:mingw32 = ""
 
 RDEPENDS:${PN}-codegen += "${CODEGEN_PYTHON_RDEPENDS}"
 
-RDEPENDS:${PN}-ptest += "${PN}-utils"
-
 RDEPENDS:${PN}-ptest += "\
             coreutils \
             libgcc \
@@ -171,6 +169,7 @@ RDEPENDS:${PN}-ptest += "\
             tzdata-europe \
             tzdata-posix \
             shared-mime-info \
+            ${PN}-dev \
             ${PN}-locale-ja \
             ${PN}-locale-fr \
             ${PN}-locale-el \
@@ -179,6 +178,7 @@ RDEPENDS:${PN}-ptest += "\
             ${PN}-locale-pl \
             ${PN}-locale-ru \
             ${PN}-locale-th \
+            ${PN}-utils \
             python3-core \
             python3-modules \
             ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python3-dbusmock', '', d)} \
@@ -190,6 +190,7 @@ RDEPENDS:${PN}-ptest += "\
             locale-base-fr-fr \
             locale-base-ru-ru \
            "
+INSANE_SKIP:${PN}-ptest = "dev-deps"
 
 RDEPENDS:${PN}-ptest:append:libc-glibc = "\
             glibc-gconv-utf-16 \
@@ -203,6 +204,7 @@ RDEPENDS:${PN}-ptest:append:libc-glibc = "\
             glibc-gconv-iso8859-15 \
             glibc-charmap-invariant \
             glibc-localedata-translit-cjk-variants \
+            locale-base-c \
             locale-base-lt-lt \
             locale-base-ja-jp.euc-jp \
             locale-base-fa-ir \
