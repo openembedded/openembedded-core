@@ -92,6 +92,7 @@ PACKAGECONFIG ??= " \
     quotacheck \
     randomseed \
     resolved \
+    ${@'' if d.getVar('SERIAL_CONSOLES') else 'serial-getty-generator'} \
     set-time-epoch \
     sysusers \
     timedated \
