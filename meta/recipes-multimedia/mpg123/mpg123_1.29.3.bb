@@ -9,7 +9,9 @@ SECTION = "multimedia"
 LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e7b9c15fcfb986abb4cc5e8400a24169"
 
-SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2"
+SRC_URI = "https://www.mpg123.de/download/${BP}.tar.bz2 \
+           file://CVE-2024-10573.patch \
+           "
 SRC_URI[sha256sum] = "963885d8cc77262f28b77187c7d189e32195e64244de2530b798ddf32183e847"
 
 UPSTREAM_CHECK_REGEX = "mpg123-(?P<pver>\d+(\.\d+)+)\.tar"
