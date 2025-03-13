@@ -244,6 +244,8 @@ def main():
         # Fetch installer
         logger.info("Fetching buildtools installer")
         tmpbuildtools = os.path.join(sdk_dir, filename)
+        with open(os.path.join(sdk_dir, 'buildtools_url'), 'w') as f:
+            f.write(buildtools_url)
         ret = subprocess.call("wget -q -O %s %s" %
                               (tmpbuildtools, buildtools_url), shell=True)
         if ret != 0:
@@ -254,13 +256,15 @@ def main():
         if args.check:
             logger.info("Fetching buildtools installer checksum")
             checksum_type = "sha256sum"
-            check_url = "{}.{}".format(buildtools_url, checksum_type)
+            checksum_url = "{}.{}".format(buildtools_url, checksum_type)
             checksum_filename = "{}.{}".format(filename, checksum_type)
             tmpbuildtools_checksum = os.path.join(sdk_dir, checksum_filename)
+            with open(os.path.join(sdk_dir, 'checksum_url'), 'w') as f:
+                f.write(checksum_url)
             ret = subprocess.call("wget -q -O %s %s" %
-                                    (tmpbuildtools_checksum, check_url), shell=True)
+                                    (tmpbuildtools_checksum, checksum_url), shell=True)
             if ret != 0:
-                logger.error("Could not download file from %s" % check_url)
+                logger.error("Could not download file from %s" % checksum_url)
                 return ret
             regex = re.compile(r"^(?P<checksum>[0-9a-f]+)\s+(?P<path>.*/)?(?P<filename>.*)$")
             with open(tmpbuildtools_checksum, 'rb') as f:
