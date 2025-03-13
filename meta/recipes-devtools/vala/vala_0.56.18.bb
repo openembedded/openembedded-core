@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=fbc093901857fcd118f065f900982c24"
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
 SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${BPN}/${SHRT_VER}/${BP}.tar.xz"
-SRC_URI[sha256sum] = "26100c4e4ef0049c619275f140d97cf565883d00c7543c82bcce5a426934ed6a"
+SRC_URI[sha256sum] = "f2affe7d40ab63db8e7b9ecc3f6bdc9c2fc7e3134c84ff2d795f482fe926a382"
 
 inherit autotools pkgconfig upstream-version-is-even
 
