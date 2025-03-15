@@ -2,14 +2,14 @@ SUMMARY = "Generic XKB keymap library"
 DESCRIPTION = "libxkbcommon is a keymap compiler and support library which \
 processes a reduced subset of keymaps as defined by the XKB specification."
 HOMEPAGE = "http://www.xkbcommon.org"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=e525ed9809e1f8a07cf4bce8b09e8b87"
-LICENSE = "MIT & MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=70eff33050c59f900f5b83275dcf1211"
+LICENSE = "MIT & MIT-open-group & HPND & HPND-sell-variant & X11"
 
 DEPENDS = "flex-native bison-native"
 
 SRC_URI = "git://github.com/xkbcommon/libxkbcommon;protocol=https;branch=master"
 
-SRCREV = "76740e0c4583ae49675e7ba8213d31ee09aa00d2"
+SRCREV = "b3465081878e80ca6c11fe35c81787ec374ec15a"
 S = "${WORKDIR}/git"
 
 inherit meson pkgconfig bash-completion
