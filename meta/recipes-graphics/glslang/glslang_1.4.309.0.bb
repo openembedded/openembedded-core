@@ -8,8 +8,8 @@ HOMEPAGE = "https://www.khronos.org/opengles/sdk/tools/Reference-Compiler"
 LICENSE = "BSD-3-Clause & BSD-2-Clause & MIT & Apache-2.0 & GPL-3-with-bison-exception"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=2a2b5acd7bc4844964cfda45fe807dc3"
 
-SRCREV = "46ef757e048e760b46601e6e77ae0cb72c97bd2f"
-SRC_URI = "git://github.com/KhronosGroup/glslang.git;protocol=https;branch=main \
+SRCREV = "7200bc12a8979d13b22cd52de80ffb7d41939615"
+SRC_URI = "git://github.com/KhronosGroup/glslang.git;protocol=https;branch=vulkan-sdk-1.4.309 \
            file://0001-generate-glslang-pkg-config.patch \
            "
 PE = "1"
