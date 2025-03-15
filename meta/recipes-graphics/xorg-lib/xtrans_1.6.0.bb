@@ -10,7 +10,7 @@ except in the X Transport Interface code."
 require xorg-lib-common.inc
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=bc875e1c864f4f62b29f7d8651f627fa"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d6091702432f176651d4bf09e61bbe2d"
 
 SRC_URI += "file://multilibfix.patch"
 
@@ -22,4 +22,4 @@ inherit gettext
 
 BBCLASSEXTEND = "native nativesdk"
 
-SRC_URI[sha256sum] = "5c5cbfe34764a9131d048f03c31c19e57fb4c682d67713eab6a65541b4dff86c"
+SRC_URI[sha256sum] = "faafea166bf2451a173d9d593352940ec6404145c5d1da5c213423ce4d359e92"
