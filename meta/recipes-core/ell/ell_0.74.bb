@@ -15,4 +15,4 @@ DEPENDS = "dbus"
 inherit autotools pkgconfig
 
 SRC_URI = "https://mirrors.edge.kernel.org/pub/linux/libs/${BPN}/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "ae97f848b45a59be7741369880badfa8c08a55a24b21eae3468342cc012df11b"
+SRC_URI[sha256sum] = "f1690913024f80fafff19ecf010accb58a56784d78937bae536c016b8276bb75"
