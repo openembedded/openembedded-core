@@ -4,11 +4,11 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d903b0b8027f461402bac9b5169b36f7"
 
-SRC_URI[sha256sum] = "5b641357904d2f56f7bfdbb37e165ab996b6143c948b9df0efc7305f54949daa"
+SRC_URI[sha256sum] = "f1a5e161bf3d1411d780d65d7919654b9405555994621d3d68e42d62114b592a"
 
 inherit pypi python_setuptools_build_meta
 
-S = "${WORKDIR}/SCons-${PV}"
+S = "${WORKDIR}/scons-${PV}"
 
 RDEPENDS:${PN}:class-target = "\
   python3-core \
