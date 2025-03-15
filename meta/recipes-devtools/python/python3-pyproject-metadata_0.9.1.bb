@@ -17,7 +17,7 @@ UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
 inherit pypi python_setuptools_build_meta
 
-SRC_URI[sha256sum] = "8511c00a4cad96686af6a6b4143433298beb96105a9379afdc9b0328f4f260c9"
+SRC_URI[sha256sum] = "b8b2253dd1b7062b78cf949a115f02ba7fa4114aabe63fa10528e9e1a954a816"
 
 RDEPENDS:${PN} += " \
     python3-logging \
