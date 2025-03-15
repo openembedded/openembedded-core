@@ -3,16 +3,16 @@ DESCRIPTION = "Implementation of the Stringprep, Punycode and IDNA specification
 HOMEPAGE = "http://www.gnu.org/software/libidn/"
 SECTION = "libs"
 LICENSE = "(GPL-2.0-or-later | LGPL-3.0-only) & GPL-3.0-or-later & Unicode-DFS-2016"
-LIC_FILES_CHKSUM = "file://COPYING;md5=2d834ea7d480438ada04e5d846152395 \
-                    file://COPYING.LESSERv3;md5=e6a600fd5e1d9cbde2d983680233ad02 \
-                    file://COPYINGv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
+                    file://COPYING.LESSERv3;md5=3000208d539ec061b899bce1d9ce9404 \
+                    file://COPYINGv2;md5=570a9b3749dd0463a1778803b12a6dce \
                     file://COPYING.unicode;md5=684cf5f7e3fded3546679424528261a9 \
-                    file://src/idn2.c;endline=16;md5=afc1531bda991ba6338e33a7eff758a0 \
-                    file://lib/idn2.h.in;endline=27;md5=f88d218005a5c45b68a83cecb5bd7f26 \
+                    file://src/idn2.c;endline=16;md5=c44fb6f201f22da3a19857499b49b15d \
+                    file://lib/idn2.h.in;endline=27;md5=f27aee1b44326be3a28961c55319099f \
                     "
 
 SRC_URI = "${GNU_MIRROR}/libidn/${BPN}-${PV}.tar.gz"
-SRC_URI[sha256sum] = "4c21a791b610b9519b9d0e12b8097bf2f359b12f8dd92647611a929e6bfd7d64"
+SRC_URI[sha256sum] = "f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a"
 
 DEPENDS = "virtual/libiconv libunistring"
 
