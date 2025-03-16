@@ -23,7 +23,9 @@ This MR will close the following issues:  #149, #150, #152, #168 (to be checked)
 
 It also fixes the old bug at http://bugzilla.maptools.org/show_bug.cgi?id=2599, for which the limitation of `NumberOfInks = SPP` was introduced, which is in my opinion not necessary and does not solve the general issue.
 
-CVE: CVE-2022-3599 CVE-2022-4645
+CVE: CVE-2022-3599
+CVE: CVE-2022-4645
+CVE: CVE-2023-30774
 Upstream-Status: Backport [https://gitlab.com/libtiff/libtiff/-/commit/e813112545942107551433d61afd16ac094ff246.patch]
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 Signed-off-by: Pawan Badganchi <Pawan.Badganchi@kpit.com>
