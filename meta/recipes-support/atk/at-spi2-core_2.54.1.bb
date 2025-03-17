@@ -45,6 +45,6 @@ FILES:${PN} += "${libdir}/gnome-settings-daemon-3.0/gtk-modules/at-spi2-atk.desk
                 ${datadir}/dbus-1/services/*.service \
                 ${datadir}/dbus-1/accessibility-services/*.service \
                 ${datadir}/defaults/at-spi2 \
-                ${systemd_user_unitdir}/at-spi-dbus-bus.service \
+                ${systemd_user_unitdir}/at-spi-dbus-bus.service \
                 "
 BBCLASSEXTEND = "native nativesdk"
