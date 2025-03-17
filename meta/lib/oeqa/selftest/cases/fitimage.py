@@ -112,6 +112,22 @@ class FitImageTestCase(OESelftestTestCase):
         self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
         self.assertIn("Signature check OK", result.output)
 
+    def _verify_dtb_property(self, dtc_bindir, dtb_path, node_path, property_name, req_property, absent=False):
+        """Verify device tree properties
+
+        The fdtget utility from dtc-native is called and the property is compared.
+        """
+        fdtget_path = os.path.join(dtc_bindir, 'fdtget')
+        cmd = '%s %s %s %s' % (fdtget_path, dtb_path, node_path, property_name)
+        if absent:
+            result = runCmd(cmd, ignore_status=True)
+            self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
+            self.assertIn("FDT_ERR_NOTFOUND", result.output)
+        else:
+            result = runCmd(cmd)
+            self.logger.debug("%s\nreturned: %s\n%s", cmd, str(result.status), result.output)
+            self.assertEqual(req_property, result.output.strip())
+
     @staticmethod
     def _find_string_in_bin_file(file_path, search_string):
         """find strings in a binary file
@@ -879,12 +895,20 @@ class UBootFitImageTests(FitImageTestCase):
         """
         internal_used = {
             'DEPLOY_DIR_IMAGE',
+            'FIT_HASH_ALG',
+            'FIT_KEY_GENRSA_ARGS',
+            'FIT_KEY_REQ_ARGS',
+            'FIT_KEY_SIGN_PKCS',
+            'FIT_SIGN_ALG',
+            'FIT_SIGN_INDIVIDUAL',
+            'FIT_SIGN_NUMBITS',
             'MACHINE',
             'SPL_MKIMAGE_SIGN_ARGS',
             'SPL_SIGN_ENABLE',
             'SPL_SIGN_KEYNAME',
             'UBOOT_ARCH',
             'UBOOT_DTB_BINARY',
+            'UBOOT_DTB_IMAGE',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE',
@@ -900,7 +924,10 @@ class UBootFitImageTests(FitImageTestCase):
             'UBOOT_FIT_USER_SETTINGS',
             'UBOOT_FITIMAGE_ENABLE',
             'UBOOT_NODTB_BINARY',
+            'UBOOT_SIGN_ENABLE',
             'UBOOT_SIGN_IMG_KEYNAME',
+            'UBOOT_SIGN_KEYDIR',
+            'UBOOT_SIGN_KEYNAME',
         }
         bb_vars = get_bb_vars(list(internal_used | set(additional_vars)), "virtual/bootloader")
         self.logger.debug("bb_vars: %s" % pprint.pformat(bb_vars, indent=4))
@@ -1085,6 +1112,50 @@ class UBootFitImageTests(FitImageTestCase):
             self.assertEqual(found_comments, num_signatures, "Expected %d signed and commented (%s) sections in the fitImage." %
                              (num_signatures, a_comment))
 
+    def _check_kernel_dtb(self, bb_vars):
+        """
+        Check if the device-tree from U-Boot has the kernel public key(s).
+
+        The concat_dtb function of the uboot-sign.bbclass injects the public keys
+        which are required for verifying the kernel at run-time into the DTB from
+        U-Boot. The following example is from a build with FIT_SIGN_INDIVIDUAL
+        set to "1". If it is set to "0" the key-the-kernel-image-key node is not
+        present.
+        / {
+            ...
+            signature {
+                key-the-kernel-image-key {
+                required = "image";
+                algo = "sha256,rsa2048";
+                ...
+            };
+            key-the-kernel-config-key {
+                required = "conf";
+                algo = "sha256,rsa2048";
+                ...
+            };
+        };
+        """
+        # Setup u-boot-tools-native
+        dtc_bindir = FitImageTestCase._setup_native('dtc-native')
+
+        # Check if 1 or 2 signature sections are in the DTB.
+        uboot_dtb_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], bb_vars['UBOOT_DTB_IMAGE'])
+        algo = "%s,%s" % (bb_vars['FIT_HASH_ALG'], bb_vars['FIT_SIGN_ALG'])
+        if bb_vars['FIT_SIGN_INDIVIDUAL'] == "1":
+            uboot_sign_img_keyname = bb_vars['UBOOT_SIGN_IMG_KEYNAME']
+            key_dtb_path = "/signature/key-" + uboot_sign_img_keyname
+            self._verify_dtb_property(dtc_bindir, uboot_dtb_path, key_dtb_path, "required", "image")
+            self._verify_dtb_property(dtc_bindir, uboot_dtb_path, key_dtb_path, "algo", algo)
+            self._verify_dtb_property(dtc_bindir, uboot_dtb_path, key_dtb_path, "key-name-hint", uboot_sign_img_keyname)
+
+        uboot_sign_keyname = bb_vars['UBOOT_SIGN_KEYNAME']
+        key_dtb_path = "/signature/key-" + uboot_sign_keyname
+        self._verify_dtb_property(dtc_bindir, uboot_dtb_path, key_dtb_path, "required", "conf")
+        self._verify_dtb_property(dtc_bindir, uboot_dtb_path, key_dtb_path, "algo", algo)
+        self._verify_dtb_property(dtc_bindir, uboot_dtb_path, key_dtb_path, "key-name-hint", uboot_sign_keyname)
+
+
     def test_uboot_fit_image(self):
         """
         Summary:     Check if Uboot FIT image and Image Tree Source
@@ -1177,9 +1248,9 @@ UBOOT_FIT_HASH_ALG = "sha256"
                         via UBOOT_FIT_GENERATE_KEYS)
                      3) Dumping the FIT image indicates signature values
                         are present
-                     4) Examination of the do_uboot_assemble_fitimage
-                     runfile/logfile indicate that UBOOT_MKIMAGE, UBOOT_MKIMAGE_SIGN
-                     and SPL_MKIMAGE_SIGN_ARGS are working as expected.
+                     4) Examination of the do_uboot_assemble_fitimage that
+                     UBOOT_MKIMAGE, UBOOT_MKIMAGE_SIGN and SPL_MKIMAGE_SIGN_ARGS
+                     are working as expected.
         Product:     oe-core
         Author:      Klaus Heinrich Kiwi <klaus@linux.vnet.ibm.com> based upon
                      work by Paul Eggleton <paul.eggleton@microsoft.com> and
@@ -1209,15 +1280,17 @@ UBOOT_EXTLINUX = "0"
 UBOOT_FIT_GENERATE_KEYS = "1"
 UBOOT_FIT_HASH_ALG = "sha256"
 UBOOT_SIGN_ENABLE = "1"
-FIT_GENERATE_KEYS = "1"
 UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
-UBOOT_SIGN_IMG_KEYNAME = "img-oe-selftest"
 UBOOT_SIGN_KEYNAME = "cfg-oe-selftest"
-FIT_SIGN_INDIVIDUAL = "1"
 """
         self.write_config(config)
         bb_vars = self._fit_get_bb_vars()
+
+        # Using a static key. FIT_GENERATE_KEYS = "1" does not work without kernel-fitimage.bbclass
+        self._gen_signing_key(bb_vars)
+
         self._test_fitimage(bb_vars)
+        self._check_kernel_dtb(bb_vars)
 
     def test_uboot_atf_tee_fit_image(self):
         """
@@ -1352,3 +1425,35 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
         FitImageTestCase._gen_random_file(dummy_tee)
 
         self._test_fitimage(bb_vars)
+
+
+    def test_sign_uboot_kernel_individual(self):
+        """
+        Summary:     Check if the device-tree from U-Boot has two public keys
+                     for verifying the kernel FIT image created by the
+                     kernel-fitimage.bbclass included.
+                     This test sets: FIT_SIGN_INDIVIDUAL = "1"
+        Expected:    There must be two signature nodes. One is required for
+                     the individual image nodes, the other is required for the
+                     verification of the configuration section.
+        """
+        config = """
+# Enable creation of fitImage
+MACHINE = "beaglebone-yocto"
+UBOOT_SIGN_ENABLE = "1"
+UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
+UBOOT_SIGN_KEYNAME = "the-kernel-config-key"
+UBOOT_SIGN_IMG_KEYNAME = "the-kernel-image-key"
+UBOOT_MKIMAGE_DTCOPTS="-I dts -O dtb -p 2000"
+FIT_SIGN_INDIVIDUAL = "1"
+"""
+        self.write_config(config)
+        bb_vars = self._fit_get_bb_vars()
+
+        # Using a static key. FIT_GENERATE_KEYS = "1" does not work without kernel-fitimage.bbclass
+        self._gen_signing_key(bb_vars)
+
+        bitbake("virtual/bootloader")
+
+        # Just check the DTB of u-boot since there is no u-boot FIT image
+        self._check_kernel_dtb(bb_vars)
