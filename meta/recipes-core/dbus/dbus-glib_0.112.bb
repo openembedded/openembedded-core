@@ -33,7 +33,7 @@ FILES:${PN}-bash-completion += "${libexecdir}/dbus-bash-completion-helper"
 FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
 FILES:${PN}-dev += "${bindir}/dbus-binding-tool"
 
-RDEPENDS:${PN}-tests += "dbus-x11"
+RDEPENDS:${PN}-tests += "dbus"
 FILES:${PN}-tests = "${datadir}/${BPN}/tests"
 
 BBCLASSEXTEND = "native"
