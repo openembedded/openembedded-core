@@ -23,11 +23,10 @@ UPSTREAM_CHECK_URI = "https://www.kernel.org/pub/linux/libs/security/linux-privs
 inherit lib_package
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
-PACKAGECONFIG:class-native ??= ""
-
 PACKAGECONFIG[pam] = "PAM_CAP=yes,PAM_CAP=no,libpam"
 
 EXTRA_OEMAKE = " \
+  ${PACKAGECONFIG_CONFARGS} \
   INDENT=  \
   lib='${baselib}' \
   RAISE_SETFCAP=no \
@@ -35,23 +34,16 @@ EXTRA_OEMAKE = " \
   USE_GPERF=yes \
 "
 
-EXTRA_OEMAKE:append:class-target = " SYSTEM_HEADERS=${STAGING_INCDIR}"
-
 do_compile() {
-	unset CFLAGS BUILD_CFLAGS
 	oe_runmake \
-		${PACKAGECONFIG_CONFARGS} \
 		AR="${AR}" \
 		CC="${CC}" \
 		RANLIB="${RANLIB}" \
-                OBJCOPY="${OBJCOPY}" \
-		COPTS="${CFLAGS}" \
-		BUILD_COPTS="${BUILD_CFLAGS}"
+		OBJCOPY="${OBJCOPY}"
 }
 
 do_install() {
 	oe_runmake install \
-		${PACKAGECONFIG_CONFARGS} \
 		DESTDIR="${D}" \
 		prefix="${prefix}" \
 		SBINDIR="${sbindir}"
