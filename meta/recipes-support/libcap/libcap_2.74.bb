@@ -68,8 +68,6 @@ do_install:append() {
 	fi
 }
 
-FILES:${PN}-dev += "${base_libdir}/*.so"
-
 # pam files
 FILES:${PN} += "${base_libdir}/security/*.so"
 
