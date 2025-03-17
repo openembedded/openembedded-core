@@ -56,10 +56,10 @@ class FitImageTestCase(OESelftestTestCase):
         # Define some variables which are usually defined by the kernel-fitimage.bbclass.
         # But for testing purpose check if the uboot-sign.bbclass is independent from
         # the kernel-fitimage.bbclass
-        fit_sign_numbits = bb_vars['FIT_SIGN_NUMBITS'] or "2048"
-        fit_key_genrsa_args = bb_vars['FIT_KEY_GENRSA_ARGS'] or "-F4"
-        fit_key_req_args =  bb_vars['FIT_KEY_REQ_ARGS'] or "-batch -new"
-        fit_key_sign_pkcs = bb_vars['FIT_KEY_SIGN_PKCS'] or "-x509"
+        fit_sign_numbits = bb_vars.get('FIT_SIGN_NUMBITS', "2048")
+        fit_key_genrsa_args = bb_vars.get('FIT_KEY_GENRSA_ARGS', "-F4")
+        fit_key_req_args =  bb_vars.get('FIT_KEY_REQ_ARGS', "-batch -new")
+        fit_key_sign_pkcs = bb_vars.get('FIT_KEY_SIGN_PKCS', "-x509")
 
         uboot_sign_keydir = bb_vars['UBOOT_SIGN_KEYDIR']
         sign_keys = [bb_vars['UBOOT_SIGN_KEYNAME']]
@@ -145,7 +145,7 @@ class FitImageTestCase(OESelftestTestCase):
 
     @staticmethod
     def _get_dtb_files(bb_vars):
-        kernel_devicetree = bb_vars['KERNEL_DEVICETREE'] or ""
+        kernel_devicetree = bb_vars.get('KERNEL_DEVICETREE')
         if kernel_devicetree:
             return [os.path.basename(dtb) for dtb in kernel_devicetree.split()]
         return []
@@ -281,7 +281,6 @@ class FitImageTestCase(OESelftestTestCase):
                     key = key.strip()
                     value = value.strip()
                 except ValueError as val_err:
-                    self.logger.debug("dumpimage debug: %s = %s" % (key, line))
                     # Handle multiple entries as e.g. for Loadables as a list
                     if key and line.startswith("   "):
                         value = sections[in_section][key] + "," + line.strip()
@@ -377,6 +376,7 @@ class KernelFitImageTests(FitImageTestCase):
             'UBOOT_SIGN_KEYNAME',
         }
         bb_vars = get_bb_vars(list(internal_used | set(additional_vars)), "virtual/kernel")
+        self.logger.debug("bb_vars: %s" % pprint.pformat(bb_vars, indent=4))
         return bb_vars
 
     def _config_add_uboot_env(self, config):
@@ -441,7 +441,7 @@ class KernelFitImageTests(FitImageTestCase):
         fit_uboot_env = bb_vars['FIT_UBOOT_ENV']
         initramfs_image = bb_vars['INITRAMFS_IMAGE']
         initramfs_image_bundle = bb_vars['INITRAMFS_IMAGE_BUNDLE']
-        uboot_sign_enable = bb_vars['UBOOT_SIGN_ENABLE']
+        uboot_sign_enable = bb_vars.get('UBOOT_SIGN_ENABLE')
 
         # image nodes
         images = [ 'kernel-1' ]
@@ -475,8 +475,8 @@ class KernelFitImageTests(FitImageTestCase):
     def _get_req_its_fields(self, bb_vars):
         initramfs_image = bb_vars['INITRAMFS_IMAGE']
         initramfs_image_bundle = bb_vars['INITRAMFS_IMAGE_BUNDLE']
-        uboot_rd_loadaddress = bb_vars['UBOOT_RD_LOADADDRESS']
-        uboot_rd_entrypoint = bb_vars['UBOOT_RD_ENTRYPOINT']
+        uboot_rd_loadaddress = bb_vars.get('UBOOT_RD_LOADADDRESS')
+        uboot_rd_entrypoint = bb_vars.get('UBOOT_RD_ENTRYPOINT')
 
         its_field_check = [
             'description = "%s";' % bb_vars['FIT_DESC'],
@@ -506,6 +506,8 @@ class KernelFitImageTests(FitImageTestCase):
 
     def _get_req_sigvalues_config(self, bb_vars):
         """Generate a dictionary of expected configuration signature nodes"""
+        if bb_vars.get('UBOOT_SIGN_ENABLE') != "1":
+            return {}
         sign_images = '"kernel", "fdt"'
         if bb_vars['INITRAMFS_IMAGE'] and bb_vars['INITRAMFS_IMAGE_BUNDLE'] != "1":
             sign_images += ', "ramdisk"'
@@ -901,6 +903,7 @@ class UBootFitImageTests(FitImageTestCase):
             'UBOOT_SIGN_IMG_KEYNAME',
         }
         bb_vars = get_bb_vars(list(internal_used | set(additional_vars)), "virtual/bootloader")
+        self.logger.debug("bb_vars: %s" % pprint.pformat(bb_vars, indent=4))
         return bb_vars
 
     def _bitbake_fit_image(self, bb_vars):
