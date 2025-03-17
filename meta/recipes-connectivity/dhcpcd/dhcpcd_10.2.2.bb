@@ -20,6 +20,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
 SRCREV = "f6983c18dbf7989f43a2838beeaf62a54c53ff1d"
 S = "${WORKDIR}/git"
 
+# Doesn't use automake so we can't do out-of-tree builds
 inherit pkgconfig autotools-brokensep systemd useradd
 
 SYSTEMD_SERVICE:${PN} = "dhcpcd.service"
@@ -48,6 +49,12 @@ EXTRA_OECONF = "--enable-ipv4 \
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM:${PN} = "--system -d ${DBDIR} -M -s /bin/false -U dhcpcd"
+
+# This isn't autoconf but is instead a configure script that tries to look like
+# autoconf, so just run it directly.
+do_configure() {
+    oe_runconf
+}
 
 do_install:append () {
     # install systemd unit files
