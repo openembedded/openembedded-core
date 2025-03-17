@@ -206,11 +206,8 @@ autotools_do_configure() {
 		ACLOCAL="$ACLOCAL" autoreconf -Wcross -Wno-obsolete --verbose --install --force ${EXTRA_AUTORECONF} || die "autoreconf execution failed."
 		cd $olddir
 	fi
-	if [ -e ${CONFIGURE_SCRIPT} ]; then
-		oe_runconf
-	else
-		bbnote "nothing to configure"
-	fi
+
+	oe_runconf
 }
 
 autotools_do_compile() {
