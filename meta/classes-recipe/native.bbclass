@@ -64,6 +64,9 @@ export AS = "${BUILD_AS}"
 export RANLIB = "${BUILD_RANLIB}"
 export STRIP = "${BUILD_STRIP}"
 export NM = "${BUILD_NM}"
+export OBJCOPY = "${BUILD_OBJCOPY}"
+export OBJDUMP = "${BUILD_OBJDUMP}"
+export READELF = "${BUILD_READELF}"
 
 # Path prefixes
 base_prefix = "${STAGING_DIR_NATIVE}"
