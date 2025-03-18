@@ -943,13 +943,12 @@ def _get_srcrev_values(d):
     dict_tag_srcrevs = {}
     for scm in scms:
         ud = urldata[scm]
-        for name in ud.names:
-            autoinc, rev = ud.method.sortable_revision(ud, d, name)
-            dict_srcrevs[name] = rev
-            if 'tag' in ud.parm:
-                tag = ud.parm['tag'];
-                key = name+'_'+tag
-                dict_tag_srcrevs[key] = rev
+        autoinc, rev = ud.method.sortable_revision(ud, d, ud.name)
+        dict_srcrevs[ud.name] = rev
+        if 'tag' in ud.parm:
+            tag = ud.parm['tag'];
+            key = ud.name+'_'+tag
+            dict_tag_srcrevs[key] = rev
     return (dict_srcrevs, dict_tag_srcrevs)
 
 do_fetch[postfuncs] += "write_srcrev"
