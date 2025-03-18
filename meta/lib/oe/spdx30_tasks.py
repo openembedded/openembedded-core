@@ -356,78 +356,77 @@ def add_download_files(d, objset):
     for download_idx, src_uri in enumerate(urls):
         fd = fetch.ud[src_uri]
 
-        for name in fd.names:
-            file_name = os.path.basename(fetch.localpath(src_uri))
-            if oe.patch.patch_path(src_uri, fetch, "", expand=False):
-                primary_purpose = oe.spdx30.software_SoftwarePurpose.patch
-            else:
-                primary_purpose = oe.spdx30.software_SoftwarePurpose.source
+        file_name = os.path.basename(fetch.localpath(src_uri))
+        if oe.patch.patch_path(src_uri, fetch, "", expand=False):
+            primary_purpose = oe.spdx30.software_SoftwarePurpose.patch
+        else:
+            primary_purpose = oe.spdx30.software_SoftwarePurpose.source
 
-            if fd.type == "file":
-                if os.path.isdir(fd.localpath):
-                    walk_idx = 1
-                    for root, dirs, files in os.walk(fd.localpath, onerror=walk_error):
-                        dirs.sort()
-                        files.sort()
-                        for f in files:
-                            f_path = os.path.join(root, f)
-                            if os.path.islink(f_path):
-                                # TODO: SPDX doesn't support symlinks yet
-                                continue
-
-                            file = objset.new_file(
-                                objset.new_spdxid(
-                                    "source", str(download_idx + 1), str(walk_idx)
-                                ),
-                                os.path.join(
-                                    file_name, os.path.relpath(f_path, fd.localpath)
-                                ),
-                                f_path,
-                                purposes=[primary_purpose],
-                            )
-
-                            inputs.add(file)
-                            walk_idx += 1
-
-                else:
-                    file = objset.new_file(
-                        objset.new_spdxid("source", str(download_idx + 1)),
-                        file_name,
-                        fd.localpath,
-                        purposes=[primary_purpose],
-                    )
-                    inputs.add(file)
-
-            else:
-                dl = objset.add(
-                    oe.spdx30.software_Package(
-                        _id=objset.new_spdxid("source", str(download_idx + 1)),
-                        creationInfo=objset.doc.creationInfo,
-                        name=file_name,
-                        software_primaryPurpose=primary_purpose,
-                        software_downloadLocation=oe.spdx_common.fetch_data_to_uri(
-                            fd, name
-                        ),
-                    )
-                )
-
-                if fd.method.supports_checksum(fd):
-                    # TODO Need something better than hard coding this
-                    for checksum_id in ["sha256", "sha1"]:
-                        expected_checksum = getattr(
-                            fd, "%s_expected" % checksum_id, None
-                        )
-                        if expected_checksum is None:
+        if fd.type == "file":
+            if os.path.isdir(fd.localpath):
+                walk_idx = 1
+                for root, dirs, files in os.walk(fd.localpath, onerror=walk_error):
+                    dirs.sort()
+                    files.sort()
+                    for f in files:
+                        f_path = os.path.join(root, f)
+                        if os.path.islink(f_path):
+                            # TODO: SPDX doesn't support symlinks yet
                             continue
 
-                        dl.verifiedUsing.append(
-                            oe.spdx30.Hash(
-                                algorithm=getattr(oe.spdx30.HashAlgorithm, checksum_id),
-                                hashValue=expected_checksum,
-                            )
+                        file = objset.new_file(
+                            objset.new_spdxid(
+                                "source", str(download_idx + 1), str(walk_idx)
+                            ),
+                            os.path.join(
+                                file_name, os.path.relpath(f_path, fd.localpath)
+                            ),
+                            f_path,
+                            purposes=[primary_purpose],
                         )
 
-                inputs.add(dl)
+                        inputs.add(file)
+                        walk_idx += 1
+
+            else:
+                file = objset.new_file(
+                    objset.new_spdxid("source", str(download_idx + 1)),
+                    file_name,
+                    fd.localpath,
+                    purposes=[primary_purpose],
+                )
+                inputs.add(file)
+
+        else:
+            dl = objset.add(
+                oe.spdx30.software_Package(
+                    _id=objset.new_spdxid("source", str(download_idx + 1)),
+                    creationInfo=objset.doc.creationInfo,
+                    name=file_name,
+                    software_primaryPurpose=primary_purpose,
+                    software_downloadLocation=oe.spdx_common.fetch_data_to_uri(
+                        fd, fd.name
+                    ),
+                )
+            )
+
+            if fd.method.supports_checksum(fd):
+                # TODO Need something better than hard coding this
+                for checksum_id in ["sha256", "sha1"]:
+                    expected_checksum = getattr(
+                        fd, "%s_expected" % checksum_id, None
+                    )
+                    if expected_checksum is None:
+                        continue
+
+                    dl.verifiedUsing.append(
+                        oe.spdx30.Hash(
+                            algorithm=getattr(oe.spdx30.HashAlgorithm, checksum_id),
+                            hashValue=expected_checksum,
+                        )
+                    )
+
+            inputs.add(dl)
 
     return inputs
 

@@ -352,34 +352,33 @@ def add_download_packages(d, doc, recipe):
     for download_idx, src_uri in enumerate(d.getVar('SRC_URI').split()):
         f = bb.fetch2.FetchData(src_uri, d)
 
-        for name in f.names:
-            package = oe.spdx.SPDXPackage()
-            package.name = "%s-source-%d" % (d.getVar("PN"), download_idx + 1)
-            package.SPDXID = oe.sbom.get_download_spdxid(d, download_idx + 1)
+        package = oe.spdx.SPDXPackage()
+        package.name = "%s-source-%d" % (d.getVar("PN"), download_idx + 1)
+        package.SPDXID = oe.sbom.get_download_spdxid(d, download_idx + 1)
 
-            if f.type == "file":
-                continue
+        if f.type == "file":
+            continue
 
-            if f.method.supports_checksum(f):
-                for checksum_id in CHECKSUM_LIST:
-                    if checksum_id.upper() not in oe.spdx.SPDXPackage.ALLOWED_CHECKSUMS:
-                        continue
+        if f.method.supports_checksum(f):
+            for checksum_id in CHECKSUM_LIST:
+                if checksum_id.upper() not in oe.spdx.SPDXPackage.ALLOWED_CHECKSUMS:
+                    continue
 
-                    expected_checksum = getattr(f, "%s_expected" % checksum_id)
-                    if expected_checksum is None:
-                        continue
+                expected_checksum = getattr(f, "%s_expected" % checksum_id)
+                if expected_checksum is None:
+                    continue
 
-                    c = oe.spdx.SPDXChecksum()
-                    c.algorithm = checksum_id.upper()
-                    c.checksumValue = expected_checksum
-                    package.checksums.append(c)
+                c = oe.spdx.SPDXChecksum()
+                c.algorithm = checksum_id.upper()
+                c.checksumValue = expected_checksum
+                package.checksums.append(c)
 
-            package.downloadLocation = oe.spdx_common.fetch_data_to_uri(f, name)
-            doc.packages.append(package)
-            doc.add_relationship(doc, "DESCRIBES", package)
-            # In the future, we might be able to do more fancy dependencies,
-            # but this should be sufficient for now
-            doc.add_relationship(package, "BUILD_DEPENDENCY_OF", recipe)
+        package.downloadLocation = oe.spdx_common.fetch_data_to_uri(f, f.name)
+        doc.packages.append(package)
+        doc.add_relationship(doc, "DESCRIBES", package)
+        # In the future, we might be able to do more fancy dependencies,
+        # but this should be sufficient for now
+        doc.add_relationship(package, "BUILD_DEPENDENCY_OF", recipe)
 
 def get_license_list_version(license_data, d):
     # Newer versions of the SPDX license list are SemVer ("MAJOR.MINOR.MICRO"),
