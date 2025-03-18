@@ -152,6 +152,10 @@ def add_package_files(
     spdx_files = set()
 
     file_counter = 1
+    if not os.path.exists(topdir):
+        bb.note(f"Skip {topdir}")
+        return spdx_files
+
     for subdir, dirs, files in os.walk(topdir, onerror=walk_error):
         dirs[:] = [d for d in dirs if d not in ignore_dirs]
         if subdir == str(topdir):
