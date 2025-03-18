@@ -18,8 +18,8 @@ DEPENDS += "python3 glib-2.0"
 
 SRCNAME = "pygobject"
 
-SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "8d836e75b5a881d457ee1622cae4a32bcdba28a0ba562193adb3bbb472472212"
+SRC_URI = "http://ftp.gnome.org/pub/GNOME/sources/${SRCNAME}/${@gnome_verdir("${PV}")}/${SRCNAME}-${PV}.tar.gz"
+SRC_URI[sha256sum] = "869f42ee70dcf6de50bce267072e2c35cee7fcd2e32ea1af3a3a99a88901850a"
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
