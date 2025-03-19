@@ -1,0 +1,43 @@
+From 73e62a08022bf8e5edad250f8c1452f0be3771a3 Mon Sep 17 00:00:00 2001
+From: Coiby Xu <coxu@redhat.com>
+Date: Thu, 23 Jan 2025 17:47:10 +0800
+Subject: [PATCH] [PATCH] fix gcc-15 compiling error: too many arguments to function eppic_init
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=2340813
+
+When building makekdumpfile against gcc-15, the following error is
+shown,
+
+    erase_info.c: In function ‘process_eppic_file’:
+    erase_info.c:2226:13: error: too many arguments to function ‘eppic_init’; expected 0, have 1
+     2226 |         if (eppic_init(&eppic_cb)) {
+          |             ^~~~~~~~~~ ~~~~~~~~~
+    make: *** [Makefile:109: erase_info.o] Error 1
+
+Upstream-Status: Backport [https://github.com/makedumpfile/makedumpfile/commit/73e62a08022bf8e5edad250f8c1452f0be3771a3]
+
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+---
+ erase_info.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/erase_info.c b/erase_info.c
+index cbe1681..af6bfae 100644
+--- a/erase_info.c
++++ b/erase_info.c
+@@ -2192,7 +2192,7 @@ process_eppic_file(char *name_config)
+ {
+ 	void *handle;
+ 	void (*eppic_load)(char *), (*eppic_unload)(char *);
+-	int (*eppic_init)();
++	int (*eppic_init)(struct call_back *);
+ 
+ 	/*
+ 	 * Dynamically load the eppic_makedumpfile.so library.
+-- 
+2.48.1
+
