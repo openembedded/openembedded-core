@@ -7,17 +7,14 @@ SECTION = "x11/libs"
 HOMEPAGE = "http://matchbox-project.org/"
 BUGTRACKER = "http://bugzilla.yoctoproject.com/"
 
-LICENSE = "LGPL-2.0-or-later & MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34 \
-                    file://COPYING.MIT;md5=f45ed9332b4f50a35adf2065adde4ca7 \
-                    file://libmb/mbexp.c;endline=20;md5=28c0aef3b23e308464f5dae6a11b0d2f \
-                    file://libmb/xsettings-client.c;endline=20;md5=4b106a387602db8d91a50d5cdfd65031"
+LICENSE = "LGPL-2.0-or-later & HPND"
+LIC_FILES_CHKSUM = "file://COPYING;md5=87712c91ca9a2c2d475a0604c00f8f54 \
+                    file://COPYING.HPND;md5=508defeea3622831e69c4827a31d6db0"
 
 DEPENDS = "virtual/libx11 libxext"
 
-#SRCREV for 1.12
-SRCREV = "e846ee434f8e23d9db38af13c523f791495e0e87"
-SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https"
+SRCREV = "35cd78efa3120efc46497f55c04382be960d1864"
+SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https;tag=${PV}"
 
 S = "${WORKDIR}/git"
 
