@@ -668,6 +668,9 @@ FILES:${PN}-qca-qca61x4-serial = " \
 FILES:${PN}-qca-qca61x4-usb = " \
   ${nonarch_base_libdir}/firmware/qca/nvm_usb_*.bin* \
   ${nonarch_base_libdir}/firmware/qca/rampatch_usb_*.bin* \
+  ${nonarch_base_libdir}/firmware/qca/QCA2066/nvm_usb_00130201_030a.bin* \
+  ${nonarch_base_libdir}/firmware/qca/QCA2066/nvm_usb_00130201_gf_030a.bin* \
+  ${nonarch_base_libdir}/firmware/qca/QCA2066/rampatch_usb_00130201.bin* \
 "
 FILES:${PN}-qca-qca6390 = " \
   ${nonarch_base_libdir}/firmware/qca/htbtfw20.tlv* \
@@ -741,9 +744,6 @@ FILES:${PN}-qca-qca2066 = " \
   ${nonarch_base_libdir}/firmware/qca/hpnv21g.bb8* \
   ${nonarch_base_libdir}/firmware/qca/hpnv21g.b10c* \
   ${nonarch_base_libdir}/firmware/qca/hpnv21g.b111* \
-  ${nonarch_base_libdir}/firmware/qca/QCA2066/nvm_usb_00130201_030a.bin* \
-  ${nonarch_base_libdir}/firmware/qca/QCA2066/nvm_usb_00130201_gf_030a.bin* \
-  ${nonarch_base_libdir}/firmware/qca/QCA2066/rampatch_usb_00130201.bin* \
 "
 FILES:${PN}-qca-wcn7850 = " \
   ${nonarch_base_libdir}/firmware/qca/hmtbtfw20.tlv* \
