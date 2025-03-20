@@ -1067,7 +1067,7 @@ def create_rootfs_spdx(d):
         filenames.sort()
         for fn in filenames:
             fpath = Path(dirpath) / fn
-            if not fpath.is_file() or fpath.is_symlink():
+            if fpath.is_symlink() or not fpath.is_file():
                 continue
 
             relpath = str(fpath.relative_to(image_rootfs))
