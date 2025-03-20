@@ -607,9 +607,9 @@ def drop_v14_cross_builds(d):
                 bb.utils.remove(stamp + "*")
                 bb.utils.remove(workdir, recurse = True)
 
-def check_cpp_toolchain(d):
+def check_cpp_toolchain_flag(d, flag, error_message=None):
     """
-    it checks if the c++ compiling and linking to libstdc++ works properly in the native system
+    Checks if the C++ toolchain support the given flag
     """
     import shlex
     import subprocess
@@ -622,12 +622,12 @@ def check_cpp_toolchain(d):
     }
     """
 
-    cmd = shlex.split(d.getVar("BUILD_CXX")) + ["-x", "c++","-", "-o", "/dev/null", "-lstdc++"]
+    cmd = shlex.split(d.getVar("BUILD_CXX")) + ["-x", "c++","-", "-o", "/dev/null", flag]
     try:
         subprocess.run(cmd, input=cpp_code, capture_output=True, text=True, check=True)
         return None
     except subprocess.CalledProcessError as e:
-        return f"An unexpected issue occurred during the C++ toolchain check: {str(e)}"
+        return error_message or f"An unexpected issue occurred during the C++ toolchain check: {str(e)}"
 
 def sanity_handle_abichanges(status, d):
     #
@@ -802,7 +802,7 @@ def check_sanity_version_change(status, d):
     status.addresult(check_case_sensitive(tmpdir, "TMPDIR"))
 
     # Check if linking with lstdc++ is failing
-    status.addresult(check_cpp_toolchain(d))
+    status.addresult(check_cpp_toolchain_flag(d, "-lstdc++"))
 
 def sanity_check_locale(d):
     """
