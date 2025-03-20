@@ -804,6 +804,11 @@ def check_sanity_version_change(status, d):
     # Check if linking with lstdc++ is failing
     status.addresult(check_cpp_toolchain_flag(d, "-lstdc++"))
 
+    # Check if the C++ toochain support the "--std=gnu++20" flag
+    status.addresult(check_cpp_toolchain_flag(d, "--std=gnu++20",
+        "An error occurred during checking the C++ toolchain for '--std=gnu++20' support. "
+        "Please use a g++ compiler that supports C++20 (e.g. g++ version 10 onwards)."))
+
 def sanity_check_locale(d):
     """
     Currently bitbake switches locale to en_US.UTF-8 so check that this locale actually exists.
