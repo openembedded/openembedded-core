@@ -206,37 +206,8 @@ do_install () {
 	install -d ${D}${libdir}/bfd-plugins
 	ln -sf ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/liblto_plugin.so ${D}${libdir}/bfd-plugins/liblto_plugin.so
 	chown -R root:root ${D}
-}
 
-do_install:append () {
-        #
-        # Thefixinc.sh script, run on the gcc's compile phase, looks into sysroot header
-        # files and places the modified files into
-        # {D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include-fixed folder. This makes the
-        # build not deterministic. The following code prunes all those headers
-        # except those under include-fixed/linux, *limits.h and README, yielding
-        # the same include-fixed folders no matter what sysroot
-
-        include_fixed="${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include-fixed"
-        for f in $(find ${include_fixed} -type f); do
-                case $f in
-                */include-fixed/linux/*)
-                    continue
-                    ;;
-                */include-fixed/*limits.h)
-                    continue
-                    ;;
-                */include-fixed/README)
-                    continue
-                    ;;
-                *)
-                    # remove file and directory if empty
-                    bbdebug 2 "Pruning $f"
-                    rm $f
-                    find $(dirname $f) -maxdepth 0 -empty -exec rmdir {} \;
-                    ;;
-                esac
-        done
+	cleanup_installed_include_fixed
 }
 
 # Installing /usr/lib/gcc/* means we'd have two copies, one from gcc-cross

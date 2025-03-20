@@ -174,6 +174,8 @@ do_install () {
 			done
 		done
 	done
+
+	cleanup_installed_include_fixed
 }
 
 ELFUTILS = "nativesdk-elfutils"
