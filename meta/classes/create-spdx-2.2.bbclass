@@ -279,21 +279,21 @@ def collect_dep_recipes(d, doc, spdx_recipe):
 
     deps = oe.spdx_common.get_spdx_deps(d)
 
-    for dep_pn, dep_hashfn, in_taskhash in deps:
+    for dep in deps:
         # If this dependency is not calculated in the taskhash skip it.
         # Otherwise, it can result in broken links since this task won't
         # rebuild and see the new SPDX ID if the dependency changes
-        if not in_taskhash:
+        if not dep.in_taskhash:
             continue
 
-        dep_recipe_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, "recipe-" + dep_pn, dep_hashfn)
+        dep_recipe_path = oe.sbom.doc_find_by_hashfn(deploy_dir_spdx, package_archs, "recipe-" + dep.pn, dep.hashfn)
         if not dep_recipe_path:
-            bb.fatal("Cannot find any SPDX file for recipe %s, %s" % (dep_pn, dep_hashfn))
+            bb.fatal("Cannot find any SPDX file for recipe %s, %s" % (dep.pn, dep.hashfn))
 
         spdx_dep_doc, spdx_dep_sha1 = oe.sbom.read_doc(dep_recipe_path)
 
         for pkg in spdx_dep_doc.packages:
-            if pkg.name == dep_pn:
+            if pkg.name == dep.pn:
                 spdx_dep_recipe = pkg
                 break
         else:
