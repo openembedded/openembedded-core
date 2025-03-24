@@ -16,7 +16,8 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git;branch=master \
            file://0001-ubifs-utils-ubifs.h-Include-fcntl.h.patch \
            file://0002-ubifs-utils-journal-Include-sys-stat.h.patch \
            file://0003-ubifs-utils-link-libmissing.a-in-case-execinfo.h-isn.patch \
-           file://0004-ubifs-utils-extract_files-Include-linux-limits.h.patch"
+           file://0004-ubifs-utils-extract_files-Include-linux-limits.h.patch \
+           file://0001-Improve-check-for-GCC-compiler-version.patch"
 
 S = "${WORKDIR}/git"
 
