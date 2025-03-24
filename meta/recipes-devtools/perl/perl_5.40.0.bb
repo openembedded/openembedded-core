@@ -369,7 +369,9 @@ do_create_rdepends_inc() {
     cat <<'EOPREAMBLE' > ${WORKDIR}/perl-rdepends.inc
 
 # Some additional dependencies that the above doesn't manage to figure out
+RDEPENDS:${PN}-module-file-path += "${PN}-module-file-spec"
 RDEPENDS:${PN}-module-file-spec += "${PN}-module-file-spec-unix"
+RDEPENDS:${PN}-module-file-spec += "${PN}-module-constant"
 RDEPENDS:${PN}-module-scalar-util += "${PN}-module-list-util"
 RDEPENDS:${PN}-module-file-temp += "${PN}-module-scalar-util"
 RDEPENDS:${PN}-module-file-temp += "${PN}-module-file-spec"
