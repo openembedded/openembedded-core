@@ -49,7 +49,7 @@ TARGET_LDFLAGS = ""
 SECURITY_LDFLAGS = ""
 LDFLAGS_SECTION_REMOVAL = ""
 
-CFLAGS += "-DNO_INLINE_FUNCS -Wno-error=implicit-function-declaration"
+CFLAGS += "-DNO_INLINE_FUNCS -Wno-error=implicit-function-declaration -idirafter ${STAGING_INCDIR}"
 
 EXTRA_OEMAKE = " \
 	BINDIR=${bindir} SBINDIR=${sbindir} LIBDIR=${libdir} \
