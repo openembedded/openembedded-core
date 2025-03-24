@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3498caf346f6b77934882101749ada23 \
 
 SRC_URI = "http://dotat.at/prog/${BPN}/${BP}.tar.xz \
            file://0001-Don-t-use-C23-constexpr-keyword.patch"
-SRC_URI[md5sum] = "ae8c0b3b4c43c1f6bc5f32412a820818"
 SRC_URI[sha256sum] = "43ce0f02ecdcdc723b2475575563ddb192e988c886d368260bc0a63aee3ac400"
 
 UPSTREAM_CHECK_REGEX = "unifdef-(?P<pver>((\d+\.*)+)(?![a-f0-9]{6,})).tar"
