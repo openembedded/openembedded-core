@@ -113,6 +113,9 @@ SPDX_ON_BEHALF_OF[doc] = "The base variable name to describe the Agent on who's 
 SPDX_PACKAGE_SUPPLIER[doc] = "The base variable name to describe the Agent who \
     is supplying artifacts produced by the build"
 
+SPDX_PACKAGE_VERSION ??= "${PV}"
+SPDX_PACKAGE_VERSION[doc] = "The version of a package, software_packageVersion \
+    in software_Package"
 
 IMAGE_CLASSES:append = " create-spdx-image-3.0"
 SDK_CLASSES += "create-spdx-sdk-3.0"

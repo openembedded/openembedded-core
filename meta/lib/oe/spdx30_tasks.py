@@ -606,7 +606,7 @@ def create_spdx(d):
                     _id=pkg_objset.new_spdxid("package", pkg_name),
                     creationInfo=pkg_objset.doc.creationInfo,
                     name=pkg_name,
-                    software_packageVersion=d.getVar("PV"),
+                    software_packageVersion=d.getVar("SPDX_PACKAGE_VERSION"),
                 )
             )
             set_timestamp_now(d, spdx_package, "builtTime")
