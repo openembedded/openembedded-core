@@ -32,47 +32,29 @@ ALTERNATIVE:${PN} = "setfattr getfattr"
 ALTERNATIVE_TARGET[setfattr] = "${bindir}/setfattr"
 ALTERNATIVE_TARGET[getfattr] = "${bindir}/getfattr"
 
-PTEST_BUILD_HOST_FILES = "builddefs"
-PTEST_BUILD_HOST_PATTERN = "^RPM"
-
 do_install_ptest() {
-        cp ${B}/Makefile ${D}${PTEST_PATH}
-        sed -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
-            -e 's|${DEBUG_PREFIX_MAP}||g' \
-            -e 's:${HOSTTOOLS_DIR}/::g' \
-            -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
-            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
-            -i ${D}${PTEST_PATH}/Makefile
+    install -m755 ${S}/test/run ${S}/test/sort-getfattr-output ${D}${PTEST_PATH}/
 
-	sed -e "s|^srcdir =.*|srcdir = .|" \
-	    -e "s|^abs_srcdir =.*|abs_srcdir = .|" \
-	    -e "s|^abs_top_srcdir =.*|abs_top_srcdir = ..|" \
-	    -e "s|^Makefile:.*|Makefile:|" \
-	    -e "/^TEST_LOG_DRIVER =/s|(top_srcdir)|(top_builddir)|" \
-	    -i ${D}${PTEST_PATH}/Makefile
-
-	cp -rf ${S}/build-aux/ ${D}${PTEST_PATH}
-	cp -rf ${S}/test/ ${D}${PTEST_PATH}
+    for t in $(makefile-getvar ${S}/test/Makemodule.am TESTS); do
+        install -m644 ${S}/$t ${D}${PTEST_PATH}/
+    done
 }
 
 do_install_ptest:append:libc-musl() {
-        sed -i -e 's|f: Operation n|f: N|g' ${D}${PTEST_PATH}/test/attr.test
+    # With glibc strerror(ENOTSUP) is "Operation not supported" but
+    # musl is "Not supported".
+    # https://savannah.nongnu.org/bugs/?62370
+    sed -i -e 's|f: Operation not supported|f: Not supported|g' ${D}${PTEST_PATH}/attr.test
 }
 
 RDEPENDS:${PN}-ptest = "attr \
-                        bash \
-                        coreutils \
-                        perl-module-constant \
-                        perl-module-filehandle \
-                        perl-module-getopt-std \
-                        perl-module-posix \
-                        make \
                         perl \
-                        gawk \
                         perl-module-cwd \
                         perl-module-file-basename \
                         perl-module-file-path \
-                        perl-module-file-spec \
+                        perl-module-filehandle \
+                        perl-module-getopt-std \
+                        perl-module-posix \
                         "
 
 BBCLASSEXTEND = "native nativesdk"
