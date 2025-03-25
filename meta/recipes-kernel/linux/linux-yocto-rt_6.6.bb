@@ -14,13 +14,13 @@ python () {
         raise bb.parse.SkipRecipe("Set PREFERRED_PROVIDER_virtual/kernel to linux-yocto-rt to enable it")
 }
 
-SRCREV_machine ?= "1ea3894afeb849bf7007324b6fbd7f7908d0dc30"
-SRCREV_meta ?= "8315cf9f3b698885f5c4693582d27d66c511f8c5"
+SRCREV_machine ?= "d40fd6f42b7a694c9689ad24b64d75e8c37d0d03"
+SRCREV_meta ?= "8cfcad6ed49d8b56dc69640d30ab834ff5e44aff"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;branch=${KBRANCH};name=machine;protocol=https \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-6.6;destsuffix=${KMETA};protocol=https"
 
-LINUX_VERSION ?= "6.6.78"
+LINUX_VERSION ?= "6.6.80"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
