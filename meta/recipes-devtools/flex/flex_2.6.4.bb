@@ -18,6 +18,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/flex-${PV}.tar.gz \
            file://0001-build-AC_USE_SYSTEM_EXTENSIONS-in-configure.ac.patch \
            file://check-funcs.patch \
            file://0001-Emit-no-line-directives-if-gen_line_dirs-is-false.patch \
+           file://0001-build-tests-add-missing-parser-scanner-dependencies.patch \
            "
 
 SRC_URI[md5sum] = "2882e3179748cc9f9c23ec593d6adc8d"
@@ -55,9 +56,8 @@ RDEPENDS:${PN} += "m4"
 RDEPENDS:${PN}-ptest += "bash gawk make"
 
 do_compile_ptest() {
-	oe_runmake -C ${B}/tests -f ${B}/tests/Makefile top_builddir=${B} INCLUDES=-I${S}/src buildtests
+	oe_runmake -C ${B}/tests buildtests
 }
-PTEST_PARALLEL_MAKE = ""
 
 do_install_ptest() {
 	mkdir -p ${D}${PTEST_PATH}/build-aux/
