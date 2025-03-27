@@ -13,6 +13,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/libpng/${BPN}/${PV}/${BPN}-${PV}.tar.xz \
            file://run-ptest \
 	    file://CVE-2022-37434.patch \
            file://CVE-2023-45853.patch \
+           file://CVE-2014-9485.patch \
            "
 UPSTREAM_CHECK_URI = "http://zlib.net/"
 
