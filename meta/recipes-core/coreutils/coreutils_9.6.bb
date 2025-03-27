@@ -222,4 +222,7 @@ do_install_ptest:append:libc-musl () {
     sed -i -e '/tests\/dd\/no-allocate.sh/d' ${D}${PTEST_PATH}/Makefile
     sed -i -e '/tests\/split\/line-bytes.sh/d' ${D}${PTEST_PATH}/Makefile
 }
-RDEPENDS:${PN}-ptest += "${PN}-getlimits"
+
+RDEPENDS:${PN}-ptest += "${PN}-getlimits xz  \
+                         ${@bb.utils.contains('PACKAGECONFIG', 'acl', 'acl', '', d)} \
+                         ${@bb.utils.contains('PACKAGECONFIG', 'xattr', 'attr', '', d)}"
