@@ -4,14 +4,13 @@ HOMEPAGE = "http://www.rust-lang.org"
 
 # check src/llvm-project/llvm/CMakeLists.txt for llvm version in use
 #
-LLVM_RELEASE = "19.1.1"
+LLVM_RELEASE = "19.1.5"
 
 require rust-source.inc
 
 SRC_URI += "file://0002-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
             file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
             file://0003-llvm-fix-include-benchmarks.patch;striplevel=2 \
-            file://0001-NFC-fix-build-failure-100993.patch;striplevel=2 \
            "
 
 S = "${RUSTSRC}/src/llvm-project/llvm"

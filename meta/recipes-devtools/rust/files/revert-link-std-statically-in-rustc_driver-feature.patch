@@ -24,13 +24,12 @@ diff --git a/compiler/rustc/src/main.rs b/compiler/rustc/src/main.rs
 index e9a7397557..29766fc9d8 100644
 --- a/compiler/rustc/src/main.rs
 +++ b/compiler/rustc/src/main.rs
-@@ -1,6 +1,3 @@
+@@ -1,5 +1,3 @@
 -// We need this feature as it changes `dylib` linking behavior and allows us to link to `rustc_driver`.
 -#![feature(rustc_private)]
--
- // A note about jemalloc: rustc uses jemalloc when built for CI and
- // distribution. The obvious way to do this is with the `#[global_allocator]`
- // mechanism. However, for complicated reasons (see
+ // Several crates are depended upon but unused so that they are present in the sysroot
+ #![expect(unused_crate_dependencies)]
+
 diff --git a/compiler/rustc_metadata/src/dependency_format.rs b/compiler/rustc_metadata/src/dependency_format.rs
 index 39fa23766b..51d86b4009 100644
 --- a/compiler/rustc_metadata/src/dependency_format.rs
@@ -44,10 +43,11 @@ index 39fa23766b..51d86b4009 100644
  use rustc_hir::def_id::CrateNum;
  use rustc_middle::bug;
  use rustc_middle::middle::dependency_format::{Dependencies, DependencyList, Linkage};
-@@ -162,43 +162,18 @@ fn calculate_type(tcx: TyCtxt<'_>, ty: CrateType) -> DependencyList {
+@@ -161,44 +161,19 @@ fn calculate_type(tcx: TyCtxt<'_>, ty: CrateType) -> DependencyList {
+         }
          Linkage::Dynamic | Linkage::IncludedFromDylib => {}
      }
-
+-
 -    let all_dylibs = || {
 -        tcx.crates(()).iter().filter(|&&cnum| {
 -            !tcx.dep_kind(cnum).macros_only() && tcx.used_crate_source(cnum).dylib.is_some()
@@ -56,7 +56,7 @@ index 39fa23766b..51d86b4009 100644
 -
 -    let mut upstream_in_dylibs = FxHashSet::default();
 -
--    if tcx.features().rustc_private {
+-    if tcx.features().rustc_private() {
 -        // We need this to prevent users of `rustc_driver` from linking dynamically to `std`
 -        // which does not work as `std` is also statically linked into `rustc_driver`.
 -
@@ -85,7 +85,7 @@ index 39fa23766b..51d86b4009 100644
 +        if tcx.dep_kind(cnum).macros_only() {
              continue;
          }
--
+
          let name = tcx.crate_name(cnum);
 +        let src = tcx.used_crate_source(cnum);
 +        if src.dylib.is_some() {
@@ -139,11 +139,11 @@ index d04e2fbeb7..011c289d93 100644
      if let Some(crate_name) = crate_name {
          if let Some(target) = env::var_os("RUSTC_TIME") {
              if target == "all"
-diff --git a/src/bootstrap/src/core/builder.rs b/src/bootstrap/src/core/builder.rs
-index ff0d1f3a72..b2c9602e57 100644
---- a/src/bootstrap/src/core/builder.rs
-+++ b/src/bootstrap/src/core/builder.rs
-@@ -2201,7 +2201,7 @@ impl<'a> Builder<'a> {
+diff --git a/src/bootstrap/src/core/builder/cargo.rs b/src/bootstrap/src/core/builder/cargo.rs
+index 0688a1d689..066e6bf53f 100644
+--- a/src/bootstrap/src/core/builder/cargo.rs
++++ b/src/bootstrap/src/core/builder/cargo.rs
+@@ -1146,7 +1146,7 @@ impl Builder<'_> {
          // When we build Rust dylibs they're all intended for intermediate
          // usage, so make sure we pass the -Cprefer-dynamic flag instead of
          // linking all deps statically into the dylib.
@@ -200,13 +200,13 @@ diff --git a/src/bootstrap/src/core/build_steps/compile.rs b/src/bootstrap/src/c
 index 27bbc8bd8f..a6fc4df2eb 100644
 --- a/src/bootstrap/src/core/build_steps/compile.rs
 +++ b/src/bootstrap/src/core/build_steps/compile.rs
-@@ -1934,24 +1934,8 @@ impl Step for Assemble {
-         let src_libdir = builder.sysroot_libdir(build_compiler, host);
+@@ -1940,24 +1940,8 @@ impl Step for Assemble {
+         let src_libdir = builder.sysroot_target_libdir(build_compiler, host);
          for f in builder.read_dir(&src_libdir) {
              let filename = f.file_name().into_string().unwrap();
 -
 -            let is_proc_macro = proc_macros.contains(&filename);
--            let is_dylib_or_debug = is_dylib(&filename) || is_debug_info(&filename);
+-            let is_dylib_or_debug = is_dylib(&f.path()) || is_debug_info(&filename);
 -
 -            // If we link statically to stdlib, do not copy the libstd dynamic library file
 -            // FIXME: Also do this for Windows once incremental post-optimization stage0 tests
@@ -214,7 +214,7 @@ index 27bbc8bd8f..a6fc4df2eb 100644
 -            let can_be_rustc_dynamic_dep = if builder
 -                .link_std_into_rustc_driver(target_compiler.host)
 -                && !target_compiler.host.is_windows()
-+            if (is_dylib(&filename) || is_debug_info(&filename)) && !proc_macros.contains(&filename)
++            if (is_dylib(Path::new(&filename)) || is_debug_info(&filename)) && !proc_macros.contains(&filename)
              {
 -                let is_std = filename.starts_with("std-") || filename.starts_with("libstd-");
 -                !is_std
