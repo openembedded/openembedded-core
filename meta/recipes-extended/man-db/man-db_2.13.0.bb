@@ -43,10 +43,6 @@ do_install() {
 	fi
 }
 
-do_install:append:libc-musl() {
-        rm -f ${D}${libdir}/charset.alias
-}
-
 FILES:${PN} += "${prefix}/lib/tmpfiles.d"
 
 FILES:${PN}-dev += "${libdir}/man-db/libman.so ${libdir}/${BPN}/libmandb.so"
