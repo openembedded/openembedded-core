@@ -670,7 +670,7 @@ def check_upgrade_status(args, config, basepath, workspace):
         currents = [r for r in recipegroup if r['status'] == 'MATCH']
         if len(upgrades) > 1:
             print("These recipes need to be upgraded together {")
-        for r in upgrades:
+        for r in sorted(upgrades, key=lambda r:r['pn']):
             _print_status(r)
         if len(upgrades) > 1:
             print("}")
