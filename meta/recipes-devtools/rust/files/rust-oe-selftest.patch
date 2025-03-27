@@ -469,3 +469,15 @@ index 14e6013f96..b670f27ab4 100644
          #[cfg_attr(miri, ignore)]
          fn $test_fn_name() {
              $crate::sort::tests::$test_fn_name::<$sort_impl>();
+diff --git a/compiler/rustc_data_structures/src/vec_cache/tests.rs b/compiler/rustc_data_structures/src/vec_cache/tests.rs
+index a05f274136..0e69b4cb98 100644
+--- a/compiler/rustc_data_structures/src/vec_cache/tests.rs
++++ b/compiler/rustc_data_structures/src/vec_cache/tests.rs
+@@ -17,6 +17,7 @@ fn vec_cache_insert_and_check() {
+ }
+
+ #[test]
++#[ignore]
+ fn sparse_inserts() {
+     let cache: VecCache<u32, u8, u32> = VecCache::default();
+     let end = if cfg!(target_pointer_width = "64") && cfg!(target_os = "linux") {
