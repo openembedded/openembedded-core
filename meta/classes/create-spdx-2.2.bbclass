@@ -15,6 +15,8 @@ SPDX_SUPPLIER[doc] = "The SPDX PackageSupplier field for SPDX packages created f
     is the contact information for the person or organization who is doing the \
     build."
 
+SPDX_ARCHIVE_SOURCES ??= "0"
+SPDX_ARCHIVE_PACKAGED ??= "0"
 
 def get_namespace(d, name):
     import uuid
