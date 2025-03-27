@@ -13,6 +13,17 @@ SRC_URI[rust.sha256sum] = "7b11d4242dab0921a7d54758ad3fe805153c979c144625fecde11
 
 RUSTSRC = "${WORKDIR}/rustc-${RUST_VERSION}-src"
 
+#After updating to Rust 1.85 we can revert this removal of "src/gcc"
+remove_gcc_directory() {
+    # Ensure the gcc directory exists
+    gcc_dir="${S}/src/gcc"
+    if [ -d "$gcc_dir" ]; then
+        rm -rf "$gcc_dir"
+    fi
+}
+# Add postfunc to the do_unpack task
+do_unpack[postfuncs] += "remove_gcc_directory"
+
 UPSTREAM_CHECK_URI = "https://forge.rust-lang.org/infra/other-installation-methods.html"
 UPSTREAM_CHECK_REGEX = "rustc-(?P<pver>\d+(\.\d+)+)-src"
 
