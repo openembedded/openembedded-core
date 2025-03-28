@@ -8,9 +8,9 @@ inherit pkgconfig meson native
 
 MESON_TARGET = "systemctl:executable"
 MESON_INSTALL_TAGS = "systemctl"
-EXTRA_OEMESON:append = " -Dlink-systemctl-shared=false"
+EXTRA_OEMESON += "-Dlink-systemctl-shared=false"
 
 # Systemctl is supposed to operate on target, but the target sysroot is not
 # determined at run-time, but rather set during configure
 # More details are here https://github.com/systemd/systemd/issues/35897#issuecomment-2665405887
-EXTRA_OEMESON:append = " --sysconfdir ${sysconfdir_native}"
+EXTRA_OEMESON += "--sysconfdir ${sysconfdir_native}"
