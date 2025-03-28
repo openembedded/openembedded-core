@@ -211,7 +211,24 @@ build_fat_img() {
 	fi
 
 	# Copy FATSOURCEDIR recursively into the image file directly
-	mcopy -i ${FATIMG} -s ${FATSOURCEDIR}/* ::/
+	fat_source_dirs="$(ls ${FATSOURCEDIR}/* -d)"
+	fat_sources=""
+	for source_dir in $fat_source_dirs; do
+		# Skip kernel and initrd
+		if [ ${source_dir%${KERNEL_IMAGETYPE}} = "$source_dir" -a \
+		     ${source_dir%initrd} = "$source_dir" ];then
+			fat_sources="$fat_sources $source_dir"
+		fi
+	done
+	# Copy EFI BOOT and other configuration at first
+	mcopy -i ${FATIMG} -s $fat_sources ::/
+	# Copy kernel and initrd at last if available
+	if [ -e ${FATSOURCEDIR}/${KERNEL_IMAGETYPE} ];then
+		mcopy -i ${FATIMG} ${FATSOURCEDIR}/${KERNEL_IMAGETYPE} ::/
+	fi
+	if [ -e ${FATSOURCEDIR}/initrd ]; then
+		mcopy -i ${FATIMG} ${FATSOURCEDIR}/initrd ::/
+	fi
 }
 
 build_hddimg() {
