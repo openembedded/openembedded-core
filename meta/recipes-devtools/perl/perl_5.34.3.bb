@@ -50,6 +50,8 @@ export ENC2XS_NO_COMMENTS = "1"
 
 # Duplicate of CVE-2023-47038, which has already been patched as of perl_5.34.3
 CVE_CHECK_IGNORE:append = " CVE-2023-47100"
+# This is fixed in 5.34.2 via https://github.com/Perl/perl5/commit/12c313ce49b36160a7ca2e9b07ad5bd92ee4a010
+CVE_CHECK_IGNORE:append = " CVE-2023-47038"
 
 do_configure:prepend() {
     cp -rfp ${STAGING_DATADIR_NATIVE}/perl-cross/* ${S}
