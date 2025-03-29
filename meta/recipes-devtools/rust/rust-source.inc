@@ -17,7 +17,7 @@ RUSTSRC = "${WORKDIR}/rustc-${RUST_VERSION}-src"
 #After updating to Rust 1.85 we can revert this removal of "src/gcc"
 remove_gcc_directory() {
     # Ensure the gcc directory exists
-    gcc_dir="${S}/src/gcc"
+    gcc_dir="${RUSTSRC}/src/gcc"
     if [ -d "$gcc_dir" ]; then
         rm -rf "$gcc_dir"
     fi
