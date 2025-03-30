@@ -1,6 +1,6 @@
 require bluez5.inc
 
-SRC_URI[sha256sum] = "4164a5303a9f71c70f48c03ff60be34231b568d93a9ad5e79928d34e6aa0ea8a"
+SRC_URI[sha256sum] = "a4d0bca3299691f06d5bd9773b854638204a51a5026c42b0ad7f1c6cf16b459a"
 
 CVE_STATUS[CVE-2020-24490] = "cpe-incorrect: This issue has kernel fixes rather than bluez fixes"
 
@@ -41,7 +41,6 @@ NOINST_TOOLS_BT ?= " \
     tools/avinfo \
     tools/avtest \
     tools/scotest \
-    tools/amptest \
     tools/hwdb \
     tools/hcieventmask \
     tools/hcisecfilter \

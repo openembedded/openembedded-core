@@ -1,4 +1,4 @@
-From 825e15ddda4aa6d8e37c1c52181f7175d2237f66 Mon Sep 17 00:00:00 2001
+From 0787e67bebbf8492b6c5f03ed816cf881edbea64 Mon Sep 17 00:00:00 2001
 From: Mingli Yu <Mingli.Yu@windriver.com>
 Date: Fri, 24 Aug 2018 12:04:03 +0800
 Subject: [PATCH] test-gatt: Fix hung issue

@@ -1,4 +1,4 @@
-From 9ce6360d11f0b1252f61ff78ce6f8ef03b150dfd Mon Sep 17 00:00:00 2001
+From b6438d9e6cd5bdbca05b444ff6d955e5b70dbb2e Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 1 Apr 2016 17:07:34 +0300
 Subject: [PATCH] tests: add a target for building tests without running them
@@ -10,10 +10,10 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/Makefile.am b/Makefile.am
-index 68bf058..a376d10 100644
+index 0821530..e7cefb5 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -713,6 +713,9 @@ endif
+@@ -723,6 +723,9 @@ endif
  TESTS = $(unit_tests)
  AM_TESTS_ENVIRONMENT = MALLOC_CHECK_=3 MALLOC_PERTURB_=69
  
