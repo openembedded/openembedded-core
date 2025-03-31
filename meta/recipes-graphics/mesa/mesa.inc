@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://docs/license.rst;md5=9a383ee9f65a4e939d6630e9b067ff58
 
 PE = "2"
 
-SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
+SRC_URI = "https://archive.mesa3d.org/older-versions/22.x/mesa-${PV}.tar.xz \
            file://0001-meson.build-check-for-all-linux-host_os-combinations.patch \
            file://0002-meson.build-make-TLS-ELF-optional.patch \
            file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
