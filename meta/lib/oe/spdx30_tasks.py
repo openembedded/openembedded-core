@@ -724,6 +724,8 @@ def create_spdx(d):
                                 )
                         else:
                             bb.fatal(f"Unknown detail '{detail}' for ignored {cve}")
+                    elif status == "Unknown":
+                        bb.note(f"Skipping {cve} with status 'Unknown'")
                     else:
                         bb.fatal(f"Unknown {cve} status '{status}'")
 
