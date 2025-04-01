@@ -18,7 +18,7 @@ inherit bash-completion gtk-doc manpages meson pkgconfig update-alternatives
 SRC_URI = "https://www.kernel.org/pub/linux/utils/kernel/${BPN}/${BP}.tar.xz \
            file://depmod-search.conf \
            "
-SRC_URI[sha256sum] = "125957c9125fc5db1bd6a2641a1c9a6a0b500882fb8ccf7fb6483fcae5309b17"
+SRC_URI[sha256sum] = "5a5d5073070cc7e0c7a7a3c6ec2a0e1780850c8b47b3e3892226b93ffcb9cb54"
 
 EXTRA_OEMESON += "\
     -Ddistconfdir=${nonarch_base_libdir} \
