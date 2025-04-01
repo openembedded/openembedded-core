@@ -38,7 +38,7 @@ LICENSE:${PN}-bash-completion = "GPL-2.0-or-later"
 FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
 FILES:${PN}-dev += "${bindir}/dbus-binding-tool"
 
-RDEPENDS:${PN}-tests += "dbus"
+RDEPENDS:${PN}-tests = "${PN}"
 FILES:${PN}-tests = "${datadir}/${BPN}/tests"
 
 BBCLASSEXTEND = "native"
