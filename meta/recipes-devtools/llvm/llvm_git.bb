@@ -36,6 +36,7 @@ SRC_URI = "git://github.com/llvm/llvm-project.git;branch=${BRANCH};protocol=http
            file://CVE-2023-46049.patch;striplevel=2 \
            file://CVE-2024-31852-1.patch;striplevel=2 \
            file://CVE-2024-31852-2.patch;striplevel=2 \
+	   file://CVE-2024-0151.patch;striplevel=2 \
            "
 
 UPSTREAM_CHECK_GITTAGREGEX = "llvmorg-(?P<pver>\d+(\.\d+)+)"
