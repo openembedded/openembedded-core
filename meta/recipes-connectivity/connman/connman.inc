@@ -118,10 +118,6 @@ RPROVIDES:${PN} = "\
 	${@bb.utils.contains('PACKAGECONFIG', '3g','connman-plugin-ofono', '', d)} \
 	"
 
-RDEPENDS:${PN} = "\
-	dbus \
-	"
-
 PACKAGES_DYNAMIC += "^${PN}-plugin-.*"
 
 def add_rdepends(bb, d, file, pkg, depmap, multilib_prefix, add_insane_skip):

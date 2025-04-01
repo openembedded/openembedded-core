@@ -37,7 +37,6 @@ PACKAGES =+ "${PN}-tests"
 FILES:${PN} += "${systemd_unitdir}"
 FILES:${PN}-tests = "${libdir}/${BPN}/test"
 
-RDEPENDS:${PN} += "dbus"
 RDEPENDS:${PN}-tests = "\
     python3-core \
     python3-dbus \

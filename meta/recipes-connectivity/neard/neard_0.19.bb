@@ -37,8 +37,6 @@ do_install:append() {
 	fi
 }
 
-RDEPENDS:${PN} = "dbus"
-
 # Bluez & Wifi are not mandatory except for handover
 WIRELESS_DAEMON ??= "wpa-supplicant"
 RRECOMMENDS:${PN} = "\
