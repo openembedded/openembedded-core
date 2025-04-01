@@ -15,11 +15,10 @@ LIC_FILES_CHKSUM = " \
 SECTION = "base"
 DEPENDS = "util-linux zlib"
 
-SRC_URI = "git://github.com/kdave/btrfs-progs.git;branch=master;protocol=https \
+SRC_URI = "git://github.com/kdave/btrfs-progs.git;branch=master;protocol=https;tag=v${PV} \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
-           file://0001-mkfs-add-break-to-case-BTRFS_COMPRESS_NONE.patch \
            "
-SRCREV = "26e4d9174c70aac0e53c3b5de55cf159f8d9397f"
+SRCREV = "5ad147c9ec00e657393c85b195c9bcc0f4c35a54"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
