@@ -1,4 +1,4 @@
-From 09e8fac984cea71867c0b7a05b0dd8f7025bd25a Mon Sep 17 00:00:00 2001
+From b0862cf4fecc11a181bc8c6602c7d09812148249 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Mon, 1 Mar 2021 13:00:47 +0000
 Subject: [PATCH] qemu: Determinism fixes
