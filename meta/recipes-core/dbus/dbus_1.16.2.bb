@@ -105,6 +105,7 @@ FILES:${PN}-tools = "${bindir}/dbus-uuidgen \
 "
 FILES:${PN}-lib = "${libdir}/lib*.so.*"
 RRECOMMENDS:${PN}-lib = "${PN}"
+RRECOMMENDS:${PN}-lib:class-target = "${VIRTUAL-RUNTIME_dbus}"
 FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-test-tool ${datadir}/xml/dbus-1"
 
 RDEPENDS:${PN}-ptest += "bash make dbus"
