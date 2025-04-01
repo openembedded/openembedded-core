@@ -160,7 +160,7 @@ RDEPENDS:${PN}-codegen += "${CODEGEN_PYTHON_RDEPENDS}"
 RDEPENDS:${PN}-ptest += "\
             coreutils \
             libgcc \
-            dbus \
+            ${VIRTUAL-RUNTIME_dbus} \
             desktop-file-utils \
             gnome-desktop-testing \
             tzdata \
