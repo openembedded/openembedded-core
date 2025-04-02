@@ -1,0 +1,36 @@
+From 459afbb556432eb417bff5a33719efd596ef7502 Mon Sep 17 00:00:00 2001
+From: Lei Maohui <leimaohui@fujitsu.com>
+Date: Wed, 2 Apr 2025 08:16:51 +0000
+Subject: [PATCH] Fix atomic 64 issue on armv5
+
+| /mnt/test/build_auh/tmp/work/armv5e-poky-linux-gnueabi/gstreamer1.0/1.26.0/recipe-sysroot-native/usr/bin/arm-poky-linux-gnueabi/../../libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/14.2.0/ld: gst/libgstreamer-1.0.so.0.2600.0.p/gstbuffer.c.o: in function `gst_atomic_int64_inc':
+| /usr/src/debug/gstreamer1.0/1.26.0/gst/gstbuffer.c:180:(.text+0x38c8): undefined reference to `__atomic_fetch_add_8'
+
+Upstream-Status: Backport [https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/8637/commits?commit_id=f2b5c0b6020b50f5173e449b45a6f7a7be31c48f]
+
+Signed-off-by: Lei Maohui <leimaohui@fujitsu.com>
+---
+ meson.build | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/meson.build b/meson.build
+index f4c146d..9c24596 100644
+--- a/meson.build
++++ b/meson.build
+@@ -599,6 +599,13 @@ if nsl_lib.found()
+   network_deps += nsl_lib
+ endif
+ 
++# Check for libatomic for use of C11 atomics: some architectures need
++# to link explicitly to this library.
++# TODO: Once meson 1.7 is in use, this can be updated to
++# dependency('atomic')
++atomic_dep = cc.find_library('atomic', required: false)
++platform_deps += atomic_dep
++
+ gir = find_program('g-ir-scanner', required : get_option('introspection'))
+ gnome = import('gnome')
+ 
+-- 
+2.43.0
+
