@@ -1,0 +1,52 @@
+From 677a40c1f5b0793598a92cbba0a621fef89c4a26 Mon Sep 17 00:00:00 2001
+From: Lei Maohui <leimaohui@fujitsu.com>
+Date: Wed, 2 Apr 2025 09:37:24 +0000
+Subject: [PATCH] gstreamer1.0-plugins-base: Fix atomic 64 issue on armv5
+
+| /mnt/test/build_auh/tmp/work/armv5e-poky-linux-gnueabi/gstreamer1.0-plugins-base/1.26.0/recipe-sysroot-native/usr/bin/arm-poky-linux-gnueabi/../../libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/14.2.0/ld: gst-libs/gst/audio/libgstaudio-1.0.so.0.2600.0.p/gstaudioringbuffer.c.o: in function `gst_atomic_uint64_get':
+| /usr/src/debug/gstreamer1.0-plugins-base/1.26.0/gst-libs/gst/audio/gstaudioringbuffer.c:72:(.text+0x4e00): undefined reference to `__atomic_load_8'
+
+Upstream-Status: Backport [https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/8637/commits?commit_id=f2b5c0b6020b50f5173e449b45a6f7a7be31c48f]
+
+Signed-off-by: Lei Maohui <leimaohui@fujitsu.com>
+---
+ gst-libs/gst/audio/meson.build | 2 +-
+ meson.build                    | 9 +++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/gst-libs/gst/audio/meson.build b/gst-libs/gst/audio/meson.build
+index 1d69713..cf8935b 100644
+--- a/gst-libs/gst/audio/meson.build
++++ b/gst-libs/gst/audio/meson.build
+@@ -162,7 +162,7 @@ gstaudio = library('gstaudio-@0@'.format(api_version),
+   soversion : soversion,
+   darwin_versions : osxversion,
+   install : true,
+-  dependencies : gstaudio_deps,
++  dependencies : [ gstaudio_deps, base_platform_dep ],
+ )
+ pkg_name = 'gstreamer-audio-1.0'
+ pkgconfig.generate(gstaudio,
+diff --git a/meson.build b/meson.build
+index a470af0..c195376 100644
+--- a/meson.build
++++ b/meson.build
+@@ -398,6 +398,15 @@ else
+   core_conf.set('DISABLE_ORC', 1)
+ endif
+ 
++base_platform_dep = []
++# Check for libatomic for use of C11 atomics: some architectures need
++# to link explicitly to this library.
++# TODO: Once meson 1.7 is in use, this can be updated to
++# dependency('atomic')
++atomic_dep = cc.find_library('atomic', required: false)
++
++base_platform_dep += [atomic_dep]
++
+ # Used to build SSE* things in audio-resampler
+ sse_args = '-msse'
+ sse2_args = '-msse2'
+-- 
+2.43.0
+
