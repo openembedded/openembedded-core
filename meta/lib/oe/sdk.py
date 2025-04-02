@@ -155,6 +155,3 @@ def get_extra_sdkinfo(sstate_dir):
                 extra_info['tasksizes'][task] = origtotal + fsize
                 extra_info['filesizes'][fn] = fsize
     return extra_info
-
-if __name__ == "__main__":
-    pass

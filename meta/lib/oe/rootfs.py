@@ -427,12 +427,3 @@ def image_list_installed_packages(d, rootfs_dir=None):
     import importlib
     cls = importlib.import_module('oe.package_manager.' + img_type)
     return cls.PMPkgsList(d, rootfs_dir).list_pkgs()
-
-if __name__ == "__main__":
-    """
-    We should be able to run this as a standalone script, from outside bitbake
-    environment.
-    """
-    """
-    TBD
-    """
