@@ -1,0 +1,41 @@
+From f8c802aa778804f02b30a191cd3bcce285023076 Mon Sep 17 00:00:00 2001
+From: Lei Maohui <leimaohui@fujitsu.com>
+Date: Wed, 2 Apr 2025 09:47:41 +0000
+Subject: [PATCH] backport libatomic issue patch
+
+Upstream-Status: Backport [https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/8637/commits?commit_id=f2b5c0b6020b50f5173e449b45a6f7a7be31c48f]
+
+Signed-off-by: Lei Maohui <leimaohui@fujitsu.com>
+---
+ gst-libs/gst/cuda/meson.build | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/gst-libs/gst/cuda/meson.build b/gst-libs/gst/cuda/meson.build
+index 3a25244..50ae027 100644
+--- a/gst-libs/gst/cuda/meson.build
++++ b/gst-libs/gst/cuda/meson.build
+@@ -48,15 +48,12 @@ if host_system not in ['windows', 'linux']
+   subdir_done()
+ endif
+ 
+-# Linux ARM would need -latomic for std::atomic<int64_t>
+-if host_system == 'linux' and host_machine.cpu_family() in ['aarch64', 'arm']
+-  libatomic_dep = cxx.find_library('atomic', required: get_option('cuda-nvmm'))
+-  if not libatomic_dep.found()
+-    subdir_done()
+-  endif
+-
+-  gstcuda_platform_dep += [libatomic_dep]
+-endif
++# Check for libatomic for use of C11 atomics: some architectures need
++# to link explicitly to this library.
++# TODO: Once meson 1.7 is in use, this can be updated to
++# dependency('atomic')
++atomic_dep = cxx.find_library('atomic', required: false)
++gstcuda_platform_dep += [atomic_dep]
+ 
+ cuda_win32_headers = [
+   'initguid.h',
+-- 
+2.43.0
+
