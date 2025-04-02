@@ -73,6 +73,8 @@ CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl dan
 CVE_CHECK_IGNORE += "CVE-2023-42915"
 # ignored: CURLOPT_SSL_VERIFYPEER was disabled on google cloud services causing a potential man in the middle attack
 CVE_CHECK_IGNORE += "CVE-2024-32928"
+# ignored: gzip decompression of content-encoded HTTP responses with the `CURLOPT_ACCEPT_ENCODING` option, using zlib 1.2.0.3 or older
+CVE_CHECK_IGNORE += "CVE-2025-0725"
 
 inherit autotools pkgconfig binconfig multilib_header
 
