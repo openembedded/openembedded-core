@@ -14,9 +14,8 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://0001-python-module-do-not-manipulate-the-environment-when.patch \
            file://0001-Make-CPU-family-warnings-fatal.patch \
            file://0002-Support-building-allarch-recipes-again.patch \
-           file://0001-dependencies-dev-prepend-sysroot-when-searching-for-.patch \
            "
-SRC_URI[sha256sum] = "08efbe84803eed07f863b05092d653a9d348f7038761d900412fddf56deb0284"
+SRC_URI[sha256sum] = "155780a5be87f6dd7f427ad8bcbf0f2b2c5f62ee5fdacca7caa9de8439a24b89"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)$"
 
 inherit python_setuptools_build_meta github-releases
@@ -24,16 +23,6 @@ inherit python_setuptools_build_meta github-releases
 RDEPENDS:${PN} = "ninja python3-modules python3-pkg-resources"
 
 FILES:${PN} += "${datadir}/polkit-1"
-
-do_install:append () {
-	# As per the same issue in the python recipe itself:
-	# Unfortunately the following pyc files are non-deterministc due to 'frozenset'
-	# being written without strict ordering, even with PYTHONHASHSEED = 0
-	# Upstream is discussing ways to solve the issue properly, until then let's
-	# just not install the problematic files.
-	# More info: http://benno.id.au/blog/2013/01/15/python-determinism
-	rm -f ${D}${libdir}/python*/site-packages/mesonbuild/dependencies/__pycache__/mpi.cpython*
-}
 
 BBCLASSEXTEND = "native nativesdk"
 
