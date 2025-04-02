@@ -7,8 +7,7 @@ It is a fully modular system that can be extended, through plug-ins, \
 to support all kinds of wired or wireless technologies. Also, \
 configuration methods, like DHCP and domain name resolving, are \
 implemented using plug-ins."
-HOMEPAGE = "http://connman.net/"
-BUGTRACKER = "https://01.org/jira/browse/CM"
+HOMEPAGE = "https://web.git.kernel.org/pub/scm/network/connman/connman.git/about/"
 LICENSE  = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e \
                     file://src/main.c;beginline=1;endline=20;md5=486a279a6ab0c8d152bcda3a5b5edc36"
@@ -20,10 +19,8 @@ CVE_PRODUCT = "connman connection_manager"
 DEPENDS  = "dbus glib-2.0 ppp"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
-           file://0001-plugin.h-Change-visibility-to-default-for-debug-symb.patch \
            file://0001-connman.service-stop-systemd-resolved-when-we-use-co.patch \
            file://connman \
-           file://no-version-scripts.patch \
            file://0002-resolve-musl-does-not-implement-res_ninit.patch \
            "
 
@@ -116,10 +113,10 @@ do_install:append() {
 	# plugins directory to be present for ownership
 	mkdir -p ${D}${libdir}/connman/plugins
 
-    # For read-only filesystem, do not create links during bootup
-    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        ln -sf ../run/connman/resolv.conf ${D}${sysconfdir}/resolv-conf.connman
-    fi
+	# For read-only filesystem, do not create links during bootup
+	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		ln -sf ../run/connman/resolv.conf ${D}${sysconfdir}/resolv-conf.connman
+	fi
 }
 
 # These used to be plugins, but now they are core
