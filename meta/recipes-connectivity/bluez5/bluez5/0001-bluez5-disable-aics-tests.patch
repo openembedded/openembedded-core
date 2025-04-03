@@ -1,4 +1,4 @@
-From 9958e88edf74509faf759099896b37477625913f Mon Sep 17 00:00:00 2001
+From 2140aa879c24dcc9dad7e733c77c1bb212fe1ddf Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Gu=C3=B0ni=20M=C3=A1r=20Gilbert?= <gudni.m.g@gmail.com>
 Date: Sun, 30 Mar 2025 02:20:24 +0000
 Subject: [PATCH] bluez5: disable aics tests
