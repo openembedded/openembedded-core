@@ -446,8 +446,9 @@ class Wic(WicTestCase):
                 wks.write("""
 part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path usr
 part /usr --source rootfs --ondisk mmcblk0 --fstype=ext4 --rootfs-dir %s/usr
-part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --rootfs-dir %s/usr"""
-                          % (rootfs_dir, rootfs_dir))
+part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --rootfs-dir %s/usr
+part /mnt --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/whoami --rootfs-dir %s/usr"""
+                          % (rootfs_dir, rootfs_dir, rootfs_dir))
             runCmd("wic create %s -e core-image-minimal -o %s" \
                                        % (wks_file, self.resultdir))
 
@@ -466,9 +467,9 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             # 1:0.00MiB:200MiB:200MiB:ext4::;\n
             partlns = res.output.splitlines()[2:]
 
-            self.assertEqual(3, len(partlns))
+            self.assertEqual(4, len(partlns))
 
-            for part in [1, 2, 3]:
+            for part in [1, 2, 3, 4]:
                 part_file = os.path.join(self.resultdir, "selftest_img.part%d" % part)
                 partln = partlns[part-1].split(":")
                 self.assertEqual(7, len(partln))
@@ -510,7 +511,24 @@ part /etc --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/ --r
             self.assertIn("..", files)
             self.assertEqual(2, len(files))
 
-            for part in [1, 2, 3]:
+            # Partition 4, should contain the same as partition 2, including the bin
+            # directory, but not whoami (a symlink to busybox.nosuid) inside it.
+            res = runCmd("debugfs -R 'ls -p' %s" % \
+                             os.path.join(self.resultdir, "selftest_img.part4"), stderr=subprocess.PIPE)
+            files = extract_files(res.output)
+            self.assertNotIn("etc", files)
+            self.assertNotIn("usr", files)
+            self.assertIn("share", files)
+            self.assertIn("bin", files)
+            res = runCmd("debugfs -R 'ls -p bin' %s" % \
+                             os.path.join(self.resultdir, "selftest_img.part4"), stderr=subprocess.PIPE)
+            files = extract_files(res.output)
+            self.assertIn(".", files)
+            self.assertIn("..", files)
+            self.assertIn("who", files)
+            self.assertNotIn("whoami", files)
+
+            for part in [1, 2, 3, 4]:
                 part_file = os.path.join(self.resultdir, "selftest_img.part%d" % part)
                 os.remove(part_file)
 
