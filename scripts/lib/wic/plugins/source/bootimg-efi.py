@@ -341,6 +341,9 @@ class BootimgEFIPlugin(SourcePlugin):
                     cp_cmd = "cp -v -p %s/%s %s/EFI/BOOT/%s" % (kernel_dir, mod, hdddir, mod[8:])
                     out = exec_cmd(cp_cmd, True)
                     logger.debug("systemd-boot files:\n%s" % out)
+                # must have installed at least one EFI bootloader
+                out = exec_cmd("ls %s/EFI/BOOT/boot*.efi" % (hdddir), True)
+                logger.debug("Installed systemd-boot files:\n%s" % out)
             elif source_params['loader'] == 'uefi-kernel':
                 kernel = get_bitbake_var("KERNEL_IMAGETYPE")
                 if not kernel:
