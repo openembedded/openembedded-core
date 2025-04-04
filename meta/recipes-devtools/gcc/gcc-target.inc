@@ -1,4 +1,7 @@
 GCCMULTILIB = "--enable-multilib"
+GCCMULTILIB:riscv32 = "--disable-multilib"
+GCCMULTILIB:riscv64 = "--disable-multilib"
+
 require gcc-configure-common.inc
 
 EXTRA_OECONF_PATHS = "\
