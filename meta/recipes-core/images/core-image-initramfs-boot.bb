@@ -2,7 +2,7 @@ SUMMARY = "Basic initramfs to boot a fully-featured rootfs"
 DESCRIPTION = "Small initramfs that contains just udev and init, to find the real rootfs."
 LICENSE = "MIT"
 
-INITRAMFS_SCRIPTS ?= "initramfs-framework-base initramfs-module-udev"
+INITRAMFS_SCRIPTS ?= "initramfs-framework-base initramfs-module-udev initramfs-module-rootfs"
 
 inherit image
 
@@ -20,7 +20,16 @@ PACKAGE_INSTALL = " \
         ${VIRTUAL-RUNTIME_dev_manager} \
     ', '${INITRAMFS_SCRIPTS}', d)} \
     base-passwd \
+    busybox-udhcpc \
+    libkmod \
 "
+
+# reduce size
+NO_RECOMMENDATIONS = "1"
+
+# don't install automatically, pick manually instead
+MACHINE_EXTRA_RDEPENDS = ""
+MACHINE_EXTRA_RRECOMMENDS = ""
 
 # Ensure the initramfs only contains the bare minimum
 IMAGE_FEATURES = ""
