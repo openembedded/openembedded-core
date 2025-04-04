@@ -21,6 +21,7 @@ PACKAGE_INSTALL = " \
     ', '${INITRAMFS_SCRIPTS}', d)} \
     base-passwd \
     busybox-udhcpc \
+    kernel-initrd-modules \
     libkmod \
 "
 
