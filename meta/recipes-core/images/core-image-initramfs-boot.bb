@@ -4,7 +4,23 @@ LICENSE = "MIT"
 
 INITRAMFS_SCRIPTS ?= "initramfs-framework-base initramfs-module-udev"
 
-PACKAGE_INSTALL = "${INITRAMFS_SCRIPTS} ${VIRTUAL-RUNTIME_base-utils} base-passwd"
+inherit image
+
+PACKAGE_INSTALL = " \
+    ${VIRTUAL-RUNTIME_base-utils} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd-initramfs', ' \
+        base-files \
+        coreutils \
+        e2fsprogs-mke2fs \
+        os-release-initrd \
+        util-linux-blkid \
+        util-linux-mount \
+        util-linux-umount \
+        ${VIRTUAL-RUNTIME_init_manager} \
+        ${VIRTUAL-RUNTIME_dev_manager} \
+    ', '${INITRAMFS_SCRIPTS}', d)} \
+    base-passwd \
+"
 
 # Ensure the initramfs only contains the bare minimum
 IMAGE_FEATURES = ""
@@ -18,5 +34,3 @@ IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
 IMAGE_NAME_SUFFIX ?= ""
 IMAGE_ROOTFS_SIZE = "8192"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
-
-inherit image
