@@ -86,3 +86,40 @@ EXPORT_FUNCTIONS do_compile do_install
 KERNEL_MODULES_META_PACKAGE = "${PN}"
 FILES:${PN} = ""
 ALLOW_EMPTY:${PN} = "1"
+
+# subset of kernel modules needed in initrd, to e.g. mount rootfs from block device
+KERNEL_INITRD_MODULES_META_PACKAGE ?= "${@ d.getVar("KERNEL_PACKAGE_NAME") or "kernel" }-initrd-modules"
+
+# match regex to path or file name. E.g. include all drivers with files in path /drivers/ata/
+KERNEL_INITRD_MODULES_REGEX ?= "(.*)(\
+/drivers/acpi/|\
+/drivers/ata/|\
+/drivers/block/|\
+/drivers/cdrom/|\
+/drivers/char/hw_random/|\
+/drivers/char/tpm/|\
+/drivers/char/|\
+/drivers/crypto/|\
+/drivers/dax/|\
+/drivers/firmware/arm_scmi/|\
+/drivers/gpu/drm/|\
+/drivers/md/|\
+/drivers/mmc/|\
+/drivers/mtd/|\
+/drivers/nvdimm/|\
+/drivers/nvme/|\
+/drivers/pci/|\
+/drivers/scsi/|\
+/drivers/tee/|\
+/drivers/tty/serial/|\
+/drivers/virtio/|\
+/drivers/watchdog/|\
+/kernel/arch/|\
+/kernel/block/|\
+/kernel/crypto/|\
+/kernel/fs/|\
+/kernel/lib/\
+)(.*)"
+
+FILES:${PN}-initrd = ""
+ALLOW_EMPTY:${PN}-initrd = "1"
