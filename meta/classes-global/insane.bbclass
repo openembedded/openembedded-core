@@ -1469,10 +1469,10 @@ python do_recipe_qa() {
         pkgconfigs = (d.getVar("PACKAGECONFIG") or "").split()
         if pkgconfigs:
             pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
-            for pkgconfig in pkgconfigs:
-                if pkgconfig not in pkgconfigflags:
-                    error_msg = "%s: invalid PACKAGECONFIG: %s" % (pn, pkgconfig)
-                    oe.qa.handle_error("invalid-packageconfig", error_msg, d)
+            invalid_pkgconfigs = set(pkgconfigs) - set(pkgconfigflags)
+            if invalid_pkgconfigs:
+                error_msg = "%s: invalid PACKAGECONFIG(s): %s" % (pn, " ".join(sorted(invalid_pkgconfigs)))
+                oe.qa.handle_error("invalid-packageconfig", error_msg, d)
 
     pn = d.getVar('PN')
     test_missing_metadata(pn, d)
