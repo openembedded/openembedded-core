@@ -1,4 +1,4 @@
-From 445fcfd7b9245881d769880a5942ce9faa893045 Mon Sep 17 00:00:00 2001
+From 9a187d2f54d3683636b951a10c165d949b3a1d18 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 23 Mar 2025 20:09:35 -0700
 Subject: [PATCH] framework: Include stdint.h

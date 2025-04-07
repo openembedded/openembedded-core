@@ -1,0 +1,30 @@
+From da4ef211810bc3b0c51ea89f02c031a170fe0cb8 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Tue, 1 Apr 2025 18:53:34 +0200
+Subject: [PATCH] bldsys/cmake/global_options.cmake: removed unused
+ ROOT_PATH_SIZE define
+
+After various refactorings it is no longer used anywhere (and
+is problematic for build reproducibility, as build path sizes can
+differ between build hosts).
+
+Upstream-Status: Submitted [https://github.com/KhronosGroup/Vulkan-Samples/pull/1325]
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ bldsys/cmake/global_options.cmake | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/bldsys/cmake/global_options.cmake b/bldsys/cmake/global_options.cmake
+index 96c7add..67a6c5e 100644
+--- a/bldsys/cmake/global_options.cmake
++++ b/bldsys/cmake/global_options.cmake
+@@ -126,9 +126,6 @@ set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+ 
+-string(LENGTH "${CMAKE_SOURCE_DIR}/" ROOT_PATH_SIZE)
+-add_definitions(-DROOT_PATH_SIZE=${ROOT_PATH_SIZE})
+-
+ set(CMAKE_C_FLAGS_DEBUG   "-DDEBUG=0 ${CMAKE_C_FLAGS_DEBUG}")
+ set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG=0 ${CMAKE_CXX_FLAGS_DEBUG}")
+ 
