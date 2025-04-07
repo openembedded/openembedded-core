@@ -1,0 +1,60 @@
+From 77afd065dc58e2f57066ef7f392c571f8136723d Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Mon, 7 Apr 2025 14:45:27 +0000
+Subject: [PATCH] scripts/dtc: clean up yamltree from dtc
+
+Refer Linux commit [dt-bindings: kbuild: Use DTB files for validation][1],
+clean up yamltree from dtc to avoid compile failure while include <yaml.h>
+in non-standard path
+
+Since barebox actually doesn't do any dtb binding checks at the moment, just
+remove the test of /usr/include/yaml.h, hard-code the -DNO_YAML and remove
+yamltree.c from DTC_SOURCE
+
+[1] https://github.com/torvalds/linux/commit/ef8795f3f1ce
+
+Upstream-Status: Submitted [https://github.com/barebox/barebox/pull/37]
+
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ scripts/dtc/Makefile             | 9 ---------
+ scripts/dtc/update-dtc-source.sh | 2 +-
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+index 721e8e2b..da00319f 100644
+--- a/scripts/dtc/Makefile
++++ b/scripts/dtc/Makefile
+@@ -16,16 +16,7 @@ fdtget-objs    += fdtget.o $(libfdt-objs) util.o
+ # Source files need to get at the userspace version of libfdt_env.h to compile
+ HOST_EXTRACFLAGS += -I$(src)/libfdt
+ 
+-ifeq ($(wildcard /usr/include/yaml.h),)
+-ifneq ($(CHECK_DTBS),)
+-$(error dtc needs libyaml for DT schema validation support. \
+-	Install the necessary libyaml development package.)
+-endif
+ HOST_EXTRACFLAGS += -DNO_YAML
+-else
+-dtc-objs	+= yamltree.o
+-HOSTLDLIBS_dtc	:= -lyaml
+-endif
+ 
+ # Generated files need one more search path to include headers in source tree
+ HOSTCFLAGS_dtc-lexer.lex.o := -I$(src)
+diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
+index 141d3629..8aa5cd66 100755
+--- a/scripts/dtc/update-dtc-source.sh
++++ b/scripts/dtc/update-dtc-source.sh
+@@ -31,7 +31,7 @@ DTC_UPSTREAM_PATH=`pwd`/../dtc
+ DTC_LINUX_PATH=`pwd`/scripts/dtc
+ 
+ DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c \
+-		srcpos.h treesource.c util.c util.h version_gen.h yamltree.c Makefile.dtc \
++		srcpos.h treesource.c util.c util.h version_gen.h Makefile.dtc \
+ 		dtc-lexer.l dtc-parser.y fdtget.c"
+ LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_tree.c \
+ 		fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
+-- 
+2.48.1
+
