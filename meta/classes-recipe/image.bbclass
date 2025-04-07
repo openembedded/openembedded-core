@@ -132,7 +132,7 @@ python () {
 
 def rootfs_variables(d):
     from oe.rootfs import variable_depends
-    variables = ['IMAGE_DEVICE_TABLE','IMAGE_DEVICE_TABLES','BUILD_IMAGES_FROM_FEEDS','IMAGE_TYPES_MASKED','IMAGE_ROOTFS_ALIGNMENT','IMAGE_OVERHEAD_FACTOR','IMAGE_ROOTFS_SIZE','IMAGE_ROOTFS_EXTRA_SPACE',
+    variables = ['IMAGE_DEVICE_TABLE','IMAGE_DEVICE_TABLES','BUILD_IMAGES_FROM_FEEDS','IMAGE_TYPES_MASKED','IMAGE_ROOTFS_ALIGNMENT','IMAGE_OVERHEAD_FACTOR','IMAGE_ROOTFS_SIZE', 'IMAGE_ROOTFS_EXACT_SIZE', 'IMAGE_ROOTFS_EXTRA_SPACE',
                  'IMAGE_ROOTFS_MAXSIZE','IMAGE_NAME','IMAGE_LINK_NAME','IMAGE_MANIFEST','DEPLOY_DIR_IMAGE','IMAGE_FSTYPES','IMAGE_INSTALL_COMPLEMENTARY','IMAGE_LINGUAS', 'IMAGE_LINGUAS_COMPLEMENTARY', 'IMAGE_LOCALES_ARCHIVE',
                  'MULTILIBRE_ALLOW_REP','MULTILIB_TEMP_ROOTFS','MULTILIB_VARIANTS','MULTILIBS','ALL_MULTILIB_PACKAGE_ARCHS','MULTILIB_GLOBAL_VARIANTS','BAD_RECOMMENDATIONS','NO_RECOMMENDATIONS',
                  'PACKAGE_ARCHS','PACKAGE_CLASSES','TARGET_VENDOR','TARGET_ARCH','TARGET_OS','OVERRIDES','BBEXTENDVARIANT','FEED_DEPLOYDIR_BASE_URI','INTERCEPT_DIR','USE_DEVFS',
@@ -596,9 +596,14 @@ def get_rootfs_size(d):
     return base_size
 
 python set_image_size () {
-        rootfs_size = get_rootfs_size(d)
-        d.setVar('ROOTFS_SIZE', str(rootfs_size))
-        d.setVarFlag('ROOTFS_SIZE', 'export', '1')
+    rootfs_size = d.getVar('IMAGE_ROOTFS_EXACT_SIZE')
+    # If IMAGE_ROOTFS_EXACT_SIZE variable is not set, use the result of
+    # get_rootfs_size as ROOTFS_SIZE.
+    if not rootfs_size:
+        rootfs_size = str(get_rootfs_size(d))
+
+    d.setVar('ROOTFS_SIZE', rootfs_size)
+    d.setVarFlag('ROOTFS_SIZE', 'export', '1')
 }
 
 #
