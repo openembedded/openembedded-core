@@ -8,11 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=2a8e0d8226a102f07ab63ed7fd6ce155"
 DEPENDS:append:x86-64:class-target = " nasm-native"
 DEPENDS:append:x86:class-target = " nasm-native"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz"
-
+SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz"
 SRC_URI[sha256sum] = "22429507714ae147b3acacd299e82099fce5d9f456882fc28e252e4579ba2a75"
-UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/libjpeg-turbo/files/"
-UPSTREAM_CHECK_REGEX = "/libjpeg-turbo/files/(?P<pver>(\d+[\.\-_]*)+)/"
 
 PE = "1"
 
@@ -22,7 +19,7 @@ RPROVIDES:${PN} += "jpeg"
 RREPLACES:${PN} += "jpeg"
 RCONFLICTS:${PN} += "jpeg"
 
-inherit cmake pkgconfig
+inherit cmake pkgconfig github-releases
 
 export NASMENV = "--reproducible --debug-prefix-map=${WORKDIR}=${TARGET_DBGSRC_DIR}"
 
