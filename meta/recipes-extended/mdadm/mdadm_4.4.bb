@@ -11,22 +11,15 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/mdadm/mdadm.git;protocol=https;branch=main;tag=mdadm-${PV} \
            file://run-ptest \
-           file://mdadm-3.3.2_x32_abi_time_t.patch \
-           file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
            file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
-           file://0001-Use-CC-to-check-for-implicit-fallthrough-warning-sup.patch \
-           file://0001-fix-gcc-8-format-truncation-warning.patch \
-           file://debian-no-Werror.patch \
            file://mdadm.init \
-           file://0001-mdadm-add-option-y-for-use-syslog-to-recive-event-re.patch \
            file://0001-Makefile-install-mdcheck.patch \
            file://0001-restripe.c-Use-_FILE_OFFSET_BITS-to-enable-largefile.patch \
            file://0002-Create.c-include-linux-falloc.h-for-FALLOC_FL_ZERO_R.patch \
-           file://0001-util.c-add-limits.h-include-for-NAME_MAX-definition.patch \
-           file://0001-include-libgen.h-for-basename-API.patch \
+           file://xmalloc.patch \
            "
 
-SRCREV = "d709d4161d1dd51a976147e8372fbd99ff8183bd"
+SRCREV = "8e56efac9afd7080bb42bae4b77cdad5f345633a"
 S = "${WORKDIR}/git"
 
 inherit ptest systemd
@@ -44,7 +37,7 @@ CFLAGS:append:powerpc64 = ' -D__SANE_USERSPACE_TYPES__'
 CFLAGS:append:mipsarchn64 = ' -D__SANE_USERSPACE_TYPES__'
 CFLAGS:append:mipsarchn32 = ' -D__SANE_USERSPACE_TYPES__'
 
-EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CXFLAGS="${CFLAGS}" SYSTEMD_DIR=${systemd_system_unitdir} \
+EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CWFLAGS="" CXFLAGS="${CFLAGS}" SYSTEMD_DIR=${systemd_system_unitdir} \
                 BINDIR="${base_sbindir}" UDEVDIR="${nonarch_base_libdir}/udev" LDFLAGS="${LDFLAGS}" \
                 SYSROOT="${STAGING_DIR_TARGET}" STRIP='
 
@@ -53,7 +46,7 @@ DEBUG_OPTIMIZATION:append = " -Wno-error"
 do_install() {
         oe_runmake 'DESTDIR=${D}' install install-systemd
         install -d ${D}/${sysconfdir}/
-        install -m 644 ${S}/mdadm.conf-example ${D}${sysconfdir}/mdadm.conf
+        install -m 644 ${S}/documentation/mdadm.conf-example ${D}${sysconfdir}/mdadm.conf
         install -d ${D}/${sysconfdir}/init.d
         install -m 755 ${UNPACKDIR}/mdadm.init ${D}${sysconfdir}/init.d/mdmonitor
 }
