@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://mdadm.h;beglinlne=4;endline=22;md5=462bc9936ac0d3da110191a3f9994161"
 
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
+SRC_URI = "git://git.kernel.org/pub/scm/utils/mdadm/mdadm.git;protocol=https;branch=main;tag=mdadm-${PV} \
            file://run-ptest \
            file://mdadm-3.3.2_x32_abi_time_t.patch \
            file://0001-mdadm.h-Undefine-dprintf-before-redefining.patch \
@@ -26,7 +26,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/raid/mdadm/${BPN}-${PV}.tar.xz \
            file://0001-include-libgen.h-for-basename-API.patch \
            "
 
-SRC_URI[sha256sum] = "416727ae1f1080ea6e3090cea36dd076826fc369151e36ab736557ba92196f9f"
+SRCREV = "d709d4161d1dd51a976147e8372fbd99ff8183bd"
+S = "${WORKDIR}/git"
 
 inherit ptest systemd
 

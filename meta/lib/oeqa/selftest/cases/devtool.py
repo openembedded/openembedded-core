@@ -1185,13 +1185,16 @@ class DevtoolUpdateTests(DevtoolBase):
         result = runCmd('echo "A new file" > devtool-new-file', cwd=tempdir)
         result = runCmd('git add devtool-new-file', cwd=tempdir)
         result = runCmd('git commit -m "Add a new file"', cwd=tempdir)
-        self.add_command_to_tearDown('cd %s; rm %s/*.patch; git checkout %s %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile)))
+        cleanup_cmd = 'cd %s; rm %s/*.patch; git add %s; git checkout %s' % (os.path.dirname(recipefile), testrecipe, testrecipe, os.path.basename(recipefile))
+        self.add_command_to_tearDown(cleanup_cmd)
         result = runCmd('devtool update-recipe %s' % testrecipe)
         result = runCmd('git add minicom', cwd=os.path.dirname(recipefile))
         expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile)),
                            ('A ', '.*/0001-Change-the-README.patch$'),
                            ('A ', '.*/0002-Add-a-new-file.patch$')]
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
+        result = runCmd(cleanup_cmd)
+        self._check_repo_status(os.path.dirname(recipefile), [])
 
     def test_devtool_update_recipe_git(self):
         # Check preconditions
@@ -1248,7 +1251,7 @@ class DevtoolUpdateTests(DevtoolBase):
 
     def test_devtool_update_recipe_append(self):
         # Check preconditions
-        testrecipe = 'mdadm'
+        testrecipe = 'minicom'
         bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
         recipefile = bb_vars['FILE']
         src_uri = bb_vars['SRC_URI']
@@ -1266,7 +1269,7 @@ class DevtoolUpdateTests(DevtoolBase):
         # Check git repo
         self._check_src_repo(tempsrcdir)
         # Add a commit
-        result = runCmd("sed 's!\\(#define VERSION\\W*\"[^\"]*\\)\"!\\1-custom\"!' -i ReadMe.c", cwd=tempsrcdir)
+        result = runCmd('echo "Additional line" >> README', cwd=tempsrcdir)
         result = runCmd('git commit -a -m "Add our custom version"', cwd=tempsrcdir)
         self.add_command_to_tearDown('cd %s; rm -f %s/*.patch; git checkout .' % (os.path.dirname(recipefile), testrecipe))
         # Create a temporary layer and add it to bblayers.conf
@@ -1305,7 +1308,7 @@ class DevtoolUpdateTests(DevtoolBase):
             self.assertEqual(expectedlines2, f.readlines())
         # Put commit back and check we can run it if layer isn't in bblayers.conf
         os.remove(bbappendfile)
-        result = runCmd("sed 's!\\(#define VERSION\\W*\"[^\"]*\\)\"!\\1-custom\"!' -i ReadMe.c", cwd=tempsrcdir)
+        result = runCmd('echo "Additional line" >> README', cwd=tempsrcdir)
         result = runCmd('git commit -a -m "Add our custom version"', cwd=tempsrcdir)
         result = runCmd('bitbake-layers remove-layer %s' % templayerdir, cwd=self.builddir)
         result = runCmd('devtool update-recipe %s -a %s' % (testrecipe, templayerdir))
