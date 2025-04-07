@@ -692,6 +692,7 @@ part /etc --source rootfs --fstype=ext4 --change-directory=etc
 
                 config = 'IMAGE_FSTYPES += "wic"\nWKS_FILE = "%s"\n' % wks_file
                 self.append_config(config)
+                bitbake('-c clean core-image-minimal')
                 bitbake('core-image-minimal')
                 tmpdir = os.path.join(get_bb_var('WORKDIR', 'core-image-minimal'),'build-wic')
 
