@@ -161,6 +161,9 @@ CVE_CHECK_IGNORE += "CVE-2023-2680"
 #       due to the rocker device not falling within the virtualization use case.
 CVE_CHECK_IGNORE += "CVE-2022-36648"
 
+# disputed: not an issue as per https://bugzilla.redhat.com/show_bug.cgi?id=2223985
+CVE_CHECK_IGNORE += "CVE-2023-1386"
+
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"
 COMPATIBLE_HOST:riscv32 = "null"
