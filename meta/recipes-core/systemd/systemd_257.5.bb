@@ -274,6 +274,10 @@ WATCHDOG_TIMEOUT ??= "60"
 # and the watchdog is enabled. (defaults is no hardware watchdog use)
 WATCHDOG_RUNTIME_SEC ??= ""
 
+# Predictable network interface name policies
+PNI_NAME_POLICY ??= "keep kernel database onboard slot path mac"
+PNI_ALTERNATIVE_NAMES_POLICY ??= "database onboard slot path mac"
+
 do_install() {
 	meson_do_install
 
@@ -399,12 +403,8 @@ do_install() {
 	fi
 
 	if ${@bb.utils.contains('PACKAGECONFIG', 'pni-names', 'true', 'false', d)}; then
-		if ! grep -q '^NamePolicy=.*mac' ${D}${nonarch_libdir}/systemd/network/99-default.link; then
-			sed -i '/^NamePolicy=/s/$/ mac/' ${D}${nonarch_libdir}/systemd/network/99-default.link
-		fi
-		if ! grep -q 'AlternativeNamesPolicy=.*mac' ${D}${nonarch_libdir}/systemd/network/99-default.link; then
-			sed -i '/AlternativeNamesPolicy=/s/$/ mac/' ${D}${nonarch_libdir}/systemd/network/99-default.link
-		fi
+		sed -i 's/^NamePolicy=.*/NamePolicy=${PNI_NAME_POLICY}/' ${D}${nonarch_libdir}/systemd/network/99-default.link
+		sed -i 's/^AlternativeNamesPolicy=.*/AlternativeNamesPolicy=${PNI_ALTERNATIVE_NAMES_POLICY}/' ${D}${nonarch_libdir}/systemd/network/99-default.link
 	else
 		# Actively disable Predictable Network Interface Names
 		sed -i 's/^NamePolicy=.*/NamePolicy=/;s/^AlternativeNamesPolicy=.*/AlternativeNamesPolicy=/' ${D}${nonarch_libdir}/systemd/network/99-default.link
