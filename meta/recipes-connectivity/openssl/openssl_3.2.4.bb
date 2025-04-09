@@ -186,44 +186,43 @@ do_install:append:class-nativesdk () {
 
 PTEST_BUILD_HOST_FILES += "configdata.pm"
 PTEST_BUILD_HOST_PATTERN = "perl_version ="
-do_install_ptest () {
-	install -d ${D}${PTEST_PATH}/test
-	install -m755 ${B}/test/p_test.so ${D}${PTEST_PATH}/test
-	install -m755 ${B}/test/p_minimal.so ${D}${PTEST_PATH}/test
-	install -m755 ${B}/test/provider_internal_test.cnf ${D}${PTEST_PATH}/test
-
-	# Prune the build tree
-	rm -f ${B}/fuzz/*.* ${B}/test/*.*
-
-	cp ${S}/Configure ${B}/configdata.pm ${D}${PTEST_PATH}
-	sed 's|${S}|${PTEST_PATH}|g' -i ${D}${PTEST_PATH}/configdata.pm
-	cp -r ${S}/external ${B}/test ${S}/test ${B}/fuzz ${S}/util ${B}/util ${D}${PTEST_PATH}
-
-	# For test_shlibload
-	ln -s ${libdir}/libcrypto.so.1.1 ${D}${PTEST_PATH}/
-	ln -s ${libdir}/libssl.so.1.1 ${D}${PTEST_PATH}/
+do_install_ptest() {
+	install -m644 ${S}/Configure ${B}/configdata.pm ${D}${PTEST_PATH}
+	cp -rf ${S}/Configurations ${S}/external ${D}${PTEST_PATH}/
 
 	install -d ${D}${PTEST_PATH}/apps
 	ln -s ${bindir}/openssl ${D}${PTEST_PATH}/apps
-	install -m644 ${S}/apps/*.pem ${S}/apps/*.srl ${S}/apps/openssl.cnf ${D}${PTEST_PATH}/apps
-	install -m755 ${B}/apps/CA.pl ${D}${PTEST_PATH}/apps
+
+	cd ${S}
+	find test/certs test/ct test/d2i-tests test/recipes test/ocsp-tests test/ssl-tests test/smime-certs -type f -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	find apps test -name \*.cnf -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	find apps test -name \*.der -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	find apps test -name \*.pem -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	find util -name \*.p[lm] -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+
+	cd ${B}
+	# Everything but .? (.o and .d)
+	find test -type f -name \*[^.]? -exec install -m755 -D {} ${D}${PTEST_PATH}/{} \;
+	find apps test -name \*.cnf -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	find apps test -name \*.pem -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	find apps test -name \*.srl -exec install -m644 -D {} ${D}${PTEST_PATH}/{} \;
+	install -m755 ${B}/util/*wrap.* ${D}${PTEST_PATH}/util/
+
+	install -m755 ${B}/apps/CA.pl ${D}${PTEST_PATH}/apps/
+	install -m755 ${S}/test/*.pl ${D}${PTEST_PATH}/test/
+	install -m755 ${S}/test/shibboleth.pfx ${D}${PTEST_PATH}/test/
+	install -m755 ${S}/test/*.bin ${D}${PTEST_PATH}/test/
+	install -m755 ${S}/test/dane*.in ${D}${PTEST_PATH}/test/
+	install -m755 ${S}/test/smcont*.txt ${D}${PTEST_PATH}/test/
+	install -m755 ${S}/test/ssl_test.tmpl ${D}${PTEST_PATH}/test/
+
+	sed 's|${S}|${PTEST_PATH}|g' -i ${D}${PTEST_PATH}/configdata.pm ${D}${PTEST_PATH}/util/wrap.pl
 
 	install -d ${D}${PTEST_PATH}/engines
-	install -m755 ${B}/engines/dasync.so ${D}${PTEST_PATH}/engines
-	install -m755 ${B}/engines/loader_attic.so ${D}${PTEST_PATH}/engines
-	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines
-
-	install -d ${D}${PTEST_PATH}/providers
-	install -m755 ${B}/providers/legacy.so ${D}${PTEST_PATH}/providers
-
-	install -d ${D}${PTEST_PATH}/Configurations
-	cp -rf ${S}/Configurations/* ${D}${PTEST_PATH}/Configurations/
-
-	# seems to be needed with perl 5.32.1
-	install -d ${D}${PTEST_PATH}/util/perl/recipes
-	cp ${D}${PTEST_PATH}/test/recipes/tconversion.pl ${D}${PTEST_PATH}/util/perl/recipes/
-
-	sed 's|${S}|${PTEST_PATH}|g' -i ${D}${PTEST_PATH}/util/wrap.pl
+	install -m755 ${B}/engines/dasync.so ${D}${PTEST_PATH}/engines/
+	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines/
+	ln -s ${libdir}/engines-3/loader_attic.so ${D}${PTEST_PATH}/engines/
+	ln -s ${libdir}/ossl-modules/ ${D}${PTEST_PATH}/providers
 }
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
@@ -250,7 +249,7 @@ CONFFILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 
 RRECOMMENDS:libcrypto += "openssl-conf ${PN}-ossl-module-legacy"
 RDEPENDS:${PN}-misc = "perl"
-RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed"
+RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed openssl-engines openssl-ossl-module-legacy"
 
 RDEPENDS:${PN}-bin += "openssl-conf"
 
