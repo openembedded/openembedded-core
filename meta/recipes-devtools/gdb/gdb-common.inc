@@ -38,6 +38,7 @@ PACKAGECONFIG[babeltrace] = "--with-babeltrace,--without-babeltrace,babeltrace"
 PACKAGECONFIG[tui] = "--enable-tui,--disable-tui,,ncurses-terminfo-base"
 PACKAGECONFIG[xz] = "--with-lzma --with-liblzma-prefix=${STAGING_DIR_HOST},--without-lzma,xz"
 PACKAGECONFIG[debuginfod] = "--with-debuginfod, --without-debuginfod, elfutils"
+PACKAGECONFIG[source-highlight] = "--enable-source-highlight,--disable-source-highlight,source-highlight"
 
 GDBPROPREFIX = "--program-prefix=''"
 
