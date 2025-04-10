@@ -54,24 +54,6 @@ OECMAKE_SOURCEPATH = "${S}/llvm"
 
 LLVM_INSTALL_DIR = "${WORKDIR}/llvm-install"
 
-def get_llvm_arch(bb, d, arch_var):
-    import re
-    a = d.getVar(arch_var)
-    if   re.match(r'(i.86|athlon|x86.64)$', a):         return 'X86'
-    elif re.match(r'arm$', a):                          return 'ARM'
-    elif re.match(r'armeb$', a):                        return 'ARM'
-    elif re.match(r'aarch64$', a):                      return 'AArch64'
-    elif re.match(r'aarch64_be$', a):                   return 'AArch64'
-    elif re.match(r'loongarch(32|64|)$', a):            return 'LoongArch'
-    elif re.match(r'mips(isa|)(32|64|)(r6|)(el|)$', a): return 'Mips'
-    elif re.match(r'riscv(32|64)(eb|)$', a):            return 'RISCV'
-    elif re.match(r'p(pc|owerpc)(|64)', a):             return 'PowerPC'
-    else:
-        raise bb.parse.SkipRecipe("Cannot map '%s' to a supported LLVM architecture" % a)
-
-def get_llvm_host_arch(bb, d):
-    return get_llvm_arch(bb, d, 'HOST_ARCH')
-
 PACKAGECONFIG ??= "libllvm libclc spirv-llvm-translator"
 # if optviewer OFF, force the modules to be not found or the ones on the host would be found
 PACKAGECONFIG[optviewer] = ",-DPY_PYGMENTS_FOUND=OFF -DPY_PYGMENTS_LEXERS_C_CPP_FOUND=OFF -DPY_YAML_FOUND=OFF,python3-pygments python3-pyyaml,python3-pygments python3-pyyaml"
@@ -82,7 +64,7 @@ PACKAGECONFIG[spirv-llvm-translator] = "-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR
 #
 # Default to build all OE-Core supported target arches (user overridable).
 #
-LLVM_TARGETS ?= "AMDGPU;NVPTX;SPIRV;${@get_llvm_host_arch(bb, d)}"
+LLVM_TARGETS ?= "AMDGPU;AArch64;ARM;BPF;Mips;PowerPC;RISCV;X86;LoongArch;NVPTX;SPIRV"
 
 ARM_INSTRUCTION_SET:armv5 = "arm"
 ARM_INSTRUCTION_SET:armv4t = "arm"
