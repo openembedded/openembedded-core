@@ -1,0 +1,28 @@
+From f3c34b8da2662643089b33be8b93e56a4da8703d Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Wed, 2 Apr 2025 15:30:20 +0300
+Subject: [PATCH] meson: disable SIMD blake optimisations on x32 host
+
+On X.org startup libgallium crashes on x32 hosts inside
+blake3_hash_many_sse41(), most likely because of the different pointer
+size. Disable SIMD blake implementation if x32 is detected.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Upstream-Status: Pending [will be submitted upstream after internal clearance]
+---
+ src/util/blake3/meson.build | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/util/blake3/meson.build b/src/util/blake3/meson.build
+index 6b53daab6b32..ce6dd85ac1ea 100644
+--- a/src/util/blake3/meson.build
++++ b/src/util/blake3/meson.build
+@@ -24,6 +24,8 @@ if cpu_family == 'x86_64'
+     else
+       files_blake3 += ['blake3_sse2_x86-64_windows_gnu.S', 'blake3_sse41_x86-64_windows_gnu.S', 'blake3_avx2_x86-64_windows_gnu.S', 'blake3_avx512_x86-64_windows_gnu.S']
+     endif
++  elif meson.get_compiler('c').sizeof('void *') == 4
++    blake3_defs += blake3_x86_no_simd_defs
+   else
+     files_blake3 += ['blake3_sse2_x86-64_unix.S', 'blake3_sse41_x86-64_unix.S', 'blake3_avx2_x86-64_unix.S', 'blake3_avx512_x86-64_unix.S']
+   endif
