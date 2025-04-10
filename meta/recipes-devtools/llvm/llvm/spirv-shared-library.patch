@@ -1,0 +1,25 @@
+From e94e529aefb28b65165e978daa2bfd89867ee8d0 Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Thu, 9 Apr 2025 15:20:32 +0200
+Subject: [PATCH] SPIRV-LLVM-Translator: build shared library
+
+By default SPIRV-LLVM-Translator builds only a static version of the library.
+Unfortunately this might result in linking erros when uninative is in play, if
+libLLVMSPIRV uses symbols which are provided only by the uninative libc and are
+not provided by the host libc.
+
+Upstream-Status: Inappropriate [OE-Specific]
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+Index: llvm-project-20.1.1.src/llvm/projects/SPIRV-LLVM-Translator/lib/SPIRV/CMakeLists.txt
+===================================================================
+--- llvm-project-20.1.1.src.orig/llvm/projects/SPIRV-LLVM-Translator/lib/SPIRV/CMakeLists.txt
++++ llvm-project-20.1.1.src/llvm/projects/SPIRV-LLVM-Translator/lib/SPIRV/CMakeLists.txt
+@@ -42,6 +42,7 @@ set(SRC_LIST
+ )
+ add_llvm_library(LLVMSPIRVLib
+   ${SRC_LIST}
++  SHARED
+   LINK_COMPONENTS
+     Analysis
+     BitWriter
