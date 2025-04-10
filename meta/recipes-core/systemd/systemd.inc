@@ -19,3 +19,6 @@ SRCBRANCH = "v250-stable"
 SRC_URI = "git://github.com/systemd/systemd-stable.git;protocol=https;branch=${SRCBRANCH}"
 
 S = "${WORKDIR}/git"
+
+# cpe-stable-backport: patches were backported to v250 stable branch
+CVE_CHECK_IGNORE += "CVE-2022-3821 CVE-2022-4415 CVE-2022-45873"
