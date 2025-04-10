@@ -1,0 +1,67 @@
+From b9cf34f39ca7e7546508ce2ab1f053edef5fc201 Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Wed, 26 Mar 2025 17:47:09 +0200
+Subject: [PATCH] rusticl: provide cross-compilation arguments to LLVM bindgen
+ invocation
+
+Correctly generating LLVM bindings requires several croos-compilation
+arguments. Provide them to rust.bindgen(). Karol Herbst on IRC suggested
+that a proper fix should be to fix meson's rust.bindgen() to support
+cross-compilation. Carry this patch until meson is fixed.
+
+Upstream-Status: Inappropriate [OE-Specific]
+Link: https://github.com/mesonbuild/meson/issues/13591
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ meson_options.txt                         | 14 ++++++++++++++
+ src/gallium/frontends/rusticl/meson.build |  8 ++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/meson_options.txt b/meson_options.txt
+index 0147cafcb146..f73e83fded18 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -796,3 +796,17 @@ option(
+   value : false,
+   description : 'Install the drivers internal shader compilers (if needed for cross builds).'
+ )
++
++option(
++  'bindgen-includedir',
++  type : 'string',
++  value : '',
++  description : 'system-wide include directory for cross-generating LLVM bindings'
++  )
++
++option(
++  'bindgen-target',
++  type : 'string',
++  value : '',
++  description : 'Clang target for cross-generating LLVM bindings'
++  )
+diff --git a/src/gallium/frontends/rusticl/meson.build b/src/gallium/frontends/rusticl/meson.build
+index a5d1dcf3abb9..480c220b7f5f 100644
+--- a/src/gallium/frontends/rusticl/meson.build
++++ b/src/gallium/frontends/rusticl/meson.build
+@@ -115,6 +115,11 @@ rusticl_bindgen_c_args = [
+   '-fno-builtin-malloc',
+ ]
+ 
++bindgen_target = get_option('bindgen-target')
++if bindgen_target != ''
++  rusticl_bindgen_c_args += [ '-target', bindgen_target ]
++endif
++
+ cl_c_args = [
+   '-DCL_USE_DEPRECATED_OPENCL_1_0_APIS',
+   '-DCL_USE_DEPRECATED_OPENCL_1_1_APIS',
+@@ -187,6 +192,9 @@ rusticl_llvm_bindings_rs = rust.bindgen(
+     rusticl_bindgen_c_args,
+     pre_args,
+   ],
++  include_directories : [
++    get_option('bindgen-includedir'),
++  ],
+   dependencies : [
+     dep_clang,
+     dep_llvm,
