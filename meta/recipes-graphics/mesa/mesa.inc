@@ -89,10 +89,10 @@ PACKAGECONFIG = " \
 # skip all Rust dependencies if we are not building OpenCL"
 INHIBIT_DEFAULT_RUST_DEPS = "${@bb.utils.contains('PACKAGECONFIG', 'opencl', '', '1', d)}"
 
-PACKAGECONFIG:append:x86 = " libclc gallium-llvm intel amd"
-PACKAGECONFIG:append:x86-64 = " libclc gallium-llvm intel amd"
-PACKAGECONFIG:append:i686 = " libclc gallium-llvm intel amd"
-PACKAGECONFIG:append:class-native = " libclc gallium-llvm amd"
+PACKAGECONFIG:append:x86 = " libclc gallium-llvm intel amd svga"
+PACKAGECONFIG:append:x86-64 = " libclc gallium-llvm intel amd svga"
+PACKAGECONFIG:append:i686 = " libclc gallium-llvm intel amd svga"
+PACKAGECONFIG:append:class-native = " libclc gallium-llvm amd svga"
 
 # "gbm" requires "opengl"
 PACKAGECONFIG[gbm] = "-Dgbm=enabled,-Dgbm=disabled"
@@ -177,13 +177,11 @@ GALLIUMDRIVERS_RADEONSI = "${@bb.utils.contains('PACKAGECONFIG', 'amd', ',radeon
 GALLIUMDRIVERS_LLVMPIPE = ",llvmpipe"
 # llvmpipe crashes on x32
 GALLIUMDRIVERS_LLVMPIPE:x86-x32 = ""
-GALLIUMDRIVERS_LLVM = ",r300,nouveau${GALLIUMDRIVERS_LLVMPIPE}${GALLIUMDRIVERS_IRIS}${GALLIUMDRIVERS_RADEONSI}"
-GALLIUMDRIVERS_LLVM:append:x86 = ",svga"
-GALLIUMDRIVERS_LLVM:append:x86-64 = ",svga"
-# i686 is a 32 bit override for mesa-native
-GALLIUMDRIVERS_LLVM:append:i686 = ",svga"
+GALLIUMDRIVERS_SVGA = "${@bb.utils.contains('PACKAGECONFIG', 'svga', ',svga', '', d)}"
+GALLIUMDRIVERS_LLVM = ",r300,nouveau${GALLIUMDRIVERS_LLVMPIPE}${GALLIUMDRIVERS_IRIS}${GALLIUMDRIVERS_RADEONSI}${GALLIUMDRIVERS_SVGA}"
 
 PACKAGECONFIG[amd] = ""
+PACKAGECONFIG[svga] = ""
 PACKAGECONFIG[virgl] = ""
 
 GALLIUMDRIVERS:append = "${@bb.utils.contains('PACKAGECONFIG', 'gallium-llvm', '${GALLIUMDRIVERS_LLVM}', '', d)}"
