@@ -1,24 +1,27 @@
-From 7750e2a29b084ee033acc82abab410035e220d3f Mon Sep 17 00:00:00 2001
+From 2a5473a31c6b02e9c49d688691e848d6281ffd2e Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Tue, 16 Jan 2024 18:21:26 +0000
-Subject: [PATCH 1/2] coredump-mips-register
+Subject: [PATCH 2/4] coredump: use glibc or musl register names as appropriate
+ on MIPS
 
-glibc and musl have different names for the registers, add a
-macro that generates the names appropriately.
+glibc has register macros of the form EF_REGx, but musl uses EF_Rx.
 
-Upstream-Status: Pending
+Handle this by using a macro to use the correct names.
+
+Closes #708.
+
+Upstream-Status: Backport
 Signed-off-by: Ross Burton <ross.burton@arm.com>
-
 ---
  src/coredump/_UCD_access_reg_linux.c | 69 ++++++++++++++++------------
  1 file changed, 39 insertions(+), 30 deletions(-)
 
 diff --git a/src/coredump/_UCD_access_reg_linux.c b/src/coredump/_UCD_access_reg_linux.c
-index 27eef123..beefdb47 100644
+index 302f7bdf..05100ed6 100644
 --- a/src/coredump/_UCD_access_reg_linux.c
 +++ b/src/coredump/_UCD_access_reg_linux.c
-@@ -67,38 +67,47 @@ _UCD_access_reg (unw_addr_space_t as,
-     goto badreg;
+@@ -100,38 +100,47 @@ _UCD_access_reg (unw_addr_space_t  as UNUSED,
+     };
  #else
  #if defined(UNW_TARGET_MIPS)
 +
@@ -94,7 +97,7 @@ index 27eef123..beefdb47 100644
 +      [UNW_MIPS_R31] = EF_REG(31),
        [UNW_MIPS_PC]  = EF_CP0_EPC,
      };
- #elif defined(UNW_TARGET_X86)
+ #elif defined(UNW_TARGET_S390X)
 -- 
 2.34.1
 
