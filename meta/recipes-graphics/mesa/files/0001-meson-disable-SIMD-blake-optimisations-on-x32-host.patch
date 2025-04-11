@@ -8,7 +8,7 @@ blake3_hash_many_sse41(), most likely because of the different pointer
 size. Disable SIMD blake implementation if x32 is detected.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Upstream-Status: Pending [will be submitted upstream after internal clearance]
+Upstream-Status: Backport [https://gitlab.freedesktop.org/mesa/mesa/-/commit/b9c6afd3a7c7ac302b47e70b5c745b84cb35f188]
 ---
  src/util/blake3/meson.build | 2 ++
  1 file changed, 2 insertions(+)
