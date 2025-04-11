@@ -89,10 +89,10 @@ PACKAGECONFIG = " \
 # skip all Rust dependencies if we are not building OpenCL"
 INHIBIT_DEFAULT_RUST_DEPS = "${@bb.utils.contains('PACKAGECONFIG', 'opencl', '', '1', d)}"
 
-PACKAGECONFIG:append:x86 = " libclc gallium-llvm intel"
-PACKAGECONFIG:append:x86-64 = " libclc gallium-llvm intel"
-PACKAGECONFIG:append:i686 = " libclc gallium-llvm intel"
-PACKAGECONFIG:append:class-native = " libclc gallium-llvm r600"
+PACKAGECONFIG:append:x86 = " libclc gallium-llvm intel amd"
+PACKAGECONFIG:append:x86-64 = " libclc gallium-llvm intel amd"
+PACKAGECONFIG:append:i686 = " libclc gallium-llvm intel amd"
+PACKAGECONFIG:append:class-native = " libclc gallium-llvm amd"
 
 # "gbm" requires "opengl"
 PACKAGECONFIG[gbm] = "-Dgbm=enabled,-Dgbm=disabled"
@@ -102,12 +102,7 @@ X11_DEPS = "xorgproto virtual/libx11 libxext libxxf86vm libxdamage libxfixes xra
 PACKAGECONFIG[x11] = ",-Dglx=disabled,${X11_DEPS}"
 PACKAGECONFIG[wayland] = ",,wayland-native wayland libdrm wayland-protocols"
 
-VULKAN_DRIVERS_AMD = ""
-VULKAN_DRIVERS_AMD:x86 = ",amd"
-VULKAN_DRIVERS_AMD:x86-64 = ",amd"
-# i686 is a 32 bit override for mesa-native
-VULKAN_DRIVERS_AMD:i686 = ",amd"
-
+VULKAN_DRIVERS_AMD = "${@bb.utils.contains('PACKAGECONFIG', 'amd', ',amd', '', d)}"
 VULKAN_DRIVERS_INTEL = "${@bb.utils.contains('PACKAGECONFIG', 'intel libclc', ',intel', '', d)}"
 VULKAN_DRIVERS_SWRAST = ",swrast"
 # Crashes on x32
@@ -178,7 +173,7 @@ GALLIUMDRIVERS:append = "${@bb.utils.contains('PACKAGECONFIG', 'zink', ',zink', 
 
 # radeonsi requires LLVM
 GALLIUMDRIVERS_IRIS = "${@bb.utils.contains('PACKAGECONFIG', 'intel libclc', ',iris', '', d)}"
-GALLIUMDRIVERS_RADEONSI = "${@bb.utils.contains('PACKAGECONFIG', 'r600', ',radeonsi', '', d)}"
+GALLIUMDRIVERS_RADEONSI = "${@bb.utils.contains('PACKAGECONFIG', 'amd', ',radeonsi', '', d)}"
 GALLIUMDRIVERS_LLVMPIPE = ",llvmpipe"
 # llvmpipe crashes on x32
 GALLIUMDRIVERS_LLVMPIPE:x86-x32 = ""
@@ -188,11 +183,11 @@ GALLIUMDRIVERS_LLVM:append:x86-64 = ",svga"
 # i686 is a 32 bit override for mesa-native
 GALLIUMDRIVERS_LLVM:append:i686 = ",svga"
 
-PACKAGECONFIG[r600] = ""
+PACKAGECONFIG[amd] = ""
 PACKAGECONFIG[virgl] = ""
 
 GALLIUMDRIVERS:append = "${@bb.utils.contains('PACKAGECONFIG', 'gallium-llvm', '${GALLIUMDRIVERS_LLVM}', '', d)}"
-GALLIUMDRIVERS:append = "${@bb.utils.contains('PACKAGECONFIG', 'r600', ',r600', '', d)}"
+GALLIUMDRIVERS:append = "${@bb.utils.contains('PACKAGECONFIG', 'amd', ',r600', '', d)}"
 GALLIUMDRIVERS:append = "${@bb.utils.contains('PACKAGECONFIG', 'virgl', ',virgl', '', d)}"
 
 MESA_CLC = "system"
