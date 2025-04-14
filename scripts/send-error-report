@@ -65,7 +65,7 @@ def edit_content(json_file_path):
 
 def prepare_data(args):
     # attempt to get the max_log_size from the server's settings
-    max_log_size = getPayloadLimit(args.protocol+args.server+"/ClientPost/JSON")
+    max_log_size = getPayloadLimit(args.server+"/ClientPost/JSON")
 
     if not os.path.isfile(args.error_file):
         log.error("No data file found.")
@@ -135,9 +135,9 @@ def send_data(data, args):
     headers={'Content-type': 'application/json', 'User-Agent': "send-error-report/"+version}
 
     if args.json:
-        url = args.protocol+args.server+"/ClientPost/JSON/"
+        url = args.server+"/ClientPost/JSON/"
     else:
-        url = args.protocol+args.server+"/ClientPost/"
+        url = args.server+"/ClientPost/"
 
     req = urllib.request.Request(url, data=data, headers=headers)
     try:
@@ -147,6 +147,23 @@ def send_data(data, args):
         sys.exit(1)
 
     print(response.read().decode('utf-8'))
+
+
+def determine_server_url(args):
+    # Get the error report server from an argument
+    server = args.server or 'errors.yoctoproject.org'
+
+    # The scheme contained in the given URL takes precedence over --no-ssl flag
+    scheme = args.protocol
+    if server.startswith('http://'):
+        server = server[len('http://'):]
+        scheme = 'http://'
+    elif server.startswith('https://'):
+        server = server[len('https://'):]
+        scheme = 'https://'
+
+    # Construct the final URL
+    return f"{scheme}{server}"
 
 
 if __name__ == '__main__':
@@ -164,8 +181,7 @@ if __name__ == '__main__':
     arg_parse.add_argument("-s",
                            "--server",
                            help="Server to send error report to",
-                           type=str,
-                           default="errors.yoctoproject.org")
+                           type=str)
 
     arg_parse.add_argument("-e",
                            "--email",
@@ -195,9 +211,9 @@ if __name__ == '__main__':
                            dest="protocol",
                            action="store_const", const="http://", default="https://")
 
-
-
     args = arg_parse.parse_args()
+
+    args.server = determine_server_url(args)
 
     if (args.json == False):
         print("Preparing to send errors to: "+args.server)
