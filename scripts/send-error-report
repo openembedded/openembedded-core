@@ -149,21 +149,16 @@ def send_data(data, args):
     print(response.read().decode('utf-8'))
 
 
-def determine_server_url(args):
+def validate_server_url(args):
     # Get the error report server from an argument
-    server = args.server or 'errors.yoctoproject.org'
+    server = args.server or 'https://errors.yoctoproject.org'
 
-    # The scheme contained in the given URL takes precedence over --no-ssl flag
-    scheme = args.protocol
-    if server.startswith('http://'):
-        server = server[len('http://'):]
-        scheme = 'http://'
-    elif server.startswith('https://'):
-        server = server[len('https://'):]
-        scheme = 'https://'
+    if not server.startswith('http://') and not server.startswith('https://'):
+        log.error("Missing a URL scheme either http:// or https:// in the server name: " + server)
+        sys.exit(1)
 
     # Construct the final URL
-    return f"{scheme}{server}"
+    return f"{server}"
 
 
 if __name__ == '__main__':
@@ -206,14 +201,9 @@ if __name__ == '__main__':
                            help="Return the result in json format, silences all other output",
                            action="store_true")
 
-    arg_parse.add_argument("--no-ssl",
-                           help="Use http instead of https protocol",
-                           dest="protocol",
-                           action="store_const", const="http://", default="https://")
-
     args = arg_parse.parse_args()
 
-    args.server = determine_server_url(args)
+    args.server = validate_server_url(args)
 
     if (args.json == False):
         print("Preparing to send errors to: "+args.server)
