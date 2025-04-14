@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://src/xdemos/glxgears.c;beginline=1;endline=20;md5=9142
                     file://src/xdemos/glxdemo.c;beginline=1;endline=8;md5=b01d5ab1aee94d35b7efaa2ef48e1a06"
 
 SRC_URI = "https://archive.mesa3d.org/demos/${BPN}-${PV}.tar.xz \
+           file://0001-meson-fix-glx-detection-without-glvnd.patch \
            "
 SRC_URI[sha256sum] = "3046a3d26a7b051af7ebdd257a5f23bfeb160cad6ed952329cdff1e9f1ed496b"
 
