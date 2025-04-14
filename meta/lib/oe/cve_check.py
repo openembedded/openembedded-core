@@ -153,6 +153,7 @@ def parse_cves_from_patch_file(patch_file):
     return cve_ids
 
 
+@bb.parse.vardeps("CVE_STATUS")
 def get_patched_cves(d):
     """
     Determines the CVE IDs that have been solved by either patches incuded within
@@ -289,6 +290,7 @@ def convert_cve_version(version):
 
     return version + update
 
+@bb.parse.vardeps("CVE_STATUS", "CVE_CHECK_STATUSMAP")
 def decode_cve_status(d, cve):
     """
     Convert CVE_STATUS into status, vendor, product, detail and description.
