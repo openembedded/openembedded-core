@@ -40,5 +40,7 @@ SRC_URI = "\
      file://0017-dlltool-file-name-too-long.patch \
      file://0018-CVE-2025-0840.patch \
      file://CVE-2025-1176.patch \
+     file://CVE-2025-1178.patch \
+     file://CVE-2024-57360.patch \
 "
 S  = "${WORKDIR}/git"
