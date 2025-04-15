@@ -66,7 +66,7 @@ class SystemStats:
         self.min_seconds = 1.0 - self.tolerance
 
         self.meminfo_regex = re.compile(rb'^(MemTotal|MemFree|Buffers|Cached|SwapTotal|SwapFree):\s*(\d+)')
-        self.diskstats_regex = re.compile(rb'^([hsv]d.|mtdblock\d|mmcblk\d|cciss/c\d+d\d+.*)$')
+        self.diskstats_regex = re.compile(rb'^([hsv]d.|mtdblock\d|mmcblk\d|cciss/c\d+d\d+|nvme\d+n\d+.*)$')
         self.diskstats_ltime = None
         self.diskstats_data = None
         self.stat_ltimes = None
@@ -94,7 +94,7 @@ class SystemStats:
                                (b'MemTotal', b'MemFree', b'Buffers', b'Cached', b'SwapTotal', b'SwapFree')]) + b'\n')
 
     def _diskstats_is_relevant_line(self, linetokens):
-        if len(linetokens) != 14:
+        if len(linetokens) < 14:
             return False
         disk = linetokens[2]
         return self.diskstats_regex.match(disk)
