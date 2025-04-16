@@ -6,6 +6,7 @@
 # Copyright (C) 2013 Intel Corporation
 # Author: Andreea Proca <andreea.b.proca@intel.com>
 # Author: Michael Wood <michael.g.wood@intel.com>
+# Author: Thomas Perrot <thomas.perrot@bootlin.com>
 #
 # SPDX-License-Identifier: GPL-2.0-only
 #
@@ -22,7 +23,7 @@ scripts_lib_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'li
 sys.path.insert(0, scripts_lib_path)
 import argparse_oe
 
-version = "0.3"
+version = "0.4"
 
 log = logging.getLogger("send-error-report")
 logging.basicConfig(format='%(levelname)s: %(message)s')
@@ -140,13 +141,25 @@ def send_data(data, args):
         url = args.server+"/ClientPost/"
 
     req = urllib.request.Request(url, data=data, headers=headers)
+
+    if args.debug:
+        log.debug(f"Request URL: {url}")
+        log.debug(f"Request Headers: {headers}")
+        log.debug(f"Request Data: {data.decode('utf-8')}")
+
     try:
         response = urllib.request.urlopen(req)
     except urllib.error.HTTPError as e:
-        logging.error(str(e))
+        log.error(f"HTTP Error {e.code}: {e.reason}")
+        log.debug(f"Response Content: {e.read().decode('utf-8')}")
         sys.exit(1)
 
-    print(response.read().decode('utf-8'))
+    if args.debug:
+        log.debug(f"Response Status: {response.status}")
+        log.debug(f"Response Headers: {response.getheaders()}")
+        log.debug(f"Response Content: {response.read().decode('utf-8')}")
+    else:
+        print(response.read().decode('utf-8'))
 
 
 def validate_server_url(args):
@@ -201,12 +214,21 @@ if __name__ == '__main__':
                            help="Return the result in json format, silences all other output",
                            action="store_true")
 
+    arg_parse.add_argument("-d",
+                           "--debug",
+                           help="Enable debug mode to print request/response details",
+                           action="store_true")
+
     args = arg_parse.parse_args()
 
     args.server = validate_server_url(args)
 
     if (args.json == False):
         print("Preparing to send errors to: "+args.server)
+
+    # Enable debugging if requested
+    if args.debug:
+        log.setLevel(logging.DEBUG)
 
     data = prepare_data(args)
     send_data(data, args)
