@@ -27,6 +27,11 @@ class MesonTest(OESDKTestCase):
                 self.tc.hasHostPackage("meson-native")):
             raise unittest.SkipTest("MesonTest: needs meson")
 
+        sdk_arch = self.td["SDK_ARCH"]
+        build_arch = self._run("uname -m").strip()
+        if not sdk_arch == build_arch:
+            raise unittest.SkipTest("MesonTest: SDK arch '%s' not valid for build machine arch '%s'" % (sdk_arch, build_arch))
+
     def test_epoxy(self):
         with tempfile.TemporaryDirectory(prefix="epoxy", dir=self.tc.sdk_dir) as testdir:
             tarball = self.fetch(testdir, self.td["DL_DIR"], "https://github.com/anholt/libepoxy/releases/download/1.5.3/libepoxy-1.5.3.tar.xz")
