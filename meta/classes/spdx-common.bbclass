@@ -37,6 +37,11 @@ SPDX_CUSTOM_ANNOTATION_VARS ??= ""
 
 SPDX_MULTILIB_SSTATE_ARCHS ??= "${SSTATE_ARCHS}"
 
+python () {
+    from oe.cve_check import extend_cve_status
+    extend_cve_status(d)
+}
+
 def create_spdx_source_deps(d):
     import oe.spdx_common
 
