@@ -43,77 +43,6 @@ diff --git a/compiler/rustc_interface/src/tests.rs b/compiler/rustc_interface/sr
  fn test_can_print_warnings() {
      sess_and_cfg(&["-Awarnings"], |sess, _cfg| {
          assert!(!sess.dcx().can_emit_warnings());
-diff --git a/library/test/src/stats/tests.rs b/library/test/src/stats/tests.rs
---- a/library/test/src/stats/tests.rs
-+++ b/library/test/src/stats/tests.rs
-@@ -40,6 +40,7 @@
- }
-
- #[test]
-+#[ignore]
- fn test_min_max_nan() {
-     let xs = &[1.0, 2.0, f64::NAN, 3.0, 4.0];
-     let summary = Summary::new(xs);
-diff --git a/library/std/src/io/buffered/tests.rs b/library/std/src/io/buffered/tests.rs
-index 35a5291a347..5f2858d2505 100644
---- a/library/std/src/io/buffered/tests.rs
-+++ b/library/std/src/io/buffered/tests.rs
-@@ -488,6 +488,7 @@ fn flush(&mut self) -> io::Result<()> {
- }
-
- #[test]
-+#[ignore]
- #[cfg_attr(any(target_os = "emscripten", target_os = "wasi"), ignore)] // no threads
- fn panic_in_write_doesnt_flush_in_drop() {
-     static WRITES: AtomicUsize = AtomicUsize::new(0);
-diff --git a/library/std/src/io/stdio/tests.rs b/library/std/src/io/stdio/tests.rs
-index f89fd27ce6c..79737f5b127 100644
---- a/library/std/src/io/stdio/tests.rs
-+++ b/library/std/src/io/stdio/tests.rs
-@@ -25,6 +25,7 @@ fn stderrlock_unwind_safe() {
- fn assert_unwind_safe<T: UnwindSafe + RefUnwindSafe>() {}
-
- #[test]
-+#[ignore]
- #[cfg_attr(any(target_os = "emscripten", target_os = "wasi"), ignore)] // no threads
- fn panic_doesnt_poison() {
-     thread::spawn(|| {
-diff --git a/library/std/src/sync/mpsc/sync_tests.rs b/library/std/src/sync/mpsc/sync_tests.rs
-index 945de280f40..1ac7eeabc5c 100644
---- a/library/std/src/sync/mpsc/sync_tests.rs
-+++ b/library/std/src/sync/mpsc/sync_tests.rs
-@@ -252,6 +252,7 @@ fn oneshot_single_thread_send_port_close() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_single_thread_recv_chan_close() {
-     // Receiving on a closed chan will panic
-     let res = thread::spawn(move || {
-@@ -347,6 +348,7 @@ fn oneshot_multi_task_recv_then_send() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_multi_task_recv_then_close() {
-     let (tx, rx) = sync_channel::<Box<i32>>(0);
-     let _t = thread::spawn(move || {
-@@ -371,6 +373,7 @@ fn oneshot_multi_thread_close_stress() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_multi_thread_send_close_stress() {
-     for _ in 0..stress_factor() {
-         let (tx, rx) = sync_channel::<i32>(0);
-@@ -385,6 +388,7 @@ fn oneshot_multi_thread_send_close_stress() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_multi_thread_recv_close_stress() {
-     for _ in 0..stress_factor() {
-         let (tx, rx) = sync_channel::<i32>(0);
 diff --git a/library/std/src/sync/mpsc/tests.rs b/library/std/src/sync/mpsc/tests.rs
 index ac1a804cf9c..7c687982324 100644
 --- a/library/std/src/sync/mpsc/tests.rs
@@ -402,14 +331,6 @@ index 160af8a65d..686f4607bb 100644
  fn smoke() {
      let value = 12u32;
      let reference = &value;
-@@ -28,6 +29,7 @@ fn smoke() {
- }
-
- #[test]
-+#[ignore]
- fn stable_hash_hashes_as_tuple() {
-     let hash_packed = {
-         let mut hasher = StableHasher::new();
 diff --git a/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs b/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs
 index 4d342c72cc..9a77f92616 100644
 --- a/compiler/rustc_data_structures/src/tagged_ptr/drop/tests.rs
@@ -422,22 +343,6 @@ index 4d342c72cc..9a77f92616 100644
  fn smoke() {
      let value = 12u32;
      let reference = &value;
-@@ -28,6 +29,7 @@ fn smoke() {
- }
-
- #[test]
-+#[ignore]
- fn boxed() {
-     let value = 12u32;
-     let boxed = Box::new(value);
-@@ -52,6 +54,7 @@ fn boxed() {
- }
-
- #[test]
-+#[ignore]
- fn arclones() {
-     let value = 12u32;
-     let arc = Arc::new(value);
 diff --git a/library/std/src/thread/local/tests.rs b/library/std/src/thread/local/tests.rs
 index 9d4f52a092..d425e5f7b7 100644
 --- a/library/std/src/thread/local/tests.rs
