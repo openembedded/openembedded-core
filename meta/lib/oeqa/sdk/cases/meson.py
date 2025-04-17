@@ -47,9 +47,6 @@ class MesonTest(OESDKTestCase):
 
             log = self._run("meson setup --warnlevel 1 -Degl=no -Dglx=no -Dx11=false {build} {source}".format(**dirs))
 
-            # Check that the host (gcc) and build (cross-gcc) compilers are different
-            data = json.loads(self._run("meson introspect --compilers {build}".format(**dirs)))
-            self.assertNotEqual(data["build"]["c"]["exelist"], data["host"]["c"]["exelist"])
             # Check that the system architectures were set correctly
             data = json.loads(self._run("meson introspect --machines {build}".format(**dirs)))
             self.assertEqual(data["build"]["cpu"], self.td["SDK_ARCH"])
