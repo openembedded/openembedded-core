@@ -19,7 +19,6 @@ CVE_PRODUCT = "connman connection_manager"
 DEPENDS  = "dbus glib-2.0"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
-           file://0001-connman.service-stop-systemd-resolved-when-we-use-co.patch \
            file://connman \
            file://0002-resolve-musl-does-not-implement-res_ninit.patch \
            "
@@ -40,6 +39,7 @@ EXTRA_OECONF += "\
     --enable-tools \
     --disable-polkit \
     --runstatedir='${runtimedir}' \
+    --with-dns-backend='${@bb.utils.contains("DISTRO_FEATURES", "systemd-resolved", "systemd-resolved", "internal", d)}' \
 "
 # For smooth operation it would be best to start only one wireless daemon at a time.
 # If wpa-supplicant is running, connman will use it preferentially.
