@@ -30,8 +30,10 @@ RRECOMMENDS:${PN} = "connman-conf"
 RCONFLICTS:${PN} = "networkmanager"
 
 EXTRA_OECONF += "\
-    ac_cv_path_WPASUPPLICANT=${sbindir}/wpa_supplicant \
+    ac_cv_path_IP6TABLES_SAVE=${sbindir}/ip6tables-save \
+    ac_cv_path_IPTABLES_SAVE=${sbindir}/iptables-save \
     ac_cv_path_PPPD=${sbindir}/pppd \
+    ac_cv_path_WPASUPPLICANT=${sbindir}/wpa_supplicant \
     --enable-debug \
     --enable-loopback \
     --enable-ethernet \
