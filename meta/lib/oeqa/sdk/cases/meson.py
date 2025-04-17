@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import json
 import os
 import subprocess
 import tempfile
@@ -39,10 +40,17 @@ class MesonTest(OESDKTestCase):
             self.assertTrue(os.path.isdir(dirs["source"]))
             os.makedirs(dirs["build"])
 
-            log = self._run("meson --warnlevel 1 -Degl=no -Dglx=no -Dx11=false {build} {source}".format(**dirs))
-            # Check that Meson thinks we're doing a cross build and not a native
-            self.assertIn("Build type: cross build", log)
-            self._run("ninja -C {build} -v".format(**dirs))
-            self._run("DESTDIR={install} ninja -C {build} -v install".format(**dirs))
+            log = self._run("meson setup --warnlevel 1 -Degl=no -Dglx=no -Dx11=false {build} {source}".format(**dirs))
+
+            # Check that the host (gcc) and build (cross-gcc) compilers are different
+            data = json.loads(self._run("meson introspect --compilers {build}".format(**dirs)))
+            self.assertNotEqual(data["build"]["c"]["exelist"], data["host"]["c"]["exelist"])
+            # Check that the system architectures were set correctly
+            data = json.loads(self._run("meson introspect --machines {build}".format(**dirs)))
+            self.assertEqual(data["build"]["cpu"], self.td["SDK_ARCH"])
+            self.assertEqual(data["host"]["cpu"], self.td["HOST_ARCH"])
+
+            self._run("meson compile -C {build} -v".format(**dirs))
+            self._run("meson install -C {build} --destdir {install}".format(**dirs))
 
             self.check_elf(os.path.join(dirs["install"], "usr", "local", "lib", "libepoxy.so"))
