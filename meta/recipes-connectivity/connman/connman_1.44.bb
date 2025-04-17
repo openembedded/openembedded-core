@@ -115,6 +115,7 @@ do_install:append() {
 
 	# For read-only filesystem, do not create links during bootup
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		install -d ${D}${sysconfdir}
 		ln -sf ../run/connman/resolv.conf ${D}${sysconfdir}/resolv-conf.connman
 	fi
 }
