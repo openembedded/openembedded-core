@@ -107,18 +107,14 @@ needs_exe_wrapper = true
 sys_root = @OECORE_TARGET_SYSROOT
 
 [host_machine]
-system = '$host_system'
-cpu_family = '$host_cpu_family'
-cpu = '$host_cpu'
-endian = '$host_endian'
+system = @OECORE_MESON_HOST_SYSTEM
+cpu_family = @OECORE_MESON_HOST_CPU_FAMILY
+cpu = @OECORE_MESON_HOST_CPU
+endian = @OECORE_MESON_HOST_ENDIAN
 EOF
 }
 
 do_install:append:class-nativesdk() {
-    host_system=${SDK_OS}
-    host_cpu_family=${@meson_cpu_family("SDK_ARCH", d)}
-    host_cpu=${SDK_ARCH}
-    host_endian=${@meson_endian("SDK", d)}
     install_templates
 
     install -d ${D}${SDKPATHNATIVE}/post-relocate-setup.d
@@ -132,10 +128,6 @@ do_install:append:class-nativesdk() {
 FILES:${PN}:append:class-nativesdk = "${datadir}/meson ${SDKPATHNATIVE}"
 
 do_install:append:class-native() {
-    host_system=${HOST_OS}
-    host_cpu_family=${@meson_cpu_family("HOST_ARCH", d)}
-    host_cpu=${HOST_ARCH}
-    host_endian=${@meson_endian("HOST", d)}
     install_templates
 
     install -d ${D}${datadir}/post-relocate-setup.d
