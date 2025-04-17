@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=cc3f3a7596cb558bbd9eb7fbaa3ef16c \
 		    file://COPYINGv3;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 SRC_URI = " \
-           https://alpha.gnu.org/gnu/autoconf/${BP}.tar.gz \
+           ${GNU_MIRROR}/autoconf/${BP}.tar.gz \
            file://program_prefix.patch \
            file://autoreconf-exclude.patch \
            file://remove-usr-local-lib-from-m4.patch \
@@ -22,7 +22,7 @@ SRC_URI = " \
 "
 SRC_URI:append:class-native = " file://no-man.patch"
 
-SRC_URI[sha256sum] = "f3478d3b597d51f5d61596fb2f6f6aba49cdd974b4b05ff0bac57f56b5cfdb39"
+SRC_URI[sha256sum] = "afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e"
 
 RDEPENDS:${PN} = "m4 gnu-config \
 		  perl \
