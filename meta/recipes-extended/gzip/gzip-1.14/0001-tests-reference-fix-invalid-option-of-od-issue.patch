@@ -1,0 +1,36 @@
+From fe8f7d75ca16e8c1c53b210dcdf130b91b57c252 Mon Sep 17 00:00:00 2001
+From: Lei Maohui <leimaohui@fujitsu.com>
+Date: Thu, 17 Apr 2025 01:15:06 +0000
+Subject: [PATCH] tests/reference: fix invalid option of od issue
+
+ptest issue:
+| od: invalid option -- 'A'
+| BusyBox v1.37.0 () multi-call binary.
+
+replace "od" with "perl" according to the comments before error point
+|# Ensure that compressing these simple strings always produces the same bytes.
+|# If using "od" is not portable enough, consider using this:
+|# perl -ne 'printf "%02x ", ord($_) for split //'
+|for i in '' a b c yyy zzzzzzzzzzz; do
+|  echo $i: $(printf %s "$i" | gzip | od -An -tx1 | tr -d '\n')
+|done
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Lei Maohui <leimaohui@fujitsu.com>
+---
+ tests/reference | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/reference b/tests/reference
+index add962e..bfd6ad3 100755
+--- a/tests/reference
++++ b/tests/reference
+@@ -43,7 +43,7 @@ EOF
+ # If using "od" is not portable enough, consider using this:
+ # perl -ne 'printf "%02x ", ord($_) for split //'
+ for i in '' a b c yyy zzzzzzzzzzz; do
+-  echo $i: $(printf %s "$i" | gzip | od -An -tx1 | tr -d '\n')
++  echo $i: $(printf %s "$i" | gzip | perl -ne 'printf "%02x ", ord($_) for split //')
+ done > out || framework_failure_
+ 
+ compare exp out || fail=1
