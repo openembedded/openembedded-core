@@ -4,11 +4,11 @@ LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4ee62c16ebd0f4f99d906f36b7de8c3c"
 
 PYPI_PACKAGE = "hypothesis"
+PTEST_PYTEST_DIR ?= "examples"
 
-inherit pypi python_setuptools_build_meta ptest
+inherit pypi python_setuptools_build_meta ptest-python-pytest
 
 SRC_URI += " \
-    file://run-ptest \
     file://test_binary_search.py \
     file://test_rle.py \
     "
@@ -27,14 +27,10 @@ RDEPENDS:${PN} += " \
     python3-zoneinfo \
     "
 
-RDEPENDS:${PN}-ptest += " \
-    python3-unittest-automake-output \
-    "
-
-do_install_ptest() {
-    install -d ${D}${PTEST_PATH}/examples
-    install -m 0755 ${UNPACKDIR}/test_binary_search.py ${D}${PTEST_PATH}/examples/
-    install -m 0755 ${UNPACKDIR}/test_rle.py ${D}${PTEST_PATH}/examples/
+do_install_ptest:append() {
+    install -d ${D}${PTEST_PATH}/${PTEST_PYTEST_DIR}
+    install -m 0755 ${UNPACKDIR}/test_binary_search.py ${D}${PTEST_PATH}/${PTEST_PYTEST_DIR}/
+    install -m 0755 ${UNPACKDIR}/test_rle.py ${D}${PTEST_PATH}/${PTEST_PYTEST_DIR}/
 }
 
 BBCLASSEXTEND = "native nativesdk"
