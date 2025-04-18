@@ -18,7 +18,6 @@ SRC_URI = "https://archive.mesa3d.org/mesa-${PV}.tar.xz \
            file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
            file://0001-meson-disable-SIMD-blake-optimisations-on-x32-host.patch \
            file://0001-freedreno-don-t-encode-build-path-into-binaries.patch\
-           file://0001-rusticl-provide-cross-compilation-arguments-to-LLVM-.patch \
 "
 
 SRC_URI[sha256sum] = "adf904d083b308df95898600ffed435f4b5c600d95fb6ec6d4c45638627fdc97"
@@ -144,13 +143,10 @@ PACKAGECONFIG[gles] = "-Dgles1=enabled -Dgles2=enabled, -Dgles1=disabled -Dgles2
 # "egl" requires "opengl"
 PACKAGECONFIG[egl] = "-Degl=enabled, -Degl=disabled"
 
-BINDGEN_TARGET = "${TARGET_ARCH}-${TARGET_OS}${@['-gnu', ''][d.getVar('LIBCEXTENSION') != '']}"
-BINDGEN_TARGET:class-native = ""
-
 # "opencl" also requires libclc and gallium-llvm to be present in PKGCONFIG!
 # Be sure to enable them both for the target and for the native build.
 PACKAGECONFIG[opencl] = " \
-    -Dgallium-opencl=icd -Dgallium-rusticl=true -Dbindgen-includedir=${STAGING_INCDIR} -Dbindgen-target=${BINDGEN_TARGET},\
+    -Dgallium-opencl=icd -Dgallium-rusticl=true, \
     -Dgallium-opencl=disabled -Dgallium-rusticl=false, \
     bindgen-cli-native \
 "
