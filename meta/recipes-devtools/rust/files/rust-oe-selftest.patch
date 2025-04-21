@@ -43,86 +43,6 @@ diff --git a/compiler/rustc_interface/src/tests.rs b/compiler/rustc_interface/sr
  fn test_can_print_warnings() {
      sess_and_cfg(&["-Awarnings"], |sess, _cfg| {
          assert!(!sess.dcx().can_emit_warnings());
-diff --git a/library/std/src/sync/mpsc/tests.rs b/library/std/src/sync/mpsc/tests.rs
-index ac1a804cf9c..7c687982324 100644
---- a/library/std/src/sync/mpsc/tests.rs
-+++ b/library/std/src/sync/mpsc/tests.rs
-@@ -233,6 +233,7 @@ fn oneshot_single_thread_send_port_close() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_single_thread_recv_chan_close() {
-     // Receiving on a closed chan will panic
-     let res = thread::spawn(move || {
-@@ -313,6 +314,7 @@ fn oneshot_multi_task_recv_then_send() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_multi_task_recv_then_close() {
-     let (tx, rx) = channel::<Box<i32>>();
-     let _t = thread::spawn(move || {
-@@ -337,6 +339,7 @@ fn oneshot_multi_thread_close_stress() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_multi_thread_send_close_stress() {
-     for _ in 0..stress_factor() {
-         let (tx, rx) = channel::<i32>();
-@@ -351,6 +354,7 @@ fn oneshot_multi_thread_send_close_stress() {
- }
-
- #[test]
-+#[ignore]
- fn oneshot_multi_thread_recv_close_stress() {
-     for _ in 0..stress_factor() {
-         let (tx, rx) = channel::<i32>();
-diff --git a/library/std/src/sync/poison/mutex/tests.rs b/library/std/src/sync/poison/mutex/tests.rs
-index 1786a3c09ff..9dcead7092b 100644
---- a/library/std/src/sync/poison/mutex/tests.rs
-+++ b/library/std/src/sync/poison/mutex/tests.rs
-@@ -82,6 +82,7 @@ fn drop(&mut self) {
- }
-
- #[test]
-+#[ignore]
- fn test_into_inner_poison() {
-     let m = new_poisoned_mutex(NonCopy(10));
-
-@@ -106,6 +107,7 @@ fn test_get_mut() {
- }
-
- #[test]
-+#[ignore]
- fn test_get_mut_poison() {
-     let mut m = new_poisoned_mutex(NonCopy(10));
-
-@@ -146,6 +148,7 @@ fn test_mutex_arc_condvar() {
- }
-
- #[test]
-+#[ignore]
- fn test_arc_condvar_poison() {
-     let packet = Packet(Arc::new((Mutex::new(1), Condvar::new())));
-     let packet2 = Packet(packet.0.clone());
-@@ -175,6 +178,7 @@ fn test_arc_condvar_poison() {
- }
-
- #[test]
-+#[ignore]
- fn test_mutex_arc_poison() {
-     let arc = Arc::new(Mutex::new(1));
-     assert!(!arc.is_poisoned());
-@@ -220,6 +220,7 @@ fn test_mutex_arc_nested() {
- }
-
- #[test]
-+#[ignore]
- fn test_mutex_arc_access_in_unwind() {
-     let arc = Arc::new(Mutex::new(1));
-     let arc2 = arc.clone();
 diff --git a/library/std/src/sync/poison/rwlock/tests.rs b/library/std/src/sync/poison/rwlock/tests.rs
 index 1a9d3d3f12f..0a9cfc48806 100644
 --- a/library/std/src/sync/poison/rwlock/tests.rs
@@ -183,26 +103,6 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_get_mut_poison() {
      let mut m = new_poisoned_rwlock(NonCopy(10));
 
-diff --git a/library/std/src/sys/pal/unix/process/process_unix/tests.rs b/library/std/src/sys/pal/unix/process/process_unix/tests.rs
-index 0a6c6ec19fc..bec257bc630 100644
---- a/library/std/src/sys/pal/unix/process/process_unix/tests.rs
-+++ b/library/std/src/sys/pal/unix/process/process_unix/tests.rs
-@@ -6,6 +6,7 @@
- // safety etc., are tested in tests/ui/process/process-panic-after-fork.rs
-
- #[test]
-+#[ignore]
- fn exitstatus_display_tests() {
-     // In practice this is the same on every Unix.
-     // If some weird platform turns out to be different, and this test fails, use #[cfg].
-@@ -37,6 +38,7 @@
- }
-
- #[test]
-+#[ignore]
- #[cfg_attr(target_os = "emscripten", ignore)]
- fn test_command_fork_no_unwind() {
-     let got = catch_unwind(|| {
 diff --git a/library/std/src/thread/tests.rs b/library/std/src/thread/tests.rs
 index 5d6b9e94ee9..a5aacb2eb87 100644
 --- a/library/std/src/thread/tests.rs
