@@ -991,7 +991,7 @@ def copydebugsources(debugsrcdir, sources, d):
 
         prefixmap = {}
         for flag in cflags.split():
-            if not flag.startswith("-fdebug-prefix-map"):
+            if not flag.startswith("-ffile-prefix-map"):
                 continue
             if "recipe-sysroot" in flag:
                 continue
