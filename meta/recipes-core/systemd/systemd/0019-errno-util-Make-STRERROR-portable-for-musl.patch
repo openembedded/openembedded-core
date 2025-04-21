@@ -1,4 +1,4 @@
-From 6ad0fb9dcd6940a9a24e515b61d4b6245c3b1e98 Mon Sep 17 00:00:00 2001
+From 5e3e71f93adf5bdbfd470bcd93320dab314dc3ef Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 23 Jan 2023 23:39:46 -0800
 Subject: [PATCH] errno-util: Make STRERROR portable for musl

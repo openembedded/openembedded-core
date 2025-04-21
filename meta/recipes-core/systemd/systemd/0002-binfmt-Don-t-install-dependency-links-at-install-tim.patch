@@ -1,4 +1,4 @@
-From 95bf78fe7d7b7d41ff43e761bb78adfb4fdb9303 Mon Sep 17 00:00:00 2001
+From 7e4fae68909ce4932e073dd060e22581edc39ad2 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Thu, 21 Feb 2019 16:23:24 +0800
 Subject: [PATCH] binfmt: Don't install dependency links at install time for

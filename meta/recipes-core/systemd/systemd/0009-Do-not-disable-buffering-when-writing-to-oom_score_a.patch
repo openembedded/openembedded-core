@@ -1,4 +1,4 @@
-From b783adf25c5619931189b4474d389a808e7845d6 Mon Sep 17 00:00:00 2001
+From 8d61cecff3ba0687ad2c10aacb7d2aee7cb3fa79 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Wed, 4 Jul 2018 15:00:44 +0800
 Subject: [PATCH] Do not disable buffering when writing to oom_score_adj
@@ -24,7 +24,7 @@ Signed-off-by: Scott Murray <scott.murray@konsulko.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/basic/process-util.c b/src/basic/process-util.c
-index 1447f65399..dcbc7ac973 100644
+index bbce0ea985..d2f7c27cea 100644
 --- a/src/basic/process-util.c
 +++ b/src/basic/process-util.c
 @@ -1716,7 +1716,7 @@ int set_oom_score_adjust(int value) {

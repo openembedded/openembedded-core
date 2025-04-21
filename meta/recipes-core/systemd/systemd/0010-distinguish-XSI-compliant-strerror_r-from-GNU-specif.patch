@@ -1,4 +1,4 @@
-From ac820a745c905e0045ce5cc41da7eaa802078b1b Mon Sep 17 00:00:00 2001
+From 2180b639665bd314905ef058dee9a5e4a534333e Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Tue, 10 Jul 2018 15:40:17 +0800
 Subject: [PATCH] distinguish XSI-compliant strerror_r from GNU-specifi

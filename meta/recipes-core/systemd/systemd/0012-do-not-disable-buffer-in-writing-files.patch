@@ -1,4 +1,4 @@
-From 8072fee9fcb0e9a8c73de56f38468e7287ac4961 Mon Sep 17 00:00:00 2001
+From c1a375d93edbfaf3f64bec88c75cfcf436d4ba05 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Fri, 1 Mar 2019 15:22:15 +0800
 Subject: [PATCH] do not disable buffer in writing files

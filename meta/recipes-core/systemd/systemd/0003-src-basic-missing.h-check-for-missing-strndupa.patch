@@ -1,4 +1,4 @@
-From 76f4749e3a583ad3c924bdff4a6bde967c674ed7 Mon Sep 17 00:00:00 2001
+From ca0b48676132744b78d99ee3ec2d33f11bb73c28 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 14:18:21 +0800
 Subject: [PATCH] src/basic/missing.h: check for missing strndupa
@@ -80,7 +80,7 @@ Signed-off-by: Guðni Már Gilbert <gudni.m.g@gmail.com>
  51 files changed, 62 insertions(+)
 
 diff --git a/meson.build b/meson.build
-index 216a8cbc91..d5109b0d00 100644
+index 408d2ab80a..2c00b7047f 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -572,6 +572,7 @@ foreach ident : ['secure_getenv', '__secure_getenv']
@@ -328,7 +328,7 @@ index b8e3f7aadd..8ce8ca68d8 100644
  #if HAVE_KMOD
  #include "module-util.h"
 diff --git a/src/core/service.c b/src/core/service.c
-index d3ea8a9c3c..c3441f785c 100644
+index d0353ae461..7f98f5ee45 100644
 --- a/src/core/service.c
 +++ b/src/core/service.c
 @@ -45,6 +45,7 @@

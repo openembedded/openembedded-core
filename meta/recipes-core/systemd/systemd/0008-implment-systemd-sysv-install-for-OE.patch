@@ -1,4 +1,4 @@
-From 2b40558d201b73962077d0cedef820dfe95395c7 Mon Sep 17 00:00:00 2001
+From abca5814cb0b5b98a1e7af829cc166e76c524f1a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 5 Sep 2015 06:31:47 +0000
 Subject: [PATCH] implment systemd-sysv-install for OE

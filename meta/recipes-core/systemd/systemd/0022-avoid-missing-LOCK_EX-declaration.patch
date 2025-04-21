@@ -1,4 +1,4 @@
-From 45478696b3a3eb1fbcd6c5cd4899bb426230c2e1 Mon Sep 17 00:00:00 2001
+From f3bc7816d9cca9963a2737857763ee76e300a232 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Tue, 2 Jan 2024 11:03:27 +0800
 Subject: [PATCH] avoid missing LOCK_EX declaration
