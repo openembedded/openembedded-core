@@ -14,6 +14,7 @@ python do_compile_ptest_cargo() {
 
     cargo = bb.utils.which(d.getVar("PATH"), d.getVar("CARGO"))
     cargo_build_flags = d.getVar("CARGO_BUILD_FLAGS")
+    packageconfig_confargs = d.getVar("PACKAGECONFIG_CONFARGS")
     rust_flags = d.getVar("RUSTFLAGS")
     manifest_path = d.getVar("CARGO_MANIFEST_PATH")
     project_manifest_path = os.path.normpath(manifest_path)
@@ -21,7 +22,7 @@ python do_compile_ptest_cargo() {
 
     env = os.environ.copy()
     env['RUSTFLAGS'] = rust_flags
-    cmd = f"{cargo} build --tests --message-format json {cargo_build_flags}"
+    cmd = f"{cargo} build --tests --message-format json {cargo_build_flags} {packageconfig_confargs}"
     bb.note(f"Building tests with cargo ({cmd})")
 
     try:
