@@ -1418,16 +1418,6 @@ Rerun configure task after fixing this."""
         except subprocess.CalledProcessError:
             pass
 
-    # Check invalid PACKAGECONFIG
-    pkgconfig = (d.getVar("PACKAGECONFIG") or "").split()
-    if pkgconfig:
-        pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
-        for pconfig in pkgconfig:
-            if pconfig not in pkgconfigflags:
-                pn = d.getVar('PN')
-                error_msg = "%s: invalid PACKAGECONFIG: %s" % (pn, pconfig)
-                oe.qa.handle_error("invalid-packageconfig", error_msg, d)
-
     oe.qa.exit_if_errors(d)
 }
 
@@ -1475,10 +1465,20 @@ python do_recipe_qa() {
             if re.search(r"git(hu|la)b\.com/.+/.+/archive/.+", url) or "//codeload.github.com/" in url:
                 oe.qa.handle_error("src-uri-bad", "%s: SRC_URI uses unstable GitHub/GitLab archives, convert recipe to use git protocol" % pn, d)
 
+    def test_packageconfig(pn, d):
+        pkgconfigs = (d.getVar("PACKAGECONFIG") or "").split()
+        if pkgconfigs:
+            pkgconfigflags = d.getVarFlags("PACKAGECONFIG") or {}
+            for pkgconfig in pkgconfigs:
+                if pkgconfig not in pkgconfigflags:
+                    error_msg = "%s: invalid PACKAGECONFIG: %s" % (pn, pkgconfig)
+                    oe.qa.handle_error("invalid-packageconfig", error_msg, d)
+
     pn = d.getVar('PN')
     test_missing_metadata(pn, d)
     test_missing_maintainer(pn, d)
     test_srcuri(pn, d)
+    test_packageconfig(pn, d)
     oe.qa.exit_if_errors(d)
 }
 
