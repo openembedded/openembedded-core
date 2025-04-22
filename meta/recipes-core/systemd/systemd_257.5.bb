@@ -92,6 +92,7 @@ PACKAGECONFIG ??= " \
     quotacheck \
     randomseed \
     resolved \
+    serial-getty-generator \
     set-time-epoch \
     sysusers \
     timedated \
