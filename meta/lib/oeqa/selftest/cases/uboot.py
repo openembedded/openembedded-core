@@ -6,7 +6,7 @@
 #
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, runqemu
+from oeqa.utils.commands import bitbake, runqemu, get_bb_var
 from oeqa.core.decorator.data import skipIfNotArch
 from oeqa.core.decorator import OETestTag
 
@@ -33,7 +33,8 @@ QEMU_USE_KVM = "False"
 """)
         bitbake("virtual/bootloader core-image-minimal")
 
-        with runqemu('core-image-minimal', ssh=False, runqemuparams='nographic',
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', ssh=False, runqemuparams='nographic %s' % runqemu_params,
                      boot_patterns=uboot_boot_patterns) as qemu:
 
             # test if u-boot console works

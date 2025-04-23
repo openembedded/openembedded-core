@@ -42,7 +42,8 @@ class TestExport(OESelftestTestCase):
         isdir = os.path.isdir(testexport_dir)
         self.assertEqual(True, isdir, 'Failed to create testexport dir: %s' % testexport_dir)
 
-        with runqemu('core-image-minimal') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params) as qemu:
             # Attempt to run runexported.py to perform ping test
             test_path = os.path.join(testexport_dir, "oe-test")
             data_file = os.path.join(testexport_dir, 'data', 'testdata.json')
@@ -320,7 +321,8 @@ class Postinst(OESelftestTestCase):
                 self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs")),
                                 "rootfs state file was not created")
 
-                with runqemu('core-image-minimal') as qemu:
+                runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+                with runqemu('core-image-minimal', runqemuparams=runqemu_params) as qemu:
                     # Make the test echo a string and search for that as
                     # run_serial()'s status code is useless.'
                     for filename in ("rootfs", "delayed-a", "delayed-b"):

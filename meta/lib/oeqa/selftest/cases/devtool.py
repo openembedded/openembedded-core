@@ -1836,8 +1836,9 @@ class DevtoolDeployTargetTests(DevtoolBase):
         # First try a dry-run of deploy-target
         result = runCmd('devtool deploy-target -n %s root@localhost' % testrecipe)
         self.assertIn('  %s' % testfile, result.output)
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', testimage) or ""
         # Boot the image
-        with runqemu(testimage) as qemu:
+        with runqemu(testimage, runqemuparams=runqemu_params) as qemu:
             # Now really test deploy-target
             result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, qemu.ip))
             # Run a test command to see if it was installed properly
@@ -2810,7 +2811,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
 
         # Verify deployment to Qemu (system mode) works
         bitbake(testimage)
-        with runqemu(testimage, runqemuparams="nographic") as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu(testimage, runqemuparams="nographic %s" % runqemu_params) as qemu:
             # cmake-example recipe
             recipe_name = "cmake-example"
             example_exe = "cmake-example"

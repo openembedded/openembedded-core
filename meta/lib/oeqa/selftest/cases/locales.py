@@ -4,7 +4,7 @@
 
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.core.decorator import OETestTag
-from oeqa.utils.commands import bitbake, runqemu
+from oeqa.utils.commands import bitbake, runqemu, get_bb_var
 
 class LocalesTest(OESelftestTestCase):
 
@@ -25,7 +25,8 @@ class LocalesTest(OESelftestTestCase):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        with runqemu("core-image-minimal", ssh=False, runqemuparams='nographic') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu("core-image-minimal", ssh=False, runqemuparams='nographic %s' % runqemu_params) as qemu:
             cmd = "locale -a"
             status, output = qemu.run_serial(cmd)
             # output must includes fr_FR or fr_FR.UTF-8

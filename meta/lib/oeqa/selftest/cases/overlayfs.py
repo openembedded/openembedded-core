@@ -5,7 +5,7 @@
 #
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, runqemu, get_bb_vars
+from oeqa.utils.commands import bitbake, runqemu, get_bb_var, get_bb_vars
 from oeqa.core.decorator import OETestTag
 from oeqa.core.decorator.data import skipIfNotMachine
 
@@ -181,7 +181,8 @@ EOT
 
         bitbake('core-image-minimal')
 
-        with runqemu('core-image-minimal') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params) as qemu:
             # Check that application service started
             status, output = qemu.run_serial("systemctl status my-application")
             self.assertTrue("active (exited)" in output, msg=output)
@@ -360,7 +361,8 @@ OVERLAYFS_ROOTFS_TYPE = "ext4"
 
         bitbake('core-image-minimal')
 
-        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params, image_fstype='wic') as qemu:
             status, output = qemu.run_serial("/bin/mount")
 
             line = getline_qemu(output, "upperdir=/data/overlay-etc/upper")
@@ -399,7 +401,8 @@ OVERLAYFS_ROOTFS_TYPE = "ext4"
         bitbake('core-image-minimal')
         testFile = "/etc/my-test-data"
 
-        with runqemu('core-image-minimal', image_fstype='wic', discard_writes=False) as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params, image_fstype='wic', discard_writes=False) as qemu:
             status, output = qemu.run_serial("/bin/mount")
 
             line = getline_qemu(output, "/dev/sda3")
@@ -420,7 +423,7 @@ OVERLAYFS_ROOTFS_TYPE = "ext4"
             self.assertTrue(line and line.startswith(testFile), msg=output)
 
         # Check that file exists in /etc after reboot
-        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params, image_fstype='wic') as qemu:
             status, output = qemu.run_serial("ls -1 " + testFile)
             line = getline_qemu(output, testFile)
             self.assertTrue(line and line.startswith(testFile), msg=output)
@@ -454,7 +457,8 @@ IMAGE_INSTALL:append = " overlayfs-user"
         self.append_config(configLower)
         bitbake('core-image-minimal')
 
-        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params, image_fstype='wic') as qemu:
             status, output = qemu.run_serial("echo \"Modified in upper\" > /etc/" + testFile)
             status, output = qemu.run_serial("diff /etc/" + testFile + " /data/overlay-etc/lower/" + testFile)
             line = getline_qemu(output, "Modified in upper")
@@ -500,7 +504,8 @@ IMAGE_INSTALL:append = " overlayfs-user"
 
         res = bitbake('core-image-minimal')
 
-        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params, image_fstype='wic') as qemu:
             for filename in ("rootfs", "delayed-a", "delayed-b"):
                 status, output = qemu.run_serial("test -f %s && echo found" % os.path.join(targettestdir, filename))
                 self.assertIn("found", output, "%s was not present on boot" % filename)

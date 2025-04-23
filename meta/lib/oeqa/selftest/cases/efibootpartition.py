@@ -30,5 +30,6 @@ IMAGE_INSTALL:append = " grub-efi kernel-image-bzimage"
 % (image))
 
         bitbake(image + " ovmf")
-        with runqemu(image, ssh=False, launch_cmd=cmd) as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', image) or ""
+        with runqemu(image, ssh=False, launch_cmd=cmd, runqemuparams=runqemu_params) as qemu:
             self.assertTrue(qemu.runner.logged, "Failed: %s" % cmd)

@@ -177,7 +177,8 @@ class PackageTests(OESelftestTestCase):
             self.logger.error("GDB result:\n%d: %s", status, output)
             return False
 
-        with runqemu('core-image-minimal') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params) as qemu:
             for binary in ['/usr/bin/hello1',
                            '/usr/bin/hello2',
                            '/usr/libexec/hello3',
@@ -202,7 +203,8 @@ class PackageTests(OESelftestTestCase):
                 self.fail("Cannot parse output: " + output)
 
         sysconfdir = get_bb_var('sysconfdir', 'selftest-chown')
-        with runqemu('core-image-minimal') as qemu:
+        runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+        with runqemu('core-image-minimal', runqemuparams=runqemu_params) as qemu:
             for path in [ sysconfdir + "/selftest-chown/file",
                           sysconfdir + "/selftest-chown/dir",
                           sysconfdir + "/selftest-chown/symlink",
