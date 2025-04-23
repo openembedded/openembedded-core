@@ -1,0 +1,87 @@
+From e8d0681eb49697d91f277e2f9f4cff32a30b316c Mon Sep 17 00:00:00 2001
+From: Daan De Meyer <daan.j.demeyer@gmail.com>
+Date: Tue, 5 Jul 2022 15:22:01 +0200
+Subject: [PATCH] journal: Make sd_journal_previous/next() return 0 at
+ HEAD/TAIL
+
+Currently, both these functions don't return 0 if we're at HEAD/TAIL
+and move in the corresponding direction. Let's fix that.
+
+Replaces #23480
+
+Upstream-Status: Backport [https://github.com/systemd/systemd/commit/977ad21b5b8f6323515297bd8995dcaaca0905df]
+
+[Rebased for v250]
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/journal/test-journal-interleaving.c | 4 ++++
+ src/libsystemd/sd-journal/sd-journal.c  | 8 ++++----
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/src/journal/test-journal-interleaving.c b/src/journal/test-journal-interleaving.c
+index c543b87b69..f0ed1b4c74 100644
+--- a/src/journal/test-journal-interleaving.c
++++ b/src/journal/test-journal-interleaving.c
+@@ -158,6 +158,7 @@ static void test_skip(void (*setup)(void)) {
+          */
+         assert_ret(sd_journal_open_directory(&j, t, 0));
+         assert_ret(sd_journal_seek_head(j));
++        assert_ret(sd_journal_previous(j) == 0);
+         assert_ret(sd_journal_next(j));
+         test_check_numbers_down(j, 4);
+         sd_journal_close(j);
+@@ -166,6 +167,7 @@ static void test_skip(void (*setup)(void)) {
+          */
+         assert_ret(sd_journal_open_directory(&j, t, 0));
+         assert_ret(sd_journal_seek_tail(j));
++        assert_ret(sd_journal_next(j) == 0);
+         assert_ret(sd_journal_previous(j));
+         test_check_numbers_up(j, 4);
+         sd_journal_close(j);
+@@ -174,6 +176,7 @@ static void test_skip(void (*setup)(void)) {
+          */
+         assert_ret(sd_journal_open_directory(&j, t, 0));
+         assert_ret(sd_journal_seek_tail(j));
++        assert_ret(sd_journal_next(j) == 0);
+         assert_ret(r = sd_journal_previous_skip(j, 4));
+         assert_se(r == 4);
+         test_check_numbers_down(j, 4);
+@@ -183,6 +186,7 @@ static void test_skip(void (*setup)(void)) {
+          */
+         assert_ret(sd_journal_open_directory(&j, t, 0));
+         assert_ret(sd_journal_seek_head(j));
++        assert_ret(sd_journal_previous(j) == 0);
+         assert_ret(r = sd_journal_next_skip(j, 4));
+         assert_se(r == 4);
+         test_check_numbers_up(j, 4);
+diff --git a/src/libsystemd/sd-journal/sd-journal.c b/src/libsystemd/sd-journal/sd-journal.c
+index 7a6cc4aca3..04cafdf1c8 100644
+--- a/src/libsystemd/sd-journal/sd-journal.c
++++ b/src/libsystemd/sd-journal/sd-journal.c
+@@ -611,9 +611,9 @@ static int find_location_for_match(
+                 /* FIXME: missing: find by monotonic */
+ 
+                 if (j->current_location.type == LOCATION_HEAD)
+-                        return journal_file_next_entry_for_data(f, dp, DIRECTION_DOWN, ret, offset);
++                        return direction == DIRECTION_DOWN ? journal_file_next_entry_for_data(f, dp, DIRECTION_DOWN, ret, offset) : 0;
+                 if (j->current_location.type == LOCATION_TAIL)
+-                        return journal_file_next_entry_for_data(f, dp, DIRECTION_UP, ret, offset);
++                        return direction == DIRECTION_UP ? journal_file_next_entry_for_data(f, dp, DIRECTION_UP, ret, offset) : 0;
+                 if (j->current_location.seqnum_set && sd_id128_equal(j->current_location.seqnum_id, f->header->seqnum_id))
+                         return journal_file_move_to_entry_by_seqnum_for_data(f, dp, j->current_location.seqnum, direction, ret, offset);
+                 if (j->current_location.monotonic_set) {
+@@ -704,9 +704,9 @@ static int find_location_with_matches(
+                 /* No matches is simple */
+ 
+                 if (j->current_location.type == LOCATION_HEAD)
+-                        return journal_file_next_entry(f, 0, DIRECTION_DOWN, ret, offset);
++                        return direction == DIRECTION_DOWN ? journal_file_next_entry(f, 0, DIRECTION_DOWN, ret, offset) : 0;
+                 if (j->current_location.type == LOCATION_TAIL)
+-                        return journal_file_next_entry(f, 0, DIRECTION_UP, ret, offset);
++                        return direction == DIRECTION_UP ? journal_file_next_entry(f, 0, DIRECTION_UP, ret, offset) : 0;
+                 if (j->current_location.seqnum_set && sd_id128_equal(j->current_location.seqnum_id, f->header->seqnum_id))
+                         return journal_file_move_to_entry_by_seqnum(f, j->current_location.seqnum, direction, ret, offset);
+                 if (j->current_location.monotonic_set) {
+-- 
+2.17.1
+

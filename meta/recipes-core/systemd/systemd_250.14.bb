@@ -29,6 +29,7 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-nspawn-make-sure-host-root-can-write-to-the-uidmappe.patch \
            file://fix-vlan-qos-mapping.patch \
            file://0001-core-fix-build-when-seccomp-is-off.patch \
+           file://0001-journal-Make-sd_journal_previous-next-return-0-at-HE.patch \
            "
 
 # patches needed by musl
