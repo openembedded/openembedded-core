@@ -42,7 +42,8 @@ CORE_IMAGE_EXTRA_INSTALL = "gdbserver"
             filename = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], "%s.tar.bz2" % bb_vars['IMAGE_LINK_NAME'])
             shutil.unpack_archive(filename, debugfs)
 
-            with runqemu("core-image-minimal", runqemuparams="nographic") as qemu:
+            runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', "core-image-minimal") or ""
+            with runqemu("core-image-minimal", runqemuparams="nographic %s" % runqemu_params) as qemu:
                 status, output = qemu.run_serial("kmod --help")
                 self.assertIn("modprobe", output)
 

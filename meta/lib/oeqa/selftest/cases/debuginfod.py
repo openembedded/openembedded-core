@@ -147,10 +147,12 @@ CORE_IMAGE_EXTRA_INSTALL += "elfutils xz"
         """)
         bitbake("core-image-minimal elfutils-native:do_addto_recipe_sysroot xz:do_localpkgfeed")
 
+        runqemu_params = get_bb_var("TEST_RUNQEMUPARAMS", "core-image-minimal") or ""
+
         try:
             self.start_debuginfod(get_bb_var("LOCALPKGFEED_DIR", "xz"))
 
-            with runqemu("core-image-minimal", runqemuparams="nographic") as qemu:
+            with runqemu("core-image-minimal", runqemuparams="nographic %s" % runqemu_params) as qemu:
                 cmd = "DEBUGINFOD_URLS=http://%s:%d/ debuginfod-find debuginfo /usr/bin/xz" % (qemu.server_ip, self.port)
                 self.logger.info(f"Starting client {cmd}")
                 status, output = qemu.run_serial(cmd)
