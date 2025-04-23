@@ -1,0 +1,78 @@
+From e01e68e70ae1db9fe61adec3e7bdcced7adc1930 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Zbigniew=20J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
+Date: Thu, 10 Feb 2022 08:30:08 +0100
+Subject: [PATCH] basic: do not warn in mkdir_p() when parent directory exists
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This effectively disables warnings about type/mode/ownership of existing
+directories when recursively creating parent directories. (Or files. If there's
+a file in a place we expect a directory, the code will later try to create
+a file and fail. This follows the general pattern where we do (void)mkdir()
+if the mkdir() is immediately followed by opening of a file.)
+
+I was recently debugging an issue with the fstab-generator [1], and it says:
+'Directory "/tmp" already exists, but has mode 0777 that is too permissive (0644 was requested), refusing.'
+which is very specific but totally wrong in this context.
+This output was added in 37c1d5e97dbc869edd8fc178427714e2d9428d2b, and I still
+think it is worth to do it, because if you actually *do* want the directory, if
+there's something wrong, the precise error message will make it much easier to
+diagnose. And we can't easily pass the information what failed up the call chain
+because there are multiple things we check (ownership, permission mask, type)…
+So passing a param whether to warn or not down into the library code seems like
+the best solution, despite not being very elegant.
+
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=2051285
+
+Upstream-Status: Backport [https://github.com/systemd/systemd/commit/e01e68e70ae1db9fe61adec3e7bdcced7adc1930]
+
+Signed-off-by: Haitao Liu <haitao.liu@windriver.com>
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+---
+ src/basic/mkdir.c | 5 ++++-
+ src/basic/mkdir.h | 5 +++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/basic/mkdir.c b/src/basic/mkdir.c
+index 27144dd45a..cf7cf4a357 100644
+--- a/src/basic/mkdir.c
++++ b/src/basic/mkdir.c
+@@ -55,6 +55,9 @@ int mkdir_safe_internal(
+                         return -errno;
+         }
+ 
++        if (flags & MKDIR_IGNORE_EXISTING)
++                return 0;
++
+         if (!S_ISDIR(st.st_mode))
+                 return log_full_errno(flags & MKDIR_WARN_MODE ? LOG_WARNING : LOG_DEBUG, SYNTHETIC_ERRNO(ENOTDIR),
+                                       "Path \"%s\" already exists and is not a directory, refusing.", path);
+@@ -142,7 +145,7 @@ int mkdir_parents_internal(const char *prefix, const char *path, mode_t mode, ui
+                 s[n] = '\0';
+ 
+                 if (!prefix || !path_startswith_full(prefix, path, /* accept_dot_dot= */ false)) {
+-                        r = mkdir_safe_internal(path, mode, uid, gid, flags, _mkdirat);
++                        r = mkdir_safe_internal(path, mode, uid, gid, flags | MKDIR_IGNORE_EXISTING, _mkdirat);
+                         if (r < 0 && r != -EEXIST)
+                                 return r;
+                 }
+diff --git a/src/basic/mkdir.h b/src/basic/mkdir.h
+index 34a5227577..c0c0ea6c4f 100644
+--- a/src/basic/mkdir.h
++++ b/src/basic/mkdir.h
+@@ -4,8 +4,9 @@
+ #include <sys/types.h>
+ 
+ typedef enum MkdirFlags {
+-        MKDIR_FOLLOW_SYMLINK = 1 << 0,
+-        MKDIR_WARN_MODE      = 1 << 1,
++        MKDIR_FOLLOW_SYMLINK  = 1 << 0,
++        MKDIR_IGNORE_EXISTING = 1 << 1,  /* Quietly accept a preexisting directory (or file) */
++        MKDIR_WARN_MODE       = 1 << 2,  /* Log at LOG_WARNING when mode doesn't match */
+ } MkdirFlags;
+ 
+ int mkdirat_errno_wrapper(int dirfd, const char *pathname, mode_t mode);
+-- 
+2.25.1
+

@@ -30,6 +30,7 @@ SRC_URI += "file://touchscreen.rules \
            file://fix-vlan-qos-mapping.patch \
            file://0001-core-fix-build-when-seccomp-is-off.patch \
            file://0001-journal-Make-sd_journal_previous-next-return-0-at-HE.patch \
+           file://0001-basic-do-not-warn-in-mkdir_p-when-parent-directory-e.patch \
            "
 
 # patches needed by musl
