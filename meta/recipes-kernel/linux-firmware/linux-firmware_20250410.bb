@@ -269,6 +269,8 @@ def fw_compr_suffix(d):
     compr = d.getVar('FIRMWARE_COMPRESSION')
     if compr == '':
         return ''
+    if compr == 'zstd':
+        compr = 'zst'
     return '-' + compr
 
 do_compile() {
