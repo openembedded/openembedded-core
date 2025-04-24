@@ -5,7 +5,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d80c8ed4062b8339b715f90fa68cc9f"
 DEPENDS:append:libc-musl = " libucontext"
 
-SRC_URI = "https://github.com/libunwind/libunwind/releases/download/v${PV}/${BP}.tar.gz \
+GITHUB_BASE_URI = "https://github.com/libunwind/libunwind/releases"
+SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://mips-byte-order.patch \
            file://0001-tests-Garm64-test-sve-signal-check-that-SVE-is-prese.patch \
            file://0002-coredump-use-glibc-or-musl-register-names-as-appropr.patch \
@@ -16,7 +17,7 @@ SRC_URI = "https://github.com/libunwind/libunwind/releases/download/v${PV}/${BP}
 
 SRC_URI[sha256sum] = "ddf0e32dd5fafe5283198d37e4bf9decf7ba1770b6e7e006c33e6df79e6a6157"
 
-inherit autotools multilib_header
+inherit autotools multilib_header github-releases
 
 COMPATIBLE_HOST:riscv32 = "null"
 
