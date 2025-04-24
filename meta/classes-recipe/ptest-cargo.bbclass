@@ -98,17 +98,19 @@ python do_install_ptest_cargo() {
         test_paths.append(os.path.join(ptest_path, os.path.basename(test_bin)))
 
     ptest_script = os.path.join(ptest_dir, "run-ptest")
-    if os.path.exists(ptest_script):
-        with open(ptest_script, "a") as f:
+    script_exists = os.path.exists(ptest_script)
+    with open(ptest_script, "a") as f:
+        if not script_exists:
+            f.write("#!/bin/sh\n")
+                
+        else:
             f.write(f"\necho \"\"\n")
             f.write(f"echo \"## starting to run rust tests ##\"\n")
-            for test_path in test_paths:
-                f.write(f"{test_path} {rust_test_args}\n")
-    else:
-        with open(ptest_script, "a") as f:
-            f.write("#!/bin/sh\n")
-            for test_path in test_paths:
-                f.write(f"{test_path} {rust_test_args}\n")
+                
+        for test_path in test_paths:
+            f.write(f"{test_path} {rust_test_args}\n")
+        
+    if not script_exists:
         os.chmod(ptest_script, 0o755)
 
     # this is chown -R root:root ${D}${PTEST_PATH}
