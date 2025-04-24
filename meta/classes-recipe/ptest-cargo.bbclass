@@ -102,14 +102,15 @@ python do_install_ptest_cargo() {
     with open(ptest_script, "a") as f:
         if not script_exists:
             f.write("#!/bin/sh\n")
-                
+            f.write("rc=0\n")                
         else:
             f.write(f"\necho \"\"\n")
-            f.write(f"echo \"## starting to run rust tests ##\"\n")
-                
+            f.write(f"echo \"## starting to run rust tests ##\"\n")               
         for test_path in test_paths:
-            f.write(f"{test_path} {rust_test_args}\n")
+            f.write(f"if ! {test_path} {rust_test_args}; then rc=1; fi\n")
         
+        f.write("exit $rc\n")
+
     if not script_exists:
         os.chmod(ptest_script, 0o755)
 
