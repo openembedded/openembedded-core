@@ -26,7 +26,7 @@ SRC_URI:append:class-target = " \
            file://encodefix.patch \
 "
 
-SRC_URI[perl.sha256sum] = "a0a31534451eb7b83c7d6594a497543a54d488bc90ca00f5e34762577f40655e"
+SRC_URI[perl.sha256sum] = "fb888accf8b50b5180e91166e5153608be294c57c19878e95f7659c1f1f12758"
 
 B = "${WORKDIR}/perl-${PV}-build"
 
