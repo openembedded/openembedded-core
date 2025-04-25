@@ -46,6 +46,8 @@ CVE_CHECK_IGNORE += "CVE-2023-30571"
 CVE_CHECK_IGNORE += "CVE-2024-37407"
 # cpe-incorrect: bsdtar was introduced in v3.7.0, so 3.6.2 is not affected yet
 CVE_CHECK_IGNORE += "CVE-2025-1632"
+# cpe-incorrect: vulnerable code introduced in v3.7.5, so 3.6.2 is not affected yet
+CVE_CHECK_IGNORE += "CVE-2024-48615"
 
 inherit autotools update-alternatives pkgconfig
 
