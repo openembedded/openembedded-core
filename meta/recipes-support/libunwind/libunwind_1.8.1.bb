@@ -33,6 +33,10 @@ EXTRA_OECONF = "--enable-static"
 ARM_INSTRUCTION_SET:armv4 = "arm"
 ARM_INSTRUCTION_SET:armv5 = "arm"
 
+# With qemuarm64 and poky-tiny:
+# ld: .libs/Gtest-trace: hidden symbol `__aarch64_cas8_acq_rel' in libgcc.a(cas_8_4.o) is referenced by DSO
+LDFLAGS_SECTION_REMOVAL = ""
+
 LDFLAGS += "-Wl,-z,relro,-z,now"
 
 SECURITY_LDFLAGS:append:libc-musl = " -lssp_nonshared"
