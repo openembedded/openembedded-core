@@ -23,6 +23,9 @@ inherit cmake pkgconfig github-releases
 
 export NASMENV = "--reproducible --debug-prefix-map=${WORKDIR}=${TARGET_DBGSRC_DIR}"
 
+# The binaries have RUNPATH=$libdir, which is redundant
+EXTRA_OECMAKE += "-DCMAKE_SKIP_INSTALL_RPATH=ON"
+
 # Add nasm-native dependency consistently for all build arches is hard
 EXTRA_OECMAKE:append:class-native = " -DWITH_SIMD=False"
 EXTRA_OECMAKE:append:class-nativesdk = " -DWITH_SIMD=False"
@@ -51,10 +54,5 @@ FILES:jpeg-tools = "${bindir}/*"
 
 DESCRIPTION:libturbojpeg = "A SIMD-accelerated JPEG codec which provides only TurboJPEG APIs"
 FILES:libturbojpeg = "${libdir}/libturbojpeg.so.*"
-
-do_install:append() {
-    # The binaries have RUNPATH=$libdir, which is redundant
-    chrpath -d ${D}/${bindir}/* ${D}${libdir}/*${SOLIBS}
-}
 
 BBCLASSEXTEND = "native nativesdk"
