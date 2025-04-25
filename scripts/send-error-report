@@ -142,10 +142,9 @@ def send_data(data, args):
 
     req = urllib.request.Request(url, data=data, headers=headers)
 
-    if args.debug:
-        log.debug(f"Request URL: {url}")
-        log.debug(f"Request Headers: {headers}")
-        log.debug(f"Request Data: {data.decode('utf-8')}")
+    log.debug(f"Request URL: {url}")
+    log.debug(f"Request Headers: {headers}")
+    log.debug(f"Request Data: {data.decode('utf-8')}")
 
     try:
         response = urllib.request.urlopen(req)
@@ -154,13 +153,9 @@ def send_data(data, args):
         log.debug(f"Response Content: {e.read().decode('utf-8')}")
         sys.exit(1)
 
-    if args.debug:
-        log.debug(f"Response Status: {response.status}")
-        log.debug(f"Response Headers: {response.getheaders()}")
-        log.debug(f"Response Content: {response.read().decode('utf-8')}")
-    else:
-        print(response.read().decode('utf-8'))
-
+    log.debug(f"Response Status: {response.status}")
+    log.debug(f"Response Headers: {response.getheaders()}")
+    log.info(response.read().decode('utf-8'))
 
 def validate_server_url(args):
     # Get the error report server from an argument
