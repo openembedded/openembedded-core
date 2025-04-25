@@ -13,6 +13,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://0003-Fixed-miscompilation-of-unw_getcontext-on-ARM.patch \
            file://0004-Rework-inline-aarch64-as-for-setcontext.patch \
            file://0005-Handle-musl-on-PPC32.patch \
+           file://libatomic.patch \
            "
 
 SRC_URI[sha256sum] = "ddf0e32dd5fafe5283198d37e4bf9decf7ba1770b6e7e006c33e6df79e6a6157"
@@ -33,7 +34,6 @@ ARM_INSTRUCTION_SET:armv4 = "arm"
 ARM_INSTRUCTION_SET:armv5 = "arm"
 
 LDFLAGS += "-Wl,-z,relro,-z,now"
-LDFLAGS:append:powerpc:libc-musl = " -latomic"
 
 SECURITY_LDFLAGS:append:libc-musl = " -lssp_nonshared"
 CACHED_CONFIGUREVARS:append:libc-musl = " LDFLAGS='${LDFLAGS} -lucontext'"
