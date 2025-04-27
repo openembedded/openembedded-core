@@ -38,6 +38,7 @@ SRC_URI += "http://www.w3.org/XML/Test/xmlts20080827.tar;subdir=${BP};name=testt
            file://CVE-2024-56171.patch \
            file://CVE-2025-24928.patch \
            file://CVE-2025-32414.patch \
+           file://CVE-2025-32415.patch \
            "
 
 SRC_URI[archive.sha256sum] = "60d74a257d1ccec0475e749cba2f21559e48139efba6ff28224357c7c798dfee"
