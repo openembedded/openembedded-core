@@ -10,11 +10,12 @@ SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz \
 SRC_URI:append:class-target = " file://wrong-path-fix.patch"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://gzip.h;beginline=8;endline=20;md5=6e47caaa630e0c8bf9f1bc8d94a8ed0e"
+                    file://gzip.h;beginline=8;endline=20;md5=a22158dc3dd3f5cf6e5a556940a49212 \
+                    "
 
 PROVIDES:append:class-native = " gzip-replacement-native"
 
-RDEPENDS:${PN}-ptest += "make perl grep diffutils"
+RDEPENDS:${PN}-ptest += "make perl grep diffutils coreutils"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -33,9 +34,10 @@ do_install_ptest() {
             -e 's/^Makefile: ..*/Makefile: /'           \
             -e 's,--sysroot=${STAGING_DIR_TARGET},,g'   \
             -e 's|${DEBUG_PREFIX_MAP}||g' \
+            -e 's|${BUILD_LDFLAGS}||g' \
             -e 's:${HOSTTOOLS_DIR}/::g'                 \
             -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
             ${B}/tests/Makefile > ${D}${PTEST_PATH}/src/tests/Makefile
 }
 
-SRC_URI[sha256sum] = "20fc818aeebae87cdbf209d35141ad9d3cf312b35a5e6be61bfcfbf9eddd212a"
+SRC_URI[sha256sum] = "613d6ea44f1248d7370c7ccdeee0dd0017a09e6c39de894b3c6f03f981191c6b"
