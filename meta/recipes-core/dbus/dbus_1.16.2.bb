@@ -67,13 +67,6 @@ CONFFILES:${PN} = "${sysconfdir}/dbus-1/system.conf ${sysconfdir}/dbus-1/session
 
 DEBIANNAME:${PN} = "dbus-1"
 
-OLDPKGNAME = "dbus-x11"
-OLDPKGNAME:class-nativesdk = ""
-
-# for compatibility
-RPROVIDES:${PN} = "${OLDPKGNAME}"
-RREPLACES:${PN} += "${OLDPKGNAME}"
-
 FILES:${PN} = "${bindir}/dbus-daemon* \
                ${bindir}/dbus-cleanup-sockets \
                ${bindir}/dbus-launch \
