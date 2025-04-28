@@ -10,6 +10,7 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://0001-lttng-modules-fix-sigaction-build-without-CONFIG_COM.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
