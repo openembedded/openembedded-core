@@ -117,6 +117,11 @@ SPDX_PACKAGE_VERSION ??= "${PV}"
 SPDX_PACKAGE_VERSION[doc] = "The version of a package, software_packageVersion \
     in software_Package"
 
+SPDX_PACKAGE_URL ??= ""
+SPDX_PACKAGE_URL[doc] = "Provides a place for the SPDX data creator to record \
+the package URL string (in accordance with the Package URL specification) for \
+a software Package."
+
 IMAGE_CLASSES:append = " create-spdx-image-3.0"
 SDK_CLASSES += "create-spdx-sdk-3.0"
 
