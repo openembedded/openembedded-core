@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b98429b8e8e3c2a67cfef01e99e4893d \
                     "
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"
+SRC_URI += "file://0001-Use-Os-to-compile-hb-subset-plan-layout.cc.patch"
 SRC_URI[sha256sum] = "477f0d48c34dc32093b45304178eb9733361ca1832b5159879c99e6d40227969"
 
 DEPENDS += "glib-2.0-native"
@@ -31,9 +32,6 @@ PACKAGECONFIG[icu] = "-Dicu=enabled,-Dicu=disabled,icu"
 PACKAGES =+ "${PN}-icu ${PN}-icu-dev ${PN}-subset"
 
 LEAD_SONAME = "libharfbuzz.so"
-
-# Remove when https://github.com/harfbuzz/harfbuzz/issues/4671 is resolved
-EXTRA_OEMESON += "-Dcpp_std=c++17"
 
 do_install:append() {
     # If no tools are installed due to PACKAGECONFIG then this directory might
