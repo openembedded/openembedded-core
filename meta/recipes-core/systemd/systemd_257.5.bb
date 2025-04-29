@@ -602,26 +602,16 @@ FILES:${PN}-extra-utils = "\
                         ${bindir}/systemd-cgls \
                         ${bindir}/systemd-cgtop \
                         ${bindir}/systemd-stdio-bridge \
-                        ${base_bindir}/systemd-ask-password \
-                        ${base_bindir}/systemd-tty-ask-password-agent \
                         ${base_sbindir}/mount.ddi \
                         ${systemd_system_unitdir}/initrd.target.wants/systemd-pcrphase-initrd.path \
-                        ${systemd_system_unitdir}/systemd-ask-password-console.path \
-                        ${systemd_system_unitdir}/systemd-ask-password-console.service \
-                        ${systemd_system_unitdir}/systemd-ask-password-wall.path \
-                        ${systemd_system_unitdir}/systemd-ask-password-wall.service \
-                        ${systemd_system_unitdir}/sysinit.target.wants/systemd-ask-password-console.path \
-                        ${systemd_system_unitdir}/sysinit.target.wants/systemd-ask-password-wall.path \
                         ${systemd_system_unitdir}/sysinit.target.wants/systemd-pcrphase.path \
                         ${systemd_system_unitdir}/sysinit.target.wants/systemd-pcrphase-sysinit.path \
-                        ${systemd_system_unitdir}/multi-user.target.wants/systemd-ask-password-wall.path \
                         ${nonarch_libdir}/systemd/systemd-resolve-host \
                         ${nonarch_libdir}/systemd/systemd-ac-power \
                         ${nonarch_libdir}/systemd/systemd-activate \
                         ${nonarch_libdir}/systemd/systemd-measure \
                         ${nonarch_libdir}/systemd/systemd-pcrphase \
                         ${nonarch_libdir}/systemd/systemd-socket-proxyd \
-                        ${nonarch_libdir}/systemd/systemd-reply-password \
                         ${nonarch_libdir}/systemd/systemd-sleep \
                         ${nonarch_libdir}/systemd/system-sleep \
                         ${systemd_system_unitdir}/systemd-hibernate.service \
