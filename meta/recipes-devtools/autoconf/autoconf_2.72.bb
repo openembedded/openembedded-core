@@ -24,6 +24,10 @@ SRC_URI:append:class-native = " file://no-man.patch"
 
 SRC_URI[sha256sum] = "afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e"
 
+# Remove this when upgrading past 2.72, as package managers sort 2.72e (the
+# fifth release candidate) after 2.72.
+PKGV = "2.72e+really${PV}"
+
 RDEPENDS:${PN} = "m4 gnu-config \
 		  perl \
 		  perl-module-bytes \
