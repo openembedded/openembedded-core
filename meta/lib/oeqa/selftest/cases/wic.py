@@ -1150,71 +1150,71 @@ class Wic2(WicTestCase):
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are placed at the correct offsets, default KB
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 100M --fstype=ext4\n" \
-                        "part /bar                 --ondisk hda --offset 102432 --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 200M --fstype=ext4\n" \
+                        "part /bar                 --ondisk hda --offset 204832 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
             _, partlns = self._get_wic_partitions(tempf.name, native_sysroot)
             self.assertEqual(partlns, [
-                "1:32.0kiB:102432kiB:102400kiB:ext4:primary:;",
-                "2:102432kiB:204832kiB:102400kiB:ext4:primary:;",
+                "1:32.0kiB:204832kiB:204800kiB:ext4:primary:;",
+                "2:204832kiB:307232kiB:102400kiB:ext4:primary:;",
                 ])
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are placed at the correct offsets, same with explicit KB
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32K     --fixed-size 100M --fstype=ext4\n" \
-                        "part /bar                 --ondisk hda --offset 102432K --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 32K     --fixed-size 200M --fstype=ext4\n" \
+                        "part /bar                 --ondisk hda --offset 204832K --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
             _, partlns = self._get_wic_partitions(tempf.name, native_sysroot)
             self.assertEqual(partlns, [
-                "1:32.0kiB:102432kiB:102400kiB:ext4:primary:;",
-                "2:102432kiB:204832kiB:102400kiB:ext4:primary:;",
+                "1:32.0kiB:204832kiB:204800kiB:ext4:primary:;",
+                "2:204832kiB:307232kiB:102400kiB:ext4:primary:;",
                 ])
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are placed at the correct offsets using MB
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32K  --fixed-size 100M --fstype=ext4\n" \
-                        "part /bar                 --ondisk hda --offset 101M --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 32K  --fixed-size 200M --fstype=ext4\n" \
+                        "part /bar                 --ondisk hda --offset 201M --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
             _, partlns = self._get_wic_partitions(tempf.name, native_sysroot)
             self.assertEqual(partlns, [
-                "1:32.0kiB:102432kiB:102400kiB:ext4:primary:;",
-                "2:103424kiB:205824kiB:102400kiB:ext4:primary:;",
+                "1:32.0kiB:204832kiB:204800kiB:ext4:primary:;",
+                "2:205824kiB:308224kiB:102400kiB:ext4:primary:;",
                 ])
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions can be placed on a 512 byte sector boundary
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 65s --fixed-size 99M --fstype=ext4\n" \
-                        "part /bar                 --ondisk hda --offset 102432 --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 65s --fixed-size 199M --fstype=ext4\n" \
+                        "part /bar                 --ondisk hda --offset 204832 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
             _, partlns = self._get_wic_partitions(tempf.name, native_sysroot)
             self.assertEqual(partlns, [
-                "1:32.5kiB:101408kiB:101376kiB:ext4:primary:;",
-                "2:102432kiB:204832kiB:102400kiB:ext4:primary:;",
+                "1:32.5kiB:203808kiB:203776kiB:ext4:primary:;",
+                "2:204832kiB:307232kiB:102400kiB:ext4:primary:;",
                 ])
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that a partition can be placed immediately after a MSDOS partition table
             tempf.write("bootloader --ptable msdos\n" \
-                        "part /    --source rootfs --ondisk hda --offset 1s --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 1s --fixed-size 200M --fstype=ext4\n")
             tempf.flush()
 
             _, partlns = self._get_wic_partitions(tempf.name, native_sysroot)
             self.assertEqual(partlns, [
-                "1:0.50kiB:102400kiB:102400kiB:ext4::;",
+                "1:0.50kiB:204800kiB:204800kiB:ext4::;",
                 ])
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that image creation fails if the partitions would overlap
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 100M --fstype=ext4\n" \
-                        "part /bar                 --ondisk hda --offset 102431 --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 32     --fixed-size 200M --fstype=ext4\n" \
+                        "part /bar                 --ondisk hda --offset 204831 --fixed-size 100M --fstype=ext4\n")
             tempf.flush()
 
             p, _ = self._get_wic_partitions(tempf.name, ignore_status=True)
@@ -1223,7 +1223,7 @@ class Wic2(WicTestCase):
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             # Test that partitions are not allowed to overlap with the booloader
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /    --source rootfs --ondisk hda --offset 8 --fixed-size 100M --fstype=ext4\n")
+                        "part /    --source rootfs --ondisk hda --offset 8 --fixed-size 200M --fstype=ext4\n")
             tempf.flush()
 
             p, _ = self._get_wic_partitions(tempf.name, ignore_status=True)
