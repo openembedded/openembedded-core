@@ -24,7 +24,7 @@ inherit meson pkgconfig gtk-doc python3targetconfig qemu gobject-introspection-d
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 
-MULTILIB_SCRIPTS = "${PN}:${bindir}/g-ir-annotation-tool ${PN}:${bindir}/g-ir-scanner"
+MULTILIB_SCRIPTS = "${PN}-tools:${bindir}/g-ir-annotation-tool ${PN}-tools:${bindir}/g-ir-scanner"
 
 # setuptools are required to provide distutils to build the tools
 DEPENDS += " libffi zlib python3 python3-setuptools flex-native bison-native"
