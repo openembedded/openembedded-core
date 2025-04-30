@@ -546,7 +546,7 @@ part /mnt --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/whoa
             wks.flush()
             config = 'IMAGE_ROOTFS_EXTRA_SPACE = "500000"\n'\
                      'DEPENDS:pn-core-image-minimal += "wic-tools"\n'\
-                     'IMAGE_FSTYPES += "wic"\n'\
+                     'IMAGE_FSTYPES += "wic ext4"\n'\
                      'WKS_FILE = "%s"\n' % wks.name
             self.append_config(config)
             bitbake('core-image-minimal')
