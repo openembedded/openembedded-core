@@ -15,7 +15,6 @@ SRC_URI:append:class-target = " file://run-ptest \
                                 file://serial-tests-config.patch \
                               "
 
-SRC_URI[md5sum] = "f4a2b0284d80353b995f8ef2385ed73c"
 SRC_URI[sha256sum] = "3be4a26d825ffdfda52a56fc43246456989a3630093cced3fbddf4771ee58a70"
 
 LICENSE = "GPL-3.0-only"
