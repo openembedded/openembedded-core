@@ -538,42 +538,36 @@ part /mnt --source rootfs --ondisk mmcblk0 --fstype=ext4 --exclude-path bin/whoa
     def test_exclude_path_with_extra_space(self):
         """Test having --exclude-path with IMAGE_ROOTFS_EXTRA_SPACE. [Yocto #15555]"""
 
-        oldpath = os.environ['PATH']
-        os.environ['PATH'] = get_bb_var("PATH", "wic-tools")
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(
+                ['bootloader --ptable gpt\n',
+                 'part /boot --size=100M --active --fstype=ext4 --label boot\n',
+                 'part /     --source rootfs      --fstype=ext4 --label root --exclude-path boot/\n'])
+            wks.flush()
+            config = 'IMAGE_ROOTFS_EXTRA_SPACE = "500000"\n'\
+                     'DEPENDS:pn-core-image-minimal += "wic-tools"\n'\
+                     'IMAGE_FSTYPES += "wic"\n'\
+                     'WKS_FILE = "%s"\n' % wks.name
+            self.append_config(config)
+            bitbake('core-image-minimal')
 
-        try:
-            with NamedTemporaryFile("w", suffix=".wks") as wks:
-                wks.writelines(
-                    ['bootloader --ptable gpt\n',
-                     'part /boot --size=100M --active --fstype=ext4 --label boot\n',
-                     'part /     --source rootfs      --fstype=ext4 --label root --exclude-path boot/\n'])
-                wks.flush()
-                config = 'IMAGE_ROOTFS_EXTRA_SPACE = "500000"\n'\
-                         'DEPENDS:pn-core-image-minimal += "wic-tools"\n'\
-                         'IMAGE_FSTYPES += "wic"\n'\
-                         'WKS_FILE = "%s"\n' % wks.name
-                self.append_config(config)
-                bitbake('core-image-minimal')
-
-            """
-            the output of "wic ls <image>.wic" will look something like:
-                Num     Start        End          Size      Fstype
-                 1         17408    136332287    136314880  ext4
-                 2     136332288    171464703     35132416  ext4
-            we are looking for the size of partition 2
-            i.e. in this case the number 35,132,416
-            without the fix the size will be around 85,403,648
-            with the fix the size should be around 799,960,064
-            """
-            bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'], 'core-image-minimal')
-            deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
-            machine = bb_vars['MACHINE']
-            wicout = glob(os.path.join(deploy_dir, "core-image-minimal-%s.rootfs-*.wic" % machine))[0]
-            size_of_root_partition = int(runCmd("wic ls %s" % wicout).output.split('\n')[2].split()[3])
-            self.assertGreater(size_of_root_partition, 500000000)
-
-        finally:
-            os.environ['PATH'] = oldpath
+        """
+        the output of "wic ls <image>.wic" will look something like:
+            Num     Start        End          Size      Fstype
+             1         17408    136332287    136314880  ext4
+             2     136332288    171464703     35132416  ext4
+        we are looking for the size of partition 2
+        i.e. in this case the number 35,132,416
+        without the fix the size will be around 85,403,648
+        with the fix the size should be around 799,960,064
+        """
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'MACHINE'], 'core-image-minimal')
+        deploy_dir = bb_vars['DEPLOY_DIR_IMAGE']
+        machine = bb_vars['MACHINE']
+        nativesysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+        wicout = glob(os.path.join(deploy_dir, "core-image-minimal-%s.rootfs-*.wic" % machine))[0]
+        size_of_root_partition = int(runCmd("wic ls %s --native-sysroot %s" % (wicout, nativesysroot)).output.split('\n')[2].split()[3])
+        self.assertGreater(size_of_root_partition, 500000000)
 
     def test_include_path(self):
         """Test --include-path wks option."""
