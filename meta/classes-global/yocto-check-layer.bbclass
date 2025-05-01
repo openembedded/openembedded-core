@@ -27,6 +27,36 @@ def check_insane_skip(d):
             d.setVar("QA_ERRORS_FOUND", "True")
 
 
+# Check that no tasks (with rare exceptions) between do_fetch and do_build
+# use the network.
+def check_network_flag(d):
+    # BPN:task names that are allowed to reach the network, using fnmatch to compare.
+    allowed = []
+    # build-appliance-image uses pip at image time
+    allowed += ["build-appliance-image:do_image"]
+
+    def is_allowed(bpn, task):
+        from fnmatch import fnmatch
+        name = f"{bpn}:{task}"
+        return any(fnmatch(name, pattern) for pattern in allowed)
+
+    bpn = d.getVar("BPN")
+    seen = set()
+    stack = {"do_build"}
+    while stack:
+        task = stack.pop()
+        if task == "do_fetch":
+            continue
+
+        seen.add(task)
+        deps = d.getVarFlag(task, "deps") or []
+        stack |= {d for d in deps if d not in seen}
+
+        network = bb.utils.to_boolean(d.getVarFlag(task, "network"))
+        if network and not is_allowed(bpn, task):
+            bb.error(f"QA Issue: task {task} has network enabled")
+
 python () {
     check_insane_skip(d)
+    check_network_flag(d)
 }
