@@ -26,6 +26,8 @@ CVE_CHECK_IGNORE += "CVE-2013-6629"
 CVE_CHECK_IGNORE += "CVE-2023-38560 CVE-2024-46954"
 # Vulnerable code was introduced in 9.56.0, so 9.55.0 is not affected yet
 CVE_CHECK_IGNORE += "CVE-2025-27833"
+# Only impacts codepaths relevant for Windows builds
+CVE_CHECK_IGNORE += "CVE-2025-27837"
 
 def gs_verdir(v):
     return "".join(v.split("."))
