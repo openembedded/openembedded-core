@@ -57,6 +57,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
            file://0001-test-gatt-Fix-hung-issue.patch \
            file://0001-adapter-Fix-up-address-type-when-loading-keys.patch \
+           file://toolsbtmgmt-fix-index-option-for-non-interactive-mode.patch \
            "
 S = "${WORKDIR}/bluez-${PV}"
 
