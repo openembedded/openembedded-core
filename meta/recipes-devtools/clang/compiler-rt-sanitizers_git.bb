@@ -18,9 +18,15 @@ inherit cmake pkgconfig python3native
 LIC_FILES_CHKSUM = "file://compiler-rt/LICENSE.TXT;md5=d846d1d65baf322d4c485d6ee54e877a"
 
 TUNE_CCARGS:remove = "-no-integrated-as"
+COMPILER_RT ??= "-rtlib=libgcc -unwindlib=libgcc"
+LIBCPLUSPLUS ??= "-stdlib=libstdc++"
 
 CC = "${CCACHE}${HOST_PREFIX}clang ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 CXX = "${CCACHE}${HOST_PREFIX}clang++ ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
+BUILD_CC = "${CCACHE}${HOST_PREFIX}clang ${BUILD_CC_ARCH}"
+BUILD_CXX = "${CCACHE}${HOST_PREFIX}clang++ ${BUILD_CC_ARCH}$"
+CFLAGS += "${COMPILER_RT}"
+CXXFLAGS += "${COMPILER_RT} ${LIBCPLUSPLUS}"
 
 DEPENDS += "ninja-native virtual/crypt compiler-rt"
 DEPENDS:append:class-native = " clang-native libxcrypt-native libcxx-native"
