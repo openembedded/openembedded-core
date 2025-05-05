@@ -196,6 +196,8 @@ python vex_write_rootfs_manifest () {
             with open(pkgfilepath) as j:
                 data = json.load(j)
                 cve_check_merge_jsons(json_data, data)
+        else:
+            bb.warn("Missing cve file for %s" % pkg)
 
     d.setVar("PN", save_pn)
 
@@ -290,9 +292,12 @@ def cve_write_data_json(d, cve_data, cve_status):
     cvelogpath = d.getVar("CVE_CHECK_SUMMARY_DIR")
     index_path = d.getVar("CVE_CHECK_SUMMARY_INDEX_PATH")
     bb.utils.mkdirhier(cvelogpath)
+    bb.utils.mkdirhier(os.path.dirname(deploy_file))
     fragment_file = os.path.basename(deploy_file)
     fragment_path = os.path.join(cvelogpath, fragment_file)
     with open(fragment_path, "w") as f:
+        f.write(write_string)
+    with open(deploy_file, "w") as f:
         f.write(write_string)
     with open(index_path, "a+") as f:
         f.write("%s\n" % fragment_path)
