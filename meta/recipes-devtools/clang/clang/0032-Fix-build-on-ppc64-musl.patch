@@ -1,0 +1,97 @@
+From bb99b65d884185a2eb1d4601e5135da582cbd8a9 Mon Sep 17 00:00:00 2001
+From: mojyack <mojyack@gmail.com>
+Date: Mon, 16 Dec 2024 13:42:04 +0900
+Subject: [PATCH] Fix build on ppc64+musl
+
+In powerpc64-unknown-linux-musl, signal.h does not include asm/ptrace.h,
+which causes "member access into incomplete type 'struct pt_regs'" errors.
+Include the header explicitly to fix this.
+
+Also in sanitizer_linux_libcdep.cpp, there is a usage of
+TlsPreTcbSize which is not defined in such a platform.
+Guard the branch with macro.
+
+Upstream-Status: Backport [https://github.com/llvm/llvm-project/pull/120036]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ .../lib/sanitizer_common/sanitizer_linux.cpp        |  4 ++++
+ .../sanitizer_common/sanitizer_linux_libcdep.cpp    | 13 +++++++------
+ .../sanitizer_platform_limits_posix.cpp             |  2 +-
+ .../sanitizer_stoptheworld_linux_libcdep.cpp        |  3 ++-
+ 4 files changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/compiler-rt/lib/sanitizer_common/sanitizer_linux.cpp b/compiler-rt/lib/sanitizer_common/sanitizer_linux.cpp
+index 7aa48d29d2d5..a4d526b4466c 100644
+--- a/compiler-rt/lib/sanitizer_common/sanitizer_linux.cpp
++++ b/compiler-rt/lib/sanitizer_common/sanitizer_linux.cpp
+@@ -86,6 +86,10 @@
+ #    include <sys/sysmacros.h>
+ #  endif
+ 
++#  if SANITIZER_LINUX && defined(__powerpc64__)
++#    include <asm/ptrace.h>
++#  endif
++
+ #  if SANITIZER_FREEBSD
+ #    include <machine/atomic.h>
+ #    include <sys/exec.h>
+diff --git a/compiler-rt/lib/sanitizer_common/sanitizer_linux_libcdep.cpp b/compiler-rt/lib/sanitizer_common/sanitizer_linux_libcdep.cpp
+index e11eff13cd32..331e1c7d8d15 100644
+--- a/compiler-rt/lib/sanitizer_common/sanitizer_linux_libcdep.cpp
++++ b/compiler-rt/lib/sanitizer_common/sanitizer_linux_libcdep.cpp
+@@ -619,21 +619,22 @@ static void GetTls(uptr *addr, uptr *size) {
+   *addr = tp - RoundUpTo(*size, align);
+   *size = tp - *addr + ThreadDescriptorSize();
+ #      else
+-  if (SANITIZER_GLIBC)
+-    *size += 1664;
+-  else if (SANITIZER_FREEBSD)
+-    *size += 128;  // RTLD_STATIC_TLS_EXTRA
+-#        if defined(__mips__) || defined(__powerpc64__) || SANITIZER_RISCV64
++#        if SANITIZER_GLIBC
++  *size += 1664;
++#        elif SANITIZER_FREEBSD
++  *size += 128;  // RTLD_STATIC_TLS_EXTRA
++#          if defined(__mips__) || defined(__powerpc64__) || SANITIZER_RISCV64
+   const uptr pre_tcb_size = TlsPreTcbSize();
+   *addr -= pre_tcb_size;
+   *size += pre_tcb_size;
+-#        else
++#          else
+   // arm and aarch64 reserve two words at TP, so this underestimates the range.
+   // However, this is sufficient for the purpose of finding the pointers to
+   // thread-specific data keys.
+   const uptr tcb_size = ThreadDescriptorSize();
+   *addr -= tcb_size;
+   *size += tcb_size;
++#          endif
+ #        endif
+ #      endif
+ #    elif SANITIZER_NETBSD
+diff --git a/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp b/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
+index a5311d266b0c..ec5f2edab6a6 100644
+--- a/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
++++ b/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
+@@ -96,7 +96,7 @@
+ # include <sys/ptrace.h>
+ #    if defined(__mips64) || defined(__aarch64__) || defined(__arm__) ||       \
+         defined(__hexagon__) || defined(__loongarch__) || SANITIZER_RISCV64 || \
+-        defined(__sparc__)
++        defined(__sparc__) || defined(__powerpc64__)
+ #      include <asm/ptrace.h>
+ #      ifdef __arm__
+ typedef struct user_fpregs elf_fpregset_t;
+diff --git a/compiler-rt/lib/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cpp b/compiler-rt/lib/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cpp
+index 945da99d41f4..58d17d90c343 100644
+--- a/compiler-rt/lib/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cpp
++++ b/compiler-rt/lib/sanitizer_common/sanitizer_stoptheworld_linux_libcdep.cpp
+@@ -31,7 +31,8 @@
+ #include <sys/types.h> // for pid_t
+ #include <sys/uio.h> // for iovec
+ #include <elf.h> // for NT_PRSTATUS
+-#if (defined(__aarch64__) || SANITIZER_RISCV64 || SANITIZER_LOONGARCH64) && \
++#if (defined(__aarch64__) || defined(__powerpc64__) || \
++     SANITIZER_RISCV64 || SANITIZER_LOONGARCH64) &&    \
+      !SANITIZER_ANDROID
+ // GLIBC 2.20+ sys/user does not include asm/ptrace.h
+ # include <asm/ptrace.h>
