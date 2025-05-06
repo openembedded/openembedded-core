@@ -155,7 +155,7 @@ def send_data(data, args):
 
     log.debug(f"Response Status: {response.status}")
     log.debug(f"Response Headers: {response.getheaders()}")
-    log.info(response.read().decode('utf-8'))
+    print(response.read().decode('utf-8'))
 
 def validate_server_url(args):
     # Get the error report server from an argument
