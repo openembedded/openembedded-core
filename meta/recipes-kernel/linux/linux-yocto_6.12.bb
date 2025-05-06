@@ -18,18 +18,18 @@ KBRANCH:qemux86.104 ?= "v6.12/standard/base"
 KBRANCH:qemuloongarch64  ?= "v6.12/standard/base"
 KBRANCH:qemumips64 ?= "v6.12/standard/mti-malta64"
 
-SRCREV_machine:qemuarm ?= "f31649d9e24280f86c7314f988ab817d62e3557f"
-SRCREV_machine:qemuarm64 ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemuloongarch64 ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemumips ?= "12b5d8353b4882e94de4571b43766f46871c03ec"
-SRCREV_machine:qemuppc ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemuriscv64 ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemuriscv32 ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemux86 ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemux86-64 ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_machine:qemumips64 ?= "eca58a19ed046caa5707d546a9f733ca1a96e722"
-SRCREV_machine ?= "df727a0a44b11f5e8715dc15c57eac92f1a75193"
-SRCREV_meta ?= "47b69a68c57e1c58e83732fe46849190d2a00cbf"
+SRCREV_machine:qemuarm ?= "ab61ca00dc8c8d6992d25112dadeed88b8c48bdc"
+SRCREV_machine:qemuarm64 ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemuloongarch64 ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemumips ?= "9d52a1ea29e175681780b615541b0af66f9d0d55"
+SRCREV_machine:qemuppc ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemuriscv64 ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemuriscv32 ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemux86 ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemux86-64 ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_machine:qemumips64 ?= "54af295ab3ca402812576c8425d92dcabe9f0b0d"
+SRCREV_machine ?= "8bdb46d18b39209344e65cd7ee24d1fa451397d5"
+SRCREV_meta ?= "1f6ab68a1d86836bf1b82b791df03da3cfeacb3f"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
@@ -44,7 +44,7 @@ SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRA
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-6.12;destsuffix=${KMETA};protocol=https"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
-LINUX_VERSION ?= "6.12.24"
+LINUX_VERSION ?= "6.12.25"
 
 PV = "${LINUX_VERSION}+git"
 
