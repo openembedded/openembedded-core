@@ -155,7 +155,6 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DCMAKE_BUILD_TYPE=Release \
                   -DCMAKE_CXX_FLAGS_RELEASE='${CXXFLAGS} -DNDEBUG -g0' \
                   -DCMAKE_C_FLAGS_RELEASE='${CFLAGS} -DNDEBUG -g0' \
-                  -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${S}/llvm/projects/SPIRV-LLVM-Translator/SPIRV-Headers \
                   -DLLVM_ENABLE_PROJECTS='${LLVM_PROJECTS}' \
                   -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR} \
                   -DLLVM_VERSION_SUFFIX='${VER_SUFFIX}' \
@@ -171,7 +170,6 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                   -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DLLDB_PYTHON_RELATIVE_PATH=${PYTHON_SITEPACKAGES_DIR} \
                                                   -DLLDB_PYTHON_EXE_RELATIVE_PATH=${PYTHON_PN} \
                                                   -DLLDB_PYTHON_EXT_SUFFIX=${SOLIBSDEV} \
-                                                  -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${S}/llvm/projects/SPIRV-LLVM-Translator/SPIRV-Headers \
                                                   -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain-native.cmake' \
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
                   -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ar \
@@ -187,8 +185,6 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                   -DPYTHON_EXECUTABLE='${PYTHON}' \
 "
 EXTRA_OECMAKE:append:class-target = "\
-                  -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${S}/llvm/projects/SPIRV-LLVM-Translator/SPIRV-Headers \
-' \
                   -DLLVM_NATIVE_TOOL_DIR=${STAGING_BINDIR_NATIVE} \
                   -DLLVM_HEADERS_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-min-tblgen \
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
@@ -310,11 +306,11 @@ do_install:append:class-nativesdk () {
     fi
 }
 
-PROVIDES:append:class-native = " llvm-native libclc-native spirv-llvm-translator-native"
-PROVIDES:append:class-target = " llvm libclc spirv-llvm-translator"
-PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc nativesdk-spirv-llvm-translator"
+PROVIDES:append:class-native = " llvm-native libclc-native"
+PROVIDES:append:class-target = " llvm libclc"
+PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc"
 
-PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc ${PN}-spirv \
+PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
              libclang lldb lldb-server liblldb llvm-linker-tools"
 
 
@@ -334,7 +330,6 @@ RDEPENDS:${PN}-tools += "\
   perl-module-term-ansicolor \
 "
 
-RPROVIDES:${PN}-spirv = "${MLPREFIX}spirv-llvm-translator"
 RPROVIDES:${PN}-clc = "${MLPREFIX}libclc"
 
 RRECOMMENDS:${PN}-tidy += "${PN}-tools"
@@ -405,11 +400,6 @@ FILES:${PN} += "\
 
 FILES:${PN}-clc += "${datadir}/clc"
 
-FILES:${PN}-spirv = " \
-    ${bindir}/llvm-spirv \
-    ${libdir}/libLLVMSPIRV.so.* \
-"
-
 FILES:lldb = "\
   ${bindir}/lldb \
   ${bindir}/lldb-argdumper \
@@ -455,10 +445,6 @@ INSANE_SKIP:${PN} += "already-stripped"
 INSANE_SKIP:${PN}-lldb-python += "dev-so dev-deps"
 INSANE_SKIP:${MLPREFIX}liblldb = "dev-so"
 INSANE_SKIP:${PN}-libllvm = "dev-so"
-
-# SPIRV-LLVM-Translator provides only static libraries, they are included into
-# the clang-spirv package.
-INSANE_SKIP:${PN}-spirv += "dev-so"
 
 #Avoid SSTATE_SCAN_COMMAND running sed over llvm-config.
 SSTATE_SCAN_FILES:remove = "*-config"
