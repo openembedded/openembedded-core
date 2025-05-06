@@ -32,15 +32,15 @@ DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-native clang-crosssdk
 DEPENDS:append:class-native = " clang-native"
 
 # Trick clang.bbclass into not creating circular dependencies
-UNWINDLIB:class-nativesdk:toolchain-clang = "--unwindlib=libgcc"
-COMPILER_RT:class-nativesdk:toolchain-clang = "-rtlib=libgcc --unwindlib=libgcc"
-LIBCPLUSPLUS:class-nativesdk:toolchain-clang = "-stdlib=libstdc++"
-UNWINDLIB:class-native:toolchain-clang = "--unwindlib=libgcc"
-COMPILER_RT:class-native:toolchain-clang = "-rtlib=libgcc --unwindlib=libgcc"
-LIBCPLUSPLUS:class-native:toolchain-clang = "-stdlib=libstdc++"
-UNWINDLIB:class-target:toolchain-clang = "--unwindlib=libgcc"
-COMPILER_RT:class-target:toolchain-clang = "-rtlib=libgcc --unwindlib=libgcc"
-LIBCPLUSPLUS:class-target:toolchain-clang = "-stdlib=libstdc++"
+UNWINDLIB:class-nativesdk = "--unwindlib=libgcc"
+COMPILER_RT:class-nativesdk = "-rtlib=libgcc"
+LIBCPLUSPLUS:class-nativesdk = "-stdlib=libstdc++"
+UNWINDLIB:class-native = "--unwindlib=libgcc"
+COMPILER_RT:class-native = "-rtlib=libgcc"
+LIBCPLUSPLUS:class-native = "-stdlib=libstdc++"
+UNWINDLIB:class-target = "--unwindlib=libgcc"
+COMPILER_RT:class-target = "-rtlib=libgcc"
+LIBCPLUSPLUS:class-target = "-stdlib=libstdc++"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[crt] = "-DCOMPILER_RT_BUILD_CRT:BOOL=ON,-DCOMPILER_RT_BUILD_CRT:BOOL=OFF"
@@ -51,6 +51,13 @@ PACKAGECONFIG[ctx-profile] = "-DCOMPILER_RT_BUILD_CTX_PROFILE=ON,-DCOMPILER_RT_B
 HF = ""
 HF:class-target = "${@ bb.utils.contains('TUNE_CCARGS_MFLOAT', 'hard', 'hf', '', d)}"
 HF[vardepvalue] = "${HF}"
+
+CC = "${CCACHE}${HOST_PREFIX}clang ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
+CXX = "${CCACHE}${HOST_PREFIX}clang++ ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
+BUILD_CC = "${CCACHE}clang ${BUILD_CC_ARCH}"
+BUILD_CXX = "${CCACHE}clang++ ${BUILD_CC_ARCH}"
+LDFLAGS += "${COMPILER_RT} ${UNWINDLIB}"
+CXXFLAGS += "${LIBCPLUSPLUS}"
 
 OECMAKE_TARGET_COMPILE = "compiler-rt"
 OECMAKE_TARGET_INSTALL = "install-compiler-rt install-compiler-rt-headers"
@@ -72,7 +79,7 @@ EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 
 EXTRA_OECMAKE:append:class-native = "\
                   -DCOMPILER_RT_DEFAULT_TARGET_ARCH=${HOST_ARCH} \
-                  -DCMAKE_C_COMPILER_TARGET=${HOST_ARCH} \
+                  -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
 "
 
 EXTRA_OECMAKE:append:class-target = "\
@@ -89,7 +96,7 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
                -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                -DCLANG_TABLEGEN=${STAGING_BINDIR_NATIVE}/clang-tblgen \
-               -DCMAKE_C_COMPILER_TARGET=${HOST_ARCH}${HOST_VENDOR}-${HOST_OS}${HF} \
+               -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
 "
 EXTRA_OECMAKE:append:powerpc = " -DCOMPILER_RT_DEFAULT_TARGET_ARCH=powerpc "
 
