@@ -50,7 +50,7 @@ PACKAGECONFIG[single-binary] = "--enable-single-binary,--disable-single-binary,,
 PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux,libselinux"
 PACKAGECONFIG[openssl] = "--with-openssl=yes,--with-openssl=no,openssl"
 
-# [ df mktemp nice printenv base64 gets a special treatment and is not included in this
+# [ base32 base64 df mktemp nice printenv get a special treatment and are not included in this
 bindir_progs = "arch basename chcon cksum comm csplit cut dir dircolors dirname du \
                 env expand expr factor fmt fold groups head hostid id install \
                 join link logname md5sum mkfifo nl nohup nproc od paste pathchk \
@@ -58,7 +58,6 @@ bindir_progs = "arch basename chcon cksum comm csplit cut dir dircolors dirname 
                 sha384sum sha512sum shred shuf sort split sum tac tail tee test timeout \
                 tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes"
 
-# hostname gets a special treatment and is not included in this
 base_bindir_progs = "cat chgrp chmod chown cp date dd echo false hostname kill ln ls mkdir \
                      mknod mv pwd rm rmdir sleep stty sync touch true uname stat"
 
