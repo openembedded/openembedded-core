@@ -153,8 +153,6 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DLLVM_BUILD_EXTERNAL_COMPILER_RT=ON \
                   -DCMAKE_SYSTEM_NAME=Linux \
                   -DCMAKE_BUILD_TYPE=Release \
-                  -DCMAKE_CXX_FLAGS_RELEASE='${CXXFLAGS} -DNDEBUG -g0' \
-                  -DCMAKE_C_FLAGS_RELEASE='${CFLAGS} -DNDEBUG -g0' \
                   -DLLVM_ENABLE_PROJECTS='${LLVM_PROJECTS}' \
                   -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR} \
                   -DLLVM_VERSION_SUFFIX='${VER_SUFFIX}' \
