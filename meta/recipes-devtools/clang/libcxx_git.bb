@@ -51,8 +51,8 @@ CC = "${CCACHE}${HOST_PREFIX}clang ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 CXX = "${CCACHE}${HOST_PREFIX}clang++ ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 BUILD_CC = "${CCACHE}clang ${BUILD_CC_ARCH}"
 BUILD_CXX = "${CCACHE}clang++ ${BUILD_CC_ARCH}"
-CFLAGS += "${COMPILER_RT}"
-CXXFLAGS += "${COMPILER_RT} ${LIBCPLUSPLUS}"
+LDFLAGS += "${COMPILER_RT} ${UNWINDLIB} ${LIBCPLUSPLUS}"
+CXXFLAGS += "${LIBCPLUSPLUS}"
 
 OECMAKE_SOURCEPATH = "${S}/llvm"
 EXTRA_OECMAKE += "\
@@ -71,7 +71,7 @@ EXTRA_OECMAKE += "\
                   -DLIBCXX_CXX_ABI_LIBRARY_PATH=${B}/lib${LLVM_LIBDIR_SUFFIX} \
                   -S ${S}/runtimes \
                   -DLLVM_ENABLE_RUNTIMES='libcxx;libcxxabi;libunwind' \
-                  -DLLVM_RUNTIME_TARGETS=${HOST_SYS} \
+                  -DLLVM_RUNTIME_TARGETS=${HOST_ARCH} \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
                   -DLLVM_APPEND_VC_REV=OFF \
                   -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
@@ -81,7 +81,7 @@ EXTRA_OECMAKE:append:class-target = " \
                   -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${AR} \
                   -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${NM} \
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${RANLIB} \
-                  -DLLVM_DEFAULT_TARGET_TRIPLE=${HOST_SYS} \
+                  -DLLVM_HOST_TRIPLE=${TARGET_SYS} \
                   -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 "
 
