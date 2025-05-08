@@ -219,6 +219,8 @@ do_install_ptest () {
         find "${D}${PTEST_PATH}/src" -type f -exec \
             sed -i -e 's:${B}/src/coreutils:/usr/bin/env -S coreutils:g' \
             {} +
+
+        sed -i '/^single_binary_progs/s/ginstall/install/g' ${D}${PTEST_PATH}/Makefile
     fi
 }
 
