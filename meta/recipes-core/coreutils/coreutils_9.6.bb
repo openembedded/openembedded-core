@@ -214,6 +214,12 @@ do_install_ptest () {
     
     # handle multilib
     sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'single-binary', 'true', 'false', d)}; then
+        find "${D}${PTEST_PATH}/src" -type f -exec \
+            sed -i -e 's:${B}/src/coreutils:/usr/bin/env -S coreutils:g' \
+            {} +
+    fi
 }
 
 do_install_ptest:append:libc-musl () {
