@@ -29,6 +29,7 @@ RDEPENDS:${PN} += " \
     python3-asyncio \
     python3-io \
     python3-pkgutil \
+    gobject-introspection \
 "
 
 # python3-pycairo is checked on configuration -> DEPENDS
