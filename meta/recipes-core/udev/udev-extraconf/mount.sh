@@ -83,6 +83,10 @@ automount_systemd() {
 
     MOUNT="$MOUNT -o silent"
 
+    if [ -n "${SKIP_SYSTEMD_MOUNT_FSCK+isset}" ]; then
+        MOUNT="$MOUNT --fsck=no"
+    fi
+
     # If filesystemtype is vfat, change the ownership group to mount group, and
     # grant it with  w/r/x permissions.
     case $ID_FS_TYPE in
