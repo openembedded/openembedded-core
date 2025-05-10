@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import json
 import os
 import subprocess
 import tempfile
@@ -35,6 +36,14 @@ class MesonTestBase(OESDKTestCase):
 
         # Check that Meson thinks we're doing a cross build and not a native
         self.assertIn("Build type: cross build", log)
+
+        # Check that the cross-compiler used is the one we set.
+        data = json.loads(self._run(f"meson introspect --compilers {builddir}"))
+        self.assertIn(self.td.get("CC").split()[0], data["host"]["c"]["exelist"])
+
+        # Check that the target architectures was set correctly.
+        data = json.loads(self._run(f"meson introspect --machines {builddir}"))
+        self.assertEqual(data["host"]["cpu"], self.td["HOST_ARCH"])
 
         self._run(f"meson compile -C {builddir} -v")
 
