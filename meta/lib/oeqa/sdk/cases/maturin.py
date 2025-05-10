@@ -16,11 +16,7 @@ errors_have_output()
 
 class MaturinTest(OESDKTestCase):
     def setUp(self):
-        if not (
-            self.tc.hasHostPackage("nativesdk-python3-maturin")
-            or self.tc.hasHostPackage("python3-maturin-native")
-        ):
-            raise unittest.SkipTest("No python3-maturin package in the SDK")
+        self.ensure_host_package("python3-maturin")
 
     def test_maturin_list_python(self):
         py_major = self._run("python3 -c 'import sys; print(sys.version_info.major)'")
@@ -49,11 +45,8 @@ class MaturinDevelopTest(OESDKTestCase):
 
     def setUp(self):
         machine = self.td.get("MACHINE")
-        if not (
-            self.tc.hasHostPackage("nativesdk-python3-maturin")
-            or self.tc.hasHostPackage("python3-maturin-native")
-        ):
-            raise unittest.SkipTest("No python3-maturin package in the SDK")
+        self.ensure_host_package("python3-maturin")
+
         if not (
             self.tc.hasHostPackage("packagegroup-rust-cross-canadian-%s" % machine)
         ):
