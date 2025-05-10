@@ -135,7 +135,7 @@ python do_testsdk() {
     testsdk = oeqa.sdk.testsdk.TestSDK()
 
     cases_path = os.path.join(os.path.abspath(os.path.dirname(oeqa.sdk.testsdk.__file__)), d.getVar("TESTSDK_CASES"))
-    testsdk.context_executor_class.default_cases = cases_path
+    testsdk.context_executor_class.default_cases = [cases_path,]
 
     testsdk.run(d)
 }
