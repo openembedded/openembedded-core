@@ -99,6 +99,8 @@ toolchain_create_tree_env_script () {
 	echo 'export OECORE_BASELIB="${baselib}"' >> $script
 	echo 'export OECORE_TARGET_ARCH="${TARGET_ARCH}"' >>$script
 	echo 'export OECORE_TARGET_OS="${TARGET_OS}"' >>$script
+	echo 'export OECORE_TARGET_BITS="${@siteinfo_with_prefix(d, 'bit-')}"' >>$script
+	echo 'export OECORE_TARGET_ENDIAN="${@siteinfo_with_prefix(d, 'endian-')}"' >>$script
 
 	toolchain_shared_env_script
 
