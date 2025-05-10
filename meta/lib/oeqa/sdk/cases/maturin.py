@@ -30,17 +30,6 @@ class MaturinTest(OESDKTestCase):
         self.assertIn(expected, output)
 
 class MaturinDevelopTest(OESDKTestCase):
-    @classmethod
-    def setUpClass(self):
-        targetdir = os.path.join(self.tc.sdk_dir, "guessing-game")
-        try:
-            shutil.rmtree(targetdir)
-        except FileNotFoundError:
-            pass
-        shutil.copytree(
-            os.path.join(self.tc.files_dir, "maturin/guessing-game"), targetdir
-        )
-
     def setUp(self):
         machine = self.td.get("MACHINE")
         self.ensure_host_package("python3-maturin")
@@ -58,9 +47,17 @@ class MaturinDevelopTest(OESDKTestCase):
           (1) that a .venv can been created.
           (2) a functional 'rustc' and 'cargo'
         """
-        self._run("cd %s/guessing-game; python3 -m venv .venv" % self.tc.sdk_dir)
-        cmd = "cd %s/guessing-game; maturin develop" % self.tc.sdk_dir
-        output = self._run(cmd)
+        targetdir = os.path.join(self.tc.sdk_dir, "guessing-game")
+        try:
+            shutil.rmtree(targetdir)
+        except FileNotFoundError:
+            pass
+        shutil.copytree(
+            os.path.join(self.tc.files_dir, "maturin/guessing-game"), targetdir
+        )
+
+        self._run("cd %s; python3 -m venv .venv" % targetdir)
+        output = self._run("cd %s; maturin develop" % targetdir)
         self.assertRegex(output, r"🔗 Found pyo3 bindings with abi3 support for Python ≥ 3.8")
         self.assertRegex(output, r"🐍 Not using a specific python interpreter")
         self.assertRegex(output, r"📡 Using build options features from pyproject.toml")
