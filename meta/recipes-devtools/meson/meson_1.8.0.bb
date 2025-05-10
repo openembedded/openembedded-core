@@ -65,7 +65,7 @@ def generate_native_link_template(d):
 
     return repr(val)
 
-install_templates() {
+install_native_template() {
     install -d ${D}${datadir}/meson
 
     cat >${D}${datadir}/meson/meson.native.template <<EOF
@@ -83,9 +83,14 @@ c_args = ['-isystem@{OECORE_NATIVE_SYSROOT}${includedir_native}' , ${@var_list2s
 c_link_args = ${@generate_native_link_template(d)}
 cpp_args = ['-isystem@{OECORE_NATIVE_SYSROOT}${includedir_native}' , ${@var_list2str('BUILD_OPTIMIZATION', d)}]
 cpp_link_args = ${@generate_native_link_template(d)}
+
 [properties]
 sys_root = '@OECORE_NATIVE_SYSROOT'
 EOF
+}
+
+install_cross_template() {
+    install -d ${D}${datadir}/meson
 
     cat >${D}${datadir}/meson/meson.cross.template <<EOF
 [binaries]
@@ -115,7 +120,8 @@ EOF
 }
 
 do_install:append:class-nativesdk() {
-    install_templates
+    install_native_template
+    install_cross_template
 
     install -d ${D}${SDKPATHNATIVE}/post-relocate-setup.d
     install -m 0755 ${UNPACKDIR}/meson-setup.py ${D}${SDKPATHNATIVE}/post-relocate-setup.d/
@@ -128,7 +134,8 @@ do_install:append:class-nativesdk() {
 FILES:${PN}:append:class-nativesdk = "${datadir}/meson ${SDKPATHNATIVE}"
 
 do_install:append:class-native() {
-    install_templates
+    install_native_template
+    install_cross_template
 
     install -d ${D}${datadir}/post-relocate-setup.d
     install -m 0755 ${UNPACKDIR}/meson-setup.py ${D}${datadir}/post-relocate-setup.d/
