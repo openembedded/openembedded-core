@@ -52,6 +52,8 @@ SDK_DEPLOY = "${DEPLOY_DIR}/sdk"
 
 SDKDEPLOYDIR = "${WORKDIR}/${SDKMACHINE}-deploy-${PN}-populate-sdk"
 
+PSEUDO_INCLUDE_PATHS .= ",${SDK_DIR}"
+
 B:task-populate-sdk = "${SDK_DIR}"
 
 SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${REAL_MULTIMACH_TARGET_SYS}"
@@ -262,8 +264,6 @@ python do_populate_sdk_setscene () {
     sstate_setscene(d)
 }
 addtask do_populate_sdk_setscene
-
-PSEUDO_IGNORE_PATHS .= ",${SDKDEPLOYDIR},${WORKDIR}/oe-sdk-repo,${WORKDIR}/sstate-build-populate_sdk"
 
 fakeroot create_sdk_files() {
 	cp ${COREBASE}/scripts/relocate_sdk.py ${SDK_OUTPUT}/${SDKPATH}/

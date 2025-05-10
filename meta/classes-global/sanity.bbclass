@@ -733,14 +733,14 @@ def check_sanity_version_change(status, d):
         status.addresult("TMPDIR is setuid, please don't build in a setuid directory")
 
     # Check that a user isn't building in a path in PSEUDO_IGNORE_PATHS
-    pseudoignorepaths = d.getVar('PSEUDO_IGNORE_PATHS', expand=True).split(",")
+    pseudoignorepaths = (d.getVar('PSEUDO_IGNORE_PATHS', expand=True) or "").split(",")
     workdir = d.getVar('WORKDIR', expand=True)
     for i in pseudoignorepaths:
         if i and workdir.startswith(i):
             status.addresult("You are building in a path included in PSEUDO_IGNORE_PATHS " + str(i) + " please locate the build outside this path.\n")
 
     # Check if PSEUDO_IGNORE_PATHS and paths under pseudo control overlap
-    pseudoignorepaths = d.getVar('PSEUDO_IGNORE_PATHS', expand=True).split(",")
+    pseudoignorepaths = (d.getVar('PSEUDO_IGNORE_PATHS', expand=True) or "").split(",")
     pseudo_control_dir = "${D},${PKGD},${PKGDEST},${IMAGEROOTFS},${SDK_OUTPUT}"
     pseudocontroldir = d.expand(pseudo_control_dir).split(",")
     for i in pseudoignorepaths:
