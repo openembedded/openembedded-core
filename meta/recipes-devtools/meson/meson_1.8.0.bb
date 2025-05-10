@@ -86,6 +86,21 @@ cpp_link_args = ${@generate_native_link_template(d)}
 EOF
 }
 
+install_nativesdk_template() {
+    install -d ${D}${datadir}/meson
+
+    cat >${D}${datadir}/meson/meson.native.template <<EOF
+[binaries]
+pkg-config = 'pkg-config-native'
+
+[built-in options]
+c_args = ['-isystem@{OECORE_NATIVE_SYSROOT}${includedir_native}']
+c_link_args = ['-L@{OECORE_NATIVE_SYSROOT}${libdir_native}', '-L@{OECORE_NATIVE_SYSROOT}${base_libdir_native}',]
+cpp_args = ['-isystem@{OECORE_NATIVE_SYSROOT}${includedir_native}']
+cpp_link_args = ['-L@{OECORE_NATIVE_SYSROOT}${libdir_native}', '-L@{OECORE_NATIVE_SYSROOT}${base_libdir_native}',]
+EOF
+}
+
 install_cross_template() {
     install -d ${D}${datadir}/meson
 
@@ -117,7 +132,7 @@ EOF
 }
 
 do_install:append:class-nativesdk() {
-    install_native_template
+    install_nativesdk_template
     install_cross_template
 
     install -d ${D}${SDKPATHNATIVE}/post-relocate-setup.d
