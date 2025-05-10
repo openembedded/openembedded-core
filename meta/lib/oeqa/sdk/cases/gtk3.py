@@ -22,12 +22,8 @@ class GTK3Test(OESDKTestCase):
         if libc in [ 'newlib' ]:
             raise unittest.SkipTest("GTK3Test class: SDK doesn't contain a supported C library")
 
-        if not (self.tc.hasTargetPackage("gtk+3", multilib=True) or \
-                self.tc.hasTargetPackage("libgtk-3.0", multilib=True)):
-            raise unittest.SkipTest("GalculatorTest class: SDK don't support gtk+3")
-        if not (self.tc.hasHostPackage("nativesdk-gettext-dev") or
-                self.tc.hasHostPackage("gettext-native")):
-            raise unittest.SkipTest("GalculatorTest class: SDK doesn't contain gettext")
+        self.ensure_host_package(recipe="intltool")
+        self.ensure_target_package("gtk+3", "libgtk-3.0", recipe="gtk+3")
 
     def test_galculator(self):
         with tempfile.TemporaryDirectory(prefix="galculator", dir=self.tc.sdk_dir) as testdir:

@@ -22,9 +22,7 @@ class MesonTest(OESDKTestCase):
         if libc in [ 'newlib' ]:
             raise unittest.SkipTest("MesonTest class: SDK doesn't contain a supported C library")
 
-        if not (self.tc.hasHostPackage("nativesdk-meson") or
-                self.tc.hasHostPackage("meson-native")):
-            raise unittest.SkipTest("MesonTest: needs meson")
+        self.ensure_host_package("meson")
 
     def test_epoxy(self):
         with tempfile.TemporaryDirectory(prefix="epoxy", dir=self.tc.sdk_dir) as testdir:
