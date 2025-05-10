@@ -83,9 +83,6 @@ c_args = ['-isystem@{OECORE_NATIVE_SYSROOT}${includedir_native}' , ${@var_list2s
 c_link_args = ${@generate_native_link_template(d)}
 cpp_args = ['-isystem@{OECORE_NATIVE_SYSROOT}${includedir_native}' , ${@var_list2str('BUILD_OPTIMIZATION', d)}]
 cpp_link_args = ${@generate_native_link_template(d)}
-
-[properties]
-sys_root = '@OECORE_NATIVE_SYSROOT'
 EOF
 }
 
