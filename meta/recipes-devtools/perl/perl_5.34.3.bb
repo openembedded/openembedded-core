@@ -21,6 +21,7 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://CVE-2023-31484.patch \
            file://CVE-2023-31486-0001.patch \
            file://CVE-2023-31486-0002.patch \
+           file://0001-CVE-2024-56406-Heap-buffer-overflow-with-tr.patch \
            "
 SRC_URI:append:class-native = " \
            file://perl-configpm-switch.patch \
