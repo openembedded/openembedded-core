@@ -12,12 +12,10 @@ inherit autotools pkgconfig github-releases
 DEPENDS = "bison-native flex-native"
 DEPENDS:append:libc-musl = " fts"
 
-SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
-           file://0001-include-Makefile-install-systemd.h-by-default.patch \
-"
+SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz"
 UPSTREAM_CHECK_URI = "https://github.com/libcgroup/libcgroup/tags"
 
-SRC_URI[sha256sum] = "976ec4b1e03c0498308cfd28f1b256b40858f636abc8d1f9db24f0a7ea9e1258"
+SRC_URI[sha256sum] = "9a0fc2d6c377215c3e0d849f9189ecd91fd075f1da0a24b73f56c8892e86bdfe"
 
 PACKAGECONFIG = "${@bb.utils.filter('DISTRO_FEATURES', 'pam systemd', d)}"
 PACKAGECONFIG[pam] = "--enable-pam-module-dir=${base_libdir}/security --enable-pam=yes,--enable-pam=no,libpam"
