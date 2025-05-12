@@ -77,6 +77,7 @@ python do_compile_ptest_cargo() {
 
 python do_install_ptest_cargo() {
     import shutil
+    import textwrap
 
     dest_dir = d.getVar("D")
     pn = d.getVar("PN")
@@ -107,7 +108,16 @@ python do_install_ptest_cargo() {
             f.write(f"\necho \"\"\n")
             f.write(f"echo \"## starting to run rust tests ##\"\n")               
         for test_path in test_paths:
-            f.write(f"if ! {test_path} {rust_test_args}; then rc=1; fi\n")
+            script = textwrap.dedent(f"""\
+                if ! {test_path} {rust_test_args}
+                then
+                    rc=1
+                    echo "FAIL: {test_path}"
+                else
+                    echo "PASS: {test_path}"
+                fi
+            """)
+            f.write(script)
         
         f.write("exit $rc\n")
 
