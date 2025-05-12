@@ -4,9 +4,9 @@ HOMEPAGE = "https://fmt.dev"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b9257785fc4f3803a4b71b76c1412729"
 
-SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https \
+SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https;tag=${PV}\
            file://0001-Workaround-an-ABI-issue-in-spdlog.patch"
-SRCREV = "123913715afeb8a437e6388b4473fcc4753e1c9a"
+SRCREV = "40626af88bd7df9a5fb80be7b25ac85b122d6c21"
 
 S = "${WORKDIR}/git"
 
