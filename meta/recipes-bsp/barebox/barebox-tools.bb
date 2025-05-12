@@ -2,10 +2,6 @@ SUMMARY = "barebox bootloader tools"
 
 require barebox-common.inc
 
-SRC_URI += " \
-    file://0001-scripts-dtc-clean-up-yamltree-from-dtc.patch \
-"
-
 LICENSE = "GPL-2.0-only"
 
 DEPENDS = "bison-native flex-native libusb1"
