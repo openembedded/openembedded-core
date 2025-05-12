@@ -7,14 +7,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f6b015e4f388d6e78adb1b1f9a887d06"
 
 DEPENDS = "glib-2.0 util-linux popt bison-native flex-native virtual/libiconv"
 
-SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-2.1;protocol=https \
+SRC_URI = "git://git.efficios.com/babeltrace.git;branch=stable-2.1;protocol=https;tag=v${PV} \
            file://run-ptest \
            file://0001-Make-manpages-multilib-identical.patch \
            file://0001-tests-fix-test-applications-in-cpp-common.patch \
            file://0001-tests-set-the-correct-plugin-directory.patch \
            file://0001-Make-bt_field_blob_get_length-return-size_t-instead-.patch \
            "
-SRCREV = "e61d41ff3c3ac6a123930d4e60cf710ff9ea18e0"
+SRCREV = "7f2f8cd6dac497cbb466efb31219b531c62013f5"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>2(\.\d+)+)$"
 
 S = "${WORKDIR}/git"
