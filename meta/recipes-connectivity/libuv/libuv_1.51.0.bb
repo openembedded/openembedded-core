@@ -6,8 +6,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=74b6f2f7818a4e3a80d03556f71b129b \
                     file://LICENSE-extra;md5=f9307417749e19bd1d6d68a394b49324"
 
-SRCREV = "8fb9cb919489a48880680a56efecff6a7dfb4504"
-SRC_URI = "git://github.com/libuv/libuv.git;branch=v1.x;protocol=https"
+SRCREV = "5152db2cbfeb5582e9c27c5ea1dba2cd9e10759b"
+SRC_URI = "git://github.com/libuv/libuv.git;branch=v1.x;protocol=https;tag=v${PV}"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 S = "${WORKDIR}/git"
