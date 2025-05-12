@@ -8,10 +8,10 @@ SECTION = "base"
 LICENSE = "GPL-2.0-only & SMAIL_GPL"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=4b667f30411d21bc8fd7db85d502a8e9"
 
-SRC_URI = "git://salsa.debian.org/debian/debianutils.git;protocol=https;branch=master \
+SRC_URI = "git://salsa.debian.org/debian/debianutils.git;protocol=https;branch=master;tag=debian/${PV} \
            "
 
-SRCREV = "ae002b498f2e310c934a0b3f0992e83391f108c7"
+SRCREV = "528fac5c7448989f33c54599ae6e4c2b84d41e21"
 
 inherit autotools update-alternatives
 
