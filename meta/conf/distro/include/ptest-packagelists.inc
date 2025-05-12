@@ -80,6 +80,7 @@ PTESTS_FAST = "\
     python3-webcolors \
     qemu \
     quilt \
+    rpm-sequoia \
     sed \
     slang \
     wayland \

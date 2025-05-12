@@ -10,9 +10,12 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=f0ff5ff7747cf7d394079c6ae87f5f0c"
 
 DEPENDS = "openssl"
 
-inherit pkgconfig rust cargo cargo-update-recipe-crates
+inherit pkgconfig rust cargo cargo-update-recipe-crates ptest-cargo
 
-SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=https;branch=main \
+	file://0001-Use-optional-env-vars-to-force-runtime-paths-in-test.patch \
+"
+
 
 SRCREV = "0667e04ae7fb8cf0490919978d69883d16400e41"
 
@@ -41,6 +44,13 @@ do_compile:prepend () {
 	export LIBDIR="${libdir}"
 }
 
+# By default, ptest binaries contain host build dir paths.
+# Use custom environment variables to force these paths to match the target instead.
+do_compile_ptest_cargo:prepend() {
+    os.environ["FORCE_RUNTIME_PATH_LIB"] = d.getVar("libdir")
+    os.environ["FORCE_RUNTIME_PATH_SRC"] = d.getVar("PTEST_PATH")
+}
+
 do_install:append () {
 	# Move the library to the correct location expected by rpm-sequoia.pc
 	mkdir -p ${D}${libdir}
@@ -53,6 +63,18 @@ do_install:append () {
 	mkdir -p ${D}${libdir}/pkgconfig
 	install -m644 ${S}/target/release/rpm-sequoia.pc ${D}${libdir}/pkgconfig
 }
+
+do_install_ptest:append () {
+	install -d ${D}${PTEST_PATH}/src
+	install -m 644 ${S}/src/symbols.txt ${D}${PTEST_PATH}/src/symbols.txt
+}
+
+# Tests need objdump
+# ptest requires a symlinked library that is only present in the -dev package,
+# so we add the -dev to runtime dependencies.
+# The "dev-deps" QA check is skipped to avoid warnings about this dev package dependency.
+RDEPENDS:${PN}-ptest += "binutils ${PN}-dev"
+INSANE_SKIP:${PN}-ptest += "dev-deps"
 
 RDEPENDS:${PN} = "rpm-sequoia-crypto-policy"
 PACKAGE_WRITE_DEPS += "rpm-sequoia-crypto-policy-native"
