@@ -70,6 +70,7 @@ do_configure:class-target() {
     -Dlibpth='${libdir} ${base_libdir}' \
     -Dglibpth='${libdir} ${base_libdir}' \
     -Alddlflags=' ${LDFLAGS}' \
+    -Dd_gnulibc=define \
     ${PACKAGECONFIG_CONFARGS}
 
     #perl.c uses an ARCHLIB_EXP define to generate compile-time code that
