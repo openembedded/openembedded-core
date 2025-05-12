@@ -7,9 +7,9 @@ LICENSE = "MIT & MIT-open-group & HPND & HPND-sell-variant & X11"
 
 DEPENDS = "flex-native bison-native"
 
-SRC_URI = "git://github.com/xkbcommon/libxkbcommon;protocol=https;branch=master"
+SRC_URI = "git://github.com/xkbcommon/libxkbcommon;protocol=https;branch=master;tag=xkbcommon-${PV}"
 
-SRCREV = "b3465081878e80ca6c11fe35c81787ec374ec15a"
+SRCREV = "dd642359f8d43c09968e34ca7f1eb1121b2dfd70"
 S = "${WORKDIR}/git"
 
 inherit meson pkgconfig bash-completion
