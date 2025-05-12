@@ -14,7 +14,7 @@ PYPI_PACKAGE = "meson_python"
 UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
 inherit pypi python_mesonpy
-SRC_URI[sha256sum] = "efb91f69f2e19eef7bc9a471ed2a4e730088cc6b39eacaf3e49fc4f930eb5f83"
+SRC_URI[sha256sum] = "c56a99ec9df669a40662fe46960321af6e4b14106c14db228709c1628e23848d"
 
 DEPENDS:remove:class-native = "python3-meson-python-native"
 
