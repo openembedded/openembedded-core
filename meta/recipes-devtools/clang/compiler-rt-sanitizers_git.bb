@@ -14,6 +14,14 @@ BPN = "compiler-rt-sanitizers"
 
 inherit cmake pkgconfig python3native
 
+def get_compiler_rt_arch(bb, d):
+    if bb.utils.contains('TUNE_FEATURES', 'armv5 thumb dsp', True, False, d):
+        return 'armv5te'
+    elif bb.utils.contains('TUNE_FEATURES', 'armv4 thumb', True, False, d):
+        return 'armv4t'
+    elif bb.utils.contains('TUNE_FEATURES', 'arm vfp callconvention-hard', True, False, d):
+        return 'armhf'
+    return d.getVar('HOST_ARCH')
 
 LIC_FILES_CHKSUM = "file://compiler-rt/LICENSE.TXT;md5=d846d1d65baf322d4c485d6ee54e877a"
 
@@ -56,6 +64,7 @@ EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
                   -DCOMPILER_RT_BUILD_LIBFUZZER=ON \
                   -DCOMPILER_RT_BUILD_PROFILE=ON \
                   -DCOMPILER_RT_BUILD_MEMPROF=ON \
+                  -DCOMPILER_RT_DEFAULT_TARGET_ARCH=${@get_compiler_rt_arch(bb, d)} \
                   -DLLVM_ENABLE_RUNTIMES='compiler-rt' \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
                   -DLLVM_APPEND_VC_REV=OFF \
@@ -64,16 +73,13 @@ EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 
 EXTRA_OECMAKE:append:class-native = "\
                -DCOMPILER_RT_USE_BUILTINS_LIBRARY=OFF \
-               -DCMAKE_C_COMPILER_TARGET=${HOST_ARCH}${HOST_VENDOR}-${HOST_OS} \
-               -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
-               -DCOMPILER_RT_DEFAULT_TARGET_ARCH=${HOST_ARCH} \
 "
 
 EXTRA_OECMAKE:append:class-target = "\
                -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
                -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ar \
                -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
-               -DCMAKE_C_COMPILER_TARGET=${HOST_ARCH}${HOST_VENDOR}-${HOST_OS} \
+               -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
                -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
                -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 "
@@ -84,12 +90,11 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
                -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                -DCLANG_TABLEGEN=${STAGING_BINDIR_NATIVE}/clang-tblgen \
-               -DCMAKE_C_COMPILER_TARGET=${HOST_ARCH}${HOST_VENDOR}-${HOST_OS} \
+               -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
                -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
 "
 
 EXTRA_OECMAKE:append:libc-musl = " -DLIBCXX_HAS_MUSL_LIBC=ON "
-EXTRA_OECMAKE:append:powerpc = " -DCOMPILER_RT_DEFAULT_TARGET_ARCH=powerpc "
 
 do_install:append () {
     mkdir -p ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib
