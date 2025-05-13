@@ -103,50 +103,6 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_get_mut_poison() {
      let mut m = new_poisoned_rwlock(NonCopy(10));
 
-diff --git a/library/std/src/thread/tests.rs b/library/std/src/thread/tests.rs
-index 5d6b9e94ee9..a5aacb2eb87 100644
---- a/library/std/src/thread/tests.rs
-+++ b/library/std/src/thread/tests.rs
-@@ -116,6 +116,7 @@ fn test_is_finished() {
- }
-
- #[test]
-+#[ignore]
- fn test_join_panic() {
-     match thread::spawn(move || panic!()).join() {
-         result::Result::Err(_) => (),
-@@ -218,6 +219,7 @@ fn test_simple_newsched_spawn() {
- }
-
- #[test]
-+#[ignore]
- fn test_try_panic_message_string_literal() {
-     match thread::spawn(move || {
-         panic!("static string");
-@@ -234,6 +236,7 @@ fn test_try_panic_message_string_literal() {
- }
-
- #[test]
-+#[ignore]
- fn test_try_panic_any_message_owned_str() {
-     match thread::spawn(move || {
-         panic_any("owned string".to_string());
-@@ -250,6 +253,7 @@ fn test_try_panic_any_message_owned_str() {
- }
-
- #[test]
-+#[ignore]
- fn test_try_panic_any_message_any() {
-     match thread::spawn(move || {
-         panic_any(Box::new(413u16) as Box<dyn Any + Send>);
-@@ -268,6 +272,7 @@ fn test_try_panic_any_message_any() {
- }
-
- #[test]
-+#[ignore]
- fn test_try_panic_any_message_unit_struct() {
-     struct Juju;
-
 diff --git a/library/test/src/tests.rs b/library/test/src/tests.rs
 --- a/library/test/src/tests.rs
 +++ b/library/test/src/tests.rs
