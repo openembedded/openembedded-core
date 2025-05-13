@@ -15,7 +15,6 @@ inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
-           file://0001-local.mk-fix-cross-compiling-problem.patch \
            file://intermittent-testfailure.patch \
            file://0001-ls-fix-crash-with-context.patch \
            file://0001-cksum-port-to-32-bit-uint_fast32_t.patch \
@@ -184,7 +183,6 @@ RRECOMMENDS:${PN}-dev += "${DEVDEPS}"
 do_install_ptest () {
     install -d ${D}${PTEST_PATH}/tests
     cp -r ${S}/tests/* ${D}${PTEST_PATH}/tests
-    sed -i 's/ginstall/install/g'  `grep -R ginstall ${D}${PTEST_PATH}/tests | awk -F: '{print $1}' | uniq`
     install -d ${D}${PTEST_PATH}/build-aux
     install ${S}/build-aux/test-driver ${D}${PTEST_PATH}/build-aux/
     install -Dm 0644 ${B}/lib/config.h ${D}${PTEST_PATH}/lib/config.h
@@ -198,7 +196,6 @@ do_install_ptest () {
     sed -i '/^abs_srcdir/s/= .*$/= \$\{PWD\}/g' ${D}${PTEST_PATH}/Makefile
     sed -i '/^abs_top_builddir/s/= .*$/= \$\{PWD\}/g' ${D}${PTEST_PATH}/Makefile
     sed -i '/^abs_top_srcdir/s/= .*$/= \$\{PWD\}/g' ${D}${PTEST_PATH}/Makefile
-    sed -i '/^built_programs/s/ginstall/install/g' ${D}${PTEST_PATH}/Makefile
     sed -i '/^CC =/s/ --sysroot=.*recipe-sysroot/ /g' ${D}${PTEST_PATH}/Makefile
     sed -i '/^BUILD_LDFLAGS =/d' ${D}${PTEST_PATH}/Makefile
     chmod -R 777 ${D}${PTEST_PATH}
