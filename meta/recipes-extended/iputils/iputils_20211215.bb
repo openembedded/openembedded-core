@@ -12,6 +12,7 @@ DEPENDS = "gnutls"
 
 SRC_URI = "git://github.com/iputils/iputils;branch=master;protocol=https \
            file://0001-rarpd-rdisc-Drop-PrivateUsers.patch \
+           file://CVE-2025-47268.patch \
            "
 SRCREV = "1d1e7c43210d8af316a41cb2c53d612a4c16f34d"
 
