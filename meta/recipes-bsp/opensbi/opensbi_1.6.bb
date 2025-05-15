@@ -9,8 +9,9 @@ require opensbi-payloads.inc
 inherit deploy
 
 SRCREV = "bd613dd92113f683052acfb23d9dc8ba60029e0a"
-SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https"
-
+SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https \
+           file://0001-Makefile-Add-flag-for-reprodubility-compiler-flags.patch \
+"
 S = "${WORKDIR}/git"
 
 TARGET_DBGSRC_DIR = "/share/opensbi/*/generic/firmware/"
@@ -18,7 +19,8 @@ TARGET_DBGSRC_DIR = "/share/opensbi/*/generic/firmware/"
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 RISCV_SBI_FW_TEXT_START ??= "0x80000000"
-EXTRA_OEMAKE += "PLATFORM=${RISCV_SBI_PLAT} I=${D} FW_TEXT_START=${RISCV_SBI_FW_TEXT_START}"
+EXTRA_OEMAKE += "REPRODUCIBLE=y CROSS_COMPILE=${HOST_PREFIX} ELFFLAGS="${LDFLAGS}" PLATFORM=${RISCV_SBI_PLAT} I=${D} FW_TEXT_START=${RISCV_SBI_FW_TEXT_START}"
+EXTRA_OEMAKE:append:toolchain-clang = " LLVM=y"
 # If RISCV_SBI_PAYLOAD is set then include it as a payload
 EXTRA_OEMAKE:append = " ${@riscv_get_extra_oemake_image(d)}"
 EXTRA_OEMAKE:append = " ${@riscv_get_extra_oemake_fdt(d)}"
