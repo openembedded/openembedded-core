@@ -9,10 +9,6 @@ if [ "x$UDEV_PID" != "x" ]; then
     /etc/init.d/udev stop
 fi
 
-current_path=$(readlink -f $0)
-export bindir=$(dirname $current_path)
-export PATH=$bindir/bin:$PATH
-
 # losetup tests will be skipped and/or fail otherwise
 modprobe loop
 
@@ -25,7 +21,7 @@ mount --make-shared /
 # lsfd/option-inet has races in the test script:
 # https://github.com/util-linux/util-linux/issues/2399
 # lsfd/mkfds-bpf* have issues with the gcc 15 upgrade
-./tests/run.sh --use-system-commands --parsable --show-diff --exclude='lsfd/option-inet lsfd/mkfds-bpf-map lsfd/mkfds-bpf-prog' | sed -u '{
+./tests/run.sh --builddir=@PTEST_PATH@ --parsable --show-diff --exclude='lsfd/option-inet lsfd/mkfds-bpf-map lsfd/mkfds-bpf-prog' | sed -u '{
       s/^\(.*\):\(.*\) \.\.\. OK$/PASS: \1:\2/                              
       s/^\(.*\):\(.*\) \.\.\. FAILED \(.*\)$/FAIL: \1:\2 \3/                
       s/^\(.*\):\(.*\) \.\.\. SKIPPED \(.*\)$/SKIP: \1:\2 \3/               
