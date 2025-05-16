@@ -1,6 +1,3 @@
-# To allow util-linux to optionally build-depend on cryptsetup, libuuid is
-# split out of the main recipe, as it's needed by cryptsetup
-
 require util-linux.inc
 
 inherit autotools gettext pkgconfig
