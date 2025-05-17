@@ -18,6 +18,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0005-Disable-PIE-during-link.patch \
            file://0001-arm64-kexec-disabled-check-if-kaslr-seed-dtb-propert.patch \
            file://0001-kexec.c-add-MFD_NOEXEC_SEAL-flag-explicitly.patch \
+           file://0001-ppc-fs2dt-Match-function-signatures.patch \
            "
 
 SRC_URI[sha256sum] = "ddaaa65b02b4f8aa9222586b1f26565b93a4baeffd35bcbd523f15fae7aa4897"
@@ -26,6 +27,9 @@ inherit autotools update-rc.d systemd
 
 export LDFLAGS = "-L${STAGING_LIBDIR}"
 EXTRA_OECONF = " --with-zlib=yes"
+
+# purgatory uses -msoft-float for ppc32/ppc64, it does not go with -maltivec
+TUNE_CCARGS:remove:powerpc = "-maltivec"
 
 do_compile:prepend() {
     # Remove the prepackaged config.h from the source tree as it overrides
