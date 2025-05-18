@@ -1,8 +1,8 @@
 SUMMARY = "Helper tool used when compiling"
-DESCRIPTION = "pkg-config is a helper tool used when compiling applications and libraries. It helps determined \
+DESCRIPTION = "pkg-config is a helper tool used when compiling applications and libraries. It helps determine \
 the correct compiler/link options.  It is also language-agnostic."
 HOMEPAGE = "http://pkg-config.freedesktop.org/wiki/"
-BUGTRACKER = "http://bugs.freedesktop.org/buglist.cgi?product=pkg-config"
+BUGTRACKER = "https://gitlab.freedesktop.org/pkg-config/pkg-config/-/issues"
 SECTION = "console/utils"
 
 LICENSE = "GPL-2.0-or-later"
