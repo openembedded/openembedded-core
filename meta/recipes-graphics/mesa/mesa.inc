@@ -17,13 +17,11 @@ PE = "2"
 SRC_URI = "https://archive.mesa3d.org/mesa-${PV}.tar.xz \
            file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
            file://0001-freedreno-don-t-encode-build-path-into-binaries.patch \
-           file://0001-mesa-clc-add-an-option-to-force-inclusion-of-OpenCL-.patch \
-           file://0001-clover-Don-t-include-libclc-headers.patch \
-           file://0001-gallium-clover-Do-not-use-LLVM_LIBRARY_DIR-for-FALLB.patch \
+           file://0001-dont-build-clover-frontend.patch \
 "
 
-SRC_URI[sha256sum] = "c0d245dea0aa4b49f74b3d474b16542e4a8799791cd33d676c69f650ad4378d0"
-PV = "25.0.5"
+SRC_URI[sha256sum] = "b1c45888969ee5df997e2542654f735ab1b772924b442f3016d2293414c99c14"
+PV = "25.1.0"
 
 UPSTREAM_CHECK_GITTAGREGEX = "mesa-(?P<pver>\d+(\.\d+)+)"
 
@@ -343,7 +341,7 @@ FILES:mesa-megadriver = "${libdir}/dri/* ${datadir}/drirc.d"
 FILES:mesa-vulkan-drivers = "${libdir}/libvulkan_*.so ${libdir}/libpowervr_rogue.so ${datadir}/vulkan"
 FILES:${PN}-vdpau-drivers = "${libdir}/vdpau/*.so.*"
 FILES:libegl-mesa = "${libdir}/libEGL*.so.* ${datadir}/glvnd/egl_vendor.d"
-FILES:libgbm = "${libdir}/libgbm.so.* ${libdir}/gbm/*_gbm.so"
+FILES:libgbm = "${libdir}/libgbm.so.* ${libdir}/gbm/*_gbm.so ${includedir}/gbm_backend_abi.h"
 FILES:libgallium = "${libdir}/libgallium-*.so"
 FILES:libgles1-mesa = "${libdir}/libGLESv1*.so.*"
 FILES:libgles2-mesa = "${libdir}/libGLESv2.so.*"
