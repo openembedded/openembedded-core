@@ -49,7 +49,7 @@ def get_clang_host_arch(bb, d):
 def get_clang_target_arch(bb, d):
     return get_clang_arch(bb, d, 'TARGET_ARCH')
 
-PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs \
+PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-python \
                               ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
                               "
 
@@ -90,6 +90,7 @@ PACKAGECONFIG[split-dwarf] = "-DLLVM_USE_SPLIT_DWARF=ON,-DLLVM_USE_SPLIT_DWARF=O
 PACKAGECONFIG[terminfo] = "-DLLVM_ENABLE_TERMINFO=ON -DCOMPILER_RT_TERMINFO_LIB=ON,-DLLVM_ENABLE_TERMINFO=OFF -DCOMPILER_RT_TERMINFO_LIB=OFF,ncurses,"
 PACKAGECONFIG[thin-lto] = "-DLLVM_ENABLE_LTO=Thin -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
 PACKAGECONFIG[unwindlib] = "-DCLANG_DEFAULT_UNWINDLIB=libunwind,-DCLANG_DEFAULT_UNWINDLIB=libgcc,,"
+PACKAGECONFIG[libclang-python] = "-DCLANG_PYTHON_BINDINGS_VERSIONS=${PYTHON_BASEVERSION},,"
 
 OECMAKE_SOURCEPATH = "${S}/llvm"
 
@@ -312,7 +313,7 @@ PROVIDES:append:class-native = " llvm-native libclc-native"
 PROVIDES:append:class-target = " llvm libclc"
 PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc"
 
-PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
+PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
              libclang lldb lldb-server liblldb llvm-linker-tools"
 
 
@@ -341,6 +342,8 @@ FILES:llvm-linker-tools = "${libdir}/LLVMgold* ${libdir}/libLTO.so.* ${libdir}/L
 FILES:${PN}-libclang-cpp = "${libdir}/libclang-cpp.so.*"
 
 FILES:${PN}-lldb-python = "${libdir}/python*/site-packages/lldb/*"
+
+FILES:${PN}-libclang-python = "${PYTHON_SITEPACKAGES_DIR}/clang/*"
 
 FILES:${PN}-tidy = "${bindir}/*clang-tidy*"
 FILES:${PN}-format = "${bindir}/*clang-format*"
