@@ -27,6 +27,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c02de712b028a5cc7e22472e8f2b3db1 \
 
 SRC_URI = "https://github.com/tukaani-project/xz/releases/download/v${PV}/xz-${PV}.tar.gz \
            file://run-ptest \
+           file://CVE-2025-31115-01.patch \
+           file://CVE-2025-31115-02.patch \
+           file://CVE-2025-31115-03.patch \
+           file://CVE-2025-31115-04.patch \
           "
 SRC_URI[sha256sum] = "269e3f2e512cbd3314849982014dc199a7b2148cf5c91cedc6db629acdf5e09b"
 UPSTREAM_CHECK_REGEX = "releases/tag/v(?P<pver>\d+(\.\d+)+)"
