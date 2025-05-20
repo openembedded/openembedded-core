@@ -45,17 +45,11 @@ inherit_defer ${@bb.utils.contains('INITRAMFS_IMAGE_BUNDLE', '1', 'kernel-artifa
 WKS_FILE ??= "${IMAGE_BASENAME}.${MACHINE}.wks"
 WKS_FILES ?= "${WKS_FILE} ${IMAGE_BASENAME}.wks"
 WKS_SEARCH_PATH ?= "${THISDIR}:${@':'.join('%s/wic' % p for p in '${BBPATH}'.split(':'))}:${@':'.join('%s/scripts/lib/wic/canned-wks' % l for l in '${BBPATH}:${COREBASE}'.split(':'))}"
-WKS_FULL_PATH = "${@wks_search(d.getVar('WKS_FILES').split(), d.getVar('WKS_SEARCH_PATH')) or ''}"
+WKS_FULL_PATH = "${@wks_search(d.getVar('WKS_FILES').split(), d.getVar('WKS_SEARCH_PATH'), d) or ''}"
 
-def wks_search(files, search_path):
-    for f in files:
-        if os.path.isabs(f):
-            if os.path.exists(f):
-                return f
-        else:
-            searched = bb.utils.which(search_path, f)
-            if searched:
-                return searched
+def wks_search(files, search_path, d):
+    from oe.searchfile import search_file
+    return search_file(search_path, files, d)
 
 WIC_CREATE_EXTRA_ARGS ?= ""
 
@@ -161,10 +155,6 @@ python () {
             d.setVar('WKS_FULL_PATH', wks_out_file)
             d.setVar('WKS_TEMPLATE_PATH', wks_file_u)
             d.setVar('WKS_FILE_CHECKSUM', '${WKS_TEMPLATE_PATH}:True')
-
-            # We need to re-parse each time the file changes, and bitbake
-            # needs to be told about that explicitly.
-            bb.parse.mark_dependency(d, wks_file)
 
             try:
                 with open(wks_file, 'r') as f:
