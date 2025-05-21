@@ -72,6 +72,7 @@ SRC_URI = "${BASEURI} \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
            file://0026-arm-fully-validate-mem_noofs_operand-PR120351.patch \
+           file://0026-fix-incorrect-preprocessor-line-numbers.patch \
 "
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${SOURCEDIR}"
