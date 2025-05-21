@@ -39,6 +39,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0001-compat-Define-off64_t-as-off_t-on-linux.patch \
            file://0001-tests-add-check_skip_kernel_test-to-check-root-user-.patch \
            file://0001-Fix-rotation-destroy-flush-fix-session-daemon-abort-.patch \
+           file://0001-fix-lttng-tools-fails-to-compile-with-libxml2-2.14.0.patch \
            "
 
 SRC_URI[sha256sum] = "96ea42351ee112c19dad9fdc7aae93b583d9f1722b2175664a381d2d337703c4"
