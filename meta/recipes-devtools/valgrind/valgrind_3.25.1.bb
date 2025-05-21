@@ -106,3 +106,11 @@ INHIBIT_PACKAGE_STRIP_FILES = "${PKGD}${libexecdir}/valgrind/vgpreload_memcheck-
 # valgrind needs debug information for ld.so at runtime in order to
 # redirect functions like strlen.
 RRECOMMENDS:${PN} += "${TCLIBC}-dbg"
+
+# Valgrind needs intrinsics which are not provided by clang
+# m_signals.c:2213:7: error: __builtin_longjmp is not supported for the current target
+# 2213 |       VG_MINIMAL_LONGJMP(tst->sched_jmpbuf);
+#      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# It needs something like - https://bugs.kde.org/show_bug.cgi?id=369723
+TOOLCHAIN:riscv64 = "gcc"
