@@ -74,6 +74,11 @@ USE_NLS = "yes"
 # Helps tests for -msse fail on non-SSE architectures which is all non-x86
 TUNE_CCARGS:append:toolchain-clang = " -Werror=unused-command-line-argument"
 
+# mix_neon.c:179:9: error: invalid operand in inline asm: 'vld1.s32 ${0:h}, [$2]
+#      vld1.s32 ${1:h}, [$3] '
+TOOLCHAIN:armv7ve = "gcc"
+TOOLCHAIN:armv7a = "gcc"
+
 EXTRA_OEMESON = "\
 		-Dhal-compat=false \
 		-Dorc=disabled \
