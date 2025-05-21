@@ -106,3 +106,7 @@ do_configure:prepend() {
 	FROM_BOOTSTRAP=1 ${S}/autogen.sh
 	cd ${B}
 }
+
+# | aarch64-poky-linux-clang: error: invalid argument '-mcmodel=large' only allowed with '-fno-pic'
+# see - https://bugs.gentoo.org/942843
+TOOLCHAIN:aarch64 = "gcc"
