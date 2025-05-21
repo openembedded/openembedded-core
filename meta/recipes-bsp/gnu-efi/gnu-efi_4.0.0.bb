@@ -22,6 +22,10 @@ SRCREV = "5ea320f0f01c8de8f9dd4e4e38a245608f0287dd"
 
 S = "${WORKDIR}/git"
 
+# llvm-objcopy fails
+# arm-poky-linux-gnueabi-llvm-objcopy: error: 't8.so': section '.dynstr' cannot be removed because it is referenced by the section '.dynamic'
+OBJCOPY:toolchain-clang = "${HOST_PREFIX}objcopy"
+
 inherit github-releases
 
 do_configure:linux-gnux32:prepend() {
