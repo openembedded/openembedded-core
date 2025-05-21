@@ -972,7 +972,10 @@ def copydebugsources(debugsrcdir, sources, d):
     cpath = oe.cachedpath.CachedPath()
 
     if debugsrcdir and sources:
-        sourcefile = d.expand("${WORKDIR}/debugsources.list")
+        sourcefile = d.expand("${PKGDESTWORK}/debugsources/${PN}-debugsources.list")
+        debugdir = os.path.dirname(sourcefile)
+        if not os.path.isdir(debugdir):
+            bb.utils.mkdirhier(debugdir)
         bb.utils.remove(sourcefile)
 
         # filenames are null-separated - this is an artefact of the previous use
