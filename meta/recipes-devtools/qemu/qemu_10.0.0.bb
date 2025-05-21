@@ -7,6 +7,7 @@ DEPENDS += "glib-2.0 zlib pixman"
 DEPENDS:append:libc-musl = " libucontext"
 
 CFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', '', '-DEGL_NO_X11=1', d)}"
+LDFLAGS:append:toolchain-clang:x86 = " -latomic"
 
 RDEPENDS:${PN}-common:class-target += "bash"
 
