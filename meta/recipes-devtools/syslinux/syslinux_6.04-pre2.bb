@@ -130,3 +130,8 @@ FILES:${PN}-staticdev += "${datadir}/${BPN}/com32/lib*.a ${libdir}/${BPN}/com32/
 FILES:${PN}-misc = "${datadir}/${BPN}/* ${libdir}/${BPN}/* ${bindir}/*"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# com32/lib/../include/stdarg.h:9:15: fatal error: 'stdarg.h' file not found
+#    9 | #include_next <stdarg.h>
+#      |               ^~~~~~~~~~
+TOOLCHAIN = "gcc"
