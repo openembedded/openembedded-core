@@ -81,6 +81,16 @@ LDFLAGS = "-ldl -lutil"
 # avoiding the 'buildpaths' QA warning.
 TARGET_CC_ARCH += "${SELECTED_OPTIMIZATION} ${DEBUG_PREFIX_MAP}"
 
+#| libbpf.c: In function 'find_kernel_btf_id.constprop':
+#| libbpf.c:10009:33: error: 'mod_len' may be used uninitialized [-Werror=maybe-uninitialized]
+#| 10009 |                 if (mod_name && strncmp(mod->name, mod_name, mod_len) != 0)
+#|       |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#| libbpf.c:9979:21: note: 'mod_len' was declared here
+#|  9979 |         int ret, i, mod_len;
+#|       |                     ^~~~~~~
+#| cc1: all warnings being treated as errors
+TARGET_CC_ARCH:append:toolchain-clang:arm = " -fno-error=maybe-uninitialized"
+
 EXTRA_OEMAKE = '\
     V=1 \
     VF=1 \
