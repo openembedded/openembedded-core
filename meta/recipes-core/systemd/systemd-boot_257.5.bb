@@ -47,6 +47,11 @@ FILES:${PN} = "${EFI_FILES_PATH}/${SYSTEMD_BOOT_IMAGE}"
 
 RDEPENDS:${PN} += "virtual-systemd-bootconf"
 
+# efi portions use -mgeneral-regs-only option which conflicts with SSE
+# especially clang throws errors about it
+# error: the 'sse' unit is not supported with this instruction set
+TUNE_CCARGS:remove = "-mfpmath=sse"
+
 CFLAGS:append:libc-musl = " -D__DEFINED_wchar_t"
 
 COMPATIBLE_HOST = "(aarch64.*|arm.*|x86_64.*|i.86.*|riscv.*)-linux"
