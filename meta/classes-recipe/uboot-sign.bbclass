@@ -425,7 +425,7 @@ EOF
 	fi
 
 	if [ -n "${UBOOT_FIT_USER_SETTINGS}" ] ; then
-		echo -e "${UBOOT_FIT_USER_SETTINGS}" >> ${UBOOT_ITS}
+		printf "%b" "${UBOOT_FIT_USER_SETTINGS}" >> ${UBOOT_ITS}
 	fi
 
 	if [ -n "${UBOOT_FIT_CONF_USER_LOADABLES}" ] ; then
