@@ -71,6 +71,9 @@ inherit bash-completion meson pkgconfig useradd gettext perlnative systemd manpa
 # if using --disable-nls
 USE_NLS = "yes"
 
+# Helps tests for -msse fail on non-SSE architectures which is all non-x86
+TUNE_CCARGS:append:toolchain-clang = " -Werror=unused-command-line-argument"
+
 EXTRA_OEMESON = "\
 		-Dhal-compat=false \
 		-Dorc=disabled \
