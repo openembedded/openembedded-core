@@ -19,5 +19,7 @@ SRC_URI[sha256sum] = "426633cabd7c798236443516dfa8335b47e004b0ef37ff107e0c7ead32
 
 inherit autotools pkgconfig
 
+CFLAGS += "-std=gnu17"
+
 PACKAGES =+ "${PN}-examples"
 FILES:${PN}-examples += "${bindir}/*"
