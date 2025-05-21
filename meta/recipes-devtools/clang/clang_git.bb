@@ -22,7 +22,7 @@ INHIBIT_DEFAULT_DEPS:class-native = "1"
 LDFLAGS:append:class-target:riscv32 = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
 LDFLAGS:append:class-target:mips = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
 
-inherit cmake pkgconfig python3native python3targetconfig
+inherit cmake pkgconfig python3native python3targetconfig multilib_header
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
@@ -237,6 +237,9 @@ do_install:append() {
             install -Dm 0755 ${B}${BINPATHPREFIX}/bin/$t ${D}${bindir}/$t
         fi
     done
+
+    oe_multilib_header llvm/Config/llvm-config.h
+    oe_multilib_header clang/Config/config.h
 }
 
 do_install:append:class-target () {
