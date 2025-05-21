@@ -242,3 +242,52 @@ def fetch_data_to_uri(fd, name):
         uri = uri + "@" + fd.revision
 
     return uri
+
+def is_compiled_source (filename, compiled_sources, types):
+    """
+    Check if the file, is a compiled file
+    """
+    import os
+    # If we don't have compiled source, we assume all are compiled.
+    if len(compiled_sources) == 0:
+        return True
+    # We remove the top directory, to match the format in compiled sources
+    relative = filename[filename.find("/")+1:]
+    basename = os.path.basename(filename)
+    # We return always true if the file type is not in the list of compiled files
+    if basename[basename.find("."):] not in types:
+        return True
+    # Check that the file is in the list
+    return relative in compiled_sources
+
+def get_compiled_sources(d):
+    """
+    Get list of compiled sources from debug information and normalize the paths
+    """
+    sourcefile = d.expand("${PKGDESTWORK}/debugsources/${PN}-debugsources.list")
+    pn = d.getVar('PN')
+    pv = d.getVar('PV')
+
+    if not os.path.isfile(sourcefile):
+        bb.debug(1, "Do not have debugsources.list. Skipping")
+        return [], []
+    with open(sourcefile, 'r') as sf:
+        # We need to normalize the path to match the one in the package
+        # kernel is special case that doesn't match pn
+        # filenames are null-separated - this is an artefact of the previous use
+        # of rpm's debugedit
+        sources = sf.readline()\
+                    .replace(f"/usr/src/debug/{pn}/","")\
+                    .replace(f"/usr/src/kernel/","")\
+                    .replace(f"/usr/src/{pn}/","")\
+                    .replace(f"{pv}/","")\
+                    .split('\0')
+    # Check extensions of files
+    types = []
+    for src in sources:
+        basename = os.path.basename(src)
+        ext = basename[basename.find("."):]
+        if ext not in types and len(ext)>0:
+            types.append(ext)
+    bb.debug(1, f"Num of sources: {len(sources)} and types: {len(types)} {str(types)}")
+    return sources, types
