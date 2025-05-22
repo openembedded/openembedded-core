@@ -32,6 +32,7 @@ BOOST_LIBS = "\
 	json \
 	log \
 	math \
+	process \
 	program_options \
 	random \
 	regex \
