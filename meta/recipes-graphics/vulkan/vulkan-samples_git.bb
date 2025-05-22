@@ -7,12 +7,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=48aa35cefb768436223a6e7f18dc2a2a"
 
 SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=main;protocol=https;lfs=0 \
            file://0001-SPIRV-SpvBuilder.h-add-missing-cstdint-include.patch;patchdir=third_party/glslang \
-           file://0001-framework-Include-stdint.h.patch \
-           file://0003-bldsys-cmake-global_options.cmake-removed-unused-ROO.patch \
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "8547ce1022a19870d3e49075b5b08ca2d11c8773"
+SRCREV = "eca122602a5d7a9f63686411dcef1b62feb36a9a"
 
 UPSTREAM_CHECK_GITTAGREGEX = "These are not the releases you're looking for"
 S = "${WORKDIR}/git"
