@@ -8,12 +8,10 @@ inherit pypi python_setuptools_build_meta
 
 CVE_PRODUCT = "python3-setuptools python:setuptools"
 
-SRC_URI:append:class-native = " file://0001-conditionally-do-not-fetch-code-by-easy_install.patch"
-
 SRC_URI += " \
             file://0001-_distutils-sysconfig.py-make-it-possible-to-substite.patch"
 
-SRC_URI[sha256sum] = "18fd474d4a82a5f83dac888df697af65afa82dec7323d09c3e37d1f14288da54"
+SRC_URI[sha256sum] = "49f7af965996f26d43c8ae34539c8d99c5042fbff34302ea151eaa9c207cd257"
 
 DEPENDS += "python3"
 
