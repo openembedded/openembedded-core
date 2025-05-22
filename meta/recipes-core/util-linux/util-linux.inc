@@ -41,6 +41,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://CVE-2024-28085-0003.patch \
            file://CVE-2024-28085-0004.patch \
            file://CVE-2024-28085-0005.patch \
+	   file://fstab-isolation.patch \
            "
 
 SRC_URI[sha256sum] = "634e6916ad913366c3536b6468e7844769549b99a7b2bf80314de78ab5655b83"
