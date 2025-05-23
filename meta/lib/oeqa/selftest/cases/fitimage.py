@@ -4,13 +4,36 @@
 # SPDX-License-Identifier: MIT
 #
 
-from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import runCmd, bitbake, get_bb_vars
 import os
 import re
 import shlex
 import logging
 import pprint
+import tempfile
+
+import oe.fitimage
+
+from oeqa.selftest.case import OESelftestTestCase
+from oeqa.utils.commands import runCmd, bitbake, get_bb_vars
+
+
+class BbVarsMockGenKeys:
+    def __init__(self, keydir, gen_keys="0", sign_enabled="0", keyname="", sign_ind="0", img_keyname=""):
+        self.bb_vars = {
+            'FIT_GENERATE_KEYS': gen_keys,
+            'FIT_KEY_GENRSA_ARGS': "-F4",
+            'FIT_KEY_REQ_ARGS': "-batch -new",
+            'FIT_KEY_SIGN_PKCS': "-x509",
+            'FIT_SIGN_INDIVIDUAL': sign_ind,
+            'FIT_SIGN_NUMBITS': "2048",
+            'UBOOT_SIGN_ENABLE': sign_enabled,
+            'UBOOT_SIGN_IMG_KEYNAME': img_keyname,
+            'UBOOT_SIGN_KEYDIR': keydir,
+            'UBOOT_SIGN_KEYNAME': keyname,
+        }
+
+    def getVar(self, var):
+        return self.bb_vars[var]
 
 class FitImageTestCase(OESelftestTestCase):
     """Test functions usable for testing kernel-fitimage.bbclass and uboot-sign.bbclass
@@ -84,6 +107,25 @@ class FitImageTestCase(OESelftestTestCase):
                 sing_key_path,
                 sing_key_path
             ))
+
+    @staticmethod
+    def generate_rsa_key(keydir, keyname, numbits, genrsa_args, req_args, sign_pkcs, openssl_path="openssl"):
+        sing_key_path = os.path.join(keydir, keyname)
+        if not os.path.isdir(keydir):
+            os.makedirs(keydir)
+        runCmd("%s genrsa %s -out %s.key %s" % (
+            openssl_path,
+            genrsa_args,
+            sing_key_path,
+            numbits
+        ))
+        runCmd("%s req %s %s -key %s.key -out %s.crt" % (
+            openssl_path,
+            req_args,
+            sign_pkcs,
+            sing_key_path,
+            sing_key_path
+        ))
 
     @staticmethod
     def _gen_random_file(file_path, num_bytes=65536):
@@ -367,8 +409,7 @@ class FitImageTestCase(OESelftestTestCase):
         # Verify the FIT image
         self._check_fitimage(bb_vars, fitimage_path, uboot_tools_bindir)
 
-
-class KernelFitImageTests(FitImageTestCase):
+class KernelFitImageBase(FitImageTestCase):
     """Test cases for the kernel-fitimage bbclass"""
 
     def _fit_get_bb_vars(self, additional_vars=[]):
@@ -683,6 +724,8 @@ class KernelFitImageTests(FitImageTestCase):
             self.assertEqual(found_comments, num_signatures, "Expected %d signed and commented (%s) sections in the fitImage." %
                              (num_signatures, a_comment))
 
+class KernelFitImageTests(KernelFitImageBase):
+    """Test cases for the kernel-fitimage bbclass"""
 
     def test_fit_image(self):
         """
@@ -927,6 +970,100 @@ FIT_HASH_ALG = "sha256"
         self.write_config(config)
         bb_vars = self._fit_get_bb_vars()
         self._test_fitimage(bb_vars)
+
+class FitImagePyTests(KernelFitImageBase):
+    """Test cases for the fitimage.py module without calling bitbake"""
+
+    def _test_fitimage_py(self, bb_vars_overrides=None):
+        topdir = os.path.join(os.environ['BUILDDIR'])
+        fitimage_its_path = os.path.join(topdir, self._testMethodName + '.its')
+
+        # Provide variables without calling bitbake
+        bb_vars = {
+            # image-fitimage.conf
+            'FIT_DESC': "Kernel fitImage for a dummy distro",
+            'FIT_HASH_ALG': "sha256",
+            'FIT_SIGN_ALG': "rsa2048",
+            'FIT_PAD_ALG': "pkcs-1.5",
+            'FIT_GENERATE_KEYS': "0",
+            'FIT_SIGN_NUMBITS': "2048",
+            'FIT_KEY_GENRSA_ARGS': "-F4",
+            'FIT_KEY_REQ_ARGS': "-batch -new",
+            'FIT_KEY_SIGN_PKCS': "-x509",
+            'FIT_SIGN_INDIVIDUAL': "0",
+            'FIT_CONF_PREFIX': "conf-",
+            'FIT_SUPPORTED_INITRAMFS_FSTYPES': "cpio.lz4 cpio.lzo cpio.lzma cpio.xz cpio.zst cpio.gz ext2.gz cpio",
+            'FIT_CONF_DEFAULT_DTB': "",
+            'FIT_ADDRESS_CELLS': "1",
+            'FIT_UBOOT_ENV': "",
+            # kernel.bbclass
+            'UBOOT_ENTRYPOINT': "0x20008000",
+            'UBOOT_LOADADDRESS': "0x20008000",
+            'INITRAMFS_IMAGE': "",
+            'INITRAMFS_IMAGE_BUNDLE': "",
+            # kernel-uboot.bbclass
+            'FIT_KERNEL_COMP_ALG': "gzip",
+            'FIT_KERNEL_COMP_ALG_EXTENSION': ".gz",
+            'UBOOT_MKIMAGE_KERNEL_TYPE': "kernel",
+            # uboot-config.bbclass
+            'UBOOT_MKIMAGE_DTCOPTS': "",
+            'UBOOT_MKIMAGE': "uboot-mkimage",
+            'UBOOT_MKIMAGE_SIGN': "uboot-mkimage",
+            'UBOOT_MKIMAGE_SIGN_ARGS': "",
+            'UBOOT_SIGN_ENABLE': "0",
+            'UBOOT_SIGN_KEYDIR': None,
+            'UBOOT_SIGN_KEYNAME': None,
+            'UBOOT_SIGN_IMG_KEYNAME': None,
+            # others
+            'MACHINE': "qemux86-64",
+            'UBOOT_ARCH': "x86",
+            'HOST_PREFIX': "x86_64-poky-linux-"
+        }
+        if bb_vars_overrides:
+            bb_vars.update(bb_vars_overrides)
+
+        root_node = oe.fitimage.ItsNodeRootKernel(
+            bb_vars["FIT_DESC"], bb_vars["FIT_ADDRESS_CELLS"],
+            bb_vars['HOST_PREFIX'], bb_vars['UBOOT_ARCH'],  bb_vars["FIT_CONF_PREFIX"],
+            oe.types.boolean(bb_vars['UBOOT_SIGN_ENABLE']), bb_vars["UBOOT_SIGN_KEYDIR"],
+            bb_vars["UBOOT_MKIMAGE"], bb_vars["UBOOT_MKIMAGE_DTCOPTS"],
+            bb_vars["UBOOT_MKIMAGE_SIGN"], bb_vars["UBOOT_MKIMAGE_SIGN_ARGS"],
+            bb_vars['FIT_HASH_ALG'], bb_vars['FIT_SIGN_ALG'], bb_vars['FIT_PAD_ALG'],
+            bb_vars['UBOOT_SIGN_KEYNAME'],
+            oe.types.boolean(bb_vars['FIT_SIGN_INDIVIDUAL']), bb_vars['UBOOT_SIGN_IMG_KEYNAME']
+        )
+
+        root_node.fitimage_emit_section_kernel("kernel-1", "linux.bin", "none",
+            bb_vars.get('UBOOT_LOADADDRESS'), bb_vars.get('UBOOT_ENTRYPOINT'),
+            bb_vars.get('UBOOT_MKIMAGE_KERNEL_TYPE'), bb_vars.get("UBOOT_ENTRYSYMBOL")
+        )
+
+        dtb_files = FitImageTestCase._get_dtb_files(bb_vars)
+        for dtb in dtb_files:
+            root_node.fitimage_emit_section_dtb("fdt-" + dtb, os.path.join("a-dir", dtb),
+                bb_vars.get("UBOOT_DTB_LOADADDRESS"), bb_vars.get("UBOOT_DTBO_LOADADDRESS"))
+
+        if bb_vars.get('FIT_UBOOT_ENV'):
+            root_node.fitimage_emit_section_boot_script(
+                "bootscr-" + bb_vars['FIT_UBOOT_ENV'], bb_vars['FIT_UBOOT_ENV'])
+
+        if bb_vars['MACHINE'] == "qemux86-64": # Not really the right if
+            root_node.fitimage_emit_section_setup("setup-1", "setup1.bin")
+
+        if bb_vars.get('INITRAMFS_IMAGE') and bb_vars.get("INITRAMFS_IMAGE_BUNDLE") != "1":
+            root_node.fitimage_emit_section_ramdisk("ramdisk-1", "a-dir/a-initramfs-1",
+                "core-image-minimal-initramfs",
+                bb_vars.get("UBOOT_RD_LOADADDRESS"), bb_vars.get("UBOOT_RD_ENTRYPOINT"))
+
+        root_node.fitimage_emit_section_config()
+        root_node.write_its_file(fitimage_its_path)
+
+        self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
+        self.logger.debug("Checking its: %s" % fitimage_its_path)
+        self._check_its_file(bb_vars, fitimage_its_path)
+
+    def test_fitimage_py_default(self):
+        self._test_fitimage_py()
 
 
 class UBootFitImageTests(FitImageTestCase):
