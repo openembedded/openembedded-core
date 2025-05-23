@@ -31,4 +31,8 @@ EXTRA_OECMAKE += "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON"
 # This needs to be specified explicitly to avoid xcb/xlib dependencies
 EXTRA_OECMAKE += "-DVKB_WSI_SELECTION=D2D"
 
+# Clang is fussy about incompatible options on aarch64/x86_64
+# x86_64-poky-linux-clang++: error: overriding '-ffp-model=precise' option with '-ffp-contract=fast' [-Werror,-Woverriding-option]
+CXXFLAGS:append:toolchain-clang = " -Wno-error=overriding-option"
+
 COMPATIBLE_HOST = "(aarch64|x86_64).*-linux"
