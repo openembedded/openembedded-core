@@ -19,6 +19,21 @@ PACKAGECONFIG_CONFARGS ??= ""
 
 inherit metadata_scm
 
+PREFERRED_TOOLCHAIN_TARGET ??= "gcc"
+PREFERRED_TOOLCHAIN_NATIVE ??= "gcc"
+PREFERRED_TOOLCHAIN_SDK ??= "gcc"
+
+PREFERRED_TOOLCHAIN = "${PREFERRED_TOOLCHAIN_TARGET}"
+PREFERRED_TOOLCHAIN:class-native = "${PREFERRED_TOOLCHAIN_NATIVE}"
+PREFERRED_TOOLCHAIN:class-cross = "${PREFERRED_TOOLCHAIN_NATIVE}"
+PREFERRED_TOOLCHAIN:class-crosssdk = "${PREFERRED_TOOLCHAIN_SDK}"
+PREFERRED_TOOLCHAIN:class-nativesdk = "${PREFERRED_TOOLCHAIN_SDK}"
+
+TOOLCHAIN ??= "${PREFERRED_TOOLCHAIN}"
+
+inherit toolchain/gcc-native
+inherit_defer toolchain/${TOOLCHAIN}
+
 def lsb_distro_identifier(d):
     adjust = d.getVar('LSB_DISTRO_ADJUST')
     adjust_func = None
