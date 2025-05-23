@@ -161,10 +161,21 @@ class FitImageTestCase(OESelftestTestCase):
 
     @staticmethod
     def _get_dtb_files(bb_vars):
+        """Return a list of devicetree names
+
+        The list should be used to check the dtb and conf nodes in the FIT image or its file.
+        In addition to the entries from KERNEL_DEVICETREE, the external devicetree overlay
+        added by the test recipe bborg-relay-00a2.bb is also handled.
+        """
         kernel_devicetree = bb_vars.get('KERNEL_DEVICETREE')
+        all_dtbs = []
         if kernel_devicetree:
-            return [os.path.basename(dtb) for dtb in kernel_devicetree.split()]
-        return []
+            all_dtbs += [os.path.basename(dtb) for dtb in kernel_devicetree.split()]
+        # Support only the test recipe which provides 1 devicetree overlay
+        pref_prov_dtb = bb_vars.get('PREFERRED_PROVIDER_virtual/dtb')
+        if pref_prov_dtb == "bborg-relay-00a2":
+            all_dtbs.append("BBORG_RELAY-00A2.dtbo")
+        return all_dtbs
 
     def _is_req_dict_in_dict(self, found_dict, req_dict):
         """
@@ -379,6 +390,7 @@ class KernelFitImageTests(FitImageTestCase):
             'KERNEL_DEVICETREE',
             'KERNEL_FIT_LINK_NAME',
             'MACHINE',
+            'PREFERRED_PROVIDER_virtual/dtb',
             'UBOOT_ARCH',
             'UBOOT_ENTRYPOINT',
             'UBOOT_LOADADDRESS',
@@ -585,10 +597,16 @@ class KernelFitImageTests(FitImageTestCase):
         # Create a configuration section for each DTB
         if dtb_files:
             for dtb in dtb_files:
-                req_sections['conf-' + dtb] = {
-                    "Kernel": "kernel-1",
-                    "FDT": 'fdt-' + dtb,
-                }
+                # dtb overlays do not refer to a kernel (yet?)
+                if dtb.endswith('.dtbo'):
+                    req_sections['conf-' + dtb] = {
+                        "FDT": 'fdt-' + dtb,
+                    }
+                else:
+                    req_sections['conf-' + dtb] = {
+                        "Kernel": "kernel-1",
+                        "FDT": 'fdt-' + dtb,
+                    }
                 if initramfs_image and initramfs_image_bundle != "1":
                     req_sections['conf-' + dtb]['Init Ramdisk'] = "ramdisk-1"
         else:
@@ -635,7 +653,12 @@ class KernelFitImageTests(FitImageTestCase):
                 self.assertEqual(sign_algo, req_sign_algo, 'Signature algorithm for %s not expected value' % section)
                 sign_value = values.get('Sign value', None)
                 self.assertEqual(len(sign_value), fit_sign_alg_len, 'Signature value for section %s not expected length' % section)
-                dtb_path = os.path.join(deploy_dir_image, section.replace('conf-', ''))
+                dtb_file_name = section.replace('conf-', '')
+                dtb_path = os.path.join(deploy_dir_image, dtb_file_name)
+                # External devicetrees created by devicetree.bbclass are in a subfolder and have priority
+                dtb_path_ext = os.path.join(deploy_dir_image, "devicetree", dtb_file_name)
+                if os.path.exists(dtb_path_ext):
+                    dtb_path = dtb_path_ext
                 self._verify_fit_image_signature(uboot_tools_bindir, fitimage_path, dtb_path, section)
             else:
                 # Image nodes always need a hash which gets indirectly signed by the config signature
@@ -691,6 +714,27 @@ UBOOT_LOADADDRESS = "0x80080000"
 UBOOT_ENTRYPOINT = "0x80080000"
 FIT_DESC = "A model description"
 """
+        self.write_config(config)
+        bb_vars = self._fit_get_bb_vars()
+        self._test_fitimage(bb_vars)
+
+
+    def test_fit_image_ext_dtbo(self):
+        """
+        Summary:     Check if FIT image and Image Tree Source (its) are created correctly.
+        Expected:    1) its and FIT image are built successfully
+                     2) The its file contains also the external devicetree overlay
+                     3) Dumping the FIT image indicates the devicetree overlay
+        """
+        config = """
+# Enable creation of fitImage
+MACHINE = "beaglebone-yocto"
+KERNEL_IMAGETYPES += " fitImage "
+KERNEL_CLASSES = " kernel-fitimage "
+# Add a devicetree overlay which does not need kernel sources
+PREFERRED_PROVIDER_virtual/dtb = "bborg-relay-00a2"
+"""
+        config = self._config_add_uboot_env(config)
         self.write_config(config)
         bb_vars = self._fit_get_bb_vars()
         self._test_fitimage(bb_vars)
