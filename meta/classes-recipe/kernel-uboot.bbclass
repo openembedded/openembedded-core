@@ -57,3 +57,12 @@ uboot_prep_kimage() {
 
 	printf "$linux_comp" > "$output_dir/linux_comp"
 }
+
+kernel_do_deploy:append() {
+	# Provide the kernel artifacts to post processing recipes e.g. for creating a FIT image
+	uboot_prep_kimage "$deployDir"
+	# For x86 a setup.bin needs to be include"d in a fitImage as well
+	if [ -e ${KERNEL_OUTPUT_DIR}/setup.bin ]; then
+		install -D "${B}/${KERNEL_OUTPUT_DIR}/setup.bin" "$deployDir/"
+	fi
+}
