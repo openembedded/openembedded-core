@@ -99,3 +99,7 @@ do_install:append () {
 }
 
 BBCLASSEXTEND = "nativesdk"
+
+# Emits lot of warning which are treated as errors
+# They must be looked into before disabling
+TOOLCHAIN = "gcc"
