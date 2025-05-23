@@ -58,6 +58,7 @@ SRC_URI = "\
     file://0035-llvm-config-remove-LLVM_LDFLAGS-from-ldflags-output.patch \
     file://0036-openmp-Do-not-emit-date-and-time-into-generate-files.patch \
     file://0038-compiler-rt-Exclude-sync_fetch_and_-for-any-pre-ARMv.patch \
+    file://0038-compiler-rt-Hardcode-uptr-sptr-typedefs-on-Mips-Linu.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
