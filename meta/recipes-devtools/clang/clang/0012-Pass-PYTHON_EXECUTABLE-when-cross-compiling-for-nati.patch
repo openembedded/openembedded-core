@@ -1,4 +1,4 @@
-From 0e60706bcddbb9a97ab28df6fba39bf6bd49ab27 Mon Sep 17 00:00:00 2001
+From a6055a858f6e54cac2b427101fb43c83599b9072 Mon Sep 17 00:00:00 2001
 From: Anuj Mittal <anuj.mittal@intel.com>
 Date: Thu, 26 Dec 2019 12:56:16 -0800
 Subject: [PATCH] Pass PYTHON_EXECUTABLE when cross compiling for native build

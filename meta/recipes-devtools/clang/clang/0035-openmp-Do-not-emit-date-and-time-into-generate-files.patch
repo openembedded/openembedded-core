@@ -1,4 +1,4 @@
-From f79ebc5bc696e8747c79a2277ffcf8d91bdadfd5 Mon Sep 17 00:00:00 2001
+From c439de272b3f983c6d97b8f6fec0135323e3363c Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 23 Apr 2025 11:52:48 -0700
 Subject: [PATCH] openmp: Do not emit date and time into generate files

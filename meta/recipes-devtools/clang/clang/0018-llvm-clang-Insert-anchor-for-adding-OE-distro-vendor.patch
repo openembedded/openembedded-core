@@ -1,4 +1,4 @@
-From aec307904022e138d1004ceb44b9600deaa7fbdb Mon Sep 17 00:00:00 2001
+From cfe5ec616f1bbbe7d20409b552428e43e282f115 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Mon, 25 Jan 2021 16:14:35 +0800
 Subject: [PATCH] llvm/clang: Insert anchor for adding OE distro vendor names
@@ -97,10 +97,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  5 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/clang/include/clang/Driver/Distro.h b/clang/include/clang/Driver/Distro.h
-index b4d485dac8a2..ac0bf25b7c63 100644
+index c544a8c00219..3cd687ede458 100644
 --- a/clang/include/clang/Driver/Distro.h
 +++ b/clang/include/clang/Driver/Distro.h
-@@ -45,6 +45,7 @@ public:
+@@ -47,6 +47,7 @@ public:
      RHEL7,
      Fedora,
      Gentoo,
@@ -108,7 +108,7 @@ index b4d485dac8a2..ac0bf25b7c63 100644
      OpenSUSE,
      UbuntuHardy,
      UbuntuIntrepid,
-@@ -139,6 +140,7 @@ public:
+@@ -141,6 +142,7 @@ public:
  
    bool IsGentoo() const { return DistroVal == Gentoo; }
  
@@ -117,7 +117,7 @@ index b4d485dac8a2..ac0bf25b7c63 100644
  };
  
 diff --git a/clang/lib/Driver/Distro.cpp b/clang/lib/Driver/Distro.cpp
-index 3cc79535de8d..595656179bdc 100644
+index 71ba71fa1837..f64d0abddf6d 100644
 --- a/clang/lib/Driver/Distro.cpp
 +++ b/clang/lib/Driver/Distro.cpp
 @@ -43,6 +43,7 @@ static Distro::DistroType DetectOsRelease(llvm::vfs::FileSystem &VFS) {

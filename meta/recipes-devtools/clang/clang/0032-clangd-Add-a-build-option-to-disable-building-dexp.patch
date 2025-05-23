@@ -1,4 +1,4 @@
-From 49fbbb928d5cafba3d367e3750d402b53425943a Mon Sep 17 00:00:00 2001
+From 12abcd058e2aa468054708b0ca7a06f2638eabab Mon Sep 17 00:00:00 2001
 From: Yoann Congal <yoann.congal@smile.fr>
 Date: Tue, 25 Mar 2025 22:25:55 +0100
 Subject: [PATCH] clangd: Add a build option to disable building dexp

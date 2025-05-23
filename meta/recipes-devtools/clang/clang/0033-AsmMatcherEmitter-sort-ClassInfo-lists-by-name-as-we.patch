@@ -1,4 +1,4 @@
-From 59921cb127dcfb2c655b357e8deb95004f3da41f Mon Sep 17 00:00:00 2001
+From 9e389e1dc73a2f5601cfbab34249aedffd053235 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Fri, 27 Nov 2020 10:11:08 +0000
 Subject: [PATCH] AsmMatcherEmitter: sort ClassInfo lists by name as well

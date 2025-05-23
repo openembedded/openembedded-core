@@ -1,4 +1,4 @@
-From e79d44241dfd0f4b4ec25547e6a65e61d2a0b4b2 Mon Sep 17 00:00:00 2001
+From dc2de98d70a763f30347df2d76df1c70cc464b87 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 20 Mar 2021 16:09:16 -0700
 Subject: [PATCH] clang: Define / releative gcc installation dir

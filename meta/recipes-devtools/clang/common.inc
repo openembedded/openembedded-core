@@ -17,7 +17,7 @@ BASEURI ?= "${LLVM_HTTP}/llvm-project/releases/download/llvmorg-${PV}/llvm-proje
 UPSTREAM_CHECK_URI = "${LLVM_HTTP}/llvm-project/releases/"
 UPSTREAM_CHECK_REGEX = "releases/tag/llvmorg-?(?P<pver>\d+(\.\d+)+)"
 SOURCEDIR ?= "llvm-project-${PV}.src"
-SRC_URI[sha256sum] = "a95365b02536ed4aef29b325c205dd89c268cba41503ab2fc05f81418613ab63"
+SRC_URI[sha256sum] = "a069565cd1c6aee48ee0f36de300635b5781f355d7b3c96a28062d50d575fa3e"
 
 SRC_URI = "\
     ${BASEURI} \
@@ -52,12 +52,12 @@ SRC_URI = "\
     file://0029-llvm-Add-libunwind.pc.in-and-llvm-config-scripts.patch \
     file://0030-scan-build-py-respect-LLVM_LIBDIR_SUFFIX-like-other-.patch \
     file://0031-compiler-rt-Do-not-pass-target-to-clang-compiler.patch \
-    file://0032-Fix-build-on-ppc64-musl.patch \
-    file://0033-clangd-Add-a-build-option-to-disable-building-dexp.patch \
-    file://0034-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch \
-    file://0035-llvm-config-remove-LLVM_LDFLAGS-from-ldflags-output.patch \
-    file://0036-openmp-Do-not-emit-date-and-time-into-generate-files.patch \
-    file://0038-compiler-rt-Exclude-sync_fetch_and_-for-any-pre-ARMv.patch \
+    file://0032-clangd-Add-a-build-option-to-disable-building-dexp.patch \
+    file://0033-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch \
+    file://0034-llvm-config-remove-LLVM_LDFLAGS-from-ldflags-output.patch \
+    file://0035-openmp-Do-not-emit-date-and-time-into-generate-files.patch \
+    file://0036-libunwind-Use-gcs-instead-of-gcs-target-attribute.patch \
+    file://0037-compiler-rt-Exclude-sync_fetch_and_-for-any-pre-ARMv.patch \
     file://0038-compiler-rt-Hardcode-uptr-sptr-typedefs-on-Mips-Linu.patch \
 "
 # Fallback to no-PIE if not set

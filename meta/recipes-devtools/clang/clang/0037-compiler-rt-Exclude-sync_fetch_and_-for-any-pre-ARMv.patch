@@ -1,4 +1,4 @@
-From 5a0daa2dcc2bb39d87c4fcae7036cd8ab7ee6f6d Mon Sep 17 00:00:00 2001
+From d2360096db2da00121f4e653b39ca1f7eb2801eb Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 10 May 2025 14:03:12 -0700
 Subject: [PATCH] compiler-rt: Exclude sync_fetch_and_* for any pre-ARMv6 targets
@@ -38,6 +38,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  compiler-rt/lib/builtins/CMakeLists.txt | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
+diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
+index cb276311b290..53a3cd1dc81f 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
 @@ -864,6 +864,18 @@ else ()
