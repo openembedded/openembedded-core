@@ -1,0 +1,45 @@
+gcc: AArch64 - Fix strict-align cpymem/setmem
+
+The cpymemdi/setmemdi implementation doesn't fully support strict alignment.
+Block the expansion if the alignment is less than 16 with STRICT_ALIGNMENT.
+Clean up the condition when to use MOPS.
+
+Upstream-Status: Backport [https://gcc.gnu.org/cgit/gcc/commit/?id=b9d16d8361a9e3a82a2f21e759e760d235d43322]
+
+Signed-off-by: Wilco Dijkstra <wilco.dijkstra@arm.com>
+Signed-off-by: Sundeep KOKKONDA <sundeep.kokkonda@windriver.com>
+---
+--- a/gcc/config/aarch64/aarch64.c	2025-05-08 20:40:10.969865898 -0700
++++ b/gcc/config/aarch64/aarch64.c	2025-05-13 23:11:07.006796627 -0700
+@@ -23621,14 +23621,15 @@
+   int mode_bits;
+   rtx dst = operands[0];
+   rtx src = operands[1];
++  unsigned align = UINTVAL (operands[3]);
+   rtx base;
+   machine_mode cur_mode = BLKmode;
+ 
+   /* Only expand fixed-size copies.  */
+-  if (!CONST_INT_P (operands[2]))
++  if (!CONST_INT_P (operands[2]) || (STRICT_ALIGNMENT && align < 16))
+     return false;
+ 
+-  unsigned HOST_WIDE_INT size = INTVAL (operands[2]);
++  unsigned HOST_WIDE_INT size = UINTVAL (operands[2]);
+ 
+   /* Inline up to 256 bytes when optimizing for speed.  */
+   unsigned HOST_WIDE_INT max_copy_size = 256;
+@@ -23750,11 +23751,12 @@
+   unsigned HOST_WIDE_INT len;
+   rtx dst = operands[0];
+   rtx val = operands[2], src;
++  unsigned align = UINTVAL (operands[3]);
+   rtx base;
+   machine_mode cur_mode = BLKmode, next_mode;
+ 
+   /* We can't do anything smart if the amount to copy is not constant.  */
+-  if (!CONST_INT_P (operands[1]))
++  if (!CONST_INT_P (operands[1]) || (STRICT_ALIGNMENT && align < 16))
+     return false;
+ 
+   bool speed_p = !optimize_function_for_size_p (cfun);

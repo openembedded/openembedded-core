@@ -60,6 +60,7 @@ SRC_URI = "\
            file://0029-Fix-install-path-of-linux64.h.patch \
            file://0030-rust-recursion-limit.patch \
            file://0031-gcc-sanitizers-fix.patch \
+           file://0032-gcc-aarch64-fix-strict-align-cpymem-setmem.patch \
            file://0001-CVE-2021-42574.patch \
            file://0002-CVE-2021-42574.patch \
            file://0003-CVE-2021-42574.patch \
