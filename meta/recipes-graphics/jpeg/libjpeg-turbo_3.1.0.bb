@@ -47,6 +47,12 @@ EXTRA_OECMAKE:append:class-target:powerpc64le = " ${@bb.utils.contains("TUNE_FEA
 DEBUG_OPTIMIZATION:append:armv4 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
 DEBUG_OPTIMIZATION:append:armv5 = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
 
+# libjpeg-turbo-2.0.2/simd/mips/jsimd_dspr2.S
+# <instantiation>:13:5: error: invalid token in expression
+# .if $17 != 0
+# ^
+CFLAGS:append:toolchain-clang:mipsarch = " -fno-integrated-as"
+
 PACKAGES =+ "jpeg-tools libturbojpeg"
 
 DESCRIPTION:jpeg-tools = "The jpeg-tools package includes client programs to access libjpeg functionality.  These tools allow for the compression, decompression, transformation and display of JPEG files and benchmarking of the libjpeg library."
