@@ -21,6 +21,7 @@ python multilib_virtclass_handler () {
     bpn = d.getVar("BPN")
     if ("virtual/kernel" in provides
             or bb.data.inherits_class('module-base', d)
+            or bb.data.inherits_class('kernel-fit-image', d)
             or bpn in non_ml_recipes):
         raise bb.parse.SkipRecipe("We shouldn't have multilib variants for %s" % bpn)
 
