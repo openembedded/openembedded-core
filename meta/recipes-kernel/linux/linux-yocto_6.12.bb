@@ -72,5 +72,8 @@ KERNEL_FEATURES:append = " ${@bb.utils.contains("DISTRO_FEATURES", "ptest", " cg
 KERNEL_FEATURES:append:powerpc = " arch/powerpc/powerpc-debug.scc"
 KERNEL_FEATURES:append:powerpc64 = " arch/powerpc/powerpc-debug.scc"
 KERNEL_FEATURES:append:powerpc64le = " arch/powerpc/powerpc-debug.scc"
-
+# Do not add debug info for riscv32, it fails during depmod
+# ERROR: modpost: __ex_table+0x17a4 references non-executable section '.debug_loclists'
+# Check again during next major version upgrade
+KERNEL_FEATURES:remove:riscv32 = "features/debug/debug-kernel.scc"
 INSANE_SKIP:kernel-vmlinux:qemuppc64 = "textrel"
