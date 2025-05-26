@@ -8,9 +8,10 @@ SRC_URI = "${GNU_MIRROR}/diffutils/diffutils-${PV}.tar.xz \
            file://0001-Skip-strip-trailing-cr-test-case.patch \
            "
 
-SRC_URI[sha256sum] = "a73ef05fe37dd585f7d87068e4a0639760419f810138bd75c61ddaa1f9e2131e"
+SRC_URI[sha256sum] = "7c8b7f9fc8609141fdea9cece85249d308624391ff61dedaf528fcb337727dfd"
 
 EXTRA_OECONF += "ac_cv_path_PR_PROGRAM=${bindir}/pr --without-libsigsegv-prefix"
+EXTRA_OECONF += "gl_cv_func_strcasecmp_works=yes"
 
 # latest gnulib is no longer able to handle this - I dare not try to fix that maze of abstractions and generators
 CFLAGS:mingw32 = " -DSA_RESTART=0"
