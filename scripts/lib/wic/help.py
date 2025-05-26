@@ -544,18 +544,18 @@ DESCRIPTION
     the --source param given to that partition.  For example, if the
     partition is set up like this:
 
-      part /boot --source bootimg-pcbios   ...
+      part /boot --source bootimg_pcbios   ...
 
     then the methods defined as class members of the plugin having the
-    matching bootimg-pcbios .name class member would be used.
+    matching bootimg_pcbios .name class member would be used.
 
     To be more concrete, here's the plugin definition that would match
-    a '--source bootimg-pcbios' usage, along with an example method
+    a '--source bootimg_pcbios' usage, along with an example method
     that would be called by the wic implementation when it needed to
     invoke an implementation-specific partition-preparation function:
 
     class BootimgPcbiosPlugin(SourcePlugin):
-        name = 'bootimg-pcbios'
+        name = 'bootimg_pcbios'
 
     @classmethod
         def do_prepare_partition(self, part, ...)
@@ -794,7 +794,7 @@ DESCRIPTION
 
      Here is a content of test.wks:
 
-     part /boot --source bootimg-pcbios --ondisk sda --label boot --active --align 1024
+     part /boot --source bootimg_pcbios --ondisk sda --label boot --active --align 1024
      part / --source rootfs --ondisk sda --fstype=ext3 --label platform --align 1024
 
      bootloader  --timeout=0  --append="rootwait rootfstype=ext3 video=vesafb vga=0x318 console=tty0"

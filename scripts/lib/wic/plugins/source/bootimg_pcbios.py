@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 # DESCRIPTION
-# This implements the 'bootimg-pcbios' source plugin class for 'wic'
+# This implements the 'bootimg_pcbios' source plugin class for 'wic'
 #
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
@@ -27,7 +27,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
     Create MBR boot partition and install syslinux on it.
     """
 
-    name = 'bootimg-pcbios'
+    name = 'bootimg_pcbios'
 
     @classmethod
     def _get_bootimg_dir(cls, bootimg_dir, dirname):
