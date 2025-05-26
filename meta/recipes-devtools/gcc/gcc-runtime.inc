@@ -144,7 +144,7 @@ do_install:append:class-target () {
 		ln -sf ../${X86ARCH32}${TARGET_VENDOR}-${TARGET_OS} ${D}${includedir}/c++/${BINV}/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}/32
 	fi
 
-	if [ "${TARGET_ARCH}" = "riscv64" -a "${MULTILIB_VARIANTS}" = "" ]; then
+	if [ "${TARGET_ARCH}" = "riscv32" -o "${TARGET_ARCH}" = "riscv64" ] && [ -z "${MULTILIB_VARIANTS}" ]; then
 		mv ${D}${includedir}/c++/${BINV}/${TARGET_SYS}/bits/* ${D}${includedir}/c++/${BINV}/bits
 		mv ${D}${includedir}/c++/${BINV}/${TARGET_SYS}/ext/* ${D}${includedir}/c++/${BINV}/ext
 	fi

@@ -149,6 +149,7 @@ python gcc_multilib_setup() {
         'i686'      : ['gcc/config/i386/t-linux64'],
         'mips'      : ['gcc/config/mips/t-linux64'],
         'mips64'    : ['gcc/config/mips/t-linux64'],
+        'riscv32'     : ['gcc/config/riscv/t-linux-multilib'],
         'riscv64'     : ['gcc/config/riscv/t-linux-multilib'],
         'powerpc'   : ['gcc/config/rs6000/t-linux64'],
         'powerpc64' : ['gcc/config/rs6000/t-linux64'],
@@ -166,6 +167,7 @@ python gcc_multilib_setup() {
         'powerpc64' : ['gcc/config/linux.h', 'gcc/config/rs6000/linux64.h'],
         'aarch64'   : ['gcc/config/linux.h', 'gcc/config/aarch64/aarch64-linux.h', 'gcc/config/arm/linux-eabi.h'],
         'arm'       : ['gcc/config/linux.h', 'gcc/config/aarch64/aarch64-linux.h', 'gcc/config/arm/linux-eabi.h'],
+        'riscv32'     : ['gcc/config/linux.h'],
         'riscv64'     : ['gcc/config/linux.h'],
     }
 
