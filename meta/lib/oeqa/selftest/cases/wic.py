@@ -153,7 +153,7 @@ class Wic(WicTestCase):
         # create a temporary file for the WKS content
         with NamedTemporaryFile("w", suffix=".wks") as wks:
             wks.write(
-                'part --source bootimg-efi '
+                'part --source bootimg_efi '
                 '--sourceparams="loader=grub-efi,install-kernel-into-boot-dir=false" '
                 '--label boot --active\n'
             )
@@ -186,7 +186,7 @@ class Wic(WicTestCase):
         # create a temporary file for the WKS content
         with NamedTemporaryFile("w", suffix=".wks") as wks:
             wks.write(
-                'part --source bootimg-efi '
+                'part --source bootimg_efi '
                 '--sourceparams="loader=grub-efi,install-kernel-into-boot-dir=true" '
                 '--label boot --active\n'
             )
@@ -1358,7 +1358,7 @@ class Wic2(WicTestCase):
     def test_biosplusefi_plugin(self):
         """Test biosplusefi plugin"""
         # Wic generation below may fail depending on the order of the unittests
-        # This is because bootimg-pcbios (that bootimg-biosplusefi uses) generate its MBR inside STAGING_DATADIR directory
+        # This is because bootimg_pcbios (that bootimg_biosplusefi uses) generate its MBR inside STAGING_DATADIR directory
         #    which may or may not exists depending on what was built already
         # If an image hasn't been built yet, directory ${STAGING_DATADIR}/syslinux won't exists and _get_bootimg_dir()
         #   will raise with "Couldn't find correct bootimg_dir"
@@ -1370,7 +1370,7 @@ class Wic2(WicTestCase):
 
         img = 'core-image-minimal'
         with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.writelines(['part /boot --active --source bootimg-biosplusefi --sourceparams="loader=grub-efi"\n',
+            wks.writelines(['part /boot --active --source bootimg_biosplusefi --sourceparams="loader=grub-efi"\n',
                             'part / --source rootfs --fstype=ext4 --align 1024 --use-uuid\n'\
                             'bootloader --timeout=0 --append="console=ttyS0,115200n8"\n'])
             wks.flush()
@@ -1390,7 +1390,7 @@ class Wic2(WicTestCase):
 
         img = 'core-image-minimal'
         with NamedTemporaryFile("w", suffix=".wks") as wks:
-            wks.writelines(['part /boot --source bootimg-efi --sourceparams="loader=uefi-kernel"\n'
+            wks.writelines(['part /boot --source bootimg_efi --sourceparams="loader=uefi-kernel"\n'
                             'part / --source rootfs --fstype=ext4 --align 1024 --use-uuid\n'\
                             'bootloader --timeout=0 --append="console=ttyS0,115200n8"\n'])
             wks.flush()

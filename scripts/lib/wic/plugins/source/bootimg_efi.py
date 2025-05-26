@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 # DESCRIPTION
-# This implements the 'bootimg-efi' source plugin class for 'wic'
+# This implements the 'bootimg_efi' source plugin class for 'wic'
 #
 # AUTHORS
 # Tom Zanussi <tom.zanussi (at] linux.intel.com>
@@ -32,7 +32,7 @@ class BootimgEFIPlugin(SourcePlugin):
     This plugin supports GRUB 2 and systemd-boot bootloaders.
     """
 
-    name = 'bootimg-efi'
+    name = 'bootimg_efi'
 
     @classmethod
     def _copy_additional_files(cls, hdddir, initrd, dtb):
@@ -230,9 +230,9 @@ class BootimgEFIPlugin(SourcePlugin):
             elif source_params['loader'] == 'uefi-kernel':
                 pass
             else:
-                raise WicError("unrecognized bootimg-efi loader: %s" % source_params['loader'])
+                raise WicError("unrecognized bootimg_efi loader: %s" % source_params['loader'])
         except KeyError:
-            raise WicError("bootimg-efi requires a loader, none specified")
+            raise WicError("bootimg_efi requires a loader, none specified")
 
         if get_bitbake_var("IMAGE_EFI_BOOT_FILES") is None:
             logger.debug('No boot files defined in IMAGE_EFI_BOOT_FILES')
@@ -365,7 +365,7 @@ class BootimgEFIPlugin(SourcePlugin):
                     out = exec_cmd(cp_cmd, True)
                     logger.debug("uefi-kernel files:\n%s" % out)
             else:
-                raise WicError("unrecognized bootimg-efi loader: %s" %
+                raise WicError("unrecognized bootimg_efi loader: %s" %
                                source_params['loader'])
 
             # must have installed at least one EFI bootloader
@@ -375,7 +375,7 @@ class BootimgEFIPlugin(SourcePlugin):
                 raise WicError("No EFI loaders installed to ESP partition. Check that grub-efi, systemd-boot or similar is installed.")
 
         except KeyError:
-            raise WicError("bootimg-efi requires a loader, none specified")
+            raise WicError("bootimg_efi requires a loader, none specified")
 
         startup = os.path.join(kernel_dir, "startup.nsh")
         if os.path.exists(startup):

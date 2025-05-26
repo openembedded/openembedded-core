@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 # DESCRIPTION
-# This implements the 'bootimg-partition' source plugin class for
+# This implements the 'bootimg_partition' source plugin class for
 # 'wic'. The plugin creates an image of boot partition, copying over
 # files listed in IMAGE_BOOT_FILES bitbake variable.
 #
@@ -31,7 +31,7 @@ class BootimgPartitionPlugin(SourcePlugin):
     listed in IMAGE_BOOT_FILES bitbake variable.
     """
 
-    name = 'bootimg-partition'
+    name = 'bootimg_partition'
     image_boot_files_var_name = 'IMAGE_BOOT_FILES'
 
     @classmethod

@@ -15,7 +15,7 @@
 #
 #   - or any combinations of -r and --rootfs command line options
 
-part /boot --source bootimg-pcbios --ondisk sda --label boot --active --align 1024
+part /boot --source bootimg_pcbios --ondisk sda --label boot --active --align 1024
 part / --source rootfs --rootfs-dir=rootfs1 --ondisk sda --fstype=ext4 --label platform --align 1024
 part /rescue --source rootfs --rootfs-dir=rootfs2 --ondisk sda --fstype=ext4 --label secondary --align 1024
 
