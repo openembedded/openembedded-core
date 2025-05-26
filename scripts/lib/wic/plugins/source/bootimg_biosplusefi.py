@@ -13,7 +13,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # DESCRIPTION
-# This implements the 'bootimg-biosplusefi' source plugin class for 'wic'
+# This implements the 'bootimg_biosplusefi' source plugin class for 'wic'
 #
 # AUTHORS
 # William Bourque <wbourque [at) gmail.com>
@@ -34,7 +34,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
 
     Note it is possible to create an image that can boot from both
     legacy BIOS and EFI by defining two partitions : one with arg
-    --source bootimg-efi  and another one with --source bootimg-pcbios.
+    --source bootimg_efi  and another one with --source bootimg_pcbios.
     However, this method has the obvious downside that it requires TWO
     partitions to be created on the storage device.
     Both partitions will also be marked as "bootable" which does not work on
@@ -45,7 +45,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
     the first partition will be duplicated into the second, even though it
     will not be used at all.
 
-    Also, unlike "isoimage-isohybrid" that also does BIOS and EFI, this plugin
+    Also, unlike "isoimage_isohybrid" that also does BIOS and EFI, this plugin
     allows you to have more than only a single rootfs partitions and does
     not turn the rootfs into an initramfs RAM image.
 
@@ -53,32 +53,32 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
     does not have the limitations listed above.
 
     The plugin is made so it does tries not to reimplement what's already
-    been done in other plugins; as such it imports "bootimg-pcbios"
-    and "bootimg-efi".
-    Plugin "bootimg-pcbios" is used to generate legacy BIOS boot.
-    Plugin "bootimg-efi" is used to generate the UEFI boot. Note that it
+    been done in other plugins; as such it imports "bootimg_pcbios"
+    and "bootimg_efi".
+    Plugin "bootimg_pcbios" is used to generate legacy BIOS boot.
+    Plugin "bootimg_efi" is used to generate the UEFI boot. Note that it
     requires a --sourceparams argument to know which loader to use; refer
-    to "bootimg-efi" code/documentation for the list of loader.
+    to "bootimg_efi" code/documentation for the list of loader.
 
     Imports are handled with "SourceFileLoader" from importlib as it is
     otherwise very difficult to import module that has hyphen "-" in their
     filename.
     The SourcePlugin() methods used in the plugins (do_install_disk,
     do_configure_partition, do_prepare_partition) are then called on both,
-    beginning by "bootimg-efi".
+    beginning by "bootimg_efi".
 
     Plugin options, such as "--sourceparams" can still be passed to a
     plugin, as long they does not cause issue in the other plugin.
 
     Example wic configuration:
-    part /boot --source bootimg-biosplusefi --sourceparams="loader=grub-efi"\\
+    part /boot --source bootimg_biosplusefi --sourceparams="loader=grub-efi"\\
                --ondisk sda --label os_boot --active --align 1024 --use-uuid
     """
 
-    name = 'bootimg-biosplusefi'
+    name = 'bootimg_biosplusefi'
 
-    __PCBIOS_MODULE_NAME = "bootimg-pcbios"
-    __EFI_MODULE_NAME = "bootimg-efi"
+    __PCBIOS_MODULE_NAME = "bootimg_pcbios"
+    __EFI_MODULE_NAME = "bootimg_efi"
 
     __imgEFIObj = None
     __imgBiosObj = None
@@ -100,7 +100,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
 
         """
 
-        # Import bootimg-pcbios (class name "BootimgPcbiosPlugin")
+        # Import bootimg_pcbios (class name "BootimgPcbiosPlugin")
         modulePath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                   cls.__PCBIOS_MODULE_NAME + ".py")
         loader = SourceFileLoader(cls.__PCBIOS_MODULE_NAME, modulePath)
@@ -108,7 +108,7 @@ class BootimgBiosPlusEFIPlugin(SourcePlugin):
         loader.exec_module(mod)
         cls.__imgBiosObj = mod.BootimgPcbiosPlugin()
 
-        # Import bootimg-efi (class name "BootimgEFIPlugin")
+        # Import bootimg_efi (class name "BootimgEFIPlugin")
         modulePath = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                   cls.__EFI_MODULE_NAME + ".py")
         loader = SourceFileLoader(cls.__EFI_MODULE_NAME, modulePath)

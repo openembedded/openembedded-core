@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 # DESCRIPTION
-# This implements the 'isoimage-isohybrid' source plugin class for 'wic'
+# This implements the 'isoimage_isohybrid' source plugin class for 'wic'
 #
 # AUTHORS
 # Mihaly Varga <mihaly.varga (at] ni.com>
@@ -35,7 +35,7 @@ class IsoImagePlugin(SourcePlugin):
     bootloader files.
 
     Example kickstart file:
-    part /boot --source isoimage-isohybrid --sourceparams="loader=grub-efi, \\
+    part /boot --source isoimage_isohybrid --sourceparams="loader=grub-efi, \\
     image_name= IsoImage" --ondisk cd --label LIVECD
     bootloader  --timeout=10  --append=" "
 
@@ -45,7 +45,7 @@ class IsoImagePlugin(SourcePlugin):
     extension added by direct imeger plugin) and a file named IsoImage-cd.iso
     """
 
-    name = 'isoimage-isohybrid'
+    name = 'isoimage_isohybrid'
 
     @classmethod
     def do_configure_syslinux(cls, creator, cr_workdir):
@@ -340,10 +340,10 @@ class IsoImagePlugin(SourcePlugin):
                     cls.do_configure_grubefi(part, creator, target_dir)
 
             else:
-                raise WicError("unrecognized bootimg-efi loader: %s" %
+                raise WicError("unrecognized bootimg_efi loader: %s" %
                                source_params['loader'])
         except KeyError:
-            raise WicError("bootimg-efi requires a loader, none specified")
+            raise WicError("bootimg_efi requires a loader, none specified")
 
         # Create efi.img that contains bootloader files for EFI booting
         # if ISODIR didn't exist or didn't contains it
