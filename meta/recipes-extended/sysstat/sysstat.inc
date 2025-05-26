@@ -1,15 +1,15 @@
 SUMMARY = "System performance tools"
 DESCRIPTION = "The sysstat utilities are a collection of performance monitoring tools for Linux."
-HOMEPAGE = "http://sebastien.godard.pagesperso-orange.fr/"
+HOMEPAGE = "https://sysstat.github.io/"
 LICENSE = "GPL-2.0-or-later"
 SECTION = "console/utils"
 
-SRC_URI = "http://pagesperso-orange.fr/sebastien.godard/${BP}.tar.xz \
+SRC_URI = "https://sysstat.github.io/sysstat-packages/${BP}.tar.xz \
            file://99_sysstat \
            file://sysstat.service \
           "
 
-UPSTREAM_CHECK_URI = "http://sebastien.godard.pagesperso-orange.fr/download.html"
+UPSTREAM_CHECK_URI = "https://sysstat.github.io/versions.html"
 
 DEPENDS += "base-passwd"
 
