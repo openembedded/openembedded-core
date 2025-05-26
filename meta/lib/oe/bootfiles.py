@@ -10,7 +10,7 @@
 # Returns a list of tuples with (original filepath relative to
 # deploy_dir, desired filepath renaming)
 #
-# Heavily inspired of bootimg-partition.py
+# Heavily inspired of bootimg_partition.py
 #
 def get_boot_files(deploy_dir, boot_files):
     import re
