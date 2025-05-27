@@ -356,9 +356,11 @@ do_install_ptest() {
 
     sed -i 's|@base_sbindir@|${base_sbindir}|g' ${D}${PTEST_PATH}/run-ptest
 
-    # chfn needs PAM
     if ! ${@bb.utils.contains('PACKAGECONFIG', 'pam', 'true', 'false', d)}; then
+        # chfn needs PAM
         rm -rf ${D}${PTEST_PATH}/tests/ts/chfn
+        # su is not enabled when pam is not in PACKAGECONFIG
+        rm -rf ${D}${PTEST_PATH}/tests/ts/su
     fi
     # remove raid tests, known failures and avoid dependency on mdadm therefore
     # See https://github.com/util-linux/util-linux/commit/7519c3edab120b14623931d5ddb16fdc6e7cad5d
