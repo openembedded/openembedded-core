@@ -15,12 +15,9 @@ inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
-           file://intermittent-testfailure.patch \
-           file://0001-ls-fix-crash-with-context.patch \
-           file://0001-cksum-port-to-32-bit-uint_fast32_t.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "7a0124327b398fd9eb1a6abde583389821422c744ffa10734b24f557610d3283"
+SRC_URI[sha256sum] = "e8bb26ad0293f9b5a1fc43fb42ba970e312c66ce92c1b0b16713d7500db251bf"
 
 # http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=v8.27-101-gf5d7c0842
 #
