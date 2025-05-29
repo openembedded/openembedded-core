@@ -92,7 +92,7 @@ SYSTEMD_SERVICE:${PN} = "connman.service"
 SYSTEMD_SERVICE:${PN}-vpn = "connman-vpn.service"
 SYSTEMD_SERVICE:${PN}-wait-online = "connman-wait-online.service"
 
-ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_PRIORITY = "${@bb.utils.contains('DISTRO_FEATURES','systemd-resolved','10','100',d)}"
 ALTERNATIVE:${PN} = "${@bb.utils.contains('DISTRO_FEATURES','systemd','resolv-conf','',d)}"
 ALTERNATIVE_TARGET[resolv-conf] = "${@bb.utils.contains('DISTRO_FEATURES','systemd','${sysconfdir}/resolv-conf.connman','',d)}"
 ALTERNATIVE_LINK_NAME[resolv-conf] = "${@bb.utils.contains('DISTRO_FEATURES','systemd','${sysconfdir}/resolv.conf','',d)}"
