@@ -23,6 +23,7 @@ IMAGE_ROOTFS_EXTRA_SPACE = "324288"
 IMAGE_ROOTFS_EXTRA_SPACE:virtclass-mcextend-mdadm = "1524288"
 IMAGE_ROOTFS_EXTRA_SPACE:virtclass-mcextend-strace = "1524288"
 IMAGE_ROOTFS_EXTRA_SPACE:virtclass-mcextend-lttng-tools = "1524288"
+IMAGE_ROOTFS_EXTRA_SPACE:virtclass-mcextend-util-linux = "1524288"
 
 # tar-ptest in particular needs more space
 IMAGE_ROOTFS_EXTRA_SPACE:virtclass-mcextend-tar = "1524288"
