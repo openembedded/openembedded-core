@@ -17,7 +17,7 @@ BASEURI ?= "${LLVM_HTTP}/llvm-project/releases/download/llvmorg-${PV}/llvm-proje
 UPSTREAM_CHECK_URI = "${LLVM_HTTP}/llvm-project/releases/"
 UPSTREAM_CHECK_REGEX = "releases/tag/llvmorg-?(?P<pver>\d+(\.\d+)+)"
 SOURCEDIR ?= "llvm-project-${PV}.src"
-SRC_URI[sha256sum] = "a069565cd1c6aee48ee0f36de300635b5781f355d7b3c96a28062d50d575fa3e"
+SRC_URI[sha256sum] = "5c70549d524284c184fe9fbff862c3d2d7a61b787570611b5a30e5cc345f145e"
 
 SRC_URI = "\
     ${BASEURI} \
