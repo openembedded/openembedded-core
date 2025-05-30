@@ -367,6 +367,13 @@ class BootimgEFIPlugin(SourcePlugin):
             else:
                 raise WicError("unrecognized bootimg-efi loader: %s" %
                                source_params['loader'])
+
+            # must have installed at least one EFI bootloader
+            out = glob(os.path.join(hdddir, 'EFI', 'BOOT', 'boot*.efi'))
+            logger.debug("Installed EFI loader files:\n%s" % out)
+            if not out:
+                raise WicError("No EFI loaders installed to ESP partition. Check that grub-efi, systemd-boot or similar is installed.")
+
         except KeyError:
             raise WicError("bootimg-efi requires a loader, none specified")
 
