@@ -23,6 +23,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=14096c769ae0cbb5fcb94ec468be11b3 \
 
 inherit meson pkgconfig
 
+OPENMP ?= ""
+OPENMP:toolchain-clang = "openmp"
+# openmp is not yet ported to rv32/ppc
+OPENMP:remove:riscv32 = "openmp"
+OPENMP:remove:powerpc = "openmp"
+
+PACKAGECONFIG ??= "openmp"
+PACKAGECONFIG:class-native ?= ""
+
+PACKAGECONFIG[openmp] = ",-Dopenmp=disabled,${OPENMP}"
+
 # These are for the tests and demos, which we don't install
 EXTRA_OEMESON = "-Dgtk=disabled -Dlibpng=disabled"
 # ld: pixman/libpixman-mmx.a(pixman-mmx.c.o):
@@ -36,7 +47,7 @@ EXTRA_OEMESON:append:class-target:powerpc64le = " ${@bb.utils.contains("TUNE_FEA
 EXTRA_OEMESON:append:armv7a = "${@bb.utils.contains("TUNE_FEATURES","neon",""," -Dneon=disabled",d)}"
 EXTRA_OEMESON:append:armv7ve = "${@bb.utils.contains("TUNE_FEATURES","neon",""," -Dneon=disabled",d)}"
 
-EXTRA_OEMESON:append:class-native = " -Dopenmp=disabled"
+CFLAGS:append:toolchain-clang:mipsarch = " -fno-integrated-as"
 
 BBCLASSEXTEND = "native nativesdk"
 
