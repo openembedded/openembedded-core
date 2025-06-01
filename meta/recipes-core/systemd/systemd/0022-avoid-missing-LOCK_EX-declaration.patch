@@ -1,4 +1,4 @@
-From f3bc7816d9cca9963a2737857763ee76e300a232 Mon Sep 17 00:00:00 2001
+From 9d151b5bb3105fb21d55a301def3d97b5a314580 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Tue, 2 Jan 2024 11:03:27 +0800
 Subject: [PATCH] avoid missing LOCK_EX declaration
@@ -15,7 +15,7 @@ Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
  2 files changed, 2 insertions(+)
 
 diff --git a/src/core/exec-invoke.c b/src/core/exec-invoke.c
-index 22bc8d10c1..9bced8f420 100644
+index 9d27280ed0..569311422d 100644
 --- a/src/core/exec-invoke.c
 +++ b/src/core/exec-invoke.c
 @@ -5,6 +5,7 @@

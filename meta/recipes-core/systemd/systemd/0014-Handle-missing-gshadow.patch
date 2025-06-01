@@ -1,4 +1,4 @@
-From c55dd0f9e1ea05749d0a54082daa69729ee946af Mon Sep 17 00:00:00 2001
+From bc62e5e507cc3f10fde7d35d16059a06a78757b6 Mon Sep 17 00:00:00 2001
 From: Alex Kiernan <alex.kiernan@gmail.com>
 Date: Tue, 10 Mar 2020 11:05:20 +0000
 Subject: [PATCH] Handle missing gshadow

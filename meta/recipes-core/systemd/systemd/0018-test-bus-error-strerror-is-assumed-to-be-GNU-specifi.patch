@@ -1,4 +1,4 @@
-From 20cf3569dff21f5c4e46855c3956606fa0141710 Mon Sep 17 00:00:00 2001
+From 1c5c9714a2a9bc651687bf2c583019c52ed93ac4 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 8 Nov 2022 13:31:34 -0800
 Subject: [PATCH] test-bus-error: strerror() is assumed to be GNU specific

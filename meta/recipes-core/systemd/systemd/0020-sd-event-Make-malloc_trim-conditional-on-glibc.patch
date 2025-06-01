@@ -1,4 +1,4 @@
-From 18201d3350b443c79cc85274f3944bf64de33da0 Mon Sep 17 00:00:00 2001
+From cda1cc94bd81c8ff9135255895a414fb938e2c79 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 2 Aug 2023 12:06:27 -0700
 Subject: [PATCH] sd-event: Make malloc_trim() conditional on glibc

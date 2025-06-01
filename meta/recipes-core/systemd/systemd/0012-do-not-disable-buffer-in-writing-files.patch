@@ -1,4 +1,4 @@
-From c1a375d93edbfaf3f64bec88c75cfcf436d4ba05 Mon Sep 17 00:00:00 2001
+From 9686b8c52bd9e532ebe687dd31352d884873e0a4 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Fri, 1 Mar 2019 15:22:15 +0800
 Subject: [PATCH] do not disable buffer in writing files
@@ -188,10 +188,10 @@ index d21f3f79ff..258607cc7e 100644
                          log_warning_errno(r, "Failed to flush binfmt_misc rules, ignoring: %m");
                  else
 diff --git a/src/core/cgroup.c b/src/core/cgroup.c
-index 61539afdbf..77e2b35daf 100644
+index d398655b0a..9558f38a72 100644
 --- a/src/core/cgroup.c
 +++ b/src/core/cgroup.c
-@@ -4581,7 +4581,7 @@ int unit_cgroup_freezer_action(Unit *u, FreezerAction action) {
+@@ -4589,7 +4589,7 @@ int unit_cgroup_freezer_action(Unit *u, FreezerAction action) {
                          u->freezer_state = FREEZER_THAWING;
          }
  
@@ -201,7 +201,7 @@ index 61539afdbf..77e2b35daf 100644
                  return r;
  
 diff --git a/src/core/main.c b/src/core/main.c
-index 8373a156cb..33e866942c 100644
+index 364dc895d1..d28ec42030 100644
 --- a/src/core/main.c
 +++ b/src/core/main.c
 @@ -1683,7 +1683,7 @@ static void initialize_core_pattern(bool skip_setup) {

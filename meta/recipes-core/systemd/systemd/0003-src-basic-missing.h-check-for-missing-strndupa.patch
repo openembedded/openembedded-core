@@ -1,4 +1,4 @@
-From ca0b48676132744b78d99ee3ec2d33f11bb73c28 Mon Sep 17 00:00:00 2001
+From c728a728cd54c372162f5447aa94921efb0c35f0 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Mon, 25 Feb 2019 14:18:21 +0800
 Subject: [PATCH] src/basic/missing.h: check for missing strndupa
@@ -280,7 +280,7 @@ index b3baf03afc..7404784a01 100644
  
  BUS_DEFINE_PROPERTY_GET(bus_property_get_tasks_max, "t", CGroupTasksMax, cgroup_tasks_max_resolve);
 diff --git a/src/core/dbus-execute.c b/src/core/dbus-execute.c
-index 2d05ba7e1d..61a7de0037 100644
+index 71b07a6ec1..174a94e8a0 100644
 --- a/src/core/dbus-execute.c
 +++ b/src/core/dbus-execute.c
 @@ -42,6 +42,7 @@
@@ -352,7 +352,7 @@ index 7e0c98cb7d..978a7f5874 100644
  #define DEFAULT_MAX_USE_LOWER (uint64_t) (1ULL*1024ULL*1024ULL)           /* 1 MiB */
  #define DEFAULT_MAX_USE_UPPER (uint64_t) (4ULL*1024ULL*1024ULL*1024ULL)   /* 4 GiB */
 diff --git a/src/fstab-generator/fstab-generator.c b/src/fstab-generator/fstab-generator.c
-index 016f3baa7f..b1def81313 100644
+index e7caf510ba..79b252cad7 100644
 --- a/src/fstab-generator/fstab-generator.c
 +++ b/src/fstab-generator/fstab-generator.c
 @@ -37,6 +37,7 @@
@@ -424,7 +424,7 @@ index 5ade8e99aa..7553cf319d 100644
  #define SNDBUF_SIZE (8*1024*1024)
  
 diff --git a/src/libsystemd/sd-bus/sd-bus.c b/src/libsystemd/sd-bus/sd-bus.c
-index 8befc97460..6ee4d4f595 100644
+index b32cd6c6a0..cc484454e0 100644
 --- a/src/libsystemd/sd-bus/sd-bus.c
 +++ b/src/libsystemd/sd-bus/sd-bus.c
 @@ -46,6 +46,7 @@
@@ -616,7 +616,7 @@ index 0a31be382f..92d629e7e0 100644
  /* up to three lines (each up to 100 characters) or 300 characters, whichever is less */
  #define PRINT_LINE_THRESHOLD 3
 diff --git a/src/shared/pager.c b/src/shared/pager.c
-index 19deefab56..6b6d0af1a0 100644
+index 41dd7bffdc..9ca45d8b91 100644
 --- a/src/shared/pager.c
 +++ b/src/shared/pager.c
 @@ -25,6 +25,7 @@

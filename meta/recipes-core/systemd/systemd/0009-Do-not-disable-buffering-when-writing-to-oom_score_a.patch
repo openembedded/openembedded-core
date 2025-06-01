@@ -1,4 +1,4 @@
-From 8d61cecff3ba0687ad2c10aacb7d2aee7cb3fa79 Mon Sep 17 00:00:00 2001
+From ed33f139195794477ac854214022034db306f42d Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Wed, 4 Jul 2018 15:00:44 +0800
 Subject: [PATCH] Do not disable buffering when writing to oom_score_adj
