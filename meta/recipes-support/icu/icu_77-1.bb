@@ -3,7 +3,7 @@ DESCRIPTION = "The International Component for Unicode (ICU) is a mature, \
 portable set of C/C++ and Java libraries for Unicode support, software \
 internationalization (I18N) and globalization (G11N), giving applications the \
 same results on all platforms."
-HOMEPAGE = "http://site.icu-project.org/"
+HOMEPAGE = "https://icu.unicode.org/"
 
 LICENSE = "ICU"
 DEPENDS = "icu-native autoconf-archive-native"
@@ -92,7 +92,7 @@ FILES:libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=7c364a0debecf16d5a13de2b7f1aaabd"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=cf57d9459a2c5f88ecd83c75207cc5ff"
 
 def icu_download_version(d):
     pvsplit = d.getVar('PV').split('-')
@@ -124,8 +124,8 @@ SRC_URI = "${BASE_SRC_URI};name=code \
 SRC_URI:append:class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[code.sha256sum] = "dfacb46bfe4747410472ce3e1144bf28a102feeaa4e3875bac9b4c6cf30f4f3e"
-SRC_URI[data.sha256sum] = "133ae58a67d68b46f7296822904cd3c30126a0b4b2f65f0f905e7f47c0ef9e47"
+SRC_URI[code.sha256sum] = "588e431f77327c39031ffbb8843c0e3bc122c211374485fa87dc5f3faff24061"
+SRC_URI[data.sha256sum] = "1e08bfafa442260ccabf9a872d4eab12de813d42b90769df056bab032b37e1d3"
 
 UPSTREAM_CHECK_REGEX = "releases/tag/release-(?P<pver>(?!.+rc).+)"
 GITHUB_BASE_URI = "https://github.com/unicode-org/icu/releases"
