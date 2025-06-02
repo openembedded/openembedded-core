@@ -7,6 +7,7 @@ GNU M4 also has built-in functions for including files, running shell commands, 
 inherit autotools texinfo ptest gettext
 
 SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz \
+           file://0001-gettext-h-Avoid-gcc-Wformat-security-warnings-with-d.patch \
            "
 SRC_URI:append:class-target = " file://run-ptest \
                                 file://serial-tests-config.patch \
