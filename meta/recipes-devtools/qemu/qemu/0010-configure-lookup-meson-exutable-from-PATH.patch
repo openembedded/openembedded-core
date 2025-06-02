@@ -1,4 +1,4 @@
-From 9067e464685cb503d58a07520769a49c5f9f2e47 Mon Sep 17 00:00:00 2001
+From 9adf3fc3ea2cbccb41d49695a53c74fed6850fb0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>
 Date: Wed, 22 May 2024 14:02:55 +0200
 Subject: [PATCH] configure: lookup meson exutable from PATH

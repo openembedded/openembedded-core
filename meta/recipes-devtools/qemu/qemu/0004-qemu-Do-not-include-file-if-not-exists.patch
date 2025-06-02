@@ -1,4 +1,4 @@
-From 09936dc09b577448d354e82919829ef6a809dc94 Mon Sep 17 00:00:00 2001
+From 913064f9fe724fa1b70b9bf6dd3444c7dddeb928 Mon Sep 17 00:00:00 2001
 From: Oleksiy Obitotskyy <oobitots@cisco.com>
 Date: Wed, 25 Mar 2020 21:21:35 +0200
 Subject: [PATCH] qemu: Do not include file if not exists

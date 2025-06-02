@@ -1,4 +1,4 @@
-From 8ab2b722da7868c507cfdd67ae6d535c8ba36f53 Mon Sep 17 00:00:00 2001
+From f2adfc703e94819b0daca98fde1d0a30168c292d Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Fri, 8 Jan 2021 17:27:06 +0000
 Subject: [PATCH] qemu: Add some user space mmap tweaks to address musl 32 bit
