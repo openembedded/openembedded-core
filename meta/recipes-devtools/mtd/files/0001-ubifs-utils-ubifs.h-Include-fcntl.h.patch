@@ -25,7 +25,7 @@ when building with musl:
 |       |                                            off_t
 | make: *** [Makefile:4878: ubifs-utils/common/mkfs_ubifs-compr.o] Error 1
 
-Upstream-Status: Submitted [https://lore.kernel.org/linux-mtd/20250219130244.2119582-1-festevam@gmail.com/T/#t]
+Upstream-Status: Backport [https://github.com/sigma-star/mtd-utils/commit/12bc9ad824bd8f18a5ec9c7154ad2374cf8c7ae3]
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
 Reviewed-by: Khem Raj <raj.khem@gmail.com>

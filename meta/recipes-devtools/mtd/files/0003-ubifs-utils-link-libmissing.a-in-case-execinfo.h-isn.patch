@@ -13,7 +13,7 @@ backtrace().
 Guard the execinfo.h include and if it isn't available instead include
 libmissing.h, and link to libmissing.a to provide backtrace() if needed.
 
-Upstream-Status: Submitted [https://lore.kernel.org/linux-mtd/20250226182400.1723418-1-ross.burton@arm.com/]
+Upstream-Status: Backport [https://github.com/sigma-star/mtd-utils/commit/8a83b306db64d6f60186d4396b0b770163b85b6e]
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
 Signed-off-by: Fabio Estevam <festevam@gmail.com>

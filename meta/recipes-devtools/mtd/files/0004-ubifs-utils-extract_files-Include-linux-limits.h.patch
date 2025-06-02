@@ -13,7 +13,7 @@ with musl:
 | ../git/ubifs-utils/fsck.ubifs/extract_files.c:144:47: note: each undeclared identifier is reported only once for each function it appears in
 | make: *** [Makefile:4374: ubifs-utils/fsck.ubifs/fsck_ubifs-extract_files.o] Error 1
 
-Upstream-Status: Submitted [https://lore.kernel.org/linux-mtd/20250219130244.2119582-4-festevam@gmail.com/T/#t]
+Upstream-Status: Backport [https://github.com/sigma-star/mtd-utils/commit/77981a2888c711268b0e7f32af6af159c2288e23]
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---

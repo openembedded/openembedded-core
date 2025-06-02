@@ -8,7 +8,7 @@ When using unreleased compiler has version like
 becomes true, therefore check for full version string
 which is more rubust.
 
-Upstream-Status: Submitted [https://lists.infradead.org/pipermail/linux-mtd/2025-March/108860.html]
+Upstream-Status: Backport [https://github.com/sigma-star/mtd-utils/commit/ac0ab65ebcd7b11739986b81343457469fbb43b0]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  ubifs-utils/common/atomic.h | 6 +++++-

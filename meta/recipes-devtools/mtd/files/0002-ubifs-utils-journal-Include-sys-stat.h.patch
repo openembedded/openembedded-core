@@ -14,7 +14,7 @@ when building with musl:
 | ../git/ubifs-utils/libubifs/journal.c:415:14: error: 'S_IFREG' undeclared (first use in this function)
 |   415 |         case S_IFREG:
 
-Upstream-Status: Submitted [https://lore.kernel.org/linux-mtd/20250219130244.2119582-2-festevam@gmail.com/T/#t]
+Upstream-Status: Backport [https://github.com/sigma-star/mtd-utils/commit/173f9714c8da1d685bfa951d43b9310d16bbab3c]
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
