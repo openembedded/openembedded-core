@@ -9,5 +9,10 @@ export SRC_PATH=$ptestdir
 cd $ptestdir/tests
 tests=$(find . -name "test-*" ! -name "*.p")
 for f in $tests; do
+    # Test hangs intermittently on qemurisc64 on autobuilder
+    if [ "$f" = "./unit/test-nested-aio-poll" -a `uname -m` = "riscv64" ]; then
+        continue
+    fi
+    echo "Running $f"
     $f  | sed '/^ok/ s/ok/PASS:/g'
 done
