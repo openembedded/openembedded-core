@@ -14,6 +14,7 @@ import shutil
 import stat
 import os
 import datetime
+import oeqa.utils.ftools as ftools
 
 exclude_packages = [
 	]
@@ -158,6 +159,12 @@ class ReproducibleTests(OESelftestTestCase):
     # reproducible, disable this in your derived test class
     build_from_sstate = True
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        ftools.append_file(os.path.join(cls.builddir, "conf/local.conf"), \
+             "\ninclude_all conf/include/known_non_repro.inc\n")
+
     def setUpLocal(self):
         super().setUpLocal()
         needed_vars = [
@@ -170,6 +177,7 @@ class ReproducibleTests(OESelftestTestCase):
             'OEQA_REPRODUCIBLE_TEST_SSTATE_TARGETS',
             'OEQA_REPRODUCIBLE_EXCLUDED_PACKAGES',
             'OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS',
+            'KNOWN_NON_REPRO_PACKAGES_LIST',
         ]
         bb_vars = get_bb_vars(needed_vars)
         for v in needed_vars:
@@ -188,6 +196,10 @@ class ReproducibleTests(OESelftestTestCase):
             # Setup to build every DEPENDS of leaf recipes using sstate
             for leaf_recipe in bb_vars['OEQA_REPRODUCIBLE_TEST_LEAF_TARGETS'].split():
                 self.sstate_targets.extend(get_bb_var('DEPENDS', leaf_recipe).split())
+
+        # Apply exclusion from layers (conf/include/known_non_repro.inc files)
+        if bb_vars['KNOWN_NON_REPRO_PACKAGES_LIST']:
+            self.oeqa_reproducible_excluded_packages = (self.oeqa_reproducible_excluded_packages or "") + bb_vars['KNOWN_NON_REPRO_PACKAGES_LIST']
 
         self.extraresults = {}
         self.extraresults.setdefault('reproducible', {}).setdefault('files', {})
