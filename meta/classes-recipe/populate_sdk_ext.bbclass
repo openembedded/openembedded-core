@@ -40,7 +40,7 @@ ESDK_LOCALCONF_REMOVE ?= "CONF_VERSION \
                              TMPDIR \
                              BB_SERVER_TIMEOUT \
                             "
-ESDK_CLASS_INHERIT_DISABLE ?= "buildhistory icecc"
+ESDK_CLASS_INHERIT_DISABLE ?= "buildhistory"
 SDK_UPDATE_URL ?= ""
 
 SDK_TARGETS ?= "${PN}"
