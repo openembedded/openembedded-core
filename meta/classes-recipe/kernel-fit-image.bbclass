@@ -7,6 +7,9 @@ UNPACKDIR = "${S}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+# This bbclass requires KERNEL_CLASSES += "kernel-fit-extra-artifacts"
+EXCLUDE_FROM_WORLD = "1"
+
 DEPENDS += "\
     u-boot-tools-native dtc-native \
     ${@'kernel-signing-keys-native' if d.getVar('FIT_GENERATE_KEYS') == '1' else ''} \
