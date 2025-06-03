@@ -49,6 +49,12 @@ CFLAGS:append:riscv64 = " ${LCL_STOP_SERVICES}"
 CFLAGS:append:riscv32 = " ${LCL_STOP_SERVICES}"
 CFLAGS:append:loongarch64 = " ${LCL_STOP_SERVICES}"
 
+# This works with gcc-ranlib wrapper only because it exists without error if nothing
+# is passed as argument but binutils ranlib and llvm ranlib do not and expect an input
+# passing $@ ensures that Makefile default target which is the archive name in tcf makefiles
+# is passed to RANLIB, ensures that whichever ranlib is used, the behavior is identical
+RANLIB:append = " $@"
+
 do_install() {
 	oe_runmake install INSTALLROOT=${D}
 	install -d ${D}${sysconfdir}/init.d/
