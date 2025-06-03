@@ -380,6 +380,7 @@ class KernelFitImageTests(FitImageTestCase):
         """
         internal_used = {
             'DEPLOY_DIR_IMAGE',
+            'FIT_CONF_DEFAULT_DTB',
             'FIT_CONF_PREFIX',
             'FIT_DESC',
             'FIT_HASH_ALG',
@@ -526,10 +527,14 @@ class KernelFitImageTests(FitImageTestCase):
                 its_field_check.append("load = <%s>;" % uboot_rd_loadaddress)
             if uboot_rd_entrypoint:
                 its_field_check.append("entry = <%s>;" % uboot_rd_entrypoint)
-        its_field_check += [
-            # 'default = bb_vars['FIT_CONF_PREFIX'] + "1";', needs more work
-            'kernel = "kernel-1";',
-        ]
+
+        fit_conf_default_dtb = bb_vars.get('FIT_CONF_DEFAULT_DTB')
+        if fit_conf_default_dtb:
+            fit_conf_prefix = bb_vars.get('FIT_CONF_PREFIX', "conf-")
+            its_field_check.append('default = "' + fit_conf_prefix + fit_conf_default_dtb + '";')
+
+        its_field_check.append('kernel = "kernel-1";')
+
         if initramfs_image and initramfs_image_bundle != "1":
             its_field_check.append('ramdisk = "ramdisk-1";')
 
@@ -773,6 +778,7 @@ UBOOT_SIGN_ENABLE = "1"
 UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
 UBOOT_SIGN_KEYNAME = "dev"
 UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart comment'"
+FIT_CONF_DEFAULT_DTB = "am335x-bonegreen.dtb"
 """
         config = self._config_add_uboot_env(config)
         self.write_config(config)
