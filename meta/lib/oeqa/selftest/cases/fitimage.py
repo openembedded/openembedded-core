@@ -256,7 +256,7 @@ class FitImageTestCase(OESelftestTestCase):
         self.logger.debug("sigs:\n%s\n" % pprint.pformat(sigs, indent=4))
         if req_sigvalues_config or req_sigvalues_image:
             for its_path, values in sigs.items():
-                if 'conf-' in its_path:
+                if bb_vars.get('FIT_CONF_PREFIX', "conf-") in its_path:
                     reqsigvalues = req_sigvalues_config
                 else:
                     reqsigvalues = req_sigvalues_image
@@ -380,6 +380,7 @@ class KernelFitImageTests(FitImageTestCase):
         """
         internal_used = {
             'DEPLOY_DIR_IMAGE',
+            'FIT_CONF_PREFIX',
             'FIT_DESC',
             'FIT_HASH_ALG',
             'FIT_KERNEL_COMP_ALG',
@@ -486,9 +487,9 @@ class KernelFitImageTests(FitImageTestCase):
 
         # configuration nodes (one per DTB and also one per symlink)
         if dtb_files:
-            configurations = [ 'conf-' + conf for conf in dtb_files + dtb_symlinks]
+            configurations = [bb_vars['FIT_CONF_PREFIX'] + conf for conf in dtb_files + dtb_symlinks]
         else:
-            configurations = [ 'conf-1' ]
+            configurations = [bb_vars['FIT_CONF_PREFIX'] + '1']
 
         # Create a list of paths for all image and configuration nodes
         req_its_paths = []
@@ -526,7 +527,7 @@ class KernelFitImageTests(FitImageTestCase):
             if uboot_rd_entrypoint:
                 its_field_check.append("entry = <%s>;" % uboot_rd_entrypoint)
         its_field_check += [
-            # 'default = "conf-1";', needs more work
+            # 'default = bb_vars['FIT_CONF_PREFIX'] + "1";', needs more work
             'kernel = "kernel-1";',
         ]
         if initramfs_image and initramfs_image_bundle != "1":
@@ -599,33 +600,35 @@ class KernelFitImageTests(FitImageTestCase):
         # Create a configuration section for each DTB
         if dtb_files:
             for dtb in dtb_files + dtb_symlinks:
+                conf_name = bb_vars['FIT_CONF_PREFIX'] + dtb
                 # Assume that DTBs with an "-alias" in its name are symlink DTBs created e.g. by the
                 # bbb-dtbs-as-ext test recipe. Make the configuration node pointing to the real DTB.
                 real_dtb = dtb.replace("-alias", "")
                 # dtb overlays do not refer to a kernel (yet?)
                 if dtb.endswith('.dtbo'):
-                    req_sections['conf-' + dtb] = {
+                    req_sections[conf_name] = {
                         "FDT": 'fdt-' + real_dtb,
                     }
                 else:
-                    req_sections['conf-' + dtb] = {
+                    req_sections[conf_name] = {
                         "Kernel": "kernel-1",
                         "FDT": 'fdt-' + real_dtb,
                     }
                 if initramfs_image and initramfs_image_bundle != "1":
-                    req_sections['conf-' + dtb]['Init Ramdisk'] = "ramdisk-1"
+                    req_sections[conf_name]['Init Ramdisk'] = "ramdisk-1"
         else:
-            req_sections['conf-1'] = {
+            conf_name = bb_vars['FIT_CONF_PREFIX'] +  '1'
+            req_sections[conf_name] = {
                 "Kernel": "kernel-1"
             }
             if initramfs_image and initramfs_image_bundle != "1":
-                req_sections['conf-1']['Init Ramdisk'] = "ramdisk-1"
+                req_sections[conf_name]['Init Ramdisk'] = "ramdisk-1"
 
         # Add signing related properties if needed
         if uboot_sign_enable == "1":
             for section in req_sections:
                 req_sections[section]['Hash algo'] = fit_hash_alg
-                if section.startswith('conf-'):
+                if section.startswith(bb_vars['FIT_CONF_PREFIX']):
                     req_sections[section]['Hash value'] = "unavailable"
                     req_sections[section]['Sign algo'] = "%s,%s:%s" % (fit_hash_alg, fit_sign_alg, uboot_sign_keyname)
                     num_signatures += 1
@@ -652,13 +655,13 @@ class KernelFitImageTests(FitImageTestCase):
         fit_sign_alg_len = FitImageTestCase.MKIMAGE_SIGNATURE_LENGTHS[fit_sign_alg]
         for section, values in sections.items():
             # Configuration nodes are always signed with UBOOT_SIGN_KEYNAME (if UBOOT_SIGN_ENABLE = "1")
-            if section.startswith("conf"):
+            if section.startswith(bb_vars['FIT_CONF_PREFIX']):
                 sign_algo = values.get('Sign algo', None)
                 req_sign_algo = "%s,%s:%s" % (fit_hash_alg, fit_sign_alg, uboot_sign_keyname)
                 self.assertEqual(sign_algo, req_sign_algo, 'Signature algorithm for %s not expected value' % section)
                 sign_value = values.get('Sign value', None)
                 self.assertEqual(len(sign_value), fit_sign_alg_len, 'Signature value for section %s not expected length' % section)
-                dtb_file_name = section.replace('conf-', '')
+                dtb_file_name = section.replace(bb_vars['FIT_CONF_PREFIX'], '')
                 dtb_path = os.path.join(deploy_dir_image, dtb_file_name)
                 # External devicetrees created by devicetree.bbclass are in a subfolder and have priority
                 dtb_path_ext = os.path.join(deploy_dir_image, "devicetree", dtb_file_name)
@@ -718,6 +721,7 @@ UBOOT_RD_ENTRYPOINT = "0x88000000"
 UBOOT_LOADADDRESS = "0x80080000"
 UBOOT_ENTRYPOINT = "0x80080000"
 FIT_DESC = "A model description"
+FIT_CONF_PREFIX = "foo-"
 """
         self.write_config(config)
         bb_vars = self._fit_get_bb_vars()
