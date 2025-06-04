@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ebea527af0602d509b7f4c49533fb1bd"
 SECTION = "libs"
 DEPENDS = ""
 
-SRCREV = "4dde3417b4bb4b1b1545bd913be337680b5e28c3"
+SRCREV = "a0323579ac50b9a9d4033754d089f1fed0f59a00"
 SRC_URI = "git://github.com/kaniini/libucontext;branch=master;protocol=https \
            "
 
