@@ -1,4 +1,4 @@
-From 8d876ea19579ee6b687668921c17be423cf7d6c2 Mon Sep 17 00:00:00 2001
+From a4325b6f6ddbebf3ecaee8f3825a2f03096adb6d Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 27 Apr 2025 15:26:09 -0700
 Subject: [PATCH] Use -Os to compile hb-subset-plan-layout.cc
@@ -17,10 +17,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/src/meson.build b/src/meson.build
-index 3d1c00d..fded728 100644
+index cbe5d9e..d7fc764 100644
 --- a/src/meson.build
 +++ b/src/meson.build
-@@ -393,7 +393,6 @@ hb_subset_sources = files(
+@@ -398,7 +398,6 @@ hb_subset_sources = files(
    'hb-subset-instancer-solver.hh',
    'hb-subset-instancer-solver.cc',
    'hb-subset-plan.cc',
@@ -28,7 +28,7 @@ index 3d1c00d..fded728 100644
    'hb-subset-plan-var.cc',
    'hb-subset-plan.hh',
    'hb-subset-plan-member-list.hh',
-@@ -410,6 +409,10 @@ hb_subset_sources = files(
+@@ -415,6 +414,10 @@ hb_subset_sources = files(
    'hb-subset.hh',
  )
  
@@ -39,7 +39,7 @@ index 3d1c00d..fded728 100644
  hb_subset_headers = files(
    'hb-subset.h',
    'hb-subset-serialize.h'
-@@ -618,6 +621,12 @@ endif
+@@ -629,6 +632,12 @@ endif
  
  darwin_versions = [hb_version_int, '@0@.0.0'.format(hb_version_int)]
  
@@ -52,7 +52,7 @@ index 3d1c00d..fded728 100644
  libharfbuzz = library('harfbuzz', hb_sources,
    include_directories: incconfig,
    dependencies: harfbuzz_deps,
-@@ -645,7 +654,7 @@ defs_list += [harfbuzz_subset_def]
+@@ -656,7 +665,7 @@ defs_list += [harfbuzz_subset_def]
  libharfbuzz_subset = library('harfbuzz-subset', hb_subset_sources,
    include_directories: incconfig,
    dependencies: [m_dep],
@@ -61,7 +61,7 @@ index 3d1c00d..fded728 100644
    cpp_args: cpp_args + extra_hb_cpp_args,
    soversion: hb_so_version,
    version: version,
-@@ -657,7 +666,7 @@ libharfbuzz_subset = library('harfbuzz-subset', hb_subset_sources,
+@@ -668,7 +677,7 @@ libharfbuzz_subset = library('harfbuzz-subset', hb_subset_sources,
  custom_target('harfbuzz-subset.cc',
    build_by_default: true,
    output: 'harfbuzz-subset.cc',
