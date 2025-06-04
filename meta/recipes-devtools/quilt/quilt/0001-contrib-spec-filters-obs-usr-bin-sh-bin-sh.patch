@@ -1,0 +1,28 @@
+From 0e00d22182c4cce3b242dd8f4166d3df238b3a0b Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Wed, 4 Jun 2025 00:21:40 -0700
+Subject: [PATCH] contrib/spec-filters/obs: /usr/bin/sh -> /bin/sh
+
+The /bin/sh is more common than /usr/bin/sh, the later one doesn't exist on
+distributions such as Ubuntu 22.04.
+
+Upstream-Status: Submitted [https://lists.nongnu.org/archive/html/quilt-dev/2025-06/msg00002.html]
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ contrib/spec-filters/obs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/contrib/spec-filters/obs b/contrib/spec-filters/obs
+index 2f5b169..b675230 100755
+--- a/contrib/spec-filters/obs
++++ b/contrib/spec-filters/obs
+@@ -1,4 +1,4 @@
+-#!/usr/bin/sh
++#!/bin/sh
+ # Basic spec file filter for OBS packages
+ # https://build.opensuse.org/
+ 
+-- 
+2.49.0
+

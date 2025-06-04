@@ -11,11 +11,12 @@ SRC_URI = "${SAVANNAH_GNU_MIRROR}/quilt/quilt-${PV}.tar.gz \
         file://run-ptest \
         file://test.sh \
         file://0001-tests-Allow-different-output-from-mv.patch \
+        file://0001-contrib-spec-filters-obs-usr-bin-sh-bin-sh.patch \
 "
 
 SRC_URI:append:class-target = " file://gnu_patch_test_fix_target.patch"
 
-SRC_URI[sha256sum] = "fe8c09de03c106e85b3737c8f03ade147c956b79ed7af485a1c8a3858db38426"
+SRC_URI[sha256sum] = "555ddffde22da3c86d1caf5a9c1fb8a152ac2b84730437bd39cc08849c9f4852"
 
 inherit autotools-brokensep ptest
 
