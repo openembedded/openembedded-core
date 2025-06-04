@@ -12,7 +12,7 @@ PROVIDES += "virtual/bootloader"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS += "bison-native flex-native"
+DEPENDS += "bison-native flex-native lz4-native"
 
 S = "${WORKDIR}/barebox-${PV}"
 B = "${WORKDIR}/build"
