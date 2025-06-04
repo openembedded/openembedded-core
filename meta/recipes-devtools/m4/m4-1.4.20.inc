@@ -49,9 +49,9 @@ do_install_ptest:append:libc-glibc() {
                        -e  "s;LOCALE_FR_UTF8='none';LOCALE_FR_UTF8='fr_FR.utf8';g" ${D}${PTEST_PATH}/tests/Makefile
 }
 
-RDEPENDS:${PN}-ptest += "make coreutils diffutils bash"
+RDEPENDS:${PN}-ptest += "make coreutils diffutils bash locale-base-fr-fr"
+
 RDEPENDS:${PN}-ptest:append:libc-glibc = "\
-     locale-base-fr-fr \
      locale-base-fr-fr.iso-8859-1 \
      glibc-gconv-iso8859-1 \
 "
