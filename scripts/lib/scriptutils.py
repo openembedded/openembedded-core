@@ -182,7 +182,10 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirr
                 f.write('UNPACKDIR = "%s"\n' % destdir)
 
                 # Set S out of the way so it doesn't get created under the workdir
-                f.write('S = "%s"\n' % os.path.join(tmpdir, 'emptysrc'))
+                s_dir = os.path.join(tmpdir, 'emptysrc')
+                bb.utils.mkdirhier(s_dir)
+                f.write('S = "%s"\n' % s_dir)
+
                 if not mirrors:
                     # We do not need PREMIRRORS since we are almost certainly
                     # fetching new source rather than something that has already
