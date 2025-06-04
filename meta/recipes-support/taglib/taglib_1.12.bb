@@ -9,7 +9,9 @@ LIC_FILES_CHKSUM = "file://COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
 
 DEPENDS = "zlib"
 
-SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz"
+SRC_URI = "http://taglib.github.io/releases/${BP}.tar.gz \
+           file://CVE-2023-47466.patch \
+          "
 
 SRC_URI[md5sum] = "4313ed2671234e029b7af8f97c84e9af"
 SRC_URI[sha256sum] = "7fccd07669a523b07a15bd24c8da1bbb92206cb19e9366c3692af3d79253b703"
