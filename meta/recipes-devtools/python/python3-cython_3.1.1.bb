@@ -7,7 +7,7 @@ SECTION = "devel/python"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=61c3ee8961575861fa86c7e62bc9f69c"
 
-SRC_URI[sha256sum] = "1097dd60d43ad0fff614a57524bfd531b35c13a907d13bee2cc2ec152e6bf4a1"
+SRC_URI[sha256sum] = "505ccd413669d5132a53834d792c707974248088c4f60c497deb1b416e366397"
 
 inherit pypi setuptools3 cython
 
