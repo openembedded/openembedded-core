@@ -1,0 +1,34 @@
+From a13fc5a57ea7c6b1761bc204cb79d8ce4745f57a Mon Sep 17 00:00:00 2001
+From: songliang <YS.songliang@h3c.com>
+Date: Wed, 4 Jun 2025 15:58:53 +0800
+Subject: [PATCH] Modify "my_strncat" function
+
+The meaning of the "len" parameter in the my_strncat function is the size limit for copying characters from "from", not the size limit for "to" after copying.
+Also, the "#define safestrcat(to, from) my_strncat(to, from, sizeof(to) - strlen(to) - 1)" has already imposed a limit on max based on the size of "to".
+Modify the function to prevent truncation of content when too many bytes are passed to the my_strcat function.
+
+Upstream-Status: Submitted [https://github.com/linux-ras/sysfsutils/pull/30/commits/c2326946c0c2a4206c9b079a9fe25f7f9115295c]
+Signed-off-by: songliang <YS.songliang@h3c.com>
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ lib/sysfs_utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/sysfs_utils.c b/lib/sysfs_utils.c
+index 46e0849..c0176d1 100644
+--- a/lib/sysfs_utils.c
++++ b/lib/sysfs_utils.c
+@@ -375,8 +375,8 @@ char *my_strncat(char *to, const char *from, size_t max)
+ {
+ 	size_t i = 0;
+ 
+-	while (i < max && to[i] != '\0')
++	while (to[i] != '\0')
+ 		i++;
+-	my_strncpy(to+i, from, max-i);
++	my_strncpy(to+i, from, max);
+ 	return to;
+ }
+-- 
+2.34.1
+
