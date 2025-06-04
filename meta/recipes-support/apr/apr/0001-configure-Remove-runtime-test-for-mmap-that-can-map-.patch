@@ -1,4 +1,4 @@
-From 316b81c462f065927d7fec56aadd5c8cb94d1cf0 Mon Sep 17 00:00:00 2001
+From 84990901ba642238779c74a003c1f5e572ab8d38 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 26 Aug 2022 00:28:08 -0700
 Subject: [PATCH] configure: Remove runtime test for mmap that can map
@@ -10,16 +10,15 @@ mutexes
 
 Upstream-Status: Inappropriate [Cross-compile specific]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
 ---
  configure.in | 30 ------------------------------
  1 file changed, 30 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index 3663220..dce9789 100644
+index 3d42953..7e43b0f 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1303,36 +1303,6 @@ AC_CHECK_FUNCS([mmap munmap shm_open shm_unlink shmget shmat shmdt shmctl \
+@@ -1391,36 +1391,6 @@ AC_CHECK_FUNCS([mmap munmap shm_open shm_unlink shmget shmat shmdt shmctl \
  APR_CHECK_DEFINE(MAP_ANON, sys/mman.h)
  AC_CHECK_FILE(/dev/zero)
  

@@ -1,4 +1,4 @@
-From 689a8db96a6d1e1cae9cbfb35d05ac82140a6555 Mon Sep 17 00:00:00 2001
+From 5050645e626a8ee91a7f45070ef2d3911e1870d7 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Tue, 30 Jan 2018 09:39:06 +0800
 Subject: [PATCH] apr: Remove workdir path references from installed apr files
@@ -13,16 +13,15 @@ packages at target run time, the workdir path caused confusion.
 Rebase to 1.6.3
 
 Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-
 ---
  apr-config.in | 32 ++------------------------------
  1 file changed, 2 insertions(+), 30 deletions(-)
 
 diff --git a/apr-config.in b/apr-config.in
-index bed47ca..47874e5 100644
+index 626d3b0..42be269 100644
 --- a/apr-config.in
 +++ b/apr-config.in
-@@ -164,16 +164,7 @@ while test $# -gt 0; do
+@@ -179,16 +179,7 @@ while test $# -gt 0; do
      flags="$flags $LDFLAGS"
      ;;
      --includes)
@@ -39,7 +38,7 @@ index bed47ca..47874e5 100644
      ;;
      --srcdir)
      echo $APR_SOURCE_DIR
-@@ -197,33 +188,14 @@ while test $# -gt 0; do
+@@ -212,33 +203,14 @@ while test $# -gt 0; do
      exit 0
      ;;
      --link-ld)

@@ -24,7 +24,7 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.bz2 \
            file://0001-dso-Check-for-NULL-handle-in-apr_dso_sym.patch \
            "
 
-SRC_URI[sha256sum] = "cd0f5d52b9ab1704c72160c5ee3ed5d3d4ca2df4a7f8ab564e3cb352b67232f2"
+SRC_URI[sha256sum] = "49030d92d2575da735791b496dc322f3ce5cff9494779ba8cc28c7f46c5deb32"
 
 inherit autotools-brokensep lib_package binconfig multilib_header ptest multilib_script
 

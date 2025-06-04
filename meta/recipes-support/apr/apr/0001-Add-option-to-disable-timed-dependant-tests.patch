@@ -1,4 +1,4 @@
-From 225abf37cd0b49960664b59f08e515a4c4ea5ad0 Mon Sep 17 00:00:00 2001
+From dc02ac2f43e47178a9b1f35ef6906d7835dc121b Mon Sep 17 00:00:00 2001
 From: Jeremy Puhlman <jpuhlman@mvista.com>
 Date: Thu, 26 Mar 2020 18:30:36 +0000
 Subject: [PATCH] Add option to disable timed dependant tests
@@ -9,7 +9,6 @@ a timer or other timing related issues.
 
 Upstream-Status: Submitted [https://github.com/apache/apr/pull/54]
 Signed-off-by: Jeremy Puhlman <jpuhlman@mvista.com>
-
 ---
  configure.in     | 6 ++++++
  include/apr.h.in | 1 +
@@ -17,10 +16,10 @@ Signed-off-by: Jeremy Puhlman <jpuhlman@mvista.com>
  3 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index bfd488b..3663220 100644
+index 0ce20ab..3d42953 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -3023,6 +3023,12 @@ AC_ARG_ENABLE(timedlocks,
+@@ -3119,6 +3119,12 @@ AC_ARG_ENABLE(timedlocks,
  )
  AC_SUBST(apr_has_timedlocks)
  
@@ -34,10 +33,10 @@ index bfd488b..3663220 100644
  # so getaddrinfo/gai_strerror are not used.
  if test $have_ipv6 = 0; then
 diff --git a/include/apr.h.in b/include/apr.h.in
-index ee99def..c46a5f4 100644
+index 637ed38..e7cb9b9 100644
 --- a/include/apr.h.in
 +++ b/include/apr.h.in
-@@ -298,6 +298,7 @@ extern "C" {
+@@ -307,6 +307,7 @@ extern "C" {
  #define APR_HAS_XTHREAD_FILES     @apr_has_xthread_files@
  #define APR_HAS_OS_UUID           @osuuid@
  #define APR_HAS_TIMEDLOCKS        @apr_has_timedlocks@
