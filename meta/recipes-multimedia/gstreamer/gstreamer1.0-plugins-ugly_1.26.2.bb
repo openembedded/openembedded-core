@@ -15,7 +15,7 @@ SRC_URI = " \
             https://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-${PV}.tar.xz \
             "
 
-SRC_URI[sha256sum] = "34d9bcec8e88b008839d8de33fb043ae75eb04e466df74066fd66ee487a8ec4f"
+SRC_URI[sha256sum] = "ec2d7556c6b8c2694f9b918ab9c4c6c998fb908c6b6a6ad57441702dad14ce73"
 
 S = "${WORKDIR}/gst-plugins-ugly-${PV}"
 
