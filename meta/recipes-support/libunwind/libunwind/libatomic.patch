@@ -1,4 +1,4 @@
-From d6a0d8ce07c761e51b9dc7c5d16a9b06c3e93560 Mon Sep 17 00:00:00 2001
+From a331e3a63981427724d2d9cfdcb4a456153299b5 Mon Sep 17 00:00:00 2001
 From: Stephen Webb <swebb@blackberry.com>
 Date: Mon, 18 Mar 2024 10:22:26 -0400
 Subject: [PATCH] configure.ac: detect if -latomic is required
@@ -14,10 +14,10 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
  1 file changed, 12 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index 758a27d19..d0ef5f3d9 100644
+index eaa0ddc..d5f1d4a 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -94,6 +94,18 @@ dnl Checks for library functions.
+@@ -93,6 +93,18 @@ dnl Checks for library functions.
  AC_CHECK_FUNCS(dl_iterate_phdr dl_phdr_removals_counter dlmodinfo getunwind \
  		ttrace mincore pipe2 sigaltstack execvpe)
  

@@ -10,14 +10,12 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://mips-byte-order.patch \
            file://0001-tests-Garm64-test-sve-signal-check-that-SVE-is-prese.patch \
            file://0002-coredump-use-glibc-or-musl-register-names-as-appropr.patch \
-           file://0003-Fixed-miscompilation-of-unw_getcontext-on-ARM.patch \
-           file://0004-Rework-inline-aarch64-as-for-setcontext.patch \
            file://0005-Handle-musl-on-PPC32.patch \
            file://libatomic.patch \
            file://malloc.patch \
            "
 
-SRC_URI[sha256sum] = "ddf0e32dd5fafe5283198d37e4bf9decf7ba1770b6e7e006c33e6df79e6a6157"
+SRC_URI[sha256sum] = "7f262f1a1224f437ede0f96a6932b582c8f5421ff207c04e3d9504dfa04c8b82"
 
 inherit autotools multilib_header github-releases
 
