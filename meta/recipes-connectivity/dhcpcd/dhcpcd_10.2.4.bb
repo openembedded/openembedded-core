@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            file://0001-dhcpcd.8-Fix-conflict-error-when-enable-multilib.patch \
            "
 
-SRCREV = "f6983c18dbf7989f43a2838beeaf62a54c53ff1d"
+SRCREV = "93df2b254caf9639f9ffb66e0fe2b584eeba6220"
 S = "${WORKDIR}/git"
 
 # Doesn't use automake so we can't do out-of-tree builds
