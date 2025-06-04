@@ -1,6 +1,6 @@
 require bluez5.inc
 
-SRC_URI[sha256sum] = "0739fa608a837967ee6d5572b43fb89946a938d1c6c26127158aaefd743a790b"
+SRC_URI[sha256sum] = "108522d909d220581399bfec93daab62035539ceef3dda3e79970785c63bd24c"
 
 CVE_STATUS[CVE-2020-24490] = "cpe-incorrect: This issue has kernel fixes rather than bluez fixes"
 
