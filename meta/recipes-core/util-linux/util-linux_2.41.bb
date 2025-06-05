@@ -1,13 +1,44 @@
 require util-linux.inc
 
+# Most of the applications and the libraries are linked with libcommon.la,
+# which uses these licenses
+LIBCOMMON_LICENSES = "LGPL-2.1-or-later & BSD-2-Clause & BSD-3-Clause & MIT"
+
+# The default license is GPL-2.0-or-later
+DEFAULT_LICENSES = "GPL-2.0-or-later & ${LIBCOMMON_LICENSES}"
+
 LICENSE = "GPL-1.0-or-later & GPL-2.0-only & GPL-2.0-or-later & LGPL-2.1-or-later & BSD-2-Clause & BSD-3-Clause & BSD-4-Clause-UC & MIT & EUPL-1.2"
+LICENSE:${PN}-bash-completion = "GPL-2.0-or-later"
+LICENSE:${PN}-dev = "${LIBCOMMON_LICENSES}"
+# All dynamic packages use ${DEFAULT_LICENSES} with the following exceptions
+LICENSE:${PN}-cal = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-col = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-colcrt = "BSD-4-Clause-UC"
+LICENSE:${PN}-colrm = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-column = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-coresched = "EUPL-1.2 & ${LIBCOMMON_LICENSES}"
 LICENSE:${PN}-fcntl-lock = "MIT"
-LICENSE:${PN}-fdisk = "GPL-1.0-or-later"
-LICENSE:${PN}-libblkid = "LGPL-2.1-or-later"
-LICENSE:${PN}-libfdisk = "LGPL-2.1-or-later"
-LICENSE:${PN}-libmount = "LGPL-2.1-or-later"
-LICENSE:${PN}-libsmartcols = "LGPL-2.1-or-later"
-LICENSE:${PN}-coresched = "EUPL-1.2"
+LICENSE:${PN}-fdisk = "GPL-1.0-or-later & ${DEFAULT_LICENSES}"
+LICENSE:${PN}-fsfreeze = "GPL-1.0-or-later"
+LICENSE:${PN}-hexdump = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-kill = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-libblkid = "${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-libfdisk = "${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-libmount = "${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-libsmartcols = "${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-logger = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-look = "BSD-4-Clause-UC"
+LICENSE:${PN}-lscpu = "GPL-2.0-only & ${DEFAULT_LICENSES}"
+LICENSE:${PN}-mesg = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-nsenter = "GPL-2.0-only & ${DEFAULT_LICENSES}"
+LICENSE:${PN}-renice = "BSD-4-Clause-UC"
+LICENSE:${PN}-rev = "BSD-4-Clause-UC"
+LICENSE:${PN}-script = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-ul = "BSD-4-Clause-UC"
+LICENSE:${PN}-vipw = "BSD-4-Clause-UC & ${DEFAULT_LICENSES}"
+LICENSE:${PN}-wall = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-whereis = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
+LICENSE:${PN}-write = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
 
 LIC_FILES_CHKSUM = "file://README.licensing;md5=55e895a80bdd4ffc65e167a76d2e7569 \
                     file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
@@ -32,6 +63,9 @@ python util_linux_binpackages () {
     def pkg_hook(f, pkg, file_regex, output_pattern, modulename):
         pn = d.getVar('PN')
         d.appendVar('RRECOMMENDS:%s' % pn, ' %s' % pkg)
+
+        if not d.getVar('LICENSE:' + pkg):
+            d.setVar('LICENSE:' + pkg, '${DEFAULT_LICENSES}')
 
         if d.getVar('ALTERNATIVE:' + pkg):
             return
