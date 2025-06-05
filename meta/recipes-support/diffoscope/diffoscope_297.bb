@@ -12,7 +12,7 @@ PYPI_PACKAGE = "diffoscope"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "15315d09babdee45449be7042ad1f57104a5f04853bd6951cdc0da171c13ac3b"
+SRC_URI[sha256sum] = "25532061c640b4be7496f9a726640e20ca0fcb8e46a8a1a46e51ac940a5f4e57"
 
 RDEPENDS:${PN} += "\
         binutils \
@@ -28,9 +28,6 @@ RDEPENDS:${PN} += "\
         squashfs-tools \
         vim \
         "
-
-# Dependencies don't build for musl
-COMPATIBLE_HOST:libc-musl = 'null'
 
 do_install:append:class-native() {
 	create_wrapper ${D}${bindir}/diffoscope \
