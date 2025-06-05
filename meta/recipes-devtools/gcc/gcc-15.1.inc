@@ -79,7 +79,7 @@ S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${SOURCEDIR}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # Language Overrides
-FORTRAN = ""
+FORTRAN ?= ""
 
 SSP ?= "--disable-libssp"
 SSP:mingw32 = "--enable-libssp"
