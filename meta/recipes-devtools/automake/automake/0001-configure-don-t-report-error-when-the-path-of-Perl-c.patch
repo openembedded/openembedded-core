@@ -13,27 +13,22 @@ Upstream-Status: Inappropriate [ oe-specific ]
 
 Signed-off-by: Changqing Li <changqing.li@windriver.com>
 ---
- configure |   10 ----------
- 1 file changed, 10 deletions(-)
+ configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure b/configure
-index 64b61eb..786aefd 100755
+index 45bf85a..68d3c7d 100755
 --- a/configure
 +++ b/configure
-@@ -3776,16 +3776,6 @@ case $PERL in
+@@ -3514,7 +3514,7 @@ case $PERL in
     as_fn_error $? "perl not found" "$LINENO" 5
     ;;
   *' '* | *'	'*)
--  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: The path to your Perl contains spaces or tabs.
--This will likely cause build failures later or unusable programs.
--Unless you're specifying a full string for a #! line,
--as in \"/usr/bin/env perl\",
--please use a path without spaces and try again." >&5
--printf "%s\n" "$as_me: WARNING: The path to your Perl contains spaces or tabs.
--This will likely cause build failures later or unusable programs.
--Unless you're specifying a full string for a #! line,
--as in \"/usr/bin/env perl\",
--please use a path without spaces and try again." >&2;}
+-  as_fn_error $? "The path to your Perl contains spaces or tabs.
++  : as_fn_error $? "The path to your Perl contains spaces or tabs.
+ This would cause build failures later or unusable programs.
+ Please use a path without spaces and try again." "$LINENO" 5
    ;;
- esac
- 
+-- 
+2.25.1
+
