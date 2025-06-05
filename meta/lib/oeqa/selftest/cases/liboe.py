@@ -9,11 +9,11 @@ from oeqa.utils.commands import get_bb_var, get_bb_vars, bitbake, runCmd
 import oe.path
 import os
 
-class LibOE(OESelftestTestCase):
+class CopyTreeTests(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(LibOE, cls).setUpClass()
+        super().setUpClass()
         cls.tmp_dir = get_bb_var('TMPDIR')
 
     def test_copy_tree_special(self):
@@ -102,3 +102,36 @@ class LibOE(OESelftestTestCase):
         self.assertEqual(dstcnt, len(testfiles), "Number of files in dst (%s) differs from number of files in src(%s)." % (dstcnt, srccnt))
 
         oe.path.remove(testloc)
+
+class SubprocessTests(OESelftestTestCase):
+
+    def test_subprocess_tweak(self):
+        """
+        Test that the string representation of
+        oeqa.utils.subprocesstweak.OETestCalledProcessError includes stdout and
+        stderr, as expected.
+        """
+        script = """
+#! /bin/sh
+echo Ivn fgqbhg | tr '[a-zA-Z]' '[n-za-mN-ZA-M]'
+echo Ivn fgqree | tr '[a-zA-Z]' '[n-za-mN-ZA-M]' >&2
+exit 42
+        """
+
+        import subprocess
+        import unittest.mock
+        from oeqa.utils.subprocesstweak import OETestCalledProcessError
+
+        with self.assertRaises(OETestCalledProcessError) as cm:
+            with unittest.mock.patch("subprocess.CalledProcessError", OETestCalledProcessError):
+                subprocess.run(["bash", "-"], input=script, text=True, capture_output=True, check=True)
+
+        e = cm.exception
+        self.assertEqual(e.returncode, 42)
+        self.assertEqual("Via stdout\n", e.stdout)
+        self.assertEqual("Via stderr\n", e.stderr)
+
+        string = str(e)
+        self.assertIn("exit status 42", string)
+        self.assertIn("Standard Output: Via stdout", string)
+        self.assertIn("Standard Error: Via stderr", string)
