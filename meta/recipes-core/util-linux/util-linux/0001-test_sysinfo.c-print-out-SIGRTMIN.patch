@@ -1,0 +1,50 @@
+From 50774e34fee0cd528b195a863bcd4e3a04fbfc4b Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Wed, 4 Jun 2025 10:52:18 +0800
+Subject: [PATCH 1/2] test_sysinfo.c: print out SIGRTMIN
+
+This will be used by ts/kill/decode.
+
+Upstream-Status: Submitted [https://github.com/util-linux/util-linux/pull/3605]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ tests/helpers/test_sysinfo.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tests/helpers/test_sysinfo.c b/tests/helpers/test_sysinfo.c
+index 1559d471f..3a791e7f1 100644
+--- a/tests/helpers/test_sysinfo.c
++++ b/tests/helpers/test_sysinfo.c
+@@ -27,6 +27,7 @@
+ #include <errno.h>
+ #include <time.h>
+ #include <sys/ioctl.h>
++#include <signal.h>
+ 
+ #include "c.h"
+ 
+@@ -116,6 +117,12 @@ static int hlp_ulong_max32(void)
+ 	return 0;
+ }
+ 
++static int hlp_sigrtmin(void)
++{
++	printf("%d\n", SIGRTMIN);
++	return 0;
++}
++
+ static int hlp_wcsspn_ok(void)
+ {
+ 	printf("%d\n", wcsspn(L"FOO", L"F") == 1);
+@@ -229,6 +236,7 @@ static const mntHlpfnc hlps[] =
+ 	{ "ULONG_MAX",  hlp_ulong_max	},
+ 	{ "ULONG_MAX32",hlp_ulong_max32	},
+ 	{ "UINT64_MAX", hlp_u64_max     },
++	{ "SIGRTMIN",   hlp_sigrtmin    },
+ 	{ "byte-order", hlp_endianness  },
+ 	{ "wcsspn-ok",  hlp_wcsspn_ok   },
+ 	{ "enotty-ok",  hlp_enotty_ok   },
+-- 
+2.34.1
+
