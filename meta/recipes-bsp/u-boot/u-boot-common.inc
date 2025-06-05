@@ -16,10 +16,6 @@ SRCREV = "34820924edbc4ec7803eb89d9852f4b870fa760a"
 
 SRC_URI = "git://source.denx.de/u-boot/u-boot.git;protocol=https;branch=master;tag=v${PV}"
 
-# workarounds for aarch64 kvm qemu boot regressions
-SRC_URI:append:qemuarm64 = " file://disable-CONFIG_BLOBLIST.cfg file://disable_CONFIG_USB.cfg"
-SRC_URI:append:genericarm64 = " file://disable-CONFIG_BLOBLIST.cfg file://disable_CONFIG_USB.cfg"
-
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
