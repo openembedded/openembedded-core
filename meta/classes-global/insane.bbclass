@@ -32,7 +32,7 @@ CHECKLAYER_REQUIRED_TESTS = "\
     invalid-packageconfig la \
     license-checksum license-exception license-exists license-file-missing license-format license-no-generic license-syntax \
     mime mime-xdg missing-update-alternatives multilib obsolete-license \
-    packages-list patch-fuzz patch-status perllocalpod perm-config perm-line perm-link \
+    packages-list patch-fuzz patch-status perllocalpod perm-config perm-line perm-link recipe-naming \
     pkgconfig pkgvarcheck pkgv-undefined pn-overrides shebang-size src-uri-bad symlink-to-sysroot \
     unhandled-features-check unknown-configure-option unlisted-pkg-lics uppercase-pn useless-rpaths \
     var-undefined virtual-slash xorg-driver-abi"
@@ -1438,6 +1438,12 @@ python do_qa_unpack() {
 python do_recipe_qa() {
     import re
 
+    def test_naming(pn, d):
+        if pn.endswith("-native") and not bb.data.inherits_class("native", d):
+            oe.qa.handle_error("recipe-naming", "Recipe %s appears native but is not, should inherit native" % pn, d)
+        if pn.startswith("nativesdk-") and not bb.data.inherits_class("nativesdk", d):
+            oe.qa.handle_error("recipe-naming", "Recipe %s appears nativesdk but is not, should inherit nativesdk" % pn, d)
+
     def test_missing_metadata(pn, d):
         fn = d.getVar("FILE")
         srcfile = d.getVar('SRC_URI').split()
@@ -1482,6 +1488,7 @@ python do_recipe_qa() {
                 oe.qa.handle_error("invalid-packageconfig", error_msg, d)
 
     pn = d.getVar('PN')
+    test_naming(pn, d)
     test_missing_metadata(pn, d)
     test_missing_maintainer(pn, d)
     test_srcuri(pn, d)
