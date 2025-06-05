@@ -101,6 +101,8 @@ WRAPPER_TOOLS = " \
    ${libdir}/rpm/rpmdeps \
 "
 
+base_bindir_progs = "sed tar rm mv mkdir cp cat chown chmod gzip grep"
+
 do_install:append:class-native() {
         for tool in ${WRAPPER_TOOLS}; do
                 test -x ${D}$tool && create_wrapper ${D}$tool \
@@ -123,9 +125,15 @@ do_install:append:class-nativesdk() {
 	EOF
 }
 
-# Rpm's make install creates var/tmp which clashes with base-files packaging
 do_install:append:class-target() {
+    # Rpm's make install creates var/tmp which clashes with base-files packaging
     rm -rf ${D}/var
+
+    if [ "${base_bindir}" != "${bindir}" ]; then
+        for prog in ${base_bindir_progs}; do
+            sed -i "s|^%__${prog}.*|%__${prog}  ${base_bindir}/${prog}|g" ${D}${libdir}/rpm/macros
+        done
+    fi
 }
 do_install:append:class-nativesdk() {
     rm -rf ${D}${SDKPATHNATIVE}/var
