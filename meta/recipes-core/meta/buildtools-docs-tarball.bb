@@ -16,4 +16,5 @@ TOOLCHAIN_OUTPUTNAME = "${SDK_ARCH}-buildtools-docs-nativesdk-standalone-${DISTR
 
 SDK_TITLE = "Docs Build tools tarball"
 
-TESTSDK_CASES = "buildtools-docs-cases"
+# Directory that contains testcases
+TESTSDK_CASE_DIRS = "sdkbuildtools-docs"

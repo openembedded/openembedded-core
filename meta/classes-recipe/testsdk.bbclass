@@ -19,6 +19,7 @@ TESTSDK_SUITES ?= ""
 
 TESTSDK_CLASS_NAME ?= "oeqa.sdk.testsdk.TestSDK"
 TESTSDKEXT_CLASS_NAME ?= "oeqa.sdkext.testsdk.TestSDKExt"
+TESTSDK_CASE_DIRS ?= "sdk"
 
 def import_and_run(name, d):
     import importlib
