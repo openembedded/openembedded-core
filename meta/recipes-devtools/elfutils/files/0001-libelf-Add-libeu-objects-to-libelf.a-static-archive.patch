@@ -20,12 +20,12 @@ Upstream-Status: Backport [https://sourceware.org/git/?p=elfutils.git;a=commit;h
  1 file changed, 3 insertions(+)
 
 diff --git a/libelf/Makefile.am b/libelf/Makefile.am
-index 3402863e..2d3dbdf2 100644
+index 05484c1..72f1e22 100644
 --- a/libelf/Makefile.am
 +++ b/libelf/Makefile.am
-@@ -122,6 +122,9 @@ libelf.so: $(srcdir)/libelf.map $(libelf_so_LIBS) $(libelf_so_DEPS)
- 	@$(textrel_check)
- 	$(AM_V_at)ln -fs $@ $@.$(VERSION)
+@@ -125,6 +125,9 @@ libelf.so: $(srcdir)/libelf.map $(libelf_so_LIBS) $(libelf_so_DEPS)
+ libeu_objects = $(shell cat ../lib/libeu.manifest)
+ libelf_a_LIBADD = $(addprefix ../lib/,$(libeu_objects))
  
 +libeu_objects = $(shell $(AR) t ../lib/libeu.a)
 +libelf_a_LIBADD = $(addprefix ../lib/,$(libeu_objects))

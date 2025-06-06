@@ -24,7 +24,7 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
            "
-SRC_URI[sha256sum] = "616099beae24aba11f9b63d86ca6cc8d566d968b802391334c91df54eab416b4"
+SRC_URI[sha256sum] = "7857f44b624f4d8d421df851aaae7b1402cfe6bcdd2d8049f15fc07d3dde7635"
 
 inherit autotools gettext ptest pkgconfig
 
