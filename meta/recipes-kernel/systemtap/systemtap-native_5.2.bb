@@ -1,5 +1,4 @@
-
-require systemtap_git.bb
+require systemtap_${PV}.bb
 
 inherit_defer native
 
