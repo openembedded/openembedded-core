@@ -4,22 +4,18 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://src/calibrator.cpp;endline=22;md5=1bcba08f67cdb56f34021557898e4b5a"
 DEPENDS = "virtual/libx11 libxi libxrandr"
 
-PV = "0.7.5+git"
-
 inherit autotools pkgconfig features_check
-# depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"
 
-SRCREV = "18ec53f1cada39f905614ebfaffed5c7754ecf46"
-SRC_URI = "git://github.com/kreijack/xinput_calibrator.git;branch=libinput;protocol=https \
+SRCREV = "970b574b8f7b0d6f2613d343191f47814f2dfaa4"
+
+SRC_URI = "git://gitlab.freedesktop.org/xorg/app/xinput-calibrator;protocol=https;branch=master;tag=v${PV} \
            file://30xinput_calibrate.sh \
            file://Allow-xinput_calibrator_pointercal.sh-to-be-run-as-n.patch \
-           file://0001-calibrator.hh-Include-string-to-get-std-string.patch \
            "
 
 S = "${WORKDIR}/git"
 
-# force native X11 ui as we don't have gtk+ in DEPENDS
 EXTRA_OECONF += "--with-gui=x11"
 
 do_install:append() {
