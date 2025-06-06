@@ -27,7 +27,7 @@ EXTRA_OEMAKE += "'infodir=${infodir}'"
 do_compile_ptest() {
 	cd ${B}/tests
 	sed -i '/^buildtest-TESTS: /c buildtest-TESTS: $(TESTS) $(check_LIBRARIES) $(check_PROGRAMS)' Makefile
-	oe_runmake buildtest-TESTS
+	oe_runmake CPPFLAGS="-DSRCDIR=\\\"${PTEST_PATH}/tests/\\\"" buildtest-TESTS
 }
 
 do_install_ptest() {
@@ -39,9 +39,6 @@ do_install_ptest() {
                 chmod 0755 ${D}${PTEST_PATH}/tests/test-spawn-pipe-main \
                      ${D}${PTEST_PATH}/tests/test-spawn-pipe-child ${D}${PTEST_PATH}/tests/test-version-etc \
                      ${D}${PTEST_PATH}/tests/test-xalloc-die
-
-                ln -sf ptest ${D}${libdir}/${BPN}/${BP}
-                sed -i -e 's/@BP@/${BP}/g' ${D}${PTEST_PATH}/run-ptest
 }
 
 do_install_ptest:append:libc-glibc() {
