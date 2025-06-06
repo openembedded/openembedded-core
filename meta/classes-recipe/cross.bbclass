@@ -80,17 +80,17 @@ do_packagedata[stamp-extra-info] = ""
 
 USE_NLS = "no"
 
-export CC = "${BUILD_CC}"
-export CXX = "${BUILD_CXX}"
-export FC = "${BUILD_FC}"
-export CPP = "${BUILD_CPP}"
-export LD = "${BUILD_LD}"
-export CCLD = "${BUILD_CCLD}"
-export AR = "${BUILD_AR}"
-export AS = "${BUILD_AS}"
-export RANLIB = "${BUILD_RANLIB}"
-export STRIP = "${BUILD_STRIP}"
-export NM = "${BUILD_NM}"
+CC = "${BUILD_CC}"
+CXX = "${BUILD_CXX}"
+FC = "${BUILD_FC}"
+CPP = "${BUILD_CPP}"
+LD = "${BUILD_LD}"
+CCLD = "${BUILD_CCLD}"
+AR = "${BUILD_AR}"
+AS = "${BUILD_AS}"
+RANLIB = "${BUILD_RANLIB}"
+STRIP = "${BUILD_STRIP}"
+NM = "${BUILD_NM}"
 
 inherit nopackages
 
