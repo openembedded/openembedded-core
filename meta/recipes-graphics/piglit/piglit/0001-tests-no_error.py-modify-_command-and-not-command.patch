@@ -1,0 +1,32 @@
+From 846efe923932d66810305b228fa09f83a172296d Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Thu, 22 May 2025 17:34:15 +0200
+Subject: [PATCH] tests/no_error.py: modify _command and not command
+
+command getter function has hidden magic that prepends build paths;
+this is an undesirable side effect here, as we only want to append a parameter
+and not change anything else.
+
+In particular this avoids adding build paths to installed .xml.gz file,
+ensuring reproducibility. Xml writer is already using _command for the
+same reason.
+
+Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/piglit/-/merge_requests/1016]
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ tests/no_error.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/no_error.py b/tests/no_error.py
+index 4ecaa9a01..c64eec0a1 100644
+--- a/tests/no_error.py
++++ b/tests/no_error.py
+@@ -21,4 +21,4 @@ for name, test in itertools.chain(_profile1.test_list.items(),
+                                   _profile2.test_list.items()):
+     if isinstance(test, (PiglitGLTest, ShaderTest, MultiShaderTest)):
+         profile.test_list['{} khr_no_error'.format(name)] = test
+-        test.command += ['-khr_no_error']
++        test._command += ['-khr_no_error']
+-- 
+2.39.5
+
