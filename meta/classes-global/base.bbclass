@@ -267,9 +267,18 @@ def buildcfg_neededvars(d):
         bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
 addhandler base_eventhandler
-base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.MultiConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.event.RecipeParsed"
+base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.MultiConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.event.RecipeParsed bb.event.RecipePreDeferredInherits"
 python base_eventhandler() {
     import bb.runqueue
+
+    if isinstance(e, bb.event.RecipePreDeferredInherits):
+        # Use this to snoop on class extensions and set these up before the deferred inherits
+        # are processed which allows overrides on conditional variables.
+        for c in ['native', 'nativesdk', 'crosssdk', 'cross']:
+            if c in e.inherits:
+                d.setVar('CLASSOVERRIDE', 'class-' + c)
+                break
+        return
 
     if isinstance(e, bb.event.ConfigParsed):
         if not d.getVar("NATIVELSBSTRING", False):
