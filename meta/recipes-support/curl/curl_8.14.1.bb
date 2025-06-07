@@ -20,7 +20,7 @@ SRC_URI:append:class-nativesdk = " \
            file://environment.d-curl.sh \
 "
 
-SRC_URI[sha256sum] = "0341f1ed97a26c811abaebd37d62b833956792b7607ea3f15d001613c76de202"
+SRC_URI[sha256sum] = "f4619a1e2474c4bbfedc88a7c2191209c8334b48fa1f4e53fd584cc12e9120dd"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
@@ -126,11 +126,16 @@ do_install_ptest() {
 		${B}/libtool --mode=install install ${B}/tests/server/$name ${D}${PTEST_PATH}/tests/server
 	done
 
+	install -d ${D}${PTEST_PATH}/src
+	install -m 755 ${B}/src/curlinfo ${D}${PTEST_PATH}/src
+
 	cp -r ${S}/tests/data ${D}${PTEST_PATH}/tests/
 
 	# More tests that we disable for automated QA as they're not reliable
 	cat ${UNPACKDIR}/disable-tests >>${D}${PTEST_PATH}/tests/data/DISABLED
 }
+
+DEPENDS:append:class-target = "${@bb.utils.contains('PTEST_ENABLED', '1', ' openssl-native', '', d)}"
 
 RDEPENDS:${PN}-ptest += " \
 	locale-base-en-us \
