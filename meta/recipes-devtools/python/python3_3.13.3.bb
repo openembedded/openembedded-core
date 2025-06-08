@@ -72,8 +72,6 @@ DEPENDS = "\
     bzip2-replacement-native \
     expat \
     libffi \
-    libnsl2 \
-    libtirpc \
     ncurses \
     openssl \
     sqlite3 \
