@@ -24,15 +24,18 @@ Amended 2018-07-03 by Olof Johansson <olofjn@axis.com>:
 
 Upstream-Status: Inappropriate [oe-core specific]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+Rebased to 4.20.1
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
- lib/rpmscript.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ lib/rpmscript.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/lib/rpmscript.c b/lib/rpmscript.c
-index 097c9055a..060fd8124 100644
+index eb14870b3..1785e8f30 100644
 --- a/lib/rpmscript.c
 +++ b/lib/rpmscript.c
-@@ -447,8 +447,7 @@ exit:
+@@ -456,8 +456,7 @@ exit:
  	Fclose(out);	/* XXX dup'd STDOUT_FILENO */
  
      if (fn) {
@@ -42,18 +45,17 @@ index 097c9055a..060fd8124 100644
  	free(fn);
      }
      free(mline);
-@@ -482,7 +481,13 @@ rpmRC rpmScriptRun(rpmScript script, int arg1, int arg2, FD_t scriptFd,
+@@ -491,7 +490,13 @@ rpmRC rpmScriptRun(rpmScript script, int arg1, int arg2, FD_t scriptFd,
  
      if (rc != RPMRC_FAIL) {
  	if (script_type & RPMSCRIPTLET_EXEC) {
--	    rc = runExtScript(plugins, prefixes, script->descr, lvl, scriptFd, &args, script->body, arg1, arg2, script->nextFileFunc);
 +	    if (getenv("RPM_NO_CHROOT_FOR_SCRIPTS") != NULL) {
-+		rpmChrootOut();
-+		rc = runExtScript(plugins, prefixes, script->descr, lvl, scriptFd, &args, script->body, arg1, arg2, script->nextFileFunc);
-+		rpmChrootIn();
++	    rpmChrootOut();
+ 	    rc = runExtScript(plugins, prefixes, script, lvl, scriptFd, &args, arg1, arg2);
++	    rpmChrootIn();
 +	    } else {
-+		rc = runExtScript(plugins, prefixes, script->descr, lvl, scriptFd, &args, script->body, arg1, arg2, script->nextFileFunc);
++	    rc = runExtScript(plugins, prefixes, script, lvl, scriptFd, &args, arg1, arg2);
 +	    }
  	} else {
- 	    rc = runLuaScript(plugins, prefixes, script->descr, lvl, scriptFd, &args, script->body, arg1, arg2, script->nextFileFunc);
+ 	    rc = runLuaScript(plugins, prefixes, script, lvl, scriptFd, &args, arg1, arg2);
  	}

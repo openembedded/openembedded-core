@@ -22,7 +22,7 @@ HOMEPAGE = "http://www.rpm.org"
 
 # libraries are also LGPL - how to express this?
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c4eec0c20c6034b9407a09945b48a43f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=066ecde17828e5c8911ec9eae8be78f4"
 
 SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.20.x;protocol=https \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
@@ -38,11 +38,11 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.20.x;protoc
            file://0001-CMakeLists.txt-look-for-lua-with-pkg-config-rather-t.patch \
            file://0002-rpmio-rpmglob.c-avoid-using-GLOB_BRACE-if-undefined-.patch \
            file://0001-CMakeLists.txt-set-libdir-to-CMAKE_INSTALL_FULL_LIBD.patch \
-           file://0001-Set-RPM_PLUGINDIR-in-top-level-CMakeLists.txt.patch \
+           file://0001-CMakeLists.txt-Fix-checking-for-CFLAGS.patch \
            "
 
 PE = "1"
-SRCREV = "b3323786668cf99bc9aed7e60ccdab0bc25e19da"
+SRCREV = "c8dc5ea575a2e9c1488036d12f4b75f6a5a49120"
 
 S = "${WORKDIR}/git"
 

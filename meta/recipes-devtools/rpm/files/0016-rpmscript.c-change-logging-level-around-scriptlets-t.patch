@@ -9,15 +9,18 @@ irrelevant noise to rootfs logs.
 
 Upstream-Status: Inappropriate [oe-core specific]
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+Rebased to 4.20.1
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
  lib/rpmscript.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/lib/rpmscript.c b/lib/rpmscript.c
-index 4dc6466a8..6d3c19d01 100644
+index e9f288ae0..f0c628708 100644
 --- a/lib/rpmscript.c
 +++ b/lib/rpmscript.c
-@@ -290,7 +290,7 @@ static char * writeScript(const char *cmd, const char *script)
+@@ -299,7 +299,7 @@ static char * writeScript(const char *cmd, const char *script)
      if (Ferror(fd))
  	goto exit;
  
@@ -26,30 +29,30 @@ index 4dc6466a8..6d3c19d01 100644
  	static const char set_x[] = "set -x\n";
  	/* Assume failures will be caught by the write below */
  	Fwrite(set_x, sizeof(set_x[0]), sizeof(set_x)-1, fd);
-@@ -322,7 +322,7 @@ static rpmRC runExtScript(rpmPlugins plugins, ARGV_const_t prefixes,
+@@ -330,7 +330,7 @@ static rpmRC runExtScript(rpmPlugins plugins, ARGV_const_t prefixes,
      char *mline = NULL;
      rpmRC rc = RPMRC_FAIL;
  
--    rpmlog(RPMLOG_DEBUG, "%s: scriptlet start\n", sname);
-+    rpmlog(RPMLOG_INFO, "%s: scriptlet start\n", sname);
+-    rpmlog(RPMLOG_DEBUG, "%s: scriptlet start\n", script->descr);
++    rpmlog(RPMLOG_INFO, "%s: scriptlet start\n", script->descr);
  
-     if (script) {
- 	fn = writeScript(*argvp[0], script);
-@@ -374,7 +374,7 @@ static rpmRC runExtScript(rpmPlugins plugins, ARGV_const_t prefixes,
- 		sname, strerror(errno));
+     if (script->body) {
+ 	fn = writeScript(*argvp[0], script->body);
+@@ -382,7 +382,7 @@ static rpmRC runExtScript(rpmPlugins plugins, ARGV_const_t prefixes,
+ 		script->descr, strerror(errno));
  	goto exit;
      } else if (pid == 0) {/* Child */
 -	rpmlog(RPMLOG_DEBUG, "%s: execv(%s) pid %d\n",
 +	rpmlog(RPMLOG_INFO, "%s: execv(%s) pid %d\n",
- 	       sname, *argvp[0], (unsigned)getpid());
+ 	       script->descr, *argvp[0], (unsigned)getpid());
  
  	fclose(in);
-@@ -417,7 +417,7 @@ static rpmRC runExtScript(rpmPlugins plugins, ARGV_const_t prefixes,
+@@ -426,7 +426,7 @@ static rpmRC runExtScript(rpmPlugins plugins, ARGV_const_t prefixes,
  	reaped = waitpid(pid, &status, 0);
      } while (reaped == -1 && errno == EINTR);
  
 -    rpmlog(RPMLOG_DEBUG, "%s: waitpid(%d) rc %d status %x\n",
 +    rpmlog(RPMLOG_INFO, "%s: waitpid(%d) rc %d status %x\n",
- 	   sname, (unsigned)pid, (unsigned)reaped, status);
+ 	   script->descr, (unsigned)pid, (unsigned)reaped, status);
  
      if (reaped < 0) {
