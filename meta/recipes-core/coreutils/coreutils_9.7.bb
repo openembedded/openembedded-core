@@ -74,11 +74,6 @@ RDEPENDS:coreutils:class-target += "${@bb.utils.contains('PACKAGECONFIG', 'singl
 # regardless of whether single-binary is in effect.
 RPROVIDES:coreutils += "${@bb.utils.contains('PACKAGECONFIG', 'single-binary', 'coreutils-stdbuf', '', d)}"
 
-# put getlimits into coreutils-getlimits, because other ptest packages such as
-# findutils-ptest may need this command. Note that getlimits is a noinst_PROGRAM
-PACKAGE_BEFORE_PN:class-target += "${PN}-getlimits"
-FILES:${PN}-getlimits = "${bindir}/getlimits"
-
 # Deal with a separate builddir failure if src doesn't exist when creating version.c/version.h
 do_compile:prepend () {
 	mkdir -p ${B}/src
@@ -106,9 +101,6 @@ do_install:append() {
 	# in update-alternatives to fail, therefore use lbracket - the name used
 	# for the actual source file.
 	mv ${D}${bindir}/[ ${D}${bindir}/lbracket.${BPN}
-
-	# this getlimits noinst_PROGRAM would possibly be needed by other ptest packages
-	install ${B}/src/getlimits ${D}/${bindir}
 }
 
 inherit update-alternatives
@@ -213,6 +205,7 @@ do_install_ptest () {
         fi
     done
 
+    install ${B}/src/getlimits ${D}/${bindir}
     # handle multilib
     sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
 }
@@ -224,6 +217,7 @@ do_install_ptest:append:libc-musl () {
     sed -i -e '/tests\/split\/line-bytes.sh/d' ${D}${PTEST_PATH}/Makefile
 }
 
-RDEPENDS:${PN}-ptest += "${PN}-getlimits xz  \
+RDEPENDS:${PN}-ptest += "xz  \
                          ${@bb.utils.contains('PACKAGECONFIG', 'acl', 'acl', '', d)} \
                          ${@bb.utils.contains('PACKAGECONFIG', 'xattr', 'attr', '', d)}"
+FILES:${PN}-ptest += "${bindir}/getlimits"
