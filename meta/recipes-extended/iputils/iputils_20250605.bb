@@ -11,9 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=627cc07ec86a45951d43e30658bbd819"
 DEPENDS = "gnutls"
 
 SRC_URI = "git://github.com/iputils/iputils;branch=master;protocol=https \
-           file://CVE-2025-47268.patch \
           "
-SRCREV = "10b50784aae3fb75c96cdf9b1668916b49557dd5"
+SRCREV = "6e1cb146547eb6fbb127ffc8397a9241be0d33c2"
 
 S = "${WORKDIR}/git"
 
