@@ -23,7 +23,7 @@ diff --git a/setup.py b/setup.py
 index 85a2b26357..7605347bf5 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -517,6 +517,14 @@ def print_three_column(lst):
+@@ -517,6 +517,14 @@ class PyBuildExt(build_ext):
                  print("%-*s   %-*s   %-*s" % (longest, e, longest, f,
                                                longest, g))
  

@@ -18,7 +18,7 @@ diff --git a/setup.py b/setup.py
 index 11b5cf5..2be4738 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1895,8 +1895,8 @@ class PyBuildExt(build_ext):
+@@ -1902,8 +1902,8 @@ class PyBuildExt(build_ext):
          self.detect_decimal()
          self.detect_ctypes()
          self.detect_multiprocessing()

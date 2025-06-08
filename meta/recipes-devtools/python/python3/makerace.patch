@@ -21,7 +21,7 @@ diff --git a/Makefile.pre.in b/Makefile.pre.in
 index 5e13ba2..026bffd 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -1527,7 +1527,7 @@ TESTSUBDIRS=	ctypes/test \
+@@ -1528,7 +1528,7 @@ TESTSUBDIRS=	ctypes/test \
  		unittest/test unittest/test/testmock
  
  TEST_MODULES=@TEST_MODULES@

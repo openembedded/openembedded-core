@@ -21,7 +21,7 @@ diff --git a/configure.ac b/configure.ac
 index e5e3df8..bfdd987 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -5092,12 +5092,6 @@ then
+@@ -5097,12 +5097,6 @@ then
    [Define if you have struct stat.st_mtimensec])
  fi
  
@@ -38,7 +38,7 @@ diff --git a/setup.py b/setup.py
 index 62f0e18..c190002 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1169,8 +1169,6 @@ class PyBuildExt(build_ext):
+@@ -1173,8 +1173,6 @@ class PyBuildExt(build_ext):
          panel_library = 'panel'
          if curses_library == 'ncursesw':
              curses_defines.append(('HAVE_NCURSESW', '1'))

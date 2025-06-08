@@ -20,7 +20,7 @@ diff --git a/Lib/test/_test_multiprocessing.py b/Lib/test/_test_multiprocessing.
 index 3bc5b8f..a6e106d 100644
 --- a/Lib/test/_test_multiprocessing.py
 +++ b/Lib/test/_test_multiprocessing.py
-@@ -568,6 +568,7 @@ class _TestProcess(BaseTestCase):
+@@ -575,6 +575,7 @@ class _TestProcess(BaseTestCase):
  
          close_queue(q)
  
@@ -28,7 +28,7 @@ index 3bc5b8f..a6e106d 100644
      def test_many_processes(self):
          if self.TYPE == 'threads':
              self.skipTest('test not appropriate for {}'.format(self.TYPE))
-@@ -4817,6 +4818,7 @@ class TestWait(unittest.TestCase):
+@@ -4829,6 +4830,7 @@ class TestWait(unittest.TestCase):
          sem.release()
          time.sleep(period)
  
@@ -40,7 +40,7 @@ diff --git a/Lib/test/test_time.py b/Lib/test/test_time.py
 index 875615a..aebaa8c 100644
 --- a/Lib/test/test_time.py
 +++ b/Lib/test/test_time.py
-@@ -474,6 +474,7 @@ class TimeTestCase(unittest.TestCase):
+@@ -475,6 +475,7 @@ class TimeTestCase(unittest.TestCase):
      def test_perf_counter(self):
          time.perf_counter()
  

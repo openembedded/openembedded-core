@@ -27,7 +27,7 @@ diff --git a/setup.py b/setup.py
 index 2e7f263..f7a3d39 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -840,7 +840,8 @@ class PyBuildExt(build_ext):
+@@ -839,7 +839,8 @@ class PyBuildExt(build_ext):
          # only change this for cross builds for 3.3, issues on Mageia
          if CROSS_COMPILING:
              self.add_cross_compiling_paths()

@@ -15,7 +15,7 @@ diff --git a/setup.py b/setup.py
 index 43e807f..11b5cf5 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -1149,7 +1149,6 @@ class PyBuildExt(build_ext):
+@@ -1153,7 +1153,6 @@ class PyBuildExt(build_ext):
                                                       'termcap'):
                  readline_libs.append('termcap')
              self.add(Extension('readline', ['readline.c'],

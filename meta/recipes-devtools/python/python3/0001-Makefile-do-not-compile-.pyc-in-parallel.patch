@@ -26,7 +26,7 @@ diff --git a/Makefile.pre.in b/Makefile.pre.in
 index edd70d4..5e13ba2 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -1601,30 +1601,30 @@ libinstall:	build_all $(srcdir)/Modules/xxmodule.c
+@@ -1602,30 +1602,30 @@ libinstall:	build_all $(srcdir)/Modules/xxmodule.c
  	fi
  	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
  		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
