@@ -15,12 +15,13 @@ CACHED_CONFIGUREVARS += "gl_cv_func_wcwidth_works=yes"
 EXTRA_OECONF += "ac_cv_path_SORT=${bindir}/sort"
 
 # need od from coreutils for -t option
-RDEPENDS:${PN}-ptest += "bash sed grep coreutils coreutils-getlimits"
+RDEPENDS:${PN}-ptest += "bash sed grep coreutils"
 
 do_install_ptest:class-target() {
 	mkdir -p ${D}${PTEST_PATH}/tests/
 	cp ${S}/init.cfg ${D}${PTEST_PATH}
 	cp -r ${S}/tests/* ${D}${PTEST_PATH}/tests/
+	install -m 755 ${B}/find/getlimits ${D}${PTEST_PATH}/
 
 	# substitute value in run-ptest with actual version
 	sed -i -e 's/__run_ptest_version__/${PV}/' ${D}${PTEST_PATH}/run-ptest

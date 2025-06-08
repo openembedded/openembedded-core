@@ -5,6 +5,9 @@ ln -s /usr/bin/find /tmp/oldfind
 # make oldfind visible
 export PATH="/tmp:${PATH}"
 
+# Add findutils ptest directory to PATH for getlimits
+export PATH="/usr/lib/findutils/ptest:${PATH}"
+
 export built_programs="find xargs locate updatedb"
 
 # this gets substituted by sed during build
