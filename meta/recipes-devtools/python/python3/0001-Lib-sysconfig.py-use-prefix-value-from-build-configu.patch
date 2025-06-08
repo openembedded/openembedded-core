@@ -17,7 +17,7 @@ diff --git a/Lib/sysconfig.py b/Lib/sysconfig.py
 index 6258b68..d59ec6e 100644
 --- a/Lib/sysconfig.py
 +++ b/Lib/sysconfig.py
-@@ -668,6 +668,11 @@ def _init_config_vars():
+@@ -675,6 +675,11 @@ def _init_config_vars():
          _CONFIG_VARS['VPATH'] = sys._vpath
      if os.name == 'posix':
          _init_posix(_CONFIG_VARS)
