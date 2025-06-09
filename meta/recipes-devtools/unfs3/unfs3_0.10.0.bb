@@ -22,8 +22,6 @@ SRC_URI = "git://github.com/unfs3/unfs3.git;protocol=https;branch=master \
 SRCREV = "c8f2d2cd4529955419bad0e163f88d47ff176b8d"
 UPSTREAM_CHECK_GITTAGREGEX = "unfs3\-(?P<pver>\d+(\.\d+)+)"
 
-PV = "0.10.0"
-
 BBCLASSEXTEND = "native nativesdk"
 
 inherit autotools pkgconfig
