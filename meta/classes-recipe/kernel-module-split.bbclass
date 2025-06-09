@@ -86,11 +86,7 @@ python split_kernel_module_packages () {
             vals[m.group(1)] = m.group(2)
         return vals
 
-    def frob_metadata(file, pkg, pattern, format, basename):
-        vals = extract_modinfo(file)
-
-        dvar = d.getVar('PKGD')
-
+    def handle_conf_files(d, basename, pkg):
         # If autoloading is requested, output ${modulesloaddir}/<name>.conf and append
         # appropriate modprobe commands to the postinst
         autoloadlist = (d.getVar("KERNEL_MODULE_AUTOLOAD") or "").split()
@@ -102,7 +98,7 @@ python split_kernel_module_packages () {
 
         # The .conf file can either be installed by a recipe or generated from module_autoload_*
         conf = '%s/%s.conf' % (d.getVar('modulesloaddir'), basename)
-        name = '%s%s' % (dvar, conf)
+        name = '%s%s' % (d.getVar('PKGD'), conf)
         # If module name is in KERNEL_MODULE_AUTOLOAD, then generate the .conf file and write to `name`.
         if basename in autoloadlist:
             os.makedirs(os.path.dirname(name), exist_ok=True)
@@ -120,7 +116,7 @@ python split_kernel_module_packages () {
             d.appendVar('CONFFILES:%s' % pkg, conf2append)
             postinst = d.getVar('pkg_postinst:%s' % pkg)
             if not postinst:
-                bb.fatal("pkg_postinst:%s not defined" % pkg)
+                postinst = d.getVar('pkg_postinst:modules')
             postinst += d.getVar('autoload_postinst_fragment') % (autoload or basename)
             d.setVar('pkg_postinst:%s' % pkg, postinst)
 
@@ -130,7 +126,7 @@ python split_kernel_module_packages () {
 
         # The .conf file can either be installed by a recipe or generated from module_conf_*
         conf = '%s/%s.conf' % (d.getVar('modprobedir'), basename)
-        name = '%s%s' % (dvar, conf)
+        name = '%s%s' % (d.getVar('PKGD'), conf)
         # If module name is in KERNEL_MODULE_PROBECONF, then generate the .conf file and write to `name`.
         if modconf and basename in modconflist:
             os.makedirs(os.path.dirname(name), exist_ok=True)
@@ -144,6 +140,55 @@ python split_kernel_module_packages () {
             conf2append = ' %s' % conf
             d.appendVar('FILES:%s' % pkg, conf2append)
             d.appendVar('CONFFILES:%s' % pkg, conf2append)
+
+    def generate_conf_files(d, root, file_regex, output_pattern):
+        """
+        Arguments:
+        root           -- the path in which to search. Contains system lib path
+                          so needs expansion.
+        file_regex     -- regular expression to match searched files. Use
+                          parentheses () to mark the part of this expression
+                          that should be used to derive the module name (to be
+                          substituted where %s is used in other function
+                          arguments as noted below)
+        output_pattern -- pattern to use for the package names. Must include %s.
+        """
+        import re, stat
+
+        dvar = d.getVar('PKGD')
+        root = d.expand(root)
+
+        # if the root directory doesn't exist, it's fatal - exit from the current execution.
+        if not os.path.exists(dvar + root):
+            bb.fatal("kernel module root directory path does not exist")
+
+        # walk through kernel module directory. for each entry in the directory, check if it
+        # matches the desired regex pattern and file type. if it fullfills, process it to generate
+        # it's conf file based on its package name.
+        for walkroot, dirs, files in os.walk(dvar + root):
+            for file in files:
+                relpath = os.path.join(walkroot, file).replace(dvar + root + '/', '', 1)
+                if not relpath:
+                    continue
+                m = re.match(file_regex, os.path.basename(relpath))
+                if not m:
+                    continue
+                file_f = os.path.join(dvar + root, relpath)
+                mode = os.lstat(file_f).st_mode
+                if not (stat.S_ISREG(mode) or (allow_links and stat.S_ISLNK(mode)) or (allow_dirs and stat.S_ISDIR(mode))):
+                    continue
+
+                basename = m.group(1)
+                on = legitimize_package_name(basename)
+                pkg = output_pattern % on
+                handle_conf_files(d, basename, pkg)
+
+
+    def frob_metadata(file, pkg, pattern, format, basename):
+        vals = extract_modinfo(file)
+        dvar = d.getVar('PKGD')
+
+        handle_conf_files(d, basename, pkg)
 
         if "description" in vals:
             old_desc = d.getVar('DESCRIPTION:' + pkg) or ""
@@ -178,18 +223,19 @@ python split_kernel_module_packages () {
     postinst = d.getVar('pkg_postinst:modules')
     postrm = d.getVar('pkg_postrm:modules')
 
-    if splitmods != '1':
-        d.appendVar('FILES:' + metapkg, '%s %s %s/modules' %
-            (d.getVar('modulesloaddir'), d.getVar('modprobedir'), d.getVar("nonarch_base_libdir")))
-        d.appendVar('pkg_postinst:%s' % metapkg, postinst)
-        d.prependVar('pkg_postrm:%s' % metapkg, postrm);
-        return
-
     module_regex = r'^(.*)\.k?o(?:\.(gz|xz|zst))?$'
 
     module_pattern_prefix = d.getVar('KERNEL_MODULE_PACKAGE_PREFIX')
     module_pattern_suffix = d.getVar('KERNEL_MODULE_PACKAGE_SUFFIX')
     module_pattern = module_pattern_prefix + kernel_package_name + '-module-%s' + module_pattern_suffix
+
+    if splitmods != '1':
+        d.appendVar('FILES:' + metapkg, '%s %s %s/modules' %
+            (d.getVar('modulesloaddir'), d.getVar('modprobedir'), d.getVar("nonarch_base_libdir")))
+        d.appendVar('pkg_postinst:%s' % metapkg, postinst)
+        d.prependVar('pkg_postrm:%s' % metapkg, postrm)
+        generate_conf_files(d, root='${nonarch_base_libdir}/modules', file_regex=module_regex, output_pattern=module_pattern)
+        return
 
     modules = do_split_packages(d, root='${nonarch_base_libdir}/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='%s-%s' % (kernel_package_name, kernel_version))
     if modules:
