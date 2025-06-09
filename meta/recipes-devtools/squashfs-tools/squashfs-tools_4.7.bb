@@ -7,8 +7,10 @@ SECTION = "base"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "git://github.com/plougher/squashfs-tools.git;protocol=https;branch=v6.1.1"
-SRCREV = "d8cb82d9840330f9344ec37b992595b5d7b44184"
+SRC_URI = "git://github.com/plougher/squashfs-tools.git;protocol=https;branch=master;tag=${PV} \
+           file://pid.patch \
+           file://thread.patch"
+SRCREV = "2e87d42ed089dc31990d83eeb07437b9d085d6d1"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
@@ -16,7 +18,7 @@ S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = "${PACKAGECONFIG_CONFARGS}"
 
-PACKAGECONFIG ??= "gzip xz lzo lz4 lzma xattr zstd reproducible"
+PACKAGECONFIG ??= "gzip xz lzo lz4 lzma xattr zstd"
 PACKAGECONFIG[gzip] = "GZIP_SUPPORT=1,GZIP_SUPPORT=0,zlib"
 PACKAGECONFIG[xz] = "XZ_SUPPORT=1,XZ_SUPPORT=0,xz"
 PACKAGECONFIG[lzo] = "LZO_SUPPORT=1,LZO_SUPPORT=0,lzo"
@@ -24,17 +26,15 @@ PACKAGECONFIG[lz4] = "LZ4_SUPPORT=1,LZ4_SUPPORT=0,lz4"
 PACKAGECONFIG[lzma] = "LZMA_XZ_SUPPORT=1,LZMA_XZ_SUPPORT=0,xz"
 PACKAGECONFIG[xattr] = "XATTR_SUPPORT=1,XATTR_SUPPORT=0,attr"
 PACKAGECONFIG[zstd] = "ZSTD_SUPPORT=1,ZSTD_SUPPORT=0,zstd"
-PACKAGECONFIG[reproducible] = "REPRODUCIBLE_DEFAULT=1,REPRODUCIBLE_DEFAULT=0,"
 
 do_compile() {
-        cd ${S}/squashfs-tools
-	oe_runmake all
+	oe_runmake -C ${S}/squashfs-tools all
 }
 
 do_install() {
-        cd ${S}/squashfs-tools
+	oe_runmake -C ${S}/squashfs-tools install INSTALL_PREFIX=${D}${prefix} INSTALL_MANPAGES_DIR=${D}${datadir}/man/man1
+
 	install -d "${D}${includedir}"
-	oe_runmake install INSTALL_PREFIX=${D}${prefix} INSTALL_MANPAGES_DIR=${D}${datadir}/man/man1
 	install -m 0644 "${S}"/squashfs-tools/squashfs_fs.h "${D}${includedir}"
 }
 
