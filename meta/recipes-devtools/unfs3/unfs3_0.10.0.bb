@@ -7,9 +7,7 @@ SECTION = "console/network"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9475885294e17c0cc0067820d042792e"
 
-DEPENDS = "flex-native bison-native flex"
-DEPENDS += "libtirpc"
-DEPENDS:append:class-nativesdk = " flex-nativesdk"
+DEPENDS = "flex-native bison-native flex libtirpc"
 
 S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/unfs3/unfs3.git;protocol=https;branch=master \
