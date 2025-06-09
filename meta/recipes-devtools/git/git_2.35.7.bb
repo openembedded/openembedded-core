@@ -23,6 +23,9 @@ SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
            file://CVE-2024-32021-0001.patch \
            file://CVE-2024-32021-0002.patch \
            file://CVE-2024-32465.patch \
+           file://CVE-2024-50349-0001.patch \
+           file://CVE-2024-50349-0002.patch \
+           file://CVE-2024-52006.patch \
            "
 
 S = "${WORKDIR}/git-${PV}"
