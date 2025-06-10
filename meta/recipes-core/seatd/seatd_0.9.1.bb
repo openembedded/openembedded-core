@@ -35,9 +35,8 @@ PACKAGECONFIG[systemd] = "-Dlibseat-logind=systemd,,systemd"
 do_install:append() {
         if [ "${VIRTUAL-RUNTIME_init_manager}" != "systemd" ]; then
                 install -Dm755 ${UNPACKDIR}/init ${D}/${sysconfdir}/init.d/seatd
-        else
-                install -Dm644 ${S}/contrib/systemd/seatd.service ${D}${systemd_unitdir}/system/seatd.service
         fi
+        install -Dm644 ${S}/contrib/systemd/seatd.service ${D}${systemd_unitdir}/system/seatd.service
 }
 
 USERADD_PACKAGES = "${PN}"
