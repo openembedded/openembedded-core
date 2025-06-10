@@ -156,6 +156,11 @@ def add_package_files(
         bb.note(f"Skip {topdir}")
         return spdx_files
 
+    check_compiled_sources = d.getVar("SPDX_INCLUDE_COMPILED_SOURCES") == "1"
+    if check_compiled_sources:
+        compiled_sources, types = oe.spdx_common.get_compiled_sources(d)
+        bb.debug(1, f"Total compiled files: {len(compiled_sources)}")
+
     for subdir, dirs, files in os.walk(topdir, onerror=walk_error):
         dirs[:] = [d for d in dirs if d not in ignore_dirs]
         if subdir == str(topdir):
@@ -170,6 +175,11 @@ def add_package_files(
 
             filename = str(filepath.relative_to(topdir))
             file_purposes = get_purposes(filepath)
+
+            # Check if file is compiled
+            if check_compiled_sources:
+                if not oe.spdx_common.is_compiled_source(filename, compiled_sources, types):
+                    continue
 
             spdx_file = objset.new_file(
                 get_spdxid(file_counter),
