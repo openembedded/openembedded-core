@@ -24,23 +24,53 @@ diff --git a/src/bootstrap/src/core/build_steps/tool.rs b/src/bootstrap/src/core
 index 087df2f8a..00790affb 100644
 --- a/src/bootstrap/src/core/build_steps/tool.rs
 +++ b/src/bootstrap/src/core/build_steps/tool.rs
-@@ -635,7 +635,7 @@ impl Step for Rustdoc {
-         }
+@@ -1,14 +1,11 @@
+ use std::path::PathBuf;
+ use std::{env, fs};
  
-         // NOTE: Never modify the rustflags here, it breaks the build cache for other tools!
--        let cargo = prepare_tool_cargo(
-+        let mut cargo = prepare_tool_cargo(
-             builder,
-             build_compiler,
-             Mode::ToolRustc,
-@@ -645,6 +645,7 @@ impl Step for Rustdoc {
+-use crate::core::build_steps::compile::is_lto_stage;
+ use crate::core::build_steps::toolstate::ToolState;
+ use crate::core::build_steps::{compile, llvm};
+ use crate::core::builder;
+-use crate::core::builder::{
+-    Builder, Cargo as CargoCommand, RunConfig, ShouldRun, Step, cargo_profile_var,
+-};
+-use crate::core::config::{DebuginfoLevel, RustcLto, TargetSelection};
++use crate::core::builder::{Builder, Cargo as CargoCommand, RunConfig, ShouldRun, Step};
++use crate::core::config::{DebuginfoLevel, TargetSelection};
+ use crate::utils::channel::GitInfo;
+ use crate::utils::exec::{BootstrapCommand, command};
+ use crate::utils::helpers::{add_dylib_path, exe, t};
+@@ -658,19 +655,7 @@
              SourceType::InTree,
              features.as_slice(),
          );
+-
+-        // rustdoc is performance sensitive, so apply LTO to it.
+-        if is_lto_stage(&build_compiler) {
+-            let lto = match builder.config.rust_lto {
+-                RustcLto::Off => Some("off"),
+-                RustcLto::Thin => Some("thin"),
+-                RustcLto::Fat => Some("fat"),
+-                RustcLto::ThinLocal => None,
+-            };
+-            if let Some(lto) = lto {
+-                cargo.env(cargo_profile_var("LTO", &builder.config), lto);
+-            }
+-        }
 +        cargo.rustflag("-Clto=off");
  
          let _guard = builder.msg_tool(
              Kind::Build,
--- 
-2.39.5
-
+diff --git a/src/bootstrap/src/core/builder/mod.rs b/src/bootstrap/src/core/builder/mod.rs
+--- a/src/bootstrap/src/core/builder/mod.rs
++++ b/src/bootstrap/src/core/builder/mod.rs
+@@ -11,7 +11,7 @@
+ 
+ use clap::ValueEnum;
+ 
+-pub use self::cargo::{Cargo, cargo_profile_var};
++pub use self::cargo::Cargo;
+ pub use crate::Compiler;
+ use crate::core::build_steps::{
+     check, clean, clippy, compile, dist, doc, gcc, install, llvm, run, setup, test, tool, vendor,

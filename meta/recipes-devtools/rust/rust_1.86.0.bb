@@ -2,18 +2,18 @@ SUMMARY = "Rust compiler and runtime libaries"
 HOMEPAGE = "http://www.rust-lang.org"
 SECTION = "devel"
 LICENSE = "(MIT | Apache-2.0) & Unicode-3.0"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=9c0fae516fe8aaea2fb601db4800daf7"
+LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=11a3899825f4376896e438c8c753f8dc"
 
 inherit rust
 inherit cargo_common
 
-DEPENDS += "rust-llvm"
+DEPENDS += "rust-llvm pkgconfig-native openssl ninja-native"
 # native rust uses cargo/rustc from binary snapshots to bootstrap
 # but everything else should use our native builds
 DEPENDS:append:class-target = " cargo-native rust-native"
 DEPENDS:append:class-nativesdk = " cargo-native rust-native"
 
-RDEPENDS:${PN}:append:class-target = " gcc g++ binutils"
+RDEPENDS:${PN}:append:class-target = " gcc g++ binutils bash"
 
 # Otherwise we'll depend on what we provide
 INHIBIT_DEFAULT_RUST_DEPS:class-native = "1"
@@ -135,6 +135,8 @@ python do_configure() {
     config.set("rust", "remap-debuginfo", e(True))
     config.set("rust", "download-rustc", e(False))
     config.set("rust", "llvm-tools", e(False))
+    config.set("rust", "lld", e(False))
+    config.set("rust", "use-lld", e(False))
     config.set("rust", "channel", e(d.expand("${RUST_CHANNEL}")))
 
     # Whether or not to optimize the compiler and standard library
@@ -154,6 +156,8 @@ python do_configure() {
 
     cargo = d.getVar('CARGO_BOOTSTRAP')
     config.set("build", "cargo", e(cargo))
+
+    config.set("build", "extended", e(False))
 
     config.set("build", "vendor", e(True))
 
@@ -233,10 +237,12 @@ do_test_compile () {
 
 ALLOW_EMPTY:${PN} = "1"
 
-PACKAGES =+ "${PN}-rustdoc ${PN}-tools-clippy ${PN}-tools-rustfmt"
+PACKAGES =+ "${PN}-rustdoc ${PN}-tools-clippy ${PN}-tools-rustfmt ${PN}-zsh-completion"
 FILES:${PN}-rustdoc = "${bindir}/rustdoc"
 FILES:${PN}-tools-clippy = "${bindir}/cargo-clippy ${bindir}/clippy-driver"
 FILES:${PN}-tools-rustfmt = "${bindir}/rustfmt"
+FILES:${PN}-zsh-completion = "${datadir}/zsh"
+
 RDEPENDS:${PN}-rustdoc = "${PN}"
 RDEPENDS:${PN}-tools-clippy = "${PN}"
 RDEPENDS:${PN}-tools-rustfmt = "${PN}"
@@ -250,6 +256,10 @@ do_install () {
 
 rust_do_install() {
     rust_runx install
+}
+
+rust_do_install:append:class-native () {
+    rm -f ${D}${bindir}/cargo
 }
 
 rust_do_install:class-nativesdk() {
