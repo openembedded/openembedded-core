@@ -18,15 +18,16 @@ GITHUB_BASE_URI = "https://github.com/libcheck/check/releases/"
 
 S = "${WORKDIR}/check-${PV}"
 
-inherit autotools pkgconfig texinfo github-releases
-
-CACHED_CONFIGUREVARS += "ac_cv_path_AWK_PATH=${bindir}/gawk"
+inherit cmake pkgconfig texinfo github-releases
 
 RREPLACES:${PN} = "check (<= 0.9.5)"
+
+EXTRA_OECMAKE:append:class-target = " -DAWK_PATH=${bindir}/awk"
 
 do_install:append:class-native() {
     create_cmdline_shebang_wrapper ${D}${bindir}/checkmk
 }
+
 BBCLASSEXTEND = "native nativesdk"
 
 PACKAGES =+ "checkmk"
@@ -34,3 +35,4 @@ PACKAGES =+ "checkmk"
 FILES:checkmk = "${bindir}/checkmk"
 
 RDEPENDS:checkmk = "gawk"
+
