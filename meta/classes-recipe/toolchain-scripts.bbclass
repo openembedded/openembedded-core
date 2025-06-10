@@ -238,11 +238,11 @@ toolchain_create_sdk_siteconfig () {
 python __anonymous () {
     import oe.classextend
     deps = ""
+    prefixes = (d.getVar("MULTILIB_VARIANTS") or "").split()
     for dep in (d.getVar('TOOLCHAIN_NEED_CONFIGSITE_CACHE') or "").split():
         deps += " %s:do_populate_sysroot" % dep
         for variant in (d.getVar('MULTILIB_VARIANTS') or "").split():
-            clsextend = oe.classextend.ClassExtender(variant, d)
-            newdep = clsextend.extend_name(dep)
+            newdep = oe.classextend.add_suffix(dep, variant, prefixes)
             deps += " %s:do_populate_sysroot" % newdep
     d.appendVarFlag('do_configure', 'depends', deps)
 }
