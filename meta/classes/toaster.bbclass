@@ -84,7 +84,7 @@ python toaster_layerinfo_dumpdata() {
 
     llayerinfo = {}
 
-    for layer in { l for l in bblayers.strip().split(" ") if len(l) }:
+    for layer in { l for l in bblayers.strip().split() if len(l) }:
         llayerinfo[layer] = _get_layer_dict(layer)
 
 
