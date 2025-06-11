@@ -1,0 +1,40 @@
+From bd6c104f931329ce6fbc5a1250c8c80a1d8223ee Mon Sep 17 00:00:00 2001
+From: Karel Zak <kzak@redhat.com>
+Date: Mon, 24 Feb 2025 13:37:04 +0100
+Subject: [PATCH] agetty: fix stdin conversion to tty name
+
+Addresses: https://github.com/util-linux/util-linux/issues/3304
+
+Upstream-Status: Backport
+[https://github.com/util-linux/util-linux/commit/bd6c104f931329ce6fbc5a1250c8c80a1d8223ee]
+Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
+---
+ term-utils/agetty.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/term-utils/agetty.c b/term-utils/agetty.c
+index aa859c27b..0dfe52c90 100644
+--- a/term-utils/agetty.c
++++ b/term-utils/agetty.c
+@@ -928,11 +928,15 @@ static void parse_args(int argc, char **argv, struct options *op)
+ 
+ 	/* resolve the tty path in case it was provided as stdin */
+ 	if (strcmp(op->tty, "-") == 0) {
++		int fd;
++		const char *name = op->tty;
++
+ 		op->tty_is_stdin = 1;
+-		int fd = get_terminal_name(NULL, &op->tty, NULL);
+-		if (fd < 0) {
++		fd = get_terminal_name(NULL, &name, NULL);
++		if (fd >= 0)
++			op->tty = name;	/* set real device name */
++		else
+ 			log_warn(_("could not get terminal name: %d"), fd);
+-		}
+ 	}
+ 
+ 	/* On virtual console remember the line which is used for */
+-- 
+2.46.2
+

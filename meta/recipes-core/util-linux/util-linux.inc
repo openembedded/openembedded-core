@@ -40,6 +40,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://fcntl-lock.c \
            file://0001-cfdisk-add-sector-size-commanand-line-option.patch \
            file://0002-sfdisk-add-sector-size-commanand-line-option.patch \
+           file://0003-agetty-fix-stdin-conversion-to-tty-name.patch \
            "
 
 SRC_URI[sha256sum] = "5c1daf733b04e9859afdc3bd87cc481180ee0f88b5c0946b16fdec931975fb79"
