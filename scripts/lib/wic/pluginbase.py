@@ -44,7 +44,7 @@ class PluginMgr:
                     path = os.path.join(layer_path, script_plugin_dir)
                     path = os.path.abspath(os.path.expanduser(path))
                     if path not in cls._plugin_dirs and os.path.isdir(path):
-                        cls._plugin_dirs.insert(0, path)
+                        cls._plugin_dirs.append(path)
 
         if ptype not in PLUGINS:
             # load all ptype plugins
