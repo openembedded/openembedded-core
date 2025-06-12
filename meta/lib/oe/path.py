@@ -10,6 +10,8 @@ import shutil
 import subprocess
 import os.path
 
+import bb.parse
+
 def join(*paths):
     """Like os.path.join but doesn't treat absolute RHS specially"""
     return os.path.normpath("/".join(paths))
@@ -77,6 +79,7 @@ def replace_absolute_symlinks(basedir, d):
             os.remove(path)
             os.symlink(base, path)
 
+@bb.parse.vardepsexclude("TOPDIR")
 def format_display(path, metadata):
     """ Prepare a path for display to the user. """
     rel = relative(metadata.getVar("TOPDIR"), path)

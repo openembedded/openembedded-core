@@ -9,6 +9,8 @@ import multiprocessing
 import traceback
 import errno
 
+import bb.parse
+
 def read_file(filename):
     try:
         f = open( filename, "r" )
@@ -265,6 +267,7 @@ def execute_pre_post_process(d, cmds):
         bb.note("Executing %s ..." % cmd)
         bb.build.exec_func(cmd, d)
 
+@bb.parse.vardepsexclude("BB_NUMBER_THREADS")
 def get_bb_number_threads(d):
     return int(d.getVar("BB_NUMBER_THREADS") or os.cpu_count() or 1)
 
@@ -467,7 +470,7 @@ def host_gcc_version(d, taskcontextonly=False):
     version = match.group(1)
     return "-%s" % version if version in ("4.8", "4.9") else ""
 
-
+@bb.parse.vardepsexclude("DEFAULTTUNE_MULTILIB_ORIGINAL", "OVERRIDES")
 def get_multilib_datastore(variant, d):
     localdata = bb.data.createCopy(d)
     if variant:
