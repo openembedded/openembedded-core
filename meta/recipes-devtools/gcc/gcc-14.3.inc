@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "14.2.0"
+PV = "14.3.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "14.2.0"
+BINV = "14.3.0"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
@@ -40,7 +40,7 @@ LIC_FILES_CHKSUM = "\
 RELEASE ?= "${PV}"
 BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.xz"
 SOURCEDIR ?= "gcc-${PV}"
-SRC_URI[sha256sum] = "a7b39bc69cbf9e25826c5a60ab26477001f7c08d85cec04bc0e29cabed6f3cc9"
+SRC_URI[sha256sum] = "e0dc77297625631ac8e50fa92fffefe899a4eb702592da5c32ef04e2293aca3a"
 
 SRC_URI = "${BASEURI} \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
@@ -68,11 +68,6 @@ SRC_URI = "${BASEURI} \
            file://0023-Fix-install-path-of-linux64.h.patch \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
-	   file://0026-gcc-Fix-c-tweak-for-Wrange-loop-construct.patch \
-           file://0027-gcc-backport-patch-to-fix-data-relocation-to-ENDBR-s.patch \
-           file://gcc.git-ab884fffe3fc82a710bea66ad651720d71c938b8.patch \
-           file://0001-arm-Fix-LDRD-register-overlap-PR117675.patch \
-           file://0028-fix-incorrect-preprocessor-line-numbers.patch \
 "
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${SOURCEDIR}"
