@@ -19,6 +19,11 @@ inherit autotools pkgconfig
 
 EXTRA_OECONF = "--disable-examples --disable-doc"
 
+# theora 1.2.0 has broken 32-bit arm assembler, see:
+# https://gitlab.xiph.org/xiph/theora/-/issues/2339
+# https://gitlab.xiph.org/xiph/theora/-/issues/2340
+EXTRA_OECONF:append:arm = " --disable-asm"
+
 # these old architectures don't support all the instructions from the asm source files
 EXTRA_OECONF:append:armv4 = " --disable-asm "
 EXTRA_OECONF:append:armv5 = " --disable-asm "
