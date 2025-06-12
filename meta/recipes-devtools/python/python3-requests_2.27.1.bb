@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=34400b68072d710fecd0a2940a0d1658"
 
 SRC_URI += "file://CVE-2023-32681.patch \
             file://CVE-2024-35195.patch \
+            file://CVE-2024-47081.patch \
            "
 
 SRC_URI[sha256sum] = "68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"
