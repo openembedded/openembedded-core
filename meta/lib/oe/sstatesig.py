@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: GPL-2.0-only
 #
+import bb.parse
 import bb.siggen
 import bb.runqueue
 import oe
@@ -493,6 +494,7 @@ def sstate_get_manifest_filename(task, d):
         d2.setVar("SSTATE_MANMACH", extrainf)
     return (d2.expand("${SSTATE_MANFILEPREFIX}.%s" % task), d2)
 
+@bb.parse.vardepsexclude("BBEXTENDCURR", "BBEXTENDVARIANT", "OVERRIDES", "PACKAGE_EXTRA_ARCHS")
 def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
     d2 = d
     variant = ''

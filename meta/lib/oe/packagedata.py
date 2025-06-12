@@ -7,6 +7,7 @@
 import codecs
 import os
 import json
+import bb.parse
 import bb.compress.zstd
 import oe.path
 
@@ -64,6 +65,7 @@ def read_subpkgdata_dict(pkg, d):
         ret[newvar] = subd[var]
     return ret
 
+@bb.parse.vardepsexclude("BB_NUMBER_THREADS")
 def read_subpkgdata_extended(pkg, d):
     import json
     import bb.compress.zstd
@@ -182,6 +184,7 @@ def runtime_mapping_rename(varname, pkg, d):
 
     #bb.note("%s after: %s" % (varname, d.getVar(varname)))
 
+@bb.parse.vardepsexclude("BB_NUMBER_THREADS")
 def emit_pkgdata(pkgfiles, d):
     def process_postinst_on_target(pkg, mlprefix):
         pkgval = d.getVar('PKG:%s' % pkg)
