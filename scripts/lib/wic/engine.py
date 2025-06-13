@@ -180,6 +180,8 @@ def wic_create(wks_file, rootfs_dir, bootimg_dir, kernel_dir,
         os.makedirs(options.outdir)
 
     pname = options.imager
+    # Don't support '-' in plugin names
+    pname = pname.replace("-", "_")
     plugin_class = PluginMgr.get_plugins('imager').get(pname)
     if not plugin_class:
         raise WicError('Unknown plugin: %s' % pname)

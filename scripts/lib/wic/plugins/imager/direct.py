@@ -203,6 +203,8 @@ class DirectPlugin(ImagerPlugin):
         source_plugin = self.ks.bootloader.source
         disk_name = self.parts[0].disk
         if source_plugin:
+            # Don't support '-' in plugin names
+            source_plugin = source_plugin.replace("-", "_")
             plugin = PluginMgr.get_plugins('source')[source_plugin]
             plugin.do_install_disk(self._image, disk_name, self, self.workdir,
                                    self.oe_builddir, self.bootimg_dir,
