@@ -145,10 +145,11 @@ def find_license_files(srctree, first_only=False):
     return licfiles
 
 
-def match_licenses(licfiles, srctree, d):
+def match_licenses(licfiles, srctree, d, extra_hashes={}):
     md5sums = {}
     md5sums.update(_load_hash_csv(d))
     md5sums.update(_crunch_known_licenses(d))
+    md5sums.update(extra_hashes)
 
     licenses = []
     for licfile in sorted(licfiles):
@@ -169,9 +170,9 @@ def match_licenses(licfiles, srctree, d):
     return licenses
 
 
-def find_licenses(srctree, d, first_only=False):
+def find_licenses(srctree, d, first_only=False, extra_hashes={}):
     licfiles = find_license_files(srctree, first_only)
-    licenses = match_licenses(licfiles, srctree, d)
+    licenses = match_licenses(licfiles, srctree, d, extra_hashes)
 
     # FIXME should we grab at least one source file with a license header and add that too?
 
