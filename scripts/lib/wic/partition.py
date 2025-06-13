@@ -164,6 +164,9 @@ class Partition():
 
         plugins = PluginMgr.get_plugins('source')
 
+        # Don't support '-' in plugin names
+        self.source = self.source.replace("-", "_")
+
         if self.source not in plugins:
             raise WicError("The '%s' --source specified for %s doesn't exist.\n\t"
                            "See 'wic list source-plugins' for a list of available"
@@ -178,7 +181,7 @@ class Partition():
             splitted = self.sourceparams.split(',')
             srcparams_dict = dict((par.split('=', 1) + [None])[:2] for par in splitted if par)
 
-        plugin = PluginMgr.get_plugins('source')[self.source]
+        plugin = plugins[self.source]
         plugin.do_configure_partition(self, srcparams_dict, creator,
                                       cr_workdir, oe_builddir, bootimg_dir,
                                       kernel_dir, native_sysroot)
