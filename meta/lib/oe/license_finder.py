@@ -54,65 +54,6 @@ def crunch_known_licenses(d):
     
     crunched_md5sums = {}
 
-    # common licenses
-    crunched_md5sums['ad4e9d34a2e966dfe9837f18de03266d'] = 'GFDL-1.1-only'
-    crunched_md5sums['d014fb11a34eb67dc717fdcfc97e60ed'] = 'GFDL-1.2-only'
-    crunched_md5sums['e020ca655b06c112def28e597ab844f1'] = 'GFDL-1.3-only'
-
-    # The following two were gleaned from the "forever" npm package
-    crunched_md5sums['0a97f8e4cbaf889d6fa51f84b89a79f6'] = 'ISC'
-    # https://github.com/waffle-gl/waffle/blob/master/LICENSE.txt
-    crunched_md5sums['50fab24ce589d69af8964fdbfe414c60'] = 'BSD-2-Clause'
-    # https://github.com/spigwitmer/fakeds1963s/blob/master/LICENSE
-    crunched_md5sums['88a4355858a1433fea99fae34a44da88'] = 'GPL-2.0-only'
-    # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
-    crunched_md5sums['063b5c3ebb5f3aa4c85a2ed18a31fbe7'] = 'GPL-2.0-only'
-    # https://github.com/FFmpeg/FFmpeg/blob/master/COPYING.LGPLv2.1
-    crunched_md5sums['7f5202f4d44ed15dcd4915f5210417d8'] = 'LGPL-2.1-only'
-    # unixODBC-2.3.4 COPYING
-    crunched_md5sums['3debde09238a8c8e1f6a847e1ec9055b'] = 'LGPL-2.1-only'
-    # https://github.com/FFmpeg/FFmpeg/blob/master/COPYING.LGPLv3
-    crunched_md5sums['f90c613c51aa35da4d79dd55fc724ceb'] = 'LGPL-3.0-only'
-    # https://raw.githubusercontent.com/eclipse/mosquitto/v1.4.14/epl-v10
-    crunched_md5sums['efe2cb9a35826992b9df68224e3c2628'] = 'EPL-1.0'
-
-    # https://raw.githubusercontent.com/jquery/esprima/3.1.3/LICENSE.BSD
-    crunched_md5sums['80fa7b56a28e8c902e6af194003220a5'] = 'BSD-2-Clause'
-    # https://raw.githubusercontent.com/npm/npm-install-checks/master/LICENSE
-    crunched_md5sums['e659f77bfd9002659e112d0d3d59b2c1'] = 'BSD-2-Clause'
-    # https://raw.githubusercontent.com/silverwind/default-gateway/4.2.0/LICENSE
-    crunched_md5sums['4c641f2d995c47f5cb08bdb4b5b6ea05'] = 'BSD-2-Clause'
-    # https://raw.githubusercontent.com/tad-lispy/node-damerau-levenshtein/v1.0.5/LICENSE
-    crunched_md5sums['2b8c039b2b9a25f0feb4410c4542d346'] = 'BSD-2-Clause'
-    # https://raw.githubusercontent.com/terser/terser/v3.17.0/LICENSE
-    crunched_md5sums['8bd23871802951c9ad63855151204c2c'] = 'BSD-2-Clause'
-    # https://raw.githubusercontent.com/alexei/sprintf.js/1.0.3/LICENSE
-    crunched_md5sums['008c22318c8ea65928bf730ddd0273e3'] = 'BSD-3-Clause'
-    # https://raw.githubusercontent.com/Caligatio/jsSHA/v3.2.0/LICENSE
-    crunched_md5sums['0e46634a01bfef056892949acaea85b1'] = 'BSD-3-Clause'
-    # https://raw.githubusercontent.com/d3/d3-path/v1.0.9/LICENSE
-    crunched_md5sums['b5f72aef53d3b2b432702c30b0215666'] = 'BSD-3-Clause'
-    # https://raw.githubusercontent.com/feross/ieee754/v1.1.13/LICENSE
-    crunched_md5sums['a39327c997c20da0937955192d86232d'] = 'BSD-3-Clause'
-    # https://raw.githubusercontent.com/joyent/node-extsprintf/v1.3.0/LICENSE
-    crunched_md5sums['721f23a96ff4161ca3a5f071bbe18108'] = 'MIT'
-    # https://raw.githubusercontent.com/pvorb/clone/v0.2.0/LICENSE
-    crunched_md5sums['b376d29a53c9573006b9970709231431'] = 'MIT'
-    # https://raw.githubusercontent.com/andris9/encoding/v0.1.12/LICENSE
-    crunched_md5sums['85d8a977ee9d7c5ab4ac03c9b95431c4'] = 'MIT-0'
-    # https://raw.githubusercontent.com/faye/websocket-driver-node/0.7.3/LICENSE.md
-    crunched_md5sums['b66384e7137e41a9b1904ef4d39703b6'] = 'Apache-2.0'
-    # https://raw.githubusercontent.com/less/less.js/v4.1.1/LICENSE
-    crunched_md5sums['b27575459e02221ccef97ec0bfd457ae'] = 'Apache-2.0'
-    # https://raw.githubusercontent.com/microsoft/TypeScript/v3.5.3/LICENSE.txt
-    crunched_md5sums['a54a1a6a39e7f9dbb4a23a42f5c7fd1c'] = 'Apache-2.0'
-    # https://raw.githubusercontent.com/request/request/v2.87.0/LICENSE
-    crunched_md5sums['1034431802e57486b393d00c5d262b8a'] = 'Apache-2.0'
-    # https://raw.githubusercontent.com/dchest/tweetnacl-js/v0.14.5/LICENSE
-    crunched_md5sums['75605e6bdd564791ab698fca65c94a4f'] = 'Unlicense'
-    # https://raw.githubusercontent.com/stackgl/gl-mat3/v2.0.0/LICENSE.md
-    crunched_md5sums['75512892d6f59dddb6d1c7e191957e9c'] = 'Zlib'
-
     commonlicdir = d.getVar('COMMON_LICENSE_DIR')
     for fn in sorted(os.listdir(commonlicdir)):
         md5value, lictext = crunch_license(os.path.join(commonlicdir, fn))
