@@ -193,7 +193,7 @@ def crunch_license(licfile):
 
 def find_license_files(srctree):
     licspecs = ['*LICEN[CS]E*', 'COPYING*', '*[Ll]icense*', 'LEGAL*', '[Ll]egal*', '*GPL*', 'README.lic*', 'COPYRIGHT*', '[Cc]opyright*', 'e[dp]l-v10']
-    skip_extensions = (".html", ".js", ".json", ".svg", ".ts", ".go")
+    skip_extensions = (".html", ".js", ".json", ".svg", ".ts", ".go", ".sh")
     licfiles = []
     for root, dirs, files in os.walk(srctree):
         for fn in files:
