@@ -11,23 +11,17 @@ import os
 import re
 
 import bb
+import bb.utils
 
 logger = logging.getLogger("BitBake.OE.LicenseFinder")
 
-def get_license_md5sums(d):
-    import bb.utils
+def _load_hash_csv(d):
+    """
+    Load a mapping of (checksum: license name) from all files/license-hashes.csv
+    files that can be found in the available layers.
+    """
     import csv
     md5sums = {}
-
-    # Gather md5sums of license files in common license dir
-    commonlicdir = d.getVar('COMMON_LICENSE_DIR')
-    for fn in os.listdir(commonlicdir):
-        md5value = bb.utils.md5_file(os.path.join(commonlicdir, fn))
-        md5sums[md5value] = fn
-
-    # The following were extracted from common values in various recipes
-    # (double checking the license against the license file itself, not just
-    # the LICENSE value in the recipe)
 
     # Read license md5sums from csv file
     for path in d.getVar('BBPATH').split(':'):
@@ -41,28 +35,28 @@ def get_license_md5sums(d):
     return md5sums
 
 
-def crunch_known_licenses(d):
-    '''
-    Calculate the MD5 checksums for the crunched versions of all common
-    licenses. Also add additional known checksums.
-    '''
-    
-    crunched_md5sums = {}
+def _crunch_known_licenses(d):
+    """
+    Calculate the MD5 checksums for the original and "crunched" versions of all
+    known licenses.
+    """
+    md5sums = {}
 
-    commonlicdir = d.getVar('COMMON_LICENSE_DIR')
-    for fn in sorted(os.listdir(commonlicdir)):
-        md5value = crunch_license(os.path.join(commonlicdir, fn))
-        if md5value not in crunched_md5sums:
-            crunched_md5sums[md5value] = fn
-        elif fn != crunched_md5sums[md5value]:
-            bb.debug(2, "crunched_md5sums['%s'] is already set to '%s' rather than '%s'" % (md5value, crunched_md5sums[md5value], fn))
-        else:
-            bb.debug(2, "crunched_md5sums['%s'] is already set to '%s'" % (md5value, crunched_md5sums[md5value]))
+    lic_dirs = [d.getVar('COMMON_LICENSE_DIR')] + (d.getVar('LICENSE_PATH') or "").split()
+    for lic_dir in lic_dirs:
+        for fn in os.listdir(lic_dir):
+            path = os.path.join(lic_dir, fn)
+            # Hash the exact contents
+            md5value = bb.utils.md5_file(path)
+            md5sums[md5value] = fn
+            # Also hash a "crunched" version
+            md5value = _crunch_license(path)
+            md5sums[md5value] = fn
 
-    return crunched_md5sums
+    return md5sums
 
 
-def crunch_license(licfile):
+def _crunch_license(licfile):
     '''
     Remove non-material text from a license file and then calculate its
     md5sum. This works well for licenses that contain a copyright statement,
@@ -152,10 +146,9 @@ def find_license_files(srctree, first_only=False):
 
 
 def match_licenses(licfiles, srctree, d):
-    import bb
-    md5sums = get_license_md5sums(d)
-
-    crunched_md5sums = crunch_known_licenses(d)
+    md5sums = {}
+    md5sums.update(_load_hash_csv(d))
+    md5sums.update(_crunch_known_licenses(d))
 
     licenses = []
     for licfile in sorted(licfiles):
@@ -163,8 +156,8 @@ def match_licenses(licfiles, srctree, d):
         md5value = bb.utils.md5_file(resolved_licfile)
         license = md5sums.get(md5value, None)
         if not license:
-            crunched_md5 = crunch_license(resolved_licfile)
-            license = crunched_md5sums.get(crunched_md5, None)
+            crunched_md5 = _crunch_license(resolved_licfile)
+            license = md5sums.get(crunched_md5, None)
             if not license:
                 license = 'Unknown'
                 logger.info("Please add the following line for '%s' to a 'license-hashes.csv' " \
