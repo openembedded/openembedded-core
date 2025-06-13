@@ -16,7 +16,6 @@ import mmap
 import subprocess
 import shutil
 
-import bb.parse
 import oe.cachedpath
 
 def runstrip(file, elftype, strip, extra_strip_sections=''):
@@ -1050,7 +1049,6 @@ def copydebugsources(debugsrcdir, sources, d):
             if os.path.exists(p) and not os.listdir(p):
                 os.rmdir(p)
 
-@bb.parse.vardepsexclude("BB_NUMBER_THREADS")
 def save_debugsources_info(debugsrcdir, sources_raw, d):
     import json
     import bb.compress.zstd
@@ -1083,7 +1081,6 @@ def save_debugsources_info(debugsrcdir, sources_raw, d):
         with bb.compress.zstd.open(debugsources_file, "wt", encoding="utf-8", num_threads=num_threads) as f:
             json.dump(sources_dict, f, sort_keys=True)
 
-@bb.parse.vardepsexclude("BB_NUMBER_THREADS")
 def read_debugsources_info(d):
     import json
     import bb.compress.zstd
