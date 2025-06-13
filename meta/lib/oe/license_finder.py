@@ -14,16 +14,16 @@ import bb
 
 logger = logging.getLogger("BitBake.OE.LicenseFinder")
 
-def get_license_md5sums(d, static_only=False, linenumbers=False):
+def get_license_md5sums(d):
     import bb.utils
     import csv
     md5sums = {}
-    if not static_only and not linenumbers:
-        # Gather md5sums of license files in common license dir
-        commonlicdir = d.getVar('COMMON_LICENSE_DIR')
-        for fn in os.listdir(commonlicdir):
-            md5value = bb.utils.md5_file(os.path.join(commonlicdir, fn))
-            md5sums[md5value] = fn
+
+    # Gather md5sums of license files in common license dir
+    commonlicdir = d.getVar('COMMON_LICENSE_DIR')
+    for fn in os.listdir(commonlicdir):
+        md5value = bb.utils.md5_file(os.path.join(commonlicdir, fn))
+        md5sums[md5value] = fn
 
     # The following were extracted from common values in various recipes
     # (double checking the license against the license file itself, not just
@@ -34,14 +34,9 @@ def get_license_md5sums(d, static_only=False, linenumbers=False):
         csv_path = os.path.join(path, 'files', 'license-hashes.csv')
         if os.path.isfile(csv_path):
             with open(csv_path, newline='') as csv_file:
-                fieldnames = ['md5sum', 'license', 'beginline', 'endline', 'md5']
-                reader = csv.DictReader(csv_file, delimiter=',', fieldnames=fieldnames)
+                reader = csv.DictReader(csv_file, delimiter=',', fieldnames=['md5sum', 'license'])
                 for row in reader:
-                    if linenumbers:
-                        md5sums[row['md5sum']] = (
-                            row['license'], row['beginline'], row['endline'], row['md5'])
-                    else:
-                        md5sums[row['md5sum']] = row['license']
+                    md5sums[row['md5sum']] = row['license']
 
     return md5sums
 
