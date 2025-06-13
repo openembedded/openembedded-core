@@ -71,7 +71,7 @@ diff --git a/src/basic/namespace-util.c b/src/basic/namespace-util.c
 index 332e8cdfd5..804498127d 100644
 --- a/src/basic/namespace-util.c
 +++ b/src/basic/namespace-util.c
-@@ -354,12 +354,12 @@ int userns_acquire(const char *uid_map, const char *gid_map) {
+@@ -359,12 +359,12 @@ int userns_acquire(const char *uid_map, const char *gid_map) {
                  freeze();
  
          xsprintf(path, "/proc/" PID_FMT "/uid_map", pid);
@@ -154,7 +154,7 @@ diff --git a/src/core/cgroup.c b/src/core/cgroup.c
 index 6933aae54d..ab6fccc0e4 100644
 --- a/src/core/cgroup.c
 +++ b/src/core/cgroup.c
-@@ -5167,7 +5167,7 @@ int unit_cgroup_freezer_action(Unit *u, FreezerAction action) {
+@@ -5175,7 +5175,7 @@ int unit_cgroup_freezer_action(Unit *u, FreezerAction action) {
          if (r < 0)
                  return r;
  
@@ -180,7 +180,7 @@ diff --git a/src/core/main.c b/src/core/main.c
 index 172742c769..e68ce2a6d8 100644
 --- a/src/core/main.c
 +++ b/src/core/main.c
-@@ -1812,7 +1812,7 @@ static void initialize_core_pattern(bool skip_setup) {
+@@ -1826,7 +1826,7 @@ static void initialize_core_pattern(bool skip_setup) {
          if (getpid_cached() != 1)
                  return;
  
@@ -231,7 +231,7 @@ diff --git a/src/libsystemd/sd-device/sd-device.c b/src/libsystemd/sd-device/sd-
 index 01fa90b1ff..83ab655bf4 100644
 --- a/src/libsystemd/sd-device/sd-device.c
 +++ b/src/libsystemd/sd-device/sd-device.c
-@@ -2563,7 +2563,7 @@ _public_ int sd_device_set_sysattr_value(sd_device *device, const char *sysattr,
+@@ -2564,7 +2564,7 @@ _public_ int sd_device_set_sysattr_value(sd_device *device, const char *sysattr,
          if (!value)
                  return -ENOMEM;
  
@@ -359,7 +359,7 @@ diff --git a/src/shared/coredump-util.c b/src/shared/coredump-util.c
 index 805503f366..3234a1d76e 100644
 --- a/src/shared/coredump-util.c
 +++ b/src/shared/coredump-util.c
-@@ -173,7 +173,7 @@ void disable_coredumps(void) {
+@@ -180,7 +180,7 @@ void disable_coredumps(void) {
          if (detect_container() > 0)
                  return;
  
@@ -372,7 +372,7 @@ diff --git a/src/shared/hibernate-util.c b/src/shared/hibernate-util.c
 index 1213fdc2c7..4c26e6a4ee 100644
 --- a/src/shared/hibernate-util.c
 +++ b/src/shared/hibernate-util.c
-@@ -495,7 +495,7 @@ int write_resume_config(dev_t devno, uint64_t offset, const char *device) {
+@@ -498,7 +498,7 @@ int write_resume_config(dev_t devno, uint64_t offset, const char *device) {
  
          /* We write the offset first since it's safer. Note that this file is only available in 4.17+, so
           * fail gracefully if it doesn't exist and we're only overwriting it with 0. */
@@ -381,7 +381,7 @@ index 1213fdc2c7..4c26e6a4ee 100644
          if (r == -ENOENT) {
                  if (offset != 0)
                          return log_error_errno(SYNTHETIC_ERRNO(EOPNOTSUPP),
-@@ -511,7 +511,7 @@ int write_resume_config(dev_t devno, uint64_t offset, const char *device) {
+@@ -514,7 +514,7 @@ int write_resume_config(dev_t devno, uint64_t offset, const char *device) {
                  log_debug("Wrote resume_offset=%s for device '%s' to /sys/power/resume_offset.",
                            offset_str, device);
  
