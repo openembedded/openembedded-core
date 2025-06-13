@@ -15,8 +15,9 @@ import bb
 from bb.fetch2.npm import NpmEnvironment
 from bb.fetch2.npm import npm_package
 from bb.fetch2.npmsw import foreach_dependencies
+from oe.license_finder import match_licenses, find_license_files
 from recipetool.create import RecipeHandler
-from recipetool.create import match_licenses, find_license_files, generate_common_licenses_chksums
+from recipetool.create import generate_common_licenses_chksums
 from recipetool.create import split_pkg_licenses
 logger = logging.getLogger('recipetool')
 
