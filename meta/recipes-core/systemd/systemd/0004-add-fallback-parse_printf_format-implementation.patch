@@ -25,7 +25,7 @@ diff --git a/meson.build b/meson.build
 index bffda86845..4146f4beef 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -773,6 +773,7 @@ foreach header : ['crypt.h',
+@@ -770,6 +770,7 @@ foreach header : ['crypt.h',
                    'linux/ioprio.h',
                    'linux/memfd.h',
                    'linux/time_types.h',
