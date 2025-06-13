@@ -51,7 +51,7 @@ def crunch_known_licenses(d):
 
     commonlicdir = d.getVar('COMMON_LICENSE_DIR')
     for fn in sorted(os.listdir(commonlicdir)):
-        md5value, lictext = crunch_license(os.path.join(commonlicdir, fn))
+        md5value = crunch_license(os.path.join(commonlicdir, fn))
         if md5value not in crunched_md5sums:
             crunched_md5sums[md5value] = fn
         elif fn != crunched_md5sums[md5value]:
@@ -123,8 +123,7 @@ def crunch_license(licfile):
         md5val = m.hexdigest()
     except UnicodeEncodeError:
         md5val = None
-        lictext = ''
-    return md5val, lictext
+    return md5val
 
 
 def find_license_files(srctree, first_only=False):
@@ -164,15 +163,15 @@ def match_licenses(licfiles, srctree, d):
         md5value = bb.utils.md5_file(resolved_licfile)
         license = md5sums.get(md5value, None)
         if not license:
-            crunched_md5, lictext = crunch_license(resolved_licfile)
+            crunched_md5 = crunch_license(resolved_licfile)
             license = crunched_md5sums.get(crunched_md5, None)
-            if lictext and not license:
+            if not license:
                 license = 'Unknown'
                 logger.info("Please add the following line for '%s' to a 'license-hashes.csv' " \
                     "and replace `Unknown` with the license:\n" \
                     "%s,Unknown" % (os.path.relpath(licfile, srctree + "/.."), md5value))
-        if license:
-            licenses.append((license, os.path.relpath(licfile, srctree), md5value))
+
+        licenses.append((license, os.path.relpath(licfile, srctree), md5value))
 
     return licenses
 
