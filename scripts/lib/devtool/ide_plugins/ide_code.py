@@ -161,7 +161,6 @@ class IdeVSCode(IdeBase):
         if modified_recipe.build_tool is not BuildTool.CMAKE:
             return
         recommendations += [
-            "twxs.cmake",
             "ms-vscode.cmake-tools",
             "ms-vscode.cpptools",
             "ms-vscode.cpptools-extension-pack",
