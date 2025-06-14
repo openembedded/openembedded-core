@@ -918,7 +918,7 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart comment'"
         bb_vars = self._fit_get_bb_vars()
 
         # Ensure new keys are generated and FIT_GENERATE_KEYS = "1" is tested
-        bitbake("kernel-signing-keys-native -c cleansstate")
+        bitbake("kernel-signing-keys-native -c compile -f")
 
         self._test_fitimage(bb_vars)
 
