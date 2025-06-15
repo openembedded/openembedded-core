@@ -786,7 +786,7 @@ FIT_CONF_PREFIX = "foo-"
         EXPECTED_COMP = ["ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx"]
 
         config = """
-DISTRO="poky"
+DISTRO = "poky"
 MACHINE = "beaglebone-yocto"
 """
         self.write_config(config)
@@ -938,7 +938,7 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart comment'"
         """
 
         config = """
-DISTRO="poky"
+DISTRO = "poky"
 MACHINE = "beaglebone-yocto"
 INITRAMFS_IMAGE = "core-image-minimal-initramfs"
 INITRAMFS_SCRIPTS = ""
@@ -992,7 +992,7 @@ FIT_HASH_ALG = "sha256"
         """
 
         config = """
-DISTRO="poky"
+DISTRO = "poky"
 MACHINE = "beaglebone-yocto"
 INITRAMFS_IMAGE_BUNDLE = "1"
 INITRAMFS_IMAGE = "core-image-minimal-initramfs"
