@@ -119,7 +119,7 @@ python __anonymous () {
 # packages added by distribution
 #
 SUMMARY:packagegroup-distro-base = "${DISTRO} extras"
-DEPENDS_packagegroup-distro-base = "${DISTRO_EXTRA_DEPENDS}"
+DEPENDS:packagegroup-distro-base = "${DISTRO_EXTRA_DEPENDS}"
 RDEPENDS:packagegroup-distro-base = "${DISTRO_EXTRA_RDEPENDS}"
 RRECOMMENDS:packagegroup-distro-base = "${DISTRO_EXTRA_RRECOMMENDS}"
 
