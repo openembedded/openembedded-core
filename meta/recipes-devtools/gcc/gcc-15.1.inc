@@ -75,7 +75,8 @@ SRC_URI = "${BASEURI} \
            file://0026-fix-incorrect-preprocessor-line-numbers.patch \
 "
 
-S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/${SOURCEDIR}"
+UNPACKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/sources"
+S = "${UNPACKDIR}/${SOURCEDIR}"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # Language Overrides
