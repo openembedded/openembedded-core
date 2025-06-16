@@ -12,7 +12,6 @@ SRC_URI = "git://git.yoctoproject.org/sato-icon-theme.git;protocol=https;branch=
 SRCREV = "d23f04ecb0328f655bf195df8eb04c1b734d53a9"
 UPSTREAM_CHECK_COMMITS = "1"
 
-
 inherit autotools pkgconfig allarch gtk-icon-cache perlnative
 
 # The configure script uses pkg-config to find native binaries to execute, so

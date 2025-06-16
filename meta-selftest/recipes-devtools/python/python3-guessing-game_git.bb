@@ -12,7 +12,6 @@ SRC_URI = "git://git.yoctoproject.org/guessing-game.git;protocol=https;branch=ma
 PV = "0.1.0"
 SRCREV = "469c9e2230ca4fa9e391c94be6e697733e769500"
 
-
 inherit python_maturin cargo-update-recipe-crates
 
 require ${BPN}-crates.inc

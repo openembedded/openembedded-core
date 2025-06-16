@@ -175,7 +175,6 @@ do_install() {
         oe_runmake -C narrowc ${_install_cfgs} \
                 install.data
 
-
         ! ${ENABLE_WIDEC} || \
             oe_runmake -C widec ${_install_cfgs} ${_install_opts}
 
@@ -262,7 +261,6 @@ python populate_packages:prepend () {
     if libdir is not base_libdir:
         do_split_packages(d, base_libdir, r'^lib(.*)\.so\..*', pnbase, 'ncurses %s library', prepend=True, extra_depends = '', allow_links=True)
 }
-
 
 inherit update-alternatives
 

@@ -12,7 +12,6 @@ SRCREV = "a0323579ac50b9a9d4033754d089f1fed0f59a00"
 SRC_URI = "git://github.com/kaniini/libucontext;branch=master;protocol=https \
            "
 
-
 COMPATIBLE_HOST = ".*-musl.*"
 
 valid_archs = " \

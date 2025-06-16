@@ -32,7 +32,6 @@ SRCREV_falco = "caa0e4d0044fdaaebab086592a97f0c7f32aeaa9"
 
 SRCREV_FORMAT = "sysdig_falco"
 
-
 EXTRA_OECMAKE = "\
                 -DBUILD_DRIVER=OFF \
                 -DMINIMAL_BUILD=ON \

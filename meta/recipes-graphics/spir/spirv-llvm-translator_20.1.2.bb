@@ -14,7 +14,6 @@ SRCREV_spirv = "6dd8f2a1681a27f16c53d932d2765920f312aeb2"
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
-
 DEPENDS = "clang spirv-tools spirv-headers"
 
 inherit cmake pkgconfig python3native

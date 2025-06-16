@@ -10,5 +10,4 @@ SRC_URI = "git://github.com/sass/libsass.git;protocol=https;branch=master \
 
 SRCREV = "7037f03fabeb2b18b5efa84403f5a6d7a990f460"
 
-
 BBCLASSEXTEND = "native"

@@ -19,7 +19,6 @@ DEPENDS = "m4-native flex-native bison-native"
 SRC_URI = "git://github.com/acpica/acpica;protocol=https;branch=master"
 SRCREV = "e80cbd7b52de20aa8c75bfba9845e9cb61f2e681"
 
-
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"

@@ -37,7 +37,6 @@ LCL_STOP_SERVICES = "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
     -DSERVICE_Memory=0 -DSERVICE_Registers=0 -DSERVICE_MemoryMap=0 \
     -DSERVICE_StackTrace=0 -DSERVICE_Expressions=0"
 
-
 # These features don't compile for several cases.
 #
 CFLAGS:append:arc = " ${LCL_STOP_SERVICES}"

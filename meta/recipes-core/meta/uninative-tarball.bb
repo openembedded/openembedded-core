@@ -51,7 +51,6 @@ fakeroot create_sdk_files() {
 	sed -i -e "s:##DEFAULT_INSTALL_DIR##:$escaped_sdkpath:" ${SDK_OUTPUT}/${SDKPATH}/relocate_sdk.py
 }
 
-
 fakeroot archive_sdk() {
 	cd ${SDK_OUTPUT}/${SDKPATH}
 

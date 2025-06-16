@@ -16,7 +16,6 @@ SRC_URI = "git://github.com/openSUSE/xinetd.git;protocol=https;branch=master \
 
 SRCREV = "6a4af7786630ce48747d9687e2f18f45ea6684c4"
 
-
 # https://github.com/xinetd-org/xinetd/pull/10 is merged into this git tree revision
 CVE_STATUS[CVE-2013-4342] = "fixed-version: Fixed directly in git tree revision"
 

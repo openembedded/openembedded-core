@@ -33,7 +33,6 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=ht
            file://0001-cve-2015-3290-Disable-AVX-for-x86_64.patch \
            "
 
-
 inherit autotools-brokensep pkgconfig
 
 # Version 20220527 added KVM test infrastructure which currently fails to build with lld due to

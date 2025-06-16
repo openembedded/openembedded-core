@@ -4,7 +4,6 @@
 
 SUMMARY = "Profiling tools"
 
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup

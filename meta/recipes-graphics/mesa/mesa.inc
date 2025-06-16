@@ -81,7 +81,6 @@ EXTRA_OEMESON = " \
 def strip_comma(s):
     return s.strip(',')
 
-
 PACKAGECONFIG = " \
 	gallium \
 	video-codecs \

@@ -14,7 +14,6 @@ SRCREV = "7fa03051562ee81e2a5371f8b3a6d0bb6e646aa0"
 PE = "2"
 PV = "0.0+git"
 
-
 inherit cmake features_check pkgconfig
 
 DEPENDS += "gtk+3"

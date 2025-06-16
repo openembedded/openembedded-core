@@ -44,7 +44,6 @@ EXTRA_OECONF_PATHS = "\
 
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
 
-
 do_configure:prepend () {
 	install -d ${RECIPE_SYSROOT}${target_includedir}
 	touch ${RECIPE_SYSROOT}${target_includedir}/limits.h

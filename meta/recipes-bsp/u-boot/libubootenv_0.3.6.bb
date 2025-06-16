@@ -13,7 +13,6 @@ SECTION = "libs"
 SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https;branch=master"
 SRCREV = "5507339628b5caf244e1ff9d58cb3fa534b16beb"
 
-
 inherit cmake lib_package
 
 EXTRA_OECMAKE = "-DCMAKE_BUILD_TYPE=Release"

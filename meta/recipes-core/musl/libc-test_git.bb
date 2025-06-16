@@ -18,7 +18,6 @@ SRC_URI = " \
 
 PV = "0+git"
 
-
 # libc-test 'make' or 'make run' command is designed to build and run tests. It
 # reports both build and test failures. The commands should be run on target.
 do_compile() {

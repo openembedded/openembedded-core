@@ -15,7 +15,6 @@ CVE_PRODUCT = "libnsl_project:libnsl"
 SRC_URI = "git://github.com/thkukuk/libnsl;branch=master;protocol=https"
 SRCREV = "d4b22e54b5e6637a69b26eab5faad2a326c9b182"
 
-
 inherit autotools pkgconfig gettext
 
 BBCLASSEXTEND = "native nativesdk"

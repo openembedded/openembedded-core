@@ -8,7 +8,6 @@ SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https;branch=
 
 SRCREV = "e7f179eeeb6eee1403f090fc43a3c80bb08b5bfd"
 
-
 inherit meson gobject-introspection pkgconfig manpages
 
 EXTRA_OEMESON = "-Dwith_py3=false -Dwith_docs=false -Drpmio=disabled -Dgobject_overrides_dir_py3=${PYTHON_SITEPACKAGES_DIR}/gi/overrides"

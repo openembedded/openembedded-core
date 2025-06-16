@@ -17,7 +17,6 @@ UPSTREAM_CHECK_COMMITS = "1"
 
 inherit autotools
 
-
 PACKAGES =+ "${PN}-iconv"
 
 FILES:${PN}-iconv = "${bindir}/iconv"

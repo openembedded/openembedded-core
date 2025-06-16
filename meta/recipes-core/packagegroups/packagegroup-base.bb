@@ -72,7 +72,6 @@ RDEPENDS:packagegroup-base = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', 'packagegroup-base-zeroconf', '',d)} \
     "
 
-
 RRECOMMENDS:packagegroup-base = "\
     kernel-module-nls-utf8 \
     kernel-module-input \

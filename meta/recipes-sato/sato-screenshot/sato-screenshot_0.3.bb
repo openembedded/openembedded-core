@@ -14,7 +14,6 @@ SRCREV = "9250fa5a012d84ff45984e8c4345ee7635227756"
 SRC_URI = "git://git.yoctoproject.org/screenshot;branch=master;protocol=https"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-
 inherit autotools pkgconfig features_check
 
 FILES:${PN} += "${libdir}/matchbox-panel/*.so"

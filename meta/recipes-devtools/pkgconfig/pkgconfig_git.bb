@@ -18,7 +18,6 @@ SRC_URI = "git://gitlab.freedesktop.org/pkg-config/pkg-config.git;branch=master;
            file://0001-Do-not-use-bool-as-a-field-name.patch \
            "
 
-
 inherit autotools
 
 # Because of a faulty test, the current auto mode always evaluates to no,

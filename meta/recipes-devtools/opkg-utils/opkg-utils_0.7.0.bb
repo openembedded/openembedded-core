@@ -12,7 +12,6 @@ SRC_URI = "git://git.yoctoproject.org/opkg-utils;protocol=https;branch=master \
            "
 SRCREV = "68a969f0e867ace0d94faf8ebe7c7bb67f59d386"
 
-
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 RDEPENDS:${PN} += "bash"

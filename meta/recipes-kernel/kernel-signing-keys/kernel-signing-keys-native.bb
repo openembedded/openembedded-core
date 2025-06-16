@@ -11,7 +11,6 @@
 # cases. For more advanced or production-grade scenarios, a more robust solution
 # is usually required—such as external signing or re-signing using e.g a HSM.
 
-
 SUMMARY = "Signing keys for the kernel FIT image"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -27,7 +26,6 @@ do_unpack[noexec] = "1"
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_install[noexec] = "1"
-
 
 do_compile() {
 	if [ "${UBOOT_SIGN_ENABLE}" = "0" ] && [ "${FIT_GENERATE_KEYS}" = "1" ]; then

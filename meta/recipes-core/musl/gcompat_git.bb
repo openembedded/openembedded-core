@@ -16,7 +16,6 @@ SRC_URI:append:powerpc = "\
 PV = "1.1.0"
 SRCREV = "b7bfe0b08c52fdc72e0c1d9d4dcb2129f1642bd6"
 
-
 inherit pkgconfig linuxloader siteinfo
 
 DEPENDS += "musl-obstack"

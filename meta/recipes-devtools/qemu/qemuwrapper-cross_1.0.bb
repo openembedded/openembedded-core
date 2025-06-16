@@ -26,7 +26,6 @@ if [ ${@bb.utils.contains('MACHINE_FEATURES', 'qemu-usermode', 'True', 'False', 
 	exit 1
 fi
 
-
 $qemu_binary $qemu_options "\$@"
 EOF
 

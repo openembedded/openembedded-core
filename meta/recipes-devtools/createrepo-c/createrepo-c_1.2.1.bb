@@ -11,7 +11,6 @@ SRC_URI = "git://github.com/rpm-software-management/createrepo_c;branch=master;p
 
 SRCREV = "8c6e6f88df86d1e34ca26d3835d77a2816326414"
 
-
 DEPENDS = "expat curl glib-2.0 libxml2 openssl bzip2 zlib file sqlite3 xz rpm"
 DEPENDS:append:class-native = " file-replacement-native"
 

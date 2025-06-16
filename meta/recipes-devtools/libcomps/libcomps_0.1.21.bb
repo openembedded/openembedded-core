@@ -10,7 +10,6 @@ SRC_URI = "git://github.com/rpm-software-management/libcomps.git;branch=master;p
 
 SRCREV = "2e973ce22698dd64f472180e3a689755268fb06b"
 
-
 inherit cmake setuptools3-base
 
 DEPENDS = "expat libxml2 zlib"

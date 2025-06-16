@@ -33,7 +33,6 @@ EXTRA_OECONF:append:class-nativesdk = " --disable-update-alternatives DEB_HOST_A
 PACKAGECONFIG = "liblzma"
 PACKAGECONFIG[liblzma] = "--with-liblzma,--without-liblzma, xz"
 
-
 #autotools.bbclass default AUTOTOOLS_AUXDIR is ${S}, we need to under ${S}/build-aux
 AUTOTOOLS_AUXDIR = "${S}/build-aux"
 

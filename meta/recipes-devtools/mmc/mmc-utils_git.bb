@@ -15,7 +15,6 @@ UPSTREAM_CHECK_COMMITS = "1"
 DEPENDS = "python3-sphinx-native"
 EXTRA_OEMAKE = "C="
 
-
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn32 = " -D__SANE_USERSPACE_TYPES__"

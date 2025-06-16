@@ -16,7 +16,6 @@ SRCREV = "31e19f92f00c7003fa115047ce50978bc98c3a0d"
 
 PV = "r3039+git"
 
-
 inherit lib_package pkgconfig
 
 X264_DISABLE_ASM = ""

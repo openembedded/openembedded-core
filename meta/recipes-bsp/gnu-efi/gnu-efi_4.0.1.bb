@@ -20,7 +20,6 @@ SRC_URI = "git://github.com/ncroxon/gnu-efi;protocol=https;branch=master \
            "
 SRCREV = "00cdfa66e923ab2f6683bb52cab0d0d1a9083b16"
 
-
 # llvm-objcopy fails
 # arm-poky-linux-gnueabi-llvm-objcopy: error: 't8.so': section '.dynstr' cannot be removed because it is referenced by the section '.dynamic'
 OBJCOPY:toolchain-clang = "${HOST_PREFIX}objcopy"

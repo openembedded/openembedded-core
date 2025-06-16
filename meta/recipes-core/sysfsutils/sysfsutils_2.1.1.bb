@@ -15,7 +15,6 @@ SRC_URI = "git://github.com/linux-ras/sysfsutils.git;protocol=https;branch=maste
 
 SRCREV = "da2f1f8500c0af6663a56ce2bff07f67e60a92e0"
 
-
 inherit autotools
 
 PACKAGES =+ "libsysfs"

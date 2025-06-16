@@ -18,7 +18,6 @@ SRC_URI = "git://github.com/connectivity/connman-gnome.git;branch=master;protoco
            file://0001-Port-to-Gtk3.patch \
           "
 
-
 inherit autotools-brokensep gtk-icon-cache pkgconfig features_check
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 

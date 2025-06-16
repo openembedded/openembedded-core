@@ -11,5 +11,4 @@ DEPENDS = "hwdata-native"
 SRC_URI = "git://gitlab.freedesktop.org/emersion/libdisplay-info.git;branch=main;protocol=https"
 SRCREV = "66b802d05b374cd8f388dc6ad1e7ae4f08cb3300"
 
-
 inherit meson pkgconfig lib_package

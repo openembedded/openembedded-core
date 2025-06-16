@@ -16,7 +16,6 @@ SRC_URI = " \
 SRCREV = "032b418a6db842f0eab330eb5909e4604e888728"
 UPSTREAM_CHECK_COMMITS = "1"
 
-
 do_compile () {
 	# Remove most policy variants, leave DEFAULT.pol
 	# It speeds up the build and we only need DEFAULT/rpm-sequoia.

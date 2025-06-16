@@ -10,7 +10,6 @@ PV = "0.1+git"
 SRC_URI = "git://github.com/ahcbb6/baremetal-helloqemu.git;protocol=https;branch=master"
 UPSTREAM_VERSION_UNKNOWN = "1"
 
-
 # The following variables should be set to accomodate each application
 BAREMETAL_BINNAME ?= "hello_baremetal_${MACHINE}"
 IMAGE_LINK_NAME ?= "baremetal-helloworld-image-${MACHINE}"
@@ -21,7 +20,6 @@ IMAGE_NAME_SUFFIX ?= ""
 # package to be created since we might have some way of updating the baremetal
 # firmware from Linux
 inherit baremetal-image
-
 
 # startup code for x86 uses NASM syntax
 DEPENDS:qemux86:append = " nasm-native"

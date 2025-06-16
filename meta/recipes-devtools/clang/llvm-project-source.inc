@@ -66,7 +66,6 @@ python do_preconfigure() {
     cmd = d.expand("sed -i 's#//CLANG_EXTRA_OE_VENDORS_CASES#%s#g' -i ${S}/llvm/lib/TargetParser/Triple.cpp" % (case))
     subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
-
     case = ""
     triple = ""
     name = ""

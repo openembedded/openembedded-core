@@ -14,7 +14,6 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 PV = "0.2+git"
 
-
 inherit autotools pkgconfig features_check update-alternatives
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"

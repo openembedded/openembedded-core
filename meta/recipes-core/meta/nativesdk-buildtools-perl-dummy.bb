@@ -41,7 +41,6 @@ DUMMYPROVIDES = "\
     /usr/bin/perl \
     "
 
-
 require dummy-sdk-package.inc
 
 inherit nativesdk

@@ -10,7 +10,6 @@ SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https \
            file://remove-host-information.patch"
 SRCREV = "bbf320ce586a848f880bca7b758d50ae4c712624"
 
-
 inherit update-alternatives autotools pkgconfig manpages
 PACKAGECONFIG[manpages] = ""
 

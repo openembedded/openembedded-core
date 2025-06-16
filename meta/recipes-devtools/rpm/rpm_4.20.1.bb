@@ -44,7 +44,6 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;branch=rpm-4.20.x;protoc
 PE = "1"
 SRCREV = "c8dc5ea575a2e9c1488036d12f4b75f6a5a49120"
 
-
 DEPENDS = "lua libgcrypt file popt xz bzip2 elfutils python3 sqlite3 zstd"
 DEPENDS:append:class-native = " file-replacement-native bzip2-replacement-native"
 

@@ -519,7 +519,6 @@ RRECOMMENDS:${PN}-binfmt = "${@bb.utils.contains('PACKAGECONFIG', 'binfmt', 'ker
 
 RDEPENDS:${PN}-vconsole-setup = "${@bb.utils.contains('PACKAGECONFIG', 'vconsole', 'kbd kbd-consolefonts kbd-keymaps', '', d)}"
 
-
 FILES:${PN}-journal-gatewayd = "${nonarch_libdir}/systemd/systemd-journal-gatewayd \
                                 ${systemd_system_unitdir}/systemd-journal-gatewayd.service \
                                 ${systemd_system_unitdir}/systemd-journal-gatewayd.socket \
@@ -541,7 +540,6 @@ FILES:${PN}-journal-remote = "${nonarch_libdir}/systemd/systemd-journal-remote \
                               ${systemd_system_unitdir}/systemd-journal-remote.socket \
                              "
 SYSTEMD_SERVICE:${PN}-journal-remote = "systemd-journal-remote.socket"
-
 
 FILES:${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.conf \
                          ${sysconfdir}/dbus-1/system.d/org.freedesktop.machine1.conf \

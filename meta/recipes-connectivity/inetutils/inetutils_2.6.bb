@@ -165,7 +165,6 @@ ALTERNATIVE_LINK_NAME[ping]   = "${base_bindir}/ping"
 ALTERNATIVE:${PN}-ping6 = "${@bb.utils.filter('PACKAGECONFIG', 'ping6', d)}"
 ALTERNATIVE_LINK_NAME[ping6]  = "${base_bindir}/ping6"
 
-
 FILES:${PN}-dbg += "${base_bindir}/.debug ${base_sbindir}/.debug ${bindir}/.debug ${sbindir}/.debug"
 FILES:${PN}-ping = "${base_bindir}/ping.${BPN}"
 FILES:${PN}-ping6 = "${base_bindir}/ping6.${BPN}"

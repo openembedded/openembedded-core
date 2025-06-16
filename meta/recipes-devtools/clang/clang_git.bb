@@ -316,7 +316,6 @@ PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc"
 PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
              libclang lldb lldb-server liblldb llvm-linker-tools"
 
-
 BBCLASSEXTEND = "native nativesdk"
 
 RDEPENDS:lldb += "${PN}-lldb-python lldb-server"

@@ -148,7 +148,6 @@ do_install:append:class-target() {
 		ln -fs ../dbus.service ${D}${systemd_system_unitdir}/multi-user.target.wants/dbus.service
 	fi
 
-
 	mkdir -p ${D}${localstatedir}/lib/dbus
 
 	chown messagebus:messagebus ${D}${localstatedir}/lib/dbus

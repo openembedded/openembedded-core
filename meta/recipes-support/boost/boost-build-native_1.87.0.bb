@@ -14,7 +14,6 @@ UPSTREAM_CHECK_GITTAGREGEX = "boost-(?P<pver>(\d+(\.\d+)+))"
 
 inherit native
 
-
 do_compile() {
     ./bootstrap.sh
 }

@@ -17,7 +17,6 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/strace-${PV}.tar.xz \
            "
 SRC_URI[sha256sum] = "8552dfab08abc22a0f2048c98fd9541fd4d71b6882507952780dab7c7c512f51"
 
-
 inherit autotools github-releases ptest
 
 # Not yet ported to rv32

@@ -11,7 +11,6 @@ SRCREV = "793c037ded98cd001075cdb55a9c58e122380256"
 
 CVE_PRODUCT = "s390-tools"
 
-
 EXTRA_OEMAKE = "\
     V=1 \
     CC="${CC}" \

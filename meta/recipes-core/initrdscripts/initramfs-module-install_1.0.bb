@@ -9,7 +9,6 @@ COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*)-(linux.*|freebsd.*)'
 COMPATIBLE_HOST:armv7a = 'null'
 COMPATIBLE_HOST:armv7ve = 'null'
 
-
 SRC_URI = "file://init-install.sh"
 
 S = "${UNPACKDIR}"

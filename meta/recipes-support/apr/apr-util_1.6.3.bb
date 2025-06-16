@@ -23,7 +23,6 @@ EXTRA_OECONF = "--with-apr=${STAGING_BINDIR_CROSS}/apr-1-config \
 		--without-sqlite2 \
 		--with-expat=${STAGING_DIR_HOST}${prefix}"
 
-
 inherit autotools lib_package binconfig multilib_script
 
 MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/apu-1-config"

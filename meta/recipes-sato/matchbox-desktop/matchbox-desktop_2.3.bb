@@ -18,7 +18,6 @@ SRC_URI = "git://git.yoctoproject.org/${BPN}-2;branch=master;protocol=https \
 
 EXTRA_OECONF = "--enable-startup-notification --with-dbus"
 
-
 inherit autotools pkgconfig features_check
 
 # The startup-notification requires x11 in DISTRO_FEATURES

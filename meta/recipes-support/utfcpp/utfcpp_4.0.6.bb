@@ -9,7 +9,6 @@ SRC_URI = "gitsm://github.com/nemtrif/utfcpp;protocol=https;branch=master"
 
 SRCREV = "b26a5f718f4f370af1852a0d5c6ae8fa031ba7d0"
 
-
 inherit cmake
 
 FILES:${PN}-dev += "${datadir}/utf8cpp/cmake"

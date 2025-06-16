@@ -13,7 +13,6 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 SRC_URI = "git://github.com/rhinstaller/efibootmgr.git;protocol=https;branch=main"
 SRCREV = "c3f9f0534e32158f62c43564036878b93b9e0fd6"
 
-
 inherit pkgconfig
 
 # The directory under the ESP that the default bootloader is found in.  When

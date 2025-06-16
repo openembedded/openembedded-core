@@ -124,7 +124,6 @@ do_compile:append:class-native () {
 	fi
 }
 
-
 do_install () {
 	oe_runmake 'DESTDIR=${D}' ${MAKEOPTS} 'LIB=lib/pseudo/lib$(MARK64)' install
 }

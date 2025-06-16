@@ -12,7 +12,6 @@ PV .= "+git"
 
 UPSTREAM_CHECK_COMMITS = "1"
 
-
 inherit allarch
 
 do_compile() {

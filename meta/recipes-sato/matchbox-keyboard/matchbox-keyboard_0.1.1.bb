@@ -17,7 +17,6 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1;protoc
            file://0001-desktop-file-Hide-the-keyboard-from-app-list.patch \
            file://80matchboxkeyboard.sh"
 
-
 inherit autotools pkgconfig gettext gtk-immodules-cache features_check
 
 # The libxft, libfakekey and matchbox-panel-2 requires x11 in DISTRO_FEATURES
@@ -42,7 +41,6 @@ FILES:${PN}-im = "${libdir}/gtk-2.0/*/immodules/*.so \
                   ${libdir}/gtk-3.0/*/immodules/*.so"
 
 FILES:${PN}-applet = "${libdir}/matchbox-panel/*.so"
-
 
 do_install:append () {
 	install -d ${D}/${sysconfdir}/X11/Xsession.d/

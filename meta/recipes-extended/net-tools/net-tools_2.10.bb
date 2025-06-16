@@ -15,7 +15,6 @@ SRC_URI = "git://git.code.sf.net/p/net-tools/code;protocol=https;branch=master \
     file://CVE-2025-46836-02.patch \
 "
 
-
 inherit gettext
 
 # The Makefile is lame, no parallel build

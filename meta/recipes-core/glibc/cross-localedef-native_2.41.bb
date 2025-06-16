@@ -37,7 +37,6 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
 #
 SRCREV_FORMAT = "glibc_localedef"
 
-
 EXTRA_OECONF = "--with-glibc=${S}"
 
 # We do not need bash to run tzselect script, the default is to use

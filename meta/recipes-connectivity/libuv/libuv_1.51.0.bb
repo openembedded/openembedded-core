@@ -10,7 +10,6 @@ SRCREV = "5152db2cbfeb5582e9c27c5ea1dba2cd9e10759b"
 SRC_URI = "git://github.com/libuv/libuv.git;branch=v1.x;protocol=https;tag=v${PV}"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
-
 inherit autotools
 
 do_configure() {

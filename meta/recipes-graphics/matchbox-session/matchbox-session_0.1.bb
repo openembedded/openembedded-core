@@ -13,7 +13,6 @@ SRC_URI = "file://matchbox-session"
 
 S = "${UNPACKDIR}"
 
-
 inherit update-alternatives
 
 ALTERNATIVE:${PN} = "x-session-manager"

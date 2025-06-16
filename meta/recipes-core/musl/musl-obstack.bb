@@ -16,6 +16,5 @@ UPSTREAM_CHECK_COMMITS = "1"
 
 inherit autotools pkgconfig
 
-
 COMPATIBLE_HOST = ".*-musl.*"
 

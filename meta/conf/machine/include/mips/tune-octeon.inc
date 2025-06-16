@@ -17,7 +17,6 @@ BASE_LIB:tune-octeon2_64 = "lib64"
 MIPSPKGSFX_VARIANT:tune-octeon2_64 = "octeon2_64"
 PACKAGE_EXTRA_ARCHS:tune-octeon2_64 = "mips64 octeon2_64"
 
-
 TUNEVALID[octeon3] = "Enable optimization related to octeon3 support"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'octeon3', ' -march=octeon3 ', '',d)}"
 

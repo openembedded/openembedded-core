@@ -391,7 +391,6 @@ python do_package:prepend() {
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-
 PACKAGES =+ "${PN}-archive ${PN}-tests ${PN}-perl ${PN}-python"
 
 RDEPENDS:${PN} += "elfutils bash"

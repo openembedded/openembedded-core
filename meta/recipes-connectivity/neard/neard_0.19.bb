@@ -17,7 +17,6 @@ SRC_URI = "git://git.kernel.org/pub/scm/network/nfc/neard.git;protocol=https;bra
 
 SRCREV = "a1dc8a75cba999728e154a0f811ab9dd50c809f7"
 
-
 inherit autotools pkgconfig systemd update-rc.d
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"

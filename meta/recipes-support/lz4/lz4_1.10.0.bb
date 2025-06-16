@@ -17,7 +17,6 @@ SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https \
            file://run-ptest"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
-
 inherit ptest
 
 CVE_STATUS[CVE-2014-4715] = "fixed-version: Fixed in r118, which is larger than the current version."

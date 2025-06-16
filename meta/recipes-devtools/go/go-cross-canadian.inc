@@ -29,7 +29,6 @@ do_compile() {
 }
 do_compile[cleandirs] += "${GOTMPDIR} ${B}/bin ${B}/pkg"
 
-
 make_wrapper() {
 	rm -f ${D}${bindir}/$2
 	cat <<END >${D}${bindir}/$2

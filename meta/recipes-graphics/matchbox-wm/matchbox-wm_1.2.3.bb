@@ -14,7 +14,6 @@ SRCREV = "ce8c1053270d960a7235ab5c3435f707541810a4"
 SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager;branch=master;protocol=https \
            file://kbdconfig"
 
-
 inherit autotools pkgconfig features_check
 # depends on virtual/libx11
 REQUIRED_DISTRO_FEATURES = "x11"

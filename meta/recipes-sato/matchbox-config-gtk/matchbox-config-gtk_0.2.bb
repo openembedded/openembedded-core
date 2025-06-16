@@ -15,7 +15,6 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https \
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 PV = "0.2+git"
 
-
 inherit autotools pkgconfig features_check
 
 # The settings-daemon requires x11 in DISTRO_FEATURES

@@ -107,7 +107,6 @@ RDEPENDS:packagegroup-self-hosted-debug = " \
     ${STRACE} \
     tcf-agent"
 
-
 RDEPENDS:packagegroup-self-hosted-extended = "\
     bzip2 \
     chrpath \
@@ -177,7 +176,6 @@ RDEPENDS:packagegroup-self-hosted-extended = "\
     zlib \
     zstd \
     "
-
 
 RDEPENDS:packagegroup-self-hosted-graphics = "\
     adwaita-icon-theme \

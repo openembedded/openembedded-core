@@ -16,7 +16,6 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;p
 SRCREV = "91a0bf9aada36a722855051526f012e0b5ab1af9"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
-
 DEPENDS = "glib-2.0 libsolv libcheck librepo rpm gtk-doc libmodulemd json-c swig-native util-linux"
 
 inherit gtk-doc gobject-introspection cmake pkgconfig setuptools3-base

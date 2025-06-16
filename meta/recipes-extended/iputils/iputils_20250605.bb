@@ -12,7 +12,6 @@ SRC_URI = "git://github.com/iputils/iputils;branch=master;protocol=https \
           "
 SRCREV = "6e1cb146547eb6fbb127ffc8397a9241be0d33c2"
 
-
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>20\d+)"
 
 CVE_STATUS[CVE-2000-1213] = "fixed-version: Fixed in 2000-10-10, but the versioning of iputils breaks the version order."

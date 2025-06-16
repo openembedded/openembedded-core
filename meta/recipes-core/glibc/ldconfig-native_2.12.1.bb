@@ -19,7 +19,6 @@ SRC_URI = "file://ldconfig-native-2.12.1.tar.bz2 \
            file://ldconfig-handle-.dynstr-located-in-separate-segment.patch \
 "
 
-
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${P}:"
 
 inherit native

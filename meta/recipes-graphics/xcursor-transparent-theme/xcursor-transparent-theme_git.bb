@@ -13,7 +13,6 @@ PV = "0.1.1+git"
 SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https"
 UPSTREAM_CHECK_COMMITS = "1"
 
-
 inherit autotools allarch
 
 FILES:${PN} = "${datadir}/icons/xcursor-transparent/cursors/*"

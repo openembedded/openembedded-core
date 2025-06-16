@@ -15,7 +15,6 @@ SRCREV = "b262d0e4619c406a2708856ed312091d21c5bf39"
 
 MIRRORS += "git://gerrit.googlesource.com/git-repo.git git://github.com/GerritCodeReview/git-repo.git"
 
-
 do_configure:prepend() {
 	sed -Ei "s/REPO_REV\s*=\s*('|\")stable('|\")/REPO_REV = '${SRCREV}'/g" ${S}/repo
 }

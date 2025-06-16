@@ -104,7 +104,6 @@ fakeroot python do_multilib_install() {
         os.symlink(src, dest)
         return
 
-
     for ml in multilibs.split():
         tune = d.getVar('DEFAULTTUNE:virtclass-multilib-' + ml)
         if not tune:

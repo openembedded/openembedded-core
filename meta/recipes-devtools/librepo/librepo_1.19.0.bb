@@ -12,7 +12,6 @@ SRC_URI = "git://github.com/rpm-software-management/librepo.git;branch=master;pr
 
 SRCREV = "7955987e33ba98dddb3fc2c63bb6dc892e3505fa"
 
-
 DEPENDS = "curl glib-2.0 openssl attr gpgme libxml2"
 
 inherit cmake setuptools3-base pkgconfig

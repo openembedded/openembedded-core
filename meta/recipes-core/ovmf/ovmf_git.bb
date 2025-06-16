@@ -16,7 +16,6 @@ PACKAGECONFIG[debug] = ",,,"
 PACKAGECONFIG[secureboot] = ",,,"
 PACKAGECONFIG[tpm] = "-D TPM_ENABLE=TRUE,-D TPM_ENABLE=FALSE,,"
 
-
 # GCC12 trips on it
 #see https://src.fedoraproject.org/rpms/edk2/blob/rawhide/f/0032-Basetools-turn-off-gcc12-warning.patch
 BUILD_CFLAGS += "-Wno-error=stringop-overflow"
@@ -54,7 +53,6 @@ CVE_STATUS[CVE-2019-14587] = "fixed-version: The CPE in the NVD database doesn't
 inherit deploy
 
 PARALLEL_MAKE = ""
-
 
 DEPENDS = "nasm-native acpica-native ovmf-native util-linux-native"
 

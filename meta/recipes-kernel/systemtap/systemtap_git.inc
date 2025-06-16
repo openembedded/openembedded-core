@@ -12,7 +12,6 @@ SRCREV = "3a92ffe673c1621309a0b60892114495b651c9de"
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm|aarch64|microblazeel|mips|riscv64).*-linux'
 COMPATIBLE_HOST:libc-musl = 'null'
 
-
 # systemtap can't be built without optimization, if someone tries to compile an
 # entire image as -O0, break with fatal.
 python () {

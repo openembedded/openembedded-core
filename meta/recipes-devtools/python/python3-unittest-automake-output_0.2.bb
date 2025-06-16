@@ -8,7 +8,6 @@ SRC_URI = "git://gitlab.com/rossburton/python-unittest-automake-output;protocol=
 
 SRCREV = "aebdfb188e368c690ea55cf6c9c9ffa1a52def65"
 
-
 inherit python_flit_core
 
 RDEPENDS:${PN} += "python3-unittest"

@@ -5,7 +5,6 @@ MIPSPKGSFX_MIPS16E ??= ""
 require conf/machine/include/mips/tune-mips32r2.inc
 require conf/machine/include/mips/feature-mips-mips16e.inc
 
-
 TUNEVALID[74kc] = "Enable MIPS 74K with DSPr2 processor optimizations"
 TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "74kc", " -mtune=74kc", "", d)}"
 

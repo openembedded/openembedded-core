@@ -59,7 +59,6 @@ do_configure:prepend() {
 	cp -f $(automake --print-libdir)/install-sh ${S}/config/
 }
 
-
 do_install:append() {
     if [ "${@bb.utils.filter('PACKAGECONFIG', 'python', d)}" ]; then
         oe_runmake 'DESTDIR=${D}' 'PYTHON_SITEPACKAGES_DIR=${PYTHON_SITEPACKAGES_DIR}' install_python

@@ -10,7 +10,6 @@ SRC_URI = "git://git.sr.ht/~sircmpwn/scdoc;protocol=https;branch=master \
            file://0001-Makefile-drop-static.patch "
 SRCREV = "0528bcb993cac6c412acd3ae2e09539e994c0a59"
 
-
 do_install() {
 	oe_runmake 'DESTDIR=${D}' install
 }

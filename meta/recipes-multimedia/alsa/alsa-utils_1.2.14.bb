@@ -119,7 +119,6 @@ do_install() {
 	rm -rf ${D}/unwanted
 }
 
-
 PROVIDES = "alsa-utils-alsaconf alsa-utils-scripts"
 
 RDEPENDS:${PN}-scripts += "bash"

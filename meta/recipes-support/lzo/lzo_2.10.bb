@@ -30,5 +30,4 @@ do_install_ptest() {
 	done
 }
 
-
 BBCLASSEXTEND = "native nativesdk"

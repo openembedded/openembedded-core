@@ -4,7 +4,6 @@
 
 SUMMARY = "Testing tools/applications"
 
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup

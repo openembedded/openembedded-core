@@ -21,9 +21,7 @@ SRC_URI:append:libc-musl = " \
     file://0001-Define-portable-basename-function.patch \
     "
 
-
 SRCREV = "8ab9680a1bd5eb8fe7a7dcc44897af7ee41e56e7"
-
 
 DEPENDS = "systemd libxslt-native xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native intltool"
 

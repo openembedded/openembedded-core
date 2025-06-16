@@ -15,12 +15,10 @@ SRCREV = "ab0eaf33b783ba578773af2557753d2b973ba5bb"
 
 inherit autotools update-alternatives
 
-
 # Disable po4a (translated manpages) sub-directory, as that requires po4a to build
 do_configure:prepend() {
     sed -i -e 's:po4a::g' ${S}/Makefile.am
 }
-
 
 do_install:append() {
     if [ "${base_bindir}" != "${bindir}" ]; then

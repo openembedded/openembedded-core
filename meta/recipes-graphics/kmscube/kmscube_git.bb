@@ -16,7 +16,6 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/kmscube;branch=master;protocol=http
 
 UPSTREAM_CHECK_COMMITS = "1"
 
-
 BASEPV = "0.0.1"
 PV = "${BASEPV}+git"
 

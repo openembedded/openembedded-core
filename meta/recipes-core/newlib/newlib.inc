@@ -34,7 +34,6 @@ TARGET_CC_ARCH:append = " -nostdlib"
 # Keep RISC-V 32 using -mcmodel=medlow (symbols lie between -2GB:2GB)
 TARGET_CFLAGS:append:qemuriscv64 = " -mcmodel=medany"
 
-
 EXTRA_OECONF = " \
                 --build=${BUILD_SYS}  \
                 --target=${TARGET_SYS} \
