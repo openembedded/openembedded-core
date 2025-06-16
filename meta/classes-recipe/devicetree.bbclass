@@ -40,8 +40,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SYSROOT_DIRS += "/boot/devicetree"
 FILES:${PN} = "/boot/devicetree/*.dtb /boot/devicetree/*.dtbo"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 B = "${WORKDIR}/build"
 
 # Default kernel includes, these represent what are normally used for in-kernel

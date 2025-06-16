@@ -15,8 +15,7 @@ do_compile[noexec] = "1"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
 	install -Dm 0644 ${S}/sys-queue.h ${D}${includedir}/sys/queue.h

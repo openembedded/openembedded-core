@@ -5,8 +5,7 @@ LICENSE = "MIT"
 
 USERADD_DEPENDS = "acreategroup"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 EXCLUDE_FROM_WORLD = "1"
 

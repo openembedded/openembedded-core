@@ -72,7 +72,7 @@ class RecipeUtilsTests(OESelftestTestCase):
         expected_patch = """
 --- a/recipes-test/recipeutils/recipeutils-test_1.2.bb
 +++ b/recipes-test/recipeutils/recipeutils-test_1.2.bb
-@@ -11,6 +11,4 @@
+@@ -10,6 +10,4 @@
  
  BBCLASSEXTEND = "native nativesdk"
  
@@ -97,7 +97,7 @@ class RecipeUtilsTests(OESelftestTestCase):
         expected_patch = """
 --- a/recipes-test/recipeutils/recipeutils-test_1.2.bb
 +++ b/recipes-test/recipeutils/recipeutils-test_1.2.bb
-@@ -11,6 +11,3 @@
+@@ -10,6 +10,3 @@
  
  BBCLASSEXTEND = "native nativesdk"
  

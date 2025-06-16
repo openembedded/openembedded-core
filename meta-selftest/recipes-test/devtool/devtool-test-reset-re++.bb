@@ -3,7 +3,6 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 SRC_URI = "file://file1"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 EXCLUDE_FROM_WORLD = "1"

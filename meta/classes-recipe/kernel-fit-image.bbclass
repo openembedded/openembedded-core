@@ -2,8 +2,7 @@
 inherit kernel-arch kernel-artifact-names uboot-config deploy
 require conf/image-fitimage.conf
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

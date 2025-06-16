@@ -21,8 +21,7 @@ SRC_URI = "\
   file://alsa-state-init \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 # As the recipe doesn't inherit systemd.bbclass, we need to set this variable
 # manually to avoid unnecessary postinst/preinst generated.

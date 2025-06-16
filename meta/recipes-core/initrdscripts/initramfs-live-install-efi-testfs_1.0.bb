@@ -5,8 +5,7 @@ SRC_URI = "file://init-install-efi-testfs.sh"
 
 RDEPENDS:${PN} = "parted e2fsprogs-mke2fs dosfstools"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
         install -m 0755 ${S}/init-install-efi-testfs.sh ${D}/install-efi.sh

@@ -6,8 +6,7 @@ LICENSE = "HPND"
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/somefile;md5=d41d8cd98f00b204e9800998ecf8427e"
 DEPENDS += "zlib"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 BBCLASSEXTEND = "native nativesdk"
 

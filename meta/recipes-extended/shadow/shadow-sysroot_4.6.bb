@@ -13,8 +13,7 @@ DEPENDS = "base-passwd"
 # can add custom users/groups for recipes that use inherit useradd.
 SRC_URI = "file://login.defs_shadow-sysroot"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
 	install -d ${D}${sysconfdir}

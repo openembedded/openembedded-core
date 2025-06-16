@@ -18,8 +18,7 @@ SRC_URI = "file://${COREBASE}/scripts/runqemu \
            file://${COREBASE}/scripts/runqemu-export-rootfs \
           "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit nativesdk
 

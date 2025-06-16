@@ -25,8 +25,7 @@ SRC_URI = "file://rotation \
            file://licenses/GPL-2 \
            "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 

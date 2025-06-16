@@ -12,8 +12,7 @@ RCONFLICTS:${PN} = "matchbox-common"
 
 SRC_URI = "file://mini-x-session"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 RDEPENDS:${PN} = "sudo"
 

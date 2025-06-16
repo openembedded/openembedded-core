@@ -6,8 +6,7 @@ DEPENDS = "libgfortran"
 
 SRC_URI = "file://hello.f95"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 # These set flags that Fortran doesn't support
 SECURITY_CFLAGS = ""

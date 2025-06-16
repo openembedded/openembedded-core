@@ -1,8 +1,7 @@
 SUMMARY = "Wrapper script for the Linux kernel module dependency indexer"
 LICENSE = "MIT"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 # The kernel and the staging dir for it is machine specific

@@ -35,8 +35,7 @@ SRC_URI = "file://functions \
            ${@bb.utils.contains('DISTRO_FEATURES','selinux','file://sushell','',d)} \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI:append:arm = " file://alignment.sh"
 SRC_URI:append:armeb = " file://alignment.sh"

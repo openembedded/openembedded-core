@@ -20,8 +20,7 @@ SRC_URI = "file://init \
            file://overlayroot \
           "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/init.d

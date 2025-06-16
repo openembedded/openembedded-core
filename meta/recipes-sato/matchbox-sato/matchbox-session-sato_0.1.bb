@@ -20,8 +20,7 @@ REQUIRED_DISTRO_FEATURES = "x11"
 SRC_URI = "file://session \
            file://index.theme"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:${PN} += "${datadir}/themes/Sato/index.theme"
 

@@ -15,8 +15,7 @@ SRC_URI = "file://copyright \
            file://interfaces \
            file://nfsroot"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install () {
 	install -d ${D}${sysconfdir}/init.d \
