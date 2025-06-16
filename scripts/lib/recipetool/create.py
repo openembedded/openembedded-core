@@ -735,7 +735,7 @@ def create_recipe(args):
     if srcsubdir and not args.binary:
         # (for binary packages we explicitly specify subdir= when fetching to
         # match the default value of S, so we don't need to set it in that case)
-        lines_before.append('S = "${WORKDIR}/%s"' % srcsubdir)
+        lines_before.append('S = "${UNPACKDIR}/%s"' % srcsubdir)
         lines_before.append('')
 
     if pkgarch:
@@ -839,7 +839,7 @@ def create_recipe(args):
                 line = line.replace(realpv, '${PV}')
             if pn:
                 line = line.replace(pn, '${BPN}')
-            if line == 'S = "${WORKDIR}/${BPN}-${PV}"' or 'tmp-recipetool-' in line:
+            if line == 'S = "${UNPACKDIR}/${BPN}-${PV}"' or 'tmp-recipetool-' in line:
                 skipblank = True
                 continue
         elif line.startswith('SRC_URI = '):

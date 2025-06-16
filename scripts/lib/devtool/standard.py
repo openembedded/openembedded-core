@@ -625,7 +625,7 @@ def _extract_source(srctree, keep_temp, devbranch, sync, config, basepath, works
                 srcsubdir = f.read()
         except FileNotFoundError as e:
             raise DevtoolError('Something went wrong with source extraction - the devtool-source class was not active or did not function correctly:\n%s' % str(e))
-        srcsubdir_rel = os.path.relpath(srcsubdir, os.path.join(tempdir, 'workdir'))
+        srcsubdir_rel = os.path.relpath(srcsubdir, os.path.join(tempdir, 'workdir', os.path.relpath(d.getVar('UNPACKDIR'), d.getVar('WORKDIR'))))
 
         # Check if work-shared is empty, if yes
         # find source and copy to work-shared
@@ -742,13 +742,13 @@ def get_staging_kbranch(srcdir):
         staging_kbranch = "".join(branch.split('\n')[0])
     return staging_kbranch
 
-def get_real_srctree(srctree, s, workdir):
+def get_real_srctree(srctree, s, unpackdir):
     # Check that recipe isn't using a shared workdir
     s = os.path.abspath(s)
-    workdir = os.path.abspath(workdir)
-    if s.startswith(workdir) and s != workdir and os.path.dirname(s) != workdir:
+    unpackdir = os.path.abspath(unpackdir)
+    if s.startswith(unpackdir) and s != unpackdir and os.path.dirname(s) != unpackdir:
         # Handle if S is set to a subdirectory of the source
-        srcsubdir = os.path.relpath(s, workdir).split(os.sep, 1)[1]
+        srcsubdir = os.path.relpath(s, unpackdir).split(os.sep, 1)[1]
         srctree = os.path.join(srctree, srcsubdir)
     return srctree
 
@@ -907,7 +907,7 @@ def modify(args, config, basepath, workspace):
 
         # Need to grab this here in case the source is within a subdirectory
         srctreebase = srctree
-        srctree = get_real_srctree(srctree, rd.getVar('S'), rd.getVar('WORKDIR'))
+        srctree = get_real_srctree(srctree, rd.getVar('S'), rd.getVar('UNPACKDIR'))
 
         bb.utils.mkdirhier(os.path.dirname(appendfile))
         with open(appendfile, 'w') as f:

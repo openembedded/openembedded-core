@@ -565,7 +565,7 @@ class DevtoolAddTests(DevtoolBase):
         recipefile = get_bb_var('FILE', testrecipe)
         self.assertIn('%s_%s.bb' % (testrecipe, testver), recipefile, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/MarkupSafe-${PV}'
+        checkvars['S'] = '${UNPACKDIR}/MarkupSafe-${PV}'
         checkvars['SRC_URI'] = url.replace(testver, '${PV}')
         self._test_recipe_contents(recipefile, checkvars, [])
         # Try with version specified
@@ -582,7 +582,7 @@ class DevtoolAddTests(DevtoolBase):
         recipefile = get_bb_var('FILE', testrecipe)
         self.assertIn('%s_%s.bb' % (testrecipe, fakever), recipefile, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/MarkupSafe-%s' % testver
+        checkvars['S'] = '${UNPACKDIR}/MarkupSafe-%s' % testver
         checkvars['SRC_URI'] = url
         self._test_recipe_contents(recipefile, checkvars, [])
 
@@ -1627,12 +1627,12 @@ class DevtoolUpdateTests(DevtoolBase):
         # Check preconditions
         testrecipe = 'dos2unix'
         self.append_config('ERROR_QA:remove:pn-dos2unix = "patch-status"\n')
-        bb_vars = get_bb_vars(['SRC_URI', 'S', 'WORKDIR', 'FILE', 'BB_GIT_DEFAULT_DESTSUFFIX'], testrecipe)
+        bb_vars = get_bb_vars(['SRC_URI', 'S', 'UNPACKDIR', 'FILE', 'BB_GIT_DEFAULT_DESTSUFFIX'], testrecipe)
         self.assertIn('git://', bb_vars['SRC_URI'], 'This test expects the %s recipe to be a git recipe' % testrecipe)
-        workdir_git = '%s/%s/' % (bb_vars['WORKDIR'], bb_vars['BB_GIT_DEFAULT_DESTSUFFIX'])
-        if not bb_vars['S'].startswith(workdir_git):
+        unpackdir_git = '%s/%s/' % (bb_vars['UNPACKDIR'], bb_vars['BB_GIT_DEFAULT_DESTSUFFIX'])
+        if not bb_vars['S'].startswith(unpackdir_git):
             self.fail('This test expects the %s recipe to be building from a subdirectory of the git repo' % testrecipe)
-        subdir = bb_vars['S'].split(workdir_git, 1)[1]
+        subdir = bb_vars['S'].split(unpackdir_git, 1)[1]
         # Clean up anything in the workdir/sysroot/sstate cache
         bitbake('%s -c cleansstate' % testrecipe)
         # Try modifying a recipe
@@ -2414,7 +2414,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         newsrctree = os.path.join(self.workspacedir, 'sources', newrecipename)
         self.assertExists(newsrctree, 'Source directory not renamed')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/%s-%s' % (recipename, recipever)
+        checkvars['S'] = '${UNPACKDIR}/%s-%s' % (recipename, recipever)
         checkvars['SRC_URI'] = url
         self._test_recipe_contents(newrecipefile, checkvars, [])
         # Try again - change just name this time
@@ -2426,7 +2426,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         self.assertNotExists(os.path.join(self.workspacedir, 'recipes', recipename), 'Old recipe directory still exists')
         self.assertExists(os.path.join(self.workspacedir, 'sources', newrecipename), 'Source directory not renamed')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/%s-${PV}' % recipename
+        checkvars['S'] = '${UNPACKDIR}/%s-${PV}' % recipename
         checkvars['SRC_URI'] = url.replace(recipever, '${PV}')
         self._test_recipe_contents(newrecipefile, checkvars, [])
         # Try again - change just version this time
@@ -2437,7 +2437,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         self.assertExists(newrecipefile, 'Recipe file not renamed')
         self.assertExists(os.path.join(self.workspacedir, 'sources', recipename), 'Source directory no longer exists')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/${BPN}-%s' % recipever
+        checkvars['S'] = '${UNPACKDIR}/${BPN}-%s' % recipever
         checkvars['SRC_URI'] = url
         self._test_recipe_contents(newrecipefile, checkvars, [])
 

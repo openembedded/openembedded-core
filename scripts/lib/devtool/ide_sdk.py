@@ -334,7 +334,7 @@ class RecipeModified:
         self.srctree = workspace[workspacepn]['srctree']
         # Need to grab this here in case the source is within a subdirectory
         self.real_srctree = get_real_srctree(
-            self.srctree, recipe_d.getVar('S'), recipe_d.getVar('WORKDIR'))
+            self.srctree, recipe_d.getVar('S'), recipe_d.getVar('UNPACKDIR'))
         self.bbappend = workspace[workspacepn]['bbappend']
 
         self.ide_sdk_dir = os.path.join(

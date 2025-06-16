@@ -1144,10 +1144,10 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
 
     def test_recipetool_appendsrcfile_srcdir_basic(self):
         testrecipe = 'bash'
-        bb_vars = get_bb_vars(['S', 'WORKDIR'], testrecipe)
+        bb_vars = get_bb_vars(['S', 'UNPACKDIR'], testrecipe)
         srcdir = bb_vars['S']
-        workdir = bb_vars['WORKDIR']
-        subdir = os.path.relpath(srcdir, workdir)
+        unpackdir = bb_vars['UNPACKDIR']
+        subdir = os.path.relpath(srcdir, unpackdir)
         self._test_appendsrcfile(testrecipe, 'a-file', srcdir=subdir)
 
     def test_recipetool_appendsrcfile_existing_in_src_uri(self):
@@ -1196,10 +1196,10 @@ class RecipetoolAppendsrcTests(RecipetoolAppendsrcBase):
     def test_recipetool_appendsrcfile_replace_file_srcdir(self):
         testrecipe = 'bash'
         filepath = 'Makefile.in'
-        bb_vars = get_bb_vars(['S', 'WORKDIR'], testrecipe)
+        bb_vars = get_bb_vars(['S', 'UNPACKDIR'], testrecipe)
         srcdir = bb_vars['S']
-        workdir = bb_vars['WORKDIR']
-        subdir = os.path.relpath(srcdir, workdir)
+        unpackdir = bb_vars['UNPACKDIR']
+        subdir = os.path.relpath(srcdir, unpackdir)
 
         self._test_appendsrcfile(testrecipe, filepath, srcdir=subdir)
         bitbake('%s:do_unpack' % testrecipe)

@@ -317,7 +317,7 @@ def appendsrc(args, files, rd, extralines=None):
     import oe.recipeutils
 
     srcdir = rd.getVar('S')
-    workdir = rd.getVar('WORKDIR')
+    unpackdir = rd.getVar('UNPACKDIR')
 
     import bb.fetch
     simplified = {}
@@ -336,10 +336,10 @@ def appendsrc(args, files, rd, extralines=None):
         src_destdir = os.path.dirname(srcfile)
         if not args.use_workdir:
             if rd.getVar('S') == rd.getVar('STAGING_KERNEL_DIR'):
-                srcdir = os.path.join(workdir, rd.getVar('BB_GIT_DEFAULT_DESTSUFFIX'))
+                srcdir = os.path.join(unpackdir, rd.getVar('BB_GIT_DEFAULT_DESTSUFFIX'))
                 if not bb.data.inherits_class('kernel-yocto', rd):
-                    logger.warning('S == STAGING_KERNEL_DIR and non-kernel-yocto, unable to determine path to srcdir, defaulting to ${WORKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}')
-            src_destdir = os.path.join(os.path.relpath(srcdir, workdir), src_destdir)
+                    logger.warning('S == STAGING_KERNEL_DIR and non-kernel-yocto, unable to determine path to srcdir, defaulting to ${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}')
+            src_destdir = os.path.join(os.path.relpath(srcdir, unpackdir), src_destdir)
         src_destdir = os.path.normpath(src_destdir)
 
         if src_destdir and src_destdir != '.':
