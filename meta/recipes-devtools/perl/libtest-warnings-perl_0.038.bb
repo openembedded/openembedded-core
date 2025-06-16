@@ -17,7 +17,7 @@ SRC_URI = "${CPAN_MIRROR}/authors/id/E/ET/ETHER/Test-Warnings-${PV}.tar.gz"
 
 SRC_URI[sha256sum] = "3da27e003a3c3cafed3c09b42be05cf9bdbff0bee5c8590a731b02853880a273"
 
-S = "${WORKDIR}/Test-Warnings-${PV}"
+S = "${UNPACKDIR}/Test-Warnings-${PV}"
 
 inherit cpan ptest-perl
 

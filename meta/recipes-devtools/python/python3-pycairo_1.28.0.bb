@@ -15,7 +15,7 @@ GITHUB_BASE_URI = "https://github.com/pygobject/pycairo/releases/"
 
 SRC_URI[sha256sum] = "26ec5c6126781eb167089a123919f87baa2740da2cca9098be8b3a6b91cc5fbc"
 
-S = "${WORKDIR}/pycairo-${PV}"
+S = "${UNPACKDIR}/pycairo-${PV}"
 
 inherit meson pkgconfig python3targetconfig github-releases
 

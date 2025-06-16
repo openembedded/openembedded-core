@@ -23,7 +23,7 @@ SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar
            "
 SRC_URI[sha256sum] = "7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7"
 
-S = "${WORKDIR}/gtk+-${PV}"
+S = "${UNPACKDIR}/gtk+-${PV}"
 
 BBCLASSEXTEND = "native nativesdk"
 

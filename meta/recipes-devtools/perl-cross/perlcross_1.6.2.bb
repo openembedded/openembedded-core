@@ -20,7 +20,7 @@ GITHUB_BASE_URI = "https://github.com/arsv/perl-cross/releases/"
 
 SRC_URI[perl-cross.sha256sum] = "131f7496152ee32067dbac2bc9b44b2f582fc778140e545701b3b2faee782f1d"
 
-S = "${WORKDIR}/perl-cross-${PV}"
+S = "${UNPACKDIR}/perl-cross-${PV}"
 
 do_configure () {
 }

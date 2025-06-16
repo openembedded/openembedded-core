@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "21547f3516120c75597e5b30a992e27a592a31950b5140e7b8bfde3f19
 
 CVE_PRODUCT = "pcre2"
 
-S = "${WORKDIR}/pcre2-${PV}"
+S = "${UNPACKDIR}/pcre2-${PV}"
 
 PROVIDES += "pcre2"
 DEPENDS += "bzip2 zlib"

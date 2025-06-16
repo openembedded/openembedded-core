@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "6891765aac3e949017945c3eaebd8cc8216df772456dc9f460976fbdb7
 PROVIDES = "libsoup-3.0"
 CVE_PRODUCT = "libsoup"
 
-S = "${WORKDIR}/libsoup-${PV}"
+S = "${UNPACKDIR}/libsoup-${PV}"
 
 inherit meson gettext pkgconfig upstream-version-is-even gobject-introspection gi-docgen vala
 

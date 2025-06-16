@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://libuuid/COPYING;md5=6d2cafc999feb2c2de84d4d24b23290c 
 
 inherit autotools gettext pkgconfig
 
-S = "${WORKDIR}/util-linux-${PV}"
+S = "${UNPACKDIR}/util-linux-${PV}"
 
 EXTRA_AUTORECONF += "--exclude=gtkdocize"
 EXTRA_OECONF += "--disable-all-programs --enable-libuuid"

@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://${UNPACKDIR}/COPYING;md5=4bd090a20bfcd1a18f1f79837b5e
 
 inherit native
 
-S = "${WORKDIR}/gettext-${PV}"
+S = "${UNPACKDIR}/gettext-${PV}"
 
 python get_aclocal_files() {
     fpath = oe.path.join(d.getVar("S"), "/gettext-tools/m4/Makefile.am")

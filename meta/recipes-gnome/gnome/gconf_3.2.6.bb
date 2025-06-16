@@ -22,7 +22,7 @@ SRC_URI = "${GNOME_MIRROR}/GConf/${@gnome_verdir("${PV}")}/GConf-${PV}.tar.xz;na
 SRC_URI[archive.md5sum] = "2b16996d0e4b112856ee5c59130e822c"
 SRC_URI[archive.sha256sum] = "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e0cfa51a04d784c"
 
-S = "${WORKDIR}/GConf-${PV}"
+S = "${UNPACKDIR}/GConf-${PV}"
 
 EXTRA_OECONF = "--enable-shared --disable-static \
                 --disable-orbit --with-openldap=no --disable-gtk"

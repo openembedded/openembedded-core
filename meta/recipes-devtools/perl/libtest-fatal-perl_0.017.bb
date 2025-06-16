@@ -13,7 +13,7 @@ SRC_URI = "${CPAN_MIRROR}/authors/id/R/RJ/RJBS/Test-Fatal-${PV}.tar.gz"
 
 SRC_URI[sha256sum] = "37dfffdafb84b762efe96b02fb2aa41f37026c73e6b83590db76229697f3c4a6"
 
-S = "${WORKDIR}/Test-Fatal-${PV}"
+S = "${UNPACKDIR}/Test-Fatal-${PV}"
 
 inherit cpan ptest-perl
 

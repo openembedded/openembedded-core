@@ -30,7 +30,7 @@ LEAD_SONAME = "libglib-2.0.*"
 
 inherit meson gettext gi-docgen pkgconfig ptest-gnome upstream-version-is-even bash-completion gio-module-cache manpages gobject-introspection-data
 
-S = "${WORKDIR}/glib-${PV}"
+S = "${UNPACKDIR}/glib-${PV}"
 
 GIDOCGEN_MESON_OPTION = "documentation"
 

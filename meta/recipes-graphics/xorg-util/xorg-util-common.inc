@@ -8,6 +8,6 @@ XORG_PN = "${BPN}"
 
 SRC_URI = "${XORG_MIRROR}/individual/util/${XORG_PN}-${PV}.tar.gz"
 
-S = "${WORKDIR}/${XORG_PN}-${PV}"
+S = "${UNPACKDIR}/${XORG_PN}-${PV}"
 
 inherit autotools pkgconfig

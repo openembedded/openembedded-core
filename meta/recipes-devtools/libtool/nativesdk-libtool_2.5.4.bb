@@ -7,7 +7,7 @@ SRC_URI += "file://0008-libtool-Avoid-relinking-when-cross-compiling-its-poi.pat
 
 inherit nativesdk
 
-S = "${WORKDIR}/libtool-${PV}"
+S = "${UNPACKDIR}/libtool-${PV}"
 FILES:${PN} += "${datadir}/libtool/*"
 
 do_install () {

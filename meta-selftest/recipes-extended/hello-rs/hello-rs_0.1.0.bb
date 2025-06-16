@@ -12,7 +12,7 @@ SRCREV = "d3d096eda182644868f8e7458dcfa538ff637db3"
 SRCREV_FORMAT .= "_hello-lib"
 SRCREV_hello-lib = "59c84574e844617043cf337bc8fa537cf87ad8ae"
 
-S = "${WORKDIR}/rust"
+S = "${UNPACKDIR}/rust"
 
 inherit cargo cargo-update-recipe-crates ptest-cargo
 

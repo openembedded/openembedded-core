@@ -13,7 +13,7 @@ inherit meson pkgconfig gettext upstream-version-is-even gobject-introspection p
 LIC_FILES_CHKSUM = "file://COPYING;md5=69333daa044cb77e486cc36129f7a770 \
                     file://gst/gst.h;beginline=1;endline=21;md5=e059138481205ee2c6fc1c079c016d0d"
 
-S = "${WORKDIR}/gstreamer-${PV}"
+S = "${UNPACKDIR}/gstreamer-${PV}"
 
 SRC_URI = "https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-${PV}.tar.xz \
            file://run-ptest \

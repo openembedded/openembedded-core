@@ -24,7 +24,7 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/${P}:"
 
 inherit native
 
-S = "${WORKDIR}/${PN}-${PV}"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 do_compile () {
 	$CC ldconfig.c -std=gnu99 chroot_canon.c xmalloc.c xstrdup.c cache.c readlib.c  -I. dl-cache.c -o ldconfig

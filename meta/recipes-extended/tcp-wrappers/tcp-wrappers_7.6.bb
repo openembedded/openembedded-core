@@ -52,7 +52,7 @@ SRC_URI = "http://ftp.porcupine.org/pub/security/tcp_wrappers_${PV}.tar.gz \
 
 SRC_URI[sha256sum] = "9543d7adedf78a6de0b221ccbbd1952e08b5138717f4ade814039bb489a4315d"
 
-S = "${WORKDIR}/tcp_wrappers_${PV}"
+S = "${UNPACKDIR}/tcp_wrappers_${PV}"
 
 CFLAGS += "-std=gnu17"
 

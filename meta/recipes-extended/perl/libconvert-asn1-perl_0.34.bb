@@ -9,7 +9,7 @@ SRC_URI = "https://cpan.metacpan.org/authors/id/T/TI/TIMLEGGE/Convert-ASN1-${PV}
 
 SRC_URI[sha256sum] = "a628d7c9d390568fb76359975fa03f626ce57f10dc17980e8e3587d7713e4ee7"
 
-S = "${WORKDIR}/Convert-ASN1-${PV}"
+S = "${UNPACKDIR}/Convert-ASN1-${PV}"
 
 inherit cpan ptest-perl
 

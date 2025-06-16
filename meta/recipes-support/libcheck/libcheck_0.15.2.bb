@@ -16,7 +16,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/check-${PV}.tar.gz \
 SRC_URI[sha256sum] = "a8de4e0bacfb4d76dd1c618ded263523b53b85d92a146d8835eb1a52932fa20a"
 GITHUB_BASE_URI = "https://github.com/libcheck/check/releases/"
 
-S = "${WORKDIR}/check-${PV}"
+S = "${UNPACKDIR}/check-${PV}"
 
 inherit cmake pkgconfig texinfo github-releases
 

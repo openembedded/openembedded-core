@@ -11,7 +11,7 @@ XORG_PN = "${BPN}"
 
 SRC_URI_EXT = "bz2"
 SRC_URI = "${XORG_MIRROR}/individual/font/${XORG_PN}-${PV}.tar.${SRC_URI_EXT}"
-S = "${WORKDIR}/${XORG_PN}-${PV}"
+S = "${UNPACKDIR}/${XORG_PN}-${PV}"
 
 inherit autotools pkgconfig features_check
 

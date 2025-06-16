@@ -43,7 +43,7 @@ CVE_STATUS[CVE-2008-0888] = "fixed-version: Patch from https://bugzilla.redhat.c
 # exclude version 5.5.2 which triggers a false positive
 UPSTREAM_CHECK_REGEX = "unzip(?P<pver>(?!552).+)\.tgz"
 
-S = "${WORKDIR}/unzip60"
+S = "${UNPACKDIR}/unzip60"
 
 # Makefile uses CF_NOOPT instead of CFLAGS.  We lifted the values from
 # Makefile and add CFLAGS.  Optimization will be overriden by unzip

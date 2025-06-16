@@ -18,7 +18,7 @@ SRC_URI = "${CPAN_MIRROR}/authors/id/L/LE/LEONT/Module-Build-${PV}.tar.gz \
            "
 SRC_URI[sha256sum] = "66aeac6127418be5e471ead3744648c766bd01482825c5b66652675f2bc86a8f"
 
-S = "${WORKDIR}/Module-Build-${PV}"
+S = "${UNPACKDIR}/Module-Build-${PV}"
 
 inherit cpan_build ptest-perl
 

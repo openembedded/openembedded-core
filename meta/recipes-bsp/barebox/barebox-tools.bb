@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-only"
 
 DEPENDS = "bison-native flex-native libusb1"
 
-S = "${WORKDIR}/barebox-${PV}"
+S = "${UNPACKDIR}/barebox-${PV}"
 B = "${WORKDIR}/build"
 
 inherit pkgconfig

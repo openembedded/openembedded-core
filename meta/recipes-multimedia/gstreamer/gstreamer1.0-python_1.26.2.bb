@@ -15,7 +15,7 @@ RDEPENDS:${PN} += "gstreamer1.0 gstreamer1.0-plugins-base python3-pygobject"
 
 PNREAL = "gst-python"
 
-S = "${WORKDIR}/${PNREAL}-${PV}"
+S = "${UNPACKDIR}/${PNREAL}-${PV}"
 
 EXTRA_OEMESON += "\
     -Dtests=disabled \

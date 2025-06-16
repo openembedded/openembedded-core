@@ -13,7 +13,7 @@ def sqlite_download_version(d):
 
 SQLITE_PV = "${@sqlite_download_version(d)}"
 
-S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
+S = "${UNPACKDIR}/sqlite-autoconf-${SQLITE_PV}"
 
 UPSTREAM_CHECK_URI = "http://www.sqlite.org/"
 UPSTREAM_CHECK_REGEX = "releaselog/(?P<pver>(\d+[\.\-_]*)+)\.html"

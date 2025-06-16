@@ -53,7 +53,7 @@ CVE_STATUS[CVE-2023-36632] = "disputed: Not an issue, in fact expected behaviour
 
 PYTHON_MAJMIN = "3.13"
 
-S = "${WORKDIR}/Python-${PV}"
+S = "${UNPACKDIR}/Python-${PV}"
 
 BBCLASSEXTEND = "native nativesdk"
 

@@ -13,7 +13,7 @@ UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/docbook/files/docbook-xsl/
 # Reject versions ending in .0 as those are release candidates
 UPSTREAM_CHECK_REGEX = "/docbook-xsl/(?P<pver>(\d+[\.\-_]*)+(?!\.0)\.\d+)/"
 
-S = "${WORKDIR}/docbook-xsl-${PV}"
+S = "${UNPACKDIR}/docbook-xsl-${PV}"
 
 inherit allarch xmlcatalog
 

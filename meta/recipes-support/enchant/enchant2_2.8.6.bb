@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "c4cd0889d8aff8248fc3913de5a83907013962f0e1895030a3836468cd
 
 GITHUB_BASE_URI = "https://github.com/rrthomas/enchant/releases"
 
-S = "${WORKDIR}/enchant-${PV}"
+S = "${UNPACKDIR}/enchant-${PV}"
 
 PACKAGECONFIG ??= "aspell"
 PACKAGECONFIG[aspell]  = "--with-aspell,--without-aspell,aspell,aspell"

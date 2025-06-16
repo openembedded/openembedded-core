@@ -16,7 +16,7 @@ SRC_URI = "http://lttng.org/files/urcu/userspace-rcu-${PV}.tar.bz2"
 
 SRC_URI[sha256sum] = "26687ec84e3e114759454c884a08abeaf79dec09b041895ddf4c45ec150acb6d"
 
-S = "${WORKDIR}/userspace-rcu-${PV}"
+S = "${UNPACKDIR}/userspace-rcu-${PV}"
 inherit autotools multilib_header
 
 CPPFLAGS:append:riscv64  = " -pthread -D_REENTRANT"

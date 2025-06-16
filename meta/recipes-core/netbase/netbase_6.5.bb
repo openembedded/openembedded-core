@@ -22,4 +22,4 @@ do_install () {
 	install -m 0644 ${S}/etc/ethertypes ${D}${sysconfdir}/ethertypes
 }
 
-S = "${WORKDIR}/netbase"
+S = "${UNPACKDIR}/netbase"

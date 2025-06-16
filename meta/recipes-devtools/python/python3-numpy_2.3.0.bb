@@ -19,7 +19,7 @@ UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
 inherit pkgconfig ptest python_mesonpy github-releases cython
 
-S = "${WORKDIR}/numpy-${PV}"
+S = "${UNPACKDIR}/numpy-${PV}"
 
 PACKAGECONFIG[svml] = "-Ddisable-svml=false,-Ddisable-svml=true"
 

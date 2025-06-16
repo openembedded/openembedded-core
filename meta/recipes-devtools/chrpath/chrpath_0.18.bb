@@ -12,7 +12,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/c/${BPN}/${BPN}_${PV}.orig.tar.gz \
 SRC_URI[sha256sum] = "f09c49f0618660ca11fc6d9580ddde904c7224d4c6d0f6f2d1f9bcdc9102c9aa"
 
 inherit autotools
-S = "${WORKDIR}/chrpath"
+S = "${UNPACKDIR}/chrpath"
 
 # We don't have a staged chrpath-native for ensuring our binary is
 # relocatable, so use the one we've just built

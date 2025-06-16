@@ -16,7 +16,7 @@ SRC_URI = "http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/XML-SAX-Base-${PV}
 
 SRC_URI[sha256sum] = "66cb355ba4ef47c10ca738bd35999723644386ac853abbeb5132841f5e8a2ad0"
 
-S = "${WORKDIR}/XML-SAX-Base-${PV}"
+S = "${UNPACKDIR}/XML-SAX-Base-${PV}"
 
 inherit cpan ptest-perl
 

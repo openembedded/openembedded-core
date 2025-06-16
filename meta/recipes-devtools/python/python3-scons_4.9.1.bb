@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "bacac880ba2e86d6a156c116e2f8f2bfa82b257046f3ac2666c85c53c6
 
 inherit pypi python_setuptools_build_meta
 
-S = "${WORKDIR}/scons-${PV}"
+S = "${UNPACKDIR}/scons-${PV}"
 
 RDEPENDS:${PN}:class-target = "\
   python3-core \

@@ -23,7 +23,7 @@ PROVIDES = "virtual/libsdl2"
 
 SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz"
 
-S = "${WORKDIR}/SDL2-${PV}"
+S = "${UNPACKDIR}/SDL2-${PV}"
 
 SRC_URI[sha256sum] = "0ca83e9c9b31e18288c7ec811108e58bac1f1bb5ec6577ad386830eac51c787e"
 

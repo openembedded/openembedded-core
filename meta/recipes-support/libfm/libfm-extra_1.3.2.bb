@@ -14,7 +14,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${SOURCEFORGE_PROJECT}/libfm-${PV}.tar.xz \
 
 SRC_URI[sha256sum] = "a5042630304cf8e5d8cff9d565c6bd546f228b48c960153ed366a34e87cad1e5"
 
-S = "${WORKDIR}/libfm-${PV}"
+S = "${UNPACKDIR}/libfm-${PV}"
 
 EXTRA_OECONF = "--with-extra-only --with-gtk=no"
 

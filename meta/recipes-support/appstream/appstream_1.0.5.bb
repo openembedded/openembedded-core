@@ -32,7 +32,7 @@ SRC_URI = " \
 "
 SRC_URI[sha256sum] = "ce0ed29e89abd5f0cf790ea87d792f1967c3413060beb30e63a979578d975121"
 
-S = "${WORKDIR}/AppStream-${PV}"
+S = "${UNPACKDIR}/AppStream-${PV}"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
 

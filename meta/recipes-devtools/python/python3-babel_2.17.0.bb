@@ -7,7 +7,7 @@ SRC_URI[sha256sum] = "0c54cffb19f690cdcc52a3b50bcbf71e07a808d1c80d549f2459b9d2cf
 
 inherit pypi setuptools3
 
-S = "${WORKDIR}/babel-${PV}"
+S = "${UNPACKDIR}/babel-${PV}"
 
 CLEANBROKEN = "1"
 

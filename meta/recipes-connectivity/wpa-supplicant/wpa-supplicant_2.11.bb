@@ -19,7 +19,7 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            "
 SRC_URI[sha256sum] = "912ea06f74e30a8e36fbb68064d6cdff218d8d591db0fc5d75dee6c81ac7fc0a"
 
-S = "${WORKDIR}/wpa_supplicant-${PV}"
+S = "${UNPACKDIR}/wpa_supplicant-${PV}"
 
 inherit pkgconfig systemd
 

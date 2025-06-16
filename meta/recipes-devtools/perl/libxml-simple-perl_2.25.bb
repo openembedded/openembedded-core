@@ -14,7 +14,7 @@ SRC_URI = "http://www.cpan.org/modules/by-module/XML/XML-Simple-${PV}.tar.gz"
 
 SRC_URI[sha256sum] = "531fddaebea2416743eb5c4fdfab028f502123d9a220405a4100e68fc480dbf8"
 
-S = "${WORKDIR}/XML-Simple-${PV}"
+S = "${UNPACKDIR}/XML-Simple-${PV}"
 
 EXTRA_PERLFLAGS = "-I ${PERLHOSTLIB}"
 

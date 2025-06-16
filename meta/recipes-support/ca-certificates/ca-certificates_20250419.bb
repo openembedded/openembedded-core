@@ -20,7 +20,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/c/ca-certificates/${BPN}_${PV}.tar.xz \
            file://0003-update-ca-certificates-use-relative-symlinks-from-ET.patch \
            file://0001-Revert-mozilla-certdata2pem.py-print-a-warning-for-e.patch \
            "
-S = "${WORKDIR}/ca-certificates"
+S = "${UNPACKDIR}/ca-certificates"
 inherit allarch
 
 EXTRA_OEMAKE = "\

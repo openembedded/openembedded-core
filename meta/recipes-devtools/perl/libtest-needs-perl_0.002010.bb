@@ -19,7 +19,7 @@ SRC_URI = "https://cpan.metacpan.org/authors/id/H/HA/${CPAN_AUTHOR}/${CPAN_NAME}
 
 SRC_URI[sha256sum] = "923ffdc78fcba96609753e4bae26b0ba0186893de4a63cd5236e012c7c90e208"
 
-S = "${WORKDIR}/${CPAN_NAME}-${PV}"
+S = "${UNPACKDIR}/${CPAN_NAME}-${PV}"
 
 inherit cpan ptest-perl
 

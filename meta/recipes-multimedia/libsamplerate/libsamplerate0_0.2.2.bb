@@ -16,7 +16,7 @@ CVE_PRODUCT = "libsamplerate"
 
 GITHUB_BASE_URI = "https://github.com/libsndfile/libsamplerate/releases"
 
-S = "${WORKDIR}/libsamplerate-${PV}"
+S = "${UNPACKDIR}/libsamplerate-${PV}"
 
 inherit autotools pkgconfig github-releases
 

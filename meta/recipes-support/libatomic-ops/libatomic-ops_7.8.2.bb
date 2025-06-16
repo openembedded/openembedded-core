@@ -15,7 +15,7 @@ SRC_URI[sha256sum] = "d305207fe207f2b3fb5cb4c019da12b44ce3fcbc593dfd5080d867b1a2
 
 CVE_PRODUCT = "libatomic_ops"
 
-S = "${WORKDIR}/libatomic_ops-${PV}"
+S = "${UNPACKDIR}/libatomic_ops-${PV}"
 
 ALLOW_EMPTY:${PN} = "1"
 

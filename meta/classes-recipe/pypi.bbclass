@@ -41,7 +41,7 @@ PYPI_SRC_URI ?= "${@pypi_src_uri(d)}"
 HOMEPAGE ?= "https://pypi.python.org/pypi/${PYPI_PACKAGE}/"
 SECTION = "devel/python"
 SRC_URI:prepend = "${PYPI_SRC_URI} "
-S = "${WORKDIR}/${PYPI_PACKAGE}-${PV}"
+S = "${UNPACKDIR}/${PYPI_PACKAGE}-${PV}"
 
 # Replace any '_' characters in the pypi URI with '-'s to follow the PyPi website naming conventions
 UPSTREAM_CHECK_PYPI_PACKAGE ?= "${@pypi_normalize(d)}"

@@ -10,7 +10,7 @@ XORG_EXT ?= "tar.xz"
 
 SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.${XORG_EXT}"
 
-S = "${WORKDIR}/${XORG_PN}-${PV}"
+S = "${UNPACKDIR}/${XORG_PN}-${PV}"
 
 inherit autotools features_check pkgconfig
 

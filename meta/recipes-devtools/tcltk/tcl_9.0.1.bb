@@ -28,7 +28,7 @@ SRC_URI[sha256sum] = "488fcb6c875a1762e9e8478319b20fbad9a31de475f056aeed94cc54b4
 UPSTREAM_CHECK_URI = "https://www.tcl.tk/software/tcltk/download.html"
 UPSTREAM_CHECK_REGEX = "tcl(?P<pver>\d+(\.\d+)+)-src"
 
-S = "${WORKDIR}/${BPN}${PV}"
+S = "${UNPACKDIR}/${BPN}${PV}"
 
 VER = "${PV}"
 

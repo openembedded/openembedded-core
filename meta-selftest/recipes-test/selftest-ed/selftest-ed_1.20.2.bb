@@ -21,7 +21,7 @@ UPSTREAM_CHECK_URI = "${GNU_MIRROR}/ed/"
 
 SRC_URI[sha256sum] = "65fec7318f48c2ca17f334ac0f4703defe62037bb13cc23920de077b5fa24523"
 
-S = "${WORKDIR}/ed-${PV}"
+S = "${UNPACKDIR}/ed-${PV}"
 
 EXTRA_OEMAKE = "-e MAKEFLAGS="
 

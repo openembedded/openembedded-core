@@ -16,7 +16,7 @@ SRC_URI:append:class-nativesdk = " \
            file://environment.d-git.sh \
            "
 
-S = "${WORKDIR}/git-${PV}"
+S = "${UNPACKDIR}/git-${PV}"
 
 LIC_FILES_CHKSUM = "\
 	file://COPYING;md5=7c0d7ef03a7eb04ce795b0f60e68e7e1 \

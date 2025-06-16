@@ -40,7 +40,7 @@ UPSTREAM_CHECK_REGEX = "gtk-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)\.tar.xz"
 SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk/${MAJ_VER}/gtk-${PV}.tar.xz"
 SRC_URI[sha256sum] = "e1817c650ddc3261f9a8345b3b22a26a5d80af154630dedc03cc7becefffd0fa"
 
-S = "${WORKDIR}/gtk-${PV}"
+S = "${UNPACKDIR}/gtk-${PV}"
 
 CVE_PRODUCT = "gnome:gtk"
 

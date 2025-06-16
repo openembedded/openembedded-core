@@ -20,7 +20,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.xz \
            "
 SRC_URI[sha256sum] = "c90874b8c054a35991fb8c4d30c443ed1e9b1815ff6165c7b483f558be4e4b53"
 
-S = "${WORKDIR}/sysvinit-${PV}"
+S = "${UNPACKDIR}/sysvinit-${PV}"
 
 inherit update-alternatives features_check github-releases
 DEPENDS:append = " update-rc.d-native base-passwd virtual/crypt"

@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "681bcca9784bf3cb2207e68236d1f68e2aa7b80f999b5750dc77dcd756
 
 PR = "r5"
 
-S = "${WORKDIR}/pv-${PV}"
+S = "${UNPACKDIR}/pv-${PV}"
 
 EXCLUDE_FROM_WORLD = "1"
 

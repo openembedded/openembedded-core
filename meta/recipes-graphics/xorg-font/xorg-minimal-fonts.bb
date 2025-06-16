@@ -19,7 +19,7 @@ inherit allarch features_check
 # The font-alias requires x11 in DISTRO_FEATURES
 REQUIRED_DISTRO_FEATURES = "x11"
 
-S = "${WORKDIR}/misc"
+S = "${UNPACKDIR}/misc"
 
 PACKAGES = "${PN}"
 FILES:${PN} = "${libdir}/X11/ ${datadir}/fonts/X11/"

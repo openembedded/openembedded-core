@@ -9,7 +9,7 @@ SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus-python-${PV}.ta
 
 SRC_URI[sha256sum] = "c36b28f10ffcc8f1f798aca973bcc132f91f33eb9b6b8904381b4077766043d5"
 
-S = "${WORKDIR}/dbus-python-${PV}"
+S = "${UNPACKDIR}/dbus-python-${PV}"
 
 inherit setuptools3-base meson pkgconfig
 
