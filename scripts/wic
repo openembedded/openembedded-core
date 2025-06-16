@@ -237,6 +237,13 @@ def wic_ls_subcommand(args, usage_str):
     Command-line handling for list content of images.
     The real work is done by engine.wic_ls()
     """
+
+    if args.image_name:
+        BB_VARS.default_image = args.image_name
+
+    if args.vars_dir:
+        BB_VARS.vars_dir = args.vars_dir
+
     engine.wic_ls(args, args.native_sysroot)
 
 def wic_cp_subcommand(args, usage_str):
@@ -244,6 +251,12 @@ def wic_cp_subcommand(args, usage_str):
     Command-line handling for copying files/dirs to images.
     The real work is done by engine.wic_cp()
     """
+    if args.image_name:
+        BB_VARS.default_image = args.image_name
+
+    if args.vars_dir:
+        BB_VARS.vars_dir = args.vars_dir
+
     engine.wic_cp(args, args.native_sysroot)
 
 def wic_rm_subcommand(args, usage_str):
@@ -251,6 +264,12 @@ def wic_rm_subcommand(args, usage_str):
     Command-line handling for removing files/dirs from images.
     The real work is done by engine.wic_rm()
     """
+    if args.image_name:
+        BB_VARS.default_image = args.image_name
+
+    if args.vars_dir:
+        BB_VARS.vars_dir = args.vars_dir
+
     engine.wic_rm(args, args.native_sysroot)
 
 def wic_write_subcommand(args, usage_str):
@@ -258,6 +277,12 @@ def wic_write_subcommand(args, usage_str):
     Command-line handling for writing images.
     The real work is done by engine.wic_write()
     """
+    if args.image_name:
+        BB_VARS.default_image = args.image_name
+
+    if args.vars_dir:
+        BB_VARS.vars_dir = args.vars_dir
+
     engine.wic_write(args, args.native_sysroot)
 
 def wic_help_subcommand(args, usage_str):
@@ -390,6 +415,12 @@ def wic_init_parser_ls(subparser):
                         help="image spec: <image>[:<vfat partition>[<path>]]")
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
+    subparser.add_argument("-e", "--image-name", dest="image_name",
+                      help="name of the image to use the artifacts from "
+                           "e.g. core-image-sato")
+    subparser.add_argument("-v", "--vars", dest='vars_dir',
+                      help="directory with <image>.env files that store "
+                           "bitbake variables")
 
 def imgpathtype(arg):
     img = imgtype(arg)
@@ -404,6 +435,12 @@ def wic_init_parser_cp(subparser):
                         help="image spec: <image>:<vfat partition>[<path>] or <file>")
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
+    subparser.add_argument("-e", "--image-name", dest="image_name",
+                      help="name of the image to use the artifacts from "
+                           "e.g. core-image-sato")
+    subparser.add_argument("-v", "--vars", dest='vars_dir',
+                      help="directory with <image>.env files that store "
+                           "bitbake variables")
 
 def wic_init_parser_rm(subparser):
     subparser.add_argument("path", type=imgpathtype,
@@ -413,6 +450,12 @@ def wic_init_parser_rm(subparser):
     subparser.add_argument("-r", dest="recursive_delete", action="store_true", default=False,
                         help="remove directories and their contents recursively, "
                         " this only applies to ext* partition")
+    subparser.add_argument("-e", "--image-name", dest="image_name",
+                      help="name of the image to use the artifacts from "
+                           "e.g. core-image-sato")
+    subparser.add_argument("-v", "--vars", dest='vars_dir',
+                      help="directory with <image>.env files that store "
+                           "bitbake variables")
 
 def expandtype(rules):
     """
@@ -454,6 +497,12 @@ def wic_init_parser_write(subparser):
                         help="expand rules: auto or <partition>:<size>[,<partition>:<size>]")
     subparser.add_argument("-n", "--native-sysroot",
                         help="path to the native sysroot containing the tools")
+    subparser.add_argument("--image-name", dest="image_name",
+                      help="name of the image to use the artifacts from "
+                           "e.g. core-image-sato")
+    subparser.add_argument("-v", "--vars", dest='vars_dir',
+                      help="directory with <image>.env files that store "
+                           "bitbake variables")
 
 def wic_init_parser_help(subparser):
     helpparsers = subparser.add_subparsers(dest='help_topic', help=hlp.wic_usage)
