@@ -1431,6 +1431,14 @@ Rerun configure task after fixing this."""
 python do_qa_unpack() {
     src_uri = d.getVar('SRC_URI')
     s_dir = d.getVar('S')
+    s_dir_orig = d.getVar('S', False)
+
+    if s_dir_orig == '${WORKDIR}/git' or s_dir_orig == '${UNPACKDIR}/git':
+        bb.fatal('Recipes that set S = "${WORKDIR}/git" or S = "${UNPACKDIR}/git" should remove that assignment, as S set by bitbake.conf in oe-core now works.')
+
+    if '${WORKDIR}' in s_dir_orig:
+        bb.fatal('S should be set relative to UNPACKDIR, e.g. replace WORKDIR with UNPACKDIR in "S = {}"'.format(s_dir_orig))
+
     if src_uri and not os.path.exists(s_dir):
         bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN'), d.getVar('S', False), s_dir))
 }
