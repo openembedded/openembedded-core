@@ -23,7 +23,7 @@ JIT:powerpc64 = ""
 RDEPENDS:${PN} = "bash"
 
 SRC_URI = "git://github.com/draios/sysdig.git;branch=dev;protocol=https;name=sysdig \
-           git://github.com/falcosecurity/libs;protocol=https;branch=master;name=falco;subdir=git/falcosecurity-libs \
+           git://github.com/falcosecurity/libs;protocol=https;branch=master;name=falco;subdir=${BB_GIT_DEFAULT_DESTSUFFIX}/falcosecurity-libs \
            file://0055-Add-cstdint-for-uintXX_t-types.patch;patchdir=./falcosecurity-libs \
            file://0099-cmake-Pass-PROBE_NAME-via-CFLAGS.patch \
            "
@@ -32,7 +32,6 @@ SRCREV_falco = "caa0e4d0044fdaaebab086592a97f0c7f32aeaa9"
 
 SRCREV_FORMAT = "sysdig_falco"
 
-S = "${WORKDIR}/git"
 
 EXTRA_OECMAKE = "\
                 -DBUILD_DRIVER=OFF \

@@ -13,6 +13,5 @@ SRC_URI = "git://github.com/cryptodev-linux/cryptodev-linux;branch=master;protoc
 SRCREV = "135cbff90af2ba97d88f1472be595ce78721972c"
 PV = "1.14"
 
-S = "${WORKDIR}/git"
 
 CLEANBROKEN = "1"

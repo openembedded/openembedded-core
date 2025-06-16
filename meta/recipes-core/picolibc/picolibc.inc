@@ -17,5 +17,4 @@ PV = "${BASEVER}+git"
 SRC_URI = "git://github.com/picolibc/picolibc.git;protocol=https;branch=main"
 SRCREV = "764ef4e401a8f4c6a86ab723533841f072885a5b"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"

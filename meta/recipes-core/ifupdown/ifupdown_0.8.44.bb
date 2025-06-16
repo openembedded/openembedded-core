@@ -18,7 +18,6 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=mast
            "
 SRCREV = "7d44f9ce6717a4a496fd46f28c52e12dbf5bafdd"
 
-S = "${WORKDIR}/git"
 
 
 inherit ptest update-alternatives

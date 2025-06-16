@@ -336,9 +336,9 @@ def appendsrc(args, files, rd, extralines=None):
         src_destdir = os.path.dirname(srcfile)
         if not args.use_workdir:
             if rd.getVar('S') == rd.getVar('STAGING_KERNEL_DIR'):
-                srcdir = os.path.join(workdir, 'git')
+                srcdir = os.path.join(workdir, rd.getVar('BB_GIT_DEFAULT_DESTSUFFIX'))
                 if not bb.data.inherits_class('kernel-yocto', rd):
-                    logger.warning('S == STAGING_KERNEL_DIR and non-kernel-yocto, unable to determine path to srcdir, defaulting to ${WORKDIR}/git')
+                    logger.warning('S == STAGING_KERNEL_DIR and non-kernel-yocto, unable to determine path to srcdir, defaulting to ${WORKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}')
             src_destdir = os.path.join(os.path.relpath(srcdir, workdir), src_destdir)
         src_destdir = os.path.normpath(src_destdir)
 

@@ -15,7 +15,6 @@ SRCREV = "2d10aa2afe35527728db30b35ec491ecb6959e5c"
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
-S = "${WORKDIR}/git"
 
 inherit meson pkgconfig
 

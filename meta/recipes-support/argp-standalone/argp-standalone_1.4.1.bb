@@ -12,7 +12,6 @@ SRC_URI = "git://github.com/ericonr/argp-standalone;branch=master;protocol=https
            file://out_of_tree_build.patch \
           "
 SRCREV = "e5fe9ad9e83e6765cf8fa787f903d4c6792338b5"
-S = "${WORKDIR}/git"
 
 inherit autotools
 

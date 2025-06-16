@@ -19,7 +19,6 @@ PE = "1"
 # The tags versions should always be sdk-x.y.z, as this is what
 # upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
-S = "${WORKDIR}/git"
 
 inherit cmake python3native
 

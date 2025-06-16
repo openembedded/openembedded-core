@@ -8,7 +8,6 @@ SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https;tag=${PV}\
            file://0001-Workaround-an-ABI-issue-in-spdlog.patch"
 SRCREV = "40626af88bd7df9a5fb80be7b25ac85b122d6c21"
 
-S = "${WORKDIR}/git"
 
 inherit cmake
 

@@ -13,7 +13,6 @@ SECTION = "libs"
 SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https;branch=master"
 SRCREV = "5507339628b5caf244e1ff9d58cb3fa534b16beb"
 
-S = "${WORKDIR}/git"
 
 inherit cmake lib_package
 

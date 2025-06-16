@@ -11,7 +11,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/yoctoproject/${BPN};branch=main;protocol=https"
 SRCREV = "618a7316102f6f81faa60537503012a419eafa06"
-S = "${WORKDIR}/git"
 
 # TODO: remove when we upgrade to a release past 3.9.0
 PV .= "+git"

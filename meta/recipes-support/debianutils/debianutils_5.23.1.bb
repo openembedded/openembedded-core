@@ -15,7 +15,6 @@ SRCREV = "ab0eaf33b783ba578773af2557753d2b973ba5bb"
 
 inherit autotools update-alternatives
 
-S = "${WORKDIR}/git"
 
 # Disable po4a (translated manpages) sub-directory, as that requires po4a to build
 do_configure:prepend() {

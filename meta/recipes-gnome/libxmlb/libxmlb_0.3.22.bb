@@ -9,7 +9,6 @@ SRC_URI = " \
 	file://run-ptest \
 "
 SRCREV = "addcce32a3bd6a09303f052bd59fb758621d30fb"
-S = "${WORKDIR}/git"
 
 DEPENDS = "glib-2.0 xz zstd"
 

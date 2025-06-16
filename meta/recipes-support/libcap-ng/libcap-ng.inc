@@ -11,7 +11,6 @@ SRC_URI = "git://github.com/stevegrubb/libcap-ng.git;protocol=https;branch=maste
            file://0001-Fix-python-path-when-invoking-py-compile-54.patch \
            "
 SRCREV = "f5d39702622208b3ada064d7b2eaeaf1454c9bd3"
-S = "${WORKDIR}/git"
 
 inherit lib_package autotools
 

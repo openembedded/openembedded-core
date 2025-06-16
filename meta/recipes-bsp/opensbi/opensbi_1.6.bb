@@ -12,7 +12,6 @@ SRCREV = "bd613dd92113f683052acfb23d9dc8ba60029e0a"
 SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https \
            file://0001-Makefile-Add-flag-for-reprodubility-compiler-flags.patch \
 "
-S = "${WORKDIR}/git"
 
 TARGET_DBGSRC_DIR = "/share/opensbi/*/generic/firmware/"
 

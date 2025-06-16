@@ -8,7 +8,6 @@ inherit setuptools3 ptest-python-pytest
 SRCREV = "4b3b1e2e568a88d4f1897d694d684f23d9e270c4"
 SRC_URI = "git://github.com/erocarrera/pefile;branch=master;protocol=https \
            file://run-ptest"
-S = "${WORKDIR}/git"
 
 BBCLASSEXTEND = "native nativesdk"
 

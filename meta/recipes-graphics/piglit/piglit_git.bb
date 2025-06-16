@@ -20,7 +20,6 @@ SRCREV = "a0a27e528f643dfeb785350a1213bfff09681950"
 # (when PV goes above 1.0 remove the trailing r)
 PV = "1.0+gitr"
 
-S = "${WORKDIR}/git"
 
 X11_DEPS = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxrender libglu', '', d)}"
 X11_RDEPS = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'mesa-demos', '', d)}"

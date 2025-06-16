@@ -16,7 +16,6 @@ SRCBRANCH ?= "master"
 
 PROVIDES = "virtual/crypt"
 
-S = "${WORKDIR}/git"
 
 BUILD_CPPFLAGS = "-I${STAGING_INCDIR_NATIVE}"
 TARGET_CPPFLAGS = "-I${STAGING_DIR_TARGET}${includedir} -Wno-error"

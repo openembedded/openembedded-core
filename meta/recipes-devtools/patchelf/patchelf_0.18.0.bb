@@ -11,7 +11,6 @@ SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master \
 "
 SRCREV = "99c24238981b7b1084313aca8f5c493bb46f302c"
 
-S = "${WORKDIR}/git"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 

@@ -13,7 +13,6 @@ SRC_URI = "git://github.com/nhorman/rng-tools.git;branch=master;protocol=https \
            "
 SRCREV = "bd00c08b0c3c6a880b0988befe97fd35b315468c"
 
-S = "${WORKDIR}/git"
 
 inherit autotools update-rc.d systemd pkgconfig
 

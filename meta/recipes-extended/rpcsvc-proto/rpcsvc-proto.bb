@@ -23,7 +23,6 @@ SRC_URI = "git://github.com/thkukuk/${BPN};branch=master;protocol=https \
            file://0001-Use-cross-compiled-rpcgen.patch \
            "
 
-S = "${WORKDIR}/git"
 
 inherit autotools gettext
 

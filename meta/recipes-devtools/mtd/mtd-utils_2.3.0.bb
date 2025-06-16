@@ -19,7 +19,6 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git;branch=master \
            file://0004-ubifs-utils-extract_files-Include-linux-limits.h.patch \
            file://0001-Improve-check-for-GCC-compiler-version.patch"
 
-S = "${WORKDIR}/git"
 
 # xattr support creates an additional compile-time dependency on acl because
 # the sys/acl.h header is needed. libacl is not needed and thus enabling xattr

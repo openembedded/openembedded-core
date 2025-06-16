@@ -19,4 +19,3 @@ SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-
 
 SRCREV = "ee7e9118d0a9581cb00c5ce02dccd561b3096387"
 
-S = "${WORKDIR}/git"

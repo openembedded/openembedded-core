@@ -17,7 +17,6 @@ PV = "0.3+git"
 inherit native
 
 SRC_URI = "git://git.yoctoproject.org/yocto-kernel-tools.git;branch=master;protocol=https"
-S = "${WORKDIR}/git"
 
 do_configure() {
 	:

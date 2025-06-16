@@ -24,7 +24,6 @@ SRC_URI:append:libc-musl = " \
 
 SRCREV = "8ab9680a1bd5eb8fe7a7dcc44897af7ee41e56e7"
 
-S = "${WORKDIR}/git"
 
 DEPENDS = "systemd libxslt-native xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native intltool"
 

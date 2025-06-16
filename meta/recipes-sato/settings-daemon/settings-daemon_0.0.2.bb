@@ -15,7 +15,6 @@ SRC_URI = "git://git.yoctoproject.org/xsettings-daemon;branch=master;protocol=ht
            "
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gconf features_check
 

@@ -12,7 +12,6 @@ SRC_URI = "git://github.com/google/shaderc.git;protocol=https;branch=main;tag=v$
            file://0002-libshaderc_util-fix-glslang-header-file-location.patch \
            "
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
-S = "${WORKDIR}/git"
 
 inherit cmake python3native pkgconfig
 

@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 
 SRCREV = "74862a684907ada3d4ed2ce0f8111adf626e1456"
 SRC_URI = "git://pagure.io/xmlto.git;protocol=https;branch=master"
-S = "${WORKDIR}/git"
 
 inherit autotools
 

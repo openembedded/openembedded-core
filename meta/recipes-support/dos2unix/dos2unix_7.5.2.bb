@@ -13,7 +13,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "dos2unix-(?P<pver>(\d+(\.\d+)+))"
 
 SRCREV = "c16a0b31a64c7eb6b2d76960e5144732b57f2993"
 
-S = "${WORKDIR}/git/dos2unix"
+S = "${UNPACKDIR}/${BP}/dos2unix"
 
 inherit gettext perlnative
 

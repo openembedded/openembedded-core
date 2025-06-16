@@ -388,19 +388,19 @@ do_kernel_checkout() {
 	set +e
 
 	source_dir=`echo ${S} | sed 's%/$%%'`
-	source_workdir="${UNPACKDIR}/git"
-	if [ -d "${UNPACKDIR}/git/" ]; then
+	source_unpackdir="${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}"
+	if [ -d "${source_unpackdir}" ]; then
 		# case: git repository
-		# if S is WORKDIR/git, then we shouldn't be moving or deleting the tree.
-		if [ "${source_dir}" != "${source_workdir}" ]; then
-			if [ -d "${source_workdir}/.git" ]; then
+		# if S is UNPACKDIR/BB_GIT_DEFAULT_DESTSUFFIX, then we shouldn't be moving or deleting the tree.
+		if [ "${source_dir}" != "${source_unpackdir}" ]; then
+			if [ -d "${source_unpackdir}/.git" ]; then
 				# regular git repository with .git
 				rm -rf ${S}
-				mv ${UNPACKDIR}/git ${S}
+				mv ${source_unpackdir} ${S}
 			else
 				# create source for bare cloned git repository
-				git clone ${WORKDIR}/git ${S}
-				rm -rf ${UNPACKDIR}/git
+				git clone ${source_unpackdir} ${S}
+				rm -rf ${source_unpackdir}
 			fi
 		fi
 		cd ${S}

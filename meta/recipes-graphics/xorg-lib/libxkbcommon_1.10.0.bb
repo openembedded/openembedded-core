@@ -10,7 +10,6 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "git://github.com/xkbcommon/libxkbcommon;protocol=https;branch=master;tag=xkbcommon-${PV}"
 
 SRCREV = "7888474d0296dcad50c9ba4adfdfdf2be02d35e1"
-S = "${WORKDIR}/git"
 
 inherit meson pkgconfig bash-completion
 

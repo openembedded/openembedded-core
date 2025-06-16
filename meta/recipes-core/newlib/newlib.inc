@@ -22,7 +22,6 @@ SRCREV = "5e5e51f1dc56a99eb4648c28e00d73b6ea44a8b0"
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "virtual/cross-cc"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
 ## disable stdlib

@@ -16,7 +16,6 @@ UPSTREAM_CHECK_COMMITS = "1"
 
 inherit autotools pkgconfig
 
-S = "${WORKDIR}/git"
 
 COMPATIBLE_HOST = ".*-musl.*"
 

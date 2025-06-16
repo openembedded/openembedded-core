@@ -15,7 +15,6 @@ PV = "0.3+git"
 
 SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gettext features_check
 

@@ -18,7 +18,6 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            "
 
 SRCREV = "93df2b254caf9639f9ffb66e0fe2b584eeba6220"
-S = "${WORKDIR}/git"
 
 # Doesn't use automake so we can't do out-of-tree builds
 inherit pkgconfig autotools-brokensep systemd useradd

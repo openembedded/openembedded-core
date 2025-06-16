@@ -13,9 +13,6 @@
 # SRC_URI:class-devupstream = "git://git.example.com/example;branch=master"
 # SRCREV:class-devupstream = "abcdef"
 #
-# If the first entry in SRC_URI is a git: URL then S is rewritten to
-# WORKDIR/git.
-#
 # There are a few caveats that remain to be solved:
 # - You can't build native or nativesdk recipes using for example
 #   devupstream:native, you can only build target recipes.
@@ -38,9 +35,6 @@ python devupstream_virtclass_handler () {
 
     src_uri = d.getVar("SRC_URI:class-devupstream") or d.getVar("SRC_URI")
     uri = bb.fetch2.URI(src_uri.split()[0])
-
-    if uri.scheme == "git" and not d.getVar("S:class-devupstream"):
-        d.setVar("S", "${WORKDIR}/git")
 
     # Modify the PV if the recipe hasn't already overridden it
     pv = d.getVar("PV")

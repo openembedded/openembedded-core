@@ -33,7 +33,6 @@ SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=ht
            file://0001-cve-2015-3290-Disable-AVX-for-x86_64.patch \
            "
 
-S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig
 

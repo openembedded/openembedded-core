@@ -12,7 +12,6 @@ SRCREV = "bd47bd544c9ebc9f44bd88c2b2f2049230741058"
 SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git;branch=${BPN};protocol=https \
           "
 
-S = "${WORKDIR}/git"
 
 inherit meson pkgconfig
 

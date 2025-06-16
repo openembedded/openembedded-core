@@ -16,7 +16,6 @@ SRC_URI = " \
 SRCREV = "032b418a6db842f0eab330eb5909e4604e888728"
 UPSTREAM_CHECK_COMMITS = "1"
 
-S = "${UNPACKDIR}/git"
 
 do_compile () {
 	# Remove most policy variants, leave DEFAULT.pol

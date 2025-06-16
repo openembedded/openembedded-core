@@ -19,7 +19,6 @@ PV = "0.8.18.1.11+git"
 SRC_URI = "git://github.com/stevenhoneyman/l3afpad.git;branch=master;protocol=https"
 SRCREV = "3cdccdc9505643e50f8208171d9eee5de11a42ff"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig features_check mime-xdg
 

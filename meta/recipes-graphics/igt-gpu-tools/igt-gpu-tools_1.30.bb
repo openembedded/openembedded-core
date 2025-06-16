@@ -15,7 +15,6 @@ SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;bra
            file://0001-lib-igt_aux.c-address-procps-4.0.5-compatibility.patch \
            "
 
-S = "${WORKDIR}/git"
 
 DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 procps libunwind kmod openssl elfutils alsa-lib json-c bison-native"
 RDEPENDS:${PN} += "bash perl"

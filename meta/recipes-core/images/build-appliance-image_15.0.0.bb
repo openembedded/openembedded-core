@@ -27,7 +27,7 @@ inherit core-image setuptools3 features_check
 REQUIRED_DISTRO_FEATURES += "xattr"
 
 SRCREV ?= "b1b3318eff36d4d9b2d3a935dee607c4f012f992"
-SRC_URI = "git://git.yoctoproject.org/poky;branch=master \
+SRC_URI = "git://git.yoctoproject.org/poky;branch=master;destsuffix=poky \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
            file://README_VirtualBox_Guest_Additions.txt \
@@ -44,10 +44,10 @@ IMAGE_CMD:ext4:append () {
 fakeroot do_populate_poky_src () {
 	# Because fetch2's git's unpack uses -s cloneflag, the unpacked git repo
 	# will become invalid in the target.
-	rm -rf ${UNPACKDIR}/git/.git
-	rm -f ${UNPACKDIR}/git/.gitignore
+	rm -rf ${UNPACKDIR}/poky/.git
+	rm -f ${UNPACKDIR}/poky/.gitignore
 
-	cp -R ${UNPACKDIR}/git ${IMAGE_ROOTFS}/home/builder/poky
+	cp -R ${UNPACKDIR}/poky ${IMAGE_ROOTFS}/home/builder/poky
 
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/poky/build/conf
 	mkdir -p ${IMAGE_ROOTFS}/home/builder/poky/build/downloads

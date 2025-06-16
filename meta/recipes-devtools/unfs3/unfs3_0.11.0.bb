@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c1c621cd2786a3a1344a60a0d608c910"
 
 DEPENDS = "bison-native flex-native libtirpc"
 
-S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/unfs3/unfs3.git;protocol=https;branch=master;tag=${BP}"
 SRCREV = "ec1660ba33c80d5c67131e163e68834c1a10e243"
 UPSTREAM_CHECK_GITTAGREGEX = "unfs3\-(?P<pver>\d+(\.\d+)+)"

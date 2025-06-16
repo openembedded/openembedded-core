@@ -12,7 +12,6 @@ SRC_URI = "git://github.com/iputils/iputils;branch=master;protocol=https \
           "
 SRCREV = "6e1cb146547eb6fbb127ffc8397a9241be0d33c2"
 
-S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>20\d+)"
 

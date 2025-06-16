@@ -10,7 +10,6 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git;b
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
 
-S = "${WORKDIR}/git"
 
 DEPENDS = "util-linux-libuuid"
 

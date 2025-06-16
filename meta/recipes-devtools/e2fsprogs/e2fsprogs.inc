@@ -20,7 +20,6 @@ SECTION = "base"
 DEPENDS = "util-linux attr autoconf-archive-native"
 
 SRC_URI = "git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git;branch=master;protocol=https"
-S = "${WORKDIR}/git"
 
 inherit autotools gettext texinfo pkgconfig multilib_header update-alternatives ptest
 

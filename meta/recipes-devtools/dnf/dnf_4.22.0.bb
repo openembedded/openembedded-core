@@ -23,7 +23,6 @@ SRC_URI:append:class-native = " file://0001-dnf-write-the-log-lock-to-root.patch
 SRCREV = "da9a7066be8e1628d9453428d33685225cd9c90d"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
-S = "${WORKDIR}/git"
 
 inherit cmake gettext bash-completion setuptools3-base systemd
 

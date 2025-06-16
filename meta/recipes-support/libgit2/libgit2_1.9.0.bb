@@ -10,7 +10,6 @@ SRC_URI = "git://github.com/libgit2/libgit2.git;branch=main;protocol=https \
            "
 SRCREV = "338e6fb681369ff0537719095e22ce9dc602dbf0"
 
-S = "${WORKDIR}/git"
 
 inherit cmake
 

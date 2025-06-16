@@ -21,7 +21,6 @@ SRC_URI = "git://github.com/distcc/distcc.git;branch=master;protocol=https \
            file://distcc.service \
            "
 SRCREV = "50d821efe99cae82c05be0a4ab3b4035ef0d3883"
-S = "${WORKDIR}/git"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 inherit autotools pkgconfig update-rc.d useradd systemd

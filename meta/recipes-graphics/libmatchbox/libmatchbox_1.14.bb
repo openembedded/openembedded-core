@@ -16,7 +16,6 @@ DEPENDS = "virtual/libx11 libxext"
 SRCREV = "04b214a0d5cf8285e196d90bf2332626b12c74ef"
 SRC_URI = "git://git.yoctoproject.org/${BPN};branch=master;protocol=https;tag=${PV}"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig features_check
 # depends on virtual/libx11

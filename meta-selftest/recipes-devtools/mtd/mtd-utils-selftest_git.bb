@@ -18,7 +18,6 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git;branch=master \
            file://0001-tests-Remove-unused-linux-fs.h-header-from-includes.patch \
            "
 
-S = "${WORKDIR}/git"
 
 # xattr support creates an additional compile-time dependency on acl because
 # the sys/acl.h header is needed. libacl is not needed and thus enabling xattr

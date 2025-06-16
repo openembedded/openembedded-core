@@ -13,7 +13,6 @@ SRC_URI = "git://github.com/lathiat/nss-mdns;branch=master;protocol=https \
 
 SRCREV = "4b3cfe818bf72d99a02b8ca8b8813cb2d6b40633"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 

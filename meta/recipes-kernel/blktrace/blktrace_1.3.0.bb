@@ -17,8 +17,6 @@ SRC_URI = "git://git.kernel.dk/blktrace.git;protocol=https;branch=master \
 
 SRCREV = "366d30b9cdb20345c5d064af850d686da79b89eb"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = "\
     'CC=${CC}' \
     'CFLAGS=${CFLAGS}' \

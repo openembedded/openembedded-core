@@ -16,7 +16,6 @@ SRCREV = "e346cd4ed2e2102c9b195b614f3c642d23f5f6e7"
 
 DEPENDS = "glib-2.0"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 

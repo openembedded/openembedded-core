@@ -13,4 +13,3 @@ SRC_URI:append:gitunpack-enable-recipe = ";tag=${TAGVALUE}"
 SRCREV = "f82ca3f42510fb3ef10f598b393eb373a2c34ca7"
 SRCREV:gitunpack-enable-recipe = ""
 
-S = "${WORKDIR}/git"

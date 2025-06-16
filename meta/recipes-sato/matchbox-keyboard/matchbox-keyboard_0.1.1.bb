@@ -17,7 +17,6 @@ SRC_URI = "git://git.yoctoproject.org/${BPN};branch=matchbox-keyboard-0-1;protoc
            file://0001-desktop-file-Hide-the-keyboard-from-app-list.patch \
            file://80matchboxkeyboard.sh"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig gettext gtk-immodules-cache features_check
 

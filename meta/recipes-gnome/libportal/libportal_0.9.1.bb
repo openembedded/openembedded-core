@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3000208d539ec061b899bce1d9ce9404"
 
 SRC_URI = "git://github.com/flatpak/${BPN}.git;protocol=https;branch=main"
 SRCREV = "8f5dc8d192f6e31dafe69e35219e3b707bde71ce"
-S = "${WORKDIR}/git"
 
 inherit meson gi-docgen gobject-introspection vala features_check pkgconfig
 GIDOCGEN_MESON_OPTION = 'docs'

@@ -13,4 +13,3 @@ SRC_URI = "git://git.yoctoproject.org/git/matchbox-panel-2;branch=master;protoco
 
 SRCREV = "f82ca3f42510fb3ef10f598b393eb373a2c34ca7"
 
-S = "${WORKDIR}/git"

@@ -16,7 +16,6 @@ SRC_URI = "git://github.com/troglobit/sysklogd.git;branch=master;protocol=https;
 
 SRCREV = "5fb314cb9060afa3bd4eed2f0be3200f02f729e9"
 
-S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "--with-systemd=${systemd_system_unitdir} --without-logger"
 

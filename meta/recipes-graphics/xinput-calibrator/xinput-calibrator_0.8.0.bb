@@ -14,7 +14,6 @@ SRC_URI = "git://gitlab.freedesktop.org/xorg/app/xinput-calibrator;protocol=http
            file://Allow-xinput_calibrator_pointercal.sh-to-be-run-as-n.patch \
            "
 
-S = "${WORKDIR}/git"
 
 EXTRA_OECONF += "--with-gui=x11"
 

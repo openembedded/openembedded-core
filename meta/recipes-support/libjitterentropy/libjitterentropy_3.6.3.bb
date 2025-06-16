@@ -11,7 +11,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e01027c4ad1fe5a4768f8488c945d491 \
                     "
 SRC_URI = "git://github.com/smuellerDD/jitterentropy-library.git;branch=master;protocol=https;tag=v${PV}"
 SRCREV = "c90ff465dcdb6a6949542c72a26a8ab496daa8cb"
-S = "${WORKDIR}/git"
 
 do_configure[noexec] = "1"
 

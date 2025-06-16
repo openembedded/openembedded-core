@@ -4,4 +4,3 @@ PE = "1"
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git;branch=main;protocol=https"
 
-S = "${WORKDIR}/git"

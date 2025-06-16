@@ -62,7 +62,6 @@ python __anonymous() {
             d.appendVar("RDEPENDS:%s" % pn, " %s" % ep)
 }
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d update-alternatives systemd
 

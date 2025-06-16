@@ -19,6 +19,5 @@ SRCREV = "00a12c234e2506f5cab683460199575f13c454db"
 SRCBRANCH = "v257-stable"
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=https;branch=${SRCBRANCH};tag=v${PV}"
 
-S = "${WORKDIR}/git"
 
 CVE_PRODUCT = "systemd"

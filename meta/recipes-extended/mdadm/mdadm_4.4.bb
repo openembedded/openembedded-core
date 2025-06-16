@@ -20,7 +20,6 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/mdadm/mdadm.git;protocol=https;bra
            "
 
 SRCREV = "8e56efac9afd7080bb42bae4b77cdad5f345633a"
-S = "${WORKDIR}/git"
 
 inherit ptest systemd
 

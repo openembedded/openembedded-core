@@ -8,7 +8,6 @@ SRCREV = "3b74bdce35f2814eb2b65db39a133d5c849ddea7"
 
 inherit python_setuptools_build_meta ptest-python-pytest
 
-S = "${WORKDIR}/git"
 
 RDEPENDS:${PN}-ptest += " \
     python3-pretend \

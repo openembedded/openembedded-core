@@ -17,7 +17,6 @@ UPSTREAM_CHECK_COMMITS = "1"
 
 inherit autotools
 
-S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-iconv"
 

@@ -10,7 +10,6 @@ UPSTREAM_VERSION_UNKNOWN = "1"
 SRC_URI = "gitsm://git.yoctoproject.org/git-submodule-test;branch=master"
 SRCREV = "a2885dd7d25380d23627e7544b7bbb55014b16ee"
 
-S = "${WORKDIR}/git"
 
 do_test_git_as_user() {
     cd ${S}

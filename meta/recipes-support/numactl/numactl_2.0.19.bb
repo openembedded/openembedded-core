@@ -19,7 +19,6 @@ SRC_URI = "git://github.com/numactl/numactl;branch=master;protocol=https \
            file://0001-define-run-test-target.patch \
            "
 
-S = "${WORKDIR}/git"
 
 LDFLAGS:append:riscv64 = " -latomic"
 LDFLAGS:append:riscv32 = " -latomic"

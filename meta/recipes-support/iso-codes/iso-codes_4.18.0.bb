@@ -15,7 +15,6 @@ SRCREV = "5be4d112d420706eacd913a3ebd85549fe9eeae4"
 # are inhibited by allarch
 DEPENDS = "gettext-native"
 
-S = "${WORKDIR}/git"
 
 inherit allarch autotools
 

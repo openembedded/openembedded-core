@@ -469,7 +469,7 @@ class DevtoolAddTests(DevtoolBase):
         checkvars = {}
         checkvars['LICENSE'] = 'GPL-2.0-only'
         checkvars['LIC_FILES_CHKSUM'] = 'file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263'
-        checkvars['S'] = '${WORKDIR}/git'
+        checkvars['S'] = None
         checkvars['PV'] = '0.1+git'
         checkvars['SRC_URI'] = 'git://git.yoctoproject.org/git/dbus-wait;protocol=https;branch=master'
         checkvars['SRCREV'] = srcrev
@@ -609,7 +609,7 @@ class DevtoolAddTests(DevtoolBase):
         recipefile = get_bb_var('FILE', testrecipe)
         self.assertIn('_git.bb', recipefile, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/git'
+        checkvars['S'] = None
         checkvars['PV'] = '1.0+git'
         checkvars['SRC_URI'] = url_branch
         checkvars['SRCREV'] = '${AUTOREV}'
@@ -628,7 +628,7 @@ class DevtoolAddTests(DevtoolBase):
         recipefile = get_bb_var('FILE', testrecipe)
         self.assertIn('_git.bb', recipefile, 'Recipe file incorrectly named')
         checkvars = {}
-        checkvars['S'] = '${WORKDIR}/git'
+        checkvars['S'] = None
         checkvars['PV'] = '1.5+git'
         checkvars['SRC_URI'] = url_branch
         checkvars['SRCREV'] = checkrev
@@ -1627,9 +1627,9 @@ class DevtoolUpdateTests(DevtoolBase):
         # Check preconditions
         testrecipe = 'dos2unix'
         self.append_config('ERROR_QA:remove:pn-dos2unix = "patch-status"\n')
-        bb_vars = get_bb_vars(['SRC_URI', 'S', 'WORKDIR', 'FILE'], testrecipe)
+        bb_vars = get_bb_vars(['SRC_URI', 'S', 'WORKDIR', 'FILE', 'BB_GIT_DEFAULT_DESTSUFFIX'], testrecipe)
         self.assertIn('git://', bb_vars['SRC_URI'], 'This test expects the %s recipe to be a git recipe' % testrecipe)
-        workdir_git = '%s/git/' % bb_vars['WORKDIR']
+        workdir_git = '%s/%s/' % (bb_vars['WORKDIR'], bb_vars['BB_GIT_DEFAULT_DESTSUFFIX'])
         if not bb_vars['S'].startswith(workdir_git):
             self.fail('This test expects the %s recipe to be building from a subdirectory of the git repo' % testrecipe)
         subdir = bb_vars['S'].split(workdir_git, 1)[1]

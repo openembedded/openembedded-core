@@ -12,7 +12,6 @@ SRC_URI = "git://gitlab.gnome.org/GNOME/gi-docgen.git;protocol=https;branch=main
 
 SRCREV = "9ab2ab8fa3f4a04f5d2cc24b0c8e91e73bc57b51"
 
-S = "${WORKDIR}/git"
 
 inherit python_setuptools_build_meta
 

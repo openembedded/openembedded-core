@@ -11,7 +11,6 @@ SRCREV = "2daa09ba270b0a43e1929d29b073348aa985dfaa"
 SRC_URI = "git://github.com/ninja-build/ninja.git;branch=release;protocol=https"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
-S = "${WORKDIR}/git"
 
 do_configure[noexec] = "1"
 

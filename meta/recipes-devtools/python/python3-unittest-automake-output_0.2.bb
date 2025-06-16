@@ -8,7 +8,6 @@ SRC_URI = "git://gitlab.com/rossburton/python-unittest-automake-output;protocol=
 
 SRCREV = "aebdfb188e368c690ea55cf6c9c9ffa1a52def65"
 
-S = "${WORKDIR}/git"
 
 inherit python_flit_core
 

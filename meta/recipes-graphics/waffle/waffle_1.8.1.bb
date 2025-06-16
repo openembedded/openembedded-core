@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4c5154407c2490750dd461c50ad94797 \
 SRC_URI = "git://gitlab.freedesktop.org/mesa/waffle.git;protocol=https;branch=maint-1.8 \
            "
 SRCREV = "49abc7cb5f73cc6852136c91da49ea3a338960e4"
-S = "${WORKDIR}/git"
 
 inherit meson features_check lib_package bash-completion pkgconfig
 

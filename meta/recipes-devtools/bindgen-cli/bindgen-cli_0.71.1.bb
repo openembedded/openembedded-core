@@ -8,7 +8,6 @@ inherit rust cargo cargo-update-recipe-crates
 
 SRC_URI += "git://github.com/rust-lang/rust-bindgen.git;protocol=https;branch=main"
 SRCREV = "af7fd38d5e80514406fb6a8bba2d407d252c30b9"
-S = "${WORKDIR}/git"
 
 require ${BPN}-crates.inc
 

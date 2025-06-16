@@ -10,8 +10,6 @@ PE = "1"
 SRC_URI = "git://gitlab.gnome.org/GNOME/mobile-broadband-provider-info.git;protocol=https;branch=main"
 SRCREV = "55ba955d53305df96123534488fd160ea882b4dd"
 
-S = "${WORKDIR}/git"
-
 inherit meson
 
 DEPENDS += "libxslt-native"

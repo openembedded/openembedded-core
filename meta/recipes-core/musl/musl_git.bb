@@ -16,7 +16,6 @@ SRC_URI = "git://git.musl-libc.org/musl;branch=master \
            file://0001-Update-syscalls-for-r32-rv64-from-kernel-6.4-through.patch \
           "
 
-S = "${WORKDIR}/git"
 
 PROVIDES += "virtual/libc virtual/libiconv virtual/libintl virtual/crypt"
 

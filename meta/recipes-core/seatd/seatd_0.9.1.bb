@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=715a99d2dd552e6188e74d4ed2914d5a"
 SRC_URI = "git://git.sr.ht/~kennylevinsen/seatd;protocol=https;branch=master \
            file://init"
 SRCREV = "566ffeb032af42865dc1210e48cec08368059bb9"
-S = "${WORKDIR}/git"
 
 inherit meson pkgconfig systemd update-rc.d useradd
 

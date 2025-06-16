@@ -16,7 +16,6 @@ SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;bra
            file://run-ptest \
            "
 SRCREV = "4f7b4ef0e4eb5d569df36be387579858eba349bb"
-S = "${WORKDIR}/git"
 
 UPSTREAM_CHECK_REGEX = "libinput-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 

@@ -17,7 +17,6 @@ SRC_URI = "git://github.com/file/file.git;branch=master;protocol=https \
            "
 
 SRCREV = "c5aa4f7f8d5063fb3c37ad57bf54bb67ec641a09"
-S = "${WORKDIR}/git"
 
 inherit autotools update-alternatives
 

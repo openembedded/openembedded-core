@@ -18,7 +18,7 @@ SRC_URI = "git://gitlab.eclipse.org/eclipse/tcf/tcf.agent.git;protocol=https;bra
 DEPENDS = "util-linux openssl"
 RDEPENDS:${PN} = "bash"
 
-S = "${WORKDIR}/git/agent"
+S = "${UNPACKDIR}/${BP}/agent"
 
 inherit update-rc.d systemd
 

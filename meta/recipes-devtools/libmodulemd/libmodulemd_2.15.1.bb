@@ -8,7 +8,6 @@ SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https;branch=
 
 SRCREV = "e7f179eeeb6eee1403f090fc43a3c80bb08b5bfd"
 
-S = "${WORKDIR}/git"
 
 inherit meson gobject-introspection pkgconfig manpages
 

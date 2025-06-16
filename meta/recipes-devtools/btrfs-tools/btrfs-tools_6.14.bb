@@ -19,7 +19,6 @@ SRC_URI = "git://github.com/kdave/btrfs-progs.git;branch=master;protocol=https;t
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
 SRCREV = "5ad147c9ec00e657393c85b195c9bcc0f4c35a54"
-S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
     programs \

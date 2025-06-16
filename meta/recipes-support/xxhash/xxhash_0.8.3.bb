@@ -12,7 +12,6 @@ UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 SRCREV = "e626a72bc2321cd320e953a0ccf1584cad60f363"
 
-S = "${WORKDIR}/git"
 
 CFLAGS += "${@bb.utils.contains('SELECTED_OPTIMIZATION', '-Og', '-DXXH_NO_INLINE_HINTS', '', d)}"
 

@@ -19,7 +19,6 @@ SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=htt
 
 SRCREV = "0667e04ae7fb8cf0490919978d69883d16400e41"
 
-S = "${UNPACKDIR}/git"
 
 require ${BPN}-crates.inc
 

@@ -12,7 +12,6 @@ SRC_URI = "git://git.adelielinux.org/adelie/musl-locales;protocol=https;branch=m
 PV = "1.0+git"
 SRCREV = "5663f5bfd30bf9e1e0ba3fc5fe2da6725969f30e"
 
-S = "${WORKDIR}/git"
 
 DEPENDS = "virtual/libintl gettext-native"
 
