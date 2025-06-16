@@ -17,7 +17,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
                 "
 
-SRC_URI[sha256sum] = "a2f38e289817dbd1d2f12cfc1f20390230e16d56323cb58cc1db9874ced400ed"
+SRC_URI[sha256sum] = "06d704633749039f8fa72a954bec6486058386e2a0c3557b22c484698f9b34d5"
 
 export INSTALL_MOD_DIR = "kernel/lttng-modules"
 
