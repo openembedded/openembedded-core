@@ -108,6 +108,7 @@ PTESTS_SLOW = "\
     libevent \
     libgcrypt \
     libmodule-build-perl \
+    libpng \
     libseccomp \
     lttng-tools \
     lz4 \
