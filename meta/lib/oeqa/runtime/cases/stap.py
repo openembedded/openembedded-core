@@ -26,6 +26,7 @@ class StapTest(OERuntimeTestCase):
             self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
 
             cmd = 'staprun -v -R -b1 stap_hello.ko'
+            status, output = self.target.run(cmd, 60)
             self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
             self.assertIn('Hello, SystemTap!', output, msg='\n'.join([cmd, output]))
         except:
