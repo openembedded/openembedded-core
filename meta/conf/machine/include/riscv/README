@@ -1,0 +1,122 @@
+2025/06/08 - Mark Hatle <mark.hatle@amd.com>
+ - Initial Revision
+
+The RISC-V ISA is broken into two parts, a base ISA and extensions.  As
+of the writing of this document these are documented at:
+
+https://lf-riscv.atlassian.net/wiki/spaces/HOME/pages/16154769/RISC-V+Technical+Specifications
+
+Specifically "The RISC-V Instruction Set Manual Volume I: Unprivileged ISA"
+was used to create this implementation.
+
+Requirements
+------------
+As RISC-V is a “variable” ISA (a base isa plus numerous extensions), a
+mechanism is required to specify a series of ISA features that a user or
+tune can use to specify a specific CPU instantiation.
+
+Not all ratified or draft features should or can be implemented with the
+available resources.
+
+The implementation should work for Linux, baremetal (newlib), zephyr and
+other operating systems.  Supported extensions should be based on
+real-world examples.
+
+Linux
+-----
+Linux required base and support extensions should be available.  Linux
+requires:
+* Base: rv32ima & rv64ima
+* Optional FPU: fd
+* Optional RISCV_ISA_C: c
+* Optiona RISCV_ISA_V: v
+* Required additional: _zicsr_zifencei
+* Optional RISCV_ISA_ZBA: _zba
+* Optional RISCV_ISA_ZBB: _zbb
+* Optional RISCV_ISA_ZBC: _zbc (not supported by current QEMU design)
+
+See: https://git.yoctoproject.org/linux-yocto/tree/arch/riscv/Makefile?h=v6.12/base
+
+Baremetal
+---------
+AMD Microblaze-V FPGA support uses the following static configurations:
+Base: rv32e, rv32i, rv64i
+Extensions: m, a, f, d, c, b, zicsr, zifencei
+
+Zephyr
+------
+AMD Microblaze-V development for Zephyr is the same as Baremetal, with a
+few additional extensions: zbc, zicbom
+
+ABI
+---
+The following ABIs are supported GNU tools and some combination of systems.
+* ilp32 - Integer, long and pointer are 32-bit
+* lp64 - Long and pointer are 64-bit (integer is 32-bit)
+
+The ABI is dependent upon the core system implementation, as ilp32 can
+only used on an ‘rv32’ system, while lp64 can only be used on an ‘rv64’
+system.
+
+There are additional variations of each ABI:
+* e - used with the Reduced register extension
+* f - used when single precision floating point (but not double precision) is
+      enabled
+* d - used when both single and double precision floating point is enabled
+
+Based on the above, the ABI should be automatically determined based on
+the selected Base ISA and Extensions.
+
+Implementation
+--------------
+To make it easier to generate the RISC-V canonical arch, ISA based -march,
+and the ABI string, a few new variables are added for specific RISC-V items.
+
+TUNE_RISCV_ARCH - This contains the canonical GNU style arch, generally this
+                  will evaluate to "riscv32" or "riscv64".
+
+TUNE_RISCV_MARCH - This will contain an ISA based -march string compatible
+                   with gcc and similar toolchains.  For example:
+                   rv32imacfd_zicsr_zifencei
+
+TUNE_RISCV_ABI - This is the generated ABI that corresponds to the ARCH and
+                 MARCH/ISA values.  For riscv32, the value will be ilp32
+                 (int, long and pointer is 32-bit) with the ISA
+                 variation.  For riscv64, the value will be lp64 (long
+                 and pointer are 64-bit bit, while int is 32-bit) with the
+                 ISA variation.  The ISA affects the ABI when the 'e', 'f'
+                 and 'd' extension are used.
+
+TUNE_RISCV_PKGARCH - This is the generated PKGARCH value.
+
+The standard variables are defined as:
+
+TUNE_CCARGS = "${@ '-march=${TUNE_RISCV_MARCH} -mabi=${TUNE_RISCV_ABI}' if not d.getVar('TUNE_CCARGS:tune-${DEFAULTTUNE}') else 'TUNE_CCARGS:tune-${DEFAULTTUNE}'}"
+
+The above will allow the user to specify an implementation specific
+TUNE_CCARGS for a given processor tune if the default implementtion is
+not adequate for some reason.  It is expected that most, if not all,
+implementations will use the default behavior.
+
+TUNE_ARCH = "${TUNE_RISCV_ARCH}"
+TUNE_PKGARCH = "${TUNE_RISCV_PKGARCH}"
+
+The above two will always base their setting off the standard TUNE_FEATURES.
+
+Ratified and draft extensions should be implemented as TUNE_FEATURES in
+the arch-riscv.inc file.
+
+Vendor specific extensions and processor specific settings should go
+into a 'tune-<vendor>.inc' file, with tune-riscv.inc being reserved for
+general purpose tunes.
+
+TUNE_FEATURE Helper
+-------------------
+A special helper function has been written that will convert RISC-V ISA
+notation into TUNE_FEATURE notion, for example:
+
+rv32g -> rv 32 i m a f d zicsr zifencei
+
+The helper can be called using oe.tune.riscv_isa_to_tune("<ISA>") such as
+oe.tune.riscv_isa_to_tune("rv64gc") which would return:
+ rv 64 i m a f d c zicsr zifencei
