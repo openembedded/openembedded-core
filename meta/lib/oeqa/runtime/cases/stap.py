@@ -21,11 +21,11 @@ class StapTest(OERuntimeTestCase):
             status, output = self.target.run(cmd, 900)
             self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
 
-            cmd = 'stap -v -p4 -m stap-hello --disable-cache -DSTP_NO_VERREL_CHECK -e \'probe oneshot { print("Hello, "); println("SystemTap!") }\''
+            cmd = 'stap -v -p4 -m stap_hello --disable-cache -DSTP_NO_VERREL_CHECK -e \'probe oneshot { print("Hello, "); println("SystemTap!") }\''
             status, output = self.target.run(cmd, 900)
             self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
 
-            cmd = 'staprun -v -R -b1 stap-hello.ko'
+            cmd = 'staprun -v -R -b1 stap_hello.ko'
             self.assertEqual(status, 0, msg='\n'.join([cmd, output]))
             self.assertIn('Hello, SystemTap!', output, msg='\n'.join([cmd, output]))
         except:
