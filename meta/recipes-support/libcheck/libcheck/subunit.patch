@@ -1,0 +1,43 @@
+From a6cd376b9ebcb4afc9ab06bce23b9bd909811ece Mon Sep 17 00:00:00 2001
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Thu, 13 Jun 2024 09:49:53 +0100
+Subject: [PATCH] Allow disabling autodetection of subunit library
+
+It can be useful to avoid linking to subunit when we are building the check
+library for the host, e.g. in a buildroot recipe, where the built check is
+linked into other applications which are used on the host to build images.
+
+These applications are built with the host's cross-compiler and can use
+the host's pkgconfig to determine if libraries are available. When check
+is linked against other libraries, it can fail this check for subunit.
+
+Allow disabling the autodetection of subunit with a configure flag
+-DENABLE_SUBUNIT_EXT=OFF
+
+Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
+
+Upstream-Status: Submitted [https://github.com/libcheck/check/pull/353/]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ CMakeLists.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2ee580bc..6b36015b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -393,7 +393,13 @@ if (HAVE_LIBRT)
+   ADD_DEFINITIONS(-DHAVE_LIBRT=1)
+ endif (HAVE_LIBRT)
+ 
+-check_library_exists(subunit subunit_test_start "" HAVE_SUBUNIT)
++# Allow disabling subunit
++IF(ENABLE_SUBUNIT_EXT)
++  check_library_exists(subunit subunit_test_start "" HAVE_SUBUNIT)
++ELSE(ENABLE_SUBUNIT_EXT)
++  set(HAVE_SUBUNIT, false)
++ENDIF(ENABLE_SUBUNIT_EXT)
++
+ if (HAVE_SUBUNIT)
+   set(SUBUNIT "subunit")
+   set(ENABLE_SUBUNIT 1)
