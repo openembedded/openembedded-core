@@ -77,8 +77,33 @@ def llvm_features_from_tune(d):
         f.append("+a15")
     if 'cortexa17' in feat:
         f.append("+a17")
-    if ('riscv64' in feat) or ('riscv32' in feat):
-        f.append("+a,+c,+d,+f,+m")
+    if 'rv' in feat:
+        if 'm' in feat:
+            f.append("+m")
+        if 'a' in feat:
+            f.append("+a")
+        if 'f' in feat:
+            f.append("+f")
+        if 'd' in feat:
+            f.append("+d")
+        if 'c' in feat:
+            f.append("+c")
+        if 'v' in feat:
+            f.append("+v")
+        if 'zicbom' in feat:
+            f.append("+zicbom")
+        if 'zicsr' in feat:
+            f.append("+zicsr")
+        if 'zifencei' in feat:
+            f.append("+zifencei")
+        if 'zba' in feat:
+            f.append("+zba")
+        if 'zbb' in feat:
+            f.append("+zbb")
+        if 'zbc' in feat:
+            f.append("+zbc")
+        if 'zbs' in feat:
+            f.append("+zbs")
     return f
 llvm_features_from_tune[vardepvalue] = "${@llvm_features_from_tune(d)}"
 
@@ -236,19 +261,19 @@ TARGET_POINTER_WIDTH[powerpc64le] = "64"
 TARGET_C_INT_WIDTH[powerpc64le] = "32"
 MAX_ATOMIC_WIDTH[powerpc64le] = "64"
 
-## riscv32gc-unknown-linux-{gnu, musl}
-DATA_LAYOUT[riscv32gc] = "e-m:e-p:32:32-i64:64-n32-S128"
-TARGET_ENDIAN[riscv32gc] = "little"
-TARGET_POINTER_WIDTH[riscv32gc] = "32"
-TARGET_C_INT_WIDTH[riscv32gc] = "32"
-MAX_ATOMIC_WIDTH[riscv32gc] = "32"
+## riscv32-unknown-linux-{gnu, musl}
+DATA_LAYOUT[riscv32] = "e-m:e-p:32:32-i64:64-n32-S128"
+TARGET_ENDIAN[riscv32] = "little"
+TARGET_POINTER_WIDTH[riscv32] = "32"
+TARGET_C_INT_WIDTH[riscv32] = "32"
+MAX_ATOMIC_WIDTH[riscv32] = "32"
 
-## riscv64gc-unknown-linux-{gnu, musl}
-DATA_LAYOUT[riscv64gc] = "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128"
-TARGET_ENDIAN[riscv64gc] = "little"
-TARGET_POINTER_WIDTH[riscv64gc] = "64"
-TARGET_C_INT_WIDTH[riscv64gc] = "32"
-MAX_ATOMIC_WIDTH[riscv64gc] = "64"
+## riscv64-unknown-linux-{gnu, musl}
+DATA_LAYOUT[riscv64] = "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128"
+TARGET_ENDIAN[riscv64] = "little"
+TARGET_POINTER_WIDTH[riscv64] = "64"
+TARGET_C_INT_WIDTH[riscv64] = "32"
+MAX_ATOMIC_WIDTH[riscv64] = "64"
 
 ## loongarch64-unknown-linux-{gnu, musl}
 DATA_LAYOUT[loongarch64] = "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128"
@@ -271,19 +296,11 @@ def arch_to_rust_target_arch(arch):
         return "arm"
     elif arch == "powerpc64le":
         return "powerpc64"
-    elif arch == "riscv32gc":
-        return "riscv32"
-    elif arch == "riscv64gc":
-        return "riscv64"
     else:
         return arch
 
 # Convert a rust target string to a llvm-compatible triplet
 def rust_sys_to_llvm_target(sys):
-    if sys.startswith('riscv32gc-'):
-        return sys.replace('riscv32gc-', 'riscv32-', 1)
-    if sys.startswith('riscv64gc-'):
-        return sys.replace('riscv64gc-', 'riscv64-', 1)
     return sys
 
 # generates our target CPU value
@@ -380,9 +397,9 @@ def rust_gen_target(d, thing, wd, arch):
     else:
         tspec['env'] = "gnu"
     if "riscv64" in tspec['llvm-target']:
-        tspec['llvm-abiname'] = "lp64d"
+        tspec['llvm-abiname'] = d.getVar('TUNE_RISCV_ABI')
     if "riscv32" in tspec['llvm-target']:
-        tspec['llvm-abiname'] = "ilp32d"
+        tspec['llvm-abiname'] = d.getVar('TUNE_RISCV_ABI')
     if "loongarch64" in tspec['llvm-target']:
         tspec['llvm-abiname'] = "lp64d"
     tspec['vendor'] = "unknown"
