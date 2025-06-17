@@ -1692,3 +1692,40 @@ FIT_SIGN_INDIVIDUAL = "1"
 
         # Just check the DTB of u-boot since there is no u-boot FIT image
         self._check_kernel_dtb(bb_vars)
+
+
+    def test_sign_uboot_fit_image_without_spl(self):
+        """
+        Summary:     Check if U-Boot FIT image and Image Tree Source (its) are
+                     created and signed correctly for the scenario where only
+                     the U-Boot proper fitImage is being created and signed
+                     (no SPL included).
+        Expected:    1) U-Boot its and FIT image are built successfully
+                     2) Scanning the its file indicates signing is enabled
+                        as requested by SPL_SIGN_ENABLE (using keys generated
+                        via UBOOT_FIT_GENERATE_KEYS)
+                     3) Dumping the FIT image indicates signature values
+                        are present
+                     4) Examination of the do_uboot_assemble_fitimage
+                     runfile/logfile indicate that UBOOT_MKIMAGE and
+                     UBOOT_MKIMAGE_SIGN are working as expected.
+        Product:     oe-core
+        Author:      Jamin Lin <jamin_lin@aspeedtech.com>
+        """
+        config = """
+# There's no U-boot defconfig with CONFIG_FIT_SIGNATURE yet, so we need at
+# least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
+MACHINE = "qemuarm"
+UBOOT_MACHINE = "am57xx_evm_defconfig"
+# Enable creation and signing of the U-Boot fitImage (no SPL)
+UBOOT_FITIMAGE_ENABLE = "1"
+SPL_DTB_BINARY = ""
+SPL_SIGN_ENABLE = "1"
+SPL_SIGN_KEYNAME = "spl-oe-selftest"
+SPL_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
+UBOOT_FIT_GENERATE_KEYS = "1"
+"""
+        self.write_config(config)
+        bb_vars = self._fit_get_bb_vars()
+        self._test_fitimage(bb_vars)
+
