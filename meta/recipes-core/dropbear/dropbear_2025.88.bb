@@ -48,10 +48,10 @@ SBINCOMMANDS = "dropbear dropbearkey dropbearconvert"
 BINCOMMANDS = "dbclient ssh scp"
 EXTRA_OEMAKE = 'MULTI=1 SCPPROGRESS=1 PROGRAMS="${SBINCOMMANDS} ${BINCOMMANDS}"'
 
-PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)}"
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam x11', d)}"
 PACKAGECONFIG[pam] = "--enable-pam,--disable-pam,libpam,${PAM_PLUGINS}"
 PACKAGECONFIG[system-libtom] = "--disable-bundled-libtom,--enable-bundled-libtom,libtommath libtomcrypt"
-PACKAGECONFIG[enable-x11-forwarding] = ""
+PACKAGECONFIG[x11] = ",,,,xauth"
 
 # This option appends to CFLAGS and LDFLAGS from OE
 # This is causing [textrel] QA warning
@@ -62,7 +62,7 @@ EXTRA_OECONF:append:libc-musl = " --disable-wtmp --disable-lastlog"
 
 do_configure:append() {
 	echo "/* Dropbear features */" > ${B}/localoptions.h
-	if ${@bb.utils.contains('PACKAGECONFIG', 'enable-x11-forwarding', 'true', 'false', d)}; then
+	if ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'true', 'false', d)}; then
 		echo "#define DROPBEAR_X11FWD 1" >> ${B}/localoptions.h
 	fi
 }
