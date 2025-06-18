@@ -62,7 +62,22 @@ class ConfigFragmentsPlugin(LayerPlugin):
             else:
                 print('Name: {}\nPath: {}\nEnabled: {}\nSummary: {}\nDescription:\n{}\n'.format(f['name'], f['path'], 'yes' if is_enabled else 'no', f['summary'],''.join(f['description'])))
 
+        def print_builtin_fragments(builtin, enabled):
+            print('Available built-in fragments:')
+            builtin_dict = {i[0]:i[1] for i in [f.split(':') for f in builtin]}
+            for prefix,var in builtin_dict.items():
+                print('{}/...\tSets {} = ...'.format(prefix, var))
+            print('')
+            enabled_builtin_fragments = [f for f in enabled if self.builtin_fragment_exists(f)]
+            print('Enabled built-in fragments:')
+            for f in enabled_builtin_fragments:
+                 prefix, value = f.split('/', 1)
+                 print('{}\tSets {} = "{}"'.format(f, builtin_dict[prefix], value))
+            print('')
+
         all_enabled_fragments = (self.tinfoil.config_data.getVar('OE_FRAGMENTS') or "").split()
+        all_builtin_fragments = (self.tinfoil.config_data.getVar('OE_FRAGMENTS_BUILTIN') or "").split()
+        print_builtin_fragments(all_builtin_fragments, all_enabled_fragments)
 
         for layername, layerdata in self.discover_fragments().items():
             layerdir = layerdata['layerdir']
@@ -89,6 +104,11 @@ class ConfigFragmentsPlugin(LayerPlugin):
                   return True
         return False
 
+    def builtin_fragment_exists(self, fragmentname):
+        fragment_prefix = fragmentname.split("/",1)[0]
+        fragment_prefix_defs = set([f.split(':')[0] for f in self.tinfoil.config_data.getVar('OE_FRAGMENTS_BUILTIN').split()])
+        return fragment_prefix in fragment_prefix_defs
+
     def create_conf(self, confpath):
         if not os.path.exists(confpath):
             with open(confpath, 'w') as f:
@@ -112,7 +132,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
             return " ".join(enabled_fragments), None, 0, True
 
         for f in args.fragmentname:
-            if not self.fragment_exists(f):
+            if not self.fragment_exists(f) and not self.builtin_fragment_exists(f):
                 raise Exception("Fragment {} does not exist; use 'list-fragments' to see the full list.".format(f))
 
         self.create_conf(args.confpath)
