@@ -35,6 +35,13 @@ PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,
 inherit autotools gettext pkgconfig systemd
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3-probes', 'setuptools3-base', '', d)}
 
+EXTRA_OECONF += " \
+    PYTHON_CPPFLAGS=-I${STAGING_INCDIR}/python${PYTHON_BASEVERSION} \
+    PYTHON3_CONFIG=${STAGING_BINDIR_NATIVE}/python3-config \
+"
+
+CPPFLAGS:append = " -I${STAGING_INCDIR}/python${PYTHON_BASEVERSION}"
+
 # exporter comes with python3-probes
 PACKAGES =+ "${PN}-exporter"
 FILES:${PN}-exporter = "${sysconfdir}/stap-exporter/* \
