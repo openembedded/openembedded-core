@@ -18,7 +18,7 @@ S = "${WORKDIR}/git/subprojects/gst-examples"
 
 inherit meson pkgconfig features_check
 
-UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
+UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
