@@ -14,6 +14,9 @@ SRC_URI[go_linux_arm64.sha256sum] = "914daad3f011cc2014dea799bb7490442677e4ad6de
 UPSTREAM_CHECK_URI = "https://golang.org/dl/"
 UPSTREAM_CHECK_REGEX = "go(?P<pver>\d+(\.\d+)+)\.linux"
 
+# not-applicable-platform: Issue only applies on Windows
+CVE_CHECK_IGNORE += "CVE-2024-3566"
+
 S = "${WORKDIR}/go"
 
 inherit goarch native
