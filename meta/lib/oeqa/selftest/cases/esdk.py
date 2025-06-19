@@ -27,11 +27,7 @@ class oeSDKExtSelfTest(OESelftestTestCase):
         return glob.glob(pattern)[0]
 
     @staticmethod
-    def run_esdk_cmd(env_eSDK, tmpdir_eSDKQA, cmd, postconfig=None, **options):
-        if postconfig:
-            esdk_conf_file = os.path.join(tmpdir_eSDKQA, 'conf', 'local.conf')
-            with open(esdk_conf_file, 'a+') as f:
-                f.write(postconfig)
+    def run_esdk_cmd(env_eSDK, tmpdir_eSDKQA, cmd, **options):
         if not options:
             options = {}
         if not 'shell' in options:
