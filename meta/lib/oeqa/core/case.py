@@ -5,6 +5,7 @@
 #
 
 import base64
+import os
 import zlib
 import unittest
 
@@ -56,6 +57,13 @@ class OETestCase(unittest.TestCase):
         for d in self.decorators:
             d.tearDownDecorator()
         self.tearDownMethod()
+
+    def assertFileExists(self, filename, msg=None):
+        """
+        Test that filename exists. If it does not, the test will fail.
+        """
+        if not os.path.exists(filename):
+            self.fail(msg or "%s does not exist" % filename)
 
 class OEPTestResultTestCase:
     """
