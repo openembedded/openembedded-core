@@ -1,18 +1,9 @@
-From 19f7ef341f19ac5594c7d0113f9eb8224934464a Mon Sep 17 00:00:00 2001
+From e14502834fe6a9c6c9a439401ac3d2c8fd979267 Mon Sep 17 00:00:00 2001
 From: Robert Yang <liezhi.yang@windriver.com>
-Date: Sun, 8 Jun 2025 00:19:06 -0700
-Subject: [PATCH] CMakeLists.txt: Fix checking for CFLAGS
+Date: Sun, 8 Jun 2025 00:36:38 -0700
+Subject: [PATCH] CMakeLists.txt: Improve checking for CFLAGS
 
-The previous code doesn't work because the check_c_compiler_flag() only ran
-once because 'found' is in CACHE, here is log:
--- Performing Test found
--- Performing Test found - Success
-
-That would result in:
-* All the flags are added when the first one works
-* None of the flags is added when the first one doesn't work
-
-We can use "unset(found CACHE)" to fix that, but the log is still not clear:
+The previous log wasn't clear:
 -- Performing Test found
 -- Performing Test found - Success
 -- Performing Test found
@@ -20,15 +11,15 @@ We can use "unset(found CACHE)" to fix that, but the log is still not clear:
 -- Performing Test found
 -- Performing Test found - Failed
 
-Use a new var SUPPORTS_${flag} will make it more clear:
--- Performing Test SUPPORTS_-fno-strict-overflow
--- Performing Test SUPPORTS_-fno-strict-overflow - Success
--- Performing Test SUPPORTS_-fno-delete-null-pointer-checks
--- Performing Test SUPPORTS_-fno-delete-null-pointer-checks - Success
--- Performing Test SUPPORTS_-fhardened
--- Performing Test SUPPORTS_-fhardened - Failed
+Use a new var compiler-supports${flag} will make it more clear:
+-- Performing Test compiler-supports-fno-strict-overflow
+-- Performing Test compiler-supports-fno-strict-overflow - Success
+-- Performing Test compiler-supports-fno-delete-null-pointer-checks
+-- Performing Test compiler-supports-fno-delete-null-pointer-checks - Success
+-- Performing Test compiler-supports-fhardened
+-- Performing Test compiler-supports-fhardened - Failed
 
-Upstream-Status: Submitted [https://github.com/rpm-software-management/rpm/pull/3796]
+Upstream-Status: Backport [https://github.com/rpm-software-management/rpm/commit/e14502834fe6a9c6c9a439401ac3d2c8fd979267]
 
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 ---
@@ -36,7 +27,7 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 08e3e5274..a7566ab5a 100644
+index 08e3e5274..f275c396b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -416,11 +416,10 @@ endif()
@@ -45,14 +36,11 @@ index 08e3e5274..a7566ab5a 100644
  foreach (flag -fno-strict-overflow -fno-delete-null-pointer-checks -fhardened)
 -	check_c_compiler_flag(${flag} found)
 -	if (found)
-+	check_c_compiler_flag(${flag} SUPPORTS_${flag})
-+	if (SUPPORTS_${flag})
++	check_c_compiler_flag(${flag} compiler-supports${flag})
++	if (compiler-supports${flag})
  		add_compile_options(${flag})
  	endif()
 -	unset(found)
  endforeach()
  
  # generated sources
--- 
-2.49.0
-
