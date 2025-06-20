@@ -10,6 +10,7 @@ SRC_URI:append:class-nativesdk = " \
     file://cmake-setup.py \
     file://environment.d-cmake.sh \
     file://0001-CMakeDetermineSystem-use-oe-environment-vars-to-load.patch \
+    file://0001-ctest-Allow-arbitrary-characters-in-test-names-of-CT.patch \
 "
 
 LICENSE:append = " & BSD-1-Clause & MIT"
