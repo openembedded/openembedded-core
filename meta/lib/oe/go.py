@@ -7,6 +7,10 @@
 import re
 
 def map_arch(a):
+    """
+    Map our architecture names to Go's GOARCH names.
+    See https://github.com/golang/go/blob/master/src/internal/syslist/syslist.go for the complete list.
+    """
     if re.match('i.86', a):
         return '386'
     elif a == 'x86_64':
@@ -31,4 +35,4 @@ def map_arch(a):
         return 'riscv64'
     elif a == 'loongarch64':
         return 'loong64'
-    return ''
+    raise KeyError(f"Cannot map architecture {a}")
