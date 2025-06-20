@@ -9,10 +9,10 @@ import re
 import datetime
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, get_bb_vars
+from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var, runCmd
 
 
-class BuildhistoryBase(OESelftestTestCase):
+class BuildhistoryTests(OESelftestTestCase):
 
     def config_buildhistory(self, tmp_bh_location=False):
         bb_vars = get_bb_vars(['USER_CLASSES', 'INHERIT'])
@@ -48,5 +48,58 @@ class BuildhistoryBase(OESelftestTestCase):
         else:
             self.assertEqual(result.status, 0, msg="Command 'bitbake %s' has failed unexpectedly: %s" % (target, result.output))
 
-    # No tests should be added to the base class.
-    # Please create a new class that inherit this one, or use one of those already available for adding tests.
+
+    def test_buildhistory_basic(self):
+        self.run_buildhistory_operation('xcursor-transparent-theme')
+        self.assertTrue(os.path.isdir(get_bb_var('BUILDHISTORY_DIR')), "buildhistory dir was not created.")
+
+    def test_buildhistory_buildtime_pr_backwards(self):
+        target = 'xcursor-transparent-theme'
+        error = "ERROR:.*QA Issue: Package version for package %s went backwards which would break package feeds \(from .*-r1.* to .*-r0.*\)" % target
+        self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
+        self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True, error_regex=error)
+
+    def test_fileinfo(self):
+        self.config_buildhistory()
+        bitbake('hicolor-icon-theme')
+        history_dir = get_bb_var('BUILDHISTORY_DIR_PACKAGE', 'hicolor-icon-theme')
+        self.assertTrue(os.path.isdir(history_dir), 'buildhistory dir was not created.')
+
+        def load_bh(f):
+            d = {}
+            for line in open(f):
+                split = [s.strip() for s in line.split('=', 1)]
+                if len(split) > 1:
+                    d[split[0]] = split[1]
+            return d
+
+        data = load_bh(os.path.join(history_dir, 'hicolor-icon-theme', 'latest'))
+        self.assertIn('FILELIST', data)
+        self.assertEqual(data['FILELIST'], '/usr/share/icons/hicolor/index.theme')
+        self.assertGreater(int(data['PKGSIZE']), 0)
+
+        data = load_bh(os.path.join(history_dir, 'hicolor-icon-theme-dev', 'latest'))
+        if 'FILELIST' in data:
+            self.assertEqual(data['FILELIST'], '/usr/share/pkgconfig/default-icon-theme.pc')
+        self.assertGreater(int(data['PKGSIZE']), 0)
+
+    def test_buildhistory_diff(self):
+        target = 'xcursor-transparent-theme'
+        self.run_buildhistory_operation(target, target_config="PR = \"r1\"", change_bh_location=True)
+        self.run_buildhistory_operation(target, target_config="PR = \"r0\"", change_bh_location=False, expect_error=True)
+        result = runCmd("oe-pkgdata-util read-value PKGV %s" % target)
+        pkgv = result.output.rstrip()
+        result = runCmd("buildhistory-diff -p %s" % get_bb_var('BUILDHISTORY_DIR'))
+        expected_endlines = [
+            "xcursor-transparent-theme-dev: RRECOMMENDS: removed \"xcursor-transparent-theme (['= %s-r1'])\", added \"xcursor-transparent-theme (['= %s-r0'])\"" % (pkgv, pkgv),
+            "xcursor-transparent-theme-staticdev: RDEPENDS: removed \"xcursor-transparent-theme-dev (['= %s-r1'])\", added \"xcursor-transparent-theme-dev (['= %s-r0'])\"" % (pkgv, pkgv)
+        ]
+        for line in result.output.splitlines():
+            for el in expected_endlines:
+                if line.endswith(el):
+                    expected_endlines.remove(el)
+                    break
+            else:
+                self.fail('Unexpected line:\n%s\nExpected line endings:\n  %s' % (line, '\n  '.join(expected_endlines)))
+        if expected_endlines:
+            self.fail('Missing expected line endings:\n  %s' % '\n  '.join(expected_endlines))
