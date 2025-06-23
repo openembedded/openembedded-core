@@ -16,3 +16,5 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 IMAGE_ROOTFS_EXTRA_SPACE = "2000"
 
 inherit image
+
+include test_recipe.inc
