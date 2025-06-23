@@ -19,8 +19,11 @@ UPSTREAM_CHECK_REGEX = "json-c-(?P<pver>\d+(\.\d+)+)-\d+"
 
 RPROVIDES:${PN} = "libjson"
 
-# Required for ICECC builds
-EXTRA_OECMAKE = "-DDISABLE_WERROR=ON"
+# - '-Werror' must be disabled for ICECC builds
+# - Apps aren't needed/packaged and their CMakeLists.txt is incompatible with CMake 4+.
+EXTRA_OECMAKE = "-DDISABLE_WERROR=ON \
+                 -DBUILD_APPS=OFF \
+"
 
 inherit cmake ptest
 
