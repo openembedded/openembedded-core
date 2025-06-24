@@ -728,6 +728,7 @@ python do_package_rpm () {
 
     # rpm 4 creates various empty directories in _topdir, let's clean them up
     cleanupcmd = "rm -rf %s/BUILDROOT %s/SOURCES %s/SPECS %s/SRPMS" % (workdir, workdir, workdir, workdir)
+    cleanupcmd += " %s/%s-build" % (d.getVar('B'), d.getVar('P'))
 
     # Build the rpm package!
     d.setVar('BUILDSPEC', cmd + "\n" + cleanupcmd + "\n")
