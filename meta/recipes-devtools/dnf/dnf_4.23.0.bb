@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/rpm-software-management/dnf.git;branch=master;protoc
 
 SRC_URI:append:class-native = " file://0001-dnf-write-the-log-lock-to-root.patch"
 
-SRCREV = "da9a7066be8e1628d9453428d33685225cd9c90d"
+SRCREV = "8fa4bb94a99eadaed91ad2ee51f27a4baafcebed"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 inherit cmake gettext bash-completion setuptools3-base systemd
@@ -35,6 +35,7 @@ BBCLASSEXTEND = "native nativesdk"
 RDEPENDS:${PN} += " \
   python3-core \
   python3-codecs \
+  python3-ctypes \
   python3-netclient \
   python3-email \
   python3-threading \
