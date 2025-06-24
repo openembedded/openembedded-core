@@ -13,8 +13,6 @@ REQUIRED_DISTRO_FEATURES = "opengl glvnd"
 
 inherit meson pkgconfig features_check
 
-S = "${WORKDIR}/git"
-
 PACKAGECONFIG ?= "\
   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'egl gles1 gles2', '', d)} \
