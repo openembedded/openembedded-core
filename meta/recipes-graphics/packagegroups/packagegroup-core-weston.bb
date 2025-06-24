@@ -9,6 +9,9 @@ REQUIRED_DISTRO_FEATURES = "wayland ${@oe.utils.conditional('VIRTUAL-RUNTIME_ini
 RDEPENDS:${PN} = "\
     weston \
     weston-init \
+    "
+
+RRECOMMENDS:${PN} = "\
     weston-examples \
     wayland-utils \
     "
