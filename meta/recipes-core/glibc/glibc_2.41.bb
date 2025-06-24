@@ -111,7 +111,7 @@ do_configure () {
 }
 
 LDFLAGS += "-fuse-ld=bfd"
-CC += "-fuse-ld=bfd"
+CFLAGS += "-fuse-ld=bfd"
 
 do_compile () {
 	base_do_compile
