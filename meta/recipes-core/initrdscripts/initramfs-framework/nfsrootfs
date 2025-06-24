@@ -1,7 +1,7 @@
 #!/bin/sh
 
 nfsrootfs_enabled() {
-	if [ ${bootparam_root} != "/dev/nfs" ] || [ -z ${bootparam_nfsroot} ]; then
+	if [ "${bootparam_root}" != "/dev/nfs" ] || [ -z ${bootparam_nfsroot} ]; then
 		return 1
 	fi
 	return 0
