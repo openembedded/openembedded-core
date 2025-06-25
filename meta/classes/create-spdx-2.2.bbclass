@@ -23,6 +23,8 @@ def get_namespace(d, name):
     namespace_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, d.getVar("SPDX_UUID_NAMESPACE"))
     return "%s/%s-%s" % (d.getVar("SPDX_NAMESPACE_PREFIX"), name, str(uuid.uuid5(namespace_uuid, name)))
 
+SPDX_PACKAGE_VERSION ??= "${PV}"
+SPDX_PACKAGE_VERSION[doc] = "The version of a package, versionInfo in recipe, package and image"
 
 def create_annotation(d, comment):
     from datetime import datetime, timezone
@@ -447,7 +449,7 @@ python do_create_spdx() {
 
     recipe = oe.spdx.SPDXPackage()
     recipe.name = d.getVar("PN")
-    recipe.versionInfo = d.getVar("PV")
+    recipe.versionInfo = d.getVar("SPDX_PACKAGE_VERSION")
     recipe.SPDXID = oe.sbom.get_recipe_spdxid(d)
     recipe.supplier = d.getVar("SPDX_SUPPLIER")
     if bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d):
@@ -556,7 +558,7 @@ python do_create_spdx() {
 
             spdx_package.SPDXID = oe.sbom.get_package_spdxid(pkg_name)
             spdx_package.name = pkg_name
-            spdx_package.versionInfo = d.getVar("PV")
+            spdx_package.versionInfo = d.getVar("SPDX_PACKAGE_VERSION")
             spdx_package.licenseDeclared = convert_license_to_spdx(package_license, license_data, package_doc, d, found_licenses)
             spdx_package.supplier = d.getVar("SPDX_SUPPLIER")
 
@@ -832,7 +834,7 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
 
     image = oe.spdx.SPDXPackage()
     image.name = d.getVar("PN")
-    image.versionInfo = d.getVar("PV")
+    image.versionInfo = d.getVar("SPDX_PACKAGE_VERSION")
     image.SPDXID = rootfs_spdxid
     image.supplier = d.getVar("SPDX_SUPPLIER")
 
