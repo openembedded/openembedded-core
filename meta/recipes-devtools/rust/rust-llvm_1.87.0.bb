@@ -2,9 +2,9 @@ SUMMARY = "LLVM compiler framework (packaged with rust)"
 LICENSE ?= "Apache-2.0-with-LLVM-exception"
 HOMEPAGE = "http://www.rust-lang.org"
 
-# check src/llvm-project/cmake/Modules/LLVMVersion.cmake for llvm version in use
+# check src/llvm-project/llvm/CMakeLists.txt for llvm version in use
 #
-LLVM_RELEASE = "19.1.7"
+LLVM_RELEASE = "20.1.1"
 
 require rust-source.inc
 

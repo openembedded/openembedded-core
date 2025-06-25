@@ -24,9 +24,9 @@ diff --git a/src/bootstrap/src/core/build_steps/tool.rs b/src/bootstrap/src/core
 index 087df2f8a..00790affb 100644
 --- a/src/bootstrap/src/core/build_steps/tool.rs
 +++ b/src/bootstrap/src/core/build_steps/tool.rs
-@@ -1,14 +1,11 @@
- use std::path::PathBuf;
- use std::{env, fs};
+@@ -15,14 +15,12 @@
+ #[cfg(feature = "tracing")]
+ use tracing::instrument;
  
 -use crate::core::build_steps::compile::is_lto_stage;
  use crate::core::build_steps::toolstate::ToolState;
@@ -36,18 +36,20 @@ index 087df2f8a..00790affb 100644
 -    Builder, Cargo as CargoCommand, RunConfig, ShouldRun, Step, cargo_profile_var,
 -};
 -use crate::core::config::{DebuginfoLevel, RustcLto, TargetSelection};
++
 +use crate::core::builder::{Builder, Cargo as CargoCommand, RunConfig, ShouldRun, Step};
 +use crate::core::config::{DebuginfoLevel, TargetSelection};
  use crate::utils::channel::GitInfo;
  use crate::utils::exec::{BootstrapCommand, command};
  use crate::utils::helpers::{add_dylib_path, exe, t};
-@@ -658,19 +655,7 @@
-             SourceType::InTree,
-             features.as_slice(),
+@@ -148,20 +146,7 @@
+             &self.extra_features,
          );
--
--        // rustdoc is performance sensitive, so apply LTO to it.
--        if is_lto_stage(&build_compiler) {
+ 
+-        if path.ends_with("/rustdoc") &&
+-            // rustdoc is performance sensitive, so apply LTO to it.
+-            is_lto_stage(&self.compiler)
+-        {
 -            let lto = match builder.config.rust_lto {
 -                RustcLto::Off => Some("off"),
 -                RustcLto::Thin => Some("thin"),
@@ -60,14 +62,14 @@ index 087df2f8a..00790affb 100644
 -        }
 +        cargo.rustflag("-Clto=off");
  
-         let _guard = builder.msg_tool(
-             Kind::Build,
+         if !self.allow_features.is_empty() {
+             cargo.allow_features(self.allow_features);
 diff --git a/src/bootstrap/src/core/builder/mod.rs b/src/bootstrap/src/core/builder/mod.rs
 --- a/src/bootstrap/src/core/builder/mod.rs
 +++ b/src/bootstrap/src/core/builder/mod.rs
-@@ -11,7 +11,7 @@
- 
- use clap::ValueEnum;
+@@ -13,7 +13,7 @@
+ #[cfg(feature = "tracing")]
+ use tracing::instrument;
  
 -pub use self::cargo::{Cargo, cargo_profile_var};
 +pub use self::cargo::Cargo;

@@ -22,10 +22,10 @@ index 11f363d62..c12d66016 100644
 +++ b/tests/ui/process/process-sigpipe.rs
 @@ -23,7 +23,7 @@ use std::thread;
  fn main() {
-     // Just in case `yes` doesn't check for EPIPE...
+     // Just in case `yes` or `while-echo` doesn't check for EPIPE...
      thread::spawn(|| {
 -        thread::sleep_ms(5000);
 +        thread::sleep_ms(50000);
          process::exit(1);
      });
-     let output = process::Command::new("sh")
+     // QNX Neutrino does not have `yes`. Therefore, use `while-echo` for `nto`

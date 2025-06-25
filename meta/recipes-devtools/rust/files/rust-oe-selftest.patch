@@ -47,61 +47,85 @@ diff --git a/library/std/tests/sync/rwlock.rs b/library/std/tests/sync/rwlock.rs
 index 1a9d3d3f12f..0a9cfc48806 100644
 --- a/library/std/tests/sync/rwlock.rs
 +++ b/library/std/tests/sync/rwlock.rs
-@@ -47,6 +47,7 @@ fn frob() {
- }
-
+@@ -74,6 +74,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_rw_arc_poison_wr() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -72,6 +73,7 @@ fn test_rw_arc_poison_mapped_w_r() {
- }
-
+@@ -87,6 +88,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
++#[ignore]
+ fn test_rw_arc_poison_mapped_w_r() {
+     let arc = Arc::new(RwLock::new(1));
+     let arc2 = arc.clone();
+@@ -101,6 +103,7 @@
+ 
+ #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_rw_arc_poison_ww() {
      let arc = Arc::new(RwLock::new(1));
      assert!(!arc.is_poisoned());
-@@ -100,6 +102,7 @@ fn test_rw_arc_poison_mapped_w_w() {
+@@ -115,6 +118,7 @@
  }
-
+ 
  #[test]
++#[ignore]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
+ fn test_rw_arc_poison_mapped_w_w() {
+     let arc = Arc::new(RwLock::new(1));
+@@ -131,6 +135,7 @@
+ 
+ #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_rw_arc_no_poison_rr() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -127,6 +130,7 @@ fn test_rw_arc_no_poison_mapped_r_r() {
- }
-
+@@ -160,6 +165,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_rw_arc_no_poison_rw() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -192,6 +196,7 @@ fn test_rw_arc() {
- }
-
+@@ -227,6 +233,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_rw_arc_access_in_unwind() {
      let arc = Arc::new(RwLock::new(1));
      let arc2 = arc.clone();
-@@ -275,6 +280,7 @@ fn drop(&mut self) {
- }
-
+@@ -326,6 +333,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_into_inner_poison() {
      let m = new_poisoned_rwlock(NonCopy(10));
-
-@@ -299,6 +305,7 @@ fn test_get_mut() {
- }
-
+ 
+@@ -362,6 +370,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_get_mut_poison() {
      let mut m = new_poisoned_rwlock(NonCopy(10));
+ 
+@@ -567,6 +576,7 @@
+ 
+ #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
++#[ignore]
+ fn panic_while_mapping_write_unlocked_poison() {
+     let lock = RwLock::new(());
 
 diff --git a/library/test/src/tests.rs b/library/test/src/tests.rs
 --- a/library/test/src/tests.rs
@@ -117,51 +141,21 @@ diff --git a/library/test/src/tests.rs b/library/test/src/tests.rs
 diff --git a/library/std/tests/sync/mutex.rs b/library/std/tests/sync/mutex.rs
 --- a/library/std/tests/sync/mutex.rs
 +++ b/library/std/tests/sync/mutex.rs
-@@ -193,6 +193,7 @@
- }
-
+@@ -312,6 +312,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn test_mutex_arc_poison_mapped() {
      let arc = Arc::new(Mutex::new(1));
      assert!(!arc.is_poisoned());
-diff --git a/library/std/tests/sync/mutex.rs b/library/std/tests/sync/mutex.rs
---- a/library/std/tests/sync/mutex.rs
-+++ b/library/std/tests/sync/mutex.rs
-@@ -272,6 +272,7 @@
- }
-
+@@ -391,6 +392,7 @@
+ 
  #[test]
+ #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
 +#[ignore]
  fn panic_while_mapping_unlocked_poison() {
      let lock = Mutex::new(());
-
-diff --git a/library/std/src/sync/rwlock/tests.rs b/library/std/tests/sync/rwlock.rs
---- a/library/std/tests/sync/rwlock.rs
-+++ b/library/std/tests/sync/rwlock.rs
-@@ -59,6 +59,7 @@ fn test_rw_arc_poison_wr() {
- }
-
- #[test]
-+#[ignore]
- fn test_rw_arc_poison_mapped_w_r() {
-     let arc = Arc::new(RwLock::new(1));
-     let arc2 = arc.clone();
-@@ -86,6 +87,7 @@ fn test_rw_arc_poison_ww() {
- }
-
- #[test]
-+#[ignore]
- fn test_rw_arc_poison_mapped_w_w() {
-     let arc = Arc::new(RwLock::new(1));
-     let arc2 = arc.clone();
-@@ -431,6 +433,7 @@ fn panic_while_mapping_read_unlocked_no_poison() {
- }
-
- #[test]
-+#[ignore]
- fn panic_while_mapping_write_unlocked_poison() {
-     let lock = RwLock::new(());
 
 diff --git a/library/coretests/benches/num/int_log/mod.rs b/library/coretests/benches/num/int_log/mod.rs
 index 3807cd5d76c..018c5c04456 100644
@@ -199,10 +193,10 @@ index 9d4f52a092..d425e5f7b7 100644
  fn thread_current_in_dtor() {
      // Go through one round of TLS destruction first.
      struct Defer;
-diff --git a/library/alloc/tests/sort/tests.rs b/library/alloc/tests/sort/tests.rs
+diff --git a/library/alloctests/tests/sort/tests.rs b/library/alloctests/tests/sort/tests.rs
 index 14e6013f96..b670f27ab4 100644
---- a/library/alloc/tests/sort/tests.rs
-+++ b/library/alloc/tests/sort/tests.rs
+--- a/library/alloctests/tests/sort/tests.rs
++++ b/library/alloctests/tests/sort/tests.rs
 @@ -915,12 +915,14 @@ gen_sort_test_fns_with_default_patterns_3_ty!(
  macro_rules! instantiate_sort_test_inner {
      ($sort_impl:ty, miri_yes, $test_fn_name:ident) => {
@@ -234,10 +228,10 @@ diff --git a/tests/assembly/dwarf-mixed-versions-lto.rs b/tests/assembly/dwarf-m
 index 5b8e5ff4f4a..e558fbd7bd7 100644
 --- a/tests/assembly/dwarf-mixed-versions-lto.rs
 +++ b/tests/assembly/dwarf-mixed-versions-lto.rs
-@@ -1,6 +1,11 @@
- // This test ensures that if LTO occurs between crates with different DWARF versions, we
+@@ -2,6 +2,11 @@
  // will choose the highest DWARF version for the final binary. This matches Clang's behavior.
-
+ // Note: `.2byte` directive is used on MIPS.
+ 
 +//@ only-x86
 +//@ only-x86_64
 +//@ only-arm
@@ -259,3 +253,30 @@ index 0e712bc3a4e..93965d990d0 100644
  //@ revisions: OPT2 OPT3
  //@[OPT2] compile-flags: -Copt-level=2
  //@[OPT3] compile-flags: -C opt-level=3
+diff --git a/tests/codegen/uninhabited-transparent-return-abi.rs b/tests/codegen/uninhabited-transparent-return-abi.rs
+index face1577c3f..d69e5e34a7b 100644
+--- a/tests/codegen/uninhabited-transparent-return-abi.rs
++++ b/tests/codegen/uninhabited-transparent-return-abi.rs
+@@ -1,4 +1,8 @@
+ //@ compile-flags: -Copt-level=3
++//@ only-x86
++//@ only-x86_64
++//@ only-arm
++//@ only-aarch64
+ 
+ // See https://github.com/rust-lang/rust/issues/135802
+
+diff --git a/tests/ui/abi/rust-cold-works-with-rustic-args.rs b/tests/ui/abi/rust-cold-works-with-rustic-args.rs
+index 57027364699..3faa7ea035e 100644
+--- a/tests/ui/abi/rust-cold-works-with-rustic-args.rs
++++ b/tests/ui/abi/rust-cold-works-with-rustic-args.rs
+@@ -1,5 +1,9 @@
+ //@build-pass
+ //@compile-flags: -Clink-dead-code=true --crate-type lib
++//@ only-x86
++//@ only-x86_64
++//@ only-arm
++//@ only-aarch64
+ // We used to not handle all "rustic" ABIs in a (relatively) uniform way,
+ // so we failed to fix up arguments for actually passing through the ABI...
+ #![feature(rust_cold_cc)]

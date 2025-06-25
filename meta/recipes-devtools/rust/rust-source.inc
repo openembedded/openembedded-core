@@ -9,8 +9,9 @@ SRC_URI += "https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.xz;n
             file://revert-link-std-statically-in-rustc_driver-feature.patch;patchdir=${RUSTSRC} \
             file://0001-libunwind-Use-gcs-instead-of-gcs-target-attribute.patch;patchdir=${RUSTSRC} \
             file://0001-Disable-libunwind-cross-architecture-unwinding.patch;patchdir=${RUSTSRC} \
+            file://triagebot.patch;patchdir=${RUSTSRC} \
 "
-SRC_URI[rust.sha256sum] = "d939eada065dc827a9d4dbb55bd48533ad14c16e7f0a42e70147029c82a7707b"
+SRC_URI[rust.sha256sum] = "8623b8651893e8c6aebfa45b6a90645a4f652f7b18189a0992a90d11ac2631f4"
 
 RUSTSRC = "${UNPACKDIR}/rustc-${RUST_VERSION}-src"
 
