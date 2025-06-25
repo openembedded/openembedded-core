@@ -10,7 +10,6 @@ from oeqa.core.decorator.data import skipIfQemu
 class Ethernet_Test(OERuntimeTestCase):
 
     @skipIfQemu()
-    @OETestDepends(['ethernet_ip_connman.Ethernet_Test.test_set_virtual_ip'])  
     def test_get_ip_from_dhcp(self): 
         (status, output) = self.target.run("connmanctl services | grep -E '*AO Wired|*AR Wired' | awk '{print $3}'")
         self.assertEqual(status, 0, msg='No wired interfaces are detected, output: %s' % output)
