@@ -7,6 +7,8 @@ LICENSE = "MIT"
 # Add nativesdk equivalent of build-essentials
 TOOLCHAIN_HOST_TASK += "\
     nativesdk-python3-sphinx \
+    nativesdk-python3-sphinx-argparse \
+    nativesdk-python3-sphinx-copybutton \
     nativesdk-python3-sphinx-rtd-theme \
     nativesdk-python3-pyyaml \
     nativesdk-rsvg \
