@@ -9,6 +9,7 @@ inherit pypi python_hatchling
 
 SRC_URI += " \
     file://CVE-2025-50181.patch \
+    file://CVE-2025-50182.patch \
 "
 
 DEPENDS += " \
