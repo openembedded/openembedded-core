@@ -23,7 +23,7 @@ SRC_URI:append:class-native = " file://0001-configure.ac-use-a-custom-value-for-
                                 file://relocate.patch"
 SRC_URI:append:class-nativesdk = " file://relocate.patch"
 
-SRC_URI[sha256sum] = "f68f7d75d06cb1635c336d34d844af97436c3f64ea14bcb7c869782f96f44277"
+SRC_URI[sha256sum] = "b58c80d79b04d3243ff49c1c3fc6b5f83138eb3784689563bcdd060595318616"
 
 EXTRA_OECONF = "--disable-ldap \
 		--disable-ccid-driver \
@@ -31,7 +31,6 @@ EXTRA_OECONF = "--disable-ldap \
 		--with-bzip2=${STAGING_LIBDIR}/.. \
 		--with-readline=${STAGING_LIBDIR}/.. \
 		--with-mailprog=${sbindir}/sendmail \
-		--enable-gpg-is-gpg2 \
 		--disable-tests \
                "
 # yat2m can be found from recipe-sysroot-native non-deterministically with different versioning otherwise
@@ -41,7 +40,6 @@ CACHED_CONFIGUREVARS += "ac_cv_path_YAT2M=./yat2m"
 PACKAGES =+ "${PN}-gpg"
 FILES:${PN}-gpg = " \
 	${bindir}/gpg \
-	${bindir}/gpg2 \
 	${bindir}/gpg-agent \
 "
 
@@ -61,11 +59,6 @@ do_configure:prepend () {
 	rm -f ${S}/m4/libgcrypt.m4
 }
 
-do_install:append() {
-	ln -sf gpg2 ${D}${bindir}/gpg
-	ln -sf gpgv2 ${D}${bindir}/gpgv
-}
-
 do_install:append:class-native() {
 	create_wrappers ${STAGING_BINDIR_NATIVE}
 }
@@ -75,7 +68,7 @@ do_install:append:class-nativesdk() {
 }
 
 create_wrappers() {
-	for i in gpg2 gpgconf gpg-agent gpg-connect-agent; do
+	for i in gpg gpgconf gpg-agent gpg-connect-agent; do
 		create_wrapper ${D}${bindir}/$i GNUPG_BINDIR=$1
 	done
 }
