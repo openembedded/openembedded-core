@@ -7,6 +7,10 @@ SRC_URI[sha256sum] = "f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96
 
 inherit pypi python_hatchling
 
+SRC_URI += " \
+    file://CVE-2025-50181.patch \
+"
+
 DEPENDS += " \
     python3-hatch-vcs-native \
 "
