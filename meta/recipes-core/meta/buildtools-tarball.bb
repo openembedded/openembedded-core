@@ -124,22 +124,7 @@ TOOLCHAIN_NEED_CONFIGSITE_CACHE = ""
 # The recipe doesn't need any default deps
 INHIBIT_DEFAULT_DEPS = "1"
 
-# Directory in testsdk that contains testcases
-TESTSDK_CASES = "buildtools-cases"
+inherit testsdk
 
-# We have our own code, avoid deferred inherit
-SDK_CLASSES:remove = "testsdk"
-
-python do_testsdk() {
-    import oeqa.sdk.testsdk
-    testsdk = oeqa.sdk.testsdk.TestSDK()
-
-    cases_path = os.path.join(os.path.abspath(os.path.dirname(oeqa.sdk.testsdk.__file__)), d.getVar("TESTSDK_CASES"))
-    testsdk.context_executor_class.default_cases = [cases_path,]
-
-    testsdk.run(d)
-}
-addtask testsdk
-do_testsdk[nostamp] = "1"
-do_testsdk[network] = "1"
-do_testsdk[depends] += "xz-native:do_populate_sysroot"
+# Directory that contains testcases
+TESTSDK_CASE_DIRS = "buildtools"
