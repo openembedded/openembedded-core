@@ -462,3 +462,18 @@ def skip_incompatible_package_licenses(d, pkgs):
             skipped_pkgs[pkg] = incompatible_lic
 
     return skipped_pkgs
+
+def tidy_licenses(value):
+    """
+    Flat, split and sort licenses.
+    """
+    from oe.license import flattened_licenses
+
+    def _choose(a, b):
+        str_a, str_b  = sorted((" & ".join(a), " & ".join(b)), key=str.casefold)
+        return ["(%s | %s)" % (str_a, str_b)]
+
+    if not isinstance(value, str):
+        value = " & ".join(value)
+
+    return sorted(list(set(flattened_licenses(value, _choose))), key=str.casefold)

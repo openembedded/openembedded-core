@@ -18,6 +18,7 @@ from urllib.parse import urlparse, urldefrag, urlsplit
 import hashlib
 import bb.fetch2
 logger = logging.getLogger('recipetool')
+from oe.license import tidy_licenses
 from oe.license_finder import find_licenses
 
 tinfoil = None
@@ -949,16 +950,6 @@ def fixup_license(value):
     if '|' in value:
         return '(' + value + ')'
     return value
-
-def tidy_licenses(value):
-    """Flat, split and sort licenses"""
-    from oe.license import flattened_licenses
-    def _choose(a, b):
-        str_a, str_b  = sorted((" & ".join(a), " & ".join(b)), key=str.casefold)
-        return ["(%s | %s)" % (str_a, str_b)]
-    if not isinstance(value, str):
-        value = " & ".join(value)
-    return sorted(list(set(flattened_licenses(value, _choose))), key=str.casefold)
 
 def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     lichandled = [x for x in handled if x[0] == 'license']
