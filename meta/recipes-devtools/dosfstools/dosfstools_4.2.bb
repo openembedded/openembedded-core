@@ -10,10 +10,11 @@ LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
-          "
+           file://source-date-epoch.patch \
+           file://0001-fsck.fat-Adhere-to-the-fsck-exit-codes.patch \
+           file://0002-manpages-Document-fsck.fat-new-exit-codes.patch \
+           "
 SRC_URI[sha256sum] = "64926eebf90092dca21b14259a5301b7b98e7b1943e8a201c7d726084809b527"
-
-SRC_URI += "file://source-date-epoch.patch"
 
 inherit autotools gettext pkgconfig update-alternatives github-releases
 
