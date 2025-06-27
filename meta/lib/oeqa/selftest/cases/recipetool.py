@@ -757,13 +757,12 @@ class RecipetoolCreateTests(RecipetoolBase):
 
     def test_recipetool_create_go(self):
         # Basic test to check go recipe generation
+        self.maxDiff = None
+
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
 
         recipefile = os.path.join(temprecipe, 'recipetool-go-test_git.bb')
-        deps_require_file = os.path.join(temprecipe, 'recipetool-go-test', 'recipetool-go-test-modules.inc')
-        lics_require_file = os.path.join(temprecipe, 'recipetool-go-test', 'recipetool-go-test-licenses.inc')
-        modules_txt_file = os.path.join(temprecipe, 'recipetool-go-test', 'modules.txt')
 
         srcuri = 'https://git.yoctoproject.org/recipetool-go-test.git'
         srcrev = "c3e213c01b6c1406b430df03ef0d1ae77de5d2f7"
@@ -771,13 +770,11 @@ class RecipetoolCreateTests(RecipetoolBase):
 
         result = runCmd('recipetool create -o %s %s -S %s -B %s' % (temprecipe, srcuri, srcrev, srcbranch))
 
-        self.maxDiff = None
-        inherits = ['go-vendor']
+        inherits = ['go-mod', 'go-mod-update-modules']
 
         checkvars = {}
         checkvars['GO_IMPORT'] = "git.yoctoproject.org/recipetool-go-test"
-        checkvars['SRC_URI'] = {'git://${GO_IMPORT};destsuffix=git/src/${GO_IMPORT};nobranch=1;name=${BPN};protocol=https',
-                                'file://modules.txt'}
+        checkvars['SRC_URI'] = {'git://${GO_IMPORT};protocol=https;nobranch=1;destsuffix=${GO_SRCURI_DESTSUFFIX}'}
         checkvars['LIC_FILES_CHKSUM'] = {
             'file://src/${GO_IMPORT}/LICENSE;md5=4e3933dd47afbf115e484d11385fb3bd',
             'file://src/${GO_IMPORT}/is/LICENSE;md5=62beaee5a116dd1e80161667b1df39ab'
@@ -786,26 +783,16 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
         self.assertNotIn('Traceback', result.output)
 
+        lics_require_file = os.path.join(temprecipe, 'recipetool-go-test-licenses.inc')
+        self.assertFileExists(lics_require_file)
         checkvars = {}
-        checkvars['VENDORED_LIC_FILES_CHKSUM'] = set(
-                 ['file://src/${GO_IMPORT}/vendor/github.com/godbus/dbus/v5/LICENSE;md5=09042bd5c6c96a2b9e45ddf1bc517eed',
-                 'file://src/${GO_IMPORT}/vendor/github.com/matryer/is/LICENSE;md5=62beaee5a116dd1e80161667b1df39ab'])
-        self.assertTrue(os.path.isfile(lics_require_file))
+        checkvars['LIC_FILES_CHKSUM'] = {'file://pkg/mod/github.com/godbus/dbus/v5@v5.1.0/LICENSE;md5=09042bd5c6c96a2b9e45ddf1bc517eed;spdx=BSD-2-Clause'}
         self._test_recipe_contents(lics_require_file, checkvars, [])
 
-        # make sure that dependencies don't mention local directory ./matryer/is
-        dependencies = \
-            [   ('github.com/godbus/dbus','v5.1.0', 'github.com/godbus/dbus/v5', '/v5', ''),
-            ]
-
-        src_uri = set()
-        for d in dependencies:
-            src_uri.add(self._go_urifiy(*d))
-
+        deps_require_file = os.path.join(temprecipe, 'recipetool-go-test-go-mods.inc')
+        self.assertFileExists(deps_require_file)
         checkvars = {}
-        checkvars['GO_DEPENDENCIES_SRC_URI'] = src_uri
-
-        self.assertTrue(os.path.isfile(deps_require_file))
+        checkvars['SRC_URI'] = {'gomod://github.com/godbus/dbus/v5;version=v5.1.0;sha256sum=03dfa8e71089a6f477310d15c4d3a036d82d028532881b50fee254358e782ad9'}
         self._test_recipe_contents(deps_require_file, checkvars, [])
 
 class RecipetoolTests(RecipetoolBase):
