@@ -824,7 +824,8 @@ def create_recipe(args):
             extraoutdir = os.path.join(os.path.dirname(outfile), pn)
         bb.utils.mkdirhier(extraoutdir)
         for destfn, extrafile in extrafiles.items():
-            shutil.move(extrafile, os.path.join(extraoutdir, destfn))
+            fn = destfn.format(pn=pn, pv=realpv)
+            shutil.move(extrafile, os.path.join(extraoutdir, fn))
 
     lines = lines_before
     lines_before = []
