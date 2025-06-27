@@ -27,17 +27,15 @@ class SStateBase(OESelftestTestCase):
     def setUpLocal(self):
         super(SStateBase, self).setUpLocal()
         self.temp_sstate_location = None
-        needed_vars = ['SSTATE_DIR', 'NATIVELSBSTRING', 'TCLIBC', 'TUNE_ARCH',
+        needed_vars = ['SSTATE_DIR', 'TCLIBC', 'TUNE_ARCH',
                        'TOPDIR', 'TARGET_VENDOR', 'TARGET_OS']
         bb_vars = get_bb_vars(needed_vars)
         self.sstate_path = bb_vars['SSTATE_DIR']
-        self.hostdistro = bb_vars['NATIVELSBSTRING']
         self.tclibc = bb_vars['TCLIBC']
         self.tune_arch = bb_vars['TUNE_ARCH']
         self.topdir = bb_vars['TOPDIR']
         self.target_vendor = bb_vars['TARGET_VENDOR']
         self.target_os = bb_vars['TARGET_OS']
-        self.distro_specific_sstate = os.path.join(self.sstate_path, self.hostdistro)
 
     def track_for_cleanup(self, path):
         if not keep_temp_files:
@@ -52,10 +50,7 @@ class SStateBase(OESelftestTestCase):
             config_temp_sstate = "SSTATE_DIR = \"%s\"" % temp_sstate_path
             self.append_config(config_temp_sstate)
             self.track_for_cleanup(temp_sstate_path)
-        bb_vars = get_bb_vars(['SSTATE_DIR', 'NATIVELSBSTRING'])
-        self.sstate_path = bb_vars['SSTATE_DIR']
-        self.hostdistro = bb_vars['NATIVELSBSTRING']
-        self.distro_specific_sstate = os.path.join(self.sstate_path, self.hostdistro)
+        self.sstate_path = get_bb_var('SSTATE_DIR')
 
         if add_local_mirrors:
             config_set_sstate_if_not_set = 'SSTATE_MIRRORS ?= ""'
@@ -65,8 +60,16 @@ class SStateBase(OESelftestTestCase):
                 config_sstate_mirror = "SSTATE_MIRRORS += \"file://.* file:///%s/PATH\"" % local_mirror
                 self.append_config(config_sstate_mirror)
 
+    def set_hostdistro(self):
+        # This needs to be read after a BuildStarted event in case it gets changed by event
+        # handling in uninative.bbclass
+        self.hostdistro = get_bb_var('NATIVELSBSTRING')
+        self.distro_specific_sstate = os.path.join(self.sstate_path, self.hostdistro)
+
     # Returns a list containing sstate files
     def search_sstate(self, filename_regex, distro_specific=True, distro_nonspecific=True):
+        self.set_hostdistro()
+
         result = []
         for root, dirs, files in os.walk(self.sstate_path):
             if distro_specific and re.search(r"%s/%s/[a-z0-9]{2}/[a-z0-9]{2}$" % (self.sstate_path, self.hostdistro), root):
@@ -152,6 +155,8 @@ class SStateBase(OESelftestTestCase):
         self.config_sstate(temp_sstate_location, [self.sstate_path])
 
         bitbake(['-ccleansstate'] + targets)
+
+        self.set_hostdistro()
 
         bitbake(targets)
         results = self.search_sstate('|'.join(map(str, [s + r'.*?\.tar.zst$' for s in targets])), distro_specific=False, distro_nonspecific=True)
