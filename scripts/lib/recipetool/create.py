@@ -764,6 +764,7 @@ def create_recipe(args):
     extrafiles = extravalues.pop('extrafiles', {})
     extra_pn = extravalues.pop('PN', None)
     extra_pv = extravalues.pop('PV', None)
+    run_tasks = extravalues.pop('run_tasks', "").split()
 
     if extra_pv and not realpv:
         realpv = extra_pv
@@ -917,6 +918,10 @@ def create_recipe(args):
                 lastline = line
         log_info_cond('Recipe %s has been created; further editing may be required to make it fully functional' % outfile, args.devtool)
         tinfoil.modified_files()
+
+    for task in run_tasks:
+        logger.info("Running task %s" % task)
+        tinfoil.build_file_sync(outfile, task)
 
     if tempsrc:
         if args.keep_temp:
