@@ -726,7 +726,6 @@ def pstaging_fetch(sstatefetch, d):
     localdata = bb.data.createCopy(d)
 
     dldir = localdata.expand("${SSTATE_DIR}")
-    bb.utils.mkdirhier(dldir)
 
     localdata.delVar('MIRRORS')
     localdata.setVar('FILESPATH', dldir)
@@ -746,16 +745,19 @@ def pstaging_fetch(sstatefetch, d):
     if bb.utils.to_boolean(d.getVar("SSTATE_VERIFY_SIG"), False):
         uris += ['file://{0}.sig;downloadfilename={0}.sig'.format(sstatefetch)]
 
-    for srcuri in uris:
-        localdata.delVar('SRC_URI')
-        localdata.setVar('SRC_URI', srcuri)
-        try:
-            fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
-            fetcher.checkstatus()
-            fetcher.download()
+    with bb.utils.umask(0o002):
+        bb.utils.mkdirhier(dldir)
 
-        except bb.fetch2.BBFetchException:
-            pass
+        for srcuri in uris:
+            localdata.delVar('SRC_URI')
+            localdata.setVar('SRC_URI', srcuri)
+            try:
+                fetcher = bb.fetch2.Fetch([srcuri], localdata, cache=False)
+                fetcher.checkstatus()
+                fetcher.download()
+
+            except bb.fetch2.BBFetchException:
+                pass
 
 def sstate_setscene(d):
     shared_state = sstate_state_fromvars(d)
