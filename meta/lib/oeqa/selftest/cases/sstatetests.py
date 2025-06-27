@@ -83,55 +83,43 @@ class SStateBase(OESelftestTestCase):
         return result
 
     # Test sstate files creation and their location and directory perms
-    def run_test_sstate_creation(self, targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True, should_pass=True):
-        self.config_sstate(temp_sstate_location, [self.sstate_path])
+    def run_test_sstate_creation(self, targets, hostdistro_specific):
+        self.config_sstate(True, [self.sstate_path])
 
-        if  self.temp_sstate_location:
-            bitbake(['-cclean'] + targets)
-        else:
-            bitbake(['-ccleansstate'] + targets)
+        bitbake(['-cclean'] + targets)
 
-        # We need to test that the env umask have does not effect sstate directory creation
-        # So, first, we'll get the current umask and set it to something we know incorrect
-        # See: sstate_task_postfunc for correct umask of os.umask(0o002)
-        import os
-        def current_umask():
-            current_umask = os.umask(0)
-            os.umask(current_umask)
-            return current_umask
-
-        orig_umask = current_umask()
         # Set it to a umask we know will be 'wrong'
-        os.umask(0o022)
+        with bb.utils.umask(0o022):
+            bitbake(targets)
 
-        bitbake(targets)
-        file_tracker = []
-        results = self.search_sstate('|'.join(map(str, targets)), distro_specific, distro_nonspecific)
-        if distro_nonspecific:
-            for r in results:
-                if r.endswith(("_populate_lic.tar.zst", "_populate_lic.tar.zst.siginfo", "_fetch.tar.zst.siginfo", "_unpack.tar.zst.siginfo", "_patch.tar.zst.siginfo")):
-                    continue
-                file_tracker.append(r)
-        else:
-            file_tracker = results
+        # Distro specific files
+        distro_specific_files = self.search_sstate('|'.join(map(str, targets)), True, False)
 
-        if should_pass:
-            self.assertTrue(file_tracker , msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
+        # Distro non-specific
+        distro_non_specific_files = []
+        results = self.search_sstate('|'.join(map(str, targets)), False, True)
+        for r in results:
+            if r.endswith(("_populate_lic.tar.zst", "_populate_lic.tar.zst.siginfo", "_fetch.tar.zst.siginfo", "_unpack.tar.zst.siginfo", "_patch.tar.zst.siginfo")):
+                continue
+            distro_non_specific_files.append(r)
+
+        if hostdistro_specific:
+            self.assertTrue(distro_specific_files , msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
+            self.assertFalse(distro_non_specific_files, msg="Found sstate files in the wrong place for: %s (found %s)" % (', '.join(map(str, targets)), str(distro_non_specific_files)))
         else:
-            self.assertTrue(not file_tracker , msg="Found sstate files in the wrong place for: %s (found %s)" % (', '.join(map(str, targets)), str(file_tracker)))
+            self.assertTrue(distro_non_specific_files , msg="Could not find sstate files for: %s" % ', '.join(map(str, targets)))
+            self.assertFalse(distro_specific_files, msg="Found sstate files in the wrong place for: %s (found %s)" % (', '.join(map(str, targets)), str(distro_specific_files)))
 
         # Now we'll walk the tree to check the mode and see if things are incorrect.
         badperms = []
         for root, dirs, files in os.walk(self.sstate_path):
             for directory in dirs:
-                if (os.stat(os.path.join(root, directory)).st_mode & 0o777) != 0o775:
-                    badperms.append(os.path.join(root, directory))
+                mode = os.stat(os.path.join(root, directory)).st_mode & 0o777
+                if mode != 0o775:
+                    badperms.append("%s: %s vs %s" % (os.path.join(root, directory), mode, 0o775))
 
-        # Return to original umask
-        os.umask(orig_umask)
-
-        if should_pass:
-            self.assertTrue(badperms , msg="Found sstate directories with the wrong permissions: %s (found %s)" % (', '.join(map(str, targets)), str(badperms)))
+        # Check badperms is empty
+        self.assertFalse(badperms , msg="Found sstate directories with the wrong permissions: %s (found %s)" % (', '.join(map(str, targets)), str(badperms)))
 
     # Test the sstate files deletion part of the do_cleansstate task
     def run_test_cleansstate_task(self, targets, distro_specific=True, distro_nonspecific=True, temp_sstate_location=True):
@@ -256,17 +244,11 @@ class SStateTests(SStateBase):
         bitbake("dbus-wait-test -c unpack")
 
 class SStateCreation(SStateBase):
-    def test_sstate_creation_distro_specific_pass(self):
-        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True)
+    def test_sstate_creation_distro_specific(self):
+        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], hostdistro_specific=True)
 
-    def test_sstate_creation_distro_specific_fail(self):
-        self.run_test_sstate_creation(['binutils-cross-'+ self.tune_arch, 'binutils-native'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True, should_pass=False)
-
-    def test_sstate_creation_distro_nonspecific_pass(self):
-        self.run_test_sstate_creation(['linux-libc-headers'], distro_specific=False, distro_nonspecific=True, temp_sstate_location=True)
-
-    def test_sstate_creation_distro_nonspecific_fail(self):
-        self.run_test_sstate_creation(['linux-libc-headers'], distro_specific=True, distro_nonspecific=False, temp_sstate_location=True, should_pass=False)
+    def test_sstate_creation_distro_nonspecific(self):
+        self.run_test_sstate_creation(['linux-libc-headers'], hostdistro_specific=False)
 
 class SStateCleanup(SStateBase):
     def test_cleansstate_task_distro_specific_nonspecific(self):
