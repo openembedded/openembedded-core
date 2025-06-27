@@ -1,0 +1,46 @@
+From 8d703216d2ea3247092a08adb0c37b38eb77ccc7 Mon Sep 17 00:00:00 2001
+From: Ricardo Ungerer <ungerer.ricardo@gmail.com>
+Date: Wed, 21 May 2025 07:18:15 +0100
+Subject: [PATCH 2/3] manpages: Document fsck.fat new exit codes
+
+Signed-off-by: Ricardo Ungerer <ungerer.ricardo@gmail.com>
+
+Upstream-Status: Inactive-Upstream [lastcommit: 2023, lastrelease: 2021]
+Upstream-Status: Submitted [https://github.com/dosfstools/dosfstools/pull/217]
+---
+ manpages/fsck.fat.8.in | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/manpages/fsck.fat.8.in b/manpages/fsck.fat.8.in
+index 824a83d..557aa4c 100644
+--- a/manpages/fsck.fat.8.in
++++ b/manpages/fsck.fat.8.in
+@@ -222,13 +222,21 @@ Display help message describing usage and options then exit.
+ .\" ----------------------------------------------------------------------------
+ .SH "EXIT STATUS"
+ .IP "0" 4
+-No recoverable errors have been detected.
++No errors
+ .IP "1" 4
+-Recoverable errors have been detected or \fBfsck.fat\fP has discovered an
+-internal inconsistency.
++Filesystem errors corrected
+ .IP "2" 4
+-Usage error.
+-\fBfsck.fat\fP did not access the filesystem.
++System should be rebooted
++.IP "4" 4
++Filesystem errors left uncorrected
++.IP "8" 4
++Operational error
++.IP "16" 4
++Usage or syntax error
++.IP "32" 4
++Checking canceled by user request
++.IP "128" 4
++Shared-library error
+ .\" ----------------------------------------------------------------------------
+ .SH FILES
+ .IP "\fIfsck0000.rec\fP, \fIfsck0001.rec\fP, ..." 4
+--
+2.25.1

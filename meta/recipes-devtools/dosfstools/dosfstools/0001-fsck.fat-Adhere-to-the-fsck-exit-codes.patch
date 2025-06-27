@@ -1,0 +1,214 @@
+From 9d165145b9f9c20a56e111360fbc2003c2b28cba Mon Sep 17 00:00:00 2001
+From: Ricardo Simoes <ricardo.simoes@pt.bosch.com>
+Date: Thu, 26 Jun 2025 08:14:29 +0100
+Subject: [PATCH] fsck.fat: Adhere to the fsck exit codes
+
+fsck.fat is used as a filesystem-specific checker for the `fsck`. This
+also causes `fsck` to return the same exit-codes given by `fsck.fat`.
+
+In most cases this is already the case. One exception to that comes when
+checking a read-only filesystem. In that case `fsck.fat` will return 6,
+which for `fsck` means "Fiesystem errors left uncorrected" and "System
+should reboot". When a more proper response would be to return 8,
+"Operational Error".
+
+This commit solves that problem by introducing a new header file which
+standardizes the exit codes used by `fsck.fat`.
+
+Signed-off-by: Ricardo Ungerer <ungerer.ricardo@gmail.com>
+
+Upstream-Status: Inactive-Upstream [lastcommit: 2023, lastrelease: 2021]
+Upstream-Status: Submitted [https://github.com/dosfstools/dosfstools/pull/217]
+---
+ src/Makefile.am  |  4 ++--
+ src/common.c     |  8 ++++----
+ src/exit_codes.h | 15 +++++++++++++++
+ src/fsck.fat.c   | 23 ++++++++++++-----------
+ src/io.c         |  3 ++-
+ 5 files changed, 35 insertions(+), 18 deletions(-)
+ create mode 100644 src/exit_codes.h
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index a389046..48f00dd 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -23,7 +23,7 @@ EXTRA_DIST = blkdev/README
+
+ charconv_common_sources = charconv.c charconv.h
+ charconv_common_ldadd = $(LIBICONV)
+-fscklabel_common_sources = boot.c boot.h common.c common.h \
++fscklabel_common_sources = boot.c boot.h common.c common.h exit_codes.h \
+ 			   fat.c fat.h io.c io.h msdos_fs.h \
+ 			   $(charconv_common_sources) \
+ 			   fsck.fat.h endian_compat.h
+@@ -38,7 +38,7 @@ devinfo_common_sources = device_info.c device_info.h \
+ 			 blkdev/blkdev.c blkdev/blkdev.h \
+ 			 blkdev/linux_version.c blkdev/linux_version.h
+ mkfs_fat_SOURCES  = mkfs.fat.c msdos_fs.h common.c common.h endian_compat.h \
+-		    $(charconv_common_sources) $(devinfo_common_sources)
++		    exit_codes.h $(charconv_common_sources) $(devinfo_common_sources)
+ mkfs_fat_CPPFLAGS = -I$(srcdir)/blkdev
+ mkfs_fat_CFLAGS   = $(AM_CFLAGS)
+ mkfs_fat_LDADD    = $(charconv_common_ldadd)
+diff --git a/src/common.c b/src/common.c
+index 4f1afcb..089d4b3 100644
+--- a/src/common.c
++++ b/src/common.c
+@@ -38,7 +38,7 @@
+
+ #include "common.h"
+ #include "charconv.h"
+-
++#include "exit_codes.h"
+
+ int interactive;
+ int write_immed;
+@@ -62,7 +62,7 @@ void die(const char *msg, ...)
+     vfprintf(stderr, msg, args);
+     va_end(args);
+     fprintf(stderr, "\n");
+-    exit(1);
++    exit(OPERATIONAL_ERROR);
+ }
+
+ void pdie(const char *msg, ...)
+@@ -205,7 +205,7 @@ int get_choice(int noninteractive_result, const char *noninteractive_msg,
+ 	} while (choice == '\n');  /* filter out enter presses */
+
+ 	if (choice == EOF)
+-	    exit(1);
++	    exit(USAGE_OR_SYNTAX_ERROR);
+
+ 	printf("%c\n", choice);
+
+@@ -235,7 +235,7 @@ int get_choice(int noninteractive_result, const char *noninteractive_msg,
+ 	    inhibit_quit_choice = 0;
+
+ 	    if (quit_choice == 1)
+-		exit(0);
++		exit(NO_ERRORS);
+ 	}
+     }
+
+diff --git a/src/exit_codes.h b/src/exit_codes.h
+new file mode 100644
+index 0000000..f67d22e
+--- /dev/null
++++ b/src/exit_codes.h
+@@ -0,0 +1,15 @@
++#ifndef _EXIT_CODES_H
++#define _EXIT_CODES_H
++
++/* Codes as defined by fsck.
++   For more information, see fsck manpage. */
++#define NO_ERRORS                   0
++#define FS_ERRORS_CORRECTED         1
++#define SYSTEM_SHOULD_BE_REBOOTED   2
++#define FS_ERRORS_LEFT_UNCORRECTED  4
++#define OPERATIONAL_ERROR           8
++#define USAGE_OR_SYNTAX_ERROR       16
++#define CHECKING_CANCELED_BY_USER   32
++#define SHARED_LIB_ERROR            128
++
++#endif
+diff --git a/src/fsck.fat.c b/src/fsck.fat.c
+index 8b02b57..42e3ab4 100644
+--- a/src/fsck.fat.c
++++ b/src/fsck.fat.c
+@@ -46,6 +46,7 @@
+ #include "file.h"
+ #include "check.h"
+ #include "charconv.h"
++#include "exit_codes.h"
+
+ int rw = 0, list = 0, test = 0, verbose = 0;
+ long fat_table = 0;
+@@ -147,10 +148,10 @@ int main(int argc, char **argv)
+ 	    codepage = strtol(optarg, &tmp, 10);
+ 	    if (!*optarg || isspace(*optarg) || *tmp || errno || codepage < 0 || codepage > INT_MAX) {
+ 		fprintf(stderr, "Invalid codepage : %s\n", optarg);
+-		usage(argv[0], 2);
++		usage(argv[0], USAGE_OR_SYNTAX_ERROR);
+ 	    }
+ 	    if (!set_dos_codepage(codepage))
+-		usage(argv[0], 2);
++		usage(argv[0], USAGE_OR_SYNTAX_ERROR);
+ 	    break;
+ 	case 'd':
+ 	    file_add(optarg, fdt_drop);
+@@ -163,7 +164,7 @@ int main(int argc, char **argv)
+ 	    fat_table = strtol(optarg, &tmp, 10);
+ 	    if (!*optarg || isspace(*optarg) || *tmp || errno || fat_table < 0 || fat_table > 255) {
+ 		fprintf(stderr, "Invalid FAT table : %s\n", optarg);
+-		usage(argv[0], 2);
++		usage(argv[0], USAGE_OR_SYNTAX_ERROR);
+ 	    }
+ 	    break;
+ 	case 'l':
+@@ -202,31 +203,31 @@ int main(int argc, char **argv)
+ 		    atari_format = 1;
+ 	    } else {
+ 		    fprintf(stderr, "Unknown variant: %s\n", optarg);
+-		    usage(argv[0], 2);
++		    usage(argv[0], USAGE_OR_SYNTAX_ERROR);
+ 	    }
+ 	    break;
+ 	case 'w':
+ 	    write_immed = 1;
+ 	    break;
+ 	case OPT_HELP:
+-	    usage(argv[0], 0);
++	    usage(argv[0], EXIT_SUCCESS);
+ 	    break;
+ 	case '?':
+-	    usage(argv[0], 2);
++	    usage(argv[0], USAGE_OR_SYNTAX_ERROR);
+ 	    break;
+ 	default:
+ 	    fprintf(stderr,
+ 		    "Internal error: getopt_long() returned unexpected value %d\n", c);
+-	    exit(3);
++	    exit(OPERATIONAL_ERROR);
+ 	}
+     if (!set_dos_codepage(-1))	/* set default codepage if none was given in command line */
+-        exit(2);
++        exit(OPERATIONAL_ERROR);
+     if ((test || write_immed) && !rw) {
+ 	fprintf(stderr, "-t and -w can not be used in read only mode\n");
+-	exit(2);
++	exit(USAGE_OR_SYNTAX_ERROR);
+     }
+     if (optind != argc - 1)
+-	usage(argv[0], 2);
++	usage(argv[0], USAGE_OR_SYNTAX_ERROR);
+
+     printf("fsck.fat " VERSION " (" VERSION_DATE ")\n");
+     fs_open(argv[optind], rw);
+@@ -285,5 +286,5 @@ exit:
+ 	       n_files, (unsigned long)fs.data_clusters - free_clusters,
+ 	       (unsigned long)fs.data_clusters);
+
+-    return fs_close(rw) ? 1 : 0;
++    return fs_close(rw) ? FS_ERRORS_CORRECTED : NO_ERRORS;
+ }
+diff --git a/src/io.c b/src/io.c
+index 8c0c3b2..8bd1ae5 100644
+--- a/src/io.c
++++ b/src/io.c
+@@ -44,6 +44,7 @@
+ #include "fsck.fat.h"
+ #include "common.h"
+ #include "io.h"
++#include "exit_codes.h"
+
+ typedef struct _change {
+     void *data;
+@@ -60,7 +61,7 @@ void fs_open(const char *path, int rw)
+ {
+     if ((fd = open(path, rw ? O_RDWR : O_RDONLY)) < 0) {
+ 	perror("open");
+-	exit(6);
++	exit(OPERATIONAL_ERROR);
+     }
+     changes = last = NULL;
+     did_change = 0;
