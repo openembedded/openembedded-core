@@ -154,7 +154,7 @@ class DevtoolTestCase(OESelftestTestCase):
                         value = invalue
                         invar = None
                 elif '=' in line:
-                    splitline = line.split('=', 1)
+                    splitline = re.split(r"[?+:]*=[+]?", line, 1)
                     var = splitline[0].rstrip()
                     value = splitline[1].strip().strip('"')
                     if value.endswith('\\'):
