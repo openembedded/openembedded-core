@@ -48,7 +48,7 @@ python do_update_modules() {
 
         env = dict(os.environ, GOMODCACHE=mod_cache_dir)
 
-        source = d.expand("${WORKDIR}/${GO_SRCURI_DESTSUFFIX}")
+        source = d.expand("${UNPACKDIR}/${GO_SRCURI_DESTSUFFIX}")
         output = subprocess.check_output(("go", "mod", "edit", "-json"), cwd=source, env=env, text=True)
         go_mod = json.loads(output)
 
@@ -78,7 +78,7 @@ python do_update_modules() {
 
             mod_dir = mod['Dir']
 
-            if mod_dir.startswith(s_dir):
+            if not mod_dir.startswith(mod_cache_dir):
                 continue
 
             path = os.path.relpath(mod_dir, mod_cache_dir)
