@@ -23,7 +23,7 @@ GOBUILDFLAGS:append = " -modcacherw"
 inherit go
 
 export GOMODCACHE = "${S}/pkg/mod"
-GO_MOD_CACHE_DIR = "${@os.path.relpath(d.getVar('GOMODCACHE'), d.getVar('WORKDIR'))}"
+GO_MOD_CACHE_DIR = "${@os.path.relpath(d.getVar('GOMODCACHE'), d.getVar('UNPACKDIR'))}"
 do_unpack[cleandirs] += "${GOMODCACHE}"
 
 GO_WORKDIR ?= "${GO_IMPORT}"
