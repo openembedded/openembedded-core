@@ -22,10 +22,9 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/Linux-PAM-${PV}.tar.xz \
            file://pam.d/other \
            file://run-ptest \
            file://pam-volatiles.conf \
-           file://0001-meson.build-correct-check-for-existence-of-two-prepr.patch \
            "
 
-SRC_URI[sha256sum] = "57dcd7a6b966ecd5bbd95e1d11173734691e16b68692fa59661cdae9b13b1697"
+SRC_URI[sha256sum] = "21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0"
 
 DEPENDS = "bison-native flex-native libxml2-native virtual/crypt"
 
