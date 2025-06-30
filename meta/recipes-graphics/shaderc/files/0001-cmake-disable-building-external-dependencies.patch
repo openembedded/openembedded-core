@@ -1,4 +1,4 @@
-From ed0e2fad08a3cd3f0a0c70922737d8a6886f484d Mon Sep 17 00:00:00 2001
+From 3db09ee0d0bf6390eb3dcd835bd4ef786188bf16 Mon Sep 17 00:00:00 2001
 From: Jose Quaresma <quaresma.jose@gmail.com>
 Date: Sat, 13 Feb 2021 00:45:56 +0000
 Subject: [PATCH] cmake: disable building external dependencies
@@ -15,10 +15,10 @@ Signed-off-by: Jose Quaresma <quaresma.jose@gmail.com>
  2 files changed, 25 insertions(+), 10 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bd6b890..f1ddd74 100644
+index 06f5395..39b8869 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -62,6 +62,7 @@ else()
+@@ -72,6 +72,7 @@ else()
  endif()
  
  option(SHADERC_ENABLE_WERROR_COMPILE "Enable passing -Werror to compiler, if available" ON)
@@ -26,7 +26,7 @@ index bd6b890..f1ddd74 100644
  
  set (CMAKE_CXX_STANDARD 17)
  
-@@ -119,8 +120,14 @@ endif(MSVC)
+@@ -129,8 +130,14 @@ endif(MSVC)
  
  
  # Configure subdirectories.
@@ -43,7 +43,7 @@ index bd6b890..f1ddd74 100644
  
  add_subdirectory(libshaderc_util)
  add_subdirectory(libshaderc)
-@@ -132,7 +139,7 @@ endif()
+@@ -142,7 +149,7 @@ endif()
  add_custom_target(build-version
    ${Python_EXECUTABLE}
    ${CMAKE_CURRENT_SOURCE_DIR}/utils/update_build_version.py
