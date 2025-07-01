@@ -176,3 +176,5 @@ src_package_preprocess () {
             ${B}/WebKitGTK/DerivedSources/webkit/*.cpp
 }
 
+# Clang-20 issue - https://github.com/llvm/llvm-project/issues/132322
+TOOLCHAIN:arm = "gcc"
