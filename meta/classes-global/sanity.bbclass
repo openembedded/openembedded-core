@@ -606,7 +606,7 @@ def drop_v14_cross_builds(d):
 
 def check_cpp_toolchain_flag(d, flag, error_message=None):
     """
-    Checks if the C++ toolchain support the given flag
+    Checks if the g++ compiler supports the given flag
     """
     import shlex
     import subprocess
@@ -619,7 +619,7 @@ def check_cpp_toolchain_flag(d, flag, error_message=None):
     }
     """
 
-    cmd = shlex.split(d.getVar("BUILD_CXX")) + ["-x", "c++","-", "-o", "/dev/null", flag]
+    cmd = ["g++", "-x", "c++","-", "-o", "/dev/null", flag]
     try:
         subprocess.run(cmd, input=cpp_code, capture_output=True, text=True, check=True)
         return None
@@ -697,11 +697,11 @@ def check_sanity_version_change(status, d):
     if not check_app_exists("${MAKE}", d):
         missing = missing + "GNU make,"
 
-    if not check_app_exists('${BUILD_CC}', d):
-        missing = missing + "C Compiler (%s)," % d.getVar("BUILD_CC")
+    if not check_app_exists('gcc', d):
+        missing = missing + "C Compiler (gcc),"
 
-    if not check_app_exists('${BUILD_CXX}', d):
-        missing = missing + "C++ Compiler (%s)," % d.getVar("BUILD_CXX")
+    if not check_app_exists('g++', d):
+        missing = missing + "C++ Compiler (g++),"
 
     required_utilities = d.getVar('SANITY_REQUIRED_UTILITIES')
 
