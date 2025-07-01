@@ -31,6 +31,10 @@ SRC_URI += "file://touchscreen.rules \
            file://0001-core-fix-build-when-seccomp-is-off.patch \
            file://0001-journal-Make-sd_journal_previous-next-return-0-at-HE.patch \
            file://0001-basic-do-not-warn-in-mkdir_p-when-parent-directory-e.patch \
+           file://CVE-2025-4598-0001.patch \
+           file://CVE-2025-4598-0002.patch \
+           file://CVE-2025-4598-0003.patch \
+           file://CVE-2025-4598-0004.patch \
            "
 
 # patches needed by musl
