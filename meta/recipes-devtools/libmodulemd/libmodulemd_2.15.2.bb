@@ -4,9 +4,9 @@ DESCRIPTION = "${SUMMARY}"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=25a3927bff3ee4f5b21bcb0ed3fcd6bb"
 
-SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https;branch=main"
+SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https;branch=main;tag=${PV}"
 
-SRCREV = "e7f179eeeb6eee1403f090fc43a3c80bb08b5bfd"
+SRCREV = "b8b11b4dafaa2c4d73883152bfa7e5bd81cd7395"
 
 inherit meson gobject-introspection pkgconfig manpages
 
