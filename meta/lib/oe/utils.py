@@ -415,34 +415,29 @@ def format_pkg_list(pkg_dict, ret_format=None, pkgdata_dir=None):
     return output_str
 
 
-# Helper function to get the host compiler version
-# Do not assume the compiler is gcc
-def get_host_compiler_version(d, taskcontextonly=False):
+# Helper function to get the host gcc version
+def get_host_gcc_version(d, taskcontextonly=False):
     import re, subprocess
 
     if taskcontextonly and d.getVar('BB_WORKERCONTEXT') != '1':
         return
 
-    compiler = d.getVar("BUILD_CC")
-    # Get rid of ccache since it is not present when parsing.
-    if compiler.startswith('ccache '):
-        compiler = compiler[7:]
     try:
         env = os.environ.copy()
         # datastore PATH does not contain session PATH as set by environment-setup-...
         # this breaks the install-buildtools use-case
         # env["PATH"] = d.getVar("PATH")
-        output = subprocess.check_output("%s --version" % compiler, \
+        output = subprocess.check_output("gcc --version", \
                     shell=True, env=env, stderr=subprocess.STDOUT).decode("utf-8")
     except subprocess.CalledProcessError as e:
-        bb.fatal("Error running %s --version: %s" % (compiler, e.output.decode("utf-8")))
+        bb.fatal("Error running gcc --version: %s" % (e.output.decode("utf-8")))
 
     match = re.match(r".* (\d+\.\d+)\.\d+.*", output.split('\n')[0])
     if not match:
-        bb.fatal("Can't get compiler version from %s --version output" % compiler)
+        bb.fatal("Can't get compiler version from gcc --version output")
 
     version = match.group(1)
-    return compiler, version
+    return version
 
 @bb.parse.vardepsexclude("DEFAULTTUNE_MULTILIB_ORIGINAL", "OVERRIDES")
 def get_multilib_datastore(variant, d):
