@@ -150,7 +150,6 @@ def create_filtered_tasklist(d, sdkbasepath, tasklistfile, conf_initpath):
         with open(sdkbasepath + '/conf/local.conf', 'a') as f:
             # Force the use of sstate from the build system
             f.write('\nSSTATE_DIR:forcevariable = "%s"\n' % d.getVar('SSTATE_DIR'))
-            f.write('SSTATE_MIRRORS:forcevariable = "file://universal/(.*) file://universal-4.9/\\1 file://universal-4.9/(.*) file://universal-4.8/\\1"\n')
             # Ensure TMPDIR is the default so that clean_esdk_builddir() can delete it
             f.write('TMPDIR:forcevariable = "${TOPDIR}/tmp"\n')
             # Drop uninative if the build isn't using it (or else NATIVELSBSTRING will
@@ -380,9 +379,6 @@ def write_local_conf(d, baseoutpath, derivative, core_meta_subdir, uninative_che
             f.write('# Provide a flag to indicate we are in the EXT_SDK Context\n')
             f.write('WITHIN_EXT_SDK = "1"\n\n')
 
-            # Map gcc-dependent uninative sstate cache for installer usage
-            f.write('SSTATE_MIRRORS += " file://universal/(.*) file://universal-4.9/\\1 file://universal-4.9/(.*) file://universal-4.8/\\1"\n\n')
-
             if d.getVar("PRSERV_HOST"):
                 # Override this, we now include PR data, so it should only point ot the local database
                 f.write('PRSERV_HOST = "localhost:0"\n\n')
@@ -491,8 +487,8 @@ def prepare_locked_cache(d, baseoutpath, derivative, conf_initpath):
     sstate_out = baseoutpath + '/sstate-cache'
     bb.utils.remove(sstate_out, True)
 
-    # uninative.bbclass sets NATIVELSBSTRING to 'universal%s' % oe.utils.host_gcc_version(d)
-    fixedlsbstring = "universal%s" % oe.utils.host_gcc_version(d) if bb.data.inherits_class('uninative', d) else ""
+    # uninative.bbclass sets NATIVELSBSTRING to 'universal'
+    fixedlsbstring = "universal" if bb.data.inherits_class('uninative', d) else ""
 
     sdk_include_toolchain = (d.getVar('SDK_INCLUDE_TOOLCHAIN') == '1')
     sdk_ext_type = d.getVar('SDK_EXT_TYPE')
