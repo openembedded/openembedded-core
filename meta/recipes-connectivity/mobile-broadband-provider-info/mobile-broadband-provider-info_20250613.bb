@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=87964579b2a8ece4bc6744d2dc9a8b04"
 
 PE = "1"
 
-SRC_URI = "git://gitlab.gnome.org/GNOME/mobile-broadband-provider-info.git;protocol=https;branch=main"
-SRCREV = "55ba955d53305df96123534488fd160ea882b4dd"
+SRC_URI = "git://gitlab.gnome.org/GNOME/mobile-broadband-provider-info.git;protocol=https;branch=main;tag=${PV}"
+SRCREV = "2a1b409491a531aedcf3eb3ba907929d96bd181a"
 
 inherit meson
 
