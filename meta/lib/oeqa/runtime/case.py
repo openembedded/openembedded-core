@@ -23,6 +23,8 @@ class OERuntimeTestCase(OETestCase):
         uninstall_package(self)
 
 def run_network_serialdebug(runner):
+    if not runner:
+        return
     status, output = runner.run_serial("ip addr")
     print("ip addr on target: %s %s" % (output, status))
     status, output = runner.run_serial("ping -c 1 %s" % self.target.server_ip)

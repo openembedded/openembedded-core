@@ -10,6 +10,7 @@ class OETarget(object):
 
     def __init__(self, logger, *args, **kwargs):
         self.logger = logger
+        self.runner = None
 
     @abstractmethod
     def start(self):
