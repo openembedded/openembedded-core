@@ -8,10 +8,8 @@ require opensbi-payloads.inc
 
 inherit deploy
 
-SRCREV = "bd613dd92113f683052acfb23d9dc8ba60029e0a"
-SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https \
-           file://0001-Makefile-Add-flag-for-reprodubility-compiler-flags.patch \
-"
+SRCREV = "a32a91069119e7a5aa31e6bc51d5e00860be3d80"
+SRC_URI = "git://github.com/riscv/opensbi.git;branch=master;protocol=https"
 
 TARGET_DBGSRC_DIR = "/share/opensbi/*/generic/firmware/"
 
