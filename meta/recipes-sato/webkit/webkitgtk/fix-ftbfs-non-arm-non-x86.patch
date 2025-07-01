@@ -1,0 +1,31 @@
+From 8bee9eb95ae24c6a410f9cd614976f4653d020d9 Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mcatanzaro@redhat.com>
+Date: Wed, 2 Apr 2025 15:01:55 -0500
+Subject: [PATCH] REGRESSION(290945.129@webkitglib/2.48): Broke non-x86,
+ non-ARM builds https://bugs.webkit.org/show_bug.cgi?id=287662
+
+Unreviewed stable branch build fix.
+
+* Source/WebCore/platform/audio/DenormalDisabler.cpp:
+
+Canonical link: https://commits.webkit.org/290945.155@webkitglib/2.48
+
+Upstream-Status: Backport [https://github.com/WebKit/WebKit/commit/8bee9eb95ae24c6a410f9cd614976f4653d020d9]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ Source/WebCore/platform/audio/DenormalDisabler.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WebCore/platform/audio/DenormalDisabler.cpp b/Source/WebCore/platform/audio/DenormalDisabler.cpp
+index 35715e663ce7e..44ba08a33d5d9 100644
+--- a/Source/WebCore/platform/audio/DenormalDisabler.cpp
++++ b/Source/WebCore/platform/audio/DenormalDisabler.cpp
+@@ -91,7 +91,7 @@ DenormalDisabler::~DenormalDisabler()
+     }
+ }
+ #else
+-DenormalDisabler::DenormalDisabler() = default
++DenormalDisabler::DenormalDisabler() = default;
+ DenormalDisabler::~DenormalDisabler() = default;
+ #endif
+ 
