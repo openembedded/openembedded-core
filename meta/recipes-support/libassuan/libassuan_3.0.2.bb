@@ -26,6 +26,8 @@ BINCONFIG = "${bindir}/libassuan-config"
 
 inherit autotools texinfo binconfig-disabled pkgconfig multilib_header
 
+require recipes-support/gnupg/drop-unknown-suffix.inc
+
 do_configure:prepend () {
 	# Else these could be used in preference to those in aclocal-copy
 	rm -f ${S}/m4/*.m4
