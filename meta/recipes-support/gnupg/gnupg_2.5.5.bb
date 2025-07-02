@@ -13,10 +13,11 @@ DEPENDS = "npth libassuan libksba zlib bzip2 readline libgcrypt"
 
 inherit autotools gettext texinfo pkgconfig upstream-version-is-even
 
+require drop-unknown-suffix.inc
+
 UPSTREAM_CHECK_URI = "https://gnupg.org/ftp/gcrypt/gnupg/"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0002-use-pkgconfig-instead-of-npth-config.patch \
-           file://0004-autogen.sh-fix-find-version-for-beta-checking.patch \
            file://0001-Woverride-init-is-not-needed-with-gcc-9.patch \
            "
 SRC_URI:append:class-native = " file://0001-configure.ac-use-a-custom-value-for-the-location-of-.patch \
