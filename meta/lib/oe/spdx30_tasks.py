@@ -724,24 +724,23 @@ def create_spdx(d):
                             impact_statement=description,
                         )
 
-                        if detail in (
-                            "ignored",
-                            "cpe-incorrect",
-                            "disputed",
-                            "upstream-wontfix",
-                        ):
-                            # VEX doesn't have justifications for this
-                            pass
-                        elif detail in (
-                            "not-applicable-config",
-                            "not-applicable-platform",
-                        ):
-                            for v in spdx_vex:
-                                v.security_justificationType = (
-                                    oe.spdx30.security_VexJustificationType.vulnerableCodeNotPresent
+                        vex_just_type = d.getVarFlag(
+                            "CVE_CHECK_VEX_JUSTIFICATION", detail
+                        )
+                        if vex_just_type:
+                            if (
+                                vex_just_type
+                                not in oe.spdx30.security_VexJustificationType.NAMED_INDIVIDUALS
+                            ):
+                                bb.fatal(
+                                    f"Unknown vex justification '{vex_just_type}', detail '{detail}', for ignored {cve}"
                                 )
-                        else:
-                            bb.fatal(f"Unknown detail '{detail}' for ignored {cve}")
+
+                            for v in spdx_vex:
+                                v.security_justificationType = oe.spdx30.security_VexJustificationType.NAMED_INDIVIDUALS[
+                                    vex_just_type
+                                ]
+
                     elif status == "Unknown":
                         bb.note(f"Skipping {cve} with status 'Unknown'")
                     else:
