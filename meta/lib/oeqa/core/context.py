@@ -179,9 +179,16 @@ class OETestContextExecutor(object):
         else:
             self.tc_kwargs['init']['td'] = {}
 
+        # Run image specific TEST_SUITE like testimage.bbclass by default
+        test_suites = self.tc_kwargs['init']['td'].get("TEST_SUITES")
+        if test_suites:
+            test_suites = test_suites.split()
+
         if args.run_tests:
             self.tc_kwargs['load']['modules'] = args.run_tests
             self.tc_kwargs['load']['modules_required'] = args.run_tests
+        elif test_suites:
+            self.tc_kwargs['load']['modules'] = test_suites
         else:
             self.tc_kwargs['load']['modules'] = []
 
