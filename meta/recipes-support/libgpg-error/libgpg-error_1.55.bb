@@ -25,6 +25,8 @@ BINCONFIG = "${bindir}/gpg-error-config"
 
 inherit autotools binconfig-disabled pkgconfig gettext multilib_header multilib_script ptest
 
+require recipes-support/gnupg/drop-unknown-suffix.inc
+
 RDEPENDS:${PN}-ptest:append = " make bash"
 
 MULTILIB_SCRIPTS = "${PN}-dev:${bindir}/gpgrt-config"
