@@ -4,9 +4,13 @@
 # SPDX-License-Identifier: MIT
 #
 
-inherit linux-kernel-base kernel-module-split
+inherit linux-kernel-base kernel-module-split features_check
 
 COMPATIBLE_HOST = ".*-linux"
+
+# Linux has a minimum ISA requires on riscv, see arch/riscv/Makefile
+REQUIRED_TUNE_FEATURES:riscv32 = "rv 32 i m a zicsr zifencei"
+REQUIRED_TUNE_FEATURES:riscv64 = "rv 64 i m a zicsr zifencei"
 
 KERNEL_PACKAGE_NAME ??= "kernel"
 KERNEL_DEPLOYSUBDIR ??= "${@ "" if (d.getVar("KERNEL_PACKAGE_NAME") == "kernel") else d.getVar("KERNEL_PACKAGE_NAME") }"
