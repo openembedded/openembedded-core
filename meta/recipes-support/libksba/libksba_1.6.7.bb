@@ -20,6 +20,8 @@ BINCONFIG = "${bindir}/ksba-config"
 
 inherit autotools binconfig-disabled pkgconfig texinfo
 
+require recipes-support/gnupg/drop-unknown-suffix.inc
+
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://ksba-add-pkgconfig-support.patch"
