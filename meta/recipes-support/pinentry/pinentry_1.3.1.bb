@@ -20,6 +20,8 @@ SRC_URI[sha256sum] = "bc72ee27c7239007ab1896c3c2fae53b076e2c9bd2483dc2769a16902b
 
 inherit autotools pkgconfig
 
+require recipes-support/gnupg/drop-unknown-suffix.inc
+
 PACKAGECONFIG ??= "ncurses"
 
 PACKAGECONFIG[ncurses] = "--enable-ncurses  --with-ncurses-include-dir=${STAGING_INCDIR}, --disable-ncurses, ncurses"
