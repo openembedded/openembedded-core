@@ -147,6 +147,8 @@ def check_workspace_recipe(workspace, pn, checksrc=True, bbclassextend=False):
     Check that a recipe is in the workspace and (optionally) that source
     is present.
     """
+    import bb.runqueue
+    _, pn = bb.runqueue.split_mc(pn)
 
     workspacepn = pn
 
