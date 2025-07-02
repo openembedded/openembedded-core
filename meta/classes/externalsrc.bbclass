@@ -28,6 +28,20 @@
 SRCTREECOVEREDTASKS ?= "do_patch do_unpack do_fetch"
 EXTERNALSRC_SYMLINKS ?= "oe-workdir:${WORKDIR} oe-logs:${T}"
 
+def find_git_dir(d, s_dir):
+    import subprocess
+    git_dir = None
+    try:
+        git_dir = os.path.join(s_dir,
+            subprocess.check_output(['git', '-C', s_dir, 'rev-parse', '--git-dir'], stderr=subprocess.DEVNULL).decode("utf-8").rstrip())
+        top_git_dir = os.path.join(d.getVar("TOPDIR"),
+            subprocess.check_output(['git', '-C', d.getVar("TOPDIR"), 'rev-parse', '--git-dir'], stderr=subprocess.DEVNULL).decode("utf-8").rstrip())
+        if git_dir == top_git_dir:
+            git_dir = None
+    except subprocess.CalledProcessError:
+        pass
+    return git_dir
+
 python () {
     externalsrc = d.getVar('EXTERNALSRC')
     externalsrcbuild = d.getVar('EXTERNALSRC_BUILD')
@@ -169,14 +183,16 @@ python externalsrc_configure_prefunc() {
             newlinks.append(symsplit[0])
     # Hide the symlinks from git
     try:
-        git_exclude_file = os.path.join(s_dir, '.git/info/exclude')
-        if os.path.exists(git_exclude_file):
-            with open(git_exclude_file, 'r+') as efile:
-                elines = efile.readlines()
-                for link in newlinks:
-                    if link in elines or '/'+link in elines:
-                        continue
-                    efile.write('/' + link + '\n')
+        git_dir = find_git_dir(d, s_dir)
+        if git_dir:
+            git_exclude_file = os.path.join(git_dir, 'info/exclude')
+            if os.path.exists(git_exclude_file):
+                with open(git_exclude_file, 'r+') as efile:
+                    elines = efile.readlines()
+                    for link in newlinks:
+                        if link in elines or '/'+link in elines:
+                            continue
+                        efile.write('/' + link + '\n')
     except IOError as ioe:
         bb.note('Failed to hide EXTERNALSRC_SYMLINKS from git')
 }
@@ -207,17 +223,7 @@ def srctree_hash_files(d, srcdir=None):
     import hashlib
 
     s_dir = srcdir or d.getVar('EXTERNALSRC')
-    git_dir = None
-
-    try:
-        git_dir = os.path.join(s_dir,
-            subprocess.check_output(['git', '-C', s_dir, 'rev-parse', '--git-dir'], stderr=subprocess.DEVNULL).decode("utf-8").rstrip())
-        top_git_dir = os.path.join(d.getVar("TOPDIR"),
-            subprocess.check_output(['git', '-C', d.getVar("TOPDIR"), 'rev-parse', '--git-dir'], stderr=subprocess.DEVNULL).decode("utf-8").rstrip())
-        if git_dir == top_git_dir:
-            git_dir = None
-    except subprocess.CalledProcessError:
-        pass
+    git_dir = find_git_dir(d, s_dir)
 
     ret = " "
     if git_dir is not None:
