@@ -136,8 +136,12 @@ def copy_needed_files(d, tc):
             if dir == '__pycache__':
                 shutil.rmtree(os.path.join(subdir, dir))
 
+    image_basename = d.getVar('IMAGE_BASENAME')
+    image_machine_suffix = d.getVar('IMAGE_MACHINE_SUFFIX')
+
     # Create tar file for common parts of testexport
-    testexport_create_tarball(d, "testexport.tar.gz", d.getVar("TEST_EXPORT_DIR"))
+    testexport_create_tarball(d, "testexport-%s%s.tar.gz" %
+        (image_basename, image_machine_suffix), d.getVar("TEST_EXPORT_DIR"))
 
     # Copy packages needed for runtime testing
     test_paths = get_runtime_paths(d)
@@ -149,7 +153,7 @@ def copy_needed_files(d, tc):
         export_pkg_dir = os.path.join(d.getVar("TEST_EXPORT_DIR"), "packages")
         oe.path.copytree(test_pkg_dir, export_pkg_dir)
         # Create tar file for packages needed by the DUT
-        testexport_create_tarball(d, "testexport_packages_%s.tar.gz" % d.getVar("MACHINE"), export_pkg_dir)
+        testexport_create_tarball(d, "testexport_packages%s.tar.gz" % image_machine_suffix, export_pkg_dir)
 
     # Copy SDK
     if d.getVar("TEST_EXPORT_SDK_ENABLED") == "1":
