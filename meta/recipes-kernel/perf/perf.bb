@@ -385,10 +385,6 @@ do_configure:prepend () {
     done
 }
 
-python do_package:prepend() {
-    d.setVar('PKGV', d.getVar("KERNEL_VERSION").split("-")[0])
-}
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "${PN}-archive ${PN}-tests ${PN}-perl ${PN}-python"
