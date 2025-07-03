@@ -7,7 +7,9 @@ LICENSE = "MIT & LGPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=cf5713fba707073020b1db2acaa73e78 \
                     file://LICENSE.MIT;md5=a4f1c6864a83ddf4b754cdab7d593523"
 
-SRC_URI = "git://git.adelielinux.org/adelie/musl-locales;protocol=https;branch=main"
+SRC_URI = "git://git.adelielinux.org/adelie/musl-locales;protocol=https;branch=main \
+           file://0001-cmake-Support-builds-with-CMake-4.patch \
+           "
 
 PV = "1.0+git"
 SRCREV = "5663f5bfd30bf9e1e0ba3fc5fe2da6725969f30e"
