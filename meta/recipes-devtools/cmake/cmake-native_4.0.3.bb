@@ -5,8 +5,8 @@ DEPENDS += "bzip2-replacement-native xz-native zlib-native ncurses-native zstd-n
 
 SRC_URI += "file://OEToolchainConfig.cmake \
             file://environment.d-cmake.sh \
-            file://0005-Disable-use-of-ext2fs-ext2_fs.h-by-cmake-s-internal-.patch \
-            file://0001-CMakeLists.txt-disable-USE_NGHTTP2.patch \
+            file://0001-Disable-use-of-ext2fs-ext2_fs.h-by-cmake-s-internal.patch \
+            file://0002-CMakeLists.txt-disable-USE_NGHTTP2.patch \
             "
 
 LICENSE:append = " & BSD-1-Clause & MIT & BSD-2-Clause & curl"
@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM:append = " \
     file://Utilities/cmexpat/COPYING;md5=7b3b078238d0901d3b339289117cb7fb \
     file://Utilities/cmlibrhash/COPYING;md5=a8c2a557a5c53b1c12cddbee98c099af \
     file://Utilities/cmlibuv/LICENSE;md5=ad93ca1fffe931537fcf64f6fcce084d \
-    file://Utilities/cmcurl/COPYING;md5=eed2e5088e1ac619c9a1c747da291d75 \
+    file://Utilities/cmcurl/COPYING;md5=72f4e9890e99e68d77b7e40703d789b8 \
 "
 
 B = "${WORKDIR}/build"

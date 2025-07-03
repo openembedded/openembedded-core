@@ -406,7 +406,7 @@ class DevtoolAddTests(DevtoolBase):
         test_file_dir_full = os.path.join(test_file_package_root, test_file_dir)
         bb.utils.mkdirhier(test_file_dir_full)
         with open(os.path.join(test_file_dir_full, test_file_name), "w") as f:
-           f.write(test_file_content)
+            f.write(test_file_content)
         bin_package_path = os.path.join(tempdir, "%s.tar.gz" % pn)
         runCmd("tar czf %s -C %s ." % (bin_package_path, test_file_package_root))
 
@@ -509,7 +509,13 @@ class DevtoolAddTests(DevtoolBase):
         # normally cover, which triggers the installed-vs-shipped QA test we have
         # within do_package
         recipefile = '%s/recipes/libftdi/libftdi_%s.bb' % (self.workspacedir, version)
-        result = runCmd('recipetool setvar %s EXTRA_OECMAKE -- \'-DPYTHON_BINDINGS=OFF -DLIBFTDI_CMAKE_CONFIG_DIR=${datadir}/cmake/Modules\'' % recipefile)
+        # There is no upstream release that supports building with CMake 4+ yet, so we explicitly
+        # set the policy minimum version via EXTRA_OECMAKE. That's easier than applying backported
+        # patches.
+        result = runCmd(
+            "recipetool setvar %s EXTRA_OECMAKE -- '-DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DPYTHON_BINDINGS=OFF -DLIBFTDI_CMAKE_CONFIG_DIR=${datadir}/cmake/Modules'"
+            % recipefile
+        )
         with open(recipefile, 'a') as f:
             f.write('\nFILES:${PN}-dev += "${datadir}/cmake/Modules"\n')
             # We don't have the ability to pick up this dependency automatically yet...
