@@ -192,6 +192,11 @@ do_install:append:class-native () {
 	    SSL_CERT_FILE=\${SSL_CERT_FILE:-${libdir}/ssl-3/cert.pem} \
 	    OPENSSL_ENGINES=\${OPENSSL_ENGINES:-${libdir}/engines-3} \
 	    OPENSSL_MODULES=\${OPENSSL_MODULES:-${libdir}/ossl-modules}
+
+	# Setting ENGINESDIR and MODULESDIR to invalid paths prevents host contamination,
+	# but also breaks the generated libcrypto.pc file. Post-Fix it manually here.
+	sed -i 's|^enginesdir=\($.libdir.\)/.*|enginesdir=\1/engines-3|' ${D}${libdir}/pkgconfig/libcrypto.pc
+	sed -i 's|^modulesdir=\($.libdir.\)/.*|modulesdir=\1/ossl-modules|' ${D}${libdir}/pkgconfig/libcrypto.pc
 }
 
 do_install:append:class-nativesdk () {
