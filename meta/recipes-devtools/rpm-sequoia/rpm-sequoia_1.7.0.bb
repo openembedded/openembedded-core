@@ -26,7 +26,7 @@ CARGO_INSTALL_LIBRARIES = "1"
 do_compile:prepend () {
 	# rpm-sequoia.pc is generated in the source directory
 	# but the target directory does not exist there.
-	mkdir -p ${S}/target/release
+	mkdir -p ${S}/target/${BUILD_DIR}
 
 	# From rpm-sequoia's README.md:
 	#
@@ -58,7 +58,7 @@ do_install:append () {
 
 	# rpm-sequoia does not install its pkgconfig file. Do it manually.
 	mkdir -p ${D}${libdir}/pkgconfig
-	install -m644 ${S}/target/release/rpm-sequoia.pc ${D}${libdir}/pkgconfig
+	install -m644 ${S}/target/${BUILD_DIR}/rpm-sequoia.pc ${D}${libdir}/pkgconfig
 }
 
 do_install_ptest:append () {
