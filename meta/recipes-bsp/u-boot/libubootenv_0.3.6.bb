@@ -10,7 +10,9 @@ LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://LICENSES/LGPL-2.1-or-later.txt;md5=4fbd65380cdd255951079008b364516c"
 SECTION = "libs"
 
-SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https;branch=master"
+SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https;branch=master \
+           file://0001-Update-cmake_minimum_required-to-3.5.patch \
+           "
 SRCREV = "5507339628b5caf244e1ff9d58cb3fa534b16beb"
 
 inherit cmake lib_package
