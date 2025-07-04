@@ -173,7 +173,7 @@ do_deploy() {
     fi
 
     if [ -n "${INITRAMFS_IMAGE}" ]; then
-        ln -snf fit-image-its "$deploy_dir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its"
+        ln -snf fit-image.its "$deploy_dir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}.its"
         if [ -n "${KERNEL_FIT_LINK_NAME}" ]; then
             ln -snf fit-image.its "$deploy_dir/fitImage-its-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_LINK_NAME}"
         fi
