@@ -23,15 +23,15 @@ Upstream-Status: Submitted [https://public-inbox.org/git/f029a942dd3d50d85e60bd3
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/generate-configlist.sh b/generate-configlist.sh
-index dffdaad..cc35a21 100755
+index 75c39ad..6d4525e 100755
 --- a/generate-configlist.sh
 +++ b/generate-configlist.sh
-@@ -15,7 +15,7 @@ static const char *config_name_list[] = {
- EOF
- 	grep -h '^[a-zA-Z].*\..*::$' "$SOURCE_DIR"/Documentation/*config.adoc "$SOURCE_DIR"/Documentation/config/*.adoc |
- 	sed '/deprecated/d; s/::$//; s/,  */\n/g' |
--	sort |
-+	LC_ALL=C sort |
- 	sed 's/^.*$/	"&",/'
+@@ -23,7 +23,7 @@ EOF
+ 	d' \
+ 	    "$SOURCE_DIR"/Documentation/*config.adoc \
+ 	    "$SOURCE_DIR"/Documentation/config/*.adoc |
+-	sort
++	LC_ALL=C sort
  	cat <<EOF
  	NULL,
+ };
