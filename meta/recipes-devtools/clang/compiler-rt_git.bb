@@ -29,14 +29,15 @@ DEPENDS += "ninja-native libgcc"
 DEPENDS:append:class-target = " virtual/cross-c++ clang-cross-${TARGET_ARCH} virtual/${MLPREFIX}libc gcc-runtime"
 DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-native clang-crosssdk-${SDK_SYS} nativesdk-gcc-runtime"
 DEPENDS:append:class-native = " clang-native"
+DEPENDS:remove:class-native = "libcxx-native compiler-rt-native"
 
 # Trick clang.bbclass into not creating circular dependencies
 UNWINDLIB:class-nativesdk = "--unwindlib=libgcc"
 COMPILER_RT:class-nativesdk = "-rtlib=libgcc"
 LIBCPLUSPLUS:class-nativesdk = "-stdlib=libstdc++"
-UNWINDLIB:class-native = "--unwindlib=libgcc"
-COMPILER_RT:class-native = "-rtlib=libgcc"
-LIBCPLUSPLUS:class-native = "-stdlib=libstdc++"
+UNWINDLIB:class-native = ""
+COMPILER_RT:class-native = ""
+LIBCPLUSPLUS:class-native = ""
 UNWINDLIB:class-target = "--unwindlib=libgcc"
 COMPILER_RT:class-target = "-rtlib=libgcc"
 LIBCPLUSPLUS:class-target = "-stdlib=libstdc++"
@@ -52,8 +53,6 @@ HF:class-target = "${@ bb.utils.contains('TUNE_CCARGS_MFLOAT', 'hard', 'hf', '',
 
 CC = "${CCACHE}${HOST_PREFIX}clang ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 CXX = "${CCACHE}${HOST_PREFIX}clang++ ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
-BUILD_CC = "${CCACHE}clang ${BUILD_CC_ARCH}"
-BUILD_CXX = "${CCACHE}clang++ ${BUILD_CC_ARCH}"
 LDFLAGS += "${COMPILER_RT} ${UNWINDLIB}"
 CXXFLAGS += "${LIBCPLUSPLUS}"
 
