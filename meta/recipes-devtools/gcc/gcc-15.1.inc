@@ -53,7 +53,6 @@ SRC_URI = "${BASEURI} \
            file://0005-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
            file://0006-cpp-honor-sysroot.patch \
            file://0007-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch \
-           file://0008-libtool.patch \
            file://0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
            file://0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
            file://0011-aarch64-Fix-include-paths-when-S-B.patch \
