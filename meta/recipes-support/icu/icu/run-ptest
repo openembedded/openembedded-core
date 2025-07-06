@@ -1,0 +1,13 @@
+#!/bin/sh
+
+TOPDIR=$(dirname "$(realpath $0)")
+cd ${TOPDIR}/test/tests
+TESTS=$(find . -executable -type f)
+for t in ${TESTS}; do
+	./$t
+	if [ "$?" = "0" ]; then
+		echo "PASS: $t"
+	else
+		echo "FAIL: $t"
+	fi
+done
