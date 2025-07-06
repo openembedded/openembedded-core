@@ -119,6 +119,9 @@ SRC_URI = "${BASE_SRC_URI};name=code \
            ${DATA_SRC_URI};name=data \
            file://filter.json \
            file://0001-icu-Added-armeb-support.patch \
+           file://0001-ICU-23120-Mask-UnicodeStringTest-TestLargeMemory-on-.patch \
+           file://0001-test-Add-support-ptest.patch \
+           file://run-ptest \
            "
 
 SRC_URI:append:class-target = "\
@@ -160,3 +163,23 @@ do_make_icudata() {
 }
 
 addtask make_icudata before do_configure after do_patch do_prepare_recipe_sysroot
+
+inherit ptest
+RDEPENDS:${PN}-ptest += "bash"
+
+do_compile_ptest() {
+    oe_runmake -C test everything PTEST_PATH=${PTEST_PATH}
+}
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}/test
+    install -d ${D}${PTEST_PATH}/data
+    cp -r ${S}/test/testdata ${D}/${PTEST_PATH}/test
+    cp -r ${S}/data/unidata ${D}/${PTEST_PATH}/data/
+    cp -r ${S}/data/sprep ${D}/${PTEST_PATH}/data/
+    cp -r ${S}/../testdata ${D}/${PTEST_PATH}/
+    cp -r ${B}/test/testdata/out ${D}/${PTEST_PATH}/test/testdata
+
+    install -d ${D}${PTEST_PATH}/test/tests
+    find ${B}/test/ -type f -executable -exec cp {} ${D}${PTEST_PATH}/test/tests \;
+}

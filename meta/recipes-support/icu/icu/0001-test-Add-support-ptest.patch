@@ -1,0 +1,84 @@
+From 783d9e0d3d7824fbca53c2c3a80e8e5e23eacc82 Mon Sep 17 00:00:00 2001
+From: Daisuke Yamane <yamane07ynct@gmail.com>
+Date: Tue, 1 Jul 2025 18:35:25 +0900
+Subject: [PATCH] test: Add support ptest
+
+Upstream-Status: Inappropriate [oe-core specific]
+
+Signed-off-by: Daisuke Yamane <yamane07ynct@gmail.com>
+---
+ test/cintltst/Makefile.in  | 2 +-
+ test/intltest/Makefile.in  | 2 +-
+ test/intltest/intltest.cpp | 2 +-
+ test/iotest/Makefile.in    | 2 +-
+ test/letest/Makefile.in    | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/test/cintltst/Makefile.in b/test/cintltst/Makefile.in
+index 552a105..9cf3071 100644
+--- a/test/cintltst/Makefile.in
++++ b/test/cintltst/Makefile.in
+@@ -39,7 +39,7 @@ CPPFLAGS += -I$(top_srcdir)/common -I$(top_srcdir)/i18n -I$(top_srcdir)/tools/ct
+ ifdef QNX_TARGET
+ DEFS += -D'ICU_UNICODE_VERSION="$(UNICODE_VERSION)"' -D'ICU_VERSION="@VERSION@"' -D'ICUDATA_NAME="$(ICUDATA_PLATFORM_NAME)"' -D'U_TOPSRCDIR="/var/icu_tests"' -D'U_TOPBUILDDIR="/var/icu_tests/"'
+ else
+-DEFS += -D'ICU_UNICODE_VERSION="$(UNICODE_VERSION)"' -D'ICU_VERSION="@VERSION@"' -D'ICUDATA_NAME="$(ICUDATA_PLATFORM_NAME)"' -D'U_TOPSRCDIR="$(top_srcdir)/"' -D'U_TOPBUILDDIR="$(BUILDDIR)"'
++DEFS += -D'ICU_UNICODE_VERSION="$(UNICODE_VERSION)"' -D'ICU_VERSION="@VERSION@"' -D'ICUDATA_NAME="$(ICUDATA_PLATFORM_NAME)"' -D'U_TOPSRCDIR="$(PTEST_PATH)/"' -D'U_TOPBUILDDIR="$(PTEST_PATH)/"'
+ endif
+ LIBS = $(LIBCTESTFW) $(LIBICUI18N) $(LIBICUTOOLUTIL) $(LIBICUUC) $(DEFAULT_LIBS) $(LIB_M)
+ 
+diff --git a/test/intltest/Makefile.in b/test/intltest/Makefile.in
+index 5d4a03b..ca4e4cd 100644
+--- a/test/intltest/Makefile.in
++++ b/test/intltest/Makefile.in
+@@ -39,7 +39,7 @@ CPPFLAGS += -DUNISTR_FROM_CHAR_EXPLICIT= -DUNISTR_FROM_STRING_EXPLICIT=
+ ifdef QNX_TARGET
+ DEFS += -D'U_TOPSRCDIR="/var/icu_tests"' -D'U_TOPBUILDDIR="/var/icu_tests/"'
+ else
+-DEFS += -D'U_TOPSRCDIR="$(top_srcdir)/"' -D'U_TOPBUILDDIR="$(BUILDDIR)"'
++DEFS += -D'U_TOPSRCDIR="$(PTEST_PATH)/"' -D'U_TOPBUILDDIR="$(PTEST_PATH)/"'
+ endif
+ LIBS = $(LIBCTESTFW) $(LIBICUI18N) $(LIBICUUC) $(LIBICUTOOLUTIL) $(DEFAULT_LIBS) $(LIB_M) $(LIB_THREAD)
+ 
+diff --git a/test/intltest/intltest.cpp b/test/intltest/intltest.cpp
+index 3806d0f..33829b0 100644
+--- a/test/intltest/intltest.cpp
++++ b/test/intltest/intltest.cpp
+@@ -1713,7 +1713,7 @@ static bool fileExists(const char* fileName) {
+  * Returns the path to icu/testdata/
+  */
+ const char *IntlTest::getSharedTestData(UErrorCode& err) {
+-#define SOURCE_TARBALL_TOP U_TOPSRCDIR U_FILE_SEP_STRING ".." U_FILE_SEP_STRING
++#define SOURCE_TARBALL_TOP U_TOPSRCDIR U_FILE_SEP_STRING
+ #define REPO_TOP SOURCE_TARBALL_TOP ".." U_FILE_SEP_STRING
+ #define FILE_NAME U_FILE_SEP_STRING "message2" U_FILE_SEP_STRING "valid-tests.json"
+     const char *srcDataDir = nullptr;
+diff --git a/test/iotest/Makefile.in b/test/iotest/Makefile.in
+index 16c510f..9eeff4b 100644
+--- a/test/iotest/Makefile.in
++++ b/test/iotest/Makefile.in
+@@ -39,7 +39,7 @@ CPPFLAGS += -DUNISTR_FROM_CHAR_EXPLICIT= -DUNISTR_FROM_STRING_EXPLICIT=
+ ifdef QNX_TARGET
+ DEFS += -D'U_TOPSRCDIR="/var/icu_tests"' -D'U_TOPBUILDDIR="/var/icu_tests/"'
+ else
+-DEFS += -D'U_TOPSRCDIR="$(top_srcdir)/"' -D'U_TOPBUILDDIR="$(BUILDDIR)"'
++DEFS += -D'U_TOPSRCDIR="$(PTEST_PATH)/"' -D'U_TOPBUILDDIR="$(PTEST_PATH)/"'
+ endif
+ LIBS = $(LIBCTESTFW) $(LIBICUTOOLUTIL) $(LIBICUIO) $(LIBICUI18N) $(LIBICUUC) $(DEFAULT_LIBS) $(LIB_M)
+ 
+diff --git a/test/letest/Makefile.in b/test/letest/Makefile.in
+index 156c86f..555a820 100644
+--- a/test/letest/Makefile.in
++++ b/test/letest/Makefile.in
+@@ -30,7 +30,7 @@ BUILDDIR := $(BUILDDIR:test\\cintltst/../../=)
+ BUILDDIR := $(BUILDDIR:TEST\\CINTLTST/../../=)
+ 
+ CPPFLAGS += -I$(top_srcdir)/common -I$(top_srcdir)/i18n -I$(top_srcdir)/tools/ctestfw -I$(top_srcdir)/tools/toolutil -I$(top_srcdir)/layoutex $(ICULE_CFLAGS) $(ICULEHB_CFLAGS)
+-DEFS += -D'U_TOPSRCDIR="$(top_srcdir)/"' -D'U_TOPBUILDDIR="$(BUILDDIR)"'
++DEFS += -D'U_TOPSRCDIR="$(PTEST_PATH)/"' -D'U_TOPBUILDDIR="$(PTEST_PATH)/"'
+ LIBS = $(LIBICULX) $(LIBICUUC) $(LIBICUI18N) $(LIBCTESTFW) $(LIBICUTOOLUTIL) $(DEFAULT_LIBS) $(LIB_M) $(ICULEHB_LIBS)
+ 
+ COMMONOBJECTS = SimpleFontInstance.o
+-- 
+2.43.0
+
