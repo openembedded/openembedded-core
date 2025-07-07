@@ -85,6 +85,7 @@ def copy_needed_files(d, tc):
 
     export_path = d.getVar('TEST_EXPORT_DIR')
     corebase_path = d.getVar('COREBASE')
+    bblayers = d.getVar('BBLAYERS').split()
 
     # Clean everything before starting
     oe.path.remove(export_path)
@@ -92,17 +93,11 @@ def copy_needed_files(d, tc):
 
     # The source of files to copy are relative to 'COREBASE' directory
     # The destination is relative to 'TEST_EXPORT_DIR'
-    # Because we are squashing the libraries, we need to remove
-    # the layer/script directory
-    files_to_copy = [ os.path.join('meta', 'lib', 'oeqa', 'core'),
-                      os.path.join('meta', 'lib', 'oeqa', 'runtime'),
-                      os.path.join('meta', 'lib', 'oeqa', 'files'),
-                      os.path.join('meta', 'lib', 'oeqa', 'utils'),
-                      os.path.join('scripts', 'oe-test'),
+    # core files/dirs first
+    core_files_to_copy = [ os.path.join('scripts', 'oe-test'),
                       os.path.join('scripts', 'lib', 'argparse_oe.py'),
                       os.path.join('scripts', 'lib', 'scriptutils.py'), ]
-
-    for f in files_to_copy:
+    for f in core_files_to_copy:
         src = os.path.join(corebase_path, f)
         dst = os.path.join(export_path, f.split('/', 1)[-1])
         if os.path.isdir(src):
@@ -110,18 +105,21 @@ def copy_needed_files(d, tc):
         else:
             shutil.copy2(src, dst)
 
-    # Remove cases and just copy the ones specified
-    cases_path = os.path.join(export_path, 'lib', 'oeqa', 'runtime', 'cases')
-    oe.path.remove(cases_path)
-    bb.utils.mkdirhier(cases_path)
-    test_paths = get_runtime_paths(d)
-    test_modules = d.getVar('TEST_SUITES').split()
-    tc.loadTests(test_paths, modules=test_modules)
-    for f in getSuiteCasesFiles(tc.suites):
-        shutil.copy2(f, cases_path)
-        json_file = _get_json_file(f)
-        if json_file:
-            shutil.copy2(json_file, cases_path)
+    # layer specific files/dirs
+    layer_files_to_copy = [ os.path.join('lib', 'oeqa', 'core'),
+                      os.path.join('lib', 'oeqa', 'runtime'),
+                      os.path.join('lib', 'oeqa', 'files'),
+                      os.path.join('lib', 'oeqa', 'utils'),]
+    for layer in bblayers:
+        meta = os.path.basename(layer)
+        for f in layer_files_to_copy:
+            src = os.path.join(layer, f)
+            dst = os.path.join(export_path, meta, f)
+            if os.path.exists(src):
+                if os.path.isdir(src):
+                    oe.path.copytree(src, dst)
+                else:
+                    shutil.copy2(src, dst)
 
     # Copy test data
     image_name = ("%s/%s" % (d.getVar('DEPLOY_DIR_IMAGE'),
@@ -142,6 +140,9 @@ def copy_needed_files(d, tc):
     testexport_create_tarball(d, "testexport.tar.gz", d.getVar("TEST_EXPORT_DIR"))
 
     # Copy packages needed for runtime testing
+    test_paths = get_runtime_paths(d)
+    test_modules = d.getVar('TEST_SUITES').split()
+    tc.loadTests(test_paths, modules=test_modules)
     package_extraction(d, tc.suites)
     test_pkg_dir = d.getVar("TEST_NEEDED_PACKAGES_DIR")
     if os.path.isdir(test_pkg_dir) and os.listdir(test_pkg_dir):

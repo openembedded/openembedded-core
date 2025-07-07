@@ -7,14 +7,18 @@
 # SPDX-License-Identifier: MIT
 #
 
+import argparse
+import glob
+import logging
 import os
 import sys
-import argparse
-import logging
 
 scripts_path = os.path.dirname(os.path.realpath(__file__))
-lib_path = scripts_path + '/lib'
-sys.path = sys.path + [lib_path]
+lib_path = os.path.join(scripts_path, 'lib')
+sys.path.append(lib_path)
+meta_lib_paths = glob.glob(scripts_path + '/*/lib', recursive=True)
+for p in meta_lib_paths:
+    sys.path.append(p)
 import argparse_oe
 import scriptutils
 
