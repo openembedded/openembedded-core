@@ -672,6 +672,8 @@ def check_sanity_sstate_dir_change(sstate_dir, data):
     return testmsg
 
 def check_sanity_version_change(status, d):
+    import glob
+
     # Sanity checks to be done when SANITY_VERSION or NATIVELSBSTRING changes
     # In other words, these tests run once in a given build directory and then 
     # never again until the sanity version or host distribution id/version changes.
@@ -702,6 +704,11 @@ def check_sanity_version_change(status, d):
 
     if not check_app_exists('g++', d):
         missing = missing + "C++ Compiler (g++),"
+
+    # installing emacs on Ubuntu 24.04 pulls in emacs-gtk -> libgcc-14-dev despite gcc being 13
+    # this breaks libcxx-native and compiler-rt-native builds so tell the user to fix things
+    if glob.glob("/usr/lib/gcc/*/14/libgcc_s.so") and not glob.glob("/usr/lib/gcc/*/14/libstdc++.so"):
+        status.addresult('libgcc-14-dev is installed and not libstdc++-14-dev which will break clang native compiles. Please remove one or install the other.')
 
     required_utilities = d.getVar('SANITY_REQUIRED_UTILITIES')
 
