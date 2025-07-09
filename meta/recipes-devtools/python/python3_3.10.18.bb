@@ -51,7 +51,7 @@ SRC_URI[sha256sum] = "ae665bc678abd9ab6a6e1573d2481625a53719bc517e9a634ed2b9fefa
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
 UPSTREAM_CHECK_URI = "https://www.python.org/downloads/source/"
 
-CVE_PRODUCT = "python"
+CVE_PRODUCT = "python:python python_software_foundation:python"
 
 # Upstream consider this expected behaviour
 CVE_CHECK_IGNORE += "CVE-2007-4559"
