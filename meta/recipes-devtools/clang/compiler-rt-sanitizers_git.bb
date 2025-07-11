@@ -55,8 +55,11 @@ CXXFLAGS:append:libc-musl = " -D_LARGEFILE64_SOURCE"
 OECMAKE_TARGET_COMPILE = "compiler-rt"
 OECMAKE_TARGET_INSTALL = "install-compiler-rt install-compiler-rt-headers"
 OECMAKE_SOURCEPATH = "${S}/llvm"
+
+INSTALL_VER ?= "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}"
+INSTALL_VER:class-native = "${@oe.utils.trim_version("${PV}", 1)}"
+
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-                  -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
                   -DCOMPILER_RT_STANDALONE_BUILD=ON \
                   -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
                   -DCOMPILER_RT_BUILD_BUILTINS=OFF \
@@ -71,11 +74,13 @@ EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
                   -DLLVM_ENABLE_RUNTIMES='compiler-rt' \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
                   -DLLVM_APPEND_VC_REV=OFF \
+                  -DCOMPILER_RT_INSTALL_PATH=${nonarch_libdir}/clang/${INSTALL_VER} \
                   -S ${S}/runtimes \
 "
 
 EXTRA_OECMAKE:append:class-native = "\
                -DCOMPILER_RT_USE_BUILTINS_LIBRARY=OFF \
+               -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=ON \
 "
 
 EXTRA_OECMAKE:append:class-target = "\
@@ -85,6 +90,7 @@ EXTRA_OECMAKE:append:class-target = "\
                -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
                -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
                -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+               -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
 "
 
 EXTRA_OECMAKE:append:class-nativesdk = "\
@@ -95,24 +101,23 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                -DCLANG_TABLEGEN=${STAGING_BINDIR_NATIVE}/clang-tblgen \
                -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
                -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
+               -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
 "
 
 EXTRA_OECMAKE:append:libc-musl = " -DLIBCXX_HAS_MUSL_LIBC=ON "
 
 do_install:append () {
-    mkdir -p ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib
-    mv ${D}${nonarch_libdir}/linux ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib
     # Already shipped with compile-rt Orc support
     rm -rf ${D}${nonarch_libdir}/clang/${MAJOR_VER}/lib/linux/liborc_rt-*.a
     rm -rf ${D}${nonarch_libdir}/clang/${MAJOR_VER}/include/orc/
 }
 
 FILES_SOLIBSDEV = ""
-FILES:${PN} += "${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER} \
+FILES:${PN} += "${nonarch_libdir}/clang/${INSTALL_VER} \
 				${nonarch_libdir}/clang/${MAJOR_VER}/lib/linux/lib*${SOLIBSDEV} \
                 ${nonarch_libdir}/clang/${MAJOR_VER}/*.txt \
                 ${nonarch_libdir}/clang/${MAJOR_VER}/share/*.txt"
-FILES:${PN}-staticdev += "${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/*.a"
+FILES:${PN}-staticdev += "${nonarch_libdir}/clang/${INSTALL_VER}/lib/linux/*.a"
 FILES:${PN}-dev += "${datadir} ${nonarch_libdir}/clang/${MAJOR_VER}/lib/linux/*.syms \
                     ${nonarch_libdir}/clang/${MAJOR_VER}/include \
                     ${nonarch_libdir}/clang/${MAJOR_VER}/lib/linux/clang_rt.crt*.o \
