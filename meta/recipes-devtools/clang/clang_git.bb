@@ -55,7 +55,7 @@ PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-pyth
                               ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
                               "
 
-PACKAGECONFIG ??= "lldb-wchar terminfo \
+PACKAGECONFIG ??= "terminfo \
                    ${PACKAGECONFIG_CLANG_COMMON} \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'lto thin-lto', d)} \
                    "
@@ -79,11 +79,9 @@ PACKAGECONFIG[clangd-dexp] = "-DCLANGD_BUILD_DEXP=ON,-DCLANGD_BUILD_DEXP=OFF,,"
 PACKAGECONFIG[compiler-rt] = "-DCLANG_DEFAULT_RTLIB=compiler-rt,,"
 PACKAGECONFIG[eh] = "-DLLVM_ENABLE_EH=ON,-DLLVM_ENABLE_EH=OFF,,"
 PACKAGECONFIG[libcplusplus] = "-DCLANG_DEFAULT_CXX_STDLIB=libc++,,"
-PACKAGECONFIG[libedit] = "-DLLVM_ENABLE_LIBEDIT=ON -DLLDB_ENABLE_LIBEDIT=ON,-DLLVM_ENABLE_LIBEDIT=OFF -DLLDB_ENABLE_LIBEDIT=OFF,libedit libedit-native"
+PACKAGECONFIG[libedit] = "-DLLVM_ENABLE_LIBEDIT=ON,-DLLVM_ENABLE_LIBEDIT=OFF,libedit libedit-native"
 PACKAGECONFIG[libomp] = "-DCLANG_DEFAULT_OPENMP_RUNTIME=libomp,,"
 PACKAGECONFIG[lld] = "-DCLANG_DEFAULT_LINKER=lld,,"
-PACKAGECONFIG[lldb-lua] = "-DLLDB_ENABLE_LUA=ON,-DLLDB_ENABLE_LUA=OFF,lua"
-PACKAGECONFIG[lldb-wchar] = "-DLLDB_EDITLINE_USE_WCHAR=1,-DLLDB_EDITLINE_USE_WCHAR=0,"
 PACKAGECONFIG[lto] = "-DLLVM_ENABLE_LTO=Full -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
 PACKAGECONFIG[pfm] = "-DLLVM_ENABLE_LIBPFM=ON,-DLLVM_ENABLE_LIBPFM=OFF,libpfm,"
 PACKAGECONFIG[rtti] = "-DLLVM_ENABLE_RTTI=ON,-DLLVM_ENABLE_RTTI=OFF,,"
@@ -107,9 +105,8 @@ LLVM_BINDINGS_LIST;LLVM_ENABLE_FFI;FFI_INCLUDE_DIR;LLVM_OPTIMIZED_TABLEGEN;\
 LLVM_ENABLE_RTTI;LLVM_ENABLE_EH;LLVM_BUILD_EXTERNAL_COMPILER_RT;CMAKE_SYSTEM_NAME;\
 CMAKE_BUILD_TYPE;BUILD_SHARED_LIBS;LLVM_ENABLE_PROJECTS;LLVM_ENABLE_RUNTIMES;LLVM_BINUTILS_INCDIR;\
 LLVM_TARGETS_TO_BUILD;LLVM_EXPERIMENTAL_TARGETS_TO_BUILD;PYTHON_EXECUTABLE;\
-PYTHON_LIBRARY;PYTHON_INCLUDE_DIR;LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN;LLDB_EDITLINE_USE_WCHAR;\
-LLVM_ENABLE_LIBEDIT;LLDB_ENABLE_LIBEDIT;LLDB_PYTHON_RELATIVE_PATH;LLDB_PYTHON_EXE_RELATIVE_PATH;\
-LLDB_PYTHON_EXT_SUFFIX;CMAKE_C_FLAGS_RELEASE;CMAKE_CXX_FLAGS_RELEASE;CMAKE_ASM_FLAGS_RELEASE;\
+PYTHON_LIBRARY;PYTHON_INCLUDE_DIR;LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN;\
+LLVM_ENABLE_LIBEDIT;CMAKE_C_FLAGS_RELEASE;CMAKE_CXX_FLAGS_RELEASE;CMAKE_ASM_FLAGS_RELEASE;\
 CLANG_DEFAULT_CXX_STDLIB;CLANG_DEFAULT_RTLIB;CLANG_DEFAULT_UNWINDLIB;\
 CLANG_DEFAULT_OPENMP_RUNTIME;LLVM_ENABLE_PER_TARGET_RUNTIME_DIR;\
 LLVM_BUILD_TOOLS;LLVM_USE_HOST_TOOLS;LLVM_CONFIG_PATH;LLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR;\
@@ -133,13 +130,7 @@ HF[vardepvalue] = "${HF}"
 
 # Ensure that LLVM_PROJECTS does not contain compiler runtime components e.g. libcxx etc
 # they are enabled via LLVM_ENABLE_RUNTIMES
-LLVM_PROJECTS ?= "clang;clang-tools-extra;libclc;lld${LLDB}"
-LLDB ?= ";lldb"
-# LLDB support for RISCV32/Mips32 does not work yet
-LLDB:riscv32 = ""
-LLDB:mips = ""
-LLDB:mipsel = ""
-LLDB:powerpc = ""
+LLVM_PROJECTS ?= "clang;clang-tools-extra;libclc;lld"
 
 # linux hosts (.so) on Windows .pyd
 SOLIBSDEV:mingw32 = ".pyd"
@@ -172,10 +163,7 @@ EXTRA_OECMAKE:append:class-native = "\
                   -DPYTHON_EXECUTABLE='${PYTHON}' \
 "
 EXTRA_OECMAKE:append:class-nativesdk = "\
-                  -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DLLDB_PYTHON_RELATIVE_PATH=${PYTHON_SITEPACKAGES_DIR} \
-                                                  -DLLDB_PYTHON_EXE_RELATIVE_PATH=${PYTHON_PN} \
-                                                  -DLLDB_PYTHON_EXT_SUFFIX=${SOLIBSDEV} \
-                                                  -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain-native.cmake' \
+                  -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain-native.cmake' \
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
                   -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ar \
                   -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
@@ -183,9 +171,6 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                   -DLLVM_NATIVE_TOOL_DIR=${STAGING_BINDIR_NATIVE} \
                   -DLLVM_HEADERS_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-min-tblgen \
                   -DPYTHON_LIBRARY=${STAGING_LIBDIR}/lib${PYTHON_DIR}${PYTHON_ABI}.so \
-                  -DLLDB_PYTHON_RELATIVE_PATH=${PYTHON_SITEPACKAGES_DIR} \
-                  -DLLDB_PYTHON_EXE_RELATIVE_PATH=${PYTHON_PN} \
-                  -DLLDB_PYTHON_EXT_SUFFIX=${SOLIBSDEV} \
                   -DPYTHON_INCLUDE_DIR=${STAGING_INCDIR}/${PYTHON_DIR}${PYTHON_ABI} \
                   -DPYTHON_EXECUTABLE='${PYTHON}' \
 "
@@ -202,9 +187,6 @@ EXTRA_OECMAKE:append:class-target = "\
                   -DPYTHON_LIBRARY=${STAGING_LIBDIR}/lib${PYTHON_DIR}${PYTHON_ABI}.so \
                   -DPYTHON_INCLUDE_DIR=${STAGING_INCDIR}/${PYTHON_DIR}${PYTHON_ABI} \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
-                  -DLLDB_PYTHON_RELATIVE_PATH=${PYTHON_SITEPACKAGES_DIR} \
-                  -DLLDB_PYTHON_EXE_RELATIVE_PATH=${bindir} \
-                  -DLLDB_PYTHON_EXT_SUFFIX=${SOLIBSDEV} \
 "
 
 DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native ninja-native swig-native spirv-tools-native llvm-tblgen-native"
@@ -317,11 +299,9 @@ PROVIDES:append:class-target = " llvm libclc"
 PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc"
 
 PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
-             libclang lldb lldb-server liblldb llvm-linker-tools"
+             libclang llvm-linker-tools"
 
 BBCLASSEXTEND = "native nativesdk"
-
-RDEPENDS:lldb += "${PN}-lldb-python lldb-server"
 
 RDEPENDS:${PN}-tools += "\
   perl-module-digest-md5 \
@@ -342,8 +322,6 @@ RRECOMMENDS:${PN}-tidy += "${PN}-tools"
 FILES:llvm-linker-tools = "${libdir}/LLVMgold* ${libdir}/libLTO.so.* ${libdir}/LLVMPolly*"
 
 FILES:${PN}-libclang-cpp = "${libdir}/libclang-cpp.so.*"
-
-FILES:${PN}-lldb-python = "${libdir}/python*/site-packages/lldb/*"
 
 FILES:${PN}-libclang-python = "${PYTHON_SITEPACKAGES_DIR}/clang/*"
 
@@ -407,22 +385,6 @@ FILES:${PN} += "\
 
 FILES:${PN}-clc += "${datadir}/clc"
 
-FILES:lldb = "\
-  ${bindir}/lldb \
-  ${bindir}/lldb-argdumper \
-  ${bindir}/lldb-instr \
-  ${bindir}/lldb-vscode \
-"
-
-FILES:lldb-server = "\
-  ${bindir}/lldb-server \
-"
-
-FILES:liblldb = "\
-  ${libdir}/liblldbIntelFeatures.so.* \
-  ${libdir}/liblldb.so.* \
-"
-
 FILES:${PN}-libllvm =+ "\
   ${libdir}/libLLVM.so.${MAJOR_VER}.${MINOR_VER} \
   ${libdir}/libLLVM-${MAJOR_VER}.so \
@@ -449,8 +411,6 @@ FILES:${PN}:remove = "${libdir}/${BPN}/*"
 
 INSANE_SKIP:${PN} += "already-stripped"
 #INSANE_SKIP:${PN}-dev += "dev-elf"
-INSANE_SKIP:${PN}-lldb-python += "dev-so dev-deps"
-INSANE_SKIP:${MLPREFIX}liblldb = "dev-so"
 INSANE_SKIP:${PN}-libllvm = "dev-so"
 
 #Avoid SSTATE_SCAN_COMMAND running sed over llvm-config.
