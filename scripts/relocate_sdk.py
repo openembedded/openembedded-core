@@ -27,7 +27,7 @@ else:
     def b(x):
         return x.encode(sys.getfilesystemencoding())
 
-old_prefix = re.compile(b("##DEFAULT_INSTALL_DIR##"))
+old_prefix = re.compile(rb("##DEFAULT_INSTALL_DIR##"))
 
 def get_arch():
     global endian_prefix
