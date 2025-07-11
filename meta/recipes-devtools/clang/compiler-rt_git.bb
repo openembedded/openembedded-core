@@ -35,9 +35,9 @@ DEPENDS:remove:class-native = "libcxx-native compiler-rt-native"
 UNWINDLIB:class-nativesdk = "--unwindlib=libgcc"
 COMPILER_RT:class-nativesdk = "-rtlib=libgcc"
 LIBCPLUSPLUS:class-nativesdk = "-stdlib=libstdc++"
-UNWINDLIB:class-native = ""
-COMPILER_RT:class-native = ""
-LIBCPLUSPLUS:class-native = ""
+UNWINDLIB:class-native = "--unwindlib=libgcc"
+COMPILER_RT:class-native = "-rtlib=libgcc"
+LIBCPLUSPLUS:class-native = "-stdlib=libstdc++"
 UNWINDLIB:class-target = "--unwindlib=libgcc"
 COMPILER_RT:class-target = "-rtlib=libgcc"
 LIBCPLUSPLUS:class-target = "-stdlib=libstdc++"
@@ -57,6 +57,7 @@ LDFLAGS += "${COMPILER_RT} ${UNWINDLIB}"
 CXXFLAGS += "${LIBCPLUSPLUS}"
 
 TOOLCHAIN = "clang"
+TOOLCHAIN_NATIVE = "clang"
 
 def get_compiler_rt_arch(bb, d):
     if bb.utils.contains('TUNE_FEATURES', 'armv5 thumb dsp', True, False, d):
