@@ -13,7 +13,11 @@ for now this resolves the nastiest problems this causes.
 func_normal_abspath would resolve an empty path to `pwd` so we need
 to filter the zero case.
 
-RP 2012/8/24
+We now delete the .la files, so the scope of this issue is limited however
+if anyting else in gcc-runtime linked to libstdc++ (which can potentially
+see the .la files), it would potentially see the issue.
+
+RP 2012/8/24 and 2025/7/14
 
 Upstream-Status: Submitted [https://lists.gnu.org/archive/html/libtool-patches/2023-04/msg00000.html]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
