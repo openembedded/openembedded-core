@@ -17,6 +17,8 @@ SECTION = "devel"
 require common-clang.inc
 require common-source.inc
 
+BPN = "clang"
+
 INHIBIT_DEFAULT_DEPS:class-native = "1"
 
 LDFLAGS:append:class-target:riscv32 = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
