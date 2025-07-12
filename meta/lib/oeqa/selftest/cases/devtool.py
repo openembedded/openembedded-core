@@ -2530,7 +2530,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
             'IMAGE_CLASSES += "image-combined-dbg"',
             'IMAGE_GEN_DEBUGFS = "1"',
             'IMAGE_INSTALL:append = " gdbserver %s"' % ' '.join(
-                [r + '-ptest' for r in recipe_names])
+                [r + '-ptest' for r in recipe_names]),
+            'DISTRO_FEATURES:append = " ptest"'
         ]
         self.write_config("\n".join(conf_lines))
 
