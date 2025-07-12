@@ -1839,36 +1839,39 @@ class DevtoolDeployTargetTests(DevtoolBase):
         # Boot the image
         with runqemu(testimage) as qemu:
             # Now really test deploy-target
-            result = runCmd('devtool deploy-target -c %s root@%s' % (testrecipe, qemu.ip))
-            # Run a test command to see if it was installed properly
-            sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-            result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
-            # Check if it deployed all of the files with the right ownership/perms
-            # First look on the host - need to do this under pseudo to get the correct ownership/perms
-            bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD'], testrecipe)
-            installdir = bb_vars['D']
-            fakerootenv = bb_vars['FAKEROOTENV']
-            fakerootcmd = bb_vars['FAKEROOTCMD']
-            result = runCmd('%s %s find . -type f -exec ls -l {} \\;' % (fakerootenv, fakerootcmd), cwd=installdir)
-            filelist1 = self._process_ls_output(result.output)
+            for extra_opt in ['', '--strip']:
+                deploy_cmd= 'devtool deploy-target -c %s root@%s %s' % (testrecipe, qemu.ip, extra_opt)
+                self.logger.debug(deploy_cmd)
+                result = runCmd(deploy_cmd)
+                # Run a test command to see if it was installed properly
+                sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+                result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
+                # Check if it deployed all of the files with the right ownership/perms
+                # First look on the host - need to do this under pseudo to get the correct ownership/perms
+                bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD'], testrecipe)
+                installdir = bb_vars['D']
+                fakerootenv = bb_vars['FAKEROOTENV']
+                fakerootcmd = bb_vars['FAKEROOTCMD']
+                result = runCmd('%s %s find . -type f -exec ls -l {} \\;' % (fakerootenv, fakerootcmd), cwd=installdir)
+                filelist1 = self._process_ls_output(result.output)
 
-            # Now look on the target
-            tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
-            self.track_for_cleanup(tempdir2)
-            tmpfilelist = os.path.join(tempdir2, 'files.txt')
-            with open(tmpfilelist, 'w') as f:
-                for line in filelist1:
-                    splitline = line.split()
-                    f.write(splitline[-1] + '\n')
-            result = runCmd('cat %s | ssh -q %s root@%s \'xargs ls -l\'' % (tmpfilelist, sshargs, qemu.ip))
-            filelist2 = self._process_ls_output(result.output)
-            filelist1.sort(key=lambda item: item.split()[-1])
-            filelist2.sort(key=lambda item: item.split()[-1])
-            self.assertEqual(filelist1, filelist2)
-            # Test undeploy-target
-            result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
-            result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand), ignore_status=True)
-            self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
+                # Now look on the target
+                tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
+                self.track_for_cleanup(tempdir2)
+                tmpfilelist = os.path.join(tempdir2, 'files.txt')
+                with open(tmpfilelist, 'w') as f:
+                    for line in filelist1:
+                        splitline = line.split()
+                        f.write(splitline[-1] + '\n')
+                result = runCmd('cat %s | ssh -q %s root@%s \'xargs ls -l\'' % (tmpfilelist, sshargs, qemu.ip))
+                filelist2 = self._process_ls_output(result.output)
+                filelist1.sort(key=lambda item: item.split()[-1])
+                filelist2.sort(key=lambda item: item.split()[-1])
+                self.assertEqual(filelist1, filelist2)
+                # Test undeploy-target
+                result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
+                result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand), ignore_status=True)
+                self.assertNotEqual(result, 0, 'undeploy-target did not remove command as it should have')
 
 class DevtoolBuildImageTests(DevtoolBase):
 
