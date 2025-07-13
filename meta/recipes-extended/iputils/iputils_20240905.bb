@@ -12,6 +12,7 @@ DEPENDS = "gnutls"
 
 SRC_URI = "git://github.com/iputils/iputils;branch=master;protocol=https \
            file://CVE-2025-47268.patch \
+           file://CVE-2025-48964.patch \
           "
 SRCREV = "10b50784aae3fb75c96cdf9b1668916b49557dd5"
 
