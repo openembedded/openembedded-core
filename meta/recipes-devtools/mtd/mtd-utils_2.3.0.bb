@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://include/common.h;beginline=1;endline=17;md5=ba05b07912a44ea2bf81ce409380049c"
 
-inherit autotools pkgconfig update-alternatives
+inherit autotools pkgconfig systemd update-alternatives
 
 DEPENDS = "zlib e2fsprogs util-linux"
 RDEPENDS:mtd-utils-tests += "bash"
@@ -17,7 +17,8 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git;branch=master \
            file://0002-ubifs-utils-journal-Include-sys-stat.h.patch \
            file://0003-ubifs-utils-link-libmissing.a-in-case-execinfo.h-isn.patch \
            file://0004-ubifs-utils-extract_files-Include-linux-limits.h.patch \
-           file://0001-Improve-check-for-GCC-compiler-version.patch"
+           file://0001-Improve-check-for-GCC-compiler-version.patch \
+           file://ubihealthd.service"
 
 # xattr support creates an additional compile-time dependency on acl because
 # the sys/acl.h header is needed. libacl is not needed and thus enabling xattr
@@ -29,6 +30,7 @@ PACKAGECONFIG[crypto] = "--with-crypto,--without-crypto,openssl"
 PACKAGECONFIG[jffs] = "--with-jffs,--without-jffs"
 PACKAGECONFIG[ubifs] = "--with-ubifs,--without-ubifs"
 PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
+PACKAGECONFIG[ubihealthd-service] = ",,"
 
 CPPFLAGS:append:riscv64  = " -pthread -D_REENTRANT"
 
@@ -54,6 +56,9 @@ ALTERNATIVE_LINK_NAME[flash_lock] = "${sbindir}/flash_lock"
 ALTERNATIVE_LINK_NAME[flash_unlock] = "${sbindir}/flash_unlock"
 ALTERNATIVE_LINK_NAME[flashcp] = "${sbindir}/flashcp"
 
+SYSTEMD_SERVICE:${PN}-ubifs = "${@bb.utils.contains('PACKAGECONFIG', 'ubihealthd-service', 'ubihealthd.service', '', d)}"
+SYSTEMD_AUTO_ENABLE = "disable"
+
 do_install () {
 	oe_runmake install DESTDIR=${D} SBINDIR=${sbindir} MANDIR=${mandir} INCLUDEDIR=${includedir}
 	install -d ${D}${includedir}/mtd
@@ -64,6 +69,12 @@ do_install () {
 	install -m 0644 ${S}/include/libubigen.h ${D}${includedir}
 	oe_libinstall -a libubi ${D}${libdir}/
 	oe_libinstall -a libmtd ${D}${libdir}/
+
+	if ${@bb.utils.contains('PACKAGECONFIG', 'ubihealthd-service', 'true', 'false', d)}; then
+		install -d ${D}${systemd_system_unitdir}
+		install -m 0644 ${UNPACKDIR}/ubihealthd.service ${D}${systemd_system_unitdir}
+		sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_system_unitdir}/ubihealthd.service
+	fi
 }
 
 PACKAGES =+ "mtd-utils-misc mtd-utils-tests"
@@ -71,7 +82,11 @@ PACKAGES =+ "${@bb.utils.contains("PACKAGECONFIG", "jffs", "mtd-utils-jffs2", ""
 PACKAGES =+ "${@bb.utils.contains("PACKAGECONFIG", "ubifs", "mtd-utils-ubifs", "", d)}"
 
 FILES:mtd-utils-jffs2 = "${sbindir}/mkfs.jffs2 ${sbindir}/jffs2dump ${sbindir}/jffs2reader ${sbindir}/sumtool"
-FILES:mtd-utils-ubifs = "${sbindir}/mkfs.ubifs ${sbindir}/ubi*"
+FILES:mtd-utils-ubifs = "\
+    ${sbindir}/mkfs.ubifs \
+    ${sbindir}/ubi* \
+    ${@bb.utils.contains('PACKAGECONFIG', 'ubihealthd-service', '${systemd_system_unitdir}/ubihealthd.service', '', d)} \
+    "
 FILES:mtd-utils-misc = "${sbindir}/nftl* ${sbindir}/ftl* ${sbindir}/rfd* ${sbindir}/doc* ${sbindir}/serve_image ${sbindir}/recv_image"
 FILES:mtd-utils-tests = "${libexecdir}/mtd-utils/*"
 

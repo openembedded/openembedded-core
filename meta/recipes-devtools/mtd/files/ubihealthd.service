@@ -1,0 +1,10 @@
+[Unit]
+Description=UBI health daemon
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=@SBINDIR@/ubihealthd
+
+[Install]
+WantedBy=multi-user.target
