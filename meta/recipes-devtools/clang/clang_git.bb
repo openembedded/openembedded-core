@@ -298,7 +298,7 @@ PROVIDES:append:class-native = " llvm-native libclc-native"
 PROVIDES:append:class-target = " llvm libclc"
 PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc"
 
-PACKAGES =+ "${PN}-libllvm ${PN}-lldb-python ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
+PACKAGES =+ "${PN}-libllvm ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
              libclang llvm-linker-tools"
 
 BBCLASSEXTEND = "native nativesdk"
