@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://gi-docgen.py;beginline=1;endline=5;md5=2dc0f1f0120247
 
 SRC_URI = "git://gitlab.gnome.org/GNOME/gi-docgen.git;protocol=https;branch=main"
 
-SRCREV = "9ab2ab8fa3f4a04f5d2cc24b0c8e91e73bc57b51"
+SRCREV = "0517026e0bf51b3776efa4689da44ea0c99e343e"
 
 inherit python_setuptools_build_meta
 
