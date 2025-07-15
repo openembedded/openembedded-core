@@ -23,7 +23,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
            file://0004-tcl-update-the-header-location.patch \
            file://0005-tcl-fix-race-in-interp.test.patch \
            "
-SRC_URI[sha256sum] = "488fcb6c875a1762e9e8478319b20fbad9a31de475f056aeed94cc54b44cf221"
+SRC_URI[sha256sum] = "b563649181dfe12f970673c427c59208074fd7c91a20132d6cadf5d82d3371be"
 
 UPSTREAM_CHECK_URI = "https://www.tcl.tk/software/tcltk/download.html"
 UPSTREAM_CHECK_REGEX = "tcl(?P<pver>\d+(\.\d+)+)-src"
