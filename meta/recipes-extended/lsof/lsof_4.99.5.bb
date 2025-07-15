@@ -6,9 +6,9 @@ SECTION = "devel"
 LICENSE = "Spencer-94"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a48ac97a8550eff12395a2c0d6151510"
 
-SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https \
+SRC_URI = "git://github.com/lsof-org/lsof;branch=master;protocol=https;tag=${PV} \
            file://remove-host-information.patch"
-SRCREV = "bbf320ce586a848f880bca7b758d50ae4c712624"
+SRCREV = "ed0fef9a134b64c9398075185534a76714c91179"
 
 inherit update-alternatives autotools pkgconfig manpages
 PACKAGECONFIG[manpages] = ""
