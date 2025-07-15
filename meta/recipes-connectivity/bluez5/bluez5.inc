@@ -10,8 +10,6 @@ DEPENDS = "dbus glib-2.0"
 PROVIDES += "bluez-hcidump"
 RPROVIDES:${PN} += "bluez-hcidump"
 
-RCONFLICTS:${PN} = "bluez4"
-
 PACKAGECONFIG ??= "obex-profiles \
     readline \
     ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
