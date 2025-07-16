@@ -92,7 +92,6 @@ PACKAGECONFIG ??= " \
     quotacheck \
     randomseed \
     resolved \
-    serial-getty-generator \
     set-time-epoch \
     sysusers \
     timedated \
@@ -124,11 +123,6 @@ TARGET_CC_ARCH:append:libc-musl = " -D__UAPI_DEF_ETHHDR=0 -D_LARGEFILE64_SOURCE"
 
 # Some of the dependencies are weak-style recommends - if not available at runtime,
 # systemd won't fail but the library-related feature will be skipped with a warning.
-
-# Use the upstream systemd serial-getty@.service and rely on
-# systemd-getty-generator instead of using the OE-core specific
-# systemd-serialgetty.bb - not enabled by default.
-PACKAGECONFIG[serial-getty-generator] = ""
 
 PACKAGECONFIG[acl] = "-Dacl=enabled,-Dacl=disabled,acl"
 PACKAGECONFIG[audit] = "-Daudit=enabled,-Daudit=disabled,audit"
@@ -289,12 +283,6 @@ do_install() {
 		fi
 	fi
 	install -d ${D}/${base_sbindir}
-
-	if ! ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'true', 'false', d)}; then
-		# Remove the serial-getty generator and instead use explicit services
-		# created by the systemd-serialgetty recipe
-		find ${D} -name \*getty-generator\* -delete
-	fi
 
 	# Provide support for initramfs
 	[ ! -e ${D}/init ] && ln -s ${nonarch_libdir}/systemd/systemd ${D}/init
