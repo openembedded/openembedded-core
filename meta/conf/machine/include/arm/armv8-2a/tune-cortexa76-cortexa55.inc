@@ -5,7 +5,11 @@ DEFAULTTUNE                                        ?= "cortexa76-cortexa55"
 
 TUNEVALID[cortexa76-cortexa55] = "Enable big.LITTLE Cortex-A76.Cortex-A55 specific processor optimizations"
 MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES", "cortexa76-cortexa55", "cortexa76-cortexa55:", "", d)}"
-TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "cortexa76-cortexa55", " -mcpu=cortex-a76.cortex-a55", "", d)}"
+
+CPU_TUNE_ARG = "cortex-a76.cortex-a55"
+# clang doesn't support big.LITTLE tunes, select the LITTLE tune
+CPU_TUNE_ARG:toolchain-clang = "cortex-a55"
+TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "cortexa76-cortexa55", " -mcpu=${CPU_TUNE_ARG}", "", d)}"
 
 require conf/machine/include/arm/arch-armv8-2a.inc
 
