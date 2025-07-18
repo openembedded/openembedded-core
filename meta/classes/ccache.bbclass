@@ -37,9 +37,6 @@ CCACHE_NATIVE_RECIPES_ALLOWED ?= ""
 # in different builds.
 export CCACHE_BASEDIR ?= "${TMPDIR}"
 
-# Used for sharing cache files after compiler is rebuilt
-export CCACHE_COMPILERCHECK ?= "%compiler% -dumpspecs"
-
 export CCACHE_CONFIGPATH ?= "${COREBASE}/meta/conf/ccache.conf"
 
 export CCACHE_DIR ?= "${CCACHE_TOP_DIR}/${MULTIMACH_TARGET_SYS}/${PN}"
