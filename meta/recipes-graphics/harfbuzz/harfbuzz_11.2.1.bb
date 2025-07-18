@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b98429b8e8e3c2a67cfef01e99e4893d \
                     "
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"
-SRC_URI += "file://0001-Use-Os-to-compile-hb-subset-plan-layout.cc.patch"
 SRC_URI[sha256sum] = "093714c8548a285094685f0bdc999e202d666b59eeb3df2ff921ab68b8336a49"
 
 DEPENDS += "glib-2.0-native"
@@ -20,6 +19,9 @@ GIR_MESON_ENABLE_FLAG = 'enabled'
 GIR_MESON_DISABLE_FLAG = 'disabled'
 GTKDOC_MESON_ENABLE_FLAG = 'enabled'
 GTKDOC_MESON_DISABLE_FLAG = 'disabled'
+
+# As per upstream CONFIG.md, it is recommended to always build with -Os.
+FULL_OPTIMIZATION = "-Os ${DEBUG_LEVELFLAG}"
 
 EXTRA_OEMESON = "-Dtests=disabled"
 
