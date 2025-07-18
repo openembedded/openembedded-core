@@ -21,6 +21,8 @@ GIR_MESON_DISABLE_FLAG = 'disabled'
 GTKDOC_MESON_ENABLE_FLAG = 'enabled'
 GTKDOC_MESON_DISABLE_FLAG = 'disabled'
 
+EXTRA_OEMESON = "-Dtests=disabled"
+
 PACKAGECONFIG ??= "cairo freetype glib icu"
 PACKAGECONFIG[cairo] = "-Dcairo=enabled,-Dcairo=disabled,cairo"
 PACKAGECONFIG[chafa] = "-Dchafa=enabled,-Dchafa=disabled,chafa"
