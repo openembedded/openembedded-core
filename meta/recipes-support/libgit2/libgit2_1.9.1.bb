@@ -5,10 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8eacfdc17c8f4d219e131a073973b97d"
 
 DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 
-SRC_URI = "git://github.com/libgit2/libgit2.git;branch=main;protocol=https \
-           file://0001-src-libgit2-CMakeLists.txt-install-cmake-files-into-.patch \
-           "
-SRCREV = "338e6fb681369ff0537719095e22ce9dc602dbf0"
+SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.9;protocol=https;tag=v${PV}"
+SRCREV = "0060d9cf5666f015b1067129bd874c6cc4c9c7ac"
 
 inherit cmake
 
