@@ -27,7 +27,7 @@ PREFERRED_PROVIDER_virtual/nativesdk-cross-cc:class-cross-canadian = "clang-cros
 PREFERRED_PROVIDER_virtual/nativesdk-cross-c++:class-cross-canadian = "clang-crosssdk-${SDK_SYS}"
 
 
-BASE_DEFAULT_DEPS:append:class-target = " compiler-rt"
+BASE_DEFAULT_DEPS:append:class-target = " compiler-rt libcxx"
 
 TUNE_CCARGS += "${@bb.utils.contains("DISTRO_FEATURES", "usrmerge", " --dyld-prefix=/usr", "", d)}"
 
