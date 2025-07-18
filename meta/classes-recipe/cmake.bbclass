@@ -216,6 +216,12 @@ list(APPEND CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES ${STAGING_INCDIR_NATIVE})
 EOF
 }
 
+cmake_do_generate_toolchain_file:append:toolchain-clang() {
+	cat >> ${WORKDIR}/toolchain.cmake <<EOF
+set( CMAKE_CLANG_TIDY ${HOST_PREFIX}clang-tidy )
+EOF
+}
+
 addtask generate_toolchain_file after do_patch before do_configure
 
 CONFIGURE_FILES = "CMakeLists.txt *.cmake"
