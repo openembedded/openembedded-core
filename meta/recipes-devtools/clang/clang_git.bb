@@ -54,6 +54,7 @@ def get_clang_target_arch(bb, d):
     return get_clang_arch(bb, d, 'TARGET_ARCH')
 
 PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-python \
+                              ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
                               ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
                               "
 
