@@ -4,14 +4,13 @@ SRC_URI += "file://remove.ldconfig.call.patch \
            file://run-ptest \
            file://ptest.patch \
            file://mkdir_p.patch \
-           file://0001-libext2fs-fix-std-c23-build-failure.patch \
            "
 SRC_URI:append:class-native = " \
            file://e2fsprogs-fix-missing-check-for-permission-denied.patch \
            file://quiet-debugfs.patch \
            "
 
-SRCREV = "b571b9b4240739a982e8bca62cfc914a3b50190a"
+SRCREV = "da631e117dcf8797bfda0f48bdaa05ac0fbcf7af"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+\.\d+(\.\d+)*)$"
 
 EXTRA_OECONF += "--libdir=${base_libdir} --sbindir=${base_sbindir} \
@@ -119,7 +118,7 @@ ALTERNATIVE:${PN}-tune2fs = "tune2fs"
 ALTERNATIVE_LINK_NAME[tune2fs] = "${base_sbindir}/tune2fs"
 
 RDEPENDS:e2fsprogs-e2scrub = "bash"
-RDEPENDS:${PN}-ptest += "coreutils procps bash bzip2 diffutils perl sed"
+RDEPENDS:${PN}-ptest += "coreutils procps bash bzip2 diffutils perl sed grep"
 RDEPENDS:${PN}-ptest += "e2fsprogs-badblocks e2fsprogs-dumpe2fs e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-resize2fs e2fsprogs-tune2fs"
 
 do_compile_ptest() {
@@ -134,7 +133,8 @@ do_install_ptest() {
 	sed -e 's!../e2fsck/e2fsck!e2fsck!g' \
 	    -e 's!../misc/tune2fs!tune2fs!g' -i ${D}${PTEST_PATH}/test/*/expect*
 	sed -e 's!../e2fsck/e2fsck!${base_sbindir}/e2fsck!g' -i ${D}${PTEST_PATH}/test/*/script
-	sed -i "s#@PTEST_PATH@#${PTEST_PATH}#g" ${D}${PTEST_PATH}/test/test_script ${D}${PTEST_PATH}/test/test_one
+	sed -i -e 's#@PTEST_PATH@#${PTEST_PATH}#g' -e 's#^EGREP=.*#EGREP="grep -E"#' \
+        ${D}${PTEST_PATH}/test/test_script ${D}${PTEST_PATH}/test/test_one
 
 	# Remove various files
 	find "${D}${PTEST_PATH}" -type f \
