@@ -112,16 +112,18 @@ CLANG_DEFAULT_CXX_STDLIB;CLANG_DEFAULT_RTLIB;CLANG_DEFAULT_UNWINDLIB;\
 CLANG_DEFAULT_OPENMP_RUNTIME;LLVM_ENABLE_PER_TARGET_RUNTIME_DIR;\
 LLVM_BUILD_TOOLS;LLVM_USE_HOST_TOOLS;LLVM_CONFIG_PATH;LLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR;\
 "
-#
-# Default to build all OE-Core supported target arches (user overridable).
-# Gennerally setting LLVM_TARGETS_TO_BUILD = "" in local.conf is ok in most simple situations
-# where only one target architecture is needed along with just one build arch (usually X86)
-# Core tier targets:
-# AArch64;AMDGPU;ARM;AVR;BPF;Hexagon;Lanai;LoongArch;Mips;MSP430;NVPTX;PowerPC;RISCV;Sparc;SPIRV;SystemZ;VE;WebAssembly;X86;XCore
-# Known experimental targets: ARC;CSKY;DirectX;M68k;Xtensa
 
-LLVM_TARGETS_TO_BUILD ?= "AMDGPU;AArch64;ARM;BPF;Mips;PowerPC;RISCV;X86;LoongArch;NVPTX;SPIRV"
-LLVM_TARGETS_TO_BUILD:class-target ?= "${@get_clang_host_arch(bb, d)};AMDGPU;BPF;NVPTX;SPIRV"
+# By default we build all the supported CPU architectures, and the GPU targets
+# if the opengl or vulkan DISTRO_FEATURES are enabled.
+#
+# For target builds we default to building that specific architecture, BPF, and the GPU targets if required.
+#
+# The available target list can be seen in the source code
+# in the LLVM_ALL_TARGETS assignment:
+# https://github.com/llvm/llvm-project/blob/main/llvm/CMakeLists.txt
+LLVM_TARGETS_GPU ?= "${@bb.utils.contains_any('DISTRO_FEATURES', 'opengl vulkan', 'AMDGPU;NVPTX;SPIRV', '', d)}"
+LLVM_TARGETS_TO_BUILD ?= "AArch64;ARM;BPF;Mips;PowerPC;RISCV;X86;LoongArch;${LLVM_TARGETS_GPU}"
+LLVM_TARGETS_TO_BUILD:class-target ?= "${@get_clang_host_arch(bb, d)};BPF;${LLVM_TARGETS_GPU}"
 
 LLVM_EXPERIMENTAL_TARGETS_TO_BUILD ?= ""
 
