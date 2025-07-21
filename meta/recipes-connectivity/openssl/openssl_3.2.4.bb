@@ -13,6 +13,8 @@ SRC_URI = "https://github.com/openssl/openssl/releases/download/openssl-${PV}/op
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
            file://0001-Added-handshake-history-reporting-when-test-fails.patch \
            file://CVE-2024-41996.patch \
+           file://CVE-2025-27587-1.patch \
+           file://CVE-2025-27587-2.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
