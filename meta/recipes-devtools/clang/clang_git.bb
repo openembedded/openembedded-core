@@ -131,7 +131,7 @@ HF[vardepvalue] = "${HF}"
 
 # Ensure that LLVM_PROJECTS does not contain compiler runtime components e.g. libcxx etc
 # they are enabled via LLVM_ENABLE_RUNTIMES
-LLVM_PROJECTS ?= "clang;clang-tools-extra;libclc;lld"
+LLVM_PROJECTS ?= "clang;clang-tools-extra;lld"
 
 # linux hosts (.so) on Windows .pyd
 SOLIBSDEV:mingw32 = ".pyd"
@@ -192,7 +192,7 @@ EXTRA_OECMAKE:append:class-target = "\
 
 DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native ninja-native swig-native spirv-tools-native llvm-tblgen-native"
 DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils nativesdk-python3"
-DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} python3 ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)} spirv-llvm-translator-native"
+DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} python3 ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
 
 RRECOMMENDS:${PN} = "binutils"
 RRECOMMENDS:${PN}:append:class-target = "${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', ' libcxx-dev', '', d)}"
@@ -259,7 +259,6 @@ do_install:append:class-native () {
         install -Dm 0755 ${B}${BINPATHPREFIX}/bin/clangd-indexer ${D}${bindir}/clangd-indexer
     fi
     install -Dm 0755 ${B}${BINPATHPREFIX}/bin/clang-tidy-confusable-chars-gen ${D}${bindir}/clang-tidy-confusable-chars-gen
-    install -Dm 0755 ${B}${BINPATHPREFIX}/bin/prepare_builtins ${D}${bindir}/prepare_builtins
 
     for f in `find ${D}${bindir} -executable -type f -not -type l`; do
         test -n "`file -b $f|grep -i ELF`" && ${STRIP} $f
@@ -295,11 +294,11 @@ do_install:append:class-nativesdk () {
     fi
 }
 
-PROVIDES:append:class-native = " llvm-native libclc-native"
-PROVIDES:append:class-target = " llvm libclc"
-PROVIDES:append:class-nativesdk = " nativesdk-llvm nativesdk-libclc"
+PROVIDES:append:class-native = " llvm-native"
+PROVIDES:append:class-target = " llvm"
+PROVIDES:append:class-nativesdk = " nativesdk-llvm"
 
-PACKAGES =+ "${PN}-libllvm ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools ${PN}-clc \
+PACKAGES =+ "${PN}-libllvm ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools \
              libclang llvm-linker-tools"
 
 BBCLASSEXTEND = "native nativesdk"
@@ -315,8 +314,6 @@ RDEPENDS:${PN}-tools += "\
   perl-module-sys-hostname \
   perl-module-term-ansicolor \
 "
-
-RPROVIDES:${PN}-clc = "${MLPREFIX}libclc"
 
 RRECOMMENDS:${PN}-tidy += "${PN}-tools"
 
@@ -383,8 +380,6 @@ FILES:${PN} += "\
   ${libdir}/${BPN} \
   ${nonarch_libdir}/${BPN}/*/include/ \
 "
-
-FILES:${PN}-clc += "${datadir}/clc"
 
 FILES:${PN}-libllvm =+ "\
   ${libdir}/libLLVM.so.${MAJOR_VER}.${MINOR_VER} \
