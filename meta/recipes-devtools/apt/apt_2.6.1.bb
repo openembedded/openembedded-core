@@ -15,6 +15,7 @@ SRC_URI = "${DEBIAN_MIRROR}/main/a/apt/${BPN}_${PV}.tar.xz \
            file://0001-Remove-using-std-binary_function.patch \
            file://0001-strutl-Add-missing-include-cstdint-gcc-15.patch \
            file://0001-Raise-cmake_minimum_required-to-3.13-to-avoid-warnin.patch \
+           file://0001-Fix-compilation-error-with-clang-libc-18.patch \
            "
 
 SRC_URI:append:class-native = " \

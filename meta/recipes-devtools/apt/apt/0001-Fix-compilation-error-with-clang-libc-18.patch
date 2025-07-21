@@ -1,0 +1,29 @@
+From b4488583424b33f51cb031562a9e8df820ffda23 Mon Sep 17 00:00:00 2001
+From: Chongyun Lee <licy183@termux.dev>
+Date: Thu, 15 Aug 2024 21:31:24 +0800
+Subject: [PATCH] Fix compilation error with clang/libc++ 18
+
+Upstream-Status: Backport [https://salsa.debian.org/apt-team/apt/-/commit/b4488583424b33f51cb031562a9e8df820ffda23]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ apt-pkg/cacheset.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/apt-pkg/cacheset.h b/apt-pkg/cacheset.h
+index 5dbb9bf08..1c67a65d6 100644
+--- a/apt-pkg/cacheset.h
++++ b/apt-pkg/cacheset.h
+@@ -218,11 +218,11 @@ public:
+ 	operator container_iterator(void) const { return _iter; }
+ 	inline iterator_type& operator++() { ++_iter; return static_cast<iterator_type&>(*this); }
+ 	inline iterator_type operator++(int) { iterator_type tmp(*this); operator++(); return tmp; }
+-	inline iterator_type operator+(typename container_iterator::difference_type const &n) { return iterator_type(_iter + n); }
++	inline iterator_type operator+(typename container_iterator::difference_type const &n) const { return iterator_type(_iter + n); }
+ 	inline iterator_type operator+=(typename container_iterator::difference_type const &n) { _iter += n; return static_cast<iterator_type&>(*this); }
+ 	inline iterator_type& operator--() { --_iter;; return static_cast<iterator_type&>(*this); }
+ 	inline iterator_type operator--(int) { iterator_type tmp(*this); operator--(); return tmp; }
+-	inline iterator_type operator-(typename container_iterator::difference_type const &n) { return iterator_type(_iter - n); }
++	inline iterator_type operator-(typename container_iterator::difference_type const &n) const { return iterator_type(_iter - n); }
+ 	inline typename container_iterator::difference_type operator-(iterator_type const &b) { return (_iter - b._iter); }
+ 	inline iterator_type operator-=(typename container_iterator::difference_type const &n) { _iter -= n; return static_cast<iterator_type&>(*this); }
+ 	inline bool operator!=(iterator_type const &i) const { return _iter != i._iter; }
