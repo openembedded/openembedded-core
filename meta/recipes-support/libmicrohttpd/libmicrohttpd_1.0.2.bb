@@ -7,7 +7,7 @@ SECTION = "net"
 DEPENDS = "file"
 
 SRC_URI = "${GNU_MIRROR}/libmicrohttpd/${BPN}-${PV}.tar.gz"
-SRC_URI[sha256sum] = "a89e09fc9b4de34dde19f4fcb4faaa1ce10299b9908db1132bbfa1de47882b94"
+SRC_URI[sha256sum] = "df324fcd0834175dab07483133902d9774a605bfa298025f69883288fd20a8c7"
 
 inherit autotools lib_package pkgconfig gettext
 
