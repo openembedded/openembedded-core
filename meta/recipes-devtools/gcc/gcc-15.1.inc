@@ -73,6 +73,7 @@ SRC_URI = "${BASEURI} \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
            file://0026-arm-fully-validate-mem_noofs_operand-PR120351.patch \
            file://0026-fix-incorrect-preprocessor-line-numbers.patch \
+           file://0027-aarch64-Fix-fma-steering-when-rename-fails-PR120119.patch \
 "
 
 UNPACKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/sources"

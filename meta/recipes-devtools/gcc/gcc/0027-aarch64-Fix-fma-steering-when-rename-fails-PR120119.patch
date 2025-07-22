@@ -1,0 +1,69 @@
+From b28d5f51e1ec75f6878593ef084e9cfb836b9db4 Mon Sep 17 00:00:00 2001
+From: Andrew Pinski <quic_apinski@quicinc.com>
+Date: Tue, 22 Jul 2025 10:32:42 -0700
+Subject: [PATCH] aarch64: Fix fma steering when rename fails [PR120119]
+
+Regrename can fail in some case and `insn_rr[INSN_UID (insn)].op_info`
+will be null. The FMA steering code was not expecting the failure to happen.
+This started to happen after early RA was added but it has been a latent bug
+before that.
+
+Build and tested for aarch64-linux-gnu.
+
+	PR target/120119
+
+gcc/ChangeLog:
+
+	* config/aarch64/cortex-a57-fma-steering.cc (func_fma_steering::analyze):
+	Skip if renaming fails.
+
+gcc/testsuite/ChangeLog:
+
+	* g++.dg/torture/pr120119-1.C: New test.
+
+Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2025-July/690239.html]
+Signed-off-by: Andrew Pinski <quic_apinski@quicinc.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ gcc/config/aarch64/cortex-a57-fma-steering.cc |  5 +++++
+ gcc/testsuite/g++.dg/torture/pr120119-1.C     | 15 +++++++++++++++
+ 2 files changed, 20 insertions(+)
+ create mode 100644 gcc/testsuite/g++.dg/torture/pr120119-1.C
+
+diff --git a/gcc/config/aarch64/cortex-a57-fma-steering.cc b/gcc/config/aarch64/cortex-a57-fma-steering.cc
+index fd6da66d855..f7675bed13d 100644
+--- a/gcc/config/aarch64/cortex-a57-fma-steering.cc
++++ b/gcc/config/aarch64/cortex-a57-fma-steering.cc
+@@ -948,6 +948,11 @@ func_fma_steering::analyze ()
+ 
+ 	  /* Search the chain where this instruction is (one of) the root.  */
+ 	  dest_op_info = insn_rr[INSN_UID (insn)].op_info;
++
++	  /* Register rename could fail. */
++	  if (!dest_op_info)
++	    continue;
++
+ 	  dest_regno = REGNO (SET_DEST (PATTERN (insn)));
+ 	  for (i = 0; i < dest_op_info->n_chains; i++)
+ 	    {
+diff --git a/gcc/testsuite/g++.dg/torture/pr120119-1.C b/gcc/testsuite/g++.dg/torture/pr120119-1.C
+new file mode 100644
+index 00000000000..1206feb310b
+--- /dev/null
++++ b/gcc/testsuite/g++.dg/torture/pr120119-1.C
+@@ -0,0 +1,15 @@
++// { dg-do compile }
++// { dg-additional-options "-mcpu=cortex-a57" { target aarch64*-*-* } }
++
++// PR target/120119
++
++struct a {
++  float operator()(int b, int c) { return d[c * 4 + b]; }
++  float *d;
++};
++float e(float *);
++auto f(a b) {
++  float g[]{b(1, 1), b(2, 1), b(3, 1), b(1, 2), b(2, 2), b(3, 2), b(1, 3),
++            b(2, 3), b(3, 3), b(3, 2), b(1, 3), b(2, 3), b(3, 3)};
++  return b.d[0] * e(g);
++}
