@@ -28,7 +28,7 @@ EXTRA_OEMESON = "-Dxml_docs=disabled \
                 "
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)} \
-                   user-session \
+                   traditional-activation user-session \
                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                   "
 PACKAGECONFIG:class-native = ""
@@ -36,6 +36,7 @@ PACKAGECONFIG:class-nativesdk = ""
 
 PACKAGECONFIG[systemd] = "-Dsystemd=enabled -Dsystemd_system_unitdir=${systemd_system_unitdir},-Dsystemd=disabled,systemd"
 PACKAGECONFIG[x11] = "-Dx11_autolaunch=enabled,-Dx11_autolaunch=disabled, virtual/libx11 libsm"
+PACKAGECONFIG[traditional-activation] = "-Dtraditional_activation=true,-Dtraditional_activation=false"
 PACKAGECONFIG[user-session] = "-Duser_session=true -Dsystemd_user_unitdir=${systemd_user_unitdir},-Duser_session=false"
 PACKAGECONFIG[verbose-mode] = "-Dverbose_mode=true,-Dverbose_mode=false,,"
 PACKAGECONFIG[audit] = "-Dlibaudit=enabled,-Dlibaudit=disabled,audit"
@@ -152,8 +153,11 @@ do_install:append:class-target() {
 
 	chown messagebus:messagebus ${D}${localstatedir}/lib/dbus
 
-	chown root:messagebus ${D}${libexecdir}/dbus-daemon-launch-helper
-	chmod 4755 ${D}${libexecdir}/dbus-daemon-launch-helper
+	if [ "${@bb.utils.contains('PACKAGECONFIG', 'traditional-activation', '1', '0', d)}" = "1" ]
+	then
+		chown root:messagebus ${D}${libexecdir}/dbus-daemon-launch-helper
+		chmod 4755 ${D}${libexecdir}/dbus-daemon-launch-helper
+	fi
 
 	# Remove Red Hat initscript
 	rm -rf ${D}${sysconfdir}/rc.d
