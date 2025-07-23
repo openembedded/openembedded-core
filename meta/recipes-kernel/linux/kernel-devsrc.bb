@@ -208,6 +208,13 @@ do_install() {
         fi
 
         if [ "${ARCH}" = "powerpc" ]; then
+            # Copy scripts that are needed by powperpc build, but don't error if they aren't present in the source.
+            # 4.18+ needs gcc-check-mprofile-kernel.sh for MPROFILE_KERNEL, for example.
+            # See https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=abba759796f9b73eb24df9b734dd063839fc62e0
+            for script in gcc-check-mprofile-kernel.sh gcc-check-fpatchable-function-entry.sh head_check.sh relocs_check.sh unrel_branch_check.sh; do
+                cp -a --parents arch/powerpc/tools/$script $kerneldir/build/ 2>/dev/null || :
+            done
+
             # 5.0 needs these files, but don't error if they aren't present in the source
             cp -a --parents arch/${ARCH}/kernel/syscalls/syscall.tbl $kerneldir/build/ 2>/dev/null || :
             cp -a --parents arch/${ARCH}/kernel/syscalls/syscalltbl.sh $kerneldir/build/ 2>/dev/null || :
