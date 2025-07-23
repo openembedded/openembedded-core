@@ -844,7 +844,7 @@ def draw_header (ctx, headers, duration):
     toshow = [
       ('system.uname', 'uname', lambda s: s),
       ('system.release', 'release', lambda s: s),
-      ('system.cpu', 'CPU', lambda s: re.sub('model name\s*:\s*', '', s, 1)),
+      ('system.cpu', 'CPU', lambda s: re.sub(r'model name\s*:\s*', '', s, 1)),
       ('system.kernel.options', 'kernel options', lambda s: s),
     ]
 
