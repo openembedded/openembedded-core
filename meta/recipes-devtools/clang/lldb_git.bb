@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://lldb/LICENSE.TXT;md5=2e0d44968471fcde980034dbb826bea9
 
 inherit cmake pkgconfig python3native python3targetconfig
 
-# This actually just depends on LLVM but right now llvm and clang are built together
 DEPENDS = "llvm-tblgen-native clang"
 
 OECMAKE_SOURCEPATH = "${S}/lldb"
