@@ -371,6 +371,8 @@ def extents(options, xscale, trace):
             h += 30 + bar_h
         if trace.mem_stats:
             h += meminfo_bar_h
+        if trace.net_stats:
+            h += (30 + bar_h) * len(trace.net_stats)
 
     # Allow for width of process legend and offset
     if w < (720 + off_x):
