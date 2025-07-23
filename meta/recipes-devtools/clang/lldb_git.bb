@@ -24,6 +24,7 @@ EXTRA_OECMAKE = "-DLLDB_INCLUDE_TESTS=OFF \
                  -DLLVM_DIR=${STAGING_LIBDIR}/cmake/llvm/ \
                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                  -DLLDB_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/lldb-tblgen \
+                 -DLLDB_NO_INSTALL_DEFAULT_RPATH=ON \
 "
 
 PACKAGECONFIG ??= "libedit libxml2 lzma"
