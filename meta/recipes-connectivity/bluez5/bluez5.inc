@@ -81,7 +81,7 @@ EXTRA_OECONF = "\
   --without-zsh-completion-dir \
 "
 
-CFLAGS += "-DFIRMWARE_DIR=\\"${nonarch_base_libdir}/firmware\\""
+CFLAGS += "-DFIRMWARE_DIR='"${nonarch_base_libdir}/firmware"'"
 
 # bluez5 builds a large number of useful utilities but does not
 # install them.  Specify which ones we want put into ${PN}-noinst-tools.
