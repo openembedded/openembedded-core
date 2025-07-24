@@ -371,6 +371,7 @@ do_install_ptest () {
         rm -rf ${D}${PTEST_PATH}/testsuite/wget
 	sort ${B}/.config > ${D}${PTEST_PATH}/.config
 	ln -s ${base_bindir}/busybox   ${D}${PTEST_PATH}/busybox
+	sed -i -e 's|LIBC="<libc>"|LIBC=${TCLIBC}|g' ${D}${PTEST_PATH}/run-ptest
 }
 
 inherit update-alternatives
