@@ -13,7 +13,7 @@ SRC_URI = " \
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
-DEPENDS = "clang spirv-tools spirv-headers"
+DEPENDS = "llvm spirv-tools spirv-headers"
 
 inherit cmake pkgconfig python3native
 
