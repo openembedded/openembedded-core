@@ -50,6 +50,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://lttng-sessiond.service \
            file://disable-tests.patch \
            file://0001-gen-ust-events-constructor-change-rpath-to-libdir-li.patch \
+           file://0001-eventfd.cpp-Remove-the-scope-resolution-operator.patch \
            "
 
 SRC_URI[sha256sum] = "d8c39c26cec13b7bd82551cd52a22efc358b888e36ebcf9c1b60ef1c3a3c2fd3"
