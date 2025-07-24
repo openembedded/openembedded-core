@@ -29,6 +29,11 @@ SRC_URI = "https://github.com/linux-pam/linux-pam/releases/download/v${PV}/Linux
            file://CVE-2024-22365.patch \
            file://CVE-2024-10041-1.patch \
            file://CVE-2024-10041-2.patch \
+           file://0001-pam_namespace-include-stdint-h.patch \
+           file://0001-pam_inline-introduce-pam_asprint.patch \
+           file://CVE-2025-6020-01.patch \
+           file://CVE-2025-6020-02.patch \
+           file://CVE-2025-6020-03.patch \
            "
 
 SRC_URI[sha256sum] = "e4ec7131a91da44512574268f493c6d8ca105c87091691b8e9b56ca685d4f94d"
