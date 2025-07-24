@@ -12,14 +12,27 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=40ef17463fbd6f377db3c47b1cbaded8 \
 
 include lttng-platforms.inc
 
-DEPENDS = "liburcu popt libxml2 util-linux bison-native"
+DEPENDS = "liburcu popt libxml2 util-linux bison-native babeltrace2"
 RDEPENDS:${PN} = "libgcc"
 RRECOMMENDS:${PN} += "${LTTNGMODULES}"
 RDEPENDS:${PN}-ptest += "make perl bash gawk babeltrace procps perl-module-overloading coreutils util-linux kmod ${LTTNGMODULES} sed python3-core grep binutils"
 RDEPENDS:${PN}-ptest:append:libc-glibc = " glibc-utils"
 RDEPENDS:${PN}-ptest:append:libc-musl = " musl-utils"
 # babelstats.pl wants getopt-long
-RDEPENDS:${PN}-ptest += "perl-module-getopt-long"
+RDEPENDS:${PN}-ptest += "perl-module-getopt-long \
+                         babeltrace2 \
+                         lttng-ust-dev \
+                         python3-asyncio \
+                         python3-logging \
+                         python3-math \
+                         python3-numbers \
+                         python3-json \
+                         python3-io \
+                         python3-shell \
+                         python3-xml \
+"
+
+INSANE_SKIP:${PN}-ptest += "dev-deps"
 
 PYTHON_OPTION = "am_cv_python_pyexecdir='${PYTHON_SITEPACKAGES_DIR}' \
                  am_cv_python_pythondir='${PYTHON_SITEPACKAGES_DIR}' \
@@ -36,13 +49,10 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://run-ptest \
            file://lttng-sessiond.service \
            file://disable-tests.patch \
-           file://0001-compat-Define-off64_t-as-off_t-on-linux.patch \
-           file://0001-tests-add-check_skip_kernel_test-to-check-root-user-.patch \
-           file://0001-Fix-rotation-destroy-flush-fix-session-daemon-abort-.patch \
-           file://0001-fix-lttng-tools-fails-to-compile-with-libxml2-2.14.0.patch \
+           file://0001-gen-ust-events-constructor-change-rpath-to-libdir-li.patch \
            "
 
-SRC_URI[sha256sum] = "96ea42351ee112c19dad9fdc7aae93b583d9f1722b2175664a381d2d337703c4"
+SRC_URI[sha256sum] = "d8c39c26cec13b7bd82551cd52a22efc358b888e36ebcf9c1b60ef1c3a3c2fd3"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
@@ -80,11 +90,14 @@ do_install_ptest () {
             tests/regression/tools/save-load/configuration/load-42*.lttng tests/regression/tools/health/test_health.sh \
             tests/regression/tools/metadata/utils.sh tests/regression/tools/rotation/rotate_utils.sh \
             tests/regression/tools/notification/util_event_generator.sh \
+            tests/regression/tools/trace-format/ust-local-trace-pretty.expect \
+            tests/regression/tools/trace-format/kernel-local-trace-pretty.expect \
             tests/regression/tools/base-path/*.lttng; do
         install -D "${B}/$f" "${D}${PTEST_PATH}/$f"
     done
 
-    for f in tests/utils/tap-driver.sh config/test-driver src/common/config/session.xsd src/common/mi-lttng-4.1.xsd; do
+    for f in tests/utils/tap-driver.sh config/test-driver src/common/session.xsd src/common/mi-lttng-4.1.xsd \
+             tests/regression/tests.serial; do
         install -D "${S}/$f" "${D}${PTEST_PATH}/$f"
     done
 

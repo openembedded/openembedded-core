@@ -1,0 +1,43 @@
+From 673e8ef4763ea9a9c67248e6a1a7eadfc4bc278d Mon Sep 17 00:00:00 2001
+From: Liu Yiding <liuyd.fnst@fujitsu.com>
+Date: Thu, 3 Jul 2025 19:00:25 +0800
+Subject: [PATCH] gen-ust-events-constructor: change rpath to $libdir like
+ others do
+
+set rpath to abs_builddir will cause issue like:
+ERROR: lttng-tools-2.14.0-r0 do_package_qa: QA Issue: File /usr/lib/lttng-tools/ptest/tests/utils/testapp/gen-ust-events-constructor/gen-ust-events-c-constructor-so in package lttng-tools-ptest contains reference to TMPDIR [buildpaths]
+ERROR: lttng-tools-2.14.0-r0 do_package_qa: QA Issue: File /usr/lib/lttng-tools/ptest/tests/utils/testapp/gen-ust-events-constructor/gen-ust-events-constructor-so in package lttng-tools-ptest contains reference to TMPDIR [buildpaths]
+
+userspace-probe-elf-binary and userspace-probe-sdt-binary set rpath to libdir
+ |$ grep -nr "rpath" */Makefile.am
+ |gen-ust-events-constructor/Makefile.am:29:                         -rpath $(abs_builddir)
+ |userspace-probe-elf-binary/Makefile.am:8:libfoo_la_LDFLAGS = -shared -module -avoid-version -rpath $(libdir)
+ |userspace-probe-sdt-binary/Makefile.am:25:libfoo_la_LDFLAGS = -module -shared -avoid-version -rpath $(libdir)
+ |userspace-probe-sdt-binary/Makefile.am:31:libbar_la_LDFLAGS = -module -shared -avoid-version -rpath $(libdir)
+ |userspace-probe-sdt-binary/Makefile.am:37:libzzz_la_LDFLAGS = -module -shared -avoid-version -rpath $(libdir)
+
+Signed-off-by: Liu Yiding <liuyd.fnst@fujitsu.com>
+
+Upstream-Status: Submitted [https://github.com/lttng/lttng-tools/pull/171]
+
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ tests/utils/testapp/gen-ust-events-constructor/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/utils/testapp/gen-ust-events-constructor/Makefile.am b/tests/utils/testapp/gen-ust-events-constructor/Makefile.am
+index 6c09cf585..3eb26fba2 100644
+--- a/tests/utils/testapp/gen-ust-events-constructor/Makefile.am
++++ b/tests/utils/testapp/gen-ust-events-constructor/Makefile.am
+@@ -26,7 +26,7 @@ else
+ # Force the shared flag on the noinst libraries since they are
+ # only built static by default
+ FORCE_SHARED_LIB_OPTIONS = -module -shared -avoid-version \
+-			   -rpath $(abs_builddir)
++			   -rpath $(libdir)
+ 
+ noinst_LTLIBRARIES += libtp-so-provider.la libtp-so-define.la \
+ 	libtp-so_c-provider.la libtp-so_c-define.la
+-- 
+2.34.1
+
