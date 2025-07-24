@@ -30,29 +30,6 @@ inherit cmake pkgconfig python3native python3targetconfig multilib_header
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
-def get_clang_arch(bb, d, arch_var):
-    import re
-    a = d.getVar(arch_var)
-    if   re.match('(i.86|athlon|x86.64)$', a):         return 'X86'
-    elif re.match('arm$', a):                          return 'ARM'
-    elif re.match('armeb$', a):                        return 'ARM'
-    elif re.match('aarch64$', a):                      return 'AArch64'
-    elif re.match('aarch64_be$', a):                   return 'AArch64'
-    elif re.match('mips(isa|)(32|64|)(r6|)(el|)$', a): return 'Mips'
-    elif re.match('riscv32$', a):                      return 'RISCV'
-    elif re.match('riscv64$', a):                      return 'RISCV'
-    elif re.match('p(pc|owerpc)(|64)', a):             return 'PowerPC'
-    elif re.match('loongarch64$', a):                  return 'LoongArch'
-    else:
-        bb.note("'%s' is not a primary llvm architecture" % a)
-    return ""
-
-def get_clang_host_arch(bb, d):
-    return get_clang_arch(bb, d, 'HOST_ARCH')
-
-def get_clang_target_arch(bb, d):
-    return get_clang_arch(bb, d, 'TARGET_ARCH')
-
 PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-python \
                               ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
                               ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
