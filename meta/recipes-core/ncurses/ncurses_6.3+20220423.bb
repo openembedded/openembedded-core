@@ -6,6 +6,7 @@ SRC_URI += "file://0001-tic-hang.patch \
            file://CVE-2023-29491.patch \
            file://CVE-2023-50495.patch \
            file://CVE-2023-45918.patch \
+           file://CVE-2025-6141.patch \
            "
 # commit id corresponds to the revision in package version
 SRCREV = "a0bc708bc6954b5d3c0a38d92b683c3ec3135260"
