@@ -1,0 +1,85 @@
+From 5240406747fd43886618ae8194153e6fc957a82a Mon Sep 17 00:00:00 2001
+From: John Snow <jsnow@redhat.com>
+Date: Tue, 13 Aug 2024 09:35:30 -0400
+Subject: [PATCH] Remove deprecated get_event_loop calls
+
+This method was deprecated in 3.12 because it ordinarily should not be
+used from coroutines; if there is not a currently running event loop,
+this automatically creates a new event loop - which is usually not what
+you want from code that would ever run in the bottom half.
+
+In our case, we do want this behavior in two places:
+
+(1) The synchronous shim, for convenience: this allows fully sync
+programs to use QEMUMonitorProtocol() without needing to set up an event
+loop beforehand. This is intentional to fully box in the async
+complexities into the legacy sync shim.
+
+(2) The qmp_tui shell; instead of relying on asyncio.run to create and
+run an asyncio program, we need to be able to pass the current asyncio
+loop to urwid setup functions. For convenience, again, we create one if
+one is not present to simplify the creation of the TUI appliance.
+
+The remaining user of get_event_loop() was in fact one of the erroneous
+users that should not have been using this function: if there's no
+running event loop inside of a coroutine, you're in big trouble :)
+
+Upstream-Status: Backport [https://gitlab.com/qemu-project/python-qemu-qmp/-/merge_requests/33]
+Signed-off-by: John Snow <jsnow@redhat.com>
+---
+ python/qemu/qmp/legacy.py  | 9 ++++++++-
+ python/qemu/qmp/qmp_tui.py | 7 ++++++-
+ python/tests/protocol.py   | 2 +-
+ 3 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/python/qemu/qmp/legacy.py b/python/qemu/qmp/legacy.py
+index 22a2b56..ea9b803 100644
+--- a/python/qemu/qmp/legacy.py
++++ b/python/qemu/qmp/legacy.py
+@@ -86,7 +86,14 @@ def __init__(self,
+                 "server argument should be False when passing a socket")
+ 
+         self._qmp = QMPClient(nickname)
+-        self._aloop = asyncio.get_event_loop()
++
++        try:
++            self._aloop = asyncio.get_running_loop()
++        except RuntimeError:
++            # No running loop; since this is a sync shim likely to be
++            # used in fully sync programs, create one if neccessary.
++            self._aloop = asyncio.get_event_loop_policy().get_event_loop()
++
+         self._address = address
+         self._timeout: Optional[float] = None
+ 
+diff --git a/python/qemu/qmp/qmp_tui.py b/python/qemu/qmp/qmp_tui.py
+index 2d9ebbd..d11b9fc 100644
+--- a/python/qemu/qmp/qmp_tui.py
++++ b/python/qemu/qmp/qmp_tui.py
+@@ -377,7 +377,12 @@ def run(self, debug: bool = False) -> None:
+         screen = urwid.raw_display.Screen()
+         screen.set_terminal_properties(256)
+ 
+-        self.aloop = asyncio.get_event_loop()
++        try:
++            self.aloop = asyncio.get_running_loop()
++        except RuntimeError:
++            # No running asyncio event loop. Create one if necessary.
++            self.aloop = asyncio.get_event_loop_policy().get_event_loop()
++
+         self.aloop.set_debug(debug)
+ 
+         # Gracefully handle SIGTERM and SIGINT signals
+diff --git a/python/tests/protocol.py b/python/tests/protocol.py
+index 56c4d44..8dcef57 100644
+--- a/python/tests/protocol.py
++++ b/python/tests/protocol.py
+@@ -228,7 +228,7 @@ def async_test(async_test_method):
+         Decorator; adds SetUp and TearDown to async tests.
+         """
+         async def _wrapper(self, *args, **kwargs):
+-            loop = asyncio.get_event_loop()
++            loop = asyncio.get_running_loop()
+             loop.set_debug(True)
+ 
+             await self._asyncSetUp()
