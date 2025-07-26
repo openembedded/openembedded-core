@@ -1,0 +1,48 @@
+From ac2433cb8daa1279d14f8b2cd4c7e1f3405787d4 Mon Sep 17 00:00:00 2001
+From: Matt Johnston <matt@ucc.asn.au>
+Date: Fri, 1 Apr 2022 12:10:48 +0800
+Subject: [PATCH] Add m_snprintf() that won't return negative
+
+Origin: https://github.com/mkj/dropbear/commit/ac2433cb8daa1279d14f8b2cd4c7e1f3405787d4
+
+Upstream-Status: Backport [https://github.com/mkj/dropbear/commit/ac2433cb8daa1279d14f8b2cd4c7e1f3405787d4]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ dbutil.c | 13 +++++++++++++
+ dbutil.h |  2 ++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/dbutil.c b/dbutil.c
+index 5af6330..d4c3298 100644
+--- a/dbutil.c
++++ b/dbutil.c
+@@ -691,3 +691,16 @@ void fsync_parent_dir(const char* fn) {
+ 	m_free(fn_dir);
+ #endif
+ }
++
++int m_snprintf(char *str, size_t size, const char *format, ...) {
++	va_list param;
++	int ret;
++
++	va_start(param, format);
++	ret = vsnprintf(str, size, format, param);
++	va_end(param);
++	if (ret < 0) {
++		dropbear_exit("snprintf failed");
++	}
++	return ret;
++}
+diff --git a/dbutil.h b/dbutil.h
+index 2a1c82c..71cffe8 100644
+--- a/dbutil.h
++++ b/dbutil.h
+@@ -70,6 +70,8 @@ void m_close(int fd);
+ void setnonblocking(int fd);
+ void disallow_core(void);
+ int m_str_to_uint(const char* str, unsigned int *val);
++/* The same as snprintf() but exits rather than returning negative */
++int m_snprintf(char *str, size_t size, const char *format, ...);
+ 
+ /* Used to force mp_ints to be initialised */
+ #define DEF_MP_INT(X) mp_int X = {0, 0, 0, NULL}

@@ -31,6 +31,9 @@ SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
 	   file://CVE-2021-36369.patch \
 	   file://CVE-2023-36328.patch \
 	   file://CVE-2023-48795.patch \
+           file://0001-Add-m_snprintf-that-won-t-return-negative.patch \
+           file://0001-Handle-arbitrary-length-paths-and-commands-in-multih.patch \
+           file://CVE-2025-47203.patch \
 	   "
 
 PAM_SRC_URI = "file://0005-dropbear-enable-pam.patch \

@@ -1,0 +1,126 @@
+From fe15c36664a984de9e1b2386ac52d4b8577cac93 Mon Sep 17 00:00:00 2001
+From: Matt Johnston <matt@ucc.asn.au>
+Date: Mon, 1 Apr 2024 11:50:26 +0800
+Subject: [PATCH] Handle arbitrary length paths and commands in
+ multihop_passthrough_args()
+
+Origin: https://github.com/mkj/dropbear/commit/7894254afa9b1d3a836911b7ccea1fe18391b881
+Origin: https://github.com/mkj/dropbear/commit/2f1177e55f33afd676e08c9449ab7ab517fc3b30
+Origin: https://github.com/mkj/dropbear/commit/697b1f86c0b2b0caf12e9e32bab29161093ab5d4
+Origin: https://github.com/mkj/dropbear/commit/dd03da772bfad6174425066ff9752b60e25ed183
+Origin: https://github.com/mkj/dropbear/commit/d59436a4d56de58b856142a5d489a4a8fc7382ed
+
+Upstream-Status: Backport [see commits above]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ cli-runopts.c | 63 +++++++++++++++++++++------------------------------
+ 1 file changed, 26 insertions(+), 37 deletions(-)
+
+diff --git a/cli-runopts.c b/cli-runopts.c
+index 255b47e..9798f62 100644
+--- a/cli-runopts.c
++++ b/cli-runopts.c
+@@ -523,61 +523,50 @@ static void loadidentityfile(const char* filename, int warnfail) {
+ 
+ #if DROPBEAR_CLI_MULTIHOP
+ 
+-static char*
+-multihop_passthrough_args() {
+-	char *ret;
+-	int total;
+-	unsigned int len = 0;
++/* Fill out -i, -y, -W options that make sense for all
++ * the intermediate processes */
++static char* multihop_passthrough_args(void) {
++	char *args = NULL;
++	unsigned int len, total;
++#if DROPBEAR_CLI_PUBKEY_AUTH
+ 	m_list_elem *iter;
+-	/* Fill out -i, -y, -W options that make sense for all
+-	 * the intermediate processes */
++#endif
++	/* Sufficient space for non-string args */
++	len = 100;
++
++	/* String arguments have arbitrary length, so determine space required */
+ #if DROPBEAR_CLI_PUBKEY_AUTH
+ 	for (iter = cli_opts.privkeys->first; iter; iter = iter->next)
+ 	{
+ 		sign_key * key = (sign_key*)iter->item;
+-		len += 3 + strlen(key->filename);
++		len += 4 + strlen(key->filename);
+ 	}
+-#endif /* DROPBEAR_CLI_PUBKEY_AUTH */
++#endif
+ 
+-	len += 30; /* space for -W <size>, terminator. */
+-	ret = m_malloc(len);
++	args = m_malloc(len);
+ 	total = 0;
+ 
+-	if (cli_opts.no_hostkey_check)
+-	{
+-		int written = snprintf(ret+total, len-total, "-y -y ");
+-		total += written;
+-	}
+-	else if (cli_opts.always_accept_key)
+-	{
+-		int written = snprintf(ret+total, len-total, "-y ");
+-		total += written;
++	/* Create new argument string */
++
++	if (cli_opts.no_hostkey_check) {
++		total += m_snprintf(args+total, len-total, "-y -y ");
++	} else if (cli_opts.always_accept_key) {
++		total += m_snprintf(args+total, len-total, "-y ");
+ 	}
+ 
+-	if (opts.recv_window != DEFAULT_RECV_WINDOW)
+-	{
+-		int written = snprintf(ret+total, len-total, "-W %u ", opts.recv_window);
+-		total += written;
++	if (opts.recv_window != DEFAULT_RECV_WINDOW) {
++		total += m_snprintf(args+total, len-total, "-W %u ", opts.recv_window);
+ 	}
+ 
+ #if DROPBEAR_CLI_PUBKEY_AUTH
+ 	for (iter = cli_opts.privkeys->first; iter; iter = iter->next)
+ 	{
+ 		sign_key * key = (sign_key*)iter->item;
+-		const size_t size = len - total;
+-		int written = snprintf(ret+total, size, "-i %s ", key->filename);
+-		dropbear_assert((unsigned int)written < size);
+-		total += written;
++		total += m_snprintf(args+total, len-total, "-i %s ", key->filename);
+ 	}
+ #endif /* DROPBEAR_CLI_PUBKEY_AUTH */
+ 
+-	/* if args were passed, total will be not zero, and it will have a space at the end, so remove that */
+-	if (total > 0) 
+-	{
+-		total--;
+-	}
+-
+-	return ret;
++	return args;
+ }
+ 
+ /* Sets up 'onion-forwarding' connections. This will spawn
+@@ -608,7 +597,7 @@ static void parse_multihop_hostname(const char* orighostarg, const char* argv0)
+ 			&& strchr(cli_opts.username, '@')) {
+ 		unsigned int len = strlen(orighostarg) + strlen(cli_opts.username) + 2;
+ 		hostbuf = m_malloc(len);
+-		snprintf(hostbuf, len, "%s@%s", cli_opts.username, orighostarg);
++		m_snprintf(hostbuf, len, "%s@%s", cli_opts.username, orighostarg);
+ 	} else {
+ 		hostbuf = m_strdup(orighostarg);
+ 	}
+@@ -642,7 +631,7 @@ static void parse_multihop_hostname(const char* orighostarg, const char* argv0)
+ 			+ strlen(passthrough_args)
+ 			+ 30;
+ 		cli_opts.proxycmd = m_malloc(cmd_len);
+-		snprintf(cli_opts.proxycmd, cmd_len, "%s -B %s:%s %s %s", 
++		m_snprintf(cli_opts.proxycmd, cmd_len, "%s -B %s:%s %s %s",
+ 				argv0, cli_opts.remotehost, cli_opts.remoteport, 
+ 				passthrough_args, remainder);
+ #ifndef DISABLE_ZLIB
