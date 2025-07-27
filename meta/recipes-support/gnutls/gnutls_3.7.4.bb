@@ -29,6 +29,8 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://CVE-2024-28834.patch \
            file://CVE-2024-28835.patch \
            file://CVE-2024-12243.patch \
+           file://CVE-2025-32989.patch \
+           file://04939b75417cc95b7372c6f208c4bda4579bdc34 \
            "
 
 SRC_URI[sha256sum] = "e6adbebcfbc95867de01060d93c789938cf89cc1d1f6ef9ef661890f6217451f"
@@ -65,6 +67,10 @@ do_configure:prepend() {
 	for dir in . lib; do
 		rm -f ${dir}/aclocal.m4 ${dir}/m4/libtool.m4 ${dir}/m4/lt*.m4
 	done
+
+    # binary files cannot be delivered as diff
+    mkdir -p ${S}/fuzz/gnutls_x509_parser_fuzzer.repro/
+    cp ${WORKDIR}/04939b75417cc95b7372c6f208c4bda4579bdc34 ${S}/fuzz/gnutls_x509_parser_fuzzer.repro/
 }
 
 PACKAGES =+ "${PN}-openssl ${PN}-xx"
