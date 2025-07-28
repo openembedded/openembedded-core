@@ -43,14 +43,16 @@ index 39fa23766b..51d86b4009 100644
  use rustc_hir::def_id::{CrateNum, LOCAL_CRATE};
  use rustc_index::IndexVec;
  use rustc_middle::bug;
-@@ -161,44 +161,19 @@ fn calculate_type(tcx: TyCtxt<'_>, ty: CrateType) -> DependencyList {
+@@ -159,46 +159,19 @@ fn calculate_type(tcx: TyCtxt<'_>, ty: CrateType) -> DependencyList {
          }
          Linkage::Dynamic | Linkage::IncludedFromDylib => {}
      }
 -
 -    let all_dylibs = || {
 -        tcx.crates(()).iter().filter(|&&cnum| {
--            !tcx.dep_kind(cnum).macros_only() && tcx.used_crate_source(cnum).dylib.is_some()
+-            !tcx.dep_kind(cnum).macros_only()
+-                && (tcx.used_crate_source(cnum).dylib.is_some()
+-                    || tcx.used_crate_source(cnum).sdylib_interface.is_some())
 -        })
 -    };
 -

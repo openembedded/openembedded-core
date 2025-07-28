@@ -119,7 +119,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
  fn test_get_mut_poison() {
      let mut m = new_poisoned_rwlock(NonCopy(10));
  
-@@ -567,6 +576,7 @@
+@@ -571,6 +571,7 @@
  
  #[test]
  #[cfg_attr(not(panic = "unwind"), ignore = "test requires unwinding support")]
@@ -130,7 +130,7 @@ index 1a9d3d3f12f..0a9cfc48806 100644
 diff --git a/library/test/src/tests.rs b/library/test/src/tests.rs
 --- a/library/test/src/tests.rs
 +++ b/library/test/src/tests.rs
-@@ -424,6 +424,7 @@
+@@ -414,6 +414,7 @@
  }
 
  #[test]
@@ -173,7 +173,7 @@ diff --git a/compiler/rustc_data_structures/src/tagged_ptr/tests.rs b/compiler/r
 index 160af8a65d..686f4607bb 100644
 --- a/compiler/rustc_data_structures/src/tagged_ptr/tests.rs
 +++ b/compiler/rustc_data_structures/src/tagged_ptr/tests.rs
-@@ -5,6 +5,7 @@ use crate::stable_hasher::{HashStable, StableHasher};
+@@ -39,6 +39,7 @@ use crate::stable_hasher::{HashStable, StableHasher};
  }
 
  #[test]
@@ -185,19 +185,19 @@ diff --git a/library/std/tests/thread_local/tests.rs b/library/std/tests/thread_
 index 9d4f52a092..d425e5f7b7 100644
 --- a/library/std/tests/thread_local/tests.rs
 +++ b/library/std/tests/thread_local/tests.rs
-@@ -346,6 +346,7 @@ fn join_orders_after_tls_destructors() {
-
- // Test that thread::current is still available in TLS destructors.
+@@ -363,6 +363,7 @@ fn join_orders_after_tls_destructors() {
+ // ** musl: https://github.com/kraj/musl/blob/1880359b54ff7dd9f5016002bfdae4b136007dde/src/thread/pthread_key_create.c#L87
+ #[cfg(target_thread_local)]
  #[test]
 +#[ignore]
  fn thread_current_in_dtor() {
-     // Go through one round of TLS destruction first.
-     struct Defer;
+     use std::thread::Builder;
+
 diff --git a/library/alloctests/tests/sort/tests.rs b/library/alloctests/tests/sort/tests.rs
 index 14e6013f96..b670f27ab4 100644
 --- a/library/alloctests/tests/sort/tests.rs
 +++ b/library/alloctests/tests/sort/tests.rs
-@@ -915,12 +915,14 @@ gen_sort_test_fns_with_default_patterns_3_ty!(
+@@ -922,12 +922,14 @@ gen_sort_test_fns_with_default_patterns_3_ty!(
  macro_rules! instantiate_sort_test_inner {
      ($sort_impl:ty, miri_yes, $test_fn_name:ident) => {
          #[test]
@@ -239,7 +239,7 @@ index 5b8e5ff4f4a..e558fbd7bd7 100644
 +
  //@ only-linux
  //@ aux-build:dwarf-mixed-versions-lto-aux.rs
- //@ compile-flags: -C lto -g -Zdwarf-version=5
+ //@ compile-flags: -C lto -g -Cdwarf-version=5
 diff --git a/tests/codegen/dont-shuffle-bswaps.rs b/tests/codegen/dont-shuffle-bswaps.rs
 index 0e712bc3a4e..93965d990d0 100644
 --- a/tests/codegen/dont-shuffle-bswaps.rs
@@ -250,7 +250,7 @@ index 0e712bc3a4e..93965d990d0 100644
 +//@ only-arm
 +//@ only-aarch64
 +
- //@ revisions: OPT2 OPT3
+ //@ revisions: OPT2 OPT3 OPT3_S390X
  //@[OPT2] compile-flags: -Copt-level=2
  //@[OPT3] compile-flags: -C opt-level=3
 diff --git a/tests/codegen/uninhabited-transparent-return-abi.rs b/tests/codegen/uninhabited-transparent-return-abi.rs
@@ -280,3 +280,29 @@ index 57027364699..3faa7ea035e 100644
  // We used to not handle all "rustic" ABIs in a (relatively) uniform way,
  // so we failed to fix up arguments for actually passing through the ABI...
  #![feature(rust_cold_cc)]
+diff --git a/tests/codegen/simd/extract-insert-dyn.rs b/tests/codegen/simd/extract-insert-dyn.rs
+index 729f0145314..1b21356518e 100644
+--- a/tests/codegen/simd/extract-insert-dyn.rs
++++ b/tests/codegen/simd/extract-insert-dyn.rs
+@@ -1,3 +1,8 @@
++//@ only-x86
++//@ only-x86_64
++//@ only-arm
++//@ only-aarch64
++
+ //@compile-flags: -C opt-level=3 -C no-prepopulate-passes
+
+ #![feature(
+diff --git a/tests/codegen/const-vector.rs b/tests/codegen/const-vector.rs
+index 42921442e03..af0edc2ee92 100644
+--- a/tests/codegen/const-vector.rs
++++ b/tests/codegen/const-vector.rs
+@@ -1,3 +1,8 @@
++//@ only-x86
++//@ only-x86_64
++//@ only-arm
++//@ only-aarch64
++
+ //@ revisions: OPT0 OPT0_S390X
+ //@ [OPT0] ignore-s390x
+ //@ [OPT0_S390X] only-s390x

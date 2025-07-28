@@ -11,7 +11,7 @@ SRC_URI += "https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.xz;n
             file://0001-Disable-libunwind-cross-architecture-unwinding.patch;patchdir=${RUSTSRC} \
             file://triagebot.patch;patchdir=${RUSTSRC} \
 "
-SRC_URI[rust.sha256sum] = "8623b8651893e8c6aebfa45b6a90645a4f652f7b18189a0992a90d11ac2631f4"
+SRC_URI[rust.sha256sum] = "0c1dcbb4f762513d021e1a282c0ac58c0a423642b3a6bf581cafb5414df4193e"
 
 RUSTSRC = "${UNPACKDIR}/rustc-${RUST_VERSION}-src"
 
