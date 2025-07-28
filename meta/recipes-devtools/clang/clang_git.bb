@@ -162,7 +162,7 @@ EXTRA_OECMAKE:append:class-target = "\
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
 "
 
-DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native ninja-native swig-native spirv-tools-native llvm-tblgen-native"
+DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native ninja-native swig-native llvm-tblgen-native"
 DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils nativesdk-python3"
 DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} python3 ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
 
