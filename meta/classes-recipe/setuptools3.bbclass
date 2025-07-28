@@ -23,6 +23,7 @@ python do_check_backend() {
             msg = f"inherits setuptools3 but has pyproject.toml with {match[1]}, use the correct class"
             if "pep517-backend" not in (d.getVar("INSANE_SKIP") or "").split():
                 oe.qa.handle_error("pep517-backend", msg, d)
+    oe.qa.exit_if_errors(d)
 }
 addtask check_backend after do_patch before do_configure
 
