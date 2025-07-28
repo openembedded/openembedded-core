@@ -35,7 +35,7 @@ CHECKLAYER_REQUIRED_TESTS = "\
     packages-list patch-fuzz patch-status perllocalpod perm-config perm-line perm-link recipe-naming \
     pkgconfig pkgvarcheck pkgv-undefined pn-overrides shebang-size src-uri-bad symlink-to-sysroot \
     unhandled-features-check unknown-configure-option unlisted-pkg-lics uppercase-pn useless-rpaths \
-    var-undefined virtual-slash xorg-driver-abi"
+    virtual-slash xorg-driver-abi"
 
 # Elect whether a given type of error is a warning or error, they may
 # have been set by other files.

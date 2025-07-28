@@ -494,8 +494,7 @@ python do_package () {
     pn = d.getVar('PN')
 
     if not workdir or not outdir or not dest or not dvar or not pn:
-        msg = "WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package"
-        oe.qa.handle_error("var-undefined", msg, d)
+        bb.fatal("WORKDIR, DEPLOY_DIR, D, PN and PKGD all must be defined, unable to package")
         return
 
     bb.build.exec_func("package_setup_pkgv", d)
