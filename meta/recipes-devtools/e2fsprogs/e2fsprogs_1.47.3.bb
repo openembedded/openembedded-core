@@ -24,6 +24,9 @@ CFLAGS:append:riscv32 = " -D_FILE_OFFSET_BITS=64"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[fuse] = '--enable-fuse2fs,--disable-fuse2fs,fuse'
 
+# Fix e2fsprogs-native do_compile error with old kernel such as 5.10
+CACHED_CONFIGUREVARS:class-native = "ac_cv_header_linux_fsverity_h=no"
+
 # make locale rules sometimes fire, sometimes don't as git doesn't preserve
 # file mktime. Touch the files introducing non-determinism to the build
 do_compile:prepend (){
