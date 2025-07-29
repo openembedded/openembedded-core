@@ -61,3 +61,6 @@ python_pep517_do_bootstrap_install () {
 }
 
 EXPORT_FUNCTIONS do_configure do_compile do_install
+
+# Tell externalsrc this changing means it needs to reconfigure
+CONFIGURE_FILES += "pyproject.toml"

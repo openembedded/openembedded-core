@@ -17,8 +17,6 @@ meson_do_qa_configure () {
 # ERROR: Got argument buildtype as both -Dbuildtype and --buildtype. Pick one.
 MESONOPTS:remove = "--buildtype ${MESON_BUILDTYPE}"
 
-CONFIGURE_FILES = "pyproject.toml"
-
 DEPENDS += "python3-wheel-native python3-meson-python-native"
 
 def mesonpy_get_args(d):
