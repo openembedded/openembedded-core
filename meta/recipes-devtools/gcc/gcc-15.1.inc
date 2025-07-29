@@ -74,6 +74,7 @@ SRC_URI = "${BASEURI} \
            file://0026-arm-fully-validate-mem_noofs_operand-PR120351.patch \
            file://0026-fix-incorrect-preprocessor-line-numbers.patch \
            file://0027-aarch64-Fix-fma-steering-when-rename-fails-PR120119.patch \
+           file://0028-libsanitizer-Fix-build-with-glibc-2.42.patch \
 "
 
 UNPACKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/sources"
