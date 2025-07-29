@@ -28,8 +28,6 @@ LDFLAGS:append:class-target:mips = " -Wl,--no-as-needed -latomic -Wl,--as-needed
 
 inherit cmake pkgconfig python3native python3targetconfig multilib_header
 
-OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
-
 PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-python \
                               ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
                               ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
