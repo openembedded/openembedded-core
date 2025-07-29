@@ -30,6 +30,9 @@ addtask check_backend after do_patch before do_configure
 setuptools3_do_configure() {
     :
 }
+# This isn't nice, but is the best solutions to ensure clean builds for now.
+# https://github.com/pypa/setuptools/issues/4732
+do_configure[cleandirs] = "${SETUPTOOLS_SETUP_PATH}/build"
 
 setuptools3_do_compile() {
         cd ${SETUPTOOLS_SETUP_PATH}
