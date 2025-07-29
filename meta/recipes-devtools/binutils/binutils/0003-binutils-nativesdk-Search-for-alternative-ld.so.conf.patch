@@ -1,4 +1,4 @@
-From d718e17e1668880a85ff05993f0027d9c9ad6935 Mon Sep 17 00:00:00 2001
+From 96b52f92b2888e1954f619bffd17a3f55be2e27e Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Wed, 19 Feb 2020 09:51:16 -0800
 Subject: [PATCH] binutils-nativesdk: Search for alternative ld.so.conf in SDK
@@ -57,7 +57,7 @@ index 3e24bd4deb2..23d4f1f3132 100644
  AM_CFLAGS = $(WARN_CFLAGS) $(ELF_CFLAGS) $(JANSSON_CFLAGS) $(ZSTD_CFLAGS)
  
 diff --git a/ld/ldelf.c b/ld/ldelf.c
-index 4a1aa044e70..f6f3ac11a76 100644
+index f4f27fc3873..a870c39bd81 100644
 --- a/ld/ldelf.c
 +++ b/ld/ldelf.c
 @@ -943,7 +943,7 @@ ldelf_check_ld_so_conf (const struct bfd_link_needed_list *l, int force,
@@ -70,10 +70,10 @@ index 4a1aa044e70..f6f3ac11a76 100644
        if (!ldelf_parse_ld_so_conf (&info, tmppath))
  	{
 diff --git a/ld/ldmain.c b/ld/ldmain.c
-index f1c5f7035c5..cce4991b25a 100644
+index 67c60c3f80d..7878bd3922f 100644
 --- a/ld/ldmain.c
 +++ b/ld/ldmain.c
-@@ -69,6 +69,7 @@ char *program_name;
+@@ -74,6 +74,7 @@ char *program_name;
  
  /* The prefix for system library directories.  */
  const char *ld_sysroot;
