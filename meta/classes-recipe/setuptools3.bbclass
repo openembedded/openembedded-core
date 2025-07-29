@@ -33,11 +33,13 @@ setuptools3_do_configure() {
 
 setuptools3_do_compile() {
         cd ${SETUPTOOLS_SETUP_PATH}
-        STAGING_INCDIR=${STAGING_INCDIR} \
-        STAGING_LIBDIR=${STAGING_LIBDIR} \
-        ${STAGING_BINDIR_NATIVE}/python3-native/python3 setup.py \
-        bdist_wheel --verbose --dist-dir ${PEP517_WHEEL_PATH} ${SETUPTOOLS_BUILD_ARGS} || \
-        bbfatal_log "'python3 setup.py bdist_wheel ${SETUPTOOLS_BUILD_ARGS}' execution failed."
+
+        export STAGING_INCDIR=${STAGING_INCDIR}
+        export STAGING_LIBDIR=${STAGING_LIBDIR}
+
+        nativepython3 setup.py --verbose \
+            bdist_wheel --dist-dir ${PEP517_WHEEL_PATH} \
+            ${SETUPTOOLS_BUILD_ARGS}
 }
 setuptools3_do_compile[vardepsexclude] = "MACHINE"
 do_compile[cleandirs] += "${PEP517_WHEEL_PATH}"
