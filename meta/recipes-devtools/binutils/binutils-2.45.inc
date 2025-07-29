@@ -18,8 +18,6 @@ SRCBRANCH ?= "binutils-2_45-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-CVE_STATUS[CVE-2025-1153] = "cpe-stable-backport: fix available in used git hash"
-
 SRCREV ?= "2bc7af1ff7732451b6a7b09462a815c3284f9613"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
