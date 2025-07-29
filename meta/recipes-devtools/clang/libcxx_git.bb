@@ -8,7 +8,7 @@ SECTION = "base"
 require common-clang.inc
 require common-source.inc
 
-inherit cmake python3native
+inherit cmake
 
 BPN = "libcxx"
 

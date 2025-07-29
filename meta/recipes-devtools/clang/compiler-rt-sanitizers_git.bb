@@ -12,7 +12,7 @@ require common-source.inc
 
 BPN = "compiler-rt-sanitizers"
 
-inherit cmake pkgconfig python3native
+inherit cmake pkgconfig
 
 def get_compiler_rt_arch(bb, d):
     if bb.utils.contains('TUNE_FEATURES', 'armv5 thumb dsp', True, False, d):
