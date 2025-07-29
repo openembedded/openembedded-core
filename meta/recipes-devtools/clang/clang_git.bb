@@ -26,7 +26,7 @@ INHIBIT_DEFAULT_DEPS:class-native = "1"
 LDFLAGS:append:class-target:riscv32 = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
 LDFLAGS:append:class-target:mips = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
 
-inherit cmake pkgconfig python3native python3targetconfig multilib_header
+inherit cmake pkgconfig multilib_header python3-dir
 
 PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-python \
                               ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
@@ -144,8 +144,6 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                   -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ar \
                   -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
                   -DCMAKE_STRIP=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-strip \
-                  -DPYTHON_LIBRARY=${STAGING_LIBDIR}/lib${PYTHON_DIR}${PYTHON_ABI}.so \
-                  -DPYTHON_INCLUDE_DIR=${STAGING_INCDIR}/${PYTHON_DIR}${PYTHON_ABI} \
 "
 EXTRA_OECMAKE:append:class-target = "\
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
@@ -155,14 +153,12 @@ EXTRA_OECMAKE:append:class-target = "\
                   -DLLVM_TARGET_ARCH=${HOST_ARCH} \
                   -DLLVM_DEFAULT_TARGET_TRIPLE=${TARGET_SYS}${HF} \
                   -DLLVM_HOST_TRIPLE=${TARGET_SYS}${HF} \
-                  -DPYTHON_LIBRARY=${STAGING_LIBDIR}/lib${PYTHON_DIR}${PYTHON_ABI}.so \
-                  -DPYTHON_INCLUDE_DIR=${STAGING_INCDIR}/${PYTHON_DIR}${PYTHON_ABI} \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
 "
 
 DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native ninja-native swig-native llvm-tblgen-native"
-DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils nativesdk-python3"
-DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} python3 ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
+DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils"
+DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
 
 RRECOMMENDS:${PN} = "binutils"
 RRECOMMENDS:${PN}:append:class-target = "${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', ' libcxx-dev', '', d)}"
@@ -186,7 +182,6 @@ do_configure:append:class-nativesdk() {
 }
 
 do_install:append() {
-    rm -rf ${D}${libdir}/python*/site-packages/six.py
     for t in clang-pseudo clang-pseudo-gen clang-rename; do
         if [ -e ${B}${BINPATHPREFIX}/bin/$t ]; then
             install -Dm 0755 ${B}${BINPATHPREFIX}/bin/$t ${D}${bindir}/$t
