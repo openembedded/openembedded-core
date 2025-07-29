@@ -1,4 +1,4 @@
-From cd66a5301c4d84e3dbc4e30fdb9e32b341e66b3d Mon Sep 17 00:00:00 2001
+From 662d544fbed823b9bf917058762ddb54bcee5f07 Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Sun, 24 Jul 2022 07:07:29 -0700
 Subject: [PATCH] Avoid hardcoded build time paths in the output binaries
@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/support/Makefile b/support/Makefile
-index 59a9974539..c3f7302bcb 100644
+index d41278eeab..657769418e 100644
 --- a/support/Makefile
 +++ b/support/Makefile
 @@ -238,9 +238,9 @@ libsupport-inhibit-o += .o
