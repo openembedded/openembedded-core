@@ -60,6 +60,7 @@ SRC_URI = "\
     file://0037-compiler-rt-Exclude-sync_fetch_and_-for-any-pre-ARMv.patch \
     file://0038-compiler-rt-Hardcode-uptr-sptr-typedefs-on-Mips-Linu.patch \
     file://0001-libclc-allow-existing-prepare-builtins-in-standalone.patch \
+    file://no-c-index-test.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
