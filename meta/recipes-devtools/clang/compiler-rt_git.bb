@@ -25,7 +25,7 @@ TUNE_CCARGS:remove = "-no-integrated-as"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-DEPENDS += "ninja-native libgcc"
+DEPENDS += "libgcc"
 DEPENDS:append:class-target = " virtual/cross-c++ clang-cross-${TARGET_ARCH} virtual/${MLPREFIX}libc gcc-runtime"
 DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-native clang-crosssdk-${SDK_SYS} nativesdk-gcc-runtime"
 DEPENDS:append:class-native = " clang-native"
