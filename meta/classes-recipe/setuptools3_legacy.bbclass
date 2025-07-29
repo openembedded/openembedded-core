@@ -17,6 +17,7 @@
 inherit setuptools3-base
 
 B = "${WORKDIR}/build"
+do_configure[cleandirs] = "${B}"
 
 SETUPTOOLS_BUILD_ARGS ?= ""
 SETUPTOOLS_INSTALL_ARGS ?= "--root=${D} \
