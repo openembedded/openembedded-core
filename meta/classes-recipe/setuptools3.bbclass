@@ -38,6 +38,7 @@ setuptools3_do_compile() {
         export STAGING_LIBDIR=${STAGING_LIBDIR}
 
         nativepython3 setup.py --verbose \
+            build ${@oe.utils.parallel_make_argument(d, "-j %d")} \
             bdist_wheel --dist-dir ${PEP517_WHEEL_PATH} \
             ${SETUPTOOLS_BUILD_ARGS}
 }
