@@ -61,6 +61,7 @@ do_install () {
         LIB_PATH="\$OECORE_TARGET_SYSROOT/usr/lib/rustlib/${RUST_TARGET_SYS}/lib"
 	export CARGO_TARGET_${RUST_TARGET_TRIPLE}_RUSTFLAGS="--sysroot=\$OECORE_TARGET_SYSROOT/usr -C link-arg=--sysroot=\$OECORE_TARGET_SYSROOT -L \$LIB_PATH"
 	export RUST_TARGET_PATH="\$OECORE_NATIVE_SYSROOT/usr/lib/${TARGET_SYS}/rustlib"
+	export RUST_TARGET_SYS_VALUE="${RUST_TARGET_SYS}"
 	EOF
 
     chown -R root.root ${D}
