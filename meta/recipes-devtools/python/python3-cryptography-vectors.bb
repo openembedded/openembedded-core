@@ -14,10 +14,6 @@ SRC_URI[sha256sum] = "fbb0408df8ff2d2b3dbd2928bc5b7feebfdd36fb092fa8790d5778a9b9
 PYPI_PACKAGE = "cryptography_vectors"
 UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
-inherit pypi python_setuptools_build_meta
-
-DEPENDS += " \
-    python3-cryptography \
-"
+inherit pypi python_flit_core
 
 BBCLASSEXTEND = "native nativesdk"
