@@ -24,6 +24,7 @@ inherit pypi python_maturin cargo-update-recipe-crates pkgconfig
 
 DEPENDS += " \
     python3-cffi-native \
+    openssl \
 "
 
 RDEPENDS:${PN} += " \
