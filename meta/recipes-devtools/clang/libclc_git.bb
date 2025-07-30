@@ -43,6 +43,7 @@ do_install:append() {
 # Need to build a native prepare_builtins binary in target builds. The easiest
 # way to do this is with a second native cmake build tree.
 do_build_prepare_builtins() {
+    export LDFLAGS="${BUILD_LDFLAGS}"
     cmake --fresh -G Ninja \
         -S ${OECMAKE_SOURCEPATH} -B ${B_NATIVE} \
         -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${WORKDIR}/toolchain-native.cmake \
