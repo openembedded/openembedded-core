@@ -102,7 +102,7 @@ CXXFLAGS:append:armv5 = " -mfpu=vfp2"
 
 ALLOW_EMPTY:${PN} = "1"
 
-PROVIDES:append:runtime-llvm = " libunwind"
+PROVIDES:append = " ${@bb.utils.contains("TC_CXX_RUNTIME", "llvm", "libunwind", "false", d)}"
 
 do_install:append() {
     if ${@bb.utils.contains("TC_CXX_RUNTIME", "llvm", "true", "false", d)}
@@ -116,8 +116,8 @@ do_install:append() {
     fi
 }
 
-PACKAGES:append:runtime-llvm = " libunwind"
-FILES:libunwind:runtime-llvm = "${libdir}/libunwind.so.*"
+PACKAGES:append = "${@bb.utils.contains("TC_CXX_RUNTIME", "llvm", " libunwind", "", d)}"
+FILES:libunwind = "${@bb.utils.contains("TC_CXX_RUNTIME", "llvm", " ${libdir}/libunwind.so.*", "", d)}"
 # Package library module manifest path
 FILES:${PN}-dev += "${datadir}/libc++/v1/ ${libdir}/libc++.modules.json"
 
