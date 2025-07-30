@@ -21,8 +21,9 @@ B_NATIVE = "${B}-native"
 # Semicolon-separated list of targets to build
 LIBCLC_TARGETS ?= "all"
 
-EXTRA_OECMAKE = "-DLIBCLC_TARGETS_TO_BUILD=${LIBCLC_TARGETS} \
-                 -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
+EXTRA_OECMAKE = "-DLIBCLC_TARGETS_TO_BUILD=${LIBCLC_TARGETS}"
+EXTRA_OECMAKE:append:class-target = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
+EXTRA_OECMAKE:append:class-nativesdk = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
 
 # Need to build a native prepare_builtins binary in target builds. The easiest
 # way to do this is with a second native cmake build tree.
