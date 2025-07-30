@@ -25,6 +25,21 @@ EXTRA_OECMAKE = "-DLIBCLC_TARGETS_TO_BUILD=${LIBCLC_TARGETS}"
 EXTRA_OECMAKE:append:class-target = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
 EXTRA_OECMAKE:append:class-nativesdk = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
 
+do_install:append() {
+    # Convert absolute symlinks to relative ones (same directory)
+    cd ${D}
+    find . -type l | while read link; do
+        target=$(readlink "$link")
+        case "$target" in
+            /*)
+                # Extract filename and point to current directory
+                target_basename=$(basename "$target")
+                ln -sf "$target_basename" "$link"
+                ;;
+        esac
+    done
+}
+
 # Need to build a native prepare_builtins binary in target builds. The easiest
 # way to do this is with a second native cmake build tree.
 do_build_prepare_builtins() {
