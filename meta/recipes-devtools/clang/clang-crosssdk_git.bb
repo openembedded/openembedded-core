@@ -11,7 +11,8 @@ PN = "clang-crosssdk-${SDK_SYS}"
 
 inherit crosssdk
 
-DEPENDS = "clang-native nativesdk-clang-glue virtual/nativesdk-cross-binutils virtual/nativesdk-libc"
+DEPENDS = "clang-native nativesdk-clang-glue virtual/nativesdk-cross-binutils virtual/nativesdk-libc \
+	       ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld-native', '', d)}"
 
 do_install() {
     install -d ${D}${bindir}

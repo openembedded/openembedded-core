@@ -11,7 +11,7 @@ PN = "clang-cross-${TARGET_ARCH}"
 
 inherit cross
 
-DEPENDS = "clang-native virtual/cross-binutils"
+DEPENDS = "clang-native virtual/cross-binutils ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld-native', '', d)}"
 
 do_install() {
 	install -d ${D}${bindir}
@@ -19,6 +19,8 @@ do_install() {
             llvm-nm llvm-ar llvm-as llvm-ranlib llvm-strip llvm-objcopy llvm-objdump llvm-readelf \
             llvm-addr2line llvm-dwp llvm-size llvm-strings llvm-cov
 	do
-		ln -sf ../$tool ${D}${bindir}/${TARGET_PREFIX}$tool
+		if [ -x ${STAGING_BINDIR_NATIVE}/$tool ]; then
+			ln -sf ../$tool ${D}${bindir}/${TARGET_PREFIX}$tool
+		fi
 	done
 }

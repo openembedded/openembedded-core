@@ -11,7 +11,7 @@ PN = "clang-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 inherit cross-canadian
 
-DEPENDS = "nativesdk-clang binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} virtual/nativesdk-cross-binutils virtual/nativesdk-libc"
+DEPENDS = "nativesdk-clang binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} virtual/nativesdk-cross-binutils virtual/nativesdk-libc ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'nativesdk-lld', '', d)}"
 
 do_install() {
 	install -d ${D}${bindir}

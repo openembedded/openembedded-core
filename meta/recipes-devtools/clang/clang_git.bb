@@ -57,7 +57,7 @@ PACKAGECONFIG[eh] = "-DLLVM_ENABLE_EH=ON,-DLLVM_ENABLE_EH=OFF,,"
 PACKAGECONFIG[libcplusplus] = "-DCLANG_DEFAULT_CXX_STDLIB=libc++,,"
 PACKAGECONFIG[libedit] = "-DLLVM_ENABLE_LIBEDIT=ON,-DLLVM_ENABLE_LIBEDIT=OFF,libedit libedit-native"
 PACKAGECONFIG[libomp] = "-DCLANG_DEFAULT_OPENMP_RUNTIME=libomp,,"
-PACKAGECONFIG[lld] = "-DCLANG_DEFAULT_LINKER=lld,,"
+PACKAGECONFIG[lld] = "-DCLANG_DEFAULT_LINKER=lld,,,"
 PACKAGECONFIG[lto] = "-DLLVM_ENABLE_LTO=Full -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
 PACKAGECONFIG[pfm] = "-DLLVM_ENABLE_LIBPFM=ON,-DLLVM_ENABLE_LIBPFM=OFF,libpfm,"
 PACKAGECONFIG[rtti] = "-DLLVM_ENABLE_RTTI=ON,-DLLVM_ENABLE_RTTI=OFF,,"
@@ -89,7 +89,7 @@ HF[vardepvalue] = "${HF}"
 
 # Ensure that LLVM_PROJECTS does not contain compiler runtime components e.g. libcxx etc
 # they are enabled via LLVM_ENABLE_RUNTIMES
-LLVM_PROJECTS ?= "clang;clang-tools-extra;lld"
+LLVM_PROJECTS ?= "clang;clang-tools-extra"
 
 # linux hosts (.so) on Windows .pyd
 SOLIBSDEV:mingw32 = ".pyd"
@@ -141,8 +141,8 @@ DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native llvm-tblgen-native"
 DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils"
 DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
 
-RRECOMMENDS:${PN} = "binutils"
-RRECOMMENDS:${PN}:append:class-target = "${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', ' libcxx-dev', '', d)}"
+RDEPENDS:${PN}:append:class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' lld', '', d)}"
+RRECOMMENDS:${PN}:append:class-target = "binutils ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', ' libcxx-dev', '', d)}"
 
 # patch out build host paths for reproducibility
 reproducible_build_variables() {
@@ -370,10 +370,8 @@ clang_sysroot_preprocess() {
 	install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
 	install -m 0755 ${S}/llvm/tools/llvm-config/llvm-config ${SYSROOT_DESTDIR}${bindir_crossscripts}/
 	ln -sf llvm-config ${SYSROOT_DESTDIR}${bindir_crossscripts}/llvm-config${PV}
-	# LLDTargets.cmake references the lld executable(!) that some modules/plugins link to
-	install -d ${SYSROOT_DESTDIR}${bindir}
 
-	binaries="lld diagtool clang-${MAJOR_VER} clang-format clang-offload-packager
+	binaries="diagtool clang-${MAJOR_VER} clang-format clang-offload-packager
 	                clang-offload-bundler clang-scan-deps clang-repl
 	                clang-refactor clang-check clang-extdef-mapping clang-apply-replacements
 	                clang-reorder-fields clang-tidy clang-change-namespace clang-doc clang-include-fixer
