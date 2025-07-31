@@ -21,7 +21,7 @@ LIC_FILES_CHKSUM:append = " ${@bb.utils.contains('PACKAGECONFIG', 'arm-neon', 'f
 
 PROVIDES = "virtual/libsdl2"
 
-SRC_URI = "http://www.libsdl.org/release/SDL2-${PV}.tar.gz"
+SRC_URI = "https://www.libsdl.org/release/SDL2-${PV}.tar.gz"
 
 S = "${UNPACKDIR}/SDL2-${PV}"
 
