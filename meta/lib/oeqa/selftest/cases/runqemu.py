@@ -31,7 +31,7 @@ class RunqemuTests(OESelftestTestCase):
         if self.td["HOST_ARCH"] in ('i586', 'i686', 'x86_64'):
             self.fstypes += " iso hddimg"
         if self.machine == "qemux86-64":
-            self.fstypes += " wic.vmdk wic.qcow2 wic.vdi"
+            self.fstypes += " wic.vmdk wic.qcow2 wic.vdi wic.zst"
 
         self.cmd_common = "runqemu nographic"
         kvm = oe.types.qemu_use_kvm(get_bb_var('QEMU_USE_KVM'), self.td["TARGET_ARCH"])
@@ -152,6 +152,25 @@ SYSLINUX_TIMEOUT = "10"
             with open(qemu.qemurunnerlog) as f:
                 self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
 
+    @skipIfNotMachine("qemux86-64", "wic tests are qemux86-64 specific currently")
+    def test_boot_compressed_wic_by_path(self):
+        """Test runqemu /path/to/rootfs.wic.zst"""
+        rootfs = "%s.wic.zst" % (self.image_link_name)
+        rootfs = os.path.join(self.deploy_dir_image, rootfs)
+        if not os.path.exists(rootfs):
+            self.skipTest("%s not found" % rootfs)
+        cmd = "%s %s snapshot" % (self.cmd_common, rootfs)
+        with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
+
+    @skipIfNotMachine("qemux86-64", "wic tests are qemux86-64 specific currently")
+    def test_boot_compressed_wic_by_recipe(self):
+        """Test runqemu recipe-image wic.zst"""
+        cmd = "%s %s snapshot wic.zst" % (self.cmd_common, self.recipe)
+        with runqemu(self.recipe, ssh=False, launch_cmd=cmd) as qemu:
+            with open(qemu.qemurunnerlog) as f:
+                self.assertTrue(qemu.runner.logged, "Failed: %s, %s" % (cmd, f.read()))
 
 # This test was designed as a separate class to test that shutdown
 # command will shutdown qemu as expected on each qemu architecture
