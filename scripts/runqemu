@@ -1053,6 +1053,9 @@ to your build configuration.
             logoutput.append('NFS_DIR: [%s]' % self.rootfs)
         else:
             logoutput.append('ROOTFS: [%s]' % self.rootfs)
+        logoutput.append('SNAPSHOT: [%s]' %
+                         "Enabled. Changes on rootfs won't be kept after QEMU shutdown." if self.snapshot
+                         else "Disabled. Changes on rootfs will be kept after QEMU shutdown.")
         if self.ovmf_bios:
             logoutput.append('OVMF: %s' % self.ovmf_bios)
         if (self.ovmf_secboot_pkkek1):
