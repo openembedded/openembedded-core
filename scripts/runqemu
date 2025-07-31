@@ -380,7 +380,7 @@ class BaseConfig(object):
             # Check filename against self.fstypes can handle <file>.cpio.gz,
             # otherwise, its type would be "gz", which is incorrect.
             fst = ""
-            for t in self.fstypes:
+            for t in self.fstypes + self.vmtypes + self.wictypes:
                 if p.endswith(t):
                     fst = t
                     break
