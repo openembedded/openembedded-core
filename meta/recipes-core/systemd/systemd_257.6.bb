@@ -147,7 +147,6 @@ PACKAGECONFIG[tpm2] = "-Dtpm2=enabled,-Dtpm2=disabled,tpm2-tss,tpm2-tss libtss2 
 PACKAGECONFIG[default-compression-lz4] = "-Dlz4=true -Ddefault-compression=lz4,,lz4"
 PACKAGECONFIG[default-compression-xz] = "-Dxz=true -Ddefault-compression=xz,,xz"
 PACKAGECONFIG[default-compression-zstd] = "-Dzstd=true -Ddefault-compression=zstd,,zstd"
-PACKAGECONFIG[dbus] = "-Ddbus=enabled,-Ddbus=disabled,dbus"
 PACKAGECONFIG[efi] = "-Defi=true -Dbootloader=enabled,-Defi=false -Dbootloader=disabled,python3-pyelftools-native"
 PACKAGECONFIG[elfutils] = "-Delfutils=enabled,-Delfutils=disabled,elfutils,,libelf libdw"
 PACKAGECONFIG[fido] = "-Dlibfido2=enabled,-Dlibfido2=disabled,libfido2"
@@ -251,6 +250,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dsystem-alloc-gid-min=101 \
                   -Dsystem-gid-max=999 \
                   ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', '-Ddefault-mdns=no -Ddefault-llmnr=no', '', d)} \
+                  -Ddbus=disabled \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
