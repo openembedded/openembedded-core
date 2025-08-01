@@ -39,7 +39,7 @@ python_pep517_do_configure () {
 # When we have Python 3.11 we can parse pyproject.toml to determine the build
 # API entry point directly
 python_pep517_do_compile () {
-    nativepython3 -m build --no-isolation --wheel --outdir ${PEP517_WHEEL_PATH} ${PEP517_SOURCE_PATH} ${PEP517_BUILD_OPTS}
+    pyproject-build --no-isolation --wheel --outdir ${PEP517_WHEEL_PATH} ${PEP517_SOURCE_PATH} ${PEP517_BUILD_OPTS}
 }
 do_compile[cleandirs] += "${PEP517_WHEEL_PATH}"
 
