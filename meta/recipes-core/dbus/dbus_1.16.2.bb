@@ -159,12 +159,6 @@ do_install:append:class-target() {
 		chmod 4755 ${D}${libexecdir}/dbus-daemon-launch-helper
 	fi
 
-	# Remove Red Hat initscript
-	rm -rf ${D}${sysconfdir}/rc.d
-
-	# Remove empty testexec directory as we don't build tests
-	rm -rf ${D}${libdir}/dbus-1.0/test
-
 	# Remove /run as it is created on startup
 	rm -rf ${D}${runtimedir}
 }
