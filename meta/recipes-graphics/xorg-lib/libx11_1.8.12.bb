@@ -13,7 +13,6 @@ DEPENDS += "xorgproto \
             xtrans \
             libxcb \
             xorgproto-native \
-            autoconf-archive-native \
             "
 
 PROVIDES = "virtual/libx11"
