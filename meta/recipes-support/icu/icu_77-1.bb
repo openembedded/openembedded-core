@@ -6,7 +6,7 @@ same results on all platforms."
 HOMEPAGE = "https://icu.unicode.org/"
 
 LICENSE = "ICU"
-DEPENDS = "icu-native autoconf-archive-native"
+DEPENDS = "icu-native"
 
 CVE_PRODUCT = "international_components_for_unicode"
 
