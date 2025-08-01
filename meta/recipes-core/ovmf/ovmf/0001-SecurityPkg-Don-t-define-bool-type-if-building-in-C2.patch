@@ -1,0 +1,35 @@
+From 772fa11ac82579a8f6fa171e6b835f68af3f64be Mon Sep 17 00:00:00 2001
+From: Rebecca Cran <rebecca@bsdio.com>
+Date: Mon, 26 May 2025 08:01:39 -0600
+Subject: [PATCH] SecurityPkg: Don't define bool type if building in C23 mode
+
+In C23 bool is a built-in type, so it's not necessary to typedef
+bool in LibspdmStdBoolAlt.h.
+
+Signed-off-by: Rebecca Cran <rebecca@bsdio.com>
+
+Upstream-Status: Backport [https://github.com/tianocore/edk2/commit/772fa11ac82579a8f6fa171e6b835f68af3f64be]
+
+Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+---
+ .../DeviceSecurity/SpdmLib/Include/hal/LibspdmStdBoolAlt.h     | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/SecurityPkg/DeviceSecurity/SpdmLib/Include/hal/LibspdmStdBoolAlt.h b/SecurityPkg/DeviceSecurity/SpdmLib/Include/hal/LibspdmStdBoolAlt.h
+index 08af7296d0..395ef22d43 100644
+--- a/SecurityPkg/DeviceSecurity/SpdmLib/Include/hal/LibspdmStdBoolAlt.h
++++ b/SecurityPkg/DeviceSecurity/SpdmLib/Include/hal/LibspdmStdBoolAlt.h
+@@ -10,7 +10,10 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
+ #ifndef LIBSPDM_STDBOOL_ALT_H
+ #define LIBSPDM_STDBOOL_ALT_H
+ 
++// In C23, bool is a built-in type
++#if __STDC_VERSION__ < 202311L
+ typedef BOOLEAN bool;
++#endif
+ 
+ #ifndef true
+ #define true  TRUE
+-- 
+2.34.1
+
