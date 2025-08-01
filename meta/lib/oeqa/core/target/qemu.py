@@ -15,7 +15,7 @@ from collections import defaultdict
 from .ssh import OESSHTarget
 from oeqa.utils.qemurunner import QemuRunner
 
-supported_fstypes = ['ext3', 'ext4', 'cpio.gz', 'wic']
+supported_fstypes = ['ext3', 'ext4', 'cpio.gz', 'wic', 'wic.zst', 'ext3.zst', 'ext4.zst']
 
 class OEQemuTarget(OESSHTarget):
     def __init__(self, logger, server_ip, timeout=300, user='root',
