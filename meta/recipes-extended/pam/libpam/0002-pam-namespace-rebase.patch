@@ -714,7 +714,7 @@ diff --git a/modules/pam_namespace/pam_namespace.h b/modules/pam_namespace/pam_n
 index a991b4c..180e042 100644
 --- a/modules/pam_namespace/pam_namespace.h
 +++ b/modules/pam_namespace/pam_namespace.h
-@@ -44,21 +44,16 @@
+@@ -44,21 +44,17 @@
  #include <stdlib.h>
  #include <errno.h>
  #include <syslog.h>
@@ -728,7 +728,7 @@ index a991b4c..180e042 100644
 -#include <sys/resource.h>
  #include <sys/mount.h>
  #include <sys/wait.h>
--#include <libgen.h>
+ #include <libgen.h>
  #include <fcntl.h>
  #include <sched.h>
  #include <glob.h>
