@@ -13,6 +13,11 @@ EXTRA_OECONF += "--with-sysroot=${SDKPATH}/sysroots/${TUNE_PKGARCH}${TARGET_VEND
 # e.g. we switch between different machines with different tunes.
 EXTRA_OECONF[vardepsexclude] = "TUNE_PKGARCH"
 
+# lld complains
+# aarch64-yoesdk-linux-ld.lld: error: version script assignment of 'GLIBC_2.0' to symbol 'dlclose' failed: symbol not defined
+
+LDFLAGS:append:toolchain-clang = " -fuse-ld=bfd"
+
 do_install () {
 	autotools_do_install
 
