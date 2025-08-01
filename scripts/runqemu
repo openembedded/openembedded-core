@@ -198,8 +198,9 @@ class BaseConfig(object):
         self.bitbake_e = ''
         self.snapshot = False
         self.wictypes = ('wic.zst', 'wic', 'wic.vmdk', 'wic.qcow2', 'wic.vdi', "wic.vhd", "wic.vhdx")
-        self.fstypes = ('ext2', 'ext3', 'ext4', 'jffs2', 'nfs', 'btrfs',
-                        'cpio.gz', 'cpio', 'ramfs', 'tar.bz2', 'tar.gz',
+        self.fstypes = ('ext2', 'ext3', 'ext4', 'ext2.zst', 'ext3.zst', 'ext4.zst',
+                        'jffs2', 'nfs', 'btrfs', 'cpio.gz', 'cpio', 'ramfs',
+                        'tar.bz2', 'tar.gz', 'tar.zst',
                         'squashfs', 'squashfs-xz', 'squashfs-lzo',
                         'squashfs-lz4', 'squashfs-zst')
         self.vmtypes = ('hddimg', 'iso')
