@@ -9,13 +9,8 @@ inherit pypi python_flit_core
 
 DEPENDS += "python3-pyproject-hooks-native"
 
-DEPENDS:remove:class-native = "python3-build-native"
-
-# Skip dependencies as we're doing a minimal build to bootstrap
-PEP517_BUILD_OPTS:class-native = "--skip-dependency-check"
-
-do_compile:prepend:class-native() {
-    export PYTHONPATH="${S}/src"
+do_compile:class-native() {
+    python_flit_core_do_manual_build
 }
 
 RDEPENDS:${PN} += " \
