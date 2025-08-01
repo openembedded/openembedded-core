@@ -28,7 +28,7 @@ EXTRA_OECMAKE:append:class-nativesdk = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_
 # Need to build a native prepare_builtins binary in target builds. The easiest
 # way to do this is with a second native cmake build tree.
 do_build_prepare_builtins() {
-    cmake --fresh -G Ninja \
+    env -i PATH=$PATH cmake --fresh -G Ninja \
         -S ${OECMAKE_SOURCEPATH} -B ${B_NATIVE} \
         -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${WORKDIR}/toolchain-native.cmake \
         -DLIBCLC_TARGETS_TO_BUILD=
