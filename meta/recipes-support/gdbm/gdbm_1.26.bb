@@ -12,7 +12,7 @@ SRC_URI = "${GNU_MIRROR}/gdbm/gdbm-${PV}.tar.gz \
            file://ptest.patch \
           "
 
-SRC_URI[sha256sum] = "695e9827fdf763513f133910bc7e6cfdb9187943a4fec943e57449723d2b8dbf"
+SRC_URI[sha256sum] = "6a24504a14de4a744103dcb936be976df6fbe88ccff26065e54c1c47946f4a5e"
 
 inherit autotools gettext texinfo lib_package ptest
 
@@ -21,9 +21,6 @@ EXTRA_OECONF = "--enable-libgdbm-compat --without-readline"
 
 # Stop presence of dbm/nbdm on the host contaminating builds
 CACHED_CONFIGUREVARS += "ac_cv_lib_ndbm_main=no ac_cv_lib_dbm_main=no"
-
-# Not yet ready for C23
-CFLAGS += "-std=gnu11"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -41,7 +38,5 @@ do_compile_ptest() {
     oe_runmake -C tests buildtests
 }
 
-PACKAGES =+ "${PN}-compat \
-            "
-FILES:${PN}-compat = "${libdir}/libgdbm_compat${SOLIBS} \
-                     "
+PACKAGES =+ "${PN}-compat"
+FILES:${PN}-compat = "${libdir}/libgdbm_compat${SOLIBS}"
