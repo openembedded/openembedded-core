@@ -195,6 +195,12 @@ class QemuTest(OESelftestTestCase):
         cls.cmd_common = "runqemu nographic snapshot"
         cls.qemuboot_conf = "%s.qemuboot.conf" % (cls.image_link_name)
         cls.qemuboot_conf = os.path.join(cls.deploy_dir_image, cls.qemuboot_conf)
+
+        cls.write_config(cls,
+"""
+IMAGE_FSTYPES += "tar.bz2"
+""")
+
         bitbake(cls.recipe)
 
     def _start_qemu_shutdown_check_if_shutdown_succeeded(self, qemu, timeout):
