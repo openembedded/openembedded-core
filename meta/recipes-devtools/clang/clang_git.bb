@@ -139,7 +139,7 @@ EXTRA_OECMAKE:append:class-target = "\
 
 DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native llvm-tblgen-native"
 DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils"
-DEPENDS:append:class-target = " clang-cross-${TARGET_ARCH} ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
+DEPENDS:append:class-target = " ${MLPREFIX}clang-cross-${TARGET_ARCH} ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
 
 RDEPENDS:${PN}:append:class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' lld', '', d)}"
 RRECOMMENDS:${PN}:append:class-target = "binutils ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', ' libcxx-dev', '', d)}"
