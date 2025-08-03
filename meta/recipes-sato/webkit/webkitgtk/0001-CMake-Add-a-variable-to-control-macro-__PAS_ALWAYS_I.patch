@@ -60,7 +60,7 @@ diff --git a/Source/cmake/WebKitCompilerFlags.cmake b/Source/cmake/WebKitCompile
 index f5ec0a55..dfd741e7 100644
 --- a/Source/cmake/WebKitCompilerFlags.cmake
 +++ b/Source/cmake/WebKitCompilerFlags.cmake
-@@ -492,3 +492,10 @@ endif ()
+@@ -503,3 +503,10 @@ endif ()
  
  # FIXME: Enable pre-compiled headers for all ports <https://webkit.org/b/139438>
  set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
