@@ -29,16 +29,19 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[tests] = "--enable-tests,,,"
 
 EXTRA_OECONF:class-target = "--with-dbus-binding-tool=${STAGING_BINDIR_NATIVE}/dbus-binding-tool"
+EXTRA_OECONF:class-nativesdk = "--with-dbus-binding-tool=${STAGING_BINDIR_NATIVE}/dbus-binding-tool"
 
-PACKAGES += "${PN}-tests"
+PACKAGES += "${PN}-tests ${PN}-tools"
 
 FILES:${PN} = "${libdir}/lib*${SOLIBS}"
 FILES:${PN}-bash-completion += "${libexecdir}/dbus-bash-completion-helper"
 LICENSE:${PN}-bash-completion = "GPL-2.0-or-later"
-FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-glib-tool"
-FILES:${PN}-dev += "${bindir}/dbus-binding-tool"
+
+RDEPENDS:${PN}-dev += "${PN}-tools"
 
 RDEPENDS:${PN}-tests = "${PN}"
 FILES:${PN}-tests = "${datadir}/${BPN}/tests"
 
-BBCLASSEXTEND = "native"
+FILES:${PN}-tools = "${bindir}"
+
+BBCLASSEXTEND = "native nativesdk"
