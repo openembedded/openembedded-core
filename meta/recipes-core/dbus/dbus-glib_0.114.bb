@@ -15,9 +15,7 @@ SECTION = "base"
 DEPENDS = "expat glib-2.0 virtual/libintl dbus-glib-native dbus"
 DEPENDS:class-native = "glib-2.0-native dbus-native"
 
-SRC_URI = "https://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz \
-           file://no-examples.patch \
-"
+SRC_URI = "https://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-${PV}.tar.gz"
 SRC_URI[sha256sum] = "c09c5c085b2a0e391b8ee7d783a1d63fe444e96717cc1814d61b5e8fc2827a7c"
 
 inherit autotools pkgconfig gettext bash-completion gtk-doc
