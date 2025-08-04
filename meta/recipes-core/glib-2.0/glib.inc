@@ -157,6 +157,8 @@ CODEGEN_PYTHON_RDEPENDS:mingw32 = ""
 
 RDEPENDS:${PN}-codegen += "${CODEGEN_PYTHON_RDEPENDS}"
 
+RDEPENDS:${PN}-dev += "${PN}-utils"
+
 RDEPENDS:${PN}-ptest += "\
             coreutils \
             libgcc \
