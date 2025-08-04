@@ -32,9 +32,7 @@ GIR_MESON_DISABLE_FLAG = "disabled"
 
 LIBV = "2.10.0"
 
-GDK_PIXBUF_LOADERS ?= "png jpeg gif others"
-
-PACKAGECONFIG ??= "${GDK_PIXBUF_LOADERS} \
+PACKAGECONFIG ??= "png jpeg gif others \
                    ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 
 PACKAGECONFIG[png] = "-Dpng=enabled,-Dpng=disabled,libpng"
