@@ -20,7 +20,6 @@ SRC_URI[sha256sum] = "0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6
 EXTRA_OEMESON = "-Dxml_docs=disabled \
                  -Ddoxygen_docs=disabled \
                  -Dsystem_socket=/run/dbus/system_bus_socket \
-                 -Dmodular_tests=enabled \
                  -Dchecks=true \
                  -Druntime_dir=${runtimedir} \
                  -Dtest_socket_dir=/tmp \
@@ -41,9 +40,9 @@ PACKAGECONFIG[user-session] = "-Duser_session=true -Dsystemd_user_unitdir=${syst
 PACKAGECONFIG[verbose-mode] = "-Dverbose_mode=true,-Dverbose_mode=false,,"
 PACKAGECONFIG[audit] = "-Dlibaudit=enabled,-Dlibaudit=disabled,audit"
 PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux"
-PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
+PACKAGECONFIG[tests] = "-Dmodular_tests=enabled -Dinstalled_tests=true,-Dmodular_tests=disabled -Dinstalled_tests=false,glib-2.0"
 
-DEPENDS = "expat virtual/libintl glib-2.0"
+DEPENDS = "expat virtual/libintl"
 RDEPENDS:${PN} += "${PN}-common ${PN}-tools"
 RDEPENDS:${PN}:class-native = ""
 
