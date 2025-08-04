@@ -2,7 +2,7 @@ SUMMARY = "Multi-platform toolkit for creating GUIs"
 DESCRIPTION = "GTK is a multi-platform toolkit for creating graphical user interfaces. Offering a complete \
 set of widgets, GTK is suitable for projects ranging from small one-off projects to complete application suites."
 HOMEPAGE = "http://www.gtk.org"
-BUGTRACKER = "https://bugzilla.gnome.org/"
+BUGTRACKER = "https://gitlab.gnome.org/GNOME/gtk/-/issues/"
 SECTION = "libs"
 
 DEPENDS = " \
