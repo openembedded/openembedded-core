@@ -16,8 +16,7 @@ SRCREV = "e37de002fac3895e8d0b60ae2015e17bb33e2b5b"
 
 SRC_URI = "\
     git://source.denx.de/u-boot/u-boot.git;protocol=https;branch=master;tag=v${PV} \
-    file://v3-0001-Makefile-scripts-Makefile.lib-fix-_efi.so-depende.patch \
-    file://v3-0002-efi_loader-Makefile-change-apps-from-always-to-ta.patch \
+    file://0001-Makefile-add-dependency-from-lib-to-arch-ARCH-lib.patch \
     file://0001-nxp-Prepare-macros-for-KVM-changes.patch \
     file://0002-arm-io.h-Fix-io-accessors-for-KVM.patch \
     file://0003-qemu-arm-Enable-virtualizable-IO-accessors.patch \
