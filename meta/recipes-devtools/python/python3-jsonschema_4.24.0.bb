@@ -39,9 +39,8 @@ RDEPENDS:${PN} += " \
     python3-netclient \
     python3-numbers \
     python3-pprint \
-    python3-pyrsistent \
     python3-referencing \
-    python3-zipp \
+    python3-rpds-py \
 "
 
 RDEPENDS:${PN}-tests = "${PN}"
