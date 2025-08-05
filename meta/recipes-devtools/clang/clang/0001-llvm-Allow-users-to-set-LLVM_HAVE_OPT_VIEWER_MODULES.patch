@@ -1,0 +1,91 @@
+From e396fbe0e698c80e112af76fcdff8bbd61a30740 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 2 Aug 2025 17:58:20 -0700
+Subject: [PATCH] llvm: Allow users to set LLVM_HAVE_OPT_VIEWER_MODULES
+ manually from the CMake
+
+Check right before setting LLVM_HAVE_OPT_VIEWER_MODULES
+so that if the user specifies the variable on the commandline
+it takes precedence. If not, fall back to the old logic
+
+Upstream-Status: Submitted [https://github.com/llvm/llvm-project/pull/151845]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ llvm/CMakeLists.txt                  |  2 ++
+ llvm/cmake/config-ix.cmake           | 13 ++++++++++---
+ llvm/tools/opt-viewer/CMakeLists.txt | 24 +++++++++++++-----------
+ 3 files changed, 25 insertions(+), 14 deletions(-)
+
+diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
+index 4c70b98a32f9..60b786ca39c2 100644
+--- a/llvm/CMakeLists.txt
++++ b/llvm/CMakeLists.txt
+@@ -7,6 +7,8 @@ set(LLVM_COMMON_CMAKE_UTILS ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
+ include(${LLVM_COMMON_CMAKE_UTILS}/Modules/CMakePolicy.cmake
+   NO_POLICY_SCOPE)
+ 
++option(LLVM_HAVE_OPT_VIEWER_MODULES "Enable opt-viewer modules support" ON)
++
+ # Builds with custom install names and installation rpath setups may not work
+ # in the build tree. Allow these cases to use CMake's default build tree
+ # behavior by setting `LLVM_NO_INSTALL_NAME_DIR_FOR_BUILD_TREE` to do this.
+diff --git a/llvm/cmake/config-ix.cmake b/llvm/cmake/config-ix.cmake
+index a8e4e5a63244..17af3dc1e93f 100644
+--- a/llvm/cmake/config-ix.cmake
++++ b/llvm/cmake/config-ix.cmake
+@@ -805,10 +805,17 @@ foreach(module ${PYTHON_MODULES})
+   find_python_module(${module})
+ endforeach()
+ 
+-if(PY_PYGMENTS_FOUND AND PY_PYGMENTS_LEXERS_C_CPP_FOUND AND PY_YAML_FOUND)
+-  set (LLVM_HAVE_OPT_VIEWER_MODULES 1)
++if(NOT DEFINED LLVM_HAVE_OPT_VIEWER_MODULES)
++  if(PY_PYGMENTS_FOUND AND PY_PYGMENTS_LEXERS_C_CPP_FOUND AND PY_YAML_FOUND)
++    set (LLVM_HAVE_OPT_VIEWER_MODULES 1)
++  else()
++    set (LLVM_HAVE_OPT_VIEWER_MODULES 0)
++  endif()
++elseif(LLVM_HAVE_OPT_VIEWER_MODULES)
++  # Use the user-provided value
++  set(LLVM_HAVE_OPT_VIEWER_MODULES 1)
+ else()
+-  set (LLVM_HAVE_OPT_VIEWER_MODULES 0)
++  set(LLVM_HAVE_OPT_VIEWER_MODULES 0)
+ endif()
+ 
+ function(llvm_get_host_prefixes_and_suffixes)
+diff --git a/llvm/tools/opt-viewer/CMakeLists.txt b/llvm/tools/opt-viewer/CMakeLists.txt
+index 4bcf6932ee77..d231c39bcc5d 100644
+--- a/llvm/tools/opt-viewer/CMakeLists.txt
++++ b/llvm/tools/opt-viewer/CMakeLists.txt
+@@ -6,16 +6,18 @@ set (files
+   "optrecord.py"
+   "style.css")
+ 
+-foreach (file ${files})
+-  install(PROGRAMS ${file}
+-    DESTINATION "${CMAKE_INSTALL_DATADIR}/opt-viewer"
+-    COMPONENT opt-viewer)
+-endforeach (file)
++if(LLVM_HAVE_OPT_VIEWER_MODULES)
++  foreach (file ${files})
++    install(PROGRAMS ${file}
++      DESTINATION "${CMAKE_INSTALL_DATADIR}/opt-viewer"
++      COMPONENT opt-viewer)
++  endforeach (file)
+ 
+-add_custom_target(opt-viewer DEPENDS ${files})
+-set_target_properties(opt-viewer PROPERTIES FOLDER "LLVM/Tools")
+-if(NOT LLVM_ENABLE_IDE)
+-  add_llvm_install_targets("install-opt-viewer"
+-                           DEPENDS opt-viewer
+-                           COMPONENT opt-viewer)
++  add_custom_target(opt-viewer DEPENDS ${files})
++  set_target_properties(opt-viewer PROPERTIES FOLDER "LLVM/Tools")
++  if(NOT LLVM_ENABLE_IDE)
++    add_llvm_install_targets("install-opt-viewer"
++                             DEPENDS opt-viewer
++                             COMPONENT opt-viewer)
++  endif()
+ endif()
