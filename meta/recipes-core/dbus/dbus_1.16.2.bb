@@ -27,12 +27,13 @@ EXTRA_OEMESON = "-Dxml_docs=disabled \
                 "
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)} \
-                   traditional-activation user-session \
+                   message-bus traditional-activation user-session \
                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                   "
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
 
+PACKAGECONFIG[message-bus] = "-Dmessage_bus=true,-Dmessage_bus=false,expat"
 PACKAGECONFIG[systemd] = "-Dsystemd=enabled -Dsystemd_system_unitdir=${systemd_system_unitdir},-Dsystemd=disabled,systemd"
 PACKAGECONFIG[x11] = "-Dx11_autolaunch=enabled,-Dx11_autolaunch=disabled, virtual/libx11 libsm"
 PACKAGECONFIG[traditional-activation] = "-Dtraditional_activation=true,-Dtraditional_activation=false"
@@ -42,7 +43,7 @@ PACKAGECONFIG[audit] = "-Dlibaudit=enabled,-Dlibaudit=disabled,audit"
 PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux"
 PACKAGECONFIG[tests] = "-Dmodular_tests=enabled -Dinstalled_tests=true,-Dmodular_tests=disabled -Dinstalled_tests=false,glib-2.0"
 
-DEPENDS = "expat virtual/libintl"
+DEPENDS = "virtual/libintl"
 RDEPENDS:${PN} += "${PN}-common ${PN}-tools"
 RDEPENDS:${PN}:class-native = ""
 
@@ -115,26 +116,31 @@ systemctl = '${bindir}/systemctl'
 EOF
 }
 
-do_install:append:class-target() {
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
-		install -d ${D}${sysconfdir}/init.d
-		sed 's:@bindir@:${bindir}:' < ${UNPACKDIR}/dbus-1.init > ${S}/dbus-1.init.sh
-		install -m 0755 ${S}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
+do_install:append() {
+	if ${@bb.utils.contains('PACKAGECONFIG', 'message-bus', 'true', 'false', d)}; then
+		if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+			install -d ${D}${sysconfdir}/init.d
+			sed 's:@bindir@:${bindir}:' < ${UNPACKDIR}/dbus-1.init > ${S}/dbus-1.init.sh
+			install -m 0755 ${S}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
 
-		install -d ${D}${sysconfdir}/default/volatiles
-		echo "d messagebus messagebus 0755 /run/dbus none" \
-		     > ${D}${sysconfdir}/default/volatiles/99_dbus
+			install -d ${D}${sysconfdir}/default/volatiles
+			echo "d messagebus messagebus 0755 /run/dbus none" \
+			    > ${D}${sysconfdir}/default/volatiles/99_dbus
 
-		if ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'true', 'false', d)}; then
-			# symlink dbus-1.service to /dev/null to "mask" the service, This ensures
-			# that if systemd and sysv init systems are both enabled, systemd doesn't
-			# start two system buses (one from init.d/dbus-1, one from dbus.service).
-			ln -s /dev/null ${D}${systemd_system_unitdir}/dbus-1.service
+			if ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'true', 'false', d)}; then
+				# symlink dbus-1.service to /dev/null to "mask" the service, This ensures
+				# that if systemd and sysv init systems are both enabled, systemd doesn't
+				# start two system buses (one from init.d/dbus-1, one from dbus.service).
+				ln -s /dev/null ${D}${systemd_system_unitdir}/dbus-1.service
+			fi
 		fi
-	fi
 
-	mkdir -p ${D}${localstatedir}/lib/dbus
-	chown messagebus:messagebus ${D}${localstatedir}/lib/dbus
+		mkdir -p ${D}${localstatedir}/lib/dbus
+		chown messagebus:messagebus ${D}${localstatedir}/lib/dbus
+	else
+		# This gets installed even if the bus is disabled
+		rm -rf ${D}${localstatedir}
+	fi
 
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'traditional-activation', '1', '0', d)}" = "1" ]
 	then
@@ -146,20 +152,6 @@ do_install:append:class-target() {
 	rm -rf ${D}${runtimedir}
 }
 
-do_install:append:class-native() {
-	# dbus-launch has no X support so lets not install it in case the host
-	# has a more featured and useful version
-	rm -f ${D}${bindir}/dbus-launch
-}
-
-do_install:append:class-nativesdk() {
-	# dbus-launch has no X support so lets not install it in case the host
-	# has a more featured and useful version
-	rm -f ${D}${bindir}/dbus-launch
-
-	# Remove /run to avoid QA error
-	rm -rf ${D}${runtimedir}
-}
 BBCLASSEXTEND = "native nativesdk"
 
 CVE_PRODUCT += "d-bus_project:d-bus freedesktop:dbus freedesktop:libdbus"
