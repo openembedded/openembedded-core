@@ -46,15 +46,10 @@ DEPENDS = "expat virtual/libintl"
 RDEPENDS:${PN} += "${PN}-common ${PN}-tools"
 RDEPENDS:${PN}:class-native = ""
 
-inherit useradd update-rc.d
+inherit systemd useradd update-rc.d
 
 INITSCRIPT_NAME = "dbus-1"
 INITSCRIPT_PARAMS = "start 02 5 3 2 . stop 20 0 1 6 ."
-
-python __anonymous() {
-    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
-        d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
-}
 
 PACKAGES =+ "${PN}-lib ${PN}-common ${PN}-tools"
 
@@ -103,16 +98,7 @@ FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-test-tool ${datadi
 
 RDEPENDS:${PN}-ptest += "bash make dbus"
 
-PACKAGE_WRITE_DEPS += "${@bb.utils.contains('DISTRO_FEATURES','systemd sysvinit','systemd-systemctl-native','',d)}"
 pkg_postinst:dbus() {
-	# If both systemd and sysvinit are enabled, mask the dbus-1 init script
-        if ${@bb.utils.contains('DISTRO_FEATURES','systemd sysvinit','true','false',d)}; then
-		if [ -n "$D" ]; then
-			OPTS="--root=$D"
-		fi
-		systemctl $OPTS mask dbus-1.service
-	fi
-
 	if [ -z "$D" ] && [ -e /etc/init.d/populate-volatile.sh ] ; then
 		/etc/init.d/populate-volatile.sh update
 	fi
@@ -134,22 +120,20 @@ do_install:append:class-target() {
 		install -d ${D}${sysconfdir}/init.d
 		sed 's:@bindir@:${bindir}:' < ${UNPACKDIR}/dbus-1.init > ${S}/dbus-1.init.sh
 		install -m 0755 ${S}/dbus-1.init.sh ${D}${sysconfdir}/init.d/dbus-1
+
 		install -d ${D}${sysconfdir}/default/volatiles
 		echo "d messagebus messagebus 0755 /run/dbus none" \
 		     > ${D}${sysconfdir}/default/volatiles/99_dbus
-	fi
 
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
-		for i in dbus.target.wants sockets.target.wants multi-user.target.wants; do \
-			install -d ${D}${systemd_system_unitdir}/$i; done
-		install -m 0644 ${B}/bus/dbus.service ${B}/bus/dbus.socket ${D}${systemd_system_unitdir}/
-		ln -fs ../dbus.socket ${D}${systemd_system_unitdir}/dbus.target.wants/dbus.socket
-		ln -fs ../dbus.socket ${D}${systemd_system_unitdir}/sockets.target.wants/dbus.socket
-		ln -fs ../dbus.service ${D}${systemd_system_unitdir}/multi-user.target.wants/dbus.service
+		if ${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'true', 'false', d)}; then
+			# symlink dbus-1.service to /dev/null to "mask" the service, This ensures
+			# that if systemd and sysv init systems are both enabled, systemd doesn't
+			# start two system buses (one from init.d/dbus-1, one from dbus.service).
+			ln -s /dev/null ${D}${systemd_system_unitdir}/dbus-1.service
+		fi
 	fi
 
 	mkdir -p ${D}${localstatedir}/lib/dbus
-
 	chown messagebus:messagebus ${D}${localstatedir}/lib/dbus
 
 	if [ "${@bb.utils.contains('PACKAGECONFIG', 'traditional-activation', '1', '0', d)}" = "1" ]
