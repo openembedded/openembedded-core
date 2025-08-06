@@ -22,7 +22,7 @@ do_install() {
         speed=$(echo $s | cut -d\; -f 1)
         device=$(echo $s | cut -d\; -f 2)
 
-        echo "$device::respawn:${sbindir}/ttyrun $device ${base_sbindir}/getty $speed $device" >> ${D}${sysconfdir}/inittab
+        echo "$device::respawn:${sbindir}/ttyrun $device ${base_sbindir}/getty -L $speed $device" >> ${D}${sysconfdir}/inittab
     done
 
 	if [ "${USE_VT}" = "1" ]; then
