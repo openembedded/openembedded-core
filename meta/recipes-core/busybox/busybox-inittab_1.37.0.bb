@@ -21,7 +21,6 @@ do_install() {
     do
         speed=$(echo $s | cut -d\; -f 1)
         device=$(echo $s | cut -d\; -f 2)
-        label=$(echo $device | sed -e 's/tty//' | tail --bytes=5)
 
         echo "$device::respawn:${sbindir}/ttyrun $device ${base_sbindir}/getty $speed $device" >> ${D}${sysconfdir}/inittab
     done
