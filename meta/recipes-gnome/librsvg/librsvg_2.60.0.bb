@@ -7,8 +7,7 @@ HOMEPAGE = "https://gitlab.gnome.org/GNOME/librsvg"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/librsvg/issues"
 
 LICENSE = "LGPL-2.1-or-later"
-LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
-                   "
+LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
 SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native cargo-c-native"
@@ -23,9 +22,9 @@ GIDOCGEN_MESON_DISABLE_FLAG = 'disabled'
 
 require ${BPN}-crates.inc
 
-SRC_URI += "file://0001-meson.build-do-not-force-disable-introspection-and-v.patch \
-            file://0001-gdk-pixbuf-loader-meson.build-do-not-look-for-gdk-pi.patch"
-SRC_URI[archive.sha256sum] = "ecd293fb0cc338c170171bbc7bcfbea6725d041c95f31385dc935409933e4597"
+SRC_URI += "file://0001-query-rustc-append-RUSTFLAGS-to-rustc-executable.patch \
+            file://0001-Revert-meson.build-do-not-force-disable-gdk-pixbuf-l.patch"
+SRC_URI[archive.sha256sum] = "0b6ffccdf6e70afc9876882f5d2ce9ffcf2c713cbaaf1ad90170daa752e1eec3"
 
 UPSTREAM_CHECK_REGEX = "librsvg-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
@@ -53,8 +52,6 @@ inherit rust-target-config
 do_compile:prepend() {
     sed -ie 's,"linker": ".*","linker": "${RUST_TARGET_CC}",g' ${RUST_TARGETS_DIR}/${RUST_HOST_SYS}.json
 }
-
-CVE_STATUS[CVE-2018-1000041] = "not-applicable-platform: Issue only applies on Windows"
 
 EXTRA_OEMESON = "-Dtriplet=${RUST_HOST_SYS}"
 LDFLAGS += " -L${B}/rsvg"
