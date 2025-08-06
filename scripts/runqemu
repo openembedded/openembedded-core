@@ -448,8 +448,7 @@ class BaseConfig(object):
             if not shutil.which('zstd'):
                 raise RunQemuError(f"'zstd' is required to decompress {self.rootfs} but was not found in PATH")
             try:
-                with open(uncompressed_path, 'wb') as out_file:
-                    subprocess.check_call(['zstd', '-d', '-c', image_path], stdout=out_file)
+                subprocess.check_call(['zstd', '-d', image_path, '-o', uncompressed_path])
             except subprocess.CalledProcessError as e:
                 self.cleanup_files.append(uncompressed_path)
                 raise RunQemuError(f"Failed to decompress {self.rootfs}: {e}")
