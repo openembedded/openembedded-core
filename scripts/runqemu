@@ -450,11 +450,10 @@ class BaseConfig(object):
             try:
                 subprocess.check_call(['zstd', '-d', image_path, '-o', uncompressed_path])
             except subprocess.CalledProcessError as e:
-                self.cleanup_files.append(uncompressed_path)
                 raise RunQemuError(f"Failed to decompress {self.rootfs}: {e}")
-    
-            # Mark for deletion at the end
-            self.cleanup_files.append(uncompressed_path)
+            finally:
+                # Mark temporary file for deletion
+                self.cleanup_files.append(uncompressed_path)
     
         # Use the decompressed image as the rootfs
         self.rootfs = uncompressed_path
