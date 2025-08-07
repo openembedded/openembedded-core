@@ -1038,7 +1038,7 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
             if progress:
                 bb.event.fire(bb.event.ProcessProgress(msg, next(cnt_tasks_done)), d)
-            bb.event.check_for_interrupts(d)
+            bb.event.check_for_interrupts()
 
         tasklist = []
         for tid in missed:
@@ -1298,7 +1298,7 @@ python sstate_eventhandler_reachablestamps() {
                 lines.remove(r)
                 removed = removed + 1
                 bb.event.fire(bb.event.ProcessProgress(msg, removed), d)
-                bb.event.check_for_interrupts(d)
+                bb.event.check_for_interrupts()
 
             bb.event.fire(bb.event.ProcessFinished(msg), d)
 
@@ -1368,7 +1368,7 @@ python sstate_eventhandler_stalesstate() {
                     bb.utils.remove(stamp)
                 removed = removed + 1
                 bb.event.fire(bb.event.ProcessProgress(msg, removed), d)
-                bb.event.check_for_interrupts(d)
+                bb.event.check_for_interrupts()
 
             bb.event.fire(bb.event.ProcessFinished(msg), d)
 }
