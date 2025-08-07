@@ -9,8 +9,8 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=4ca2d6799091aaa98a8520f1b793939b"
 
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-Utility-Libraries.git;branch=vulkan-sdk-1.4.313;protocol=https"
-SRCREV = "4e246c56ec5afb5ad66b9b04374d39ac04675c8e"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-Utility-Libraries.git;branch=vulkan-sdk-1.4.321;protocol=https"
+SRCREV = "ec329e2721921f79743b90307ee047d08e057788"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 

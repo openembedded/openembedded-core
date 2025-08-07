@@ -1,10 +1,10 @@
 SUMMARY = "Machine-readable files for the SPIR-V Registry"
 SECTION = "graphics"
 HOMEPAGE = "https://www.khronos.org/registry/spir-v"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d14ee3b13f42e9c9674acc5925c3d741"
+LICENSE = "MIT & CC-BY-4.0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=a0dcaa512cc2dee95fe0fd791ee83a18"
 
-SRCREV = "aa6cef192b8e693916eb713e7a9ccadf06062ceb"
+SRCREV = "2a611a970fdbc41ac2e3e328802aed9985352dca"
 SRC_URI = "git://github.com/KhronosGroup/SPIRV-Headers;protocol=https;branch=main"
 PE = "1"
 # These recipes need to be updated in lockstep with each other:

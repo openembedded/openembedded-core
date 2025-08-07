@@ -11,7 +11,7 @@ LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=1bc355d8c4196f774c8b87ed1a8dd625"
 SRC_URI = "git://github.com/KhronosGroup/Vulkan-Headers.git;branch=main;protocol=https"
 
-SRCREV = "409c16be502e39fe70dd6fe2d9ad4842ef2c9a53"
+SRCREV = "2cd90f9d20df57eac214c148f3aed885372ddcfe"
 
 inherit cmake
 
