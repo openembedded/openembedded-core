@@ -23,6 +23,9 @@ S = "${UNPACKDIR}/numpy-${PV}"
 
 PACKAGECONFIG[svml] = "-Ddisable-svml=false,-Ddisable-svml=true"
 
+# the overflow tests fail with compiler-rt on aarch64
+LDFLAGS:append:toolchain-clang:aarch64 = " -rtlib=libgcc -unwindlib=libgcc"
+
 # Remove references to buildpaths from numpy's __config__.py
 do_install:append() {
     sed -i \
