@@ -51,10 +51,10 @@ python() {
     Enable ccache for the recipe
     """
     pn = d.getVar('PN')
-    if ("ccache" in d.getVar("HOSTTOOLS").split() or
+    if (not bb.utils.to_boolean(d.getVar('CCACHE_DISABLE')) and
+        ("ccache" in d.getVar("HOSTTOOLS").split() or
         pn in d.getVar('CCACHE_NATIVE_RECIPES_ALLOWED') or
-        not (bb.data.inherits_class("native", d) or
-        bb.utils.to_boolean(d.getVar('CCACHE_DISABLE')))):
+        not bb.data.inherits_class("native", d))):
         d.appendVar('DEPENDS', ' ccache-native')
         d.setVar('CCACHE', 'ccache ')
 }
