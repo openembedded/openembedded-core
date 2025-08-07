@@ -62,6 +62,7 @@ SRC_URI = "\
     file://0001-libclc-allow-existing-prepare-builtins-in-standalone.patch \
     file://no-c-index-test.patch \
     file://0001-llvm-Allow-users-to-set-LLVM_HAVE_OPT_VIEWER_MODULES.patch \
+    file://0001-compiler-rt-AArch64-Add-GCS-property-in-assembly-fil.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
