@@ -15,7 +15,7 @@ DEPENDS = "clang-native virtual/cross-binutils ${@bb.utils.contains('DISTRO_FEAT
 
 do_install() {
 	install -d ${D}${bindir}
-	for tool in clang clang++ clang-tidy lld ld.lld llvm-profdata \
+	for tool in clang-tidy lld ld.lld llvm-profdata \
             llvm-nm llvm-ar llvm-as llvm-ranlib llvm-strip llvm-objcopy llvm-objdump llvm-readelf \
             llvm-addr2line llvm-dwp llvm-size llvm-strings llvm-cov
 	do
@@ -23,4 +23,10 @@ do_install() {
 			ln -sf ../$tool ${D}${bindir}/${TARGET_PREFIX}$tool
 		fi
 	done
+	# GNU Linker and assembler is needed in same directory as clang binaries else
+	# it will fallback to host linker which is not desired
+	install -m 0755 ${STAGING_BINDIR_NATIVE}/clang ${D}${bindir}/${TARGET_PREFIX}clang
+	ln -sf ${TARGET_PREFIX}clang ${D}${bindir}/${TARGET_PREFIX}clang++
 }
+# clang driver being copied above is already stripped
+INHIBIT_SYSROOT_STRIP = "1"
