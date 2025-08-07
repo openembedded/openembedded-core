@@ -50,6 +50,10 @@ export ENC2XS_NO_COMMENTS = "1"
 
 CFLAGS += "-D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
+# Perl built with clang runs into sefaults with clang-21+
+# https://github.com/llvm/llvm-project/issues/152241
+CFLAGS:append:toolchain-clang = " -fno-strict-aliasing"
+
 do_configure:prepend() {
     rm -rf ${B}
     cp -rfp ${S} ${B}
