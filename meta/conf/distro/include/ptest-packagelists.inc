@@ -101,6 +101,7 @@ PTESTS_SLOW = "\
     curl \
     dbus \
     dosfstools \
+    dpkg \
     e2fsprogs \
     elfutils \
     gettext \

@@ -6,6 +6,7 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=1.22.
            file://remove-tar-no-timestamp.patch \
            file://arch_pm.patch \
            file://add_armeb_triplet_entry.patch \
+           file://run-ptest \
            file://0002-Adapt-to-linux-wrs-kernel-version-which-has-characte.patch \
            file://0001-script.c-avoid-use-of-chroot.patch \
            file://0004-The-lutimes-function-doesn-t-work-properly-for-all-s.patch \
