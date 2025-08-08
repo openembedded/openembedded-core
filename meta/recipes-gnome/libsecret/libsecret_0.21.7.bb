@@ -13,7 +13,7 @@ inherit gnomebase gi-docgen vala gobject-introspection manpages
 DEPENDS += "glib-2.0 libgcrypt gettext-native"
 
 SRC_URI += "file://0001-meson-add-option-to-disable-pam-tests.patch"
-SRC_URI[archive.sha256sum] = "747b8c175be108c880d3adfb9c3537ea66e520e4ad2dccf5dce58003aeeca090"
+SRC_URI[archive.sha256sum] = "6b452e4750590a2b5617adc40026f28d2f4903de15f1250e1d1c40bfd68ed55e"
 
 EXTRA_OEMESON += "-Dpam-tests=false"
 
