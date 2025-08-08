@@ -25,12 +25,12 @@ index bb7cebf5a748..351cc31ef2de 100644
 @@ -56,10 +56,12 @@ if with_tests
    asm_fw = custom_target('afuc_test.fw',
      output: 'afuc_test.fw',
-     command: [asm, files('../.gitlab-ci/traces/afuc_test.asm'), '@OUTPUT@'],
+     command: [asm, files('../tests/traces/afuc_test.asm'), '@OUTPUT@'],
 +    env: {'RNN_PATH': rnn_src_path},
    )
    asm_fw_a7xx = custom_target('afuc_test_a7xx.fw',
      output: 'afuc_test_a7xx.fw',
-     command: [asm, files('../.gitlab-ci/traces/afuc_test_a7xx.asm'), '@OUTPUT@'],
+     command: [asm, files('../tests/traces/afuc_test_a7xx.asm'), '@OUTPUT@'],
 +    env: {'RNN_PATH': rnn_src_path},
    )
    test('afuc-asm',
@@ -38,13 +38,13 @@ index bb7cebf5a748..351cc31ef2de 100644
 @@ -120,11 +122,13 @@ if cc.sizeof('size_t') > 4
      disasm_fw = custom_target('afuc_test.asm',
        output: 'afuc_test.asm',
-       command: [disasm, '-u', files('../.gitlab-ci/reference/afuc_test.fw')],
+       command: [disasm, '-u', files('../tests/reference/afuc_test.fw')],
 +      env: {'RNN_PATH': rnn_src_path},
        capture: true
      )
      disasm_fw_a7xx = custom_target('afuc_test_a7xx.asm',
        output: 'afuc_test_a7xx.asm',
-       command: [disasm, '-u', files('../.gitlab-ci/reference/afuc_test_a7xx.fw')],
+       command: [disasm, '-u', files('../tests/reference/afuc_test_a7xx.fw')],
 +      env: {'RNN_PATH': rnn_src_path},
        capture: true
      )
@@ -56,14 +56,14 @@ index 469eeb4eb597..dfa1c12d0d9f 100644
 @@ -194,6 +194,7 @@ if dep_lua.found() and dep_libarchive.found()
        log = custom_target(name + '.log',
          output: name + '.log',
-         command: [cffdump, '--unit-test', args, files('../.gitlab-ci/traces/' + name + '.rd.gz')],
+         command: [cffdump, '--unit-test', args, files('../tests/traces/' + name + '.rd.gz')],
 +        env: {'RNN_PATH': rnn_src_path},
          capture: true,
        )
        test('cffdump-' + name,
 @@ -247,7 +248,8 @@ if with_tests
        output: name + '.log',
-       command: [crashdec, args, files('../.gitlab-ci/traces/' + name + '.devcore')],
+       command: [crashdec, args, files('../tests/traces/' + name + '.devcore')],
        capture: true,
 -      env: {'GALLIUM_DUMP_CPU': 'false'},
 +      env: {'GALLIUM_DUMP_CPU': 'false',
