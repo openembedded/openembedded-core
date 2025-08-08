@@ -37,6 +37,7 @@ EXTRA_OECONF = "--disable-ldap \
 		--with-readline=${STAGING_LIBDIR}/.. \
 		--with-mailprog=${sbindir}/sendmail \
 		--enable-gpg-is-gpg2 \
+		--disable-tests \
                "
 
 # A minimal package containing just enough to run gpg+gpgagent (E.g. use gpgme in opkg)
