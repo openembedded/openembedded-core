@@ -174,18 +174,14 @@ def any_distro_features(d, features, truevalue="1", falsevalue=""):
     """
     return bb.utils.contains_any("DISTRO_FEATURES", features, truevalue, falsevalue, d)
 
-def parallel_make(d, makeinst=False):
+def parallel_make_value(pm):
     """
     Return the integer value for the number of parallel threads to use when
-    building, scraped out of PARALLEL_MAKE. If no parallelization option is
-    found, returns None
+    building, scraped out of given string. If no parallelization option is
+    found, returns empty string
 
-    e.g. if PARALLEL_MAKE = "-j 10", this will return 10 as an integer.
+    e.g. if string is "-j 10", this will return 10 as an integer.
     """
-    if makeinst:
-        pm = (d.getVar('PARALLEL_MAKEINST') or '').split()
-    else:
-        pm = (d.getVar('PARALLEL_MAKE') or '').split()
     # look for '-j' and throw other options (e.g. '-l') away
     while pm:
         opt = pm.pop(0)
@@ -199,6 +195,20 @@ def parallel_make(d, makeinst=False):
         return int(v)
 
     return ''
+
+def parallel_make(d, makeinst=False):
+    """
+    Return the integer value for the number of parallel threads to use when
+    building, scraped out of PARALLEL_MAKE. If no parallelization option is
+    found, returns empty string
+
+    e.g. if PARALLEL_MAKE = "-j 10", this will return 10 as an integer.
+    """
+    if makeinst:
+        pm = (d.getVar('PARALLEL_MAKEINST') or '').split()
+    else:
+        pm = (d.getVar('PARALLEL_MAKE') or '').split()
+    return parallel_make_value(pm)
 
 def parallel_make_argument(d, fmt, limit=None, makeinst=False):
     """
