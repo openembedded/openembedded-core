@@ -19,7 +19,7 @@ UPSTREAM_CHECK_REGEX = "gcr-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
 REQUIRED_DISTRO_FEATURES = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'opengl', '', d)}"
 
-SRC_URI[archive.sha256sum] = "b2f070fff1840eef70546a28be80235427c116aadc593b5b68ccc869be3aa09d"
+SRC_URI[archive.sha256sum] = "0c3c341e49f9f4f2532a4884509804190a0c2663e6120360bb298c5d174a8098"
 
 PACKAGECONFIG ??= " \
 	${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
@@ -55,3 +55,12 @@ ssh-add = '${bindir}/ssh-add'
 ssh-agent = '${bindir}/ssh-agent'
 EOF
 }
+
+# gnome_verdir is coming from gnomebase.bbclass, which seems to work
+# with gcr as long as its version has 3 sections (x.y.z).
+# This version is 4.4.0.1 - add a custom version parser, otherwise the
+# original parser constructs invalid download URL.
+# It can be removed with the next update, when/if the version has only
+# 3 sections again.
+def gnome_verdir(v):
+    return ".".join(v.split(".")[:2]) or v
