@@ -12,11 +12,12 @@ DEPENDS = "openssl"
 
 inherit pkgconfig rust cargo cargo-update-recipe-crates ptest-cargo
 
-SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=https;branch=main \
-	file://0001-Use-optional-env-vars-to-force-runtime-paths-in-test.patch \
+SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=https;branch=main;tag=v${PV} \
+           file://0001-Use-optional-env-vars-to-force-runtime-paths-in-test.patch \
+           file://0001-tests-build-lib-for-symbols-tests-conditionally.patch \
+           file://run-ptest \
 "
-
-SRCREV = "0667e04ae7fb8cf0490919978d69883d16400e41"
+SRCREV = "cd090b02119565c6d171fa9a892790c966cf10ef"
 
 require ${BPN}-crates.inc
 

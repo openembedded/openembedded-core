@@ -1,0 +1,41 @@
+From aaae1cc05c906b1d413e02f9da0b908e4cf9456d Mon Sep 17 00:00:00 2001
+From: Gyorgy Sarvari <skandigraun@gmail.com>
+Date: Fri, 8 Aug 2025 18:17:39 +0200
+Subject: [PATCH] tests: build lib for symbols tests conditionally
+
+When the tests are executed, cargo might not be available,
+however the library could be built already.
+
+An example of when this could happen is cross-compiling for
+embedded systems: when the library is compiled for a different
+(potentially low powered) system, then at runtime frequently
+there is no rust toolchain available to build the library;
+however the library is usually already built and installed.
+
+To be able to run the test on pre-built artifacts, introduce
+an environment variable, "DONT_BUILD_TEST_LIB", which, if
+present with any value, will skip building the library.
+
+Upstream-Status: Submitted [https://github.com/rpm-software-management/rpm-sequoia/pull/99]
+
+Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
+---
+ tests/symbols.rs | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tests/symbols.rs b/tests/symbols.rs
+index c532a15..0c4d268 100644
+--- a/tests/symbols.rs
++++ b/tests/symbols.rs
+@@ -9,7 +9,10 @@ use assert_cmd::assert::OutputAssertExt;
+ #[test]
+ fn symbols() -> anyhow::Result<()> {
+     // Make sure the library is built.
+-    Command::new("cargo").arg("build").ok()?;
++    let skip_build_library = env::var("TEST_DONT_BUILD_LIB").is_ok();
++    if ! skip_build_library {
++        Command::new("cargo").arg("build").ok()?;
++    }
+ 
+     // We want the location of the build directory (e.g.,
+     // `/tmp/rpm-sequoia/debug`).
