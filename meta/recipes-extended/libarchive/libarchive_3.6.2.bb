@@ -39,6 +39,9 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://CVE-2025-5915.patch \
            file://CVE-2025-5916.patch \
            file://CVE-2025-5917.patch \
+           file://0001-FILE-seeking-support-2539.patch \
+           file://0001-Improve-lseek-handling-2564.patch \
+           file://CVE-2025-5918.patch \
            "
 UPSTREAM_CHECK_URI = "http://libarchive.org/"
 
