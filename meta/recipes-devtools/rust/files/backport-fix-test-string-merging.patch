@@ -1,0 +1,27 @@
+From 2d51acd2fbcbadb6f30709c5dd305494d413d388 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Fri, 18 Jul 2025 19:44:20 +0200
+Subject: [PATCH] tests: assembly: cstring-merging: Disable GlobalMerge pass
+
+The test relies on LLVM not merging all the globals into one and would
+currently otherwise fail on powerpc64le.
+
+Signed-off-by: Peter Tatrai <Peter.Tatrai@siemens.com>
+Upstream-Status: Backport [https://github.com/rust-lang/rust/commit/2d51acd2fbcbadb6f30709c5dd305494d413d388]
+---
+ tests/assembly/cstring-merging.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/assembly/cstring-merging.rs b/tests/assembly/cstring-merging.rs
+index f7d0775f7affd..03688e0068b79 100644
+--- a/tests/assembly/cstring-merging.rs
++++ b/tests/assembly/cstring-merging.rs
+@@ -2,7 +2,7 @@
+ // other architectures (including ARM and x86-64) use the prefix `.Lanon.`
+ //@ only-linux
+ //@ assembly-output: emit-asm
+-//@ compile-flags: --crate-type=lib -Copt-level=3
++//@ compile-flags: --crate-type=lib -Copt-level=3 -Cllvm-args=-enable-global-merge=0
+ //@ edition: 2024
+ 
+ use std::ffi::CStr;
