@@ -2,11 +2,11 @@ require gcc-common.inc
 
 # Third digit in PV should be incremented after a minor release
 
-PV = "15.1.0"
+PV = "15.2.0"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "15.1.0"
+BINV = "15.2.0"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
@@ -43,7 +43,7 @@ LIC_FILES_CHKSUM = "\
 RELEASE ?= "${PV}"
 BASEURI ?= "${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.xz"
 SOURCEDIR ?= "gcc-${PV}"
-SRC_URI[sha256sum] = "e2b09ec21660f01fecffb715e0120265216943f038d0e48a9868713e54f06cea"
+SRC_URI[sha256sum] = "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e"
 
 SRC_URI = "${BASEURI} \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
@@ -71,10 +71,6 @@ SRC_URI = "${BASEURI} \
            file://0023-Fix-install-path-of-linux64.h.patch \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
-           file://0026-arm-fully-validate-mem_noofs_operand-PR120351.patch \
-           file://0026-fix-incorrect-preprocessor-line-numbers.patch \
-           file://0027-aarch64-Fix-fma-steering-when-rename-fails-PR120119.patch \
-           file://0028-libsanitizer-Fix-build-with-glibc-2.42.patch \
 "
 
 UNPACKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/sources"
