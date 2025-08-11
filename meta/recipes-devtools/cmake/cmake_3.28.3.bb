@@ -44,8 +44,10 @@ EXTRA_OECMAKE=" \
     -DKWSYS_CHAR_IS_SIGNED=1 \
     -DBUILD_CursesDialog=0 \
     -DKWSYS_LFS_WORKS=1 \
-    -DCMake_ENABLE_DEBUGGER=0 \
 "
+
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[debugger] = "-DCMake_ENABLE_DEBUGGER=1,-DCMake_ENABLE_DEBUGGER=0,"
 
 do_install:append:class-nativesdk() {
     mkdir -p ${D}${datadir}/cmake
