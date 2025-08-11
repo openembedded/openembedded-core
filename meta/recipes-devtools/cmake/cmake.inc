@@ -19,7 +19,7 @@ CMAKE_MAJOR_VERSION = "${@'.'.join(d.getVar('PV').split('.')[0:2])}"
 SRC_URI = "https://cmake.org/files/v${CMAKE_MAJOR_VERSION}/cmake-${PV}.tar.gz \
            "
 
-SRC_URI[sha256sum] = "8d3537b7b7732660ea247398f166be892fe6131d63cc291944b45b91279f3ffb"
+SRC_URI[sha256sum] = "81ee8170028865581a8e10eaf055afb620fa4baa0beb6387241241a975033508"
 
 UPSTREAM_CHECK_REGEX = "cmake-(?P<pver>\d+(\.\d+)+)\.tar"
 
