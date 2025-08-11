@@ -4,6 +4,8 @@ ignore them during rust oe-selftest.
 Upstream-Status: Inappropriate [OE testing specific]
 
 Signed-off-by: Yash Shinde <Yash.Shinde@windriver.com>
+# added executable-no-mangle-strip.rs ignore
+Signed-off-by: Peter Tatrai <Peter.Tatrai@siemens.com>
 ---
 diff --git a/compiler/rustc_errors/src/markdown/tests/term.rs b/compiler/rustc_errors/src/markdown/tests/term.rs
 --- a/compiler/rustc_errors/src/markdown/tests/term.rs
@@ -306,3 +308,16 @@ index 42921442e03..af0edc2ee92 100644
  //@ revisions: OPT0 OPT0_S390X
  //@ [OPT0] ignore-s390x
  //@ [OPT0_S390X] only-s390x
+
+diff --git a/tests/ui/linking/executable-no-mangle-strip.rs b/tests/ui/linking/executable-no-mangle-strip.rs
+index cc283dc53..73cbab9c0 100644
+--- a/tests/ui/linking/executable-no-mangle-strip.rs
++++ b/tests/ui/linking/executable-no-mangle-strip.rs
+@@ -1,5 +1,7 @@
+ //@ run-pass
+ //@ ignore-windows-gnu: only statics marked with used can be GC-ed on windows-gnu
++//@ ignore-powerpc: this test is not working on powerpc
++//  bug report: https://github.com/rust-lang/rust/issues/144777
+ 
+ // Regression test for <https://github.com/rust-lang/rust/issues/139744>.
+ // Functions in the binary marked with no_mangle should be GC-ed if they
