@@ -24,3 +24,5 @@ API = "--disable-obsolete-api"
 EXTRA_OECONF += "${API}"
 
 BBCLASSEXTEND = "native nativesdk"
+# Needed until https://github.com/besser82/libxcrypt/issues/181 is addressed
+LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', '-Wl,--undefined-version', '', d)}"
