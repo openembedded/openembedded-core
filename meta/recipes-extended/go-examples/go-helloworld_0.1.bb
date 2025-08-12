@@ -2,8 +2,8 @@ DESCRIPTION = "This is a simple example recipe that cross-compiles a Go program.
 SECTION = "examples"
 HOMEPAGE = "https://golang.org/"
 
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://go.googlesource.com/example;branch=master;protocol=https"
 SRCREV = "787a929d5a0dfb8bbfcdd2c4a62e0fd89466113f"
