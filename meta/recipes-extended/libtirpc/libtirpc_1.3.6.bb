@@ -12,6 +12,7 @@ PROVIDES = "virtual/librpc"
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://0001-Update-declarations-to-allow-compile-with-gcc-15.patch \
            file://0002-update-signal-and-key_call-declarations-to-allow-com.patch \
+           file://0001-Add-conditional-version-script-support.patch \
           "
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/libtirpc/files/libtirpc/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)/"
@@ -24,8 +25,11 @@ inherit autotools pkgconfig
 PACKAGECONFIG ??= "\
 	${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
+PACKAGECONFIG:append:libc-musl = " rpcdb"
+
 PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6"
 PACKAGECONFIG[gssapi] = "--enable-gssapi,--disable-gssapi,krb5"
+PACKAGECONFIG[rpcdb] = "--enable-rpcdb,--disable-rpcdb,"
 
 do_install:append() {
 	test -e ${D}${sysconfdir}/netconfig && chown root:root ${D}${sysconfdir}/netconfig
