@@ -59,12 +59,26 @@ python do_compile() {
     )
 
     # Prepare a kernel image section.
-    shutil.copyfile(os.path.join(kernel_deploydir, "linux.bin"), "linux.bin")
-    with open(os.path.join(kernel_deploydir, "linux_comp")) as linux_comp_f:
-        linux_comp = linux_comp_f.read()
-    root_node.fitimage_emit_section_kernel("kernel-1", "linux.bin", linux_comp,
+    # Construct the full path to linux.bin
+    linux_bin_path = os.path.join(kernel_deploydir, "linux.bin")
+
+    # Check if linux.bin exists
+    if os.path.exists(linux_bin_path):
+        # Copy linux.bin to current directory
+        shutil.copyfile(linux_bin_path, "linux.bin")
+
+        # Read linux_comp file
+        linux_comp_path = os.path.join(kernel_deploydir, "linux_comp")
+        with open(linux_comp_path, 'r') as linux_comp_f:
+            linux_comp = linux_comp_f.read()
+
+        # Emit kernel image section
+        root_node.fitimage_emit_section_kernel("kernel-1", "linux.bin", linux_comp,
         d.getVar('UBOOT_LOADADDRESS'), d.getVar('UBOOT_ENTRYPOINT'),
         d.getVar('UBOOT_MKIMAGE_KERNEL_TYPE'), d.getVar("UBOOT_ENTRYSYMBOL"))
+    else:
+        bb.note("linux.bin not found. Skipping kernel image preparation. ")
+
 
     # Prepare a DTB image section
     kernel_devicetree = d.getVar('KERNEL_DEVICETREE')
