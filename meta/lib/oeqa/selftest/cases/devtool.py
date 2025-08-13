@@ -1958,13 +1958,11 @@ class DevtoolUpgradeTests(DevtoolBase):
         self.assertNotIn(recipe, result.output)
         self.assertNotExists(os.path.join(self.workspacedir, 'recipes', recipe), 'Recipe directory should not exist after resetting')
 
-    def test_devtool_upgrade_git(self):
+    def _test_devtool_upgrade_git_by_recipe(self, recipe, commit):
         # Check preconditions
         self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
         self.track_for_cleanup(self.workspacedir)
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        recipe = 'devtool-upgrade-test2'
-        commit = '6cc6077a36fe2648a5f993fe7c16c9632f946517'
         oldrecipefile = get_bb_var('FILE', recipe)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
@@ -1993,6 +1991,12 @@ class DevtoolUpgradeTests(DevtoolBase):
         result = runCmd('devtool status')
         self.assertNotIn(recipe, result.output)
         self.assertNotExists(os.path.join(self.workspacedir, 'recipes', recipe), 'Recipe directory should not exist after resetting')
+
+    def test_devtool_upgrade_git(self):
+        self._test_devtool_upgrade_git_by_recipe('devtool-upgrade-test2', '6cc6077a36fe2648a5f993fe7c16c9632f946517')
+
+    def test_devtool_upgrade_gitsm(self):
+        self._test_devtool_upgrade_git_by_recipe('devtool-upgrade-test5', 'a2885dd7d25380d23627e7544b7bbb55014b16ee')
 
     def test_devtool_upgrade_drop_md5sum(self):
         # Check preconditions
