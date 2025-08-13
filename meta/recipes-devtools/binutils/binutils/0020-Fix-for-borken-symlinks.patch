@@ -1,0 +1,62 @@
+From 90803ffdcc4d8c3d17566bf8dccadbad312f07a9 Mon Sep 17 00:00:00 2001
+From: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+Date: Mon, 10 Feb 2025 17:04:55 +0800
+Subject: [PATCH] gprofng: Fix cross-compilation binary name.
+
+commit d25ba4596e85da6d8af78c88b5917e14763afbe1 create symbolic link
+no care cross-compilation prefix.
+
+(cherry picked from commit:90803ffdcc4d8c3d17566bf8dccadbad312f07a9)
+Upstream-Status: Backport [https://sourceware.org/git/?p=binutils-gdb.git;a=patch;h=90803ffdcc4d8c3d17566bf8dccadbad312f07a9]
+
+Signed-off-by: Harish Sadineni <Harish.Sadineni@windriver.com>
+---
+ gprofng/src/Makefile.am | 12 +++++-------
+ gprofng/src/Makefile.in | 12 +++++-------
+ 2 files changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/gprofng/src/Makefile.am b/gprofng/src/Makefile.am
+index a132a9ddb05..0465cdb06e3 100644
+--- a/gprofng/src/Makefile.am
++++ b/gprofng/src/Makefile.am
+@@ -179,10 +179,8 @@ $(srcdir)/DbeSession.cc: QLParser.tab.hh
+ .PHONY: install-exec-local
+ install-exec-local:
+ 	$(mkinstalldirs) $(DESTDIR)$(bindir)
+-	rm -f $(DESTDIR)$(bindir)/gp-{archive,collect-app,display-html,display-src,display-text}
+-	ln -s gprofng-archive $(DESTDIR)$(bindir)/gp-archive
+-	ln -s gprofng-collect-app $(DESTDIR)$(bindir)/gp-collect-app
+-	ln -s gprofng-display-html $(DESTDIR)$(bindir)/gp-display-html
+-	ln -s gprofng-display-src $(DESTDIR)$(bindir)/gp-display-src
+-	ln -s gprofng-display-text $(DESTDIR)$(bindir)/gp-display-text
+-
++	for i in gp-{archive,collect-app,display-html,display-src,display-text}; do \
++		oldname=`echo $$i | sed '$(transform)'`; \
++		rm -f $(DESTDIR)$(bindir)/$$oldname ; \
++		ln -s `echo $$oldname | sed 's&gp-&gprofng-&'` $(DESTDIR)$(bindir)/$$oldname; \
++	done
+diff --git a/gprofng/src/Makefile.in b/gprofng/src/Makefile.in
+index d0dec12e244..d6f1f9438b6 100644
+--- a/gprofng/src/Makefile.in
++++ b/gprofng/src/Makefile.in
+@@ -1119,13 +1119,11 @@ $(srcdir)/DbeSession.cc: QLParser.tab.hh
+ .PHONY: install-exec-local
+ install-exec-local:
+ 	$(mkinstalldirs) $(DESTDIR)$(bindir)
+-	rm -f $(DESTDIR)$(bindir)/gp-{archive,collect-app,display-html,display-src,display-text}
+-	ln -s gprofng-archive $(DESTDIR)$(bindir)/gp-archive
+-	ln -s gprofng-collect-app $(DESTDIR)$(bindir)/gp-collect-app
+-	ln -s gprofng-display-html $(DESTDIR)$(bindir)/gp-display-html
+-	ln -s gprofng-display-src $(DESTDIR)$(bindir)/gp-display-src
+-	ln -s gprofng-display-text $(DESTDIR)$(bindir)/gp-display-text
+-
++	for i in gp-{archive,collect-app,display-html,display-src,display-text}; do \
++		oldname=`echo $$i | sed '$(transform)'`; \
++		rm -f $(DESTDIR)$(bindir)/$$oldname ; \
++		ln -s `echo $$oldname | sed 's&gp-&gprofng-&'` $(DESTDIR)$(bindir)/$$oldname; \
++	done
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
+-- 
+2.43.7
