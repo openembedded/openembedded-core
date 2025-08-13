@@ -280,7 +280,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
             # note is still attached to the old commit. Avoid this by making
             # sure all old devtool related commits have a note attached to them
             # (this assumes git config notes.rewriteMode is set to ignore).
-            (stdout, _) = __run('git rev-list devtool-base..%s' % target_branch)
+            (stdout, _) = _run('git rev-list devtool-base..%s' % target_branch, cwd=path)
             for rev in stdout.splitlines():
                 if not oe.patch.GitApplyTree.getNotes(path, rev):
                     oe.patch.GitApplyTree.addNote(path, rev, "dummy")
@@ -298,7 +298,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
                         logger.warning('Command \'%s\' failed:\n%s' % (e.command, e.stdout))
 
             # Remove any dummy notes added above.
-            (stdout, _) = __run('git rev-list devtool-base..%s' % target_branch)
+            (stdout, _) = _run('git rev-list devtool-base..%s' % target_branch, cwd=path)
             for rev in stdout.splitlines():
                 oe.patch.GitApplyTree.removeNote(path, rev, "dummy")
 
