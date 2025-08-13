@@ -4,7 +4,7 @@ HOMEPAGE = "https://sysstat.github.io/"
 LICENSE = "GPL-2.0-or-later"
 SECTION = "console/utils"
 
-SRC_URI = "git://github.com/sysstat/sysstat.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/sysstat/sysstat.git;protocol=https;branch=master;tag=v${PV} \
            file://99_sysstat \
            file://sysstat.service \
            file://0001-configure.in-remove-check-for-chkconfig.patch \
@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/sysstat/sysstat.git;protocol=https;branch=master \
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=a23a74b3f4caf9616230789d94217acb"
 
-SRCREV = "dac10e13c70d1102aa3beea10135a3ed60520c36"
+SRCREV = "5841596edf7f5e53288cb56400e0c0c1da5f2415"
 
 DEPENDS += "base-passwd"
 
