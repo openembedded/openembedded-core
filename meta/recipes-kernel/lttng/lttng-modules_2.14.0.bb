@@ -3,21 +3,21 @@ SUMMARY = "Linux Trace Toolkit KERNEL MODULE"
 DESCRIPTION = "The lttng-modules 2.0 package contains the kernel tracer modules"
 HOMEPAGE = "https://lttng.org/"
 LICENSE = "LGPL-2.1-only & GPL-2.0-only & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=8d0d9f08888046474772a5d745d89d6a"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=018e002dbdda3306682e394ddd65fa32"
 
 inherit module
 
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-lttng-modules-fix-sigaction-build-without-CONFIG_COM.patch \
+           file://0001-writeback-instrumentation-Add-missing-provider-name-.patch \
+           file://0002-fix-percpu-repurpose-__percpu-tag-as-a-named-address.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
                 "
-
-SRC_URI[sha256sum] = "06d704633749039f8fa72a954bec6486058386e2a0c3557b22c484698f9b34d5"
+SRC_URI[sha256sum] = "f2261e738b1dd1027640e5ba3040dee292241b847d5745766b3ba640e168c94a"
 
 export INSTALL_MOD_DIR = "kernel/lttng-modules"
 

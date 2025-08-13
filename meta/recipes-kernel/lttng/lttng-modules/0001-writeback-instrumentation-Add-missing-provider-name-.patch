@@ -1,0 +1,45 @@
+From 039dbff4ba95eca58f8ebbcf1640a46b482c24e0 Mon Sep 17 00:00:00 2001
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Date: Fri, 4 Jul 2025 11:34:45 -0400
+Subject: [PATCH 1/2] writeback instrumentation: Add missing provider name
+ prefix
+
+The events folio_wait_writeback and wait_on_page_writeback do not have
+the writeback event name prefix mandated by the sanity check in
+lttng_kernel_probe_register, which trigger a console warning.
+
+Change those event names to provide the relevant provider name prefix.
+
+Upstream-Status: Backport [commit 039dbff4]
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Change-Id: Ia069e2dac4a373170e059792a947cffb6c956cb2
+---
+ include/instrumentation/events/writeback.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/instrumentation/events/writeback.h b/include/instrumentation/events/writeback.h
+index d694e323..b9e26b5b 100644
+--- a/include/instrumentation/events/writeback.h
++++ b/include/instrumentation/events/writeback.h
+@@ -122,7 +122,7 @@ LTTNG_TRACEPOINT_EVENT_INSTANCE(writeback_folio_template, writeback_dirty_folio,
+ 	TP_ARGS(folio, mapping)
+ )
+ 
+-LTTNG_TRACEPOINT_EVENT_INSTANCE(writeback_folio_template, folio_wait_writeback,
++LTTNG_TRACEPOINT_EVENT_INSTANCE(writeback_folio_template, writeback_folio_wait,
+ 
+ 	TP_PROTO(struct folio *folio, struct address_space *mapping),
+ 
+@@ -150,7 +150,7 @@ LTTNG_TRACEPOINT_EVENT_INSTANCE(writeback_page_template, writeback_dirty_page,
+ 	TP_ARGS(page, mapping)
+ )
+ 
+-LTTNG_TRACEPOINT_EVENT_INSTANCE(writeback_page_template, wait_on_page_writeback,
++LTTNG_TRACEPOINT_EVENT_INSTANCE(writeback_page_template, writeback_wait_on_page,
+ 
+ 	TP_PROTO(struct page *page, struct address_space *mapping),
+ 
+-- 
+2.39.2
+
