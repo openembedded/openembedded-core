@@ -63,6 +63,10 @@ do_compile_ptest() {
 }
 PTEST_PARALLEL_MAKE = ""
 
+PTEST_XFAILS ?= ""
+# See - https://sourceware.org/bugzilla/show_bug.cgi?id=32232
+PTEST_XFAILS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' run-strip-strmerge.sh run-elflint-self.sh run-backtrace-data.sh run-reverse-sections-self.sh', '', d)}"
+
 do_install_ptest() {
 	# copy the files which needed by the cases
 	TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip srcfiles"
@@ -100,6 +104,7 @@ do_install_ptest() {
 	cp -r ${B}/debuginfod                   ${D}${PTEST_PATH}
 	sed -i '/^Makefile:/c Makefile:'        ${D}${PTEST_PATH}/tests/Makefile
 	find ${D}${PTEST_PATH} -type f -name *.[hoc] | xargs -i rm {}
+	sed -i -e 's|@XFAIL_TESTS@|${PTEST_XFAILS}|' ${D}${PTEST_PATH}/run-ptest
 }
 
 EXTRA_OEMAKE:class-native = ""
