@@ -23,6 +23,7 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://0001-config-eu.am-do-not-force-Werror.patch \
            file://0001-libelf-Add-libeu-objects-to-libelf.a-static-archive.patch \
            file://CVE-2025-1352.patch \
+           file://CVE-2025-1365.patch \
            "
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
