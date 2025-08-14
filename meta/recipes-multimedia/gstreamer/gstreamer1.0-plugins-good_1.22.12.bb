@@ -38,6 +38,9 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-go
            file://0029-wavparse-Check-that-at-least-32-bytes-are-available-.patch \
            file://0030-wavparse-Fix-clipping-of-size-to-the-file-size.patch \
            file://0031-wavparse-Check-size-before-reading-ds64-chunk.patch \
+           file://CVE-2025-47183-001.patch \
+           file://CVE-2025-47183-002.patch \
+           file://CVE-2025-47219.patch \
           "
 
 SRC_URI[sha256sum] = "9c1913f981900bd8867182639b20907b28ed78ef7a222cfbf2d8ba9dab992fa7"
