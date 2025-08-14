@@ -59,9 +59,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
 
-        cls._do_configure_syslinux(part, source_params, creator, cr_workdir,
-                                   oe_builddir, bootimg_dir, kernel_dir,
-                                   native_sysroot)
+        cls._do_configure_syslinux(part, creator, cr_workdir)
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
@@ -89,9 +87,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
         return custom_cfg
 
     @classmethod
-    def _do_configure_syslinux(cls, part, source_params, creator, cr_workdir,
-                               oe_builddir, bootimg_dir, kernel_dir,
-                               native_sysroot):
+    def _do_configure_syslinux(cls, part, creator, cr_workdir):
         """
         Called before do_prepare_partition(), creates syslinux config
         """
@@ -106,11 +102,23 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
         if not syslinux_conf:
             # Create syslinux configuration using parameters from wks file
-            splash = os.path.join(cr_workdir, "/hdd/boot/splash.jpg")
+            splash = os.path.join(hdddir, "/splash.jpg")
             if os.path.exists(splash):
                 splashline = "menu background splash.jpg"
             else:
                 splashline = ""
+
+            # Set a default timeout if none specified to avoid
+            # 'None' being the value placed within the configuration
+            # file.
+            if not bootloader.timeout:
+                bootloader.timeout = 500
+
+            # Set a default kernel params string if none specified
+            # to avoid 'None' being the value placed within the
+            # configuration file.
+            if not bootloader.append:
+                bootloader.append = "rootwait console=ttyS0,115200 console=tty0"
 
             syslinux_conf = ""
             syslinux_conf += "PROMPT 0\n"
@@ -130,8 +138,7 @@ class BootimgPcbiosPlugin(SourcePlugin):
             syslinux_conf += "APPEND label=boot root=%s %s\n" % \
                              (creator.rootdev, bootloader.append)
 
-        logger.debug("Writing syslinux config %s/hdd/boot/syslinux.cfg",
-                     cr_workdir)
+        logger.debug("Writing syslinux config %s/syslinux.cfg", hdddir)
         cfg = open("%s/hdd/boot/syslinux.cfg" % cr_workdir, "w")
         cfg.write(syslinux_conf)
         cfg.close()
