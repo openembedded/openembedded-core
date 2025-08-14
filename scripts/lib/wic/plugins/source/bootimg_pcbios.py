@@ -73,6 +73,22 @@ class BootimgPcbiosPlugin(SourcePlugin):
                                  rootfs_dir, native_sysroot)
 
     @classmethod
+    def _get_bootloader_config(cls, bootloader, loader):
+        custom_cfg = None
+
+        if bootloader.configfile:
+            custom_cfg = get_custom_config(bootloader.configfile)
+            if custom_cfg:
+                logger.debug("Using custom configuration file %s "
+                             "for %s.cfg", bootloader.configfile,
+                             loader)
+                return custom_cfg
+            else:
+                raise WicError("configfile is specified but failed to "
+                               "get it from %s." % bootloader.configfile)
+        return custom_cfg
+
+    @classmethod
     def _do_configure_syslinux(cls, part, source_params, creator, cr_workdir,
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
@@ -86,20 +102,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
         exec_cmd(install_cmd)
 
         bootloader = creator.ks.bootloader
+        syslinux_conf = cls._get_bootloader_config(bootloader, 'syslinux')
 
-        custom_cfg = None
-        if bootloader.configfile:
-            custom_cfg = get_custom_config(bootloader.configfile)
-            if custom_cfg:
-                # Use a custom configuration for grub
-                syslinux_conf = custom_cfg
-                logger.debug("Using custom configuration file %s "
-                             "for syslinux.cfg", bootloader.configfile)
-            else:
-                raise WicError("configfile is specified but failed to "
-                               "get it from %s." % bootloader.configfile)
-
-        if not custom_cfg:
+        if not syslinux_conf:
             # Create syslinux configuration using parameters from wks file
             splash = os.path.join(cr_workdir, "/hdd/boot/splash.jpg")
             if os.path.exists(splash):
