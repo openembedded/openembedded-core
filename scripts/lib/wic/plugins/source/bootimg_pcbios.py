@@ -31,6 +31,9 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
     name = 'bootimg_pcbios'
 
+    # Variable required for do_install_disk
+    loader = ''
+
     @classmethod
     def _get_bootimg_dir(cls, bootimg_dir, dirname):
         """
@@ -56,23 +59,50 @@ class BootimgPcbiosPlugin(SourcePlugin):
         logger.debug("Installing MBR on disk %s as %s with size %s bytes",
                      disk_name, full_path, disk.min_size)
 
-        cls._do_install_syslinux(creator, bootimg_dir,
+        if cls.loader == 'grub':
+            cls._do_install_grub(creator, kernel_dir,
                             native_sysroot, full_path)
+        elif cls.loader == 'syslinux':
+            cls._do_install_syslinux(creator, bootimg_dir,
+                            native_sysroot, full_path)
+        else:
+            raise WicError("boot loader some how not specified check do_prepare_partition")
 
     @classmethod
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
-
-        cls._do_configure_syslinux(part, creator, cr_workdir)
+        try:
+            if source_params['loader-bios'] == 'grub':
+                cls._do_configure_grub(part, creator, cr_workdir)
+            elif source_params['loader-bios'] == 'syslinux':
+                cls._do_configure_syslinux(part, creator, cr_workdir)
+            else:
+                raise WicError("unrecognized bootimg_pcbios loader: %s" % source_params['loader-bios'])
+        except KeyError:
+            cls._do_configure_syslinux(part, creator, cr_workdir)
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
                              rootfs_dir, native_sysroot):
+        try:
+            if source_params['loader-bios'] == 'grub':
+                cls._do_prepare_grub(part, cr_workdir, oe_builddir,
+                                kernel_dir, rootfs_dir, native_sysroot)
+            elif source_params['loader-bios'] == 'syslinux':
+                cls._do_prepare_syslinux(part, cr_workdir, bootimg_dir,
+                                    kernel_dir, native_sysroot)
+            else:
+                raise WicError("unrecognized bootimg_pcbios loader: %s" % source_params['loader-bios'])
 
-        cls._do_prepare_syslinux(part, cr_workdir, bootimg_dir,
-                                 kernel_dir, native_sysroot)
+            # Required by do_install_disk
+            cls.loader = source_params['loader-bios']
+        except KeyError:
+            # Required by do_install_disk
+            cls.loader = 'syslinux'
+            cls._do_prepare_syslinux(part, cr_workdir, bootimg_dir,
+                                kernel_dir, native_sysroot)
 
     @classmethod
     def _get_staging_libdir(cls):
