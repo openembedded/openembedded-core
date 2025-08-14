@@ -50,9 +50,12 @@ class BootimgPcbiosPlugin(SourcePlugin):
     @classmethod
     def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
                         bootimg_dir, kernel_dir, native_sysroot):
+        full_path = creator._full_path(workdir, disk_name, "direct")
+        logger.debug("Installing MBR on disk %s as %s with size %s bytes",
+                     disk_name, full_path, disk.min_size)
 
-        cls._do_install_syslinux(disk, disk_name, creator, workdir, oe_builddir,
-                                 bootimg_dir, kernel_dir, native_sysroot)
+        cls._do_install_syslinux(creator, bootimg_dir,
+                            native_sysroot, full_path)
 
     @classmethod
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,
@@ -66,9 +69,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
                              oe_builddir, bootimg_dir, kernel_dir,
                              rootfs_dir, native_sysroot):
 
-        cls._do_prepare_syslinux(part, source_params, creator, cr_workdir,
-                                 oe_builddir, bootimg_dir, kernel_dir,
-                                 rootfs_dir, native_sysroot)
+        cls._do_prepare_syslinux(part, cr_workdir, bootimg_dir,
+                                 kernel_dir, native_sysroot)
 
     @classmethod
     def _get_bootloader_config(cls, bootloader, loader):
@@ -144,9 +146,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
         cfg.close()
 
     @classmethod
-    def _do_prepare_syslinux(cls, part, source_params, creator, cr_workdir,
-                             oe_builddir, bootimg_dir, kernel_dir,
-                             rootfs_dir, native_sysroot):
+    def _do_prepare_syslinux(cls, part, cr_workdir, bootimg_dir,
+                             kernel_dir, native_sysroot):
         """
         Called to do the actual content population for a partition i.e. it
         'prepares' the partition to be incorporated into the image.
@@ -218,8 +219,8 @@ class BootimgPcbiosPlugin(SourcePlugin):
         part.source_file = bootimg
 
     @classmethod
-    def _do_install_syslinux(cls, disk, disk_name, creator, workdir, oe_builddir,
-                             bootimg_dir, kernel_dir, native_sysroot):
+    def _do_install_syslinux(cls, creator, bootimg_dir,
+                             native_sysroot, full_path):
         """
         Called after all partitions have been prepared and assembled into a
         disk image.  In this case, we install the MBR.
@@ -239,10 +240,6 @@ class BootimgPcbiosPlugin(SourcePlugin):
             raise WicError("Couldn't find %s.  If using the -e option, do you "
                            "have the right MACHINE set in local.conf?  If not, "
                            "is the bootimg_dir path correct?" % mbrfile)
-
-        full_path = creator._full_path(workdir, disk_name, "direct")
-        logger.debug("Installing MBR on disk %s as %s with size %s bytes",
-                     disk_name, full_path, disk.min_size)
 
         dd_cmd = "dd if=%s of=%s conv=notrunc" % (mbrfile, full_path)
         exec_cmd(dd_cmd, native_sysroot)
