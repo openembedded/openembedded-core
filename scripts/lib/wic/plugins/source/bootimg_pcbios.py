@@ -50,10 +50,18 @@ class BootimgPcbiosPlugin(SourcePlugin):
     @classmethod
     def do_install_disk(cls, disk, disk_name, creator, workdir, oe_builddir,
                         bootimg_dir, kernel_dir, native_sysroot):
+
+        cls._do_install_syslinux(disk, disk_name, creator, workdir, oe_builddir,
+                                 bootimg_dir, kernel_dir, native_sysroot)
+
+    @classmethod
+    def _do_install_syslinux(cls, disk, disk_name, creator, workdir, oe_builddir,
+                             bootimg_dir, kernel_dir, native_sysroot):
         """
         Called after all partitions have been prepared and assembled into a
         disk image.  In this case, we install the MBR.
         """
+
         bootimg_dir = cls._get_bootimg_dir(bootimg_dir, 'syslinux')
         mbrfile = "%s/syslinux/" % bootimg_dir
         if creator.ptable_format == 'msdos':
@@ -80,9 +88,19 @@ class BootimgPcbiosPlugin(SourcePlugin):
     def do_configure_partition(cls, part, source_params, creator, cr_workdir,
                                oe_builddir, bootimg_dir, kernel_dir,
                                native_sysroot):
+
+        cls._do_configure_syslinux(part, source_params, creator, cr_workdir,
+                                   oe_builddir, bootimg_dir, kernel_dir,
+                                   native_sysroot)
+
+    @classmethod
+    def _do_configure_syslinux(cls, part, source_params, creator, cr_workdir,
+                               oe_builddir, bootimg_dir, kernel_dir,
+                               native_sysroot):
         """
         Called before do_prepare_partition(), creates syslinux config
         """
+
         hdddir = "%s/hdd/boot" % cr_workdir
 
         install_cmd = "install -d %s" % hdddir
@@ -136,6 +154,15 @@ class BootimgPcbiosPlugin(SourcePlugin):
 
     @classmethod
     def do_prepare_partition(cls, part, source_params, creator, cr_workdir,
+                             oe_builddir, bootimg_dir, kernel_dir,
+                             rootfs_dir, native_sysroot):
+
+        cls._do_prepare_syslinux(part, source_params, creator, cr_workdir,
+                                 oe_builddir, bootimg_dir, kernel_dir,
+                                 rootfs_dir, native_sysroot)
+
+    @classmethod
+    def _do_prepare_syslinux(cls, part, source_params, creator, cr_workdir,
                              oe_builddir, bootimg_dir, kernel_dir,
                              rootfs_dir, native_sysroot):
         """
