@@ -24,6 +24,11 @@ SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
            ${@bb.utils.contains('PACKAGECONFIG', 'disable-weak-ciphers', 'file://dropbear-disable-weak-ciphers.patch', '', d)} \
            file://CVE-2023-36328.patch \
            file://CVE-2023-48795.patch \
+           file://0001-add-o-BatchMode-and-also-forward-this-when-multihop-.patch \
+           file://0001-Handle-arbitrary-length-paths-and-commands-in-multih.patch \
+           file://0001-cli-runopts.c-add-missing-DROPBEAR_CLI_PUBKEY_AUTH.patch \
+           file://0001-Avoid-unused-variable-with-DROPBEAR_CLI_PUBKEY_AUTH-.patch \
+           file://CVE-2025-47203.patch \
            "
 
 SRC_URI[sha256sum] = "bc5a121ffbc94b5171ad5ebe01be42746d50aa797c9549a4639894a16749443b"
