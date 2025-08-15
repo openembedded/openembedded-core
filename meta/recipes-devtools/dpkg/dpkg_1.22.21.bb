@@ -19,3 +19,6 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=1.22.
 SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
 
 SRCREV = "d72b038fd2113cb62972e4071db03dd1388394d8"
+
+# NVD tracks this CVE as "Up to (excluding) 2025-06-30" (which is fix commit date, not dpkg version)
+CVE_STATUS[CVE-2025-6297] = "cpe-incorrect: this is fixed in 1.22.21"
