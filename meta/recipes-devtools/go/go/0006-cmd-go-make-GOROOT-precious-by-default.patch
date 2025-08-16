@@ -32,7 +32,7 @@ diff --git a/src/cmd/go/internal/work/action.go b/src/cmd/go/internal/work/actio
 index 44bb9f8c1e..87ac4e30e5 100644
 --- a/src/cmd/go/internal/work/action.go
 +++ b/src/cmd/go/internal/work/action.go
-@@ -837,6 +837,9 @@ func (b *Builder) addTransitiveLinkDeps(a, a1 *Action, shlib string) {
+@@ -844,6 +844,9 @@ func (b *Builder) addTransitiveLinkDeps(a, a1 *Action, shlib string) {
  			if p1 == nil || p1.Shlib == "" || haveShlib[filepath.Base(p1.Shlib)] {
  				continue
  			}
@@ -46,7 +46,7 @@ diff --git a/src/cmd/go/internal/work/build.go b/src/cmd/go/internal/work/build.
 index 3508d51fbb..77f5e7241a 100644
 --- a/src/cmd/go/internal/work/build.go
 +++ b/src/cmd/go/internal/work/build.go
-@@ -238,6 +238,8 @@ See also: go install, go get, go clean.
+@@ -239,6 +239,8 @@ See also: go install, go get, go clean.
  
  const concurrentGCBackendCompilationEnabledByDefault = true
  
@@ -55,9 +55,9 @@ index 3508d51fbb..77f5e7241a 100644
  func init() {
  	// break init cycle
  	CmdBuild.Run = runBuild
-@@ -251,6 +253,10 @@ func init() {
- 		AddCoverFlags(CmdBuild, nil)
- 		AddCoverFlags(CmdInstall, nil)
+@@ -293,6 +295,10 @@ func init() {
+ 	case "gc", "gccgo":
+ 		buildCompiler{}.Set(build.Default.Compiler)
  	}
 +
 +	if x := os.Getenv("GOROOT_OVERRIDE"); x != "" {
@@ -65,12 +65,12 @@ index 3508d51fbb..77f5e7241a 100644
 +	}
  }
  
- // Note that flags consulted by other parts of the code
+ type BuildFlagMask int
 diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
 index 1f618be0bb..651fa64582 100644
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -552,6 +552,23 @@ func (b *Builder) build(ctx context.Context, a *Action) (err error) {
+@@ -558,6 +558,23 @@ func (b *Builder) build(ctx context.Context, a *Action) (err error) {
  		return err
  	}
  
@@ -94,7 +94,7 @@ index 1f618be0bb..651fa64582 100644
  	if err := sh.Mkdir(a.Objdir); err != nil {
  		return err
  	}
-@@ -1747,6 +1764,14 @@ func (b *Builder) linkShared(ctx context.Context, a *Action) (err error) {
+@@ -1731,6 +1748,14 @@ func (b *Builder) linkShared(ctx context.Context, a *Action) (err error) {
  		return err
  	}
  
