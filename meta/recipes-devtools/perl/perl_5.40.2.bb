@@ -54,6 +54,9 @@ CFLAGS += "-D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 # https://github.com/llvm/llvm-project/issues/152241
 CFLAGS:append:toolchain-clang = " -fno-strict-aliasing"
 
+# Needed with -march=x86-64-v3
+CFLAGS:append:toolchain-gcc:class-target:x86-64 = " -fno-builtin-memcpy -D__NO_STRING_INLINES -U_FORTIFY_SOURCE"
+
 do_configure:prepend() {
     rm -rf ${B}
     cp -rfp ${S} ${B}
