@@ -4,12 +4,11 @@ DESCRIPTION = "Libcomps is alternative for yum.comps library. It's written in pu
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "git://github.com/rpm-software-management/libcomps.git;branch=master;protocol=https \
-           file://0001-libcomps-Support-builds-with-CMake-4.patch \
-           file://0002-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
+SRC_URI = "git://github.com/rpm-software-management/libcomps.git;branch=master;tag=${PV};protocol=https \
+           file://0001-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            "
 
-SRCREV = "2e973ce22698dd64f472180e3a689755268fb06b"
+SRCREV = "3f0d19b3c3273db4bf0497f08f22317835c1d426"
 
 inherit cmake setuptools3-base
 
