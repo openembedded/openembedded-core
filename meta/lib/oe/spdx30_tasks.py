@@ -696,7 +696,7 @@ def create_spdx(d):
 
             pkg_objset.new_relationship(
                 [spdx_package],
-                oe.spdx30.RelationshipType.hasConcludedLicense,
+                oe.spdx30.RelationshipType.hasDeclaredLicense,
                 [oe.sbom30.get_element_link_id(package_spdx_license)],
             )
 
