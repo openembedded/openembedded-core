@@ -1,0 +1,13 @@
+#!/bin/sh
+
+for testFile in $(ls); do
+	if [ "$testFile" = "run-ptest" ]; then
+		continue
+	else
+		if ./${testFile}; then
+			echo "PASS: ${testFile}"
+		else
+			echo "FAIL: ${testFile}"
+		fi
+	fi
+done
