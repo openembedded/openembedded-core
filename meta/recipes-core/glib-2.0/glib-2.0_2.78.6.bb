@@ -66,3 +66,5 @@ def find_meson_cross_files(d):
 python () {
     find_meson_cross_files(d)
 }
+
+CVE_STATUS[CVE-2025-4056] = "not-applicable-platform: Issue only applies on Windows"
