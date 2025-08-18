@@ -97,3 +97,6 @@ def find_meson_cross_files(d):
 python () {
     find_meson_cross_files(d)
 }
+
+# not-applicable-platform: Issue only applies on Windows
+CVE_CHECK_IGNORE += "CVE-2025-4056"
