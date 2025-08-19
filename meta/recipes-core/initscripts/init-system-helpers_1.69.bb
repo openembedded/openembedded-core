@@ -16,8 +16,8 @@ SECTION = "base"
 LICENSE = "BSD-3-Clause & GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=c4ec20aa158fa9de26ee1accf78dcaae"
 
-SRCREV = "78486a4a2a305170b66ce4d907bedadbaed10daf"
-SRC_URI = "git://salsa.debian.org/debian/init-system-helpers.git;protocol=https;branch=master"
+SRCREV = "592518fcedf96c9b763f214a9acbdc1109aaa385"
+SRC_URI = "git://salsa.debian.org/debian/init-system-helpers.git;protocol=https;branch=master;tag=debian/${PV}"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))(?!_exp)"
 
 do_configure[noexec] = "1"
