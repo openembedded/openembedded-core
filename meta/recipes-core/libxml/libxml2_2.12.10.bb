@@ -32,6 +32,10 @@ SRC_URI[testtar.sha256sum] = "c6b2d42ee50b8b236e711a97d68e6c4b5c8d83e69a2be47223
 # Disputed as a security issue, but fixed in d39f780
 CVE_STATUS[CVE-2023-45322] = "disputed: issue requires memory allocation to fail"
 
+# Disputed as a security issue, if attempts to process an invalid file, it fails
+# https://gitlab.gnome.org/GNOME/libxml2/-/issues/958
+CVE_STATUS[CVE-2025-8732] = "disputed: the code maintainer explains, that the issue can only be triggered with untrusted SGML catalogs and it makes absolutely no sense to use untrusted catalogs. The issue triggers a crash if an invalid file is provided.  https://gitlab.gnome.org/GNOME/libxml2/-/issues/958"
+
 BINCONFIG = "${bindir}/xml2-config"
 
 PACKAGECONFIG ??= "python \
