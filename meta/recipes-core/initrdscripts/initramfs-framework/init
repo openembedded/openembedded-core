@@ -81,9 +81,11 @@ EFI_DIR=/sys/firmware/efi  # place to store device firmware information
 touch /etc/fstab
 
 # initialize /proc, /sys, /run/lock and /var/lock
-mkdir -p /proc /sys /run/lock /var/lock
+mkdir -p /proc /sys /run /var/lock
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
+mount -t tmpfs tmpfs /run
+mkdir -p /run/lock
 
 if [ -d $EFI_DIR ];then
 	mount -t efivarfs none /sys/firmware/efi/efivars
