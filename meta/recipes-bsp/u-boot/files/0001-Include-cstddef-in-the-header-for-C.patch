@@ -1,0 +1,27 @@
+From 10c9a571f1c0472799f72b1924b039aab231e95f Mon Sep 17 00:00:00 2001
+From: Oleksandr Kravchuk <open.source@oleksandr-kravchuk.com>
+Date: Thu, 16 Dec 2021 16:19:50 +0100
+Subject: [PATCH] Include cstddef in the header for C++
+
+So C++ compiler always has access to the definition of size_t.
+
+Signed-off-by: Oleksandr Kravchuk <open.source@oleksandr-kravchuk.com>
+Signed-off-by: Youngseok Jeong <youngseok1.jeong@lge.com>
+Upstream-Status: Backport [v0.3.3 https://github.com/sbabic/libubootenv/pull/19/commits/764226a7de2ea79b182d92829922489537c766fa]
+---
+ src/libuboot.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libuboot.h b/src/libuboot.h
+index 88f0558..1f305f4 100644
+--- a/src/libuboot.h
++++ b/src/libuboot.h
+@@ -6,6 +6,8 @@
+  */
+ 
+ #ifdef __cplusplus
++#include <cstddef>
++
+ extern "C" {
+ #endif
+ 

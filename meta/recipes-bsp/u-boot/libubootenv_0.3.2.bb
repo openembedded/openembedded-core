@@ -10,7 +10,11 @@ LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://Licenses/lgpl-2.1.txt;md5=4fbd65380cdd255951079008b364516c"
 SECTION = "libs"
 
-SRC_URI = "git://github.com/sbabic/libubootenv;protocol=https;branch=master"
+SRC_URI = " \
+    git://github.com/sbabic/libubootenv;protocol=https;branch=master \
+    file://0001-Include-cstddef-in-the-header-for-C.patch \
+"
+
 SRCREV = "ba7564f5006d09bec51058cf4f5ac90d4dc18b3c"
 
 S = "${WORKDIR}/git"
