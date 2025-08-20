@@ -13,7 +13,13 @@ SRC_URI = "https://github.com/openssl/openssl/releases/download/openssl-${PV}/op
            file://afalg.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
            file://CVE-2024-41996.patch \
-           "
+           file://CVE-2023-50781-1.patch \
+           file://CVE-2023-50781-2.patch \
+           file://CVE-2023-50781-3.patch \
+           file://CVE-2023-50781-4.patch \
+           file://CVE-2023-50781-5.patch \
+           file://CVE-2023-50781-6.patch \
+          "
 
 SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
