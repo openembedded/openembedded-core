@@ -27,26 +27,16 @@ SRC_URI = " \
     file://av1_ordering_info.patch \
     file://vulkan_av1_stable_API.patch \
     file://vulkan_fix_gcc14.patch \
-    file://CVE-2023-49502.patch \
-    file://CVE-2024-31578.patch \
-    file://CVE-2024-31582.patch \
-    file://CVE-2023-50008.patch \
-    file://CVE-2023-49501.patch \
     file://CVE-2024-28661.patch \
-    file://CVE-2023-50007.patch \
     file://CVE-2023-49528.patch \
-    file://CVE-2024-35367.patch \
-    file://CVE-2024-35368.patch \
     file://CVE-2024-35365.patch \
     file://CVE-2024-36618.patch \
     file://CVE-2024-35369.patch \
     file://CVE-2025-25473.patch \
-    file://CVE-2025-22919.patch \
     file://CVE-2025-22921.patch \
-    file://CVE-2025-0518.patch \
 "
 
-SRC_URI[sha256sum] = "3b624649725ecdc565c903ca6643d41f33bd49239922e45c9b1442c63dca4e38"
+SRC_URI[sha256sum] = "bc5f1e4a4d283a6492354684ee1124129c52293bcfc6a9169193539fbece3487"
 
 # https://nvd.nist.gov/vuln/detail/CVE-2023-39018
 # https://github.com/bramp/ffmpeg-cli-wrapper/issues/291
