@@ -275,9 +275,9 @@ class KickStart():
                             # --fixed-size iff given option was not used
                             # (again, one cannot tell if option was passed but
                             # with value equal to 0)
-                            if '--overhead-factor' not in line_args:
+                            if not parsed.overhead_factor:
                                 parsed.overhead_factor = self.DEFAULT_OVERHEAD_FACTOR
-                            if '--extra-space' not in line_args:
+                            if not parsed.extra_space:
                                 parsed.extra_space = self.DEFAULT_EXTRA_SPACE
 
                         self.partnum += 1
