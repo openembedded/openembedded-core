@@ -14,15 +14,12 @@ PACKAGECONFIG[manpages] = ""
 # first place
 EXTRA_OECMAKE = "-DENABLE_EXAMPLES=OFF -DENABLE_APP=OFF -DENABLE_HPACK_TOOLS=OFF -DENABLE_PYTHON_BINDINGS=OFF"
 
-PACKAGES =+ "lib${BPN} ${PN}-proxy "
+PACKAGES =+ "lib${BPN}"
 
-RDEPENDS:${PN} = "${PN}-proxy (>= ${PV})"
 RDEPENDS:${PN}:class-native = ""
-RDEPENDS:${PN}-proxy = "openssl python3-core python3-io python3-shell"
 
 ALLOW_EMPTY:${PN} = "1"
 FILES:${PN} = ""
 FILES:lib${BPN} = "${libdir}/*${SOLIBS}"
-FILES:${PN}-proxy = "${bindir}/nghttpx ${datadir}/${BPN}/fetch-ocsp-response"
 
 BBCLASSEXTEND = "native nativesdk"
