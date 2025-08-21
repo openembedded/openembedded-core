@@ -21,6 +21,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-ba
            file://0012-subparse-Check-for-NULL-return-of-strchr-when-parsin.patch \
            file://CVE-2025-47808.patch \
            file://CVE-2025-47806.patch \
+           file://CVE-2025-47807.patch \
            "
 SRC_URI[sha256sum] = "73cfadc3a6ffe77ed974cfd6fb391c605e4531f48db21dd6b9f42b8cb69bd8c1"
 
