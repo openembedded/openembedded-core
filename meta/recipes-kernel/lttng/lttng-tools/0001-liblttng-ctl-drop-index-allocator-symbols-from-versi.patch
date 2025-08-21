@@ -1,0 +1,43 @@
+From adafa15a0ea145e1e98f68e2a56512e83f1f6798 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 19 Aug 2025 20:06:21 -0700
+Subject: [PATCH] liblttng-ctl: drop index allocator symbols from version
+ script
+
+The lttng_index_allocator_* functions are implemented in libcommon-gpl,
+not in liblttng-ctl. Since liblttng-ctl does not link against
+libcommon-gpl and does not export these symbols, referencing them in
+liblttng-ctl.sym causes link failures with LLD:
+
+  ld.lld: error: version script assignment of 'global' to symbol
+  'lttng_index_allocator_alloc' failed: symbol not defined
+  ...
+
+Remove these entries from the version script to align the exported ABI
+with the actual symbols provided by liblttng-ctl.
+
+This fixes builds with clang + lld.
+
+Upstream-Status: Submitted [https://review.lttng.org/c/lttng-tools/+/15156]
+Change-Id: I27f40f3d38af7014cf5356230e06aa291c9a3c5f
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/lib/lttng-ctl/liblttng-ctl.sym | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/src/lib/lttng-ctl/liblttng-ctl.sym b/src/lib/lttng-ctl/liblttng-ctl.sym
+index 27900ca44..641084750 100644
+--- a/src/lib/lttng-ctl/liblttng-ctl.sym
++++ b/src/lib/lttng-ctl/liblttng-ctl.sym
+@@ -336,11 +336,6 @@ lttng_health_state
+ lttng_health_thread_name
+ lttng_health_thread_state
+ lttng_ht_seed
+-lttng_index_allocator_alloc
+-lttng_index_allocator_create
+-lttng_index_allocator_destroy
+-lttng_index_allocator_get_index_count
+-lttng_index_allocator_release
+ lttng_kernel_probe_location_address_create
+ lttng_kernel_probe_location_address_get_address
+ lttng_kernel_probe_location_destroy
