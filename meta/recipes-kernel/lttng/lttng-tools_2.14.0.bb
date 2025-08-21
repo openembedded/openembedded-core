@@ -53,6 +53,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://0001-eventfd.cpp-Remove-the-scope-resolution-operator.patch \
            file://disable-tests2.patch \
            file://0001-liblttng-ctl-drop-index-allocator-symbols-from-versi.patch \
+           file://libc++.patch \
            "
 
 SRC_URI[sha256sum] = "d8c39c26cec13b7bd82551cd52a22efc358b888e36ebcf9c1b60ef1c3a3c2fd3"
