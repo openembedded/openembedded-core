@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=43ed1245085be90dc934288117d55a3b"
 
 inherit ptest
 
-SRCREV = "18e28496adee3d84fefdda6efcb9c5b8996a2398"
+SRCREV = "f2bac7711bec93467b73bec1465579ea0b8d5071"
 SRC_URI = " \
     git://repo.or.cz/libc-test;branch=master;protocol=https \
     file://run-ptest \
