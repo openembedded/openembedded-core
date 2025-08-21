@@ -27,6 +27,7 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://CVE-2025-1365.patch \
            file://CVE-2025-1372.patch \
            file://CVE-2025-1371.patch \
+           file://0007-Fix-build-with-gcc-15.patch \
            "
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
