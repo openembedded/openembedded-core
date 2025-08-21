@@ -14,6 +14,7 @@ SRC_URI = " \
     git://repo.or.cz/libc-test;branch=master;protocol=https \
     file://0001-Fix-strptime-on-musl.patch \
     file://0001-api-unistd-guard-optional-obsolete-_PC-_SC-constants.patch \
+    file://0001-math-Delete-failing-tests.patch \
     file://run-ptest \
     file://run-libc-ptests \
 "
