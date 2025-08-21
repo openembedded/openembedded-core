@@ -1,6 +1,7 @@
-export OPENSSL_CONF="$OECORE_NATIVE_SYSROOT/usr/lib/ssl-3/openssl.cnf"
-export OPENSSL_MODULES="$OECORE_NATIVE_SYSROOT/usr/lib/ossl-modules/"
-export OPENSSL_ENGINES="$OECORE_NATIVE_SYSROOT/usr/lib/engines-3"
+export OPENSSL_LIBDIR="@OPENSSL_LIBDIR@"
+export OPENSSL_CONF="$OPENSSL_LIBDIR/ssl-3/openssl.cnf"
+export OPENSSL_MODULES="$OPENSSL_LIBDIR/ossl-modules/"
+export OPENSSL_ENGINES="$OPENSSL_LIBDIR/engines-3"
 export BB_ENV_PASSTHROUGH_ADDITIONS="${BB_ENV_PASSTHROUGH_ADDITIONS:-} OPENSSL_CONF OPENSSL_MODULES OPENSSL_ENGINES"
 
 # Respect host env SSL_CERT_FILE/SSL_CERT_DIR first, then auto-detected host cert, then cert in buildtools
@@ -9,7 +10,7 @@ if [ -z "$SSL_CERT_FILE" ]; then
 	if [ -n "$CAFILE" ];then
 		export SSL_CERT_FILE="$CAFILE"
 	elif [ -e "${OECORE_NATIVE_SYSROOT}/etc/ssl/certs/ca-certificates.crt" ];then
-		export SSL_CERT_FILE="$OECORE_NATIVE_SYSROOT/usr/lib/ssl-3/certs/ca-certificates.crt"
+		export SSL_CERT_FILE="$OPENSSL_LIBDIR/ssl-3/certs/ca-certificates.crt"
 	fi
 fi
 
@@ -17,7 +18,7 @@ if [ -z "$SSL_CERT_DIR" ]; then
 	if [ -n "$CAPATH" ];then
 		export SSL_CERT_DIR="$CAPATH"
 	elif [ -e "${OECORE_NATIVE_SYSROOT}/etc/ssl/certs/ca-certificates.crt" ];then
-		export SSL_CERT_DIR="$OECORE_NATIVE_SYSROOT/usr/lib/ssl-3/certs"
+		export SSL_CERT_DIR="$OPENSSL_LIBDIR/ssl-3/certs"
 	fi
 fi
 
