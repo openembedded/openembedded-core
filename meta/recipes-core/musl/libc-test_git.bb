@@ -12,6 +12,8 @@ inherit ptest
 SRCREV = "f2bac7711bec93467b73bec1465579ea0b8d5071"
 SRC_URI = " \
     git://repo.or.cz/libc-test;branch=master;protocol=https \
+    file://0001-Fix-strptime-on-musl.patch \
+    file://0001-api-unistd-guard-optional-obsolete-_PC-_SC-constants.patch \
     file://run-ptest \
     file://run-libc-ptests \
 "
@@ -33,8 +35,10 @@ RDEPENDS:${PN} = " \
 
 RDEPENDS:${PN}-ptest = " \
      ${PN} \
+     locale-base-en-us \
      musl-staticdev \
      sed \
+     tzdata \
 "
 
 install_path = "/opt/${PN}"
