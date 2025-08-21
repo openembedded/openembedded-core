@@ -9,8 +9,6 @@ DEPENDS = "bison-native"
 SRC_URI[sha256sum] = "1387e0b67ff247d2abde998f90dfbf70c1491391a59ddfecb8ae698789f0a4f5"
 
 PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux,libselinux"
-# http://savannah.gnu.org/bugs/?27299
-CACHED_CONFIGUREVARS += "gl_cv_func_wcwidth_works=yes"
 
 EXTRA_OECONF += "ac_cv_path_SORT=${bindir}/sort"
 
