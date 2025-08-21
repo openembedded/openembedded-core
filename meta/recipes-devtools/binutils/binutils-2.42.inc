@@ -39,6 +39,10 @@ SRC_URI = "\
      file://0015-gprofng-change-use-of-bignum-to-bigint.patch \
      file://0016-CVE-2024-53589.patch \
      file://0017-dlltool-file-name-too-long.patch \
+     file://0018-opcodes-fix-std-gnu23-compatibility-wrt-static_assert.patch \
+     file://0019-Fix-32097-Warnings-when-building-gprofng-with-Clang.patch \
+     file://0020-gprofng-fix-std-gnu23-compatibility-wrt-unprototyped.patch \
+     file://0021-gprofng-fix-build-with-std-gnu23.patch \
      file://0018-CVE-2025-0840.patch \
      file://CVE-2025-1176.patch \
      file://CVE-2025-1178.patch \
