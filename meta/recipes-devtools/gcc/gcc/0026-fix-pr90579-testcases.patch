@@ -1,0 +1,20 @@
+Upstream-Status: Backport [https://gcc.gnu.org/cgit/gcc/commit/?id=679e24f5a751663998ff7202149a749e0f7251f9]
+
+Signed-off-by: Harish Sadineni <Harish.Sadineni@windriver.com>
+---
+ gcc/testsuite/gcc.target/i386/pr90579.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/testsuite/gcc.target/i386/pr90579.c b/gcc/testsuite/gcc.target/i386/pr90579.c
+index ab48a44063c..19081ec9fdf 100644
+--- a/gcc/testsuite/gcc.target/i386/pr90579.c
++++ b/gcc/testsuite/gcc.target/i386/pr90579.c
+@@ -1,5 +1,5 @@
+ /* { dg-do compile } */
+-/* { dg-options "-O3 -mavx2 -mfpmath=sse" } */
++/* { dg-options "-O3 -mavx2 -mfpmath=sse -fno-pie" } */
+ 
+ extern double r[6];
+ extern double a[];
+-- 
+2.49.0
