@@ -179,6 +179,16 @@ do_install_ptest() {
         sed -i -e 's|${DEBUG_PREFIX_MAP}||g' ${D}${PTEST_PATH}/tests/init-env
 }
 
+do_install_ptest:append:libc-musl() {
+        # Force UTF-8 runtime and skip legacy fr_FR subcases
+        sed -i '3i export LANG=fr_FR.UTF-8; export LC_ALL=fr_FR.UTF-8' \
+            ${D}${PTEST_PATH}/run-ptest
+        sed -i '3i export LOCALE_FR="none"; export LOCALE_FR_UTF8=fr_FR.UTF-8' \
+            ${D}${PTEST_PATH}/run-ptest
+        sed -i -e 's|^LOCALE_FR="fr_FR.ISO-8859-1"|LOCALE_FR="none"|g' \
+            ${D}${PTEST_PATH}/tests/init-env
+}
+
 RDEPENDS:${PN}-ptest += "coreutils make xz bash gawk autoconf locale-base-de-de locale-base-fr-fr"
 RDEPENDS:${PN}-ptest:append:libc-glibc = "\
     glibc-gconv-big5 \
