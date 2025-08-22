@@ -27,6 +27,7 @@ SRC_URI += " \
            file://0001-tests-autopoint-3-unset-MAKEFLAGS.patch \
            file://0001-init-env.in-do-not-add-C-CXX-parameters.patch \
            "
+SRC_URI:append:libc-musl = " file://0001-Ignore-failing-tests-needing-BIG5-encoding-on-musl.patch"
 
 inherit autotools texinfo pkgconfig ptest
 
@@ -51,6 +52,10 @@ EXTRA_OECONF:append:class-target = " \
                  gt_cv_locale_de=de_DE.ISO-8859-1 \
 "
 
+EXTRA_OECONF:append:libc-musl = "\
+                 --enable-threads=posix \
+                 gt_cv_func_printf_posix=yes \
+"
 PACKAGECONFIG ??= "glib libxml"
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
@@ -174,7 +179,7 @@ do_install_ptest() {
         sed -i -e 's|${DEBUG_PREFIX_MAP}||g' ${D}${PTEST_PATH}/tests/init-env
 }
 
-RDEPENDS:${PN}-ptest += "make xz bash gawk autoconf locale-base-de-de locale-base-fr-fr"
+RDEPENDS:${PN}-ptest += "coreutils make xz bash gawk autoconf locale-base-de-de locale-base-fr-fr"
 RDEPENDS:${PN}-ptest:append:libc-glibc = "\
     glibc-gconv-big5 \
     glibc-charmap-big5 \
