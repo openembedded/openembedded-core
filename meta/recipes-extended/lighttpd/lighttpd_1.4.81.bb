@@ -16,7 +16,7 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
            file://lighttpd \
            "
 
-SRC_URI[sha256sum] = "3b29a625b3ad88702d1fea4f5f42bb7d87488f2e4efc977d7f185329ca6084bd"
+SRC_URI[sha256sum] = "d7d42c3fd2fd94b63c915aa7d18f4da3cac5937ddba33e909f81cf50842a5840"
 
 DEPENDS = "virtual/crypt"
 
@@ -24,7 +24,6 @@ PACKAGECONFIG ??= "openssl pcre zlib \
     ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
 "
 
-PACKAGECONFIG[libev] = "-Dwith_libev=enabled,-Dwith_libev=disabled,libev"
 PACKAGECONFIG[mysql] = "-Dwith_mysql=enabled,-Dwith_mysql=disabled,mariadb"
 PACKAGECONFIG[ldap] = "-Dwith_ldap=enabled,-Dwith_ldap=disabled,openldap"
 PACKAGECONFIG[attr] = "-Dwith_xattr=true,-Dwith_xattr=false,attr"
