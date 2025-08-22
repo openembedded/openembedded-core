@@ -79,7 +79,8 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
         bitbake("core-image-minimal")
 
         # wrap the execution with a qemu instance
-        with runqemu("core-image-minimal", runqemuparams = "nographic") as qemu:
+        # Increase RAM to 4GB to accommodate some GCC tests that require more than 3GB 
+        with runqemu("core-image-minimal", runqemuparams = "nographic", qemuparams=" -m 4096") as qemu:
             # validate that SSH is working
             status, _ = qemu.run("uname")
             self.assertEqual(status, 0)
