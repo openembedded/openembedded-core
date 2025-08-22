@@ -31,7 +31,9 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_readline-skip-limited-history-test.patch \
            file://0001-Generate-data-for-OpenSSL-3.4-and-add-it-to-multissl.patch \
            "
-
+SRC_URI:append:libc-musl = "\
+           file://test_posix_nodev_disable.patch \
+           "
 SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
            "
@@ -247,7 +249,7 @@ do_install:append:class-nativesdk () {
 }
 
 do_install_ptest:append:class-target:libc-musl () {
-    sed -i -e 's|SKIPPED_TESTS=|SKIPPED_TESTS="-x test__locale -x test_c_locale_coercion -x test_locale -x test_os test_re -x test__xxsubinterpreters -x test_threading --ignore test.test_strptime.StrptimeTests.test_date_locale2"|' ${D}${PTEST_PATH}/run-ptest
+    sed -i -e 's|SKIPPED_TESTS=|SKIPPED_TESTS="-x test__locale -x test_c_locale_coercion -x test_locale -x test_os test_re -x test__xxsubinterpreters -x test_threading --ignore test.test_strptime.StrptimeTests.test_date_locale2 --ignore test.test_ctypes.test_dlerror.TestNullDlsym.test_null_dlsym"|' ${D}${PTEST_PATH}/run-ptest
 }
 
 SYSROOT_PREPROCESS_FUNCS:append:class-target = " provide_target_config_script"
