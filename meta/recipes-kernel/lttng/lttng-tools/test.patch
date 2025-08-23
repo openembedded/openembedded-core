@@ -1,0 +1,22 @@
+tests: fix unix socket high FD count test off-by-one
+
+The HIGH_FD_COUNT macro in test_unix_socket.cpp was set equal to
+LTTCOMM_MAX_SEND_FDS, which could cause the test to exceed the
+maximum allowed number of file descriptors. Adjust it to
+LTTCOMM_MAX_SEND_FDS - 1 to avoid hitting the limit and ensure the
+test remains valid.
+
+Upstream-Status: Inappropriate [Musl-specific]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+--- a/tests/unit/test_unix_socket.cpp
++++ b/tests/unit/test_unix_socket.cpp
+@@ -25,7 +25,7 @@
+ #include <tap/tap.h>
+ #include <unistd.h>
+ 
+-#define HIGH_FD_COUNT		LTTCOMM_MAX_SEND_FDS
++#define HIGH_FD_COUNT		LTTCOMM_MAX_SEND_FDS - 1
+ #define MESSAGE_COUNT		4
+ #define LARGE_PAYLOAD_SIZE	(4 * 1024)
+ #define LARGE_PAYLOAD_RECV_SIZE 100
