@@ -183,3 +183,5 @@ do_install_ptest() {
     install -d ${D}${PTEST_PATH}/test/tests
     find ${B}/test/ -type f -executable -exec cp {} ${D}${PTEST_PATH}/test/tests \;
 }
+
+CVE_STATUS[CVE-2025-5222] = "fixed-version: fixed in version 77-1"
