@@ -10,6 +10,7 @@ DEPENDS += "gperf-native"
 SRCREV = "c7c0caed1d04292500ed4b9bb386566053eb9775"
 
 SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.6;protocol=https \
+           file://0001-api-fix-seccomp_export_bpf_mem-out-of-bounds-read.patch \
            file://run-ptest \
            "
 
