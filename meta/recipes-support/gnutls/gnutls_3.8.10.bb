@@ -98,3 +98,6 @@ pkg_postinst_ontarget:${PN}-fips () {
         ${bindir}/fipshmac ${libdir}/libhogweed.so.6.* > ${libdir}/.libhogweed.so.6.hmac
     fi
 }
+
+CVE_STATUS[CVE-2025-32989] = "fixed-version: fixed in version 3.8.10"
+CVE_STATUS[CVE-2025-32990] = "fixed-version: fixed in version 3.8.10"
