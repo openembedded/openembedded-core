@@ -27,6 +27,8 @@ SRC_URI[testtar.sha256sum] = "c6b2d42ee50b8b236e711a97d68e6c4b5c8d83e69a2be47223
 # Disputed as a security issue, but fixed in d39f780
 CVE_STATUS[CVE-2023-45322] = "disputed: issue requires memory allocation to fail"
 
+CVE_STATUS[CVE-2025-6170] = "fixed-version: fixed in version 2.14.5"
+
 BINCONFIG = "${bindir}/xml2-config"
 
 PACKAGECONFIG ??= "python"
