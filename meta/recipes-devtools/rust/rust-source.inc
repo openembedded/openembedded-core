@@ -19,6 +19,3 @@ RUSTSRC = "${UNPACKDIR}/rustc-${RUST_VERSION}-src"
 
 UPSTREAM_CHECK_URI = "https://forge.rust-lang.org/infra/other-installation-methods.html"
 UPSTREAM_CHECK_REGEX = "rustc-(?P<pver>\d+(\.\d+)+)-src"
-
-CVE_STATUS[CVE-2024-24576] = "not-applicable-platform: Issue only applies on Windows"
-CVE_STATUS[CVE-2024-43402] = "not-applicable-platform: Issue only applies on Windows"

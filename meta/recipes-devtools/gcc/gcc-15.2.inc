@@ -112,5 +112,4 @@ EXTRA_OECONF_INITIAL = "\
     --disable-libssp \
 "
 
-CVE_STATUS[CVE-2021-37322] = "cpe-incorrect: Is a binutils 2.26 issue, not gcc"
 CVE_STATUS[CVE-2023-4039] = "fixed-version: Fixed from version 14.0+"

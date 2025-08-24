@@ -49,7 +49,5 @@ do_install_ptest() {
 
 BBCLASSEXTEND = "native nativesdk"
 
-CVE_STATUS[CVE-2023-45853] = "not-applicable-config: we don't build minizip"
-
 # Adding 'CVE_PRODUCT' to avoid false detection of CVEs
 CVE_PRODUCT = "zlib:zlib gnu:zlib"

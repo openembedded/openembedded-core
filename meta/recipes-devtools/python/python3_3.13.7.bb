@@ -45,14 +45,6 @@ UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
 
 CVE_PRODUCT = "python:python python_software_foundation:python cpython"
 
-CVE_STATUS[CVE-2007-4559] = "disputed: Upstream consider this expected behaviour"
-CVE_STATUS[CVE-2019-18348] = "not-applicable-config: This is not exploitable when glibc has CVE-2016-10739 fixed"
-CVE_STATUS[CVE-2020-15523] = "not-applicable-platform: Issue only applies on Windows"
-CVE_STATUS[CVE-2022-26488] = "not-applicable-platform: Issue only applies on Windows"
-# The module will be removed in the future and flaws documented.
-CVE_STATUS[CVE-2015-20107] = "upstream-wontfix: The mailcap module is insecure by design, so this can't be fixed in a meaningful way"
-CVE_STATUS[CVE-2023-36632] = "disputed: Not an issue, in fact expected behaviour"
-
 PYTHON_MAJMIN = "3.13"
 
 S = "${UNPACKDIR}/Python-${PV}"
@@ -201,14 +193,14 @@ do_install:append:class-native() {
         # when they're only used for python called with -O or -OO.
         #find ${D} -name *opt-*.pyc -delete
         # Remove all pyc files. There are a ton of them and it is probably faster to let
-        # python create the ones it wants at runtime rather than manage in the sstate 
+        # python create the ones it wants at runtime rather than manage in the sstate
         # tarballs and sysroot creation.
         find ${D} -name *.pyc -delete
 
         # Nothing should be looking into ${B} for python3-native
         sed -i -e 's:${B}:/build/path/unavailable/:g' \
                 ${D}/${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile
-        
+
         # disable the lookup in user's site-packages globally
         sed -i 's#ENABLE_USER_SITE = None#ENABLE_USER_SITE = False#' ${D}${libdir}/python${PYTHON_MAJMIN}/site.py
 
@@ -306,7 +298,7 @@ py_package_preprocess () {
         cd -
 
         mv ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config-${MULTILIB_SUFFIX}
-        
+
         #Remove the unneeded copy of target sysconfig data
         rm -rf ${PKGD}/${libdir}/python-sysconfigdata
 }

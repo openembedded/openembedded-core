@@ -26,10 +26,6 @@ UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
 # follow the ESV versions divisible by 2
 UPSTREAM_CHECK_REGEX = "(?P<pver>9.(\d*[02468])+(\.\d+)+(-P\d+)*)/"
 
-# Issue only affects dhcpd with recent bind versions. We don't ship dhcpd anymore
-# so the issue doesn't affect us.
-CVE_STATUS[CVE-2019-6470] = "not-applicable-config: Issue only affects dhcpd with recent bind versions and we don't ship dhcpd anymore."
-
 inherit autotools update-rc.d systemd useradd pkgconfig multilib_header update-alternatives
 
 # PACKAGECONFIGs readline and libedit should NOT be set at same time

@@ -26,13 +26,6 @@ SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz"
 
 SRC_URI[sha256sum] = "733984395e0dbbe5c046abda2dc49a5544e7e0e1e2366bba849222ae9e3a03b1"
 
-# https://nvd.nist.gov/vuln/detail/CVE-2023-39018
-# https://github.com/bramp/ffmpeg-cli-wrapper/issues/291
-# https://security-tracker.debian.org/tracker/CVE-2023-39018
-# https://bugzilla.suse.com/show_bug.cgi?id=CVE-2023-39018
-CVE_STATUS[CVE-2023-39018] = "cpe-incorrect: This issue belongs to ffmpeg-cli-wrapper \
-(Java wrapper around the FFmpeg CLI) and not ffmepg itself."
-
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
 ARM_INSTRUCTION_SET:armv5 = "arm"

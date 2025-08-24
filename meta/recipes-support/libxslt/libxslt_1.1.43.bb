@@ -19,8 +19,6 @@ SRC_URI[sha256sum] = "5a3d6b383ca5afc235b171118e90f5ff6aa27e9fea3303065231a6d403
 
 UPSTREAM_CHECK_REGEX = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
-CVE_STATUS[CVE-2022-29824] = "not-applicable-config: Static linking to libxml2 is not enabled."
-
 S = "${UNPACKDIR}/libxslt-${PV}"
 
 BINCONFIG = "${bindir}/xslt-config"
