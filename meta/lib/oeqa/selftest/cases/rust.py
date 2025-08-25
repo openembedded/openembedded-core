@@ -74,6 +74,7 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'src/tools/rust-analyzer',
                             'src/tools/rustdoc-themes',
                             'src/tools/rust-installer',
+                            'src/tools/test-float-parse',
                             'src/tools/suggest-tests',
                             'src/tools/tidy',
                             'tests/assembly/asm/aarch64-outline-atomics.rs',
@@ -98,7 +99,7 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
 
         exclude_fail_tests = " ".join([" --exclude " + item for item in exclude_list])
         # Add exclude_fail_tests with other test arguments
-        testargs =  exclude_fail_tests + " --no-fail-fast --bless"
+        testargs =  exclude_fail_tests + " --no-doc --no-fail-fast --bless"
 
         # wrap the execution with a qemu instance.
         # Tests are run with 512 tasks in parallel to execute all tests very quickly

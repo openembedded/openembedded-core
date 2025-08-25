@@ -106,7 +106,7 @@ diff --git a/src/bootstrap/src/bin/rustc.rs b/src/bootstrap/src/bin/rustc.rs
 index d04e2fbeb7..011c289d93 100644
 --- a/src/bootstrap/src/bin/rustc.rs
 +++ b/src/bootstrap/src/bin/rustc.rs
-@@ -89,24 +89,6 @@ fn main() {
+@@ -92,24 +92,6 @@ fn main() {
          rustc_real
      };
 
@@ -131,16 +131,16 @@ index d04e2fbeb7..011c289d93 100644
      let mut cmd = match env::var_os("RUSTC_WRAPPER_REAL") {
          Some(wrapper) if !wrapper.is_empty() => {
              let mut cmd = Command::new(wrapper);
-@@ -117,6 +99,9 @@ fn main() {
+@@ -120,6 +102,9 @@ fn main() {
      };
      cmd.args(&args).env(dylib_path_var(), env::join_paths(&dylib_path).unwrap());
 
 +    // Get the name of the crate we're compiling, if any.
 +    let crate_name = parse_value_from_args(&orig_args, "--crate-name");
 +
-     if let Some(crate_name) = crate_name {
-         if let Some(target) = env::var_os("RUSTC_TIME") {
-             if target == "all"
+     if let Some(crate_name) = crate_name
+         && let Some(target) = env::var_os("RUSTC_TIME")
+         && (target == "all"
 diff --git a/src/bootstrap/src/core/builder/cargo.rs b/src/bootstrap/src/core/builder/cargo.rs
 index 0688a1d689..066e6bf53f 100644
 --- a/src/bootstrap/src/core/builder/cargo.rs
@@ -170,8 +170,8 @@ index 9754254cdd..dd95cc71cd 100644
 --- a/src/tools/clippy/tests/compile-test.rs
 +++ b/src/tools/clippy/tests/compile-test.rs
 @@ -1,4 +1,4 @@
--#![feature(rustc_private, let_chains)]
-+#![feature(let_chains)]
+-#![feature(rustc_private)]
++// warn on lints, that are included in `rust-lang/rust`s bootstrap
  #![warn(rust_2018_idioms, unused_lifetimes)]
  #![allow(unused_extern_crates)]
 

@@ -242,19 +242,6 @@ index 5b8e5ff4f4a..e558fbd7bd7 100644
  //@ only-linux
  //@ aux-build:dwarf-mixed-versions-lto-aux.rs
  //@ compile-flags: -C lto -g -Cdwarf-version=5
-diff --git a/tests/codegen/dont-shuffle-bswaps.rs b/tests/codegen/dont-shuffle-bswaps.rs
-index 0e712bc3a4e..93965d990d0 100644
---- a/tests/codegen/dont-shuffle-bswaps.rs
-+++ b/tests/codegen/dont-shuffle-bswaps.rs
-@@ -1,3 +1,8 @@
-+//@ only-x86
-+//@ only-x86_64
-+//@ only-arm
-+//@ only-aarch64
-+
- //@ revisions: OPT2 OPT3 OPT3_S390X
- //@[OPT2] compile-flags: -Copt-level=2
- //@[OPT3] compile-flags: -C opt-level=3
 diff --git a/tests/codegen/uninhabited-transparent-return-abi.rs b/tests/codegen/uninhabited-transparent-return-abi.rs
 index face1577c3f..d69e5e34a7b 100644
 --- a/tests/codegen/uninhabited-transparent-return-abi.rs

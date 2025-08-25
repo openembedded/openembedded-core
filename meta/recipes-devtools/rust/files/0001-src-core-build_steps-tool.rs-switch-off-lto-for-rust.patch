@@ -39,12 +39,12 @@ index 087df2f8a..00790affb 100644
 +
 +use crate::core::builder::{Builder, Cargo as CargoCommand, RunConfig, ShouldRun, Step};
 +use crate::core::config::{DebuginfoLevel, TargetSelection};
- use crate::utils::channel::GitInfo;
  use crate::utils::exec::{BootstrapCommand, command};
  use crate::utils::helpers::{add_dylib_path, exe, t};
-@@ -148,20 +146,7 @@ impl Step for ToolBuild {
-             &self.extra_features,
-         );
+ use crate::{Compiler, FileType, Kind, Mode, gha};
+@@ -171,20 +171,7 @@ impl Step for ToolBuild {
+             cargo.env("RUSTC_WRAPPER", ccache);
+         }
 
 -        // Rustc tools (miri, clippy, cargo, rustfmt, rust-analyzer)
 -        // could use the additional optimizations.
