@@ -1,4 +1,4 @@
-From 297d3c709027467468aeb908e72d4d09cfb9ee91 Mon Sep 17 00:00:00 2001
+From 1c204b5acc66f3e89c6f90cf5bcdb410fc90f0c6 Mon Sep 17 00:00:00 2001
 From: Gyorgy Sarvari <skandigraun@gmail.com>
 Date: Sat, 2 Aug 2025 20:57:49 +0200
 Subject: [PATCH] query-rustc: append RUSTFLAGS to rustc executable
@@ -21,7 +21,7 @@ Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/meson/query-rustc.py b/meson/query-rustc.py
-index f97cb692..fc7369a8 100755
+index f97cb69..fc7369a 100755
 --- a/meson/query-rustc.py
 +++ b/meson/query-rustc.py
 @@ -78,6 +78,10 @@ if __name__ == "__main__":

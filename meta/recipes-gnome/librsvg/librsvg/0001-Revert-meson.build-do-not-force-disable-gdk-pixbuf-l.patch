@@ -1,4 +1,4 @@
-From 275edeb3794ca5581452a178fd111d0383c2f04e Mon Sep 17 00:00:00 2001
+From a614646fc79ad1c11784e04d415b19e752a4ae20 Mon Sep 17 00:00:00 2001
 From: Gyorgy Sarvari <skandigraun@gmail.com>
 Date: Wed, 6 Aug 2025 13:50:21 +0200
 Subject: [PATCH] Revert "meson.build: do not force-disable gdk-pixbuf-loader
@@ -26,7 +26,7 @@ Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/gdk-pixbuf-loader/meson.build b/gdk-pixbuf-loader/meson.build
-index 6fa10a68..c51d8031 100644
+index 6fa10a6..c51d803 100644
 --- a/gdk-pixbuf-loader/meson.build
 +++ b/gdk-pixbuf-loader/meson.build
 @@ -36,7 +36,7 @@ pixbuf_thumbnailer = configure_file(
