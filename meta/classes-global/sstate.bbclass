@@ -306,18 +306,17 @@ def sstate_install(ss, d):
         sharedfiles.append(ss['fixmedir'] + "/fixmepath")
 
     # Write out the manifest
-    f = open(manifest, "w")
-    for file in sharedfiles:
-        f.write(file + "\n")
+    with open(manifest, "w") as f:
+        for file in sharedfiles:
+            f.write(file + "\n")
 
-    # We want to ensure that directories appear at the end of the manifest
-    # so that when we test to see if they should be deleted any contents
-    # added by the task will have been removed first.
-    dirs = sorted(shareddirs, key=len)
-    # Must remove children first, which will have a longer path than the parent
-    for di in reversed(dirs):
-        f.write(di + "\n")
-    f.close()
+        # We want to ensure that directories appear at the end of the manifest
+        # so that when we test to see if they should be deleted any contents
+        # added by the task will have been removed first.
+        dirs = sorted(shareddirs, key=len)
+        # Must remove children first, which will have a longer path than the parent
+        for di in reversed(dirs):
+            f.write(di + "\n")
 
     # Append to the list of manifests for this PACKAGE_ARCH
 
@@ -481,9 +480,8 @@ def sstate_clean_cachefiles(d):
 def sstate_clean_manifest(manifest, d, canrace=False, prefix=None):
     import oe.path
 
-    mfile = open(manifest)
-    entries = mfile.readlines()
-    mfile.close()
+    with open(manifest) as mfile:
+        entries = mfile.readlines()
 
     for entry in entries:
         entry = entry.strip()
