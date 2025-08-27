@@ -1714,9 +1714,6 @@ to your build configuration.
         self.cleaned = True
 
     def run_bitbake_env(self, mach=None, target=''):
-        bitbake = shutil.which('bitbake')
-        if not bitbake:
-            return
 
         if not mach:
             mach = self.get('MACHINE')
@@ -1732,6 +1729,10 @@ to your build configuration.
             cmd = 'MACHINE=%s bitbake -e %s %s' % (mach, multiconfig, target)
         else:
             cmd = 'bitbake -e %s %s' % (multiconfig, target)
+
+        bitbake = shutil.which('bitbake')
+        if not bitbake:
+            raise OEPathError("Bitbake is needed to run '%s', but it is not found in PATH. Please source the bitbake build environment." % cmd.strip())
 
         logger.info('Running %s...' % cmd)
         try:
