@@ -1,4 +1,4 @@
-From 348f846b206780646430d6477c04b7793b669f34 Mon Sep 17 00:00:00 2001
+From 710c2937dbc95e4e57166e7c33c029f7f1eec00d Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Wed, 16 Jul 2025 23:24:21 +0100
 Subject: [PATCH] allow external prepare_builtins
@@ -14,10 +14,10 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
  1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/libclc/CMakeLists.txt b/libclc/CMakeLists.txt
-index 43e213b385f5..d4a6d096169e 100644
+index c98e2043464d..151c5d2d20c6 100644
 --- a/libclc/CMakeLists.txt
 +++ b/libclc/CMakeLists.txt
-@@ -181,17 +181,28 @@ set(LLVM_LINK_COMPONENTS
+@@ -178,17 +178,28 @@ set(LLVM_LINK_COMPONENTS
    IRReader
    Support
  )
@@ -52,6 +52,3 @@ index 43e213b385f5..d4a6d096169e 100644
  
  # Setup arch devices
  set( r600--_devices cedar cypress barts cayman )
--- 
-2.43.0
-

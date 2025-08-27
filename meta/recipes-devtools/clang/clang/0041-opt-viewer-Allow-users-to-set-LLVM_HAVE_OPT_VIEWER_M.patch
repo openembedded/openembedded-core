@@ -1,7 +1,7 @@
-From e396fbe0e698c80e112af76fcdff8bbd61a30740 Mon Sep 17 00:00:00 2001
+From 6995028155fce3dea8a54ec229745a2d3a283add Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 2 Aug 2025 17:58:20 -0700
-Subject: [PATCH] llvm: Allow users to set LLVM_HAVE_OPT_VIEWER_MODULES
+Subject: [PATCH] [opt-viewer] Allow users to set LLVM_HAVE_OPT_VIEWER_MODULES
  manually from the CMake
 
 Check right before setting LLVM_HAVE_OPT_VIEWER_MODULES
@@ -9,16 +9,15 @@ so that if the user specifies the variable on the commandline
 it takes precedence. If not, fall back to the old logic
 
 Upstream-Status: Submitted [https://github.com/llvm/llvm-project/pull/151845]
-
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- llvm/CMakeLists.txt                  |  2 ++
- llvm/cmake/config-ix.cmake           | 13 ++++++++++---
- llvm/tools/opt-viewer/CMakeLists.txt | 24 +++++++++++++-----------
- 3 files changed, 25 insertions(+), 14 deletions(-)
+ llvm/CMakeLists.txt                     |  2 ++
+ llvm/cmake/config-ix.cmake              | 13 ++++++++++---
+ llvm/include/llvm/Config/config.h.cmake |  3 +++
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index 4c70b98a32f9..60b786ca39c2 100644
+index cb945b578e46..e4ed9eca6014 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
 @@ -7,6 +7,8 @@ set(LLVM_COMMON_CMAKE_UTILS ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
@@ -55,37 +54,17 @@ index a8e4e5a63244..17af3dc1e93f 100644
  endif()
  
  function(llvm_get_host_prefixes_and_suffixes)
-diff --git a/llvm/tools/opt-viewer/CMakeLists.txt b/llvm/tools/opt-viewer/CMakeLists.txt
-index 4bcf6932ee77..d231c39bcc5d 100644
---- a/llvm/tools/opt-viewer/CMakeLists.txt
-+++ b/llvm/tools/opt-viewer/CMakeLists.txt
-@@ -6,16 +6,18 @@ set (files
-   "optrecord.py"
-   "style.css")
+diff --git a/llvm/include/llvm/Config/config.h.cmake b/llvm/include/llvm/Config/config.h.cmake
+index ce83de8e4cba..02cf6d2ec363 100644
+--- a/llvm/include/llvm/Config/config.h.cmake
++++ b/llvm/include/llvm/Config/config.h.cmake
+@@ -287,6 +287,9 @@
+ /* Define to a function implementing strdup */
+ #cmakedefine strdup ${strdup}
  
--foreach (file ${files})
--  install(PROGRAMS ${file}
--    DESTINATION "${CMAKE_INSTALL_DATADIR}/opt-viewer"
--    COMPONENT opt-viewer)
--endforeach (file)
-+if(LLVM_HAVE_OPT_VIEWER_MODULES)
-+  foreach (file ${files})
-+    install(PROGRAMS ${file}
-+      DESTINATION "${CMAKE_INSTALL_DATADIR}/opt-viewer"
-+      COMPONENT opt-viewer)
-+  endforeach (file)
++/* Define indicating opt-viewer modules */
++#cmakedefine LLVM_HAVE_OPT_VIEWER_MODULES
++
+ /* Whether GlobalISel rule coverage is being collected */
+ #cmakedefine01 LLVM_GISEL_COV_ENABLED
  
--add_custom_target(opt-viewer DEPENDS ${files})
--set_target_properties(opt-viewer PROPERTIES FOLDER "LLVM/Tools")
--if(NOT LLVM_ENABLE_IDE)
--  add_llvm_install_targets("install-opt-viewer"
--                           DEPENDS opt-viewer
--                           COMPONENT opt-viewer)
-+  add_custom_target(opt-viewer DEPENDS ${files})
-+  set_target_properties(opt-viewer PROPERTIES FOLDER "LLVM/Tools")
-+  if(NOT LLVM_ENABLE_IDE)
-+    add_llvm_install_targets("install-opt-viewer"
-+                             DEPENDS opt-viewer
-+                             COMPONENT opt-viewer)
-+  endif()
- endif()

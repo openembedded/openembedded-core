@@ -1,7 +1,8 @@
-From d2360096db2da00121f4e653b39ca1f7eb2801eb Mon Sep 17 00:00:00 2001
+From 3b2851385e78b67a272717076086f0f4dbc2d84a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 10 May 2025 14:03:12 -0700
-Subject: [PATCH] compiler-rt: Exclude sync_fetch_and_* for any pre-ARMv6 targets
+Subject: [PATCH] compiler-rt: Exclude sync_fetch_and_* for any pre-ARMv6
+ targets
 
 Sometimes builds may happen where ABI is not indidated by host_triple
 e.g. on Yocto the compiler used is called arm-poky-linux-gnueabi-clang
@@ -39,12 +40,12 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 12 insertions(+)
 
 diff --git a/compiler-rt/lib/builtins/CMakeLists.txt b/compiler-rt/lib/builtins/CMakeLists.txt
-index cb276311b290..53a3cd1dc81f 100644
+index 9c1148e2a8e3..9a15606e1e22 100644
 --- a/compiler-rt/lib/builtins/CMakeLists.txt
 +++ b/compiler-rt/lib/builtins/CMakeLists.txt
-@@ -864,6 +864,18 @@ else ()
-       list(JOIN BUILTIN_CFLAGS " " CMAKE_REQUIRED_FLAGS)
-       set(CMAKE_REQUIRED_FLAGS "${TARGET_${arch}_CFLAGS} ${BUILTIN_CFLAGS_${arch}}")
+@@ -908,6 +908,18 @@ else ()
+         ${TARGET_${arch}_CFLAGS})
+       list(JOIN CMAKE_REQUIRED_FLAGS " " CMAKE_REQUIRED_FLAGS)
        message(STATUS "Performing additional configure checks with target flags: ${CMAKE_REQUIRED_FLAGS}")
 +      # For ARM archs, exclude any sync builtins if dmb or mcr p15, #0, r0, c7, c10, #5
 +      # is not supported
@@ -60,4 +61,4 @@ index cb276311b290..53a3cd1dc81f 100644
 +      endif()
        # For ARM archs, exclude any VFP builtins if VFP is not supported
        if (${arch} MATCHES "^(arm|armhf|armv7|armv7s|armv7k|armv7m|armv7em|armv8m.main|armv8.1m.main)$")
-         string(REPLACE ";" " " _TARGET_${arch}_CFLAGS "${TARGET_${arch}_CFLAGS}")
+         check_compile_definition(__ARM_FP "${CMAKE_C_FLAGS}" COMPILER_RT_HAS_${arch}_VFP)

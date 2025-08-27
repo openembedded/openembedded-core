@@ -1,0 +1,30 @@
+From 4782e94c9b3e150f60bca1b279c300cc4f34fa24 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sun, 27 Jul 2025 19:12:13 -0700
+Subject: [PATCH] Revert "[libc++] Remap headers in the debug info when
+ building the library (#143004)"
+
+This reverts commit 4d50b405f1585ce172f87cb5f8daf3c1b4145215.
+
+Upstream-Status: Inappropriate [ OE-Specific ]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ libcxx/include/CMakeLists.txt | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/libcxx/include/CMakeLists.txt b/libcxx/include/CMakeLists.txt
+index 85758c671e1e..fed5229514e6 100644
+--- a/libcxx/include/CMakeLists.txt
++++ b/libcxx/include/CMakeLists.txt
+@@ -1718,11 +1718,6 @@ add_dependencies(cxx-headers generate-cxx-headers)
+ target_include_directories(cxx-headers INTERFACE ${LIBCXX_GENERATED_INCLUDE_TARGET_DIR}
+                                                  ${LIBCXX_GENERATED_INCLUDE_DIR})
+ 
+-# Make sure to map the generated include directory back to libc++'s actual source directory when generating
+-# debug information. Otherwise, the debug information will refer to generated headers which are created during
+-# the build and generally not persistent.
+-target_add_compile_flags_if_supported(cxx-headers INTERFACE "-fdebug-prefix-map=${LIBCXX_GENERATED_INCLUDE_DIR}=${LIBCXX_SOURCE_DIR}/include")
+-
+ if (LIBCXX_INSTALL_HEADERS)
+   foreach(file ${files})
+     get_filename_component(dir ${file} DIRECTORY)

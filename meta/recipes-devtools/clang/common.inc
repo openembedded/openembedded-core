@@ -13,11 +13,11 @@ LICENSE = "Apache-2.0-with-LLVM-exception"
 
 # GA Release
 RELEASE ?= "${PV}"
-BASEURI ?= "${LLVM_HTTP}/llvm-project/releases/download/llvmorg-${PV}/llvm-project-${PV}.src.tar.xz"
+BASEURI ?= "${LLVM_HTTP}/llvm-project/releases/download/llvmorg-${PV}${VER_SUFFIX}/llvm-project-${PV}${VER_SUFFIX}.src.tar.xz"
 UPSTREAM_CHECK_URI = "${LLVM_HTTP}/llvm-project/releases/"
 UPSTREAM_CHECK_REGEX = "releases/tag/llvmorg-?(?P<pver>\d+(\.\d+)+)"
-SOURCEDIR ?= "llvm-project-${PV}.src"
-SRC_URI[sha256sum] = "6898f963c8e938981e6c4a302e83ec5beb4630147c7311183cf61069af16333d"
+SOURCEDIR ?= "llvm-project-${PV}${VER_SUFFIX}.src"
+SRC_URI[sha256sum] = "1672e3efb4c2affd62dbbe12ea898b28a451416c7d95c1bd0190c26cbe878825"
 
 SRC_URI = "\
     ${BASEURI} \
@@ -52,17 +52,16 @@ SRC_URI = "\
     file://0029-llvm-Add-libunwind.pc.in-and-llvm-config-scripts.patch \
     file://0030-scan-build-py-respect-LLVM_LIBDIR_SUFFIX-like-other-.patch \
     file://0031-compiler-rt-Do-not-pass-target-to-clang-compiler.patch \
-    file://0032-clangd-Add-a-build-option-to-disable-building-dexp.patch \
-    file://0033-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch \
-    file://0034-llvm-config-remove-LLVM_LDFLAGS-from-ldflags-output.patch \
-    file://0035-openmp-Do-not-emit-date-and-time-into-generate-files.patch \
-    file://0036-libunwind-Use-gcs-instead-of-gcs-target-attribute.patch \
-    file://0037-compiler-rt-Exclude-sync_fetch_and_-for-any-pre-ARMv.patch \
-    file://0038-compiler-rt-Hardcode-uptr-sptr-typedefs-on-Mips-Linu.patch \
-    file://0001-libclc-allow-existing-prepare-builtins-in-standalone.patch \
-    file://no-c-index-test.patch \
-    file://0001-llvm-Allow-users-to-set-LLVM_HAVE_OPT_VIEWER_MODULES.patch \
-    file://0001-compiler-rt-AArch64-Add-GCS-property-in-assembly-fil.patch \
+    file://0032-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch \
+    file://0033-llvm-config-remove-LLVM_LDFLAGS-from-ldflags-output.patch \
+    file://0034-compiler-rt-Exclude-sync_fetch_and_-for-any-pre-ARMv.patch \
+    file://0035-compiler-rt-Hardcode-uptr-sptr-typedefs-on-Mips-Linu.patch \
+    file://0036-clang-Use-sysroot-relative-paths-for-getArchSpecific.patch \
+    file://0037-allow-external-prepare_builtins.patch \
+    file://0038-Revert-libc-Remap-headers-in-the-debug-info-when-bui.patch \
+    file://0039-Prevent-revisiting-block-when-searching-for-noreturn.patch \
+    file://0040-Only-build-c-index-test-when-clang-tests-are-include.patch \
+    file://0041-opt-viewer-Allow-users-to-set-LLVM_HAVE_OPT_VIEWER_M.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
