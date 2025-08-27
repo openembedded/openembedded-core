@@ -18,6 +18,7 @@ PV = "3.2"
 SRCREV = "cd0d391af9535b56e612ed227c1b89be269f3d59"
 
 SRC_URI = "git://github.com/thkukuk/libnss_nis;branch=master;protocol=https \
+           file://0001-make-ake-_nss_nis_getsecretkey-export-conditional-on.patch \
           "
 
 inherit autotools pkgconfig
