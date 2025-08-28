@@ -66,6 +66,7 @@ SDK_TOOLCHAIN_LANGS:remove:mipsarchn32 = "rust"
 SDK_TOOLCHAIN_LANGS:remove:linux-gnux32 = "go"
 SDK_TOOLCHAIN_LANGS:remove:riscv32 = "go"
 SDK_TOOLCHAIN_LANGS:remove:sdkmingw32 = "go"
+SDK_TOOLCHAIN_LANGS:remove:powerpc = "go"
 
 TOOLCHAIN_HOST_TASK ?= " \
     nativesdk-packagegroup-sdk-host \
