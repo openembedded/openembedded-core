@@ -103,10 +103,10 @@ python do_install_ptest_cargo() {
     with open(ptest_script, "a") as f:
         if not script_exists:
             f.write("#!/bin/sh\n")
-            f.write("rc=0\n")                
         else:
             f.write(f"\necho \"\"\n")
             f.write(f"echo \"## starting to run rust tests ##\"\n")               
+        f.write("if [ -z \"$rc\" ]; then rc=0; fi\n")
         for test_path in test_paths:
             script = textwrap.dedent(f"""\
                 if ! {test_path} {rust_test_args}
