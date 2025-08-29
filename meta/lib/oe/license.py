@@ -84,9 +84,6 @@ class FlattenVisitor(LicenseVisitor):
         self.licenses = []
         LicenseVisitor.__init__(self)
 
-    def visit_Str(self, node):
-        self.licenses.append(node.s)
-
     def visit_Constant(self, node):
         self.licenses.append(node.value)
 
@@ -239,9 +236,6 @@ class ListVisitor(LicenseVisitor):
     """Record all different licenses found in the license string"""
     def __init__(self):
         self.licenses = set()
-
-    def visit_Str(self, node):
-        self.licenses.add(node.s)
 
     def visit_Constant(self, node):
         self.licenses.add(node.value)
