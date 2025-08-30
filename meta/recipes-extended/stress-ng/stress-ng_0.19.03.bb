@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/ColinIanKing/stress-ng.git;protocol=https;branch=master;tag=V${PV}"
-SRCREV = "8d5399b282225f758606cd2b522382f65d947a8d"
+SRCREV = "20e0f48cf0ca9cc96ed150c3dfa96f8e8a2f964b"
 
 DEPENDS = "coreutils-native libbsd"
 
@@ -29,6 +29,3 @@ do_install() {
     oe_runmake DESTDIR=${D} BINDIR=${bindir} install
     ln -s stress-ng ${D}${bindir}/stress
 }
-
-# upstream issue: https://github.com/ColinIanKing/stress-ng/issues/315
-DEBUG_BUILD = "0"
