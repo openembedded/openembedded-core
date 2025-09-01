@@ -90,7 +90,7 @@ do_install:class-native() {
 }
 
 do_install:append() {
-	for i in df mktemp nice printenv base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${BPN}; done
+	for i in df mktemp nice printenv base32 base64; do mv ${D}${bindir}/$i ${D}${bindir}/$i.${BPN}; done
 
 	install -d ${D}${base_bindir}
 	[ "${base_bindir}" != "${bindir}" ] && for i in ${base_bindir_progs}; do mv ${D}${bindir}/$i ${D}${base_bindir}/$i.${BPN}; done
@@ -110,9 +110,13 @@ ALTERNATIVE_PRIORITY = "100"
 # Make hostname's priority higher than busybox but lower than net-tools
 ALTERNATIVE_PRIORITY[hostname] = "90"
 ALTERNATIVE:${PN} = "lbracket ${bindir_progs} ${base_bindir_progs} ${sbindir_progs} base32 base64 nice printenv mktemp df"
-ALTERNATIVE:${PN}-doc = "base64.1 nice.1 mktemp.1 df.1 groups.1 kill.1 uptime.1 stat.1 hostname.1"
+ALTERNATIVE:${PN}-doc = "base32.1 base64.1 nice.1 mktemp.1 df.1 groups.1 kill.1 uptime.1 stat.1 hostname.1"
 
 ALTERNATIVE_LINK_NAME[hostname.1] = "${mandir}/man1/hostname.1"
+
+ALTERNATIVE_LINK_NAME[base32] = "${base_bindir}/base32"
+ALTERNATIVE_TARGET[base32] = "${bindir}/base32.${BPN}"
+ALTERNATIVE_LINK_NAME[base32.1] = "${mandir}/man1/base32.1"
 
 ALTERNATIVE_LINK_NAME[base64] = "${base_bindir}/base64"
 ALTERNATIVE_TARGET[base64] = "${bindir}/base64.${BPN}"
