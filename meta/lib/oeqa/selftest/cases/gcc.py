@@ -71,7 +71,7 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
 
     def run_check_emulated(self, *args, **kwargs):
         # build core-image-minimal with required packages
-        default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp"]
+        default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp", "libitm"]
         features = []
         features.append('IMAGE_FEATURES += "ssh-server-openssh"')
         features.append('CORE_IMAGE_EXTRA_INSTALL += "{0}"'.format(" ".join(default_installed_packages)))
