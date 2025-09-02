@@ -39,6 +39,7 @@ PACKAGECONFIG ?= "cxx jpeg zlib lzma \
 PACKAGECONFIG[cxx] = "--enable-cxx,--disable-cxx,,"
 PACKAGECONFIG[jbig] = "--enable-jbig,--disable-jbig,jbig,"
 PACKAGECONFIG[jpeg] = "--enable-jpeg,--disable-jpeg,jpeg,"
+PACKAGECONFIG[lerc] = "--enable-lerc,--disable-lerc,liblerc,"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib,"
 PACKAGECONFIG[lzma] = "--enable-lzma,--disable-lzma,xz,"
 PACKAGECONFIG[webp] = "--enable-webp,--disable-webp,libwebp,"
