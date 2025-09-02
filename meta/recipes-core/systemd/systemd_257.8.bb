@@ -400,15 +400,8 @@ do_install() {
 			${D}/${sysconfdir}/systemd/system.conf
 	fi
 
-	if ${@bb.utils.contains('PACKAGECONFIG', 'pni-names', 'true', 'false', d)}; then
-		if ! grep -q '^NamePolicy=.*mac' ${D}${nonarch_libdir}/systemd/network/99-default.link; then
-			sed -i '/^NamePolicy=/s/$/ mac/' ${D}${nonarch_libdir}/systemd/network/99-default.link
-		fi
-		if ! grep -q 'AlternativeNamesPolicy=.*mac' ${D}${nonarch_libdir}/systemd/network/99-default.link; then
-			sed -i '/AlternativeNamesPolicy=/s/$/ mac/' ${D}${nonarch_libdir}/systemd/network/99-default.link
-		fi
-	else
-		# Actively disable Predictable Network Interface Names
+	# Actively disable Predictable Network Interface Names
+	if ${@ 'true' if not bb.utils.contains('PACKAGECONFIG', 'pni-names', 'true', 'false', d) else 'false'}; then
 		sed -i 's/^NamePolicy=.*/NamePolicy=/;s/^AlternativeNamesPolicy=.*/AlternativeNamesPolicy=/' ${D}${nonarch_libdir}/systemd/network/99-default.link
 	fi
 }
