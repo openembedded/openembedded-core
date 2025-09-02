@@ -207,6 +207,7 @@ do_install_ptest () {
 
 do_install_ptest:append:libc-musl () {
     # filter-out running regression testsuite on musl systems, it hangs
+    # Keep it until https://bugs.lttng.org/issues/1432 is fixed upstream
     sed -i -e '$a\' -e 'SUBDIRS := $(filter-out regression,$(SUBDIRS))' ${D}${PTEST_PATH}/tests/Makefile
 }
 
