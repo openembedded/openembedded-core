@@ -15,21 +15,16 @@ Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
  src/bin/keactrl/keactrl.in | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/src/bin/keactrl/keactrl.in b/src/bin/keactrl/keactrl.in
-index cccfdac303..20ae2e6ec5 100644
 --- a/src/bin/keactrl/keactrl.in
 +++ b/src/bin/keactrl/keactrl.in
-@@ -146,8 +146,8 @@ check_running() {
+@@ -157,8 +157,8 @@ check_running() {
      # Get the PID from the PID file (if it exists)
      get_pid_from_file "${proc_name}"
-     if [ ${_pid} -gt 0 ]; then
+     if [ "${_pid}" -gt 0 ]; then
 -        # Use ps to check if PID is alive
--        if ps -p ${_pid} 1>/dev/null; then
+-        if ps -p "${_pid}" 1>/dev/null; then
 +        # Use pgrep and grep to check if PID is alive
 +        if pgrep -v 1 | grep ${_pid} 1>/dev/null; then
              # No error, so PID IS ALIVE
              _running=1
          fi
--- 
-2.39.2
-
