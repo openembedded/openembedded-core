@@ -10,7 +10,9 @@ HOMEPAGE = "https://perf.wiki.kernel.org/index.php/Main_Page"
 LICENSE = "GPL-2.0-only"
 
 # zstd is required for kernels 6.14+ when libelf-zstd is detected
-PACKAGECONFIG ??= "python tui libunwind libtraceevent zstd"
+# Respect the coresight machine feature, but note this causes a
+# dependency on meta-arm.
+PACKAGECONFIG ??= "python tui libunwind libtraceevent zstd ${@bb.utils.filter('MACHINE_FEATURES', 'coresight', d)}"
 PACKAGECONFIG[dwarf] = ",NO_DWARF=1"
 PACKAGECONFIG[perl] = ",NO_LIBPERL=1,perl"
 PACKAGECONFIG[python] = ",NO_LIBPYTHON=1,python3 python3-setuptools-native"
@@ -28,7 +30,7 @@ PACKAGECONFIG[libtraceevent] = ",NO_LIBTRACEEVENT=1,libtraceevent"
 # jevents requires host python for generating a .c file, but is
 # unrelated to the python item.
 PACKAGECONFIG[jevents] = ",NO_JEVENTS=1,python3-native"
-# Arm CoreSight
+# Arm CoreSight support, requires meta-arm for opencsd
 PACKAGECONFIG[coresight] = "CORESIGHT=1,,opencsd"
 PACKAGECONFIG[pfm4] = ",NO_LIBPFM4=1,libpfm4"
 PACKAGECONFIG[babeltrace] = ",NO_LIBBABELTRACE=1,babeltrace"
