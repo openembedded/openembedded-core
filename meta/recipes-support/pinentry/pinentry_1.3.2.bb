@@ -13,10 +13,10 @@ DEPENDS = "gettext-native libassuan libgpg-error"
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://libassuan_pkgconf.patch \
-           file://gpg-error_pkconf.patch \
+           file://0001-find-gpg-error-with-pkg-config.patch \
 "
 
-SRC_URI[sha256sum] = "bc72ee27c7239007ab1896c3c2fae53b076e2c9bd2483dc2769a16902bce8c04"
+SRC_URI[sha256sum] = "8e986ed88561b4da6e9efe0c54fa4ca8923035c99264df0b0464497c5fb94e9e"
 
 inherit autotools pkgconfig
 
