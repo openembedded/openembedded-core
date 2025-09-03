@@ -132,7 +132,7 @@ def systemidtype(arg):
 class KickStart():
     """Kickstart parser implementation."""
 
-    DEFAULT_EXTRA_SPACE = 10*1024
+    DEFAULT_EXTRA_FILESYSTEM_SPACE = 10*1024
     DEFAULT_OVERHEAD_FACTOR = 1.3
 
     def __init__(self, confpath):
@@ -153,7 +153,7 @@ class KickStart():
         part.add_argument('--exclude-path', nargs='+')
         part.add_argument('--include-path', nargs='+', action='append')
         part.add_argument('--change-directory')
-        part.add_argument("--extra-space", type=sizetype("M"))
+        part.add_argument('--extra-filesystem-space', type=sizetype("M"))
         part.add_argument('--extra-partition-space', type=sizetype("M"))
         part.add_argument('--fsoptions', dest='fsopts')
         part.add_argument('--fspassno', dest='fspassno')
@@ -175,9 +175,9 @@ class KickStart():
         part.add_argument('--hidden', action='store_true')
 
         # --size and --fixed-size cannot be specified together; options
-        # ----extra-space and --overhead-factor should also raise a parser
-        # --error, but since nesting mutually exclusive groups does not work,
-        # ----extra-space/--overhead-factor are handled later
+        # ----extra-filesystem-space and --overhead-factor should also raise a
+        # parser error, but since nesting mutually exclusive groups does not work,
+        # ----extra-filesystem-space/--overhead-factor are handled later
         sizeexcl = part.add_mutually_exclusive_group()
         sizeexcl.add_argument('--size', type=sizetype("M"), default=0)
         sizeexcl.add_argument('--fixed-size', type=sizetype("M"), default=0)
@@ -264,12 +264,13 @@ class KickStart():
                             parsed.extra_partition_space = 0
                         # using ArgumentParser one cannot easily tell if option
                         # was passed as argument, if said option has a default
-                        # value; --overhead-factor/--extra-space cannot be used
-                        # with --fixed-size, so at least detect when these were
-                        # passed with non-0 values ...
+                        # value; --overhead-factor/--extra-filesystem-space
+                        # cannot be used with --fixed-size, so at least detect
+                        # when these were passed with non-0 values ...
                         if parsed.fixed_size:
-                            if parsed.overhead_factor or parsed.extra_space:
-                                err = "%s:%d: arguments --overhead-factor and --extra-space not "\
+                            if parsed.overhead_factor or parsed.extra_filesystem_space:
+                                err = "%s:%d: arguments --overhead-factor and "\
+                                      "--extra-filesystem-space not "\
                                       "allowed with argument --fixed-size" \
                                       % (confpath, lineno)
                                 raise KickStartError(err)
@@ -280,8 +281,8 @@ class KickStart():
                             # with value equal to 0)
                             if not parsed.overhead_factor:
                                 parsed.overhead_factor = self.DEFAULT_OVERHEAD_FACTOR
-                            if not parsed.extra_space:
-                                parsed.extra_space = self.DEFAULT_EXTRA_SPACE
+                            if not parsed.extra_filesystem_space:
+                                parsed.extra_filesystem_space = self.DEFAULT_EXTRA_FILESYSTEM_SPACE
 
                         self.partnum += 1
                         self.partitions.append(Partition(parsed, self.partnum))

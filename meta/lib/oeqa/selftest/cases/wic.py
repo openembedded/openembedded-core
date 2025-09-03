@@ -1311,12 +1311,12 @@ run_wic_cmd() {
             p, _ = self._get_wic_partitions(tempf.name, ignore_status=True)
             self.assertNotEqual(p.status, 0, "wic exited successfully when an error was expected:\n%s" % p.output)
 
-    def test_extra_space(self):
+    def test_extra_filesystem_space(self):
         native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
 
         with NamedTemporaryFile("w", suffix=".wks") as tempf:
             tempf.write("bootloader --ptable gpt\n" \
-                        "part /     --source rootfs --ondisk hda --extra-space 200M --fstype=ext4\n")
+                        "part /     --source rootfs --ondisk hda --extra-filesystem-space 200M --fstype=ext4\n")
             tempf.flush()
 
             _, partlns = self._get_wic_partitions(tempf.name, native_sysroot)

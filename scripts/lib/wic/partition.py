@@ -28,7 +28,7 @@ class Partition():
         self.align = args.align
         self.disk = args.disk
         self.device = None
-        self.extra_space = args.extra_space
+        self.extra_filesystem_space = args.extra_filesystem_space
         self.extra_partition_space = args.extra_partition_space
         self.exclude_path = args.exclude_path
         self.include_path = args.include_path
@@ -104,8 +104,8 @@ class Partition():
                                (actual_rootfs_size, rootfs_size))
         else:
             extra_blocks = self.get_extra_block_count(actual_rootfs_size)
-            if extra_blocks < self.extra_space:
-                extra_blocks = self.extra_space
+            if extra_blocks < self.extra_filesystem_space:
+                extra_blocks = self.extra_filesystem_space
 
             rootfs_size = actual_rootfs_size + extra_blocks
             rootfs_size = int(rootfs_size * self.overhead_factor)

@@ -1013,12 +1013,12 @@ DESCRIPTION
          --no-fstab-update: This option is specific to wic. It does not update the
                             '/etc/fstab' stock file for the given partition.
 
-         --extra-space: This option is specific to wic. It adds extra
-                        space after the space filled by the content
-                        of the partition. The final size can go
-                        beyond the size specified by --size.
-                        By default, 10MB. This option cannot be used
-                        with --fixed-size option.
+         --extra-filesystem-space: This option is specific to wic. It adds extra
+                                   space after the space filled by the content
+                                   of the partition. The final size can go
+                                   beyond the size specified by --size.
+                                   By default, 10MB. This option cannot be used
+                                   with --fixed-size option.
 
          --extra-partition-space: This option is specific to wic. It adds extra
                                   empty space after the space filled by the
