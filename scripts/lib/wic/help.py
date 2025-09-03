@@ -1020,6 +1020,14 @@ DESCRIPTION
                         By default, 10MB. This option cannot be used
                         with --fixed-size option.
 
+         --extra-partition-space: This option is specific to wic. It adds extra
+                                  empty space after the space filled by the
+                                  filesystem. With --fixed-size, the extra
+                                  partition space is removed from the filesystem
+                                  size. Otherwise (with or without --size flag),
+                                  the extra partition space is added to the final
+                                  paritition size. The default value is 0MB.
+
          --overhead-factor: This option is specific to wic. The
                             size of the partition is multiplied by
                             this factor. It has to be greater than or
