@@ -1,8 +1,6 @@
 DUMMYARCH = "sdk-provides-dummy-${SDKPKGSUFFIX}"
 
-DUMMYPROVIDES_PACKAGES = "\
-    pkgconfig \
-"
+DUMMYPROVIDES_PACKAGES = ""
 
 DUMMYPROVIDES = "\
     /bin/sh \
