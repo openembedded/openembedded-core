@@ -20,8 +20,8 @@ SRC_URI = "https://archive.mesa3d.org/mesa-${PV}.tar.xz \
            file://0001-meson-fix-libcl-assert-reproducibility.patch \
 "
 
-SRC_URI[sha256sum] = "7c726b21c074d14d31d253d638b741422f3c0a497ce7f1b4aaaa917d10bd8d4f"
-PV = "25.2.0"
+SRC_URI[sha256sum] = "43d7abcd4aa8049d8fd75538344a374104765e81e17b4a6314cee2c0160e4412"
+PV = "25.2.2"
 
 UPSTREAM_CHECK_GITTAGREGEX = "mesa-(?P<pver>\d+(\.\d+)+)"
 
