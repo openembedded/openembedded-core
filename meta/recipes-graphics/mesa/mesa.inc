@@ -17,6 +17,7 @@ PE = "2"
 SRC_URI = "https://archive.mesa3d.org/mesa-${PV}.tar.xz \
            file://0001-meson-misdetects-64bit-atomics-on-mips-clang.patch \
            file://0001-freedreno-don-t-encode-build-path-into-binaries.patch \
+           file://0001-meson-fix-libcl-assert-reproducibility.patch \
 "
 
 SRC_URI[sha256sum] = "7c726b21c074d14d31d253d638b741422f3c0a497ce7f1b4aaaa917d10bd8d4f"
