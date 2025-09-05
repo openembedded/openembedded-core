@@ -70,7 +70,7 @@ python do_compile_ptest_cargo() {
     cargo_test_binaries_file = d.getVar('CARGO_TEST_BINARIES_FILES')
     bb.note(f"Found {len(test_bins)} tests, write their paths into {cargo_test_binaries_file}")
     with open(cargo_test_binaries_file, "w") as f:
-        for test_bin in test_bins:
+        for test_bin in sorted(test_bins):
             f.write(f"{test_bin}\n")
 
 }
