@@ -271,3 +271,29 @@ class BitbakeConfigBuild(OESelftestTestCase):
         runCmd('bitbake-config-build disable-fragment selftest/more-fragments-here/test-another-fragment')
         self.assertEqual(get_bb_var('SELFTEST_FRAGMENT_VARIABLE'), None)
         self.assertEqual(get_bb_var('SELFTEST_FRAGMENT_ANOTHER_VARIABLE'), None)
+
+    def test_show_fragment(self):
+        """
+        Test that bitbake-config-build show-fragment returns the expected
+        output. Use bitbake-config-build list-fragments --verbose to get the
+        path to the fragment.
+        """
+        result = runCmd('bitbake-config-build --quiet list-fragments --verbose')
+        test_fragment_re = re.compile(r'^Path: .*conf/fragments/test-fragment.conf$')
+        fragment_path, fragment_content = '', ''
+
+        for line in result.output.splitlines():
+            m = re.match(test_fragment_re, line)
+            if m:
+                fragment_path = ' '.join(line.split()[1:])
+                break
+
+        if not fragment_path:
+            raise Exception("Couldn't find the fragment")
+
+        with open(fragment_path, 'r') as f:
+            fragment_content = f'{fragment_path}:\n\n{f.read()}'.strip()
+
+        result = runCmd('bitbake-config-build --quiet show-fragment selftest/test-fragment')
+
+        self.assertEqual(result.output.strip(), fragment_content)
