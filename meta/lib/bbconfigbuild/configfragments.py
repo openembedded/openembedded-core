@@ -156,6 +156,18 @@ class ConfigFragmentsPlugin(LayerPlugin):
         if modified:
             print("Fragment {} removed from {}.".format(", ".join(args.fragmentname), args.confpath))
 
+    def do_show_fragment(self, args):
+        """ Show the content of a fragment """
+        for layername, layerdata in self.discover_fragments().items():
+            fragments = layerdata['fragments']
+            for fragment in fragments:
+                if fragment['name'] == args.fragmentname:
+                    print(f"{fragment['path']}:")
+                    print()
+                    with open(fragment['path']) as fd:
+                        print(fd.read())
+                    return
+
     def do_disable_all_fragments(self, args):
         """ Disable all fragments in the local build configuration """
         def disable_all_helper(varname, origvalue, op, newlines):
@@ -180,6 +192,9 @@ class ConfigFragmentsPlugin(LayerPlugin):
         parser_disable_fragment = self.add_command(sp, 'disable-fragment', self.do_disable_fragment, parserecipes=False)
         parser_disable_fragment.add_argument("--confpath", default=default_confpath, help='Configuration file which contains a list of enabled fragments (default is {}).'.format(default_confpath))
         parser_disable_fragment.add_argument('fragmentname', help='The name of the fragment', nargs='+')
+
+        parser_show_fragment = self.add_command(sp, 'show-fragment', self.do_show_fragment, parserecipes=False)
+        parser_show_fragment.add_argument('fragmentname', help='The name of the fragment')
 
         parser_disable_all = self.add_command(sp, 'disable-all-fragments', self.do_disable_all_fragments, parserecipes=False)
         parser_disable_all.add_argument("--confpath", default=default_confpath, help='Configuration file which contains a list of enabled fragments (default is {}).'.format(default_confpath))
