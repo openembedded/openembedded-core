@@ -443,7 +443,7 @@ python do_rust_gen_targets () {
     rust_gen_target(d, 'TARGET', wd, d.getVar('TARGET_ARCH'))
 }
 
-addtask rust_gen_targets after do_patch before do_compile
+addtask rust_gen_targets after do_patch before do_configure
 do_rust_gen_targets[dirs] += "${RUST_TARGETS_DIR}"
 
 # For building target C dependecies use only compiler parameters defined in OE
