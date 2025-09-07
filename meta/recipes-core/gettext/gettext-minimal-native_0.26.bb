@@ -24,7 +24,7 @@ python get_aclocal_files() {
     with open(fpath) as f:
         content = f.read()
         for l in content.replace("\\\n","").split("\n"):
-            if l.startswith("aclocal_DATA"):
+            if l.startswith("macros_DATA"):
                 aclocal_files = l.split("=")[1]
                 with open(oe.path.join(d.getVar("WORKDIR"),"aclocal-files"),'w') as outf:
                     outf.write(aclocal_files)
@@ -43,4 +43,6 @@ do_install () {
 	cp ${S}/build-aux/config.rpath ${D}${datadir}/gettext/
 	cp ${S}/gettext-runtime/po/Makefile.in.in ${D}${datadir}/gettext/po/
 	cp ${S}/gettext-runtime/po/remove-potcdate.sed ${D}${datadir}/gettext/po/
+	# The gettext recipe also installs the same Makevars.template at the same place, rename it
+	cp ${S}/gettext-tools/po/Makevars.template ${D}${datadir}/gettext/po/Makevars.template.minimal
 }

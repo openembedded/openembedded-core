@@ -37,7 +37,6 @@ EXTRA_OECONF += "--without-lispdir \
                  --disable-java \
                  --disable-native-java \
                  --disable-openmp \
-                 --disable-acl \
                  --without-emacs \
                  --without-cvs \
                  --without-git \
@@ -56,7 +55,7 @@ EXTRA_OECONF:append:libc-musl = "\
                  --enable-threads=posix \
                  gt_cv_func_printf_posix=yes \
 "
-PACKAGECONFIG ??= "glib libxml"
+PACKAGECONFIG ??= "glib libxml ${@bb.utils.filter('DISTRO_FEATURES', 'selinux', d)}"
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
 
@@ -66,6 +65,7 @@ PACKAGECONFIG[libxml] = "--without-included-libxml,--with-included-libxml,libxml
 # or problems if $libdir isn't $prefix/lib.
 PACKAGECONFIG[libunistring] = "--with-libunistring-prefix=${STAGING_LIBDIR}/..,--with-included-libunistring,libunistring"
 PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
+PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux --disable-acl,attr libselinux"
 
 do_install:append:libc-musl () {
 	rm -f ${D}${libdir}/charset.alias
@@ -94,7 +94,8 @@ FILES:${PN} += "${libdir}/${BPN}/"
 # The its/Makefile.am has defined:
 # itsdir = $(pkgdatadir)$(PACKAGE_SUFFIX)/its
 # not itsdir = $(pkgdatadir), so use wildcard to match the version.
-FILES:${PN} += "${datadir}/${BPN}-*/*"
+FILES:${PN} += "${datadir}/${BPN}-*/* \
+                ${datadir}/${BPN}/m4/*"
 
 FILES:gettext-runtime = "${bindir}/gettext \
                          ${bindir}/ngettext \
@@ -175,7 +176,9 @@ do_install_ptest() {
         find ${D}${PTEST_PATH}/ -name "*.o" -exec rm {} \;
         chmod 0755 ${D}${PTEST_PATH}/tests/lang-vala ${D}${PTEST_PATH}/tests/plural-1 ${D}${PTEST_PATH}/tests/xgettext-tcl-4 \
                    ${D}${PTEST_PATH}/tests/xgettext-vala-1  ${D}${PTEST_PATH}/tests/xgettext-po-2 ${D}${PTEST_PATH}/tests/xgettext-vala-6 \
-                   ${D}${PTEST_PATH}/tests/plural-3 ${D}${PTEST_PATH}/tests/plural-4 ${D}${PTEST_PATH}/tests/xgettext-java-8 ${D}${PTEST_PATH}/tests/xgettext-java-9
+                   ${D}${PTEST_PATH}/tests/plural-3 ${D}${PTEST_PATH}/tests/plural-4 ${D}${PTEST_PATH}/tests/xgettext-java-8 ${D}${PTEST_PATH}/tests/xgettext-java-9 \
+                   ${D}${PTEST_PATH}/tests/msgfmt-21 ${D}${PTEST_PATH}/tests/format-modula2-1 ${D}${PTEST_PATH}/tests/format-modula2-2 \
+                   ${D}${PTEST_PATH}/tests/lang-go ${D}${PTEST_PATH}/tests/lang-ruby ${D}${PTEST_PATH}/tests/lang-modula2 ${D}${PTEST_PATH}/tests/lang-d
         sed -i -e 's|${DEBUG_PREFIX_MAP}||g' ${D}${PTEST_PATH}/tests/init-env
 }
 
