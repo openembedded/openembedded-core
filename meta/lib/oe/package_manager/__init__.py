@@ -513,10 +513,7 @@ def create_packages_dir(d, subrepo_dir, deploydir, taskname, filterbydependencie
             for l in f:
                 l = l.strip()
                 deploydir = os.path.normpath(deploydir)
-                if bb.data.inherits_class('packagefeed-stability', d):
-                    dest = l.replace(deploydir + "-prediff", "")
-                else:
-                    dest = l.replace(deploydir, "")
+                dest = l.replace(deploydir, "")
                 dest = subrepo_dir + dest
                 if l.endswith("/"):
                     if dest not in seendirs:
