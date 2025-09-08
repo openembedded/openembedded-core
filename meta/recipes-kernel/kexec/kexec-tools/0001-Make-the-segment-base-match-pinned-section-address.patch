@@ -1,0 +1,62 @@
+From 0d8a9e12b6509cb2a79818f5f4062a0bee33edfc Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Wed, 3 Sep 2025 13:28:32 -0700
+Subject: [PATCH] Make the segment base match pinned section address
+
+ET_EXEC uses image base of 0x400000, but the build forces
+section VMAs like .text = 0x10000. LLD now errors when any
+section address is below the image base unless you explicitly
+set the base. (Older LLD tolerated it.)
+
+To fix this, set the image base to match forced section addresses
+
+Fixes
+| x86_64-yoe-linux-ld.lld: error: section '.text' address (0x10000) is smaller than image base (0x400000); specify --image-base
+| x86_64-yoe-linux-ld.lld: error: section '.bss' address (0x12000) is smaller than image base (0x400000); specify --image-base
+
+Upstream-Status: Submitted [https://lists.infradead.org/pipermail/kexec/2025-September/033493.html]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ kexec_test/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/kexec_test/Makefile
++++ b/kexec_test/Makefile
+@@ -5,7 +5,7 @@ RELOC:=0x10000
+ KEXEC_TEST_SRCS:= kexec_test/kexec_test16.S kexec_test/kexec_test.S
+ 
+ dist += kexec_test/Makefile $(KEXEC_TEST_SRCS)				\
+-	kexec_test/x86-setup-legacy-pic.S
++	kexec_test/x86-setup-legacy-pic.S kexec_test/kexec_test.ld
+ 
+ BUILD_KEXEC_TEST = no
+ ifeq ($(ARCH),i386)
+@@ -31,7 +31,7 @@ $(KEXEC_TEST): CPPFLAGS+=-DRELOC=$(RELOC
+ $(KEXEC_TEST): ASFLAGS+=-m32
+ #$(KEXEC_TEST): LDFLAGS=-m32 -Wl,-e -Wl,_start -Wl,-Ttext -Wl,$(RELOC) \
+ #		       -nostartfiles
+-$(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start -Ttext $(RELOC)
++$(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start -T $(srcdir)/kexec_test/kexec_test.ld
+ 
+ $(KEXEC_TEST): $(KEXEC_TEST_OBJS)
+ 	mkdir -p $(@D)
+--- /dev/null
++++ b/kexec_test/kexec_test.ld
+@@ -0,0 +1,16 @@
++ENTRY(_start)
++SECTIONS
++{
++  . = 0x10000;
++  .text : { *(.text .text.*) }
++
++  /* Place the note after .text to avoid overlap */
++  . = ALIGN(16);
++  .note.gnu.property : { *(.note.gnu.property) }
++
++  .rodata : { *(.rodata .rodata.*) }
++
++  /* If you need bss fixed: */
++  . = 0x12000;
++  .bss : { *(.bss .bss.* COMMON) }
++}
