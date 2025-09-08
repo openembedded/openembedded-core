@@ -1,4 +1,4 @@
-From 518c0025921b0bd21e69bf4c38f369778032f4e0 Mon Sep 17 00:00:00 2001
+From c4da3b294284213bad523c47a9ab1825175ccda6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 13 Mar 2025 00:30:38 -0700
 Subject: [PATCH] compiler-rt: Do not pass --target to clang compiler

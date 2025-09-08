@@ -1,4 +1,4 @@
-From 2603da5f1fce88f6c7f6134faf7757f17b7e14f5 Mon Sep 17 00:00:00 2001
+From bd6aaf1bad7d46da1928a5b1ecfc9f15e4345a84 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 21 May 2016 00:33:20 +0000
 Subject: [PATCH] llvm: TargetLibraryInfo: Undefine libc functions if they are
@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/llvm/include/llvm/Analysis/TargetLibraryInfo.def b/llvm/include/llvm/Analysis/TargetLibraryInfo.def
-index db566b8ee610..578161f9c978 100644
+index 014988299d37..ea77dae66482 100644
 --- a/llvm/include/llvm/Analysis/TargetLibraryInfo.def
 +++ b/llvm/include/llvm/Analysis/TargetLibraryInfo.def
 @@ -1467,6 +1467,9 @@ TLI_DEFINE_STRING_INTERNAL("fopen")
@@ -68,7 +68,7 @@ index db566b8ee610..578161f9c978 100644
  TLI_DEFINE_ENUM_INTERNAL(lstat64)
  TLI_DEFINE_STRING_INTERNAL("lstat64")
  TLI_DEFINE_SIG_INTERNAL(Int, Ptr, Ptr)
-@@ -2334,6 +2348,9 @@ TLI_DEFINE_STRING_INTERNAL("stat")
+@@ -2339,6 +2353,9 @@ TLI_DEFINE_STRING_INTERNAL("stat")
  TLI_DEFINE_SIG_INTERNAL(Int, Ptr, Ptr)
  
  /// int stat64(const char *path, struct stat64 *buf);
@@ -78,7 +78,7 @@ index db566b8ee610..578161f9c978 100644
  TLI_DEFINE_ENUM_INTERNAL(stat64)
  TLI_DEFINE_STRING_INTERNAL("stat64")
  TLI_DEFINE_SIG_INTERNAL(Int, Ptr, Ptr)
-@@ -2559,6 +2576,9 @@ TLI_DEFINE_STRING_INTERNAL("tmpfile")
+@@ -2564,6 +2581,9 @@ TLI_DEFINE_STRING_INTERNAL("tmpfile")
  TLI_DEFINE_SIG_INTERNAL(Ptr)
  
  /// FILE *tmpfile64(void)

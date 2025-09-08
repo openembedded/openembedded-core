@@ -1,4 +1,4 @@
-From e5223f6013c7c70a7f6e35ecec046cfdc0c15c2a Mon Sep 17 00:00:00 2001
+From c4ebc0b6347886e679aa211a3fa3816be9b2fd52 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Tue, 14 May 2024 22:04:43 -0700
 Subject: [PATCH] llvm: Add libunwind.pc.in and llvm-config scripts

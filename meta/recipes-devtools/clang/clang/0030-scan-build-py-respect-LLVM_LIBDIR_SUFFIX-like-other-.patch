@@ -1,4 +1,4 @@
-From 3f03bd4a5a16f2b5525f4dc32c7b196840b96856 Mon Sep 17 00:00:00 2001
+From 36b051141be917a466fbc26b140b3ba268d82468 Mon Sep 17 00:00:00 2001
 From: Martin Jansa <martin.jansa@gmail.com>
 Date: Fri, 13 Sep 2024 13:38:08 +0200
 Subject: [PATCH] scan-build-py: respect LLVM_LIBDIR_SUFFIX like other tools do
