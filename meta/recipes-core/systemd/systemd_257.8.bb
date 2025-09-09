@@ -401,7 +401,7 @@ do_install() {
 	fi
 
 	# Actively disable Predictable Network Interface Names
-	if ${@ 'true' if not bb.utils.contains('PACKAGECONFIG', 'pni-names', 'true', 'false', d) else 'false'}; then
+	if ! ${@bb.utils.contains('PACKAGECONFIG', 'pni-names', 'true', 'false', d)}; then
 		sed -i 's/^NamePolicy=.*/NamePolicy=/;s/^AlternativeNamesPolicy=.*/AlternativeNamesPolicy=/' ${D}${nonarch_libdir}/systemd/network/99-default.link
 	fi
 }
