@@ -1,0 +1,24 @@
+From 2dc5e9f4c82888dbe21bd1eadb4b59b0efa9608c Mon Sep 17 00:00:00 2001
+From: Zachary Ware <zach@python.org>
+Date: Sat, 6 Sep 2025 13:20:12 -0500
+Subject: [PATCH] gh-90548: Skip NODEV portion of test_makedev when linked to musl
+
+Upstream-Status: Backport [https://github.com/python/cpython/pull/138593]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ Lib/test/test_posix.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Lib/test/test_posix.py b/Lib/test/test_posix.py
+index c9cbe15..bfc1e2b 100644
+--- a/Lib/test/test_posix.py
++++ b/Lib/test/test_posix.py
+@@ -757,7 +757,7 @@ class PosixTester(unittest.TestCase):
+             self.assertRaises((ValueError, OverflowError), posix.makedev, x, minor)
+             self.assertRaises((ValueError, OverflowError), posix.makedev, major, x)
+ 
+-        if sys.platform == 'linux':
++        if sys.platform == 'linux' and not support.linked_to_musl():
+             NODEV = -1
+             self.assertEqual(posix.major(NODEV), NODEV)
+             self.assertEqual(posix.minor(NODEV), NODEV)
