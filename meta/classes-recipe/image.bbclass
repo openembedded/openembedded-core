@@ -481,6 +481,7 @@ python () {
             for ctype in sorted(ctypes):
                 if bt.endswith("." + ctype):
                     type = bt[0:-len(ctype) - 1]
+                    original_type = type
                     if type.startswith("debugfs_"):
                         type = type[8:]
                     # Create input image first.
@@ -493,7 +494,7 @@ python () {
                     subimage = type + "." + ctype
                     if subimage not in subimages:
                         subimages.append(subimage)
-                    if type not in alltypes:
+                    if original_type not in alltypes:
                         rm_tmp_images.add(localdata.expand("${IMAGE_NAME}.${type}"))
 
         for bt in basetypes[t]:
